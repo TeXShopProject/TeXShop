@@ -33,7 +33,7 @@ MUTATIONS = {
     'the panel\'s field keeps the Find menu': ('TSAdvancedFindPanelController.m',
         '    if (controller && (item.action == @selector(performFindPanelAction:)', '    if (NO && (item.action == @selector(performFindPanelAction:)'),
     'the buttons ignore a read-only target': ('TSAdvancedFindPanelController+Actions.m',
-        '    return target ? [self.findController validateAction:action forTextView:target] : YES;', '    return YES;'),
+        '    return target ? [self.findController validateAction:action forTextView:target] : self.findController.runningTask == nil;', '    return YES;'),
     'TSTextView keeps the Find menu': ('TSTextView.m', '\tif (advancedFind)\n\t\t[advancedFind performFindPanelAction:sender inTextView:self];\n\telse\n\t\t[super performFindPanelAction:sender];',
         '\t[super performFindPanelAction:sender];'),
     'TSTextView routes whatever the find method': ('TSAdvancedFindTextView.m', '    if ([defaults integerForKey:TSFindMethodKey] != TSFindMethodAdvancedPanel)\n        return nil;\n', ''),
