@@ -20,9 +20,15 @@ MUTATIONS = {
     'no-autoscroll': ('[view scrollRectToVisible:NSMakeRect(NSMidX(visibleRect), pointInView.y, 1.0, 1.0)];', ';'),
     # The scroll target lies under the ruler and the text moves sideways.
     'left-edge-target': ('NSMakeRect(NSMidX(visibleRect), pointInView.y', 'NSMakeRect(NSMinX(visibleRect), pointInView.y'),
+    # The selected lines' numbers are not bold.
+    'no-bold': ('currentTextAttributes = selectedAttributes;', 'currentTextAttributes = textAttributes;'),
+    # The numbers stay bold after the selection changes otherwise.
+    'bold-stays': ('return (([ranges count] == 1) && NSEqualRanges([[ranges firstObject] rangeValue], _lineSelection));', 'return YES;'),
+    # The ruler is not redrawn when the selection changes otherwise.
+    'no-redisplay': ('\t\t_hasLineSelection = NO;\n\t\t[self setNeedsDisplay:YES];', '\t\t_hasLineSelection = NO;'),
     # Every drag step posts a selection change.
-    'notify-each-step': ('[view setSelectedRange:selection affinity:NSSelectionAffinityDownstream stillSelecting:YES];\n\t\t}',
-                         '[view setSelectedRange:selection affinity:NSSelectionAffinityDownstream stillSelecting:NO];\n\t\t}'),
+    'notify-each-step': ('stillSelecting:YES];\n\t\t\t[self showLineSelection:selection];\n\t\t}',
+                         'stillSelecting:NO];\n\t\t\t[self showLineSelection:selection];\n\t\t}'),
 }
 
 

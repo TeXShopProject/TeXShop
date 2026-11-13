@@ -32,10 +32,18 @@ static void Require(const char *name, BOOL condition)
 }
 @end
 
+// Counts redisplay requests: a window that is never shown does not keep needsDisplay.
+@interface CountingLineNumberView : NoodleLineNumberView
+@property NSUInteger redisplays;
+@end
+@implementation CountingLineNumberView
+- (void)setNeedsDisplay:(BOOL)flag { if (flag) self.redisplays++; [super setNeedsDisplay:flag]; }
+@end
+
 static NSWindow *window;
 static NSScrollView *scroll;
 static ShrinkingTextView *textView;
-static NoodleLineNumberView *ruler;
+static CountingLineNumberView *ruler;
 
 static void Setup(NSString *text, BOOL wraps, CGFloat height)
 {
@@ -57,7 +65,7 @@ static void Setup(NSString *text, BOOL wraps, CGFloat height)
     textView.string = text;
     scroll.documentView = textView;
     window.contentView = scroll;
-    ruler = [[NoodleLineNumberView alloc] initWithScrollView:scroll];
+    ruler = [[CountingLineNumberView alloc] initWithScrollView:scroll];
     scroll.verticalRulerView = ruler;
     scroll.hasHorizontalRuler = NO;
     scroll.hasVerticalRuler = YES;
@@ -106,6 +114,30 @@ static void Gesture(NSArray<NSValue *> *points, NSEventModifierFlags flags)
 }
 
 static NSValue *P(NSUInteger index) { return [NSValue valueWithPoint:RulerPointForCharacter(index, 0.5)]; }
+
+// The ink of the ruler's numbers in the band of the line fragment holding a character,
+// drawn offscreen in the light appearance.
+static NSUInteger InkForLine(NSUInteger index)
+{
+    ruler.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    NSRect bounds = ruler.bounds;
+    NSBitmapImageRep *rep = [ruler bitmapImageRepForCachingDisplayInRect:bounds];
+    [ruler cacheDisplayInRect:bounds toBitmapImageRep:rep];
+    NSLayoutManager *lm = textView.layoutManager;
+    NSRect fragment = [lm lineFragmentRectForGlyphAtIndex:[lm glyphIndexForCharacterAtIndex:index] effectiveRange:NULL];
+    NSRect inText = NSOffsetRect(fragment, 0, textView.textContainerOrigin.y);
+    NSRect inRuler = [ruler convertRect:[textView convertRect:inText toView:nil] fromView:nil];
+    CGFloat scale = rep.pixelsHigh / NSHeight(bounds);
+    CGFloat top = ruler.isFlipped ? NSMinY(inRuler) : NSHeight(bounds) - NSMaxY(inRuler);
+    NSUInteger ink = 0;
+    for (NSInteger y = (NSInteger)floor(top * scale); y < (NSInteger)ceil((top + NSHeight(inRuler)) * scale); y++)
+        for (NSInteger x = 0; x < rep.pixelsWide; x++) {
+            if (y < 0 || y >= rep.pixelsHigh) continue;
+            NSColor *c = [[rep colorAtX:x y:y] colorUsingColorSpace:NSColorSpace.genericGrayColorSpace];
+            ink += (NSUInteger)lround((1.0 - c.whiteComponent) * c.alphaComponent * 255.0);
+        }
+    return ink;
+}
 static NSRange LineOf(NSUInteger index) { return [textView.string lineRangeForRange:NSMakeRange(index, 0)]; }
 static NSUInteger StartOf(NSString *needle) { NSRange r = [textView.string rangeOfString:needle]; NSCAssert(r.location != NSNotFound, @"needle"); return r.location; }
 
@@ -183,6 +215,29 @@ int main(void)
         [ruler mouseDown:MouseEvent(NSEventTypeLeftMouseDown, P(StartOf(@"fifth")).pointValue, 0)];
         Require("unselectable text is left alone", NSEqualRanges(textView.selectedRange, NSMakeRange(1, 2)));
         textView.selectable = YES;
+        textView.editable = YES;  // turning selection off also turned editing off
+
+        // The numbers of the lines selected on the ruler are bold until the selection changes otherwise.
+        NSUInteger second = StartOf(@"second"), fifth = StartOf(@"fifth"), sixth = StartOf(@"sixth"), first = StartOf(@"first");
+        textView.selectedRange = NSMakeRange(0, 0);
+        NSUInteger plainSecond = InkForLine(second), plainFifth = InkForLine(fifth), plainSixth = InkForLine(sixth), plainFirst = InkForLine(first);
+        Require("numbers are drawn", plainSecond > 0 && plainFifth > 0);
+        Gesture(@[P(second), P(fifth)], 0);
+        Require("selected numbers are bold", InkForLine(second) > plainSecond + plainSecond / 10 && InkForLine(fifth) > plainFifth + plainFifth / 10);
+        Require("other numbers stay regular", InkForLine(sixth) == plainSixth && InkForLine(first) == plainFirst);
+        ruler.redisplays = 0;
+        textView.selectedRange = NSMakeRange(sixth, 0);
+        Require("ruler redraws when the selection changes", ruler.redisplays > 0);
+        Require("bold ends when the selection changes", InkForLine(second) == plainSecond && InkForLine(fifth) == plainFifth);
+        Gesture(@[P(sixth)], 0);
+        Require("a single line is bold", InkForLine(sixth) > plainSixth && InkForLine(fifth) == plainFifth);
+        // Typing replaces the selected line; the caret after it is not a line selection.
+        [textView insertText:@"sixth\n" replacementRange:textView.selectedRange];
+        Require("typed text replaced the line", [textView.string isEqualToString:text] && textView.selectedRange.length == 0);
+        Require("typing ends bold", InkForLine(sixth) == plainSixth);
+        NSUInteger typedLast = InkForLine(StartOf(@"last"));
+        textView.selectedRange = NSMakeRange(0, 0);
+        Require("the caret line after typing is regular", InkForLine(StartOf(@"last")) == typedLast);
 
         // Text without a final line ending: below the text is the last line.
         [[NSNotificationCenter defaultCenter] removeObserver:observer];

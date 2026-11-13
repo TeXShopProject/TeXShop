@@ -49,6 +49,11 @@
 @end
 
 @implementation NoodleLineNumberView
+{
+	// The selection made on the line numbers, while the text view still has it.
+	BOOL	_hasLineSelection;
+	NSRange	_lineSelection;
+}
 
 - (id)initWithScrollView: (NSScrollView *)aScrollView
 {
@@ -176,11 +181,14 @@
     if ((oldClientView != aView) && [oldClientView isKindOfClass:[NSTextView class]])
     {
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:NSTextStorageDidProcessEditingNotification object:[(NSTextView *)oldClientView textStorage]];
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:NSTextViewDidChangeSelectionNotification object:oldClientView];
     }
+    _hasLineSelection = NO;
     [super setClientView:aView];
     if ((aView != nil) && [aView isKindOfClass:[NSTextView class]])
     {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSTextStorageDidProcessEditingNotification object:[(NSTextView *)aView textStorage]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectionDidChange:) name:NSTextViewDidChangeSelectionNotification object:aView];
 
 		[self invalidateLineIndices];
     }
@@ -210,6 +218,26 @@
 	
         [self setNeedsDisplay:YES];
     }
+}
+
+// The line numbers stop being bold once the selection is no longer the one made on them.
+- (void)selectionDidChange:(NSNotification *)notification
+{
+	if (_hasLineSelection && ![self clientViewHasLineSelection])
+	{
+		_hasLineSelection = NO;
+		[self setNeedsDisplay:YES];
+	}
+}
+
+- (BOOL)clientViewHasLineSelection
+{
+	NSArray	*ranges;
+
+	if (!_hasLineSelection || ![[self clientView] isKindOfClass:[NSTextView class]])
+		return NO;
+	ranges = [(NSTextView *)[self clientView] selectedRanges];
+	return (([ranges count] == 1) && NSEqualRanges([[ranges firstObject] rangeValue], _lineSelection));
 }
 
 - (void)scrollEnded:(NSNotification *)notification
@@ -384,6 +412,16 @@
             nil];
 }
 
+- (NSDictionary *)selectedLineTextAttributes
+{
+	NSFont	*font = [[NSFontManager sharedFontManager] convertFont:[self font] toHaveTrait:NSBoldFontMask];
+
+	return [NSDictionary dictionaryWithObjectsAndKeys:
+			font, NSFontAttributeName,
+			[self textColor], NSForegroundColorAttributeName,
+			nil];
+}
+
 - (NSDictionary *)markerTextAttributes
 {
 	    return [NSDictionary dictionaryWithObjectsAndKeys:
@@ -446,7 +484,8 @@
         NSUInteger				rectCount, index, line, count;
         NSRectArray				rects;
         CGFloat					ypos, yinset;
-        NSDictionary			*textAttributes, *currentTextAttributes;
+        NSDictionary			*textAttributes, *currentTextAttributes, *selectedAttributes;
+        NSUInteger				firstSelectedLine, lastSelectedLine;
         NSSize					stringSize, markerSize;
 		NoodleLineNumberMarker	*marker;
 		NSImage					*markerImage;
@@ -463,6 +502,18 @@
         textAttributes = [self textAttributes];
 		
 		lines = [self lineIndices];
+
+        // The lines selected on the line numbers have bold numbers.
+        firstSelectedLine = NSNotFound;
+        lastSelectedLine = NSNotFound;
+        selectedAttributes = nil;
+        if ([self clientViewHasLineSelection] && (NSMaxRange(_lineSelection) <= [text length]))
+        {
+            firstSelectedLine = [self lineNumberForCharacterIndex:_lineSelection.location inText:text];
+            lastSelectedLine = (_lineSelection.length == 0) ? firstSelectedLine
+                : [self lineNumberForCharacterIndex:NSMaxRange(_lineSelection) - 1 inText:text];
+            selectedAttributes = [self selectedLineTextAttributes];
+        }
 
         // Find the characters that are currently visible
         glyphRange = [layoutManager glyphRangeForBoundingRect:visibleRect inTextContainer:container];
@@ -516,6 +567,8 @@
 					if (marker == nil)
 					{
 						currentTextAttributes = textAttributes;
+						if ((firstSelectedLine != NSNotFound) && (line >= firstSelectedLine) && (line <= lastSelectedLine))
+							currentTextAttributes = selectedAttributes;
 					}
 					else
 					{
@@ -621,6 +674,7 @@ static NSRange NoodleClampedRange(NSRange range, NSUInteger length)
 	if (extending)
 		selection = NSUnionRange(selection, baseRange);
 	[view setSelectedRange:selection affinity:NSSelectionAffinityDownstream stillSelecting:YES];
+	[self showLineSelection:selection];
 
 	[NSEvent startPeriodicEventsAfterDelay:0.1 withPeriod:0.05];
 	while (YES)
@@ -648,12 +702,24 @@ static NSRange NoodleClampedRange(NSRange range, NSUInteger length)
 		{
 			selection = newSelection;
 			[view setSelectedRange:selection affinity:NSSelectionAffinityDownstream stillSelecting:YES];
+			[self showLineSelection:selection];
 		}
 	}
 	[NSEvent stopPeriodicEvents];
 
 	selection = NoodleClampedRange(selection, [[view string] length]);
+	[self showLineSelection:selection];
 	[view setSelectedRange:selection affinity:NSSelectionAffinityDownstream stillSelecting:NO];
+}
+
+- (void)showLineSelection:(NSRange)selection
+{
+	if (!_hasLineSelection || !NSEqualRanges(_lineSelection, selection))
+	{
+		_hasLineSelection = YES;
+		_lineSelection = selection;
+		[self setNeedsDisplay:YES];
+	}
 }
 
 - (void)setMarkers:(NSArray *)markers
