@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-// The rules are those that -[TSDocument colorizeText:range:] has always used, kept as they were, including their
-// quirks: what a source showed before, it shows now.
+// The rules are those that -[TSDocument colorizeText:range:] used, kept as they were, with two fixes: an argument of
+// \footnote or \index that is not closed no longer leaves the rest of the text uncolored, and a five-character
+// \msg_ is an expl3 message name, as longer ones are.
 #import "TSSyntaxTeXScanner.h"
 #import "TSSyntaxXMLScanning.h"
 
@@ -51,12 +52,15 @@ static inline void TSNoSpelling(TSTeXScan *scan, NSRange range)
     scan->block(range, TSSyntaxRoleNone, TSSyntaxTokenFlagsNoSpellCheck);
 }
 
-// Skips an optional argument [...], coloring its brackets, and leaves *location after it.
-static void TSSkipOptionalArgument(TSTeXScan *scan, NSUInteger *location)
+// Skips an optional argument [...], coloring its brackets, and leaves *location after it. When the closing bracket
+// is not found before the end of the range, *location is left just after the opening one, so that what follows is
+// colored as usual, and NO is returned.
+static BOOL TSSkipOptionalArgument(TSTeXScan *scan, NSUInteger *location)
 {
     NSInteger count = 1;
     TSToken(scan, *location, 1, TSSyntaxRoleMarker);
     (*location)++;
+    const NSUInteger start = *location;
     BOOL notDone = YES;
     while ((*location < scan->lineEnd) && notDone) {
         NSInteger c = TSCharacter(scan, *location);
@@ -70,22 +74,27 @@ static void TSSkipOptionalArgument(TSTeXScan *scan, NSUInteger *location)
         }
         (*location)++;
     }
+    if (notDone)
+        *location = start;
+    return !notDone;
 }
 
 // The argument of \footnote or \index after its optional arguments: braces in the marker color, the text between
-// them in the given role. Nothing is colored when the closing brace is not found before the end of the range.
-// *range becomes the range of the argument: its start once the opening brace is found, its length once the closing
-// one is (the spelling of the parameters of \footnote then starts there).
+// them in the given role. *range becomes the range of the argument (the spelling of the parameters of \footnote
+// then starts there). When an argument is not closed before the end of the range, it is not colored as one, *range
+// is left as it was, and *location is left just after its opening brace or bracket, so that the rest of the text is
+// colored as usual.
 static void TSArgument(TSTeXScan *scan, NSUInteger *location, TSSyntaxRole role, NSRange *range)
 {
     while ((*location < scan->lineEnd) && (TSCharacter(scan, *location) == '['))
-        TSSkipOptionalArgument(scan, location);
+        if (!TSSkipOptionalArgument(scan, location))
+            return;
     if (!((*location < scan->lineEnd) && (TSCharacter(scan, *location) == '{')))
         return;
     NSInteger count = 1;
     TSToken(scan, *location, 1, TSSyntaxRoleMarker);
     (*location)++;
-    range->location = *location;
+    const NSUInteger start = *location;
     BOOL notDone = YES;
     while ((*location < scan->lineEnd) && notDone) {
         NSInteger c = TSCharacter(scan, *location);
@@ -95,12 +104,14 @@ static void TSArgument(TSTeXScan *scan, NSUInteger *location, TSSyntaxRole role,
             count--;
         if (count == 0) {
             notDone = NO;
-            range->length = *location - range->location;
+            *range = NSMakeRange(start, *location - start);
             TSToken(scan, range->location, range->length, role);
             TSToken(scan, *location, 1, TSSyntaxRoleMarker);
         }
         (*location)++;
     }
+    if (notDone)
+        *location = start;
 }
 
 // The first arguments of a command whose parameters are not spell checked: the brackets in them are colored, and
@@ -186,8 +197,7 @@ static void TSSkipParametersForSpelling(TSTeXScan *scan, NSRange range, NSUInteg
     scan.lineEnd = NSMaxRange(range);
     scan.block = block;
     const NSUInteger lineStart = range.location, lineEnd = scan.lineEnd;
-    // The letters after the command's backslash. The fourth is read for five-letter commands too, although it is
-    // only set for longer ones: it keeps the value of the last longer command of this range, as it always has.
+    // The letters after the command's backslash, for expl3.
     NSInteger first = 0, second = 0, third = 0, fourth = 0;
 
     NSUInteger location = lineStart;
@@ -242,12 +252,14 @@ static void TSSkipParametersForSpelling(TSTeXScan *scan, NSRange range, NSUInteg
             }
             NSString *commandString = [string substringWithRange:command];
             if (expl3) {
+                first = second = third = fourth = 0;
                 if (command.length > 3) {
                     first = [commandString characterAtIndex:1];
                     second = [commandString characterAtIndex:2];
                     third = [commandString characterAtIndex:3];
                 }
-                if (command.length > 5)
+                // The fourth letter is read whenever there is one: \msg_ has five characters.
+                if (command.length > 4)
                     fourth = [commandString characterAtIndex:4];
                 BOOL hasUnderlineAndColon = [commandString containsString:@"_"] && [commandString containsString:@":"];
                 TSSyntaxRole role;

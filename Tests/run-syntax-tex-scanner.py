@@ -23,6 +23,13 @@ if mutation == 'copy-shares-values':
         '    return (id)self;')
 elif mutation == 'yen-ignored':
     sources['TSSyntaxTeXScanner.m'] = sources['TSSyntaxTeXScanner.m'].replace('else if (c == texCharacter) {', "else if (c == '\\\\' && texCharacter) {")
+elif mutation == 'unclosed-argument-swallows':
+    old = '    if (notDone)\n        *location = start;\n'
+    assert sources['TSSyntaxTeXScanner.m'].count(old) == 2
+    sources['TSSyntaxTeXScanner.m'] = sources['TSSyntaxTeXScanner.m'].replace(old, '    (void)start;\n')
+elif mutation == 'stale-fourth-letter':
+    sources['TSSyntaxTeXScanner.m'] = sources['TSSyntaxTeXScanner.m'].replace(
+        '                first = second = third = fourth = 0;\n', '').replace('if (command.length > 4)\n                    fourth', 'if (command.length > 5)\n                    fourth')
 elif mutation == 'shares-commands':
     sources['TSSyntaxTeXOptions.m'] = sources['TSSyntaxTeXOptions.m'].replace(
         '_commandsWithUncheckedParameters = [[NSArray alloc] initWithArray:commands copyItems:YES];',
@@ -98,6 +105,24 @@ int main(void) { @autoreleasepool {
         Check([o.commandsWithUncheckedParameters isEqual:@[@"\\foo"]], "options and their copies keep the command they were given");
     Check(![spelling.commandsWithUncheckedParameters.firstObject isKindOfClass:NSMutableString.class] ||
           spelling.commandsWithUncheckedParameters.firstObject != name, "the options hold their own copy of the name");
+
+    // An argument of \footnote or \index that is not closed does not keep the rest of the text from being colored.
+    TSMutableSyntaxTeXOptions *notes = [TSMutableSyntaxTeXOptions new];
+    notes.colorsFootnote = YES; notes.colorsIndex = YES;
+    NSString *open = Tokens(notes, @"\\footnote{open \\emph{x}\n\\index[o \\ref{y} % c\n");
+    Check([open containsString:[NSString stringWithFormat:@"\\emph:%ld", (long)TSSyntaxRoleCommand]] &&
+          [open containsString:[NSString stringWithFormat:@"\\ref:%ld", (long)TSSyntaxRoleCommand]] &&
+          [open containsString:[NSString stringWithFormat:@"%% c:%ld", (long)TSSyntaxRoleComment]],
+          "what follows an unclosed argument of \\footnote or \\index is colored");
+    Check(![open containsString:[NSString stringWithFormat:@":%ld", (long)TSSyntaxRoleFootnote]] &&
+          ![open containsString:[NSString stringWithFormat:@":%ld", (long)TSSyntaxRoleIndex]], "an unclosed argument is not colored as one");
+    Check([Tokens(notes, @"\\footnote{closed} x\n") containsString:[NSString stringWithFormat:@"closed:%ld", (long)TSSyntaxRoleFootnote]],
+          "a closed argument is colored as before");
+    // \msg_ (five characters) is a message name; \msgs is not, whatever command came before it.
+    NSString *messages = Tokens(expl, @"\\msg_ \\msg_error:nnn \\msgs\n");
+    Check([messages hasPrefix:[NSString stringWithFormat:@"\\msg_:%ld \\msg_:%ld! \\msg_error:nnn:%ld \\msg_error:nnn:%ld! \\msgs:%ld",
+           (long)TSSyntaxRoleExplMessage, (long)TSSyntaxRoleNone, (long)TSSyntaxRoleExplMessage, (long)TSSyntaxRoleNone,
+           (long)TSSyntaxRoleCommand]], "\\msg_ is a message name, and \\msgs after a longer one is not");
 
     NSString *text = @"first line\nsecond line\nthird";
     NSRange lines = [scanner lineAlignedRangeForEditedRange:NSMakeRange(14, 2) inString:text];

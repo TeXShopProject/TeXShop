@@ -52,6 +52,11 @@ MUTATIONS = {
     # The spelling of the parameters of \footnote starts at the command, not at its argument.
     'footnote-spelling-from-command': (SCANNER, 'TSSkipParametersForSpelling(&scan, colorRange, &location);',
                                        'TSSkipParametersForSpelling(&scan, command, &location);'),
+    # An unclosed argument of \footnote or \index leaves the rest of the range uncolored, as it did before 2026-11-14.
+    'unclosed-argument-swallows': (SCANNER, '    if (notDone)\n        *location = start;\n}\n\n// The first arguments of a command',
+                                   '}\n\n// The first arguments of a command'),
+    # The fourth letter is read only from six characters on, as before 2026-11-14, so that \msg_ is not a message.
+    'fourth-letter-from-six': (SCANNER, 'if (command.length > 4)\n                    fourth', 'if (command.length > 5)\n                    fourth'),
     # The highlighter clears what it colors, taking the colors of other features with it.
     'highlighter-clears': ('Sources/Syntax/TSSyntaxHighlighter.m', '    __unsafe_unretained NSDictionary<NSAttributedStringKey, id> *roles[TSSyntaxRoleCacheSize] = {nil};',
                            '    [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:range];\n    __unsafe_unretained NSDictionary<NSAttributedStringKey, id> *roles[TSSyntaxRoleCacheSize] = {nil};'),
@@ -529,7 +534,8 @@ samples['latex-cr.tex'] = samples['latex.tex'].replace('\n', '\r')
 samples['japanese-yen.tex'] = samples['japanese.tex'].replace('\\', '¥')
 small = [name for name in samples if not name.startswith('real-')]
 # A large document: every sample many times over, a few hundred kilobytes.
-large = ''.join(samples[name] + '\n' for name in sorted(samples)) * 6
+# (quirks.tex, added with the fixes of 2026-11-14, is left out so that the large document stays as it was.)
+large = ''.join(samples[name] + '\n' for name in sorted(samples) if name != 'quirks.tex') * 6
 samples['large.tex'] = large
 
 VARIANTS = {
@@ -564,7 +570,7 @@ VARIANTS = {
 DETAILED = {('latex.tex', 'plain'), ('latex.tex', 'index-footnote'), ('latex.tex', 'spelling'), ('latex.tex', 'makeatletter'),
             ('expl3.tex', 'expl3'), ('japanese.tex', 'plain'), ('japanese-yen.tex', 'yen'), ('broken.tex', 'plain'),
             ('broken.tex', 'index-footnote'), ('pretext.ptx', 'xml'), ('rtl.tex', 'right-justify'), ('latex.tex', 'entry'),
-            ('latex.tex', 'block-cursor-center')}
+            ('latex.tex', 'block-cursor-center'), ('quirks.tex', 'expl3'), ('quirks.tex', 'index-footnote')}
 
 cases = []
 for sample in sorted(samples):

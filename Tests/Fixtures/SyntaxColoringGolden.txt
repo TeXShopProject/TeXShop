@@ -1,4 +1,4 @@
-# Syntax coloring golden record: 428 cases. Rewrite with run-syntax-coloring-golden.py --update.
+# Syntax coloring golden record: 468 cases. Rewrite with run-syntax-coloring-golden.py --update.
 == broken.tex plain whole
 fg 0-9 commandColor "\\footnote"
 fg 9-10 markerColorCurly "{"
@@ -48,11 +48,27 @@ sha256 broken.tex makeatletter whole 2f0c26fbcab58b2bef046cb8d8d83870912e846bef4
 == broken.tex index-footnote whole
 fg 0-9 commandColor "\\footnote"
 fg 9-10 markerColor "{"
-sha256 broken.tex index-footnote whole d3d1f91cbce4f8259e0c61d3ebae18f94bc98dd0d8cc4c109df80a2400559188
-sha256 broken.tex index-footnote-expl3 whole d3d1f91cbce4f8259e0c61d3ebae18f94bc98dd0d8cc4c109df80a2400559188
+fg 33-34 markerColorCurly "{"
+fg 41-47 commandColor "\\index"
+fg 47-48 markerColor "{"
+fg 48-206 indexColor "also unclosed\n\\cite[unclosed optional\n\\f"
+fg 206-207 markerColor "}"
+fg 208-209 markerColorSquare "]"
+fg 210-211 markerColorParen ")"
+fg 216-217 markerColor "$"
+fg 224-225 markerColor "&"
+fg 231-237 commandColor "\\\n\\%\\\\"
+fg 237-259 commentColor "%comment after escaped"
+fg 275-279 commandColor "\\cmd"
+fg 280-293 commentColor "% tab comment"
+fg 339-344 commandColor "\\verb"
+fg 345-346 commentColor "%"
+fg 383-385 commentColor "%\\"
+sha256 broken.tex index-footnote whole 16e73b8302e7cea4e6a40066db82fade9f4146b66a689cfe42cd8a2157cc2765
+sha256 broken.tex index-footnote-expl3 whole 16e73b8302e7cea4e6a40066db82fade9f4146b66a689cfe42cd8a2157cc2765
 sha256 broken.tex spelling whole 603aae5727cda1c2212bbf83a44af07ec8992c08c2425a1664533db5a632d8b0
 sha256 broken.tex spelling-exceptions whole 84c3f502257363faa7c32d9e231895fce55a1c8370e9876d047d5ebd3af6fad4
-sha256 broken.tex spelling-index-expl3 whole d3d1f91cbce4f8259e0c61d3ebae18f94bc98dd0d8cc4c109df80a2400559188
+sha256 broken.tex spelling-index-expl3 whole 16e73b8302e7cea4e6a40066db82fade9f4146b66a689cfe42cd8a2157cc2765
 sha256 broken.tex spelling-texaware whole 2f0c26fbcab58b2bef046cb8d8d83870912e846bef4229f02c642ec279c02055
 sha256 broken.tex fullwidth-foreground whole 2f0c26fbcab58b2bef046cb8d8d83870912e846bef4229f02c642ec279c02055
 sha256 broken.tex fullwidth-background whole 2f0c26fbcab58b2bef046cb8d8d83870912e846bef4229f02c642ec279c02055
@@ -467,7 +483,7 @@ sha256 japanese.tex right-justify whole 9bb1f2bc9008abec40a0658229c8530b91b87cec
 sha256 japanese.tex right-justify-any whole 9bb1f2bc9008abec40a0658229c8530b91b87ceca5848fc51991b7a98bee6bc1
 sha256 large.tex plain whole 66aceb6d08dfd4662ad9a76ca11f691c39774792279cfdb9bbb05f8502803dfa
 sha256 large.tex expl3 whole cc29f57cc824e16e34b8426cf45b143c7870e49b8b22cdabb5087862d6d348dd
-sha256 large.tex index-footnote-expl3 whole d3d1f91cbce4f8259e0c61d3ebae18f94bc98dd0d8cc4c109df80a2400559188
+sha256 large.tex index-footnote-expl3 whole 5149a3adbcc0c30ef31ba464f0835cfe668d08fedb56698ad77f1877ac5cf2fa
 sha256 large.tex spelling-exceptions whole 2da6ce2ae7d26e594b8fa073abd07e1291285d175d392b14f686ec4893d4c343
 sha256 large.tex xml whole 541bd720c839cbb1830104fd0608550d74d91d31c94de25120735afd2ba1020e
 sha256 latex-cr.tex plain whole ad4128bb3cc7aaebc01e424da2b0c767ce4ebc001121cdfb2ae5f9e10dcd6789
@@ -2689,6 +2705,96 @@ fg 595-603 tagXMLColor "/pretext"
 sha256 pretext.ptx xml whole fe369cfeb0db2f17003d3476bf4c2d21507e12e9e2d76c94e4c3a71e8e05dbe9
 sha256 pretext.ptx right-justify whole 445922931e02d084541eef84b0d4852af974156d89bce50cd3ff3a305416712e
 sha256 pretext.ptx right-justify-any whole 445922931e02d084541eef84b0d4852af974156d89bce50cd3ff3a305416712e
+sha256 quirks.tex plain whole 88f6f18061b16806232b268cf6b93dbeb8797c0c1414d709864e7f299fc66157
+== quirks.tex expl3 whole
+fg 0-13 commandColor "\\ExplSyntaxOn"
+fg 14-19 explColor5 "\\msg_"
+fg 20-25 commandColor "\\msgs"
+fg 26-32 explColor5 "\\msg_x"
+fg 33-45 explColor5 "\\msg_new:nnn"
+fg 46-60 explColor5 "\\msg_error:nnn"
+fg 66-71 commandColor "\\msgs"
+fg 76-81 explColor5 "\\msg_"
+fg 82-96 commandColor "\\ExplSyntaxOff"
+fg 97-106 commandColor "\\footnote"
+fg 106-107 markerColorCurly "{"
+fg 120-127 commandColor "\\textbf"
+fg 127-128 markerColorCurly "{"
+fg 132-133 markerColorCurly "}"
+fg 134-135 markerColor "$"
+fg 136-137 markerColor "$"
+fg 138-147 commentColor "% comment"
+fg 148-154 commandColor "\\index"
+fg 154-155 markerColorSquare "["
+fg 159-164 commandColor "\\emph"
+fg 164-165 markerColorCurly "{"
+fg 170-171 markerColorCurly "}"
+fg 172-177 commandColor "\\cite"
+fg 177-178 markerColorSquare "["
+fg 182-183 markerColorSquare "]"
+fg 183-184 markerColorCurly "{"
+fg 190-191 markerColorCurly "}"
+fg 198-202 commandColor "\\ref"
+fg 202-203 markerColorCurly "{"
+fg 204-205 markerColorCurly "}"
+nospell 14-19 "\\msg_"
+nospell 26-32 "\\msg_x"
+nospell 33-45 "\\msg_new:nnn"
+nospell 46-60 "\\msg_error:nnn"
+nospell 76-81 "\\msg_"
+sha256 quirks.tex expl3 whole 72cdda4940de3b530613f098f2a18694c2adf0a2e5d191bd102cce58be8a2f63
+sha256 quirks.tex expl3-makeatletter whole 72cdda4940de3b530613f098f2a18694c2adf0a2e5d191bd102cce58be8a2f63
+sha256 quirks.tex makeatletter whole 88f6f18061b16806232b268cf6b93dbeb8797c0c1414d709864e7f299fc66157
+== quirks.tex index-footnote whole
+fg 0-13 commandColor "\\ExplSyntaxOn"
+fg 14-18 commandColor "\\msg"
+fg 20-25 commandColor "\\msgs"
+fg 26-30 commandColor "\\msg"
+fg 33-37 commandColor "\\msg"
+fg 46-50 commandColor "\\msg"
+fg 66-71 commandColor "\\msgs"
+fg 76-80 commandColor "\\msg"
+fg 82-96 commandColor "\\ExplSyntaxOff"
+fg 97-106 commandColor "\\footnote"
+fg 106-107 markerColor "{"
+fg 120-127 commandColor "\\textbf"
+fg 127-128 markerColorCurly "{"
+fg 132-133 markerColorCurly "}"
+fg 134-135 markerColor "$"
+fg 136-137 markerColor "$"
+fg 138-147 commentColor "% comment"
+fg 148-154 commandColor "\\index"
+fg 154-155 markerColor "["
+fg 159-164 commandColor "\\emph"
+fg 164-165 markerColorCurly "{"
+fg 170-171 markerColorCurly "}"
+fg 172-177 commandColor "\\cite"
+fg 177-178 markerColor "["
+fg 182-184 markerColor "]{"
+fg 184-190 footnoteColor "closed"
+fg 190-191 markerColor "}"
+fg 198-202 commandColor "\\ref"
+fg 202-203 markerColorCurly "{"
+fg 204-205 markerColorCurly "}"
+sha256 quirks.tex index-footnote whole c20c39c3d0e8e2f49087ad07216c9d6146f2bde20147bb991b7ee7cb96595b70
+sha256 quirks.tex index-footnote-expl3 whole ded2e5137e8cb1ceb299b167e7dcb266d44f18f504fe180f0d5027338be6eae2
+sha256 quirks.tex spelling whole 67fc48bf8e575681fc1b2a5282e98b1c9c2fdefd383bce0e3f72d9722f49878c
+sha256 quirks.tex spelling-exceptions whole 704d4847a47b5bec0a7cf1f3064a24601188cfb3d2c9768f4184f1cc22b5d49a
+sha256 quirks.tex spelling-index-expl3 whole 227d4b14186bd710c9164e058bbd30045108d422cbd1402200d8f5654cc5e961
+sha256 quirks.tex spelling-texaware whole 72cdda4940de3b530613f098f2a18694c2adf0a2e5d191bd102cce58be8a2f63
+sha256 quirks.tex fullwidth-foreground whole 88f6f18061b16806232b268cf6b93dbeb8797c0c1414d709864e7f299fc66157
+sha256 quirks.tex fullwidth-background whole 88f6f18061b16806232b268cf6b93dbeb8797c0c1414d709864e7f299fc66157
+sha256 quirks.tex fullwidth-none whole 88f6f18061b16806232b268cf6b93dbeb8797c0c1414d709864e7f299fc66157
+sha256 quirks.tex entry whole f9f7804de71d63ebbb1c790fe0a45b83719adb01b271a73437e615ee308b3714
+sha256 quirks.tex always-highlight whole f44f2ad3d879394c13e01235d08e51b77d19e72c7cf6d3daeace97eb177f783d
+sha256 quirks.tex block-cursor-left whole 44d85a5f4894676075ce6bd71afff7ca116f8364b68f03221bbf0b03b8a033ea
+sha256 quirks.tex block-cursor-center whole 18028ffcecb2dce36343b03916ceb28c8152263fde2a27d02d6f5dee4218e332
+sha256 quirks.tex block-cursor-right whole 8861a57d2fd1c17b00e9ccd83564964b22941ffa8e519f39e7b091829608c606
+sha256 quirks.tex yen whole 6a5d684b6bae2d7b1bebc5342bd34ba3792cea977604768e63760c555135514c
+sha256 quirks.tex yen-expl3 whole 6a5d684b6bae2d7b1bebc5342bd34ba3792cea977604768e63760c555135514c
+sha256 quirks.tex xml whole 88f6f18061b16806232b268cf6b93dbeb8797c0c1414d709864e7f299fc66157
+sha256 quirks.tex right-justify whole 88f6f18061b16806232b268cf6b93dbeb8797c0c1414d709864e7f299fc66157
+sha256 quirks.tex right-justify-any whole 88f6f18061b16806232b268cf6b93dbeb8797c0c1414d709864e7f299fc66157
 sha256 real-tsapplescript.tex plain whole 519ed065e82f897417d2d4947107cb6b318f7438a583762940475d1c26a3756b
 sha256 real-tsapplescript.tex expl3 whole 93377d8738b1151125f16f0b7ee9a76918c99c7160f2521e6ad791442a7d4028
 sha256 real-tsapplescript.tex expl3-makeatletter whole 93377d8738b1151125f16f0b7ee9a76918c99c7160f2521e6ad791442a7d4028
@@ -2853,6 +2959,23 @@ sha256 pretext.ptx xml fix 3c71a815761bc2d9dadcb26dc2d2ee70dc2c7693212418188a34a
 sha256 pretext.ptx xml fix-end 6f644b1af486b681f27f34aa45a5212c11755a892c07947a011402bf78e24304
 sha256 pretext.ptx xml fix-empty 16f5905c74547f4c84ced90d9693e8e24dbad771325227e5e7d47a503763e079
 sha256 pretext.ptx plain off e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+sha256 quirks.tex plain range 297e0d28ca307daf278736764dcdeac95774f6439784b9cbefa2a7c464c24627
+sha256 quirks.tex plain fix cb92f3777f7c9e1ff98c3767fe7de26e5c4063aa1be1db6562bf77517fb5d3f8
+sha256 quirks.tex plain fix-end acb9d36884664afc27e20f2b8f386705d2c6138f1dc744be302702f906c2d5cf
+sha256 quirks.tex plain fix-empty 71a92dded8e39b16ebe2fb404f82525ea56755dedcbc164f3b252f934b774d8c
+sha256 quirks.tex expl3 range d3381edc2745240c94c4c42521f30b83ef2f1306e7e5ebb7c70dc5f9b90c0b25
+sha256 quirks.tex expl3 fix cb92f3777f7c9e1ff98c3767fe7de26e5c4063aa1be1db6562bf77517fb5d3f8
+sha256 quirks.tex expl3 fix-end acb9d36884664afc27e20f2b8f386705d2c6138f1dc744be302702f906c2d5cf
+sha256 quirks.tex expl3 fix-empty 4660ef022f76c4edfdbb0466b20eb07fc55e728ac81e7b02374ef6dbfd137a13
+sha256 quirks.tex index-footnote range 297e0d28ca307daf278736764dcdeac95774f6439784b9cbefa2a7c464c24627
+sha256 quirks.tex index-footnote fix 336cd184338b789ac02da250c1b25c0a9a61faf09b30f627022aacac1aef8464
+sha256 quirks.tex index-footnote fix-end 1e88aac514cba9094fb504ce88f6dcbcd4fd40d4e6755e7ca5e179c87da421a9
+sha256 quirks.tex index-footnote fix-empty 71a92dded8e39b16ebe2fb404f82525ea56755dedcbc164f3b252f934b774d8c
+sha256 quirks.tex xml range 297e0d28ca307daf278736764dcdeac95774f6439784b9cbefa2a7c464c24627
+sha256 quirks.tex xml fix cb92f3777f7c9e1ff98c3767fe7de26e5c4063aa1be1db6562bf77517fb5d3f8
+sha256 quirks.tex xml fix-end acb9d36884664afc27e20f2b8f386705d2c6138f1dc744be302702f906c2d5cf
+sha256 quirks.tex xml fix-empty 71a92dded8e39b16ebe2fb404f82525ea56755dedcbc164f3b252f934b774d8c
+sha256 quirks.tex plain off e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 sha256 rtl.tex plain range 2a2e54e557cbf14f6a804838057529f86c1fbb5c7be9ef0ad429f27bfb7f5e91
 sha256 rtl.tex plain fix b6235b1443e3979eb7a443a1e10ecdf19b029b733554e0ad25bf5d0375dececc
 sha256 rtl.tex plain fix-end f6f230cb29f1fba15e4cef6ec7cdec512b9f298c121d71f06672368750954adb
