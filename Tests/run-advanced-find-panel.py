@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""The Advanced Find panel of stage 2 (Tests/AdvancedFindPanel.m): the controller on real text views, the routing of the
-Find menu, the highlights drawn by the real TSLayoutManager (plan §6 a-e, in pixels), and the panel in all 12 languages.
+"""The Advanced Find panel (Tests/AdvancedFindPanel.m): the controller on real text views, the routing of the
+Find menu, the highlights drawn by the real TSLayoutManager (in pixels), and the panel in all 12 languages.
 Nothing is displayed; the defaults stay in memory and the pasteboards are unique.
 
 --image DIR writes the panel, its options and the highlights, light and dark, in English and Japanese
@@ -225,7 +225,7 @@ def main():
                     if all(r.returncode == 0 for r in results):
                         sys.exit(f'FAIL: mutation {name!r} was not detected')
                     print(f'PASS: detected mutation {name!r}')
-    print('PASS: Advanced Find panel stage 2')
+    print('PASS: Advanced Find panel')
 
 
 if __name__ == '__main__':

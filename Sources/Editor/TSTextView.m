@@ -2954,7 +2954,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 #pragma mark ========Advanced Find Panel==========
 
 // With the Advanced Find panel (FindMethod 3) the Find menu's actions go to it instead of NSTextView's find; the menu
-// itself is not changed, so the setting takes effect without a restart (plan §5).
+// itself is not changed, so the setting takes effect without a restart.
 - (nullable TSAdvancedFindController *)advancedFindController
 {
 	if ([SUD integerForKey:FindMethodKey] != TSFindMethodAdvancedPanel)

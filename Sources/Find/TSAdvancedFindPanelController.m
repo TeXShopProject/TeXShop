@@ -169,7 +169,6 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     NSButton *more = [NSButton buttonWithImage:moreImage target:self action:@selector(showOptions:)];
     more.controlSize = NSControlSizeSmall;
     more.toolTip = TSLocalized(@"AdvancedFind.MoreOptions", @"More Options");
-    // The regular expression cheat sheet's "?" after "Regular expression" comes with stage 6.
     NSStackView *row = [NSStackView stackViewWithViews:@[self.regexBox, self.ignoreCaseBox, self.inSelectionBox]];
     row.spacing = 16;
     [row addView:more inGravity:NSStackViewGravityTrailing];
@@ -179,7 +178,6 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
 /// As in CotEditor: the actions on all matches on the left, those on the current match on the right, ending with
 /// previous / next. A button with ▾ has more actions of its kind: Select All and Remove Highlights under Highlight
 /// All, Replace (without finding on) under Replace & Find. Return in the find field is "Next".
-/// Stage 4 puts Find All, with the list of matches, in Highlight All's place and moves Highlight All under its ▾.
 - (NSView *)makeButtonRow
 {
     NSMenu *allMenu = [[NSMenu alloc] initWithTitle:@""];
@@ -321,8 +319,7 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     [self loadStrings];
 }
 
-/// The engine's error on the find pattern, in the line under the options (the coloring of the fields and its notes
-/// come with stage 6).
+/// The engine's error on the find pattern, in the line under the options.
 - (void)validatePattern
 {
     TSAdvancedFindSettings *settings = self.findController.settings;

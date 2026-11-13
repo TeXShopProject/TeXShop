@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The find method after launch (plan §5): the production launch branch of TSAppDelegate and
+"""The find method after launch: the production launch branch of TSAppDelegate and
 -[TSPreferences registerFactoryDefaults] (its setPersistentDomain:) are taken verbatim and run on in-memory defaults
 with the shipped FactoryDefaults.plist; the final value is checked for every kind of user, for an explicit reset and
 for every shipped profile. Nothing is displayed.

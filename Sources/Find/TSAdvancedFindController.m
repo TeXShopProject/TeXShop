@@ -243,7 +243,7 @@ NSString *TSAdvancedFindPatternFindingText(NSString *text, TSRegexFindOptions op
     return YES;
 }
 
-/// The matches of `find`. Every action searches the text again (the cache of matches is stage 5, plan §4).
+/// The matches of `find`. Every action searches the text again.
 - (NSArray<NSValue *> *)matchesOfFind:(TSRegexTextFind *)find inTextView:(NSTextView *)textView
 {
     return [find matchRangesWithCancellation:nil] ?: @[];
@@ -308,7 +308,7 @@ NSString *TSAdvancedFindPatternFindingText(NSString *text, TSRegexFindOptions op
     return done;
 }
 
-/// Replace All in one step on the main thread, undone at once (the background task with its progress sheet is stage 5).
+/// Replace All in one step on the main thread, undone at once.
 - (BOOL)replaceAllInTextView:(NSTextView *)textView inSelection:(BOOL)inSelection
 {
     TSRegexTextFind *find = [self textFindForTextView:textView inSelection:inSelection quiet:NO];
