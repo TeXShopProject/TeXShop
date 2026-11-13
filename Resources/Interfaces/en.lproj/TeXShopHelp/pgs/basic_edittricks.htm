@@ -12,20 +12,10 @@
 		<div id="content_border">
 
 <p> Double clicking on a bracket of the form (, {, [, ], }, or ) will select everything between that bracket and its matching bracket. Double clicking on a bracket with the option key down will select the bracket alone.</p>
-<p> TeXShop has a new Find panel by Isao Sonobe. This panel supports regular expressions. Users can switch
-between this panel and the original one in Settings. The Find panel depends on OgreKit, a Cocoa framework
-for handling regular expressions by Sonobe. See</p>
-<dl>
-<dd> <dd><a href="http://www-gauge.scphys.kyoto-u.ac.jp/~sonobe/OgreKit">http://www-gauge.scphys.kyoto-u.ac.jp/~sonobe/OgreKit</a>
-</dl>
-
-<p> OgreKit is distributed using a slightly modified version of the BSD license; this license can be found
-in the TeXShop source code distribution. OgreKit requires Panther, so the new panel will only appear on
-machines running system 10.3 or later.</p>
-<p> There are many nice features of this new Find panel. OgreKit modifies the "Find" submenu of the TeXShop
-edit menu, replacing it with a more extensive menu. The Find panel presents buttons controlling how it will
-find words; the settings of these buttons will be remembered from session to session. Adjust them
-until Find words as expected and then relax.</p>
+<p> The Advanced Find Panel, chosen in Settings &gt; Editor &gt; Find Panel, finds and replaces with regular expressions. New users start with it. Find All lists every match in the panel with its line number; clicking a row selects the match. Highlight All, Select All and Remove Highlights are in the menu of Find All. Replace All is undone with a single Undo. The options under the fields and behind the button with three dots are remembered from session to session.</p>
+<p> The panel uses the regular expressions of ICU. A brace that is not part of a repetition must be written \{ or \}. In the replacement, $1, $2, ... are the groups and \$ is a dollar sign; the OgreKit syntax, with \1, \2, ... and a literal $, can be chosen among the options. A backslash in the replacement is written twice.</p>
+<p> Edit Multiple Replace in the Find submenu keeps sets of find and replace pairs, applied in order with a single Undo. The sets are files in ~/Library/TeXShop/MultipleReplace, in the JSON format of CotEditor's replacement definitions. The Multiple Replace submenu applies a set to the whole text at once.</p>
+<p> The OgreKit Find Panel by Isao Sonobe remains available as a legacy choice in Settings; switching to or from it requires restarting TeXShop. The TeXShop manual describes the Advanced Find Panel in detail.</p>
 
 		<P>Groups of lines can be commented out using a menu command, and later activated again. Groups of lines can be indented with a menu command, and later moved back. If a line starts with a series of tabs or spaces, new lines will start at the same position until the behavior is cancelled by backspacing. This behavior was added to TeXShop by Nicol&aacute;s Ojeda B&auml;r in Argentina, who can be reached at <a href="mailto:lojedaortiz@interlink.com.ar">lojedaortiz@interlink.com.ar</a>. Thanks!</P>
 
