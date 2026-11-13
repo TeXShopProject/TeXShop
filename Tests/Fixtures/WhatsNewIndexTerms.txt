@@ -427,6 +427,7 @@ correct
 correction
 correctly
 corresponding
+coteditor
 count
 country
 couple
@@ -452,7 +453,6 @@ critical
 crlf
 cropbox
 cropped
-crucial
 ctan
 curiously
 curly
