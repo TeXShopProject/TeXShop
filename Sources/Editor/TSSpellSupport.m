@@ -487,12 +487,21 @@ static NSView *TSChangeAllAccessory(id target, NSTextField * __strong *field, NS
     return word;
 }
 
-+ (void)showSpellingPanelForTextView:(NSTextView *)tv mask:(TSSpellMask *)mask openPanel:(void (^)(void))openPanel
++ (void)showSpellingPanelForTextView:(NSTextView *)tv mask:(TSSpellMask *)mask hidePanel:(void (^)(void))hidePanel
 {
-    NSRange before = tv.selectedRange;
+    NSPanel *panel = [NSSpellChecker sharedSpellChecker].spellingPanel;
+    // While the panel is shown, the menu item reads Hide Spelling and Grammar.
+    if (panel.isVisible) {
+        hidePanel();
+        return;
+    }
+    // The panel is shown here, not by the text view's own showGuessPanel:. That
+    // one also starts the system's search, which does not know the rules, and
+    // in a long text, or when grammar is checked too, carries on after it has
+    // returned. It would then select its own finding in place of the one below,
+    // and show it in the panel.
     [self installChangeAllButton];
-    openPanel();                        // shows the panel; the system also selects "its" first misspelling
-    tv.selectedRange = before;          // undo that markup-blind search
+    [panel orderFront:nil];
     NSString *word = [self findNextMisspellingInTextView:tv mask:mask];
 
     // Do not schedule another search with a captured mask: the document or
