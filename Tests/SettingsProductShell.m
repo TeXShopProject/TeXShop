@@ -183,6 +183,19 @@ int main(int argc,char **argv){@autoreleasepool{
   if(original)[TSIsolatedAppKitDefaults setObject:original forKey:key];else[TSIsolatedAppKitDefaults removeObjectForKey:key];
   [owner updateSettingsCategory:category fromDefaults:TSIsolatedAppKitDefaults];
  }
+ // Prerelease updates are refreshed from defaults and do not depend on automatic checks.
+ {
+  NSButton *prerelease=[owner valueForKey:@"sparklePrereleaseButton"];Check(prerelease!=nil,@"The prerelease switch has its owner");
+  id originalPrerelease=[TSIsolatedAppKitDefaults objectForKey:SparklePrereleaseUpdatesKey],originalAutomatic=[TSIsolatedAppKitDefaults objectForKey:SparkleAutomaticUpdateKey];
+  for(NSNumber *on in @[@YES,@NO])for(NSNumber *automatic in @[@YES,@NO]){
+   [TSIsolatedAppKitDefaults setBool:on.boolValue forKey:SparklePrereleaseUpdatesKey];[TSIsolatedAppKitDefaults setBool:automatic.boolValue forKey:SparkleAutomaticUpdateKey];
+   [owner updateSettingsCategory:TSSettingsCategoryUpdates fromDefaults:TSIsolatedAppKitDefaults];
+   Check((prerelease.state==NSControlStateValueOn)==on.boolValue && prerelease.enabled,[NSString stringWithFormat:@"Prerelease switch shows %@ and stays enabled with automatic checks %@",on,automatic]);
+  }
+  if(originalPrerelease)[TSIsolatedAppKitDefaults setObject:originalPrerelease forKey:SparklePrereleaseUpdatesKey];else[TSIsolatedAppKitDefaults removeObjectForKey:SparklePrereleaseUpdatesKey];
+  if(originalAutomatic)[TSIsolatedAppKitDefaults setObject:originalAutomatic forKey:SparkleAutomaticUpdateKey];else[TSIsolatedAppKitDefaults removeObjectForKey:SparkleAutomaticUpdateKey];
+  [owner updateSettingsCategory:TSSettingsCategoryUpdates fromDefaults:TSIsolatedAppKitDefaults];
+ }
  NSPopUpButton *dictionary=[owner valueForKey:@"dictionaryPopup"];
  NSArray *dictionaryTitles=dictionary.itemTitles;
  [dictionary addItemWithTitle:@"Unavailable dictionary fixture"];

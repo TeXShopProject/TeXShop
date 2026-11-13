@@ -493,6 +493,8 @@ extern NSString *ConsoleWindowFixedPosKey;
 extern NSString *ConsoleWindowPosModeKey;
 extern NSString *SparkleAutomaticUpdateKey;
 extern NSString *SparkleIntervalKey;
+extern NSString *SparklePrereleaseUpdatesKey;
+extern NSString *SparklePrereleaseForcedVersionKey;
 extern NSString *reverseSyncRedKey;
 extern NSString *reverseSyncGreenKey;
 extern NSString *reverseSyncBlueKey;

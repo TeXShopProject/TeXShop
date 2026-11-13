@@ -4,7 +4,13 @@ TeXShop 5.59 uses Sparkle 2.10.1, with the framework kept in `Frameworks/Sparkle
 
 The feed is https://texshop.app/appcast.xml. It is part of the website deployed from `website/` by the manual **Publish website** GitHub Actions workflow. Edit website sources in this repository, commit and push after review, then run that workflow. GitHub Pages must be configured to use GitHub Actions. Site URL: https://texshop.app/.
 
-The feed contains released builds only. A cached legacy feed URL is overridden by the updater delegate so the installed application's feed remains authoritative.
+The feed contains releases and, on the `prerelease` channel, the newest beta. A cached legacy feed URL is overridden by the updater delegate so the installed application's feed remains authoritative.
+
+## Prereleases
+
+Settings › Updates › “Update to prereleases when available” lets the updater see items marked `<sparkle:channel>prerelease</sparkle:channel>` (`allowedChannelsForUpdater:` in `TSSparkleController.m`). It applies to automatic and manual checks alike. It is off by default; the first launch of each beta build (a build version with a letter, such as `5.60b11`) turns it on, and the user may turn it off again for that beta. Every application that reads this feed uses Sparkle 2, so items on a channel are invisible to applications that have not opted in. Sparkle orders `5.59 < 5.60b10 < 5.60b11 < 5.60 < 5.60.1`, so a beta tester receives the release, and turning the switch off never downgrades.
+
+Prepare a beta with `--prerelease NOTES.md`, where the notes are the Markdown body of its GitHub release. The application must have a short version such as `5.60 beta-11` and the build version `5.60b11`; the archive is `TeXShop-5.60-beta-11.zip` under the tag `v.5.60-beta.11`, and the item links to that GitHub release. The newest beta replaces the previous one in the feed, and a release removes the betas of its own version. The first beta that contains the setting has to be installed by hand; later betas reach it automatically.
 
 ## Signing
 

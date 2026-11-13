@@ -40,8 +40,7 @@
       "reference_sha256": "d4f560fc245793ed6b40c8bfaca053dbc83768b7d13c396a015dbe02b781e308"
     },
     "updates": {
-      "height": 225.0,
-      "reference_sha256": "af58af3412011d845d0bac857ae8fc2c9376a28f9ae04aa3a937b4bd9f661fa9"
-    }
+      "height": 360.0,
+      "reference_sha256": "af58af3412011d845d0bac857ae8fc2c9376a28f9ae04aa3a937b4bd9f661fa9", "note": "2026-11-13: the user-approved Updates to Include group (+79: heading, one 38-point row, 18-point group spacing) and the line with the last check and Check for Updates (+56: 38-point row, 18-point spacing) were added to the 225-point lab capture."}
   }
 }
