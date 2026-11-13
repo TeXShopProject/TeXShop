@@ -271,6 +271,8 @@ static void TestPanelFields(void)
     [replace insertText:@"$3" replacementRange:NSMakeRange(replace.string.length, 0)];
     RunLoopOnce();
     Check(UnderlineAt(replace, 4) != nil, @"typing $3 in the replace field marks it");
+    Check([panel.statusField.stringValue isEqualToString:[NSString stringWithFormat:@"%@ %@", hexMessage, more]],
+          [NSString stringWithFormat:@"and the message line counts its mark at once (%@)", panel.statusField.stringValue]);
     // An error of the engine comes first, in red.
     settings.findString = @"(a";
     [panel reloadFromSettings];
