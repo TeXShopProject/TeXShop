@@ -1479,11 +1479,54 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 
 #endif
 
+- (IBAction)sparklePrereleaseUpdates:(NSButton *)sender
+{
+    [SUD setBool:sender.state == NSControlStateValueOn forKey:SparklePrereleaseUpdatesKey];
+#ifdef USESPARKLE
+    [[TSSparkleController sharedUpdater] resetUpdateCycleAfterShortDelay];
+#endif
+}
 
+- (IBAction)checkForUpdatesFromSettings:(id)sender
+{
+#ifdef USESPARKLE
+    [[TSSparkleController sharedController] checkForUpdates:sender];
+#endif
+}
 
+- (void)sparkleStatusControlsDidLoad
+{
+#ifdef USESPARKLE
+    SPUUpdater *updater = [TSSparkleController sharedUpdater];
+    if (updater != nil && self.sparkleCheckNowButton != nil)
+        [self.sparkleCheckNowButton bind:NSEnabledBinding toObject:updater withKeyPath:@"canCheckForUpdates" options:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TSSparkleUpdateCheckDidFinishNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sparkleUpdateCheckDidFinish:) name:TSSparkleUpdateCheckDidFinishNotification object:nil];
+#endif
+    [self refreshSparkleLastCheck];
+}
 
+- (void)sparkleUpdateCheckDidFinish:(NSNotification *)notification
+{
+    [self refreshSparkleLastCheck];
+}
 
-
+- (void)refreshSparkleLastCheck
+{
+    if (self.sparkleLastCheckField == nil) return;
+    NSDate *date = nil;
+#ifdef USESPARKLE
+    date = [TSSparkleController sharedUpdater].lastUpdateCheckDate;
+#endif
+    NSBundle *bundle = [NSBundle mainBundle];
+    NSString *when;
+    if (date != nil)
+        when = [NSDateFormatter localizedStringFromDate:date dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterShortStyle];
+    else
+        when = [bundle localizedStringForKey:@"catalog.updates.2.0.never" value:@"Never" table:@"SettingsCategories"];
+    NSString *format = [bundle localizedStringForKey:@"catalog.updates.2.0.last" value:@"Last checked: %@" table:@"SettingsCategories"];
+    self.sparkleLastCheckField.stringValue = [NSString stringWithFormat:format, when];
+}
 
 /*" This method is connected to the textField that holds the tex script command. It is located on the TeX pane.
 "*/
