@@ -9,6 +9,7 @@
 #import "globals.h"
 #import "TSPreferenceEffects.h"
 #import "TSColorSupport.h"
+#import "TSKeyBindingsController.h"
 #import "TSPreferences+LiveSettings.h"
 #import "TSWindowManager.h"
 #import "TSSettingsWindowController.h"
@@ -29,13 +30,7 @@ static TSMemoryDefaults *memory;
 @implementation TSSpellSupport
 + (void)preferencesDidChange {}
 @end
-static NSUInteger bindingOpens, helpOpens, completionOpens;
-@interface TSAutoCompletionListEditor:NSObject
-- (void)openAutoCompletionListEditor:(id)sender;
-@end
-@implementation TSAutoCompletionListEditor
-- (void)openAutoCompletionListEditor:(id)sender { bindingOpens++; }
-@end
+static NSUInteger helpOpens, completionOpens;
 @interface HelpDocuments:NSObject
 - (void)displayCommentLines:(id)sender;
 @end
@@ -126,7 +121,7 @@ int main(int argc,char **argv){@autoreleasepool{
   }
   Check([actual isEqual:contract[category]],[NSString stringWithFormat:@"Category group order %@: %@",category,actual]);
  }
- NSDictionary *controlCategories=@{@"settings.hidden-settings-help":@"general",@"settings.926":@"keyboard",@"settings.cell.842":@"keyboard",@"settings.cell.843":@"keyboard",@"settings.edit-bindings":@"keyboard",@"settings.edit-completion":@"keyboard",@"settings.o1v-YF-ekd":@"spelling",@"settings.ts-edit-spelling":@"spelling",@"settings.cell.teg-0p-Q8J":@"spelling"};
+ NSDictionary *controlCategories=@{@"settings.hidden-settings-help":@"general",@"settings.926":@"keyboard",@"settings.cell.842":@"keyboard",@"settings.cell.843":@"keyboard",@"settings.edit-completion":@"keyboard",@"settings.o1v-YF-ekd":@"spelling",@"settings.ts-edit-spelling":@"spelling",@"settings.cell.teg-0p-Q8J":@"spelling"};
  for(NSString *identifier in controlCategories)Check(Find([panes[Required(controlCategories[identifier])] view],identifier)!=nil,[@"Planned control category: " stringByAppendingString:identifier]);
  Check(HeadingCount(Find([panes[@"documents"] view],@"group.encoding"))==1 && HeadingCount(Find([panes[@"documents"] view],@"group.saving"))==1,@"Documents has one heading for Encoding and one for Saving");
  Check([Find([panes[@"documents"] view],@"settings.5xa-en-KkV") isDescendantOf:Find([panes[@"documents"] view],@"group.encoding")],@"Encoding dialog option belongs to Encoding");
@@ -154,12 +149,14 @@ int main(int argc,char **argv){@autoreleasepool{
  NSString *bindingsTitle=[bundle localizedStringForKey:@"group.bindings.title" value:nil table:@"SettingsCategories"];
  Check([bindings.accessibilityLabel isEqual:bindingsTitle],@"Bindings heading follows approved catalog");
  ApplicationDelegate *appDelegate=[ApplicationDelegate new];NSApp.delegate=appDelegate;
- for(NSString *identifier in @[@"settings.edit-bindings",@"settings.edit-completion",@"settings.hidden-settings-help"]) {
+ for(NSString *identifier in @[@"settings.edit-completion",@"settings.hidden-settings-help"]) {
   NSButton *button=after[identifier];Check(button!=nil,@"Editor/help button exists");
   Check([button sendAction:button.action to:button.target],@"Editor/help action reaches its intended owner");
  }
- Check(bindingOpens==1 && completionOpens==1 && helpOpens==1,@"All moved editor/help actions route once without a visible panel");
- Check(owner.keyBindingEditor!=nil && owner.settingsHelpDocuments!=nil,@"Lazily created helper owners are retained");
+ Check(completionOpens==1 && helpOpens==1,@"All moved editor/help actions route once without a visible panel");
+ Check(owner.settingsHelpDocuments!=nil,@"Lazily created helper owners are retained");
+ // Key bindings are edited in the list in the Key Bindings group, not in a window.
+ Check(after[@"settings.edit-bindings"]==nil && owner.keyBindings!=nil && [Find(bindings,@"settings.key-bindings") isEqual:owner.keyBindings.view] && [owner.keyBindings.view isDescendantOf:bindings] && Find(bindings,@"keybindings.table")!=nil,@"The key binding list is embedded in the Key Bindings group");
  // Dispatch through the migrated control and original typed owner, using the
  // production action body. A copied cell or lost target must fail here.
  NSDictionary *writes=@{@"839":@"SyntaxColoringEnabled",@"cgA-o7-Bdw":@"MakeatletterEnabled",@"f1k-jx-ley":@"expl3SyntaxColoring",@"840":@"ParensMatchingEnabled",@"841":@"SpellCheckEnabled",@"842":@"AutoCompleteEnabled",@"843":@"BibDeskCompletion",@"844":@"AcceptFirstMouse",@"845":@"LineNumberEnabled",@"846":@"RightJustify",@"XoX-gZ-pO3":@"TagMenuInMenuBar",@"PhR-Vr-jce":@"AutomaticSpellingCorrectionEnabled",@"CPb-hk-Gqb":@"EditorCanAddBrackets",@"teg-0p-Q8J":@"TurnOffCommandSpellCheck",@"3eF-XA-ahc":@"TurnOffParameterSpellCheck",@"8Wq-gx-FqO":@"TurnOffCommentSpellCheck"};

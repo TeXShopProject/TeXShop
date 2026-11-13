@@ -39,9 +39,7 @@ parser.add_argument('--images')
 parser.add_argument('--only')
 parser.add_argument('--focus-rings', action='store_true')
 args = parser.parse_args()
-editor_source = root / 'Sources/Panels/TSAutoCompletionListEditor.m'
 macro_source = root / 'Sources/Macros/TSMacroEditor.m'
-assert '[self layoutEditorWindow];' in editor_source.read_text(), 'The application lays out the key binding editor as the check does'
 assert '[self installShortcutStatus];\n        [self installListControls];\n        [self installPlaceholderNote];\n        [self layoutDialogButtons];' in macro_source.read_text(), \
     'The application lays out the macro editor as the check does'
 
@@ -51,8 +49,6 @@ def strings_for(lproj):
 
 with tempfile.TemporaryDirectory(prefix='texshop-label-fit-') as tmp:
     tmp = Path(tmp)
-    editor = editor_source.read_text()
-    (tmp / 'EditorLayout.inc').write_text(editor[editor.index('// BEGIN editor layout'):editor.index('// END editor layout')])
     macro = macro_source.read_text()
     (tmp / 'MacroEditorLayout.inc').write_text(macro[macro.index('- (void)installShortcutStatus'):macro.index('- (void)collectShortcutCandidates:')])
     entries = []

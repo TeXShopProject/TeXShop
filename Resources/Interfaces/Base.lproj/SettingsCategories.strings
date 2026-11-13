@@ -294,9 +294,11 @@
 "catalog.console.1.1.title" = "Console Resize";
 "group.bindings.title" = "Key Bindings";
 "catalog.keyboard.0.0.title" = "Use key bindings (default for new documents)";
-"catalog.keyboard.0.1.title" = "Key Bindings Editor…";
+"catalog.keyboard.0.0.note" = "Replaces a typed character with a set text, such as { with {}.";
+"catalog.keyboard.0.1.title" = "Key Binding List";
 "group.completion.title" = "Command Completion";
 "catalog.keyboard.1.0.title" = "Completion trigger";
+"catalog.keyboard.1.0.note" = "Completes the command you are typing; press the key again for the next candidate.";
 "catalog.keyboard.1.1.title" = "BibDesk Completions";
 "catalog.keyboard.1.1.note" = "Offers citation keys from BibDesk as completions inside \\cite and similar commands.";
 "catalog.keyboard.1.2.title" = "Edit Command Completion…";

@@ -337,7 +337,7 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
         if (parent != nil && pane != nil) {
             NSScrollView *scroll = [NSScrollView new];
             scroll.translatesAutoresizingMaskIntoConstraints = NO;
-            scroll.hasVerticalScroller = NO; scroll.hasHorizontalScroller = YES;
+            scroll.hasVerticalScroller = YES; scroll.hasHorizontalScroller = YES;
             scroll.automaticallyAdjustsContentInsets = NO;
             scroll.autohidesScrollers = YES;
             self.keyboardScroll = scroll;
@@ -347,17 +347,19 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
             scroll.documentView = document;
             [parent addSubview:scroll];
             NSLayoutConstraint *width = [document.widthAnchor constraintEqualToAnchor:scroll.contentView.widthAnchor];
+            // The pane fills a taller window, where its two lists share the extra
+            // height, and scrolls in a shorter one, where they keep their minimum.
             NSLayoutConstraint *height = [document.heightAnchor constraintEqualToAnchor:scroll.contentView.heightAnchor];
-            // Keep all input groups and the list's minimum visible without a
-            // second vertical scroller. Width wrapping participates in fitting.
+            height.priority = 200;
             width.priority = NSLayoutPriorityDefaultHigh;
             [NSLayoutConstraint activateConstraints:@[
                 [scroll.leadingAnchor constraintEqualToAnchor:self.contentScroll.leadingAnchor],
                 [scroll.trailingAnchor constraintEqualToAnchor:self.contentScroll.trailingAnchor],
-                // The Keyboard pane does not scroll vertically; keep it below the toolbar.
+                // Like the other panes, the Keyboard pane scrolls below the toolbar.
                 [scroll.topAnchor constraintEqualToAnchor:parent.safeAreaLayoutGuide.topAnchor],
                 [scroll.bottomAnchor constraintEqualToAnchor:self.contentScroll.bottomAnchor],
                 [document.widthAnchor constraintGreaterThanOrEqualToConstant:700],
+                [document.heightAnchor constraintGreaterThanOrEqualToAnchor:scroll.contentView.heightAnchor],
                 width, height,
                 [pane.leadingAnchor constraintEqualToAnchor:document.leadingAnchor],
                 [pane.trailingAnchor constraintEqualToAnchor:document.trailingAnchor],
@@ -365,7 +367,7 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
                 [pane.bottomAnchor constraintEqualToAnchor:document.bottomAnchor]]];
         }
     }
-    CGFloat minimum = keyboard && self.keyboardPane != nil ? MAX(560, self.keyboardPane.view.fittingSize.height + 28) : 560;
+    CGFloat minimum = 560;
     NSSize minSize = self.window.contentMinSize; minSize.height = minimum;
     self.window.contentMinSize = minSize;
     NSSize size = self.window.contentView.bounds.size;
@@ -395,6 +397,12 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
     [self.contentScroll layoutSubtreeIfNeeded];
     [self.contentScroll.contentView scrollToPoint:NSMakePoint(0, -self.contentScroll.contentInsets.top)];
     [self.contentScroll reflectScrolledClipView:self.contentScroll.contentView];
+    NSScrollView *keyboard = self.keyboardScroll;
+    if (keyboard != nil && !keyboard.hidden) {
+        [keyboard layoutSubtreeIfNeeded];
+        [keyboard.contentView scrollToPoint:NSZeroPoint];
+        [keyboard reflectScrolledClipView:keyboard.contentView];
+    }
 }
 - (void)synchronizeSidebarSelection
 {

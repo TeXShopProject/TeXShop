@@ -173,7 +173,8 @@
     "Labels",
     "Macros",
     "Page %@",
-    "Source"
+    "Source",
+    "note"
    ],
    "MainMenu.nib": [
     "Description",
@@ -238,6 +239,7 @@
     "Help",
     "Info: %@",
     "Labels",
+    "Tab",
     "Updates",
     "Variant"
    ],
@@ -325,7 +327,8 @@
   "ro": {
    "Localizable.strings": [
     "Editor",
-    "General"
+    "General",
+    "Tab"
    ],
    "MacroEditor.nib": [
     "Separator"

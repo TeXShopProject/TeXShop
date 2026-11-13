@@ -15,7 +15,6 @@ production = {
     'Sources/App/HelpDocuments.m': 'if (packageHelpPanel) TSLayoutDialogButtonRow(packageHelpPanel);\n\tif (openStyleFilePanel) TSLayoutDialogButtonRow(openStyleFilePanel);',
     'Sources/App/TSStationery.m': 'if (stationeryWindow) TSLayoutDialogButtonRow(stationeryWindow);',
     'Sources/Editor/TextFinder.m': 'TSLayoutBottomActionRow([findTextField window]);',
-    'Sources/Panels/TSAutoCompletionListEditor.m': '[self layoutEditorWindow];',
 }
 for path, call in production.items():
     text = (root / path).read_text(encoding='latin-1' if path.endswith('TextFinder.m') else 'utf-8', errors='replace')
@@ -37,8 +36,6 @@ for lproj in sorted((root / 'Resources/Interfaces').glob('*.lproj')):
 with tempfile.TemporaryDirectory(prefix='texshop-button-spacing-') as tmp:
     tmp = Path(tmp)
     binary = tmp / 'ButtonSpacing'
-    editor = (root / 'Sources/Panels/TSAutoCompletionListEditor.m').read_text()
-    (tmp / 'EditorLayout.inc').write_text(editor[editor.index('// BEGIN editor layout'):editor.index('// END editor layout')])
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-framework', 'AVKit', '-I', str(tmp), '-I', str(root / 'Tests'), *include_args(root),
                     str(root / 'Tests/ButtonSpacing.m'), str(root / 'Sources/Windows/TSDialogButtonLayout.m'), str(root / 'Sources/Editor/TSMarkMenu.m'), '-o', str(binary)], check=True)
     compiled = []

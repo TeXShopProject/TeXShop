@@ -33,8 +33,6 @@
 @end
 @interface HelpDocuments:NSObject @end
 @implementation HelpDocuments @end
-@interface TSAutoCompletionListEditor:NSObject @end
-@implementation TSAutoCompletionListEditor @end
 static NSUInteger spellRefreshes;
 @interface TSSpellSupport:NSObject @end
 @implementation TSSpellSupport
