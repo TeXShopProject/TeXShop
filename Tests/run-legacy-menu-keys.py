@@ -25,3 +25,11 @@ for nib in sorted((r/'Resources/Interfaces').glob('*.lproj/MainMenu.nib/designab
  assert parent[style] is parent[opened] and siblings.index(style)==siblings.index(opened)+1,(nib,'Open Style File follows Open')
  assert parent[package] is not parent[style],(nib,'Show Help for Package stays in another menu')
 print('PASS: 12 MainMenu files keep Open Style File after Open and Show Help for Package in Help')
+# Positions saved for Source › Command Completion reach Add to Command Completion List
+# because the command took the submenu's place, right after Key Bindings.
+for nib in sorted((r/'Resources/Interfaces').glob('*.lproj/MainMenu.nib/designable.nib')):
+ root=ET.parse(nib).getroot();parent={c:p for p in root.iter() for c in p}
+ found=[e for e in root.iter('menuItem') if e.get('identifier')=='TSShortcut.registerForCommandCompletion:.0'];assert len(found)==1,nib
+ completion=found[0];siblings=[e for e in parent[completion] if e.tag=='menuItem']
+ assert completion.find('menu') is None and siblings[siblings.index(completion)-1].get('identifier')=='TSShortcut.changeAutoComplete:.0',(nib,'Add to Command Completion List follows Key Bindings')
+print('PASS: 12 MainMenu files have Add to Command Completion List in place of the Command Completion submenu')

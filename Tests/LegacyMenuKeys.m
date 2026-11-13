@@ -22,8 +22,7 @@ int main(int argc,char **argv){@autoreleasepool{
   NSMenuItem *bindings=Item(source.submenu,@"Key Bindings");NSMenuItem *toggle=bindings;
   if(old.boolValue){bindings.submenu=[NSMenu new];toggle=Item(bindings.submenu,title);Item(bindings.submenu,@"Edit Key Bindings File…");}
   toggle.identifier=@"TSShortcut.changeAutoComplete:.0";
-  NSMenuItem *completion=Item(source.submenu,@"Command Completion");completion.submenu=[NSMenu new];Item(completion.submenu,@"Add Word");Item(completion.submenu,@"Marks");
-  if(old.boolValue)Item(completion.submenu,@"Edit Command Completion File…");
+  NSMenuItem *completion=Item(source.submenu,@"Add to Command Completion List");completion.identifier=@"TSShortcut.registerForCommandCompletion:.0";
   NSMenuItem *other=Item(source.submenu,@"Other");
   NSArray *key=@[@"k",@YES,@NO];
   for(NSString *child in @[@"1",title]){
@@ -40,11 +39,34 @@ int main(int argc,char **argv){@autoreleasepool{
    }
   }
   Apply(main,@{@"1":@{@"2":@{@"3":@[@"e",@NO,@NO]},@"3":@[@"z",@NO,@YES]},@"999":@{},@"-2":@{}});
-  Check([other.keyEquivalent isEqual:@"z"] && (other.keyEquivalentModifierMask & NSEventModifierFlagControl),@"Removed completion or invalid menu does not interrupt other assignments");
+  Check([other.keyEquivalent isEqual:@"z"] && (other.keyEquivalentModifierMask & NSEventModifierFlagControl) && [completion.keyEquivalent isEqual:@""],@"Removed completion or invalid menu does not interrupt other assignments");
   if(!old.boolValue){Check([toggle.keyEquivalent isEqual:@"k"],@"Removed editor never targets toggle");Apply(main,@{@"1":@{@"1":@{@"2":@[@"e",@NO,@NO],@"Edit Key Bindings File…":@[@"e",@NO,@NO]}}});Check([toggle.keyEquivalent isEqual:@"k"],@"Removed editor compatibility entries stay inert");}
   Apply(main,@{@"1":@{@"3":@[],@"999":@[@"x",@NO,@NO],@"-1":@[@"x",@NO,@NO],@"2":@{@"999":@[@"x",@NO,@NO],@"1":@[@"a",@NO,@NO],@"2":@[@"b",@NO,@NO]}}});
   Check([other.keyEquivalent isEqual:@"z"],@"Malformed entries do not rewrite unrelated keys");
-  Check([[completion.submenu itemAtIndex:0].keyEquivalent isEqual:@"a"] && [[completion.submenu itemAtIndex:1].keyEquivalent isEqual:@"b"],@"Every child dictionary entry is processed");
+  Check([completion.keyEquivalent isEqual:@"a"] && [other.keyEquivalent isEqual:@"z"],@"Every child dictionary entry is processed; the former Marks position stays inert");
+ }
+ // Source › Command Completion was a submenu whose first item was Add Word. It is now
+ // the command itself, Add to Command Completion List, at the same position.
+ NSDictionary *completions=fixture[@"command_completion"];
+ Check(completions.count==12,@"Former Command Completion titles for 12 languages");
+ for(NSString *language in completions){
+  NSString *former=completions[language][0];NSArray *words=completions[language][1];
+  NSMenu *main=[NSMenu new];NSMenuItem *source=Item(main,@"Source");source.submenu=[NSMenu new];
+  NSMenuItem *bindings=Item(source.submenu,@"Key Bindings");bindings.identifier=@"TSShortcut.changeAutoComplete:.0";
+  NSMenuItem *completion=Item(source.submenu,@"Add to Command Completion List");completion.identifier=@"TSShortcut.registerForCommandCompletion:.0";
+  NSMenuItem *wrap=Item(source.submenu,@"Wrap Lines");wrap.submenu=[NSMenu new];NSMenuItem *none=Item(wrap.submenu,@"None");
+  void (^reset)(void)=^{for(NSMenuItem *item in @[bindings,completion,none])item.keyEquivalent=@"";};
+  for(NSString *parent in @[former,@"2"])for(NSString *child in [words arrayByAddingObject:@"1"]){
+   reset();Apply(main,@{@"Source":@{parent:@{child:@[@"w",@YES,@YES]}}});
+   NSEventModifierFlags mask=completion.keyEquivalentModifierMask;
+   Check([completion.keyEquivalent isEqual:@"w"] && (mask & NSEventModifierFlagOption) && (mask & NSEventModifierFlagControl) && [bindings.keyEquivalent isEqual:@""] && [none.keyEquivalent isEqual:@""],[NSString stringWithFormat:@"%@: Source › %@ › %@ reaches Add to Command Completion List",language,parent,child]);
+  }
+  reset();Apply(main,@{@"1":@{former:@{@"2":@{@"1":@[@"m",@NO,@NO]},@"3":@[@"e",@NO,@NO],@"Marks":@[@"m",@NO,@NO],@"Edit Command Completion File...":@[@"e",@NO,@NO]}}});
+  Check([completion.keyEquivalent isEqual:@""] && [bindings.keyEquivalent isEqual:@""] && [none.keyEquivalent isEqual:@""],[NSString stringWithFormat:@"%@: the other former Command Completion items stay inert",language]);
+  reset();Apply(main,@{@"Source":@{@"Add to Command Completion List":@[@"j",@NO,@YES],@"Wrap Lines":@{@"1":@[@"n",@NO,@NO]}}});
+  Check([completion.keyEquivalent isEqual:@"j"] && [none.keyEquivalent isEqual:@"n"],@"The current title and the submenu after it still apply");
+  reset();Apply(main,@{@"Source":@{@"Wrap Lines":@{former:@[@"x",@NO,@NO]}}});
+  Check([completion.keyEquivalent isEqual:@""] && [none.keyEquivalent isEqual:@""],@"A former title only names the item in the Source menu");
  }
  // Japanese and Chinese titles lost the space between CJK and Latin text in 5.60.
  {
@@ -104,5 +126,5 @@ int main(int argc,char **argv){@autoreleasepool{
   Apply(main,@{@"Typeset":@{@"TeX和DVI":@[@"5",@NO,@NO]}});
   Check([dvi.keyEquivalent isEqual:@"5"],@"A former title reaches its item with or without the space between CJK and Latin text");
  }
- puts("PASS: 12 legacy title fixtures; CJK-Latin spacing; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File; former typesetting method titles in 12 languages");
+ puts("PASS: 12 legacy title fixtures; CJK-Latin spacing; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File; former typesetting method titles in 12 languages; Command Completion submenu entries in 12 languages reach Add to Command Completion List");
 }return 0;}

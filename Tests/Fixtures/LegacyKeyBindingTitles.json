@@ -64,5 +64,82 @@
       "Pdftex",
       "TeX 和 DVI"
     ]
+  },
+  "command_completion_origin": "db040b9b (5.58) titles of the Source › Command Completion submenu and its first item, Add Word, before the submenu became one item; nl and pt-PT translated Add Word in 5.60 beta 8",
+  "command_completion": {
+    "Base": [
+      "Command Completion",
+      [
+        "Add Word"
+      ]
+    ],
+    "de": [
+      "Vervollständigung",
+      [
+        "Wort hinzufügen"
+      ]
+    ],
+    "es": [
+      "Compleción de comandos ",
+      [
+        "Añadir palabra"
+      ]
+    ],
+    "fr": [
+      "Commande de complètement",
+      [
+        "Ajouter un mot"
+      ]
+    ],
+    "it": [
+      "Completamento comandi",
+      [
+        "Aggiungi comando"
+      ]
+    ],
+    "ja": [
+      "コマンド補完",
+      [
+        "用語を追加"
+      ]
+    ],
+    "ko": [
+      "명령 완성",
+      [
+        "항목 추가"
+      ]
+    ],
+    "nl": [
+      "Aanvullen",
+      [
+        "Add Word",
+        "Voeg woord toe"
+      ]
+    ],
+    "pt-PT": [
+      "Completion",
+      [
+        "Add Word",
+        "Adicionar palavra"
+      ]
+    ],
+    "pt": [
+      "Completar",
+      [
+        "Adicionar palavra"
+      ]
+    ],
+    "ro": [
+      "Completare",
+      [
+        "Adaugă un Cuvânt"
+      ]
+    ],
+    "zh_CN": [
+      "命令补全",
+      [
+        "新增单词"
+      ]
+    ]
   }
 }
