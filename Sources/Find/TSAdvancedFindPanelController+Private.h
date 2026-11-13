@@ -3,6 +3,7 @@
 #import "TSAdvancedFindPanelController.h"
 #import "TSAdvancedFindOptionsForm.h"
 #import "TSAdvancedFindInputBox.h"
+#import "TSAdvancedFindCheatSheet.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -13,12 +14,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak, nullable) TSAdvancedFindInputBox *box;
 @end
 
-@interface TSAdvancedFindPanelController () <NSTextViewDelegate>
+@interface TSAdvancedFindPanelController () <NSTextViewDelegate, NSPopoverDelegate>
 @property (nonatomic, strong) TSAdvancedFindFieldView *findFieldView;
 @property (nonatomic, strong) TSAdvancedFindFieldView *replaceFieldView;
 @property (nonatomic, strong) TSAdvancedFindInputBox *findBox;
 @property (nonatomic, strong) TSAdvancedFindInputBox *replaceBox;
 @property (nonatomic, strong) NSButton *regexBox;
+/// The "?" right after "Regular expression", and the cheat sheet it opens (also when dragged off as a window).
+@property (nonatomic, strong) NSButton *cheatSheetButton;
+@property (nonatomic, strong, nullable) NSPopover *cheatSheetPopover;
 @property (nonatomic, strong) NSButton *ignoreCaseBox;
 /// In the "More Options" popover, while it is open.
 @property (nonatomic, strong, nullable) NSButton *wrapBox;
@@ -42,6 +46,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateModeControls;
 - (void)optionsDidChange;
 - (void)loadStrings;
+/// The cheat sheet's content, loaded, for the replacement syntax of the settings.
+- (TSAdvancedFindCheatSheet *)makeCheatSheet;
+- (void)showCheatSheet:(nullable id)sender;
+/// An open cheat sheet follows the replacement syntax of the settings.
+- (void)updateCheatSheet;
 /// The text view of the main window, which the panel acts on.
 - (nullable NSTextView *)targetTextView;
 /// The buttons' actions, on the main window's text view.

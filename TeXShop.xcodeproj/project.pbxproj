@@ -14,6 +14,9 @@
 		D50CE16F90F64FDBE3758709 /* TSAdvancedFindPanelController+Actions.m in Sources */ = {isa = PBXBuildFile; fileRef = DB29034FA28C8124507DFF25 /* TSAdvancedFindPanelController+Actions.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		15DF76C178AFF47DC3F19EA6 /* TSAdvancedFindPanelController+History.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C43187D643C8B79289AB25 /* TSAdvancedFindPanelController+History.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		F909CBB2A6D94D6A5696B0C9 /* TSAdvancedFindPanelController+Options.m in Sources */ = {isa = PBXBuildFile; fileRef = 0967693A34326EE9E6FBA327 /* TSAdvancedFindPanelController+Options.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		2DD5D09308284E4DFF5E3324 /* TSAdvancedFindCheatSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BA245EE589086F8BB208254 /* TSAdvancedFindCheatSheet.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		482A3A0740ACA1A4E2CA3A30 /* TSRegexOnigmoIncompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 46B1E2089286828DDC828770 /* TSRegexOnigmoIncompatibility.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		CAE36867C8D37DB17E702F0D /* TSAdvancedFindPanelController+CheatSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F28323883C7A0B51BBE7D63 /* TSAdvancedFindPanelController+CheatSheet.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		1515E934D4D5C57D578A0B70 /* TSAdvancedFindPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FCF2A3181BB2E666FF3BE52 /* TSAdvancedFindPanelController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		CA2B36C2CA1477FDBB2CF755 /* TSAdvancedFindSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 80D87B64004DCACC0F91003B /* TSAdvancedFindSettings.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		E7D37A94A8A25460D369D60C /* TSAdvancedFindTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92C81BD7E5D80BF55BE94E34 /* TSAdvancedFindTextView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
@@ -403,6 +406,11 @@
 		DB29034FA28C8124507DFF25 /* TSAdvancedFindPanelController+Actions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindPanelController+Actions.m"; sourceTree = "<group>"; };
 		27C43187D643C8B79289AB25 /* TSAdvancedFindPanelController+History.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindPanelController+History.m"; sourceTree = "<group>"; };
 		0967693A34326EE9E6FBA327 /* TSAdvancedFindPanelController+Options.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindPanelController+Options.m"; sourceTree = "<group>"; };
+		32F268DBF9C127E1D5EF970B /* TSAdvancedFindCheatSheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindCheatSheet.h; sourceTree = "<group>"; };
+		7BA245EE589086F8BB208254 /* TSAdvancedFindCheatSheet.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindCheatSheet.m; sourceTree = "<group>"; };
+		E1091878DF6ECF40EA9A039B /* TSRegexOnigmoIncompatibility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRegexOnigmoIncompatibility.h; sourceTree = "<group>"; };
+		46B1E2089286828DDC828770 /* TSRegexOnigmoIncompatibility.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRegexOnigmoIncompatibility.m; sourceTree = "<group>"; };
+		0F28323883C7A0B51BBE7D63 /* TSAdvancedFindPanelController+CheatSheet.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindPanelController+CheatSheet.m"; sourceTree = "<group>"; };
 		D39F26F1E3FD4FC8AF0F8847 /* TSAdvancedFindPanelController+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TSAdvancedFindPanelController+Private.h"; sourceTree = "<group>"; };
 		452157E5DF6449194BF0E926 /* TSAdvancedFindPanelController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindPanelController.h; sourceTree = "<group>"; };
 		9FCF2A3181BB2E666FF3BE52 /* TSAdvancedFindPanelController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindPanelController.m; sourceTree = "<group>"; };
@@ -1706,7 +1714,10 @@
 				F56648C2E54E22BBF5A070A6 /* TSAdvancedFindInputBox.m */,
 				8D9A0C4E9B27EA807C50DF9D /* TSAdvancedFindOptionsForm.h */,
 				8862EBA5FD34F66E2FA2D3B6 /* TSAdvancedFindOptionsForm.m */,
+				32F268DBF9C127E1D5EF970B /* TSAdvancedFindCheatSheet.h */,
+				7BA245EE589086F8BB208254 /* TSAdvancedFindCheatSheet.m */,
 				DB29034FA28C8124507DFF25 /* TSAdvancedFindPanelController+Actions.m */,
+				0F28323883C7A0B51BBE7D63 /* TSAdvancedFindPanelController+CheatSheet.m */,
 				27C43187D643C8B79289AB25 /* TSAdvancedFindPanelController+History.m */,
 				0967693A34326EE9E6FBA327 /* TSAdvancedFindPanelController+Options.m */,
 				D39F26F1E3FD4FC8AF0F8847 /* TSAdvancedFindPanelController+Private.h */,
@@ -1724,6 +1735,8 @@
 				8BAB36C46A874188F41DC0B2 /* TSRegexFindOptions.m */,
 				44A1DA9ECAA9302F78780C97 /* TSRegexFindPattern.h */,
 				5D2EB0097D0878293A8CB554 /* TSRegexFindPattern.m */,
+				E1091878DF6ECF40EA9A039B /* TSRegexOnigmoIncompatibility.h */,
+				46B1E2089286828DDC828770 /* TSRegexOnigmoIncompatibility.m */,
 				7FDEF05CF1564F1E291B3951 /* TSRegexReplacementTemplate.h */,
 				0B779315E1E594F3CC15741E /* TSRegexReplacementTemplate.m */,
 				16431FC52F2B9E1F8ADD26BA /* TSRegexFindReplacement.h */,
@@ -1982,7 +1995,9 @@
 				3E28439E4331B75239F78E1E /* TSAdvancedFindHighlights.m in Sources */,
 				129A84463E3189A2848E7DA5 /* TSAdvancedFindInputBox.m in Sources */,
 				469AA3DB7D935CA1B232678B /* TSAdvancedFindOptionsForm.m in Sources */,
+				2DD5D09308284E4DFF5E3324 /* TSAdvancedFindCheatSheet.m in Sources */,
 				D50CE16F90F64FDBE3758709 /* TSAdvancedFindPanelController+Actions.m in Sources */,
+				CAE36867C8D37DB17E702F0D /* TSAdvancedFindPanelController+CheatSheet.m in Sources */,
 				15DF76C178AFF47DC3F19EA6 /* TSAdvancedFindPanelController+History.m in Sources */,
 				F909CBB2A6D94D6A5696B0C9 /* TSAdvancedFindPanelController+Options.m in Sources */,
 				1515E934D4D5C57D578A0B70 /* TSAdvancedFindPanelController.m in Sources */,
@@ -1993,6 +2008,7 @@
 				5842AEFCEA920C9547F699A0 /* TSRegexReplacementRule.m in Sources */,
 				A12627FA47A94107E91A0354 /* TSRegexFindOptions.m in Sources */,
 				24F1158918A8E62736CE6FFD /* TSRegexFindPattern.m in Sources */,
+				482A3A0740ACA1A4E2CA3A30 /* TSRegexOnigmoIncompatibility.m in Sources */,
 				925124931FE605F31756F6DD /* TSRegexReplacementTemplate.m in Sources */,
 				CECFB19823AD78E51D1BD74D /* TSRegexFindReplacement.m in Sources */,
 				E1B65A56BD2D987F27CFE39E /* TSRegexReplaceAllResult.m in Sources */,
