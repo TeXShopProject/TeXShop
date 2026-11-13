@@ -405,20 +405,33 @@ else
 // in the toolbar: it is not a navigational item, which macOS draws at the leading edge.
 - (NSToolbarItem*) makeBackForthItemWithItemIdentifier: (NSString *)itemIdent key:(NSString *)itemKey
 {
+    NSString *back = NSLocalizedStringFromTable(@"tiBack", @"ToolbarItems", nil);
+    NSString *forward = NSLocalizedStringFromTable(@"tiForward", @"ToolbarItems", nil);
     NSImage *backImage = [NSImage imageWithSystemSymbolName: @"chevron.backward"
-                                   accessibilityDescription: @"Back"] ?: [NSImage imageNamed: NSImageNameGoBackTemplate];
+                                   accessibilityDescription: back] ?: [NSImage imageNamed: NSImageNameGoBackTemplate];
     NSImage *forwardImage = [NSImage imageWithSystemSymbolName: @"chevron.forward"
-                                      accessibilityDescription: @"Forward"] ?: [NSImage imageNamed: NSImageNameGoForwardTemplate];
+                                      accessibilityDescription: forward] ?: [NSImage imageNamed: NSImageNameGoForwardTemplate];
     NSSegmentedControl *control = [NSSegmentedControl segmentedControlWithImages: @[backImage, forwardImage]
                                                                     trackingMode: NSSegmentSwitchTrackingMomentary
                                                                           target: self action: @selector(doBackForward:)];
+    [control setToolTip: NSLocalizedStringFromTable(@"tiToolTipGoBack", @"ToolbarItems", nil) forSegment: 0];
+    [control setToolTip: NSLocalizedStringFromTable(@"tiToolTipGoForward", @"ToolbarItems", nil) forSegment: 1];
     NSToolbarItem *textItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:itemKey];
     TSBackForwardToolbarItem *toolbarItem = [[TSBackForwardToolbarItem alloc] initWithItemIdentifier: itemIdent];
     toolbarItem.label = textItem.label;
     toolbarItem.paletteLabel = textItem.paletteLabel;
-    toolbarItem.toolTip = textItem.toolTip;
+    // Back and Forward have their own tool tips, so the item has none of its own.
     toolbarItem.view = control;
     toolbarItem.document = self;
+    // A text-only toolbar, and the menu of items that do not fit, show Back and Forward
+    // as a submenu of the item.
+    NSMenu *submenu = [[NSMenu alloc] init];
+    [submenu addItemWithTitle: back action: @selector(doBack:) keyEquivalent: @""].target = self;
+    [submenu addItemWithTitle: forward action: @selector(doForward:) keyEquivalent: @""].target = self;
+    NSMenuItem *menuFormRep = [[NSMenuItem alloc] init];
+    menuFormRep.title = toolbarItem.label;
+    menuFormRep.submenu = submenu;
+    toolbarItem.menuFormRepresentation = menuFormRep;
     return toolbarItem;
 }
 
@@ -1203,51 +1216,8 @@ if ([itemIdent isEqual: kSplitKKTID]) {
         return [self makeToolbarSymbolsItemWithItemIdentifier:itemIdent key:itemIdent symbolName: @"chevron.right" accessibility: @"Next Page" imageName:@"NextPageAction" newImageName:@"chevron.right" target:self action:@selector(doHtmlNextPage:)];
      }
 
-	if ([itemIdent isEqual: kBackForthKKTID]) {
-        
-        toolbarItem = [self makeBackForthItemWithItemIdentifier: itemIdent key:itemIdent];
-        
-  		//toolbarItem =  [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent
-		//											customView:backforthKK];
-		menuFormRep = [[NSMenuItem alloc] init];
-		[menuFormRep setTitle: [toolbarItem label]];
-
-		submenu = [[NSMenu alloc] init];
-		submenuItem = [[NSMenuItem alloc] initWithTitle: @"Back" action: @selector(doBack:) keyEquivalent:@""];
-		[submenuItem setTarget: self];
-		[submenu addItem: submenuItem];
-		submenuItem = [[NSMenuItem alloc] initWithTitle: @"Forward" action: @selector(doForward:) keyEquivalent:@""];
-		[submenuItem setTarget: self];
-		[submenu addItem: submenuItem];
-		[menuFormRep setSubmenu: submenu];
-
-
-
-		// [menuFormRep setAction: @selector(doBackForth:)];
-		[toolbarItem setMenuFormRepresentation: menuFormRep];
-		return toolbarItem;
-	}
-    
-    if ([itemIdent isEqual: skBackForthKKTID]) {
-        
-        toolbarItem = [self makeBackForthItemWithItemIdentifier: itemIdent key:itemIdent];
-        
-         
-        menuFormRep = [[NSMenuItem alloc] init];
-        [menuFormRep setTitle: [toolbarItem label]];
-
-        submenu = [[NSMenu alloc] init];
-        submenuItem = [[NSMenuItem alloc] initWithTitle: @"Back" action: @selector(doBack:) keyEquivalent:@""];
-        [submenuItem setTarget: self];
-        [submenu addItem: submenuItem];
-        submenuItem = [[NSMenuItem alloc] initWithTitle: @"Forward" action: @selector(doForward:) keyEquivalent:@""];
-        [submenuItem setTarget: self];
-        [submenu addItem: submenuItem];
-        [menuFormRep setSubmenu: submenu];
-
-       [toolbarItem setMenuFormRepresentation: menuFormRep];
-        return toolbarItem;
-    }
+	if ([itemIdent isEqual: kBackForthKKTID] || [itemIdent isEqual: skBackForthKKTID])
+		return [self makeBackForthItemWithItemIdentifier: itemIdent key:itemIdent];
 
 
     toolbarItem = [self makePreviewPageItemWithItemIdentifier:itemIdent];

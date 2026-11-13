@@ -172,11 +172,13 @@ tiToolTipSyncMarksKIT			= "Afișați marcajele de sincronizare";
 
 tiLabelBackForthKIT				= "Înapoi/Înainte";
 tiPaletteLabelBackForthKIT		= "Înapoi/Înainte";
-tiToolTipBackForthKIT			= "Butoane Înapoi/Înainte";
+tiToolTipGoBack				= "Înapoi";
+tiToolTipGoForward			= "Înainte";
+tiBack					= "Înapoi";
+tiForward				= "Înainte";
 
 tiLabelBackForthKITSplit                = "Înapoi/Înainte";
 tiPaletteLabelBackForthKITSplit        = "Înapoi/Înainte";
-tiToolTipBackForthKITSplit            = "Butoane Înapoi/Înainte";
 
 tiLabelDrawerKIT				= "Sertar";
 tiPaletteLabelDrawerKIT			= "Sertar";
