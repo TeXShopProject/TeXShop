@@ -26,7 +26,7 @@ parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'oth
                                            'escape-falls-to-other-part', 'escape-closes-hover',
                                            'link-keeps-pin', 'outline-keeps-pin', 'back-keeps-pin', 'forward-keeps-pin', 'page-number-keeps-pin',
                                            'last-page-keeps-pin', 'sync-keeps-pin', 'zoom-kills-pin', 'next-page-kills-pin',
-                                           'empty-outline-kills-pin', 'stuck-back-kills-pin'])
+                                           'empty-outline-kills-pin', 'stuck-back-kills-pin', 'stuck-single-page-kills-pin'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
@@ -94,6 +94,10 @@ view_mutations = {
     'empty-outline-kills-pin': ('\tif (destination)\n\t\t[self closePinnedLinkPreview];\n', '\t[self closePinnedLinkPreview];\n'),
     'back-keeps-pin': ('\tif ([self canGoBack])\n\t\t[self closePinnedLinkPreview];\n', ''),
     'stuck-back-kills-pin': ('\tif ([self canGoForward])\n\t\t[self closePinnedLinkPreview];\n', '\t[self closePinnedLinkPreview];\n'),
+    # The behavior that the first audit found: in Single Page and Double Page display Back and
+    # Forward cleaned up the marquee with the pinned popup, also with nowhere to go.
+    'stuck-single-page-kills-pin': ('\tif ([self canGoBack])\n\t\t[self closePinnedLinkPreview];\n\tif  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))\n\t\t[self cleanupMarqueeKeepingPinnedLinkPreview];',
+                                    '\tif ([self canGoBack])\n\t\t[self closePinnedLinkPreview];\n\tif  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))\n\t\t[self cleanupMarquee: YES];'),
     'forward-keeps-pin': ('\tif ([self canGoForward])\n\t\t[self closePinnedLinkPreview];\n', ''),
     'page-number-keeps-pin': ('\t// A page number goes to another place: the pinned popup of this part closes (#35).\n\t[self closePinnedLinkPreview];\n', ''),
     'last-page-keeps-pin': ('- (void) lastPage: (id)sender\n{\n\t[self closePinnedLinkPreview];\n', '- (void) lastPage: (id)sender\n{\n'),
@@ -1435,11 +1439,27 @@ static void testJumps(MyPDFKitView *view, NSWindow *window) {
     check(view.canGoForward, @"PDFKit keeps the history forward");
     [view goForward:nil];
     check(!view.preview && !handlers.count, @"Forward closes the pinned popup");
-    while (view.canGoForward) [view goForward:nil];
-    pin();
-    while (view.canGoForward) [view goForward:nil];
-    [view goForward:nil];
-    check(view.preview != nil, @"Forward with nowhere to go keeps the pinned popup");
+    // Back and Forward with nowhere to go keep it, in every display format.
+    for (NSNumber *style in @[@(PDF_MULTI_PAGE_STYLE), @(PDF_SINGLE_PAGE_STYLE), @(PDF_TWO_PAGE_STYLE)]) {
+        [view setTestPageStyle:style.integerValue];
+        view.displayMode = style.integerValue == PDF_SINGLE_PAGE_STYLE ? kPDFDisplaySinglePage :
+                           style.integerValue == PDF_TWO_PAGE_STYLE ? kPDFDisplayTwoUp : kPDFDisplaySinglePageContinuous;
+        [view layoutDocumentView];
+        while (view.canGoForward) [view goForward:nil];
+        pin();
+        while (view.canGoForward) [view goForward:nil];
+        [view goForward:nil];
+        check(view.preview != nil, @"Forward with nowhere to go keeps the pinned popup");
+        pin();
+        while (view.canGoBack) [view goBack:nil];
+        pin();
+        check(!view.canGoBack, @"PDFKit has no place to go back to");
+        [view goBack:nil];
+        check(view.preview != nil, @"Back with nowhere to go keeps the pinned popup");
+    }
+    [view setTestPageStyle:PDF_MULTI_PAGE_STYLE];
+    view.displayMode = kPDFDisplaySinglePageContinuous;
+    [view layoutDocumentView];
 
     // Zoom keeps it, in view.
     pin();
@@ -1892,6 +1912,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'back-keeps-pin':'Back closes the pinned popup',
                     'forward-keeps-pin':'Forward closes the pinned popup',
                     'stuck-back-kills-pin':'Forward with nowhere to go keeps the pinned popup',
+                    'stuck-single-page-kills-pin':('Forward with nowhere to go keeps the pinned popup', 'Back with nowhere to go keeps the pinned popup'),
                     'page-number-keeps-pin':'a page number closes the pinned popup',
                     'last-page-keeps-pin':'going to the last page closes the pinned popup',
                     'sync-keeps-pin':'a sync from the source closes the pinned popup',

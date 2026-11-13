@@ -1728,7 +1728,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	if ([self canGoBack])
 		[self closePinnedLinkPreview];
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
-		[self cleanupMarquee: YES];
+		[self cleanupMarqueeKeepingPinnedLinkPreview];
 	[super goBack:sender];
 }
 
@@ -1737,7 +1737,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	if ([self canGoForward])
 		[self closePinnedLinkPreview];
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
-		[self cleanupMarquee: YES];
+		[self cleanupMarqueeKeepingPinnedLinkPreview];
 	[super goForward:sender];
 }
 
