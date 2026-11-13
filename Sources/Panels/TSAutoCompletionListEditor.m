@@ -50,6 +50,13 @@
             list.frame = listFrame;
         }
     }
+    // The two input fields stand apart by the usual spacing between controls,
+    // leaving room for the focus ring of each.
+    if (newKeyField && newValueField) {
+        NSRect key = newKeyField.frame;
+        CGFloat gap = NSMinX(newValueField.frame) - NSMaxX(key);
+        if (gap < 8) { key.size.width -= 8 - gap; newKeyField.frame = key; }
+    }
     if (save && cancel) TSLayoutDialogButtons(host, @[save, cancel], remove ? @[remove] : @[]);
 }
 // END editor layout
