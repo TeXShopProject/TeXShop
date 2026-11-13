@@ -13,8 +13,8 @@ import subprocess
 import sys
 
 MUTATIONS = {
-    # A word of an older release is pushed out (nstextview and started, #25 audit).
-    'word-pushed-out': lambda terms: terms - {'started'},
+    # A word of an older release is pushed out, as nstextview and started were by #39.
+    'word-pushed-out': lambda terms: terms - {'golden'},
     # A new word comes in.
     'word-added': lambda terms: terms | {'else'},
 }
