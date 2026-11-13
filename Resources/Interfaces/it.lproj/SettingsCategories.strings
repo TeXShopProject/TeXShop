@@ -170,6 +170,7 @@
 "catalog.appearance.2.0.item.1" = "Console";
 "catalog.appearance.2.0.item.2" = "Log";
 "catalog.appearance.2.0.item.3" = "Anteprima";
+"catalog.appearance.2.0.item.3.heading.1" = "Pagine chiare";
 "group.appearance.3.title" = "Sorgente";
 "catalog.appearance.3.0.item.0" = "Inserimento";
 "catalog.appearance.3.0.item.1" = "Lampeggio";

@@ -319,6 +319,35 @@ int main(int argc,char **argv){@autoreleasepool{
   }
   [shell setSettingsSearchQuery:@""];
  }
+ {
+  // The paper of light pages has its own heading, in the Background column right above the
+  // Preview color well; the window opacity beside it has none. Its text is shown whole.
+  [shell selectCategoryIdentifier:TSSettingsCategoryAppearance];
+  NSView *themes=[shell viewForCategoryIdentifier:TSSettingsCategoryAppearance];
+  NSGridView *table=(NSGridView *)Find(themes,@"settings.color-table");
+  NSTextField *heading=(NSTextField *)Find(themes,@"heading.catalog.appearance.2.0.item.3.heading.1");
+  NSView *paper=Find(themes,@"settings.hCM-4U-XkM");
+  Check([table isKindOfClass:NSGridView.class] && [heading isKindOfClass:NSTextField.class] && paper!=nil,@"Themes shows the Light Pages heading in the color table");
+  NSInteger headingRow=-1,headingColumn=-1,paperRow=-1,paperColumn=-1;
+  for(NSInteger r=0;r<table.numberOfRows;r++)for(NSInteger c=0;c<table.numberOfColumns;c++){
+   NSView *content=[table cellAtColumnIndex:c rowIndex:r].contentView;
+   if(content==heading){headingRow=r;headingColumn=c;}
+   if(content==paper || [paper isDescendantOf:content]){paperRow=r;paperColumn=c;}
+  }
+  Check(headingColumn==2 && paperColumn==2 && headingRow+1==paperRow,[NSString stringWithFormat:@"Light Pages heads the Preview color well: heading %ld/%ld, well %ld/%ld",(long)headingRow,(long)headingColumn,(long)paperRow,(long)paperColumn]);
+  for(NSInteger c=0;c<table.numberOfColumns;c++)if(c!=2 && headingRow>=0){
+   NSView *content=[table cellAtColumnIndex:c rowIndex:headingRow].contentView;
+   Check(content==nil || content==NSGridCell.emptyContentView || content.subviews.count==0 && ![content isKindOfClass:NSControl.class],@"Only the Preview color has a heading");
+  }
+  Check([heading.stringValue isEqual:[fixture localizedStringForKey:@"catalog.appearance.2.0.item.3.heading.1" value:nil table:@"SettingsCategories"]] && heading.stringValue.length && ![heading.stringValue isEqual:@"catalog.appearance.2.0.item.3.heading.1"],@"Light Pages heading is localized");
+  for(NSString *appearance in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]){
+   shell.window.appearance=[NSAppearance appearanceNamed:appearance];[shell.window.contentView layoutSubtreeIfNeeded];
+   Check(!heading.hiddenOrHasHiddenAncestor && NSHeight(heading.frame)>0 && heading.cell.cellSize.width<=NSWidth(heading.frame)+1,[NSString stringWithFormat:@"Light Pages heading fits: %@ %.1f <= %.1f",heading.stringValue,heading.cell.cellSize.width,NSWidth(heading.frame)]);
+   NSRect inTable=[heading convertRect:heading.bounds toView:table];
+   Check(NSContainsRect(NSInsetRect(table.bounds,-1,-1),inTable) && NSMaxX([table convertRect:table.bounds toView:themes])<=NSWidth(themes.bounds)+1,@"Light Pages heading stays inside the color table and the pane");
+   if(argc>2)Save(themes,[@(argv[2]) stringByAppendingPathComponent:[NSString stringWithFormat:@"themes-light-pages-%@.png",appearance]]);
+  }
+ }
  NSMutableDictionary *current=[[TSIsolatedAppKitDefaults dictionaryRepresentation]mutableCopy];[current removeObjectForKey:TSSettingsSelectedCategoryKey];NSMutableDictionary *before=[saved mutableCopy];[before removeObjectForKey:TSSettingsSelectedCategoryKey];Check([current isEqual:before],@"Opening and navigating changes only remembered category");
  [shell selectCategoryIdentifier:TSSettingsCategoryDocuments];
  id windowManager=[NSClassFromString(@"TSWindowManager") performSelector:@selector(sharedInstance)];
