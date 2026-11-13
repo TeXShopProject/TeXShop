@@ -61,7 +61,7 @@
     }
     [entries setArray:rowEntries];
     NSArray<NSString *> *dockTitles = @[@"Original", @"Classic Triangle", @"Retina Triangle", @"Classic Circle", @"Current (Default)"];
-    NSArray<NSString *> *dockPeriods = @[@"Before 1.0", @"1.0–3.13", @"3.14–3.38", @"3.39–5.58", @"5.60–"];
+    NSArray<NSString *> *dockPeriods = @[@"Before 1.0", @"1.0–3.13", @"3.14–3.38", @"3.39–5.58", @"6.00–"];
     NSString *(^dockText)(NSString *) = ^(NSString *key) { return [bundle localizedStringForKey:key value:key table:@"SettingsDock"]; };
     for (NSUInteger i = 0; i < dockTitles.count; i++) {
         NSString *tip = [NSString stringWithFormat:@"%@ — %@", dockText(dockTitles[i]), dockText(dockPeriods[i])];

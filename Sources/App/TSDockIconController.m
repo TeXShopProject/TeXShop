@@ -51,7 +51,7 @@
     if (group == nil) return;
     NSMutableArray<NSView *> *options = [NSMutableArray array];
     NSArray *titles = @[@"Original", @"Classic Triangle", @"Retina Triangle", @"Classic Circle", @"Current (Default)"];
-    NSArray *details = @[@"Before 1.0", @"1.0–3.13", @"3.14–3.38", @"3.39–5.58", @"5.60–"];
+    NSArray *details = @[@"Before 1.0", @"1.0–3.13", @"3.14–3.38", @"3.39–5.58", @"6.00–"];
     NSArray<NSString *> *years = TSDockIconYears();
     for (NSInteger index = 0; index < 5; index++) {
         NSString *label = [self text:titles[index]];
