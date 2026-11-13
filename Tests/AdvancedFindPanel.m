@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-// The Advanced Find panel of stage 2 (plan §5, §6, §7): the controller on real text views, the routing of the Find
+// The Advanced Find panel: the controller on real text views, the routing of the Find
 // menu, the highlights drawn by the real TSLayoutManager (checked in pixels), and the panel's layout and images.
 // Built by Tests/run-advanced-find-panel.py; no window is ever shown and the defaults stay in memory.
 #import <Cocoa/Cocoa.h>
@@ -204,7 +204,7 @@ static void TestController(void)
     view.selectedRange = NSMakeRange(29, 6); // "second"
     Check([controller performAction:TSAdvancedFindActionFindSelectedText inTextView:view] && [settings.findString isEqualToString:@"second"], @"Find Selected Text");
 
-    // Find Selected Text finds the selection as it is with every regular expression option (first audit, F1)
+    // Find Selected Text finds the selection as it is with every regular expression option
     for (NSNumber *flags in @[@(TSRegexFindRegularExpression), @(TSRegexFindRegularExpression | TSRegexFindIgnoreMetacharacters),
                               @(TSRegexFindRegularExpression | TSRegexFindAllowCommentsAndWhitespace), @0])
         for (NSString *selected in @[@".*", @"two words", @"#note", @"¥100 $\\x", @"a\tb # c", @"a\u200Eb", @"a\u200Fb"]) {
@@ -301,7 +301,7 @@ static void TestRouting(void)
     Check(document.upper.layoutManager == own && [own isKindOfClass:TSLayoutManager.class], @"TSLayoutManager draws the highlights itself and is not replaced");
 }
 
-#pragma mark Highlights (plan §6 a–e)
+#pragma mark Highlights
 
 static void TestHighlights(void)
 {
@@ -361,7 +361,7 @@ static void TestHighlights(void)
 #pragma mark Panel
 
 /// Windows that are never shown do not draw buttons; each button's own cell is drawn at its measured frame
-/// (the method of the plan audit's render-probe.m). Window glass and translucency are not reproduced.
+/// at its measured frame. Window glass and translucency are not reproduced.
 static BOOL WritePNG(NSView *view, NSAppearance *appearance, NSString *path)
 {
     __block BOOL written = NO;
@@ -512,7 +512,7 @@ static void TestPanel(NSString *_Nullable imageDirectory)
     TSAdvancedFindSettings *settings = controller.settings;
     NSString *language = NSBundle.mainBundle.preferredLocalizations.firstObject ?: @"en";
 
-    // The parts of stage 2 and nothing of the later stages
+    // The parts of the panel
     Check(panel.buttons.count == 4 && [panel.buttons[0] isKindOfClass:NSComboButton.class] && [panel.buttons[2] isKindOfClass:NSComboButton.class]
           && [panel.buttons[3] isKindOfClass:NSSegmentedControl.class], @"Highlight All ▾, Replace All, Replace & Find ▾, previous / next");
     for (NSButton *box in panel.optionBoxes)

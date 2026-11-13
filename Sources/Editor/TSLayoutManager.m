@@ -119,7 +119,7 @@
 // changed by Terada (until this line)
 
 // The highlights of the Advanced Find panel go over the background that is already there (temporary attributes and the
-// selection) and under the text; they are not attributes, so nothing underneath is overwritten or lost (plan §6).
+// selection) and under the text; they are not attributes, so nothing underneath is overwritten or lost.
 - (void)drawBackgroundForGlyphRange:(NSRange)glyphsToShow atPoint:(NSPoint)origin
 {
 	[super drawBackgroundForGlyphRange:glyphsToShow atPoint:origin];
