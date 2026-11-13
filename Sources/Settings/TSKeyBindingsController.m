@@ -8,14 +8,14 @@ static NSPasteboardType const TSKeyBindingRowType = @"org.texshop.key-binding-ro
 static NSString *const TSKeyBindingMark = @"•";
 static NSString *const TSKeyBindingKeyColumn = @"key";
 static NSString *const TSKeyBindingOutputColumn = @"output";
-// Rows shown when the window has room, and at least.
-static const NSInteger TSKeyBindingPreferredRows = 7;
-static const NSInteger TSKeyBindingMinimumRows = 3;
+// Rows the list shows at least; a taller window shows more.
+static const NSInteger TSKeyBindingMinimumRows = 6;
 
-// Symbols replaced when a key binding is used, in the order Insert lists them.
+// Symbols shown as tokens, in the order Insert lists them. Line breaks and tabs
+// are written to the file as themselves.
 static NSArray<NSString *> *TSKeyBindingSymbols(void)
 {
-    return @[@"#SEL#", @"#INS#", @"#PASTE#", TSKeyBindingMark];
+    return @[@"#SEL#", @"#INS#", @"#PASTE#", @"\n", @"\t", TSKeyBindingMark];
 }
 
 static NSString *TSKeyBindingSymbolTitle(NSString *symbol)
@@ -23,6 +23,8 @@ static NSString *TSKeyBindingSymbolTitle(NSString *symbol)
     if ([symbol isEqualToString:@"#SEL#"]) return NSLocalizedString(@"Selected Text", @"Key binding token for #SEL#");
     if ([symbol isEqualToString:@"#INS#"]) return NSLocalizedString(@"Insertion Point", @"Key binding token for #INS#: where the insertion point is placed after the output");
     if ([symbol isEqualToString:@"#PASTE#"]) return NSLocalizedString(@"Clipboard Text", @"Key binding token for #PASTE#");
+    if ([symbol isEqualToString:@"\n"]) return NSLocalizedString(@"Line Break", @"Key binding token for a line break in the output");
+    if ([symbol isEqualToString:@"\t"]) return NSLocalizedString(@"Tab", @"Key binding token for a tab in the output");
     return NSLocalizedString(@"Mark", @"Key binding token for •");
 }
 
@@ -70,6 +72,56 @@ static NSAttributedString *TSKeyBindingTokenString(NSString *symbol, NSFont *fon
 @property (weak) TSKeyBindingsController *bindings;
 @end
 
+// Edits an output string: copying writes the file text (#SEL#, line breaks),
+// pasting and dropping text show its symbols as tokens, and Option-Return and
+// Option-Tab insert a line break or a tab.
+@interface TSKeyBindingFieldEditor : NSTextView
+- (void)insertOutput:(NSString *)output;
+@end
+
+@implementation TSKeyBindingFieldEditor
+- (void)insertOutput:(NSString *)output
+{
+    NSAttributedString *text = [TSKeyBindingsController displayStringForOutput:output font:TSKeyBindingOutputFont()];
+    NSRange range = self.selectedRange;
+    if (![self shouldChangeTextInRange:range replacementString:text.string]) return;
+    [self.textStorage replaceCharactersInRange:range withAttributedString:text];
+    [self didChangeText];
+    self.selectedRange = NSMakeRange(range.location + text.length, 0);
+}
+- (void)insertNewlineIgnoringFieldEditor:(id)sender { [self insertOutput:@"\n"]; }
+- (void)insertTabIgnoringFieldEditor:(id)sender { [self insertOutput:@"\t"]; }
+- (NSArray<NSPasteboardType> *)writablePasteboardTypes { return @[NSPasteboardTypeString]; }
+- (BOOL)writeSelectionToPasteboard:(NSPasteboard *)pasteboard type:(NSPasteboardType)type
+{
+    if (![type isEqualToString:NSPasteboardTypeString]) return NO;
+    NSMutableString *text = [NSMutableString string];
+    for (NSValue *range in self.selectedRanges)
+        [text appendString:[TSKeyBindingsController outputForDisplayString:(NSAttributedString *)[self.textStorage attributedSubstringFromRange:range.rangeValue]]];
+    return [pasteboard setString:text forType:NSPasteboardTypeString];
+}
+- (NSArray<NSPasteboardType> *)readablePasteboardTypes { return @[NSPasteboardTypeString]; }
+- (BOOL)readSelectionFromPasteboard:(NSPasteboard *)pasteboard type:(NSPasteboardType)type
+{
+    NSString *text = [pasteboard stringForType:NSPasteboardTypeString];
+    if (text == nil) return NO;
+    [self insertOutput:text];
+    return YES;
+}
+@end
+
+@interface TSKeyBindingOutputCell : NSTextFieldCell
+@end
+
+@implementation TSKeyBindingOutputCell
+- (NSTextView *)fieldEditorForView:(NSView *)controlView
+{
+    static TSKeyBindingFieldEditor *editor;
+    if (editor == nil) { editor = [[TSKeyBindingFieldEditor alloc] initWithFrame:NSZeroRect]; editor.fieldEditor = YES; }
+    return editor;
+}
+@end
+
 @interface TSKeyBindingsController () <NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate, NSMenuDelegate, NSMenuItemValidation>
 @property (strong) NSMutableArray<NSString *> *mutableKeys;
 @property (strong) NSMutableArray<NSString *> *mutableValues;
@@ -97,6 +149,12 @@ static NSAttributedString *TSKeyBindingTokenString(NSString *symbol, NSFont *fon
     [super keyDown:event];
 }
 @end
+
+// An input character as TSTextView compares it: one UTF-16 unit, composed.
+static NSString *TSKeyBindingInputCharacter(NSString *text)
+{
+    return text.precomposedStringWithCanonicalMapping;
+}
 
 @implementation TSKeyBindingsController
 
@@ -180,7 +238,8 @@ static NSAttributedString *TSKeyBindingTokenString(NSString *symbol, NSFont *fon
     table.identifier = @"keybindings.table";
     NSTableColumn *key = [[NSTableColumn alloc] initWithIdentifier:TSKeyBindingKeyColumn];
     key.title = NSLocalizedString(@"Input Character", @"Key binding column");
-    key.width = 110; key.minWidth = 70; key.maxWidth = 240;
+    // Wide enough for the column title in every language.
+    key.width = MAX(110, ceil(key.headerCell.cellSize.width) + 16); key.minWidth = 70; key.maxWidth = 240;
     NSTableColumn *output = [[NSTableColumn alloc] initWithIdentifier:TSKeyBindingOutputColumn];
     output.title = NSLocalizedString(@"Output String", @"Key binding column");
     output.width = 420; output.minWidth = 160;
@@ -215,7 +274,7 @@ static NSAttributedString *TSKeyBindingTokenString(NSString *symbol, NSFont *fon
     insert.identifier = @"keybindings.insert";
     [insert addItemWithTitle:NSLocalizedString(@"Insert", @"Key binding Insert menu")];
     for (NSString *symbol in TSKeyBindingSymbols()) {
-        if ([symbol isEqualToString:TSKeyBindingMark]) [insert.menu addItem:[NSMenuItem separatorItem]];
+        if ([symbol isEqualToString:@"\n"] || [symbol isEqualToString:TSKeyBindingMark]) [insert.menu addItem:[NSMenuItem separatorItem]];
         NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:TSKeyBindingSymbolTitle(symbol) action:@selector(insertSymbol:) keyEquivalent:@""];
         item.target = self; item.representedObject = symbol;
         [insert.menu addItem:item];
@@ -235,14 +294,13 @@ static NSAttributedString *TSKeyBindingTokenString(NSString *symbol, NSFont *fon
     self.symbolsButton = help;
 
     for (NSView *child in @[scroll, addRemove, insert, help]) [body addSubview:child];
-    // The pane does not scroll; the window's minimum height keeps three rows.
-    // Below the fitting compression priority, so the minimum stays small, but
-    // above the menu shortcut list, which takes the rest of a taller window.
-    CGFloat chrome = 28 + 2;
-    NSLayoutConstraint *height = [scroll.heightAnchor constraintGreaterThanOrEqualToConstant:TSKeyBindingMinimumRows * table.rowHeight + chrome];
-    NSLayoutConstraint *preferred = [scroll.heightAnchor constraintEqualToConstant:TSKeyBindingPreferredRows * table.rowHeight + chrome];
-    preferred.priority = NSLayoutPriorityFittingSizeCompression - 1;
-    preferred.active = YES;
+    // At least six rows; a taller window gives the list, and the menu shortcut
+    // list, more (TSShortcutPaneController shares the height between them).
+    CGFloat minimum = TSKeyBindingMinimumRows * table.rowHeight + 28 + 2;
+    NSLayoutConstraint *height = [scroll.heightAnchor constraintGreaterThanOrEqualToConstant:minimum];
+    NSLayoutConstraint *compact = [scroll.heightAnchor constraintEqualToConstant:minimum];
+    compact.priority = 1;
+    compact.active = YES;
     [NSLayoutConstraint activateConstraints:@[
         [body.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
         [body.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
@@ -428,16 +486,10 @@ static NSAttributedString *TSKeyBindingTokenString(NSString *symbol, NSFont *fon
         editor = (NSTextView *)[self editedField].currentEditor;
         editor.selectedRange = NSMakeRange(editor.string.length, 0);
     }
-    if (editor == nil) { NSBeep(); return; }
-    NSAttributedString *text = [TSKeyBindingsController displayStringForOutput:symbol font:TSKeyBindingOutputFont()];
-    NSRange range = editor.selectedRange;
-    if ([editor shouldChangeTextInRange:range replacementString:text.string]) {
-        [editor.textStorage replaceCharactersInRange:range withAttributedString:text];
-        [editor didChangeText];
-        // A mark with a note leaves the insertion point in the note.
-        NSUInteger end = range.location + text.length;
-        editor.selectedRange = NSMakeRange([symbol hasSuffix:@"›"] ? end - 1 : end, 0);
-    }
+    if (![editor isKindOfClass:TSKeyBindingFieldEditor.class]) { NSBeep(); return; }
+    [(TSKeyBindingFieldEditor *)editor insertOutput:symbol];
+    // A mark with a note leaves the insertion point in the note.
+    if ([symbol hasSuffix:@"›"]) editor.selectedRange = NSMakeRange(editor.selectedRange.location - 1, 0);
 }
 
 - (IBAction)showSymbols:(id)sender
@@ -465,12 +517,14 @@ static NSAttributedString *TSKeyBindingTokenString(NSString *symbol, NSFont *fon
         label.textColor = NSColor.secondaryLabelColor;
         return label;
     };
-    NSMutableArray<NSArray<NSView *> *> *rows = [NSMutableArray arrayWithObject:@[heading(NSLocalizedString(@"Display", @"Key binding symbols: how a symbol is shown")), heading(NSLocalizedString(@"Symbol", @"Key binding symbols: the text in the file"))]];
+    NSMutableArray<NSArray<NSView *> *> *rows = [NSMutableArray arrayWithObject:@[heading(NSLocalizedString(@"Display", @"Key binding symbols: how a symbol is shown")), heading(NSLocalizedString(@"Typed As", @"Key binding symbols: how a symbol is typed in an output string"))]];
     NSMutableArray<NSString *> *symbols = [TSKeyBindingSymbols() mutableCopy];
     [symbols addObject:[NSString stringWithFormat:@"%@‹%@›", TSKeyBindingMark, NSLocalizedString(@"note", @"Placeholder for the note of a mark: •‹note›")]];
     for (NSString *symbol in symbols) {
         NSTextField *shown = [NSTextField labelWithAttributedString:[TSKeyBindingsController displayStringForOutput:symbol font:font]];
-        NSTextField *written = [NSTextField labelWithString:symbol];
+        // Line breaks and tabs are typed with Option, as in other text fields.
+        NSString *typed = [symbol isEqualToString:@"\n"] ? @"⌥↩" : ([symbol isEqualToString:@"\t"] ? @"⌥⇥" : symbol);
+        NSTextField *written = [NSTextField labelWithString:typed];
         written.font = font;
         written.selectable = YES;
         [rows addObject:@[shown, written]];
@@ -510,6 +564,21 @@ static NSAttributedString *TSKeyBindingTokenString(NSString *symbol, NSFont *fon
 
 - (void)controlTextDidBeginEditing:(NSNotification *)notification { [self updateControls]; }
 
+// An input character field holds one character: typing replaces it.
+- (void)controlTextDidChange:(NSNotification *)notification
+{
+    NSTextField *field = notification.object;
+    if ([self.tableView columnForView:field] != [self.tableView columnWithIdentifier:TSKeyBindingKeyColumn]) return;
+    NSTextView *editor = notification.userInfo[@"NSFieldEditor"];
+    if (![editor isKindOfClass:NSTextView.class] || editor.hasMarkedText) return;
+    NSString *text = editor.string;
+    if (text.length == 0 || [text rangeOfComposedCharacterSequenceAtIndex:0].length == text.length) return;
+    NSUInteger caret = editor.selectedRange.location;
+    NSString *character = [text substringWithRange:[text rangeOfComposedCharacterSequenceAtIndex:caret > 0 ? MIN(caret, text.length) - 1 : 0]];
+    editor.string = character;
+    editor.selectedRange = NSMakeRange(character.length, 0);
+}
+
 - (void)controlTextDidEndEditing:(NSNotification *)notification
 {
     NSTextField *field = notification.object;
@@ -544,10 +613,18 @@ static NSAttributedString *TSKeyBindingTokenString(NSString *symbol, NSFont *fon
     });
 }
 
-- (void)commitKey:(NSString *)key row:(NSInteger)row
+- (void)commitKey:(NSString *)typed row:(NSInteger)row
 {
     NSString *old = self.mutableKeys[row];
-    if ([key isEqualToString:old]) { if (key.length == 0) [self dropUnfinishedRowLater]; return; }
+    NSString *key = [typed isEqualToString:old] ? old : TSKeyBindingInputCharacter(typed);
+    if ([key isEqualToString:old]) { if (key.length == 0) [self dropUnfinishedRowLater]; [self reloadRow:row]; return; }
+    if (key.length > 1) {
+        // Only a single character can start a key binding.
+        NSBeep();
+        if (old.length == 0) [self dropUnfinishedRowLater];
+        [self reloadRow:row];
+        return;
+    }
     if (key.length == 0) {
         // An existing binding keeps its input character; Delete removes it.
         NSBeep();
@@ -584,13 +661,18 @@ static NSAttributedString *TSKeyBindingTokenString(NSString *symbol, NSFont *fon
             [self reloadRow:row];
         }
     };
+    [self askToReplaceKey:key completion:finish];
+}
+
+- (void)askToReplaceKey:(NSString *)key completion:(void (^)(BOOL replace))completion
+{
     NSWindow *window = self.tableView.window;
-    if (window == nil) { finish(NO); return; }
+    if (window == nil) { completion(NO); return; }
     NSAlert *alert = [NSAlert new];
     alert.messageText = [NSString stringWithFormat:NSLocalizedString(@"Your current setting of %@ will be replaced. OK?", @"Your current setting of %@ will be replaced. OK?"), key];
     [alert addButtonWithTitle:NSLocalizedString(@"OK", @"OK")];
     [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel")];
-    [alert beginSheetModalForWindow:window completionHandler:^(NSModalResponse response) { finish(response == NSAlertFirstButtonReturn); }];
+    [alert beginSheetModalForWindow:window completionHandler:^(NSModalResponse response) { completion(response == NSAlertFirstButtonReturn); }];
 }
 
 - (void)commitOutput:(NSString *)output row:(NSInteger)row
@@ -620,6 +702,7 @@ static NSAttributedString *TSKeyBindingTokenString(NSString *symbol, NSFont *fon
         cell = [[NSTableCellView alloc] initWithFrame:NSMakeRect(0, 0, column.width, tableView.rowHeight)];
         cell.identifier = identifier;
         NSTextField *field = [NSTextField new];
+        if (output) field.cell = [[TSKeyBindingOutputCell alloc] initTextCell:@""];
         field.translatesAutoresizingMaskIntoConstraints = NO;
         field.bordered = NO; field.drawsBackground = NO;
         field.editable = YES; field.selectable = YES;

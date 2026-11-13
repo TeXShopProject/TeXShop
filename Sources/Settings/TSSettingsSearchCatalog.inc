@@ -331,6 +331,11 @@ add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"O
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Selected Text", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Insertion Point", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Clipboard Text", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Line Break", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Tab", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Mark", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Insert", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Symbols", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Mark with Note", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.2", @"Localizable", @"Edit Command Completion…", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"shortcut.edit", @"Localizable", @"Change…", TSSettingsSearchWeightLabel);

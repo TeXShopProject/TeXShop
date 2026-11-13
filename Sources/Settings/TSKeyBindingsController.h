@@ -5,8 +5,10 @@ NS_ASSUME_NONNULL_BEGIN
 // autocompletion.plist and autocompletionDisplayOrder.plist at once and takes
 // effect in open documents; Edit › Undo restores the previous list.
 //
-// Output strings keep their file format. In the table, #SEL#, #INS#, #PASTE#
-// and • are shown as tokens; Insert adds them and the help button lists them.
+// Output strings keep their file format. In the table, #SEL#, #INS#, #PASTE#,
+// •, line breaks and tabs are shown as tokens; Insert adds them, the help
+// button lists them, and copying an output string copies the file text.
+// An input character is a single character; longer ones from a file are kept.
 @interface TSKeyBindingsController : NSViewController
 @property (readonly) NSTableView *tableView;
 @property (readonly) NSPopUpButton *insertButton;
@@ -19,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction)delete:(nullable id)sender;
 - (IBAction)insertSymbol:(nullable id)sender;
 - (IBAction)showSymbols:(nullable id)sender;
+// Asks before an input character replaces another row's; the default shows
+// the confirmation sheet on the Settings window.
+- (void)askToReplaceKey:(NSString *)key completion:(void (^)(BOOL replace))completion;
 // The view shown by the help button; also used for screenshots.
 - (NSView *)makeSymbolListView;
 // Tokens for symbols, and the file text for tokens.
