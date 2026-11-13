@@ -269,15 +269,15 @@
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="624" y="312" width="504" height="430"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1055"/>
-            <value key="minSize" type="size" width="213" height="107"/>
+            <value key="minSize" type="size" width="360" height="107"/>
             <view key="contentView" id="121">
                 <rect key="frame" x="0.0" y="0.0" width="504" height="430"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="139">
-                        <rect key="frame" x="20" y="0.0" width="464" height="53"/>
+                        <rect key="frame" x="20" y="5" width="464" height="36"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" placeholderString="出错时: &lt;ret&gt; 忽略, [s] 忽略全部, [x] 完成, [i]+文本 以插入替换" bezelStyle="round" id="3824">
+                        <textFieldCell key="cell" controlSize="small" lineBreakMode="wordWrapping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" placeholderString="出错时: &lt;ret&gt; 忽略, [s] 忽略全部, [x] 完成, [i]+文本 以插入替换" bezelStyle="round" id="3824">
                             <font key="font" metaFont="label" size="11"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -320,18 +320,18 @@
                         </connections>
                     </button>
                     <scrollView fixedFrame="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4ID-ew-aBz">
-                        <rect key="frame" x="0.0" y="54" width="504" height="344"/>
+                        <rect key="frame" x="0.0" y="46" width="504" height="352"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="ye1-Qy-o7q">
-                            <rect key="frame" x="0.0" y="0.0" width="504" height="344"/>
+                            <rect key="frame" x="0.0" y="0.0" width="504" height="352"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <textView importsGraphics="NO" richText="NO" verticallyResizable="YES" smartInsertDelete="YES" id="ElP-92-GFt">
-                                    <rect key="frame" x="0.0" y="0.0" width="504" height="344"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="504" height="352"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                    <size key="minSize" width="504" height="344"/>
+                                    <size key="minSize" width="504" height="352"/>
                                     <size key="maxSize" width="516" height="10000000"/>
                                     <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                 </textView>
@@ -342,7 +342,7 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="8Sh-5r-a5U">
-                            <rect key="frame" x="488" y="0.0" width="16" height="344"/>
+                            <rect key="frame" x="488" y="0.0" width="16" height="352"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
@@ -2735,7 +2735,7 @@ Gw
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="1812" y="261" width="370" height="157"/>
             <rect key="screenRect" x="1920" y="-37" width="1728" height="1079"/>
-            <value key="minSize" type="size" width="200" height="100"/>
+            <value key="minSize" type="size" width="324" height="100"/>
             <view key="contentView" id="w8h-ku-nE0">
                 <rect key="frame" x="0.0" y="0.0" width="370" height="157"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -2783,7 +2783,7 @@ DQ
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mkc-W3-4bK">
                         <rect key="frame" x="18" y="12" width="57" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="radio" title="居左" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3gI-QO-aI4">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -2794,7 +2794,7 @@ DQ
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5qN-ax-ZtL">
                         <rect key="frame" x="79" y="12" width="54" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="radio" title=" 居中" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="FFZ-dU-wYP">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -2805,7 +2805,7 @@ DQ
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Spu-nI-ipd">
                         <rect key="frame" x="158" y="12" width="68" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="radio" title="居右" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="ZgF-Uq-bL6">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>

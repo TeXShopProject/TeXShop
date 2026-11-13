@@ -693,16 +693,10 @@
                                     <action selector="changeAutoComplete:" target="-1" id="1086"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="命令补全" id="539">
-                                <menu key="submenu" title="命令补全" id="540">
-                                    <items>
-                                        <menuItem title="新增单词" keyEquivalent="W" id="541" identifier="TSShortcut.registerForCommandCompletion:.0">
-                                            <connections>
-                                                <action selector="registerForCommandCompletion:" target="-1" id="545"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
+                            <menuItem title="添加到命令补全列表" keyEquivalent="W" id="541" identifier="TSShortcut.registerForCommandCompletion:.0">
+                                <connections>
+                                    <action selector="registerForCommandCompletion:" target="-1" id="545"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="自动换行" id="670">
                                 <menu key="submenu" title="自动换行" id="671">

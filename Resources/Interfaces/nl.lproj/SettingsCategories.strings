@@ -294,9 +294,11 @@
 "catalog.console.1.1.title" = "Vergroten/verkleinen console";
 "group.bindings.title" = "Automatisch aanvullen";
 "catalog.keyboard.0.0.title" = "Toetsbindingen gebruiken (standaard voor nieuwe documenten)";
-"catalog.keyboard.0.1.title" = "Toetsbindingen-editor…";
+"catalog.keyboard.0.0.note" = "Vervangt een getypt teken door een vaste tekst, zoals { door {}.";
+"catalog.keyboard.0.1.title" = "Lijst met toetsbindingen";
 "group.completion.title" = "Commandoaanvulling";
 "catalog.keyboard.1.0.title" = "Activeringstoets";
+"catalog.keyboard.1.0.note" = "Vult de opdracht aan die u typt; druk nogmaals op de toets voor de volgende suggestie.";
 "catalog.keyboard.1.1.title" = "BibDesk-aanvullen";
 "catalog.keyboard.1.1.note" = "Biedt citeersleutels uit BibDesk aan als aanvullingen binnen \\cite en vergelijkbare opdrachten.";
 "catalog.keyboard.1.2.title" = "Commandoaanvulling bewerken…";

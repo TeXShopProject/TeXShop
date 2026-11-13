@@ -1,5 +1,5 @@
 {
-  "provenance": "Approved SettingsPanelLab full-light captures, 570 points at 2x. Includes user-approved notes; Keyboard follows 2026-11-09 remaining-height decision.",
+  "provenance": "Approved SettingsPanelLab full-light captures, 570 points at 2x. Includes user-approved notes; Keyboard follows the 2026-11-13 key binding list decision: the list and the menu shortcuts each show at least six rows (reference image keyboard-ja-570.png in the audit notes).",
   "width": 570,
   "maximum_ratio": 1.15,
   "categories": {
@@ -24,8 +24,8 @@
       "reference_sha256": "3a7a9c2e5c737e3d271463c951012672e70e157ace176f99d7f517e0b259cd4e"
     },
     "keyboard": {
-      "height": 773.0,
-      "reference_sha256": "11d120126c9f687ad77dca70b88ac75449580a242ddf453b77fb40f6b55c79a2"
+      "height": 912.0,
+      "reference_sha256": "193432fb03cd3271db786600b8e8479ae34b396435b40096d31c98d247fb21c0"
     },
     "preview": {
       "height": 916.0,

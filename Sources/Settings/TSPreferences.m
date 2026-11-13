@@ -45,7 +45,6 @@
 #import "TSWindowManager.h"
 #import "TSEncodingSupport.h"
 #import "globals.h"
-#import "TSAutoCompletionListEditor.h"
 #import "HelpDocuments.h"
 #import "TSPreviewWindow.h"
 #import "TSSettingsChangeNote.h"
@@ -89,7 +88,7 @@ typedef NS_CLOSED_ENUM(NSUInteger, TSSettingsFontDestination) {
 @end
 
 @implementation TSPreferences
-@synthesize legacySpellCheckButton = _legacySpellCheckButton, keyBindingEditor = _keyBindingEditor, settingsHelpDocuments = _settingsHelpDocuments;
+@synthesize legacySpellCheckButton = _legacySpellCheckButton, settingsHelpDocuments = _settingsHelpDocuments;
 /*"
 Format of the original prefs file:
 
@@ -1711,12 +1710,6 @@ person script. See also: DefaultTypesetMode.
     [self updateSpellingControlsFromDefaults:SUD];
     [self applyEffectsForPreferenceKeys:[NSSet setWithObject:TSTeXAwareSpellCheckingKey]];
     [self.settingsChangeNotes recordUserChangeForKey:TSTeXAwareSpellCheckingKey previousValue:previousNoteValue];
-}
-
-- (IBAction)editKeyBindings:(id)sender
-{
-    if (self.keyBindingEditor == nil) self.keyBindingEditor = [TSAutoCompletionListEditor new];
-    [self.keyBindingEditor openAutoCompletionListEditor:sender];
 }
 
 - (IBAction)displayCommentLines:(id)sender

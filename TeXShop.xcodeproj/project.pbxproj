@@ -82,11 +82,6 @@
 		0BF38A67E94FE8E7E9361D96 /* TSPreviewSplitDivider.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF3DDBE9DD040A7E58F0C3F /* TSPreviewSplitDivider.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		403E76BE218E7008006975A8 /* TeXShop.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 403E76BD218E7008006975A8 /* TeXShop.scriptSuite */; };
 		403F25EA0F20770F001031A0 /* TSDocument-Console.m in Sources */ = {isa = PBXBuildFile; fileRef = 403F25E90F20770F001031A0 /* TSDocument-Console.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		4040A2C9135BE98200AC4C27 /* TSAutoCompletionListEditor.h in Headers */ = {isa = PBXBuildFile; fileRef = 4040A2C7135BE98200AC4C27 /* TSAutoCompletionListEditor.h */; };
-		4040A2CA135BE98200AC4C27 /* TSAutoCompletionListEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4040A2C8135BE98200AC4C27 /* TSAutoCompletionListEditor.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		4040A2CF135BE99500AC4C27 /* TSListEditorTableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4040A2CD135BE99500AC4C27 /* TSListEditorTableView.h */; };
-		4040A2D0135BE99500AC4C27 /* TSListEditorTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4040A2CE135BE99500AC4C27 /* TSListEditorTableView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		4040A7F6135BEA8200AC4C27 /* AutoCompletionListEditor.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4040A7F4135BEA8200AC4C27 /* AutoCompletionListEditor.nib */; };
 		40415E3D131CAB3700226AF4 /* TeXShop Tips & Tricks.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 40415E3B131CAB3700226AF4 /* TeXShop Tips & Tricks.pdf */; };
 		40473FAE0C68273C009311CF /* Course Supplements in Resources */ = {isa = PBXBuildFile; fileRef = 40473FA90C68273C009311CF /* Course Supplements */; };
 		404D1B632891B23400402802 /* TSHTMLWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 404D1B612891B23400402802 /* TSHTMLWindow.h */; };
@@ -248,6 +243,7 @@
 		E18300000000000000000001 = {isa = PBXBuildFile; fileRef = E18200000000000000000110; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		E18300000000000000000002 = {isa = PBXBuildFile; fileRef = E18200000000000000000210; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		E18300000000000000000003 = {isa = PBXBuildFile; fileRef = E18200000000000000000310; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		E18300000000000000000005 = {isa = PBXBuildFile; fileRef = E18200000000000000000510; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		E18300000000000000000004 = {isa = PBXBuildFile; fileRef = E18200000000000000000410; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		F5BAC2E9ED1431D54CC853B8 = {isa = PBXBuildFile; fileRef = 9E2B2A2E258A950674839CF0; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		0E1D12D0E21A008917374A1E = {isa = PBXBuildFile; fileRef = 83392E91D403FD331C9F5227; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
@@ -462,8 +458,6 @@
 		40154D62131C06B000526CCA /* zh_CN */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/Localizable.strings; sourceTree = "<group>"; };
 		40154D63131C06BD00526CCA /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.scriptTerminology; name = zh_CN; path = zh_CN.lproj/TeXShop.scriptTerminology; sourceTree = "<group>"; };
 		40154D64131C06C900526CCA /* zh_CN */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/ToolbarItems.strings; sourceTree = "<group>"; };
-		4015C22A199AF62C005C5ED3 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = "pt-PT"; path = "Resources/Interfaces/pt-PT.lproj/AutoCompletionListEditor.nib"; sourceTree = SOURCE_ROOT; };
-		4015C22B199AF650005C5ED3 /* pt */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt; path = Resources/Interfaces/pt.lproj/AutoCompletionListEditor.nib; sourceTree = SOURCE_ROOT; };
 		4015F924218F458C00F6F883 /* ScriptRunner.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; name = ScriptRunner.app; path = Resources/ScriptRunner.app; sourceTree = SOURCE_ROOT; };
 		40162B2A0F1873F200E9336E /* NoodleLineNumberMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoodleLineNumberMarker.h; sourceTree = "<group>"; };
 		40162B2B0F1873F200E9336E /* NoodleLineNumberMarker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoodleLineNumberMarker.m; sourceTree = "<group>"; };
@@ -494,11 +488,6 @@
 		1AF3DDBE9DD040A7E58F0C3F /* TSPreviewSplitDivider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSPreviewSplitDivider.m; sourceTree = "<group>"; };
 		403E76BD218E7008006975A8 /* TeXShop.scriptSuite */ = {isa = PBXFileReference; lastKnownFileType = text.plist.scriptSuite; path = TeXShop.scriptSuite; sourceTree = "<group>"; };
 		403F25E90F20770F001031A0 /* TSDocument-Console.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-Console.m"; sourceTree = "<group>"; };
-		4040A2C7135BE98200AC4C27 /* TSAutoCompletionListEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSAutoCompletionListEditor.h; sourceTree = "<group>"; };
-		4040A2C8135BE98200AC4C27 /* TSAutoCompletionListEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSAutoCompletionListEditor.m; sourceTree = "<group>"; };
-		4040A2CD135BE99500AC4C27 /* TSListEditorTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSListEditorTableView.h; sourceTree = "<group>"; };
-		4040A2CE135BE99500AC4C27 /* TSListEditorTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSListEditorTableView.m; sourceTree = "<group>"; };
-		4040A811135BEB9B00AC4C27 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/Interfaces/zh_CN.lproj/AutoCompletionListEditor.nib; sourceTree = SOURCE_ROOT; };
 		40473FA90C68273C009311CF /* Course Supplements */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Course Supplements"; sourceTree = "<group>"; };
 		40496C1F26067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/First Steps with TeXShop.pdf"; sourceTree = "<group>"; };
 		40496C2026067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/First Steps with General Typesetting.pdf"; sourceTree = "<group>"; };
@@ -509,7 +498,6 @@
 		40496C2526067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/First Steps with Mathematical Typesetting.pdf"; sourceTree = "<group>"; };
 		40496C2626067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/GPLv2 License.pdf"; sourceTree = "<group>"; };
 		40496C2726067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/Notes on Applescript in TeXShop.pdf"; sourceTree = "<group>"; };
-		404CFF162102A1AB00C77471 /* Base */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Base; path = ../Resources/Interfaces/Base.lproj/AutoCompletionListEditor.nib; sourceTree = "<group>"; };
 		404CFF172102A1AB00C77471 /* Base */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Base; path = Base.lproj/completionpanel1.2.nib; sourceTree = "<group>"; };
 		404CFF182102A1AB00C77471 /* Base */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Base; path = Base.lproj/FindPanel.nib; sourceTree = "<group>"; };
 		404CFF192102A1AB00C77471 /* Base */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Base; path = Base.lproj/MacroEditor.nib; sourceTree = "<group>"; };
@@ -554,7 +542,6 @@
 		40795D632AB4E307005A7539 /* ps2pdftransparencywrap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.csh; path = ps2pdftransparencywrap; sourceTree = "<group>"; };
 		407F694D11E65D4F00FD4359 /* TSDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSDocument.m; sourceTree = "<group>"; };
 		4080F36B210BA5520034C707 /* TSPreferences-Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSPreferences-Color.m"; sourceTree = "<group>"; };
-		4082B23A1A0D5899002DE167 /* ko */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ko; path = Resources/Interfaces/ko.lproj/AutoCompletionListEditor.nib; sourceTree = SOURCE_ROOT; };
 		40839127060963C800266FAB /* TextFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFinder.h; sourceTree = "<group>"; };
 		40839128060963C800266FAB /* TextFinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextFinder.m; sourceTree = "<group>"; };
 		4087651E18E71BB70066B908 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = "pt-PT"; path = "pt-PT.lproj/completionpanel1.2.nib"; sourceTree = "<group>"; };
@@ -596,7 +583,6 @@
 		4089E43C2604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/ToolbarItems.strings; sourceTree = "<group>"; };
 		4089E43D2604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = fr.lproj/completionpanel1.2.nib; sourceTree = "<group>"; };
 		4089E43E2604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = fr.lproj/matrixpanel.nib; sourceTree = "<group>"; };
-		4089E43F2604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = ../Resources/Interfaces/fr.lproj/AutoCompletionListEditor.nib; sourceTree = "<group>"; };
 		4089E4402604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = fr; path = fr.lproj/Credits.rtf; sourceTree = "<group>"; };
 		4089E4412604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Encodings.strings; sourceTree = "<group>"; };
 		4089E4422604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = fr; path = "fr.lproj/File Encoding.pdf"; sourceTree = "<group>"; };
@@ -618,7 +604,6 @@
 		4089E4522604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/ToolbarItems.strings; sourceTree = "<group>"; };
 		4089E4532604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ro; path = ro.lproj/completionpanel1.2.nib; sourceTree = "<group>"; };
 		4089E4542604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ro; path = ro.lproj/matrixpanel.nib; sourceTree = "<group>"; };
-		4089E4552604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ro; path = ../Resources/Interfaces/ro.lproj/AutoCompletionListEditor.nib; sourceTree = "<group>"; };
 		4089E4562604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = ro; path = ro.lproj/Credits.rtf; sourceTree = "<group>"; };
 		4089E4572604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/Encodings.strings; sourceTree = "<group>"; };
 		4089E4582604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ro; path = ro.lproj/FindPanel.nib; sourceTree = "<group>"; };
@@ -634,7 +619,6 @@
 		4089E4622604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/ToolbarItems.strings; sourceTree = "<group>"; };
 		4089E4632604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = it.lproj/completionpanel1.2.nib; sourceTree = "<group>"; };
 		4089E4642604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = it.lproj/matrixpanel.nib; sourceTree = "<group>"; };
-		4089E4652604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = ../Resources/Interfaces/it.lproj/AutoCompletionListEditor.nib; sourceTree = "<group>"; };
 		4089E4662604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = it; path = it.lproj/Credits.rtf; sourceTree = "<group>"; };
 		4089E4672604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Encodings.strings; sourceTree = "<group>"; };
 		4089E4682604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = it.lproj/FindPanel.nib; sourceTree = "<group>"; };
@@ -650,7 +634,6 @@
 		4089E4722604154700B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/ToolbarItems.strings; sourceTree = "<group>"; };
 		4089E4732604154800B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = nl.lproj/completionpanel1.2.nib; sourceTree = "<group>"; };
 		4089E4742604154800B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = nl.lproj/matrixpanel.nib; sourceTree = "<group>"; };
-		4089E4752604154800B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = ../Resources/Interfaces/nl.lproj/AutoCompletionListEditor.nib; sourceTree = "<group>"; };
 		4089E4762604154800B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = nl; path = nl.lproj/Credits.rtf; sourceTree = "<group>"; };
 		4089E4772604154800B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Encodings.strings; sourceTree = "<group>"; };
 		4089E4782604154800B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = nl.lproj/FindPanel.nib; sourceTree = "<group>"; };
@@ -668,7 +651,6 @@
 		4089E4842604154E00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/ToolbarItems.strings; sourceTree = "<group>"; };
 		4089E4852604154E00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = es; path = es.lproj/completionpanel1.2.nib; sourceTree = "<group>"; };
 		4089E4862604154E00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = es; path = es.lproj/matrixpanel.nib; sourceTree = "<group>"; };
-		4089E4872604154E00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = es; path = ../Resources/Interfaces/es.lproj/AutoCompletionListEditor.nib; sourceTree = "<group>"; };
 		4089E4882604154E00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = es; path = es.lproj/Credits.rtf; sourceTree = "<group>"; };
 		4089E4892604154E00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Encodings.strings; sourceTree = "<group>"; };
 		4089E48A2604154E00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = es; path = es.lproj/FindPanel.nib; sourceTree = "<group>"; };
@@ -685,7 +667,6 @@
 		4089E4952604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/ToolbarItems.strings; sourceTree = "<group>"; };
 		4089E4962604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ja; path = ja.lproj/completionpanel1.2.nib; sourceTree = "<group>"; };
 		4089E4972604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ja; path = ja.lproj/matrixpanel.nib; sourceTree = "<group>"; };
-		4089E4982604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ja; path = ../Resources/Interfaces/ja.lproj/AutoCompletionListEditor.nib; sourceTree = "<group>"; };
 		4089E4992604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = ja; path = ja.lproj/Credits.rtf; sourceTree = "<group>"; };
 		4089E49A2604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Encodings.strings; sourceTree = "<group>"; };
 		4089E49B2604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ja; path = ja.lproj/FindPanel.nib; sourceTree = "<group>"; };
@@ -723,7 +704,6 @@
 		4089E4BD2604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/ToolbarItems.strings; sourceTree = "<group>"; };
 		4089E4BE2604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = de.lproj/completionpanel1.2.nib; sourceTree = "<group>"; };
 		4089E4BF2604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = de.lproj/matrixpanel.nib; sourceTree = "<group>"; };
-		4089E4C02604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = ../Resources/Interfaces/de.lproj/AutoCompletionListEditor.nib; sourceTree = "<group>"; };
 		4089E4C12604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = de; path = de.lproj/Credits.rtf; sourceTree = "<group>"; };
 		4089E4C22604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Encodings.strings; sourceTree = "<group>"; };
 		4089E4C32604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = de.lproj/FindPanel.nib; sourceTree = "<group>"; };
@@ -862,6 +842,8 @@
 		E18200000000000000000210 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsStateStore.m; sourceTree = "<group>"; };
 		E18200000000000000000300 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingsSidebarRow.h; sourceTree = "<group>"; };
 		E18200000000000000000310 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsSidebarRow.m; sourceTree = "<group>"; };
+		E18200000000000000000500 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKeyBindingsController.h; sourceTree = "<group>"; };
+		E18200000000000000000510 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSKeyBindingsController.m; sourceTree = "<group>"; };
 		E18200000000000000000400 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingsContentView.h; sourceTree = "<group>"; };
 		E18200000000000000000410 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsContentView.m; sourceTree = "<group>"; };
 		9BEADA65F9CB4B3EC9B86C51 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPrefConsoleController.h; sourceTree = "<group>"; };
@@ -1194,14 +1176,10 @@
 		16B3298EA352468D9847E75E /* Panels */ = {
 			isa = PBXGroup;
 			children = (
-				4040A2C7135BE98200AC4C27 /* TSAutoCompletionListEditor.h */,
-				4040A2C8135BE98200AC4C27 /* TSAutoCompletionListEditor.m */,
 				40A9D09019AE7D4400FEFAC6 /* TSGlyphPopoverController.h */,
 				40A9D09119AE7D4400FEFAC6 /* TSGlyphPopoverController.m */,
 				F5B8EA8E01FF59A101DF2474 /* TSLaTeXPanelController.h */,
 				F5B8EA8F01FF59A101DF2474 /* TSLaTeXPanelController.m */,
-				4040A2CD135BE99500AC4C27 /* TSListEditorTableView.h */,
-				4040A2CE135BE99500AC4C27 /* TSListEditorTableView.m */,
 				4096186205824CF2000D94FD /* TSMatrixPanelController.h */,
 				4096186305824CF2000D94FD /* TSMatrixPanelController.m */,
 				40D1F2BD06040B1700087115 /* TSMatrixTableView.h */,
@@ -1302,6 +1280,8 @@
 				E3B000000000000000000002 /* TSSettingsSearch.m */,
 				E18200000000000000000300 /* TSSettingsSidebarRow.h */,
 				E18200000000000000000310 /* TSSettingsSidebarRow.m */,
+				E18200000000000000000500 /* TSKeyBindingsController.h */,
+				E18200000000000000000510 /* TSKeyBindingsController.m */,
 				E18200000000000000000200 /* TSSettingsStateStore.h */,
 				E18200000000000000000210 /* TSSettingsStateStore.m */,
 				E18000000000000000000004 /* TSSettingsWindowController.h */,
@@ -1451,7 +1431,6 @@
 				40F80CAC1FAD3A2E00377616 /* Changes.pdf */,
 				402613E32144902500DE43FB /* CommentLines.pdf */,
 				4062E2901D7BC08300DC1518 /* GPLv2 License.pdf */,
-				4040A7F4135BEA8200AC4C27 /* AutoCompletionListEditor.nib */,
 				52B13E4D08A8183B00756E5E /* completionpanel1.2.nib */,
 				2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */,
 				52A4036E08AE1F6C0070F041 /* Encodings.strings */,
@@ -1687,8 +1666,6 @@
 				346FA9FD1309961900DAA25D /* TSLayoutManager.h in Headers */,
 				40D5BB2F19632B9C0081BC77 /* ScrapTextView.h in Headers */,
 				40328ADC1340380800AD2EA7 /* TSToolbar.h in Headers */,
-				4040A2C9135BE98200AC4C27 /* TSAutoCompletionListEditor.h in Headers */,
-				4040A2CF135BE99500AC4C27 /* TSListEditorTableView.h in Headers */,
 				40B288CE1398A366005C921D /* synctex_parser_utils.h in Headers */,
 				40B288D21398A373005C921D /* synctex_parser.h in Headers */,
 				40A3575F13CA151400793021 /* TSApplication.h in Headers */,
@@ -1842,7 +1819,6 @@
 				40A6859F11125D0A00C67A9E /* About This Release.pdf in Resources */,
 				40415E3D131CAB3700226AF4 /* TeXShop Tips & Tricks.pdf in Resources */,
 				402613E52144902500DE43FB /* CommentLines.pdf in Resources */,
-				4040A7F6135BEA8200AC4C27 /* AutoCompletionListEditor.nib in Resources */,
 				40367BB513DFB3B70098E009 /* TeXShopHelp in Resources */,
 				40DD04301C23893C00422219 /* File Encoding.pdf in Resources */,
 			);
@@ -1906,6 +1882,7 @@
 				E18300000000000000000002,
 				E18300000000000000000003,
 				E18300000000000000000004,
+				E18300000000000000000005,
 				E18100000000000000000001,
 				E3B000000000000000000001,
 				7A9051C11D9E4EA1A5210013,
@@ -1984,8 +1961,6 @@
 				4080F36C210BA5520034C707 /* TSPreferences-Color.m in Sources */,
 				40328ADD1340380800AD2EA7 /* TSToolbar.m in Sources */,
 				40AA6A721BCB498D00533975 /* MyPDFKitView-Magnification.m in Sources */,
-				4040A2CA135BE98200AC4C27 /* TSAutoCompletionListEditor.m in Sources */,
-				4040A2D0135BE99500AC4C27 /* TSListEditorTableView.m in Sources */,
 				40B288CD1398A366005C921D /* synctex_parser_utils.c in Sources */,
 				40B288D11398A373005C921D /* synctex_parser.c in Sources */,
 				40A3576013CA151400793021 /* TSApplication.m in Sources */,
@@ -2117,26 +2092,6 @@
 				4089E4BC2604156000B8A795 /* de */,
 			);
 			name = TeXShopHelp;
-			sourceTree = "<group>";
-		};
-		4040A7F4135BEA8200AC4C27 /* AutoCompletionListEditor.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				4040A811135BEB9B00AC4C27 /* zh_CN */,
-				4015C22A199AF62C005C5ED3 /* pt-PT */,
-				4015C22B199AF650005C5ED3 /* pt */,
-				4082B23A1A0D5899002DE167 /* ko */,
-				404CFF162102A1AB00C77471 /* Base */,
-				4089E43F2604153000B8A795 /* fr */,
-				4089E4552604153900B8A795 /* ro */,
-				4089E4652604154100B8A795 /* it */,
-				4089E4752604154800B8A795 /* nl */,
-				4089E4872604154E00B8A795 /* es */,
-				4089E4982604155300B8A795 /* ja */,
-				4089E4C02604156000B8A795 /* de */,
-			);
-			name = AutoCompletionListEditor.nib;
-			path = ../../Sources;
 			sourceTree = "<group>";
 		};
 		40415E3B131CAB3700226AF4 /* TeXShop Tips & Tricks.pdf */ = {

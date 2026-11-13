@@ -294,9 +294,11 @@
 "catalog.console.1.1.title" = "Ridimensionamento console";
 "group.bindings.title" = "Autocompletamento";
 "catalog.keyboard.0.0.title" = "Usare le combinazioni di tasti (valore iniziale per i nuovi documenti)";
-"catalog.keyboard.0.1.title" = "Editor delle associazioni dei tasti…";
+"catalog.keyboard.0.0.note" = "Sostituisce un carattere digitato con un testo prestabilito, ad esempio { con {}.";
+"catalog.keyboard.0.1.title" = "Elenco delle associazioni dei tasti";
 "group.completion.title" = "Completamento dei comandi";
 "catalog.keyboard.1.0.title" = "Tasto di attivazione";
+"catalog.keyboard.1.0.note" = "Completa il comando in corso di digitazione; premere di nuovo il tasto per la proposta successiva.";
 "catalog.keyboard.1.1.title" = "Completamento BibDesk";
 "catalog.keyboard.1.1.note" = "Propone le chiavi di citazione di BibDesk come completamenti in \\cite e comandi simili.";
 "catalog.keyboard.1.2.title" = "Modifica il completamento dei comandi…";
