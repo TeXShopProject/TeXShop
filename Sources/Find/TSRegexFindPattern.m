@@ -61,25 +61,28 @@ static NSCharacterSet *TSNumbersButASCIIDigits(void)
     return numbers;
 }
 
-/// The same numbers, one by one.
-static NSArray<NSNumber *> *TSNumbersButASCIIDigitsList(void)
+/// The same numbers as a bitmap of the BMP and a set of the others.
+static void TSNumbersButASCIIDigitsTables(NSData *_Nonnull *_Nonnull bmp, NSSet<NSNumber *> *_Nonnull *_Nonnull astral)
 {
-    static NSArray<NSNumber *> *list;
+    static NSData *bitmap;
+    static NSSet<NSNumber *> *others;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         NSCharacterSet *numbers = TSNumbersButASCIIDigits();
-        NSMutableArray<NSNumber *> *all = [NSMutableArray array];
-        for (UTF32Char c = 0; c <= 0x10FFFF; c++) {
+        bitmap = [numbers.bitmapRepresentation subdataWithRange:NSMakeRange(0, 0x10000 / 8)];
+        NSMutableSet<NSNumber *> *all = [NSMutableSet set];
+        for (UTF32Char c = 0x10000; c <= 0x10FFFF; c++) {
             if ((c & 0xFFFF) == 0 && ![numbers hasMemberInPlane:(uint8_t)(c >> 16)]) {
                 c += 0xFFFF;
                 continue;
             }
-            if (!(c >= 0xD800 && c <= 0xDFFF) && [numbers longCharacterIsMember:c])
+            if ([numbers longCharacterIsMember:c])
                 [all addObject:@(c)];
         }
-        list = all;
+        others = all;
     });
-    return list;
+    *bmp = bitmap;
+    *astral = others;
 }
 
 /// The characters a quick word may hold: ASCII and Latin-1 but the controls (tab and LF are kept) and the soft hyphen,
@@ -103,6 +106,8 @@ static inline BOOL TSIsQuickCharacter(unichar c)
     /// BMP, and the others; nil when there are none.
     NSData *_others;
     NSSet<NSNumber *> *_astralOthers;
+    /// Whether the word has a digit, so that every number but the ASCII digits is one of them too.
+    BOOL _hasDigit;
 }
 @property (nonatomic, readonly) NSData *unitData;
 @end
@@ -145,9 +150,13 @@ static inline BOOL TSIsQuickCharacter(unichar c)
         ((uint8_t *)others.mutableBytes)[c >> 3] |= (uint8_t)(1u << (c & 7));
     };
     // With a digit, any other number in the text is left to the search itself.
-    if ([own intersectsIndexesInRange:NSMakeRange('0', 10)])
-        for (NSNumber *number in TSNumbersButASCIIDigitsList())
-            addOther(number);
+    quick->_hasDigit = [own intersectsIndexesInRange:NSMakeRange('0', 10)];
+    if (quick->_hasDigit) {
+        NSData *numberBitmap = nil;
+        NSSet<NSNumber *> *astralNumbers = nil;
+        TSNumbersButASCIIDigitsTables(&numberBitmap, &astralNumbers);
+        others = [numberBitmap mutableCopy];
+    }
     NSDictionary<NSNumber *, NSArray<NSArray *> *> *table = TSUnmarkedDecompositions();
     [own enumerateIndexesUsingBlock:^(NSUInteger first, BOOL *stop) {
         for (NSArray *entry in table[@(first)]) {
@@ -167,14 +176,23 @@ static inline BOOL TSIsQuickCharacter(unichar c)
 /// Whether the characters hold one that a match of the word without NSLiteralSearch could hold in its place.
 - (BOOL)hasOthersIn:(const unichar *)chars length:(NSUInteger)length
 {
+    // The BMP bitmap holds the numbers too when the word has a digit; none of them is ASCII.
     const uint8_t *bits = _others.bytes;
+    NSData *numberBitmap = nil;
+    NSSet<NSNumber *> *astralNumbers = nil;
+    if (_hasDigit)
+        TSNumbersButASCIIDigitsTables(&numberBitmap, &astralNumbers);
     for (NSUInteger i = 0; i < length; i++) {
         unichar c = chars[i];
+        if (c < 0x80)
+            continue;
         if (bits && (bits[c >> 3] & (1u << (c & 7))))
             return YES;
-        if (_astralOthers && CFStringIsSurrogateHighCharacter(c) && i + 1 < length && CFStringIsSurrogateLowCharacter(chars[i + 1])
-            && [_astralOthers containsObject:@(CFStringGetLongCharacterForSurrogatePair(c, chars[i + 1]))])
-            return YES;
+        if ((_astralOthers || astralNumbers) && CFStringIsSurrogateHighCharacter(c) && i + 1 < length && CFStringIsSurrogateLowCharacter(chars[i + 1])) {
+            NSNumber *scalar = @(CFStringGetLongCharacterForSurrogatePair(c, chars[i + 1]));
+            if ([_astralOthers containsObject:scalar] || [astralNumbers containsObject:scalar])
+                return YES;
+        }
     }
     return NO;
 }
@@ -453,7 +471,7 @@ static inline BOOL TSIsQuickCharacter(unichar c)
             chars = copy.bytes;
             base = range.location;
         }
-        [quick addObject:(word->_others || word->_astralOthers) && [word hasOthersIn:chars + (range.location - base) length:range.length] ? NSNull.null : word];
+        [quick addObject:(word->_others || word->_astralOthers || word->_hasDigit) && [word hasOthersIn:chars + (range.location - base) length:range.length] ? NSNull.null : word];
     }
     NSRange (^find)(NSUInteger, NSUInteger) = ^NSRange(NSUInteger i, NSUInteger from) {
         TSQuickWord *word = quick[i];

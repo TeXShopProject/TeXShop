@@ -627,9 +627,8 @@ static NSError *TSDefinitionError(NSString *description)
                                             cancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
                                                 progress:(nullable void (NS_NOESCAPE ^)(NSUInteger, NSUInteger, double))progress
 {
-    // Once isCancelled has said YES, the replacement is cancelled whatever it says later.
-    __block BOOL cancelled = NO;
-    BOOL (^cancellation)(void) = isCancelled ? ^BOOL { return cancelled || (cancelled = isCancelled()); } : nil;
+    // A YES ends the replacement at once: here before a rule, and in the rule's replacement, which keeps it.
+    BOOL (^cancellation)(void) = isCancelled;
     NSUInteger ruleCount = self.rules.count;
     void (^ruleDone)(NSUInteger) = ^(NSUInteger index) {
         if (progress)
@@ -682,9 +681,8 @@ static NSError *TSDefinitionError(NSString *description)
                                           lineEnding:(nullable NSString *)lineEnding
                                         cancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
 {
-    // Once isCancelled has said YES, the search is cancelled whatever it says later.
-    __block BOOL cancelled = NO;
-    BOOL (^cancellation)(void) = isCancelled ? ^BOOL { return cancelled || (cancelled = isCancelled()); } : nil;
+    // A YES ends the search at once: here before a rule, and in the rule's search, which keeps it.
+    BOOL (^cancellation)(void) = isCancelled;
     NSMutableArray<NSValue *> *ranges = [NSMutableArray array];
     for (TSRegexReplacementRule *rule in self.rules) {
         if (cancellation && cancellation())
