@@ -2389,6 +2389,8 @@ The Advanced Find Panel is chosen in TeXShop Settings, in the Editor category un
 
 The usual commands in the Find submenu of the Edit menu work with the panel. Find (command-F) opens it with the find field selected, and Find and Replace with the replacement field selected. Find Next (command-G), Find Previous (shift-command-G) and Use Selection for Find (command-E) act on the source window, also while the panel is in front.
 
+The panel also finds in the console, the log, and the source panel and the console of Experiment. While one of them has the focus, the commands of the Find submenu go to the panel, and its highlights are drawn there. The panel acts on the text that had the focus last. The console, the log and the Experiment console show the output of \TeX, so the commands and buttons that replace are dimmed there; the log can still be edited by hand.
+
 The find and replacement fields grow when the panel is made larger. In a field, RETURN finds the next match and TAB moves to the other field; option-RETURN and option-TAB insert a line break and a tab. The icon at the left of a field shows the recent strings of that field, and Clear Recent Searches or Clear Recent Replacements removes them. The position of the current match, for example ``3 of 12'', appears at the right of the find field.
 
 Below the fields are Regular expression, Ignore case and In selection. The button with three dots shows more options:
@@ -2422,6 +2424,8 @@ The small button with a question mark next to Regular expression opens the Regul
 The replacement can be written in two ways, chosen among the options. In the ICU syntax, the default, \verb|$0| is the whole match and \verb|$1|, \verb|$2|, \ldots\ are the groups, as in CotEditor; \verb|\$| is a dollar sign. A \TeX\ formula such as \verb|$x$| is therefore written \verb|\$x\$| in a replacement. In the OgreKit syntax, \verb|\0| or \verb|\&| is the whole match, \verb|\1|, \verb|\2|, \ldots\ are the groups, \verb|\g<name>| is a named group, and \verb|$| is an ordinary character. In both, a backslash in the replacement is written twice: \verb|\\section| gives \verb|\section|.
 
 For example, to change \verb|\section{Intro}| into \verb|\section*{Intro}|, turn on Regular expression, search for \verb|\\section\{([^}]*)\}| and replace with \verb|\\section*{$1}|. To find characters that are not ASCII, search for \verb|[^[:ascii:]]|.
+
+With Regular expression on, the find and replacement fields show a pattern as the panel reads it. Character classes, groups and alternatives, quantifiers, anchors, escapes, group references and comments each have a color of their own. An error, such as a group that is not closed or a reference in the replacement to a group the pattern does not have, is red and underlined; what OgreKit read in another way is orange with a dotted underline. The line below the options explains the first mark and says how many more there are. In the find field, when the insertion point is right after a parenthesis or a square bracket, its partner is shown briefly, and a double-click on one selects the pair with what is between. Only the brackets that the pattern really uses count: not escaped ones, nor parentheses inside a class or a comment. In Multiple Replace, the find and replacement strings of a rule that is on and uses regular expressions are colored the same way.
 
 \subsection{Multiple Replace}
 
