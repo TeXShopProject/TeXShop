@@ -15,6 +15,7 @@ static BOOL TSIn(const char *set, unichar c) { return c > 0 && c < 128 && strchr
     BOOL _yen, _extended;
     BOOL _canRepeat;                            // the previous item can take a quantifier
     NSMutableArray<NSNumber *> *_openGroups;   // where the unclosed groups start
+    NSMutableArray<NSNumber *> *_openExtended; // whether spaces and # comments were ignored before each of them
 }
 
 - (instancetype)initWithString:(NSString *)string options:(TSRegexFindOptions)options
@@ -26,6 +27,7 @@ static BOOL TSIn(const char *set, unichar c) { return c > 0 && c < 128 && strchr
         _extended = (options & TSRegexFindAllowCommentsAndWhitespace) != 0;
         _tokens = [NSMutableData data];
         _openGroups = [NSMutableArray array];
+        _openExtended = [NSMutableArray array];
         _pairs = [NSMutableArray array];
         _names = [NSMutableArray array];
         if (!(options & TSRegexFindIgnoreMetacharacters))
@@ -140,6 +142,9 @@ static BOOL TSIn(const char *set, unichar c) { return c > 0 && c < 128 && strchr
             else {
                 NSUInteger open = _openGroups.lastObject.unsignedIntegerValue;
                 [_openGroups removeLastObject];
+                // A flag set inside the group, as (?x), ends with it.
+                _extended = _openExtended.lastObject.boolValue;
+                [_openExtended removeLastObject];
                 [_pairs addObject:[NSValue valueWithRange:NSMakeRange(open, i + 1 - open)]];
                 [self add:i end:i + 1 role:TSSyntaxRoleRegexSymbol];
             }
@@ -164,12 +169,14 @@ static BOOL TSIn(const char *set, unichar c) { return c > 0 && c < 128 && strchr
             _canRepeat = YES;
             i++;
         } else if (_extended && c == '#') {
+            // As ICU: the comment runs to a line feed, a carriage return, NEL or LINE SEPARATOR (not to U+2029).
             NSUInteger j = i;
-            while (j < _n && [self at:j] != '\n' && [self at:j] != '\r')
+            while (j < _n && !TSIn("\n\r", [self at:j]) && [self at:j] != 0x85 && [self at:j] != 0x2028)
                 j++;
             [self add:i end:j role:TSSyntaxRoleComment];
             i = j;
-        } else if (_extended && (c == ' ' || c == '\t' || c == '\n' || c == '\r')) {
+        } else if (_extended && (TSIn(" \t\n\v\f\r", c) || c == 0x85 || c == 0x200E || c == 0x200F || c == 0x2028 || c == 0x2029)) {
+            // Pattern_White_Space, which ICU skips
             i++;
         } else {
             _canRepeat = YES;
@@ -308,11 +315,17 @@ static BOOL TSIn(const char *set, unichar c) { return c > 0 && c < 128 && strchr
     return j;
 }
 
+- (void)openGroupAt:(NSUInteger)i
+{
+    [_openGroups addObject:@(i)];
+    [_openExtended addObject:@(_extended)];
+}
+
 - (NSUInteger)groupAt:(NSUInteger)i
 {
     if ([self at:i + 1] != '?') {
         [self add:i end:i + 1 role:TSSyntaxRoleRegexSymbol];
-        [_openGroups addObject:@(i)];
+        [self openGroupAt:i];
         _canRepeat = NO;
         return i + 1;
     }
@@ -339,15 +352,20 @@ static BOOL TSIn(const char *set, unichar c) { return c > 0 && c < 128 && strchr
         end = i + 4;
     else if (k == '~') {
         [self add:i end:i + 3 incompatibility:TSRegexOnigmoIncompatibilityAbsent];
-        [_openGroups addObject:@(i)];
+        [self openGroupAt:i];
         _canRepeat = NO;
         return i + 3;
     } else if (!TSIn(":=!>", k)) {
-        // Flags: (?i) (?im-sx) or (?i:…)
+        // Flags: (?i) (?im-sx) or (?i:…). Of them, x changes how the rest is read.
         NSUInteger j = i + 2;
-        BOOL multiline = NO;
+        BOOL multiline = NO, off = NO, extended = _extended;
         while (j < _n && TSIn("imsxwu-", [self at:j])) {
-            multiline = multiline || [self at:j] == 'm';
+            unichar flag = [self at:j];
+            multiline = multiline || flag == 'm';
+            if (flag == '-')
+                off = YES;
+            else if (flag == 'x')
+                extended = !off;
             j++;
         }
         unichar close = [self at:j];
@@ -360,12 +378,13 @@ static BOOL TSIn(const char *set, unichar c) { return c > 0 && c < 128 && strchr
         else
             [self add:i end:j + 1 role:TSSyntaxRoleRegexSymbol];
         if (close == ':')
-            [_openGroups addObject:@(i)];
+            [self openGroupAt:i]; // (?x:…): until the group ends
+        _extended = extended;     // (?x): until the enclosing group ends
         _canRepeat = NO;
         return j + 1;
     }
     [self add:i end:end role:TSSyntaxRoleRegexSymbol];
-    [_openGroups addObject:@(i)];
+    [self openGroupAt:i];
     _canRepeat = NO;
     return end;
 }

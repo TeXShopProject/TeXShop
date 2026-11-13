@@ -183,6 +183,37 @@ static void TestPairsAndNames(void)
               [NSString stringWithFormat:@"the engine has the same group names for %@: %@", named[i].pattern, [pattern.captureGroupNames componentsJoinedByString:@","]]);
     }
 
+    // Comments of the x option, turned on or off inside the pattern and ended as ICU ends them (first audit F1, F2):
+    // the names are those of ICU's groups, and \g<name> gives what ICU's group matched.
+    NSString *ls = @" ", *ps = @" ", *nel = [NSString stringWithFormat:@"%C", (unichar)0x85];
+    struct { NSString *pattern; BOOL extended; NSArray<NSString *> *names; } scoped[] = {
+        {@"(?-x:#(?<real>a))", YES, @[@"real"]},
+        {@"(?x)#(?<fake>b)\n(?<real>a)", NO, @[@"real"]},
+        {@"(?x:#(?<fake>b)\n)(?<real>a)", NO, @[@"real"]},
+        {@"(?x:#(?<fake>b)\n)(?<real>a)", YES, @[@"real"]},
+        {@"(a(?x)) #(?<after>b)", NO, @[@"after"]},  // (?x) ends with its group
+        {@"(?x-x)#(?<last>a)", YES, @[@"last"]},       // the last x of the flags counts
+        {[NSString stringWithFormat:@"#comment%@(?<real>a)", ls], YES, @[@"real"]},
+        {[NSString stringWithFormat:@"#comment%@(?<real>a)", nel], YES, @[@"real"]},
+        {[NSString stringWithFormat:@"#comment%@(?<fake>a)", ps], YES, @[]},  // U+2029 does not end a comment
+    };
+    for (size_t i = 0; i < sizeof scoped / sizeof scoped[0]; i++) {
+        TSRegexFindOptions options = regex | (scoped[i].extended ? TSRegexFindAllowCommentsAndWhitespace : 0);
+        NSString *shown = [[scoped[i].pattern stringByReplacingOccurrencesOfString:@"\n" withString:@"⏎"] stringByAppendingFormat:@" (x %d)", scoped[i].extended];
+        TSRegexFindPattern *found = [[TSRegexFindPattern alloc] initWithFindString:scoped[i].pattern options:options error:NULL];
+        Check(found && [found.captureGroupNames isEqualToArray:scoped[i].names],
+              [NSString stringWithFormat:@"the named groups of %@: %@", shown, [found.captureGroupNames componentsJoinedByString:@","]]);
+        NSRegularExpression *icu = [NSRegularExpression regularExpressionWithPattern:scoped[i].pattern
+                                                                             options:scoped[i].extended ? NSRegularExpressionAllowCommentsAndWhitespace : 0 error:NULL];
+        NSString *name = scoped[i].names.firstObject ?: @"fake";
+        NSTextCheckingResult *match = [icu firstMatchInString:@"#ab" options:0 range:NSMakeRange(0, 3)];
+        TSRegexReplacementTemplate *expand = [[TSRegexReplacementTemplate alloc] initWithString:[NSString stringWithFormat:@"\\g<%@>", name]
+                                                                                         pattern:found syntax:TSRegexReplacementSyntaxOgreKit];
+        NSString *expected = scoped[i].names.count && match ? [@"#ab" substringWithRange:[match rangeWithName:name]] : @"";
+        NSString *got = match && found ? [expand replacementForMatchRange:match.range result:match inString:@"#ab" previousMatchEnd:0] : @"";
+        Check([got isEqualToString:expected], [NSString stringWithFormat:@"\\g<%@> of %@ gives what ICU's group matched: [%@] (ICU: [%@])", name, shown, got, expected]);
+    }
+
     // The replace field knows only the real groups: \g<b> refers to a name inside a class.
     TSRegexFindPattern *pattern = [[TSRegexFindPattern alloc] initWithFindString:@"[(?<b>y)]x" options:regex error:NULL];
     TSAdvancedFindReplacementScanner *replace = [[TSAdvancedFindReplacementScanner alloc] initWithSyntax:TSRegexReplacementSyntaxOgreKit options:regex pattern:pattern];

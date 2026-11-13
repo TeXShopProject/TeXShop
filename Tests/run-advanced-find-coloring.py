@@ -37,6 +37,10 @@ MUTATIONS = {
         '            ? [TSRegexFindPattern onigmoIncompatibilityOfKind:(TSRegexOnigmoIncompatibilityKind)token.incompatibility].message',
         '            ? [TSRegexFindPattern onigmoIncompatibilityOfKind:TSRegexOnigmoIncompatibilityKeep].message'),
     '\\( counts as a bracket': ('TSRegexPatternLexer.m', '    if (d >= \'1\' && d <= \'9\') {', '    if (d == \'(\') [_openGroups addObject:@(i + 1)];\n    if (d >= \'1\' && d <= \'9\') {'),
+    # Inline flags and comment ends as ICU reads them (first audit F1, F2)
+    'an inline x is ignored': ('TSRegexPatternLexer.m', '        _extended = extended;     // (?x): until the enclosing group ends\n', ''),
+    'a group does not end its x': ('TSRegexPatternLexer.m', '                _extended = _openExtended.lastObject.boolValue;\n', ''),
+    'U+2028 does not end a comment': ('TSRegexPatternLexer.m', ' && [self at:j] != 0x2028)', ')'),
     # The coloring itself
     'quantifiers are text': ('TSRegexPatternLexer.m', '        [self add:i end:end role:TSSyntaxRoleRegexQuantifier];', '        [self add:i end:end role:TSSyntaxRoleNone];'),
     'a quantifier after nothing is valid': ('TSRegexPatternLexer.m', '    if (!_canRepeat)\n        [self add:i end:end problem:TSRegexLexerProblemNothingToRepeat];',
