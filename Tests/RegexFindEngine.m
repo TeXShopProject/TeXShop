@@ -375,7 +375,10 @@ int main(void)
             @"18446744073709551615": @127, @"9223372036854775807.0": @127, @"9223372036854775808e0": @0, @"1e19": @0,
             // From 2^53 the fraction is cut off, not rounded as a double would be.
             @"9007199254740993.9": @1, @"9007199254740995.5": @3, @"12345678901234567890e-1": @21, @"90071992547409930000e-4": @1,
-            @"9007199254740993.00000000000000000000000000000000000001": @1};
+            @"9007199254740993.00000000000000000000000000000000000001": @1,
+            // Exponents and digits that NSJSONSerialization cannot read.
+            @"1e00000": @1, @"1e+00000": @1, @"1e-00000": @1, @"1E+0000000000": @1, @"0e-9999": @0,
+            [[@"9007199254739967" stringByPaddingToLength:16 + 254 withString:@"0" startingAtIndex:0] stringByAppendingString:@"e-254"]: @127};
         for (NSString *number in wholeNumbers) {
             NSString *textual = [NSString stringWithFormat:@"{\"replacements\":[],\"settings\":{\"textualOptions\":%@,\"regexOptions\":0}}", number];
             NSString *regex = [NSString stringWithFormat:@"{\"replacements\":[],\"settings\":{\"textualOptions\":0,\"regexOptions\":%@}}", number];
@@ -390,7 +393,8 @@ int main(void)
         for (NSString *number in @[@"18446744073709551616", @"18446744073709551617", @"18446744073709551614.9", @"1.5", @"-1", @"1e40", @"1e309",
                                    @"9223372036854775807.9", @"9223372036854775792.9", @"9007199254740993.000001", @"18446744073709551600.0",
                                    @"18446744073709551600e0", @"18446744073709551615.0", @"1.8446744073709551615e19", @"18446744073709550592.0",
-                                   @"true", @"null", @"\"1\""]) {
+                                   @"01", @"00", @"-01", @"-.0", @"-", @"1.", @"1e", @"1e+", @"1.e5", @"1..2", @"1e5e5", @"1e+-5", @"1-2",
+                                   @"1.5-3", @"--1", @"5-", @"true", @"null", @"\"1\""]) {
             for (NSString *format in @[@"{\"replacements\":[],\"settings\":{\"textualOptions\":%@,\"regexOptions\":0}}",
                                        @"{\"replacements\":[],\"settings\":{\"textualOptions\":0,\"regexOptions\":%@}}"]) {
                 NSString *file = [NSString stringWithFormat:format, number];
@@ -405,6 +409,24 @@ int main(void)
         for (NSNumber *encoding in @[@(NSUTF8StringEncoding), @(NSUTF16LittleEndianStringEncoding), @(NSUTF16StringEncoding), @(NSUTF32BigEndianStringEncoding)]) {
             TSRegexMultipleReplace *set = [[TSRegexMultipleReplace alloc] initWithJSONData:(NSData *_Nonnull)[shaped dataUsingEncoding:encoding.unsignedIntegerValue] error:NULL];
             Check(set.regularExpressionOptions == TSRegexFindIgnoreCase, [@"the number is found as Swift finds it, in encoding " stringByAppendingString:encoding.stringValue]);
+        }
+        // Swift reads a number only when it decodes it: until then any run of digits, `.`, `+`, `-`, `e` and `E` that
+        // begins with a digit or `-` is a number, wherever it is.
+        NSString *loose = @"{\"replacements\":[{\"findString\":\"a\\\"1e00000\",\"replacementString\":\"-1 2e-9999\",\"x\":-}],"
+                          "\"x\":[1e00000,01,1.,1e,-,1-2,1e400,0e-9999,{\"y\":5+5}],"
+                          "\"settings\":{\"textualOptions\":1e00000,\"regexOptions\":1E+0000,\"x\":1e99999,\"texshopYenIsBackslash\":1e00000}}";
+        for (NSNumber *encoding in @[@(NSUTF8StringEncoding), @(NSUTF16BigEndianStringEncoding), @(NSUTF32LittleEndianStringEncoding)]) {
+            TSRegexMultipleReplace *set = [[TSRegexMultipleReplace alloc] initWithJSONData:(NSData *_Nonnull)[loose dataUsingEncoding:encoding.unsignedIntegerValue] error:NULL];
+            Check(set && set.textualOptions == TSRegexFindIgnoreCase && set.regularExpressionOptions == TSRegexFindIgnoreCase
+                  && [set.rules[0].findString isEqualToString:@"a\"1e00000"] && [set.rules[0].replaceString isEqualToString:@"-1 2e-9999"],
+                  [@"numbers Swift does not decode are not read, in encoding " stringByAppendingString:encoding.stringValue]);
+        }
+        for (NSString *bad in @[@"{\"replacements\":[{\"findString\":\"a\",\"replacementString\":\"b\",\"isEnabled\":1e00000}],\"settings\":{\"textualOptions\":0,\"regexOptions\":0}}",
+                                @"{\"replacements\":[],\"settings\":{\"textualOptions\":0,\"regexOptions\":0,\"matchesFullWord\":1e00000}}",
+                                @"{\"replacements\":[],\"settings\":{\"textualOptions\":0,\"regexOptions\":0},\"x\":1x}",
+                                @"{\"replacements\":[],\"settings\":{\"textualOptions\":0,\"regexOptions\":0},\"x\":1e00000\"a\"}"]) {
+            Check([[TSRegexMultipleReplace alloc] initWithJSONData:[bad dataUsingEncoding:NSUTF8StringEncoding] error:NULL] == nil,
+                  [@"a number where Swift wants something else, or followed by something else, is refused: " stringByAppendingString:bad]);
         }
         NSString *missingUnescape = @"{\"replacements\":[],\"settings\":{\"textualOptions\":0,\"regexOptions\":0}}";
         Check([[TSRegexMultipleReplace alloc] initWithJSONData:[missingUnescape dataUsingEncoding:NSUTF8StringEncoding] error:NULL].regularExpressionOptions == 0, @"a missing unescape value reads as off, as in CotEditor");

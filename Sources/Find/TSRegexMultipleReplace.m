@@ -32,31 +32,96 @@ static BOOL TSIsBooleanValue(id value)
 
 #pragma mark - Numbers read as Swift reads them
 
-// CotEditor reads its options with Swift's JSONDecoder, which reads a number from its text; NSJSONSerialization keeps
-// only a double for most fractions, so the text of the two option numbers is taken from the data itself.
+// CotEditor reads its options with Swift's JSONDecoder, which reads a number from its text, and only when it decodes it.
+// NSJSONSerialization keeps only a double for most fractions, and refuses some numbers that Swift reads, such as
+// `1e00000`. So NSJSONSerialization is given every number as `0`, and the two option numbers are read from their text.
+
+typedef struct {
+    NSStringEncoding encoding;
+    NSUInteger width;       // Bytes in a code unit.
+    BOOL bigEndian;
+} TSJSONEncoding;
+
+/// The encoding of JSON data, as NSJSONSerialization detects it.
+static TSJSONEncoding TSJSONEncodingOfData(NSData *data)
+{
+    const uint8_t *b = data.bytes;
+    NSUInteger n = data.length;
+    if (n >= 4 && b[0] == 0 && b[1] == 0 && b[2] == 0xFE && b[3] == 0xFF)
+        return (TSJSONEncoding){NSUTF32StringEncoding, 4, YES};
+    if (n >= 4 && b[0] == 0xFF && b[1] == 0xFE && b[2] == 0 && b[3] == 0)
+        return (TSJSONEncoding){NSUTF32StringEncoding, 4, NO};
+    if (n >= 2 && b[0] == 0xFE && b[1] == 0xFF)
+        return (TSJSONEncoding){NSUTF16StringEncoding, 2, YES};
+    if (n >= 2 && b[0] == 0xFF && b[1] == 0xFE)
+        return (TSJSONEncoding){NSUTF16StringEncoding, 2, NO};
+    if (n >= 4 && b[0] == 0 && b[1] == 0 && b[2] == 0)
+        return (TSJSONEncoding){NSUTF32BigEndianStringEncoding, 4, YES};
+    if (n >= 4 && b[1] == 0 && b[2] == 0 && b[3] == 0)
+        return (TSJSONEncoding){NSUTF32LittleEndianStringEncoding, 4, NO};
+    if (n >= 2 && b[0] == 0)
+        return (TSJSONEncoding){NSUTF16BigEndianStringEncoding, 2, YES};
+    if (n >= 2 && b[1] == 0)
+        return (TSJSONEncoding){NSUTF16LittleEndianStringEncoding, 2, NO};
+    return (TSJSONEncoding){NSUTF8StringEncoding, 1, NO};
+}
 
 /// The text of JSON data, in the encoding NSJSONSerialization detects.
 static NSString *_Nullable TSJSONText(NSData *data)
 {
-    const uint8_t *b = data.bytes;
-    NSUInteger n = data.length;
-    NSStringEncoding encoding = NSUTF8StringEncoding;
-    if (n >= 4 && ((b[0] == 0 && b[1] == 0 && b[2] == 0xFE && b[3] == 0xFF) || (b[0] == 0xFF && b[1] == 0xFE && b[2] == 0 && b[3] == 0)))
-        encoding = NSUTF32StringEncoding;
-    else if (n >= 2 && ((b[0] == 0xFE && b[1] == 0xFF) || (b[0] == 0xFF && b[1] == 0xFE)))
-        encoding = NSUTF16StringEncoding;
-    else if (n >= 4 && b[0] == 0 && b[1] == 0 && b[2] == 0)
-        encoding = NSUTF32BigEndianStringEncoding;
-    else if (n >= 4 && b[1] == 0 && b[2] == 0 && b[3] == 0)
-        encoding = NSUTF32LittleEndianStringEncoding;
-    else if (n >= 2 && b[0] == 0)
-        encoding = NSUTF16BigEndianStringEncoding;
-    else if (n >= 2 && b[1] == 0)
-        encoding = NSUTF16LittleEndianStringEncoding;
-    NSString *text = [[NSString alloc] initWithData:data encoding:encoding];
+    NSString *text = [[NSString alloc] initWithData:data encoding:TSJSONEncodingOfData(data).encoding];
     if ([text hasPrefix:@"﻿"])
         text = [text substringFromIndex:1];
     return text;
+}
+
+static uint32_t TSJSONUnit(const uint8_t *bytes, NSUInteger index, TSJSONEncoding encoding)
+{
+    const uint8_t *unit = bytes + index * encoding.width;
+    uint32_t value = 0;
+    for (NSUInteger i = 0; i < encoding.width; i++)
+        value |= (uint32_t)unit[encoding.bigEndian ? i : encoding.width - 1 - i] << (8 * (encoding.width - 1 - i));
+    return value;
+}
+
+static void TSJSONSetUnit(uint8_t *bytes, NSUInteger index, TSJSONEncoding encoding, uint8_t character)
+{
+    uint8_t *unit = bytes + index * encoding.width;
+    memset(unit, 0, encoding.width);
+    unit[encoding.bigEndian ? encoding.width - 1 : 0] = character;
+}
+
+static BOOL TSIsJSONNumberCharacter(uint32_t c)
+{
+    return (c >= '0' && c <= '9') || c == '.' || c == '+' || c == '-' || c == 'e' || c == 'E';
+}
+
+/// JSON data in which every number is `0` followed by spaces, so that NSJSONSerialization accepts the numbers that
+/// Swift's JSONDecoder accepts. Until it decodes a number, Swift takes as one any run of digits, `.`, `+`, `-`, `e` and
+/// `E` that begins with a digit or `-`; anything else in the data stays as it is, in its own encoding.
+static NSData *TSJSONDataWithPlainNumbers(NSData *data)
+{
+    TSJSONEncoding encoding = TSJSONEncodingOfData(data);
+    NSMutableData *plain = [data mutableCopy];
+    uint8_t *bytes = plain.mutableBytes;
+    NSUInteger count = plain.length / encoding.width;
+    BOOL inString = NO;
+    for (NSUInteger i = 0; i < count; i++) {
+        uint32_t c = TSJSONUnit(bytes, i, encoding);
+        if (inString) {
+            if (c == '\\')
+                i++;
+            else if (c == '"')
+                inString = NO;
+        } else if (c == '"') {
+            inString = YES;
+        } else if (c == '-' || (c >= '0' && c <= '9')) {
+            TSJSONSetUnit(bytes, i, encoding, '0');
+            while (i + 1 < count && TSIsJSONNumberCharacter(TSJSONUnit(bytes, i + 1, encoding)))
+                TSJSONSetUnit(bytes, ++i, encoding, ' ');
+        }
+    }
+    return plain;
 }
 
 typedef struct {
@@ -167,7 +232,7 @@ static NSDictionary<NSString *, NSString *> *TSSettingsTexts(NSData *data)
 }
 
 /// A decimal number as Foundation's Decimal reads its text: up to 128 bits of digits and an exponent from -128 to
-/// 127, without trailing zeros. NO when Decimal refuses the text.
+/// 127, without trailing zeros. NO when Decimal refuses the text, or does not read all of it.
 static BOOL TSDecimalOfNumberText(const char *s, BOOL *negative, unsigned __int128 *mantissa, int *exponent)
 {
     const unsigned __int128 max = ~(unsigned __int128)0;
@@ -220,6 +285,8 @@ static BOOL TSDecimalOfNumberText(const char *s, BOOL *negative, unsigned __int1
             return NO;
         e = value;
     }
+    if (*s)
+        return NO;
     if (m != 0) {
         BOOL changed = NO;
         while (m % 10 == 0) {
@@ -237,16 +304,34 @@ static BOOL TSDecimalOfNumberText(const char *s, BOOL *negative, unsigned __int1
     return YES;
 }
 
+/// Whether the text of a number passes the first checks of Swift's JSONDecoder: it begins with a digit, or `-` and a
+/// digit; a leading 0 is followed by nothing, `.`, `e` or `E`; the first `e` or `E` follows a digit; it ends with a
+/// digit.
+static BOOL TSJSONNumberTextIsPlausible(const char *s)
+{
+    const char *digits = (*s == '-') ? s + 1 : s;
+    if (!(*digits >= '0' && *digits <= '9'))
+        return NO;
+    if (*digits == '0' && digits[1] && digits[1] != '.' && digits[1] != 'e' && digits[1] != 'E')
+        return NO;
+    const char *e = strpbrk(digits + 1, "eE");
+    if (e && !(e[-1] >= '0' && e[-1] <= '9'))
+        return NO;
+    char last = s[strlen(s) - 1];
+    return last >= '0' && last <= '9';
+}
+
 /// Reads the text of a JSON number as the JSONDecoder of macOS reads a UInt:
 /// - an integer is read exactly, from 0 to UInt64.max;
 /// - anything else is read as a double, which must be a whole number below 2^64; below 2^53 that double is the value;
-/// - from 2^53 the text is read as a Decimal, whose digits must fit in 64 bits; the fraction is cut off.
-/// So `1.0` is 1, `1.5` and `-1` are refused, `9007199254740993.9` is 9007199254740993, and `9223372036854775807.9`
-/// is refused.
+/// - from 2^53, or when the double is not all of the text, the text is read as a Decimal, whose digits must fit in
+///   64 bits; the fraction is cut off.
+/// So `1.0` is 1, `1.5`, `-1` and `01` are refused, `9007199254740993.9` is 9007199254740993, and
+/// `9223372036854775807.9` is refused.
 static BOOL TSUnsignedValueOfNumberText(NSString *text, uint64_t *result)
 {
     const char *s = text.UTF8String;
-    if (!s || !*s)
+    if (!s || !TSJSONNumberTextIsPlausible(s))
         return NO;
     if (strpbrk(s, ".eE") == NULL && *s != '-') {
         uint64_t value = 0;
@@ -266,13 +351,16 @@ static BOOL TSUnsignedValueOfNumberText(NSString *text, uint64_t *result)
     dispatch_once(&once, ^{
         cLocale = newlocale(LC_ALL_MASK, "C", NULL);
     });
-    double d = strtod_l(s, NULL, cLocale);
-    // UInt(exactly:); -0.0 is 0. 2^64 is the first double above UInt64.max.
-    if (!(d >= 0 && d < 0x1p64 && d == floor(d)))
-        return NO;
-    if (d < 0x1p53) {
-        *result = (uint64_t)d;
-        return YES;
+    char *end = NULL;
+    double d = strtod_l(s, &end, cLocale);
+    if (!*end) {
+        // UInt(exactly:); -0.0 is 0. 2^64 is the first double above UInt64.max.
+        if (!(d >= 0 && d < 0x1p64 && d == floor(d)))
+            return NO;
+        if (d < 0x1p53) {
+            *result = (uint64_t)d;
+            return YES;
+        }
     }
     BOOL negative = NO;
     unsigned __int128 mantissa = 0;
@@ -359,7 +447,7 @@ static NSError *TSDefinitionError(NSString *description)
 - (nullable instancetype)initWithJSONData:(NSData *)data error:(NSError **)error
 {
     NSError *parseError = nil;
-    id root = [NSJSONSerialization JSONObjectWithData:data options:0 error:&parseError];
+    id root = [NSJSONSerialization JSONObjectWithData:TSJSONDataWithPlainNumbers(data) options:0 error:&parseError];
     NSDictionary *settings = [root isKindOfClass:[NSDictionary class]] ? root[TSDefinitionSettingsKey] : nil;
     NSArray *objects = [root isKindOfClass:[NSDictionary class]] ? root[TSDefinitionRulesKey] : nil;
     if (![settings isKindOfClass:[NSDictionary class]] || ![objects isKindOfClass:[NSArray class]]) {

@@ -65,7 +65,21 @@ MUTATIONS = {
     'the last of duplicate keys is used': ('TSRegexMultipleReplace.m', '        if (!members[key])\n', '        if (YES)\n'),
     'escaped keys are not decoded': ('TSRegexMultipleReplace.m', '[keyText rangeOfString:@"\\\\"].location == NSNotFound\n', 'YES\n'),
     'numbers are read from NSJSONSerialization': ('TSRegexMultipleReplace.m', 'return TSUnsignedValueOfNumberText((NSString *_Nonnull)text, result);', 'return TSUnsignedValueOfNumberText([value stringValue], result);'),
-    'other encodings are read as UTF-8': ('TSRegexMultipleReplace.m', 'initWithData:data encoding:encoding];', 'initWithData:data encoding:NSUTF8StringEncoding];'),
+    'other encodings are read as UTF-8': ('TSRegexMultipleReplace.m', 'initWithData:data encoding:TSJSONEncodingOfData(data).encoding];', 'initWithData:data encoding:NSUTF8StringEncoding];'),
+    'numbers reach NSJSONSerialization as they are': ('TSRegexMultipleReplace.m', 'JSONObjectWithData:TSJSONDataWithPlainNumbers(data) options:0', 'JSONObjectWithData:data options:0'),
+    'numbers in strings are replaced': ('TSRegexMultipleReplace.m', '        } else if (c == \'"\') {\n            inString = YES;\n', '        } else if (NO) {\n'),
+    'escaped quotes end strings': ('TSRegexMultipleReplace.m', "            if (c == '\\\\')\n                i++;\n            else if", "            if"),
+    'only the first character of a number is replaced': ('TSRegexMultipleReplace.m', '            while (i + 1 < count && TSIsJSONNumberCharacter', '            while (NO && TSIsJSONNumberCharacter'),
+    'plus signs end a number': ('TSRegexMultipleReplace.m', "c == '.' || c == '+' || c == '-'", "c == '.' || c == '-'"),
+    'numbers are replaced byte by byte': ('TSRegexMultipleReplace.m', '    TSJSONEncoding encoding = TSJSONEncodingOfData(data);\n    NSMutableData *plain', '    TSJSONEncoding encoding = {NSUTF8StringEncoding, 1, NO};\n    NSMutableData *plain'),
+    'big-endian units are read little-endian': ('TSRegexMultipleReplace.m', 'unit[encoding.bigEndian ? i : encoding.width - 1 - i]', 'unit[NO ? i : encoding.width - 1 - i]'),
+    'big-endian units are written little-endian': ('TSRegexMultipleReplace.m', 'unit[encoding.bigEndian ? encoding.width - 1 : 0] = character;', 'unit[0] = character;'),
+    'leading zeros are accepted': ('TSRegexMultipleReplace.m', "    if (*digits == '0' && digits[1] && ", "    if (NO && "),
+    'a minus sign needs no digit': ('TSRegexMultipleReplace.m', "    if (!(*digits >= '0' && *digits <= '9'))\n        return NO;\n", ""),
+    'an exponent may follow a point': ('TSRegexMultipleReplace.m', "    if (e && !(e[-1] >= '0' && e[-1] <= '9'))", "    if (NO)"),
+    'a number may end in a non-digit': ('TSRegexMultipleReplace.m', "    return last >= '0' && last <= '9';", "    return last || YES;"),
+    'the double need not read all of the text': ('TSRegexMultipleReplace.m', '    if (!*end) {', '    if (YES) {'),
+    'the Decimal need not read all of the text': ('TSRegexMultipleReplace.m', '    if (*s)\n        return NO;\n    if (m != 0) {', '    if (m != 0) {'),
 }
 
 
