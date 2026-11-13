@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSAdvancedFindResults.h"
+#import "TSAdvancedFindTask.h"
 
 /// As OgreKit's list: at most 30 characters (UTF-16 units) before the match, 250 in all.
 static const NSUInteger TSBeforeLength = 30, TSShownLength = 250;
@@ -237,6 +238,12 @@ static BOOL TSAdjustRange(NSRange *range, NSUInteger a, NSUInteger b, NSUInteger
         // Not during the edit: the text storage is still processing it.
         [self performSelector:@selector(update) withObject:nil afterDelay:self.liveUpdateDelay inModes:@[NSRunLoopCommonModes]];
     }
+}
+
+- (void)followEdits:(NSArray<TSAdvancedFindTextEdit *> *)edits
+{
+    for (TSAdvancedFindTextEdit *edit in edits)
+        [self followEditFrom:edit.range.location to:NSMaxRange(edit.range) newEnd:edit.range.location + edit.replacementLength];
 }
 
 /// The old text [a, b) was replaced with new text ending at b2.

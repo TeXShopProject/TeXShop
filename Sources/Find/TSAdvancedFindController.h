@@ -3,6 +3,8 @@
 #import "TSAdvancedFindSettings.h"
 #import "TSAdvancedFindResults.h"
 
+@class TSAdvancedFindTask;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /// The actions of the panel. The first values are those of NSFindPanelAction and NSTextFinderAction, so the tags of
@@ -54,19 +56,28 @@ NS_SWIFT_NAME(AdvancedFindController)
 @property (nonatomic, copy, nullable) void (^findAllHandler)(TSAdvancedFindResults *results, NSTextView *textView);
 /// Called after the find or replacement string was taken from a selection.
 @property (nonatomic, copy, nullable) void (^stringsChangedHandler)(void);
+/// The long action running now (Replace All, Find All, Multiple Replace), or nil. Meanwhile every action but showing
+/// or hiding the panel is refused, and the document's text views are read-only.
+@property (nonatomic, readonly, nullable) TSAdvancedFindTask *runningTask;
+/// Seconds before a long action shows its progress sheet; 0.4 unless changed.
+@property (nonatomic) NSTimeInterval sheetDelay;
 
 - (instancetype)initWithSettings:(TSAdvancedFindSettings *)settings NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
 - (BOOL)validateAction:(TSAdvancedFindAction)action forTextView:(NSTextView *)textView;
-/// Returns NO and beeps when nothing was found or the action failed.
+/// Returns NO and beeps when nothing was found or the action failed. Replace All and Find All only start here and
+/// finish later (`runningTask`); they return YES when they started.
 - (BOOL)performAction:(TSAdvancedFindAction)action inTextView:(NSTextView *)textView;
 /// Finds the next match from the start of the selection, keeping a match that is already selected.
 - (BOOL)incrementalSearchInTextView:(NSTextView *)textView;
 
 @end
 
+/// Posted (object: the controller) when a long action starts or ends: the find panel and the multiple replacement
+/// window gray out their buttons meanwhile, since every action is refused.
+FOUNDATION_EXPORT NSNotificationName const TSAdvancedFindTaskDidChangeNotification;
 FOUNDATION_EXPORT NSString *TSAdvancedFindLocalized(NSString *key, NSString *english);
 /// The find string of "Find Selected Text": one that finds `text` as it is with `options`.
 FOUNDATION_EXPORT NSString *TSAdvancedFindPatternFindingText(NSString *text, TSRegexFindOptions options) NS_SWIFT_NAME(AdvancedFindPatternFindingText(_:options:));

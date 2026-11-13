@@ -2,6 +2,8 @@
 
 "AdvancedFind.AnchorsMatchLines" = "^ și $ se potrivesc la fiecare linie";
 "AdvancedFind.Cancel" = "Anulați";
+"AdvancedFind.Cancelled" = "Anulat";
+"AdvancedFind.Cancelling" = "Anulare…";
 "AdvancedFind.Cheat.Alternation" = "a sau b";
 "AdvancedFind.Cheat.Anchors" = "Ancore";
 "AdvancedFind.Cheat.AnyCharacter" = "orice caracter, cu excepția întreruperii de linie";
@@ -97,6 +99,8 @@
 "AdvancedFind.Results.Line" = "Linie";
 "AdvancedFind.Results.LiveUpdate" = "Actualizare automată";
 "AdvancedFind.Results.Text" = "Text potrivit";
+"AdvancedFind.Searching" = "Căutare…";
+"AdvancedFind.SearchingCount" = "Căutare… %lu";
 "AdvancedFind.Section.Common" = "Ambele";
 "AdvancedFind.Section.Regex" = "Expresie regulată";
 "AdvancedFind.Section.Text" = "Căutare de text";
@@ -105,6 +109,7 @@
 "AdvancedFind.Syntax.ICU" = "ICU ($1)";
 "AdvancedFind.Syntax.OgreKit" = "OgreKit (\\1)";
 "AdvancedFind.SyntaxLabel" = "Sintaxa înlocuirii:";
+"AdvancedFind.TextChanged" = "Textul s-a modificat între timp; nu s-a schimbat nimic.";
 "AdvancedFind.Title" = "Găsiți și înlocuiți";
 "AdvancedFind.Unescapes" = "Interpretați \\n, \\t etc. în textul de înlocuire";
 "AdvancedFind.Unhighlight" = "Eliminați evidențierile";
@@ -138,6 +143,7 @@
 "MultipleReplace.RemoveQuestion" = "Mutați „%@” în Coș?";
 "MultipleReplace.RemoveRule" = "Eliminați regulile selectate";
 "MultipleReplace.RemoveSet" = "Mutați setul în Coș";
+"MultipleReplace.RuleProgress" = "Regula %1$lu din %2$lu";
 "MultipleReplace.Sets" = "Seturi";
 "MultipleReplace.ShowInFinder" = "Afișați în Finder";
 "MultipleReplace.SkippedRules" = "(reguli omise: %@; vedeți ⚠︎)";

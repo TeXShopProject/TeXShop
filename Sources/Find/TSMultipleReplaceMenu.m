@@ -123,7 +123,7 @@ static NSMenu *_Nullable TSFindSubmenu(NSMenu *menu)
         self.findController.beepHandler();
         return;
     }
-    [self.findController applyMultipleReplace:(TSRegexMultipleReplace *_Nonnull)set inTextView:(NSTextView *_Nonnull)target inSelection:NO];
+    [self.findController applyMultipleReplace:(TSRegexMultipleReplace *_Nonnull)set inTextView:(NSTextView *_Nonnull)target inSelection:NO completion:nil];
 }
 
 @end

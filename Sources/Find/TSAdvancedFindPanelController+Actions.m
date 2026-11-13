@@ -32,7 +32,7 @@
 - (BOOL)canPerform:(TSAdvancedFindAction)action
 {
     NSTextView *target = [self targetTextView];
-    return target ? [self.findController validateAction:action forTextView:target] : YES;
+    return target ? [self.findController validateAction:action forTextView:target] : self.findController.runningTask == nil;
 }
 
 /// The actions under the ▾ of Find All and of Replace & Find.

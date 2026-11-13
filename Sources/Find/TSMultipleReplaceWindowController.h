@@ -29,8 +29,8 @@ NS_SWIFT_NAME(MultipleReplaceWindowController)
 /// The options view of the selected set (the popover's content).
 - (NSView *)makeOptionsView;
 
-/// Applies the shown set to the text view (the main window's when nil) and shows the counts and the status.
-/// NO when nothing was replaced or there is no set or target.
+/// Starts applying the shown set to the text view (the main window's when nil), as a background task; when it ends,
+/// shows the counts and the status. NO when it cannot start (no set or target, a read-only target, another task).
 - (BOOL)replaceAllInTextView:(nullable NSTextView *)textView;
 - (BOOL)highlightInTextView:(nullable NSTextView *)textView;
 

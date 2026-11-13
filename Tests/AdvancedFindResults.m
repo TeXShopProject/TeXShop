@@ -5,6 +5,7 @@
 #import <Cocoa/Cocoa.h>
 #import <objc/runtime.h>
 #import "TestAppKitIsolation.h"
+#import "AdvancedFindTaskWait.h"
 #import "TSLayoutManager.h"
 #import "TSAdvancedFindPanelController+Private.h"
 #import "TSAdvancedFindTextView.h"
@@ -351,7 +352,7 @@ static void TestLargeDocument(void)
     panel.showsResults = NO;
     controller.settings.findString = @"ab";
     start = NSDate.date;
-    BOOL found = [controller performAction:TSAdvancedFindActionFindAll inTextView:document.upper];
+    BOOL found = TSTestPerform(controller, TSAdvancedFindActionFindAll, document.upper);
     TSAdvancedFindResultsView *list = panel.resultsView;
     [panel.window.contentView layoutSubtreeIfNeeded];
     [list.tableView scrollRowToVisible:199999];
@@ -384,10 +385,10 @@ static void TestFindAllAction(void)
     controller.findAllHandler = ^(TSAdvancedFindResults *results, NSTextView *textView) { listed = results; listedView = textView; };
     TestDocument *document = [[TestDocument alloc] initWithText:@"one two\r\none"];
     settings.findString = @"zz";
-    Check(![controller performAction:TSAdvancedFindActionFindAll inTextView:document.upper] && beeps == 1 && !listed,
-          @"nothing found: a beep, a message and no list");
+    Check(TSTestPerform(controller, TSAdvancedFindActionFindAll, document.upper) && beeps == 1 && !listed,
+          @"nothing found: the search starts, then a beep, a message and no list");
     settings.findString = @"one";
-    Check([controller performAction:TSAdvancedFindActionFindAll inTextView:document.upper] && beeps == 1 && listed.items.count == 2 && listedView == document.upper,
+    Check(TSTestPerform(controller, TSAdvancedFindActionFindAll, document.upper) && beeps == 1 && listed.items.count == 2 && listedView == document.upper,
           @"Find All hands its list to the panel");
     Check([status isEqualToString:[NSString stringWithFormat:TSAdvancedFindLocalized(@"AdvancedFind.Found", @"%lu found"), 2UL]] && !isError, @"and reports the count");
     Check([TSAdvancedFindHighlights existingHighlightsForTextStorage:document.storage].ranges.count == 0, @"Find All does not highlight, as in OgreKit");
@@ -396,24 +397,24 @@ static void TestFindAllAction(void)
     settings.options = TSRegexFindDefaultOptions | TSRegexFindRegularExpression;
     controller.lineEndingHandler = ^NSString *(NSTextView *view) { return @"\r\n"; };
     settings.findString = @"two\none";
-    Check([controller performAction:TSAdvancedFindActionFindAll inTextView:document.upper] && listed.items.count == 1
+    Check(TSTestPerform(controller, TSAdvancedFindActionFindAll, document.upper) && listed.items.count == 1
           && [listed.findString isEqualToString:@"two\none"], @"the find string is put into the document's line ending; the list shows it as typed");
     controller.lineEndingHandler = ^NSString *(NSTextView *view) { return @"\n"; };
     settings.findString = @"o";
     settings.inSelection = YES;
     document.upper.selectedRange = NSMakeRange(0, 7);
-    Check([controller performAction:TSAdvancedFindActionFindAll inTextView:document.upper] && listed.items.count == 2 && listed.scopeRanges.count == 1,
+    Check(TSTestPerform(controller, TSAdvancedFindActionFindAll, document.upper) && listed.items.count == 2 && listed.scopeRanges.count == 1,
           @"with In selection, only the matches in the selection");
     settings.inSelection = NO;
     // An invalid pattern is an error, with no list
     listed = nil;
     settings.findString = @"(";
-    Check(![controller performAction:TSAdvancedFindActionFindAll inTextView:document.upper] && beeps == 2 && isError && !listed, @"an invalid pattern: an error and no list");
+    Check(!TSTestPerform(controller, TSAdvancedFindActionFindAll, document.upper) && beeps == 2 && isError && !listed, @"an invalid pattern: an error and no list");
     // A read-only text view (the console, the log) may be listed
     document.upper.editable = NO;
     settings.findString = @"one";
     Check([controller validateAction:TSAdvancedFindActionFindAll forTextView:document.upper]
-          && [controller performAction:TSAdvancedFindActionFindAll inTextView:document.upper] && listed, @"Find All works in a read-only text view");
+          && TSTestPerform(controller, TSAdvancedFindActionFindAll, document.upper) && listed, @"Find All works in a read-only text view");
     document.upper.selectable = NO;
     Check(![controller validateAction:TSAdvancedFindActionFindAll forTextView:document.upper], @"but not in one that cannot be selected");
 }
@@ -465,6 +466,7 @@ static void TestPanelList(void)
 
     settings.findString = @"zz";
     [panel advancedFindAll:nil];
+    TSTestWaitForTask(controller, 60);
     Check(beeps == 1 && list.hidden && NSEqualRects(panel.window.frame, panelFrame), @"nothing found: a beep and no list");
 
     // Find All: the panel grows at its bottom, the list takes the new room, the fields keep theirs.
@@ -473,6 +475,7 @@ static void TestPanelList(void)
     watchedWindow = panel.window;
     originalOrderOut = method_setImplementation(class_getInstanceMethod(NSWindow.class, @selector(orderOut:)), (IMP)CountOrderOut);
     [panel advancedFindAll:nil];
+    TSTestWaitForTask(controller, 60);
     Check(watchedOrderOuts == 0, @"Find All keeps the panel open, with \"close after finding\" on: its list is in the panel");
     method_setImplementation(class_getInstanceMethod(NSWindow.class, @selector(orderOut:)), originalOrderOut);
     [content layoutSubtreeIfNeeded];
@@ -512,6 +515,7 @@ static void TestPanelList(void)
 
     settings.findString = @"x";
     [panel advancedFindAll:nil];
+    TSTestWaitForTask(controller, 60);
     Check(list.tableView.numberOfRows == 2 && fabs(NSHeight(panel.window.frame) - NSHeight(grown)) < 0.5, @"a new Find All replaces the list without growing again");
     // The buttons follow the target: Find All stays in a read-only text view
     view.editable = NO;
@@ -568,11 +572,13 @@ static void TestPanelList(void)
     // Quitting with the list open closes it at once, so the panel's saved size is that without the list.
     settings.findString = @"ab";
     [panel advancedFindAll:nil];
+    TSTestWaitForTask(controller, 60);
     [panel applicationWillTerminate:[NSNotification notificationWithName:NSApplicationWillTerminateNotification object:nil]];
     Check(list.hidden && NSEqualRects(panel.window.frame, panelFrame), @"quitting with the list open closes it first");
 
     // Closing another window leaves the list; closing the document's window closes it.
     [panel advancedFindAll:nil];
+    TSTestWaitForTask(controller, 60);
     TestDocument *other = [[TestDocument alloc] initWithText:@"ab"];
     [NSNotificationCenter.defaultCenter postNotificationName:NSWindowWillCloseNotification object:other.window];
     Check(!list.hidden && list.results, @"closing another window leaves the list");
@@ -580,10 +586,12 @@ static void TestPanelList(void)
     Check(list.hidden && !list.results && list.tableView.numberOfRows == 0 && NSEqualRects(panel.window.frame, panelFrame), @"the list goes with its document");
     // A list whose text view is gone beeps instead of jumping.
     [panel advancedFindAll:nil];
+    TSTestWaitForTask(controller, 60);
     @autoreleasepool {
         TestDocument *gone = [[TestDocument alloc] initWithText:@"ab ab"];
         TSAdvancedFindController.testTargetTextView = gone.upper;
         [panel advancedFindAll:nil];
+    TSTestWaitForTask(controller, 60);
         [gone.upper removeFromSuperview];
         [gone.storage removeLayoutManager:gone.upper.layoutManager];
         gone = nil;
@@ -717,7 +725,7 @@ static void TestListLayout(NSString *_Nullable imageDirectory)
     settings.findString = @"\\\\(begin|end)\\{(\\w+)\\}|\\\\text(bf|it)";
     settings.replaceString = @"\\\\text$1{$2}$3\\n";
     [panel reloadFromSettings];
-    Check([controller performAction:TSAdvancedFindActionFindAll inTextView:document.upper] && panel.resultsView.results.items.count == 6, @"six matches for the images");
+    Check(TSTestPerform(controller, TSAdvancedFindActionFindAll, document.upper) && panel.resultsView.results.items.count == 6, @"six matches for the images");
     // One match made stale by an edit
     NSRange align = [document.storage.string rangeOfString:@"\\end{align}"];
     [document.storage replaceCharactersInRange:NSMakeRange(align.location + 6, 0) withString:@"ed"];
