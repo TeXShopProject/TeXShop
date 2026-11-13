@@ -1273,7 +1273,8 @@
                                     <action selector="splitWindow:" target="-1" id="495"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Dividi finestra verticalmente" alternate="YES" keyEquivalent="v" id="a3v-rF-k9e" identifier="TSShortcut.splitWindow:.vertical">
+                            <menuItem title="Dividi finestra verticalmente" alternate="YES" keyEquivalent="2" id="a3v-rF-k9e" identifier="TSShortcut.splitWindow:.vertical">
+                                <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES"/>
                                 <connections>
                                     <action selector="splitWindow:" target="-1" id="XlU-vW-yjy"/>
                                 </connections>
