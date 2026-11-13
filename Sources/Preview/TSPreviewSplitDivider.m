@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSPreviewSplitDivider.h"
-#import "TSPreviewPanePlace.h"
 
 // The text at the top edge of a part, as a point on a page, and where the part was left.
 @interface TSPreviewSplitAnchor : NSObject
@@ -30,6 +29,15 @@ static NSClipView *TSPartClip(PDFView *view)
 {
     NSClipView *clip = view.documentView.enclosingScrollView.contentView;
     return [clip isKindOfClass:[NSClipView class]] ? clip : nil;
+}
+
+// The top edge of a part, in clip view coordinates. The content insets are left out:
+// up to macOS 15, AppKit gives the top part a content inset as large as the change of
+// the window's height for a moment while the window is resized, and a place noted then
+// was put back that much too low once the inset was gone.
+static CGFloat TSPartTop(NSClipView *clip)
+{
+    return clip.isFlipped ? NSMinY(clip.bounds) : NSMaxY(clip.bounds);
 }
 
 // Whether a part can follow a change of its height without PDFKit.
@@ -116,9 +124,7 @@ static BOOL TSPartCanResizeQuietly(PDFView *view)
     BOOL wasQuiet = anchor.quiet;
     anchor = nil;
     if (!empty) {
-        NSScrollView *scroll = view.documentView.enclosingScrollView;
-        NSPoint edge = TSPreviewPaneEdge(scroll);
-        NSPoint top = [view convertPoint:NSMakePoint(NSMidX(clip.bounds), edge.y) fromView:clip];
+        NSPoint top = [view convertPoint:NSMakePoint(NSMidX(clip.bounds), TSPartTop(clip)) fromView:clip];
         PDFPage *page = [view pageForPoint:top nearest:YES];
         if (page != nil) {
             anchor = [TSPreviewSplitAnchor new];
@@ -149,7 +155,7 @@ static BOOL TSPartCanResizeQuietly(PDFView *view)
     if (!NSIsEmptyRect(clip.bounds) && anchor.page.document == view.document) {
         NSPoint point = [clip convertPoint:[view convertPoint:anchor.point fromPage:anchor.page] fromView:view];
         NSRect bounds = clip.bounds;
-        bounds.origin.y += point.y - TSPreviewPaneEdge(scroll).y;
+        bounds.origin.y += point.y - TSPartTop(clip);
         NSPoint target = [clip constrainBoundsRect:bounds].origin;
         if (!NSEqualPoints(target, clip.bounds.origin)) {
             [clip scrollToPoint:target];

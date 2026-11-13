@@ -38,12 +38,18 @@ MUTATIONS = {
     # PDFKit is never told about the size after a drag.
     'never-finished': ('TSPreviewSplitDivider.m',
         '        view.postsFrameChangedNotifications = YES;\n        if (view.superview', '        if (view.superview'),
+    # The top edge counts the content insets, which change for a moment during a window resize.
+    'inset-edge': ('TSPreviewSplitDivider.m',
+        '    return clip.isFlipped ? NSMinY(clip.bounds) : NSMaxY(clip.bounds);\n',
+        '    NSEdgeInsets insets = ((NSScrollView *)clip.superview).contentInsets;\n'
+        '    return clip.isFlipped ? NSMinY(clip.bounds) + insets.top : NSMaxY(clip.bounds) - insets.top;\n'),
     # Window resizes are not seen.
     'no-window-resize': ('TSPreviewSplitDivider.m',
         '        if (splitView.delegate == nil)\n            splitView.delegate = self;\n', ''),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
+parser.add_argument('--binary', type=Path, help='write the test program, built for macOS 14 and later, here instead of running it')
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 text = {name: source_file(root, name).read_text(encoding='latin1') for name in ('TSPreviewSplitDivider.m', 'TSPreviewWindow.m')}
@@ -184,12 +190,24 @@ static void Watch(Preview p) {
 }
 static BOOL Kept(Preview p) { return fabs(Off(p.upper, upperMark)) <= 0.5 && fabs(Off(p.lower, lowerMark)) <= 0.5; }
 
+// Up to macOS 15, AppKit gives the top part a content inset as large as the change of the
+// window's height while the window is resized, and takes it away afterwards.
+static NSEdgeInsets (*nativeInsets)(id, SEL);
+static __weak NSScrollView *transientScroll; static CGFloat transientInset;
+static NSEdgeInsets TransientInsets(NSScrollView *self, SEL _cmd) {
+    NSEdgeInsets insets = nativeInsets(self, _cmd);
+    if (self == transientScroll) insets.top += transientInset;
+    return insets;
+}
+
 static NSEvent *CurrentEvent;
 static NSEvent *TestCurrentEvent(id application, SEL selector) { return CurrentEvent; }
 
 int main(void) { @autoreleasepool {
     TSInstallAppKitIsolation();
     [NSApplication sharedApplication];
+    nativeInsets = (NSEdgeInsets (*)(id, SEL))method_setImplementation(
+        class_getInstanceMethod(NSScrollView.class, @selector(contentInsets)), (IMP)TransientInsets);
     Check(INSTALLED, @"the Preview window installs the divider keeper when it splits");
     PDFDocument *document = MakeDocument();
 
@@ -271,6 +289,20 @@ int main(void) { @autoreleasepool {
         SetWindowSize(p.window, 820, 1000);
         RunLoop();
         Check(Kept(p), [@"changing the width and the height of the window keeps the text at the top of both parts" stringByAppendingString:how]);
+        // A content inset the top part has only while the window is resized.
+        ScrollParts(p.upper, p.lower);
+        Watch(p);
+        transientScroll = p.upper.documentView.enclosingScrollView;
+        for (NSNumber *h in @[@950, @1000]) {
+            transientInset = fabs(NSHeight(p.window.frame) - h.doubleValue);
+            SetWindowSize(p.window, 820, h.doubleValue);
+            transientInset = 0;
+            RunLoop();
+        }
+        transientScroll = nil;
+        printf("window height with a passing content inset%s: the text at the tops is %.2f and %.2f pt away\n", how.UTF8String,
+               Off(p.upper, upperMark), Off(p.lower, lowerMark));
+        Check(Kept(p), [@"a content inset the top part has only during the resize does not move its text" stringByAppendingString:how]);
         [center removeObserver:watcher];
     }
 
@@ -310,9 +342,14 @@ int main(void) { @autoreleasepool {
     // The last page cannot scroll past its end: the lower part shows its bottom.
     {
         Preview p = MakePreview(document, NO, YES, NO);
-        [p.lower goToPage:[document pageAtIndex:7]];
-        [p.lower scrollPageDown:nil]; [p.lower scrollPageDown:nil]; [p.lower scrollPageDown:nil];
+        // To the end of the document (goToPage: does not move a part offscreen up to macOS 15).
+        NSClipView *clip = Clip(p.lower); NSRect end = clip.bounds;
+        end.origin.y = clip.isFlipped ? 1e7 : -1e7;
+        [clip scrollToPoint:[clip constrainBoundsRect:end].origin];
+        [p.lower.documentView.enclosingScrollView reflectScrolledClipView:clip];
         [p.window layoutIfNeeded];
+        Check([document indexForPage:[p.lower pageForPoint:NSMakePoint(NSMidX(p.lower.bounds), NSMidY(p.lower.bounds)) nearest:YES]] == 7,
+              @"the lower part shows the end of the document before the drag");
         Drag(p.split, @[@450, @400, @500]);
         RunLoop();
         NSRect b = p.lower.bounds;
@@ -359,9 +396,13 @@ with tempfile.TemporaryDirectory(prefix='texshop-preview-split-') as tmp:
     tmp = Path(tmp)
     (tmp / 'probe.m').write_text(program, encoding='latin1')
     (tmp / 'TSPreviewSplitDivider.m').write_text(text['TSPreviewSplitDivider.m'], encoding='latin1')
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-framework', 'Quartz', *include_args(root),
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-mmacosx-version-min=14.0', '-framework', 'Cocoa', '-framework', 'Quartz', *include_args(root),
                     '-I', str(root / 'Tests'), str(tmp / 'probe.m'), str(tmp / 'TSPreviewSplitDivider.m'),
                     '-o', str(tmp / 'probe')], check=True)
+    if args.binary:
+        import shutil
+        shutil.copy2(tmp / 'probe', args.binary)
+        sys.exit(0)
     result = subprocess.run([str(tmp / 'probe')], capture_output=True, text=True, timeout=300)
     print(result.stdout, end='')
     if args.mutation:
