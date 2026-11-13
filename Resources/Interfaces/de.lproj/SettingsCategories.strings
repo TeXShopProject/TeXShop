@@ -294,9 +294,11 @@
 "catalog.console.1.1.title" = "Größenänderung der Konsole";
 "group.bindings.title" = "Automat. Vervollständigung";
 "catalog.keyboard.0.0.title" = "Tastenbelegungen verwenden (Vorgabe für neue Dokumente)";
-"catalog.keyboard.0.1.title" = "Tastenbelegungs-Editor…";
+"catalog.keyboard.0.0.note" = "Ersetzt ein eingegebenes Zeichen durch einen festgelegten Text, z. B. { durch {}.";
+"catalog.keyboard.0.1.title" = "Liste der Tastenbelegungen";
 "group.completion.title" = "Befehlsvervollständigung";
 "catalog.keyboard.1.0.title" = "Auslösetaste";
+"catalog.keyboard.1.0.note" = "Vervollständigt den gerade eingegebenen Befehl; erneutes Drücken der Taste zeigt den nächsten Vorschlag.";
 "catalog.keyboard.1.1.title" = "BibDesk-Vervollständigung";
 "catalog.keyboard.1.1.note" = "Bietet in \\cite und ähnlichen Befehlen Zitierschlüssel aus BibDesk zur Vervollständigung an.";
 "catalog.keyboard.1.2.title" = "Befehlsvervollständigung bearbeiten…";
@@ -304,6 +306,11 @@
 "group.updates.0.title" = "Automatische Suche";
 "catalog.updates.0.0.title" = "Automatisch nach Aktualisierungen suchen";
 "catalog.updates.0.1.title" = "Suchintervall";
+"group.updates.1.title" = "Einbezogene Updates";
+"catalog.updates.1.0.title" = "Vorabversionen einschließen";
+"catalog.updates.2.0.title" = "Nach Updates suchen...";
+"catalog.updates.2.0.last" = "Zuletzt überprüft: %@";
+"catalog.updates.2.0.never" = "Nie";
 
 "catalog.documents.1.3.note" = "Beim Sichern werden getrennt gespeicherte Zeichen (z. B. か + ゛) zu einem Zeichen (が) zusammengefügt.";
 

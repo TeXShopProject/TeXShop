@@ -151,6 +151,40 @@ static NSString*    kHtmlNextPageButtonTID      = @"HtmlNextPageButton";
 static NSString*    kHtmlURLFieldTID            = @"HtmlURLField";
 static NSString*    kHtmlSearchTID              = @"HtmlSearch";
 
+// Like the Back and Forward buttons of Apple's Preview, Back or Forward is dimmed
+// when the preview that the item sends it to has no page to go back or forward to.
+// The toolbar validates the item after each event; a page change or a new history
+// in any preview, a new document and a change of the active preview do so at once.
+@interface TSBackForwardToolbarItem : NSToolbarItem
+@property (weak) TSDocument *document;
+@end
+
+@implementation TSBackForwardToolbarItem
+- (instancetype)initWithItemIdentifier:(NSToolbarItemIdentifier)itemIdentifier
+{
+    self = [super initWithItemIdentifier: itemIdentifier];
+    if (self)
+        for (NSNotificationName name in @[PDFViewChangedHistoryNotification, PDFViewPageChangedNotification])
+            [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(previewHistoryChanged:) name: name object: nil];
+    return self;
+}
+
+- (void)previewHistoryChanged:(NSNotification *)notification
+{
+    [self validate];
+}
+
+- (void)validate
+{
+    NSSegmentedControl *control = (NSSegmentedControl *)self.view;
+    if (![control isKindOfClass: [NSSegmentedControl class]])
+        return;
+    PDFView *view = self.document.pdfKitWindow.activeView;
+    [control setEnabled: view.canGoBack forSegment: 0];
+    [control setEnabled: view.canGoForward forSegment: 1];
+}
+@end
+
 @implementation TSDocument (ToolbarSupport)
 
 // -----------------------------------------------------------------------------
@@ -343,7 +377,15 @@ else
             [mySegmentedControl setTag: 3 forSegment: 2];
             [mySegmentedControl setTag: 4 forSegment: 3];
             [mySegmentedControl setTag: 5 forSegment: 4];
+            NSArray *toolTipKeys = @[@"tiToolTipMouseModeScroll", @"tiToolTipMouseModeSelectText",
+                                     @"tiToolTipMouseModeMagnify", @"tiToolTipMouseModeMagnifyLarge",
+                                     @"tiToolTipMouseModeSelectPDF"];
+            for (NSInteger segment = 0; segment < 5; segment++)
+                [mySegmentedControl setToolTip: NSLocalizedStringFromTable(toolTipKeys[segment], @"ToolbarItems", nil)
+                                    forSegment: segment];
             theToolbarItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent customView:mySegmentedControl];
+            // Each tool has its own tool tip, so the item has none of its own.
+            theToolbarItem.toolTip = nil;
             }
                 
         else
@@ -356,28 +398,26 @@ else
     return theToolbarItem;
 }
 
-- (NSToolbarItem*) makeBackForthItemWithItemIdentifier: (NSString *)itemIdent key:(NSString *)itemKey customView: (NSView *)theView
+// Back and Forward show the chevrons of the Back and Forward buttons of Apple's Preview.
+// Like those, they highlight only while clicked. The item stays where the user put it
+// in the toolbar: it is not a navigational item, which macOS draws at the leading edge.
+- (NSToolbarItem*) makeBackForthItemWithItemIdentifier: (NSString *)itemIdent key:(NSString *)itemKey
 {
-    NSToolbarItem *theToolbarItem;
-    
-    if (atLeastMonterey)
-    {
-        if (@available(macOS 11.0, *)) {
-            NSImage *firstImage = [NSImage imageWithSystemSymbolName: @"arrowtriangle.left.fill"
-                                            accessibilityDescription: @"Left Move"];
-            NSImage *secondImage = [NSImage imageWithSystemSymbolName: @"arrowtriangle.right.fill"
-                                             accessibilityDescription: @"Right Move"];
-             NSArray *myArray = @[firstImage, secondImage];
-            NSSegmentedControl *mySegmentedControl = [NSSegmentedControl segmentedControlWithImages: myArray trackingMode:NSSegmentSwitchTrackingSelectOne target: self action:@selector(doBackForward:)];
-             theToolbarItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent customView:mySegmentedControl];
-            }
-        else
-            theToolbarItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent customView:theView];
-    }
-else
-    theToolbarItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent customView:theView];
-    
-    return theToolbarItem;
+    NSImage *backImage = [NSImage imageWithSystemSymbolName: @"chevron.backward"
+                                   accessibilityDescription: @"Back"] ?: [NSImage imageNamed: NSImageNameGoBackTemplate];
+    NSImage *forwardImage = [NSImage imageWithSystemSymbolName: @"chevron.forward"
+                                      accessibilityDescription: @"Forward"] ?: [NSImage imageNamed: NSImageNameGoForwardTemplate];
+    NSSegmentedControl *control = [NSSegmentedControl segmentedControlWithImages: @[backImage, forwardImage]
+                                                                    trackingMode: NSSegmentSwitchTrackingMomentary
+                                                                          target: self action: @selector(doBackForward:)];
+    NSToolbarItem *textItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:itemKey];
+    TSBackForwardToolbarItem *toolbarItem = [[TSBackForwardToolbarItem alloc] initWithItemIdentifier: itemIdent];
+    toolbarItem.label = textItem.label;
+    toolbarItem.paletteLabel = textItem.paletteLabel;
+    toolbarItem.toolTip = textItem.toolTip;
+    toolbarItem.view = control;
+    toolbarItem.document = self;
+    return toolbarItem;
 }
 
 
@@ -454,6 +494,10 @@ else
                                (NSWindow *)self.fullSplitWindow ?: NSNull.null]) {
         if (![window isKindOfClass:NSWindow.class]) continue;
         for (NSToolbarItem *item in window.toolbar.items) {
+            if ([item isKindOfClass:[TSBackForwardToolbarItem class]]) {
+                [item validate];
+                continue;
+            }
             BOOL layout = [item.itemIdentifier isEqual:TSPreviewLayoutToolbarID];
             if (!layout && ![item.itemIdentifier isEqual:TSPreviewArrangementToolbarID]) continue;
             item.enabled = view.document != nil;
@@ -510,6 +554,8 @@ if (@available(macOS 11.0, *))
 	[[self pdfWindow] setToolbar: [self makeToolbar: kPDFToolbarIdentifier]];
 	[self.pdfKitWindow setToolbar: [self makeToolbar: kPDFKitToolbarIdentifier]];
     [[self fullSplitWindow] setToolbar: [self makeToolbar: kFullWindowToolbarIdentifier]];
+    [self keepOnePreviewPagePairInToolbar: self.pdfKitWindow.toolbar];
+    [self keepOnePreviewPagePairInToolbar: [[self fullSplitWindow] toolbar]];
 // added by Terada (from this line)
     for (NSString *identifier in @[kPDFKitToolbarIdentifier, kFullWindowToolbarIdentifier]) {
         NSToolbar *previewToolbar = [identifier isEqual:kPDFKitToolbarIdentifier]
@@ -619,6 +665,37 @@ static NSString *TSPreviewPageItemKey(NSString *itemIdent)
         return [self makeToolbarSymbolsItemWithItemIdentifier:itemIdent key:itemKey symbolName: @"arrow.down.doc" accessibility: @"Next Page" imageName:@"NextPageAlternateAction" newImageName:@"NextPageAlternateAction" target:self action:@selector(doNextPageKK:)];
 
     return nil;
+}
+
+// A toolbar saved with both pairs shows the document arrow items twice, and a saved
+// arrow-only item lets Customize Toolbar add the document arrow item a second time.
+// Keep the first previous and the first next page item in place, under the
+// document arrow identifier, and remove the others.
+- (void)keepOnePreviewPagePairInToolbar:(NSToolbar *)toolbar
+{
+    NSMutableSet *kept = [NSMutableSet set];
+    NSMutableIndexSet *extra = [NSMutableIndexSet indexSet];
+    NSArray *items = toolbar.items;
+    for (NSUInteger index = 0; index < items.count; index++) {
+        NSString *itemKey = TSPreviewPageItemKey([items[index] itemIdentifier]);
+        if (![itemKey isEqual: kPreviousPageButtonKKTID] && ![itemKey isEqual: kNextPageButtonKKTID])
+            continue;
+        if ([kept containsObject: itemKey])
+            [extra addIndex: index];
+        else
+            [kept addObject: itemKey];
+    }
+    [extra enumerateIndexesWithOptions: NSEnumerationReverse usingBlock: ^(NSUInteger index, BOOL *stop) {
+        [toolbar removeItemAtIndex: index];
+    }];
+    for (NSUInteger index = 0; index < toolbar.items.count; index++) {
+        NSString *itemIdent = [toolbar.items[index] itemIdentifier];
+        NSString *itemKey = TSPreviewPageItemKey(itemIdent);
+        if (![itemKey isEqual: itemIdent]) {
+            [toolbar removeItemAtIndex: index];
+            [toolbar insertItemWithItemIdentifier: itemKey atIndex: index];
+        }
+    }
 }
 
 - (NSToolbarItem *) toolbar: (NSToolbar *)toolbar itemForItemIdentifier: (NSString *) itemIdent willBeInsertedIntoToolbar:(BOOL) willBeInserted {
@@ -1094,7 +1171,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 
 	if ([itemIdent isEqual: kBackForthKKTID]) {
         
-        toolbarItem = [self makeBackForthItemWithItemIdentifier: itemIdent key:itemIdent customView: backforthKK];
+        toolbarItem = [self makeBackForthItemWithItemIdentifier: itemIdent key:itemIdent];
         
   		//toolbarItem =  [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent
 		//											customView:backforthKK];
@@ -1119,7 +1196,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
     
     if ([itemIdent isEqual: skBackForthKKTID]) {
         
-        toolbarItem = [self makeBackForthItemWithItemIdentifier: itemIdent key:itemIdent customView: sbackforthKK];
+        toolbarItem = [self makeBackForthItemWithItemIdentifier: itemIdent key:itemIdent];
         
          
         menuFormRep = [[NSMenuItem alloc] init];

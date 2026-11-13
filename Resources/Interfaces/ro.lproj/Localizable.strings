@@ -110,6 +110,7 @@
 "Split Window" = "Scindează Fereastra";
 "New Document" = "Document nou";
 "Link Popups" = "Ferestre pop-up";
+"Split Window with Link" = "Scindează Fereastra cu Legătura";
 "Syntax Color expl3 Code" = "Sintaxă Cod expl culoare";
 "PDF File Has No Annotations" = "Fișierul PDF nu are adnotări";
 
@@ -231,7 +232,6 @@
 "Use LaTeX-aware spell checking (recommended)" = "Folosește verificarea adaptată la LaTeX (recomandat)";
 "Use legacy spell checking" = "Folosește verificarea tradițională";
 "LaTeX Spell Checking" = "Ortografie LaTeX";
-"Edit Key Bindings…" = "Editor de asocieri de taste…";
 "Key Bindings" = "Asocieri de taste";
 "Edit Command Completion…" = "Editează completarea comenzilor…";
 "Command Completion" = "Completarea comenzilor";
@@ -322,7 +322,6 @@
 /* Macro editor placeholder guide */
 "#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = textul selectat, #INS# = punctul de inserare după macro, #PASTE# = textul din clipboard. Macrourile AppleScript pot folosi și #FILEPATH# și alți marcatori (vezi Ajutor).";
 /* Key binding editor placeholder guide */
-"* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = caracterele selectate, #INS# = punctul de inserare, #PASTE# = textul din clipboard";
 
 /* Edit › Mark */
 "Insert Mark with Note" = "Inserează marcaj cu notă";
@@ -335,3 +334,25 @@
 "Deletes the previous • and selects its note, if it has one." = "Șterge • anterior și îi selectează nota, dacă are.";
 "• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = marcaj, •‹notă› = marcaj cu notă; %@ › %@ trece de la unul la altul.";
 "Marks" = "Marcaje";
+
+/* Settings › Keyboard › Key Bindings */
+"Input Character" = "Caracter tastat";
+"Output String" = "Text rezultat";
+"Selected Text" = "Text selectat";
+"Insertion Point" = "Punct de inserare";
+"Clipboard Text" = "Text din clipboard";
+"Line Break" = "Întrerupere de rând";
+"Tab" = "Tab";
+"Mark" = "Marcaj";
+"Mark with Note" = "Marcaj cu notă";
+"note" = "notă";
+"Insert" = "Inserează";
+"Add" = "Adaugă";
+"Delete" = "Șterge";
+"Symbols" = "Simboluri";
+"Display" = "Afișare";
+"Typed As" = "Se tastează";
+"Add Key Binding" = "Adăugare asociere de taste";
+"Change Key Binding" = "Modificare asociere de taste";
+"Delete Key Binding" = "Ștergere asociere de taste";
+"Move Key Binding" = "Mutare asociere de taste";

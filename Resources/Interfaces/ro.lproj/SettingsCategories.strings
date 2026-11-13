@@ -294,9 +294,11 @@
 "catalog.console.1.1.title" = "Redimensionarea consolei";
 "group.bindings.title" = "Completare Automată";
 "catalog.keyboard.0.0.title" = "Folosește asocieri de taste (implicit pentru documentele noi)";
-"catalog.keyboard.0.1.title" = "Editor de asocieri de taste…";
+"catalog.keyboard.0.0.note" = "Înlocuiește un caracter tastat cu un text stabilit, de exemplu { cu {}.";
+"catalog.keyboard.0.1.title" = "Lista asocierilor de taste";
 "group.completion.title" = "Completarea comenzilor";
 "catalog.keyboard.1.0.title" = "Tastă de activare";
+"catalog.keyboard.1.0.note" = "Completează comanda pe care o tastați; apăsați din nou tasta pentru următoarea variantă.";
 "catalog.keyboard.1.1.title" = "Completări BibDesk";
 "catalog.keyboard.1.1.note" = "Oferă chei de citare din BibDesk drept completări în \\cite și comenzi similare.";
 "catalog.keyboard.1.2.title" = "Editează completarea comenzilor…";
@@ -304,6 +306,11 @@
 "group.updates.0.title" = "Verificări automate";
 "catalog.updates.0.0.title" = "Caută automat actualizări";
 "catalog.updates.0.1.title" = "Intervalul de verificare";
+"group.updates.1.title" = "Actualizări incluse";
+"catalog.updates.1.0.title" = "Actualizează la versiunile preliminare când sunt disponibile";
+"catalog.updates.2.0.title" = "Căutați actualizări...";
+"catalog.updates.2.0.last" = "Ultima verificare: %@";
+"catalog.updates.2.0.never" = "Niciodată";
 
 "catalog.documents.1.3.note" = "La salvare, combină caracterele stocate separat (de exemplu か + ゛) într-un singur caracter (が).";
 

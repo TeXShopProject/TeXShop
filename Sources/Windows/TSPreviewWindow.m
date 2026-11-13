@@ -920,6 +920,51 @@ extern NSPanel *pageNumberWindow;
     [self keepPinnedLinkPreviewsInView];
 }
 
+// Split Window with Link (#31). The part with the link stays where it is, and the other part
+// goes to the target of the link as if the link were clicked there, so Back takes it back.
+// An unsplit window is first split as by Split Window. The other part keeps its display
+// format and magnification. If it is too small to show anything, as when the divider has
+// been dragged to the edge of the window, the divider first moves to the middle. The other
+// part becomes the active view, which Back and Forward and the toolbar work with.
+- (void)showLinkDestination: (PDFDestination *)destination besideView: (PDFView *)view
+{
+    // The PDF may have been reloaded while the menu was open; the target then belongs to the old one.
+    if (destination.page == nil || destination.page.document == nil || destination.page.document != view.document)
+        return;
+    if (! self.windowIsSplit) {
+        if (view != self.myPDFKitView)
+            return;
+        [self splitPdfKitWindow: nil];
+    }
+    MyPDFKitView *linkView = (MyPDFKitView *)view;
+    MyPDFKitView *otherView = (MyPDFKitView *)(view == self.myPDFKitView ? self.myPDFKitView2 : self.myPDFKitView);
+    NSSplitView *splitView = self.pdfKitSplitView;
+    if (! self.windowIsSplit || linkView.superview != splitView || otherView.superview != splitView || splitView.subviews.count != 2)
+        return;
+    if (otherView.document != linkView.document)
+        return;
+    NSWindow *window = linkView.window;
+
+    CGFloat whole = splitView.isVertical ? NSWidth(splitView.bounds) : NSHeight(splitView.bounds);
+    CGFloat otherExtent = splitView.isVertical ? NSWidth(otherView.frame) : NSHeight(otherView.frame);
+    if (otherExtent < whole / 10) {
+        TSPreviewPanePlace place = TSPreviewPaneCapture(linkView);
+        CGFloat start = splitView.isVertical ? NSMinX(splitView.bounds) : NSMinY(splitView.bounds);
+        [splitView setPosition: start + round((whole - splitView.dividerThickness) / 2) ofDividerAtIndex: 0];
+        [splitView layoutSubtreeIfNeeded];
+        TSPreviewPaneRestore(linkView, place);
+    }
+
+    [otherView cleanupMarqueeKeepingPinnedLinkPreview];
+    [otherView goToDestination: destination];
+
+    NSResponder *responder = window.firstResponder;
+    BOOL focusInParts = [responder isKindOfClass: [NSView class]] &&
+        ([(NSView *)responder isDescendantOf: linkView] || [(NSView *)responder isDescendantOf: otherView]);
+    if (! focusInParts || ! [window makeFirstResponder: otherView])
+        [otherView becomeActiveView];
+}
+
 - (void)switchSplitViews: (id)sender
 {
     [self switchViews];
@@ -1267,6 +1312,9 @@ extern NSPanel *pageNumberWindow;
         // The second view holds the document only while the preview is split;
         // give it the document before its display parameters are set.
         [self.myPDFKitView2 setDocument:[self.myPDFKitView document]];
+        // When the document was opened without a PDF, the second view did not start
+        // watching its page then, so the page number box would not follow it (#14).
+        [(MyPDFKitView *)self.myPDFKitView2 notificationSetup];
         
         // ADJUST DISPLAY PARAMETERS
         

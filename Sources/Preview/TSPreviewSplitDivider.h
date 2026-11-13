@@ -6,6 +6,9 @@
  * dragged, each part keeps the text at its top edge where it is: the top part
  * shows more or less below it, and the text of the bottom part moves with the
  * divider, like a sheet of paper laid over the lower part of a page.
+ *
+ * When the height of such a window changes, both parts also keep the text at
+ * their top edges.
  */
 
 #import <Cocoa/Cocoa.h>

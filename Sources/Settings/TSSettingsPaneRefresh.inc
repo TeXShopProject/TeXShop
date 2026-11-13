@@ -132,28 +132,33 @@
     [self updateSpellingControlsFromDefaults:defaults];
     [dictionaryPopup removeAllItems];
     [dictionaryPopup addItemWithTitle:NSLocalizedString(@"Automatic Language", @"")];
-    NSArray *theLanguages = [[NSSpellChecker sharedSpellChecker] availableLanguages];
-    NSInteger numberOfItems = [theLanguages count];
-    NSInteger i = 0;
-    while (i < numberOfItems)
-    {
-        [dictionaryPopup addItemWithTitle:[theLanguages objectAtIndex:i]];
-        i = i + 1;
+    // Each choice keeps the checker's identifier; its title is the language's name.
+    NSArray<NSString *> *theLanguages = [[NSSpellChecker sharedSpellChecker] availableLanguages] ?: @[];
+    NSMutableArray<NSString *> *titles = [NSMutableArray array];
+    for (NSString *language in theLanguages) [titles addObject:TSSpellingLanguageDisplayName(language)];
+    NSCountedSet<NSString *> *titleCounts = [[NSCountedSet alloc] initWithArray:titles];
+    for (NSUInteger i = 0; i < theLanguages.count; i++) {
+        NSString *title = titles[i];
+        if ([titleCounts countForObject:title] > 1) title = [NSString stringWithFormat:@"%@ (%@)", title, theLanguages[i]];
+        NSMenuItem *item = [dictionaryPopup.menu addItemWithTitle:title action:NULL keyEquivalent:@""];
+        item.representedObject = theLanguages[i];
+        item.toolTip = theLanguages[i];
     }
-    BOOL useAutomatic = [defaults boolForKey:spellingAutomaticDefaultKey];
-    NSString *myLanguage = [defaults objectForKey:spellingLanguageDefaultKey];
-    if (useAutomatic)
+    NSString *myLanguage = nil;
+    if (TSSpellingDefaultIsAutomatic(defaults, nil, &myLanguage)) {
         [dictionaryPopup selectItemAtIndex:0];
-    else
-    {
-        i = 0;
-        while (i < numberOfItems)
-        {
-            if ([myLanguage isEqualToString:[dictionaryPopup itemTitleAtIndex:(i + 1)]])
-                [dictionaryPopup selectItemAtIndex:(i + 1)];
-            i = i + 1;
-        }
+        return;
     }
+    NSString *match = TSSpellingLanguageMatching(myLanguage, theLanguages);
+    if (match == nil && TSSpellingLanguageNormalized(myLanguage).length > 0) {
+        // A dictionary that is no longer installed stays visible as the current choice.
+        NSMenuItem *item = [dictionaryPopup.menu addItemWithTitle:TSSpellingLanguageDisplayName(myLanguage) action:NULL keyEquivalent:@""];
+        item.representedObject = myLanguage;
+        item.toolTip = myLanguage;
+        match = myLanguage;
+    }
+    NSInteger index = match ? [dictionaryPopup indexOfItemWithRepresentedObject:match] : -1;
+    [dictionaryPopup selectItemAtIndex:index >= 0 ? index : 0];
 }
 
 - (void)refreshAppearanceSettingsFromDefaults:(NSUserDefaults *)defaults
@@ -303,6 +308,8 @@
     [_sparkleAutomaticButton setState:[defaults boolForKey:SparkleAutomaticUpdateKey]];
 
     [_sparkleIntervalMatrix selectCellWithTag:[defaults integerForKey:SparkleIntervalKey]];
+    self.sparklePrereleaseButton.state = [defaults boolForKey:SparklePrereleaseUpdatesKey] ? NSControlStateValueOn : NSControlStateValueOff;
+    if (defaults == SUD) [self refreshSparkleLastCheck];
 #ifdef USESPARKLE
     if (defaults == SUD && [TSSparkleController sharedUpdater] != nil)
     {

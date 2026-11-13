@@ -68,6 +68,7 @@
 
 \usepackage[colorlinks=true, pdfstartview=FitV, linkcolor=blue, 
             citecolor=blue, urlcolor=blue, hyperfigures=true, bookmarksnumbered]{hyperref}
+\hypersetup{pdftitle={TeXShop Manual}, pdfauthor={Richard Koch, Yusuke Terada}}
 
 %\usepackage[colorlinks=true, pdfstartview=FitV, linkcolor=blue, 
 %            citecolor=blue, urlcolor=blue, hyperfigures=true]{hyperref}
@@ -80,7 +81,7 @@
 \usepackage[all]{hypcap}  % For well-positioned anchors for floats
 
 \title{TeXShop Manual \\ Version 1.4.8}
-\author{Richard Koch}
+\author{Richard Koch\\[0.5ex]{\normalsize with revisions and additions by}\\[0.5ex]Yusuke Terada}
 %\date{}							% Activate to display a given date or no date
 
 \begin{document}
@@ -96,7 +97,7 @@ In January 2024 he contributed \cref{PresentingWithTeXShopChapter} to this manua
 
 The version number of the manual  increases when changes are made. Small changes are made with most new TeXShop releases, including additional chapters from time to time.
 
-Version 1.4.8 updates the manual for TeXShop 5.60. Starting with TeXShop 5.59, TeXShop is maintained by Yusuke Terada; the passages written in the first person are by Richard Koch.
+Version 1.4.8 updates the manual for TeXShop 5.60. Starting with TeXShop 5.59, TeXShop is maintained by Yusuke Terada, who has revised and extended this manual; the passages written in the first person are by Richard Koch.
 
  \newpage
 \pdfbookmark{Table of Contents}{ContentsLabel}
@@ -542,7 +543,7 @@ The solution was simple: choose a source font which contains Hebrew. The Apple F
 
 \section{Settings for the Source Window}
 
-Existing KeyEquivalents.plist entries for the former Key Bindings submenu's first item still apply to the Key Bindings item in Source. Entries for removed editing items or out-of-range numbers are ignored. macOS App Shortcuts (NSUserKeyEquivalents) use exact menu titles, so an assignment stops working when a title changes; assign the shortcut in the Keyboard category of Settings instead (see Section \ref{sec:MenuShortcutKeystrokes}). The file editors are now buttons in Settings, Keyboard and cannot be assigned by their former menu titles.
+Existing KeyEquivalents.plist entries for the former Key Bindings submenu's first item still apply to the Key Bindings item in Source, and entries for Add Word in the former Command Completion submenu, by title or by position, apply to Add to Command Completion List, which took the place of that submenu in Source. Entries for removed editing items or out-of-range numbers are ignored. macOS App Shortcuts (NSUserKeyEquivalents) use exact menu titles, so an assignment stops working when a title changes; assign the shortcut in the Keyboard category of Settings instead (see Section \ref{sec:MenuShortcutKeystrokes}). The command completion file is now edited with a button in Settings, Keyboard, and key bindings in a list there; neither can be assigned by its former menu title.
 
 
 Settings has ten categories: General, Documents and Saving, Editor, Spell Checking, Themes, Preview, Typesetting, Console, Keyboard, Updates. In Spell Checking, choose the \LaTeX{}-aware or legacy method. The former has a rule editor; the latter has three indented options. Searching for Tab when it triggers completion shows a reservation message and reveals the completion trigger. General links to Comment Lines and Hidden Settings.
@@ -2174,11 +2175,12 @@ There is an item under the Keyboard category of TeXShop Settings to turn Key Bin
 
 There is also an item in the TeXShop ``Source'' menu to toggle Key Bindings on or off. So if you use Key Bindings but suddenly need an unusual character that has been remapped, turn Key Bindings off, type the character, and turn it back on. If this situation occurs often for you, there is an optional tool for the Source Window toolbar which toggles Key Bindings on and off.
 
-Open Settings, select Keyboard, and press ``Key Bindings Editor...''. This opens an editor listing keys in a column on the left and the corresponding output on the right.
-Extra items can be added, and existing items can be edited or removed.  
+Open Settings and select Keyboard. The Key Bindings section lists the input characters in a column on the left and the corresponding output strings on the right. Double-click a cell to edit it in place; press + below the list to add a key binding and $-$ to delete the selected ones. Rows can be dragged to change their order. An input character is a single character. Changes are saved at once and take effect immediately, also in documents which are already open; Edit $\rightarrow$ Undo reverts them.
 
 Note the special symbols \#SEL\# and \#INS\#. If there is selected text when a remapped key is pressed, \#SEL\# will be that selection in the resulting output. The insertion cursor will be placed at the spot \#INS\#
-in the resulting output. The symbol \#PASTE\# is replaced by the text on the clipboard.
+in the resulting output. The symbol \#PASTE\# is replaced by the text on the clipboard, and the bullet $\bullet$ is a mark which Edit $\rightarrow$ Marks can move to.
+
+In the list, these symbols, as well as line breaks and tabs, are shown as small labels such as ``Selected Text''. They can be added with the Insert menu below the list, or typed: the symbols as written above, a line break with Option-Return and a tab with Option-Tab. The ? button beside the list shows all of them. Copying an output string copies its text with the symbols as written above, and pasting such text shows them as labels again. The file itself is unchanged: the symbols, line breaks and tabs are stored as they always were.
 
 Although many items are remapped by the default Key Bindings, my guess is that only a few items are used, and users aren't even aware of the others. This seems to do no harm.
 
@@ -2570,7 +2572,9 @@ The same group, ``Copy Images'', has the switch ``Use Color Mapping''. When it i
 
 \section{Back, Forward, Rotation}
 
-The toolbar has two buttons showing a page with an arrow pointing up or down, for moving to the previous or next page, and two arrows pointing left and right for moving through the history of a document. These left and right arrows act like the corresponding arrows in a browser. If you use the ``Go to page'' tool to go from page 3 to page 5, and then page 10, and then page 25, the left arrow will take you back to page 10, and then to page 5, and at that point the right arrow will take you back to page 10.
+The toolbar has two buttons showing a page with an arrow pointing up or down, Previous Page and Next Page, for moving to the previous or next page. It also has the Back/Forward item, two chevrons pointing left and right as in Apple's Preview, for moving through the history of a document. These chevrons act like the back and forward buttons in a browser. If you use the ``Go to page'' tool to go from page 3 to page 5, and then page 10, and then page 25, the left chevron will take you back to page 10, and then to page 5, and at that point the right chevron will take you back to page 10. A chevron is dimmed when there is no page to go back or forward to. The Back/Forward item is in the toolbar of the Preview Window by default; in single window mode, add it with ``Customize Toolbar...'' in the Window menu.
+
+Earlier versions of TeXShop also offered Previous Page and Next Page buttons showing only an arrow. A toolbar that contained both kinds now shows the page buttons once.
 
 The Preview menu also has menu items to rotate individual pages clockwise or counterclockwise.
 
@@ -2612,19 +2616,23 @@ The Backward/Forward arrows in the Preview window toolbar work  like similar arr
 \section{Popup Windows and Hovering Over Links}
 \label{Popup_Windows_Section}
 Hovering over a link will bring up a small view of the linked text. For instance, hovering over a section number in the table of contents will display the beginning of that section in the text. 
-The popup is as wide as the text column on the linked page plus a margin of about 5\% of the column, so complete lines are visible and a pinned popup has room to scroll; in a two-column document it shows only the column containing the link target. The popup becomes smaller only when the Preview window is too narrow for it, and then never below half size. Its lower right corner shows the label of the linked page, such as ``Page 157''. This is the page number given in the PDF, which may differ from the page's position in the file, as in a book whose front matter is numbered i, ii, \ldots; a PDF without page labels shows that position. While link popups are on, the ``Go to page'' tool tip that would otherwise appear over such a link is left out, since it could cover the text.
+The popup is as wide as the text column on the linked page plus a margin of about 5\% of the column, so complete lines are visible and a pinned popup has room to scroll; in a two-column document it shows only the column containing the link target. The popup becomes smaller when the Preview window is too narrow for it, and then never below half size. It starts just above the link target and shows what follows it. When the target is near the bottom of its page, the popup becomes lower rather than showing more of what comes before the target. In the continuous displays, Multi-Page and Double Multi-Page, it goes on with the top of the next page instead, as the display does, so a definition or theorem broken by a page break can be read in one popup. Its lower right corner shows the label of the linked page, such as ``Page 157''. This is the page number given in the PDF, which may differ from the page's position in the file, as in a book whose front matter is numbered i, ii, \ldots; a PDF without page labels shows that position. While link popups are on, or while Command brings up a popup as described below, the ``Go to page'' tool tip that would otherwise appear over such a link is left out, since it could cover the text.
 Normally the popup is on screen for four seconds and then disappears. This behavior can be changed with a
 modifier key, as explained below.
 
-There is a menu item in the Preview menu called ``Link Popups'', suggested by Uwe Schmock. This menu is a toggle turning the hover behavior on or off. When it is on, the menu item is checked. Whether the hover behavior is on when a document is opened is set by the ``Link Popups'' switch under Display in the {\em Preview} category of Settings; it is on by default.
+There is a menu item in the Preview menu called ``Link Popups'', suggested by Uwe Schmock. This menu is a toggle turning the hover behavior on or off. When it is on, the menu item is checked. Whether the hover behavior is on when a document is opened is set by the ``Link Popups'' switch under Display in the {\em Preview} category of Settings; it is on by default. While ``Link Popups'' is off, a popup can still be seen for a particular link by holding down the Command key while moving the pointer onto it, as explained in the next section; without Command, hovering shows nothing. This too was suggested by Uwe Schmock.
 
-If you click in the contents of the Preview window while the Control key is down, a contextual menu opens. The ``Link Popups'' item is also in this contextual menu.
+If you click in the contents of the Preview window while the Control key is down, a contextual menu opens. Clicking with the right mouse button, or with two fingers on a trackpad, opens it too. The ``Link Popups'' item is also in this contextual menu. When the menu is opened over an internal link, it also contains ``Split Window with Link'', which shows the linked place in the other part of a split window (see \cref{Split_Window_With_Link_Section}).
 
 \subsection{Modifying Popup Windows}
 \label{Modifying_Popup_Windows_Section}
 The details of the small window created by hovering over a link can be changed by holding down any combination of three modifier keys  before moving a mouse to the link. These modifying keys have been selected so their names give a mnemonic for the effect they create. The SHIFT key shifts the small window to appear above the link, rather than  below it. The COMMAND key commands that a bigger window with larger text be displayed. The OPTION key pins the popup on screen, so you can move the pointer to explain the relationship between the linked text and the surrounding page. Release Option and the popup stays visible; press Escape to dismiss it. Option can also be pressed while an ordinary popup is already visible to pin it. Shift and Command can still be combined with Option.
 
-A pinned popup can be moved out of the way by dragging it, even until only a small part of it remains in view, and resized by dragging its edges or corners; resizing shows more or less of the page at the same text size. Scrolling with the pointer over a pinned popup scrolls the page inside it, which helps when the popup does not start at the interesting part, as often happens with multi-line formulas.
+The COMMAND key also works while ``Link Popups'' is off. Hovering over a link with Command held down then shows the popup of that link all the same, as the bigger window, since that is what Command always asks for; Shift and Option can be added as usual. If Command is released before the popup appears, no popup appears; press it again and move the pointer within the link. Without Command, hovering shows nothing. When ``Link Popups'' is on, Command keeps its meaning and gives the bigger window; it does not turn the popup off.
+
+In the continuous displays, Multi-Page and Double Multi-Page, the popup always appears below the link, or above it with Shift, so that it does not cover the text next to the link, such as a displayed formula with links above and below it. If there is not enough room on that side, part of the popup lies outside the Preview window; below the link, the part that stays in view is the beginning of the linked text. The popup moves only sideways to stay in view. In Single Page and Double Page display, a popup that does not fit on its side of the link appears on the other side instead, and in a window too low for it, it becomes smaller to fit.
+
+A pinned popup can be moved out of the way by dragging it, even until only a small part of it remains in view, and resized by dragging its edges or corners; resizing shows more or less of the page at the same text size. Scrolling with the pointer over a pinned popup scrolls the page inside it, which helps when the popup does not start at the interesting part, as often happens with multi-line formulas. In the continuous displays, it scrolls on into the next page.
 
 The tool chosen in the Preview toolbar also applies inside a pinned popup. With the hand, dragging anywhere inside the popup moves it. With any other tool, the popup behaves like the text tool: dragging over text selects and highlights it, so it can be copied, double-clicking selects a word, and dragging where there is no text moves the popup. The pointer shows which of these will happen.
 
@@ -2632,7 +2640,7 @@ A pinned popup stays until Escape is pressed in the Preview window. Clicking ins
 
 When the Preview window is split (see \cref{Splitting_Windows_Section}), each part can show its own pinned popup. Splitting or unsplitting the window keeps pinned popups, moving them back into view if needed; when the window is unsplit, a popup pinned in the part that goes away moves to the remaining part, at the same place on the screen, unless that part shows a pinned popup of its own.
 
-While a pinned popup is open, hovering over other links shows no new popups in the same view; in a split window, the other part still shows them unless it has a pinned popup of its own. So if popups no longer appear, a pinned popup may still be open where it is easy to miss: dragged almost out of the window, or scrolled out of view with its page. Click in the preview to make its window active, which does not dismiss the popup, and press Escape with no modifier keys held down. If both parts of a split window have a pinned popup, each press of Escape dismisses one of them. If popups still do not appear, make sure that ``Link Popups'' is checked in the Preview menu, and that the Select PDF tool is not chosen in the toolbar, since that tool shows no popups.
+While a pinned popup is open, hovering over other links shows no new popups in the same view; in a split window, the other part still shows them unless it has a pinned popup of its own. So if popups no longer appear, a pinned popup may still be open where it is easy to miss: dragged almost out of the window, or scrolled out of view with its page. Click in the preview to make its window active, which does not dismiss the popup, and press Escape with no modifier keys held down. In a split window, Escape dismisses the pinned popup of the active part, the part clicked last (see \cref{Active_View_Split_Window}); if that part has no pinned popup, Escape dismisses the one in the other part. If popups still do not appear, make sure that ``Link Popups'' is checked in the Preview menu, and that the Select PDF tool is not chosen in the toolbar, since that tool shows no popups.
 
 
 
@@ -3750,6 +3758,8 @@ When the drawer is active and we select a chapter in the drawer, it is marked in
 When the chapters in the drawer's outline view are numbered, several keyboard shortcuts are available in the
 drawer. If you type Option-1, the drawer will select the first chapter. If you type Option-2 followed by Option-0, the drawer will switch to Chapter 20. Type Option-UpArrow to select the first item and Option-DownArrow to select the last item. Type Option-1.5 to select Chapter 1, Section 5. If Chapter 3 is selected, Option-RightArrow will open sub-levels and Option-LeftArrow will close sub-levels. Although these keystrokes select drawer items, it is still necessary to click these items to make the associated view scroll to them.
 
+The toolbar of a split Preview window also works with its active view. The page number box shows the page of the active view, and typing a page number there moves the active view to that page while the other view stays where it is. Escape dismisses the pinned link popup of the active view first (see \cref{Modifying_Popup_Windows_Section}).
+
 There is a final item related to responders and active views. If the source window is split and we then unsplit it, the active view in the Source window will expand and become the contents of the unsplit window. So if the top portion is active and
 then we unsplit the window, we'll see that top portion. But if the bottom portion is active and then we unsplit the
 window, we'll see that bottom portion.
@@ -3759,6 +3769,8 @@ The Preview window does not work this way. Instead, the top view of a split wind
 There are rare situations when we want the bottom portion of the Preview window to become the primary view after we unsplit. And for that, there is a special command.
 
 The top view is also the one that stays in place when the divider of a Preview window split into a top and a bottom part is moved. Think of the page lying on a table, and of the bottom view as a sheet of paper laid over its lower part, showing another place in the document. Moving the divider moves this sheet up or down. The top view keeps its text where it is and only shows more or less of it below, while the text of the bottom view moves with the divider. Unsplitting the window takes the sheet away.
+
+Changing the height of the window works the same way: both views keep the text at their top edges and show more or less below it. A view can also be put out of sight for a moment by dragging the divider all the way to the top or the bottom of the window. When the divider is dragged back, the view shows the same text at its top as before.
 
 %There is a final interesting interaction. Select a chapter in the drawer and then type Option-2. This command does not switch the two views, because the first responder is the drawer rather than the Preview Window. Instead it selects chapter 2. But if we click in either view, then that view becomes first responder. After that when we type Option-2, this keystroke goes to the view rather than the drawer. Neither view understands Option-2, so the keystroke passes on down to the Preview Window. The Preview Window does understand Option-2 as a shortcut for ``Switch Views'' and switches the views.
 %
@@ -3778,6 +3790,14 @@ Switch Views exchanges the two parts completely. Each part keeps its size, so if
 
 \newpage
 This feature is not available for the Source Window because it is not needed there. When the source window has been split into two views, the  view with the cursor will become the active window when the window is unsplit.
+
+
+\section{Showing a Link in the Other Part}
+\label{Split_Window_With_Link_Section}
+
+When the contextual menu of the Preview window is opened over an internal link, such as a reference to a theorem or an entry of the table of contents, it contains the item ``Split Window with Link'', suggested by Uwe Schmock. The menu opens when you click with the Control key held down, or with the right mouse button. The item shows the linked place in the other part of a split window, while the part with the link stays where it is. If the window is not split, it is first split as by ``Split Window'', and the linked place appears in the bottom part; hold down the Option key while choosing the item to split the window side by side. If the window is already split, the other part moves to the linked place, whichever part contains the link. The other part keeps its display format and magnification. If it is too small to show anything, for instance because the divider was dragged to the edge of the window, the divider first moves to the middle.
+
+The part that shows the linked place becomes the active view, so the left chevron of the Back/Forward item in the toolbar takes it back to where it was, as after clicking a link in that part. The item is not in the menu over a link to a web page or to another file.
 
 
 \section{Revising the Document and Typesetting}
@@ -4010,7 +4030,7 @@ When the time arrives to show the figure, you press the keyboard equivalent Opti
 You don't have to stop sharing and start sharing again!
 \item
 By default, I use the mouse pointer for the Preview window.
-In the ``Change Mouse Mode'' icon of the toolbar, it is the second choice (text selection), see \cref{Preview_Mouse_Tools_Section}.
+In the ``Mouse Mode'' item of the toolbar, it is the second choice (Select Text), see \cref{Preview_Mouse_Tools_Section}.
 Highlighting text by selecting it works fine, but can produce confusing results with bigger displayed formulas, so you should check these critical cases in advance.
 \end{itemize}
 
@@ -4075,6 +4095,8 @@ When you switch back, i.e.\ unsplit the Preview window (no modifier key necessar
 
 TeXShop remembers the position of the dividing bar and the view of the lower part is saved.
 If you split again (without any modifier key), you get back the setting which you just left.
+
+Instead of these steps, you can also Control-click the link in the upper part and choose ``Split Window with Link'' from the contextual menu: the window is split, and the lower part shows the linked place at once. When the window is already split, the same item moves the other part to the linked place, so it also works for links in the lower part; see \cref{Split_Window_With_Link_Section}.
 
 \item
 The ``Split Window'' just explained is also helpful when presenting a theorem.
@@ -4177,6 +4199,8 @@ Each document has its own source and preview panels, so if you have multiple doc
 After this item was introduced, it was mentioned on the web site \url{tex.stackexchange.com}, and Denis Bitouzé suggested an improvement. Following his suggestion, if a selection of source is made first and then the menu is chosen, the selection is automatically copied into the experiment window.
 If no selection is made and instead the cursor is simply positioned by clicking at a point, then the Experiment window opens with
 its previous contents. Thus if a user carefully edits an equation, closes the experiment window, and then decides on a final change, the contents can be brought back for another edit.
+
+Typesetting in the source panel shows its output in a console of its own, the Experiment console. Like the two panels, it floats over the document's windows. It comes in front of the panels when typesetting starts, and a panel comes in front of it again when you click the panel. \cmdkey-0 ({\bf Show Console}) in a panel brings the Experiment console forward; pressing it again returns to the panel. TeXShop remembers the size and location of the Experiment console. If the Console category of TeXShop Settings is set to show the console only when an error occurs, the Experiment console stays hidden until \TeX\ reports an error or waits for input.
 
 Typesetting for ``Experiment...'' uses the settings for pdflatex and simpdftex latex in the Typesetting category of TeXShop Settings. If the user's pulldown menu is set to latex, the three choices of 1) pdflatex, 2) tex + dvi, 3) personal script are obeyed. This should make the command work for TeX in Japan.
 
@@ -4407,7 +4431,7 @@ Many TeXShop menu items have keyboard shortcuts. Eventually these shortcuts beca
 
 Nowadays I ignore shortcut requests, letting users modify the shortcuts themselves if desired. There are now three ways to do this.
 
-Choose {\bf Settings...} in the TeXShop menu and select the {\bf Keyboard} category. The pane lists menu commands with their shortcuts; {\bf Search by Function} finds a command by name or menu path. Select a command and press {\bf Change...}, or double-click it. A small sheet appears; press the new shortcut and then {\bf Apply}, or press Escape to cancel. A shortcut must use the Command or Control key, or be one of the function keys F1--F20. If another command already uses the shortcut, TeXShop says so and does not change anything. The buttons {\bf Remove Shortcut}, {\bf Restore Default}, and {\bf Restore All...} remove a shortcut, restore the original shortcut of the selected command, or restore all of them. Changes take effect immediately and are kept when TeXShop restarts. They are stored in TeXShop's settings under the key TSMenuShortcutOverrides, using names for the commands which do not depend on the language of the menus. Shortcuts for macros are still set in the Macro Editor, and key bindings which insert text are set in their own editor.
+Choose {\bf Settings...} in the TeXShop menu and select the {\bf Keyboard} category. The pane lists menu commands with their shortcuts; {\bf Search by Function} finds a command by name or menu path. Select a command and press {\bf Change...}, or double-click it. A small sheet appears; press the new shortcut and then {\bf Apply}, or press Escape to cancel. A shortcut must use the Command or Control key, or be one of the function keys F1--F20. If another command already uses the shortcut, TeXShop says so and does not change anything. The buttons {\bf Remove Shortcut}, {\bf Restore Default}, and {\bf Restore All...} remove a shortcut, restore the original shortcut of the selected command, or restore all of them. Changes take effect immediately and are kept when TeXShop restarts. They are stored in TeXShop's settings under the key TSMenuShortcutOverrides, using names for the commands which do not depend on the language of the menus. Shortcuts for macros are still set in the Macro Editor, and key bindings which insert text are set in the Key Bindings list of the same category.
 
 Choose {\bf Search by Key} and press a shortcut to list matching menu commands and macros with their assignment priority. When several assignments match, input-form priority and menu order determine the effective assignment. Plain Escape, clicking the search-mode control again, changing categories, switching windows, or closing Settings ends recording. To edit a macro, choose {\bf Show in Macro Editor}.
 
@@ -4421,7 +4445,7 @@ The two older methods described below still work. Shortcuts set in KeyEquivalent
 One method is provided by Apple in System Settings under Keyboard. The details which follow apply to Ventura and later, but similar methods are available for earlier systems. Select Keyboard and push the button {\em Keyboard Shortcuts...}. On the left side, select {\em App Shortcuts}. In the resulting dialog, push the plus key. A new dialog appears. On the top line in the pull-down menu, select TeXShop. TeXShop may not be in the resulting list; in that case select {\em Other} at the end of the menu and then choose TeXShop.
 On the second line, type the exact name of the menu command you want to work with. This will be the menu name in the localization you use, not necessarily the English menu name. On the final line, type the desired shortcut. Press {\em Cancel} or {\em Done} to end the session.
 
-App Shortcuts are matched by the exact menu title. When TeXShop renames a menu item, a shortcut assigned this way no longer applies. For example, TeXShop 5.60 renamed ``Pdftex'' and ``TeX and DVI'' in the Typeset menu to ``Direct PDF'' and ``Via DVI'', and the Japanese and Chinese menus no longer put a space between Chinese characters or kana and Latin letters. Assign menu shortcuts in the Keyboard category of TeXShop Settings instead; those assignments do not depend on the titles.
+App Shortcuts are matched by the exact menu title. When TeXShop renames a menu item, a shortcut assigned this way no longer applies. For example, TeXShop 5.60 renamed ``Pdftex'' and ``TeX and DVI'' in the Typeset menu to ``Direct PDF'' and ``Via DVI'', replaced ``Add Word'' in the Command Completion submenu of the Source menu with ``Add to Command Completion List'' in the Source menu itself, and the Japanese and Chinese menus no longer put a space between Chinese characters or kana and Latin letters. Assign menu shortcuts in the Keyboard category of TeXShop Settings instead; those assignments do not depend on the titles.
 
 Before Apple created this Preference Item, TeXShop provided a way for users to modify its shortcuts. This method still exists, but it is seldom used. In a pinch, you can try it. 
 

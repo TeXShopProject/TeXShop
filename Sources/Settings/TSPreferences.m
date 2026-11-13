@@ -41,10 +41,10 @@
 #import "TSDockIconController.h"
 #import "TSKeyboardShortcuts.h"
 #import "TSSpellSupport.h"
+#import "TSSpellingLanguage.h"
 #import "TSWindowManager.h"
 #import "TSEncodingSupport.h"
 #import "globals.h"
-#import "TSAutoCompletionListEditor.h"
 #import "HelpDocuments.h"
 #import "TSPreviewWindow.h"
 #import "TSSettingsChangeNote.h"
@@ -88,7 +88,7 @@ typedef NS_CLOSED_ENUM(NSUInteger, TSSettingsFontDestination) {
 @end
 
 @implementation TSPreferences
-@synthesize legacySpellCheckButton = _legacySpellCheckButton, keyBindingEditor = _keyBindingEditor, settingsHelpDocuments = _settingsHelpDocuments;
+@synthesize legacySpellCheckButton = _legacySpellCheckButton, settingsHelpDocuments = _settingsHelpDocuments;
 /*"
 Format of the original prefs file:
 
@@ -1475,11 +1475,54 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 
 #endif
 
+- (IBAction)sparklePrereleaseUpdates:(NSButton *)sender
+{
+    [SUD setBool:sender.state == NSControlStateValueOn forKey:SparklePrereleaseUpdatesKey];
+#ifdef USESPARKLE
+    [[TSSparkleController sharedUpdater] resetUpdateCycleAfterShortDelay];
+#endif
+}
 
+- (IBAction)checkForUpdatesFromSettings:(id)sender
+{
+#ifdef USESPARKLE
+    [[TSSparkleController sharedController] checkForUpdates:sender];
+#endif
+}
 
+- (void)sparkleStatusControlsDidLoad
+{
+#ifdef USESPARKLE
+    SPUUpdater *updater = [TSSparkleController sharedUpdater];
+    if (updater != nil && self.sparkleCheckNowButton != nil)
+        [self.sparkleCheckNowButton bind:NSEnabledBinding toObject:updater withKeyPath:@"canCheckForUpdates" options:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TSSparkleUpdateCheckDidFinishNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sparkleUpdateCheckDidFinish:) name:TSSparkleUpdateCheckDidFinishNotification object:nil];
+#endif
+    [self refreshSparkleLastCheck];
+}
 
+- (void)sparkleUpdateCheckDidFinish:(NSNotification *)notification
+{
+    [self refreshSparkleLastCheck];
+}
 
-
+- (void)refreshSparkleLastCheck
+{
+    if (self.sparkleLastCheckField == nil) return;
+    NSDate *date = nil;
+#ifdef USESPARKLE
+    date = [TSSparkleController sharedUpdater].lastUpdateCheckDate;
+#endif
+    NSBundle *bundle = [NSBundle mainBundle];
+    NSString *when;
+    if (date != nil)
+        when = [NSDateFormatter localizedStringFromDate:date dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterShortStyle];
+    else
+        when = [bundle localizedStringForKey:@"catalog.updates.2.0.never" value:@"Never" table:@"SettingsCategories"];
+    NSString *format = [bundle localizedStringForKey:@"catalog.updates.2.0.last" value:@"Last checked: %@" table:@"SettingsCategories"];
+    self.sparkleLastCheckField.stringValue = [NSString stringWithFormat:format, when];
+}
 
 /*" This method is connected to the textField that holds the tex script command. It is located on the TeX pane.
 "*/
@@ -1666,12 +1709,6 @@ person script. See also: DefaultTypesetMode.
     [self.settingsChangeNotes recordUserChangeForKey:TSTeXAwareSpellCheckingKey previousValue:previousNoteValue];
 }
 
-- (IBAction)editKeyBindings:(id)sender
-{
-    if (self.keyBindingEditor == nil) self.keyBindingEditor = [TSAutoCompletionListEditor new];
-    [self.keyBindingEditor openAutoCompletionListEditor:sender];
-}
-
 - (IBAction)displayCommentLines:(id)sender
 {
     if (self.settingsHelpDocuments == nil) self.settingsHelpDocuments = [HelpDocuments new];
@@ -1728,12 +1765,9 @@ A tag of 0 means "always", a tag of 1 means "when errors occur".
 
 - (IBAction)dictionaryPressed: sender
 {
-    
-    NSString *language = [[sender selectedItem] title];
-    
-    
-    
-    if ([language isEqualToString: @"Automatic Language"])
+    // The automatic choice has no identifier; the others keep the checker's.
+    NSString *language = [[sender selectedItem] representedObject];
+    if (![language isKindOfClass:[NSString class]] || [language length] == 0)
     {
         [SUD setBool:YES forKey:spellingAutomaticDefaultKey];
         [SUD setObject:@" " forKey:spellingLanguageDefaultKey];
@@ -1743,7 +1777,7 @@ A tag of 0 means "always", a tag of 1 means "when errors occur".
         [SUD setBool:NO forKey:spellingAutomaticDefaultKey];
         [SUD setObject:language forKey:spellingLanguageDefaultKey];
     }
-    
+    TSPostPreferenceNotifications([NSSet setWithArray:@[spellingLanguageDefaultKey, spellingAutomaticDefaultKey]], self);
 }
 
 

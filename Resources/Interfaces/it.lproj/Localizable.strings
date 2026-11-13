@@ -110,6 +110,7 @@
 "Split Window" = "Dividi finestra";
 "New Document" = "Nuovo documento";
 "Link Popups" = "Collegamento popup";
+"Split Window with Link" = "Dividi finestra con collegamento";
 "Syntax Color expl3 Code" = "Colorazione sintassi codice expl3";
 "PDF File Has No Annotations" = "Il file PDF non ha annotazioni";
 
@@ -231,7 +232,6 @@
 "Use LaTeX-aware spell checking (recommended)" = "Usa il controllo adatto a LaTeX (consigliato)";
 "Use legacy spell checking" = "Usa il controllo tradizionale";
 "LaTeX Spell Checking" = "Ortografia LaTeX";
-"Edit Key Bindings…" = "Editor delle associazioni dei tasti…";
 "Key Bindings" = "Associazioni dei tasti";
 "Edit Command Completion…" = "Modifica il completamento dei comandi…";
 "Command Completion" = "Completamento dei comandi";
@@ -322,7 +322,6 @@
 /* Macro editor placeholder guide */
 "#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = testo selezionato, #INS# = punto di inserimento dopo la macro, #PASTE# = testo negli appunti. Le macro AppleScript possono usare anche #FILEPATH# e altri segnaposto (vedi Aiuto).";
 /* Key binding editor placeholder guide */
-"* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = caratteri selezionati, #INS# = punto di inserimento, #PASTE# = testo negli appunti";
 
 /* Edit › Mark */
 "Insert Mark with Note" = "Inserisci marcatore con nota";
@@ -335,3 +334,25 @@
 "Deletes the previous • and selects its note, if it has one." = "Elimina il • precedente e ne seleziona la nota, se presente.";
 "• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = marcatore, •‹nota› = marcatore con nota; %@ › %@ sposta tra di essi.";
 "Marks" = "Marcatori";
+
+/* Settings › Keyboard › Key Bindings */
+"Input Character" = "Carattere digitato";
+"Output String" = "Testo prodotto";
+"Selected Text" = "Testo selezionato";
+"Insertion Point" = "Punto di inserimento";
+"Clipboard Text" = "Testo negli appunti";
+"Line Break" = "Interruzione di riga";
+"Tab" = "Tabulazione";
+"Mark" = "Marcatore";
+"Mark with Note" = "Marcatore con nota";
+"note" = "nota";
+"Insert" = "Inserisci";
+"Add" = "Aggiungi";
+"Delete" = "Elimina";
+"Symbols" = "Simboli";
+"Display" = "Aspetto";
+"Typed As" = "Si digita";
+"Add Key Binding" = "Aggiungi associazione dei tasti";
+"Change Key Binding" = "Modifica associazione dei tasti";
+"Delete Key Binding" = "Elimina associazione dei tasti";
+"Move Key Binding" = "Sposta associazione dei tasti";

@@ -49,6 +49,11 @@
 @end
 
 @implementation NoodleLineNumberView
+{
+	// The selection made on the line numbers, while the text view still has it.
+	BOOL	_hasLineSelection;
+	NSRange	_lineSelection;
+}
 
 - (id)initWithScrollView: (NSScrollView *)aScrollView
 {
@@ -98,22 +103,23 @@
     }
 }
 
+// The system's monospaced font, so that the digits of every number line up, and bold
+// numbers are exactly as wide as regular ones.
+- (NSFont *)fontOfWeight:(NSFontWeight)weight
+{
+    CGFloat size;
+
+    if ([SUD integerForKey: LineNumberSizeKey] == 1)
+        size = [NSFont systemFontSizeForControlSize:NSControlSizeRegular];
+    else
+        size = [NSFont systemFontSizeForControlSize:NSControlSizeMini];
+    return [NSFont monospacedSystemFontOfSize:size weight:weight];
+}
+
 - (NSFont *)font
 {
-    NSInteger lineSize;
-    
-    lineSize = [SUD integerForKey: LineNumberSizeKey];
-        
 	if (_font == nil)
-    {
-        if (lineSize == 0)
-            return [NSFont labelFontOfSize:[NSFont systemFontSizeForControlSize:NSControlSizeMini]];
-        else if (lineSize == 1)
-            return [NSFont labelFontOfSize:[NSFont systemFontSizeForControlSize:NSControlSizeRegular]];
-        else
-            return [NSFont labelFontOfSize:[NSFont systemFontSizeForControlSize:NSControlSizeMini]];
-    }
-        
+        return [self fontOfWeight:NSFontWeightRegular];
     return _font;
 }
 
@@ -176,11 +182,14 @@
     if ((oldClientView != aView) && [oldClientView isKindOfClass:[NSTextView class]])
     {
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:NSTextStorageDidProcessEditingNotification object:[(NSTextView *)oldClientView textStorage]];
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:NSTextViewDidChangeSelectionNotification object:oldClientView];
     }
+    _hasLineSelection = NO;
     [super setClientView:aView];
     if ((aView != nil) && [aView isKindOfClass:[NSTextView class]])
     {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSTextStorageDidProcessEditingNotification object:[(NSTextView *)aView textStorage]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectionDidChange:) name:NSTextViewDidChangeSelectionNotification object:aView];
 
 		[self invalidateLineIndices];
     }
@@ -210,6 +219,26 @@
 	
         [self setNeedsDisplay:YES];
     }
+}
+
+// The line numbers stop being bold once the selection is no longer the one made on them.
+- (void)selectionDidChange:(NSNotification *)notification
+{
+	if (_hasLineSelection && ![self clientViewHasLineSelection])
+	{
+		_hasLineSelection = NO;
+		[self setNeedsDisplay:YES];
+	}
+}
+
+- (BOOL)clientViewHasLineSelection
+{
+	NSArray	*ranges;
+
+	if (!_hasLineSelection || ![[self clientView] isKindOfClass:[NSTextView class]])
+		return NO;
+	ranges = [(NSTextView *)[self clientView] selectedRanges];
+	return (([ranges count] == 1) && NSEqualRanges([[ranges firstObject] rangeValue], _lineSelection));
 }
 
 - (void)scrollEnded:(NSNotification *)notification
@@ -384,6 +413,17 @@
             nil];
 }
 
+- (NSDictionary *)selectedLineTextAttributes
+{
+	NSFont	*font = (_font == nil) ? [self fontOfWeight:NSFontWeightBold]
+		: [[NSFontManager sharedFontManager] convertFont:_font toHaveTrait:NSBoldFontMask];
+
+	return [NSDictionary dictionaryWithObjectsAndKeys:
+			font, NSFontAttributeName,
+			[self textColor], NSForegroundColorAttributeName,
+			nil];
+}
+
 - (NSDictionary *)markerTextAttributes
 {
 	    return [NSDictionary dictionaryWithObjectsAndKeys:
@@ -446,7 +486,8 @@
         NSUInteger				rectCount, index, line, count;
         NSRectArray				rects;
         CGFloat					ypos, yinset;
-        NSDictionary			*textAttributes, *currentTextAttributes;
+        NSDictionary			*textAttributes, *currentTextAttributes, *selectedAttributes;
+        NSUInteger				firstSelectedLine, lastSelectedLine;
         NSSize					stringSize, markerSize;
 		NoodleLineNumberMarker	*marker;
 		NSImage					*markerImage;
@@ -463,6 +504,18 @@
         textAttributes = [self textAttributes];
 		
 		lines = [self lineIndices];
+
+        // The lines selected on the line numbers have bold numbers.
+        firstSelectedLine = NSNotFound;
+        lastSelectedLine = NSNotFound;
+        selectedAttributes = nil;
+        if ([self clientViewHasLineSelection] && (NSMaxRange(_lineSelection) <= [text length]))
+        {
+            firstSelectedLine = [self lineNumberForCharacterIndex:_lineSelection.location inText:text];
+            lastSelectedLine = (_lineSelection.length == 0) ? firstSelectedLine
+                : [self lineNumberForCharacterIndex:NSMaxRange(_lineSelection) - 1 inText:text];
+            selectedAttributes = [self selectedLineTextAttributes];
+        }
 
         // Find the characters that are currently visible
         glyphRange = [layoutManager glyphRangeForBoundingRect:visibleRect inTextContainer:container];
@@ -511,22 +564,26 @@
                     // Line numbers are internally stored starting at 0
                     labelText = [NSString stringWithFormat:@"%jd", (intmax_t)line + 1];
                     
-                    stringSize = [labelText sizeWithAttributes:textAttributes];
-
 					if (marker == nil)
 					{
 						currentTextAttributes = textAttributes;
+						if ((firstSelectedLine != NSNotFound) && (line >= firstSelectedLine) && (line <= lastSelectedLine))
+							currentTextAttributes = selectedAttributes;
 					}
 					else
 					{
 						currentTextAttributes = [self markerTextAttributes];
 					}
-					
+
+                    // Measure in the font it is drawn in: bold digits are wider, and a rect
+                    // narrower than the string would drop its last digit.
+                    stringSize = [labelText sizeWithAttributes:currentTextAttributes];
+
                     // Draw string flush right, centered vertically within the line
                     [labelText drawInRect:
                        NSMakeRect(NSWidth(bounds) - stringSize.width - RULER_MARGIN,
                                   ypos + (NSHeight(rects[0]) - stringSize.height) / 2.0,
-                                  NSWidth(bounds) - RULER_MARGIN * 2.0, NSHeight(rects[0]))
+                                  MAX(NSWidth(bounds) - RULER_MARGIN * 2.0, ceil(stringSize.width)), NSHeight(rects[0]))
                            withAttributes:currentTextAttributes];
                 }
             }
@@ -536,6 +593,137 @@
 			}
         }
     }
+}
+
+#pragma mark Line selection
+
+// The whole lines from the line containing anchorIndex to the line containing currentIndex,
+// each with its line ending.
+static NSRange NoodleLineSelectionRange(NSString *text, NSUInteger anchorIndex, NSUInteger currentIndex)
+{
+	NSUInteger	length = [text length];
+	NSRange		anchorLine, currentLine;
+
+	anchorLine = [text lineRangeForRange:NSMakeRange(MIN(anchorIndex, length), 0)];
+	currentLine = [text lineRangeForRange:NSMakeRange(MIN(currentIndex, length), 0)];
+	return NSUnionRange(anchorLine, currentLine);
+}
+
+static NSRange NoodleClampedRange(NSRange range, NSUInteger length)
+{
+	NSUInteger	start = MIN(range.location, length);
+
+	return NSMakeRange(start, MIN(NSMaxRange(range), length) - start);
+}
+
+// The character that starts the line fragment at the height of windowPoint. A wrapped line's
+// later fragments belong to its line, and the empty line after a final line ending is the end
+// of the text.
+- (NSUInteger)characterIndexForLineSelectionAtPoint:(NSPoint)windowPoint inTextView:(NSTextView *)view
+{
+	NSLayoutManager	*layoutManager = [view layoutManager];
+	NSTextContainer	*container = [view textContainer];
+	NSUInteger		length = [[view string] length];
+	NSUInteger		glyphIndex;
+	NSRect			extraRect;
+	NSPoint			point;
+
+	if ((length == 0) || (layoutManager == nil) || (container == nil))
+		return 0;
+	point = [view convertPoint:windowPoint fromView:nil];
+	point.y -= [view textContainerOrigin].y;
+	point.x = 0.0;
+	if (point.y < 0.0)
+		point.y = 0.0;
+	glyphIndex = [layoutManager glyphIndexForPoint:point inTextContainer:container fractionOfDistanceThroughGlyph:NULL];
+	extraRect = [layoutManager extraLineFragmentRect];
+	if (!NSIsEmptyRect(extraRect) && (point.y >= NSMinY(extraRect)))
+		return length;
+	return MIN([layoutManager characterIndexForGlyphAtIndex:glyphIndex], length);
+}
+
+// A click on the line numbers selects the whole line, line ending included; dragging selects
+// every line from there to the line under the mouse, scrolling when the mouse leaves the text.
+// Shift-click extends the current selection to whole lines.
+- (void)mouseDown:(NSEvent *)theEvent
+{
+	NSTextView				*view;
+	NSEventModifierFlags	modifiers;
+	NSArray					*ranges;
+	NSRange					baseRange, selection, newSelection;
+	NSUInteger				anchorIndex, currentIndex, length;
+	NSPoint					location, pointInView;
+	NSRect					visibleRect;
+	NSEvent					*event;
+	BOOL					extending;
+
+	view = (NSTextView *)[self clientView];
+	modifiers = [theEvent modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask;
+	if (![view isKindOfClass:[NSTextView class]] || ![view isSelectable] || ([self window] == nil)
+		|| (modifiers & (NSEventModifierFlagCommand | NSEventModifierFlagControl | NSEventModifierFlagOption)))
+	{
+		[super mouseDown:theEvent];
+		return;
+	}
+
+	extending = ((modifiers & NSEventModifierFlagShift) != 0);
+	ranges = [view selectedRanges];
+	baseRange = NSUnionRange([[ranges firstObject] rangeValue], [[ranges lastObject] rangeValue]);
+	if ([view acceptsFirstResponder])
+		[[view window] makeFirstResponder:view];
+
+	location = [theEvent locationInWindow];
+	anchorIndex = [self characterIndexForLineSelectionAtPoint:location inTextView:view];
+	selection = NoodleLineSelectionRange([view string], anchorIndex, anchorIndex);
+	if (extending)
+		selection = NSUnionRange(selection, baseRange);
+	[view setSelectedRange:selection affinity:NSSelectionAffinityDownstream stillSelecting:YES];
+	[self showLineSelection:selection];
+
+	[NSEvent startPeriodicEventsAfterDelay:0.1 withPeriod:0.05];
+	while (YES)
+	{
+		event = [[self window] nextEventMatchingMask:(NSEventMaskLeftMouseDragged | NSEventMaskLeftMouseUp | NSEventMaskPeriodic)];
+		if ((event == nil) || ([event type] == NSEventTypeLeftMouseUp))
+			break;
+		if ([event type] == NSEventTypeLeftMouseDragged)
+			location = [event locationInWindow];
+
+		// Scroll vertically only, by as far as the mouse is above or below the text. The left
+		// edge of the visible rect can lie under this ruler, so keep the middle in view.
+		pointInView = [view convertPoint:location fromView:nil];
+		visibleRect = [view visibleRect];
+		if ((pointInView.y < NSMinY(visibleRect)) || (pointInView.y > NSMaxY(visibleRect)))
+			[view scrollRectToVisible:NSMakeRect(NSMidX(visibleRect), pointInView.y, 1.0, 1.0)];
+
+		// The text may change while the mouse is down.
+		length = [[view string] length];
+		currentIndex = [self characterIndexForLineSelectionAtPoint:location inTextView:view];
+		newSelection = NoodleLineSelectionRange([view string], anchorIndex, currentIndex);
+		if (extending)
+			newSelection = NSUnionRange(newSelection, NoodleClampedRange(baseRange, length));
+		if (!NSEqualRanges(newSelection, selection))
+		{
+			selection = newSelection;
+			[view setSelectedRange:selection affinity:NSSelectionAffinityDownstream stillSelecting:YES];
+			[self showLineSelection:selection];
+		}
+	}
+	[NSEvent stopPeriodicEvents];
+
+	selection = NoodleClampedRange(selection, [[view string] length]);
+	[self showLineSelection:selection];
+	[view setSelectedRange:selection affinity:NSSelectionAffinityDownstream stillSelecting:NO];
+}
+
+- (void)showLineSelection:(NSRange)selection
+{
+	if (!_hasLineSelection || !NSEqualRanges(_lineSelection, selection))
+	{
+		_hasLineSelection = YES;
+		_lineSelection = selection;
+		[self setNeedsDisplay:YES];
+	}
 }
 
 - (void)setMarkers:(NSArray *)markers

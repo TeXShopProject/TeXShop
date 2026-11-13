@@ -15,6 +15,8 @@
 #import "TSColorSupport.h"
 #import "TSSettingsChangeNote.h"
 #import "TSPrefPaneLayout.h"
+#import "TSPreferenceKey.h"
+#import "TSSpellingLanguage.h"
 @interface TSPreferences (Probe)
 - (BOOL)prepareSettingsWindow;
 - (void)FillInColorWells;
@@ -31,8 +33,6 @@
 @end
 @interface HelpDocuments:NSObject @end
 @implementation HelpDocuments @end
-@interface TSAutoCompletionListEditor:NSObject @end
-@implementation TSAutoCompletionListEditor @end
 static NSUInteger spellRefreshes;
 @interface TSSpellSupport:NSObject @end
 @implementation TSSpellSupport
@@ -60,6 +60,58 @@ static NSBundle *fixture;
 static id MainBundle(id object,SEL selector){return fixture;}
 static void Check(BOOL yes,NSString *reason){if(!yes){fprintf(stderr,"FAIL: %s\n",reason.UTF8String);exit(1);}}
 void TSTestUnexpectedCriticalSheet(NSString *title,NSString *defaultButton,NSString *alternateButton,NSString *otherButton,NSWindow *window,id delegate,SEL didEnd,SEL didDismiss,void *context,NSString *format,...) { Check(NO,@"Encoding change must not present a critical alert sheet"); }
+// Dictionary choices: language names for the checker's identifiers, identifiers
+// stored, automatic detection in every localization, and stored values from
+// earlier versions selected. The checker's language itself is never changed.
+static void CheckSpellingDictionary(TSPreferences *owner,NSPopUpButton *dictionary) {
+ NSDictionary *saved=[TSIsolatedAppKitDefaults.values copy];
+ NSArray<NSString *> *languages=NSSpellChecker.sharedSpellChecker.availableLanguages;
+ NSString *before=NSSpellChecker.sharedSpellChecker.language;
+ [TSIsolatedAppKitDefaults setBool:YES forKey:spellingAutomaticDefaultKey];
+ [owner updateSettingsCategory:TSSettingsCategorySpelling fromDefaults:TSIsolatedAppKitDefaults];
+ Check(languages.count>0 && dictionary.numberOfItems==(NSInteger)languages.count+1 && [dictionary itemAtIndex:0].representedObject==nil && dictionary.indexOfSelectedItem==0,@"Dictionary lists the automatic choice and every checker language");
+ for(NSUInteger i=0;i<languages.count;i++){
+  NSMenuItem *item=[dictionary itemAtIndex:(NSInteger)i+1];
+  Check([item.representedObject isEqual:languages[i]] && [item.toolTip isEqual:languages[i]],@"Each dictionary choice keeps the checker's identifier");
+  Check([item.title hasPrefix:TSSpellingLanguageDisplayName(languages[i])] && ![item.title isEqual:languages[i]],@"Each dictionary choice shows the language's name");
+ }
+ NSString *english=TSSpellingLanguageMatching(@"en",languages);
+ if(english){
+  Check([[dictionary itemAtIndex:[dictionary indexOfItemWithRepresentedObject:english]].title isEqual:@"English (United States)"],@"The checker's en is shown as U.S. English");
+ }
+ __block NSUInteger posted=0;
+ id observer=[NSNotificationCenter.defaultCenter addObserverForName:TSSpellingLanguageChangedNotification object:owner queue:nil usingBlock:^(NSNotification *note){posted++;}];
+ NSString *chosen=english ?: languages.firstObject;
+ [dictionary selectItemAtIndex:[dictionary indexOfItemWithRepresentedObject:chosen]];
+ Check([NSApp sendAction:dictionary.action to:dictionary.target from:dictionary],@"Dictionary popup action is connected");
+ Check(![TSIsolatedAppKitDefaults boolForKey:spellingAutomaticDefaultKey] && [[TSIsolatedAppKitDefaults stringForKey:spellingLanguageDefaultKey] isEqual:chosen] && posted==1,@"A dictionary choice stores its identifier and tells open documents once");
+ [dictionary selectItemAtIndex:0];[NSApp sendAction:dictionary.action to:dictionary.target from:dictionary];
+ Check([TSIsolatedAppKitDefaults boolForKey:spellingAutomaticDefaultKey] && posted==2,@"The automatic choice chooses automatic detection in this localization");
+ [NSNotificationCenter.defaultCenter removeObserver:observer];
+ [TSIsolatedAppKitDefaults setBool:NO forKey:spellingAutomaticDefaultKey];
+ NSMutableDictionary *expected=[NSMutableDictionary dictionary];
+ if(english){expected[@"en_US"]=english;expected[@"en-US"]=english;expected[@"English"]=english;}
+ expected[chosen]=chosen;
+ for(NSString *stored in expected){
+  [TSIsolatedAppKitDefaults setObject:stored forKey:spellingLanguageDefaultKey];
+  [owner updateSettingsCategory:TSSettingsCategorySpelling fromDefaults:TSIsolatedAppKitDefaults];
+  Check([dictionary.selectedItem.representedObject isEqual:expected[stored]] && dictionary.numberOfItems==(NSInteger)languages.count+1,@"A stored identifier selects the checker's language");
+ }
+ [TSIsolatedAppKitDefaults setObject:NSLocalizedString(@"Automatic Language",@"") forKey:spellingLanguageDefaultKey];
+ [owner updateSettingsCategory:TSSettingsCategorySpelling fromDefaults:TSIsolatedAppKitDefaults];
+ Check(dictionary.indexOfSelectedItem==0,@"A stored automatic title from an earlier beta is automatic detection");
+ for(NSUInteger pass=0;pass<2;pass++){
+  [TSIsolatedAppKitDefaults setObject:@"tlh_XX" forKey:spellingLanguageDefaultKey];
+  [owner updateSettingsCategory:TSSettingsCategorySpelling fromDefaults:TSIsolatedAppKitDefaults];
+  Check(dictionary.numberOfItems==(NSInteger)languages.count+2 && [dictionary.selectedItem.representedObject isEqual:@"tlh_XX"] && dictionary.indexOfSelectedItem==dictionary.numberOfItems-1,@"A dictionary that is not installed stays the visible choice once");
+ }
+ [NSApp sendAction:dictionary.action to:dictionary.target from:dictionary];
+ Check([[TSIsolatedAppKitDefaults stringForKey:spellingLanguageDefaultKey] isEqual:@"tlh_XX"] && ![TSIsolatedAppKitDefaults boolForKey:spellingAutomaticDefaultKey],@"Choosing the missing dictionary again keeps it");
+ Check([NSSpellChecker.sharedSpellChecker.language isEqual:before],@"Settings never change the checker's language");
+ TSIsolatedAppKitDefaults.values=[saved mutableCopy];
+ [owner updateSettingsCategory:TSSettingsCategorySpelling fromDefaults:TSIsolatedAppKitDefaults];
+ puts("PASS: dictionary language names, stored identifiers, automatic choice, earlier stored values and missing dictionaries");
+}
 static NSView *Find(NSView *view,NSString *identifier){if([view.identifier isEqual:identifier])return view;for(NSView *child in view.subviews){NSView *found=Find(child,identifier);if(found)return found;}return nil;}
 static void Save(NSView *v,NSString *path){[v layoutSubtreeIfNeeded];[v display];NSBitmapImageRep *rep=[v bitmapImageRepForCachingDisplayInRect:v.bounds];[v cacheDisplayInRect:v.bounds toBitmapImageRep:rep];NSImage *image=[[NSImage alloc]initWithSize:v.bounds.size];[image lockFocus];[v.effectiveAppearance performAsCurrentDrawingAppearance:^{[NSColor.windowBackgroundColor setFill];NSRectFill(NSMakeRect(0,0,v.bounds.size.width,v.bounds.size.height));}];NSImage *capture=[[NSImage alloc]initWithSize:v.bounds.size];[capture addRepresentation:rep];[capture drawInRect:NSMakeRect(0,0,v.bounds.size.width,v.bounds.size.height) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1];[image unlockFocus];NSData *tiff=image.TIFFRepresentation;if(tiff==nil)abort();NSBitmapImageRep *opaque=[[NSBitmapImageRep alloc]initWithData:tiff];[[opaque representationUsingType:NSBitmapImageFileTypePNG properties:@{}]writeToFile:path atomically:YES];}
 static void SaveNote(TSSettingsWindowController *shell,NSView *row,NSString *directory,NSString *name) {
@@ -129,12 +181,26 @@ int main(int argc,char **argv){@autoreleasepool{
   if(original)[TSIsolatedAppKitDefaults setObject:original forKey:key];else[TSIsolatedAppKitDefaults removeObjectForKey:key];
   [owner updateSettingsCategory:category fromDefaults:TSIsolatedAppKitDefaults];
  }
+ // Prerelease updates are refreshed from defaults and do not depend on automatic checks.
+ {
+  NSButton *prerelease=[owner valueForKey:@"sparklePrereleaseButton"];Check(prerelease!=nil,@"The prerelease switch has its owner");
+  id originalPrerelease=[TSIsolatedAppKitDefaults objectForKey:SparklePrereleaseUpdatesKey],originalAutomatic=[TSIsolatedAppKitDefaults objectForKey:SparkleAutomaticUpdateKey];
+  for(NSNumber *on in @[@YES,@NO])for(NSNumber *automatic in @[@YES,@NO]){
+   [TSIsolatedAppKitDefaults setBool:on.boolValue forKey:SparklePrereleaseUpdatesKey];[TSIsolatedAppKitDefaults setBool:automatic.boolValue forKey:SparkleAutomaticUpdateKey];
+   [owner updateSettingsCategory:TSSettingsCategoryUpdates fromDefaults:TSIsolatedAppKitDefaults];
+   Check((prerelease.state==NSControlStateValueOn)==on.boolValue && prerelease.enabled,[NSString stringWithFormat:@"Prerelease switch shows %@ and stays enabled with automatic checks %@",on,automatic]);
+  }
+  if(originalPrerelease)[TSIsolatedAppKitDefaults setObject:originalPrerelease forKey:SparklePrereleaseUpdatesKey];else[TSIsolatedAppKitDefaults removeObjectForKey:SparklePrereleaseUpdatesKey];
+  if(originalAutomatic)[TSIsolatedAppKitDefaults setObject:originalAutomatic forKey:SparkleAutomaticUpdateKey];else[TSIsolatedAppKitDefaults removeObjectForKey:SparkleAutomaticUpdateKey];
+  [owner updateSettingsCategory:TSSettingsCategoryUpdates fromDefaults:TSIsolatedAppKitDefaults];
+ }
  NSPopUpButton *dictionary=[owner valueForKey:@"dictionaryPopup"];
  NSArray *dictionaryTitles=dictionary.itemTitles;
  [dictionary addItemWithTitle:@"Unavailable dictionary fixture"];
  for(NSUInteger pass=0;pass<3;pass++)[owner updateSettingsCategory:TSSettingsCategorySpelling fromDefaults:TSIsolatedAppKitDefaults];
  Check([dictionary.itemTitles isEqual:dictionaryTitles],@"Repeated refresh does not append duplicate dictionary choices");
  Check([dictionary.itemTitles.firstObject isEqual:NSLocalizedString(@"Automatic Language",@"")],@"Dictionary automatic choice uses the current language");
+ CheckSpellingDictionary(owner,dictionary);
  for(NSNumber *value in @[@NO,@YES]){
   [TSIsolatedAppKitDefaults setBool:value.boolValue forKey:SourceAndPreviewInSameWindowKey];
   [TSIsolatedAppKitDefaults setBool:value.boolValue forKey:SwitchSidesKey];

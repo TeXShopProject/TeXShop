@@ -49,6 +49,8 @@
 #import "TSExternalPDFReload.h"
 #import "TSSpellExclusions.h"
 #import "TSSpellSupport.h"
+#import "TSDocument.h"
+#import "TSPreferenceKey.h"
 
 
 
@@ -205,6 +207,12 @@
 }
 
 
+// A dictionary chosen in Settings while no document's source window is main.
+- (void)spellingLanguageDefaultChanged:(NSNotification *)notification
+{
+    [TSDocument applySpellingDefaultUnlessDocumentIsMain];
+}
+
 // TeX-aware spell checking: read the exclusion rules (installing the default
 // file the first time) and add the extra items to Edit > Spelling and Grammar.
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
@@ -354,6 +362,11 @@
 	}
     
     editorCanAddBrackets = [SUD boolForKey:EditorCanAddBracketsKey];
+    
+    // Until a document's source window is main, the Spelling panel shows the dictionary chosen in Settings.
+    [TSDocument applySpellingDefaultUnlessDocumentIsMain];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(spellingLanguageDefaultChanged:)
+        name:TSSpellingLanguageChangedNotification object:nil];
     
     
     //Set value of NSISOLatin9StringEncoding   NSMacOSRomanStringEncoding

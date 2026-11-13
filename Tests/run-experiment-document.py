@@ -249,10 +249,13 @@ static BOOL auxCopied;
 - (void)stopExternalPDFObservation;
 - (void)callSaveAnnotations;
 - (Node *)getStringWindow;
++ (void)applySpellingDefaultUnlessDocumentIsMain;
 @end
 #define TSDocument Document
 #define NSDocument Document
+static NSUInteger spellingDefaultsApplied;
 @implementation Document
++ (void)applySpellingDefaultUnlessDocumentIsMain { spellingDefaultsApplied++; }
 - (Console *)ensureExperimentConsole {
     if (!self.experimentConsole) self.experimentConsole = [Console new];
     return self.experimentConsole;
@@ -444,9 +447,10 @@ int main(void) { @autoreleasepool {
     Check(d->scrapPDFWindow.closes == 1 && !d->scrapPDFKitView.document, @"Experiment close clears its preview");
     CheckNormal(d, normal);
     // Full document close must invoke the same cancellation path.
-    d = D(); c = [d ensureExperimentConsole]; [d close];
+    d = D(); c = [d ensureExperimentConsole]; spellingDefaultsApplied = 0; [d close];
     Check(c.invalidations == 1 && !d.experimentConsole, @"document close invalidates Experiment before teardown");
     Check(d.baseCloses == 1 && d.watchCancellations == 1 && d.pdfStops == 1, @"document close continues ordinary teardown");
+    Check(spellingDefaultsApplied == 1, @"document close lets the spell checker return to the Settings choice");
     printf("%lu checks, %lu failures\n", (unsigned long)checks, (unsigned long)failures);
     return failures ? 1 : 0;
 } }

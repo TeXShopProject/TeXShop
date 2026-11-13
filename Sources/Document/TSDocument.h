@@ -393,6 +393,7 @@ enum RootCommand
    NSData *sourceAcceptedFingerprint, *sourceWrittenFingerprint, *sourceReloadData, *sourceReloadFingerprint;
    NSUInteger sourceIOGeneration;
    BOOL sourceSaving;
+   BOOL sourceExternalWriteFinished; // set off the main thread under @synchronized (self)
 // END PATCH
     
 // NSDate              *_pdfLastModDate;
@@ -480,6 +481,12 @@ enum RootCommand
 
 @property (retain)  NSString            *spellLanguage;
 @property           BOOL                automaticSpelling;
+// YES while the document uses the dictionary chosen in Settings: not one from a
+// "% !TEX spellcheck" line, nor one chosen in the Spelling panel for it.
+@property           BOOL                spellLanguageFollowsDefault;
+// What the spell checker reported after resetSpelling gave it this document's language.
+@property (copy)    NSString            *appliedSpellLanguage;
+@property           BOOL                appliedAutomaticSpelling;
 @property           BOOL                syntaxcolorEntry;
 @property           BOOL                coloringWaitsForMarkedText;
 @property           BOOL                blockCursor;
@@ -780,6 +787,9 @@ enum RootCommand
 - (void)reDisplayLog;
 - (void)resetSpelling;
 - (void)resignSpelling;
+- (void)spellingLanguageDefaultChanged:(NSNotification *)notification;
+- (BOOL)spellingWindowIsMain;
++ (void)applySpellingDefaultUnlessDocumentIsMain;
 - (void)closeCurrentEnvironment:(id)sender;
 - (void)invalidateCompletionConnection;
 // Forward Routines Not Found by Source

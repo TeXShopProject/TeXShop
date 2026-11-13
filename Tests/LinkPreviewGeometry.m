@@ -70,7 +70,7 @@ static void testDrawing(void) {
         CGPoint destination = CGPointApplyAffineTransform(CGPointMake(110,125), transform);
         NSRect source, output;
         require(TSLinkPreviewRects(size, NSPointFromCGPoint(destination), NSZeroRect, NSMakeRect(30,40,300,220),
-            NSMakePoint(200,150), YES, NO, YES, &source, &output), "rotated destination crop");
+            NSMakePoint(200,150), YES, NO, YES, NO, &source, &output), "rotated destination crop");
         require(NSPointInRect(NSPointFromCGPoint(destination), source), "destination stays in crop");
         NSSize canvas = NSMakeSize(300,220);
         actual = bitmap(canvas); expected = bitmap(canvas);
@@ -130,13 +130,13 @@ static void testTextContext(void) {
         require(!NSIsEmptyRect(text) && NSMinX(text)<95, "extract actual PDF text line beginning");
         NSRect source,output;
         require(TSLinkPreviewRects(size,destination,text,NSMakeRect(0,0,1000,1000),NSMakePoint(500,500),
-                                  enlarged,NO,YES,&source,&output), "A4 equation preview");
+                                  enlarged,NO,YES,NO,&source,&output), "A4 equation preview");
         require(source.origin.x < 89, "A4 line beginning is included despite centered equation anchor");
         require(NSPointInRect(destination,source), "A4 equation anchor remains visible");
         // Widely separated text and destination must both remain visible; scale uniformly.
         destination.x=570;
         require(TSLinkPreviewRects(size,destination,text,NSMakeRect(0,0,1000,1000),NSMakePoint(500,500),
-                                  enlarged,NO,YES,&source,&output), "distant text and destination");
+                                  enlarged,NO,YES,NO,&source,&output), "distant text and destination");
         require(source.origin.x < 89 && NSPointInRect(destination,source), "keep left context and far right anchor");
         require(near(output.size.width/source.size.width,enlarged?1:2.0/3.0), "wider context widens popup at nominal scale");
         require(source.size.width <= MIN(size.width-10,TSLinkPreviewMaximumColumn)+2*(enlarged?10:5)+0.001,
@@ -190,7 +190,7 @@ static void testColumnsAndWidePages(void) {
             require(NSMinX(text)>=(wide?1449:311),"context excludes unrelated left column and wide prose");
             NSRect source,output;
             require(TSLinkPreviewRects(size,destination,text,NSMakeRect(0,0,2000,1200),NSMakePoint(800,500),
-                enlarged,NO,YES,&source,&output),"column preview");
+                enlarged,NO,YES,NO,&source,&output),"column preview");
             require(contains(source,equationBounds),"complete right-column formula remains visible");
             require(output.size.width/source.size.width >= (enlarged?1:2.0/3.0)*0.75-0.001,
                     "wide page context does not reduce readability below floor");
@@ -200,13 +200,13 @@ static void testColumnsAndWidePages(void) {
     for (NSInteger enlarged=0;enlarged<2;enlarged++) {
         NSRect source,output;
         require(TSLinkPreviewRects(NSMakeSize(2400,1000),NSMakePoint(1300,700),NSMakeRect(50,400,2200,300),
-            NSMakeRect(0,0,2000,1200),NSMakePoint(800,500),enlarged,NO,YES,&source,&output),"poster fallback");
+            NSMakeRect(0,0,2000,1200),NSMakePoint(800,500),enlarged,NO,YES,NO,&source,&output),"poster fallback");
         require(source.origin.x>1200 && NSMaxX(source)>1500,"poster keeps destination and right-hand expression");
         require(near(output.size.width/source.size.width,enlarged?1:2.0/3.0),"poster fallback retains nominal scale");
     }
     NSRect source,output;
     require(TSLinkPreviewRects(NSMakeSize(800,900),NSMakePoint(200,700),NSMakeRect(80,400,500,300),
-        NSMakeRect(0,0,2000,1200),NSMakePoint(800,500),YES,NO,YES,&source,&output),"command full text width");
+        NSMakeRect(0,0,2000,1200),NSMakePoint(800,500),YES,NO,YES,NO,&source,&output),"command full text width");
     require(NSMaxX(source)>=590 && source.origin.x<=70,"Command includes right edge of same-column text");
 }
 static void testRotatedTextContext(void) {
@@ -253,7 +253,7 @@ static void testPlacementAndUnspecified(void) {
     for (NSInteger above=0; above<2; above++) {
         NSRect source,output; CGFloat scale=enlarged?1:2.0/3.0;
         require(TSLinkPreviewRects(NSMakeSize(600,900),NSMakePoint(100,700),NSZeroRect,
-            NSMakeRect(0,0,2000,2000),NSMakePoint(500,500),enlarged,above,flipped,&source,&output), "placement");
+            NSMakeRect(0,0,2000,2000),NSMakePoint(500,500),enlarged,above,flipped,NO,&source,&output), "placement");
         require(near(output.size.width,(enlarged?445:400)*scale) &&
                 near(output.size.height,(enlarged?360:120)*scale), "normal and command default scale");
         require(near(output.origin.x,500+(enlarged?-5:10)), "horizontal cursor anchor");
@@ -261,7 +261,7 @@ static void testPlacementAndUnspecified(void) {
         require(near(output.origin.y,expectedY), "Shift and flipped direction");
         NSPoint edge=NSMakePoint(500,above!=flipped ? 980 : 20);
         require(TSLinkPreviewRects(NSMakeSize(600,900),NSMakePoint(100,700),NSZeroRect,
-            NSMakeRect(0,0,1000,1000),edge,enlarged,above,flipped,&source,&output), "opposite-side placement");
+            NSMakeRect(0,0,1000,1000),edge,enlarged,above,flipped,NO,&source,&output), "opposite-side placement");
         require(!NSPointInRect(edge,output), "use opposite side before covering cursor");
     }
     for (NSInteger rotation=0; rotation<360; rotation+=90) {
@@ -300,9 +300,141 @@ static void sizedPreview(PDFDocument *document, NSPoint raw, NSRect visible, BOO
     *column=TSLinkPreviewColumnBounds(page,size,transform,
                                      TSLinkPreviewTextBounds(page,size,destination,transform,enlarged));
     require(TSLinkPreviewRects(size,destination,*column,visible,NSMakePoint(NSMidX(visible),NSMidY(visible)),
-                              enlarged,NO,YES,source,output),"sized preview");
+                              enlarged,NO,YES,NO,source,output),"sized preview");
 }
 // The popup widens to the destination's text column instead of shrinking it.
+// In the continuous displays the popup keeps to its side of the link, below it or above it
+// with Shift, even when part of it then lies outside the visible area, and keeps its size;
+// it still moves sideways to stay in view (#14).
+static void testKeptSide(void) {
+    NSSize page=NSMakeSize(600,900);
+    NSRect visible=NSMakeRect(0,0,1000,1000), available=NSInsetRect(visible,5,5);
+    for (NSInteger enlarged=0; enlarged<2; enlarged++) for (NSInteger flipped=0; flipped<2; flipped++)
+    for (NSInteger above=0; above<2; above++) {
+        BOOL positiveY=above!=flipped;
+        CGFloat scale=enlarged?1:2.0/3.0, height=(enlarged?360:120)*scale;
+        for (CGFloat y=NSMinY(available); y<=NSMaxY(available); y+=7) {
+            NSPoint cursor=NSMakePoint(500,y);
+            NSRect keptSource, kept, fittedSource, fitted;
+            require(TSLinkPreviewRects(page,NSMakePoint(100,700),NSZeroRect,visible,cursor,enlarged,above,flipped,
+                                       YES,&keptSource,&kept),"kept-side geometry");
+            require(TSLinkPreviewRects(page,NSMakePoint(100,700),NSZeroRect,visible,cursor,enlarged,above,flipped,
+                                       NO,&fittedSource,&fitted),"fitted geometry");
+            require(near(NSMinY(kept),positiveY ? y+10 : y-height-10),"popup stays on its side of the link");
+            require(near(NSHeight(kept),height) && near(NSWidth(kept),NSWidth(fitted)),"popup keeps its size");
+            require(NSEqualRects(keptSource,fittedSource) && near(NSMinX(kept),NSMinX(fitted)),
+                    "only the vertical position differs from the fitted popup");
+            require(!NSPointInRect(cursor,kept),"popup never covers the link");
+            if (contains(available,kept))
+                require(near(NSMinY(kept),NSMinY(fitted)),"a popup that fits is placed as before");
+        }
+        // Near the edge on its side, the fitted popup moves to the other side; the kept one does not.
+        NSPoint edge=NSMakePoint(500,positiveY ? 980 : 20);
+        NSRect source, kept, fitted;
+        require(TSLinkPreviewRects(page,NSMakePoint(100,700),NSZeroRect,visible,edge,enlarged,above,flipped,
+                                   YES,&source,&kept),"kept-side geometry near the edge");
+        require(TSLinkPreviewRects(page,NSMakePoint(100,700),NSZeroRect,visible,edge,enlarged,above,flipped,
+                                   NO,&source,&fitted),"fitted geometry near the edge");
+        require(positiveY ? NSMinY(kept)>edge.y && NSMaxY(kept)>NSMaxY(available)
+                          : NSMaxY(kept)<edge.y && NSMinY(kept)<NSMinY(available),
+                "near the edge the popup stays on its side, partly outside the visible area");
+        require(positiveY ? NSMaxY(fitted)<edge.y : NSMinY(fitted)>edge.y,
+                "near the edge the fitted popup moves to the other side");
+        // A low window shrinks the fitted popup to its height, but not the kept one.
+        NSRect low=NSMakeRect(0,0,1000,enlarged?200:60);
+        NSPoint middle=NSMakePoint(500,NSMidY(low));
+        require(TSLinkPreviewRects(page,NSMakePoint(100,700),NSZeroRect,low,middle,enlarged,above,flipped,
+                                   YES,&source,&kept),"kept-side geometry in a low window");
+        require(TSLinkPreviewRects(page,NSMakePoint(100,700),NSZeroRect,low,middle,enlarged,above,flipped,
+                                   NO,&source,&fitted),"fitted geometry in a low window");
+        require(near(NSHeight(kept),height) && NSHeight(fitted)<height-1,"only the fitted popup shrinks to the window height");
+        require(near(NSMinY(kept),positiveY ? middle.y+10 : middle.y-height-10),"a low window keeps the side");
+        // Sideways, the popup still stays in view.
+        for (CGFloat x=NSMinX(available); x<=NSMaxX(available); x+=13) {
+            require(TSLinkPreviewRects(page,NSMakePoint(100,700),NSZeroRect,visible,NSMakePoint(x,500),enlarged,above,
+                                       flipped,YES,&source,&kept),"kept-side geometry across the window");
+            require(NSMinX(kept)>=NSMinX(available)-0.001 && NSMaxX(kept)<=NSMaxX(available)+0.001,
+                    "the kept popup still moves sideways to stay in view");
+        }
+    }
+}
+// Near the bottom of its page the popup becomes lower instead of filling up with what comes
+// before the destination; with the next page below it, as in the continuous displays, it
+// goes on with that page instead (#14).
+static void testBottomAndStrip(void) {
+    NSSize page=NSMakeSize(600,800);
+    NSRect visible=NSMakeRect(0,0,1000,1000);
+    for (NSInteger enlarged=0; enlarged<2; enlarged++) for (NSInteger keepSide=0; keepSide<2; keepSide++) {
+        CGFloat full=enlarged?360:120, scale=enlarged?1:2.0/3.0;
+        for (CGFloat y=0; y<=page.height; y+=2.5) {
+            NSRect source, output;
+            require(TSLinkPreviewRects(page,NSMakePoint(100,y),NSZeroRect,visible,NSMakePoint(500,500),enlarged,NO,YES,
+                                       keepSide,&source,&output),"bottom geometry");
+            CGFloat top=MIN(MAX(y+10,TSLinkPreviewMinimumCrop),page.height);
+            require(near(NSMaxY(source),top) && NSMinY(source)>=-0.001,"the popup starts just above the destination");
+            require(near(NSHeight(source),MIN(full,top)),"near the bottom the popup shows less, not what comes before");
+            require(near(NSHeight(output),NSHeight(source)*scale) && near(NSMinY(output),510),
+                    "a lower popup keeps its scale and its place below the link");
+        }
+    }
+    // The strip: the linked page above the next one, centered, with a gap.
+    NSRect first, second;
+    NSSize strip=TSLinkPreviewStrip(NSMakeSize(600,800),NSMakeSize(500,700),&first,&second);
+    require(near(strip.width,600) && near(strip.height,800+TSLinkPreviewPageGap+700),"strip size");
+    require(NSEqualRects(first,NSMakeRect(0,700+TSLinkPreviewPageGap,600,800)) && NSEqualRects(second,NSMakeRect(50,0,500,700)),
+            "the next page lies below the linked one, centered");
+    strip=TSLinkPreviewStrip(page,page,&first,&second);
+    for (NSInteger enlarged=0; enlarged<2; enlarged++) {
+        CGFloat full=enlarged?360:120;
+        for (CGFloat y=0; y<=page.height; y+=5) {
+            NSRect source, output;
+            NSPoint destination=NSMakePoint(100,NSMinY(first)+y);
+            require(TSLinkPreviewRects(strip,destination,NSZeroRect,visible,NSMakePoint(500,500),enlarged,NO,YES,YES,
+                                       &source,&output),"strip geometry");
+            require(near(NSHeight(source),full) && near(NSMaxY(source),MIN(destination.y+10,strip.height)),
+                    "with the next page below, the popup keeps its height and goes on with that page");
+            if (y+10+TSLinkPreviewPageGap<full) require(NSMinY(source)<NSMaxY(second),"a destination near the bottom shows the next page");
+        }
+    }
+    // The image draws each page at its place in the strip.
+    PDFDocument *document=fixture();
+    [document insertPage:[[fixture() pageAtIndex:0] copy] atIndex:1];
+    document=[[PDFDocument alloc] initWithData:document.dataRepresentation];
+    NSSize size; CGAffineTransform transform;
+    require(document.pageCount==2 && TSLinkPreviewPageGeometry([document pageAtIndex:0],&size,&transform),"strip pages");
+    strip=TSLinkPreviewStrip(size,size,&first,&second);
+    NSRect rects[2]={first,second};
+    NSImage *image=TSLinkPreviewStripImage(@[[document pageAtIndex:0],[document pageAtIndex:1]],rects,strip);
+    NSBitmapImageRep *rep=bitmap(strip);
+    [NSGraphicsContext saveGraphicsState];
+    NSGraphicsContext.currentContext=[NSGraphicsContext graphicsContextWithBitmapImageRep:rep];
+    [image drawInRect:NSMakeRect(0,0,strip.width,strip.height) fromRect:NSZeroRect
+            operation:NSCompositingOperationCopy fraction:1 respectFlipped:YES hints:nil];
+    [NSGraphicsContext restoreGraphicsState];
+    for (NSInteger i=0; i<2; i++) {
+        // Compare with the page drawn alone, as a popup without the next page shows it.
+        NSBitmapImageRep *alone=bitmap(size);
+        [NSGraphicsContext saveGraphicsState];
+        NSGraphicsContext.currentContext=[NSGraphicsContext graphicsContextWithBitmapImageRep:alone];
+        [[NSColor whiteColor] set]; NSRectFill(NSMakeRect(0,0,size.width,size.height));
+        [TSLinkPreviewImage([document pageAtIndex:i],size) drawInRect:NSMakeRect(0,0,size.width,size.height) fromRect:NSZeroRect
+              operation:NSCompositingOperationSourceOver fraction:1 respectFlipped:YES hints:nil];
+        [NSGraphicsContext restoreGraphicsState];
+        NSUInteger red=0, mismatch=0;
+        for (NSInteger y=0; y<(NSInteger)size.height; y++) for (NSInteger x=0; x<(NSInteger)size.width; x++) {
+            NSColor *a=[alone colorAtX:x y:y];
+            // Bitmap rows run from the top.
+            NSColor *b=[rep colorAtX:x+(NSInteger)NSMinX(rects[i]) y:y+(NSInteger)(strip.height-NSMaxY(rects[i]))];
+            BOOL ar=a.redComponent>0.8 && a.greenComponent<0.2, br=b.redComponent>0.8 && b.greenComponent<0.2;
+            red+=ar; mismatch+=ar!=br;
+        }
+        require(red>1000 && mismatch<10,"each page is drawn at its place in the strip");
+        NSColor *paper=[rep colorAtX:(NSInteger)NSMidX(rects[i]) y:(NSInteger)(strip.height-NSMaxY(rects[i])+5)];
+        require(paper.redComponent>0.95 && paper.greenComponent>0.95,"the pages are white");
+    }
+    NSColor *gap=[rep colorAtX:(NSInteger)NSMidX(first) y:(NSInteger)(strip.height-NSMinY(first)+TSLinkPreviewPageGap/2)];
+    require(gap.redComponent<0.8 && gap.alphaComponent>0.9,"the gap between the pages is gray");
+}
 static void testColumnWidth(void) {
     NSRect wide=NSMakeRect(0,0,1500,1200), column, source, output;
     // A heading and short display lines near the destination; full body lines further down.
@@ -352,7 +484,7 @@ static void testContinuousShrinking(void) {
         NSRect previousSource=NSZeroRect, previousOutput=NSZeroRect, source, output; CGFloat previousScale=0;
         for (CGFloat width=700; width>=40; width-=0.5) {
             NSRect visible=NSMakeRect(0,0,width,1000);
-            require(TSLinkPreviewRects(page,destination,text,visible,NSMakePoint(width/2,500),enlarged,NO,YES,
+            require(TSLinkPreviewRects(page,destination,text,visible,NSMakePoint(width/2,500),enlarged,NO,YES,NO,
                                       &source,&output),"continuous geometry");
             CGFloat scale=output.size.width/source.size.width;
             require(contains(NSInsetRect(visible,5,5),output),"continuous output stays visible");
@@ -393,7 +525,7 @@ static void testDocument(const char *path) {
             destination.x=NSMinX(text);
         NSRect source,output;
         require(TSLinkPreviewRects(size,destination,text,NSMakeRect(0,0,1000,1200),NSMakePoint(400,500),
-                                  NO,NO,YES,&source,&output),"real link preview");
+                                  NO,NO,YES,NO,&source,&output),"real link preview");
         require(NSIsEmptyRect(local) || (NSMinX(local)>=NSMinX(source)-0.5 && NSMaxX(local)<=NSMaxX(source)+0.5),
                 "real link lines are not cut");
         require(near(output.size.width/source.size.width,2.0/3.0),"real link shown at nominal scale");
@@ -521,7 +653,7 @@ static void testPinnedInteraction(void) {
 int main(int argc, const char **argv) { @autoreleasepool {
     NSRect source, output;
     require(TSLinkPreviewRects(NSMakeSize(418.431,637.609), NSMakePoint(91.009,598.328), NSZeroRect,
-        NSMakeRect(0,0,418.431,637.609), NSMakePoint(396,500), YES, NO, YES, &source,&output), "reported example");
+        NSMakeRect(0,0,418.431,637.609), NSMakePoint(396,500), YES, NO, YES, NO, &source,&output), "reported example");
     require(near(source.origin.x,0) && near(source.size.width,418.431), "narrow page includes full width");
     require(contains(NSMakeRect(5,5,408.431,627.609), output), "reported output remains visible");
     for (NSInteger enlarged=0; enlarged<2; enlarged++) for (NSInteger flipped=0; flipped<2; flipped++)
@@ -531,20 +663,25 @@ int main(int argc, const char **argv) { @autoreleasepool {
         NSRect visible=NSMakeRect(-100,230,(CGFloat[]){80,418,445,1000}[n],(CGFloat[]){70,250,360,900}[n]);
         NSPoint cursor=NSMakePoint(corner&1 ? NSMaxX(visible) : NSMinX(visible), corner&2 ? NSMaxY(visible) : NSMinY(visible));
         NSPoint destination=NSMakePoint(corner&1 ? size.width : 0, corner&2 ? size.height : 0);
-        require(TSLinkPreviewRects(size,destination,NSZeroRect,visible,cursor,enlarged,above,flipped,&source,&output), "valid geometry");
+        require(TSLinkPreviewRects(size,destination,NSZeroRect,visible,cursor,enlarged,above,flipped,NO,&source,&output), "valid geometry");
         require(contains(NSMakeRect(0,0,size.width,size.height),source), "source in page");
         require(contains(NSInsetRect(visible,5,5),output), "output in viewport");
         require(near(source.size.width/source.size.height,output.size.width/output.size.height), "uniform scale");
-        require(near(source.size.height,MIN(size.height,enlarged?360:120)), "left/right use same command height");
+        CGFloat full=MIN(size.height,enlarged?360:120);
+        // A destination at the bottom of its page shows only the lowest part of the page (#14).
+        require(near(source.size.height,corner&2 ? full : MIN(full,TSLinkPreviewMinimumCrop)),
+                "left/right use the same command height, lower at the bottom of the page");
     }
-    require(!TSLinkPreviewRects(NSMakeSize(400,600),NSMakePoint(NAN,1),NSZeroRect,NSMakeRect(0,0,800,600),NSZeroPoint,0,0,0,&source,&output), "invalid destination rejected");
-    require(!TSLinkPreviewRects(NSMakeSize(400,600),NSZeroPoint,NSZeroRect,NSMakeRect(0,0,8,8),NSZeroPoint,0,0,0,&source,&output), "empty viewport rejected");
+    require(!TSLinkPreviewRects(NSMakeSize(400,600),NSMakePoint(NAN,1),NSZeroRect,NSMakeRect(0,0,800,600),NSZeroPoint,0,0,0,NO,&source,&output), "invalid destination rejected");
+    require(!TSLinkPreviewRects(NSMakeSize(400,600),NSZeroPoint,NSZeroRect,NSMakeRect(0,0,8,8),NSZeroPoint,0,0,0,NO,&source,&output), "empty viewport rejected");
     testDrawing();
     testTextContext();
     testPlacementAndUnspecified();
     testColumnsAndWidePages();
     testRotatedTextContext();
     testColumnWidth();
+    testKeptSide();
+    testBottomAndStrip();
     testContinuousShrinking();
     testPinnedInteraction();
     require(argc>1,"real document path");

@@ -2,8 +2,8 @@
 """Check wording from the actual localized production views in all twelve locales.
 
 The probe never orders windows and uses memory defaults. Fixed text matching Base
-must have an explicit, location-specific language allowance. Dictionary codes,
-encoding names and user values are runtime data rather than translated labels.
+must have an explicit, location-specific language allowance. Dictionary language
+names, encoding names and user values are runtime data rather than translated labels.
 """
 from pathlib import Path
 import argparse
@@ -43,8 +43,7 @@ def failures(language, records, base, allowances):
         # A translated label or the "Automatic Language" choice is not exempt.
         if (record['category'], record['id'], record['role']) == ('documents', 'settings.278', 'choice'):
             continue
-        if ((record['category'], record['id'], record['role']) == ('spelling', 'settings.o1v-YF-ekd', 'choice')
-                and re.fullmatch('[a-z]{2,3}(?:_[A-Z]{2})?', text)):
+        if (record['category'], record['id'], record['role']) == ('spelling', 'settings.o1v-YF-ekd', 'language'):
             continue
         if identity(record) not in allowed:
             identical.append(record)

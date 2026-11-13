@@ -26,8 +26,8 @@ import xml.etree.ElementTree as ET
 ROOT = Path(__file__).resolve().parents[1]
 INTERFACES = ROOT / 'Resources/Interfaces'
 LANGUAGES = ['de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt-PT', 'pt', 'ro', 'zh_CN']
-TABLES = ['Localizable', 'ToolbarItems', 'InfoPlist', 'Encodings', 'FindPanel', 'CustomModalWindowController', 'AdvancedFindEngine']
-NIBS = ['MainMenu', 'TSDocument', 'AutoCompletionListEditor', 'MacroEditor', 'matrixpanel', 'completionpanel1.2', 'Movie', 'FindPanel']
+TABLES = ['Localizable', 'ToolbarItems', 'InfoPlist', 'Encodings', 'FindPanel', 'CustomModalWindowController', 'AdvancedFindEngine', 'AdvancedFind']
+NIBS = ['MainMenu', 'TSDocument', 'MacroEditor', 'matrixpanel', 'completionpanel1.2', 'Movie', 'FindPanel']
 ATTRIBUTES = ('title', 'toolTip', 'placeholderString', 'label', 'paletteLabel')
 ARCHIVE_KEYS = ('NSTitle', 'NSToolTip', 'NSContents', 'NSPlaceholderString')
 CJK = re.compile(r'[぀-ヿ㐀-鿿가-힯＀-￯]')

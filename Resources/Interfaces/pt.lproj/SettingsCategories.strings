@@ -294,9 +294,11 @@
 "catalog.console.1.1.title" = "Redimensionar console";
 "group.bindings.title" = "Auto Completar";
 "catalog.keyboard.0.0.title" = "Usar associações de teclas (padrão para novos documentos)";
-"catalog.keyboard.0.1.title" = "Editor de associações de teclas…";
+"catalog.keyboard.0.0.note" = "Substitui um caractere digitado por um texto definido, como { por {}.";
+"catalog.keyboard.0.1.title" = "Lista de associações de teclas";
 "group.completion.title" = "Conclusão de comandos";
 "catalog.keyboard.1.0.title" = "Tecla de ativação";
+"catalog.keyboard.1.0.note" = "Completa o comando que você está digitando; pressione a tecla de novo para a próxima sugestão.";
 "catalog.keyboard.1.1.title" = "Complemento BibDesk";
 "catalog.keyboard.1.1.note" = "Oferece chaves de citação do BibDesk como complementos dentro de \\cite e comandos semelhantes.";
 "catalog.keyboard.1.2.title" = "Editar conclusão de comandos…";
@@ -304,6 +306,11 @@
 "group.updates.0.title" = "Verificações automáticas";
 "catalog.updates.0.0.title" = "Verificar automaticamente se há atualizações";
 "catalog.updates.0.1.title" = "Intervalo de verificação";
+"group.updates.1.title" = "Atualizações incluídas";
+"catalog.updates.1.0.title" = "Atualizar para Pré-Lançamentos Quando Disponíveis";
+"catalog.updates.2.0.title" = "Buscar atualizações...";
+"catalog.updates.2.0.last" = "Última verificação: %@";
+"catalog.updates.2.0.never" = "Nunca";
 
 "catalog.documents.1.3.note" = "Ao salvar, combina caracteres armazenados separadamente (como か + ゛) em um único caractere (が).";
 

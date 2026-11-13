@@ -45,6 +45,7 @@
 #import "MyPDFKitView.h"
 #import "TSExternalPDFReload.h"
 #import "TSPreviewHorizontalPosition.h"
+#import "TSPreviewScrollerKeeper.h"
 #import "TSScrollPageTurn.h"
 #import "TSLinkPreviewGeometry.h"
 #import "TSLinkPreviewView.h"
@@ -130,7 +131,11 @@
     currentMouseMode = mouseMode;
     [mouseModeMatrix selectCellWithTag: mouseMode];
     [[mouseModeMenu itemWithTag: mouseMode] setState: NSOnState];
-    
+    // Only the first view is connected to the page number field of the single window
+    // toolbar; the second view shows its page there too (#14).
+    MyPDFKitView *first = self.myDocument.myPDFKitView;
+    if (!scurrentPage && first && first != self)
+        scurrentPage = first->scurrentPage;
 }
 
 /*
@@ -166,7 +171,7 @@
 
 - (void)setScaleFactor:(CGFloat)scale
 {
-    [super setScaleFactor: scale];
+    TSPreviewChangeScale(self, ^{ [super setScaleFactor: scale]; });
     resizeOption =  NEW_PDF_FIT_TO_NONE;
 }
 
@@ -376,6 +381,13 @@
 
 - (void) notificationSetup;
 {
+    // This runs again for each PDF the first view shows and when the window is split;
+    // observe each notification once (#14).
+    for (NSNotificationName name in @[PDFViewPageChangedNotification, PDFViewScaleChangedNotification,
+                                      NSViewBoundsDidChangeNotification, NSScrollViewWillStartLiveMagnifyNotification,
+                                      NSScrollViewDidEndLiveMagnifyNotification, MagnificationChangedNotification,
+                                      PreviewColorChangedNotification])
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:name object:nil];
     // [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(documentChanged:)
     //                                            name: PDFViewDocumentChangedNotification object: self];
     
@@ -2418,10 +2430,15 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	
 
 
+	// Count the pages of the PDF shown now. The second view of a split window gets its
+	// PDF when the window is split, after it last counted the pages (#14).
+	NSInteger pageCount = (NSInteger)[[self document] pageCount];
+	if (pageCount < 1)
+		return;
 	if (myPage < 1)
 		myPage = 1;
-	if (myPage > totalPages)
-		myPage = totalPages;
+	if (myPage > pageCount)
+		myPage = pageCount;
 
 	[currentPage0 setIntegerValue:myPage];
     [scurrentPage setIntegerValue:myPage];
@@ -4171,6 +4188,14 @@ The system then remembers the new number and sends is to the Timer which will di
         _skipLinks = skip;
 }
 
+// Whether hovering over a link with these modifier keys shows its popup. With Link Popups
+// off, Command shows it all the same, and as always Command makes it the larger popup, so
+// that Command keeps that meaning whether Link Popups is on or off (#30).
+- (BOOL) showsLinkPopupsWithModifierFlags: (NSEventModifierFlags)flags
+{
+    return !self.skipLinks || (flags & NSEventModifierFlagCommand) != 0;
+}
+
 /*
 - (void) changeAnnotationMenu
 {
@@ -4230,7 +4255,8 @@ The system then remembers the new number and sends is to the Timer which will di
     if (showsLinkPreviewCursor)
         [self showToolCursorOutsideLinkPreviewWithEvent: theEvent];
     
-if (!self.skipLinks && !self.globalLongTerm)
+// A popup shown with Command while Link Popups is off goes away like any other.
+if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent modifierFlags]]))
     
     {
         
@@ -4484,8 +4510,14 @@ if (!self.skipLinks && !self.globalLongTerm)
     
     NSNumber *timerNumberObject = (NSNumber *)theTimer.userInfo[0];
     NSInteger aTimerNumber = [(NSNumber *)theTimer.userInfo[0] integerValue];
-    if (aTimerNumber != self.timerNumber || self.handlingLink != 1 || self.skipLinks || !self.window)
+    NSEventModifierFlags modifiers = [[NSApp currentEvent] modifierFlags];
+    if (aTimerNumber != self.timerNumber || self.handlingLink != 1 || !self.window)
         return;
+    // With Link Popups off, Command has to be held still when the popup would appear.
+    if (![self showsLinkPopupsWithModifierFlags: modifiers]) {
+        self.handlingLink = 0;
+        return;
+    }
     NSPoint originalPoint = [(NSValue *)theTimer.userInfo[1] pointValue];
     NSEvent *theEvent = (NSEvent *)theTimer.userInfo[2];
     NSPoint currentPoint = [NSEvent mouseLocation];
@@ -4516,9 +4548,9 @@ if (!self.skipLinks && !self.globalLongTerm)
             }
             linkedPoint = TSLinkPreviewDestinationPoint([theDestination point], imageSize, pageTransform);
 
-            if ([[NSApp currentEvent] modifierFlags] & NSCommandKeyMask)
+            if (modifiers & NSCommandKeyMask)
                 largerSize = YES;
-            if ([[NSApp currentEvent] modifierFlags] & NSShiftKeyMask)
+            if (modifiers & NSShiftKeyMask)
                 pushUp = YES;
 
             
@@ -4532,13 +4564,41 @@ if (!self.skipLinks && !self.globalLongTerm)
             if (!TSLinkPreviewHasHorizontalDestination([theDestination point], pageTransform) &&
                 !NSIsEmptyRect(textBounds))
                 linkedPoint.x = NSMinX(textBounds);
-            if (!TSLinkPreviewRects(imageSize, linkedPoint, textBounds, documentView.visibleRect,
+            // In the continuous displays the popup stays below the link, or above it with Shift,
+            // even where part of it falls outside the window, so that it does not cover the text
+            // around the link (#14).
+            PDFDisplayMode displayMode = self.displayMode;
+            BOOL keepSide = displayMode == kPDFDisplaySinglePageContinuous ||
+                            displayMode == kPDFDisplayTwoUpContinuous;
+            // There the popup also goes on with the next page below the linked one, as the
+            // display does, so that a statement broken by a page break can be read on (#14).
+            PDFDocument *linkedDocument = linkedPage.document;
+            NSUInteger linkedIndex = linkedDocument ? [linkedDocument indexForPage:linkedPage] : NSNotFound;
+            PDFPage *nextPage = nil;
+            NSSize nextSize;
+            CGAffineTransform nextTransform;
+            if (keepSide && linkedIndex != NSNotFound && linkedIndex + 1 < linkedDocument.pageCount) {
+                nextPage = [linkedDocument pageAtIndex:linkedIndex + 1];
+                if (!TSLinkPreviewPageGeometry(nextPage, &nextSize, &nextTransform)) nextPage = nil;
+            }
+            NSSize previewSize = imageSize;
+            NSRect pageRects[2] = {NSMakeRect(0, 0, imageSize.width, imageSize.height), NSZeroRect};
+            if (nextPage) {
+                previewSize = TSLinkPreviewStrip(imageSize, nextSize, &pageRects[0], &pageRects[1]);
+                linkedPoint.x += NSMinX(pageRects[0]);
+                linkedPoint.y += NSMinY(pageRects[0]);
+                if (!NSIsEmptyRect(textBounds))
+                    textBounds = NSOffsetRect(textBounds, NSMinX(pageRects[0]), NSMinY(pageRects[0]));
+            }
+            if (!TSLinkPreviewRects(previewSize, linkedPoint, textBounds, documentView.visibleRect,
                                     mouseLocDocumentView, largerSize, pushUp, documentView.isFlipped,
-                                    &aRect, &bRect)) {
+                                    keepSide, &aRect, &bRect)) {
                 self.handlingLink = 0;
                 return;
             }
-            NSImage *myImageNew = TSLinkPreviewImage(linkedPage, imageSize);
+            NSArray<PDFPage *> *previewPages = nextPage ? @[linkedPage, nextPage] : @[linkedPage];
+            NSImage *myImageNew = nextPage ? TSLinkPreviewStripImage(previewPages, pageRects, previewSize)
+                                           : TSLinkPreviewImage(linkedPage, imageSize);
             if (!myImageNew) { self.handlingLink = 0; return; }
             if (self.overView) {
                 [self.overView removeFromSuperview];
@@ -4546,8 +4606,8 @@ if (!self.skipLinks && !self.globalLongTerm)
             }
             [linkPreview removeFromSuperview];
             linkPreview = [[TSLinkPreviewView alloc] initWithFrame:bRect image:myImageNew source:aRect
-                                                          pageSize:imageSize page:linkedPage
-                                                         transform:pageTransform];
+                                                          pageSize:previewSize pages:previewPages
+                                                         pageRects:pageRects];
             if (linkedPage.label.length)
                 linkPreview.pageLabel = [NSString stringWithFormat:NSLocalizedString(@"Page %@",
                     @"Page label in the corner of a link popup; %@ is the page label given in the PDF"), linkedPage.label];
@@ -4587,9 +4647,13 @@ if (!self.skipLinks && !self.globalLongTerm)
 
 
 // Links whose target hovering shows in a popup, which replaces PDFKit's tool tip (#17).
+// With Link Popups off, that is while Command is held or the popup of the link under the
+// pointer is still to come or on screen (#30).
 - (BOOL)showsLinkPreviewForAnnotation:(PDFAnnotation *)annotation
 {
-    return !self.skipLinks && mouseMode != NEW_MOUSE_MODE_SELECT_PDF &&
+    BOOL showsPopups = [self showsLinkPopupsWithModifierFlags: [NSEvent modifierFlags]] ||
+                       (self.handlingLink && !self.globalLongTerm);
+    return showsPopups && mouseMode != NEW_MOUSE_MODE_SELECT_PDF &&
            [annotation.type isEqualToString:@"Link"] && annotation.destination != nil;
 }
 
@@ -4606,6 +4670,13 @@ if (!self.skipLinks && !self.globalLongTerm)
         && !(event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagControl
                                     | NSEventModifierFlagOption | NSEventModifierFlagShift))
         && [event.charactersIgnoringModifiers isEqualToString:@"\033"]) {
+        // Both parts of a split window watch Escape, the part that showed its popup last
+        // first. Escape dismisses the popup of the active part, and that of the other part
+        // only when the active part has none (#14).
+        MyPDFKitView *active = (MyPDFKitView *)self.myPDFWindow.activeView;
+        if (active != self && active.window == self.window && [active isKindOfClass:[MyPDFKitView class]]
+            && [active hasPinnedLinkPreview])
+            return event;
         [self doKillPopup];
         return nil;
     }
@@ -8034,6 +8105,15 @@ else
         [theMenu insertItemWithTitle: NSLocalizedString(@"Split Window", @"Split Window") action:@selector(splitWindow:) keyEquivalent:@"" atIndex:1];
         [theMenu insertItemWithTitle: NSLocalizedString(@"Link Popups", @"Link Popups") action:@selector(toggleLinkPopups:) keyEquivalent:@"" atIndex:2];
 		[theMenu insertItem:[NSMenuItem separatorItem] atIndex:3];
+        // Over an internal link, the other part of the window can show its target (#31).
+        PDFDestination *linkDestination = [self internalLinkDestinationAtPoint: [self convertPoint: menuPoint fromView: nil]];
+        if (linkDestination) {
+            NSMenuItem *linkItem = [[NSMenuItem alloc] initWithTitle: NSLocalizedString(@"Split Window with Link", @"Split Window with Link")
+                                                              action: @selector(splitWindowWithLink:) keyEquivalent: @""];
+            linkItem.target = self;
+            linkItem.representedObject = linkDestination;
+            [theMenu insertItem: linkItem atIndex: 2];
+        }
         
         aMenu = [self.myDocument getContextMenu];
         if (aMenu)
@@ -8042,6 +8122,31 @@ else
         //    theMenu = [self.myDocument getAnnotationMenu];
 	}
     return theMenu;
+}
+
+// The target of the internal link at a point of this view, or nil where there is no link or
+// where the link goes to a URL or to another file. These are the links that show popups.
+- (PDFDestination *)internalLinkDestinationAtPoint: (NSPoint)viewPoint
+{
+    PDFPage *page = [self pageForPoint: viewPoint nearest: NO];
+    if (page == nil)
+        return nil;
+    PDFAnnotation *annotation = [page annotationAtPoint: [self convertPoint: viewPoint toPage: page]];
+    if (![annotation.type isEqualToString: @"Link"])
+        return nil;
+    PDFDestination *destination = annotation.destination;
+    if (destination.page == nil || destination.page.document != self.document)
+        return nil;
+    return destination;
+}
+
+// Split Window with Link (#31): the other part of the window goes to the target of the link,
+// and this part stays where it is.
+- (void)splitWindowWithLink: (id)sender
+{
+    PDFDestination *destination = [sender representedObject];
+    if ([destination isKindOfClass: [PDFDestination class]])
+        [self.myPDFWindow showLinkDestination: destination besideView: self];
 }
 
 - (void)doMenuSync: (id)theItem
@@ -8093,7 +8198,10 @@ else
 	//-------Magnification Controls----------
 	[self fixMagnificationControls]; //needed when magnify in split mode
 	[self scaleChanged: nil];
-	[self pageChanged: nil];
+	// The page number fields show the page of this view, which the toolbar now works with (#14).
+	PDFPage *activePage = [self currentPage];
+	if (activePage)
+		[self displayPageChange: [[self document] indexForPage: activePage]];
 }
 
 - (BOOL)becomeFirstResponder
@@ -8274,6 +8382,7 @@ else
     BOOL preserveZoom = _pdfViewReady && self.document && document && !self.autoScales;
     CGFloat previousScale = preserveZoom ? self.scaleFactor : 0;
     [super setDocument:document];
+    [TSPreviewScrollerKeeper installInView:self];
     // Apply the resolved direction after PDFKit has installed the new catalog.
     // Explicit source comments and toolbar choices take precedence over the PDF.
     if (document && self.myDocument) {
@@ -8308,6 +8417,7 @@ else
 - (void)viewDidMoveToWindow
 {
     [super viewDidMoveToWindow];
+    [TSPreviewScrollerKeeper installInView:self];
     [self observePreviewAppearance];
     [self updateDarkModeInversion];
 }

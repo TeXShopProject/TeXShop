@@ -27,7 +27,7 @@ int main(int argc,char **argv){@autoreleasepool{
  [NSApplication sharedApplication];[NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
  const NSUInteger C=NSEventModifierFlagCommand,S=NSEventModifierFlagShift,O=NSEventModifierFlagOption,K=NSEventModifierFlagControl;
  NSMutableSet *raw=[NSMutableSet set];
- for(NSString *name in @[@"HelpDocuments",@"TSAppDelegate",@"TSAutoCompletionListEditor",@"TSDocumentController",@"TSMacroEditor",@"TSMacroMenuController",@"TSMovie",@"TSPreferences",@"TSSparkleController",@"TSStationery",@"TextFinder"]){Class c=objc_allocateClassPair(NSObject.class,name.UTF8String,0);if(c){class_addMethod(c,@selector(setValue:forUndefinedKey:),(IMP)IgnoreAssignmentOutlet,"v@:@@");objc_registerClassPair(c);}}
+ for(NSString *name in @[@"HelpDocuments",@"TSAppDelegate",@"TSDocumentController",@"TSMacroEditor",@"TSMacroMenuController",@"TSMovie",@"TSPreferences",@"TSSparkleController",@"TSStationery",@"TextFinder"]){Class c=objc_allocateClassPair(NSObject.class,name.UTF8String,0);if(c){class_addMethod(c,@selector(setValue:forUndefinedKey:),(IMP)IgnoreAssignmentOutlet,"v@:@@");objc_registerClassPair(c);}}
  for(int n=1;n<argc;n++){
   NSString *path=@(argv[n]);
   if([path.pathExtension isEqual:@"plist"])CollectAssignmentMacros([NSDictionary dictionaryWithContentsOfFile:path],raw);

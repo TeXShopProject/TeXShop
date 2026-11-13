@@ -308,7 +308,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-viewport-') as directory:
         (temp/'TSExternalPDFReload.h').write_text(header[:start] + replacement + header[end:])
     subprocess.run(['xcrun', 'clang', '-I', str(root/'Tests'), '-mmacosx-version-min=14.6', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit',
                     *include_args(root), str(temp/'test.m'), str(root/'Sources/Preview/HideView.m'),
-                    str(root/'Sources/Preview/TSExternalPDFSnapshot.m'), '-o', str(temp/'test')], check=True)
+                    str(root/'Sources/Preview/TSExternalPDFSnapshot.m'), str(root/'Sources/Preview/TSPreviewScrollerKeeper.m'), '-o', str(temp/'test')], check=True)
     home = temp / 'home'
     (home/'Library'/'Preferences').mkdir(parents=True)
     environment = dict(os.environ, HOME=str(home), CFFIXED_USER_HOME=str(home))
