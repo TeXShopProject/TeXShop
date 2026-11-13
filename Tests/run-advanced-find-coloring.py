@@ -46,7 +46,7 @@ MUTATIONS = {
     'the replace field ignores the pattern': ('TSAdvancedFindPanelController+Coloring.m',
         "    TSRegexFindPattern *pattern = settings.findString.length > 0 ? [[TSRegexFindPattern alloc] initWithFindString:settings.findString options:options error:NULL] : nil;",
         "    TSRegexFindPattern *pattern = nil;"),
-    'the replace field keeps its first scanner': ('TSAdvancedFindPanelController+Coloring.m', '        self.replaceHighlighter.scanner = replace;\n', ''),
+    'the replace field keeps its first scanner': ('TSAdvancedFindPanelController+Coloring.m', '        self.replaceHighlighter.scanner = replace;\n', '        (void)replace;\n'),
     'plain text is colored': ('TSAdvancedFindPanelController+Coloring.m', '    if (!regex) {\n        if (find)', '    if (NO) {\n        if (find)'),
     'the message line ignores the marks': ('TSAdvancedFindPanelController.m', '    NSArray<TSSyntaxDiagnostic *> *diagnostics = [self fieldDiagnostics];', '    NSArray<TSSyntaxDiagnostic *> *diagnostics = @[];'),
     'the message line ignores the replace field': ('TSAdvancedFindPanelController+Coloring.m', '@[self.findHighlighter, self.replaceHighlighter]', '@[self.findHighlighter]'),

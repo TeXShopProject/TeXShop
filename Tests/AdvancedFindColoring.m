@@ -190,6 +190,17 @@ static void TestPairsAndNames(void)
     for (TSSyntaxDiagnostic *diagnostic in [replace diagnosticsInString:@"<\\g<b>>"])
         flagged = flagged || diagnostic.role == TSSyntaxRoleInvalid;
     Check(pattern && flagged, @"\\g<b> is marked when (?<b> is only inside a class");
+    // ... and expanding it gives nothing: the engine no longer asks ICU for a group it does not have (which raises).
+    TSRegexReplacementTemplate *template = [[TSRegexReplacementTemplate alloc] initWithString:@"<\\g<b>>" pattern:pattern syntax:TSRegexReplacementSyntaxOgreKit];
+    NSRegularExpression *icu = [NSRegularExpression regularExpressionWithPattern:@"[(?<b>y)]x" options:0 error:NULL];
+    NSTextCheckingResult *match = [icu firstMatchInString:@"yx" options:0 range:NSMakeRange(0, 2)];
+    NSString *expanded = nil;
+    @try {
+        expanded = [template replacementForMatchRange:match.range result:match inString:@"yx" previousMatchEnd:0];
+    } @catch (NSException *exception) {
+        expanded = [@"exception: " stringByAppendingString:exception.name];
+    }
+    Check([expanded isEqualToString:@"<>"], [NSString stringWithFormat:@"\\g<b> of a name only inside a class gives nothing (%@)", expanded]);
 }
 
 /// Every difference the find field marks gives the cheat sheet's message, from the engine's one table.
