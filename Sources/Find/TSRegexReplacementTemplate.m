@@ -263,8 +263,14 @@ static NSString *TSUnescapedTemplate(NSString *s, NSMutableData *places)
         NSString *unescaped = TSUnescapedTemplate(normalized, places);
         const NSRange *from = places.bytes;
         TSICUPieces(unescaped, groups, ^(TSRegexReplacementPieceKind kind, NSRange range, NSString *text, NSUInteger group) {
-            NSUInteger start = from[range.location].location, end = NSMaxRange(from[NSMaxRange(range) - 1]);
-            block(kind, NSMakeRange(start, end - start), text, group);
+            if (kind != TSRegexReplacementPieceText) {
+                NSUInteger start = from[range.location].location, end = NSMaxRange(from[NSMaxRange(range) - 1]);
+                block(kind, NSMakeRange(start, end - start), text, group);
+                return;
+            }
+            // Text the template copies: each unit the unescaping made of an escape (two units as written) is that escape.
+            for (NSUInteger k = range.location; k < NSMaxRange(range); k++)
+                block(from[k].length > 1 ? TSRegexReplacementPieceEscape : TSRegexReplacementPieceText, from[k], [unescaped substringWithRange:NSMakeRange(k, 1)], 0);
         });
     } else
         TSICUPieces(normalized, groups, block);

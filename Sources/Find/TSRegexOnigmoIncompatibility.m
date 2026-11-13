@@ -38,7 +38,7 @@
                     NSLocalizedStringFromTable(@"In ICU \\h is a horizontal space; in OgreKit it was a hexadecimal digit. For a digit, write [0-9a-fA-F].", @"AdvancedFindEngine",
                                                @"Cheat sheet and find field, differences from OgreKit.")),
             TSEntry(Multiline, @"(?m)", YES,
-                    NSLocalizedStringFromTable(@"In ICU (?m) makes ^ and $ match at each line; in OgreKit it made . match line breaks, which is (?s) in ICU.", @"AdvancedFindEngine",
+                    NSLocalizedStringFromTable(@"In ICU (?m) makes ^ and $ match at each line; OgreKit’s (?m), where . matches line breaks, is (?s).", @"AdvancedFindEngine",
                                                @"Cheat sheet and find field, differences from OgreKit.")),
             TSEntry(Possessive, @"{n}+", YES,
                     NSLocalizedStringFromTable(@"In ICU {n}+ is possessive; in OgreKit it repeated the repetition.", @"AdvancedFindEngine",

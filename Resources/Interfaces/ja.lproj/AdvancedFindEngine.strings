@@ -28,7 +28,7 @@
 "In ICU \\h is a horizontal space; in OgreKit it was a hexadecimal digit. For a digit, write [0-9a-fA-F]." = "ICUの \\h は横方向の空白です（OgreKitでは16進数字）。数字には [0-9a-fA-F] と書きます。";
 
 /* Cheat sheet and find field, differences from OgreKit. */
-"In ICU (?m) makes ^ and $ match at each line; in OgreKit it made . match line breaks, which is (?s) in ICU." = "ICUの (?m) は ^ と $ を各行に一致させます（OgreKitでは「.」を改行に一致させた。ICUではそれは (?s)）。";
+"In ICU (?m) makes ^ and $ match at each line; OgreKit’s (?m), where . matches line breaks, is (?s)." = "ICUの (?m) は ^ と $ を各行に一致させます（OgreKitでは「.」を改行に一致させた。ICUではそれは (?s)）。";
 
 /* Cheat sheet and find field, differences from OgreKit. */
 "In ICU {n}+ is possessive; in OgreKit it repeated the repetition." = "ICUの {n}+ は強欲な繰り返しです（OgreKitでは繰り返しをさらに繰り返した）。";
