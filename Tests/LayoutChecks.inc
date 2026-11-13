@@ -299,7 +299,12 @@ static void CheckFocusRings(NSView *root, NSString *where, NSArray<Ink *> *inks)
         }
         NSMutableArray<NSValue *> *neighbours = [NSMutableArray array];
         NSMutableArray<NSView *> *views = [NSMutableArray array];
-        for (Ink *other in inks) if (!NSIsEmptyRect(other.drawn)) { [neighbours addObject:[NSValue valueWithRect:other.drawn]]; [views addObject:other.view]; }
+        // A stepper is measured by its frame: its arrows sit inside it, but the ring
+        // must stay off the whole control, as in Settings.
+        for (Ink *other in inks) if (!NSIsEmptyRect(other.drawn)) {
+            NSRect r = [other.view isKindOfClass:NSStepper.class] ? [root convertRect:[other.view alignmentRectForFrame:other.view.frame] fromView:other.view.superview] : other.drawn;
+            [neighbours addObject:[NSValue valueWithRect:r]]; [views addObject:other.view];
+        }
         for (NSView *scroll in scrolls) { [neighbours addObject:[NSValue valueWithRect:[root convertRect:scroll.bounds fromView:scroll]]]; [views addObject:scroll]; }
         for (NSUInteger i = 0; i < views.count; i++) {
             NSView *other = views[i];
