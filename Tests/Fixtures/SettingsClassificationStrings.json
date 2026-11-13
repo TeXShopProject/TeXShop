@@ -256,20 +256,36 @@
         "zh_CN": "LaTeX拼写检查"
       }
     },
-    "Edit Key Bindings…": {
-      "default": "Key Bindings Editor…",
+    "Input Character": {
+      "default": "Input Character",
       "overrides": {
-        "ja": "キーバインドエディタ…",
-        "de": "Tastenbelegungs-Editor…",
-        "fr": "Éditeur de raccourcis de saisie…",
-        "es": "Editor de combinaciones de teclas…",
-        "it": "Editor delle associazioni dei tasti…",
-        "nl": "Toetsbindingen-editor…",
-        "pt": "Editor de associações de teclas…",
-        "pt-PT": "Editor de associações de teclas…",
-        "ro": "Editor de asocieri de taste…",
-        "ko": "키 바인딩 에디터…",
-        "zh_CN": "按键绑定编辑器…"
+        "ja": "入力文字",
+        "de": "Eingabezeichen",
+        "fr": "Caractère saisi",
+        "es": "Carácter escrito",
+        "it": "Carattere digitato",
+        "nl": "Invoerteken",
+        "pt": "Caractere digitado",
+        "pt-PT": "Carácter escrito",
+        "ro": "Caracter tastat",
+        "ko": "입력 문자",
+        "zh_CN": "输入字符"
+      }
+    },
+    "Output String": {
+      "default": "Output String",
+      "overrides": {
+        "ja": "出力文字列",
+        "de": "Ausgabetext",
+        "fr": "Texte produit",
+        "es": "Texto de salida",
+        "it": "Testo prodotto",
+        "nl": "Uitvoertekst",
+        "pt": "Texto de saída",
+        "pt-PT": "Texto de saída",
+        "ro": "Text rezultat",
+        "ko": "출력 문자열",
+        "zh_CN": "输出文本"
       }
     },
     "Key Bindings": {

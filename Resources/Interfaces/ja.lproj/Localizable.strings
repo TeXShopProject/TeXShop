@@ -253,7 +253,6 @@
 "Use LaTeX-aware spell checking (recommended)" = "LaTeXの構造を考慮する（推奨）";
 "Use legacy spell checking" = "従来方式を使う";
 "LaTeX Spell Checking" = "LaTeXのスペルチェック";
-"Edit Key Bindings…" = "キーバインドエディタ…";
 "Key Bindings" = "キーバインド";
 "Edit Command Completion…" = "コマンド補完ファイルを編集…";
 "Command Completion" = "コマンド補完";
@@ -330,7 +329,6 @@
 /* Macro editor placeholder guide */
 "#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = 選択中の文字列、#INS# = 挿入後のカーソル位置、#PASTE# = クリップボードの文字列。AppleScriptのマクロでは #FILEPATH# なども使えます（ヘルプ参照）。";
 /* Key binding editor placeholder guide */
-"* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = 選択中の文字列、#INS# = 出力後のカーソル位置、#PASTE# = クリップボードの文字列";
 
 /* Edit › Mark */
 "Insert Mark with Note" = "メモ付きマークを挿入";
@@ -344,12 +342,15 @@
 "• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = マーク、•‹メモ› = メモ付きマーク。「%@」→「%@」で移動できます。";
 "Marks" = "マーク";
 
+
 /* Settings › Keyboard › Key Bindings */
 "Input Character" = "入力文字";
 "Output String" = "出力文字列";
 "Selected Text" = "選択中の文字列";
 "Insertion Point" = "出力後のカーソル位置";
 "Clipboard Text" = "クリップボードの文字列";
+"Line Break" = "改行";
+"Tab" = "タブ";
 "Mark" = "マーク";
 "Mark with Note" = "メモ付きマーク";
 "note" = "メモ";
@@ -358,7 +359,7 @@
 "Delete" = "削除";
 "Symbols" = "記号";
 "Display" = "表示";
-"Symbol" = "記号";
+"Typed As" = "書き方";
 "Add Key Binding" = "キーバインドの追加";
 "Change Key Binding" = "キーバインドの変更";
 "Delete Key Binding" = "キーバインドの削除";

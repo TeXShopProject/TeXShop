@@ -205,7 +205,6 @@
 "Use LaTeX-aware spell checking (recommended)" = "Use LaTeX-aware spell checking (recommended)";
 "Use legacy spell checking" = "Use legacy spell checking";
 "LaTeX Spell Checking" = "LaTeX Spell Checking";
-"Edit Key Bindings…" = "Key Bindings Editor…";
 "Key Bindings" = "Key Bindings";
 "Edit Command Completion…" = "Edit Command Completion…";
 "Command Completion" = "Command Completion";
@@ -318,7 +317,6 @@
 /* Macro editor placeholder guide */
 "#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help).";
 /* Key binding editor placeholder guide */
-"* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard";
 
 /* Edit › Mark */
 "Insert Mark with Note" = "Insert Mark with Note";
@@ -332,12 +330,15 @@
 "• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = mark, •‹note› = mark with a note; %@ › %@ moves between them.";
 "Marks" = "Marks";
 
+
 /* Settings › Keyboard › Key Bindings */
 "Input Character" = "Input Character";
 "Output String" = "Output String";
 "Selected Text" = "Selected Text";
 "Insertion Point" = "Insertion Point";
 "Clipboard Text" = "Clipboard Text";
+"Line Break" = "Line Break";
+"Tab" = "Tab";
 "Mark" = "Mark";
 "Mark with Note" = "Mark with Note";
 "note" = "note";
@@ -346,7 +347,7 @@
 "Delete" = "Delete";
 "Symbols" = "Symbols";
 "Display" = "Display";
-"Symbol" = "Symbol";
+"Typed As" = "Typed As";
 "Add Key Binding" = "Add Key Binding";
 "Change Key Binding" = "Change Key Binding";
 "Delete Key Binding" = "Delete Key Binding";

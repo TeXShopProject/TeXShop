@@ -294,9 +294,11 @@
 "catalog.console.1.1.title" = "Redimensionnement de la console";
 "group.bindings.title" = "Raccourcis clavier";
 "catalog.keyboard.0.0.title" = "Utiliser les raccourcis de saisie (valeur initiale des nouveaux documents)";
-"catalog.keyboard.0.1.title" = "Éditeur de raccourcis de saisie…";
+"catalog.keyboard.0.0.note" = "Remplace un caractère saisi par un texte défini, par exemple { par {}.";
+"catalog.keyboard.0.1.title" = "Liste des raccourcis de saisie";
 "group.completion.title" = "Complétion des commandes";
 "catalog.keyboard.1.0.title" = "Touche de déclenchement";
+"catalog.keyboard.1.0.note" = "Complète la commande en cours de saisie ; appuyez de nouveau sur la touche pour la proposition suivante.";
 "catalog.keyboard.1.1.title" = "Complétions de BibDesk";
 "catalog.keyboard.1.1.note" = "Propose les clés de citation de BibDesk comme complétions dans \\cite et les commandes similaires.";
 "catalog.keyboard.1.2.title" = "Modifier la complétion des commandes…";

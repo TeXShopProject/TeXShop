@@ -228,7 +228,6 @@
 "Use LaTeX-aware spell checking (recommended)" = "使用考虑LaTeX结构的拼写检查（推荐）";
 "Use legacy spell checking" = "使用传统拼写检查";
 "LaTeX Spell Checking" = "LaTeX拼写检查";
-"Edit Key Bindings…" = "按键绑定编辑器…";
 "Key Bindings" = "按键绑定";
 "Edit Command Completion…" = "编辑命令补全文件…";
 "Command Completion" = "命令补全";
@@ -320,7 +319,6 @@
 /* Macro editor placeholder guide */
 "#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = 所选文本，#INS# = 插入宏后的光标位置，#PASTE# = 剪贴板中的文本。AppleScript宏还可以使用 #FILEPATH# 等占位符（参见帮助）。";
 /* Key binding editor placeholder guide */
-"* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = 已选字符，#INS# = 插入点，#PASTE# = 剪贴板中的文本";
 
 /* Edit › Mark */
 "Insert Mark with Note" = "插入带注释的标记";
@@ -333,3 +331,25 @@
 "Deletes the previous • and selects its note, if it has one." = "删除上一个 • 并选中其注释（如果有）。";
 "• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = 标记，•‹注释› = 带注释的标记；使用“%@ › %@”在它们之间移动。";
 "Marks" = "标记";
+
+/* Settings › Keyboard › Key Bindings */
+"Input Character" = "输入字符";
+"Output String" = "输出文本";
+"Selected Text" = "所选文本";
+"Insertion Point" = "插入点";
+"Clipboard Text" = "剪贴板文本";
+"Line Break" = "换行";
+"Tab" = "制表符";
+"Mark" = "标记";
+"Mark with Note" = "带注释的标记";
+"note" = "注释";
+"Insert" = "插入";
+"Add" = "添加";
+"Delete" = "删除";
+"Symbols" = "符号";
+"Display" = "显示";
+"Typed As" = "输入方式";
+"Add Key Binding" = "添加按键绑定";
+"Change Key Binding" = "更改按键绑定";
+"Delete Key Binding" = "删除按键绑定";
+"Move Key Binding" = "移动按键绑定";

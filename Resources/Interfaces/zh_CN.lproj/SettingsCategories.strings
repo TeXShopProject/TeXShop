@@ -294,9 +294,11 @@
 "catalog.console.1.1.title" = "控制台窗口调整";
 "group.bindings.title" = "按键绑定";
 "catalog.keyboard.0.0.title" = "使用按键绑定（新文档的默认值）";
-"catalog.keyboard.0.1.title" = "按键绑定编辑器…";
+"catalog.keyboard.0.0.note" = "将输入的单个字符替换为设定的文本，例如将 { 替换为 {}。";
+"catalog.keyboard.0.1.title" = "按键绑定列表";
 "group.completion.title" = "命令补全";
 "catalog.keyboard.1.0.title" = "触发按键";
+"catalog.keyboard.1.0.note" = "按触发按键补全正在输入的命令；再次按下可切换到下一个候选。";
 "catalog.keyboard.1.1.title" = "BibDesk补全";
 "catalog.keyboard.1.1.note" = "在 \\cite等命令中，将BibDesk中的引用键作为补全候选。";
 "catalog.keyboard.1.2.title" = "编辑命令补全文件…";
