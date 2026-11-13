@@ -18,6 +18,10 @@ magnification changes.
 Plain PDFViews run with the production TSPreviewScrollerKeeper and TSPreviewSplitDivider
 in windows that are never ordered on screen. -[NSWindow isVisible] answers YES, so that
 PDFKit takes the path it takes on screen.
+
+The controls without the fix only show that the test sees the jumps on this system. A
+later PDFKit that no longer jumps makes them a note, not a failure. --binary writes the
+test program, built for macOS 14 and later, to run it on other systems.
 """
 import argparse, subprocess, sys, tempfile
 from pathlib import Path
@@ -36,6 +40,8 @@ MUTATIONS = {
     # The text is put back after every change of the magnification, also without a scroller change.
     'scale-fix-always': ('TSPreviewScrollerKeeper.m',
         '        fabs(TSVisibleHeight(scroll) - height) < 0.5)', '        NO)'),
+    # Views with content insets are kept too.
+    'insets-kept': ('TSPreviewScrollerKeeper.m', '    return insets.top != 0 || insets.bottom != 0;\n', '    return NO;\n'),
     # The Preview views do not use the keeper.
     'not-installed': ('MyPDFKitView.m', '    [super setDocument:document];\n    [TSPreviewScrollerKeeper installInView:self];\n',
         '    [super setDocument:document];\n'),
@@ -44,6 +50,7 @@ MUTATIONS = {
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
+parser.add_argument('--binary', type=Path, help='write the test program here instead of running it')
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 names = ('TSPreviewScrollerKeeper.m', 'TSPreviewSplitDivider.m', 'MyPDFKitView.m')
@@ -72,6 +79,8 @@ program = r'''
 #import "TSPreviewSplitDivider.h"
 static int failures; static const char *model;
 static void Check(BOOL ok, NSString *name) { if (!ok) { printf("FAIL (%s): %s\n", model, name.UTF8String); failures++; } }
+// A control that only shows the test sees the problem on this system.
+static void Control(BOOL ok, NSString *name) { if (!ok) printf("NOTE (%s): not seen on this system: %s\n", model, name.UTF8String); }
 static NSScrollerStyle Legacy(id s, SEL c) { return NSScrollerStyleLegacy; }
 static NSScrollerStyle Overlay(id s, SEL c) { return NSScrollerStyleOverlay; }
 static BOOL Yes(id s, SEL c) { return YES; }
@@ -231,7 +240,7 @@ int main(int argc, char **argv) { @autoreleasepool {
                             single ? "single page" : "continuous", kept]);
         CGFloat bare = WidthChanges(document, single, NO, &toggled);
         if (!flipped && !overlay)
-            Check(bare >= 10, [NSString stringWithFormat:@"without the keeper the text jumps by the scroller (%.2fpt)", bare]);
+            Control(bare >= 10, [NSString stringWithFormat:@"without the keeper the text jumps by the scroller (%.2fpt)", bare]);
         if (overlay)
             Check(bare <= 0.5, @"overlay scrollers never moved the text");
     }
@@ -273,7 +282,8 @@ int main(int argc, char **argv) { @autoreleasepool {
         NSRect frame = s.window.frame; CGFloat top = NSMaxY(frame);
         frame.size.height = 700; frame.origin.y = top - 700;
         [s.window setFrame:frame display:NO]; [s.window layoutIfNeeded]; RunLoop();
-        Check(fabs(Below(s.a, a)) <= 0.5 && fabs(Below(s.b, b)) <= 0.5, @"split top and bottom: the tops are kept when the height changes");
+        Check(fabs(Below(s.a, a)) <= 0.5 && fabs(Below(s.b, b)) <= 0.5,
+              [NSString stringWithFormat:@"split top and bottom: the tops are kept when the height changes (%.2f, %.2fpt)", Below(s.a, a), Below(s.b, b)]);
     }
 
     // (c) The magnification crosses the scale where the scroller appears.
@@ -285,9 +295,31 @@ int main(int argc, char **argv) { @autoreleasepool {
                             single ? "single page" : "continuous", kept]);
         CGFloat bare = ScaleSteps(document, single, NO, &toggled);
         if (!overlay)
-            Check(bare >= 5, [NSString stringWithFormat:@"without the fix the text jumps by half the scroller (%.2fpt)", bare]);
+            Control(bare >= 5, [NSString stringWithFormat:@"without the fix the text jumps by half the scroller (%.2fpt)", bare]);
         else
             Check(fabs(bare - kept) <= 0.01, @"overlay scrollers: the magnification is left to PDFKit");
+    }
+
+    // A view with content insets is left to PDFKit: the text noted while the scroller comes or
+    // goes is not always the text at the top then (Codex's case in the first audit).
+    {
+        CGFloat moved[2];
+        for (int keep = 0; keep < 2; keep++) {
+            NSWindow *window = MakeWindow(900, 500);
+            PDFView *view = MakeView(window.contentView.bounds, document, NO, keep);
+            [window.contentView addSubview:view]; [window layoutIfNeeded]; RunLoop();
+            Scroll(view).automaticallyAdjustsContentInsets = NO;
+            Scroll(view).contentInsets = NSEdgeInsetsMake(23, 7, 11, 13);
+            RunLoop();
+            ScrollIntoPage(view, 3, 150);
+            Mark mark = MarkAt(view, 90); CGFloat before = Below(view, mark); moved[keep] = 0;
+            for (NSNumber *width in @[@450, @900, @500, @1000]) {
+                SetWidth(window, width.doubleValue);
+                moved[keep] = fmax(moved[keep], fabs(Below(view, mark) - before));
+            }
+        }
+        Check(fabs(moved[1] - moved[0]) <= 0.5, [NSString stringWithFormat:
+              @"with content insets the text moves as it does without the keeper (%.2f and %.2fpt)", moved[1], moved[0]]);
     }
 
     // A view that gets another document, and a view that goes away with its keeper.
@@ -316,9 +348,14 @@ with tempfile.TemporaryDirectory(prefix='texshop-preview-scroller-') as tmp:
     (tmp / 'probe.m').write_text(program, encoding='utf-8')
     for name in ('TSPreviewScrollerKeeper.m', 'TSPreviewSplitDivider.m'):
         (tmp / name).write_text(text[name], encoding='utf-8', errors='surrogateescape')
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-framework', 'Quartz', *include_args(root),
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-mmacosx-version-min=14.0', '-framework', 'Cocoa', '-framework', 'Quartz', *include_args(root),
                     '-I', str(root / 'Tests'), str(tmp / 'probe.m'), str(tmp / 'TSPreviewScrollerKeeper.m'),
                     str(tmp / 'TSPreviewSplitDivider.m'), '-o', str(tmp / 'probe')], check=True)
+    if args.binary:
+        import shutil
+        shutil.copy2(tmp / 'probe', args.binary)
+        print(f'wrote {args.binary}; run it with the models sources, unflipped, system and overlay')
+        sys.exit(0)
     failed = False
     for model in ('sources', 'unflipped', 'system', 'overlay'):
         result = subprocess.run([str(tmp / 'probe'), model], capture_output=True, text=True, timeout=300)

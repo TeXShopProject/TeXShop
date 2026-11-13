@@ -18,35 +18,47 @@ static NSScrollView *TSScroll(PDFView *view)
     return [scroll.contentView isKindOfClass:[NSClipView class]] && scroll.superview == view ? scroll : nil;
 }
 
-// How far a point in the scroll view lies below a height in it, in points.
-static CGFloat TSBelow(NSScrollView *scroll, NSPoint point, CGFloat y)
+// Places are measured in the clip view's own coordinates, from the top edge of its bounds,
+// so that they do not depend on whether its frame has caught up with its bounds yet.
+
+// The size of a point of the view in the clip view: the magnification.
+static CGFloat TSUnit(NSClipView *clip)
 {
-    return scroll.isFlipped ? point.y - y : y - point.y;
+    return NSHeight(clip.frame) > 0 ? NSHeight(clip.bounds) / NSHeight(clip.frame) : 1;
 }
 
-// The top edge of the visible area, below the content insets, as a height in the scroll view.
-static CGFloat TSVisibleTop(NSScrollView *scroll)
+static CGFloat TSTop(NSClipView *clip)
 {
-    NSClipView *clip = scroll.contentView;
-    NSRect frame = clip.frame;
-    CGFloat top = scroll.isFlipped ? NSMinY(frame) : NSMaxY(frame);
-    return top + (scroll.isFlipped ? scroll.contentInsets.top : -scroll.contentInsets.top);
+    return clip.isFlipped ? NSMinY(clip.bounds) : NSMaxY(clip.bounds);
 }
 
+// Whether the scroll view has content insets. Then AppKit puts the scroller over the
+// bottom inset, and a scroller that comes or goes during a resize can be seen in a state
+// that PDFKit is about to change again (measured on macOS 14 and 15, and in the test with
+// a document view that is not flipped): the text noted then is not the text at the top.
+// The views are left to PDFKit then, as before. The Preview views have no content insets
+// up to macOS 15, except for a moment while the window's height changes.
+static BOOL TSHasInsets(NSScrollView *scroll)
+{
+    NSEdgeInsets insets = scroll.contentInsets;
+    return insets.top != 0 || insets.bottom != 0;
+}
+
+// The height of the area where the text can be seen, in points.
 static CGFloat TSVisibleHeight(NSScrollView *scroll)
 {
     return NSHeight(scroll.contentView.frame) - scroll.contentInsets.top - scroll.contentInsets.bottom;
 }
 
-// The text shown a distance below the top edge of the visible area, in the middle of its width.
+// The text shown a distance below the top edge of the clip view, in the middle of its width.
 static TSPreviewText TSTextAt(PDFView *view, NSScrollView *scroll, CGFloat below)
 {
     TSPreviewText text = {0};
     NSClipView *clip = scroll.contentView;
     if (view.document.pageCount == 0 || NSIsEmptyRect(clip.bounds))
         return text;
-    CGFloat y = TSVisibleTop(scroll) + (scroll.isFlipped ? below : -below);
-    NSPoint point = [view convertPoint:NSMakePoint(NSMidX(clip.frame), y) fromView:scroll];
+    CGFloat y = TSTop(clip) + (clip.isFlipped ? below : -below) * TSUnit(clip);
+    NSPoint point = [view convertPoint:NSMakePoint(NSMidX(clip.bounds), y) fromView:clip];
     PDFPage *page = [view pageForPoint:point nearest:YES];
     if (page == nil)
         return text;
@@ -56,11 +68,12 @@ static TSPreviewText TSTextAt(PDFView *view, NSScrollView *scroll, CGFloat below
     return text;
 }
 
-// How far the text lies below the top edge of the visible area.
+// How far the text lies below the top edge of the clip view, in points.
 static CGFloat TSTextBelowTop(PDFView *view, NSScrollView *scroll, TSPreviewText text)
 {
-    NSPoint point = [scroll convertPoint:[view convertPoint:text.point fromPage:text.page] fromView:view];
-    return TSBelow(scroll, point, TSVisibleTop(scroll));
+    NSClipView *clip = scroll.contentView;
+    NSPoint point = [clip convertPoint:[view convertPoint:text.point fromPage:text.page] fromView:view];
+    return (clip.isFlipped ? point.y - TSTop(clip) : TSTop(clip) - point.y) / TSUnit(clip);
 }
 
 // Moves the text up by a distance, as far as the document allows.
@@ -69,10 +82,8 @@ static void TSMoveTextUp(NSScrollView *scroll, CGFloat distance)
     NSClipView *clip = scroll.contentView;
     if (fabs(distance) < 0.01 || NSIsEmptyRect(clip.bounds) || NSHeight(clip.frame) <= 0)
         return;
-    // The bounds of the clip view are in document units: the scale of the magnification.
-    CGFloat unit = NSHeight(clip.bounds) / NSHeight(clip.frame);
     NSRect bounds = clip.bounds;
-    bounds.origin.y += (clip.isFlipped ? distance : -distance) * unit;
+    bounds.origin.y += (clip.isFlipped ? distance : -distance) * TSUnit(clip);
     NSPoint target = [clip constrainBoundsRect:bounds].origin;
     if (!NSEqualPoints(target, clip.bounds.origin)) {
         [clip scrollToPoint:target];
@@ -142,7 +153,8 @@ static void TSMoveTextUp(NSScrollView *scroll, CGFloat distance)
     NSScrollView *scroll = view ? TSScroll(view) : nil;
     if ([change[NSKeyValueChangeNotificationIsPriorKey] boolValue]) {
         // PDFKit is about to add or remove the scroller: note the text at the top edge.
-        TSPreviewText text = (scroll == object && self.suspended == 0) ? TSTextAt(view, scroll, 0) : (TSPreviewText){0};
+        TSPreviewText text = (scroll == object && self.suspended == 0 && !TSHasInsets(scroll)) ?
+            TSTextAt(view, scroll, 0) : (TSPreviewText){0};
         self.pending = text.valid;
         self.page = text.page;
         self.point = text.point;
@@ -165,7 +177,8 @@ void TSPreviewChangeScale(PDFView *view, void (NS_NOESCAPE ^change)(void))
     TSPreviewScrollerKeeper *keeper = [TSPreviewScrollerKeeper keeperForView:view];
     NSScrollView *scroll = TSScroll(view);
     CGFloat height = scroll ? TSVisibleHeight(scroll) : 0;
-    CGFloat below = height / 2;
+    // The centre of the area where the text can be seen.
+    CGFloat below = scroll ? scroll.contentInsets.top + height / 2 : 0;
     TSPreviewText text = scroll ? TSTextAt(view, scroll, below) : (TSPreviewText){0};
     PDFPage *page = text.page;
     keeper.suspended++;
