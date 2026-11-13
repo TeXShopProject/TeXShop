@@ -1,6 +1,7 @@
 /* The Advanced Find panel (Sources/Find/TSAdvancedFind…). The keys are the code's; the English is in the code as well. */
 
 "AdvancedFind.AnchorsMatchLines" = "^ and $ match at each line";
+"AdvancedFind.Cancel" = "Cancel";
 "AdvancedFind.ClearFindHistory" = "Clear Recent Searches";
 "AdvancedFind.ClearReplaceHistory" = "Clear Recent Replacements";
 "AdvancedFind.ClosesWhenDone" = "Close the panel after finding";
@@ -10,6 +11,7 @@
 "AdvancedFind.FindHistory" = "Recent Searches";
 "AdvancedFind.FindLabel" = "Find:";
 "AdvancedFind.Found" = "%lu found";
+"AdvancedFind.Highlight" = "Highlight";
 "AdvancedFind.HighlightAll" = "Highlight All";
 "AdvancedFind.History" = "Recent Strings";
 "AdvancedFind.IgnoreCase" = "Ignore case";
@@ -53,3 +55,31 @@
 "AdvancedFind.Wrap" = "Wrap around";
 "AdvancedFind.Wrapped" = "(wrapped)";
 "AdvancedFind.YenIsBackslash" = "Treat ¥ as \\";
+"MultipleReplace.Action" = "Multiple Replace";
+"MultipleReplace.AddRule" = "Add a Rule";
+"MultipleReplace.AddSet" = "New Set";
+"MultipleReplace.BadName" = "“%@” cannot be the name of a set.";
+"MultipleReplace.Column.Count" = "Count";
+"MultipleReplace.Column.CountTip" = "Matches replaced by the last run";
+"MultipleReplace.Column.EnabledTip" = "Use this rule";
+"MultipleReplace.Column.Find" = "Find";
+"MultipleReplace.Column.Note" = "Note";
+"MultipleReplace.Column.Replace" = "Replace";
+"MultipleReplace.CopyName" = "%@ copy";
+"MultipleReplace.Duplicate" = "Duplicate";
+"MultipleReplace.EditMenu" = "Edit Multiple Replace…";
+"MultipleReplace.Export" = "Export…";
+"MultipleReplace.Import" = "Import…";
+"MultipleReplace.MoveToTrash" = "Move to Trash";
+"MultipleReplace.NameTaken" = "A set named “%@” already exists.";
+"MultipleReplace.NotText" = "“%@” is not UTF-8 text.";
+"MultipleReplace.Options" = "Options…";
+"MultipleReplace.Problem" = "Rule %lu is skipped: %@";
+"MultipleReplace.RemoveQuestion" = "Move “%@” to the Trash?";
+"MultipleReplace.RemoveRule" = "Remove the Selected Rules";
+"MultipleReplace.RemoveSet" = "Move the Set to the Trash";
+"MultipleReplace.Sets" = "Sets";
+"MultipleReplace.ShowInFinder" = "Show in Finder";
+"MultipleReplace.SkippedRules" = "(rule %@ skipped; see ⚠︎)";
+"MultipleReplace.Title" = "Multiple Replace";
+"MultipleReplace.Untitled" = "Untitled";

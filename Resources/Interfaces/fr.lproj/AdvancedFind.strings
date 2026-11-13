@@ -1,6 +1,7 @@
 /* The Advanced Find panel (Sources/Find/TSAdvancedFind…). The keys are the code's; the English is in the code as well. */
 
 "AdvancedFind.AnchorsMatchLines" = "^ et $ correspondent à chaque ligne";
+"AdvancedFind.Cancel" = "Annuler";
 "AdvancedFind.ClearFindHistory" = "Effacer les recherches récentes";
 "AdvancedFind.ClearReplaceHistory" = "Effacer les remplacements récents";
 "AdvancedFind.ClosesWhenDone" = "Fermer le panneau dès qu’une occurrence est trouvée";
@@ -10,6 +11,7 @@
 "AdvancedFind.FindHistory" = "Recherches récentes";
 "AdvancedFind.FindLabel" = "Rechercher :";
 "AdvancedFind.Found" = "Occurrences : %lu";
+"AdvancedFind.Highlight" = "Surligner";
 "AdvancedFind.HighlightAll" = "Tout surligner";
 "AdvancedFind.History" = "Chaînes récentes";
 "AdvancedFind.IgnoreCase" = "Ignorer la casse";
@@ -53,3 +55,31 @@
 "AdvancedFind.Wrap" = "En boucle";
 "AdvancedFind.Wrapped" = "(reprise au début)";
 "AdvancedFind.YenIsBackslash" = "Traiter ¥ comme \\";
+"MultipleReplace.Action" = "Remplacement multiple";
+"MultipleReplace.AddRule" = "Ajouter une règle";
+"MultipleReplace.AddSet" = "Nouveau jeu";
+"MultipleReplace.BadName" = "« %@ » ne peut pas être le nom d’un jeu.";
+"MultipleReplace.Column.Count" = "Nb";
+"MultipleReplace.Column.CountTip" = "Occurrences remplacées lors de la dernière exécution";
+"MultipleReplace.Column.EnabledTip" = "Utiliser cette règle";
+"MultipleReplace.Column.Find" = "Recherche";
+"MultipleReplace.Column.Note" = "Note";
+"MultipleReplace.Column.Replace" = "Remplacement";
+"MultipleReplace.CopyName" = "%@ copie";
+"MultipleReplace.Duplicate" = "Dupliquer";
+"MultipleReplace.EditMenu" = "Modifier les remplacements multiples…";
+"MultipleReplace.Export" = "Exporter…";
+"MultipleReplace.Import" = "Importer…";
+"MultipleReplace.MoveToTrash" = "Placer dans la Corbeille";
+"MultipleReplace.NameTaken" = "Un jeu nommé « %@ » existe déjà.";
+"MultipleReplace.NotText" = "« %@ » n’est pas du texte UTF-8.";
+"MultipleReplace.Options" = "Options…";
+"MultipleReplace.Problem" = "La règle %lu est ignorée : %@";
+"MultipleReplace.RemoveQuestion" = "Placer « %@ » dans la Corbeille ?";
+"MultipleReplace.RemoveRule" = "Supprimer les règles sélectionnées";
+"MultipleReplace.RemoveSet" = "Placer le jeu dans la Corbeille";
+"MultipleReplace.Sets" = "Jeux";
+"MultipleReplace.ShowInFinder" = "Afficher dans le Finder";
+"MultipleReplace.SkippedRules" = "(règle %@ ignorée ; voir ⚠︎)";
+"MultipleReplace.Title" = "Remplacement multiple";
+"MultipleReplace.Untitled" = "Sans titre";

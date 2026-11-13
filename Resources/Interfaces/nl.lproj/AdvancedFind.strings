@@ -1,6 +1,7 @@
 /* The Advanced Find panel (Sources/Find/TSAdvancedFind…). The keys are the code's; the English is in the code as well. */
 
 "AdvancedFind.AnchorsMatchLines" = "^ en $ gelden voor elke regel";
+"AdvancedFind.Cancel" = "Annuleer";
 "AdvancedFind.ClearFindHistory" = "Wis recente zoekopdrachten";
 "AdvancedFind.ClearReplaceHistory" = "Wis recente vervangingen";
 "AdvancedFind.ClosesWhenDone" = "Sluit venster zodra er iets is gevonden";
@@ -10,6 +11,7 @@
 "AdvancedFind.FindHistory" = "Recente zoekopdrachten";
 "AdvancedFind.FindLabel" = "Zoek:";
 "AdvancedFind.Found" = "%lu gevonden";
+"AdvancedFind.Highlight" = "Markeer";
 "AdvancedFind.HighlightAll" = "Markeer alles";
 "AdvancedFind.History" = "Recente invoer";
 "AdvancedFind.IgnoreCase" = "Negeer hoofdletters";
@@ -53,3 +55,31 @@
 "AdvancedFind.Wrap" = "Volledig document";
 "AdvancedFind.Wrapped" = "(verder aan andere kant)";
 "AdvancedFind.YenIsBackslash" = "Behandel ¥ als \\";
+"MultipleReplace.Action" = "Meervoudige vervanging";
+"MultipleReplace.AddRule" = "Voeg regel toe";
+"MultipleReplace.AddSet" = "Nieuwe set";
+"MultipleReplace.BadName" = "‘%@’ kan niet de naam van een set zijn.";
+"MultipleReplace.Column.Count" = "Aant.";
+"MultipleReplace.Column.CountTip" = "Overeenkomsten vervangen bij de laatste uitvoering";
+"MultipleReplace.Column.EnabledTip" = "Gebruik deze regel";
+"MultipleReplace.Column.Find" = "Zoek";
+"MultipleReplace.Column.Note" = "Notitie";
+"MultipleReplace.Column.Replace" = "Vervang";
+"MultipleReplace.CopyName" = "%@ kopie";
+"MultipleReplace.Duplicate" = "Dupliceer";
+"MultipleReplace.EditMenu" = "Wijzig meervoudige vervanging…";
+"MultipleReplace.Export" = "Exporteer…";
+"MultipleReplace.Import" = "Importeer…";
+"MultipleReplace.MoveToTrash" = "Verplaats naar prullenmand";
+"MultipleReplace.NameTaken" = "Er bestaat al een set met de naam ‘%@’.";
+"MultipleReplace.NotText" = "‘%@’ is geen UTF-8-tekst.";
+"MultipleReplace.Options" = "Opties…";
+"MultipleReplace.Problem" = "Regel %lu wordt overgeslagen: %@";
+"MultipleReplace.RemoveQuestion" = "‘%@’ naar de prullenmand verplaatsen?";
+"MultipleReplace.RemoveRule" = "Verwijder geselecteerde regels";
+"MultipleReplace.RemoveSet" = "Verplaats set naar prullenmand";
+"MultipleReplace.Sets" = "Sets";
+"MultipleReplace.ShowInFinder" = "Toon in Finder";
+"MultipleReplace.SkippedRules" = "(regel %@ overgeslagen; zie ⚠︎)";
+"MultipleReplace.Title" = "Meervoudige vervanging";
+"MultipleReplace.Untitled" = "Naamloos";

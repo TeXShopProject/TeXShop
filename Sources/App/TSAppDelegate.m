@@ -59,6 +59,7 @@
 #import "TSSettingsChangeNote.h"
 #import "TextFinder.h"
 #import "TSPreferenceLaunch.h"
+#import "TSMultipleReplaceMenu.h"
 
 #include <sys/sysctl.h>     // for testForIntel
 #include <mach/machine.h>   // for testForIntel
@@ -225,6 +226,11 @@
     // Marks work without command completion; their commands belong in Edit.
     [TSMarkMenu installInMenu:NSApp.mainMenu];
     // OgreKit replaces the Find submenu during the launch notification.
+    // Multiple Replace joins the Find submenu after that, and before the shortcuts are read from the menu.
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSString *directory = [[TeXShopPath stringByStandardizingPath] stringByAppendingPathComponent:@"MultipleReplace"];
+        [TSMultipleReplaceMenu installInMainMenu:NSApp.mainMenu directory:[NSURL fileURLWithPath:directory isDirectory:YES]];
+    });
     [[TSKeyboardShortcuts sharedController] startAfterLaunchWithConfiguration:^(TSKeyboardShortcuts *shortcuts) {
         shortcuts.showSettings = ^{ [[TSPreferences sharedInstance] showKeyboardSettings:nil]; };
         shortcuts.macroProvider = ^{ return [[TSMacroMenuController sharedInstance] shortcutEntries]; };

@@ -1,6 +1,7 @@
 /* The Advanced Find panel (Sources/Find/TSAdvancedFind…). The keys are the code's; the English is in the code as well. */
 
 "AdvancedFind.AnchorsMatchLines" = "^ と $ を各行の行頭・行末に一致させる";
+"AdvancedFind.Cancel" = "キャンセル";
 "AdvancedFind.ClearFindHistory" = "検索履歴を消去";
 "AdvancedFind.ClearReplaceHistory" = "置換履歴を消去";
 "AdvancedFind.ClosesWhenDone" = "見つかったらパネルを閉じる";
@@ -10,6 +11,7 @@
 "AdvancedFind.FindHistory" = "検索履歴";
 "AdvancedFind.FindLabel" = "検索:";
 "AdvancedFind.Found" = "%lu件一致";
+"AdvancedFind.Highlight" = "ハイライト";
 "AdvancedFind.HighlightAll" = "すべてハイライト";
 "AdvancedFind.History" = "最近使った文字列";
 "AdvancedFind.IgnoreCase" = "大文字と小文字を区別しない";
@@ -53,3 +55,31 @@
 "AdvancedFind.Wrap" = "折り返す";
 "AdvancedFind.Wrapped" = "（折り返し）";
 "AdvancedFind.YenIsBackslash" = "¥ を \\ とみなす";
+"MultipleReplace.Action" = "複数置換";
+"MultipleReplace.AddRule" = "規則を追加";
+"MultipleReplace.AddSet" = "新しい組";
+"MultipleReplace.BadName" = "「%@」は組の名前にできません。";
+"MultipleReplace.Column.Count" = "件数";
+"MultipleReplace.Column.CountTip" = "前回の実行で置換した数";
+"MultipleReplace.Column.EnabledTip" = "この規則を使う";
+"MultipleReplace.Column.Find" = "検索";
+"MultipleReplace.Column.Note" = "メモ";
+"MultipleReplace.Column.Replace" = "置換";
+"MultipleReplace.CopyName" = "%@ のコピー";
+"MultipleReplace.Duplicate" = "複製";
+"MultipleReplace.EditMenu" = "複数置換を編集…";
+"MultipleReplace.Export" = "書き出す…";
+"MultipleReplace.Import" = "読み込む…";
+"MultipleReplace.MoveToTrash" = "ゴミ箱に入れる";
+"MultipleReplace.NameTaken" = "「%@」という組はすでにあります。";
+"MultipleReplace.NotText" = "「%@」はUTF-8のテキストではありません。";
+"MultipleReplace.Options" = "オプション…";
+"MultipleReplace.Problem" = "規則 %1$luは使われません：%2$@";
+"MultipleReplace.RemoveQuestion" = "「%@」をゴミ箱に入れますか？";
+"MultipleReplace.RemoveRule" = "選択した規則を削除";
+"MultipleReplace.RemoveSet" = "組をゴミ箱に入れる";
+"MultipleReplace.Sets" = "組";
+"MultipleReplace.ShowInFinder" = "Finderで表示";
+"MultipleReplace.SkippedRules" = "（規則 %@ は飛ばしました。⚠︎ にポインタを置くと理由が出ます）";
+"MultipleReplace.Title" = "複数置換";
+"MultipleReplace.Untitled" = "名称未設定";

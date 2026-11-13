@@ -1,6 +1,7 @@
 /* The Advanced Find panel (Sources/Find/TSAdvancedFind…). The keys are the code's; the English is in the code as well. */
 
 "AdvancedFind.AnchorsMatchLines" = "^ și $ se potrivesc la fiecare linie";
+"AdvancedFind.Cancel" = "Anulați";
 "AdvancedFind.ClearFindHistory" = "Degajați căutările recente";
 "AdvancedFind.ClearReplaceHistory" = "Degajați înlocuirile recente";
 "AdvancedFind.ClosesWhenDone" = "Închideți panoul după găsirea unei potriviri";
@@ -10,6 +11,7 @@
 "AdvancedFind.FindHistory" = "Căutări recente";
 "AdvancedFind.FindLabel" = "Găsiți:";
 "AdvancedFind.Found" = "Potriviri: %lu";
+"AdvancedFind.Highlight" = "Evidențiați";
 "AdvancedFind.HighlightAll" = "Evidențiați tot";
 "AdvancedFind.History" = "Șiruri recente";
 "AdvancedFind.IgnoreCase" = "Ignorați majuscule/minuscule";
@@ -53,3 +55,31 @@
 "AdvancedFind.Wrap" = "În tot textul";
 "AdvancedFind.Wrapped" = "(căutare reluată)";
 "AdvancedFind.YenIsBackslash" = "Tratați ¥ ca \\";
+"MultipleReplace.Action" = "Înlocuire multiplă";
+"MultipleReplace.AddRule" = "Adăugați o regulă";
+"MultipleReplace.AddSet" = "Set nou";
+"MultipleReplace.BadName" = "„%@” nu poate fi numele unui set.";
+"MultipleReplace.Column.Count" = "Nr.";
+"MultipleReplace.Column.CountTip" = "Potriviri înlocuite la ultima rulare";
+"MultipleReplace.Column.EnabledTip" = "Utilizați această regulă";
+"MultipleReplace.Column.Find" = "Găsiți";
+"MultipleReplace.Column.Note" = "Notiță";
+"MultipleReplace.Column.Replace" = "Înlocuiți";
+"MultipleReplace.CopyName" = "%@ copie";
+"MultipleReplace.Duplicate" = "Duplicați";
+"MultipleReplace.EditMenu" = "Editați înlocuirea multiplă…";
+"MultipleReplace.Export" = "Exportați…";
+"MultipleReplace.Import" = "Importați…";
+"MultipleReplace.MoveToTrash" = "Mutați în Coș";
+"MultipleReplace.NameTaken" = "Există deja un set numit „%@”.";
+"MultipleReplace.NotText" = "„%@” nu este text UTF-8.";
+"MultipleReplace.Options" = "Opțiuni…";
+"MultipleReplace.Problem" = "Regula %lu se omite: %@";
+"MultipleReplace.RemoveQuestion" = "Mutați „%@” în Coș?";
+"MultipleReplace.RemoveRule" = "Eliminați regulile selectate";
+"MultipleReplace.RemoveSet" = "Mutați setul în Coș";
+"MultipleReplace.Sets" = "Seturi";
+"MultipleReplace.ShowInFinder" = "Afișați în Finder";
+"MultipleReplace.SkippedRules" = "(reguli omise: %@; vedeți ⚠︎)";
+"MultipleReplace.Title" = "Înlocuire multiplă";
+"MultipleReplace.Untitled" = "Fără titlu";

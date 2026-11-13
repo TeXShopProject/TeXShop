@@ -1,6 +1,7 @@
 /* The Advanced Find panel (Sources/Find/TSAdvancedFind…). The keys are the code's; the English is in the code as well. */
 
 "AdvancedFind.AnchorsMatchLines" = "^ und $ gelten für jede Zeile";
+"AdvancedFind.Cancel" = "Abbrechen";
 "AdvancedFind.ClearFindHistory" = "Letzte Sucheinträge löschen";
 "AdvancedFind.ClearReplaceHistory" = "Letzte Ersetzungen löschen";
 "AdvancedFind.ClosesWhenDone" = "Fenster schließen, sobald etwas gefunden wurde";
@@ -10,6 +11,7 @@
 "AdvancedFind.FindHistory" = "Letzte Sucheinträge";
 "AdvancedFind.FindLabel" = "Suchen nach:";
 "AdvancedFind.Found" = "%lu gefunden";
+"AdvancedFind.Highlight" = "Hervorheben";
 "AdvancedFind.HighlightAll" = "Alle hervorheben";
 "AdvancedFind.History" = "Letzte Einträge";
 "AdvancedFind.IgnoreCase" = "Groß-/Kleinschreibung ignorieren";
@@ -53,3 +55,31 @@
 "AdvancedFind.Wrap" = "Gesamtes Dokument";
 "AdvancedFind.Wrapped" = "(am anderen Ende fortgesetzt)";
 "AdvancedFind.YenIsBackslash" = "¥ als \\ behandeln";
+"MultipleReplace.Action" = "Mehrfach ersetzen";
+"MultipleReplace.AddRule" = "Regel hinzufügen";
+"MultipleReplace.AddSet" = "Neuer Regelsatz";
+"MultipleReplace.BadName" = "„%@“ ist als Name eines Regelsatzes nicht möglich.";
+"MultipleReplace.Column.Count" = "Anz.";
+"MultipleReplace.Column.CountTip" = "Beim letzten Durchlauf ersetzte Treffer";
+"MultipleReplace.Column.EnabledTip" = "Diese Regel verwenden";
+"MultipleReplace.Column.Find" = "Suchen";
+"MultipleReplace.Column.Note" = "Notiz";
+"MultipleReplace.Column.Replace" = "Ersetzen";
+"MultipleReplace.CopyName" = "%@ Kopie";
+"MultipleReplace.Duplicate" = "Duplizieren";
+"MultipleReplace.EditMenu" = "Mehrfach ersetzen bearbeiten …";
+"MultipleReplace.Export" = "Exportieren …";
+"MultipleReplace.Import" = "Importieren …";
+"MultipleReplace.MoveToTrash" = "In den Papierkorb legen";
+"MultipleReplace.NameTaken" = "Ein Regelsatz namens „%@“ existiert bereits.";
+"MultipleReplace.NotText" = "„%@“ ist kein UTF-8-Text.";
+"MultipleReplace.Options" = "Optionen …";
+"MultipleReplace.Problem" = "Regel %lu wird übersprungen: %@";
+"MultipleReplace.RemoveQuestion" = "„%@“ in den Papierkorb legen?";
+"MultipleReplace.RemoveRule" = "Ausgewählte Regeln entfernen";
+"MultipleReplace.RemoveSet" = "Regelsatz in den Papierkorb legen";
+"MultipleReplace.Sets" = "Regelsätze";
+"MultipleReplace.ShowInFinder" = "Im Finder anzeigen";
+"MultipleReplace.SkippedRules" = "(Regel %@ übersprungen; siehe ⚠︎)";
+"MultipleReplace.Title" = "Mehrfach ersetzen";
+"MultipleReplace.Untitled" = "Ohne Titel";
