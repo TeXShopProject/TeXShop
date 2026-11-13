@@ -7,7 +7,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// The state of the Advanced Find panel kept between launches (the AdvancedFind… settings, plan §5).
+/// The state of the Advanced Find panel kept between launches (the AdvancedFind… settings).
 /// The defaults are passed in, so tests can use their own.
 NS_SWIFT_NAME(AdvancedFindSettings)
 @interface TSAdvancedFindSettings : NSObject

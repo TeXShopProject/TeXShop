@@ -43,6 +43,7 @@
 
 
 #import "MyPDFKitView.h"
+#import "TSContentZoom.h"
 #import "TSExternalPDFReload.h"
 #import "TSPreviewHorizontalPosition.h"
 #import "TSPreviewScrollerKeeper.h"
@@ -1986,10 +1987,6 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 
 - (void) makePageChanges: (NSInteger) pageNumber
 {
-	NSInteger		numRows, i, newlySelectedRow;
-	NSUInteger	    newPageIndex;
-	NSIndexSet		*myIndexSet;
-    PDFOutline      *outlineItem;
     // NSInteger       newValue;
     // NSString        *romanStringValue;
     
@@ -2027,6 +2024,26 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     [currentPage1 display];
  */
     
+    [self showPageInOutline: pageNumber];
+}
+
+// Selects the entry of the drawer's outline for the page.
+- (void) showPageInOutline: (NSInteger) pageNumber
+{
+	NSInteger		numRows, i, newlySelectedRow;
+	NSUInteger	    newPageIndex, newlySelectedPageIndex;
+	NSIndexSet		*myIndexSet;
+    PDFOutline      *outlineItem;
+    
+    // Only the first view of the Preview window is connected to the drawer, so the second
+    // part of a split window shows its page there through the first view (#25).
+    MyPDFKitView *firstView = (MyPDFKitView *)self.myPDFWindow.myPDFKitView;
+    if (_outlineView == nil && firstView != self && [firstView isKindOfClass: [MyPDFKitView class]])
+    {
+        [firstView showPageInOutline: pageNumber];
+        return;
+    }
+    
  	// Skip out if there is no outline.
 //	if ([[self document] outlineRoot] == NULL)
 //		return;
@@ -2055,8 +2072,11 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
  	// What is the new page number (zero-based).
     newPageIndex = pageNumber;
 
-	// Walk outline view looking for best firstpage number match.
+	// Walk outline view looking for best firstpage number match: the first entry that starts
+	// on the page, or else the last entry that starts before it, so a page between two entries
+	// belongs to the earlier one. No entry is selected for a page before the first one (#25).
 	newlySelectedRow = -1;
+	newlySelectedPageIndex = 0;
 	numRows = [_outlineView numberOfRows];
     if (numRows <= 0)
         return;
@@ -2067,28 +2087,45 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 		// Get the destination of the given row....
         // THE FOLLOWING CRASHES TEXSHOP
 		outlineItem = (PDFOutline *)[_outlineView itemAtRow: i];
- 
-		if ([[self document] indexForPage: [[outlineItem destination] page]] == newPageIndex)
+		PDFPage *itemPage = [[outlineItem destination] page];
+		if (itemPage == nil)
+			continue;
+		NSUInteger itemPageIndex = [[self document] indexForPage: itemPage];
+		if (itemPageIndex == NSNotFound || itemPageIndex > newPageIndex)
+			continue;
+		if (itemPageIndex == newPageIndex)
 		{
 			newlySelectedRow = i;
-			myIndexSet = [NSIndexSet indexSetWithIndex: i];
-			// [_outlineView selectRow: newlySelectedRow byExtendingSelection: NO]; //this was deprecated, so
-			[_outlineView selectRowIndexes: myIndexSet byExtendingSelection: NO];
+			newlySelectedPageIndex = itemPageIndex;
 			break;
 		}
-		else if ([[self document] indexForPage: [[outlineItem destination] page]] > newPageIndex)
+		if (newlySelectedRow == -1 || itemPageIndex >= newlySelectedPageIndex)
 		{
-			newlySelectedRow = i - 1;
-			myIndexSet = [NSIndexSet indexSetWithIndex: i];
-			// [_outlineView selectRow: newlySelectedRow byExtendingSelection: NO]; //this was deprecated, so
-			[_outlineView selectRowIndexes: myIndexSet byExtendingSelection: NO];
-			break;
+			newlySelectedRow = i;
+			newlySelectedPageIndex = itemPageIndex;
 		}
 	}
 
+	if (newlySelectedRow == -1)
+	{
+		[_outlineView deselectAll: nil];
+		return;
+	}
+	// An entry that was clicked stays marked while the page belongs to it, also when an
+	// earlier entry, such as its chapter, starts on the same page.
+	NSInteger oldRow = [_outlineView selectedRow];
+	if (oldRow >= 0 && oldRow != newlySelectedRow)
+	{
+		PDFPage *oldPage = [[(PDFOutline *)[_outlineView itemAtRow: oldRow] destination] page];
+		if (oldPage != nil && [[self document] indexForPage: oldPage] == newlySelectedPageIndex)
+			newlySelectedRow = oldRow;
+	}
+	myIndexSet = [NSIndexSet indexSetWithIndex: newlySelectedRow];
+	// [_outlineView selectRow: newlySelectedRow byExtendingSelection: NO]; //this was deprecated, so
+	[_outlineView selectRowIndexes: myIndexSet byExtendingSelection: NO];
+
 	// Auto-scroll.
-	if (newlySelectedRow != -1)
-		[_outlineView scrollRowToVisible: newlySelectedRow];
+	[_outlineView scrollRowToVisible: newlySelectedRow];
     
 }
 
@@ -2134,6 +2171,22 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	[self changeScale: self];
 }
 
+
+// Zoom to Content, or Zoom to Content Width (TSContentZoom.h), with the magnification
+// set as Zoom In and Zoom Out set it.
+- (void)zoomToContentWidthOnly:(BOOL)widthOnly
+{
+	[self cleanupMarquee: YES];
+	TSContentZoom(self, widthOnly, ^CGFloat(CGFloat scale) {
+		// Rounded down, so that the content stays within the view.
+		NSInteger percent = MAX(20, MIN((NSInteger)floor(scale * 100.0 + 1e-6), PDF_MAX_SCALE));
+		scaleMag = percent;
+		[myScale setIntegerValue:percent];
+		[smyScale setIntegerValue:percent];
+		[self changeScale: self];
+		return self.scaleFactor;
+	});
+}
 
 - (void) changeScale: sender
 {
@@ -4188,12 +4241,12 @@ The system then remembers the new number and sends is to the Timer which will di
         _skipLinks = skip;
 }
 
-// Whether hovering over a link with these modifier keys shows its popup. With Link Popups
-// off, Command shows it all the same, and as always Command makes it the larger popup, so
-// that Command keeps that meaning whether Link Popups is on or off (#30).
+// Whether hovering over a link with these modifier keys shows its popup. Control reverses
+// Link Popups for the link under the pointer: with Link Popups on it keeps the popup away,
+// as on the way to the contextual menu, and with Link Popups off it shows the popup (#30).
 - (BOOL) showsLinkPopupsWithModifierFlags: (NSEventModifierFlags)flags
 {
-    return !self.skipLinks || (flags & NSEventModifierFlagCommand) != 0;
+    return !self.skipLinks != ((flags & NSEventModifierFlagControl) != 0);
 }
 
 /*
@@ -4255,7 +4308,7 @@ The system then remembers the new number and sends is to the Timer which will di
     if (showsLinkPreviewCursor)
         [self showToolCursorOutsideLinkPreviewWithEvent: theEvent];
     
-// A popup shown with Command while Link Popups is off goes away like any other.
+// A popup shown with Control while Link Popups is off goes away like any other.
 if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent modifierFlags]]))
     
     {
@@ -4513,7 +4566,8 @@ if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithM
     NSEventModifierFlags modifiers = [[NSApp currentEvent] modifierFlags];
     if (aTimerNumber != self.timerNumber || self.handlingLink != 1 || !self.window)
         return;
-    // With Link Popups off, Command has to be held still when the popup would appear.
+    // Control, held when the popup would appear, shows it with Link Popups off and keeps it
+    // away with Link Popups on.
     if (![self showsLinkPopupsWithModifierFlags: modifiers]) {
         self.handlingLink = 0;
         return;
@@ -4647,8 +4701,8 @@ if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithM
 
 
 // Links whose target hovering shows in a popup, which replaces PDFKit's tool tip (#17).
-// With Link Popups off, that is while Command is held or the popup of the link under the
-// pointer is still to come or on screen (#30).
+// Control reverses Link Popups here too, and a popup of the link under the pointer that is
+// still to come or on screen keeps the tool tip away (#30).
 - (BOOL)showsLinkPreviewForAnnotation:(PDFAnnotation *)annotation
 {
     BOOL showsPopups = [self showsLinkPopupsWithModifierFlags: [NSEvent modifierFlags]] ||
@@ -8092,9 +8146,30 @@ else
 
 
 
+// When both parts of a split window show a page, PDFKit can ask the part that showed it last
+// for the menu of a click on that page in the other part (#31). The part under the click is
+// the one that makes the menu.
+- (MyPDFKitView *)previewPartForMenuEvent: (NSEvent *)theEvent
+{
+    NSWindow *window = self.window;
+    NSPoint point = [theEvent locationInWindow];
+    if (window == nil || (theEvent.window != nil && theEvent.window != window) ||
+        NSPointInRect([self convertPoint: point fromView: nil], self.bounds))
+        return self;
+    NSView *hit = [window.contentView.superview hitTest: point];
+    for (NSView *view = hit; view != nil; view = view.superview)
+        if ([view isKindOfClass: [MyPDFKitView class]])
+            return (MyPDFKitView *)view;
+    return self;
+}
+
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent
 {
     NSMenu  *aMenu;
+    
+    MyPDFKitView *part = [self previewPartForMenuEvent: theEvent];
+    if (part != self)
+        return [part menuForEvent: theEvent];
     
 	NSMenu *theMenu = [super menuForEvent: theEvent];
 	if (theMenu != nil) {
@@ -8221,6 +8296,10 @@ else
 	((TSPreviewWindow *)self.myPDFWindow).activeView = self;
 	[self fixStuff];
 	[self resetSearchDelegate];
+	// The drawer's outline shows the page of the active part (#25).
+	PDFPage *activePage = [self currentPage];
+	if (activePage)
+		[self showPageInOutline: [[self document] indexForPage: activePage]];
     [self.myDocument updatePreviewLayoutControls];
 }
 

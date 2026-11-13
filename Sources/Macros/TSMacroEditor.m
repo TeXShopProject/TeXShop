@@ -484,7 +484,9 @@ static TSFilterMode savedFilter = kNoFilterMode;
                           columnIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [outlineView numberOfColumns])]];
 }
 - (void)menuShortcutsChanged:(NSNotification *)notification { [self refreshShortcutConflicts]; }
-- (NSModalResponse)showShortcutConflicts:(NSString *)details
+// BEGIN shortcut conflicts alert
+// The alert that lists the macro shortcuts that conflict, with the three ways on.
+static NSAlert *TSShortcutConflictsAlert(NSString *details)
 {
     NSAlert *alert = [NSAlert new];
     alert.alertStyle = NSAlertStyleWarning;
@@ -501,7 +503,12 @@ static TSFilterMode savedFilter = kNoFilterMode;
     text.textContainerInset = NSMakeSize(8,8); text.textContainer.widthTracksTextView = YES;
     text.autoresizingMask = NSViewWidthSizable; text.string = details;
     scroll.documentView = text; alert.accessoryView = scroll;
-    return TSRunShortcutAlert(alert);
+    return alert;
+}
+// END shortcut conflicts alert
+- (NSModalResponse)showShortcutConflicts:(NSString *)details
+{
+    return TSRunShortcutAlert(TSShortcutConflictsAlert(details));
 }
 - (BOOL)validateMacroShortcutsBeforeSaving
 {

@@ -49,6 +49,7 @@
 
 #import "MyPDFView.h"
 #import "MyPDFKitView.h"
+#import "TSContentZoom.h"
 #import "TSToolbar.h"
 
 // added by mitsu --(H) Macro menu; macroButton
@@ -112,6 +113,7 @@ static NSString*	kNextPageButtonKKTID	= @"NextPageButtonKIT";
 static NSString*	kNextPageKKTID 			= @"NextPageKIT";
 static NSString*	kGotoPageKKTID 			= @"GotoPageKIT";
 static NSString*	kMagnificationKKTID 	= @"MagnificationKIT";
+static NSString*    kContentZoomKKTID       = @"ContentZoomKIT";
 #ifdef MITSU_PDF
 static NSString*	kMouseModeKKTID 		= @"MouseModeKIT";
 static NSString*	kBackForthKKTID			= @"BackForthKIT";
@@ -403,20 +405,33 @@ else
 // in the toolbar: it is not a navigational item, which macOS draws at the leading edge.
 - (NSToolbarItem*) makeBackForthItemWithItemIdentifier: (NSString *)itemIdent key:(NSString *)itemKey
 {
+    NSString *back = NSLocalizedStringFromTable(@"tiBack", @"ToolbarItems", nil);
+    NSString *forward = NSLocalizedStringFromTable(@"tiForward", @"ToolbarItems", nil);
     NSImage *backImage = [NSImage imageWithSystemSymbolName: @"chevron.backward"
-                                   accessibilityDescription: @"Back"] ?: [NSImage imageNamed: NSImageNameGoBackTemplate];
+                                   accessibilityDescription: back] ?: [NSImage imageNamed: NSImageNameGoBackTemplate];
     NSImage *forwardImage = [NSImage imageWithSystemSymbolName: @"chevron.forward"
-                                      accessibilityDescription: @"Forward"] ?: [NSImage imageNamed: NSImageNameGoForwardTemplate];
+                                      accessibilityDescription: forward] ?: [NSImage imageNamed: NSImageNameGoForwardTemplate];
     NSSegmentedControl *control = [NSSegmentedControl segmentedControlWithImages: @[backImage, forwardImage]
                                                                     trackingMode: NSSegmentSwitchTrackingMomentary
                                                                           target: self action: @selector(doBackForward:)];
+    [control setToolTip: NSLocalizedStringFromTable(@"tiToolTipGoBack", @"ToolbarItems", nil) forSegment: 0];
+    [control setToolTip: NSLocalizedStringFromTable(@"tiToolTipGoForward", @"ToolbarItems", nil) forSegment: 1];
     NSToolbarItem *textItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:itemKey];
     TSBackForwardToolbarItem *toolbarItem = [[TSBackForwardToolbarItem alloc] initWithItemIdentifier: itemIdent];
     toolbarItem.label = textItem.label;
     toolbarItem.paletteLabel = textItem.paletteLabel;
-    toolbarItem.toolTip = textItem.toolTip;
+    // Back and Forward have their own tool tips, so the item has none of its own.
     toolbarItem.view = control;
     toolbarItem.document = self;
+    // A text-only toolbar, and the menu of items that do not fit, show Back and Forward
+    // as a submenu of the item.
+    NSMenu *submenu = [[NSMenu alloc] init];
+    [submenu addItemWithTitle: back action: @selector(doBack:) keyEquivalent: @""].target = self;
+    [submenu addItemWithTitle: forward action: @selector(doForward:) keyEquivalent: @""].target = self;
+    NSMenuItem *menuFormRep = [[NSMenuItem alloc] init];
+    menuFormRep.title = toolbarItem.label;
+    menuFormRep.submenu = submenu;
+    toolbarItem.menuFormRepresentation = menuFormRep;
     return toolbarItem;
 }
 
@@ -509,6 +524,36 @@ else
                 if (choice.action) choice.enabled = [self validatePreviewLayoutItem:choice];
         }
     }
+}
+
+// Zoom to Content and Zoom to Content Width (TSContentZoom.h), for the active part of the preview.
+- (NSToolbarItem *)contentZoomToolbarItem
+{
+    NSArray *names = TSContentZoomLabels(), *symbols = TSContentZoomSymbols();
+    NSMutableArray *images = [NSMutableArray array];
+    for (NSUInteger i = 0; i < symbols.count; i++)
+        [images addObject:[NSImage imageWithSystemSymbolName:symbols[i] accessibilityDescription:names[i]] ?: [NSImage new]];
+    NSToolbarItemGroup *group = [NSToolbarItemGroup groupWithItemIdentifier:kContentZoomKKTID images:images
+        selectionMode:NSToolbarItemGroupSelectionModeMomentary labels:names target:self action:@selector(zoomPreviewToContent:)];
+    // Kept as separate buttons: AppKit would size them by their labels and fold them into a menu.
+    group.controlRepresentation = NSToolbarItemGroupControlRepresentationExpanded;
+    group.label = group.paletteLabel = names[0];
+    for (NSUInteger i = 0; i < group.subitems.count; i++) group.subitems[i].toolTip = names[i];
+    return group;
+}
+
+- (void)zoomPreviewToContent:(id)sender
+{
+    NSInteger index = NSNotFound;
+    if ([sender isKindOfClass:[NSToolbarItemGroup class]])
+        index = [(NSToolbarItemGroup *)sender selectedIndex];
+    else if ([sender isKindOfClass:[NSToolbarItem class]])
+        for (NSToolbarItem *item in [(NSToolbarItem *)sender toolbar].items)
+            if ([item isKindOfClass:[NSToolbarItemGroup class]] && [[(NSToolbarItemGroup *)item subitems] containsObject:sender])
+                index = [[(NSToolbarItemGroup *)item subitems] indexOfObject:sender];
+    MyPDFKitView *view = [self pdfKitView];
+    if ((index == 0 || index == 1) && view.document)
+        [view zoomToContentWidthOnly:index == 1];
 }
 
 - (void) setupToolbar
@@ -711,6 +756,8 @@ static NSString *TSPreviewPageItemKey(NSString *itemIdent)
     
     if ([itemIdent isEqual:TSPreviewLayoutToolbarID] || [itemIdent isEqual:TSPreviewArrangementToolbarID])
         return TSPreviewLayoutItem(self, itemIdent);
+    if ([itemIdent isEqual:kContentZoomKKTID])
+        return [self contentZoomToolbarItem];
 // added by Terada (from this line)
     if ([itemIdent isEqual:TSPreviewAppearanceToolbarID])
         return TSPreviewAppearanceItem(self);
@@ -1169,51 +1216,8 @@ if ([itemIdent isEqual: kSplitKKTID]) {
         return [self makeToolbarSymbolsItemWithItemIdentifier:itemIdent key:itemIdent symbolName: @"chevron.right" accessibility: @"Next Page" imageName:@"NextPageAction" newImageName:@"chevron.right" target:self action:@selector(doHtmlNextPage:)];
      }
 
-	if ([itemIdent isEqual: kBackForthKKTID]) {
-        
-        toolbarItem = [self makeBackForthItemWithItemIdentifier: itemIdent key:itemIdent];
-        
-  		//toolbarItem =  [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent
-		//											customView:backforthKK];
-		menuFormRep = [[NSMenuItem alloc] init];
-		[menuFormRep setTitle: [toolbarItem label]];
-
-		submenu = [[NSMenu alloc] init];
-		submenuItem = [[NSMenuItem alloc] initWithTitle: @"Back" action: @selector(doBack:) keyEquivalent:@""];
-		[submenuItem setTarget: self];
-		[submenu addItem: submenuItem];
-		submenuItem = [[NSMenuItem alloc] initWithTitle: @"Forward" action: @selector(doForward:) keyEquivalent:@""];
-		[submenuItem setTarget: self];
-		[submenu addItem: submenuItem];
-		[menuFormRep setSubmenu: submenu];
-
-
-
-		// [menuFormRep setAction: @selector(doBackForth:)];
-		[toolbarItem setMenuFormRepresentation: menuFormRep];
-		return toolbarItem;
-	}
-    
-    if ([itemIdent isEqual: skBackForthKKTID]) {
-        
-        toolbarItem = [self makeBackForthItemWithItemIdentifier: itemIdent key:itemIdent];
-        
-         
-        menuFormRep = [[NSMenuItem alloc] init];
-        [menuFormRep setTitle: [toolbarItem label]];
-
-        submenu = [[NSMenu alloc] init];
-        submenuItem = [[NSMenuItem alloc] initWithTitle: @"Back" action: @selector(doBack:) keyEquivalent:@""];
-        [submenuItem setTarget: self];
-        [submenu addItem: submenuItem];
-        submenuItem = [[NSMenuItem alloc] initWithTitle: @"Forward" action: @selector(doForward:) keyEquivalent:@""];
-        [submenuItem setTarget: self];
-        [submenu addItem: submenuItem];
-        [menuFormRep setSubmenu: submenu];
-
-       [toolbarItem setMenuFormRepresentation: menuFormRep];
-        return toolbarItem;
-    }
+	if ([itemIdent isEqual: kBackForthKKTID] || [itemIdent isEqual: skBackForthKKTID])
+		return [self makeBackForthItemWithItemIdentifier: itemIdent key:itemIdent];
 
 
     toolbarItem = [self makePreviewPageItemWithItemIdentifier:itemIdent];
@@ -1966,6 +1970,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 					kMetaFontID,
 					kGotoPageKKTID,
 					kMagnificationKKTID,
+					kContentZoomKKTID,
 					kMouseModeKKTID,
 // added by Terada (from this line)
 					TSPreviewAppearanceToolbarID,
@@ -2004,6 +2009,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 					kMetaFontID,
 					kGotoPageKKTID,
 					kMagnificationKKTID,
+					kContentZoomKKTID,
 					kMouseModeKKTID,
 // added by Terada (from this line)
 					TSPreviewAppearanceToolbarID,
@@ -2046,6 +2052,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 					kDrawerKKTID,
 	                skGotoPageKKTID,
                     skMagnificationKKTID,
+                    kContentZoomKKTID,
 					skMouseModeTID,
 // added by Terada (from this line)
 					TSPreviewAppearanceToolbarID,
@@ -2081,6 +2088,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 					kDrawerKKTID,
 	                skGotoPageKKTID,
                     skMagnificationKKTID,
+                    kContentZoomKKTID,
 					skMouseModeTID,
 // added by Terada (from this line)
 					TSPreviewAppearanceToolbarID,

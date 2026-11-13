@@ -333,7 +333,7 @@ BOOL TSPreferenceProfilePreservesKey(TSPreferenceKey key)
         ConsoleWindowNameKey,
         DocumentSplitWindowPositionKey,
         DocumentWindowNameKey,
-        FindMethodKey, // a matter of taste, not of the TeX engine: a profile keeps the find method (plan §5)
+        FindMethodKey, // a matter of taste, not of the TeX engine: a profile keeps the find method
         FullSplitSourceFractionKey,
         HtmlWindowNameKey,
         LastStyNameKey,

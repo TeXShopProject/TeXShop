@@ -172,11 +172,13 @@ tiToolTipSyncMarksKIT			= "Mostrar Sync Marks";
 
 tiLabelBackForthKIT				= "Atrás/Adelante";
 tiPaletteLabelBackForthKIT		= "Atrás/Adelante";
-tiToolTipBackForthKIT			= "Botones Atrás/Adelante";
+tiToolTipGoBack				= "Atrás";
+tiToolTipGoForward			= "Adelante";
+tiBack					= "Atrás";
+tiForward				= "Adelante";
 
 tiLabelBackForthKITSplit                = "Atrás/Adelante";
 tiPaletteLabelBackForthKITSplit        = "Atrás/Adelante";
-tiToolTipBackForthKITSplit            = "Botones Atrás/Adelante";
 
 tiLabelDrawerKIT				= "Cajón";
 tiPaletteLabelDrawerKIT			= "Cajón";
@@ -273,6 +275,7 @@ tiToolTipHtmlSearch           = "Buscar";
 "ExperimentZoomOut" = "Alejar";
 "ExperimentZoomIn" = "Acercar";
 "ExperimentZoomToContent" = "Ajustar al contenido";
+"ExperimentZoomToContentWidth" = "Ajustar al ancho del contenido";
 
 "Page Layout" = "Disposición de página";
 "tiLabelTSPreviewAppearance" = "Aspecto";

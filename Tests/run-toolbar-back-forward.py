@@ -5,8 +5,12 @@ The Back/Forward item of the Preview window (BackForthKIT) and of the single win
 (BackForthKITSplit) shows the chevrons of Apple's Preview (chevron.backward and
 chevron.forward), highlights a segment only while it is clicked, dims Back or Forward
 when the preview has no page to go back or forward to, and sends Back or Forward to
-the preview. Identifiers, label, palette label, tool tip and command are
-unchanged in every language, and a saved toolbar draws the item where it was saved:
+the preview. Back and Forward each have their own translated tool tip ("Go Back" and
+"Go Forward" in English), and the item has none of its own over them. VoiceOver reads
+Back and Forward, and a text-only toolbar shows them as a submenu, in the words of the
+language. The label does not use the words of Previous Page and Next Page (Dutch and
+European Portuguese used to). Identifiers and command are unchanged, and a saved
+toolbar draws the item where it was saved:
 the item is not a navigational item, which macOS draws at the leading edge.
 Nothing is shown on screen and no user settings are read.
 """
@@ -16,7 +20,9 @@ from production_fragments import method as production_method, verify_embedded
 from source_tree import include_args, source_file
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['triangles', 'select-one', 'navigational', 'swapped', 'always-enabled', 'no-history-observer'])
+parser.add_argument('--mutation', choices=['triangles', 'select-one', 'navigational', 'swapped', 'always-enabled', 'no-history-observer',
+                                               'no-segment-tips', 'keep-item-tip', 'swapped-tips', 'english-menu',
+                                               'english-accessibility', 'no-menu', 'swapped-menu', 'dutch-previous-next'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 toolbar = (root/'Sources/Windows/TSToolbarController.m').read_text()
@@ -42,17 +48,14 @@ methods = '\n'.join(method(toolbar, s) for s in [
 commands = '\n'.join(method(document, s) for s in [
     '- (void)doBackForward:(id)sender', '- (void)doForward:(id)sender', '- (void)doBack:(id)sender'])
 
-# Both preview toolbars build the item with the helper compiled below and keep
-# their Back and Forward menu for text-only toolbars.
+# Both preview toolbars take the item, with its menu for text-only toolbars, as the
+# helper compiled below makes it.
 item_for = production_method(toolbar, '- (NSToolbarItem *) toolbar: (NSToolbar *)toolbar itemForItemIdentifier:')
-assert item_for.count('makeBackForthItemWithItemIdentifier') == 2
-for ident in ('kBackForthKKTID', 'skBackForthKKTID'):
-    branch = item_for[item_for.index(f'if ([itemIdent isEqual: {ident}])'):]
-    branch = branch[:branch.index('return toolbarItem;')]
-    assert branch.count('toolbarItem = [self makeBackForthItemWithItemIdentifier: itemIdent key:itemIdent];') == 1, ident
-    for command in ('@selector(doBack:)', '@selector(doForward:)', '[menuFormRep setSubmenu: submenu];',
-                    '[toolbarItem setMenuFormRepresentation: menuFormRep];'):
-        assert branch.count(command) == 1, f'{ident} keeps its menu: {command}'
+assert item_for.count('makeBackForthItemWithItemIdentifier') == 1
+assert item_for.count('if ([itemIdent isEqual: kBackForthKKTID] || [itemIdent isEqual: skBackForthKKTID])\n'
+                      '\t\treturn [self makeBackForthItemWithItemIdentifier: itemIdent key:itemIdent];') == 1
+# No English words for Back and Forward are left in the toolbar code.
+assert '@"Back"' not in toolbar and '@"Forward"' not in toolbar, 'Back and Forward come from ToolbarItems.strings'
 assert 'arrowtriangle' not in toolbar, 'No triangle symbols left in the toolbar'
 # A new document in a preview and a change of the active preview validate the item
 # at once: both go through updatePreviewLayoutControls, which validates it.
@@ -76,6 +79,20 @@ elif args.mutation == 'swapped':
     mutate('@[backImage, forwardImage]', '@[forwardImage, backImage]')
 elif args.mutation == 'no-history-observer':
     mutate('            [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(previewHistoryChanged:) name: name object: nil];', '            ;')
+elif args.mutation == 'no-segment-tips':
+    mutate('    [control setToolTip: NSLocalizedStringFromTable(@"tiToolTipGoBack", @"ToolbarItems", nil) forSegment: 0];\n', '')
+elif args.mutation == 'keep-item-tip':
+    mutate('    toolbarItem.paletteLabel = textItem.paletteLabel;\n', '    toolbarItem.paletteLabel = textItem.paletteLabel;\n    toolbarItem.toolTip = textItem.toolTip;\n')
+elif args.mutation == 'swapped-tips':
+    mutate('@"tiToolTipGoBack", @"ToolbarItems", nil) forSegment: 0', '@"tiToolTipGoForward", @"ToolbarItems", nil) forSegment: 0')
+elif args.mutation == 'english-menu':
+    mutate('[submenu addItemWithTitle: back action:', '[submenu addItemWithTitle: @"Back" action:')
+elif args.mutation == 'english-accessibility':
+    mutate('accessibilityDescription: forward]', 'accessibilityDescription: @"Forward"]')
+elif args.mutation == 'no-menu':
+    mutate('    toolbarItem.menuFormRepresentation = menuFormRep;\n', '')
+elif args.mutation == 'swapped-menu':
+    mutate('action: @selector(doBack:)', 'action: @selector(doForward:)')
 elif args.mutation == 'always-enabled':
     mutate('    [control setEnabled: view.canGoBack forSegment: 0];\n    [control setEnabled: view.canGoForward forSegment: 1];\n', '')
 
@@ -165,9 +182,30 @@ int main(int argc, char **argv) { @autoreleasepool {
   NSToolbarItem *item = [d makeBackForthItemWithItemIdentifier:ident key:ident];
   NSString *where = [NSString stringWithFormat:@"%@ %@", language, ident];
   Check([item.itemIdentifier isEqual:ident] && item.tag == 0, [@"Identifier and tag: " stringByAppendingString:where]);
-  NSArray *text = @[item.label, item.paletteLabel, item.toolTip];
-  Check([text isEqual:@[Localized([@"tiLabel" stringByAppendingString:ident]), Localized([@"tiPaletteLabel" stringByAppendingString:ident]), Localized([@"tiToolTip" stringByAppendingString:ident])]], [@"Text from its own keys: " stringByAppendingString:where]);
+  NSSegmentedControl *tipped = (NSSegmentedControl *)item.view;
+  Check(item.toolTip.length == 0 && tipped.toolTip.length == 0, [NSString stringWithFormat:@"No tool tip of the item over Back and Forward: %@ (%@ / %@)", where, item.toolTip, tipped.toolTip]);
+  NSArray *text = @[item.label, item.paletteLabel, [tipped toolTipForSegment:0] ?: @"", [tipped toolTipForSegment:1] ?: @"",
+                    [tipped imageForSegment:0].accessibilityDescription ?: @"", [tipped imageForSegment:1].accessibilityDescription ?: @""];
+  Check([text isEqual:@[Localized([@"tiLabel" stringByAppendingString:ident]), Localized([@"tiPaletteLabel" stringByAppendingString:ident]), Localized(@"tiToolTipGoBack"), Localized(@"tiToolTipGoForward"), Localized(@"tiBack"), Localized(@"tiForward")]], [NSString stringWithFormat:@"Text from its own keys: %@ %@", where, text]);
   for (NSString *one in text) Check(one.length && ![one isEqual:@"MISSING"] && ![one hasPrefix:@"ti"], [@"Real text: " stringByAppendingString:where]);
+  Check(![text[2] isEqual:text[3]], [@"Back and Forward have different tool tips: " stringByAppendingString:where]);
+  Check(![text[4] isEqual:text[5]], [@"Back and Forward have different names: " stringByAppendingString:where]);
+  if (![language isEqual:@"en"]) for (NSUInteger n = 0; n < text.count; n++) Check(![text[n] isEqual:EXPECTED_TEXT[@"en"][n]], [NSString stringWithFormat:@"Translated: %@ %@", where, text[n]]);
+  // The label does not use the words of the Previous Page and Next Page buttons.
+  for (NSString *word in [item.label componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/／"]])
+   for (NSString *key in @[@"tiLabelPreviousPageButtonKIT", @"tiLabelNextPageButtonKIT"])
+    Check([word caseInsensitiveCompare:Localized(key)] != NSOrderedSame, [NSString stringWithFormat:@"Not the word of %@: %@ %@", key, where, item.label]);
+  // VoiceOver reads the name of each segment.
+  NSMutableArray *spoken = [NSMutableArray array];
+  for (id segment in [tipped.cell accessibilityChildren]) [spoken addObject:[NSString stringWithFormat:@"%@ %@", [segment accessibilityRole], [segment accessibilityLabel]]];
+  Check([spoken isEqual:@[[@"AXButton " stringByAppendingString:text[4]], [@"AXButton " stringByAppendingString:text[5]]]], [NSString stringWithFormat:@"VoiceOver names: %@ %@", where, spoken]);
+  // A text-only toolbar shows the item as a submenu with Back and Forward.
+  NSMenuItem *menuForm = item.menuFormRepresentation;
+  Check([menuForm.title isEqual:item.label] && menuForm.submenu.numberOfItems == 2, [NSString stringWithFormat:@"Menu of a text-only toolbar: %@ %@", where, menuForm]);
+  Check([[menuForm.submenu.itemArray valueForKey:@"title"] isEqual:@[text[4], text[5]]], [NSString stringWithFormat:@"Menu names: %@ %@", where, [menuForm.submenu.itemArray valueForKey:@"title"]]);
+  for (NSMenuItem *entry in menuForm.submenu.itemArray) Check(entry.target == d && entry.keyEquivalent.length == 0 && !entry.hasSubmenu, [@"Menu targets: " stringByAppendingString:where]);
+  [view.log removeAllObjects]; [menuForm.submenu performActionForItemAtIndex:0]; [menuForm.submenu performActionForItemAtIndex:1];
+  Check([view.log isEqual:@[@"back", @"forward"]], [NSString stringWithFormat:@"Menu commands: %@ %@", where, view.log]);
   NSArray *expected = EXPECTED_TEXT[language];
   if (expected) { Check([text isEqual:expected], [NSString stringWithFormat:@"Exact text: %@ %@", where, text]); checkedText++; }
   Check(!item.navigational, [@"Not a navigational item: " stringByAppendingString:where]);
@@ -177,7 +215,6 @@ int main(int argc, char **argv) { @autoreleasepool {
   Check(control.segmentCount == 2, [@"Two segments: " stringByAppendingString:where]);
   Check([Pixels([control imageForSegment:0]) isEqual:back] && [Pixels([control imageForSegment:1]) isEqual:forward], [@"Preview's chevrons: " stringByAppendingString:where]);
   Check(![Pixels([control imageForSegment:0]) isEqual:Symbol(@"arrowtriangle.left.fill")] && ![Pixels([control imageForSegment:1]) isEqual:Symbol(@"arrowtriangle.right.fill")], [@"No triangles: " stringByAppendingString:where]);
-  Check([[control imageForSegment:0].accessibilityDescription isEqual:@"Back"] && [[control imageForSegment:1].accessibilityDescription isEqual:@"Forward"], [@"Accessibility descriptions: " stringByAppendingString:where]);
   Check([control labelForSegment:0].length == 0 && [control labelForSegment:1].length == 0, [@"Icons only: " stringByAppendingString:where]);
   Check(control.trackingMode == NSSegmentSwitchTrackingMomentary, [@"Highlighted only while clicked: " stringByAppendingString:where]);
   Check([control tagForSegment:0] == 0 && [control tagForSegment:1] == 1, [@"Segment tags as before (0, 1): " stringByAppendingString:where]);
@@ -218,12 +255,10 @@ int main(int argc, char **argv) { @autoreleasepool {
    Check(view.log.count == 0, [NSString stringWithFormat:@"Dimmed Back does nothing: %@ %@", where, view.log]);
   }
   view.canGoBack = YES;
-  // The menu of a text-only toolbar sends the same commands.
-  [view.log removeAllObjects]; [d doBack:nil]; [d doForward:nil];
-  Check([view.log isEqual:@[@"back", @"forward"]], [@"Menu commands: " stringByAppendingString:where]);
  }
- Check([Localized(@"tiLabelBackForthKIT") isEqual:Localized(@"tiLabelBackForthKITSplit")] && [Localized(@"tiToolTipBackForthKIT") isEqual:Localized(@"tiToolTipBackForthKITSplit")], @"Both windows show the same text");
- Check(checkedText == (EXPECTED_TEXT[language] ? 2 : 0), @"Exact text checked where listed");
+ Check([Localized(@"tiLabelBackForthKIT") isEqual:Localized(@"tiLabelBackForthKITSplit")] && [Localized(@"tiPaletteLabelBackForthKIT") isEqual:Localized(@"tiPaletteLabelBackForthKITSplit")], @"Both windows show the same text");
+ Check([Localized(@"tiToolTipBackForthKIT") isEqual:@"MISSING"] && [Localized(@"tiToolTipBackForthKITSplit") isEqual:@"MISSING"], @"The tool tip of the whole item is gone");
+ Check(checkedText == 2, @"Exact text checked in every language");
 
  // A real preview: the item follows the preview's history as pages change, with no
  // other validation, and follows the preview that is active.
@@ -300,18 +335,34 @@ int main(int argc, char **argv) { @autoreleasepool {
   }
  }
  Check(placed == 8, @"All saved toolbars checked");
- NSLog(@"%@ PASS: Back/Forward shows Preview's chevrons, highlights only while clicked, is dimmed with no page to go to, keeps its text, command and saved place", language);
+ NSLog(@"%@ PASS: Back/Forward shows Preview's chevrons with their own tool tips and translated names and menu, highlights only while clicked, is dimmed with no page to go to, keeps its labels, command and saved place", language);
 }}
 '''
+# Label, palette label, the tool tips of Back and Forward, and the names of Back and
+# Forward that VoiceOver reads and the menu of a text-only toolbar shows. They use the
+# words of Back and Forward in the Preview menu. Dutch uses the words of Back and
+# Forward in Apple's Preview and in TeXShop's Settings window (Terug, Vooruit), since its
+# Preview menu uses Vorige and Volgende, the label of Previous Page and Next Page. In
+# European Portuguese Anterior and Seguinte also name Previous Page and Next Page.
 expected = {
-    'en': [('Back/Forward', 'Back/Forward', 'Back Forward Buttons')] * 2,
-    'ja': [('戻る／進む', '戻る／進む', 'ページを戻したり進めたりするボタンです')] * 2,
+    'en': [('Back/Forward', 'Back/Forward', 'Go Back', 'Go Forward', 'Back', 'Forward')] * 2,
+    'de': [('Zurück/Vorwärts', 'Zurück/Vorwärts', 'Zurück', 'Vorwärts', 'Zurück', 'Vorwärts')] * 2,
+    'es': [('Atrás/Adelante', 'Atrás/Adelante', 'Atrás', 'Adelante', 'Atrás', 'Adelante')] * 2,
+    'fr': [('Revenir/Avancer', 'Revenir/Avancer', 'Revenir', 'Avancer', 'Revenir', 'Avancer')] * 2,
+    'it': [('Indietro/Avanti', 'Indietro/Avanti', 'Indietro', 'Avanti', 'Indietro', 'Avanti')] * 2,
+    'ja': [('戻る／進む', '戻る／進む', '戻る', '進む', '戻る', '進む')] * 2,
+    'ko': [('뒤로/앞으로', '뒤로/앞으로', '뒤로', '앞으로', '뒤로', '앞으로')] * 2,
+    'nl': [('Terug/Vooruit', 'Terug/Vooruit', 'Terug', 'Vooruit', 'Terug', 'Vooruit')] * 2,
+    'pt-PT': [('Retroceder/Avançar', 'Retroceder/Avançar', 'Retroceder', 'Avançar', 'Retroceder', 'Avançar')] * 2,
+    'pt': [('Voltar/Avançar', 'Voltar/Avançar', 'Voltar', 'Avançar', 'Voltar', 'Avançar')] * 2,
+    'ro': [('Înapoi/Înainte', 'Înapoi/Înainte', 'Înapoi', 'Înainte', 'Înapoi', 'Înainte')] * 2,
+    'zh_CN': [('返回/前进', '返回/前进', '返回', '前进', '返回', '前进')] * 2,
 }
 objc = lambda text: '@"' + text.replace('\\', '\\\\').replace('"', '\\"') + '"'
 table = '@{' + ', '.join('@"%s": @[%s]' % (language, ', '.join(map(objc, items[0])))
                          for language, items in expected.items()) + '}'
 languages = sorted(p.parent.stem for p in (root/'Resources/Interfaces').glob('*.lproj/ToolbarItems.strings'))
-assert len(languages) == 12 and set(expected) <= set(languages), languages
+assert len(languages) == 12 and set(expected) == set(languages), languages
 program = program.replace('CONSTANTS', constants).replace('METHODS', methods).replace('COMMANDS', commands).replace('ITEM_CLASS', item_class).replace('EXPECTED_TEXT', table)
 if not args.mutation:
     verify_embedded(program, fragments)
@@ -323,6 +374,9 @@ with tempfile.TemporaryDirectory(prefix='TeXShop-back-forward-') as tmp:
     for language in languages:
         res = app/f'Contents/Resources/{language}.lproj'; res.mkdir(parents=True)
         shutil.copy(root/f'Resources/Interfaces/{language}.lproj/ToolbarItems.strings', res)
+    if args.mutation == 'dutch-previous-next':
+        strings = app/'Contents/Resources/nl.lproj/ToolbarItems.strings'
+        strings.write_text(strings.read_text().replace('"Terug/Vooruit"', '"Vorige/Volgende"'))
     source = tmp/'Test.m'; source.write_text(program)
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-fmodules', '-w', *include_args(root), '-I'+str(root/'Tests'),
                     '-framework', 'Cocoa', str(source), '-o', str(mac/'BackForwardTest')], check=True)

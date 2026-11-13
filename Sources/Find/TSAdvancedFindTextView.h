@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-// The small shared piece of plan §5 (stage 7): every text view that finds with the Advanced Find panel, not only
-// TSTextView. The console and the log are plain NSTextViews, the Experiment source is ScrapTextView, the Experiment
+// A small shared piece for every text view that finds with the Advanced Find panel, not only TSTextView. The console and the log are plain NSTextViews, the Experiment source is ScrapTextView, the Experiment
 // output a plain NSTextView made in code. Each one routes the find menu to the controller and draws the search
-// highlights (plan §6), which live in the layout manager's background pass.
+// highlights, which live in the layout manager's background pass.
 #import <Cocoa/Cocoa.h>
 #import "TSAdvancedFindController.h"
 #import "TSAdvancedFindHighlights.h"

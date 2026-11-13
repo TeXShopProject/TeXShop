@@ -173,7 +173,6 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     NSButton *more = [NSButton buttonWithImage:moreImage target:self action:@selector(showOptions:)];
     more.controlSize = NSControlSizeSmall;
     more.toolTip = TSLocalized(@"AdvancedFind.MoreOptions", @"More Options");
-    // The regular expression cheat sheet's "?" after "Regular expression" comes with stage 6.
     NSStackView *row = [NSStackView stackViewWithViews:@[self.regexBox, self.ignoreCaseBox, self.inSelectionBox]];
     row.spacing = 16;
     [row addView:more inGravity:NSStackViewGravityTrailing];
@@ -334,8 +333,7 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     [self loadStrings];
 }
 
-/// The engine's error on the find pattern, in the line under the options (the coloring of the fields and its notes
-/// come with stage 6).
+/// The engine's error on the find pattern, in the line under the options.
 - (void)validatePattern
 {
     TSAdvancedFindSettings *settings = self.findController.settings;

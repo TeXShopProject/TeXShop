@@ -256,6 +256,7 @@
 - (void) scrollByDragging: (NSEvent *)theEvent;
 - (void) zoomIn: (id)sender;
 - (void) zoomOut: (id)sender;
+- (void)zoomToContentWidthOnly:(BOOL)widthOnly;
 - (void) fancyMouseDown: (NSEvent *)theEvent;
 - (BOOL) toolIsMagnification;
 - (BOOL) validateMenuItem:(NSMenuItem *)anItem;
@@ -308,6 +309,7 @@
 - (void)keyDown:(NSEvent *)theEvent;
 - (void)updateBackground: (NSRect)aRect;
 // - (void)goToKitPageNumber: (NSInteger) thePage;
+- (MyPDFKitView *)previewPartForMenuEvent: (NSEvent *)theEvent;
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent;
 - (PDFDestination *)internalLinkDestinationAtPoint: (NSPoint)viewPoint;
 - (void)splitWindowWithLink: (id)sender;

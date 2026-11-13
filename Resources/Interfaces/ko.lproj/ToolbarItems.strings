@@ -171,11 +171,13 @@ tiToolTipSyncMarksKIT			= "동기화 마크 보기";
 
 tiLabelBackForthKIT				= "뒤로/앞으로";
 tiPaletteLabelBackForthKIT		= "뒤로/앞으로";
-tiToolTipBackForthKIT			= "뒤로/앞으로 버튼";
+tiToolTipGoBack				= "뒤로";
+tiToolTipGoForward			= "앞으로";
+tiBack					= "뒤로";
+tiForward				= "앞으로";
 
 tiLabelBackForthKITSplit                = "뒤로/앞으로";
 tiPaletteLabelBackForthKITSplit        = "뒤로/앞으로";
-tiToolTipBackForthKITSplit            = "뒤로/앞으로 버튼";
 
 tiLabelDrawerKIT				= "서랍";
 tiPaletteLabelDrawerKIT			= "서랍";
@@ -268,6 +270,7 @@ tiToolTipHtmlSearch           = "검색";
 "ExperimentZoomOut" = "축소";
 "ExperimentZoomIn" = "확대";
 "ExperimentZoomToContent" = "내용에 맞추기";
+"ExperimentZoomToContentWidth" = "내용 너비에 맞추기";
 
 "Page Layout" = "페이지 레이아웃";
 "tiLabelTSPreviewAppearance" = "화면 모드";

@@ -176,11 +176,13 @@ tiToolTipSyncMarksKIT			= "Afficher les marques synchro";
 
 tiLabelBackForthKIT				= "Revenir/Avancer";
 tiPaletteLabelBackForthKIT		= "Revenir/Avancer";
-tiToolTipBackForthKIT			= "Boutons Revenir et Avancer";
+tiToolTipGoBack				= "Revenir";
+tiToolTipGoForward			= "Avancer";
+tiBack					= "Revenir";
+tiForward				= "Avancer";
 
 tiLabelBackForthKITSplit                = "Revenir/Avancer";
 tiPaletteLabelBackForthKITSplit        = "Revenir/Avancer";
-tiToolTipBackForthKITSplit            = "Boutons Revenir et Avancer";
 
 tiLabelDrawerKIT				= "Tiroir";
 tiPaletteLabelDrawerKIT			= "Tiroir";
@@ -274,6 +276,7 @@ tiToolTipHtmlSearch           = "Rechercher";
 "ExperimentZoomOut" = "Zoom arrière";
 "ExperimentZoomIn" = "Zoom avant";
 "ExperimentZoomToContent" = "Zoom sur le contenu";
+"ExperimentZoomToContentWidth" = "Zoom sur la largeur du contenu";
 
 "Page Layout" = "Format d’affichage";
 "tiLabelTSPreviewAppearance" = "Apparence";
