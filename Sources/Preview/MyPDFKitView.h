@@ -308,6 +308,7 @@
 - (void)keyDown:(NSEvent *)theEvent;
 - (void)updateBackground: (NSRect)aRect;
 // - (void)goToKitPageNumber: (NSInteger) thePage;
+- (MyPDFKitView *)previewPartForMenuEvent: (NSEvent *)theEvent;
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent;
 - (PDFDestination *)internalLinkDestinationAtPoint: (NSPoint)viewPoint;
 - (void)splitWindowWithLink: (id)sender;

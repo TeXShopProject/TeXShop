@@ -8092,9 +8092,30 @@ else
 
 
 
+// When both parts of a split window show a page, PDFKit can ask the part that showed it last
+// for the menu of a click on that page in the other part (#31). The part under the click is
+// the one that makes the menu.
+- (MyPDFKitView *)previewPartForMenuEvent: (NSEvent *)theEvent
+{
+    NSWindow *window = self.window;
+    NSPoint point = [theEvent locationInWindow];
+    if (window == nil || (theEvent.window != nil && theEvent.window != window) ||
+        NSPointInRect([self convertPoint: point fromView: nil], self.bounds))
+        return self;
+    NSView *hit = [window.contentView.superview hitTest: point];
+    for (NSView *view = hit; view != nil; view = view.superview)
+        if ([view isKindOfClass: [MyPDFKitView class]])
+            return (MyPDFKitView *)view;
+    return self;
+}
+
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent
 {
     NSMenu  *aMenu;
+    
+    MyPDFKitView *part = [self previewPartForMenuEvent: theEvent];
+    if (part != self)
+        return [part menuForEvent: theEvent];
     
 	NSMenu *theMenu = [super menuForEvent: theEvent];
 	if (theMenu != nil) {
