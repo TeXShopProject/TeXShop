@@ -312,6 +312,8 @@
     [_sparkleAutomaticButton setState:[defaults boolForKey:SparkleAutomaticUpdateKey]];
 
     [_sparkleIntervalMatrix selectCellWithTag:[defaults integerForKey:SparkleIntervalKey]];
+    self.sparklePrereleaseButton.state = [defaults boolForKey:SparklePrereleaseUpdatesKey] ? NSControlStateValueOn : NSControlStateValueOff;
+    if (defaults == SUD) [self refreshSparkleLastCheck];
 #ifdef USESPARKLE
     if (defaults == SUD && [TSSparkleController sharedUpdater] != nil)
     {

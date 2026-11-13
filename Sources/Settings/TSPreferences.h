@@ -243,6 +243,9 @@
 @property (strong) TSSettingsChangeNotes *settingsChangeNotes;
 @property NSUInteger themeOperationGeneration;
 @property (strong) NSButton *legacySpellCheckButton;
+@property (strong) NSButton *sparklePrereleaseButton;
+@property (strong) NSTextField *sparkleLastCheckField;
+@property (strong) NSButton *sparkleCheckNowButton;
 @property (strong) TSAutoCompletionListEditor *keyBindingEditor;
 @property (strong) HelpDocuments *settingsHelpDocuments;
 - (IBAction)displayCommentLines:(id)sender;
@@ -369,6 +372,10 @@
 
 - (IBAction)sparkleAutomaticCheck:sender;
 - (IBAction)sparkleInterval:sender;
+- (IBAction)sparklePrereleaseUpdates:(NSButton *)sender;
+- (IBAction)checkForUpdatesFromSettings:(id)sender;
+- (void)sparkleStatusControlsDidLoad;
+- (void)refreshSparkleLastCheck;
 
 
 - (IBAction)texAwareSpellCheckPressed:(NSButton *)sender;

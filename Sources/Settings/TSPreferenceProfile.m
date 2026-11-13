@@ -220,6 +220,8 @@ NSSet<TSPreferenceKey> *TSKnownPreferenceKeys(void)
             TSProfileKeySpaceCharacterKindExtended,
             SparkleAutomaticUpdateKey,
             SparkleIntervalKey,
+            SparklePrereleaseUpdatesKey,
+            SparklePrereleaseForcedVersionKey,
             SpellCheckEnabledKey,
             spellingAutomaticDefaultKey,
             spellingLanguageDefaultKey,
@@ -334,6 +336,8 @@ BOOL TSPreferenceProfilePreservesKey(TSPreferenceKey key)
         PdfWindowNameKey,
         SparkleAutomaticUpdateKey,
         SparkleIntervalKey,
+        SparklePrereleaseUpdatesKey,
+        SparklePrereleaseForcedVersionKey,
         TSProfileKeyTSMenuShortcutOverrides,
         TSSettingsSelectedCategoryKey
     ] containsObject:key];
