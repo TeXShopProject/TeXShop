@@ -270,7 +270,7 @@
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="147" y="248" width="504" height="430"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1055"/>
-            <value key="minSize" type="size" width="213" height="107"/>
+            <value key="minSize" type="size" width="403" height="107"/>
             <view key="contentView" id="121">
                 <rect key="frame" x="0.0" y="0.0" width="504" height="430"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -278,7 +278,7 @@
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="139">
                         <rect key="frame" x="20" y="0.0" width="464" height="53"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" placeholderString="En cas d’erreur : &lt;ret&gt; ignorer, [s] tout ignorer, [x] terminer, [i]+texte pour insérer un remplacement" bezelStyle="round" id="3824">
+                        <textFieldCell key="cell" controlSize="small" lineBreakMode="wordWrapping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" placeholderString="En cas d’erreur : &lt;ret&gt; ignorer, [s] tout ignorer, [x] terminer, [i]+texte pour insérer un remplacement" bezelStyle="round" id="3824">
                             <font key="font" metaFont="message" size="11"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -288,7 +288,7 @@
                         </connections>
                     </textField>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="286">
-                        <rect key="frame" x="-6" y="398" width="142" height="33"/>
+                        <rect key="frame" x="-1" y="398" width="142" height="33"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="square" title="Aller à l'erreur ^⌘E" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" inset="2" id="3825">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -299,7 +299,7 @@
                         </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="630">
-                        <rect key="frame" x="266" y="398" width="78" height="33"/>
+                        <rect key="frame" x="262" y="398" width="78" height="33"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="square" title="Arrêter" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" inset="2" id="3826">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -310,7 +310,7 @@
                         </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="670">
-                        <rect key="frame" x="343" y="398" width="166" height="33"/>
+                        <rect key="frame" x="339" y="398" width="166" height="33"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="square" title="Fichiers aux. Corbeille" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" inset="2" id="3827">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2757,7 +2757,7 @@ Gw
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="1812" y="261" width="370" height="157"/>
             <rect key="screenRect" x="1920" y="-37" width="1728" height="1079"/>
-            <value key="minSize" type="size" width="200" height="100"/>
+            <value key="minSize" type="size" width="340" height="100"/>
             <view key="contentView" id="vNk-U8-KQy">
                 <rect key="frame" x="0.0" y="0.0" width="370" height="157"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -2805,7 +2805,7 @@ DQ
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bgs-As-mqB">
                         <rect key="frame" x="18" y="12" width="73" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="radio" title="Gauche" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="mYW-dN-EjQ">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -2816,7 +2816,7 @@ DQ
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pG1-sw-2zq">
                         <rect key="frame" x="99" y="12" width="67" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="radio" title="Centre" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="2ly-p4-78f">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -2827,7 +2827,7 @@ DQ
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5KX-Tb-NuJ">
                         <rect key="frame" x="174" y="12" width="68" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="radio" title="Droite" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="uCB-Y8-Oh5">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
