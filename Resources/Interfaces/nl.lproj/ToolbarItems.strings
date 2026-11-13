@@ -170,13 +170,15 @@ tiLabelSyncMarksKIT				= "Syncpunten";
 tiPaletteLabelSyncMarksKIT		= "Synchronisatiepunten";
 tiToolTipSyncMarksKIT			= "Toon Sync Marks";
 
-tiLabelBackForthKIT				= "Vorige/Volgende";
-tiPaletteLabelBackForthKIT		= "Vorige/Volgende";
+tiLabelBackForthKIT				= "Terug/Vooruit";
+tiPaletteLabelBackForthKIT		= "Terug/Vooruit";
 tiToolTipGoBack				= "Terug";
 tiToolTipGoForward			= "Vooruit";
+tiBack					= "Terug";
+tiForward				= "Vooruit";
 
-tiLabelBackForthKITSplit                = "Vorige/Volgende";
-tiPaletteLabelBackForthKITSplit        = "Vorige/Volgende";
+tiLabelBackForthKITSplit                = "Terug/Vooruit";
+tiPaletteLabelBackForthKITSplit        = "Terug/Vooruit";
 
 tiLabelDrawerKIT				= "Navigatiekolom";
 tiPaletteLabelDrawerKIT			= "Navigatiekolom";

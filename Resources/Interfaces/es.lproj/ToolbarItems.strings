@@ -174,6 +174,8 @@ tiLabelBackForthKIT				= "Atrás/Adelante";
 tiPaletteLabelBackForthKIT		= "Atrás/Adelante";
 tiToolTipGoBack				= "Atrás";
 tiToolTipGoForward			= "Adelante";
+tiBack					= "Atrás";
+tiForward				= "Adelante";
 
 tiLabelBackForthKITSplit                = "Atrás/Adelante";
 tiPaletteLabelBackForthKITSplit        = "Atrás/Adelante";
