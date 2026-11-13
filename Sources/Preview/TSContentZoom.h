@@ -85,7 +85,7 @@ static inline NSArray<NSDictionary *> *TSContentZoomParts(PDFView *view)
     NSRect area = TSContentVisibleArea(view);
     NSPoint middle = [view convertPoint:NSMakePoint(NSMidX(area), NSMidY(area)) fromView:clip];
     PDFPage *page = [view pageForPoint:middle nearest:YES];
-    // One page or one row at a time: PDFKit also places pages that are not shown there.
+    // One page or one row at a time: PDFKit also places pages of other rows there.
     NSArray<PDFPage *> *shown = view.visiblePages;
     if (page && shown.count && ![shown containsObject:page]) page = view.currentPage;
     if (!page) return @[];
@@ -98,8 +98,9 @@ static inline NSArray<NSDictionary *> *TSContentZoomParts(PDFView *view)
         NSInteger first = view.displaysAsBook ? 1 : 0;
         NSInteger other = index < first ? -1 : ((index - first) % 2 == 0 ? index + 1 : index - 1);
         if (other >= 0 && other < (NSInteger)view.document.pageCount) {
+            // Also when it is out of sight at a high magnification.
             PDFPage *beside = [view.document pageAtIndex:other];
-            if (beside && (!shown.count || [shown containsObject:beside])) [pages addObject:beside];
+            if (beside) [pages addObject:beside];
         }
     }
     NSMutableArray *parts = [NSMutableArray array];

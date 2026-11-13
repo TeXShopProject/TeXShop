@@ -17,8 +17,9 @@ MUTATIONS = {
                         '    if (YES)\n        target.origin.y += NSMidY(content) - NSMidY(area);'),
     'rotation-ignored': ('zoom', '    CGAffineTransform toDrawn = [page transformForBox:box];',
                          '    CGAffineTransform toDrawn = CGAffineTransformMakeTranslation(-NSMinX(bounds), -NSMinY(bounds));'),
-    'one-page-in-two-up': ('zoom', '            if (beside && (!shown.count || [shown containsObject:beside])) [pages addObject:beside];',
-                           '            if (NO) [pages addObject:beside];'),
+    'one-page-in-two-up': ('zoom', '            if (beside) [pages addObject:beside];', '            if (NO) [pages addObject:beside];'),
+    'partner-only-if-shown': ('zoom', '            if (beside) [pages addObject:beside];',
+                              '            if (beside && [shown containsObject:beside]) [pages addObject:beside];'),
     'cover-ignored': ('zoom', '        NSInteger first = view.displaysAsBook ? 1 : 0;', '        NSInteger first = 0;'),
     'partner-by-height': ('zoom', '        NSInteger other = index < first ? -1 : ((index - first) % 2 == 0 ? index + 1 : index - 1);',
                           '        NSInteger other = index - 1;'),
@@ -282,9 +283,11 @@ int main(int argc, char **argv) { @autoreleasepool {
     // places at the same height while one row at a time is shown. The rows of one row at a
     // time are those PDFKit shows; a second press keeps the magnification.
     for (NSNumber *mode in @[@(kPDFDisplayTwoUp), @(kPDFDisplayTwoUpContinuous)])
-    for (int book = 0; book < 2; book++) for (int rtl = 0; rtl < 2; rtl++) for (NSUInteger index = 0; index < 6; index++) {
-        context = [NSString stringWithFormat:@"row: mode %ld, cover %d, right to left %d, page %lu",
-                   (long)mode.integerValue, book, rtl, (unsigned long)index];
+    for (int book = 0; book < 2; book++) for (int rtl = 0; rtl < 2; rtl++) for (NSUInteger index = 0; index < 6; index++)
+    for (int enlarged = 0; enlarged < 2; enlarged++) for (int whole = 0; whole < 2; whole++) {
+        context = [NSString stringWithFormat:@"row: mode %ld, cover %d, right to left %d, page %lu, from %@, %@",
+                   (long)mode.integerValue, book, rtl, (unsigned long)index, enlarged ? @"250%" : @"Fit to Window",
+                   whole ? @"Zoom to Content" : @"Zoom to Content Width"];
         PDFDocument *document = makeDocument(0, NSZeroRect);
         Preview p = makePreview(document, (PDFDisplayMode)mode.integerValue);
         MyPDFKitView *view = p.lower;
@@ -301,7 +304,9 @@ int main(int argc, char **argv) { @autoreleasepool {
         check(row.count >= 1 && row.count <= 2, [NSString stringWithFormat:@"a row of %lu pages", (unsigned long)row.count]);
         BOOL blank = YES;
         for (PDFPage *page in row) if ([document indexForPage:page] != 5) blank = NO;
-        [view zoomToContentWidthOnly:YES]; settle(p.window);
+        // Enlarged, one page of the row may be out of sight; it still counts.
+        if (enlarged) { view.scaleFactor = 2.5; settle(p.window); show(view, index); }
+        [view zoomToContentWidthOnly:!whole]; settle(p.window);
         CGFloat scale = view.scaleFactor;
         if (blank) { [p.window close]; continue; }
         NSRect content = NSZeroRect;
@@ -312,10 +317,15 @@ int main(int argc, char **argv) { @autoreleasepool {
             NSRect inView = [view convertRect:ink fromPage:page];
             content = NSIsEmptyRect(content) ? inView : NSUnionRect(content, inView);
         }
-        CGFloat width = NSWidth(clipOf(view).frame);
-        check(NSWidth(content) <= width + 0.5 && NSWidth(content) > width * 0.97,
-              [NSString stringWithFormat:@"the content of the row %.1f fills the view %.1f at %.2f", NSWidth(content), width, scale]);
-        [view zoomToContentWidthOnly:YES]; settle(p.window);
+        CGFloat width = NSWidth(clipOf(view).frame), height = NSHeight(clipOf(view).frame);
+        if (whole)
+            check(NSWidth(content) <= width + 0.5 && NSHeight(content) <= height + 0.5 &&
+                  (NSWidth(content) > width * 0.97 || NSHeight(content) > height * 0.97),
+                  [NSString stringWithFormat:@"the content of the row %@ fits the view %.1fx%.1f at %.2f", NSStringFromSize(content.size), width, height, scale]);
+        else
+            check(NSWidth(content) <= width + 0.5 && NSWidth(content) > width * 0.97,
+                  [NSString stringWithFormat:@"the content of the row %.1f fills the view %.1f at %.2f", NSWidth(content), width, scale]);
+        [view zoomToContentWidthOnly:!whole]; settle(p.window);
         check(fabs(view.scaleFactor - scale) < 0.001, [NSString stringWithFormat:@"a second press keeps %.2f (%.2f)", scale, view.scaleFactor]);
         [p.window close];
     }
