@@ -87,6 +87,7 @@
 74
 78
 8
+85
 86
 86a
 89
@@ -354,6 +355,7 @@ close
 closed
 closing
 code
+collin's
 color
 colored
 coloring
@@ -955,6 +957,7 @@ japanese
 jis
 job
 jobs
+john
 jp
 jpeg
 juan
@@ -1296,6 +1299,7 @@ parsing
 part
 particular
 particularly
+partly
 parts
 party
 passages
@@ -1494,8 +1498,8 @@ require
 required
 requires
 reread
+rescan
 reserved
-reset
 resize
 resized
 resolutions
@@ -1549,7 +1553,6 @@ scheme
 schmock
 schoutens
 schulz
-scope
 screen
 screens
 scribble
@@ -1571,7 +1574,6 @@ select
 selected
 selecting
 selection
-selections
 selects
 send
 sending
@@ -1592,7 +1594,6 @@ set
 sets
 setting
 settings
-setup
 seven
 several
 shape
@@ -1874,7 +1875,6 @@ unicode
 united
 units
 unless
-unrecognized
 unreported
 unsaved
 unsplit
