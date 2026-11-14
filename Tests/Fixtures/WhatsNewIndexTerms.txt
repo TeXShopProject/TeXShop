@@ -148,6 +148,7 @@ alone
 along
 alongside
 already
+alternate
 although
 altogether
 always
@@ -1836,7 +1837,6 @@ transparenttheme
 trash
 treat
 triangles
-trick
 tried
 trigger
 triggers

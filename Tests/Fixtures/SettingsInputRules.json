@@ -169,14 +169,5 @@
     "maximum": 0,
     "allowsEmpty": true,
     "notification": null
-  },
-  {
-    "outlet": "alternateEngineTextField",
-    "key": "AlternateEngine",
-    "kind": 0,
-    "minimum": 0,
-    "maximum": 0,
-    "allowsEmpty": true,
-    "notification": null
   }
 ]

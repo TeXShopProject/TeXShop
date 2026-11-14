@@ -18,6 +18,8 @@ def declared_methods():
     names.add("setDefaults:")
     # The engine field of the earlier window. Settings chooses the engine file from a menu.
     names.add("setEngine:")
+    # The Alternate Engine field of the earlier window. Settings chooses it from a menu.
+    names.add("alternateEngineChanged:")
     for path in [root / 'Sources/Settings/TSPreferences.h', *sorted(root.glob('Sources/TSPreferences*.m'))]:
         text = re.sub(r'/\*.*?\*/', '', path.read_text(errors='replace'), flags=re.S)
         text = re.sub(r'//.*', '', text)
@@ -100,7 +102,7 @@ for p in [x for x in (root/'Resources/Interfaces/Base.lproj').glob('Settings*.xi
   new[original]=p.name
 missing=set(old)-set(new)
 # _scrollButton ("Do not scroll" with page buttons), _distillerMatrix and _antialiasButton were removed.
-# _engineTextField gave way to the Engine File menu built in code.
-assert missing <= {'_prefsWindow','_tabView','_samplePanel','_fontTextView','_scrollButton','_distillerMatrix','_antialiasButton','_engineTextField'},missing
-assert len(new)==169
+# _engineTextField and _alternateEngineTextField gave way to menus built in code.
+assert missing <= {'_prefsWindow','_tabView','_samplePanel','_fontTextView','_scrollButton','_distillerMatrix','_antialiasButton','_engineTextField','_alternateEngineTextField'},missing
+assert len(new)==168
 print('PASS: 170 used outlets each migrate exactly once into shared panes')

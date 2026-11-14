@@ -5,7 +5,11 @@
 - (BOOL)finishPreferenceEditing:(BOOL)showError;
 - (void)refreshTypesettingSettingsFromDefaults:(NSUserDefaults *)defaults;
 - (void)menuNeedsUpdate:(NSMenu *)menu;
+- (void)refreshAlternateEngineFromDefaults:(NSUserDefaults *)defaults;
+- (NSViewController *)alternateEngineInfoController;
 @end
+NSArray<NSArray<NSString *> *> *TSAlternateEnginePrograms(void);
+NSArray<NSString *> *TSAlternateEngineInfoLines(NSMenu *mainMenu);
 static NSUInteger ownerAlertCount;
 static NSAlert *capturedOwnerAlert;
 static void (^ownerAlertCompletion)(NSModalResponse);
@@ -31,6 +35,82 @@ static NSURL *ownerOpenedURL;
 static BOOL OwnerOpenURL(id receiver, SEL selector, NSURL *url) { ownerOpenedURL=url; return YES; }
 // Engine File lists the engine files of the Engines folder, as a document's toolbar does,
 // and follows the folder while Settings is open.
+// The Alternate Engine is chosen like the engine file, from the built-in programs and the engine
+// files, and its info button tells where the command is and its key as the menu has it now.
+static void CheckOwnerAlternateEngine(TSPreferences *owner, TSSettingsWindowController *shell) {
+    NSFileManager *files=NSFileManager.defaultManager;
+    NSString *savedEnginePath=EnginePath;
+    NSString *engines=[NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"texshop-alternate-engines-%d",getpid()]];
+    [files removeItemAtPath:engines error:NULL];[files createDirectoryAtPath:engines withIntermediateDirectories:YES attributes:nil error:NULL];
+    for(NSString *file in @[@"pdflatexmk.engine",@"LuaLaTeX.engine"])[@"" writeToFile:[engines stringByAppendingPathComponent:file] atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+    EnginePath=engines;
+    [TSIsolatedAppKitDefaults removeObjectForKey:AlternateEngineKey];
+    [shell selectCategoryIdentifier:TSSettingsCategoryTypesetting];
+    [owner refreshTypesettingSettingsFromDefaults:TSIsolatedAppKitDefaults];
+    NSPopUpButton *alternate=[owner valueForKey:@"alternateEnginePopup"];
+    NSArray *(^names)(void)=^NSArray *{NSMutableArray *list=[NSMutableArray array];for(NSMenuItem *item in alternate.itemArray)[list addObject:item.isSeparatorItem?@"-":item.representedObject];return list;};
+    NSArray *programs=@[@"pdftex",@"pdflatex",@"tex",@"latex",@"personaltex",@"personallatex"];
+    Check([names() isEqual:[programs arrayByAddingObjectsFromArray:@[@"-",@"LuaLaTeX",@"pdflatexmk"]]],@"Alternate Engine lists the built-in programs, plain TeX first, then the engine files");
+    Check([[TSIsolatedAppKitDefaults stringForKey:AlternateEngineKey] isEqual:@"pdflatexmk"] && [alternate.selectedItem.representedObject isEqual:@"pdflatexmk"],@"The factory Alternate Engine is shown");
+    NSArray *builtIn=TSAlternateEnginePrograms();
+    BOOL titled=builtIn.count==programs.count;for(NSUInteger i=0;titled && i<programs.count;i++)titled=[builtIn[i][0] isEqual:programs[i]] && [[alternate itemAtIndex:(NSInteger)i].title isEqual:builtIn[i][1]] && [builtIn[i][1] hasPrefix:i%2==0?@"plain TeX":@"LaTeX"] && [builtIn[i][1] length]>9;
+    Check(titled,@"Each built-in program is named with its method");
+    [TSIsolatedAppKitDefaults setObject:@"PDFLaTeX" forKey:AlternateEngineKey];[owner refreshAlternateEngineFromDefaults:TSIsolatedAppKitDefaults];
+    Check([alternate.selectedItem.representedObject isEqual:@"pdflatex"] && [alternate.itemArray.firstObject.representedObject isEqual:@"pdftex"],@"A built-in program is found in any case, as the typesetting does");
+    [TSIsolatedAppKitDefaults setObject:@"luaLATEX" forKey:AlternateEngineKey];[owner refreshAlternateEngineFromDefaults:TSIsolatedAppKitDefaults];
+    Check([alternate.selectedItem.representedObject isEqual:@"LuaLaTeX"],@"An engine file is found in any case");
+    // As the typesetting does, a stored name is trimmed, and bibtex, makeindex and metapost are understood.
+    [TSIsolatedAppKitDefaults setObject:@" PDFLaTeX \n" forKey:AlternateEngineKey];[owner refreshAlternateEngineFromDefaults:TSIsolatedAppKitDefaults];
+    Check([alternate.selectedItem.representedObject isEqual:@"pdflatex"] && [[TSIsolatedAppKitDefaults stringForKey:AlternateEngineKey] isEqual:@" PDFLaTeX \n"],@"A built-in program with spaces around it is found, and the stored value stays");
+    [TSIsolatedAppKitDefaults setObject:@" luaLaTeX\t" forKey:AlternateEngineKey];[owner refreshAlternateEngineFromDefaults:TSIsolatedAppKitDefaults];
+    Check([alternate.selectedItem.representedObject isEqual:@"LuaLaTeX"],@"An engine file with spaces around it is found");
+    for(NSString *old in @[@"bibtex",@" MakeIndex ",@"metapost"]){
+        [TSIsolatedAppKitDefaults setObject:old forKey:AlternateEngineKey];[owner refreshAlternateEngineFromDefaults:TSIsolatedAppKitDefaults];
+        NSString *shown=[old stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+        Check(alternate.indexOfSelectedItem==0 && [alternate.titleOfSelectedItem isEqual:shown] && [alternate.selectedItem.representedObject isEqual:old] && [alternate itemAtIndex:1].isSeparatorItem,[NSString stringWithFormat:@"%@, which the typesetting understands, is shown as itself",shown]);
+    }
+    [TSIsolatedAppKitDefaults setObject:@"Gone" forKey:AlternateEngineKey];[owner refreshAlternateEngineFromDefaults:TSIsolatedAppKitDefaults];
+    NSString *missing=[NSString stringWithFormat:NSLocalizedString(@"%@ (Not Found)",nil),@"Gone"];
+    Check([alternate.titleOfSelectedItem isEqual:missing] && alternate.indexOfSelectedItem==0 && [alternate itemAtIndex:1].isSeparatorItem,@"An Alternate Engine that is nowhere stays shown as not found");
+    [TSIsolatedAppKitDefaults setObject:@"" forKey:AlternateEngineKey];[owner refreshAlternateEngineFromDefaults:TSIsolatedAppKitDefaults];
+    Check([alternate.titleOfSelectedItem isEqual:NSLocalizedString(@"None",nil)] && alternate.indexOfSelectedItem==0,@"An empty Alternate Engine is shown as None");
+    [alternate selectItemAtIndex:[names() indexOfObject:@"latex"]];[alternate sendAction:alternate.action to:alternate.target];
+    Check([[TSIsolatedAppKitDefaults stringForKey:AlternateEngineKey] isEqual:@"latex"] && alternate.numberOfItems==9,@"Choosing a built-in program stores the name the typesetting understands");
+    [@"" writeToFile:[engines stringByAppendingPathComponent:@"Added.engine"] atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+    [owner menuNeedsUpdate:alternate.menu];
+    [alternate selectItemAtIndex:[names() indexOfObject:@"Added"]];[alternate sendAction:alternate.action to:alternate.target];
+    Check([[TSIsolatedAppKitDefaults stringForKey:AlternateEngineKey] isEqual:@"Added"],@"The Alternate Engine menu follows the folder and stores an engine file by its name");
+    NSButton *edit=[owner valueForKey:@"editAlternateEnginesButton"];
+    Check(edit.enabled && [edit.identifier isEqual:@"settings.alternate-engine-edit"] && edit.action==@selector(openEnginesFolder:) && edit.superview==alternate.superview && [edit.title isEqual:[[NSBundle mainBundle] localizedStringForKey:@"catalog.typesetting.0.1.button" value:nil table:@"SettingsCategories"]],@"Edit Engine List is beside the Alternate Engine too");
+    NSButton *info=[owner valueForKey:@"alternateEngineInfoButton"];
+    NSView *row=info.superview;while(row && ![row.identifier hasPrefix:@"row."])row=row.superview;
+    NSTextField *name=(NSTextField *)Find(row,@"label.catalog-row");
+    [shell.window.contentView layoutSubtreeIfNeeded];
+    NSRect infoFrame=[row convertRect:info.bounds fromView:info],nameFrame=[row convertRect:name.bounds fromView:name];
+    CGFloat textEnd=NSMinX(nameFrame)+[name.attributedStringValue size].width;
+    Check([row.identifier isEqual:@"row.catalog.typesetting.0.3"] && info.action==@selector(showAlternateEngineInfo:) && info.accessibilityLabel.length>0 && NSMinX(infoFrame)>=textEnd && NSMinX(infoFrame)<textEnd+16 && NSMidY(infoFrame)>NSMinY(nameFrame) && NSMidY(infoFrame)<NSMaxY(nameFrame) && NSMaxX(infoFrame)<NSMinX([row convertRect:alternate.bounds fromView:alternate]),@"The info button follows the name of the Alternate Engine");
+    // The info names the menu, the item it replaces, the modifiers and the key as the menu has them now.
+    NSMenu *main=[NSMenu new],*typeset=[[NSMenu alloc] initWithTitle:@"Typeset"];
+    [main addItemWithTitle:@"Typeset" action:NULL keyEquivalent:@""].submenu=typeset;
+    NSMenuItem *base=[typeset addItemWithTitle:@"Typeset" action:@selector(doTypeset:) keyEquivalent:@"t"];base.keyEquivalentModifierMask=NSEventModifierFlagCommand;
+    NSMenuItem *trash=[typeset addItemWithTitle:@"Trash Aux & Typeset" action:@selector(doTypeset:) keyEquivalent:@"t"];trash.keyEquivalentModifierMask=NSEventModifierFlagCommand|NSEventModifierFlagOption;trash.alternate=YES;
+    NSMenuItem *item=[typeset addItemWithTitle:@"Typeset with Alternate Engine" action:@selector(doAlternateTypeset:) keyEquivalent:@"t"];item.keyEquivalentModifierMask=NSEventModifierFlagCommand|NSEventModifierFlagOption|NSEventModifierFlagControl;item.alternate=YES;
+    NSArray *lines=TSAlternateEngineInfoLines(main);
+    NSString *where=[NSString stringWithFormat:NSLocalizedString(@"In the %1$@ menu, this item appears in place of %2$@ while you hold %3$@.",nil),@"Typeset",@"Typeset",@"⌃⌥"];
+    NSString *key=[NSString stringWithFormat:NSLocalizedString(@"Key: %@",nil),@"⌃⌥⌘T"];
+    Check(lines.count==5 && [lines[0] isEqual:@"Typeset with Alternate Engine"] && [lines[1] isEqual:where] && [lines[2] isEqual:key] && [lines[4] containsString:@"% !TEX TS-program"] && ![[lines componentsJoinedByString:@" "] containsString:@"pdflatexmk"],@"The info tells where the item is, its key and what it does");
+    item.alternate=NO;item.keyEquivalent=@"y";item.keyEquivalentModifierMask=NSEventModifierFlagCommand|NSEventModifierFlagShift;
+    lines=TSAlternateEngineInfoLines(main);
+    Check([lines[1] isEqual:[NSString stringWithFormat:NSLocalizedString(@"This item is in the %@ menu.",nil),@"Typeset"]] && [lines[2] isEqual:[NSString stringWithFormat:NSLocalizedString(@"Key: %@",nil),@"⇧⌘Y"]],@"A changed shortcut is told as the menu has it");
+    item.keyEquivalent=@"";lines=TSAlternateEngineInfoLines(main);
+    Check([lines[2] isEqual:NSLocalizedString(@"No key is assigned.",nil)],@"An item without a key says so");
+    Check(TSAlternateEngineInfoLines(nil).count==3,@"Without the menu item the info still says what the engine does");
+    NSStackView *content=(NSStackView *)[owner alternateEngineInfoController].view;
+    Check([content isKindOfClass:NSStackView.class] && content.arrangedSubviews.count==TSAlternateEngineInfoLines(NSApp.mainMenu).count,@"The popover shows each line of the info");
+    [TSIsolatedAppKitDefaults removeObjectForKey:AlternateEngineKey];[owner refreshAlternateEngineFromDefaults:TSIsolatedAppKitDefaults];
+    [files removeItemAtPath:engines error:NULL];
+    EnginePath=savedEnginePath;
+}
 static void CheckOwnerEngineFile(TSPreferences *owner, TSSettingsWindowController *shell) {
     NSFileManager *files=NSFileManager.defaultManager;
     NSString *savedEnginePath=EnginePath;
@@ -101,7 +181,7 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     IMP originalAlert = method_setImplementation(alertMethod, (IMP)CaptureOwnerAlert);
     NSArray *contract=[NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfURL:[fixture URLForResource:@"SettingsInputRules" withExtension:@"json"]] options:0 error:NULL];
     NSMapTable *rules=[owner valueForKey:@"inputRules"];
-    Check(contract.count==20 && rules.count==contract.count,@"All twenty independent input rules are installed");
+    Check(contract.count==19 && rules.count==contract.count,@"All nineteen independent input rules are installed");
     for(NSDictionary *entry in contract){
         NSTextField *field=[owner valueForKey:entry[@"outlet"]];TSPreferenceInput *rule=[rules objectForKey:field];
         Check(rule && [rule.key isEqual:entry[@"key"]] && rule.kind==[entry[@"kind"]integerValue] && rule.minimum==[entry[@"minimum"]doubleValue] && rule.maximum==[entry[@"maximum"]doubleValue] && rule.allowsEmpty==[entry[@"allowsEmpty"]boolValue],[NSString stringWithFormat:@"Independent rule contract for %@",entry[@"outlet"]]);
@@ -202,6 +282,7 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     [shell selectCategoryIdentifier:TSSettingsCategoryGeneral];
     Check([[TSIsolatedAppKitDefaults stringForKey:LatexGSCommandKey] isEqual:profileCommand],@"Later navigation cannot restore the pre-profile text");
     CheckOwnerEngineFile(owner,shell);
+    CheckOwnerAlternateEngine(owner,shell);
     // Whole-number fields: digits only while typing, and a stepper beside each.
     [shell selectCategoryIdentifier:TSSettingsCategoryEditor];
     [shell.window.contentView layoutSubtreeIfNeeded];

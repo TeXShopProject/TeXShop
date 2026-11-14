@@ -377,4 +377,13 @@
 "Use latexmk" = "latexmkを使用";
 "Detect Paths" = "パスの自動検出";
 "%@ (Not Found)" = "%@（見つかりません）";
+"%1$@ (%2$@)" = "%1$@（%2$@）";
+"None" = "なし";
+"Typeset with Alternate Engine" = "代替エンジンでタイプセット";
+"In the %1$@ menu, this item appears in place of %2$@ while you hold %3$@." = "「%1$@」メニューで %3$@ を押している間、「%2$@」の代わりにこの項目が現れます。";
+"This item is in the %@ menu." = "この項目は「%@」メニューにあります。";
+"Key: %@" = "キー：%@";
+"No key is assigned." = "キーは割り当てられていません。";
+"Typesets once with this engine instead of the one chosen in the toolbar." = "その回だけ、ツールバーで選んでいるものの代わりに、このエンジンでタイプセットします。";
+"A % !TEX TS-program line at the top of the document takes precedence." = "書類の先頭に % !TEX TS-programの行があるときは、そちらが優先されます。";
 "Choose an Engine Profile" = "エンジンのプロファイルを選択";

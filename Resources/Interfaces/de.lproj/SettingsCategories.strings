@@ -244,7 +244,8 @@
 "catalog.typesetting.0.1.button" = "Engine-Liste bearbeiten…";
 "catalog.typesetting.0.2.title" = "Satzmethode";
 "catalog.typesetting.0.3.title" = "Alternativer Engine";
-"catalog.typesetting.0.3.note" = "Die Engine für das Setzen mit der alternativen Engine. Vorgabe: pdflatexmk";
+"catalog.typesetting.0.3.note" = "Die Engine für das Setzen mit der alternativen Engine.";
+"catalog.typesetting.0.3.info" = "Über „Setzen mit Alternate Engine“";
 "group.typesetting.1.title" = "Nach dem Textsatz";
 "catalog.typesetting.1.0.title" = "Nach dem Setzen";
 "group.typesetting.2.title" = "Synchronisierung von Quelltext und Vorschau";
