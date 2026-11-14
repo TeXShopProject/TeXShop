@@ -196,8 +196,8 @@
 "catalog.appearance.7.0.item.3" = "Fullwidth";
 "catalog.appearance.7.0.item.4" = "Fullwidth (Background)";
 "group.appearance.8.title" = "SyncTeX";
-"catalog.appearance.8.0.item.0" = "SyncTeX in Preview";
-"catalog.appearance.8.0.item.1" = "SyncTeX in Source";
+"catalog.appearance.8.0.item.0" = "Preview";
+"catalog.appearance.8.0.item.1" = "Source";
 "group.appearance.11.title" = "Color Mapping for Copied Images";
 "catalog.appearance.11.0.item.0" = "Text";
 "catalog.appearance.11.0.item.1" = "Background";

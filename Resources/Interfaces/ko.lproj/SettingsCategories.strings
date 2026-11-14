@@ -182,11 +182,11 @@
 "catalog.appearance.5.0.item.1" = "{ }";
 "catalog.appearance.5.0.item.2" = "[ ]";
 "group.appearance.6.title" = "expl3";
-"catalog.appearance.6.0.item.0" = "Function";
-"catalog.appearance.6.0.item.1" = "__Function";
+"catalog.appearance.6.0.item.0" = "function";
+"catalog.appearance.6.0.item.1" = "__function";
 "catalog.appearance.6.0.item.2" = "key";
-"catalog.appearance.6.0.item.3" = "Variable";
-"catalog.appearance.6.0.item.4" = "__Variable";
+"catalog.appearance.6.0.item.3" = "variable";
+"catalog.appearance.6.0.item.4" = "__variable";
 "catalog.appearance.6.0.item.5" = "argument";
 "catalog.appearance.6.0.item.6" = "msg";
 "group.appearance.7.title" = "강조";
@@ -196,8 +196,8 @@
 "catalog.appearance.7.0.item.3" = "전각 영숫자·기호";
 "catalog.appearance.7.0.item.4" = "전각 영숫자·기호 배경";
 "group.appearance.8.title" = "SyncTeX";
-"catalog.appearance.8.0.item.0" = "미리보기의 SyncTeX";
-"catalog.appearance.8.0.item.1" = "소스의 SyncTeX";
+"catalog.appearance.8.0.item.0" = "미리보기";
+"catalog.appearance.8.0.item.1" = "소스";
 "group.appearance.11.title" = "이미지 복사 시 칼러 맵";
 "catalog.appearance.11.0.item.0" = "텍스트";
 "catalog.appearance.11.0.item.1" = "배경색";

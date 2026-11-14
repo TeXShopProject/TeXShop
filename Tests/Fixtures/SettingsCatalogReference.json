@@ -1142,7 +1142,7 @@
        "title": "",
        "items": [
         {
-         "title": "Function",
+         "title": "function",
          "cells": [
           "#1F5FBF"
          ],
@@ -1151,7 +1151,7 @@
          ]
         },
         {
-         "title": "__Function",
+         "title": "__function",
          "cells": [
           "#5F8FDF"
          ],
@@ -1169,7 +1169,7 @@
          ]
         },
         {
-         "title": "Variable",
+         "title": "variable",
          "cells": [
           "#2F8F2F"
          ],
@@ -1178,7 +1178,7 @@
          ]
         },
         {
-         "title": "__Variable",
+         "title": "__variable",
          "cells": [
           "#6FBF6F"
          ],
@@ -1254,7 +1254,7 @@
        "title": "",
        "items": [
         {
-         "title": "SyncTeX（プレビュー上）",
+         "title": "プレビュー",
          "cells": [
           "#FF0000"
          ],
@@ -1263,7 +1263,7 @@
          ]
         },
         {
-         "title": "SyncTeX（ソース上）",
+         "title": "ソース",
          "cells": [
           "#FFFF00"
          ],

@@ -182,11 +182,11 @@
 "catalog.appearance.5.0.item.1" = "{ }";
 "catalog.appearance.5.0.item.2" = "[ ]";
 "group.appearance.6.title" = "expl3";
-"catalog.appearance.6.0.item.0" = "Function";
-"catalog.appearance.6.0.item.1" = "__Function";
+"catalog.appearance.6.0.item.0" = "function";
+"catalog.appearance.6.0.item.1" = "__function";
 "catalog.appearance.6.0.item.2" = "key";
-"catalog.appearance.6.0.item.3" = "Variable";
-"catalog.appearance.6.0.item.4" = "__Variable";
+"catalog.appearance.6.0.item.3" = "variable";
+"catalog.appearance.6.0.item.4" = "__variable";
 "catalog.appearance.6.0.item.5" = "argument";
 "catalog.appearance.6.0.item.6" = "msg";
 "group.appearance.7.title" = "強調表示";
@@ -196,8 +196,8 @@
 "catalog.appearance.7.0.item.3" = "全角英数記号";
 "catalog.appearance.7.0.item.4" = "全角英数記号の背景";
 "group.appearance.8.title" = "SyncTeX";
-"catalog.appearance.8.0.item.0" = "SyncTeX（プレビュー上）";
-"catalog.appearance.8.0.item.1" = "SyncTeX（ソース上）";
+"catalog.appearance.8.0.item.0" = "プレビュー";
+"catalog.appearance.8.0.item.1" = "ソース";
 "group.appearance.11.title" = "画像コピー時のカラーマップ";
 "catalog.appearance.11.0.item.0" = "文字";
 "catalog.appearance.11.0.item.1" = "背景";
