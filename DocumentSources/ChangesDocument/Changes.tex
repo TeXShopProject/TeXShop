@@ -18,20 +18,20 @@
 
 \noindent\textit{Release preparation; not yet published.}\par
 
-TeXShop 6.00 is a major update. Besides the highlights below, it makes the split Preview window easier to work with, adds new editing commands and a new app icon, and fixes many problems. If you have used TeXShop before, read “Already using TeXShop? What works differently” for the changes you may notice and how to get the earlier behavior back.
+TeXShop 6.00 follows TeXShop 5.59. It adds the Advanced Find panel, LaTeX-aware spell checking, pinned link previews and a new Settings window, changes how a split Preview window behaves, and fixes many problems. “Changes in behavior from earlier versions” lists what works differently from earlier versions and how to get the earlier behavior back.
 
 
-\subsection{TeXShop 6 at a glance}
+\subsection{Main changes}
 
 \begin{itemize}
-\item \textbf{The Advanced Find panel:} find and replace with regular expressions, list every match, highlight them all, and apply whole sets of replacements in one step.
-\item \textbf{Spell checking that understands LaTeX:} commands, comments, mathematics, labels and keys are skipped, so only the prose is checked.
-\item \textbf{Link previews you can pin:} press Option to pin the preview of an internal link, then move, resize and scroll it while you explain the linked page.
-\item \textbf{A redesigned Settings window:} ten categories, a search field, menu shortcuts and key bindings that can be edited, and automatic detection of TeX and Ghostscript.
-\item \textbf{A Stop that stops:} Stop, and starting another typesetting job, now end TeX and its child processes, and the preview keeps its position on macOS 27.
+\item \textbf{Advanced Find panel:} a find and replace panel with regular expressions, a list of all matches, highlighting of all matches, and multiple replacement with saved sets of find and replace pairs.
+\item \textbf{LaTeX-aware spell checking:} spell checking skips TeX commands, comments, mathematics, and arguments such as labels and keys.
+\item \textbf{Pinned link previews:} Option pins the preview of an internal link; a pinned preview can be moved, resized and scrolled.
+\item \textbf{Settings window:} ten categories, a search field, editors for menu shortcuts and key bindings, and automatic detection of TeX and Ghostscript.
+\item \textbf{Stop:} Stop, and starting another typesetting job, end TeX and its child processes.
 \end{itemize}
 
-\subsection{Find and replace, rebuilt: the Advanced Find panel}
+\subsection{Advanced Find panel}
 
 \begin{itemize}
 \item Add the Advanced Find panel, a new find and replace panel with regular expressions. Choose it in Settings \(\rightarrow\) Editor \(\rightarrow\) Find Panel; switching to it does not require a restart. Find, Find and Replace, Find Next, Find Previous and Use Selection for Find in the Edit menu work with the panel. It keeps recent find and replace text and offers Ignore Case, In Selection, whole words and further options, with two ways to write a replacement: \texttt{\$1} (the default) or the OgreKit \texttt{\textbackslash{}1}.
@@ -43,7 +43,7 @@ TeXShop 6.00 is a major update. Besides the highlights below, it makes the split
 \item The panel also finds in the console, the log and the Experiment windows; replacing is dimmed where they show the output of TeX.
 \end{itemize}
 
-\subsection{Spell checking that understands LaTeX}
+\subsection{Spell checking}
 
 \begin{itemize}
 \item Add LaTeX-aware spell checking, based on suggestions from \href{https://github.com/ralphrmartin}{Ralph Martin}. It checks prose while skipping TeX commands, comments, mathematics, and arguments used for references and similar purposes.
@@ -58,7 +58,7 @@ TeXShop 6.00 is a major update. Besides the highlights below, it makes the split
 \item Improve Find Next, scrolling to misspelled words, and spell-checking performance in long documents and split editors.
 \end{itemize}
 
-\subsection{A smarter preview: link previews, split windows and zoom}
+\subsection{Preview}
 
 \begin{itemize}
 \item Pin an internal-link preview with Option, then move the pointer freely while explaining its contents (\href{https://github.com/TeXShopProject/TeXShop/issues/10}{\#10}). Drag a pinned preview to move it, even mostly out of view, drag its edges or corners to resize it at the same text size, and scroll over it to see more of the linked page; with any tool but the hand, text in it can be selected and copied. A pinned preview stays until Escape: clicking inside or outside it with any tool, using another window, or splitting or unsplitting the Preview window does not dismiss it (\href{https://github.com/TeXShopProject/TeXShop/issues/14}{\#14}). It is closed when its part of the Preview window goes to another place: following a link, selecting an item in the drawer, Back and Forward, typing a page number, going to the first or last page, selecting a search result, or a sync from the source. Back and Forward do not show it again, and “Split Window with Link” dismisses only the preview of the part that goes to the target. Scrolling, changing the zoom and going to the next or previous page keep it. While a preview is pinned, other links still show their previews when the pointer moves over them, and Option keeps one of them pinned in place of the preview pinned before. In a split window, Escape dismisses only the pinned preview of the active part, the part clicked last (\href{https://github.com/TeXShopProject/TeXShop/issues/35}{\#35}, \href{https://github.com/TeXShopProject/TeXShop/issues/31}{\#31}). Suggested and reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock}.
@@ -83,7 +83,7 @@ TeXShop 6.00 is a major update. Besides the highlights below, it makes the split
 \item Make the magnifying glass show the place under the pointer in PDFs whose page box does not start at the origin, such as PDFs cropped with a CropBox, and show the next page when it is dragged onto it. The glass now has the same size on the screen at any preview magnification and shows the page at 150\% of its size on the screen (200\%, 250\% and 300\% with Command, Option and Control); at small magnifications it used to reduce the page. The Experiment preview uses the same glass.
 \end{itemize}
 
-\subsection{Handy new tools for writing}
+\subsection{Editing}
 
 \begin{itemize}
 \item Use Command-0 to show the current document’s console. Press it again in the console to return to the source or PDF window that opened it; if there is no originating window, return to the source. This follows the existing Command-1 behavior. Suggested by \href{https://github.com/martignoni}{Nicolas Martignoni} (\href{https://github.com/TeXShopProject/TeXShop/issues/2}{\#2}).
@@ -103,7 +103,7 @@ TeXShop 6.00 is a major update. Besides the highlights below, it makes the split
 \item Add tools to the Experiment preview’s toolbar: Scroll, Select Text, Magnify and Select PDF, as in the Preview window, and Zoom Out, Zoom In, Zoom to Content, which enlarges the typeset part of the page to fill the window, and Zoom to Content Width. A rectangle drawn with Select PDF is copied in the format chosen in Copy Format. The Experiment preview remembers its tool separately from the Preview window.
 \end{itemize}
 
-\subsection{A redesigned Settings window}
+\subsection{Settings window}
 
 \begin{itemize}
 \item Settings has a compact sidebar with ten categories: General, Documents and Saving, Editor, Keyboard, Spell Checking, Themes, Preview, Typesetting, Console, and Updates. Each category shows overview cards and named groups with switches, right-aligned controls, wrapping labels and indented dependent options. The Dock icon is in General, and settings profiles are in Typesetting; Themes contains only what themes store.
@@ -130,7 +130,7 @@ TeXShop 6.00 is a major update. Besides the highlights below, it makes the split
 \item General provides a link to Comment Lines and Hidden Settings.
 \end{itemize}
 
-\subsection{A fresh look}
+\subsection{App icon and appearance}
 
 \begin{itemize}
 \item Introduce a white-frame app icon inspired by the classic circular icon, with optically centered TeX lettering and a rounded-square shape for current macOS versions. Suggested by \href{https://github.com/LaTeX-fetishist}{LaTeX fetishist} and \href{https://github.com/martignoni}{Nicolas Martignoni} (\href{https://github.com/TeXShopProject/TeXShop/issues/3}{\#3}).
@@ -152,7 +152,7 @@ TeXShop 6.00 is a major update. Besides the highlights below, it makes the split
 \item Correct overlapping controls, clipped labels, and incorrect control connections throughout the localized Settings windows. Add missing bracket-color controls in Dutch, and correct the Korean word for Dark in the dark theme setting.
 \end{itemize}
 
-\subsection{Already using TeXShop? What works differently}
+\subsection{Changes in behavior from earlier versions}
 
 \begin{itemize}
 \item \textbf{Spell checking:} LaTeX-aware spell checking is on by default. To check spelling as before, choose “Legacy method” under Settings \(\rightarrow\) Spell Checking.
@@ -170,17 +170,52 @@ TeXShop 6.00 is a major update. Besides the highlights below, it makes the split
 \item \textbf{Line endings:} when an opened file has Windows (CRLF), classic Mac (CR) or mixed line endings, TeXShop tells the user that they have been changed to LF. The notice can be turned off for each file.
 \end{itemize}
 
-\subsection{Fixes and polish}
+\subsection{Fixes: typesetting and the console}
 
 \begin{itemize}
 \item \textbf{Critical fix:} Fix a problem where Stop reported that typesetting had been aborted but left TeX running. Starting another typesetting job now also stops the previous job and its child processes.
-\item Fix the cursor jumping to the end of the file, and typed characters going missing, while editing files in folders synced by OneDrive, Google Drive and other File Provider services. When such a service updates the file’s attributes or writes the same contents again, TeXShop now keeps the text, the selection, the scroll position and the undo history. Unsaved edits are no longer replaced by a change made elsewhere; TeXShop reports the change when the document is saved. When the file does change and TeXShop reloads it, the selection and the first visible line stay where they were, unless that part of the text changed. Reported by \href{https://github.com/Steuard}{Steuard} (\href{https://github.com/TeXShopProject/TeXShop/issues/29}{\#29}).
-\item Make source-file monitoring continue after automatic reloads and file replacement by external editors, including atomic saves. Preserve unsaved edits and the undo history for TeXShop’s own saves. This includes the contribution from \href{https://github.com/ddd3h}{Daisuke Nishihama} in \href{https://github.com/TeXShopProject/TeXShop/pull/1}{PR \#1}.
+\item Let console output be selected and copied while TeX runs or waits for input after an error. New output no longer replaces the selection, and the console does not scroll while text is selected. Moving the focus out of the input field no longer sends an empty line to TeX; Return still does. The Experiment console behaves the same.
+\item Return or Enter in the console output, for example after clicking it to read the log, answers TeX as Return in the empty input field does, and moves the focus back to the input field. Text typed in the input field is kept and not sent. Return with Shift, Option, Control or Command is not affected. The Experiment console behaves the same. Sending a line just after TeX quits no longer makes TeXShop quit.
+\item Improve the handling of console output and log files that contain mixed encodings or broken characters, including UTF-8 characters split by TeX’s line wrapping.
+\item When a file with a \texttt{\% !TEX root} line is typeset, Command-1 in the root document’s preview returns to that file. A typeset or Command-1 in the root document’s own window makes that window the destination again.
+\item Handle failures to launch typesetting tools and missing command-search paths more reliably, and avoid an indefinite wait when stopping helper processes.
+\item Show a sheet when a specified TeX root file cannot be found.
+\item Trash leftover \texttt{.synctex.gz(busy)} files, which an interrupted run leaves behind, with the other auxiliary files.
+\end{itemize}
+
+\subsection{Fixes: preview}
+
+\begin{itemize}
 \item Preserve the page-relative position in both PDF panes after reloading, including content insets on macOS Tahoe. Preserve it across single-page and two-page navigation on macOS 27 when native PDFKit moves the viewport. Reported by \href{https://github.com/svb-bit}{svb-bit} (\href{https://github.com/TeXShopProject/TeXShop/issues/9}{\#9}).
 \item On macOS 27, keep the horizontal position of an enlarged page in single-page and two-page layouts when Option or Command with the Up and Down Arrow keys, Space, Home, End or the page number field move to another page. A SyncTeX or Find result no longer moves the margins sideways either: the view scrolls sideways only when the result is out of view. Reported by \href{https://github.com/svb-bit}{svb-bit} (\href{https://github.com/TeXShopProject/TeXShop/issues/9}{\#9}).
 \item Keep the top of the Preview window where it is on the screen when the window is split or unsplit, at any magnification, and make Switch Views exchange exactly what the two views show, so that the views no longer creep. Unsplitting now keeps any scrolling of the top view instead of returning to the position before the split. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/23}{\#23}).
 \item Keep parts of the linked page from showing around an internal-link preview while the Preview window scrolls. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/21}{\#21}).
 \item Preserve the preview position when a window is closed and reopened during typesetting, including the combined source-and-preview window. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/5}{\#5}).
+\item Use the recorded source-click position and the clicked split editor for SyncTeX, including clicks at the start of a line and context-menu actions. Match valid filesystem aliases to SyncTeX inputs, prefer an exact recorded path, and reject paths that cannot be resolved.
+\item Fix a PDFKit crash during preview reloads, including changes in page count.
+\item Correct Space and Shift-Space scrolling when a PDF page is larger than the preview window.
+\item When preview windows open at a fixed position, offset a new preview from the frontmost one instead of covering it exactly.
+\end{itemize}
+
+\subsection{Fixes: opening and saving documents}
+
+\begin{itemize}
+\item Fix the cursor jumping to the end of the file, and typed characters going missing, while editing files in folders synced by OneDrive, Google Drive and other File Provider services. When such a service updates the file’s attributes or writes the same contents again, TeXShop now keeps the text, the selection, the scroll position and the undo history. Unsaved edits are no longer replaced by a change made elsewhere; TeXShop reports the change when the document is saved. When the file does change and TeXShop reloads it, the selection and the first visible line stay where they were, unless that part of the text changed. Reported by \href{https://github.com/Steuard}{Steuard} (\href{https://github.com/TeXShopProject/TeXShop/issues/29}{\#29}).
+\item Make source-file monitoring continue after automatic reloads and file replacement by external editors, including atomic saves. Preserve unsaved edits and the undo history for TeXShop’s own saves. This includes the contribution from \href{https://github.com/ddd3h}{Daisuke Nishihama} in \href{https://github.com/TeXShopProject/TeXShop/pull/1}{PR \#1}.
+\item Keep the byte order mark of UTF-8 files and the byte order of UTF-16 files when saving, and read encoding magic comments in UTF-16 files.
+\item Read GB 2312 files correctly, and stop a file that could not be read in its specified encoding from being damaged when it is saved.
+\item Always write TeX’s backslash and tilde as the bytes 0x5C and 0x7E in Japanese encodings. A typed backslash or tilde no longer becomes a full-width backslash or wave dash, or the byte 0x80, in Mac Japanese and Shift JIS X0213 files, and a yen sign typed for a backslash no longer becomes “?” in Windows Shift JIS, EUC-JP and ISO-2022-JP files.
+\item Use UTF-8 rather than Latin 9, with a message, when an encoding name is not recognized, and write project files in UTF-8.
+\item Fix the encoding menu in the Save dialog, which did not change the encoding of the saved file. The menu can now be shown from Settings \(\rightarrow\) Documents and Saving. When the source has an encoding magic comment naming a known encoding, the menu shows that encoding and cannot be changed, unless the file could not be read in that encoding.
+\item Fix saving with Automatic UTF-8-Mac to UTF-8 Conversion, which wrote an empty file when the text consisted only of CJK compatibility ideographs.
+\item Fix saving with utf.sty export when a line break or tab is followed by a combining mark. The two were written as one \texttt{\textbackslash{}CID} command for a glyph that does not exist, and the line break was lost; the mark is now written on its own.
+\item Fix Make Default Editor for \texttt{.tex} files.
+\item Fix errors involving empty documents, isolated quotation marks, and save-completion handling.
+\end{itemize}
+
+\subsection{Fixes: editing and other}
+
+\begin{itemize}
 \item Show the misspelled word in the middle of the source window when the spelling panel is opened, or Find Next or Check Document Now is used, in a long document. In a high window the word could stay below the visible part of the source. Opening the spelling panel also keeps the word found, rather than the word found by the system’s own search, which does not skip commands; that search could replace it a moment later, for instance when the panel checks more than spelling. Reported by \href{https://github.com/herbs}{Herb Schulz} (\href{https://github.com/TeXShopProject/TeXShop/issues/38}{\#38}).
 \item Fix opening a file with a \texttt{\% !TEX spellcheck} line changing the spelling language of the document that was in front.
 \item Recolor text that a line break moves out of a comment line, so that it no longer keeps the comment color. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/16}{\#16}).
@@ -191,27 +226,7 @@ TeXShop 6.00 is a major update. Besides the highlights below, it makes the split
 \item Improve opening, scrolling, and editing long source documents.
 \item Preserve explicit left alignment in right-to-left paragraphs.
 \item Keep the Tags menu correctly localized when reopening a document in the combined source-and-preview window.
-\item Let console output be selected and copied while TeX runs or waits for input after an error. New output no longer replaces the selection, and the console does not scroll while text is selected. Moving the focus out of the input field no longer sends an empty line to TeX; Return still does. The Experiment console behaves the same.
-\item Return or Enter in the console output, for example after clicking it to read the log, answers TeX as Return in the empty input field does, and moves the focus back to the input field. Text typed in the input field is kept and not sent. Return with Shift, Option, Control or Command is not affected. The Experiment console behaves the same. Sending a line just after TeX quits no longer makes TeXShop quit.
-\item Improve the handling of console output and log files that contain mixed encodings or broken characters, including UTF-8 characters split by TeX’s line wrapping.
-\item When a file with a \texttt{\% !TEX root} line is typeset, Command-1 in the root document’s preview returns to that file. A typeset or Command-1 in the root document’s own window makes that window the destination again.
-\item Handle failures to launch typesetting tools and missing command-search paths more reliably, and avoid an indefinite wait when stopping helper processes.
-\item Show a sheet when a specified TeX root file cannot be found.
-\item Trash leftover \texttt{.synctex.gz(busy)} files, which an interrupted run leaves behind, with the other auxiliary files.
-\item Fix errors involving empty documents, isolated quotation marks, and save-completion handling.
-\item Use the recorded source-click position and the clicked split editor for SyncTeX, including clicks at the start of a line and context-menu actions. Match valid filesystem aliases to SyncTeX inputs, prefer an exact recorded path, and reject paths that cannot be resolved.
-\item Fix a PDFKit crash during preview reloads, including changes in page count.
-\item Correct Space and Shift-Space scrolling when a PDF page is larger than the preview window.
-\item When preview windows open at a fixed position, offset a new preview from the frontmost one instead of covering it exactly.
 \item Make the Home URL setting for the HTML window work, and open the TeXShop web site by default. The setting was never used, and any value kept the HTML window from opening; the window now opens the web address or file it names, or \texttt{https://texshop.app} when it is empty. The sample page it used to show is no longer bundled.
-\item Keep the byte order mark of UTF-8 files and the byte order of UTF-16 files when saving, and read encoding magic comments in UTF-16 files.
-\item Read GB 2312 files correctly, and stop a file that could not be read in its specified encoding from being damaged when it is saved.
-\item Always write TeX’s backslash and tilde as the bytes 0x5C and 0x7E in Japanese encodings. A typed backslash or tilde no longer becomes a full-width backslash or wave dash, or the byte 0x80, in Mac Japanese and Shift JIS X0213 files, and a yen sign typed for a backslash no longer becomes “?” in Windows Shift JIS, EUC-JP and ISO-2022-JP files.
-\item Use UTF-8 rather than Latin 9, with a message, when an encoding name is not recognized, and write project files in UTF-8.
-\item Fix the encoding menu in the Save dialog, which did not change the encoding of the saved file. The menu can now be shown from Settings \(\rightarrow\) Documents and Saving. When the source has an encoding magic comment naming a known encoding, the menu shows that encoding and cannot be changed, unless the file could not be read in that encoding.
-\item Fix saving with Automatic UTF-8-Mac to UTF-8 Conversion, which wrote an empty file when the text consisted only of CJK compatibility ideographs.
-\item Fix saving with utf.sty export when a line break or tab is followed by a combining mark. The two were written as one \texttt{\textbackslash{}CID} command for a glyph that does not exist, and the line break was lost; the mark is now written on its own.
-\item Fix Make Default Editor for \texttt{.tex} files.
 \end{itemize}
 
 \subsection{Manual, help and bundled tools}

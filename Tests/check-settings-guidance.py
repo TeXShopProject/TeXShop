@@ -165,7 +165,7 @@ class ReleaseParser(HTMLParser):
     def handle_data(self,data):
         if self.in_heading:self.heading+=data
         if self.item:self.item[3]+=data
-for suffix,heading,phrase in [('', 'A redesigned Settings window', 'Add Search Settings'),('-ja','生まれ変わった設定画面','「設定を検索」')]:
+for suffix,heading,phrase in [('', 'Settings window', 'Add Search Settings'),('-ja','設定画面','「設定を検索」')]:
     md=(ROOT/('Documentation/Releases/6.00'+suffix+'.md')).read_text()
     section=md.split('## '+heading+'\n',1)[1].split('\n## ',1)[0]
     assert any(line.startswith('- ') and phrase in line for line in section.splitlines()), (suffix,'release Markdown section')

@@ -83,7 +83,9 @@
 6
 7
 718
+72
 74
+78
 8
 86
 86a
@@ -249,7 +251,6 @@ being
 below
 beneath
 bennett
-besides
 beta
 betas
 better
@@ -568,7 +569,6 @@ e
 each
 earlier
 early
-easier
 easy
 edge
 edges
@@ -727,6 +727,7 @@ format
 formats
 former
 formerly
+formula
 formulas
 forth
 forward
@@ -739,7 +740,6 @@ frame
 frames
 freed
 freely
-fresh
 from
 front
 frontmost
@@ -800,7 +800,6 @@ hand
 handle
 handling
 handover
-handy
 hans
 has
 he
@@ -1103,6 +1102,7 @@ martignoni
 martin
 match
 matched
+matches
 matching
 material
 math
@@ -1327,6 +1327,7 @@ pictures
 pieces
 pin
 pinned
+pins
 place
 placed
 plain
@@ -1337,7 +1338,6 @@ point
 pointed
 pointer
 points
-polish
 pop
 pops
 popup
@@ -1429,7 +1429,6 @@ readonlyshipoutcounter
 reads
 realpageno
 reappear
-rebuilt
 recall
 receive
 received
@@ -1444,7 +1443,6 @@ recorded
 records
 rectangle
 red
-redesigned
 reduce
 ref
 reference
@@ -1489,7 +1487,6 @@ repeatedly
 replace
 replaced
 replacement
-replacements
 replaces
 replacing
 report
@@ -1638,6 +1635,7 @@ skimming
 skip
 skipped
 skipping
+skips
 skype
 slider
 sliders
@@ -1645,7 +1643,6 @@ slightly
 slows
 small
 smaller
-smarter
 smith
 smooth
 so
@@ -1657,6 +1654,7 @@ sometime
 sometimes
 soon
 sophisticated
+sort
 source
 sources
 space
@@ -1710,6 +1708,7 @@ subsequent
 subset
 subtab
 succeeds
+suddenly
 suggested
 suggestion
 suggestions
@@ -1758,6 +1757,7 @@ targets
 tcsh
 teaching
 tell
+telling
 tells
 template
 templates
@@ -1796,6 +1796,7 @@ these
 they
 thickness
 thin
+think
 third
 this
 thomas
@@ -1826,6 +1827,7 @@ tooltips
 top
 toward
 trace
+track
 trackpad
 trailing
 transitioning
@@ -1865,7 +1867,6 @@ uncomment
 under
 underfull
 underline
-understands
 undo
 undone
 unexpected
@@ -1948,7 +1949,6 @@ well
 wells
 went
 were
-what
 wheel
 when
 whenever
