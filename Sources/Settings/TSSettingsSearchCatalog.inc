@@ -122,7 +122,7 @@ add(TSSettingsCategorySpelling, @"row.catalog.spelling.0.2", @"SettingsCategorie
 add(TSSettingsCategorySpelling, @"heading.group.spelling.1", @"SettingsCategories", @"group.spelling.1.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.0", @"SettingsCategories", @"catalog.spelling.1.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.0", @"SettingsCategories", @"catalog.spelling.1.0.note", TSSettingsSearchWeightDescription);
-add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.1", @"SettingsCategories", @"catalog.spelling.1.1.title", TSSettingsSearchWeightLabel);
+add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.0", @"SettingsCategories", @"catalog.spelling.1.0.button", TSSettingsSearchWeightLabel);
 add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.2", @"SettingsCategories", @"catalog.spelling.1.2.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.3", @"SettingsCategories", @"catalog.spelling.1.3.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.4", @"SettingsCategories", @"catalog.spelling.1.4.title", TSSettingsSearchWeightLabel);
@@ -407,7 +407,7 @@ add(TSSettingsCategoryPreview, @"row.catalog.preview.0.2", @"SettingsPreview", @
 add(TSSettingsCategoryPreview, @"row.catalog.preview.4.2", @"SettingsMiscOne", @"434.ibShadowedToolTip", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.4.1", @"SettingsMiscOne", @"437.ibShadowedToolTip", TSSettingsSearchWeightDescription);
 add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.0", @"SettingsSource", @"ts-aware-spelling.ibShadowedToolTip", TSSettingsSearchWeightDescription);
-add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.1", @"SettingsSource", @"ts-edit-spelling.ibShadowedToolTip", TSSettingsSearchWeightDescription);
+add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.0", @"SettingsSource", @"ts-edit-spelling.ibShadowedToolTip", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryDocuments, @"row.catalog.documents.0.0", @"Encodings", @"Ascii", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryDocuments, @"row.catalog.documents.0.0", @"Encodings", @"DOS Chinese Simplified", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryDocuments, @"row.catalog.documents.0.0", @"Encodings", @"DOS Chinese Traditional", TSSettingsSearchWeightChoice);

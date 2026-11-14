@@ -11,7 +11,7 @@
         {TSSettingsCategoryEditor, showFullwidthSpaceCharacterKey, 1, TSDependencyBoolean, _FullwidthSpaceCharacterKindPopup, NO},
         {TSSettingsCategoryEditor, showNewLineCharacterKey, 1, TSDependencyBoolean, _NewLineCharacterKindPopup, NO},
         {TSSettingsCategoryEditor, showTabCharacterKey, 1, TSDependencyBoolean, _TabCharacterKindPopup, NO},
-        {TSSettingsCategorySpelling, TSTeXAwareSpellCheckingKey, 1, TSDependencyBoolean, _editSpellingExclusionsButton, YES},
+        {TSSettingsCategorySpelling, TSTeXAwareSpellCheckingKey, 1, TSDependencyBoolean, _editSpellingExclusionsButton, NO},
         {TSSettingsCategorySpelling, TSTeXAwareSpellCheckingKey, 0, TSDependencyBoolean, _spellCheckCommands, YES},
         {TSSettingsCategorySpelling, TSTeXAwareSpellCheckingKey, 0, TSDependencyBoolean, _spellCheckParameters, YES},
         {TSSettingsCategorySpelling, TSTeXAwareSpellCheckingKey, 0, TSDependencyBoolean, _spellCheckComments, YES},

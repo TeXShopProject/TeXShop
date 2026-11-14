@@ -35,6 +35,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSView *)choiceForControls:(NSArray<NSView *> *)controls;
 + (NSView *)catalogRowWithTitle:(NSString *)title note:(NSString *)note accessory:(NSView *)accessory expands:(BOOL)expands indent:(NSUInteger)indent;
 + (NSView *)catalogContent:(NSView *)content trailing:(BOOL)trailing indent:(NSUInteger)indent;
+// A row whose button belongs to it: the button sits at the right end of the
+// line of `line`, the first line of `content`; a title in that line wraps
+// beside the button when the two do not fit side by side.
++ (NSView *)catalogContent:(NSView *)content button:(NSButton *)button line:(NSView *)line indent:(NSUInteger)indent;
 + (NSView *)viewForRow:(TSSettingsControlRow *)row;
 + (NSView *)categoryHeaderWithTitle:(NSString *)title summary:(NSString *)summary symbol:(NSString *)symbol color:(NSColor *)color;
 + (void)decorateGroupsInView:(NSView *)view;

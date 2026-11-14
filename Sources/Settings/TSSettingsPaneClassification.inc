@@ -112,7 +112,11 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
             for(NSView *child in stack.arrangedSubviews)[child.widthAnchor constraintEqualToAnchor:stack.widthAnchor].active=YES;
             content=stack;
         }
-        row=[TSPrefPaneLayout catalogContent:content trailing:[kind isEqual:@"button"] && !indent indent:indent];
+        // A second control is the row's own button, named by the row's button key.
+        if(controls.count>1){
+            NSButton *action=(NSButton *)controls[1];action.title=text(TSCatalogRequired(model[@"button"]));
+            row=[TSPrefPaneLayout catalogContent:content button:action line:button indent:indent];
+        }else row=[TSPrefPaneLayout catalogContent:content trailing:[kind isEqual:@"button"] && !indent indent:indent];
     }else if([kind isEqual:@"status"]){
         // A status line on the left and its action on the right, outside a group card.
         NSTextField *status=(NSTextField *)controls.firstObject;NSButton *action=(NSButton *)controls[1];action.title=title;

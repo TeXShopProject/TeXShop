@@ -145,7 +145,7 @@
 "group.spelling.1.title" = "Méthode";
 "catalog.spelling.1.0.title" = "Utiliser la vérification adaptée à LaTeX (recommandé)";
 "catalog.spelling.1.0.note" = "Vérifier le corps du texte, en excluant les commandes, les formules, les commentaires et les arguments de référence.";
-"catalog.spelling.1.1.title" = "Modifier les exclusions LaTeX…";
+"catalog.spelling.1.0.button" = "Modifier les exclusions LaTeX…";
 "catalog.spelling.1.2.title" = "Ancienne méthode";
 "catalog.spelling.1.3.title" = "Ignorer les commandes LaTeX";
 "catalog.spelling.1.4.title" = "Ne pas vérifier les paramètres";

@@ -145,7 +145,7 @@
 "group.spelling.1.title" = "Method";
 "catalog.spelling.1.0.title" = "Use LaTeX-aware spell checking (recommended)";
 "catalog.spelling.1.0.note" = "Check body text, excluding commands, math, comments and reference arguments.";
-"catalog.spelling.1.1.title" = "Edit LaTeX exclusion rules…";
+"catalog.spelling.1.0.button" = "Edit LaTeX exclusion rules…";
 "catalog.spelling.1.2.title" = "Legacy method";
 "catalog.spelling.1.3.title" = "Do not check LaTeX commands";
 "catalog.spelling.1.4.title" = "Do not check selected parameters";
