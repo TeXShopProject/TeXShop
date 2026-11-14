@@ -14,11 +14,11 @@
 "K8n-in-y4T.title" = "自动转换UTF-8-Mac为UTF-8 ";
 "Kin-Cw-xVc.title" = "项目根文件";
 "R9c-Rj-59Z.title" = "table";
-"SS5-tZ-cDa.title" = "pTeX支持 (仅日语用户)";
+"SS5-tZ-cDa.title" = "日语pLaTeX";
 "WeQ-Qd-mPg.title" = "figure";
 "YtS-5V-eM9.title" = "打开子文件时自动打开根文件";
 "a5N-7n-3da.title" = "(默认: pdflatexmk)";
-"ahm-aK-Qi9.title" = "utf输出";
+"ahm-aK-Qi9.title" = "自动转换为otf宏包的\\UTF / \\CID";
 "e3h-Wk-X7D.title" = "升级工具";
 "fDa-Qp-dfQ.title" = "subsection";
 "h3F-qB-MHw.title" = "最小化打开的根窗口";

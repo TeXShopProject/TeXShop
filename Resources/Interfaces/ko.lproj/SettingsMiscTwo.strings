@@ -14,11 +14,11 @@
 "K8n-in-y4T.title" = "UTF-8-Mac을 UTF-8로 자동 변환";
 "Kin-Cw-xVc.title" = "프로젝트 루트 파일";
 "R9c-Rj-59Z.title" = "table";
-"SS5-tZ-cDa.title" = "일본어 pTeX 지원";
+"SS5-tZ-cDa.title" = "일본어 pLaTeX";
 "WeQ-Qd-mPg.title" = "figure";
 "YtS-5V-eM9.title" = "루트 파일을 함께 열기";
 "a5N-7n-3da.title" = "(default: pdflatexmk)";
-"ahm-aK-Qi9.title" = "utf 패키지 대응";
+"ahm-aK-Qi9.title" = "otf 패키지의 \\UTF / \\CID로 자동 변환";
 "e3h-Wk-X7D.title" = "Sparkle 업데이트 관리자";
 "fDa-Qp-dfQ.title" = "subsection";
 "h3F-qB-MHw.title" = "루트 파일 창을 최소화";
