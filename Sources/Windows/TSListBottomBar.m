@@ -66,3 +66,59 @@ static NSButton *TSListBottomBarButton(NSString *symbol, NSString *toolTip, id t
 }
 
 @end
+
+const CGFloat TSListSidebarMinimumWidth = 160, TSListSidebarMaximumWidth = 320;
+
+NSVisualEffectView *TSListSidebarView(NSScrollView *list, TSListBottomBar *bar)
+{
+    list.borderType = NSNoBorder;
+    list.drawsBackground = NO;
+    list.automaticallyAdjustsContentInsets = NO; // it starts below the title bar
+    list.hasHorizontalScroller = NO;
+    list.horizontalScrollElasticity = NSScrollElasticityNone;
+    list.translatesAutoresizingMaskIntoConstraints = NO;
+    bar.translatesAutoresizingMaskIntoConstraints = NO;
+    NSVisualEffectView *view = [[NSVisualEffectView alloc] initWithFrame:NSMakeRect(0, 0, 200, 400)];
+    view.material = NSVisualEffectMaterialSidebar;
+    view.blendingMode = NSVisualEffectBlendingModeBehindWindow;
+    for (NSView *child in @[list, bar])
+        [view addSubview:child];
+    [NSLayoutConstraint activateConstraints:@[
+        [list.topAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.topAnchor],
+        [list.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+        [list.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
+        [list.bottomAnchor constraintEqualToAnchor:bar.topAnchor],
+        [bar.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+        [bar.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
+        [bar.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
+        [view.widthAnchor constraintGreaterThanOrEqualToConstant:TSListSidebarMinimumWidth],
+    ]];
+    return view;
+}
+
+NSSplitViewController *TSInstallListSidebar(NSWindow *window, NSViewController *sidebar, NSViewController *main,
+                                            CGFloat width, CGFloat mainMinimumWidth, NSString *autosaveName)
+{
+    NSRect frame = window.frame;
+    // The sidebar runs up to the top, under the title bar, as in CotEditor and the macOS apps with a sidebar.
+    if (!(window.styleMask & NSWindowStyleMaskFullSizeContentView))
+        window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+    NSSplitViewController *split = [NSSplitViewController new];
+    NSSplitViewItem *side = [NSSplitViewItem splitViewItemWithViewController:sidebar];
+    side.canCollapse = NO;
+    side.holdingPriority = NSLayoutPriorityDefaultLow + 10; // a wider window widens the main part
+    side.titlebarSeparatorStyle = NSTitlebarSeparatorStyleNone;
+    side.minimumThickness = TSListSidebarMinimumWidth;
+    side.maximumThickness = TSListSidebarMaximumWidth;
+    [split addSplitViewItem:side];
+    NSSplitViewItem *rest = [NSSplitViewItem splitViewItemWithViewController:main];
+    rest.minimumThickness = mainMinimumWidth;
+    rest.titlebarSeparatorStyle = NSTitlebarSeparatorStyleNone;
+    [split addSplitViewItem:rest];
+    split.splitView.autosaveName = autosaveName;
+    frame.size.width = MAX(NSWidth(frame), width + split.splitView.dividerThickness + mainMinimumWidth);
+    window.contentViewController = split;
+    [window setFrame:frame display:NO];
+    [split.splitView setPosition:width ofDividerAtIndex:0];
+    return split;
+}
