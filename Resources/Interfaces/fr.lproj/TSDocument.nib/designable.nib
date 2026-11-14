@@ -119,6 +119,7 @@
                 <outlet property="textView1" destination="21" id="447"/>
                 <outlet property="textView2" destination="444" id="448"/>
                 <outlet property="textWindow" destination="5" id="189"/>
+                <outlet property="tLog" destination="LqC-fO-238" id="VgR-V5-IfL"/>
                 <outlet property="typesetButton" destination="398" id="Eya-ip-Lis"/>
                 <outlet property="typesetButtonEE" destination="417" id="427"/>
                 <outlet property="uLog" destination="zwD-39-DvY" id="jqf-5T-wJ9"/>
