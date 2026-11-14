@@ -144,11 +144,9 @@
 "Don’t show again for this document" = "No volver a mostrar para este documento";
 
 /* Engine path discovery */
-"Detected Engine Paths" = "Rutas de motores detectadas";
 
 "Not found" = "No encontrado";
 "Version unavailable" = "Desconocida";
-"Use These Paths" = "Usar estas rutas";
 
 /* Menu keyboard shortcut customization */
 "Search commands" = "Buscar comandos";
@@ -236,8 +234,8 @@
 "Comment Lines and Hidden Settings" = "Líneas de comentario y ajustes ocultos";
 "Advanced" = "Avanzado";
 
-"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Instale una distribución TeX y ejecute la configuración automática en Ajustes > Composición.";
-"Ghostscript was not found. Install Ghostscript, then run Auto Setup in Settings > Typesetting." = "No se encontró Ghostscript. Instale Ghostscript y ejecute la configuración automática en Ajustes > Composición.";
+"Install TeX Live or MacTeX, then choose Set Up Typesetting in Settings > Typesetting." = "Instale TeX Live o MacTeX y elija «Configurar la composición» en Ajustes > Composición.";
+"Ghostscript was not found. Install Ghostscript, then choose Set Up Typesetting in Settings > Typesetting." = "No se encontró Ghostscript. Instale Ghostscript y elija «Configurar la composición» en Ajustes > Composición.";
 
 "Completion trigger" = "Tecla de activación";
 
@@ -295,7 +293,6 @@
 
 "Edits the shared file for all documents. This setting controls the default for new documents." = "Edita el archivo compartido por todos los documentos. Este ajuste determina el valor predeterminado de los documentos nuevos.";
 
-"The newest detected installation is selected. You can choose another candidate below." = "Se ha seleccionado la instalación más reciente detectada. Puede elegir otra a continuación.";
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "Las siguientes macros usan este atajo. Si se asigna al comando del menú, sus atajos quedarán inactivos.\n\n%@";
 

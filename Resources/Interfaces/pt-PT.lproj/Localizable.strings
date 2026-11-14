@@ -144,11 +144,9 @@
 "Don’t show again for this document" = "Não voltar a mostrar para este documento";
 
 /* Engine path discovery */
-"Detected Engine Paths" = "Caminhos dos motores encontrados";
 
 "Not found" = "Não encontrado";
 "Version unavailable" = "Desconhecida";
-"Use These Paths" = "Usar estes caminhos";
 
 /* Menu keyboard shortcut customization */
 "Search commands" = "Pesquisar comandos";
@@ -235,8 +233,8 @@
 "Comment Lines and Hidden Settings" = "Linhas de comentário e definições ocultas";
 "Advanced" = "Avançadas";
 
-"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Instale uma distribuição TeX e execute a configuração automática em Definições > Composição.";
-"Ghostscript was not found. Install Ghostscript, then run Auto Setup in Settings > Typesetting." = "O Ghostscript não foi encontrado. Instale o Ghostscript e execute a configuração automática em Definições > Composição.";
+"Install TeX Live or MacTeX, then choose Set Up Typesetting in Settings > Typesetting." = "Instale o TeX Live ou o MacTeX e escolha “Configurar a composição” em Definições > Composição.";
+"Ghostscript was not found. Install Ghostscript, then choose Set Up Typesetting in Settings > Typesetting." = "O Ghostscript não foi encontrado. Instale o Ghostscript e escolha “Configurar a composição” em Definições > Composição.";
 
 "Completion trigger" = "Tecla de ativação";
 
@@ -295,7 +293,6 @@
 
 "Edits the shared file for all documents. This setting controls the default for new documents." = "Edita o ficheiro partilhado por todos os documentos. Esta definição determina a predefinição para novos documentos.";
 
-"The newest detected installation is selected. You can choose another candidate below." = "A instalação mais recente encontrada está selecionada. Pode escolher outra abaixo.";
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "As seguintes macros usam este atalho. Ao atribuí-lo ao comando do menu, os atalhos das macros ficam inativos.\n\n%@";
 

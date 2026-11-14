@@ -1286,6 +1286,7 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
     [self searchEnginePathsForInitialSetup:YES sender:nil];
 }
 
+// Set Up Typesetting in Settings: the setup of first launch, as a sheet.
 - (IBAction)discoverEnginePaths:(id)sender
 {
     if (![self finishPreferenceEditing:YES]) return;
@@ -1306,21 +1307,22 @@ static BOOL TSEngineProfileContains(NSString *directory, NSArray<NSString *> *pr
     return [TSEnginePathDiscovery directory:directory containsPrograms:programs];
 }
 
-// After first launch: the TeX installation chosen lacks programs of the profile chosen.
-static void TSEngineProfileMissingAlert(NSString *path, NSArray<NSString *> *missing)
+// After the setup: the TeX installation chosen lacks programs of the profile chosen.
+static void TSEngineProfileMissingAlert(NSString *path, NSArray<NSString *> *missing, NSWindow *window)
 {
     NSAlert *alert = [NSAlert new];
     alert.alertStyle = NSAlertStyleWarning;
     alert.messageText = [NSString stringWithFormat:NSLocalizedString(@"Not found: %@", @"Programs missing for an engine profile"), [missing componentsJoinedByString:@", "]];
     alert.informativeText = path;
-    [alert runModal];
+    if (window != nil) [alert beginSheetModalForWindow:window completionHandler:nil];
+    else [alert runModal];
 }
 
-// The first-launch list of engine profiles: every profile but those under Other.
-static NSPopUpButton *TSEngineProfileFirstLaunchPopup(TSEngineProfile selected)
+// The engine profiles of the setup: every profile but those under Other.
+static NSPopUpButton *TSEngineProfileSetupPopup(TSEngineProfile selected)
 {
     NSPopUpButton *popup = [[NSPopUpButton alloc] initWithFrame:NSZeroRect pullsDown:NO];
-    popup.identifier = @"settings.first-launch-profile";
+    popup.identifier = @"settings.setup-profile";
     popup.autoenablesItems = NO;
     NSArray *sections = TSEngineProfileMenuSections();
     for (NSUInteger i = 0; i + 1 < sections.count; i++) {
@@ -1368,57 +1370,58 @@ static NSButton *TSEngineProfileLatexmkButton(BOOL on)
 
 // The alert that lists the TeX and Ghostscript installations found, with the
 // newest of each selected; the radio matrices are returned in matrices.
-static NSAlert *TSEnginePathAlert(NSDictionary *found, BOOL initial, NSMutableDictionary *matrices)
+static NSAlert *TSEnginePathAlert(NSDictionary *found, TSEngineProfile profile, BOOL useLatexmk, NSMutableDictionary *matrices)
 {
+    // The setup of first launch and of Set Up Typesetting in Settings: the engine profile with
+    // latexmk, and the TeX and Ghostscript installations found, the newest of each selected.
     NSAlert *alert = [NSAlert new];
-    alert.messageText = NSLocalizedString(initial ? @"Set Up Typesetting" : @"Detected Engine Paths", @"");
-    BOOL hasPaths = [found[@"TeX"] count] || [found[@"Ghostscript"] count];
-    alert.informativeText = NSLocalizedString(@"The newest detected installation is selected. You can choose another candidate below.", @"");
-    CGFloat fullHeight = initial ? 420 : 340;
-    NSView *choices = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 560, fullHeight)];
-    CGFloat top = fullHeight;
-    if (initial) {
-        // On first launch the engine profile is chosen together with the paths.
-        NSTextField *label = [NSTextField labelWithString:NSLocalizedString(@"Engine Profile", @"")];
-        label.font = [NSFont boldSystemFontOfSize:13];
-        top -= 22;
-        label.frame = NSMakeRect(0, top, 560, 20);
+    alert.messageText = NSLocalizedString(@"Set Up Typesetting", @"");
+    CGFloat const width = 480, labelHeight = 17, sectionGap = 12;
+    NSView *choices = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, width, 400)];
+    __block CGFloat top = 400;
+    NSTextField *(^heading)(NSString *) = ^NSTextField *(NSString *title) {
+        NSTextField *label = [NSTextField labelWithString:title];
+        label.font = [NSFont boldSystemFontOfSize:NSFont.systemFontSize];
+        [label sizeToFit];
+        label.frame = NSMakeRect(0, top - labelHeight, width, labelHeight);
         [choices addSubview:label];
-        NSPopUpButton *popup = TSEngineProfileFirstLaunchPopup(TSEngineProfileForLanguages(NSLocale.preferredLanguages));
-        [popup sizeToFit];
-        top -= 28;
-        popup.frame = NSMakeRect(0, top, MAX(NSWidth(popup.frame), 260), 26);
-        [choices addSubview:popup];
-        NSButton *latexmk = TSEngineProfileLatexmkButton(NO);
-        [latexmk sizeToFit];
-        top -= 24;
-        latexmk.frame = NSMakeRect(0, top, 560, 20);
-        [choices addSubview:latexmk];
-        top -= 16;
-        matrices[@"Profile"] = popup;
-        matrices[@"latexmk"] = latexmk;
-    }
+        return label;
+    };
+    heading(NSLocalizedString(@"Engine Profile", @""));
+    top -= labelHeight + 4;
+    NSPopUpButton *popup = TSEngineProfileSetupPopup(profile);
+    [popup sizeToFit];
+    popup.frame = NSMakeRect(-2, top - NSHeight(popup.frame), MAX(NSWidth(popup.frame), 240), NSHeight(popup.frame));
+    [choices addSubview:popup];
+    top -= NSHeight(popup.frame) + 4;
+    NSButton *latexmk = TSEngineProfileLatexmkButton(useLatexmk);
+    [latexmk sizeToFit];
+    latexmk.frame = NSMakeRect(0, top - NSHeight(latexmk.frame), width, NSHeight(latexmk.frame));
+    [choices addSubview:latexmk];
+    top -= NSHeight(latexmk.frame) + sectionGap;
+    matrices[@"Profile"] = popup;
+    matrices[@"latexmk"] = latexmk;
     for (NSString *key in @[@"TeX", @"Ghostscript"]) {
-        NSTextField *label = [NSTextField labelWithString:key];
-        label.font = [NSFont boldSystemFontOfSize:13];
-        top -= 22;
-        label.frame = NSMakeRect(0, top, 560, 20);
-        [choices addSubview:label];
+        heading(key);
+        top -= labelHeight + 4;
         NSArray *candidates = found[key];
         if (candidates.count == 0) {
-            NSTextField *missing = [NSTextField wrappingLabelWithString:NSLocalizedString(@"Not found", @"")];
-            top -= 30;
-            missing.frame = NSMakeRect(0, top, 560, 28);
+            NSTextField *missing = [NSTextField labelWithString:NSLocalizedString(@"Not found", @"")];
+            missing.textColor = NSColor.secondaryLabelColor;
+            [missing sizeToFit];
+            missing.frame = NSMakeRect(0, top - NSHeight(missing.frame), width, NSHeight(missing.frame));
             [choices addSubview:missing];
+            top -= NSHeight(missing.frame);
         } else {
             NSButtonCell *cell = [NSButtonCell new];
             [cell setButtonType:NSButtonTypeRadio];
-            cell.font = [NSFont systemFontOfSize:12];
+            cell.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
             cell.wraps = YES;
-            NSMatrix *matrix = [[NSMatrix alloc] initWithFrame:NSMakeRect(0, 0, 540, 42 * candidates.count)
+            CGFloat const rowHeight = 30, spacing = 4;
+            NSMatrix *matrix = [[NSMatrix alloc] initWithFrame:NSMakeRect(0, 0, width - 20, (rowHeight + spacing) * candidates.count)
                 mode:NSRadioModeMatrix prototype:cell numberOfRows:candidates.count numberOfColumns:1];
-            matrix.cellSize = NSMakeSize(540, 40);
-            matrix.intercellSpacing = NSMakeSize(0, 2);
+            matrix.cellSize = NSMakeSize(width - 20, rowHeight);
+            matrix.intercellSpacing = NSMakeSize(0, spacing);
             [matrix sizeToCells];
             for (NSUInteger row = 0; row < candidates.count; row++) {
                 NSDictionary *candidate = candidates[row];
@@ -1427,8 +1430,9 @@ static NSAlert *TSEnginePathAlert(NSDictionary *found, BOOL initial, NSMutableDi
                 [matrix setToolTip:candidate[@"path"] forCell:[matrix cellAtRow:row column:0]];
             }
             [matrix selectCellAtRow:0 column:0];
-            CGFloat height = MIN(126, NSHeight(matrix.frame));
-            NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, top - height, 560, height)];
+            // At most three installations show at once; more scroll.
+            CGFloat height = MIN(3 * rowHeight + 2 * spacing, NSHeight(matrix.frame));
+            NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, top - height, width, height)];
             scroll.hasVerticalScroller = YES;
             scroll.autohidesScrollers = YES;
             scroll.drawsBackground = NO;
@@ -1438,16 +1442,16 @@ static NSAlert *TSEnginePathAlert(NSDictionary *found, BOOL initial, NSMutableDi
             matrices[key] = matrix;
             top -= height;
         }
-        top -= 16;
+        top -= sectionGap;
     }
-    // Remove unused space when there are only one or two installations.
+    top += sectionGap;
+    // Remove the space not used.
     for (NSView *view in choices.subviews) [view setFrameOrigin:NSMakePoint(view.frame.origin.x, view.frame.origin.y - top)];
-    [choices setFrameSize:NSMakeSize(560, fullHeight - top)];
+    [choices setFrameSize:NSMakeSize(width, 400 - top)];
     alert.accessoryView = choices;
-    if (![found[@"TeX"] count]) alert.informativeText = [alert.informativeText stringByAppendingFormat:@"\n\n%@", NSLocalizedString(@"Install a TeX distribution, then run Auto Setup in Settings > Typesetting.", @"")];
-    if (initial) [alert addButtonWithTitle:NSLocalizedString(@"OK", @"")];
-    else [alert addButtonWithTitle:NSLocalizedString(hasPaths ? @"Use These Paths" : @"OK", @"")];
-    if (hasPaths || initial) [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+    if (![found[@"TeX"] count]) alert.informativeText = NSLocalizedString(@"Install TeX Live or MacTeX, then choose Set Up Typesetting in Settings > Typesetting.", @"");
+    [alert addButtonWithTitle:NSLocalizedString(@"OK", @"")];
+    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
     return alert;
 }
 // END engine path alert
@@ -1471,10 +1475,13 @@ static NSAlert *TSEnginePathAlert(NSDictionary *found, BOOL initial, NSMutableDi
             BOOL applyInitial = initial && !self->_prefsWindow.visible;
             if ((!initial && !self->_prefsWindow.visible) || ![self enginePathSnapshotMatches:snapshot initial:applyInitial]) return;
             NSMutableDictionary *matrices = [NSMutableDictionary dictionary];
-            NSAlert *alert = TSEnginePathAlert(found, initial, matrices);
-            BOOL hasPaths = [found[@"TeX"] count] || [found[@"Ghostscript"] count];
+            // First launch suggests the profile of the preferred language; Settings starts from the commands in use.
+            TSEngineProfile current = initial ? TSEngineProfileNone : TSEngineProfileMatchingSettings(SUD, NULL);
+            if (current == TSEngineProfileNone || current == TSEngineProfileLaTeXDvipsGhostscript)
+                current = TSEngineProfileForLanguages(NSLocale.preferredLanguages);
+            NSAlert *alert = TSEnginePathAlert(found, current, !initial && TSEngineProfileSettingsUseLatexmk(SUD), matrices);
             void (^finish)(NSModalResponse) = ^(NSModalResponse response) {
-                if (response != NSAlertFirstButtonReturn || (!hasPaths && !initial) || generation != self.enginePathSearchGeneration ||
+                if (response != NSAlertFirstButtonReturn || generation != self.enginePathSearchGeneration ||
                     (!applyInitial && !self->_prefsWindow.visible) ||
                     ![self enginePathSnapshotMatches:snapshot initial:applyInitial]) return;
                 NSArray *keys = @[TetexBinPath, GSBinPath];
@@ -1487,24 +1494,19 @@ static NSAlert *TSEnginePathAlert(NSDictionary *found, BOOL initial, NSMutableDi
                     if (!path || ![TSEnginePathDiscovery directory:path containsPrograms:required[i]]) continue;
                     values[keys[i]] = path;
                 }
-                // The first-launch setup, also when it became a sheet of Settings, applies the profile chosen.
-                if (initial) {
-                    TSEngineProfile profile = [(NSPopUpButton *)matrices[@"Profile"] selectedTag];
-                    BOOL latexmk = [(NSButton *)matrices[@"latexmk"] state] == NSControlStateValueOn;
-                    [values addEntriesFromDictionary:TSEngineProfileValues(profile, latexmk)];
-                    [self applyEngineProfileValues:values];
-                    NSString *texPath = values[TetexBinPath];
-                    NSMutableArray *missing = [NSMutableArray array];
-                    for (NSString *program in TSEngineProfileRequiredPrograms(profile, latexmk))
-                        if (texPath && !TSEngineProfileContains(texPath, @[program])) [missing addObject:program];
-                    if (missing.count) TSEngineProfileMissingAlert(texPath, missing);
-                } else {
-                    [values enumerateKeysAndObjectsUsingBlock:^(NSString *key, id value, BOOL *stop) { [SUD setObject:value forKey:key]; }];
-                }
+                TSEngineProfile profile = [(NSPopUpButton *)matrices[@"Profile"] selectedTag];
+                BOOL latexmk = [(NSButton *)matrices[@"latexmk"] state] == NSControlStateValueOn;
+                [values addEntriesFromDictionary:TSEngineProfileValues(profile, latexmk)];
+                [self applyEngineProfileValues:values];
                 if (!applyInitial) {
                     self->_tetexBinPathField.stringValue = [SUD stringForKey:TetexBinPath] ?: @"";
                     self->_gsBinPathField.stringValue = [SUD stringForKey:GSBinPath] ?: @"";
                 }
+                NSString *texPath = values[TetexBinPath];
+                NSMutableArray *missing = [NSMutableArray array];
+                for (NSString *program in TSEngineProfileRequiredPrograms(profile, latexmk))
+                    if (texPath && !TSEngineProfileContains(texPath, @[program])) [missing addObject:program];
+                if (missing.count) TSEngineProfileMissingAlert(texPath, missing, applyInitial ? nil : self->_prefsWindow);
             };
             if (applyInitial) finish([alert runModal]);
             else [alert beginSheetModalForWindow:self->_prefsWindow completionHandler:finish];

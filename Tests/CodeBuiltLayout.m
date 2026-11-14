@@ -95,10 +95,10 @@ int main(int argc, char **argv) { @autoreleasepool {
             @"one": @{@"TeX": @[Candidate(@"TeX Live 2026", @"/Library/TeX/texbin")], @"Ghostscript": @[]},
             @"none": @{@"TeX": @[], @"Ghostscript": @[]},
         };
-        for (NSString *name in @[@"several", @"one", @"none"]) for (NSNumber *initial in @[@YES, @NO]) {
-            NSAlert *alert = TSEnginePathAlert(cases[name], initial.boolValue, [NSMutableDictionary dictionary]);
+        for (NSString *name in @[@"several", @"one", @"none"]) for (NSNumber *latexmk in @[@YES, @NO]) {
+            NSAlert *alert = TSEnginePathAlert(cases[name], TSEngineProfileLuaLaTeXJapanese, latexmk.boolValue, [NSMutableDictionary dictionary]);
             [alert layout];
-            NSString *where = [NSString stringWithFormat:@"%@ [engine path alert, %@ found%@]", language, name, initial.boolValue ? @", first setup" : @""];
+            NSString *where = [NSString stringWithFormat:@"%@ [setup, %@ found%@]", language, name, latexmk.boolValue ? @", latexmk" : @""];
             CheckRoot(alert.window.contentView, where); roots++;
             SaveImage(alert.window.contentView, where);
         }

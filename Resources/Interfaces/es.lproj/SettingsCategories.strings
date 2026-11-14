@@ -234,7 +234,7 @@
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "URL base";
 "catalog.preview.5.0.note" = "La página que abre primero la ventana HTML. Escriba una dirección web o la ruta de un archivo. Predeterminado: https://texshop.app";
-"group.typesetting.0.title" = "Valores predeterminados";
+"group.typesetting.0.title" = "Motor";
 "catalog.typesetting.0.4.title" = "Perfil del motor";
 "catalog.typesetting.0.4.note" = "Establece los comandos de composición, el motor BibTeX, la compatibilidad con el paquete otf y las rutas de TeX y Ghostscript. Los perfiles japoneses también establecen UTF-8 como codificación de documentos nuevos, el diccionario y la conversión de UTF-8-MAC.";
 "catalog.typesetting.0.4.button" = "Aplicar…";
@@ -256,7 +256,7 @@
 "catalog.typesetting.3.1.note" = "Predeterminado: /usr/local/bin";
 "catalog.typesetting.3.2.title" = "Segundos motores TeX";
 "catalog.typesetting.3.2.note" = "Para documentos con % !TEX useAlternatePath. Predeterminado: ~/bin/context/tex/texmf-osx-arm64/bin";
-"catalog.typesetting.3.3.title" = "Configurar automáticamente…";
+"catalog.typesetting.3.3.title" = "Configurar la composición…";
 "group.typesetting.4.title" = "PDF directo";
 "catalog.typesetting.4.0.title" = "TeX";
 "catalog.typesetting.4.0.button" = "Por omisión";

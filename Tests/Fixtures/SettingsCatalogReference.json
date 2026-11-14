@@ -1564,7 +1564,7 @@
    "summary": "エンジンのプロファイル、既定のエンジンとスクリプト、TeX・Ghostscriptの場所、各エンジンのコマンドを設定します。",
    "groups": [
     {
-     "title": "既定",
+     "title": "エンジン",
      "rows": [
       {
        "kind": "popup",
@@ -1710,7 +1710,7 @@
       },
       {
        "kind": "button",
-       "title": "自動設定…",
+       "title": "タイプセットを設定…",
        "src": [
         "engine-auto-button"
        ]

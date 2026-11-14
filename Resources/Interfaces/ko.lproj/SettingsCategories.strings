@@ -234,7 +234,7 @@
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "홈 URL";
 "catalog.preview.5.0.note" = "HTML 창을 열 때 처음 표시할 페이지입니다. 웹 주소나 파일 경로를 입력합니다. 기본값: https://texshop.app";
-"group.typesetting.0.title" = "초기값";
+"group.typesetting.0.title" = "엔진";
 "catalog.typesetting.0.4.title" = "엔진 프로파일";
 "catalog.typesetting.0.4.note" = "조판 명령, BibTeX 엔진, otf 패키지 지원, TeX 및 Ghostscript 경로를 설정합니다. 일본어 프로파일은 새 문서의 인코딩(UTF-8), 사전, UTF-8-MAC 변환도 설정합니다.";
 "catalog.typesetting.0.4.button" = "적용…";
@@ -256,7 +256,7 @@
 "catalog.typesetting.3.1.note" = "기본값: /usr/local/bin";
 "catalog.typesetting.3.2.title" = "두 번째 TeX 엔진";
 "catalog.typesetting.3.2.note" = "% !TEX useAlternatePath가 있는 문서에 사용합니다. 기본값: ~/bin/context/tex/texmf-osx-arm64/bin";
-"catalog.typesetting.3.3.title" = "자동 설정…";
+"catalog.typesetting.3.3.title" = "조판 설정…";
 "group.typesetting.4.title" = "PDF 직접 생성";
 "catalog.typesetting.4.0.title" = "TeX";
 "catalog.typesetting.4.0.button" = "기본값";

@@ -145,11 +145,9 @@
 "Don’t show again for this document" = "Ne plus afficher pour ce document";
 
 /* Engine path discovery */
-"Detected Engine Paths" = "Chemins des moteurs détectés";
 
 "Not found" = "Introuvable";
 "Version unavailable" = "Inconnue";
-"Use These Paths" = "Utiliser ces chemins";
 
 /* Menu keyboard shortcut customization */
 "Search commands" = "Rechercher des commandes";
@@ -236,8 +234,8 @@
 "Comment Lines and Hidden Settings" = "Lignes de commentaire et réglages masqués";
 "Advanced" = "Avancé";
 
-"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Installez une distribution TeX, puis lancez la configuration automatique dans Réglages > Composition.";
-"Ghostscript was not found. Install Ghostscript, then run Auto Setup in Settings > Typesetting." = "Ghostscript est introuvable. Installez Ghostscript, puis lancez la configuration automatique dans Réglages > Composition.";
+"Install TeX Live or MacTeX, then choose Set Up Typesetting in Settings > Typesetting." = "Installez TeX Live ou MacTeX, puis choisissez « Configurer la composition » dans Réglages > Composition.";
+"Ghostscript was not found. Install Ghostscript, then choose Set Up Typesetting in Settings > Typesetting." = "Ghostscript est introuvable. Installez Ghostscript, puis choisissez « Configurer la composition » dans Réglages > Composition.";
 
 "Completion trigger" = "Touche de déclenchement";
 
@@ -295,7 +293,6 @@
 
 "Edits the shared file for all documents. This setting controls the default for new documents." = "Modifie le fichier partagé par tous les documents. Ce réglage détermine la valeur par défaut des nouveaux documents.";
 
-"The newest detected installation is selected. You can choose another candidate below." = "L’installation la plus récente détectée est sélectionnée. Vous pouvez en choisir une autre ci-dessous.";
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "Les macros suivantes utilisent ce raccourci. Si vous l’attribuez à la commande du menu, leurs raccourcis seront désactivés.\n\n%@";
 

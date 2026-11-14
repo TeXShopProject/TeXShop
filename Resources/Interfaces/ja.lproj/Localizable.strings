@@ -145,7 +145,6 @@
 "Don’t show again for this document" = "この書類では今後表示しない";
 
 
-"Detected Engine Paths" = "エンジンの検出結果";
 
 
 
@@ -154,7 +153,6 @@
 "Version unavailable" = "不明";
 
 
-"Use These Paths" = "この設定を使用";
 
 /* Menu keyboard shortcut customization */
 "Search commands" = "機能を検索";
@@ -257,8 +255,8 @@
 "Comment Lines and Hidden Settings" = "コメント行と隠し設定";
 "Advanced" = "詳細";
 
-"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "TeX環境をインストールしてから、設定の「タイプセット」で「自動設定」を実行してください。";
-"Ghostscript was not found. Install Ghostscript, then run Auto Setup in Settings > Typesetting." = "Ghostscriptが見つかりませんでした。Ghostscriptをインストールしてから、設定の「タイプセット」で「自動設定」を実行してください。";
+"Install TeX Live or MacTeX, then choose Set Up Typesetting in Settings > Typesetting." = "TeX LiveかMacTeXをインストールしてから、設定の「タイプセット」で「タイプセットを設定」を選んでください。";
+"Ghostscript was not found. Install Ghostscript, then choose Set Up Typesetting in Settings > Typesetting." = "Ghostscriptが見つかりませんでした。Ghostscriptをインストールしてから、設定の「タイプセット」で「タイプセットを設定」を選んでください。";
 
 "Completion trigger" = "呼び出すキー";
 
@@ -302,7 +300,6 @@
 
 "Edits the shared file for all documents. This setting controls the default for new documents." = "全書類で使う共通ファイルを編集します。この設定は新しい書類の初期値に適用されます。";
 
-"The newest detected installation is selected. You can choose another candidate below." = "検出した中で最も新しい環境を選択しています。以下の候補から別の環境も選べます。";
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "次のマクロがこのキーを使用しています。メニューのコマンドに割り当てると、マクロのキーは無効になります。\n\n%@";
 

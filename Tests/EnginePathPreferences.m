@@ -2,16 +2,9 @@
 #import "TestAppKitIsolation.h"
 #import "TSPreferenceProfile.h"
 
-@interface MemoryDefaults : NSObject
-@property NSMutableDictionary *values;
-- (NSString *)stringForKey:(NSString *)key;
-- (void)setObject:(id)value forKey:(NSString *)key;
-@end
-@implementation MemoryDefaults
-- (instancetype)init { if ((self = [super init])) _values = [NSMutableDictionary dictionary]; return self; }
-- (NSString *)stringForKey:(NSString *)key { return self.values[key]; }
-- (void)setObject:(id)value forKey:(NSString *)key { self.values[key] = value; }
-@end
+#import "MemoryDefaults.h"
+@interface MemoryDefaults : TSMemoryDefaults @end
+@implementation MemoryDefaults @end
 static MemoryDefaults *defaults;
 static NSModalResponse modalResponse = NSAlertSecondButtonReturn;
 static NSUInteger modalCount;
@@ -100,7 +93,8 @@ int main(void) { @autoreleasepool {
 
     NSButton *button = [NSButton new];
     [p discoverEnginePaths:button]; spin();
-    check(shown.buttons.count == 2 && [shown.buttons[1].title isEqual:@"Cancel"], @"candidate dialog offers Cancel");
+    check(shown.buttons.count == 2 && [shown.buttons[0].title isEqual:@"OK"] && [shown.buttons[1].title isEqual:@"Cancel"], @"candidate dialog offers OK and Cancel");
+    check([shown.messageText isEqual:@"Set Up Typesetting"] && shown.informativeText.length == 0, @"Set Up Typesetting in Settings opens the setup of first launch, without explanation");
     check(shown != nil && button.enabled, @"asynchronous results presented");
     check(matrices().count == 2 && matrices()[0].selectedRow == 0 && matrices()[1].selectedRow == 0, @"newest preselected for both lists");
     check(matrices()[0].numberOfRows == 3 && matrices()[1].numberOfRows == 3, @"all alternatives selectable");
@@ -123,6 +117,7 @@ int main(void) { @autoreleasepool {
     shown = nil; [p discoverEnginePaths:button]; [p cancelEnginePathDiscovery]; spin();
     check(shown == nil && button.enabled, @"closing Settings discards pending discovery");
     ((TestWindow *)p->_prefsWindow).testVisible = NO;
+    applied = nil;
     [p discoverInitialEnginePaths]; spin();
     check(shown != nil && modalCount == 1 && [[defaults stringForKey:TetexBinPath] isEqual:@"/old/tex"], @"initial modal Cancel is non-destructive");
 
@@ -130,7 +125,7 @@ int main(void) { @autoreleasepool {
     // The first-launch setup: the engine profiles but the one under Other, chosen by language, and latexmk.
     NSPopUpButton *profiles = nil; NSButton *latexmk = nil;
     for (NSView *v in shown.accessoryView.subviews) {
-        if ([v.identifier isEqual:@"settings.first-launch-profile"]) profiles = (NSPopUpButton *)v;
+        if ([v.identifier isEqual:@"settings.setup-profile"]) profiles = (NSPopUpButton *)v;
         if ([v.identifier isEqual:@"settings.engine-profile-latexmk"]) latexmk = (NSButton *)v;
     }
     NSMutableArray *tags = [NSMutableArray array];
@@ -204,7 +199,24 @@ int main(void) { @autoreleasepool {
     p->_tetexBinPathField.stringValue = @"/old/tex"; p->_gsBinPathField.stringValue = @"/old/gs";
     results = @{@"TeX":@[],@"Ghostscript":@[]};
     [p discoverEnginePaths:button]; spin();
-    check(matrices().count == 0 && shown.buttons.count == 1, @"nothing found gives informational dialog");
+    check(matrices().count == 0 && shown.buttons.count == 2 && [shown.informativeText containsString:@"Install TeX Live or MacTeX"], @"nothing found: the profile can still be chosen, and installing TeX is suggested");
     finish(NSAlertFirstButtonReturn);
+    // From Settings the setup starts from the profile and the latexmk choice in use.
+    results = @{@"TeX":@[candidate(@"/new/tex",@"TeX Live 2026")],@"Ghostscript":@[]};
+    for (NSArray *c in @[@[@(TSEngineProfilePLaTeXDvipdfmx), @YES, @(TSEngineProfilePLaTeXDvipdfmx)], @[@(TSEngineProfileXeLaTeX), @NO, @(TSEngineProfileXeLaTeX)],
+                         @[@(TSEngineProfileLaTeXDvipsGhostscript), @NO, @(TSEngineProfileForLanguages(NSLocale.preferredLanguages))]]) {
+        [defaults.values addEntriesFromDictionary:TSEngineProfileValues([c[0] integerValue], [c[1] boolValue])];
+        [defaults setObject:@"/old/tex" forKey:TetexBinPath]; [defaults setObject:@"/old/gs" forKey:GSBinPath];
+        p->_tetexBinPathField.stringValue = @"/old/tex"; p->_gsBinPathField.stringValue = @"/old/gs";
+        shown = nil; [p discoverEnginePaths:button]; spin();
+        NSPopUpButton *setupProfiles = nil; NSButton *setupLatexmk = nil;
+        for (NSView *v in shown.accessoryView.subviews) {
+            if ([v.identifier isEqual:@"settings.setup-profile"]) setupProfiles = (NSPopUpButton *)v;
+            if ([v.identifier isEqual:@"settings.engine-profile-latexmk"]) setupLatexmk = (NSButton *)v;
+        }
+        check(setupProfiles.selectedTag == [c[2] integerValue] && (setupLatexmk.state == NSControlStateValueOn) == [c[1] boolValue],
+              [NSString stringWithFormat:@"the setup from Settings starts from profile %@", c[0]]);
+        finish(NSAlertSecondButtonReturn);
+    }
     NSLog(@"PASS: candidate selection, local Cancel, immediate saving, stale results, initial setup, removed and missing tools, TeX or Ghostscript alone");
 } return 0; }

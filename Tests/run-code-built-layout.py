@@ -37,7 +37,7 @@ assert 'TSChangeAllAccessory(self, &sReplacementField, &sReplacementStatus)' in 
     'The application builds the Change All view as the check does'
 assert 'return TSRunShortcutAlert(TSShortcutConflictsAlert(details));' in (root / 'Sources/Macros/TSMacroEditor.m').read_text()
 assert 'alert = TSLearnedWordsAlert(language, list, &table);' in (root / 'Sources/Editor/TSSpellSupport.m').read_text()
-assert 'NSAlert *alert = TSEnginePathAlert(found, initial, matrices);' in (root / 'Sources/Settings/TSPreferences.m').read_text(), \
+assert 'NSAlert *alert = TSEnginePathAlert(found, current, !initial && TSEngineProfileSettingsUseLatexmk(SUD), matrices);' in (root / 'Sources/Settings/TSPreferences.m').read_text(), \
     'The application builds the engine path alert as the check does'
 assert 'NSAlert *alert = TSEngineProfileAlert(profile, tex, gs, missing, latexmkButton);' in (root / 'Sources/Settings/TSPreferences.m').read_text(), \
     'The application builds the engine profile sheet as the check does'

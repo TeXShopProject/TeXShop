@@ -234,7 +234,7 @@
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "Home URL";
 "catalog.preview.5.0.note" = "The page that the HTML window opens first. Enter a web address or the path of a file. Default: https://texshop.app";
-"group.typesetting.0.title" = "Defaults";
+"group.typesetting.0.title" = "Engine";
 "catalog.typesetting.0.4.title" = "Engine Profile";
 "catalog.typesetting.0.4.note" = "Sets the typesetting commands, the BibTeX engine, otf package support, and the paths to TeX and Ghostscript. The Japanese profiles also set UTF-8 as the encoding for new documents, the dictionary, and UTF-8-MAC conversion.";
 "catalog.typesetting.0.4.button" = "Apply…";
@@ -256,7 +256,7 @@
 "catalog.typesetting.3.1.note" = "Default: /usr/local/bin";
 "catalog.typesetting.3.2.title" = "Second TeX Engines";
 "catalog.typesetting.3.2.note" = "Used for documents that contain % !TEX useAlternatePath. Default: ~/bin/context/tex/texmf-osx-arm64/bin";
-"catalog.typesetting.3.3.title" = "Auto Setup…";
+"catalog.typesetting.3.3.title" = "Set Up Typesetting…";
 "group.typesetting.4.title" = "Direct PDF";
 "catalog.typesetting.4.0.title" = "TeX";
 "catalog.typesetting.4.0.button" = "Default";
