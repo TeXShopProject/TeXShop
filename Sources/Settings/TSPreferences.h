@@ -245,6 +245,8 @@
 @property (strong) NSButton *sparklePrereleaseButton;
 @property (strong) NSPopUpButton *engineProfilePopup;
 @property (strong) id engineProfileWatcher;
+// The profile that the sheet asks about, shown in the menu until the sheet ends; 0 when none.
+@property NSInteger engineProfileAsked;
 @property (strong) NSPopUpButton *defaultEnginePopup;
 @property (strong) NSButton *editEnginesButton;
 @property (strong) NSTextField *makeIndexEngineField;

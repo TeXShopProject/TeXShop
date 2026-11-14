@@ -166,6 +166,15 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     NSString *texPath=[TSIsolatedAppKitDefaults stringForKey:TetexBinPath],*gsPath=[TSIsolatedAppKitDefaults stringForKey:GSBinPath];
     EditOwnerField(owner,latexGS,@"typed-command");alerts=ownerAlertCount;chooseProfile(TSEngineProfileUpLaTeXDvipdfmx);
     Check(ownerAlertCount==alerts+1,@"The profile sheet comes after the commit");
+    // While the sheet waits, the change notices of the commit, and of an owned setting changed elsewhere, leave the
+    // chosen profile in the menu.
+    for(int i=0;i<5;i++)[NSRunLoop.mainRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+    Check(profileChoice.selectedTag==TSEngineProfileUpLaTeXDvipdfmx,[NSString stringWithFormat:@"While the sheet waits, the menu keeps the profile chosen after the commit: %@",profileChoice.titleOfSelectedItem]);
+    NSString *indexBefore=[TSIsolatedAppKitDefaults stringForKey:MakeIndexEngineKey];
+    [TSIsolatedAppKitDefaults setObject:@"elsewhere" forKey:MakeIndexEngineKey];
+    for(int i=0;i<5;i++)[NSRunLoop.mainRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+    Check(profileChoice.selectedTag==TSEngineProfileUpLaTeXDvipdfmx,@"While the sheet waits, a setting changed elsewhere leaves the profile chosen in the menu");
+    if(indexBefore)[TSIsolatedAppKitDefaults setObject:indexBefore forKey:MakeIndexEngineKey];else [TSIsolatedAppKitDefaults removeObjectForKey:MakeIndexEngineKey];
     sheetLatexmk().state=NSControlStateValueOn;
     FinishOwnerAlert(NSAlertFirstButtonReturn);
     NSString *profileCommand=TSEngineProfileValues(TSEngineProfileUpLaTeXDvipdfmx,YES)[LatexGSCommandKey];

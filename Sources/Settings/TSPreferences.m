@@ -302,6 +302,12 @@ NSArray<NSString *> *TSEngineFileNames(NSString *folder)
 {
     NSPopUpButton *popup = self.engineProfilePopup;
     if (popup == nil) return;
+    // While the sheet asks, the menu keeps showing the profile chosen; it shows the settings again
+    // when the sheet ends.
+    if (self.engineProfileAsked != TSEngineProfileNone && [popup indexOfItemWithTag:self.engineProfileAsked] >= 0) {
+        [popup selectItemWithTag:self.engineProfileAsked];
+        return;
+    }
     TSEngineProfile current = TSEngineProfileMatchingSettings(defaults, NULL);
     // The menu is built again only when what it shows changes.
     BOOL hasCustom = [popup indexOfItemWithTag:TSEngineProfileNone] >= 0;
@@ -349,10 +355,12 @@ static NSButton *TSEngineProfileLatexmkButton(BOOL on);
         return;
     }
     // The commit may have shown the settings again; the menu shows the choice while the sheet asks.
+    self.engineProfileAsked = profile;
     [self.engineProfilePopup selectItemWithTag:profile];
     NSButton *latexmk = TSEngineProfileLatexmkButton(TSEngineProfileSettingsUseLatexmk(SUD));
     NSAlert *alert = TSEngineProfileAlert(profile, latexmk);
     [alert beginSheetModalForWindow:_prefsWindow completionHandler:^(NSModalResponse response) {
+        self.engineProfileAsked = TSEngineProfileNone;
         if (response == NSAlertFirstButtonReturn && !self.endingPreferences)
             [self applyEngineProfileValues:TSEngineProfileValues(profile, latexmk.state == NSControlStateValueOn)];
         [self refreshEngineProfileFromDefaults:SUD];
