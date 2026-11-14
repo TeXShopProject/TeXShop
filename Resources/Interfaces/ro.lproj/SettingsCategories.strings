@@ -16,13 +16,13 @@
 "updates" = "Actualizări";
 
 /* Category overview */
-"general.summary" = "Pornire, pozițiile ferestrelor, profiluri de configurare și pictograma din Dock.";
+"general.summary" = "Pornire, pozițiile ferestrelor și pictograma din Dock.";
 "documents.summary" = "Codificarea textului și salvarea documentelor.";
 "editor.summary" = "Editare, culori de sintaxă, indentare și paranteze.";
 "spelling.summary" = "Verificarea ortografiei la tastare și în LaTeX.";
 "appearance.summary" = "Alegeți și editați temele de culori.";
 "preview.summary" = "Afișarea și comenzile previzualizării PDF.";
-"typesetting.summary" = "Compunere, sincronizare și căile instrumentelor.";
+"typesetting.summary" = "Profilurile motorului, compunere, sincronizare și căile instrumentelor.";
 "console.summary" = "Consola care afișează rezultatele compilării.";
 "keyboard.summary" = "Asocieri de taste, completare și scurtături de meniu.";
 "updates.summary" = "Verificare automată și actualizări software.";
@@ -49,10 +49,6 @@
 "group.general.3.title" = "Fișierul principal al proiectului";
 "catalog.general.3.0.title" = "Deschide fișierul principal la deschiderea unui document";
 "catalog.general.3.1.title" = "Minimizează fereastra principală deschisă";
-"group.general.4.title" = "Stabilește valorile implicite";
-"catalog.general.4.0.title" = "Aplică un profil de configurare, de exemplu pentru tehnoredactare în japoneză.";
-"catalog.general.4.1.title" = "Profil";
-"catalog.general.4.1.button" = "Aplicați";
 "group.general.5.title" = "Avansat";
 "group.general.6.title" = "Pictograma din Dock în timpul rulării";
 "catalog.general.5.0.title" = "Setările care nu apar aici sunt descrise în documentul de ajutor „Linii de comentariu și setări ascunse”.";
@@ -238,7 +234,10 @@
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "URL inițial";
 "catalog.preview.5.0.note" = "Pagina pe care fereastra HTML o deschide prima. Introduceți o adresă web sau calea unui fișier. Implicit: https://texshop.app";
-"group.typesetting.0.title" = "Valori implicite";
+"group.typesetting.0.title" = "Motor";
+"catalog.typesetting.0.4.title" = "Profilul motorului";
+"catalog.typesetting.0.4.note" = "Stabilește comenzile de compunere, motorul BibTeX și suportul pentru pachetul otf. Profilurile japoneze stabilesc și UTF-8 drept codificare a documentelor noi, dicționarul și conversia UTF-8-MAC.";
+"catalog.typesetting.0.4.button" = "Aplicați…";
 "catalog.typesetting.0.0.title" = "Comanda Standard";
 "catalog.typesetting.0.1.title" = "Comanda utilizată";
 "catalog.typesetting.0.2.title" = "Metoda de tehnoredactare";
@@ -257,7 +256,7 @@
 "catalog.typesetting.3.1.note" = "Implicit: /usr/local/bin";
 "catalog.typesetting.3.2.title" = "Al doilea set de motoare TeX";
 "catalog.typesetting.3.2.note" = "Pentru documentele cu % !TEX useAlternatePath. Implicit: ~/bin/context/tex/texmf-osx-arm64/bin";
-"catalog.typesetting.3.3.title" = "Configurare automată…";
+"catalog.typesetting.3.3.title" = "Detectați căile…";
 "group.typesetting.4.title" = "PDF direct";
 "catalog.typesetting.4.0.title" = "TeX";
 "catalog.typesetting.4.0.button" = "Implicit";

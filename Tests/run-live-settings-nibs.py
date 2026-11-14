@@ -4,7 +4,7 @@ from pathlib import Path
 import subprocess, sys, xml.etree.ElementTree as ET
 r=Path(__file__).resolve().parents[1]
 xibs=sorted([x for x in (r/'Resources/Interfaces/Base.lproj').glob('Settings*.xib') if x.name != 'SettingsWindow.xib'])
-assert len(xibs)==11
+assert len(xibs)==10
 all_actions={a.get('selector') for p in xibs for a in ET.parse(p).iter('action')}
 assert not all_actions.intersection({'okButtonPressed:','cancelButtonPressed:','SaveEditedStyle:'})
 assert 'themeSelectionChanged:' in all_actions

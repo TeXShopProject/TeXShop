@@ -496,7 +496,7 @@ TeXShop Settings opens from the main TeXShop menu. Its sidebar groups related se
 
 Use Back and Forward to revisit categories. Command-left bracket and Command-right bracket navigate while Settings is active; brackets produced with Option also work. The window remembers its last category. Navigation history lasts until the settings window closes.
 
-General contains Settings Profile, the Dock icon choices and the link to Comment Lines and Hidden Settings. The profile confirmation describes its reset scope and selected engine path. Editor contains the source font; Console contains its own font. Themes contains theme selections and the theme editor. Theme colors are grouped by their purpose. Creating a theme asks for its name; replacing an existing theme asks for confirmation with that name.
+General contains the Dock icon choices and the link to Comment Lines and Hidden Settings. Typesetting contains the engine profiles described in Section~\ref{sec:configuring-typesetting}. Editor contains the source font; Console contains its own font. Themes contains theme selections and the theme editor. Theme colors are grouped by their purpose. Creating a theme asks for its name; replacing an existing theme asks for confirmation with that name.
 
 A small note with a yellow warning symbol under a changed setting explains consequences that may otherwise be surprising: the spell-checking method, the zoom for new PDFs when a preview is open, and the default encoding when a source window is open. The note clears when the value returns to the value at opening, another category is selected, or Settings closes. Auto Save shows a restart note while its saved value differs from the startup value. Switching among the Apple Find Panel, the Apple Find Bar and the Advanced Find Panel takes effect immediately. Switching to or from OgreKit requires restarting TeXShop.
 
@@ -855,11 +855,14 @@ about TeX and LaTeX make perfect sense when used on a machine running XeTeX or L
 
 
 \section{Configuring \TeX\ and \LaTeX\ Typesetting}
+\label{sec:configuring-typesetting}
 
 With this history out of the way, it is time to explain how to configure TeXShop to typeset
 using whatever engine you decide to use. You'll do this by using TeXShop Settings. 
 
-Go to TeXShop Settings and select the {\bf Typesetting} category. In the {\bf Defaults} group, use the {\bf Default Command} pop-up menu to select either \TeX\ or \LaTeX\ as the default command. Most people use \LaTeX, so that is the default choice.
+Go to TeXShop Settings and select the {\bf Typesetting} category. The quickest way to set up typesetting is an engine profile. At the top of the {\bf Engine} group, choose a profile in the {\bf Engine Profile} pop-up menu and click {\bf Apply}. The profiles are pdfLaTeX, XeLaTeX, LuaLaTeX, LaTeX + dvipdfmx, LuaLaTeX (Japanese), pLaTeX + dvipdfmx and upLaTeX + dvipdfmx; LaTeX + dvips + Ghostscript is under {\bf Other}. Select {\bf Use latexmk} to have latexmk run BibTeX, the index and further passes as needed; otherwise each typesetting runs the engine once. A profile sets only the typesetting commands of its method, the typesetting method, the BibTeX engine and otf package support; the Japanese profiles also set UTF-8 as the encoding for new documents, set the spelling dictionary to automatic language detection and turn on UTF-8-MAC conversion. Every other setting stays as it is, and the commands of the other method are not changed. The menu shows the profile whose commands are set now, or {\bf Custom} after you change a command by hand. The paths to TeX and Ghostscript are set apart, with {\bf Detect Paths...} in the {\bf Paths} group. When TeXShop starts for the first time, it asks for the paths and then for an engine profile.
+
+The rest of this section describes the settings that a profile sets, for those who want to set them by hand. In the {\bf Engine} group, use the {\bf Default Command} pop-up menu to select either \TeX\ or \LaTeX\ as the default command. Most people use \LaTeX, so that is the default choice.
 We'll describe the third choice in this menu shortly.
 
 The {\bf Typesetting Method} pop-up menu in the same group sets the default method. Select either ``Direct PDF'' or ``Via DVI''.  Most people select ``Direct PDF''. If you use pstricks or have many very old documents, ``Via DVI'' may be a better choice. 
@@ -879,7 +882,7 @@ safer, and by default they no longer accept the postscript transparency operator
 telling Ghostscript to process transparency calls correctly. The setting will be irrelevant for most
 people.
 
-Below the Defaults group is the {\bf After Typesetting} pop-up menu.
+Below the Engine group is the {\bf After Typesetting} pop-up menu.
 This setting determines which window is pulled to the front after typesetting is done.
 Users often want to 
 inspect the output to make sure it is correct, so the choice  ``Bring Preview Forward'' pulls the
@@ -1007,7 +1010,7 @@ Homebrew, or MiKTeX, the location of the binaries will be different. Consult the
 
 The second item in this group, {\bf Ghostscript}, is a full path to the Ghostscript binary. This is /usr/local/bin for the copy of Ghostscript installed by MacTeX. The standard build sequence for Ghostscript will also install it at this location. If you use the Ghostscript in MacPorts or Homebrew, consult their documentation for the proper location. Many typesetting engines do not use Ghostscript, so this is not a crucial setting.
 
-Starting with TeXShop 5.60, TeXShop can set these two items for you. When TeXShop is first used, and whenever the button {\bf Auto Setup...} in the {\bf Paths} group of the Typesetting category is pressed, TeXShop looks for \TeX\ and Ghostscript in the usual places: the folders listed in /etc/paths and /etc/paths.d, /Library/TeX/texbin, the TeX Live folders in /usr/local/texlive and /Applications/TeXLive, and the folders used by Homebrew, MacPorts, and Fink. It checks that the programs run, asks each one for its version, and lists the installations it finds, newest first; \TeX\ Live installations are ordered by year and then by pdfTeX version. The newest one is selected, but another one can be chosen, separately for \TeX\ and for Ghostscript. Press {\bf Use These Paths} to select the installation. Installations in other places can still be entered by hand.
+Starting with TeXShop 5.60, TeXShop can set these two items for you. When TeXShop is first used, and whenever the button {\bf Detect Paths...} in the {\bf Paths} group of the Typesetting category is pressed, TeXShop looks for \TeX\ and Ghostscript in the usual places: the folders listed in /etc/paths and /etc/paths.d, /Library/TeX/texbin, the TeX Live folders in /usr/local/texlive and /Applications/TeXLive, and the folders used by Homebrew, MacPorts, and Fink. It checks that the programs run, asks each one for its version, and lists the installations it finds, newest first; \TeX\ Live installations are ordered by year and then by pdfTeX version. The newest one is selected, but another one can be chosen, separately for \TeX\ and for Ghostscript. Press {\bf OK} to select the installation. Installations in other places can still be entered by hand.
 
 The {\bf Second TeX Engines} setting will be explained later and is not used by the toolchains discussed in this chapter.
 

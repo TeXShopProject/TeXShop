@@ -141,12 +141,9 @@
 "Don’t show again for this document" = "对此文稿不再显示";
 
 /* Engine path discovery */
-"Set Up TeX Engine Paths" = "设置TeX引擎路径";
-"Detected Engine Paths" = "检测到的引擎路径";
 
 "Not found" = "未找到";
 "Version unavailable" = "未知";
-"Use These Paths" = "使用这些路径";
 
 /* Menu keyboard shortcut customization */
 "Search commands" = "搜索命令";
@@ -167,10 +164,7 @@
 
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
-"The selected profile is invalid." = "所选配置无效。";
-"Apply Settings Profile?" = "要应用设置配置吗？";
 
-"Apply Profile" = "应用配置";
 "Settings could not be saved" = "无法保存设置";
 "Enter a valid setting" = "请输入有效的设置";
 
@@ -236,8 +230,8 @@
 "Comment Lines and Hidden Settings" = "注释行与隐藏设置";
 "Advanced" = "高级";
 
-"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "安装TeX发行版，然后在设置 > 排版中运行自动设置。";
-"Ghostscript was not found. Install Ghostscript, then run Auto Setup in Settings > Typesetting." = "未找到Ghostscript。安装Ghostscript，然后在设置 > 排版中运行自动设置。";
+"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "请安装TeX Live或MacTeX，然后在设置 > 排版中选择“自动检测路径”。";
+"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "未找到Ghostscript。请安装Ghostscript，然后在设置 > 排版中选择“自动检测路径”。";
 
 "Completion trigger" = "触发按键";
 
@@ -296,7 +290,6 @@
 
 "Edits the shared file for all documents. This setting controls the default for new documents." = "编辑所有文稿共用的文件。此设置决定新文稿的默认值。";
 
-"The newest detected installation is selected. You can choose another candidate below." = "已选中检测到的最新版本。您可以在下方选择其他候选项。";
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "以下宏使用此快捷键。将其分配给菜单命令后，这些宏的快捷键将停用。\n\n%@";
 
@@ -308,7 +301,6 @@
 
 "Custom menu shortcuts will be removed." = "将移除自定菜单快捷键。";
 
-"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "将重置引擎、编辑、显示、已知的隐藏设置和Dock图标。主题选择可能会更改。TeX引擎路径：%@";
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "自动检测语言";
@@ -353,3 +345,12 @@
 "Change Key Binding" = "更改按键绑定";
 "Delete Key Binding" = "删除按键绑定";
 "Move Key Binding" = "移动按键绑定";
+
+/* Engine profiles */
+"LuaLaTeX (Japanese)" = "LuaLaTeX（日语）";
+"Other" = "其他";
+"Custom" = "自定";
+"Apply the “%@” profile?" = "要应用“%@”配置吗？";
+"Use latexmk" = "使用latexmk";
+"Detect Paths" = "自动检测路径";
+"Choose an Engine Profile" = "选择引擎配置";

@@ -28,10 +28,6 @@ add(TSSettingsCategoryGeneral, @"DockIconChoices", @"SettingsDock", @"Classic Tr
 add(TSSettingsCategoryGeneral, @"DockIconChoices", @"SettingsDock", @"Current (Default)", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryGeneral, @"DockIconChoices", @"SettingsDock", @"Original", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryGeneral, @"DockIconChoices", @"SettingsDock", @"Retina Triangle", TSSettingsSearchWeightChoice);
-add(TSSettingsCategoryGeneral, @"heading.group.general.4", @"SettingsCategories", @"group.general.4.title", TSSettingsSearchWeightHeading);
-add(TSSettingsCategoryGeneral, @"row.catalog.general.4.1", @"SettingsCategories", @"catalog.general.4.0.title", TSSettingsSearchWeightDescription);
-add(TSSettingsCategoryGeneral, @"row.catalog.general.4.1", @"SettingsCategories", @"catalog.general.4.1.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryGeneral, @"row.catalog.general.4.1", @"SettingsCategories", @"catalog.general.4.1.button", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryGeneral, @"heading.group.general.5", @"SettingsCategories", @"group.general.5.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.5.1", @"SettingsCategories", @"catalog.general.5.0.title", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.5.1", @"SettingsCategories", @"catalog.general.5.1.title", TSSettingsSearchWeightLabel);
@@ -218,6 +214,10 @@ add(TSSettingsCategoryPreview, @"heading.group.preview.5", @"SettingsCategories"
 add(TSSettingsCategoryPreview, @"row.catalog.preview.5.0", @"SettingsCategories", @"catalog.preview.5.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.5.0", @"SettingsCategories", @"catalog.preview.5.0.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryTypesetting, @"heading.group.typesetting.0", @"SettingsCategories", @"group.typesetting.0.title", TSSettingsSearchWeightHeading);
+add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.4", @"SettingsCategories", @"catalog.typesetting.0.4.title", TSSettingsSearchWeightLabel);
+add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.4", @"SettingsCategories", @"catalog.typesetting.0.4.note", TSSettingsSearchWeightDescription);
+add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.4", @"SettingsCategories", @"catalog.typesetting.0.4.button", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.4", @"Localizable", @"LuaLaTeX (Japanese)", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.0", @"SettingsCategories", @"catalog.typesetting.0.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.1", @"SettingsCategories", @"catalog.typesetting.0.1.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.2", @"SettingsCategories", @"catalog.typesetting.0.2.title", TSSettingsSearchWeightLabel);
@@ -444,15 +444,6 @@ add(TSSettingsCategoryDocuments, @"row.catalog.documents.0.0", @"Encodings", @"W
 add(TSSettingsCategoryDocuments, @"row.catalog.documents.0.0", @"Encodings", @"Windows Latin 1", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryDocuments, @"row.catalog.documents.0.0", @"Encodings", @"WindowsCentralEurRoman", TSSettingsSearchWeightChoice);
 add(TSSettingsCategorySpelling, @"row.catalog.spelling.0.2", @"Localizable", @"Automatic Language", TSSettingsSearchWeightChoice);
-add(TSSettingsCategoryGeneral, @"row.catalog.general.4.1", @"SettingsFooter", @"1100.title", TSSettingsSearchWeightChoice);
-add(TSSettingsCategoryGeneral, @"row.catalog.general.4.1", @"SettingsFooter", @"1099.title", TSSettingsSearchWeightChoice);
-add(TSSettingsCategoryGeneral, @"row.catalog.general.4.1", @"SettingsFooter", @"1098.title", TSSettingsSearchWeightChoice);
-add(TSSettingsCategoryGeneral, @"row.catalog.general.4.1", @"SettingsFooter", @"1097.title", TSSettingsSearchWeightChoice);
-add(TSSettingsCategoryGeneral, @"row.catalog.general.4.1", @"SettingsFooter", @"1096.title", TSSettingsSearchWeightChoice);
-add(TSSettingsCategoryGeneral, @"row.catalog.general.4.1", @"SettingsFooter", @"1095.title", TSSettingsSearchWeightChoice);
-add(TSSettingsCategoryGeneral, @"row.catalog.general.4.1", @"SettingsFooter", @"1094.title", TSSettingsSearchWeightChoice);
-add(TSSettingsCategoryGeneral, @"row.catalog.general.4.1", @"SettingsFooter", @"1093.title", TSSettingsSearchWeightChoice);
-add(TSSettingsCategoryGeneral, @"row.catalog.general.4.1", @"SettingsFooter", @"1092.title", TSSettingsSearchWeightChoice);
 // Column labels qualify the corresponding window color or opacity setting.
 add(TSSettingsCategoryAppearance, @"settings.L8Q-Ov-EVr", @"SettingsCategories", @"catalog.appearance.2.0.column.0", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryAppearance, @"settings.Kx3-n3-dsv", @"SettingsCategories", @"catalog.appearance.2.0.column.0", TSSettingsSearchWeightChoice);

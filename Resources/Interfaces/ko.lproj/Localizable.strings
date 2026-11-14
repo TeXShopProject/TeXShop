@@ -145,12 +145,9 @@
 "Don’t show again for this document" = "이 문서에 대해 다시 표시하지 않음";
 
 /* Engine path discovery */
-"Set Up TeX Engine Paths" = "TeX 엔진 경로 설정";
-"Detected Engine Paths" = "검색된 엔진 경로";
 
 "Not found" = "찾을 수 없음";
 "Version unavailable" = "알 수 없음";
-"Use These Paths" = "이 경로 사용";
 
 /* Menu keyboard shortcut customization */
 "Search commands" = "명령 검색";
@@ -171,10 +168,7 @@
 
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
-"The selected profile is invalid." = "선택한 프로파일이 유효하지 않습니다.";
-"Apply Settings Profile?" = "설정 프로파일을 적용하시겠습니까?";
 
-"Apply Profile" = "프로파일 적용";
 "Settings could not be saved" = "설정을 저장할 수 없습니다";
 "Enter a valid setting" = "유효한 설정값을 입력하십시오";
 
@@ -240,8 +234,8 @@
 "Comment Lines and Hidden Settings" = "주석 행 및 숨겨진 설정";
 "Advanced" = "고급";
 
-"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "TeX 배포판을 설치한 다음 설정 > 조판에서 자동 설정을 실행하십시오.";
-"Ghostscript was not found. Install Ghostscript, then run Auto Setup in Settings > Typesetting." = "Ghostscript를 찾을 수 없습니다. Ghostscript를 설치한 다음 설정 > 조판에서 자동 설정을 실행하십시오.";
+"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "TeX Live 또는 MacTeX를 설치한 다음 설정 > 조판에서 '경로 자동 감지'를 선택하십시오.";
+"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript를 찾을 수 없습니다. Ghostscript를 설치한 다음 설정 > 조판에서 '경로 자동 감지'를 선택하십시오.";
 
 "Completion trigger" = "호출 키";
 
@@ -299,7 +293,6 @@
 
 "Edits the shared file for all documents. This setting controls the default for new documents." = "모든 문서가 공유하는 파일을 편집합니다. 이 설정은 새 문서의 기본값을 정합니다.";
 
-"The newest detected installation is selected. You can choose another candidate below." = "검색된 설치 항목 중 최신 버전이 선택되어 있습니다. 아래에서 다른 항목을 선택할 수 있습니다.";
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "다음 매크로가 이 단축키를 사용합니다. 메뉴 명령에 할당하면 해당 매크로의 단축키가 비활성화됩니다.\n\n%@";
 
@@ -311,7 +304,6 @@
 
 "Custom menu shortcuts will be removed." = "사용자 지정 메뉴 단축키가 삭제됩니다.";
 
-"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "엔진, 편집, 표시, 알려진 숨겨진 설정 및 Dock 아이콘을 재설정합니다. 테마 선택이 변경될 수 있습니다. TeX 엔진 경로: %@";
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "언어 자동 감지";
@@ -356,3 +348,12 @@
 "Change Key Binding" = "키 바인딩 변경";
 "Delete Key Binding" = "키 바인딩 삭제";
 "Move Key Binding" = "키 바인딩 이동";
+
+/* Engine profiles */
+"LuaLaTeX (Japanese)" = "LuaLaTeX(일본어)";
+"Other" = "기타";
+"Custom" = "사용자화";
+"Apply the “%@” profile?" = "‘%@’ 프로파일을 적용하시겠습니까?";
+"Use latexmk" = "latexmk 사용";
+"Detect Paths" = "경로 자동 감지";
+"Choose an Engine Profile" = "엔진 프로파일 선택";

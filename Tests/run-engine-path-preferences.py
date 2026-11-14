@@ -5,6 +5,7 @@ import subprocess
 import tempfile
 from production_fragments import verify_embedded
 import xml.etree.ElementTree as ET
+from source_tree import include_args, source_file
 
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/Settings/TSPreferences.m').read_text(encoding='latin1')
@@ -23,6 +24,7 @@ with tempfile.TemporaryDirectory() as td:
     generated = td / 'PreferencesMethods.h'
     generated.write_text(methods)
     exe = td / 'EnginePathPreferences'
-    subprocess.run(['clang', '-fobjc-arc', '-framework', 'Cocoa', '-I', str(td),
-                    str(root / 'Tests/EnginePathPreferences.m'), '-o', str(exe)], check=True)
+    subprocess.run(['clang', '-fobjc-arc', '-framework', 'Cocoa', '-I', str(td), *include_args(root),
+                    str(root / 'Tests/EnginePathPreferences.m'), str(source_file(root, 'TSPreferenceProfile.m')), str(source_file(root, 'globals.m')),
+                    '-o', str(exe)], check=True)
     subprocess.run([str(exe)], check=True, timeout=20)

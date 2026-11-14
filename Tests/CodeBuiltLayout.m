@@ -7,7 +7,10 @@
 //     (TSChangeAllAccessory in TSSpellSupport.m), with each message it shows;
 //   * the alert that lists the TeX and Ghostscript installations found
 //     (TSEnginePathAlert in TSPreferences.m), laid out by NSAlert, with several
-//     installations, with one, and with none;
+//     installations, with one, and with none (Detect Paths and the first step of
+//     first launch); the choice of an engine profile with latexmk (the second
+//     step, TSEngineProfileChoiceAlert) and the sheet that applies one
+//     (TSEngineProfileAlert);
 //   * the alerts that list macro shortcut conflicts (TSShortcutConflictsAlert in
 //     TSMacroEditor.m) and the learned words of a document (TSLearnedWordsAlert
 //     in TSSpellSupport.m), laid out by NSAlert;
@@ -93,10 +96,21 @@ int main(int argc, char **argv) { @autoreleasepool {
             @"one": @{@"TeX": @[Candidate(@"TeX Live 2026", @"/Library/TeX/texbin")], @"Ghostscript": @[]},
             @"none": @{@"TeX": @[], @"Ghostscript": @[]},
         };
-        for (NSString *name in @[@"several", @"one", @"none"]) for (NSNumber *initial in @[@YES, @NO]) {
-            NSAlert *alert = TSEnginePathAlert(cases[name], initial.boolValue, [NSMutableDictionary dictionary]);
+        for (NSString *name in @[@"several", @"one", @"none"]) {
+            NSAlert *alert = TSEnginePathAlert(cases[name], [NSMutableDictionary dictionary]);
             [alert layout];
-            NSString *where = [NSString stringWithFormat:@"%@ [engine path alert, %@ found%@]", language, name, initial.boolValue ? @", first setup" : @""];
+            NSString *where = [NSString stringWithFormat:@"%@ [Detect Paths, %@ found]", language, name];
+            CheckRoot(alert.window.contentView, where); roots++;
+            SaveImage(alert.window.contentView, where);
+        }
+        // The engine profile: the second step of first launch, and the sheet of Apply… with the longest name.
+        NSArray *profileAlerts = @[TSEngineProfileChoiceAlert(TSEngineProfileLuaLaTeXJapanese, [NSMutableDictionary dictionary]),
+                                   TSEngineProfileAlert(TSEngineProfileLaTeXDvipsGhostscript, TSEngineProfileLatexmkButton(YES))];
+        NSArray *profileNames = @[@"engine profile choice", @"engine profile sheet"];
+        for (NSUInteger i = 0; i < profileAlerts.count; i++) {
+            NSAlert *alert = profileAlerts[i];
+            [alert layout];
+            NSString *where = [NSString stringWithFormat:@"%@ [%@]", language, profileNames[i]];
             CheckRoot(alert.window.contentView, where); roots++;
             SaveImage(alert.window.contentView, where);
         }
@@ -118,5 +132,5 @@ int main(int argc, char **argv) { @autoreleasepool {
     if (need > SIZE_WINDOW_WIDTH) Report([NSString stringWithFormat:@"CLIPPED [selection size overlay] \"8888 x 8888\": needs %.1f, has %d", need, SIZE_WINDOW_WIDTH]);
 
     if (problems) { printf("FAIL: %d problems\n", problems); return 1; }
-    printf("PASS: the Experiment console, the Change All view, the engine path, shortcut conflicts and learned words alerts and the selection size overlay show their whole text, inside their windows and apart, with room for focus rings and even margins (%lu windows and views in %lu languages)\n", (unsigned long)roots, (unsigned long)entries.count);
+    printf("PASS: the Experiment console, the Change All view, the engine path, engine profile, shortcut conflicts and learned words alerts and the selection size overlay show their whole text, inside their windows and apart, with room for focus rings and even margins (%lu windows and views in %lu languages)\n", (unsigned long)roots, (unsigned long)entries.count);
 } return 0; }
