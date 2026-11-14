@@ -223,7 +223,7 @@
 "Defaults for New Documents" = "새 문서의 기본값";
 "Matching Brackets" = "괄호 짝 맞추기";
 "Spelling While Typing" = "입력 중 맞춤법 검사";
-"Use LaTeX-aware spell checking (recommended)" = "LaTeX 구조를 고려한 맞춤법 검사 사용(권장)";
+"Use LaTeX-aware spell checking (recommended)" = "LaTeX 구문을 고려한 맞춤법 검사 사용(권장)";
 "Use legacy spell checking" = "기존 맞춤법 검사 사용";
 "LaTeX Spell Checking" = "LaTeX 맞춤법 검사";
 "Key Bindings" = "키 바인딩";

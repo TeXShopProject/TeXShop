@@ -219,7 +219,7 @@
 "Defaults for New Documents" = "新文稿的默认设置";
 "Matching Brackets" = "括号匹配";
 "Spelling While Typing" = "键入时检查拼写";
-"Use LaTeX-aware spell checking (recommended)" = "使用考虑LaTeX结构的拼写检查（推荐）";
+"Use LaTeX-aware spell checking (recommended)" = "使用考虑LaTeX语法的拼写检查（推荐）";
 "Use legacy spell checking" = "使用传统拼写检查";
 "LaTeX Spell Checking" = "LaTeX拼写检查";
 "Key Bindings" = "按键绑定";
