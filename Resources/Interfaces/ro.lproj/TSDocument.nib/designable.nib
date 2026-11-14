@@ -110,12 +110,13 @@
                 <outlet property="stringLeft" destination="fnP-08-fEx" id="mxd-gC-26Q"/>
                 <outlet property="stringRight" destination="5Pf-7y-LPx" id="5OQ-u1-1CU"/>
                 <outlet property="stringWindow" destination="pzK-XX-4Ga" id="jiV-K4-1lr"/>
+                <outlet property="stringWindowTextView" destination="RAn-kp-SNH" id="Ohb-Vr-poi"/>
                 <outlet property="stypesetButton" destination="elf-7z-BBD" id="vbU-LP-3Fo"/>
                 <outlet property="syncBox" destination="672" id="674"/>
                 <outlet property="tLog" destination="19Z-Li-7hD" id="vCR-Pc-bhk"/>
                 <outlet property="tags" destination="357" id="382"/>
                 <outlet property="texCommand" destination="139" id="141"/>
-                <outlet property="textView" destination="RAn-kp-SNH" id="Jbj-v1-ByF"/>
+                <outlet property="textView" destination="21" id="Jbj-v1-ByF"/>
                 <outlet property="textView1" destination="21" id="447"/>
                 <outlet property="textView2" destination="444" id="448"/>
                 <outlet property="textWindow" destination="5" id="189"/>

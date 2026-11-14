@@ -83,9 +83,7 @@
 60
 7
 718
-72
 74
-78
 8
 86
 86a
@@ -726,7 +724,6 @@ format
 formats
 former
 formerly
-formula
 formulas
 forth
 forward
@@ -739,6 +736,7 @@ frame
 frames
 freed
 freely
+french
 from
 front
 frontmost
@@ -948,6 +946,7 @@ issue
 issues
 it
 it's
+italian
 item
 items
 its
@@ -1345,6 +1344,7 @@ popup
 popups
 portion
 portions
+portuguese
 position
 positioning
 positive
@@ -1530,6 +1530,7 @@ right
 risking
 rivas
 roman
+romanian
 room
 root
 rounded
@@ -1758,7 +1759,6 @@ targets
 tcsh
 teaching
 tell
-telling
 tells
 template
 templates
@@ -1797,7 +1797,6 @@ these
 they
 thickness
 thin
-think
 third
 this
 thomas
@@ -1818,6 +1817,7 @@ titles
 to
 today
 together
+tom
 took
 tool
 toolbar

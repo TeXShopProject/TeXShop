@@ -15,6 +15,7 @@
                 <outlet property="annotationChoices" destination="Xgw-Br-1cR" id="F0Z-BX-kBy"/>
                 <outlet property="annotationMenu" destination="P4N-nV-DN3" id="29t-y8-2Q0"/>
                 <outlet property="autoCompleteButton" destination="440" id="441"/>
+                <outlet property="autoCompleteSplitButton" destination="oCL-rZ-3aW" id="2wM-qZ-cUD"/>
                 <outlet property="backforthKK" destination="780" id="783"/>
                 <outlet property="drawerKK" destination="782" id="784"/>
                 <outlet property="eLog" destination="9Rc-h5-FmV" id="AoN-fT-Je7"/>
@@ -32,6 +33,7 @@
                 <outlet property="htmlWindow" destination="Twu-Es-Nm7" id="aat-37-hKE"/>
                 <outlet property="iLog" destination="bRd-8X-n9q" id="RIE-PG-6VA"/>
                 <outlet property="indexColorBox" destination="923" id="924"/>
+                <outlet property="indexColorSplitBox" destination="Ih7-yf-Js1" id="o3g-yr-DO1"/>
                 <outlet property="labels" destination="BDD-Bh-Mbn" id="eDc-Sp-yfN"/>
                 <outlet property="leftView" destination="FGz-Z5-IJ0" id="OJq-i9-FsZ"/>
                 <outlet property="lineBox" destination="217" id="221"/>
@@ -586,6 +588,17 @@ DQ
                         <action selector="showIndexColor:" target="-2" id="925"/>
                     </connections>
                 </button>
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ih7-yf-Js1">
+                    <rect key="frame" x="18" y="10" width="92" height="18"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <buttonCell key="cell" type="check" title="索引着色" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="ON4-3x-KmT">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="showIndexColor:" target="-2" id="ecQ-oX-sf2"/>
+                    </connections>
+                </button>
                 <imageView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="782">
                     <rect key="frame" x="773" y="48" width="39" height="32"/>
                     <autoresizingMask key="autoresizingMask"/>
@@ -816,6 +829,17 @@ DQ
                     </buttonCell>
                     <connections>
                         <action selector="changeAutoComplete:" target="-2" id="442"/>
+                    </connections>
+                </button>
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oCL-rZ-3aW">
+                    <rect key="frame" x="131" y="10" width="113" height="18"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <buttonCell key="cell" type="check" title="按键绑定" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="ZkS-Bv-rjn">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="changeAutoComplete:" target="-2" id="9Wv-gf-ygw"/>
                     </connections>
                 </button>
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="398">
@@ -2720,7 +2744,7 @@ Gw
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                         <connections>
-                            <action selector="lockDocument:" target="-2" id="LJq-e2-BPE"/>
+                            <action selector="gotoURL:" target="-2" id="LJq-e2-BPE"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ftx-t0-ZLp">
