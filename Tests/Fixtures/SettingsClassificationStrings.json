@@ -211,7 +211,7 @@
     "Use LaTeX-aware spell checking (recommended)": {
       "default": "Use LaTeX-aware spell checking (recommended)",
       "overrides": {
-        "ja": "LaTeXの構造を考慮する（推奨）",
+        "ja": "LaTeXの構文を考慮する（推奨）",
         "de": "LaTeX-bewusste Rechtschreibprüfung verwenden (empfohlen)",
         "fr": "Utiliser la vérification adaptée à LaTeX (recommandé)",
         "es": "Usar corrección adaptada a LaTeX (recomendado)",

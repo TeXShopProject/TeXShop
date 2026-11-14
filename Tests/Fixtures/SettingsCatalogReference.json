@@ -748,7 +748,7 @@
    "symbol": "text.badge.checkmark",
    "color": "#639922",
    "section": 1,
-   "summary": "スペルチェックと、LaTeXの構造を考慮するスペルチェックを設定します。",
+   "summary": "スペルチェックと、LaTeXの構文を考慮するスペルチェックを設定します。",
    "groups": [
     {
      "title": "スペルチェック",
@@ -789,7 +789,7 @@
      "rows": [
       {
        "kind": "radio",
-       "title": "LaTeXの構造を考慮する（推奨）",
+       "title": "LaTeXの構文を考慮する（推奨）",
        "value": "spellMode",
        "selected": 0,
        "on": true,
