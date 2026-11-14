@@ -69,6 +69,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 @property (readwrite) BOOL searchingByKey;
 @property (strong) NSSegmentedControl *searchMode;
 @property (strong) TSShortcutKeySearchView *keySearchView;
+@property (weak) NSView *commandsView;
 @property (strong) NSButton *macroButton;
 @property (copy) NSString *textQuery;
 @property (strong, nullable) NSEvent *searchEvent;
@@ -176,7 +177,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
         button.controlSize = NSControlSizeSmall; button.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
     }
     for (NSView *view in @[self.searchMode,self.search,hint,scroll,buttons,self.keySearchView]) { view.translatesAutoresizingMaskIntoConstraints = NO; [content addSubview:view]; }
-    content.identifier = @"shortcut.commands";
+    content.identifier = @"shortcut.commands"; self.commandsView = content;
     hint.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
     [NSLayoutConstraint activateConstraints:@[
         [self.search.topAnchor constraintEqualToAnchor:content.topAnchor constant:10],
@@ -270,6 +271,17 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     self.search.stringValue = self.textQuery;
     self.search.placeholderString = NSLocalizedString(@"Search commands", @"");
     [self reloadCommands];
+}
+// Key search lasts while the focus stays in the menu shortcut controls; the
+// selection buttons there act on the selected match.
+- (void)windowFirstResponderChanged:(NSResponder *)responder {
+    if (!self.searchingByKey) { return; }
+    NSView *view = [responder isKindOfClass:NSView.class] ? (NSView *)responder : nil;
+    if ([view isKindOfClass:NSText.class] && ((NSText *)view).fieldEditor && [((NSText *)view).delegate isKindOfClass:NSView.class])
+        view = (NSView *)((NSText *)view).delegate;
+    NSView *commands = self.commandsView;
+    if (view == nil || commands == nil || [view isDescendantOf:commands]) { return; }
+    [self stopKeySearch];
 }
 - (BOOL)handleKeySearchEvent:(NSEvent *)event {
     if (!self.searchingByKey) { return NO; }

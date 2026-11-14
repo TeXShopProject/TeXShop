@@ -288,6 +288,21 @@ int main(int argc,char **argv){@autoreleasepool{
  method_setImplementation(class_getInstanceMethod(NSWindow.class,@selector(sendEvent:)),appKitSendEvent);
  REQUIRE(pane.searchMatches.count==0 && [pane.searchMessage containsString:@"cannot be used"] && forwardedKeys==0 && forwardedWindowEvents==0);
  fixtureCharacters=@"\r";forwardedKeys=0;REQUIRE([shell.window performKeyEquivalent:Event(@"\r",0,36)] && pane.searchingByKey && forwardedKeys==0 && [pane.searchMessage containsString:@"cannot be used"]);
+ // Focus that moves to a control outside the menu shortcut controls ends key search, and keys then reach that control.
+ {
+  NSSearchField *settingsSearch=[shell valueForKey:@"settingsSearchField"];NSTableView *sidebar=[shell valueForKey:@"categoryTable"];
+  for(NSView *outside in @[settingsSearch,sidebar]){
+   if(!pane.searchingByKey){pane.searchMode.selectedSegment=1;[pane changeSearchMode:pane.searchMode];}
+   fixtureCharacters=@"f";[shell.window performKeyEquivalent:Event(@"f",C,3)];REQUIRE(pane.searchingByKey && pane.searchEvent!=nil);
+   // The results and the key field are part of key search.
+   for(NSView *inside in @[pane.table,pane.keySearchView]) REQUIRE([shell.window makeFirstResponder:inside] && pane.searchingByKey && pane.searchEvent!=nil);
+   REQUIRE([shell.window makeFirstResponder:outside]);
+   REQUIRE(!pane.searchingByKey && pane.searchMode.selectedSegment==0 && pane.search.editable && pane.keySearchView.hidden && [pane.search.stringValue isEqual:@"First"]);
+   REQUIRE(![(id)shell handleKeySearchEvent:Event(@"f",C,3)]);
+  }
+  REQUIRE([(id<NSSearchFieldDelegate>)shell control:settingsSearch textShouldBeginEditing:[NSText new]] && [shell setSettingsSearchQuery:@""]);
+  pane.searchMode.selectedSegment=1;[pane changeSearchMode:pane.searchMode];REQUIRE(pane.searchingByKey && shell.window.firstResponder==pane.keySearchView);
+ }
  // Existing non-assignable shortcuts remain searchable, but new assignments stay restricted.
  NSMenuItem *rotate=Item(@"Rotate",@"c",O),*switchViews=Item(@"Switch views",@"2",O);
  [menu addItem:rotate];[menu addItem:switchViews];

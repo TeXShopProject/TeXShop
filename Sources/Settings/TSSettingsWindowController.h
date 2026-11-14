@@ -10,6 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)handleKeySearchEvent:(NSEvent *)event;
 @optional
 @property (readonly) BOOL searchingByKey;
+- (void)windowFirstResponderChanged:(nullable NSResponder *)responder;
 - (void)applySettingsQuery:(NSString *)query targets:(NSArray<NSString *> *)targets filterCommands:(BOOL)filter;
 @end
 @protocol TSSettingsWindowDelegate <NSObject>
