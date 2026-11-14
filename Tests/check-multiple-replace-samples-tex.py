@@ -54,6 +54,7 @@ KNOWN_VARIANTS = {chr(0x1F170 + i): 11174 + i for i in range(26)} | {'\u32FF': 2
 # Each breaks one thing; the test must fail (--mutations).
 MUTATIONS = {
     'no-pdf': 'the PDF is not made',
+    'no-glyphs': 'no glyph of a CID font is read from the PDF',
     'wrong-glyph': 'a character is typeset as another one',
     'extra-glyph': 'a line has one glyph more',
     'unknown-variant': 'a variant of ajmacros is not the known one',
@@ -140,6 +141,9 @@ def main():
         warnings = [l for l in log.splitlines() if 'Warning' in l or 'Missing character' in l]
         failed = False
         report = {'characters': len(targets)}
+        if len(targets) < 600 or '' in targets:
+            print(f'FAIL: the menu converts {len(targets)} characters; the tables have more than 600')
+            failed = True
         if result.returncode or errors:
             print(f'FAIL: upLaTeX stops: {errors[:5]}')
             failed = True
@@ -168,12 +172,12 @@ def main():
             failed = True
             glyphs = []
         else:
-            glyphs = pdf_cids(pdf)
+            glyphs = [] if mutation == 'no-glyphs' else pdf_cids(pdf)
         mismatches, used = [], collections.Counter()
-        if glyphs and len(glyphs) != 2 * len(targets):
+        if pdf.exists() and len(glyphs) != 2 * len(targets):
             print(f'FAIL: the PDF has {len(glyphs)} glyphs of CID fonts, not {2 * len(targets)} (two for each of {len(targets)} characters)')
             failed = True
-        elif glyphs:
+        elif pdf.exists():
             for i, t in enumerate(targets):
                 kind = kinds.get(t, '?')
                 for where, cid in (('middle', glyphs[2 * i]), ('end', glyphs[2 * i + 1])):
