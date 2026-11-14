@@ -8,9 +8,17 @@ static const NSInteger TSFindMethodOgreKit = 2;
 static const NSInteger TSFindMethodAdvancedPanel = 3;
 // Reconcile all flags, including turning off a previously enabled find bar.
 // The Advanced Find panel takes the find actions before NSTextView (TSTextView); its views keep the Apple panel's flags.
+// The flag being turned off goes first: a view that used the find panel and is given the find bar before the panel is
+// turned off reports the bar but never shows it.
 static inline void TSConfigureFindInterface(NSTextView *view, NSInteger method, BOOL incremental) {
-    if (method != TSFindMethodFindBar) view.enclosingScrollView.findBarVisible = NO;
-    view.usesFindBar = method == TSFindMethodFindBar;
-    view.usesFindPanel = method != TSFindMethodFindBar;
-    view.incrementalSearchingEnabled = method == TSFindMethodFindBar && incremental;
+    BOOL bar = method == TSFindMethodFindBar;
+    if (bar) {
+        view.usesFindPanel = NO;
+        view.usesFindBar = YES;
+    } else {
+        view.enclosingScrollView.findBarVisible = NO;
+        view.usesFindBar = NO;
+        view.usesFindPanel = YES;
+    }
+    view.incrementalSearchingEnabled = bar && incremental;
 }
