@@ -236,8 +236,7 @@
 "catalog.preview.5.0.note" = "A página que a janela HTML abre primeiro. Introduza um endereço web ou o caminho de um ficheiro. Predefinição: https://texshop.app";
 "group.typesetting.0.title" = "Motor";
 "catalog.typesetting.0.4.title" = "Perfil do motor";
-"catalog.typesetting.0.4.note" = "Define os comandos de composição, o motor BibTeX e o suporte para o pacote otf. Os perfis japoneses também definem UTF-8 como codificação dos novos documentos, o dicionário e a conversão de UTF-8-MAC.";
-"catalog.typesetting.0.4.button" = "Aplicar…";
+"catalog.typesetting.0.4.note" = "Define os comandos de composição, o motor BibTeX, o programa de índice, o MetaPost e o suporte para o pacote otf. Os perfis japoneses também definem UTF-8 como codificação dos novos documentos, o dicionário e a conversão de UTF-8-MAC.";
 "catalog.typesetting.0.0.title" = "Compor documentos novos com";
 "catalog.typesetting.0.0.note" = "O que a barra de ferramentas escolhe ao lado de Compor quando um documento é aberto. Uma linha % !TEX TS-program no documento tem prioridade.";
 "catalog.typesetting.0.1.title" = "Ficheiro de motor";
@@ -282,11 +281,15 @@
 "group.typesetting.7.title" = "Ghostscript";
 "catalog.typesetting.7.1.title" = "-dALLOWPSTRANSPARENCY";
 "catalog.typesetting.7.1.note" = "Acrescenta esta opção quando o Ghostscript converte PostScript em PDF, para manter a transparência, como a do PSTricks. Requer o Ghostscript 9.51 ou posterior.";
-"group.typesetting.8.title" = "Comandos de pesquisa e BibTeX";
+"group.typesetting.8.title" = "Ferramentas relacionadas";
 "catalog.typesetting.8.0.title" = "kpsewhich";
 "catalog.typesetting.8.0.note" = "O comando com que “Abrir ficheiro de estilo” do menu Ficheiro procura o ficheiro. Predefinição: kpsewhich -progname=latex -format=tex";
 "catalog.typesetting.8.1.title" = "Motor BibTeX";
 "catalog.typesetting.8.1.note" = "Predefinição: bibtex";
+"catalog.typesetting.8.2.title" = "Programa de índice";
+"catalog.typesetting.8.2.note" = "Predefinição: makeindex";
+"catalog.typesetting.8.3.title" = "MetaPost";
+"catalog.typesetting.8.3.note" = "Predefinição: mpost";
 "group.typesetting.9.title" = "Suporte a pTeX (para o Japão)";
 "catalog.typesetting.9.0.title" = "Suporte para o pacote otf";
 "group.console.0.title" = "Tipo de letra";

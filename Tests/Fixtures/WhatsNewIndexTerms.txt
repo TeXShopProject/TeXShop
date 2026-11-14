@@ -1079,6 +1079,7 @@ maintained
 maintainer
 major
 make
+makeindex
 makes
 making
 malumbres
@@ -1122,6 +1123,7 @@ message
 messages
 met
 metal
+metapost
 method
 microtype
 middle
@@ -1655,7 +1657,6 @@ sometime
 sometimes
 soon
 sophisticated
-sort
 source
 sources
 space
@@ -1710,7 +1711,6 @@ subsequent
 subset
 subtab
 succeeds
-suddenly
 suggested
 suggestion
 suggestions

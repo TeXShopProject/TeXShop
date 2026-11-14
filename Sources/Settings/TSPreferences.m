@@ -205,6 +205,11 @@ Loads the .nib file if necessary, fills all the controls with the values from th
     [controller hostPaneControllers:panes footer:nil];
     _prefsWindow = newWindow;
     self.settingsController = controller;
+    // The profile menu follows every change of a profile's settings, wherever it is made.
+    if (self.engineProfileWatcher == nil) {
+        __weak TSPreferences *weakSelf = self;
+        self.engineProfileWatcher = [[TSEngineProfileWatcher alloc] initWithDefaults:SUD handler:^{ [weakSelf refreshEngineProfileFromDefaults:SUD]; }];
+    }
     return YES;
 }
 - (BOOL)settingsMayChangeCategory
@@ -291,13 +296,22 @@ NSArray<NSString *> *TSEngineFileNames(NSString *folder)
 // Engine profile
 //==============================================================================
 
-// The profile menu of Settings > Typesetting shows the profile whose commands are set now,
-// or Custom when none is.
+// The profile menu of Settings > Typesetting shows the profile all of whose settings are set
+// now, or Custom when none is.
 - (void)refreshEngineProfileFromDefaults:(NSUserDefaults *)defaults
 {
     NSPopUpButton *popup = self.engineProfilePopup;
     if (popup == nil) return;
+    // While the sheet asks, the menu keeps showing the profile chosen; it shows the settings again
+    // when the sheet ends.
+    if (self.engineProfileAsked != TSEngineProfileNone && [popup indexOfItemWithTag:self.engineProfileAsked] >= 0) {
+        [popup selectItemWithTag:self.engineProfileAsked];
+        return;
+    }
     TSEngineProfile current = TSEngineProfileMatchingSettings(defaults, NULL);
+    // The menu is built again only when what it shows changes.
+    BOOL hasCustom = [popup indexOfItemWithTag:TSEngineProfileNone] >= 0;
+    if (popup.numberOfItems > 0 && popup.selectedItem != nil && popup.selectedTag == current && hasCustom == (current == TSEngineProfileNone)) return;
     [popup removeAllItems];
     popup.autoenablesItems = NO;
     NSMenu *menu = popup.menu;
@@ -329,19 +343,27 @@ NSArray<NSString *> *TSEngineFileNames(NSString *folder)
 static NSAlert *TSEngineProfileAlert(TSEngineProfile profile, NSButton *latexmk);
 static NSButton *TSEngineProfileLatexmkButton(BOOL on);
 
-// Apply… sets the typesetting commands of the profile chosen, with latexmk or without; the
-// paths are set apart, with Detect Paths.
+// Choosing a profile in the menu asks at once whether to apply it, with latexmk or without; the
+// paths are set apart, with Detect Paths. Cancel changes nothing, and the menu shows the
+// settings again.
 - (IBAction)applyEngineProfile:(id)sender
 {
     // Read the choice first: committing a command being edited refreshes the menu.
     TSEngineProfile profile = self.engineProfilePopup.selectedTag;
-    if (![self finishPreferenceEditing:YES]) return;
-    if (TSEngineProfileTitle(profile) == nil || _prefsWindow == nil) return;
+    if (![self finishPreferenceEditing:YES] || TSEngineProfileTitle(profile) == nil || _prefsWindow == nil || _prefsWindow.attachedSheet != nil) {
+        [self refreshEngineProfileFromDefaults:SUD];
+        return;
+    }
+    // The commit may have shown the settings again; the menu shows the choice while the sheet asks.
+    self.engineProfileAsked = profile;
+    [self.engineProfilePopup selectItemWithTag:profile];
     NSButton *latexmk = TSEngineProfileLatexmkButton(TSEngineProfileSettingsUseLatexmk(SUD));
     NSAlert *alert = TSEngineProfileAlert(profile, latexmk);
     [alert beginSheetModalForWindow:_prefsWindow completionHandler:^(NSModalResponse response) {
-        if (response != NSAlertFirstButtonReturn || self.endingPreferences) return;
-        [self applyEngineProfileValues:TSEngineProfileValues(profile, latexmk.state == NSControlStateValueOn)];
+        self.engineProfileAsked = TSEngineProfileNone;
+        if (response == NSAlertFirstButtonReturn && !self.endingPreferences)
+            [self applyEngineProfileValues:TSEngineProfileValues(profile, latexmk.state == NSControlStateValueOn)];
+        [self refreshEngineProfileFromDefaults:SUD];
     }];
 }
 
@@ -606,6 +628,16 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 - (IBAction)bibTeXengineChanged:(id)sender
 {
     [self commitPreferenceField:_bibTeXengineField showError:YES reflect:YES];
+}
+
+- (IBAction)makeIndexEngineChanged:(id)sender
+{
+    [self commitPreferenceField:self.makeIndexEngineField showError:YES reflect:YES];
+}
+
+- (IBAction)metaPostEngineChanged:(id)sender
+{
+    [self commitPreferenceField:self.metaPostEngineField showError:YES reflect:YES];
 }
 
 
@@ -1391,7 +1423,7 @@ static void TSEngineProfileAlignAccessory(NSAlert *alert)
     }
 }
 
-// The sheet of Apply… in Settings.
+// The sheet shown when a profile is chosen in Settings.
 static NSAlert *TSEngineProfileAlert(TSEngineProfile profile, NSButton *latexmk)
 {
     NSAlert *alert = [NSAlert new];
@@ -2148,6 +2180,10 @@ A tag of 0 means "no", a tag of 1 means "yes".
     [self addPreferenceField:_kpsetoolField rule:[[TSPreferenceInput alloc] initWithKey:KpsetoolKey
         kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
     [self addPreferenceField:_bibTeXengineField rule:[[TSPreferenceInput alloc] initWithKey:BibTeXengineKey
+        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
+    [self addPreferenceField:self.makeIndexEngineField rule:[[TSPreferenceInput alloc] initWithKey:MakeIndexEngineKey
+        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
+    [self addPreferenceField:self.metaPostEngineField rule:[[TSPreferenceInput alloc] initWithKey:MetaPostEngineKey
         kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
     [self addPreferenceField:_texScriptCommandTextField rule:[[TSPreferenceInput alloc] initWithKey:TexScriptCommandKey
         kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:YES notification:nil]];

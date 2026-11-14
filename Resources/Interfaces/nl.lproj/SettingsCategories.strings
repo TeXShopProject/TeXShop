@@ -236,8 +236,7 @@
 "catalog.preview.5.0.note" = "De pagina die het HTML-venster als eerste opent. Voer een webadres of het pad van een bestand in. Standaard: https://texshop.app";
 "group.typesetting.0.title" = "Engine";
 "catalog.typesetting.0.4.title" = "Engineprofiel";
-"catalog.typesetting.0.4.note" = "Stelt de zetcommando’s, de BibTeX-engine en ondersteuning voor het otf-pakket in. De Japanse profielen stellen ook UTF-8 als codering voor nieuwe documenten, het woordenboek en de omzetting van UTF-8-MAC in.";
-"catalog.typesetting.0.4.button" = "Pas toe…";
+"catalog.typesetting.0.4.note" = "Stelt de zetcommando’s, de BibTeX-engine, het indexprogramma, MetaPost en ondersteuning voor het otf-pakket in. De Japanse profielen stellen ook UTF-8 als codering voor nieuwe documenten, het woordenboek en de omzetting van UTF-8-MAC in.";
 "catalog.typesetting.0.0.title" = "Nieuwe documenten zetten met";
 "catalog.typesetting.0.0.note" = "Wat de knoppenbalk naast Zet kiest als een document opent. Een regel % !TEX TS-program in het document gaat voor.";
 "catalog.typesetting.0.1.title" = "Engine-bestand";
@@ -282,11 +281,15 @@
 "group.typesetting.7.title" = "Ghostscript";
 "catalog.typesetting.7.1.title" = "-dALLOWPSTRANSPARENCY";
 "catalog.typesetting.7.1.note" = "Voegt deze optie toe wanneer Ghostscript PostScript naar PDF omzet, zodat transparantie, zoals van PSTricks, behouden blijft. Vereist Ghostscript 9.51 of nieuwer.";
-"group.typesetting.8.title" = "Zoekcommando’s en BibTeX";
+"group.typesetting.8.title" = "Verwante programma’s";
 "catalog.typesetting.8.0.title" = "kpsewhich";
 "catalog.typesetting.8.0.note" = "De opdracht waarmee „Stijlbestand openen” in het menu Archief het bestand zoekt. Standaard: kpsewhich -progname=latex -format=tex";
 "catalog.typesetting.8.1.title" = "BibTeX-engine";
 "catalog.typesetting.8.1.note" = "Standaard: bibtex";
+"catalog.typesetting.8.2.title" = "Indexprogramma";
+"catalog.typesetting.8.2.note" = "Standaard: makeindex";
+"catalog.typesetting.8.3.title" = "MetaPost";
+"catalog.typesetting.8.3.note" = "Standaard: mpost";
 "group.typesetting.9.title" = "pTeX-ondersteuning (voor Japan)";
 "catalog.typesetting.9.0.title" = "Ondersteuning voor het otf-pakket";
 "group.console.0.title" = "Lettertype";
