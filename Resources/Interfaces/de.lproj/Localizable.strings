@@ -144,12 +144,9 @@
 "Don’t show again for this document" = "Für dieses Dokument nicht mehr anzeigen";
 
 /* Engine path discovery */
-"Set Up TeX Engine Paths" = "TeX-Programmpfade einrichten";
-"Detected Engine Paths" = "Gefundene Programmpfade";
 
 "Not found" = "Nicht gefunden";
 "Version unavailable" = "Unbekannt";
-"Use These Paths" = "Diese Pfade verwenden";
 
 /* Menu keyboard shortcut customization */
 "Search commands" = "Befehle suchen";
@@ -170,10 +167,7 @@
 
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
-"The selected profile is invalid." = "Das ausgewählte Profil ist ungültig.";
-"Apply Settings Profile?" = "Einstellungsprofil anwenden?";
 
-"Apply Profile" = "Profil anwenden";
 "Settings could not be saved" = "Einstellungen konnten nicht gesichert werden";
 "Enter a valid setting" = "Geben Sie einen gültigen Wert ein";
 
@@ -239,8 +233,8 @@
 "Comment Lines and Hidden Settings" = "Kommentarzeilen und verborgene Einstellungen";
 "Advanced" = "Erweitert";
 
-"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Installieren Sie eine TeX-Distribution und starten Sie die automatische Einrichtung unter Einstellungen > Schriftsatz.";
-"Ghostscript was not found. Install Ghostscript, then run Auto Setup in Settings > Typesetting." = "Ghostscript wurde nicht gefunden. Installieren Sie Ghostscript und starten Sie die automatische Einrichtung unter Einstellungen > Schriftsatz.";
+"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "Installieren Sie TeX Live oder MacTeX und wählen Sie dann „Pfade erkennen“ unter Einstellungen > Satz.";
+"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript wurde nicht gefunden. Installieren Sie Ghostscript und wählen Sie dann „Pfade erkennen“ unter Einstellungen > Satz.";
 
 "Completion trigger" = "Auslösetaste";
 
@@ -299,7 +293,6 @@
 
 "Edits the shared file for all documents. This setting controls the default for new documents." = "Bearbeitet die gemeinsame Datei für alle Dokumente. Diese Einstellung bestimmt die Vorgabe für neue Dokumente.";
 
-"The newest detected installation is selected. You can choose another candidate below." = "Die neueste gefundene Installation ist ausgewählt. Sie können unten eine andere auswählen.";
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "Die folgenden Makros verwenden diesen Kurzbefehl. Wenn Sie ihn dem Menübefehl zuweisen, werden ihre Kurzbefehle inaktiv.\n\n%@";
 
@@ -311,7 +304,6 @@
 
 "Custom menu shortcuts will be removed." = "Eigene Menükurzbefehle werden entfernt.";
 
-"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Setzt Programm-, Bearbeitungs- und Anzeigeeinstellungen, bekannte verborgene Einstellungen und das Dock-Symbol zurück. Die Themenauswahl kann sich ändern. TeX-Programmpfad: %@";
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "Automatische Spracherkennung";
@@ -356,3 +348,12 @@
 "Change Key Binding" = "Tastenbelegung ändern";
 "Delete Key Binding" = "Tastenbelegung löschen";
 "Move Key Binding" = "Tastenbelegung bewegen";
+
+/* Engine profiles */
+"LuaLaTeX (Japanese)" = "LuaLaTeX (Japanisch)";
+"Other" = "Andere";
+"Custom" = "Eigene";
+"Apply the “%@” profile?" = "Profil „%@“ anwenden?";
+"Use latexmk" = "latexmk verwenden";
+"Detect Paths" = "Pfade erkennen";
+"Choose an Engine Profile" = "Engine-Profil wählen";

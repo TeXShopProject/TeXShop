@@ -7,17 +7,11 @@
   "de": {
     "SettingsPreview.strings": {
       "337.title": "PDF-Auswahl"
-    },
-    "SettingsFooter.strings": {
-      "1093.title": "Legacy pTeX (Shift JIS)"
     }
   },
   "fr": {
     "SettingsPreview.strings": {
       "337.title": "Sélectionner"
-    },
-    "SettingsFooter.strings": {
-      "1093.title": "Legacy pTeX (Shift JIS)"
     },
     "Localizable.strings": {
       "Search Settings": "Rechercher"
@@ -26,9 +20,6 @@
   "it": {
     "SettingsPreview.strings": {
       "337.title": "Selezione"
-    },
-    "SettingsFooter.strings": {
-      "1093.title": "Legacy pTeX (Shift JIS)"
     },
     "Localizable.strings": {
       "Search Settings": "Cerca"
@@ -49,9 +40,6 @@
     "SettingsEditor.strings": {
       "ojN-Oi-8cl.title": "Tabbreedte:",
       "pdc-GP-Cbb.title": "Tabs gebruiken voor inspringmenu"
-    },
-    "SettingsFooter.strings": {
-      "1093.title": "Legacy pTeX (Shift JIS)"
     }
   },
   "pt-PT": {
@@ -70,9 +58,6 @@
     "SettingsEditor.strings": {
       "ojN-Oi-8cl.title": "Largura da tabulação:",
       "pdc-GP-Cbb.title": "Usar tabulações no menu de indentação"
-    },
-    "SettingsFooter.strings": {
-      "1093.title": "Legacy pTeX (Shift JIS)"
     }
   },
   "ro": {
@@ -92,29 +77,10 @@
     "SettingsEditor.strings": {
       "ojN-Oi-8cl.title": "Lățimea tabulatorului:",
       "pdc-GP-Cbb.title": "Folosește tabulatori pentru meniul de indentare"
-    },
-    "SettingsFooter.strings": {
-      "1093.title": "Legacy pTeX (Shift JIS)"
     }
   },
-  "es": {
-    "SettingsFooter.strings": {
-      "1093.title": "Legacy pTeX (Shift JIS)"
-    }
-  },
-  "ko": {
-    "SettingsFooter.strings": {
-      "1093.title": "Legacy pTeX (Shift JIS)"
-    }
-  },
-  "pt": {
-    "SettingsFooter.strings": {
-      "1093.title": "Legado pTeX (Shift JIS)"
-    }
-  },
-  "zh_CN": {
-    "SettingsFooter.strings": {
-      "1093.title": "Legacy pTeX (Shift JIS)"
-    }
-  }
+  "es": {},
+  "ko": {},
+  "pt": {},
+  "zh_CN": {}
 }

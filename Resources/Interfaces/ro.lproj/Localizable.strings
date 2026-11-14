@@ -145,12 +145,9 @@
 "Don’t show again for this document" = "Nu mai afișa pentru acest document";
 
 /* Engine path discovery */
-"Set Up TeX Engine Paths" = "Configurarea căilor motoarelor TeX";
-"Detected Engine Paths" = "Căi ale motoarelor detectate";
 
 "Not found" = "Nu a fost găsit";
 "Version unavailable" = "Necunoscută";
-"Use These Paths" = "Folosește aceste căi";
 
 /* Menu keyboard shortcut customization */
 "Search commands" = "Caută comenzi";
@@ -171,10 +168,7 @@
 
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
-"The selected profile is invalid." = "Profilul selectat nu este valid.";
-"Apply Settings Profile?" = "Aplicați profilul de configurare?";
 
-"Apply Profile" = "Aplicați profilul";
 "Settings could not be saved" = "Configurările nu au putut fi salvate";
 "Enter a valid setting" = "Introduceți o valoare validă";
 
@@ -240,8 +234,8 @@
 "Comment Lines and Hidden Settings" = "Linii de comentarii și configurări ascunse";
 "Advanced" = "Avansat";
 
-"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Instalați o distribuție TeX, apoi rulați configurarea automată în Configurări > Tehnoredactare.";
-"Ghostscript was not found. Install Ghostscript, then run Auto Setup in Settings > Typesetting." = "Ghostscript nu a fost găsit. Instalați Ghostscript, apoi rulați configurarea automată în Configurări > Tehnoredactare.";
+"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "Instalați TeX Live sau MacTeX, apoi alegeți „Detectați căile” în Configurări > Compunere.";
+"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript nu a fost găsit. Instalați Ghostscript, apoi alegeți „Detectați căile” în Configurări > Compunere.";
 
 "Completion trigger" = "Tastă de activare";
 
@@ -299,7 +293,6 @@
 
 "Edits the shared file for all documents. This setting controls the default for new documents." = "Editează fișierul comun tuturor documentelor. Această configurare determină valoarea implicită pentru documentele noi.";
 
-"The newest detected installation is selected. You can choose another candidate below." = "Este selectată cea mai nouă instalare detectată. Puteți alege alta din lista de mai jos.";
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "Următoarele macrocomenzi folosesc această scurtătură. Dacă o atribuiți comenzii din meniu, scurtăturile macrocomenzilor vor fi dezactivate.\n\n%@";
 
@@ -311,7 +304,6 @@
 
 "Custom menu shortcuts will be removed." = "Scurtăturile de meniu personalizate vor fi eliminate.";
 
-"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Resetează motorul, editarea, afișarea, configurările ascunse cunoscute și pictograma din Dock. Temele selectate se pot schimba. Calea motorului TeX: %@";
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "Detectare automată a limbii";
@@ -356,3 +348,12 @@
 "Change Key Binding" = "Modificare asociere de taste";
 "Delete Key Binding" = "Ștergere asociere de taste";
 "Move Key Binding" = "Mutare asociere de taste";
+
+/* Engine profiles */
+"LuaLaTeX (Japanese)" = "LuaLaTeX (japoneză)";
+"Other" = "Altele";
+"Custom" = "Personalizat";
+"Apply the “%@” profile?" = "Aplicați profilul „%@”?";
+"Use latexmk" = "Utilizați latexmk";
+"Detect Paths" = "Detectați căile";
+"Choose an Engine Profile" = "Alegeți un profil al motorului";

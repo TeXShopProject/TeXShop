@@ -16,13 +16,13 @@
 "updates" = "Aggiornamenti";
 
 /* Category overview */
-"general.summary" = "Avvio, posizione delle finestre, profili delle impostazioni e icona del Dock.";
+"general.summary" = "Avvio, posizione delle finestre e icona del Dock.";
 "documents.summary" = "Codifica del testo e salvataggio dei documenti.";
 "editor.summary" = "Modifica, colori della sintassi, rientri e parentesi.";
 "spelling.summary" = "Controllo ortografico durante la digitazione e in LaTeX.";
 "appearance.summary" = "Scegli e modifica i temi dei colori.";
 "preview.summary" = "Visualizzazione e controlli dell’anteprima PDF.";
-"typesetting.summary" = "Composizione, sincronizzazione e percorsi degli strumenti.";
+"typesetting.summary" = "Profili del motore, composizione, sincronizzazione e percorsi degli strumenti.";
 "console.summary" = "La console che mostra l’output della composizione.";
 "keyboard.summary" = "Associazioni dei tasti, completamento e scorciatoie dei menu.";
 "updates.summary" = "Ricerca automatica e aggiornamenti del software.";
@@ -49,10 +49,6 @@
 "group.general.3.title" = "File principale del progetto";
 "catalog.general.3.0.title" = "Aprire il file principale quando si apre un documento";
 "catalog.general.3.1.title" = "Riduci la finestra principale all'apertura";
-"group.general.4.title" = "Imposta default";
-"catalog.general.4.0.title" = "Applicare un profilo di impostazioni, ad esempio per la composizione in giapponese.";
-"catalog.general.4.1.title" = "Profilo";
-"catalog.general.4.1.button" = "Applica";
 "group.general.5.title" = "Avanzate";
 "group.general.6.title" = "Icona del Dock durante l’esecuzione";
 "catalog.general.5.0.title" = "Le impostazioni non presenti qui sono descritte nella guida «Righe di commento e impostazioni nascoste».";
@@ -238,7 +234,10 @@
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "URL personale";
 "catalog.preview.5.0.note" = "La pagina che la finestra HTML apre per prima. Inserisci un indirizzo web o il percorso di un file. Predefinito: https://texshop.app";
-"group.typesetting.0.title" = "Valori predefiniti";
+"group.typesetting.0.title" = "Motore";
+"catalog.typesetting.0.4.title" = "Profilo del motore";
+"catalog.typesetting.0.4.note" = "Imposta i comandi di composizione, il motore BibTeX e il supporto per il pacchetto otf. I profili giapponesi impostano anche UTF-8 come codifica dei nuovi documenti, il dizionario e la conversione UTF-8-MAC.";
+"catalog.typesetting.0.4.button" = "Applica…";
 "catalog.typesetting.0.0.title" = "Formato TeX Default";
 "catalog.typesetting.0.1.title" = "Comando da usare";
 "catalog.typesetting.0.2.title" = "Metodo di composizione";
@@ -257,7 +256,7 @@
 "catalog.typesetting.3.1.note" = "Predefinito: /usr/local/bin";
 "catalog.typesetting.3.2.title" = "Secondi motori TeX";
 "catalog.typesetting.3.2.note" = "Per i documenti con % !TEX useAlternatePath. Predefinito: ~/bin/context/tex/texmf-osx-arm64/bin";
-"catalog.typesetting.3.3.title" = "Configurazione automatica…";
+"catalog.typesetting.3.3.title" = "Rileva percorsi…";
 "group.typesetting.4.title" = "PDF diretto";
 "catalog.typesetting.4.0.title" = "TeX";
 "catalog.typesetting.4.0.button" = "default";

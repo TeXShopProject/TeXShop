@@ -1262,6 +1262,7 @@ origin
 original
 originally
 originating
+otf
 other
 others
 oudenhove
@@ -1497,8 +1498,8 @@ require
 required
 requires
 reread
+rescan
 reserved
-reset
 resize
 resized
 resolutions
@@ -1552,7 +1553,6 @@ scheme
 schmock
 schoutens
 schulz
-scope
 screen
 screens
 scribble
@@ -1574,7 +1574,6 @@ select
 selected
 selecting
 selection
-selections
 selects
 send
 sending
@@ -1595,7 +1594,6 @@ set
 sets
 setting
 settings
-setup
 seven
 several
 shape
@@ -1737,6 +1735,7 @@ symbol
 symbols
 sync
 synced
+synchronization
 synctex
 syntax
 system
@@ -1798,6 +1797,7 @@ these
 they
 thickness
 thin
+think
 third
 this
 thomas
@@ -1828,6 +1828,7 @@ tooltips
 top
 toward
 trace
+track
 trackpad
 trailing
 transitioning
@@ -1874,7 +1875,6 @@ unicode
 united
 units
 unless
-unrecognized
 unreported
 unsaved
 unsplit

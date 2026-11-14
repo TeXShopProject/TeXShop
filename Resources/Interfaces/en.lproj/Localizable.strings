@@ -144,10 +144,7 @@
 "This shortcut is already used by:\n%@" = "This shortcut is already used by:\n%@";
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
-"The selected profile is invalid." = "The selected profile is invalid.";
-"Apply Settings Profile?" = "Apply Settings Profile?";
 
-"Apply Profile" = "Apply Profile";
 "Settings could not be saved" = "Settings could not be saved";
 "Enter a valid setting" = "Enter a valid setting";
 
@@ -213,8 +210,8 @@
 "Comment Lines and Hidden Settings" = "Comment Lines and Hidden Settings";
 "Advanced" = "Advanced";
 
-"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Install a TeX distribution, then run Auto Setup in Settings > Typesetting.";
-"Ghostscript was not found. Install Ghostscript, then run Auto Setup in Settings > Typesetting." = "Ghostscript was not found. Install Ghostscript, then run Auto Setup in Settings > Typesetting.";
+"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting.";
+"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting.";
 
 "Completion trigger" = "Completion trigger";
 
@@ -260,7 +257,6 @@
 "Change Shortcut" = "Change Shortcut";
 "Change…" = "Change…";
 "Command" = "Command";
-"Detected Engine Paths" = "Detected Engine Paths";
 "Edit Spelling Exclusions…" = "Edit Spelling Exclusions…";
 "Forget Learned Words…" = "Forget Learned Words…";
 "Forget Selected" = "Forget Selected";
@@ -280,7 +276,6 @@
 "Restore all keyboard shortcuts?" = "Restore all keyboard shortcuts?";
 "Search commands" = "Search commands";
 
-"Set Up TeX Engine Paths" = "Set Up TeX Engine Paths";
 "Shortcut" = "Shortcut";
 "Shortcut Unavailable" = "Shortcut Unavailable";
 "Spell Checking Help" = "Spell Checking Help";
@@ -289,12 +284,10 @@
 "These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several.";
 "This command is no longer available." = "This command is no longer available.";
 "This shortcut is already used by “%@”." = "This shortcut is already used by “%@”.";
-"Use These Paths" = "Use These Paths";
 "Version unavailable" = "Version unavailable";
 
 "Edits the shared file for all documents. This setting controls the default for new documents." = "Edits the shared file for all documents. This setting controls the default for new documents.";
 
-"The newest detected installation is selected. You can choose another candidate below." = "The newest detected installation is selected. You can choose another candidate below.";
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@";
 
@@ -306,7 +299,6 @@
 
 "Custom menu shortcuts will be removed." = "Custom menu shortcuts will be removed.";
 
-"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@";
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "Automatic Language";
@@ -352,3 +344,12 @@
 "Change Key Binding" = "Change Key Binding";
 "Delete Key Binding" = "Delete Key Binding";
 "Move Key Binding" = "Move Key Binding";
+
+/* Engine profiles */
+"LuaLaTeX (Japanese)" = "LuaLaTeX (Japanese)";
+"Other" = "Other";
+"Custom" = "Custom";
+"Apply the “%@” profile?" = "Apply the “%@” profile?";
+"Use latexmk" = "Use latexmk";
+"Detect Paths" = "Detect Paths";
+"Choose an Engine Profile" = "Choose an Engine Profile";

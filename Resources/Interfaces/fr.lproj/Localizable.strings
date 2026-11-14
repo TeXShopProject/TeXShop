@@ -145,12 +145,9 @@
 "Don’t show again for this document" = "Ne plus afficher pour ce document";
 
 /* Engine path discovery */
-"Set Up TeX Engine Paths" = "Configurer les chemins des moteurs TeX";
-"Detected Engine Paths" = "Chemins des moteurs détectés";
 
 "Not found" = "Introuvable";
 "Version unavailable" = "Inconnue";
-"Use These Paths" = "Utiliser ces chemins";
 
 /* Menu keyboard shortcut customization */
 "Search commands" = "Rechercher des commandes";
@@ -171,10 +168,7 @@
 
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
-"The selected profile is invalid." = "Le profil sélectionné n’est pas valide.";
-"Apply Settings Profile?" = "Appliquer le profil de réglages ?";
 
-"Apply Profile" = "Appliquer le profil";
 "Settings could not be saved" = "Impossible d’enregistrer les réglages";
 "Enter a valid setting" = "Saisissez un réglage valide";
 
@@ -240,8 +234,8 @@
 "Comment Lines and Hidden Settings" = "Lignes de commentaire et réglages masqués";
 "Advanced" = "Avancé";
 
-"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Installez une distribution TeX, puis lancez la configuration automatique dans Réglages > Composition.";
-"Ghostscript was not found. Install Ghostscript, then run Auto Setup in Settings > Typesetting." = "Ghostscript est introuvable. Installez Ghostscript, puis lancez la configuration automatique dans Réglages > Composition.";
+"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "Installez TeX Live ou MacTeX, puis choisissez « Détecter les chemins » dans Réglages > Composition.";
+"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript est introuvable. Installez Ghostscript, puis choisissez « Détecter les chemins » dans Réglages > Composition.";
 
 "Completion trigger" = "Touche de déclenchement";
 
@@ -299,7 +293,6 @@
 
 "Edits the shared file for all documents. This setting controls the default for new documents." = "Modifie le fichier partagé par tous les documents. Ce réglage détermine la valeur par défaut des nouveaux documents.";
 
-"The newest detected installation is selected. You can choose another candidate below." = "L’installation la plus récente détectée est sélectionnée. Vous pouvez en choisir une autre ci-dessous.";
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "Les macros suivantes utilisent ce raccourci. Si vous l’attribuez à la commande du menu, leurs raccourcis seront désactivés.\n\n%@";
 
@@ -311,7 +304,6 @@
 
 "Custom menu shortcuts will be removed." = "Les raccourcis de menu personnalisés seront supprimés.";
 
-"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Réinitialise le moteur, l’édition, l’affichage, les réglages cachés connus et l’icône du Dock. La sélection des thèmes peut changer. Chemin du moteur TeX : %@";
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "Détection automatique de la langue";
@@ -356,3 +348,12 @@
 "Change Key Binding" = "Modifier un raccourci de saisie";
 "Delete Key Binding" = "Supprimer un raccourci de saisie";
 "Move Key Binding" = "Déplacer un raccourci de saisie";
+
+/* Engine profiles */
+"LuaLaTeX (Japanese)" = "LuaLaTeX (japonais)";
+"Other" = "Autre";
+"Custom" = "Personnalisé";
+"Apply the “%@” profile?" = "Appliquer le profil « %@ » ?";
+"Use latexmk" = "Utiliser latexmk";
+"Detect Paths" = "Détecter les chemins";
+"Choose an Engine Profile" = "Choisir un profil du moteur";

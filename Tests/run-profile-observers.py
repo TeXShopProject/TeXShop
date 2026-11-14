@@ -33,9 +33,9 @@ METHODS
 int main(void){@autoreleasepool{
  memory=[ObservedDefaults new];Probe *p=[Probe new];__block NSUInteger notes=0;
  id token=[NSNotificationCenter.defaultCenter addObserverForName:NSUserDefaultsDidChangeNotification object:memory queue:nil usingBlock:^(NSNotification *n){notes++;[p previewAppearanceDefaultsChanged:n];[p externalPDFSettingsChanged:n];}];
- TSPreferenceProfile *profile=[[TSPreferenceProfile alloc]initWithProfile:@{@"TetexBinPath":@"/test",@"RefreshTime":@1} documentFont:[@"font" dataUsingEncoding:NSUTF8StringEncoding]];
- [profile applyToDefaults:memory];
- check(notes>100 && p.appearances==1 && p.observations==1,"each observer reconciles exactly once after all profile writes");
+ NSMutableDictionary *values=[TSEngineProfileValues(TSEngineProfileUpLaTeXDvipdfmx,YES) mutableCopy];values[@"TetexBinPath"]=@"/test";values[@"GSBinPath"]=@"/gs";
+ TSEngineProfileApply(memory,values);
+ check(notes==values.count+1 && p.appearances==1 && p.observations==1,"each observer reconciles exactly once after all profile writes");
  [NSNotificationCenter.defaultCenter removeObserver:token];puts("PASS: real appearance and external PDF observers defer intermediate profile notifications");
 }return 0;}
 '''.replace('METHODS',a+'\n'+b)

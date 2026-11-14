@@ -195,7 +195,7 @@ for target in ('Base','en'):
 print('PASS: hidden PDF current text and distribution identity')
 
 # The current public English copies carry identical Settings layout wording.
-phrase='Settings has a compact sidebar with ten categories: General, Documents and Saving, Editor, Keyboard, Spell Checking, Themes, Preview, Typesetting, Console, and Updates. Each category shows overview cards and named groups with switches, right-aligned controls, wrapping labels and indented dependent options. Settings Profile and the Dock icon are in General; Themes contains only what themes store.'
+phrase='Settings has a compact sidebar with ten categories: General, Documents and Saving, Editor, Keyboard, Spell Checking, Themes, Preview, Typesetting, Console, and Updates. Each category shows overview cards and named groups with switches, right-aligned controls, wrapping labels and indented dependent options. The Dock icon is in General, engine profiles are in Typesetting, and Themes contains only what themes store.'
 for filename in ('Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm'):
     assert phrase in (ROOT/filename).read_text(),('Current release layout copies agree',filename)
 

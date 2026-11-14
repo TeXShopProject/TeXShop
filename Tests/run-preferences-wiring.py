@@ -13,6 +13,9 @@ CONTROLS = {'button', 'popUpButton', 'textField', 'colorWell', 'matrix', 'button
 
 def declared_methods():
     names = {"closeSamplePanel:"}  # Unused historical panel; absent from product panes.
+    # The settings profile menu of the earlier window. The product builds no Preferences.nib
+    # (run-live-settings-nibs.py); engine profiles are applied in Settings > Typesetting.
+    names.add("setDefaults:")
     for path in [root / 'Sources/Settings/TSPreferences.h', *sorted(root.glob('Sources/TSPreferences*.m'))]:
         text = re.sub(r'/\*.*?\*/', '', path.read_text(errors='replace'), flags=re.S)
         text = re.sub(r'//.*', '', text)

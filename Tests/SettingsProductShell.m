@@ -22,7 +22,7 @@
 - (void)FillInColorWells;
 - (void)configurePreferenceInputs;
 - (void)updateControlsFromUserDefaults:(NSUserDefaults *)defaults;
-- (void)applyPreferenceProfile:(TSPreferenceProfile *)proposal font:(NSFont *)font;
+- (void)applyEngineProfileValues:(NSDictionary<NSString *, id> *)values;
 - (void)finishPreferencesForTermination;
 - (void)showPreferences:(id)sender;
 - (BOOL)commitPreferenceField:(NSControl *)field showError:(BOOL)show reflect:(BOOL)reflect;
@@ -386,14 +386,13 @@ int main(int argc,char **argv){@autoreleasepool{
  NSView *spellingNote=Find(Find([shell viewForCategoryIdentifier:TSSettingsCategorySpelling],@"row.catalog.spelling.1.0"),@"settings.change-note");
  Check(!spellingNote.hidden,@"Actual spelling action shows its warning before profile replacement");
  SaveNote(shell,spellingNote.superview.superview,argc>2?@(argv[2]):nil,@"spelling");
- NSMutableDictionary *replacement=[[TSIsolatedAppKitDefaults dictionaryRepresentation]mutableCopy];
+ // The engine profile is written with the one transaction that writes several settings at once
+ // (applyEngineProfileValues:); the other keys here exercise its notes and effects.
+ NSMutableDictionary *replacement=[TSEngineProfileValues(TSEngineProfileUpLaTeXDvipdfmx,YES) mutableCopy];
  replacement[AutoSaveEnabledKey]=@(![TSIsolatedAppKitDefaults boolForKey:AutoSaveEnabledKey]);
  NSInteger findMethodBefore=[TSIsolatedAppKitDefaults integerForKey:FindMethodKey];
- replacement[FindMethodKey]=@(findMethodBefore==2?0:2); // a profile keeps the find method (plan §5), whatever the file says
  replacement[EncodingKey]=@"MacOSRoman";replacement[PdfMagnificationKey]=@1.75;
- NSFont *profileFont=[NSFont userFontOfSize:12];
- TSPreferenceProfile *profile=[[TSPreferenceProfile alloc]initWithProfile:replacement documentFont:[NSArchiver archivedDataWithRootObject:profileFont] registeredDefaults:factory];
- Check(profile!=nil,@"Actual profile proposal is valid");[owner applyPreferenceProfile:profile font:profileFont];
+ [owner applyEngineProfileValues:replacement];
  Check(spellingNote.hidden,@"Actual profile replacement clears a visible transient warning");
  for(NSArray *entry in @[@[TSSettingsCategoryPreview,@"row.catalog.preview.0.2"],@[TSSettingsCategoryDocuments,@"row.catalog.documents.0.0"]])Check(Find(Find([shell viewForCategoryIdentifier:entry[0]],entry[1]),@"settings.change-note").hidden,@"Profile application never creates transient zoom or encoding warnings");
  Check([TSIsolatedAppKitDefaults integerForKey:FindMethodKey]==findMethodBefore,@"A profile keeps the find method");
@@ -441,24 +440,40 @@ int main(int argc,char **argv){@autoreleasepool{
  [owner setValue:editedTheme forKey:@"EditingColors"];[owner refreshInheritedBracketColorWells];
  for(NSString *name in @[@"markerParenColorWell",@"markerCurlyColorWell",@"markerSquareColorWell"]){NSColorWell *well=[owner valueForKey:name];NSColor *rgb=[well.color colorUsingColorSpace:NSColorSpace.genericRGBColorSpace];Check(fabs(rgb.redComponent-[[NSColor colorWithRed:0.1 green:0.6 blue:0.5 alpha:1]colorUsingColorSpace:NSColorSpace.genericRGBColorSpace].redComponent)<0.001 && fabs(rgb.greenComponent-[[NSColor colorWithRed:0.1 green:0.6 blue:0.5 alpha:1]colorUsingColorSpace:NSColorSpace.genericRGBColorSpace].greenComponent)<0.001,@"Actual detached bracket wells inherit the edited marker");}
  Check(editedTheme[@"SyntaxMarkerParen"]==nil,@"Refreshing inherited wells does not materialize saved overrides");
- // Apply all nine shipped profiles through the unmodified production transaction.
- NSArray<NSString *> *profileFiles=[NSFileManager.defaultManager contentsOfDirectoryAtPath:[fixture.resourcePath stringByAppendingPathComponent:@"Profiles"] error:NULL];
- Check(profileFiles.count==9,@"Nine shipped profiles are present");
+ // Apply every engine profile, in both forms, through the production transaction.
+ [shell selectCategoryIdentifier:TSSettingsCategoryTypesetting];
+ NSPopUpButton *profiles=[owner valueForKey:@"engineProfilePopup"];
+ NSButton *applyProfile=[owner valueForKey:@"engineProfileApplyButton"];
+ Check(profiles!=nil && Find([shell viewForCategoryIdentifier:TSSettingsCategoryTypesetting],@"row.catalog.typesetting.0.4")!=nil && [applyProfile.superview isDescendantOf:Find([shell viewForCategoryIdentifier:TSSettingsCategoryTypesetting],@"row.catalog.typesetting.0.4")],@"The engine profile menu and its Apply button are in Typesetting");
+ Check(applyProfile.target==owner && applyProfile.action==@selector(applyEngineProfile:),@"Apply is connected to the owner");
  __block NSMutableArray<NSString *> *effects=[NSMutableArray array];
  id token=[NSNotificationCenter.defaultCenter addObserverForName:nil object:owner queue:nil usingBlock:^(NSNotification *note){[effects addObject:note.name];Check(note.userInfo==nil,@"Profile notifications contain no transient theme dictionary");}];
- for(NSString *file in profileFiles){
-  NSDictionary *values=[NSDictionary dictionaryWithContentsOfFile:[[fixture.resourcePath stringByAppendingPathComponent:@"Profiles"]stringByAppendingPathComponent:file]];
-  TSPreferenceProfile *proposal=[[TSPreferenceProfile alloc]initWithProfile:values documentFont:[NSArchiver archivedDataWithRootObject:profileFont] registeredDefaults:factory];Check(proposal!=nil,@"Each shipped profile validates");
-  [owner applyPreferenceProfile:proposal font:profileFont];
+ NSUInteger applied=0;
+ for(NSArray<NSNumber *> *section in TSEngineProfileMenuSections())for(NSNumber *profile in section)for(NSNumber *latexmk in @[@NO,@YES]){
+  NSDictionary *before=[TSIsolatedAppKitDefaults.values copy];
+  NSDictionary *values=TSEngineProfileValues(profile.integerValue,latexmk.boolValue);
+  [owner applyEngineProfileValues:values];applied++;
+  Check(profiles.selectedTag==profile.integerValue && [profiles.titleOfSelectedItem isEqual:TSEngineProfileTitle(profile.integerValue)],@"The menu shows the applied profile");
+  NSString *latexKey=values[LatexCommandKey]?LatexCommandKey:LatexGSCommandKey;
+  NSTextField *latexField=[owner valueForKey:values[LatexCommandKey]?@"latexCommandTextField":@"latexGSCommandTextField"];
+  Check([latexField.stringValue isEqual:values[latexKey]],@"The command fields show the applied profile");
+  for(NSString *key in before)if(values[key]==nil)Check([TSIsolatedAppKitDefaults.values[key] isEqual:before[key]],[NSString stringWithFormat:@"A profile leaves %@ alone",key]);
   Check([[owner valueForKey:@"keepBackupButton"]isEnabled]==![TSIsolatedAppKitDefaults boolForKey:AutoSaveEnabledKey],@"Every shipped profile applies autosave dependency using its effective Boolean");
   Check(editorCanAddBrackets==[TSIsolatedAppKitDefaults boolForKey:EditorCanAddBracketsKey],@"Real profile refresh updates the process-wide copy");
-  [effects removeAllObjects];[owner applyPreferenceProfile:proposal font:profileFont];Check(effects.count==0,@"Unchanged profile emits no runtime notifications");
-  for(NSString *key in @[AlwaysHighlightEnabledKey,ShowIndicatorForMoveEnabledKey,HighlightContentEnabledKey,BeepEnabledKey,FlashBackgroundEnabledKey,CheckBraceEnabledKey,CheckBracketEnabledKey,CheckSquareBracketEnabledKey,CheckParenEnabledKey,MakeatletterEnabledKey,expl3SyntaxColoringKey,ShowInvisibleCharactersEnabledKey]){
-   [TSIsolatedAppKitDefaults setBool:![TSIsolatedAppKitDefaults boolForKey:key] forKey:key];[effects removeAllObjects];[owner applyPreferenceProfile:proposal font:profileFont];
-   Check([effects containsObject:@"NeedsForRecolorNotification"],[NSString stringWithFormat:@"Profile sends recolor for changed %@",key]);
-  }
+  [effects removeAllObjects];[owner applyEngineProfileValues:values];Check(effects.count==0,@"Unchanged profile emits no runtime notifications");
   Check(![effects containsObject:@"MagnificationChangedNotification"],@"Profile leaves current PDF magnification to document state");
  }
+ Check(applied==16,@"Eight profiles in two forms");
+ Check(profiles.numberOfItems==8+2+1,@"Eight profiles, two separators and the Other heading, without Custom when a profile matches");
+ // A command typed by hand matches no profile.
+ NSTextField *latexField=[owner valueForKey:@"latexGSCommandTextField"];
+ [latexField selectText:nil];latexField.currentEditor.string=@"uplatex-custom";
+ [owner controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:latexField]];
+ Check([owner commitPreferenceField:latexField showError:NO reflect:YES],@"A typed command commits");
+ Check(profiles.selectedTag==TSEngineProfileNone && [profiles.titleOfSelectedItem isEqual:NSLocalizedString(@"Custom",@"")] && !profiles.selectedItem.enabled,@"A typed command shows Custom, which cannot be chosen");
+ NSUInteger untagged=0;for(NSMenuItem *item in profiles.itemArray)if(item.tag==TSEngineProfileNone)untagged++;
+ Check(untagged==1 && profiles.selectedItem.tag==TSEngineProfileNone && !profiles.selectedItem.isSeparatorItem && !profiles.selectedItem.isSectionHeader,@"Only Custom answers to no profile; separators and the heading answer to none");
+ [shell.window makeFirstResponder:nil];
  [NSNotificationCenter.defaultCenter removeObserver:token];
  [TSIsolatedAppKitDefaults setObject:@"round" forKey:TSDockIconKey];[dock restoreSavedIcon];
  NSUInteger oldThemeGeneration=[[owner valueForKey:@"themeOperationGeneration"]unsignedIntegerValue],oldEngineGeneration=[[owner valueForKey:@"enginePathSearchGeneration"]unsignedIntegerValue];

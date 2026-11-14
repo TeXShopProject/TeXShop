@@ -400,20 +400,20 @@
         "zh_CN": "高级"
       }
     },
-    "Install a TeX distribution, then run Auto Setup in Settings > Typesetting.": {
-      "default": "Install a TeX distribution, then run Auto Setup in Settings > Typesetting.",
+    "Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting.": {
+      "default": "Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting.",
       "overrides": {
-        "ja": "TeX環境をインストールしてから、設定の「タイプセット」で「自動設定」を実行してください。",
-        "de": "Installieren Sie eine TeX-Distribution und starten Sie die automatische Einrichtung unter Einstellungen > Schriftsatz.",
-        "fr": "Installez une distribution TeX, puis lancez la configuration automatique dans Réglages > Composition.",
-        "es": "Instale una distribución TeX y ejecute la configuración automática en Ajustes > Composición.",
-        "it": "Installare una distribuzione TeX, quindi avviare la configurazione automatica in Impostazioni > Composizione.",
-        "nl": "Installeer een TeX-distributie en voer automatische configuratie uit bij Instellingen > Zetwerk.",
-        "pt": "Instale uma distribuição TeX e execute a configuração automática em Ajustes > Composição.",
-        "pt-PT": "Instale uma distribuição TeX e execute a configuração automática em Definições > Composição.",
-        "ro": "Instalați o distribuție TeX, apoi rulați configurarea automată în Configurări > Tehnoredactare.",
-        "ko": "TeX 배포판을 설치한 다음 설정 > 조판에서 자동 설정을 실행하십시오.",
-        "zh_CN": "安装TeX发行版，然后在设置 > 排版中运行自动设置。"
+        "ja": "TeX LiveかMacTeXをインストールしてから、設定の「タイプセット」で「パスの自動検出」を選んでください。",
+        "de": "Installieren Sie TeX Live oder MacTeX und wählen Sie dann „Pfade erkennen“ unter Einstellungen > Satz.",
+        "fr": "Installez TeX Live ou MacTeX, puis choisissez « Détecter les chemins » dans Réglages > Composition.",
+        "es": "Instale TeX Live o MacTeX y elija «Detectar rutas» en Ajustes > Composición.",
+        "it": "Installa TeX Live o MacTeX, quindi scegli «Rileva percorsi» in Impostazioni > Composizione.",
+        "nl": "Installeer TeX Live of MacTeX en kies daarna ‘Paden detecteren’ bij Instellingen > Zetten.",
+        "pt": "Instale o TeX Live ou o MacTeX e escolha “Detectar caminhos” em Ajustes > Composição.",
+        "pt-PT": "Instale o TeX Live ou o MacTeX e escolha “Detetar caminhos” em Definições > Composição.",
+        "ro": "Instalați TeX Live sau MacTeX, apoi alegeți „Detectați căile” în Configurări > Compunere.",
+        "ko": "TeX Live 또는 MacTeX를 설치한 다음 설정 > 조판에서 '경로 자동 감지'를 선택하십시오.",
+        "zh_CN": "请安装TeX Live或MacTeX，然后在设置 > 排版中选择“自动检测路径”。"
       }
     },
     "Completion trigger": {

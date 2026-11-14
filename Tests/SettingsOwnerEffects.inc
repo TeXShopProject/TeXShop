@@ -8,9 +8,7 @@ extern NSUInteger TSSettingsEncodingPreparations;
 @end
 // Observe the completed transaction, not merely which notification was sent.
 static void CheckOwnerEffects(TSPreferences *owner, NSDictionary *factory, NSDictionary *baseTheme) {
-    NSArray *profileNames=@[@"FactoryDefaults",@"Defaults_upTeX_ptex2pdf",@"Defaults_upTeX_latexmk",@"Defaults_upTeX_script",@"Defaults_pTeX_ptex2pdf",@"Defaults_pTeX_latexmk",@"Defaults_pTeX_script",@"Defaults_pTeX_sjis",@"Defaults_pTeX_euc"];
-    for(NSInteger tag=1;tag<=9;tag++)Check([TSPreferenceProfileNameForTag((TSPreferenceProfileTag)tag)isEqual:profileNames[tag-1]],@"Named profile tags preserve all nine resource mappings");
-    for(NSNumber *tag in @[@(-1),@0,@10,@999])Check(TSPreferenceProfileNameForTag((TSPreferenceProfileTag)tag.integerValue)==nil,@"Unknown profile tags are rejected");
+    (void)factory;
     id<NSApplicationDelegate> oldDelegate=NSApp.delegate;SettingsPreparationDelegate *preparation=[SettingsPreparationDelegate new];NSApp.delegate=preparation;
     NSDictionary *saved = [TSIsolatedAppKitDefaults.values copy];
     NSDictionary *savedLite = liteColors, *savedDark = darkColors;
@@ -30,9 +28,6 @@ static void CheckOwnerEffects(TSPreferences *owner, NSDictionary *factory, NSDic
     values[TSTeXAwareSpellCheckingKey]=@(![TSIsolatedAppKitDefaults boolForKey:TSTeXAwareSpellCheckingKey]);
     values[PdfCopyTypeKey]=@([TSIsolatedAppKitDefaults integerForKey:PdfCopyTypeKey]==1?2:1);
     NSUInteger encoding=TSSettingsEncodingPreparations,spelling=spellRefreshes,copies=preparation.copies;
-    NSFont *font = [NSFont userFontOfSize:12];
-    TSPreferenceProfile *proposal = [[TSPreferenceProfile alloc] initWithProfile:values documentFont:[NSArchiver archivedDataWithRootObject:font] registeredDefaults:factory];
-    Check(proposal != nil, @"Theme-changing profile validates");
     __block NSUInteger colors = 0;
     id observer = [NSNotificationCenter.defaultCenter addObserverForName:SourceColorChangedNotification object:owner queue:nil usingBlock:^(NSNotification *note) {
         colors++;
@@ -42,10 +37,10 @@ static void CheckOwnerEffects(TSPreferences *owner, NSDictionary *factory, NSDic
         Check([liteColors[@"SourceBackground"] isEqual:nextTheme[@"SourceBackground"]], @"Theme notification recipients already see the new colors");
         Check([[[TSDockIconController sharedController] valueForKey:@"selection"] isEqual:@"current"], @"Dock selection is prepared before change notifications");
     }];
-    [owner applyPreferenceProfile:proposal font:font];
+    [owner applyEngineProfileValues:values];
     Check(colors == 1, @"One theme notification for a changed profile");
     Check(testDockTile.contentView == nil, @"Profile restores the standard Dock icon immediately");
-    [owner applyPreferenceProfile:proposal font:font];
+    [owner applyEngineProfileValues:values];
     Check(colors == 1, @"Repeated unchanged profile has no redundant theme effect");
     [NSNotificationCenter.defaultCenter removeObserver:observer];
     TSIsolatedAppKitDefaults.values = [saved mutableCopy];
