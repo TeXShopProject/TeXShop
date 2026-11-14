@@ -242,10 +242,6 @@ tiLabelLabelsSplit                = "레이블";
 tiPaletteLabelLabelsSplit         = "레이블";
 tiToolTipLabelsSplit              = "이동할 레이블 선택";
 
-tiLabelUpdate              = "새로고침";
-tiPaletteLabelUpdate         = "새로고침";
-tiToolTipUpdate              = "태그와 레이블 목록 갱신";
-
 tiLabelHtmlPreviousPageButton                = "뒤로";
 tiPaletteLabelHtmlPreviousPageButton            = "뒤로";
 tiToolTipHtmlPreviousPageButton            = "뒤로";
@@ -285,8 +281,5 @@ tiToolTipHtmlSearch           = "검색";
 "Two-Page Arrangement" = "두 페이지 배열";
 "Applies when displaying two pages" = "두 페이지를 표시할 때 적용됩니다";
 "Continuous" = "연속 스크롤";
-"tiLabelUpdateSplit" = "새로고침";
 "Right to left" = "오른쪽에서 왼쪽으로";
-"tiToolTipUpdateSplit" = "태그와 레이블 목록 갱신";
-"tiPaletteLabelUpdateSplit" = "새로고침";
 "Show first page alone as cover" = "첫 페이지를 표지로 따로 표시";

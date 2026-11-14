@@ -243,14 +243,6 @@ tiLabelLabelsSplit                = "Etiquetas";
 tiPaletteLabelLabelsSplit         = "Etiquetas";
 tiToolTipLabelsSplit              = "Ir a una etiqueta";
 
-tiLabelUpdate              = "Actualizar";
-tiPaletteLabelUpdate         = "Actualizar";
-tiToolTipUpdate              = "Actualizar marcas y etiquetas";
-
-tiLabelUpdateSplit                = "Actualizar";
-tiPaletteLabelUpdateSplit         = "Actualizar";
-tiToolTipUpdateSplit              = "Actualizar marcas y etiquetas";
-
 tiLabelHtmlPreviousPageButton                = "Atrás";
 tiPaletteLabelHtmlPreviousPageButton            = "Atrás";
 tiToolTipHtmlPreviousPageButton            = "Atrás";

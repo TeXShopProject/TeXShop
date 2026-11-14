@@ -7057,16 +7057,6 @@ Version 2.38 also marks matching parentheses with a yellow badge over the parent
 
 In a small number of cases, it may be easier to work around a bug than to fix it. When cases like that arise, they will be listed here. We'll also list   very rare bugs with unexpected solutions. This section should be short because bugs are regularly fixed in TeXShop.
 
-\section{Tags}
-
-Two bugs were discovered in TeXShop 5.42, but these bugs have  been active since 2005. When a document is first opened, the Tags menu is populated with tags for chapters, sections, and so forth. Later as the document is edited, the Tags menu is revised; new tags are added as they are entered into the source, and tags are removed when they are removed from the source. But this revision step did not happen if the toolbar was in
-``Text Only'' mode, and it never happened to the Tags menu in the TeXShop menu bar. Note that the menu bar
-version only appears if an appropriate setting is turned on.
-
-In TeXShop 5.43 and later, this bug is fixed for the Tags menu in the toolbar. It was impossible to fix for the Tags menu in the menu bar without creating performance issues when large documents are edited. However, there is an easy workaround. If the Tags menu in the menu bar is noticeably out of date, use the toolbar's tag menu just once.
-Then the tags menu in both places will be up to date and either can be used. 
-
-
 \section{Zombie Untitled Windows}
 
 If macOS is configured appropriately, then when TeXShop is quit while windows are open, these windows will appear  in their old positions when the program is restarted. To restart TeXShop without opening the old windows, hold down the Option key while TeXShop restarts.
