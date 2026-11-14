@@ -58,6 +58,8 @@
     return self.progressSheet.window;
 }
 
+static void *TSLockedViewContext = &TSLockedViewContext;
+
 /// Every view of the text storage: the two of a split window, for example.
 - (void)lockTextViews
 {
@@ -68,14 +70,33 @@
             if (view.isEditable) {
                 view.editable = NO;
                 [self.lockedViews addObject:view];
+                [view addObserver:self forKeyPath:@"editable" options:0 context:TSLockedViewContext];
             }
         }
 }
 
+/// TeXShop set the view's editability meanwhile (a typesetting that starts makes the console read-only): that
+/// stands, and the view is not made editable at the end.
+- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary<NSKeyValueChangeKey, id> *)change
+                       context:(nullable void *)context
+{
+    if (context != TSLockedViewContext) {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+        return;
+    }
+    NSTextView *view = object;
+    if ([self.lockedViews containsObject:view]) {
+        [view removeObserver:self forKeyPath:@"editable" context:TSLockedViewContext];
+        [self.lockedViews removeObject:view];
+    }
+}
+
 - (void)unlockTextViews
 {
-    for (NSTextView *view in self.lockedViews)
+    for (NSTextView *view in self.lockedViews) {
+        [view removeObserver:self forKeyPath:@"editable" context:TSLockedViewContext];
         view.editable = YES;
+    }
     [self.lockedViews removeAllObjects];
 }
 
