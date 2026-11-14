@@ -1,0 +1,117 @@
+/* The bundled sample sets of multiple replacement (Resources/MultipleReplaceSamples), made from Edit > Character Type Conversion.
+   The keys are the file names of the sets (Resources/MultipleReplaceSamples/*.json) and the English notes of their rules;
+   the samples are written translated the first time. */
+
+/* The name of a sample set: the menu item Edit > Character Type Conversion > Unicode Characters → ajmacros. */
+"UnicodeToAjmacros" = "Caractere Unicode → ajmacros";
+
+/* The name of a sample set: the menu item Edit > Character Type Conversion > ajmacros → Unicode Characters. */
+"AjmacrosToUnicode" = "ajmacros → Caractere Unicode";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled numbers" = "Numere încercuite";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled numbers (end of line)" = "Numere încercuite (sfârșit de rând)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Negative circled numbers" = "Numere încercuite negative";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Negative circled numbers (end of line)" = "Numere încercuite negative (sfârșit de rând)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Parenthesized numbers" = "Numere între paranteze";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Parenthesized numbers (end of line)" = "Numere între paranteze (sfârșit de rând)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled letters" = "Litere încercuite";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled letters (end of line)" = "Litere încercuite (sfârșit de rând)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Parenthesized letters" = "Litere între paranteze";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Parenthesized letters (end of line)" = "Litere între paranteze (sfârșit de rând)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Negative circled letters" = "Litere încercuite negative";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Negative circled letters (end of line)" = "Litere încercuite negative (sfârșit de rând)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Squared letters" = "Litere încadrate";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Squared letters (end of line)" = "Litere încadrate (sfârșit de rând)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Negative squared letters" = "Litere încadrate negative";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Negative squared letters (end of line)" = "Litere încadrate negative (sfârșit de rând)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Roman numerals" = "Cifre romane";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Roman numerals (end of line)" = "Cifre romane (sfârșit de rând)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Numbers with a period" = "Numere cu punct";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Numbers with a period (end of line)" = "Numere cu punct (sfârșit de rând)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Parenthesized days of the week" = "Zilele săptămânii între paranteze";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Parenthesized days of the week (end of line)" = "Zilele săptămânii între paranteze (sfârșit de rând)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled days of the week" = "Zilele săptămânii încercuite";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled days of the week (end of line)" = "Zilele săptămânii încercuite (sfârșit de rând)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Double circled numbers" = "Numere dublu încercuite";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Double circled numbers (end of line)" = "Numere dublu încercuite (sfârșit de rând)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Recycling symbols" = "Simboluri de reciclare";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Recycling symbols (end of line)" = "Simboluri de reciclare (sfârșit de rând)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled katakana" = "Katakana încercuite";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled katakana (end of line)" = "Katakana încercuite (sfârșit de rând)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Parenthesized kanji numerals" = "Cifre kanji între paranteze";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Parenthesized kanji numerals (end of line)" = "Cifre kanji între paranteze (sfârșit de rând)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled kanji numerals" = "Cifre kanji încercuite";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled kanji numerals (end of line)" = "Cifre kanji încercuite (sfârșit de rând)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Ligatures, symbols and variants" = "Ligaturi, simboluri și variante";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Ligatures, symbols and variants (end of line)" = "Ligaturi, simboluri și variante (sfârșit de rând)";
