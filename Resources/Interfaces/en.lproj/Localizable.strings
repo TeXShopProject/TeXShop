@@ -210,8 +210,8 @@
 "Comment Lines and Hidden Settings" = "Comment Lines and Hidden Settings";
 "Advanced" = "Advanced";
 
-"Install TeX Live or MacTeX, then choose Set Up Typesetting in Settings > Typesetting." = "Install TeX Live or MacTeX, then choose Set Up Typesetting in Settings > Typesetting.";
-"Ghostscript was not found. Install Ghostscript, then choose Set Up Typesetting in Settings > Typesetting." = "Ghostscript was not found. Install Ghostscript, then choose Set Up Typesetting in Settings > Typesetting.";
+"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting.";
+"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting.";
 
 "Completion trigger" = "Completion trigger";
 
@@ -350,9 +350,6 @@
 "Other" = "Other";
 "Custom" = "Custom";
 "Apply the “%@” profile?" = "Apply the “%@” profile?";
-"Not found: %@" = "Not found: %@";
 "Use latexmk" = "Use latexmk";
-"TeX Not Found" = "TeX Not Found";
-"Install TeX Live or MacTeX, then apply the profile again." = "Install TeX Live or MacTeX, then apply the profile again.";
-"Set Up Typesetting" = "Set Up Typesetting";
-"Engine Profile" = "Engine Profile";
+"Detect Paths" = "Detect Paths";
+"Choose an Engine Profile" = "Choose an Engine Profile";

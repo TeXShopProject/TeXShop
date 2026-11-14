@@ -230,8 +230,8 @@
 "Comment Lines and Hidden Settings" = "注释行与隐藏设置";
 "Advanced" = "高级";
 
-"Install TeX Live or MacTeX, then choose Set Up Typesetting in Settings > Typesetting." = "请安装TeX Live或MacTeX，然后在设置 > 排版中选择“设置排版”。";
-"Ghostscript was not found. Install Ghostscript, then choose Set Up Typesetting in Settings > Typesetting." = "未找到Ghostscript。请安装Ghostscript，然后在设置 > 排版中选择“设置排版”。";
+"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "请安装TeX Live或MacTeX，然后在设置 > 排版中选择“自动检测路径”。";
+"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "未找到Ghostscript。请安装Ghostscript，然后在设置 > 排版中选择“自动检测路径”。";
 
 "Completion trigger" = "触发按键";
 
@@ -351,9 +351,6 @@
 "Other" = "其他";
 "Custom" = "自定";
 "Apply the “%@” profile?" = "要应用“%@”配置吗？";
-"Not found: %@" = "未找到：%@";
 "Use latexmk" = "使用latexmk";
-"TeX Not Found" = "未找到TeX";
-"Install TeX Live or MacTeX, then apply the profile again." = "请安装TeX Live或MacTeX，然后再次应用配置。";
-"Set Up Typesetting" = "设置排版";
-"Engine Profile" = "引擎配置";
+"Detect Paths" = "自动检测路径";
+"Choose an Engine Profile" = "选择引擎配置";

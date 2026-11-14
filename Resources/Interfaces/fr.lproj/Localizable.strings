@@ -234,8 +234,8 @@
 "Comment Lines and Hidden Settings" = "Lignes de commentaire et réglages masqués";
 "Advanced" = "Avancé";
 
-"Install TeX Live or MacTeX, then choose Set Up Typesetting in Settings > Typesetting." = "Installez TeX Live ou MacTeX, puis choisissez « Configurer la composition » dans Réglages > Composition.";
-"Ghostscript was not found. Install Ghostscript, then choose Set Up Typesetting in Settings > Typesetting." = "Ghostscript est introuvable. Installez Ghostscript, puis choisissez « Configurer la composition » dans Réglages > Composition.";
+"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "Installez TeX Live ou MacTeX, puis choisissez « Détecter les chemins » dans Réglages > Composition.";
+"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript est introuvable. Installez Ghostscript, puis choisissez « Détecter les chemins » dans Réglages > Composition.";
 
 "Completion trigger" = "Touche de déclenchement";
 
@@ -354,9 +354,6 @@
 "Other" = "Autre";
 "Custom" = "Personnalisé";
 "Apply the “%@” profile?" = "Appliquer le profil « %@ » ?";
-"Not found: %@" = "Introuvable : %@";
 "Use latexmk" = "Utiliser latexmk";
-"TeX Not Found" = "TeX introuvable";
-"Install TeX Live or MacTeX, then apply the profile again." = "Installez TeX Live ou MacTeX, puis appliquez de nouveau le profil.";
-"Set Up Typesetting" = "Configurer la composition";
-"Engine Profile" = "Profil du moteur";
+"Detect Paths" = "Détecter les chemins";
+"Choose an Engine Profile" = "Choisir un profil du moteur";

@@ -39,11 +39,6 @@ BOOL TSEngineProfileIsJapanese(TSEngineProfile profile)
     return profile == TSEngineProfileLuaLaTeXJapanese || profile == TSEngineProfilePLaTeXDvipdfmx || profile == TSEngineProfileUpLaTeXDvipdfmx;
 }
 
-BOOL TSEngineProfileNeedsGhostscript(TSEngineProfile profile)
-{
-    return profile == TSEngineProfileLaTeXDvipsGhostscript;
-}
-
 // One row of the table: the place, the LaTeX and TeX commands without latexmk, the LaTeX
 // command with latexmk, and the BibTeX engine.
 static NSArray *TSEngineProfileRow(TSEngineProfile profile)
@@ -108,23 +103,6 @@ NSDictionary<TSPreferenceKey, id> *TSEngineProfileValues(TSEngineProfile profile
     return values;
 }
 
-NSArray<NSString *> *TSEngineProfileRequiredPrograms(TSEngineProfile profile, BOOL latexmk)
-{
-    NSArray *programs;
-    switch (profile) {
-        case TSEngineProfilePdfLaTeX: programs = @[@"pdflatex"]; break;
-        case TSEngineProfileXeLaTeX: programs = @[@"xelatex"]; break;
-        case TSEngineProfileLuaLaTeX: programs = @[@"lualatex"]; break;
-        case TSEngineProfileLaTeXDvipdfmx: programs = @[@"latex", @"simpdftex", @"dvipdfmx"]; break;
-        case TSEngineProfileLuaLaTeXJapanese: programs = @[@"lualatex", @"upbibtex"]; break;
-        case TSEngineProfilePLaTeXDvipdfmx: programs = @[@"platex", @"ptex2pdf", @"dvipdfmx", @"pbibtex"]; break;
-        case TSEngineProfileUpLaTeXDvipdfmx: programs = @[@"uplatex", @"ptex2pdf", @"dvipdfmx", @"upbibtex"]; break;
-        case TSEngineProfileLaTeXDvipsGhostscript: programs = @[@"latex", @"simpdftex", @"dvips"]; break;
-        default: return @[];
-    }
-    return latexmk ? [programs arrayByAddingObject:@"latexmk"] : programs;
-}
-
 // Equal in meaning: a stored "NO" is the same switch as @NO, and blanks around a command do not count.
 static BOOL TSEngineProfileSame(id value, id expected)
 {
@@ -168,22 +146,6 @@ TSEngineProfile TSEngineProfileForLanguages(NSArray<NSString *> *languages)
 {
     NSString *first = languages.firstObject.lowercaseString ?: @"";
     return [first isEqualToString:@"ja"] || [first hasPrefix:@"ja-"] || [first hasPrefix:@"ja_"] ? TSEngineProfileUpLaTeXDvipdfmx : TSEngineProfilePdfLaTeX;
-}
-
-NSDictionary *TSEngineProfileTeXCandidate(NSArray<NSDictionary *> *candidates, NSArray<NSString *> *required,
-    BOOL (^contains)(NSString *, NSArray<NSString *> *), NSArray<NSString *> **missing)
-{
-    NSDictionary *chosen = nil;
-    for (NSDictionary *candidate in candidates)
-        if ([candidate[@"path"] isKindOfClass:NSString.class] && contains(candidate[@"path"], required)) { chosen = candidate; break; }
-    if (chosen == nil) chosen = candidates.firstObject;
-    if (missing != NULL) {
-        NSMutableArray *absent = [NSMutableArray array];
-        for (NSString *program in required)
-            if (chosen == nil || !contains(chosen[@"path"], @[program])) [absent addObject:program];
-        *missing = absent;
-    }
-    return chosen;
 }
 
 NSSet<TSPreferenceKey> *TSEngineProfileApply(NSUserDefaults *defaults, NSDictionary<TSPreferenceKey, id> *values)

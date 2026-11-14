@@ -236,7 +236,7 @@
 "catalog.preview.5.0.note" = "De pagina die het HTML-venster als eerste opent. Voer een webadres of het pad van een bestand in. Standaard: https://texshop.app";
 "group.typesetting.0.title" = "Engine";
 "catalog.typesetting.0.4.title" = "Engineprofiel";
-"catalog.typesetting.0.4.note" = "Stelt de zetcommando’s, de BibTeX-engine, ondersteuning voor het otf-pakket en de paden naar TeX en Ghostscript in. De Japanse profielen stellen ook UTF-8 als codering voor nieuwe documenten, het woordenboek en de omzetting van UTF-8-MAC in.";
+"catalog.typesetting.0.4.note" = "Stelt de zetcommando’s, de BibTeX-engine en ondersteuning voor het otf-pakket in. De Japanse profielen stellen ook UTF-8 als codering voor nieuwe documenten, het woordenboek en de omzetting van UTF-8-MAC in.";
 "catalog.typesetting.0.4.button" = "Pas toe…";
 "catalog.typesetting.0.0.title" = "Standaard TeX-opdracht";
 "catalog.typesetting.0.1.title" = "Te gebruiken commando";
@@ -256,7 +256,7 @@
 "catalog.typesetting.3.1.note" = "Standaard: /usr/local/bin";
 "catalog.typesetting.3.2.title" = "Tweede TeX-engines";
 "catalog.typesetting.3.2.note" = "Voor documenten met % !TEX useAlternatePath. Standaard: ~/bin/context/tex/texmf-osx-arm64/bin";
-"catalog.typesetting.3.3.title" = "Zetten instellen…";
+"catalog.typesetting.3.3.title" = "Paden detecteren…";
 "group.typesetting.4.title" = "Direct PDF";
 "catalog.typesetting.4.0.title" = "TeX";
 "catalog.typesetting.4.0.button" = "standaard";

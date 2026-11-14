@@ -7,9 +7,10 @@
 //     (TSChangeAllAccessory in TSSpellSupport.m), with each message it shows;
 //   * the alert that lists the TeX and Ghostscript installations found
 //     (TSEnginePathAlert in TSPreferences.m), laid out by NSAlert, with several
-//     installations, with one, and with none, also as the first-launch setup with
-//     the engine profile menu and latexmk; and the sheet that applies an engine
-//     profile (TSEngineProfileAlert), with programs missing and without;
+//     installations, with one, and with none (Detect Paths and the first step of
+//     first launch); the choice of an engine profile with latexmk (the second
+//     step, TSEngineProfileChoiceAlert) and the sheet that applies one
+//     (TSEngineProfileAlert);
 //   * the alerts that list macro shortcut conflicts (TSShortcutConflictsAlert in
 //     TSMacroEditor.m) and the learned words of a document (TSLearnedWordsAlert
 //     in TSSpellSupport.m), laid out by NSAlert;
@@ -95,23 +96,21 @@ int main(int argc, char **argv) { @autoreleasepool {
             @"one": @{@"TeX": @[Candidate(@"TeX Live 2026", @"/Library/TeX/texbin")], @"Ghostscript": @[]},
             @"none": @{@"TeX": @[], @"Ghostscript": @[]},
         };
-        for (NSString *name in @[@"several", @"one", @"none"]) for (NSNumber *latexmk in @[@YES, @NO]) {
-            NSAlert *alert = TSEnginePathAlert(cases[name], TSEngineProfileLuaLaTeXJapanese, latexmk.boolValue, [NSMutableDictionary dictionary]);
+        for (NSString *name in @[@"several", @"one", @"none"]) {
+            NSAlert *alert = TSEnginePathAlert(cases[name], [NSMutableDictionary dictionary]);
             [alert layout];
-            NSString *where = [NSString stringWithFormat:@"%@ [setup, %@ found%@]", language, name, latexmk.boolValue ? @", latexmk" : @""];
+            NSString *where = [NSString stringWithFormat:@"%@ [Detect Paths, %@ found]", language, name];
             CheckRoot(alert.window.contentView, where); roots++;
             SaveImage(alert.window.contentView, where);
         }
-
-        // The sheet that applies an engine profile: with the longest title and programs missing, and plainly.
-        NSDictionary *tex = Candidate(@"TeX Live 2026 (3.141592653-2.6-1.40.28)", @"/Library/TeX/texbin"), *gs = Candidate(@"10.06.0", @"/usr/local/bin");
-        NSArray *sheets = @[@[@(TSEngineProfileLaTeXDvipsGhostscript), @[@"latex", @"simpdftex", @"dvips", @"gs"], @"missing programs"],
-                            @[@(TSEngineProfileLuaLaTeXJapanese), @[], @"all programs"]];
-        for (NSArray *sheet in sheets) {
-            NSButton *latexmk = TSEngineProfileLatexmkButton(YES);
-            NSAlert *alert = TSEngineProfileAlert([sheet[0] integerValue], tex, [sheet[1] count] ? nil : gs, sheet[1], latexmk);
+        // The engine profile: the second step of first launch, and the sheet of Apply… with the longest name.
+        NSArray *profileAlerts = @[TSEngineProfileChoiceAlert(TSEngineProfileLuaLaTeXJapanese, [NSMutableDictionary dictionary]),
+                                   TSEngineProfileAlert(TSEngineProfileLaTeXDvipsGhostscript, TSEngineProfileLatexmkButton(YES))];
+        NSArray *profileNames = @[@"engine profile choice", @"engine profile sheet"];
+        for (NSUInteger i = 0; i < profileAlerts.count; i++) {
+            NSAlert *alert = profileAlerts[i];
             [alert layout];
-            NSString *where = [NSString stringWithFormat:@"%@ [engine profile sheet, %@]", language, sheet[2]];
+            NSString *where = [NSString stringWithFormat:@"%@ [%@]", language, profileNames[i]];
             CheckRoot(alert.window.contentView, where); roots++;
             SaveImage(alert.window.contentView, where);
         }

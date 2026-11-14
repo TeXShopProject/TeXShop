@@ -231,8 +231,8 @@
 "Comment Lines and Hidden Settings" = "Commentaarregels en verborgen instellingen";
 "Advanced" = "Geavanceerd";
 
-"Install TeX Live or MacTeX, then choose Set Up Typesetting in Settings > Typesetting." = "Installeer TeX Live of MacTeX en kies daarna ‘Zetten instellen’ bij Instellingen > Zetten.";
-"Ghostscript was not found. Install Ghostscript, then choose Set Up Typesetting in Settings > Typesetting." = "Ghostscript is niet gevonden. Installeer Ghostscript en kies daarna ‘Zetten instellen’ bij Instellingen > Zetten.";
+"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "Installeer TeX Live of MacTeX en kies daarna ‘Paden detecteren’ bij Instellingen > Zetten.";
+"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript is niet gevonden. Installeer Ghostscript en kies daarna ‘Paden detecteren’ bij Instellingen > Zetten.";
 
 "Completion trigger" = "Activeringstoets";
 
@@ -354,9 +354,6 @@
 "Other" = "Overige";
 "Custom" = "Aangepast";
 "Apply the “%@” profile?" = "Profiel ‘%@’ toepassen?";
-"Not found: %@" = "Niet gevonden: %@";
 "Use latexmk" = "Gebruik latexmk";
-"TeX Not Found" = "TeX niet gevonden";
-"Install TeX Live or MacTeX, then apply the profile again." = "Installeer TeX Live of MacTeX en pas het profiel daarna opnieuw toe.";
-"Set Up Typesetting" = "Zetten instellen";
-"Engine Profile" = "Engineprofiel";
+"Detect Paths" = "Paden detecteren";
+"Choose an Engine Profile" = "Kies een engineprofiel";

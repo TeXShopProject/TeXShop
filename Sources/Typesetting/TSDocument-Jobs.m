@@ -89,7 +89,7 @@
     if (TSGhostscriptFoundInPath(path))
         return YES;
     NSString *title = NSLocalizedString(@"Can't find required tool.", @"Can't find required tool.");
-    NSString *message = NSLocalizedString(@"Ghostscript was not found. Install Ghostscript, then choose Set Up Typesetting in Settings > Typesetting.", @"");
+    NSString *message = NSLocalizedString(@"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting.", @"");
     NSWindow *window = [[textView window] isVisible] ? [textView window] : ([self.pdfKitWindow isVisible] ? self.pdfKitWindow : nil);
     NSAlert *alert = [[NSAlert alloc] init];
     alert.messageText = title;

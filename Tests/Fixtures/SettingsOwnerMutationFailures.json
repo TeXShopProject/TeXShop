@@ -49,6 +49,6 @@
   "sidebar-wrap": "Long localized sidebar names fit at every supported width",
   "profile-copy-menu": "PDF copy format is prepared before profile notifications",
   "termination-validation": "Termination commits valid editing without showing a warning",
-  "profile-choice-after-commit": "The profile sheet comes after the search",
+  "profile-choice-after-commit": "The profile sheet comes after the commit",
   "profile-separator-tags": "Only Custom answers to no profile; separators and the heading answer to none"
 }

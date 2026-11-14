@@ -89,14 +89,12 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     Check(ownerAlertCount==alerts+1 && [[owner valueForKey:@"inputErrorPresented"]boolValue],@"Profile selection validates an edit before showing its confirmation");
     FinishOwnerAlert(NSAlertSecondButtonReturn);
     EditOwnerField(owner,tabs,@"22");alerts=ownerAlertCount;[owner applyEngineProfile:applyProfile];
-    // The installations are looked for away from the main thread; the sheet comes after.
-    for(NSDate *limit=[NSDate dateWithTimeIntervalSinceNow:10];ownerAlertCount==alerts && limit.timeIntervalSinceNow>0;)[NSRunLoop.currentRunLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
     Check([TSIsolatedAppKitDefaults integerForKey:tabsKey]==22 && ownerAlertCount==alerts+1 && ![[owner valueForKey:@"inputErrorPresented"]boolValue],@"Valid edit commits before profile confirmation");
-    Check([capturedOwnerAlert.messageText containsString:@"upLaTeX + dvipdfmx"] && [capturedOwnerAlert.informativeText containsString:@"/test/texbin"] && [capturedOwnerAlert.informativeText containsString:@"/test/gs"],@"Profile confirmation displays the TeX and Ghostscript installations it will use");
+    Check([capturedOwnerAlert.messageText containsString:@"upLaTeX + dvipdfmx"] && capturedOwnerAlert.informativeText.length==0,@"Profile confirmation names the profile and shows no paths");
     Check([capturedOwnerAlert.buttons.firstObject.keyEquivalent isEqual:@"\r"] && [capturedOwnerAlert.buttons.lastObject.keyEquivalent isEqual:@"\e"],@"Profile confirmation applies on Return and reserves Escape for Cancel");
-    NSButton *latexmk=(NSButton *)capturedOwnerAlert.accessoryView;
-    BOOL latexmkInUse=NO;TSEngineProfileMatchingSettings(TSIsolatedAppKitDefaults,&latexmkInUse);
-    Check([latexmk isKindOfClass:NSButton.class] && latexmk.enabled && latexmk.state==(latexmkInUse?NSControlStateValueOn:NSControlStateValueOff),@"The latexmk choice starts from the commands in use");
+    NSButton *(^sheetLatexmk)(void)=^NSButton *{return (NSButton *)Find(capturedOwnerAlert.accessoryView,@"settings.engine-profile-latexmk");};
+    NSButton *latexmk=sheetLatexmk();
+    Check([latexmk isKindOfClass:NSButton.class] && latexmk.enabled && latexmk.state==(TSEngineProfileSettingsUseLatexmk(TSIsolatedAppKitDefaults)?NSControlStateValueOn:NSControlStateValueOff),@"The latexmk choice starts from the commands in use");
     NSString *commandBefore=[TSIsolatedAppKitDefaults stringForKey:LatexGSCommandKey];
     FinishOwnerAlert(NSAlertSecondButtonReturn);
     Check([TSIsolatedAppKitDefaults integerForKey:tabsKey]==22 && [[TSIsolatedAppKitDefaults stringForKey:LatexGSCommandKey] isEqual:commandBefore],@"Cancelling the profile preserves the committed edit");
@@ -104,14 +102,14 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     // cannot write its prior text over the profile's value.
     [shell selectCategoryIdentifier:TSSettingsCategoryTypesetting];
     NSTextField *latexGS=[owner valueForKey:@"latexGSCommandTextField"];
+    NSString *texPath=[TSIsolatedAppKitDefaults stringForKey:TetexBinPath],*gsPath=[TSIsolatedAppKitDefaults stringForKey:GSBinPath];
     EditOwnerField(owner,latexGS,@"typed-command");alerts=ownerAlertCount;[owner applyEngineProfile:applyProfile];
-    for(NSDate *limit=[NSDate dateWithTimeIntervalSinceNow:10];ownerAlertCount==alerts && limit.timeIntervalSinceNow>0;)[NSRunLoop.currentRunLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
-    Check(ownerAlertCount==alerts+1,@"The profile sheet comes after the search");
-    ((NSButton *)capturedOwnerAlert.accessoryView).state=NSControlStateValueOn;
+    Check(ownerAlertCount==alerts+1,@"The profile sheet comes after the commit");
+    sheetLatexmk().state=NSControlStateValueOn;
     FinishOwnerAlert(NSAlertFirstButtonReturn);
     NSString *profileCommand=TSEngineProfileValues(TSEngineProfileUpLaTeXDvipdfmx,YES)[LatexGSCommandKey];
     Check([[TSIsolatedAppKitDefaults stringForKey:LatexGSCommandKey] isEqual:profileCommand] && latexGS.currentEditor==nil && [latexGS.stringValue isEqual:profileCommand],@"Profile application releases the pre-application editor");
-    Check([[TSIsolatedAppKitDefaults stringForKey:TetexBinPath] isEqual:@"/test/texbin"] && [[TSIsolatedAppKitDefaults stringForKey:GSBinPath] isEqual:@"/test/gs"],@"Applying a profile sets the TeX and Ghostscript paths it showed");
+    Check([[TSIsolatedAppKitDefaults stringForKey:TetexBinPath] ?: @"" isEqual:texPath ?: @""] && [[TSIsolatedAppKitDefaults stringForKey:GSBinPath] ?: @"" isEqual:gsPath ?: @""],@"Applying a profile leaves the paths to Detect Paths");
     Check(profileChoice.selectedTag==TSEngineProfileUpLaTeXDvipdfmx && [TSIsolatedAppKitDefaults integerForKey:tabsKey]==22,@"The applied profile is shown and other settings stay");
     [shell selectCategoryIdentifier:TSSettingsCategoryGeneral];
     Check([[TSIsolatedAppKitDefaults stringForKey:LatexGSCommandKey] isEqual:profileCommand],@"Later navigation cannot restore the pre-profile text");

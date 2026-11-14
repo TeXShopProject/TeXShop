@@ -152,10 +152,10 @@ assert '(theScript == kTypesetViaGhostScript) ? TSGhostscriptFoldersForCommand(e
 available = jobs[jobs.index('- (BOOL)ghostscriptIsAvailableAlsoIn:'):]
 available = available[:available.index('\n}\n')]
 assert 'path = [[[folders componentsJoinedByString:@":"] stringByAppendingString:@":"] stringByAppendingString:path];' in available and 'TSGhostscriptFoundInPath(path)' in available and \
-       'NSLocalizedString(@"Ghostscript was not found. Install Ghostscript, then choose Set Up Typesetting in Settings > Typesetting."' in available
+       'NSLocalizedString(@"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting."' in available
 assert '[args addObject:tetexBinPath ?: @""];' in jobs, 'no Ghostscript path does not raise in TestGSVersion'
 
-key = 'Ghostscript was not found. Install Ghostscript, then choose Set Up Typesetting in Settings > Typesetting.'
+key = 'Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting.'
 for language in ('en', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt-PT', 'pt', 'ro', 'zh_CN'):
     table = json.loads(subprocess.check_output(['plutil', '-convert', 'json', '-o', '-', str(ROOT / f'Resources/Interfaces/{language}.lproj/Localizable.strings')]))
     value = table.get(key, '')

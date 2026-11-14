@@ -255,8 +255,8 @@
 "Comment Lines and Hidden Settings" = "コメント行と隠し設定";
 "Advanced" = "詳細";
 
-"Install TeX Live or MacTeX, then choose Set Up Typesetting in Settings > Typesetting." = "TeX LiveかMacTeXをインストールしてから、設定の「タイプセット」で「タイプセットを設定」を選んでください。";
-"Ghostscript was not found. Install Ghostscript, then choose Set Up Typesetting in Settings > Typesetting." = "Ghostscriptが見つかりませんでした。Ghostscriptをインストールしてから、設定の「タイプセット」で「タイプセットを設定」を選んでください。";
+"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "TeX LiveかMacTeXをインストールしてから、設定の「タイプセット」で「パスの自動検出」を選んでください。";
+"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscriptが見つかりませんでした。Ghostscriptをインストールしてから、設定の「タイプセット」で「パスの自動検出」を選んでください。";
 
 "Completion trigger" = "呼び出すキー";
 
@@ -362,9 +362,6 @@
 "Other" = "その他";
 "Custom" = "カスタム";
 "Apply the “%@” profile?" = "プロファイル“%@”を適用しますか？";
-"Not found: %@" = "見つかりません：%@";
 "Use latexmk" = "latexmkを使用";
-"TeX Not Found" = "TeXが見つかりません";
-"Install TeX Live or MacTeX, then apply the profile again." = "TeX LiveかMacTeXをインストールしてから、もう一度プロファイルを適用してください。";
-"Set Up Typesetting" = "タイプセットの設定";
-"Engine Profile" = "エンジンのプロファイル";
+"Detect Paths" = "パスの自動検出";
+"Choose an Engine Profile" = "エンジンのプロファイルを選択";

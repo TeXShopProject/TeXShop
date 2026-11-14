@@ -26,10 +26,6 @@ FOUNDATION_EXPORT NSString * _Nullable TSEngineProfileTitle(TSEngineProfile prof
 FOUNDATION_EXPORT BOOL TSEngineProfileIsJapanese(TSEngineProfile profile);
 /// The keys and values that applying the profile writes. Empty for an unknown profile.
 FOUNDATION_EXPORT NSDictionary<TSPreferenceKey, id> *TSEngineProfileValues(TSEngineProfile profile, BOOL latexmk);
-/// The programs that the TeX bin directory must contain for the profile.
-FOUNDATION_EXPORT NSArray<NSString *> *TSEngineProfileRequiredPrograms(TSEngineProfile profile, BOOL latexmk);
-/// Whether the profile converts PostScript with Ghostscript.
-FOUNDATION_EXPORT BOOL TSEngineProfileNeedsGhostscript(TSEngineProfile profile);
 /// The profile whose typesetting commands the settings have now, or TSEngineProfileNone.
 /// *latexmk tells which of its two forms they match.
 FOUNDATION_EXPORT TSEngineProfile TSEngineProfileMatchingSettings(NSUserDefaults *defaults, BOOL * _Nullable latexmk);
@@ -38,10 +34,6 @@ FOUNDATION_EXPORT TSEngineProfile TSEngineProfileMatchingSettings(NSUserDefaults
 FOUNDATION_EXPORT BOOL TSEngineProfileSettingsUseLatexmk(NSUserDefaults *defaults);
 /// The profile chosen beforehand on first launch for these preferred languages.
 FOUNDATION_EXPORT TSEngineProfile TSEngineProfileForLanguages(NSArray<NSString *> *languages);
-/// Of the TeX installations found (newest first), the newest that contains every required
-/// program, else the newest. *missing lists the required programs that the chosen one lacks.
-FOUNDATION_EXPORT NSDictionary * _Nullable TSEngineProfileTeXCandidate(NSArray<NSDictionary *> *candidates, NSArray<NSString *> *required,
-    BOOL (^contains)(NSString *directory, NSArray<NSString *> *programs), NSArray<NSString *> * _Nullable * _Nullable missing);
 /// Writes the values, holding back the observers of single keys until all are stored, and
 /// returns the keys whose values changed.
 FOUNDATION_EXPORT NSSet<TSPreferenceKey> *TSEngineProfileApply(NSUserDefaults *defaults, NSDictionary<TSPreferenceKey, id> *values);

@@ -234,8 +234,8 @@
 "Comment Lines and Hidden Settings" = "주석 행 및 숨겨진 설정";
 "Advanced" = "고급";
 
-"Install TeX Live or MacTeX, then choose Set Up Typesetting in Settings > Typesetting." = "TeX Live 또는 MacTeX를 설치한 다음 설정 > 조판에서 '조판 설정'을 선택하십시오.";
-"Ghostscript was not found. Install Ghostscript, then choose Set Up Typesetting in Settings > Typesetting." = "Ghostscript를 찾을 수 없습니다. Ghostscript를 설치한 다음 설정 > 조판에서 '조판 설정'을 선택하십시오.";
+"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "TeX Live 또는 MacTeX를 설치한 다음 설정 > 조판에서 '경로 자동 감지'을 선택하십시오.";
+"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript를 찾을 수 없습니다. Ghostscript를 설치한 다음 설정 > 조판에서 '경로 자동 감지'을 선택하십시오.";
 
 "Completion trigger" = "호출 키";
 
@@ -354,9 +354,6 @@
 "Other" = "기타";
 "Custom" = "사용자화";
 "Apply the “%@” profile?" = "‘%@’ 프로파일을 적용하시겠습니까?";
-"Not found: %@" = "찾을 수 없음: %@";
 "Use latexmk" = "latexmk 사용";
-"TeX Not Found" = "TeX를 찾을 수 없음";
-"Install TeX Live or MacTeX, then apply the profile again." = "TeX Live 또는 MacTeX를 설치한 다음 프로파일을 다시 적용하십시오.";
-"Set Up Typesetting" = "조판 설정";
-"Engine Profile" = "엔진 프로파일";
+"Detect Paths" = "경로 자동 감지";
+"Choose an Engine Profile" = "엔진 프로파일 선택";

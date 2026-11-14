@@ -233,8 +233,8 @@
 "Comment Lines and Hidden Settings" = "Kommentarzeilen und verborgene Einstellungen";
 "Advanced" = "Erweitert";
 
-"Install TeX Live or MacTeX, then choose Set Up Typesetting in Settings > Typesetting." = "Installieren Sie TeX Live oder MacTeX und wählen Sie dann „Satz einrichten“ unter Einstellungen > Satz.";
-"Ghostscript was not found. Install Ghostscript, then choose Set Up Typesetting in Settings > Typesetting." = "Ghostscript wurde nicht gefunden. Installieren Sie Ghostscript und wählen Sie dann „Satz einrichten“ unter Einstellungen > Satz.";
+"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "Installieren Sie TeX Live oder MacTeX und wählen Sie dann „Pfade erkennen“ unter Einstellungen > Satz.";
+"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript wurde nicht gefunden. Installieren Sie Ghostscript und wählen Sie dann „Pfade erkennen“ unter Einstellungen > Satz.";
 
 "Completion trigger" = "Auslösetaste";
 
@@ -354,9 +354,6 @@
 "Other" = "Andere";
 "Custom" = "Eigene";
 "Apply the “%@” profile?" = "Profil „%@“ anwenden?";
-"Not found: %@" = "Nicht gefunden: %@";
 "Use latexmk" = "latexmk verwenden";
-"TeX Not Found" = "TeX nicht gefunden";
-"Install TeX Live or MacTeX, then apply the profile again." = "Installieren Sie TeX Live oder MacTeX und wenden Sie das Profil dann erneut an.";
-"Set Up Typesetting" = "Satz einrichten";
-"Engine Profile" = "Engine-Profil";
+"Detect Paths" = "Pfade erkennen";
+"Choose an Engine Profile" = "Engine-Profil wählen";

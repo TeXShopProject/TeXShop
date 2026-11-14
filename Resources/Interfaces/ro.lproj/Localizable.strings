@@ -234,8 +234,8 @@
 "Comment Lines and Hidden Settings" = "Linii de comentarii și configurări ascunse";
 "Advanced" = "Avansat";
 
-"Install TeX Live or MacTeX, then choose Set Up Typesetting in Settings > Typesetting." = "Instalați TeX Live sau MacTeX, apoi alegeți „Configurați compunerea” în Configurări > Compunere.";
-"Ghostscript was not found. Install Ghostscript, then choose Set Up Typesetting in Settings > Typesetting." = "Ghostscript nu a fost găsit. Instalați Ghostscript, apoi alegeți „Configurați compunerea” în Configurări > Compunere.";
+"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "Instalați TeX Live sau MacTeX, apoi alegeți „Detectați căile” în Configurări > Compunere.";
+"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript nu a fost găsit. Instalați Ghostscript, apoi alegeți „Detectați căile” în Configurări > Compunere.";
 
 "Completion trigger" = "Tastă de activare";
 
@@ -354,9 +354,6 @@
 "Other" = "Altele";
 "Custom" = "Personalizat";
 "Apply the “%@” profile?" = "Aplicați profilul „%@”?";
-"Not found: %@" = "Nu a fost găsit: %@";
 "Use latexmk" = "Utilizați latexmk";
-"TeX Not Found" = "TeX nu a fost găsit";
-"Install TeX Live or MacTeX, then apply the profile again." = "Instalați TeX Live sau MacTeX, apoi aplicați din nou profilul.";
-"Set Up Typesetting" = "Configurați compunerea";
-"Engine Profile" = "Profilul motorului";
+"Detect Paths" = "Detectați căile";
+"Choose an Engine Profile" = "Alegeți un profil al motorului";

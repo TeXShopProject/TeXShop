@@ -236,7 +236,7 @@
 "catalog.preview.5.0.note" = "Pagina pe care fereastra HTML o deschide prima. Introduceți o adresă web sau calea unui fișier. Implicit: https://texshop.app";
 "group.typesetting.0.title" = "Motor";
 "catalog.typesetting.0.4.title" = "Profilul motorului";
-"catalog.typesetting.0.4.note" = "Stabilește comenzile de compunere, motorul BibTeX, suportul pentru pachetul otf și căile către TeX și Ghostscript. Profilurile japoneze stabilesc și UTF-8 drept codificare a documentelor noi, dicționarul și conversia UTF-8-MAC.";
+"catalog.typesetting.0.4.note" = "Stabilește comenzile de compunere, motorul BibTeX și suportul pentru pachetul otf. Profilurile japoneze stabilesc și UTF-8 drept codificare a documentelor noi, dicționarul și conversia UTF-8-MAC.";
 "catalog.typesetting.0.4.button" = "Aplicați…";
 "catalog.typesetting.0.0.title" = "Comanda Standard";
 "catalog.typesetting.0.1.title" = "Comanda utilizată";
@@ -256,7 +256,7 @@
 "catalog.typesetting.3.1.note" = "Implicit: /usr/local/bin";
 "catalog.typesetting.3.2.title" = "Al doilea set de motoare TeX";
 "catalog.typesetting.3.2.note" = "Pentru documentele cu % !TEX useAlternatePath. Implicit: ~/bin/context/tex/texmf-osx-arm64/bin";
-"catalog.typesetting.3.3.title" = "Configurați compunerea…";
+"catalog.typesetting.3.3.title" = "Detectați căile…";
 "group.typesetting.4.title" = "PDF direct";
 "catalog.typesetting.4.0.title" = "TeX";
 "catalog.typesetting.4.0.button" = "Implicit";

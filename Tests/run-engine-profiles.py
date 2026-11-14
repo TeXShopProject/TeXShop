@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Engine profiles: the table of keys each one writes, the profile the settings match, the TeX installation chosen,
+"""Engine profiles: the table of keys each one writes, the profile the settings match, whether latexmk runs,
 the language-based first-launch choice, and an apply that writes only the profile's keys. Each production rule is
 then removed in turn, and the probe must notice."""
 from pathlib import Path
@@ -131,19 +131,6 @@ int main(int argc, char **argv) { @autoreleasepool {
     check([d.values[@"LatexCommand"] isEqual:@"mine"], @"the other place keeps the user's command");
     check([changed isEqualToSet:want], [NSString stringWithFormat:@"changed keys: %@", changed]);
     check(TSEngineProfileApply(d, values).count == 0, @"applying again changes nothing");
-    // 4. The TeX installation: the newest with every program, else the newest; what it lacks.
-    NSArray *found = @[@{@"path": @"/new"}, @{@"path": @"/old"}];
-    NSDictionary *has = @{@"/new": @[@"pdflatex", @"latexmk"], @"/old": @[@"pdflatex", @"uplatex", @"ptex2pdf", @"dvipdfmx", @"upbibtex"]};
-    BOOL (^contains)(NSString *, NSArray *) = ^BOOL(NSString *dir, NSArray *programs) {
-        for (NSString *p in programs) if (![has[dir] containsObject:p]) return NO; return YES; };
-    NSArray *missing = @[@"x"];
-    check([TSEngineProfileTeXCandidate(found, TSEngineProfileRequiredPrograms(1, YES), contains, &missing)[@"path"] isEqual:@"/new"] && missing.count == 0, @"newest with every program");
-    check([TSEngineProfileTeXCandidate(found, TSEngineProfileRequiredPrograms(7, NO), contains, &missing)[@"path"] isEqual:@"/old"] && missing.count == 0, @"older installation that has the Japanese programs");
-    check([TSEngineProfileTeXCandidate(found, TSEngineProfileRequiredPrograms(6, NO), contains, &missing)[@"path"] isEqual:@"/new"] &&
-          [missing isEqual:@[@"platex", @"ptex2pdf", @"dvipdfmx", @"pbibtex"]], [NSString stringWithFormat:@"newest when none has every program; missing %@", missing]);
-    check(TSEngineProfileTeXCandidate(@[], @[@"pdflatex"], contains, &missing) == nil && [missing isEqual:@[@"pdflatex"]], @"no installation");
-    check([TSEngineProfileRequiredPrograms(7, YES) containsObject:@"latexmk"] && ![TSEngineProfileRequiredPrograms(7, NO) containsObject:@"latexmk"], @"latexmk is required only with latexmk");
-    check(TSEngineProfileNeedsGhostscript(8) && !TSEngineProfileNeedsGhostscript(4), @"only the dvips profile needs Ghostscript");
     // 4b. Whether latexmk runs now, for a profile and for commands typed by hand.
     TSMemoryDefaults *typed = [TSMemoryDefaults new]; [typed registerDefaults:factory];
     check(!TSEngineProfileSettingsUseLatexmk(typed), @"factory settings run the engine once");
@@ -157,7 +144,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     check(TSEngineProfileForLanguages(@[@"ja-JP", @"en"]) == 7 && TSEngineProfileForLanguages(@[@"ja"]) == 7, @"Japanese first: upLaTeX + dvipdfmx");
     check(TSEngineProfileForLanguages(@[@"en-JP", @"ja"]) == 1 && TSEngineProfileForLanguages(@[]) == 1 && TSEngineProfileForLanguages(@[@"jv"]) == 1, @"otherwise pdfLaTeX");
     if (failures) return 1;
-    puts("PASS: 8 profiles x 2 forms write exactly their keys; matching, apply, TeX choice and first-launch language choice");
+    puts("PASS: 8 profiles x 2 forms write exactly their keys; matching, apply, latexmk in use and first-launch language choice");
 } return 0; }
 '''
 
@@ -171,7 +158,6 @@ MUTATIONS = {
     'no Japanese encoding': ('        values[EncodingKey] = @"UTF-8 Unicode";\n', ''),
     'match ignores BibTeX': ('TexGSCommandKey, BibTeXengineKey]', 'TexGSCommandKey]'),
     'match only one form': ("for (NSNumber *form in @[@NO, @YES])", "for (NSNumber *form in @[@NO])"),
-    'candidate ignores programs': ('contains(candidate[@"path"], required)) { chosen', 'YES) { chosen'),
     'no deferral': ('    profileApplicationDepth++;\n', '\n'),
     'every key reported changed': ('if (!TSEngineProfileSame([defaults objectForKey:key], value)) [changed addObject:key];', '[changed addObject:key];'),
     'every language Japanese': ('? TSEngineProfileUpLaTeXDvipdfmx : TSEngineProfilePdfLaTeX', '? TSEngineProfileUpLaTeXDvipdfmx : TSEngineProfileUpLaTeXDvipdfmx'),
