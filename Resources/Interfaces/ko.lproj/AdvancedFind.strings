@@ -86,6 +86,15 @@
 "AdvancedFind.Mark.UnclosedName" = "그룹 이름이 >로 닫히지 않았습니다.";
 "AdvancedFind.Mark.UnclosedParen" = "이 그룹이 닫히지 않았습니다.";
 "AdvancedFind.Mark.UnmatchedParen" = "이 )에 대응하는 그룹이 없습니다.";
+"AdvancedFind.Menu.FindAll" = "모두 찾기";
+"AdvancedFind.Menu.Highlight" = "모두 하이라이트";
+"AdvancedFind.Menu.Replace" = "대치";
+"AdvancedFind.Menu.ReplaceAll" = "모두 대치";
+"AdvancedFind.Menu.ReplaceAndFind" = "대치 및 찾기";
+"AdvancedFind.Menu.SelectAll" = "모든 일치 항목 선택";
+"AdvancedFind.Menu.SetReplaceString" = "선택 부분으로 대치";
+"AdvancedFind.Menu.ShowReplacePanel" = "찾기 및 대치...";
+"AdvancedFind.Menu.Unhighlight" = "하이라이트 제거";
 "AdvancedFind.MoreMarks" = "(외 %lu개)";
 "AdvancedFind.MoreOptions" = "추가 옵션";
 "AdvancedFind.Next" = "다음";

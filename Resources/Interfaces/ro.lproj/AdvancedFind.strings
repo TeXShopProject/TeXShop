@@ -86,6 +86,15 @@
 "AdvancedFind.Mark.UnclosedName" = "Numele grupului nu este închis cu >.";
 "AdvancedFind.Mark.UnclosedParen" = "Acest grup nu este închis.";
 "AdvancedFind.Mark.UnmatchedParen" = "Acest ) nu închide niciun grup.";
+"AdvancedFind.Menu.FindAll" = "Găsiți tot";
+"AdvancedFind.Menu.Highlight" = "Evidențiați tot";
+"AdvancedFind.Menu.Replace" = "Înlocuiți";
+"AdvancedFind.Menu.ReplaceAll" = "Înlocuiți tot";
+"AdvancedFind.Menu.ReplaceAndFind" = "Înlocuiți și găsiți";
+"AdvancedFind.Menu.SelectAll" = "Selectați toate potrivirile";
+"AdvancedFind.Menu.SetReplaceString" = "Folosiți selecția pentru înlocuire";
+"AdvancedFind.Menu.ShowReplacePanel" = "Găsiți și înlocuiți…";
+"AdvancedFind.Menu.Unhighlight" = "Eliminați evidențierile";
 "AdvancedFind.MoreMarks" = "(încă %lu)";
 "AdvancedFind.MoreOptions" = "Alte opțiuni";
 "AdvancedFind.Next" = "Următor";
