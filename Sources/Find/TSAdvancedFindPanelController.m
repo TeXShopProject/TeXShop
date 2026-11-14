@@ -220,7 +220,9 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     [previousNext setWidth:36 forSegment:0];
     [previousNext setWidth:36 forSegment:1];
     self.buttons = @[findAll, replaceAll, replace, previousNext];
-    NSStackView *row = [NSStackView stackViewWithViews:@[findAll, replaceAll]];
+    // Not in `buttons`, which follow the target text view: the window opens whatever the target is.
+    self.multipleReplaceButton = [self button:@"AdvancedFind.MultipleReplace" english:@"Multiple Replace…" action:@selector(showMultipleReplace:)];
+    NSStackView *row = [NSStackView stackViewWithViews:@[findAll, replaceAll, self.multipleReplaceButton]];
     row.spacing = 12;
     for (NSView *view in @[replace, previousNext])
         [row addView:view inGravity:NSStackViewGravityTrailing];
@@ -278,6 +280,10 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     ]];
     self.window.contentView = content;
     self.window.contentMinSize = NSMakeSize(MAX(560, content.fittingSize.width), 250);
+    // The row of buttons can be wider than the first size in some languages: start at the smallest size then.
+    NSSize size = self.window.contentLayoutRect.size;
+    if (size.width < self.window.contentMinSize.width)
+        [self.window setContentSize:NSMakeSize(self.window.contentMinSize.width, size.height)];
     self.window.initialFirstResponder = self.findFieldView;
     self.findFieldView.nextKeyView = self.replaceFieldView;
     self.replaceFieldView.nextKeyView = self.regexBox;

@@ -88,6 +88,7 @@
 "AdvancedFind.Mark.UnmatchedParen" = "Deze ) sluit geen groep af.";
 "AdvancedFind.MoreMarks" = "(nog %lu)";
 "AdvancedFind.MoreOptions" = "Meer opties";
+"AdvancedFind.MultipleReplace" = "Meervoudige vervanging…";
 "AdvancedFind.Next" = "Volgende";
 "AdvancedFind.NoHistory" = "Geen recente invoer";
 "AdvancedFind.NotFound" = "Niet gevonden";

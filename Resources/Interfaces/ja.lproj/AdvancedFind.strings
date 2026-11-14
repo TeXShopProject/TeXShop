@@ -88,6 +88,7 @@
 "AdvancedFind.Mark.UnmatchedParen" = "この ) に対応する ( がありません。";
 "AdvancedFind.MoreMarks" = "（ほかに%luか所）";
 "AdvancedFind.MoreOptions" = "その他のオプション";
+"AdvancedFind.MultipleReplace" = "複数置換…";
 "AdvancedFind.Next" = "次を検索";
 "AdvancedFind.NoHistory" = "最近使った文字列はありません";
 "AdvancedFind.NotFound" = "見つかりません";

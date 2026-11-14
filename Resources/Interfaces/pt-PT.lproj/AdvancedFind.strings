@@ -88,6 +88,7 @@
 "AdvancedFind.Mark.UnmatchedParen" = "Este ) não fecha nenhum grupo.";
 "AdvancedFind.MoreMarks" = "(mais %lu)";
 "AdvancedFind.MoreOptions" = "Mais opções";
+"AdvancedFind.MultipleReplace" = "Substituição múltipla…";
 "AdvancedFind.Next" = "Seguinte";
 "AdvancedFind.NoHistory" = "Nenhum texto recente";
 "AdvancedFind.NotFound" = "Nenhum resultado";
