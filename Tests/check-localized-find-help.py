@@ -34,6 +34,7 @@ TERMS = (
 )
 # Words of the old pages: OgreKit as the new panel for Panther, and its web site.
 OLD_EDITING = re.compile(r'Panther|10\.3|sonobe/OgreKit|園部さんのOgreKit|新しい検索パネル|neuen Suchdialog|nuevo panel de B|new Find panel')
+RECOMMENDED = re.compile(r'\s*[(（](?:recommended|empfohlen|recomendado|推奨|권장)[)）]$')
 OLD_DEFAULTS = re.compile(r'1\.35.{0,40}?(?:検索パネル|Suchdialog|panel de B|Find panel)', re.I)
 
 
@@ -65,6 +66,8 @@ for language in LANGUAGES:
     folded = tricks.casefold()
     for table, key in TERMS:
         value = strings(language, table)[key]
+        # The settings mark the Advanced Find panel as recommended; the help names the panel without that mark.
+        value = RECOMMENDED.sub('', value)
         if value.casefold() not in folded:
             failures.append(f'{language} basic_edittricks.htm lacks {table} {key} “{value}”')
     # The ? button of the Multiple Replace window opens the help at this anchor.
