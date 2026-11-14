@@ -93,6 +93,7 @@
 "AdvancedFind.Menu.ReplaceAndFind" = "Sostituisci e trova";
 "AdvancedFind.Menu.SelectAll" = "Seleziona tutte le corrispondenze";
 "AdvancedFind.Menu.SetReplaceString" = "Usa selezione per sostituire";
+"AdvancedFind.Menu.ShowReplacePanel" = "Trova e sostituisci…";
 "AdvancedFind.Menu.Unhighlight" = "Rimuovi evidenziazioni";
 "AdvancedFind.MoreMarks" = "(altri %lu)";
 "AdvancedFind.MoreOptions" = "Più opzioni";

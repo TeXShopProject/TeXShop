@@ -93,6 +93,7 @@
 "AdvancedFind.Menu.ReplaceAndFind" = "置換して次を検索";
 "AdvancedFind.Menu.SelectAll" = "すべての一致を選択";
 "AdvancedFind.Menu.SetReplaceString" = "選択部分を置換に使用";
+"AdvancedFind.Menu.ShowReplacePanel" = "検索と置換…";
 "AdvancedFind.Menu.Unhighlight" = "ハイライトを削除";
 "AdvancedFind.MoreMarks" = "（ほかに%luか所）";
 "AdvancedFind.MoreOptions" = "その他のオプション";

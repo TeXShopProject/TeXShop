@@ -93,6 +93,7 @@
 "AdvancedFind.Menu.ReplaceAndFind" = "Vervang en zoek";
 "AdvancedFind.Menu.SelectAll" = "Selecteer alle overeenkomsten";
 "AdvancedFind.Menu.SetReplaceString" = "Gebruik selectie voor vervanging";
+"AdvancedFind.Menu.ShowReplacePanel" = "Zoek en vervang…";
 "AdvancedFind.Menu.Unhighlight" = "Verwijder markeringen";
 "AdvancedFind.MoreMarks" = "(nog %lu)";
 "AdvancedFind.MoreOptions" = "Meer opties";

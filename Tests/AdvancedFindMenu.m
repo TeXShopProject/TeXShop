@@ -132,8 +132,6 @@ static void TestNib(NSString *nibPath, NSString *macrosPath, NSDictionary<NSStri
     NSMutableArray *expected = [@[ID(1), @"TSShortcut.performTextFinderAction:.12", ID(2), ID(3), ID(106), ID(9), @"-TSAdvancedFindMenu.separator.find",
                                   ID(7), ID(101), @"TSShortcut.centerSelectionInVisibleArea:.0", @"-", ID(5), ID(6), ID(4),
                                   @"TSShortcut.showMultipleReplace:.0", @"▸", @"-TSAdvancedFindMenu.separator.highlight", ID(102), ID(103)] mutableCopy];
-    if (!findAndReplace)
-        [expected removeObject:@"TSShortcut.performTextFinderAction:.12"];
     NSArray *tokens = FindTokens(find);
     Check([tokens isEqual:expected], [NSString stringWithFormat:@"the order of the Find submenu: %@", [tokens componentsJoinedByString:@" "]]);
     NSArray<NSString *> *withCommands = Snapshot(main);
@@ -148,6 +146,12 @@ static void TestNib(NSString *nibPath, NSString *macrosPath, NSDictionary<NSStri
         {102, @"H", NSEventModifierFlagCommand | NSEventModifierFlagShift, @"Highlight"},
         {103, @"H", NSEventModifierFlagCommand | NSEventModifierFlagShift | NSEventModifierFlagControl, @"Unhighlight"},
     };
+    NSMenuItem *findAndReplaceItem = ItemWithIdentifier(main, @"TSShortcut.performTextFinderAction:.12");
+    Check(findAndReplaceItem.action == @selector(performTextFinderAction:) && findAndReplaceItem.tag == 12 && [findAndReplaceItem.keyEquivalent isEqualToString:@"f"]
+          && (findAndReplaceItem.keyEquivalentModifierMask & (NSEventModifierFlagCommand | NSEventModifierFlagShift | NSEventModifierFlagOption | NSEventModifierFlagControl)) == (NSEventModifierFlagCommand | NSEventModifierFlagOption),
+          @"Find and Replace… with Option-Command-F in every language");
+    if (!findAndReplace)
+        Check([findAndReplaceItem.title isEqualToString:titles[@"ShowReplacePanel"]], [NSString stringWithFormat:@"the added Find and Replace… is titled %@, not %@", titles[@"ShowReplacePanel"], findAndReplaceItem.title]);
     for (size_t i = 0; i < sizeof(commands) / sizeof(commands[0]); i++) {
         NSMenuItem *item = ItemWithIdentifier(main, ID(commands[i].tag));
         Check(item.action == @selector(performFindPanelAction:) && item.tag == commands[i].tag && item.target == nil,

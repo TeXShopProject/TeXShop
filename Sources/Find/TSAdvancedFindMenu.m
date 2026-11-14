@@ -9,6 +9,10 @@
 // FindMethodKey of globals.m: the Find sources are built without the rest of TeXShop in the tests.
 static NSString *const TSFindMethodKey = @"FindMethod";
 static NSString *const TSSeparatorPrefix = @"TSAdvancedFindMenu.separator.";
+/// The representedObject of every item added here, so that only these are taken out again.
+static NSString *const TSAddedItemMark = @"TSAdvancedFindMenu";
+/// "Find and Replace…" (performTextFinderAction:, tag 12), which the Base menu has and the other languages' menus lack.
+static NSString *const TSFindAndReplaceIdentifier = @"TSShortcut.performTextFinderAction:.12";
 
 /// One added item: a command (the panel's action as its tag, the default key) or a separator (`key` nil).
 typedef struct {
@@ -33,6 +37,7 @@ static NSString *_Nullable TSCommandTitle(TSAdvancedFindAction action)
         case TSAdvancedFindActionReplaceAll: return TSLocalized(@"AdvancedFind.Menu.ReplaceAll", @"Replace All");
         case TSAdvancedFindActionHighlight: return TSLocalized(@"AdvancedFind.Menu.Highlight", @"Highlight All");
         case TSAdvancedFindActionUnhighlight: return TSLocalized(@"AdvancedFind.Menu.Unhighlight", @"Remove Highlights");
+        case TSAdvancedFindActionShowReplacePanel: return TSLocalized(@"AdvancedFind.Menu.ShowReplacePanel", @"Find and Replace…");
         default: return nil;
     }
 }
@@ -40,10 +45,11 @@ static NSString *_Nullable TSCommandTitle(TSAdvancedFindAction action)
 static NSMenuItem *TSCommandItem(TSAdvancedFindAction action, const char *key, NSEventModifierFlags modifiers)
 {
     NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:TSCommandTitle(action) ?: @"" action:@selector(performFindPanelAction:)
-                                           keyEquivalent:[NSString stringWithUTF8String:key]];
+                                           keyEquivalent:[NSString stringWithUTF8String:key] ?: @""];
     item.keyEquivalentModifierMask = item.keyEquivalent.length ? modifiers : 0;
     item.tag = action;
     item.identifier = TSCommandIdentifier(action);
+    item.representedObject = TSAddedItemMark;
     return item; // no target: the first responder, as for the other commands of the Find submenu
 }
 
@@ -51,6 +57,7 @@ static NSMenuItem *TSSeparatorItem(NSString *name)
 {
     NSMenuItem *item = NSMenuItem.separatorItem;
     item.identifier = [TSSeparatorPrefix stringByAppendingString:name];
+    item.representedObject = TSAddedItemMark;
     return item;
 }
 
@@ -89,7 +96,7 @@ static NSInteger TSIndexAfterFindPanelAction(NSMenu *menu, NSInteger tag)
 
 + (NSArray<NSString *> *)itemIdentifiers
 {
-    return @[TSCommandIdentifier(TSAdvancedFindActionFindAll), TSCommandIdentifier(TSAdvancedFindActionSelectAll),
+    return @[TSFindAndReplaceIdentifier, TSCommandIdentifier(TSAdvancedFindActionFindAll), TSCommandIdentifier(TSAdvancedFindActionSelectAll),
              [TSSeparatorPrefix stringByAppendingString:@"find"],
              TSCommandIdentifier(TSAdvancedFindActionSetReplaceString),
              [TSSeparatorPrefix stringByAppendingString:@"replace"],
@@ -101,14 +108,28 @@ static NSInteger TSIndexAfterFindPanelAction(NSMenu *menu, NSInteger tag)
 
 + (void)removeItemsFromMenu:(NSMenu *)findMenu
 {
-    NSArray<NSString *> *identifiers = self.itemIdentifiers;
     for (NSMenuItem *item in [findMenu.itemArray copy])
-        if (item.identifier && [identifiers containsObject:item.identifier])
+        if ([item.representedObject isEqual:TSAddedItemMark])
             [findMenu removeItem:item];
 }
 
 + (void)addItemsToMenu:(NSMenu *)findMenu
 {
+    // Find…, then Find and Replace… ⌥⌘F where the localized menu lacks it.
+    BOOL findAndReplace = NO;
+    for (NSMenuItem *item in findMenu.itemArray)
+        if ([item.identifier isEqualToString:TSFindAndReplaceIdentifier])
+            findAndReplace = YES;
+    if (!findAndReplace) {
+        NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:TSCommandTitle(TSAdvancedFindActionShowReplacePanel) ?: @""
+                                                      action:@selector(performTextFinderAction:) keyEquivalent:@"f"];
+        item.keyEquivalentModifierMask = NSEventModifierFlagOption | TSCommand;
+        item.tag = TSAdvancedFindActionShowReplacePanel;
+        item.identifier = TSFindAndReplaceIdentifier;
+        item.representedObject = TSAddedItemMark;
+        [findMenu insertItem:item atIndex:TSIndexAfterFindPanelAction(findMenu, NSFindPanelActionShowFindPanel)];
+    }
+
     // Find Next and Find Previous, then Find All ⇧⌘F, Select All Matches and a separator.
     NSInteger index = TSIndexAfterFindPanelAction(findMenu, NSFindPanelActionPrevious);
     if (index == NSNotFound)

@@ -20,16 +20,16 @@ from shortcut_sources import production_source, companion_sources
 
 root = Path(__file__).resolve().parents[1]
 LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt', 'pt-PT', 'ro', 'zh_CN']
-KEYS = ['FindAll', 'SelectAll', 'SetReplaceString', 'Replace', 'ReplaceAndFind', 'ReplaceAll', 'Highlight', 'Unhighlight']
+KEYS = ['ShowReplacePanel', 'FindAll', 'SelectAll', 'SetReplaceString', 'Replace', 'ReplaceAndFind', 'ReplaceAll', 'Highlight', 'Unhighlight']
 # The user's names (2026-11-14), those of CotEditor's Japanese Find menu
-JAPANESE = {'FindAll': 'すべて検索', 'SelectAll': 'すべての一致を選択', 'SetReplaceString': '選択部分を置換に使用', 'Replace': '置換',
+JAPANESE = {'ShowReplacePanel': '検索と置換…', 'FindAll': 'すべて検索', 'SelectAll': 'すべての一致を選択', 'SetReplaceString': '選択部分を置換に使用', 'Replace': '置換',
             'ReplaceAndFind': '置換して次を検索', 'ReplaceAll': 'すべて置換', 'Highlight': 'すべてハイライト', 'Unhighlight': 'ハイライトを削除'}
 
 MUTATIONS = {
     'the commands are added for every method': ('TSAdvancedFindMenu.m',
         'BOOL wanted = findMethod == TSFindMethodAdvancedPanel;', 'BOOL wanted = YES;'),
     'switching away leaves the separators': ('TSAdvancedFindMenu.m',
-        '        if (item.identifier && [identifiers containsObject:item.identifier])', '        if (item.identifier && !item.separatorItem && [identifiers containsObject:item.identifier])'),
+        '        if ([item.representedObject isEqual:TSAddedItemMark])', '        if (!item.separatorItem && [item.representedObject isEqual:TSAddedItemMark])'),
     'Find All has no Shift': ('TSAdvancedFindMenu.m', 'TSCommandItem(TSAdvancedFindActionFindAll, "F", TSShiftCommand)', 'TSCommandItem(TSAdvancedFindActionFindAll, "f", TSCommand)'),
     'Replace and Find has no Option': ('TSAdvancedFindMenu.m', '"g", NSEventModifierFlagOption | TSCommand)', '"g", TSShiftCommand)'),
     'Remove Highlights has no Control': ('TSAdvancedFindMenu.m', '"H", NSEventModifierFlagControl | TSShiftCommand)', '"h", NSEventModifierFlagControl | TSCommand)'),
@@ -41,6 +41,9 @@ MUTATIONS = {
         '        if ((item.action == @selector(performFindPanelAction:) && item.tag == NSFindPanelActionShowFindPanel) || item.action == NSSelectorFromString(@"showFindPanel:"))\n            return menu;\n        NSMenu *found = item.submenu ? TSAppKitFindSubmenu'),
     'a title reads another key': ('TSAdvancedFindMenu.m', '@"AdvancedFind.Menu.ReplaceAll"', '@"AdvancedFind.ReplaceAll"'),
     'the commands have no identifier': ('TSAdvancedFindMenu.m', '    item.identifier = TSCommandIdentifier(action);\n', ''),
+    'Find and Replace… is not added where it is missing': ('TSAdvancedFindMenu.m', '    if (!findAndReplace) {', '    if (NO) {'),
+    'switching away takes out the Base menu\'s Find and Replace…': ('TSAdvancedFindMenu.m',
+        '        if ([item.representedObject isEqual:TSAddedItemMark])', '        if ([item.representedObject isEqual:TSAddedItemMark] || [item.identifier isEqualToString:TSFindAndReplaceIdentifier])'),
 }
 
 
@@ -65,7 +68,7 @@ def check_strings():
     code = (root / 'Sources/Find/TSAdvancedFindMenu.m').read_text(encoding='utf-8')
     for key in KEYS:
         assert f'TSLocalized(@"AdvancedFind.Menu.{key}", @"{english[key]}")' in code, key
-    print('PASS: the eight titles in 12 languages, the Japanese of CotEditor, the English in the code')
+    print('PASS: the nine titles in 12 languages, the Japanese of CotEditor, the English in the code')
 
 
 def check_launch(delegate):
