@@ -707,31 +707,54 @@ static NSTextField *_Nullable TSTextFieldIn(NSView *_Nullable view)
     return nil;
 }
 
-/// The list of sets fits its sidebar at the smallest, the first and a wide width: no sideways scrolling, the names
-/// as wide as the visible list, the selection inside on both ends (rounded, not cut by the edge).
-static int CheckSetListFits(TSMultipleReplaceWindowController *window, NSString *name)
+/// The list of sets fits its visible width as it is now: the table and every row as wide as the visible list, the
+/// names taking most of it, no sideways offset or scrolling, and the selection, as AppKit draws it, inside on both
+/// ends (rounded, not cut by the edge of the sidebar).
+static int CheckSetListFitsNow(TSMultipleReplaceWindowController *window, NSString *name)
 {
-    int count = 0;
-    NSView *content = window.window.contentView;
     NSScrollView *setScroll = (NSScrollView *)window.removeSetButton.superview.superview.subviews.firstObject;
     NSTableView *sets = (NSTableView *)setScroll.documentView;
+    [window.window.contentView layoutSubtreeIfNeeded];
+    [setScroll layoutSubtreeIfNeeded];
+    [sets displayIfNeeded];
+    NSClipView *clip = setScroll.contentView;
+    NSTableColumn *column = sets.tableColumns.firstObject;
+    CGFloat visible = NSWidth(clip.bounds);
+    CGFloat rowEnd = 0, selectionEnd = 0, selectionStart = visible;
+    for (NSInteger row = 0; row < sets.numberOfRows; row++) {
+        NSTableRowView *rowView = [sets rowViewAtRow:row makeIfNecessary:YES];
+        rowEnd = MAX(rowEnd, NSMaxX([rowView convertRect:rowView.bounds toView:clip]));
+        rowEnd = MAX(rowEnd, NSMaxX([sets rectOfRow:row]));
+        if (!rowView.selected)
+            continue;
+        [rowView layoutSubtreeIfNeeded];
+        for (NSView *v in rowView.subviews)
+            if ([v isKindOfClass:[NSVisualEffectView class]]) { // the selection AppKit draws
+                NSRect frame = [v convertRect:v.bounds toView:clip];
+                selectionEnd = MAX(selectionEnd, NSMaxX(frame));
+                selectionStart = MIN(selectionStart, NSMinX(frame));
+            }
+    }
+    BOOL fits = fabs(NSWidth(sets.frame) - visible) <= 0.5 && rowEnd <= visible + 0.5 && column.width >= visible - 40 && column.width <= visible
+             && selectionEnd <= visible - 2 && selectionStart >= 2 && NSMinX(clip.bounds) == 0
+             && !setScroll.hasHorizontalScroller && setScroll.horizontalScrollElasticity == NSScrollElasticityNone;
+    if (fits)
+        return 0;
+    printf("FAIL %s: the names do not fit the visible list (table %.0f, column %.0f, rows to %.0f, selection %.0f–%.0f, visible %.0f)\n",
+           name.UTF8String, NSWidth(sets.frame), column.width, rowEnd, selectionStart, selectionEnd, visible);
+    return 1;
+}
+
+/// The list of sets fits its sidebar as the window opens, then at the smallest, the first and a wide width.
+static int CheckSetListFits(TSMultipleReplaceWindowController *window, NSString *name)
+{
+    int count = CheckSetListFitsNow(window, [name stringByAppendingString:@" as opened"]);
+    NSView *content = window.window.contentView;
     NSSplitView *splitView = ((NSSplitViewController *)window.window.contentViewController).splitView;
     CGFloat first = NSWidth(splitView.arrangedSubviews.firstObject.frame);
     for (NSNumber *wanted in @[@160, @(first), @320]) {
         [splitView setPosition:wanted.doubleValue ofDividerAtIndex:0];
-        [content layoutSubtreeIfNeeded];
-        [setScroll layoutSubtreeIfNeeded];
-        NSClipView *clip = setScroll.contentView;
-        NSTableColumn *column = sets.tableColumns.firstObject;
-        NSRect row = sets.selectedRow >= 0 ? [sets rectOfRow:sets.selectedRow] : NSZeroRect;
-        CGFloat visible = NSWidth(clip.bounds), used = column.width + sets.intercellSpacing.width;
-        BOOL fits = NSWidth(sets.frame) <= visible + 0.5 && used <= visible + 0.5 && used >= visible - 1 && NSMaxX(row) <= visible + 0.5
-                 && NSMinX(clip.bounds) == 0 && !setScroll.hasHorizontalScroller && setScroll.horizontalScrollElasticity == NSScrollElasticityNone;
-        if (!fits) {
-            printf("FAIL %s %.0f: the names do not fit the visible list (table %.0f, column %.0f, row to %.0f, visible %.0f)\n", name.UTF8String,
-                   wanted.doubleValue, NSWidth(sets.frame), column.width, NSMaxX(row), visible);
-            count++;
-        }
+        count += CheckSetListFitsNow(window, [NSString stringWithFormat:@"%@ %@", name, wanted]);
     }
     [splitView setPosition:first ofDividerAtIndex:0];
     [content layoutSubtreeIfNeeded];
@@ -753,6 +776,8 @@ static void TestLayout(NSString *_Nullable imageDirectory)
     TSMultipleReplaceWindowController *window = [[TSMultipleReplaceWindowController alloc] initWithFindController:MakeController(NULL) library:library];
     [window selectSetNamed:@"Typography"];
     [window updateButtons];
+    // As the window opens, before the sidebar is ever resized
+    failures += CheckSetListFitsNow(window, [language stringByAppendingString:@" sidebar as opened"]);
     NSView *content = window.window.contentView;
     NSView *options = [window makeOptionsView];
     [content layoutSubtreeIfNeeded];
@@ -825,6 +850,7 @@ static void TestLayout(NSString *_Nullable imageDirectory)
     NSDate *start = NSDate.date;
     TSMultipleReplaceWindowController *samples = [[TSMultipleReplaceWindowController alloc] initWithFindController:MakeController(NULL) library:samplesLibrary];
     [samples selectSetNamed:toMacros];
+    failures += CheckSetListFitsNow(samples, [language stringByAppendingString:@" sidebar with the samples as opened"]);
     NSView *samplesContent = samples.window.contentView;
     [samplesContent layoutSubtreeIfNeeded];
     [samples.ruleTable.tableView displayIfNeeded];

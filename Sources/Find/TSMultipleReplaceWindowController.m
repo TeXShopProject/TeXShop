@@ -14,6 +14,8 @@
 @property (nonatomic, readwrite) NSTextField *statusField;
 @property (nonatomic) NSTableView *setTable;
 @property (nonatomic, copy) NSArray<NSString *> *setNames;
+/// Set while fitSetColumn changes the sizes it is told about.
+@property (nonatomic) BOOL fittingSetColumn;
 @property (nonatomic) NSButton *inSelectionBox;
 @property (nonatomic, readwrite) NSButton *removeSetButton;
 @property (nonatomic, readwrite) NSSegmentedControl *ruleButtons;
@@ -147,6 +149,10 @@ static const CGFloat TSSidebarWidth = 240;
     scroll.contentView.postsFrameChangedNotifications = YES;
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(fitSetColumn) name:NSViewFrameDidChangeNotification
                                              object:scroll.contentView];
+    // Loading the sets tiles the table again, wider than the list unless the column is fitted again.
+    self.setTable.postsFrameChangedNotifications = YES;
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(fitSetColumn) name:NSViewFrameDidChangeNotification
+                                             object:self.setTable];
 
     NSPopUpButton *action = [[NSPopUpButton alloc] initWithFrame:NSZeroRect pullsDown:YES];
     action.bordered = NO;
@@ -484,18 +490,23 @@ static const CGFloat TSSidebarWidth = 240;
     return (NSInteger)self.setNames.count;
 }
 
-/// The column of names as wide as the visible list, whatever the width of the sidebar.
+/// The column of names as wide as the visible list, whatever the width of the sidebar, and the table no wider. Again
+/// whenever the visible list or the table changes its size: as the window opens and its sets are loaded (loading
+/// tiles the table again, wider than the list), and as the sidebar is resized.
 - (void)fitSetColumn
 {
     NSTableColumn *column = self.setTable.tableColumns.firstObject;
     NSClipView *clip = self.setTable.enclosingScrollView.contentView;
-    if (!column || !clip)
+    if (!column || !clip || self.fittingSetColumn)
         return;
-    CGFloat width = MAX(column.minWidth, NSWidth(clip.bounds) - self.setTable.intercellSpacing.width);
+    self.fittingSetColumn = YES;
+    CGFloat visible = NSWidth(clip.bounds);
+    CGFloat width = MAX(column.minWidth, visible - self.setTable.intercellSpacing.width);
     if (fabs(column.width - width) > 0.5)
         column.width = width;
-    if (fabs(NSWidth(self.setTable.frame) - NSWidth(clip.bounds)) > 0.5)
-        [self.setTable setFrameSize:NSMakeSize(NSWidth(clip.bounds), NSHeight(self.setTable.frame))];
+    if (fabs(NSWidth(self.setTable.frame) - visible) > 0.5)
+        [self.setTable setFrameSize:NSMakeSize(visible, NSHeight(self.setTable.frame))];
+    self.fittingSetColumn = NO;
 }
 
 - (nullable NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(nullable NSTableColumn *)column row:(NSInteger)row
