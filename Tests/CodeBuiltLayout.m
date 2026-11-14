@@ -8,9 +8,10 @@
 //   * the alert that lists the TeX and Ghostscript installations found
 //     (TSEnginePathAlert in TSPreferences.m), laid out by NSAlert, with several
 //     installations, with one, and with none (Detect Paths and the first step of
-//     first launch); the choice of an engine profile with latexmk (the second
-//     step, TSEngineProfileChoiceAlert) and the sheet that applies one
-//     (TSEngineProfileAlert);
+//     first launch); the window that chooses an engine profile (the second
+//     step) and the sheet that applies one (TSEngineProfileSheet), each with
+//     the list of what a profile sets (TSEngineProfileList), for every
+//     profile and both forms;
 //   * the alerts that list macro shortcut conflicts (TSShortcutConflictsAlert in
 //     TSMacroEditor.m) and the learned words of a document (TSLearnedWordsAlert
 //     in TSSpellSupport.m), laid out by NSAlert;
@@ -33,7 +34,13 @@
 - (IBAction)changeAll:(id)sender {}
 @end
 
+#import "MemoryDefaults.h"
 #include "EnginePathAlert.inc"
+static NSView *FindView(NSView *root, NSString *identifier) {
+    if ([root.identifier isEqual:identifier]) return root;
+    for (NSView *view in root.subviews) { NSView *found = FindView(view, identifier); if (found) return found; }
+    return nil;
+}
 #include "ShortcutConflictsAlert.inc"
 #include "LearnedWordsAlert.inc"
 @interface WordList : NSObject <NSTableViewDataSource> @end
@@ -65,6 +72,8 @@ int main(int argc, char **argv) { @autoreleasepool {
         NSArray<NSString *> *parts = [entry componentsSeparatedByString:@"|"];
         NSString *language = parts[0];
         UseLocalizedStrings(parts.count > 1 ? parts[1] : nil);
+        // The list of what an engine profile sets names the settings as Settings does.
+        if (parts.count > 1) UseLocalizedTables(parts[1], @[@"SettingsCategories", @"Encodings"]);
 
         // The Experiment console, with its input field enabled as while a job runs.
         TSExperimentConsoleController *console = [TSExperimentConsoleController new];
@@ -103,16 +112,36 @@ int main(int argc, char **argv) { @autoreleasepool {
             CheckRoot(alert.window.contentView, where); roots++;
             SaveImage(alert.window.contentView, where);
         }
-        // The engine profile: the second step of first launch, and the sheet shown when a profile is chosen, with the longest name.
-        NSArray *profileAlerts = @[TSEngineProfileChoiceAlert(TSEngineProfileLuaLaTeXJapanese, [NSMutableDictionary dictionary]),
-                                   TSEngineProfileAlert(TSEngineProfileLaTeXDvipsGhostscript, TSEngineProfileLatexmkButton(YES))];
-        NSArray *profileNames = @[@"engine profile choice", @"engine profile sheet"];
-        for (NSUInteger i = 0; i < profileAlerts.count; i++) {
-            NSAlert *alert = profileAlerts[i];
-            [alert layout];
-            NSString *where = [NSString stringWithFormat:@"%@ [%@]", language, profileNames[i]];
-            CheckRoot(alert.window.contentView, where); roots++;
-            SaveImage(alert.window.contentView, where);
+        // The engine profile: the window of the second step of first launch, with each profile chosen in its menu,
+        // and the sheet shown when a profile is chosen, for each profile, with latexmk chosen either way and two of
+        // the values that change turned off. The settings in use are empty, so that every value changes.
+        TSMemoryDefaults *inUse = [TSMemoryDefaults new];
+        TSEngineProfileSheet *choice = [[TSEngineProfileSheet alloc] initChoosingProfile:TSEngineProfileLuaLaTeXJapanese];
+        for (NSMenuItem *item in choice.profileMenu.itemArray) {
+            if (item.isSeparatorItem) continue;
+            [choice.profileMenu selectItem:item];
+            [choice.profileMenu sendAction:choice.profileMenu.action to:choice.profileMenu.target];
+            for (NSInteger form = 0; form < 2; form++) {
+                choice.latexmkChoice.selectedSegment = form;
+                [choice.latexmkChoice sendAction:choice.latexmkChoice.action to:choice.latexmkChoice.target];
+                NSString *where = [NSString stringWithFormat:@"%@ [engine profile choice, %@%@]", language, item.title, form ? @", latexmk" : @""];
+                CheckRoot(choice.window.contentView, where); roots++;
+                SaveImage(choice.window.contentView, where);
+            }
+        }
+        for (NSArray<NSNumber *> *section in TSEngineProfileMenuSections()) for (NSNumber *profile in section) for (NSNumber *on in @[@NO, @YES]) {
+            TSEngineProfileSheet *sheet = [[TSEngineProfileSheet alloc] initWithProfile:profile.integerValue latexmk:on.boolValue settings:inUse];
+            NSGridView *rows = (NSGridView *)FindView(sheet.list, @"settings.engine-profile-list.rows");
+            for (NSInteger r = 1; r < 3; r++) {
+                NSButton *box = (NSButton *)[rows cellAtColumnIndex:0 rowIndex:r].contentView;
+                if ([box isKindOfClass:NSButton.class]) [box performClick:nil];
+            }
+            for (int turn = 0; turn < 2; turn++) {
+                if (turn) { sheet.latexmkChoice.selectedSegment = !on.boolValue; [sheet.latexmkChoice sendAction:sheet.latexmkChoice.action to:sheet.latexmkChoice.target]; }
+                NSString *where = [NSString stringWithFormat:@"%@ [engine profile sheet, %@%@]", language, TSEngineProfileTitle(profile.integerValue), on.boolValue != turn ? @", latexmk" : @""];
+                CheckRoot(sheet.window.contentView, where); roots++;
+                if (!turn) SaveImage(sheet.window.contentView, where);
+            }
         }
 
         NSArray<NSAlert *> *alerts = @[TSShortcutConflictsAlert(@"⌘T: Typeset › plain TeX\n⇧⌘M: Typeset › MetaPost"),

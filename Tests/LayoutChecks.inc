@@ -17,9 +17,12 @@
 // NSLocalizedString in the application's code returns the strings of the
 // language whose nib is being checked.
 static NSDictionary<NSString *, NSString *> *LocalizedStrings;
+// Other tables of the same language, when the including file asks for them (UseLocalizedTables).
+static NSDictionary<NSString *, NSDictionary<NSString *, NSString *> *> *LocalizedTables;
 static IMP OriginalLocalizedString;
 static NSString *LocalizedString(NSBundle *self, SEL _cmd, NSString *key, NSString *value, NSString *table) {
     if (self == NSBundle.mainBundle && (table == nil || [table isEqual:@"Localizable"]) && LocalizedStrings[key]) return LocalizedStrings[key];
+    if (self == NSBundle.mainBundle && table != nil && LocalizedTables[table][key]) return LocalizedTables[table][key];
     return ((NSString *(*)(id, SEL, NSString *, NSString *, NSString *))OriginalLocalizedString)(self, _cmd, key, value, table);
 }
 
@@ -426,4 +429,18 @@ static void InstallLocalizedStrings(void) {
 static void UseLocalizedStrings(NSString *path) {
     NSString *source = path ? [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil] : nil;
     LocalizedStrings = source ? [source propertyListFromStringsFileFormat] : @{};
+}
+// The tables beside the Localizable.strings at path, or, where the language has none (English), in Base.lproj.
+__attribute__((unused)) static void UseLocalizedTables(NSString *path, NSArray<NSString *> *tables) {
+    NSMutableDictionary *loaded = [NSMutableDictionary dictionary];
+    NSString *folder = path.stringByDeletingLastPathComponent;
+    NSString *base = [folder.stringByDeletingLastPathComponent stringByAppendingPathComponent:@"Base.lproj"];
+    for (NSString *table in tables) {
+        NSString *name = [table stringByAppendingPathExtension:@"strings"];
+        NSString *file = [folder stringByAppendingPathComponent:name];
+        if (![NSFileManager.defaultManager fileExistsAtPath:file]) file = [base stringByAppendingPathComponent:name];
+        NSString *source = [NSString stringWithContentsOfFile:file encoding:NSUTF8StringEncoding error:nil];
+        loaded[table] = source ? [source propertyListFromStringsFileFormat] : @{};
+    }
+    LocalizedTables = loaded;
 }

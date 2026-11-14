@@ -578,15 +578,15 @@ int main(int argc,char **argv){@autoreleasepool{
  Check([owner commitPreferenceField:indexField showError:NO reflect:YES] && [[TSIsolatedAppKitDefaults stringForKey:MakeIndexEngineKey] isEqual:@"makeindex"],@"Another index program commits");
  drainProfiles();Check(profiles.selectedTag==TSEngineProfileNone,@"Another index program typed in Settings shows Custom");
  // Choosing a profile asks; Cancel changes nothing and shows Custom again.
- Method profileSheet=class_getInstanceMethod(NSAlert.class,@selector(beginSheetModalForWindow:completionHandler:));
- __block NSModalResponse profileAnswer=NSAlertSecondButtonReturn;__block NSUInteger profileSheets=0;
+ Method profileSheet=class_getInstanceMethod(NSWindow.class,@selector(beginSheet:completionHandler:));
+ __block NSModalResponse profileAnswer=NSModalResponseCancel;__block NSUInteger profileSheets=0;
  __block TSEngineProfile shownWhileAsking=TSEngineProfileNone;
- IMP originalSheet=method_setImplementation(profileSheet,imp_implementationWithBlock(^(NSAlert *alert,NSWindow *window,void (^completion)(NSModalResponse)){profileSheets++;shownWhileAsking=profiles.selectedTag;completion(profileAnswer);}));
+ IMP originalSheet=method_setImplementation(profileSheet,imp_implementationWithBlock(^(NSWindow *window,NSWindow *sheet,void (^completion)(NSModalResponse)){profileSheets++;shownWhileAsking=profiles.selectedTag;completion(profileAnswer);}));
  NSDictionary *beforeChoice=[TSIsolatedAppKitDefaults.values copy];
  [profiles selectItemWithTag:TSEngineProfileXeLaTeX];[profiles sendAction:profiles.action to:profiles.target];drainProfiles();
  Check(profileSheets==1 && shownWhileAsking==TSEngineProfileXeLaTeX,@"While the sheet asks, the menu shows the profile chosen");
  Check([TSIsolatedAppKitDefaults.values isEqual:beforeChoice] && profiles.selectedTag==TSEngineProfileNone,@"Cancel changes nothing and shows Custom again");
- profileAnswer=NSAlertFirstButtonReturn;
+ profileAnswer=NSModalResponseOK;
  [profiles selectItemWithTag:TSEngineProfileXeLaTeX];[profiles sendAction:profiles.action to:profiles.target];drainProfiles();
  Check(profileSheets==2 && profiles.selectedTag==TSEngineProfileXeLaTeX && [[TSIsolatedAppKitDefaults stringForKey:MakeIndexEngineKey] isEqual:@"makeindex"] && [[TSIsolatedAppKitDefaults stringForKey:LatexCommandKey] isEqual:TSEngineProfileValues(TSEngineProfileXeLaTeX,NO)[LatexCommandKey]],@"Apply in the sheet applies the chosen profile");
   // The commands have no Default buttons: choosing the profile again, while the menu shows it or Custom, asks and

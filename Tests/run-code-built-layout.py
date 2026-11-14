@@ -7,7 +7,8 @@ applies to the nibs).
 
 The Experiment console is the production controller; the Change All view and
 the engine path, engine profile, shortcut conflicts and learned words alerts are the production
-functions, copied from their source between their BEGIN and END lines. Nothing
+functions, copied from their source between their BEGIN and END lines, with the list of what an engine
+profile sets (TSEngineProfileList, in TSEngineProfileSheet) named in each language as Settings names the settings. Nothing
 is shown on screen.
 
   --images DIR   also write each window and view as drawn, as PNG files
@@ -30,7 +31,8 @@ def between(path, begin, end):
 
 
 spell = between('Sources/Editor/TSSpellSupport.m', '// BEGIN change all accessory', '// END change all accessory')
-engine = between('Sources/Settings/TSPreferences.m', '// BEGIN engine path alert', '// END engine path alert')
+engine = between('Sources/Settings/TSPreferences.m', '// BEGIN engine profile list', '// END engine profile list') + \
+    between('Sources/Settings/TSPreferences.m', '// BEGIN engine path alert', '// END engine path alert')
 conflicts = between('Sources/Macros/TSMacroEditor.m', '// BEGIN shortcut conflicts alert', '// END shortcut conflicts alert')
 learned = between('Sources/Editor/TSSpellSupport.m', '// BEGIN learned words alert', '// END learned words alert')
 assert 'TSChangeAllAccessory(self, &sReplacementField, &sReplacementStatus)' in (root / 'Sources/Editor/TSSpellSupport.m').read_text(), \
@@ -39,8 +41,10 @@ assert 'return TSRunShortcutAlert(TSShortcutConflictsAlert(details));' in (root 
 assert 'alert = TSLearnedWordsAlert(language, list, &table);' in (root / 'Sources/Editor/TSSpellSupport.m').read_text()
 assert 'NSAlert *alert = TSEnginePathAlert(found, matrices);' in (root / 'Sources/Settings/TSPreferences.m').read_text(), \
     'The application builds the engine path alert as the check does'
-assert 'NSAlert *alert = TSEngineProfileAlert(profile, latexmk);' in (root / 'Sources/Settings/TSPreferences.m').read_text(), \
+assert 'TSEngineProfileSheet *sheet = [[TSEngineProfileSheet alloc] initWithProfile:profile latexmk:TSEngineProfileSettingsUseLatexmk(SUD) settings:SUD];' in (root / 'Sources/Settings/TSPreferences.m').read_text(), \
     'The application builds the engine profile sheet as the check does'
+assert 'TSEngineProfileSheet *sheet = [[TSEngineProfileSheet alloc] initChoosingProfile:' in (root / 'Sources/Settings/TSPreferences.m').read_text(), \
+    'The application builds the first-launch engine profile window as the check does'
 size_window = '\n'.join(line for line in (root / 'Sources/App/globals.h').read_text().splitlines() if re.match(r'#define\s+SIZE_WINDOW_', line))
 assert 'SIZE_WINDOW_WIDTH' in size_window and 'SIZE_WINDOW_DRAW_X' in size_window
 
@@ -56,7 +60,11 @@ for lproj in sorted(interfaces.glob('*.lproj')):
 with tempfile.TemporaryDirectory(prefix='texshop-code-built-layout-') as tmp:
     tmp = Path(tmp)
     (tmp / 'SpellAccessory.inc').write_text(spell)
-    (tmp / 'EnginePathAlert.inc').write_text('#import "TSPreferenceProfile.h"\n#import "TSEnginePathDiscovery.h"\n' + engine)
+    (tmp / 'EnginePathAlert.inc').write_text('#import "TSPreferenceProfile.h"\n#import "TSEnginePathDiscovery.h"\n'
+                                                 # The keys of globals.m that the list reads; globals.h clashes with the console stubs.
+                                                 'extern NSString *DefaultScriptKey, *LatexCommandKey, *TexCommandKey, *LatexGSCommandKey, *TexGSCommandKey, '
+                                                 '*BibTeXengineKey, *MakeIndexEngineKey, *MetaPostEngineKey, *ptexUtfOutputEnabledKey, *EncodingKey, '
+                                                 '*AutomaticUTF8MACtoUTF8ConversionKey, *spellingAutomaticDefaultKey, *spellingLanguageDefaultKey;\n' + engine)
     (tmp / 'SizeWindow.inc').write_text(size_window + '\n')
     (tmp / 'ShortcutConflictsAlert.inc').write_text(conflicts)
     (tmp / 'LearnedWordsAlert.inc').write_text(learned)
