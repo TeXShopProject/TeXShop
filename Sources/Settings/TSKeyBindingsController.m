@@ -3,6 +3,7 @@
 #import "GlobalData.h"
 #import "globals.h"
 #import "TSMarkMenu.h"
+#import "TSPlaceholderToken.h"
 
 static NSPasteboardType const TSKeyBindingRowType = @"org.texshop.key-binding-row";
 static NSString *const TSKeyBindingMark = @"•";
@@ -20,12 +21,7 @@ static NSArray<NSString *> *TSKeyBindingSymbols(void)
 
 static NSString *TSKeyBindingSymbolTitle(NSString *symbol)
 {
-    if ([symbol isEqualToString:@"#SEL#"]) return NSLocalizedString(@"Selected Text", @"Key binding token for #SEL#");
-    if ([symbol isEqualToString:@"#INS#"]) return NSLocalizedString(@"Insertion Point", @"Key binding token for #INS#: where the insertion point is placed after the output");
-    if ([symbol isEqualToString:@"#PASTE#"]) return NSLocalizedString(@"Clipboard Text", @"Key binding token for #PASTE#");
-    if ([symbol isEqualToString:@"\n"]) return NSLocalizedString(@"Line Break", @"Key binding token for a line break in the output");
-    if ([symbol isEqualToString:@"\t"]) return NSLocalizedString(@"Tab", @"Key binding token for a tab in the output");
-    return NSLocalizedString(@"Mark", @"Key binding token for •");
+    return TSPlaceholderTokenTitle(symbol);
 }
 
 static NSFont *TSKeyBindingKeyFont(void) { return [NSFont systemFontOfSize:NSFont.systemFontSize]; }
@@ -41,24 +37,8 @@ static NSFont *TSKeyBindingOutputFont(void) { return [NSFont monospacedSystemFon
 static NSAttributedString *TSKeyBindingTokenString(NSString *symbol, NSFont *font)
 {
     NSString *title = TSKeyBindingSymbolTitle(symbol);
-    NSFont *labelFont = [NSFont systemFontOfSize:round(font.pointSize * 0.85)];
-    NSSize textSize = [title sizeWithAttributes:@{NSFontAttributeName: labelFont}];
-    CGFloat height = ceil(font.ascender - font.descender) + 2;
-    NSSize size = NSMakeSize(ceil(textSize.width) + 14, height);
-    NSImage *image = [NSImage imageWithSize:size flipped:NO drawingHandler:^BOOL(NSRect rect) {
-        NSRect pill = NSInsetRect(rect, 1.5, 0.5);
-        CGFloat radius = NSHeight(pill) / 2;
-        NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:pill xRadius:radius yRadius:radius];
-        [[NSColor.controlAccentColor colorWithAlphaComponent:0.16] setFill];
-        [path fill];
-        [[NSColor.controlAccentColor colorWithAlphaComponent:0.55] setStroke];
-        path.lineWidth = 1;
-        [path stroke];
-        [title drawAtPoint:NSMakePoint(7, floor((NSHeight(rect) - textSize.height) / 2))
-            withAttributes:@{NSFontAttributeName: labelFont, NSForegroundColorAttributeName: NSColor.labelColor}];
-        return YES;
-    }];
-    image.accessibilityDescription = title;
+    NSSize size = TSPlaceholderTokenSize(title, font);
+    NSImage *image = TSPlaceholderTokenImage(title, font);
     TSKeyBindingToken *token = [TSKeyBindingToken new];
     token.symbol = symbol;
     token.image = image;

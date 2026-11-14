@@ -311,8 +311,20 @@
 /* Asked when a conversion is chosen with nothing selected */
 "Apply \"%@\" to the whole document?" = "문서 전체에 ‘%@’을(를) 적용하시겠습니까?";
 
-/* Macro editor placeholder guide */
-"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = 선택한 텍스트, #INS# = 매크로 삽입 후 커서 위치, #PASTE# = 클립보드의 텍스트. AppleScript 매크로에서는 #FILEPATH# 등도 사용할 수 있습니다(도움말 참조).";
+/* Macro editor › tokens for the paths and the name that an AppleScript macro is given (#FILEPATH# and the others) */
+"File Path" = "파일 경로";
+"PDF Path" = "PDF 경로";
+"DVI Path" = "DVI 경로";
+"PS Path" = "PS 경로";
+"Log Path" = "로그 경로";
+"AUX Path" = "AUX 경로";
+"IND Path" = "IND 경로";
+"BBL Path" = "BBL 경로";
+"HTML Path" = "HTML 경로";
+"Path Without Extension" = "확장자를 뺀 경로";
+"TeX Path" = "TeX 경로";
+"Document Name" = "문서 이름";
+"Folder Path" = "폴더 경로";
 /* Key binding editor placeholder guide */
 
 /* Edit › Mark */

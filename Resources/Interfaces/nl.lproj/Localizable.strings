@@ -311,8 +311,20 @@
 /* Asked when a conversion is chosen with nothing selected */
 "Apply \"%@\" to the whole document?" = "‘%@’ op het hele document toepassen?";
 
-/* Macro editor placeholder guide */
-"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = geselecteerde tekst, #INS# = invoegpositie na de macro, #PASTE# = tekst op het klembord. AppleScript-macro’s kunnen ook #FILEPATH# en andere plaatsaanduidingen gebruiken (zie Help).";
+/* Macro editor › tokens for the paths and the name that an AppleScript macro is given (#FILEPATH# and the others) */
+"File Path" = "Bestandspad";
+"PDF Path" = "PDF-pad";
+"DVI Path" = "DVI-pad";
+"PS Path" = "PS-pad";
+"Log Path" = "Logpad";
+"AUX Path" = "AUX-pad";
+"IND Path" = "IND-pad";
+"BBL Path" = "BBL-pad";
+"HTML Path" = "HTML-pad";
+"Path Without Extension" = "Pad zonder extensie";
+"TeX Path" = "TeX-pad";
+"Document Name" = "Documentnaam";
+"Folder Path" = "Mappad";
 /* Key binding editor placeholder guide */
 
 /* Edit › Mark */
