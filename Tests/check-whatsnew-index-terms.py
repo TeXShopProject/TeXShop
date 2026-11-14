@@ -13,7 +13,7 @@ import subprocess
 import sys
 
 MUTATIONS = {
-    # A word is pushed out (nstextview, started and tasks were, #25 audit, the Advanced Find panel and #38; synchronization, think and track for the Find submenu of the Advanced Find panel; rescan for the Dracula theme); the word must be in the fixture.
+    # A word is pushed out (nstextview, started and tasks were, #25 audit, the Advanced Find panel and #38; synchronization, think and track for the Find submenu of the Advanced Find panel; rescan for the Dracula theme; synchronization and track for TransparentTheme and SolarizedLite); the word must be in the fixture.
     'word-pushed-out': lambda terms: terms - {'advanced'},
     # A new word comes in.
     'word-added': lambda terms: terms | {'else'},

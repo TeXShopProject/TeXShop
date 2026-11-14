@@ -520,7 +520,7 @@
 == SolarizedLite light
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.8600 0.1960 0.1840 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.5800 0.6300 0.6300 1.0000
-  markerColorAttribute NSColor kCGColorSpaceSRGB 0.1650 0.6300 0.5960 1.0000
+  markerColorAttribute NSColor kCGColorSpaceSRGB 0.8300 0.2100 0.5100 1.0000
   markerColorParenAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   markerColorCurlyAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   markerColorSquareAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
@@ -549,7 +549,7 @@
   regexCharacterClass NSColor kCGColorSpaceSRGB 0.8600 0.1960 0.1840 1.0000
   regexEscape NSColor kCGColorSpaceSRGB 0.4235 0.4431 0.7686 1.0000
   regexBackreference NSColor kCGColorSpaceSRGB 0.5216 0.6000 0.0000 1.0000
-  regexQuantifier NSColor kCGColorSpaceSRGB 0.1650 0.6300 0.5960 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.8300 0.2100 0.5100 1.0000
   regexAnchor NSColor kCGColorSpaceSRGB 0.1490 0.5451 0.8235 1.0000
   regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   regexIncompatible empty
@@ -557,7 +557,7 @@
 == SolarizedLite dark
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.8600 0.1960 0.1840 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.5800 0.6300 0.6300 1.0000
-  markerColorAttribute NSColor kCGColorSpaceSRGB 0.1650 0.6300 0.5960 1.0000
+  markerColorAttribute NSColor kCGColorSpaceSRGB 0.8300 0.2100 0.5100 1.0000
   markerColorParenAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   markerColorCurlyAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   markerColorSquareAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
@@ -586,7 +586,7 @@
   regexCharacterClass NSColor kCGColorSpaceSRGB 0.8600 0.1960 0.1840 1.0000
   regexEscape NSColor kCGColorSpaceSRGB 0.4235 0.4431 0.7686 1.0000
   regexBackreference NSColor kCGColorSpaceSRGB 0.5216 0.6000 0.0000 1.0000
-  regexQuantifier NSColor kCGColorSpaceSRGB 0.1650 0.6300 0.5960 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.8300 0.2100 0.5100 1.0000
   regexAnchor NSColor kCGColorSpaceSRGB 0.1490 0.5451 0.8235 1.0000
   regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   regexIncompatible empty
@@ -594,7 +594,7 @@
 == TransparentTheme light
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.2747 0.6232 0.9597 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.9175 0.4510 0.0548 1.0000
-  markerColorAttribute NSColor kCGColorSpaceSRGB 1.0000 0.9703 0.2354 1.0000
+  markerColorAttribute NSColor kCGColorSpaceSRGB 0.5000 0.4000 0.0000 1.0000
   markerColorParenAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   markerColorCurlyAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   markerColorSquareAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
@@ -623,7 +623,7 @@
   regexCharacterClass NSColor kCGColorSpaceSRGB 0.2747 0.6232 0.9597 1.0000
   regexEscape NSColor kCGColorSpaceSRGB 0.7059 0.2824 0.6078 1.0000
   regexBackreference NSColor kCGColorSpaceSRGB 0.1804 0.5451 0.3412 1.0000
-  regexQuantifier NSColor kCGColorSpaceSRGB 1.0000 0.9703 0.2354 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.5000 0.4000 0.0000 1.0000
   regexAnchor NSColor kCGColorSpaceSRGB 0.3529 0.3098 0.8118 1.0000
   regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   regexIncompatible empty
@@ -631,7 +631,7 @@
 == TransparentTheme dark
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.2747 0.6232 0.9597 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.9175 0.4510 0.0548 1.0000
-  markerColorAttribute NSColor kCGColorSpaceSRGB 1.0000 0.9703 0.2354 1.0000
+  markerColorAttribute NSColor kCGColorSpaceSRGB 0.5000 0.4000 0.0000 1.0000
   markerColorParenAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   markerColorCurlyAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   markerColorSquareAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
@@ -660,7 +660,7 @@
   regexCharacterClass NSColor kCGColorSpaceSRGB 0.2747 0.6232 0.9597 1.0000
   regexEscape NSColor kCGColorSpaceSRGB 0.7059 0.2824 0.6078 1.0000
   regexBackreference NSColor kCGColorSpaceSRGB 0.1804 0.5451 0.3412 1.0000
-  regexQuantifier NSColor kCGColorSpaceSRGB 1.0000 0.9703 0.2354 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.5000 0.4000 0.0000 1.0000
   regexAnchor NSColor kCGColorSpaceSRGB 0.3529 0.3098 0.8118 1.0000
   regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   regexIncompatible empty

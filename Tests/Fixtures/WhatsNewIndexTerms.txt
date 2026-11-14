@@ -1647,6 +1647,7 @@ smooth
 so
 software
 solarizeddark
+solarizedlite
 some
 something
 sometime
@@ -1735,7 +1736,6 @@ symbol
 symbols
 sync
 synced
-synchronization
 synctex
 syntax
 system
@@ -1828,11 +1828,11 @@ tooltips
 top
 toward
 trace
-track
 trackpad
 trailing
 transitioning
 transparency
+transparenttheme
 trash
 treat
 triangles
