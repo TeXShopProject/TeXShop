@@ -98,7 +98,7 @@
                                     <action selector="newDocument:" target="-1" id="104"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Nuevo desde documento modelo... " id="909" identifier="TSShortcut.newFromStationery:.0">
+                            <menuItem title="Nuevo desde documento modelo..." id="909" identifier="TSShortcut.newFromStationery:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="newFromStationery:" target="887" id="910"/>
@@ -785,8 +785,8 @@
                             <menuItem isSeparatorItem="YES" id="537">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Tipo de letra " id="286">
-                                <menu key="submenu" title="Tipo de letra " systemMenu="font" id="303">
+                            <menuItem title="Tipo de letra" id="286">
+                                <menu key="submenu" title="Tipo de letra" systemMenu="font" id="303">
                                     <items>
                                         <menuItem title="Mostrar tipos de letra" keyEquivalent="k" id="295" identifier="TSShortcut.orderFrontFontPanel:.0">
                                             <connections>

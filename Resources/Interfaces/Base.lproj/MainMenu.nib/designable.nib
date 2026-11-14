@@ -1408,7 +1408,7 @@
                                     <action selector="displayFileEncoding:" target="705" id="ekW-SV-yNw"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop Tips and Tricks " id="1061" identifier="TSShortcut.displayTipsandTricks:.0">
+                            <menuItem title="TeXShop Tips and Tricks" id="1061" identifier="TSShortcut.displayTipsandTricks:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayTipsandTricks:" target="705" id="1063"/>

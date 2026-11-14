@@ -1380,7 +1380,7 @@
                                     <action selector="displayTeXLiveDocumentation:" target="675" id="4Tg-3g-snS"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Afficher l'aide pour le package... " keyEquivalent="i" id="824" identifier="TSShortcut.displayHelpForPackage:.0">
+                            <menuItem title="Afficher l'aide pour le package..." keyEquivalent="i" id="824" identifier="TSShortcut.displayHelpForPackage:.0">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="displayHelpForPackage:" target="675" id="825"/>

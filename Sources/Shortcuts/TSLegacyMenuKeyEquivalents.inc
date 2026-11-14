@@ -51,17 +51,21 @@ static NSArray<NSMenuItem *> *TSLegacyItems(NSMenu *menu)
     return items;
 }
 // Japanese and Chinese titles dropped the space between CJK and Latin text,
-// as macOS does; titles saved before that still name the same items.
+// as macOS does, and titles in several languages dropped a stray space at the
+// start or end or a doubled one inside; titles saved before that still name the same items.
 static NSString *TSLegacyComparableTitle(NSString *title)
 {
-    static NSRegularExpression *space;
+    static NSRegularExpression *space, *doubled;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         NSString *cjk = @"[\\x{3000}-\\x{30FF}\\x{3400}-\\x{9FFF}\\x{FF01}-\\x{FF60}]";
         NSString *pattern = [NSString stringWithFormat:@"(?<=%@) (?=[A-Za-z0-9])|(?<=[A-Za-z0-9]) (?=%@)", cjk, cjk];
         space = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:NULL];
+        doubled = [NSRegularExpression regularExpressionWithPattern:@" {2,}" options:0 error:NULL];
     });
-    return [space stringByReplacingMatchesInString:title options:0 range:NSMakeRange(0, title.length) withTemplate:@""];
+    NSString *trimmed = [title stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
+    trimmed = [doubled stringByReplacingMatchesInString:trimmed options:0 range:NSMakeRange(0, trimmed.length) withTemplate:@" "];
+    return [space stringByReplacingMatchesInString:trimmed options:0 range:NSMakeRange(0, trimmed.length) withTemplate:@""];
 }
 // Source › Command Completion was a submenu before 5.60 whose first item was
 // Add Word; the Source menu now has that command itself in its place.
@@ -101,7 +105,8 @@ static NSMenuItem *TSLegacyMenuItem(NSMenu *menu, id key)
         NSMenuItem *titled = [menu itemWithTitle:key];
         if (titled != nil) return titled;
         NSString *comparable = TSLegacyComparableTitle(key);
-        for (NSMenuItem *item in items) if ([TSLegacyComparableTitle(item.title) isEqualToString:comparable]) return item;
+        if (comparable.length > 0)
+            for (NSMenuItem *item in items) if ([TSLegacyComparableTitle(item.title) isEqualToString:comparable]) return item;
         NSString *identifier = TSLegacyFormerTitleIdentifier(key);
         if (identifier != nil) for (NSMenuItem *item in items) if ([item.identifier isEqualToString:identifier]) return item;
         return nil;
