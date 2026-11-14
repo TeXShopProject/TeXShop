@@ -2181,14 +2181,6 @@ static NSAlert *TSEnginePathAlert(NSDictionary *found, NSMutableDictionary *matr
     [self commitPreferenceField:_latexGSCommandTextField showError:YES reflect:YES];
 }
 
-/*" This method is connected to the 'save postscript' checkbox.
-"*/
-- (IBAction)savePSPressed:sender
-{
-
-	[SUD setBool:[(NSCell *)sender state] forKey:SavePSEnabledKey];
-}
-
 #ifdef USESPARKLE
 
 /*" Sparkle Actions 
@@ -2561,14 +2553,6 @@ A tag of 0 means "always", a tag of 1 means "when errors occur".
 	// since the default program values map identically to the tags of the NSButtonCells,
 	// we can use the tag directly here.
 	[SUD setBool:[(NSCell *)sender state] forKey:SaveRelatedKey];
-}
-
-- (IBAction)useTransparencyPressed:sender
-{
-
-    // since the default program values map identically to the tags of the NSButtonCells,
-    // we can use the tag directly here.
-    [SUD setBool:[(NSCell *)sender state] forKey:UseTransparencyKey];
 }
 
 /*" On Typesetting Pane

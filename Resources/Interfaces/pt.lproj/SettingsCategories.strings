@@ -264,14 +264,9 @@
 "group.typesetting.5.title" = "Via DVI";
 "catalog.typesetting.5.0.title" = "plain TeX";
 "catalog.typesetting.5.1.title" = "LaTeX";
-"catalog.typesetting.5.2.title" = "Salvar arquivo PostScript";
-"catalog.typesetting.5.2.note" = "Acrescenta --keep-psfile ao comando plain TeX ou LaTeX acima para manter o arquivo PostScript intermediário.";
 "group.typesetting.6.title" = "Script pessoal";
 "catalog.typesetting.6.0.title" = "Programa plain TeX";
 "catalog.typesetting.6.1.title" = "Programa LaTeX";
-"group.typesetting.7.title" = "Ghostscript";
-"catalog.typesetting.7.1.title" = "-dALLOWPSTRANSPARENCY";
-"catalog.typesetting.7.1.note" = "Adiciona esta opção quando o Ghostscript converte PostScript em PDF, para manter a transparência, como a do PSTricks.";
 "group.typesetting.8.title" = "Ferramentas relacionadas";
 "catalog.typesetting.8.0.title" = "kpsewhich";
 "catalog.typesetting.8.0.note" = "O comando com que “Abrir arquivo de estilo” do menu Arquivo procura o arquivo.";

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.10.17)  15 NOV 2026 02:47
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.10.17)  15 NOV 2026 06:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -618,7 +618,7 @@ Chapter 26.
 [167
 
 ] [168] [169] [170] [171]
-Overfull \hbox (34.58725pt too wide) in paragraph at lines 3886--3886
+Overfull \hbox (34.58725pt too wide) in paragraph at lines 3884--3884
 []\TU/lmr/bx/n/14.4 Changing the Display Format While Using Switch Views 
  []
 
@@ -635,7 +635,7 @@ Chapter 29.
 [186
 
 ] [187] [188]
-Overfull \hbox (5.46301pt too wide) in paragraph at lines 4305--4306
+Overfull \hbox (5.46301pt too wide) in paragraph at lines 4303--4304
 []\TU/lmr/m/n/10.95 The menu takes at least the following commands (and more if
  an xml file is being used): 
  []
@@ -653,7 +653,7 @@ File: Graphics/invisible.png Graphic file (type bmp)
 <Graphics/invisible.png>
  [192] [193] [194]
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 4420.
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 4418.
  [195]
 Chapter 30.
 [196
@@ -663,14 +663,14 @@ Chapter 31.
 [202
 
 ]
-Overfull \hbox (0.39821pt too wide) in paragraph at lines 4578--4579
+Overfull \hbox (0.39821pt too wide) in paragraph at lines 4577--4578
 \TU/lmr/m/n/10.95 skipped too. Text marked as another language with [][]\TU/lmt
 t/m/n/10.95 \foreignlanguage[]\TU/lmr/m/n/10.95 , [][]\TU/lmtt/m/n/10.95 \selec
 tlanguage[]\TU/lmr/m/n/10.95 ,
  []
 
 [203] [204] [205]
-Overfull \hbox (29.89528pt too wide) in paragraph at lines 4652--4652
+Overfull \hbox (29.89528pt too wide) in paragraph at lines 4651--4651
 []\TU/lmtt/m/n/10.95 defaults write TeXShop ExtraCommandsNotToCheckParameters -
 array-add "\\verbatim" 
  []
@@ -683,7 +683,7 @@ File: Graphics/Spelling_and_Grammar.png Graphic file (type bmp)
  [207] [208] [209] [210]
 Chapter 32.
 
-Overfull \hbox (1.04213pt too wide) in paragraph at lines 4767--4768
+Overfull \hbox (1.04213pt too wide) in paragraph at lines 4766--4767
 \TU/lmr/m/n/10.95 PDFKit supports annotations and TeXShop can open arbitrary pd
 f files. Recently TeXShop
  []
@@ -691,14 +691,14 @@ f files. Recently TeXShop
 File: Graphics/screen.jpg Graphic file (type bmp)
 <Graphics/screen.jpg>
 
-Overfull \hbox (75.88538pt too wide) in paragraph at lines 4779--4780
+Overfull \hbox (75.88538pt too wide) in paragraph at lines 4778--4779
  [][] 
  []
 
 [211
 
 ] [212]
-Overfull \hbox (2.03786pt too wide) in paragraph at lines 4808--4810
+Overfull \hbox (2.03786pt too wide) in paragraph at lines 4807--4809
 []\TU/lmr/m/n/10.95 For a package which mimics Adobe annotations, consider \TU/
 lmr/m/it/10.95 todonotes, pdfcomment, \TU/lmr/m/n/10.95 or \TU/lmr/m/it/10.95 m
 argin-
@@ -710,7 +710,7 @@ File: Graphics/annotationPanel.png Graphic file (type bmp)
  [214] [215] [216] [217]
 Chapter 33.
 
-Overfull \hbox (8.45224pt too wide) in paragraph at lines 5340--5343
+Overfull \hbox (8.45224pt too wide) in paragraph at lines 5339--5342
 \TU/lmr/m/n/10.95 “Fourier-Annotated1.pdf” and you can easily change that to “F
 ourier-Annotated2.pdf”. 
  []
@@ -725,7 +725,7 @@ Chapter 34.
 File: Graphics/Graphic1.png Graphic file (type bmp)
 <Graphics/Graphic1.png>
  [226] [227] [228] [229]
-Overfull \hbox (4.85268pt too wide) in paragraph at lines 5671--5673
+Overfull \hbox (4.85268pt too wide) in paragraph at lines 5670--5672
 []\TU/lmr/m/n/10.95 See [][]$[][][][][] [] [] [] [][][][][][][] [] [][][][] [] 
 [][][][][] [] [][][] [] [][][][][][] [] [][][][][][][][][][][] [] [][][][][][][
 ][][][] [] [][][]$[][] for a won-
@@ -736,7 +736,7 @@ Chapter 35.
 File: Graphics/writingtools.png Graphic file (type bmp)
 <Graphics/writingtools.png>
 
-Overfull \hbox (39.75037pt too wide) in paragraph at lines 6086--6087
+Overfull \hbox (39.75037pt too wide) in paragraph at lines 6085--6086
  [][] 
  []
 
@@ -759,13 +759,13 @@ Chapter 39.
 [239
 
 ]
-Overfull \hbox (9.7225pt too wide) in paragraph at lines 6251--6252
+Overfull \hbox (9.7225pt too wide) in paragraph at lines 6250--6251
 \TU/lmr/m/n/10.95 Select the menu item “Close Current Environment” and the foll
 owing line will be added: 
  []
 
 [240]
-Overfull \hbox (2.4262pt too wide) in paragraph at lines 6304--6306
+Overfull \hbox (2.4262pt too wide) in paragraph at lines 6303--6305
 []\TU/lmr/m/n/10.95 To fix this, the Ghostscript authors added a special flag, 
 “-dALLOWPSTRANSPARENCY”.
  []

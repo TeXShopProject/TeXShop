@@ -8,6 +8,5 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nullable) IBOutlet NSButton *saveRelatedButton;
 @property (strong, nullable) IBOutlet NSMatrix *syncMatrix;
 @property (strong, nullable) IBOutlet NSButton *syncTabButton;
-@property (strong, nullable) IBOutlet NSButton *useTransparencyButton;
 @end
 NS_ASSUME_NONNULL_END

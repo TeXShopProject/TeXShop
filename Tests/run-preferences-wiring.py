@@ -25,6 +25,10 @@ def declared_methods():
     names.add("magChanged:")
     # The Default buttons of the earlier window's commands. Settings restores them with the engine profiles.
     names.add("defaultEngineCall:")
+    # Save PostScript File and -dALLOWPSTRANSPARENCY of earlier windows; Via DVI commands take
+    # --keep-psfile and --distilleropts themselves.
+    names.add("savePSPressed:")
+    names.add("useTransparencyPressed:")
     for path in [root / 'Sources/Settings/TSPreferences.h', *sorted(root.glob('Sources/TSPreferences*.m'))]:
         text = re.sub(r'/\*.*?\*/', '', path.read_text(errors='replace'), flags=re.S)
         text = re.sub(r'//.*', '', text)
@@ -108,7 +112,8 @@ for p in [x for x in (root/'Resources/Interfaces/Base.lproj').glob('Settings*.xi
   new[original]=p.name
 missing=set(old)-set(new)
 # _scrollButton ("Do not scroll" with page buttons), _distillerMatrix and _antialiasButton were removed.
-# _engineTextField and _alternateEngineTextField gave way to menus built in code.
-assert missing <= {'_prefsWindow','_tabView','_samplePanel','_fontTextView','_scrollButton','_distillerMatrix','_antialiasButton','_engineTextField','_alternateEngineTextField'},missing
-assert len(new)==168
+# _engineTextField and _alternateEngineTextField gave way to menus built in code; _savePSButton
+# (Save PostScript File) and _useTransparencyButton (-dALLOWPSTRANSPARENCY) were removed.
+assert missing <= {'_prefsWindow','_tabView','_samplePanel','_fontTextView','_scrollButton','_distillerMatrix','_antialiasButton','_engineTextField','_alternateEngineTextField','_savePSButton','_useTransparencyButton'},missing
+assert len(new)==166
 print('PASS: 170 used outlets each migrate exactly once into shared panes')

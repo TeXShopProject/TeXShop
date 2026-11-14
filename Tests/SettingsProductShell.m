@@ -173,13 +173,12 @@ int main(int argc,char **argv){@autoreleasepool{
   @[@"editor",@"LineNumberEnabled",@"lineNumberButton"],
   @[@"spelling",@"AutomaticSpellingCorrectionEnabled",@"autoSpellCorrectButton"],
   @[@"preview",@"NoScrollPageTurn",@"scrollPageTurnButton"],
-  @[@"typesetting",@"SavePSEnabled",@"savePSButton"],
   @[@"console",@"SameFontForMacro",@"macroButton"],
   @[@"keyboard",@"AutoCompleteEnabled",@"autoCompleteButton"],
   @[@"updates",@"SUScheduledCheckInterval",@"sparkleAutomaticButton"]
  ];
  // Sparkle's Boolean key is independent of its interval key.
- NSMutableArray *reviewedCases=[refreshCases mutableCopy];reviewedCases[8]=@[@"updates",SparkleAutomaticUpdateKey,@"sparkleAutomaticButton"];
+ NSMutableArray *reviewedCases=[refreshCases mutableCopy];reviewedCases[reviewedCases.count-1]=@[@"updates",SparkleAutomaticUpdateKey,@"sparkleAutomaticButton"];
  for(NSArray<NSString *> *entry in reviewedCases){
   NSString *category=entry[0],*key=entry[1];id cell=[owner valueForKey:entry[2]];Check(cell!=nil,@"Refresh fixture names a real outlet");
   id original=[TSIsolatedAppKitDefaults objectForKey:key];BOOL wanted=![[cell valueForKey:@"state"] boolValue];

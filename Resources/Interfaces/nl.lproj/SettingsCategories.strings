@@ -264,14 +264,9 @@
 "group.typesetting.5.title" = "Via DVI";
 "catalog.typesetting.5.0.title" = "plain TeX";
 "catalog.typesetting.5.1.title" = "LaTeX";
-"catalog.typesetting.5.2.title" = "Bewaar PostScript-bestand";
-"catalog.typesetting.5.2.note" = "Voegt --keep-psfile toe aan de opdracht voor plain TeX of LaTeX hierboven en bewaart zo het tussentijdse PostScript-bestand.";
 "group.typesetting.6.title" = "Eigen script";
 "catalog.typesetting.6.0.title" = "Programma voor plain TeX";
 "catalog.typesetting.6.1.title" = "LaTeX-programma";
-"group.typesetting.7.title" = "Ghostscript";
-"catalog.typesetting.7.1.title" = "-dALLOWPSTRANSPARENCY";
-"catalog.typesetting.7.1.note" = "Voegt deze optie toe wanneer Ghostscript PostScript naar PDF omzet, zodat transparantie, zoals van PSTricks, behouden blijft.";
 "group.typesetting.8.title" = "Verwante programma’s";
 "catalog.typesetting.8.0.title" = "kpsewhich";
 "catalog.typesetting.8.0.note" = "De opdracht waarmee „Stijlbestand openen” in het menu Archief het bestand zoekt.";
