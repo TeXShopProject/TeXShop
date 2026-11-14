@@ -197,6 +197,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
     NSColor *text = opaque(@"EditorText");
     contentTextView.drawsBackground = YES;
     contentTextView.backgroundColor = opaque(@"EditorBackground");
+    self.contentsBezel.backgroundColor = contentTextView.backgroundColor;
     contentTextView.textColor = text;
     contentTextView.insertionPointColor = opaque(@"EditorInsertionPoint");
     NSMutableDictionary *typing = [contentTextView.typingAttributes mutableCopy] ?: [NSMutableDictionary dictionary];
@@ -276,6 +277,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
 			NSBeep();
 			return;
 		}
+        [self useSystemFont];
         [self installShortcutStatus];
         [self installShortcutField];
         [self installPlaceholderControls];
@@ -482,8 +484,8 @@ static const CGFloat TSMacroEditorSidebarWidth = 240;
     self.shortcutStatus.frame = NSMakeRect(TSDialogMargin, NSMinY(status), width - 2 * TSDialogMargin, NSHeight(status));
     self.editorView = main;
     // The buttons as the Multiple Replace window's: AppKit's own style at its own height, 20
-    // points above the bottom edge. Save is shown as the preferred one; it does not take
-    // Return, which starts a new line in the contents and ends editing in the name field.
+    // points above the bottom edge. Save is the default button (Return), Cancel takes
+    // Escape; in the contents both keys stay with the text (keyForContents:).
     for (NSButton *button in @[saveButton, cancelButton, testButton]) {
         button.bezelStyle = NSBezelStyleAutomatic;
         NSRect frame = button.frame;
@@ -491,7 +493,8 @@ static const CGFloat TSMacroEditorSidebarWidth = 240;
         frame.origin.y = TSDialogMargin;
         button.frame = frame;
     }
-    if (@available(macOS 26.0, *)) saveButton.tintProminence = NSTintProminencePrimary;
+    saveButton.keyEquivalent = @"\r";
+    cancelButton.keyEquivalent = @"\033";
     [self layoutDialogButtons];
     // As narrow as the fields and the buttons allow: what the nib's window allowed for the fields.
     CGFloat narrowest = MAX(MAX(editor.minSize.width, editor.contentMinSize.width) + widened,
@@ -513,7 +516,85 @@ static const CGFloat TSMacroEditorSidebarWidth = 240;
     editor.minSize = NSMakeSize(TSListSidebarMinimumWidth + split.splitView.dividerThickness + narrowest, minimumHeight);
     [split.view layoutSubtreeIfNeeded];
     self.sidebar = sidebar; self.listBar = bar;
+    [self installContentsBezel];
+    __weak TSMacroEditor *weakSelf = self;
+    self.contentsKeyMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskKeyDown handler:^NSEvent *(NSEvent *event) {
+        return weakSelf ? [weakSelf keyForContents:event] : event;
+    }];
     [self syncListControls];
+}
+// While the contents have the keyboard focus, Return and Enter start a new line and Escape
+// completes, as in the source: the keys go to the contents before the window looks for a
+// button with that key (Save, Cancel). Elsewhere, as in the name field, they press those.
+- (NSEvent *)keyForContents:(NSEvent *)event
+{
+    NSWindow *editor = window;
+    NSResponder *responder = editor.firstResponder;
+    if (event.type != NSEventTypeKeyDown || event.windowNumber != editor.windowNumber) return event;
+    if (![responder isKindOfClass:NSTextView.class] || ((NSTextView *)responder).isFieldEditor) return event;
+    if (event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagControl)) return event;
+    NSString *key = event.charactersIgnoringModifiers;
+    if (!([key isEqual:@"\r"] || [key isEqual:@"\x03"] || [key isEqual:@"\x1b"])) return event;
+    [editor sendEvent:event];
+    return nil;
+}
+- (void)stopKeyMonitor
+{
+    id monitor = self.contentsKeyMonitor;
+    if (monitor) [NSEvent removeMonitor:monitor];
+    self.contentsKeyMonitor = nil;
+}
+// The contents in a field drawn as the name field is, rounded as text fields are now, and not
+// in the square bezel of their scroll view: the field behind, the contents inside its border.
+- (void)installContentsBezel
+{
+    NSScrollView *contents = [contentTextView enclosingScrollView];
+    if (self.contentsBezel || !contents) return;
+    NSTextField *bezel = [NSTextField textFieldWithString:@""];
+    bezel.bezeled = [nameField isBezeled];
+    bezel.bezelStyle = [nameField bezelStyle];
+    bezel.editable = NO;
+    bezel.selectable = NO;
+    bezel.refusesFirstResponder = YES;
+    bezel.drawsBackground = YES;
+    bezel.backgroundColor = [contentTextView backgroundColor] ?: NSColor.textBackgroundColor;
+    bezel.accessibilityElement = NO;
+    bezel.identifier = @"macro.contents.bezel";
+    bezel.frame = contents.frame;
+    bezel.autoresizingMask = contents.autoresizingMask;
+    [contents.superview addSubview:bezel positioned:NSWindowBelow relativeTo:contents];
+    contents.borderType = NSNoBorder;
+    contents.drawsBackground = NO;
+    contents.frame = NSInsetRect(contents.frame, 1, 1);
+    contents.wantsLayer = YES;
+    contents.layer.cornerRadius = 5;
+    contents.layer.masksToBounds = YES;
+    self.contentsBezel = bezel;
+}
+// The line of a separator in the list, as the lines of menus are now.
+NSImage *TSMacroSeparatorImage(CGFloat width)
+{
+    return [NSImage imageWithSize:NSMakeSize(MAX(1, width), 3) flipped:NO drawingHandler:^BOOL(NSRect rect) {
+        [NSColor.separatorColor setFill];
+        NSRectFill(NSMakeRect(0, 1, NSWidth(rect), 1));
+        return YES;
+    }];
+}
+// Interface text in the system font: some nibs name another font (the Chinese one STHeiti).
+- (void)useSystemFont
+{
+    NSView *content = [window contentView];
+    NSMutableArray<NSView *> *pending = content ? [NSMutableArray arrayWithObject:content] : [NSMutableArray array];
+    while (pending.count) {
+        NSView *view = pending.lastObject; [pending removeLastObject];
+        [pending addObjectsFromArray:view.subviews];
+        if (![view isKindOfClass:NSControl.class]) continue;
+        NSControl *control = (NSControl *)view;
+        NSFont *font = control.font;
+        if (font == nil || [font.fontName hasPrefix:@"."]) continue;
+        BOOL bold = ([NSFontManager.sharedFontManager traitsOfFont:font] & NSBoldFontMask) != 0;
+        control.font = bold ? [NSFont boldSystemFontOfSize:font.pointSize] : [NSFont systemFontOfSize:font.pointSize];
+    }
 }
 - (void)syncListControls
 {
@@ -1168,6 +1249,7 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 		self.previousItem = nil;
 	self.previousItem = nil;
 	[outlineController setRootOfTree: nil]; // this release the tree structure
+    [self stopKeyMonitor];
     self.originalShortcutKeys = nil; self.shortcutConflicts = nil; self.shortcutStatus = nil;
 	outlineView = nil;
 	window = nil;

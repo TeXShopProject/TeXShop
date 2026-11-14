@@ -30,6 +30,9 @@
 @class TSListBottomBar;
 @class TSMacroShortcutField;
 
+// The line of a separator in the list of macros, `width` points long.
+NSImage *TSMacroSeparatorImage(CGFloat width);
+
 @interface TSMacroEditor : NSObject <NSTextViewDelegate, NSMenuDelegate>
 {
 	IBOutlet id outlineController;
@@ -67,6 +70,10 @@
 @property (retain) TSListBottomBar *listBar;
 // Beside the sidebar: the fields, the message and the buttons.
 @property (retain) NSView *editorView;
+// Return, Enter and Escape for the contents, before the buttons take them (keyForContents:).
+@property (retain) id contentsKeyMonitor;
+// Behind the contents: draws their border as the name field's.
+@property (retain) NSTextField *contentsBezel;
 // Below the contents: Insert adds a placeholder, the help button lists them.
 @property (retain) NSPopUpButton *insertPlaceholderButton;
 @property (retain) NSButton *placeholdersButton;
@@ -78,6 +85,10 @@
 // The shortcut being edited, as the macros store it (for example @"M+ShiftKey").
 @property (copy) NSString *pendingShortcutKey;
 - (void)installSidebar;
+- (void)installContentsBezel;
+- (NSEvent *)keyForContents:(NSEvent *)event;
+- (void)stopKeyMonitor;
+- (void)useSystemFont;
 - (void)installShortcutField;
 - (void)syncShortcutField;
 - (BOOL)recordShortcutEvent:(NSEvent *)event;

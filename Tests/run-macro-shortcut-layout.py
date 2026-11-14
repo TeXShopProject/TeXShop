@@ -7,6 +7,12 @@ from source_tree import include_args
 from macro_editor_sources import write_sources, layout_body, FRAMEWORKS
 root=Path(__file__).resolve().parents[1]
 body=layout_body(root)
+# What the harness does not run: closing the window removes the key monitor, and the list draws its separators
+# with TSMacroSeparatorImage, not the old groove image.
+editor=(root/'Sources/Macros/TSMacroEditor.m').read_text()
+assert '[self stopKeyMonitor];' in editor[editor.index('- (void) windowWillClose:'):], 'closing the editor removes its key monitor'
+outline=(root/'Sources/Macros/TSMacroOutlineController.m').read_text()
+assert 'setImage1: TSMacroSeparatorImage(' in outline and 'imageNamed: SEPARATOR_IMAGE' not in outline, 'separators are drawn as lines'
 with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
     mutation='--mutations' in sys.argv
     extra=write_sources(root,td,'MacroStatusLayout.inc')
@@ -34,7 +40,11 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
             'the first row is higher than the sets\'': ('    list.contentInsets = NSEdgeInsetsMake(5, 0, 0, 0);\n', ''),
             'the fields keep the nib\'s margin from the list': ('    CGFloat shift = NSMinX([nameField frame]) - TSDialogMargin;', '    CGFloat shift = NSMinX([nameField frame]) - 2 * TSDialogMargin;'),
             'the buttons do not hold the narrowest window': ('                            TSDialogButtonsWidth(@[saveButton, cancelButton], @[testButton]));', '                            0);'),
-            'Save takes Return, before the contents': ('    if (@available(macOS 26.0, *)) saveButton.tintProminence = NSTintProminencePrimary;', '    saveButton.keyEquivalent = @"\\r";'),
+            'Return in the contents saves': ('    [editor sendEvent:event];\n    return nil;\n', '    return event;\n'),
+            'Escape does not cancel': ('    cancelButton.keyEquivalent = @"\\033";\n', ''),
+            'Save is not the default button': ('    saveButton.keyEquivalent = @"\\r";\n', ''),
+            'the contents keep their square bezel': ('    [self installContentsBezel];\n', ''),
+            'zh_CN.lproj: a font the nib names stays': ('        if (font == nil || [font.fontName hasPrefix:@"."]) continue;', '        continue;'),
             'the name field keeps the nib\'s height': ('    if (taller > 0) { nameFrame.origin.y -= taller; nameFrame.size.height += taller; [nameField setFrame:nameFrame]; }\n', ''),
             'the buttons keep the nib\'s height': ('        frame.size.height = button.fittingSize.height;\n', ''),
             'the window loses its minimum height': ('    editor.minSize = NSMakeSize(TSListSidebarMinimumWidth + split.splitView.dividerThickness + narrowest, minimumHeight);', '    editor.minSize = NSMakeSize(TSListSidebarMinimumWidth + split.splitView.dividerThickness + narrowest, 0);'),
@@ -63,7 +73,12 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
                 mutated.write_text(text.replace(before,after))
                 sources=[str(mutated) if x.endswith('/'+changed) else x for x in extra]
             subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-incomplete-implementation','-Wno-deprecated-declarations','-Wno-nullability-completeness',*FRAMEWORKS,'-I',td,'-I',str(root/'Tests'),*include_args(root),str(root/'Tests/MacroShortcutLayout.m'),*sources,'-o',str(binary)],check=True)
-            result=subprocess.run([str(binary),str(root/'Resources/Interfaces/Base.lproj/MacroEditor.nib/keyedobjects.nib')],capture_output=True,text=True)
+            # A mutation named after a localization runs on that nib.
+            lproj=name.split(':')[0] if name.split(':')[0].endswith('.lproj') else 'Base.lproj'
+            # The nib AppKit reads: keyedobjects-101300.nib where there is one.
+            nibs=root/'Resources/Interfaces'/lproj/'MacroEditor.nib'
+            nib=nibs/'keyedobjects-101300.nib' if (nibs/'keyedobjects-101300.nib').exists() else nibs/'keyedobjects.nib'
+            result=subprocess.run([str(binary),str(nib)],capture_output=True,text=True)
             assert result.returncode and 'FAIL ' in result.stderr,(name,result.stderr)
             print('DETECTED:',name,result.stderr.strip())
 

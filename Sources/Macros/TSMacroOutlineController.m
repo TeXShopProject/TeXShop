@@ -339,7 +339,7 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 		//	[(ImageAndTextCell*)cell setImage: [(TSMacroTreeNode*)item iconRep]];
 		// else
 		if ([item isSeparator]) {
-			[(ImageAndTextCell*)cell setImage1: [NSImage imageNamed: SEPARATOR_IMAGE]];
+			[(ImageAndTextCell*)cell setImage1: TSMacroSeparatorImage(tableColumn.width - 8)];
 		}
         else {
 			 [(ImageAndTextCell*)cell setImage1: nil];
