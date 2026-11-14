@@ -82,6 +82,27 @@ static void TSEnumeratePlaceholders(NSString *string, NSRange range, NSArray<NSS
         block(match.rangeValue, TSSyntaxRolePlaceholder, TSSyntaxTokenFlagsNone);
 }
 
++ (void)enumerateTokensInString:(NSString *)string usingBlock:(NS_NOESCAPE void (^)(NSRange range, NSString *symbol))block
+{
+    NSRange all = NSMakeRange(0, string.length);
+    NSMutableArray<NSValue *> *found = [NSMutableArray array];
+    if (TSMacroContentKindForString(string) == TSMacroContentKindTeX) {
+        TSEnumerateMarks(string, all, ^(NSRange range, TSSyntaxRole role, TSSyntaxTokenFlags flags) {
+            [found addObject:[NSValue valueWithRange:NSMakeRange(range.location, 1)]];
+        });
+        TSEnumeratePlaceholders(string, all, TSSyntaxMacroContentScanner.teXPlaceholders, [NSSet setWithObject:@"#INS#"],
+                                ^(NSRange range, TSSyntaxRole role, TSSyntaxTokenFlags flags) { [found addObject:[NSValue valueWithRange:range]]; });
+    } else {
+        TSEnumeratePlaceholders(string, all, TSSyntaxMacroContentScanner.appleScriptPlaceholders, [NSSet set],
+                                ^(NSRange range, TSSyntaxRole role, TSSyntaxTokenFlags flags) { [found addObject:[NSValue valueWithRange:range]]; });
+    }
+    [found sortUsingComparator:^NSComparisonResult(NSValue *a, NSValue *b) {
+        return a.rangeValue.location < b.rangeValue.location ? NSOrderedAscending : NSOrderedDescending;
+    }];
+    for (NSValue *value in found)
+        block(value.rangeValue, [string substringWithRange:value.rangeValue]);
+}
+
 - (void)enumerateTokensInString:(NSString *)string range:(NSRange)range usingBlock:(NS_NOESCAPE TSSyntaxTokenBlock)block
 {
     if (TSMacroContentKindForString(string) == TSMacroContentKindTeX) {

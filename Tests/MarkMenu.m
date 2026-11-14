@@ -71,6 +71,21 @@ int main(int argc, char **argv) { @autoreleasepool {
         NSApp.mainMenu = nil;
         printf("PASS: %s Edit › Mark: %s\n", argv[i], Describe(marks).UTF8String);
     }
+    // How to Use Marks: the help book's anchor in English; the English page with the section, as a link, in every
+    // other language of the interface.
+    if (getenv("MARK_HELP_BUNDLE")) {
+        NSBundle *bundle = [NSBundle bundleWithPath:@(getenv("MARK_HELP_BUNDLE"))];
+        REQUIRE(bundle);
+        REQUIRE([TSMarkMenu markHelpPageForLocalization:@"en" inBundle:bundle] == nil);
+        for (NSString *language in @[@"ja", @"ko", @"de", @"es", @"fr", @"it", @"nl", @"pt", @"pt-PT", @"ro", @"zh_CN"]) {
+            NSURL *page = [TSMarkMenu markHelpPageForLocalization:language inBundle:bundle];
+            REQUIRE(page.isFileURL && [page.fragment isEqual:@"marks"] && [page.path hasSuffix:@"/en.lproj/TeXShopHelp/pgs/basic_commandcompletion.htm"]);
+            NSString *text = [NSString stringWithContentsOfURL:[NSURL fileURLWithPath:page.path] encoding:NSUTF8StringEncoding error:NULL]
+                ?: [NSString stringWithContentsOfURL:[NSURL fileURLWithPath:page.path] encoding:NSISOLatin1StringEncoding error:NULL];
+            REQUIRE([text containsString:@"name=\"marks\""]);
+        }
+        printf("PASS: How to Use Marks opens the help book in English, the English page in the 11 other languages\n");
+    }
     // Insert Mark with Note.
     MarkTextView *view = [[MarkTextView alloc] initWithFrame:NSMakeRect(0, 0, 200, 100)];
     view.allowsUndo = YES;

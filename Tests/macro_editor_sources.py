@@ -22,4 +22,10 @@ def write_sources(root, directory, inc_name):
     (directory / 'ShortcutProduction.m').write_text(production_source(root))
     return [str(directory / 'MacroKeyFunctions.m'), str(directory / 'ShortcutProduction.m'), *companion_sources(root),
             *(str(source_file(root, name)) for name in ('TSDialogButtonLayout.m', 'TSMarkMenu.m', 'TSListBottomBar.m',
-                                                        'TSMacroShortcutField.m', 'TSMacroTreeNode.m'))]
+                                                        'TSMacroShortcutField.m', 'TSMacroTreeNode.m', 'TSPlaceholderToken.m',
+                                                        'TSMacroContentKind.m', *PLACEHOLDER_RULES))]
+
+
+# The rules of what a macro replaces (Insert and the help list the placeholders of each kind of macro).
+PLACEHOLDER_RULES = ('TSSyntaxMacroContentScanner.m', 'TSSyntaxTeXScanner.m', 'TSSyntaxAppleScriptScanner.m', 'TSSyntaxScanner.m',
+                     'TSSyntaxTeXOptions.m', 'TSSyntaxXMLScanning.m')

@@ -51,7 +51,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-highlighting-') as tmp:
                     str(ROOT / 'Tests/MacroContentHighlighting.m'), *map(str, sorted(parts.glob('*.m'))),
                     str(ROOT / 'Sources/Macros/TSMacroContentKind.m'), str(ROOT / 'Sources/Editor/TSColorSupport.m'),
                     str(ROOT / 'Sources/Find/TSAdvancedFindTextView.m'), str(ROOT / 'Sources/Find/TSAdvancedFindHighlights.m'),
-                    str(ROOT / 'Sources/App/globals.m'), '-o', str(tmp / 'test')], check=True)
+                    str(ROOT / 'Sources/App/globals.m'), str(ROOT / 'Sources/Macros/TSMacroContentTokens.m'), str(ROOT / 'Sources/Editor/TSPlaceholderToken.m'), '-o', str(tmp / 'test')], check=True)
     themes = ROOT / 'Resources/TeXShop/Themes'
     result = subprocess.run([str(tmp / 'test'), str(themes / 'LiteTheme.plist'), str(themes / 'DarkTheme.plist')],
                             capture_output=True, text=True, timeout=60)
