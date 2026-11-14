@@ -451,6 +451,10 @@ static const CGFloat TSMacroEditorSidebarWidth = 240;
         view.frame = frame;
         [main addSubview:view];
     }
+    // The name field as tall as a text field is now (the nibs' are 22 points), keeping its top.
+    NSRect nameFrame = [nameField frame];
+    CGFloat taller = [nameField fittingSize].height - NSHeight(nameFrame);
+    if (taller > 0) { nameFrame.origin.y -= taller; nameFrame.size.height += taller; [nameField setFrame:nameFrame]; }
     // A label of the name or the contents stands just above its field, one line tall, as in
     // most nibs: some have labels two lines tall that run into the field below them.
     NSScrollView *contents = [contentTextView enclosingScrollView];
@@ -477,6 +481,17 @@ static const CGFloat TSMacroEditorSidebarWidth = 240;
     NSRect status = self.shortcutStatus.frame;
     self.shortcutStatus.frame = NSMakeRect(TSDialogMargin, NSMinY(status), width - 2 * TSDialogMargin, NSHeight(status));
     self.editorView = main;
+    // The buttons as the Multiple Replace window's: AppKit's own style at its own height, 20
+    // points above the bottom edge. Save is shown as the preferred one; it does not take
+    // Return, which starts a new line in the contents and ends editing in the name field.
+    for (NSButton *button in @[saveButton, cancelButton, testButton]) {
+        button.bezelStyle = NSBezelStyleAutomatic;
+        NSRect frame = button.frame;
+        frame.size.height = button.fittingSize.height;
+        frame.origin.y = TSDialogMargin;
+        button.frame = frame;
+    }
+    if (@available(macOS 26.0, *)) saveButton.tintProminence = NSTintProminencePrimary;
     [self layoutDialogButtons];
     // As narrow as the fields and the buttons allow: what the nib's window allowed for the fields.
     CGFloat narrowest = MAX(MAX(editor.minSize.width, editor.contentMinSize.width) + widened,
@@ -549,7 +564,8 @@ static void TSSendButtonAction(NSButton *button)
     NSTextField *label = [NSTextField labelWithString:[NSLocalizedString(@"Shortcut", @"") stringByAppendingString:suffix]];
     if (keyLabel.font) label.font = keyLabel.font;
     [label sizeToFit];
-    CGFloat middle = NSMidY([shiftCheckBox frame]), height = NSHeight([keyField frame]);
+    // At least as tall as a text field is now (the nibs' are 22 points).
+    CGFloat middle = NSMidY([shiftCheckBox frame]), height = MAX(NSHeight([keyField frame]), [NSTextField textFieldWithString:@""].fittingSize.height);
     // At the leading edge of the name's label, as the other labels of the column.
     if (nameLabel) leading = NSMinX(nameLabel.frame);
     label.frame = NSMakeRect(leading, round(middle - NSHeight(label.frame) / 2), NSWidth(label.frame), NSHeight(label.frame));

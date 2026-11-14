@@ -228,7 +228,8 @@ static void CheckShortcutField(TSMacroEditor *owner) {
     REQUIRE([label.cell cellSize].width<=NSWidth(label.frame)+.5 && fabs(NSMidY(label.frame)-NSMidY(field.frame))<=1);
     REQUIRE(fabs(NSMinX(field.frame)-NSMaxX(label.frame)-8)<.5 && NSMaxX(field.frame)<=NSMaxX(nameField.frame)+.5);
     REQUIRE(NSWidth(field.frame)>=field.minimumWidth-.5 || fabs(NSMaxX(field.frame)-NSMaxX(nameField.frame))<.5);
-    REQUIRE(NSHeight(field.frame)==NSHeight(keyField.frame) && field.display.bezelStyle==keyField.bezelStyle);
+    // As tall as a text field made now, and drawn as the nib's key field.
+    REQUIRE(NSHeight(field.frame)==MAX(NSHeight(keyField.frame),[NSTextField textFieldWithString:@""].fittingSize.height) && field.display.bezelStyle==keyField.bezelStyle);
     NSRect cross=field.clearButton.frame;
     REQUIRE(NSMaxX(cross)<=NSWidth(field.bounds)-3.5 && fabs(NSMidY(cross)-NSMidY(field.bounds))<=1);
     REQUIRE([field.clearButton.toolTip isEqual:NSLocalizedString(@"Remove Shortcut",@"")] && [field.clearButton.image.accessibilityDescription isEqual:field.clearButton.toolTip]);
@@ -363,6 +364,8 @@ static void CheckEditor(TSMacroEditor *owner, NSWindow *window) {
     // The fields 20 points from the sidebar and from the window's trailing edge, as the rules of the Multiple Replace window.
     NSTextField *nameField=[owner valueForKey:@"nameField"]; NSScrollView *contents=[[owner valueForKey:@"contentTextView"] enclosingScrollView];
     for(NSView *v in @[nameField,contents]) REQUIRE(v.superview==host && fabs(NSMinX(v.frame)-20)<.5 && fabs(NSMaxX(v.frame)-(NSWidth(host.bounds)-20))<.5);
+    // The name field as tall as a text field made now (as the shortcut field).
+    REQUIRE(NSHeight(nameField.frame)>=[NSTextField textFieldWithString:@""].fittingSize.height-.5 && fabs(NSHeight(nameField.frame)-NSHeight(owner.shortcutField.frame))<.5);
     // The labels of the name and the contents stand above their fields, whole, and the shortcut's at their leading edge.
     NSTextField *nameLabel=nil;
     for(NSView *v in host.subviews) if([v isKindOfClass:NSTextField.class] && !((NSTextField *)v).isEditable && !v.hidden && v!=owner.shortcutStatus && v!=owner.shortcutLabel)
@@ -384,6 +387,11 @@ static void CheckEditor(TSMacroEditor *owner, NSWindow *window) {
     REQUIRE(fabs(NSMaxX(save.frame)-(NSWidth(host.bounds)-20))<.5 && fabs(NSMinX(save.frame)-12-NSMaxX(cancel.frame))<.5 && NSWidth(save.frame)==NSWidth(cancel.frame));
     REQUIRE(fabs(NSMinX(test.frame)-20)<.5 && NSMaxX(test.frame)+12<=NSMinX(cancel.frame));
     for(NSButton *b in @[save,cancel,test]) REQUIRE(b.superview==host && b.fittingSize.width<=NSWidth(b.frame)+.5);
+    // As the Multiple Replace window's buttons: AppKit's own style and height, 20 points above the bottom edge.
+    for(NSButton *b in @[save,cancel,test]) REQUIRE(b.bezelStyle==NSBezelStyleAutomatic && fabs(NSHeight(b.frame)-b.fittingSize.height)<.5 && fabs(NSMinY(b.frame)-20)<.5);
+    // Save is the preferred one (macOS 26); Return stays with the fields.
+    if (@available(macOS 26.0, *)) REQUIRE(save.tintProminence==NSTintProminencePrimary && cancel.tintProminence!=NSTintProminencePrimary && test.tintProminence!=NSTintProminencePrimary);
+    REQUIRE(save.keyEquivalent.length==0 && cancel.keyEquivalent.length==0 && test.keyEquivalent.length==0 && window.defaultButtonCell==nil);
     NSRect s=Drawn(host,save),c=Drawn(host,cancel); REQUIRE(NSMinX(s)-NSMaxX(c)>=11);
     CheckPlaceholderRow(owner);
     // What this layout adds or moves must not overlap anything; older labels in the
@@ -396,6 +404,22 @@ static void CheckEditor(TSMacroEditor *owner, NSWindow *window) {
             REQUIRE(!NSIntersectsRect(NSInsetRect(a.frame,.5,.5),NSInsetRect(b.frame,.5,.5)));
         }
     }
+}
+// Return in the contents starts a new line and does not save, also when the window looks for a
+// key equivalent first, as the application does: no button takes Return.
+static void CheckReturnKey(TSMacroEditor *owner) {
+    NSWindow *window=[owner valueForKey:@"window"]; NSButton *save=[owner valueForKey:@"saveButton"];
+    NSTextView *contents=contentsOf(owner);
+    id target=save.target; SEL action=save.action; ActionRecorder *recorder=[ActionRecorder new]; recorder.log=[NSMutableArray new];
+    save.target=recorder; save.action=@selector(hit:);
+    NSEvent *ret=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:0 timestamp:0 windowNumber:window.windowNumber context:nil characters:@"\r" charactersIgnoringModifiers:@"\r" isARepeat:NO keyCode:36];
+    BOOL editable=contents.editable; contents.editable=YES; contents.string=@"ab"; contents.selectedRange=NSMakeRange(1,0);
+    REQUIRE([window makeFirstResponder:contents]);
+    if(![window performKeyEquivalent:ret]) [window sendEvent:ret];
+    if(![contents.string isEqual:@"a\nb"] || recorder.log.count) fprintf(stderr,"RETURN contents %s saves %lu\n",contents.string.UTF8String,(unsigned long)recorder.log.count);
+    REQUIRE([contents.string isEqual:@"a\nb"] && recorder.log.count==0);
+    contents.editable=editable; contents.string=@""; [window makeFirstResponder:window];
+    save.target=target; save.action=action;
 }
 // The frames in the main part, to compare after the window has been resized and back.
 static NSArray<NSValue *> *MainFrames(TSMacroEditor *owner) {
@@ -452,6 +476,24 @@ static TSMacroTreeNode *MakeSampleRoot(TSMacroTreeNode **selected) {
     [root addChild:[TSMacroTreeNode nodeWithName:@"Insert Reference" content:@"x" key:@""]];
     return root;
 }
+// TS_CONTROLS: the kind of each control beside the sidebar and of those AppKit makes in code (as the Multiple Replace window's).
+static void DumpControl(NSString *what, NSView *v) {
+    NSMutableString *s=[NSMutableString stringWithFormat:@"CTRL %@ %@ frame %@ fit %@",what,NSStringFromClass(v.class),NSStringFromRect(v.frame),NSStringFromSize(v.fittingSize)];
+    if([v isKindOfClass:NSControl.class]) { NSControl *c=(NSControl *)v; [s appendFormat:@" size %ld font %@ %.1f",(long)c.controlSize,c.font.fontName,c.font.pointSize]; }
+    if([v isKindOfClass:NSButton.class]) { NSButton *b=(NSButton *)v; [s appendFormat:@" bezel %ld bordered %d key '%@' cell %@ bezelColor %@",(long)b.bezelStyle,b.bordered,[b.keyEquivalent stringByReplacingOccurrencesOfString:@"\r" withString:@"\\r"],NSStringFromClass(b.cell.class),b.bezelColor]; }
+    if([v isKindOfClass:NSTextField.class]) { NSTextField *f=(NSTextField *)v; [s appendFormat:@" bezeled %d bezelStyle %ld bg %d %@ border %d",f.bezeled,(long)f.bezelStyle,f.drawsBackground,f.backgroundColor,f.bordered]; }
+    if([v isKindOfClass:NSScrollView.class]) { NSScrollView *f=(NSScrollView *)v; [s appendFormat:@" borderType %ld bg %d",(long)f.borderType,f.drawsBackground]; }
+    fprintf(stderr,"%s\n",s.UTF8String);
+}
+static void DumpControls(TSMacroEditor *owner) {
+    NSWindow *w=[owner valueForKey:@"window"];
+    fprintf(stderr,"WINDOW class %s style %lu toolbar %p tbstyle %ld transparent %d\n",NSStringFromClass(w.class).UTF8String,(unsigned long)w.styleMask,w.toolbar,(long)w.toolbarStyle,w.titlebarAppearsTransparent);
+    for(NSView *v in owner.editorView.subviews) if(!v.hidden) DumpControl(@"macro",v);
+    DumpControl(@"code-push",[NSButton buttonWithTitle:@"Replace All" target:nil action:NULL]);
+    DumpControl(@"code-field",[NSTextField textFieldWithString:@"x"]);
+    DumpControl(@"code-label",[NSTextField labelWithString:@"x"]);
+    NSButton *help=[NSButton buttonWithTitle:@"" target:nil action:NULL]; help.bezelStyle=NSBezelStyleHelpButton; DumpControl(@"code-help",help);
+}
 int main(int argc,char **argv) { @autoreleasepool {
     memoryDefaults=[TSMemoryDefaults new];
     UseTestStrings();
@@ -503,8 +545,9 @@ int main(int argc,char **argv) { @autoreleasepool {
     if(round==0) { SampleRoot=MakeSampleRoot(&shown); [rows reloadData]; [rows expandItem:nil expandChildren:YES]; }
     { NSVisualEffectView *sidebar=owner.sidebar; NSView *main=owner.editorView; [owner installSidebar]; REQUIRE(owner.sidebar==sidebar && owner.editorView==main && SplitOf(window)==split); }
     CheckEditor(owner,window);
+    if(getenv("TS_CONTROLS") && round==0) DumpControls(owner);
     CheckListFitsSidebarWidths(owner);
-    if(round==0) { CheckShortcutBehavior(owner); CheckPlaceholderControls(owner); }
+    if(round==0) { CheckShortcutBehavior(owner); CheckPlaceholderControls(owner); CheckReturnKey(owner); }
     NSArray<NSValue *> *openedFrames=MainFrames(owner);
     NSTextField *label=owner.shortcutStatus; NSView *host=owner.editorView;
     // The messages, as long as they come, wrap within the band, at this width and at the narrowest.
