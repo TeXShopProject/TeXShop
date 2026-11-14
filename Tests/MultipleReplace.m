@@ -769,8 +769,8 @@ static void TestLayout(NSString *_Nullable imageDirectory)
     TSMultipleReplaceLibrary *samplesLibrary = [[TSMultipleReplaceLibrary alloc] initWithDirectory:samplesDirectory];
     samplesLibrary.usesTrash = NO;
     samplesLibrary.samplesDirectory = [NSBundle.mainBundle URLForResource:@"MultipleReplaceSamples" withExtension:nil];
-    NSString *toMacros = [NSBundle.mainBundle localizedStringForKey:@"Unicode Characters → ajmacros" value:nil table:@"MultipleReplaceSamples"];
-    NSString *toCharacters = [NSBundle.mainBundle localizedStringForKey:@"ajmacros → Unicode Characters" value:nil table:@"MultipleReplaceSamples"];
+    NSString *toMacros = [NSBundle.mainBundle localizedStringForKey:@"UnicodeToAjmacros" value:nil table:@"MultipleReplaceSamples"];
+    NSString *toCharacters = [NSBundle.mainBundle localizedStringForKey:@"AjmacrosToUnicode" value:nil table:@"MultipleReplaceSamples"];
     NSDate *start = NSDate.date;
     TSMultipleReplaceWindowController *samples = [[TSMultipleReplaceWindowController alloc] initWithFindController:MakeController(NULL) library:samplesLibrary];
     [samples selectSetNamed:toMacros];

@@ -5,12 +5,14 @@
    and at the end (so that the % at the end of a line is typeset too). The sample is applied by the multiple
    replacement engine, and the result is typeset by upLaTeX with ujarticle, otf and ajmacros: no error and no
    warning, and no character missing from a font.
-2. The text of the PDF is read back: for each kind, how many of its characters come back as they were.
+2. The PDF has, for each character, two glyphs whose CIDs (Identity-H, so the codes in the content streams) are the
+   Adobe-Japan1 CID that Hiragino draws for the character, or a known variant that ajmacros uses.
 3. "ajmacros → Unicode Characters" applied to the converted document gives back the document, except for the %
    that the first set adds at the end of a line (it is a TeX comment, which the reverse set keeps).
 
 --tex DIR: the bin folder of TeX Live (default /Applications/TeXLive/2026/bin/universal-darwin).
---keep DIR: keep the documents, the log and the PDF there."""
+--keep DIR: keep the documents, the log and the PDF there.
+--mutations: check that the test fails when the PDF is missing, a glyph is wrong or extra, or a variant is not the known one."""
 from pathlib import Path
 import argparse
 import collections
@@ -23,8 +25,8 @@ import tempfile
 
 root = Path(__file__).resolve().parents[1]
 SAMPLES = root / 'Resources/MultipleReplaceSamples'
-TO_MACROS = SAMPLES / 'Unicode Characters → ajmacros.json'
-TO_CHARACTERS = SAMPLES / 'ajmacros → Unicode Characters.json'
+TO_MACROS = SAMPLES / 'UnicodeToAjmacros.json'
+TO_CHARACTERS = SAMPLES / 'AjmacrosToUnicode.json'
 
 
 def runner():
@@ -44,6 +46,43 @@ def notes():
     return kinds
 
 
+# The characters that ajmacros draws with another glyph of the same character than Hiragino's own (checked by eye,
+# 2026-11-14): the negative squared letters, 令和 as Adobe-Japan1-7's square ligature, and variants of ℧ and €.
+KNOWN_VARIANTS = {chr(0x1F170 + i): 11174 + i for i in range(26)} | {'\u32FF': 23058, '\u2127': 16204, '\u20AC': 9779}
+
+
+# Each breaks one thing; the test must fail (--mutations).
+MUTATIONS = {
+    'no-pdf': 'the PDF is not made',
+    'wrong-glyph': 'a character is typeset as another one',
+    'extra-glyph': 'a line has one glyph more',
+    'unknown-variant': 'a variant of ajmacros is not the known one',
+}
+
+
+def pdf_cids(path):
+    """The CIDs of the glyphs of Identity-H (Type0) fonts, in the order of the content streams."""
+    from pypdf import PdfReader
+    from pypdf.generic import ContentStream
+    reader = PdfReader(str(path))
+    cids = []
+    for page in reader.pages:
+        fonts = page['/Resources'].get('/Font', {})
+        stream = ContentStream(page.get_contents(), reader)
+        current = None
+        for operands, operator in stream.operations:
+            if operator == b'Tf':
+                font = fonts[operands[0]].get_object()
+                current = font if font.get('/Subtype') == '/Type0' and font.get('/Encoding') in ('/Identity-H', '/Identity-V') else None
+            elif operator in (b'Tj', b"'", b'"', b'TJ') and current is not None:
+                items = operands[0] if operator == b'TJ' else [operands[-1]]
+                for item in items:
+                    if isinstance(item, (bytes, str)) or hasattr(item, 'original_bytes'):
+                        data = item.original_bytes if hasattr(item, 'original_bytes') else bytes(item)
+                        cids += [int.from_bytes(data[k:k + 2], 'big') for k in range(0, len(data) - 1, 2)]
+    return cids
+
+
 DOCUMENT = r'''\documentclass{ujarticle}
 \usepackage[uplatex]{otf}
 \usepackage{ajmacros}
@@ -58,7 +97,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--tex', type=Path, default=Path('/Applications/TeXLive/2026/bin/universal-darwin'))
     parser.add_argument('--keep', type=Path)
+    parser.add_argument('--mutation', choices=sorted(MUTATIONS))
+    parser.add_argument('--mutations', action='store_true', help='check that each mutation makes this test fail')
     args = parser.parse_args()
+    if args.mutations:
+        for name in sorted(MUTATIONS):
+            result = subprocess.run([sys.executable, __file__, '--tex', str(args.tex), '--mutation', name], capture_output=True, text=True)
+            if result.returncode == 0:
+                sys.exit(f'FAIL: mutation {name!r} was not detected')
+            print(f'PASS: detected mutation {name!r}')
+        return
+    mutation = args.mutation or ''
     uplatex, dvipdfmx = args.tex / 'uplatex', args.tex / 'dvipdfmx'
     if not uplatex.exists() or not dvipdfmx.exists():
         print(f'SKIP: no upLaTeX in {args.tex}')
@@ -78,6 +127,10 @@ def main():
         converted = tmp / 'converted.txt'
         subprocess.run([str(probe), 'apply', str(TO_MACROS), str(original), str(converted)], check=True, capture_output=True)
         latex = converted.read_text()
+        if mutation == 'wrong-glyph':
+            latex = latex.replace('a\\ajMaru{1}b', 'a\\ajMaru{2}b', 1)
+        elif mutation == 'extra-glyph':
+            latex = latex.replace('a\\ajMaru{1}b', 'a\\ajMaru{1}\\ajMaru{1}b', 1)
         source = tmp / 'samples.tex'
         source.write_text(DOCUMENT % latex)
         result = subprocess.run([str(uplatex), '-interaction=nonstopmode', '-halt-on-error', 'samples.tex'], cwd=tmp,
@@ -97,42 +150,48 @@ def main():
             print(f'PASS: upLaTeX typesets the {len(targets)} characters converted by the sample, in the middle and at the end of lines, '
                   f'with no error, no warning and no missing character')
         subprocess.run([str(dvipdfmx), 'samples.dvi'], cwd=tmp, capture_output=True, check=not failed)
+        if mutation == 'no-pdf':
+            (tmp / 'samples.pdf').unlink()
+        variants = dict(KNOWN_VARIANTS)
+        if mutation == 'unknown-variant':
+            variants['\u20AC'] = 9354
 
-        # 2. The text of the PDF. ajmacros draws most characters by \CID, whose text in the PDF is the CID itself
-        # (no ToUnicode): a character comes back when the PDF has it, or its Adobe-Japan1 CID, on its line.
+        # 2. The glyphs in the PDF. ajmacros draws the characters with Identity-H CID fonts, whose codes in the
+        # content streams are the Adobe-Japan1 CIDs themselves: two glyphs per line (in the middle and at the end),
+        # each the CID that Hiragino draws for the character, or the variant that ajmacros is known to use.
         cids_file = tmp / 'cids.txt'
         subprocess.run([str(probe), 'cids', str(targets_file), str(cids_file)], check=True, capture_output=True)
-        cids = [int(c) for c in cids_file.read_text().split('\n')]
-        recovered, as_cid, totals = collections.Counter(), collections.Counter(), collections.Counter()
-        other = []
-        if (tmp / 'samples.pdf').exists():
-            from pypdf import PdfReader
-            text = '\n'.join(page.extract_text() or '' for page in PdfReader(str(tmp / 'samples.pdf')).pages)
-            rows = [l for l in text.split('\n') if l.startswith('a ') or l.startswith('a')]
+        expected = [int(c) for c in cids_file.read_text().split('\n')]
+        pdf = tmp / 'samples.pdf'
+        if not pdf.exists():
+            print('FAIL: dvipdfmx made no PDF')
+            failed = True
+            glyphs = []
+        else:
+            glyphs = pdf_cids(pdf)
+        mismatches, used = [], collections.Counter()
+        if glyphs and len(glyphs) != 2 * len(targets):
+            print(f'FAIL: the PDF has {len(glyphs)} glyphs of CID fonts, not {2 * len(targets)} (two for each of {len(targets)} characters)')
+            failed = True
+        elif glyphs:
             for i, t in enumerate(targets):
                 kind = kinds.get(t, '?')
-                totals[kind] += 1
-                row = rows[i] if i < len(rows) else ''
-                # "a X b X": the glyph between a and b.
-                middle = row[1:row.index('b')].strip() if 'b' in row[1:] else ''
-                if middle == t or middle == t.replace(' ', ''):
-                    recovered[kind] += 1
-                elif len(middle) == 1 and cids[i] and ord(middle) == cids[i]:
-                    as_cid[kind] += 1
-                elif middle == '' and cids[i] and chr(cids[i]).isspace():
-                    # CIDs 8192–8202 and 8287 read as the spaces U+2000–U+200A and U+205F, which the text drops.
-                    as_cid[kind] += 1
-                else:
-                    other.append((kind, t, middle, cids[i]))
-            print('Text of the PDF, for each kind: the character itself / its Adobe-Japan1 CID / something else:')
-            for kind in dict.fromkeys(kinds.get(t, '?') for t in targets):
-                print(f'  {kind}: {recovered[kind]} / {as_cid[kind]} / {totals[kind] - recovered[kind] - as_cid[kind]}')
-            # Known: ajmacros draws these with other glyphs of the same character than Hiragino's own (checked by eye,
-            # 2026-11-14): 🅰–🆉 at CIDs 11174–11199, ㋿ at 23058 (Adobe-Japan1-7's 令和), ℧ and € at other variants.
-            for kind, t, middle, cid in other:
-                print(f'  else: {kind} {t} (U+{ord(t[0]):04X}, CID {cid}) → {middle!r} ({", ".join(f"U+{ord(c):04X}" for c in middle)})')
-            report['pdf'] = {'itself': sum(recovered.values()), 'cid': sum(as_cid.values()),
-                             'other': [dict(kind=k, character=t, pdf=m, cid=c) for k, t, m, c in other]}
+                for where, cid in (('middle', glyphs[2 * i]), ('end', glyphs[2 * i + 1])):
+                    if t in variants:
+                        ok = cid == variants[t]
+                        used[kind] += ok and where == 'middle'
+                    else:
+                        ok = expected[i] != 0 and cid == expected[i]
+                    if not ok:
+                        mismatches.append(dict(kind=kind, character=t, where=where, pdf=cid, expected=variants.get(t, expected[i])))
+            if mismatches:
+                print(f'FAIL: {len(mismatches)} glyphs are not the CID of their character, such as {mismatches[:5]}')
+                failed = True
+            else:
+                print(f'PASS: the PDF has, for each of the {len(targets)} characters, in the middle and at the end of its line, the '
+                      f'Adobe-Japan1 CID of the character ({len(targets) - sum(used.values())} as Hiragino draws it, '
+                      f'{sum(used.values())} as the known variants of ajmacros)')
+        report['pdf'] = dict(glyphs=len(glyphs), mismatches=mismatches, variants=dict(used))
 
         # 3. The reverse set gives the document back, but for the % at the ends of lines.
         back = tmp / 'back.txt'

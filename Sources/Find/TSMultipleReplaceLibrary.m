@@ -13,7 +13,7 @@ static NSError *TSLibraryError(NSString *key, NSString *english, NSString *name)
                            userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:format, name]}];
 }
 
-/// The table of the samples' translations: its keys are the English names and notes.
+/// The table of the samples' names and translations: its keys are the file names of the sets and the English notes.
 static NSString *const TSMultipleReplaceSamplesTable = @"MultipleReplaceSamples";
 
 @interface TSMultipleReplaceLibrary ()
@@ -113,10 +113,11 @@ static NSString *const TSMultipleReplaceSamplesTable = @"MultipleReplaceSamples"
     for (NSURL *file in files) {
         NSData *data = [NSData dataWithContentsOfURL:file];
         TSRegexMultipleReplace *sample = data ? [[TSRegexMultipleReplace alloc] initWithJSONData:(NSData *_Nonnull)data error:NULL] : nil;
-        NSString *english = file.URLByDeletingPathExtension.lastPathComponent ?: @"";
-        NSString *name = [self.samplesBundle localizedStringForKey:english value:english table:TSMultipleReplaceSamplesTable];
+        // The file's name is a key (ASCII, so that any archiver unpacks the sources); the table names the set.
+        NSString *key = file.URLByDeletingPathExtension.lastPathComponent ?: @"";
+        NSString *name = [self.samplesBundle localizedStringForKey:key value:key table:TSMultipleReplaceSamplesTable];
         if (![TSMultipleReplaceLibrary isValidName:name])
-            name = english;
+            name = key;
         NSURL *target = [[staging URLByAppendingPathComponent:name isDirectory:NO] URLByAppendingPathExtension:TSMultipleReplaceLibrary.fileExtension];
         if (!sample || ![TSMultipleReplaceLibrary isValidName:name]
             || ![[self translatedSample:(TSRegexMultipleReplace *_Nonnull)sample].JSONData writeToURL:target options:NSDataWritingWithoutOverwriting error:NULL]) {

@@ -14,9 +14,9 @@ NS_SWIFT_NAME(MultipleReplaceLibrary)
 @property (nonatomic, readonly, copy) NSURL *directory;
 /// Removed sets go to the Trash (the default); the self test removes them for good.
 @property (nonatomic) BOOL usesTrash;
-/// The bundled sample sets: a folder of definitions whose names and notes are English. They are written the first
-/// time the sets are listed, and only when the folder of sets does not exist yet, so a sample that the user changed or
-/// removed is never written again. Nil (the default): no samples.
+/// The bundled sample sets: a folder of definitions whose file names are keys and whose notes are English. They are
+/// written the first time the sets are listed, and only when the folder of sets does not exist yet, so a sample that
+/// the user changed or removed is never written again. Nil (the default): no samples.
 @property (nonatomic, copy, nullable) NSURL *samplesDirectory;
 /// Translates the names and notes of the samples with its table MultipleReplaceSamples; the main bundle by default.
 @property (nonatomic, null_resettable) NSBundle *samplesBundle;

@@ -187,6 +187,10 @@ static NSArray<NSDictionary *> *TSKindsInOrder(BOOL toMacros)
 
 #pragma mark Making the sets
 
+/// The files of the samples are named in ASCII, so that any archiver unpacks the sources; the names of the sets
+/// come from the table MultipleReplaceSamples, keyed by the file names (English: the names below).
+static NSString *const TSToMacrosFile = @"UnicodeToAjmacros";
+static NSString *const TSToCharactersFile = @"AjmacrosToUnicode";
 static NSString *const TSToMacrosName = @"Unicode Characters → ajmacros";
 static NSString *const TSToCharactersName = @"ajmacros → Unicode Characters";
 
@@ -268,7 +272,7 @@ static void Generate(NSString *directory)
     for (NSNumber *toMacros in @[@YES, @NO]) {
         NSArray<NSDictionary *> *kinds = TSKindsInOrder(toMacros.boolValue);
         TSRegexMultipleReplace *set = TSMakeSet(kinds);
-        Check([set.JSONData writeToURL:TSSampleURL(directory, toMacros.boolValue ? TSToMacrosName : TSToCharactersName) atomically:YES], @"write a sample");
+        Check([set.JSONData writeToURL:TSSampleURL(directory, toMacros.boolValue ? TSToMacrosFile : TSToCharactersFile) atomically:YES], @"write a sample");
         NSUInteger entries = 0;
         for (NSDictionary *kind in kinds)
             entries += [kind[@"entries"] count];
@@ -427,7 +431,7 @@ static void Equivalence(NSString *directory)
     for (NSNumber *forward in @[@YES, @NO]) {
         BOOL f = forward.boolValue;
         NSString *name = f ? TSToMacrosName : TSToCharactersName;
-        TSRegexMultipleReplace *set = TSLoad(directory, name);
+        TSRegexMultipleReplace *set = TSLoad(directory, f ? TSToMacrosFile : TSToCharactersFile);
         if (!set)
             continue;
         Check(set.replacementSyntax == TSRegexReplacementSyntaxICU && set.textualOptions == 0 && set.regularExpressionOptions == TSSampleRegexOptions(),
@@ -518,8 +522,8 @@ static void Install(NSString *samples)
     NSFileManager *manager = NSFileManager.defaultManager;
     NSBundle *bundle = NSBundle.mainBundle;
     NSString *language = bundle.preferredLocalizations.firstObject ?: @"en";
-    NSString *toMacros = [bundle localizedStringForKey:TSToMacrosName value:nil table:@"MultipleReplaceSamples"];
-    NSString *toCharacters = [bundle localizedStringForKey:TSToCharactersName value:nil table:@"MultipleReplaceSamples"];
+    NSString *toMacros = [bundle localizedStringForKey:TSToMacrosFile value:nil table:@"MultipleReplaceSamples"];
+    NSString *toCharacters = [bundle localizedStringForKey:TSToCharactersFile value:nil table:@"MultipleReplaceSamples"];
     NSString *expectedFiles = [[@[[toMacros stringByAppendingString:@".json"], [toCharacters stringByAppendingString:@".json"]]
                                 sortedArrayUsingSelector:@selector(compare:)] componentsJoinedByString:@", "];
 
@@ -530,12 +534,13 @@ static void Install(NSString *samples)
     Check([[TSFiles(directory) componentsJoinedByString:@", "] isEqualToString:expectedFiles],
           [NSString stringWithFormat:@"%@: the samples are written under their translated names (%@)", language, [TSFiles(directory) componentsJoinedByString:@", "]]);
     Check(names.count == 2 && [names containsObject:toMacros] && [names containsObject:toCharacters], [language stringByAppendingString:@": the first listing shows them"]);
-    Check([language isEqualToString:@"en"] || (![toMacros isEqualToString:TSToMacrosName] && ![toCharacters isEqualToString:TSToCharactersName]),
-          [language stringByAppendingString:@": the names are translated"]);
+    Check([language isEqualToString:@"en"] ? ([toMacros isEqualToString:TSToMacrosName] && [toCharacters isEqualToString:TSToCharactersName])
+                                           : (![toMacros isEqualToString:TSToMacrosName] && ![toCharacters isEqualToString:TSToCharactersName]),
+          [language stringByAppendingString:@": the names are translated (English: the names of the menu items)"]);
     Check([TSFiles(directory.URLByDeletingLastPathComponent) isEqualToArray:@[@"MultipleReplace"]], [language stringByAppendingString:@": no staging folder is left"]);
-    for (NSString *pair in @[TSToMacrosName, TSToCharactersName]) {
+    for (NSString *pair in @[TSToMacrosFile, TSToCharactersFile]) {
         TSRegexMultipleReplace *bundled = TSLoad(samples, pair);
-        NSString *localized = [pair isEqualToString:TSToMacrosName] ? toMacros : toCharacters;
+        NSString *localized = [pair isEqualToString:TSToMacrosFile] ? toMacros : toCharacters;
         TSRegexMultipleReplace *written = [library setNamed:localized error:NULL];
         Check(written && [TSRuleContents(written) isEqualToArray:TSRuleContents(bundled)] && written.textualOptions == bundled.textualOptions
               && written.regularExpressionOptions == bundled.regularExpressionOptions && written.replacementSyntax == bundled.replacementSyntax,

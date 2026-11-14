@@ -1,11 +1,12 @@
 /* The bundled sample sets of multiple replacement (Resources/MultipleReplaceSamples), made from Edit > Character Type Conversion.
-   The keys are the English names of the sets and the notes of their rules; the samples are written translated the first time. */
+   The keys are the file names of the sets (Resources/MultipleReplaceSamples/*.json) and the English notes of their rules;
+   the samples are written translated the first time. */
 
 /* The name of a sample set: the menu item Edit > Character Type Conversion > Unicode Characters → ajmacros. */
-"Unicode Characters → ajmacros" = "Caractères Unicode → ajmacros";
+"UnicodeToAjmacros" = "Caractères Unicode → ajmacros";
 
 /* The name of a sample set: the menu item Edit > Character Type Conversion > ajmacros → Unicode Characters. */
-"ajmacros → Unicode Characters" = "ajmacros → Caractères Unicode";
+"AjmacrosToUnicode" = "ajmacros → Caractères Unicode";
 
 /* The note of the rules of one kind of character in the ajmacros samples. */
 "Circled numbers" = "Nombres cerclés";

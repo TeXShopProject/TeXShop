@@ -25,8 +25,10 @@ from source_tree import include_args
 root = Path(__file__).resolve().parents[1]
 SAMPLES = root / 'Resources/MultipleReplaceSamples'
 LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt', 'pt-PT', 'ro', 'zh_CN']
-TO_MACROS = 'Unicode Characters → ajmacros'
-TO_CHARACTERS = 'ajmacros → Unicode Characters'
+# The files are named in ASCII (any archiver unpacks the sources); the table gives the names of the sets.
+TO_MACROS = 'UnicodeToAjmacros'
+TO_CHARACTERS = 'AjmacrosToUnicode'
+NAMES = {TO_MACROS: 'Unicode Characters → ajmacros', TO_CHARACTERS: 'ajmacros → Unicode Characters'}
 UTILITIES = ['NSString-CharacterConversion.m', 'NSString-Extras.m', 'NSMutableString-Extras.m']
 
 
@@ -103,16 +105,18 @@ def check_tables(samples, interfaces):
     for name in sample_files(samples):
         keys |= {rule.get('description') for rule in json.loads((samples / name).read_text())['replacements']}
     problems = []
+    if not all(re.fullmatch(r'[A-Za-z]+\.json', name) for name in sample_files(samples)):
+        problems.append(f'the files of the samples are not named in ASCII letters: {sample_files(samples)}')
     if None in keys:
         problems.append('a rule without a note')
     for language in LANGUAGES:
         table = strings(interfaces / f'{language}.lproj/MultipleReplaceSamples.strings')
         if set(table) != keys:
             problems.append(f'{language}: missing {sorted(keys - set(table))[:3]}, extra {sorted(set(table) - keys)[:3]}')
-        elif language == 'en' and any(table[k] != k for k in table):
-            problems.append('en: a value differs from its key')
-        elif language != 'en' and any(table[k] == k for k in table):
-            problems.append(f'{language}: untranslated {[k for k in table if table[k] == k][:3]}')
+        elif language == 'en' and any(table[k] != NAMES.get(k, k) for k in table):
+            problems.append('en: a value differs from its key (a note) or from the name of the menu item (a set)')
+        elif language != 'en' and any(table[k] == NAMES.get(k, k) for k in table):
+            problems.append(f'{language}: untranslated {[k for k in table if table[k] == NAMES.get(k, k)][:3]}')
     for problem in problems:
         print(f'FAIL: MultipleReplaceSamples.strings {problem}')
     return not problems
@@ -232,7 +236,7 @@ SOURCE_MUTATIONS = {
     'the staging folder is left': ('find', 'TSMultipleReplaceLibrary.m',
         '    if (!written)\n        [manager removeItemAtURL:staging error:NULL];\n', ''),
     'the names are not translated': ('find', 'TSMultipleReplaceLibrary.m',
-        'localizedStringForKey:english value:english table:TSMultipleReplaceSamplesTable]', 'localizedStringForKey:english value:english table:@"Missing"]'),
+        'localizedStringForKey:key value:key table:TSMultipleReplaceSamplesTable]', 'localizedStringForKey:key value:key table:@"Missing"]'),
     'the notes are not translated': ('find', 'TSMultipleReplaceLibrary.m',
         '        NSString *note = rule.note ? [self.samplesBundle localizedStringForKey:(NSString *_Nonnull)rule.note value:rule.note table:TSMultipleReplaceSamplesTable] : nil;',
         '        NSString *note = rule.note;'),
