@@ -4,11 +4,41 @@
 #import "TSPrefPaneLayout.h"
 #import "TSSettingsSearchText.h"
 #import <QuartzCore/QuartzCore.h>
+// Lies over the search field, so it also handles the field's cancel button.
 @interface TSShortcutKeySearchView : NSView
 @property (copy, nullable) BOOL (^handleEvent)(NSEvent *event);
+@property (copy, nullable) dispatch_block_t clearKey;
+@property (weak, nullable) NSSearchField *searchField;
+@property BOOL pressingCancelButton;
 @end
 @implementation TSShortcutKeySearchView
 - (BOOL)acceptsFirstResponder { return YES; }
+// The search field shows its cancel button only while it shows a key.
+- (BOOL)showsCancelButton { return self.clearKey != nil && self.searchField.stringValue.length > 0; }
+- (BOOL)cancelButtonContainsEvent:(NSEvent *)event {
+    NSSearchField *field = self.searchField;
+    if (field == nil || !self.showsCancelButton) { return NO; }
+    NSRect button = [field convertRect:[(NSSearchFieldCell *)field.cell cancelButtonRectForBounds:field.bounds] toView:self];
+    return NSMouseInRect([self convertPoint:event.locationInWindow fromView:nil], button, self.isFlipped);
+}
+- (void)mouseDown:(NSEvent *)event {
+    self.pressingCancelButton = [self cancelButtonContainsEvent:event];
+    if (!self.pressingCancelButton) { [super mouseDown:event]; }
+}
+- (void)mouseUp:(NSEvent *)event {
+    BOOL clear = self.pressingCancelButton && [self cancelButtonContainsEvent:event];
+    self.pressingCancelButton = NO;
+    if (clear) { self.clearKey(); } else { [super mouseUp:event]; }
+}
+- (BOOL)isAccessibilitySelectorAllowed:(SEL)selector {
+    if (selector == @selector(accessibilityPerformCancel)) { return self.showsCancelButton; }
+    return [super isAccessibilitySelectorAllowed:selector];
+}
+- (BOOL)accessibilityPerformCancel {
+    if (!self.showsCancelButton) { return NO; }
+    self.clearKey();
+    return YES;
+}
 - (BOOL)isAccessibilityElement { return YES; }
 - (NSString *)accessibilityRole { return NSAccessibilityTextFieldRole; }
 - (NSString *)accessibilityLabel { return NSLocalizedString(@"Search by Key", @""); }
@@ -69,6 +99,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 @property (readwrite) BOOL searchingByKey;
 @property (strong) NSSegmentedControl *searchMode;
 @property (strong) TSShortcutKeySearchView *keySearchView;
+@property (weak) NSView *commandsView;
 @property (strong) NSButton *macroButton;
 @property (copy) NSString *textQuery;
 @property (strong, nullable) NSEvent *searchEvent;
@@ -135,6 +166,8 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
         if (strongSelf == nil) { return NO; }
         return [strongSelf handleKeySearchEvent:event];
     };
+    self.keySearchView.searchField = self.search;
+    self.keySearchView.clearKey = ^{ [weakSelf clearKeySearch]; };
     NSTextField *hint = [NSTextField wrappingLabelWithString:@""];
     hint.identifier = @"shortcut.hint";
     hint.textColor = NSColor.secondaryLabelColor; self.hint = hint;
@@ -176,7 +209,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
         button.controlSize = NSControlSizeSmall; button.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
     }
     for (NSView *view in @[self.searchMode,self.search,hint,scroll,buttons,self.keySearchView]) { view.translatesAutoresizingMaskIntoConstraints = NO; [content addSubview:view]; }
-    content.identifier = @"shortcut.commands";
+    content.identifier = @"shortcut.commands"; self.commandsView = content;
     hint.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
     [NSLayoutConstraint activateConstraints:@[
         [self.search.topAnchor constraintEqualToAnchor:content.topAnchor constant:10],
@@ -270,6 +303,28 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     self.search.stringValue = self.textQuery;
     self.search.placeholderString = NSLocalizedString(@"Search commands", @"");
     [self reloadCommands];
+}
+// Key search lasts while the focus stays in the menu shortcut controls; the
+// selection buttons there act on the selected match.
+- (void)windowFirstResponderChanged:(NSResponder *)responder {
+    if (!self.searchingByKey) { return; }
+    NSView *view = [responder isKindOfClass:NSView.class] ? (NSView *)responder : nil;
+    if ([view isKindOfClass:NSText.class] && ((NSText *)view).fieldEditor && [((NSText *)view).delegate isKindOfClass:NSView.class])
+        view = (NSView *)((NSText *)view).delegate;
+    NSView *commands = self.commandsView;
+    if (view == nil || commands == nil || [view isDescendantOf:commands]) { return; }
+    [self stopKeySearch];
+}
+// Forgets the searched key and waits for the next one, as on entering key search.
+- (void)clearKeySearch {
+    if (!self.searchingByKey) { return; }
+    self.searchEvent = nil;
+    self.search.stringValue = @"";
+    [self.table deselectAll:nil];
+    [self reloadFunctionCommands];
+    [self updateKeyResults];
+    NSWindow *window = self.window;
+    if (window != nil) { [window makeFirstResponder:self.keySearchView]; }
 }
 - (BOOL)handleKeySearchEvent:(NSEvent *)event {
     if (!self.searchingByKey) { return NO; }
