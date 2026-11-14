@@ -1,0 +1,116 @@
+/* The bundled sample sets of multiple replacement (Resources/MultipleReplaceSamples), made from Edit > Character Type Conversion.
+   The keys are the English names of the sets and the notes of their rules; the samples are written translated the first time. */
+
+/* The name of a sample set: the menu item Edit > Character Type Conversion > Unicode Characters → ajmacros. */
+"Unicode Characters → ajmacros" = "Caratteri Unicode → ajmacros";
+
+/* The name of a sample set: the menu item Edit > Character Type Conversion > ajmacros → Unicode Characters. */
+"ajmacros → Unicode Characters" = "ajmacros → Caratteri Unicode";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled numbers" = "Numeri cerchiati";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled numbers (end of line)" = "Numeri cerchiati (fine riga)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Negative circled numbers" = "Numeri cerchiati in negativo";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Negative circled numbers (end of line)" = "Numeri cerchiati in negativo (fine riga)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Parenthesized numbers" = "Numeri tra parentesi";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Parenthesized numbers (end of line)" = "Numeri tra parentesi (fine riga)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled letters" = "Lettere cerchiate";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled letters (end of line)" = "Lettere cerchiate (fine riga)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Parenthesized letters" = "Lettere tra parentesi";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Parenthesized letters (end of line)" = "Lettere tra parentesi (fine riga)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Negative circled letters" = "Lettere cerchiate in negativo";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Negative circled letters (end of line)" = "Lettere cerchiate in negativo (fine riga)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Squared letters" = "Lettere riquadrate";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Squared letters (end of line)" = "Lettere riquadrate (fine riga)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Negative squared letters" = "Lettere riquadrate in negativo";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Negative squared letters (end of line)" = "Lettere riquadrate in negativo (fine riga)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Roman numerals" = "Numeri romani";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Roman numerals (end of line)" = "Numeri romani (fine riga)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Numbers with a period" = "Numeri con punto";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Numbers with a period (end of line)" = "Numeri con punto (fine riga)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Parenthesized days of the week" = "Giorni della settimana tra parentesi";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Parenthesized days of the week (end of line)" = "Giorni della settimana tra parentesi (fine riga)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled days of the week" = "Giorni della settimana cerchiati";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled days of the week (end of line)" = "Giorni della settimana cerchiati (fine riga)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Double circled numbers" = "Numeri con doppio cerchio";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Double circled numbers (end of line)" = "Numeri con doppio cerchio (fine riga)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Recycling symbols" = "Simboli di riciclaggio";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Recycling symbols (end of line)" = "Simboli di riciclaggio (fine riga)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled katakana" = "Katakana cerchiati";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled katakana (end of line)" = "Katakana cerchiati (fine riga)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Parenthesized kanji numerals" = "Numeri kanji tra parentesi";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Parenthesized kanji numerals (end of line)" = "Numeri kanji tra parentesi (fine riga)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled kanji numerals" = "Numeri kanji cerchiati";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled kanji numerals (end of line)" = "Numeri kanji cerchiati (fine riga)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Ligatures, symbols and variants" = "Legature, simboli e varianti";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Ligatures, symbols and variants (end of line)" = "Legature, simboli e varianti (fine riga)";

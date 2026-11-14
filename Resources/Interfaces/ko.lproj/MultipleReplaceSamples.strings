@@ -1,0 +1,116 @@
+/* The bundled sample sets of multiple replacement (Resources/MultipleReplaceSamples), made from Edit > Character Type Conversion.
+   The keys are the English names of the sets and the notes of their rules; the samples are written translated the first time. */
+
+/* The name of a sample set: the menu item Edit > Character Type Conversion > Unicode Characters → ajmacros. */
+"Unicode Characters → ajmacros" = "유니코드 문자 → ajmacros";
+
+/* The name of a sample set: the menu item Edit > Character Type Conversion > ajmacros → Unicode Characters. */
+"ajmacros → Unicode Characters" = "ajmacros → 유니코드 문자";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled numbers" = "원 숫자";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled numbers (end of line)" = "원 숫자 (줄 끝)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Negative circled numbers" = "검은 원 숫자";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Negative circled numbers (end of line)" = "검은 원 숫자 (줄 끝)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Parenthesized numbers" = "괄호 숫자";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Parenthesized numbers (end of line)" = "괄호 숫자 (줄 끝)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled letters" = "원 영문자";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled letters (end of line)" = "원 영문자 (줄 끝)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Parenthesized letters" = "괄호 영문자";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Parenthesized letters (end of line)" = "괄호 영문자 (줄 끝)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Negative circled letters" = "검은 원 영문자";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Negative circled letters (end of line)" = "검은 원 영문자 (줄 끝)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Squared letters" = "사각 영문자";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Squared letters (end of line)" = "사각 영문자 (줄 끝)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Negative squared letters" = "검은 사각 영문자";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Negative squared letters (end of line)" = "검은 사각 영문자 (줄 끝)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Roman numerals" = "로마 숫자";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Roman numerals (end of line)" = "로마 숫자 (줄 끝)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Numbers with a period" = "마침표 숫자";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Numbers with a period (end of line)" = "마침표 숫자 (줄 끝)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Parenthesized days of the week" = "괄호 요일";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Parenthesized days of the week (end of line)" = "괄호 요일 (줄 끝)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled days of the week" = "원 요일";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled days of the week (end of line)" = "원 요일 (줄 끝)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Double circled numbers" = "이중 원 숫자";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Double circled numbers (end of line)" = "이중 원 숫자 (줄 끝)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Recycling symbols" = "재활용 기호";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Recycling symbols (end of line)" = "재활용 기호 (줄 끝)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled katakana" = "원 가타카나";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled katakana (end of line)" = "원 가타카나 (줄 끝)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Parenthesized kanji numerals" = "괄호 한자 숫자";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Parenthesized kanji numerals (end of line)" = "괄호 한자 숫자 (줄 끝)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled kanji numerals" = "원 한자 숫자";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled kanji numerals (end of line)" = "원 한자 숫자 (줄 끝)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Ligatures, symbols and variants" = "합자, 기호, 이체자";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Ligatures, symbols and variants (end of line)" = "합자, 기호, 이체자 (줄 끝)";

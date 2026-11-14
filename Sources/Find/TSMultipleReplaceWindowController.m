@@ -39,17 +39,20 @@ static NSAttributedString *_Nullable TSMultipleReplaceColoredField(NSString *str
     return TSAdvancedFindColoredString(string, scanner, TSAdvancedFindFieldColorScheme(), attributes);
 }
 
+/// Wide enough for the names of the bundled samples in every language (“ajmacros → Caracteres Unicode”).
+static const CGFloat TSSetListWidth = 240;
+
 @implementation TSMultipleReplaceWindowController
 
 - (instancetype)initWithFindController:(TSAdvancedFindController *)findController library:(TSMultipleReplaceLibrary *)library
 {
-    NSPanel *panel = [[NSPanel alloc] initWithContentRect:NSMakeRect(0, 0, 860, 440)
+    NSPanel *panel = [[NSPanel alloc] initWithContentRect:NSMakeRect(0, 0, 980, 440)
                                                 styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable | NSWindowStyleMaskMiniaturizable
                                                   backing:NSBackingStoreBuffered defer:YES];
     panel.title = TSLocalized(@"MultipleReplace.Title", @"Multiple Replace");
     panel.hidesOnDeactivate = YES;
     panel.becomesKeyOnlyIfNeeded = NO;
-    panel.contentMinSize = NSMakeSize(680, 300);
+    panel.contentMinSize = NSMakeSize(740, 300);
     if (!(self = [super initWithWindow:panel]))
         return nil;
     _findController = findController;
@@ -100,10 +103,14 @@ static NSAttributedString *_Nullable TSMultipleReplaceColoredField(NSString *str
 
 - (NSView *)makeSetList
 {
-    self.setTable = [[NSTableView alloc] initWithFrame:NSMakeRect(0, 0, 180, 300)];
+    self.setTable = [[NSTableView alloc] initWithFrame:NSMakeRect(0, 0, TSSetListWidth, 300)];
     NSTableColumn *column = [[NSTableColumn alloc] initWithIdentifier:@"name"];
     column.title = TSLocalized(@"MultipleReplace.Sets", @"Sets");
+    // The names take the width of the list, not a new column's 100 points.
+    column.resizingMask = NSTableColumnAutoresizingMask;
+    column.width = NSWidth(self.setTable.frame);
     [self.setTable addTableColumn:column];
+    self.setTable.columnAutoresizingStyle = NSTableViewFirstColumnOnlyAutoresizingStyle;
     self.setTable.headerView = nil;
     self.setTable.style = NSTableViewStyleSourceList;
     self.setTable.dataSource = self;
@@ -128,7 +135,7 @@ static NSAttributedString *_Nullable TSMultipleReplaceColoredField(NSString *str
     list.alignment = NSLayoutAttributeLeading;
     list.spacing = 0;
     [scroll.widthAnchor constraintEqualToAnchor:list.widthAnchor].active = YES;
-    [list.widthAnchor constraintEqualToConstant:180].active = YES;
+    [list.widthAnchor constraintEqualToConstant:TSSetListWidth].active = YES;
     return list;
 }
 
@@ -361,6 +368,7 @@ static NSAttributedString *_Nullable TSMultipleReplaceColoredField(NSString *str
     field.editable = YES;
     field.delegate = self;
     field.lineBreakMode = NSLineBreakByTruncatingTail;
+    field.allowsExpansionToolTips = YES;
     return field;
 }
 

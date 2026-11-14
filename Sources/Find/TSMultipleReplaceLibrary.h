@@ -14,13 +14,22 @@ NS_SWIFT_NAME(MultipleReplaceLibrary)
 @property (nonatomic, readonly, copy) NSURL *directory;
 /// Removed sets go to the Trash (the default); the self test removes them for good.
 @property (nonatomic) BOOL usesTrash;
+/// The bundled sample sets: a folder of definitions whose names and notes are English. They are written the first
+/// time the sets are listed, and only when the folder of sets does not exist yet, so a sample that the user changed or
+/// removed is never written again. Nil (the default): no samples.
+@property (nonatomic, copy, nullable) NSURL *samplesDirectory;
+/// Translates the names and notes of the samples with its table MultipleReplaceSamples; the main bundle by default.
+@property (nonatomic, null_resettable) NSBundle *samplesBundle;
 
 - (instancetype)initWithDirectory:(NSURL *)directory NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-/// In the Finder's order.
+/// In the Finder's order. The first time, writes the samples when the folder does not exist yet.
 @property (nonatomic, readonly, copy) NSArray<NSString *> *setNames;
+/// Writes the samples, translated, into a new folder of sets: in a hidden folder beside it that is then renamed, so
+/// the folder appears complete or not at all, and an existing folder is never replaced. YES when they were written.
+- (BOOL)installSamples;
 - (nullable TSRegexMultipleReplace *)setNamed:(NSString *)name error:(NSError **)error;
 - (BOOL)saveSet:(TSRegexMultipleReplace *)set named:(NSString *)name error:(NSError **)error;
 - (BOOL)removeSetNamed:(NSString *)name error:(NSError **)error;

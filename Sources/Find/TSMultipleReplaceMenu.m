@@ -42,9 +42,12 @@ static NSMenu *_Nullable TSFindSubmenu(NSMenu *menu)
     for (NSMenuItem *item in findMenu.itemArray)
         if ([item.identifier isEqualToString:TSShowMultipleReplaceIdentifier])
             return;
-    if (!TSSharedMultipleReplaceMenu)
-        TSSharedMultipleReplaceMenu = [[TSMultipleReplaceMenu alloc] initWithFindController:TSAdvancedFindController.sharedController
-                                                                                    library:[[TSMultipleReplaceLibrary alloc] initWithDirectory:directory]];
+    if (!TSSharedMultipleReplaceMenu) {
+        TSMultipleReplaceLibrary *library = [[TSMultipleReplaceLibrary alloc] initWithDirectory:directory];
+        // Made by Tests/run-multiple-replace-samples.py from Edit > Character Type Conversion's ajmacros tables.
+        library.samplesDirectory = [NSBundle.mainBundle URLForResource:@"MultipleReplaceSamples" withExtension:nil];
+        TSSharedMultipleReplaceMenu = [[TSMultipleReplaceMenu alloc] initWithFindController:TSAdvancedFindController.sharedController library:library];
+    }
     [TSSharedMultipleReplaceMenu addItemsToMenu:findMenu];
 }
 

@@ -187,6 +187,8 @@ static TSRegexReplacementRule *TSRuleWith(TSRegexReplacementRule *rule, NSString
     field.editable = YES;
     field.delegate = self;
     field.lineBreakMode = NSLineBreakByTruncatingTail;
+    // A cut text shows in full while the pointer rests on it.
+    field.allowsExpansionToolTips = YES;
     field.font = [NSFont monospacedSystemFontOfSize:NSFont.smallSystemFontSize weight:NSFontWeightRegular];
     return field;
 }

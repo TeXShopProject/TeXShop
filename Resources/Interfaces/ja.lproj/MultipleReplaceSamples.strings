@@ -1,0 +1,116 @@
+/* The bundled sample sets of multiple replacement (Resources/MultipleReplaceSamples), made from Edit > Character Type Conversion.
+   The keys are the English names of the sets and the notes of their rules; the samples are written translated the first time. */
+
+/* The name of a sample set: the menu item Edit > Character Type Conversion > Unicode Characters → ajmacros. */
+"Unicode Characters → ajmacros" = "Unicode文字 → ajmacros";
+
+/* The name of a sample set: the menu item Edit > Character Type Conversion > ajmacros → Unicode Characters. */
+"ajmacros → Unicode Characters" = "ajmacros → Unicode文字";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled numbers" = "丸数字";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled numbers (end of line)" = "丸数字（行末）";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Negative circled numbers" = "黒丸数字";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Negative circled numbers (end of line)" = "黒丸数字（行末）";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Parenthesized numbers" = "括弧数字";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Parenthesized numbers (end of line)" = "括弧数字（行末）";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled letters" = "丸英字";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled letters (end of line)" = "丸英字（行末）";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Parenthesized letters" = "括弧英字";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Parenthesized letters (end of line)" = "括弧英字（行末）";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Negative circled letters" = "黒丸英字";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Negative circled letters (end of line)" = "黒丸英字（行末）";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Squared letters" = "角英字";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Squared letters (end of line)" = "角英字（行末）";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Negative squared letters" = "黒角英字";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Negative squared letters (end of line)" = "黒角英字（行末）";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Roman numerals" = "ローマ数字";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Roman numerals (end of line)" = "ローマ数字（行末）";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Numbers with a period" = "ピリオド付き数字";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Numbers with a period (end of line)" = "ピリオド付き数字（行末）";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Parenthesized days of the week" = "括弧曜日";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Parenthesized days of the week (end of line)" = "括弧曜日（行末）";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled days of the week" = "丸曜日";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled days of the week (end of line)" = "丸曜日（行末）";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Double circled numbers" = "二重丸数字";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Double circled numbers (end of line)" = "二重丸数字（行末）";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Recycling symbols" = "リサイクル記号";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Recycling symbols (end of line)" = "リサイクル記号（行末）";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled katakana" = "丸カタカナ";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled katakana (end of line)" = "丸カタカナ（行末）";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Parenthesized kanji numerals" = "括弧漢数字";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Parenthesized kanji numerals (end of line)" = "括弧漢数字（行末）";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled kanji numerals" = "丸漢数字";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled kanji numerals (end of line)" = "丸漢数字（行末）";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Ligatures, symbols and variants" = "合字・記号・異体字";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Ligatures, symbols and variants (end of line)" = "合字・記号・異体字（行末）";
