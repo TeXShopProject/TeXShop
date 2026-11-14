@@ -6,26 +6,8 @@
   "languages": [
    "nl"
   ],
-  "reason": "open: the Dutch legacy Find panel (compiled only, no source) has no status field",
+  "reason": "the Base Find panel keeps two unused Radio cells beyond the one row and two columns of the Replace All scope matrix; the Dutch one does not",
   "count": 2
- },
- {
-  "nib": "FindPanel",
-  "change": "missing",
-  "fact": "@statusField | top:NSPanel | NSTextField",
-  "languages": [
-   "nl"
-  ],
-  "reason": "open: the Dutch legacy Find panel (compiled only, no source) has no status field"
- },
- {
-  "nib": "FindPanel",
-  "change": "missing",
-  "fact": "outlet Owner.statusField -> NSTextField in top:NSPanel",
-  "languages": [
-   "nl"
-  ],
-  "reason": "open: the Dutch legacy Find panel (compiled only, no source) has no status field"
  },
  {
   "nib": "MacroEditor",
