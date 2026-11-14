@@ -155,9 +155,8 @@
 "catalog.appearance.0.1.title" = "Thème pour Mode sombre";
 "group.appearance.1.title" = "Modifier le thème";
 "catalog.appearance.1.0.title" = "Thème à éditer";
-"catalog.appearance.1.1.choice.0" = "Importer les anciens réglages";
-"catalog.appearance.1.1.choice.1" = "Nouveau thème";
-"catalog.appearance.1.1.choice.2" = "Écraser le thème";
+"catalog.appearance.1.1.choice.0" = "Nouveau thème";
+"catalog.appearance.1.1.choice.1" = "Écraser le thème";
 "group.appearance.2.title" = "Fenêtres";
 "catalog.appearance.2.0.column.0" = "Premier plan";
 "catalog.appearance.2.0.column.1" = "Arrière-plan";

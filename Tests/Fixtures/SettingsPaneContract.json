@@ -2649,13 +2649,6 @@
         "value": "SaveNewStyle:"
       },
       {
-        "key": "uXA-S0-9dP.action",
-        "view": "settings.uXA-S0-9dP",
-        "kind": "view",
-        "property": "action",
-        "value": "NewStyleFromPrefs:"
-      },
-      {
         "key": "cnt-Xt-iQF.action",
         "view": "settings.cnt-Xt-iQF",
         "kind": "view",
@@ -3415,7 +3408,6 @@
           "29d-sK-CAr.title": "Lite Mode Theme",
           "cXx-KS-HoL.title": "__variable",
           "Qws-5c-CFu.title": "Attribute",
-          "J9P-9m-Ehr.title": "New Theme from Settings",
           "s3b-sE-3Ix.title": "Value",
           "oZx-IF-VfJ.title": "Preview",
           "kuS-x2-ZGi.title": "Console",
@@ -5604,13 +5596,6 @@
           "value": "Attribute"
         },
         {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "New Theme from Settings"
-        },
-        {
           "key": "s3b-sE-3Ix.title",
           "view": "settings.UKr-GF-nnj",
           "kind": "cell",
@@ -6588,7 +6573,6 @@
           "29d-sK-CAr.title": "Hellmodus-Thema",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "Attribut",
-          "J9P-9m-Ehr.title": "Neu aus Einstellungen",
           "s3b-sE-3Ix.title": "Wert",
           "oZx-IF-VfJ.title": "Vorschau",
           "kuS-x2-ZGi.title": "Konsole",
@@ -8777,13 +8761,6 @@
           "value": "Attribut"
         },
         {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "Neu aus Einstellungen"
-        },
-        {
           "key": "s3b-sE-3Ix.title",
           "view": "settings.UKr-GF-nnj",
           "kind": "cell",
@@ -9761,7 +9738,6 @@
           "29d-sK-CAr.title": "Modo claro",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "Atributo",
-          "J9P-9m-Ehr.title": "Nuevo tema desde ajustes",
           "s3b-sE-3Ix.title": "Valor",
           "oZx-IF-VfJ.title": "PDF",
           "kuS-x2-ZGi.title": "Consola",
@@ -11950,13 +11926,6 @@
           "value": "Atributo"
         },
         {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "Nuevo tema desde ajustes"
-        },
-        {
           "key": "s3b-sE-3Ix.title",
           "view": "settings.UKr-GF-nnj",
           "kind": "cell",
@@ -12934,7 +12903,6 @@
           "29d-sK-CAr.title": "Thème pour Mode clair",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "Attribut",
-          "J9P-9m-Ehr.title": "Thème depuis les réglages",
           "s3b-sE-3Ix.title": "Valeur",
           "oZx-IF-VfJ.title": "Aperçu",
           "kuS-x2-ZGi.title": "Console",
@@ -15123,13 +15091,6 @@
           "value": "Attribut"
         },
         {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "Thème depuis les réglages"
-        },
-        {
           "key": "s3b-sE-3Ix.title",
           "view": "settings.UKr-GF-nnj",
           "kind": "cell",
@@ -16107,7 +16068,6 @@
           "29d-sK-CAr.title": "A sfondo chiaro",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "Attributo",
-          "J9P-9m-Ehr.title": "Crea da impostazioni",
           "s3b-sE-3Ix.title": "Valore",
           "oZx-IF-VfJ.title": "Anteprima",
           "kuS-x2-ZGi.title": "Console",
@@ -18296,13 +18256,6 @@
           "value": "Attributo"
         },
         {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "Crea da impostazioni"
-        },
-        {
           "key": "s3b-sE-3Ix.title",
           "view": "settings.UKr-GF-nnj",
           "kind": "cell",
@@ -19280,7 +19233,6 @@
           "29d-sK-CAr.title": "ライトモード時のテーマ",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "属性",
-          "J9P-9m-Ehr.title": "旧バージョンの設定から移行",
           "s3b-sE-3Ix.title": "値",
           "oZx-IF-VfJ.title": "プレビュー",
           "kuS-x2-ZGi.title": "コンソール",
@@ -21469,13 +21421,6 @@
           "value": "属性"
         },
         {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "旧バージョンの設定から移行"
-        },
-        {
           "key": "s3b-sE-3Ix.title",
           "view": "settings.UKr-GF-nnj",
           "kind": "cell",
@@ -22453,7 +22398,6 @@
           "29d-sK-CAr.title": "밝은 테마",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "속성",
-          "J9P-9m-Ehr.title": "설정에서 새 테마",
           "s3b-sE-3Ix.title": "값",
           "oZx-IF-VfJ.title": "미리보기",
           "kuS-x2-ZGi.title": "콘솔",
@@ -24642,13 +24586,6 @@
           "value": "속성"
         },
         {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "설정에서 새 테마"
-        },
-        {
           "key": "s3b-sE-3Ix.title",
           "view": "settings.UKr-GF-nnj",
           "kind": "cell",
@@ -25626,7 +25563,6 @@
           "29d-sK-CAr.title": "Thema voor lichte modus",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "Attribuut",
-          "J9P-9m-Ehr.title": "New Theme from Settings",
           "s3b-sE-3Ix.title": "Waarde",
           "oZx-IF-VfJ.title": "Voorvertoning",
           "kuS-x2-ZGi.title": "Console",
@@ -27815,13 +27751,6 @@
           "value": "Attribuut"
         },
         {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "New Theme from Settings"
-        },
-        {
           "key": "s3b-sE-3Ix.title",
           "view": "settings.UKr-GF-nnj",
           "kind": "cell",
@@ -28799,7 +28728,6 @@
           "29d-sK-CAr.title": "Tema do modo claro",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "Atributo",
-          "J9P-9m-Ehr.title": "New Theme from Settings",
           "s3b-sE-3Ix.title": "Valor",
           "oZx-IF-VfJ.title": "Pré-visualização",
           "kuS-x2-ZGi.title": "Consola",
@@ -30988,13 +30916,6 @@
           "value": "Atributo"
         },
         {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "New Theme from Settings"
-        },
-        {
           "key": "s3b-sE-3Ix.title",
           "view": "settings.UKr-GF-nnj",
           "kind": "cell",
@@ -31972,7 +31893,6 @@
           "29d-sK-CAr.title": "Tema modo claro",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "Atributo",
-          "J9P-9m-Ehr.title": "Novo tema a partir dos ajustes",
           "s3b-sE-3Ix.title": "Valor",
           "oZx-IF-VfJ.title": "Pré-visualização",
           "kuS-x2-ZGi.title": "Console",
@@ -34161,13 +34081,6 @@
           "value": "Atributo"
         },
         {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "Novo tema a partir dos ajustes"
-        },
-        {
           "key": "s3b-sE-3Ix.title",
           "view": "settings.UKr-GF-nnj",
           "kind": "cell",
@@ -35145,7 +35058,6 @@
           "29d-sK-CAr.title": "Tema modului luminos",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "Atribut",
-          "J9P-9m-Ehr.title": "New Theme from Settings",
           "s3b-sE-3Ix.title": "Valoare",
           "oZx-IF-VfJ.title": "Previzualizare",
           "kuS-x2-ZGi.title": "Consolă",
@@ -37334,13 +37246,6 @@
           "value": "Atribut"
         },
         {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "New Theme from Settings"
-        },
-        {
           "key": "s3b-sE-3Ix.title",
           "view": "settings.UKr-GF-nnj",
           "kind": "cell",
@@ -38318,7 +38223,6 @@
           "29d-sK-CAr.title": "浅色主题",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "属性",
-          "J9P-9m-Ehr.title": "从设置新建主题",
           "s3b-sE-3Ix.title": "值",
           "oZx-IF-VfJ.title": "预览",
           "kuS-x2-ZGi.title": "控制台",
@@ -40505,13 +40409,6 @@
           "kind": "cell",
           "property": "title",
           "value": "属性"
-        },
-        {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "从设置新建主题"
         },
         {
           "key": "s3b-sE-3Ix.title",

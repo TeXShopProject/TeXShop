@@ -67,7 +67,8 @@ for path in nibs:
     problems += [f'{lang}: {x}' for x in labels]
     # Removed because they had no effect: scrollPressed: ("Do not scroll" with page buttons, since PDFKit),
     # distillerChanged: (Apple Distiller, whose pstopdf macOS 14 removed) and antialiasChanged: (always on).
-    problems += [f'{lang}: action {s} is not a TSPreferences method' for s in sorted(actions - declared - {'scrollPressed:', 'distillerChanged:', 'antialiasChanged:'})]
+    # NewStyleFromPrefs: made a theme from the color settings used before themes (TeXShop 4.08); removed.
+    problems += [f'{lang}: action {s} is not a TSPreferences method' for s in sorted(actions - declared - {'scrollPressed:', 'distillerChanged:', 'antialiasChanged:', 'NewStyleFromPrefs:'})]
     for prop, want in sorted(base.items()):
         have = outlets.get(prop)
         if have is None:

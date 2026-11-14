@@ -28,7 +28,6 @@
 - (IBAction)ImageForegroundChanged:(id)sender { [self.preferences ImageForegroundChanged:sender]; }
 - (IBAction)LogBackgroundColorChanged:(id)sender { [self.preferences LogBackgroundColorChanged:sender]; }
 - (IBAction)LogTextColorChanged:(id)sender { [self.preferences LogTextColorChanged:sender]; }
-- (IBAction)NewStyleFromPrefs:(id)sender { [self.preferences NewStyleFromPrefs:sender]; }
 - (IBAction)PreviewAlphaChanged:(id)sender { [self.preferences PreviewAlphaChanged:sender]; }
 - (IBAction)PreviewBackgroundColorChanged:(id)sender { [self.preferences PreviewBackgroundColorChanged:sender]; }
 - (IBAction)PreviewDirectSyncChanged:(id)sender { [self.preferences PreviewDirectSyncChanged:sender]; }

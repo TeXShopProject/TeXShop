@@ -293,20 +293,6 @@ static id sharedColorSupport = nil;
 
 
 
-- (void)setColorValueInDictionary: (NSMutableDictionary *)theDictionary forKey: (NSString *)theKey withRed: (double)red
-        Green: (double)green Blue: (double)blue Alpha: (double)alpha
-{
-    NSNumber *redNumber, *greenNumber, *blueNumber, *alphaNumber;
-    
-    redNumber = [NSNumber numberWithDouble: red];
-    greenNumber = [NSNumber numberWithDouble: green];
-    blueNumber = [NSNumber numberWithDouble: blue];
-    alphaNumber = [NSNumber numberWithDouble: alpha];
-    NSArray *theArray = @[redNumber, greenNumber, blueNumber, alphaNumber];
-    [theDictionary setObject: theArray forKey:theKey];
-}
-
-
 - (void)changeColorValueInDictionary: (NSMutableDictionary *)theDictionary forKey: (NSString *)theKey fromColorWell: (id)theWell
 {
     CGFloat aRed, aGreen, aBlue, anAlpha;

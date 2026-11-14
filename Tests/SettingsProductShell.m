@@ -413,6 +413,7 @@ int main(int argc,char **argv){@autoreleasepool{
  CheckOwnerSearch(owner,shell);
  CheckOwnerThemeWells(owner,shell,theme);
  CheckOwnerOpacity(owner,shell,theme);
+ CheckThemeActionButtons(owner,shell);
  // Complete production editing callbacks: untouched focus, Return, validation and teardown.
  NSMapTable *inputRules=[owner valueForKey:@"inputRules"];Check(inputRules.count==20,@"All twenty production input rules are installed");
  NSTextField *tabsField=[owner valueForKey:@"tabIndentField"],*gsField=[owner valueForKey:@"gsBinPathField"],*zoomField=[owner valueForKey:@"magTextField"];
