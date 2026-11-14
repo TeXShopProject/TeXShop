@@ -1,96 +1,95 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.10.2)  4 OCT 2025 12:05
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.10.17)  14 NOV 2026 10:24
 entering extended mode
  restricted \write18 enabled.
- file:line:error style messages enabled.
  %&-line parsing enabled.
 **Manual.tex
 (./Manual.tex
-LaTeX2e <2025-06-01> patch level 1
-L3 programming layer <2025-09-02>
-(/usr/local/texlive/2025/texmf-dist/tex/latex/base/book.cls
+LaTeX2e <2026-06-01>
+L3 programming layer <2026-09-09>
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/base/book.cls
 Document Class: book 2025/01/22 v1.4n Standard LaTeX document class
-(/usr/local/texlive/2025/texmf-dist/tex/latex/base/bk11.clo
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/base/bk11.clo
 File: bk11.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
 )
-\c@part=\count271
-\c@chapter=\count272
-\c@section=\count273
-\c@subsection=\count274
-\c@subsubsection=\count275
-\c@paragraph=\count276
-\c@subparagraph=\count277
-\c@figure=\count278
-\c@table=\count279
+\c@part=\count273
+\c@chapter=\count274
+\c@section=\count275
+\c@subsection=\count276
+\c@subsubsection=\count277
+\c@paragraph=\count278
+\c@subparagraph=\count279
+\c@figure=\count280
+\c@table=\count281
 \abovecaptionskip=\skip49
 \belowcaptionskip=\skip50
-\bibindent=\dimen148
+\bibindent=\dimen150
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/geometry/geometry.sty
-Package: geometry 2020/01/02 v5.9 Page Geometry
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2026/03/07 v6.0 Page Geometry
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/keyval.sty
-Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2026-05-17 v1.15 key=value parser (DPC)
 \KV@toks@=\toks17
 )
-(/usr/local/texlive/2025/texmf-dist/tex/generic/iftex/ifvtex.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/generic/iftex/ifvtex.sty
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 
-(/usr/local/texlive/2025/texmf-dist/tex/generic/iftex/iftex.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/generic/iftex/iftex.sty
 Package: iftex 2024/12/12 v1.0g TeX engine tests
 ))
-\Gm@cnth=\count280
-\Gm@cntv=\count281
-\c@Gm@tempcnt=\count282
-\Gm@bindingoffset=\dimen149
-\Gm@wd@mp=\dimen150
-\Gm@odd@mp=\dimen151
-\Gm@even@mp=\dimen152
-\Gm@layoutwidth=\dimen153
-\Gm@layoutheight=\dimen154
-\Gm@layouthoffset=\dimen155
-\Gm@layoutvoffset=\dimen156
+\Gm@cnth=\count282
+\Gm@cntv=\count283
+\c@Gm@tempcnt=\count284
+\Gm@bindingoffset=\dimen151
+\Gm@wd@mp=\dimen152
+\Gm@odd@mp=\dimen153
+\Gm@even@mp=\dimen154
+\Gm@layoutwidth=\dimen155
+\Gm@layoutheight=\dimen156
+\Gm@layouthoffset=\dimen157
+\Gm@layoutvoffset=\dimen158
 \Gm@dimlist=\toks18
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/parskip/parskip.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/parskip/parskip.sty
 Package: parskip 2021-03-14 v2.0h non-zero parskip adjustments
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/kvoptions/kvoptions.sty
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
 
-(/usr/local/texlive/2025/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
 Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
 Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
 ))
-(/usr/local/texlive/2025/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count283
+\etb@tempcnta=\count285
 ))
-(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/graphicx.sty
-Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2026-05-17 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/graphics.sty
-Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2026-05-17 v1.4h Standard LaTeX Graphics (DPC,SPQR)
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/trig.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/graphics/trig.sty
 Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: xetex.def on input line 106.
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-def/xetex.def
-File: xetex.def 2025/09/29 v5.0o Graphics/color driver for xetex
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/graphics-def/xetex.def
+File: xetex.def 2025/11/01 v5.0p Graphics/color driver for xetex
 ))
-\Gin@req@height=\dimen157
-\Gin@req@width=\dimen158
+\Gin@req@height=\dimen159
+\Gin@req@width=\dimen160
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/amssymb.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/amsfonts/amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/amsfonts/amsfonts.sty
 Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 \@emptytoks=\toks19
 \symAMSa=\mathgroup4
@@ -99,23 +98,23 @@ LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
 ))
-(/usr/local/texlive/2025/texmf-dist/tex/latex/float/float.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count284
+\c@float@type=\count286
 \float@exts=\toks20
 \float@box=\box53
 \@float@everytoks=\toks21
 \@floatcapt=\box54
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/xcolor/xcolor.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/xcolor/xcolor.sty
 Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-cfg/color.cfg
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/graphics-cfg/color.cfg
 File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package xcolor Info: Driver file: xetex.def on input line 274.
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/mathcolor.ltx)
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/graphics/mathcolor.ltx)
 Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
 Package xcolor Info: Model `RGB' extended on input line 1365.
 Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1367.
@@ -125,141 +124,143 @@ Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/enumitem/enumitem.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/enumitem/enumitem.sty
 Package: enumitem 2025/02/06 v3.11 Customized lists
 \labelindent=\skip51
-\enit@outerparindent=\dimen159
+\enit@outerparindent=\dimen161
 \enit@toks=\toks22
 \enit@inbox=\box55
-\enit@count@id=\count285
-\enitdp@description=\count286
+\enit@count@id=\count287
+\enitdp@description=\count288
 )
-\c@theorem=\count287
-\c@corollary=\count288
-\c@definition=\count289
-\c@lemma=\count290
-\c@axiom=\count291
+\c@theorem=\count289
+\c@corollary=\count290
+\c@definition=\count291
+\c@lemma=\count292
+\c@axiom=\count293
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/url/url.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip17
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/tools/verbatim.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/tools/verbatim.sty
 Package: verbatim 2024-01-22 v1.5x LaTeX2e package for verbatim enhancements
 \every@verbatim=\toks23
 \verbatim@line=\toks24
 \verbatim@in@stream=\read2
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/hyperref.sty
-Package: hyperref 2025-07-12 v7.01o Hypertext links for LaTeX
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2026-10-09 v7.01s Hypertext links for LaTeX
 
-(/usr/local/texlive/2025/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.st
+y
 Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
-)
-(/usr/local/texlive/2025/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+) (/Applications/TeXLive/2026/texmf-dist/tex/generic/pdfescape/pdfescape.sty
 Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
 
-(/usr/local/texlive/2025/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
 Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
 )
 
-(/usr/local/texlive/2025/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/generic/infwarerr/infwarerr.sty
 Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
 )
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 Package pdftexcmds Info: \pdfdraftmode not found.
 ))
-(/usr/local/texlive/2025/texmf-dist/tex/latex/hycolor/hycolor.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/hycolor/hycolor.sty
 Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/nameref.sty
-Package: nameref 2025-06-21 v2.57 Cross-referencing by name of section
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2026-01-29 v2.58 Cross-referencing by name of section
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/refcount/refcount.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/refcount/refcount.sty
 Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 )
-(/usr/local/texlive/2025/texmf-dist/tex/generic/gettitlestring/gettitlestring.s
-ty
+(/Applications/TeXLive/2026/texmf-dist/tex/generic/gettitlestring/gettitlestrin
+g.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count292
-) (/usr/local/texlive/2025/texmf-dist/tex/generic/stringenc/stringenc.sty
+\c@section@level=\count294
+)
+(/Applications/TeXLive/2026/texmf-dist/tex/generic/stringenc/stringenc.sty
 Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 )
 )
-\@linkdim=\dimen160
-\Hy@linkcounter=\count293
-\Hy@pagecounter=\count294
+\@linkdim=\dimen162
+\Hy@linkcounter=\count295
+\Hy@pagecounter=\count296
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/pd1enc.def
-File: pd1enc.def 2025-07-12 v7.01o Hyperref: PDFDocEncoding definition (HO)
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2026-10-09 v7.01s Hyperref: PDFDocEncoding definition (HO)
 )
-(/usr/local/texlive/2025/texmf-dist/tex/generic/intcalc/intcalc.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-\Hy@SavedSpaceFactor=\count295
+\Hy@SavedSpaceFactor=\count297
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/puenc.def
-File: puenc.def 2025-07-12 v7.01o Hyperref: PDF Unicode definition (HO)
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/hyperref/puenc.def
+File: puenc.def 2026-10-09 v7.01s Hyperref: PDF Unicode definition (HO)
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 4066.
-Package hyperref Info: Option `hyperfigures' set `true' on input line 4066.
-Package hyperref Info: Option `bookmarksnumbered' set `true' on input line 4066
+Package hyperref Info: Option `colorlinks' set `true' on input line 4070.
+Package hyperref Info: Option `hyperfigures' set `true' on input line 4070.
+Package hyperref Info: Option `bookmarksnumbered' set `true' on input line 4070
 .
-Package hyperref Info: Hyper figures ON on input line 4193.
-Package hyperref Info: Link nesting OFF on input line 4200.
-Package hyperref Info: Hyper index ON on input line 4203.
-Package hyperref Info: Plain pages OFF on input line 4210.
-Package hyperref Info: Backreferencing OFF on input line 4215.
+Package hyperref Info: Hyper figures ON on input line 4197.
+Package hyperref Info: Link nesting OFF on input line 4204.
+Package hyperref Info: Hyper index ON on input line 4207.
+Package hyperref Info: Plain pages OFF on input line 4214.
+Package hyperref Info: Backreferencing OFF on input line 4219.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
-Package hyperref Info: Bookmarks ON on input line 4462.
-\c@Hy@tempcnt=\count296
-LaTeX Info: Redefining \url on input line 4801.
-\XeTeXLinkMargin=\dimen161
+Package hyperref Info: Bookmarks ON on input line 4466.
+\c@Hy@tempcnt=\count298
+LaTeX Info: Redefining \url on input line 4805.
+\XeTeXLinkMargin=\dimen163
 
-(/usr/local/texlive/2025/texmf-dist/tex/generic/bitset/bitset.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/generic/bitset/bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
 
-(/usr/local/texlive/2025/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
-\Fld@menulength=\count297
-\Field@Width=\dimen162
-\Fld@charsize=\dimen163
-Package hyperref Info: Hyper figures ON on input line 6076.
-Package hyperref Info: Link nesting OFF on input line 6083.
-Package hyperref Info: Hyper index ON on input line 6086.
-Package hyperref Info: backreferencing OFF on input line 6093.
-Package hyperref Info: Link coloring ON on input line 6096.
-Package hyperref Info: Link coloring with OCG OFF on input line 6103.
-Package hyperref Info: PDF/A mode OFF on input line 6108.
-\Hy@abspage=\count298
-\c@Item=\count299
-\c@Hfootnote=\count300
+\Fld@menulength=\count299
+\Field@Width=\dimen164
+\Fld@charsize=\dimen165
+Package hyperref Info: Hyper figures ON on input line 6089.
+Package hyperref Info: Link nesting OFF on input line 6096.
+Package hyperref Info: Hyper index ON on input line 6099.
+Package hyperref Info: backreferencing OFF on input line 6106.
+Package hyperref Info: Link coloring ON on input line 6109.
+Package hyperref Info: Link coloring with OCG OFF on input line 6116.
+Package hyperref Info: PDF/A mode OFF on input line 6121.
+\Hy@abspage=\count300
+\c@Item=\count301
+\c@Hfootnote=\count302
 )
 Package hyperref Info: Driver (autodetected): hxetex.
-
-(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/hxetex.def
-File: hxetex.def 2025-07-12 v7.01o Hyperref driver for XeTeX
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/hyperref/hxetex.def
+File: hxetex.def 2026-10-09 v7.01s Hyperref driver for XeTeX
 \pdfm@box=\box56
-\c@Hy@AnnotLevel=\count301
-\HyField@AnnotCount=\count302
-\Fld@listcount=\count303
-\c@bookmark@seq@number=\count304
+\c@Hy@AnnotLevel=\count303
+\HyField@AnnotCount=\count304
+\Fld@listcount=\count305
+\c@bookmark@seq@number=\count306
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.
+sty
 Package: rerunfilecheck 2025-06-21 v1.11 Rerun checks for auxiliary files (HO)
 
-(/usr/local/texlive/2025/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/generic/uniquecounter/uniquecounter.
+sty
 Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
 )
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 84.
 )
 \Hy@SectionHShift=\skip52
-) (/usr/local/texlive/2025/texmf-dist/tex/latex/cleveref/cleveref.sty
+) (/Applications/TeXLive/2026/texmf-dist/tex/latex/cleveref/cleveref.sty
 Package: cleveref 2018/03/27 v0.21.4 Intelligent cross-referencing
 Package cleveref Info: `hyperref' support loaded on input line 2370.
 LaTeX Info: Redefining \cref on input line 2370.
@@ -280,60 +281,41 @@ Package cleveref Info: sorting but not compressing references on input line 785
 2.
 )
 ==> First Aid for cleveref.sty applied!
-(/usr/local/texlive/2025/texmf-dist/tex/latex/hypcap/hypcap.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/hypcap/hypcap.sty
 Package: hypcap 2024-07-26 v1.13 Adjusting the anchors of captions (HO)
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/letltxmacro/letltxmacro.sty
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/letltxmacro/letltxmacro.sty
 Package: letltxmacro 2019/12/03 v1.6 Let assignment for LaTeX macros (HO)
 ))
-(/usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-xetex.def
-File: l3backend-xetex.def 2025-06-09 L3 backend support: XeTeX
-\g__graphics_track_int=\count305
-\g__pdfannot_backend_int=\count306
-\g__pdfannot_backend_link_int=\count307
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/l3kernel/l3backend-xetex.def
+File: l3backend-xetex.def 2026-09-09 L3 backend support: XeTeX
+\g__graphics_track_int=\count307
+\g__pdfannot_backend_int=\count308
+\g__pdfannot_backend_link_int=\count309
 )
-(./Manual.aux
-
-LaTeX Warning: Label `fig:example' multiply defined.
-
-
-LaTeX Warning: Label `fig:example@cref' multiply defined.
-
-
-LaTeX Warning: Label `fig:example' multiply defined.
-
-
-LaTeX Warning: Label `fig:example@cref' multiply defined.
-
-
-LaTeX Warning: Label `fig:example' multiply defined.
-
-
-LaTeX Warning: Label `fig:example@cref' multiply defined.
-
-)
+(./Manual.aux)
 \openout1 = `Manual.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 86.
-LaTeX Font Info:    ... okay on input line 86.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 86.
-LaTeX Font Info:    ... okay on input line 86.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 86.
-LaTeX Font Info:    ... okay on input line 86.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 86.
-LaTeX Font Info:    ... okay on input line 86.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 86.
-LaTeX Font Info:    ... okay on input line 86.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 86.
-LaTeX Font Info:    ... okay on input line 86.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 86.
-LaTeX Font Info:    ... okay on input line 86.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 86.
-LaTeX Font Info:    ... okay on input line 86.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 86.
-LaTeX Font Info:    ... okay on input line 86.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 86.
-LaTeX Font Info:    ... okay on input line 86.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -369,370 +351,188 @@ LaTeX Font Info:    ... okay on input line 86.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring ON on input line 86.
+Package hyperref Info: Link coloring ON on input line 87.
 (./Manual.out) (./Manual.out)
 \@outlinefile=\write3
 \openout3 = `Manual.out'.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 89.
-
-
-(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Trying to load font information for U+msb on input line 89.
-
-
-(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-
-[1
+ [1
 
 
 
-]
-
-[2
+] [2
 
 ] (./Manual.toc
+LaTeX Font Info:    Trying to load font information for U+msa on input line 1.
 
-[3
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 1.
 
-]
+(/Applications/TeXLive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+) [3
 
-[4]
-
-[5]
-
-[6]
-
-[7]
-
-[8])
+] [4]
+[5] [6] [7] [8] [9])
 \tf@toc=\write4
 \openout4 = `Manual.toc'.
 
-
-
-[9]
+ [10]
 Chapter 1.
-
-
 [1
 
 
 
-Start of main material: 10.
-]
-
-[2]
+Start of main material: 11.
+] [2]
 File: Graphics/output.pdf Graphic file (type pdf)
-<Graphics/output.pdf>
-
-
-[3]
-
-[4]
-
-[5]
-
-[6]
-
-[7]
-
-[8]
-
-[9]
+<use Graphics/output.pdf>
+ [3] [4] [5] [6] [7] [8] [9] [10]
 Chapter 2.
-
-
-[10
+[11
 
 ]
+Overfull \hbox (26.71686pt too wide) in paragraph at lines 300--301
+[][][][][][][] [] [][][][]$[][]\TU/lmr/m/n/10.95 . Download the program and dra
+g it to /Applications or /Applications/TeX. 
+ []
 
-[11]
-
-[12]
+[12] [13]
 Chapter 3.
 File: Graphics/edit.png Graphic file (type bmp)
 <Graphics/edit.png>
-
-
-[13
+[14
 
 ]
 File: Graphics/edit2.png Graphic file (type bmp)
 <Graphics/edit2.png>
-
-
-[14]
-
-[15]
-
-[16]
-
-[17]
+ [15] [16] [17] [18]
 Chapter 4.
-
-
-[18
-
-]
-Chapter 5.
-
-
 [19
 
 ]
+Chapter 5.
+[20
 
-[20]
-
-[21]
+] [21] [22]
 Chapter 6.
+[23
 
-
-[22
-
-]
-
-[23]
-
-[24]
-
-[25]
-File: Graphics/EditTab.png Graphic file (type bmp)
-<Graphics/EditTab.png>
-
-
-[26]
-
-[27]
-
-[28]
-
-[29]
+] [24] [25] [26] [27]
+File: Graphics/SettingsEditor.png Graphic file (type bmp)
+<Graphics/SettingsEditor.png>
+ [28] [29] [30] [31] [32]
 Chapter 7.
+[33
 
-
-[30
-
-]
-
-[31]
-
-[32]
-
-[33]
+] [34] [35] [36] [37] [38]
 Chapter 8.
+[39
 
-
-[34
-
-]
-
-[35]
-
-[36]
-
-[37]
-
-[38]
-
-[39]
-
-[40]
+] [40] [41] [42] [43] [44] [45] [46]
 Chapter 9.
+[47
 
-
-[41
-
-]
-
-[42]
-
-[43]
-
-[44]
-Overfull \hbox (14.15727pt too wide) in paragraph at lines 1090--1091
+] [48] [49] [50]
+Overfull \hbox (14.15727pt too wide) in paragraph at lines 1130--1131
 []\TU/lmr/m/n/10.95 Over time the engines have been extended to use Apple’s new
  default \TU/lmr/bx/n/10.95 zsh \TU/lmr/m/n/10.95 and TeXShop’s 
  []
 
-
-
-[45]
-
-[46]
-
-[47]
-
-[48]
-
-[49]
-
-[50]
+[51] [52] [53] [54] [55] [56] [57]
 Chapter 10.
+[58
 
-
-[51
-
-]
-
-[52]
+] [59]
 Chapter 11.
+[60
 
-
-[53
-
-]
-
-[54]
-
-[55]
-
-[56]
+] [61] [62] [63]
 Chapter 12.
+[64
 
-
-[57
-
-]
-
-[58]
-
-[59]
-
-[60]
-Chapter 13.
-
-
-[61
-
-]
-
-[62]
-
-[63]
-
-[64]
-
-[65]
-
-[66]
-
-[67]
-Chapter 14.
-
-
-[68
-
-]
-
-[69]
-
-[70]
-
-[71]
-
-[72]
-
-[73]
-Overfull \hbox (5.99371pt too wide) in paragraph at lines 1780--1782
-[]\TU/lmr/m/n/10.95 When TeXShop interpretes an AppleScript macro, it first rep
-laces any string #FILEPATH#,
+] [65]
+Overfull \hbox (12.64902pt too wide) in paragraph at lines 1455--1455
+[]    \TU/lmtt/m/n/10.95 {\OLDmain\write128{Start of main material: \the\Readon
+lyShipoutCounter.}}[] 
  []
 
+[66] [67]
+Chapter 13.
+[68
 
+] [69] [70] [71] [72] [73] [74]
+Chapter 14.
+[75
 
-[74]
+] [76] [77] [78] [79] [80]
+Overfull \hbox (1.13193pt too wide) in paragraph at lines 1822--1824
+[]\TU/lmr/m/n/10.95 When TeXShop interprets an AppleScript macro, it first repl
+aces any string #FILEPATH#,
+ []
 
-[75]
-Overfull \hbox (6.90028pt too wide) in paragraph at lines 1839--1839
+[81] [82]
+Overfull \hbox (6.90028pt too wide) in paragraph at lines 1879--1879
 []  \TU/lmtt/m/n/10.95 -- The returned information can be used to define corres
 ponding variables.[] 
  []
 
 
-Overfull \hbox (41.39278pt too wide) in paragraph at lines 1845--1845
+Overfull \hbox (52.89027pt too wide) in paragraph at lines 1885--1885
 []  \TU/lmtt/m/n/10.95 display dialog "Test dialog: type something below" defau
-lt answer "Hello World!"[] 
+lt answer "Hello World!" ¬[] 
  []
 
 
-Overfull \hbox (41.39278pt too wide) in paragraph at lines 1848--1848
+Overfull \hbox (52.89027pt too wide) in paragraph at lines 1888--1888
 []  \TU/lmtt/m/n/10.95 display dialog "Test dialog: type something below" defau
-lt answer "Hello World!"[] 
+lt answer "Hello World!" ¬[] 
  []
 
 
-Overfull \hbox (41.39278pt too wide) in paragraph at lines 1851--1851
+Overfull \hbox (52.89027pt too wide) in paragraph at lines 1891--1891
 []  \TU/lmtt/m/n/10.95 display dialog "Test dialog: type something below" defau
-lt answer "Hello World!"[] 
+lt answer "Hello World!" ¬[] 
  []
 
-
-
-[76]
-
-[77]
-
-[78]
-Overfull \hbox (35.64401pt too wide) in paragraph at lines 1951--1951
+[83] [84] [85]
+Overfull \hbox (35.64401pt too wide) in paragraph at lines 1994--1994
 []  \TU/lmtt/m/n/10.95 set scriptPath to (do shell script "dirname " & "~/Libra
 ry/TeXShop/Scripts/ex")[] 
  []
 
 
-Overfull \hbox (58.63902pt too wide) in paragraph at lines 1964--1964
+Overfull \hbox (58.63902pt too wide) in paragraph at lines 2007--2007
 []  \TU/lmtt/m/n/10.95 set dirName to quoted form of (characters 1 thru (n - m 
 - 1) of fileName as string)[] 
  []
 
 
-Overfull \hbox (35.64401pt too wide) in paragraph at lines 1967--1967
+Overfull \hbox (35.64401pt too wide) in paragraph at lines 2010--2010
 []  \TU/lmtt/m/n/10.95 set shellScript to shellScript & "~/Library/TeXShop/bin/
 pdflatexc  " & baseName[] 
  []
 
-
-
-[79]
-
-[80]
-Overfull \hbox (2.1996pt too wide) in paragraph at lines 2031--2032
-\OMS/cmsy/m/n/10.95 ^^X$\TU/lmr/m/n/10.95 /Library/TeX/bin/pdflatexc - calling 
-the shell script -, and “input(2)” = baseName. 
- []
-
-
-Overfull \hbox (24.14651pt too wide) in paragraph at lines 2037--2037
-[]\TU/lmtt/m/n/10.95 <br>set shellScript to shellScript & "~/Library/TeX/bin/pd
+[86] [87]
+Overfull \hbox (24.14651pt too wide) in paragraph at lines 2079--2079
+[]\TU/lmtt/m/n/10.95 set shellScript to shellScript & "~/Library/TeXShop/bin/pd
 flatexc  " & baseName[] 
  []
 
-
-
-[81]
-Chapter 15.
-
-
-[82
-
-]
-
-[83]
-
-[84]
-
-[85]
-
-[86]
-
-[87]
-
 [88]
-Overfull \hbox (6.64195pt too wide) in paragraph at lines 2271--2272
+Chapter 15.
+[89
+
+] [90] [91] [92] [93]
+Overfull \hbox (9.75534pt too wide) in paragraph at lines 2229--2230
+\TU/lmr/m/n/10.95 tion trigger” item under the Keyboard category of TeXShop Set
+tings makes this change. 
+ []
+
+[94] [95]
+Overfull \hbox (6.64195pt too wide) in paragraph at lines 2314--2315
 \TU/lmr/m/n/10.95 in turn. Additional sectioning abbreviations are [][]\TU/lmtt
 /m/n/10.95 ssec[]\TU/lmr/m/n/10.95 , [][]\TU/lmtt/m/n/10.95 sssec[]\TU/lmr/m/n/
 10.95 , [][]\TU/lmtt/m/n/10.95 par []\TU/lmr/m/n/10.95 and [][]\TU/lmtt/m/n/10.
@@ -740,340 +540,150 @@ Overfull \hbox (6.64195pt too wide) in paragraph at lines 2271--2272
  ,
  []
 
+[96]
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <12> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 2299.
-
-
-[89]
-Overfull \hbox (10.07285pt too wide) in paragraph at lines 2325--2326
-[]\TU/lmr/m/n/10.95 Recall the menu Source/CommandCompletion/Marks. This menu h
-as three commands 
- []
-
-
-
-[90]
-
-[91]
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 2342.
+ [97] [98] [99] [100] [101] [102]
 Chapter 16.
+[103
 
-
-[92
-
-]
-
-[93]
+] [104]
 File: Graphics/RevertTo.jpg Graphic file (type bmp)
 <Graphics/RevertTo.jpg>
-
-
-[94]
-
-[95]
+ [105] [106]
 Chapter 17.
+[107
 
-
-[96
-
-]
-
-[97]
-
-[98]
-
-[99]
-
-[100]
-
-[101]
-
-[102]
-
-[103]
+] [108] [109] [110] [111] [112] [113] [114] [115] [116] [117]
 Chapter 18.
 
-Overfull \hbox (47.1415pt too wide) in paragraph at lines 2623--2623
+Overfull \hbox (47.1415pt too wide) in paragraph at lines 2738--2738
 []   \TU/lmtt/m/n/10.95 \AddToHook{env/sidewaysfigure/end}{\pdfmanagement_add:n
 nn{ThisPage}{Rotate}{90}}[] 
  []
 
+[118
 
-
-[104
-
-]
-
-[105]
+] [119]
 Chapter 19.
+[120
 
-
-[106
-
-]
+] [121]
 Chapter 20.
+[122
 
-
-[107
-
-]
-
-[108]
-
-[109]
-
-[110]
-
-[111]
-
-[112]
-
-[113]
-
-[114]
-
-[115]
-
-[116]
-
-[117]
-
-[118]
+] [123] [124] [125] [126] [127] [128] [129] [130] [131] [132] [133]
 Chapter 21.
-
-
-[119
+[134
 
 ]
-Overfull \hbox (15.14026pt too wide) in paragraph at lines 2961--2965
+Overfull \hbox (15.14026pt too wide) in paragraph at lines 3079--3083
 []\TU/lmr/m/n/10.95 ”$3”: the full path to the binaries in the distribution; th
 is is usually /Library/TeX/texbin
  []
 
-
-
-[120]
-
-[121]
-Overfull \hbox (2.18547pt too wide) in paragraph at lines 3042--3042
+[135] [136]
+Overfull \hbox (2.18547pt too wide) in paragraph at lines 3158--3158
 []\TU/lmr/bx/n/14.4 Typesetting ConTeXt in TeX Live using luametatex 
  []
 
-
-
-[122]
-
-[123]
-
-[124]
+[137] [138] [139]
 Chapter 22.
+[140
 
-
-[125
-
-]
-
-[126]
-
-[127]
+] [141] [142]
 Chapter 23.
+[143
 
-
-[128
+] [144] [145] [146] [147] [148] [149] [150] [151] [152] [153] [154]
+[155]
+Chapter 24.
+[156
 
 ]
+File: Graphics/SettingsThemes.png Graphic file (type bmp)
+<Graphics/SettingsThemes.png>
 
-[129]
-
-[130]
-
-[131]
-
-[132]
-
-[133]
-
-[134]
-
-[135]
-
-[136]
-
-[137]
-
-[138]
-
-[139]
-Chapter 24.
-File: Graphics/Theme.png Graphic file (type bmp)
-<Graphics/Theme.png>
-
-Overfull \hbox (9.77725pt too wide) in paragraph at lines 3521--3522
+Overfull \hbox (9.77725pt too wide) in paragraph at lines 3642--3643
 \TU/lmr/m/n/10.95 nothing prevents a user from setting both Lite Mode and Dark 
 Mode to the same theme. 
  []
 
-
-
-[140
-
-]
-
-[141]
-
-[142]
-
-[143]
-
-[144]
+[157] [158] [159] [160]
 Chapter 25.
+[161
 
-
-[145
-
-]
-
-[146]
-
-[147]
+] [162] [163]
 Chapter 26.
+[164
 
-
-[148
-
-]
-
-[149]
-
-[150]
-Overfull \hbox (34.58725pt too wide) in paragraph at lines 3735--3735
+] [165] [166] [167] [168]
+Overfull \hbox (34.58725pt too wide) in paragraph at lines 3875--3875
 []\TU/lmr/bx/n/14.4 Changing the Display Format While Using Switch Views 
  []
 
-
-
-[151]
-
-[152]
-
-[153]
+[169] [170] [171]
 Chapter 27.
+[172
 
-
-[154
-
-]
-
-[155]
-
-[156]
+] [173] [174]
 Chapter 28.
+[175
 
-
-[157
-
-]
-
-LaTeX Warning: Characters dropped after `\end{verbatim}' on input line 3881.
-
-
-
-[158]
-
-[159]
-
-[160]
-
-[161]
-
-[162]
-
-[163]
-
-[164]
+] [176] [177] [178] [179] [180] [181] [182]
 Chapter 29.
+[183
 
-
-[165
-
-]
-
-[166]
-Overfull \hbox (5.46301pt too wide) in paragraph at lines 4153--4154
+] [184] [185]
+Overfull \hbox (5.46301pt too wide) in paragraph at lines 4294--4295
 []\TU/lmr/m/n/10.95 The menu takes at least the following commands (and more if
  an xml file is being used): 
  []
 
-
-
-[167]
+[186]
 File: Graphics/latexpanel.png Graphic file (type bmp)
 <Graphics/latexpanel.png>
-
-
-[168]
+ [187]
 File: Graphics/matrixpanel.png Graphic file (type bmp)
 <Graphics/matrixpanel.png>
 File: Graphics/arabic.png Graphic file (type bmp)
 <Graphics/arabic.png>
-
-
-[169]
+ [188]
 File: Graphics/invisible.png Graphic file (type bmp)
 <Graphics/invisible.png>
-
-
-[170]
+ [189] [190] [191]
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 4246.
-
-
-[171]
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 4409.
+ [192]
 Chapter 30.
+[193
 
-
-[172
-
-]
-
-[173]
-
-[174]
-
-[175]
-
-[176]
+] [194] [195] [196] [197] [198]
 Chapter 31.
-
-
-[177
+[199
 
 ]
-
-[178]
-
-[179]
-Overfull \hbox (58.639pt too wide) in paragraph at lines 4439--4439
-[]\TU/lmtt/m/n/10.95 defaults write TeXShop UserCommandsWithoutParameterSpellCh
-eck -array-add "\\verbatim" 
+Overfull \hbox (0.39821pt too wide) in paragraph at lines 4567--4568
+\TU/lmr/m/n/10.95 skipped too. Text marked as another language with [][]\TU/lmt
+t/m/n/10.95 \foreignlanguage[]\TU/lmr/m/n/10.95 , [][]\TU/lmtt/m/n/10.95 \selec
+tlanguage[]\TU/lmr/m/n/10.95 ,
  []
 
+[200] [201] [202]
+Overfull \hbox (29.89528pt too wide) in paragraph at lines 4641--4641
+[]\TU/lmtt/m/n/10.95 defaults write TeXShop ExtraCommandsNotToCheckParameters -
+array-add "\\verbatim" 
+ []
 
-
-[180]
+[203]
 File: Graphics/PrefPane.png Graphic file (type bmp)
 <Graphics/PrefPane.png>
 File: Graphics/Spelling_and_Grammar.png Graphic file (type bmp)
 <Graphics/Spelling_and_Grammar.png>
-
-
-[181]
-
-[182]
-
-[183]
+ [204] [205] [206] [207]
 Chapter 32.
 
-Overfull \hbox (1.04213pt too wide) in paragraph at lines 4554--4555
+Overfull \hbox (1.04213pt too wide) in paragraph at lines 4756--4757
 \TU/lmr/m/n/10.95 PDFKit supports annotations and TeXShop can open arbitrary pd
 f files. Recently TeXShop
  []
@@ -1081,263 +691,152 @@ f files. Recently TeXShop
 File: Graphics/screen.jpg Graphic file (type bmp)
 <Graphics/screen.jpg>
 
-Overfull \hbox (75.88538pt too wide) in paragraph at lines 4566--4567
+Overfull \hbox (75.88538pt too wide) in paragraph at lines 4768--4769
  [][] 
  []
 
+[208
 
-
-[184
-
-]
-
-[185]
-Overfull \hbox (2.03786pt too wide) in paragraph at lines 4595--4597
+] [209]
+Overfull \hbox (2.03786pt too wide) in paragraph at lines 4797--4799
 []\TU/lmr/m/n/10.95 For a package which mimics Adobe annotations, consider \TU/
 lmr/m/it/10.95 todonotes, pdfcomment, \TU/lmr/m/n/10.95 or \TU/lmr/m/it/10.95 m
 argin-
  []
 
-
-
-[186]
+[210]
 File: Graphics/annotationPanel.png Graphic file (type bmp)
 <Graphics/annotationPanel.png>
-
-
-[187]
-
-[188]
-
-[189]
-
-[190]
+ [211] [212] [213] [214]
 Chapter 33.
 
-Overfull \hbox (8.45224pt too wide) in paragraph at lines 5127--5130
-\TU/lmr/m/n/10.95 ”Fourier-Annotated1.pdf” and you can easily change that to ”F
+Overfull \hbox (8.45224pt too wide) in paragraph at lines 5329--5332
+\TU/lmr/m/n/10.95 “Fourier-Annotated1.pdf” and you can easily change that to “F
 ourier-Annotated2.pdf”. 
  []
 
+[215
 
-
-[191
-
-]
-
-[192]
-
-[193]
-
-[194]
-
-[195]
-
-[196]
+] [216] [217] [218] [219] [220]
 Chapter 34.
+[221
 
-
-[197
-
-]
-
-[198]
+] [222]
 File: Graphics/Graphic1.png Graphic file (type bmp)
 <Graphics/Graphic1.png>
-
-
-[199]
-
-[200]
-
-[201]
-
-[202]
-Overfull \hbox (4.85268pt too wide) in paragraph at lines 5457--5459
+ [223] [224] [225] [226]
+Overfull \hbox (4.85268pt too wide) in paragraph at lines 5660--5662
 []\TU/lmr/m/n/10.95 See [][]$[][][][][] [] [] [] [][][][][][][] [] [][][][] [] 
 [][][][][] [] [][][] [] [][][][][][] [] [][][][][][][][][][][] [] [][][][][][][
 ][][][] [] [][][]$[][] for a won-
  []
 
-
-
-[203]
+[227]
 Chapter 35.
 File: Graphics/writingtools.png Graphic file (type bmp)
 <Graphics/writingtools.png>
 
-Overfull \hbox (39.75037pt too wide) in paragraph at lines 5872--5873
+Overfull \hbox (39.75037pt too wide) in paragraph at lines 6075--6076
  [][] 
  []
 
+[228
 
-
-[204
-
-]
-
-[205]
+] [229]
 Chapter 36.
+[230
 
-
-[206
-
-]
-
-[207]
+] [231]
 Chapter 37.
+[232
 
-
-[208
-
-]
-
-[209]
+] [233]
 Chapter 38.
+[234
 
-
-[210
-
-]
-
-[211]
+] [235]
 Chapter 39.
-
-
-[212
+[236
 
 ]
-Overfull \hbox (9.7225pt too wide) in paragraph at lines 6032--6033
+Overfull \hbox (9.7225pt too wide) in paragraph at lines 6240--6241
 \TU/lmr/m/n/10.95 Select the menu item “Close Current Environment” and the foll
 owing line will be added: 
  []
 
-
-
-[213]
-Overfull \hbox (2.4262pt too wide) in paragraph at lines 6089--6091
+[237]
+Overfull \hbox (2.4262pt too wide) in paragraph at lines 6293--6295
 []\TU/lmr/m/n/10.95 To fix this, the Ghostscript authors added a special flag, 
 “-dALLOWPSTRANSPARENCY”.
  []
 
-
-
-[214]
-
-[215]
-
-[216]
+[238] [239] [240]
 Chapter 40.
 
-Overfull \hbox (1.15154pt too wide) in paragraph at lines 6165--6165
+Overfull \hbox (1.15154pt too wide) in paragraph at lines 6363--6363
 []     \TU/lmtt/m/n/10.95 to determine this encoding. Irrelevant if all files u
 se UTF-8 Unicode.[] 
  []
 
-
-
-[217
+[241
 
 ]
-Overfull \hbox (58.63902pt too wide) in paragraph at lines 6193--6193
+Overfull \hbox (58.63902pt too wide) in paragraph at lines 6391--6391
 []     \TU/lmtt/m/n/10.95 The number of preliminary pages before the main text 
 numbering starts at page 1. 
  []
 
 
-Overfull \hbox (22.28967pt too wide) in paragraph at lines 6196--6196
+Overfull \hbox (22.28967pt too wide) in paragraph at lines 6394--6394
 []\TU/lmr/bx/n/14.4 Magic Lines to Control Preview in Double Page Modes 
  []
 
-
-
-[218]
-
-[219]
-
-[220]
-
-[221]
+[242] [243] [244] [245]
 Chapter 41.
+[246
 
-
-[222
-
-]
-
-[223]
-
-[224]
-
-[225]
-
-[226]
-Overfull \hbox (58.639pt too wide) in paragraph at lines 6517--6517
-[]\TU/lmtt/m/n/10.95 defaults write TeXShop UserCommandsWithoutParameterSpellCh
-eck -array-add "\\verbatim" 
+] [247] [248] [249] [250] [251] [252]
+Overfull \hbox (29.89528pt too wide) in paragraph at lines 6710--6710
+[]\TU/lmtt/m/n/10.95 defaults write TeXShop ExtraCommandsNotToCheckParameters -
+array-add "\\verbatim" 
  []
 
-
-Overfull \hbox (1.15152pt too wide) in paragraph at lines 6530--6530
-[]\TU/lmtt/m/n/10.95 defaults write TeXShop ExtraCommandsNotToCheckParameter -a
-rray-add "\\emph" 
+[253] [254] [255] [256] [257]
+Overfull \hbox (4.87163pt too wide) in paragraph at lines 6900--6901
+[]\TU/lmr/m/n/10.95 The following setting causes synchronization spots to be sh
+own in the Preview window: 
  []
 
-
-
-[227]
-
-[228]
-
-[229]
-
-[230]
-
-[231]
-
-[232]
-
-[233]
-
-[234]
-
-[235]
-
-[236]
+[258] [259] [260] [261] [262]
 Chapter 42.
+[263
 
-
-[237
-
-]
-
-[238]
+] [264]
 Chapter 43.
 
+Overfull \hbox (1.26328pt too wide) in paragraph at lines 7073--7074
+\TU/lmr/m/n/10.95 former TeXShop web site, [][]$[][][][][] [] [] [] [][][][][] 
+[] [][][][][][][] [] [][][] [] [][][][] [] [][][][][][][] [] [][][][][][] [] []
+[][][]$[][]. I’d
+ []
 
-[239
+[265
 
-]
-
-[240] (./Manual.aux)
+] [266] (./Manual.aux)
  ***********
-LaTeX2e <2025-06-01> patch level 1
-L3 programming layer <2025-09-02>
+LaTeX2e <2026-06-01>
+L3 programming layer <2026-09-09>
  ***********
-
-
-LaTeX Warning: There were multiply-defined labels.
-
 Package rerunfilecheck Info: File `Manual.out' has not changed.
-(rerunfilecheck)             Checksum: F8016E7CA99C7530ABE33057D10812E3;46867.
+(rerunfilecheck)             Checksum: 8AFA53784FAD0B860D7D10B4CF940D41;48189.
  ) 
 Here is how much of TeX's memory you used:
- 12200 strings out of 468389
- 202473 string characters out of 5440620
- 662808 words of memory out of 5000000
- 40543 multiletter control sequences out of 15000+600000
- 642616 words of font info for 119 fonts, out of 8000000 for 9000
+ 12249 strings out of 467696
+ 205035 string characters out of 5418921
+ 680338 words of memory out of 5000000
+ 41280 multiletter control sequences out of 15000+600000
+ 641839 words of font info for 113 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 69i,8n,79p,1022b,516s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 69i,8n,79p,1519b,525s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on Manual.pdf (249 pages).
+Output written on Manual.pdf (276 pages).
