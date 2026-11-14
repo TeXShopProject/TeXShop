@@ -356,4 +356,5 @@
 "Apply the “%@” profile?" = "Profil „%@“ anwenden?";
 "Use latexmk" = "latexmk verwenden";
 "Detect Paths" = "Pfade erkennen";
+"%@ (Not Found)" = "%@ (nicht gefunden)";
 "Choose an Engine Profile" = "Engine-Profil wählen";

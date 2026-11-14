@@ -54,15 +54,6 @@
     "notification": null
   },
   {
-    "outlet": "engineTextField",
-    "key": "DefaultEngine",
-    "kind": 0,
-    "minimum": 0,
-    "maximum": 0,
-    "allowsEmpty": false,
-    "notification": null
-  },
-  {
     "outlet": "texCommandTextField",
     "key": "TexCommand",
     "kind": 0,

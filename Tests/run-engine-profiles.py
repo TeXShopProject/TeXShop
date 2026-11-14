@@ -143,8 +143,19 @@ int main(int argc, char **argv) { @autoreleasepool {
     // 5. The first-launch choice.
     check(TSEngineProfileForLanguages(@[@"ja-JP", @"en"]) == 7 && TSEngineProfileForLanguages(@[@"ja"]) == 7, @"Japanese first: upLaTeX + dvipdfmx");
     check(TSEngineProfileForLanguages(@[@"en-JP", @"ja"]) == 1 && TSEngineProfileForLanguages(@[]) == 1 && TSEngineProfileForLanguages(@[@"jv"]) == 1, @"otherwise pdfLaTeX");
+    // 6. The factory engine file became LuaLaTeX in 6.00; an earlier choice of the factory one keeps XeLaTeX.
+    check([factory[@"DefaultEngine"] isEqual:@"LuaLaTeX"] && [factory[@"DefaultCommand"] integerValue] == 1, @"the factory engine file is LuaLaTeX and new documents use LaTeX");
+    NSArray *cases = @[@[@{@"DefaultCommand": @2}, @"XeLaTeX"], @[@{@"DefaultCommand": @"2"}, @"XeLaTeX"],
+                       @[@{@"DefaultCommand": @2, @"DefaultEngine": @"pdflatexmk"}, @"pdflatexmk"],
+                       @[@{@"DefaultCommand": @1}, @"LuaLaTeX"], @[@{}, @"LuaLaTeX"], @[@{@"DefaultCommand": @[]}, @"LuaLaTeX"]];
+    for (NSArray *c in cases) {
+        TSMemoryDefaults *d = [TSMemoryDefaults new]; [d registerDefaults:factory];
+        [c[0] enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) { [d setObject:value forKey:key]; }];
+        TSKeepEarlierFactoryEngineFile(d, c[0]); TSKeepEarlierFactoryEngineFile(d, c[0]);
+        check([[d stringForKey:@"DefaultEngine"] isEqual:c[1]], [NSString stringWithFormat:@"stored %@ typesets with %@", c[0], c[1]]);
+    }
     if (failures) return 1;
-    puts("PASS: 8 profiles x 2 forms write exactly their keys; matching, apply, latexmk in use and first-launch language choice");
+    puts("PASS: 8 profiles x 2 forms write exactly their keys; matching, apply, latexmk in use, first-launch language choice and the earlier factory engine file");
 } return 0; }
 '''
 
@@ -163,6 +174,9 @@ MUTATIONS = {
     'every language Japanese': ('? TSEngineProfileUpLaTeXDvipdfmx : TSEngineProfilePdfLaTeX', '? TSEngineProfileUpLaTeXDvipdfmx : TSEngineProfileUpLaTeXDvipdfmx'),
     'latexmk by prefix only': ('    return [command isEqualToString:@"latexmk"] || [command hasPrefix:@"latexmk "];', '    return [command hasPrefix:@"latexmk"];'),
     'latexmk of the other method': ('[defaults integerForKey:DefaultScriptKey] == TSEngineProfileViaDVI ? LatexGSCommandKey : LatexCommandKey;', 'LatexGSCommandKey;'),
+    'earlier engine file lost': ('    [defaults setObject:@"XeLaTeX" forKey:DefaultEngineKey];', ''),
+    'stored engine file replaced': ('    if (stored[DefaultEngineKey] != nil) return;\n', ''),
+    'any command keeps XeLaTeX': ('|| [command integerValue] != 2) return;', ') return;'),
     'dvips offered first': ('             @[@(TSEngineProfileLaTeXDvipsGhostscript)]];', '             @[@(TSEngineProfileLaTeXDvipsGhostscript), @(TSEngineProfilePdfLaTeX)]];'),
 }
 

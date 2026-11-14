@@ -115,7 +115,7 @@ int main(int argc, char **argv) { @autoreleasepool {
             SaveImage(alert.window.contentView, where);
         }
 
-        NSArray<NSAlert *> *alerts = @[TSShortcutConflictsAlert(@"⌘T: Typeset › Plain TeX\n⇧⌘M: Typeset › MetaPost"),
+        NSArray<NSAlert *> *alerts = @[TSShortcutConflictsAlert(@"⌘T: Typeset › plain TeX\n⇧⌘M: Typeset › MetaPost"),
                                        TSLearnedWordsAlert(@"en", [WordList new], &(NSTableView *__strong){nil})];
         NSArray<NSString *> *names = @[@"macro shortcut conflicts alert", @"learned words alert"];
         for (NSUInteger i = 0; i < alerts.count; i++) {

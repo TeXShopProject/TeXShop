@@ -21,8 +21,8 @@ tiLabelProgram				= "Programma";
 tiPaletteLabelProgram			= "Programma";
 tiToolTipProgram			= "Kies zet-programma";
 
-tiLabelTeX				= "TeX";
-tiPaletteLabelTeX			= "TeX";
+tiLabelTeX				= "plain TeX";
+tiPaletteLabelTeX			= "plain TeX";
 tiToolTipTeX				= "Zet de source met plain TeX";
 
 tiLabelLaTeX				= "LaTeX";

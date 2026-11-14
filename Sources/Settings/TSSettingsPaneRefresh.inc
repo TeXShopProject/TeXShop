@@ -263,14 +263,7 @@
     [_latexScriptCommandTextField setStringValue:[defaults stringForKey:LatexScriptCommandKey] ?: @""];
     [_alternateEngineTextField setStringValue:[defaults stringForKey:AlternateEngineKey] ?: @""];
     [_defaultCommandMatrix selectCellWithTag:[defaults integerForKey:DefaultCommandKey]];
-    [_engineTextField setStringValue:[defaults stringForKey:DefaultEngineKey] ?: @""];
-    if ([defaults integerForKey:DefaultCommandKey] == 2)
-    {
-        [_engineTextField setEditable:YES];
-        [_engineTextField setSelectable:YES];
-    }
-    if ([defaults integerForKey:DefaultCommandKey] == 2)
-        [_engineTextField setEditable:YES];
+    [self refreshDefaultEngineFromDefaults:defaults];
     [_defaultScriptMatrix selectCellWithTag:[defaults integerForKey:DefaultScriptKey]];
     if (![_syncMatrix selectCellWithTag:[defaults integerForKey:SyncMethodKey]])
     {

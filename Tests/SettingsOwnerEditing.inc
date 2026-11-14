@@ -3,6 +3,8 @@
 @interface TSPreferences (EditingRegression)
 - (BOOL)windowShouldClose:(NSWindow *)window;
 - (BOOL)finishPreferenceEditing:(BOOL)showError;
+- (void)refreshTypesettingSettingsFromDefaults:(NSUserDefaults *)defaults;
+- (void)menuNeedsUpdate:(NSMenu *)menu;
 @end
 static NSUInteger ownerAlertCount;
 static NSAlert *capturedOwnerAlert;
@@ -25,12 +27,63 @@ static void EditOwnerField(TSPreferences *owner, NSTextField *field, NSString *t
     editor.string = text;
     [owner controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:field]];
 }
+static NSURL *ownerOpenedURL;
+static BOOL OwnerOpenURL(id receiver, SEL selector, NSURL *url) { ownerOpenedURL=url; return YES; }
+// Engine File lists the engine files of the Engines folder, as a document's toolbar does,
+// and follows the folder while Settings is open.
+static void CheckOwnerEngineFile(TSPreferences *owner, TSSettingsWindowController *shell) {
+    NSFileManager *files=NSFileManager.defaultManager;
+    NSString *savedEnginePath=EnginePath;
+    NSString *engines=[NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"texshop-engine-files-%d",getpid()]];
+    [files removeItemAtPath:engines error:NULL];
+    [files createDirectoryAtPath:[engines stringByAppendingPathComponent:@"Folder.engine"] withIntermediateDirectories:YES attributes:nil error:NULL];
+    for(NSString *file in @[@"XeLaTeX.engine",@"lualatex.ENGINE",@"pdflatexmk.engine",@"notes.txt"])
+        [@"" writeToFile:[engines stringByAppendingPathComponent:file] atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+    EnginePath=engines;
+    [TSIsolatedAppKitDefaults removeObjectForKey:DefaultEngineKey];
+    [TSIsolatedAppKitDefaults setInteger:1 forKey:DefaultCommandKey];
+    [shell selectCategoryIdentifier:TSSettingsCategoryTypesetting];
+    [owner refreshTypesettingSettingsFromDefaults:TSIsolatedAppKitDefaults];
+    NSPopUpButton *engineFile=[owner valueForKey:@"defaultEnginePopup"];
+    NSArray *(^titles)(void)=^NSArray *{NSMutableArray *list=[NSMutableArray array];for(NSMenuItem *item in engineFile.itemArray)[list addObject:item.isSeparatorItem?@"-":item.title];return list;};
+    Check([titles() isEqual:@[@"lualatex",@"pdflatexmk",@"XeLaTeX"]],@"Engine File lists the engine files of the folder in the toolbar's order");
+    Check([[TSIsolatedAppKitDefaults stringForKey:DefaultEngineKey] isEqual:@"LuaLaTeX"] && [engineFile.titleOfSelectedItem isEqual:@"lualatex"],@"The factory engine file is LuaLaTeX, found in any case");
+    Check(!engineFile.enabled,@"Engine File is dimmed unless the engine file is chosen above");
+    NSButton *edit=[owner valueForKey:@"editEnginesButton"];
+    Check(edit.enabled && [edit.identifier isEqual:@"settings.default-engine-edit"] && edit.action==@selector(openEnginesFolder:) && edit.superview==engineFile.superview,@"Edit Engine List stays available beside Engine File");
+    NSMatrix *command=[owner valueForKey:@"defaultCommandMatrix"];
+    Check([[command.cells valueForKey:@"tag"] isEqual:@[@1,@0,@2]] && [[command.cells.firstObject title] length]>0,@"LaTeX comes first, then plain TeX, then the engine file");
+    [command selectCellWithTag:2];[owner defaultProgramChanged:command];
+    Check(engineFile.enabled && [TSIsolatedAppKitDefaults integerForKey:DefaultCommandKey]==2,@"Choosing the engine file enables Engine File");
+    Check([[TSIsolatedAppKitDefaults objectForKey:DefaultEngineKey] isEqual:@"lualatex"],@"Choosing the engine file stores the engine file shown");
+    [engineFile selectItemWithTitle:@"XeLaTeX"];[owner defaultEngineChosen:engineFile];
+    Check([[TSIsolatedAppKitDefaults stringForKey:DefaultEngineKey] isEqual:@"XeLaTeX"],@"Choosing in Engine File stores the file name");
+    [files removeItemAtPath:[engines stringByAppendingPathComponent:@"XeLaTeX.engine"] error:NULL];
+    [@"" writeToFile:[engines stringByAppendingPathComponent:@"Added.engine"] atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+    [owner menuNeedsUpdate:engineFile.menu];
+    NSString *missing=[NSString stringWithFormat:NSLocalizedString(@"%@ (Not Found)",nil),@"XeLaTeX"];
+    Check([titles() isEqual:@[missing,@"-",@"Added",@"lualatex",@"pdflatexmk"]] && [engineFile.titleOfSelectedItem isEqual:missing],@"The list follows the folder, and a missing engine file stays shown");
+    Check([[TSIsolatedAppKitDefaults stringForKey:DefaultEngineKey] isEqual:@"XeLaTeX"],@"Refreshing the list does not change the setting");
+    [engineFile selectItemWithTitle:@"Added"];[owner defaultEngineChosen:engineFile];
+    Check([[TSIsolatedAppKitDefaults stringForKey:DefaultEngineKey] isEqual:@"Added"] && [titles() isEqual:@[@"Added",@"lualatex",@"pdflatexmk"]],@"Choosing another engine file drops the missing one");
+    Method open=class_getInstanceMethod(NSWorkspace.class,@selector(openURL:));
+    IMP original=method_setImplementation(open,(IMP)OwnerOpenURL);
+    [files removeItemAtPath:engines error:NULL];ownerOpenedURL=nil;
+    [owner openEnginesFolder:edit];
+    method_setImplementation(open,original);
+    BOOL isFolder=NO;
+    Check([ownerOpenedURL.path isEqual:engines] && [files fileExistsAtPath:engines isDirectory:&isFolder] && isFolder,@"Edit Engine List opens the Engines folder, made again if it was removed");
+    [command selectCellWithTag:1];[owner defaultProgramChanged:command];
+    Check(!engineFile.enabled && [[TSIsolatedAppKitDefaults stringForKey:DefaultEngineKey] isEqual:@"Added"],@"Going back to LaTeX dims Engine File and keeps its choice");
+    [files removeItemAtPath:engines error:NULL];
+    EnginePath=savedEnginePath;
+}
 static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *shell) {
     Method alertMethod = class_getInstanceMethod(NSAlert.class, @selector(beginSheetModalForWindow:completionHandler:));
     IMP originalAlert = method_setImplementation(alertMethod, (IMP)CaptureOwnerAlert);
     NSArray *contract=[NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfURL:[fixture URLForResource:@"SettingsInputRules" withExtension:@"json"]] options:0 error:NULL];
     NSMapTable *rules=[owner valueForKey:@"inputRules"];
-    Check(contract.count==19 && rules.count==contract.count,@"All nineteen independent input rules are installed");
+    Check(contract.count==18 && rules.count==contract.count,@"All eighteen independent input rules are installed");
     for(NSDictionary *entry in contract){
         NSTextField *field=[owner valueForKey:entry[@"outlet"]];TSPreferenceInput *rule=[rules objectForKey:field];
         Check(rule && [rule.key isEqual:entry[@"key"]] && rule.kind==[entry[@"kind"]integerValue] && rule.minimum==[entry[@"minimum"]doubleValue] && rule.maximum==[entry[@"maximum"]doubleValue] && rule.allowsEmpty==[entry[@"allowsEmpty"]boolValue],[NSString stringWithFormat:@"Independent rule contract for %@",entry[@"outlet"]]);
@@ -113,6 +166,7 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     Check(profileChoice.selectedTag==TSEngineProfileUpLaTeXDvipdfmx && [TSIsolatedAppKitDefaults integerForKey:tabsKey]==22,@"The applied profile is shown and other settings stay");
     [shell selectCategoryIdentifier:TSSettingsCategoryGeneral];
     Check([[TSIsolatedAppKitDefaults stringForKey:LatexGSCommandKey] isEqual:profileCommand],@"Later navigation cannot restore the pre-profile text");
+    CheckOwnerEngineFile(owner,shell);
     // Whole-number fields: digits only while typing, and a stepper beside each.
     [shell selectCategoryIdentifier:TSSettingsCategoryEditor];
     [shell.window.contentView layoutSubtreeIfNeeded];
