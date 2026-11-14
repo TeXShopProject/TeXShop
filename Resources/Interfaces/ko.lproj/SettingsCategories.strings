@@ -143,7 +143,7 @@
 "catalog.spelling.0.1.title" = "맞춤법 자동 수정";
 "catalog.spelling.0.2.title" = "사전";
 "group.spelling.1.title" = "방식";
-"catalog.spelling.1.0.title" = "LaTeX 구조를 고려한 맞춤법 검사 사용(권장)";
+"catalog.spelling.1.0.title" = "LaTeX 구문을 고려한 맞춤법 검사 사용(권장)";
 "catalog.spelling.1.0.note" = "명령, 수식, 주석, 참조 인수를 제외한 본문을 검사합니다.";
 "catalog.spelling.1.1.title" = "LaTeX 제외 규칙 편집…";
 "catalog.spelling.1.2.title" = "기존 방식";

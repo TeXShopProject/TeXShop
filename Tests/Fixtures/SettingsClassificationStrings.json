@@ -220,8 +220,8 @@
         "pt": "Usar verificação adaptada ao LaTeX (recomendado)",
         "pt-PT": "Usar verificação adaptada ao LaTeX (recomendado)",
         "ro": "Folosește verificarea adaptată la LaTeX (recomandat)",
-        "ko": "LaTeX 구조를 고려한 맞춤법 검사 사용(권장)",
-        "zh_CN": "使用考虑LaTeX结构的拼写检查（推荐）"
+        "ko": "LaTeX 구문을 고려한 맞춤법 검사 사용(권장)",
+        "zh_CN": "使用考虑LaTeX语法的拼写检查（推荐）"
       }
     },
     "Use legacy spell checking": {

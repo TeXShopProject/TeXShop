@@ -143,7 +143,7 @@
 "catalog.spelling.0.1.title" = "自动更正";
 "catalog.spelling.0.2.title" = "词典";
 "group.spelling.1.title" = "方式";
-"catalog.spelling.1.0.title" = "使用考虑LaTeX结构的拼写检查（推荐）";
+"catalog.spelling.1.0.title" = "使用考虑LaTeX语法的拼写检查（推荐）";
 "catalog.spelling.1.0.note" = "检查正文，排除命令、公式、注释和引用参数。";
 "catalog.spelling.1.1.title" = "编辑LaTeX排除规则…";
 "catalog.spelling.1.2.title" = "传统方式";
