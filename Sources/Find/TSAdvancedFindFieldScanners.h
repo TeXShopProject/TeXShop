@@ -38,10 +38,6 @@ NS_SWIFT_NAME(AdvancedFindReplacementScanner)
 + (instancetype)new NS_UNAVAILABLE;
 @end
 
-/// The colors of the find and replace fields, in light and dark windows: the regular expression roles have no theme
-/// colors, so the panel has its own. Errors are red and underlined, incompatibilities orange with a dotted line.
-FOUNDATION_EXPORT TSSyntaxColorScheme *TSAdvancedFindFieldColorScheme(void) NS_SWIFT_NAME(AdvancedFindFieldColorScheme());
-
 /// `string` with the attributes of `scanner`'s tokens over `attributes`, for a cell of the multiple replacement rules.
 FOUNDATION_EXPORT NSAttributedString *TSAdvancedFindColoredString(NSString *string, id<TSSyntaxScanner> scanner, TSSyntaxColorScheme *scheme,
                                                                   NSDictionary<NSAttributedStringKey, id> *attributes);

@@ -114,6 +114,7 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
 
 - (void)dealloc
 {
+    [self tearDownFieldColoring];
     [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
@@ -130,7 +131,6 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     field.automaticTextReplacementEnabled = NO;
     field.automaticSpellingCorrectionEnabled = NO;
     field.continuousSpellCheckingEnabled = NO;
-    field.font = [NSFont monospacedSystemFontOfSize:NSFont.systemFontSize + 1 weight:NSFontWeightRegular];
     field.textContainerInset = NSMakeSize(0, 4);
     field.verticallyResizable = YES;
     field.horizontallyResizable = NO;
@@ -233,9 +233,9 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
 {
     self.findFieldView = [self makeField];
     self.replaceFieldView = [self makeField];
-    [self setUpFieldColoring];
     self.findBox = [self boxForField:self.findFieldView symbol:@"magnifyingglass" tag:0];
     self.replaceBox = [self boxForField:self.replaceFieldView symbol:@"pencil" tag:1];
+    [self setUpFieldColoring];
     self.findBox.textView.accessibilityLabel = TSLocalized(@"AdvancedFind.FindLabel", @"Find:");
     self.replaceBox.textView.accessibilityLabel = TSLocalized(@"AdvancedFind.ReplaceLabel", @"Replace:");
 

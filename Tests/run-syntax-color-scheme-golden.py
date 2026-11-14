@@ -4,7 +4,9 @@
 -[TSDocument changeColorsUsingDictionary:] turns a theme into the attribute
 dictionaries of syntax coloring: commands, comments, the marker and the three
 kinds of brackets, index, footnote, the seven expl3 colors, the five XML colors,
-the fullwidth highlight, the active line, and the brace and content highlights.
+the fullwidth highlight, the active line, and the brace and content highlights; and the roles of
+regular expressions in the find and replace fields, which take keys of the source (and the marks of errors and
+incompatibilities, which take none).
 Every bundled theme, the reserve copies of Lite and Dark, and made-up themes
 that lack the newer keys, the basic syntax colors or every key are applied in a light and a dark window. The color
 space, components and alpha of every color are compared with
@@ -195,6 +197,15 @@ int main(int argc, const char **argv) { @autoreleasepool {
             Print(@"highlightContent", highlightContentColorDict);
             printf("  editorBackground %s\n  editorText %s\n  invisible %s\n", Describe(doc->textView1.backgroundColor).UTF8String,
                    Describe(doc->textView1.textColor).UTF8String, Describe(InvisibleColor).UTF8String);
+            // The roles of the find and replace fields with "Regular expression" on, from the keys of the source.
+            NSDictionary<NSString *, NSNumber *> *regex = @{@"regexCharacterClass": @(TSSyntaxRoleRegexCharacterClass),
+                @"regexEscape": @(TSSyntaxRoleRegexEscape), @"regexBackreference": @(TSSyntaxRoleRegexBackreference),
+                @"regexQuantifier": @(TSSyntaxRoleRegexQuantifier), @"regexAnchor": @(TSSyntaxRoleRegexAnchor),
+                @"regexSymbol": @(TSSyntaxRoleRegexSymbol), @"regexIncompatible": @(TSSyntaxRoleRegexIncompatible),
+                @"invalid": @(TSSyntaxRoleInvalid)};
+            for (NSString *role in @[@"regexCharacterClass", @"regexEscape", @"regexBackreference", @"regexQuantifier", @"regexAnchor",
+                                     @"regexSymbol", @"regexIncompatible", @"invalid"])
+                Print(role, [doc.syntaxColorScheme attributesForRole:(TSSyntaxRole)regex[role].integerValue]);
         }
     }
     return 0;

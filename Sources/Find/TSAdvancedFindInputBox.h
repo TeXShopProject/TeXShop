@@ -14,6 +14,8 @@ NS_SWIFT_NAME(AdvancedFindInputBox)
 @property (nonatomic, readonly) NSButton *clearButton;
 @property (nonatomic, readonly) NSTextField *statusLabel;
 @property (nonatomic, getter=isFocused) BOOL focused;
+/// The background inside the border; nil: that of text fields.
+@property (nonatomic, strong, nullable) NSColor *fillColor;
 
 /// `symbolName` is the SF Symbol of the history button (magnifyingglass for find, pencil for replace).
 - (instancetype)initWithTextView:(NSTextView *)textView symbolName:(NSString *)symbolName

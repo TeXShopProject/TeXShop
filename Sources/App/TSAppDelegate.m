@@ -62,6 +62,8 @@
 #import "TSPreferenceLaunch.h"
 #import "TSMultipleReplaceMenu.h"
 #import "TSAdvancedFindMenu.h"
+#import "TSAdvancedFindFieldStyle.h"
+#import "TSPreferenceEffects.h"
 
 #include <sys/sysctl.h>     // for testForIntel
 #include <mach/machine.h>   // for testForIntel
@@ -78,6 +80,48 @@
 
 @class TSTextEditorWindow;
 
+
+// BEGIN Advanced Find field style
+// The Advanced Find panel's find and replace fields and the rules of Multiple Replace look like the macro editor's
+// contents: the opaque text, background and insertion point colors of the theme of a light or a dark window, the
+// source font, and syntax coloring as the source does it, in the theme's colors (none when it is off).
+static TSAdvancedFindFieldStyle *TSAdvancedFindFieldStyleForTheme(NSDictionary *theme, BOOL dark)
+{
+    TSColorSupport *colors = [TSColorSupport sharedInstance];
+    NSColor *(^opaque)(NSString *) = ^NSColor *(NSString *key) {
+        return [colors colorFromDictionary:theme andKey:key] ?: [[colors colorForKey:key fromDictionary:theme isWindowDark:dark] colorWithAlphaComponent:1];
+    };
+    TSSyntaxColorScheme *scheme = [SUD boolForKey:SyntaxColoringEnabledKey] ? [[TSSyntaxColorScheme alloc] initWithTheme:theme ?: @{} dark:dark] : nil;
+    TSMutableSyntaxTeXOptions *options = [TSMutableSyntaxTeXOptions new];
+    options.texCharacter = (unichar)g_texChar;
+    options.colorsExpl3 = [SUD boolForKey:expl3SyntaxColoringKey];
+    options.makesAtLetter = [SUD boolForKey:MakeatletterEnabledKey];
+    options.colorsIndex = [SUD boolForKey:IndexColorStartKey];
+    options.colorsFootnote = [SUD boolForKey:SyntaxColorFootnoteKey];
+    options.marksFullwidthSymbols = [scheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;
+    NSFont *font = nil;
+    id data = [SUD objectForKey:DocumentFontKey];
+    if ([data isKindOfClass:NSData.class]) {
+        @try { font = [NSUnarchiver unarchiveObjectWithData:data]; } @catch (NSException *exception) { font = nil; }
+    }
+    return [[TSAdvancedFindFieldStyle alloc] initWithScheme:scheme texOptions:options font:[font isKindOfClass:NSFont.class] ? font : [NSFont userFontOfSize:12.0]
+                                                  textColor:opaque(@"EditorText") backgroundColor:opaque(@"EditorBackground")
+                                        insertionPointColor:opaque(@"EditorInsertionPoint")];
+}
+
+static void TSInstallAdvancedFindFieldStyle(void)
+{
+    TSAdvancedFindFieldStyle.provider = ^TSAdvancedFindFieldStyle *(BOOL dark) {
+        return TSAdvancedFindFieldStyleForTheme(dark ? darkColors : liteColors, dark);
+    };
+    // The themes, syntax coloring on or off, expl3 and \makeatletter, and the source font.
+    for (NSNotificationName name in @[SourceColorChangedNotification, DocumentSyntaxColorNotification, TSPreferenceNeedsRecolorNotification,
+                                      DocumentFontChangedNotification])
+        [NSNotificationCenter.defaultCenter addObserverForName:name object:nil queue:nil usingBlock:^(NSNotification *notification) {
+            [TSAdvancedFindFieldStyle styleDidChange];
+        }];
+}
+// END Advanced Find field style
 
 @interface TSAppDelegate (Private)
 
@@ -789,6 +833,7 @@
 	[self configureExternalEditor];
 	[self configureMovieMenu];
     [[TSColorSupport sharedInstance]  initializeColors];
+    TSInstallAdvancedFindFieldStyle();
     
     if ( ![[NSUserDefaults standardUserDefaults] boolForKey:TagMenuInMenuBarKey])
     {   

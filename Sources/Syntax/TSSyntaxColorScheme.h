@@ -22,7 +22,8 @@ NS_SWIFT_NAME(SyntaxColorScheme)
 + (instancetype)new NS_UNAVAILABLE;
 
 /// Only attributes that temporary attributes can show: colors and underlines. Empty when the role is shown as plain
-/// text, as the regular expression roles are until they get theme keys, or when the theme has no color for it.
+/// text, as the marks of errors and incompatibilities are (their colors are the find panel's), or when the theme has
+/// no color for it.
 - (NSDictionary<NSAttributedStringKey, id> *)attributesForRole:(TSSyntaxRole)role;
 /// The background of the line holding the insertion point.
 @property (nonatomic, readonly, copy) NSDictionary<NSAttributedStringKey, id> *activeLineAttributes;

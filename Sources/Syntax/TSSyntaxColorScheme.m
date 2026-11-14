@@ -48,6 +48,15 @@ static const TSSyntaxRoleThemeKey TSSyntaxRoleThemeKeys[] = {
     // A placeholder is underlined, to tell it from $ and & in the same color.
     {TSSyntaxRolePlaceholder, @"SyntaxMarker", TSSyntaxThemeFallbackNone, YES},
     {TSSyntaxRoleMark, @"SyntaxMarker", TSSyntaxThemeFallbackNone, NO},
+    // Regular expressions and replacement templates in the find and replace fields use the colors that the source
+    // already has, each with the fallback that its key has there. Escapes take a color that every bundled theme sets
+    // for its own background (not XMLSpecial, the same dark blue in every theme).
+    {TSSyntaxRoleRegexCharacterClass, @"SyntaxCommand", TSSyntaxThemeFallbackNone, NO},
+    {TSSyntaxRoleRegexEscape, @"explIntenseFunction", TSSyntaxThemeFallbackBuiltIn, NO},
+    {TSSyntaxRoleRegexBackreference, @"explVariable", TSSyntaxThemeFallbackBuiltIn, NO},
+    {TSSyntaxRoleRegexQuantifier, @"SyntaxMarker", TSSyntaxThemeFallbackNone, NO},
+    {TSSyntaxRoleRegexAnchor, @"explFunction", TSSyntaxThemeFallbackBuiltIn, NO},
+    {TSSyntaxRoleRegexSymbol, @"SyntaxMarkerParen", TSSyntaxThemeFallbackBuiltIn, NO},
 };
 
 static NSDictionary<NSAttributedStringKey, id> *TSSyntaxAttributes(NSAttributedStringKey key, NSColor *_Nullable color)
