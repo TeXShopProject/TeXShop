@@ -1692,6 +1692,8 @@ This macro is an AppleScript macro, described below. A text macro which does the
 Text in the macro will be inserted into the source file. Each occurrence of the string \#SEL\# will be replaced by the text selected when the macro was invoked. If no text was selected, \#SEL\# will be replaced with an empty string. Each occurrence of \#PASTE\# will be replaced by the text on the clipboard, or with an empty string if the clipboard holds no text. The cursor will be placed at the end of the inserted text unless the text contains the string \#INS\#, in which case the cursor will be placed at that location.
 
 Using this knowledge, it is easy to understand and modify the default macros.
+
+In the Macro Editor, these placeholders, the marks • of a macro, and the paths that an AppleScript macro is given (described below) are shown as rounded tokens which say what they stand for, such as {\bf Selected Text}; the macro itself keeps the strings as they are written, so copying and saving work as before. Type a placeholder, or choose it from the {\bf Insert} menu below the contents; the help button at the right of that menu lists all of them, for TeX and AppleScript macros. Deleting next to a token deletes all of it.
 		
 \section{Rearranging Macros}
 

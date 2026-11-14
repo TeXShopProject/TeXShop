@@ -306,8 +306,20 @@
 /* Asked when a conversion is chosen with nothing selected */
 "Apply \"%@\" to the whole document?" = "Apply “%@” to the whole document?";
 
-/* Macro editor placeholder guide */
-"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help).";
+/* Macro editor › tokens for the paths and the name that an AppleScript macro is given (#FILEPATH# and the others) */
+"File Path" = "File Path";
+"PDF Path" = "PDF Path";
+"DVI Path" = "DVI Path";
+"PS Path" = "PS Path";
+"Log Path" = "Log Path";
+"AUX Path" = "AUX Path";
+"IND Path" = "IND Path";
+"BBL Path" = "BBL Path";
+"HTML Path" = "HTML Path";
+"Path Without Extension" = "Path Without Extension";
+"TeX Path" = "TeX Path";
+"Document Name" = "Document Name";
+"Folder Path" = "Folder Path";
 /* Key binding editor placeholder guide */
 
 /* Edit › Mark */

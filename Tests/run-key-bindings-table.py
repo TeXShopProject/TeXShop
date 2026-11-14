@@ -22,7 +22,7 @@ def run(text):
         binary = tmp / 'test'
         subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-Werror', '-Wno-deprecated-declarations', '-mmacosx-version-min=14.6', '-DNSBeep=TSTestBeep',
                         '-include', str(root / 'Tests/KeyBindingsBeep.h'), '-framework', 'Cocoa', '-I', str(root / 'Tests'), *include_args(root),
-                        str(root / 'Tests/KeyBindingsTable.m'), str(controller), str(root / 'Sources/App/GlobalData.m'), str(root / 'Sources/App/globals.m'), '-o', str(binary)], check=True)
+                        str(root / 'Tests/KeyBindingsTable.m'), str(controller), str(root / 'Sources/Editor/TSPlaceholderToken.m'), str(root / 'Sources/App/GlobalData.m'), str(root / 'Sources/App/globals.m'), '-o', str(binary)], check=True)
         return subprocess.run([str(binary), str(root / 'Resources/TeXShop/Keyboard/autocompletion.plist')], capture_output=True, text=True, timeout=120)
 original = source.read_text()
 result = run(original); print(result.stdout, end=''); print(result.stderr, end='', file=sys.stderr)

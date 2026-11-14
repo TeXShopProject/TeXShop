@@ -14,10 +14,10 @@
 #import "TSPreferenceEffects.h"
 #import "TSAdvancedFindTextView.h"
 #import "TSAdvancedFindPanelController.h"
+#import "TSTextView.h"
+#import "TSMacroContentTokens.h"
 #import "globals.h"
 // The source's text view and the Advanced Find controller are not needed here, only their classes.
-@interface TSTextView : NSTextView
-@end
 @implementation TSTextView
 @end
 @implementation TSAdvancedFindController

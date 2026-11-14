@@ -11,9 +11,9 @@
 #import "TSSyntaxTeXScanner.h"
 #import "TSAdvancedFindTextView.h"
 #import "TSAdvancedFindPanelController.h"
+#import "TSTextView.h"
+#import "TSMacroContentTokens.h"
 // Only the classes the editor's methods name.
-@interface TSTextView : NSTextView
-@end
 @implementation TSTextView
 @end
 @implementation TSAdvancedFindController
