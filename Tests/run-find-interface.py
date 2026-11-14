@@ -46,7 +46,8 @@ int main(int argc,char **argv){@autoreleasepool{
  NSArray *documents=@[[FindDocumentProbe new],[FindDocumentProbe new]];
  for(FindDocumentProbe *document in documents)for(NSTextView *view in document.views)TSConfigureFindInterface(view,launch,NO);
  NSMutableArray *scrollViews=[NSMutableArray array];
- for(FindDocumentProbe *document in documents)for(NSTextView *view in document.views){NSScrollView *scroll=[NSScrollView new];scroll.documentView=view;[scrollViews addObject:scroll];}
+ for(FindDocumentProbe *document in documents)for(NSTextView *view in document.views){NSWindow *window=[[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,400,300) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];window.releasedWhenClosed=NO;NSScrollView *scroll=[[NSScrollView alloc] initWithFrame:window.contentView.bounds];scroll.documentView=view;[window.contentView addSubview:scroll];[scrollViews addObject:scroll];}
+ NSMenuItem *findItem=[[NSMenuItem alloc] initWithTitle:@"Find" action:@selector(performFindPanelAction:) keyEquivalent:@"f"];findItem.tag=NSFindPanelActionShowFindPanel;
  NSInteger effective=launch;
  for(NSNumber *method in @[@1,@3,@0,@2,@0,@1,@3,@1])for(NSNumber *incremental in @[@YES,@NO]){
   for(FindDocumentProbe *document in documents)for(NSTextView *view in document.highlightedViews)[TSAdvancedFindHighlights highlightsForTextStorage:view.textStorage].ranges=@[[NSValue valueWithRange:NSMakeRange(0,0)]];
@@ -59,6 +60,8 @@ int main(int argc,char **argv){@autoreleasepool{
    Check(view.usesFindBar==(effective==1) && view.usesFindPanel==(effective!=1),@"All source split views, console and log follow the effective find interface");
    for(NSTextView *lit in document.highlightedViews)Check(([TSAdvancedFindHighlights existingHighlightsForTextStorage:lit.textStorage].ranges.count==0)==(method.integerValue!=3),@"Leaving the Advanced Find panel removes its highlights");
    if(launch!=2 && method.integerValue!=2)Check(view.incrementalSearchingEnabled==(effective==1&&incremental.boolValue),@"Incremental searching is enabled only in the requested find bar");
+   // Find… shows the bar in a view that used the find panel before (only the bar is asked for: the panel would open on screen).
+   if(effective==1){view.enclosingScrollView.findBarVisible=NO;[view performFindPanelAction:findItem];Check(view.enclosingScrollView.findBarVisible,@"Find shows the find bar after switching to it");}
   }
  }
  puts("PASS: extracted document observer and registration, two documents/four real text views, highlights of the source, console, log and Experiment windows, panel/bar/OgreKit and incremental state");
@@ -77,11 +80,12 @@ with tempfile.TemporaryDirectory(prefix='texshop-find-interface-')as tmp:
   for view in ['textView1','textView2','outputText','self.logTextView']:
    old='TSConfigureFindInterface('+view+', current, incremental);';assert program.count(old)==1;cases.append((view,program.replace(old,';'),original,'All source split views'))
   cases.append(('ignore-startup-ogre',program.replace('current == 2 || (initial != nil && initial.integerValue == 2)','current == 2 || (initial != nil && NO)'),original,'All source split views'))
-  cases.append(('bar-flag',program,original.replace('view.usesFindBar = method == TSFindMethodFindBar;','view.usesFindBar = NO;'),'All source split views'))
-  cases.append(('panel-flag',program,original.replace('view.usesFindPanel = method != TSFindMethodFindBar;','view.usesFindPanel = YES;'),'All source split views'))
-  cases.append(('incremental',program,original.replace('method == TSFindMethodFindBar && incremental','NO && incremental'),'Incremental searching'))
+  cases.append(('bar-flag',program,original.replace('view.usesFindBar = YES;','view.usesFindBar = NO;'),'All source split views'))
+  cases.append(('panel-flag',program,original.replace('view.usesFindPanel = NO;','view.usesFindPanel = YES;'),'Find shows the find bar after switching to it'))
+  cases.append(('bar-before-panel-off',program,original.replace('        view.usesFindPanel = NO;\n        view.usesFindBar = YES;','        view.usesFindBar = YES;\n        view.usesFindPanel = NO;'),'Find shows the find bar after switching to it'))
+  cases.append(('incremental',program,original.replace('bar && incremental','NO && incremental'),'Incremental searching'))
   cases.append(('reverse-panel',program.replace('NSInteger current = [SUD integerForKey:FindMethodKey];','NSInteger current = [SUD integerForKey:FindMethodKey]; if (current == 0) return;'),original,'Switching to the panel closes every visible find bar'))
-  cases.append(('visible-bar',program,original.replace('if (method != TSFindMethodFindBar) view.enclosingScrollView.findBarVisible = NO;',';'),'Switching to the panel closes every visible find bar'))
+  cases.append(('visible-bar',program,original.replace('view.enclosingScrollView.findBarVisible = NO;',';'),'Switching to the panel closes every visible find bar'))
   cases.append(('keep-console-highlights',program.replace('{textView1, outputText, self.logTextView, scrapTextView, self.experimentConsole.outputText}','{textView1, self.logTextView, scrapTextView, self.experimentConsole.outputText}'),original,'Leaving the Advanced Find panel removes its highlights'))
   cases.append(('keep-highlights',program.replace('[[TSAdvancedFindHighlights existingHighlightsForTextStorage:storage] removeAll];',';'),original,'Leaving the Advanced Find panel removes its highlights'))
   for name,body,interface,expected in cases:
