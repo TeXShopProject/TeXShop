@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // The coloring of the Advanced Find panel's find and replace fields with the shared syntax coloring (layer 3,
-// TSSyntaxHighlighter), in the source's theme and font, and the matching brackets of the find field. With "Regular
+// TSSyntaxHighlighter), in the source's theme, a monospaced font, and the matching brackets of the find field. With "Regular
 // expression" on, the fields are read as the engine reads them, and the replace field knows the groups of the current
 // pattern; with it off, as the source reads TeX.
 #import "TSAdvancedFindPanelController+Private.h"
@@ -93,7 +93,8 @@ static void *TSFieldAppearanceContext = &TSFieldAppearanceContext;
     [self applyFieldStyle];
 }
 
-/// As the macro editor's contents: the theme's text, background and insertion point colors, and the source font.
+/// As the macro editor's contents: the theme's text, background and insertion point colors; a monospaced font at
+/// the size of the source font.
 - (void)applyFieldStyle
 {
     TSAdvancedFindFieldStyle *style = [TSAdvancedFindFieldStyle styleForWindow:self.window];

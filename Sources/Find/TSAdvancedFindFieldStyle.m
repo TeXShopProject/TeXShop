@@ -83,11 +83,10 @@ static TSAdvancedFindFieldStyle *_Nullable (^TSProvider)(BOOL dark);
 
 - (NSFont *)fieldFont
 {
+    // Monospaced whatever the source font is, so that | and l, 0 and O are told apart in a pattern.
     NSFont *font = self.font;
-    if (!font)
-        return [NSFont monospacedSystemFontOfSize:NSFont.systemFontSize + 1 weight:NSFontWeightRegular];
-    CGFloat size = MIN(MAX(font.pointSize, 11), 16);
-    return size == font.pointSize ? font : ([NSFont fontWithDescriptor:font.fontDescriptor size:size] ?: font);
+    CGFloat size = font ? MIN(MAX(font.pointSize, 11), 16) : NSFont.systemFontSize + 1;
+    return [NSFont monospacedSystemFontOfSize:size weight:NSFontWeightRegular];
 }
 
 - (nullable NSAppearance *)fieldAppearance

@@ -36,8 +36,8 @@ NS_SWIFT_NAME(AdvancedFindFieldStyle)
 /// The colors of the fields: those of `scheme` (none without it), and the marks of errors (red, underlined) and of
 /// what OgreKit reads otherwise (orange, a dotted line), which are not theme colors.
 @property (nonatomic, readonly) TSSyntaxColorScheme *fieldScheme;
-/// The font of the panel's fields: the source font at 11 to 16 points, so that the panel keeps its layout, or a
-/// monospaced font of 14 points without one.
+/// The font of the panel's fields: the system's monospaced font, at the size of the source font kept between 11
+/// and 16 points, so that the panel keeps its layout, or at 14 points without a source font.
 @property (nonatomic, readonly) NSFont *fieldFont;
 /// The appearance that matches `backgroundColor` (nil without one): the field's buttons, its status and the marks
 /// take the colors of a light or a dark background.
