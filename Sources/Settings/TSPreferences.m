@@ -87,6 +87,493 @@ typedef NS_CLOSED_ENUM(NSUInteger, TSSettingsFontDestination) {
 - (void)refreshRuntimePreferences;
 @end
 
+// BEGIN engine profile list
+// The settings an engine profile sets, as Settings names them, each with the value the profile gives it. Shown in
+// the sheet that applies a profile, where it is compared with the settings in use: each value that changes has a
+// checkbox before its name, on at first, and a dot before the value; the others are dimmed. A value turned off is
+// gray and struck through, its dot faint, and keeps the setting in use; with every one of them off the sheet cannot
+// apply. On first launch nothing is marked and everything is set. The latexmk choice, and on first launch the
+// profile menu, replace the list at once; the values turned off stay off.
+@interface TSEngineProfileList : NSView
+- (instancetype)initWithProfile:(TSEngineProfile)profile latexmk:(BOOL)latexmk settings:(NSUserDefaults *)settings;
+@property (readonly) TSEngineProfile profile;
+@property (readonly) BOOL latexmk;
+// The button that applies: it cannot be chosen while every value that changes is turned off.
+@property (nonatomic, weak) NSButton *applyButton;
+// Called when the list changes its height.
+@property (copy) void (^heightChanged)(void);
+// What applying writes: the values of the profile in the form chosen, but for those turned off.
+@property (readonly) NSDictionary<TSPreferenceKey, id> *valuesToApply;
+- (IBAction)changeLatexmk:(NSSegmentedControl *)sender;
+- (IBAction)changeProfile:(NSPopUpButton *)sender;
+@end
+
+static CGFloat const TSEngineProfileListWidth = 450, TSEngineProfileListNameWidth = 200, TSEngineProfileListDotWidth = 12;
+
+// One row: the name of the setting, the value shown, whether the value is a command, whether applying the profile
+// changes the setting, and the keys the row writes. In Settings order: Typesetting, then Documents and Spelling for
+// the Japanese profiles. The names are short forms of those in Settings, each on one line.
+static NSArray<NSArray *> *TSEngineProfileListRows(TSEngineProfile profile, BOOL latexmk, NSUserDefaults *settings)
+{
+    NSDictionary<TSPreferenceKey, id> *values = TSEngineProfileValues(profile, latexmk);
+    if (values.count == 0) return @[];
+    NSBundle *bundle = NSBundle.mainBundle;
+    NSString *(^name)(NSString *) = ^NSString *(NSString *key) { return [bundle localizedStringForKey:key value:nil table:@"SettingsCategories"]; };
+    NSString *(^onOff)(TSPreferenceKey) = ^NSString *(TSPreferenceKey key) {
+        return [values[key] boolValue] ? NSLocalizedString(@"On", @"Engine profile list: a setting turned on") : NSLocalizedString(@"Off", @"Engine profile list: a setting turned off");
+    };
+    NSMutableArray *rows = [NSMutableArray array];
+    void (^add)(NSString *, NSString *, BOOL, TSPreferenceKey) = ^(NSString *setting, NSString *shown, BOOL command, TSPreferenceKey key) {
+        [rows addObject:@[setting, shown, @(command), @(settings != nil && !TSEngineProfileSame([settings objectForKey:key], values[key])), @[key]]];
+    };
+    // Only the commands of the method the profile chooses are written.
+    BOOL direct = values[LatexCommandKey] != nil;
+    TSPreferenceKey tex = direct ? TexCommandKey : TexGSCommandKey, latex = direct ? LatexCommandKey : LatexGSCommandKey;
+    add(NSLocalizedString(@"Engine profile row: Typesetting Method", @"Engine profile list: Typesetting Method of Settings > Typesetting"),
+        name(direct ? @"group.typesetting.4.title" : @"group.typesetting.5.title"), NO, DefaultScriptKey);
+    add(NSLocalizedString(@"Engine profile row: plain TeX", @"Engine profile list: the plain TeX command"), values[tex], YES, tex);
+    add(NSLocalizedString(@"Engine profile row: LaTeX", @"Engine profile list: the LaTeX command"), values[latex], YES, latex);
+    add(NSLocalizedString(@"Engine profile row: BibTeX Engine", @"Engine profile list: BibTeX Engine of Settings > Typesetting"), values[BibTeXengineKey], YES, BibTeXengineKey);
+    add(NSLocalizedString(@"Engine profile row: Index Program", @"Engine profile list: Index Program of Settings > Typesetting"), values[MakeIndexEngineKey], YES, MakeIndexEngineKey);
+    add(NSLocalizedString(@"Engine profile row: MetaPost", @"Engine profile list: the MetaPost command"), values[MetaPostEngineKey], YES, MetaPostEngineKey);
+    add(NSLocalizedString(@"Engine profile row: Convert to \\UTF / \\CID", @"Engine profile list: the conversion to the \\UTF and \\CID commands of the otf package, of Settings > Typesetting"),
+        onOff(ptexUtfOutputEnabledKey), NO, ptexUtfOutputEnabledKey);
+    if (values[EncodingKey] != nil) {
+        add(NSLocalizedString(@"Engine profile row: New Document Encoding", @"Engine profile list: the encoding for new documents of Settings > Documents"),
+            NSLocalizedStringFromTable(values[EncodingKey], @"Encodings", @"Fetch localized encoding name"), NO, EncodingKey);
+        add(NSLocalizedString(@"Engine profile row: UTF-8-MAC Conversion", @"Engine profile list: the automatic conversion of UTF-8-MAC to UTF-8 of Settings > Documents"),
+            onOff(AutomaticUTF8MACtoUTF8ConversionKey), NO, AutomaticUTF8MACtoUTF8ConversionKey);
+    }
+    if (values[spellingAutomaticDefaultKey] != nil) {
+        // The dictionary menu shows Automatic Language whenever the automatic choice is on, whatever language is stored.
+        [rows addObject:@[NSLocalizedString(@"Engine profile row: Dictionary", @"Engine profile list: Dictionary of Settings > Spelling"), NSLocalizedString(@"Automatic Language", @""), @NO,
+                          @(settings != nil && ![settings boolForKey:spellingAutomaticDefaultKey]), @[spellingAutomaticDefaultKey, spellingLanguageDefaultKey]]];
+    }
+    return rows;
+}
+
+static NSTextField *TSEngineProfileListField(NSString *text, NSFont *font, CGFloat width)
+{
+    NSTextField *field = [NSTextField wrappingLabelWithString:text];
+    field.font = font;
+    field.selectable = NO;
+    field.preferredMaxLayoutWidth = width;
+    field.translatesAutoresizingMaskIntoConstraints = NO;
+    return field;
+}
+
+@implementation TSEngineProfileList {
+    NSUserDefaults *_settings;
+    NSGridView *_grid;
+    // The keys of the values turned off, kept while latexmk is turned on and off.
+    NSMutableSet<TSPreferenceKey> *_kept;
+    // For each row: its keys, and its checkbox, dot, name and value, to show whether it is set.
+    NSArray<NSArray *> *_rows;
+    NSArray<NSDictionary<NSString *, id> *> *_rowViews;
+}
+
+static CGFloat const TSEngineProfileListPadding = 12;
+// How far the dot of 7 points is raised to stand at the middle of a line of 11 points.
+static CGFloat const TSEngineProfileListDotRaise = 1.5;
+
+- (instancetype)initWithProfile:(TSEngineProfile)profile latexmk:(BOOL)latexmk settings:(NSUserDefaults *)settings
+{
+    self = [super initWithFrame:NSMakeRect(0, 0, TSEngineProfileListWidth + 2 * TSEngineProfileListPadding, 0)];
+    if (self == nil) return nil;
+    self.identifier = @"settings.engine-profile-list";
+    _profile = profile;
+    _latexmk = latexmk;
+    _settings = settings;
+    _kept = [NSMutableSet set];
+    [self showRows];
+    return self;
+}
+
+- (BOOL)isFlipped { return YES; }
+
+- (void)setApplyButton:(NSButton *)button
+{
+    _applyButton = button;
+    [self enableApply];
+}
+
+- (NSDictionary<TSPreferenceKey, id> *)valuesToApply
+{
+    NSMutableDictionary *values = [TSEngineProfileValues(_profile, _latexmk) mutableCopy];
+    [values removeObjectsForKeys:_kept.allObjects];
+    return values;
+}
+
+- (BOOL)rowIsSet:(NSUInteger)index
+{
+    return ![_kept intersectsSet:[NSSet setWithArray:_rows[index][4]]];
+}
+
+// The grid of the rows, and, for each row, its views by role.
+- (NSGridView *)gridForProfile:(TSEngineProfile)profile latexmk:(BOOL)latexmk rows:(NSArray<NSArray *> **)rowsOut views:(NSArray **)viewsOut
+{
+    NSArray<NSArray *> *rows = TSEngineProfileListRows(profile, latexmk, _settings);
+    CGFloat size = NSFont.smallSystemFontSize;
+    NSFont *font = [NSFont systemFontOfSize:size], *mono = [NSFont monospacedSystemFontOfSize:size weight:NSFontWeightRegular];
+    BOOL marks = _settings != nil;
+    CGFloat nameWidth = 0;
+    for (NSArray *row in rows) nameWidth = MAX(nameWidth, ceil([row[0] sizeWithAttributes:@{NSFontAttributeName: font}].width) + 4);
+    nameWidth = MIN(nameWidth, TSEngineProfileListNameWidth);
+    CGFloat const spacing = 12, checkWidth = marks ? 20 : 0, dotWidth = TSEngineProfileListDotWidth;
+    CGFloat valueWidth = TSEngineProfileListWidth - checkWidth - (marks ? dotWidth : 0) - nameWidth - spacing;
+    NSMutableArray *gridRows = [NSMutableArray array], *views = [NSMutableArray array];
+    for (NSArray *row in rows) {
+        BOOL command = [row[2] boolValue], changes = [row[3] boolValue];
+        // A command breaks only at its spaces: a word joiner after each hyphen and slash keeps an option whole.
+        NSString *value = command ? [[row[1] stringByReplacingOccurrencesOfString:@"-" withString:@"-\u2060"]
+                                        stringByReplacingOccurrencesOfString:@"/" withString:@"/\u2060"] : row[1];
+        NSMutableDictionary *rowViews = [NSMutableDictionary dictionary];
+        NSMutableArray *cells = [NSMutableArray array];
+        // A name stands on one line.
+        NSTextField *nameField = [NSTextField labelWithString:row[0]];
+        nameField.font = font;
+        nameField.selectable = NO;
+        nameField.translatesAutoresizingMaskIntoConstraints = NO;
+        rowViews[@"name"] = nameField;
+        rowViews[@"value"] = TSEngineProfileListField(value, command ? mono : font, valueWidth);
+        if (marks) {
+            if (changes) {
+                NSButton *check = [NSButton checkboxWithTitle:@"" target:self action:@selector(changeRow:)];
+                check.controlSize = NSControlSizeSmall;
+                [check sizeToFit];
+                check.identifier = @"settings.engine-profile-list.set";
+                check.tag = (NSInteger)views.count;
+                check.accessibilityLabel = row[0];
+                check.state = [_kept intersectsSet:[NSSet setWithArray:row[4]]] ? NSControlStateValueOff : NSControlStateValueOn;
+                check.translatesAutoresizingMaskIntoConstraints = NO;
+                rowViews[@"check"] = check;
+                [cells addObject:check];
+            } else [cells addObject:NSGridCell.emptyContentView];
+        }
+        NSTextField *dot = nil;
+        if (marks) {
+            dot = TSEngineProfileListField(changes ? @"\u25CF" : @"", [NSFont systemFontOfSize:7], dotWidth);
+            dot.identifier = changes ? @"settings.engine-profile-list.changes" : @"settings.engine-profile-list.same";
+            rowViews[@"dot"] = dot;
+        }
+        [cells addObject:rowViews[@"name"]];
+        if (marks) [cells addObject:dot];
+        [cells addObject:rowViews[@"value"]];
+        [gridRows addObject:cells];
+        [views addObject:rowViews];
+    }
+    NSGridView *grid = [NSGridView gridViewWithViews:gridRows];
+    grid.identifier = @"settings.engine-profile-list.rows";
+    grid.rowSpacing = 5;
+    grid.columnSpacing = 0;
+    grid.rowAlignment = NSGridRowAlignmentFirstBaseline;
+    NSInteger column = 0;
+    if (marks) [grid columnAtIndex:column++].width = checkWidth;
+    NSInteger nameColumn = column++;
+    [grid columnAtIndex:nameColumn].width = nameWidth;
+    [grid columnAtIndex:nameColumn].trailingPadding = spacing;
+    if (marks) [grid columnAtIndex:column++].width = dotWidth;
+    [grid columnAtIndex:column].width = valueWidth;
+    // The checkbox stands at the middle of the first line of its row; the dot is raised there from the baseline.
+    CGFloat middle = (font.ascender + font.descender) / 2;
+    for (NSDictionary *rowViews in views) {
+        NSView *check = rowViews[@"check"];
+        if (check == nil) continue;
+        NSGridCell *cell = [grid cellForView:check];
+        cell.yPlacement = NSGridCellPlacementNone;
+        cell.customPlacementConstraints = @[[check.centerYAnchor constraintEqualToAnchor:[rowViews[@"name"] firstBaselineAnchor] constant:-middle]];
+    }
+    grid.translatesAutoresizingMaskIntoConstraints = YES;
+    [grid layoutSubtreeIfNeeded];
+    [grid setFrameSize:NSMakeSize(TSEngineProfileListWidth, grid.fittingSize.height)];
+    [grid layoutSubtreeIfNeeded];
+    if (rowsOut) *rowsOut = rows;
+    if (viewsOut) *viewsOut = views;
+    return grid;
+}
+
+// A row that is set shows its value as the others do; a row turned off is gray, its value struck through.
+- (void)styleRow:(NSUInteger)index
+{
+    NSArray *row = _rows[index];
+    NSDictionary *views = _rowViews[index];
+    BOOL marks = _settings != nil, changes = [row[3] boolValue], set = [self rowIsSet:index];
+    NSColor *color = !marks || (changes && set) ? NSColor.labelColor : NSColor.secondaryLabelColor;
+    NSTextField *name = views[@"name"], *value = views[@"value"];
+    name.textColor = color;
+    NSMutableDictionary *attributes = [@{NSFontAttributeName: value.font, NSForegroundColorAttributeName: color} mutableCopy];
+    if (changes && !set) attributes[NSStrikethroughStyleAttributeName] = @(NSUnderlineStyleSingle);
+    value.attributedStringValue = [[NSAttributedString alloc] initWithString:value.stringValue attributes:attributes];
+    value.textColor = color;
+    NSTextField *dot = views[@"dot"];
+    if (dot.stringValue.length) {
+        NSColor *dotColor = set ? NSColor.controlAccentColor : [NSColor.controlAccentColor colorWithAlphaComponent:0.35];
+        dot.attributedStringValue = [[NSAttributedString alloc] initWithString:dot.stringValue attributes:@{NSFontAttributeName: dot.font,
+            NSForegroundColorAttributeName: dotColor, NSBaselineOffsetAttributeName: @(TSEngineProfileListDotRaise)}];
+        dot.textColor = dotColor;
+    }
+}
+
+// The list is as tall as its rows; the sheet follows its height.
+- (void)showRows
+{
+    [_grid removeFromSuperview];
+    NSArray *rows = nil, *views = nil;
+    _grid = [self gridForProfile:_profile latexmk:_latexmk rows:&rows views:&views];
+    _rows = rows;
+    _rowViews = views;
+    [_grid setFrameOrigin:NSMakePoint(TSEngineProfileListPadding, TSEngineProfileListPadding)];
+    [self addSubview:_grid];
+    for (NSUInteger i = 0; i < _rows.count; i++) [self styleRow:i];
+    [self enableApply];
+    CGFloat height = NSHeight(_grid.frame) + 2 * TSEngineProfileListPadding;
+    if (height == NSHeight(self.frame)) return;
+    [self setFrameSize:NSMakeSize(NSWidth(self.frame), height)];
+    if (self.heightChanged) self.heightChanged();
+}
+
+// Applying writes nothing when every value that changes is turned off, and cannot be chosen then, by Return either.
+- (void)enableApply
+{
+    BOOL changes = NO, set = NO;
+    for (NSUInteger i = 0; i < _rows.count; i++) {
+        if (![_rows[i][3] boolValue]) continue;
+        changes = YES;
+        if ([self rowIsSet:i]) set = YES;
+    }
+    self.applyButton.enabled = set || !changes;
+}
+
+- (IBAction)changeRow:(NSButton *)sender
+{
+    NSUInteger index = (NSUInteger)sender.tag;
+    if (index >= _rows.count) return;
+    if (sender.state == NSControlStateValueOn) [_kept minusSet:[NSSet setWithArray:_rows[index][4]]];
+    else [_kept addObjectsFromArray:_rows[index][4]];
+    [self styleRow:index];
+    [self enableApply];
+}
+
+- (IBAction)changeLatexmk:(NSSegmentedControl *)sender
+{
+    _latexmk = sender.selectedSegment == 1;
+    [self showRows];
+}
+
+- (IBAction)changeProfile:(NSPopUpButton *)sender
+{
+    if (TSEngineProfileTitle(sender.selectedTag) == nil) return;
+    _profile = sender.selectedTag;
+    [self showRows];
+}
+@end
+
+// The engine profiles offered to choose on first launch: every profile but those under Other.
+static NSPopUpButton *TSEngineProfileChoicePopup(TSEngineProfile selected)
+{
+    NSPopUpButton *popup = [[NSPopUpButton alloc] initWithFrame:NSZeroRect pullsDown:NO];
+    popup.identifier = @"settings.choose-profile";
+    popup.autoenablesItems = NO;
+    NSArray *sections = TSEngineProfileMenuSections();
+    for (NSUInteger i = 0; i + 1 < sections.count; i++) {
+        if (i > 0) { NSMenuItem *separator = NSMenuItem.separatorItem; separator.tag = -1; [popup.menu addItem:separator]; }
+        for (NSNumber *profile in sections[i]) {
+            NSString *title = TSEngineProfileTitle(profile.integerValue);
+            if (title == nil) continue;
+            NSMenuItem *item = [popup.menu addItemWithTitle:title action:NULL keyEquivalent:@""];
+            item.tag = profile.integerValue;
+        }
+    }
+    [popup selectItemWithTag:selected];
+    [popup sizeToFit];
+    return popup;
+}
+
+@interface TSEngineProfileSheetContent : NSView
+@end
+@implementation TSEngineProfileSheetContent
+- (BOOL)isFlipped { return YES; }
+@end
+
+// The sheet that applies an engine profile in Settings, and the window of the second step of first launch. From the
+// top: the question, on first launch the profile menu, the latexmk choice, the list under its heading in a box like
+// the groups of Settings, and Cancel and OK at the bottom right, OK the default button. The window is as tall as the
+// list, which changes with latexmk and the profile.
+@interface TSEngineProfileSheet : NSObject
+// The sheet in Settings: the list compared with the settings in use.
+- (instancetype)initWithProfile:(TSEngineProfile)profile latexmk:(BOOL)latexmk settings:(NSUserDefaults *)settings;
+// First launch: the profiles in a menu, the profile chosen beforehand selected, latexmk off.
+- (instancetype)initChoosingProfile:(TSEngineProfile)profile;
+@property (readonly) NSWindow *window;
+@property (readonly) TSEngineProfileList *list;
+@property (readonly) NSSegmentedControl *latexmkChoice;
+// The profile menu of first launch; nil in Settings.
+@property (readonly) NSPopUpButton *profileMenu;
+@property (readonly) NSButton *okButton, *cancelButton;
+// What OK writes.
+@property (readonly) NSDictionary<TSPreferenceKey, id> *valuesToApply;
+- (void)beginSheetForWindow:(NSWindow *)parent completionHandler:(void (^)(NSModalResponse response))handler;
+- (NSModalResponse)runModal;
+@end
+
+@implementation TSEngineProfileSheet {
+    NSTextField *_question, *_latexmkLabel, *_heading;
+    NSBox *_box;
+}
+
+static CGFloat const TSEngineProfileSheetMargin = 20;
+
+- (instancetype)initWithQuestion:(NSString *)question profile:(TSEngineProfile)profile latexmk:(BOOL)latexmk
+                        settings:(NSUserDefaults *)settings menu:(BOOL)menu
+{
+    self = [super init];
+    if (self == nil) return nil;
+    _window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 400, 200)
+                                         styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskFullSizeContentView backing:NSBackingStoreBuffered defer:YES];
+    _window.identifier = @"settings.engine-profile-sheet";
+    _window.titleVisibility = NSWindowTitleHidden;
+    _window.titlebarAppearsTransparent = YES;
+    _window.releasedWhenClosed = NO;
+    _window.title = question;
+    // On first launch it stands alone, as an alert does: no title and no window buttons.
+    for (NSNumber *kind in @[@(NSWindowCloseButton), @(NSWindowMiniaturizeButton), @(NSWindowZoomButton)])
+        [_window standardWindowButton:kind.unsignedIntegerValue].hidden = YES;
+    _window.contentView = [[TSEngineProfileSheetContent alloc] initWithFrame:NSMakeRect(0, 0, 400, 200)];
+    NSView *content = _window.contentView;
+
+    _question = [NSTextField wrappingLabelWithString:question];
+    _question.font = [NSFont boldSystemFontOfSize:NSFont.systemFontSize];
+    _question.selectable = NO;
+    _question.identifier = @"settings.engine-profile-question";
+    [content addSubview:_question];
+    if (menu) {
+        _profileMenu = TSEngineProfileChoicePopup(profile);
+        [content addSubview:_profileMenu];
+        profile = _profileMenu.selectedTag;
+    }
+    _latexmkLabel = [NSTextField labelWithString:NSLocalizedString(@"Run LaTeX:", @"Engine profile sheet: label of the latexmk choice")];
+    _latexmkLabel.identifier = @"settings.engine-profile-latexmk-label";
+    [content addSubview:_latexmkLabel];
+    _latexmkChoice = [NSSegmentedControl segmentedControlWithLabels:@[NSLocalizedString(@"Without latexmk", @"Engine profile sheet: run the engine once"),
+                                                                      NSLocalizedString(@"With latexmk", @"Engine profile sheet: run latexmk")]
+                                                        trackingMode:NSSegmentSwitchTrackingSelectOne target:nil action:NULL];
+    _latexmkChoice.identifier = @"settings.engine-profile-latexmk";
+    _latexmkChoice.selectedSegment = latexmk ? 1 : 0;
+    _latexmkChoice.accessibilityLabel = _latexmkLabel.stringValue;
+    [content addSubview:_latexmkChoice];
+    _heading = [NSTextField labelWithString:NSLocalizedString(@"Values to Set", @"Engine profile sheet: heading of the list")];
+    _heading.font = [NSFont boldSystemFontOfSize:NSFont.systemFontSize];
+    _heading.identifier = @"settings.engine-profile-heading";
+    [content addSubview:_heading];
+    _list = [[TSEngineProfileList alloc] initWithProfile:profile latexmk:latexmk settings:settings];
+    _box = [[NSBox alloc] initWithFrame:NSZeroRect];
+    _box.identifier = @"settings.engine-profile-box";
+    _box.titlePosition = NSNoTitle;
+    _box.boxType = NSBoxCustom;
+    _box.borderWidth = 0;
+    _box.contentViewMargins = NSZeroSize;
+    // As the groups of Settings.
+    _box.fillColor = [NSColor colorWithName:@"EngineProfileListFill" dynamicProvider:^NSColor *(NSAppearance *appearance) {
+        BOOL dark = [[appearance bestMatchFromAppearancesWithNames:@[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] isEqual:NSAppearanceNameDarkAqua];
+        return [NSColor colorWithWhite:dark ? 1 : 0 alpha:dark ? 0.055 : 0.04];
+    }];
+    _box.cornerRadius = NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26 ? 12 : 10;
+    [_box.contentView addSubview:_list];
+    [content addSubview:_box];
+    _latexmkChoice.target = _list;
+    _latexmkChoice.action = @selector(changeLatexmk:);
+    _profileMenu.target = _list;
+    _profileMenu.action = @selector(changeProfile:);
+
+    _cancelButton = [NSButton buttonWithTitle:NSLocalizedString(@"Cancel", @"") target:self action:@selector(finish:)];
+    _cancelButton.keyEquivalent = @"\e";
+    _cancelButton.identifier = @"settings.engine-profile-cancel";
+    _okButton = [NSButton buttonWithTitle:NSLocalizedString(@"OK", @"") target:self action:@selector(finish:)];
+    _okButton.keyEquivalent = @"\r";
+    _okButton.identifier = @"settings.engine-profile-ok";
+    [content addSubview:_cancelButton];
+    [content addSubview:_okButton];
+    _window.defaultButtonCell = _okButton.cell;
+    _list.applyButton = _okButton;
+    __weak __typeof(self) weakSelf = self;
+    _list.heightChanged = ^{ [weakSelf layOut]; };
+    [self layOut];
+    return self;
+}
+
+- (instancetype)initWithProfile:(TSEngineProfile)profile latexmk:(BOOL)latexmk settings:(NSUserDefaults *)settings
+{
+    NSString *question = [NSString stringWithFormat:NSLocalizedString(@"Apply the “%@” profile?", @"Engine profile sheet"), TSEngineProfileTitle(profile)];
+    return [self initWithQuestion:question profile:profile latexmk:latexmk settings:settings menu:NO];
+}
+
+- (instancetype)initChoosingProfile:(TSEngineProfile)profile
+{
+    return [self initWithQuestion:NSLocalizedString(@"Choose an Engine Profile", @"") profile:profile latexmk:NO settings:nil menu:YES];
+}
+
+// From the top down, as wide as the box of the list; the top of the window stays where it is.
+- (void)layOut
+{
+    CGFloat const margin = TSEngineProfileSheetMargin;
+    CGFloat inner = NSWidth(_list.frame), width = inner + 2 * margin;
+    CGFloat y = margin;
+    _question.preferredMaxLayoutWidth = inner;
+    _question.frame = NSMakeRect(margin, y, inner, _question.fittingSize.height);
+    y = NSMaxY(_question.frame) + 14;
+    if (_profileMenu != nil) {
+        [_profileMenu sizeToFit];
+        [_profileMenu setFrameOrigin:NSMakePoint(margin - 2, y)];
+        y = NSMaxY(_profileMenu.frame) + 10;
+    }
+    [_latexmkLabel sizeToFit];
+    [_latexmkChoice sizeToFit];
+    CGFloat choiceHeight = NSHeight(_latexmkChoice.frame);
+    [_latexmkLabel setFrameOrigin:NSMakePoint(margin, y + round((choiceHeight - NSHeight(_latexmkLabel.frame)) / 2))];
+    [_latexmkChoice setFrameOrigin:NSMakePoint(NSMaxX(_latexmkLabel.frame) + 8, y)];
+    y += choiceHeight + 16;
+    [_heading sizeToFit];
+    [_heading setFrameOrigin:NSMakePoint(margin, y)];
+    y = NSMaxY(_heading.frame) + 6;
+    _box.frame = NSMakeRect(margin, y, inner, NSHeight(_list.frame));
+    [_list setFrameOrigin:NSZeroPoint];
+    y = NSMaxY(_box.frame) + 20;
+    for (NSButton *button in @[_okButton, _cancelButton]) {
+        [button sizeToFit];
+        [button setFrameSize:NSMakeSize(MAX(NSWidth(button.frame), 80), NSHeight(button.frame))];
+    }
+    [_okButton setFrameOrigin:NSMakePoint(width - margin - NSWidth(_okButton.frame), y)];
+    [_cancelButton setFrameOrigin:NSMakePoint(NSMinX(_okButton.frame) - 12 - NSWidth(_cancelButton.frame), y)];
+    y = NSMaxY(_okButton.frame) + margin;
+    NSRect frame = [_window frameRectForContentRect:NSMakeRect(0, 0, width, y)];
+    frame.origin = NSMakePoint(NSMinX(_window.frame), NSMaxY(_window.frame) - NSHeight(frame));
+    [_window setFrame:frame display:_window.visible];
+}
+
+- (NSDictionary<TSPreferenceKey, id> *)valuesToApply { return _list.valuesToApply; }
+
+- (IBAction)finish:(NSButton *)sender
+{
+    NSModalResponse response = sender == _okButton ? NSModalResponseOK : NSModalResponseCancel;
+    if (_window.sheetParent != nil) [_window.sheetParent endSheet:_window returnCode:response];
+    else if (NSApp.modalWindow == _window) [NSApp stopModalWithCode:response];
+}
+
+- (void)beginSheetForWindow:(NSWindow *)parent completionHandler:(void (^)(NSModalResponse))handler
+{
+    [parent beginSheet:_window completionHandler:handler];
+}
+
+- (NSModalResponse)runModal
+{
+    [_window center];
+    NSModalResponse response = [NSApp runModalForWindow:_window];
+    [_window orderOut:nil];
+    return response;
+}
+@end
+// END engine profile list
+
 @implementation TSPreferences
 @synthesize legacySpellCheckButton = _legacySpellCheckButton, settingsHelpDocuments = _settingsHelpDocuments;
 /*"
@@ -339,13 +826,10 @@ NSArray<NSString *> *TSEngineFileNames(NSString *folder)
     }
 }
 
-// Built with the engine path alert, below.
-static NSAlert *TSEngineProfileAlert(TSEngineProfile profile, NSButton *latexmk);
-static NSButton *TSEngineProfileLatexmkButton(BOOL on);
-
-// Choosing a profile in the menu asks at once whether to apply it, with latexmk or without; the
-// paths are set apart, with Detect Paths. Cancel changes nothing, and the menu shows the
-// settings again.
+// Choosing a profile in the menu asks at once whether to apply it, with latexmk or without, and
+// lists what it sets; a value turned off in the list keeps the setting in use. The paths are set
+// apart, with Detect Paths. Cancel changes nothing, and the menu shows the settings again, as it
+// does after Apply: Custom when a value was turned off.
 - (IBAction)applyEngineProfile:(id)sender
 {
     // Read the choice first: committing a command being edited refreshes the menu.
@@ -357,12 +841,12 @@ static NSButton *TSEngineProfileLatexmkButton(BOOL on);
     // The commit may have shown the settings again; the menu shows the choice while the sheet asks.
     self.engineProfileAsked = profile;
     [self.engineProfilePopup selectItemWithTag:profile];
-    NSButton *latexmk = TSEngineProfileLatexmkButton(TSEngineProfileSettingsUseLatexmk(SUD));
-    NSAlert *alert = TSEngineProfileAlert(profile, latexmk);
-    [alert beginSheetModalForWindow:_prefsWindow completionHandler:^(NSModalResponse response) {
+    TSEngineProfileSheet *sheet = [[TSEngineProfileSheet alloc] initWithProfile:profile latexmk:TSEngineProfileSettingsUseLatexmk(SUD) settings:SUD];
+    [sheet beginSheetForWindow:_prefsWindow completionHandler:^(NSModalResponse response) {
         self.engineProfileAsked = TSEngineProfileNone;
-        if (response == NSAlertFirstButtonReturn && !self.endingPreferences)
-            [self applyEngineProfileValues:TSEngineProfileValues(profile, latexmk.state == NSControlStateValueOn)];
+        // The list leaves out the values turned off.
+        if (response == NSModalResponseOK && !self.endingPreferences)
+            [self applyEngineProfileValues:sheet.valuesToApply];
         [self refreshEngineProfileFromDefaults:SUD];
     }];
 }
@@ -1361,36 +1845,6 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 }
 
 // BEGIN engine path alert
-// The engine profiles offered to choose: every profile but those under Other.
-static NSPopUpButton *TSEngineProfileChoicePopup(TSEngineProfile selected)
-{
-    NSPopUpButton *popup = [[NSPopUpButton alloc] initWithFrame:NSZeroRect pullsDown:NO];
-    popup.identifier = @"settings.choose-profile";
-    popup.autoenablesItems = NO;
-    NSArray *sections = TSEngineProfileMenuSections();
-    for (NSUInteger i = 0; i + 1 < sections.count; i++) {
-        if (i > 0) { NSMenuItem *separator = NSMenuItem.separatorItem; separator.tag = -1; [popup.menu addItem:separator]; }
-        for (NSNumber *profile in sections[i]) {
-            NSString *title = TSEngineProfileTitle(profile.integerValue);
-            if (title == nil) continue;
-            NSMenuItem *item = [popup.menu addItemWithTitle:title action:NULL keyEquivalent:@""];
-            item.tag = profile.integerValue;
-        }
-    }
-    [popup selectItemWithTag:selected];
-    [popup sizeToFit];
-    return popup;
-}
-
-static NSButton *TSEngineProfileLatexmkButton(BOOL on)
-{
-    NSButton *button = [NSButton checkboxWithTitle:NSLocalizedString(@"Use latexmk", @"Engine profile option") target:nil action:NULL];
-    button.identifier = @"settings.engine-profile-latexmk";
-    button.state = on ? NSControlStateValueOn : NSControlStateValueOff;
-    [button sizeToFit];
-    return button;
-}
-
 // Views stacked from the top, left-aligned, as wide as the widest.
 static NSView *TSEngineProfileStack(NSArray<NSView *> *views, NSArray<NSNumber *> *gaps)
 {
@@ -1421,38 +1875,6 @@ static void TSEngineProfileAlignAccessory(NSAlert *alert)
         }
         return;
     }
-}
-
-// The sheet shown when a profile is chosen in Settings.
-static NSAlert *TSEngineProfileAlert(TSEngineProfile profile, NSButton *latexmk)
-{
-    NSAlert *alert = [NSAlert new];
-    alert.messageText = [NSString stringWithFormat:NSLocalizedString(@"Apply the “%@” profile?", @"Engine profile sheet"), TSEngineProfileTitle(profile)];
-    NSView *accessory = [[NSView alloc] initWithFrame:latexmk.frame];
-    [latexmk setFrameOrigin:NSZeroPoint];
-    [accessory addSubview:latexmk];
-    alert.accessoryView = accessory;
-    [alert addButtonWithTitle:NSLocalizedString(@"Apply", @"")].keyEquivalent = @"\r";
-    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")].keyEquivalent = @"\e";
-    TSEngineProfileAlignAccessory(alert);
-    return alert;
-}
-
-// The second step of first launch: the engine profile, and latexmk.
-static NSAlert *TSEngineProfileChoiceAlert(TSEngineProfile profile, NSMutableDictionary *controls)
-{
-    NSAlert *alert = [NSAlert new];
-    alert.messageText = NSLocalizedString(@"Choose an Engine Profile", @"");
-    NSPopUpButton *popup = TSEngineProfileChoicePopup(profile);
-    NSButton *latexmk = TSEngineProfileLatexmkButton(NO);
-    [popup setFrameOrigin:NSMakePoint(-2, 0)];
-    alert.accessoryView = TSEngineProfileStack(@[popup, latexmk], @[@0, @6]);
-    [alert addButtonWithTitle:NSLocalizedString(@"OK", @"")];
-    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
-    TSEngineProfileAlignAccessory(alert);
-    controls[@"Profile"] = popup;
-    controls[@"latexmk"] = latexmk;
-    return alert;
 }
 
 // Detect Paths, and the first step of first launch: the TeX and Ghostscript installations
@@ -1569,16 +1991,14 @@ static NSAlert *TSEnginePathAlert(NSDictionary *found, NSMutableDictionary *matr
 // The second step of first launch. Cancel leaves the factory commands.
 - (void)chooseInitialEngineProfileModal:(BOOL)modal
 {
-    NSMutableDictionary *controls = [NSMutableDictionary dictionary];
-    NSAlert *alert = TSEngineProfileChoiceAlert(TSEngineProfileForLanguages(NSLocale.preferredLanguages), controls);
+    TSEngineProfileSheet *sheet = [[TSEngineProfileSheet alloc] initChoosingProfile:TSEngineProfileForLanguages(NSLocale.preferredLanguages)];
     NSUInteger generation = self.enginePathSearchGeneration;
     void (^finish)(NSModalResponse) = ^(NSModalResponse response) {
-        if (response != NSAlertFirstButtonReturn || generation != self.enginePathSearchGeneration) return;
-        [self applyEngineProfileValues:TSEngineProfileValues([(NSPopUpButton *)controls[@"Profile"] selectedTag],
-                                                            [(NSButton *)controls[@"latexmk"] state] == NSControlStateValueOn)];
+        if (response != NSModalResponseOK || generation != self.enginePathSearchGeneration) return;
+        [self applyEngineProfileValues:sheet.valuesToApply];
     };
-    if (modal || !self->_prefsWindow.visible) finish([alert runModal]);
-    else [alert beginSheetModalForWindow:self->_prefsWindow completionHandler:finish];
+    if (modal || !self->_prefsWindow.visible) finish([sheet runModal]);
+    else [sheet beginSheetForWindow:self->_prefsWindow completionHandler:finish];
 }
 
 /*" This method is connected to the textField that holds the tetex bin path.

@@ -106,7 +106,7 @@ NSDictionary<TSPreferenceKey, id> *TSEngineProfileValues(TSEngineProfile profile
 }
 
 // Equal in meaning: a stored "NO" is the same switch as @NO, and blanks around a command do not count.
-static BOOL TSEngineProfileSame(id value, id expected)
+BOOL TSEngineProfileSame(id value, id expected)
 {
     if ([expected isKindOfClass:NSNumber.class] && CFGetTypeID((__bridge CFTypeRef)expected) == CFBooleanGetTypeID())
         return [value respondsToSelector:@selector(boolValue)] && [value boolValue] == [expected boolValue];

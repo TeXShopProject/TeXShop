@@ -14,6 +14,13 @@ static void CaptureOwnerAlert(NSAlert *alert, SEL selector, NSWindow *window, vo
     Check(ownerAlertCompletion == nil, @"One outstanding validation warning");
     ownerAlertCompletion = [completion copy];
 }
+// The engine profile sheet is a window of its own: it is captured where Settings begins it.
+static NSWindow *capturedOwnerSheet, *capturedOwnerSheetParent;
+static void CaptureOwnerSheet(NSWindow *parent, SEL selector, NSWindow *sheet, void (^completion)(NSModalResponse)) {
+    ownerAlertCount++;capturedOwnerSheet=sheet;capturedOwnerSheetParent=parent;
+    Check(ownerAlertCompletion == nil, @"One outstanding sheet");
+    ownerAlertCompletion = [completion copy];
+}
 static void FinishOwnerAlert(NSModalResponse response) {
     void (^completion)(NSModalResponse) = ownerAlertCompletion;
     ownerAlertCompletion = nil;
@@ -99,6 +106,8 @@ static void CheckOwnerEngineFile(TSPreferences *owner, TSSettingsWindowControlle
 static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *shell) {
     Method alertMethod = class_getInstanceMethod(NSAlert.class, @selector(beginSheetModalForWindow:completionHandler:));
     IMP originalAlert = method_setImplementation(alertMethod, (IMP)CaptureOwnerAlert);
+    Method sheetMethod = class_getInstanceMethod(NSWindow.class, @selector(beginSheet:completionHandler:));
+    IMP originalSheet = method_setImplementation(sheetMethod, (IMP)CaptureOwnerSheet);
     NSArray *contract=[NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfURL:[fixture URLForResource:@"SettingsInputRules" withExtension:@"json"]] options:0 error:NULL];
     NSMapTable *rules=[owner valueForKey:@"inputRules"];
     Check(contract.count==20 && rules.count==contract.count,@"All twenty independent input rules are installed");
@@ -163,17 +172,39 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     FinishOwnerAlert(NSAlertSecondButtonReturn);
     TSEngineProfile shownBefore=TSEngineProfileMatchingSettings(TSIsolatedAppKitDefaults,NULL);
     Check(profileChoice.selectedTag==shownBefore && shownBefore!=TSEngineProfileUpLaTeXDvipdfmx,@"An edit that cannot be committed puts the menu back");
+    // A setting in use that already has the profile's value, though the factory one does not: its row is not marked.
+    NSString *metaPostBefore=[TSIsolatedAppKitDefaults.values[MetaPostEngineKey] copy];
+    [TSIsolatedAppKitDefaults setObject:@" upmpost" forKey:MetaPostEngineKey];
     EditOwnerField(owner,tabs,@"22");alerts=ownerAlertCount;chooseProfile(TSEngineProfileUpLaTeXDvipdfmx);
     Check([TSIsolatedAppKitDefaults integerForKey:tabsKey]==22 && ownerAlertCount==alerts+1 && ![[owner valueForKey:@"inputErrorPresented"]boolValue],@"Valid edit commits before profile confirmation");
-    Check([capturedOwnerAlert.messageText containsString:@"upLaTeX + dvipdfmx"] && capturedOwnerAlert.informativeText.length==0,@"Profile confirmation names the profile and shows no paths");
-    Check([capturedOwnerAlert.buttons.firstObject.keyEquivalent isEqual:@"\r"] && [capturedOwnerAlert.buttons.lastObject.keyEquivalent isEqual:@"\e"],@"Profile confirmation applies on Return and reserves Escape for Cancel");
-    NSButton *(^sheetLatexmk)(void)=^NSButton *{return (NSButton *)Find(capturedOwnerAlert.accessoryView,@"settings.engine-profile-latexmk");};
-    NSButton *latexmk=sheetLatexmk();
-    Check([latexmk isKindOfClass:NSButton.class] && latexmk.enabled && latexmk.state==(TSEngineProfileSettingsUseLatexmk(TSIsolatedAppKitDefaults)?NSControlStateValueOn:NSControlStateValueOff),@"The latexmk choice starts from the commands in use");
+    // The sheet is a window of its own on the Settings window, with the list, the latexmk choice, OK and Cancel.
+    NSView *(^sheetView)(NSString *)=^NSView *(NSString *identifier){return Find(capturedOwnerSheet.contentView,identifier);};
+    NSButton *(^sheetOK)(void)=^NSButton *{return (NSButton *)sheetView(@"settings.engine-profile-ok");};
+    NSSegmentedControl *(^sheetLatexmk)(void)=^NSSegmentedControl *{return (NSSegmentedControl *)sheetView(@"settings.engine-profile-latexmk");};
+    void (^chooseLatexmk)(NSInteger)=^(NSInteger segment){NSSegmentedControl *c=sheetLatexmk();c.selectedSegment=segment;[c sendAction:c.action to:c.target];};
+    Check(capturedOwnerSheetParent==shell.window && [[(NSTextField *)sheetView(@"settings.engine-profile-question") stringValue] containsString:@"upLaTeX + dvipdfmx"],@"Profile confirmation is a sheet on Settings that names the profile");
+    Check([sheetOK().keyEquivalent isEqual:@"\r"] && capturedOwnerSheet.defaultButtonCell==sheetOK().cell && [[(NSButton *)sheetView(@"settings.engine-profile-cancel") keyEquivalent] isEqual:@"\e"],@"Profile confirmation applies on Return and reserves Escape for Cancel");
+    NSSegmentedControl *latexmk=sheetLatexmk();
+    Check([latexmk isKindOfClass:NSSegmentedControl.class] && latexmk.enabled && latexmk.selectedSegment==(TSEngineProfileSettingsUseLatexmk(TSIsolatedAppKitDefaults)?1:0),@"The latexmk choice starts from the commands in use");
     Check(profileChoice.selectedTag==TSEngineProfileUpLaTeXDvipdfmx,@"While the sheet asks, the menu shows the profile chosen");
+    // The sheet lists what the profile sets, compared with the settings in use, and follows latexmk at once.
+    NSView *profileList=sheetView(@"settings.engine-profile-list");
+    NSGridView *(^listRows)(void)=^NSGridView *{return (NSGridView *)Find(profileList,@"settings.engine-profile-list.rows");};
+    NSString *(^listValue)(NSInteger)=^NSString *(NSInteger row){return [[(NSTextField *)[listRows() cellAtColumnIndex:3 rowIndex:row].contentView stringValue] stringByReplacingOccurrencesOfString:@"\u2060" withString:@""];};
+    BOOL (^listMarked)(NSInteger)=^BOOL(NSInteger row){return [[listRows() cellAtColumnIndex:2 rowIndex:row].contentView.identifier isEqual:@"settings.engine-profile-list.changes"] && [[listRows() cellAtColumnIndex:0 rowIndex:row].contentView isKindOfClass:NSButton.class];};
+    NSDictionary *upValues=TSEngineProfileValues(TSEngineProfileUpLaTeXDvipdfmx,latexmk.selectedSegment==1);
+    Check(profileList!=nil && latexmk.target==profileList && listRows().numberOfRows==10,@"The sheet lists the ten settings a Japanese profile sets, and latexmk belongs to the list");
+    Check([listValue(2) isEqual:upValues[LatexGSCommandKey]] && [listValue(5) isEqual:@"upmpost"] && !listMarked(5) && listMarked(4)==![[TSIsolatedAppKitDefaults stringForKey:MakeIndexEngineKey] isEqual:@"upmendex"],
+          @"The list shows the profile's values and marks those that differ from the settings in use, not from the factory settings");
+    NSInteger firstForm=latexmk.selectedSegment;
+    chooseLatexmk(1-firstForm);
+    Check([listValue(2) isEqual:TSEngineProfileValues(TSEngineProfileUpLaTeXDvipdfmx,firstForm==0)[LatexGSCommandKey]] && ![listValue(2) isEqual:upValues[LatexGSCommandKey]],@"Choosing latexmk the other way replaces the LaTeX command in the list at once");
+    chooseLatexmk(firstForm);
+    Check([listValue(2) isEqual:upValues[LatexGSCommandKey]],@"Choosing latexmk back shows the first command again");
+    if(metaPostBefore)[TSIsolatedAppKitDefaults setObject:metaPostBefore forKey:MetaPostEngineKey];else [TSIsolatedAppKitDefaults removeObjectForKey:MetaPostEngineKey];
     NSString *commandBefore=[TSIsolatedAppKitDefaults stringForKey:LatexGSCommandKey];
     NSDictionary *valuesBefore=[TSIsolatedAppKitDefaults.values copy];
-    FinishOwnerAlert(NSAlertSecondButtonReturn);
+    FinishOwnerAlert(NSModalResponseCancel);
     Check([TSIsolatedAppKitDefaults integerForKey:tabsKey]==22 && [[TSIsolatedAppKitDefaults stringForKey:LatexGSCommandKey] isEqual:commandBefore],@"Cancelling the profile preserves the committed edit");
     Check([TSIsolatedAppKitDefaults.values isEqual:valuesBefore],@"Cancel changes no setting");
     Check(profileChoice.selectedTag==shownBefore && [profileChoice.titleOfSelectedItem isEqual:(shownBefore==TSEngineProfileNone?NSLocalizedString(@"Custom",@""):TSEngineProfileTitle(shownBefore))],[NSString stringWithFormat:@"Cancel shows the earlier choice again: %@",profileChoice.titleOfSelectedItem]);
@@ -193,14 +224,41 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     for(int i=0;i<5;i++)[NSRunLoop.mainRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
     Check(profileChoice.selectedTag==TSEngineProfileUpLaTeXDvipdfmx,@"While the sheet waits, a setting changed elsewhere leaves the profile chosen in the menu");
     if(indexBefore)[TSIsolatedAppKitDefaults setObject:indexBefore forKey:MakeIndexEngineKey];else [TSIsolatedAppKitDefaults removeObjectForKey:MakeIndexEngineKey];
-    sheetLatexmk().state=NSControlStateValueOn;
-    FinishOwnerAlert(NSAlertFirstButtonReturn);
+    // Chosen as the user chooses it, so that the list follows.
+    chooseLatexmk(1);
+    FinishOwnerAlert(NSModalResponseOK);
     NSString *profileCommand=TSEngineProfileValues(TSEngineProfileUpLaTeXDvipdfmx,YES)[LatexGSCommandKey];
     Check([[TSIsolatedAppKitDefaults stringForKey:LatexGSCommandKey] isEqual:profileCommand] && latexGS.currentEditor==nil && [latexGS.stringValue isEqual:profileCommand],@"Profile application releases the pre-application editor");
     Check([[TSIsolatedAppKitDefaults stringForKey:TetexBinPath] ?: @"" isEqual:texPath ?: @""] && [[TSIsolatedAppKitDefaults stringForKey:GSBinPath] ?: @"" isEqual:gsPath ?: @""],@"Applying a profile leaves the paths to Detect Paths");
     Check(profileChoice.selectedTag==TSEngineProfileUpLaTeXDvipdfmx && [TSIsolatedAppKitDefaults integerForKey:tabsKey]==22,@"The applied profile is shown and other settings stay");
     [shell selectCategoryIdentifier:TSSettingsCategoryGeneral];
     Check([[TSIsolatedAppKitDefaults stringForKey:LatexGSCommandKey] isEqual:profileCommand],@"Later navigation cannot restore the pre-profile text");
+    // A value turned off in the list keeps the setting in use; the others are written, and the menu shows Custom at once.
+    alerts=ownerAlertCount;chooseProfile(TSEngineProfilePLaTeXDvipdfmx);
+    Check(ownerAlertCount==alerts+1,@"Choosing pLaTeX + dvipdfmx asks");
+    NSGridView *pRows=(NSGridView *)Find(sheetView(@"settings.engine-profile-list"),@"settings.engine-profile-list.rows");
+    NSButton *indexBox=(NSButton *)[pRows cellAtColumnIndex:0 rowIndex:4].contentView;
+    Check([indexBox isKindOfClass:NSButton.class] && indexBox.state==NSControlStateValueOn && [indexBox.accessibilityLabel length]>0,@"The index command, which changes, has its checkbox, on, named for VoiceOver");
+    [indexBox performClick:nil];
+    Check(sheetOK().enabled,@"OK stays available while some value is set");
+    FinishOwnerAlert(NSModalResponseOK);
+    Check([[TSIsolatedAppKitDefaults stringForKey:MakeIndexEngineKey] isEqual:@"upmendex"] && [[TSIsolatedAppKitDefaults stringForKey:BibTeXengineKey] isEqual:@"pbibtex"] && [TSIsolatedAppKitDefaults boolForKey:ptexUtfOutputEnabledKey],
+          @"OK writes the values that are on and keeps the one turned off");
+    Check(profileChoice.selectedTag==TSEngineProfileNone && [profileChoice.titleOfSelectedItem isEqual:NSLocalizedString(@"Custom",@"")],[NSString stringWithFormat:@"With a value turned off, the menu shows Custom at once: %@",profileChoice.titleOfSelectedItem]);
+    // With every value that changes turned off, OK cannot be chosen; one turned on again brings it back.
+    alerts=ownerAlertCount;chooseProfile(TSEngineProfileUpLaTeXDvipdfmx);
+    NSGridView *uRows=(NSGridView *)Find(sheetView(@"settings.engine-profile-list"),@"settings.engine-profile-list.rows");
+    NSButton *lastBox=nil;
+    for(NSInteger r=0;r<uRows.numberOfRows;r++){NSView *box=[uRows cellAtColumnIndex:0 rowIndex:r].contentView;if([box isKindOfClass:NSButton.class]){lastBox=(NSButton *)box;[lastBox performClick:nil];}}
+    Check(lastBox!=nil && !sheetOK().enabled,@"OK cannot be chosen with every value turned off");
+    [lastBox performClick:nil];
+    Check(sheetOK().enabled,@"OK comes back when a value is turned on again");
+    FinishOwnerAlert(NSModalResponseCancel);
+    // Back to upLaTeX + dvipdfmx with latexmk, in full.
+    alerts=ownerAlertCount;chooseProfile(TSEngineProfileUpLaTeXDvipdfmx);
+    chooseLatexmk(1);
+    FinishOwnerAlert(NSModalResponseOK);
+    Check(profileChoice.selectedTag==TSEngineProfileUpLaTeXDvipdfmx && [[TSIsolatedAppKitDefaults stringForKey:LatexGSCommandKey] isEqual:profileCommand],@"Applying in full shows the profile again");
     CheckOwnerEngineFile(owner,shell);
     // Whole-number fields: digits only while typing, and a stepper beside each.
     [shell selectCategoryIdentifier:TSSettingsCategoryEditor];
@@ -269,5 +327,6 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     [owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
     [shell beginSession];
     method_setImplementation(alertMethod, originalAlert);
+    method_setImplementation(sheetMethod, originalSheet);
     puts("PASS: owner field-editor navigation, restore, validation and close");
 }
