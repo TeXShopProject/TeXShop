@@ -5068,7 +5068,8 @@ if ( ! skipTextWindow) {
         [menu removeAllItems];
 }
 
-- (void)doUpdate: (id)sender;
+// Fills the menus once the document has loaded.
+- (void)setupTagsAndLabelsAfterLoading
 {
     if ( ! [SUD boolForKey:UseNewTagsAndLabelsKey])
         return;

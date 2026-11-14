@@ -242,14 +242,6 @@ tiLabelLabelsSplit                = "Rótulos";
 tiPaletteLabelLabelsSplit         = "Rótulos";
 tiToolTipLabelsSplit              = "Selecionar um rótulo para ir até ele";
 
-tiLabelUpdate              = "Atualizar";
-tiPaletteLabelUpdate         = "Atualizar";
-tiToolTipUpdate              = "Atualizar marcas e rótulos";
-
-tiLabelUpdateSplit                = "Atualizar";
-tiPaletteLabelUpdateSplit         = "Atualizar";
-tiToolTipUpdateSplit              = "Atualizar marcas e rótulos";
-
 tiLabelHtmlPreviousPageButton                = "Retroceder";
 tiPaletteLabelHtmlPreviousPageButton            = "Retroceder";
 tiToolTipHtmlPreviousPageButton            = "Ir para a página anterior";
