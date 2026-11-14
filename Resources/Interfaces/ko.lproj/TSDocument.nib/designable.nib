@@ -1412,7 +1412,7 @@ DQ
                                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="233">
                                     <rect key="frame" x="5" y="11" width="36" height="14"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="배" id="234">
+                                    <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="배율" id="234">
                                         <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -1512,17 +1512,17 @@ DQ
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="253">
                     <rect key="frame" x="99" y="3" width="210" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <popUpButtonCell key="cell" type="push" title="JPEG（高画質）" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="11" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="256" id="254">
+                    <popUpButtonCell key="cell" type="push" title="JPEG (고품질)" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="11" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="256" id="254">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="255">
                             <items>
-                                <menuItem title="JPEG（高画質）" state="on" tag="11" id="256"/>
-                                <menuItem title="JPEG（中画質）" tag="13" id="257"/>
-                                <menuItem title="JPEG（低画質）" tag="15" id="258"/>
-                                <menuItem title="TIFF（圧縮なし）" tag="1" id="259"/>
-                                <menuItem title="TIFF（LZW圧縮）" tag="2" id="260"/>
-                                <menuItem title="TIFF（PackBits圧縮）" tag="3" id="261"/>
+                                <menuItem title="JPEG (고품질)" state="on" tag="11" id="256"/>
+                                <menuItem title="JPEG (중간 품질)" tag="13" id="257"/>
+                                <menuItem title="JPEG (저품질)" tag="15" id="258"/>
+                                <menuItem title="TIFF (비압축)" tag="1" id="259"/>
+                                <menuItem title="TIFF (LZW)" tag="2" id="260"/>
+                                <menuItem title="TIFF (PackBits)" tag="3" id="261"/>
                                 <menuItem title="PNG" tag="21" id="262"/>
                                 <menuItem title="GIF" tag="22" id="264"/>
                                 <menuItem title="PDF" tag="31" id="265"/>

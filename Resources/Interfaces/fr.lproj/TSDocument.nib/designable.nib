@@ -1318,10 +1318,10 @@ DQ
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <box fixedFrame="YES" boxType="secondary" borderType="bezel" title="go to page" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="467">
-                        <rect key="frame" x="16" y="9" width="166" height="46"/>
+                        <rect key="frame" x="13" y="9" width="172" height="46"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <view key="contentView" id="lTF-h4-w89">
-                            <rect key="frame" x="4" y="5" width="158" height="38"/>
+                            <rect key="frame" x="4" y="5" width="164" height="38"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="470">
@@ -1346,16 +1346,16 @@ DQ
                                     </connections>
                                 </textField>
                                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="468">
-                                    <rect key="frame" x="86" y="10" width="22" height="14"/>
+                                    <rect key="frame" x="86" y="10" width="28" height="14"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="of" id="3872">
+                                    <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="sur" id="3872">
                                         <font key="font" metaFont="message" size="11"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
                                 <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="466">
-                                    <rect key="frame" x="110" y="7" width="46" height="21"/>
+                                    <rect key="frame" x="116" y="7" width="46" height="21"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="1" drawsBackground="YES" id="3871">
                                         <font key="font" metaFont="system"/>
@@ -1972,10 +1972,10 @@ DQ
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <box fixedFrame="YES" boxType="secondary" borderType="bezel" title="go to page" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="813">
-                        <rect key="frame" x="16" y="9" width="166" height="46"/>
+                        <rect key="frame" x="13" y="9" width="172" height="46"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <view key="contentView" id="2g4-nW-qsU">
-                            <rect key="frame" x="4" y="5" width="158" height="38"/>
+                            <rect key="frame" x="4" y="5" width="164" height="38"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="815">
@@ -2000,16 +2000,16 @@ DQ
                                     </connections>
                                 </textField>
                                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="817">
-                                    <rect key="frame" x="86" y="10" width="22" height="14"/>
+                                    <rect key="frame" x="86" y="10" width="28" height="14"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="of" id="3894">
+                                    <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="sur" id="3894">
                                         <font key="font" metaFont="message" size="11"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
                                 <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="818">
-                                    <rect key="frame" x="110" y="7" width="46" height="21"/>
+                                    <rect key="frame" x="116" y="7" width="46" height="21"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="1" drawsBackground="YES" id="3895">
                                         <font key="font" metaFont="system"/>

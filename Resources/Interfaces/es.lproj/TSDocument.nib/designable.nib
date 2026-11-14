@@ -2309,7 +2309,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8tb-Sl-il3">
                         <rect key="frame" x="179" y="520" width="107" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title=" info de fonts" bezelStyle="regularSquare" imagePosition="left" inset="2" id="orb-i9-9d4">
+                        <buttonCell key="cell" type="check" title="info de fonts" bezelStyle="regularSquare" imagePosition="left" inset="2" id="orb-i9-9d4">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>

@@ -575,7 +575,7 @@ DQ
             </view>
         </window>
         <customView id="356" userLabel="View" customClass="NSMatrix">
-            <rect key="frame" x="0.0" y="0.0" width="945" height="215"/>
+            <rect key="frame" x="0.0" y="0.0" width="1005" height="215"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="923">
@@ -638,7 +638,7 @@ DQ
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Ingrandisci (più largo)" tag="4" inset="2" id="790">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Lupe (groß)" tag="4" inset="2" id="790">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -756,7 +756,7 @@ DQ
                     </connections>
                 </button>
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="625">
-                    <rect key="frame" x="369" y="9" width="91" height="26"/>
+                    <rect key="frame" x="418" y="9" width="91" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <popUpButtonCell key="cell" type="push" title="Makros" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="626" id="3859">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -792,7 +792,7 @@ DQ
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Ingrandisci (più largo)" tag="3" inset="2" id="565">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Lupe (groß)" tag="3" inset="2" id="565">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -809,9 +809,9 @@ DQ
                     </connections>
                 </matrix>
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sN7-vf-b8c">
-                    <rect key="frame" x="131" y="10" width="113" height="18"/>
+                    <rect key="frame" x="131" y="10" width="162" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="AutoComplete" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3zL-Uj-qe0">
+                    <buttonCell key="cell" type="check" title="Autovervollständigung" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3zL-Uj-qe0">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -1094,7 +1094,7 @@ DQ
                     <font key="titleFont" metaFont="system"/>
                 </box>
                 <box fixedFrame="YES" boxType="oldStyle" borderType="none" title="Scale" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="6Ck-Zt-R51">
-                    <rect key="frame" x="810" y="10" width="126" height="30"/>
+                    <rect key="frame" x="859" y="10" width="126" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                     <view key="contentView" id="Foj-Pk-ny2">
                         <rect key="frame" x="0.0" y="0.0" width="126" height="30"/>
@@ -1146,7 +1146,7 @@ DQ
                     </connections>
                 </button>
                 <searchField wantsLayer="YES" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WxM-bb-7Fd">
-                    <rect key="frame" x="258" y="8" width="96" height="22"/>
+                    <rect key="frame" x="307" y="8" width="96" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" sendsWholeSearchString="YES" id="T65-7f-Txw">
                         <font key="font" metaFont="system"/>
@@ -1169,7 +1169,7 @@ DQ
                     </connections>
                 </button>
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZTb-eh-Ie2">
-                    <rect key="frame" x="732" y="172" width="87" height="26"/>
+                    <rect key="frame" x="781" y="172" width="87" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="Labels" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="mixed" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="bcz-xX-IOD" id="kDk-YD-AQH">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -1187,9 +1187,9 @@ DQ
                     </connections>
                 </popUpButton>
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="440">
-                    <rect key="frame" x="173" y="178" width="113" height="18"/>
+                    <rect key="frame" x="173" y="178" width="162" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="AutoComplete" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3858">
+                    <buttonCell key="cell" type="check" title="Autovervollständigung" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3858">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -1214,7 +1214,7 @@ DQ
                     </connections>
                 </popUpButton>
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="357">
-                    <rect key="frame" x="435" y="170" width="125" height="33"/>
+                    <rect key="frame" x="484" y="170" width="125" height="33"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="Markierungen" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="359" id="3842">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -1230,7 +1230,7 @@ DQ
                     </connections>
                 </popUpButton>
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3921">
-                    <rect key="frame" x="296" y="178" width="116" height="18"/>
+                    <rect key="frame" x="345" y="178" width="116" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Gesamt-Pfad" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="3922">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -1241,7 +1241,7 @@ DQ
                     </connections>
                 </button>
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KKh-4u-2lh">
-                    <rect key="frame" x="583" y="173" width="125" height="26"/>
+                    <rect key="frame" x="632" y="173" width="125" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="Markierungen" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="wp5-Iy-WDt" id="zgn-Sl-AAc">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -1257,7 +1257,7 @@ DQ
                     </connections>
                 </popUpButton>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eBL-Mg-4nV">
-                    <rect key="frame" x="485" y="11" width="57" height="22"/>
+                    <rect key="frame" x="534" y="11" width="57" height="22"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="momentary" id="tWB-d4-V1n">
                         <font key="font" metaFont="system"/>
@@ -1271,7 +1271,7 @@ DQ
                     </connections>
                 </segmentedControl>
                 <searchField wantsLayer="YES" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hmc-uV-ufF">
-                    <rect key="frame" x="574" y="13" width="96" height="22"/>
+                    <rect key="frame" x="623" y="13" width="96" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" sendsWholeSearchString="YES" id="riE-QN-SoV">
                         <font key="font" metaFont="system"/>
@@ -1283,7 +1283,7 @@ DQ
                     </connections>
                 </searchField>
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J4U-vv-wNX">
-                    <rect key="frame" x="686" y="10" width="87" height="26"/>
+                    <rect key="frame" x="735" y="10" width="87" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="Labels" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="mixed" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="uxW-Kj-sto" id="CLe-Nl-Nz0">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -2470,7 +2470,7 @@ Gw
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cgj-nm-nhy">
                         <rect key="frame" x="192" y="5" width="64" height="20"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="push" title="Compila" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="RBb-oD-RDB">
+                        <buttonCell key="cell" type="push" title="Setzen" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="RBb-oD-RDB">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="smallSystem"/>
                         </buttonCell>

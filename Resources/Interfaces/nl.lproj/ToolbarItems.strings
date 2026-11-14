@@ -90,7 +90,7 @@ tiPaletteLabelProgramEE			= "Programma";
 tiToolTipProgramEE			= "Kies een zet-programma";
 
 tiLabelAutoComplete			= "Automatisch aanvullen";
-tiPaletteLabelAutoComplete		= "AutoComplete";
+tiPaletteLabelAutoComplete		= "Automatisch aanvullen";
 tiToolTipAutoComplete			= "Zet automatisch aanvullen aan/uit";
 
 tiLabelSplit				= "Splits venster";

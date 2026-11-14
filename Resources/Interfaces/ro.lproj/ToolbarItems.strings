@@ -91,7 +91,7 @@ tiToolTipProgramEE			= "Alegeți programul de tehnoredactare";
 
 tiLabelAutoComplete			= "Completare Automată";
 tiPaletteLabelAutoComplete		= "Completare Automată";
-tiToolTipAutoComplete			= "Toggle auto completion";
+tiToolTipAutoComplete			= "Comutați completarea automată";
 
 tiLabelSplit				= "Scindează Fereastra";
 tiPaletteLabelSplit			= "Scindează Fereastra";
@@ -214,7 +214,7 @@ tiToolTipColorIndexSplit          = "Comenzi pentru indexul de culori";
 
 tiLabelAutoCompleteSplit		= "Completare Automată";
 tiPaletteLabelAutoCompleteSplit   = "Completare Automată";
-tiToolTipAutoCompleteSplit     = "Toggle auto completion";
+tiToolTipAutoCompleteSplit     = "Comutați completarea automată";
 
 tiLabelTemplatesSplit            = "Modele";
 tiPaletteLabelTemplatesSplit            = "Modele";
