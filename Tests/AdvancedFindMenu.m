@@ -121,7 +121,10 @@ static void TestNib(NSString *nibPath, NSString *macrosPath, NSDictionary<NSStri
     NSURL *directory = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:NSUUID.UUID.UUIDString] isDirectory:YES];
     [TSMultipleReplaceMenu installInMainMenu:main directory:directory];
     NSArray<NSString *> *before = Snapshot(main);
-    BOOL findAndReplace = [find indexOfItemWithTag:12] >= 0;
+    NSMenuItem *ownFindAndReplace = ItemWithIdentifier(main, @"TSShortcut.performTextFinderAction:.12");
+    Check(ownFindAndReplace.action == @selector(performTextFinderAction:) && ownFindAndReplace.tag == 12 && ownFindAndReplace.menu == find
+          && [find indexOfItem:ownFindAndReplace] == [find indexOfItemWithTag:1] + 1 && [ownFindAndReplace.title isEqualToString:titles[@"FindAndReplace"]],
+          [NSString stringWithFormat:@"the menu has its own Find and Replace…, after Find…, titled %@ (not %@)", titles[@"FindAndReplace"], ownFindAndReplace.title]);
 
     for (NSNumber *method in @[@0, @1, @2]) {
         [TSAdvancedFindMenu updateMainMenu:main findMethod:method.integerValue];
@@ -150,8 +153,7 @@ static void TestNib(NSString *nibPath, NSString *macrosPath, NSDictionary<NSStri
     Check(findAndReplaceItem.action == @selector(performTextFinderAction:) && findAndReplaceItem.tag == 12 && [findAndReplaceItem.keyEquivalent isEqualToString:@"f"]
           && (findAndReplaceItem.keyEquivalentModifierMask & (NSEventModifierFlagCommand | NSEventModifierFlagShift | NSEventModifierFlagOption | NSEventModifierFlagControl)) == (NSEventModifierFlagCommand | NSEventModifierFlagOption),
           @"Find and Replace… with Option-Command-F in every language");
-    if (!findAndReplace)
-        Check([findAndReplaceItem.title isEqualToString:titles[@"ShowReplacePanel"]], [NSString stringWithFormat:@"the added Find and Replace… is titled %@, not %@", titles[@"ShowReplacePanel"], findAndReplaceItem.title]);
+    Check(findAndReplaceItem == ownFindAndReplace, @"the Advanced Find panel adds no second Find and Replace…");
     for (size_t i = 0; i < sizeof(commands) / sizeof(commands[0]); i++) {
         NSMenuItem *item = ItemWithIdentifier(main, ID(commands[i].tag));
         Check(item.action == @selector(performFindPanelAction:) && item.tag == commands[i].tag && item.target == nil,

@@ -93,10 +93,10 @@
 "AdvancedFind.Menu.ReplaceAndFind" = "Ersetzen und suchen";
 "AdvancedFind.Menu.SelectAll" = "Alle Treffer auswählen";
 "AdvancedFind.Menu.SetReplaceString" = "Auswahl für Ersetzen verwenden";
-"AdvancedFind.Menu.ShowReplacePanel" = "Suchen und ersetzen...";
 "AdvancedFind.Menu.Unhighlight" = "Hervorhebungen entfernen";
 "AdvancedFind.MoreMarks" = "(%lu weitere)";
 "AdvancedFind.MoreOptions" = "Weitere Optionen";
+"AdvancedFind.MultipleReplace" = "Mehrfach ersetzen …";
 "AdvancedFind.Next" = "Weiter";
 "AdvancedFind.NoHistory" = "Keine letzten Einträge";
 "AdvancedFind.NotFound" = "Nicht gefunden";

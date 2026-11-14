@@ -43,6 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSTextField *status;
 @property (nonatomic, strong, nullable) NSPopover *optionsPopover;
 @property (nonatomic, copy) NSArray<NSControl *> *buttons;
+@property (nonatomic, readwrite) NSButton *multipleReplaceButton;
 /// The option check boxes of the open popover, enabled or not by the regular expression setting.
 @property (nonatomic, strong, nullable) TSAdvancedFindOptionsForm *optionsForm;
 /// The coloring of the find and replace fields (+Coloring).
@@ -102,6 +103,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction)advancedHighlight:(nullable id)sender;
 - (IBAction)advancedUnhighlight:(nullable id)sender;
 - (IBAction)previousOrNext:(NSSegmentedControl *)sender;
+- (IBAction)showMultipleReplace:(nullable id)sender;
 /// The Find menu while the panel is key (from its fields): the actions go to the main window's text view, as the
 /// buttons' do; Find… and Find and Replace… select the panel's own fields.
 - (void)performFindMenuAction:(nullable id)sender;

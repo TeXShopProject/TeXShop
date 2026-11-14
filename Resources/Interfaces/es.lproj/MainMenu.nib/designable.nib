@@ -279,6 +279,12 @@
                                                 <action selector="performFindPanelAction:" target="-1" id="1019"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Buscar y reemplazar…" tag="12" keyEquivalent="f" id="eAi-Aa-Oto" identifier="TSShortcut.performTextFinderAction:.12">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="performTextFinderAction:" target="-1" id="nCw-oW-cHG"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Buscar siguiente" tag="2" keyEquivalent="g" id="988" identifier="TSShortcut.performFindPanelAction:.2">
                                             <connections>
                                                 <action selector="performFindPanelAction:" target="-1" id="1017"/>

@@ -14,9 +14,31 @@ static NSMenuItem *TSLegacyItemWithIdentifier(NSMenu *menu, NSString *identifier
     }
     return nil;
 }
+// Edit › Find › Find and Replace… was in the English (Base) menu only; the other languages' menus have it after Find…
+// since 6.00, so positions saved for those menus skip it.
+static NSString *const TSLegacyFindAndReplaceItem = @"TSShortcut.performTextFinderAction:.12";
+/// Whether the MainMenu nib at `path` (the one the application loaded) had Find and Replace… before 6.00: the Base one.
+static BOOL TSLegacyMenuPathHadFindAndReplace(NSString *path)
+{
+    return path == nil || [path containsString:@"/Base.lproj/"];
+}
+/// Whether the menu in use had Find and Replace… before 6.00; -1 until asked. The tests set it.
+static int TSLegacyMenuHadFindAndReplace = -1;
+static BOOL TSLegacySkipsFindAndReplace(void)
+{
+    if (TSLegacyMenuHadFindAndReplace < 0)
+        TSLegacyMenuHadFindAndReplace = TSLegacyMenuPathHadFindAndReplace([NSBundle.mainBundle pathForResource:@"MainMenu" ofType:@"nib"]);
+    return TSLegacyMenuHadFindAndReplace == 0;
+}
 static NSArray<NSMenuItem *> *TSLegacyItems(NSMenu *menu)
 {
     NSMutableArray<NSMenuItem *> *items = [menu.itemArray mutableCopy];
+    if (TSLegacySkipsFindAndReplace()) {
+        NSUInteger added = [items indexOfObjectPassingTest:^BOOL(NSMenuItem *item, NSUInteger index, BOOL *stop) {
+            return [item.identifier isEqualToString:TSLegacyFindAndReplaceItem];
+        }];
+        if (added != NSNotFound) [items removeObjectAtIndex:added];
+    }
     NSMenu *root = menu;
     while (root.supermenu != nil) root = root.supermenu;
     NSMenuItem *moved = TSLegacyItemWithIdentifier(root, TSLegacyMovedItem);

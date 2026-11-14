@@ -10,6 +10,7 @@
 #import "TSAdvancedFindPanelController+Private.h"
 #import "TSAdvancedFindTextView.h"
 #import "TSAdvancedFindHighlights.h"
+#import "TSMultipleReplaceMenu.h"
 
 static int failures;
 static void Check(BOOL ok, NSString *what)
@@ -510,6 +511,44 @@ static int CheckMessages(TSAdvancedFindPanelController *panel)
 }
 
 /// The panel and its options: layout in the current language (every language is run by the script), images on request.
+/// The Multiple Replace windows asked to show (the window itself is never ordered in).
+static NSUInteger TestShownMultipleReplaceWindows;
+static void TestCountShowWindow(id self, SEL _cmd, id sender) { TestShownMultipleReplaceWindows++; }
+
+/// "Multiple Replace…" right of Replace All opens the window as Edit Multiple Replace… does, whatever the target.
+static void TestMultipleReplaceButton(TSAdvancedFindPanelController *panel, NSUInteger *beeps)
+{
+    NSButton *button = panel.multipleReplaceButton;
+    NSStackView *row = (NSStackView *)button.superview;
+    NSUInteger index = [row.arrangedSubviews indexOfObject:button];
+    Check(button && index != NSNotFound && index > 0 && row.arrangedSubviews[index - 1] == panel.buttons[1]
+          && [row.views containsObject:button] && [[row viewsInGravity:NSStackViewGravityLeading] containsObject:button],
+          @"Multiple Replace… is right after Replace All, on the left of the row");
+    Check([button.title isEqualToString:TSAdvancedFindLocalized(@"AdvancedFind.MultipleReplace", @"Multiple Replace…")] && [button.title hasSuffix:@"…"]
+          && ![panel.buttons containsObject:button] && button.bezelStyle == ((NSButton *)panel.buttons[1]).bezelStyle,
+          @"its title ends with …, it looks as Replace All and does not follow the target");
+    method_setImplementation(class_getInstanceMethod(TSMultipleReplaceWindowController.class, @selector(showWindow:)), (IMP)TestCountShowWindow);
+    if (!TSMultipleReplaceMenu.sharedMenu) {
+        NSUInteger before = *beeps;
+        [button performClick:nil];
+        Check(*beeps == before + 1 && TestShownMultipleReplaceWindows == 0, @"without the menu's window (never in TeXShop) it beeps");
+        NSMenu *main = [[NSMenu alloc] initWithTitle:@"Main"];
+        NSMenu *edit = [[NSMenu alloc] initWithTitle:@"Edit"];
+        [main addItemWithTitle:@"Edit" action:NULL keyEquivalent:@""].submenu = edit;
+        NSMenu *find = [[NSMenu alloc] initWithTitle:@"Find"];
+        [edit addItemWithTitle:@"Find" action:NULL keyEquivalent:@""].submenu = find;
+        [find addItemWithTitle:@"Find…" action:@selector(performFindPanelAction:) keyEquivalent:@"f"].tag = NSFindPanelActionShowFindPanel;
+        NSURL *directory = [[NSURL fileURLWithPath:NSTemporaryDirectory()] URLByAppendingPathComponent:NSUUID.UUID.UUIDString];
+        [TSMultipleReplaceMenu installInMainMenu:main directory:[directory URLByAppendingPathComponent:@"MultipleReplace"]];
+    }
+    TSMultipleReplaceMenu *menu = TSMultipleReplaceMenu.sharedMenu;
+    NSUInteger shown = TestShownMultipleReplaceWindows;
+    Check(button.enabled, @"Multiple Replace… is enabled");
+    [button performClick:nil];
+    Check(menu && TestShownMultipleReplaceWindows == shown + 1 && !menu.windowController.window.isVisible,
+          @"Multiple Replace… shows the menu's Multiple Replace window (never ordered in here)");
+}
+
 static void TestPanel(NSString *_Nullable imageDirectory)
 {
     NSUInteger beeps = 0;
@@ -552,6 +591,8 @@ static void TestPanel(NSString *_Nullable imageDirectory)
     [panel updateButtons];
     Check(panel.buttons[0].enabled && !panel.buttons[1].enabled && !panel.buttons[2].enabled && panel.buttons[3].enabled,
           @"in a read-only target the replacing buttons are gray");
+    Check(panel.multipleReplaceButton.enabled, @"Multiple Replace… is not: it only opens its window");
+    TestMultipleReplaceButton(panel, &beeps);
     document.upper.editable = YES;
     [panel updateButtons];
     Check(panel.buttons[1].enabled && panel.buttons[2].enabled, @"in an editable target they are not");
@@ -586,6 +627,13 @@ static void TestPanel(NSString *_Nullable imageDirectory)
     [panel.window setContentSize:panel.window.contentMinSize];
     [content layoutSubtreeIfNeeded];
     failures += CheckLayoutInset(content, [NSString stringWithFormat:@"%@ smallest panel", language], 0);
+    Check(panel.window.contentMinSize.width + 0.5 >= ((NSStackView *)content).arrangedSubviews.lastObject.fittingSize.width + 40,
+          [NSString stringWithFormat:@"%@ smallest panel: the row of buttons sets the smallest width (%.0f)", language, panel.window.contentMinSize.width]);
+    // The left and the right buttons of the row keep their room in the smallest panel.
+    NSRect multiple = [panel.multipleReplaceButton convertRect:panel.multipleReplaceButton.bounds toView:content];
+    NSRect replaceAndFind = [panel.buttons[2] convertRect:panel.buttons[2].bounds toView:content];
+    Check(NSMaxX(multiple) + 8 <= NSMinX(replaceAndFind) && NSWidth(panel.multipleReplaceButton.frame) + 0.5 >= panel.multipleReplaceButton.fittingSize.width,
+          [NSString stringWithFormat:@"%@ smallest panel: Multiple Replace… is whole and clear of Replace & Find (%.0f, %.0f)", language, NSMaxX(multiple), NSMinX(replaceAndFind)]);
     [panel.window setFrame:old display:NO];
     failures += CheckMessages(panel);
     // Made larger, the fields take the room: the buttons stay 20 points from the bottom.
@@ -622,6 +670,13 @@ static void TestPanel(NSString *_Nullable imageDirectory)
         Check(WritePNG(content, appearance, [base stringByAppendingString:@"-panel.png"])
               && WritePNG(options, appearance, [base stringByAppendingString:@"-options.png"])
               && WritePNG(highlighted.window.contentView, appearance, [base stringByAppendingString:@"-highlights.png"]), @"images written");
+        // The smallest panel, where the row of buttons is tightest
+        NSRect frame = panel.window.frame;
+        [panel.window setContentSize:panel.window.contentMinSize];
+        [content layoutSubtreeIfNeeded];
+        Check(WritePNG(content, appearance, [base stringByAppendingString:@"-panel-smallest.png"]), @"image of the smallest panel written");
+        [panel.window setFrame:frame display:NO];
+        [content layoutSubtreeIfNeeded];
     }
 }
 

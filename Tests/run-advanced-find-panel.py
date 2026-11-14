@@ -19,6 +19,11 @@ root = Path(__file__).resolve().parents[1]
 LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt', 'pt-PT', 'ro', 'zh_CN']
 
 MUTATIONS = {
+    'Multiple Replace… does not open the window': ('TSAdvancedFindPanelController+Actions.m', '        [menu showMultipleReplace:sender];', '        (void)menu;'),
+    'Multiple Replace… is not in the row': ('TSAdvancedFindPanelController.m',
+        '[NSStackView stackViewWithViews:@[findAll, replaceAll, self.multipleReplaceButton]]', '[NSStackView stackViewWithViews:@[findAll, replaceAll]]'),
+    'the panel keeps its old smallest width': ('TSAdvancedFindPanelController.m',
+        'self.window.contentMinSize = NSMakeSize(MAX(560, content.fittingSize.width), 250);', 'self.window.contentMinSize = NSMakeSize(560, 250);'),
     'highlights are drawn before the background': ('TSLayoutManager.m',
         '\t[super drawBackgroundForGlyphRange:glyphsToShow atPoint:origin];\n\t[TSAdvancedFindHighlights drawInLayoutManager:self forGlyphRange:glyphsToShow atPoint:origin];',
         '\t[TSAdvancedFindHighlights drawInLayoutManager:self forGlyphRange:glyphsToShow atPoint:origin];\n\t[super drawBackgroundForGlyphRange:glyphsToShow atPoint:origin];'),
@@ -187,7 +192,7 @@ def copy_sources(tmp):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--image', type=Path)
-    parser.add_argument('--image-all-languages', action='store_true', help='images in all 12 languages, not only English and Japanese')
+    parser.add_argument('--image-all-languages', action='store_true', help='images in all 12 languages, not only English, German and Japanese')
     parser.add_argument('--mutations', action='store_true')
     args = parser.parse_args()
     with tempfile.TemporaryDirectory(prefix='texshop-advanced-find-panel-') as tmp:
@@ -204,7 +209,7 @@ def main():
                 sys.exit(f'FAIL: {table} is not in the application in all 12 languages')
         print('PASS: both tables are in the application in all 12 languages')
         for language in LANGUAGES:
-            images = args.image if args.image and (args.image_all_languages or language in ('en', 'ja')) else None
+            images = args.image if args.image and (args.image_all_languages or language in ('en', 'de', 'ja')) else None
             result = run(probe, 'panel', language, images)
             print(result.stdout + result.stderr, end='')
             if result.returncode:

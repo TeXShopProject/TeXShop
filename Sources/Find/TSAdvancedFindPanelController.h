@@ -25,6 +25,9 @@ NS_SWIFT_NAME(AdvancedFindPanelController)
 /// The buttons under the options: Find All (▾ Highlight All, Select All, Remove Highlights), Replace All,
 /// Replace & Find (▾ Replace), Previous / Next.
 @property (nonatomic, readonly) NSArray<NSControl *> *buttons;
+/// "Multiple Replace…" right of Replace All: opens the Multiple Replace window, as Edit Multiple Replace… does.
+/// Always enabled; it acts on no text.
+@property (nonatomic, readonly) NSButton *multipleReplaceButton;
 
 @end
 
