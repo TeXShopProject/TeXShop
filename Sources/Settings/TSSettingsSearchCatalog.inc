@@ -454,6 +454,9 @@ add(TSSettingsCategoryAppearance, @"settings.c9R-58-ggg", @"SettingsCategories",
 add(TSSettingsCategoryAppearance, @"settings.cnt-Xt-iQF", @"SettingsCategories", @"catalog.appearance.2.0.column.2", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryDocuments, @"row.catalog.documents.1.3", @"SettingsCategories", @"catalog.documents.1.3.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.9.0", @"SettingsCategories", @"catalog.typesetting.9.0.note", TSSettingsSearchWeightDescription);
+// The former names of the otf setting and its group still find the setting.
+add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.9.0", @"SettingsCategories", @"catalog.typesetting.9.0.former", TSSettingsSearchWeightDescription);
+add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.9.0", @"SettingsCategories", @"group.typesetting.9.former", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.0.4", @"SettingsCategories", @"catalog.editor.0.1.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.0.5", @"SettingsCategories", @"catalog.editor.0.1.note", TSSettingsSearchWeightDescription);
 
