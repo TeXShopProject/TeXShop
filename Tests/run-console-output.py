@@ -135,7 +135,7 @@ static BOOL TSWriteConsoleInput(FakeHandle *handle, NSData *data, NSError **erro
     NSWindow *outputWindow;
     NSTextView *outputText;
     NSTextField *texCommand;
-    NSForm *statisticsForm;
+    NSTextField *statisticsWords, *statisticsLines, *statisticsCharacters;
 }
 @property id readHandle, texloganalyserHandle, detexHandle, inputPipe;
 @property FakeHandle *writeHandle;

@@ -8116,9 +8116,9 @@ if (! useFullSplitWindow) {
                 NSNumber *lineNumber = [NSNumber numberWithInteger:lineCount];
                 NSNumber *wordNumber = [NSNumber numberWithInteger:wordCount];
                 NSNumber *charNumber = [NSNumber numberWithInteger:charCount];
-                [[statisticsForm cellAtIndex:0] setObjectValue:[wordNumber stringValue]];
-                [[statisticsForm cellAtIndex:1] setObjectValue:[lineNumber stringValue]];
-                [[statisticsForm cellAtIndex:2] setObjectValue:[charNumber stringValue]];
+                [statisticsWords setObjectValue:[wordNumber stringValue]];
+                [statisticsLines setObjectValue:[lineNumber stringValue]];
+                [statisticsCharacters setObjectValue:[charNumber stringValue]];
             }
         }
         if (self.statTempFile) { // we got statistics for a selection and need to erase the temp file
