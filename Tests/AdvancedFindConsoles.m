@@ -645,6 +645,37 @@ static void TestReplacingMeanwhile(TSExperimentConsoleController *experimentCont
     experiment.editable = NO;
 }
 
+/// Two editable views of one text: in one layout manager, which they share the editability of, or each in its own (a
+/// split window). TeXShop makes the second read-only while a task runs, to its end or cancelled: what it set stands.
+static void TestEditabilitySetOnAnotherView(void)
+{
+    for (NSNumber *shared in @[@YES, @NO])
+        for (NSNumber *cancel in @[@NO, @YES]) {
+            NSTextStorage *storage = [[NSTextStorage alloc] initWithString:SampleLog(3)];
+            NSMutableArray<NSTextView *> *views = [NSMutableArray array];
+            NSLayoutManager *layout = nil;
+            for (NSUInteger i = 0; i < 2; i++) {
+                if (!layout || !shared.boolValue) {
+                    layout = [NSLayoutManager new];
+                    [storage addLayoutManager:layout];
+                }
+                NSTextContainer *container = [[NSTextContainer alloc] initWithSize:NSMakeSize(300, 1e7)];
+                [layout addTextContainer:container];
+                [views addObject:[[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 300, 100) textContainer:container]];
+            }
+            NSString *name = [NSString stringWithFormat:@"%@ layout manager%@", shared.boolValue ? @"one" : @"a", cancel.boolValue ? @", cancelled" : @""];
+            Check(views[0].isEditable && views[1].isEditable && StartGatedFindAll(views[0]) && !views[0].isEditable && !views[1].isEditable,
+                  [NSString stringWithFormat:@"%@: both views are read-only while Find All runs", name]);
+            views[1].editable = NO;
+            if (cancel.boolValue)
+                [TestShared.runningTask cancel];
+            BOOL ended = FinishGatedFindAll();
+            BOOL first = shared.boolValue ? NO : YES; // the first view shares the second's editability, or not
+            Check(ended && views[0].isEditable == first && !views[1].isEditable,
+                  [NSString stringWithFormat:@"%@: a view made read-only meanwhile stays so (%d %d)", name, views[0].isEditable, views[1].isEditable]);
+        }
+}
+
 #pragma mark Images
 
 /// Windows that are never shown do not draw buttons; each button's own cell is drawn at its measured frame.
@@ -799,6 +830,7 @@ int main(int argc, const char *argv[])
             TestFindAllWhileOutputComes(nibs.firstObject, experimentController, log);
             TestReadOnlyMeanwhile(nibs.firstObject, experimentController, log, source);
             TestReplacingMeanwhile(experimentController, source);
+            TestEditabilitySetOnAnotherView();
         } else if ([mode isEqualToString:@"images"]) {
             [NSUserDefaults.standardUserDefaults setInteger:3 forKey:@"FindMethod"];
             WriteImages(nibs.firstObject, nibs.lastObject, experimentController);
