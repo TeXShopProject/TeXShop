@@ -98,7 +98,7 @@ static NSDictionary *State(TSEngineProfileSheet *sheet) {
              @"latexmkLabelText": [(NSTextField *)Find(content, @"settings.engine-profile-latexmk-label") stringValue] ?: @"",
              @"popup": Frame(Find(content, @"settings.choose-profile")),
              @"listIdentity": [NSString stringWithFormat:@"%p", list], @"latexmkTarget": [NSString stringWithFormat:@"%p", [(NSControl *)latexmk target]],
-             @"toApply": sheet.valuesToApply};
+             @"toApply": sheet.valuesToApply, @"keeps": @(sheet.list.keepsChangedValues)};
 }
 
 // Stands in for the sheet as the target of a button: counts the times a key chooses it.

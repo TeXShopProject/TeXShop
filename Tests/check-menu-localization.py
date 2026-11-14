@@ -17,6 +17,17 @@ ROOT = Path(__file__).resolve().parents[1]
 TOKEN = re.compile(r'\s+|/\*.*?\*/|//[^\n]*|"(?:\\.|[^"\\])*"|[=;]|[^\s"=;/]+', re.S)
 
 
+def string_literal(token):
+    """A quoted .strings key as Foundation reads it: \\Uhhhh is a Unicode escape, but an escaped backslash
+    followed by U (as in \\\\UTF) is a backslash and the letter U."""
+    return json.loads(re.sub(r'(?<!\\)((?:\\\\)*)\\U', r'\1\\u', token))
+
+
+# The two kinds of backslash before U, read as Foundation reads them.
+assert string_literal('"Convert to \\\\UTF / \\\\CID"') == 'Convert to \\UTF / \\CID'
+assert string_literal('"caf\\U00e9 \\\\\\U00e9"') == 'caf\u00e9 \\\u00e9'
+
+
 def strings(path):
     data = path.read_bytes()
     values = json.loads(subprocess.check_output(['plutil', '-convert', 'json', '-o', '-', str(path)]))
@@ -36,7 +47,7 @@ def strings(path):
     for i in range(0, len(tokens), 4):
         key, equals, value, semicolon = tokens[i:i+4]
         assert equals == '=' and semicolon == ';', (path, 'invalid entry', key)
-        key = json.loads(key.replace('\\U', '\\u')) if key.startswith('"') else key
+        key = string_literal(key) if key.startswith('"') else key
         assert key not in seen, (path, 'duplicate key', key)
         seen.add(key)
     assert seen == values.keys(), (path, 'lexical and plist keys differ')

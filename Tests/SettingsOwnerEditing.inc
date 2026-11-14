@@ -259,6 +259,26 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     chooseLatexmk(1);
     FinishOwnerAlert(NSModalResponseOK);
     Check(profileChoice.selectedTag==TSEngineProfileUpLaTeXDvipdfmx && [[TSIsolatedAppKitDefaults stringForKey:LatexGSCommandKey] isEqual:profileCommand],@"Applying in full shows the profile again");
+    // With a value turned off, the menu shows Custom even when the settings left happen to be those of another profile:
+    // LuaLaTeX (Japanese), then a MetaPost command of one's own, then LuaLaTeX keeping the BibTeX engine and the index
+    // program leaves exactly the settings of LuaLaTeX (Japanese).
+    void (^spin)(void)=^{for(int i=0;i<5;i++)[NSRunLoop.mainRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];};
+    chooseProfile(TSEngineProfileLuaLaTeXJapanese);chooseLatexmk(0);FinishOwnerAlert(NSModalResponseOK);spin();
+    [TSIsolatedAppKitDefaults setObject:@"custom-metapost" forKey:MetaPostEngineKey];spin();
+    chooseProfile(TSEngineProfileLuaLaTeX);chooseLatexmk(0);
+    NSGridView *lRows=(NSGridView *)Find(sheetView(@"settings.engine-profile-list"),@"settings.engine-profile-list.rows");
+    for(NSInteger r=3;r<5;r++){NSButton *box=(NSButton *)[lRows cellAtColumnIndex:0 rowIndex:r].contentView;Check([box isKindOfClass:NSButton.class],@"The BibTeX engine and the index program change, each with its checkbox");[box performClick:nil];}
+    FinishOwnerAlert(NSModalResponseOK);
+    Check([[TSIsolatedAppKitDefaults stringForKey:MetaPostEngineKey] isEqual:@"mpost"] && [[TSIsolatedAppKitDefaults stringForKey:MakeIndexEngineKey] isEqual:@"upmendex"] && TSEngineProfileMatchingSettings(TSIsolatedAppKitDefaults,NULL)==TSEngineProfileLuaLaTeXJapanese,
+          @"The settings left are those of LuaLaTeX (Japanese)");
+    Check(profileChoice.selectedTag==TSEngineProfileNone && [profileChoice.titleOfSelectedItem isEqual:NSLocalizedString(@"Custom",@"")],[NSString stringWithFormat:@"With a value turned off, the menu shows Custom, not another profile: %@",profileChoice.titleOfSelectedItem]);
+    spin();
+    Check(profileChoice.selectedTag==TSEngineProfileNone,@"The change notices of the profile leave Custom in the menu");
+    [TSIsolatedAppKitDefaults setObject:@"other" forKey:MetaPostEngineKey];spin();
+    [TSIsolatedAppKitDefaults setObject:@"mpost" forKey:MetaPostEngineKey];spin();
+    Check(profileChoice.selectedTag==TSEngineProfileLuaLaTeXJapanese,[NSString stringWithFormat:@"Once a setting changes again, the menu follows the settings: %@",profileChoice.titleOfSelectedItem]);
+    chooseProfile(TSEngineProfileUpLaTeXDvipdfmx);chooseLatexmk(1);FinishOwnerAlert(NSModalResponseOK);
+    Check(profileChoice.selectedTag==TSEngineProfileUpLaTeXDvipdfmx,@"Applying in full shows the profile again");
     CheckOwnerEngineFile(owner,shell);
     // Whole-number fields: digits only while typing, and a stepper beside each.
     [shell selectCategoryIdentifier:TSSettingsCategoryEditor];

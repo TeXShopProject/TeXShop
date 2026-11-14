@@ -82,6 +82,9 @@ typedef NS_CLOSED_ENUM(NSUInteger, TSSettingsFontDestination) {
 @property NSUInteger enginePathSearchGeneration;
 @property BOOL initialEnginePathSearchPending;
 @property (weak) NSButton *enginePathSearchButton;
+// The settings a profile left when it was applied with a value that changes turned off. While the settings stay so,
+// the menu shows Custom, even when they happen to be those of another profile.
+@property (copy) NSDictionary<TSPreferenceKey, id> *engineProfileLeftSettings;
 - (void)searchEnginePathsForInitialSetup:(BOOL)initial sender:(NSButton *)sender;
 - (void)chooseInitialEngineProfileModal:(BOOL)modal;
 - (void)refreshRuntimePreferences;
@@ -104,6 +107,8 @@ typedef NS_CLOSED_ENUM(NSUInteger, TSSettingsFontDestination) {
 @property (copy) void (^heightChanged)(void);
 // What applying writes: the values of the profile in the form chosen, but for those turned off.
 @property (readonly) NSDictionary<TSPreferenceKey, id> *valuesToApply;
+// Whether a value that changes is turned off: then the settings no longer follow the profile.
+@property (readonly) BOOL keepsChangedValues;
 - (IBAction)changeLatexmk:(NSSegmentedControl *)sender;
 - (IBAction)changeProfile:(NSPopUpButton *)sender;
 @end
@@ -138,9 +143,10 @@ static NSArray<NSArray *> *TSEngineProfileListRows(TSEngineProfile profile, BOOL
     add(NSLocalizedString(@"Engine profile row: MetaPost", @"Engine profile list: the MetaPost command"), values[MetaPostEngineKey], YES, MetaPostEngineKey);
     add(NSLocalizedString(@"Engine profile row: Convert to \\UTF / \\CID", @"Engine profile list: the conversion to the \\UTF and \\CID commands of the otf package, of Settings > Typesetting"),
         onOff(ptexUtfOutputEnabledKey), NO, ptexUtfOutputEnabledKey);
-    if (values[EncodingKey] != nil) {
+    NSString *encoding = values[EncodingKey];
+    if (encoding != nil) {
         add(NSLocalizedString(@"Engine profile row: New Document Encoding", @"Engine profile list: the encoding for new documents of Settings > Documents"),
-            NSLocalizedStringFromTable(values[EncodingKey], @"Encodings", @"Fetch localized encoding name"), NO, EncodingKey);
+            NSLocalizedStringFromTable(encoding, @"Encodings", @"Fetch localized encoding name"), NO, EncodingKey);
         add(NSLocalizedString(@"Engine profile row: UTF-8-MAC Conversion", @"Engine profile list: the automatic conversion of UTF-8-MAC to UTF-8 of Settings > Documents"),
             onOff(AutomaticUTF8MACtoUTF8ConversionKey), NO, AutomaticUTF8MACtoUTF8ConversionKey);
     }
@@ -204,6 +210,13 @@ static CGFloat const TSEngineProfileListDotRaise = 1.5;
     return values;
 }
 
+- (BOOL)keepsChangedValues
+{
+    for (NSUInteger i = 0; i < _rows.count; i++)
+        if ([_rows[i][3] boolValue] && ![self rowIsSet:i]) return YES;
+    return NO;
+}
+
 - (BOOL)rowIsSet:(NSUInteger)index
 {
     return ![_kept intersectsSet:[NSSet setWithArray:_rows[index][4]]];
@@ -235,7 +248,8 @@ static CGFloat const TSEngineProfileListDotRaise = 1.5;
         nameField.selectable = NO;
         nameField.translatesAutoresizingMaskIntoConstraints = NO;
         rowViews[@"name"] = nameField;
-        rowViews[@"value"] = TSEngineProfileListField(value, command ? mono : font, valueWidth);
+        NSTextField *valueField = TSEngineProfileListField(value, command ? mono : font, valueWidth);
+        rowViews[@"value"] = valueField;
         if (marks) {
             if (changes) {
                 NSButton *check = [NSButton checkboxWithTitle:@"" target:self action:@selector(changeRow:)];
@@ -254,11 +268,13 @@ static CGFloat const TSEngineProfileListDotRaise = 1.5;
         if (marks) {
             dot = TSEngineProfileListField(changes ? @"\u25CF" : @"", [NSFont systemFontOfSize:7], dotWidth);
             dot.identifier = changes ? @"settings.engine-profile-list.changes" : @"settings.engine-profile-list.same";
+            // VoiceOver reads the checkbox of the row; the dot only repeats it.
+            dot.accessibilityElement = NO;
             rowViews[@"dot"] = dot;
         }
-        [cells addObject:rowViews[@"name"]];
+        [cells addObject:nameField];
         if (marks) [cells addObject:dot];
-        [cells addObject:rowViews[@"value"]];
+        [cells addObject:valueField];
         [gridRows addObject:cells];
         [views addObject:rowViews];
     }
@@ -278,10 +294,11 @@ static CGFloat const TSEngineProfileListDotRaise = 1.5;
     CGFloat middle = (font.ascender + font.descender) / 2;
     for (NSDictionary *rowViews in views) {
         NSView *check = rowViews[@"check"];
+        NSTextField *nameField = rowViews[@"name"];
         if (check == nil) continue;
         NSGridCell *cell = [grid cellForView:check];
         cell.yPlacement = NSGridCellPlacementNone;
-        cell.customPlacementConstraints = @[[check.centerYAnchor constraintEqualToAnchor:[rowViews[@"name"] firstBaselineAnchor] constant:-middle]];
+        cell.customPlacementConstraints = @[[check.centerYAnchor constraintEqualToAnchor:nameField.firstBaselineAnchor constant:-middle]];
     }
     grid.translatesAutoresizingMaskIntoConstraints = YES;
     [grid layoutSubtreeIfNeeded];
@@ -301,14 +318,16 @@ static CGFloat const TSEngineProfileListDotRaise = 1.5;
     NSColor *color = !marks || (changes && set) ? NSColor.labelColor : NSColor.secondaryLabelColor;
     NSTextField *name = views[@"name"], *value = views[@"value"];
     name.textColor = color;
-    NSMutableDictionary *attributes = [@{NSFontAttributeName: value.font, NSForegroundColorAttributeName: color} mutableCopy];
+    NSFont *valueFont = value.font ?: [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
+    NSMutableDictionary *attributes = [@{NSFontAttributeName: valueFont, NSForegroundColorAttributeName: color} mutableCopy];
     if (changes && !set) attributes[NSStrikethroughStyleAttributeName] = @(NSUnderlineStyleSingle);
     value.attributedStringValue = [[NSAttributedString alloc] initWithString:value.stringValue attributes:attributes];
     value.textColor = color;
     NSTextField *dot = views[@"dot"];
     if (dot.stringValue.length) {
         NSColor *dotColor = set ? NSColor.controlAccentColor : [NSColor.controlAccentColor colorWithAlphaComponent:0.35];
-        dot.attributedStringValue = [[NSAttributedString alloc] initWithString:dot.stringValue attributes:@{NSFontAttributeName: dot.font,
+        NSFont *dotFont = dot.font ?: [NSFont systemFontOfSize:7];
+        dot.attributedStringValue = [[NSAttributedString alloc] initWithString:dot.stringValue attributes:@{NSFontAttributeName: dotFont,
             NSForegroundColorAttributeName: dotColor, NSBaselineOffsetAttributeName: @(TSEngineProfileListDotRaise)}];
         dot.textColor = dotColor;
     }
@@ -785,6 +804,14 @@ NSArray<NSString *> *TSEngineFileNames(NSString *folder)
 
 // The profile menu of Settings > Typesetting shows the profile all of whose settings are set
 // now, or Custom when none is.
+// Every setting some profile writes, as stored now.
+static NSDictionary<TSPreferenceKey, id> *TSEngineProfileSettingsNow(NSUserDefaults *defaults)
+{
+    NSMutableDictionary *settings = [NSMutableDictionary dictionary];
+    for (TSPreferenceKey key in TSEngineProfileKeys()) settings[key] = [defaults objectForKey:key] ?: NSNull.null;
+    return settings;
+}
+
 - (void)refreshEngineProfileFromDefaults:(NSUserDefaults *)defaults
 {
     NSPopUpButton *popup = self.engineProfilePopup;
@@ -796,6 +823,10 @@ NSArray<NSString *> *TSEngineFileNames(NSString *folder)
         return;
     }
     TSEngineProfile current = TSEngineProfileMatchingSettings(defaults, NULL);
+    if (self.engineProfileLeftSettings != nil) {
+        if ([TSEngineProfileSettingsNow(defaults) isEqual:self.engineProfileLeftSettings]) current = TSEngineProfileNone;
+        else self.engineProfileLeftSettings = nil;
+    }
     // The menu is built again only when what it shows changes.
     BOOL hasCustom = [popup indexOfItemWithTag:TSEngineProfileNone] >= 0;
     if (popup.numberOfItems > 0 && popup.selectedItem != nil && popup.selectedTag == current && hasCustom == (current == TSEngineProfileNone)) return;
@@ -844,9 +875,11 @@ NSArray<NSString *> *TSEngineFileNames(NSString *folder)
     TSEngineProfileSheet *sheet = [[TSEngineProfileSheet alloc] initWithProfile:profile latexmk:TSEngineProfileSettingsUseLatexmk(SUD) settings:SUD];
     [sheet beginSheetForWindow:_prefsWindow completionHandler:^(NSModalResponse response) {
         self.engineProfileAsked = TSEngineProfileNone;
-        // The list leaves out the values turned off.
-        if (response == NSModalResponseOK && !self.endingPreferences)
+        // The list leaves out the values turned off; with one of them turned off, the menu shows Custom.
+        if (response == NSModalResponseOK && !self.endingPreferences) {
             [self applyEngineProfileValues:sheet.valuesToApply];
+            self.engineProfileLeftSettings = sheet.list.keepsChangedValues ? TSEngineProfileSettingsNow(SUD) : nil;
+        }
         [self refreshEngineProfileFromDefaults:SUD];
     }];
 }

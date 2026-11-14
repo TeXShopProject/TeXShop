@@ -229,6 +229,8 @@ def check_state(problems, where, language, state, profile, latexmk, current, kep
     if state['toApply'] != applies:
         problems.append(f'{where}: OK writes {sorted(state["toApply"])}, expected {sorted(applies)}')
     changing = [set(keys) for (_, _, _, marked, keys) in want if marked]
+    if state['keeps'] != any(keys & kept for keys in changing):
+        problems.append(f'{where}: the sheet {"keeps" if state["keeps"] else "does not keep"} a value that changes, with {sorted(kept)} turned off')
     enabled = not changing or any(not (keys & kept) for keys in changing)
     if state['okEnabled'] != enabled:
         problems.append(f'{where}: OK is {"enabled" if state["okEnabled"] else "disabled"} with {sorted(kept)} turned off')
@@ -330,14 +332,15 @@ MUTATIONS = {
     'names wrap': ('        NSTextField *nameField = [NSTextField labelWithString:row[0]];', '        NSTextField *nameField = TSEngineProfileListField(row[0], font, 60);'),
     'the window does not follow the list': ('    _list.heightChanged = ^{ [weakSelf layOut]; };\n', ''),
     'no spacing after the names': ('    [grid columnAtIndex:nameColumn].trailingPadding = spacing;\n', ''),
-    'the checkbox off the middle of its name': ('firstBaselineAnchor] constant:-middle]];', 'firstBaselineAnchor] constant:-middle + 4]];'),
+    'the checkbox off the middle of its name': ('nameField.firstBaselineAnchor constant:-middle]];', 'nameField.firstBaselineAnchor constant:-middle + 4]];'),
     'checkboxes of the regular size': ('                check.controlSize = NSControlSizeSmall;\n', ''),
-    'the dot before the name': ('        [cells addObject:rowViews[@"name"]];\n        if (marks) [cells addObject:dot];', '        if (marks) [cells addObject:dot];\n        [cells addObject:rowViews[@"name"]];'),
+    'the dot before the name': ('        [cells addObject:nameField];\n        if (marks) [cells addObject:dot];', '        if (marks) [cells addObject:dot];\n        [cells addObject:nameField];'),
     'the dot not faint when off': ('NSColor *dotColor = set ? NSColor.controlAccentColor : [NSColor.controlAccentColor colorWithAlphaComponent:0.35];', 'NSColor *dotColor = NSColor.controlAccentColor;'),
     'not struck through': ('    if (changes && !set) attributes[NSStrikethroughStyleAttributeName] = @(NSUnderlineStyleSingle);\n', ''),
     'values turned off still written': ('    [values removeObjectsForKeys:_kept.allObjects];\n', ''),
     'values turned off forgotten with latexmk': ('    _latexmk = sender.selectedSegment == 1;', '    _latexmk = sender.selectedSegment == 1; [_kept removeAllObjects];'),
     'checkboxes always on': ('check.state = [_kept intersectsSet:[NSSet setWithArray:row[4]]] ? NSControlStateValueOff : NSControlStateValueOn;', 'check.state = NSControlStateValueOn;'),
+    'turning a value off not told': ('        if ([_rows[i][3] boolValue] && ![self rowIsSet:i]) return YES;\n', ''),
     'OK always enabled': ('    self.applyButton.enabled = set || !changes;', '    self.applyButton.enabled = YES;'),
     'OK not on Return': ('    _window.defaultButtonCell = _okButton.cell;\n', '    _window.defaultButtonCell = nil; _okButton.keyEquivalent = @"";\n'),
     'Cancel not on Escape': ('    _cancelButton.keyEquivalent = @"\\e";\n', ''),
@@ -370,7 +373,7 @@ def main():
         sheets = sum(len(r['sheets']) for r in results)
         print(f'PASS: the sheet in {sheets} cases and the first-launch window in {len(results)} languages: short names on one line, '
               'the values of the profile and its latexmk form, checkboxes and dots on what changes from the settings in use, '
-              'values turned off kept and left out, OK disabled with none on, the window following the list, OK and Cancel at the '
+              'values turned off kept and left out and told, OK disabled with none on, the window following the list, OK and Cancel at the '
               'bottom right on Return and Escape, nothing cut')
         missed = []
         for name, (old, new) in MUTATIONS.items():
