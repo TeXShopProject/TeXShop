@@ -141,7 +141,7 @@ for file in ('Documentation/Releases/6.00.md', 'website/release-notes.html', 'Do
         assert obsolete not in text, (file, obsolete)
 for file in ('Documentation/Releases/6.00-ja.md', 'website/release-notes-ja.html'):
     text = (ROOT / file).read_text()
-    assert 'NSUserKeyEquivalents' in text and 'LaTeXの構造を考慮する（推奨）' in text and '従来の方式' in text and '従来方式を使う' not in text
+    assert 'NSUserKeyEquivalents' in text and 'LaTeXの構文を考慮する（推奨）' in text and '従来の方式' in text and '従来方式を使う' not in text
     assert '入力設定とショートカット一覧は同じ縦スクロール領域' not in text
 contract = json.loads((ROOT / 'Tests/Fixtures/SettingsCategoryGroups.json').read_text())
 assert 'catalog' in contract['source'].lower()
