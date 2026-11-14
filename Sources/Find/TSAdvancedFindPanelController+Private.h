@@ -6,6 +6,7 @@
 #import "TSAdvancedFindResultsView.h"
 #import "TSAdvancedFindCheatSheet.h"
 #import "TSSyntaxHighlighter.h"
+#import "TSAdvancedFindFieldStyle.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -49,6 +50,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// The coloring of the find and replace fields (+Coloring).
 @property (nonatomic, strong) TSSyntaxHighlighter *findHighlighter;
 @property (nonatomic, strong) TSSyntaxHighlighter *replaceHighlighter;
+/// The look of the fields, for the window's light or dark appearance (+Coloring).
+@property (nonatomic, strong) TSAdvancedFindFieldStyle *fieldStyle;
 /// The list of all matches, under the options while shown (+Results).
 @property (nonatomic, strong) TSAdvancedFindResultsView *resultsView;
 /// The height of the list when it was last shown, for the next time.
@@ -71,8 +74,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateModeControls;
 - (void)optionsDidChange;
 - (void)loadStrings;
-/// Colors the fields as the engine reads them (+Coloring): starts following their edits.
+/// Colors the fields as the engine reads them (+Coloring): starts following their edits, the theme and the window's
+/// light or dark appearance. After the boxes are made.
 - (void)setUpFieldColoring;
+/// Stops following the theme and the appearance.
+- (void)tearDownFieldColoring;
+/// The theme's colors, the source font and the TeX settings, for the window's appearance (+Coloring).
+- (void)applyFieldStyle;
 /// The scanners for the current options, pattern and replacement syntax; colors the fields again when they changed.
 - (void)updateFieldScanners;
 /// The marks of both fields, the find field's first: errors and what OgreKit reads otherwise.

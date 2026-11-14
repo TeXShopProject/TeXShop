@@ -178,52 +178,7 @@ static NSString *TSProblemMessage(TSRegexLexerProblem problem)
 
 @end
 
-#pragma mark Colors
-
-static NSColor *TSDynamicColor(NSString *name, unsigned light, unsigned dark)
-{
-    NSColor *(^rgb)(unsigned) = ^NSColor *(unsigned value) {
-        return [NSColor colorWithSRGBRed:((value >> 16) & 0xFF) / 255.0 green:((value >> 8) & 0xFF) / 255.0 blue:(value & 0xFF) / 255.0 alpha:1];
-    };
-    NSColor *lightColor = rgb(light), *darkColor = rgb(dark);
-    return [NSColor colorWithName:name dynamicProvider:^NSColor *(NSAppearance *appearance) {
-        NSAppearanceName match = [appearance bestMatchFromAppearancesWithNames:@[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]];
-        return [match isEqualToString:NSAppearanceNameDarkAqua] ? darkColor : lightColor;
-    }];
-}
-
-TSSyntaxColorScheme *TSAdvancedFindFieldColorScheme(void)
-{
-    static TSSyntaxColorScheme *scheme;
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{
-        NSDictionary<NSAttributedStringKey, id> *(^color)(NSString *, unsigned, unsigned) = ^(NSString *name, unsigned light, unsigned dark) {
-            return @{NSForegroundColorAttributeName: TSDynamicColor(name, light, dark)};
-        };
-        NSColor *red = TSDynamicColor(@"AdvancedFindInvalid", 0xD12F1B, 0xFF6B5A);
-        NSColor *orange = TSDynamicColor(@"AdvancedFindIncompatible", 0xC86400, 0xFFA14A);
-        scheme = [[TSSyntaxColorScheme alloc] initWithAttributes:@{
-            @(TSSyntaxRoleRegexCharacterClass): color(@"AdvancedFindClass", 0x0F68A0, 0x6BB8F0),
-            @(TSSyntaxRoleRegexBackreference): color(@"AdvancedFindBackreference", 0x8A2BB8, 0xD58BF5),
-            @(TSSyntaxRoleRegexQuantifier): color(@"AdvancedFindQuantifier", 0xB0560A, 0xF2A65A),
-            @(TSSyntaxRoleRegexAnchor): color(@"AdvancedFindAnchor", 0xC2185B, 0xFF7AB0),
-            @(TSSyntaxRoleRegexSymbol): color(@"AdvancedFindSymbol", 0x2E7D32, 0x7FD483),
-            @(TSSyntaxRoleRegexEscape): color(@"AdvancedFindEscape", 0x7A5C1E, 0xD9B76A),
-            @(TSSyntaxRoleComment): color(@"AdvancedFindComment", 0x8A8A8A, 0x8E8E93),
-            @(TSSyntaxRoleRegexIncompatible): @{
-                NSUnderlineStyleAttributeName: @(NSUnderlineStyleThick | NSUnderlinePatternDot),
-                NSUnderlineColorAttributeName: orange,
-                NSForegroundColorAttributeName: orange,
-            },
-            @(TSSyntaxRoleInvalid): @{
-                NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle),
-                NSUnderlineColorAttributeName: red,
-                NSForegroundColorAttributeName: red,
-            },
-        } activeLineAttributes:@{} braceHighlightAttributes:@{} contentHighlightAttributes:@{}];
-    });
-    return scheme;
-}
+#pragma mark Rules
 
 NSAttributedString *TSAdvancedFindColoredString(NSString *string, id<TSSyntaxScanner> scanner, TSSyntaxColorScheme *scheme,
                                                 NSDictionary<NSAttributedStringKey, id> *attributes)

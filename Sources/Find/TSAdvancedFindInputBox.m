@@ -88,7 +88,7 @@ static NSImage *TSMenuSymbol(NSString *name, NSString *description)
     __block CGColorRef border = NULL, fill = NULL;
     [self.effectiveAppearance performAsCurrentDrawingAppearance:^{
         border = (self.focused ? [NSColor.keyboardFocusIndicatorColor colorWithAlphaComponent:0.6] : NSColor.separatorColor).CGColor;
-        fill = NSColor.textBackgroundColor.CGColor;
+        fill = (self.fillColor ?: NSColor.textBackgroundColor).CGColor;
     }];
     self.layer.cornerRadius = 7;
     self.layer.borderWidth = self.focused ? 3 : 1;
@@ -99,6 +99,12 @@ static NSImage *TSMenuSymbol(NSString *name, NSString *description)
 - (void)setFocused:(BOOL)focused
 {
     _focused = focused;
+    self.needsDisplay = YES;
+}
+
+- (void)setFillColor:(nullable NSColor *)fillColor
+{
+    _fillColor = fillColor;
     self.needsDisplay = YES;
 }
 

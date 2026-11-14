@@ -94,6 +94,27 @@ static TSRegexReplacementRule *TSRuleWith(TSRegexReplacementRule *rule, NSString
     [self.tableView reloadData];
 }
 
+- (void)reloadFieldCells
+{
+    NSTableView *table = self.tableView;
+    NSMutableIndexSet *rows = [NSMutableIndexSet indexSetWithIndexesInRange:NSMakeRange(0, (NSUInteger)table.numberOfRows)];
+    // The text being typed keeps its field editor.
+    id responder = table.window.firstResponder;
+    if ([responder isKindOfClass:[NSText class]] && [((NSText *)responder).delegate isKindOfClass:[NSView class]]) {
+        NSInteger edited = [table rowForView:(NSView *)((NSText *)responder).delegate];
+        if (edited >= 0)
+            [rows removeIndex:(NSUInteger)edited];
+    }
+    NSMutableIndexSet *columns = [NSMutableIndexSet indexSet];
+    for (NSString *identifier in @[TSColumnFind, TSColumnReplace]) {
+        NSInteger column = [table columnWithIdentifier:identifier];
+        if (column >= 0)
+            [columns addIndex:(NSUInteger)column];
+    }
+    if (rows.count > 0 && columns.count > 0)
+        [table reloadDataForRowIndexes:rows columnIndexes:columns];
+}
+
 - (void)changeRules:(NSArray<TSRegexReplacementRule *> *)rules
 {
     TSRegexMultipleReplace *old = self.set;

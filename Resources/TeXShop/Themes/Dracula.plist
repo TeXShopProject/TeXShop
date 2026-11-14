@@ -193,23 +193,23 @@
 	</array>
 	<key>SyntaxMarkerParen</key>
 	<array>
-		<real>0</real>
-		<real>0</real>
-		<real>0</real>
+		<real>0.97254901960784312</real>
+		<real>0.97254901960784312</real>
+		<real>0.94901960784313721</real>
 		<integer>1</integer>
 	</array>
 	<key>SyntaxMarkerCurly</key>
 	<array>
-		<real>0</real>
-		<real>0</real>
-		<real>0</real>
+		<real>0.97254901960784312</real>
+		<real>0.97254901960784312</real>
+		<real>0.94901960784313721</real>
 		<integer>1</integer>
 	</array>
 	<key>SyntaxMarkerSquare</key>
 	<array>
-		<real>0</real>
-		<real>0</real>
-		<real>0</real>
+		<real>0.97254901960784312</real>
+		<real>0.97254901960784312</real>
+		<real>0.94901960784313721</real>
 		<integer>1</integer>
 	</array>
 	<key>Title</key>
