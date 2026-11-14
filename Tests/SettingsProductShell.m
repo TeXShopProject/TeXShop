@@ -373,6 +373,60 @@ int main(int argc,char **argv){@autoreleasepool{
    if(argc>2)Save(themes,[@(argv[2]) stringByAppendingPathComponent:[NSString stringWithFormat:@"themes-light-pages-%@.png",appearance]]);
   }
  }
+ {
+  // The theme colors stand in three columns that line up from group to group, in the
+  // narrowest window too. Every name is shown whole and stays in its card; only the last
+  // name of a group may run on into the empty columns after it.
+  [shell selectCategoryIdentifier:TSSettingsCategoryAppearance];
+  NSView *themes=[shell viewForCategoryIdentifier:TSSettingsCategoryAppearance];
+  NSSize original=[shell.window contentRectForFrameRect:shell.window.frame].size;
+  NSArray *groups=@[@"3",@"4",@"5",@"6",@"7",@"8",@"11",@"9"];
+  for(NSNumber *width in @[@900,@1040])for(NSString *appearance in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]){
+   [shell.window setContentSize:NSMakeSize(width.doubleValue,original.height)];shell.window.appearance=[NSAppearance appearanceNamed:appearance];
+   [shell.window.contentView layoutSubtreeIfNeeded];[themes layoutSubtreeIfNeeded];
+   CGFloat columnX[3]={-1,-1,-1};NSUInteger columnsUsed=0;
+   for(NSString *group in groups){
+    NSView *row=Find(themes,[NSString stringWithFormat:@"row.catalog.appearance.%@.0",group]);NSGridView *grid=nil;
+    for(NSView *child in row.subviews)if([child isKindOfClass:NSGridView.class])grid=(NSGridView *)child;
+    Check(grid!=nil && grid.numberOfColumns==3,[NSString stringWithFormat:@"Theme colors of group %@ stand in three columns",group]);
+    NSMutableArray<NSView *> *items=[NSMutableArray array];NSMutableArray<NSNumber *> *places=[NSMutableArray array];
+    for(NSInteger r=0;r<grid.numberOfRows;r++)for(NSInteger c=0;c<3;c++){
+     NSView *content=[grid cellAtColumnIndex:c rowIndex:r].contentView;
+     if(content==nil || content==NSGridCell.emptyContentView || !content.subviews.count || [items indexOfObjectIdenticalTo:content]!=NSNotFound)continue;
+     [items addObject:content];[places addObject:@(r*3+c)];
+    }
+    // The cells after the last name are merged into its cell.
+    NSUInteger lastPlace=places.lastObject.unsignedIntegerValue;
+    for(NSUInteger c=lastPlace%3+1;c<3;c++)Check([grid cellAtColumnIndex:c rowIndex:lastPlace/3].contentView==items.lastObject,[NSString stringWithFormat:@"The last color of group %@ may use the empty columns after it",group]);
+    // A missing key comes back as the marker, not as the key itself.
+    NSUInteger count=0;while(![[fixture localizedStringForKey:[NSString stringWithFormat:@"catalog.appearance.%@.0.item.%lu",group,(unsigned long)count] value:@"\u2400" table:@"SettingsCategories"] isEqual:@"\u2400"] && count<20)count++;
+    Check(items.count==count && count>0,[NSString stringWithFormat:@"Group %@ shows its %lu colors (%lu)",group,(unsigned long)count,(unsigned long)items.count]);
+    NSRect card=NSInsetRect([row convertRect:row.bounds toView:themes],12,0);
+    for(NSUInteger i=0;i<items.count;i++){
+     Check(places[i].unsignedIntegerValue==i,[NSString stringWithFormat:@"Group %@ fills its rows from the left without gaps",group]);
+     NSColorWell *well=nil;NSTextField *label=nil;
+     for(NSView *part in items[i].subviews){if([part isKindOfClass:NSColorWell.class])well=(NSColorWell *)part;else if([part isKindOfClass:NSTextField.class])label=(NSTextField *)part;}
+     Check(well!=nil && label!=nil,@"Each theme color has its well and its name");
+     NSString *expected=[fixture localizedStringForKey:[NSString stringWithFormat:@"catalog.appearance.%@.0.item.%lu",group,(unsigned long)i] value:nil table:@"SettingsCategories"];
+     Check([label.stringValue isEqual:expected],[NSString stringWithFormat:@"Theme color %@ is named %@",label.stringValue,expected]);
+     NSUInteger column=i%3;CGFloat x=NSMinX([well convertRect:well.bounds toView:themes]);
+     if(columnX[column]<0){columnX[column]=x;columnsUsed=MAX(columnsUsed,column+1);}
+     Check(fabs(x-columnX[column])<0.5,[NSString stringWithFormat:@"Theme colors line up in column %lu at width %@: %.1f vs %.1f (group %@)",(unsigned long)column,width,x,columnX[column],group]);
+     NSRect name=[label convertRect:label.bounds toView:themes];
+     Check(label.cell.cellSize.width<=NSWidth(label.frame)+1,[NSString stringWithFormat:@"Theme color name fits at width %@: %@ %.1f <= %.1f",width,label.stringValue,label.cell.cellSize.width,NSWidth(label.frame)]);
+     Check(NSMaxX(name)<=NSMaxX(card)+1,[NSString stringWithFormat:@"Theme color name stays in its card at width %@: %@",width,label.stringValue]);
+     CGFloat columnEnd=column<2?columnX[column+1]-12:NSMaxX(card);
+     if(i+1<items.count && column<2 && columnX[column+1]>=0)Check(NSMaxX(name)<=columnEnd,[NSString stringWithFormat:@"Theme color name ends before the next column at width %@: %@",width,label.stringValue]);
+    }
+   }
+   Check(columnsUsed==3 && columnX[1]-columnX[0]>=196 && fabs((columnX[2]-columnX[1])-(columnX[1]-columnX[0]))<0.5,@"Theme color columns are evenly spaced");
+   if(argc>2)Save(themes,[@(argv[2]) stringByAppendingPathComponent:[NSString stringWithFormat:@"themes-colors-%@-%@.png",width,appearance]]);
+  }
+  NSString *preview=[fixture localizedStringForKey:@"preview" value:nil table:@"SettingsCategories"];
+  for(NSUInteger i=0;i<2;i++){NSString *name=[fixture localizedStringForKey:[NSString stringWithFormat:@"catalog.appearance.8.0.item.%lu",(unsigned long)i] value:nil table:@"SettingsCategories"];
+   Check(name.length && ![name containsString:@"SyncTeX"] && (i || [name isEqual:preview]),[NSString stringWithFormat:@"The SyncTeX colors are named after their windows: %@",name]);}
+  [shell.window setContentSize:original];[shell.window.contentView layoutSubtreeIfNeeded];
+ }
  NSMutableDictionary *current=[[TSIsolatedAppKitDefaults dictionaryRepresentation]mutableCopy];[current removeObjectForKey:TSSettingsSelectedCategoryKey];NSMutableDictionary *before=[saved mutableCopy];[before removeObjectForKey:TSSettingsSelectedCategoryKey];Check([current isEqual:before],@"Opening and navigating changes only remembered category");
  [shell selectCategoryIdentifier:TSSettingsCategoryDocuments];
  id windowManager=[NSClassFromString(@"TSWindowManager") performSelector:@selector(sharedInstance)];
@@ -524,15 +578,15 @@ int main(int argc,char **argv){@autoreleasepool{
  Check([owner commitPreferenceField:indexField showError:NO reflect:YES] && [[TSIsolatedAppKitDefaults stringForKey:MakeIndexEngineKey] isEqual:@"makeindex"],@"Another index program commits");
  drainProfiles();Check(profiles.selectedTag==TSEngineProfileNone,@"Another index program typed in Settings shows Custom");
  // Choosing a profile asks; Cancel changes nothing and shows Custom again.
- Method profileSheet=class_getInstanceMethod(NSAlert.class,@selector(beginSheetModalForWindow:completionHandler:));
- __block NSModalResponse profileAnswer=NSAlertSecondButtonReturn;__block NSUInteger profileSheets=0;
+ Method profileSheet=class_getInstanceMethod(NSWindow.class,@selector(beginSheet:completionHandler:));
+ __block NSModalResponse profileAnswer=NSModalResponseCancel;__block NSUInteger profileSheets=0;
  __block TSEngineProfile shownWhileAsking=TSEngineProfileNone;
- IMP originalSheet=method_setImplementation(profileSheet,imp_implementationWithBlock(^(NSAlert *alert,NSWindow *window,void (^completion)(NSModalResponse)){profileSheets++;shownWhileAsking=profiles.selectedTag;completion(profileAnswer);}));
+ IMP originalSheet=method_setImplementation(profileSheet,imp_implementationWithBlock(^(NSWindow *window,NSWindow *sheet,void (^completion)(NSModalResponse)){profileSheets++;shownWhileAsking=profiles.selectedTag;completion(profileAnswer);}));
  NSDictionary *beforeChoice=[TSIsolatedAppKitDefaults.values copy];
  [profiles selectItemWithTag:TSEngineProfileXeLaTeX];[profiles sendAction:profiles.action to:profiles.target];drainProfiles();
  Check(profileSheets==1 && shownWhileAsking==TSEngineProfileXeLaTeX,@"While the sheet asks, the menu shows the profile chosen");
  Check([TSIsolatedAppKitDefaults.values isEqual:beforeChoice] && profiles.selectedTag==TSEngineProfileNone,@"Cancel changes nothing and shows Custom again");
- profileAnswer=NSAlertFirstButtonReturn;
+ profileAnswer=NSModalResponseOK;
  [profiles selectItemWithTag:TSEngineProfileXeLaTeX];[profiles sendAction:profiles.action to:profiles.target];drainProfiles();
  Check(profileSheets==2 && profiles.selectedTag==TSEngineProfileXeLaTeX && [[TSIsolatedAppKitDefaults stringForKey:MakeIndexEngineKey] isEqual:@"makeindex"] && [[TSIsolatedAppKitDefaults stringForKey:LatexCommandKey] isEqual:TSEngineProfileValues(TSEngineProfileXeLaTeX,NO)[LatexCommandKey]],@"Apply in the sheet applies the chosen profile");
   // The commands have no Default buttons: choosing the profile again, while the menu shows it or Custom, asks and
