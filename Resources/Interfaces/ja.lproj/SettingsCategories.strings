@@ -19,7 +19,7 @@
 "general.summary" = "起動時の動作、ウインドウの開き方と位置、Dockのアイコンを設定します。";
 "documents.summary" = "新しい書類のエンコーディングと、保存の方法を設定します。";
 "editor.summary" = "ソースのウインドウの表示と入力を設定します。";
-"spelling.summary" = "スペルチェックと、LaTeXの構造を考慮するスペルチェックを設定します。";
+"spelling.summary" = "スペルチェックと、LaTeXの構文を考慮するスペルチェックを設定します。";
 "appearance.summary" = "配色のテーマを選び、編集します。";
 "preview.summary" = "PDFのプレビューの表示と操作を設定します。";
 "typesetting.summary" = "エンジンのプロファイル、既定のエンジンとスクリプト、TeX・Ghostscriptの場所、各エンジンのコマンドを設定します。";
@@ -143,7 +143,7 @@
 "catalog.spelling.0.1.title" = "スペルの自動修正";
 "catalog.spelling.0.2.title" = "辞書";
 "group.spelling.1.title" = "方式";
-"catalog.spelling.1.0.title" = "LaTeXの構造を考慮する（推奨）";
+"catalog.spelling.1.0.title" = "LaTeXの構文を考慮する（推奨）";
 "catalog.spelling.1.0.note" = "コマンド、数式、コメント、参照の引数などを除いて、本文だけを検査します。";
 "catalog.spelling.1.1.title" = "LaTeXの除外規則を編集…";
 "catalog.spelling.1.2.title" = "従来の方式";
