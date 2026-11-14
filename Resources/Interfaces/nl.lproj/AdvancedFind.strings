@@ -97,6 +97,7 @@
 "AdvancedFind.Menu.Unhighlight" = "Verwijder markeringen";
 "AdvancedFind.MoreMarks" = "(nog %lu)";
 "AdvancedFind.MoreOptions" = "Meer opties";
+"AdvancedFind.MultipleReplace" = "Meervoudige vervanging…";
 "AdvancedFind.Next" = "Volgende";
 "AdvancedFind.NoHistory" = "Geen recente invoer";
 "AdvancedFind.NotFound" = "Niet gevonden";

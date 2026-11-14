@@ -97,6 +97,7 @@
 "AdvancedFind.Menu.Unhighlight" = "Remover Destaques";
 "AdvancedFind.MoreMarks" = "(mais %lu)";
 "AdvancedFind.MoreOptions" = "Mais Opções";
+"AdvancedFind.MultipleReplace" = "Substituição Múltipla…";
 "AdvancedFind.Next" = "Seguinte";
 "AdvancedFind.NoHistory" = "Não Há Textos Recentes";
 "AdvancedFind.NotFound" = "Não encontrado";

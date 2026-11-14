@@ -97,6 +97,7 @@
 "AdvancedFind.Menu.Unhighlight" = "Supprimer le surlignage";
 "AdvancedFind.MoreMarks" = "(%lu de plus)";
 "AdvancedFind.MoreOptions" = "Plus d’options";
+"AdvancedFind.MultipleReplace" = "Remplacement multiple…";
 "AdvancedFind.Next" = "Suivant";
 "AdvancedFind.NoHistory" = "Aucune chaîne récente";
 "AdvancedFind.NotFound" = "Introuvable";

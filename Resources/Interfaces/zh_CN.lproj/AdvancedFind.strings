@@ -97,6 +97,7 @@
 "AdvancedFind.Menu.Unhighlight" = "移除高亮标记";
 "AdvancedFind.MoreMarks" = "（另有%lu处）";
 "AdvancedFind.MoreOptions" = "更多选项";
+"AdvancedFind.MultipleReplace" = "批量替换…";
 "AdvancedFind.Next" = "下一个";
 "AdvancedFind.NoHistory" = "无最近使用的字符串";
 "AdvancedFind.NotFound" = "未找到";
