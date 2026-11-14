@@ -135,8 +135,6 @@
 "MultipleReplace.AddRule" = "添加规则";
 "MultipleReplace.AddSet" = "新建规则集";
 "MultipleReplace.BadName" = "“%@”不能用作规则集名称。";
-"MultipleReplace.Column.Count" = "计数";
-"MultipleReplace.Column.CountTip" = "上次运行时替换的匹配项数";
 "MultipleReplace.Column.EnabledTip" = "使用此规则";
 "MultipleReplace.Column.Find" = "查找";
 "MultipleReplace.Column.Note" = "说明";

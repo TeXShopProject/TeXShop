@@ -135,8 +135,6 @@
 "MultipleReplace.AddRule" = "Voeg regel toe";
 "MultipleReplace.AddSet" = "Nieuwe set";
 "MultipleReplace.BadName" = "‘%@’ kan niet de naam van een set zijn.";
-"MultipleReplace.Column.Count" = "Aant.";
-"MultipleReplace.Column.CountTip" = "Overeenkomsten vervangen bij de laatste uitvoering";
 "MultipleReplace.Column.EnabledTip" = "Gebruik deze regel";
 "MultipleReplace.Column.Find" = "Zoek";
 "MultipleReplace.Column.Note" = "Beschrijving";

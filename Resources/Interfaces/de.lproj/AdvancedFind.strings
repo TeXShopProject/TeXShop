@@ -135,8 +135,6 @@
 "MultipleReplace.AddRule" = "Regel hinzufügen";
 "MultipleReplace.AddSet" = "Neuer Regelsatz";
 "MultipleReplace.BadName" = "„%@“ ist als Name eines Regelsatzes nicht möglich.";
-"MultipleReplace.Column.Count" = "Anz.";
-"MultipleReplace.Column.CountTip" = "Beim letzten Durchlauf ersetzte Treffer";
 "MultipleReplace.Column.EnabledTip" = "Diese Regel verwenden";
 "MultipleReplace.Column.Find" = "Suchen";
 "MultipleReplace.Column.Note" = "Beschreibung";
