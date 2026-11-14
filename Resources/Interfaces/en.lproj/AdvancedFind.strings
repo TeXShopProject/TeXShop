@@ -135,8 +135,6 @@
 "MultipleReplace.AddRule" = "Add a Rule";
 "MultipleReplace.AddSet" = "New Set";
 "MultipleReplace.BadName" = "“%@” cannot be the name of a set.";
-"MultipleReplace.Column.Count" = "Count";
-"MultipleReplace.Column.CountTip" = "Matches replaced by the last run";
 "MultipleReplace.Column.EnabledTip" = "Use this rule";
 "MultipleReplace.Column.Find" = "Find";
 "MultipleReplace.Column.Note" = "Description";

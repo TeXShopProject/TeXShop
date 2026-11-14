@@ -21,8 +21,6 @@ NS_SWIFT_NAME(MultipleReplaceRuleTable)
 
 @property (nonatomic, readonly) NSTableView *tableView;
 @property (nonatomic, strong, nullable) TSRegexMultipleReplace *set;
-/// The matches replaced by each rule in the last application; nil until then. Cleared when the set changes.
-@property (nonatomic, copy, nullable) NSArray<NSNumber *> *counts;
 @property (nonatomic, copy, nullable) void (^setChangedHandler)(TSRegexMultipleReplace *set);
 /// Colors the text of a find or replacement cell (the rule, its column, its pattern options and the plain
 /// attributes are given); nil, or a nil result, shows it plain.

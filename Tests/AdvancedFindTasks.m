@@ -319,8 +319,8 @@ static void TestMultipleReplaceWindow(void)
     Check(![window highlightInTextView:nil] && [TSAdvancedFindHighlights existingHighlightsForTextStorage:document.storage].ranges.count == 0,
           @"while it runs, Highlight is refused");
     Check(TSTestWaitForTask(controller, 60) && AllEnabled(ActionButtons(window), YES), @"after it, they are enabled again");
-    Check([window.ruleTable.counts isEqualToArray:@[@90000]] && [window.statusField.stringValue containsString:@"90"],
-          [NSString stringWithFormat:@"the counts and the status come at the end (%@)", window.statusField.stringValue]);
+    Check([window.statusField.stringValue containsString:@"90"],
+          [NSString stringWithFormat:@"the status comes at the end (%@)", window.statusField.stringValue]);
     TSAdvancedFindController.testTargetTextView = nil;
     [NSFileManager.defaultManager removeItemAtURL:directory error:NULL];
 }

@@ -135,8 +135,6 @@
 "MultipleReplace.AddRule" = "Adicionar Regra";
 "MultipleReplace.AddSet" = "Novo Conjunto";
 "MultipleReplace.BadName" = "“%@” não pode ser o nome de um conjunto.";
-"MultipleReplace.Column.Count" = "Total";
-"MultipleReplace.Column.CountTip" = "Correspondências substituídas na última execução";
 "MultipleReplace.Column.EnabledTip" = "Usar esta regra";
 "MultipleReplace.Column.Find" = "Buscar";
 "MultipleReplace.Column.Note" = "Descrição";
