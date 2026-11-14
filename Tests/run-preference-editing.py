@@ -11,7 +11,7 @@ mutations={
  'shared-restore':('NSString *original = [rule displayStringFromDefaults:defaults];','NSString *original = TSLastCommittedText;'),
  'focus-is-edit':('if (self.editedField != field) return YES;','/* incorrectly treats focus/display as an edit */'),
  'restore-keeps-dirty':('self.editedField = nil;\n}\n@end','/* incorrectly keeps the invalid field dirty */\n}\n@end'),
- 'drop-write':('BOOL changed = [value storeInDefaults:defaults forKey:rule.key];','BOOL changed = NO;'),
+ 'drop-write':('BOOL changed = [rule storeValue:value inDefaults:defaults];','BOOL changed = NO;'),
 }
 for name in ['baseline']+(list(mutations) if a.mutations else []):
  with tempfile.TemporaryDirectory(prefix='texshop-preference-editing-') as td:
@@ -19,8 +19,9 @@ for name in ['baseline']+(list(mutations) if a.mutations else []):
   if name!='baseline':
    old,new=mutations[name];assert s.count(old)==1,(name,s.count(old));s=s.replace(old,new)
    if name=='shared-restore':
-    s=s.replace('@implementation TSPreferenceEditing','static NSString *TSLastCommittedText;\n@implementation TSPreferenceEditing')
-    s=s.replace('field.stringValue = [rule displayStringForValue:value];','field.stringValue = [rule displayStringForValue:value];\n    TSLastCommittedText = field.stringValue;')
+    shown='field.stringValue = rule.restoresDefaultWhenEmpty ? [rule displayStringFromDefaults:defaults] : [rule displayStringForValue:value];'
+    for old,new in [('@implementation TSPreferenceEditing','static NSString *TSLastCommittedText;\n@implementation TSPreferenceEditing'),(shown,shown+'\n    TSLastCommittedText = field.stringValue;')]:
+     assert s.count(old)==1,(name,old);s=s.replace(old,new)
   (t/'TSPreferenceInput.m').write_text(s)
   subprocess.run(['xcrun','clang','-fobjc-arc','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-Wnullability-completeness','-Wnullable-to-nonnull-conversion',*include_args(r),'-I',str(r/'Tests'),'-framework','Cocoa',str(r/'Tests/PreferenceEditing.m'),str(t/'TSPreferenceInput.m'),'-o',str(t/'probe')],check=True)
   run=subprocess.run([str(t/'probe')],capture_output=True,text=True)
