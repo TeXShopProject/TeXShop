@@ -190,6 +190,50 @@ static void TestApplying(void)
           && [view.string isEqualToString:@"x1 y2 x3"], @"a read-only text view takes no multiple replacement");
 }
 
+/// The text field of a cell (cells hold their control in a cell view, to center it in the row).
+static NSTextField *CellField(NSView *_Nullable view)
+{
+    return [view isKindOfClass:[NSTableCellView class]] ? ((NSTableCellView *)view).textField : (NSTextField *)view;
+}
+
+/// The columns' headers: RE and IC as in CotEditor, each with a tooltip naming its option; Description.
+static void TestHeaders(void)
+{
+    NSTableView *table = [TSMultipleReplaceRuleTable new].tableView;
+    NSTableColumn *regex = [table tableColumnWithIdentifier:@"regex"], *ignoreCase = [table tableColumnWithIdentifier:@"case"];
+    Check([regex.title isEqualToString:@"RE"] && [regex.headerToolTip isEqualToString:TSAdvancedFindLocalized(@"AdvancedFind.RegularExpression", @"Regular expression")],
+          @"the regular expression column is RE, with its name as the tooltip");
+    Check([ignoreCase.title isEqualToString:@"IC"] && [ignoreCase.headerToolTip isEqualToString:TSAdvancedFindLocalized(@"AdvancedFind.IgnoreCase", @"Ignore case")],
+          @"the ignore case column is IC, with its name as the tooltip");
+    NSArray<NSString *> *order = [table.tableColumns valueForKey:@"identifier"];
+    Check([order isEqualToArray:@[@"enabled", @"find", @"replace", @"regex", @"case", @"note"]]
+          && [[table tableColumnWithIdentifier:@"note"].title isEqualToString:TSAdvancedFindLocalized(@"MultipleReplace.Column.Note", @"Description")]
+          && [table tableColumnWithIdentifier:@"enabled"].title.length == 0,
+          @"the columns: on (no header), find, replace, RE, IC, description (as CotEditor's; no column of results)");
+}
+
+/// A click on a segment of a momentary control, which keeps no selection outside a real click.
+static void ClickSegment(NSSegmentedControl *control, NSInteger segment)
+{
+    NSSegmentSwitchTracking tracking = control.trackingMode;
+    control.trackingMode = NSSegmentSwitchTrackingSelectOne;
+    control.selectedSegment = segment;
+    [control sendAction:control.action to:control.target];
+    control.trackingMode = tracking;
+}
+
+/// The set's options, ＋|− of the rules and − of the sets: gray unless they can act.
+static void CheckButtons(TSMultipleReplaceWindowController *window, BOOL options, BOOL add, BOOL remove, BOOL removeSet, NSString *name)
+{
+    [window updateButtons];
+    BOOL ok = window.optionsButton.enabled == options && [window.ruleButtons isEnabledForSegment:0] == add
+           && [window.ruleButtons isEnabledForSegment:1] == remove && window.removeSetButton.enabled == removeSet;
+    if (!ok)
+        printf("  options %d add %d remove %d remove set %d\n", window.optionsButton.enabled, [window.ruleButtons isEnabledForSegment:0],
+               [window.ruleButtons isEnabledForSegment:1], window.removeSetButton.enabled);
+    Check(ok, name);
+}
+
 static void TestRuleTable(void)
 {
     TSMultipleReplaceRuleTable *table = [TSMultipleReplaceRuleTable new];
@@ -214,31 +258,32 @@ static void TestRuleTable(void)
     Check(changed.rules.count == 4 && changed.rules[1].findString.length == 0, @"a new rule goes after the selection");
     [table replaceRuleAtIndex:0 withRule:Rule(@"a", @"1", YES, NO)];
     Check(changed.rules[0].usesRegularExpression && !changed.rules[0].enabled, @"editing a rule keeps the rest");
-    table.counts = @[@2, @0, @1, @0];
     TSRegexMultipleReplace *before = changed;
-    table.set = before;
-    Check(table.counts == nil, @"a changed set clears the counts of the last run");
-    // Before anything is applied, a rule that cannot be used shows ⚠︎ with the reason in the count column.
+    // Before anything is applied, a rule that cannot be used shows ⚠︎ at the end of its find cell, with the reason.
     table.set = Set(@[Rule(@"ok", @"", NO, YES), Rule(@"(", @"", YES, YES), Rule(@"", @"x", NO, YES), Rule(@"(", @"", YES, NO)]);
-    NSTableColumn *countColumn = [table.tableView tableColumnWithIdentifier:@"count"];
+    NSTableColumn *problemColumn = [table.tableView tableColumnWithIdentifier:@"find"];
     NSMutableArray<NSString *> *marks = [NSMutableArray array];
     for (NSInteger row = 0; row < 4; row++) {
-        NSTextField *cell = (NSTextField *)[table tableView:table.tableView viewForTableColumn:countColumn row:row];
-        [marks addObject:[cell.stringValue isEqualToString:@"⚠︎"] && cell.toolTip.length > 0 ? @"!" : @"-"];
+        NSView *cell = [table tableView:table.tableView viewForTableColumn:problemColumn row:row];
+        NSTextField *mark = nil;
+        for (NSView *v in cell.subviews)
+            if ([v.identifier isEqualToString:@"problem"])
+                mark = (NSTextField *)v;
+        [marks addObject:[mark.stringValue isEqualToString:@"⚠︎"] && mark.toolTip.length > 0 && [CellField(cell).toolTip isEqualToString:mark.toolTip] ? @"!" : @"-"];
     }
     Check([marks isEqualToArray:@[@"-", @"!", @"!", @"-"]], [@"⚠︎ on the invalid and the empty rule only: " stringByAppendingString:[marks componentsJoinedByString:@""]]);
     table.set = before;
     // The cells are plain unless a styler colors them (the place for the coloring of the fields).
     NSTableColumn *findColumn = [table.tableView tableColumnWithIdentifier:@"find"];
-    NSTextField *plain = (NSTextField *)[table tableView:table.tableView viewForTableColumn:findColumn row:0];
+    NSTextField *plain = CellField([table tableView:table.tableView viewForTableColumn:findColumn row:0]);
     Check([plain.attributedStringValue attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:NULL] != NSColor.systemPinkColor, @"plain cells");
     table.fieldStyler = ^NSAttributedString *(NSString *string, TSRegexReplacementRule *rule, TSMultipleReplaceRuleField field, TSRegexFindOptions options, NSDictionary *attributes) {
         NSMutableDictionary *pink = [attributes mutableCopy];
         pink[NSForegroundColorAttributeName] = NSColor.systemPinkColor;
         return field == TSMultipleReplaceRuleFieldFind ? [[NSAttributedString alloc] initWithString:string attributes:pink] : nil;
     };
-    NSTextField *styled = (NSTextField *)[table tableView:table.tableView viewForTableColumn:findColumn row:0];
-    NSTextField *replacement = (NSTextField *)[table tableView:table.tableView viewForTableColumn:[table.tableView tableColumnWithIdentifier:@"replace"] row:0];
+    NSTextField *styled = CellField([table tableView:table.tableView viewForTableColumn:findColumn row:0]);
+    NSTextField *replacement = CellField([table tableView:table.tableView viewForTableColumn:[table.tableView tableColumnWithIdentifier:@"replace"] row:0]);
     Check([styled.attributedStringValue attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:NULL] == NSColor.systemPinkColor
           && [replacement.stringValue isEqualToString:changed.rules[0].replaceString], @"the styler colors a field; a nil result leaves it plain");
 }
@@ -278,7 +323,6 @@ static void TestWindow(NSURL *directory)
     view.undoManager.groupsByEvent = NO;
     [view.undoManager beginUndoGrouping]; // one group for the window's runs; they are not undone here
     Check([window replaceAllInTextView:view] && TSTestWaitForTask(controller, 60) && [view.string isEqualToString:@"dog dog"], @"replace all runs the shown set");
-    Check([window.ruleTable.counts isEqualToArray:@[@2, @0]], @"the table shows the counts");
     Check([window.statusField.stringValue containsString:@"2"], @"the status reports the result");
     [window selectSetNamed:@"B"];
     [window highlightInTextView:view];
@@ -340,6 +384,7 @@ static void TestWindow(NSURL *directory)
     Check(window.ruleTable.set == nil && window.statusField.stringValue.length > 0
           && [[NSString stringWithContentsOfURL:brokenURL encoding:NSUTF8StringEncoding error:NULL] isEqualToString:@"{\"replacements\": 3}"],
           @"a broken set shows its error and is left as it is");
+    CheckButtons(window, NO, NO, NO, YES, @"a broken set: no options and no rules, but it can be moved to the Trash");
     Check(!window.window.isVisible, @"the window is never shown");
 }
 
@@ -356,8 +401,25 @@ static void TestEmptyWindow(void)
     Check(![window replaceAllInTextView:view] && ![window highlightInTextView:view] && beeps == 2 && [view.string isEqualToString:@"text"],
           @"with no set, Replace All and Highlight beep and change nothing");
     Check(![NSFileManager.defaultManager fileExistsAtPath:directory.path], @"nothing is written into an empty folder");
+    CheckButtons(window, NO, NO, NO, NO, @"no set: the options, ＋|− and − of the sets are gray");
+    NSMenuItem *duplicate = [[NSMenuItem alloc] initWithTitle:@"" action:@selector(duplicateSet:) keyEquivalent:@""];
+    NSMenuItem *import = [[NSMenuItem alloc] initWithTitle:@"" action:NSSelectorFromString(@"importSet:") keyEquivalent:@""];
+    Check(![(id<NSUserInterfaceValidations>)window validateUserInterfaceItem:duplicate] && [(id<NSUserInterfaceValidations>)window validateUserInterfaceItem:import],
+          @"no set: Duplicate is gray, Import is not");
+    Check(window.optionsButton.action == @selector(showOptions:) && window.helpButton.enabled && window.helpButton.bezelStyle == NSBezelStyleHelpButton
+          && window.helpButton.action == NSSelectorFromString(@"showHelp:") && [TSMultipleReplaceWindowController.helpAnchor isEqualToString:@"multiplereplace"],
+          @"the help button opens Multiple Replace in the help");
     [window addSet:nil];
     Check(window.selectedSetName.length > 0 && library.setNames.count == 1 && window.ruleTable.tableView.numberOfRows == 1, @"a new set has one empty rule and is saved");
+    CheckButtons(window, YES, YES, NO, YES, @"a set: the options and ＋ can be used, − waits for a selected rule");
+    Check([(id<NSUserInterfaceValidations>)window validateUserInterfaceItem:duplicate], @"a set: Duplicate can be used");
+    [window.ruleTable.tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+    CheckButtons(window, YES, YES, YES, YES, @"a selected rule: − can be used");
+    ClickSegment(window.ruleButtons, 1);
+    Check(window.ruleTable.tableView.numberOfRows == 0 && [library setNamed:(NSString *_Nonnull)window.selectedSetName error:NULL].rules.count == 0, @"− removes the rule");
+    CheckButtons(window, YES, YES, NO, YES, @"a set without rules: its options can still be opened");
+    ClickSegment(window.ruleButtons, 0);
+    Check(window.ruleTable.tableView.numberOfRows == 1, @"＋ adds a rule");
     [NSFileManager.defaultManager removeItemAtURL:directory.URLByDeletingLastPathComponent error:NULL];
 }
 
@@ -436,6 +498,22 @@ static void TestMenu(void)
 static BOOL WritePNG(NSView *view, NSAppearance *appearance, NSString *path)
 {
     __block BOOL written = NO;
+    // A sidebar's material blends with what is behind the window, which an offscreen image does not have: its
+    // contents are drawn as within the window.
+    NSMutableArray<NSView *> *pendingEffects = [view.subviews mutableCopy];
+    while (pendingEffects.count) {
+        NSView *v = pendingEffects.lastObject;
+        [pendingEffects removeLastObject];
+        [pendingEffects addObjectsFromArray:v.subviews];
+        if ([v isKindOfClass:[NSVisualEffectView class]])
+            ((NSVisualEffectView *)v).blendingMode = NSVisualEffectBlendingModeWithinWindow;
+        // The selection of a source list is a material too, which is drawn black: the selected row gets the color
+        // of a selection in a window that is not key instead.
+        if ([v isKindOfClass:[NSVisualEffectView class]] && [v.superview isKindOfClass:[NSTableRowView class]]) {
+            v.hidden = YES;
+            ((NSTableRowView *)v.superview).backgroundColor = NSColor.unemphasizedSelectedContentBackgroundColor;
+        }
+    }
     [appearance performAsCurrentDrawingAppearance:^{
         [view layoutSubtreeIfNeeded];
         [view displayIfNeeded];
@@ -532,6 +610,57 @@ static int CheckLayoutInset(NSView *root, NSString *name, CGFloat rightInset)
 
 
 
+/// Every cell's control is centered in its row's height and lies within the row.
+static int CheckCellsCentered(NSTableView *table, NSString *name)
+{
+    int count = 0;
+    for (NSInteger row = 0; row < table.numberOfRows; row++) {
+        NSRect rowRect = [table rectOfRow:row];
+        for (NSInteger column = 0; column < table.numberOfColumns; column++) {
+            NSView *cell = [table viewAtColumn:column row:row makeIfNecessary:YES];
+            [cell layoutSubtreeIfNeeded];
+            // Every part of the cell (the ⚠︎ of a find cell too)
+            for (NSView *control in [cell isKindOfClass:[NSTableCellView class]] ? cell.subviews : @[cell]) {
+                // Its own height, centered: a control stretched over the row draws its text at the top.
+                NSRect frame = [control convertRect:control.bounds toView:table];
+                CGFloat natural = control.intrinsicContentSize.height;
+                if (fabs(NSMidY(frame) - NSMidY(rowRect)) > 1 || NSMinY(frame) < NSMinY(rowRect) - 0.5 || NSMaxY(frame) > NSMaxY(rowRect) + 0.5
+                    || (natural > 0 && NSHeight(frame) > natural + 1)) {
+                    printf("FAIL %s: row %ld column %s is not centered (%.1f, row %.1f)\n", name.UTF8String, (long)row,
+                           table.tableColumns[(NSUInteger)column].identifier.UTF8String, NSMidY(frame), NSMidY(rowRect));
+                    count++;
+                }
+            }
+            // The ⚠︎ is inside the cell and does not cover the text field.
+            NSView *mark = nil, *field = cell.subviews.firstObject;
+            for (NSView *v in cell.subviews)
+                if ([v.identifier isEqualToString:@"problem"])
+                    mark = v;
+            NSRect markRect = [mark alignmentRectForFrame:mark.frame], fieldRect = [field alignmentRectForFrame:field.frame]; // as drawn
+            if (mark && (NSMaxX(markRect) > NSWidth(cell.bounds) + 0.5 || NSMaxX(fieldRect) > NSMinX(markRect) + 0.5)) {
+                printf("FAIL %s: row %ld the ⚠︎ is outside the cell or over the text (cell %s field %s mark %s)\n", name.UTF8String, (long)row, NSStringFromRect(cell.bounds).UTF8String, NSStringFromRect(field.frame).UTF8String, NSStringFromRect(mark.frame).UTF8String);
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
+/// Buttons side by side are the same height: none is bigger than its neighbours.
+static int CheckSameHeight(NSArray<NSView *> *views, CGFloat tolerance, NSString *name)
+{
+    CGFloat low = CGFLOAT_MAX, high = 0;
+    for (NSView *v in views) {
+        CGFloat height = NSHeight([v alignmentRectForFrame:v.frame]); // the control as drawn, without the room for its symbol
+        low = MIN(low, height);
+        high = MAX(high, height);
+    }
+    if (high - low <= tolerance)
+        return 0;
+    printf("FAIL %s: heights from %.1f to %.1f\n", name.UTF8String, low, high);
+    return 1;
+}
+
 /// The window and the options of a set in this language: layout, messages, and images on request.
 static void TestLayout(NSString *_Nullable imageDirectory)
 {
@@ -543,9 +672,10 @@ static void TestLayout(NSString *_Nullable imageDirectory)
                                                                 usesRegularExpression:YES ignoresCase:NO enabled:YES note:TSAdvancedFindLocalized(@"MultipleReplace.Column.Note", @"Note")];
     [library saveSet:Set(@[note, Rule(@"、", @"，", NO, YES), Rule(@"[", @"", YES, YES), Rule(@"。", @"．", NO, NO)]) named:@"Typography" error:NULL];
     [library saveSet:Set(@[Rule(@"a", @"b", NO, YES)]) named:@"Letters" error:NULL];
+    [library saveSet:Set(@[]) named:@"No Rules" error:NULL];
     TSMultipleReplaceWindowController *window = [[TSMultipleReplaceWindowController alloc] initWithFindController:MakeController(NULL) library:library];
     [window selectSetNamed:@"Typography"];
-    window.ruleTable.counts = @[@3, @12, @0, @0];
+    [window updateButtons];
     NSView *content = window.window.contentView;
     NSView *options = [window makeOptionsView];
     [content layoutSubtreeIfNeeded];
@@ -553,6 +683,29 @@ static void TestLayout(NSString *_Nullable imageDirectory)
     [options setFrameSize:options.fittingSize];
     failures += CheckLayoutInset(content, [language stringByAppendingString:@" window"], 0);
     failures += CheckLayoutInset(options, [language stringByAppendingString:@" set options"], 16);
+    failures += CheckCellsCentered(window.ruleTable.tableView, [language stringByAppendingString:@" rules"]);
+    NSScrollView *setScroll = (NSScrollView *)window.removeSetButton.superview.superview.subviews.firstObject;
+    failures += CheckCellsCentered((NSTableView *)setScroll.documentView, [language stringByAppendingString:@" sets"]);
+    NSView *sidebarBar = window.removeSetButton.superview;
+    NSPopUpButton *setActions = nil;
+    for (NSView *v in sidebarBar.superview.subviews)
+        if ([v isKindOfClass:[NSPopUpButton class]])
+            setActions = (NSPopUpButton *)v;
+    failures += CheckSameHeight(@[sidebarBar.subviews[0], window.removeSetButton, setActions ?: window.removeSetButton], 2, [language stringByAppendingString:@" sidebar buttons"]);
+    failures += CheckSameHeight(@[window.ruleButtons, window.optionsButton], 1, [language stringByAppendingString:@" ＋|− and options"]);
+    NSMutableArray<NSView *> *bottom = [NSMutableArray array];
+    NSMutableArray<NSView *> *pendingViews = [content.subviews mutableCopy];
+    while (pendingViews.count) {
+        NSView *v = pendingViews.lastObject;
+        [pendingViews removeLastObject];
+        [pendingViews addObjectsFromArray:v.subviews];
+        if ([v isKindOfClass:[NSButton class]] && (((NSButton *)v).action == @selector(highlight:) || ((NSButton *)v).action == @selector(replaceAll:)))
+            [bottom addObject:v];
+    }
+    Check(bottom.count == 2, [language stringByAppendingString:@" Highlight All and Replace All are found"]);
+    failures += CheckSameHeight(bottom, 0.5, [language stringByAppendingString:@" Highlight All and Replace All"]);
+    Check(fabs(NSMidY([window.helpButton convertRect:window.helpButton.bounds toView:content]) - NSMidY([bottom.firstObject convertRect:bottom.firstObject.bounds toView:content])) <= 1,
+          [language stringByAppendingString:@" the help button is on the line of the actions"]);
     // The smallest window, with the longest messages it shows
     NSRect old = window.window.frame;
     [window.window setContentSize:window.window.contentMinSize];
@@ -579,19 +732,25 @@ static void TestLayout(NSString *_Nullable imageDirectory)
         Check(column.title.length == 0 || column.headerCell.cellSize.width <= column.width + 0.5, [NSString stringWithFormat:@"%@ header %@ fits", language, column.title]);
     if (imageDirectory) {
         [NSFileManager.defaultManager createDirectoryAtPath:(NSString *_Nonnull)imageDirectory withIntermediateDirectories:YES attributes:nil error:NULL];
+        TSMultipleReplaceWindowController *noRules = [[TSMultipleReplaceWindowController alloc] initWithFindController:MakeController(NULL) library:library];
+        [noRules selectSetNamed:@"No Rules"];
+        [noRules updateButtons];
         NSURL *emptyDirectory = TemporaryLibraryDirectory();
         TSMultipleReplaceWindowController *empty = [[TSMultipleReplaceWindowController alloc] initWithFindController:MakeController(NULL)
                                                                                                              library:[[TSMultipleReplaceLibrary alloc] initWithDirectory:emptyDirectory]];
+        [empty updateButtons];
         for (NSAppearanceName name in @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]) {
             NSAppearance *appearance = [NSAppearance appearanceNamed:name];
             NSString *tag = [name isEqualToString:NSAppearanceNameAqua] ? @"light" : @"dark";
             window.window.appearance = appearance;
             options.appearance = appearance;
             empty.window.appearance = appearance;
+            noRules.window.appearance = appearance;
             NSString *base = [(NSString *_Nonnull)imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%@", language, tag]];
             Check(WritePNG(content, appearance, [base stringByAppendingString:@"-multiple-replace.png"])
                   && WritePNG(options, appearance, [base stringByAppendingString:@"-set-options.png"])
-                  && WritePNG((NSView *_Nonnull)empty.window.contentView, appearance, [base stringByAppendingString:@"-multiple-replace-empty.png"]), @"images written");
+                  && WritePNG((NSView *_Nonnull)empty.window.contentView, appearance, [base stringByAppendingString:@"-multiple-replace-empty.png"])
+                  && WritePNG((NSView *_Nonnull)noRules.window.contentView, appearance, [base stringByAppendingString:@"-multiple-replace-norules.png"]), @"images written");
         }
     }
     [NSFileManager.defaultManager removeItemAtURL:directory.URLByDeletingLastPathComponent error:NULL];
@@ -609,6 +768,7 @@ int main(int argc, const char *argv[])
             TestLibrary(directory);
             [NSFileManager.defaultManager removeItemAtURL:directory.URLByDeletingLastPathComponent error:NULL];
             TestApplying();
+            TestHeaders();
             TestRuleTable();
             TestOptionsForm();
             NSURL *windowDirectory = TemporaryLibraryDirectory();

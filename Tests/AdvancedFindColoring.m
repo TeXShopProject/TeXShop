@@ -402,6 +402,8 @@ static NSAttributedString *CellText(TSMultipleReplaceWindowController *window, N
     NSTableView *table = window.ruleTable.tableView;
     NSTableColumn *tableColumn = [table tableColumnWithIdentifier:column];
     NSView *cell = [table.delegate tableView:table viewForTableColumn:tableColumn row:row];
+    if ([cell isKindOfClass:[NSTableCellView class]]) // the field, centered in the row
+        cell = ((NSTableCellView *)cell).textField;
     return [cell isKindOfClass:[NSTextField class]] ? ((NSTextField *)cell).attributedStringValue : [NSAttributedString new];
 }
 
