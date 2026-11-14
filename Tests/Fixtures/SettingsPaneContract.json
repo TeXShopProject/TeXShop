@@ -9817,7 +9817,7 @@
           "xwP-lA-zVw.title": "Usar -dALLOWPSTRANSPARENCY",
           "589.title": "LaTeX",
           "679.title": "Pdf previsto al frente",
-          "bYh-V5-ri6.title": "Mostrar PDF previsto y volver a la ventana original",
+          "bYh-V5-ri6.title": "Mostrar la vista previa y volver a la ventana original",
           "183.title": "Formato por defecto",
           "188.title": "Script por defecto",
           "921.title": "Radio",
@@ -12352,7 +12352,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "Mostrar PDF previsto y volver a la ventana original",
+          "value": "Mostrar la vista previa y volver a la ventana original",
           "row": 2,
           "column": 0
         },
