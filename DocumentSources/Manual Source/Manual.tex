@@ -862,7 +862,7 @@ using whatever engine you decide to use. You'll do this by using TeXShop Setting
 
 Go to TeXShop Settings and select the {\bf Typesetting} category. The quickest way to set up typesetting is an engine profile. At the top of the {\bf Engine} group, choose a profile in the {\bf Engine Profile} pop-up menu and click {\bf Apply}. The profiles are pdfLaTeX, XeLaTeX, LuaLaTeX, LaTeX + dvipdfmx, LuaLaTeX (Japanese), pLaTeX + dvipdfmx and upLaTeX + dvipdfmx; LaTeX + dvips + Ghostscript is under {\bf Other}. Select {\bf Use latexmk} to have latexmk run BibTeX, the index and further passes as needed; otherwise each typesetting runs the engine once. A profile sets only the typesetting commands of its method, the typesetting method, the BibTeX engine and otf package support; the Japanese profiles also set UTF-8 as the encoding for new documents, set the spelling dictionary to automatic language detection and turn on UTF-8-MAC conversion. Every other setting stays as it is, and the commands of the other method are not changed. The menu shows the profile whose commands are set now, or {\bf Custom} after you change a command by hand. The paths to TeX and Ghostscript are set apart, with {\bf Detect Paths...} in the {\bf Paths} group. When TeXShop starts for the first time, it asks for the paths and then for an engine profile.
 
-The rest of this section describes the settings that a profile sets, for those who want to set them by hand. In the {\bf Engine} group, use the {\bf Default Command} pop-up menu to select either \TeX\ or \LaTeX\ as the default command. Most people use \LaTeX, so that is the default choice.
+The rest of this section describes the other settings of the {\bf Engine} group and the settings that a profile sets, for those who want to set them by hand. In the {\bf Engine} group, the {\bf Typeset New Documents With} pop-up menu chooses what the toolbar of a document selects beside the Typeset button when the document opens: \LaTeX, plain \TeX, or {\bf Engine File}. Most people use \LaTeX, so that is the default choice. A \verb|% !TEX TS-program| line at the top of a document takes precedence, as explained later.
 We'll describe the third choice in this menu shortly.
 
 The {\bf Typesetting Method} pop-up menu in the same group sets the default method. Select either ``Direct PDF'' or ``Via DVI''.  Most people select ``Direct PDF''. If you use pstricks or have many very old documents, ``Via DVI'' may be a better choice. 
@@ -870,7 +870,7 @@ The {\bf Typesetting Method} pop-up menu in the same group sets the default meth
 To switch between these two methods for an occasional document, go to the Typeset menu and select ``Direct PDF'' or ``Via DVI'' at the bottom. This only affects the active document, so if you have two documents open, you can switch the typesetting method for one without changing it for the other.
 
 
- If you want to use Xe\TeX\ rather than \LaTeX, choose {\bf Command Listed Below} in the {\bf Default Command} pop-up menu and write XeLaTeX in the {\bf Command to use} field. If you want to use Lua\TeX\ rather than \LaTeX, write the word LuaLaTeX in that field. 
+ If you want to use Lua\TeX\ or Xe\TeX\ rather than \LaTeX, choose {\bf Engine File} in the {\bf Typeset New Documents With} pop-up menu, and choose LuaLaTeX or XeLaTeX in the {\bf Engine File} pop-up menu below it; LuaLaTeX is chosen at first. That menu lists the engine files in \path{~/Library/TeXShop/Engines}. {\bf Edit Engine List...} opens this folder in the Finder, where you can add, remove or rename engine files; the menu follows the folder. If the engine file of the setting is no longer in the folder, the menu shows it as not found, and documents are typeset with \LaTeX\ instead. 
 
 After making these choices, typesetting with TeXShop is easy. When you want to typeset, just push the ``Typeset'' button in the Source toolbar or select the ``Typeset'' menu at the top of the Typeset menu. This menu has a keyboard shortcut, command-T. After a few days, you'll ignore the toolbar item and the menu item and type command-T when you want to typeset.
 
@@ -1078,7 +1078,7 @@ In a later section we will have  more to say about  creating engine files.
 
 Active engine files are listed in the pull-down menu to the right of the Typeset button in a source window toolbar.  To typeset, choose the appropriate engine in the pulldown menu and then either push the typeset button or type command-T.
 
-If most of the time you typeset with a particular engine, you can make it the default engine. In TeXShop Settings under the Typesetting category, the {\bf Default Command} pop-up menu selects the default typesetting command. Select the item {\bf Command Listed Below} and type the desired engine name in the {\bf Command to use} field. This name must have exactly the capitalization and spelling of the desired engine, without the ``engine'' extension.
+If most of the time you typeset with a particular engine, you can make it the default engine. In TeXShop Settings under the Typesetting category, choose {\bf Engine File} in the {\bf Typeset New Documents With} pop-up menu, and choose the engine in the {\bf Engine File} pop-up menu, which lists the active engine files.
 
 The pulldown menu  changes typesetting only for the source in its window. You can have two files open, one typeset with your default engine and the other typeset with xelatex. You only need to select xelatex the first time you  typeset that file.
 
@@ -1096,8 +1096,8 @@ If you get in the habit of adding  magic lines to the top of sources files, then
 In all of these places you select one of the four original typesetting methods using the following scheme:
 
 $$\begin{array}{ll} 
-\mbox{tex} & \mbox{TeX, Via DVI} \\ 
-\mbox{pdftex} & \mbox{TeX outputting pdf} \\ 
+\mbox{tex} & \mbox{plain TeX, Via DVI} \\ 
+\mbox{pdftex} & \mbox{plain TeX outputting pdf} \\ 
 \mbox{latex} & \mbox{LaTeX, Via DVI} \\ 
 \mbox{pdflatex} & \mbox{LaTeX outputting pdf} \\ 
 \end{array} $$
@@ -4515,7 +4515,7 @@ The two older methods described below still work. Shortcuts set in KeyEquivalent
 One method is provided by Apple in System Settings under Keyboard. The details which follow apply to Ventura and later, but similar methods are available for earlier systems. Select Keyboard and push the button {\em Keyboard Shortcuts...}. On the left side, select {\em App Shortcuts}. In the resulting dialog, push the plus key. A new dialog appears. On the top line in the pull-down menu, select TeXShop. TeXShop may not be in the resulting list; in that case select {\em Other} at the end of the menu and then choose TeXShop.
 On the second line, type the exact name of the menu command you want to work with. This will be the menu name in the localization you use, not necessarily the English menu name. On the final line, type the desired shortcut. Press {\em Cancel} or {\em Done} to end the session.
 
-App Shortcuts are matched by the exact menu title. When TeXShop renames a menu item, a shortcut assigned this way no longer applies. For example, TeXShop 5.60 renamed ``Pdftex'' and ``TeX and DVI'' in the Typeset menu to ``Direct PDF'' and ``Via DVI'', replaced ``Add Word'' in the Command Completion submenu of the Source menu with ``Add to Command Completion List'' in the Source menu itself, and the Japanese and Chinese menus no longer put a space between Chinese characters or kana and Latin letters. Assign menu shortcuts in the Keyboard category of TeXShop Settings instead; those assignments do not depend on the titles.
+App Shortcuts are matched by the exact menu title. When TeXShop renames a menu item, a shortcut assigned this way no longer applies. For example, TeXShop 5.60 renamed ``Pdftex'' and ``TeX and DVI'' in the Typeset menu to ``Direct PDF'' and ``Via DVI'', replaced ``Add Word'' in the Command Completion submenu of the Source menu with ``Add to Command Completion List'' in the Source menu itself, TeXShop 6.00 renamed ``Plain TeX'' in the Typeset menu to ``plain TeX'', and the Japanese and Chinese menus no longer put a space between Chinese characters or kana and Latin letters. Assign menu shortcuts in the Keyboard category of TeXShop Settings instead; those assignments do not depend on the titles.
 
 Before Apple created this Preference Item, TeXShop provided a way for users to modify its shortcuts. This method still exists, but it is seldom used. In a pinch, you can try it. 
 
