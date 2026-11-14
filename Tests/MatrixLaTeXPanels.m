@@ -1,9 +1,9 @@
 // The Matrix and LaTeX panels, loaded offscreen with their own controllers as the application loads them,
 // in every language given: what their buttons insert, and how they are laid out.
 //   * Matrix panel: Insert, Clear, Identity and Zero insert and set what they did before; the columns
-//     inserted follow the order shown; there is no ruler; the first row is below the header; Insert is
-//     the default button, and Return in the size and delimiter fields or in a cell being edited does not
-//     insert; the table, its cells and the
+//     inserted follow the order shown; the rows are numbered in a column that cannot be edited or moved,
+//     with no ruler; the first row is below the header; Insert is the default button, and Return in the
+//     size and delimiter fields or in a cell being edited does not insert; the table, its cells and the
 //     pictures of the border and grid buttons follow the light or dark appearance.
 //   * LaTeX panel: each group has a segmented control above it that shows its pages; every kind of button
 //     posts the same text as before; the custom buttons have their names whatever LPanelOutlines says;
@@ -19,14 +19,26 @@
 #import "PanelEnvironment.h"
 // The table's data source and delegate.
 @interface TSMatrixPanelController (Table)
+- (BOOL)tableView:(NSTableView *)tableView shouldReorderColumn:(NSInteger)columnIndex toColumn:(NSInteger)newColumnIndex;
 - (void)tableView:(NSTableView *)tv setObjectValue:(id)objectValue forTableColumn:(NSTableColumn *)tc row:(NSInteger)row;
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
+- (BOOL)tableView:(NSTableView *)tv writeRows:(NSArray *)rows toPasteboard:(NSPasteboard *)pboard;
+- (BOOL)tableView:(NSTableView *)tv acceptDrop:(id)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)op;
 @end
 
 static int failures;
 static void Expect(BOOL ok, NSString *what) {
     if (!ok) { printf("FAIL %s\n", what.UTF8String); failures++; }
 }
+
+// A row dragged within the table, as AppKit hands it to the data source.
+@interface RowDrag : NSObject
+@property (strong) NSPasteboard *draggingPasteboard;
+@property (strong) id draggingSource;
+@end
+@implementation RowDrag
+- (NSDragOperation)draggingSourceOperationMask { return NSDragOperationEvery; }
+@end
 
 @interface Listener : NSObject
 @property (strong) NSMutableArray<NSString *> *posted;
@@ -71,8 +83,15 @@ static void CheckMatrixPanel(NSString *language, NSString *path, Listener *liste
     NSButton *insert = nil;
     for (NSView *v in w.contentView.subviews) if ([v isKindOfClass:NSButton.class] && ((NSButton *)v).action == @selector(insertMatrix:)) insert = (NSButton *)v;
 
+    // The row numbers.
     Expect(!scroll.hasVerticalRuler && !scroll.rulersVisible, name(@"no ruler"));
-    Expect(table.matrixColumns.count == 12, name(@"12 matrix columns"));
+    NSTableColumn *numbers = table.tableColumns.firstObject;
+    Expect([numbers.identifier isEqual:TSMatrixRowNumberColumn] && !numbers.isEditable && numbers.resizingMask == NSTableColumnNoResizing, name(@"the first column numbers the rows and cannot be edited or resized"));
+    Expect([[panel tableView:table objectValueForTableColumn:numbers row:4] isEqual:@5], name(@"the fifth row is numbered 5"));
+    Expect(table.matrixColumns.count == 12 && ![table.matrixColumns containsObject:numbers], name(@"12 matrix columns, without the row numbers"));
+    Expect([panel respondsToSelector:@selector(tableView:shouldReorderColumn:toColumn:)] && ![panel tableView:table shouldReorderColumn:0 toColumn:3] && ![panel tableView:table shouldReorderColumn:3 toColumn:0] && [panel tableView:table shouldReorderColumn:2 toColumn:3],
+           name(@"the row numbers stay first; the matrix columns can be moved"));
+    Expect([[numbers.dataCell font] isEqual:[table.matrixColumns[0].headerCell font]], name(@"the row numbers use the font of the column numbers"));
     // The first row below the header, as the panel opens.
     NSRect row = [w.contentView convertRect:[table rectOfRow:0] fromView:table];
     NSRect header = [w.contentView convertRect:table.headerView.visibleRect fromView:table.headerView];
@@ -100,6 +119,30 @@ static void CheckMatrixPanel(NSString *language, NSString *path, Listener *liste
     [panel insertMatrix:insert];
     Expect([listener.posted.lastObject isEqual:@"\\left(\\begin{array}{ccc}  &   &   \\\\  &   &   \\\\  &   &  \\end{array}\\right)"], name([@"Clear: " stringByAppendingString:listener.posted.lastObject ?: @"nothing"]));
     [modify selectCellWithTag:2]; [panel resetMatrix:modify];
+    // A row dragged below another moves its values; the row numbers stay 1, 2, 3 (they number the places).
+    [panel tableView:table setObjectValue:@"x" forTableColumn:table.matrixColumns[0] row:0];
+    RowDrag *drag = [RowDrag new];
+    drag.draggingPasteboard = [NSPasteboard pasteboardWithUniqueName];
+    drag.draggingSource = table;
+    [panel tableView:table writeRows:@[@0] toPasteboard:drag.draggingPasteboard];
+    [panel tableView:table acceptDrop:drag row:2 dropOperation:NSTableViewDropAbove];
+    [panel insertMatrix:insert];
+    Expect([listener.posted.lastObject isEqual:@"\\left(\\begin{array}{ccc}0 & 0 & 0 \\\\x & 0 & 0 \\\\0 & 0 & 0\\end{array}\\right)"], name([@"a dragged row moves its values: " stringByAppendingString:listener.posted.lastObject ?: @"nothing"]));
+    Expect([[panel tableView:table objectValueForTableColumn:numbers row:0] isEqual:@1] && [[panel tableView:table objectValueForTableColumn:numbers row:1] isEqual:@2], name(@"the row numbers stay in order after a drag"));
+    // The blue of the cells inserted starts at the first column of the matrix, not under the row numbers.
+    w.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua]; [w displayIfNeeded];
+    NSRect numberCell = [table frameOfCellAtColumn:0 row:1], firstCell = [table frameOfCellAtColumn:1 row:1];
+    NSColor *(^rgb)(NSRect) = ^NSColor *(NSRect cell) {
+        NSBitmapImageRep *rep = [table bitmapImageRepForCachingDisplayInRect:table.bounds];
+        [table cacheDisplayInRect:table.bounds toBitmapImageRep:rep];
+        CGFloat scale = rep.pixelsWide / NSWidth(table.bounds);
+        return [[rep colorAtX:(NSInteger)((NSMinX(cell) + 3) * scale) y:(NSInteger)((NSMinY(cell) + 3) * scale)] colorUsingColorSpace:NSColorSpace.genericRGBColorSpace];
+    };
+    NSColor *number = rgb(numberCell), *inserted = rgb(firstCell);
+    Expect(inserted.blueComponent - inserted.redComponent > 0.03 && fabs(number.blueComponent - number.redComponent) < 0.02,
+           name([NSString stringWithFormat:@"blue under the cells inserted (%.2f/%.2f), not under the row numbers (%.2f/%.2f)", inserted.redComponent, inserted.blueComponent, number.redComponent, number.blueComponent]));
+    w.appearance = nil;
+    [panel resetMatrix:modify];
     // tabular in a table with a border and a grid, 2 by 2.
     NSMatrix *environment = [panel valueForKey:@"envsel"];
     [environment selectCellWithTag:1]; [panel envselChange:environment];
@@ -250,5 +293,5 @@ int main(int argc, char **argv) { @autoreleasepool {
         for (NSNumber *hover in @[@YES, @NO]) CheckLaTeXPanel(parts[0], parts[2], listener, hover.boolValue);
     }
     if (failures) { printf("FAIL: %d problems\n", failures); return 1; }
-    printf("PASS: in %d languages the Matrix panel inserts what it did, has no ruler, starts its rows below the header and makes Insert the default button, and the LaTeX panel shows its groups with segmented controls, posts what it did, names its custom buttons and draws its symbols in the color of text\n", argc - 1);
+    printf("PASS: in %d languages the Matrix panel inserts what it did, numbers its rows without a ruler, starts its rows below the header and makes Insert the default button, and the LaTeX panel shows its groups with segmented controls, posts what it did, names its custom buttons and draws its symbols in the color of text\n", argc - 1);
 } return 0; }

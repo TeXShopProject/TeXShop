@@ -105,7 +105,11 @@ static id _sharedInstance = nil;
 	[self.myMatrix setActRows:3];
 	[self.myMatrix setActCols:3];
 	
+	// The numbers of the rows, at the left of the table, look like the numbers of the columns in its header.
+	[self addRowNumberColumn];
+
 	[matrixtable setAutosaveTableColumns:TRUE];
+	[self keepRowNumberColumnFirst];
 	[matrixtable setVerticalMotionCanBeginDrag:NO];
 	[matrixtable registerForDraggedTypes:[NSArray arrayWithObjects:MatPboardType, nil]];
 	
@@ -164,7 +168,7 @@ static id _sharedInstance = nil;
 	NSString  *theValue, *colid;
 	colid = [tableColumn identifier];
 	NSParameterAssert(row >= 0 && row < [self.myMatrix rowCount]);
-	if ([colid isEqualToString:@"col"]) {
+	if ([colid isEqualToString:TSMatrixRowNumberColumn]) {
 		return [NSNumber numberWithInteger:row+1];
 	} else {
 		theValue = [self.myMatrix objectInRow:row inCol:[colid integerValue]];
@@ -180,6 +184,8 @@ static id _sharedInstance = nil;
 
 - (void)tableView:(NSTableView *)tv setObjectValue:(id)objectValue forTableColumn:(NSTableColumn *)tc row:(NSInteger)row
 {
+	if ([[tc identifier] isEqualToString:TSMatrixRowNumberColumn])
+		return;
 	[self.myMatrix replaceObjectInRow:row inCol:[[tc identifier] integerValue] withObject:objectValue];
 }
 
@@ -536,6 +542,45 @@ static id _sharedInstance = nil;
 
 
 #pragma mark Layout
+
+// The numbers of the rows: a column that cannot be edited, moved or resized, in the font and color of the
+// numbers of the columns in the header.
+- (void)addRowNumberColumn
+{
+	NSTableColumn *firstColumn = [[(TSMatrixTableView *)matrixtable matrixColumns] firstObject];
+	NSTableHeaderCell *header = [firstColumn headerCell];
+	NSTextFieldCell *cell = [[NSTextFieldCell alloc] init];
+	[cell setFont:[header font] ?: [NSFont systemFontOfSize:[NSFont systemFontSize]]];
+	[cell setTextColor:[header textColor] ?: [NSColor headerTextColor]];
+	[cell setAlignment:NSTextAlignmentCenter];
+	[cell setEditable:NO];
+	[cell setSelectable:NO];
+	NSTableColumn *numbers = [[NSTableColumn alloc] initWithIdentifier:TSMatrixRowNumberColumn];
+	[numbers setDataCell:cell];
+	[numbers setEditable:NO];
+	[[numbers headerCell] setStringValue:@""];
+	[numbers setResizingMask:NSTableColumnNoResizing];
+	CGFloat width = ceil([@"100" sizeWithAttributes:@{NSFontAttributeName: [cell font]}].width) + 12;
+	[numbers setMinWidth:width];
+	[numbers setMaxWidth:width];
+	[numbers setWidth:width];
+	[matrixtable addTableColumn:numbers];
+	[self keepRowNumberColumnFirst];
+}
+
+- (void)keepRowNumberColumnFirst
+{
+	NSInteger index = [matrixtable columnWithIdentifier:TSMatrixRowNumberColumn];
+	if (index > 0)
+		[matrixtable moveColumn:index toColumn:0];
+}
+
+// The row numbers stay at the left; the columns of the matrix can still be moved among themselves.
+- (BOOL)tableView:(NSTableView *)tableView shouldReorderColumn:(NSInteger)columnIndex toColumn:(NSInteger)newColumnIndex
+{
+	NSInteger numbers = [tableView columnWithIdentifier:TSMatrixRowNumberColumn];
+	return columnIndex != numbers && newColumnIndex != numbers;
+}
 
 // The first row starts below the header, where the scroll view's insets put the top of the table.
 - (void)scrollTableToTop

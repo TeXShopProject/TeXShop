@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The Matrix and LaTeX panels in every language, loaded offscreen with their own controllers and the
 application's factory defaults (MatrixLaTeXPanels.m): what their buttons insert is unchanged, the Matrix
-panel has no ruler, starts its rows below the header and makes Insert the default button,
+panel numbers its rows without a ruler, starts them below the header and makes Insert the default button,
 and the LaTeX panel shows its groups with segmented controls and draws its symbols in the color of text.
 Their layout in every language is checked by run-interface-label-fit.py."""
 from pathlib import Path
