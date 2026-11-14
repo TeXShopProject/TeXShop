@@ -2,556 +2,3659 @@
   "policy": "Exact text and presented location only. No general English-word exemption. Dynamic encoding names and ISO dictionary codes are scoped separately in the checker.",
   "languages": {
     "de": [
-      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "PDF", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "PNG", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "choice.settings.782", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (LZW)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (PackBits)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "kpsewhich", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "MetaPost", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "argument", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "key", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "msg", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "search", "id": "", "category": "keyboard", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "chapter", "id": "settings.Fww-AH-Uix", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "conclusion", "id": "settings.pUb-HQ-m1i", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "exercises", "id": "settings.dNI-hB-T5a", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "figure", "id": "settings.3T5-e8-Mcd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "introduction", "id": "settings.ZIN-eZ-jRd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "project", "id": "settings.Ejc-g3-EPJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "section", "id": "settings.J9Y-VM-xKk", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsection", "id": "settings.leH-sT-cbJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsubsection ", "id": "settings.ct9-Gf-9nT", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "table", "id": "settings.F6b-YV-mvL", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "0 (normal)", "id": "settings.434", "category": "preview", "role": "choice", "reason": "Word also used in this locale"},
-      {"text": "Alpha", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Editor", "id": "category.title", "category": "editor", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Index", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Tag", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Themen", "id": "heading.group.appearance.0", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Updates", "id": "category.title", "category": "updates", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
-      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
-      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Text", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Engine", "id": "heading.group.typesetting.0", "category": "typesetting", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "pdfLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "XeLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LuaLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "pLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "upLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvips + Ghostscript", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"}
+      {
+        "text": "-dALLOWPSTRANSPARENCY",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Ghostscript",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "label.catalog-row",
+        "category": "general",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "heading.group.preview.5",
+        "category": "preview",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PDF",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PNG",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "choice.settings.782",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (LZW)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (PackBits)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "kpsewhich",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "MetaPost",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "argument",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "key",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "msg",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "search",
+        "id": "",
+        "category": "keyboard",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "chapter",
+        "id": "settings.Fww-AH-Uix",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "conclusion",
+        "id": "settings.pUb-HQ-m1i",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "exercises",
+        "id": "settings.dNI-hB-T5a",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "figure",
+        "id": "settings.3T5-e8-Mcd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "introduction",
+        "id": "settings.ZIN-eZ-jRd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "project",
+        "id": "settings.Ejc-g3-EPJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "section",
+        "id": "settings.J9Y-VM-xKk",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsection",
+        "id": "settings.leH-sT-cbJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsubsection ",
+        "id": "settings.ct9-Gf-9nT",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "table",
+        "id": "settings.F6b-YV-mvL",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "0 (normal)",
+        "id": "settings.434",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Alpha",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Editor",
+        "id": "category.title",
+        "category": "editor",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Index",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Tag",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Themen",
+        "id": "heading.group.appearance.0",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Updates",
+        "id": "category.title",
+        "category": "updates",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Button",
+        "id": "",
+        "category": "appearance",
+        "role": "button",
+        "reason": "AppKit image-button placeholder; independently audited in all languages"
+      },
+      {
+        "category": "editor",
+        "id": "",
+        "role": "label",
+        "text": "pt",
+        "reason": "Point unit for dimensions"
+      },
+      {
+        "text": "expl3",
+        "id": "heading.group.appearance.6",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "heading.group.appearance.8",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Text",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Engine",
+        "id": "heading.group.typesetting.0",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "pdfLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "XeLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LuaLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "pLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "upLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvips + Ghostscript",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      }
     ],
     "es": [
-      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "PDF", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "PNG", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "choice.settings.782", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (LZW)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (PackBits)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "kpsewhich", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "MetaPost", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "argument", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "key", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "msg", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "search", "id": "", "category": "keyboard", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "chapter", "id": "settings.Fww-AH-Uix", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "conclusion", "id": "settings.pUb-HQ-m1i", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "exercises", "id": "settings.dNI-hB-T5a", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "figure", "id": "settings.3T5-e8-Mcd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "introduction", "id": "settings.ZIN-eZ-jRd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "project", "id": "settings.Ejc-g3-EPJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "section", "id": "settings.J9Y-VM-xKk", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsection", "id": "settings.leH-sT-cbJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsubsection ", "id": "settings.ct9-Gf-9nT", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "table", "id": "settings.F6b-YV-mvL", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "0 (normal)", "id": "settings.434", "category": "preview", "role": "choice", "reason": "Word also used in this locale"},
-      {"text": "Editor", "id": "category.title", "category": "editor", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Escape", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "General", "id": "category.title", "category": "general", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Invisible", "id": "heading.group.editor.5", "category": "editor", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Invisible", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Log", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
-      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
-      {"category": "general", "id": "label.catalog-row", "role": "label", "text": "PDF", "reason": "File format or typesetting engine name"},
-      {"category": "appearance", "id": "", "role": "label", "text": "PDF", "reason": "File format or typesetting engine name"},
-      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "pdfLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "XeLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LuaLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "pLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "upLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvips + Ghostscript", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"}
+      {
+        "text": "-dALLOWPSTRANSPARENCY",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Ghostscript",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "label.catalog-row",
+        "category": "general",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "heading.group.preview.5",
+        "category": "preview",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PDF",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PNG",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "choice.settings.782",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (LZW)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (PackBits)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "kpsewhich",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "MetaPost",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "argument",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "key",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "msg",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "search",
+        "id": "",
+        "category": "keyboard",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "chapter",
+        "id": "settings.Fww-AH-Uix",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "conclusion",
+        "id": "settings.pUb-HQ-m1i",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "exercises",
+        "id": "settings.dNI-hB-T5a",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "figure",
+        "id": "settings.3T5-e8-Mcd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "introduction",
+        "id": "settings.ZIN-eZ-jRd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "project",
+        "id": "settings.Ejc-g3-EPJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "section",
+        "id": "settings.J9Y-VM-xKk",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsection",
+        "id": "settings.leH-sT-cbJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsubsection ",
+        "id": "settings.ct9-Gf-9nT",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "table",
+        "id": "settings.F6b-YV-mvL",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "0 (normal)",
+        "id": "settings.434",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Editor",
+        "id": "category.title",
+        "category": "editor",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Escape",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "General",
+        "id": "category.title",
+        "category": "general",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Invisible",
+        "id": "heading.group.editor.5",
+        "category": "editor",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Invisible",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Log",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Button",
+        "id": "",
+        "category": "appearance",
+        "role": "button",
+        "reason": "AppKit image-button placeholder; independently audited in all languages"
+      },
+      {
+        "category": "editor",
+        "id": "",
+        "role": "label",
+        "text": "pt",
+        "reason": "Point unit for dimensions"
+      },
+      {
+        "category": "general",
+        "id": "label.catalog-row",
+        "role": "label",
+        "text": "PDF",
+        "reason": "File format or typesetting engine name"
+      },
+      {
+        "category": "appearance",
+        "id": "",
+        "role": "label",
+        "text": "PDF",
+        "reason": "File format or typesetting engine name"
+      },
+      {
+        "text": "expl3",
+        "id": "heading.group.appearance.6",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "heading.group.appearance.8",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "pdfLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "XeLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LuaLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "pLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "upLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvips + Ghostscript",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      }
     ],
     "fr": [
-      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "PDF", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "PNG", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "choice.settings.782", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (LZW)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (PackBits)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Via DVI", "id": "choice.settings.186", "category": "typesetting", "role": "choice", "reason": "Word also used in this locale"},
-      {"text": "Via DVI", "id": "heading.group.typesetting.5", "category": "typesetting", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "kpsewhich", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "MetaPost", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "argument", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "key", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "msg", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "search", "id": "", "category": "keyboard", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "chapter", "id": "settings.Fww-AH-Uix", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "conclusion", "id": "settings.pUb-HQ-m1i", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "exercises", "id": "settings.dNI-hB-T5a", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "figure", "id": "settings.3T5-e8-Mcd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "introduction", "id": "settings.ZIN-eZ-jRd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "project", "id": "settings.Ejc-g3-EPJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "section", "id": "settings.J9Y-VM-xKk", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsection", "id": "settings.leH-sT-cbJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsubsection ", "id": "settings.ct9-Gf-9nT", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "table", "id": "settings.F6b-YV-mvL", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "0 (normal)", "id": "settings.434", "category": "preview", "role": "choice", "reason": "Word also used in this locale"},
-      {"text": "Actions", "id": "heading.group.console.1", "category": "console", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Console", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Console", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Console", "id": "category.title", "category": "console", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Flash", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Index", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Insertion", "id": "heading.group.editor.6", "category": "editor", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Insertion", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Log", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Source", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Source", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Style", "id": "heading.group.editor.1", "category": "editor", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
-      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
-      {"text": "Source", "id": "heading.group.appearance.3", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "pdfLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "XeLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LuaLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "pLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "upLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvips + Ghostscript", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"}
+      {
+        "text": "-dALLOWPSTRANSPARENCY",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Ghostscript",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "label.catalog-row",
+        "category": "general",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "heading.group.preview.5",
+        "category": "preview",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PDF",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PNG",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "choice.settings.782",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (LZW)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (PackBits)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Via DVI",
+        "id": "choice.settings.186",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Via DVI",
+        "id": "heading.group.typesetting.5",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "kpsewhich",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "MetaPost",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "argument",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "key",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "msg",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "search",
+        "id": "",
+        "category": "keyboard",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "chapter",
+        "id": "settings.Fww-AH-Uix",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "conclusion",
+        "id": "settings.pUb-HQ-m1i",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "exercises",
+        "id": "settings.dNI-hB-T5a",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "figure",
+        "id": "settings.3T5-e8-Mcd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "introduction",
+        "id": "settings.ZIN-eZ-jRd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "project",
+        "id": "settings.Ejc-g3-EPJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "section",
+        "id": "settings.J9Y-VM-xKk",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsection",
+        "id": "settings.leH-sT-cbJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsubsection ",
+        "id": "settings.ct9-Gf-9nT",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "table",
+        "id": "settings.F6b-YV-mvL",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "0 (normal)",
+        "id": "settings.434",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Actions",
+        "id": "heading.group.console.1",
+        "category": "console",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Console",
+        "id": "label.catalog-row",
+        "category": "general",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Console",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Console",
+        "id": "category.title",
+        "category": "console",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Flash",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Index",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Insertion",
+        "id": "heading.group.editor.6",
+        "category": "editor",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Insertion",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Log",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Source",
+        "id": "label.catalog-row",
+        "category": "general",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Source",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Style",
+        "id": "heading.group.editor.1",
+        "category": "editor",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Button",
+        "id": "",
+        "category": "appearance",
+        "role": "button",
+        "reason": "AppKit image-button placeholder; independently audited in all languages"
+      },
+      {
+        "category": "editor",
+        "id": "",
+        "role": "label",
+        "text": "pt",
+        "reason": "Point unit for dimensions"
+      },
+      {
+        "text": "Source",
+        "id": "heading.group.appearance.3",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "expl3",
+        "id": "heading.group.appearance.6",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "heading.group.appearance.8",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "pdfLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "XeLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LuaLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "pLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "upLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvips + Ghostscript",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      }
     ],
     "it": [
-      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "PDF", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "PNG", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "choice.settings.782", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (LZW)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (PackBits)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "kpsewhich", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "MetaPost", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "argument", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "key", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "msg", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "search", "id": "", "category": "keyboard", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "chapter", "id": "settings.Fww-AH-Uix", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "conclusion", "id": "settings.pUb-HQ-m1i", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "exercises", "id": "settings.dNI-hB-T5a", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "figure", "id": "settings.3T5-e8-Mcd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "introduction", "id": "settings.ZIN-eZ-jRd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "project", "id": "settings.Ejc-g3-EPJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "section", "id": "settings.J9Y-VM-xKk", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsection", "id": "settings.leH-sT-cbJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsubsection ", "id": "settings.ct9-Gf-9nT", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "table", "id": "settings.F6b-YV-mvL", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "Console", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Console", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Console", "id": "category.title", "category": "console", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Editor", "id": "category.title", "category": "editor", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Escape", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Font", "id": "heading.group.console.0", "category": "console", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Log", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Tag", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
-      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
-      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "pdfLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "XeLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LuaLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "pLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "upLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvips + Ghostscript", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"}
+      {
+        "text": "-dALLOWPSTRANSPARENCY",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Ghostscript",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "label.catalog-row",
+        "category": "general",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "heading.group.preview.5",
+        "category": "preview",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PDF",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PNG",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "choice.settings.782",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (LZW)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (PackBits)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "kpsewhich",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "MetaPost",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "argument",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "key",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "msg",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "search",
+        "id": "",
+        "category": "keyboard",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "chapter",
+        "id": "settings.Fww-AH-Uix",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "conclusion",
+        "id": "settings.pUb-HQ-m1i",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "exercises",
+        "id": "settings.dNI-hB-T5a",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "figure",
+        "id": "settings.3T5-e8-Mcd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "introduction",
+        "id": "settings.ZIN-eZ-jRd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "project",
+        "id": "settings.Ejc-g3-EPJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "section",
+        "id": "settings.J9Y-VM-xKk",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsection",
+        "id": "settings.leH-sT-cbJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsubsection ",
+        "id": "settings.ct9-Gf-9nT",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "table",
+        "id": "settings.F6b-YV-mvL",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Console",
+        "id": "label.catalog-row",
+        "category": "general",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Console",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Console",
+        "id": "category.title",
+        "category": "console",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Editor",
+        "id": "category.title",
+        "category": "editor",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Escape",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Font",
+        "id": "heading.group.console.0",
+        "category": "console",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Log",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Tag",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Button",
+        "id": "",
+        "category": "appearance",
+        "role": "button",
+        "reason": "AppKit image-button placeholder; independently audited in all languages"
+      },
+      {
+        "category": "editor",
+        "id": "",
+        "role": "label",
+        "text": "pt",
+        "reason": "Point unit for dimensions"
+      },
+      {
+        "text": "expl3",
+        "id": "heading.group.appearance.6",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "heading.group.appearance.8",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "pdfLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "XeLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LuaLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "pLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "upLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvips + Ghostscript",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      }
     ],
     "ja": [
-      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "PDF", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "PNG", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "choice.settings.782", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (LZW)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (PackBits)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "kpsewhich", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "MetaPost", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "argument", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "key", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "msg", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "search", "id": "", "category": "keyboard", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "chapter", "id": "settings.Fww-AH-Uix", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "conclusion", "id": "settings.pUb-HQ-m1i", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "exercises", "id": "settings.dNI-hB-T5a", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "figure", "id": "settings.3T5-e8-Mcd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "introduction", "id": "settings.ZIN-eZ-jRd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "project", "id": "settings.Ejc-g3-EPJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "section", "id": "settings.J9Y-VM-xKk", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsection", "id": "settings.leH-sT-cbJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsubsection ", "id": "settings.ct9-Gf-9nT", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "table", "id": "settings.F6b-YV-mvL", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
-      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
-      {"category": "typesetting", "id": "label.catalog-row", "role": "label", "text": "LaTeX", "reason": "File format or typesetting engine name"},
-      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "pdfLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "XeLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LuaLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "pLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "upLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvips + Ghostscript", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"}
+      {
+        "text": "-dALLOWPSTRANSPARENCY",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Ghostscript",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "label.catalog-row",
+        "category": "general",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "heading.group.preview.5",
+        "category": "preview",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PDF",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PNG",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "choice.settings.782",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (LZW)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (PackBits)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "kpsewhich",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "MetaPost",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "argument",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "key",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "msg",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "search",
+        "id": "",
+        "category": "keyboard",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "chapter",
+        "id": "settings.Fww-AH-Uix",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "conclusion",
+        "id": "settings.pUb-HQ-m1i",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "exercises",
+        "id": "settings.dNI-hB-T5a",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "figure",
+        "id": "settings.3T5-e8-Mcd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "introduction",
+        "id": "settings.ZIN-eZ-jRd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "project",
+        "id": "settings.Ejc-g3-EPJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "section",
+        "id": "settings.J9Y-VM-xKk",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsection",
+        "id": "settings.leH-sT-cbJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsubsection ",
+        "id": "settings.ct9-Gf-9nT",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "table",
+        "id": "settings.F6b-YV-mvL",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Button",
+        "id": "",
+        "category": "appearance",
+        "role": "button",
+        "reason": "AppKit image-button placeholder; independently audited in all languages"
+      },
+      {
+        "category": "editor",
+        "id": "",
+        "role": "label",
+        "text": "pt",
+        "reason": "Point unit for dimensions"
+      },
+      {
+        "category": "typesetting",
+        "id": "label.catalog-row",
+        "role": "label",
+        "text": "LaTeX",
+        "reason": "File format or typesetting engine name"
+      },
+      {
+        "text": "expl3",
+        "id": "heading.group.appearance.6",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "heading.group.appearance.8",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "pdfLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "XeLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LuaLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "pLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "upLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvips + Ghostscript",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      }
     ],
     "ko": [
-      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "PDF", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "PNG", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "choice.settings.782", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (LZW)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (PackBits)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "kpsewhich", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "MetaPost", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "argument", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "key", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "msg", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "search", "id": "", "category": "keyboard", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "chapter", "id": "settings.Fww-AH-Uix", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "conclusion", "id": "settings.pUb-HQ-m1i", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "exercises", "id": "settings.dNI-hB-T5a", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "figure", "id": "settings.3T5-e8-Mcd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "introduction", "id": "settings.ZIN-eZ-jRd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "project", "id": "settings.Ejc-g3-EPJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "section", "id": "settings.J9Y-VM-xKk", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsection", "id": "settings.leH-sT-cbJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsubsection ", "id": "settings.ct9-Gf-9nT", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "table", "id": "settings.F6b-YV-mvL", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
-      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
-      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "pdfLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "XeLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LuaLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "pLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "upLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvips + Ghostscript", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"}
+      {
+        "text": "-dALLOWPSTRANSPARENCY",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Ghostscript",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "label.catalog-row",
+        "category": "general",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "heading.group.preview.5",
+        "category": "preview",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PDF",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PNG",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "choice.settings.782",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (LZW)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (PackBits)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "kpsewhich",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "MetaPost",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "argument",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "key",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "msg",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "search",
+        "id": "",
+        "category": "keyboard",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "chapter",
+        "id": "settings.Fww-AH-Uix",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "conclusion",
+        "id": "settings.pUb-HQ-m1i",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "exercises",
+        "id": "settings.dNI-hB-T5a",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "figure",
+        "id": "settings.3T5-e8-Mcd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "introduction",
+        "id": "settings.ZIN-eZ-jRd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "project",
+        "id": "settings.Ejc-g3-EPJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "section",
+        "id": "settings.J9Y-VM-xKk",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsection",
+        "id": "settings.leH-sT-cbJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsubsection ",
+        "id": "settings.ct9-Gf-9nT",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "table",
+        "id": "settings.F6b-YV-mvL",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Button",
+        "id": "",
+        "category": "appearance",
+        "role": "button",
+        "reason": "AppKit image-button placeholder; independently audited in all languages"
+      },
+      {
+        "category": "editor",
+        "id": "",
+        "role": "label",
+        "text": "pt",
+        "reason": "Point unit for dimensions"
+      },
+      {
+        "text": "expl3",
+        "id": "heading.group.appearance.6",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "heading.group.appearance.8",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "pdfLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "XeLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LuaLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "pLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "upLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvips + Ghostscript",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      }
     ],
     "nl": [
-      {"text": "Tab", "id": "keybindings.insert", "category": "keyboard", "role": "choice", "reason": "Key name that is the same word in this language"},
-      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "PDF", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "PNG", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "choice.settings.782", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (LZW)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (PackBits)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Via DVI", "id": "choice.settings.186", "category": "typesetting", "role": "choice", "reason": "Word also used in this locale"},
-      {"text": "Via DVI", "id": "heading.group.typesetting.5", "category": "typesetting", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Direct PDF", "id": "choice.settings.186", "category": "typesetting", "role": "choice", "reason": "Word also used in this locale"},
-      {"text": "Direct PDF", "id": "heading.group.typesetting.4", "category": "typesetting", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "kpsewhich", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "MetaPost", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "argument", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "key", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "msg", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "search", "id": "", "category": "keyboard", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "chapter", "id": "settings.Fww-AH-Uix", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "conclusion", "id": "settings.pUb-HQ-m1i", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "exercises", "id": "settings.dNI-hB-T5a", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "figure", "id": "settings.3T5-e8-Mcd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "introduction", "id": "settings.ZIN-eZ-jRd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "project", "id": "settings.Ejc-g3-EPJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "section", "id": "settings.J9Y-VM-xKk", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsection", "id": "settings.leH-sT-cbJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsubsection ", "id": "settings.ct9-Gf-9nT", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "table", "id": "settings.F6b-YV-mvL", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "Console", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Console", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Console", "id": "category.title", "category": "console", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Editor", "id": "category.title", "category": "editor", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Index", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Tab", "id": "label.catalog-row", "category": "editor", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Tag", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Updates", "id": "category.title", "category": "updates", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
-      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
-      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Engine", "id": "heading.group.typesetting.0", "category": "typesetting", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "pdfLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "XeLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LuaLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "pLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "upLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvips + Ghostscript", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"}
+      {
+        "text": "Tab",
+        "id": "keybindings.insert",
+        "category": "keyboard",
+        "role": "choice",
+        "reason": "Key name that is the same word in this language"
+      },
+      {
+        "text": "-dALLOWPSTRANSPARENCY",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Ghostscript",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "label.catalog-row",
+        "category": "general",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "heading.group.preview.5",
+        "category": "preview",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PDF",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PNG",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "choice.settings.782",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (LZW)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (PackBits)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Via DVI",
+        "id": "choice.settings.186",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Via DVI",
+        "id": "heading.group.typesetting.5",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Direct PDF",
+        "id": "choice.settings.186",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Direct PDF",
+        "id": "heading.group.typesetting.4",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "kpsewhich",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "MetaPost",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "argument",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "key",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "msg",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "search",
+        "id": "",
+        "category": "keyboard",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "chapter",
+        "id": "settings.Fww-AH-Uix",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "conclusion",
+        "id": "settings.pUb-HQ-m1i",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "exercises",
+        "id": "settings.dNI-hB-T5a",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "figure",
+        "id": "settings.3T5-e8-Mcd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "introduction",
+        "id": "settings.ZIN-eZ-jRd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "project",
+        "id": "settings.Ejc-g3-EPJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "section",
+        "id": "settings.J9Y-VM-xKk",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsection",
+        "id": "settings.leH-sT-cbJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsubsection ",
+        "id": "settings.ct9-Gf-9nT",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "table",
+        "id": "settings.F6b-YV-mvL",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Console",
+        "id": "label.catalog-row",
+        "category": "general",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Console",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Console",
+        "id": "category.title",
+        "category": "console",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Editor",
+        "id": "category.title",
+        "category": "editor",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Index",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Tab",
+        "id": "label.catalog-row",
+        "category": "editor",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Tag",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Updates",
+        "id": "category.title",
+        "category": "updates",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Button",
+        "id": "",
+        "category": "appearance",
+        "role": "button",
+        "reason": "AppKit image-button placeholder; independently audited in all languages"
+      },
+      {
+        "category": "editor",
+        "id": "",
+        "role": "label",
+        "text": "pt",
+        "reason": "Point unit for dimensions"
+      },
+      {
+        "text": "expl3",
+        "id": "heading.group.appearance.6",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "heading.group.appearance.8",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Engine",
+        "id": "heading.group.typesetting.0",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "pdfLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "XeLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LuaLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "pLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "upLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvips + Ghostscript",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      }
     ],
     "pt": [
-      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "PDF", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "PNG", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "choice.settings.782", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (LZW)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (PackBits)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Via DVI", "id": "choice.settings.186", "category": "typesetting", "role": "choice", "reason": "Word also used in this locale"},
-      {"text": "Via DVI", "id": "heading.group.typesetting.5", "category": "typesetting", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "kpsewhich", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "MetaPost", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "argument", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "key", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "msg", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "search", "id": "", "category": "keyboard", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "chapter", "id": "settings.Fww-AH-Uix", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "conclusion", "id": "settings.pUb-HQ-m1i", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "exercises", "id": "settings.dNI-hB-T5a", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "figure", "id": "settings.3T5-e8-Mcd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "introduction", "id": "settings.ZIN-eZ-jRd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "project", "id": "settings.Ejc-g3-EPJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "section", "id": "settings.J9Y-VM-xKk", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsection", "id": "settings.leH-sT-cbJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsubsection ", "id": "settings.ct9-Gf-9nT", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "table", "id": "settings.F6b-YV-mvL", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "0 (normal)", "id": "settings.434", "category": "preview", "role": "choice", "reason": "Word also used in this locale"},
-      {"text": "Console", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Console", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Console", "id": "category.title", "category": "console", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Editor", "id": "category.title", "category": "editor", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Escape", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Log", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Tab", "id": "label.catalog-row", "category": "editor", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
-      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
-      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "pdfLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "XeLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LuaLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "pLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "upLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvips + Ghostscript", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"}
+      {
+        "text": "-dALLOWPSTRANSPARENCY",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Ghostscript",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "label.catalog-row",
+        "category": "general",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "heading.group.preview.5",
+        "category": "preview",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PDF",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PNG",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "choice.settings.782",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (LZW)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (PackBits)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Via DVI",
+        "id": "choice.settings.186",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Via DVI",
+        "id": "heading.group.typesetting.5",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "kpsewhich",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "MetaPost",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "argument",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "key",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "msg",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "search",
+        "id": "",
+        "category": "keyboard",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "chapter",
+        "id": "settings.Fww-AH-Uix",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "conclusion",
+        "id": "settings.pUb-HQ-m1i",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "exercises",
+        "id": "settings.dNI-hB-T5a",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "figure",
+        "id": "settings.3T5-e8-Mcd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "introduction",
+        "id": "settings.ZIN-eZ-jRd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "project",
+        "id": "settings.Ejc-g3-EPJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "section",
+        "id": "settings.J9Y-VM-xKk",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsection",
+        "id": "settings.leH-sT-cbJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsubsection ",
+        "id": "settings.ct9-Gf-9nT",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "table",
+        "id": "settings.F6b-YV-mvL",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "0 (normal)",
+        "id": "settings.434",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Console",
+        "id": "label.catalog-row",
+        "category": "general",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Console",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Console",
+        "id": "category.title",
+        "category": "console",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Editor",
+        "id": "category.title",
+        "category": "editor",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Escape",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Log",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Tab",
+        "id": "label.catalog-row",
+        "category": "editor",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Button",
+        "id": "",
+        "category": "appearance",
+        "role": "button",
+        "reason": "AppKit image-button placeholder; independently audited in all languages"
+      },
+      {
+        "category": "editor",
+        "id": "",
+        "role": "label",
+        "text": "pt",
+        "reason": "Point unit for dimensions"
+      },
+      {
+        "text": "expl3",
+        "id": "heading.group.appearance.6",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "heading.group.appearance.8",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "pdfLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "XeLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LuaLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "pLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "upLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvips + Ghostscript",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      }
     ],
     "pt-PT": [
-      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "PDF", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "PNG", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "choice.settings.782", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (LZW)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (PackBits)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Via DVI", "id": "choice.settings.186", "category": "typesetting", "role": "choice", "reason": "Word also used in this locale"},
-      {"text": "Via DVI", "id": "heading.group.typesetting.5", "category": "typesetting", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "kpsewhich", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "MetaPost", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "argument", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "key", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "msg", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "search", "id": "", "category": "keyboard", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "chapter", "id": "settings.Fww-AH-Uix", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "conclusion", "id": "settings.pUb-HQ-m1i", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "exercises", "id": "settings.dNI-hB-T5a", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "figure", "id": "settings.3T5-e8-Mcd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "introduction", "id": "settings.ZIN-eZ-jRd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "project", "id": "settings.Ejc-g3-EPJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "section", "id": "settings.J9Y-VM-xKk", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsection", "id": "settings.leH-sT-cbJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsubsection ", "id": "settings.ct9-Gf-9nT", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "table", "id": "settings.F6b-YV-mvL", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "0 (normal)", "id": "settings.434", "category": "preview", "role": "choice", "reason": "Word also used in this locale"},
-      {"text": "Editor", "id": "category.title", "category": "editor", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
-      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
-      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "pdfLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "XeLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LuaLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "pLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "upLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvips + Ghostscript", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"}
+      {
+        "text": "-dALLOWPSTRANSPARENCY",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Ghostscript",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "label.catalog-row",
+        "category": "general",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "heading.group.preview.5",
+        "category": "preview",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PDF",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PNG",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "choice.settings.782",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (LZW)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (PackBits)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Via DVI",
+        "id": "choice.settings.186",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Via DVI",
+        "id": "heading.group.typesetting.5",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "kpsewhich",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "MetaPost",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "argument",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "key",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "msg",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "search",
+        "id": "",
+        "category": "keyboard",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "chapter",
+        "id": "settings.Fww-AH-Uix",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "conclusion",
+        "id": "settings.pUb-HQ-m1i",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "exercises",
+        "id": "settings.dNI-hB-T5a",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "figure",
+        "id": "settings.3T5-e8-Mcd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "introduction",
+        "id": "settings.ZIN-eZ-jRd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "project",
+        "id": "settings.Ejc-g3-EPJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "section",
+        "id": "settings.J9Y-VM-xKk",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsection",
+        "id": "settings.leH-sT-cbJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsubsection ",
+        "id": "settings.ct9-Gf-9nT",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "table",
+        "id": "settings.F6b-YV-mvL",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "0 (normal)",
+        "id": "settings.434",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Editor",
+        "id": "category.title",
+        "category": "editor",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Button",
+        "id": "",
+        "category": "appearance",
+        "role": "button",
+        "reason": "AppKit image-button placeholder; independently audited in all languages"
+      },
+      {
+        "category": "editor",
+        "id": "",
+        "role": "label",
+        "text": "pt",
+        "reason": "Point unit for dimensions"
+      },
+      {
+        "text": "expl3",
+        "id": "heading.group.appearance.6",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "heading.group.appearance.8",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "pdfLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "XeLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LuaLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "pLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "upLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvips + Ghostscript",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      }
     ],
     "ro": [
-      {"text": "Tab", "id": "keybindings.insert", "category": "keyboard", "role": "choice", "reason": "Key name that is the same word in this language"},
-      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "PDF", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "PNG", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "choice.settings.782", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (LZW)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (PackBits)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "kpsewhich", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "MetaPost", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "argument", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "key", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "msg", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "search", "id": "", "category": "keyboard", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "chapter", "id": "settings.Fww-AH-Uix", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "conclusion", "id": "settings.pUb-HQ-m1i", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "exercises", "id": "settings.dNI-hB-T5a", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "figure", "id": "settings.3T5-e8-Mcd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "introduction", "id": "settings.ZIN-eZ-jRd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "project", "id": "settings.Ejc-g3-EPJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "section", "id": "settings.J9Y-VM-xKk", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsection", "id": "settings.leH-sT-cbJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsubsection ", "id": "settings.ct9-Gf-9nT", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "table", "id": "settings.F6b-YV-mvL", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "0 (normal)", "id": "settings.434", "category": "preview", "role": "choice", "reason": "Word also used in this locale"},
-      {"text": "Editor", "id": "category.title", "category": "editor", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Font", "id": "heading.group.console.0", "category": "console", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "General", "id": "category.title", "category": "general", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Index", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Tab", "id": "label.catalog-row", "category": "editor", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
-      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
-      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Text", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "pdfLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "XeLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LuaLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "pLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "upLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvips + Ghostscript", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"}
+      {
+        "text": "Tab",
+        "id": "keybindings.insert",
+        "category": "keyboard",
+        "role": "choice",
+        "reason": "Key name that is the same word in this language"
+      },
+      {
+        "text": "-dALLOWPSTRANSPARENCY",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Ghostscript",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "label.catalog-row",
+        "category": "general",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "heading.group.preview.5",
+        "category": "preview",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PDF",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PNG",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "choice.settings.782",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (LZW)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (PackBits)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "kpsewhich",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "MetaPost",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "argument",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "key",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "msg",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "search",
+        "id": "",
+        "category": "keyboard",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "chapter",
+        "id": "settings.Fww-AH-Uix",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "conclusion",
+        "id": "settings.pUb-HQ-m1i",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "exercises",
+        "id": "settings.dNI-hB-T5a",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "figure",
+        "id": "settings.3T5-e8-Mcd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "introduction",
+        "id": "settings.ZIN-eZ-jRd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "project",
+        "id": "settings.Ejc-g3-EPJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "section",
+        "id": "settings.J9Y-VM-xKk",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsection",
+        "id": "settings.leH-sT-cbJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsubsection ",
+        "id": "settings.ct9-Gf-9nT",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "table",
+        "id": "settings.F6b-YV-mvL",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "0 (normal)",
+        "id": "settings.434",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Editor",
+        "id": "category.title",
+        "category": "editor",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Font",
+        "id": "heading.group.console.0",
+        "category": "console",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "General",
+        "id": "category.title",
+        "category": "general",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Index",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Tab",
+        "id": "label.catalog-row",
+        "category": "editor",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "Button",
+        "id": "",
+        "category": "appearance",
+        "role": "button",
+        "reason": "AppKit image-button placeholder; independently audited in all languages"
+      },
+      {
+        "category": "editor",
+        "id": "",
+        "role": "label",
+        "text": "pt",
+        "reason": "Point unit for dimensions"
+      },
+      {
+        "text": "expl3",
+        "id": "heading.group.appearance.6",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "heading.group.appearance.8",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Text",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Word also used in this locale"
+      },
+      {
+        "text": "pdfLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "XeLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LuaLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "pLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "upLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvips + Ghostscript",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      }
     ],
     "zh_CN": [
-      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "PDF", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "PNG", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "choice.settings.782", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (LZW)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "TIFF (PackBits)", "id": "settings.405", "category": "preview", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "plain TeX", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "kpsewhich", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "MetaPost", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "argument", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "key", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "msg", "id": "", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "search", "id": "", "category": "keyboard", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "chapter", "id": "settings.Fww-AH-Uix", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "conclusion", "id": "settings.pUb-HQ-m1i", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "exercises", "id": "settings.dNI-hB-T5a", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "figure", "id": "settings.3T5-e8-Mcd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "introduction", "id": "settings.ZIN-eZ-jRd", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "project", "id": "settings.Ejc-g3-EPJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "section", "id": "settings.J9Y-VM-xKk", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsection", "id": "settings.leH-sT-cbJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "subsubsection ", "id": "settings.ct9-Gf-9nT", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "table", "id": "settings.F6b-YV-mvL", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
-      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
-      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "pdfLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "XeLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LuaLaTeX", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "pLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "upLaTeX + dvipdfmx", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "LaTeX + dvips + Ghostscript", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"}
+      {
+        "text": "-dALLOWPSTRANSPARENCY",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Ghostscript",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "label.catalog-row",
+        "category": "general",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "HTML",
+        "id": "heading.group.preview.5",
+        "category": "preview",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PDF",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "PNG",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "choice.settings.782",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (LZW)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "TIFF (PackBits)",
+        "id": "settings.405",
+        "category": "preview",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "choice.settings.181",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "plain TeX",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "kpsewhich",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "MetaPost",
+        "id": "label.catalog-row",
+        "category": "typesetting",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "argument",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "key",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "msg",
+        "id": "",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "search",
+        "id": "",
+        "category": "keyboard",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "chapter",
+        "id": "settings.Fww-AH-Uix",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "conclusion",
+        "id": "settings.pUb-HQ-m1i",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "exercises",
+        "id": "settings.dNI-hB-T5a",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "figure",
+        "id": "settings.3T5-e8-Mcd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "introduction",
+        "id": "settings.ZIN-eZ-jRd",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "project",
+        "id": "settings.Ejc-g3-EPJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "section",
+        "id": "settings.J9Y-VM-xKk",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsection",
+        "id": "settings.leH-sT-cbJ",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "subsubsection ",
+        "id": "settings.ct9-Gf-9nT",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "table",
+        "id": "settings.F6b-YV-mvL",
+        "category": "editor",
+        "role": "button",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "Button",
+        "id": "",
+        "category": "appearance",
+        "role": "button",
+        "reason": "AppKit image-button placeholder; independently audited in all languages"
+      },
+      {
+        "category": "editor",
+        "id": "",
+        "role": "label",
+        "text": "pt",
+        "reason": "Point unit for dimensions"
+      },
+      {
+        "text": "expl3",
+        "id": "heading.group.appearance.6",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "SyncTeX",
+        "id": "heading.group.appearance.8",
+        "category": "appearance",
+        "role": "label",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "pdfLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "XeLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LuaLaTeX",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "pLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "upLaTeX + dvipdfmx",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      },
+      {
+        "text": "LaTeX + dvips + Ghostscript",
+        "id": "settings.engine-profile",
+        "category": "typesetting",
+        "role": "choice",
+        "reason": "Technical name, command or XML element"
+      }
     ]
   }
 }

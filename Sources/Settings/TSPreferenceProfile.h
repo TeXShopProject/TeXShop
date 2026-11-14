@@ -50,6 +50,13 @@ FOUNDATION_EXPORT NSSet<TSPreferenceKey> *TSEngineProfileApply(NSUserDefaults *d
 /// choice is made, so only an earlier choice has no engine file stored. stored is the
 /// persistent domain of the application.
 FOUNDATION_EXPORT void TSKeepEarlierFactoryEngineFile(NSUserDefaults *defaults, NSDictionary *stored);
+/// Save PostScript File (SavePSEnabled) added --keep-psfile, and -dALLOWPSTRANSPARENCY
+/// (UseTransparency) added --distilleropts "-dALLOWPSTRANSPARENCY" unless the command had a
+/// --distiller option, to every Via DVI command; only simpdftex, altpdftex and altpdflatex
+/// understand them. For whoever turned one on, the Via DVI commands that run one of these get
+/// the option written into them, and both settings are removed, so that this happens once.
+/// stored is the persistent domain of the application.
+FOUNDATION_EXPORT void TSMoveViaDVIOptionsIntoCommands(NSUserDefaults *defaults, NSDictionary *stored);
 
 // Runtime observers defer their work until a complete profile has been stored.
 FOUNDATION_EXPORT BOOL TSPreferenceProfileIsApplying(void);

@@ -15,7 +15,6 @@
         <outlet property="kpsetoolField" destination="1022" id="1025" />
         <outlet property="latexCommandTextField" destination="53" id="99" />
         <outlet property="latexGSCommandTextField" destination="199" id="206" />
-        <outlet property="savePSButton" destination="225" id="227" />
         <outlet property="tetexBinPathField" destination="217" id="219" />
         <outlet property="texCommandTextField" destination="51" id="98" />
         <outlet property="texGSCommandTextField" destination="202" id="205" />
@@ -230,17 +229,6 @@
                   <action selector="latexGSProgramChanged:" target="-2" id="204" />
                 </connections>
               </textField>
-              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="225" identifier="settings.225">
-                <rect key="frame" x="17" y="9" width="143" height="18" />
-                <autoresizingMask key="autoresizingMask" />
-                <buttonCell key="cell" type="check" title="Save Postscript File" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="887">
-                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
-                  <font key="font" metaFont="system" />
-                </buttonCell>
-                <connections>
-                  <action selector="savePSPressed:" target="-2" id="226" />
-                </connections>
-              </button>
               <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1066" identifier="settings.1066">
                 <rect key="frame" x="21" y="116.5" width="30" height="18" />
                 <autoresizingMask key="autoresizingMask" />

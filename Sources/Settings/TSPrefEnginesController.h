@@ -9,7 +9,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nullable) IBOutlet NSTextField *kpsetoolField;
 @property (strong, nullable) IBOutlet NSTextField *latexCommandTextField;
 @property (strong, nullable) IBOutlet NSTextField *latexGSCommandTextField;
-@property (strong, nullable) IBOutlet NSButton *savePSButton;
 @property (strong, nullable) IBOutlet NSTextField *tetexBinPathField;
 @property (strong, nullable) IBOutlet NSTextField *texCommandTextField;
 @property (strong, nullable) IBOutlet NSTextField *texGSCommandTextField;

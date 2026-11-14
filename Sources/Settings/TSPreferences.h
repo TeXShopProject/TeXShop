@@ -76,7 +76,6 @@
 	IBOutlet NSButton	*_escapeWarningButton;		/*" connected to "Shell Escape Warning" "*/
 	IBOutlet NSTextField	*_texGSCommandTextField;	/*" connected to "Tex + GS" "*/
 	IBOutlet NSTextField	*_latexGSCommandTextField;	/*" connected to "Latex + GS" "*/
-	IBOutlet NSButton	*_savePSButton;			/*" connect to save postscript "*/
 	IBOutlet NSTextField	*_tetexBinPathField;		/*" connected to tetex bin path "*/
     IBOutlet NSTextField    *_altPathField;             /*" connected to alternate path "*/
 	IBOutlet NSTextField	*_gsBinPathField;		/*" connected to tetex bin path "*/
@@ -94,7 +93,6 @@
     IBOutlet NSTextField *remainingParagraphIndentField;
     IBOutlet NSTextField *interlineSpacingField;
 	IBOutlet NSButton	*_saveRelatedButton;		/*" connected to Save Related Files "*/
-    IBOutlet NSButton    *_useTransparencyButton; /*" connected to use -dALLOWPSTRANSPARENCY "*/
     IBOutlet NSButton   *_syncTabButton;
 	IBOutlet NSButton       *_autoPDFButton;
 	IBOutlet NSButton       *_ptexUtfOutputButton;          // zenitani 1.35 (C)
@@ -323,7 +321,6 @@
 - (IBAction)escapeWarningChanged:sender;
 - (IBAction)texGSProgramChanged:sender;
 - (IBAction)latexGSProgramChanged:sender;
-- (IBAction)savePSPressed:sender;
 - (IBAction)tetexBinPathChanged:sender;
 - (IBAction)altPathChanged:sender;
 - (IBAction)gsBinPathChanged:sender;
@@ -414,7 +411,6 @@
 - (IBAction)consoleWindowPosChanged:(id)sender;
 - (IBAction)consoleWindowPosDefault:(id)sender;
 - (IBAction)lineNumberButtonPressed:(id)sender;
-- (IBAction)useTransparencyPressed:(id)sender;
 
 @end
 

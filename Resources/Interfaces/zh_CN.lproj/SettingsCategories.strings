@@ -271,16 +271,11 @@
 "catalog.typesetting.5.0.button" = "默认";
 "catalog.typesetting.5.1.title" = "LaTeX";
 "catalog.typesetting.5.1.button" = "默认";
-"catalog.typesetting.5.2.title" = "保存PostScript文件";
-"catalog.typesetting.5.2.note" = "在上方的plain TeX或LaTeX命令中加上 --keep-psfile，保留中间生成的PostScript文件。";
 "group.typesetting.6.title" = "个性化脚本";
 "catalog.typesetting.6.0.title" = "plain TeX程序";
 "catalog.typesetting.6.0.note" = "默认值：空";
 "catalog.typesetting.6.1.title" = "LaTeX程序";
 "catalog.typesetting.6.1.note" = "默认值：空";
-"group.typesetting.7.title" = "Ghostscript";
-"catalog.typesetting.7.1.title" = "-dALLOWPSTRANSPARENCY";
-"catalog.typesetting.7.1.note" = "Ghostscript将PostScript转换为PDF时加上此选项，以保留PSTricks等的透明效果。需要Ghostscript 9.51或更高版本。";
 "group.typesetting.8.title" = "相关工具";
 "catalog.typesetting.8.0.title" = "kpsewhich";
 "catalog.typesetting.8.0.note" = "“文件”菜单中“打开样式文件”用来查找文件的命令。默认值：kpsewhich -progname=latex -format=tex";

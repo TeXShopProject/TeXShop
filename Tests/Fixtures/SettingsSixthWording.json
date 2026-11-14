@@ -477,7 +477,6 @@
       "catalog.general.2.0.title": "Sursă",
       "catalog.general.1.2.title": "Deschide ferestrele noi ca file",
       "catalog.console.1.1.title": "Redimensionarea consolei",
-      "catalog.typesetting.5.2.title": "Salvează fișierul PostScript",
       "themes": "Teme",
       "source": "Sursă",
       "catalog.typesetting.8.1.title": "Motor BibTeX",
@@ -602,8 +601,7 @@
     },
     "SettingsEngines.strings": {
       "1027.title": "Motor BibTeX",
-      "882.title": "Avertisment shell escape",
-      "887.title": "Salvează fișierul PostScript"
+      "882.title": "Avertisment shell escape"
     },
     "SettingsMiscOne.strings": {
       "XCi-5f-wnn.title": "Culoarea cursorului:",

@@ -271,16 +271,11 @@
 "catalog.typesetting.5.0.button" = "default";
 "catalog.typesetting.5.1.title" = "LaTeX";
 "catalog.typesetting.5.1.button" = "default";
-"catalog.typesetting.5.2.title" = "Salva Documento PostScript";
-"catalog.typesetting.5.2.note" = "Aggiunge --keep-psfile al comando plain TeX o LaTeX qui sopra per conservare il file PostScript intermedio.";
 "group.typesetting.6.title" = "Script personale";
 "catalog.typesetting.6.0.title" = "Programma plain TeX";
 "catalog.typesetting.6.0.note" = "Predefinito: vuoto";
 "catalog.typesetting.6.1.title" = "Programma LaTeX";
 "catalog.typesetting.6.1.note" = "Predefinito: vuoto";
-"group.typesetting.7.title" = "Ghostscript";
-"catalog.typesetting.7.1.title" = "-dALLOWPSTRANSPARENCY";
-"catalog.typesetting.7.1.note" = "Aggiunge questa opzione quando Ghostscript converte PostScript in PDF, per mantenere la trasparenza, ad esempio quella di PSTricks. Richiede Ghostscript 9.51 o successivo.";
 "group.typesetting.8.title" = "Strumenti correlati";
 "catalog.typesetting.8.0.title" = "kpsewhich";
 "catalog.typesetting.8.0.note" = "Il comando con cui «Apri file di stile» nel menu Archivio cerca il file. Predefinito: kpsewhich -progname=latex -format=tex";

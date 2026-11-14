@@ -9,5 +9,4 @@
 - (IBAction)saveRelatedButtonPressed:(id)sender { [self.preferences saveRelatedButtonPressed:sender]; }
 - (IBAction)syncChanged:(id)sender { [self.preferences syncChanged:sender]; }
 - (IBAction)syncTabButtonPressed:(id)sender { [self.preferences syncTabButtonPressed:sender]; }
-- (IBAction)useTransparencyPressed:(id)sender { [self.preferences useTransparencyPressed:sender]; }
 @end

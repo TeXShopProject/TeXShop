@@ -874,13 +874,10 @@ To switch between these two methods for an occasional document, go to the Typese
 
 After making these choices, typesetting with TeXShop is easy. When you want to typeset, just push the ``Typeset'' button in the Source toolbar or select the ``Typeset'' menu at the top of the Typeset menu. This menu has a keyboard shortcut, command-T. After a few days, you'll ignore the toolbar item and the menu item and type command-T when you want to typeset.
 
-Near the bottom of this Settings category, the ``Ghostscript'' group has a switch labeled
-``-dALLOWPSTRANSPARENCY''. This is only active when typesetting Via DVI.
-In this mode, when a graphic is created, it is processed by Ghostscript.
-Modern versions of Ghostscript have been made
-safer, and by default they no longer accept the postscript transparency operators. This setting sets a flag
-telling Ghostscript to process transparency calls correctly. The setting will be irrelevant for most
-people.
+When typesetting Via DVI, graphics are processed by Ghostscript. Modern versions of Ghostscript have been made
+safer, and by default they no longer accept the postscript transparency operators. To have Ghostscript process
+transparency, add \verb|--distilleropts "-dALLOWPSTRANSPARENCY"| to the plain \TeX\ or \LaTeX\ command in the {\bf Via DVI} group; simpdftex passes it to Ghostscript.
+This will be irrelevant for most people.
 
 Below the Engine group is the {\bf After Typesetting} pop-up menu.
 This setting determines which window is pulled to the front after typesetting is done.
@@ -1031,7 +1028,7 @@ The pdftex defaults use two flags. The first, --file-line-error, tells pdftex ho
 There is one other flag you might want to add, --shell-escape. This flag gives pdftex permission to call other programs during typesetting. If you typeset source files which other people send you, this could be  dangerous because pdftex will call any program requested, even a program which erases your entire home directory. So we recommend avoiding the flag. But if you use it, you might want to turn on the item {\bf Confirm Shell Escape}
 underneath, in the same {\bf Direct PDF} group. After that, when you typeset a file for the first time, a warning dialog will appear reminding you of ``shell-escape'' and asking if you still want to proceed.
 
-Typesetting ``Via DVI'' calls a script named ``simpdftex'' which is part of TeX Live. If you want to know how the script works, open it in TeX Live and read it.
+Typesetting ``Via DVI'' calls a script named ``simpdftex'' which is part of TeX Live. If you want to know how the script works, open it in TeX Live and read it. To keep the intermediate PostScript file, add \verb|--keep-psfile| to the plain \TeX\ or \LaTeX\ command in the {\bf Via DVI} group; simpdftex understands this option.
 
 \chapter{Typesetting Engines II}
 \section{More History}
@@ -6292,7 +6289,7 @@ This command reverses the cycle direction.
 
 \section{Items in TeXShop Settings}
 
-{\bf -dALLOWPSTRANSPARENCY}
+{\bf Transparency in PostScript}
 
 TeXShop uses Ghostscript in two crucial places. First, TeXShop can open and display postscript files. To do this,
 it converts the postscript file to a pdf file using ps2pdf, a program in the Ghostscript family,
@@ -6304,15 +6301,12 @@ In recent years, the authors of Ghostscript removed several security problems, o
 To fix this, the Ghostscript authors added a special flag, ``-dALLOWPSTRANSPARENCY''.
 When Ghostscript is called with this flag set, the transparency operators are recognized (while the other more serious security bugs are still quashed).  This flag is available in Ghostscript 9.51 and higher. 
 
-The switch ``-dALLOWPSTRANSPARENCY'' in the Ghostscript group of the Typesetting category of Settings turns on this flag. The flag is off by default because some users have earlier versions of Ghostscript or never use transparency, and because the flag might conceivably be removed at some future date.
-
-The flag only affects the two TeXShop operations described in the initial paragraph of this section. Earlier versions of TeXShop could also use a distiller provided by Apple in macOS instead of Ghostscript, but macOS 14 removed that distiller, so TeXShop 5.60 always uses Ghostscript. I suspect the flag works for users who have a Ghostscript provided by MacPorts or Homebrew rather than the Ghostscript provided in MacTeX, but this has not been tested. 
+When TeXShop opens a postscript file, it always sets this flag if Ghostscript is 9.51 or higher. When typesetting Via DVI, TeXShop sets no flag of its own; to set it there, add \verb|--distilleropts "-dALLOWPSTRANSPARENCY"| to the command in the {\bf Via DVI} group, as described below. Earlier versions of TeXShop could also use a distiller provided by Apple in macOS instead of Ghostscript, but macOS 14 removed that distiller, so TeXShop 5.60 always uses Ghostscript. I suspect the flag works for users who have a Ghostscript provided by MacPorts or Homebrew rather than the Ghostscript provided in MacTeX, but this has not been tested. 
 
 The DVI typesetting chain is controlled by the items in the group ``Via DVI'' in the Typesetting category of TeXShop Settings.
 These items call a script named {\em simpdftex} in TeXLive to control the typesetting process. This script recognizes many optional flags. A few are set by default. One of the optional flags not set by default is named
-{\em --distilleropts}; it allows a user to send  flags directly to the distiller (i.e., Ghostscript) portion of the chain. 
-If TeXShop discovers that this flag has been set by the user in TeXShop Settings, then it does not add the
--dALLOWPSTRANSPARENCY flag because the user is apparently controlling that operation directly.
+{\em --distilleropts}; it allows a user to send  flags directly to the distiller (i.e., Ghostscript) portion of the chain,
+for instance \verb|--distilleropts "-dALLOWPSTRANSPARENCY"|. Another optional flag, \verb|--keep-psfile|, keeps the intermediate postscript file.
 
 
 

@@ -484,8 +484,6 @@
 	<string>1</string>
 	<key>SameFontForMacro</key>
 	<false/>
-	<key>UseTransparency</key>
-	<false/>
 	<key>LineNumberSize</key>
 	<integer>0</integer>
 	<key>LinkPopups</key>

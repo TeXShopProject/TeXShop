@@ -458,9 +458,6 @@ enum RootCommand
 @property (retain) NSTask              *bibTask;
 @property (retain) NSTask              *indexTask;
 @property (retain) NSTask              *metaFontTask;
-@property (retain) NSTask              *gsversionTask;
-@property (retain) NSPipe              *gsversionPipe;
-@property (retain) NSFileHandle        *gsversionHandle;
 @property (retain) NSTask              *detexTask;
 @property (retain) NSPipe              *detexPipe;
 @property (retain) NSFileHandle        *detexHandle;

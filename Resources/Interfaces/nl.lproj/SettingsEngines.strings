@@ -15,7 +15,6 @@
 "878.title" = "LaTeX ";
 "880.title" = "TeX";
 "882.title" = "Waarschuwing voor shell escape";
-"887.title" = "Bewaar Postscript-bestand";
 "889.title" = "(pdf)TeX (standaard: /Library/TeX/texbin OR /usr/texbin)";
 "891.title" = "Distiller (ghostscript) (standaard: /usr/local/bin)";
 "BYT-g3-3p0.title" = "Alternate Path (default: ~/bin/context/tex/texmf-osx-arm64/bin)";

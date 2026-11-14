@@ -1772,27 +1772,6 @@
         "199",
         "1246"
        ]
-      },
-      {
-       "kind": "switch",
-       "title": "PostScriptファイルを保存",
-       "src": [
-        "225"
-       ],
-       "note": "上のTeX・LaTeXのコマンドに --keep-psfileを付け、途中で作るPostScriptファイルを残します。"
-      }
-     ]
-    },
-    {
-     "title": "Ghostscript",
-     "rows": [
-      {
-       "kind": "switch",
-       "title": "-dALLOWPSTRANSPARENCY",
-       "src": [
-        "217-aa-RyX"
-       ],
-       "note": "GhostscriptでPostScriptをPDFに変換するときにこのオプションを付け、PSTricksなどの透明効果を残します。Ghostscript 9.51以降が必要です。"
       }
      ]
     },

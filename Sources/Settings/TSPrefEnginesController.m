@@ -12,7 +12,6 @@
 - (IBAction)kpsetoolChanged:(id)sender { [self.preferences kpsetoolChanged:sender]; }
 - (IBAction)latexGSProgramChanged:(id)sender { [self.preferences latexGSProgramChanged:sender]; }
 - (IBAction)latexProgramChanged:(id)sender { [self.preferences latexProgramChanged:sender]; }
-- (IBAction)savePSPressed:(id)sender { [self.preferences savePSPressed:sender]; }
 - (IBAction)tetexBinPathChanged:(id)sender { [self.preferences tetexBinPathChanged:sender]; }
 - (IBAction)texGSProgramChanged:(id)sender { [self.preferences texGSProgramChanged:sender]; }
 - (IBAction)texProgramChanged:(id)sender { [self.preferences texProgramChanged:sender]; }

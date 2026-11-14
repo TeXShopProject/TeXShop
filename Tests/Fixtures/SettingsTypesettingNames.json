@@ -11,9 +11,7 @@
         "group.typesetting.5.title": "Via DVI",
         "catalog.typesetting.4.1.title": "LaTeX",
         "catalog.typesetting.5.1.title": "LaTeX",
-        "catalog.typesetting.4.2.title": "Confirm Shell Escape",
-        "catalog.typesetting.5.2.note": "Adds --keep-psfile to the plain TeX or LaTeX command above, which keeps the intermediate PostScript file.",
-        "catalog.typesetting.5.2.title": "Save PostScript File"
+        "catalog.typesetting.4.2.title": "Confirm Shell Escape"
       },
       "SettingsTypesetting.strings": {
         "191.title": "Direct PDF",
@@ -34,9 +32,7 @@
         "group.typesetting.5.title": "Über DVI",
         "catalog.typesetting.4.1.title": "LaTeX",
         "catalog.typesetting.5.1.title": "LaTeX",
-        "catalog.typesetting.4.2.title": "Bei Shell-Escape nachfragen",
-        "catalog.typesetting.5.2.note": "Hängt an den Befehl für plain TeX oder LaTeX oben --keep-psfile an und behält so die PostScript-Zwischendatei.",
-        "catalog.typesetting.5.2.title": "Als PostScript-Datei sichern"
+        "catalog.typesetting.4.2.title": "Bei Shell-Escape nachfragen"
       },
       "SettingsTypesetting.strings": {
         "191.title": "PDF direkt",
@@ -57,8 +53,7 @@
         "group.typesetting.5.title": "Vía DVI",
         "catalog.typesetting.4.1.title": "LaTeX",
         "catalog.typesetting.5.1.title": "LaTeX",
-        "catalog.typesetting.4.2.title": "Confirmar shell-escape",
-        "catalog.typesetting.5.2.note": "Añade --keep-psfile a la orden plain TeX o LaTeX de arriba para conservar el archivo PostScript intermedio."
+        "catalog.typesetting.4.2.title": "Confirmar shell-escape"
       },
       "SettingsTypesetting.strings": {
         "191.title": "PDF directo",
@@ -79,8 +74,7 @@
         "group.typesetting.5.title": "Via DVI",
         "catalog.typesetting.4.1.title": "LaTeX",
         "catalog.typesetting.5.1.title": "LaTeX",
-        "catalog.typesetting.4.2.title": "Confirmer le shell-escape",
-        "catalog.typesetting.5.2.note": "Ajoute --keep-psfile à la commande plain TeX ou LaTeX ci-dessus pour conserver le fichier PostScript intermédiaire."
+        "catalog.typesetting.4.2.title": "Confirmer le shell-escape"
       },
       "SettingsTypesetting.strings": {
         "191.title": "PDF direct",
@@ -101,9 +95,7 @@
         "group.typesetting.5.title": "Tramite DVI",
         "catalog.typesetting.4.1.title": "LaTeX",
         "catalog.typesetting.5.1.title": "LaTeX",
-        "catalog.typesetting.4.2.title": "Chiedi conferma per shell-escape",
-        "catalog.typesetting.5.2.note": "Aggiunge --keep-psfile al comando plain TeX o LaTeX qui sopra per conservare il file PostScript intermedio.",
-        "catalog.typesetting.5.2.title": "Salva Documento PostScript"
+        "catalog.typesetting.4.2.title": "Chiedi conferma per shell-escape"
       },
       "SettingsTypesetting.strings": {
         "191.title": "PDF diretto",
@@ -124,8 +116,7 @@
         "group.typesetting.5.title": "DVI経由",
         "catalog.typesetting.4.1.title": "LaTeX",
         "catalog.typesetting.5.1.title": "LaTeX",
-        "catalog.typesetting.4.2.title": "shell-escapeのとき確認",
-        "catalog.typesetting.5.2.note": "上のplain TeX・LaTeXのコマンドに --keep-psfileを付け、途中で作るPostScriptファイルを残します。"
+        "catalog.typesetting.4.2.title": "shell-escapeのとき確認"
       },
       "SettingsTypesetting.strings": {
         "191.title": "PDF直接生成",
@@ -146,9 +137,7 @@
         "group.typesetting.5.title": "DVI 경유",
         "catalog.typesetting.4.1.title": "LaTeX",
         "catalog.typesetting.5.1.title": "LaTeX",
-        "catalog.typesetting.4.2.title": "shell-escape 시 확인",
-        "catalog.typesetting.5.2.note": "위의 plain TeX 또는 LaTeX 명령에 --keep-psfile을 붙여 중간에 만드는 PostScript 파일을 남깁니다.",
-        "catalog.typesetting.5.2.title": "PostScript 파일 저장"
+        "catalog.typesetting.4.2.title": "shell-escape 시 확인"
       },
       "SettingsTypesetting.strings": {
         "191.title": "PDF 직접 생성",
@@ -169,9 +158,7 @@
         "group.typesetting.5.title": "Via DVI",
         "catalog.typesetting.4.1.title": "LaTeX",
         "catalog.typesetting.5.1.title": "LaTeX",
-        "catalog.typesetting.4.2.title": "Bevestigen bij shell-escape",
-        "catalog.typesetting.5.2.note": "Voegt --keep-psfile toe aan de opdracht voor plain TeX of LaTeX hierboven en bewaart zo het tussentijdse PostScript-bestand.",
-        "catalog.typesetting.5.2.title": "Bewaar PostScript-bestand"
+        "catalog.typesetting.4.2.title": "Bevestigen bij shell-escape"
       },
       "SettingsTypesetting.strings": {
         "191.title": "Direct PDF",
@@ -192,8 +179,7 @@
         "group.typesetting.5.title": "Via DVI",
         "catalog.typesetting.4.1.title": "LaTeX",
         "catalog.typesetting.5.1.title": "LaTeX",
-        "catalog.typesetting.4.2.title": "Confirmar shell-escape",
-        "catalog.typesetting.5.2.note": "Acrescenta --keep-psfile ao comando plain TeX ou LaTeX acima para manter o ficheiro PostScript intermédio."
+        "catalog.typesetting.4.2.title": "Confirmar shell-escape"
       },
       "SettingsTypesetting.strings": {
         "191.title": "PDF direto",
@@ -214,8 +200,7 @@
         "group.typesetting.5.title": "Via DVI",
         "catalog.typesetting.4.1.title": "LaTeX",
         "catalog.typesetting.5.1.title": "LaTeX",
-        "catalog.typesetting.4.2.title": "Confirmar shell-escape",
-        "catalog.typesetting.5.2.note": "Acrescenta --keep-psfile ao comando plain TeX ou LaTeX acima para manter o arquivo PostScript intermediário."
+        "catalog.typesetting.4.2.title": "Confirmar shell-escape"
       },
       "SettingsTypesetting.strings": {
         "191.title": "PDF direto",
@@ -236,8 +221,7 @@
         "group.typesetting.5.title": "Prin DVI",
         "catalog.typesetting.4.1.title": "LaTeX",
         "catalog.typesetting.5.1.title": "LaTeX",
-        "catalog.typesetting.4.2.title": "Confirmare la shell-escape",
-        "catalog.typesetting.5.2.note": "Adaugă --keep-psfile la comanda plain TeX sau LaTeX de mai sus, pentru a păstra fișierul PostScript intermediar."
+        "catalog.typesetting.4.2.title": "Confirmare la shell-escape"
       },
       "SettingsTypesetting.strings": {
         "191.title": "PDF direct",
@@ -258,8 +242,7 @@
         "group.typesetting.5.title": "经由DVI",
         "catalog.typesetting.4.1.title": "LaTeX",
         "catalog.typesetting.5.1.title": "LaTeX",
-        "catalog.typesetting.4.2.title": "shell-escape时确认",
-        "catalog.typesetting.5.2.note": "在上方的plain TeX或LaTeX命令中加上 --keep-psfile，保留中间生成的PostScript文件。"
+        "catalog.typesetting.4.2.title": "shell-escape时确认"
       },
       "SettingsTypesetting.strings": {
         "191.title": "直接生成PDF",

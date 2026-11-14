@@ -250,7 +250,6 @@
     self.makeIndexEngineField.stringValue = makeIndexEngine.length ? makeIndexEngine : @"makeindex";
     NSString *metaPostEngine = [defaults stringForKey:MetaPostEngineKey];
     self.metaPostEngineField.stringValue = metaPostEngine.length ? metaPostEngine : @"mpost";
-    [_savePSButton setState:[defaults boolForKey:SavePSEnabledKey]];
 #ifdef MITSU_PDF
     myInteger = [defaults integerForKey:BringFrontOnTypesetKey];
     myTag = myInteger;
@@ -275,7 +274,6 @@
         [_syncMatrix deselectAllCells];
         [_syncMatrix setAllowsEmptySelection:NO];
     }
-    [_useTransparencyButton setState:[defaults boolForKey:UseTransparencyKey]];
     [_syncTabButton setState:[defaults boolForKey:SyncUseTabsKey]];
     [self refreshEngineProfileFromDefaults:defaults];
 }

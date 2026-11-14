@@ -15,7 +15,6 @@
 "878.title" = "LaTeX ";
 "880.title" = "TeX";
 "882.title" = "Avisos shell-escape";
-"887.title" = "Guardar el archivo PostScript";
 "889.title" = "(pdf)TeX (por defecto: /Library/TeX/texbin OR /usr/texbin)";
 "891.title" = "Distiller (por defecto: /usr/local/bin)";
 "BYT-g3-3p0.title" = "Ruta alternativa (por defecto:  ~/bin/context/tex/texmf-osx-arm64/bin)";

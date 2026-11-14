@@ -199,6 +199,7 @@ int main(int argc, const char **argv) { @autoreleasepool {
     }
     // 170 migrated from the legacy Preferences window and 4 added since; the engine
     // text field gave way to the Engine File menu built in code.
-    Check(outlets == 173, @"Every typed outlet loads");
-    puts("PASS: 11 panes and 173 typed outlets");
+    // Save PostScript File and -dALLOWPSTRANSPARENCY were removed.
+    Check(outlets == 171, @"Every typed outlet loads");
+    puts("PASS: 11 panes and 171 typed outlets");
 } return 0; }

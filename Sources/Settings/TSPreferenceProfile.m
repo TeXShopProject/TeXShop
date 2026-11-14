@@ -233,3 +233,23 @@ void TSKeepEarlierFactoryEngineFile(NSUserDefaults *defaults, NSDictionary *stor
     if (stored[DefaultEngineKey] != nil) return;
     [defaults setObject:@"XeLaTeX" forKey:DefaultEngineKey];
 }
+
+void TSMoveViaDVIOptionsIntoCommands(NSUserDefaults *defaults, NSDictionary *stored)
+{
+    id savePS = stored[SavePSEnabledKey], transparency = stored[UseTransparencyKey];
+    if (savePS == nil && transparency == nil) return;
+    BOOL (^on)(id) = ^BOOL(id value) { return [value respondsToSelector:@selector(boolValue)] && [value boolValue]; };
+    for (TSPreferenceKey key in @[TexGSCommandKey, LatexGSCommandKey]) {
+        NSString *command = [[defaults stringForKey:key] stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+        NSString *program = [[command componentsSeparatedByCharactersInSet:NSCharacterSet.whitespaceCharacterSet].firstObject lastPathComponent];
+        if (![@[@"simpdftex", @"altpdftex", @"altpdflatex"] containsObject:program ?: @""]) continue;
+        NSString *moved = command;
+        if (on(savePS) && ![moved containsString:@"--keep-psfile"])
+            moved = [moved stringByAppendingString:@" --keep-psfile"];
+        if (on(transparency) && ![moved containsString:@"--distiller"])
+            moved = [moved stringByAppendingString:@" --distilleropts \"-dALLOWPSTRANSPARENCY\""];
+        if (![moved isEqualToString:command]) [defaults setObject:moved forKey:key];
+    }
+    [defaults removeObjectForKey:SavePSEnabledKey];
+    [defaults removeObjectForKey:UseTransparencyKey];
+}

@@ -140,5 +140,6 @@ for lang,expected in names.items():
     assert all(categories[k]==categories[k].strip() for k in categories if k.startswith('catalog.typesetting.') and k.endswith('.title')),(lang,'Typesetting row titles have no stray spaces')
 assert 'NSLocalizedString(@"Not found", @"")' in (r/'Sources/Settings/TSPreferences.m').read_text(encoding='latin1'),'Auto Setup says only Not found'
 order=[g for g in re.findall(r'@"id": @"(group\.typesetting\.\d+)"',layout)]
-assert order.index('group.typesetting.7')==order.index('group.typesetting.5')+1,'Ghostscript follows the Via DVI commands'
-print("PASS: pop-up titles differ from their choices; reviewed Typesetting names match in Settings and the Typeset menu; command groups are named after the methods and Ghostscript follows Via DVI")
+# The Ghostscript group held only -dALLOWPSTRANSPARENCY; Via DVI commands take --distilleropts themselves.
+assert 'group.typesetting.7' not in order and order.index('group.typesetting.6')==order.index('group.typesetting.5')+1,'Personal Script follows the Via DVI commands'
+print("PASS: pop-up titles differ from their choices; reviewed Typesetting names match in Settings and the Typeset menu; command groups are named after the methods and Personal Script follows Via DVI")

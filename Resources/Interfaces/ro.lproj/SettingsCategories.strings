@@ -271,16 +271,11 @@
 "catalog.typesetting.5.0.button" = "Implicit";
 "catalog.typesetting.5.1.title" = "LaTeX";
 "catalog.typesetting.5.1.button" = "Implicit";
-"catalog.typesetting.5.2.title" = "Salvează fișierul PostScript";
-"catalog.typesetting.5.2.note" = "Adaugă --keep-psfile la comanda plain TeX sau LaTeX de mai sus, pentru a păstra fișierul PostScript intermediar.";
 "group.typesetting.6.title" = "Script personal";
 "catalog.typesetting.6.0.title" = "Programul plain TeX";
 "catalog.typesetting.6.0.note" = "Implicit: gol";
 "catalog.typesetting.6.1.title" = "Programul LaTeX";
 "catalog.typesetting.6.1.note" = "Implicit: gol";
-"group.typesetting.7.title" = "Ghostscript";
-"catalog.typesetting.7.1.title" = "-dALLOWPSTRANSPARENCY";
-"catalog.typesetting.7.1.note" = "Adaugă această opțiune când Ghostscript convertește PostScript în PDF, pentru a păstra transparența, de exemplu cea din PSTricks. Necesită Ghostscript 9.51 sau mai nou.";
 "group.typesetting.8.title" = "Instrumente asociate";
 "catalog.typesetting.8.0.title" = "kpsewhich";
 "catalog.typesetting.8.0.note" = "Comanda cu care „Deschide fișierul de stil” din meniul Fișier caută fișierul. Implicit: kpsewhich -progname=latex -format=tex";

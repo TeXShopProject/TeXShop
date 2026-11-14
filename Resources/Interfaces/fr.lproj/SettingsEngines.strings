@@ -15,7 +15,6 @@
 "878.title" = "LaTeX ";
 "880.title" = "TeX";
 "882.title" = "Avertissement de Shell Escape";
-"887.title" = "Sauvegarder le fichier PostScript";
 "889.title" = "(pdf)TeX & dvips (par défaut: /Library/TeX/texbin OR /usr/texbin)";
 "891.title" = "Distiller (ghostscript) (par défaut: /usr/local/bin)";
 "BYT-g3-3p0.title" = "Chemin alternatif (par défaut : ~/bin/context/tex/texmf-osx-arm64/bin)";

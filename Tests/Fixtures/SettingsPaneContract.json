@@ -240,11 +240,6 @@
         "class": "TSPrefEnginesController"
       },
       {
-        "ivar": "_savePSButton",
-        "property": "savePSButton",
-        "class": "TSPrefEnginesController"
-      },
-      {
         "ivar": "_tetexBinPathField",
         "property": "tetexBinPathField",
         "class": "TSPrefEnginesController"
@@ -852,11 +847,6 @@
       {
         "ivar": "_syncTabButton",
         "property": "syncTabButton",
-        "class": "TSPrefTypesettingController"
-      },
-      {
-        "ivar": "_useTransparencyButton",
-        "property": "useTransparencyButton",
         "class": "TSPrefTypesettingController"
       }
     ],
@@ -1548,13 +1538,6 @@
         "kind": "view",
         "property": "action",
         "value": "latexGSProgramChanged:"
-      },
-      {
-        "key": "225.action",
-        "view": "settings.225",
-        "kind": "view",
-        "property": "action",
-        "value": "savePSPressed:"
       },
       {
         "key": "1067.action",
@@ -3002,13 +2985,6 @@
         "kind": "view",
         "property": "action",
         "value": "syncTabButtonPressed:"
-      },
-      {
-        "key": "8pA-l1-G9L.action",
-        "view": "settings.8pA-l1-G9L",
-        "kind": "view",
-        "property": "action",
-        "value": "useTransparencyPressed:"
       }
     ],
     "TypesettingTags": [
@@ -3205,7 +3181,6 @@
           "1068.title": "Default",
           "891.title": "Distiller (ghostscript) (default: /usr/local/bin)",
           "1074.title": "Default",
-          "887.title": "Save Postscript File",
           "215.title": "Path settings",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -3452,7 +3427,6 @@
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(Should be OFF for most users.)",
           "187.title": "Via DVI",
-          "163-F5-v8Z.title": "Ghostscript Options",
           "191.title": "Direct PDF",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "If Sync Opens a New Window",
@@ -3468,7 +3442,6 @@
           "675.title": "After Typesetting",
           "785.title": "Search PDF",
           "922.title": "Radio",
-          "xwP-lA-zVw.title": "Use -dALLOWPSTRANSPARENCY",
           "589.title": "LaTeX",
           "679.title": "Bring Preview Forward",
           "bYh-V5-ri6.title": "Stay in Current Window",
@@ -4118,13 +4091,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Default"
-        },
-        {
-          "key": "887.title",
-          "view": "settings.225",
-          "kind": "cell",
-          "property": "title",
-          "value": "Save Postscript File"
         },
         {
           "key": "215.title",
@@ -5853,13 +5819,6 @@
           "column": 0
         },
         {
-          "key": "163-F5-v8Z.title",
-          "view": "settings.163-F5-v8Z",
-          "kind": "view",
-          "property": "title",
-          "value": "Ghostscript Options"
-        },
-        {
           "key": "191.title",
           "view": "settings.186",
           "kind": "matrix",
@@ -5975,13 +5934,6 @@
           "kind": "prototype",
           "property": "title",
           "value": "Radio"
-        },
-        {
-          "key": "xwP-lA-zVw.title",
-          "view": "settings.8pA-l1-G9L",
-          "kind": "cell",
-          "property": "title",
-          "value": "Use -dALLOWPSTRANSPARENCY"
         },
         {
           "key": "589.title",
@@ -6199,10 +6151,6 @@
         {
           "id": "heading.settings.W5U-9S-4OG",
           "title": "If Sync Opens a New Window"
-        },
-        {
-          "id": "heading.settings.163-F5-v8Z",
-          "title": "Ghostscript Options"
         }
       ],
       "MiscOneHeadings": [
@@ -6378,7 +6326,6 @@
           "1068.title": "Standard",
           "891.title": "Distiller (ghostscript) (Standard: /usr/local/bin)",
           "1074.title": "Standard",
-          "887.title": "Als Postscript-Datei sichern",
           "215.title": "Pfadeinstellungen",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -6625,7 +6572,6 @@
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(Sollte AUS sein für die meisten Systeme)",
           "187.title": "Über DVI",
-          "163-F5-v8Z.title": "Ghostscript Optionen",
           "191.title": "PDF direkt",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Wenn Sync ein neues Fenster öffnet",
@@ -6641,7 +6587,6 @@
           "675.title": "Nach dem Setzen",
           "785.title": "PDF durchsuchen",
           "922.title": "Radio",
-          "xwP-lA-zVw.title": " -dALLOWPSTRANSPARENCY",
           "589.title": "LaTeX",
           "679.title": "Vorschau anzeigen",
           "bYh-V5-ri6.title": "Im aktuellen Fenster bleiben",
@@ -7291,13 +7236,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Standard"
-        },
-        {
-          "key": "887.title",
-          "view": "settings.225",
-          "kind": "cell",
-          "property": "title",
-          "value": "Als Postscript-Datei sichern"
         },
         {
           "key": "215.title",
@@ -9026,13 +8964,6 @@
           "column": 0
         },
         {
-          "key": "163-F5-v8Z.title",
-          "view": "settings.163-F5-v8Z",
-          "kind": "view",
-          "property": "title",
-          "value": "Ghostscript Optionen"
-        },
-        {
           "key": "191.title",
           "view": "settings.186",
           "kind": "matrix",
@@ -9148,13 +9079,6 @@
           "kind": "prototype",
           "property": "title",
           "value": "Radio"
-        },
-        {
-          "key": "xwP-lA-zVw.title",
-          "view": "settings.8pA-l1-G9L",
-          "kind": "cell",
-          "property": "title",
-          "value": " -dALLOWPSTRANSPARENCY"
         },
         {
           "key": "589.title",
@@ -9372,10 +9296,6 @@
         {
           "id": "heading.settings.W5U-9S-4OG",
           "title": "Wenn Sync ein neues Fenster öffnet"
-        },
-        {
-          "id": "heading.settings.163-F5-v8Z",
-          "title": "Ghostscript Optionen"
         }
       ],
       "MiscOneHeadings": [
@@ -9551,7 +9471,6 @@
           "1068.title": "Por omisión",
           "891.title": "Distiller (por defecto: /usr/local/bin)",
           "1074.title": "Por omisión",
-          "887.title": "Guardar el archivo PostScript",
           "215.title": "Rutas",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -9798,7 +9717,6 @@
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(En general, desactivado.)",
           "187.title": "Vía DVI",
-          "163-F5-v8Z.title": "Opciones Ghostscript",
           "191.title": "PDF directo",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Si Sync abre nueva ventana",
@@ -9814,7 +9732,6 @@
           "675.title": "Tras componer páginas",
           "785.title": "Buscar en PDF",
           "922.title": "Radio",
-          "xwP-lA-zVw.title": "Usar -dALLOWPSTRANSPARENCY",
           "589.title": "LaTeX",
           "679.title": "Pdf previsto al frente",
           "bYh-V5-ri6.title": "Permanecer en ventana actual",
@@ -10464,13 +10381,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Por omisión"
-        },
-        {
-          "key": "887.title",
-          "view": "settings.225",
-          "kind": "cell",
-          "property": "title",
-          "value": "Guardar el archivo PostScript"
         },
         {
           "key": "215.title",
@@ -12199,13 +12109,6 @@
           "column": 0
         },
         {
-          "key": "163-F5-v8Z.title",
-          "view": "settings.163-F5-v8Z",
-          "kind": "view",
-          "property": "title",
-          "value": "Opciones Ghostscript"
-        },
-        {
           "key": "191.title",
           "view": "settings.186",
           "kind": "matrix",
@@ -12321,13 +12224,6 @@
           "kind": "prototype",
           "property": "title",
           "value": "Radio"
-        },
-        {
-          "key": "xwP-lA-zVw.title",
-          "view": "settings.8pA-l1-G9L",
-          "kind": "cell",
-          "property": "title",
-          "value": "Usar -dALLOWPSTRANSPARENCY"
         },
         {
           "key": "589.title",
@@ -12545,10 +12441,6 @@
         {
           "id": "heading.settings.W5U-9S-4OG",
           "title": "Si Sync abre nueva ventana"
-        },
-        {
-          "id": "heading.settings.163-F5-v8Z",
-          "title": "Opciones Ghostscript"
         }
       ],
       "MiscOneHeadings": [
@@ -12724,7 +12616,6 @@
           "1068.title": "Par défaut",
           "891.title": "Distiller (ghostscript) (par défaut: /usr/local/bin)",
           "1074.title": "Par défaut",
-          "887.title": "Sauvegarder le fichier PostScript",
           "215.title": "Réglage des chemins",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -12971,7 +12862,6 @@
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "Obsoleto; dovrebbe essere spento",
           "187.title": "Via DVI",
-          "163-F5-v8Z.title": "Options de Ghostscript",
           "191.title": "PDF direct",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Si la synchro ouvre une nouvelle fenêtre",
@@ -12987,7 +12877,6 @@
           "675.title": "Après composition",
           "785.title": "Rechercher dans le PDF",
           "922.title": "Radio",
-          "xwP-lA-zVw.title": "Utiliser -dALLOWPSTRANSPARENCY",
           "589.title": "LaTeX",
           "679.title": "Amener l'aperçu devant",
           "bYh-V5-ri6.title": "Rester dans la fenêtre au premier plan",
@@ -13637,13 +13526,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Par défaut"
-        },
-        {
-          "key": "887.title",
-          "view": "settings.225",
-          "kind": "cell",
-          "property": "title",
-          "value": "Sauvegarder le fichier PostScript"
         },
         {
           "key": "215.title",
@@ -15372,13 +15254,6 @@
           "column": 0
         },
         {
-          "key": "163-F5-v8Z.title",
-          "view": "settings.163-F5-v8Z",
-          "kind": "view",
-          "property": "title",
-          "value": "Options de Ghostscript"
-        },
-        {
           "key": "191.title",
           "view": "settings.186",
           "kind": "matrix",
@@ -15494,13 +15369,6 @@
           "kind": "prototype",
           "property": "title",
           "value": "Radio"
-        },
-        {
-          "key": "xwP-lA-zVw.title",
-          "view": "settings.8pA-l1-G9L",
-          "kind": "cell",
-          "property": "title",
-          "value": "Utiliser -dALLOWPSTRANSPARENCY"
         },
         {
           "key": "589.title",
@@ -15718,10 +15586,6 @@
         {
           "id": "heading.settings.W5U-9S-4OG",
           "title": "Si la synchro ouvre une nouvelle fenêtre"
-        },
-        {
-          "id": "heading.settings.163-F5-v8Z",
-          "title": "Options de Ghostscript"
         }
       ],
       "MiscOneHeadings": [
@@ -15897,7 +15761,6 @@
           "1068.title": "default",
           "891.title": "Distiller (ghostscript) (default: /usr/local/bin)",
           "1074.title": "default",
-          "887.title": "Salva Documento Postscript",
           "215.title": "Impostazioni Percorso",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -16144,7 +16007,6 @@
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(Should be OFF for most users.)",
           "187.title": "Tramite DVI",
-          "163-F5-v8Z.title": "Opzioni Ghostscript",
           "191.title": "PDF diretto",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Se la sincronizzazione apre una nuova finestra",
@@ -16160,7 +16022,6 @@
           "675.title": "Dopo la compilazione",
           "785.title": "Cerca nel PDF",
           "922.title": "Radio",
-          "xwP-lA-zVw.title": " -dALLOWPSTRANSPARENCY",
           "589.title": "LaTeX",
           "679.title": "Porta anteprima in primo piano",
           "bYh-V5-ri6.title": "Rimani nella finetra corrente",
@@ -16810,13 +16671,6 @@
           "kind": "cell",
           "property": "title",
           "value": "default"
-        },
-        {
-          "key": "887.title",
-          "view": "settings.225",
-          "kind": "cell",
-          "property": "title",
-          "value": "Salva Documento Postscript"
         },
         {
           "key": "215.title",
@@ -18545,13 +18399,6 @@
           "column": 0
         },
         {
-          "key": "163-F5-v8Z.title",
-          "view": "settings.163-F5-v8Z",
-          "kind": "view",
-          "property": "title",
-          "value": "Opzioni Ghostscript"
-        },
-        {
           "key": "191.title",
           "view": "settings.186",
           "kind": "matrix",
@@ -18667,13 +18514,6 @@
           "kind": "prototype",
           "property": "title",
           "value": "Radio"
-        },
-        {
-          "key": "xwP-lA-zVw.title",
-          "view": "settings.8pA-l1-G9L",
-          "kind": "cell",
-          "property": "title",
-          "value": " -dALLOWPSTRANSPARENCY"
         },
         {
           "key": "589.title",
@@ -18891,10 +18731,6 @@
         {
           "id": "heading.settings.W5U-9S-4OG",
           "title": "Se la sincronizzazione apre una nuova finestra"
-        },
-        {
-          "id": "heading.settings.163-F5-v8Z",
-          "title": "Opzioni Ghostscript"
         }
       ],
       "MiscOneHeadings": [
@@ -19070,7 +18906,6 @@
           "1068.title": "デフォルト",
           "891.title": "Distiller (Ghostscript) (デフォルト: /usr/local/bin)",
           "1074.title": "デフォルト",
-          "887.title": "PostScriptファイルを保存",
           "215.title": "パス設定",
           "200.title": "TeX+dvipdfmx / TeX+dvips+distiller",
           "880.title": "TeX",
@@ -19317,7 +19152,6 @@
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "（通常はオフに）",
           "187.title": "DVI経由",
-          "163-F5-v8Z.title": "Ghostscriptオプション",
           "191.title": "PDF直接生成",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Syncで新ドキュメントが開くとき",
@@ -19333,7 +19167,6 @@
           "675.title": "タイプセット後の動作",
           "785.title": "PDFを検索",
           "922.title": "Radio",
-          "xwP-lA-zVw.title": "-dALLOWPSTRANSPARENCY",
           "589.title": "LaTeX",
           "679.title": "プレビューを手前に移動",
           "bYh-V5-ri6.title": "タイプセット開始ウインドウを手前に",
@@ -19983,13 +19816,6 @@
           "kind": "cell",
           "property": "title",
           "value": "デフォルト"
-        },
-        {
-          "key": "887.title",
-          "view": "settings.225",
-          "kind": "cell",
-          "property": "title",
-          "value": "PostScriptファイルを保存"
         },
         {
           "key": "215.title",
@@ -21718,13 +21544,6 @@
           "column": 0
         },
         {
-          "key": "163-F5-v8Z.title",
-          "view": "settings.163-F5-v8Z",
-          "kind": "view",
-          "property": "title",
-          "value": "Ghostscriptオプション"
-        },
-        {
           "key": "191.title",
           "view": "settings.186",
           "kind": "matrix",
@@ -21840,13 +21659,6 @@
           "kind": "prototype",
           "property": "title",
           "value": "Radio"
-        },
-        {
-          "key": "xwP-lA-zVw.title",
-          "view": "settings.8pA-l1-G9L",
-          "kind": "cell",
-          "property": "title",
-          "value": "-dALLOWPSTRANSPARENCY"
         },
         {
           "key": "589.title",
@@ -22064,10 +21876,6 @@
         {
           "id": "heading.settings.W5U-9S-4OG",
           "title": "Syncで新ドキュメントが開くとき"
-        },
-        {
-          "id": "heading.settings.163-F5-v8Z",
-          "title": "Ghostscriptオプション"
         }
       ],
       "MiscOneHeadings": [
@@ -22243,7 +22051,6 @@
           "1068.title": "기본값",
           "891.title": "Distiller (ghostscript) (default: /usr/local/bin)",
           "1074.title": "기본값",
-          "887.title": "ps 파일 저장",
           "215.title": "경로 설정",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -22490,7 +22297,6 @@
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(옛날 방식. 비활성화됨)",
           "187.title": "DVI 경유",
-          "163-F5-v8Z.title": "Ghostscript 옵션",
           "191.title": "PDF 직접 생성",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Sync로 새 창을 열 때",
@@ -22506,7 +22312,6 @@
           "675.title": "조판 후 동작",
           "785.title": "PDF 검색",
           "922.title": "Radio",
-          "xwP-lA-zVw.title": "-dALLOWPSTRANSPARENCY 활성화",
           "589.title": "LaTeX",
           "679.title": "보기 창을 전면으로",
           "bYh-V5-ri6.title": "현재 창 유지",
@@ -23156,13 +22961,6 @@
           "kind": "cell",
           "property": "title",
           "value": "기본값"
-        },
-        {
-          "key": "887.title",
-          "view": "settings.225",
-          "kind": "cell",
-          "property": "title",
-          "value": "ps 파일 저장"
         },
         {
           "key": "215.title",
@@ -24891,13 +24689,6 @@
           "column": 0
         },
         {
-          "key": "163-F5-v8Z.title",
-          "view": "settings.163-F5-v8Z",
-          "kind": "view",
-          "property": "title",
-          "value": "Ghostscript 옵션"
-        },
-        {
           "key": "191.title",
           "view": "settings.186",
           "kind": "matrix",
@@ -25013,13 +24804,6 @@
           "kind": "prototype",
           "property": "title",
           "value": "Radio"
-        },
-        {
-          "key": "xwP-lA-zVw.title",
-          "view": "settings.8pA-l1-G9L",
-          "kind": "cell",
-          "property": "title",
-          "value": "-dALLOWPSTRANSPARENCY 활성화"
         },
         {
           "key": "589.title",
@@ -25237,10 +25021,6 @@
         {
           "id": "heading.settings.W5U-9S-4OG",
           "title": "Sync로 새 창을 열 때"
-        },
-        {
-          "id": "heading.settings.163-F5-v8Z",
-          "title": "Ghostscript 옵션"
         }
       ],
       "MiscOneHeadings": [
@@ -25416,7 +25196,6 @@
           "1068.title": "standaard",
           "891.title": "Distiller (ghostscript) (standaard: /usr/local/bin)",
           "1074.title": "standaard",
-          "887.title": "Bewaar Postscript-bestand",
           "215.title": "Zoekpaden",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -25663,7 +25442,6 @@
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(Should be OFF for most users.)",
           "187.title": "Via DVI",
-          "163-F5-v8Z.title": "Ghostscript Options",
           "191.title": "Direct PDF",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "If Sync Opens a New Window",
@@ -25679,7 +25457,6 @@
           "675.title": "Na zetten",
           "785.title": "PDF doorzoeken",
           "922.title": "Radio",
-          "xwP-lA-zVw.title": "Use -dALLOWPSTRANSPARENCY",
           "589.title": "LaTeX",
           "679.title": "Toon voorvertoning",
           "bYh-V5-ri6.title": "In huidig venster blijven",
@@ -26329,13 +26106,6 @@
           "kind": "cell",
           "property": "title",
           "value": "standaard"
-        },
-        {
-          "key": "887.title",
-          "view": "settings.225",
-          "kind": "cell",
-          "property": "title",
-          "value": "Bewaar Postscript-bestand"
         },
         {
           "key": "215.title",
@@ -28064,13 +27834,6 @@
           "column": 0
         },
         {
-          "key": "163-F5-v8Z.title",
-          "view": "settings.163-F5-v8Z",
-          "kind": "view",
-          "property": "title",
-          "value": "Ghostscript Options"
-        },
-        {
           "key": "191.title",
           "view": "settings.186",
           "kind": "matrix",
@@ -28186,13 +27949,6 @@
           "kind": "prototype",
           "property": "title",
           "value": "Radio"
-        },
-        {
-          "key": "xwP-lA-zVw.title",
-          "view": "settings.8pA-l1-G9L",
-          "kind": "cell",
-          "property": "title",
-          "value": "Use -dALLOWPSTRANSPARENCY"
         },
         {
           "key": "589.title",
@@ -28410,10 +28166,6 @@
         {
           "id": "heading.settings.W5U-9S-4OG",
           "title": "If Sync Opens a New Window"
-        },
-        {
-          "id": "heading.settings.163-F5-v8Z",
-          "title": "Ghostscript Options"
         }
       ],
       "MiscOneHeadings": [
@@ -28589,7 +28341,6 @@
           "1068.title": "Predefinição",
           "891.title": "Distiller (por omissão: /usr/local/bin)",
           "1074.title": "Predefinição",
-          "887.title": "Guardar o ficheiro PostScript",
           "215.title": "Caminho",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -28836,7 +28587,6 @@
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(Should be OFF for most users.)",
           "187.title": "Via DVI",
-          "163-F5-v8Z.title": "Ghostscript Options",
           "191.title": "PDF direto",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "If Sync Opens a New Window",
@@ -28852,7 +28602,6 @@
           "675.title": "Após a composição",
           "785.title": "Pesquisar PDF",
           "922.title": "Radio",
-          "xwP-lA-zVw.title": "Use -dALLOWPSTRANSPARENCY",
           "589.title": "LaTeX",
           "679.title": "Trazer a pré-visualização para a frente",
           "bYh-V5-ri6.title": "Permanecer na janela atual",
@@ -29502,13 +29251,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Predefinição"
-        },
-        {
-          "key": "887.title",
-          "view": "settings.225",
-          "kind": "cell",
-          "property": "title",
-          "value": "Guardar o ficheiro PostScript"
         },
         {
           "key": "215.title",
@@ -31237,13 +30979,6 @@
           "column": 0
         },
         {
-          "key": "163-F5-v8Z.title",
-          "view": "settings.163-F5-v8Z",
-          "kind": "view",
-          "property": "title",
-          "value": "Ghostscript Options"
-        },
-        {
           "key": "191.title",
           "view": "settings.186",
           "kind": "matrix",
@@ -31359,13 +31094,6 @@
           "kind": "prototype",
           "property": "title",
           "value": "Radio"
-        },
-        {
-          "key": "xwP-lA-zVw.title",
-          "view": "settings.8pA-l1-G9L",
-          "kind": "cell",
-          "property": "title",
-          "value": "Use -dALLOWPSTRANSPARENCY"
         },
         {
           "key": "589.title",
@@ -31583,10 +31311,6 @@
         {
           "id": "heading.settings.W5U-9S-4OG",
           "title": "If Sync Opens a New Window"
-        },
-        {
-          "id": "heading.settings.163-F5-v8Z",
-          "title": "Ghostscript Options"
         }
       ],
       "MiscOneHeadings": [
@@ -31762,7 +31486,6 @@
           "1068.title": "padrão",
           "891.title": "Distiller (por padrão: /usr/local/bin)",
           "1074.title": "padrão",
-          "887.title": "Salvar arquivo PostScript",
           "215.title": "Caminho",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -32009,7 +31732,6 @@
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "Deve permanecer DESATIVADO  para a maioria dos usuários",
           "187.title": "Via DVI",
-          "163-F5-v8Z.title": "Opções do Ghostscript",
           "191.title": "PDF direto",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Se Sync abre uma nova janela",
@@ -32025,7 +31747,6 @@
           "675.title": "Depois de compor",
           "785.title": "Pesquisar PDF",
           "922.title": "Radio",
-          "xwP-lA-zVw.title": "Use -dALLOWPSTRANSPARENCY",
           "589.title": "LaTeX",
           "679.title": "Trazer a visualização para frente",
           "bYh-V5-ri6.title": "Permanecer na janela atual",
@@ -32675,13 +32396,6 @@
           "kind": "cell",
           "property": "title",
           "value": "padrão"
-        },
-        {
-          "key": "887.title",
-          "view": "settings.225",
-          "kind": "cell",
-          "property": "title",
-          "value": "Salvar arquivo PostScript"
         },
         {
           "key": "215.title",
@@ -34410,13 +34124,6 @@
           "column": 0
         },
         {
-          "key": "163-F5-v8Z.title",
-          "view": "settings.163-F5-v8Z",
-          "kind": "view",
-          "property": "title",
-          "value": "Opções do Ghostscript"
-        },
-        {
           "key": "191.title",
           "view": "settings.186",
           "kind": "matrix",
@@ -34532,13 +34239,6 @@
           "kind": "prototype",
           "property": "title",
           "value": "Radio"
-        },
-        {
-          "key": "xwP-lA-zVw.title",
-          "view": "settings.8pA-l1-G9L",
-          "kind": "cell",
-          "property": "title",
-          "value": "Use -dALLOWPSTRANSPARENCY"
         },
         {
           "key": "589.title",
@@ -34756,10 +34456,6 @@
         {
           "id": "heading.settings.W5U-9S-4OG",
           "title": "Se Sync abre uma nova janela"
-        },
-        {
-          "id": "heading.settings.163-F5-v8Z",
-          "title": "Opções do Ghostscript"
         }
       ],
       "MiscOneHeadings": [
@@ -34935,7 +34631,6 @@
           "1068.title": "Implicit",
           "891.title": "Distiller (ghostscript) (default: /usr/local/bin)",
           "1074.title": "Implicit",
-          "887.title": "Salvează fișierul PostScript",
           "215.title": "Path settings",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -35182,7 +34877,6 @@
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(Should be OFF for most users.)",
           "187.title": "Prin DVI",
-          "163-F5-v8Z.title": "Ghostscript Options",
           "191.title": "PDF direct",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "If Sync Opens a New Window",
@@ -35198,7 +34892,6 @@
           "675.title": "După tehnoredactare",
           "785.title": "Caută în PDF",
           "922.title": "Radio",
-          "xwP-lA-zVw.title": "Use -dALLOWPSTRANSPARENCY",
           "589.title": "LaTeX",
           "679.title": "Adu previzualizarea în prim-plan",
           "bYh-V5-ri6.title": "Rămâi în fereastra curentă",
@@ -35848,13 +35541,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Implicit"
-        },
-        {
-          "key": "887.title",
-          "view": "settings.225",
-          "kind": "cell",
-          "property": "title",
-          "value": "Salvează fișierul PostScript"
         },
         {
           "key": "215.title",
@@ -37583,13 +37269,6 @@
           "column": 0
         },
         {
-          "key": "163-F5-v8Z.title",
-          "view": "settings.163-F5-v8Z",
-          "kind": "view",
-          "property": "title",
-          "value": "Ghostscript Options"
-        },
-        {
           "key": "191.title",
           "view": "settings.186",
           "kind": "matrix",
@@ -37705,13 +37384,6 @@
           "kind": "prototype",
           "property": "title",
           "value": "Radio"
-        },
-        {
-          "key": "xwP-lA-zVw.title",
-          "view": "settings.8pA-l1-G9L",
-          "kind": "cell",
-          "property": "title",
-          "value": "Use -dALLOWPSTRANSPARENCY"
         },
         {
           "key": "589.title",
@@ -37929,10 +37601,6 @@
         {
           "id": "heading.settings.W5U-9S-4OG",
           "title": "If Sync Opens a New Window"
-        },
-        {
-          "id": "heading.settings.163-F5-v8Z",
-          "title": "Ghostscript Options"
         }
       ],
       "MiscOneHeadings": [
@@ -38108,7 +37776,6 @@
           "1068.title": "默认",
           "891.title": "Distiller (ghostscript) (默认: /usr/local/bin)",
           "1074.title": "默认",
-          "887.title": "保存PostScript文件",
           "215.title": "路径设置",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -38355,7 +38022,6 @@
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(通常无需开启)",
           "187.title": "经由DVI",
-          "163-F5-v8Z.title": "Ghostscript选项",
           "191.title": "直接生成PDF",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "代码同步新建窗口时",
@@ -38371,7 +38037,6 @@
           "675.title": "排版后",
           "785.title": "搜索PDF",
           "922.title": "Radio",
-          "xwP-lA-zVw.title": "使用 -dALLOWPSTRANSPARENCY",
           "589.title": "LaTeX",
           "679.title": "调出预览窗口",
           "bYh-V5-ri6.title": "留在当前窗口",
@@ -39021,13 +38686,6 @@
           "kind": "cell",
           "property": "title",
           "value": "默认"
-        },
-        {
-          "key": "887.title",
-          "view": "settings.225",
-          "kind": "cell",
-          "property": "title",
-          "value": "保存PostScript文件"
         },
         {
           "key": "215.title",
@@ -40756,13 +40414,6 @@
           "column": 0
         },
         {
-          "key": "163-F5-v8Z.title",
-          "view": "settings.163-F5-v8Z",
-          "kind": "view",
-          "property": "title",
-          "value": "Ghostscript选项"
-        },
-        {
           "key": "191.title",
           "view": "settings.186",
           "kind": "matrix",
@@ -40878,13 +40529,6 @@
           "kind": "prototype",
           "property": "title",
           "value": "Radio"
-        },
-        {
-          "key": "xwP-lA-zVw.title",
-          "view": "settings.8pA-l1-G9L",
-          "kind": "cell",
-          "property": "title",
-          "value": "使用 -dALLOWPSTRANSPARENCY"
         },
         {
           "key": "589.title",
@@ -41102,10 +40746,6 @@
         {
           "id": "heading.settings.W5U-9S-4OG",
           "title": "代码同步新建窗口时"
-        },
-        {
-          "id": "heading.settings.163-F5-v8Z",
-          "title": "Ghostscript选项"
         }
       ],
       "MiscOneHeadings": [

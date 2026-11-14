@@ -15,7 +15,6 @@
 "878.title" = "LaTeX ";
 "880.title" = "TeX";
 "882.title" = "Avertisment shell escape";
-"887.title" = "Salvează fișierul PostScript";
 "889.title" = "(pdf)TeX (default: /Library/TeX/texbin OR /usr/texbin)";
 "891.title" = "Distiller (ghostscript) (default: /usr/local/bin)";
 "BYT-g3-3p0.title" = "Alternate Path (default: ~/bin/context/tex/texmf-osx-arm64/bin)";
