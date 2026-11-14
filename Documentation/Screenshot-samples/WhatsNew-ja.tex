@@ -1,0 +1,118 @@
+% !TEX TS-program = lualatex
+% !TEX encoding = UTF-8 Unicode
+% What's New のページのスクリーンショットのための見本。
+\documentclass[11pt,a4paper]{ltjsarticle}
+\usepackage[haranoaji]{luatexja-preset}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage[margin=23mm]{geometry}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={波からフーリエ級数へ}}
+\setlength{\parskip}{0.45em}
+\newtheorem{theorem}{定理}
+\theoremstyle{definition}
+\newtheorem{definition}{定義}
+
+\begin{document}
+\begin{center}
+  {\LARGE 波からフーリエ級数へ}\\[0.5em]
+  {\small フーリエ級数入門}
+\end{center}
+
+\section{波を重ねて関数を表す}\label{sec:waves}
+複雑な信号も、単純な振動の重ね合わせとして捉えることができます。
+周期 $2\pi$ の関数に対するフーリエ級数は、次の形で表されます。
+\begin{equation}\label{eq:series}
+  f(x) \sim \frac{a_0}{2}
+  + \sum_{n=1}^{\infty}
+    \bigl(a_n\cos nx + b_n\sin nx\bigr),
+\end{equation}
+ここで、各成分の係数は次の積分で求められます。
+\begin{equation}\label{eq:coefficients}
+  a_n = \frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\cos nx\,dx,
+  \qquad
+  b_n = \frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\sin nx\,dx.
+\end{equation}
+級数がどこで何に収束するかは、第\ref{sec:convergence}節の
+定理\ref{thm:dirichlet}が答えます。
+
+\begin{definition}\label{def:piecewise}
+区間 $[-\pi,\pi]$ を有限個の小区間に分け、各小区間で $f$ と $f'$ が
+連続で、端で片側極限をもつとき、$f$ は\emph{区分的に滑らか}であるといいます。
+\end{definition}
+
+\section{矩形波を近似する}\label{sec:square}
+区間 $(-\pi,0)$ で $f(x)=-1$、区間 $(0,\pi)$ で $f(x)=1$ とする
+奇関数の矩形波では、余弦の項がすべて消え、
+\eqref{eq:coefficients} から奇数の $n$ について $b_n=4/(n\pi)$ となります。
+\eqref{eq:series} の最初の $N$ 個の非零項を用いると、次の近似が得られます。
+\begin{equation}\label{eq:partial}
+  S_N(x)=\frac{4}{\pi}\sum_{k=0}^{N-1}
+  \frac{\sin\bigl((2k+1)x\bigr)}{2k+1}.
+\end{equation}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.93\linewidth, height=6.3cm,
+  axis lines=middle, xlabel={$x$}, ylabel={$y$},
+  xmin=-3.5, xmax=3.5, ymin=-1.5, ymax=1.5,
+  xtick={-3.14159265,0,3.14159265},
+  xticklabels={$-\pi$,$0$,$\pi$}, ytick={-1,1},
+  samples=401, domain=-pi:pi,
+  legend style={at={(0.5,-0.15)}, anchor=north,
+    draw=none, legend columns=2},
+  every axis plot/.append style={thick}
+]
+\addplot[blue!75!black] {4/pi*sin(deg(x))};
+\addlegendentry{1項の近似}
+\addplot[red!80!black]
+  {4/pi*(sin(deg(x))+sin(deg(3*x))/3+sin(deg(5*x))/5
+        +sin(deg(7*x))/7+sin(deg(9*x))/9)};
+\addlegendentry{5項の近似}
+\end{axis}
+\end{tikzpicture}
+\caption{矩形波の部分和 \eqref{eq:partial}}\label{fig:square}
+\end{figure}
+
+図\ref{fig:square}のように、項数を増やすと、
+不連続点から離れた場所では近似が改善します。
+
+\clearpage
+\section{収束}\label{sec:convergence}
+級数 \eqref{eq:series} がどこで何に収束するかは、次の古典的な結果が教えてくれます。
+
+\begin{theorem}[ディリクレ]\label{thm:dirichlet}
+$f$ は周期 $2\pi$ で、定義\ref{def:piecewise}の意味で区分的に滑らかとします。
+このとき、フーリエ級数 \eqref{eq:series} はすべての点 $x$ で収束し、その和は
+\[
+  \frac{f(x^{+})+f(x^{-})}{2}
+\]
+です。特に、$f$ が連続な点では、級数は $f(x)$ に収束します。
+\end{theorem}
+
+第\ref{sec:square}節の矩形波では、$x=0$ での和は $-1$ と $1$ の平均の $0$ です。
+
+\section{ギブズ現象}\label{sec:gibbs}
+不連続点の近くでは、項数を増やしても一定の行き過ぎが残り、
+$x=0$ の近くの $S_N$ の最大値は、$N\to\infty$ のとき
+\begin{equation}\label{eq:gibbs}
+  \frac{2}{\pi}\int_0^{\pi}\frac{\sin t}{t}\,dt \approx 1.1790
+\end{equation}
+に近づきます。これが\textbf{ギブズ現象}です。これは定理\ref{thm:dirichlet}と
+矛盾しません。$x\neq0$ を固定すれば、部分和 \eqref{eq:partial} は
+$f(x)$ に収束しますが、行き過ぎの場所が不連続点に近づいていくのです。
+
+\begin{theorem}\label{thm:mean}
+$f$ が2乗可積分ならば、\eqref{eq:series} の部分和は $f$ に平均収束します。
+\[
+  \lim_{N\to\infty}\int_{-\pi}^{\pi}\bigl|f(x)-S_N(x)\bigr|^2\,dx=0.
+\]
+\end{theorem}
+
+定理\ref{thm:mean}と値 \eqref{eq:gibbs} から、図\ref{fig:square}の行き過ぎは、
+高さは減らないものの、占める区間はしだいに狭くなることがわかります。
+\end{document}
