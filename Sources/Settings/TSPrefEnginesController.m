@@ -5,7 +5,6 @@
 - (instancetype)init { return [super initWithNibName:@"SettingsEngines" bundle:nil]; }
 - (IBAction)altPathChanged:(id)sender { [self.preferences altPathChanged:sender]; }
 - (IBAction)bibTeXengineChanged:(id)sender { [self.preferences bibTeXengineChanged:sender]; }
-- (IBAction)defaultEngineCall:(id)sender { [self.preferences defaultEngineCall:sender]; }
 - (IBAction)discoverEnginePaths:(id)sender { [self.preferences discoverEnginePaths:sender]; }
 - (IBAction)escapeWarningChanged:(id)sender { [self.preferences escapeWarningChanged:sender]; }
 - (IBAction)gsBinPathChanged:(id)sender { [self.preferences gsBinPathChanged:sender]; }
