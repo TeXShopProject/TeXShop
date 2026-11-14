@@ -27,7 +27,7 @@
   },
   "nl": {
     "SettingsCategories.strings": {
-      "group.typesetting.9.title": "pTeX-ondersteuning (voor Japan)",
+      "group.typesetting.9.title": "Japans pLaTeX",
       "catalog.editor.1.0.title": "Tabbreedte:"
     },
     "SettingsMiscTwo.strings": {
@@ -44,7 +44,7 @@
   },
   "pt-PT": {
     "SettingsCategories.strings": {
-      "group.typesetting.9.title": "Suporte a pTeX (para o Japão)",
+      "group.typesetting.9.title": "pLaTeX japonês",
       "catalog.editor.1.0.title": "Largura da tabulação:",
       "catalog.editor.1.1.title": "Usar tabulações no menu de indentação"
     },
@@ -62,7 +62,7 @@
   },
   "ro": {
     "SettingsCategories.strings": {
-      "group.typesetting.9.title": "Suport pTeX (pentru Japonia)",
+      "group.typesetting.9.title": "pLaTeX japonez",
       "catalog.editor.1.0.title": "Lățimea tabulatorului:",
       "catalog.editor.1.1.title": "Folosește tabulatori pentru meniul de indentare",
       "group.typesetting.6.title": "Script personal"

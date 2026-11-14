@@ -235,7 +235,7 @@
 "catalog.preview.5.0.note" = "The page that the HTML window opens first. Enter a web address or the path of a file.";
 "group.typesetting.0.title" = "Engine";
 "catalog.typesetting.0.4.title" = "Engine Profile";
-"catalog.typesetting.0.4.note" = "Sets the typesetting commands, the BibTeX engine, the index program, MetaPost, and otf package support. The Japanese profiles also set UTF-8 as the encoding for new documents, the dictionary, and UTF-8-MAC conversion.";
+"catalog.typesetting.0.4.note" = "Sets the typesetting commands, the BibTeX engine, the index program, MetaPost, and conversion to otf package \\UTF / \\CID. The Japanese profiles also set UTF-8 as the encoding for new documents, the dictionary, and UTF-8-MAC conversion.";
 "catalog.typesetting.0.0.title" = "Typeset New Documents With";
 "catalog.typesetting.0.0.note" = "What the toolbar selects beside Typeset when a document opens. A % !TEX TS-program line in the document takes precedence.";
 "catalog.typesetting.0.1.title" = "Engine File";
@@ -279,8 +279,8 @@
 "catalog.typesetting.8.1.title" = "BibTeX Engine";
 "catalog.typesetting.8.2.title" = "Index Program";
 "catalog.typesetting.8.3.title" = "MetaPost";
-"group.typesetting.9.title" = "pTeX support (for Japan)";
-"catalog.typesetting.9.0.title" = "otf Package Support";
+"group.typesetting.9.title" = "Japanese pLaTeX";
+"catalog.typesetting.9.0.title" = "Convert to otf Package \\UTF / \\CID";
 "group.console.0.title" = "Font";
 "catalog.console.0.0.title" = "Console Font";
 "catalog.console.0.1.title" = "Use Also for Macro Editor";
@@ -309,4 +309,6 @@
 
 "catalog.documents.1.3.note" = "When saving, combines characters stored in separate parts (such as か + ゛) into single characters (が).";
 
-"catalog.typesetting.9.0.note" = "When saving, replaces characters outside JIS X 0208 with \\UTF{XXXX} (or \\CID{number} for glyph variants). For pTeX documents that use the otf package.";
+"catalog.typesetting.9.0.note" = "When saving, replaces characters outside JIS X 0208 with \\UTF{XXXX} (or \\CID{number} for glyph variants).";
+"catalog.typesetting.9.0.former" = "otf Package Support";
+"group.typesetting.9.former" = "pTeX support (for Japan)";

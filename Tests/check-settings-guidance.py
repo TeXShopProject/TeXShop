@@ -35,7 +35,8 @@ OLD_UI = (r'An obsolete remembered category opens General.|without a separate ba
           r'LaTeXに対応したスペルチェック|従来のスペルチェック|同じ縦スクロール領域|'
           r'einen vertikalen Scrollbereich|un área de desplazamiento vertical|'
           r'機能で探す|キーで探す|UTF パッケージ対応|Customizing Menu Shortcuts|'
-          r'under Preferences\s*>\s*Source|two tabs inside Themes remain|テーマ内の2つのタブはそのまま|Typesetting tab')
+          r'under Preferences\s*>\s*Source|two tabs inside Themes remain|テーマ内の2つのタブはそのまま|Typesetting tab|'
+          r'pTeX support \(for Japan\)|pTeXサポート（日本用）|MetaPost and otf package support|otfパッケージ対応を設定|Unterstützung für das otf-Paket')
 
 def strings(path):
     return json.loads(subprocess.check_output(['plutil', '-convert', 'json', '-o', '-', str(path)]))
@@ -141,8 +142,12 @@ assert 'LaTeX结构' not in str(zh_labels)+str(zh_categories), 'Chinese spell ch
 overrides=json.loads((ROOT/'Tests/Fixtures/SettingsClassificationStrings.json').read_text())['strings']['Use LaTeX-aware spell checking (recommended)']['overrides']
 assert overrides['ko']=='LaTeX 구문을 고려한 맞춤법 검사 사용(권장)' and overrides['zh_CN']==method, 'classification fixture method names'
 
-ja_unicode=read_help(ROOT/'Resources/Interfaces/ja.lproj/TeXShopHelp/pgs/advanced_unicode.htm','ja')
-assert strings(ROOT/'Resources/Interfaces/ja.lproj/SettingsMiscTwo.strings')['ahm-aK-Qi9.title'] in ja_unicode
+# The help pages on the otf conversion name its group and item as the Settings window shows them.
+for language,table,page in (('ja','ja.lproj','advanced_unicode'),('en','Base.lproj','advanced_Japan')):
+    help_text=read_help(ROOT/f'Resources/Interfaces/{language}.lproj/TeXShopHelp/pgs/{page}.htm',language)
+    names=strings(ROOT/'Resources/Interfaces'/table/'SettingsCategories.strings')
+    for key in ('group.typesetting.9.title','catalog.typesetting.9.0.title'):
+        assert names[key] in help_text,(language,page,key)
 
 for suffix,language in [('', 'en'),('-ja','ja')]:
     check_obsolete((ROOT/('Documentation/Releases/6.00'+suffix+'.md')).read_text(),language,'current release Markdown')
