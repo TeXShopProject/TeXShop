@@ -603,7 +603,7 @@ int main(int argc, const char *argv[])
 {
     @autoreleasepool {
         if (argc < 3) {
-            fprintf(stderr, "usage: %s generate|equivalence|install DIR\n", argv[0]);
+            fprintf(stderr, "usage: %s generate|equivalence|install DIR | apply SET INPUT OUTPUT | targets - OUTPUT\n", argv[0]);
             return 2;
         }
         setvbuf(stdout, NULL, _IOLBF, 0);
@@ -615,6 +615,29 @@ int main(int argc, const char *argv[])
             Equivalence(directory);
         else if ([mode isEqualToString:@"install"])
             Install(directory);
+        else if ([mode isEqualToString:@"apply"] && argc > 4) {
+            // apply SET.json INPUT OUTPUT: the set applied by the multiple replacement engine (for the TeX check).
+            NSData *data = [NSData dataWithContentsOfFile:directory];
+            TSRegexMultipleReplace *set = data ? [[TSRegexMultipleReplace alloc] initWithJSONData:(NSData *_Nonnull)data error:NULL] : nil;
+            NSString *input = [NSString stringWithContentsOfFile:@(argv[3]) encoding:NSUTF8StringEncoding error:NULL];
+            NSString *output = set && input ? TSApply(set, input, nil) : nil;
+            Check(output && [output writeToFile:@(argv[4]) atomically:YES encoding:NSUTF8StringEncoding error:NULL], @"apply the set");
+        } else if ([mode isEqualToString:@"cids"] && argc > 3) {
+            // cids INPUT OUTPUT: the Adobe-Japan1 CID that Hiragino draws for each line's character (0 when none).
+            NSMutableArray<NSString *> *lines = [NSMutableArray array];
+            for (NSString *line in [[NSString stringWithContentsOfFile:directory encoding:NSUTF8StringEncoding error:NULL] componentsSeparatedByString:@"\n"]) {
+                NSUInteger cid = line.length ? TSAdobeJapan1CIDForSequence(line) : NSNotFound;
+                [lines addObject:[NSString stringWithFormat:@"%lu", (unsigned long)(cid == NSNotFound ? 0 : cid)]];
+            }
+            Check([[lines componentsJoinedByString:@"\n"] writeToFile:@(argv[3]) atomically:YES encoding:NSUTF8StringEncoding error:NULL], @"write the CIDs");
+        } else if ([mode isEqualToString:@"targets"] && argc > 3) {
+            // targets OUTPUT: every character the menu converts to ajmacros, one per line, in the menu's order.
+            NSMutableOrderedSet<NSString *> *targets = [NSMutableOrderedSet orderedSet];
+            for (TSTableEntry *entry in TSAllEntries(TSKindsInOrder(YES)))
+                if (!entry.isPattern)
+                    [targets addObject:entry.target];
+            Check([[targets.array componentsJoinedByString:@"\n"] writeToFile:@(argv[3]) atomically:YES encoding:NSUTF8StringEncoding error:NULL], @"write the targets");
+        }
         else
             return 2;
         if (failures)
