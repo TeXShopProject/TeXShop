@@ -166,20 +166,31 @@ def check_project():
 
 
 def bracket_problems(themes):
-    """The brackets of every bundled theme are readable on its background: the find and replace fields show groups
-    and alternatives, and TeX brackets, in these colors (contrast as WCAG measures it, at least 3)."""
+    """The brackets and the marker ($, & and the quantifiers of a pattern) of every bundled theme are readable on its
+    background, in the find and replace fields and in the source (contrast as WCAG measures it, at least 3). A theme
+    whose source window is translucent (SourceAlpha below 1) is also measured as the window shows it over white and
+    over black."""
     def luminance(rgb):
         linear = [c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in rgb[:3]]
         return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+    def contrast(a, b):
+        lighter, darker = sorted([luminance(a), luminance(b)], reverse=True)
+        return (lighter + 0.05) / (darker + 0.05)
+
     problems = []
     for name, theme in themes.items():
-        background = luminance(theme['EditorBackground'])
-        for key in ('SyntaxMarkerParen', 'SyntaxMarkerCurly', 'SyntaxMarkerSquare'):
+        background = theme['EditorBackground'][:3]
+        alpha = theme.get('SourceAlpha', [0, 0, 0, 1])[3]
+        behind = [None] + ([[1, 1, 1], [0, 0, 0]] if alpha < 1 else [])
+        for key in ('SyntaxMarker', 'SyntaxMarkerParen', 'SyntaxMarkerCurly', 'SyntaxMarkerSquare'):
             color = theme.get(key) or theme.get('SyntaxMarker')
-            if color:
-                lighter, darker = sorted([luminance(color), background], reverse=True)
-                if (lighter + 0.05) / (darker + 0.05) < 3:
-                    problems.append(f'{name} {key}')
+            if not color:
+                continue
+            for desk in behind:
+                shown = (lambda c: c[:3]) if desk is None else (lambda c: [alpha * x + (1 - alpha) * d for x, d in zip(c[:3], desk)])
+                if contrast(shown(color), shown(background)) < 3:
+                    problems.append(f'{name} {key}' + ('' if desk is None else f' over {"white" if desk[0] else "black"}'))
     return problems
 
 
@@ -198,7 +209,7 @@ def main():
     problems = bracket_problems(bundled_themes())
     if problems:
         sys.exit(f'FAIL: brackets that cannot be read on the background: {problems}')
-    print('PASS: the brackets of every bundled theme can be read on its background')
+    print('PASS: the brackets and the marker of every bundled theme can be read on its background')
     with tempfile.TemporaryDirectory(prefix='texshop-advanced-find-coloring-') as tmp:
         tmp = Path(tmp)
         probe = build(tmp, copy_sources(tmp))
@@ -216,10 +227,16 @@ def main():
             print(f'images in {args.image}')
         if args.mutations:
             themes = bundled_themes()
-            themes['Resources/TeXShop/Themes/Dracula'] = dict(themes['Resources/TeXShop/Themes/Dracula'], SyntaxMarkerParen=[0, 0, 0, 1])
-            if not bracket_problems(themes):
-                sys.exit('FAIL: mutation \'Dracula has black parentheses again\' was not detected')
-            print('PASS: detected mutation \'Dracula has black parentheses again\'')
+            for label, theme, key, color in [('Dracula has black parentheses again', 'Dracula', 'SyntaxMarkerParen', [0, 0, 0, 1]),
+                                             ('TransparentTheme has its yellow marker again', 'TransparentTheme', 'SyntaxMarker', [1, 0.97, 0.235, 1]),
+                                             ('TransparentTheme\'s marker is read only opaque', 'TransparentTheme', 'SyntaxMarker', [0.58, 0.44, 0, 1]),
+                                             ('SolarizedLite has its cyan marker again', 'SolarizedLite', 'SyntaxMarker', [0.165, 0.63, 0.596, 1])]:
+                mutated = dict(themes)
+                path = f'Resources/TeXShop/Themes/{theme}'
+                mutated[path] = dict(themes[path], **{key: color})
+                if not bracket_problems(mutated):
+                    sys.exit(f'FAIL: mutation {label!r} was not detected')
+                print(f'PASS: detected mutation {label!r}')
             survivors = []
             for name, (file, old, new) in MUTATIONS.items():
                 with tempfile.TemporaryDirectory(prefix='texshop-advanced-find-coloring-mutation-') as mtmp:

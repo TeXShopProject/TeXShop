@@ -805,7 +805,8 @@ static void WriteImages(NSString *directory, NSString *language)
     NSDictionary *light = LightTheme, *dark = DarkTheme;
     // The source font of the factory settings (TSAppDelegate.m: the user font of 12 points).
     SourceFont = [NSFont userFontOfSize:12];
-    NSArray<NSArray<NSString *> *> *pairs = @[@[@"SolarizedLite", @"SolarizedDark"], @[@"LiteTheme", @"DarkTheme"], @[@"GLG-Lite", @"Dracula"]];
+    NSArray<NSArray<NSString *> *> *pairs = @[@[@"SolarizedLite", @"SolarizedDark"], @[@"LiteTheme", @"DarkTheme"], @[@"GLG-Lite", @"Dracula"],
+                                                       @[@"TransparentTheme", @"PreTeXt-Dark"]];
     for (NSArray<NSString *> *pair in pairs) {
         LightTheme = Theme(pair[0]);
         DarkTheme = Theme(pair[1]);
