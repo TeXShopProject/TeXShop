@@ -168,10 +168,12 @@ static void TestNib(NSString *nibPath, NSString *macrosPath, NSDictionary<NSStri
     for (NSString *text in count)
         Check(count[text].integerValue == 1, [NSString stringWithFormat:@"the key %@ is used once in the menu bar", text]);
     TSShortcutStore *store = [[TSShortcutStore alloc] initWithMenu:main defaults:(id)[MenuMemoryDefaults new]];
-    NSDictionary *macros = [NSDictionary dictionaryWithContentsOfFile:macrosPath];
-    NSMutableArray *candidates = [NSMutableArray array];
-    CollectMacros(macros[@"submenu"], @"Macros", candidates);
-    Check(candidates.count > 100 && [store conflictsForMacroShortcuts:candidates].count == 0, @"no bundled macro uses a key of the menu");
+    if (macrosPath.length) { // without it, the macros are checked elsewhere (TetsuTeXShop: its own macros and table)
+        NSDictionary *macros = [NSDictionary dictionaryWithContentsOfFile:macrosPath];
+        NSMutableArray *candidates = [NSMutableArray array];
+        CollectMacros(macros[@"submenu"], @"Macros", candidates);
+        Check(candidates.count > 100 && [store conflictsForMacroShortcuts:candidates].count == 0, @"no bundled macro uses a key of the menu");
+    }
     Check(store.unavailableCommands.count == 0, @"no command lost its key");
 
     // Settings › Keyboard lists the commands with their keys
