@@ -249,8 +249,8 @@
 "catalog.typesetting.1.0.title" = "Tras componer páginas";
 "group.typesetting.2.title" = "Sincronización de fuente y vista previa";
 "catalog.typesetting.2.0.title" = "Tipo de sincronía";
-"catalog.typesetting.2.1.title" = "Abrir los documentos alcanzados por Sync como pestañas de la ventana raíz";
-"catalog.typesetting.2.1.note" = "Normalmente se deja desactivado.";
+"catalog.typesetting.2.1.title" = "Abrir los archivos alcanzados por Sync como pestañas en la ventana del archivo raíz";
+"catalog.typesetting.2.1.note" = "Cuando Sync abre otro archivo desde la vista previa, este se añade como pestaña a la ventana del archivo raíz en lugar de abrirse en su propia ventana.";
 "group.typesetting.3.title" = "Rutas";
 "catalog.typesetting.3.0.title" = "Motores TeX";
 "catalog.typesetting.3.0.note" = "Predeterminado: /Library/TeX/texbin o /usr/texbin";

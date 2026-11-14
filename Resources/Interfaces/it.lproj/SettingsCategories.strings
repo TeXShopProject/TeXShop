@@ -249,8 +249,8 @@
 "catalog.typesetting.1.0.title" = "Dopo la compilazione";
 "group.typesetting.2.title" = "Sincronizzazione di sorgente e anteprima";
 "catalog.typesetting.2.0.title" = "Metodo di sincronizzazione";
-"catalog.typesetting.2.1.title" = "Aprire come pannelli nella finestra principale i documenti raggiunti dalla sincronizzazione";
-"catalog.typesetting.2.1.note" = "Di solito disattivato.";
+"catalog.typesetting.2.1.title" = "Aprire come pannelli nella finestra del file principale i file raggiunti dalla sincronizzazione";
+"catalog.typesetting.2.1.note" = "Quando la sincronizzazione dall’anteprima apre un altro file, questo si aggiunge come pannello alla finestra del file principale invece di aprirsi in una finestra propria.";
 "group.typesetting.3.title" = "Percorsi";
 "catalog.typesetting.3.0.title" = "Motori TeX";
 "catalog.typesetting.3.0.note" = "Predefinito: /Library/TeX/texbin o /usr/texbin";

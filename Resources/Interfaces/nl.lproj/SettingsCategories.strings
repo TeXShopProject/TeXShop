@@ -249,8 +249,8 @@
 "catalog.typesetting.1.0.title" = "Na zetten";
 "group.typesetting.2.title" = "Synchronisatie van bron en voorvertoning";
 "catalog.typesetting.2.0.title" = "Synchroniseermethode";
-"catalog.typesetting.2.1.title" = "Documenten die via synchronisatie worden bereikt als tabs in het hoofdvenster openen";
-"catalog.typesetting.2.1.note" = "Meestal uitgeschakeld.";
+"catalog.typesetting.2.1.title" = "Bestanden die via synchronisatie worden bereikt als tabbladen in het venster van het hoofdbestand openen";
+"catalog.typesetting.2.1.note" = "Als synchronisatie vanuit de voorvertoning een ander bestand opent, wordt dat als tabblad aan het venster van het hoofdbestand toegevoegd in plaats van in een eigen venster geopend.";
 "group.typesetting.3.title" = "Paden";
 "catalog.typesetting.3.0.title" = "TeX-engines";
 "catalog.typesetting.3.0.note" = "Standaard: /Library/TeX/texbin of /usr/texbin";

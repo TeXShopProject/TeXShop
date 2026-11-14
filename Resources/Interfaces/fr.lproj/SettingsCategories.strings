@@ -249,8 +249,8 @@
 "catalog.typesetting.1.0.title" = "Après composition";
 "group.typesetting.2.title" = "Synchronisation de la source et de l’aperçu";
 "catalog.typesetting.2.0.title" = "Méthode de synchronisation";
-"catalog.typesetting.2.1.title" = "Ouvrir les documents atteints par la synchro dans des onglets de la fenêtre racine";
-"catalog.typesetting.2.1.note" = "Généralement désactivé.";
+"catalog.typesetting.2.1.title" = "Ouvrir les fichiers atteints par la synchro dans des onglets de la fenêtre du fichier racine";
+"catalog.typesetting.2.1.note" = "Lorsque la synchro depuis l’aperçu ouvre un autre fichier, celui-ci s’ajoute sous forme d’onglet à la fenêtre du fichier racine au lieu de s’ouvrir dans sa propre fenêtre.";
 "group.typesetting.3.title" = "Chemins";
 "catalog.typesetting.3.0.title" = "Moteurs TeX";
 "catalog.typesetting.3.0.note" = "Par défaut : /Library/TeX/texbin ou /usr/texbin";
