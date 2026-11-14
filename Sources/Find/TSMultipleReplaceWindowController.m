@@ -128,9 +128,10 @@ static const CGFloat TSSidebarWidth = 240;
     self.setTable = [[NSTableView alloc] initWithFrame:NSMakeRect(0, 0, TSSidebarWidth, 300)];
     NSTableColumn *column = [[NSTableColumn alloc] initWithIdentifier:@"name"];
     column.title = TSLocalized(@"MultipleReplace.Sets", @"Sets");
-    // The names take the width of the list, not a new column's 100 points.
+    // The names take the visible width of the list, never more (fitSetColumn): the list never scrolls sideways
+    // and the selection keeps its rounded ends inside the sidebar; a long name ends with "…".
     column.resizingMask = NSTableColumnAutoresizingMask;
-    column.width = NSWidth(self.setTable.frame);
+    column.minWidth = 40;
     [self.setTable addTableColumn:column];
     self.setTable.columnAutoresizingStyle = NSTableViewFirstColumnOnlyAutoresizingStyle;
     self.setTable.headerView = nil;
@@ -141,6 +142,11 @@ static const CGFloat TSSidebarWidth = 240;
     scroll.borderType = NSNoBorder;
     scroll.drawsBackground = NO;
     scroll.automaticallyAdjustsContentInsets = NO; // it starts below the title bar
+    scroll.hasHorizontalScroller = NO;
+    scroll.horizontalScrollElasticity = NSScrollElasticityNone;
+    scroll.contentView.postsFrameChangedNotifications = YES;
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(fitSetColumn) name:NSViewFrameDidChangeNotification
+                                             object:scroll.contentView];
 
     NSPopUpButton *action = [[NSPopUpButton alloc] initWithFrame:NSZeroRect pullsDown:YES];
     action.bordered = NO;
@@ -286,6 +292,7 @@ static const CGFloat TSSidebarWidth = 240;
     self.window.contentViewController = split;
     [self.window setFrame:frame display:NO];
     [split.splitView setPosition:TSSidebarWidth ofDividerAtIndex:0];
+    [self fitSetColumn];
 }
 
 #pragma mark Sets
@@ -475,6 +482,20 @@ static const CGFloat TSSidebarWidth = 240;
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
     return (NSInteger)self.setNames.count;
+}
+
+/// The column of names as wide as the visible list, whatever the width of the sidebar.
+- (void)fitSetColumn
+{
+    NSTableColumn *column = self.setTable.tableColumns.firstObject;
+    NSClipView *clip = self.setTable.enclosingScrollView.contentView;
+    if (!column || !clip)
+        return;
+    CGFloat width = MAX(column.minWidth, NSWidth(clip.bounds) - self.setTable.intercellSpacing.width);
+    if (fabs(column.width - width) > 0.5)
+        column.width = width;
+    if (fabs(NSWidth(self.setTable.frame) - NSWidth(clip.bounds)) > 0.5)
+        [self.setTable setFrameSize:NSMakeSize(NSWidth(clip.bounds), NSHeight(self.setTable.frame))];
 }
 
 - (nullable NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(nullable NSTableColumn *)column row:(NSInteger)row
