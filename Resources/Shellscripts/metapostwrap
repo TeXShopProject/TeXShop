@@ -2,6 +2,9 @@
 
 # This short script calls mpost
 # Richard Koch; November 1, 2003
+#
+# Arguments: nonstop (YES or NO), the Ghostscript folder, the TeX folder, the file,
+# then optionally the MetaPost program and its options (mpost when none is given).
 
 set mygspath = "$argv[2]"
 if (-x ${mygspath}/ps2pdf) then
@@ -9,8 +12,17 @@ if (-x ${mygspath}/ps2pdf) then
         rehash
 endif
 
+set mpprogram = "mpost"
+if ($#argv >= 5) then
+        set mpprogram = "$argv[5]"
+endif
+set mpoptions = ( )
+if ($#argv >= 6) then
+        set mpoptions = ( $argv[6-]:q )
+endif
+
 set mytexexecpath = "$argv[3]"
-if (-x ${mytexexecpath}/mpost) then
+if ((-x "${mytexexecpath}/mpost") || (-x "${mytexexecpath}/${mpprogram}")) then
         setenv PATH "${mytexexecpath}:${PATH}"
         rehash
 endif
@@ -19,10 +31,10 @@ set filename = "$argv[4]"
 
 if ("$argv[1]" == "YES") then
 
-mpost --interaction=nonstopmode "${filename:r}.mp"
+"$mpprogram" $mpoptions:q --interaction=nonstopmode "${filename:r}.mp"
 
 else
 
-mpost "${filename:r}.mp"
+"$mpprogram" $mpoptions:q "${filename:r}.mp"
 
 endif

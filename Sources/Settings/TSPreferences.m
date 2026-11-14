@@ -608,6 +608,16 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
     [self commitPreferenceField:_bibTeXengineField showError:YES reflect:YES];
 }
 
+- (IBAction)makeIndexEngineChanged:(id)sender
+{
+    [self commitPreferenceField:self.makeIndexEngineField showError:YES reflect:YES];
+}
+
+- (IBAction)metaPostEngineChanged:(id)sender
+{
+    [self commitPreferenceField:self.metaPostEngineField showError:YES reflect:YES];
+}
+
 
 /*" Set Command Completion Key"*/
 - (IBAction)commandCompletionChanged:sender
@@ -2148,6 +2158,10 @@ A tag of 0 means "no", a tag of 1 means "yes".
     [self addPreferenceField:_kpsetoolField rule:[[TSPreferenceInput alloc] initWithKey:KpsetoolKey
         kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
     [self addPreferenceField:_bibTeXengineField rule:[[TSPreferenceInput alloc] initWithKey:BibTeXengineKey
+        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
+    [self addPreferenceField:self.makeIndexEngineField rule:[[TSPreferenceInput alloc] initWithKey:MakeIndexEngineKey
+        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
+    [self addPreferenceField:self.metaPostEngineField rule:[[TSPreferenceInput alloc] initWithKey:MetaPostEngineKey
         kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
     [self addPreferenceField:_texScriptCommandTextField rule:[[TSPreferenceInput alloc] initWithKey:TexScriptCommandKey
         kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:YES notification:nil]];

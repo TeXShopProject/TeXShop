@@ -236,7 +236,7 @@
 "catalog.preview.5.0.note" = "HTMLウインドウを表示したときに最初に開くページです。Webのアドレスか、ファイルのパスを入れます。デフォルト: https://texshop.app";
 "group.typesetting.0.title" = "エンジン";
 "catalog.typesetting.0.4.title" = "エンジンのプロファイル";
-"catalog.typesetting.0.4.note" = "タイプセットのコマンド、BibTeXエンジン、otfパッケージ対応を設定します。日本語のプロファイルは、新しい書類のエンコーディング（UTF-8）、辞書、UTF-8-MACの変換も設定します。";
+"catalog.typesetting.0.4.note" = "タイプセットのコマンド、BibTeXエンジン、索引作成とMetaPostのコマンド、otfパッケージ対応を設定します。日本語のプロファイルは、新しい書類のエンコーディング（UTF-8）、辞書、UTF-8-MACの変換も設定します。";
 "catalog.typesetting.0.4.button" = "適用…";
 "catalog.typesetting.0.0.title" = "新しい書類のタイプセット";
 "catalog.typesetting.0.0.note" = "書類を開いたとき、ツールバーの「タイプセット」の横で最初に選ばれるものです。書類に % !TEX TS-programの行があれば、そちらが優先されます。";
@@ -282,11 +282,15 @@
 "group.typesetting.7.title" = "Ghostscript";
 "catalog.typesetting.7.1.title" = "-dALLOWPSTRANSPARENCY";
 "catalog.typesetting.7.1.note" = "GhostscriptでPostScriptをPDFに変換するときにこのオプションを付け、PSTricksなどの透明効果を残します。Ghostscript 9.51以降が必要です。";
-"group.typesetting.8.title" = "検索用コマンドとBibTeX";
+"group.typesetting.8.title" = "周辺ツール";
 "catalog.typesetting.8.0.title" = "kpsewhich";
 "catalog.typesetting.8.0.note" = "「ファイル」メニューの「スタイルファイルを開く」で、ファイルを探すコマンドです。デフォルト: kpsewhich -progname=latex -format=tex";
 "catalog.typesetting.8.1.title" = "BibTeXエンジン";
 "catalog.typesetting.8.1.note" = "デフォルト: bibtex";
+"catalog.typesetting.8.2.title" = "索引作成";
+"catalog.typesetting.8.2.note" = "デフォルト: makeindex";
+"catalog.typesetting.8.3.title" = "MetaPost";
+"catalog.typesetting.8.3.note" = "デフォルト: mpost";
 "group.typesetting.9.title" = "pTeXサポート（日本用）";
 "catalog.typesetting.9.0.title" = "otfパッケージ対応";
 "group.console.0.title" = "フォント";

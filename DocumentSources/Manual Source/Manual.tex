@@ -860,7 +860,7 @@ about TeX and LaTeX make perfect sense when used on a machine running XeTeX or L
 With this history out of the way, it is time to explain how to configure TeXShop to typeset
 using whatever engine you decide to use. You'll do this by using TeXShop Settings. 
 
-Go to TeXShop Settings and select the {\bf Typesetting} category. The quickest way to set up typesetting is an engine profile. At the top of the {\bf Engine} group, choose a profile in the {\bf Engine Profile} pop-up menu and click {\bf Apply}. The profiles are pdfLaTeX, XeLaTeX, LuaLaTeX, LaTeX + dvipdfmx, LuaLaTeX (Japanese), pLaTeX + dvipdfmx and upLaTeX + dvipdfmx; LaTeX + dvips + Ghostscript is under {\bf Other}. Select {\bf Use latexmk} to have latexmk run BibTeX, the index and further passes as needed; otherwise each typesetting runs the engine once. A profile sets only the typesetting commands of its method, the typesetting method, the BibTeX engine and otf package support; the Japanese profiles also set UTF-8 as the encoding for new documents, set the spelling dictionary to automatic language detection and turn on UTF-8-MAC conversion. Every other setting stays as it is, and the commands of the other method are not changed. The menu shows the profile whose commands are set now, or {\bf Custom} after you change a command by hand. The paths to TeX and Ghostscript are set apart, with {\bf Detect Paths...} in the {\bf Paths} group. When TeXShop starts for the first time, it asks for the paths and then for an engine profile.
+Go to TeXShop Settings and select the {\bf Typesetting} category. The quickest way to set up typesetting is an engine profile. At the top of the {\bf Engine} group, choose a profile in the {\bf Engine Profile} pop-up menu and click {\bf Apply}. The profiles are pdfLaTeX, XeLaTeX, LuaLaTeX, LaTeX + dvipdfmx, LuaLaTeX (Japanese), pLaTeX + dvipdfmx and upLaTeX + dvipdfmx; LaTeX + dvips + Ghostscript is under {\bf Other}. Select {\bf Use latexmk} to have latexmk run BibTeX, the index and further passes as needed; otherwise each typesetting runs the engine once. A profile sets only the typesetting commands of its method, the typesetting method, the BibTeX engine, the index program, the MetaPost command and otf package support; the Japanese profiles also set UTF-8 as the encoding for new documents, set the spelling dictionary to automatic language detection and turn on UTF-8-MAC conversion. Every other setting stays as it is, and the commands of the other method are not changed. The menu shows the profile whose commands are set now, or {\bf Custom} after you change a command by hand. The paths to TeX and Ghostscript are set apart, with {\bf Detect Paths...} in the {\bf Paths} group. When TeXShop starts for the first time, it asks for the paths and then for an engine profile.
 
 The rest of this section describes the other settings of the {\bf Engine} group and the settings that a profile sets, for those who want to set them by hand. In the {\bf Engine} group, the {\bf Typeset New Documents With} pop-up menu chooses what the toolbar of a document selects beside the Typeset button when the document opens: \LaTeX, plain \TeX, or {\bf Engine File}. Most people use \LaTeX, so that is the default choice. A \verb|% !TEX TS-program| line at the top of a document takes precedence, as explained later.
 We'll describe the third choice in this menu shortly.
@@ -906,7 +906,7 @@ There is yet a third option, ``Stay in Current Window''. The keyboard shortcut C
 
 \section{BibTeX}
 
-The Typeset menu contains two other items, ``BibTeX'' and ``MakeIndex''. These are explained in this section and the next section. 
+The Typeset menu contains three other items, ``BibTeX'', ``MakeIndex'' and ``MetaPost''. These are explained in this section and the next two sections. 
 
 BibTeX is a tool used to create bibliographies in LaTeX documents. The tool assumes that you have a large database of references which you often quote. Simple commands allow you to cite certain of these references in your LaTeX source, and BibTeX then creates a bibliography for your article containing only the items cited.
 
@@ -961,7 +961,7 @@ Notice that the BibTeX menu command has a keyboard equivalent.
 
 The file ``mybibliography.bib'' can be opened and edited by TeXShop. If you use TeXShop to create the file ``mybibliography.bib'' in the first place, use the pulldown tag labeled ``file format'' to save the file as a bib file rather than as a tex file.
 
-In recent years, additional programs like biber have been written to handle bibliographies. Japanese typesetting is done using a modified TeX and still other programs like pbibtex and ubibtex are available there for bibliographies. So TeXShop has a setting to set the program called when the BibTeX menu item is chosen. It is the {\bf BibTeX Engine} field in the {\bf Lookup Commands and BibTeX} group of the Typesetting category. Fill in with the appropriate name, and any flags that should be used when calling this command line program.
+In recent years, additional programs like biber have been written to handle bibliographies. Japanese typesetting is done using a modified TeX and still other programs like pbibtex and ubibtex are available there for bibliographies. So TeXShop has a setting to set the program called when the BibTeX menu item is chosen. It is the {\bf BibTeX Engine} field in the {\bf Related Tools} group of the Typesetting category. Fill in with the appropriate name, and any flags that should be used when calling this command line program.
 
 Often users use different bibliography programs for different projects, or when working with different coauthors. TeXShop allows the bibliography program to be set on a file-by-file basis. To set it for a given source file, include the following line within the first twenty lines of the source, replacing ``biber'' with the desired program names and any desired flags.
 
@@ -997,7 +997,13 @@ Put index references in the source document, as in the example below:
 \end{verbatim}
 To create the index, typeset the document as usual. Then run MakeIndex. Then typeset again.
 
+MakeIndex runs the program in the {\bf Index Program} field of the {\bf Related Tools} group in the Typesetting category of TeXShop Settings, followed by the name of the idx file. The default is makeindex. Fill in another program, such as mendex or upmendex for Japanese documents, with any flags it needs, for instance \verb|upmendex -s mystyle.ist|. The engine profiles set this field: makeindex for the Western profiles, mendex for pLaTeX + dvipdfmx, and upmendex for upLaTeX + dvipdfmx and LuaLaTeX (Japanese).
+
 Many additional details can be found in The LaTeX Companion by Goossens, Mittelbach, and Samarin.
+
+\section{MetaPost}
+
+MetaPost in the Typeset menu runs MetaPost on the active document, a file with the extension mp. It runs the command in the {\bf MetaPost} field of the {\bf Related Tools} group in the Typesetting category of TeXShop Settings; the default is mpost. The engine profiles set this field: pmpost for pLaTeX + dvipdfmx and upmpost for upLaTeX + dvipdfmx, which typeset Japanese text in labels, and mpost for the other profiles. LuaLaTeX cannot include figures whose labels pmpost or upmpost typeset in Japanese; with LuaLaTeX, draw such figures in the document with the luamplib package.
 
 \section{Other Typesetting Settings}
 

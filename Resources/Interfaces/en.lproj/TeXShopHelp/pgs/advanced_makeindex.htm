@@ -4,7 +4,7 @@
 		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
 		<TITLE>MakeIndex</TITLE>
 		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="index; makeindex; makeidx">
+		<META NAME="description" CONTENT="index; makeindex; makeidx; mendex; upmendex; index program">
 	<link href="../sty/screen.css" rel="stylesheet" media="all">
 	</HEAD>
 
@@ -22,6 +22,7 @@
 			<dd>and tigers\index{animal!tiger}  and various insects\index{insect|see{animal}}.&quot;
 		</dl>
 		<p>To create the index, typeset the document as usual. Then run MakeIndex. Then typeset again.</p>
+		<p>MakeIndex runs the program in Settings &gt; Typesetting &gt; Related Tools &gt; Index Program, followed by the name of the idx file. The default is makeindex. Fill in another program, such as mendex or upmendex for Japanese documents, with any flags it needs, for instance <code>upmendex -s mystyle.ist</code>. The engine profiles set this field: makeindex for the Western profiles, mendex for pLaTeX + dvipdfmx, and upmendex for upLaTeX + dvipdfmx and LuaLaTeX (Japanese).</p>
 		<p>Many additional details can be found in The LaTeX Companion by Goossens, Mittelbach, and Samarin.</p>
 		<ul>
 			

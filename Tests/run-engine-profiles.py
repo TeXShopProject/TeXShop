@@ -12,30 +12,32 @@ PDF = '--file-line-error --synctex=1'
 SIMP = '--extratexopts "-file-line-error -synctex=1"'
 PT = '-ot "-synctex=1 -file-line-error"'
 DVIPDF = '-e "$dvipdf=q/dvipdfmx %O -o %D %S/"'
-# The expected table, written out independently of the source: place, LaTeX, TeX, LaTeX with latexmk, BibTeX.
+# The expected table, written out independently of the source: place, LaTeX, TeX, LaTeX with latexmk, BibTeX,
+# the index command and the MetaPost command.
 TABLE = {
-    1: (100, 'pdflatex ' + PDF, 'pdftex ' + PDF, 'latexmk -pdf -e "$pdflatex=q/pdflatex -synctex=1 -file-line-error/" -norc', 'bibtex'),
-    2: (100, 'xelatex ' + PDF, 'xetex ' + PDF, 'latexmk -xelatex -e "$xelatex=q/xelatex -synctex=1 -file-line-error/" -norc', 'bibtex'),
-    3: (100, 'lualatex ' + PDF, 'luatex ' + PDF, 'latexmk -lualatex -e "$lualatex=q/lualatex -synctex=1 -file-line-error/" -norc', 'bibtex'),
+    1: (100, 'pdflatex ' + PDF, 'pdftex ' + PDF, 'latexmk -pdf -e "$pdflatex=q/pdflatex -synctex=1 -file-line-error/" -norc', 'bibtex', 'makeindex', 'mpost'),
+    2: (100, 'xelatex ' + PDF, 'xetex ' + PDF, 'latexmk -xelatex -e "$xelatex=q/xelatex -synctex=1 -file-line-error/" -norc', 'bibtex', 'makeindex', 'mpost'),
+    3: (100, 'lualatex ' + PDF, 'luatex ' + PDF, 'latexmk -lualatex -e "$lualatex=q/lualatex -synctex=1 -file-line-error/" -norc', 'bibtex', 'makeindex', 'mpost'),
     4: (101, 'simpdftex latex --mode dvipdfmx ' + SIMP, 'simpdftex etex --mode dvipdfmx ' + SIMP,
-        'latexmk -pdfdvi -e "$latex=q/latex -synctex=1 -file-line-error/" ' + DVIPDF + ' -norc', 'bibtex'),
+        'latexmk -pdfdvi -e "$latex=q/latex -synctex=1 -file-line-error/" ' + DVIPDF + ' -norc', 'bibtex', 'makeindex', 'mpost'),
     5: (100, 'lualatex ' + PDF, 'luatex ' + PDF,
-        'latexmk -lualatex -e "$lualatex=q/lualatex -synctex=1 -file-line-error/" -e "$bibtex=q/upbibtex/" -e "$makeindex=q/upmendex/" -norc', 'upbibtex'),
+        'latexmk -lualatex -e "$lualatex=q/lualatex -synctex=1 -file-line-error/" -e "$bibtex=q/upbibtex/" -e "$makeindex=q/upmendex/" -norc', 'upbibtex', 'upmendex', 'mpost'),
     6: (101, 'ptex2pdf -l ' + PT, 'ptex2pdf -e ' + PT,
-        'latexmk -pdfdvi -e "$latex=q/platex -synctex=1 -file-line-error/" -e "$bibtex=q/pbibtex/" -e "$makeindex=q/mendex/" ' + DVIPDF + ' -norc', 'pbibtex'),
+        'latexmk -pdfdvi -e "$latex=q/platex -synctex=1 -file-line-error/" -e "$bibtex=q/pbibtex/" -e "$makeindex=q/mendex/" ' + DVIPDF + ' -norc', 'pbibtex', 'mendex', 'pmpost'),
     7: (101, 'ptex2pdf -u -l ' + PT, 'ptex2pdf -e -u ' + PT,
-        'latexmk -pdfdvi -e "$latex=q/uplatex -synctex=1 -file-line-error/" -e "$bibtex=q/upbibtex/" -e "$makeindex=q/mendex/" ' + DVIPDF + ' -norc', 'upbibtex'),
+        'latexmk -pdfdvi -e "$latex=q/uplatex -synctex=1 -file-line-error/" -e "$bibtex=q/upbibtex/" -e "$makeindex=q/upmendex/" ' + DVIPDF + ' -norc', 'upbibtex', 'upmendex', 'upmpost'),
     8: (101, 'simpdftex latex --maxpfb ' + SIMP, 'simpdftex etex --maxpfb ' + SIMP,
-        'latexmk -pdfps -e "$latex=q/latex -synctex=1 -file-line-error/" -norc', 'bibtex'),
+        'latexmk -pdfps -e "$latex=q/latex -synctex=1 -file-line-error/" -norc', 'bibtex', 'makeindex', 'mpost'),
 }
 JAPANESE = {5, 6, 7}
 
 
 def expected(profile, latexmk):
-    place, latex, tex, mk, bib = TABLE[profile]
+    place, latex, tex, mk, bib, index, metapost = TABLE[profile]
     direct = place == 100
     values = {'DefaultScript': place, 'LatexCommand' if direct else 'LatexGSCommand': mk if latexmk else latex,
-              'TexCommand' if direct else 'TexGSCommand': tex, 'BibTeXengine': bib, 'ptexUtfOutput': profile == 6}
+              'TexCommand' if direct else 'TexGSCommand': tex, 'BibTeXengine': bib,
+              'MakeIndexEngine': index, 'MetaPostEngine': metapost, 'ptexUtfOutput': profile == 6}
     if profile in JAPANESE:
         values.update({'Encoding': 'UTF-8 Unicode', 'AutomaticUTF8MACtoUTF8Conversion': True, 'SpellingAutomaticDefault': True, 'SpellingLanguageDefault': ' '})
     return values
@@ -167,6 +169,9 @@ MUTATIONS = {
     'no Japanese companions': ('    if (TSEngineProfileIsJapanese(profile)) {\n        // New documents', '    if (NO) {\n        // New documents'),
     'stored NO differs from @NO': ('        return [value respondsToSelector:@selector(boolValue)] && [value boolValue] == [expected boolValue];', '        return [value isEqual:expected];'),
     'no Japanese encoding': ('        values[EncodingKey] = @"UTF-8 Unicode";\n', ''),
+    'no index command': ('    values[MakeIndexEngineKey] = row[5];\n', ''),
+    'MetaPost command from the index column': ('    values[MetaPostEngineKey] = row[6];', '    values[MetaPostEngineKey] = row[5];'),
+    'upLaTeX latexmk with mendex': ('-e \\"$bibtex=q/upbibtex/\\" -e \\"$makeindex=q/upmendex/\\" %@', '-e \\"$bibtex=q/upbibtex/\\" -e \\"$makeindex=q/mendex/\\" %@'),
     'match ignores BibTeX': ('TexGSCommandKey, BibTeXengineKey]', 'TexGSCommandKey]'),
     'match only one form': ("for (NSNumber *form in @[@NO, @YES])", "for (NSNumber *form in @[@NO])"),
     'no deferral': ('    profileApplicationDepth++;\n', '\n'),

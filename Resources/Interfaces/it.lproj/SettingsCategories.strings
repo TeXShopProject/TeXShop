@@ -236,7 +236,7 @@
 "catalog.preview.5.0.note" = "La pagina che la finestra HTML apre per prima. Inserisci un indirizzo web o il percorso di un file. Predefinito: https://texshop.app";
 "group.typesetting.0.title" = "Motore";
 "catalog.typesetting.0.4.title" = "Profilo del motore";
-"catalog.typesetting.0.4.note" = "Imposta i comandi di composizione, il motore BibTeX e il supporto per il pacchetto otf. I profili giapponesi impostano anche UTF-8 come codifica dei nuovi documenti, il dizionario e la conversione UTF-8-MAC.";
+"catalog.typesetting.0.4.note" = "Imposta i comandi di composizione, il motore BibTeX, il programma per indici, MetaPost e il supporto per il pacchetto otf. I profili giapponesi impostano anche UTF-8 come codifica dei nuovi documenti, il dizionario e la conversione UTF-8-MAC.";
 "catalog.typesetting.0.4.button" = "Applica…";
 "catalog.typesetting.0.0.title" = "Componi i nuovi documenti con";
 "catalog.typesetting.0.0.note" = "Ciò che la barra strumenti sceglie accanto a Compila all’apertura di un documento. Una riga % !TEX TS-program nel documento ha la precedenza.";
@@ -282,11 +282,15 @@
 "group.typesetting.7.title" = "Ghostscript";
 "catalog.typesetting.7.1.title" = "-dALLOWPSTRANSPARENCY";
 "catalog.typesetting.7.1.note" = "Aggiunge questa opzione quando Ghostscript converte PostScript in PDF, per mantenere la trasparenza, ad esempio quella di PSTricks. Richiede Ghostscript 9.51 o successivo.";
-"group.typesetting.8.title" = "Comandi di ricerca e BibTeX";
+"group.typesetting.8.title" = "Strumenti correlati";
 "catalog.typesetting.8.0.title" = "kpsewhich";
 "catalog.typesetting.8.0.note" = "Il comando con cui «Apri file di stile» nel menu Archivio cerca il file. Predefinito: kpsewhich -progname=latex -format=tex";
 "catalog.typesetting.8.1.title" = "Motore BibTeX";
 "catalog.typesetting.8.1.note" = "Predefinito: bibtex";
+"catalog.typesetting.8.2.title" = "Programma per indici";
+"catalog.typesetting.8.2.note" = "Predefinito: makeindex";
+"catalog.typesetting.8.3.title" = "MetaPost";
+"catalog.typesetting.8.3.note" = "Predefinito: mpost";
 "group.typesetting.9.title" = "Supporto pTeX (solo giapponese)";
 "catalog.typesetting.9.0.title" = "Supporto per il pacchetto otf";
 "group.console.0.title" = "Font";

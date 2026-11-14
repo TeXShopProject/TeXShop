@@ -178,6 +178,10 @@
 	<string>YES</string>
 	<key>MakeEmptyDocument</key>
 	<string>YES</string>
+	<key>MakeIndexEngine</key>
+	<string>makeindex</string>
+	<key>MetaPostEngine</key>
+	<string>mpost</string>
 	<key>markerblue</key>
 	<string> 0.13 </string>
 	<key>markergreen</key>

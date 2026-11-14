@@ -83,7 +83,7 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     IMP originalAlert = method_setImplementation(alertMethod, (IMP)CaptureOwnerAlert);
     NSArray *contract=[NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfURL:[fixture URLForResource:@"SettingsInputRules" withExtension:@"json"]] options:0 error:NULL];
     NSMapTable *rules=[owner valueForKey:@"inputRules"];
-    Check(contract.count==18 && rules.count==contract.count,@"All eighteen independent input rules are installed");
+    Check(contract.count==20 && rules.count==contract.count,@"All twenty independent input rules are installed");
     for(NSDictionary *entry in contract){
         NSTextField *field=[owner valueForKey:entry[@"outlet"]];TSPreferenceInput *rule=[rules objectForKey:field];
         Check(rule && [rule.key isEqual:entry[@"key"]] && rule.kind==[entry[@"kind"]integerValue] && rule.minimum==[entry[@"minimum"]doubleValue] && rule.maximum==[entry[@"maximum"]doubleValue] && rule.allowsEmpty==[entry[@"allowsEmpty"]boolValue],[NSString stringWithFormat:@"Independent rule contract for %@",entry[@"outlet"]]);

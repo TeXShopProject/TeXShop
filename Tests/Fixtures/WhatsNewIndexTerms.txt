@@ -1080,6 +1080,7 @@ maintained
 maintainer
 major
 make
+makeindex
 makes
 making
 malumbres
@@ -1123,6 +1124,7 @@ message
 messages
 met
 metal
+metapost
 method
 microtype
 middle
@@ -1758,7 +1760,6 @@ targets
 tcsh
 teaching
 tell
-telling
 tells
 template
 templates
@@ -1797,7 +1798,6 @@ these
 they
 thickness
 thin
-think
 third
 this
 thomas

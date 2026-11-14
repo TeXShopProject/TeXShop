@@ -76,7 +76,7 @@ for language in LANGUAGES:
         pages[path.stem] = text
         page_count += 1
     if language in ('en', 'ko'):
-        route = 'Settings > Typesetting > Lookup Commands and BibTeX > BibTeX Engine' if language == 'en' else 'Settings > 조판 > 검색 명령과 BibTeX > BibTeX 엔진'
+        route = 'Settings > Typesetting > Related Tools > BibTeX Engine' if language == 'en' else 'Settings > 조판 > 관련 도구 > BibTeX 엔진'
         assert route in pages['advanced_bibtex'], (language, 'BibTeX Engine route')
     overview=pages['basic_preferences']
     assert 'id="settings-search"' in overview,(language,'central search instructions')

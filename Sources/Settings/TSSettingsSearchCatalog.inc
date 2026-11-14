@@ -267,6 +267,10 @@ add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.8.0", @"SettingsCat
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.8.0", @"SettingsCategories", @"catalog.typesetting.8.0.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.8.1", @"SettingsCategories", @"catalog.typesetting.8.1.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.8.1", @"SettingsCategories", @"catalog.typesetting.8.1.note", TSSettingsSearchWeightDescription);
+add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.8.2", @"SettingsCategories", @"catalog.typesetting.8.2.title", TSSettingsSearchWeightLabel);
+add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.8.2", @"SettingsCategories", @"catalog.typesetting.8.2.note", TSSettingsSearchWeightDescription);
+add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.8.3", @"SettingsCategories", @"catalog.typesetting.8.3.title", TSSettingsSearchWeightLabel);
+add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.8.3", @"SettingsCategories", @"catalog.typesetting.8.3.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryTypesetting, @"heading.group.typesetting.9", @"SettingsCategories", @"group.typesetting.9.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.9.0", @"SettingsCategories", @"catalog.typesetting.9.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryConsole, @"heading.group.console.0", @"SettingsCategories", @"group.console.0.title", TSSettingsSearchWeightHeading);

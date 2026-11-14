@@ -213,6 +213,15 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
     NSPopUpButton *engineProfile=[[NSPopUpButton alloc]initWithFrame:NSZeroRect pullsDown:NO];engineProfile.identifier=@"settings.engine-profile";preferences.engineProfilePopup=engineProfile;views[@"settings.engine-profile"]=engineProfile;
     NSButton *engineProfileApply=[NSButton buttonWithTitle:@"" target:preferences action:@selector(applyEngineProfile:)];engineProfileApply.identifier=@"settings.engine-profile-apply";preferences.engineProfileApplyButton=engineProfileApply;views[@"settings.engine-profile-apply"]=engineProfileApply;
     NSPopUpButton *defaultEngine=[[NSPopUpButton alloc]initWithFrame:NSZeroRect pullsDown:NO];defaultEngine.identifier=@"settings.default-engine";defaultEngine.target=preferences;defaultEngine.action=@selector(defaultEngineChosen:);defaultEngine.menu.delegate=(id<NSMenuDelegate>)preferences;preferences.defaultEnginePopup=defaultEngine;views[@"settings.default-engine"]=defaultEngine;
+    // The index and MetaPost commands of the Related Tools group.
+    NSArray *commandIDs=@[@"settings.makeindex-command",@"settings.metapost-command"];
+    SEL commandActions[]={@selector(makeIndexEngineChanged:),@selector(metaPostEngineChanged:)};
+    for(NSUInteger i=0;i<commandIDs.count;i++){
+        NSTextField *field=[NSTextField textFieldWithString:@""];field.identifier=commandIDs[i];field.target=preferences;field.action=commandActions[i];
+        field.cell.scrollable=YES;field.cell.sendsActionOnEndEditing=YES;
+        if(i==0)preferences.makeIndexEngineField=field;else preferences.metaPostEngineField=field;
+        views[commandIDs[i]]=field;
+    }
     NSButton *editEngines=[NSButton buttonWithTitle:@"" target:preferences action:@selector(openEnginesFolder:)];editEngines.identifier=@"settings.default-engine-edit";preferences.editEnginesButton=editEngines;views[@"settings.default-engine-edit"]=editEngines;
     NSButton *prerelease=[NSButton checkboxWithTitle:@"" target:preferences action:@selector(sparklePrereleaseUpdates:)];prerelease.identifier=@"settings.sparkle-prerelease";preferences.sparklePrereleaseButton=prerelease;views[@"settings.sparkle-prerelease"]=prerelease;
     NSTextField *lastCheck=[NSTextField labelWithString:@""];lastCheck.identifier=@"settings.sparkle-last-check";preferences.sparkleLastCheckField=lastCheck;views[@"settings.sparkle-last-check"]=lastCheck;

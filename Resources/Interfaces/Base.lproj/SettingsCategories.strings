@@ -236,7 +236,7 @@
 "catalog.preview.5.0.note" = "The page that the HTML window opens first. Enter a web address or the path of a file. Default: https://texshop.app";
 "group.typesetting.0.title" = "Engine";
 "catalog.typesetting.0.4.title" = "Engine Profile";
-"catalog.typesetting.0.4.note" = "Sets the typesetting commands, the BibTeX engine, and otf package support. The Japanese profiles also set UTF-8 as the encoding for new documents, the dictionary, and UTF-8-MAC conversion.";
+"catalog.typesetting.0.4.note" = "Sets the typesetting commands, the BibTeX engine, the index program, MetaPost, and otf package support. The Japanese profiles also set UTF-8 as the encoding for new documents, the dictionary, and UTF-8-MAC conversion.";
 "catalog.typesetting.0.4.button" = "Apply…";
 "catalog.typesetting.0.0.title" = "Typeset New Documents With";
 "catalog.typesetting.0.0.note" = "What the toolbar selects beside Typeset when a document opens. A % !TEX TS-program line in the document takes precedence.";
@@ -282,11 +282,15 @@
 "group.typesetting.7.title" = "Ghostscript";
 "catalog.typesetting.7.1.title" = "-dALLOWPSTRANSPARENCY";
 "catalog.typesetting.7.1.note" = "Adds this option when Ghostscript converts PostScript to PDF, so that transparency, such as in PSTricks, is kept. Needs Ghostscript 9.51 or later.";
-"group.typesetting.8.title" = "Lookup Commands and BibTeX";
+"group.typesetting.8.title" = "Related Tools";
 "catalog.typesetting.8.0.title" = "kpsewhich";
 "catalog.typesetting.8.0.note" = "The command that Open Style File in the File menu uses to find the file. Default: kpsewhich -progname=latex -format=tex";
 "catalog.typesetting.8.1.title" = "BibTeX Engine";
 "catalog.typesetting.8.1.note" = "Default: bibtex";
+"catalog.typesetting.8.2.title" = "Index Program";
+"catalog.typesetting.8.2.note" = "Default: makeindex";
+"catalog.typesetting.8.3.title" = "MetaPost";
+"catalog.typesetting.8.3.note" = "Default: mpost";
 "group.typesetting.9.title" = "pTeX support (for Japan)";
 "catalog.typesetting.9.0.title" = "otf Package Support";
 "group.console.0.title" = "Font";

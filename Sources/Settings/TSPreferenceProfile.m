@@ -40,7 +40,7 @@ BOOL TSEngineProfileIsJapanese(TSEngineProfile profile)
 }
 
 // One row of the table: the place, the LaTeX and TeX commands without latexmk, the LaTeX
-// command with latexmk, and the BibTeX engine.
+// command with latexmk, the BibTeX engine, the index command and the MetaPost command.
 static NSArray *TSEngineProfileRow(TSEngineProfile profile)
 {
     NSString *const pdfOptions = @"--file-line-error --synctex=1";
@@ -50,30 +50,30 @@ static NSArray *TSEngineProfileRow(TSEngineProfile profile)
     switch (profile) {
         case TSEngineProfilePdfLaTeX:
             return @[@(TSEngineProfileDirectPDF), [@"pdflatex " stringByAppendingString:pdfOptions], [@"pdftex " stringByAppendingString:pdfOptions],
-                     @"latexmk -pdf -e \"$pdflatex=q/pdflatex -synctex=1 -file-line-error/\" -norc", @"bibtex"];
+                     @"latexmk -pdf -e \"$pdflatex=q/pdflatex -synctex=1 -file-line-error/\" -norc", @"bibtex", @"makeindex", @"mpost"];
         case TSEngineProfileXeLaTeX:
             return @[@(TSEngineProfileDirectPDF), [@"xelatex " stringByAppendingString:pdfOptions], [@"xetex " stringByAppendingString:pdfOptions],
-                     @"latexmk -xelatex -e \"$xelatex=q/xelatex -synctex=1 -file-line-error/\" -norc", @"bibtex"];
+                     @"latexmk -xelatex -e \"$xelatex=q/xelatex -synctex=1 -file-line-error/\" -norc", @"bibtex", @"makeindex", @"mpost"];
         case TSEngineProfileLuaLaTeX:
             return @[@(TSEngineProfileDirectPDF), [@"lualatex " stringByAppendingString:pdfOptions], [@"luatex " stringByAppendingString:pdfOptions],
-                     @"latexmk -lualatex -e \"$lualatex=q/lualatex -synctex=1 -file-line-error/\" -norc", @"bibtex"];
+                     @"latexmk -lualatex -e \"$lualatex=q/lualatex -synctex=1 -file-line-error/\" -norc", @"bibtex", @"makeindex", @"mpost"];
         case TSEngineProfileLaTeXDvipdfmx:
             return @[@(TSEngineProfileViaDVI), [@"simpdftex latex --mode dvipdfmx " stringByAppendingString:simpdfOptions],
                      [@"simpdftex etex --mode dvipdfmx " stringByAppendingString:simpdfOptions],
-                     [NSString stringWithFormat:@"latexmk -pdfdvi -e \"$latex=q/latex -synctex=1 -file-line-error/\" %@ -norc", dvipdfmx], @"bibtex"];
+                     [NSString stringWithFormat:@"latexmk -pdfdvi -e \"$latex=q/latex -synctex=1 -file-line-error/\" %@ -norc", dvipdfmx], @"bibtex", @"makeindex", @"mpost"];
         case TSEngineProfileLuaLaTeXJapanese:
             return @[@(TSEngineProfileDirectPDF), [@"lualatex " stringByAppendingString:pdfOptions], [@"luatex " stringByAppendingString:pdfOptions],
-                     @"latexmk -lualatex -e \"$lualatex=q/lualatex -synctex=1 -file-line-error/\" -e \"$bibtex=q/upbibtex/\" -e \"$makeindex=q/upmendex/\" -norc", @"upbibtex"];
+                     @"latexmk -lualatex -e \"$lualatex=q/lualatex -synctex=1 -file-line-error/\" -e \"$bibtex=q/upbibtex/\" -e \"$makeindex=q/upmendex/\" -norc", @"upbibtex", @"upmendex", @"mpost"];
         case TSEngineProfilePLaTeXDvipdfmx:
             return @[@(TSEngineProfileViaDVI), [@"ptex2pdf -l " stringByAppendingString:ptexOptions], [@"ptex2pdf -e " stringByAppendingString:ptexOptions],
-                     [NSString stringWithFormat:@"latexmk -pdfdvi -e \"$latex=q/platex -synctex=1 -file-line-error/\" -e \"$bibtex=q/pbibtex/\" -e \"$makeindex=q/mendex/\" %@ -norc", dvipdfmx], @"pbibtex"];
+                     [NSString stringWithFormat:@"latexmk -pdfdvi -e \"$latex=q/platex -synctex=1 -file-line-error/\" -e \"$bibtex=q/pbibtex/\" -e \"$makeindex=q/mendex/\" %@ -norc", dvipdfmx], @"pbibtex", @"mendex", @"pmpost"];
         case TSEngineProfileUpLaTeXDvipdfmx:
             return @[@(TSEngineProfileViaDVI), [@"ptex2pdf -u -l " stringByAppendingString:ptexOptions], [@"ptex2pdf -e -u " stringByAppendingString:ptexOptions],
-                     [NSString stringWithFormat:@"latexmk -pdfdvi -e \"$latex=q/uplatex -synctex=1 -file-line-error/\" -e \"$bibtex=q/upbibtex/\" -e \"$makeindex=q/mendex/\" %@ -norc", dvipdfmx], @"upbibtex"];
+                     [NSString stringWithFormat:@"latexmk -pdfdvi -e \"$latex=q/uplatex -synctex=1 -file-line-error/\" -e \"$bibtex=q/upbibtex/\" -e \"$makeindex=q/upmendex/\" %@ -norc", dvipdfmx], @"upbibtex", @"upmendex", @"upmpost"];
         case TSEngineProfileLaTeXDvipsGhostscript:
             return @[@(TSEngineProfileViaDVI), [@"simpdftex latex --maxpfb " stringByAppendingString:simpdfOptions],
                      [@"simpdftex etex --maxpfb " stringByAppendingString:simpdfOptions],
-                     @"latexmk -pdfps -e \"$latex=q/latex -synctex=1 -file-line-error/\" -norc", @"bibtex"];
+                     @"latexmk -pdfps -e \"$latex=q/latex -synctex=1 -file-line-error/\" -norc", @"bibtex", @"makeindex", @"mpost"];
         default: return nil;
     }
 }
@@ -89,6 +89,8 @@ NSDictionary<TSPreferenceKey, id> *TSEngineProfileValues(TSEngineProfile profile
     values[direct ? LatexCommandKey : LatexGSCommandKey] = latexmk ? row[3] : row[1];
     values[direct ? TexCommandKey : TexGSCommandKey] = row[2];
     values[BibTeXengineKey] = row[4];
+    values[MakeIndexEngineKey] = row[5];
+    values[MetaPostEngineKey] = row[6];
     // otf package support is a pTeX feature: every other engine turns it off.
     values[ptexUtfOutputEnabledKey] = profile == TSEngineProfilePLaTeXDvipdfmx ? @YES : @NO;
     if (TSEngineProfileIsJapanese(profile)) {
