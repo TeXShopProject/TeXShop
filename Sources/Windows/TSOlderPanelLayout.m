@@ -159,8 +159,9 @@ void TSFitLabelsBeforePopUps(NSView *view)
     }
 }
 
-void TSRemoveVerticalGridLines(NSView *root)
+void TSRemoveVerticalGridLines(NSView * _Nullable root)
 {
+    if (root == nil) return;
     if ([root isKindOfClass:NSTableView.class]) {
         NSTableView *table = (NSTableView *)root;
         table.gridStyleMask &= ~NSTableViewSolidVerticalGridLineMask;

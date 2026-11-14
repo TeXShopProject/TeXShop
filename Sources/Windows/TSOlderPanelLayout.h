@@ -14,5 +14,5 @@ FOUNDATION_EXPORT NSAlert *TSAlertForNoticePanel(NSWindow *panel);
 FOUNDATION_EXPORT void TSFitLabelsBeforePopUps(NSView *view);
 // Tables drawn without the vertical lines between their columns, as lists in
 // current macOS; the column headers still separate the columns.
-FOUNDATION_EXPORT void TSRemoveVerticalGridLines(NSView *root);
+FOUNDATION_EXPORT void TSRemoveVerticalGridLines(NSView * _Nullable root);
 NS_ASSUME_NONNULL_END

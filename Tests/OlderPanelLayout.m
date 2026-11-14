@@ -79,6 +79,42 @@ int main(int argc, char **argv) { @autoreleasepool {
         if (![[[NSNib alloc] initWithNibData:[NSData dataWithContentsOfFile:parts[1]] bundle:nil] instantiateWithOwner:owner topLevelObjects:&objects]) { printf("ERROR %s cannot load\n", label.UTF8String); return 2; }
         NSApp.mainMenu = nil;
         ApplyProductionLayout(name, owner, objects);
+        if ([name isEqual:@"CustomModalWindowController.nib"]) {
+            // The sheet that changes the encoding of a file: its strings table names the label by its object ID.
+            NSDictionary *table = [[NSString stringWithContentsOfFile:parts[3] encoding:NSUTF8StringEncoding error:nil] propertyListFromStringsFileFormat];
+            for (id o in objects) if ([o isKindOfClass:NSWindow.class]) {
+                NSWindow *w = o; NSTextField *field = nil; NSPopUpButton *popUp = nil;
+                for (NSView *v in w.contentView.subviews) {
+                    if ([v isKindOfClass:NSPopUpButton.class]) popUp = (NSPopUpButton *)v;
+                    else if ([v isKindOfClass:NSTextField.class] && [((NSTextField *)v).stringValue isEqual:@"Encoding: "]) field = (NSTextField *)v;
+                }
+                if (!field || !popUp || !table[@"gGW-lx-NCF.title"]) { Fail(label, @"the encoding label, its pop-up or its translation is not found"); continue; }
+                field.stringValue = table[@"gGW-lx-NCF.title"];
+                [popUp addItemWithTitle:@"Japanese (Shift JIS X0213) with a long name"];
+                [w.contentView layoutSubtreeIfNeeded];
+                if (OneLine(field) > NSWidth(field.frame) + 0.5) Fail(label, [NSString stringWithFormat:@"%@ is cut", field.stringValue]);
+                // The gap Auto Layout keeps is between alignment rectangles, which leave out a pop-up's shadow and a label's padding.
+                NSRect fieldAlign = [field alignmentRectForFrame:field.frame], popUpAlign = [popUp alignmentRectForFrame:popUp.frame];
+                if (NSMinX(popUpAlign) - NSMaxX(fieldAlign) < 8 - 0.5) Fail(label, @"the encoding pop-up is closer than 8 points to its label");
+                if (NSMaxX(popUp.frame) > NSWidth(w.contentView.bounds) - TSDialogMargin + 0.5) Fail(label, @"the encoding pop-up reaches the window's edge");
+                if (fabs(NSMidY(popUp.frame) - NSMidY(field.frame)) > 3) Fail(label, @"the encoding pop-up is not beside its label");
+                // The explanation above, in its language, ends before the label's row; the buttons stay below the pop-up.
+                for (NSView *v in w.contentView.subviews)
+                    if ([v isKindOfClass:NSTextField.class] && v != field && NSMinY(v.frame) > NSMaxY(field.frame) - 2) {
+                        NSTextField *text = (NSTextField *)v;
+                        text.stringValue = table[@"Prr-63-EQ4.title"] ?: text.stringValue;
+                        [w.contentView layoutSubtreeIfNeeded];
+                        CGFloat needed = [text.cell cellSizeForBounds:NSMakeRect(0, 0, NSWidth(text.frame), 10000)].height;
+                        if (needed > NSHeight(text.frame) + 0.5) Fail(label, @"the explanation is cut");
+                        if (NSMinY(text.frame) - NSMaxY([popUp alignmentRectForFrame:popUp.frame]) < 8 && NSMinY(text.frame) - NSMaxY(field.frame) < 8) Fail(label, @"the explanation runs into the encoding row");
+                    }
+                for (NSView *v in w.contentView.subviews)
+                    if ([v isKindOfClass:NSButton.class] && ![v isKindOfClass:NSPopUpButton.class] && NSMaxY([v alignmentRectForFrame:v.frame]) > NSMinY([popUp alignmentRectForFrame:popUp.frame]) - 12)
+                        Fail(label, @"a button runs into the encoding row");
+                checked++;
+            }
+            continue;
+        }
         if ([name isEqual:@"TSDocument.nib"]) {
             CheckLogWindow([label stringByAppendingString:@" Log File"], owner.logWindow);
             CheckNotice([label stringByAppendingString:@" printRequestPanel"], owner->printRequestPanel);

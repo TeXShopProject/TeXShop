@@ -10,7 +10,9 @@ after loading them (ProductionLayout.inc):
     become alerts with the panel's text on one line and its OK button;
   * Select Source draws no vertical grid lines, and Encoding: in the open panel's
     accessory and Image Type: in the Save Selection panel's accessory have the size
-    of their pop-ups and are centered on them.
+    of their pop-ups and are centered on them;
+  * the sheet that changes the encoding of a file shows its whole label, in the
+    language of each strings table, 8 points from its pop-up.
 
 Static part:
   * the application calls these functions where it loads the nibs;
@@ -128,6 +130,13 @@ def run_runtime(base, tmp):
             strings = interfaces / 'en.lproj/Localizable.strings'
         for nib in ('TSDocument.nib', 'MainMenu.nib'):
             entries.append(f'{language}.lproj/{nib}|{compiled(interfaces / language / nib) if False else compiled(interfaces / f"{language}.lproj" / nib)}|{strings}')
+    # The encoding sheet: one Base interface, a strings table per language.
+    sheet = tmp / 'CustomModalWindowController.nib'
+    subprocess.run(['xcrun', 'ibtool', '--compile', str(sheet), str(interfaces / 'Base.lproj/CustomModalWindowController.xib')], check=True, capture_output=True)
+    sheet = compiled(sheet)
+    for language in LANGUAGES:
+        table = interfaces / f'{"en" if language == "Base" else language}.lproj/CustomModalWindowController.strings'
+        entries.append(f'{language}.lproj/CustomModalWindowController.nib|{sheet}|{interfaces / "en.lproj/Localizable.strings"}|{table}')
     binary = tmp / 'OlderPanelLayout'
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-framework', 'AVKit', '-framework', 'Quartz', '-framework', 'Carbon',
                     '-I', str(base / 'Tests'), *include_args(base), str(base / 'Tests/OlderPanelLayout.m'),
@@ -161,6 +170,8 @@ MUTATIONS = {
     'not destructive': ('Sources/Settings/TSPreferences-Color.m', '.hasDestructiveAction = YES;', ';'),
     'new square bezel': ('Sources/Find/TSAdvancedFindProgressSheet.m', '_cancelButton.bordered = NO;', '_cancelButton.bordered = NO; _cancelButton.bezelStyle = NSBezelStyleShadowlessSquare;'),
     'square link popup': ('Sources/Preview/TSLinkPreviewView.m', '[edge stroke];', '[edge stroke]; NSFrameRect(bounds);'),
+    'encoding label fixed width': ('Resources/Interfaces/Base.lproj/CustomModalWindowController.xib', '<constraint firstItem="jo5-hk-3mm" firstAttribute="leading" secondItem="BEr-Px-Bqw" secondAttribute="trailing" constant="8" id="Enc-pu-Gap"/>',
+                                   '<constraint firstItem="BEr-Px-Bqw" firstAttribute="width" constant="81" id="Enc-lb-Wid"/><constraint firstItem="jo5-hk-3mm" firstAttribute="leading" secondItem="BEr-Px-Bqw" secondAttribute="trailing" constant="8" id="Enc-pu-Gap"/>'),
     'call removed': ('Sources/Document/TSDocument.m', 'if (self.logWindow) TSLayoutLogWindow(self.logWindow);', ''),
 }
 
