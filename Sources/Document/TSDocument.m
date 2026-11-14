@@ -5038,9 +5038,36 @@ if ( ! skipTextWindow) {
     return NO;
 }
 
+// Whether the window is one of this document's own windows: the source, preview and
+// single windows, the console, the log, the HTML and full screen windows, and the
+// Experiment windows.
+- (BOOL)ownsWindow:(NSWindow *)window
+{
+    if (window == nil)
+        return NO;
+    return ((window == textWindow) || (window == pdfWindow) || (window == self.pdfKitWindow) ||
+            (window == fullSplitWindow) || (window == outputWindow) || (window == self.logWindow) ||
+            (window == self.htmlWindow) || (window == self.fullscreenWindow) ||
+            (window == scrapWindow) || (window == scrapPDFWindow) ||
+            (self.experimentConsole.isWindowLoaded && (window == self.experimentConsole.window)));
+}
+
+// The document a window belongs to, also for a sheet on one of its windows.
++ (TSDocument *)documentOwningWindow:(NSWindow *)window
+{
+    while ([window sheetParent] != nil)
+        window = [window sheetParent];
+    for (NSDocument *document in [[NSDocumentController sharedDocumentController] documents])
+        if ([document isKindOfClass:[TSDocument class]] && [(TSDocument *)document ownsWindow: window])
+            return (TSDocument *)document;
+    return nil;
+}
+
 // The Tags menu in the menu bar is filled each time it opens, with the tags of the
-// frontmost document. It is empty when that document is not a TeX source edited in
-// TeXShop, and when there is no document.
+// frontmost document: the document of the key window, else of the main window, else of
+// the frontmost visible window that belongs to a document. Windows of no document, such
+// as Settings and the panels, are passed over. The menu is empty when that document is
+// not a TeX source edited in TeXShop, and when there is no document.
 + (void)updateTagsMenuInMenuBar:(NSMenu *)menu
 {
     TSDocument  *document = nil;
@@ -5048,18 +5075,18 @@ if ( ! skipTextWindow) {
     if ( ! [SUD boolForKey:UseNewTagsAndLabelsKey])
         return;
     
-    for (NSWindow *window in [NSApp orderedWindows]) {
+    NSMutableArray *windows = [NSMutableArray array];
+    if ([NSApp keyWindow] != nil)
+        [windows addObject: [NSApp keyWindow]];
+    if ([NSApp mainWindow] != nil)
+        [windows addObject: [NSApp mainWindow]];
+    [windows addObjectsFromArray: [NSApp orderedWindows]];
+    for (NSWindow *window in windows) {
         if (! [window isVisible])
             continue;
-        id owner = [[window windowController] document];
-        if ((! [owner isKindOfClass:[TSDocument class]]) && [window respondsToSelector:@selector(document)])
-            owner = [(id)window document];
-        if (! [owner isKindOfClass:[TSDocument class]])
-            owner = [window delegate];
-        if ([owner isKindOfClass:[TSDocument class]]) {
-            document = owner;
+        document = [self documentOwningWindow: window];
+        if (document != nil)
             break;
-        }
     }
     
     if ((document != nil) && (! [document externalEditor]) && (! [document skipTextWindow]))

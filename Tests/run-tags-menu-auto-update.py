@@ -2,7 +2,11 @@
 """Check that the Tags and Labels menus are filled each time they open, without an Update button.
 
 The Tags menu in the menu bar (Settings → Editor → Tags Menu in Menubar) is filled with
-the tags of the frontmost document each time it opens. It is emptied when the frontmost
+the tags of the frontmost document each time it opens: the document of the key window,
+else of the main window, else of the frontmost visible window of a document. Every window
+of a document counts (source, preview, single window, console, log, HTML, full screen,
+the Experiment windows, and sheets on them), as the real compiled TSDocument.nib of each
+language gives them to the document; windows of no document are passed over. It is emptied when the frontmost
 document is configured for an external editor or shows no source, and when there is no
 document. The menus of the Tags and Labels toolbar items, in the source window and in the
 single window, are filled each time they open, also from the item's label when the toolbar
@@ -29,7 +33,9 @@ MUTATIONS = {
     'no-menu-bar-delegate': 'the Tags menu in the menu bar gets no delegate',
     'menu-bar-only-when-shown': 'the delegate is set only when Tags Menu in Menubar is on at launch',
     'ignore-external-editor': 'a document for an external editor fills the menu bar Tags menu',
-    'main-window-only': 'only a window controller finds the document of a window',
+    'no-log-window': 'the log window is not counted as a window of its document',
+    'ordered-windows-only': 'the key and main windows are not asked first',
+    'no-sheet-parent': 'a sheet is not followed to the window it is on',
     'old-method-fills': 'with UseNewTagsAndLabels NO the menu bar Tags menu is filled on opening',
     'no-key-equivalent-answer': 'the delegates do not answer menuHasKeyEquivalent:',
     'update-strings': 'English ToolbarItems.strings keeps tiLabelUpdate',
@@ -108,9 +114,16 @@ make = '\n'.join(method(toolbar, s) for s in [
 registration = span(document, '    // The Tags and Labels menus of the toolbars are filled each time they open:', '    [[slabels menu] setDelegate: self];')
 menus = '\n'.join(method(document, s) for s in [
     '- (void)menuNeedsUpdate:(NSMenu *)menu', '- (BOOL)menuHasKeyEquivalent:(NSMenu *)menu forEvent:',
+    '- (BOOL)ownsWindow:(NSWindow *)window', '+ (TSDocument *)documentOwningWindow:(NSWindow *)window',
     '+ (void)updateTagsMenuInMenuBar:(NSMenu *)menu', '- (void)setupTagsAndLabelsAfterLoading'])
 install = span(delegate, '    if ( ![[NSUserDefaults standardUserDefaults] boolForKey:TagMenuInMenuBarKey])',
                '    [[[[NSApp mainMenu] itemWithTitle:NSLocalizedString(@"Tags", @"Tags")] submenu] setDelegate: self];')
+log_header = source_file(root, 'TSLogWindow.h').read_text()
+log_source = source_file(root, 'TSLogWindow.m').read_text()
+log_impl = log_source[log_source.index('@implementation TSLogWindow'):]
+fragments.append(('statements:@implementation TSLogWindow', log_source, log_impl))
+fragments.append(('statements:TSLogWindow.h', log_header, log_header))
+log_window = log_header + '\n' + log_impl
 app_menus = '\n'.join(method(delegate, s) for s in [
     '- (void)menuNeedsUpdate:(NSMenu *)menu', '- (BOOL)menuHasKeyEquivalent:(NSMenu *)menu forEvent:'])
 # The registration is part of registerForNotifications, for documents that show a source.
@@ -119,7 +132,9 @@ check(registration in register[register.index('if ( ! skipTextWindow) {'):], 'Re
 check('NSMenuDidBeginTrackingNotification' not in document, 'No menu tracking notification is observed')
 
 program = r'''
+#import "TestAppKitIsolation.h"
 #import <Cocoa/Cocoa.h>
+#import <PDFKit/PDFKit.h>
 #import <objc/runtime.h>
 #import <objc/message.h>
 #define SUD [NSUserDefaults standardUserDefaults]
@@ -135,22 +150,34 @@ static void Check(BOOL ok, NSString *what) {
 
 @class TSDocument;
 static NSArray *orderedWindows;
+static NSWindow *harnessKey, *harnessMain;
 static NSArray *HarnessOrderedWindows(id self, SEL _cmd) { return orderedWindows; }
+static NSWindow *HarnessKeyWindow(id self, SEL _cmd) { return harnessKey; }
+static NSWindow *HarnessMainWindow(id self, SEL _cmd) { return harnessMain; }
 
+// Windows are never ordered in; a test says which are visible, and which window a sheet is on.
+static NSHashTable *shownWindows;
+static BOOL HarnessIsVisible(NSWindow *self, SEL _cmd) { return [shownWindows containsObject:self]; }
+static void SetShown(NSWindow *w, BOOL shown) { if (shown) [shownWindows addObject:w]; else [shownWindows removeObject:w]; }
 @interface HarnessWindow : NSWindow
-@property BOOL shown;
+@property (weak) NSWindow *harnessSheetParent;
 @end
 @implementation HarnessWindow
-- (BOOL)isVisible { return self.shown; }
+- (NSWindow *)sheetParent { return self.harnessSheetParent; }
 @end
-// Like TSPreviewWindow, TSConsoleWindow and TSHTMLWindow: no window controller, but -document.
-@interface HarnessPreviewWindow : HarnessWindow
-@property (weak) TSDocument *owner;
-- (TSDocument *)document;
-@end
-@implementation HarnessPreviewWindow
-- (TSDocument *)document { return self.owner; }
-@end
+static HarnessWindow *NewWindow(BOOL shown)
+{
+    HarnessWindow *w = [[HarnessWindow alloc] initWithContentRect:NSMakeRect(0, 0, 400, 300) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
+    w.releasedWhenClosed = NO; SetShown(w, shown);
+    return w;
+}
+// The window classes of TSDocument.nib, to load the compiled nibs without TeXShop.
+static void RegisterNibClass(NSString *name, Class base)
+{
+    if (NSClassFromString(name)) return;
+    Class c = objc_allocateClassPair(base, name.UTF8String, 0);
+    objc_registerClassPair(c);
+}
 
 @interface TSDocument : NSDocument <NSMenuDelegate, NSToolbarDelegate>
 {
@@ -158,12 +185,19 @@ static NSArray *HarnessOrderedWindows(id self, SEL _cmd) { return orderedWindows
     NSPopUpButton *tags, *stags, *labels, *slabels;
     BOOL _externalEditor, skipTextWindow, fileIsTex;
     NSToolbarItem *theLabels, *theSLabels;
+    NSWindow *textWindow, *pdfWindow, *fullSplitWindow, *outputWindow;
+    NSPanel *scrapWindow, *scrapPDFWindow;
 }
+@property NSWindow *pdfKitWindow, *logWindow, *htmlWindow, *fullscreenWindow;
+@property NSWindowController *experimentConsole;
 @property NSString *name;
 @property NSInteger tagsFilled, labelsFilled, tags2Filled;
 @end
 @implementation TSDocument
 - (BOOL)externalEditor { return _externalEditor; }
+// Outlets of TSDocument.nib this stand-in does not have.
+- (void)setValue:(id)value forUndefinedKey:(NSString *)key {}
+- (void)doTypeset:(id)sender {} - (void)doAlternateTypeset:(id)sender {} - (void)displayLog:(id)sender {} - (void)displayConsole:(id)sender {}
 - (BOOL)skipTextWindow { return skipTextWindow; }
 // Stand-in for setupTags1: like it, empties the toolbar menus and the menu bar menu, then
 // lists the document's tags (here one tag, named after the document) when it is TeX.
@@ -217,10 +251,12 @@ static NSArray *HarnessOrderedWindows(id self, SEL _cmd) { return orderedWindows
 }
 @@APP_MENUS@@
 @end
+@@LOG_WINDOW@@
 
 static TSDocument *NewDocument(NSString *name)
 {
     TSDocument *d = [[TSDocument alloc] init];
+    [[NSDocumentController sharedDocumentController] addDocument:d];
     d.name = name; d->fileIsTex = YES;
     d->tags = [[NSPopUpButton alloc] initWithFrame:NSMakeRect(0, 0, 80, 24) pullsDown:YES];
     d->stags = [[NSPopUpButton alloc] initWithFrame:NSMakeRect(0, 0, 80, 24) pullsDown:YES];
@@ -230,26 +266,34 @@ static TSDocument *NewDocument(NSString *name)
     [d registerTagsAndLabels];
     return d;
 }
+// The source window, as in TeXShop: an outlet of the document and its window controller's window.
 static HarnessWindow *SourceWindow(TSDocument *d, BOOL shown)
 {
-    HarnessWindow *w = [[HarnessWindow alloc] initWithContentRect:NSMakeRect(0, 0, 400, 300) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
-    w.releasedWhenClosed = NO; w.shown = shown;
+    HarnessWindow *w = NewWindow(shown);
     NSWindowController *wc = [[NSWindowController alloc] initWithWindow:w];
     [d addWindowController:wc];
+    d->textWindow = w;
     return w;
 }
 static NSArray *Titles(NSMenu *m) { return [m.itemArray valueForKey:@"title"]; }
 static NSString *Joined(NSArray *a) { return [NSString stringWithFormat:@"[%@]", [a componentsJoinedByString:@", "]]; }
 static void SetDefaults(BOOL useNew, BOOL menuBar)
 {
-    [SUD removeVolatileDomainForName:NSRegistrationDomain];
-    [SUD setVolatileDomain:@{UseNewTagsAndLabelsKey: @(useNew), TagMenuInMenuBarKey: @(menuBar)} forName:NSRegistrationDomain];
+    [SUD setVolatileDomain:@{UseNewTagsAndLabelsKey: @(useNew), TagMenuInMenuBarKey: @(menuBar)} forName:NSArgumentDomain];
 }
 static void SetUseNew(BOOL on) { SetDefaults(on, YES); }
 
 int main(int argc, char **argv) { @autoreleasepool {
+    TSInstallAppKitIsolation();
     [NSApplication sharedApplication];
     method_setImplementation(class_getInstanceMethod([NSApplication class], @selector(orderedWindows)), (IMP)HarnessOrderedWindows);
+    method_setImplementation(class_getInstanceMethod([NSApplication class], @selector(keyWindow)), (IMP)HarnessKeyWindow);
+    method_setImplementation(class_getInstanceMethod([NSApplication class], @selector(mainWindow)), (IMP)HarnessMainWindow);
+    shownWindows = [NSHashTable weakObjectsHashTable];
+    for (NSString *name in @[@"TSConsoleWindow", @"TSFullSplitWindow", @"TSFullscreenWindow", @"TSHTMLWindow", @"TSPreviewWindow", @"TSTextEditorWindow"]) RegisterNibClass(name, NSWindow.class);
+    RegisterNibClass(@"MyPDFView", NSView.class); RegisterNibClass(@"MyPDFKitView", PDFView.class); RegisterNibClass(@"ScrapPDFKitView", PDFView.class);
+    RegisterNibClass(@"TSTextView", NSTextView.class); RegisterNibClass(@"ScrapTextView", NSTextView.class);
+    method_setImplementation(class_getInstanceMethod([NSWindow class], @selector(isVisible)), (IMP)HarnessIsVisible);
     SetUseNew(YES);
     NSMenu *main = [[NSMenu alloc] initWithTitle:@"Main"];
     NSMenuItem *top = [main addItemWithTitle:@"Tags" action:nil keyEquivalent:@""];
@@ -336,33 +380,80 @@ int main(int argc, char **argv) { @autoreleasepool {
     [a setupTagsAndLabelsAfterLoading];
     Check(a.tags2Filled == t2 + 1 && a.labelsFilled == l + 1, @"After loading, tags and labels are filled");
 
-    // The menu bar Tags menu follows the frontmost document.
+    // The menu bar Tags menu follows the frontmost document: the key window's, else the
+    // main window's, else that of the frontmost visible window of a document.
     void (^open)(void) = ^{ [bar.delegate menuNeedsUpdate:bar]; };
     HarnessWindow *aSource = SourceWindow(a, YES), *bSource = SourceWindow(b, YES);
-    HarnessPreviewWindow *aPreview = [[HarnessPreviewWindow alloc] initWithContentRect:NSMakeRect(0, 0, 400, 300) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
-    aPreview.releasedWhenClosed = NO; aPreview.owner = a; aPreview.shown = YES;
-    HarnessWindow *aDelegateWindow = [[HarnessWindow alloc] initWithContentRect:NSMakeRect(0, 0, 400, 300) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
-    aDelegateWindow.releasedWhenClosed = NO; aDelegateWindow.shown = YES; aDelegateWindow.delegate = (id<NSWindowDelegate>)a;
-    HarnessWindow *settings = [[HarnessWindow alloc] initWithContentRect:NSMakeRect(0, 0, 400, 300) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
-    settings.releasedWhenClosed = NO; settings.shown = YES;
-    HarnessWindow *bHidden = SourceWindow(b, NO);
+    HarnessWindow *aPreview = NewWindow(YES); a.pdfKitWindow = aPreview;
+    HarnessWindow *aLog = NewWindow(YES); a.logWindow = aLog;
+    HarnessWindow *aConsole = NewWindow(YES); a->outputWindow = aConsole;
+    HarnessWindow *aHTML = NewWindow(YES); a.htmlWindow = aHTML;
+    HarnessWindow *aExperiment = NewWindow(YES); a->scrapWindow = (NSPanel *)aExperiment;
+    HarnessWindow *aExperimentPreview = NewWindow(YES); a->scrapPDFWindow = (NSPanel *)aExperimentPreview;
+    a.experimentConsole = [[NSWindowController alloc] initWithWindow:NewWindow(YES)];
+    HarnessWindow *aSheet = NewWindow(YES); aSheet.harnessSheetParent = aSource;
+    HarnessWindow *settings = NewWindow(YES), *panel = NewWindow(YES);
+    HarnessWindow *bHidden = NewWindow(NO); b->fullSplitWindow = bHidden;
     a.name = @"A"; b.name = @"B";
-    struct { const char *what; NSArray *windows; NSArray *expected; } cases[] = {
-        {"source window of A in front of B", @[aSource, bSource], @[@"A"]},
-        {"source window of B in front of A", @[bSource, aSource], @[@"B"]},
-        {"preview window of A in front of B", @[aPreview, bSource], @[@"A"]},
-        {"window whose delegate is A in front of B", @[aDelegateWindow, bSource], @[@"A"]},
-        {"hidden window of B in front of A", @[bHidden, aSource], @[@"A"]},
-        {"window of no document in front of B", @[settings, bSource], @[@"B"]},
-        {"no document", @[settings], @[]},
-        {"no window", @[], @[]},
+    NSNull *none = [NSNull null];
+    struct { const char *what; id key, main; NSArray *windows; NSArray *expected; } cases[] = {
+        {"source window of A in front of B", aSource, aSource, @[aSource, bSource], @[@"A"]},
+        {"source window of B in front of A", bSource, bSource, @[bSource, aSource], @[@"B"]},
+        {"preview window of A in front of B", aPreview, aPreview, @[aPreview, bSource], @[@"A"]},
+        {"log window of A in front of B", aLog, aLog, @[aLog, bSource], @[@"A"]},
+        {"log window of A in front of B, neither key nor main", none, none, @[aLog, bSource], @[@"A"]},
+        {"console of A key, B main", aConsole, bSource, @[aConsole, bSource], @[@"A"]},
+        {"HTML window of A key", aHTML, aHTML, @[aHTML, bSource], @[@"A"]},
+        {"Experiment window of A key, B main", aExperiment, bSource, @[bSource], @[@"A"]},
+        {"Experiment preview of A key, B main", aExperimentPreview, bSource, @[bSource], @[@"A"]},
+        {"Experiment console of A key, B main", a.experimentConsole.window, bSource, @[bSource], @[@"A"]},
+        {"sheet on the source window of A key, B main", aSheet, bSource, @[bSource, aSource], @[@"A"]},
+        {"key B over main A", bSource, aSource, @[bSource, aSource], @[@"B"]},
+        {"panel of no document key, A main, B in front", panel, aPreview, @[bSource, aPreview], @[@"A"]},
+        {"Settings main, B behind it", none, settings, @[settings, bSource], @[@"B"]},
+        {"hidden window of B in front of A", none, none, @[bHidden, aSource], @[@"A"]},
+        {"no document", settings, settings, @[settings], @[]},
+        {"no window", none, none, @[], @[]},
     };
     for (size_t i = 0; i < sizeof cases / sizeof cases[0]; i++) {
         [bar removeAllItems]; [bar addItemWithTitle:@"stale" action:nil keyEquivalent:@""];
+        harnessKey = cases[i].key == none ? nil : cases[i].key; harnessMain = cases[i].main == none ? nil : cases[i].main;
         orderedWindows = cases[i].windows;
         open();
         Check([Titles(bar) isEqual:cases[i].expected], [NSString stringWithFormat:@"Menu bar Tags menu, %s: %@", cases[i].what, Joined(Titles(bar))]);
     }
+    harnessKey = harnessMain = nil;
+
+    // The real compiled TSDocument.nib of each language, with the real TSLogWindow: every
+    // window the nib gives the document belongs to it, and its log window in front makes
+    // the menu show its tags.
+    for (int i = 1; i < argc; i++) {
+        if (![@(argv[i]) hasSuffix:@".nib"]) continue;
+        TSDocument *n = [[TSDocument alloc] init]; n.name = @"N"; n->fileIsTex = YES;
+        NSNib *nib = [[NSNib alloc] initWithNibData:[NSData dataWithContentsOfFile:@(argv[i])] bundle:nil];
+        NSArray *objects = nil;
+        Check([nib instantiateWithOwner:n topLevelObjects:&objects], [NSString stringWithFormat:@"Nib loads: %s", argv[i]]);
+        [[NSDocumentController sharedDocumentController] addDocument:n];
+        NSDictionary *windows = @{@"textWindow": n->textWindow ?: none, @"pdfWindow": n->pdfWindow ?: none, @"fullSplitWindow": n->fullSplitWindow ?: none,
+                                  @"outputWindow": n->outputWindow ?: none, @"scrapWindow": n->scrapWindow ?: none, @"scrapPDFWindow": n->scrapPDFWindow ?: none,
+                                  @"pdfKitWindow": n.pdfKitWindow ?: none, @"logWindow": n.logWindow ?: none, @"htmlWindow": n.htmlWindow ?: none,
+                                  @"fullscreenWindow": n.fullscreenWindow ?: none};
+        for (NSString *key in windows) {
+            id w = windows[key];
+            Check(w != none && [TSDocument documentOwningWindow:w] == n, [NSString stringWithFormat:@"%s: the %@ belongs to its document", argv[i], key]);
+        }
+        Check([n.logWindow isKindOfClass:[TSLogWindow class]] && [(TSLogWindow *)n.logWindow myDocument] == n && n.logWindow.windowController == nil && n.logWindow.delegate == nil,
+              [NSString stringWithFormat:@"%s: the log window is a TSLogWindow that knows its document only as myDocument", argv[i]]);
+        SetShown(n.logWindow, YES);
+        [bar removeAllItems];
+        harnessKey = harnessMain = n.logWindow; orderedWindows = @[n.logWindow, bSource]; open();
+        Check([Titles(bar) isEqual:@[@"N"]], [NSString stringWithFormat:@"%s: log window in front, key and main: %@", argv[i], Joined(Titles(bar))]);
+        harnessKey = harnessMain = nil; open();
+        Check([Titles(bar) isEqual:@[@"N"]], [NSString stringWithFormat:@"%s: log window in front, neither key nor main: %@", argv[i], Joined(Titles(bar))]);
+        SetShown(n.logWindow, NO);
+        [[NSDocumentController sharedDocumentController] removeDocument:n];
+    }
+    harnessKey = harnessMain = nil;
     // A front document that is not TeX, is configured for an external editor, or shows no source.
     struct { const char *what; BOOL tex, external, skip; NSInteger calls; } kinds[] = {
         {"not a TeX file", NO, NO, NO, 1}, {"external editor", YES, YES, NO, 0}, {"no source window", YES, NO, YES, 0}};
@@ -423,11 +514,17 @@ elif args.mutation == 'menu-bar-only-when-shown':
     [[[[NSApp mainMenu] itemWithTitle:NSLocalizedString(@"Tags", @"Tags")] submenu] setDelegate: self];''')
 elif args.mutation == 'ignore-external-editor':
     mutate('(! [document externalEditor]) && ', '')
-elif args.mutation == 'main-window-only':
-    mutate('''        if ((! [owner isKindOfClass:[TSDocument class]]) && [window respondsToSelector:@selector(document)])
-            owner = [(id)window document];
-        if (! [owner isKindOfClass:[TSDocument class]])
-            owner = [window delegate];
+elif args.mutation == 'no-log-window':
+    mutate(' (window == self.logWindow) ||', '')
+elif args.mutation == 'ordered-windows-only':
+    mutate('''    if ([NSApp keyWindow] != nil)
+        [windows addObject: [NSApp keyWindow]];
+    if ([NSApp mainWindow] != nil)
+        [windows addObject: [NSApp mainWindow]];
+''', '')
+elif args.mutation == 'no-sheet-parent':
+    mutate('''    while ([window sheetParent] != nil)
+        window = [window sheetParent];
 ''', '')
 elif args.mutation == 'old-method-fills':
     start = menus.index('+ (void)updateTagsMenuInMenuBar:')
@@ -441,7 +538,7 @@ elif args.mutation == 'no-key-equivalent-answer':
     menus, app_menus = without_answer(menus), without_answer(app_menus)
 
 for token, text in (('CONSTANTS', constants), ('REGISTRATION', registration), ('MENUS', menus), ('MAKE', make),
-                    ('NO_ITEM', no_item), ('ITEMS', items), ('INSTALL', install), ('APP_MENUS', app_menus)):
+                    ('NO_ITEM', no_item), ('ITEMS', items), ('INSTALL', install), ('APP_MENUS', app_menus), ('LOG_WINDOW', log_window)):
     assert program.count('@@%s@@' % token) == 1, token
     program = program.replace('@@%s@@' % token, text)
 if not args.mutation:
@@ -455,10 +552,13 @@ with tempfile.TemporaryDirectory(prefix='TeXShop-tags-menu-') as tmp:
     res = app/'Contents/Resources/en.lproj'; res.mkdir(parents=True)
     shutil.copy(root/'Resources/Interfaces/en.lproj/ToolbarItems.strings', res)
     source = tmp/'Test.m'; source.write_text(program)
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-fmodules', '-w', '-framework', 'Cocoa', str(source), '-o', str(mac/'TagsMenuTest')], check=True)
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-fmodules', '-w', '-I' + str(root/'Tests'), '-framework', 'Cocoa', '-framework', 'PDFKit',
+                    str(source), '-o', str(mac/'TagsMenuTest')], check=True)
+    nibs = sorted((root/'Resources/Interfaces').glob('*.lproj/TSDocument.nib/keyedobjects*.nib'))
+    check(len(nibs) == 12, 'Compiled TSDocument.nib in 12 languages')
     home = tmp/'Home'; (home/'Library/Preferences').mkdir(parents=True)
     try:
-        result = subprocess.run([str(mac/'TagsMenuTest'), '-AppleLanguages', '(en)'], env={**os.environ, 'CFFIXED_USER_HOME': str(home)},
+        result = subprocess.run([str(mac/'TagsMenuTest'), *map(str, nibs), '-AppleLanguages', '(en)'], env={**os.environ, 'CFFIXED_USER_HOME': str(home)},
                                 capture_output=True, text=True, timeout=120)
     finally:
         subprocess.run(['/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister', '-u', str(app)],
