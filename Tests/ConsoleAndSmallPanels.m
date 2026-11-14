@@ -2,10 +2,11 @@
 // without ordering a window and laid out as the application lays them out
 // (ProductionLayout.inc):
 //   * the console's buttons are push buttons in one row along the top: the
-//     first group 20 points from the left edge, the second 20 points from the
+//     first group 20 points from the left edge (measured to what the buttons draw), the second 20 points from the
 //     right edge, 12 points between buttons and at least 24 between the groups,
 //     8 points from the top and above the output, also at the smallest size,
-//     where the output keeps two lines;
+//     where the output keeps two lines; each button stays in its group when
+//     the console is laid out at a narrow saved width and laid out again;
 //   * the left, center and right choices of the Text panel are as wide as their
 //     titles, at least 12 points apart, and at least 12 points from OK at the
 //     panel's usual and smallest widths;
@@ -42,6 +43,9 @@ static NSRect Ink(NSView *view) {
     return NSMakeRect(minX / scale, minY / scale, (maxX - minX + 1) / scale, (maxY - minY + 1) / scale);
 }
 
+// What a button draws (its alignment rectangle), which the margins are measured to.
+static NSRect Drawn(NSView *v) { return [v alignmentRectForFrame:v.frame]; }
+
 static void CheckConsole(NSWindow *console, NSString *lang, NSString *size) {
     NSView *host = console.contentView;
     NSMutableArray<NSButton *> *buttons = [NSMutableArray array];
@@ -52,11 +56,11 @@ static void CheckConsole(NSWindow *console, NSString *lang, NSString *size) {
     }
     NSString *where = [NSString stringWithFormat:@"%@ console (%@)", lang, size];
     Check(buttons.count >= 2 && output, [where stringByAppendingString:@": buttons and output"]);
-    [buttons sortUsingComparator:^NSComparisonResult(NSButton *a, NSButton *b) { return NSMinX(a.frame) < NSMinX(b.frame) ? NSOrderedAscending : NSOrderedDescending; }];
+    [buttons sortUsingComparator:^NSComparisonResult(NSButton *a, NSButton *b) { return NSMinX(Drawn(a)) < NSMinX(Drawn(b)) ? NSOrderedAscending : NSOrderedDescending; }];
     CGFloat width = NSWidth(host.bounds), height = NSHeight(host.bounds);
     NSButton *first = buttons.firstObject, *last = buttons.lastObject;
-    Check(fabs(NSMinX(first.frame) - 20) < 0.5 && fabs(width - NSMaxX(last.frame) - 20) < 0.5,
-          [NSString stringWithFormat:@"%@: 20 points from both sides (%.1f, %.1f)", where, NSMinX(first.frame), width - NSMaxX(last.frame)]);
+    Check(fabs(NSMinX(Drawn(first)) - 20) < 0.5 && fabs(width - NSMaxX(Drawn(last)) - 20) < 0.5,
+          [NSString stringWithFormat:@"%@: 20 points from both sides (%.1f, %.1f)", where, NSMinX(Drawn(first)), width - NSMaxX(Drawn(last))]);
     NSUInteger wideGaps = 0;
     for (NSUInteger i = 0; i < buttons.count; i++) {
         NSButton *b = buttons[i];
@@ -64,10 +68,10 @@ static void CheckConsole(NSWindow *console, NSString *lang, NSString *size) {
               [NSString stringWithFormat:@"%@: \"%@\" is a regular push button", where, b.title]);
         Check(NSWidth(b.frame) >= ceil(b.fittingSize.width) - 0.5 && NSHeight(b.frame) >= b.fittingSize.height - 0.5,
               [NSString stringWithFormat:@"%@: \"%@\" is as large as its title", where, b.title]);
-        Check(fabs(height - NSMaxY(b.frame) - 8) < 0.5 && fabs(NSMinY(b.frame) - 8 - NSMaxY(output.frame)) < 0.5,
+        Check(fabs(height - NSMaxY(Drawn(b)) - 8) < 0.5 && fabs(NSMinY(Drawn(b)) - 8 - NSMaxY(output.frame)) < 0.5,
               [NSString stringWithFormat:@"%@: \"%@\" is 8 points below the top and above the output", where, b.title]);
         if (i == 0) continue;
-        CGFloat gap = NSMinX(b.frame) - NSMaxX(buttons[i - 1].frame);
+        CGFloat gap = NSMinX(Drawn(b)) - NSMaxX(Drawn(buttons[i - 1]));
         if (gap > 12.5) wideGaps++;
         Check(gap >= 11.5, [NSString stringWithFormat:@"%@: \"%@\" and \"%@\" are %.1f points apart", where, buttons[i - 1].title, b.title, gap]);
         Check(gap < 12.5 || gap >= 23.5, [NSString stringWithFormat:@"%@: the groups are %.1f points apart", where, gap]);
@@ -85,7 +89,8 @@ int main(int argc, char **argv) { @autoreleasepool {
         NSString *lang = [arg substringToIndex:eq.location];
         PanelOwner *owner = [PanelOwner new];
         NSArray *objects = nil;
-        if (![[[NSNib alloc] initWithNibData:[NSData dataWithContentsOfFile:[arg substringFromIndex:NSMaxRange(eq)]] bundle:nil] instantiateWithOwner:owner topLevelObjects:&objects]) { printf("ERROR %s cannot load\n", lang.UTF8String); return 2; }
+        NSData *nibData = [NSData dataWithContentsOfFile:[arg substringFromIndex:NSMaxRange(eq)]];
+        if (![[[NSNib alloc] initWithNibData:nibData bundle:nil] instantiateWithOwner:owner topLevelObjects:&objects]) { printf("ERROR %s cannot load\n", lang.UTF8String); return 2; }
         ApplyProductionLayout(@"TSDocument.nib", owner, objects);
 
         // The console, as it opens and at its smallest.
@@ -96,6 +101,46 @@ int main(int argc, char **argv) { @autoreleasepool {
         [console setContentSize:console.contentMinSize];
         CheckConsole(console, lang, @"smallest");
         [console setContentSize:normal];
+
+        // A console whose saved frame is narrow when it is laid out, and laid out
+        // again: each button stays in the group the nib holds it to (Goto Error at
+        // the left edge, Abort and Trash Aux Files at the right), in the same place.
+        for (NSNumber *narrow in @[@260, @400]) {
+            PanelOwner *again = [PanelOwner new]; NSArray *more = nil;
+            [[[NSNib alloc] initWithNibData:nibData bundle:nil] instantiateWithOwner:again topLevelObjects:&more];
+            NSWindow *c = again->outputWindow;
+            NSMapTable<NSButton *, NSNumber *> *right = [NSMapTable strongToStrongObjectsMapTable];
+            for (NSView *v in c.contentView.subviews)
+                if ([v isKindOfClass:NSButton.class]) [right setObject:@((v.autoresizingMask & NSViewMinXMargin) != 0) forKey:(NSButton *)v];
+            [c setContentSize:NSMakeSize(narrow.doubleValue, NSHeight(c.contentView.frame))];
+            TSLayoutConsoleButtonRow(c);
+            NSString *where = [NSString stringWithFormat:@"%@ console restored %@ points wide", lang, narrow];
+            NSArray<NSValue *> *(^frames)(void) = ^NSArray<NSValue *> *{
+                NSMutableArray *out = [NSMutableArray array];
+                for (NSButton *b in right.keyEnumerator) [out addObject:[NSValue valueWithRect:b.frame]];
+                return out;
+            };
+            void (^groups)(NSString *) = ^(NSString *when) {
+                CGFloat w = NSWidth(c.contentView.bounds), leftEnd = 0, rightStart = CGFLOAT_MAX, rightEnd = 0;
+                NSUInteger lefts = 0;
+                for (NSButton *b in right.keyEnumerator) {
+                    NSRect d = Drawn(b);
+                    if ([right objectForKey:b].boolValue) { rightStart = MIN(rightStart, NSMinX(d)); rightEnd = MAX(rightEnd, NSMaxX(d)); }
+                    else { lefts++; leftEnd = MAX(leftEnd, NSMaxX(d)); Check(fabs(NSMinX(d) - 20) < 0.5, [NSString stringWithFormat:@"%@ (%@): \"%@\" stays at the left edge", where, when, b.title]); }
+                }
+                Check(lefts == 1 && fabs(w - rightEnd - 20) < 0.5 && rightStart - leftEnd >= 23.5,
+                      [NSString stringWithFormat:@"%@ (%@): the buttons held to the right edge stay there, apart from Goto Error (%.1f)", where, when, rightStart - leftEnd]);
+            };
+            groups(@"laid out");
+            NSArray *first = frames();
+            TSLayoutConsoleButtonRow(c);
+            Check([frames() isEqual:first], [NSString stringWithFormat:@"%@: a second layout changes nothing", where]);
+            [c setContentSize:NSMakeSize(640, NSHeight(c.contentView.frame))];
+            groups(@"widened");
+            [c setContentSize:c.contentMinSize];
+            TSLayoutConsoleButtonRow(c);
+            groups(@"at its smallest, laid out again");
+        }
 
         // The Text panel's choices and OK, at its usual and smallest widths.
         NSWindow *text = owner->stringWindow;

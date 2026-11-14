@@ -16,13 +16,25 @@ static const CGFloat TSConsoleButtonSideMargin = 20, TSConsoleButtonSpacing = 12
 // At its smallest the output still shows two lines, as it did under the earlier row of square buttons.
 static const CGFloat TSConsoleMinimumOutputHeight = 28;
 
-static inline CGFloat TSConsoleButtonWidth(NSButton *button)
+// What a button draws when it fits its title (its alignment rectangle): on macOS
+// 26 and later the same as its frame, on earlier systems a little inside it.
+static inline NSSize TSConsoleButtonDrawnSize(NSButton *button)
 {
-    return ceil(button.fittingSize.width);
+    NSSize fitting = button.fittingSize;
+    NSSize drawn = [button alignmentRectForFrame:NSMakeRect(0, 0, fitting.width, fitting.height)].size;
+    return NSMakeSize(ceil(drawn.width), ceil(drawn.height));
+}
+
+// Places what a button draws at a rectangle.
+static inline void TSConsoleButtonPlace(NSButton *button, NSRect drawn, NSAutoresizingMaskOptions mask)
+{
+    button.frame = [button frameForAlignmentRect:drawn];
+    button.autoresizingMask = mask;
 }
 
 // Lays out the buttons as push buttons along the top edge of host: leading from
-// left to right, trailing from right to left. The output view keeps its bottom
+// left to right, trailing from right to left. Margins and spaces are measured
+// between what the buttons draw, so they are the same on every system. The output view keeps its bottom
 // edge and ends under the row. The window cannot be narrowed so far that the two
 // groups come closer than twice the space between buttons, nor made so low that
 // the output loses its last two lines, and it grows if it is smaller now.
@@ -32,10 +44,12 @@ static inline void TSLayoutConsoleButtons(NSView *host, NSArray<NSButton *> *lea
     for (NSArray<NSButton *> *group in @[leading, trailingRightToLeft]) {
         for (NSButton *button in group) {
             button.bezelStyle = NSBezelStylePush;
+            button.bordered = YES;
             button.controlSize = NSControlSizeRegular;
             button.font = [NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSControlSizeRegular]];
-            height = MAX(height, ceil(button.fittingSize.height));
-            needed += TSConsoleButtonWidth(button);
+            NSSize drawn = TSConsoleButtonDrawnSize(button);
+            height = MAX(height, drawn.height);
+            needed += drawn.width;
         }
         if (group.count > 1) needed += (group.count - 1) * TSConsoleButtonSpacing;
     }
@@ -54,17 +68,15 @@ static inline void TSLayoutConsoleButtons(NSView *host, NSArray<NSButton *> *lea
     CGFloat top = NSHeight(host.bounds) - TSConsoleButtonRowMargin;
     CGFloat x = TSConsoleButtonSideMargin;
     for (NSButton *button in leading) {
-        CGFloat width = TSConsoleButtonWidth(button);
-        button.frame = NSMakeRect(x, top - height, width, height);
-        button.autoresizingMask = NSViewMaxXMargin | NSViewMinYMargin;
+        CGFloat width = TSConsoleButtonDrawnSize(button).width;
+        TSConsoleButtonPlace(button, NSMakeRect(x, top - height, width, height), NSViewMaxXMargin | NSViewMinYMargin);
         x += width + TSConsoleButtonSpacing;
     }
     x = NSWidth(host.bounds) - TSConsoleButtonSideMargin;
     for (NSButton *button in trailingRightToLeft) {
-        CGFloat width = TSConsoleButtonWidth(button);
+        CGFloat width = TSConsoleButtonDrawnSize(button).width;
         x -= width;
-        button.frame = NSMakeRect(x, top - height, width, height);
-        button.autoresizingMask = NSViewMinXMargin | NSViewMinYMargin;
+        TSConsoleButtonPlace(button, NSMakeRect(x, top - height, width, height), NSViewMinXMargin | NSViewMinYMargin);
         x -= TSConsoleButtonSpacing;
     }
     if (output) {
@@ -75,8 +87,8 @@ static inline void TSLayoutConsoleButtons(NSView *host, NSArray<NSButton *> *lea
 }
 
 // The console of a document, loaded from TSDocument.nib in any language: the
-// buttons along its top edge, those left of the middle leading, and the output
-// (the scroll view) under them.
+// buttons along its top edge, those held to the left edge leading and those held
+// to the right edge trailing, and the output (the scroll view) under them.
 static inline void TSLayoutConsoleButtonRow(NSWindow *console)
 {
     NSView *host = console.contentView;
@@ -90,11 +102,18 @@ static inline void TSLayoutConsoleButtonRow(NSWindow *console)
     }
     if (output == nil) return;
     [row filterUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NSButton *button, NSDictionary *bindings) {
-        return NSMinY(button.frame) >= NSMaxY(output.frame) - 1;
+        return NSMinY([button alignmentRectForFrame:button.frame]) >= NSMaxY(output.frame) - 1;
     }]];
     NSMutableArray<NSButton *> *leading = [NSMutableArray array], *trailing = [NSMutableArray array];
-    for (NSButton *button in row)
-        [(NSMidX(button.frame) < NSMidX(host.bounds) ? leading : trailing) addObject:button];
+    // A button keeps its group however wide the window is when this runs (a saved
+    // frame may be narrow) and however often it runs: the group is where the button
+    // is held, the left or the right edge, as the nib or an earlier layout sets it.
+    // A button held to neither edge joins the side of the middle it is on.
+    for (NSButton *button in row) {
+        NSAutoresizingMaskOptions mask = button.autoresizingMask & (NSViewMinXMargin | NSViewMaxXMargin);
+        BOOL right = mask == NSViewMinXMargin || (mask != NSViewMaxXMargin && NSMidX(button.frame) >= NSMidX(host.bounds));
+        [(right ? trailing : leading) addObject:button];
+    }
     [leading sortUsingComparator:^NSComparisonResult(NSButton *a, NSButton *b) { return NSMinX(a.frame) < NSMinX(b.frame) ? NSOrderedAscending : NSOrderedDescending; }];
     [trailing sortUsingComparator:^NSComparisonResult(NSButton *a, NSButton *b) { return NSMinX(a.frame) > NSMinX(b.frame) ? NSOrderedAscending : NSOrderedDescending; }];
     TSLayoutConsoleButtons(host, leading, trailing, output);
