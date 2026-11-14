@@ -3790,16 +3790,13 @@ static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice
    
 if ( ! skipTextWindow) {
    // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLabelsAndTagsAtClick:) name:NSPopUpButtonWillPopUpNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(TagsAtClick2:) name:NSMenuDidBeginTrackingNotification object:[tags menu]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(TagsAtClick2:) name:NSMenuDidBeginTrackingNotification object:[stags menu]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(LabelsAtClick2:) name:NSMenuDidBeginTrackingNotification object:[labels menu]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(LabelsAtClick2:) name:NSMenuDidBeginTrackingNotification object:[slabels menu]];
-    
-    //NSMenu *tagsMenu = [[[NSApp mainMenu] itemWithTitle:
-    //                     NSLocalizedString(@"Tags", @"Tags")] submenu];
-    // if ([[NSUserDefaults standardUserDefaults] boolForKey:TagMenuInMenuBarKey])
-    //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(TagsAtClick3:) name:NSMenuDidBeginTrackingNotification
-    //                                             object:tagsMenu];
+    // The Tags and Labels menus of the toolbars are filled each time they open: from the
+    // toolbar item, from the item's label when the toolbar shows text only, and from the
+    // overflow menu. AppKit asks the menu's delegate before showing it in each case.
+    [[tags menu] setDelegate: self];
+    [[stags menu] setDelegate: self];
+    [[labels menu] setDelegate: self];
+    [[slabels menu] setDelegate: self];
     
     [[NSNotificationCenter defaultCenter] addObserver:[TSWindowManager sharedInstance] selector:@selector(textWindowDidBecomeKey:) name:NSWindowDidBecomeKeyNotification object:textWindow];
 	[[NSNotificationCenter defaultCenter] addObserver:[TSLaTeXPanelController sharedInstance] selector:@selector(textWindowDidBecomeKey:) name:NSWindowDidBecomeKeyNotification object:textWindow];
@@ -5022,22 +5019,53 @@ if ( ! skipTextWindow) {
     [self setupTags1];
 }
 
-- (void) TagsAtClick2:(NSNotification *)notification
+// Called by AppKit just before one of the toolbar's Tags and Labels menus opens.
+- (void)menuNeedsUpdate:(NSMenu *)menu
 {
-     
     if ( ! [SUD boolForKey:UseNewTagsAndLabelsKey])
         return;
     
-    [self setupTags1];
+    if ((menu == [tags menu]) || (menu == [stags menu]))
+        [self setupTags1];
+    else if ((menu == [labels menu]) || (menu == [slabels menu]))
+        [self setupLabels1];
 }
 
-
-- (void) LabelsAtClick2:(NSNotification *)notification
+// The items of these menus have no key equivalents. Answering here keeps AppKit from
+// filling the menus while it looks for a key equivalent.
+- (BOOL)menuHasKeyEquivalent:(NSMenu *)menu forEvent:(NSEvent *)event target:(id *)target action:(SEL *)action
 {
+    return NO;
+}
+
+// The Tags menu in the menu bar is filled each time it opens, with the tags of the
+// frontmost document. It is empty when that document is not a TeX source edited in
+// TeXShop, and when there is no document.
++ (void)updateTagsMenuInMenuBar:(NSMenu *)menu
+{
+    TSDocument  *document = nil;
+    
     if ( ! [SUD boolForKey:UseNewTagsAndLabelsKey])
         return;
     
-    [self setupLabels1];
+    for (NSWindow *window in [NSApp orderedWindows]) {
+        if (! [window isVisible])
+            continue;
+        id owner = [[window windowController] document];
+        if ((! [owner isKindOfClass:[TSDocument class]]) && [window respondsToSelector:@selector(document)])
+            owner = [(id)window document];
+        if (! [owner isKindOfClass:[TSDocument class]])
+            owner = [window delegate];
+        if ([owner isKindOfClass:[TSDocument class]]) {
+            document = owner;
+            break;
+        }
+    }
+    
+    if ((document != nil) && (! [document externalEditor]) && (! [document skipTextWindow]))
+        [document setupTags1];
+    else
+        [menu removeAllItems];
 }
 
 - (void)doUpdate: (id)sender;
