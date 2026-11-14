@@ -57,5 +57,7 @@
   "engine-file-folder-refresh": "The list follows the folder, and a missing engine file stays shown",
   "engine-file-shown-not-stored": "Choosing the engine file stores the engine file shown",
   "engine-file-whole-row": "Edit Engine List stays available beside Engine File",
-  "engine-file-folder-not-made": "Edit Engine List opens the Engines folder, made again if it was removed"
+  "engine-file-folder-not-made": "Edit Engine List opens the Engines folder, made again if it was removed",
+  "typeset-choice-stored-by-old-row": "Choosing LaTeX stores its value",
+  "typeset-choice-shown-by-old-row": "New documents are typeset with LaTeX by default"
 }

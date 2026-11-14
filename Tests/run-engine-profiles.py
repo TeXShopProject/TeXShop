@@ -3,7 +3,7 @@
 the language-based first-launch choice, and an apply that writes only the profile's keys. Each production rule is
 then removed in turn, and the probe must notice."""
 from pathlib import Path
-import json, subprocess, sys, tempfile
+import json, plistlib, subprocess, sys, tempfile
 from source_tree import include_args, source_file
 
 R = Path(__file__).resolve().parents[1]
@@ -202,5 +202,11 @@ with tempfile.TemporaryDirectory(prefix='texshop-engine-profiles-') as temp:
         result = run(original.replace(old, new))
         assert result.returncode and 'FAIL:' in result.stderr, (name, result.stdout, result.stderr)
         print('DETECTED', name, flush=True)
+    # A factory default other than LaTeX for new documents is refused.
+    factory = plistlib.loads(FACTORY.read_bytes()); factory['DefaultCommand'] = '0'
+    (t / 'factory.plist').write_bytes(plistlib.dumps(factory))
+    result = subprocess.run([str(t / 'probe'), str(t / 'table.json'), str(t / 'factory.plist')], capture_output=True, text=True)
+    assert result.returncode and 'FAIL: the factory engine file is LuaLaTeX and new documents use LaTeX' in result.stderr, (result.stdout, result.stderr)
+    print('DETECTED factory plain TeX for new documents', flush=True)
     assert run(original).returncode == 0
     print('NORMAL CONTROL passes again')

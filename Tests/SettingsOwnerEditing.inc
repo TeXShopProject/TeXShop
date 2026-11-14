@@ -52,7 +52,25 @@ static void CheckOwnerEngineFile(TSPreferences *owner, TSSettingsWindowControlle
     NSButton *edit=[owner valueForKey:@"editEnginesButton"];
     Check(edit.enabled && [edit.identifier isEqual:@"settings.default-engine-edit"] && edit.action==@selector(openEnginesFolder:) && edit.superview==engineFile.superview,@"Edit Engine List stays available beside Engine File");
     NSMatrix *command=[owner valueForKey:@"defaultCommandMatrix"];
-    Check([[command.cells valueForKey:@"tag"] isEqual:@[@1,@0,@2]] && [[command.cells.firstObject title] length]>0,@"LaTeX comes first, then plain TeX, then the engine file");
+    Check([[command.cells valueForKey:@"tag"] isEqual:@[@0,@1,@2]] && [[command.cells.firstObject title] isEqual:@"plain TeX"],@"plain TeX comes first, then LaTeX, then the engine file");
+    // The menu shows the choices in that order and keeps each stored value with its choice.
+    NSPopUpButton *choice=(NSPopUpButton *)Find([shell viewForCategoryIdentifier:TSSettingsCategoryTypesetting],@"choice.settings.181");
+    NSArray *choiceTitles=[command.cells valueForKey:@"title"];
+    Check([choice isKindOfClass:NSPopUpButton.class] && [[choice.itemArray valueForKey:@"title"] isEqual:choiceTitles] && [[choice.itemArray valueForKey:@"tag"] isEqual:@[@0,@1,@2]],@"The menu lists plain TeX, LaTeX and the engine file with their stored values");
+    [TSIsolatedAppKitDefaults removeObjectForKey:DefaultCommandKey];
+    [owner refreshTypesettingSettingsFromDefaults:TSIsolatedAppKitDefaults];
+    Check([TSIsolatedAppKitDefaults integerForKey:DefaultCommandKey]==1 && choice.selectedTag==1 && [choice.titleOfSelectedItem isEqual:choiceTitles[1]],@"New documents are typeset with LaTeX by default");
+    for(NSInteger stored=0;stored<3;stored++){
+        [TSIsolatedAppKitDefaults setInteger:stored forKey:DefaultCommandKey];
+        [owner refreshTypesettingSettingsFromDefaults:TSIsolatedAppKitDefaults];
+        Check(choice.selectedTag==stored && [choice.titleOfSelectedItem isEqual:choiceTitles[(NSUInteger)stored]] && command.selectedCell.tag==stored,[NSString stringWithFormat:@"A stored %ld shows its own choice",(long)stored]);
+    }
+    for(NSInteger index=2;index>=0;index--){
+        [choice selectItemAtIndex:index];[choice sendAction:choice.action to:choice.target];
+        Check([TSIsolatedAppKitDefaults integerForKey:DefaultCommandKey]==[choice itemAtIndex:index].tag,[NSString stringWithFormat:@"Choosing %@ stores its value",[choice itemAtIndex:index].title]);
+    }
+    [TSIsolatedAppKitDefaults setInteger:1 forKey:DefaultCommandKey];
+    [owner refreshTypesettingSettingsFromDefaults:TSIsolatedAppKitDefaults];
     [command selectCellWithTag:2];[owner defaultProgramChanged:command];
     Check(engineFile.enabled && [TSIsolatedAppKitDefaults integerForKey:DefaultCommandKey]==2,@"Choosing the engine file enables Engine File");
     Check([[TSIsolatedAppKitDefaults objectForKey:DefaultEngineKey] isEqual:@"lualatex"],@"Choosing the engine file stores the engine file shown");
