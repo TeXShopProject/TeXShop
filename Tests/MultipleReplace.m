@@ -412,9 +412,17 @@ static void TestEmptyWindow(void)
     NSMenuItem *import = [[NSMenuItem alloc] initWithTitle:@"" action:NSSelectorFromString(@"importSet:") keyEquivalent:@""];
     Check(![(id<NSUserInterfaceValidations>)window validateUserInterfaceItem:duplicate] && [(id<NSUserInterfaceValidations>)window validateUserInterfaceItem:import],
           @"no set: Duplicate is gray, Import is not");
-    Check(window.optionsButton.action == @selector(showOptions:) && window.helpButton.enabled && window.helpButton.bezelStyle == NSBezelStyleHelpButton
-          && window.helpButton.action == NSSelectorFromString(@"showHelp:") && [TSMultipleReplaceWindowController.helpAnchor isEqualToString:@"multiplereplace"],
-          @"the help button opens Multiple Replace in the help");
+    NSUInteger helpButtons = 0;
+    NSMutableArray<NSView *> *views = [window.window.contentView.subviews mutableCopy];
+    while (views.count) {
+        NSView *v = views.lastObject;
+        [views removeLastObject];
+        [views addObjectsFromArray:v.subviews];
+        if ([v isKindOfClass:[NSButton class]] && ((NSButton *)v).bezelStyle == NSBezelStyleHelpButton)
+            helpButtons++;
+    }
+    Check(window.optionsButton.action == @selector(showOptions:) && helpButtons == 0 && ![window respondsToSelector:NSSelectorFromString(@"showHelp:")],
+          @"the window has no help button");
     [window addSet:nil];
     Check(window.selectedSetName.length > 0 && library.setNames.count == 1 && window.ruleTable.tableView.numberOfRows == 1, @"a new set has one empty rule and is saved");
     CheckButtons(window, YES, YES, NO, YES, @"a set: the options and ＋ can be used, − waits for a selected rule");
@@ -737,8 +745,14 @@ static void TestLayout(NSString *_Nullable imageDirectory)
     }
     Check(bottom.count == 2, [language stringByAppendingString:@" Highlight All and Replace All are found"]);
     failures += CheckSameHeight(bottom, 0.5, [language stringByAppendingString:@" Highlight All and Replace All"]);
-    Check(fabs(NSMidY([window.helpButton convertRect:window.helpButton.bounds toView:content]) - NSMidY([bottom.firstObject convertRect:bottom.firstObject.bounds toView:content])) <= 1,
-          [language stringByAppendingString:@" the help button is on the line of the actions"]);
+    // The bottom row: nothing on the left, the actions at the right edge of the table.
+    NSView *ruleScroll = window.ruleTable.tableView.enclosingScrollView;
+    NSRect tableFrame = [ruleScroll convertRect:ruleScroll.bounds toView:content];
+    NSView *actionRow = bottom.firstObject.superview; // in selection, Highlight All and Replace All
+    NSRect actionsFrame = [actionRow convertRect:actionRow.bounds toView:content];
+    Check(fabs(NSMaxX(actionsFrame) - NSMaxX(tableFrame)) <= 1 && NSMinX(actionsFrame) > NSMinX(tableFrame) + 40,
+          [NSString stringWithFormat:@"%@ the actions are at the right of the bottom row (%.0f–%.0f, table %.0f–%.0f)", language,
+           NSMinX(actionsFrame), NSMaxX(actionsFrame), NSMinX(tableFrame), NSMaxX(tableFrame)]);
     // The smallest window, with the longest messages it shows
     NSRect old = window.window.frame;
     [window.window setContentSize:window.window.contentMinSize];
