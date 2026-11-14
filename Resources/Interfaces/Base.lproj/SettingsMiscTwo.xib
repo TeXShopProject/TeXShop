@@ -19,7 +19,6 @@
         <outlet property="XMLsubsection" destination="leH-sT-cbJ" id="7gY-7E-pzQ" />
         <outlet property="XMLsubsubsection" destination="ct9-Gf-9nT" id="x4R-gH-kJO" />
         <outlet property="XMLtable" destination="F6b-YV-mvL" id="gji-6Q-ytU" />
-        <outlet property="alternateEngineTextField" destination="gZB-h1-n7P" id="JqO-fq-T0B" />
         <outlet property="convertUTFButton" destination="sPQ-5E-qId" id="qJj-IM-dId" />
         <outlet property="latexScriptCommandTextField" destination="KBV-98-EKO" id="2pL-Wh-2wM" />
         <outlet property="miniaturizeRootFileButton" destination="4J7-3F-0ja" id="H19-zo-8gu" />
@@ -235,18 +234,6 @@
                   <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
                   <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
                 </textFieldCell>
-              </textField>
-              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gZB-h1-n7P" identifier="settings.gZB-h1-n7P">
-                <rect key="frame" x="18" y="11" width="327" height="21" />
-                <autoresizingMask key="autoresizingMask" />
-                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Nm3-EN-nuZ">
-                  <font key="font" metaFont="system" />
-                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
-                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
-                </textFieldCell>
-                <connections>
-                  <action selector="alternateEngineChanged:" target="-2" id="WDL-xY-voj" />
-                </connections>
               </textField>
             </subviews>
           </view>

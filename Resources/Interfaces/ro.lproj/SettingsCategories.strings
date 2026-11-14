@@ -244,7 +244,8 @@
 "catalog.typesetting.0.1.button" = "Editează lista de motoare…";
 "catalog.typesetting.0.2.title" = "Metoda de tehnoredactare";
 "catalog.typesetting.0.3.title" = "Motor alternativ";
-"catalog.typesetting.0.3.note" = "Motorul folosit la culegerea cu motorul alternativ. Implicit: pdflatexmk";
+"catalog.typesetting.0.3.note" = "Motorul folosit la culegerea cu motorul alternativ.";
+"catalog.typesetting.0.3.info" = "Despre „Compilare cu motorul alternativ”";
 "group.typesetting.1.title" = "După tehnoredactare";
 "catalog.typesetting.1.0.title" = "După tehnoredactare";
 "group.typesetting.2.title" = "Sincronizarea sursei și a previzualizării";

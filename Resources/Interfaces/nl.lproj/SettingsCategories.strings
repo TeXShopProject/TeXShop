@@ -244,7 +244,8 @@
 "catalog.typesetting.0.1.button" = "Engine-lijst bewerken…";
 "catalog.typesetting.0.2.title" = "Zetmethode";
 "catalog.typesetting.0.3.title" = "Alternatieve engine";
-"catalog.typesetting.0.3.note" = "De engine voor zetten met de alternatieve engine. Standaard: pdflatexmk";
+"catalog.typesetting.0.3.note" = "De engine voor zetten met de alternatieve engine.";
+"catalog.typesetting.0.3.info" = "Over ‘Zet met alternatieve engine’";
 "group.typesetting.1.title" = "Na het zetten";
 "catalog.typesetting.1.0.title" = "Na zetten";
 "group.typesetting.2.title" = "Synchronisatie van bron en voorvertoning";

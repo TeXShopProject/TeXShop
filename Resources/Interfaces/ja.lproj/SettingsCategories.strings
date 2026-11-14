@@ -244,7 +244,8 @@
 "catalog.typesetting.0.1.button" = "エンジン一覧を編集…";
 "catalog.typesetting.0.2.title" = "コンパイル法";
 "catalog.typesetting.0.3.title" = "代替エンジン";
-"catalog.typesetting.0.3.note" = "「代替エンジンでタイプセット」で使うエンジンです。デフォルト: pdflatexmk";
+"catalog.typesetting.0.3.note" = "「代替エンジンでタイプセット」で使うエンジンです。";
+"catalog.typesetting.0.3.info" = "「代替エンジンでタイプセット」について";
 "group.typesetting.1.title" = "タイプセット後";
 "catalog.typesetting.1.0.title" = "タイプセット後の動作";
 "group.typesetting.2.title" = "ソースとプレビューの同期";

@@ -225,6 +225,8 @@ add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.1", @"SettingsCat
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.2", @"SettingsCategories", @"catalog.typesetting.0.2.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.3", @"SettingsCategories", @"catalog.typesetting.0.3.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.3", @"SettingsCategories", @"catalog.typesetting.0.3.note", TSSettingsSearchWeightDescription);
+add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.3", @"SettingsCategories", @"catalog.typesetting.0.1.button", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.3", @"SettingsCategories", @"catalog.typesetting.0.3.info", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryTypesetting, @"heading.group.typesetting.1", @"SettingsCategories", @"group.typesetting.1.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.1.0", @"SettingsCategories", @"catalog.typesetting.1.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryTypesetting, @"heading.group.typesetting.2", @"SettingsCategories", @"group.typesetting.2.title", TSSettingsSearchWeightHeading);
