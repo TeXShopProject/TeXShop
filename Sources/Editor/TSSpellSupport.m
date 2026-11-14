@@ -14,7 +14,7 @@
 #import "TSSpellExclusions.h"
 #import <objc/runtime.h>
 
-// Text views that can check spelling TeX-aware (TSTextView).
+// Text views that can check spelling TeX-aware (TSTextView, ScrapTextView).
 @protocol TSTeXAwareTextView
 - (BOOL)usesTeXAwareSpellChecking;
 @end
