@@ -18,7 +18,6 @@
 @property (nonatomic, readwrite) NSButton *removeSetButton;
 @property (nonatomic, readwrite) NSSegmentedControl *ruleButtons;
 @property (nonatomic, readwrite) NSButton *optionsButton;
-@property (nonatomic, readwrite) NSButton *helpButton;
 /// Highlight and Replace All.
 @property (nonatomic, copy) NSArray<NSButton *> *actionButtons;
 @property (nonatomic, strong, nullable) NSPopover *optionsPopover;
@@ -43,12 +42,15 @@ static NSAttributedString *_Nullable TSMultipleReplaceColoredField(NSString *str
     return TSAdvancedFindColoredString(string, scanner, TSAdvancedFindFieldColorScheme(), attributes);
 }
 
+/// Wide enough at first for the names of the bundled samples in every language (“ajmacros → Caracteres Unicode”).
+static const CGFloat TSSidebarWidth = 240;
+
 @implementation TSMultipleReplaceWindowController
 
 - (instancetype)initWithFindController:(TSAdvancedFindController *)findController library:(TSMultipleReplaceLibrary *)library
 {
     // The sidebar runs up to the top, under the title bar, as in CotEditor and the macOS apps with a sidebar.
-    NSPanel *panel = [[NSPanel alloc] initWithContentRect:NSMakeRect(0, 0, 860, 440)
+    NSPanel *panel = [[NSPanel alloc] initWithContentRect:NSMakeRect(0, 0, 980, 440)
                                                 styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable
                                                           | NSWindowStyleMaskMiniaturizable | NSWindowStyleMaskFullSizeContentView
                                                   backing:NSBackingStoreBuffered defer:YES];
@@ -123,10 +125,14 @@ static NSAttributedString *_Nullable TSMultipleReplaceColoredField(NSString *str
 /// The sets, the whole height of the sidebar, and under them ＋ − and the menu with three dots, without borders.
 - (NSViewController *)makeSidebar
 {
-    self.setTable = [[NSTableView alloc] initWithFrame:NSMakeRect(0, 0, 180, 300)];
+    self.setTable = [[NSTableView alloc] initWithFrame:NSMakeRect(0, 0, TSSidebarWidth, 300)];
     NSTableColumn *column = [[NSTableColumn alloc] initWithIdentifier:@"name"];
     column.title = TSLocalized(@"MultipleReplace.Sets", @"Sets");
+    // The names take the width of the list, not a new column's 100 points.
+    column.resizingMask = NSTableColumnAutoresizingMask;
+    column.width = NSWidth(self.setTable.frame);
     [self.setTable addTableColumn:column];
+    self.setTable.columnAutoresizingStyle = NSTableViewFirstColumnOnlyAutoresizingStyle;
     self.setTable.headerView = nil;
     self.setTable.style = NSTableViewStyleSourceList;
     self.setTable.dataSource = self;
@@ -181,8 +187,7 @@ static NSAttributedString *_Nullable TSMultipleReplaceColoredField(NSString *str
     return controller;
 }
 
-/// The rules in order with ＋|− and the set's options under them; at the bottom, help on the left and the
-/// actions on the right.
+/// The rules in order with ＋|− and the set's options under them; the actions at the bottom right.
 - (NSViewController *)makeRuleArea
 {
     NSTextField *heading = [NSTextField labelWithString:TSLocalized(@"MultipleReplace.RulesHeading", @"Apply the rules from the top down:")];
@@ -217,19 +222,15 @@ static NSAttributedString *_Nullable TSMultipleReplaceColoredField(NSString *str
     for (NSView *child in @[self.ruleButtons, self.statusField, self.optionsButton])
         child.translatesAutoresizingMaskIntoConstraints = NO;
 
-    self.helpButton = [NSButton buttonWithTitle:@"" target:self action:@selector(showHelp:)];
-    self.helpButton.bezelStyle = NSBezelStyleHelpButton;
-    self.helpButton.accessibilityLabel = TSLocalized(@"MultipleReplace.Help", @"Help");
     self.inSelectionBox = [NSButton checkboxWithTitle:TSLocalized(@"AdvancedFind.InSelection", @"In selection") target:self action:@selector(inSelectionChanged:)];
     NSButton *highlight = [self button:@"AdvancedFind.HighlightAll" english:@"Highlight All" action:@selector(highlight:)];
     NSButton *replace = [self button:@"AdvancedFind.ReplaceAll" english:@"Replace All" action:@selector(replaceAll:)];
     replace.keyEquivalent = @"\r";
     self.actionButtons = @[highlight, replace];
     NSView *actions = [self stackOf:@[self.inSelectionBox, highlight, replace] spacing:12];
-    self.helpButton.translatesAutoresizingMaskIntoConstraints = NO;
 
     NSView *view = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 640, 400)];
-    for (NSView *child in @[heading, scroll, self.ruleButtons, self.statusField, self.optionsButton, self.helpButton, actions])
+    for (NSView *child in @[heading, scroll, self.ruleButtons, self.statusField, self.optionsButton, actions])
         [view addSubview:child];
     NSLayoutGuide *safe = view.safeAreaLayoutGuide;
     // A message of one line is on the line of the buttons; a longer one starts there and goes down.
@@ -254,12 +255,10 @@ static NSAttributedString *_Nullable TSMultipleReplaceColoredField(NSString *str
         [self.statusField.leadingAnchor constraintEqualToAnchor:self.ruleButtons.trailingAnchor constant:12],
         [self.statusField.trailingAnchor constraintEqualToAnchor:self.optionsButton.leadingAnchor constant:-12],
         [self.statusField.topAnchor constraintGreaterThanOrEqualToAnchor:scroll.bottomAnchor constant:8],
-
-        [self.helpButton.leadingAnchor constraintEqualToAnchor:scroll.leadingAnchor],
-        [self.helpButton.centerYAnchor constraintEqualToAnchor:actions.centerYAnchor],
+        // The actions at the right of the bottom row
         [actions.topAnchor constraintGreaterThanOrEqualToAnchor:self.ruleButtons.bottomAnchor constant:16],
         [actions.topAnchor constraintGreaterThanOrEqualToAnchor:self.statusField.bottomAnchor constant:12],
-        [actions.leadingAnchor constraintGreaterThanOrEqualToAnchor:self.helpButton.trailingAnchor constant:12],
+        [actions.leadingAnchor constraintGreaterThanOrEqualToAnchor:scroll.leadingAnchor],
         [actions.trailingAnchor constraintEqualToAnchor:scroll.trailingAnchor],
         [actions.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-20],
     ]];
@@ -286,7 +285,7 @@ static NSAttributedString *_Nullable TSMultipleReplaceColoredField(NSString *str
     NSRect frame = self.window.frame;
     self.window.contentViewController = split;
     [self.window setFrame:frame display:NO];
-    [split.splitView setPosition:200 ofDividerAtIndex:0];
+    [split.splitView setPosition:TSSidebarWidth ofDividerAtIndex:0];
 }
 
 #pragma mark Sets
@@ -486,6 +485,7 @@ static NSAttributedString *_Nullable TSMultipleReplaceColoredField(NSString *str
     field.editable = YES;
     field.delegate = self;
     field.lineBreakMode = NSLineBreakByTruncatingTail;
+    field.allowsExpansionToolTips = YES;
     NSTableCellView *cell = [TSMultipleReplaceRuleTable cellWithControl:field];
     cell.textField = nil; // plain text, as the list's rows: the source list would restyle its own text field
     return cell;
@@ -550,14 +550,6 @@ static NSAttributedString *_Nullable TSMultipleReplaceColoredField(NSString *str
     return YES;
 }
 
-+ (NSString *)helpAnchor { return @"multiplereplace"; }
-
-- (void)showHelp:(id)sender
-{
-    NSString *book = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleHelpBookName"];
-    if (book)
-        [NSHelpManager.sharedHelpManager openHelpAnchor:TSMultipleReplaceWindowController.helpAnchor inBook:book];
-}
 - (void)inSelectionChanged:(NSButton *)sender { self.inSelection = sender.state == NSControlStateValueOn; }
 
 - (void)setInSelection:(BOOL)inSelection

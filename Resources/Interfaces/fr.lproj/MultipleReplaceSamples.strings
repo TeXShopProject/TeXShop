@@ -1,0 +1,117 @@
+/* The bundled sample sets of multiple replacement (Resources/MultipleReplaceSamples), made from Edit > Character Type Conversion.
+   The keys are the file names of the sets (Resources/MultipleReplaceSamples/*.json) and the English notes of their rules;
+   the samples are written translated the first time. */
+
+/* The name of a sample set: the menu item Edit > Character Type Conversion > Unicode Characters → ajmacros. */
+"UnicodeToAjmacros" = "Caractères Unicode → ajmacros";
+
+/* The name of a sample set: the menu item Edit > Character Type Conversion > ajmacros → Unicode Characters. */
+"AjmacrosToUnicode" = "ajmacros → Caractères Unicode";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled numbers" = "Nombres cerclés";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled numbers (end of line)" = "Nombres cerclés (fin de ligne)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Negative circled numbers" = "Nombres cerclés inversés";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Negative circled numbers (end of line)" = "Nombres cerclés inversés (fin de ligne)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Parenthesized numbers" = "Nombres entre parenthèses";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Parenthesized numbers (end of line)" = "Nombres entre parenthèses (fin de ligne)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled letters" = "Lettres cerclées";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled letters (end of line)" = "Lettres cerclées (fin de ligne)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Parenthesized letters" = "Lettres entre parenthèses";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Parenthesized letters (end of line)" = "Lettres entre parenthèses (fin de ligne)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Negative circled letters" = "Lettres cerclées inversées";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Negative circled letters (end of line)" = "Lettres cerclées inversées (fin de ligne)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Squared letters" = "Lettres encadrées";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Squared letters (end of line)" = "Lettres encadrées (fin de ligne)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Negative squared letters" = "Lettres encadrées inversées";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Negative squared letters (end of line)" = "Lettres encadrées inversées (fin de ligne)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Roman numerals" = "Chiffres romains";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Roman numerals (end of line)" = "Chiffres romains (fin de ligne)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Numbers with a period" = "Nombres suivis d’un point";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Numbers with a period (end of line)" = "Nombres suivis d’un point (fin de ligne)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Parenthesized days of the week" = "Jours de la semaine entre parenthèses";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Parenthesized days of the week (end of line)" = "Jours de la semaine entre parenthèses (fin de ligne)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled days of the week" = "Jours de la semaine cerclés";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled days of the week (end of line)" = "Jours de la semaine cerclés (fin de ligne)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Double circled numbers" = "Nombres doublement cerclés";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Double circled numbers (end of line)" = "Nombres doublement cerclés (fin de ligne)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Recycling symbols" = "Symboles de recyclage";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Recycling symbols (end of line)" = "Symboles de recyclage (fin de ligne)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled katakana" = "Katakana cerclés";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled katakana (end of line)" = "Katakana cerclés (fin de ligne)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Parenthesized kanji numerals" = "Chiffres kanji entre parenthèses";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Parenthesized kanji numerals (end of line)" = "Chiffres kanji entre parenthèses (fin de ligne)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Circled kanji numerals" = "Chiffres kanji cerclés";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Circled kanji numerals (end of line)" = "Chiffres kanji cerclés (fin de ligne)";
+
+/* The note of the rules of one kind of character in the ajmacros samples. */
+"Ligatures, symbols and variants" = "Ligatures, symboles et variantes";
+
+/* The note of the rule that converts this kind of character at the end of a line, adding % after the command. */
+"Ligatures, symbols and variants (end of line)" = "Ligatures, symboles et variantes (fin de ligne)";

@@ -3,7 +3,7 @@ from pathlib import Path
 import plistlib, shutil, subprocess
 from source_tree import source_file
 
-NAMES = ('Source','Editor','Preview','Console','Typesetting','Engines','MiscOne','MiscTwo','Themes','Footer','ThemeName')
+NAMES = ('Source','Editor','Preview','Console','Typesetting','Engines','MiscOne','MiscTwo','Themes','ThemeName')
 
 def sources(root, names=NAMES):
     return [source_file(root, ('TSPref'+n+'Controller.m')) for n in (*names,'Pane')] + [root/'Sources/Settings/TSPrefPaneLayout.m']

@@ -7,10 +7,6 @@ ROOT=Path(__file__).resolve().parents[1]
 mutation=sys.argv[1] if len(sys.argv)>1 else ''
 sources={n:(source_file(ROOT, n)).read_text() for n in ['TSPreferenceProfile.m','TSPreferenceInput.m','TSThemeFileStore.m']}
 mutations={
- 'profile-preserve':('TSPreferenceProfile.m','if (TSPreferenceProfilePreservesKey(key)) continue;','if (NO) continue;'),
- 'profile-remove':('TSPreferenceProfile.m','else [removals addObject:key];','else {}'),
- 'profile-used':('TSPreferenceProfile.m','updates[TSHasBeenUsedKey] = @YES;','updates[TSHasBeenUsedKey] = @NO;'),
- 'profile-path':('TSPreferenceProfile.m','if (![path isKindOfClass:NSString.class] ||','if (NO && (![path isKindOfClass:NSString.class] ||'),
  'profile-notify':('TSPreferenceProfile.m','[NSNotificationCenter.defaultCenter postNotificationName:NSUserDefaultsDidChangeNotification object:defaults];',';'),
  'profile-guard':('TSPreferenceProfile.m','profileApplicationDepth++;',';'),
  'input-empty':('TSPreferenceInput.m','if (!self.allowsEmpty && trimmed.length == 0) return nil;',';'),
@@ -23,7 +19,6 @@ mutations={
 if mutation:
  if mutation not in mutations:raise SystemExit('unknown mutation')
  file,old,new=mutations[mutation];assert old in sources[file];sources[file]=sources[file].replace(old,new)
- if mutation=='profile-path':sources[file]=sources[file].replace('length] == 0) return nil;','length] == 0)) return nil;')
  if mutation=='profile-guard':sources[file]=sources[file].replace('profileApplicationDepth--;',';')
 program=r'''
 #import <Cocoa/Cocoa.h>
@@ -44,64 +39,21 @@ program=r'''
 @end
 static void check(BOOL ok, const char *message) { if (!ok) { fprintf(stderr,"FAIL: %s\n",message);exit(1); } }
 int main(int argc,const char **argv) { @autoreleasepool {
-    NSData *font = [@"serialized-font" dataUsingEncoding:NSUTF8StringEncoding];
-    for (int index=2;index<argc;index++) {
-        NSMutableDictionary *profile = [[NSDictionary dictionaryWithContentsOfFile:(@(argv[index]) ?: @"")] mutableCopy];
-        profile[@"DocumentFontAttributes"] = @"profile-attributes";
-        profile[@"TSSettingsSelectedCategory"] = @"profile-category";
-        check(profile != nil,"load bundled profile");
-        for (NSString *key in profile) check([TSKnownPreferenceKeys() containsObject:key],"classify every bundled key");
-        TSPreferenceProfile *proposal = [[TSPreferenceProfile alloc] initWithProfile:profile documentFont:font];
-        check(proposal != nil,"valid profile");
-        for (NSNumber *withPreservedValues in @[@NO,@YES]) {
-            ObservedDefaults *defaults=[ObservedDefaults new];
-            NSDictionary *kept=@{@"TSMenuShortcutOverrides":@{@"example":@1},@"NSUserKeyEquivalents":@{@"Menu":@"@1"},
-                @"AppleLanguages":@[@"ja"],@"SparkleAutomaticUpdate":@YES,@"SparkleInterval":@3,
-                @"SUEnableAutomaticChecks":@YES,@"SUHasLaunchedBefore":@YES,@"SUScheduledCheckInterval":@99,
-                @"NSWindow Frame Settings":@"frame",@"NSToolbar Configuration PDF":@{@"x":@1},
-                @"NSSplitView Subview Frames A":@[@"frame"],@"TSSettingsUICategory":@"source",@"TSSettingsSelectedCategory":@"preview",@"UnknownVendorKey":@"keep"};
-            if (withPreservedValues.boolValue) [defaults.values addEntriesFromDictionary:kept];
-            defaults.values[@"DockIconStyle"]=@"classic";
-            defaults.values[@"TeXAwareSpellChecking"]=@NO;
-            defaults.values[@"TSHasBeenUsed"]=@NO;
-            defaults.values[@"DocumentFontAttributes"]=@"old";
-            defaults.values[@"AltPath"]=@"stale";
-            // Exercise every B key, including hidden preferences absent from all profiles.
-            for (NSString *key in TSKnownPreferenceKeys())
-                if (profile[key] == nil && !TSPreferenceProfilePreservesKey(key)) defaults.values[key]=@"stale";
-            [defaults registerDefaults:@{@"TeXAwareSpellChecking":@YES}];
-            __block NSUInteger visible=0,intermediate=0;
-            id token=[NSNotificationCenter.defaultCenter addObserverForName:NSUserDefaultsDidChangeNotification object:defaults queue:nil usingBlock:^(NSNotification *note) {
-                if (TSPreferenceProfileIsApplying()) { intermediate++; return; }
-                visible++;
-                check([defaults boolForKey:@"TSHasBeenUsed"],"observers see completed profile");
-            }];
-            [proposal applyToDefaults:defaults];
-            [NSNotificationCenter.defaultCenter removeObserver:token];
-            check(visible==1 && intermediate>0,"one coherent observer update");
-            for (NSString *key in kept) check(withPreservedValues.boolValue ? [defaults.values[key] isEqual:kept[key]] : defaults.values[key]==nil,"C values and absence preserved");
-            for (NSString *key in profile) if (!TSPreferenceProfilePreservesKey(key) && ![key isEqual:@"DocumentFontAttributes"] && ![key isEqual:@"DocumentFont"] && ![key isEqual:@"TSHasBeenUsed"] && ![key isEqual:@"ConvertToYen"])
-                check([defaults.values[key] isEqual:profile[key]],"A profile override");
-            for (NSString *key in TSKnownPreferenceKeys()) {
-                if (profile[key] == nil && !TSPreferenceProfilePreservesKey(key) &&
-                    ![@[@"DocumentFont",@"TSHasBeenUsed",@"ConvertToYen"] containsObject:key])
-                    check(defaults.values[key]==nil,"every B key resets including hidden settings");
-            }
-            check([defaults boolForKey:@"ConvertToYen"],"generated yen conversion default");
-            check(defaults.values[@"DockIconStyle"]==nil,"B Dock defaults to current");
-            check(defaults.values[@"DocumentFontAttributes"]==nil && [defaults.values[@"DocumentFont"] isEqual:font],"font generation");
-            if (profile[@"TeXAwareSpellChecking"]==nil) check([defaults boolForKey:@"TeXAwareSpellChecking"],"B registered default");
-            check([defaults.stringForKey isEqual:nil],"unused");
-        }
-    }
-    ObservedDefaults *firstLaunch=[ObservedDefaults new];
-    NSDictionary *factory=@{@"LinkPopups":@YES,@"DocumentWindowFixedPos":@"factory-position"};
-    [firstLaunch setBool:NO forKey:@"LinkPopups"];
-    TSPreferenceProfile *first=[[TSPreferenceProfile alloc]initWithProfile:@{@"TetexBinPath":@"/test/bin"} documentFont:font registeredDefaults:factory];
-    [first applyToDefaults:firstLaunch];
-    check([firstLaunch boolForKey:@"LinkPopups"] && [[firstLaunch stringForKey:@"DocumentWindowFixedPos"] isEqual:@"factory-position"],"first launch registers absent factory defaults during apply");
-    check([[TSPreferenceProfile alloc] initWithProfile:@{} documentFont:font]==nil,"reject missing engine path");
-    check([[TSPreferenceProfile alloc] initWithProfile:@{@"TetexBinPath":@"  "} documentFont:font]==nil,"reject empty engine path");
+    // An engine profile writes its keys, and observers see one change after all of them.
+    ObservedDefaults *defaults=[ObservedDefaults new];
+    NSDictionary *kept=@{@"FindMethod":@0,@"TSMenuShortcutOverrides":@{@"example":@1},@"DockIconStyle":@"classic",@"UnknownVendorKey":@"keep"};
+    [defaults.values addEntriesFromDictionary:kept];
+    NSDictionary *values=TSEngineProfileValues(TSEngineProfilePLaTeXDvipdfmx,YES);
+    __block NSUInteger visible=0,intermediate=0;
+    id token=[NSNotificationCenter.defaultCenter addObserverForName:NSUserDefaultsDidChangeNotification object:defaults queue:nil usingBlock:^(NSNotification *note) {
+        if (TSPreferenceProfileIsApplying()) { intermediate++; return; }
+        visible++;
+        for (NSString *key in values) check([defaults.values[key] isEqual:values[key]],"observers see the completed profile");
+    }];
+    TSEngineProfileApply(defaults,values);
+    [NSNotificationCenter.defaultCenter removeObserver:token];
+    check(visible==1 && intermediate==values.count,"one coherent observer update");
+    for (NSString *key in kept) check([defaults.values[key] isEqual:kept[key]],"settings outside the profile are kept");
     TSPreferenceInput *text=[[TSPreferenceInput alloc] initWithKey:@"path" kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil];
     check([text validatedValue:@"  "]==nil,"reject empty required text");
     check([[text validatedValue:@" /missing/volume "].textValue isEqual:@"/missing/volume"],"allow nonexisting path");
@@ -139,7 +91,7 @@ int main(int argc,const char **argv) { @autoreleasepool {
         check([linked readTitle:@"Fresh"]!=nil,"read written linked theme");
         [NSFileManager.defaultManager removeItemAtURL:([directory URLByAppendingPathComponent:@"Fresh.plist"] ?: directory) error:NULL];
     }
-    puts("PASS: all nine profile policies, isolated defaults, input validation, safe theme persistence");
+    puts("PASS: engine profile notification policy, isolated defaults, input validation, safe theme persistence");
 } return 0; }
 '''.replace('            check([defaults.stringForKey isEqual:nil],"unused");','')
 with tempfile.TemporaryDirectory(prefix='texshop-live-core-',dir='/private/tmp') as tmp:
@@ -148,5 +100,4 @@ with tempfile.TemporaryDirectory(prefix='texshop-live-core-',dir='/private/tmp')
  args=['xcrun','clang','-fobjc-arc','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-Wno-deprecated-declarations','-Wnullability-completeness','-Wnullable-to-nonnull-conversion','-Wunguarded-availability-new',*include_args(ROOT),'-I',str(ROOT/'Tests'),'-framework','Cocoa',str(t/'probe.m'),*[str(t/n) for n in sources],str(ROOT/'Sources/App/globals.m'),'-o',str(t/'probe')]
  subprocess.run(args,check=True)
  themes=t/'Colors';themes.mkdir()
- profiles=sorted((ROOT/'Resources/Defaults').glob('*Defaults*.plist'));assert len(profiles)==9
- subprocess.run([str(t/'probe'),str(themes),*map(str,profiles)],check=True)
+ subprocess.run([str(t/'probe'),str(themes)],check=True)

@@ -7,8 +7,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /// The multiple replacement window, laid out as CotEditor's: the saved sets in a sidebar with ＋ − and a menu at its
-/// bottom; on the right the rules of the chosen set with ＋|− and the set's options (⋯) under them, and help, "in
-/// selection", Highlight All and Replace All at the bottom. A panel, so the document stays the main window that it
+/// bottom; on the right the rules of the chosen set with ＋|− and the set's options (⋯) under them, and "in
+/// selection", Highlight All and Replace All at the bottom right. A panel, so the document stays the main window that it
 /// acts on. Every change is saved at once, as in CotEditor.
 NS_SWIFT_NAME(MultipleReplaceWindowController)
 @interface TSMultipleReplaceWindowController : NSWindowController
@@ -25,9 +25,6 @@ NS_SWIFT_NAME(MultipleReplaceWindowController)
 @property (nonatomic, readonly) NSSegmentedControl *ruleButtons;
 /// − of the sets: needs a set chosen in the list (one that cannot be read too).
 @property (nonatomic, readonly) NSButton *removeSetButton;
-@property (nonatomic, readonly) NSButton *helpButton;
-/// The anchor of Multiple Replace in TeXShop Help, which the help button opens.
-@property (class, nonatomic, readonly) NSString *helpAnchor;
 
 - (instancetype)initWithFindController:(TSAdvancedFindController *)findController library:(TSMultipleReplaceLibrary *)library NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithWindow:(nullable NSWindow *)window NS_UNAVAILABLE;

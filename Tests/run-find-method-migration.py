@@ -10,7 +10,6 @@ Nothing is displayed.
 --mutations breaks one rule at a time and checks that the test notices."""
 from pathlib import Path
 import argparse
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -26,7 +25,6 @@ FILES = {
     'TSAdvancedFindSettings.m': source_file(root, 'TSAdvancedFindSettings.m'),
     'FactoryDefaults.plist': root / 'Resources/Defaults/FactoryDefaults.plist',
 }
-PROFILES = sorted((root / 'Resources/Defaults').glob('Defaults_*.plist'))
 FACTORY_MARK = '\t<key>FindMethodSwitchedToAdvancedFind</key>\n\t<string>YES</string>\n'
 
 MUTATIONS = {
@@ -55,9 +53,9 @@ MUTATIONS = {
         '[SUD registerDefaults:factoryDefaults];\n\t}\n',
         '[SUD registerDefaults:factoryDefaults];\n\t}\n\tif ([savedSettings[@"TSHasBeenUsed"] boolValue] || savedSettings[@"TetexBinPath"] != nil)\n\t\tTSPreferencesMigrateEarlierUser(SUD, savedSettings);\n'),
     'new users keep the find bar': ('FactoryDefaults.plist', '<key>FindMethod</key>\n\t<string>3</string>', '<key>FindMethod</key>\n\t<string>1</string>'),
-    'a profile sets the find method': ('TSPreferenceProfile.m', '        FindMethodKey, //', '        //'),
-    'a profile drops the mark of the switch': ('TSPreferenceProfile.m', '        FindMethodSwitchedToAdvancedFindKey, //', '        //'),
-    'a profile resets the panel\'s own settings': ('TSPreferenceProfile.m', '        [key hasPrefix:@"AdvancedFind"]) return YES;', '        NO) return YES;'),
+    'a profile sets the find method': ('TSPreferenceProfile.m', '    values[BibTeXengineKey] = row[4];', '    values[BibTeXengineKey] = row[4]; values[FindMethodKey] = @1;'),
+    'a profile drops the mark of the switch': ('TSPreferenceProfile.m', '    values[BibTeXengineKey] = row[4];', '    values[BibTeXengineKey] = row[4]; values[FindMethodSwitchedToAdvancedFindKey] = @NO;'),
+    'a profile resets the panel\'s own settings': ('TSPreferenceProfile.m', '    values[BibTeXengineKey] = row[4];', '    values[BibTeXengineKey] = row[4]; values[@"AdvancedFindOptions"] = @0;'),
 }
 
 PROGRAM = r"""
@@ -211,32 +209,27 @@ int main(int argc, const char *argv[])
         [SUD setInteger:TSFindMethodOgreKit forKey:FindMethodKey];
         Check(Relaunch() == 2 && Syntax() == ICU, @"OgreKit chosen after a reset stays at the next launch");
 
-        // Every shipped profile keeps the find method, the mark and the panel's own settings
-        NSDictionary *factory = [NSDictionary dictionaryWithContentsOfURL:[NSBundle.mainBundle URLForResource:@"FactoryDefaults" withExtension:@"plist" subdirectory:@"Defaults"]];
-        NSData *font = [NSArchiver archivedDataWithRootObject:[NSFont userFontOfSize:12]];
-        NSArray<NSString *> *profiles = [[NSBundle.mainBundle pathsForResourcesOfType:@"plist" inDirectory:@"Profiles"] sortedArrayUsingSelector:@selector(compare:)];
-        Check(profiles.count == 8, @"the eight shipped profiles");
-        for (NSString *profilePath in profiles)
-            for (NSNumber *method in @[@0, @1, @2, @3]) {
-                Launch(with(both, @{FindMethodKey: @2}));
-                [SUD setInteger:method.integerValue forKey:FindMethodKey];
-                [SUD setObject:@5 forKey:@"AdvancedFindOptions"];
-                [SUD setObject:@[@"x"] forKey:@"AdvancedFindHistory"];
-                [SUD setObject:@3 forKey:@"AdvancedFindHistoryLimit"];
-                TSPreferenceProfile *profile = [[TSPreferenceProfile alloc] initWithProfile:[NSDictionary dictionaryWithContentsOfFile:profilePath]
-                                                                               documentFont:font registeredDefaults:factory];
-                [profile applyToDefaults:SUD];
-                NSString *name = profilePath.lastPathComponent;
-                Check([SUD integerForKey:FindMethodKey] == method.integerValue && Syntax() == Ogre,
-                      [NSString stringWithFormat:@"%@ keeps the find method %@ and the way of replacing", name, method]);
-                Check([SUD integerForKey:@"AdvancedFindOptions"] == 5 && [[SUD arrayForKey:@"AdvancedFindHistory"] isEqual:@[@"x"]]
-                      && [SUD integerForKey:@"AdvancedFindHistoryLimit"] == 3, @"a profile keeps the panel's own settings");
-                Check(Relaunch() == method.integerValue && Syntax() == Ogre,
-                      [NSString stringWithFormat:@"after %@, the next launch keeps the find method %@", name, method]);
-            }
+        // Every engine profile, in both forms, keeps the find method, the mark and the panel's own settings
+        for (NSArray<NSNumber *> *section in TSEngineProfileMenuSections())
+            for (NSNumber *profile in section)
+                for (NSNumber *latexmk in @[@NO, @YES])
+                    for (NSNumber *method in @[@0, @1, @2, @3]) {
+                        Launch(with(both, @{FindMethodKey: @2}));
+                        [SUD setInteger:method.integerValue forKey:FindMethodKey];
+                        [SUD setObject:@5 forKey:@"AdvancedFindOptions"];
+                        [SUD setObject:@[@"x"] forKey:@"AdvancedFindHistory"];
+                        [SUD setObject:@3 forKey:@"AdvancedFindHistoryLimit"];
+                        TSEngineProfileApply(SUD, TSEngineProfileValues(profile.integerValue, latexmk.boolValue));
+                        Check([SUD integerForKey:FindMethodKey] == method.integerValue && Syntax() == Ogre,
+                              [NSString stringWithFormat:@"profile %@ keeps the find method %@ and the way of replacing", profile, method]);
+                        Check([SUD integerForKey:@"AdvancedFindOptions"] == 5 && [[SUD arrayForKey:@"AdvancedFindHistory"] isEqual:@[@"x"]]
+                              && [SUD integerForKey:@"AdvancedFindHistoryLimit"] == 3, @"a profile keeps the panel's own settings");
+                        Check(Relaunch() == method.integerValue && Syntax() == Ogre,
+                              [NSString stringWithFormat:@"after profile %@, the next launch keeps the find method %@", profile, method]);
+                    }
         if (failures)
             return 1;
-        puts("PASS: the find method and the way of replacing after launch (new, earlier of each method, chosen way, chosen again, one mark, explicit reset) and after every profile");
+        puts("PASS: the find method and the way of replacing after launch (new, earlier of each method, chosen way, chosen again, one mark, explicit reset) and after every engine profile");
     }
     return 0;
 }
@@ -258,12 +251,9 @@ def run(texts):
         app = tmp / 'Probe.app/Contents'
         (app / 'MacOS').mkdir(parents=True)
         (app / 'Resources/Defaults').mkdir(parents=True)
-        (app / 'Resources/Profiles').mkdir(parents=True)
         (app / 'Info.plist').write_text('<?xml version="1.0" encoding="UTF-8"?><plist version="1.0"><dict><key>CFBundleIdentifier</key>'
                                         '<string>org.texshop.test.FindMethodMigration</string><key>CFBundleExecutable</key><string>probe</string></dict></plist>')
         (app / 'Resources/Defaults/FactoryDefaults.plist').write_text(texts['FactoryDefaults.plist'])
-        for profile in PROFILES:
-            shutil.copy(profile, app / 'Resources/Profiles' / profile.name)
         (tmp / 'probe.m').write_text(PROGRAM.replace('REGISTER', register).replace('LAUNCH', launch))
         for name in ['TSPreferenceLaunch.m', 'TSPreferenceProfile.m', 'TSAdvancedFindSettings.m', 'TSAdvancedFindSettings.h']:
             (tmp / name).write_text(texts[name])

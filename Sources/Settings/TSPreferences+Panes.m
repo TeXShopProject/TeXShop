@@ -10,7 +10,6 @@
 #import "TSPrefMiscTwoController.h"
 #import "TSPrefThemesController.h"
 #import "TSKeyBindingsController.h"
-#import "TSPrefFooterController.h"
 #import "TSPrefThemeNameController.h"
 #import "TSSettingsCategory.h"
 #import "TSPrefPaneLayout.h"
@@ -55,9 +54,6 @@
     themes.preferences = self;
     (void)themes.view;
     themes.categoryIdentifier = TSSettingsCategoryThemes;
-    TSPrefFooterController *footer = [TSPrefFooterController new];
-    footer.preferences = self;
-    (void)footer.view;
     TSPrefThemeNameController *themeName = [TSPrefThemeNameController new];
     themeName.preferences = self;
     (void)themeName.view;
@@ -237,7 +233,7 @@
     markerSquareColorWell = themes.markerSquareColorWell;
     stylePanel = themeName.stylePanel;
     styleTitle = themeName.styleTitle;
-    return @[source, editor, preview, console, typesetting, engines, miscOne, miscTwo, themes, footer, themeName];
+    return @[source, editor, preview, console, typesetting, engines, miscOne, miscTwo, themes, themeName];
 }
 - (NSDictionary<TSSettingsCategoryID, NSViewController *> *)classifySettingsPanes:(NSArray<TSPrefPaneController *> *)panes
 {

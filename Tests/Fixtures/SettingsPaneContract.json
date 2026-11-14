@@ -1613,154 +1613,6 @@
         "value": 3
       }
     ],
-    "FooterActions": [
-      {
-        "key": "1100.action",
-        "view": "settings.1089",
-        "kind": "menuItem",
-        "property": "action",
-        "value": "setDefaults:",
-        "index": 1
-      },
-      {
-        "key": "1099.action",
-        "view": "settings.1089",
-        "kind": "menuItem",
-        "property": "action",
-        "value": "setDefaults:",
-        "index": 2
-      },
-      {
-        "key": "1098.action",
-        "view": "settings.1089",
-        "kind": "menuItem",
-        "property": "action",
-        "value": "setDefaults:",
-        "index": 3
-      },
-      {
-        "key": "1097.action",
-        "view": "settings.1089",
-        "kind": "menuItem",
-        "property": "action",
-        "value": "setDefaults:",
-        "index": 4
-      },
-      {
-        "key": "1096.action",
-        "view": "settings.1089",
-        "kind": "menuItem",
-        "property": "action",
-        "value": "setDefaults:",
-        "index": 5
-      },
-      {
-        "key": "1095.action",
-        "view": "settings.1089",
-        "kind": "menuItem",
-        "property": "action",
-        "value": "setDefaults:",
-        "index": 6
-      },
-      {
-        "key": "1094.action",
-        "view": "settings.1089",
-        "kind": "menuItem",
-        "property": "action",
-        "value": "setDefaults:",
-        "index": 7
-      },
-      {
-        "key": "1093.action",
-        "view": "settings.1089",
-        "kind": "menuItem",
-        "property": "action",
-        "value": "setDefaults:",
-        "index": 8
-      },
-      {
-        "key": "1092.action",
-        "view": "settings.1089",
-        "kind": "menuItem",
-        "property": "action",
-        "value": "setDefaults:",
-        "index": 9
-      }
-    ],
-    "FooterTags": [
-      {
-        "key": "1100.tag",
-        "view": "settings.1089",
-        "kind": "menuItem",
-        "property": "tag",
-        "value": 1,
-        "index": 1
-      },
-      {
-        "key": "1099.tag",
-        "view": "settings.1089",
-        "kind": "menuItem",
-        "property": "tag",
-        "value": 2,
-        "index": 2
-      },
-      {
-        "key": "1098.tag",
-        "view": "settings.1089",
-        "kind": "menuItem",
-        "property": "tag",
-        "value": 3,
-        "index": 3
-      },
-      {
-        "key": "1097.tag",
-        "view": "settings.1089",
-        "kind": "menuItem",
-        "property": "tag",
-        "value": 4,
-        "index": 4
-      },
-      {
-        "key": "1096.tag",
-        "view": "settings.1089",
-        "kind": "menuItem",
-        "property": "tag",
-        "value": 5,
-        "index": 5
-      },
-      {
-        "key": "1095.tag",
-        "view": "settings.1089",
-        "kind": "menuItem",
-        "property": "tag",
-        "value": 6,
-        "index": 6
-      },
-      {
-        "key": "1094.tag",
-        "view": "settings.1089",
-        "kind": "menuItem",
-        "property": "tag",
-        "value": 7,
-        "index": 7
-      },
-      {
-        "key": "1093.tag",
-        "view": "settings.1089",
-        "kind": "menuItem",
-        "property": "tag",
-        "value": 8,
-        "index": 8
-      },
-      {
-        "key": "1092.tag",
-        "view": "settings.1089",
-        "kind": "menuItem",
-        "property": "tag",
-        "value": 9,
-        "index": 9
-      }
-    ],
     "MiscOneActions": [
       {
         "key": "405.action",
@@ -3272,8 +3124,7 @@
         "column": 0
       }
     ],
-    "ThemeNameHeadings": [],
-    "FooterHeadings": []
+    "ThemeNameHeadings": []
   },
   "languages": {
     "Base": {
@@ -3371,19 +3222,6 @@
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
           "54.title": "pdfTeX"
-        },
-        "SettingsFooter": {
-          "1093.title": "Legacy pTeX (Shift JIS)",
-          "1098.title": "upTeX (latexmk)",
-          "1095.title": "pTeX (latexmk)",
-          "1092.title": "Legacy pTeX (EUC)",
-          "1097.title": "upTeX (shell script)",
-          "1101.title": "Set Default Values",
-          "1094.title": "pTeX (shell script)",
-          "1099.title": "upTeX (ptex2pdf)",
-          "1091.title": "OtherViews",
-          "1100.title": "TeXShop Standard",
-          "1096.title": "pTeX (ptex2pdf)"
         },
         "SettingsMiscOne": {
           "XCi-5f-wnn.title": "Cursor Color:",
@@ -4327,95 +4165,6 @@
           "kind": "view",
           "property": "title",
           "value": "pdfTeX"
-        }
-      ],
-      "Footer": [
-        {
-          "key": "1093.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legacy pTeX (Shift JIS)",
-          "index": 8
-        },
-        {
-          "key": "1098.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (latexmk)",
-          "index": 3
-        },
-        {
-          "key": "1095.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (latexmk)",
-          "index": 6
-        },
-        {
-          "key": "1092.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legacy pTeX (EUC)",
-          "index": 9
-        },
-        {
-          "key": "1097.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (shell script)",
-          "index": 4
-        },
-        {
-          "key": "1101.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Set Default Values",
-          "index": 0
-        },
-        {
-          "key": "1094.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (shell script)",
-          "index": 7
-        },
-        {
-          "key": "1099.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (ptex2pdf)",
-          "index": 2
-        },
-        {
-          "key": "1091.title",
-          "view": "settings.1089",
-          "kind": "menu",
-          "property": "title",
-          "value": "OtherViews"
-        },
-        {
-          "key": "1100.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "TeXShop Standard",
-          "index": 1
-        },
-        {
-          "key": "1096.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (ptex2pdf)",
-          "index": 5
         }
       ],
       "MiscOne": [
@@ -6647,19 +6396,6 @@
           "880.title": "TeX",
           "54.title": "pdfTeX"
         },
-        "SettingsFooter": {
-          "1093.title": "Legacy pTeX (Shift JIS)",
-          "1098.title": "upTeX (latexmk)",
-          "1095.title": "pTeX (latexmk)",
-          "1092.title": "Legacy pTeX (EUC)",
-          "1097.title": "upTeX (shell script)",
-          "1101.title": "Alle Einstellungen zurücksetzen",
-          "1094.title": "pTeX (shell script)",
-          "1099.title": "upTeX (ptex2pdf)",
-          "1091.title": "OtherViews",
-          "1100.title": "TeXShop-Standard",
-          "1096.title": "pTeX (ptex2pdf)"
-        },
         "SettingsMiscOne": {
           "XCi-5f-wnn.title": "Farbe des Cursors:",
           "395.title": "PNG",
@@ -7602,95 +7338,6 @@
           "kind": "view",
           "property": "title",
           "value": "pdfTeX"
-        }
-      ],
-      "Footer": [
-        {
-          "key": "1093.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legacy pTeX (Shift JIS)",
-          "index": 8
-        },
-        {
-          "key": "1098.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (latexmk)",
-          "index": 3
-        },
-        {
-          "key": "1095.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (latexmk)",
-          "index": 6
-        },
-        {
-          "key": "1092.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legacy pTeX (EUC)",
-          "index": 9
-        },
-        {
-          "key": "1097.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (shell script)",
-          "index": 4
-        },
-        {
-          "key": "1101.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Alle Einstellungen zurücksetzen",
-          "index": 0
-        },
-        {
-          "key": "1094.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (shell script)",
-          "index": 7
-        },
-        {
-          "key": "1099.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (ptex2pdf)",
-          "index": 2
-        },
-        {
-          "key": "1091.title",
-          "view": "settings.1089",
-          "kind": "menu",
-          "property": "title",
-          "value": "OtherViews"
-        },
-        {
-          "key": "1100.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "TeXShop-Standard",
-          "index": 1
-        },
-        {
-          "key": "1096.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (ptex2pdf)",
-          "index": 5
         }
       ],
       "MiscOne": [
@@ -9922,19 +9569,6 @@
           "880.title": "TeX",
           "54.title": "pdfTeX"
         },
-        "SettingsFooter": {
-          "1093.title": "Legacy pTeX (Shift JIS)",
-          "1098.title": "upTeX (latexmk)",
-          "1095.title": "pTeX (latexmk)",
-          "1092.title": "Legacy pTeX (EUC)",
-          "1097.title": "upTeX (shell script)",
-          "1101.title": "Valores predeterminados",
-          "1094.title": "pTeX (shell script)",
-          "1099.title": "upTeX (ptex2pdf)",
-          "1091.title": "OtherViews",
-          "1100.title": "Estándar de TeXShop",
-          "1096.title": "pTeX (ptex2pdf)"
-        },
         "SettingsMiscOne": {
           "XCi-5f-wnn.title": "Color del cursor:",
           "395.title": "PNG",
@@ -10877,95 +10511,6 @@
           "kind": "view",
           "property": "title",
           "value": "pdfTeX"
-        }
-      ],
-      "Footer": [
-        {
-          "key": "1093.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legacy pTeX (Shift JIS)",
-          "index": 8
-        },
-        {
-          "key": "1098.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (latexmk)",
-          "index": 3
-        },
-        {
-          "key": "1095.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (latexmk)",
-          "index": 6
-        },
-        {
-          "key": "1092.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legacy pTeX (EUC)",
-          "index": 9
-        },
-        {
-          "key": "1097.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (shell script)",
-          "index": 4
-        },
-        {
-          "key": "1101.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Valores predeterminados",
-          "index": 0
-        },
-        {
-          "key": "1094.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (shell script)",
-          "index": 7
-        },
-        {
-          "key": "1099.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (ptex2pdf)",
-          "index": 2
-        },
-        {
-          "key": "1091.title",
-          "view": "settings.1089",
-          "kind": "menu",
-          "property": "title",
-          "value": "OtherViews"
-        },
-        {
-          "key": "1100.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Estándar de TeXShop",
-          "index": 1
-        },
-        {
-          "key": "1096.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (ptex2pdf)",
-          "index": 5
         }
       ],
       "MiscOne": [
@@ -13197,19 +12742,6 @@
           "880.title": "TeX",
           "54.title": "pdfTeX"
         },
-        "SettingsFooter": {
-          "1093.title": "Legacy pTeX (Shift JIS)",
-          "1098.title": "upTeX (latexmk)",
-          "1095.title": "pTeX (latexmk)",
-          "1092.title": "Legacy pTeX (EUC)",
-          "1097.title": "upTeX (shell script)",
-          "1101.title": "Réglages par défaut",
-          "1094.title": "pTeX (shell script)",
-          "1099.title": "upTeX (ptex2pdf)",
-          "1091.title": "OtherViews",
-          "1100.title": "Standard TeXShop",
-          "1096.title": "pTeX (ptex2pdf)"
-        },
         "SettingsMiscOne": {
           "XCi-5f-wnn.title": "Couleur du curseur:",
           "395.title": "PNG",
@@ -14152,95 +13684,6 @@
           "kind": "view",
           "property": "title",
           "value": "pdfTeX"
-        }
-      ],
-      "Footer": [
-        {
-          "key": "1093.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legacy pTeX (Shift JIS)",
-          "index": 8
-        },
-        {
-          "key": "1098.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (latexmk)",
-          "index": 3
-        },
-        {
-          "key": "1095.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (latexmk)",
-          "index": 6
-        },
-        {
-          "key": "1092.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legacy pTeX (EUC)",
-          "index": 9
-        },
-        {
-          "key": "1097.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (shell script)",
-          "index": 4
-        },
-        {
-          "key": "1101.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Réglages par défaut",
-          "index": 0
-        },
-        {
-          "key": "1094.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (shell script)",
-          "index": 7
-        },
-        {
-          "key": "1099.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (ptex2pdf)",
-          "index": 2
-        },
-        {
-          "key": "1091.title",
-          "view": "settings.1089",
-          "kind": "menu",
-          "property": "title",
-          "value": "OtherViews"
-        },
-        {
-          "key": "1100.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Standard TeXShop",
-          "index": 1
-        },
-        {
-          "key": "1096.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (ptex2pdf)",
-          "index": 5
         }
       ],
       "MiscOne": [
@@ -16472,19 +15915,6 @@
           "880.title": "TeX",
           "54.title": "pdfTeX"
         },
-        "SettingsFooter": {
-          "1093.title": "Legacy pTeX (Shift JIS)",
-          "1098.title": "upTeX (latexmk)",
-          "1095.title": "pTeX (latexmk)",
-          "1092.title": "Legacy pTeX (EUC)",
-          "1097.title": "upTeX (shell script)",
-          "1101.title": "Imposta default",
-          "1094.title": "pTeX (shell script)",
-          "1099.title": "upTeX (ptex2pdf)",
-          "1091.title": "OtherViews",
-          "1100.title": "Standard TeXShop",
-          "1096.title": "pTeX (ptex2pdf)"
-        },
         "SettingsMiscOne": {
           "XCi-5f-wnn.title": "Colore cursore:",
           "395.title": "PNG",
@@ -17427,95 +16857,6 @@
           "kind": "view",
           "property": "title",
           "value": "pdfTeX"
-        }
-      ],
-      "Footer": [
-        {
-          "key": "1093.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legacy pTeX (Shift JIS)",
-          "index": 8
-        },
-        {
-          "key": "1098.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (latexmk)",
-          "index": 3
-        },
-        {
-          "key": "1095.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (latexmk)",
-          "index": 6
-        },
-        {
-          "key": "1092.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legacy pTeX (EUC)",
-          "index": 9
-        },
-        {
-          "key": "1097.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (shell script)",
-          "index": 4
-        },
-        {
-          "key": "1101.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Imposta default",
-          "index": 0
-        },
-        {
-          "key": "1094.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (shell script)",
-          "index": 7
-        },
-        {
-          "key": "1099.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (ptex2pdf)",
-          "index": 2
-        },
-        {
-          "key": "1091.title",
-          "view": "settings.1089",
-          "kind": "menu",
-          "property": "title",
-          "value": "OtherViews"
-        },
-        {
-          "key": "1100.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Standard TeXShop",
-          "index": 1
-        },
-        {
-          "key": "1096.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (ptex2pdf)",
-          "index": 5
         }
       ],
       "MiscOne": [
@@ -19747,19 +19088,6 @@
           "880.title": "TeX",
           "54.title": "pdfTeX"
         },
-        "SettingsFooter": {
-          "1093.title": "旧pTeX (Shift JIS)",
-          "1098.title": "upTeX (latexmk)",
-          "1095.title": "pTeX (latexmk)",
-          "1092.title": "旧pTeX (EUC)",
-          "1097.title": "upTeX (シェルスクリプト)",
-          "1101.title": "設定プロファイル",
-          "1094.title": "pTeX (シェルスクリプト)",
-          "1099.title": "upTeX (ptex2pdf)",
-          "1091.title": "OtherViews",
-          "1100.title": "TeXShop標準",
-          "1096.title": "pTeX (ptex2pdf)"
-        },
         "SettingsMiscOne": {
           "XCi-5f-wnn.title": "ブロックカーソルの色:",
           "395.title": "PNG",
@@ -20702,95 +20030,6 @@
           "kind": "view",
           "property": "title",
           "value": "pdfTeX"
-        }
-      ],
-      "Footer": [
-        {
-          "key": "1093.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "旧pTeX (Shift JIS)",
-          "index": 8
-        },
-        {
-          "key": "1098.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (latexmk)",
-          "index": 3
-        },
-        {
-          "key": "1095.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (latexmk)",
-          "index": 6
-        },
-        {
-          "key": "1092.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "旧pTeX (EUC)",
-          "index": 9
-        },
-        {
-          "key": "1097.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (シェルスクリプト)",
-          "index": 4
-        },
-        {
-          "key": "1101.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "設定プロファイル",
-          "index": 0
-        },
-        {
-          "key": "1094.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (シェルスクリプト)",
-          "index": 7
-        },
-        {
-          "key": "1099.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (ptex2pdf)",
-          "index": 2
-        },
-        {
-          "key": "1091.title",
-          "view": "settings.1089",
-          "kind": "menu",
-          "property": "title",
-          "value": "OtherViews"
-        },
-        {
-          "key": "1100.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "TeXShop標準",
-          "index": 1
-        },
-        {
-          "key": "1096.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (ptex2pdf)",
-          "index": 5
         }
       ],
       "MiscOne": [
@@ -23022,19 +22261,6 @@
           "880.title": "TeX",
           "54.title": "pdfTeX"
         },
-        "SettingsFooter": {
-          "1093.title": "Legacy pTeX (Shift JIS)",
-          "1098.title": "upTeX (latexmk)",
-          "1095.title": "pTeX (latexmk)",
-          "1092.title": "Legacy pTeX (EUC)",
-          "1097.title": "upTeX (shell script)",
-          "1101.title": "설정 프로파일",
-          "1094.title": "pTeX (shell script)",
-          "1099.title": "upTeX (ptex2pdf)",
-          "1091.title": "OtherViews",
-          "1100.title": "TeXShop 기본",
-          "1096.title": "pTeX (ptex2pdf)"
-        },
         "SettingsMiscOne": {
           "XCi-5f-wnn.title": "커서 색상:",
           "395.title": "PNG",
@@ -23977,95 +23203,6 @@
           "kind": "view",
           "property": "title",
           "value": "pdfTeX"
-        }
-      ],
-      "Footer": [
-        {
-          "key": "1093.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legacy pTeX (Shift JIS)",
-          "index": 8
-        },
-        {
-          "key": "1098.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (latexmk)",
-          "index": 3
-        },
-        {
-          "key": "1095.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (latexmk)",
-          "index": 6
-        },
-        {
-          "key": "1092.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legacy pTeX (EUC)",
-          "index": 9
-        },
-        {
-          "key": "1097.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (shell script)",
-          "index": 4
-        },
-        {
-          "key": "1101.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "설정 프로파일",
-          "index": 0
-        },
-        {
-          "key": "1094.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (shell script)",
-          "index": 7
-        },
-        {
-          "key": "1099.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (ptex2pdf)",
-          "index": 2
-        },
-        {
-          "key": "1091.title",
-          "view": "settings.1089",
-          "kind": "menu",
-          "property": "title",
-          "value": "OtherViews"
-        },
-        {
-          "key": "1100.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "TeXShop 기본",
-          "index": 1
-        },
-        {
-          "key": "1096.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (ptex2pdf)",
-          "index": 5
         }
       ],
       "MiscOne": [
@@ -26297,19 +25434,6 @@
           "880.title": "TeX",
           "54.title": "pdfTeX"
         },
-        "SettingsFooter": {
-          "1093.title": "Legacy pTeX (Shift JIS)",
-          "1098.title": "upTeX (latexmk)",
-          "1095.title": "pTeX (latexmk)",
-          "1092.title": "Legacy pTeX (EUC)",
-          "1097.title": "upTeX (shell script)",
-          "1101.title": "Standaardwaarden",
-          "1094.title": "pTeX (shell script)",
-          "1099.title": "upTeX (ptex2pdf)",
-          "1091.title": "OtherViews",
-          "1100.title": "TeXShop-standaard",
-          "1096.title": "pTeX (ptex2pdf)"
-        },
         "SettingsMiscOne": {
           "XCi-5f-wnn.title": "Cursorkleur:",
           "395.title": "PNG",
@@ -27252,95 +26376,6 @@
           "kind": "view",
           "property": "title",
           "value": "pdfTeX"
-        }
-      ],
-      "Footer": [
-        {
-          "key": "1093.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legacy pTeX (Shift JIS)",
-          "index": 8
-        },
-        {
-          "key": "1098.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (latexmk)",
-          "index": 3
-        },
-        {
-          "key": "1095.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (latexmk)",
-          "index": 6
-        },
-        {
-          "key": "1092.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legacy pTeX (EUC)",
-          "index": 9
-        },
-        {
-          "key": "1097.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (shell script)",
-          "index": 4
-        },
-        {
-          "key": "1101.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Standaardwaarden",
-          "index": 0
-        },
-        {
-          "key": "1094.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (shell script)",
-          "index": 7
-        },
-        {
-          "key": "1099.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (ptex2pdf)",
-          "index": 2
-        },
-        {
-          "key": "1091.title",
-          "view": "settings.1089",
-          "kind": "menu",
-          "property": "title",
-          "value": "OtherViews"
-        },
-        {
-          "key": "1100.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "TeXShop-standaard",
-          "index": 1
-        },
-        {
-          "key": "1096.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (ptex2pdf)",
-          "index": 5
         }
       ],
       "MiscOne": [
@@ -29572,19 +28607,6 @@
           "880.title": "TeX",
           "54.title": "pdfTeX"
         },
-        "SettingsFooter": {
-          "1093.title": "Legacy pTeX (Shift JIS)",
-          "1098.title": "upTeX (latexmk)",
-          "1095.title": "pTeX (latexmk)",
-          "1092.title": "Legacy pTeX (EUC)",
-          "1097.title": "upTeX (shell script)",
-          "1101.title": "Definir valores predefinidos",
-          "1094.title": "pTeX (shell script)",
-          "1099.title": "upTeX (ptex2pdf)",
-          "1091.title": "OtherViews",
-          "1100.title": "Padrão do TeXShop",
-          "1096.title": "pTeX (ptex2pdf)"
-        },
         "SettingsMiscOne": {
           "XCi-5f-wnn.title": "Cor do cursor:",
           "395.title": "PNG",
@@ -30527,95 +29549,6 @@
           "kind": "view",
           "property": "title",
           "value": "pdfTeX"
-        }
-      ],
-      "Footer": [
-        {
-          "key": "1093.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legacy pTeX (Shift JIS)",
-          "index": 8
-        },
-        {
-          "key": "1098.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (latexmk)",
-          "index": 3
-        },
-        {
-          "key": "1095.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (latexmk)",
-          "index": 6
-        },
-        {
-          "key": "1092.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legacy pTeX (EUC)",
-          "index": 9
-        },
-        {
-          "key": "1097.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (shell script)",
-          "index": 4
-        },
-        {
-          "key": "1101.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Definir valores predefinidos",
-          "index": 0
-        },
-        {
-          "key": "1094.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (shell script)",
-          "index": 7
-        },
-        {
-          "key": "1099.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (ptex2pdf)",
-          "index": 2
-        },
-        {
-          "key": "1091.title",
-          "view": "settings.1089",
-          "kind": "menu",
-          "property": "title",
-          "value": "OtherViews"
-        },
-        {
-          "key": "1100.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Padrão do TeXShop",
-          "index": 1
-        },
-        {
-          "key": "1096.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (ptex2pdf)",
-          "index": 5
         }
       ],
       "MiscOne": [
@@ -32847,19 +31780,6 @@
           "880.title": "TeX",
           "54.title": "pdfTeX"
         },
-        "SettingsFooter": {
-          "1093.title": "Legado pTeX (Shift JIS)",
-          "1098.title": "upTeX (latexmk)",
-          "1095.title": "pTeX (latexmk)",
-          "1092.title": "Legado pTeX (EUC)",
-          "1097.title": "upTeX (shell script)",
-          "1101.title": "Restaurar valores padrões",
-          "1094.title": "pTeX (shell script)",
-          "1099.title": "upTeX (ptex2pdf)",
-          "1091.title": "OtherViews",
-          "1100.title": "Padrão do TeXShop",
-          "1096.title": "pTeX (ptex2pdf)"
-        },
         "SettingsMiscOne": {
           "XCi-5f-wnn.title": "Cor do cursor:",
           "395.title": "PNG",
@@ -33802,95 +32722,6 @@
           "kind": "view",
           "property": "title",
           "value": "pdfTeX"
-        }
-      ],
-      "Footer": [
-        {
-          "key": "1093.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legado pTeX (Shift JIS)",
-          "index": 8
-        },
-        {
-          "key": "1098.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (latexmk)",
-          "index": 3
-        },
-        {
-          "key": "1095.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (latexmk)",
-          "index": 6
-        },
-        {
-          "key": "1092.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legado pTeX (EUC)",
-          "index": 9
-        },
-        {
-          "key": "1097.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (shell script)",
-          "index": 4
-        },
-        {
-          "key": "1101.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Restaurar valores padrões",
-          "index": 0
-        },
-        {
-          "key": "1094.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (shell script)",
-          "index": 7
-        },
-        {
-          "key": "1099.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (ptex2pdf)",
-          "index": 2
-        },
-        {
-          "key": "1091.title",
-          "view": "settings.1089",
-          "kind": "menu",
-          "property": "title",
-          "value": "OtherViews"
-        },
-        {
-          "key": "1100.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Padrão do TeXShop",
-          "index": 1
-        },
-        {
-          "key": "1096.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (ptex2pdf)",
-          "index": 5
         }
       ],
       "MiscOne": [
@@ -36122,19 +34953,6 @@
           "880.title": "TeX",
           "54.title": "pdfTeX"
         },
-        "SettingsFooter": {
-          "1093.title": "Legacy pTeX (Shift JIS)",
-          "1098.title": "upTeX (latexmk)",
-          "1095.title": "pTeX (latexmk)",
-          "1092.title": "Legacy pTeX (EUC)",
-          "1097.title": "upTeX (shell script)",
-          "1101.title": "Stabilește valorile implicite",
-          "1094.title": "pTeX (shell script)",
-          "1099.title": "upTeX (ptex2pdf)",
-          "1091.title": "OtherViews",
-          "1100.title": "Standard TeXShop",
-          "1096.title": "pTeX (ptex2pdf)"
-        },
         "SettingsMiscOne": {
           "XCi-5f-wnn.title": "Culoarea cursorului:",
           "395.title": "PNG",
@@ -37077,95 +35895,6 @@
           "kind": "view",
           "property": "title",
           "value": "pdfTeX"
-        }
-      ],
-      "Footer": [
-        {
-          "key": "1093.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legacy pTeX (Shift JIS)",
-          "index": 8
-        },
-        {
-          "key": "1098.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (latexmk)",
-          "index": 3
-        },
-        {
-          "key": "1095.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (latexmk)",
-          "index": 6
-        },
-        {
-          "key": "1092.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legacy pTeX (EUC)",
-          "index": 9
-        },
-        {
-          "key": "1097.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (shell script)",
-          "index": 4
-        },
-        {
-          "key": "1101.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Stabilește valorile implicite",
-          "index": 0
-        },
-        {
-          "key": "1094.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (shell script)",
-          "index": 7
-        },
-        {
-          "key": "1099.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (ptex2pdf)",
-          "index": 2
-        },
-        {
-          "key": "1091.title",
-          "view": "settings.1089",
-          "kind": "menu",
-          "property": "title",
-          "value": "OtherViews"
-        },
-        {
-          "key": "1100.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Standard TeXShop",
-          "index": 1
-        },
-        {
-          "key": "1096.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (ptex2pdf)",
-          "index": 5
         }
       ],
       "MiscOne": [
@@ -39397,19 +38126,6 @@
           "880.title": "TeX",
           "54.title": "pdfTeX"
         },
-        "SettingsFooter": {
-          "1093.title": "Legacy pTeX (Shift JIS)",
-          "1098.title": "upTeX (latexmk)",
-          "1095.title": "pTeX (latexmk)",
-          "1092.title": "Legacy pTeX (EUC)",
-          "1097.title": "upTeX (shell script)",
-          "1101.title": "恢复默认设置",
-          "1094.title": "pTeX (shell script)",
-          "1099.title": "upTeX (ptex2pdf)",
-          "1091.title": "OtherViews",
-          "1100.title": "TeXShop标准",
-          "1096.title": "pTeX (ptex2pdf)"
-        },
         "SettingsMiscOne": {
           "XCi-5f-wnn.title": "光标颜色:",
           "395.title": "PNG",
@@ -40352,95 +39068,6 @@
           "kind": "view",
           "property": "title",
           "value": "pdfTeX"
-        }
-      ],
-      "Footer": [
-        {
-          "key": "1093.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legacy pTeX (Shift JIS)",
-          "index": 8
-        },
-        {
-          "key": "1098.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (latexmk)",
-          "index": 3
-        },
-        {
-          "key": "1095.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (latexmk)",
-          "index": 6
-        },
-        {
-          "key": "1092.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "Legacy pTeX (EUC)",
-          "index": 9
-        },
-        {
-          "key": "1097.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (shell script)",
-          "index": 4
-        },
-        {
-          "key": "1101.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "恢复默认设置",
-          "index": 0
-        },
-        {
-          "key": "1094.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (shell script)",
-          "index": 7
-        },
-        {
-          "key": "1099.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "upTeX (ptex2pdf)",
-          "index": 2
-        },
-        {
-          "key": "1091.title",
-          "view": "settings.1089",
-          "kind": "menu",
-          "property": "title",
-          "value": "OtherViews"
-        },
-        {
-          "key": "1100.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "TeXShop标准",
-          "index": 1
-        },
-        {
-          "key": "1096.title",
-          "view": "settings.1089",
-          "kind": "menuItem",
-          "property": "title",
-          "value": "pTeX (ptex2pdf)",
-          "index": 5
         }
       ],
       "MiscOne": [

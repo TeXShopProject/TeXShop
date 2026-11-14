@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithWindowNibPath:(NSString *)path owner:(id)owner NS_UNAVAILABLE;
 - (instancetype)initWithCoder:(NSCoder *)coder NS_UNAVAILABLE;
 /// Category controllers retain their controls and use stable identifiers.
-- (void)hostPaneControllers:(NSDictionary<TSSettingsCategoryID, NSViewController *> *)panes footer:(NSView *)footer;
+- (void)hostPaneControllers:(NSDictionary<TSSettingsCategoryID, NSViewController *> *)panes footer:(nullable NSView *)footer;
 - (void)changeFont:(nullable id)sender;
 - (nullable NSView *)viewForCategoryIdentifier:(TSSettingsCategoryID)identifier;
 - (void)beginSession;

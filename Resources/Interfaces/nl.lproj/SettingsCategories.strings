@@ -16,13 +16,13 @@
 "updates" = "Updates";
 
 /* Category overview */
-"general.summary" = "Opstarten, vensterposities, instellingenprofielen en het Dock-symbool.";
+"general.summary" = "Opstarten, vensterposities en het Dock-symbool.";
 "documents.summary" = "Tekstcodering en documenten bewaren.";
 "editor.summary" = "Bewerken, syntaxkleuren, inspringen en haakjes.";
 "spelling.summary" = "Spellingcontrole tijdens het typen en in LaTeX.";
 "appearance.summary" = "Kleurthema’s kiezen en bewerken.";
 "preview.summary" = "Weergave en bediening van het pdf-voorbeeld.";
-"typesetting.summary" = "Zetcommando’s, synchronisatie en paden naar hulpmiddelen.";
+"typesetting.summary" = "Engineprofielen, zetcommando’s, synchronisatie en paden naar hulpmiddelen.";
 "console.summary" = "De console met de uitvoer van het zetten.";
 "keyboard.summary" = "Toetsbindingen, aanvulling en menusneltoetsen.";
 "updates.summary" = "Automatisch controleren en software-updates.";
@@ -49,10 +49,6 @@
 "group.general.3.title" = "Hoofdbestand van project";
 "catalog.general.3.0.title" = "Hoofdbestand openen bij het openen van een document";
 "catalog.general.3.1.title" = "Geopend hoofddocument minimaliseren";
-"group.general.4.title" = "Standaardwaarden";
-"catalog.general.4.0.title" = "Een instellingenprofiel toepassen, bijvoorbeeld voor Japans zetwerk.";
-"catalog.general.4.1.title" = "Profiel";
-"catalog.general.4.1.button" = "Pas toe";
 "group.general.5.title" = "Geavanceerd";
 "group.general.6.title" = "Dock-symbool tijdens gebruik";
 "catalog.general.5.0.title" = "Instellingen die hier niet staan, worden beschreven in het helpdocument ‘Commentaarregels en verborgen instellingen’.";
@@ -238,7 +234,10 @@
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "Start-URL";
 "catalog.preview.5.0.note" = "De pagina die het HTML-venster als eerste opent. Voer een webadres of het pad van een bestand in. Standaard: https://texshop.app";
-"group.typesetting.0.title" = "Standaardwaarden";
+"group.typesetting.0.title" = "Engine";
+"catalog.typesetting.0.4.title" = "Engineprofiel";
+"catalog.typesetting.0.4.note" = "Stelt de zetcommando’s, de BibTeX-engine en ondersteuning voor het otf-pakket in. De Japanse profielen stellen ook UTF-8 als codering voor nieuwe documenten, het woordenboek en de omzetting van UTF-8-MAC in.";
+"catalog.typesetting.0.4.button" = "Pas toe…";
 "catalog.typesetting.0.0.title" = "Standaard TeX-opdracht";
 "catalog.typesetting.0.1.title" = "Te gebruiken commando";
 "catalog.typesetting.0.2.title" = "Zetmethode";
@@ -257,7 +256,7 @@
 "catalog.typesetting.3.1.note" = "Standaard: /usr/local/bin";
 "catalog.typesetting.3.2.title" = "Tweede TeX-engines";
 "catalog.typesetting.3.2.note" = "Voor documenten met % !TEX useAlternatePath. Standaard: ~/bin/context/tex/texmf-osx-arm64/bin";
-"catalog.typesetting.3.3.title" = "Automatisch instellen…";
+"catalog.typesetting.3.3.title" = "Paden detecteren…";
 "group.typesetting.4.title" = "Direct PDF";
 "catalog.typesetting.4.0.title" = "TeX";
 "catalog.typesetting.4.0.button" = "standaard";

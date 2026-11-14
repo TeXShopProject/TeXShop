@@ -50,7 +50,6 @@ for lang,expected in fixture['languages'].items():
     assert strings(panes/'SettingsSource.strings')['585.title']==expected[4],(lang,'Find title')
     assert strings(panes/'SettingsPreview.strings')['113.ibShadowedToolTip']==expected[3],(lang,'zoom tooltip')
     assert 'catalog.editor.7.0.note' not in strings(panes/'SettingsCategories.strings'),(lang,'constant restart note')
-    assert not any(k.startswith('LIV-SV') for k in strings(panes/'SettingsFooter.strings')),(lang,'footer explanation')
     assert not {'F86-wI-vOl.label','L8F-o2-roK.label'} & strings(panes/'SettingsThemes.strings').keys(),(lang,'retired intermediate theme headings')
     assert not any(k.startswith('LIV-TH') for k in strings(panes/'SettingsThemes.strings')),(lang,'theme explanation')
 source=(r/'Sources/Settings/TSPreferences.m').read_text();start=source.index('- (IBAction)encodingChanged:');end=source.index('\n}',start)

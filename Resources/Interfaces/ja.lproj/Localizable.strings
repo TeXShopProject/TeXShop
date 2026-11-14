@@ -144,9 +144,7 @@
 "TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShopはすべての改行をLFに揃えました。書類を保存すると、ファイルの改行コードはLFになります。";
 "Don’t show again for this document" = "この書類では今後表示しない";
 
-"Set Up TeX Engine Paths" = "TeXエンジンのパス設定";
 
-"Detected Engine Paths" = "エンジンの検出結果";
 
 
 
@@ -155,7 +153,6 @@
 "Version unavailable" = "不明";
 
 
-"Use These Paths" = "この設定を使用";
 
 /* Menu keyboard shortcut customization */
 "Search commands" = "機能を検索";
@@ -192,10 +189,7 @@
 "This shortcut is already used by:\n%@" = "このショートカットは次のコマンドで使用されています：\n%@";
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
-"The selected profile is invalid." = "選択した設定プロファイルが正しくありません。";
-"Apply Settings Profile?" = "設定プロファイルを適用しますか？";
 
-"Apply Profile" = "プロファイルを適用";
 "Settings could not be saved" = "設定を保存できませんでした";
 "Enter a valid setting" = "有効な設定値を入力してください";
 
@@ -261,8 +255,8 @@
 "Comment Lines and Hidden Settings" = "コメント行と隠し設定";
 "Advanced" = "詳細";
 
-"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "TeX環境をインストールしてから、設定の「タイプセット」で「自動設定」を実行してください。";
-"Ghostscript was not found. Install Ghostscript, then run Auto Setup in Settings > Typesetting." = "Ghostscriptが見つかりませんでした。Ghostscriptをインストールしてから、設定の「タイプセット」で「自動設定」を実行してください。";
+"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "TeX LiveかMacTeXをインストールしてから、設定の「タイプセット」で「パスの自動検出」を選んでください。";
+"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscriptが見つかりませんでした。Ghostscriptをインストールしてから、設定の「タイプセット」で「パスの自動検出」を選んでください。";
 
 "Completion trigger" = "呼び出すキー";
 
@@ -306,7 +300,6 @@
 
 "Edits the shared file for all documents. This setting controls the default for new documents." = "全書類で使う共通ファイルを編集します。この設定は新しい書類の初期値に適用されます。";
 
-"The newest detected installation is selected. You can choose another candidate below." = "検出した中で最も新しい環境を選択しています。以下の候補から別の環境も選べます。";
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "次のマクロがこのキーを使用しています。メニューのコマンドに割り当てると、マクロのキーは無効になります。\n\n%@";
 
@@ -318,7 +311,6 @@
 
 "Custom menu shortcuts will be removed." = "メニューのカスタムショートカットを削除します。";
 
-"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "エンジン・編集・表示・既知の隠し設定とDockアイコンを初期化します。テーマの選択は変更されることがあります。TeXエンジンのパス: %@";
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "言語を自動判別";
@@ -364,3 +356,12 @@
 "Change Key Binding" = "キーバインドの変更";
 "Delete Key Binding" = "キーバインドの削除";
 "Move Key Binding" = "キーバインドの移動";
+
+/* Engine profiles */
+"LuaLaTeX (Japanese)" = "LuaLaTeX（日本語）";
+"Other" = "その他";
+"Custom" = "カスタム";
+"Apply the “%@” profile?" = "プロファイル「%@」を適用しますか？";
+"Use latexmk" = "latexmkを使用";
+"Detect Paths" = "パスの自動検出";
+"Choose an Engine Profile" = "エンジンのプロファイルを選択";

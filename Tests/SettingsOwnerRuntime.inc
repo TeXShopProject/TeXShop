@@ -55,13 +55,9 @@ static void CheckOwnerRuntime(TSPreferences *owner) {
     NSMutableDictionary *profileValues=[[TSIsolatedAppKitDefaults dictionaryRepresentation]mutableCopy];
     NSInteger previousCopy=[TSIsolatedAppKitDefaults integerForKey:PdfCopyTypeKey];
     profileValues[PdfCopyTypeKey]=@(previousCopy==1?2:1);
-    NSDictionary *factory=[NSDictionary dictionaryWithContentsOfURL:[fixture URLForResource:@"FactoryDefaults" withExtension:@"plist" subdirectory:@"Defaults"]];
-    NSFont *font=[NSFont userFontOfSize:12];
-    TSPreferenceProfile *profile=[[TSPreferenceProfile alloc]initWithProfile:profileValues documentFont:[NSArchiver archivedDataWithRootObject:font] registeredDefaults:factory];
-    Check(profile!=nil,@"PDF copy format profile validates");
-    NSUInteger copies=delegate.copyUpdates;[owner applyPreferenceProfile:profile font:font];
+    NSUInteger copies=delegate.copyUpdates;[owner applyEngineProfileValues:profileValues];
     Check(delegate.copyUpdates==copies+1 && [TSIsolatedAppKitDefaults integerForKey:PdfCopyTypeKey]!=previousCopy,@"Profile refreshes the PDF copy menu once with the new value");
-    [owner applyPreferenceProfile:profile font:font];Check(delegate.copyUpdates==copies+1,@"Unchanged profile does not refresh PDF copy menu twice");
+    [owner applyEngineProfileValues:profileValues];Check(delegate.copyUpdates==copies+1,@"Unchanged profile does not refresh PDF copy menu twice");
     [NSApp.mainMenu removeItem:tags];NSApp.delegate=previous;
     doAutoSave=savedAuto;activateBauerPatch=savedWatch;editorCanAddBrackets=savedBrackets;
     TSIsolatedAppKitDefaults.values=[saved mutableCopy];[owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];

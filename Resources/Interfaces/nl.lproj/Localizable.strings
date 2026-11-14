@@ -142,12 +142,9 @@
 "Don’t show again for this document" = "Niet meer tonen voor dit document";
 
 /* Engine path discovery */
-"Set Up TeX Engine Paths" = "TeX-enginepaden instellen";
-"Detected Engine Paths" = "Gevonden enginepaden";
 
 "Not found" = "Niet gevonden";
 "Version unavailable" = "Onbekend";
-"Use These Paths" = "Deze paden gebruiken";
 
 /* Menu keyboard shortcut customization */
 "Search commands" = "Zoek commando’s";
@@ -168,10 +165,7 @@
 
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
-"The selected profile is invalid." = "Het geselecteerde profiel is ongeldig.";
-"Apply Settings Profile?" = "Instellingenprofiel toepassen?";
 
-"Apply Profile" = "Pas profiel toe";
 "Settings could not be saved" = "Instellingen konden niet worden bewaard";
 "Enter a valid setting" = "Voer een geldige instelling in";
 
@@ -237,8 +231,8 @@
 "Comment Lines and Hidden Settings" = "Commentaarregels en verborgen instellingen";
 "Advanced" = "Geavanceerd";
 
-"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Installeer een TeX-distributie en voer automatische configuratie uit bij Instellingen > Zetwerk.";
-"Ghostscript was not found. Install Ghostscript, then run Auto Setup in Settings > Typesetting." = "Ghostscript is niet gevonden. Installeer Ghostscript en voer automatische configuratie uit bij Instellingen > Zetwerk.";
+"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "Installeer TeX Live of MacTeX en kies daarna ‘Paden detecteren’ bij Instellingen > Zetten.";
+"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript is niet gevonden. Installeer Ghostscript en kies daarna ‘Paden detecteren’ bij Instellingen > Zetten.";
 
 "Completion trigger" = "Activeringstoets";
 
@@ -299,7 +293,6 @@
 
 "Edits the shared file for all documents. This setting controls the default for new documents." = "Wijzigt het gedeelde bestand voor alle documenten. Deze instelling bepaalt de standaard voor nieuwe documenten.";
 
-"The newest detected installation is selected. You can choose another candidate below." = "De nieuwste gevonden installatie is geselecteerd. U kunt hieronder een andere kiezen.";
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "De volgende macro’s gebruiken deze toetscombinatie. Als u deze aan het menucommando toewijst, worden hun toetscombinaties inactief.\n\n%@";
 
@@ -311,7 +304,6 @@
 
 "Custom menu shortcuts will be removed." = "Aangepaste menusneltoetsen worden verwijderd.";
 
-"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Zet engine-, bewerkings- en weergave-instellingen, bekende verborgen instellingen en het Dock-symbool terug. De themaselectie kan veranderen. Pad van TeX-engine: %@";
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "Automatische taalherkenning";
@@ -356,3 +348,12 @@
 "Change Key Binding" = "Toetsbinding wijzigen";
 "Delete Key Binding" = "Toetsbinding verwijderen";
 "Move Key Binding" = "Toetsbinding verplaatsen";
+
+/* Engine profiles */
+"LuaLaTeX (Japanese)" = "LuaLaTeX (Japans)";
+"Other" = "Overige";
+"Custom" = "Aangepast";
+"Apply the “%@” profile?" = "Profiel ‘%@’ toepassen?";
+"Use latexmk" = "Gebruik latexmk";
+"Detect Paths" = "Paden detecteren";
+"Choose an Engine Profile" = "Kies een engineprofiel";

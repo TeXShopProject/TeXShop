@@ -1,0 +1,4495 @@
+{
+  "replacements" : [
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{0}",
+      "replacementString" : "⓪"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru0",
+      "replacementString" : "⓪"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{1}",
+      "replacementString" : "①"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{2}",
+      "replacementString" : "②"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{3}",
+      "replacementString" : "③"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{4}",
+      "replacementString" : "④"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{5}",
+      "replacementString" : "⑤"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{6}",
+      "replacementString" : "⑥"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{7}",
+      "replacementString" : "⑦"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{8}",
+      "replacementString" : "⑧"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{9}",
+      "replacementString" : "⑨"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{10}",
+      "replacementString" : "⑩"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{11}",
+      "replacementString" : "⑪"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{12}",
+      "replacementString" : "⑫"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{13}",
+      "replacementString" : "⑬"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{14}",
+      "replacementString" : "⑭"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{15}",
+      "replacementString" : "⑮"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{16}",
+      "replacementString" : "⑯"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{17}",
+      "replacementString" : "⑰"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{18}",
+      "replacementString" : "⑱"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{19}",
+      "replacementString" : "⑲"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{20}",
+      "replacementString" : "⑳"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru1",
+      "replacementString" : "①"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru2",
+      "replacementString" : "②"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru3",
+      "replacementString" : "③"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru4",
+      "replacementString" : "④"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru5",
+      "replacementString" : "⑤"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru6",
+      "replacementString" : "⑥"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru7",
+      "replacementString" : "⑦"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru8",
+      "replacementString" : "⑧"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru9",
+      "replacementString" : "⑨"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{21}",
+      "replacementString" : "㉑"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{22}",
+      "replacementString" : "㉒"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{23}",
+      "replacementString" : "㉓"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{24}",
+      "replacementString" : "㉔"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{25}",
+      "replacementString" : "㉕"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{26}",
+      "replacementString" : "㉖"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{27}",
+      "replacementString" : "㉗"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{28}",
+      "replacementString" : "㉘"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{29}",
+      "replacementString" : "㉙"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{30}",
+      "replacementString" : "㉚"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{31}",
+      "replacementString" : "㉛"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{32}",
+      "replacementString" : "㉜"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{33}",
+      "replacementString" : "㉝"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{34}",
+      "replacementString" : "㉞"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{35}",
+      "replacementString" : "㉟"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{36}",
+      "replacementString" : "㊱"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{37}",
+      "replacementString" : "㊲"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{38}",
+      "replacementString" : "㊳"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{39}",
+      "replacementString" : "㊴"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{40}",
+      "replacementString" : "㊵"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{41}",
+      "replacementString" : "㊶"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{42}",
+      "replacementString" : "㊷"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{43}",
+      "replacementString" : "㊸"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{44}",
+      "replacementString" : "㊹"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{45}",
+      "replacementString" : "㊺"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{46}",
+      "replacementString" : "㊻"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{47}",
+      "replacementString" : "㊼"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{48}",
+      "replacementString" : "㊽"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{49}",
+      "replacementString" : "㊾"
+    },
+    {
+      "description" : "Circled numbers",
+      "findString" : "\\ajMaru{50}",
+      "replacementString" : "㊿"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{0}",
+      "replacementString" : "⓿"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru0",
+      "replacementString" : "⓿"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{1}",
+      "replacementString" : "❶"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{2}",
+      "replacementString" : "❷"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{3}",
+      "replacementString" : "❸"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{4}",
+      "replacementString" : "❹"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{5}",
+      "replacementString" : "❺"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{6}",
+      "replacementString" : "❻"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{7}",
+      "replacementString" : "❼"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{8}",
+      "replacementString" : "❽"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{9}",
+      "replacementString" : "❾"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{10}",
+      "replacementString" : "❿"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru1",
+      "replacementString" : "❶"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru2",
+      "replacementString" : "❷"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru3",
+      "replacementString" : "❸"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru4",
+      "replacementString" : "❹"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru5",
+      "replacementString" : "❺"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru6",
+      "replacementString" : "❻"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru7",
+      "replacementString" : "❼"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru8",
+      "replacementString" : "❽"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru9",
+      "replacementString" : "❾"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{11}",
+      "replacementString" : "⓫"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{12}",
+      "replacementString" : "⓬"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{13}",
+      "replacementString" : "⓭"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{14}",
+      "replacementString" : "⓮"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{15}",
+      "replacementString" : "⓯"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{16}",
+      "replacementString" : "⓰"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{17}",
+      "replacementString" : "⓱"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{18}",
+      "replacementString" : "⓲"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{19}",
+      "replacementString" : "⓳"
+    },
+    {
+      "description" : "Negative circled numbers",
+      "findString" : "\\ajKuroMaru{20}",
+      "replacementString" : "⓴"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko{1}",
+      "replacementString" : "⑴"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko{2}",
+      "replacementString" : "⑵"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko{3}",
+      "replacementString" : "⑶"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko{4}",
+      "replacementString" : "⑷"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko{5}",
+      "replacementString" : "⑸"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko{6}",
+      "replacementString" : "⑹"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko{7}",
+      "replacementString" : "⑺"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko{8}",
+      "replacementString" : "⑻"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko{9}",
+      "replacementString" : "⑼"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko{10}",
+      "replacementString" : "⑽"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko{11}",
+      "replacementString" : "⑾"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko{12}",
+      "replacementString" : "⑿"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko{13}",
+      "replacementString" : "⒀"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko{14}",
+      "replacementString" : "⒁"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko{15}",
+      "replacementString" : "⒂"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko{16}",
+      "replacementString" : "⒃"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko{17}",
+      "replacementString" : "⒄"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko{18}",
+      "replacementString" : "⒅"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko{19}",
+      "replacementString" : "⒆"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko{20}",
+      "replacementString" : "⒇"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko1",
+      "replacementString" : "⑴"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko2",
+      "replacementString" : "⑵"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko3",
+      "replacementString" : "⑶"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko4",
+      "replacementString" : "⑷"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko5",
+      "replacementString" : "⑸"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko6",
+      "replacementString" : "⑹"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko7",
+      "replacementString" : "⑺"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko8",
+      "replacementString" : "⑻"
+    },
+    {
+      "description" : "Parenthesized numbers",
+      "findString" : "\\ajKakko9",
+      "replacementString" : "⑼"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{1}",
+      "replacementString" : "Ⓐ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{2}",
+      "replacementString" : "Ⓑ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{3}",
+      "replacementString" : "Ⓒ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{4}",
+      "replacementString" : "Ⓓ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{5}",
+      "replacementString" : "Ⓔ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{6}",
+      "replacementString" : "Ⓕ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{7}",
+      "replacementString" : "Ⓖ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{8}",
+      "replacementString" : "Ⓗ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{9}",
+      "replacementString" : "Ⓘ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{10}",
+      "replacementString" : "Ⓙ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{11}",
+      "replacementString" : "Ⓚ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{12}",
+      "replacementString" : "Ⓛ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{13}",
+      "replacementString" : "Ⓜ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{14}",
+      "replacementString" : "Ⓝ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{15}",
+      "replacementString" : "Ⓞ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{16}",
+      "replacementString" : "Ⓟ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{17}",
+      "replacementString" : "Ⓠ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{18}",
+      "replacementString" : "Ⓡ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{19}",
+      "replacementString" : "Ⓢ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{20}",
+      "replacementString" : "Ⓣ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{21}",
+      "replacementString" : "Ⓤ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{22}",
+      "replacementString" : "Ⓥ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{23}",
+      "replacementString" : "Ⓦ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{24}",
+      "replacementString" : "Ⓧ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{25}",
+      "replacementString" : "Ⓨ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph{26}",
+      "replacementString" : "Ⓩ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph1",
+      "replacementString" : "Ⓐ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph2",
+      "replacementString" : "Ⓑ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph3",
+      "replacementString" : "Ⓒ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph4",
+      "replacementString" : "Ⓓ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph5",
+      "replacementString" : "Ⓔ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph6",
+      "replacementString" : "Ⓕ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph7",
+      "replacementString" : "Ⓖ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph8",
+      "replacementString" : "Ⓗ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMaruAlph9",
+      "replacementString" : "Ⓘ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{1}",
+      "replacementString" : "ⓐ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{2}",
+      "replacementString" : "ⓑ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{3}",
+      "replacementString" : "ⓒ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{4}",
+      "replacementString" : "ⓓ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{5}",
+      "replacementString" : "ⓔ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{6}",
+      "replacementString" : "ⓕ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{7}",
+      "replacementString" : "ⓖ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{8}",
+      "replacementString" : "ⓗ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{9}",
+      "replacementString" : "ⓘ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{10}",
+      "replacementString" : "ⓙ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{11}",
+      "replacementString" : "ⓚ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{12}",
+      "replacementString" : "ⓛ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{13}",
+      "replacementString" : "ⓜ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{14}",
+      "replacementString" : "ⓝ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{15}",
+      "replacementString" : "ⓞ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{16}",
+      "replacementString" : "ⓟ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{17}",
+      "replacementString" : "ⓠ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{18}",
+      "replacementString" : "ⓡ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{19}",
+      "replacementString" : "ⓢ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{20}",
+      "replacementString" : "ⓣ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{21}",
+      "replacementString" : "ⓤ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{22}",
+      "replacementString" : "ⓥ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{23}",
+      "replacementString" : "ⓦ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{24}",
+      "replacementString" : "ⓧ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{25}",
+      "replacementString" : "ⓨ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph{26}",
+      "replacementString" : "ⓩ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph1",
+      "replacementString" : "ⓐ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph2",
+      "replacementString" : "ⓑ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph3",
+      "replacementString" : "ⓒ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph4",
+      "replacementString" : "ⓓ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph5",
+      "replacementString" : "ⓔ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph6",
+      "replacementString" : "ⓕ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph7",
+      "replacementString" : "ⓖ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph8",
+      "replacementString" : "ⓗ"
+    },
+    {
+      "description" : "Circled letters",
+      "findString" : "\\ajMarualph9",
+      "replacementString" : "ⓘ"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{1}",
+      "replacementString" : "🄐"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{2}",
+      "replacementString" : "🄑"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{3}",
+      "replacementString" : "🄒"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{4}",
+      "replacementString" : "🄓"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{5}",
+      "replacementString" : "🄔"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{6}",
+      "replacementString" : "🄕"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{7}",
+      "replacementString" : "🄖"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{8}",
+      "replacementString" : "🄗"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{9}",
+      "replacementString" : "🄘"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{10}",
+      "replacementString" : "🄙"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{11}",
+      "replacementString" : "🄚"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{12}",
+      "replacementString" : "🄛"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{13}",
+      "replacementString" : "🄜"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{14}",
+      "replacementString" : "🄝"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{15}",
+      "replacementString" : "🄞"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{16}",
+      "replacementString" : "🄟"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{17}",
+      "replacementString" : "🄠"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{18}",
+      "replacementString" : "🄡"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{19}",
+      "replacementString" : "🄢"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{20}",
+      "replacementString" : "🄣"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{21}",
+      "replacementString" : "🄤"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{22}",
+      "replacementString" : "🄥"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{23}",
+      "replacementString" : "🄦"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{24}",
+      "replacementString" : "🄧"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{25}",
+      "replacementString" : "🄨"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph{26}",
+      "replacementString" : "🄩"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph1",
+      "replacementString" : "🄐"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph2",
+      "replacementString" : "🄑"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph3",
+      "replacementString" : "🄒"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph4",
+      "replacementString" : "🄓"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph5",
+      "replacementString" : "🄔"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph6",
+      "replacementString" : "🄕"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph7",
+      "replacementString" : "🄖"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph8",
+      "replacementString" : "🄗"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoAlph9",
+      "replacementString" : "🄘"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{1}",
+      "replacementString" : "⒜"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{2}",
+      "replacementString" : "⒝"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{3}",
+      "replacementString" : "⒞"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{4}",
+      "replacementString" : "⒟"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{5}",
+      "replacementString" : "⒠"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{6}",
+      "replacementString" : "⒡"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{7}",
+      "replacementString" : "⒢"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{8}",
+      "replacementString" : "⒣"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{9}",
+      "replacementString" : "⒤"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{10}",
+      "replacementString" : "⒥"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{11}",
+      "replacementString" : "⒦"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{12}",
+      "replacementString" : "⒧"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{13}",
+      "replacementString" : "⒨"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{14}",
+      "replacementString" : "⒩"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{15}",
+      "replacementString" : "⒪"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{16}",
+      "replacementString" : "⒫"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{17}",
+      "replacementString" : "⒬"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{18}",
+      "replacementString" : "⒭"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{19}",
+      "replacementString" : "⒮"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{20}",
+      "replacementString" : "⒯"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{21}",
+      "replacementString" : "⒰"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{22}",
+      "replacementString" : "⒱"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{23}",
+      "replacementString" : "⒲"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{24}",
+      "replacementString" : "⒳"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{25}",
+      "replacementString" : "⒴"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph{26}",
+      "replacementString" : "⒵"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph1",
+      "replacementString" : "⒜"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph2",
+      "replacementString" : "⒝"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph3",
+      "replacementString" : "⒞"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph4",
+      "replacementString" : "⒟"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph5",
+      "replacementString" : "⒠"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph6",
+      "replacementString" : "⒡"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph7",
+      "replacementString" : "⒢"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph8",
+      "replacementString" : "⒣"
+    },
+    {
+      "description" : "Parenthesized letters",
+      "findString" : "\\ajKakkoalph9",
+      "replacementString" : "⒤"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{1}",
+      "replacementString" : "🅐"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{2}",
+      "replacementString" : "🅑"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{3}",
+      "replacementString" : "🅒"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{4}",
+      "replacementString" : "🅓"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{5}",
+      "replacementString" : "🅔"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{6}",
+      "replacementString" : "🅕"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{7}",
+      "replacementString" : "🅖"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{8}",
+      "replacementString" : "🅗"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{9}",
+      "replacementString" : "🅘"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{10}",
+      "replacementString" : "🅙"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{11}",
+      "replacementString" : "🅚"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{12}",
+      "replacementString" : "🅛"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{13}",
+      "replacementString" : "🅜"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{14}",
+      "replacementString" : "🅝"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{15}",
+      "replacementString" : "🅞"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{16}",
+      "replacementString" : "🅟"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{17}",
+      "replacementString" : "🅠"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{18}",
+      "replacementString" : "🅡"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{19}",
+      "replacementString" : "🅢"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{20}",
+      "replacementString" : "🅣"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{21}",
+      "replacementString" : "🅤"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{22}",
+      "replacementString" : "🅥"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{23}",
+      "replacementString" : "🅦"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{24}",
+      "replacementString" : "🅧"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{25}",
+      "replacementString" : "🅨"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph{26}",
+      "replacementString" : "🅩"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph1",
+      "replacementString" : "🅐"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph2",
+      "replacementString" : "🅑"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph3",
+      "replacementString" : "🅒"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph4",
+      "replacementString" : "🅓"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph5",
+      "replacementString" : "🅔"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph6",
+      "replacementString" : "🅕"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph7",
+      "replacementString" : "🅖"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph8",
+      "replacementString" : "🅗"
+    },
+    {
+      "description" : "Negative circled letters",
+      "findString" : "\\ajKuroMaruAlph9",
+      "replacementString" : "🅘"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{1}",
+      "replacementString" : "🄰"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{2}",
+      "replacementString" : "🄱"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{3}",
+      "replacementString" : "🄲"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{4}",
+      "replacementString" : "🄳"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{5}",
+      "replacementString" : "🄴"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{6}",
+      "replacementString" : "🄵"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{7}",
+      "replacementString" : "🄶"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{8}",
+      "replacementString" : "🄷"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{9}",
+      "replacementString" : "🄸"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{10}",
+      "replacementString" : "🄹"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{11}",
+      "replacementString" : "🄺"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{12}",
+      "replacementString" : "🄻"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{13}",
+      "replacementString" : "🄼"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{14}",
+      "replacementString" : "🄽"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{15}",
+      "replacementString" : "🄾"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{16}",
+      "replacementString" : "🄿"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{17}",
+      "replacementString" : "🅀"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{18}",
+      "replacementString" : "🅁"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{19}",
+      "replacementString" : "🅂"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{20}",
+      "replacementString" : "🅃"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{21}",
+      "replacementString" : "🅄"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{22}",
+      "replacementString" : "🅅"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{23}",
+      "replacementString" : "🅆"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{24}",
+      "replacementString" : "🅇"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{25}",
+      "replacementString" : "🅈"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph{26}",
+      "replacementString" : "🅉"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph1",
+      "replacementString" : "🄰"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph2",
+      "replacementString" : "🄱"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph3",
+      "replacementString" : "🄲"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph4",
+      "replacementString" : "🄳"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph5",
+      "replacementString" : "🄴"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph6",
+      "replacementString" : "🄵"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph7",
+      "replacementString" : "🄶"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph8",
+      "replacementString" : "🄷"
+    },
+    {
+      "description" : "Squared letters",
+      "findString" : "\\ajKakuAlph9",
+      "replacementString" : "🄸"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{1}",
+      "replacementString" : "🅰"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{2}",
+      "replacementString" : "🅱"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{3}",
+      "replacementString" : "🅲"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{4}",
+      "replacementString" : "🅳"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{5}",
+      "replacementString" : "🅴"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{6}",
+      "replacementString" : "🅵"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{7}",
+      "replacementString" : "🅶"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{8}",
+      "replacementString" : "🅷"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{9}",
+      "replacementString" : "🅸"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{10}",
+      "replacementString" : "🅹"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{11}",
+      "replacementString" : "🅺"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{12}",
+      "replacementString" : "🅻"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{13}",
+      "replacementString" : "🅼"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{14}",
+      "replacementString" : "🅽"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{15}",
+      "replacementString" : "🅾"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{16}",
+      "replacementString" : "🅿"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{17}",
+      "replacementString" : "🆀"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{18}",
+      "replacementString" : "🆁"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{19}",
+      "replacementString" : "🆂"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{20}",
+      "replacementString" : "🆃"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{21}",
+      "replacementString" : "🆄"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{22}",
+      "replacementString" : "🆅"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{23}",
+      "replacementString" : "🆆"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{24}",
+      "replacementString" : "🆇"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{25}",
+      "replacementString" : "🆈"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph{26}",
+      "replacementString" : "🆉"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph1",
+      "replacementString" : "🅰"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph2",
+      "replacementString" : "🅱"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph3",
+      "replacementString" : "🅲"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph4",
+      "replacementString" : "🅳"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph5",
+      "replacementString" : "🅴"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph6",
+      "replacementString" : "🅵"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph7",
+      "replacementString" : "🅶"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph8",
+      "replacementString" : "🅷"
+    },
+    {
+      "description" : "Negative squared letters",
+      "findString" : "\\ajKuroKakuAlph9",
+      "replacementString" : "🅸"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman{1}",
+      "replacementString" : "Ⅰ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman{2}",
+      "replacementString" : "Ⅱ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman{3}",
+      "replacementString" : "Ⅲ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman{4}",
+      "replacementString" : "Ⅳ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman{5}",
+      "replacementString" : "Ⅴ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman{6}",
+      "replacementString" : "Ⅵ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman{7}",
+      "replacementString" : "Ⅶ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman{8}",
+      "replacementString" : "Ⅷ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman{9}",
+      "replacementString" : "Ⅸ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman{10}",
+      "replacementString" : "Ⅹ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman{11}",
+      "replacementString" : "Ⅺ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman{12}",
+      "replacementString" : "Ⅻ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman1",
+      "replacementString" : "Ⅰ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman2",
+      "replacementString" : "Ⅱ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman3",
+      "replacementString" : "Ⅲ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman4",
+      "replacementString" : "Ⅳ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman5",
+      "replacementString" : "Ⅴ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman6",
+      "replacementString" : "Ⅵ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman7",
+      "replacementString" : "Ⅶ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman8",
+      "replacementString" : "Ⅷ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajRoman9",
+      "replacementString" : "Ⅸ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman{1}",
+      "replacementString" : "ⅰ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman{2}",
+      "replacementString" : "ⅱ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman{3}",
+      "replacementString" : "ⅲ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman{4}",
+      "replacementString" : "ⅳ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman{5}",
+      "replacementString" : "ⅴ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman{6}",
+      "replacementString" : "ⅵ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman{7}",
+      "replacementString" : "ⅶ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman{8}",
+      "replacementString" : "ⅷ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman{9}",
+      "replacementString" : "ⅸ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman{10}",
+      "replacementString" : "ⅹ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman{11}",
+      "replacementString" : "ⅺ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman{12}",
+      "replacementString" : "ⅻ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman1",
+      "replacementString" : "ⅰ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman2",
+      "replacementString" : "ⅱ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman3",
+      "replacementString" : "ⅲ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman4",
+      "replacementString" : "ⅳ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman5",
+      "replacementString" : "ⅴ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman6",
+      "replacementString" : "ⅵ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman7",
+      "replacementString" : "ⅶ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman8",
+      "replacementString" : "ⅷ"
+    },
+    {
+      "description" : "Roman numerals",
+      "findString" : "\\ajroman9",
+      "replacementString" : "ⅸ"
+    },
+    {
+      "description" : "Numbers with a period",
+      "findString" : "\\ajPeriod{1}",
+      "replacementString" : "⒈"
+    },
+    {
+      "description" : "Numbers with a period",
+      "findString" : "\\ajPeriod{2}",
+      "replacementString" : "⒉"
+    },
+    {
+      "description" : "Numbers with a period",
+      "findString" : "\\ajPeriod{3}",
+      "replacementString" : "⒊"
+    },
+    {
+      "description" : "Numbers with a period",
+      "findString" : "\\ajPeriod{4}",
+      "replacementString" : "⒋"
+    },
+    {
+      "description" : "Numbers with a period",
+      "findString" : "\\ajPeriod{5}",
+      "replacementString" : "⒌"
+    },
+    {
+      "description" : "Numbers with a period",
+      "findString" : "\\ajPeriod{6}",
+      "replacementString" : "⒍"
+    },
+    {
+      "description" : "Numbers with a period",
+      "findString" : "\\ajPeriod{7}",
+      "replacementString" : "⒎"
+    },
+    {
+      "description" : "Numbers with a period",
+      "findString" : "\\ajPeriod{8}",
+      "replacementString" : "⒏"
+    },
+    {
+      "description" : "Numbers with a period",
+      "findString" : "\\ajPeriod{9}",
+      "replacementString" : "⒐"
+    },
+    {
+      "description" : "Numbers with a period",
+      "findString" : "\\ajPeriod1",
+      "replacementString" : "⒈"
+    },
+    {
+      "description" : "Numbers with a period",
+      "findString" : "\\ajPeriod2",
+      "replacementString" : "⒉"
+    },
+    {
+      "description" : "Numbers with a period",
+      "findString" : "\\ajPeriod3",
+      "replacementString" : "⒊"
+    },
+    {
+      "description" : "Numbers with a period",
+      "findString" : "\\ajPeriod4",
+      "replacementString" : "⒋"
+    },
+    {
+      "description" : "Numbers with a period",
+      "findString" : "\\ajPeriod5",
+      "replacementString" : "⒌"
+    },
+    {
+      "description" : "Numbers with a period",
+      "findString" : "\\ajPeriod6",
+      "replacementString" : "⒍"
+    },
+    {
+      "description" : "Numbers with a period",
+      "findString" : "\\ajPeriod7",
+      "replacementString" : "⒎"
+    },
+    {
+      "description" : "Numbers with a period",
+      "findString" : "\\ajPeriod8",
+      "replacementString" : "⒏"
+    },
+    {
+      "description" : "Numbers with a period",
+      "findString" : "\\ajPeriod9",
+      "replacementString" : "⒐"
+    },
+    {
+      "description" : "Parenthesized days of the week",
+      "findString" : "\\ajKakkoYobi{1}",
+      "replacementString" : "㈰"
+    },
+    {
+      "description" : "Parenthesized days of the week",
+      "findString" : "\\ajKakkoYobi1",
+      "replacementString" : "㈰"
+    },
+    {
+      "description" : "Parenthesized days of the week",
+      "findString" : "\\ajKakkoYobi{2}",
+      "replacementString" : "㈪"
+    },
+    {
+      "description" : "Parenthesized days of the week",
+      "findString" : "\\ajKakkoYobi2",
+      "replacementString" : "㈪"
+    },
+    {
+      "description" : "Parenthesized days of the week",
+      "findString" : "\\ajKakkoYobi{3}",
+      "replacementString" : "㈫"
+    },
+    {
+      "description" : "Parenthesized days of the week",
+      "findString" : "\\ajKakkoYobi3",
+      "replacementString" : "㈫"
+    },
+    {
+      "description" : "Parenthesized days of the week",
+      "findString" : "\\ajKakkoYobi{4}",
+      "replacementString" : "㈬"
+    },
+    {
+      "description" : "Parenthesized days of the week",
+      "findString" : "\\ajKakkoYobi4",
+      "replacementString" : "㈬"
+    },
+    {
+      "description" : "Parenthesized days of the week",
+      "findString" : "\\ajKakkoYobi{5}",
+      "replacementString" : "㈭"
+    },
+    {
+      "description" : "Parenthesized days of the week",
+      "findString" : "\\ajKakkoYobi5",
+      "replacementString" : "㈭"
+    },
+    {
+      "description" : "Parenthesized days of the week",
+      "findString" : "\\ajKakkoYobi{6}",
+      "replacementString" : "㈮"
+    },
+    {
+      "description" : "Parenthesized days of the week",
+      "findString" : "\\ajKakkoYobi6",
+      "replacementString" : "㈮"
+    },
+    {
+      "description" : "Parenthesized days of the week",
+      "findString" : "\\ajKakkoYobi{7}",
+      "replacementString" : "㈯"
+    },
+    {
+      "description" : "Parenthesized days of the week",
+      "findString" : "\\ajKakkoYobi7",
+      "replacementString" : "㈯"
+    },
+    {
+      "description" : "Parenthesized days of the week",
+      "findString" : "\\ajKakkoYobi{8}",
+      "replacementString" : "㈷"
+    },
+    {
+      "description" : "Parenthesized days of the week",
+      "findString" : "\\ajKakkoYobi8",
+      "replacementString" : "㈷"
+    },
+    {
+      "description" : "Parenthesized days of the week",
+      "findString" : "\\ajKakkoYobi{9}",
+      "replacementString" : "㉁"
+    },
+    {
+      "description" : "Parenthesized days of the week",
+      "findString" : "\\ajKakkoYobi9",
+      "replacementString" : "㉁"
+    },
+    {
+      "description" : "Circled days of the week",
+      "findString" : "\\ajMaruYobi{1}",
+      "replacementString" : "㊐"
+    },
+    {
+      "description" : "Circled days of the week",
+      "findString" : "\\ajMaruYobi1",
+      "replacementString" : "㊐"
+    },
+    {
+      "description" : "Circled days of the week",
+      "findString" : "\\ajMaruYobi{2}",
+      "replacementString" : "㊊"
+    },
+    {
+      "description" : "Circled days of the week",
+      "findString" : "\\ajMaruYobi2",
+      "replacementString" : "㊊"
+    },
+    {
+      "description" : "Circled days of the week",
+      "findString" : "\\ajMaruYobi{3}",
+      "replacementString" : "㊋"
+    },
+    {
+      "description" : "Circled days of the week",
+      "findString" : "\\ajMaruYobi3",
+      "replacementString" : "㊋"
+    },
+    {
+      "description" : "Circled days of the week",
+      "findString" : "\\ajMaruYobi{4}",
+      "replacementString" : "㊌"
+    },
+    {
+      "description" : "Circled days of the week",
+      "findString" : "\\ajMaruYobi4",
+      "replacementString" : "㊌"
+    },
+    {
+      "description" : "Circled days of the week",
+      "findString" : "\\ajMaruYobi{5}",
+      "replacementString" : "㊍"
+    },
+    {
+      "description" : "Circled days of the week",
+      "findString" : "\\ajMaruYobi5",
+      "replacementString" : "㊍"
+    },
+    {
+      "description" : "Circled days of the week",
+      "findString" : "\\ajMaruYobi{6}",
+      "replacementString" : "㊎"
+    },
+    {
+      "description" : "Circled days of the week",
+      "findString" : "\\ajMaruYobi6",
+      "replacementString" : "㊎"
+    },
+    {
+      "description" : "Circled days of the week",
+      "findString" : "\\ajMaruYobi{7}",
+      "replacementString" : "㊏"
+    },
+    {
+      "description" : "Circled days of the week",
+      "findString" : "\\ajMaruYobi7",
+      "replacementString" : "㊏"
+    },
+    {
+      "description" : "Circled days of the week",
+      "findString" : "\\ajMaruYobi{8}",
+      "replacementString" : "㊗"
+    },
+    {
+      "description" : "Circled days of the week",
+      "findString" : "\\ajMaruYobi8",
+      "replacementString" : "㊗"
+    },
+    {
+      "description" : "Circled days of the week",
+      "findString" : "\\ajMaruYobi{9}",
+      "replacementString" : "㊡"
+    },
+    {
+      "description" : "Circled days of the week",
+      "findString" : "\\ajMaruYobi9",
+      "replacementString" : "㊡"
+    },
+    {
+      "description" : "Double circled numbers",
+      "findString" : "\\ajNijuMaru{1}",
+      "replacementString" : "⓵"
+    },
+    {
+      "description" : "Double circled numbers",
+      "findString" : "\\ajNijuMaru{2}",
+      "replacementString" : "⓶"
+    },
+    {
+      "description" : "Double circled numbers",
+      "findString" : "\\ajNijuMaru{3}",
+      "replacementString" : "⓷"
+    },
+    {
+      "description" : "Double circled numbers",
+      "findString" : "\\ajNijuMaru{4}",
+      "replacementString" : "⓸"
+    },
+    {
+      "description" : "Double circled numbers",
+      "findString" : "\\ajNijuMaru{5}",
+      "replacementString" : "⓹"
+    },
+    {
+      "description" : "Double circled numbers",
+      "findString" : "\\ajNijuMaru{6}",
+      "replacementString" : "⓺"
+    },
+    {
+      "description" : "Double circled numbers",
+      "findString" : "\\ajNijuMaru{7}",
+      "replacementString" : "⓻"
+    },
+    {
+      "description" : "Double circled numbers",
+      "findString" : "\\ajNijuMaru{8}",
+      "replacementString" : "⓼"
+    },
+    {
+      "description" : "Double circled numbers",
+      "findString" : "\\ajNijuMaru{9}",
+      "replacementString" : "⓽"
+    },
+    {
+      "description" : "Double circled numbers",
+      "findString" : "\\ajNijuMaru{10}",
+      "replacementString" : "⓾"
+    },
+    {
+      "description" : "Double circled numbers",
+      "findString" : "\\ajNijuMaru1",
+      "replacementString" : "⓵"
+    },
+    {
+      "description" : "Double circled numbers",
+      "findString" : "\\ajNijuMaru2",
+      "replacementString" : "⓶"
+    },
+    {
+      "description" : "Double circled numbers",
+      "findString" : "\\ajNijuMaru3",
+      "replacementString" : "⓷"
+    },
+    {
+      "description" : "Double circled numbers",
+      "findString" : "\\ajNijuMaru4",
+      "replacementString" : "⓸"
+    },
+    {
+      "description" : "Double circled numbers",
+      "findString" : "\\ajNijuMaru5",
+      "replacementString" : "⓹"
+    },
+    {
+      "description" : "Double circled numbers",
+      "findString" : "\\ajNijuMaru6",
+      "replacementString" : "⓺"
+    },
+    {
+      "description" : "Double circled numbers",
+      "findString" : "\\ajNijuMaru7",
+      "replacementString" : "⓻"
+    },
+    {
+      "description" : "Double circled numbers",
+      "findString" : "\\ajNijuMaru8",
+      "replacementString" : "⓼"
+    },
+    {
+      "description" : "Double circled numbers",
+      "findString" : "\\ajNijuMaru9",
+      "replacementString" : "⓽"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle{0}",
+      "replacementString" : "♲"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle{1}",
+      "replacementString" : "♳"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle{2}",
+      "replacementString" : "♴"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle{3}",
+      "replacementString" : "♵"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle{4}",
+      "replacementString" : "♶"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle{5}",
+      "replacementString" : "♷"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle{6}",
+      "replacementString" : "♸"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle{7}",
+      "replacementString" : "♹"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle{8}",
+      "replacementString" : "♺"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle{9}",
+      "replacementString" : "♻"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle{10}",
+      "replacementString" : "♼"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle{11}",
+      "replacementString" : "♽"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle0",
+      "replacementString" : "♲"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle1",
+      "replacementString" : "♳"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle2",
+      "replacementString" : "♴"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle3",
+      "replacementString" : "♵"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle4",
+      "replacementString" : "♶"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle5",
+      "replacementString" : "♷"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle6",
+      "replacementString" : "♸"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle7",
+      "replacementString" : "♹"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle8",
+      "replacementString" : "♺"
+    },
+    {
+      "description" : "Recycling symbols",
+      "findString" : "\\ajRecycle9",
+      "replacementString" : "♻"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{1}",
+      "replacementString" : "㋐"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{2}",
+      "replacementString" : "㋑"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{3}",
+      "replacementString" : "㋒"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{4}",
+      "replacementString" : "㋓"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{5}",
+      "replacementString" : "㋔"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{6}",
+      "replacementString" : "㋕"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{7}",
+      "replacementString" : "㋖"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{8}",
+      "replacementString" : "㋗"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{9}",
+      "replacementString" : "㋘"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{10}",
+      "replacementString" : "㋙"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{11}",
+      "replacementString" : "㋚"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{12}",
+      "replacementString" : "㋛"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{13}",
+      "replacementString" : "㋜"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{14}",
+      "replacementString" : "㋝"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{15}",
+      "replacementString" : "㋞"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{16}",
+      "replacementString" : "㋟"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{17}",
+      "replacementString" : "㋠"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{18}",
+      "replacementString" : "㋡"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{19}",
+      "replacementString" : "㋢"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{20}",
+      "replacementString" : "㋣"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{21}",
+      "replacementString" : "㋤"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{22}",
+      "replacementString" : "㋥"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{23}",
+      "replacementString" : "㋦"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{24}",
+      "replacementString" : "㋧"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{25}",
+      "replacementString" : "㋨"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{26}",
+      "replacementString" : "㋩"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{27}",
+      "replacementString" : "㋪"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{28}",
+      "replacementString" : "㋫"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{29}",
+      "replacementString" : "㋬"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{30}",
+      "replacementString" : "㋭"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{31}",
+      "replacementString" : "㋮"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{32}",
+      "replacementString" : "㋯"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{33}",
+      "replacementString" : "㋰"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{34}",
+      "replacementString" : "㋱"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{35}",
+      "replacementString" : "㋲"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{36}",
+      "replacementString" : "㋳"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{37}",
+      "replacementString" : "㋴"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{38}",
+      "replacementString" : "㋵"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{39}",
+      "replacementString" : "㋶"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{40}",
+      "replacementString" : "㋷"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{41}",
+      "replacementString" : "㋸"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{42}",
+      "replacementString" : "㋹"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{43}",
+      "replacementString" : "㋺"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{44}",
+      "replacementString" : "㋻"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{45}",
+      "replacementString" : "㋼"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{46}",
+      "replacementString" : "㋽"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata{47}",
+      "replacementString" : "㋾"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata1",
+      "replacementString" : "㋐"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata2",
+      "replacementString" : "㋑"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata3",
+      "replacementString" : "㋒"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata4",
+      "replacementString" : "㋓"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata5",
+      "replacementString" : "㋔"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata6",
+      "replacementString" : "㋕"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata7",
+      "replacementString" : "㋖"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata8",
+      "replacementString" : "㋗"
+    },
+    {
+      "description" : "Circled katakana",
+      "findString" : "\\ajMaruKata9",
+      "replacementString" : "㋘"
+    },
+    {
+      "description" : "Parenthesized kanji numerals",
+      "findString" : "\\ajKakkoKansuji{1}",
+      "replacementString" : "㈠"
+    },
+    {
+      "description" : "Parenthesized kanji numerals",
+      "findString" : "\\ajKakkoKansuji{2}",
+      "replacementString" : "㈡"
+    },
+    {
+      "description" : "Parenthesized kanji numerals",
+      "findString" : "\\ajKakkoKansuji{3}",
+      "replacementString" : "㈢"
+    },
+    {
+      "description" : "Parenthesized kanji numerals",
+      "findString" : "\\ajKakkoKansuji{4}",
+      "replacementString" : "㈣"
+    },
+    {
+      "description" : "Parenthesized kanji numerals",
+      "findString" : "\\ajKakkoKansuji{5}",
+      "replacementString" : "㈤"
+    },
+    {
+      "description" : "Parenthesized kanji numerals",
+      "findString" : "\\ajKakkoKansuji{6}",
+      "replacementString" : "㈥"
+    },
+    {
+      "description" : "Parenthesized kanji numerals",
+      "findString" : "\\ajKakkoKansuji{7}",
+      "replacementString" : "㈦"
+    },
+    {
+      "description" : "Parenthesized kanji numerals",
+      "findString" : "\\ajKakkoKansuji{8}",
+      "replacementString" : "㈧"
+    },
+    {
+      "description" : "Parenthesized kanji numerals",
+      "findString" : "\\ajKakkoKansuji{9}",
+      "replacementString" : "㈨"
+    },
+    {
+      "description" : "Parenthesized kanji numerals",
+      "findString" : "\\ajKakkoKansuji{10}",
+      "replacementString" : "㈩"
+    },
+    {
+      "description" : "Parenthesized kanji numerals",
+      "findString" : "\\ajKakkoKansuji1",
+      "replacementString" : "㈠"
+    },
+    {
+      "description" : "Parenthesized kanji numerals",
+      "findString" : "\\ajKakkoKansuji2",
+      "replacementString" : "㈡"
+    },
+    {
+      "description" : "Parenthesized kanji numerals",
+      "findString" : "\\ajKakkoKansuji3",
+      "replacementString" : "㈢"
+    },
+    {
+      "description" : "Parenthesized kanji numerals",
+      "findString" : "\\ajKakkoKansuji4",
+      "replacementString" : "㈣"
+    },
+    {
+      "description" : "Parenthesized kanji numerals",
+      "findString" : "\\ajKakkoKansuji5",
+      "replacementString" : "㈤"
+    },
+    {
+      "description" : "Parenthesized kanji numerals",
+      "findString" : "\\ajKakkoKansuji6",
+      "replacementString" : "㈥"
+    },
+    {
+      "description" : "Parenthesized kanji numerals",
+      "findString" : "\\ajKakkoKansuji7",
+      "replacementString" : "㈦"
+    },
+    {
+      "description" : "Parenthesized kanji numerals",
+      "findString" : "\\ajKakkoKansuji8",
+      "replacementString" : "㈧"
+    },
+    {
+      "description" : "Parenthesized kanji numerals",
+      "findString" : "\\ajKakkoKansuji9",
+      "replacementString" : "㈨"
+    },
+    {
+      "description" : "Circled kanji numerals",
+      "findString" : "\\ajMaruKansuji{1}",
+      "replacementString" : "㊀"
+    },
+    {
+      "description" : "Circled kanji numerals",
+      "findString" : "\\ajMaruKansuji{2}",
+      "replacementString" : "㊁"
+    },
+    {
+      "description" : "Circled kanji numerals",
+      "findString" : "\\ajMaruKansuji{3}",
+      "replacementString" : "㊂"
+    },
+    {
+      "description" : "Circled kanji numerals",
+      "findString" : "\\ajMaruKansuji{4}",
+      "replacementString" : "㊃"
+    },
+    {
+      "description" : "Circled kanji numerals",
+      "findString" : "\\ajMaruKansuji{5}",
+      "replacementString" : "㊄"
+    },
+    {
+      "description" : "Circled kanji numerals",
+      "findString" : "\\ajMaruKansuji{6}",
+      "replacementString" : "㊅"
+    },
+    {
+      "description" : "Circled kanji numerals",
+      "findString" : "\\ajMaruKansuji{7}",
+      "replacementString" : "㊆"
+    },
+    {
+      "description" : "Circled kanji numerals",
+      "findString" : "\\ajMaruKansuji{8}",
+      "replacementString" : "㊇"
+    },
+    {
+      "description" : "Circled kanji numerals",
+      "findString" : "\\ajMaruKansuji{9}",
+      "replacementString" : "㊈"
+    },
+    {
+      "description" : "Circled kanji numerals",
+      "findString" : "\\ajMaruKansuji{10}",
+      "replacementString" : "㊉"
+    },
+    {
+      "description" : "Circled kanji numerals",
+      "findString" : "\\ajMaruKansuji1",
+      "replacementString" : "㊀"
+    },
+    {
+      "description" : "Circled kanji numerals",
+      "findString" : "\\ajMaruKansuji2",
+      "replacementString" : "㊁"
+    },
+    {
+      "description" : "Circled kanji numerals",
+      "findString" : "\\ajMaruKansuji3",
+      "replacementString" : "㊂"
+    },
+    {
+      "description" : "Circled kanji numerals",
+      "findString" : "\\ajMaruKansuji4",
+      "replacementString" : "㊃"
+    },
+    {
+      "description" : "Circled kanji numerals",
+      "findString" : "\\ajMaruKansuji5",
+      "replacementString" : "㊄"
+    },
+    {
+      "description" : "Circled kanji numerals",
+      "findString" : "\\ajMaruKansuji6",
+      "replacementString" : "㊅"
+    },
+    {
+      "description" : "Circled kanji numerals",
+      "findString" : "\\ajMaruKansuji7",
+      "replacementString" : "㊆"
+    },
+    {
+      "description" : "Circled kanji numerals",
+      "findString" : "\\ajMaruKansuji8",
+      "replacementString" : "㊇"
+    },
+    {
+      "description" : "Circled kanji numerals",
+      "findString" : "\\ajMaruKansuji9",
+      "replacementString" : "㊈"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{明治}",
+      "replacementString" : "㍾"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{大正}",
+      "replacementString" : "㍽"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{昭和}",
+      "replacementString" : "㍼"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{平成}",
+      "replacementString" : "㍻"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{令和}",
+      "replacementString" : "㋿"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ミリ}",
+      "replacementString" : "㍉"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{キロ}",
+      "replacementString" : "㌔"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{センチ}",
+      "replacementString" : "㌢"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{メートル}",
+      "replacementString" : "㍍"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{グラム}",
+      "replacementString" : "㌘"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{トン}",
+      "replacementString" : "㌧"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{アール}",
+      "replacementString" : "㌃"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ヘクタール}",
+      "replacementString" : "㌶"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{リットル}",
+      "replacementString" : "㍑"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ワット}",
+      "replacementString" : "㍗"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{カロリー}",
+      "replacementString" : "㌍"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ドル}",
+      "replacementString" : "㌦"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{セント}",
+      "replacementString" : "㌣"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{パーセント}",
+      "replacementString" : "㌫"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ミリバール}",
+      "replacementString" : "㍊"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ページ}",
+      "replacementString" : "㌻"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{キロメートル}",
+      "replacementString" : "㌖"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{キログラム}",
+      "replacementString" : "㌕"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ホーン}",
+      "replacementString" : "㍂"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ヘルツ}",
+      "replacementString" : "㌹"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{アパート}",
+      "replacementString" : "㌀"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ビル}",
+      "replacementString" : "㌱"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{マンション}",
+      "replacementString" : "㍇"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{コーポ}",
+      "replacementString" : "㌞"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ハイツ}",
+      "replacementString" : "㌪"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{株式会社}",
+      "replacementString" : "㍿"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{インチ}",
+      "replacementString" : "㌅"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{フィート}",
+      "replacementString" : "㌳"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ヤード}",
+      "replacementString" : "㍎"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{アルファ}",
+      "replacementString" : "㌁"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{アンペア}",
+      "replacementString" : "㌂"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{イニング}",
+      "replacementString" : "㌄"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ウォン}",
+      "replacementString" : "㌆"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{エーカー}",
+      "replacementString" : "㌈"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{エスクード}",
+      "replacementString" : "㌇"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{オーム}",
+      "replacementString" : "㌊"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{オンス}",
+      "replacementString" : "㌉"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{カラット}",
+      "replacementString" : "㌌"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ガロン}",
+      "replacementString" : "㌎"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ガンマ}",
+      "replacementString" : "㌏"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ギガ}",
+      "replacementString" : "㌐"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ギニー}",
+      "replacementString" : "㌑"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{キュリー}",
+      "replacementString" : "㌒"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ギルダー}",
+      "replacementString" : "㌓"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{キロワット}",
+      "replacementString" : "㌗"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{グラムトン}",
+      "replacementString" : "㌙"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{クルゼイロ}",
+      "replacementString" : "㌚"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{クローネ}",
+      "replacementString" : "㌛"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ケース}",
+      "replacementString" : "㌜"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{コルナ}",
+      "replacementString" : "㌝"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{サイクル}",
+      "replacementString" : "㌟"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{サンチーム}",
+      "replacementString" : "㌠"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{シリング}",
+      "replacementString" : "㌡"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ダース}",
+      "replacementString" : "㌤"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{デシ}",
+      "replacementString" : "㌥"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ナノ}",
+      "replacementString" : "㌨"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ノット}",
+      "replacementString" : "㌩"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{バーレル}",
+      "replacementString" : "㌭"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ピアストル}",
+      "replacementString" : "㌮"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ピクル}",
+      "replacementString" : "㌯"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ピコ}",
+      "replacementString" : "㌰"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ファラッド}",
+      "replacementString" : "㌲"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ブッシェル}",
+      "replacementString" : "㌴"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{フラン}",
+      "replacementString" : "㌵"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ベータ}",
+      "replacementString" : "㌼"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ペソ}",
+      "replacementString" : "㌷"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ペニヒ}",
+      "replacementString" : "㌸"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ペンス}",
+      "replacementString" : "㌺"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ポイント}",
+      "replacementString" : "㌽"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ホール}",
+      "replacementString" : "㍁"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ボルト}",
+      "replacementString" : "㌾"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ホン}",
+      "replacementString" : "㌿"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ポンド}",
+      "replacementString" : "㍀"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{マイクロ}",
+      "replacementString" : "㍃"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{マイル}",
+      "replacementString" : "㍄"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{マッハ}",
+      "replacementString" : "㍅"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{マルク}",
+      "replacementString" : "㍆"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ミクロン}",
+      "replacementString" : "㍈"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{メガ}",
+      "replacementString" : "㍋"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{メガトン}",
+      "replacementString" : "㍌"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ヤール}",
+      "replacementString" : "㍏"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ユアン}",
+      "replacementString" : "㍐"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{リラ}",
+      "replacementString" : "㍒"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ルーブル}",
+      "replacementString" : "㍔"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ルピー}",
+      "replacementString" : "㍓"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{レム}",
+      "replacementString" : "㍕"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{レントゲン}",
+      "replacementString" : "㍖"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○上}",
+      "replacementString" : "㊤"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○中}",
+      "replacementString" : "㊥"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○下}",
+      "replacementString" : "㊦"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○左}",
+      "replacementString" : "㊧"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○右}",
+      "replacementString" : "㊨"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○〒}",
+      "replacementString" : "〶"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○夜}",
+      "replacementString" : "㊰"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○企}",
+      "replacementString" : "㊭"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○医}",
+      "replacementString" : "㊩"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○協}",
+      "replacementString" : "㊯"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○名}",
+      "replacementString" : "㊔"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○宗}",
+      "replacementString" : "㊪"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○労}",
+      "replacementString" : "㊘"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○学}",
+      "replacementString" : "㊫"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○有}",
+      "replacementString" : "㊒"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○株}",
+      "replacementString" : "㊑"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○社}",
+      "replacementString" : "㊓"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○監}",
+      "replacementString" : "㊬"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○資}",
+      "replacementString" : "㊮"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○財}",
+      "replacementString" : "㊖"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○印}",
+      "replacementString" : "㊞"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○秘}",
+      "replacementString" : "㊙"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○優}",
+      "replacementString" : "㊝"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○注}",
+      "replacementString" : "㊟"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○項}",
+      "replacementString" : "㊠"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○休}",
+      "replacementString" : "㊡"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○女}",
+      "replacementString" : "㊛"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○男}",
+      "replacementString" : "㊚"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○正}",
+      "replacementString" : "㊣"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○写}",
+      "replacementString" : "㊢"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○祝}",
+      "replacementString" : "㊗"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○適}",
+      "replacementString" : "㊜"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{○特}",
+      "replacementString" : "㊕"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○上",
+      "replacementString" : "㊤"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○中",
+      "replacementString" : "㊥"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○下",
+      "replacementString" : "㊦"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○左",
+      "replacementString" : "㊧"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○右",
+      "replacementString" : "㊨"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○〒",
+      "replacementString" : "〶"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○夜",
+      "replacementString" : "㊰"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○企",
+      "replacementString" : "㊭"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○医",
+      "replacementString" : "㊩"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○協",
+      "replacementString" : "㊯"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○名",
+      "replacementString" : "㊔"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○宗",
+      "replacementString" : "㊪"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○労",
+      "replacementString" : "㊘"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○学",
+      "replacementString" : "㊫"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○有",
+      "replacementString" : "㊒"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○株",
+      "replacementString" : "㊑"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○社",
+      "replacementString" : "㊓"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○監",
+      "replacementString" : "㊬"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○資",
+      "replacementString" : "㊮"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○財",
+      "replacementString" : "㊖"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○印",
+      "replacementString" : "㊞"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○秘",
+      "replacementString" : "㊙"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○優",
+      "replacementString" : "㊝"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○注",
+      "replacementString" : "㊟"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○項",
+      "replacementString" : "㊠"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○休",
+      "replacementString" : "㊡"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○女",
+      "replacementString" : "㊛"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○男",
+      "replacementString" : "㊚"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○正",
+      "replacementString" : "㊣"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○写",
+      "replacementString" : "㊢"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○祝",
+      "replacementString" : "㊗"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○適",
+      "replacementString" : "㊜"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\○特",
+      "replacementString" : "㊕"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{(株)}",
+      "replacementString" : "㈱"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{(有)}",
+      "replacementString" : "㈲"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{(代)}",
+      "replacementString" : "㈹"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{(至)}",
+      "replacementString" : "㉃"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{(企)}",
+      "replacementString" : "㈽"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{(協)}",
+      "replacementString" : "㈿"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{(名)}",
+      "replacementString" : "㈴"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{(労)}",
+      "replacementString" : "㈸"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{(社)}",
+      "replacementString" : "㈳"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{(監)}",
+      "replacementString" : "㈼"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{(自)}",
+      "replacementString" : "㉂"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{(資)}",
+      "replacementString" : "㈾"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{(財)}",
+      "replacementString" : "㈶"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{(特)}",
+      "replacementString" : "㈵"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{(学)}",
+      "replacementString" : "㈻"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{(祭)}",
+      "replacementString" : "㉀"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{(呼)}",
+      "replacementString" : "㈺"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{(祝)}",
+      "replacementString" : "㈷"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{(休)}",
+      "replacementString" : "㉁"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\（株）",
+      "replacementString" : "㈱"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\（有）",
+      "replacementString" : "㈲"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\（代）",
+      "replacementString" : "㈹"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\（至）",
+      "replacementString" : "㉃"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\（企）",
+      "replacementString" : "㈽"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\（協）",
+      "replacementString" : "㈿"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\（名）",
+      "replacementString" : "㈴"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\（労）",
+      "replacementString" : "㈸"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\（社）",
+      "replacementString" : "㈳"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\（監）",
+      "replacementString" : "㈼"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\（自）",
+      "replacementString" : "㉂"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\（資）",
+      "replacementString" : "㈾"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\（財）",
+      "replacementString" : "㈶"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\（特）",
+      "replacementString" : "㈵"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\（学）",
+      "replacementString" : "㈻"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\（祭）",
+      "replacementString" : "㉀"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\（呼）",
+      "replacementString" : "㈺"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\（祝）",
+      "replacementString" : "㈷"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\（休）",
+      "replacementString" : "㉁"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{う゛}",
+      "replacementString" : "ゔ"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ワ゛}",
+      "replacementString" : "ヷ"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ヰ゛}",
+      "replacementString" : "ヸ"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ヱ゛}",
+      "replacementString" : "ヹ"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ヲ゛}",
+      "replacementString" : "ヺ"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\゛う",
+      "replacementString" : "ゔ"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\゛ワ",
+      "replacementString" : "ヷ"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\゛ヰ",
+      "replacementString" : "ヸ"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\゛ヱ",
+      "replacementString" : "ヹ"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\゛ヲ",
+      "replacementString" : "ヺ"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{小か}",
+      "replacementString" : "ゕ"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{小け}",
+      "replacementString" : "ゖ"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\！か",
+      "replacementString" : "ゕ"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\！け",
+      "replacementString" : "ゖ"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{mm}",
+      "replacementString" : "㎜"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{cm}",
+      "replacementString" : "㎝"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{km}",
+      "replacementString" : "㎞"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{mg}",
+      "replacementString" : "㎎"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{kg}",
+      "replacementString" : "㎏"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{cc}",
+      "replacementString" : "㏄"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{m2}",
+      "replacementString" : "㎡"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{No.}",
+      "replacementString" : "№"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{K.K.}",
+      "replacementString" : "㏍"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{cm2}",
+      "replacementString" : "㎠"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{km2}",
+      "replacementString" : "㎢"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{cm3}",
+      "replacementString" : "㎤"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{m3}",
+      "replacementString" : "㎥"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{dl}",
+      "replacementString" : "㎗"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{l}",
+      "replacementString" : "ℓ"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{kl}",
+      "replacementString" : "㎘"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ms}",
+      "replacementString" : "㎳"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{micros}",
+      "replacementString" : "㎲"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ns}",
+      "replacementString" : "㎱"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ps}",
+      "replacementString" : "㎰"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{KB}",
+      "replacementString" : "㎅"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{MB}",
+      "replacementString" : "㎆"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{GB}",
+      "replacementString" : "㎇"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{HP}",
+      "replacementString" : "㏋"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{Hz}",
+      "replacementString" : "㎐"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{ml}",
+      "replacementString" : "㎖"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{Tel}",
+      "replacementString" : "℡"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{in}",
+      "replacementString" : "㏌"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{mm2}",
+      "replacementString" : "㎟"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{mm3}",
+      "replacementString" : "㎣"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{km3}",
+      "replacementString" : "㎦"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{cal}",
+      "replacementString" : "㎈"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{kcal}",
+      "replacementString" : "㎉"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{dB}",
+      "replacementString" : "㏈"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{F}",
+      "replacementString" : "℉"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{a.m.}",
+      "replacementString" : "㏂"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{p.m.}",
+      "replacementString" : "㏘"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{hPa}",
+      "replacementString" : "㍱"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{microg}",
+      "replacementString" : "㎍"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{microm}",
+      "replacementString" : "㎛"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{pH}",
+      "replacementString" : "㏗"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{JIS}",
+      "replacementString" : "〄"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{mho}",
+      "replacementString" : "℧"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{euro}",
+      "replacementString" : "€"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{!!}",
+      "replacementString" : "‼"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{??}",
+      "replacementString" : "⁇"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{?!}",
+      "replacementString" : "⁈"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\ajLig{!?}",
+      "replacementString" : "⁉"
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajMasu[ \\t]*",
+      "replacementString" : "〼",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajYori[ \\t]*",
+      "replacementString" : "ゟ",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajKoto[ \\t]*",
+      "replacementString" : "ヿ",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajUta[ \\t]*",
+      "replacementString" : "〽",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajCommandKey[ \\t]*",
+      "replacementString" : "⌘",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajReturnKey[ \\t]*",
+      "replacementString" : "⏎",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajCheckmark[ \\t]*",
+      "replacementString" : "✓",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajVisibleSpace[ \\t]*",
+      "replacementString" : "␣",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajSenteMark[ \\t]*",
+      "replacementString" : "☗",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajGoteMark[ \\t]*",
+      "replacementString" : "☖",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajClub[ \\t]*",
+      "replacementString" : "♣",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajHeart[ \\t]*",
+      "replacementString" : "♡",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajSpade[ \\t]*",
+      "replacementString" : "♠",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajDiamond[ \\t]*",
+      "replacementString" : "♢",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajvarClub[ \\t]*",
+      "replacementString" : "♧",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajvarHeart[ \\t]*",
+      "replacementString" : "♥",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajvarSpade[ \\t]*",
+      "replacementString" : "♤",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajvarDiamond[ \\t]*",
+      "replacementString" : "♦",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajPhone[ \\t]*",
+      "replacementString" : "☎",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajPostal[ \\t]*",
+      "replacementString" : "〠",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajvarPostal[ \\t]*",
+      "replacementString" : "〶",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajSun[ \\t]*",
+      "replacementString" : "☀",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajCloud[ \\t]*",
+      "replacementString" : "☁",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajUmbrella[ \\t]*",
+      "replacementString" : "☂",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajSnowman[ \\t]*",
+      "replacementString" : "☃",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajJIS[ \\t]*",
+      "replacementString" : "〄",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajHotSpring[ \\t]*",
+      "replacementString" : "♨",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajWhiteSesame[ \\t]*",
+      "replacementString" : "﹆",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajBlackSesame[ \\t]*",
+      "replacementString" : "﹅",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajWhiteFlorette[ \\t]*",
+      "replacementString" : "❀",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajBlackFlorette[ \\t]*",
+      "replacementString" : "✿",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajHashigoTaka[ \\t]*",
+      "replacementString" : "髙",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajTsuchiYoshi[ \\t]*",
+      "replacementString" : "𠮷",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajTatsuSaki[ \\t]*",
+      "replacementString" : "﨑",
+      "usesRegularExpression" : true
+    },
+    {
+      "description" : "Ligatures, symbols and variants",
+      "findString" : "\\\\ajMayuHama[ \\t]*",
+      "replacementString" : "濵",
+      "usesRegularExpression" : true
+    }
+  ],
+  "settings" : {
+    "matchesFullWord" : false,
+    "regexOptions" : 16,
+    "textualOptions" : 0,
+    "unescapesReplacementString" : true
+  }
+}

@@ -2,32 +2,7 @@
 // The approved catalog describes presentation; original controls own all values/actions.
 #include "TSSettingsCatalogLayout.inc"
 static id TSCatalogRequired(id value) { if(value==nil) [NSException raise:NSInternalInconsistencyException format:@"Incomplete settings catalog"]; return (id _Nonnull)value; }
-@interface TSSettingsProfilePresentation : NSView
-@property (strong) NSPopUpButton *popup;
-@property (copy) NSArray<NSMenuItem *> *proposals;
-- (instancetype)initWithPopup:(NSPopUpButton *)popup title:(NSString *)title;
-@end
 static NSMutableArray<NSView *> *TSCatalogGroupPopups;
-@implementation TSSettingsProfilePresentation
-- (instancetype)initWithPopup:(NSPopUpButton *)popup title:(NSString *)title
-{
-    self=[super initWithFrame:NSZeroRect]; if(!self)return nil;
-    self.translatesAutoresizingMaskIntoConstraints=NO; _popup=popup;
-    NSMutableArray *items=[NSMutableArray array];
-    for(NSMenuItem *item in popup.itemArray) if(item.tag>0) [items addObject:[item copy]];
-    _proposals=[items copy];
-    [popup removeAllItems]; popup.pullsDown=NO; popup.autoenablesItems=NO;
-    for(NSMenuItem *item in items){[popup addItemWithTitle:item.title];popup.lastItem.tag=item.tag;}
-    popup.target=nil;popup.action=NULL;
-    NSButton *apply=[NSButton buttonWithTitle:title target:self action:@selector(apply:)];apply.identifier=@"settings.apply-profile";
-    [TSPrefPaneLayout attachRows:@[[TSPrefPaneLayout stackWithViews:@[popup,apply] orientation:NSUserInterfaceLayoutOrientationHorizontal]] toView:self];
-    return self;
-}
-- (void)apply:(id)sender
-{
-    for(NSMenuItem *item in self.proposals) if(item.tag==self.popup.selectedTag){SEL action=item.action;if(action)[NSApp sendAction:action to:item.target from:item];return;}
-}
-@end
 @interface TSSettingsPaneComposer : NSObject
 + (NSDictionary<TSSettingsCategoryID, NSViewController *> *)compose:(NSArray<TSPrefPaneController *> *)panes preferences:(TSPreferences *)preferences;
 @end
@@ -100,14 +75,10 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
         if([kind isEqual:@"switchpopup"])[TSCatalogGroupPopups addObject:controls[1]];
         accessory=[kind isEqual:@"switchpopup"]?[self horizontal:@[controls[1],toggle] spacing:12]:toggle;
     }else if([kind isEqual:@"popup"]){
-        if([controls.firstObject.identifier isEqual:@"settings.1089"]){
-            accessory=[[TSSettingsProfilePresentation alloc]initWithPopup:(NSPopUpButton *)controls.firstObject title:text(model[@"button"])];
-        }else{
-            BOOL pair=[controls.firstObject.identifier isEqual:@"settings.G6V-Sw-jFT"] || [controls.firstObject.identifier isEqual:@"settings.iRm-g2-CpD"];
-            NSView *choice=[TSPrefPaneLayout choiceForControls:pair?controls:@[TSCatalogRequired(controls.firstObject)]];
-            choice.accessibilityLabel=title;
-            if(!pair && controls.count>1){((NSButton *)controls[1]).title=text(model[@"button"]);accessory=[self horizontal:@[choice,controls[1]] spacing:8];}else accessory=choice;
-        }
+        BOOL pair=[controls.firstObject.identifier isEqual:@"settings.G6V-Sw-jFT"] || [controls.firstObject.identifier isEqual:@"settings.iRm-g2-CpD"];
+        NSView *choice=[TSPrefPaneLayout choiceForControls:pair?controls:@[TSCatalogRequired(controls.firstObject)]];
+        choice.accessibilityLabel=title;
+        if(!pair && controls.count>1){((NSButton *)controls[1]).title=text(model[@"button"]);accessory=[self horizontal:@[choice,controls[1]] spacing:8];}else accessory=choice;
     }else if([kind isEqual:@"text"] || [kind isEqual:@"integer"] || [kind isEqual:@"path"]){
         NSTextField *field=(NSTextField *)controls.firstObject;field.accessibilityLabel=title;
         if(![kind isEqual:@"path"]){field.alignment=NSTextAlignmentRight;[field.widthAnchor constraintEqualToConstant:64].active=YES;}
@@ -239,6 +210,8 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
     NSArray *newIDs=@[@"settings.edit-completion",@"settings.hidden-settings-help",@"settings.save-theme"];
     SEL actions[]={@selector(openCommandCompletionList:),@selector(displayCommentLines:),@selector(SaveEditedStyle:)};
     for(NSUInteger i=0;i<newIDs.count;i++){NSButton *b=[NSButton buttonWithTitle:@"" target:i==0?nil:preferences action:actions[i]];b.identifier=newIDs[i];views[newIDs[i]]=b;}
+    NSPopUpButton *engineProfile=[[NSPopUpButton alloc]initWithFrame:NSZeroRect pullsDown:NO];engineProfile.identifier=@"settings.engine-profile";preferences.engineProfilePopup=engineProfile;views[@"settings.engine-profile"]=engineProfile;
+    NSButton *engineProfileApply=[NSButton buttonWithTitle:@"" target:preferences action:@selector(applyEngineProfile:)];engineProfileApply.identifier=@"settings.engine-profile-apply";preferences.engineProfileApplyButton=engineProfileApply;views[@"settings.engine-profile-apply"]=engineProfileApply;
     NSButton *prerelease=[NSButton checkboxWithTitle:@"" target:preferences action:@selector(sparklePrereleaseUpdates:)];prerelease.identifier=@"settings.sparkle-prerelease";preferences.sparklePrereleaseButton=prerelease;views[@"settings.sparkle-prerelease"]=prerelease;
     NSTextField *lastCheck=[NSTextField labelWithString:@""];lastCheck.identifier=@"settings.sparkle-last-check";preferences.sparkleLastCheckField=lastCheck;views[@"settings.sparkle-last-check"]=lastCheck;
     NSButton *checkNow=[NSButton buttonWithTitle:@"" target:preferences action:@selector(checkForUpdatesFromSettings:)];checkNow.identifier=@"settings.sparkle-check-now";preferences.sparkleCheckNowButton=checkNow;views[@"settings.sparkle-check-now"]=checkNow;
@@ -285,8 +258,6 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
         result[cid]=controller;
     }
     [preferences sparkleStatusControlsDidLoad];
-    // The profile selector has moved to General. Keep its typed owner but no footer band.
-    ((NSView *)views[@"settings.settings-footer"]).hidden=YES;
     return result;
 }
 @end

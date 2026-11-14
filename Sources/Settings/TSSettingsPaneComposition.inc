@@ -92,9 +92,6 @@
         @"settings.xP2-FB-CFh": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.1029", @"settings.1028"] kind:TSSettingsRowField indentation:0],
         ]],
-        @"settings.settings-footer": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.1089"] kind:TSSettingsRowControls indentation:0],
-        ]],
         @"settings.400": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.386"] kind:TSSettingsRowSection indentation:0], // Image Copy Type
             [TSSettingsLayoutRow controls:@[@"settings.447"] kind:TSSettingsRowSection indentation:0], // Color Mapping

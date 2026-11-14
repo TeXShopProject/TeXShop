@@ -129,7 +129,7 @@ int main(int argc, const char **argv) { @autoreleasepool {
         Check(found!=nil && [found.categoryIdentifier isEqual:expected[@"Categories"][name]],@"Production category ID belongs to its fixed pane class");
     }
     Check([TSSettingsGroupStyle cornerRadiusForMajorVersion:14]==10 && [TSSettingsGroupStyle cornerRadiusForMajorVersion:15]==10 && [TSSettingsGroupStyle cornerRadiusForMajorVersion:26]==12,@"Group radii match the supported OS versions");
-    Check(panes.count==11,@"Production factory eagerly owns all eleven panes");
+    Check(panes.count==10,@"Production factory eagerly owns all ten panes");
     for(NSDictionary *entry in expected[@"Bridge"]) {
         TSPrefPaneController *pane=nil;
         for(TSPrefPaneController *candidate in panes)if([NSStringFromClass(candidate.class) isEqual:entry[@"class"]])pane=candidate;
@@ -138,7 +138,7 @@ int main(int argc, const char **argv) { @autoreleasepool {
         Check(object_getIvar(coordinator,ivar)==[pane valueForKey:entry[@"property"]],@"Production bridge assigns each original outlet to its matching pane control");
         Check(pane.preferences==coordinator,@"Every pane forwards to its owning coordinator");
     }
-    NSArray *names = @[@"Source",@"Editor",@"Preview",@"Console",@"Typesetting",@"Engines",@"MiscOne",@"MiscTwo",@"Themes",@"Footer",@"ThemeName"];
+    NSArray *names = @[@"Source",@"Editor",@"Preview",@"Console",@"Typesetting",@"Engines",@"MiscOne",@"MiscTwo",@"Themes",@"ThemeName"];
     NSUInteger outlets = 0;
     for (NSString *name in names) {
         Class cls = NSClassFromString([NSString stringWithFormat:@"TSPref%@Controller", name]);

@@ -228,7 +228,7 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
     (void)self.window;
     self.panes = panes;
     NSView *parent = self.contentScroll.superview;
-    if (!footer.hidden) {
+    if (footer != nil && !footer.hidden) {
     footer.translatesAutoresizingMaskIntoConstraints = NO;
     [parent addSubview:footer];
     self.contentBottom.active = NO;
