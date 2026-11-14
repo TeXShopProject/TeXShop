@@ -145,7 +145,7 @@
 "group.spelling.1.title" = "Metodo";
 "catalog.spelling.1.0.title" = "Usa il controllo adatto a LaTeX (consigliato)";
 "catalog.spelling.1.0.note" = "Controllare il testo, escludendo comandi, formule, commenti e argomenti dei riferimenti.";
-"catalog.spelling.1.1.title" = "Modifica esclusioni LaTeX…";
+"catalog.spelling.1.0.button" = "Modifica esclusioni LaTeX…";
 "catalog.spelling.1.2.title" = "Metodo precedente";
 "catalog.spelling.1.3.title" = "Non controllare i comandi LaTeX";
 "catalog.spelling.1.4.title" = "Non controllare i parametri selezionati";
