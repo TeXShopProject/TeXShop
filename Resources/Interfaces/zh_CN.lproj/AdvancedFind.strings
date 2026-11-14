@@ -152,7 +152,6 @@
 "MultipleReplace.Duplicate" = "复制";
 "MultipleReplace.EditMenu" = "编辑批量替换…";
 "MultipleReplace.Export" = "导出…";
-"MultipleReplace.Help" = "帮助";
 "MultipleReplace.Import" = "导入…";
 "MultipleReplace.Imported" = "导入的规则集";
 "MultipleReplace.MoveToTrash" = "移到废纸篓";

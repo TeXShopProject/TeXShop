@@ -152,7 +152,6 @@
 "MultipleReplace.Duplicate" = "複製";
 "MultipleReplace.EditMenu" = "複数置換を編集…";
 "MultipleReplace.Export" = "書き出す…";
-"MultipleReplace.Help" = "ヘルプ";
 "MultipleReplace.Import" = "読み込む…";
 "MultipleReplace.Imported" = "読み込んだ組";
 "MultipleReplace.MoveToTrash" = "ゴミ箱に入れる";
