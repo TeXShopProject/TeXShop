@@ -13,7 +13,7 @@ for language,text in [('en','Settings → Editor'),('ja','設定 → エディ�
 print('NORMAL CONTROL current routes')
 
 release=(root/"Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm").read_text()
-missing="\n".join(line for line in release.splitlines() if "Size internal-link previews" not in line)
+missing="\n".join(line for line in release.splitlines() if "Internal-link previews show the text column" not in line)
 try:checks["check_internal_link_release"](missing)
 except AssertionError:print("DETECTED missing merged internal-link preview release entry")
 else:raise AssertionError("Missing release entry survived")

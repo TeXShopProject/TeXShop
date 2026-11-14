@@ -156,16 +156,18 @@ assert '\\section{Settings for the Source Window}' in manual
 assert 'After making a selection, TeXShop must be restarted' not in manual, 'Find Panel restart guidance must distinguish OgreKit'
 font_route = manual.split("To change the font in the Source Window,", 1)[1].split("Choose a font and size", 1)[0]
 assert r"{\em Editor}" in font_route and r"{\em Appearance}" not in font_route, "Source font belongs to Editor"
+# The release notes say what users can do; the macOS key (NSUserKeyEquivalents) is named in the manual.
 for file in ('Documentation/Releases/6.00.md', 'website/release-notes.html', 'DocumentSources/Manual Source/Manual.tex'):
     text = (ROOT / file).read_text()
-    assert 'NSUserKeyEquivalents' in text, file
+    if file.endswith('Manual.tex'):
+        assert 'NSUserKeyEquivalents' in text, file
     for obsolete in ('Settings → Spelling', 'with Edit Rules beneath', 'indented Edit Rules button',
                      'In Settings, Spelling,', 'Source category, there is a box',
                      'Input settings and shortcut results share one vertical scroll area'):
         assert obsolete not in text, (file, obsolete)
 for file in ('Documentation/Releases/6.00-ja.md', 'website/release-notes-ja.html'):
     text = (ROOT / file).read_text()
-    assert 'NSUserKeyEquivalents' in text and 'LaTeXの構文を考慮する（推奨）' in text and '従来の方式' in text and '従来方式を使う' not in text
+    assert 'LaTeXの構文を考慮する' in text and '従来の方式' in text and '従来方式を使う' not in text
     assert '入力設定とショートカット一覧は同じ縦スクロール領域' not in text
 contract = json.loads((ROOT / 'Tests/Fixtures/SettingsCategoryGroups.json').read_text())
 assert 'catalog' in contract['source'].lower()
@@ -189,7 +191,7 @@ class ReleaseParser(HTMLParser):
     def handle_data(self,data):
         if self.in_heading:self.heading+=data
         if self.item:self.item[3]+=data
-for suffix,heading,phrase in [('', 'Settings window', 'Add Search Settings'),('-ja','設定画面','「設定を検索」')]:
+for suffix,heading,phrase in [('', 'Settings window', 'Settings has a sidebar with ten categories'),('-ja','設定画面','10分類のサイドバー')]:
     md=(ROOT/('Documentation/Releases/6.00'+suffix+'.md')).read_text()
     section=md.split('## '+heading+'\n',1)[1].split('\n## ',1)[0]
     assert any(line.startswith('- ') and phrase in line for line in section.splitlines()), (suffix,'release Markdown section')
@@ -219,7 +221,7 @@ for target in ('Base','en'):
 print('PASS: hidden PDF current text and distribution identity')
 
 # The current public English copies carry identical Settings layout wording.
-phrase='Settings has a compact sidebar with ten categories: General, Documents and Saving, Editor, Keyboard, Spell Checking, Themes, Preview, Typesetting, Console, and Updates. Each category shows overview cards and named groups with switches, right-aligned controls, wrapping labels and indented dependent options. The Dock icon is in General, engine profiles are in Typesetting, and Themes contains only what themes store.'
+phrase='Settings has a sidebar with ten categories: General, Documents and Saving, Editor, Keyboard, Spell Checking, Themes, Preview, Typesetting, Console, and Updates.'
 for filename in ('Documentation/Releases/6.00.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm'):
     assert phrase in (ROOT/filename).read_text(),('Current release layout copies agree',filename)
 
@@ -228,7 +230,7 @@ for language in ('en','ko'):
     assert not (ROOT/f'Resources/Interfaces/{language}.lproj/TeXShopHelp/pgs/basic_preferences1.htm').exists(),'Obsolete duplicate preferences help page'
 assert 'Transparency settings bring up a full Color Well' not in manual,'Opacity uses a slider in the manual'
 
-warning='A note with a yellow warning symbol explains changes to the spell-checking method, new-PDF zoom or default encoding when relevant. Auto Save requires a restart. The standard Find Panel, the Find Bar and the Advanced Find panel switch immediately; switching to or from OgreKit requires a restart.'
+warning='A yellow warning symbol marks settings that take effect only after a restart or only for new documents.'
 for filename in ('Documentation/Releases/6.00.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm'):
     text=(ROOT/filename).read_text()
     assert warning in text,('Current release warning copies agree',filename)
@@ -236,10 +238,10 @@ for filename in ('Documentation/Releases/6.00.md','website/release-notes.html','
         assert retired not in text,('Retired redundant release explanation',filename,retired)
 
 # Release copies describe Search Settings briefly; details belong to the help and manual.
-search_copy='Selecting a result shows and highlights the setting.'
+search_copy='Search Settings finds a setting and shows it.'
 for filename in ('Documentation/Releases/6.00.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','DocumentSources/ChangesDocument/Changes.tex'):
     assert search_copy in (ROOT/filename).read_text(),('Release category and color-row guidance',filename)
-ja_copy='選んだ項目へ移動して強調します。'
+ja_copy='「設定を検索」で、設定の項目を探して表示できます。'
 for filename in ('Documentation/Releases/6.00-ja.md','website/release-notes-ja.html'):
     assert ja_copy in (ROOT/filename).read_text(),('Release category and color-row guidance',filename)
 ko=html.unescape((ROOT/'Resources/Interfaces/ko.lproj/TeXShopHelp/pgs/basic_preferences.htm').read_text())
@@ -248,7 +250,7 @@ print('PASS: six release copies and Korean category terminology')
 
 for filename in ['Documentation/Releases/6.00.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','DocumentSources/ChangesDocument/Changes.tex']:
     text=(ROOT/filename).read_text()
-    assert 'slider, a numeric field or the arrow buttons beside the field' in text,('Opacity numeric field and arrow buttons in release notes',filename)
+    assert 'slider, a number field or arrow buttons' in text,('Opacity numeric field and arrow buttons in release notes',filename)
 assert 'slider and a numeric field' in manual,'Opacity numeric field in manual'
 for lang,term in {'en':'numeric field','ja':'数値欄','de':'Zahlenfeld','es':'campo numérico','ko':'숫자 입력 필드'}.items():
     page=ROOT/f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/basic_preferences.htm'
@@ -259,7 +261,7 @@ for lang,term in {'en':'arrow buttons','ja':'矢印ボタン','de':'Pfeiltasten'
     assert term in read_help(page,lang),('Opacity arrow buttons in help',lang)
 
 for filename in ["Documentation/Releases/6.00-ja.md","website/release-notes-ja.html"]:
-    assert "数値欄、その横の矢印ボタン" in (ROOT/filename).read_text(),("Opacity numeric field in release notes",filename)
+    assert "スライダー、数値欄、矢印ボタン" in (ROOT/filename).read_text(),("Opacity numeric field in release notes",filename)
 
 # Seventh audit: invalid typed text stays intact until commit, as pasted text does.
 assert 'Invalid input, including decimals, restores the previous value at the end of editing. Typed and pasted input follow the same rule.' in manual, 'Opacity commit guidance in manual'
@@ -276,7 +278,7 @@ print('PASS: typed/pasted opacity validation guidance in five helps, manual and 
 
 
 def check_internal_link_release(text):
-    for phrase in ("Size internal-link previews to the text column of the target page", "never below half size", ">Uwe Schmock</a>", 'issues/12">#12</a>'):
+    for phrase in ("Internal-link previews show the text column of the target", ">Uwe Schmock</a>", 'issues/12">#12</a>'):
         assert phrase in text, ("Internal-link preview release guidance", phrase)
 
 check_internal_link_release((ROOT/"Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm").read_text())

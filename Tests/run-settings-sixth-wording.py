@@ -28,8 +28,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-sixth-wording-') as td:
             print('DETECTED reviewed choice/group translation',lang,table,flush=True)
     cases=[
         ('DocumentSources/Manual Source/Manual.tex',b'slider and a numeric field',b'slider and a label'),
-        ('Documentation/Releases/6.00.md',b'a numeric field or the arrow buttons',b'a label or the arrow buttons'),
-        ('website/release-notes.html',b'a numeric field or the arrow buttons',b'a label or the arrow buttons'),
+        ('Documentation/Releases/6.00.md',b'a number field or arrow buttons',b'a label or arrow buttons'),
+        ('website/release-notes.html',b'a number field or arrow buttons',b'a label or arrow buttons'),
         ('Documentation/Releases/6.00-ja.md','数値欄'.encode(),b'LABEL'),
         ('website/release-notes-ja.html','数値欄'.encode(),b'LABEL'),
     ]

@@ -38,197 +38,197 @@
 </ul>
 <h3>詳細検索パネル</h3>
 <ul>
-<li>新しい検索と置換のパネル「詳細検索パネル」を追加しました。正規表現が使えます。「設定」→「エディタ」の「検索パネル」で選べ、切り替えに再起動は要りません。編集メニューの「検索…」「次を検索」「前を検索」「選択部分を検索に使用」がこのパネルで働きます。このパネルのときは、編集メニューの「検索」に、パネルのほかの操作もCotEditorの「検索」メニューと同じ順に並びます：「すべて検索」（⇧⌘F）、「すべての一致を選択」、「選択部分を置換に使用」（⇧⌘E）、「置換」、「置換して次を検索」（⌥⌘G）、「すべて置換」、「すべてハイライト」（⇧⌘H）、「ハイライトを削除」（⌃⇧⌘H）。パネルを閉じていても働き、キーは「設定」→「キーボード」で変えられます。パネルは最近の検索文字列と置換文字列を覚え、大文字と小文字を区別しない、選択範囲内、単語単位などのオプションを備えます。置換の書き方は <code>$1</code>（既定）とOgreKit式の <code>\1</code> から選べます。<figure class="note-shot"><img src="assets/whats-new/ja/advanced-find.png" width="600" height="494" alt="正規表現を入れた詳細検索パネルと、すべての一致の一覧、ソースで強調された一致" loading="lazy"></figure></li>
-<li>「すべて検索」は、すべての一致を行番号とともにパネルの中に並べます。行をクリックするとその一致を選び、その後の編集で変わった行は灰色になります。</li>
-<li>「すべてハイライト」は、すべての一致を、分割した両方の部分に、既存の色や背景の上から重ねて示します。ハイライトは編集に合わせて動き、「ハイライトを消す」で消えます。</li>
-<li>編集メニューの「検索」の「複数置換を編集…」、またはパネルの「複数置換…」ボタンで、検索と置換の組を並べた一覧を作り、順に適用できます。取り消しは1回です。一覧は<code>~/Library/TeXShop/MultipleReplace</code>にCotEditorの置換定義と同じJSONで保存し、「複数置換」のサブメニューから本文全体にすぐ適用できます。Unicode文字とajmacrosの命令を相互に変換する見本の組を2つ同梱しました。編集メニューの「文字種一括変換」と同じ結果になり、行末では命令の後に % を付けます。<figure class="note-shot"><img src="assets/release-notes/ja/multiple-replace.png" width="600" height="269" alt="検索と置換の組を4つ並べた複数置換の窓" loading="lazy"></figure></li>
-<li>検索欄と置換欄はソースのフォントの大きさの等幅フォントとソースのテーマで表示され、「正規表現」がオフのときはソースと同じようにTeXとして色を分け、オンのときはパターンの部分ごとにテーマの色で色を分け、誤りを赤で、OgreKitと読み方が違う所を橙で示し、括弧の相手も示します。「正規表現」の右の「?」で、書き方、置換の書き方、OgreKitとの違いをまとめた「正規表現の早見表」を開けます。</li>
-<li>「すべて置き換え」「すべて検索」「複数置換」は裏で計算し、終わるまで書類を編集できません。時間がかかるときは書類の窓にシートが出て、進み具合を示し、キャンセルもできます。</li>
-<li>コンソール、ログ、「実験」のウインドウでも詳細検索パネルで検索でき、TeXの出力を示す所では置換できません。</li>
+<li>新しい検索と置換のパネル「詳細検索パネル」を追加しました。正規表現が使えます。「設定」→「エディタ」の「検索パネル」で選べます。編集メニューの「検索」に「すべて検索」「すべての一致を選択」「選択部分を置換に使用」「置換して次を検索」「すべてハイライト」「ハイライトを削除」が加わり、キーは「設定」→「キーボード」で変えられます。置換は <code>$1</code> とOgreKit式の <code>\1</code> のどちらでも書けます。<figure class="note-shot"><img src="assets/whats-new/ja/advanced-find.png" width="600" height="494" alt="正規表現を入れた詳細検索パネルと、すべての一致の一覧、ソースで強調された一致" loading="lazy"></figure></li>
+<li>「すべて検索」で、すべての一致を行とともに一覧にできます。行をクリックするとその一致へ移ります。</li>
+<li>「すべてハイライト」で、すべての一致を本文に示せます。「ハイライトを削除」で消えます。</li>
+<li>「複数置換」で、保存した検索と置換の組を上から順にまとめて適用できます。取り消しは1回です。組は「複数置換を編集…」かパネルの「複数置換…」ボタンで編集し、CotEditorの置換定義と同じ形式で保存します。Unicode文字とajmacrosの命令を相互に変換する見本の組を同梱しました。<figure class="note-shot"><img src="assets/release-notes/ja/multiple-replace.png" width="600" height="269" alt="検索と置換の組を4つ並べた複数置換の窓" loading="lazy"></figure></li>
+<li>検索欄と置換欄は等幅フォントとテーマの色で表示し、正規表現の部分ごとに色を分けて、誤りを示します。「正規表現」の右の「?」で書き方の早見表を開けます。</li>
+<li>時間のかかる処理は裏で進み、キャンセルできます。</li>
+<li>コンソール、ログ、「実験」のウインドウでも検索できます。</li>
 </ul>
 <h3>LaTeXの構文を考慮するスペルチェック</h3>
 <ul>
-<li><a href="https://github.com/ralphrmartin">Ralph Martin</a>氏の提案をもとに、LaTeXの構文を考慮するスペルチェックを追加しました。TeXコマンド、コメント、数式、参照などに使う引数を除外して本文を検査します。Experimentのソースも同じように検査します。<figure class="note-shot"><img src="assets/whats-new/ja/spell.png" width="600" height="530" alt="LaTeXのソースの本文で印の付いた2つの綴りの誤りと、「すべて変更」の欄に候補が入ったスペルのパネル" loading="lazy"></figure></li>
-<li>対応するマクロ定義や言語切り替えコマンドを考慮して検査対象を判定します。スペルチェックパネルでは、指定された言語で本文を検査できます。</li>
-<li>スペルチェックの除外規則の編集、検査対象の単語をまとめて置換する入力欄と「すべて変更」、現在の書類に含まれる学習済み単語を学習解除する機能を追加しました。「すべて変更」は1回の操作で取り消せます。</li>
-<li><a href="https://github.com/ralphrmartin">Ralph Martin</a>氏の提供により、既定の除外規則で、よく使うパッケージ（amsmath、mathtools、graphicx、xcolor、tikz、geometry、fancyhdr、microtype、booktabs、tabularx、enumitem、hyperref、cleveref、biblatex、natbib、siunitx）のコマンドの、文章でない引数（キー、ラベル、長さ、色、単位など）と、amsmath・mathtoolsの数式環境を検査しないようにしました。書類の中で同じ名前のコマンドを定義している場合は、その定義に従います。tabularx・tabularyの列指定も検査しなくなりました。検査しない引数が次の行に続いていても、正しく飛ばします。</li>
+<li><a href="https://github.com/ralphrmartin">Ralph Martin</a>氏の提案をもとに、LaTeXの構文を考慮するスペルチェックを追加しました。TeXのコマンド、コメント、数式、参照などの引数を飛ばして本文を検査します。Experimentのソースも同じように検査します。<figure class="note-shot"><img src="assets/whats-new/ja/spell.png" width="600" height="530" alt="LaTeXのソースの本文で印の付いた2つの綴りの誤りと、「すべて変更」の欄に候補が入ったスペルのパネル" loading="lazy"></figure></li>
+<li>書類の中で切り替えた別の言語の部分や、書類で定義したマクロの中の文章も検査できます。</li>
+<li>飛ばす規則を編集でき、「すべて変更」で書類中の同じ語をまとめて置き換え（取り消しは1回）、現在の書類で誤って学習した語を学習解除できます。</li>
+<li><a href="https://github.com/ralphrmartin">Ralph Martin</a>氏の提供により、amsmath、graphicx、xcolor、tikz、hyperref、biblatex、siunitxなど、よく使うパッケージのコマンドの、キー・ラベル・長さ・色などの文章でない引数を検査しないようにしました。</li>
 <li><a href="https://github.com/herbs">Herb Schulz</a>氏の提案と、<a href="https://github.com/TeXShopProject/TeXShop/pull/40">PR #40</a>での<a href="https://github.com/ralphrmartin">Ralph Martin</a>氏の提供により、amsthmの<code>\newtheoremstyle</code>の引数を検査しないようにしました。</li>
-<li><a href="https://github.com/ralphrmartin">Ralph Martin</a>氏の提案により、スペルチェックパネルで修正候補を選ぶと（クリックまたは矢印キー）、その候補が「すべて変更」の置換欄に入るようにしました。候補が1つだけのときは、単語を表示した時点で入ります。本文が変わるのは「すべて変更」を実行したときだけです。</li>
-<li><a href="https://github.com/ralphrmartin">Ralph Martin</a>氏の提案により、スペルチェックパネルの「変更」は、単語を表示した後に別の文字列を選択したり書類を編集したりした場合、その文字列を置き換えず、「すべて変更」と同じくビープ音を鳴らして何もしないようにしました。</li>
-<li><a href="https://github.com/herbs">Herb Schulz</a>氏の報告により、「設定」→「スペルチェック」の辞書の一覧に、<code>en</code>や<code>en_GB</code>のような識別子ではなく、English (United States)、English (United Kingdom)、Deutschのように各言語をその言語自身の名前で表示するようにしました。<code>en_US</code>や<code>English</code>のような以前の形で保存された辞書も選択された状態で表示し、書類は表示どおりの言語で検査します。インストールされていない辞書を選んでいた場合も、その名前の項目を表示します（<a href="https://github.com/TeXShopProject/TeXShop/issues/32">#32</a>）。</li>
-<li><a href="https://github.com/herbs">Herb Schulz</a>氏の報告により、「設定」→「スペルチェック」で選んだ辞書（または言語の自動判別）を、後から開く書類だけでなく、開いている書類にもすぐに使うようにしました。どの書類のソースのウインドウも前面にないときは、TeXShopの起動時、書類を閉じた後、設定で選んだときにもその辞書を使うので、スペルチェックパネルにも初めからその辞書が表示されます。<code>% !TEX spellcheck</code>行のある書類と、スペルチェックパネルで言語を選んだ書類は、その言語を保ちます（<a href="https://github.com/TeXShopProject/TeXShop/issues/32">#32</a>）。</li>
-<li>次のスペルミスへの移動と表示位置の調整を改善し、長い書類や分割したソース画面でのスペルチェックの負荷を抑えました。</li>
+<li><a href="https://github.com/ralphrmartin">Ralph Martin</a>氏の提案により、スペルチェックパネルで候補をクリックすると、「すべて変更」の置換に使えるようにしました。</li>
+<li><a href="https://github.com/ralphrmartin">Ralph Martin</a>氏の提案により、書類を編集したあとにスペルチェックパネルの「変更」を押しても、違う文字列を置き換えないようにしました。</li>
+<li><a href="https://github.com/herbs">Herb Schulz</a>氏の報告により、「設定」→「スペルチェック」の辞書を、<code>en_GB</code>のような記号ではなく、English (United Kingdom)のように言語の名前で表示するようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/32">#32</a>）。</li>
+<li><a href="https://github.com/herbs">Herb Schulz</a>氏の報告により、「設定」→「スペルチェック」で選んだ辞書が、開いている書類にもすぐに効くようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/32">#32</a>）。</li>
+<li>長い書類や分割したソース画面でも、スペルチェックが速くなりました。</li>
 </ul>
 <h3>プレビュー</h3>
 <ul>
-<li>Optionキーで内部リンクのポップアップを固定できるようにしました。ポインターを動かしながら内容を説明でき、Escapeキーで閉じられます（<a href="https://github.com/TeXShopProject/TeXShop/issues/10">#10</a>）。固定したポップアップは、ドラッグで動かせ、大部分を見える範囲の外へ出すこともできます。縁や角をドラッグすると、文字の大きさを保ったまま大きさを変えられ、ポップアップの上でスクロールすると、リンク先のページの続きを見られます。手のツール以外では、ポップアップの中の文字を選んでコピーできます。固定したポップアップは Escape を押すまで残り、どのツールで内側や外側をクリックしても、ほかのウインドウを使っても、プレビューウインドウを分割・分割解除しても閉じません（<a href="https://github.com/TeXShopProject/TeXShop/issues/14">#14</a>）。固定したポップアップは、その部分が別の場所へ移ったときに閉じます。リンクをたどる、ドロワーの項目を選ぶ、戻る・進む、ページ番号を入れる、最初・最後のページへ移る、検索結果を選ぶ、ソースから同期する、のいずれでも閉じます。戻る・進むで元に戻ることはなく、「ウインドウを分割してリンク先を表示」ではリンク先へ移る部分のものだけを閉じます。スクロール、拡大縮小、次・前のページへの移動では閉じません。ポップアップを固定している間もほかのリンクのポップアップが出て、それを Option で固定すると、前に固定したものと入れ替わります。分割したウインドウで Escape が閉じるのは、アクティブな部分（最後にクリックした部分）の固定したポップアップだけです（<a href="https://github.com/TeXShopProject/TeXShop/issues/35">#35</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/31">#31</a>）。<a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案と報告によるものです。<figure class="note-shot"><img src="assets/whats-new/ja/link-preview.png" width="386" height="560" alt="2ページの定理1を示す固定したリンクのポップアップ。右下にページのラベル" loading="lazy"></figure></li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、内部リンクのポップアップの幅を、リンク先ページの本文の幅に合わせるようにしました。本文の幅の約5%の余白を付けて行全体をいつもの大きさで表示し（固定したポップアップをスクロールする余裕になります）、2段組の文書では対象の段だけを表示します。ウィンドウが狭いときはポップアップを縮小しますが、半分より小さくはしません。単一ページ・見開きページの表示では、ウインドウが低いときにさらに縮小することがあります（<a href="https://github.com/TeXShopProject/TeXShop/issues/12">#12</a>）。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、PDFリンクのポップアップをページの範囲に収め、ページ端へのリンクでも周囲の本文と対象の段が見えるようにしました。単一ページ・見開きページの表示では、ポップアップをウインドウの中にも収めます。ウインドウより高いポップアップは縮小し、リンクの側に収まらないポップアップは反対の側に表示します（<a href="https://github.com/TeXShopProject/TeXShop/issues/7">#7</a>）。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、複数ページ・複数見開きページの表示では、リンクのポップアップを常にリンクの下（Shift を押したときは上）に出すようにしたので、リンクのそばの本文を隠しません。大きさは変えず、見える範囲に入るよう横にだけずらすので、一部がウインドウの外に出ることもあります。ポップアップはリンク先の少し上から始まり、そのあとの内容を表示します。リンク先がページの下端に近くても、リンク先より前の内容でポップアップを埋めることはしなくなりました。複数ページ・複数見開きページの表示では次のページの上部に続けて表示するので、ページ区切りで分かれた定理なども一つのポップアップで読め、固定したポップアップではスクロールして続きを見たり、両方のページにまたがって文字を選んだりできます。ほかの表示形式や最後のページでは、ポップアップを低くします（<a href="https://github.com/TeXShopProject/TeXShop/issues/14">#14</a>）。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、内部リンクのポップアップの右下に、リンク先のページのラベルを「157 ページ」のように表示するようにしました（Skim と同じ）。ラベルは PDF に設定されたページ番号で、PDF の中での通し番号と違うことがあります。設定のない PDF では通し番号を表示します。リンクのポップアップを使う設定のときは、内部リンクの上に PDFKit の「Go to page」の表示（PDF の中での通し番号で、本文を隠すことがあった）が出なくなりました（<a href="https://github.com/TeXShopProject/TeXShop/issues/17">#17</a>）。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、Control キーを押しながら内部リンクにポインターを載せると、そのリンクについて「リンク先をポップアップ」の設定を逆にするようにしました。オンのときはポップアップを表示しないので、Control＋クリックでコンテキストメニューを開くときに邪魔になりません。オフのときはポップアップを表示します。Command（大きいポップアップ）、Shift、Option はいつもどおり働きます（<a href="https://github.com/TeXShopProject/TeXShop/issues/30">#30</a>）。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、プレビューウインドウで内部リンクの上で開くコンテキストメニュー（Control＋クリックまたは右クリック）に「ウインドウを分割してリンク先を表示」を加えました。分割したウインドウのもう一方の部分にリンク先を表示し、リンクのある部分は動きません。分割していないときは先に分割します（Option を押すと左右に分割）。もう一方の部分は倍率と表示形式を保ち、「戻る」で元の位置に戻せます（<a href="https://github.com/TeXShopProject/TeXShop/issues/31">#31</a>）。<figure class="note-shot"><img src="assets/whats-new/ja/split-preview.png" width="386" height="560" alt="「ウインドウを分割してリンク先を表示」で分割したプレビューウインドウ。作業中の部分に線" loading="lazy"></figure></li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、「内容の幅に合わせる」を追加しました。表示中のページの組版された部分がプレビューの幅いっぱいになるように倍率を変え、その上端をプレビューの上端に合わせます。ページの余白や、ページの下端のページ番号・脚注のために文字が小さくなることはありません。「内容に合わせる」はこれまでどおり、ページ番号も含めて組版された部分全体を収めます。どちらも「実験」のプレビューのツールバーのボタンで、プレビューウインドウとソースとプレビューを一体化したウインドウでは、「ツールバーをカスタマイズ...」から二つ組の項目として追加できます。見開き表示では並んだ2ページを合わせて測り、回転したページは表示どおりの向きで測ります（<a href="https://github.com/TeXShopProject/TeXShop/issues/33">#33</a>）。</li>
-<li>プレビューのツールバーに「ページレイアウト」と「見開きの配置」のメニューを追加しました。「ページレイアウト」では現在の書類のページレイアウトを、「見開きの配置」ではページの方向と、先頭ページを表紙として単独表示するかどうかを変更できます。方向と表紙は「文書の指定に戻す」で書類の指定に戻せます。変更は書類を閉じるまで有効です。レイアウトや配置を変更しても、表示中のページと拡大率を維持します。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、プレビューウインドウを上下に分割しているとき、境界線をドラッグしても、それぞれの部分の上端の内容が動かないようにしました。上の部分は下に見える範囲が増減し、下の部分の内容は境界線と一緒に動きます。ページの下の方に紙を重ねてずらすのと同じです。ウインドウの高さを変えたときも、両方の部分の上端の内容は動きません。境界線をドラッグしている間も二つの部分は揺れず、境界線をウインドウの上端や下端まで動かして見えなくした部分も、境界線を戻すと上端に同じ内容を表示します。分割を解いたときに残るのは上の部分です。スクロールバーを常に表示する設定で、部分やウインドウの幅がページより狭く・広くなったときや倍率を変えたときに、プレビューに横スクロールバーが現れたり消えたりしても、内容は上下に跳ねず、スクロールバーが下端の帯を覆ったり現したりするだけになりました（<a href="https://github.com/TeXShopProject/TeXShop/issues/24">#24</a>）。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、分割したプレビューウインドウで「ビューを切り替え」を使うと、二つの部分をそっくり入れ替えるようにしました。それぞれの部分は大きさを保つので、動かした境界線は反対側に移ります。表示位置・表示形式・倍率・選択範囲・固定した内部リンクのポップアップも部分と一緒に移り、作業中だった部分は移った先でも作業中のままです。もう一度使うと元の配置に戻ります。分割を解いたときに残るのはこれまでどおり上（左）の部分なので、切り替えたあとはもう一方の部分の内容が残ります（<a href="https://github.com/TeXShopProject/TeXShop/issues/25">#25</a>）。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、分割したプレビューウインドウで、ドロワーのアウトラインが作業中の部分に従うようにしました。下（右）の部分が作業中でも、その部分をスクロールすると、表示している章や節に印が移ります。もう一方の部分をクリックすると、その部分の章や節に印が移ります。印を付けるのは、表示しているページで始まる項目、なければその前で最後に始まる項目です（これまでは次の項目に付くことがありました）（<a href="https://github.com/TeXShopProject/TeXShop/issues/25">#25</a>）。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、分割したプレビューウインドウで、ツールバーとプレビューメニューが働く作業中の部分の縁に、アクセントカラーの細い線を引くようにしました。線はウインドウが前面にあるときだけ表示します（<a href="https://github.com/TeXShopProject/TeXShop/issues/14">#14</a>）。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、ツールバーの「ウインドウ分割」ボタン（プレビューとソースの両方）の絵を、枠を上下に分けた形にしました。ボタンにポインターを載せてOptionキーを押すと、絵が枠を左右に分けた形に変わり、Optionキーを押しながらクリックしたときの左右の分割を示します。両方のボタンのツールチップにもOption＋クリックのことを書きました。「ウインドウを縦に分割する」に設定したショートカットは、Optionキーを押さなくてもプレビューを左右に分割するようにしました。イタリア語で、Optionキーを押している間に「ウインドウ」メニューの「ウインドウを分割する」が「ウインドウを縦に分割する」に替わらなかったのを直しました（<a href="https://github.com/TeXShopProject/TeXShop/issues/14">#14</a>）。</li>
-<li><a href="https://github.com/felix-finster">Felix Finster</a>氏の提案により、ソースとプレビューを一つにしたウインドウで境界線をドラッグすると、ソース側の幅がウインドウに占める割合を覚え、以後このウインドウは、どの書類でも、ウインドウの大きさが違っても、起動時にこのウインドウが復元されるときも、その割合で開くようにしました。ソースを右に置く設定でも、ソース側が同じ割合になります（<a href="https://github.com/TeXShopProject/TeXShop/issues/26">#26</a>）。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、プレビューウインドウのドロワーのアウトラインで開いた章や節が、タイプセットし直しても開いたままになるようにしました。スクロール位置も保ちます。項目は見出しで照合するので、新しいアウトラインに残っている項目は開いたままです（<a href="https://github.com/TeXShopProject/TeXShop/issues/19">#19</a>）。</li>
-<li><a href="https://github.com/svb-bit">svb-bit</a>氏の提案により、設定の「プレビュー」の「表示」に「スクロールでページを送らない」を加えました。単一ページ・見開きページの表示では、マウスのホイールやトラックパッドでページの上端・下端を越えてスクロールすると、前後のページへ移ります（Apple のプレビューと同じ）。このスイッチをオンにすると、ページの端で止まります。PDFKit に移って以来効果のなかった「ページボタンでスクロールしない」は取り除き、その位置に置きました（<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>）。<figure class="note-shot"><img src="assets/release-notes/ja/settings-preview.png" width="600" height="450" alt="「スクロールでページを送らない」「リンク先をポップアップ」「先頭ページを表紙として単独表示」のある設定の「プレビュー」" loading="lazy"></figure></li>
-<li>latexmk などの他のアプリケーションがPDFを書き換えた場合に、TeXShop やプレビューに戻ったときに、表示位置と拡大率を維持してプレビューを再読み込みするようにしました。TeXShop のエディタで開いたソースにも効きます。「プレビューの自動更新」を「ほかのアプリによる PDF の変更を常に監視」に改めました。オンにすると、TeXShop が後ろにあるときも再読み込みします。未保存のPDF注釈を保護し、書き込み途中の不完全なPDFを検出した場合は再試行します。</li>
-<li><a href="https://github.com/svb-bit">svb-bit</a>氏の報告により、拡大鏡がプレビューの倍率によらず働くようにしました。これまではページ全体を拡大鏡の倍率で画像にしていたため、拡大したページではメモリーを数GB使い、隠し設定 GlassMaxMagnification で上限を上げない限り、250%を超えると何もしませんでした。拡大鏡は写す部分だけを描くようになり、この隠し設定はなくなりました（<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>）。</li>
-<li>CropBox で切り抜いた PDF など、ページの箱が原点から始まらない PDF でも、拡大鏡がポインターの下を写すようにしました。ドラッグで次のページに移ると、そのページを写します。拡大鏡は、プレビューの倍率によらず画面上で同じ大きさになり、画面の 150%（⌘・⌥・⌃で 200%・250%・300%）に拡大します。これまでは、倍率が小さいとページを縮小していました。「実験」のプレビューも同じ拡大鏡を使います。</li>
+<li>Optionキーで内部リンクのポップアップを固定し、内容を説明しながら、動かす、大きさを変える、スクロールする、文字をコピーすることができるようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/10">#10</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/14">#14</a>）。固定している間もほかのリンクのポップアップは出ます（<a href="https://github.com/TeXShopProject/TeXShop/issues/35">#35</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/31">#31</a>）。<a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案と報告によるものです。<figure class="note-shot"><img src="assets/whats-new/ja/link-preview.png" width="386" height="560" alt="2ページの定理1を示す固定したリンクのポップアップ。右下にページのラベル" loading="lazy"></figure></li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、内部リンクのポップアップが、リンク先の本文の段をいつもの大きさで表示するようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/12">#12</a>）。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、ページの端へのリンクでも、ポップアップがページとウインドウの中に収まるようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/7">#7</a>）。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、連続表示では、リンクのポップアップがリンクのそばの本文を隠さず、次のページへ続けて表示するようにしました。ページ区切りで分かれた定理なども一つのポップアップで読めます（<a href="https://github.com/TeXShopProject/TeXShop/issues/14">#14</a>）。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、内部リンクのポップアップに、リンク先のページのラベルを「157 ページ」のように表示するようにしました（Skim と同じ）（<a href="https://github.com/TeXShopProject/TeXShop/issues/17">#17</a>）。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、Controlキーを押しながら内部リンクにポインターを載せると、そのリンクだけ「リンク先をポップアップ」を逆にできるようにしました。ポップアップを出さずにControl＋クリックでコンテキストメニューを開けます（<a href="https://github.com/TeXShopProject/TeXShop/issues/30">#30</a>）。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、内部リンクのコンテキストメニューに「ウインドウを分割してリンク先を表示」を加えました。リンクを見たまま、分割したもう一方の部分にリンク先を表示できます（<a href="https://github.com/TeXShopProject/TeXShop/issues/31">#31</a>）。<figure class="note-shot"><img src="assets/whats-new/ja/split-preview.png" width="386" height="560" alt="「ウインドウを分割してリンク先を表示」で分割したプレビューウインドウ。作業中の部分に線" loading="lazy"></figure></li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、「内容の幅に合わせる」を追加しました。余白を除いた本文がプレビューの幅いっぱいになります。「内容に合わせる」とともにツールバーに置けます（<a href="https://github.com/TeXShopProject/TeXShop/issues/33">#33</a>）。</li>
+<li>プレビューのツールバーに「ページレイアウト」と「見開きの配置」のメニューを置けるようにしました。現在の書類のレイアウト、ページの方向、表紙の表示を変えられます。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、分割したプレビューウインドウの境界線をドラッグしても、ウインドウの大きさを変えても、それぞれの部分の上端の内容が動かないようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/24">#24</a>）。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、「ビューを切り替え」で、分割したプレビューウインドウの二つの部分を、大きさ・表示位置・倍率ごとそっくり入れ替えるようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/25">#25</a>）。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、分割したプレビューウインドウで、ドロワーのアウトラインが作業中の部分に従うようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/25">#25</a>）。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、分割したプレビューウインドウで、作業中の部分に細い線を引くようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/14">#14</a>）。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、ツールバーの分割ボタンの絵で、上下に分けるか左右に分けるかが分かるようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/14">#14</a>）。</li>
+<li><a href="https://github.com/felix-finster">Felix Finster</a>氏の提案により、ソースとプレビューを一つにしたウインドウを、前に境界線を動かした位置で開くようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/26">#26</a>）。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、ドロワーのアウトラインで開いた章や節とスクロール位置を、タイプセットし直しても保つようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/19">#19</a>）。</li>
+<li><a href="https://github.com/svb-bit">svb-bit</a>氏の提案により、「設定」→「プレビュー」→「表示」の「スクロールでページを送らない」で、単一ページ・見開きページの表示のスクロールをページの端で止められるようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>）。<figure class="note-shot"><img src="assets/release-notes/ja/settings-preview.png" width="600" height="450" alt="「スクロールでページを送らない」「リンク先をポップアップ」「先頭ページを表紙として単独表示」のある設定の「プレビュー」" loading="lazy"></figure></li>
+<li>latexmkなどのほかのアプリがPDFを書き換えたとき、TeXShopに戻ると同じ位置のまま再読み込みするようにしました。「ほかのアプリによる PDF の変更を常に監視」（旧「プレビューの自動更新」）をオンにすると、TeXShopが後ろにあるときも再読み込みします。</li>
+<li><a href="https://github.com/svb-bit">svb-bit</a>氏の報告により、拡大鏡がプレビューのどの倍率でも働くようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>）。</li>
+<li>拡大鏡が、切り抜いたPDFでもポインターの下を写し、画面上で同じ大きさを保ち、「実験」のプレビューでも使えるようにしました。</li>
 </ul>
 <h3>編集</h3>
 <ul>
-<li><a href="https://github.com/martignoni">Nicolas Martignoni</a>氏の提案により、Command＋0で現在の書類のコンソールを表示できるようにしました。コンソールでもう一度押すと、呼び出し元のソースまたはPDFウィンドウに戻ります。呼び出し元がない場合はソースに戻ります。従来のCommand＋1の動作に合わせています（<a href="https://github.com/TeXShopProject/TeXShop/issues/2">#2</a>）。</li>
-<li>行番号をクリックするとその行全体を改行まで選択し、行番号の上をドラッグすると複数の行全体を選択するようにしました。ポインタがテキストの上または下に出るとスクロールします。Shiftキーを押しながらクリックすると、選択範囲を行単位で広げます。こうして選択した行の番号は、選択が変わるまで太字で表示します。ソース、ログ、Experimentのソースで使えます。</li>
-<li>編集メニューと、ソースウィンドウのコンテキストメニューに「文字種一括変換」を追加しました。選択範囲を、ひらがなとカタカナ、全角と半角の数字・英字、Unicode文字とajmacrosのコマンドまたは<code>\UTF</code>・<code>\CID</code>のあいだで変換し、全角引用符をTeXの引用符に変換します。文字の並び（異体字など）は、Adobe-Japan1のグリフがあるときだけ<code>\CID</code>コマンドにし、絵文字などはそのまま残します。ajmacrosのコマンドをUnicode文字に変換するとき、記号のコマンドの後ろは空白とタブだけを取り、改行は残すので、段落はつながりません。何も選択していない場合は、確認してから書類全体を変換します。変換は取り消せます。</li>
-<li>編集メニューとコンテキストメニューに「Unicode 正規化」を追加しました。NFC、NFD、NFKC、NFKDのほか、CJK互換漢字を変えないModified NFCとModified NFDを選べます。正規化した選択範囲は「文字情報」で表示します。</li>
-<li>編集メニューに「交換ペースト」を追加しました。選択範囲をクリップボードの文字列で置き換え、置き換えられた文字列をクリップボードに入れます。2か所の文字列を入れ替えるときは、一方をコピーし、もう一方を選択して交換ペーストを選び、最初の位置でペーストします。何も選択していない場合は、通常のペーストと同じです。</li>
-<li>マクロとキーバインドで、<code>#SEL#</code>が選択範囲に置き換わるのと同様に、<code>#PASTE#</code>がクリップボードの文字列に置き換わるようにしました。</li>
-<li>マクロエディタの内容を、ソースと同じようにテーマの色で色分けするようにしました。TeXのマクロはソースと同じ規則で、AppleScriptのマクロはコメント・文字列・予約語・数値・生のイベント（<code>«…»</code>）を色分けします。マクロが置き換えるプレースホルダを、キーバインドの一覧と同じく、何を表すかを書いた角丸の札で表示するようにしました（TeXのマクロでは<code>#SEL#</code>・<code>#PASTE#</code>・最初の<code>#INS#</code>とマーク、AppleScriptのマクロでは<code>#FILEPATH#</code>などのパス）。マクロには書いたとおりの文字で保存されます。内容の欄の下の長い説明書きをやめ、「挿入」メニューと、札の一覧を出す「?」ボタンにしました。内容に貼り付けた文字は、元のフォントや色を持ち込みません。設定の「ソースのカラー表示」をオフにすると、この色分けもしません。<figure class="note-shot"><img src="assets/release-notes/ja/macro-editor.png" width="585" height="452" alt="プレースホルダを札で示すTeXのマクロと、「挿入」メニュー、Commandなしのショートカットを示すマクロエディタ" loading="lazy"></figure></li>
-<li>日本語の文章でASCIIと見分けにくい全角英数字・記号とマイナス記号を、「設定」→「テーマ」→「強調表示」の「全角英数記号」「全角英数記号の背景」の色で表示できるようにしました。同梱のテーマにはこの色を設定してあります。この色を持たないテーマ（<code>~/Library/TeXShop/Themes</code>にある既存のテーマを含む）では、ほかの文字と同じに表示します。<figure class="note-shot"><img src="assets/release-notes/ja/fullwidth.png" width="591" height="220" alt="全角の英数字・記号が別の色で表示されたソース" loading="lazy"></figure></li>
-<li>文字コードのマジックコメントがないファイルを開くときに、文字コードを自動で判定するようにしました。BOMの有無にかかわらずUnicodeのファイル、日本語・中国語・韓国語のファイル、利用者の言語の1バイト文字コードのファイルを判定できます。inputencで宣言された文字コードも手がかりにします。判定は隠し設定で無効にできます。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、「実験」の処理を専用コンソールに分離し、入力・中止・後片付けを通常のタイプセットと独立させました。実験を閉じたり置き換えたりしても、その実験の処理だけを停止します。「実験」のコンソールは、「実験」のソースとプレビューのパネルと同じく、書類のウインドウの上に浮かびます。「実験」をタイプセットしたときと「コンソールを表示」（Command＋0）でパネルの前に出て、パネルをクリックするとそのパネルが前に出ます。設定の「コンソール」で「エラーがあったとき表示」を選んでいるときは、TeX がエラーを報告するか入力を待つまで、「実験」のコンソールは表示しません（<a href="https://github.com/TeXShopProject/TeXShop/issues/8">#8</a>）。<figure class="note-shot"><img src="assets/release-notes/ja/experiment.png" width="572" height="431" alt="定理1を参照する断片を入れた「実験」のソースのパネルと、それを組んだ「実験」のプレビュー" loading="lazy"></figure></li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、「実験」の一時フォルダに書類のフォルダの中身のクローン（コピーオンライト）を置き、書類そのものを組版するときと同じように画像などのファイルを見つけるようにしました。<code>\graphicspath{{./figures/}}</code>のように<code>./</code>で始まるパスも使え、組版で書き出すものは書類のフォルダに影響しません。また、書類を最後に組版したときの<code>.aux</code>を使い、<code>\ref</code>・<code>\pageref</code>・<code>\cite</code>を解決するようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/8">#8</a>）。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、「実験」の最初のタイプセットのあと、ページの中ほどではなく、出力のある1ページ目の上端を表示するようにしました。2回目以降のタイプセットでは、見ていた位置を保ちます（<a href="https://github.com/TeXShopProject/TeXShop/issues/20">#20</a>）。</li>
-<li>「実験」のソースを、書類のソースと同じように表示するようにしました。フォント、タブ、行間、行の折り返し、シンタックスハイライト、現在の行のハイライト、ブロックカーソル、不可視文字、行番号、対応する括弧の表示が同じになります。メニューや設定でこれらを変えると、「実験」のウインドウにもすぐに反映されます。</li>
-<li>実験のソース・プレビュー・コンソールで、対応する部品にテーマの背景色・文字色・挿入点の色とウインドウの不透明度を反映するようにしました。実験のプレビューでも、通常のプレビューと共通の「システム」「ライト」「ダーク」によるページ表示を使えます。背景色と文字色は、書類のウインドウと同じく不透明で塗ります。SolarizedDarkなど、背景色に透明度0を記録しているテーマでも同じです。</li>
-<li>「実験」のプレビューのツールバーに、プレビューウインドウと同じ「スクロール」「文字選択」「拡大鏡」「範囲指定」のツールと、「ズームアウト」「ズームイン」「内容に合わせる」（組版された部分をウインドウいっぱいに拡大）「内容の幅に合わせる」を追加しました。「範囲指定」で囲んだ部分は、「コピー形式」で選んだ形式でコピーできます。実験のプレビューで選んだツールは、プレビューウインドウとは別に記憶します。</li>
+<li><a href="https://github.com/martignoni">Nicolas Martignoni</a>氏の提案により、Command＋0で書類のコンソールを表示し、もう一度押すとソースかPDFのウインドウに戻れるようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/2">#2</a>）。</li>
+<li>行番号をクリックまたはドラッグして、行全体を選択できるようにしました。ソース、ログ、Experimentのソースで使えます。</li>
+<li>編集メニューの「文字種一括変換」で、選択範囲をひらがなとカタカナ、全角と半角、Unicode文字とajmacros・<code>\UTF</code>・<code>\CID</code>のコマンド、全角引用符とTeXの引用符のあいだで変換できるようにしました。</li>
+<li>編集メニューの「Unicode 正規化」で、NFC、NFD、NFKC、NFKDと、CJK互換漢字を変えないModified NFC・Modified NFDを適用できるようにしました。</li>
+<li>編集メニューの「交換ペースト」で、選択範囲をクリップボードの文字列で置き換え、置き換えた文字列をクリップボードに入れられるようにしました。</li>
+<li>マクロとキーバインドで、<code>#PASTE#</code>でクリップボードの文字列を入れられるようにしました。</li>
+<li>マクロエディタの内容をソースと同じようにテーマの色で色分けし、マクロのプレースホルダを、キーバインドの一覧と同じく「選択中の文字列」のような札で表示するようにしました。内容の下の「挿入」メニューで入れられ、その右の「?」で一覧を見られます。<figure class="note-shot"><img src="assets/release-notes/ja/macro-editor.png" width="585" height="452" alt="プレースホルダを札で示すTeXのマクロと、「挿入」メニュー、Commandなしのショートカットを示すマクロエディタ" loading="lazy"></figure></li>
+<li>日本語の文章でASCIIと見分けにくい全角英数字・記号とマイナス記号を、「設定」→「テーマ」→「強調表示」の「全角英数記号」の色で示せるようにしました。<figure class="note-shot"><img src="assets/release-notes/ja/fullwidth.png" width="591" height="220" alt="全角の英数字・記号が別の色で表示されたソース" loading="lazy"></figure></li>
+<li>文字コードのマジックコメントがないファイルも、Unicode、日本語・中国語・韓国語などの文字コードを判定して開くようにしました。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、「実験」の処理を専用のコンソールで行い、書類のタイプセットと干渉しないようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/8">#8</a>）。<figure class="note-shot"><img src="assets/release-notes/ja/experiment.png" width="572" height="431" alt="定理1を参照する断片を入れた「実験」のソースのパネルと、それを組んだ「実験」のプレビュー" loading="lazy"></figure></li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、「実験」のタイプセットで、書類の画像などのファイルを見つけ、書類を最後に組版した結果から<code>\ref</code>・<code>\pageref</code>・<code>\cite</code>を解決するようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/8">#8</a>）。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、「実験」の最初のタイプセットのあと、出力のあるページの上端を表示するようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/20">#20</a>）。</li>
+<li>「実験」のソースを、フォント・色分け・行番号・不可視文字などを含め、書類のソースと同じように表示するようにしました。</li>
+<li>「実験」のウインドウにも、テーマの色とウインドウの不透明度を使うようにしました。</li>
+<li>「実験」のプレビューのツールバーに、「スクロール」「文字選択」「拡大鏡」「範囲指定」のツールと倍率のボタンを加えました。</li>
 </ul>
 <h3>設定画面</h3>
 <ul>
-<li>設定画面を、コンパクトなサイドバーと「一般」「書類と保存」「エディタ」「キーボード」「スペルチェック」「テーマ」「プレビュー」「タイプセット」「コンソール」「アップデート」の10分類で構成しました。各分類は、見出しカード・名前付きの角丸グループ・スイッチ・右寄せの操作部品で構成し、ラベルの折り返しと従属項目の字下げに対応しました。Dockアイコンは「一般」に、エンジンのプロファイルは「タイプセット」にあります。「テーマ」には、テーマに保存される設定だけを置いています。<figure class="note-shot"><img src="assets/whats-new/ja/settings.png" width="600" height="450" alt="「フォント」で検索した結果を示す設定画面" loading="lazy"></figure></li>
-<li>「設定を検索」に、項目名と所属カテゴリを示す検索結果を表示します。選んだ項目へ移動して強調します。</li>
-<li>TeXとGhostscriptのインストール先を自動で探せるようにしました。初めて使うときと、「設定」→「タイプセット」の「パスの自動検出…」で、見つかった環境をバージョンとともに一覧表示します。最も新しいものが選ばれた状態になり、TeXとGhostscriptのそれぞれで別のものも選べます。確認後にTeXとGhostscriptのパスを更新します。<figure class="note-shot"><img src="assets/release-notes/ja/detect-paths.png" width="600" height="450" alt="見つかったTeXとGhostscriptを並べた「パスの自動検出」のシート" loading="lazy"></figure></li>
-<li>「タイプセット」メニューの「MakeIndex」と「MetaPost」は、「設定」→「タイプセット」→「周辺ツール」の「索引作成」と「MetaPost」のコマンドを実行します。デフォルトはこれまでどおりです。エンジンのプロファイルもこれらを設定し、日本語のプロファイルでは日本語用の索引作成とMetaPostのプログラム（pLaTeXは<code>mendex</code>と<code>pmpost</code>、upLaTeXは<code>upmendex</code>と<code>upmpost</code>、LuaLaTeX（日本語）は<code>upmendex</code>）になります。latexmkも同じ索引作成のプログラムを使います。<figure class="note-shot"><img src="assets/release-notes/ja/related-tools.png" width="600" height="450" alt="索引作成とMetaPostのある設定の「タイプセット」の「周辺ツール」" loading="lazy"></figure></li>
-<li>「設定 → キーボード」でメニューのショートカットを変更できます。「機能で検索」はコマンド名で、「キーで検索」は押したキーで絞り込みます。無効な割当ても含めてメニューとマクロの結果を表示し、「マクロエディタで表示」で該当マクロへ移れます。新しいショートカットはキーを押して登録します。ほかのコマンドで使われている場合は知らせ、個別またはすべてを元に戻せます。<code>KeyEquivalents.plist</code>で設定したショートカットは、引き続き既定値として使われます。同じキーと修飾キーの場合はメニューをマクロより優先し、カスタマイズで空いたキーはマクロで使えるようにしました。マクロのキーをメニューに割り当てる前に確認します。マクロエディタでは無効なキーと競合相手を表示し、保存時には新しく割り当てた・変更したキーの競合だけを確認します。同梱のNew arrayマクロのキーをControl-Shift-Command-Aに変更しました。マクロエディタでも、「ショートカット」欄をクリックしてキーを押すとマクロのショートカットを設定でき、⊗で解除できます。Commandを含まないControlの組み合わせやF1〜F20も使えるようになりました。以前の版で保存したショートカットはCommand付きのままです。<figure class="note-shot"><img src="assets/release-notes/ja/settings-keyboard.png" width="600" height="450" alt="キーバインドの一覧とメニューのショートカットのある設定の「キーボード」" loading="lazy"></figure></li>
-<li>キーバインドを、別ウインドウの「キーバインドエディタ」ではなく、「設定」→「キーボード」の一覧で編集するようにしました。行をその場で編集し、「＋」「−」で追加・削除し、ドラッグで並べ替えます。変更はすぐに保存されて開いている書類にも効き、「編集」→「取り消す」で戻せます。出力文字列の#SEL#・#INS#・#PASTE#・•・改行・タブは「選択中の文字列」などの部品で表示し、「挿入」メニューで入れられます。改行はOption＋Return、タブはOption＋Tabでも入り、「？」で一覧を表示します。出力文字列をコピーすると、これらは記号の文字として写ります。入力文字は1文字です（既存のファイルにある2文字以上の行はそのまま残します）。ファイルの形式は変わりません。</li>
-<li>キーボードにはキーバインドの一覧、Esc/Tabによるコマンド補完、BibDesk補完とコマンド補完ファイルの編集ボタンを集約し、編集ボタンはソースメニューから移しました。「キーバインド」と「コマンド補完」には、それぞれ機能を1行で説明しました。キーボードもほかの分類と同じくスクロールし、ウインドウを高くすると2つの一覧が広がります。補完にTabを使う場合、Tabは補完用に予約します。補完キーがTabの場合にTabを検索すると、該当の設定行を表示して強調します。</li>
-<li>スペルチェックは、「LaTeXの除外規則を編集…」を備えた「LaTeXの構文を考慮する（推奨）」と、字下げした3項目を持つ「従来の方式」の二択です。「スペルチェック」は独立しています。</li>
-<li>「設定」→「アップデート」に「プレリリース版を対象に含める」を追加し、β版もアップデートとして受け取れるようにしました。自動の確認にも「アップデートを確認...」にも効きます。正式版では初めはオフで、β版を初めて起動したときにオンになります（あとでオフにできます）。「アップデート」には「アップデートを確認...」ボタンと前回の確認日時も表示します。<figure class="note-shot"><img src="assets/release-notes/ja/settings-updates.png" width="600" height="450" alt="プレリリース版のスイッチと「アップデートを確認」のある設定の「アップデート」" loading="lazy"></figure></li>
-<li>「設定」→「書類と保存」に、オートセーブとバージョンの有効・無効と、オートセーブが無効のときに保存前のファイルを<code>名前~</code>として残す設定を追加しました。</li>
-<li>「設定」→「プレビュー」→「表示」に、書類を開いたときにリンク先をポップアップするかどうかの設定を追加しました（従来は隠し設定）。開いている書類では、これまでどおり「プレビュー」メニューの「リンク先をポップアップ」で切り替えます。</li>
-<li>「設定」→「プレビュー」に、見開き表示で先頭ページを表紙として単独表示する設定を追加しました（従来は隠し設定）。マジックコメントでページの方向を指定していない場合は、PDFに記録された表示方向に従います。これらの設定はその後に開く書類に適用され、マジックコメントの指定が優先されます。</li>
-<li>「設定」→「エディタ」に、構文の色分けで@をコマンド名の一部と見なす設定を追加しました。</li>
-<li>「設定」→「エディタ」に、expl3のコードを初期設定で色分けする設定を追加しました。各書類を開くときに読み込まれ、書類ごとの切り替えは従来どおり「ソース」メニューで行えます。</li>
-<li>「設定」→「エディタ」で、スペース、全角スペース、改行、タブの不可視文字マーカーをポップアップメニューから選べるようにしました。改行とタブには選択肢を追加しました。</li>
-<li>テーマの色を、用途別の8つのグループに整理しました。新しいテーマの名前はシートで入力し、既存のテーマを置き換えるときは確認します。保存に失敗した場合は、保存済みの色に戻します。<figure class="note-shot"><img src="assets/release-notes/ja/settings-themes.png" width="600" height="450" alt="名前の付いた色の群が並ぶ設定の「テーマ」" loading="lazy"></figure></li>
-<li>スペルチェック方式、新規PDFの倍率、既定のエンコーディングを変更したとき、必要な場面で行の下に黄色の警告記号付きの注意書きを表示します。オートセーブは再起動後に有効になります。標準の検索パネル、検索バー、詳細検索パネルはその場で切り替わり、OgreKitとの切り替えは再起動後に有効になります。</li>
-<li>倍率設定は新しく開くPDFに使われます。ソースとコンソールのフォントは、開いている窓と今後開く窓に適用します。</li>
-<li>ウインドウの不透明度は、0～100%のスライダー、数値欄、その横の矢印ボタンで調整できます。</li>
-<li>文字・背景・構文などの、常に不透明で描く色の色ウェルでは、不透明度を選べないようにし、効果のない透明の表示もやめました。ウインドウの不透明度は、不透明度のスライダーで設定します。</li>
-<li>設定の「プレビュー」の「カラーマップを使う」と「文字色の強め具合」は、コピーする画像にだけ効くので「画像のコピー」の群へ移し、10 の設定に短い説明を加えました。</li>
-<li>設定の「エディタ」の「書式」の整数の欄に上下の矢印ボタンを付けて数字だけを受け付けるようにし、この群の 5 つの設定に説明を加えました。ソースのウインドウもこれらの欄と同じ範囲を使うので、範囲の外に保存された値（<code>defaults write</code> で書いたものなど）は範囲の端の値として使い、小数は切り捨てます。</li>
+<li>設定画面を、「一般」「書類と保存」「エディタ」「キーボード」「スペルチェック」「テーマ」「プレビュー」「タイプセット」「コンソール」「アップデート」の10分類のサイドバーで構成しました。<figure class="note-shot"><img src="assets/whats-new/ja/settings.png" width="600" height="450" alt="「フォント」で検索した結果を示す設定画面" loading="lazy"></figure></li>
+<li>「設定を検索」で、設定の項目を探して表示できます。</li>
+<li>初めて起動したときと、「設定」→「タイプセット」の「パスの自動検出…」で、TeXとGhostscriptのインストール先を探し、バージョンとともに一覧から選べるようにしました。<figure class="note-shot"><img src="assets/release-notes/ja/detect-paths.png" width="600" height="450" alt="見つかったTeXとGhostscriptを並べた「パスの自動検出」のシート" loading="lazy"></figure></li>
+<li>「MakeIndex」と「MetaPost」のコマンドを「設定」→「タイプセット」→「周辺ツール」で設定できるようにしました。エンジンのプロファイルもこれらを設定し、日本語のプロファイルでは日本語用のプログラムになります。<figure class="note-shot"><img src="assets/release-notes/ja/related-tools.png" width="600" height="450" alt="索引作成とMetaPostのある設定の「タイプセット」の「周辺ツール」" loading="lazy"></figure></li>
+<li>「設定」→「キーボード」でメニューのショートカットを変えられます。機能でもキーでも探せ、新しいショートカットはキーを押して登録し、1つずつでもまとめてでも元に戻せます。使われているキーは知らせます。マクロエディタでも同じようにマクロのショートカットを設定でき、Commandを含まないControlの組み合わせやF1〜F20も使えます。<figure class="note-shot"><img src="assets/release-notes/ja/settings-keyboard.png" width="600" height="450" alt="キーバインドの一覧とメニューのショートカットのある設定の「キーボード」" loading="lazy"></figure></li>
+<li>キーバインドを、「キーバインドエディタ」の窓ではなく、「設定」→「キーボード」の一覧で編集するようにしました。<code>#SEL#</code>などのプレースホルダは札で表示し、「挿入」メニューで入れられます。</li>
+<li>「キーボード」にはコマンド補完と、「ソース」メニューから移したコマンド補完ファイルの編集もあります。</li>
+<li>「スペルチェック」では、除外規則を備えたLaTeXの構文を考慮する方式と、従来の方式を選べます。</li>
+<li>「設定」→「アップデート」で、β版もアップデートとして受け取れるようにしました。「アップデートを確認...」ボタンもあります。<figure class="note-shot"><img src="assets/release-notes/ja/settings-updates.png" width="600" height="450" alt="プレリリース版のスイッチと「アップデートを確認」のある設定の「アップデート」" loading="lazy"></figure></li>
+<li>「設定」→「書類と保存」で、オートセーブとバージョンをオフにし、保存前のファイルを<code>名前~</code>として残せるようにしました。</li>
+<li>「設定」→「プレビュー」→「表示」で、書類を開いたときにリンク先をポップアップするかを選べるようにしました。</li>
+<li>「設定」→「プレビュー」で、見開き表示の先頭ページを表紙として単独で表示できるようにしました。</li>
+<li>「設定」→「エディタ」で、色分けで@をコマンド名の一部と見なせるようにしました。</li>
+<li>「設定」→「エディタ」で、書類を開いたときにexpl3の色分けをオンにできるようにしました。</li>
+<li>「設定」→「エディタ」で、スペース、全角スペース、改行、タブの不可視文字マーカーをメニューから選べるようにしました。</li>
+<li>テーマの色を8つのグループに整理し、新しいテーマの名前をシートで入力するようにしました。<figure class="note-shot"><img src="assets/release-notes/ja/settings-themes.png" width="600" height="450" alt="名前の付いた色の群が並ぶ設定の「テーマ」" loading="lazy"></figure></li>
+<li>再起動後や新しい書類から効く設定には、黄色の警告記号で知らせます。</li>
+<li>倍率設定は新しいPDFに、ソースとコンソールのフォントは開いている窓にも効きます。</li>
+<li>ウインドウの不透明度を、スライダー、数値欄、矢印ボタンで変えられます。</li>
+<li>文字色や背景色など、常に不透明で描く色では、不透明度を選ばないようにしました。</li>
+<li>「設定」→「プレビュー」の「カラーマップを使う」と「文字色の強め具合」を「画像のコピー」の群に移し、10の設定に短い説明を付けました。</li>
+<li>「設定」→「エディタ」→「書式」の数の欄に矢印ボタンを付け、数字だけを受け付けるようにしました。</li>
 <li>「一般」からコメント行と隠し設定の説明を開けます。</li>
 </ul>
 <h3>アプリのアイコンと見た目</h3>
 <ul>
-<li><a href="https://github.com/LaTeX-fetishist">LaTeX fetishist</a>氏と<a href="https://github.com/martignoni">Nicolas Martignoni</a>氏の提案により、従来の丸型アイコンをもとに、白枠を備えた新しいアプリアイコンを採用しました。現在のmacOSに合わせた角丸の形状とし、TeXの文字位置も見た目の中央に調整しました（<a href="https://github.com/TeXShopProject/TeXShop/issues/3">#3</a>）。</li>
-<li><a href="https://github.com/LaTeX-fetishist">LaTeX fetishist</a>氏の提案により、「設定」→「一般」に、歴代デザインを含む5種類のDockアイコンの選択肢を追加しました。TeXShopの起動中に選択したアイコンを元の形状で表示します。終了後は標準のアプリアイコンに戻ります（<a href="https://github.com/TeXShopProject/TeXShop/issues/3">#3</a>）。<figure class="note-shot"><img src="assets/whats-new/ja/dock-icons.png" width="600" height="411" alt="設定の「一般」にあるDockアイコンの選択肢" loading="lazy"></figure></li>
-<li>macOS 26以降では、ツールバーのボタンを標準の Liquid Glass の外観で表示し、「タイプセット」を強調したボタンにしました。設定ウインドウでは、システム設定と同じく、本文がツールバーの下までスクロールするようにしました。</li>
-<li><a href="https://github.com/ethanphil4-a11y">ethanphil4-a11y</a>氏の報告により、プレビューでライト表示のページを、テーマのプレビューの背景色で再び塗るようにしました。TeXShop 5.58と5.59では、テーマの色にかかわらず白いページになっていました。設定の「テーマ」では、この色に「ライト表示のページ」という見出しを付けました。ダーク表示のページは塗らず、ダークの外観のままです。Experimentのプレビューと拡大鏡も同じ色を使い、印刷やコピーしたページには色を付けません（<a href="https://github.com/TeXShopProject/TeXShop/issues/39">#39</a>）。</li>
-<li>Bruno Voisin氏の提案により、プレビューウインドウと、ソースとプレビューを一つにしたウインドウのツールバーの「戻る／進む」を、塗りつぶした三角から、macOS の「プレビュー」アプリと同じ細い山形のアイコンに変えました。戻れない・進めないときはその側を淡く表示し、クリックしたあと押された表示のまま残らないようにしました。<figure class="note-shot"><img src="assets/release-notes/ja/preview-toolbar.png" width="600" height="244" alt="「戻る／進む」の山形とページレイアウトのメニューがあるプレビューウインドウのツールバー" loading="lazy"></figure></li>
-<li>プレビューのツールバーで選べる「前のページ」「次のページ」が、同じ働きのまま2組あったのを、1組にしました。残したのは、macOS の「プレビュー」アプリと同じ、書類に矢印のアイコンの組です。矢印だけの組を置いていたツールバーには、こちらのボタンが表示されます。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、プレビューウインドウと、ソースとプレビューを一つにしたウインドウのツールバーの「マウスモード」の5つのツールに、それぞれの名前と働きを示すツールチップを付けました（例：「スクロール：ドラッグして書類を動かします」）。これまでは、どのツールも「マウスモードを変更します」でした（<a href="https://github.com/TeXShopProject/TeXShop/issues/28">#28</a>）。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、プレビューウインドウと、ソースとプレビューを一つにしたウインドウのツールバーの「戻る／進む」の2つのボタンに、それぞれ「戻る」「進む」のツールチップを付けました。これまでは、どちらも「ページを戻したり進めたりするボタンです」でした。文字だけのツールバーで出るこの項目のメニューと、VoiceOverの読み上げでも、TeXShopの言語で名前を示します（<a href="https://github.com/TeXShopProject/TeXShop/issues/34">#34</a>）。</li>
-<li>同梱のテーマに、それぞれの配色に合うexpl3の色を設定しました。この色を持たないテーマ（<code>~/Library/TeXShop/Themes</code>にある既存のテーマを含む）では、従来どおり標準のexpl3の色を使います。</li>
-<li>同梱のテーマで、背景の上で読みにくかった色を直しました。Draculaの丸括弧・波括弧・角括弧をテーマの文字色に、TransparentThemeのマーカー（<code>$</code>・<code>&amp;</code>・量指定）の色を暗い黄色に、SolarizedLiteのマーカーの色をテーマの索引の色に変えました。<code>~/Library/TeXShop/Themes</code>にある既存のテーマは色が変わりません。色は「設定 → テーマ」で変えられます。</li>
-<li>行番号をシステムの等幅フォントで表示し、どの行番号も桁がそろうようにしました。</li>
-<li>ダイアログのボタンを、AppleのHuman Interface Guidelinesに沿って配置しました。既定のボタンを右端に、その左に「キャンセル」を、ウインドウを閉じない操作を左端に置き、互いに間隔をあけました。マクロエディタでは、一覧の下の帯に、複数置換の窓と同じく「＋」「−」と「サブメニュー」「区切り」「複製」のメニューを置き、内容欄をソースと同じフォントとテーマの色で表示し、プレースホルダの一覧を「挿入」の右の「?」で見られるようにしました。</li>
-<li>すべての言語で、画面の文字をシステムフォントで表示するようにしました。日本語・韓国語・中国語（簡体字）・スペイン語の一部の窓とパネル、いくつかの言語の検索パネル・マクロエディタ・LaTeXパネル・行列パネル、および文字情報は、ヒラギノ、AquaKana、黒体、Apple SD Gothic Neo、Lucida Grande、Helvetica、Times New Roman などの固定したフォントを使っていました。倍率パネルの「Scale」やルートファイル設定の例のように、末尾が欠けていたラベルも全体を表示するようにしました。</li>
-<li>いくつかの窓と言語で、欠けたり重なったりしていた文字と選択肢を、すべて表示するようにしました。窓を小さくしたときのコンソール上部のボタンとテキスト注釈パネルの揃えの選択肢、コンソールの入力欄の説明（2行で表示）です。入力欄のフォーカスの枠が窓の端で切れたり、ほかの部品に重なったりしないようにし、コンソールの入力欄の上下の余白をそろえました。</li>
-<li>Experimentのコンソールの入力欄を、書類のコンソールと同じ上下の余白と高さにし、フォーカスの枠も表示するようにしました。スペルチェックパネルの「すべて変更」の置換欄を、折り返さず1行で表示するようにしました。プレビューで選択範囲の横に出る大きさの表示が欠けないようにしました。数値の欄と横の矢印ボタンの間を広げ、フォーカスの枠が矢印ボタンにかからないようにしました。</li>
-<li>「実験」のソースの下のバーを細くし、「タイプセット」ボタンを小さくして、「実験」のウインドウの細い枠に合わせました。</li>
-<li>OgreKitの検索パネルのボタンが重なって描かれないよう、すべての言語で、小さめのボタンにして間隔をあけ、上のオプションの枠にそろえて並べ直しました。</li>
-<li>各言語の設定画面で、部品の重なり、文字切れ、操作と設定項目の結び付けの誤りを修正しました。オランダ語版に不足していた括弧の色設定を追加し、韓国語版のダークテーマの設定で「ダーク」の語の誤りを直しました。</li>
+<li><a href="https://github.com/LaTeX-fetishist">LaTeX fetishist</a>氏と<a href="https://github.com/martignoni">Nicolas Martignoni</a>氏の提案により、従来の丸型アイコンをもとに、白い角丸の枠を付けた新しいアプリアイコンにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/3">#3</a>）。</li>
+<li><a href="https://github.com/LaTeX-fetishist">LaTeX fetishist</a>氏の提案により、「設定」→「一般」で、歴代のデザインを含む5種類から起動中のDockアイコンを選べるようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/3">#3</a>）。<figure class="note-shot"><img src="assets/whats-new/ja/dock-icons.png" width="600" height="411" alt="設定の「一般」にあるDockアイコンの選択肢" loading="lazy"></figure></li>
+<li>macOS 26以降では、ツールバーを Liquid Glass の外観で表示し、「タイプセット」を強調したボタンにしました。</li>
+<li><a href="https://github.com/ethanphil4-a11y">ethanphil4-a11y</a>氏の報告により、プレビューのライト表示のページを、テーマのプレビューの背景色で再び塗るようにしました。「設定」→「テーマ」では「ライト表示のページ」の色です（<a href="https://github.com/TeXShopProject/TeXShop/issues/39">#39</a>）。</li>
+<li>Bruno Voisin氏の提案により、プレビューのツールバーの「戻る／進む」を macOS の「プレビュー」アプリと同じ山形のアイコンにし、移れないときは淡く表示するようにしました。<figure class="note-shot"><img src="assets/release-notes/ja/preview-toolbar.png" width="600" height="244" alt="「戻る／進む」の山形とページレイアウトのメニューがあるプレビューウインドウのツールバー" loading="lazy"></figure></li>
+<li>プレビューのツールバーの「前のページ」「次のページ」を、「プレビュー」アプリと同じアイコンの1組にしました。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、プレビューのツールバーのマウスモードの各ツールに、名前と働きを示すツールチップを付けました（<a href="https://github.com/TeXShopProject/TeXShop/issues/28">#28</a>）。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、プレビューのツールバーの「戻る」「進む」に、それぞれのツールチップと翻訳した名前を付けました（<a href="https://github.com/TeXShopProject/TeXShop/issues/34">#34</a>）。</li>
+<li>同梱のテーマに、それぞれの配色に合うexpl3の色を設定しました。</li>
+<li>同梱のテーマDracula・TransparentTheme・SolarizedLiteで、括弧やマーカーを読みやすい色にしました。<code>~/Library/TeXShop/Themes</code>にある既存のテーマは色が変わりません。</li>
+<li>行番号をシステムの等幅フォントで表示し、桁がそろうようにしました。</li>
+<li>ダイアログのボタンを、AppleのHuman Interface Guidelinesに沿って配置しました。マクロエディタは、複数置換の窓と同じく一覧の下に帯を置き、内容をソースと同じフォントで表示します。</li>
+<li>すべての言語で、画面の文字をシステムフォントで表示し、欠けていたラベルを全体まで表示するようにしました。</li>
+<li>いくつかの窓と言語で、欠けたり重なったりしていた文字と選択肢をすべて表示するようにしました。</li>
+<li>「実験」のコンソールの入力欄、スペルチェックパネルの置換欄、数値の欄が重ならずに表示されるようにしました。</li>
+<li>「実験」のソースの下のバーを細くし、「タイプセット」ボタンを小さくしました。</li>
+<li>OgreKitの検索パネルのボタンが、どの言語でも重ならないようにしました。</li>
+<li>各言語の設定画面で、部品の重なり、文字切れ、結び付けの誤りを直しました。</li>
 </ul>
 <h3>以前の版から変わった動き</h3>
 <ul>
 <li><strong>スペルチェック</strong>：LaTeXの構文を考慮するスペルチェックが初めから有効です。以前のように検査するには、「設定」→「スペルチェック」で「従来の方式」を選んでください。<figure class="note-shot"><img src="assets/release-notes/ja/settings-spelling.png" width="600" height="450" alt="LaTeXの構文を考慮するスペルチェックと従来の方式がある設定の「スペルチェック」" loading="lazy"></figure></li>
-<li><strong>検索</strong>：詳細検索パネルを、すべての利用者の検索の方式にしました。このバージョンを初めて起動したとき、今までの利用者も、Apple標準の検索パネルや検索バー、OgreKit検索パネル、既定のままのどの人も、一度だけ詳細検索パネルに切り替わります。元に戻すには、「設定」→「エディタ」の「検索パネル」でほかの方式を選びます。選んだ方式はその後も保たれます。OgreKit検索パネルを使っていた人は、パネルの「置換の書き方」がOgreKit式の <code>\1</code> になっています（自分で選んでいた人は、その選択のまま）。「置換の書き方」は「その他のオプション」にあります。OgreKit検索パネルは「レガシー」としました。OgreKitとの切り替えには、これまでどおり再起動が要ります。<figure class="note-shot"><img src="assets/release-notes/ja/settings-find-panel.png" width="600" height="450" alt="検索パネルに詳細検索パネルを選んだ設定の「エディタ」" loading="lazy"></figure></li>
-<li><strong>設定プロファイル</strong>：「設定プロファイル」を、「設定」→「タイプセット」の「エンジンのプロファイル」に置き換えました。プロファイルは、TeXエンジンごとのタイプセットのコマンド、BibTeXエンジン、索引作成とMetaPostのコマンド、otfパッケージ対応を設定します。日本語のプロファイルは、新しい書類のエンコーディングをUTF-8にし、辞書を「言語を自動判別」にし、UTF-8-MACの変換もオンにします。ほかの設定は変えません。メニューでプロファイルを選ぶと確認のシートが出て、「latexmkを使用」を選べます。latexmkは、BibTeXや索引、LaTeXの再実行を必要なだけ自動で行います。初めて起動したときは、TeXとGhostscriptのパスに続けて、エンジンのプロファイルを選べます。ほぼすべての設定を置き換えていた以前のプロファイルはなくなりました。それで変えた設定はそのまま残ります。<figure class="note-shot"><img src="assets/release-notes/ja/engine-profiles.png" width="600" height="450" alt="エンジンのプロファイルのメニューのある設定の「タイプセット」" loading="lazy"></figure></li>
-<li><strong>タイプセットの設定</strong>：「設定」→「タイプセット」の「デフォルトのコマンド」を「新しい書類のタイプセット」にしました。「利用するコマンド」は、<code>~/Library/TeXShop/Engines</code> にあるエンジンファイルから選ぶ「エンジンファイル」のメニューにしました。「エンジン一覧を編集…」でこのフォルダをFinderで開きます。最初に選ばれるエンジンファイルはXeLaTeXからLuaLaTeXになりました。すでにエンジンファイルでタイプセットしている場合はXeLaTeXのままです。LaTeXと対になるTeXは、「タイプセット」メニュー、ツールバー、設定で「plain TeX」と表記します。</li>
-<li><strong>プレビューの矢印キー</strong>：<a href="https://github.com/svb-bit">svb-bit</a>氏の提案により、単ページ・見開き表示で拡大したページが縦にスクロールできるとき、上下矢印キーはページ内を画面上の一定量ずつスクロールし、ページ端で止まるようにしました。前後のページへは移りません。ページを送るには、Command＋右／左矢印、Page Up／Page Down、スペースキーを使います（<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>）。</li>
-<li><strong>macOSで設定したメニューのショートカット</strong>：一部のメニュー名の変更により、macOSの「システム設定」で登録したTeXShop用のショートカット（<code>NSUserKeyEquivalents</code>）が機能しなくなる場合があります。今後は、TeXShopの「設定」→「キーボード」にある「メニューのショートカット」で設定してください。旧<code>KeyEquivalents.plist</code>の「キーバインド」サブメニューの先頭項目への指定は、「ソース」の「キーバインド」へ引き継ぎます。旧「コマンド補完」サブメニューの「用語を追加」への指定は、名前でも番号でも「コマンド補完リストに追加」へ引き継ぎます。削除した編集項目や範囲外の番号への指定は無視します。コマンド補完ファイルの編集は「設定」→「キーボード」のボタンに、キーバインドの編集は同じ場所の一覧になり、旧メニュー名による割り当ては使えません。</li>
-<li><strong>マクロのショートカット</strong>：マクロのショートカットは、キーを入力して修飾キーにチェックを付けるのではなく、マクロエディタでキーを押して設定するようになりました。Commandを含まないControlの組み合わせやF1〜F20も使えます。以前の版で保存したショートカットはCommand付きのままです。</li>
-<li><strong>マーク</strong>：マークはコマンド補完がなくても使えるので、マークの操作を「編集」→「マーク」に移しました。Controlキーを押したときにしか出なかった「メモ付きマークを挿入」（⌃⌘8）を常に表示し、選んだ文字をメモにできるようにしました。「マークの使い方…」で•と•‹メモ›のヘルプを開けます。「マークの使い方…」は、英語以外の画面では英語のヘルプのページを開きます（マークの説明は英語のヘルプにだけあるため）。メニュー項目にはそれぞれ説明を表示し、マクロエディタとキーバインドの一覧の「?」にもマークの説明を載せました。</li>
-<li><strong>コマンド補完</strong>：「ソース」メニューの「コマンド補完」サブメニューには「用語を追加」しかなかったので、同じ位置の1項目「コマンド補完リストに追加」（⇧⌘W）にまとめました。選んだ文字列をコマンド補完のリストに加えます。</li>
-<li><strong>スタイルファイルを開く</strong>：「ヘルプ」メニューから「ファイル」メニューの「開く」の下へ移し、ファイルを探すコマンドの既定を、kpsewhich を呼ぶだけの teTeX のスクリプト kpsetool から <code>kpsewhich -progname=latex -format=tex</code> に変えました。パネルの題名は「スタイルファイルを開く」になり、MnSymbol.sty のように大文字を含む名前もあるので、「小文字推奨」の注記を外しました。設定の「タイプセット」の項目名は「kpsewhich」になりました。保存してあるコマンドはそのまま使えます。</li>
-<li><strong>Apple Distiller</strong>：設定の「タイプセット」から Apple Distiller の選択を取り除きました。Distiller は macOS 14 で削除された <code>/usr/bin/pstopdf</code> を呼んでいたため、PostScript は常に Ghostscript で変換します。この群の名前は「Ghostscript」、スイッチの名前は「-dALLOWPSTRANSPARENCY」になりました。</li>
-<li><strong>テキストとラインアートを滑らかに表示</strong>：設定の「プレビュー」の「表示」からこの設定を取り除きました。PDF の中の画像の補間を選ぶだけの設定だったので、画像は常に補間します。隠し設定 InterpolationValue は今までどおり効きます。</li>
-<li><strong>古い設定</strong>：「設定」の用語を整理し、旧PDFSyncの選択肢や効果のない設定を削除しました。ツールバーは新しいアイコンに統一しました。</li>
-<li><strong><code>\UTF</code>コマンド</strong>：ファイルを開くときに、utf.styの書き出しが無効でも、<code>\UTF</code>・<code>\UTFK</code>・<code>\UTFT</code>・<code>\UTFC</code>コマンドを文字に戻すようにしました。戻したU+FF5EとU+FF0Dは、日本語の文字コードで保存できるU+301CとU+2212にします。ファイルに直接書かれた文字はそのままです。戻すのは、utf.styの書き出しが保存時に書く、JIS X 0208にない文字のコマンドだけです。それ以外の文字のコマンド、<code>\\UTF</code>のようにバックスラッシュをエスケープしたもの、サロゲートの値はそのまま残します。</li>
+<li><strong>検索</strong>：このバージョンを初めて起動したとき、すべての利用者が一度だけ詳細検索パネルに切り替わります。元に戻すには、「設定」→「エディタ」の「検索パネル」でほかの方式を選びます。OgreKit検索パネルは「レガシー」としました。<figure class="note-shot"><img src="assets/release-notes/ja/settings-find-panel.png" width="600" height="450" alt="検索パネルに詳細検索パネルを選んだ設定の「エディタ」" loading="lazy"></figure></li>
+<li><strong>設定プロファイル</strong>：「設定プロファイル」を、「設定」→「タイプセット」の「エンジンのプロファイル」に置き換えました。プロファイルは、TeXエンジンごとのタイプセットのコマンド、BibTeXエンジン、索引作成とMetaPostのコマンド、otfパッケージ対応を設定します。日本語のプロファイルは、新しい書類のエンコーディングをUTF-8にし、辞書を「言語を自動判別」にし、UTF-8-MACの変換もオンにします。ほかの設定は変えません。プロファイルではlatexmkも使うようにできます。以前のプロファイルで変えた設定はそのまま残ります。<figure class="note-shot"><img src="assets/release-notes/ja/engine-profiles.png" width="600" height="450" alt="エンジンのプロファイルのメニューのある設定の「タイプセット」" loading="lazy"></figure></li>
+<li><strong>タイプセットの設定</strong>：「設定」→「タイプセット」の「デフォルトのコマンド」を「新しい書類のタイプセット」に、「利用するコマンド」をエンジンファイルを選ぶ「エンジンファイル」のメニューにしました。最初に選ばれるエンジンファイルはXeLaTeXからLuaLaTeXになりました。LaTeXと対になるTeXは、「タイプセット」メニュー、ツールバー、設定で「plain TeX」と表記します。</li>
+<li><strong>プレビューの矢印キー</strong>：<a href="https://github.com/svb-bit">svb-bit</a>氏の提案により、単ページ・見開き表示で、上下矢印キーは拡大したページの中をスクロールし、ページを送らないようにしました。ページを送るには、Command＋右／左矢印、Page Up／Page Down、スペースキーを使います（<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>）。</li>
+<li><strong>macOSで設定したメニューのショートカット</strong>：一部のメニュー名が変わったため、macOSの「システム設定」で登録したTeXShop用のショートカットが効かなくなることがあります。「設定」→「キーボード」で設定し直してください。</li>
+<li><strong>マクロのショートカット</strong>：マクロのショートカットは、マクロエディタでキーを押して設定するようになり、Commandを含まないControlの組み合わせやF1〜F20も使えます。以前の版で保存したショートカットはCommand付きのままです。</li>
+<li><strong>マーク</strong>：マークの操作を「編集」→「マーク」に移しました。「メモ付きマークを挿入」は常にメニューにあります。</li>
+<li><strong>コマンド補完</strong>：「ソース」メニューの「コマンド補完」サブメニューを、同じショートカットの1項目「コマンド補完リストに追加」にしました。</li>
+<li><strong>スタイルファイルを開く</strong>：「ヘルプ」メニューから「ファイル」メニューへ移しました。</li>
+<li><strong>Apple Distiller</strong>：macOS 14にないため選択肢を取り除き、PostScriptはGhostscriptで変換します。</li>
+<li><strong>テキストとラインアートを滑らかに表示</strong>：この設定を取り除きました。PDFの中の画像は常に滑らかに表示します。</li>
+<li><strong>古い設定</strong>：旧PDFSyncの選択肢と効果のない設定を取り除きました。</li>
+<li><strong><code>\UTF</code>コマンド</strong>：utf.styの書き出しで書いた<code>\UTF</code>コマンドを、ファイルを開くときに文字に戻すようにしました。</li>
 <li><strong>改行コード</strong>：開いたファイルの改行コードがWindows形式（CRLF）、旧Mac形式（CR）、またはそれらの混在の場合に、改行をLFに揃えたことを知らせるようにしました。この通知はファイルごとに止められます。<figure class="note-shot"><img src="assets/release-notes/ja/line-endings.png" width="534" height="520" alt="書類の改行コードがWindows形式で、LFに揃えたことを知らせる画面" loading="lazy"></figure></li>
 </ul>
 <h3>不具合の修正：タイプセットとコンソール</h3>
 <ul>
-<li><strong>重大な不具合の修正</strong>：「中止」を押してもTeXの処理が残り、次のタイプセットを開始しても前の処理が停止しない問題を修正しました。関連する子プロセスも含めて停止します。</li>
-<li>TeXの実行中や、エラーで入力待ちになっているときも、コンソールの出力を選択してコピーできるようにしました。新しい出力が選択範囲を置き換えることはなく、文字を選択している間はコンソールがスクロールしません。入力欄からフォーカスを移しても、TeXに空行を送らなくなりました（Returnでは従来どおり送ります）。Experimentのコンソールも同じです。</li>
-<li>コンソールの出力欄をクリックしてログを読んだあとなど、出力欄でReturn（またはEnter）を押すと、空の入力欄でReturnを押したときと同じくTeXに空行を送り、フォーカスを入力欄に戻すようにしました。入力欄に書きかけの文字は送らずに残します。Shift・Option・Control・Commandを押しながらのReturnは対象外です。Experimentのコンソールも同じです。TeXが終了した直後にコンソールから入力を送ると、TeXShopが終了することがある問題も修正しました。</li>
-<li>異なる文字コードや壊れた文字が混じるコンソール出力・ログの表示を改善しました。TeXがUTF-8の文字の途中で折り返した場合も、文字をつなぎ直して表示します。</li>
-<li><code>% !TEX root</code>の行があるファイルからタイプセットしたとき、ルート書類のプレビューでCommand＋1を押すと、タイプセットしたファイルに戻るようにしました。ルート書類自身のウィンドウでタイプセットするかCommand＋1を押すと、戻り先はそのウィンドウになります。</li>
-<li>組版ツールを起動できない場合やコマンドの検索パスが未設定の場合の処理を改善し、補助プロセスの停止を待ち続ける問題を修正しました。</li>
-<li>指定されたTeXルートファイルが見つからない場合に、書類に付随するダイアログで通知するようにしました。</li>
-<li>中断したタイプセットが残す<code>.synctex.gz(busy)</code>ファイルも、補助ファイルと一緒に削除するようにしました。</li>
+<li><strong>重大な不具合の修正</strong>：「中止」を押してもTeXの処理が残る問題を修正しました。TeXとその子プロセスを止めます。次のタイプセットを始めたときも、前の処理を止めます。</li>
+<li>TeXの実行中や入力待ちのときも、コンソールの出力を選択してコピーできるようにしました。Experimentのコンソールも同じです。</li>
+<li>コンソールの出力欄でReturnを押すと、空の入力欄でReturnを押したときと同じくTeXに答えるようにしました。Experimentのコンソールも同じです。</li>
+<li>文字コードが混じったり文字が壊れたりしたコンソール出力とログを、正しく表示するようにしました。</li>
+<li><code>% !TEX root</code>の行があるファイルからタイプセットしたとき、ルート書類のプレビューでCommand＋1を押すと、そのファイルに戻るようにしました。</li>
+<li>組版ツールを起動できないときの処理を改善し、中止で待ち続けることがないようにしました。</li>
+<li>書類で指定したTeXのルートファイルが見つからないときに、シートで知らせるようにしました。</li>
+<li>残った<code>.synctex.gz(busy)</code>ファイルも、補助ファイルと一緒に削除するようにしました。</li>
 </ul>
 <h3>不具合の修正：プレビュー</h3>
 <ul>
-<li><a href="https://github.com/svb-bit">svb-bit</a>氏の報告により、PDFの再読込後も上下両ペインのページ内位置を保つようにし、macOS Tahoeの表示領域の余白にも対応しました。macOS 27の単ページ・見開きのページ移動でPDFKitが表示位置を変える場合も、位置を保ちます（<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>）。</li>
-<li><a href="https://github.com/svb-bit">svb-bit</a>氏の報告により、macOS 27の単ページ・見開き表示で、拡大したページをOption／Command＋上下矢印、スペースキー、Home、End、ページ番号の入力で別のページに移したときも、左右の位置を保つようにしました。SyncTeXや検索の結果を表示するときも余白の位置を変えず、結果が見えていないときだけ横にスクロールします（<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>）。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、プレビューウインドウを分割・分割解除したとき、上（左）のビューの上端に見えている箇所が、どの倍率でも画面上で動かないようにしました。「ビューを切り替え」も二つのビューの表示をそのまま入れ替えるので、繰り返しても少しずつずれることはありません。分割中に上のビューをスクロールした場合、分割を解除しても分割前の位置には戻らず、その位置のままです（<a href="https://github.com/TeXShopProject/TeXShop/issues/23">#23</a>）。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、プレビューウインドウをスクロールしたとき、内部リンクのポップアップの周りにリンク先のページの一部が表示される問題を修正しました（<a href="https://github.com/TeXShopProject/TeXShop/issues/21">#21</a>）。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、タイプセット中にプレビューを閉じて開き直したときも表示位置を保つようにしました。ソースとプレビューを一体化したウィンドウにも対応します（<a href="https://github.com/TeXShopProject/TeXShop/issues/5">#5</a>）。</li>
-<li>SyncTeXで、ソースをクリックした時点の位置と、クリックした分割エディタを使うようにしました。行頭のクリックやコンテキストメニューからの操作にも対応します。シンボリックリンクなどで同じ実体を指すパスを照合し、記録されたパスと完全に一致するものを優先します。解決できないパスは一致と扱いません。</li>
-<li>PDFのページ数が変わった場合など、プレビューの再読み込み時に起きるPDFKitのクラッシュを修正しました。</li>
-<li>PDFのページがプレビュー画面より大きい場合の、スペースキーとShift＋スペースキーによるスクロールを修正しました。</li>
-<li>プレビューウィンドウの位置を固定している場合、新しいプレビューを最前面のプレビューからずらして開き、完全に重ならないようにしました。</li>
+<li><a href="https://github.com/svb-bit">svb-bit</a>氏の報告により、macOS 26・macOS 27でも、再読み込みのあとにプレビューの位置を保つようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>）。</li>
+<li><a href="https://github.com/svb-bit">svb-bit</a>氏の報告により、macOS 27で、拡大したページを別のページや検索・SyncTeXの結果へ移しても、左右の位置を保つようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>）。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、分割・分割解除や「ビューを切り替え」で、プレビューの表示が少しずつずれないようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/23">#23</a>）。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、スクロールしたとき、リンクのポップアップの周りにリンク先のページの一部が見える問題を修正しました（<a href="https://github.com/TeXShopProject/TeXShop/issues/21">#21</a>）。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、タイプセット中にプレビューを閉じて開き直しても、表示位置を保つようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/5">#5</a>）。</li>
+<li>SyncTeXで、行頭や分割したエディタ、エイリアスのファイルでも、クリックした場所へ移るようにしました。</li>
+<li>プレビューの再読み込みで落ちる問題を修正しました。</li>
+<li>ページがウインドウより大きいときの、スペースキーとShift＋スペースキーのスクロールを修正しました。</li>
+<li>新しいプレビューのウインドウが、前面のプレビューにぴったり重ならないようにしました。</li>
 </ul>
 <h3>不具合の修正：書類の読み書き</h3>
 <ul>
-<li><a href="https://github.com/Steuard">Steuard</a>氏の報告により、OneDrive や Google Drive など File Provider を使う同期サービスのフォルダにあるファイルを編集しているときに、カーソルがファイルの末尾へ飛んだり、打った文字が消えたりする不具合を修正しました。同期サービスがファイルの属性だけを変えたり、同じ内容を書き直したりしても、本文・選択範囲・スクロール位置・取り消し履歴を保ちます。未保存の編集内容を、ほかで加えられた変更で置き換えることはなくなり、その変更は保存するときに知らせます。ファイルの内容が実際に変わって読み直すときも、変わった部分でなければ、選択範囲と表示の先頭の行を保ちます（<a href="https://github.com/TeXShopProject/TeXShop/issues/29">#29</a>）。</li>
-<li><a href="https://github.com/yo3iti">Tom</a>氏の報告と提案により、ルーマニア語で書類の窓が再び開くようにしました。TeXShop 5.57から5.59では、ルーマニア語の書類の窓のソースのエディタが文字注釈パネルの入力欄につながっていたため、ルーマニア語では「ファイル」→「新規」でもファイルを開いても何も起きませんでした。文字注釈パネルは自分の入力欄を再び使います。また、不可視文字を表示するとき、不可視文字を描けないテキストビューは飛ばし、窓が開かなくなることがないようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/42">#42</a>）。</li>
-<li>外部エディタによるソースファイルの更新を、自動再読み込みやファイルの置き換え後も継続して監視するようにしました。未保存の編集内容を保護し、TeXShop自身の保存では取り消し履歴を維持します。<a href="https://github.com/TeXShopProject/TeXShop/pull/1">PR #1</a>の<a href="https://github.com/ddd3h">Daisuke Nishihama</a>氏による貢献を含みます。</li>
-<li>UTF-8のファイルのBOMと、UTF-16のファイルのバイト順を保って保存するようにしました。UTF-16のファイルでも文字コードのマジックコメントを読み取ります。</li>
-<li>GB 2312のファイルを正しく読めるようにしました。また、指定された文字コードで読めなかったファイルが、保存時に壊れる問題を修正しました。</li>
-<li>日本語の文字コードで、TeXのバックスラッシュとチルダを必ず0x5Cと0x7Eで書き出すようにしました。MacJapaneseとShift JIS X0213のファイルで入力したバックスラッシュやチルダが全角の「＼」「〜」や0x80になる問題と、Windows Shift JIS、EUC-JP、ISO-2022-JPのファイルでバックスラッシュとして入力される円記号が「?」になる問題を修正しました。</li>
-<li>認識できない文字コード名が指定された場合に、Latin 9ではなくUTF-8を使い、その旨を表示するようにしました。また、プロジェクトファイルをUTF-8で書き出すようにしました。</li>
-<li>保存ダイアログの文字コードのメニューで選んだ文字コードが、保存に反映されない問題を修正しました。このメニューは「設定」→「書類と保存」から表示できます。ソースに認識できる文字コードのマジックコメントがある場合は、その文字コードを表示し、変更できないようにしました（その文字コードで読めなかったファイルを除きます）。</li>
-<li>「UTF-8-MAC を UTF-8 に自動変換」が有効なとき、CJK互換漢字だけからなる書類を保存すると空のファイルになる問題を修正しました。</li>
-<li>utf.styの書き出しを有効にして保存するとき、改行やタブの直後に結合文字があると、2つが存在しないグリフの<code>\CID</code>コマンド1つになり、改行が失われる問題を修正しました。結合文字だけを変換するようにしました。</li>
-<li>「デフォルトエディタに設定」が<code>.tex</code>ファイルに正しく適用されるようにしました。</li>
-<li>空の書類、単独の引用符、保存完了時の処理で発生するエラーを修正しました。</li>
+<li><a href="https://github.com/Steuard">Steuard</a>氏の報告により、OneDriveやGoogle Driveなどで同期しているフォルダのファイルを編集しているとき、カーソルがファイルの末尾へ飛んだり、打った文字が消えたりする問題を修正しました（<a href="https://github.com/TeXShopProject/TeXShop/issues/29">#29</a>）。</li>
+<li><a href="https://github.com/yo3iti">Tom</a>氏の報告と提案により、ルーマニア語で書類の窓が再び開くようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/42">#42</a>）。</li>
+<li>ほかのエディタが保存したあとも、ソースファイルの変更に気付き続けるようにしました。<a href="https://github.com/TeXShopProject/TeXShop/pull/1">PR #1</a>の<a href="https://github.com/ddd3h">Daisuke Nishihama</a>氏による貢献を含みます。</li>
+<li>UTF-8のファイルのBOMと、UTF-16のファイルのバイト順を保って保存し、UTF-16のファイルでも文字コードのマジックコメントを使えるようにしました。</li>
+<li>GB 2312のファイルを正しく読めるようにし、指定の文字コードで読めなかったファイルが保存で壊れないようにしました。</li>
+<li>日本語の文字コードで、バックスラッシュとチルダを必ずTeXが読める文字で保存するようにしました。</li>
+<li>認識できない文字コード名のときはUTF-8で開いて知らせ、プロジェクトファイルをUTF-8で書き出すようにしました。</li>
+<li>保存ダイアログの文字コードのメニューが効くようにし、「設定」→「書類と保存」から表示できるようにしました。</li>
+<li>「UTF-8-MAC を UTF-8 に自動変換」が有効なとき、CJK互換漢字だけの書類が空のファイルで保存される問題を修正しました。</li>
+<li>utf.styの書き出しで、結合文字の前の改行が失われる問題を修正しました。</li>
+<li>「デフォルトエディタに設定」が<code>.tex</code>ファイルに効くようにしました。</li>
+<li>空の書類、単独の引用符、保存で起きるエラーを修正しました。</li>
 </ul>
 <h3>不具合の修正：編集とその他</h3>
 <ul>
-<li><a href="https://github.com/herbs">Herb Schulz</a>氏の報告により、長い書類で、スペルパネルを開いたときや「次を検索」「書類を今すぐチェック」で見つけた綴りの誤りを、ソースウインドウの中央に表示するようにしました。縦に長いウインドウでは、誤りがソースの見えている部分より下に残ることがありました。また、スペルパネルを開いたときに見つけた語が、コマンドを飛ばさないシステム自身の検索の結果で少し後に置き換わること（文法もチェックしているときなど）がなくなりました（<a href="https://github.com/TeXShopProject/TeXShop/issues/38">#38</a>）。</li>
-<li><code>% !TEX spellcheck</code>行のあるファイルを開くと、前面にあった書類のスペルチェックの言語まで変わる不具合を修正しました。</li>
+<li><a href="https://github.com/herbs">Herb Schulz</a>氏の報告により、長い書類でも、スペルパネルが見つけた綴りの誤りを見える位置に表示するようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/38">#38</a>）。</li>
+<li><code>% !TEX spellcheck</code>行のあるファイルを開いても、ほかの書類の言語が変わらないようにしました。</li>
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、コメント行の途中で改行したとき、次の行に送られた文字がコメントの色のまま残る問題を修正しました（<a href="https://github.com/TeXShopProject/TeXShop/issues/16">#16</a>）。</li>
-<li>脚注や索引を色分けしているとき、閉じていない<code>\footnote</code>・<code>\cite</code>・<code>\index</code>などの引数があっても、その後ろの文字を色分けするようにしました（以前は、見えている範囲の残りが色分けされませんでした）。expl3の色分けで、<code>\msg_</code>を、それより長い<code>\msg_</code>の名前と同じく、メッセージの名前として色分けするようにしました。</li>
-<li>日本語入力などで変換中の未確定文字には色を付けず、確定または取り消したあとにソースを色づけするようにしました。日本語の入力中にキーを押すたびに見えている範囲を塗り直して入力が重くなることがなくなり、入力中の全角数字が強調表示されることもなくなりました。Experimentのソースも同じです。</li>
-<li>テーマ編集中の括弧とexpl3の色を正しく表示し、継承する色の変更を反映するようにしました。無視した色変更がテーマに残る問題も修正しました。括弧の色を持たない旧テーマでは、マーカーの色を使用します。</li>
-<li>タブ・改行（LF）・復帰（CR）以外の制御文字を、不可視文字の色のU+FFFDで表示するようにしました。不可視文字の表示の有無にかかわりません。これまでは幅がなく見えず、改ページ文字（フォームフィード）以降は文書が表示されませんでした。</li>
-<li>長い書類を開く操作、スクロール、編集を高速化しました。</li>
-<li>右から左に記述する段落でも、明示的に指定した左揃えが保持されるようにしました。</li>
-<li>ソースとプレビューを統合した書類を開き直したときに、「タグ」メニューが英語表示になる問題を修正しました。</li>
-<li>HTML ウインドウの設定「ホーム URL」が効くようにし、既定で TeXShop のサイトを開くようにしました。これまで値は使われず、何か入れると HTML ウインドウが開きませんでした。今は、指定した Web のアドレスやファイルを開き、空のときは <code>https://texshop.app</code> を開きます。これまで開いていた見本のページは同梱しなくなりました。</li>
-<li>いくつかの言語で、違う命令を呼んでいた部品や、何も呼ばなかった部品を直しました。スペイン語では、JPEG・PNG・TIFFの画像を開いても何も起きませんでした。フランス語では、ログウインドウが「.tex files used」を無視していました。ポルトガル語（ポルトガル）では、ツールバーのフルパスの項目と、ソースとプレビューを一つにしたウインドウのラベルの項目が空で、同じウインドウのタグのメニューがTIFFを変換するダイアログを開いていました。中国語（簡体字）では、ソースとプレビューを一つにしたウインドウのツールバーのキーバインドと索引の色づけの項目が空でした。韓国語と中国語（簡体字）では、HTMLウインドウのURL欄でReturnキーを押しても何も起きませんでした。イタリア語では、「ヘルプ」→「File Encoding and TeXShop」がConTeXtの文書を開いていました。10の言語で、行列パネルが表の使う部分に印を付けていませんでした。</li>
-<li>フランス語とポルトガル語（ブラジル）で、注釈パネルのボタンを、選ぶ注釈の絵の上に置きました。フランス語には取り消し線のボタンも入れました。英語の「Edit」→「Transformations」に、ほかの言語にある「Change Encoding」を入れました。</li>
+<li>閉じていない<code>\footnote</code>・<code>\cite</code>・<code>\index</code>の引数があっても、後ろの文字の色分けが消えないようにしました。</li>
+<li>日本語入力が重くならないようにし、変換中の文字は確定するまで色を付けないようにしました。</li>
+<li>テーマの編集で、括弧とexpl3の色を正しく表示するようにしました。</li>
+<li>制御文字を見える印で表示し、改ページ文字以降が表示されない問題を修正しました。</li>
+<li>長い書類を開く、スクロールする、編集する操作を速くしました。</li>
+<li>右から左に書く段落でも、左揃えを保つようにしました。</li>
+<li>ソースとプレビューを一つにしたウインドウで、「タグ」メニューの表示が英語にならないようにしました。</li>
+<li>HTMLウインドウの「ホーム URL」が効くようにし、既定でTeXShopのサイトを開くようにしました。</li>
+<li>いくつかの言語で、何もしなかったり違う働きをしたりしていた部品を直しました。スペイン語の画像を開く操作、フランス語のログウインドウ、ポルトガル語と中国語（簡体字）のツールバーの項目、韓国語と中国語（簡体字）のHTMLウインドウのURL欄、イタリア語のヘルプの項目、10の言語の行列パネルです。</li>
+<li>フランス語とポルトガル語（ブラジル）の注釈パネルのボタンを直し、英語の編集メニューに「Change Encoding」を入れました。</li>
 </ul>
 <h3>マニュアル・ヘルプ・同梱ツール</h3>
 <ul>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案に基づき、マニュアルのRaiseHook例をhyperref 7.01q以降とamsmathの数式に対応させ、調整が適用されるリンク先の範囲を説明しました（<a href="https://github.com/TeXShopProject/TeXShop/issues/6">#6</a>）。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の指摘により、マニュアルと同梱ヘルプにあるTeXShopサイトへのリンクを現在のサイト（<a href="https://texshop.app/">texshop.app</a>）に改め、Richard Koch氏のページへ残したリンクは旧サイトであることを明記しました（<a href="https://github.com/TeXShopProject/TeXShop/issues/15">#15</a>）。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案に基づき、マニュアルのRaiseHook例をhyperref 7.01q以降とamsmathの数式に対応させました（<a href="https://github.com/TeXShopProject/TeXShop/issues/6">#6</a>）。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の指摘により、マニュアルとヘルプのリンクを現在のTeXShopのサイト（<a href="https://texshop.app/">texshop.app</a>）に改めました（<a href="https://github.com/TeXShopProject/TeXShop/issues/15">#15</a>）。</li>
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の指摘により、マニュアルの発表の章からSkypeへの言及を削除しました（<a href="https://github.com/TeXShopProject/TeXShop/issues/11">#11</a>）。</li>
 <li><a href="https://github.com/ralphrmartin">Ralph Martin</a>氏の指摘により、クレジットの連絡先を現在の保守担当者に改めました（<a href="https://github.com/TeXShopProject/TeXShop/issues/13">#13</a>）。</li>
 <li>LaTeXの構文を考慮するスペルチェックのヘルプを追加し、ヘルプのリンク切れを修正しました。隠し設定の一覧も更新しました。</li>
 <li>同梱するzlibを1.4、SyncTeXパーサーを1.21に更新しました。</li>
-<li>Herbert Schulz氏の提供により、同梱するlatexmkを4.89に更新しました。latexmk系のエンジンがこれを使うのは、PATH上にlatexmkが見つからない場合だけです。</li>
-<li>展開したソースアーカイブからTeXShopをビルドできない原因となっていた、リソースのファイル名を修正しました（<a href="https://github.com/TeXShopProject/TeXShop/issues/4">#4</a>）。</li>
+<li>Herbert Schulz氏の提供により、同梱するlatexmkを4.89に更新しました。</li>
+<li>展開したソースアーカイブから、TeXShopを再びビルドできるようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/4">#4</a>）。</li>
 </ul>
 </article>
 <article id="v5.59">
