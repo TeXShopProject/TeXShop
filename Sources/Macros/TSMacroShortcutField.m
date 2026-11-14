@@ -96,16 +96,19 @@ static const CGFloat TSClearSize = 16, TSClearInset = 4;
             return event;
         }];
     } else if (!recording && self.keyMonitor) {
-        [NSEvent removeMonitor:self.keyMonitor];
+        id monitor = self.keyMonitor;
         self.keyMonitor = nil;
+        if (monitor)
+            [NSEvent removeMonitor:monitor];
     }
     [self update];
 }
 
 - (void)dealloc
 {
-    if (_keyMonitor)
-        [NSEvent removeMonitor:_keyMonitor];
+    id monitor = _keyMonitor;
+    if (monitor)
+        [NSEvent removeMonitor:monitor];
 }
 
 #pragma mark Recording

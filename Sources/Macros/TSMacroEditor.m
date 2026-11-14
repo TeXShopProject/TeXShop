@@ -431,19 +431,15 @@ static TSFilterMode savedFilter = kNoFilterMode;
     self.listBar.removeButton.enabled = deleteButton.enabled;
     for (NSMenuItem *item in self.listBar.actionItems) item.enabled = [item.representedObject isEnabled];
 }
-- (void)listAddPressed:(id)sender
+// What one of the hidden nib buttons does, while it is enabled.
+static void TSSendButtonAction(NSButton *button)
 {
-    if (newItemButton.enabled) [NSApp sendAction:newItemButton.action to:newItemButton.target from:newItemButton];
+    SEL action = button.action;
+    if (button.enabled && action) [NSApp sendAction:action to:button.target from:button];
 }
-- (void)listRemovePressed:(id)sender
-{
-    if (deleteButton.enabled) [NSApp sendAction:deleteButton.action to:deleteButton.target from:deleteButton];
-}
-- (void)listActionChosen:(NSMenuItem *)sender
-{
-    NSButton *source = sender.representedObject;
-    if (source.enabled) [NSApp sendAction:source.action to:source.target from:source];
-}
+- (void)listAddPressed:(id)sender { TSSendButtonAction(newItemButton); }
+- (void)listRemovePressed:(id)sender { TSSendButtonAction(deleteButton); }
+- (void)listActionChosen:(NSMenuItem *)sender { TSSendButtonAction(sender.representedObject); }
 // The shortcut is set as in Settings > Keyboard: a click on the field and the keys
 // pressed. It takes the two rows of the nib's key field and its Shift, Option and
 // Control boxes, which stay hidden; the contents above take the row it frees.

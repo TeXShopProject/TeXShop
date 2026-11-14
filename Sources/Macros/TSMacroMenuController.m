@@ -572,16 +572,16 @@ static NSString * const TSMacroNoCommandKey = @"NoCommandKey";
 NSUInteger getKeyModifierMaskFromString(NSString *string)
 {
 	NSString *modifiersStr = ([string length]>1)?[string substringFromIndex: 1]:@"";
-	NSUInteger mask = [modifiersStr rangeOfString: TSMacroNoCommandKey].location == NSNotFound ? NSCommandKeyMask : 0;
+	NSUInteger mask = [modifiersStr rangeOfString: TSMacroNoCommandKey].location == NSNotFound ? NSEventModifierFlagCommand : 0;
 	NSRange range = [modifiersStr rangeOfString: @"ShiftKey"];
 	if (range.location != NSNotFound)
-		mask |= NSShiftKeyMask;
+		mask |= NSEventModifierFlagShift;
 	range = [modifiersStr rangeOfString: @"OptionKey"];
 	if (range.location != NSNotFound)
-		mask |= NSAlternateKeyMask;
+		mask |= NSEventModifierFlagOption;
 	range = [modifiersStr rangeOfString: @"ControlKey"];
 	if (range.location != NSNotFound)
-		mask |= NSControlKeyMask;
+		mask |= NSEventModifierFlagControl;
 	return mask;
 }
 
@@ -594,21 +594,21 @@ NSString *getStringFormKeyEquivalentWithModifiers(NSString *key, NSUInteger modi
 	NSString *character = [key substringToIndex: 1], *upper = [character uppercaseString];
 	// Only the first character is read back: keep one whose capital is longer (ß).
 	string = [NSMutableString stringWithString: [upper length] == 1 ? upper : character];
-	if (modifiers & NSShiftKeyMask)
+	if (modifiers & NSEventModifierFlagShift)
 		[string appendString: @"+ShiftKey"];
-	if (modifiers & NSAlternateKeyMask)
+	if (modifiers & NSEventModifierFlagOption)
 		[string appendString: @"+OptionKey"];
-	if (modifiers & NSControlKeyMask)
+	if (modifiers & NSEventModifierFlagControl)
 		[string appendString: @"+ControlKey"];
-	if (!(modifiers & NSCommandKeyMask))
+	if (!(modifiers & NSEventModifierFlagCommand))
 		[string appendFormat: @"+%@", TSMacroNoCommandKey];
 	return string;
 }
 
 NSString *getStringFormKeyEquivalent(NSString *key, BOOL shift, BOOL option, BOOL control)
 {
-	return getStringFormKeyEquivalentWithModifiers(key, NSCommandKeyMask | (shift ? NSShiftKeyMask : 0)
-		| (option ? NSAlternateKeyMask : 0) | (control ? NSControlKeyMask : 0));
+	return getStringFormKeyEquivalentWithModifiers(key, NSEventModifierFlagCommand | (shift ? NSEventModifierFlagShift : 0)
+		| (option ? NSEventModifierFlagOption : 0) | (control ? NSEventModifierFlagControl : 0));
 }
 
 // make a string which is to be displayed in TSMacroEditor, as the shortcuts are in Settings
