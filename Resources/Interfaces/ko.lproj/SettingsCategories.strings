@@ -156,7 +156,7 @@
 "catalog.spelling.1.5.title" = "주석문 제외";
 "group.appearance.0.title" = "테마";
 "catalog.appearance.0.0.title" = "밝은 테마";
-"catalog.appearance.0.1.title" = "아두운 테마";
+"catalog.appearance.0.1.title" = "어두운 테마";
 "group.appearance.1.title" = "테마 편집";
 "catalog.appearance.1.0.title" = "편집할 테마";
 "catalog.appearance.1.1.choice.0" = "이전 버전 설정 가져오기";
