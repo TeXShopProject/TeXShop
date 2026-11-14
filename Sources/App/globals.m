@@ -144,6 +144,7 @@ NSString *PdfPageBack_BKey = @"Pdfbackground_B";
 NSString *ExternalEditorTypesetAtStartKey = @"ExternalEditorTypesetAtStart";
 NSString *ConvertLFKey = @"ConvertLF";
 NSString *FindMethodKey = @"FindMethod";
+NSString *FindMethodSwitchedToAdvancedFindKey = @"FindMethodSwitchedToAdvancedFind";
 NSString *LineNumberSizeKey = @"LineNumberSize";
 NSString *BringPdfFrontOnAutomaticUpdateKey = @"BringPdfFrontOnAutomaticUpdate";
 NSString *BringPdfFrontOnTypesetKey = @"BringPdfFrontOnTypeset";

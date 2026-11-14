@@ -21,13 +21,14 @@ NS_SWIFT_NAME(MultipleReplaceRuleTable)
 
 @property (nonatomic, readonly) NSTableView *tableView;
 @property (nonatomic, strong, nullable) TSRegexMultipleReplace *set;
-/// The matches replaced by each rule in the last application; nil until then. Cleared when the set changes.
-@property (nonatomic, copy, nullable) NSArray<NSNumber *> *counts;
 @property (nonatomic, copy, nullable) void (^setChangedHandler)(TSRegexMultipleReplace *set);
 /// Colors the text of a find or replacement cell (the rule, its column, its pattern options and the plain
 /// attributes are given); nil, or a nil result, shows it plain.
 @property (nonatomic, copy, nullable) NSAttributedString *_Nullable (^fieldStyler)(NSString *string, TSRegexReplacementRule *rule,
     TSMultipleReplaceRuleField field, TSRegexFindOptions options, NSDictionary<NSAttributedStringKey, id> *attributes);
+
+/// A cell holding one control, centered in the row's height (and in the column's width for a check box).
++ (NSTableCellView *)cellWithControl:(NSControl *)control;
 
 /// Makes the table and its columns.
 - (instancetype)init NS_DESIGNATED_INITIALIZER;

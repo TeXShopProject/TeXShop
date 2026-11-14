@@ -7,6 +7,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// The way a replacement is written (TSRegexReplacementSyntax); without it, the ICU way.
+static NSString *const TSAdvancedFindReplacementSyntaxKey = @"AdvancedFindReplacementSyntax";
+
 /// The state of the Advanced Find panel kept between launches (the AdvancedFind… settings).
 /// The defaults are passed in, so tests can use their own.
 NS_SWIFT_NAME(AdvancedFindSettings)

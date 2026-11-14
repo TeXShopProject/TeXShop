@@ -409,6 +409,7 @@ extern NSString *PdfPageBack_BKey;
 extern NSString *ExternalEditorTypesetAtStartKey;
 extern NSString *ConvertLFKey;
 extern NSString *FindMethodKey;
+extern NSString *FindMethodSwitchedToAdvancedFindKey;
 extern NSString *LineNumberSizeKey;
 extern NSString *BringPdfFrontOnAutomaticUpdateKey;
 extern NSString *BringPdfFrontOnTypesetKey;

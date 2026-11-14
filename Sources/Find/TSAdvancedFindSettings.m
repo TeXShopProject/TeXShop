@@ -3,7 +3,6 @@
 #import "TSAdvancedFindSettings.h"
 
 static NSString *const TSAdvancedFindOptionsKey = @"AdvancedFindOptions";
-static NSString *const TSAdvancedFindReplacementSyntaxKey = @"AdvancedFindReplacementSyntax";
 static NSString *const TSAdvancedFindInSelectionKey = @"AdvancedFindInSelection";
 static NSString *const TSAdvancedFindWrapsKey = @"AdvancedFindWraps";
 static NSString *const TSAdvancedFindClosesWhenDoneKey = @"AdvancedFindClosesWhenDone";

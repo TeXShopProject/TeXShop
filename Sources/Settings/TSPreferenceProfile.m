@@ -117,6 +117,7 @@ NSSet<TSPreferenceKey> *TSKnownPreferenceKeys(void)
             ExtraCommandsNotToCheckParametersKey,
             ExtraCommandsToCheckParametersKey,
             FindMethodKey,
+            FindMethodSwitchedToAdvancedFindKey,
             FlashBackgroundEnabledKey,
             FlashDelayKey,
             FlashFixKey,
@@ -334,6 +335,7 @@ BOOL TSPreferenceProfilePreservesKey(TSPreferenceKey key)
         DocumentSplitWindowPositionKey,
         DocumentWindowNameKey,
         FindMethodKey, // a matter of taste, not of the TeX engine: a profile keeps the find method
+        FindMethodSwitchedToAdvancedFindKey, // and the mark of the switch at the first launch of 6.00, which must not run again
         FullSplitSourceFractionKey,
         HtmlWindowNameKey,
         LastStyNameKey,

@@ -60,6 +60,7 @@
 #import "TextFinder.h"
 #import "TSPreferenceLaunch.h"
 #import "TSMultipleReplaceMenu.h"
+#import "TSAdvancedFindMenu.h"
 
 #include <sys/sysctl.h>     // for testForIntel
 #include <mach/machine.h>   // for testForIntel
@@ -232,6 +233,8 @@
         NSMenu *mainMenu = NSApp.mainMenu;
         if (mainMenu)
             [TSMultipleReplaceMenu installInMainMenu:mainMenu directory:[NSURL fileURLWithPath:directory isDirectory:YES]];
+        // The commands of the Advanced Find panel join AppKit's Find submenu while it is the find method.
+        [TSAdvancedFindMenu startFollowingFindMethod];
     });
     [[TSKeyboardShortcuts sharedController] startAfterLaunchWithConfiguration:^(TSKeyboardShortcuts *shortcuts) {
         shortcuts.showSettings = ^{ [[TSPreferences sharedInstance] showKeyboardSettings:nil]; };

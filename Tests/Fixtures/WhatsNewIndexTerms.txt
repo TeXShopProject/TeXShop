@@ -663,6 +663,7 @@ external
 extra
 extracted
 extreme
+f
 facility
 fact
 failed
@@ -793,6 +794,7 @@ grows
 guard
 guidelines
 gz
+h
 habits
 half
 halfwidth
@@ -1796,7 +1798,6 @@ these
 they
 thickness
 thin
-think
 third
 this
 thomas
@@ -1827,7 +1828,6 @@ tooltips
 top
 toward
 trace
-track
 trackpad
 trailing
 transitioning
