@@ -145,7 +145,7 @@
 "group.spelling.1.title" = "Methode";
 "catalog.spelling.1.0.title" = "LaTeX-bewuste spellingcontrole gebruiken (aanbevolen)";
 "catalog.spelling.1.0.note" = "Lopende tekst controleren, met uitzondering van commando’s, formules, commentaar en verwijzingsargumenten.";
-"catalog.spelling.1.1.title" = "LaTeX-uitsluitingsregels bewerken…";
+"catalog.spelling.1.0.button" = "LaTeX-uitsluitingsregels bewerken…";
 "catalog.spelling.1.2.title" = "Oorspronkelijke methode";
 "catalog.spelling.1.3.title" = "LaTeX-commando’s overslaan";
 "catalog.spelling.1.4.title" = "Geselecteerde parameters overslaan";

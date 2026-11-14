@@ -19,6 +19,8 @@ static void CheckOwnerSpelling(TSPreferences *owner,TSSettingsWindowController *
         Check(modern.state==!initial.boolValue && legacy.state==initial.boolValue,@"Both real radios reflect the same choice");
         for(NSUInteger i=0;i<3;i++)Check([[owner valueForKey:names[i]]isEnabled]==initial.boolValue && [TSIsolatedAppKitDefaults boolForKey:keys[i]]==(i!=1),@"Legacy child values survive switching both ways");
         Check([[owner valueForKey:@"editSpellingExclusionsButton"]isEnabled]!=initial.boolValue && ![TSIsolatedAppKitDefaults boolForKey:@"SpellCheckEnabled"],@"Rules edit follows its mode independently of continuous spelling");
+        // The rules button shares the row of its choice; disabling it leaves both choices usable.
+        Check(modern.isEnabled && legacy.isEnabled,@"Both spelling choices stay available whichever is chosen");
         choice=initial.boolValue?modern:legacy;choice.state=NSControlStateValueOn;[NSApp sendAction:choice.action to:choice.target from:choice];
         Check(note.hidden,@"Returning to the entry value clears the spelling note");
     }

@@ -422,6 +422,30 @@ static NSColor *TSSettingsCardColor(void)
     [super layout];
 }
 @end
+// A button that belongs to a row stays on the row's first line, at its right
+// end. When that line and the button do not fit side by side, the button moves
+// below the row's content, still at the right end, so nothing is cut off.
+@interface TSSettingsCatalogButtonRow : NSView
+@property (strong) NSView *rowLine;
+@property (strong) NSButton *rowButton;
+@property (copy) NSArray<NSLayoutConstraint *> *besideConstraints, *belowConstraints;
+@property BOOL buttonBelow;
+@property CGFloat leadingInset;
+@end
+@implementation TSSettingsCatalogButtonRow
+- (void)layout {
+    if (NSWidth(self.bounds) > 0) {
+        CGFloat needed = ceil(self.rowLine.intrinsicContentSize.width) + 16 + ceil(self.rowButton.intrinsicContentSize.width);
+        BOOL below = needed > NSWidth(self.bounds) - self.leadingInset - 12 + 0.5;
+        if (below != self.buttonBelow) {
+            self.buttonBelow = below;
+            [NSLayoutConstraint deactivateConstraints:below ? self.besideConstraints : self.belowConstraints];
+            [NSLayoutConstraint activateConstraints:below ? self.belowConstraints : self.besideConstraints];
+        }
+    }
+    [super layout];
+}
+@end
 // Opacity is entered as a whole percentage, as in the standard color panel.
 // Surrounding spaces and full-width digits follow the other numeric fields.
 // Decimals are refused; integers outside the range are clamped.
@@ -695,6 +719,36 @@ static NSColor *TSSettingsCardColor(void)
         [content.topAnchor constraintEqualToAnchor:view.topAnchor constant:pad],
         [content.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-pad],
         [view.heightAnchor constraintGreaterThanOrEqualToConstant:38]]];
+    return view;
+}
++ (NSView *)catalogContent:(NSView *)content button:(NSButton *)button line:(NSView *)line indent:(NSUInteger)indent
+{
+    TSSettingsCatalogButtonRow *view = [TSSettingsCatalogButtonRow new]; view.translatesAutoresizingMaskIntoConstraints = NO;
+    view.rowLine = line; view.rowButton = button; view.leadingInset = 12+24*indent;
+    [view addSubview:content]; [view addSubview:button];
+    content.translatesAutoresizingMaskIntoConstraints = NO; button.translatesAutoresizingMaskIntoConstraints = NO;
+    [button setContentCompressionResistancePriority:751 forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [button setContentHuggingPriority:752 forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [NSLayoutConstraint activateConstraints:@[
+        [content.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:view.leadingInset],
+        [content.topAnchor constraintGreaterThanOrEqualToAnchor:view.topAnchor constant:10],
+        [content.bottomAnchor constraintLessThanOrEqualToAnchor:view.bottomAnchor constant:-10],
+        [button.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-12],
+        [button.topAnchor constraintGreaterThanOrEqualToAnchor:view.topAnchor constant:6],
+        [button.bottomAnchor constraintLessThanOrEqualToAnchor:view.bottomAnchor constant:-6],
+        [view.heightAnchor constraintGreaterThanOrEqualToConstant:38]]];
+    view.besideConstraints = @[
+        [content.trailingAnchor constraintEqualToAnchor:button.leadingAnchor constant:-16],
+        [content.centerYAnchor constraintEqualToAnchor:view.centerYAnchor],
+        [button.centerYAnchor constraintEqualToAnchor:line.centerYAnchor]];
+    view.belowConstraints = @[
+        [content.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-12],
+        [content.topAnchor constraintEqualToAnchor:view.topAnchor constant:10],
+        [button.topAnchor constraintEqualToAnchor:content.bottomAnchor constant:8],
+        [button.leadingAnchor constraintGreaterThanOrEqualToAnchor:view.leadingAnchor constant:view.leadingInset],
+        [button.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-10]];
+    [NSLayoutConstraint activateConstraints:view.besideConstraints];
+    NSLayoutConstraint *fit = [view.heightAnchor constraintEqualToConstant:38]; fit.priority = 249; fit.active = YES;
     return view;
 }
 + (NSStackView *)stackWithViews:(NSArray<NSView *> *)views orientation:(NSUserInterfaceLayoutOrientation)orientation

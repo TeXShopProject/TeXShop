@@ -6,7 +6,7 @@ from pane_fixtures import bundles,sources,key_binding_sources
 from shortcut_sources import NAMES
 from source_tree import include_args, source_file
 r=Path(__file__).resolve().parents[1]
-p=argparse.ArgumentParser();p.add_argument('output',nargs='?',type=Path);p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--mutations',action='store_true');p.add_argument('--integer-field-mutations',action='store_true');p.add_argument('--additional-mutations',action='store_true');p.add_argument('--mutation-start');p.add_argument('--audit-mutations',action='store_true');p.add_argument('--third-audit-mutations',action='store_true');p.add_argument('--capture-languages',nargs='+');p.add_argument('--mutation-only');p.add_argument('--fourth-audit-mutations',action='store_true');p.add_argument('--fifth-audit-mutations',action='store_true');p.add_argument('--opacity-field-mutations',action='store_true');p.add_argument('--sixth-audit-mutations',action='store_true');p.add_argument('--seventh-audit-mutations',action='store_true');p.add_argument('--visible-text-output',type=Path);p.add_argument('--visible-text-mutation',action='store_true');p.add_argument('--visible-text-whitespace-mutation',action='store_true');a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('output',nargs='?',type=Path);p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--mutations',action='store_true');p.add_argument('--integer-field-mutations',action='store_true');p.add_argument('--additional-mutations',action='store_true');p.add_argument('--mutation-start');p.add_argument('--audit-mutations',action='store_true');p.add_argument('--third-audit-mutations',action='store_true');p.add_argument('--capture-languages',nargs='+');p.add_argument('--mutation-only');p.add_argument('--fourth-audit-mutations',action='store_true');p.add_argument('--fifth-audit-mutations',action='store_true');p.add_argument('--opacity-field-mutations',action='store_true');p.add_argument('--sixth-audit-mutations',action='store_true');p.add_argument('--seventh-audit-mutations',action='store_true');p.add_argument('--spelling-button-mutations',action='store_true');p.add_argument('--visible-text-output',type=Path);p.add_argument('--visible-text-mutation',action='store_true');p.add_argument('--visible-text-whitespace-mutation',action='store_true');a=p.parse_args()
 with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
  t=Path(temp);(t/'fixtures').mkdir()
  compile=['xcrun','clang','-fobjc-arc','-DTS_TEST_REAL_SHORTCUTS','-DTS_TEST_REAL_PROFILE','-DNSBeginCriticalAlertSheet=TSTestUnexpectedCriticalSheet','-F',str(r/'Frameworks'),'-Wno-deprecated-declarations','-mmacosx-version-min=14.6',*include_args(r),'-I',str(r/'Tests'),'-framework','Cocoa','-framework','Carbon',str(r/'Tests/SettingsProductShell.m'),str(r/'Tests/PreferencesTestServices.m'),*map(str,sources(r)),str(r/'Sources/Settings/TSPreferences+Panes.m'),*[str(source_file(r, n)) for n in ['TSPreferences.m','TSPreferenceProfile.m','TSPreferences-Color.m','TSColorSupport.m','TSThemeFileStore.m','TSPreferenceInput.m','globals.m','TSDockIconController.m',*NAMES]],*map(str,sorted((r/'Sources').rglob('TSSettings*.m'))),*map(str,key_binding_sources(r)),'-o',str(t/'probe')]
@@ -42,7 +42,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
   if a.output and (not a.capture_languages or bundle.stem in a.capture_languages):folder=a.output/bundle.stem;folder.mkdir(parents=True,exist_ok=True);command.append(str(folder))
   print('LANGUAGE',bundle.stem,flush=True);subprocess.run(command,check=True,timeout=120,env=env)
 
-  if a.integer_field_mutations or a.mutations or a.additional_mutations or a.audit_mutations or a.third_audit_mutations or a.fourth_audit_mutations or a.fifth_audit_mutations or a.opacity_field_mutations or a.sixth_audit_mutations or a.seventh_audit_mutations:
+  if a.integer_field_mutations or a.mutations or a.additional_mutations or a.audit_mutations or a.third_audit_mutations or a.fourth_audit_mutations or a.fifth_audit_mutations or a.opacity_field_mutations or a.sixth_audit_mutations or a.seventh_audit_mutations or a.spelling_button_mutations:
    cases=[
     ('profile-transient-clear','TSPreferences.m','[self.settingsChangeNotes valuesReplaced];',';'),
     ('encoding-sheet','TSPreferences.m','[self.settingsChangeNotes recordUserChangeForKey:EncodingKey previousValue:oldValue ?: @""];','NSBeginCriticalAlertSheet(@"Encoding",nil,nil,nil,nil,nil,NULL,NULL,NULL,@"Warning");'),
@@ -197,6 +197,12 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
     cases=[('sidebar-width-plus-six','TSSettingsSidebarRow.m','width - 40','width - 34'),('search-placeholder-overflow','TSSettingsWindowController.m','self.settingsSearchField.placeholderString = NSLocalizedString(@"Search Settings", @"");','self.settingsSearchField.placeholderString = @"Search all settings with a deliberately overlong placeholder";')]
     expected['sidebar-width-plus-six']='Long localized sidebar names fit at every supported width'
     expected['search-placeholder-overflow']='Search placeholder fits every supported sidebar width'
+   if a.spelling_button_mutations:
+    # The exclusion rules button shares the row of the LaTeX-aware choice.
+    cases=[('spelling-rules-whole-row','TSSettingsDependencies.inc','_editSpellingExclusionsButton, NO}','_editSpellingExclusionsButton, YES}'),
+     ('spelling-rules-search-target','TSSettingsSearchCatalog.inc','@"row.catalog.spelling.1.0", @"SettingsCategories", @"catalog.spelling.1.0.button"','@"row.catalog.spelling.1.1", @"SettingsCategories", @"catalog.spelling.1.0.button"')]
+    expected['spelling-rules-whole-row']='Both spelling choices stay available whichever is chosen'
+    expected['spelling-rules-search-target']='Searching for the rules button finds and names it'
    if a.mutation_start:cases=cases[next(i for i,c in enumerate(cases) if c[0]==a.mutation_start):]
    if a.mutation_only:cases=[c for c in cases if c[0]==a.mutation_only];assert cases
    for name,filename,old,new in cases:
@@ -211,7 +217,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
     replacements={str(source_file(r, filename)):changed}
     if filename=='TSSettingsCatalogLayout.inc':shutil.copy2(r/'Sources/Settings/TSSettingsPaneClassification.inc',stage/'TSSettingsPaneClassification.inc')
     if filename.endswith('.inc'):
-     for unit in ['TSPreferences.m','TSPreferences+Panes.m']:
+     for unit in ['TSPreferences.m','TSPreferences+Panes.m']+(['TSSettingsSearch.m'] if filename=='TSSettingsSearchCatalog.inc' else []):
       copied=stage/unit;shutil.copy2(source_file(r, unit),copied);replacements[str(source_file(r, unit))]=copied
     build(replacements)
     result=subprocess.run([str(t/'probe'),str(bundle)],capture_output=True,text=True,timeout=120)

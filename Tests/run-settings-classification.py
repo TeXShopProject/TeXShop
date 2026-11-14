@@ -6,7 +6,7 @@ from pane_fixtures import bundles,sources,key_binding_sources
 from encoding_menu_fixture import encoding_menu_fixture
 from source_tree import include_args, source_file
 r=Path(__file__).resolve().parents[1]
-p=argparse.ArgumentParser();p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--snapshots',type=Path);p.add_argument('--search-coverage',action='store_true');p.add_argument('--mutations',action='store_true');p.add_argument('--search-catalog',type=Path);p.add_argument('--search-source',type=Path);args=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--snapshots',type=Path);p.add_argument('--search-coverage',action='store_true');p.add_argument('--mutations',action='store_true');p.add_argument('--spelling-button-mutations',action='store_true');p.add_argument('--search-catalog',type=Path);p.add_argument('--search-source',type=Path);args=p.parse_args()
 with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
  t=Path(temp);(t/'fixtures').mkdir()
  program=(r/'Tests/SettingsClassification.m').read_text().replace('int main(int argc,char **argv)', encoding_menu_fixture(r)+'\nint main(int argc,char **argv)').replace('// SNAPSHOT_ENCODING', 'if(argc>3) { NSPopUpButton *encoding=[owner valueForKey:@"defaultEncodeMatrix"]; [[[EncodingMenuFixture alloc] init] addEncodingsToMenu:encoding.menu withTarget:nil action:NULL]; [encoding selectItemWithTag:NSUTF8StringEncoding]; }')
@@ -55,6 +55,23 @@ with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
    folder=args.snapshots/lang;folder.mkdir(parents=True,exist_ok=True);command.append(str(folder))
   subprocess.run(command,check=True,timeout=90)
 
+  if args.spelling_button_mutations:
+   # The exclusion rules button: beside its choice title, or below when the two do not fit.
+   cases=[('spelling-button-no-fallback','TSPrefPaneLayout.m','BOOL below = needed > NSWidth(self.bounds) - self.leadingInset - 12 + 0.5;','BOOL below = NO;','Button title fits'),
+    ('spelling-button-centered','TSPrefPaneLayout.m','[button.centerYAnchor constraintEqualToAnchor:line.centerYAnchor]','[button.centerYAnchor constraintEqualToAnchor:view.centerYAnchor]','The exclusion rules button is beside its choice title'),
+    ('spelling-button-own-row','TSSettingsCatalogLayout.inc','@"controls": @[@"settings.ts-aware-spelling", @"settings.ts-edit-spelling"], @"items": @[], @"button": @"catalog.spelling.1.0.button"}','@"controls": @[@"settings.ts-aware-spelling"], @"items": @[]}, @{@"id": @"catalog.spelling.1.1", @"kind": @"button", @"title": @"catalog.spelling.1.0.button", @"note": @"", @"unit": @"", @"indent": @1, @"controls": @[@"settings.ts-edit-spelling"], @"items": @[]}','The exclusion rules button is in the row of its LaTeX-aware choice')]
+   for name,filename,old,new,failure in cases:
+    stage=t/('spelling-'+lang+'-'+name);stage.mkdir()
+    original=source_file(r,filename).read_text();assert original.count(old)==1,(name,original.count(old));(stage/filename).write_text(original.replace(old,new))
+    replacements={str(source_file(r,filename)):str(stage/filename)}
+    if filename.endswith('.inc'):
+     # The catalog is included by the pane classification, included by the panes unit.
+     for unit in ['TSSettingsPaneClassification.inc','TSPreferences+Panes.m']:shutil.copy2(source_file(r,unit),stage/unit);replacements[str(source_file(r,unit))]=str(stage/unit)
+    subprocess.run([replacements.get(x,x) for x in compile_command],check=True)
+    result=subprocess.run(command,capture_output=True,text=True,timeout=90)
+    assert result.returncode and 'FAIL: '+failure in result.stderr,(name,result.stdout[-600:],result.stderr[-1200:])
+    print('DETECTED',name,[line for line in result.stderr.splitlines() if 'FAIL:' in line],flush=True)
+   subprocess.run(compile_command,check=True);subprocess.run(command,check=True,timeout=90);print('NORMAL CONTROL spelling button',lang,flush=True)
   if args.mutations:
    cases=[
     ('cursor-RGB','TSPreferences.m','[((NSColorWell *)sender).color colorUsingColorSpace:NSColorSpace.genericRGBColorSpace]','((NSColorWell *)sender).color'),

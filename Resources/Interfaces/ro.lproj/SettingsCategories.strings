@@ -145,7 +145,7 @@
 "group.spelling.1.title" = "Metodă";
 "catalog.spelling.1.0.title" = "Folosește verificarea adaptată la LaTeX (recomandat)";
 "catalog.spelling.1.0.note" = "Verifică textul, excluzând comenzile, formulele, comentariile și argumentele de referință.";
-"catalog.spelling.1.1.title" = "Editează excluderile LaTeX…";
+"catalog.spelling.1.0.button" = "Editează excluderile LaTeX…";
 "catalog.spelling.1.2.title" = "Metoda anterioară";
 "catalog.spelling.1.3.title" = "Omite comenzile LaTeX";
 "catalog.spelling.1.4.title" = "Omite parametrii selectați";

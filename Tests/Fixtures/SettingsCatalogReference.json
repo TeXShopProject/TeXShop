@@ -794,21 +794,15 @@
        "selected": 0,
        "on": true,
        "note": "コマンド、数式、コメント、参照の引数などを除いて、本文だけを検査します。",
-       "src": [
-        "ts-aware-spelling"
-       ]
-      },
-      {
-       "kind": "button",
-       "title": "LaTeXの除外規則を編集…",
-       "indent": 1,
-       "enabledWhen": {
+       "button": "LaTeXの除外規則を編集…",
+       "buttonEnabledWhen": {
         "row": "spellMode",
         "values": [
          0
         ]
        },
        "src": [
+        "ts-aware-spelling",
         "ts-edit-spelling"
        ]
       },

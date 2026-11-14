@@ -145,7 +145,7 @@
 "group.spelling.1.title" = "Methode";
 "catalog.spelling.1.0.title" = "LaTeX-bewusste Rechtschreibprüfung verwenden (empfohlen)";
 "catalog.spelling.1.0.note" = "Fließtext prüfen; Befehle, Formeln, Kommentare und Verweisargumente ausschließen.";
-"catalog.spelling.1.1.title" = "LaTeX-Ausschlussregeln bearbeiten…";
+"catalog.spelling.1.0.button" = "LaTeX-Ausschlussregeln bearbeiten…";
 "catalog.spelling.1.2.title" = "Bisherige Methode";
 "catalog.spelling.1.3.title" = "LaTeX-Befehle nicht überprüfen";
 "catalog.spelling.1.4.title" = "Ausgewählte Parameter nicht überprüfen";
