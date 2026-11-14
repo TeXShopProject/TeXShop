@@ -33,6 +33,9 @@ FOUNDATION_EXPORT BOOL TSEngineProfileNeedsGhostscript(TSEngineProfile profile);
 /// The profile whose typesetting commands the settings have now, or TSEngineProfileNone.
 /// *latexmk tells which of its two forms they match.
 FOUNDATION_EXPORT TSEngineProfile TSEngineProfileMatchingSettings(NSUserDefaults *defaults, BOOL * _Nullable latexmk);
+/// Whether the settings run latexmk now: the form of the matching profile, or, for commands
+/// typed by hand, whether the LaTeX command of the default method starts with latexmk.
+FOUNDATION_EXPORT BOOL TSEngineProfileSettingsUseLatexmk(NSUserDefaults *defaults);
 /// The profile chosen beforehand on first launch for these preferred languages.
 FOUNDATION_EXPORT TSEngineProfile TSEngineProfileForLanguages(NSArray<NSString *> *languages);
 /// Of the TeX installations found (newest first), the newest that contains every required

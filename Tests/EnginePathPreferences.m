@@ -157,7 +157,9 @@ int main(void) { @autoreleasepool {
     check(p.initialEnginePathSearchPending && p.enginePathSearchGeneration == generation, @"opening Settings preserves initial discovery");
     spin();
     check(shown.completion != nil && modalCount == 2, @"initial result becomes sheet when Settings opens");
+    applied = nil;
     finish(NSAlertFirstButtonReturn);
+    check(applied[@"DefaultScript"] != nil && [applied[@"TetexBinPath"] isEqual:@"/new/tex"], @"the setup that became a sheet applies the profile chosen too");
     check([p->_tetexBinPathField.stringValue isEqual:@"/new/tex"], @"initial result refreshes open Settings");
 
     check([[defaults stringForKey:TetexBinPath] isEqual:@"/new/tex"] && [[defaults stringForKey:GSBinPath] isEqual:@"/new/gs"], @"initial result in sheet remains saved");

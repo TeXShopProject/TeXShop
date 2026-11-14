@@ -153,6 +153,15 @@ TSEngineProfile TSEngineProfileMatchingSettings(NSUserDefaults *defaults, BOOL *
     return TSEngineProfileNone;
 }
 
+BOOL TSEngineProfileSettingsUseLatexmk(NSUserDefaults *defaults)
+{
+    BOOL latexmk = NO;
+    if (TSEngineProfileMatchingSettings(defaults, &latexmk) != TSEngineProfileNone) return latexmk;
+    NSString *key = [defaults integerForKey:DefaultScriptKey] == TSEngineProfileViaDVI ? LatexGSCommandKey : LatexCommandKey;
+    NSString *command = [[defaults stringForKey:key] ?: @"" stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+    return [command isEqualToString:@"latexmk"] || [command hasPrefix:@"latexmk "];
+}
+
 TSEngineProfile TSEngineProfileForLanguages(NSArray<NSString *> *languages)
 {
     NSString *first = languages.firstObject.lowercaseString ?: @"";

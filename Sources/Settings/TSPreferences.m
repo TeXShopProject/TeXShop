@@ -269,8 +269,7 @@ static BOOL TSEngineProfileContains(NSString *directory, NSArray<NSString *> *pr
     TSEngineProfile profile = self.engineProfilePopup.selectedTag;
     if (![self finishPreferenceEditing:YES]) return;
     if (TSEngineProfileTitle(profile) == nil) return;
-    BOOL latexmk = NO;
-    TSEngineProfileMatchingSettings(SUD, &latexmk);
+    BOOL latexmk = TSEngineProfileSettingsUseLatexmk(SUD);
     [self cancelEnginePathDiscovery];
     NSUInteger generation = self.enginePathSearchGeneration;
     NSButton *button = [sender isKindOfClass:NSButton.class] ? sender : nil;
@@ -1475,7 +1474,7 @@ static NSAlert *TSEnginePathAlert(NSDictionary *found, BOOL initial, NSMutableDi
             NSAlert *alert = TSEnginePathAlert(found, initial, matrices);
             BOOL hasPaths = [found[@"TeX"] count] || [found[@"Ghostscript"] count];
             void (^finish)(NSModalResponse) = ^(NSModalResponse response) {
-                if (response != NSAlertFirstButtonReturn || (!hasPaths && !applyInitial) || generation != self.enginePathSearchGeneration ||
+                if (response != NSAlertFirstButtonReturn || (!hasPaths && !initial) || generation != self.enginePathSearchGeneration ||
                     (!applyInitial && !self->_prefsWindow.visible) ||
                     ![self enginePathSnapshotMatches:snapshot initial:applyInitial]) return;
                 NSArray *keys = @[TetexBinPath, GSBinPath];
@@ -1488,7 +1487,8 @@ static NSAlert *TSEnginePathAlert(NSDictionary *found, BOOL initial, NSMutableDi
                     if (!path || ![TSEnginePathDiscovery directory:path containsPrograms:required[i]]) continue;
                     values[keys[i]] = path;
                 }
-                if (applyInitial) {
+                // The first-launch setup, also when it became a sheet of Settings, applies the profile chosen.
+                if (initial) {
                     TSEngineProfile profile = [(NSPopUpButton *)matrices[@"Profile"] selectedTag];
                     BOOL latexmk = [(NSButton *)matrices[@"latexmk"] state] == NSControlStateValueOn;
                     [values addEntriesFromDictionary:TSEngineProfileValues(profile, latexmk)];
@@ -1498,12 +1498,12 @@ static NSAlert *TSEnginePathAlert(NSDictionary *found, BOOL initial, NSMutableDi
                     for (NSString *program in TSEngineProfileRequiredPrograms(profile, latexmk))
                         if (texPath && !TSEngineProfileContains(texPath, @[program])) [missing addObject:program];
                     if (missing.count) TSEngineProfileMissingAlert(texPath, missing);
-                    return;
+                } else {
+                    [values enumerateKeysAndObjectsUsingBlock:^(NSString *key, id value, BOOL *stop) { [SUD setObject:value forKey:key]; }];
                 }
-                [values enumerateKeysAndObjectsUsingBlock:^(NSString *key, id value, BOOL *stop) { [SUD setObject:value forKey:key]; }];
                 if (!applyInitial) {
-                    self->_tetexBinPathField.stringValue = [SUD stringForKey:TetexBinPath];
-                    self->_gsBinPathField.stringValue = [SUD stringForKey:GSBinPath];
+                    self->_tetexBinPathField.stringValue = [SUD stringForKey:TetexBinPath] ?: @"";
+                    self->_gsBinPathField.stringValue = [SUD stringForKey:GSBinPath] ?: @"";
                 }
             };
             if (applyInitial) finish([alert runModal]);

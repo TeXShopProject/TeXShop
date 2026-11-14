@@ -143,6 +143,15 @@ int main(int argc, char **argv) { @autoreleasepool {
     check(TSEngineProfileTeXCandidate(@[], @[@"pdflatex"], contains, &missing) == nil && [missing isEqual:@[@"pdflatex"]], @"no installation");
     check([TSEngineProfileRequiredPrograms(7, YES) containsObject:@"latexmk"] && ![TSEngineProfileRequiredPrograms(7, NO) containsObject:@"latexmk"], @"latexmk is required only with latexmk");
     check(TSEngineProfileNeedsGhostscript(8) && !TSEngineProfileNeedsGhostscript(4), @"only the dvips profile needs Ghostscript");
+    // 4b. Whether latexmk runs now, for a profile and for commands typed by hand.
+    TSMemoryDefaults *typed = [TSMemoryDefaults new]; [typed registerDefaults:factory];
+    check(!TSEngineProfileSettingsUseLatexmk(typed), @"factory settings run the engine once");
+    [typed.values addEntriesFromDictionary:TSEngineProfileValues(6, YES)];
+    check(TSEngineProfileSettingsUseLatexmk(typed), @"a latexmk profile runs latexmk");
+    typed.values[@"LatexGSCommand"] = @" latexmk -pdfdvi mine";
+    check(TSEngineProfileMatchingSettings(typed, NULL) == 0 && TSEngineProfileSettingsUseLatexmk(typed), @"a latexmk command typed by hand runs latexmk");
+    typed.values[@"LatexGSCommand"] = @"latexmkfoo"; check(!TSEngineProfileSettingsUseLatexmk(typed), @"only the program latexmk counts");
+    typed.values[@"DefaultScript"] = @100; typed.values[@"LatexCommand"] = @"latexmk"; check(TSEngineProfileSettingsUseLatexmk(typed), @"the command of the default method decides");
     // 5. The first-launch choice.
     check(TSEngineProfileForLanguages(@[@"ja-JP", @"en"]) == 7 && TSEngineProfileForLanguages(@[@"ja"]) == 7, @"Japanese first: upLaTeX + dvipdfmx");
     check(TSEngineProfileForLanguages(@[@"en-JP", @"ja"]) == 1 && TSEngineProfileForLanguages(@[]) == 1 && TSEngineProfileForLanguages(@[@"jv"]) == 1, @"otherwise pdfLaTeX");
@@ -165,6 +174,8 @@ MUTATIONS = {
     'no deferral': ('    profileApplicationDepth++;\n', '\n'),
     'every key reported changed': ('if (!TSEngineProfileSame([defaults objectForKey:key], value)) [changed addObject:key];', '[changed addObject:key];'),
     'every language Japanese': ('? TSEngineProfileUpLaTeXDvipdfmx : TSEngineProfilePdfLaTeX', '? TSEngineProfileUpLaTeXDvipdfmx : TSEngineProfileUpLaTeXDvipdfmx'),
+    'latexmk by prefix only': ('    return [command isEqualToString:@"latexmk"] || [command hasPrefix:@"latexmk "];', '    return [command hasPrefix:@"latexmk"];'),
+    'latexmk of the other method': ('[defaults integerForKey:DefaultScriptKey] == TSEngineProfileViaDVI ? LatexGSCommandKey : LatexCommandKey;', 'LatexGSCommandKey;'),
     'dvips offered first': ('             @[@(TSEngineProfileLaTeXDvipsGhostscript)]];', '             @[@(TSEngineProfileLaTeXDvipsGhostscript), @(TSEngineProfilePdfLaTeX)]];'),
 }
 
