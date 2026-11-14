@@ -13,7 +13,22 @@ file: names, commands and words that are the same in that language. The check co
   A nib that exists only compiled is read from the compiled archive (all its texts).
 
 Japanese, Korean and Chinese text must also contain a character of that script unless
-it is allowed (catches English that differs from the current English wording).
+it is allowed (catches English that differs from the current English wording), and
+must not be written in one of the other two (Japanese kana or kanji in a Korean nib).
+
+Text in the other languages is reported as English, unless allowed, also when
+- it is a word of two letters that the Base nib has ("of" in "Page 1 of 3");
+- it reads as an English phrase: two or more common English words, which catches an
+  English text left from an earlier English wording ("Package name whose documentation
+  you want to see:");
+- an element of a nib written in XML has the same text as that element in another
+  language, outside Spanish and the two Portuguese, while Base says something else
+  (an Italian tool tip left in the German nib), or a nib text is another language's
+  translation of a text in Localizable.strings or ToolbarItems.strings that this
+  language translates differently (Italian "Compila" for Typeset in the German nib).
+  The allowlist's "shared" lists the words that two languages really share.
+A localized text must not start with a space. The allowlist's "pending" lists texts of
+nibs that another change is translating; they are reported as notes, not failures.
 """
 from pathlib import Path
 import json
@@ -29,9 +44,17 @@ LANGUAGES = ['de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt-PT', 'pt', 'ro', 'zh_
 TABLES = ['Localizable', 'ToolbarItems', 'InfoPlist', 'Encodings', 'FindPanel', 'CustomModalWindowController', 'AdvancedFindEngine', 'AdvancedFind', 'MultipleReplaceSamples']
 NIBS = ['MainMenu', 'TSDocument', 'MacroEditor', 'matrixpanel', 'completionpanel1.2', 'Movie', 'FindPanel']
 ATTRIBUTES = ('title', 'toolTip', 'placeholderString', 'label', 'paletteLabel')
-ARCHIVE_KEYS = ('NSTitle', 'NSToolTip', 'NSContents', 'NSPlaceholderString')
+ARCHIVE_KEYS = ('NSTitle', 'NSToolTip', 'NSContents', 'NSPlaceholderString', 'NSWindowTitle')
 CJK = re.compile(r'[぀-ヿ㐀-鿿가-힯＀-￯]')
 WORD = re.compile(r'[A-Za-z]{3,}')
+SHORT = re.compile(r'[A-Za-z]{2}')
+# Words of English that the other languages do not use on their own.
+ENGLISH = re.compile(r"\b(?:the|you|your|to|of|is|are|this|that|with|for|and|want|whose|will|be|not|can|please|from|which|when|usually|best|would|should|could)\b", re.I)
+KANA = re.compile(r'[぀-ヿ]')
+HANGUL = re.compile(r'[가-힯]')
+HAN = re.compile(r'[一-鿿]')  # Korean in macOS is written without hanja
+# Spanish and the two Portuguese share many words; other languages that share a text name it in "shared".
+FAMILY = {'es': 'iberian', 'pt': 'iberian', 'pt-PT': 'iberian'}
 
 
 def strings(path):
@@ -92,6 +115,27 @@ def compiled_texts(nib_dir):
     return out
 
 
+def element_texts(nib_dir):
+    """Texts of a nib written in XML, by element id and attribute (empty for an older or compiled nib)."""
+    source = nib_dir / 'designable.nib'
+    if not source.exists():
+        return {}
+    root = ET.parse(source).getroot()
+    if root.tag == 'archive':
+        return {}
+    out = {}
+    for e in root.iter():
+        if not e.get('id') or e.get('hidden') == 'YES':
+            continue
+        for a in ATTRIBUTES:
+            if e.get(a):
+                out[(e.get('id'), a)] = e.get(a)
+        for s in e.findall('string'):
+            if s.get('key') in ATTRIBUTES and s.text:
+                out[(e.get('id'), s.get('key'))] = s.text
+    return out
+
+
 def interface_texts(nib_dir):
     """A localized nib is checked from its source when it has one, otherwise from the compiled nib."""
     source = nib_dir / 'designable.nib'
@@ -103,10 +147,22 @@ def main():
     allow, shared = contract['languages'], set(contract['all_languages'])
     problems = []
     base_nibs = {n: interface_texts(INTERFACES / f'Base.lproj/{n}.nib') for n in NIBS}
+    elements = {(lang, n): element_texts(INTERFACES / f'{lang}.lproj/{n}.nib') for lang in ['Base'] + LANGUAGES for n in NIBS}
+    shared_with, pending = contract.get('shared', {}), contract.get('pending', {})
+    tables = {}
+    for lang in LANGUAGES:
+        tables[lang] = {}
+        for table in ('Localizable', 'ToolbarItems'):
+            path = INTERFACES / f'{lang}.lproj/{table}.strings'
+            if path.exists():
+                tables[lang].update({(table, k): v for k, v in strings(path).items() if isinstance(v, str)})
+    notes = []
     for lang in LANGUAGES:
         allowed = allow.get(lang, {})
         def report(file, text, why):
-            if text not in shared and text not in allowed.get(file, []):
+            if text in pending.get(lang, {}).get(file, []):
+                notes.append(f'{lang} {file}: {why} {text!r} (pending)')
+            elif text not in shared and text not in allowed.get(file, []):
                 problems.append(f'{lang} {file}: {why} {text!r}')
         for table in TABLES:
             english_path = INTERFACES / f'en.lproj/{table}.strings'
@@ -131,13 +187,38 @@ def main():
             path = INTERFACES / f'{lang}.lproj/{nib}.nib'
             if not path.exists():
                 continue  # this language uses the Base interface
+            own_values = set(tables[lang].values())
             for text in sorted(interface_texts(path)):
-                if not WORD.search(text):
+                if text != text.lstrip():
+                    report(f'{nib}.nib', text, 'starts with a space:')
+                if WORD.search(text) and text not in base_nibs[nib] and text not in own_values and text not in shared_with.get(lang, []):
+                    for other in LANGUAGES:
+                        if other == lang or FAMILY.get(other, other) == FAMILY.get(lang, lang):
+                            continue
+                        keys = [k for k, v in tables[other].items() if v == text and tables[lang].get(k, text) != text]
+                        if keys:
+                            report(f'{nib}.nib', text, f'{other} for {keys[0][1]!r} ({lang} says {tables[lang][keys[0]]!r}):')
+                            break
+                if lang == 'ko' and (KANA.search(text) or HAN.search(text)) or lang == 'zh_CN' and (KANA.search(text) or HANGUL.search(text)) or lang == 'ja' and HANGUL.search(text):
+                    report(f'{nib}.nib', text, 'text of another language')
+                if not WORD.search(text) and not (SHORT.fullmatch(text.strip()) and text in base_nibs[nib]):
                     continue
                 if text in base_nibs[nib]:
                     report(f'{nib}.nib', text, 'English')
                 elif lang in ('ja', 'ko', 'zh_CN') and not CJK.search(text):
                     report(f'{nib}.nib', text, 'no CJK text')
+                elif lang not in ('ja', 'ko', 'zh_CN') and len(ENGLISH.findall(text)) >= 2:
+                    report(f'{nib}.nib', text, 'English phrase')
+            base_elements, own = elements[('Base', nib)], elements[(lang, nib)]
+            for key, text in sorted(own.items()):
+                if not WORD.search(text) or base_elements.get(key) in (None, text) or text in base_nibs[nib]:
+                    continue
+                others = sorted(other for other in LANGUAGES if other != lang and FAMILY.get(other, other) != FAMILY.get(lang, lang)
+                                and elements[(other, nib)].get(key) == text)
+                if others and text not in shared_with.get(lang, []):
+                    report(f'{nib}.nib', text, f'same as {"/".join(others)} where Base says {base_elements[key]!r}:')
+    for note in notes:
+        print('NOTE', note)
     if problems:
         print('\n'.join(problems))
         print(f'FAIL: {len(problems)} untranslated texts')

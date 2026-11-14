@@ -1,5 +1,5 @@
 {
- "policy": "Text that may equal the English text. all_languages: program, format, LaTeX command and environment names, math operators, and placeholders that are replaced at run time or never shown (prototype cells, window titles replaced by document names, sheet titles). languages: words that are the same in that language, per file, each reviewed for this localization. Never add a wording because a check failed; translate it.",
+ "policy": "Text that may equal the English text. all_languages: program, format, LaTeX command and environment names, math operators, and placeholders that are replaced at run time or never shown (prototype cells, window titles replaced by document names, sheet titles). languages: words that are the same in that language, per file, each reviewed for this localization. Never add a wording because a check failed; translate it. shared: per language, words that an element also has in another language (outside Spanish and the two Portuguese) because they are the same in both. pending: per language and file, untranslated texts of nibs that another change is translating; reported as notes until that change lands, then removed.",
  "all_languages": [
   "-- DO NOT LOCALIZE THIS! --",
   "Align",
@@ -29,6 +29,8 @@
   "Katakana → Hiragana",
   "LaTeX",
   "LaTeX ",
+  "lg",
+  "ln",
   "Löschen",
   "MainMenu",
   "MakeIndex",
@@ -58,7 +60,9 @@
   "Shift",
   "Stex",
   "Switch",
+  "Sy",
   "SyncTeX",
+  "TeXshop",
   "TIFF (LZW)",
   "TIFF (PackBits)",
   "Tabbing",
@@ -72,6 +76,7 @@
   "ToolbarItems",
   "Try This",
   "Try This Output",
+  "TT",
   "URL",
   "URL:",
   "Unicode (UTF-16)",
@@ -125,6 +130,7 @@
     "Test"
    ],
    "MainMenu.nib": [
+    "OK",
     "TeXShop Demos"
    ],
    "Movie.nib": [
@@ -132,6 +138,7 @@
    ],
    "TSDocument.nib": [
     "Labels",
+    "OK",
     "Text"
    ],
    "ToolbarItems.strings": [
@@ -182,6 +189,7 @@
     "Description",
     "Ligatures",
     "Macros",
+    "OK",
     "Services",
     "Source",
     "Substitutions",
@@ -192,6 +200,7 @@
     "Console",
     "Labels",
     "Macros",
+    "OK",
     "Page",
     "Section"
    ],
@@ -218,13 +227,15 @@
    ],
    "MainMenu.nib": [
     "File",
-    "Font"
+    "Font",
+    "OK"
    ],
    "Movie.nib": [
     "Demo"
    ],
    "TSDocument.nib": [
     "Console",
+    "OK",
     "Popup"
    ],
    "completionpanel1.2.nib": [
@@ -256,6 +267,7 @@
     "Direct PDF",
     "Experiment...",
     "Help",
+    "OK",
     "Open ~/Library/TeXShop",
     "Open...",
     "Subscript",
@@ -268,6 +280,7 @@
    "TSDocument.nib": [
     "Console",
     "Labels",
+    "OK",
     "Project"
    ],
    "ToolbarItems.strings": [
@@ -293,6 +306,7 @@
    ],
    "MainMenu.nib": [
     "Macros",
+    "OK",
     "Via DVI"
    ],
    "Movie.nib": [
@@ -300,7 +314,8 @@
    ],
    "TSDocument.nib": [
     "Console",
-    "Macros"
+    "Macros",
+    "OK"
    ],
    "ToolbarItems.strings": [
     "Macros"
@@ -320,13 +335,15 @@
    ],
    "MainMenu.nib": [
     "Macros",
+    "OK",
     "Via DVI"
    ],
    "Movie.nib": [
     "Demo"
    ],
    "TSDocument.nib": [
-    "Macros"
+    "Macros",
+    "OK"
    ],
    "ToolbarItems.strings": [
     "Macros"
@@ -343,9 +360,11 @@
    ],
    "MainMenu.nib": [
     "Experiment...",
-    "Font"
+    "Font",
+    "OK"
    ],
    "TSDocument.nib": [
+    "OK",
     "Text"
    ],
    "ToolbarItems.strings": [
@@ -360,6 +379,82 @@
   "zh_CN": {
    "completionpanel1.2.nib": [
     "log"
+   ]
+  },
+  "ja": {
+   "MainMenu.nib": [
+    "OK"
+   ],
+   "TSDocument.nib": [
+    "OK"
+   ]
+  }
+ },
+ "shared": {
+  "fr": [
+   "PDF direct"
+  ],
+  "it": [
+   "Formato:",
+   "Macro",
+   "Pag.",
+   "Pagina"
+  ],
+  "nl": [
+   "Extensie:"
+  ],
+  "pt-PT": [
+   "Formato:",
+   "Principal:"
+  ],
+  "ro": [
+   "Extensie:",
+   "Macro",
+   "Pag.",
+   "PDF direct",
+   "Principal:"
+  ]
+ },
+ "pending": {
+  "fr": {
+   "MacroEditor.nib": [
+    "Macro Editor"
+   ],
+   "matrixpanel.nib": [
+    " Incorporer dans un environnement \"table\"",
+    "Matrix Panel"
+   ]
+  },
+  "it": {
+   "matrixpanel.nib": [
+    "Matrix Panel"
+   ]
+  },
+  "nl": {
+   "MacroEditor.nib": [
+    "Macro Editor"
+   ],
+   "matrixpanel.nib": [
+    "Matrix Panel"
+   ]
+  },
+  "pt-PT": {
+   "MacroEditor.nib": [
+    "Macro Editor"
+   ],
+   "matrixpanel.nib": [
+    "Matrix Panel"
+   ]
+  },
+  "ro": {
+   "MacroEditor.nib": [
+    "Macro Editor"
+   ],
+   "completionpanel1.2.nib": [
+    "LaTeX Panel"
+   ],
+   "matrixpanel.nib": [
+    "Matrix Panel"
    ]
   }
  }
