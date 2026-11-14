@@ -212,7 +212,6 @@
 "catalog.preview.0.1.title" = "După redimensionarea ferestrei";
 "catalog.preview.0.2.title" = "Mărire";
 "catalog.preview.0.2.unit" = "%";
-"catalog.preview.0.2.button" = "Stabilește";
 "catalog.preview.0.3.title" = "Mod maus implicit";
 "catalog.preview.0.4.title" = "Nu schimba pagina la derulare";
 "catalog.preview.0.4.note" = "La „Pagină Simplă” și „Pagină Dublă”, derularea cu rotița mouse-ului sau cu trackpadul se oprește la marginea de sus și de jos a paginii.";

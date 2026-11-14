@@ -212,7 +212,6 @@
 "catalog.preview.0.1.title" = "ウインドウのリサイズ後";
 "catalog.preview.0.2.title" = "倍率";
 "catalog.preview.0.2.unit" = "%";
-"catalog.preview.0.2.button" = "設定";
 "catalog.preview.0.3.title" = "マウスモード";
 "catalog.preview.0.4.title" = "スクロールでページを送らない";
 "catalog.preview.0.4.note" = "「単一ページ」「見開きページ」で、マウスのホイールやトラックパッドでのスクロールが、ページの上端・下端で止まります。";

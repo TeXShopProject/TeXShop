@@ -312,7 +312,6 @@
 - (IBAction)currentPdfWindowPosDefault:sender;
 - (IBAction)htmlWindowPosChanged:sender;
 - (IBAction)currentHtmlWindowPosDefault:sender;
-- (IBAction)magChanged:sender;
 - (IBAction)firstDoublePageChanged:sender;
 - (IBAction)displayAsBookChanged:(NSButton *)sender;
 - (IBAction)linkPopupsChanged:(NSButton *)sender;

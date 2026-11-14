@@ -18,6 +18,9 @@ def declared_methods():
     names.add("setDefaults:")
     # The engine field of the earlier window. Settings chooses the engine file from a menu.
     names.add("setEngine:")
+    # The Set button next to the magnification field of the earlier window. Settings saves
+    # the field when its editing ends.
+    names.add("magChanged:")
     for path in [root / 'Sources/Settings/TSPreferences.h', *sorted(root.glob('Sources/TSPreferences*.m'))]:
         text = re.sub(r'/\*.*?\*/', '', path.read_text(errors='replace'), flags=re.S)
         text = re.sub(r'//.*', '', text)

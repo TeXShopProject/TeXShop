@@ -212,7 +212,6 @@
 "catalog.preview.0.1.title" = "Después de redimensionar la ventana";
 "catalog.preview.0.2.title" = "Aumento";
 "catalog.preview.0.2.unit" = "%";
-"catalog.preview.0.2.button" = "Establecer";
 "catalog.preview.0.3.title" = "Modo de ratón";
 "catalog.preview.0.4.title" = "No pasar de página al desplazar";
 "catalog.preview.0.4.note" = "Con «Página simple» y «Página doble», el desplazamiento con la rueda del ratón o el trackpad se detiene en los bordes superior e inferior de la página.";

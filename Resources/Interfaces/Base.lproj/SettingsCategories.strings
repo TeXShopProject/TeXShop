@@ -212,7 +212,6 @@
 "catalog.preview.0.1.title" = "After resizing the window";
 "catalog.preview.0.2.title" = "Magnification";
 "catalog.preview.0.2.unit" = "%";
-"catalog.preview.0.2.button" = "Set";
 "catalog.preview.0.3.title" = "Default Mouse Mode";
 "catalog.preview.0.4.title" = "Do not turn pages by scrolling";
 "catalog.preview.0.4.note" = "With Single Page and Two Page, scrolling with the mouse wheel or the trackpad stops at the top and bottom of the page.";
