@@ -580,6 +580,32 @@ static void CheckFieldsInTheme(TSAdvancedFindPanelController *panel, NSDictionar
     Check(!find.bracketScanner && ForegroundAt(find, At(find, @"a")) == nil, [NSString stringWithFormat:@"%@: TeX text keeps the text color", label]);
 }
 
+static CGGlyph Glyph(NSFont *font, unichar character)
+{
+    CGGlyph glyph = 0;
+    CTFontGetGlyphsForCharacters((__bridge CTFontRef)font, &character, &glyph, 1);
+    return glyph;
+}
+
+/// Whether the middle of the glyph's ink is inked.
+static BOOL MiddleInked(NSFont *font, unichar character)
+{
+    CGGlyph glyph = Glyph(font, character);
+    NSRect ink = [font boundingRectForCGGlyph:glyph];
+    NSBezierPath *path = [NSBezierPath bezierPath];
+    [path moveToPoint:NSZeroPoint];
+    [path appendBezierPathWithCGGlyph:glyph inFont:font];
+    return [path containsPoint:NSMakePoint(NSMidX(ink), NSMidY(ink))];
+}
+
+/// | is a thin bar while l has a foot or a hook (its ink is at least three times as wide), and 0 is slashed or dotted
+/// (its middle is inked) while O is not.
+static BOOL GlyphsTellApart(NSFont *font)
+{
+    CGFloat bar = NSWidth([font boundingRectForCGGlyph:Glyph(font, '|')]), ell = NSWidth([font boundingRectForCGGlyph:Glyph(font, 'l')]);
+    return ell >= 3 * bar && MiddleInked(font, '0') && !MiddleInked(font, 'O');
+}
+
 static void TestThemedFields(void)
 {
     TSAdvancedFindController *controller = MakeController();
@@ -641,19 +667,26 @@ static void TestThemedFields(void)
     [TSAdvancedFindFieldStyle styleDidChange];
     Check(SameColor(ForegroundAt(find, 0), ThemeColor(LightTheme, @"SyntaxCommand")), @"coloring on again colors at once");
 
-    // The source font, kept between 11 and 16 points; without one, a monospaced font.
+    // The system's monospaced font at the size of the source font, kept between 11 and 16 points, whatever the source
+    // font is: | and l, 0 and O look different, as they do not in Helvetica, the factory source font.
     struct { CGFloat size; CGFloat shown; } sizes[] = {{13, 13}, {24, 16}, {8, 11}, {16, 16}, {11, 11}};
-    for (size_t i = 0; i < sizeof sizes / sizeof sizes[0]; i++) {
-        SourceFont = [NSFont fontWithName:@"Menlo-Regular" size:sizes[i].size];
-        [TSAdvancedFindFieldStyle styleDidChange];
-        for (NSTextView *field in @[panel.findField, panel.replaceField])
-            Check([field.font.fontName isEqualToString:@"Menlo-Regular"] && field.font.pointSize == sizes[i].shown
-                  && [field.typingAttributes[NSFontAttributeName] isEqual:field.font],
-                  [NSString stringWithFormat:@"a source font of %.0f points is %.0f in the field (%@ %.1f)", sizes[i].size, sizes[i].shown, field.font.fontName, field.font.pointSize]);
+    NSString *monospaced = [NSFont monospacedSystemFontOfSize:12 weight:NSFontWeightRegular].fontName;
+    for (NSString *source in @[@"Helvetica", @"Menlo-Regular", @"HiraginoSans-W3"]) {
+        for (size_t i = 0; i < sizeof sizes / sizeof sizes[0]; i++) {
+            SourceFont = [NSFont fontWithName:source size:sizes[i].size] ?: [NSFont userFontOfSize:sizes[i].size];
+            [TSAdvancedFindFieldStyle styleDidChange];
+            for (NSTextView *field in @[panel.findField, panel.replaceField])
+                Check([field.font.fontName isEqualToString:monospaced] && field.font.pointSize == sizes[i].shown
+                      && [field.typingAttributes[NSFontAttributeName] isEqual:field.font],
+                      [NSString stringWithFormat:@"a %@ source font of %.0f points gives the monospaced font of %.0f points (%@ %.1f)", source, sizes[i].size,
+                       sizes[i].shown, field.font.fontName, field.font.pointSize]);
+        }
     }
+    Check(GlyphsTellApart(find.font) && !GlyphsTellApart([NSFont fontWithName:@"Helvetica" size:find.font.pointSize]),
+          [NSString stringWithFormat:@"| and l, 0 and O look different in the fields (%@), as they do not in Helvetica", find.font.fontName]);
     SourceFont = nil;
     [TSAdvancedFindFieldStyle styleDidChange];
-    Check(find.font.pointSize == NSFont.systemFontSize + 1 && (find.font.fontDescriptor.symbolicTraits & NSFontDescriptorTraitMonoSpace), @"without a source font, a monospaced one");
+    Check(find.font.pointSize == NSFont.systemFontSize + 1 && [find.font.fontName isEqualToString:monospaced], @"without a source font, the monospaced font of 14 points");
 
     // Without the application's provider (as in the other tests), the fields are those of a text field.
     TSAdvancedFindFieldStyle *(^provider)(BOOL) = TSAdvancedFindFieldStyle.provider;
@@ -688,6 +721,12 @@ static void TestThemedRules(void)
               [NSString stringWithFormat:@"%@: a plain rule read as TeX in the theme's colors", label]);
     };
     check(LightTheme, @"rules, light");
+    // The find and replacement cells are monospaced too.
+    for (NSString *column in @[@"find", @"replace"]) {
+        NSFont *font = [CellText(window, tex, column) attribute:NSFontAttributeName atIndex:0 effectiveRange:NULL];
+        Check([font.fontName isEqualToString:[NSFont monospacedSystemFontOfSize:12 weight:NSFontWeightRegular].fontName] && GlyphsTellApart(font),
+              [NSString stringWithFormat:@"the %@ cells of the rules are monospaced (%@)", column, font.fontName]);
+    }
     // The cells shown in the table are made again when the appearance or the theme changes.
     NSTableView *table = window.ruleTable.tableView;
     [window.window.contentView layoutSubtreeIfNeeded];
@@ -803,7 +842,8 @@ static void WriteImages(NSString *directory, NSString *language)
 {
     [NSFileManager.defaultManager createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:NULL];
     NSDictionary *light = LightTheme, *dark = DarkTheme;
-    // The source font of the factory settings (TSAppDelegate.m: the user font of 12 points).
+    // The source font of the factory settings (TSAppDelegate.m: the user font of 12 points, Helvetica): the fields show
+    // the monospaced font at its size.
     SourceFont = [NSFont userFontOfSize:12];
     NSArray<NSArray<NSString *> *> *pairs = @[@[@"SolarizedLite", @"SolarizedDark"], @[@"LiteTheme", @"DarkTheme"], @[@"GLG-Lite", @"Dracula"]];
     for (NSArray<NSString *> *pair in pairs) {
