@@ -6,9 +6,9 @@
 "190.title" = "Persönliches Skript";
 "191.title" = "PDF direkt";
 "314.title" = "Beim Sichern";
-"588.title" = "TeX";
+"588.title" = "plain TeX";
 "589.title" = "LaTeX";
-"590.title" = "Folgender Befehl:";
+"590.title" = "Engine-Datei";
 "675.title" = "Nach dem Setzen";
 "679.title" = "Vorschau anzeigen";
 "680.title" = "Weiter bearbeiten";

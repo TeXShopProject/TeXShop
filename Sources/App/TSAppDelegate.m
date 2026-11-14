@@ -38,6 +38,7 @@
 #import "MyPDFView.h"
 #import "TSLaTeXPanelController.h"
 #import "TSMacroMenuController.h"
+#import "TSPreferenceProfile.h"
 #import "TSMatrixPanelController.h"
 #import "TSPreferences+LiveSettings.h"
 #import "TSEnginePathDiscovery.h"
@@ -871,6 +872,7 @@
         [SUD setInteger: 2 forKey: DefaultCommandKey];
         [SUD synchronize];
     }
+    TSKeepEarlierFactoryEngineFile(SUD, [SUD persistentDomainForName:NSBundle.mainBundle.bundleIdentifier ?: @"TeXShop"] ?: @{});
   
 	    
 	[self testForIntel];

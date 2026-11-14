@@ -6,9 +6,9 @@
 "190.title" = "Personal Script";
 "191.title" = "Direct PDF";
 "314.title" = "During File Save";
-"588.title" = "TeX";
+"588.title" = "plain TeX";
 "589.title" = "LaTeX";
-"590.title" = "Command Listed Below";
+"590.title" = "Engine File";
 "675.title" = "After Typesetting";
 "679.title" = "Bring Preview Forward";
 "680.title" = "Continue Editing";

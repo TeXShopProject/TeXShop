@@ -16,6 +16,8 @@ def declared_methods():
     # The settings profile menu of the earlier window. The product builds no Preferences.nib
     # (run-live-settings-nibs.py); engine profiles are applied in Settings > Typesetting.
     names.add("setDefaults:")
+    # The engine field of the earlier window. Settings chooses the engine file from a menu.
+    names.add("setEngine:")
     for path in [root / 'Sources/Settings/TSPreferences.h', *sorted(root.glob('Sources/TSPreferences*.m'))]:
         text = re.sub(r'/\*.*?\*/', '', path.read_text(errors='replace'), flags=re.S)
         text = re.sub(r'//.*', '', text)
@@ -98,6 +100,7 @@ for p in [x for x in (root/'Resources/Interfaces/Base.lproj').glob('Settings*.xi
   new[original]=p.name
 missing=set(old)-set(new)
 # _scrollButton ("Do not scroll" with page buttons), _distillerMatrix and _antialiasButton were removed.
-assert missing <= {'_prefsWindow','_tabView','_samplePanel','_fontTextView','_scrollButton','_distillerMatrix','_antialiasButton'},missing
-assert len(new)==170
+# _engineTextField gave way to the Engine File menu built in code.
+assert missing <= {'_prefsWindow','_tabView','_samplePanel','_fontTextView','_scrollButton','_distillerMatrix','_antialiasButton','_engineTextField'},missing
+assert len(new)==169
 print('PASS: 170 used outlets each migrate exactly once into shared panes')
