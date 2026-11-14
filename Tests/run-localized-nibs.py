@@ -69,10 +69,13 @@ with tempfile.TemporaryDirectory(prefix='texshop-localized-nibs-') as tmp:
                 ours = facts(path); theirs = base.get(name) or base['keyedobjects.nib']
                 checked += 1
                 for change, items in (('missing', theirs - ours), ('extra', ours - theirs)):
-                    for fact in items:
+                    for fact, count in items.items():
                         entry = next((e for e in allowed if e['nib'] == kind and e['change'] == change and e['fact'] == fact and code in e['languages']), None)
                         if entry is None:
                             problems.append('%s %s/%s: %s %s' % (kind, lang.name, name, change, fact))
+                        elif count != entry.get('count', 1):
+                            # A listed difference occurs exactly as often as listed in every compiled variant.
+                            problems.append('%s %s/%s: %s %d times instead of %d: %s' % (kind, lang.name, name, change, count, entry.get('count', 1), fact))
                         else:
                             seen.add((kind, change, fact, code))
     for e in allowed:

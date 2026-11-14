@@ -6,7 +6,8 @@
   "languages": [
    "nl"
   ],
-  "reason": "open: the Dutch legacy Find panel (compiled only, no source) has no status field"
+  "reason": "open: the Dutch legacy Find panel (compiled only, no source) has no status field",
+  "count": 2
  },
  {
   "nib": "FindPanel",
@@ -949,7 +950,8 @@
    "ro",
    "zh_CN"
   ],
-  "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them"
+  "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them",
+  "count": 2
  },
  {
   "nib": "TSDocument",
@@ -1044,7 +1046,8 @@
    "ro",
    "zh_CN"
   ],
-  "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them"
+  "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them",
+  "count": 3
  },
  {
   "nib": "TSDocument",
