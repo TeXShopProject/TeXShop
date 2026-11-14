@@ -135,8 +135,6 @@
 "MultipleReplace.AddRule" = "규칙 추가";
 "MultipleReplace.AddSet" = "새로운 세트";
 "MultipleReplace.BadName" = "‘%@’은(는) 세트 이름으로 사용할 수 없습니다.";
-"MultipleReplace.Column.Count" = "개수";
-"MultipleReplace.Column.CountTip" = "마지막 실행에서 대치한 일치 항목 수";
 "MultipleReplace.Column.EnabledTip" = "이 규칙 사용";
 "MultipleReplace.Column.Find" = "찾기";
 "MultipleReplace.Column.Note" = "설명";

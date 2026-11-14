@@ -135,8 +135,6 @@
 "MultipleReplace.AddRule" = "Ajouter une règle";
 "MultipleReplace.AddSet" = "Nouveau jeu";
 "MultipleReplace.BadName" = "« %@ » ne peut pas être le nom d’un jeu.";
-"MultipleReplace.Column.Count" = "Nb";
-"MultipleReplace.Column.CountTip" = "Occurrences remplacées lors de la dernière exécution";
 "MultipleReplace.Column.EnabledTip" = "Utiliser cette règle";
 "MultipleReplace.Column.Find" = "Recherche";
 "MultipleReplace.Column.Note" = "Description";

@@ -10,7 +10,6 @@ static NSString *const TSColumnReplace = @"replace";
 static NSString *const TSColumnRegex = @"regex";
 static NSString *const TSColumnCase = @"case";
 static NSString *const TSColumnNote = @"note";
-static NSString *const TSColumnCount = @"count";
 
 NSDictionary<NSNumber *, NSError *> *TSMultipleReplaceProblems(TSRegexMultipleReplace *set)
 {
@@ -61,8 +60,7 @@ static TSRegexReplacementRule *TSRuleWith(TSRegexReplacementRule *rule, NSString
         // Short headers, as in CotEditor; the header's tooltip names the option.
         [self addColumn:TSColumnRegex title:@"RE" width:32 tip:@"AdvancedFind.RegularExpression" english:@"Regular expression"];
         [self addColumn:TSColumnCase title:@"IC" width:32 tip:@"AdvancedFind.IgnoreCase" english:@"Ignore case"];
-        [self addColumn:TSColumnCount title:TSAdvancedFindLocalized(@"MultipleReplace.Column.Count", @"Count") width:44 tip:@"MultipleReplace.Column.CountTip" english:@"Matches replaced by the last run"];
-        [self addColumn:TSColumnNote title:TSAdvancedFindLocalized(@"MultipleReplace.Column.Note", @"Description") width:120 tip:nil english:nil];
+        [self addColumn:TSColumnNote title:TSAdvancedFindLocalized(@"MultipleReplace.Column.Note", @"Description") width:160 tip:nil english:nil];
         _tableView.dataSource = self;
         _tableView.delegate = self;
         [_tableView registerForDraggedTypes:@[TSRuleRowType]];
@@ -92,16 +90,8 @@ static TSRegexReplacementRule *TSRuleWith(TSRegexReplacementRule *rule, NSString
 - (void)setSet:(nullable TSRegexMultipleReplace *)set
 {
     _set = set;
-    _counts = nil;
     self.problems = set ? TSMultipleReplaceProblems((TSRegexMultipleReplace *_Nonnull)set) : @{};
     [self.tableView reloadData];
-}
-
-- (void)setCounts:(nullable NSArray<NSNumber *> *)counts
-{
-    _counts = [counts copy];
-    [self.tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, (NSUInteger)self.tableView.numberOfRows)]
-                              columnIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)[self.tableView columnWithIdentifier:TSColumnCount]]];
 }
 
 - (void)changeRules:(NSArray<TSRegexReplacementRule *> *)rules
@@ -237,7 +227,7 @@ static TSRegexReplacementRule *TSRuleWith(TSRegexReplacementRule *rule, NSString
         NSTextField *field = [self fieldIdentifier:identifier];
         field.attributedStringValue = [self styledString:rule.findString ofRule:rule field:TSMultipleReplaceRuleFieldFind options:options attributes:plain];
         field.placeholderString = TSAdvancedFindLocalized(@"MultipleReplace.Column.Find", @"Find");
-        return [TSMultipleReplaceRuleTable cellWithControl:field];
+        return [self findCellWithField:field problem:self.problems[@(row)]];
     }
     if ([identifier isEqualToString:TSColumnReplace]) {
         NSTextField *field = [self fieldIdentifier:identifier];
@@ -251,20 +241,34 @@ static TSRegexReplacementRule *TSRuleWith(TSRegexReplacementRule *rule, NSString
         field.textColor = NSColor.secondaryLabelColor;
         return [TSMultipleReplaceRuleTable cellWithControl:field];
     }
-    // The count of the last run, or a mark for a rule that cannot be used.
-    NSTextField *label = [NSTextField labelWithString:@""];
-    label.alignment = NSTextAlignmentRight;
-    label.font = [NSFont monospacedDigitSystemFontOfSize:NSFont.smallSystemFontSize weight:NSFontWeightRegular];
-    NSError *problem = self.problems[@(row)];
-    if (problem) {
-        label.stringValue = @"⚠︎";
-        label.textColor = NSColor.systemRedColor;
-        label.toolTip = problem.localizedDescription;
-    } else if (self.counts && (NSUInteger)row < self.counts.count && rule.enabled) {
-        label.stringValue = self.counts[(NSUInteger)row].stringValue ?: @"";
-        label.textColor = self.counts[(NSUInteger)row].unsignedIntegerValue > 0 ? NSColor.labelColor : NSColor.tertiaryLabelColor;
-    }
-    return [TSMultipleReplaceRuleTable cellWithControl:label];
+    return nil;
+}
+
+/// The find cell; a rule that cannot be used has ⚠︎ at its right end, with the reason as the tooltip (of the
+/// field too).
+- (NSTableCellView *)findCellWithField:(NSTextField *)field problem:(nullable NSError *)problem
+{
+    NSTableCellView *cell = [TSMultipleReplaceRuleTable cellWithControl:field];
+    if (!problem)
+        return cell;
+    NSTextField *mark = [NSTextField labelWithString:@"⚠︎"];
+    mark.identifier = @"problem";
+    mark.textColor = NSColor.systemRedColor;
+    mark.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
+    mark.toolTip = problem.localizedDescription;
+    field.toolTip = problem.localizedDescription;
+    mark.translatesAutoresizingMaskIntoConstraints = NO;
+    [mark setContentCompressionResistancePriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [cell addSubview:mark];
+    for (NSLayoutConstraint *constraint in cell.constraints)
+        if (constraint.firstItem == field && constraint.firstAttribute == NSLayoutAttributeTrailing)
+            constraint.active = NO;
+    [NSLayoutConstraint activateConstraints:@[
+        [mark.centerYAnchor constraintEqualToAnchor:cell.centerYAnchor],
+        [mark.trailingAnchor constraintEqualToAnchor:cell.trailingAnchor constant:-2],
+        [field.trailingAnchor constraintEqualToAnchor:mark.leadingAnchor constant:-2],
+    ]];
+    return cell;
 }
 
 - (void)checkBoxChanged:(NSButton *)box

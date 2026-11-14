@@ -206,10 +206,10 @@ static void TestHeaders(void)
     Check([ignoreCase.title isEqualToString:@"IC"] && [ignoreCase.headerToolTip isEqualToString:TSAdvancedFindLocalized(@"AdvancedFind.IgnoreCase", @"Ignore case")],
           @"the ignore case column is IC, with its name as the tooltip");
     NSArray<NSString *> *order = [table.tableColumns valueForKey:@"identifier"];
-    Check([order isEqualToArray:@[@"enabled", @"find", @"replace", @"regex", @"case", @"count", @"note"]]
+    Check([order isEqualToArray:@[@"enabled", @"find", @"replace", @"regex", @"case", @"note"]]
           && [[table tableColumnWithIdentifier:@"note"].title isEqualToString:TSAdvancedFindLocalized(@"MultipleReplace.Column.Note", @"Description")]
           && [table tableColumnWithIdentifier:@"enabled"].title.length == 0,
-          @"the columns: on (no header), find, replace, RE, IC, count, description");
+          @"the columns: on (no header), find, replace, RE, IC, description (as CotEditor's; no column of results)");
 }
 
 /// A click on a segment of a momentary control, which keeps no selection outside a real click.
@@ -258,17 +258,18 @@ static void TestRuleTable(void)
     Check(changed.rules.count == 4 && changed.rules[1].findString.length == 0, @"a new rule goes after the selection");
     [table replaceRuleAtIndex:0 withRule:Rule(@"a", @"1", YES, NO)];
     Check(changed.rules[0].usesRegularExpression && !changed.rules[0].enabled, @"editing a rule keeps the rest");
-    table.counts = @[@2, @0, @1, @0];
     TSRegexMultipleReplace *before = changed;
-    table.set = before;
-    Check(table.counts == nil, @"a changed set clears the counts of the last run");
-    // Before anything is applied, a rule that cannot be used shows ⚠︎ with the reason in the count column.
+    // Before anything is applied, a rule that cannot be used shows ⚠︎ at the end of its find cell, with the reason.
     table.set = Set(@[Rule(@"ok", @"", NO, YES), Rule(@"(", @"", YES, YES), Rule(@"", @"x", NO, YES), Rule(@"(", @"", YES, NO)]);
-    NSTableColumn *countColumn = [table.tableView tableColumnWithIdentifier:@"count"];
+    NSTableColumn *problemColumn = [table.tableView tableColumnWithIdentifier:@"find"];
     NSMutableArray<NSString *> *marks = [NSMutableArray array];
     for (NSInteger row = 0; row < 4; row++) {
-        NSTextField *cell = CellField([table tableView:table.tableView viewForTableColumn:countColumn row:row]);
-        [marks addObject:[cell.stringValue isEqualToString:@"⚠︎"] && cell.toolTip.length > 0 ? @"!" : @"-"];
+        NSView *cell = [table tableView:table.tableView viewForTableColumn:problemColumn row:row];
+        NSTextField *mark = nil;
+        for (NSView *v in cell.subviews)
+            if ([v.identifier isEqualToString:@"problem"])
+                mark = (NSTextField *)v;
+        [marks addObject:[mark.stringValue isEqualToString:@"⚠︎"] && mark.toolTip.length > 0 && [CellField(cell).toolTip isEqualToString:mark.toolTip] ? @"!" : @"-"];
     }
     Check([marks isEqualToArray:@[@"-", @"!", @"!", @"-"]], [@"⚠︎ on the invalid and the empty rule only: " stringByAppendingString:[marks componentsJoinedByString:@""]]);
     table.set = before;
@@ -322,7 +323,6 @@ static void TestWindow(NSURL *directory)
     view.undoManager.groupsByEvent = NO;
     [view.undoManager beginUndoGrouping]; // one group for the window's runs; they are not undone here
     Check([window replaceAllInTextView:view] && TSTestWaitForTask(controller, 60) && [view.string isEqualToString:@"dog dog"], @"replace all runs the shown set");
-    Check([window.ruleTable.counts isEqualToArray:@[@2, @0]], @"the table shows the counts");
     Check([window.statusField.stringValue containsString:@"2"], @"the status reports the result");
     [window selectSetNamed:@"B"];
     [window highlightInTextView:view];
@@ -619,16 +619,26 @@ static int CheckCellsCentered(NSTableView *table, NSString *name)
         for (NSInteger column = 0; column < table.numberOfColumns; column++) {
             NSView *cell = [table viewAtColumn:column row:row makeIfNecessary:YES];
             [cell layoutSubtreeIfNeeded];
-            NSView *control = [cell isKindOfClass:[NSTableCellView class]] ? cell.subviews.firstObject : cell;
-            if (!control)
-                continue;
-            // Its own height, centered: a control stretched over the row draws its text at the top.
-            NSRect frame = [control convertRect:control.bounds toView:table];
-            CGFloat natural = control.intrinsicContentSize.height;
-            if (fabs(NSMidY(frame) - NSMidY(rowRect)) > 1 || NSMinY(frame) < NSMinY(rowRect) - 0.5 || NSMaxY(frame) > NSMaxY(rowRect) + 0.5
-                || (natural > 0 && NSHeight(frame) > natural + 1)) {
-                printf("FAIL %s: row %ld column %s is not centered (%.1f, row %.1f)\n", name.UTF8String, (long)row,
-                       table.tableColumns[(NSUInteger)column].identifier.UTF8String, NSMidY(frame), NSMidY(rowRect));
+            // Every part of the cell (the ⚠︎ of a find cell too)
+            for (NSView *control in [cell isKindOfClass:[NSTableCellView class]] ? cell.subviews : @[cell]) {
+                // Its own height, centered: a control stretched over the row draws its text at the top.
+                NSRect frame = [control convertRect:control.bounds toView:table];
+                CGFloat natural = control.intrinsicContentSize.height;
+                if (fabs(NSMidY(frame) - NSMidY(rowRect)) > 1 || NSMinY(frame) < NSMinY(rowRect) - 0.5 || NSMaxY(frame) > NSMaxY(rowRect) + 0.5
+                    || (natural > 0 && NSHeight(frame) > natural + 1)) {
+                    printf("FAIL %s: row %ld column %s is not centered (%.1f, row %.1f)\n", name.UTF8String, (long)row,
+                           table.tableColumns[(NSUInteger)column].identifier.UTF8String, NSMidY(frame), NSMidY(rowRect));
+                    count++;
+                }
+            }
+            // The ⚠︎ is inside the cell and does not cover the text field.
+            NSView *mark = nil, *field = cell.subviews.firstObject;
+            for (NSView *v in cell.subviews)
+                if ([v.identifier isEqualToString:@"problem"])
+                    mark = v;
+            NSRect markRect = [mark alignmentRectForFrame:mark.frame], fieldRect = [field alignmentRectForFrame:field.frame]; // as drawn
+            if (mark && (NSMaxX(markRect) > NSWidth(cell.bounds) + 0.5 || NSMaxX(fieldRect) > NSMinX(markRect) + 0.5)) {
+                printf("FAIL %s: row %ld the ⚠︎ is outside the cell or over the text (cell %s field %s mark %s)\n", name.UTF8String, (long)row, NSStringFromRect(cell.bounds).UTF8String, NSStringFromRect(field.frame).UTF8String, NSStringFromRect(mark.frame).UTF8String);
                 count++;
             }
         }
@@ -666,7 +676,6 @@ static void TestLayout(NSString *_Nullable imageDirectory)
     TSMultipleReplaceWindowController *window = [[TSMultipleReplaceWindowController alloc] initWithFindController:MakeController(NULL) library:library];
     [window selectSetNamed:@"Typography"];
     [window updateButtons];
-    window.ruleTable.counts = @[@3, @12, @0, @0];
     NSView *content = window.window.contentView;
     NSView *options = [window makeOptionsView];
     [content layoutSubtreeIfNeeded];

@@ -40,7 +40,7 @@ NS_SWIFT_NAME(MultipleReplaceWindowController)
 - (NSView *)makeOptionsView;
 
 /// Starts applying the shown set to the text view (the main window's when nil), as a background task; when it ends,
-/// shows the counts and the status. NO when it cannot start (no set or target, a read-only target, another task).
+/// shows the status. NO when it cannot start (no set or target, a read-only target, another task).
 - (BOOL)replaceAllInTextView:(nullable NSTextView *)textView;
 - (BOOL)highlightInTextView:(nullable NSTextView *)textView;
 
