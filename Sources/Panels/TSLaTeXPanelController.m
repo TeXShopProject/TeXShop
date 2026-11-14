@@ -404,6 +404,18 @@ static NSRect TSUnionOfSubviews(NSView *view)
 	// little apart so that two frames never touch.
 	NSMutableParagraphStyle *centered = [[NSMutableParagraphStyle alloc] init];
 	[centered setAlignment:NSTextAlignmentCenter];
+	// The words in the regular size of text, as in the segmented controls; each page of words as wide as its
+	// widest word needs.
+	NSArray<NSMatrix *> *words = @[functionsbuttonmatrix, environbuttonmatrix, typefacebuttonmatrix, custombuttonmatrix];
+	NSFont *wordFont = [NSFont systemFontOfSize:[NSFont systemFontSize]];
+	for (NSMatrix *matrix in words) {
+		CGFloat width = [matrix cellSize].width;
+		for (NSButtonCell *cell in [matrix cells]) {
+			[cell setFont:wordFont];
+			width = MAX(width, ceil([[cell title] sizeWithAttributes:@{NSFontAttributeName: wordFont}].width) + 16);
+		}
+		[matrix setCellSize:NSMakeSize(width, [matrix cellSize].height)];
+	}
 	for (NSMatrix *matrix in @[mathbuttonmatrix, symbolsbuttonmatrix, greekbuttonmatrix, intlbuttonmatrix,
 							   functionsbuttonmatrix, environbuttonmatrix, typefacebuttonmatrix, custombuttonmatrix]) {
 		for (NSButtonCell *cell in [matrix cells]) {
