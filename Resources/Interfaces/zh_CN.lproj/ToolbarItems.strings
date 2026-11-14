@@ -35,7 +35,7 @@
     tiLabelSyncMarks = "\U540c\U6b65\U6807\U8bb0";
     tiLabelSyncMarksKIT = "\U540c\U6b65\U6807\U8bb0";
     tiLabelTags = "\U6807\U7b7e";
-    tiLabelTeX = TeX;
+    tiLabelTeX = "plain TeX";
     tiLabelTemplates = "\U6a21\U677f";
     tiLabelTypeset = "\U6392\U7248";
     tiLabelTypesetEE = "\U6392\U7248";
@@ -76,7 +76,7 @@
     tiPaletteLabelSyncMarks = "\U540c\U6b65\U6807\U8bb0";
     tiPaletteLabelSyncMarksKIT = "\U540c\U6b65\U6807\U8bb0";
     tiPaletteLabelTags = "\U6807\U7b7e";
-    tiPaletteLabelTeX = TeX;
+    tiPaletteLabelTeX = "plain TeX";
     tiPaletteLabelTemplates = "\U6a21\U677f";
     tiPaletteLabelTypeset = "\U6392\U7248";
     tiPaletteLabelTypesetEE = "\U6392\U7248";
@@ -125,7 +125,7 @@
     tiToolTipSyncMarks = "\U663e\U793a\U540c\U6b65\U6807\U8bb0";
     tiToolTipSyncMarksKIT = "\U663e\U793a\U540c\U6b65\U6807\U8bb0";
     tiToolTipTags = "\U6eda\U52a8\U5230\U9009\U62e9\U7684\U6807\U7b7e";
-    tiToolTipTeX = "\U4f7f\U7528Plain TeX\U5de5\U5177\U5904\U7406\U6e90\U4ee3\U7801";
+    tiToolTipTeX = "\U4f7f\U7528plain TeX\U5de5\U5177\U5904\U7406\U6e90\U4ee3\U7801";
     tiToolTipTemplates = "\U5728\U5149\U6807\U4f4d\U7f6e\U63d2\U5165\U9009\U62e9\U7684\U6a21\U677f";
     tiToolTipTypeset = "\U8fd0\U884c\U6392\U7248\U7a0b\U5e8f";
     tiToolTipTypesetEE = "\U8fd0\U884c\U6392\U7248\U7a0b\U5e8f";

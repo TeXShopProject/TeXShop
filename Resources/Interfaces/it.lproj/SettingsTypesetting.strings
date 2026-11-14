@@ -6,9 +6,9 @@
 "190.title" = "Script personale";
 "191.title" = "PDF diretto";
 "314.title" = "Quando un file è salvato";
-"588.title" = "TeX";
+"588.title" = "plain TeX";
 "589.title" = "LaTeX";
-"590.title" = "Comando ad hoc";
+"590.title" = "File del motore";
 "675.title" = "Dopo la compilazione";
 "679.title" = "Porta anteprima in primo piano";
 "680.title" = "Rimani nella finestra sorgente";

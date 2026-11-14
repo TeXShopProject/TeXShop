@@ -219,7 +219,10 @@ add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.4", @"SettingsCat
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.4", @"SettingsCategories", @"catalog.typesetting.0.4.button", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.4", @"Localizable", @"LuaLaTeX (Japanese)", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.0", @"SettingsCategories", @"catalog.typesetting.0.0.title", TSSettingsSearchWeightLabel);
+add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.0", @"SettingsCategories", @"catalog.typesetting.0.0.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.1", @"SettingsCategories", @"catalog.typesetting.0.1.title", TSSettingsSearchWeightLabel);
+add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.1", @"SettingsCategories", @"catalog.typesetting.0.1.note", TSSettingsSearchWeightDescription);
+add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.1", @"SettingsCategories", @"catalog.typesetting.0.1.button", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.2", @"SettingsCategories", @"catalog.typesetting.0.2.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.3", @"SettingsCategories", @"catalog.typesetting.0.3.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.3", @"SettingsCategories", @"catalog.typesetting.0.3.note", TSSettingsSearchWeightDescription);

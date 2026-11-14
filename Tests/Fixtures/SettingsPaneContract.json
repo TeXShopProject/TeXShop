@@ -840,11 +840,6 @@
         "class": "TSPrefTypesettingController"
       },
       {
-        "ivar": "_engineTextField",
-        "property": "engineTextField",
-        "class": "TSPrefTypesettingController"
-      },
-      {
         "ivar": "_saveRelatedButton",
         "property": "saveRelatedButton",
         "class": "TSPrefTypesettingController"
@@ -3002,13 +2997,6 @@
         "value": "defaultProgramChanged:"
       },
       {
-        "key": "592.action",
-        "view": "settings.592",
-        "kind": "view",
-        "property": "action",
-        "value": "setEngine:"
-      },
-      {
         "key": "odf-Ny-S9G.action",
         "view": "settings.odf-Ny-S9G",
         "kind": "view",
@@ -3102,7 +3090,7 @@
         "kind": "matrix",
         "property": "tag",
         "value": 0,
-        "row": 0,
+        "row": 1,
         "column": 0
       },
       {
@@ -3111,7 +3099,7 @@
         "kind": "matrix",
         "property": "tag",
         "value": 1,
-        "row": 1,
+        "row": 0,
         "column": 0
       },
       {
@@ -3473,7 +3461,7 @@
           "898.title": "Save related files",
           "823.title": "Sync Method",
           "190.title": "Personal Script",
-          "590.title": "Command Listed Below",
+          "590.title": "Engine File",
           "680.title": "Continue Editing",
           "919.title": "Radio",
           "786.title": "SyncTeX",
@@ -3487,7 +3475,7 @@
           "183.title": "Default Command",
           "188.title": "Default Script",
           "921.title": "Radio",
-          "588.title": "TeX"
+          "588.title": "plain TeX"
         }
       },
       "Console": [
@@ -5936,7 +5924,7 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "Command Listed Below",
+          "value": "Engine File",
           "row": 2,
           "column": 0
         },
@@ -6001,7 +5989,7 @@
           "kind": "matrix",
           "property": "title",
           "value": "LaTeX",
-          "row": 1,
+          "row": 0,
           "column": 0
         },
         {
@@ -6048,8 +6036,8 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX",
-          "row": 0,
+          "value": "plain TeX",
+          "row": 1,
           "column": 0
         }
       ],
@@ -6646,7 +6634,7 @@
           "898.title": "Verbundene Dateien sichern",
           "823.title": "Art der Synchronisierung",
           "190.title": "Persönliches Skript",
-          "590.title": "Folgender Befehl:",
+          "590.title": "Engine-Datei",
           "680.title": "Weiter bearbeiten",
           "919.title": "Radio",
           "786.title": "SyncTeX",
@@ -6660,7 +6648,7 @@
           "183.title": "Standardbefehl",
           "188.title": "Standardskript",
           "921.title": "Radio",
-          "588.title": "TeX"
+          "588.title": "plain TeX"
         }
       },
       "Console": [
@@ -9109,7 +9097,7 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "Folgender Befehl:",
+          "value": "Engine-Datei",
           "row": 2,
           "column": 0
         },
@@ -9174,7 +9162,7 @@
           "kind": "matrix",
           "property": "title",
           "value": "LaTeX",
-          "row": 1,
+          "row": 0,
           "column": 0
         },
         {
@@ -9221,8 +9209,8 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX",
-          "row": 0,
+          "value": "plain TeX",
+          "row": 1,
           "column": 0
         }
       ],
@@ -9819,7 +9807,7 @@
           "898.title": "Guardar relacionados",
           "823.title": "Tipo de sincronía",
           "190.title": "Script personal",
-          "590.title": "Este otro comando:",
+          "590.title": "Archivo de motor",
           "680.title": "Continuar editando",
           "919.title": "Radio",
           "786.title": "SyncTeX",
@@ -9833,7 +9821,7 @@
           "183.title": "Formato por defecto",
           "188.title": "Script por defecto",
           "921.title": "Radio",
-          "588.title": "TeX"
+          "588.title": "plain TeX"
         }
       },
       "Console": [
@@ -12282,7 +12270,7 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "Este otro comando:",
+          "value": "Archivo de motor",
           "row": 2,
           "column": 0
         },
@@ -12347,7 +12335,7 @@
           "kind": "matrix",
           "property": "title",
           "value": "LaTeX",
-          "row": 1,
+          "row": 0,
           "column": 0
         },
         {
@@ -12394,8 +12382,8 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX",
-          "row": 0,
+          "value": "plain TeX",
+          "row": 1,
           "column": 0
         }
       ],
@@ -12992,7 +12980,7 @@
           "898.title": "Fichiers apparentés sauvegardés",
           "823.title": "Méthode de synchronisation",
           "190.title": "Script personnel",
-          "590.title": "Commande mentionnée ci-dessous",
+          "590.title": "Fichier de moteur",
           "680.title": "Continuer l'édition",
           "919.title": "Radio",
           "786.title": "SyncTeX",
@@ -13006,7 +12994,7 @@
           "183.title": "Format par défaut",
           "188.title": "Script par défaut",
           "921.title": "Radio",
-          "588.title": "TeX"
+          "588.title": "plain TeX"
         }
       },
       "Console": [
@@ -15455,7 +15443,7 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "Commande mentionnée ci-dessous",
+          "value": "Fichier de moteur",
           "row": 2,
           "column": 0
         },
@@ -15520,7 +15508,7 @@
           "kind": "matrix",
           "property": "title",
           "value": "LaTeX",
-          "row": 1,
+          "row": 0,
           "column": 0
         },
         {
@@ -15567,8 +15555,8 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX",
-          "row": 0,
+          "value": "plain TeX",
+          "row": 1,
           "column": 0
         }
       ],
@@ -16165,7 +16153,7 @@
           "898.title": "Salva i file correlati",
           "823.title": "Metodo di sincronizzazione",
           "190.title": "Script personale",
-          "590.title": "Comando ad hoc",
+          "590.title": "File del motore",
           "680.title": "Rimani nella finestra sorgente",
           "919.title": "Radio",
           "786.title": "SyncTeX",
@@ -16179,7 +16167,7 @@
           "183.title": "Formato TeX Default",
           "188.title": "Script di Default",
           "921.title": "Radio",
-          "588.title": "TeX"
+          "588.title": "plain TeX"
         }
       },
       "Console": [
@@ -18628,7 +18616,7 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "Comando ad hoc",
+          "value": "File del motore",
           "row": 2,
           "column": 0
         },
@@ -18693,7 +18681,7 @@
           "kind": "matrix",
           "property": "title",
           "value": "LaTeX",
-          "row": 1,
+          "row": 0,
           "column": 0
         },
         {
@@ -18740,8 +18728,8 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX",
-          "row": 0,
+          "value": "plain TeX",
+          "row": 1,
           "column": 0
         }
       ],
@@ -19338,7 +19326,7 @@
           "898.title": "関連ファイルも保存する",
           "823.title": "Sync方式",
           "190.title": "パーソナルスクリプト",
-          "590.title": "次のコマンドを利用",
+          "590.title": "エンジンファイル",
           "680.title": "編集を続ける",
           "919.title": "Radio",
           "786.title": "SyncTeX",
@@ -19352,7 +19340,7 @@
           "183.title": "デフォルトのコマンド",
           "188.title": "デフォルトのスクリプト",
           "921.title": "Radio",
-          "588.title": "TeX"
+          "588.title": "plain TeX"
         }
       },
       "Console": [
@@ -21801,7 +21789,7 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "次のコマンドを利用",
+          "value": "エンジンファイル",
           "row": 2,
           "column": 0
         },
@@ -21866,7 +21854,7 @@
           "kind": "matrix",
           "property": "title",
           "value": "LaTeX",
-          "row": 1,
+          "row": 0,
           "column": 0
         },
         {
@@ -21913,8 +21901,8 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX",
-          "row": 0,
+          "value": "plain TeX",
+          "row": 1,
           "column": 0
         }
       ],
@@ -22511,7 +22499,7 @@
           "898.title": "관련 파일 함께 저장",
           "823.title": "Sync 방식",
           "190.title": "사용자 스크립트",
-          "590.title": "기타 명령으로 지정",
+          "590.title": "엔진 파일",
           "680.title": "편집 창에서 계속 작업",
           "919.title": "Radio",
           "786.title": "SyncTeX",
@@ -22525,7 +22513,7 @@
           "183.title": "기본 조판 명령",
           "188.title": "디폴트 스트립트",
           "921.title": "Radio",
-          "588.title": "TeX"
+          "588.title": "plain TeX"
         }
       },
       "Console": [
@@ -24974,7 +24962,7 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "기타 명령으로 지정",
+          "value": "엔진 파일",
           "row": 2,
           "column": 0
         },
@@ -25039,7 +25027,7 @@
           "kind": "matrix",
           "property": "title",
           "value": "LaTeX",
-          "row": 1,
+          "row": 0,
           "column": 0
         },
         {
@@ -25086,8 +25074,8 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX",
-          "row": 0,
+          "value": "plain TeX",
+          "row": 1,
           "column": 0
         }
       ],
@@ -25684,7 +25672,7 @@
           "898.title": "Sla verwante bestanden op",
           "823.title": "Synchroniseermethode",
           "190.title": "Eigen script",
-          "590.title": "Het commando hieronder:",
+          "590.title": "Engine-bestand",
           "680.title": "Doorgaan met editor",
           "919.title": "Radio",
           "786.title": "SyncTeX",
@@ -25698,7 +25686,7 @@
           "183.title": "Standaard TeX-opdracht",
           "188.title": "Standaard script",
           "921.title": "Radio",
-          "588.title": "TeX"
+          "588.title": "plain TeX"
         }
       },
       "Console": [
@@ -28147,7 +28135,7 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "Het commando hieronder:",
+          "value": "Engine-bestand",
           "row": 2,
           "column": 0
         },
@@ -28212,7 +28200,7 @@
           "kind": "matrix",
           "property": "title",
           "value": "LaTeX",
-          "row": 1,
+          "row": 0,
           "column": 0
         },
         {
@@ -28259,8 +28247,8 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX",
-          "row": 0,
+          "value": "plain TeX",
+          "row": 1,
           "column": 0
         }
       ],
@@ -28857,7 +28845,7 @@
           "898.title": "Save related files",
           "823.title": "Método de sincronização",
           "190.title": "Script pessoal",
-          "590.title": "Comando indicado abaixo",
+          "590.title": "Ficheiro de motor",
           "680.title": "Continuar a editar",
           "919.title": "Radio",
           "786.title": "SyncTeX",
@@ -28871,7 +28859,7 @@
           "183.title": "Formato por omissão",
           "188.title": "Script por omissão",
           "921.title": "Radio",
-          "588.title": "TeX"
+          "588.title": "plain TeX"
         }
       },
       "Console": [
@@ -31320,7 +31308,7 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "Comando indicado abaixo",
+          "value": "Ficheiro de motor",
           "row": 2,
           "column": 0
         },
@@ -31385,7 +31373,7 @@
           "kind": "matrix",
           "property": "title",
           "value": "LaTeX",
-          "row": 1,
+          "row": 0,
           "column": 0
         },
         {
@@ -31432,8 +31420,8 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX",
-          "row": 0,
+          "value": "plain TeX",
+          "row": 1,
           "column": 0
         }
       ],
@@ -32030,7 +32018,7 @@
           "898.title": "Salvar arquivos relacionados",
           "823.title": "Método Sync",
           "190.title": "Script pessoal",
-          "590.title": "Comando listado abaixo",
+          "590.title": "Arquivo de motor",
           "680.title": "Continuar editando",
           "919.title": "Radio",
           "786.title": "SyncTeX",
@@ -32044,7 +32032,7 @@
           "183.title": "Formato padrão",
           "188.title": "Script padrão",
           "921.title": "Radio",
-          "588.title": "TeX"
+          "588.title": "plain TeX"
         }
       },
       "Console": [
@@ -34493,7 +34481,7 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "Comando listado abaixo",
+          "value": "Arquivo de motor",
           "row": 2,
           "column": 0
         },
@@ -34558,7 +34546,7 @@
           "kind": "matrix",
           "property": "title",
           "value": "LaTeX",
-          "row": 1,
+          "row": 0,
           "column": 0
         },
         {
@@ -34605,8 +34593,8 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX",
-          "row": 0,
+          "value": "plain TeX",
+          "row": 1,
           "column": 0
         }
       ],
@@ -35203,7 +35191,7 @@
           "898.title": "Salvează Fișierele Adiacente",
           "823.title": "Metoda de sincronizare",
           "190.title": "Script personal",
-          "590.title": "Comanda de mai jos",
+          "590.title": "Fișier de motor",
           "680.title": "Continuă editarea",
           "919.title": "Radio",
           "786.title": "SyncTeX",
@@ -35217,7 +35205,7 @@
           "183.title": "Comanda Standard",
           "188.title": "Scriptul Standard",
           "921.title": "Radio",
-          "588.title": "TeX"
+          "588.title": "plain TeX"
         }
       },
       "Console": [
@@ -37666,7 +37654,7 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "Comanda de mai jos",
+          "value": "Fișier de motor",
           "row": 2,
           "column": 0
         },
@@ -37731,7 +37719,7 @@
           "kind": "matrix",
           "property": "title",
           "value": "LaTeX",
-          "row": 1,
+          "row": 0,
           "column": 0
         },
         {
@@ -37778,8 +37766,8 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX",
-          "row": 0,
+          "value": "plain TeX",
+          "row": 1,
           "column": 0
         }
       ],
@@ -38376,7 +38364,7 @@
           "898.title": "保存相关文件",
           "823.title": "同步方式",
           "190.title": "个性化脚本",
-          "590.title": "采用键入的指令",
+          "590.title": "引擎文件",
           "680.title": "继续编辑",
           "919.title": "Radio",
           "786.title": "SyncTeX",
@@ -38390,7 +38378,7 @@
           "183.title": "默认指令",
           "188.title": "默认脚本",
           "921.title": "Radio",
-          "588.title": "TeX"
+          "588.title": "plain TeX"
         }
       },
       "Console": [
@@ -40839,7 +40827,7 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "采用键入的指令",
+          "value": "引擎文件",
           "row": 2,
           "column": 0
         },
@@ -40904,7 +40892,7 @@
           "kind": "matrix",
           "property": "title",
           "value": "LaTeX",
-          "row": 1,
+          "row": 0,
           "column": 0
         },
         {
@@ -40951,8 +40939,8 @@
           "view": "settings.181",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX",
-          "row": 0,
+          "value": "plain TeX",
+          "row": 1,
           "column": 0
         }
       ],

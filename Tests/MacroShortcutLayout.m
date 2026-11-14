@@ -103,7 +103,7 @@ int main(int argc,char **argv) { @autoreleasepool {
         [[rep representationUsingType:NSBitmapImageFileTypePNG properties:@{}] writeToFile:name atomically:YES];
     }
     NSTextField *label=owner.shortcutStatus; NSView *host=window.contentView;
-    for (NSString *text in @[@"This shortcut is inactive because it conflicts with “Typeset › Plain TeX” (⇧⌘T).",@"このキーは“タイプセット › Plain TeX”（⇧⌘T）と重なっているため無効です。"])
+    for (NSString *text in @[@"This shortcut is inactive because it conflicts with “Typeset › plain TeX” (⇧⌘T).",@"このキーは“タイプセット › plain TeX”（⇧⌘T）と重なっているため無効です。"])
       for (NSAppearanceName mode in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]) {
         host.appearance=[NSAppearance appearanceNamed:mode];label.stringValue=text;
         REQUIRE(NSContainsRect(host.bounds,label.frame));

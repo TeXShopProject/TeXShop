@@ -414,7 +414,7 @@ int main(int argc,char **argv){@autoreleasepool{
  CheckOwnerThemeWells(owner,shell,theme);
  CheckOwnerOpacity(owner,shell,theme);
  // Complete production editing callbacks: untouched focus, Return, validation and teardown.
- NSMapTable *inputRules=[owner valueForKey:@"inputRules"];Check(inputRules.count==19,@"All nineteen production input rules are installed");
+ NSMapTable *inputRules=[owner valueForKey:@"inputRules"];Check(inputRules.count==18,@"All eighteen production input rules are installed");
  NSTextField *tabsField=[owner valueForKey:@"tabIndentField"],*gsField=[owner valueForKey:@"gsBinPathField"],*zoomField=[owner valueForKey:@"magTextField"];
  [TSIsolatedAppKitDefaults setObject:@"" forKey:GSBinPath];gsField.stringValue=@"";
  tabsField.stringValue=@"20";[owner controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:tabsField]];

@@ -356,4 +356,5 @@
 "Apply the “%@” profile?" = "Aplicați profilul „%@”?";
 "Use latexmk" = "Utilizați latexmk";
 "Detect Paths" = "Detectați căile";
+"%@ (Not Found)" = "%@ (negăsit)";
 "Choose an Engine Profile" = "Alegeți un profil al motorului";
