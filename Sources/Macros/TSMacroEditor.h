@@ -27,6 +27,8 @@
 #import "TSMacroTreeNode.h"
 
 @class TSSyntaxHighlighter;
+@class TSListBottomBar;
+@class TSMacroShortcutField;
 
 @interface TSMacroEditor : NSObject <NSTextViewDelegate>
 {
@@ -60,10 +62,21 @@
 @property (retain) NSMapTable *originalShortcutKeys;
 @property (retain) NSMapTable *shortcutConflicts;
 @property (retain) NSTextField *shortcutStatus;
-@property (retain) NSSegmentedControl *listButtons;
-@property (retain) NSMenu *listActions;
+// The list and the bar under it (＋, − and the menu of the other commands), in one frame.
+@property (retain) NSBox *listBox;
+@property (retain) TSListBottomBar *listBar;
 @property (retain) NSTextField *placeholderNote;
+// The shortcut of the selected macro, set by pressing it; the nib's key field and
+// Shift, Option and Control boxes stay hidden.
+@property (retain) NSTextField *shortcutLabel;
+@property (retain) TSMacroShortcutField *shortcutField;
+// The shortcut being edited, as the macros store it (for example @"M+ShiftKey").
+@property (copy) NSString *pendingShortcutKey;
 - (void)installListControls;
+- (void)installShortcutField;
+- (void)syncShortcutField;
+- (BOOL)recordShortcutEvent:(NSEvent *)event;
+- (void)setPendingShortcut:(NSString *)key;
 - (void)installPlaceholderNote;
 - (void)layoutDialogButtons;
 - (void)syncListControls;

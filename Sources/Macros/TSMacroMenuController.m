@@ -563,10 +563,16 @@ NSString *getKeyEquivalentFromString(NSString *string)
 		return @"";
 }
 
+// A macro's key is stored as its character and the modifiers after it, for example
+// @"Y+ShiftKey+ControlKey". Command is always part of the shortcut unless the string
+// says +NoCommandKey, which TeXShop writes only for a shortcut without Command; so
+// keys saved by earlier versions keep their meaning.
+static NSString * const TSMacroNoCommandKey = @"NoCommandKey";
+
 NSUInteger getKeyModifierMaskFromString(NSString *string)
 {
-	NSUInteger mask = NSCommandKeyMask;
 	NSString *modifiersStr = ([string length]>1)?[string substringFromIndex: 1]:@"";
+	NSUInteger mask = [modifiersStr rangeOfString: TSMacroNoCommandKey].location == NSNotFound ? NSCommandKeyMask : 0;
 	NSRange range = [modifiersStr rangeOfString: @"ShiftKey"];
 	if (range.location != NSNotFound)
 		mask |= NSShiftKeyMask;
@@ -580,48 +586,36 @@ NSUInteger getKeyModifierMaskFromString(NSString *string)
 }
 
 // create a string like @"y+ShiftKey+ControlKey"
-NSString *getStringFormKeyEquivalent(NSString *key, BOOL shift, BOOL option, BOOL control)
+NSString *getStringFormKeyEquivalentWithModifiers(NSString *key, NSUInteger modifiers)
 {
 	NSMutableString *string;
 	if ([key length] == 0)
 		return @"";
-	string = [NSMutableString stringWithString: [[key substringToIndex: 1] uppercaseString]];
-	if (shift)
+	NSString *character = [key substringToIndex: 1], *upper = [character uppercaseString];
+	// Only the first character is read back: keep one whose capital is longer (ß).
+	string = [NSMutableString stringWithString: [upper length] == 1 ? upper : character];
+	if (modifiers & NSShiftKeyMask)
 		[string appendString: @"+ShiftKey"];
-	if (option)
+	if (modifiers & NSAlternateKeyMask)
 		[string appendString: @"+OptionKey"];
-	if (control)
+	if (modifiers & NSControlKeyMask)
 		[string appendString: @"+ControlKey"];
+	if (!(modifiers & NSCommandKeyMask))
+		[string appendFormat: @"+%@", TSMacroNoCommandKey];
 	return string;
 }
 
-// make a string which is to be displayed in TSMacroEditor
+NSString *getStringFormKeyEquivalent(NSString *key, BOOL shift, BOOL option, BOOL control)
+{
+	return getStringFormKeyEquivalentWithModifiers(key, NSCommandKeyMask | (shift ? NSShiftKeyMask : 0)
+		| (option ? NSAlternateKeyMask : 0) | (control ? NSControlKeyMask : 0));
+}
+
+// make a string which is to be displayed in TSMacroEditor, as the shortcuts are in Settings
 NSString *getMenuItemString(NSString *string)
 {
-    
-	unichar c;	// command 0x2318  shift 0x21E7  option 0x2325  control 0x005E '^'
-	NSRange range;
 	if ([string length] == 0)
 		return @"";
-	NSMutableString *menuItemStr = [NSMutableString string];
-	NSString *modifiersStr = ([string length]>1)?[string substringFromIndex: 1]:@"";
-	range = [modifiersStr rangeOfString: @"ControlKey"];
-	if (range.location != NSNotFound) {
-		[menuItemStr appendString: @"^"];
-	}
-	range = [modifiersStr rangeOfString: @"OptionKey"];
-	if (range.location != NSNotFound) {
-		c = 0x2325;
-		[menuItemStr appendString: [NSString stringWithCharacters: &c length: 1]];
-	}
-	range = [modifiersStr rangeOfString: @"ShiftKey"];
-	if (range.location != NSNotFound) {
-		c = 0x21E7;
-		[menuItemStr appendString: [NSString stringWithCharacters: &c length: 1]];
-	}
-	c = 0x2318;
-	[menuItemStr appendString: [NSString stringWithCharacters: &c length: 1]];
-	[menuItemStr appendString: [[string substringToIndex: 1] uppercaseString]];
-	return menuItemStr;
+	return [TSShortcutStore displayKey:getKeyEquivalentFromString(string) modifiers:getKeyModifierMaskFromString(string)];
 }
 
