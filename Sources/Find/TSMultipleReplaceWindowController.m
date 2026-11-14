@@ -18,7 +18,6 @@
 @property (nonatomic, readwrite) NSButton *removeSetButton;
 @property (nonatomic, readwrite) NSSegmentedControl *ruleButtons;
 @property (nonatomic, readwrite) NSButton *optionsButton;
-@property (nonatomic, readwrite) NSButton *helpButton;
 /// Highlight and Replace All.
 @property (nonatomic, copy) NSArray<NSButton *> *actionButtons;
 @property (nonatomic, strong, nullable) NSPopover *optionsPopover;
@@ -188,8 +187,7 @@ static const CGFloat TSSidebarWidth = 240;
     return controller;
 }
 
-/// The rules in order with ＋|− and the set's options under them; at the bottom, help on the left and the
-/// actions on the right.
+/// The rules in order with ＋|− and the set's options under them; the actions at the bottom right.
 - (NSViewController *)makeRuleArea
 {
     NSTextField *heading = [NSTextField labelWithString:TSLocalized(@"MultipleReplace.RulesHeading", @"Apply the rules from the top down:")];
@@ -224,19 +222,15 @@ static const CGFloat TSSidebarWidth = 240;
     for (NSView *child in @[self.ruleButtons, self.statusField, self.optionsButton])
         child.translatesAutoresizingMaskIntoConstraints = NO;
 
-    self.helpButton = [NSButton buttonWithTitle:@"" target:self action:@selector(showHelp:)];
-    self.helpButton.bezelStyle = NSBezelStyleHelpButton;
-    self.helpButton.accessibilityLabel = TSLocalized(@"MultipleReplace.Help", @"Help");
     self.inSelectionBox = [NSButton checkboxWithTitle:TSLocalized(@"AdvancedFind.InSelection", @"In selection") target:self action:@selector(inSelectionChanged:)];
     NSButton *highlight = [self button:@"AdvancedFind.HighlightAll" english:@"Highlight All" action:@selector(highlight:)];
     NSButton *replace = [self button:@"AdvancedFind.ReplaceAll" english:@"Replace All" action:@selector(replaceAll:)];
     replace.keyEquivalent = @"\r";
     self.actionButtons = @[highlight, replace];
     NSView *actions = [self stackOf:@[self.inSelectionBox, highlight, replace] spacing:12];
-    self.helpButton.translatesAutoresizingMaskIntoConstraints = NO;
 
     NSView *view = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 640, 400)];
-    for (NSView *child in @[heading, scroll, self.ruleButtons, self.statusField, self.optionsButton, self.helpButton, actions])
+    for (NSView *child in @[heading, scroll, self.ruleButtons, self.statusField, self.optionsButton, actions])
         [view addSubview:child];
     NSLayoutGuide *safe = view.safeAreaLayoutGuide;
     // A message of one line is on the line of the buttons; a longer one starts there and goes down.
@@ -261,12 +255,10 @@ static const CGFloat TSSidebarWidth = 240;
         [self.statusField.leadingAnchor constraintEqualToAnchor:self.ruleButtons.trailingAnchor constant:12],
         [self.statusField.trailingAnchor constraintEqualToAnchor:self.optionsButton.leadingAnchor constant:-12],
         [self.statusField.topAnchor constraintGreaterThanOrEqualToAnchor:scroll.bottomAnchor constant:8],
-
-        [self.helpButton.leadingAnchor constraintEqualToAnchor:scroll.leadingAnchor],
-        [self.helpButton.centerYAnchor constraintEqualToAnchor:actions.centerYAnchor],
+        // The actions at the right of the bottom row
         [actions.topAnchor constraintGreaterThanOrEqualToAnchor:self.ruleButtons.bottomAnchor constant:16],
         [actions.topAnchor constraintGreaterThanOrEqualToAnchor:self.statusField.bottomAnchor constant:12],
-        [actions.leadingAnchor constraintGreaterThanOrEqualToAnchor:self.helpButton.trailingAnchor constant:12],
+        [actions.leadingAnchor constraintGreaterThanOrEqualToAnchor:scroll.leadingAnchor],
         [actions.trailingAnchor constraintEqualToAnchor:scroll.trailingAnchor],
         [actions.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-20],
     ]];
@@ -558,14 +550,6 @@ static const CGFloat TSSidebarWidth = 240;
     return YES;
 }
 
-+ (NSString *)helpAnchor { return @"multiplereplace"; }
-
-- (void)showHelp:(id)sender
-{
-    NSString *book = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleHelpBookName"];
-    if (book)
-        [NSHelpManager.sharedHelpManager openHelpAnchor:TSMultipleReplaceWindowController.helpAnchor inBook:book];
-}
 - (void)inSelectionChanged:(NSButton *)sender { self.inSelection = sender.state == NSControlStateValueOn; }
 
 - (void)setInSelection:(BOOL)inSelection

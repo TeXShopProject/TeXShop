@@ -56,6 +56,12 @@ MUTATIONS = {
         '[control.centerYAnchor constraintEqualToAnchor:cell.centerYAnchor]', '[control.topAnchor constraintEqualToAnchor:cell.topAnchor]'),
     'the names keep a new column\'s width': ('TSMultipleReplaceWindowController.m', '    column.width = NSWidth(self.setTable.frame);\n', ''),
     'the sidebar starts narrower than the samples\' names': ('TSMultipleReplaceWindowController.m', 'static const CGFloat TSSidebarWidth = 240;', 'static const CGFloat TSSidebarWidth = 180;'),
+    'a help button comes back': ('TSMultipleReplaceWindowController.m',
+        '    NSView *actions = [self stackOf:@[self.inSelectionBox, highlight, replace] spacing:12];',
+        '    NSButton *help = [NSButton buttonWithTitle:@"" target:nil action:NULL];\n    help.bezelStyle = NSBezelStyleHelpButton;\n'
+        '    NSView *actions = [self stackOf:@[help, self.inSelectionBox, highlight, replace] spacing:12];'),
+    'the actions leave the right edge': ('TSMultipleReplaceWindowController.m',
+        '        [actions.trailingAnchor constraintEqualToAnchor:scroll.trailingAnchor],', '        [actions.leadingAnchor constraintEqualToAnchor:scroll.leadingAnchor],'),
     'the set options take the panel\'s rule': ('TSMultipleReplaceWindowController.m',
         'initWithStyle:TSAdvancedFindOptionsFormStyleSet', 'initWithStyle:TSAdvancedFindOptionsFormStylePanel'),
 }
@@ -127,12 +133,6 @@ def main():
         if moved == delegate or check_launch_order(moved, shortcuts):
             sys.exit('FAIL: the launch order check does not notice an install that is not queued')
         print('PASS: launch order (after OgreKit, before the shortcuts are read)')
-        # The help button opens this anchor of the English help (the other help books take it as they describe the window).
-        help_page = (root / 'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/basic_edittricks.htm').read_text(encoding='latin1')
-        window_source = (root / 'Sources/Find/TSMultipleReplaceWindowController.m').read_text()
-        if '+ (NSString *)helpAnchor { return @"multiplereplace"; }' not in window_source or '<a name="multiplereplace"></a>' not in help_page:
-            sys.exit('FAIL: the help button\'s anchor is in the English help')
-        print('PASS: the help anchor of Multiple Replace')
         probe = build(tmp, copy_sources(tmp))
         result = run(probe, 'behavior')
         print(result.stdout + result.stderr, end='')
