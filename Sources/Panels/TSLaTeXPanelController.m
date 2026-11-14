@@ -24,6 +24,74 @@
 
 #import "TSLaTeXPanelController.h"
 #import "globals.h"
+#import <objc/runtime.h>
+
+// The buttons of the panel: a frame with rounded corners as large as the button, filled under the pointer
+// and when pressed, or drawn as a thin outline all the time when LPanelOutlines is NO. The buttons come from
+// the compiled panels as NSButtonCell; they become this class, which adds no storage.
+@interface TSLaTeXPanelButtonCell : NSButtonCell
+@end
+
+@implementation TSLaTeXPanelButtonCell
+
+- (void)drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView
+{
+	NSBezierPath *shape = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(frame, 0.5, 0.5) xRadius:6 yRadius:6];
+	// AppKit asks for the frame of a button that shows it only under the pointer when the pointer is over it.
+	if ([self isHighlighted] || [self showsBorderOnlyWhileMouseInside]) {
+		[([self isHighlighted] ? [NSColor tertiaryLabelColor] : [NSColor quaternaryLabelColor]) setFill];
+		[shape fill];
+	} else {
+		[[NSColor separatorColor] setStroke];
+		[shape setLineWidth:1];
+		[shape stroke];
+	}
+}
+
+@end
+
+@interface TSLaTeXPanelController ()
+// The two groups of buttons: symbols above, environments below. Each shows the page chosen with the
+// segmented control above it.
+@property (strong) NSArray<NSTabView *> *buttonPages;
+@property (strong) NSArray<NSSegmentedControl *> *pageChoosers;
+@end
+
+// A picture of a symbol, drawn in black and shades of gray with no transparency, as ink in the color of
+// text: black in light appearance, white in dark. Lighter gray is fainter ink, so the edges stay smooth.
+static NSImage *TSInkImage(NSImage *image)
+{
+	CGImageRef picture = [image CGImageForProposedRect:NULL context:nil hints:nil];
+	if (picture == NULL)
+		return image;
+	NSBitmapImageRep *source = [[NSBitmapImageRep alloc] initWithCGImage:picture];
+	NSInteger width = [source pixelsWide], height = [source pixelsHigh];
+	NSMutableData *coverage = [NSMutableData dataWithLength:width * height];
+	unsigned char *bytes = [coverage mutableBytes];
+	for (NSInteger y = 0; y < height; y++)
+		for (NSInteger x = 0; x < width; x++) {
+			NSColor *color = [[source colorAtX:x y:y] colorUsingColorSpace:[NSColorSpace genericGrayColorSpace]];
+			CGFloat ink = color == nil ? 0 : (1 - [color whiteComponent]) * [color alphaComponent];
+			// A mask paints where it is dark.
+			bytes[y * width + x] = (unsigned char)lround((1 - ink) * 255);
+		}
+	CGDataProviderRef provider = CGDataProviderCreateWithCFData((__bridge CFDataRef)coverage);
+	// The drawing below keeps the mask.
+	id mask = CFBridgingRelease(CGImageMaskCreate(width, height, 8, 8, width, provider, NULL, true));
+	CGDataProviderRelease(provider);
+	if (mask == nil)
+		return image;
+	NSImage *result = [NSImage imageWithSize:[image size] flipped:NO drawingHandler:^BOOL(NSRect rect) {
+		CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
+		CGContextSaveGState(context);
+		CGContextClipToMask(context, NSRectToCGRect(rect), (__bridge CGImageRef)mask);
+		[[NSColor textColor] setFill];
+		NSRectFill(rect);
+		CGContextRestoreGState(context);
+		return YES;
+	}];
+	return result;
+}
 
 @implementation TSLaTeXPanelController
 
@@ -157,28 +225,33 @@ static id _sharedInstance = nil;
 		{
 			[[intlbuttonmatrix cellWithTag:i] setShowsBorderOnlyWhileMouseInside:YES];
 		}
-
-		// added by G.K.
-		aButtons = [arrayCustomized count]/2;
-		for (i=0;i<aButtons;i++) {
-			[[custombuttonmatrix cellWithTag:i] setEnabled:YES];
-			[[custombuttonmatrix cellWithTag:i] setBordered:YES];
-			[[custombuttonmatrix cellWithTag:i] setTitle:[arrayCustomized objectAtIndex:(i*2)]];
-			[[custombuttonmatrix cellWithTag:i] setShowsBorderOnlyWhileMouseInside:YES];
-		}
-		[custombuttonmatrix setNeedsDisplay:YES];
-		// end add
 	}
 
-	// this adjust the look of buttons at startup
-    
-#ifdef MOJAVEORHIGHER
-    if ((atLeastMojave) && ([self window].effectiveAppearance.name == NSAppearanceNameDarkAqua))
-        [self setIconTemplate: YES];
-    else
-#endif
-        [self setIconTemplate: NO];
-    
+	// added by G.K.
+	// The custom buttons have their names whether or not LPanelOutlines is NO.
+	aButtons = [arrayCustomized count]/2;
+	for (i=0;i<aButtons;i++) {
+		[[custombuttonmatrix cellWithTag:i] setEnabled:YES];
+		[[custombuttonmatrix cellWithTag:i] setBordered:YES];
+		[[custombuttonmatrix cellWithTag:i] setTitle:[arrayCustomized objectAtIndex:(i*2)]];
+		[[custombuttonmatrix cellWithTag:i] setShowsBorderOnlyWhileMouseInside:
+			[[NSUserDefaults standardUserDefaults] boolForKey:LPanelOutlinesKey]];
+	}
+	[custombuttonmatrix setNeedsDisplay:YES];
+	// end add
+
+	// The pictures of the symbols follow the light or dark appearance.
+	for (i=0;i<55;i++)
+	{
+		NSButtonCell *cell = [mathbuttonmatrix cellWithTag:i];
+		if ([cell image] != nil)
+			[cell setImage:TSInkImage([cell image])];
+		cell = [symbolsbuttonmatrix cellWithTag:i];
+		if (i > 10 && [cell image] != nil)
+			[cell setImage:TSInkImage([cell image])];
+	}
+
+	[self arrangeControls];
 }
 
 - (IBAction)putenvironments:(id)sender
@@ -283,18 +356,131 @@ static id _sharedInstance = nil;
 
 - (void)setIconTemplate:(BOOL)value
 {
-    NSInteger   i;
-    
-    for (i=0;i<55;i++)
-    {
-        [[mathbuttonmatrix cellWithTag:i] image].template=value;
-    }
-    
-    for (i=0;i<55;i++)
-    {
-        if (i > 10)  [[symbolsbuttonmatrix cellWithTag:i] image].template=value;
-    }
+	// The pictures of the symbols are drawn in the color of text of the appearance in which they are shown
+	// (TSInkImage), so they need no template in dark appearance.
+}
 
- }
+#pragma mark Layout
+
+static const CGFloat TSLaTeXPanelMargin = 20;
+
+static NSRect TSUnionOfSubviews(NSView *view)
+{
+	NSRect all = NSZeroRect;
+	for (NSView *subview in [view subviews])
+		all = NSIsEmptyRect(all) ? [subview frame] : NSUnionRect(all, [subview frame]);
+	return all;
+}
+
+// Choosing a page with the segmented control above it.
+- (void)choosePage:(NSSegmentedControl *)sender
+{
+	NSUInteger index = [self.pageChoosers indexOfObject:sender];
+	if (index != NSNotFound)
+		[self.buttonPages[index] selectTabViewItemAtIndex:[sender selectedSegment]];
+}
+
+// The compiled panels of the localizations draw each group in a tab view with its own frame, and the buttons
+// with words as text that is gray until the pointer is over it. The groups now have a segmented control
+// above them and no frame.
+- (void)arrangeControls
+{
+	NSWindow *window = [self window];
+	NSView *content = [window contentView];
+	NSMutableArray<NSTabView *> *pages = [NSMutableArray array];
+	for (NSView *view in [content subviews])
+		if ([view isKindOfClass:[NSTabView class]])
+			[pages addObject:(NSTabView *)view];
+	if ([pages count] != 2)
+		return;
+	// The symbols are above the environments.
+	[pages sortUsingComparator:^NSComparisonResult(NSTabView *a, NSTabView *b) {
+		return NSMaxY([a frame]) > NSMaxY([b frame]) ? NSOrderedAscending : NSOrderedDescending;
+	}];
+
+	// Every button, symbol or word, has no frame of its own: a frame with rounded corners shows under the
+	// pointer (or all the time when LPanelOutlines is NO; TSLaTeXPanelButtonCell), and the symbols and words
+	// are in the color of text, not in the gray AppKit gives a title whose frame is hidden. The buttons are a
+	// little apart so that two frames never touch.
+	NSMutableParagraphStyle *centered = [[NSMutableParagraphStyle alloc] init];
+	[centered setAlignment:NSTextAlignmentCenter];
+	for (NSMatrix *matrix in @[mathbuttonmatrix, symbolsbuttonmatrix, greekbuttonmatrix, intlbuttonmatrix,
+							   functionsbuttonmatrix, environbuttonmatrix, typefacebuttonmatrix, custombuttonmatrix]) {
+		for (NSButtonCell *cell in [matrix cells]) {
+			if ([cell class] == [NSButtonCell class])
+				object_setClass(cell, [TSLaTeXPanelButtonCell class]);
+			[cell setBezelStyle:NSBezelStyleToolbar];
+			if ([[cell title] length])
+				[cell setAttributedTitle:[[NSAttributedString alloc] initWithString:[cell title] attributes:@{
+					NSFontAttributeName: [cell font] ?: [NSFont systemFontOfSize:[NSFont smallSystemFontSize]],
+					NSForegroundColorAttributeName: [NSColor labelColor], NSParagraphStyleAttributeName: centered}]];
+		}
+		[matrix setIntercellSpacing:NSMakeSize(4, 4)];
+		[matrix sizeToCells];
+	}
+
+	// Each page as large as its largest group of buttons; the panel as wide as the widest page.
+	NSMutableArray<NSSegmentedControl *> *choosers = [NSMutableArray array];
+	NSMutableArray<NSValue *> *pageSizes = [NSMutableArray array];
+	CGFloat width = 0;
+	for (NSTabView *page in pages) {
+		NSMutableArray<NSString *> *labels = [NSMutableArray array];
+		NSSize size = NSZeroSize;
+		for (NSTabViewItem *item in [page tabViewItems]) {
+			[labels addObject:[item label]];
+			NSRect group = TSUnionOfSubviews([item view]);
+			size.width = MAX(size.width, NSWidth(group));
+			size.height = MAX(size.height, NSHeight(group));
+		}
+		NSSegmentedControl *chooser = [NSSegmentedControl segmentedControlWithLabels:labels trackingMode:NSSegmentSwitchTrackingSelectOne
+																			   target:self action:@selector(choosePage:)];
+		[chooser sizeToFit];
+		[chooser setAutoresizingMask:NSViewNotSizable];
+		[choosers addObject:chooser];
+		[pageSizes addObject:[NSValue valueWithSize:size]];
+		width = MAX(width, MAX(size.width, NSWidth([chooser frame])));
+	}
+	// The groups keep their sizes when their pages change size below.
+	for (NSTabView *page in pages)
+		for (NSTabViewItem *item in [page tabViewItems])
+			for (NSView *group in [[item view] subviews])
+				[group setAutoresizingMask:NSViewNotSizable];
+	const CGFloat margin = TSLaTeXPanelMargin;
+	CGFloat height = margin;
+	for (NSUInteger i = 0; i < [pages count]; i++)
+		height += NSHeight([choosers[i] frame]) + 12 + [pageSizes[i] sizeValue].height + margin;
+	[window setContentSize:NSMakeSize(ceil(width + 2 * margin), ceil(height))];
+
+	CGFloat top = NSHeight([content bounds]) - margin;
+	for (NSUInteger i = 0; i < [pages count]; i++) {
+		NSTabView *page = pages[i];
+		NSSegmentedControl *chooser = choosers[i];
+		NSSize size = [pageSizes[i] sizeValue];
+		NSRect frame = [chooser frame];
+		frame.origin = NSMakePoint(round((NSWidth([content bounds]) - NSWidth(frame)) / 2), top - NSHeight(frame));
+		[chooser setFrame:frame];
+		[content addSubview:chooser];
+		top = NSMinY(frame) - 12;
+		[page setTabViewType:NSNoTabsNoBorder];
+		[page setAutoresizingMask:NSViewNotSizable];
+		[page setFrame:NSMakeRect(margin, top - size.height, width, size.height)];
+		top -= size.height + margin;
+		// Each group of buttons centered at the top of its page; every page opens at its first group.
+		for (NSTabViewItem *item in [page tabViewItems]) {
+			NSView *view = [item view];
+			NSRect group = TSUnionOfSubviews(view);
+			[view setFrame:[page contentRect]];
+			// The views of a page (a group of buttons, and on some pages a note) keep their places among themselves.
+			CGFloat dx = round((NSWidth([view bounds]) - NSWidth(group)) / 2) - NSMinX(group);
+			CGFloat dy = NSHeight([view bounds]) - NSMaxY(group);
+			for (NSView *subview in [view subviews])
+				[subview setFrameOrigin:NSMakePoint(NSMinX([subview frame]) + dx, NSMinY([subview frame]) + dy)];
+		}
+		[page selectTabViewItemAtIndex:0];
+		[chooser setSelectedSegment:0];
+	}
+	self.buttonPages = pages;
+	self.pageChoosers = choosers;
+}
 
 @end
