@@ -135,8 +135,6 @@
 "MultipleReplace.AddRule" = "Adăugați o regulă";
 "MultipleReplace.AddSet" = "Set nou";
 "MultipleReplace.BadName" = "„%@” nu poate fi numele unui set.";
-"MultipleReplace.Column.Count" = "Nr.";
-"MultipleReplace.Column.CountTip" = "Potriviri înlocuite la ultima rulare";
 "MultipleReplace.Column.EnabledTip" = "Utilizați această regulă";
 "MultipleReplace.Column.Find" = "Găsiți";
 "MultipleReplace.Column.Note" = "Descriere";

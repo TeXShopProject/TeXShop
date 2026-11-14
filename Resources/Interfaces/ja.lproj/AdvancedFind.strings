@@ -135,8 +135,6 @@
 "MultipleReplace.AddRule" = "規則を追加";
 "MultipleReplace.AddSet" = "新しい組";
 "MultipleReplace.BadName" = "「%@」は組の名前にできません。";
-"MultipleReplace.Column.Count" = "件数";
-"MultipleReplace.Column.CountTip" = "前回の実行で置換した数";
 "MultipleReplace.Column.EnabledTip" = "この規則を使う";
 "MultipleReplace.Column.Find" = "検索";
 "MultipleReplace.Column.Note" = "説明";

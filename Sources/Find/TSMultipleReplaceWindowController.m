@@ -630,14 +630,13 @@ static NSAttributedString *_Nullable TSMultipleReplaceColoredField(NSString *str
     }];
 }
 
-/// The counts of each rule and the status line after a multiple replacement; nothing when it was cancelled (the find
-/// panel's status says so) or the text changed meanwhile.
+/// The status line after a multiple replacement; nothing when it was cancelled (the find panel's status says so) or
+/// the text changed meanwhile.
 - (void)showResult:(nullable TSRegexMultipleReplaceResult *)result
 {
     if (!result)
         return;
     {
-        self.ruleTable.counts = result.counts;
         NSString *message = [NSString stringWithFormat:TSLocalized(@"AdvancedFind.Replaced", @"%lu replaced"), (unsigned long)result.totalCount];
         if (result.errors.count > 0) {
             NSMutableArray<NSString *> *numbers = [NSMutableArray array];
