@@ -60,7 +60,6 @@
 		E107B90C6AEA90757B575812 /* contextbackwardsyncwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 4008394F2665406700037D3C /* contextbackwardsyncwrap */; };
 		87ED044C590112494BDD9A75 /* epstopdf in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 66A63DCE0114947700000001 /* epstopdf */; };
 		88454FF93C9DF16FD6563358 /* epstopdfwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 66A63DCF0114947700000001 /* epstopdfwrap */; };
-		13AC52355BBADAF08B6173FE /* ps2pdfwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 66A63DD00114947700000001 /* ps2pdfwrap */; };
 		E47135E74945944E26FF1403 /* contextwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = F50B193D0152A11D01000001 /* contextwrap */; };
 		62E064B4D3D199B9A57677E5 /* metapostwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = F5332B17016CD72701DF2474 /* metapostwrap */; };
 		18785E129DC4160859C27CC9 /* contextdviwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = F5332B18016CD72701DF2474 /* contextdviwrap */; };
@@ -70,7 +69,6 @@
 		D4103F5BCDA7C2F59678F352 /* contextforwardsyncwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 400839512665407800037D3C /* contextforwardsyncwrap */; };
 		7CE990D93D49A733AF7E8927 /* texloganalyserwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 406774A218F7800D00204AF4 /* texloganalyserwrap */; };
 		ACD93F4A0F50D31F25B9F054 /* ps2pdftransparencywrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 40795D632AB4E307005A7539 /* ps2pdftransparencywrap */; };
-		BF8C34060E781402EB160498 /* gstestwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 40FFD6F72AB63CEF003E4D12 /* gstestwrap */; };
 		EF688E2B3E7370C73DB475C0 /* synctexwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 409C33D90E56866200FE3BE3 /* synctexwrap */; };
 		43CC7E078387B288158BB548 /* synctexviewwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 40AAFA3C0E573F8100419621 /* synctexviewwrap */; };
 		A4334C779E480277E18610A4 /* sipswrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 40143F70156F52B600CAFAFC /* sipswrap */; };
@@ -371,7 +369,6 @@
 				E107B90C6AEA90757B575812 /* contextbackwardsyncwrap in Copy Shell Scripts */,
 				87ED044C590112494BDD9A75 /* epstopdf in Copy Shell Scripts */,
 				88454FF93C9DF16FD6563358 /* epstopdfwrap in Copy Shell Scripts */,
-				13AC52355BBADAF08B6173FE /* ps2pdfwrap in Copy Shell Scripts */,
 				E47135E74945944E26FF1403 /* contextwrap in Copy Shell Scripts */,
 				62E064B4D3D199B9A57677E5 /* metapostwrap in Copy Shell Scripts */,
 				18785E129DC4160859C27CC9 /* contextdviwrap in Copy Shell Scripts */,
@@ -381,7 +378,6 @@
 				D4103F5BCDA7C2F59678F352 /* contextforwardsyncwrap in Copy Shell Scripts */,
 				7CE990D93D49A733AF7E8927 /* texloganalyserwrap in Copy Shell Scripts */,
 				ACD93F4A0F50D31F25B9F054 /* ps2pdftransparencywrap in Copy Shell Scripts */,
-				BF8C34060E781402EB160498 /* gstestwrap in Copy Shell Scripts */,
 				EF688E2B3E7370C73DB475C0 /* synctexwrap in Copy Shell Scripts */,
 				43CC7E078387B288158BB548 /* synctexviewwrap in Copy Shell Scripts */,
 				A4334C779E480277E18610A4 /* sipswrap in Copy Shell Scripts */,
@@ -993,7 +989,6 @@
 		40EB71E50400BE1000000009 /* TSDocumentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSDocumentController.h; sourceTree = "<group>"; };
 		40EB71E60400BE1000000009 /* TSDocumentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSDocumentController.m; sourceTree = "<group>"; };
 		40EC12140C66C4BE00B9A448 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
-		40FFD6F72AB63CEF003E4D12 /* gstestwrap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.csh; path = gstestwrap; sourceTree = "<group>"; };
 		520C2EEA08AE92850010B1F8 /* TSDocument-Jobs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-Jobs.m"; sourceTree = "<group>"; };
 		520C2EEE08AE984C0010B1F8 /* TSDocument-RootFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-RootFile.m"; sourceTree = "<group>"; };
 		520C2EEF08AE984C0010B1F8 /* TSDocument-Syntax.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-Syntax.m"; sourceTree = "<group>"; };
@@ -1008,7 +1003,6 @@
 		52E4BF4408CA74C300726E11 /* TeXShop */ = {isa = PBXFileReference; lastKnownFileType = folder; path = TeXShop; sourceTree = "<group>"; };
 		66A63DCE0114947700000001 /* epstopdf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = epstopdf; sourceTree = "<group>"; };
 		66A63DCF0114947700000001 /* epstopdfwrap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.csh; path = epstopdfwrap; sourceTree = "<group>"; };
-		66A63DD00114947700000001 /* ps2pdfwrap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.csh; path = ps2pdfwrap; sourceTree = "<group>"; };
 		F506285400F4F04801000001 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		F50B193D0152A11D01000001 /* contextwrap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.csh; path = contextwrap; sourceTree = "<group>"; };
 		F510E36D03916F340100009E /* TSTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSTextView.h; sourceTree = "<group>"; };
@@ -1777,9 +1771,7 @@
 				66A63DCE0114947700000001 /* epstopdf */,
 				66A63DCF0114947700000001 /* epstopdfwrap */,
 				40143F70156F52B600CAFAFC /* sipswrap */,
-				66A63DD00114947700000001 /* ps2pdfwrap */,
 				40795D632AB4E307005A7539 /* ps2pdftransparencywrap */,
-				40FFD6F72AB63CEF003E4D12 /* gstestwrap */,
 				F50B193D0152A11D01000001 /* contextwrap */,
 				406A69F4060F8C170028E210 /* detexwrap */,
 				400839512665407800037D3C /* contextforwardsyncwrap */,

@@ -37,7 +37,7 @@ def main():
                 problems.append(f'{path.relative_to(ROOT)}: {match.group(0)!r}')
     required = {
         'SettingsCategories': ['catalog.typesetting.4.0.title', 'catalog.typesetting.5.0.title',
-                               'catalog.typesetting.6.0.title', 'catalog.typesetting.4.2.note', 'catalog.typesetting.5.2.note'],
+                               'catalog.typesetting.6.0.title', 'catalog.typesetting.4.2.note'],
         'SettingsTypesetting': ['588.title'],
         'ToolbarItems': ['tiLabelTeX', 'tiPaletteLabelTeX', 'tiToolTipTeX'],
     }

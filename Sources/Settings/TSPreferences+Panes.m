@@ -142,7 +142,6 @@
     _saveRelatedButton = typesetting.saveRelatedButton;
     _syncMatrix = typesetting.syncMatrix;
     _syncTabButton = typesetting.syncTabButton;
-    _useTransparencyButton = typesetting.useTransparencyButton;
     _altPathField = engines.altPathField;
     _bibTeXengineField = engines.bibTeXengineField;
     _escapeWarningButton = engines.escapeWarningButton;
@@ -150,7 +149,6 @@
     _kpsetoolField = engines.kpsetoolField;
     _latexCommandTextField = engines.latexCommandTextField;
     _latexGSCommandTextField = engines.latexGSCommandTextField;
-    _savePSButton = engines.savePSButton;
     _tetexBinPathField = engines.tetexBinPathField;
     _texCommandTextField = engines.texCommandTextField;
     _texGSCommandTextField = engines.texGSCommandTextField;

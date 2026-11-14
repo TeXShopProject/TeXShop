@@ -16,7 +16,7 @@ root = Path(__file__).resolve().parents[1]
 interfaces = root / 'Resources/Interfaces'
 SPACE = ' \t\u00a0\u3000'
 mutation = sys.argv[1] if len(sys.argv) > 1 else ''
-MUTATIONS = ('designable', 'xib', 'xib-strings', 'code-strings', 'compiled')
+MUTATIONS = ('designable', 'xib', 'xib-strings', 'code-strings', 'variable-title', 'compiled')
 assert mutation in ('',) + MUTATIONS, f'unknown mutation {mutation}; use one of {MUTATIONS}'
 failures = []
 
@@ -82,6 +82,12 @@ for source in sorted((root / 'Sources').rglob('*.m')):
         for match in localized.finditer(statement.group('rest')):
             table = match.group(2) if 'FromTable' in match.group(0) else 'Localizable'
             keys.add((table, match.group(1)))
+# Titles built in a variable before the item is made: the engine menus of Settings > Typesetting
+# show a missing engine as "%@ (Not Found)" and an empty one as "None".
+preferences = (root / 'Sources/Settings/TSPreferences.m').read_text(encoding='utf-8', errors='replace')
+for key in ('%@ (Not Found)', 'None'):
+    assert f'NSLocalizedString(@"{key}"' in preferences, key
+    keys.add(('Localizable', key))
 assert ('Localizable', 'Link Popups') in keys and len(keys) >= 30, len(keys)
 english = interfaces / 'en.lproj'
 keys |= {('AdvancedFind', k) for k in strings(english / 'AdvancedFind.strings') if k.startswith('AdvancedFind.Menu.') or k == 'MultipleReplace.EditMenu'}
@@ -97,6 +103,8 @@ for language in sorted(interfaces.glob('*.lproj')):
         values = strings(path)
         if mutation == 'code-strings' and language.name == 'ko.lproj' and table == 'Localizable':
             values['Link Popups'] = ' 링크 팝업'
+        if mutation == 'variable-title' and language.name == 'de.lproj' and table == 'Localizable':
+            values['%@ (Not Found)'] = '%@  (nicht gefunden)'
         for t, key in sorted(keys):
             if t == table and key in values:
                 code_titles += 1

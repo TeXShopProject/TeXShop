@@ -868,7 +868,9 @@ static void TSInstallAdvancedFindFieldStyle(void)
         [SUD setInteger: 2 forKey: DefaultCommandKey];
         [SUD synchronize];
     }
-    TSKeepEarlierFactoryEngineFile(SUD, [SUD persistentDomainForName:NSBundle.mainBundle.bundleIdentifier ?: @"TeXShop"] ?: @{});
+    NSDictionary *storedSettings = [SUD persistentDomainForName:NSBundle.mainBundle.bundleIdentifier ?: @"TeXShop"] ?: @{};
+    TSKeepEarlierFactoryEngineFile(SUD, storedSettings);
+    TSMoveViaDVIOptionsIntoCommands(SUD, storedSettings);
   
 	    
 	[self finishMenuKeyEquivalentsConfigure];

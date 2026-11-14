@@ -122,17 +122,19 @@ with tempfile.TemporaryDirectory(prefix='texshop-ghostscript-') as temp:
     assert code == 0 and calls.strip() == 'ps2pdf a.ps', (code, calls, 'Ghostscript before 9.51 gets no -dALLOWPSTRANSPARENCY')
     code, calls, output = run(transparency, 'Ghostscript', str(temp / 'empty'), 'a.ps', path=system)
     assert code != 0 and 'ps2pdf' in output and 'not found' in output, (code, output, 'without Ghostscript the conversion fails visibly')
-    code, calls, output = run('ps2pdfwrap', 'Ghostscript', str(temp / 'empty'), 'a.ps', path=system)
-    assert code != 0 and 'not found' in output, (code, output, 'ps2pdfwrap without Ghostscript fails visibly')
-    for path, setting, expected, reason in [(f'{temp / "onpath"}:{system}', temp / 'empty', 0, 'new Ghostscript in the PATH'),
-                                            (system, temp / 'setting-old', 1, 'Ghostscript 9.50 in the setting'),
-                                            (system, temp / 'empty', 1, 'no Ghostscript')]:
-        code, _, _ = run('gstestwrap', str(setting), path=path)
-        assert code == expected, (code, reason, 'gstestwrap')
-    print('PASS wrappers: Ghostscript from the setting or the PATH, version 9.51 for transparency, visible failure without it')
+    # The wrappers that only the Settings switch -dALLOWPSTRANSPARENCY used are gone.
+    assert not (scripts / 'ps2pdfwrap').exists() and not (scripts / 'gstestwrap').exists(), 'ps2pdfwrap and gstestwrap are removed'
+    print('PASS wrappers: Ghostscript from the setting or the PATH, version 9.51 for transparency, visible failure without it; no wrapper for the removed switch')
 
 # Where Ghostscript is needed, TeXShop looks for it first.
 jobs = (ROOT / 'Sources/Typesetting/TSDocument-Jobs.m').read_text(encoding='latin1')
+if mutation == 'ps-by-setting':
+    jobs = jobs.replace('''			enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdftransparencywrap" ofType:nil inDirectory:@"Shellscripts"];''', '''			if ([SUD boolForKey:UseTransparencyKey])
+				enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdftransparencywrap" ofType:nil inDirectory:@"Shellscripts"];
+			else
+				enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdfwrap" ofType:nil inDirectory:@"Shellscripts"];''')
+if mutation == 'distiller-options-added':
+    jobs = jobs.replace('myEngine = [[SUD stringForKey:TexGSCommandKey] stringByExpandingTildeInPath]; // 1.35 (D)\n\t\t\t\t\t\t}', 'myEngine = [[SUD stringForKey:TexGSCommandKey] stringByExpandingTildeInPath]; // 1.35 (D)\n\t\t\t\t\t\t\tmyEngine = [myEngine stringByAppendingString: @" --distilleropts \\"-dALLOWPSTRANSPARENCY\\" "];\n\t\t\t\t\t\t}', 1)
 if mutation == 'no-eps-check':
     jobs = jobs.replace('''			if (! [self ghostscriptIsAvailableAlsoIn: nil]) {
 				self.texTask = nil;
@@ -153,7 +155,12 @@ available = jobs[jobs.index('- (BOOL)ghostscriptIsAvailableAlsoIn:'):]
 available = available[:available.index('\n}\n')]
 assert 'path = [[[folders componentsJoinedByString:@":"] stringByAppendingString:@":"] stringByAppendingString:path];' in available and 'TSGhostscriptFoundInPath(path)' in available and \
        'NSLocalizedString(@"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting."' in available
-assert '[args addObject:tetexBinPath ?: @""];' in jobs, 'no Ghostscript path does not raise in TestGSVersion'
+# Opening a .ps file always converts with the wrapper that adds -dALLOWPSTRANSPARENCY when
+# Ghostscript is 9.51 or later; Via DVI typesetting adds no option of its own.
+ps = convert[convert.index('isEqualToString:@"ps"]) {'):]
+ps = ps[:ps.index('} else if')]
+assert 'pathForResource:@"ps2pdftransparencywrap"' in ps and 'UseTransparencyKey' not in jobs and 'ps2pdfwrap' not in jobs, 'a .ps file always opens with ps2pdftransparencywrap'
+assert '--distilleropts' not in jobs and 'TestGSVersion' not in jobs, 'Via DVI typesetting adds no --distilleropts'
 
 key = 'Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting.'
 for language in ('en', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt-PT', 'pt', 'ro', 'zh_CN'):

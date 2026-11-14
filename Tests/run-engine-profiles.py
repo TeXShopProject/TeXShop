@@ -204,6 +204,29 @@ int main(int argc, char **argv) { @autoreleasepool {
         TSKeepEarlierFactoryEngineFile(d, c[0]); TSKeepEarlierFactoryEngineFile(d, c[0]);
         check([[d stringForKey:@"DefaultEngine"] isEqual:c[1]], [NSString stringWithFormat:@"stored %@ typesets with %@", c[0], c[1]]);
     }
+    // 7. Save PostScript File and -dALLOWPSTRANSPARENCY move into the Via DVI commands that understand them, once.
+    NSString *simp = factory[@"TexGSCommand"], *simpLatex = factory[@"LatexGSCommand"];
+    NSString *ps = @" --keep-psfile", *tr = @" --distilleropts \"-dALLOWPSTRANSPARENCY\"";
+    NSArray *psCases = @[
+        @[@{@"SavePSEnabled": @YES}, [simp stringByAppendingString:ps], [simpLatex stringByAppendingString:ps]],
+        @[@{@"SavePSEnabled": @"YES", @"TexGSCommand": @"/usr/local/bin/altpdftex  ", @"LatexGSCommand": @"altpdflatex --keep-psfile"}, @"/usr/local/bin/altpdftex --keep-psfile", @"altpdflatex --keep-psfile"],
+        @[@{@"SavePSEnabled": @1, @"UseTransparency": @YES, @"TexGSCommand": @"ptex2pdf -l", @"LatexGSCommand": @"latexmk -pdfdvi"}, @"ptex2pdf -l", @"latexmk -pdfdvi"],
+        @[@{@"SavePSEnabled": @NO}, simp, simpLatex],
+        @[@{@"SavePSEnabled": @"0", @"LatexGSCommand": @"simpdftex latex"}, simp, @"simpdftex latex"],
+        @[@{@"UseTransparency": @YES}, [simp stringByAppendingString:tr], [simpLatex stringByAppendingString:tr]],
+        @[@{@"UseTransparency": @"YES", @"SavePSEnabled": @YES, @"LatexGSCommand": @"simpdftex latex --distiller /usr/bin/pstopdf"}, [[simp stringByAppendingString:ps] stringByAppendingString:tr], @"simpdftex latex --distiller /usr/bin/pstopdf --keep-psfile"],
+        @[@{@"UseTransparency": @NO, @"SavePSEnabled": @NO}, simp, simpLatex],
+        @[@{}, simp, simpLatex]];
+    for (NSArray *c in psCases) {
+        TSMemoryDefaults *d = [TSMemoryDefaults new]; [d registerDefaults:factory];
+        [c[0] enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) { [d setObject:value forKey:key]; }];
+        TSMoveViaDVIOptionsIntoCommands(d, c[0]);
+        NSMutableDictionary *after = [c[0] mutableCopy]; [after removeObjectsForKeys:@[@"SavePSEnabled", @"UseTransparency"]];
+        for (NSString *k in @[@"TexGSCommand", @"LatexGSCommand"]) if ([d objectForKey:k] != nil) after[k] = [d objectForKey:k];
+        TSMoveViaDVIOptionsIntoCommands(d, after);
+        check([[d stringForKey:@"TexGSCommand"] isEqual:c[1]] && [[d stringForKey:@"LatexGSCommand"] isEqual:c[2]] && [d objectForKey:@"SavePSEnabled"] == nil && [d objectForKey:@"UseTransparency"] == nil,
+              [NSString stringWithFormat:@"%@ moves into the commands that understand it, once", c[0]]);
+    }
     if (failures) return 1;
     puts("PASS: 8 profiles x 2 forms write exactly their keys; matching, apply, latexmk in use, first-launch language choice and the earlier factory engine file");
 } return 0; }
@@ -235,8 +258,17 @@ MUTATIONS = {
     'earlier engine file lost': ('    [defaults setObject:@"XeLaTeX" forKey:DefaultEngineKey];', ''),
     'stored engine file replaced': ('    if (stored[DefaultEngineKey] != nil) return;\n', ''),
     'any command keeps XeLaTeX': ('|| [command integerValue] != 2) return;', ') return;'),
+    'options for every command': ('if (![@[@"simpdftex", @"altpdftex", @"altpdflatex"] containsObject:program ?: @""]) continue;', 'if (program == nil) continue;'),
+    'keep-psfile twice': ('if (on(savePS) && ![moved containsString:@"--keep-psfile"])', 'if (on(savePS))'),
+    'transparency over a distiller': ('if (on(transparency) && ![moved containsString:@"--distiller"])', 'if (on(transparency))'),
+    'settings kept': ('    [defaults removeObjectForKey:UseTransparencyKey];\n', ''),
     'dvips offered first': ('             @[@(TSEngineProfileLaTeXDvipsGhostscript)]];', '             @[@(TSEngineProfileLaTeXDvipsGhostscript), @(TSEngineProfilePdfLaTeX)]];'),
 }
+
+# Via DVI commands take --keep-psfile themselves; typesetting adds it to none.
+jobs = source_file(R, 'TSDocument-Jobs.m').read_text()
+assert '--keep-psfile' not in jobs and 'SavePSEnabledKey' not in jobs and 'ALLOWPSTRANSPARENCY\\"' not in jobs and 'UseTransparencyKey' not in jobs, 'Typesetting adds no Via DVI option'
+print('PASS: typesetting adds neither --keep-psfile nor --distilleropts', flush=True)
 
 with tempfile.TemporaryDirectory(prefix='texshop-engine-profiles-') as temp:
     t = Path(temp)
