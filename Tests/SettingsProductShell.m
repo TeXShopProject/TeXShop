@@ -443,9 +443,11 @@ int main(int argc,char **argv){@autoreleasepool{
  // Apply every engine profile, in both forms, through the production transaction.
  [shell selectCategoryIdentifier:TSSettingsCategoryTypesetting];
  NSPopUpButton *profiles=[owner valueForKey:@"engineProfilePopup"];
- NSButton *applyProfile=[owner valueForKey:@"engineProfileApplyButton"];
- Check(profiles!=nil && Find([shell viewForCategoryIdentifier:TSSettingsCategoryTypesetting],@"row.catalog.typesetting.0.4")!=nil && [applyProfile.superview isDescendantOf:Find([shell viewForCategoryIdentifier:TSSettingsCategoryTypesetting],@"row.catalog.typesetting.0.4")],@"The engine profile menu and its Apply button are in Typesetting");
- Check(applyProfile.target==owner && applyProfile.action==@selector(applyEngineProfile:),@"Apply is connected to the owner");
+ NSView *profileRow=Find([shell viewForCategoryIdentifier:TSSettingsCategoryTypesetting],@"row.catalog.typesetting.0.4");
+ Check(profiles!=nil && profileRow!=nil && [profiles isDescendantOf:profileRow] && Find(profileRow,@"settings.engine-profile-apply")==nil && [owner valueForKey:@"engineProfileWatcher"]!=nil,@"The engine profile menu is in Typesetting, without an Apply button, and follows the settings");
+ NSUInteger profileRowButtons=0;for(NSView *v in [profileRow.subviews arrayByAddingObjectsFromArray:profileRow.subviews.firstObject.subviews])if([v isMemberOfClass:NSButton.class])profileRowButtons++;
+ Check(profileRowButtons==0,@"No button beside the profile menu");
+ Check(profiles.target==owner && profiles.action==@selector(applyEngineProfile:),@"Choosing a profile asks the owner at once");
  __block NSMutableArray<NSString *> *effects=[NSMutableArray array];
  id token=[NSNotificationCenter.defaultCenter addObserverForName:nil object:owner queue:nil usingBlock:^(NSNotification *note){[effects addObject:note.name];Check(note.userInfo==nil,@"Profile notifications contain no transient theme dictionary");}];
  NSUInteger applied=0;
@@ -473,6 +475,41 @@ int main(int argc,char **argv){@autoreleasepool{
  Check(profiles.selectedTag==TSEngineProfileNone && [profiles.titleOfSelectedItem isEqual:NSLocalizedString(@"Custom",@"")] && !profiles.selectedItem.enabled,@"A typed command shows Custom, which cannot be chosen");
  NSUInteger untagged=0;for(NSMenuItem *item in profiles.itemArray)if(item.tag==TSEngineProfileNone)untagged++;
  Check(untagged==1 && profiles.selectedItem.tag==TSEngineProfileNone && !profiles.selectedItem.isSeparatorItem && !profiles.selectedItem.isSectionHeader,@"Only Custom answers to no profile; separators and the heading answer to none");
+ // Every setting a profile writes decides: one changed value shows Custom at once, wherever it is changed,
+ // and putting it back shows the profile again.
+ void (^drainProfiles)(void)=^{for(int i=0;i<5;i++)[NSRunLoop.mainRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];};
+ for(NSNumber *profile in @[@(TSEngineProfilePdfLaTeX),@(TSEngineProfileUpLaTeXDvipdfmx),@(TSEngineProfilePLaTeXDvipdfmx)]){
+  NSDictionary *values=TSEngineProfileValues(profile.integerValue,NO);
+  [owner applyEngineProfileValues:values];drainProfiles();
+  Check(profiles.selectedTag==profile.integerValue,@"The applied profile is shown");
+  for(NSString *key in values){
+   id saved=[TSIsolatedAppKitDefaults objectForKey:key];
+   id other=[values[key] isKindOfClass:NSString.class]?[values[key] stringByAppendingString:@"-other"]:@(![values[key] boolValue]+([values[key] integerValue]>1?7:0));
+   [TSIsolatedAppKitDefaults setObject:other forKey:key];drainProfiles();
+   Check(profiles.selectedTag==TSEngineProfileNone && [profiles.titleOfSelectedItem isEqual:NSLocalizedString(@"Custom",@"")],[NSString stringWithFormat:@"Changing %@ of %@ elsewhere shows Custom",key,profile]);
+   [TSIsolatedAppKitDefaults setObject:saved forKey:key];drainProfiles();
+   Check(profiles.selectedTag==profile.integerValue && profiles.numberOfItems==8+2+1,[NSString stringWithFormat:@"Putting %@ of %@ back shows the profile again",key,profile]);
+  }
+ }
+ NSTextField *indexField=[owner valueForKey:@"makeIndexEngineField"];
+ Check([indexField.stringValue isEqual:@"mendex"],@"The index program of the profile is shown");
+ [indexField selectText:nil];indexField.currentEditor.string=@"makeindex";
+ [owner controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:indexField]];
+ Check([owner commitPreferenceField:indexField showError:NO reflect:YES] && [[TSIsolatedAppKitDefaults stringForKey:MakeIndexEngineKey] isEqual:@"makeindex"],@"Another index program commits");
+ drainProfiles();Check(profiles.selectedTag==TSEngineProfileNone,@"Another index program typed in Settings shows Custom");
+ // Choosing a profile asks; Cancel changes nothing and shows Custom again.
+ Method profileSheet=class_getInstanceMethod(NSAlert.class,@selector(beginSheetModalForWindow:completionHandler:));
+ __block NSModalResponse profileAnswer=NSAlertSecondButtonReturn;__block NSUInteger profileSheets=0;
+ __block TSEngineProfile shownWhileAsking=TSEngineProfileNone;
+ IMP originalSheet=method_setImplementation(profileSheet,imp_implementationWithBlock(^(NSAlert *alert,NSWindow *window,void (^completion)(NSModalResponse)){profileSheets++;shownWhileAsking=profiles.selectedTag;completion(profileAnswer);}));
+ NSDictionary *beforeChoice=[TSIsolatedAppKitDefaults.values copy];
+ [profiles selectItemWithTag:TSEngineProfileXeLaTeX];[profiles sendAction:profiles.action to:profiles.target];drainProfiles();
+ Check(profileSheets==1 && shownWhileAsking==TSEngineProfileXeLaTeX,@"While the sheet asks, the menu shows the profile chosen");
+ Check([TSIsolatedAppKitDefaults.values isEqual:beforeChoice] && profiles.selectedTag==TSEngineProfileNone,@"Cancel changes nothing and shows Custom again");
+ profileAnswer=NSAlertFirstButtonReturn;
+ [profiles selectItemWithTag:TSEngineProfileXeLaTeX];[profiles sendAction:profiles.action to:profiles.target];drainProfiles();
+ Check(profileSheets==2 && profiles.selectedTag==TSEngineProfileXeLaTeX && [[TSIsolatedAppKitDefaults stringForKey:MakeIndexEngineKey] isEqual:@"makeindex"] && [[TSIsolatedAppKitDefaults stringForKey:LatexCommandKey] isEqual:TSEngineProfileValues(TSEngineProfileXeLaTeX,NO)[LatexCommandKey]],@"Apply in the sheet applies the chosen profile");
+ method_setImplementation(profileSheet,originalSheet);
  [shell.window makeFirstResponder:nil];
  [NSNotificationCenter.defaultCenter removeObserver:token];
  [TSIsolatedAppKitDefaults setObject:@"round" forKey:TSDockIconKey];[dock restoreSavedIcon];

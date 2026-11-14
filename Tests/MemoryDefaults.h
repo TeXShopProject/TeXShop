@@ -11,12 +11,15 @@
 @implementation TSMemoryDefaults
 - (instancetype)init { if ((self = [super init])) { _persistentValues = [NSMutableDictionary new]; _values = [NSMutableDictionary new]; _fallbacks = [NSMutableDictionary new]; _volatileValues = [NSMutableDictionary new]; } return self; }
 - (id)objectForKey:(NSString *)key { return self.volatileValues[NSArgumentDomain][key] ?: self.values[key] ?: self.persistentValues[[self applicationDomainName]][key] ?: self.fallbacks[key]; }
-- (void)setObject:(id)value forKey:(NSString *)key { if (value) self.values[key] = value; else [self removeObjectForKey:key]; }
+// Key-value observers hear of each change, as with NSUserDefaults.
+- (void)setObject:(id)value forKey:(NSString *)key { if (!value) { [self removeObjectForKey:key]; return; } [self willChangeValueForKey:key]; self.values[key] = value; [self didChangeValueForKey:key]; }
 - (void)removeObjectForKey:(NSString *)key {
+    [self willChangeValueForKey:key];
     [self.values removeObjectForKey:key];
     NSString *name=[self applicationDomainName];
     NSMutableDictionary *domain=[self.persistentValues[name] mutableCopy];
     if(domain){[domain removeObjectForKey:key];self.persistentValues[name]=[domain copy];}
+    [self didChangeValueForKey:key];
 }
 - (void)registerDefaults:(NSDictionary *)values { [self.fallbacks addEntriesFromDictionary:values]; }
 - (NSInteger)integerForKey:(NSString *)key { return [[self objectForKey:key] integerValue]; }

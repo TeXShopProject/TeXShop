@@ -237,7 +237,6 @@
 "group.typesetting.0.title" = "エンジン";
 "catalog.typesetting.0.4.title" = "エンジンのプロファイル";
 "catalog.typesetting.0.4.note" = "タイプセットのコマンド、BibTeXエンジン、索引作成とMetaPostのコマンド、otfパッケージ対応を設定します。日本語のプロファイルは、新しい書類のエンコーディング（UTF-8）、辞書、UTF-8-MACの変換も設定します。";
-"catalog.typesetting.0.4.button" = "適用…";
 "catalog.typesetting.0.0.title" = "新しい書類のタイプセット";
 "catalog.typesetting.0.0.note" = "書類を開いたとき、ツールバーの「タイプセット」の横で最初に選ばれるものです。書類に % !TEX TS-programの行があれば、そちらが優先されます。";
 "catalog.typesetting.0.1.title" = "エンジンファイル";

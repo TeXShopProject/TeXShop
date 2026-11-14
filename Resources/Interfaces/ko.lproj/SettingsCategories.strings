@@ -237,7 +237,6 @@
 "group.typesetting.0.title" = "엔진";
 "catalog.typesetting.0.4.title" = "엔진 프로파일";
 "catalog.typesetting.0.4.note" = "조판 명령, BibTeX 엔진, 색인 작성, MetaPost, otf 패키지 지원을 설정합니다. 일본어 프로파일은 새 문서의 인코딩(UTF-8), 사전, UTF-8-MAC 변환도 설정합니다.";
-"catalog.typesetting.0.4.button" = "적용…";
 "catalog.typesetting.0.0.title" = "새 문서 조판";
 "catalog.typesetting.0.0.note" = "문서를 열 때 도구 막대의 조판 옆에서 처음 선택되는 항목입니다. 문서에 % !TEX TS-program 줄이 있으면 그것이 우선합니다.";
 "catalog.typesetting.0.1.title" = "엔진 파일";

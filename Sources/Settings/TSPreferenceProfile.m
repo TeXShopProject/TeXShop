@@ -124,9 +124,10 @@ TSEngineProfile TSEngineProfileMatchingSettings(NSUserDefaults *defaults, BOOL *
             for (NSNumber *form in @[@NO, @YES]) {
                 NSDictionary *values = TSEngineProfileValues(number.integerValue, form.boolValue);
                 BOOL same = YES;
-                // The commands decide; the settings that go with them do not.
-                for (NSString *key in @[DefaultScriptKey, LatexCommandKey, TexCommandKey, LatexGSCommandKey, TexGSCommandKey, BibTeXengineKey])
-                    if (values[key] != nil && !TSEngineProfileSame([defaults objectForKey:key], values[key])) { same = NO; break; }
+                // Every value the profile writes decides, the settings that go with the commands too:
+                // a change to any of them makes the settings Custom.
+                for (NSString *key in values)
+                    if (!TSEngineProfileSame([defaults objectForKey:key], values[key])) { same = NO; break; }
                 if (!same) continue;
                 if (latexmk != NULL) *latexmk = form.boolValue;
                 return number.integerValue;
@@ -143,6 +144,63 @@ BOOL TSEngineProfileSettingsUseLatexmk(NSUserDefaults *defaults)
     NSString *command = [[defaults stringForKey:key] ?: @"" stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
     return [command isEqualToString:@"latexmk"] || [command hasPrefix:@"latexmk "];
 }
+
+NSArray<TSPreferenceKey> *TSEngineProfileKeys(void)
+{
+    NSMutableOrderedSet *keys = [NSMutableOrderedSet orderedSet];
+    for (NSArray<NSNumber *> *section in TSEngineProfileMenuSections())
+        for (NSNumber *profile in section)
+            for (NSNumber *form in @[@NO, @YES])
+                [keys addObjectsFromArray:[TSEngineProfileValues(profile.integerValue, form.boolValue).allKeys sortedArrayUsingSelector:@selector(compare:)]];
+    return keys.array;
+}
+
+static void *TSEngineProfileWatcherContext = &TSEngineProfileWatcherContext;
+
+@implementation TSEngineProfileWatcher {
+    NSUserDefaults *_defaults;
+    NSArray<TSPreferenceKey> *_keys;
+    void (^_handler)(void);
+    BOOL _pending;
+}
+
+- (instancetype)initWithDefaults:(NSUserDefaults *)defaults handler:(void (^)(void))handler
+{
+    if ((self = [super init])) {
+        _defaults = defaults;
+        _keys = TSEngineProfileKeys();
+        _handler = [handler copy];
+        for (NSString *key in _keys) [defaults addObserver:self forKeyPath:key options:0 context:TSEngineProfileWatcherContext];
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    for (NSString *key in _keys) [_defaults removeObserver:self forKeyPath:key context:TSEngineProfileWatcherContext];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if (context != TSEngineProfileWatcherContext) {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+        return;
+    }
+    // A profile writes several keys, and a change from another process may come on another thread:
+    // the handler runs once, on the main queue, after the burst.
+    @synchronized (self) {
+        if (_pending) return;
+        _pending = YES;
+    }
+    __weak TSEngineProfileWatcher *weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        TSEngineProfileWatcher *watcher = weakSelf;
+        if (watcher == nil) return;
+        @synchronized (watcher) { watcher->_pending = NO; }
+        watcher->_handler();
+    });
+}
+@end
 
 TSEngineProfile TSEngineProfileForLanguages(NSArray<NSString *> *languages)
 {

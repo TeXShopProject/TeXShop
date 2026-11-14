@@ -103,7 +103,7 @@ int main(int argc, char **argv) { @autoreleasepool {
             CheckRoot(alert.window.contentView, where); roots++;
             SaveImage(alert.window.contentView, where);
         }
-        // The engine profile: the second step of first launch, and the sheet of Apply… with the longest name.
+        // The engine profile: the second step of first launch, and the sheet shown when a profile is chosen, with the longest name.
         NSArray *profileAlerts = @[TSEngineProfileChoiceAlert(TSEngineProfileLuaLaTeXJapanese, [NSMutableDictionary dictionary]),
                                    TSEngineProfileAlert(TSEngineProfileLaTeXDvipsGhostscript, TSEngineProfileLatexmkButton(YES))];
         NSArray *profileNames = @[@"engine profile choice", @"engine profile sheet"];

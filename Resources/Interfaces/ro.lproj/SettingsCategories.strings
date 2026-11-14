@@ -237,7 +237,6 @@
 "group.typesetting.0.title" = "Motor";
 "catalog.typesetting.0.4.title" = "Profilul motorului";
 "catalog.typesetting.0.4.note" = "Stabilește comenzile de compunere, motorul BibTeX, programul pentru index, MetaPost și suportul pentru pachetul otf. Profilurile japoneze stabilesc și UTF-8 drept codificare a documentelor noi, dicționarul și conversia UTF-8-MAC.";
-"catalog.typesetting.0.4.button" = "Aplicați…";
 "catalog.typesetting.0.0.title" = "Culege documentele noi cu";
 "catalog.typesetting.0.0.note" = "Ce alege bara de instrumente lângă Compilare când se deschide un document. O linie % !TEX TS-program din document are prioritate.";
 "catalog.typesetting.0.1.title" = "Fișier de motor";

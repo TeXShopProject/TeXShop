@@ -26,12 +26,20 @@ FOUNDATION_EXPORT NSString * _Nullable TSEngineProfileTitle(TSEngineProfile prof
 FOUNDATION_EXPORT BOOL TSEngineProfileIsJapanese(TSEngineProfile profile);
 /// The keys and values that applying the profile writes. Empty for an unknown profile.
 FOUNDATION_EXPORT NSDictionary<TSPreferenceKey, id> *TSEngineProfileValues(TSEngineProfile profile, BOOL latexmk);
-/// The profile whose typesetting commands the settings have now, or TSEngineProfileNone.
+/// The profile all of whose values the settings have now, or TSEngineProfileNone (Custom).
 /// *latexmk tells which of its two forms they match.
 FOUNDATION_EXPORT TSEngineProfile TSEngineProfileMatchingSettings(NSUserDefaults *defaults, BOOL * _Nullable latexmk);
 /// Whether the settings run latexmk now: the form of the matching profile, or, for commands
 /// typed by hand, whether the LaTeX command of the default method starts with latexmk.
 FOUNDATION_EXPORT BOOL TSEngineProfileSettingsUseLatexmk(NSUserDefaults *defaults);
+/// Every key that some profile writes, in either form.
+FOUNDATION_EXPORT NSArray<TSPreferenceKey> *TSEngineProfileKeys(void);
+/// Calls the handler on the main queue, once for a burst of changes, after any key of
+/// TSEngineProfileKeys changes in the defaults, also from another process. Stops when released.
+@interface TSEngineProfileWatcher : NSObject
+- (instancetype)initWithDefaults:(NSUserDefaults *)defaults handler:(void (^)(void))handler NS_DESIGNATED_INITIALIZER;
+- (instancetype)init NS_UNAVAILABLE;
+@end
 /// The profile chosen beforehand on first launch for these preferred languages.
 FOUNDATION_EXPORT TSEngineProfile TSEngineProfileForLanguages(NSArray<NSString *> *languages);
 /// Writes the values, holding back the observers of single keys until all are stored, and

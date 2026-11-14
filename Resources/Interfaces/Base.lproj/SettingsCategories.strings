@@ -237,7 +237,6 @@
 "group.typesetting.0.title" = "Engine";
 "catalog.typesetting.0.4.title" = "Engine Profile";
 "catalog.typesetting.0.4.note" = "Sets the typesetting commands, the BibTeX engine, the index program, MetaPost, and otf package support. The Japanese profiles also set UTF-8 as the encoding for new documents, the dictionary, and UTF-8-MAC conversion.";
-"catalog.typesetting.0.4.button" = "Apply…";
 "catalog.typesetting.0.0.title" = "Typeset New Documents With";
 "catalog.typesetting.0.0.note" = "What the toolbar selects beside Typeset when a document opens. A % !TEX TS-program line in the document takes precedence.";
 "catalog.typesetting.0.1.title" = "Engine File";

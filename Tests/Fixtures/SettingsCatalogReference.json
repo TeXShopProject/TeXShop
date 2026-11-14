@@ -1580,7 +1580,6 @@
         "upLaTeX + dvipdfmx",
         "LaTeX + dvips + Ghostscript"
        ],
-       "button": "適用…",
        "src": [
         "new:engine-profile"
        ]

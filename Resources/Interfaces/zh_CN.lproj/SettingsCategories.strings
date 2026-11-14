@@ -237,7 +237,6 @@
 "group.typesetting.0.title" = "引擎";
 "catalog.typesetting.0.4.title" = "引擎配置";
 "catalog.typesetting.0.4.note" = "设置排版命令、BibTeX引擎、索引生成、MetaPost和otf宏包支持。日语配置还会设置新文档的编码（UTF-8）、词典和UTF-8-MAC转换。";
-"catalog.typesetting.0.4.button" = "应用…";
 "catalog.typesetting.0.0.title" = "新文稿的排版";
 "catalog.typesetting.0.0.note" = "打开文稿时，工具栏中“排版”旁边最先选中的项。文稿中有 % !TEX TS-program行时，以该行为准。";
 "catalog.typesetting.0.1.title" = "引擎文件";

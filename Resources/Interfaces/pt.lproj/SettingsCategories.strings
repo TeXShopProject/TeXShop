@@ -237,7 +237,6 @@
 "group.typesetting.0.title" = "Motor";
 "catalog.typesetting.0.4.title" = "Perfil do motor";
 "catalog.typesetting.0.4.note" = "Define os comandos de composição, o motor BibTeX, o programa de índice, o MetaPost e o suporte ao pacote otf. Os perfis japoneses também definem UTF-8 como codificação dos novos documentos, o dicionário e a conversão de UTF-8-MAC.";
-"catalog.typesetting.0.4.button" = "Aplicar…";
 "catalog.typesetting.0.0.title" = "Compor documentos novos com";
 "catalog.typesetting.0.0.note" = "O que a barra de ferramentas escolhe ao lado de Compor quando um documento é aberto. Uma linha % !TEX TS-program no documento tem prioridade.";
 "catalog.typesetting.0.1.title" = "Arquivo de motor";
