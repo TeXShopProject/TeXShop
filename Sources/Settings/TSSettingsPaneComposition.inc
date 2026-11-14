@@ -276,7 +276,6 @@
         ]],
         @"settings.RA7-3r-O6n": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.8bu-du-vzc"] kind:TSSettingsRowControls indentation:0], // Create New Theme
-            [TSSettingsLayoutRow controls:@[@"settings.uXA-S0-9dP"] kind:TSSettingsRowControls indentation:0], // New Theme from Settings
         ]],
         @"settings.3cH-6c-fhq": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.S3x-qU-RUF"] kind:TSSettingsRowSection indentation:0],

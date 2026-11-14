@@ -1,18 +1,14 @@
 #import "TSThemeFileStore.h"
 @interface TSPreferences (OpacityRegression)
-- (IBAction)NewStyleFromPrefs:(id)sender;
 - (IBAction)EditingStyleChoice:(id)sender;
-- (void)requestNameForThemeColors:(NSDictionary *)colors;
 @end
 static NSLocale *opacityTestLocale;
 static id OpacityLocale(id cls, SEL cmd) { return opacityTestLocale; }
 static NSUInteger opacityWrites;
 static IMP opacityOriginalWrite;
-static NSDictionary *opacityMigrated;
 static BOOL CountOpacityWrite(id store,SEL selector,NSDictionary *colors,NSString *title,NSError **error){
     opacityWrites++;return ((BOOL(*)(id,SEL,id,id,NSError **))opacityOriginalWrite)(store,selector,colors,title,error);
 }
-static void CaptureOpacityMigration(id owner,SEL selector,NSDictionary *colors){opacityMigrated=[colors copy];}
 static NSUInteger opacityRejections;
 static void EnterOpacity(NSTextField *field,NSString *text,BOOL typing){
     [field selectText:nil];NSTextView *editor=(NSTextView *)field.currentEditor;
@@ -99,6 +95,29 @@ static void CheckOpacityField(TSPreferences *owner,TSSettingsWindowController *s
     Check(opacityWrites==w && [field.stringValue isEqual:@"30"],@"Disabled opacity disables its numeric field");well.enabled=YES;
     formatter.rejectionHandler=^{NSBeep();};
 }
+static void CollectThemeButtons(NSView *view,NSMutableArray<NSButton *> *buttons){
+    if(view.hidden)return;
+    if([view isKindOfClass:NSButton.class]){[buttons addObject:(NSButton *)view];return;}
+    for(NSView *child in view.subviews)CollectThemeButtons(child,buttons);
+}
+// Edit Theme keeps New Theme and Save Theme, in this order, without the button that made a theme from earlier color settings.
+static void CheckThemeActionButtons(TSPreferences *owner,TSSettingsWindowController *shell){
+    [shell selectCategoryIdentifier:TSSettingsCategoryAppearance];
+    NSView *pane=[shell viewForCategoryIdentifier:TSSettingsCategoryAppearance];[pane layoutSubtreeIfNeeded];
+    NSView *row=Find(pane,@"row.catalog.appearance.1.1");
+    NSMutableArray<NSButton *> *buttons=[NSMutableArray array];CollectThemeButtons(row,buttons);
+    NSArray *identifiers=[buttons valueForKey:@"identifier"];
+    Check(row!=nil && [identifiers isEqual:@[@"settings.8bu-du-vzc",@"settings.save-theme"]],[NSString stringWithFormat:@"Edit Theme has New Theme and Save Theme only: %@",identifiers]);
+    Check(Find(pane,@"settings.uXA-S0-9dP")==nil && ![owner respondsToSelector:NSSelectorFromString(@"NewStyleFromPrefs:")],@"No button makes a theme from earlier color settings");
+    if(buttons.count!=2)return;
+    NSArray *titles=@[[fixture localizedStringForKey:@"catalog.appearance.1.1.choice.0" value:nil table:@"SettingsCategories"],[fixture localizedStringForKey:@"catalog.appearance.1.1.choice.1" value:nil table:@"SettingsCategories"]];
+    Check([buttons[0].title isEqual:titles[0]] && [buttons[1].title isEqual:titles[1]] && buttons[0].action==@selector(SaveNewStyle:) && buttons[1].action==@selector(SaveEditedStyle:),[NSString stringWithFormat:@"Theme buttons keep their titles and actions: %@ / %@",buttons[0].title,buttons[1].title]);
+    NSRect first=[buttons[0] convertRect:buttons[0].bounds toView:row],second=[buttons[1] convertRect:buttons[1].bounds toView:row];
+    Check(NSWidth(first)>=buttons[0].fittingSize.width-0.5 && NSWidth(second)>=buttons[1].fittingSize.width-0.5,@"Theme button titles fit");
+    Check(fabs(NSMinX(second)-NSMaxX(first)-8)<0.5 && fabs(NSMidY(first)-NSMidY(second))<0.5,@"Theme buttons stand side by side, 8 points apart");
+    Check(fabs(NSWidth(row.bounds)-NSMaxX(second)-12)<0.5 && NSMinX(first)>=0,@"Theme buttons end 12 points from the right edge of their row");
+    puts("PASS: Edit Theme buttons");
+}
 static void CheckOwnerOpacity(TSPreferences *owner,TSSettingsWindowController *shell,NSDictionary *base) {
     NSDictionary *defaults=[TSIsolatedAppKitDefaults.values copy],*editing=[owner valueForKey:@"EditingColors"],*last=[owner valueForKey:@"lastSavedEditingColors"];
     NSDictionary *savedLite=liteColors,*savedDark=darkColors;
@@ -178,18 +197,8 @@ static void CheckOwnerOpacity(TSPreferences *owner,TSSettingsWindowController *s
     }
     method_setImplementation(write,opacityOriginalWrite);method_setImplementation(key,oldKey);navigationTestWindow=nil;
     [NSNotificationCenter.defaultCenter removeObserver:observer];
-    NSArray *legacy=@[SourceWindowAlphaKey,ConsoleWindowAlphaKey,PreviewWindowAlphaKey];
-    for(NSUInteger i=0;i<3;i++)[TSIsolatedAppKitDefaults setDouble:0.17+0.22*i forKey:legacy[i]];
-    // The preview paper of the old settings, one value written by Terminal as a string with spaces.
-    [TSIsolatedAppKitDefaults setDouble:0.42 forKey:PdfPageBack_RKey];[TSIsolatedAppKitDefaults setObject:@" 0.39 " forKey:PdfPageBack_GKey];[TSIsolatedAppKitDefaults setDouble:0.77 forKey:PdfPageBack_BKey];
-    Method migrate=class_getInstanceMethod(TSPreferences.class,@selector(requestNameForThemeColors:));IMP oldMigrate=method_setImplementation(migrate,(IMP)CaptureOpacityMigration);
-    [owner NewStyleFromPrefs:nil];
-    for(NSUInteger i=0;i<3;i++)Check(fabs([opacityMigrated[keys[i]][3]doubleValue]-(0.17+0.22*i))<1e-9,@"Legacy defaults migration preserves each window alpha");
-    NSArray *paper=opacityMigrated[@"PreviewBackground"];
-    Check(paper.count==4 && fabs([paper[0]doubleValue]-0.42)<1e-9 && fabs([paper[1]doubleValue]-0.39)<1e-9 && fabs([paper[2]doubleValue]-0.77)<1e-9 && [paper[3]doubleValue]==1,@"Legacy defaults migration brings the preview paper into the theme");
-    method_setImplementation(migrate,oldMigrate);opacityMigrated=nil;
     [choice selectItemAtIndex:0];[choice removeItemWithTitle:@"OpacityFixture"];
     TSIsolatedAppKitDefaults.values=[defaults mutableCopy];liteColors=savedLite;darkColors=savedDark;
     [owner setValue:editing forKey:@"EditingColors"];[owner setValue:last forKey:@"lastSavedEditingColors"];[owner FillInColorWells];
-    puts("PASS: opacity sliders and numeric fields, exact RGB/alpha, one save/refresh, reload, disabled state and legacy migration");
+    puts("PASS: opacity sliders and numeric fields, exact RGB/alpha, one save/refresh, reload and disabled state");
 }
