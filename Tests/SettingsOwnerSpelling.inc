@@ -24,6 +24,17 @@ static void CheckOwnerSpelling(TSPreferences *owner,TSSettingsWindowController *
         choice=initial.boolValue?modern:legacy;choice.state=NSControlStateValueOn;[NSApp sendAction:choice.action to:choice.target from:choice];
         Check(note.hidden,@"Returning to the entry value clears the spelling note");
     }
+    // At the narrowest and the usual window, the rules button stays beside the first line of its choice.
+    NSSize originalSize=shell.window.contentView.frame.size;[shell selectCategoryIdentifier:TSSettingsCategorySpelling];
+    for(NSNumber *width in @[@900,@1040]){
+        [shell.window setContentSize:NSMakeSize(width.doubleValue,780)];[shell.window.contentView layoutSubtreeIfNeeded];
+        NSView *row=Find([shell viewForCategoryIdentifier:TSSettingsCategorySpelling],@"row.catalog.spelling.1.0");NSButton *rules=[owner valueForKey:@"editSpellingExclusionsButton"];
+        NSRect e=[rules.superview convertRect:[rules alignmentRectForFrame:rules.frame] toView:row],m=[modern.superview convertRect:[modern alignmentRectForFrame:modern.frame] toView:row];
+        CGFloat ruleBaseline=NSMaxY(e)-rules.firstBaselineOffsetFromTop,choiceBaseline=NSMaxY(m)-modern.firstBaselineOffsetFromTop;
+        Check(fabs(ruleBaseline-choiceBaseline)<1 && NSMinX(e)>NSMaxX(m)+15 && fabs(NSMaxX(e)-(NSWidth(row.bounds)-12))<1,[NSString stringWithFormat:@"In a %@-point window the rules button is at the right end of the first line of its choice: %@ / %@",width,NSStringFromRect(e),NSStringFromRect(m)]);
+        Check([modern.cell cellSizeForBounds:NSMakeRect(0,0,NSWidth(m),CGFLOAT_MAX)].height<=NSHeight(m)+1,@"The LaTeX-aware choice shows its whole title beside the rules button");
+    }
+    [shell.window setContentSize:originalSize];[shell.window.contentView layoutSubtreeIfNeeded];
     TSIsolatedAppKitDefaults.values=[saved mutableCopy];[owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
     puts("PASS: both real spelling mode actions, transient notes, invalidation and retained child values");
 }

@@ -56,9 +56,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
   subprocess.run(command,check=True,timeout=90)
 
   if args.spelling_button_mutations:
-   # The exclusion rules button: beside its choice title, or below when the two do not fit.
-   cases=[('spelling-button-no-fallback','TSPrefPaneLayout.m','BOOL below = needed > NSWidth(self.bounds) - self.leadingInset - 12 + 0.5;','BOOL below = NO;','Button title fits'),
-    ('spelling-button-centered','TSPrefPaneLayout.m','[button.centerYAnchor constraintEqualToAnchor:line.centerYAnchor]','[button.centerYAnchor constraintEqualToAnchor:view.centerYAnchor]','The exclusion rules button is beside its choice title'),
+   # The exclusion rules button: beside the first line of its choice title, which wraps if need be.
+   cases=[('spelling-button-no-wrap','TSPrefPaneLayout.m','title.cell.wraps = YES; title.cell.lineBreakMode = NSLineBreakByWordWrapping; title.usesSingleLineMode = NO;',';','Button title fits'),
+    ('spelling-button-centered','TSPrefPaneLayout.m','[button.firstBaselineAnchor constraintEqualToAnchor:line.firstBaselineAnchor]','[button.centerYAnchor constraintEqualToAnchor:view.centerYAnchor]','The exclusion rules button is beside the first line of its choice title'),
     ('spelling-button-own-row','TSSettingsCatalogLayout.inc','@"controls": @[@"settings.ts-aware-spelling", @"settings.ts-edit-spelling"], @"items": @[], @"button": @"catalog.spelling.1.0.button"}','@"controls": @[@"settings.ts-aware-spelling"], @"items": @[]}, @{@"id": @"catalog.spelling.1.1", @"kind": @"button", @"title": @"catalog.spelling.1.0.button", @"note": @"", @"unit": @"", @"indent": @1, @"controls": @[@"settings.ts-edit-spelling"], @"items": @[]}','The exclusion rules button is in the row of its LaTeX-aware choice')]
    for name,filename,old,new,failure in cases:
     stage=t/('spelling-'+lang+'-'+name);stage.mkdir()

@@ -71,7 +71,10 @@ static void Geometry(NSView *v) {
   Check(NSContainsRect(NSInsetRect(v.bounds,-1,-1),[c alignmentRectForFrame:c.frame]),[NSString stringWithFormat:@"%@ inside %@",c.identifier,v.identifier]);Geometry(c);
  }
  if([v isKindOfClass:NSButton.class] && ![v isKindOfClass:NSPopUpButton.class] && !v.hidden) {
-  NSButton *button=(id)v;Check(button.imagePosition==NSImageOnly || button.cell.cellSize.width<=NSWidth(button.frame)+2,[NSString stringWithFormat:@"Button title fits %@ %.1f <= %.1f",button.title,button.cell.cellSize.width,NSWidth(button.frame)]);
+  NSButton *button=(id)v;
+  // A wrapping title fits when its height for the button's width does.
+  if(button.cell.wraps)Check([button.cell cellSizeForBounds:NSMakeRect(0,0,NSWidth(button.frame),CGFLOAT_MAX)].height<=NSHeight(button.frame)+1,[NSString stringWithFormat:@"Wrapping button title fits %@ %.1f <= %.1f",button.title,[button.cell cellSizeForBounds:NSMakeRect(0,0,NSWidth(button.frame),CGFLOAT_MAX)].height,NSHeight(button.frame)]);
+  else Check(button.imagePosition==NSImageOnly || button.cell.cellSize.width<=NSWidth(button.frame)+2,[NSString stringWithFormat:@"Button title fits %@ %.1f <= %.1f",button.title,button.cell.cellSize.width,NSWidth(button.frame)]);
  }
  if([v isKindOfClass:NSMatrix.class]) {NSMatrix *matrix=(id)v;
   for(NSInteger row=0;row<matrix.numberOfRows;row++)for(NSInteger col=0;col<matrix.numberOfColumns;col++)Check([matrix cellAtRow:row column:col].cellSize.width<=NSWidth([matrix cellFrameAtRow:row column:col])+1,@"Matrix title fits");
@@ -144,20 +147,20 @@ int main(int argc,char **argv){@autoreleasepool{
    width.constant=size.doubleValue;w.appearance=[NSAppearance appearanceNamed:appearance];[w.contentView layoutSubtreeIfNeeded];Geometry(v);
    if(argc>3 && (size.integerValue==570 || size.integerValue==700))SaveImage(v,[Argument(argv[3]) stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%@-%@.png",category,appearance,size]]);
    if([category isEqual:@"spelling"]){
-    // The exclusion rules button belongs to the LaTeX-aware choice: at the right end of
-    // its line, or below its description, at the right end, when the two do not fit.
+    // The exclusion rules button belongs to the LaTeX-aware choice, at the right end of its
+    // first line in every language and width; the choice's title wraps beside it if need be.
     {NSView *row=Find(v,@"row.catalog.spelling.1.0");NSButton *radio=(NSButton *)Find(row,@"settings.ts-aware-spelling"),*edit=(NSButton *)Find(row,@"settings.ts-edit-spelling");NSView *stack=radio.superview;
      Check(row!=nil && radio!=nil && edit!=nil && Find(v,@"row.catalog.spelling.1.1")==nil && [stack.identifier isEqual:@"label.catalog-stack"],@"The exclusion rules button is in the row of its LaTeX-aware choice");
      Check([edit.title isEqual:[bundle localizedStringForKey:@"catalog.spelling.1.0.button" value:nil table:@"SettingsCategories"]] && ![edit.title isEqual:@"catalog.spelling.1.0.button"] && edit.title.length,@"The exclusion rules button has its translated title");
      NSRect e=[edit.superview convertRect:[edit alignmentRectForFrame:edit.frame] toView:row],c=[stack.superview convertRect:[stack alignmentRectForFrame:stack.frame] toView:row],line=[radio.superview convertRect:[radio alignmentRectForFrame:radio.frame] toView:row];
-     BOOL beside=ceil(radio.intrinsicContentSize.width)+16+ceil(edit.intrinsicContentSize.width)<=NSWidth(row.bounds)-24+0.5;
+     CGFloat editBaseline=NSMaxY(e)-edit.firstBaselineOffsetFromTop,radioBaseline=NSMaxY(line)-radio.firstBaselineOffsetFromTop;
+     NSUInteger lines=(NSUInteger)lround(NSHeight(line)/MAX(1.0,radio.intrinsicContentSize.height));
      Check(fabs(NSMaxX(e)-(NSWidth(row.bounds)-12))<1,[NSString stringWithFormat:@"The exclusion rules button is at the right end of its row: %@ in %@",NSStringFromRect(e),NSStringFromRect(row.bounds)]);
+     Check(fabs(editBaseline-radioBaseline)<1 && NSMinX(e)>=NSMaxX(c)+15.5,[NSString stringWithFormat:@"The exclusion rules button is beside the first line of its choice title: %@ (baseline %.1f) and %@ (baseline %.1f)",NSStringFromRect(e),editBaseline,NSStringFromRect(line),radioBaseline]);
      Check(!NSIntersectsRect(NSInsetRect(e,-1,-1),c),[NSString stringWithFormat:@"The exclusion rules button does not cover its choice or description: %@ and %@",NSStringFromRect(e),NSStringFromRect(c)]);
-     Check(NSWidth(line)+0.5>=radio.intrinsicContentSize.width,[NSString stringWithFormat:@"The LaTeX-aware choice shows its whole title: %.1f of %.1f",NSWidth(line),radio.intrinsicContentSize.width]);
-     if(beside)Check(fabs(NSMidY(e)-NSMidY(line))<1 && NSMinX(e)>=NSMaxX(c)+15.5,[NSString stringWithFormat:@"The exclusion rules button is beside its choice title: %@ and %@",NSStringFromRect(e),NSStringFromRect(line)]);
-     else Check(NSMaxY(e)<=NSMinY(c)-7.5,[NSString stringWithFormat:@"The exclusion rules button is below the description when it does not fit beside the title: %@ and %@",NSStringFromRect(e),NSStringFromRect(c)]);
-     Check(beside || size.integerValue<960,@"At a wide window the exclusion rules button is beside its choice in every language");
-     if([appearance isEqual:NSAppearanceNameAqua])printf("SPELLING-BUTTON %s %s\n",size.stringValue.UTF8String,beside?"beside":"below");}
+     Check(radio.cell.wraps && [radio.cell cellSizeForBounds:NSMakeRect(0,0,NSWidth(line),CGFLOAT_MAX)].height<=NSHeight(line)+1,[NSString stringWithFormat:@"The LaTeX-aware choice shows its whole title: %.1f wide, %.1f high",NSWidth(line),NSHeight(line)]);
+     Check(lines==1 || size.integerValue<960,@"At a wide window the LaTeX-aware choice title is one line in every language");
+     if([appearance isEqual:NSAppearanceNameAqua])printf("SPELLING-BUTTON %s title-lines=%lu\n",size.stringValue.UTF8String,(unsigned long)lines);}
     for(NSString *key in @[@"settings.cell.teg-0p-Q8J",@"settings.cell.3eF-XA-ahc",@"settings.cell.8Wq-gx-FqO"]){NSView *row=Find(v,key);while(row && ![row.identifier hasPrefix:@"row."])row=row.superview;Check(row!=nil,@"Spelling child has a catalog row");NSView *label=Find(row,@"label.catalog-row");if(label)Check(fabs(NSMinX([label.superview convertRect:[label alignmentRectForFrame:label.frame] toView:row])-36)<1,[NSString stringWithFormat:@"Spelling child %@ label is indented 24 points: %@",key,NSStringFromRect([label convertRect:label.bounds toView:row])]);}
    }
   }
