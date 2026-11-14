@@ -13,7 +13,7 @@
 "679.title" = "プレビューを手前に移動";
 "680.title" = "編集を続ける";
 "785.title" = "PDFを検索";
-"786.title" = "SyncTeX";
+"786.title" = "SyncTeX（推奨）";
 "823.title" = "Sync方式";
 "898.title" = "関連ファイルも保存する";
 "919.title" = "Radio";
@@ -23,5 +23,5 @@
 "O6H-3y-7Ca.title" = "（通常はオフに）";
 "W5U-9S-4OG.title" = "Syncで新ドキュメントが開くとき";
 "YQv-fE-Uzg.title" = "ルートウインドウのタブで開く";
-"bYh-V5-ri6.title" = "タイプセット開始ウインドウを手前に";
+"bYh-V5-ri6.title" = "プレビューを表示して元のウインドウに戻る";
 "xwP-lA-zVw.title" = "-dALLOWPSTRANSPARENCY";
