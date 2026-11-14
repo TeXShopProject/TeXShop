@@ -361,7 +361,7 @@
 "LuaLaTeX (Japanese)" = "LuaLaTeX（日本語）";
 "Other" = "その他";
 "Custom" = "カスタム";
-"Apply the “%@” profile?" = "プロファイル“%@”を適用しますか？";
+"Apply the “%@” profile?" = "プロファイル「%@」を適用しますか？";
 "Use latexmk" = "latexmkを使用";
 "Detect Paths" = "パスの自動検出";
 "Choose an Engine Profile" = "エンジンのプロファイルを選択";
