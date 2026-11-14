@@ -10875,7 +10875,9 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
                 
                 
                 // NSLog(@"got here");
-                [self.logTextView setString: @""];
+                // The error lines are put in at once, as the whole log is below: typing (insertText:) would be refused
+                // while the Advanced Find panel searches the log, which is read-only meanwhile.
+                NSMutableString *errorLines = [NSMutableString string];
                 
                 myLength = [content length];
                 lineRange.location = 0;
@@ -10905,9 +10907,9 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
                             errorLineNumber = [numberOutput integerValue];
                             if (errorLineNumber > 0)
                             {
-                                [self.logTextView insertText: previousLine];
-                                [self.logTextView insertText: lineString];
-                                [self.logTextView insertText: @"\r"];
+                                [errorLines appendString: previousLine];
+                                [errorLines appendString: lineString];
+                                [errorLines appendString: @"\r"];
                             }
                             
                         }
@@ -10917,6 +10919,8 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
                     
                    // [self.logTextView insertText: lineString];
                 }
+                [self.logTextView setString: errorLines];
+                [self.logTextView setSelectedRange: NSMakeRange(errorLines.length, 0)];
                             
                     
                 
