@@ -2,6 +2,7 @@
   "policy": "Exact text and presented location only. No general English-word exemption. Dynamic encoding names and ISO dictionary codes are scoped separately in the checker.",
   "languages": {
     "de": [
+      {"text": "Escape", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
@@ -54,6 +55,7 @@
       {"text": "LaTeX + dvips + Ghostscript", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"}
     ],
     "es": [
+      {"text": "Escape", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
@@ -106,6 +108,7 @@
       {"text": "LaTeX + dvips + Ghostscript", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"}
     ],
     "fr": [
+      {"text": "Tab", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
@@ -216,6 +219,8 @@
       {"text": "LaTeX + dvips + Ghostscript", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"}
     ],
     "ja": [
+      {"text": "Escape", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
+      {"text": "Tab", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
@@ -260,6 +265,8 @@
       {"text": "LaTeX + dvips + Ghostscript", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"}
     ],
     "ko": [
+      {"text": "Escape", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
+      {"text": "Tab", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
@@ -303,6 +310,8 @@
       {"text": "LaTeX + dvips + Ghostscript", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"}
     ],
     "nl": [
+      {"text": "Escape", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
+      {"text": "Tab", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "Tab", "id": "keybindings.insert", "category": "keyboard", "role": "choice", "reason": "Key name that is the same word in this language"},
       {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
@@ -360,6 +369,8 @@
       {"text": "LaTeX + dvips + Ghostscript", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"}
     ],
     "pt": [
+      {"text": "Escape", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
+      {"text": "Tab", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
@@ -413,6 +424,8 @@
       {"text": "LaTeX + dvips + Ghostscript", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"}
     ],
     "pt-PT": [
+      {"text": "Escape", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
+      {"text": "Tab", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
@@ -460,6 +473,8 @@
       {"text": "LaTeX + dvips + Ghostscript", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"}
     ],
     "ro": [
+      {"text": "Escape", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
+      {"text": "Tab", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "Tab", "id": "keybindings.insert", "category": "keyboard", "role": "choice", "reason": "Key name that is the same word in this language"},
       {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
@@ -511,6 +526,8 @@
       {"text": "LaTeX + dvips + Ghostscript", "id": "settings.engine-profile", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"}
     ],
     "zh_CN": [
+      {"text": "Escape", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
+      {"text": "Tab", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},

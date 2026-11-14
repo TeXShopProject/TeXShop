@@ -56,11 +56,11 @@
                 </buttonCell>
                 <cells>
                   <column>
-                    <buttonCell type="radio" title="Escape Key" imagePosition="left" alignment="left" inset="2" id="927">
+                    <buttonCell type="radio" title="Escape" imagePosition="left" alignment="left" inset="2" id="927">
                       <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                       <font key="font" metaFont="system" />
                     </buttonCell>
-                    <buttonCell type="radio" title="Tab Key" imagePosition="left" alignment="left" state="on" tag="1" inset="2" id="928">
+                    <buttonCell type="radio" title="Tab" imagePosition="left" alignment="left" state="on" tag="1" inset="2" id="928">
                       <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                       <font key="font" metaFont="system" />
                     </buttonCell>

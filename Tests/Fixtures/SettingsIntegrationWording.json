@@ -2,8 +2,8 @@
   "it": {
     "SettingsSource.strings": {
       "582.title": "Pannello di ricerca Apple",
-      "927.title": "Tasto Esc",
-      "928.title": "Tasto Tab",
+      "927.title": "Esc",
+      "928.title": "Tabulatore",
       "1080.title": "Pannello di ricerca OgreKit (obsoleto)"
     },
     "SettingsEditor.strings": {

@@ -1966,8 +1966,8 @@
        "kind": "popup",
        "title": "呼び出すキー",
        "choices": [
-        "Escapeキー",
-        "Tabキー"
+        "Escape",
+        "Tab"
        ],
        "id": "completionKey",
        "src": [
