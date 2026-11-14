@@ -697,6 +697,35 @@ static NSColor *TSSettingsCardColor(void)
         [view.heightAnchor constraintGreaterThanOrEqualToConstant:38]]];
     return view;
 }
+// A button that belongs to a row stays at the right end of the row's first
+// line. When the line is too narrow for both, the title of a button in that
+// line wraps beside it, so neither is cut off and the button never moves.
++ (NSView *)catalogContent:(NSView *)content button:(NSButton *)button line:(NSView *)line indent:(NSUInteger)indent
+{
+    NSView *view = [NSView new]; view.translatesAutoresizingMaskIntoConstraints = NO;
+    [view addSubview:content]; [view addSubview:button];
+    content.translatesAutoresizingMaskIntoConstraints = NO; button.translatesAutoresizingMaskIntoConstraints = NO;
+    if ([line isKindOfClass:NSButton.class]) {
+        NSButton *title = (NSButton *)line;
+        title.cell.wraps = YES; title.cell.lineBreakMode = NSLineBreakByWordWrapping; title.usesSingleLineMode = NO;
+        [title setContentCompressionResistancePriority:249 forOrientation:NSLayoutConstraintOrientationHorizontal];
+    }
+    [button setContentCompressionResistancePriority:751 forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [button setContentHuggingPriority:752 forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [NSLayoutConstraint activateConstraints:@[
+        [content.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:12+24*indent],
+        [content.trailingAnchor constraintEqualToAnchor:button.leadingAnchor constant:-16],
+        [content.centerYAnchor constraintEqualToAnchor:view.centerYAnchor],
+        [content.topAnchor constraintGreaterThanOrEqualToAnchor:view.topAnchor constant:10],
+        [content.bottomAnchor constraintLessThanOrEqualToAnchor:view.bottomAnchor constant:-10],
+        [button.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-12],
+        [button.firstBaselineAnchor constraintEqualToAnchor:line.firstBaselineAnchor],
+        [button.topAnchor constraintGreaterThanOrEqualToAnchor:view.topAnchor constant:6],
+        [button.bottomAnchor constraintLessThanOrEqualToAnchor:view.bottomAnchor constant:-6],
+        [view.heightAnchor constraintGreaterThanOrEqualToConstant:38]]];
+    NSLayoutConstraint *fit = [view.heightAnchor constraintEqualToConstant:38]; fit.priority = 249; fit.active = YES;
+    return view;
+}
 + (NSStackView *)stackWithViews:(NSArray<NSView *> *)views orientation:(NSUserInterfaceLayoutOrientation)orientation
 {
     NSStackView *stack = [NSStackView stackViewWithViews:views];

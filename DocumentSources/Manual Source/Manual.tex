@@ -860,7 +860,7 @@ about TeX and LaTeX make perfect sense when used on a machine running XeTeX or L
 With this history out of the way, it is time to explain how to configure TeXShop to typeset
 using whatever engine you decide to use. You'll do this by using TeXShop Settings. 
 
-Go to TeXShop Settings and select the {\bf Typesetting} category. The quickest way to set up typesetting is an engine profile. At the top of the {\bf Engine} group, choose a profile in the {\bf Engine Profile} pop-up menu. A sheet asks for confirmation: {\bf Apply} sets the profile, and {\bf Cancel} leaves every setting as it was. The profiles are pdfLaTeX, XeLaTeX, LuaLaTeX, LaTeX + dvipdfmx, LuaLaTeX (Japanese), pLaTeX + dvipdfmx and upLaTeX + dvipdfmx; LaTeX + dvips + Ghostscript is under {\bf Other}. Select {\bf Use latexmk} to have latexmk run BibTeX, the index and further passes as needed; otherwise each typesetting runs the engine once. A profile sets only the typesetting commands of its method, the typesetting method, the BibTeX engine, the index program, the MetaPost command and otf package support; the Japanese profiles also set UTF-8 as the encoding for new documents, set the spelling dictionary to automatic language detection and turn on UTF-8-MAC conversion. Every other setting stays as it is, and the commands of the other method are not changed. The menu shows the profile all of whose settings are set now, or {\bf Custom} as soon as any setting of the profile is changed, in Settings or elsewhere. The paths to TeX and Ghostscript are set apart, with {\bf Detect Paths...} in the {\bf Paths} group. When TeXShop starts for the first time, it asks for the paths and then for an engine profile.
+Go to TeXShop Settings and select the {\bf Typesetting} category. The quickest way to set up typesetting is an engine profile. At the top of the {\bf Engine} group, choose a profile in the {\bf Engine Profile} pop-up menu. A sheet asks for confirmation: {\bf Apply} sets the profile, and {\bf Cancel} leaves every setting as it was. The profiles are pdfLaTeX, XeLaTeX, LuaLaTeX, LaTeX + dvipdfmx, LuaLaTeX (Japanese), pLaTeX + dvipdfmx and upLaTeX + dvipdfmx; LaTeX + dvips + Ghostscript is under {\bf Other}. Select {\bf Use latexmk} to have latexmk run BibTeX, the index and further passes as needed; otherwise each typesetting runs the engine once. A profile sets only the typesetting commands of its method, the typesetting method, the BibTeX engine, the index program, the MetaPost command and otf package support; the Japanese profiles also set UTF-8 as the encoding for new documents, set the spelling dictionary to automatic language detection and turn on UTF-8-MAC conversion. Every other setting stays as it is, and the commands of the other method are not changed. The menu shows the profile all of whose settings are set now, or {\bf Custom} as soon as any setting of the profile is changed, in Settings or elsewhere. To go back to the values of a profile after changing one of them, choose the profile again, even when the menu shows it. The paths to TeX and Ghostscript are set apart, with {\bf Detect Paths...} in the {\bf Paths} group. When TeXShop starts for the first time, it asks for the paths and then for an engine profile.
 
 The rest of this section describes the other settings of the {\bf Engine} group and the settings that a profile sets, for those who want to set them by hand. In the {\bf Engine} group, the {\bf Typeset New Documents With} pop-up menu chooses what the toolbar of a document selects beside the Typeset button when the document opens: plain \TeX, \LaTeX, or {\bf Engine File}. Most people use \LaTeX, so that is the default choice. A \verb|% !TEX TS-program| line at the top of a document takes precedence, as explained later.
 We'll describe the third choice in this menu shortly.
@@ -899,7 +899,7 @@ There is yet a third option, ``Show Preview and Return to Original Window''. The
  to do this have been tried over the years, but the modern approach is called ``SyncTeX''
  and should be chosen in the {\bf Sync Method} pop-up menu. Sync will be discussed in detail in a later chapter.
  
- The switch labeled ``Open documents reached by Sync as tabs in the root window'' is left over from an older version of TeXShop.
+ The switch labeled ``Open files reached by Sync as tabs in the root file's window'' is left over from an older version of TeXShop.
  This item is obsolete and should not be turned on. I keep old items in case someone is still using them.
 
 
@@ -1059,7 +1059,7 @@ Open the file XeLaTeX.engine. Its contents are shown below.
 \begin{verbatim}
      #!/bin/tcsh
 
-     set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+     set path= ($path /Library/TeX/texbin /usr/local/bin)
      xelatex  -file-line-error -synctex=1 "$1"
 \end{verbatim}
 This file is what is known as a ``shell script.'' It is a series of commands which could be typed in Terminal. This particular script starts with a line telling Terminal to run the tcsh shell. Various shells are available, including zsh, bash, tcsh, sh, and others. Each has its own particular language. Recently, Apple selected zsh as the default shell, so we recommend using that shell.
@@ -1622,7 +1622,7 @@ The other choice is to  write books with just a single source file. Many famous 
 Before the changes described above were present, TeXShop had a few other features  dealing with tabs.
 These features are now obsolete and should not be used. 
 
-In TeXShop Settings under the Typesetting category, there is a switch labeled ``Open documents reached by Sync as tabs in the root window.'' Do not turn it on.
+In TeXShop Settings under the Typesetting category, there is a switch labeled ``Open files reached by Sync as tabs in the root file's window.'' Do not turn it on.
 
 Versions 3.82 and 3.84 introduced  magic comment lines dealing with tabs. Read the Changes document for details. These methods are untested with the modern tab support and should not be used.
 \begin{verbatim}
@@ -1988,7 +1988,7 @@ TeXShop and can be run from the Terminal by typing ``pdflatexc myfile.tex'' prov
      # Usage
      # pdflatexc filename.tex
 
-     set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+     set path= ($path /Library/TeX/texbin /usr/local/bin)
      pdflatex --shell-escape "$1"
 \end{verbatim}
 Of course you are likely to write a more complicated script which performs several operations
@@ -2803,7 +2803,7 @@ The window opens the TeXShop web site, which confirms that the window can access
 When the page first appears, it may be small and in an awkward location. Resize it and move it to a  reasonable spot, perhaps where the Preview Window usually appears. Select it and choose the item
 ``Save HTML Window Position'' in the Preview menu. The window will then always open with this size and position. 
 
-In the HTML group of the Preview category of Settings, the item ``Home URL'' sets the page that opens when the window is shown. Enter a web address, such as https://tug.org, or the full path of an html file. By default it is https://texshop.app, and an empty item also opens that page.
+In the HTML group of the Preview category of Settings, the item ``Home URL'' sets the page that opens when the window is shown. Enter a web address, such as https://tug.org, or the full path of an html file. By default it is https://texshop.app. Empty the item to go back to that page; while it is empty, it shows the address in gray.
 
 Although the window contains a full featured web view, the toolbar items are  minimal. Our  window only provides Back and Forward buttons, a field to enter a new URL, and a search field. The search field currently does nothing. You already have Safari and perhaps other browsers;  TeXShop has no obligation to provide a duplicate.
 
@@ -3373,7 +3373,7 @@ But there is no ``othereditor'' script in /usr/local/bin. The user needs to crea
 For example here is the complete ``othereditor'' script file for TextMate:
 \begin{verbatim}
      #!/bin/tcsh
-     set path = ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+     set path = ($path /Library/TeX/texbin /usr/local/bin)
      /usr/local/bin/mate --line $1 $2 
 \end{verbatim}
 
@@ -4462,6 +4462,7 @@ TeXShop finds the file with the search command set by the ``kpsewhich'' item in 
 \begin{verbatim}
     kpsewhich -progname=latex -format=tex
 \end{verbatim}
+Empty the item to go back to this command; while it is empty, it shows the command in gray.
 
 
 
@@ -4569,7 +4570,7 @@ The final way to spell check is to use the menu item {\em Check Spelling While T
 
 \section{LaTeX-aware Spell Checking}
 
-TeXShop 6.00 adds LaTeX-aware spell checking, based on an implementation proposed by Ralph Martin. In Settings, Spell Checking, choose {\bf Use LaTeX-aware spell checking (recommended)} or {\bf Legacy method}. The new method has an indented ``Edit LaTeX exclusion rules...'' button; the legacy method has three indented exclusions for commands, parameters and comments. Inactive options remain visible and retain their values. This choice does not turn on {\em Check Spelling While Typing}.
+TeXShop 6.00 adds LaTeX-aware spell checking, based on an implementation proposed by Ralph Martin. In Settings, Spell Checking, choose {\bf Use LaTeX-aware spell checking (recommended)} or {\bf Legacy method}. The new method has an ``Edit LaTeX exclusion rules...'' button at the right end of its line; the legacy method has three indented exclusions for commands, parameters and comments. Inactive options remain visible and retain their values. This choice does not turn on {\em Check Spelling While Typing}.
 
 LaTeX-aware spell checking skips comments, mathematics, TeX commands, and the arguments of commands such as \verb|\label|, \verb|\ref|, \verb|\cite|, and \verb|\usepackage|, and checks the rest of the text. The default rules also skip the arguments that are not prose, such as keys, colors and units, of the commands of common packages, among them hyperref, cleveref, xcolor, siunitx, enumitem, biblatex and natbib; a command that the document defines itself, such as a macro of your own named \verb|\unit|, follows its own definition instead. It works with the standard {\em Spelling and Grammar} panel, and with {\em Check Spelling While Typing}, which then does not underline the skipped parts of the source. The new rules apply to TeX source files and to new documents not yet saved; other kinds of files, including Sweave files, keep the older behavior described in the next sections.
 
@@ -6302,9 +6303,9 @@ to a pdf file. An advantage of this chain is that PSTricks package can be used i
 In recent years, the authors of Ghostscript removed several security problems, occasionally by disabling very obscure features of postscript. Unfortunately for TeX, among the obscure features were all postscript transparency operators, so any transparency in the original postscript file is ignored in the pdf version of the file.
 
 To fix this, the Ghostscript authors added a special flag, ``-dALLOWPSTRANSPARENCY''.
-When Ghostscript is called with this flag set, the transparency operators are recognized (while the other more serious security bugs are still quashed).  This flag is available in Ghostscript 9.51 and higher. 
+When Ghostscript is called with this flag set, the transparency operators are recognized (while the other more serious security bugs are still quashed).
 
-The switch ``-dALLOWPSTRANSPARENCY'' in the Ghostscript group of the Typesetting category of Settings turns on this flag. The flag is off by default because some users have earlier versions of Ghostscript or never use transparency, and because the flag might conceivably be removed at some future date.
+The switch ``-dALLOWPSTRANSPARENCY'' in the Ghostscript group of the Typesetting category of Settings turns on this flag. The flag is off by default because most users never use transparency, and because the flag might conceivably be removed at some future date.
 
 The flag only affects the two TeXShop operations described in the initial paragraph of this section. Earlier versions of TeXShop could also use a distiller provided by Apple in macOS instead of Ghostscript, but macOS 14 removed that distiller, so TeXShop 6.00 always uses Ghostscript. I suspect the flag works for users who have a Ghostscript provided by MacPorts or Homebrew rather than the Ghostscript provided in MacTeX, but this has not been tested. 
 

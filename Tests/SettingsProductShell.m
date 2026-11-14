@@ -113,6 +113,17 @@ static void CheckSpellingDictionary(TSPreferences *owner,NSPopUpButton *dictiona
  puts("PASS: dictionary language names, stored identifiers, automatic choice, earlier stored values and missing dictionaries");
 }
 static NSView *Find(NSView *view,NSString *identifier){if([view.identifier isEqual:identifier])return view;for(NSView *child in view.subviews){NSView *found=Find(child,identifier);if(found)return found;}return nil;}
+// Every row name and note shows its whole text: as tall as the same text wraps at its width, inside the pane.
+static void CheckCatalogTextFits(NSView *view,NSView *pane,NSString *category){
+ if(view.hidden)return;
+ if([view isKindOfClass:NSTextField.class] && ([view.identifier isEqual:@"label.catalog-row"] || [view.identifier isEqual:@"note.catalog-row"]) && [(NSTextField *)view stringValue].length){
+  NSTextField *field=(NSTextField *)view;NSTextField *measure=[NSTextField wrappingLabelWithString:field.stringValue];measure.font=field.font;
+  CGFloat needed=ceil([measure.cell cellSizeForBounds:NSMakeRect(0,0,NSWidth(field.bounds),CGFLOAT_MAX)].height);
+  NSRect frame=[field convertRect:field.bounds toView:pane];
+  Check(NSWidth(field.bounds)>0 && needed<=NSHeight(field.bounds)+1 && NSContainsRect(NSInsetRect(pane.bounds,-1,-1),frame),[NSString stringWithFormat:@"Whole row text shows in %@: %@ needs %.1f, has %@",category,field.stringValue,needed,NSStringFromRect(frame)]);
+ }
+ for(NSView *child in view.subviews)CheckCatalogTextFits(child,pane,category);
+}
 static void Save(NSView *v,NSString *path){[v layoutSubtreeIfNeeded];[v display];NSBitmapImageRep *rep=[v bitmapImageRepForCachingDisplayInRect:v.bounds];[v cacheDisplayInRect:v.bounds toBitmapImageRep:rep];NSImage *image=[[NSImage alloc]initWithSize:v.bounds.size];[image lockFocus];[v.effectiveAppearance performAsCurrentDrawingAppearance:^{[NSColor.windowBackgroundColor setFill];NSRectFill(NSMakeRect(0,0,v.bounds.size.width,v.bounds.size.height));}];NSImage *capture=[[NSImage alloc]initWithSize:v.bounds.size];[capture addRepresentation:rep];[capture drawInRect:NSMakeRect(0,0,v.bounds.size.width,v.bounds.size.height) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1];[image unlockFocus];NSData *tiff=image.TIFFRepresentation;if(tiff==nil)abort();NSBitmapImageRep *opaque=[[NSBitmapImageRep alloc]initWithData:tiff];[[opaque representationUsingType:NSBitmapImageFileTypePNG properties:@{}]writeToFile:path atomically:YES];}
 static void SaveNote(TSSettingsWindowController *shell,NSView *row,NSString *directory,NSString *name) {
  if(!directory)return;
@@ -269,6 +280,7 @@ int main(int argc,char **argv){@autoreleasepool{
    Check(!shell.window.visible,@"No test window is ordered");
   }
   CollectSettingsVisibleText(pane,category,visibleText);
+  CheckCatalogTextFits(pane,pane,category);
   printf("PANE %s %.1f %.1f\n",category.UTF8String,NSWidth(pane.frame),NSHeight(pane.frame));
   if(argc>2 || [fixture.bundlePath.lastPathComponent isEqual:@"ja.bundle"]){
    NSView *originalParent=pane.superview;NSArray *originalConstraints=[originalParent.constraints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NSLayoutConstraint *c,NSDictionary *bindings){return c.firstItem==pane || c.secondItem==pane;}]];
@@ -280,6 +292,7 @@ int main(int argc,char **argv){@autoreleasepool{
     if(argc>2)Save(pane,[@(argv[2]) stringByAppendingPathComponent:[NSString stringWithFormat:@"comparison-%@-%@.png",category,appearance]]);
    }
    printf("COMPARISON %s %.1f %.1f\n",category.UTF8String,NSWidth(pane.frame),NSHeight(pane.frame));
+   CheckCatalogTextFits(pane,pane,category);
    if([fixture.bundlePath.lastPathComponent isEqual:@"ja.bundle"]){
     NSDictionary *heights=[NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfURL:[fixture URLForResource:@"SettingsHeightReference" withExtension:@"json"]] options:0 error:NULL];
     double reference=[heights[@"categories"][category][@"height"]doubleValue];
@@ -509,6 +522,20 @@ int main(int argc,char **argv){@autoreleasepool{
  profileAnswer=NSAlertFirstButtonReturn;
  [profiles selectItemWithTag:TSEngineProfileXeLaTeX];[profiles sendAction:profiles.action to:profiles.target];drainProfiles();
  Check(profileSheets==2 && profiles.selectedTag==TSEngineProfileXeLaTeX && [[TSIsolatedAppKitDefaults stringForKey:MakeIndexEngineKey] isEqual:@"makeindex"] && [[TSIsolatedAppKitDefaults stringForKey:LatexCommandKey] isEqual:TSEngineProfileValues(TSEngineProfileXeLaTeX,NO)[LatexCommandKey]],@"Apply in the sheet applies the chosen profile");
+  // The commands have no Default buttons: choosing the profile again, while the menu shows it or Custom, asks and
+ // restores its values.
+ [profiles selectItemWithTag:TSEngineProfileXeLaTeX];[profiles sendAction:profiles.action to:profiles.target];drainProfiles();
+ Check(profileSheets==3 && shownWhileAsking==TSEngineProfileXeLaTeX && profiles.selectedTag==TSEngineProfileXeLaTeX,@"Choosing the profile shown asks again");
+ NSArray *restoredKeys=@[TexCommandKey,LatexCommandKey,BibTeXengineKey,MakeIndexEngineKey,MetaPostEngineKey];
+ for(NSString *key in restoredKeys){
+  Check(TSEngineProfileValues(TSEngineProfileXeLaTeX,NO)[key]!=nil,[NSString stringWithFormat:@"XeLaTeX sets %@",key]);
+  [TSIsolatedAppKitDefaults setObject:@"typed by hand" forKey:key];drainProfiles();
+  Check(profiles.selectedTag==TSEngineProfileNone,[NSString stringWithFormat:@"A command typed for %@ shows Custom",key]);
+  [profiles selectItemWithTag:TSEngineProfileXeLaTeX];[profiles sendAction:profiles.action to:profiles.target];drainProfiles();
+  Check(profiles.selectedTag==TSEngineProfileXeLaTeX && [[TSIsolatedAppKitDefaults stringForKey:key] isEqual:TSEngineProfileValues(TSEngineProfileXeLaTeX,NO)[key]],[NSString stringWithFormat:@"Choosing the profile from Custom restores %@",key]);
+ }
+ Check(profileSheets==3+restoredKeys.count,@"Each choice of a profile asks once");
+ Check(Find(shell.window.contentView,@"settings.1062")==nil && Find(shell.window.contentView,@"settings.1070")==nil && Find(shell.window.contentView,@"settings.1067")==nil && Find(shell.window.contentView,@"settings.1073")==nil && ![owner respondsToSelector:NSSelectorFromString(@"defaultEngineCall:")],@"The command rows have no Default buttons");
  method_setImplementation(profileSheet,originalSheet);
  [shell.window makeFirstResponder:nil];
  [NSNotificationCenter.defaultCenter removeObserver:token];

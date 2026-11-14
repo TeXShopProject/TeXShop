@@ -76,6 +76,22 @@ static void CheckOwnerSearch(TSPreferences *owner,TSSettingsWindowController *sh
             Check(NSIntersectsRect(selected,bounds)==(j.integerValue==named[i].integerValue),@"Color highlight identifies one named row without neighboring rows");
         }
     }
+    // Searching for the rules button finds it in the row of its choice and highlights that row.
+    NSButton *rules=[owner valueForKey:@"editSpellingExclusionsButton"];
+    NSString *rulesTitle=[fixture localizedStringForKey:@"catalog.spelling.1.0.button" value:nil table:@"SettingsCategories"];
+    Check([rules.title isEqual:rulesTitle],@"The rules button carries its translated title");
+    NSMutableArray *queries=[NSMutableArray arrayWithObject:rulesTitle];
+    if([fixture.bundlePath.lastPathComponent isEqual:@"ja.bundle"])[queries addObject:@"除外規則"];
+    for(NSString *query in queries){
+        [shell selectCategoryIdentifier:TSSettingsCategoryGeneral];[shell setSettingsSearchQuery:query];
+        TSSettingsSearchResult *hit=nil;for(TSSettingsSearchResult *result in shell.searchResults)if([result.targetIdentifier isEqual:@"row.catalog.spelling.1.0"]){hit=result;break;}
+        Check(hit!=nil && [hit.category isEqual:TSSettingsCategorySpelling] && [hit.title isEqual:rulesTitle],[NSString stringWithFormat:@"Searching for the rules button finds and names it: %@ -> %@",query,hit.title]);
+        ChooseOwnerResult(shell,@"row.catalog.spelling.1.0");[shell.window.contentView layoutSubtreeIfNeeded];
+        NSArray<NSView *> *marks=[shell valueForKey:@"searchHighlights"];
+        NSView *row=marks.firstObject.superview;
+        Check([shell.history.currentIdentifier isEqual:TSSettingsCategorySpelling] && marks.count==1 && [row.identifier isEqual:@"row.catalog.spelling.1.0"] && [rules isDescendantOf:row] && [[owner valueForKey:@"texAwareSpellCheckButton"] isDescendantOf:row],@"The rules search highlights the row of the button and its choice");
+        Check(NSContainsRect(marks.firstObject.frame,[rules convertRect:rules.bounds toView:row]),@"The search highlight covers the rules button");
+    }
     [shell setSettingsSearchQuery:@""];
     TSIsolatedAppKitDefaults.values=[saved mutableCopy];[owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];[shell beginSession];
     puts("PASS: real search editing, cancel, Escape, blanks, focus, history, row highlight, sheets, validation and Tab reservation");

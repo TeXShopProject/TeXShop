@@ -21,6 +21,19 @@
 }
 @end
 
+NSString *TSPreferenceRegisteredText(NSUserDefaults *defaults, TSPreferenceKey key)
+{
+    id value = [defaults volatileDomainForName:NSRegistrationDomain][key];
+    return [value isKindOfClass:NSString.class] ? value : nil;
+}
+
+NSString *TSPreferenceTextBesideDefault(NSUserDefaults *defaults, TSPreferenceKey key)
+{
+    NSString *value = [defaults stringForKey:key];
+    if (value == nil || [value isEqualToString:TSPreferenceRegisteredText(defaults, key) ?: @""]) return @"";
+    return value;
+}
+
 @implementation TSPreferenceInput
 - (instancetype)initWithKey:(TSPreferenceKey)key kind:(TSPreferenceInputKind)kind
                     minimum:(double)minimum maximum:(double)maximum allowsEmpty:(BOOL)allowsEmpty
@@ -31,6 +44,22 @@
     _key = [key copy]; _kind = kind; _minimum = minimum; _maximum = maximum;
     _allowsEmpty = allowsEmpty; _notification = [notification copy];
     return self;
+}
+- (instancetype)initRestoringDefaultForKey:(TSPreferenceKey)key
+{
+    self = [self initWithKey:key kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:YES notification:nil];
+    if (self != nil) _restoresDefaultWhenEmpty = YES;
+    return self;
+}
+- (BOOL)storeValue:(TSPreferenceInputValue *)value inDefaults:(NSUserDefaults *)defaults
+{
+    NSString *text = value.textValue;
+    if (!self.restoresDefaultWhenEmpty || (text.length > 0 && ![text isEqualToString:TSPreferenceRegisteredText(defaults, self.key) ?: @""]))
+        return [value storeInDefaults:defaults forKey:self.key];
+    id before = [defaults objectForKey:self.key];
+    [defaults removeObjectForKey:self.key];
+    id after = [defaults objectForKey:self.key];
+    return !(before == after || [before isEqual:after]);
 }
 - (nullable TSPreferenceInputValue *)validatedValue:(NSString *)text
 {
@@ -55,6 +84,7 @@
     // Do not validate or clamp a previously stored value while restoring it.
     // A whole number is shown as the source windows apply it: inside the range
     // and without a fraction. The stored value itself is left as it is.
+    if (self.restoresDefaultWhenEmpty) return TSPreferenceTextBesideDefault(defaults, self.key);
     if (self.kind == TSPreferenceInputText) return [defaults stringForKey:self.key] ?: @"";
     NSObject *stored = [defaults objectForKey:self.key];
     NSNumber *number = [stored isKindOfClass:NSNumber.class] ? (NSNumber *)stored : nil;
@@ -132,8 +162,8 @@
     NSText *editor = field.currentEditor;
     TSPreferenceInputValue *value = [rule validatedValue:editor != nil ? editor.string : field.stringValue];
     if (value == nil) return NO;
-    BOOL changed = [value storeInDefaults:defaults forKey:rule.key];
-    field.stringValue = [rule displayStringForValue:value];
+    BOOL changed = [rule storeValue:value inDefaults:defaults];
+    field.stringValue = rule.restoresDefaultWhenEmpty ? [rule displayStringFromDefaults:defaults] : [rule displayStringForValue:value];
     if (editor != nil) editor.string = field.stringValue;
     self.editedField = nil;
     NSNotificationName notification = rule.notification;

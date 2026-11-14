@@ -9,7 +9,8 @@ NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXPORT BOOL TSPreferencesNeedFactoryReset(NSUserDefaults *defaults);
 
 /// For a user whose settings were kept (TSPreferencesNeedFactoryReset said NO): `savedSettings` is the persistent
-/// domain read before anything was written. Once, at the first launch of 6.00, every earlier user moves to the
+/// domain read before anything was written. At every launch, a TeX path of /usr/texbin becomes /Library/TeX/texbin, and
+/// an empty kpsewhich command or HTML home page is removed, so that its default applies. Once, at the first launch of 6.00, every earlier user moves to the
 /// Advanced Find panel, whatever find method they had or if they never chose one. Those who came from the OgreKit
 /// Find Panel write replacements the OgreKit way (`\1`), unless they already chose a way in the Advanced Find panel.
 /// FindMethodSwitchedToAdvancedFind marks the switch as done, so a method chosen afterwards stays; the factory

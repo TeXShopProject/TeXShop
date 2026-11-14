@@ -1,13 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "1020.title" = "Search command";
-"1024.title" = "kpsewhich (default: kpsewhich -progname=latex -format=tex)";
 "1027.title" = "Motor BibTeX";
-"1030.title" = "default: bibtex";
-"1063.title" = "Implicit";
-"1068.title" = "Implicit";
 "1069.title" = "TeX";
-"1071.title" = "Implicit";
-"1074.title" = "Implicit";
 "1075.title" = "LaTeX ";
 "200.title" = "TeX + dvips + distiller";
 "215.title" = "Path settings";
@@ -16,7 +10,4 @@
 "880.title" = "TeX";
 "882.title" = "Avertisment shell escape";
 "887.title" = "Salvează fișierul PostScript";
-"889.title" = "(pdf)TeX (default: /Library/TeX/texbin OR /usr/texbin)";
-"891.title" = "Distiller (ghostscript) (default: /usr/local/bin)";
-"BYT-g3-3p0.title" = "Alternate Path (default: ~/bin/context/tex/texmf-osx-arm64/bin)";
 "engine-auto-cell.title" = "Configurare automată…";

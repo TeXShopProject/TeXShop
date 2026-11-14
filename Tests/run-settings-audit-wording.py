@@ -55,10 +55,10 @@ with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
   result=wording();p.write_bytes(original);assert result.returncode and 'Search counts refer to settings' in result.stderr,result.stderr
   print('DETECTED search count',lang,flush=True)
  for lang in search_wording['prefixes']:
-  actual='Base' if lang=='en' else lang;p=T/f'Resources/Interfaces/{actual}.lproj/SettingsCategories.strings';original=p.read_bytes();values=json.loads(subprocess.check_output(['plutil','-convert','json','-o','-',str(p)]));values['catalog.typesetting.8.1.note']='(default: bibtex)'
+  actual='Base' if lang=='en' else lang;p=T/f'Resources/Interfaces/{actual}.lproj/SettingsCategories.strings';original=p.read_bytes();values=json.loads(subprocess.check_output(['plutil','-convert','json','-o','-',str(p)]));values['catalog.typesetting.8.0.note']+=' '+search_wording['prefixes'][lang]+'kpsewhich'
   p.write_text('\n'.join(json.dumps(k,ensure_ascii=False)+' = '+json.dumps(v,ensure_ascii=False)+';' for k,v in values.items())+'\n')
-  result=wording();p.write_bytes(original);assert result.returncode and 'Engine defaults use consistent localized wording' in result.stderr,result.stderr
-  print('DETECTED engine default',lang,flush=True)
+  result=wording();p.write_bytes(original);assert result.returncode and 'Settings notes state no default value' in result.stderr,result.stderr
+  print('DETECTED default in a note',lang,flush=True)
  # Revert all distributed PDF copies together: identity alone cannot catch stale content.
  hidden=['DocumentSources/CommentLinesRevised/CommentLines.pdf','Resources/Interfaces/Base.lproj/CommentLines.pdf','Resources/Interfaces/en.lproj/CommentLines.pdf']
  originals={name:(T/name).read_bytes() for name in hidden}
