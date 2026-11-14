@@ -243,7 +243,9 @@ Loads the .nib file if necessary, fills all the controls with the values from th
         if (i > 0) add(NSMenuItem.separatorItem);
         if (i == sections.count - 1) add([NSMenuItem sectionHeaderWithTitle:NSLocalizedString(@"Other", @"Engine profile section")]);
         for (NSNumber *profile in sections[i]) {
-            NSMenuItem *item = [menu addItemWithTitle:TSEngineProfileTitle(profile.integerValue) action:NULL keyEquivalent:@""];
+            NSString *title = TSEngineProfileTitle(profile.integerValue);
+            if (title == nil) continue;
+            NSMenuItem *item = [menu addItemWithTitle:title action:NULL keyEquivalent:@""];
             item.tag = profile.integerValue;
         }
     }
@@ -1272,7 +1274,9 @@ static NSPopUpButton *TSEngineProfileChoicePopup(TSEngineProfile selected)
     for (NSUInteger i = 0; i + 1 < sections.count; i++) {
         if (i > 0) { NSMenuItem *separator = NSMenuItem.separatorItem; separator.tag = -1; [popup.menu addItem:separator]; }
         for (NSNumber *profile in sections[i]) {
-            NSMenuItem *item = [popup.menu addItemWithTitle:TSEngineProfileTitle(profile.integerValue) action:NULL keyEquivalent:@""];
+            NSString *title = TSEngineProfileTitle(profile.integerValue);
+            if (title == nil) continue;
+            NSMenuItem *item = [popup.menu addItemWithTitle:title action:NULL keyEquivalent:@""];
             item.tag = profile.integerValue;
         }
     }

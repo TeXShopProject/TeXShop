@@ -234,8 +234,8 @@
 "Comment Lines and Hidden Settings" = "주석 행 및 숨겨진 설정";
 "Advanced" = "고급";
 
-"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "TeX Live 또는 MacTeX를 설치한 다음 설정 > 조판에서 '경로 자동 감지'을 선택하십시오.";
-"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript를 찾을 수 없습니다. Ghostscript를 설치한 다음 설정 > 조판에서 '경로 자동 감지'을 선택하십시오.";
+"Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "TeX Live 또는 MacTeX를 설치한 다음 설정 > 조판에서 '경로 자동 감지'를 선택하십시오.";
+"Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript를 찾을 수 없습니다. Ghostscript를 설치한 다음 설정 > 조판에서 '경로 자동 감지'를 선택하십시오.";
 
 "Completion trigger" = "호출 키";
 

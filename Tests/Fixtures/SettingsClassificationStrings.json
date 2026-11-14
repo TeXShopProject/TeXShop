@@ -412,7 +412,7 @@
         "pt": "Instale o TeX Live ou o MacTeX e escolha “Detectar caminhos” em Ajustes > Composição.",
         "pt-PT": "Instale o TeX Live ou o MacTeX e escolha “Detetar caminhos” em Definições > Composição.",
         "ro": "Instalați TeX Live sau MacTeX, apoi alegeți „Detectați căile” în Configurări > Compunere.",
-        "ko": "TeX Live 또는 MacTeX를 설치한 다음 설정 > 조판에서 '경로 자동 감지'을 선택하십시오.",
+        "ko": "TeX Live 또는 MacTeX를 설치한 다음 설정 > 조판에서 '경로 자동 감지'를 선택하십시오.",
         "zh_CN": "请安装TeX Live或MacTeX，然后在设置 > 排版中选择“自动检测路径”。"
       }
     },
