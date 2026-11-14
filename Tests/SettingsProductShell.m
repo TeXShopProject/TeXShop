@@ -252,6 +252,18 @@ int main(int argc,char **argv){@autoreleasepool{
   Check(fabs([listClip constrainBoundsRect:shifted].origin.x)<0.5,[NSString stringWithFormat:@"Sidebar list cannot be scrolled sideways (%.1f), sidebar %@, window %@",[listClip constrainBoundsRect:shifted].origin.x,sidebarWidth,windowWidth]);
   for(NSInteger row=0;row<shell.categoryTable.numberOfRows;row++){CGFloat height=[shell tableView:shell.categoryTable heightOfRow:row];Check(height==8 || (height>=30 && height<=42),@"Category spacing uses compact one-line or necessary two-line rows");}
  }
+ // The otf conversion and its group are named in full on one line, also in the narrowest pane.
+ Check([shell selectCategoryIdentifier:TSSettingsCategoryTypesetting],@"Typesetting opens for the otf conversion names");
+ for(NSNumber *windowWidth in @[@900,@1040])for(NSNumber *sidebarWidth in @[@330,@190]){
+  [shell.window setContentSize:NSMakeSize(windowWidth.doubleValue,780)];[shell.splitController.splitView setPosition:sidebarWidth.doubleValue ofDividerAtIndex:0];[shell.window.contentView layoutSubtreeIfNeeded];
+  NSView *typesetting=[shell viewForCategoryIdentifier:TSSettingsCategoryTypesetting];
+  NSTextField *otfName=(NSTextField *)Find(Find(typesetting,@"row.catalog.typesetting.9.0"),@"label.catalog-row");
+  NSTextField *otfGroup=(NSTextField *)Find(typesetting,@"heading.group.typesetting.9");
+  for(NSTextField *label in @[otfName ?: [NSTextField new],otfGroup ?: [NSTextField new]]){
+   CGFloat line=[label.cell cellSizeForBounds:NSMakeRect(0,0,CGFLOAT_MAX,CGFLOAT_MAX)].width;
+   Check(label.stringValue.length>0 && line<=NSWidth(label.bounds)+0.5,[NSString stringWithFormat:@"otf conversion name fits on one line: %@ %.1f <= %.1f, sidebar %@, window %@",label.stringValue,line,NSWidth(label.bounds),sidebarWidth,windowWidth]);
+  }
+ }
  [shell.window setContentSize:NSMakeSize(1040,780)];[shell.splitController.splitView setPosition:220 ofDividerAtIndex:0];
  NSMutableArray *visibleText=[NSMutableArray array];
  for(NSString *category in shell.categoryIdentifiers){

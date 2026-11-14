@@ -14,7 +14,7 @@
   ],
   "languages": {
     "Base": [
-      "otf Package Support",
+      "Convert to otf Package \\UTF / \\CID",
       "Automatically convert UTF-8-MAC to UTF-8",
       "Dock Icon While Running",
       "Original",
@@ -25,7 +25,7 @@
       "Before 1.0"
     ],
     "ja": [
-      "otfパッケージ対応",
+      "otfパッケージの\\UTF / \\CIDに自動変換",
       "UTF-8-MACをUTF-8に自動変換",
       "起動中のDockアイコン",
       "初代",
@@ -36,7 +36,7 @@
       "1.0より前"
     ],
     "de": [
-      "Unterstützung für das otf-Paket",
+      "In \\UTF / \\CID des otf-Pakets umwandeln",
       "UTF-8-MAC automatisch in UTF-8 umwandeln",
       "Dock-Symbol während der Laufzeit",
       "Ursprünglich",
@@ -47,7 +47,7 @@
       "Vor 1.0"
     ],
     "es": [
-      "Compatibilidad con el paquete otf",
+      "Convertir a \\UTF / \\CID del paquete otf",
       "Convertir automáticamente UTF-8-MAC a UTF-8",
       "Icono del Dock durante la ejecución",
       "Original",
@@ -58,7 +58,7 @@
       "Anterior a 1.0"
     ],
     "fr": [
-      "Prise en charge du paquet otf",
+      "Convertir en \\UTF / \\CID du paquet otf",
       "Convertir automatiquement UTF-8-MAC en UTF-8",
       "Icône du Dock pendant l’exécution",
       "Origine",
@@ -69,7 +69,7 @@
       "Avant la version 1.0"
     ],
     "it": [
-      "Supporto per il pacchetto otf",
+      "Converti in \\UTF / \\CID del pacchetto otf",
       "Converti automaticamente UTF-8-MAC in UTF-8",
       "Icona del Dock durante l’esecuzione",
       "Originale",
@@ -80,7 +80,7 @@
       "Prima della versione 1.0"
     ],
     "ko": [
-      "otf 패키지 지원",
+      "otf 패키지의 \\UTF / \\CID로 자동 변환",
       "UTF-8-MAC을 UTF-8로 자동 변환",
       "실행 중인 Dock 아이콘",
       "원본",
@@ -91,7 +91,7 @@
       "1.0 이전"
     ],
     "nl": [
-      "Ondersteuning voor het otf-pakket",
+      "Omzetten naar \\UTF / \\CID van het otf-pakket",
       "UTF-8-MAC automatisch omzetten naar UTF-8",
       "Dock-symbool tijdens gebruik",
       "Oorspronkelijk",
@@ -102,7 +102,7 @@
       "Vóór 1.0"
     ],
     "pt-PT": [
-      "Suporte para o pacote otf",
+      "Converter para \\UTF / \\CID do pacote otf",
       "Converter automaticamente UTF-8-MAC para UTF-8",
       "Ícone da Dock durante a execução",
       "Original",
@@ -113,7 +113,7 @@
       "Antes de 1.0"
     ],
     "pt": [
-      "Suporte ao pacote otf",
+      "Converter para \\UTF / \\CID do pacote otf",
       "Converter automaticamente UTF-8-MAC para UTF-8",
       "Ícone do Dock durante a execução",
       "Original",
@@ -124,7 +124,7 @@
       "Antes de 1.0"
     ],
     "ro": [
-      "Suport pentru pachetul otf",
+      "Conversie în \\UTF / \\CID din pachetul otf",
       "Convertește automat UTF-8-MAC în UTF-8",
       "Pictograma din Dock în timpul rulării",
       "Originală",
@@ -135,7 +135,7 @@
       "Înainte de 1.0"
     ],
     "zh_CN": [
-      "otf宏包支持",
+      "自动转换为otf宏包的\\UTF / \\CID",
       "自动将UTF-8-MAC转换为UTF-8",
       "运行时的Dock图标",
       "原始",

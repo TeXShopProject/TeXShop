@@ -1569,7 +1569,7 @@
       {
        "kind": "popup",
        "title": "エンジンのプロファイル",
-       "note": "タイプセットのコマンド、BibTeXエンジン、索引作成とMetaPostのコマンド、otfパッケージ対応を設定します。日本語のプロファイルは、新しい書類のエンコーディング（UTF-8）、辞書、UTF-8-MACの変換も設定します。",
+       "note": "タイプセットのコマンド、BibTeXエンジン、索引作成とMetaPostのコマンド、otfパッケージの\\UTF / \\CIDへの自動変換を設定します。日本語のプロファイルは、新しい書類のエンコーディング（UTF-8）、辞書、UTF-8-MACの変換も設定します。",
        "choices": [
         "pdfLaTeX",
         "XeLaTeX",
@@ -1861,11 +1861,11 @@
      ]
     },
     {
-     "title": "pTeXサポート（日本用）",
+     "title": "日本語pLaTeX用",
      "rows": [
       {
        "kind": "switch",
-       "title": "otfパッケージ対応",
+       "title": "otfパッケージの\\UTF / \\CIDに自動変換",
        "src": [
         "573"
        ]

@@ -236,7 +236,7 @@
 "catalog.preview.5.0.note" = "La page que la fenêtre HTML ouvre en premier. Saisissez une adresse web ou le chemin d’un fichier. Par défaut : https://texshop.app";
 "group.typesetting.0.title" = "Moteur";
 "catalog.typesetting.0.4.title" = "Profil du moteur";
-"catalog.typesetting.0.4.note" = "Définit les commandes de composition, le moteur BibTeX, le programme d’index, MetaPost et la prise en charge du paquet otf. Les profils japonais définissent aussi UTF-8 comme encodage des nouveaux documents, le dictionnaire et la conversion UTF-8-MAC.";
+"catalog.typesetting.0.4.note" = "Définit les commandes de composition, le moteur BibTeX, le programme d’index, MetaPost et la conversion en \\UTF / \\CID du paquet otf. Les profils japonais définissent aussi UTF-8 comme encodage des nouveaux documents, le dictionnaire et la conversion UTF-8-MAC.";
 "catalog.typesetting.0.0.title" = "Composer les nouveaux documents avec";
 "catalog.typesetting.0.0.note" = "Ce que la barre d’outils choisit à côté de Composer à l’ouverture d’un document. Une ligne % !TEX TS-program dans le document est prioritaire.";
 "catalog.typesetting.0.1.title" = "Fichier de moteur";
@@ -290,8 +290,8 @@
 "catalog.typesetting.8.2.note" = "Par défaut : makeindex";
 "catalog.typesetting.8.3.title" = "MetaPost";
 "catalog.typesetting.8.3.note" = "Par défaut : mpost";
-"group.typesetting.9.title" = "Support pTeX (Japon)";
-"catalog.typesetting.9.0.title" = "Prise en charge du paquet otf";
+"group.typesetting.9.title" = "pLaTeX japonais";
+"catalog.typesetting.9.0.title" = "Convertir en \\UTF / \\CID du paquet otf";
 "group.console.0.title" = "Police";
 "catalog.console.0.0.title" = "Police de la console";
 "catalog.console.0.1.title" = "Utiliser aussi pour l’éditeur Macro";
@@ -320,4 +320,6 @@
 
 "catalog.documents.1.3.note" = "À l’enregistrement, réunit les caractères stockés séparément (comme か + ゛) en un seul caractère (が).";
 
-"catalog.typesetting.9.0.note" = "À l’enregistrement, remplace les caractères hors JIS X 0208 par \\UTF{XXXX} (ou \\CID{numéro} pour les variantes de glyphes). Pour les documents pTeX utilisant le paquet otf.";
+"catalog.typesetting.9.0.note" = "À l’enregistrement, remplace les caractères hors JIS X 0208 par \\UTF{XXXX} (ou \\CID{numéro} pour les variantes de glyphes).";
+"catalog.typesetting.9.0.former" = "Prise en charge du paquet otf";
+"group.typesetting.9.former" = "Support pTeX (Japon)";

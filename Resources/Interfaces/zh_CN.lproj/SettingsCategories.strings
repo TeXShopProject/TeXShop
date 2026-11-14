@@ -236,7 +236,7 @@
 "catalog.preview.5.0.note" = "打开HTML窗口时首先显示的页面。输入网址或文件路径。默认值：https://texshop.app";
 "group.typesetting.0.title" = "引擎";
 "catalog.typesetting.0.4.title" = "引擎配置";
-"catalog.typesetting.0.4.note" = "设置排版命令、BibTeX引擎、索引生成、MetaPost和otf宏包支持。日语配置还会设置新文档的编码（UTF-8）、词典和UTF-8-MAC转换。";
+"catalog.typesetting.0.4.note" = "设置排版命令、BibTeX引擎、索引生成、MetaPost和otf宏包\\UTF / \\CID的自动转换。日语配置还会设置新文档的编码（UTF-8）、词典和UTF-8-MAC转换。";
 "catalog.typesetting.0.0.title" = "新文稿的排版";
 "catalog.typesetting.0.0.note" = "打开文稿时，工具栏中“排版”旁边最先选中的项。文稿中有 % !TEX TS-program行时，以该行为准。";
 "catalog.typesetting.0.1.title" = "引擎文件";
@@ -290,8 +290,8 @@
 "catalog.typesetting.8.2.note" = "默认值：makeindex";
 "catalog.typesetting.8.3.title" = "MetaPost";
 "catalog.typesetting.8.3.note" = "默认值：mpost";
-"group.typesetting.9.title" = "pTeX支持 (仅日语用户)";
-"catalog.typesetting.9.0.title" = "otf宏包支持";
+"group.typesetting.9.title" = "日语pLaTeX";
+"catalog.typesetting.9.0.title" = "自动转换为otf宏包的\\UTF / \\CID";
 "group.console.0.title" = "字体";
 "catalog.console.0.0.title" = "控制台字体";
 "catalog.console.0.1.title" = "同时在宏编辑器中使用";
@@ -320,4 +320,6 @@
 
 "catalog.documents.1.3.note" = "保存时，将分开存储的字符（例如 か + ゛）合并为一个字符（が）。";
 
-"catalog.typesetting.9.0.note" = "保存时，将JIS X 0208以外的字符替换为 \\UTF{XXXX}（字形变体等替换为 \\CID{编号}）。适用于使用otf宏包的pTeX文稿。";
+"catalog.typesetting.9.0.note" = "保存时，将JIS X 0208以外的字符替换为 \\UTF{XXXX}（字形变体等替换为 \\CID{编号}）。";
+"catalog.typesetting.9.0.former" = "otf宏包支持";
+"group.typesetting.9.former" = "pTeX支持 (仅日语用户)";
