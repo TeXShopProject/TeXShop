@@ -20,9 +20,13 @@ from shortcut_sources import production_source, companion_sources
 
 root = Path(__file__).resolve().parents[1]
 LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt', 'pt-PT', 'ro', 'zh_CN']
-KEYS = ['ShowReplacePanel', 'FindAll', 'SelectAll', 'SetReplaceString', 'Replace', 'ReplaceAndFind', 'ReplaceAll', 'Highlight', 'Unhighlight']
+KEYS = ['FindAll', 'SelectAll', 'SetReplaceString', 'Replace', 'ReplaceAndFind', 'ReplaceAll', 'Highlight', 'Unhighlight']
+# Find and Replace… of each language's MainMenu (only the Base menu had it before 6.00)
+FIND_AND_REPLACE = {'en': 'Find and Replace…', 'de': 'Suchen und ersetzen...', 'es': 'Buscar y reemplazar…', 'fr': 'Rechercher et remplacer...',
+                    'it': 'Trova e sostituisci…', 'ja': '検索と置換…', 'ko': '찾기 및 대치...', 'nl': 'Zoek en vervang…', 'pt': 'Buscar e Substituir…',
+                    'pt-PT': 'Procurar e substituir…', 'ro': 'Găsiți și înlocuiți…', 'zh_CN': '查找和替换...'}
 # The user's names (2026-11-14), those of CotEditor's Japanese Find menu
-JAPANESE = {'ShowReplacePanel': '検索と置換…', 'FindAll': 'すべて検索', 'SelectAll': 'すべての一致を選択', 'SetReplaceString': '選択部分を置換に使用', 'Replace': '置換',
+JAPANESE = {'FindAll': 'すべて検索', 'SelectAll': 'すべての一致を選択', 'SetReplaceString': '選択部分を置換に使用', 'Replace': '置換',
             'ReplaceAndFind': '置換して次を検索', 'ReplaceAll': 'すべて置換', 'Highlight': 'すべてハイライト', 'Unhighlight': 'ハイライトを削除'}
 
 MUTATIONS = {
@@ -41,9 +45,8 @@ MUTATIONS = {
         '        if ((item.action == @selector(performFindPanelAction:) && item.tag == NSFindPanelActionShowFindPanel) || item.action == NSSelectorFromString(@"showFindPanel:"))\n            return menu;\n        NSMenu *found = item.submenu ? TSAppKitFindSubmenu'),
     'a title reads another key': ('TSAdvancedFindMenu.m', '@"AdvancedFind.Menu.ReplaceAll"', '@"AdvancedFind.ReplaceAll"'),
     'the commands have no identifier': ('TSAdvancedFindMenu.m', '    item.identifier = TSCommandIdentifier(action);\n', ''),
-    'Find and Replace… is not added where it is missing': ('TSAdvancedFindMenu.m', '    if (!findAndReplace) {', '    if (NO) {'),
-    'switching away takes out the Base menu\'s Find and Replace…': ('TSAdvancedFindMenu.m',
-        '        if ([item.representedObject isEqual:TSAddedItemMark])', '        if ([item.representedObject isEqual:TSAddedItemMark] || [item.identifier isEqualToString:TSFindAndReplaceIdentifier])'),
+    'switching away takes out the menu\'s own Find and Replace…': ('TSAdvancedFindMenu.m',
+        '        if ([item.representedObject isEqual:TSAddedItemMark])', '        if ([item.representedObject isEqual:TSAddedItemMark] || [item.identifier isEqualToString:@"TSShortcut.performTextFinderAction:.12"])'),
 }
 
 
@@ -68,7 +71,7 @@ def check_strings():
     code = (root / 'Sources/Find/TSAdvancedFindMenu.m').read_text(encoding='utf-8')
     for key in KEYS:
         assert f'TSLocalized(@"AdvancedFind.Menu.{key}", @"{english[key]}")' in code, key
-    print('PASS: the nine titles in 12 languages, the Japanese of CotEditor, the English in the code')
+    print('PASS: the eight titles in 12 languages, the Japanese of CotEditor, the English in the code')
 
 
 def check_launch(delegate):
@@ -151,6 +154,7 @@ def run_all(probe, quiet=False):
         language = 'en' if lproj == 'Base' else lproj
         table = strings(language)
         titles = {key: table[f'AdvancedFind.Menu.{key}'] for key in KEYS}
+        titles['FindAndReplace'] = FIND_AND_REPLACE[language]
         result = subprocess.run([str(probe), 'nib', str(nib), str(macros), json.dumps(titles, ensure_ascii=False), '-AppleLanguages', f'({language})'],
                                 capture_output=True, text=True, timeout=120)
         if result.returncode:
