@@ -18,8 +18,8 @@
 #import "TSMacroContentKind.h"
 #import "TSSyntaxMacroContentScanner.h"
 
-// The macro editor adds its status line, list buttons and placeholder guide and
-// lays out its buttons after loading; MacroEditorLayout.inc is that code, copied
+// The macro editor adds its status line, shortcut field and placeholder row, lays
+// out its buttons and puts its list in a sidebar after loading; MacroEditorLayout.inc is that code, copied
 // from its source.
 @implementation TSMacroEditor
 #include "MacroEditorLayout.inc"
@@ -66,7 +66,7 @@ int main(int argc, char **argv) { @autoreleasepool {
         NSApp.mainMenu = nil;
         if (macroEditor) {
             TSMacroEditor *editor = owner;
-            [editor installShortcutStatus]; [editor installListControls]; [editor installShortcutField]; [editor installPlaceholderControls]; [editor layoutDialogButtons];
+            [editor installShortcutStatus]; [editor installShortcutField]; [editor installPlaceholderControls]; [editor layoutDialogButtons]; [editor installSidebar];
         } else ApplyProductionLayout(name, owner, objects);
         for (id o in objects) {
             if ([o isKindOfClass:NSWindow.class]) {

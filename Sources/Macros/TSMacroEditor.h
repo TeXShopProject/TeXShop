@@ -62,9 +62,11 @@
 @property (retain) NSMapTable *originalShortcutKeys;
 @property (retain) NSMapTable *shortcutConflicts;
 @property (retain) NSTextField *shortcutStatus;
-// The list and the bar under it (＋, − and the menu of the other commands), in one frame.
-@property (retain) NSBox *listBox;
+// The sidebar: the list and the bar under it (＋, − and the menu of the other commands).
+@property (retain) NSVisualEffectView *sidebar;
 @property (retain) TSListBottomBar *listBar;
+// Beside the sidebar: the fields, the message and the buttons.
+@property (retain) NSView *editorView;
 // Below the contents: Insert adds a placeholder, the help button lists them.
 @property (retain) NSPopUpButton *insertPlaceholderButton;
 @property (retain) NSButton *placeholdersButton;
@@ -75,7 +77,7 @@
 @property (retain) TSMacroShortcutField *shortcutField;
 // The shortcut being edited, as the macros store it (for example @"M+ShiftKey").
 @property (copy) NSString *pendingShortcutKey;
-- (void)installListControls;
+- (void)installSidebar;
 - (void)installShortcutField;
 - (void)syncShortcutField;
 - (BOOL)recordShortcutEvent:(NSEvent *)event;

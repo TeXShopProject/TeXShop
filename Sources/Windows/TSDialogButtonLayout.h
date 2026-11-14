@@ -10,6 +10,9 @@ FOUNDATION_EXPORT const CGFloat TSDialogButtonSpacing, TSDialogMargin;
 // close the window, from left to right. Buttons are sized to their titles, and
 // the window grows to fit the row if it has to.
 FOUNDATION_EXPORT void TSLayoutDialogButtons(NSView *host, NSArray<NSButton *> *trailing, NSArray<NSButton *> *leading);
+// The width that row takes with the margins at both ends: the narrowest a view
+// can be that holds it.
+FOUNDATION_EXPORT CGFloat TSDialogButtonsWidth(NSArray<NSButton *> *trailing, NSArray<NSButton *> *leading);
 // Lays out a row of action buttons against the trailing edge, from right to
 // left, each sized to its own title; the window grows to fit if it has to.
 FOUNDATION_EXPORT void TSLayoutTrailingButtons(NSView *host, NSArray<NSButton *> *rightToLeft);

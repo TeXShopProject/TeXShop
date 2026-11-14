@@ -277,10 +277,10 @@ static TSFilterMode savedFilter = kNoFilterMode;
 			return;
 		}
         [self installShortcutStatus];
-        [self installListControls];
         [self installShortcutField];
         [self installPlaceholderControls];
         [self layoutDialogButtons];
+        [self installSidebar];
 
 		// set up window and UI elements
 		// [window setDelegate: self];	// not necessary if it is connected in IB
@@ -342,7 +342,12 @@ static TSFilterMode savedFilter = kNoFilterMode;
     }
     for (NSView *view in host.subviews)
         if (![bottomControls containsObject:view]) lowest = MIN(lowest, NSMinY(view.frame));
-    CGFloat statusY = bottom + 6, statusHeight = 52;
+    // The message in the small font of the Multiple Replace window's messages, in a band of
+    // four lines: beside the sidebar, the longest messages take four at the narrowest width.
+    NSTextField *status = [NSTextField wrappingLabelWithString:@"1\n2\n3\n4"];
+    status.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
+    CGFloat statusY = bottom + 6, statusHeight = ceil([status.cell cellSizeForBounds:NSMakeRect(0, 0, 1000, CGFLOAT_MAX)].height);
+    status.stringValue = @"";
     CGFloat height = MAX(56, statusY + statusHeight + 6 - lowest);
     // Reserve a band by shortening the resizable editors, not by enlarging the
     // window: its frame may already have been restored from an earlier opening.
@@ -369,25 +374,28 @@ static TSFilterMode savedFilter = kNoFilterMode;
         windowFrame.size.height = minimum.height;
         [window setFrame:windowFrame display:NO];
     }
-    self.shortcutStatus = [NSTextField wrappingLabelWithString:@""];
+    self.shortcutStatus = status;
     self.shortcutStatus.frame = NSMakeRect(20, statusY, NSWidth(host.bounds)-40, statusHeight);
     self.shortcutStatus.autoresizingMask = NSViewWidthSizable | NSViewMaxYMargin;
     self.shortcutStatus.textColor = NSColor.secondaryLabelColor;
     [host addSubview:self.shortcutStatus];
 }
 
-// The list is edited with ＋ and − and a menu of the less frequent commands in a
-// bar at its bottom, as the sets of the Multiple Replace window are. The list and
-// the bar share one frame and one background. The nib's five text buttons stay
-// hidden and keep their actions, titles and enabled state.
-- (void)installListControls
+// At first as wide as the sidebar of the Multiple Replace window.
+static const CGFloat TSMacroEditorSidebarWidth = 240;
+// The items run down the left of the window in a sidebar, as the sets of the Multiple
+// Replace window do: the list from the top edge, under the title bar, to the bar of ＋, −
+// and a menu of the less frequent commands at the bottom edge. The rest of the window is
+// beside it. The nib's five text buttons stay hidden and keep their actions, titles and
+// enabled state. The other controls are laid out before, in the nib's window; this puts
+// them in the part beside the sidebar.
+- (void)installSidebar
 {
-    if (self.listBar) return;
-    NSView *host = [window contentView];
+    if (self.sidebar) return;
+    NSWindow *editor = window;
+    NSView *host = editor.contentView;
     NSScrollView *list = [outlineView enclosingScrollView];
-    NSArray<NSButton *> *old = @[newItemButton, submenuButton, separatorButton, deleteButton, duplicateButton];
-    CGFloat oldBottom = CGFLOAT_MAX;
-    for (NSButton *button in old) { oldBottom = MIN(oldBottom, NSMinY([host convertRect:button.bounds fromView:button])); button.hidden = YES; }
+    for (NSButton *button in @[newItemButton, submenuButton, separatorButton, deleteButton, duplicateButton]) button.hidden = YES;
     NSString *more = [NSString stringWithFormat:@"%@, %@, %@", submenuButton.title, separatorButton.title, duplicateButton.title];
     TSListBottomBar *bar = [[TSListBottomBar alloc] initWithTarget:self addAction:@selector(listAddPressed:) addToolTip:newItemButton.title
                                                       removeAction:@selector(listRemovePressed:) removeToolTip:deleteButton.title actionsToolTip:more];
@@ -398,36 +406,98 @@ static TSFilterMode savedFilter = kNoFilterMode;
         item.target = self; item.representedObject = source;
         [bar.actionsButton.menu addItem:item];
     }
-    // The frame of the list takes the place of the old buttons too: the list
-    // above, the bar at its bottom edge, where the old buttons ended.
-    NSRect listFrame = list.frame;
-    NSRect boxFrame = NSMakeRect(NSMinX(listFrame), oldBottom, NSWidth(listFrame), NSMaxY(listFrame) - oldBottom);
-    NSBox *box = [[NSBox alloc] initWithFrame:boxFrame];
-    box.boxType = NSBoxCustom;
-    box.titlePosition = NSNoTitle;
-    box.borderWidth = 1;
-    box.borderColor = NSColor.separatorColor; // the color of the list's former bezel
-    box.fillColor = NSColor.textBackgroundColor;
-    box.contentViewMargins = NSZeroSize;
-    box.identifier = @"macro.list.box";
-    box.autoresizingMask = list.autoresizingMask;
-    [host addSubview:box positioned:NSWindowBelow relativeTo:list];
-    [list removeFromSuperview];
-    NSView *inside = box.contentView;
-    CGFloat barHeight = ceil(bar.fittingSize.height);
-    bar.frame = NSMakeRect(0, 0, NSWidth(inside.bounds), barHeight);
-    bar.autoresizingMask = NSViewWidthSizable | NSViewMaxYMargin;
-    // Without its own border the list would turn to the inset style: it keeps its rows' full width.
+    // A list without headings, its selection rounded inside the sidebar as the sets': the
+    // names, and the shortcuts at the trailing edge as in a menu.
     NSOutlineView *rows = outlineView;
-    if (rows.style == NSTableViewStyleAutomatic) rows.style = rows.effectiveStyle;
-    list.borderType = NSNoBorder;
-    list.drawsBackground = NO;
-    list.frame = NSMakeRect(0, barHeight, NSWidth(inside.bounds), NSHeight(inside.bounds) - barHeight);
-    list.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
-    rows.backgroundColor = NSColor.textBackgroundColor;
-    [inside addSubview:list];
-    [inside addSubview:bar];
-    self.listBox = box; self.listBar = bar;
+    rows.headerView = nil;
+    rows.cornerView = nil;
+    rows.style = NSTableViewStyleInset;
+    rows.backgroundColor = NSColor.clearColor;
+    // Rows 24 points apart, as the sets', their text in the middle of each.
+    rows.rowHeight = 17;
+    rows.intercellSpacing = NSMakeSize(rows.intercellSpacing.width, 7);
+    NSTableColumn *name = [rows tableColumnWithIdentifier:@"Name"], *key = [rows tableColumnWithIdentifier:@"Key"];
+    // In the font of the Multiple Replace window's sets (some nibs have a bold or smaller one).
+    NSFont *font = [NSFont systemFontOfSize:NSFont.systemFontSize];
+    for (NSTableColumn *column in @[name, key]) {
+        NSCell *cell = column.dataCell;
+        cell.font = font;
+        cell.lineBreakMode = NSLineBreakByTruncatingTail;
+    }
+    key.width = MAX(key.width, ceil([@"⌃⌥⇧⌘W" sizeWithAttributes:@{NSFontAttributeName: font}].width) + 8);
+    key.resizingMask = NSTableColumnNoResizing;
+    ((NSCell *)key.dataCell).alignment = NSTextAlignmentRight;
+    // The names take what the shortcuts leave of the list's width, whatever the sidebar's
+    // width: the list never scrolls sideways and the selection keeps its rounded ends inside.
+    name.resizingMask = NSTableColumnAutoresizingMask;
+    rows.columnAutoresizingStyle = NSTableViewFirstColumnOnlyAutoresizingStyle;
+    [list removeFromSuperview];
+    NSVisualEffectView *sidebar = TSListSidebarView(list, bar);
+    // The first row 10 points below the title bar, as the first set in its source list.
+    list.contentInsets = NSEdgeInsetsMake(5, 0, 0, 0);
+    sidebar.identifier = @"macro.sidebar";
+
+    // Beside it, the rest of the window: the fields 20 points from the sidebar and from the
+    // window's right edge, as the rules of the Multiple Replace window, the message and the
+    // buttons below them.
+    CGFloat shift = NSMinX([nameField frame]) - TSDialogMargin;
+    CGFloat width = NSMaxX([nameField frame]) - shift + TSDialogMargin, widened = width - NSWidth(host.bounds);
+    NSView *main = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, width, NSHeight(host.bounds))];
+    main.identifier = @"macro.main";
+    for (NSView *view in [host.subviews copy]) {
+        NSRect frame = view.frame;
+        frame.origin.x -= shift;
+        [view removeFromSuperview];
+        view.frame = frame;
+        [main addSubview:view];
+    }
+    // A label of the name or the contents stands just above its field, one line tall, as in
+    // most nibs: some have labels two lines tall that run into the field below them.
+    NSScrollView *contents = [contentTextView enclosingScrollView];
+    NSArray<NSView *> *fields = contents ? @[nameField, contents] : @[nameField];
+    for (NSView *view in main.subviews) {
+        if (![view isKindOfClass:NSTextField.class] || [(NSTextField *)view isEditable] || view.hidden) continue;
+        for (NSView *field in fields) {
+            NSRect frame = view.frame, below = field.frame;
+            if (NSMinY(frame) >= NSMaxY(below) || NSMaxY(frame) <= NSMaxY(below) || NSMaxX(frame) <= NSMinX(below) || NSMinX(frame) >= NSMaxX(below)) continue;
+            NSTextField *label = (NSTextField *)view;
+            NSString *text = [label.stringValue stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+            label.stringValue = text;
+            frame.size.height = MAX(17, ceil([label.cell cellSize].height));
+            // Between the name field and the contents, the contents give up the room it needs.
+            if (field != nameField && NSMaxY(below) + 3 + NSHeight(frame) > NSMinY([nameField frame]) - 4) {
+                CGFloat top = NSMinY([nameField frame]) - 4 - NSHeight(frame) - 3;
+                below.size.height -= NSMaxY(below) - top;
+                field.frame = below;
+            }
+            frame.origin.y = NSMaxY(below) + 3;
+            view.frame = frame;
+        }
+    }
+    NSRect status = self.shortcutStatus.frame;
+    self.shortcutStatus.frame = NSMakeRect(TSDialogMargin, NSMinY(status), width - 2 * TSDialogMargin, NSHeight(status));
+    self.editorView = main;
+    [self layoutDialogButtons];
+    // As narrow as the fields and the buttons allow: what the nib's window allowed for the fields.
+    CGFloat narrowest = MAX(MAX(editor.minSize.width, editor.contentMinSize.width) + widened,
+                            TSDialogButtonsWidth(@[saveButton, cancelButton], @[testButton]));
+    NSView *pane = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, width, NSHeight(editor.frame))];
+    main.translatesAutoresizingMaskIntoConstraints = NO;
+    [pane addSubview:main];
+    [NSLayoutConstraint activateConstraints:@[
+        [main.topAnchor constraintEqualToAnchor:pane.safeAreaLayoutGuide.topAnchor],
+        [main.leadingAnchor constraintEqualToAnchor:pane.leadingAnchor],
+        [main.trailingAnchor constraintEqualToAnchor:pane.trailingAnchor],
+        [main.bottomAnchor constraintEqualToAnchor:pane.bottomAnchor],
+    ]];
+    NSViewController *sidebarController = [NSViewController new], *mainController = [NSViewController new];
+    sidebarController.view = sidebar;
+    mainController.view = pane;
+    CGFloat minimumHeight = editor.minSize.height;
+    NSSplitViewController *split = TSInstallListSidebar(editor, sidebarController, mainController, TSMacroEditorSidebarWidth, narrowest, @"TSMacroEditorSplit");
+    editor.minSize = NSMakeSize(TSListSidebarMinimumWidth + split.splitView.dividerThickness + narrowest, minimumHeight);
+    [split.view layoutSubtreeIfNeeded];
+    self.sidebar = sidebar; self.listBar = bar;
     [self syncListControls];
 }
 - (void)syncListControls
@@ -480,6 +550,8 @@ static void TSSendButtonAction(NSButton *button)
     if (keyLabel.font) label.font = keyLabel.font;
     [label sizeToFit];
     CGFloat middle = NSMidY([shiftCheckBox frame]), height = NSHeight([keyField frame]);
+    // At the leading edge of the name's label, as the other labels of the column.
+    if (nameLabel) leading = NSMinX(nameLabel.frame);
     label.frame = NSMakeRect(leading, round(middle - NSHeight(label.frame) / 2), NSWidth(label.frame), NSHeight(label.frame));
     TSMacroShortcutField *field = [[TSMacroShortcutField alloc] initWithFrame:NSMakeRect(NSMaxX(label.frame) + 8, round(middle - height / 2), 150, height)
         model:keyField placeholder:NSLocalizedString(@"Press a key", @"") clearTitle:NSLocalizedString(@"Remove Shortcut", @"")];
@@ -736,7 +808,7 @@ static void TSSendButtonAction(NSButton *button)
 // which does not close the window, starts the row at the leading edge.
 - (void)layoutDialogButtons
 {
-    TSLayoutDialogButtons([window contentView], @[saveButton, cancelButton], @[testButton]);
+    TSLayoutDialogButtons(self.editorView ?: [window contentView], @[saveButton, cancelButton], @[testButton]);
 }
 
 - (void)collectShortcutCandidates:(TSMacroTreeNode *)parent path:(NSString *)path
@@ -1102,38 +1174,6 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 	if (item)
 		[macroMenu removeItem: item];
 	[[NSNotificationCenter defaultCenter] removeObserver: self];
-}
-
-// delegate method for window
-- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)proposedFrameSize
-{
-	NSRect outlineFrame = [[outlineView enclosingScrollView] frame];
-	NSRect buttonFrame = [testButton frame];
-	if ((proposedFrameSize.width < outlineFrame.size.width + 110) &&
-		(buttonFrame.origin.x > outlineFrame.origin.x + 100)) {
-		[testButton setFrameOrigin: NSMakePoint(outlineFrame.origin.x-3, buttonFrame.origin.y)];
-	}
-	if ((proposedFrameSize.width >= outlineFrame.size.width + 110) &&
-		(buttonFrame.origin.x <= outlineFrame.origin.x + 100)) {
-		[testButton setFrameOrigin: NSMakePoint(outlineFrame.origin.x+outlineFrame.size.width+24,
-																		buttonFrame.origin.y)];
-	}
-	// I think there is a bug in Cocoa which requires the fix below.
-	// If one make the window so narrow that the name and content fields disappear,
-	// then next time they appear, they stick to the right border.
-	NSRect contentBounds = [[window contentView] bounds];	// use this instead of proposedFrameSize
-	NSRect fieldFrame = [nameField frame];
-	if (fieldFrame.size.width > contentBounds.size.width-fieldFrame.origin.x-10 && fieldFrame.size.width > 0) {
-		fieldFrame.size.width = contentBounds.size.width-fieldFrame.origin.x-10;
-		[nameField setFrame:fieldFrame];
-	}
-	fieldFrame = [[contentTextView enclosingScrollView] frame];	// don't forget to apply it to the scroll view
-	if (fieldFrame.size.width > contentBounds.size.width-fieldFrame.origin.x-10 && fieldFrame.size.width > 0) {
-		fieldFrame.size.width = contentBounds.size.width-fieldFrame.origin.x-10;
-		[[contentTextView enclosingScrollView] setFrame:fieldFrame];
-	}
-	//
-	return proposedFrameSize;
 }
 
 // delegate method for window
