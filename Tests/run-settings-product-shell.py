@@ -75,6 +75,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
     ('engine-file-shown-not-stored','TSPreferences.m','		[SUD setObject:self.defaultEnginePopup.selectedItem.representedObject forKey:DefaultEngineKey];','		;'),
     ('engine-file-whole-row','TSSettingsDependencies.inc','_defaultEnginePopup, NO}','_defaultEnginePopup, YES}'),
     ('engine-file-folder-not-made','TSPreferences.m','    [NSFileManager.defaultManager createDirectoryAtPath:folder withIntermediateDirectories:YES attributes:nil error:NULL];\n    [NSWorkspace','    [NSWorkspace'),
+    ('typeset-choice-stored-by-old-row','TSPreferences.m','[SUD setInteger:[[sender selectedCell] tag] forKey:DefaultCommandKey];','[SUD setInteger:[@[@1,@0,@2][(NSUInteger)[sender selectedRow]] integerValue] forKey:DefaultCommandKey];'),
+    ('typeset-choice-shown-by-old-row','TSSettingsPaneRefresh.inc','[_defaultCommandMatrix selectCellWithTag:[defaults integerForKey:DefaultCommandKey]];','[_defaultCommandMatrix selectCellAtRow:[@[@1,@0,@2][(NSUInteger)[defaults integerForKey:DefaultCommandKey]] integerValue] column:0];'),
     ('history-bound','TSSettingsNavigationHistory.m','self.entries.count > 50','self.entries.count > 51'),
     ('history-inactive-key','TSSettingsWindowController.m','if (controller != nil && self.isKeyWindow && self.attachedSheet == nil)', 'if (controller != nil && self.attachedSheet == nil)'),
     ('sidebar-wrap','TSSettingsSidebarRow.m','label.maximumNumberOfLines = 2;','label.maximumNumberOfLines = 1;'),
