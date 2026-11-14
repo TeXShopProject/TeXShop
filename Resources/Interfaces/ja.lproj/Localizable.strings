@@ -364,4 +364,5 @@
 "Apply the “%@” profile?" = "プロファイル「%@」を適用しますか？";
 "Use latexmk" = "latexmkを使用";
 "Detect Paths" = "パスの自動検出";
+"%@ (Not Found)" = "%@（見つかりません）";
 "Choose an Engine Profile" = "エンジンのプロファイルを選択";

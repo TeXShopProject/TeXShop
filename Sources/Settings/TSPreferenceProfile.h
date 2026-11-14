@@ -37,6 +37,11 @@ FOUNDATION_EXPORT TSEngineProfile TSEngineProfileForLanguages(NSArray<NSString *
 /// Writes the values, holding back the observers of single keys until all are stored, and
 /// returns the keys whose values changed.
 FOUNDATION_EXPORT NSSet<TSPreferenceKey> *TSEngineProfileApply(NSUserDefaults *defaults, NSDictionary<TSPreferenceKey, id> *values);
+/// The factory engine file was XeLaTeX before 6.00. Whoever already typesets new documents
+/// with the factory engine file keeps XeLaTeX. Settings stores the engine file whenever this
+/// choice is made, so only an earlier choice has no engine file stored. stored is the
+/// persistent domain of the application.
+FOUNDATION_EXPORT void TSKeepEarlierFactoryEngineFile(NSUserDefaults *defaults, NSDictionary *stored);
 
 // Runtime observers defer their work until a complete profile has been stored.
 FOUNDATION_EXPORT BOOL TSPreferenceProfileIsApplying(void);

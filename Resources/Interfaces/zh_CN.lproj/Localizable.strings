@@ -353,4 +353,5 @@
 "Apply the “%@” profile?" = "要应用“%@”配置吗？";
 "Use latexmk" = "使用latexmk";
 "Detect Paths" = "自动检测路径";
+"%@ (Not Found)" = "%@（未找到）";
 "Choose an Engine Profile" = "选择引擎配置";

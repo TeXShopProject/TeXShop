@@ -21,8 +21,8 @@ tiLabelProgram				= "Programare";
 tiPaletteLabelProgram			= "Programare";
 tiToolTipProgram			= "Alegeți programul de tehnoredactare";
 
-tiLabelTeX				= "TeX";
-tiPaletteLabelTeX			= "TeX";
+tiLabelTeX				= "plain TeX";
+tiPaletteLabelTeX			= "plain TeX";
 tiToolTipTeX				= "Procesați sursa cu instrumentul plain TeX";
 
 tiLabelLaTeX				= "LaTeX";

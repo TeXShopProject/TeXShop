@@ -21,9 +21,9 @@ tiLabelProgram				= "프로그램";
 tiPaletteLabelProgram			= "프로그램";
 tiToolTipProgram			= "조판 프로그램 선택";
 
-tiLabelTeX				= "TeX";
-tiPaletteLabelTeX			= "TeX";
-tiToolTipTeX				= "Plain TeX 도구로 소스 처리";
+tiLabelTeX				= "plain TeX";
+tiPaletteLabelTeX			= "plain TeX";
+tiToolTipTeX				= "plain TeX 도구로 소스 처리";
 
 tiLabelLaTeX				= "LaTeX";
 tiPaletteLabelLaTeX			= "LaTeX";

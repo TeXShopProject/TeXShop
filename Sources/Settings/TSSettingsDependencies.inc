@@ -4,7 +4,7 @@
         {TSSettingsCategoryGeneral, ConsoleWindowPosModeKey, 0, TSDependencyInteger, _consoleWindowPosButton, NO},
         {TSSettingsCategoryGeneral, HtmlWindowPosModeKey, 0, TSDependencyInteger, _htmlWindowPosButton, NO},
         {TSSettingsCategoryUpdates, SparkleAutomaticUpdateKey, 1, TSDependencyBoolean, _sparkleIntervalMatrix, YES},
-        {TSSettingsCategoryTypesetting, DefaultCommandKey, 2, TSDependencyInteger, _engineTextField, YES},
+        {TSSettingsCategoryTypesetting, DefaultCommandKey, 2, TSDependencyInteger, _defaultEnginePopup, NO},
         {TSSettingsCategoryDocuments, AutoSaveEnabledKey, 0, TSDependencyBoolean, _keepBackupButton, YES},
         {TSSettingsCategoryPreview, PdfColorMapKey, 1, TSDependencyBoolean, _colorParam1Popup, YES},
         {TSSettingsCategoryEditor, showSpaceCharacterKey, 1, TSDependencyBoolean, _SpaceCharacterKindPopup, NO},

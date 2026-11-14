@@ -21,9 +21,9 @@ tiLabelProgram				= "Programme";
 tiPaletteLabelProgram		= "Programme";
 tiToolTipProgram			= "Choisir le programme de composition";
 
-tiLabelTeX				= "TeX";
-tiPaletteLabelTeX			= "TeX";
-tiToolTipTeX				= "Traiter la source avec Plain TeX";
+tiLabelTeX				= "plain TeX";
+tiPaletteLabelTeX			= "plain TeX";
+tiToolTipTeX				= "Traiter la source avec plain TeX";
 
 tiLabelLaTeX				= "LaTeX";
 tiPaletteLabelLaTeX			= "LaTeX";

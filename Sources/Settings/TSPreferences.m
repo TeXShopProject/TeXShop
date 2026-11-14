@@ -70,7 +70,7 @@ typedef NS_CLOSED_ENUM(NSUInteger, TSSettingsFontDestination) {
     TSSettingsFontNone, TSSettingsFontDocument, TSSettingsFontConsole
 };
 
-@interface TSPreferences () <NSWindowDelegate, NSTextFieldDelegate, TSSettingsWindowDelegate>
+@interface TSPreferences () <NSWindowDelegate, NSTextFieldDelegate, NSMenuDelegate, TSSettingsWindowDelegate>
 @property (strong) TSSettingsWindowController *settingsController;
 @property (copy) NSArray<TSPrefPaneController *> *preferencePanes;
 @property TSSettingsFontDestination fontEditingContext;
@@ -220,6 +220,71 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 - (void)settingsChangeFont:(NSFontManager *)sender
 {
     [self changeFont:sender];
+}
+
+//==============================================================================
+// Engine file
+//==============================================================================
+
+// The engine files that a document's toolbar lists, by name and in the same order.
+NSArray<NSString *> *TSEngineFileNames(NSString *folder)
+{
+    NSFileManager *fileManager = NSFileManager.defaultManager;
+    NSArray *files = [[fileManager contentsOfDirectoryAtPath:folder error:NULL] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+    NSMutableArray<NSString *> *names = [NSMutableArray array];
+    for (NSString *file in files) {
+        BOOL isDirectory = NO;
+        if (![file.pathExtension.lowercaseString isEqualToString:@"engine"]) continue;
+        if (![fileManager fileExistsAtPath:[folder stringByAppendingPathComponent:file] isDirectory:&isDirectory] || isDirectory) continue;
+        [names addObject:file.stringByDeletingPathExtension];
+    }
+    return names;
+}
+
+// A document finds the engine file of the setting by its name in any case.
+- (void)refreshDefaultEngineFromDefaults:(NSUserDefaults *)defaults
+{
+    NSPopUpButton *popup = self.defaultEnginePopup;
+    if (popup == nil) return;
+    NSString *current = [defaults stringForKey:DefaultEngineKey] ?: @"";
+    NSMenu *menu = popup.menu;
+    [menu removeAllItems];
+    popup.autoenablesItems = NO;
+    NSMenuItem *selected = nil;
+    for (NSString *name in TSEngineFileNames([EnginePath stringByStandardizingPath])) {
+        NSMenuItem *item = [menu addItemWithTitle:name action:NULL keyEquivalent:@""];
+        item.representedObject = name;
+        if (selected == nil && [name caseInsensitiveCompare:current] == NSOrderedSame) selected = item;
+    }
+    // An engine file that is not in the folder stays shown until another is chosen.
+    if (selected == nil && current.length > 0) {
+        if (menu.numberOfItems > 0) [menu insertItem:NSMenuItem.separatorItem atIndex:0];
+        selected = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"%@ (Not Found)", @"An engine file that is not in the Engines folder"), current] action:NULL keyEquivalent:@""];
+        selected.representedObject = current;
+        [menu insertItem:selected atIndex:0];
+    }
+    if (selected != nil) [popup selectItem:selected];
+}
+
+- (IBAction)defaultEngineChosen:(NSPopUpButton *)sender
+{
+    NSString *name = sender.selectedItem.representedObject;
+    if (name.length == 0) return;
+    [SUD setObject:name forKey:DefaultEngineKey];
+    [self refreshDefaultEngineFromDefaults:SUD];
+}
+
+- (IBAction)openEnginesFolder:(id)sender
+{
+    NSString *folder = [EnginePath stringByStandardizingPath];
+    [NSFileManager.defaultManager createDirectoryAtPath:folder withIntermediateDirectories:YES attributes:nil error:NULL];
+    [NSWorkspace.sharedWorkspace openURL:[NSURL fileURLWithPath:folder isDirectory:YES]];
+}
+
+// The list follows the folder, which can change while Settings is open.
+- (void)menuNeedsUpdate:(NSMenu *)menu
+{
+    if (menu == self.defaultEnginePopup.menu) [self refreshDefaultEngineFromDefaults:SUD];
 }
 
 //==============================================================================
@@ -1679,19 +1744,10 @@ A tag of 0 means use TeX, a tag of 1 means use LaTeX.
 	// since the default program values map identically to the tags of the NSButtonCells,
 	// we can use the tag directly here.
 	[SUD setInteger:[[sender selectedCell] tag] forKey:DefaultCommandKey];
-	if ([[sender selectedCell] tag] == 2) {
-		[self updateSettingsDependenciesForCategory:TSSettingsCategoryTypesetting defaults:SUD];
-		[_engineTextField setEditable: YES];
-		[_engineTextField setSelectable: YES];
-		[_engineTextField selectText:self];
-	}
-	else
-		[self updateSettingsDependenciesForCategory:TSSettingsCategoryTypesetting defaults:SUD];
-}
-
-- (IBAction)setEngine:(id)sender
-{
-    [self commitPreferenceField:_engineTextField showError:YES reflect:YES];
+	// The engine file shown is the one the documents use from now on, also when it is the factory one.
+	if ([[sender selectedCell] tag] == DefaultCommandUser && [self.defaultEnginePopup.selectedItem.representedObject length] > 0)
+		[SUD setObject:self.defaultEnginePopup.selectedItem.representedObject forKey:DefaultEngineKey];
+	[self updateSettingsDependenciesForCategory:TSSettingsCategoryTypesetting defaults:SUD];
 }
 
 /*" This method is connected to the "Default Script" matrix on the TeX pane.
@@ -2075,8 +2131,6 @@ A tag of 0 means "no", a tag of 1 means "yes".
         kind:TSPreferenceInputPercentage minimum:20 maximum:400 allowsEmpty:NO notification:nil]];
     [self addPreferenceField:_HtmlHomeField rule:[[TSPreferenceInput alloc] initWithKey:HtmlHomeKey
         kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:YES notification:nil]];
-    [self addPreferenceField:_engineTextField rule:[[TSPreferenceInput alloc] initWithKey:DefaultEngineKey
-        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
     [self addPreferenceField:_texCommandTextField rule:[[TSPreferenceInput alloc] initWithKey:TexCommandKey
         kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
     [self addPreferenceField:_latexCommandTextField rule:[[TSPreferenceInput alloc] initWithKey:LatexCommandKey

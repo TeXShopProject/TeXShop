@@ -99,7 +99,7 @@
 	<key>DefaultCommand</key>
 	<string>1</string>
 	<key>DefaultEngine</key>
-	<string>XeLaTeX</string>
+	<string>LuaLaTeX</string>
 	<key>DefaultScript</key>
 	<string>100</string>
 	<key>DocumentWindowFixedPosition</key>

@@ -707,6 +707,37 @@ static NSTextField *_Nullable TSTextFieldIn(NSView *_Nullable view)
     return nil;
 }
 
+/// The list of sets fits its sidebar at the smallest, the first and a wide width: no sideways scrolling, the names
+/// as wide as the visible list, the selection inside on both ends (rounded, not cut by the edge).
+static int CheckSetListFits(TSMultipleReplaceWindowController *window, NSString *name)
+{
+    int count = 0;
+    NSView *content = window.window.contentView;
+    NSScrollView *setScroll = (NSScrollView *)window.removeSetButton.superview.superview.subviews.firstObject;
+    NSTableView *sets = (NSTableView *)setScroll.documentView;
+    NSSplitView *splitView = ((NSSplitViewController *)window.window.contentViewController).splitView;
+    CGFloat first = NSWidth(splitView.arrangedSubviews.firstObject.frame);
+    for (NSNumber *wanted in @[@160, @(first), @320]) {
+        [splitView setPosition:wanted.doubleValue ofDividerAtIndex:0];
+        [content layoutSubtreeIfNeeded];
+        [setScroll layoutSubtreeIfNeeded];
+        NSClipView *clip = setScroll.contentView;
+        NSTableColumn *column = sets.tableColumns.firstObject;
+        NSRect row = sets.selectedRow >= 0 ? [sets rectOfRow:sets.selectedRow] : NSZeroRect;
+        CGFloat visible = NSWidth(clip.bounds), used = column.width + sets.intercellSpacing.width;
+        BOOL fits = NSWidth(sets.frame) <= visible + 0.5 && used <= visible + 0.5 && used >= visible - 1 && NSMaxX(row) <= visible + 0.5
+                 && NSMinX(clip.bounds) == 0 && !setScroll.hasHorizontalScroller && setScroll.horizontalScrollElasticity == NSScrollElasticityNone;
+        if (!fits) {
+            printf("FAIL %s %.0f: the names do not fit the visible list (table %.0f, column %.0f, row to %.0f, visible %.0f)\n", name.UTF8String,
+                   wanted.doubleValue, NSWidth(sets.frame), column.width, NSMaxX(row), visible);
+            count++;
+        }
+    }
+    [splitView setPosition:first ofDividerAtIndex:0];
+    [content layoutSubtreeIfNeeded];
+    return count;
+}
+
 /// The window and the options of a set in this language: layout, messages, and images on request.
 static void TestLayout(NSString *_Nullable imageDirectory)
 {
@@ -731,6 +762,7 @@ static void TestLayout(NSString *_Nullable imageDirectory)
     failures += CheckLayoutInset(options, [language stringByAppendingString:@" set options"], 16);
     failures += CheckCellsCentered(window.ruleTable.tableView, [language stringByAppendingString:@" rules"]);
     NSScrollView *setScroll = (NSScrollView *)window.removeSetButton.superview.superview.subviews.firstObject;
+    failures += CheckSetListFits(window, [language stringByAppendingString:@" sidebar"]);
     failures += CheckCellsCentered((NSTableView *)setScroll.documentView, [language stringByAppendingString:@" sets"]);
     NSView *sidebarBar = window.removeSetButton.superview;
     NSPopUpButton *setActions = nil;
@@ -820,6 +852,7 @@ static void TestLayout(NSString *_Nullable imageDirectory)
         if ([v isKindOfClass:[NSTableView class]] && v != samples.ruleTable.tableView)
             setList = (NSTableView *)v;
     }
+    failures += CheckSetListFits(samples, [language stringByAppendingString:@" sidebar with the samples"]);
     NSTableColumn *nameColumn = setList.tableColumns.firstObject;
     Check(setList && nameColumn.width >= NSWidth(setList.enclosingScrollView.contentView.bounds) - 2 * setList.intercellSpacing.width - 1,
           [NSString stringWithFormat:@"%@ the names take the width of the list (%.0f of %.0f)", language, nameColumn.width, NSWidth(setList.enclosingScrollView.contentView.bounds)]);

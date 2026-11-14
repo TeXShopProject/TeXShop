@@ -38,7 +38,7 @@
 
 
 
-// An experiment typesets a LaTeX document, so Plain TeX, MetaPost and ConTeXt cannot typeset it.
+// An experiment typesets a LaTeX document, so plain TeX, MetaPost and ConTeXt cannot typeset it.
 static BOOL TSExperimentRejectsEngine(NSString *name)
 {
     name = name.lowercaseString;
@@ -77,7 +77,7 @@ static NSString *TSExperimentEngine(NSString *program, NSInteger menuEngine, NSA
     else if (menuEngine >= UserEngine && menuEngine <= (NSInteger)menuTitles.count)
         engine = menuTitles[menuEngine - 1];
     else
-        return nil;   // Plain TeX, MetaPost, or no engine
+        return nil;   // plain TeX, MetaPost, or no engine
     return TSExperimentRejectsEngine(engine) ? nil : engine;
 }
 

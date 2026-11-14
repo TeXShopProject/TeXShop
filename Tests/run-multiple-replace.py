@@ -54,8 +54,9 @@ MUTATIONS = {
         '    NSTableCellView *cell = [TSMultipleReplaceRuleTable cellWithControl:field];\n    cell.textField = nil;', '    NSView *cell = field;'),
     'the cells sit at the top of the row': ('TSMultipleReplaceRuleTable.m',
         '[control.centerYAnchor constraintEqualToAnchor:cell.centerYAnchor]', '[control.topAnchor constraintEqualToAnchor:cell.topAnchor]'),
-    'the names keep a new column\'s width': ('TSMultipleReplaceWindowController.m', '    column.width = NSWidth(self.setTable.frame);\n', ''),
     'the sidebar starts narrower than the samples\' names': ('TSMultipleReplaceWindowController.m', 'static const CGFloat TSSidebarWidth = 240;', 'static const CGFloat TSSidebarWidth = 180;'),
+    'the names take a fixed width': ('TSMultipleReplaceWindowController.m', '    if (fabs(column.width - width) > 0.5)\n        column.width = width;\n', ''),
+    'the list scrolls sideways': ('TSMultipleReplaceWindowController.m', '    scroll.horizontalScrollElasticity = NSScrollElasticityNone;\n', ''),
     'a help button comes back': ('TSMultipleReplaceWindowController.m',
         '    NSView *actions = [self stackOf:@[self.inSelectionBox, highlight, replace] spacing:12];',
         '    NSButton *help = [NSButton buttonWithTitle:@"" target:nil action:NULL];\n    help.bezelStyle = NSBezelStyleHelpButton;\n'

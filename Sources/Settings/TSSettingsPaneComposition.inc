@@ -342,7 +342,6 @@
         ]],
         @"settings.vSL-XM-z8W": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.181"] kind:TSSettingsRowControls indentation:0], // defaultCommandMatrix
-            [TSSettingsLayoutRow controls:@[@"settings.592"] kind:TSSettingsRowControls indentation:1], // engineTextField
         ]],
         @"settings.0et-QV-IOa": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.odf-Ny-S9G"] kind:TSSettingsRowControls indentation:0], // syncTabButton

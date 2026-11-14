@@ -988,7 +988,7 @@
                             <menuItem isSeparatorItem="YES" id="148">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Plain TeX" tag="1" keyEquivalent="T" id="149" identifier="TSShortcut.doTex:.1">
+                            <menuItem title="plain TeX" tag="1" keyEquivalent="T" id="149" identifier="TSShortcut.doTex:.1">
                                 <connections>
                                     <action selector="doTex:" target="-1" id="343"/>
                                 </connections>

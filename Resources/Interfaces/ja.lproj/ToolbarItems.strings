@@ -21,8 +21,8 @@ tiLabelProgram				= "プログラム";
 tiPaletteLabelProgram			= "プログラム";
 tiToolTipProgram			= "タイプセットプログラムを選択します";
 
-tiLabelTeX				= "TeX";
-tiPaletteLabelTeX			= "TeX";
+tiLabelTeX				= "plain TeX";
+tiPaletteLabelTeX			= "plain TeX";
 tiToolTipTeX				= "ソースをplain TeXで処理します";
 
 tiLabelLaTeX				= "LaTeX";

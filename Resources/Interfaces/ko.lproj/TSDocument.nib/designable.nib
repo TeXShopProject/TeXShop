@@ -579,12 +579,12 @@ DQ
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="75">
                     <rect key="frame" x="261" y="50" width="127" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <popUpButtonCell key="cell" type="push" title="Plain TeX" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="1" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="78" id="76">
+                    <popUpButtonCell key="cell" type="push" title="plain TeX" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="1" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="78" id="76">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="77">
                             <items>
-                                <menuItem title="Plain TeX" state="on" tag="1" id="78"/>
+                                <menuItem title="plain TeX" state="on" tag="1" id="78"/>
                                 <menuItem title="LaTeX" tag="2" id="79"/>
                                 <menuItem title="BibTeX" tag="3" id="80"/>
                                 <menuItem title="MakeIndex" tag="4" id="81"/>
@@ -1085,12 +1085,12 @@ DQ
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="188">
                     <rect key="frame" x="581" y="50" width="127" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <popUpButtonCell key="cell" type="push" title="Plain TeX" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="1" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="191" id="189">
+                    <popUpButtonCell key="cell" type="push" title="plain TeX" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="1" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="191" id="189">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="190">
                             <items>
-                                <menuItem title="Plain TeX" state="on" tag="1" id="191"/>
+                                <menuItem title="plain TeX" state="on" tag="1" id="191"/>
                                 <menuItem title="LaTeX" tag="2" id="192"/>
                                 <menuItem title="BibTeX" tag="3" id="193"/>
                                 <menuItem title="MakeIndex" tag="4" id="194"/>
@@ -1219,12 +1219,12 @@ DQ
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="137">
                     <rect key="frame" x="17" y="50" width="127" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <popUpButtonCell key="cell" type="push" title="Plain TeX" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="1" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="140" id="138">
+                    <popUpButtonCell key="cell" type="push" title="plain TeX" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="1" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="140" id="138">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="139">
                             <items>
-                                <menuItem title="Plain TeX" state="on" tag="1" id="140"/>
+                                <menuItem title="plain TeX" state="on" tag="1" id="140"/>
                                 <menuItem title="LaTeX" tag="2" id="141"/>
                                 <menuItem title="BibTeX" tag="3" id="142"/>
                                 <menuItem title="MakeIndex" tag="4" id="143"/>

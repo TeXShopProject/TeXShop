@@ -1892,9 +1892,9 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 {
     
 // added by mitsu --(J++) Program popup button indicating Program name
-	[programButton selectItemWithTitle: @"Plain TeX"];
-    [sprogramButton selectItemWithTitle: @"Plain TeX"];
-	[programButtonEE selectItemWithTitle: @"Plain TeX"];
+	[programButton selectItemWithTitle: @"plain TeX"];
+    [sprogramButton selectItemWithTitle: @"plain TeX"];
+	[programButtonEE selectItemWithTitle: @"plain TeX"];
 // end addition
 
 	[self doJob:TexEngine withError:YES runContinuously:NO];

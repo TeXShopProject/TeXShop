@@ -827,7 +827,7 @@ DQ
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="424">
                             <items>
-                                <menuItem title="Plain TeX" tag="1" id="422"/>
+                                <menuItem title="plain TeX" tag="1" id="422"/>
                                 <menuItem title="LaTeX" state="on" tag="2" id="426"/>
                                 <menuItem title="BibTeX" tag="3" id="425"/>
                                 <menuItem title="MakeIndex" tag="4" id="418"/>
@@ -858,7 +858,7 @@ DQ
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="2yk-cN-Dwk">
                             <items>
-                                <menuItem title="Plain TeX" tag="1" id="j9n-8D-315"/>
+                                <menuItem title="plain TeX" tag="1" id="j9n-8D-315"/>
                                 <menuItem title="LaTeX" state="on" tag="2" id="Y8o-ce-orY"/>
                                 <menuItem title="BibTeX" tag="3" id="Kg9-E5-Z7i"/>
                                 <menuItem title="MakeIndex" tag="4" id="gSE-KI-NnU"/>
@@ -1144,7 +1144,7 @@ DQ
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="402">
                             <items>
-                                <menuItem title="Plain TeX" tag="1" id="406"/>
+                                <menuItem title="plain TeX" tag="1" id="406"/>
                                 <menuItem title="LaTeX" state="on" tag="2" id="407"/>
                                 <menuItem title="BibTeX" tag="3" id="405"/>
                                 <menuItem title="MakeIndex" tag="4" id="404"/>

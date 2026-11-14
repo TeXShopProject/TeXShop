@@ -6,9 +6,9 @@
 "190.title" = "Eigen script";
 "191.title" = "Direct PDF";
 "314.title" = "Bestanden opslaan";
-"588.title" = "TeX";
+"588.title" = "plain TeX";
 "589.title" = "LaTeX";
-"590.title" = "Het commando hieronder:";
+"590.title" = "Engine-bestand";
 "675.title" = "Na zetten";
 "679.title" = "Toon voorvertoning";
 "680.title" = "Doorgaan met editor";

@@ -6,9 +6,9 @@
 "190.title" = "个性化脚本";
 "191.title" = "直接生成PDF";
 "314.title" = "保存文件时";
-"588.title" = "TeX";
+"588.title" = "plain TeX";
 "589.title" = "LaTeX";
-"590.title" = "采用键入的指令";
+"590.title" = "引擎文件";
 "675.title" = "排版后";
 "679.title" = "调出预览窗口";
 "680.title" = "继续编辑";

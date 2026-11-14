@@ -1728,9 +1728,9 @@ if (! skipTextWindow) {
 	// changed by mitsu --(J) Typeset command and (J++) Program popup button indicating Program name
 	defaultcommand = [SUD integerForKey:DefaultCommandKey];
 	switch (defaultcommand) {
-		case DefaultCommandTeX: [programButton selectItemWithTitle: @"Plain TeX"];
-            [sprogramButton selectItemWithTitle: @"Plain TeX"];
-			[programButtonEE selectItemWithTitle: @"Plain TeX"];
+		case DefaultCommandTeX: [programButton selectItemWithTitle: @"plain TeX"];
+            [sprogramButton selectItemWithTitle: @"plain TeX"];
+			[programButtonEE selectItemWithTitle: @"plain TeX"];
 			whichEngine = TexEngine;	// just remember the default command
 			break;
 		case DefaultCommandLaTeX:   [programButton selectItemWithTitle: @"LaTeX"];

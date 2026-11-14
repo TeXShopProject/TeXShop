@@ -165,3 +165,11 @@ NSSet<TSPreferenceKey> *TSEngineProfileApply(NSUserDefaults *defaults, NSDiction
     [NSNotificationCenter.defaultCenter postNotificationName:NSUserDefaultsDidChangeNotification object:defaults];
     return changed;
 }
+
+void TSKeepEarlierFactoryEngineFile(NSUserDefaults *defaults, NSDictionary *stored)
+{
+    id command = stored[DefaultCommandKey];
+    if (![command respondsToSelector:@selector(integerValue)] || [command integerValue] != 2) return;
+    if (stored[DefaultEngineKey] != nil) return;
+    [defaults setObject:@"XeLaTeX" forKey:DefaultEngineKey];
+}

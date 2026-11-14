@@ -34,9 +34,9 @@ MUTATIONS = {
     'pdf-top-before-show': ('typesetFile', '        [document->scrapPDFWindow makeKeyAndOrderFront:nil];\n        [document->scrapPDFKitView didShowOutputWindow];',
                             '        [document->scrapPDFKitView didShowOutputWindow];\n        [document->scrapPDFWindow makeKeyAndOrderFront:nil];'),
     'pdf-top-missing': ('typesetFile', '        [document->scrapPDFKitView didShowOutputWindow];\n', ''),
-    # Plain TeX, MetaPost and ConTeXt cannot typeset an Experiment, also when named by a
+    # plain TeX, MetaPost and ConTeXt cannot typeset an Experiment, also when named by a
     # "% !TEX program" line; an engine of ~/Library/TeXShop/Engines keeps its name.
-    'engine-plain-tex-runs': ('engine', '        return nil;   // Plain TeX, MetaPost, or no engine', '        return @"pdflatex";'),
+    'engine-plain-tex-runs': ('engine', '        return nil;   // plain TeX, MetaPost, or no engine', '        return @"pdflatex";'),
     'engine-context-runs': ('engine', '    return TSExperimentRejectsEngine(engine) ? nil : engine;', '    return engine;'),
     'engine-pdftex-runs': ('engine', '@"tex", @"pdftex", ', '@"tex", '),
     'engine-name-lowercased': ('engine', '        engine = menuTitles[menuEngine - 1];', '        engine = menuTitles[menuEngine - 1].lowercaseString;'),
@@ -282,7 +282,7 @@ static Document *D(void) {
     d.inputPipe = [NSObject new]; d.outputPipe = [NSObject new];
     d.readHandle = [NSObject new]; d.writeHandle = [NSObject new];
     d.programButton = [Node new]; d.programButton.indexOfSelectedItem = 1;
-    d.programButton.itemTitles = @[@"Plain TeX", @"LaTeX", @"BibTeX", @"MakeIndex", @"MetaPost"];
+    d.programButton.itemTitles = @[@"plain TeX", @"LaTeX", @"BibTeX", @"MakeIndex", @"MetaPost"];
     d.textView = [Node new]; d.textView.string = @"child preamble\\begin{document}child body";
     d.encoding = NSUTF8StringEncoding; d->whichScript = 100; d->fileIsTex = YES;
     d.fileURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"child.tex"]];
@@ -344,7 +344,7 @@ static void CheckSource(NSString *source, NSString *header, NSInteger rootScript
         RemoveOutput(d.experimentConsole);
     }
 }
-// The engine of the source toolbar (its index in the menu: Plain TeX, LaTeX, BibTeX, MakeIndex,
+// The engine of the source toolbar (its index in the menu: plain TeX, LaTeX, BibTeX, MakeIndex,
 // MetaPost, then the engines of ~/Library/TeXShop/Engines) or of a "% !TEX program" line.
 static NSString *ExperimentExecutable(NSInteger index, NSArray *titles, NSString *magic, NSInteger script, BOOL *refused) {
     Document *d = D();
@@ -363,7 +363,7 @@ static NSString *ExperimentExecutable(NSInteger index, NSArray *titles, NSString
     return executable;
 }
 static NSArray *Engines(NSArray *users) {
-    return [@[@"Plain TeX", @"LaTeX", @"BibTeX", @"MakeIndex", @"MetaPost"] arrayByAddingObjectsFromArray:users];
+    return [@[@"plain TeX", @"LaTeX", @"BibTeX", @"MakeIndex", @"MetaPost"] arrayByAddingObjectsFromArray:users];
 }
 static void CheckRefused(NSInteger index, NSArray *titles, NSString *magic, NSString *label) {
     BOOL refused = NO;
@@ -378,8 +378,8 @@ static void CheckEngine(NSInteger index, NSArray *titles, NSString *magic, NSInt
 }
 static void CheckEngines(void) {
     NSArray *users = Engines(@[@"ConTeXt", @"ConTeXt-TL", @"My Engine", @"XeLaTeX"]);
-    CheckRefused(0, users, nil, @"Plain TeX of the toolbar");
-    CheckRefused(0, @[@"TeX (localized)", @"LaTeX", @"BibTeX", @"MakeIndex", @"MetaPost"], nil, @"Plain TeX of the toolbar under another title");
+    CheckRefused(0, users, nil, @"plain TeX of the toolbar");
+    CheckRefused(0, @[@"TeX (localized)", @"LaTeX", @"BibTeX", @"MakeIndex", @"MetaPost"], nil, @"plain TeX of the toolbar under another title");
     CheckRefused(4, users, nil, @"MetaPost of the toolbar");
     CheckRefused(5, users, nil, @"ConTeXt engine of the toolbar");
     CheckRefused(6, users, nil, @"ConTeXt-TL engine of the toolbar");

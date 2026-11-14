@@ -88,7 +88,6 @@
 	IBOutlet NSMatrix       *_defaultBibtexMatrix;          /*" connected to "Bibtex" "*/ // comment out by Terada
 	IBOutlet NSMatrix	*_syncMatrix;			/*" connected to "Sync Method" "*/
 	IBOutlet NSMatrix	*_defaultCommandMatrix;		/*" connected to "Default Program" "*/
-	IBOutlet NSTextField    *_engineTextField;
 	IBOutlet NSMatrix	*_consoleMatrix;		/*" connected to "Show Console" "*/
     IBOutlet NSTextField *tabIndentField;
     IBOutlet NSTextField *firstParagraphIndentField;
@@ -246,6 +245,8 @@
 @property (strong) NSButton *sparklePrereleaseButton;
 @property (strong) NSPopUpButton *engineProfilePopup;
 @property (strong) NSButton *engineProfileApplyButton;
+@property (strong) NSPopUpButton *defaultEnginePopup;
+@property (strong) NSButton *editEnginesButton;
 @property (strong) NSTextField *sparkleLastCheckField;
 @property (strong) NSButton *sparkleCheckNowButton;
 @property (strong) TSKeyBindingsController *keyBindings;
@@ -330,7 +331,8 @@
 // - (IBAction)defaultMetaPostChanged:sender;
 //- (IBAction)defaultBibtexChanged:sender; // comment out by Terada
 - (IBAction)defaultProgramChanged:sender;
-- (IBAction)setEngine:sender;
+- (IBAction)defaultEngineChosen:(NSPopUpButton *)sender;
+- (IBAction)openEnginesFolder:(id)sender;
 - (IBAction)consoleBehaviorChanged:sender;
 - (IBAction)saveRelatedButtonPressed:sender;
 - (IBAction)syncTabButtonPressed:sender;

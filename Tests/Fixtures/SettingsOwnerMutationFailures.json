@@ -8,7 +8,7 @@
   "dependency-ConsoleWindowPosModeKey": "Ledger dependency ConsoleWindowPosMode=0 -> consoleWindowPosButton",
   "dependency-DocumentWindowPosModeKey": "Ledger dependency DocumentWindowPositionMode=0 -> docWindowPosButton",
   "dictionary-stale-entry": "Repeated refresh does not append duplicate dictionary choices",
-  "dependency-DefaultCommandKey": "Ledger dependency DefaultCommand=1 -> engineTextField",
+  "dependency-DefaultCommandKey": "Ledger dependency DefaultCommand=1 -> defaultEnginePopup",
   "dependency-HtmlWindowPosModeKey": "Ledger dependency HtmlWindowPosMode=0 -> htmlWindowPosButton",
   "disabled-label-color": "Dependent name uses the actual enabled or disabled text color",
   "encoding-sheet": "Encoding change must not present a critical alert sheet",
@@ -50,5 +50,12 @@
   "profile-copy-menu": "PDF copy format is prepared before profile notifications",
   "termination-validation": "Termination commits valid editing without showing a warning",
   "profile-choice-after-commit": "The profile sheet comes after the commit",
-  "profile-separator-tags": "Only Custom answers to no profile; separators and the heading answer to none"
+  "profile-separator-tags": "Only Custom answers to no profile; separators and the heading answer to none",
+  "engine-file-directories": "Engine File lists the engine files of the folder in the toolbar's order",
+  "engine-file-case": "Engine File lists the engine files of the folder in the toolbar's order",
+  "engine-file-missing-hidden": "The list follows the folder, and a missing engine file stays shown",
+  "engine-file-folder-refresh": "The list follows the folder, and a missing engine file stays shown",
+  "engine-file-shown-not-stored": "Choosing the engine file stores the engine file shown",
+  "engine-file-whole-row": "Edit Engine List stays available beside Engine File",
+  "engine-file-folder-not-made": "Edit Engine List opens the Engines folder, made again if it was removed"
 }

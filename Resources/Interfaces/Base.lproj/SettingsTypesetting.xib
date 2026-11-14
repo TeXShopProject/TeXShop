@@ -11,7 +11,6 @@
         <outlet property="afterTypesettingMatrix" destination="678" id="682" />
         <outlet property="defaultCommandMatrix" destination="181" id="221" />
         <outlet property="defaultScriptMatrix" destination="186" id="211" />
-        <outlet property="engineTextField" destination="592" id="597" />
         <outlet property="saveRelatedButton" destination="316" id="318" />
         <outlet property="syncMatrix" destination="782" id="820" />
         <outlet property="syncTabButton" destination="odf-Ny-S9G" id="jpP-OB-XmX" />
@@ -187,15 +186,15 @@
                 </buttonCell>
                 <cells>
                   <column>
-                    <buttonCell type="radio" title="TeX" imagePosition="left" alignment="left" state="on" inset="2" id="588">
+                    <buttonCell type="radio" title="LaTeX" imagePosition="left" alignment="left" tag="1" state="on" inset="2" id="589">
                       <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                       <font key="font" metaFont="system" />
                     </buttonCell>
-                    <buttonCell type="radio" title="LaTeX" imagePosition="left" alignment="left" tag="1" inset="2" id="589">
+                    <buttonCell type="radio" title="plain TeX" imagePosition="left" alignment="left" inset="2" id="588">
                       <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                       <font key="font" metaFont="system" />
                     </buttonCell>
-                    <buttonCell type="radio" title="Command Listed Below" imagePosition="left" alignment="left" tag="2" inset="2" id="590">
+                    <buttonCell type="radio" title="Engine File" imagePosition="left" alignment="left" tag="2" inset="2" id="590">
                       <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                       <font key="font" metaFont="system" />
                     </buttonCell>
@@ -205,18 +204,6 @@
                   <action selector="defaultProgramChanged:" target="-2" id="223" />
                 </connections>
               </matrix>
-              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="592" identifier="settings.592">
-                <rect key="frame" x="19" y="11" width="181" height="22" />
-                <autoresizingMask key="autoresizingMask" />
-                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" enabled="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="897">
-                  <font key="font" metaFont="system" />
-                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
-                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
-                </textFieldCell>
-                <connections>
-                  <action selector="setEngine:" target="-2" id="596" />
-                </connections>
-              </textField>
             </subviews>
           </view>
           <font key="titleFont" metaFont="system" />

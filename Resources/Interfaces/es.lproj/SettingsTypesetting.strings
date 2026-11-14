@@ -6,9 +6,9 @@
 "190.title" = "Script personal";
 "191.title" = "PDF directo";
 "314.title" = "Al guardar";
-"588.title" = "TeX";
+"588.title" = "plain TeX";
 "589.title" = "LaTeX";
-"590.title" = "Este otro comando:";
+"590.title" = "Archivo de motor";
 "675.title" = "Tras componer páginas";
 "679.title" = "Pdf previsto al frente";
 "680.title" = "Continuar editando";

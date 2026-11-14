@@ -197,7 +197,8 @@ int main(int argc, const char **argv) { @autoreleasepool {
             [view removeFromSuperview];
         }
     }
-    // 170 migrated from the legacy Preferences window and 4 added since.
-    Check(outlets == 174, @"Every typed outlet loads");
-    puts("PASS: 11 panes and 174 typed outlets");
+    // 170 migrated from the legacy Preferences window and 4 added since; the engine
+    // text field gave way to the Engine File menu built in code.
+    Check(outlets == 173, @"Every typed outlet loads");
+    puts("PASS: 11 panes and 173 typed outlets");
 } return 0; }
