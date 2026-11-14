@@ -249,8 +249,8 @@
 "catalog.typesetting.1.0.title" = "조판 후 동작";
 "group.typesetting.2.title" = "소스와 미리보기 동기화";
 "catalog.typesetting.2.0.title" = "Sync 방식";
-"catalog.typesetting.2.1.title" = "동기화로 이동한 문서를 루트 윈도우의 탭으로 열기";
-"catalog.typesetting.2.1.note" = "보통 꺼 둡니다.";
+"catalog.typesetting.2.1.title" = "동기화로 여는 파일을 루트 파일 윈도우의 탭으로 열기";
+"catalog.typesetting.2.1.note" = "미리보기에서 동기화하여 다른 파일을 열 때 새 윈도우를 열지 않고 루트 파일 윈도우에 탭으로 추가합니다.";
 "group.typesetting.3.title" = "경로";
 "catalog.typesetting.3.0.title" = "TeX 엔진";
 "catalog.typesetting.3.0.note" = "기본값: /Library/TeX/texbin 또는 /usr/texbin";

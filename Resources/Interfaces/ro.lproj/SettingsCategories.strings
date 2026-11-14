@@ -249,8 +249,8 @@
 "catalog.typesetting.1.0.title" = "După tehnoredactare";
 "group.typesetting.2.title" = "Sincronizarea sursei și a previzualizării";
 "catalog.typesetting.2.0.title" = "Metoda de sincronizare";
-"catalog.typesetting.2.1.title" = "Deschide ca file în fereastra principală documentele accesate prin sincronizare";
-"catalog.typesetting.2.1.note" = "De obicei, dezactivat.";
+"catalog.typesetting.2.1.title" = "Deschide ca file în fereastra fișierului principal fișierele accesate prin sincronizare";
+"catalog.typesetting.2.1.note" = "Când sincronizarea din previzualizare deschide alt fișier, acesta se adaugă ca filă în fereastra fișierului principal, în loc să se deschidă într-o fereastră proprie.";
 "group.typesetting.3.title" = "Căi";
 "catalog.typesetting.3.0.title" = "Motoare TeX";
 "catalog.typesetting.3.0.note" = "Implicit: /Library/TeX/texbin sau /usr/texbin";

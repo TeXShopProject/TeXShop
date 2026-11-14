@@ -249,8 +249,8 @@
 "catalog.typesetting.1.0.title" = "After Typesetting";
 "group.typesetting.2.title" = "Source and Preview Synchronization";
 "catalog.typesetting.2.0.title" = "Sync Method";
-"catalog.typesetting.2.1.title" = "Open documents reached by Sync as tabs in the root window";
-"catalog.typesetting.2.1.note" = "Usually left off.";
+"catalog.typesetting.2.1.title" = "Open files reached by Sync as tabs in the root file’s window";
+"catalog.typesetting.2.1.note" = "When Sync from the Preview opens another file, it joins the root file’s window as a tab instead of opening its own window.";
 "group.typesetting.3.title" = "Paths";
 "catalog.typesetting.3.0.title" = "TeX Engines";
 "catalog.typesetting.3.0.note" = "Default: /Library/TeX/texbin or /usr/texbin";

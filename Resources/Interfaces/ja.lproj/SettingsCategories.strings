@@ -249,8 +249,8 @@
 "catalog.typesetting.1.0.title" = "タイプセット後の動作";
 "group.typesetting.2.title" = "ソースとプレビューの同期";
 "catalog.typesetting.2.0.title" = "Sync方式";
-"catalog.typesetting.2.1.title" = "Syncで開く新しい書類を、ルートウインドウのタブで開く";
-"catalog.typesetting.2.1.note" = "通常はオフにします。";
+"catalog.typesetting.2.1.title" = "Syncで開くファイルを、ルートファイルのウインドウのタブにする";
+"catalog.typesetting.2.1.note" = "プレビューからSyncして別のファイルが開くとき、新しいウインドウではなく、ルートファイルのウインドウにタブとして加えます。";
 "group.typesetting.3.title" = "パス";
 "catalog.typesetting.3.0.title" = "TeXエンジン";
 "catalog.typesetting.3.0.note" = "デフォルト: /Library/TeX/texbinまたは /usr/texbin";

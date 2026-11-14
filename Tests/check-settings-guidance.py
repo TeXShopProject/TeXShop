@@ -281,3 +281,38 @@ def check_internal_link_release(text):
 
 check_internal_link_release((ROOT/"Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm").read_text())
 print("PASS: English help retains the merged internal-link preview release entry")
+
+
+# The Sync tabs switch says what it does in every language, and the manual quotes its English name.
+sync_tabs={
+    'Base': ("Open files reached by Sync as tabs in the root file’s window",
+        "When Sync from the Preview opens another file, it joins the root file’s window as a tab instead of opening its own window."),
+    'ja': ("Syncで開くファイルを、ルートファイルのウインドウのタブにする",
+        "プレビューからSyncして別のファイルが開くとき、新しいウインドウではなく、ルートファイルのウインドウにタブとして加えます。"),
+    'de': ("Über Sync geöffnete Dateien als Tabs im Fenster der Hauptdatei öffnen",
+        "Wenn Sync von der Vorschau aus eine andere Datei öffnet, wird sie als Tab zum Fenster der Hauptdatei hinzugefügt, statt in einem eigenen Fenster geöffnet zu werden."),
+    'es': ("Abrir los archivos alcanzados por Sync como pestañas en la ventana del archivo raíz",
+        "Cuando Sync abre otro archivo desde la vista previa, este se añade como pestaña a la ventana del archivo raíz en lugar de abrirse en su propia ventana."),
+    'fr': ("Ouvrir les fichiers atteints par la synchro dans des onglets de la fenêtre du fichier racine",
+        "Lorsque la synchro depuis l’aperçu ouvre un autre fichier, celui-ci s’ajoute sous forme d’onglet à la fenêtre du fichier racine au lieu de s’ouvrir dans sa propre fenêtre."),
+    'it': ("Aprire come pannelli nella finestra del file principale i file raggiunti dalla sincronizzazione",
+        "Quando la sincronizzazione dall’anteprima apre un altro file, questo si aggiunge come pannello alla finestra del file principale invece di aprirsi in una finestra propria."),
+    'ko': ("동기화로 여는 파일을 루트 파일 윈도우의 탭으로 열기",
+        "미리보기에서 동기화하여 다른 파일을 열 때 새 윈도우를 열지 않고 루트 파일 윈도우에 탭으로 추가합니다."),
+    'nl': ("Bestanden die via synchronisatie worden bereikt als tabbladen in het venster van het hoofdbestand openen",
+        "Als synchronisatie vanuit de voorvertoning een ander bestand opent, wordt dat als tabblad aan het venster van het hoofdbestand toegevoegd in plaats van in een eigen venster geopend."),
+    'pt': ("Abrir como abas na janela do arquivo principal os arquivos encontrados pela sincronização",
+        "Quando a sincronização a partir da pré-visualização abre outro arquivo, ele é adicionado como aba à janela do arquivo principal em vez de abrir em uma janela própria."),
+    'pt-PT': ("Abrir como separadores na janela do ficheiro principal os ficheiros encontrados pela sincronização",
+        "Quando a sincronização a partir da pré-visualização abre outro ficheiro, este é adicionado como separador à janela do ficheiro principal em vez de abrir numa janela própria."),
+    'ro': ("Deschide ca file în fereastra fișierului principal fișierele accesate prin sincronizare",
+        "Când sincronizarea din previzualizare deschide alt fișier, acesta se adaugă ca filă în fereastra fișierului principal, în loc să se deschidă într-o fereastră proprie."),
+    'zh_CN': ("在主文件的窗口中以标签页打开通过同步定位的文件",
+        "从预览同步打开其他文件时，将其作为标签页加入主文件的窗口，而不是打开新窗口。"),
+}
+for language,(title,note) in sync_tabs.items():
+    values=strings(ROOT/f'Resources/Interfaces/{language}.lproj/SettingsCategories.strings')
+    assert (values['catalog.typesetting.2.1.title'],values['catalog.typesetting.2.1.note'])==(title,note),('Sync tabs wording',language)
+assert 'Open documents reached by Sync as tabs in the root window' not in manual,'Manual quotes the old Sync tabs name'
+assert manual.count('``'+sync_tabs['Base'][0].replace('\u2019',"'"))==2,'Manual quotes the Sync tabs switch by its current name'
+print('PASS: Sync tabs switch wording in 12 languages and the manual')

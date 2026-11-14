@@ -249,8 +249,8 @@
 "catalog.typesetting.1.0.title" = "Nach dem Setzen";
 "group.typesetting.2.title" = "Synchronisierung von Quelltext und Vorschau";
 "catalog.typesetting.2.0.title" = "Art der Synchronisierung";
-"catalog.typesetting.2.1.title" = "Über Sync geöffnete Dokumente als Tabs im Hauptfenster öffnen";
-"catalog.typesetting.2.1.note" = "Normalerweise deaktiviert lassen.";
+"catalog.typesetting.2.1.title" = "Über Sync geöffnete Dateien als Tabs im Fenster der Hauptdatei öffnen";
+"catalog.typesetting.2.1.note" = "Wenn Sync von der Vorschau aus eine andere Datei öffnet, wird sie als Tab zum Fenster der Hauptdatei hinzugefügt, statt in einem eigenen Fenster geöffnet zu werden.";
 "group.typesetting.3.title" = "Pfade";
 "catalog.typesetting.3.0.title" = "TeX-Engines";
 "catalog.typesetting.3.0.note" = "Vorgabe: /Library/TeX/texbin oder /usr/texbin";

@@ -249,8 +249,8 @@
 "catalog.typesetting.1.0.title" = "Depois de compor";
 "group.typesetting.2.title" = "Sincronização do código-fonte e da pré-visualização";
 "catalog.typesetting.2.0.title" = "Método Sync";
-"catalog.typesetting.2.1.title" = "Abrir como abas na janela principal os documentos encontrados pela sincronização";
-"catalog.typesetting.2.1.note" = "Normalmente desativado.";
+"catalog.typesetting.2.1.title" = "Abrir como abas na janela do arquivo principal os arquivos encontrados pela sincronização";
+"catalog.typesetting.2.1.note" = "Quando a sincronização a partir da pré-visualização abre outro arquivo, ele é adicionado como aba à janela do arquivo principal em vez de abrir em uma janela própria.";
 "group.typesetting.3.title" = "Caminhos";
 "catalog.typesetting.3.0.title" = "Motores TeX";
 "catalog.typesetting.3.0.note" = "Padrão: /Library/TeX/texbin ou /usr/texbin";
