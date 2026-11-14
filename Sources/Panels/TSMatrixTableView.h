@@ -22,11 +22,16 @@
 
 #import <Cocoa/Cocoa.h>
 
+// The identifier of the column that numbers the rows.
+extern NSString *const TSMatrixRowNumberColumn;
+
 @interface TSMatrixTableView : NSTableView
 {
 	IBOutlet id myController;
 }
 - (void) drawStripesInRect:(NSRect)clipRect;
+// The columns of the matrix, in the order they are shown, without the row numbers.
+- (NSArray<NSTableColumn *> *)matrixColumns;
 
 @end
 

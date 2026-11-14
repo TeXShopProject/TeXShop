@@ -77,9 +77,6 @@ static id _sharedInstance = nil;
 
 -(void)awakeFromNib
 {
-	NSArray *upArray;
-	NSArray *downArray;
-	
 	// MatrixSize = MATSIZE;
 	MatrixSize = [SUD integerForKey:MatrixSizeKey];
 	if (MatrixSize < 2)
@@ -108,16 +105,6 @@ static id _sharedInstance = nil;
 	[self.myMatrix setActRows:3];
 	[self.myMatrix setActCols:3];
 	
-	upArray = [NSArray arrayWithObjects:[NSNumber numberWithDouble:2.0], nil];
-	downArray = [NSArray arrayWithObjects:[NSNumber numberWithDouble:.5], nil];
-		
-	[NSRulerView registerUnitWithName:@"Rows" abbreviation:@"rw"
-		 unitToPointsConversionFactor:19 stepUpCycle:upArray stepDownCycle:downArray];
-	
-	[mtscrv setHasVerticalRuler:YES];
-	[mtscrv setRulersVisible:YES];
-	[[mtscrv verticalRulerView] setMeasurementUnits:@"Rows"];
-
 	[matrixtable setAutosaveTableColumns:TRUE];
 	[matrixtable setVerticalMotionCanBeginDrag:NO];
 	[matrixtable registerForDraggedTypes:[NSArray arrayWithObjects:MatPboardType, nil]];
@@ -144,6 +131,7 @@ static id _sharedInstance = nil;
 			[myBundle pathForResource:@"matrixpanel_1" ofType:@"plist"]];
 
 	[super windowDidLoad];
+	[self arrangeControls];
 
 	[[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(panelDidMove:)
 												 name:NSWindowDidMoveNotification object:[self window]];
@@ -162,6 +150,7 @@ static id _sharedInstance = nil;
 	self.arrayMatrix = [[NSArray alloc] initWithArray:[matrixDictionary objectForKey:@"Matrix" ]];
 
 	notifcenter = [NSNotificationCenter defaultCenter];
+	[self scrollTableToTop];
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
@@ -319,6 +308,7 @@ static id _sharedInstance = nil;
 	NSInteger drawgrid = ([gridbutton state] == NSOnState);
 	NSInteger hsize = [self.myMatrix actCols];
 	NSInteger vsize = [self.myMatrix actRows];
+	NSArray<NSTableColumn *> *matrixColumns = [(TSMatrixTableView *)matrixtable matrixColumns];
 
 	if (environment == 0) {
 		if ((brstyleop == 4) && (brstylecl == 4)) {
@@ -370,7 +360,7 @@ static id _sharedInstance = nil;
 
 	for (j = 0; j < vsize; j++) {
 		for (i = 0; i < hsize; i++) {
-			[insertion appendString:[self.myMatrix objectInRow:j inCol:[[[[matrixtable tableColumns] objectAtIndex:i] identifier] integerValue] ]];
+			[insertion appendString:[self.myMatrix objectInRow:j inCol:[[[matrixColumns objectAtIndex:i] identifier] integerValue] ]];
 			if (i < hsize-1)
 				[insertion appendString:[self.arrayMatrix objectAtIndex:3]];
 		}
@@ -485,7 +475,7 @@ static id _sharedInstance = nil;
 				}
 			}
 			for(i = 0; (i < mwdth) && (i < mhght); i++)
-				[self.myMatrix replaceObjectInRow:i inCol:[[[[matrixtable tableColumns]objectAtIndex:i] identifier] integerValue] withObject:@"1"];
+				[self.myMatrix replaceObjectInRow:i inCol:[[[[(TSMatrixTableView *)matrixtable matrixColumns] objectAtIndex:i] identifier] integerValue] withObject:@"1"];
 			
 		}
 	}
@@ -540,6 +530,225 @@ static id _sharedInstance = nil;
 	[[NSUserDefaults standardUserDefaults] setFloat:x forKey:MPanelOriginXKey];
 	[[NSUserDefaults standardUserDefaults] setFloat:y forKey:MPanelOriginYKey];
 	// [[self window] saveFrameUsingName:@"theLatexPanel"];
+}
+
+
+#pragma mark Layout
+
+// The first row starts below the header, where the scroll view's insets put the top of the table.
+- (void)scrollTableToTop
+{
+	[[[self window] contentView] layoutSubtreeIfNeeded];
+	NSClipView *clip = [(NSScrollView *)mtscrv contentView];
+	[clip scrollToPoint:NSMakePoint(NSMinX([clip bounds]), -[clip contentInsets].top)];
+	[mtscrv reflectScrolledClipView:clip];
+}
+
+static const CGFloat TSMatrixPanelMargin = 20;
+
+static NSFont *TSMatrixPanelFont(void)
+{
+	return [NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSControlSizeRegular]];
+}
+
+// Matrices of radio buttons or push buttons in the regular size, every cell as large as the largest one, so
+// that their columns line up.
+static void TSFitMatrices(NSArray<NSMatrix *> *matrices, NSSize spacing)
+{
+	NSSize size = NSZeroSize;
+	for (NSMatrix *matrix in matrices)
+		for (NSCell *cell in [matrix cells]) {
+			[cell setControlSize:NSControlSizeRegular];
+			[cell setFont:TSMatrixPanelFont()];
+			NSSize fit = [cell cellSize];
+			size.width = MAX(size.width, ceil(fit.width));
+			size.height = MAX(size.height, ceil(fit.height));
+		}
+	for (NSMatrix *matrix in matrices) {
+		[matrix setCellSize:size];
+		[matrix setIntercellSpacing:spacing];
+		[matrix sizeToCells];
+	}
+}
+
+static void TSPrepareControl(NSControl *control)
+{
+	[control setControlSize:NSControlSizeRegular];
+	[control setFont:TSMatrixPanelFont()];
+}
+
+static void TSFixSize(NSView *view, NSSize size)
+{
+	[NSLayoutConstraint activateConstraints:@[[[view widthAnchor] constraintEqualToConstant:size.width],
+											  [[view heightAnchor] constraintEqualToConstant:size.height]]];
+}
+
+// The controls in the regular size of macOS, laid out with the usual spacing whatever the language: the
+// compiled panels of the localizations place them in small and mini sizes, some touching each other.
+- (void)arrangeControls
+{
+	NSWindow *window = [self window];
+	NSView *content = [window contentView];
+	const CGFloat margin = TSMatrixPanelMargin;
+
+	// The views without an outlet: the environment's box, the labels of the size, the line above the buttons
+	// and the Insert button.
+	NSBox *environmentBox = nil;
+	for (NSView *view = [envsel superview]; view != nil && environmentBox == nil; view = [view superview])
+		if ([view isKindOfClass:[NSBox class]])
+			environmentBox = (NSBox *)view;
+	NSMutableArray<NSTextField *> *labels = [NSMutableArray array];
+	NSButton *insertButton = nil;
+	for (NSView *view in [[content subviews] copy]) {
+		if ([view isKindOfClass:[NSBox class]] && view != environmentBox)
+			[view removeFromSuperview];
+		else if ([view isKindOfClass:[NSTextField class]] && ![(NSTextField *)view isEditable])
+			[labels addObject:(NSTextField *)view];
+		else if ([view isKindOfClass:[NSButton class]] && [(NSButton *)view action] == @selector(insertMatrix:))
+			insertButton = (NSButton *)view;
+	}
+	if (environmentBox == nil || [labels count] != 2 || insertButton == nil)
+		return;
+	// The label nearer the rows field names the rows.
+	NSPoint rowsField = NSMakePoint(NSMidX([vtf frame]), NSMidY([vtf frame]));
+	[labels sortUsingComparator:^NSComparisonResult(NSTextField *a, NSTextField *b) {
+		CGFloat da = hypot(NSMidX([a frame]) - rowsField.x, NSMidY([a frame]) - rowsField.y);
+		CGFloat db = hypot(NSMidX([b frame]) - rowsField.x, NSMidY([b frame]) - rowsField.y);
+		return da < db ? NSOrderedAscending : da > db ? NSOrderedDescending : NSOrderedSame;
+	}];
+	NSTextField *rowsLabel = labels[0], *columnsLabel = labels[1];
+
+	// The environment's choices lose their box; its title becomes a heading above them.
+	NSTextField *heading = [NSTextField labelWithString:[environmentBox title]];
+	[heading setFont:[NSFont boldSystemFontOfSize:[NSFont systemFontSize]]];
+	[content addSubview:heading];
+	[content addSubview:envsel];
+	[content addSubview:chbfig];
+	[environmentBox removeFromSuperview];
+
+	TSFitMatrices(@[envsel], NSMakeSize(20, 0));
+	TSFitMatrices(@[brselop, brselcl], NSMakeSize(12, 0));
+	TSFitMatrices(@[matmod], NSMakeSize(12, 0));
+	for (NSControl *control in @[chbfig, rowsLabel, columnsLabel, vtf, htf, vstep, hstep, brtfop, brtfcl, insertButton])
+		TSPrepareControl(control);
+
+	// The examples of a border and a grid: buttons that stay pressed, their pictures in the color of the text.
+	for (NSButton *button in @[borderbutton, gridbutton]) {
+		NSImage *image = [[button image] copy];
+		[image setTemplate:YES];
+		[button setButtonType:NSButtonTypePushOnPushOff];
+		[button setBezelStyle:NSBezelStyleFlexiblePush];
+		[button setImage:image];
+		[button setImagePosition:NSImageOnly];
+	}
+	// Insert is the default button, as wide as the buttons beside it.
+	[insertButton setKeyEquivalent:@"\r"];
+
+	NSArray<NSView *> *arranged = @[heading, envsel, chbfig, mtscrv, rowsLabel, vtf, vstep, columnsLabel, htf, hstep,
+									brselop, brtfop, brselcl, brtfcl, borderbutton, gridbutton, matmod, insertButton];
+	for (NSView *view in arranged)
+		[view setTranslatesAutoresizingMaskIntoConstraints:NO];
+	for (NSMatrix *matrix in @[envsel, brselop, brselcl, matmod])
+		TSFixSize(matrix, [matrix frame].size);
+	NSSize picture = [[borderbutton image] size];
+	for (NSButton *button in @[borderbutton, gridbutton])
+		TSFixSize(button, NSMakeSize(ceil(picture.width) + 12, ceil(picture.height) + 8));
+	for (NSTextField *field in @[vtf, htf, brtfop, brtfcl])
+		[[[field widthAnchor] constraintEqualToConstant:48] setActive:YES];
+
+	NSTableView *table = matrixtable;
+	CGFloat row = [table rowHeight] + [table intercellSpacing].height;
+	CGFloat header = NSHeight([[table headerView] frame]);
+	NSLayoutConstraint *tableHeight = [[mtscrv heightAnchor] constraintGreaterThanOrEqualToConstant:ceil(header + 4 * row + 2)];
+
+	NSLayoutGuide *delimiters = [NSLayoutGuide new];
+	[content addLayoutGuide:delimiters];
+	NSLayoutAnchor *leading = [content leadingAnchor], *trailing = [content trailingAnchor];
+	[NSLayoutConstraint activateConstraints:@[
+		[[heading topAnchor] constraintEqualToAnchor:[content topAnchor] constant:margin],
+		[[heading leadingAnchor] constraintEqualToAnchor:leading constant:margin],
+		[[heading trailingAnchor] constraintLessThanOrEqualToAnchor:trailing constant:-margin],
+
+		[[envsel topAnchor] constraintEqualToAnchor:[heading bottomAnchor] constant:8],
+		[[envsel leadingAnchor] constraintEqualToAnchor:leading constant:margin],
+		[[chbfig centerYAnchor] constraintEqualToAnchor:[envsel centerYAnchor]],
+		[[chbfig leadingAnchor] constraintEqualToAnchor:[envsel trailingAnchor] constant:20],
+		[[chbfig trailingAnchor] constraintLessThanOrEqualToAnchor:trailing constant:-margin],
+
+		[[mtscrv topAnchor] constraintGreaterThanOrEqualToAnchor:[envsel bottomAnchor] constant:16],
+		[[mtscrv topAnchor] constraintGreaterThanOrEqualToAnchor:[chbfig bottomAnchor] constant:16],
+		[[mtscrv leadingAnchor] constraintEqualToAnchor:leading constant:margin],
+		[[mtscrv trailingAnchor] constraintEqualToAnchor:trailing constant:-margin],
+		tableHeight,
+
+		[[vtf topAnchor] constraintEqualToAnchor:[mtscrv bottomAnchor] constant:12],
+		[[rowsLabel leadingAnchor] constraintEqualToAnchor:leading constant:margin],
+		[[rowsLabel firstBaselineAnchor] constraintEqualToAnchor:[vtf firstBaselineAnchor]],
+		[[vtf leadingAnchor] constraintEqualToAnchor:[rowsLabel trailingAnchor] constant:8],
+		[[vstep leadingAnchor] constraintEqualToAnchor:[vtf trailingAnchor] constant:4],
+		[[vstep centerYAnchor] constraintEqualToAnchor:[vtf centerYAnchor]],
+		[[columnsLabel leadingAnchor] constraintEqualToAnchor:[vstep trailingAnchor] constant:20],
+		[[columnsLabel firstBaselineAnchor] constraintEqualToAnchor:[vtf firstBaselineAnchor]],
+		[[htf leadingAnchor] constraintEqualToAnchor:[columnsLabel trailingAnchor] constant:8],
+		[[htf centerYAnchor] constraintEqualToAnchor:[vtf centerYAnchor]],
+		[[hstep leadingAnchor] constraintEqualToAnchor:[htf trailingAnchor] constant:4],
+		[[hstep centerYAnchor] constraintEqualToAnchor:[vtf centerYAnchor]],
+		[[hstep trailingAnchor] constraintLessThanOrEqualToAnchor:trailing constant:-margin],
+
+		// The delimiters on the left and right of the matrix, each followed by its own field.
+		[[brselop topAnchor] constraintGreaterThanOrEqualToAnchor:[vtf bottomAnchor] constant:16],
+		[[brselop topAnchor] constraintGreaterThanOrEqualToAnchor:[vstep bottomAnchor] constant:16],
+		[[brselop leadingAnchor] constraintEqualToAnchor:leading constant:margin],
+		[[brselcl topAnchor] constraintGreaterThanOrEqualToAnchor:[brselop bottomAnchor] constant:8],
+		[[brtfcl topAnchor] constraintGreaterThanOrEqualToAnchor:[brtfop bottomAnchor] constant:8],
+		[[brselcl leadingAnchor] constraintEqualToAnchor:leading constant:margin],
+		[[brtfop leadingAnchor] constraintEqualToAnchor:[brselop trailingAnchor] constant:4],
+		[[brtfop centerYAnchor] constraintEqualToAnchor:[brselop centerYAnchor]],
+		[[brtfcl leadingAnchor] constraintEqualToAnchor:[brselcl trailingAnchor] constant:4],
+		[[brtfcl centerYAnchor] constraintEqualToAnchor:[brselcl centerYAnchor]],
+		[[delimiters topAnchor] constraintEqualToAnchor:[brtfop topAnchor]],
+		[[delimiters bottomAnchor] constraintEqualToAnchor:[brtfcl bottomAnchor]],
+		[[brtfop topAnchor] constraintGreaterThanOrEqualToAnchor:[vtf bottomAnchor] constant:16],
+
+		// The border and grid buttons at the right, centered on the two rows of delimiters.
+		[[gridbutton trailingAnchor] constraintEqualToAnchor:trailing constant:-margin],
+		[[borderbutton trailingAnchor] constraintEqualToAnchor:[gridbutton leadingAnchor] constant:-8],
+		[[borderbutton leadingAnchor] constraintGreaterThanOrEqualToAnchor:[brtfop trailingAnchor] constant:20],
+		[[borderbutton leadingAnchor] constraintGreaterThanOrEqualToAnchor:[brtfcl trailingAnchor] constant:20],
+		[[borderbutton centerYAnchor] constraintEqualToAnchor:[delimiters centerYAnchor]],
+		[[gridbutton centerYAnchor] constraintEqualToAnchor:[delimiters centerYAnchor]],
+		[[borderbutton topAnchor] constraintGreaterThanOrEqualToAnchor:[vtf bottomAnchor] constant:12],
+
+		// Clear, Identity and Zero on the left, Insert on the right.
+		[[matmod topAnchor] constraintGreaterThanOrEqualToAnchor:[brselcl bottomAnchor] constant:20],
+		[[matmod topAnchor] constraintGreaterThanOrEqualToAnchor:[brtfcl bottomAnchor] constant:20],
+		[[matmod topAnchor] constraintGreaterThanOrEqualToAnchor:[gridbutton bottomAnchor] constant:20],
+		[[matmod leadingAnchor] constraintEqualToAnchor:leading constant:margin],
+		[[matmod bottomAnchor] constraintEqualToAnchor:[content bottomAnchor] constant:-margin],
+		[[insertButton centerYAnchor] constraintEqualToAnchor:[matmod centerYAnchor]],
+		[[insertButton trailingAnchor] constraintEqualToAnchor:trailing constant:-margin],
+		[[insertButton leadingAnchor] constraintGreaterThanOrEqualToAnchor:[matmod trailingAnchor] constant:20],
+		[[insertButton widthAnchor] constraintGreaterThanOrEqualToConstant:[matmod cellSize].width],
+	]];
+	// The rows below the table keep their places; the table takes the rest of the height.
+	for (NSLayoutConstraint *constraint in @[[[mtscrv topAnchor] constraintEqualToAnchor:[envsel bottomAnchor] constant:16],
+											 [[brtfop topAnchor] constraintEqualToAnchor:[vtf bottomAnchor] constant:16],
+											 [[brselcl topAnchor] constraintEqualToAnchor:[brselop bottomAnchor] constant:8],
+											 [[matmod topAnchor] constraintEqualToAnchor:[brtfcl bottomAnchor] constant:20]]) {
+		[constraint setPriority:NSLayoutPriorityDefaultHigh];
+		[constraint setActive:YES];
+	}
+
+	// The smallest size shows four rows of the table; the panel opens with at least eight.
+	NSSize smallest = [content fittingSize];
+	NSSize size = [content frame].size;
+	size.width = MAX(size.width, smallest.width);
+	size.height = MAX(size.height, smallest.height + 4 * row);
+	[window setContentMinSize:smallest];
+	NSSize largest = [window contentRectForFrameRect:NSMakeRect(0, 0, [window maxSize].width, [window maxSize].height)].size;
+	[window setContentMaxSize:NSMakeSize(MAX(largest.width, size.width), MAX(largest.height, size.height))];
+	[window setContentSize:size];
+	[content layoutSubtreeIfNeeded];
 }
 
 @end
