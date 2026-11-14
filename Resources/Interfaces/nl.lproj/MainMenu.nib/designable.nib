@@ -971,7 +971,7 @@
                                     <action selector="doTypeset:" target="-1" id="464"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title=" Wis Aux-bestanden &amp; Zet" tag="-2" alternate="YES" keyEquivalent="t" id="1068" identifier="TSShortcut.doTypeset:.-2">
+                            <menuItem title="Wis Aux-bestanden &amp; Zet" tag="-2" alternate="YES" keyEquivalent="t" id="1068" identifier="TSShortcut.doTypeset:.-2">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="doTypeset:" target="-1" id="1069"/>
@@ -1423,7 +1423,7 @@
                                     <action selector="displayFileEncoding:" target="692" id="0Nl-JU-JD1"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop-tips en -trucs " id="954" identifier="TSShortcut.displayTipsandTricks:.0">
+                            <menuItem title="TeXShop-tips en -trucs" id="954" identifier="TSShortcut.displayTipsandTricks:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayTipsandTricks:" target="692" id="955"/>
