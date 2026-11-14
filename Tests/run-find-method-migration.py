@@ -50,8 +50,8 @@ MUTATIONS = {
     # The experiment's own judgement (either mark makes an earlier user), written after the reset
     'the migration judges for itself, after the reset': ('TSAppDelegate.m',
         '\t\tTSPreferencesMigrateEarlierUser(SUD, savedSettings);\n', '',
-        '[SUD registerDefaults:factoryDefaults];\n\t}\n',
-        '[SUD registerDefaults:factoryDefaults];\n\t}\n\tif ([savedSettings[@"TSHasBeenUsed"] boolValue] || savedSettings[@"TetexBinPath"] != nil)\n\t\tTSPreferencesMigrateEarlierUser(SUD, savedSettings);\n'),
+        '[SUD registerDefaults:factoryDefaults];\n',
+        '[SUD registerDefaults:factoryDefaults];\n\tif ([savedSettings[@"TSHasBeenUsed"] boolValue] || savedSettings[@"TetexBinPath"] != nil)\n\t\tTSPreferencesMigrateEarlierUser(SUD, savedSettings);\n'),
     'new users keep the find bar': ('FactoryDefaults.plist', '<key>FindMethod</key>\n\t<string>3</string>', '<key>FindMethod</key>\n\t<string>1</string>'),
     'a profile sets the find method': ('TSPreferenceProfile.m', '    values[BibTeXengineKey] = row[4];', '    values[BibTeXengineKey] = row[4]; values[FindMethodKey] = @1;'),
     'a profile drops the mark of the switch': ('TSPreferenceProfile.m', '    values[BibTeXengineKey] = row[4];', '    values[BibTeXengineKey] = row[4]; values[FindMethodSwitchedToAdvancedFindKey] = @NO;'),
