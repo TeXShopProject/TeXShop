@@ -1454,7 +1454,7 @@ DQ
                         <action selector="changeMouseMode:" target="675" id="3695"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Select  Text" tag="2" id="838">
+                <menuItem title="Select Text" tag="2" id="838">
                     <connections>
                         <action selector="changeMouseMode:" target="675" id="3696"/>
                     </connections>
@@ -1469,7 +1469,7 @@ DQ
                         <action selector="changeMouseMode:" target="675" id="3698"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Select  Pdf" tag="5" id="579">
+                <menuItem title="Select Pdf" tag="5" id="579">
                     <connections>
                         <action selector="changeMouseMode:" target="675" id="3699"/>
                     </connections>

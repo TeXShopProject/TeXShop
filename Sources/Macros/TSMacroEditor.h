@@ -30,7 +30,7 @@
 @class TSListBottomBar;
 @class TSMacroShortcutField;
 
-@interface TSMacroEditor : NSObject <NSTextViewDelegate>
+@interface TSMacroEditor : NSObject <NSTextViewDelegate, NSMenuDelegate>
 {
 	IBOutlet id outlineController;
 	IBOutlet id outlineView;
@@ -65,7 +65,10 @@
 // The list and the bar under it (＋, − and the menu of the other commands), in one frame.
 @property (retain) NSBox *listBox;
 @property (retain) TSListBottomBar *listBar;
-@property (retain) NSTextField *placeholderNote;
+// Below the contents: Insert adds a placeholder, the help button lists them.
+@property (retain) NSPopUpButton *insertPlaceholderButton;
+@property (retain) NSButton *placeholdersButton;
+@property (retain) NSPopover *placeholdersPopover;
 // The shortcut of the selected macro, set by pressing it; the nib's key field and
 // Shift, Option and Control boxes stay hidden.
 @property (retain) NSTextField *shortcutLabel;
@@ -77,7 +80,11 @@
 - (void)syncShortcutField;
 - (BOOL)recordShortcutEvent:(NSEvent *)event;
 - (void)setPendingShortcut:(NSString *)key;
-- (void)installPlaceholderNote;
+- (void)installPlaceholderControls;
+- (void)syncPlaceholderControls;
+- (NSView *)makePlaceholderListView;
+- (IBAction)showPlaceholders:(id)sender;
+- (void)insertPlaceholder:(NSMenuItem *)sender;
 - (void)layoutDialogButtons;
 - (void)syncListControls;
 - (NSString *)shortcutConflictForNode:(TSMacroTreeNode *)node;

@@ -83,9 +83,7 @@
 6
 7
 718
-72
 74
-78
 8
 86
 86a
@@ -687,6 +685,7 @@ figures
 file
 filename
 filenames
+filepath
 files
 filesystem
 file’s
@@ -729,7 +728,6 @@ format
 formats
 former
 formerly
-formula
 formulas
 forth
 forward
@@ -1333,6 +1331,8 @@ pinned
 pins
 place
 placed
+placeholder
+placeholders
 plain
 played
 plist
@@ -1656,7 +1656,6 @@ sometime
 sometimes
 soon
 sophisticated
-sort
 source
 sources
 space
@@ -1676,6 +1675,7 @@ splitting
 spot
 spotlight
 square
+stand
 standard
 standardized
 stands
@@ -1710,7 +1710,6 @@ subsequent
 subset
 subtab
 succeeds
-suddenly
 suggested
 suggestion
 suggestions
@@ -1817,6 +1816,7 @@ titles
 to
 today
 together
+tokens
 took
 tool
 toolbar

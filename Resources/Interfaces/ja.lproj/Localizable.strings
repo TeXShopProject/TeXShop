@@ -318,8 +318,20 @@
 /* Asked when a conversion is chosen with nothing selected */
 "Apply \"%@\" to the whole document?" = "「%@」を書類全体に適用しますか？";
 
-/* Macro editor placeholder guide */
-"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = 選択中の文字列、#INS# = 挿入後のカーソル位置、#PASTE# = クリップボードの文字列。AppleScriptのマクロでは #FILEPATH# なども使えます（ヘルプ参照）。";
+/* Macro editor › tokens for the paths and the name that an AppleScript macro is given (#FILEPATH# and the others) */
+"File Path" = "ファイルのパス";
+"PDF Path" = "PDFのパス";
+"DVI Path" = "DVIのパス";
+"PS Path" = "PSのパス";
+"Log Path" = "ログのパス";
+"AUX Path" = "AUXのパス";
+"IND Path" = "INDのパス";
+"BBL Path" = "BBLのパス";
+"HTML Path" = "HTMLのパス";
+"Path Without Extension" = "拡張子を除いたパス";
+"TeX Path" = "TeXのパス";
+"Document Name" = "書類の名前";
+"Folder Path" = "フォルダのパス";
 /* Key binding editor placeholder guide */
 
 /* Edit › Mark */

@@ -12837,7 +12837,7 @@
           "866.title": "Confirmer",
           "501.title": "Page double (variantes)",
           "871.title": "Toujours surveiller les modifications du PDF par d’autres apps",
-          "636.title": "Sélectionner le  texte",
+          "636.title": "Sélectionner le texte",
           "339.title": "Adapter à la fenêtre",
           "328.title": "Dérouler",
           "344.title": "Agrandissement constant",
@@ -14444,7 +14444,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "Sélectionner le  texte",
+          "value": "Sélectionner le texte",
           "index": 1
         },
         {

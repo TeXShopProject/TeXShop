@@ -21,7 +21,8 @@ def run(text):
         subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-I', str(tmp), '-I', str(root / 'Tests'), *include_args(root),
                         str(root / 'Tests/MacroContentAppearance.m'), str(root / 'Sources/Editor/TSColorSupport.m'), str(root / 'Sources/App/globals.m'),
                         *map(str, sorted((root / 'Sources/Syntax').glob('*.m'))), str(root / 'Sources/Macros/TSMacroContentKind.m'),
-                        str(root / 'Sources/Find/TSAdvancedFindTextView.m'), str(root / 'Sources/Find/TSAdvancedFindHighlights.m'), '-o', str(binary)], check=True)
+                        str(root / 'Sources/Find/TSAdvancedFindTextView.m'), str(root / 'Sources/Find/TSAdvancedFindHighlights.m'),
+                        str(root / 'Sources/Macros/TSMacroContentTokens.m'), str(root / 'Sources/Editor/TSPlaceholderToken.m'), '-o', str(binary)], check=True)
         themes = root / 'Resources/TeXShop/Themes'
         return subprocess.run([str(binary), str(themes / 'SolarizedLite.plist'), str(themes / 'Dracula.plist')], capture_output=True, text=True, timeout=60)
 result = run(body); print(result.stdout, end=''); assert result.returncode == 0, result.stderr

@@ -854,9 +854,9 @@
                                                 </items>
                                             </menu>
                                         </menuItem>
-                                        <menuItem title=" Ligaduras" id="YMM-Ge-289">
+                                        <menuItem title="Ligaduras" id="YMM-Ge-289">
                                             <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title=" Ligaduras" id="Nad-gW-ZFb">
+                                            <menu key="submenu" title="Ligaduras" id="Nad-gW-ZFb">
                                                 <items>
                                                     <menuItem title="Usar Padrão" id="eM6-kJ-pgl" identifier="TSShortcut.useStandardLigatures:.0">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
@@ -921,7 +921,7 @@
                                                 <action selector="copyFont:" target="-1" id="5ZN-Fq-Mkg"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Colar Estilo " keyEquivalent="v" id="Eil-LD-zne" identifier="TSShortcut.pasteFont:.0">
+                                        <menuItem title="Colar Estilo" keyEquivalent="v" id="Eil-LD-zne" identifier="TSShortcut.pasteFont:.0">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="pasteFont:" target="-1" id="okh-rt-a9P"/>
@@ -1419,7 +1419,7 @@
                                     <action selector="displayFileEncoding:" target="671" id="58U-iN-z68"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop Dicas e macetes " id="893" identifier="TSShortcut.displayTipsandTricks:.0">
+                            <menuItem title="TeXShop Dicas e macetes" id="893" identifier="TSShortcut.displayTipsandTricks:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayTipsandTricks:" target="671" id="894"/>

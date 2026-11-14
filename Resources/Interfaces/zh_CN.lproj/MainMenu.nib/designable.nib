@@ -821,9 +821,9 @@
                                         <menuItem isSeparatorItem="YES" id="Eia-tj-f1s">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
-                                        <menuItem title=" 字距调整" id="Ycb-gR-3JI">
+                                        <menuItem title="字距调整" id="Ycb-gR-3JI">
                                             <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title=" 字距调整" id="Q4w-Cd-HEQ">
+                                            <menu key="submenu" title="字距调整" id="Q4w-Cd-HEQ">
                                                 <items>
                                                     <menuItem title="使用默认" id="mEe-r8-2jT" identifier="TSShortcut.useStandardKerning:.0">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
@@ -977,7 +977,7 @@
                                     <action selector="doTypeset:" target="-1" id="1173"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title=" 使用替代引擎排版" tag="-2" alternate="YES" keyEquivalent="t" id="SIe-kU-USH" identifier="TSShortcut.doAlternateTypeset:.-2">
+                            <menuItem title="使用替代引擎排版" tag="-2" alternate="YES" keyEquivalent="t" id="SIe-kU-USH" identifier="TSShortcut.doAlternateTypeset:.-2">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="doAlternateTypeset:" target="-1" id="S18-HA-9lm"/>

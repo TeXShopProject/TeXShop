@@ -1417,7 +1417,7 @@
                                     <action selector="displayFileEncoding:" target="690" id="e3E-5P-1qc"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Sfaturi și trucuri TeXShop " id="913" identifier="TSShortcut.displayTipsandTricks:.0">
+                            <menuItem title="Sfaturi și trucuri TeXShop" id="913" identifier="TSShortcut.displayTipsandTricks:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayTipsandTricks:" target="690" id="914"/>

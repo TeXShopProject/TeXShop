@@ -12,6 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 // shortcuts stay with them. Calling it again changes nothing.
 + (void)installInMenu:(NSMenu *)mainMenu;
 - (IBAction)showMarkHelp:(nullable id)sender;
+// Where showMarkHelp: goes in a localization: nil in English, for the help
+// book's anchor "marks"; in every other language, the English page with that
+// section, opened as a link (most languages have no help book, and those that
+// have one do not explain marks in their language).
++ (nullable NSURL *)markHelpPageForLocalization:(NSString *)localization inBundle:(NSBundle *)bundle;
 // One sentence explaining • and •‹note›, naming the Edit › Mark menu as it is titled.
 + (NSString *)markGuide;
 @end

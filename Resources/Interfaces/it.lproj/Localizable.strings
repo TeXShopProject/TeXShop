@@ -311,8 +311,20 @@
 /* Asked when a conversion is chosen with nothing selected */
 "Apply \"%@\" to the whole document?" = "Applicare «%@» all’intero documento?";
 
-/* Macro editor placeholder guide */
-"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = testo selezionato, #INS# = punto di inserimento dopo la macro, #PASTE# = testo negli appunti. Le macro AppleScript possono usare anche #FILEPATH# e altri segnaposto (vedi Aiuto).";
+/* Macro editor › tokens for the paths and the name that an AppleScript macro is given (#FILEPATH# and the others) */
+"File Path" = "Percorso del file";
+"PDF Path" = "Percorso PDF";
+"DVI Path" = "Percorso DVI";
+"PS Path" = "Percorso PS";
+"Log Path" = "Percorso del registro";
+"AUX Path" = "Percorso AUX";
+"IND Path" = "Percorso IND";
+"BBL Path" = "Percorso BBL";
+"HTML Path" = "Percorso HTML";
+"Path Without Extension" = "Percorso senza estensione";
+"TeX Path" = "Percorso TeX";
+"Document Name" = "Nome del documento";
+"Folder Path" = "Percorso della cartella";
 /* Key binding editor placeholder guide */
 
 /* Edit › Mark */

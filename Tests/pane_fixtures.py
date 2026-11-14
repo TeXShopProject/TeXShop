@@ -10,7 +10,7 @@ def sources(root, names=NAMES):
 
 # The key binding list that Settings › Keyboard embeds, and what it uses.
 def key_binding_sources(root):
-    return [root/'Sources/Settings/TSKeyBindingsController.m', root/'Sources/App/GlobalData.m', root/'Sources/Editor/TSMarkMenu.m']
+    return [root/'Sources/Settings/TSKeyBindingsController.m', root/'Sources/App/GlobalData.m', root/'Sources/Editor/TSMarkMenu.m', root/'Sources/Editor/TSPlaceholderToken.m']
 
 def bundles(root, temp, names=NAMES, product=None, dock=False):
     compiled=temp/'compiled';compiled.mkdir()

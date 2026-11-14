@@ -250,7 +250,7 @@
                                     <action selector="exchangePaste:" target="-1" id="MKZ-B9-ael"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title=" Incolla come commento" id="gdL-qH-kH6" identifier="TSShortcut.pasteAsComment:.0">
+                            <menuItem title="Incolla come commento" id="gdL-qH-kH6" identifier="TSShortcut.pasteAsComment:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="pasteAsComment:" target="-1" id="ryY-aA-oV7"/>
@@ -1417,7 +1417,7 @@
                                     <action selector="displayGettingStartedConTeXt:" target="672" id="Vpr-gm-ppi"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Trucchi e suggerimenti per TeXShop " id="895" identifier="TSShortcut.displayTipsandTricks:.0">
+                            <menuItem title="Trucchi e suggerimenti per TeXShop" id="895" identifier="TSShortcut.displayTipsandTricks:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayTipsandTricks:" target="672" id="896"/>

@@ -141,5 +141,216 @@
         "新增单词"
       ]
     ]
-  }
+  },
+  "stray_spaces_origin": "48d03ec1 MainMenu paths of the titles that had a stray space at the start or end, before the spaces were removed",
+  "stray_spaces": [
+    {
+      "language": "Base",
+      "former": [
+        "Help",
+        "TeXShop Tips and Tricks "
+      ],
+      "current": [
+        "Help",
+        "TeXShop Tips and Tricks"
+      ]
+    },
+    {
+      "language": "es",
+      "former": [
+        "Archivo",
+        "Nuevo desde documento modelo... "
+      ],
+      "current": [
+        "Archivo",
+        "Nuevo desde documento modelo..."
+      ]
+    },
+    {
+      "language": "es",
+      "former": [
+        "Código",
+        "Tipo de letra "
+      ],
+      "current": [
+        "Código",
+        "Tipo de letra"
+      ]
+    },
+    {
+      "language": "fr",
+      "former": [
+        "Aide",
+        "Afficher l'aide pour le package... "
+      ],
+      "current": [
+        "Aide",
+        "Afficher l'aide pour le package..."
+      ]
+    },
+    {
+      "language": "it",
+      "former": [
+        "Modifica",
+        " Incolla come commento"
+      ],
+      "current": [
+        "Modifica",
+        "Incolla come commento"
+      ]
+    },
+    {
+      "language": "it",
+      "former": [
+        "Aiuto",
+        "Trucchi e suggerimenti per TeXShop "
+      ],
+      "current": [
+        "Aiuto",
+        "Trucchi e suggerimenti per TeXShop"
+      ]
+    },
+    {
+      "language": "ja",
+      "former": [
+        "ソース",
+        " マジックコメントを再読み込み"
+      ],
+      "current": [
+        "ソース",
+        "マジックコメントを再読み込み"
+      ]
+    },
+    {
+      "language": "ja",
+      "former": [
+        "ソース",
+        "フォント",
+        "カーニング",
+        " ゆるく"
+      ],
+      "current": [
+        "ソース",
+        "フォント",
+        "カーニング",
+        "ゆるく"
+      ]
+    },
+    {
+      "language": "ja",
+      "former": [
+        "タイプセット",
+        " 代替エンジンでタイプセット"
+      ],
+      "current": [
+        "タイプセット",
+        "代替エンジンでタイプセット"
+      ]
+    },
+    {
+      "language": "ko",
+      "former": [
+        "윈도우",
+        " 보기 전환"
+      ],
+      "current": [
+        "윈도우",
+        "보기 전환"
+      ]
+    },
+    {
+      "language": "nl",
+      "former": [
+        "Zet",
+        " Wis Aux-bestanden & Zet"
+      ],
+      "current": [
+        "Zet",
+        "Wis Aux-bestanden & Zet"
+      ]
+    },
+    {
+      "language": "nl",
+      "former": [
+        "Help",
+        "TeXShop-tips en -trucs "
+      ],
+      "current": [
+        "Help",
+        "TeXShop-tips en -trucs"
+      ]
+    },
+    {
+      "language": "pt",
+      "former": [
+        "Fonte",
+        "Tipos",
+        " Ligaduras"
+      ],
+      "current": [
+        "Fonte",
+        "Tipos",
+        "Ligaduras"
+      ]
+    },
+    {
+      "language": "pt",
+      "former": [
+        "Fonte",
+        "Tipos",
+        "Colar Estilo "
+      ],
+      "current": [
+        "Fonte",
+        "Tipos",
+        "Colar Estilo"
+      ]
+    },
+    {
+      "language": "pt",
+      "former": [
+        "Ajuda",
+        "TeXShop Dicas e macetes "
+      ],
+      "current": [
+        "Ajuda",
+        "TeXShop Dicas e macetes"
+      ]
+    },
+    {
+      "language": "ro",
+      "former": [
+        "Ajutor",
+        "Sfaturi și trucuri TeXShop "
+      ],
+      "current": [
+        "Ajutor",
+        "Sfaturi și trucuri TeXShop"
+      ]
+    },
+    {
+      "language": "zh_CN",
+      "former": [
+        "源代码",
+        "字体",
+        " 字距调整"
+      ],
+      "current": [
+        "源代码",
+        "字体",
+        "字距调整"
+      ]
+    },
+    {
+      "language": "zh_CN",
+      "former": [
+        "排版",
+        " 使用替代引擎排版"
+      ],
+      "current": [
+        "排版",
+        "使用替代引擎排版"
+      ]
+    }
+  ]
 }

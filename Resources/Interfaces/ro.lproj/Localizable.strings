@@ -311,8 +311,20 @@
 /* Asked when a conversion is chosen with nothing selected */
 "Apply \"%@\" to the whole document?" = "Aplicați „%@” întregului document?";
 
-/* Macro editor placeholder guide */
-"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = textul selectat, #INS# = punctul de inserare după macro, #PASTE# = textul din clipboard. Macrourile AppleScript pot folosi și #FILEPATH# și alți marcatori (vezi Ajutor).";
+/* Macro editor › tokens for the paths and the name that an AppleScript macro is given (#FILEPATH# and the others) */
+"File Path" = "Calea fișierului";
+"PDF Path" = "Calea PDF";
+"DVI Path" = "Calea DVI";
+"PS Path" = "Calea PS";
+"Log Path" = "Calea jurnalului";
+"AUX Path" = "Calea AUX";
+"IND Path" = "Calea IND";
+"BBL Path" = "Calea BBL";
+"HTML Path" = "Calea HTML";
+"Path Without Extension" = "Calea fără extensie";
+"TeX Path" = "Calea TeX";
+"Document Name" = "Numele documentului";
+"Folder Path" = "Calea dosarului";
 /* Key binding editor placeholder guide */
 
 /* Edit › Mark */

@@ -1286,7 +1286,7 @@
                                     <action selector="splitWindow:" target="-1" id="AnX-uE-0tB"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title=" 보기 전환" keyEquivalent="2" id="zWS-yH-Nsc" identifier="TSShortcut.switchSplitViews:.0">
+                            <menuItem title="보기 전환" keyEquivalent="2" id="zWS-yH-Nsc" identifier="TSShortcut.switchSplitViews:.0">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES"/>
                                 <connections>
                                     <action selector="switchSplitViews:" target="-1" id="uob-6P-dL5"/>
