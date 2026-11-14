@@ -122,8 +122,9 @@ int main(int argc, char **argv) { @autoreleasepool {
     // for other keys or after it is released.
     {
         TSMemoryDefaults *k = [TSMemoryDefaults new]; [k registerDefaults:factory];
-        __block NSUInteger calls = 0;
-        TSEngineProfileWatcher *watcher = [[TSEngineProfileWatcher alloc] initWithDefaults:k handler:^{ calls++; }];
+        __block NSUInteger calls = 0, offMain = 0;
+        // Each call is counted where it runs; one off the main thread fails below.
+        TSEngineProfileWatcher *watcher = [[TSEngineProfileWatcher alloc] initWithDefaults:k handler:^{ if (!NSThread.isMainThread) offMain++; calls++; }];
         check(watcher != nil, @"a watcher is made");
         void (^drain)(void) = ^{ for (int i = 0; i < 5; i++) [NSRunLoop.mainRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]]; };
         TSEngineProfileApply(k, TSEngineProfileValues(7, YES)); drain();
@@ -142,6 +143,7 @@ int main(int argc, char **argv) { @autoreleasepool {
         @autoreleasepool { watcher = nil; }
         before = calls; [k setObject:@"after" forKey:@"MakeIndexEngine"]; drain();
         check(calls == before, @"a released watcher stops");
+        check(offMain == 0, [NSString stringWithFormat:@"the handler runs on the main thread: %lu calls off it", (unsigned long)offMain]);
     }
     TSMemoryDefaults *fresh = [TSMemoryDefaults new]; [fresh registerDefaults:factory];
     BOOL mk = YES;
