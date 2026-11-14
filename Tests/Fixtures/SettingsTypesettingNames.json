@@ -35,7 +35,7 @@
         "catalog.typesetting.4.1.title": "LaTeX",
         "catalog.typesetting.5.1.title": "LaTeX",
         "catalog.typesetting.4.2.title": "Bei Shell-Escape nachfragen",
-        "catalog.typesetting.5.2.note": "Hängt an den plain-TeX- oder LaTeX-Befehl oben --keep-psfile an und behält so die PostScript-Zwischendatei.",
+        "catalog.typesetting.5.2.note": "Hängt an den Befehl für plain TeX oder LaTeX oben --keep-psfile an und behält so die PostScript-Zwischendatei.",
         "catalog.typesetting.5.2.title": "Als PostScript-Datei sichern"
       },
       "SettingsTypesetting.strings": {
@@ -170,7 +170,7 @@
         "catalog.typesetting.4.1.title": "LaTeX",
         "catalog.typesetting.5.1.title": "LaTeX",
         "catalog.typesetting.4.2.title": "Bevestigen bij shell-escape",
-        "catalog.typesetting.5.2.note": "Voegt --keep-psfile toe aan de plain-TeX- of LaTeX-opdracht hierboven en bewaart zo het tussentijdse PostScript-bestand.",
+        "catalog.typesetting.5.2.note": "Voegt --keep-psfile toe aan de opdracht voor plain TeX of LaTeX hierboven en bewaart zo het tussentijdse PostScript-bestand.",
         "catalog.typesetting.5.2.title": "Bewaar PostScript-bestand"
       },
       "SettingsTypesetting.strings": {
