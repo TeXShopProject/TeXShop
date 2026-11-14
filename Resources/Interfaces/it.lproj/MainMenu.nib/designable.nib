@@ -1411,10 +1411,10 @@
                                     <action selector="showHelp:" target="-1" id="144"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Codifica dei file e TeXShop" id="1JJ-3d-2MX" identifier="TSShortcut.displayGettingStartedConTeXt:.0">
+                            <menuItem title="Codifica dei file e TeXShop" id="1JJ-3d-2MX" identifier="TSShortcut.displayFileEncoding:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="displayGettingStartedConTeXt:" target="672" id="Vpr-gm-ppi"/>
+                                    <action selector="displayFileEncoding:" target="672" id="Vpr-gm-ppi"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Trucchi e suggerimenti per TeXShop " id="895" identifier="TSShortcut.displayTipsandTricks:.0">
