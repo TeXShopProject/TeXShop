@@ -219,7 +219,7 @@ static id _sharedInstance = nil;
 	// might contain different formats
 	NSArray *typeArray=[NSArray arrayWithObjects:MatPboardType,nil];
 	NSString *availableType;
-	NSArray *_draggedrows;
+	NSMutableArray *_draggedrows;
 	NSMutableArray *matRow;
 	NSMutableIndexSet* indset = [NSMutableIndexSet indexSet];
 	NSInteger i;
@@ -227,10 +227,12 @@ static id _sharedInstance = nil;
 	// find the best match of the types we'll accept and what's actually on the pasteboard
 	availableType=[myPasteboard availableTypeFromArray:typeArray];
 	// In the file format type that we're working with, get all data on the pasteboard
-	_draggedrows=[myPasteboard propertyListForType:availableType];
+	_draggedrows=[[myPasteboard propertyListForType:availableType] mutableCopy];
 	
 	for (i = 0; i < [_draggedrows count]; i++) {
-		matRow = [_draggedrows objectAtIndex:i];
+		// The pasteboard gives the row back unchangeable; the matrix changes its rows in place.
+		matRow = [[_draggedrows objectAtIndex:i] mutableCopy];
+		[_draggedrows replaceObjectAtIndex:i withObject:matRow];
 		if (row > [[self.myMatrix rows] indexOfObjectIdenticalTo:[[(TSMatrixPanelController *)[[info draggingSource] dataSource] draggedRows] objectAtIndex:i]])
 			row--;
 		[[self.myMatrix rows] removeObjectIdenticalTo:[[(TSMatrixPanelController *)[[info draggingSource] dataSource] draggedRows] objectAtIndex:i]];
