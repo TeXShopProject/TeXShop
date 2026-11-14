@@ -3,12 +3,14 @@
 #import "TSPreferenceProfile.h"
 
 #import "MemoryDefaults.h"
+#include "EngineProfileSheet.h"
 @interface MemoryDefaults : TSMemoryDefaults @end
 @implementation MemoryDefaults @end
 static MemoryDefaults *defaults;
 static NSModalResponse modalResponse = NSAlertSecondButtonReturn;
 static NSUInteger modalCount;
-static NSMutableArray<NSAlert *> *modals;
+// The alerts of the paths, and the engine profile windows, in the order shown.
+static NSMutableArray *modals;
 #define SUD defaults
 static NSString *TetexBinPath = @"TetexBinPath", *GSBinPath = @"GSBinPath";
 static NSDictionary *results;
@@ -35,6 +37,14 @@ static TestAlert *shown;
     self.completion = handler; shown = self;
 }
 - (NSModalResponse)runModal { shown = self; modalCount++; [modals addObject:self]; return modalResponse; }
+@end
+// The engine profile step is a window of its own: shown as a sheet or modally, it answers as the alerts do here.
+static TSEngineProfileSheet *shownSheet;
+static void (^sheetCompletion)(NSModalResponse);
+static NSModalResponse SheetResponse(NSModalResponse alertResponse) { return alertResponse == NSAlertFirstButtonReturn ? NSModalResponseOK : NSModalResponseCancel; }
+@implementation TSEngineProfileSheet (Test)
+- (NSModalResponse)testRunModal { shownSheet = self; shown = nil; modalCount++; [modals addObject:self]; return SheetResponse(modalResponse); }
+- (void)testBeginSheetForWindow:(NSWindow *)window completionHandler:(void (^)(NSModalResponse))handler { shownSheet = self; shown = nil; sheetCompletion = handler; }
 @end
 @interface TestWindow : NSWindow
 @property BOOL testVisible;
@@ -71,12 +81,27 @@ static NSArray<NSMatrix *> *matrices(void) {
 }
 static NSDictionary *candidate(NSString *path, NSString *version) { return @{@"path":path,@"version":version}; }
 static void finish(NSModalResponse response) {
+    if (shown == nil && sheetCompletion != nil) {
+        void (^completion)(NSModalResponse) = sheetCompletion;
+        sheetCompletion = nil;
+        completion(SheetResponse(response));
+        return;
+    }
     void (^completion)(NSModalResponse) = shown.completion;
     shown.completion = nil;
     completion(response);
 }
+static NSView *FindIn(NSView *root, NSString *identifier) {
+    if ([root.identifier isEqual:identifier]) return root;
+    for (NSView *view in root.subviews) { NSView *found = FindIn(view, identifier); if (found) return found; }
+    return nil;
+}
 int main(void) { @autoreleasepool {
     TSInstallAppKitIsolation();
+    method_exchangeImplementations(class_getInstanceMethod(TSEngineProfileSheet.class, @selector(runModal)),
+                                   class_getInstanceMethod(TSEngineProfileSheet.class, @selector(testRunModal)));
+    method_exchangeImplementations(class_getInstanceMethod(TSEngineProfileSheet.class, @selector(beginSheetForWindow:completionHandler:)),
+                                   class_getInstanceMethod(TSEngineProfileSheet.class, @selector(testBeginSheetForWindow:completionHandler:)));
     [NSApplication sharedApplication];
     [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
     [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
@@ -132,17 +157,21 @@ int main(void) { @autoreleasepool {
     [modals removeAllObjects];
     [p discoverInitialEnginePaths]; spin();
     check(modals.count == 2 && modalCount == 2 && [[defaults stringForKey:TetexBinPath] isEqual:@"/old/tex"] && applied == nil, @"initial modal Cancel is non-destructive, in both steps");
-    check([modals[0].messageText isEqual:@"Detect Paths"] && !hasPopup(modals[0]) && [modals[1].messageText isEqual:@"Choose an Engine Profile"], @"first launch: the paths first, then the engine profile");
-    NSPopUpButton *profiles = nil; NSButton *latexmk = nil;
-    for (NSView *v in modals[1].accessoryView.subviews) {
-        if ([v.identifier isEqual:@"settings.choose-profile"]) profiles = (NSPopUpButton *)v;
-        if ([v.identifier isEqual:@"settings.engine-profile-latexmk"]) latexmk = (NSButton *)v;
-    }
+    check([modals[0] isKindOfClass:NSAlert.class] && [[modals[0] messageText] isEqual:@"Detect Paths"] && !hasPopup(modals[0]) &&
+          [modals[1] isKindOfClass:TSEngineProfileSheet.class] && [[modals[1] window].title isEqual:@"Choose an Engine Profile"], @"first launch: the paths first, then the engine profile");
+    TSEngineProfileSheet *profileWindow = modals[1];
+    NSPopUpButton *profiles = (NSPopUpButton *)FindIn(profileWindow.window.contentView, @"settings.choose-profile");
+    NSSegmentedControl *latexmk = (NSSegmentedControl *)FindIn(profileWindow.window.contentView, @"settings.engine-profile-latexmk");
     NSMutableArray *tags = [NSMutableArray array];
     for (NSMenuItem *item in profiles.itemArray) if (!item.isSeparatorItem) [tags addObject:@(item.tag)];
     check([tags isEqual:@[@1, @2, @3, @4, @5, @6, @7]], [NSString stringWithFormat:@"first launch offers seven profiles, without dvips: %@", tags]);
-    check(profiles.selectedTag == TSEngineProfileForLanguages(NSLocale.preferredLanguages) && latexmk.state == NSControlStateValueOff, @"the profile for the preferred language is chosen, without latexmk");
-    check(modals[1].buttons.count == 2 && NSMinX(profiles.frame) <= 0 && NSMinX(latexmk.frame) <= 0, @"the profile dialog has OK and Cancel, its controls at the left");
+    check(profiles == profileWindow.profileMenu && latexmk == profileWindow.latexmkChoice && profiles.selectedTag == TSEngineProfileForLanguages(NSLocale.preferredLanguages) && latexmk.selectedSegment == 0,
+          @"the profile for the preferred language is chosen, without latexmk");
+    check([profileWindow.okButton.keyEquivalent isEqual:@"\r"] && [profileWindow.cancelButton.keyEquivalent isEqual:@"\e"] && NSMinX(profiles.frame) <= 20, @"the profile window has OK and Cancel, its menu at the left");
+    // Another profile and latexmk chosen in the window are what OK applies.
+    [profiles selectItemWithTag:TSEngineProfileLuaLaTeX]; [profiles sendAction:profiles.action to:profiles.target];
+    latexmk.selectedSegment = 1; [latexmk sendAction:latexmk.action to:latexmk.target];
+    check([profileWindow.valuesToApply isEqual:TSEngineProfileValues(TSEngineProfileLuaLaTeX, YES)], @"the window applies the profile and the latexmk form chosen in it");
 
     modalResponse = NSAlertFirstButtonReturn;
     [modals removeAllObjects];
@@ -164,9 +193,10 @@ int main(void) { @autoreleasepool {
     check(p.initialEnginePathSearchPending && p.enginePathSearchGeneration == generation, @"opening Settings preserves initial discovery");
     spin();
     check(shown.completion != nil && modalCount == modalsBefore, @"initial result becomes sheet when Settings opens");
+    shownSheet = nil;
     finish(NSAlertFirstButtonReturn);
     check([p->_tetexBinPathField.stringValue isEqual:@"/new/tex"], @"initial result refreshes open Settings");
-    check([shown.messageText isEqual:@"Choose an Engine Profile"] && shown.completion != nil && modalCount == modalsBefore, @"the profile step follows as a sheet too");
+    check([shownSheet.window.title isEqual:@"Choose an Engine Profile"] && sheetCompletion != nil && modalCount == modalsBefore, @"the profile step follows as a sheet too");
     finish(NSAlertFirstButtonReturn);
     check(applied[@"DefaultScript"] != nil, @"the profile chosen in the sheet is applied");
 

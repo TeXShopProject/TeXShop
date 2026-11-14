@@ -26,6 +26,9 @@ FOUNDATION_EXPORT NSString * _Nullable TSEngineProfileTitle(TSEngineProfile prof
 FOUNDATION_EXPORT BOOL TSEngineProfileIsJapanese(TSEngineProfile profile);
 /// The keys and values that applying the profile writes. Empty for an unknown profile.
 FOUNDATION_EXPORT NSDictionary<TSPreferenceKey, id> *TSEngineProfileValues(TSEngineProfile profile, BOOL latexmk);
+/// Whether a stored setting has the value a profile writes: a stored "NO" is the same switch as NO, and blanks
+/// around a command do not count.
+FOUNDATION_EXPORT BOOL TSEngineProfileSame(id _Nullable value, id _Nullable expected);
 /// The profile all of whose values the settings have now, or TSEngineProfileNone (Custom).
 /// *latexmk tells which of its two forms they match.
 FOUNDATION_EXPORT TSEngineProfile TSEngineProfileMatchingSettings(NSUserDefaults *defaults, BOOL * _Nullable latexmk);
