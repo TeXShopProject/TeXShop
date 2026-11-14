@@ -2580,13 +2580,6 @@
         "value": "SaveNewStyle:"
       },
       {
-        "key": "uXA-S0-9dP.action",
-        "view": "settings.uXA-S0-9dP",
-        "kind": "view",
-        "property": "action",
-        "value": "NewStyleFromPrefs:"
-      },
-      {
         "key": "cnt-Xt-iQF.action",
         "view": "settings.cnt-Xt-iQF",
         "kind": "view",
@@ -3278,11 +3271,11 @@
           "566.title": "-- DO NOT LOCALIZE THIS! --",
           "582.title": "Apple Find Panel",
           "Mo3-zf-BYT.title": "Never",
-          "927.title": "Escape Key",
+          "927.title": "Escape",
           "236.title": "On Startup",
           "ts-aware-spelling.ibShadowedToolTip": "Use exclusion rules for LaTeX documents.",
           "876.title": "Configure for External Editor",
-          "928.title": "Tab Key",
+          "928.title": "Tab",
           "583.title": "Apple Find Bar",
           "ts-edit-spelling.ibShadowedToolTip": "Edit the exclusion rules used by LaTeX-aware spell checking.",
           "Xrb-Fe-9cg.title": "Small",
@@ -3334,7 +3327,6 @@
           "29d-sK-CAr.title": "Lite Mode Theme",
           "cXx-KS-HoL.title": "__variable",
           "Qws-5c-CFu.title": "Attribute",
-          "J9P-9m-Ehr.title": "New Theme from Settings",
           "s3b-sE-3Ix.title": "Value",
           "oZx-IF-VfJ.title": "Preview",
           "kuS-x2-ZGi.title": "Console",
@@ -5053,7 +5045,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Escape Key",
+          "value": "Escape",
           "row": 0,
           "column": 0
         },
@@ -5083,7 +5075,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Tab Key",
+          "value": "Tab",
           "row": 1,
           "column": 0
         },
@@ -5437,13 +5429,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Attribute"
-        },
-        {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "New Theme from Settings"
         },
         {
           "key": "s3b-sE-3Ix.title",
@@ -6355,11 +6340,11 @@
           "566.title": "-- DO NOT LOCALIZE THIS! --",
           "582.title": "Apple Suchmaske",
           "Mo3-zf-BYT.title": "Nie",
-          "927.title": "Escape-Taste",
+          "927.title": "Escape",
           "236.title": "Bei Programmstart",
           "ts-aware-spelling.ibShadowedToolTip": "Ausschlussregeln für LaTeX-Dokumente verwenden.",
           "876.title": "Externen Editor benutzen",
-          "928.title": "Tabulator-Taste",
+          "928.title": "Tabulator",
           "583.title": "Apple Suchleiste",
           "ts-edit-spelling.ibShadowedToolTip": "Die Ausschlussregeln für die LaTeX-bewusste Rechtschreibprüfung bearbeiten.",
           "Xrb-Fe-9cg.title": "Klein",
@@ -6411,7 +6396,6 @@
           "29d-sK-CAr.title": "Hellmodus-Thema",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "Attribut",
-          "J9P-9m-Ehr.title": "Neu aus Einstellungen",
           "s3b-sE-3Ix.title": "Wert",
           "oZx-IF-VfJ.title": "Vorschau",
           "kuS-x2-ZGi.title": "Konsole",
@@ -8130,7 +8114,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Escape-Taste",
+          "value": "Escape",
           "row": 0,
           "column": 0
         },
@@ -8160,7 +8144,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Tabulator-Taste",
+          "value": "Tabulator",
           "row": 1,
           "column": 0
         },
@@ -8514,13 +8498,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Attribut"
-        },
-        {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "Neu aus Einstellungen"
         },
         {
           "key": "s3b-sE-3Ix.title",
@@ -9432,7 +9409,7 @@
           "566.title": "-- DO NOT LOCALIZE THIS! --",
           "582.title": "Panel de búsquedas de Apple",
           "Mo3-zf-BYT.title": "Nunca",
-          "927.title": "Tecla «Escape»",
+          "927.title": "Escape",
           "236.title": "Al comenzar",
           "ts-aware-spelling.ibShadowedToolTip": "Usar reglas de exclusión para documentos LaTeX.",
           "876.title": "Configurar para editor externo",
@@ -9488,7 +9465,6 @@
           "29d-sK-CAr.title": "Modo claro",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "Atributo",
-          "J9P-9m-Ehr.title": "Nuevo tema desde ajustes",
           "s3b-sE-3Ix.title": "Valor",
           "oZx-IF-VfJ.title": "PDF",
           "kuS-x2-ZGi.title": "Consola",
@@ -11207,7 +11183,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Tecla «Escape»",
+          "value": "Escape",
           "row": 0,
           "column": 0
         },
@@ -11591,13 +11567,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Atributo"
-        },
-        {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "Nuevo tema desde ajustes"
         },
         {
           "key": "s3b-sE-3Ix.title",
@@ -12509,11 +12478,11 @@
           "566.title": "-- DO NOT LOCALIZE THIS! --",
           "582.title": "Palette Apple",
           "Mo3-zf-BYT.title": "Jamais",
-          "927.title": "Touche Escape",
+          "927.title": "Échap",
           "236.title": "Au démarrage",
           "ts-aware-spelling.ibShadowedToolTip": "Utiliser les règles d’exclusion pour les documents LaTeX.",
           "876.title": "Configurer pour éditeur externe",
-          "928.title": "Touche Tabulation",
+          "928.title": "Tab",
           "583.title": "Bannière de recherche Apple",
           "ts-edit-spelling.ibShadowedToolTip": "Modifier les règles d’exclusion de la vérification orthographique adaptée à LaTeX.",
           "Xrb-Fe-9cg.title": "Petit",
@@ -12565,7 +12534,6 @@
           "29d-sK-CAr.title": "Thème pour Mode clair",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "Attribut",
-          "J9P-9m-Ehr.title": "Thème depuis les réglages",
           "s3b-sE-3Ix.title": "Valeur",
           "oZx-IF-VfJ.title": "Aperçu",
           "kuS-x2-ZGi.title": "Console",
@@ -14284,7 +14252,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Touche Escape",
+          "value": "Échap",
           "row": 0,
           "column": 0
         },
@@ -14314,7 +14282,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Touche Tabulation",
+          "value": "Tab",
           "row": 1,
           "column": 0
         },
@@ -14668,13 +14636,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Attribut"
-        },
-        {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "Thème depuis les réglages"
         },
         {
           "key": "s3b-sE-3Ix.title",
@@ -15586,11 +15547,11 @@
           "566.title": "-- DO NOT LOCALIZE THIS! --",
           "582.title": "Pannello di ricerca Apple",
           "Mo3-zf-BYT.title": "Mai",
-          "927.title": "Tasto Esc",
+          "927.title": "Esc",
           "236.title": "All'avvio",
           "ts-aware-spelling.ibShadowedToolTip": "Usa le regole di esclusione per i documenti LaTeX.",
           "876.title": "Configura per Editor Esterno",
-          "928.title": "Tasto Tab",
+          "928.title": "Tabulatore",
           "583.title": "Apple Fine Bar",
           "ts-edit-spelling.ibShadowedToolTip": "Modifica le regole di esclusione del controllo ortografico per LaTeX.",
           "Xrb-Fe-9cg.title": "Piccola",
@@ -15642,7 +15603,6 @@
           "29d-sK-CAr.title": "A sfondo chiaro",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "Attributo",
-          "J9P-9m-Ehr.title": "Crea da impostazioni",
           "s3b-sE-3Ix.title": "Valore",
           "oZx-IF-VfJ.title": "Anteprima",
           "kuS-x2-ZGi.title": "Console",
@@ -17361,7 +17321,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Tasto Esc",
+          "value": "Esc",
           "row": 0,
           "column": 0
         },
@@ -17391,7 +17351,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Tasto Tab",
+          "value": "Tabulatore",
           "row": 1,
           "column": 0
         },
@@ -17745,13 +17705,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Attributo"
-        },
-        {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "Crea da impostazioni"
         },
         {
           "key": "s3b-sE-3Ix.title",
@@ -18663,11 +18616,11 @@
           "566.title": "-- DO NOT LOCALIZE THIS! --",
           "582.title": "Apple標準検索パネル",
           "Mo3-zf-BYT.title": "しない",
-          "927.title": "Escapeキー",
+          "927.title": "Escape",
           "236.title": "起動時に",
           "ts-aware-spelling.ibShadowedToolTip": "LaTeX文書では除外規則を使います。",
           "876.title": "外部エディタでソースを編集",
-          "928.title": "Tabキー",
+          "928.title": "Tab",
           "583.title": "Apple標準検索バー",
           "ts-edit-spelling.ibShadowedToolTip": "LaTeX対応のスペルチェックで使用する除外規則を編集します。",
           "Xrb-Fe-9cg.title": "小",
@@ -18719,7 +18672,6 @@
           "29d-sK-CAr.title": "ライトモード時のテーマ",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "属性",
-          "J9P-9m-Ehr.title": "旧バージョンの設定から移行",
           "s3b-sE-3Ix.title": "値",
           "oZx-IF-VfJ.title": "プレビュー",
           "kuS-x2-ZGi.title": "コンソール",
@@ -20438,7 +20390,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Escapeキー",
+          "value": "Escape",
           "row": 0,
           "column": 0
         },
@@ -20468,7 +20420,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Tabキー",
+          "value": "Tab",
           "row": 1,
           "column": 0
         },
@@ -20822,13 +20774,6 @@
           "kind": "cell",
           "property": "title",
           "value": "属性"
-        },
-        {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "旧バージョンの設定から移行"
         },
         {
           "key": "s3b-sE-3Ix.title",
@@ -21740,11 +21685,11 @@
           "566.title": "-- DO NOT LOCALIZE THIS! --",
           "582.title": "Apple 표준 찾기 패널",
           "Mo3-zf-BYT.title": "안 함",
-          "927.title": "Escape 키",
+          "927.title": "Escape",
           "236.title": "실행할 때",
           "ts-aware-spelling.ibShadowedToolTip": "LaTeX 문서에 제외 규칙을 사용합니다.",
           "876.title": "외부 에디터 사용",
-          "928.title": "Tab 키",
+          "928.title": "Tab",
           "583.title": "Apple 찾기 바",
           "ts-edit-spelling.ibShadowedToolTip": "LaTeX 맞춤법 검사에 사용하는 제외 규칙을 편집합니다.",
           "Xrb-Fe-9cg.title": "작게",
@@ -21796,7 +21741,6 @@
           "29d-sK-CAr.title": "밝은 테마",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "속성",
-          "J9P-9m-Ehr.title": "설정에서 새 테마",
           "s3b-sE-3Ix.title": "값",
           "oZx-IF-VfJ.title": "미리보기",
           "kuS-x2-ZGi.title": "콘솔",
@@ -23515,7 +23459,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Escape 키",
+          "value": "Escape",
           "row": 0,
           "column": 0
         },
@@ -23545,7 +23489,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Tab 키",
+          "value": "Tab",
           "row": 1,
           "column": 0
         },
@@ -23899,13 +23843,6 @@
           "kind": "cell",
           "property": "title",
           "value": "속성"
-        },
-        {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "설정에서 새 테마"
         },
         {
           "key": "s3b-sE-3Ix.title",
@@ -24817,11 +24754,11 @@
           "566.title": "-- DO NOT LOCALIZE THIS! --",
           "582.title": "Apple zoekpaneel",
           "Mo3-zf-BYT.title": "Nooit",
-          "927.title": "Escape-toets",
+          "927.title": "Escape",
           "236.title": "Bij starten",
           "ts-aware-spelling.ibShadowedToolTip": "Uitsluitingsregels voor LaTeX-documenten gebruiken.",
           "876.title": "Stel in voor externe editor",
-          "928.title": "Tab-toets",
+          "928.title": "Tab",
           "583.title": "Apple-zoekbalk",
           "ts-edit-spelling.ibShadowedToolTip": "Bewerk de uitsluitingsregels voor LaTeX-bewuste spellingcontrole.",
           "Xrb-Fe-9cg.title": "Klein",
@@ -24873,7 +24810,6 @@
           "29d-sK-CAr.title": "Thema voor lichte modus",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "Attribuut",
-          "J9P-9m-Ehr.title": "New Theme from Settings",
           "s3b-sE-3Ix.title": "Waarde",
           "oZx-IF-VfJ.title": "Voorvertoning",
           "kuS-x2-ZGi.title": "Console",
@@ -26592,7 +26528,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Escape-toets",
+          "value": "Escape",
           "row": 0,
           "column": 0
         },
@@ -26622,7 +26558,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Tab-toets",
+          "value": "Tab",
           "row": 1,
           "column": 0
         },
@@ -26976,13 +26912,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Attribuut"
-        },
-        {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "New Theme from Settings"
         },
         {
           "key": "s3b-sE-3Ix.title",
@@ -27894,11 +27823,11 @@
           "566.title": "-- DO NOT LOCALIZE THIS! --",
           "582.title": "Painel de pesquisa Apple",
           "Mo3-zf-BYT.title": "Nunca",
-          "927.title": "Tecla Escape",
+          "927.title": "Escape",
           "236.title": "No início",
           "ts-aware-spelling.ibShadowedToolTip": "Usar regras de exclusão para documentos LaTeX.",
           "876.title": "Usar editor externo",
-          "928.title": "Tecla Tab",
+          "928.title": "Tab",
           "583.title": "Barra de pesquisa Apple",
           "ts-edit-spelling.ibShadowedToolTip": "Editar as regras de exclusão da verificação ortográfica adaptada ao LaTeX.",
           "Xrb-Fe-9cg.title": "Pequeno",
@@ -27950,7 +27879,6 @@
           "29d-sK-CAr.title": "Tema do modo claro",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "Atributo",
-          "J9P-9m-Ehr.title": "New Theme from Settings",
           "s3b-sE-3Ix.title": "Valor",
           "oZx-IF-VfJ.title": "Pré-visualização",
           "kuS-x2-ZGi.title": "Consola",
@@ -29669,7 +29597,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Tecla Escape",
+          "value": "Escape",
           "row": 0,
           "column": 0
         },
@@ -29699,7 +29627,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Tecla Tab",
+          "value": "Tab",
           "row": 1,
           "column": 0
         },
@@ -30053,13 +29981,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Atributo"
-        },
-        {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "New Theme from Settings"
         },
         {
           "key": "s3b-sE-3Ix.title",
@@ -30971,11 +30892,11 @@
           "566.title": "-- DO NOT LOCALIZE THIS! --",
           "582.title": "Painel de localizar da Apple",
           "Mo3-zf-BYT.title": "Nunca",
-          "927.title": "Tecla Escape",
+          "927.title": "Escape",
           "236.title": "No início",
           "ts-aware-spelling.ibShadowedToolTip": "Usar regras de exclusão para documentos LaTeX.",
           "876.title": "Usar editor externo",
-          "928.title": "Tecla Tab",
+          "928.title": "Tab",
           "583.title": "Barra de localizar da Apple",
           "ts-edit-spelling.ibShadowedToolTip": "Editar as regras de exclusão da verificação ortográfica adaptada ao LaTeX.",
           "Xrb-Fe-9cg.title": "Pequeno",
@@ -31027,7 +30948,6 @@
           "29d-sK-CAr.title": "Tema modo claro",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "Atributo",
-          "J9P-9m-Ehr.title": "Novo tema a partir dos ajustes",
           "s3b-sE-3Ix.title": "Valor",
           "oZx-IF-VfJ.title": "Pré-visualização",
           "kuS-x2-ZGi.title": "Console",
@@ -32746,7 +32666,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Tecla Escape",
+          "value": "Escape",
           "row": 0,
           "column": 0
         },
@@ -32776,7 +32696,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Tecla Tab",
+          "value": "Tab",
           "row": 1,
           "column": 0
         },
@@ -33130,13 +33050,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Atributo"
-        },
-        {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "Novo tema a partir dos ajustes"
         },
         {
           "key": "s3b-sE-3Ix.title",
@@ -34048,11 +33961,11 @@
           "566.title": "-- DO NOT LOCALIZE THIS! --",
           "582.title": "Panoul de căutare Apple",
           "Mo3-zf-BYT.title": "Niciodată",
-          "927.title": "Tasta Escape",
+          "927.title": "Escape",
           "236.title": "La Deschidere",
           "ts-aware-spelling.ibShadowedToolTip": "Folosește reguli de excludere pentru documentele LaTeX.",
           "876.title": "Configurează pentru Editor Extern",
-          "928.title": "Tasta Tab",
+          "928.title": "Tab",
           "583.title": "Bara de căutare Apple",
           "ts-edit-spelling.ibShadowedToolTip": "Editează regulile de excludere pentru verificarea ortografică LaTeX.",
           "Xrb-Fe-9cg.title": "Mic",
@@ -34104,7 +34017,6 @@
           "29d-sK-CAr.title": "Tema modului luminos",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "Atribut",
-          "J9P-9m-Ehr.title": "New Theme from Settings",
           "s3b-sE-3Ix.title": "Valoare",
           "oZx-IF-VfJ.title": "Previzualizare",
           "kuS-x2-ZGi.title": "Consolă",
@@ -35823,7 +35735,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Tasta Escape",
+          "value": "Escape",
           "row": 0,
           "column": 0
         },
@@ -35853,7 +35765,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Tasta Tab",
+          "value": "Tab",
           "row": 1,
           "column": 0
         },
@@ -36207,13 +36119,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Atribut"
-        },
-        {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "New Theme from Settings"
         },
         {
           "key": "s3b-sE-3Ix.title",
@@ -37125,11 +37030,11 @@
           "566.title": "-- DO NOT LOCALIZE THIS! --",
           "582.title": "Apple查找面板",
           "Mo3-zf-BYT.title": "永不",
-          "927.title": "Escape键",
+          "927.title": "Escape",
           "236.title": "启动时",
           "ts-aware-spelling.ibShadowedToolTip": "对LaTeX文档使用排除规则。",
           "876.title": "配置为外部编辑器",
-          "928.title": "Tab键",
+          "928.title": "Tab",
           "583.title": "Apple查找栏",
           "ts-edit-spelling.ibShadowedToolTip": "编辑LaTeX拼写检查使用的排除规则。",
           "Xrb-Fe-9cg.title": "小",
@@ -37181,7 +37086,6 @@
           "29d-sK-CAr.title": "浅色主题",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "属性",
-          "J9P-9m-Ehr.title": "从设置新建主题",
           "s3b-sE-3Ix.title": "值",
           "oZx-IF-VfJ.title": "预览",
           "kuS-x2-ZGi.title": "控制台",
@@ -38900,7 +38804,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Escape键",
+          "value": "Escape",
           "row": 0,
           "column": 0
         },
@@ -38930,7 +38834,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Tab键",
+          "value": "Tab",
           "row": 1,
           "column": 0
         },
@@ -39284,13 +39188,6 @@
           "kind": "cell",
           "property": "title",
           "value": "属性"
-        },
-        {
-          "key": "J9P-9m-Ehr.title",
-          "view": "settings.uXA-S0-9dP",
-          "kind": "cell",
-          "property": "title",
-          "value": "从设置新建主题"
         },
         {
           "key": "s3b-sE-3Ix.title",

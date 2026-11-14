@@ -10,13 +10,8 @@
 
 <BODY>
 	<div id="content_border">
-		<P>When syntax coloring turned on in the source window, comments will be colored red, commands will be colored blue, and the symbols $, {, and } will be colored dark green. A few users may wish to change these colors. Each color is determined by setting its red, green, and blue components; these components are real numbers between 0.0 and 1.0. Suppose we wish to change the color of $, {, and } to bright green, a color with components (r, g, b) = (0.0, 1.0, 0.0). To do so, open the Terminal window and type the following commands</P>
-		<dl>
-			<dd>defaults write TeXShop markerred 0.0
-			<dd>defaults write TeXShop markergreen 1.0
-			<dd>defaults write TeXShop markerblue 0.0
-		</dl>
-		<p>The corresponding settings for comments are commentred, commentgreen, commentblue; the items for commands are commandred, commandgreen, commandblue.</p>
+		<P>When syntax coloring is turned on in the source window, comments, commands, and the symbols $, {, and } are shown in their own colors. These colors belong to the theme. To change them, use the Syntax Highlighting group in the Themes category of the Settings window. Each theme has its own colors, so the Lite Mode Theme and the Dark Mode Theme can use different colors.</P>
+		<p>Earlier versions of TeXShop set these colors with hidden settings such as markerred, markergreen and markerblue. They are no longer used.</p>
 		<ul>
 			
 		</ul>

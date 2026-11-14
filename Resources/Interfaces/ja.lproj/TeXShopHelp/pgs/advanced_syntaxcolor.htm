@@ -13,19 +13,11 @@
 <div id="content_border">
 
 <p>
-ソースウインドウでソースのカラー表示<small>（構文の色分け）</small>が有効になっているときは、コメントは赤、コマンドは青、「 $ 」 「 { 」 「 } 」といった記号は暗緑色になります。これらの色合いを変更したいユーザもいるかもしれません。それぞれの色は、赤・緑・青（Ｒ・Ｇ・Ｂ）の成分の割合を調整することで決定されています ； 各成分は0.0から1.0までの実数です。たとえば「 $ 」 「 { 」 「 } 」の色を明るい緑色──成分で言えば (r, g, b) = (0.0, 1.0, 0.0) ──に変えたいとします。そうするには、Terminalのウインドウを開き、次のようなコマンドを打ち込みます──
+ソースウインドウでソースのカラー表示<small>（構文の色分け）</small>が有効になっているときは、コメント、コマンド、「 $ 」 「 { 」 「 } 」といった記号が、それぞれの色で表示されます。これらの色はテーマの一部です。設定ウインドウの「テーマ」の「シンタックスハイライト」で変えられます。色はテーマごとに設定するので、ライトモード時のテーマとダークモード時のテーマで別の色にできます。
 </p>
 
-<tt>
-		<dl>
-			<dd>defaults write TeXShop markerred 0.0
-			<dd>defaults write TeXShop markergreen 1.0
-			<dd>defaults write TeXShop markerblue 0.0
-		</dl>
-</tt>
-
 <p>
-コメントの色を指定する設定項目はcommentred・commentgreen・commentblueです ； コマンドについてはcommandred・commandgreen・commandblueです。
+以前のTeXShopでは、markerred・markergreen・markerblueなどの隠れた設定でこれらの色を設定していました。これらの設定は今は使われません。
 </p>
 
 <div id="header_background"></div>

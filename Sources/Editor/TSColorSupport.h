@@ -35,6 +35,4 @@
 // - (NSColor *)colorForKey: (NSString *)theKey  whiledark: (BOOL)mode;
 
 - (void)changeColorValueInDictionary: (NSMutableDictionary *)theDictionary forKey: (NSString *)theKey fromColorWell: (id)theWell;
-- (void)setColorValueInDictionary: (NSMutableDictionary *)theDictionary forKey: (NSString *)theKey withRed: (double)red
-    Green: (double)green Blue: (double)blue Alpha: (double)alpha;
 @end

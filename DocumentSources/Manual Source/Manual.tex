@@ -3660,8 +3660,6 @@ To keep the original theme, duplicate it with ``New Theme'' before changing its 
 
 To create a new theme, first change ``Theme to Edit'' to obtain reasonable starting colors for your new theme. Then push ``New Theme'' and fill in the resulting dialog with a title for this theme. Use a filename without path separators. The new theme will become the ``Theme to Edit'' and you can begin changing colors.
 
-One final button in the Edit Theme group must be explained, but it is essentially obsolete. When the theme panel was first introduced, some users had spent time using the original color settings system to revise the default colors, only to have that system ripped out of the program. Their color setting choices, however, still remained in the Preferences data base. The button ``Migrate Legacy Settings'' creates a new color theme using these old setting choices. There is just one other use for this button which someone might conceivably still use. When the old color settings system existed, some people on the internet developed color themes for TeXShop and made them available as shell scripts which reset various TeXShop color settings. These shell scripts still work, but they no longer affect the appearance of TeXShop. After running such a script, you can use ``Migrate Legacy Settings'' to convert the old scripted theme to a regular new Theme.
-
 Recall that various TeXShop items which users can customize are set in \path{~/Library/TeXShop}. This folder has various subfolders. There is a new folder in \path{~/Library/TeXShop} named ``Themes''.  This folder contains very small ``.plist'' files describing the various Themes in TeXShop. If you create a theme you like, give it to others by putting its plist file on the Internet. To install a new theme of this kind, just drop its plist form in the Themes folder.
 
 An actual Theme plist file can be opened in TeXShop. You'll find that it has a very simple structure.
@@ -6973,7 +6971,7 @@ When macOS Mountain Lion was released, Apple  optimized text and font drawing fo
 
 \subsubsection{<Obsolete Color Settings>}
 
-Originally, many syntax colors, foreground and background colors, and other TeXShop colors could be modified using hidden settings. These settings still exist, but most of them no longer set colors; the Migrate Legacy Settings button in the Themes category of TeXShop Settings reads them to create a new theme. Modern colors are determined by themes, which are stored as small files in \path{~/Library/TeXShop/Themes} rather than in the Preferences database.
+Originally, many syntax colors, foreground and background colors, and other TeXShop colors could be modified using hidden settings. Most of these settings no longer set colors. Modern colors are determined by themes, which are stored as small files in \path{~/Library/TeXShop/Themes} rather than in the Preferences database.
 
 With syntax coloring, comments are colored red, commands are colored blue, and the symbols \$, \{, and \} are colored dark green. These colors could be changed. A color is determined by the red, green, and blue components of the color; each is a number between 0.00 and 1.00. 
 \begin{verbatim}

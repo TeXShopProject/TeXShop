@@ -22,8 +22,8 @@
 "912.title" = "Radio";
 "914.title" = "Radio";
 "925.title" = "Command Completion Triggered By:";
-"927.title" = "Escape Key";
-"928.title" = "Tab Key";
+"927.title" = "Escape";
+"928.title" = "Tab";
 "929.title" = "Radio";
 "934.title" = "Parens Targets & Highlight Color";
 "950.title" = "{ }";
