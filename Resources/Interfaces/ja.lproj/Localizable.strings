@@ -244,7 +244,7 @@
 "Defaults for New Documents" = "新しい書類の初期値";
 "Matching Brackets" = "括弧の対応";
 "Spelling While Typing" = "入力中のスペルチェック";
-"Use LaTeX-aware spell checking (recommended)" = "LaTeXの構造を考慮する（推奨）";
+"Use LaTeX-aware spell checking (recommended)" = "LaTeXの構文を考慮する（推奨）";
 "Use legacy spell checking" = "従来方式を使う";
 "LaTeX Spell Checking" = "LaTeXのスペルチェック";
 "Key Bindings" = "キーバインド";
