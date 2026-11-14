@@ -2,24 +2,29 @@
 """The coloring of the Advanced Find panel's fields and of the multiple replacement rules
 (Tests/AdvancedFindColoring.m): the tokens of patterns and replacement strings from the engine's own lexers, the
 brackets that pair up, the real named groups (also the engine's), the marks of OgreKit's differences from the engine's
-one table, the message line, bracket matching in the find field, the rule table, and every mark's message in the
-smallest panel in all 12 languages. Nothing is displayed; the defaults stay in memory and the pasteboards are unique.
+one table, the message line, bracket matching in the find field, the rule table, every mark's message in the
+smallest panel in all 12 languages, and the source's theme (the bundled themes, read with TSColorSupport's own
+look-ups), font and TeX coloring in the fields and the rules. Nothing is displayed; the defaults stay in memory and
+the pasteboards are unique.
 
---image DIR writes the colored panel and rules, light and dark, in English and Japanese (--image-all-languages: all 12).
+--image DIR writes the panel (a TeX pattern with Regular expression on and off, and every role) and the rules in three
+pairs of bundled themes, light and dark, in English and Japanese (--image-all-languages: all 12).
 --mutations breaks one rule at a time in a copy of the sources and checks that the test notices."""
 from pathlib import Path
 import argparse
+import os
 import re
 import shutil
 import subprocess
 import sys
 import tempfile
 from source_tree import include_args, source_file, advanced_find_syntax_sources
+from production_fragments import method
 
 root = Path(__file__).resolve().parents[1]
 LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt', 'pt-PT', 'ro', 'zh_CN']
 NEW_FILES = ['TSRegexPatternLexer.h', 'TSRegexPatternLexer.m', 'TSAdvancedFindFieldScanners.h', 'TSAdvancedFindFieldScanners.m',
-             'TSAdvancedFindPanelController+Coloring.m']
+             'TSAdvancedFindPanelController+Coloring.m', 'TSAdvancedFindFieldStyle.h', 'TSAdvancedFindFieldStyle.m']
 KEYS = ['AdvancedFind.MoreMarks', 'AdvancedFind.Mark.UnmatchedParen', 'AdvancedFind.Mark.UnclosedParen', 'AdvancedFind.Mark.TrailingBackslash',
         'AdvancedFind.Mark.UnclosedName', 'AdvancedFind.Mark.UnclosedClass', 'AdvancedFind.Mark.UnclosedComment', 'AdvancedFind.Mark.BadGroup',
         'AdvancedFind.Mark.NothingToRepeat', 'AdvancedFind.Mark.TrailingBackslashReplacement', 'AdvancedFind.Mark.NoSuchGroup', 'AdvancedFind.Mark.NoSuchName']
@@ -51,19 +56,52 @@ MUTATIONS = {
         "    TSRegexFindPattern *pattern = settings.findString.length > 0 ? [[TSRegexFindPattern alloc] initWithFindString:settings.findString options:options error:NULL] : nil;",
         "    TSRegexFindPattern *pattern = nil;"),
     'the replace field keeps its first scanner': ('TSAdvancedFindPanelController+Coloring.m', '        self.replaceHighlighter.scanner = replace;\n', '        (void)replace;\n'),
-    'plain text is colored': ('TSAdvancedFindPanelController+Coloring.m', '    if (!regex) {\n        if (find)', '    if (NO) {\n        if (find)'),
+    'plain text is read as a regular expression': ('TSAdvancedFindPanelController+Coloring.m', '    if (!regex) {\n        // A new scanner', '    if (NO) {\n        // A new scanner'),
     'the message line ignores the marks': ('TSAdvancedFindPanelController.m', '    NSArray<TSSyntaxDiagnostic *> *diagnostics = [self fieldDiagnostics];', '    NSArray<TSSyntaxDiagnostic *> *diagnostics = @[];'),
-    'the message line ignores the replace field': ('TSAdvancedFindPanelController+Coloring.m', '@[self.findHighlighter, self.replaceHighlighter]', '@[self.findHighlighter]'),
+    'the message line ignores the replace field': ('TSAdvancedFindPanelController+Coloring.m', '@[self.findHighlighter, self.replaceHighlighter]) {\n        id<TSSyntaxScanner> scanner',
+                                                   '@[self.findHighlighter]) {\n        id<TSSyntaxScanner> scanner'),
     'typing in the replace field leaves the line': ('TSAdvancedFindPanelController.m', '        [self validatePattern]; // the marks of the replace field\n', ''),
     'the count of more marks is left out': ('TSAdvancedFindPanelController.m', '        if (diagnostics.count > 1) {', '        if (NO) {'),
     'incompatibilities are red': ('TSAdvancedFindPanelController.m', 'NSColor.systemRedColor : NSColor.systemOrangeColor', 'NSColor.systemRedColor : NSColor.systemRedColor'),
-    'rules are not colored': ('TSMultipleReplaceWindowController.m', '        return TSMultipleReplaceColoredField(string, rule, field, options, weakSelf.ruleTable.set.replacementSyntax, attributes);', '        return nil;'),
-    'plain rules are colored': ('TSMultipleReplaceWindowController.m', '    if (!rule.usesRegularExpression || !rule.enabled || !(options & TSRegexFindRegularExpression))', '    if (NO)'),
-    'a rule ignores the set\'s syntax': ('TSMultipleReplaceWindowController.m', 'weakSelf.ruleTable.set.replacementSyntax, attributes);', 'TSRegexReplacementSyntaxICU, attributes);'),
+    'rules are not colored': ('TSMultipleReplaceWindowController.m', '        return TSMultipleReplaceColoredField(string, rule, field, options, weakSelf.ruleTable.set.replacementSyntax, attributes, weakSelf.fieldStyle);', '        return nil;'),
+    'plain rules are read as regular expressions': ('TSMultipleReplaceWindowController.m', '    if (!rule.usesRegularExpression || !(options & TSRegexFindRegularExpression))\n', '    if (NO)\n'),
+    'a rule ignores the set\'s syntax': ('TSMultipleReplaceWindowController.m', 'weakSelf.ruleTable.set.replacementSyntax, attributes, weakSelf.fieldStyle);', 'TSRegexReplacementSyntaxICU, attributes, weakSelf.fieldStyle);'),
     'unescaped places are those of the unescaped text': ('TSRegexReplacementTemplate.m',
         '                block(from[k].length > 1 ? TSRegexReplacementPieceEscape : TSRegexReplacementPieceText, from[k], [unescaped substringWithRange:NSMakeRange(k, 1)], 0);',
         '                block(TSRegexReplacementPieceText, NSMakeRange(k, 1), [unescaped substringWithRange:NSMakeRange(k, 1)], 0);'),
+    # The theme, the font and the appearance
+    'escapes take XMLSpecial': ('TSSyntaxColorScheme.m', '{TSSyntaxRoleRegexEscape, @"explIntenseFunction"', '{TSSyntaxRoleRegexEscape, @"XMLSpecial"'),
+    'symbols have no theme key': ('TSSyntaxColorScheme.m', '    {TSSyntaxRoleRegexSymbol, @"SyntaxMarkerParen", TSSyntaxThemeFallbackBuiltIn, NO},\n', ''),
+    'the marks are lost': ('TSAdvancedFindFieldStyle.m', '        [roles addEntriesFromDictionary:TSMarkAttributes()];\n', ''),
+    'coloring off keeps colors': ('TSAdvancedFindFieldStyle.m', '        TSSyntaxColorScheme *scheme = self.scheme;',
+                                  '        TSSyntaxColorScheme *scheme = self.scheme ?: [[TSSyntaxColorScheme alloc] initWithTheme:@{} dark:NO];'),
+    'the font is not kept in its sizes': ('TSAdvancedFindFieldStyle.m', 'CGFloat size = MIN(MAX(font.pointSize, 11), 16);', 'CGFloat size = font.pointSize;'),
+    'the window\'s late appearance is used': ('TSAdvancedFindFieldStyle.m', 'window.appearance ?: NSApp.effectiveAppearance ?: window.effectiveAppearance', 'window.effectiveAppearance ?: NSApp.effectiveAppearance'),
+    'the box keeps the text background': ('TSAdvancedFindInputBox.m', 'fill = (self.fillColor ?: NSColor.textBackgroundColor).CGColor;', 'fill = NSColor.textBackgroundColor.CGColor;'),
+    'the box of a dark theme is light': ('TSAdvancedFindPanelController+Coloring.m', 'field.box.appearance = style.fieldAppearance;', 'field.box.appearance = nil;'),
+    'the insertion point keeps the text color': ('TSAdvancedFindPanelController+Coloring.m', 'field.insertionPointColor = style.insertionPointColor ?: NSColor.textColor;',
+                                                 'field.insertionPointColor = NSColor.textColor;'),
+    'the appearance is not followed': ('TSAdvancedFindPanelController+Coloring.m', '    if (context == TSFieldAppearanceContext)\n        [self applyFieldStyle];',
+                                       '    if (context == TSFieldAppearanceContext)\n        ;'),
+    'the theme is not followed': ('TSAdvancedFindPanelController+Coloring.m', '- (void)fieldStyleDidChange:(NSNotification *)notification\n{\n    [self applyFieldStyle];\n}',
+                                  '- (void)fieldStyleDidChange:(NSNotification *)notification\n{\n}'),
+    'the rules keep their cells': ('TSMultipleReplaceWindowController.m', '    [self.ruleTable reloadFieldCells];\n', ''),
+    'the rules ignore the appearance': ('TSMultipleReplaceWindowController.m', '    if (context == TSRuleAppearanceContext)\n        [self fieldStyleDidChange:nil];',
+                                        '    if (context == TSRuleAppearanceContext)\n        ;'),
 }
+
+
+def color_support(tmp):
+    """The theme look-ups of the application's TSColorSupport, unchanged: the fields take the theme's colors through the
+    color scheme (Sources/Syntax/TSSyntaxColorScheme.m), which reads themes with them."""
+    text = source_file(root, 'TSColorSupport.m').read_text(encoding='latin1')
+    methods = '\n'.join(method(text, signature) for signature in [
+        '- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFromDictionary:', '- (NSColor *) colorAndAlphaFromDictionary:',
+        '- (NSColor *)liteColorWithKey:', '- (NSColor *)darkColorWithKey:', '- (NSColor *)liteColorAndAlphaWithKey:', '- (NSColor *)darkColorAndAlphaWithKey:'])
+    path = tmp / 'ColorSupport.m'
+    path.write_text('#import "TSColorSupport.h"\n#pragma clang diagnostic ignored "-Wincomplete-implementation"\n@implementation TSColorSupport\n'
+                    '+ (id)sharedInstance { static id shared; if (!shared) shared = [self new]; return shared; }\n' + methods + '\n@end\n')
+    return path
 
 
 def build(tmp, sources):
@@ -91,20 +129,23 @@ def build(tmp, sources):
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-fmodules', '-mmacosx-version-min=14.6', '-Wall', '-Wno-unused-parameter',
                     '-Wno-deprecated-declarations', '-Wno-deprecated-implementations', '-Wnullability-completeness', '-Werror=nullability-completeness',
                     '-I', str(sources), *include_args(root), '-I', str(root / 'Tests'), '-framework', 'Cocoa',
-                    str(root / 'Tests/AdvancedFindColoring.m'), str(tmp / 'keys.m'), *map(str, sorted(sources.glob('*.m'))), *map(str, advanced_find_syntax_sources(root)),
+                    str(root / 'Tests/AdvancedFindColoring.m'), str(tmp / 'keys.m'), *map(str, sorted(sources.glob('*.m'))), str(color_support(tmp)),
                     '-o', str(probe)], check=True)
     return probe
 
 
 def run(probe, mode, language='en', images=None):
     command = [str(probe), mode, *([str(images)] if images else []), '-AppleLanguages', f'({language})']
-    return subprocess.run(command, capture_output=True, text=True, timeout=900)
+    environment = dict(os.environ, ADVANCED_FIND_THEMES=str(root / 'Resources/TeXShop/Themes'))
+    return subprocess.run(command, capture_output=True, text=True, timeout=900, env=environment)
 
 
 def copy_sources(tmp):
     sources = tmp / 'sources'
     sources.mkdir()
-    for path in [*(root / 'Sources/Find').glob('*.[mh]'), source_file(root, 'TSLayoutManager.m'), source_file(root, 'TSLayoutManager.h')]:
+    syntax = [path for path in advanced_find_syntax_sources(root) if path.name != 'TSColorSupportStub.m']
+    for path in [*(root / 'Sources/Find').glob('*.[mh]'), source_file(root, 'TSLayoutManager.m'), source_file(root, 'TSLayoutManager.h'),
+                 *syntax, *(root / 'Sources/Syntax').glob('*.h')]:
         shutil.copy(path, sources / path.name)
     return sources
 

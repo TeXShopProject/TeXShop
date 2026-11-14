@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSMultipleReplaceWindowController.h"
 #import "TSAdvancedFindFieldScanners.h"
+#import "TSAdvancedFindFieldStyle.h"
+#import "TSSyntaxTeXScanner.h"
 #import "TSAdvancedFindTextView.h"
 #import "TSAdvancedFindController+MultipleReplace.h"
 #import "TSAdvancedFindOptionsForm.h"
@@ -23,24 +25,31 @@
 @property (nonatomic, strong, nullable) NSPopover *optionsPopover;
 /// Kept while its view is shown: the check boxes target it.
 @property (nonatomic, strong, nullable) TSAdvancedFindOptionsForm *optionsForm;
+/// The theme of the rules' find and replacement cells, for the window's light or dark appearance.
+@property (nonatomic, strong) TSAdvancedFindFieldStyle *fieldStyle;
 @end
 
-/// A rule's find or replacement text colored as the find panel's fields are: only for an enabled regular expression rule.
+/// A rule's find or replacement text colored as the find panel's fields are, in the theme of `style`: a regular
+/// expression rule as the engine reads it, another as the source reads TeX. A disabled rule stays gray.
 static NSAttributedString *_Nullable TSMultipleReplaceColoredField(NSString *string, TSRegexReplacementRule *rule, TSMultipleReplaceRuleField field,
                                                                   TSRegexFindOptions options, TSRegexReplacementSyntax syntax,
-                                                                  NSDictionary<NSAttributedStringKey, id> *attributes)
+                                                                  NSDictionary<NSAttributedStringKey, id> *attributes, TSAdvancedFindFieldStyle *style)
 {
-    if (!rule.usesRegularExpression || !rule.enabled || !(options & TSRegexFindRegularExpression))
+    if (!rule.enabled)
         return nil;
     id<TSSyntaxScanner> scanner;
-    if (field == TSMultipleReplaceRuleFieldFind)
+    if (!rule.usesRegularExpression || !(options & TSRegexFindRegularExpression))
+        scanner = [[TSSyntaxTeXScanner alloc] initWithOptions:style.texOptions];
+    else if (field == TSMultipleReplaceRuleFieldFind)
         scanner = [[TSAdvancedFindPatternScanner alloc] initWithOptions:options];
     else {
         TSRegexFindPattern *pattern = rule.findString.length > 0 ? [[TSRegexFindPattern alloc] initWithFindString:rule.findString options:options error:NULL] : nil;
         scanner = [[TSAdvancedFindReplacementScanner alloc] initWithSyntax:syntax options:options pattern:pattern];
     }
-    return TSAdvancedFindColoredString(string, scanner, TSAdvancedFindFieldColorScheme(), attributes);
+    return TSAdvancedFindColoredString(string, scanner, style.fieldScheme, attributes);
 }
+
+static void *TSRuleAppearanceContext = &TSRuleAppearanceContext;
 
 /// Wide enough at first for the names of the bundled samples in every language (“ajmacros → Caracteres Unicode”).
 static const CGFloat TSSidebarWidth = 240;
@@ -72,8 +81,13 @@ static const CGFloat TSSidebarWidth = 240;
     _ruleTable.setChangedHandler = ^(TSRegexMultipleReplace *set) { [weakSelf saveSet:set]; };
     _ruleTable.fieldStyler = ^NSAttributedString *_Nullable(NSString *string, TSRegexReplacementRule *rule, TSMultipleReplaceRuleField field,
                                                             TSRegexFindOptions options, NSDictionary<NSAttributedStringKey, id> *attributes) {
-        return TSMultipleReplaceColoredField(string, rule, field, options, weakSelf.ruleTable.set.replacementSyntax, attributes);
+        return TSMultipleReplaceColoredField(string, rule, field, options, weakSelf.ruleTable.set.replacementSyntax, attributes, weakSelf.fieldStyle);
     };
+    _fieldStyle = [TSAdvancedFindFieldStyle styleForWindow:panel];
+    // The cells follow the theme and the light or dark appearance of the application or of the window.
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(fieldStyleDidChange:) name:TSAdvancedFindFieldStyleDidChangeNotification object:nil];
+    [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:TSRuleAppearanceContext];
+    [panel addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:TSRuleAppearanceContext];
     [self buildContent];
     // The minus button of the rules follows the selection.
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(ruleSelectionChanged:) name:NSTableViewSelectionDidChangeNotification
@@ -678,8 +692,27 @@ static const CGFloat TSSidebarWidth = 240;
     }
 }
 
+#pragma mark Theme
+
+- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary<NSKeyValueChangeKey, id> *)change
+                       context:(nullable void *)context
+{
+    if (context == TSRuleAppearanceContext)
+        [self fieldStyleDidChange:nil];
+    else
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+}
+
+- (void)fieldStyleDidChange:(nullable NSNotification *)notification
+{
+    self.fieldStyle = [TSAdvancedFindFieldStyle styleForWindow:self.window];
+    [self.ruleTable reloadFieldCells];
+}
+
 - (void)dealloc
 {
+    [NSApp removeObserver:self forKeyPath:@"effectiveAppearance" context:TSRuleAppearanceContext];
+    [self.window removeObserver:self forKeyPath:@"effectiveAppearance" context:TSRuleAppearanceContext];
     [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 - (void)highlight:(id)sender { [self highlightInTextView:nil]; }

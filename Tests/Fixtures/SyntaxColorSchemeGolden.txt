@@ -28,6 +28,14 @@
   editorBackground kCGColorSpaceSRGB 0.2031 0.2031 0.2031 1.0000
   editorText kCGColorSpaceSRGB 0.9999 1.0000 0.9998 1.0000
   invisible kCGColorSpaceSRGB 0.5000 0.5000 0.5000 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.4198 0.7640 0.8300 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 1.0000 0.5781 0.0000 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3612 0.5539 0.1471 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.9677 0.5778 0.9109 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.5738 0.5655 0.0000 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 1.0000 1.0000 1.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == DarkTheme dark
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.4198 0.7640 0.8300 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.4215 0.4841 0.4887 1.0000
@@ -57,6 +65,14 @@
   editorBackground kCGColorSpaceSRGB 0.2031 0.2031 0.2031 1.0000
   editorText kCGColorSpaceSRGB 0.9999 1.0000 0.9998 1.0000
   invisible kCGColorSpaceSRGB 0.5000 0.5000 0.5000 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.4198 0.7640 0.8300 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 1.0000 0.5781 0.0000 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3612 0.5539 0.1471 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.9677 0.5778 0.9109 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.5738 0.5655 0.0000 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 1.0000 1.0000 1.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == Dracula light
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.4850 0.8957 0.9893 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.3120 0.3641 0.5760 1.0000
@@ -86,6 +102,14 @@
   editorBackground kCGColorSpaceSRGB 0.1177 0.1222 0.1598 1.0000
   editorText kCGColorSpaceSRGB 0.9655 0.9664 0.9362 1.0000
   invisible kCGColorSpaceSRGB 0.5000 0.5000 0.5000 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.4850 0.8957 0.9893 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 1.0000 0.4745 0.7765 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3137 0.9804 0.4824 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.9882 0.3641 0.7281 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.7412 0.5765 0.9765 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == Dracula dark
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.4850 0.8957 0.9893 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.3120 0.3641 0.5760 1.0000
@@ -115,6 +139,14 @@
   editorBackground kCGColorSpaceSRGB 0.1177 0.1222 0.1598 1.0000
   editorText kCGColorSpaceSRGB 0.9655 0.9664 0.9362 1.0000
   invisible kCGColorSpaceSRGB 0.5000 0.5000 0.5000 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.4850 0.8957 0.9893 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 1.0000 0.4745 0.7765 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3137 0.9804 0.4824 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.9882 0.3641 0.7281 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.7412 0.5765 0.9765 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == GLG-Lite light
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.1294 0.4627 0.7804 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.4000 0.4000 0.4000 1.0000
@@ -144,6 +176,14 @@
   editorBackground kCGColorSpaceSRGB 0.9882 0.9569 0.8667 1.0000
   editorText kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   invisible kCGColorSpaceSRGB 0.7098 0.5373 0.0000 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.1294 0.4627 0.7804 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.8275 0.2118 0.5098 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.5216 0.6000 0.0000 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.8627 0.1961 0.1843 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.4235 0.4431 0.7686 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == GLG-Lite dark
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.1294 0.4627 0.7804 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.4000 0.4000 0.4000 1.0000
@@ -173,6 +213,14 @@
   editorBackground kCGColorSpaceSRGB 0.9882 0.9569 0.8667 1.0000
   editorText kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   invisible kCGColorSpaceSRGB 0.7098 0.5373 0.0000 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.1294 0.4627 0.7804 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.8275 0.2118 0.5098 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.5216 0.6000 0.0000 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.8627 0.1961 0.1843 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.4235 0.4431 0.7686 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == LiteTheme light
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.9997 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 1.0000 0.0000 0.0000 1.0000
@@ -202,6 +250,14 @@
   editorBackground kCGColorSpaceSRGB 1.0000 1.0000 1.0000 1.0000
   editorText kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   invisible kCGColorSpaceExtendedSRGB 1.2350 0.0130 0.0110 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.9997 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.5787 0.3215 0.0000 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3084 0.5618 0.0000 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.0200 0.5100 0.1300 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.0049 0.0961 0.5750 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == LiteTheme dark
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.9997 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 1.0000 0.0000 0.0000 1.0000
@@ -231,6 +287,14 @@
   editorBackground kCGColorSpaceSRGB 1.0000 1.0000 1.0000 1.0000
   editorText kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   invisible kCGColorSpaceExtendedSRGB 1.2350 0.0130 0.0110 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.9997 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.5787 0.3215 0.0000 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3084 0.5618 0.0000 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.0200 0.5100 0.1300 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.0049 0.0961 0.5750 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == Manteuffel light
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.0824 0.7098 0.9137 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.7529 0.7412 0.7294 1.0000
@@ -260,6 +324,14 @@
   editorBackground kCGColorSpaceSRGB 0.9647 0.9647 0.9647 1.0000
   editorText kCGColorSpaceSRGB 0.2588 0.2588 0.2588 1.0000
   invisible kCGColorSpaceSRGB 1.0000 0.5000 0.0000 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.0824 0.7098 0.9137 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.6039 0.3569 0.7098 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3608 0.6039 0.2353 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.2471 0.4549 0.7216 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == Manteuffel dark
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.0824 0.7098 0.9137 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.7529 0.7412 0.7294 1.0000
@@ -289,6 +361,14 @@
   editorBackground kCGColorSpaceSRGB 0.9647 0.9647 0.9647 1.0000
   editorText kCGColorSpaceSRGB 0.2588 0.2588 0.2588 1.0000
   invisible kCGColorSpaceSRGB 1.0000 0.5000 0.0000 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.0824 0.7098 0.9137 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.6039 0.3569 0.7098 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3608 0.6039 0.2353 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.2471 0.4549 0.7216 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == PreTeXt-Dark light
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.8809 0.7129 0.4912 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.4215 0.4841 0.4887 1.0000
@@ -318,6 +398,14 @@
   editorBackground kCGColorSpaceSRGB 0.1170 0.1213 0.1016 1.0000
   editorText kCGColorSpaceSRGB 0.8977 0.8894 0.7877 1.0000
   invisible kCGColorSpaceSRGB 0.5000 0.5000 0.5000 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.8809 0.7129 0.4912 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.6824 0.5059 1.0000 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.6510 0.8863 0.1804 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 1.0000 0.5781 0.0000 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.4000 0.8510 0.9373 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 1.0000 1.0000 1.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == PreTeXt-Dark dark
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.8809 0.7129 0.4912 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.4215 0.4841 0.4887 1.0000
@@ -347,6 +435,14 @@
   editorBackground kCGColorSpaceSRGB 0.1170 0.1213 0.1016 1.0000
   editorText kCGColorSpaceSRGB 0.8977 0.8894 0.7877 1.0000
   invisible kCGColorSpaceSRGB 0.5000 0.5000 0.5000 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.8809 0.7129 0.4912 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.6824 0.5059 1.0000 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.6510 0.8863 0.1804 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 1.0000 0.5781 0.0000 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.4000 0.8510 0.9373 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 1.0000 1.0000 1.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == SolarizedDark light
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.8600 0.1960 0.1840 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.5992 0.1416 0.8494 1.0000
@@ -376,6 +472,14 @@
   editorBackground kCGColorSpaceSRGB 0.0000 0.1690 0.2120 1.0000
   editorText kCGColorSpaceSRGB 0.5140 0.5800 0.5890 1.0000
   invisible kCGColorSpaceSRGB 1.0000 0.5000 0.0000 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.8600 0.1960 0.1840 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.4235 0.4431 0.7686 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.5216 0.6000 0.0000 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.1650 0.6300 0.5960 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.1490 0.5451 0.8235 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 1.0000 1.0000 1.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == SolarizedDark dark
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.8600 0.1960 0.1840 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.5992 0.1416 0.8494 1.0000
@@ -405,6 +509,14 @@
   editorBackground kCGColorSpaceSRGB 0.0000 0.1690 0.2120 1.0000
   editorText kCGColorSpaceSRGB 0.5140 0.5800 0.5890 1.0000
   invisible kCGColorSpaceSRGB 1.0000 0.5000 0.0000 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.8600 0.1960 0.1840 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.4235 0.4431 0.7686 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.5216 0.6000 0.0000 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.1650 0.6300 0.5960 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.1490 0.5451 0.8235 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 1.0000 1.0000 1.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == SolarizedLite light
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.8600 0.1960 0.1840 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.5800 0.6300 0.6300 1.0000
@@ -434,6 +546,14 @@
   editorBackground kCGColorSpaceSRGB 0.9900 0.9600 0.8900 1.0000
   editorText kCGColorSpaceSRGB 0.4000 0.4800 0.5100 1.0000
   invisible kCGColorSpaceSRGB 1.0000 0.5000 0.0000 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.8600 0.1960 0.1840 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.4235 0.4431 0.7686 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.5216 0.6000 0.0000 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.1650 0.6300 0.5960 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.1490 0.5451 0.8235 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == SolarizedLite dark
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.8600 0.1960 0.1840 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.5800 0.6300 0.6300 1.0000
@@ -463,6 +583,14 @@
   editorBackground kCGColorSpaceSRGB 0.9900 0.9600 0.8900 1.0000
   editorText kCGColorSpaceSRGB 0.4000 0.4800 0.5100 1.0000
   invisible kCGColorSpaceSRGB 1.0000 0.5000 0.0000 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.8600 0.1960 0.1840 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.4235 0.4431 0.7686 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.5216 0.6000 0.0000 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.1650 0.6300 0.5960 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.1490 0.5451 0.8235 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == TransparentTheme light
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.2747 0.6232 0.9597 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.9175 0.4510 0.0548 1.0000
@@ -492,6 +620,14 @@
   editorBackground kCGColorSpaceSRGB 0.7928 1.0000 0.9856 1.0000
   editorText kCGColorSpaceSRGB 0.6593 0.3899 0.5198 1.0000
   invisible kCGColorSpaceSRGB 1.0000 0.2592 0.0880 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.2747 0.6232 0.9597 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.7059 0.2824 0.6078 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.1804 0.5451 0.3412 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 1.0000 0.9703 0.2354 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.3529 0.3098 0.8118 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == TransparentTheme dark
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.2747 0.6232 0.9597 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.9175 0.4510 0.0548 1.0000
@@ -521,6 +657,14 @@
   editorBackground kCGColorSpaceSRGB 0.7928 1.0000 0.9856 1.0000
   editorText kCGColorSpaceSRGB 0.6593 0.3899 0.5198 1.0000
   invisible kCGColorSpaceSRGB 1.0000 0.2592 0.0880 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.2747 0.6232 0.9597 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.7059 0.2824 0.6078 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.1804 0.5451 0.3412 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 1.0000 0.9703 0.2354 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.3529 0.3098 0.8118 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == made-up-empty light
   commandColorAttribute empty
   commentColorAttribute empty
@@ -549,6 +693,14 @@
   editorBackground none
   editorText none
   invisible none
+  regexCharacterClass empty
+  regexEscape NSColor kCGColorSpaceSRGB 0.5800 0.3200 0.0000 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3100 0.5600 0.0000 1.0000
+  regexQuantifier empty
+  regexAnchor NSColor kCGColorSpaceSRGB 0.0000 0.1000 0.5700 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0200 0.5100 0.1300 1.0000
+  regexIncompatible empty
+  invalid empty
 == made-up-empty dark
   commandColorAttribute empty
   commentColorAttribute empty
@@ -577,6 +729,14 @@
   editorBackground none
   editorText none
   invisible none
+  regexCharacterClass empty
+  regexEscape NSColor kCGColorSpaceSRGB 1.0000 0.5800 0.0000 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3100 0.5600 0.0000 1.0000
+  regexQuantifier empty
+  regexAnchor NSColor kCGColorSpaceSRGB 0.5700 0.5700 0.0000 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.9677 0.5778 0.9109 1.0000
+  regexIncompatible empty
+  invalid empty
 == made-up-no-syntax-colors light
   commandColorAttribute empty
   commentColorAttribute empty
@@ -606,6 +766,14 @@
   editorBackground kCGColorSpaceSRGB 1.0000 1.0000 1.0000 1.0000
   editorText kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   invisible kCGColorSpaceExtendedSRGB 1.2350 0.0130 0.0110 1.0000
+  regexCharacterClass empty
+  regexEscape NSColor kCGColorSpaceSRGB 0.5787 0.3215 0.0000 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3084 0.5618 0.0000 1.0000
+  regexQuantifier empty
+  regexAnchor NSColor kCGColorSpaceSRGB 0.0049 0.0961 0.5750 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0200 0.5100 0.1300 1.0000
+  regexIncompatible empty
+  invalid empty
 == made-up-no-syntax-colors dark
   commandColorAttribute empty
   commentColorAttribute empty
@@ -635,6 +803,14 @@
   editorBackground kCGColorSpaceSRGB 1.0000 1.0000 1.0000 1.0000
   editorText kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   invisible kCGColorSpaceExtendedSRGB 1.2350 0.0130 0.0110 1.0000
+  regexCharacterClass empty
+  regexEscape NSColor kCGColorSpaceSRGB 0.5787 0.3215 0.0000 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3084 0.5618 0.0000 1.0000
+  regexQuantifier empty
+  regexAnchor NSColor kCGColorSpaceSRGB 0.0049 0.0961 0.5750 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.9677 0.5778 0.9109 1.0000
+  regexIncompatible empty
+  invalid empty
 == made-up-old light
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.9997 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 1.0000 0.0000 0.0000 1.0000
@@ -663,6 +839,14 @@
   editorBackground kCGColorSpaceSRGB 1.0000 1.0000 1.0000 1.0000
   editorText kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   invisible kCGColorSpaceExtendedSRGB 1.2350 0.0130 0.0110 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.9997 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.5800 0.3200 0.0000 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3100 0.5600 0.0000 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.0200 0.5100 0.1300 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.0000 0.1000 0.5700 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0200 0.5100 0.1300 1.0000
+  regexIncompatible empty
+  invalid empty
 == made-up-old dark
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.9997 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 1.0000 0.0000 0.0000 1.0000
@@ -691,6 +875,14 @@
   editorBackground kCGColorSpaceSRGB 1.0000 1.0000 1.0000 1.0000
   editorText kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   invisible kCGColorSpaceExtendedSRGB 1.2350 0.0130 0.0110 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.9997 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 1.0000 0.5800 0.0000 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3100 0.5600 0.0000 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.0200 0.5100 0.1300 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.5700 0.5700 0.0000 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0200 0.5100 0.1300 1.0000
+  regexIncompatible empty
+  invalid empty
 == made-up-partial light
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.9997 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 1.0000 0.0000 0.0000 1.0000
@@ -719,6 +911,14 @@
   editorBackground kCGColorSpaceSRGB 1.0000 1.0000 1.0000 1.0000
   editorText kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   invisible kCGColorSpaceExtendedSRGB 1.2350 0.0130 0.0110 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.9997 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.5787 0.3215 0.0000 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3084 0.5618 0.0000 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.0200 0.5100 0.1300 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.0049 0.0961 0.5750 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0200 0.5100 0.1300 1.0000
+  regexIncompatible empty
+  invalid empty
 == made-up-partial dark
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.9997 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 1.0000 0.0000 0.0000 1.0000
@@ -747,6 +947,14 @@
   editorBackground kCGColorSpaceSRGB 1.0000 1.0000 1.0000 1.0000
   editorText kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   invisible kCGColorSpaceExtendedSRGB 1.2350 0.0130 0.0110 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.9997 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.5787 0.3215 0.0000 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3084 0.5618 0.0000 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.0200 0.5100 0.1300 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.0049 0.0961 0.5750 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0200 0.5100 0.1300 1.0000
+  regexIncompatible empty
+  invalid empty
 == made-up-three-values light
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.9997 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 1.0000 0.0000 0.0000 1.0000
@@ -775,6 +983,14 @@
   editorBackground kCGColorSpaceSRGB 1.0000 1.0000 1.0000 1.0000
   editorText kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   invisible kCGColorSpaceExtendedSRGB 1.2350 0.0130 0.0110 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.9997 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.5787 0.3215 0.0000 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3084 0.5618 0.0000 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.0200 0.5100 0.1300 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.0049 0.0961 0.5750 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == made-up-three-values dark
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.9997 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 1.0000 0.0000 0.0000 1.0000
@@ -803,6 +1019,14 @@
   editorBackground kCGColorSpaceSRGB 1.0000 1.0000 1.0000 1.0000
   editorText kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   invisible kCGColorSpaceExtendedSRGB 1.2350 0.0130 0.0110 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.9997 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.5787 0.3215 0.0000 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3084 0.5618 0.0000 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.0200 0.5100 0.1300 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.0049 0.0961 0.5750 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == reserve-DarkTheme light
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.4198 0.7640 0.8300 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.4215 0.4841 0.4887 1.0000
@@ -832,6 +1056,14 @@
   editorBackground kCGColorSpaceSRGB 0.2031 0.2031 0.2031 1.0000
   editorText kCGColorSpaceSRGB 0.9999 1.0000 0.9998 1.0000
   invisible kCGColorSpaceSRGB 0.5000 0.5000 0.5000 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.4198 0.7640 0.8300 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 1.0000 0.5781 0.0000 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3612 0.5539 0.1471 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.9677 0.5778 0.9109 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.5738 0.5655 0.0000 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 1.0000 1.0000 1.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == reserve-DarkTheme dark
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.4198 0.7640 0.8300 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.4215 0.4841 0.4887 1.0000
@@ -861,6 +1093,14 @@
   editorBackground kCGColorSpaceSRGB 0.2031 0.2031 0.2031 1.0000
   editorText kCGColorSpaceSRGB 0.9999 1.0000 0.9998 1.0000
   invisible kCGColorSpaceSRGB 0.5000 0.5000 0.5000 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.4198 0.7640 0.8300 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 1.0000 0.5781 0.0000 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3612 0.5539 0.1471 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.9677 0.5778 0.9109 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.5738 0.5655 0.0000 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 1.0000 1.0000 1.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == reserve-LiteTheme light
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.9997 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 1.0000 0.0000 0.0000 1.0000
@@ -890,6 +1130,14 @@
   editorBackground kCGColorSpaceSRGB 1.0000 1.0000 1.0000 1.0000
   editorText kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   invisible kCGColorSpaceExtendedSRGB 1.2350 0.0130 0.0110 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.9997 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.5787 0.3215 0.0000 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3084 0.5618 0.0000 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.0200 0.5100 0.1300 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.0049 0.0961 0.5750 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  regexIncompatible empty
+  invalid empty
 == reserve-LiteTheme dark
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.9997 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 1.0000 0.0000 0.0000 1.0000
@@ -919,3 +1167,11 @@
   editorBackground kCGColorSpaceSRGB 1.0000 1.0000 1.0000 1.0000
   editorText kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   invisible kCGColorSpaceExtendedSRGB 1.2350 0.0130 0.0110 1.0000
+  regexCharacterClass NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.9997 1.0000
+  regexEscape NSColor kCGColorSpaceSRGB 0.5787 0.3215 0.0000 1.0000
+  regexBackreference NSColor kCGColorSpaceSRGB 0.3084 0.5618 0.0000 1.0000
+  regexQuantifier NSColor kCGColorSpaceSRGB 0.0200 0.5100 0.1300 1.0000
+  regexAnchor NSColor kCGColorSpaceSRGB 0.0049 0.0961 0.5750 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  regexIncompatible empty
+  invalid empty

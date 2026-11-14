@@ -32,8 +32,10 @@ def git_show(root, rev, path):
 
 
 def advanced_find_syntax_sources(root):
-    """What the Advanced Find panel's files need of the shared syntax coloring (Sources/Syntax), with a stand-in for
-    the application's TSColorSupport, which the color scheme looks themes up with."""
+    """What the Advanced Find panel's files need of the shared syntax coloring (Sources/Syntax): the highlighter, the
+    color scheme and the TeX scanner of the fields with "Regular expression" off, with a stand-in for the application's
+    TSColorSupport, which the color scheme looks themes up with."""
     root = Path(root)
-    return [root / 'Sources/Syntax' / name for name in ('TSSyntaxScanner.m', 'TSSyntaxHighlighter.m', 'TSSyntaxColorScheme.m')] + \
+    return [root / 'Sources/Syntax' / name for name in ('TSSyntaxScanner.m', 'TSSyntaxHighlighter.m', 'TSSyntaxColorScheme.m', 'TSSyntaxTeXOptions.m',
+                                                         'TSSyntaxTeXScanner.m', 'TSSyntaxXMLScanning.m')] + \
         [root / 'Tests/TSColorSupportStub.m']

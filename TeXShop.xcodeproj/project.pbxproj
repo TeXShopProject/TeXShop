@@ -23,6 +23,7 @@
 		94C6902FB2F0DD13B05C0CFD /* TSAdvancedFindTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 86D35FB1EE567A0E3FFFC6F8 /* TSAdvancedFindTask.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		3E28439E4331B75239F78E1E /* TSAdvancedFindHighlights.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EE63785520FA8CB2B6FF24C /* TSAdvancedFindHighlights.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		129A84463E3189A2848E7DA5 /* TSAdvancedFindInputBox.m in Sources */ = {isa = PBXBuildFile; fileRef = F56648C2E54E22BBF5A070A6 /* TSAdvancedFindInputBox.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		1EAECBB3869963F6E0AE221C /* TSAdvancedFindFieldStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = F1D5CB29F635191835E90513 /* TSAdvancedFindFieldStyle.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		469AA3DB7D935CA1B232678B /* TSAdvancedFindOptionsForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 8862EBA5FD34F66E2FA2D3B6 /* TSAdvancedFindOptionsForm.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		D50CE16F90F64FDBE3758709 /* TSAdvancedFindPanelController+Actions.m in Sources */ = {isa = PBXBuildFile; fileRef = DB29034FA28C8124507DFF25 /* TSAdvancedFindPanelController+Actions.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		15DF76C178AFF47DC3F19EA6 /* TSAdvancedFindPanelController+History.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C43187D643C8B79289AB25 /* TSAdvancedFindPanelController+History.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
@@ -448,7 +449,9 @@
 		1F8F715B9FF420B7989F30AC /* TSAdvancedFindHighlights.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindHighlights.h; sourceTree = "<group>"; };
 		3EE63785520FA8CB2B6FF24C /* TSAdvancedFindHighlights.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindHighlights.m; sourceTree = "<group>"; };
 		7AEFC934AA5B01FE309793AB /* TSAdvancedFindInputBox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindInputBox.h; sourceTree = "<group>"; };
+		3C1870278AF5CB7C0962736E /* TSAdvancedFindFieldStyle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindFieldStyle.h; sourceTree = "<group>"; };
 		F56648C2E54E22BBF5A070A6 /* TSAdvancedFindInputBox.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindInputBox.m; sourceTree = "<group>"; };
+		F1D5CB29F635191835E90513 /* TSAdvancedFindFieldStyle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindFieldStyle.m; sourceTree = "<group>"; };
 		8D9A0C4E9B27EA807C50DF9D /* TSAdvancedFindOptionsForm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindOptionsForm.h; sourceTree = "<group>"; };
 		8862EBA5FD34F66E2FA2D3B6 /* TSAdvancedFindOptionsForm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindOptionsForm.m; sourceTree = "<group>"; };
 		DB29034FA28C8124507DFF25 /* TSAdvancedFindPanelController+Actions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindPanelController+Actions.m"; sourceTree = "<group>"; };
@@ -1830,6 +1833,8 @@
 				3EE63785520FA8CB2B6FF24C /* TSAdvancedFindHighlights.m */,
 				7AEFC934AA5B01FE309793AB /* TSAdvancedFindInputBox.h */,
 				F56648C2E54E22BBF5A070A6 /* TSAdvancedFindInputBox.m */,
+				3C1870278AF5CB7C0962736E /* TSAdvancedFindFieldStyle.h */,
+				F1D5CB29F635191835E90513 /* TSAdvancedFindFieldStyle.m */,
 				8D9A0C4E9B27EA807C50DF9D /* TSAdvancedFindOptionsForm.h */,
 				8862EBA5FD34F66E2FA2D3B6 /* TSAdvancedFindOptionsForm.m */,
 				32F268DBF9C127E1D5EF970B /* TSAdvancedFindCheatSheet.h */,
@@ -2131,6 +2136,7 @@
 				94C6902FB2F0DD13B05C0CFD /* TSAdvancedFindTask.m in Sources */,
 				3E28439E4331B75239F78E1E /* TSAdvancedFindHighlights.m in Sources */,
 				129A84463E3189A2848E7DA5 /* TSAdvancedFindInputBox.m in Sources */,
+				1EAECBB3869963F6E0AE221C /* TSAdvancedFindFieldStyle.m in Sources */,
 				469AA3DB7D935CA1B232678B /* TSAdvancedFindOptionsForm.m in Sources */,
 				2DD5D09308284E4DFF5E3324 /* TSAdvancedFindCheatSheet.m in Sources */,
 				D50CE16F90F64FDBE3758709 /* TSAdvancedFindPanelController+Actions.m in Sources */,
