@@ -83,9 +83,27 @@ static NSMenuItem *TSItemWithAction(NSMenu *menu, SEL action)
     return [NSString stringWithFormat:NSLocalizedString(@"• = mark, •‹note› = mark with a note; %@ › %@ moves between them.", @"Mark guide below the macro and key binding editors"), editTitle, markTitle];
 }
 
++ (NSURL *)markHelpPageForLocalization:(NSString *)localization inBundle:(NSBundle *)bundle
+{
+    if ([localization isEqualToString:@"en"])
+        return nil;
+    NSURL *page = [bundle URLForResource:@"basic_commandcompletion" withExtension:@"htm" subdirectory:@"TeXShopHelp/pgs" localization:@"en"];
+    if (page == nil)
+        return nil;
+    NSURLComponents *components = [NSURLComponents componentsWithURL:page resolvingAgainstBaseURL:NO];
+    components.fragment = @"marks";
+    return components.URL;
+}
+
 - (IBAction)showMarkHelp:(id)sender
 {
-    NSString *book = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleHelpBookName"];
+    NSBundle *bundle = NSBundle.mainBundle;
+    NSURL *page = [TSMarkMenu markHelpPageForLocalization:bundle.preferredLocalizations.firstObject ?: @"en" inBundle:bundle];
+    if (page) {
+        [NSWorkspace.sharedWorkspace openURL:page];
+        return;
+    }
+    NSString *book = [bundle objectForInfoDictionaryKey:@"CFBundleHelpBookName"];
     [NSHelpManager.sharedHelpManager openHelpAnchor:@"marks" inBook:book];
 }
 
