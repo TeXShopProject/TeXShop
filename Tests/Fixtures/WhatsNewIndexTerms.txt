@@ -59,6 +59,7 @@
 38
 39
 4
+40
 41
 42
 43
@@ -82,9 +83,7 @@
 6
 7
 718
-72
 74
-78
 8
 86
 86a
@@ -154,6 +153,7 @@ altogether
 always
 am
 amsmath
+amsthm
 an
 and
 annotate
@@ -181,6 +181,7 @@ application
 applications
 applies
 apply
+applying
 approach
 appropriate
 apps
@@ -248,6 +249,7 @@ being
 below
 beneath
 bennett
+besides
 beta
 betas
 better
@@ -407,6 +409,7 @@ context
 contextual
 continue
 continuous
+contributed
 contribution
 contributor
 control
@@ -458,6 +461,7 @@ curiously
 curly
 current
 cursor
+custom
 customization
 cut
 daisuke
@@ -515,6 +519,7 @@ dictionary
 differ
 difference
 different
+differently
 digit
 digits
 dimmed
@@ -530,7 +535,6 @@ displayed
 displaying
 displays
 distiller
-distribution
 divider
 do
 dock
@@ -564,6 +568,7 @@ e
 each
 earlier
 early
+easier
 easy
 edge
 edges
@@ -591,7 +596,6 @@ empire
 empty
 en
 enable
-enabled
 encoding
 encodings
 end
@@ -723,7 +727,6 @@ format
 formats
 former
 formerly
-formula
 formulas
 forth
 forward
@@ -736,6 +739,7 @@ frame
 frames
 freed
 freely
+fresh
 from
 front
 frontmost
@@ -796,6 +800,7 @@ hand
 handle
 handling
 handover
+handy
 hans
 has
 he
@@ -1018,7 +1023,6 @@ lettering
 letters
 level
 lf
-libraries
 library
 lies
 light
@@ -1157,7 +1161,6 @@ moreover
 most
 mostly
 mouse
-movable
 move
 moved
 moves
@@ -1189,6 +1192,7 @@ new
 newest
 newlines
 news
+newtheoremstyle
 next
 nfc
 nfd
@@ -1198,6 +1202,7 @@ nicolas
 nightmare
 nishihama
 no
+none
 nonintrusive
 normal
 normalization
@@ -1321,7 +1326,6 @@ picture
 pictures
 pieces
 pin
-pinnable
 pinned
 place
 placed
@@ -1333,6 +1337,7 @@ point
 pointed
 pointer
 points
+polish
 pop
 pops
 popup
@@ -1424,6 +1429,7 @@ readonlyshipoutcounter
 reads
 realpageno
 reappear
+rebuilt
 recall
 receive
 received
@@ -1483,6 +1489,7 @@ repeatedly
 replace
 replaced
 replacement
+replacements
 replaces
 replacing
 report
@@ -1493,7 +1500,6 @@ require
 required
 requires
 reread
-rescan
 reserved
 reset
 resize
@@ -1549,7 +1555,6 @@ scheme
 schmock
 schoutens
 schulz
-scope
 screen
 screens
 scribble
@@ -1571,7 +1576,6 @@ select
 selected
 selecting
 selection
-selections
 selects
 send
 sending
@@ -1641,6 +1645,7 @@ slightly
 slows
 small
 smaller
+smarter
 smith
 smooth
 so
@@ -1652,7 +1657,6 @@ sometime
 sometimes
 soon
 sophisticated
-sort
 source
 sources
 space
@@ -1672,9 +1676,8 @@ splitting
 spot
 spotlight
 square
-stability
 standard
-standardize
+standardized
 stands
 start
 starting
@@ -1707,7 +1710,6 @@ subsequent
 subset
 subtab
 succeeds
-suddenly
 suggested
 suggestion
 suggestions
@@ -1734,7 +1736,6 @@ symbol
 symbols
 sync
 synced
-synchronization
 synctex
 syntax
 system
@@ -1757,7 +1758,6 @@ targets
 tcsh
 teaching
 tell
-telling
 tells
 template
 templates
@@ -1796,7 +1796,6 @@ these
 they
 thickness
 thin
-think
 third
 this
 thomas
@@ -1827,7 +1826,6 @@ tooltips
 top
 toward
 trace
-track
 trackpad
 trailing
 transitioning
@@ -1867,6 +1865,7 @@ uncomment
 under
 underfull
 underline
+understands
 undo
 undone
 unexpected
@@ -1874,7 +1873,6 @@ unicode
 united
 units
 unless
-unrecognized
 unreported
 unsaved
 unsplit
@@ -1929,6 +1927,7 @@ viewed
 viewport
 views
 visible
+voiceover
 voisin
 volumes
 wait
@@ -1949,6 +1948,7 @@ well
 wells
 went
 were
+what
 wheel
 when
 whenever

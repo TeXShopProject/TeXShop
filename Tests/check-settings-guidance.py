@@ -165,7 +165,7 @@ class ReleaseParser(HTMLParser):
     def handle_data(self,data):
         if self.in_heading:self.heading+=data
         if self.item:self.item[3]+=data
-for suffix,heading,phrase in [('', 'Settings and themes', 'Add Search Settings'),('-ja','設定とテーマ','「設定を検索」')]:
+for suffix,heading,phrase in [('', 'A redesigned Settings window', 'Add Search Settings'),('-ja','生まれ変わった設定画面','「設定を検索」')]:
     md=(ROOT/('Documentation/Releases/6.00'+suffix+'.md')).read_text()
     section=md.split('## '+heading+'\n',1)[1].split('\n## ',1)[0]
     assert any(line.startswith('- ') and phrase in line for line in section.splitlines()), (suffix,'release Markdown section')
@@ -195,7 +195,7 @@ for target in ('Base','en'):
 print('PASS: hidden PDF current text and distribution identity')
 
 # The current public English copies carry identical Settings layout wording.
-phrase='Settings has a compact sidebar with ten categories: General, Documents and Saving, Editor, Keyboard, Spell Checking, Themes, Preview, Typesetting, Console, and Updates. Each category shows overview cards and named groups with switches, right-aligned controls, wrapping labels and indented dependent options. Settings Profile and the Dock icon are in General; Themes contains only what themes store.'
+phrase='Settings has a compact sidebar with ten categories: General, Documents and Saving, Editor, Keyboard, Spell Checking, Themes, Preview, Typesetting, Console, and Updates. Each category shows overview cards and named groups with switches, right-aligned controls, wrapping labels and indented dependent options. The Dock icon is in General, and settings profiles are in Typesetting; Themes contains only what themes store.'
 for filename in ('Documentation/Releases/6.00.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm'):
     assert phrase in (ROOT/filename).read_text(),('Current release layout copies agree',filename)
 
