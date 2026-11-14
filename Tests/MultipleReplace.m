@@ -103,6 +103,12 @@ static void TestLibrary(NSURL *directory)
     [library removeSetNamed:@"Broken" error:NULL];
 
     TSRegexMultipleReplace *set = Set(@[Rule(@"a", @"b", NO, YES)]);
+    // Foundation writes the file name decomposed; the set is listed under the name it was saved with.
+    for (NSString *accented in @[@"Caract\u00e8res", @"\uc720\ub2c8\ucf54\ub4dc"]) {
+        Check([library saveSet:set named:accented error:NULL] && [library.setNames containsObject:accented] && [library setNamed:accented error:NULL],
+              [@"a set is listed under its composed name: " stringByAppendingString:accented]);
+        [library removeSetNamed:accented error:NULL];
+    }
     Check([library saveSet:set named:@"X" error:NULL] && [[library availableNameForName:@"X"] isEqualToString:@"X 2"]
           && [[library availableNameForName:@"x"] isEqualToString:@"x 2"], @"a taken name gets a number");
     [library saveSet:set named:@"Y" error:NULL];
@@ -441,6 +447,7 @@ static void TestOgreKitMenu(void)
     NSURL *directory = TemporaryLibraryDirectory();
     [TSMultipleReplaceMenu installInMainMenu:main directory:directory];
     [TSMultipleReplaceMenu installInMainMenu:main directory:directory];
+    TSMultipleReplaceMenu.sharedMenu.library.usesTrash = NO;
     Check(find.numberOfItems == 6 && [find itemAtIndex:3].separatorItem && [find itemAtIndex:4].action == @selector(showMultipleReplace:)
           && [find itemAtIndex:5].submenu && [[find itemAtIndex:0].title isEqualToString:@"Find…"] && edit.numberOfItems == 2,
           @"OgreKit's Find submenu gets the items at its end, once, and keeps its own");
@@ -463,13 +470,21 @@ static void TestMenu(void)
     NSURL *directory = TemporaryLibraryDirectory();
     [TSMultipleReplaceMenu installInMainMenu:main directory:directory];
     [TSMultipleReplaceMenu installInMainMenu:main directory:directory];
+    TSMultipleReplaceMenu.sharedMenu.library.usesTrash = NO;
     Check(find.numberOfItems == 7, @"three items added once, even when installed twice");
     NSMenuItem *show = [find itemAtIndex:4], *sets = [find itemAtIndex:5];
     Check([find itemAtIndex:3].separatorItem && show.action == @selector(showMultipleReplace:) && [show.identifier isEqualToString:@"TSShortcut.showMultipleReplace:.0"]
           && show.keyEquivalent.length == 0 && sets.submenu && [[find itemAtIndex:6].title isEqualToString:@"Marks"],
           @"after Jump to Selection: a separator, Edit Multiple Replace… (a shortcut command without a key) and the sets");
     TSMultipleReplaceMenu *menu = TSMultipleReplaceMenu.sharedMenu;
-    Check(menu && ![menu validateMenuItem:sets], @"no set: the submenu is gray");
+    // The menu's library writes the bundled samples into the new folder the first time the menu is checked.
+    NSURL *bundled = [NSBundle.mainBundle URLForResource:@"MultipleReplaceSamples" withExtension:nil];
+    Check(bundled && [menu.library.samplesDirectory isEqual:bundled], @"the menu's library has the bundled samples");
+    Check(![NSFileManager.defaultManager fileExistsAtPath:directory.path], @"installing the menu writes nothing");
+    Check(menu && [menu validateMenuItem:sets] && menu.library.setNames.count == 2, @"the first look at the menu writes the two samples, and lists them");
+    for (NSString *name in menu.library.setNames)
+        [menu.library removeSetNamed:name error:NULL];
+    Check(menu && ![menu validateMenuItem:sets], @"no set: the submenu is gray (the samples removed are not written again)");
     menu.findController.beepHandler = ^{};
     [menu.library saveSet:Set(@[Rule(@"cat", @"dog", NO, YES)]) named:@"Pets" error:NULL];
     [menu.library saveSet:Set(@[Rule(@"a", @"b", NO, YES)]) named:@"Letters" error:NULL];
@@ -536,7 +551,12 @@ static BOOL WritePNG(NSView *view, NSAppearance *appearance, NSString *path)
             if (!([v isKindOfClass:[NSButton class]] || [v isKindOfClass:[NSSegmentedControl class]]) || v.isHiddenOrHasHiddenAncestor)
                 continue;
             NSRect frame = [v convertRect:v.bounds toView:view];
+            // Only the part that the scroll views show: rows scrolled out of a table are not drawn.
+            NSRect visible = [v convertRect:v.visibleRect toView:view];
+            if (NSIsEmptyRect(visible))
+                continue;
             [NSGraphicsContext saveGraphicsState];
+            NSRectClip(NSMakeRect(NSMinX(visible), view.isFlipped ? NSHeight(view.bounds) - NSMaxY(visible) : NSMinY(visible), NSWidth(visible), NSHeight(visible)));
             NSAffineTransform *transform = [NSAffineTransform transform];
             [transform translateXBy:frame.origin.x yBy:view.isFlipped ? NSHeight(view.bounds) - NSMaxY(frame) : frame.origin.y];
             if (v.isFlipped) {
@@ -661,6 +681,19 @@ static int CheckSameHeight(NSArray<NSView *> *views, CGFloat tolerance, NSString
     return 1;
 }
 
+/// The text field of a table cell: the cell itself, or the field inside it.
+static NSTextField *_Nullable TSTextFieldIn(NSView *_Nullable view)
+{
+    if ([view isKindOfClass:[NSTextField class]])
+        return (NSTextField *)view;
+    for (NSView *subview in view.subviews) {
+        NSTextField *field = TSTextFieldIn(subview);
+        if (field)
+            return field;
+    }
+    return nil;
+}
+
 /// The window and the options of a set in this language: layout, messages, and images on request.
 static void TestLayout(NSString *_Nullable imageDirectory)
 {
@@ -730,6 +763,53 @@ static void TestLayout(NSString *_Nullable imageDirectory)
     // The table's headers are not cut
     for (NSTableColumn *column in window.ruleTable.tableView.tableColumns)
         Check(column.title.length == 0 || column.headerCell.cellSize.width <= column.width + 0.5, [NSString stringWithFormat:@"%@ header %@ fits", language, column.title]);
+    // The bundled samples, written into a new folder in this language: both are listed under their names, and the
+    // larger one (over a thousand rules) is shown at once, with its notes, and laid out as any set.
+    NSURL *samplesDirectory = TemporaryLibraryDirectory();
+    TSMultipleReplaceLibrary *samplesLibrary = [[TSMultipleReplaceLibrary alloc] initWithDirectory:samplesDirectory];
+    samplesLibrary.usesTrash = NO;
+    samplesLibrary.samplesDirectory = [NSBundle.mainBundle URLForResource:@"MultipleReplaceSamples" withExtension:nil];
+    NSString *toMacros = [NSBundle.mainBundle localizedStringForKey:@"UnicodeToAjmacros" value:nil table:@"MultipleReplaceSamples"];
+    NSString *toCharacters = [NSBundle.mainBundle localizedStringForKey:@"AjmacrosToUnicode" value:nil table:@"MultipleReplaceSamples"];
+    NSDate *start = NSDate.date;
+    TSMultipleReplaceWindowController *samples = [[TSMultipleReplaceWindowController alloc] initWithFindController:MakeController(NULL) library:samplesLibrary];
+    [samples selectSetNamed:toMacros];
+    NSView *samplesContent = samples.window.contentView;
+    [samplesContent layoutSubtreeIfNeeded];
+    [samples.ruleTable.tableView displayIfNeeded];
+    NSTimeInterval shown = -start.timeIntervalSinceNow;
+    Check(samples.ruleTable.set.rules.count > 1000 && samples.ruleTable.tableView.numberOfRows == (NSInteger)samples.ruleTable.set.rules.count,
+          [language stringByAppendingString:@" the sample → ajmacros is listed with all its rules"]);
+    Check([samplesLibrary.setNames isEqualToArray:[@[toMacros, toCharacters] sortedArrayUsingSelector:@selector(localizedStandardCompare:)]],
+          [NSString stringWithFormat:@"%@ the samples are the sets, under their names (%@)", language, [samplesLibrary.setNames componentsJoinedByString:@", "]]);
+    Check([samples.ruleTable.set.rules.firstObject.note isEqualToString:[NSBundle.mainBundle localizedStringForKey:@"Circled numbers (end of line)" value:nil table:@"MultipleReplaceSamples"]],
+          [language stringByAppendingString:@" the notes of the samples are translated"]);
+    Check(shown < 3, [NSString stringWithFormat:@"%@ the sample opens in %.2f s", language, shown]);
+    failures += CheckLayoutInset(samplesContent, [language stringByAppendingString:@" window with the samples"], 0);
+    // At the first size, the notes of the samples have room (the note column takes what the others leave).
+    NSTableColumn *noteColumn = samples.ruleTable.tableView.tableColumns.lastObject;
+    Check(noteColumn.width >= 100, [NSString stringWithFormat:@"%@ the notes have room at the first size (%.0f)", language, noteColumn.width]);
+    NSTextField *noteField = TSTextFieldIn([samples.ruleTable.tableView viewAtColumn:samples.ruleTable.tableView.numberOfColumns - 1 row:0 makeIfNecessary:YES]);
+    Check([noteField isKindOfClass:[NSTextField class]] && noteField.allowsExpansionToolTips, [language stringByAppendingString:@" a cut note shows in a tool tip"]);
+    // The list of sets gives the names its whole width; a name that is still too long shows in full in a tool tip.
+    NSTableView *setList = nil;
+    NSMutableArray<NSView *> *pending = [samplesContent.subviews mutableCopy];
+    while (pending.count) {
+        NSView *v = pending.lastObject;
+        [pending removeLastObject];
+        [pending addObjectsFromArray:v.subviews];
+        if ([v isKindOfClass:[NSTableView class]] && v != samples.ruleTable.tableView)
+            setList = (NSTableView *)v;
+    }
+    NSTableColumn *nameColumn = setList.tableColumns.firstObject;
+    Check(setList && nameColumn.width >= NSWidth(setList.enclosingScrollView.contentView.bounds) - 2 * setList.intercellSpacing.width - 1,
+          [NSString stringWithFormat:@"%@ the names take the width of the list (%.0f of %.0f)", language, nameColumn.width, NSWidth(setList.enclosingScrollView.contentView.bounds)]);
+    for (NSInteger row = 0; row < setList.numberOfRows; row++) {
+        NSTextField *field = TSTextFieldIn([setList viewAtColumn:0 row:row makeIfNecessary:YES]);
+        Check([field isKindOfClass:[NSTextField class]] && field.allowsExpansionToolTips, [language stringByAppendingString:@" a long name shows in a tool tip"]);
+        Check(field.cell.cellSize.width <= NSWidth(field.frame) + 0.5, [NSString stringWithFormat:@"%@ the name of the sample “%@” fits in the list (%.0f of %.0f)",
+                                                                       language, field.stringValue, field.cell.cellSize.width, NSWidth(field.frame)]);
+    }
     if (imageDirectory) {
         [NSFileManager.defaultManager createDirectoryAtPath:(NSString *_Nonnull)imageDirectory withIntermediateDirectories:YES attributes:nil error:NULL];
         TSMultipleReplaceWindowController *noRules = [[TSMultipleReplaceWindowController alloc] initWithFindController:MakeController(NULL) library:library];
@@ -745,15 +825,18 @@ static void TestLayout(NSString *_Nullable imageDirectory)
             window.window.appearance = appearance;
             options.appearance = appearance;
             empty.window.appearance = appearance;
+            samples.window.appearance = appearance;
             noRules.window.appearance = appearance;
             NSString *base = [(NSString *_Nonnull)imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%@", language, tag]];
             Check(WritePNG(content, appearance, [base stringByAppendingString:@"-multiple-replace.png"])
                   && WritePNG(options, appearance, [base stringByAppendingString:@"-set-options.png"])
                   && WritePNG((NSView *_Nonnull)empty.window.contentView, appearance, [base stringByAppendingString:@"-multiple-replace-empty.png"])
-                  && WritePNG((NSView *_Nonnull)noRules.window.contentView, appearance, [base stringByAppendingString:@"-multiple-replace-norules.png"]), @"images written");
+                  && WritePNG((NSView *_Nonnull)noRules.window.contentView, appearance, [base stringByAppendingString:@"-multiple-replace-norules.png"])
+                  && WritePNG(samplesContent, appearance, [base stringByAppendingString:@"-multiple-replace-samples.png"]), @"images written");
         }
     }
     [NSFileManager.defaultManager removeItemAtURL:directory.URLByDeletingLastPathComponent error:NULL];
+    [NSFileManager.defaultManager removeItemAtURL:samplesDirectory.URLByDeletingLastPathComponent error:NULL];
 }
 
 int main(int argc, const char *argv[])

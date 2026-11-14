@@ -2437,6 +2437,8 @@ The Multiple Replace submenu of the Find submenu lists the sets; choosing one ap
 
 Each set is a file in \verb|~/Library/TeXShop/MultipleReplace|. The file is a replacement definition in the JSON format of CotEditor, with the extension \verb|.json|. The + and $-$ buttons below the list of sets make a new set and move the selected set to the Trash; the menu with three dots next to them duplicates, imports and exports sets, and shows the folder in the Finder. Import reads replacement definitions of CotEditor (\verb|.cotrpl| or \verb|.json|) and tab-separated text, with one rule per line.
 
+TeXShop comes with two sample sets, Unicode Characters \(\rightarrow\) ajmacros and ajmacros \(\rightarrow\) Unicode Characters, named in the language of TeXShop. They are made from the tables of the menu items with the same names in Edit, Character Type Conversion, and give the same results. In the first set, a regular expression rule converts a character at the end of a line and adds \verb|%| after the command, and a plain rule converts it elsewhere; the description of each rule names the kind of character. The second set also accepts short forms such as \verb|\ajMaru1|. The samples are written only when \verb|~/Library/TeXShop/MultipleReplace| does not exist yet, so a sample that was changed or removed is not written again; to get them back, move the folder elsewhere and restart TeXShop.
+
 Edit Multiple Replace has no keyboard shortcut; one can be assigned in TeXShop Settings, Keyboard.
 
 \chapter{Automatic Saving; Finding Documents on Disk}

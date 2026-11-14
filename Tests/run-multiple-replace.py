@@ -3,8 +3,8 @@
 the rule table, the window, the Find menu's items, and the window in all 12 languages. Nothing is displayed; the
 defaults stay in memory, the pasteboards are unique and the sets go into temporary folders.
 
---image DIR writes the window, a set without rules, a window without sets and a set's options, light and dark, in
-English, German and Japanese (--image-all-languages: in all 12).
+--image DIR writes the window, a set without rules, a window without sets, the window with the bundled samples and
+a set's options, light and dark, in English, German and Japanese (--image-all-languages: in all 12).
 --mutations breaks one rule at a time in a copy of the sources and checks that the test notices."""
 from pathlib import Path
 import argparse
@@ -29,7 +29,8 @@ MUTATIONS = {
     'a rename overwrites another set': ('TSMultipleReplaceLibrary.m', '    if (!sameFile && [NSFileManager', '    if (NO && [NSFileManager'),
     'bad names are saved': ('TSMultipleReplaceLibrary.m', '    if (![TSMultipleReplaceLibrary isValidName:name]) {\n        if (error)\n            *error = TSLibraryError(@"MultipleReplace.BadName"',
         '    if (NO) {\n        if (error)\n            *error = TSLibraryError(@"MultipleReplace.BadName"'),
-    'other files are listed as sets': ('TSMultipleReplaceLibrary.m', '        if ([file.pathExtension isEqualToString:TSMultipleReplaceLibrary.fileExtension])\n', ''),
+    'decomposed file names are listed as they are': ('TSMultipleReplaceLibrary.m', 'lastPathComponent.precomposedStringWithCanonicalMapping ?: @""]', 'lastPathComponent ?: @""]'),
+    'other files are listed as sets': ('TSMultipleReplaceLibrary.m', '        if ([file.pathExtension isEqualToString:TSMultipleReplaceLibrary.fileExtension])\n            // The file system', '            // The file system'),
     'a dropped row is not moved back by the rows above it': ('TSMultipleReplaceRuleTable.m',
         '(NSUInteger)row - [indexes countOfIndexesInRange:NSMakeRange(0, (NSUInteger)row)];', 'MIN((NSUInteger)row, rules.count - indexes.count);'),
     'problems are not marked': ('TSMultipleReplaceRuleTable.m', 'problem:self.problems[@(row)]];', 'problem:nil];'),
@@ -53,6 +54,8 @@ MUTATIONS = {
         '    NSTableCellView *cell = [TSMultipleReplaceRuleTable cellWithControl:field];\n    cell.textField = nil;', '    NSView *cell = field;'),
     'the cells sit at the top of the row': ('TSMultipleReplaceRuleTable.m',
         '[control.centerYAnchor constraintEqualToAnchor:cell.centerYAnchor]', '[control.topAnchor constraintEqualToAnchor:cell.topAnchor]'),
+    'the names keep a new column\'s width': ('TSMultipleReplaceWindowController.m', '    column.width = NSWidth(self.setTable.frame);\n', ''),
+    'the sidebar starts narrower than the samples\' names': ('TSMultipleReplaceWindowController.m', 'static const CGFloat TSSidebarWidth = 240;', 'static const CGFloat TSSidebarWidth = 180;'),
     'the set options take the panel\'s rule': ('TSMultipleReplaceWindowController.m',
         'initWithStyle:TSAdvancedFindOptionsFormStyleSet', 'initWithStyle:TSAdvancedFindOptionsFormStylePanel'),
 }
@@ -65,8 +68,9 @@ def build(tmp, sources):
     (app / 'Contents/MacOS').mkdir(parents=True)
     for language in LANGUAGES:
         (resources / f'{language}.lproj').mkdir(parents=True)
-        for table in ['AdvancedFind.strings', 'AdvancedFindEngine.strings']:
+        for table in ['AdvancedFind.strings', 'AdvancedFindEngine.strings', 'MultipleReplaceSamples.strings']:
             shutil.copy(root / 'Resources/Interfaces' / f'{language}.lproj' / table, resources / f'{language}.lproj' / table)
+    shutil.copytree(root / 'Resources/MultipleReplaceSamples', resources / 'MultipleReplaceSamples')
     localizations = ''.join(f'<string>{l}</string>' for l in LANGUAGES)
     (app / 'Contents/Info.plist').write_text(f'''<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
