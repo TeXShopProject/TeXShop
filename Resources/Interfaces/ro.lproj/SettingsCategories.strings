@@ -236,7 +236,7 @@
 "catalog.preview.5.0.note" = "Pagina pe care fereastra HTML o deschide prima. Introduceți o adresă web sau calea unui fișier. Implicit: https://texshop.app";
 "group.typesetting.0.title" = "Valori implicite";
 "catalog.typesetting.0.4.title" = "Profilul motorului";
-"catalog.typesetting.0.4.note" = "Stabilește comenzile de compunere, motorul BibTeX, suportul pentru pachetul otf și căile către TeX și Ghostscript. Profilurile japoneze stabilesc și dicționarul și conversia UTF-8-MAC.";
+"catalog.typesetting.0.4.note" = "Stabilește comenzile de compunere, motorul BibTeX, suportul pentru pachetul otf și căile către TeX și Ghostscript. Profilurile japoneze stabilesc și UTF-8 drept codificare a documentelor noi, dicționarul și conversia UTF-8-MAC.";
 "catalog.typesetting.0.4.button" = "Aplicați…";
 "catalog.typesetting.0.0.title" = "Comanda Standard";
 "catalog.typesetting.0.1.title" = "Comanda utilizată";

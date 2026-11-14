@@ -236,7 +236,7 @@
 "catalog.preview.5.0.note" = "HTML 창을 열 때 처음 표시할 페이지입니다. 웹 주소나 파일 경로를 입력합니다. 기본값: https://texshop.app";
 "group.typesetting.0.title" = "초기값";
 "catalog.typesetting.0.4.title" = "엔진 프로파일";
-"catalog.typesetting.0.4.note" = "조판 명령, BibTeX 엔진, otf 패키지 지원, TeX 및 Ghostscript 경로를 설정합니다. 일본어 프로파일은 사전과 UTF-8-MAC 변환도 설정합니다.";
+"catalog.typesetting.0.4.note" = "조판 명령, BibTeX 엔진, otf 패키지 지원, TeX 및 Ghostscript 경로를 설정합니다. 일본어 프로파일은 새 문서의 인코딩(UTF-8), 사전, UTF-8-MAC 변환도 설정합니다.";
 "catalog.typesetting.0.4.button" = "적용…";
 "catalog.typesetting.0.0.title" = "기본 조판 명령";
 "catalog.typesetting.0.1.title" = "사용할 명령";

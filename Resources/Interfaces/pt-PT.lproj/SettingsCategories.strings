@@ -236,7 +236,7 @@
 "catalog.preview.5.0.note" = "A página que a janela HTML abre primeiro. Introduza um endereço web ou o caminho de um ficheiro. Predefinição: https://texshop.app";
 "group.typesetting.0.title" = "Predefinições";
 "catalog.typesetting.0.4.title" = "Perfil do motor";
-"catalog.typesetting.0.4.note" = "Define os comandos de composição, o motor BibTeX, o suporte para o pacote otf e os caminhos do TeX e do Ghostscript. Os perfis japoneses também definem o dicionário e a conversão de UTF-8-MAC.";
+"catalog.typesetting.0.4.note" = "Define os comandos de composição, o motor BibTeX, o suporte para o pacote otf e os caminhos do TeX e do Ghostscript. Os perfis japoneses também definem UTF-8 como codificação dos novos documentos, o dicionário e a conversão de UTF-8-MAC.";
 "catalog.typesetting.0.4.button" = "Aplicar…";
 "catalog.typesetting.0.0.title" = "Formato por omissão";
 "catalog.typesetting.0.1.title" = "Comando a usar";

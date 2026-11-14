@@ -97,6 +97,8 @@ NSDictionary<TSPreferenceKey, id> *TSEngineProfileValues(TSEngineProfile profile
     // otf package support is a pTeX feature: every other engine turns it off.
     values[ptexUtfOutputEnabledKey] = profile == TSEngineProfilePLaTeXDvipdfmx ? @YES : @NO;
     if (TSEngineProfileIsJapanese(profile)) {
+        // New documents in UTF-8, which the Japanese engines of today read.
+        values[EncodingKey] = @"UTF-8 Unicode";
         values[AutomaticUTF8MACtoUTF8ConversionKey] = @YES;
         // macOS has no Japanese spelling dictionary: the language is identified automatically,
         // stored as the Settings choice of Automatic stores it.

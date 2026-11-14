@@ -236,7 +236,7 @@
 "catalog.preview.5.0.note" = "HTMLウインドウを表示したときに最初に開くページです。Webのアドレスか、ファイルのパスを入れます。デフォルト: https://texshop.app";
 "group.typesetting.0.title" = "既定";
 "catalog.typesetting.0.4.title" = "エンジンのプロファイル";
-"catalog.typesetting.0.4.note" = "タイプセットのコマンド、BibTeXエンジン、otfパッケージ対応、TeXとGhostscriptのパスを設定します。日本語のプロファイルは、辞書とUTF-8-MACの変換も設定します。";
+"catalog.typesetting.0.4.note" = "タイプセットのコマンド、BibTeXエンジン、otfパッケージ対応、TeXとGhostscriptのパスを設定します。日本語のプロファイルは、新しい書類のエンコーディング（UTF-8）、辞書、UTF-8-MACの変換も設定します。";
 "catalog.typesetting.0.4.button" = "適用…";
 "catalog.typesetting.0.0.title" = "デフォルトのコマンド";
 "catalog.typesetting.0.1.title" = "利用するコマンド";

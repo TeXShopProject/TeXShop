@@ -236,7 +236,7 @@
 "catalog.preview.5.0.note" = "Die Seite, die das HTML-Fenster zuerst öffnet. Geben Sie eine Webadresse oder den Pfad einer Datei ein. Vorgabe: https://texshop.app";
 "group.typesetting.0.title" = "Vorgaben";
 "catalog.typesetting.0.4.title" = "Engine-Profil";
-"catalog.typesetting.0.4.note" = "Legt die Satzbefehle, das BibTeX-Programm, die Unterstützung für das otf-Paket und die Pfade zu TeX und Ghostscript fest. Die japanischen Profile legen auch das Wörterbuch und die Umwandlung von UTF-8-MAC fest.";
+"catalog.typesetting.0.4.note" = "Legt die Satzbefehle, das BibTeX-Programm, die Unterstützung für das otf-Paket und die Pfade zu TeX und Ghostscript fest. Die japanischen Profile legen auch UTF-8 als Kodierung für neue Dokumente, das Wörterbuch und die Umwandlung von UTF-8-MAC fest.";
 "catalog.typesetting.0.4.button" = "Anwenden…";
 "catalog.typesetting.0.0.title" = "Standardbefehl";
 "catalog.typesetting.0.1.title" = "Zu verwendender Befehl";

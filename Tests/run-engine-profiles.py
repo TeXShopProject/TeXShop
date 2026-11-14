@@ -37,7 +37,7 @@ def expected(profile, latexmk):
     values = {'DefaultScript': place, 'LatexCommand' if direct else 'LatexGSCommand': mk if latexmk else latex,
               'TexCommand' if direct else 'TexGSCommand': tex, 'BibTeXengine': bib, 'ptexUtfOutput': profile == 6}
     if profile in JAPANESE:
-        values.update({'AutomaticUTF8MACtoUTF8Conversion': True, 'SpellingAutomaticDefault': True, 'SpellingLanguageDefault': ' '})
+        values.update({'Encoding': 'UTF-8 Unicode', 'AutomaticUTF8MACtoUTF8Conversion': True, 'SpellingAutomaticDefault': True, 'SpellingLanguageDefault': ' '})
     return values
 
 
@@ -126,7 +126,8 @@ int main(int argc, char **argv) { @autoreleasepool {
     check(!TSPreferenceProfileIsApplying(), @"applying ends");
     for (NSString *key in values) check(same(d.values[key], values[key]), [NSString stringWithFormat:@"applied %@", key]);
     for (NSString *key in before) if (values[key] == nil) check([d.values[key] isEqual:before[key]], [NSString stringWithFormat:@"untouched %@", key]);
-    check(d.values.count == before.count + values.count - 1, @"no other key is written");
+    NSMutableSet *written = [NSMutableSet setWithArray:before.allKeys]; [written addObjectsFromArray:values.allKeys];
+    check(d.values.count == written.count && [d.values[@"Encoding"] isEqual:@"UTF-8 Unicode"], @"no other key is written; a Japanese profile sets UTF-8");
     check([d.values[@"LatexCommand"] isEqual:@"mine"], @"the other place keeps the user's command");
     check([changed isEqualToSet:want], [NSString stringWithFormat:@"changed keys: %@", changed]);
     check(TSEngineProfileApply(d, values).count == 0, @"applying again changes nothing");
@@ -165,9 +166,9 @@ MUTATIONS = {
                             '    values[direct ? TexCommandKey : TexGSCommandKey] = row[2]; values[direct ? LatexGSCommandKey : LatexCommandKey] = row[1];'),
     'latexmk ignored': ('latexmk ? row[3] : row[1]', 'row[1]'),
     'otf for every Japanese engine': ('profile == TSEngineProfilePLaTeXDvipdfmx ? @YES : @NO;', 'TSEngineProfileIsJapanese(profile) ? @YES : @NO;'),
-    'no Japanese companions': ('    if (TSEngineProfileIsJapanese(profile)) {\n        values[AutomaticUTF8MACtoUTF8ConversionKey]',
-                               '    if (NO) {\n        values[AutomaticUTF8MACtoUTF8ConversionKey]'),
+    'no Japanese companions': ('    if (TSEngineProfileIsJapanese(profile)) {\n        // New documents', '    if (NO) {\n        // New documents'),
     'stored NO differs from @NO': ('        return [value respondsToSelector:@selector(boolValue)] && [value boolValue] == [expected boolValue];', '        return [value isEqual:expected];'),
+    'no Japanese encoding': ('        values[EncodingKey] = @"UTF-8 Unicode";\n', ''),
     'match ignores BibTeX': ('TexGSCommandKey, BibTeXengineKey]', 'TexGSCommandKey]'),
     'match only one form': ("for (NSNumber *form in @[@NO, @YES])", "for (NSNumber *form in @[@NO])"),
     'candidate ignores programs': ('contains(candidate[@"path"], required)) { chosen', 'YES) { chosen'),

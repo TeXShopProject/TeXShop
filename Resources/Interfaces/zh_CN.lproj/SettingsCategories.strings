@@ -236,7 +236,7 @@
 "catalog.preview.5.0.note" = "打开HTML窗口时首先显示的页面。输入网址或文件路径。默认值：https://texshop.app";
 "group.typesetting.0.title" = "默认值";
 "catalog.typesetting.0.4.title" = "引擎配置";
-"catalog.typesetting.0.4.note" = "设置排版命令、BibTeX引擎、otf宏包支持以及TeX和Ghostscript的路径。日语配置还会设置词典和UTF-8-MAC转换。";
+"catalog.typesetting.0.4.note" = "设置排版命令、BibTeX引擎、otf宏包支持以及TeX和Ghostscript的路径。日语配置还会设置新文档的编码（UTF-8）、词典和UTF-8-MAC转换。";
 "catalog.typesetting.0.4.button" = "应用…";
 "catalog.typesetting.0.0.title" = "默认指令";
 "catalog.typesetting.0.1.title" = "使用的命令";
