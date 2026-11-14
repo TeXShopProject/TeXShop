@@ -11,6 +11,7 @@
 #import "TSMultipleReplaceWindowController.h"
 #import "TSAdvancedFindHighlights.h"
 #import "TSAdvancedFindOptionsForm.h"
+#import "TSListBottomBar.h"
 
 static int failures;
 
@@ -712,7 +713,8 @@ static NSTextField *_Nullable TSTextFieldIn(NSView *_Nullable view)
 /// ends (rounded, not cut by the edge of the sidebar).
 static int CheckSetListFitsNow(TSMultipleReplaceWindowController *window, NSString *name)
 {
-    NSScrollView *setScroll = (NSScrollView *)window.removeSetButton.superview.superview.subviews.firstObject;
+    // The sets' list is above the bar under it (TSListBottomBar), in the sidebar.
+    NSScrollView *setScroll = (NSScrollView *)window.removeSetButton.superview.superview.superview.subviews.firstObject;
     NSTableView *sets = (NSTableView *)setScroll.documentView;
     [window.window.contentView layoutSubtreeIfNeeded];
     [setScroll layoutSubtreeIfNeeded];
@@ -786,15 +788,12 @@ static void TestLayout(NSString *_Nullable imageDirectory)
     failures += CheckLayoutInset(content, [language stringByAppendingString:@" window"], 0);
     failures += CheckLayoutInset(options, [language stringByAppendingString:@" set options"], 16);
     failures += CheckCellsCentered(window.ruleTable.tableView, [language stringByAppendingString:@" rules"]);
-    NSScrollView *setScroll = (NSScrollView *)window.removeSetButton.superview.superview.subviews.firstObject;
+    TSListBottomBar *setBar = (TSListBottomBar *)window.removeSetButton.superview.superview;
+    Check([setBar isKindOfClass:[TSListBottomBar class]] && setBar.removeButton == window.removeSetButton, [language stringByAppendingString:@" the sets have the bar under a list"]);
+    NSScrollView *setScroll = (NSScrollView *)setBar.superview.subviews.firstObject;
     failures += CheckSetListFits(window, [language stringByAppendingString:@" sidebar"]);
     failures += CheckCellsCentered((NSTableView *)setScroll.documentView, [language stringByAppendingString:@" sets"]);
-    NSView *sidebarBar = window.removeSetButton.superview;
-    NSPopUpButton *setActions = nil;
-    for (NSView *v in sidebarBar.superview.subviews)
-        if ([v isKindOfClass:[NSPopUpButton class]])
-            setActions = (NSPopUpButton *)v;
-    failures += CheckSameHeight(@[sidebarBar.subviews[0], window.removeSetButton, setActions ?: window.removeSetButton], 2, [language stringByAppendingString:@" sidebar buttons"]);
+    failures += CheckSameHeight(@[setBar.addButton, setBar.removeButton, setBar.actionsButton], 2, [language stringByAppendingString:@" sidebar buttons"]);
     failures += CheckSameHeight(@[window.ruleButtons, window.optionsButton], 1, [language stringByAppendingString:@" ＋|− and options"]);
     NSMutableArray<NSView *> *bottom = [NSMutableArray array];
     NSMutableArray<NSView *> *pendingViews = [content.subviews mutableCopy];

@@ -3,6 +3,7 @@
 #pragma clang diagnostic ignored "-Wnullability-completeness"
 #import "TSKeyboardShortcuts.m"
 #import "TSMacroEditor.h"
+#import "TSMacroShortcutField.h"
 #import "TSMacroMenuController.h"
 #import "TSMacroOutlineController.h"
 #define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr,"FAIL %d: %s\n",__LINE__,#__VA_ARGS__); exit(1); } } while (0)
@@ -250,6 +251,24 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE(!macroMenu.itemArray[2].keyEquivalent.length && [macroMenu.itemArray[2].toolTip containsString:@"Uppercase"]);
     REQUIRE(!macroMenu.itemArray[4].submenu.itemArray[0].keyEquivalent.length && [macroMenu.itemArray[4].submenu.itemArray[0].toolTip containsString:@"First"]);
     [menu removeItem:upper];
+    // Keys saved by earlier versions keep Command; only +NoCommandKey, which this version
+    // writes for a shortcut without Command, takes it away.
+    NSUInteger option=NSEventModifierFlagOption;
+    REQUIRE(getKeyModifierMaskFromString(@"Y")==cmd && getKeyModifierMaskFromString(@"Y+ShiftKey+OptionKey+ControlKey")==(cmd|shift|option|control));
+    REQUIRE([getStringFormKeyEquivalent(@"y",YES,NO,YES) isEqual:@"Y+ShiftKey+ControlKey"] && [getStringFormKeyEquivalentWithModifiers(@"y",cmd|shift) isEqual:@"Y+ShiftKey"]);
+    REQUIRE([getStringFormKeyEquivalentWithModifiers(@"y",control) isEqual:@"Y+ControlKey+NoCommandKey"] && getKeyModifierMaskFromString(@"Y+ControlKey+NoCommandKey")==control);
+    NSString *f5=[NSString stringWithFormat:@"%C",(unichar)NSF5FunctionKey], *savedF5=getStringFormKeyEquivalentWithModifiers(f5,0);
+    REQUIRE([getKeyEquivalentFromString(savedF5) isEqual:f5] && getKeyModifierMaskFromString(savedF5)==0);
+    REQUIRE([getStringFormKeyEquivalentWithModifiers(@"ß",control) hasPrefix:@"ß+"] && [getKeyEquivalentFromString(getStringFormKeyEquivalentWithModifiers(@"ß",control)) isEqual:@"ß"]);
+    REQUIRE([getMenuItemString(@"Y+ShiftKey") isEqual:@"⇧⌘Y"] && [getMenuItemString(@"Y+ControlKey+NoCommandKey") isEqual:@"⌃Y"]
+            && [getMenuItemString(@"Y+ControlKey") isEqual:@"⌃⌘Y"] && [getMenuItemString(savedF5) isEqual:@"F5"] && [getMenuItemString(@"") isEqual:@""]);
+    macros.macroDict=@{@"submenu":@[Macro(@"Control only",@"J+ControlKey+NoCommandKey"),Macro(@"Function key",savedF5),Macro(@"Saved before",@"J+ControlKey")]};
+    [coordinator refreshMenuAndMacros];
+    REQUIRE([macroMenu.itemArray[2].keyEquivalent isEqual:@"j"] && macroMenu.itemArray[2].keyEquivalentModifierMask==control);
+    REQUIRE([macroMenu.itemArray[3].keyEquivalent isEqual:f5] && macroMenu.itemArray[3].keyEquivalentModifierMask==0);
+    REQUIRE([macroMenu.itemArray[4].keyEquivalent isEqual:@"j"] && macroMenu.itemArray[4].keyEquivalentModifierMask==(cmd|control));
+    REQUIRE([store conflictsForMacroShortcuts:@[Candidate(@"Control only",@"j",control),Candidate(@"Saved before",@"j",cmd|control)]].count==0);
+    puts("PASS: macro keys without Command (+NoCommandKey) and function keys; keys saved before keep Command");
     puts("PASS: effective menu precedence, freed defaults, takeover confirmation/cancel, restore, engine changes and inactive tooltip");
     NSMenu *services=[NSMenu new];NSApp.servicesMenu=services;NSMenuItem *serviceParent=[[NSMenuItem alloc] initWithTitle:@"Services" action:nil keyEquivalent:@""];serviceParent.submenu=services;[menu addItem:serviceParent];
     [services addItem:Command(@"Service",@"z")];
@@ -323,13 +342,13 @@ int main(int argc, char **argv) { @autoreleasepool {
     [root addChild:group];[group addChildren:@[old,a,b]];
     TestEditor *editor=[TestEditor new];editor.testOutline.rootOfTree=root;[editor rememberOriginalShortcutKeys];
     [editor refreshShortcutConflicts];REQUIRE([[editor shortcutConflictForNode:old] containsString:@"Find"]);
-    NSTextField *field=[NSTextField new];field.stringValue=@"f";
-    [editor setValue:field forKey:@"keyField"];
-    for(NSString *name in @[@"shiftCheckBox",@"optionCheckBox",@"controlCheckBox"]) [editor setValue:[NSButton new] forKey:name];
+    editor.pendingShortcutKey=@"F";
     editor.shortcutStatus=[NSTextField wrappingLabelWithString:@""];editor.previousItem=a;
     [editor updatePendingShortcutStatus];
     REQUIRE([a.key isEqual:@"Y"] && [editor.shortcutStatus.stringValue containsString:@"Find"] && [editor.shortcutStatus.stringValue containsString:@"⌘F"]);
-    field.stringValue=@"x";[editor updatePendingShortcutStatus];REQUIRE(editor.shortcutStatus.stringValue.length==0 && [a.key isEqual:@"Y"]);
+    editor.pendingShortcutKey=@"X";[editor updatePendingShortcutStatus];REQUIRE(editor.shortcutStatus.stringValue.length==0 && [a.key isEqual:@"Y"]);
+    // Without Command the same letter is another shortcut.
+    editor.pendingShortcutKey=@"F+ControlKey+NoCommandKey";[editor updatePendingShortcutStatus];REQUIRE(editor.shortcutStatus.stringValue.length==0 && [a.key isEqual:@"Y"]);
     editor.previousItem=nil;
     NSString *file=[MacrosPath stringByAppendingPathComponent:@"Macros_Latex.plist"];
     [editor savePressed:nil];REQUIRE(editor.prompts==0 && editor.testWindow.closes==1 && reloads==1);

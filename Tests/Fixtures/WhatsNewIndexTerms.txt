@@ -662,6 +662,8 @@ extra
 extracted
 extreme
 f
+f1
+f20
 facility
 fact
 failed
@@ -1497,7 +1499,6 @@ require
 required
 requires
 reread
-rescan
 reserved
 resize
 resized
@@ -1734,7 +1735,6 @@ symbol
 symbols
 sync
 synced
-synchronization
 synctex
 syntax
 system

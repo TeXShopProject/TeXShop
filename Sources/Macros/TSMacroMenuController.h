@@ -69,4 +69,6 @@
 NSString *getKeyEquivalentFromString(NSString *string);
 NSUInteger getKeyModifierMaskFromString(NSString *string);
 NSString *getStringFormKeyEquivalent(NSString *key, BOOL shift, BOOL option, BOOL control);
+// The modifiers are NSEventModifierFlags; without Command the string says +NoCommandKey.
+NSString *getStringFormKeyEquivalentWithModifiers(NSString *key, NSUInteger modifiers);
 NSString *getMenuItemString(NSString *string);
