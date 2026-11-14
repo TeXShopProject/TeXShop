@@ -42,41 +42,6 @@
 
 @implementation TSDocument (JobProcessing)
 
-- (BOOL)TestGSVersion
-{
-    
-    NSString        *enginePath, *gsPath;
-    NSMutableArray  *args;
-    NSDate          *myDate;
-    NSString        *tetexBinPath;
-    int             status;
-    
-    status = 1;
-    
-    self.gsversionTask = [[NSTask alloc] init];
-    [self.gsversionTask setEnvironment: [self environmentForSubTask]];
-    enginePath = [[NSBundle mainBundle] pathForResource:@"gstestwrap" ofType:nil inDirectory:@"Shellscripts"];
-    tetexBinPath = [[SUD stringForKey:GSBinPath] stringByExpandingTildeInPath];
-    args = [NSMutableArray array];
-    [args addObject:tetexBinPath ?: @""];
-    if ((enginePath != nil) && ([[NSFileManager defaultManager] fileExistsAtPath: enginePath])) {
-        [self.gsversionTask setLaunchPath:enginePath];
-        [self.gsversionTask setArguments:args];
-        [self.gsversionTask launch];
-        [self.gsversionTask waitUntilExit];
-        status = [self.gsversionTask terminationStatus];
-        self.gsversionTask = nil;
-        }
-    else
-       self.gsversionTask = nil;
-    
-    if (status == 0)
-        return YES;
-    else
-        return NO;
-    
- }
-
 // Ghostscript is looked for where the conversion looks for it: in the folders a
 // command adds in front of the PATH, and in the PATH given to the tasks, which
 // includes the Ghostscript path in Settings. When it is missing, say so instead
@@ -630,17 +595,13 @@ for(NSString *key in enu)
 				self.texTask = nil;
 				return;
 			}
-			if ([SUD boolForKey:SavePSEnabledKey])
-				[args addObject: @"--keep-psfile"];
 		} else if ([[myFileName pathExtension] isEqualToString:@"ps"]) {
 			if (! [self ghostscriptIsAvailableAlsoIn: nil]) {
 				self.texTask = nil;
 				return;
 			}
-            if ([SUD boolForKey:UseTransparencyKey])
-                enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdftransparencywrap" ofType:nil inDirectory:@"Shellscripts"];
-            else
-                enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdfwrap" ofType:nil inDirectory:@"Shellscripts"];
+			// The wrapper adds -dALLOWPSTRANSPARENCY when Ghostscript is 9.51 or later.
+			enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdftransparencywrap" ofType:nil inDirectory:@"Shellscripts"];
 			[args addObject: @"Ghostscript"];
 			gsPath = [[SUD stringForKey:GSBinPath] stringByExpandingTildeInPath];
 			[args addObject: gsPath ?: @""];
@@ -1488,12 +1449,6 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
         if ((whichEngineLocal == TexEngine) || (whichEngineLocal == LatexEngine) || (whichEngineLocal == MetapostEngine)) { //} || (whichEngineLocal == ContextEngine)) {
 			NSString* enginePath = 0;
 			NSString* myEngine = 0;
-/*
-			if ((theScript == kTypesetViaGhostScript) && ([SUD boolForKey:SavePSEnabledKey])
-				//        && (whichEngine != 2)   && (whichEngine != 4))
-				&& (whichEngineLocal != MetapostEngine) && (whichEngineLocal != ContextEngine))
-					[args addObject: [NSString stringWithString:@"--keep-psfile"]];
-*/			
 			if (self.texTask != nil) {
 				if ([self.texTask isRunning])
 					[self.texTask terminate];
@@ -1524,12 +1479,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 					else
 						[args addObject: @"Ghostscript"];
 					[args addObject: [[[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath] stringByAppendingString:@"/"]];
-					if ((theScript == kTypesetViaGhostScript) && ([SUD boolForKey:SavePSEnabledKey]))
-						[args addObject: @"yes"];
-					else
-						[args addObject: @"no"];
-					// if ([SUD boolForKey:SavePSEnabledKey])
-					//     [args addObject: [NSString stringWithString:@"--keep-psfile"]];
+					[args addObject: @"no"];
 				}
 			} else
      */
@@ -1587,25 +1537,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 								myEngine = [[SUD stringForKey:LatexGSCommandKey] stringByExpandingTildeInPath]; // 1.35 (D)
 							else
 								myEngine = [[SUD stringForKey:TexGSCommandKey] stringByExpandingTildeInPath]; // 1.35 (D)
-						
-						
-                        //KOCH2023
-                        {
-                            
-                            BOOL versionOK = true;
-                            
-                            if ([SUD boolForKey:UseTransparencyKey])
-                               versionOK = [self TestGSVersion];
-                                
-                        
-                            if ( (versionOK) && (! [myEngine containsString:@"--distiller"]) && ([SUD boolForKey:UseTransparencyKey]))
-                            
-                                myEngine = [myEngine stringByAppendingString: @" --distilleropts \"-dALLOWPSTRANSPARENCY\" "];
-                   
-                                  
-                            }
-                        
-                        }
+						}
 						
 						break;
 						
@@ -1634,8 +1566,6 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 				
 				enginePath = [self separate:myEngine into:args];
 
-				if ((theScript == kTypesetViaGhostScript) && ([SUD boolForKey:SavePSEnabledKey])) 
-					[args addObject: @"--keep-psfile"];
           
                
                 

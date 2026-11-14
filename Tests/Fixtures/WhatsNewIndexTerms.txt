@@ -183,7 +183,6 @@ applies
 apply
 approach
 appropriate
-appropriately
 apps
 arabic
 arara
@@ -371,7 +370,6 @@ common
 compatibility
 compilation
 compiled
-complain
 complained
 complaining
 complains
@@ -386,7 +384,6 @@ computer
 concerns
 conclusion
 configuration
-configured
 confirmed
 connected
 consequently
@@ -463,6 +460,7 @@ cut
 cycle
 cycles
 daisuke
+dallowpstransparency
 damaged
 dangerous
 dark
@@ -530,6 +528,7 @@ displayed
 displaying
 displays
 distiller
+distilleropts
 divider
 do
 dock
@@ -559,6 +558,7 @@ duplicate
 duplicated
 duplicating
 during
+dvi
 e
 each
 earlier
@@ -623,7 +623,6 @@ everything
 exact
 exactly
 examine
-examined
 example
 examples
 except
@@ -1065,7 +1064,6 @@ make
 makeindex
 makes
 making
-malformed
 malumbres
 management
 manipulated
@@ -1397,6 +1395,7 @@ prose
 provide
 provided
 provides
+psfile
 purpose
 push
 pushed
@@ -1500,7 +1499,6 @@ resolutions
 resolves
 rest
 restart
-restarted
 restore
 restoring
 result
@@ -1830,6 +1828,7 @@ track
 trackpad
 transitioning
 translated
+transparency
 transparenttheme
 trash
 trashed
@@ -1931,6 +1930,7 @@ vertical
 vertically
 very
 vi
+via
 videos
 view
 views

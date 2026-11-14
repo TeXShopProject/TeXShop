@@ -142,6 +142,7 @@
 <li><strong>Open Style File:</strong> it has moved from the Help menu to the File menu.</li>
 <li><strong>Apple Distiller:</strong> the choice is removed, since macOS 14 no longer has it; PostScript is converted with Ghostscript.</li>
 <li><strong>Smooth text and line art:</strong> this setting is removed; images in the PDF are always smoothed.</li>
+<li><strong>Save PostScript File and -dALLOWPSTRANSPARENCY:</strong> these settings are removed from Settings → Typesetting. If you had turned one on, TeXShop adds <code>--keep-psfile</code> or <code>--distilleropts "-dALLOWPSTRANSPARENCY"</code> to the Via DVI command for you. Opening a PostScript file always allows transparency when Ghostscript supports it.</li>
 <li><strong>Obsolete settings:</strong> obsolete PDFSync choices and settings that had no effect are removed.</li>
 <li><strong>Themes from earlier color settings:</strong> the button in Settings → Themes that made a theme from the color settings of earlier versions is removed.</li>
 <li><strong><code>\UTF</code> commands:</strong> <code>\UTF</code> commands written by utf.sty export are turned back into characters when a file is opened.</li>

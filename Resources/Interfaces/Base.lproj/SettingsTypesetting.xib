@@ -14,7 +14,6 @@
         <outlet property="saveRelatedButton" destination="316" id="318" />
         <outlet property="syncMatrix" destination="782" id="820" />
         <outlet property="syncTabButton" destination="odf-Ny-S9G" id="jpP-OB-XmX" />
-        <outlet property="useTransparencyButton" destination="8pA-l1-G9L" id="2LS-1R-OC6" />
         <outlet property="view" destination="170" id="settings-root-view" />
       </connections>
     </customObject>
@@ -235,28 +234,6 @@
                   <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
                 </textFieldCell>
               </textField>
-            </subviews>
-          </view>
-          <font key="titleFont" metaFont="system" />
-        </box>
-        <box fixedFrame="YES" title="Ghostscript Options" translatesAutoresizingMaskIntoConstraints="NO" id="163-F5-v8Z" identifier="settings.163-F5-v8Z">
-          <rect key="frame" x="40" y="318" width="260" height="50" />
-          <autoresizingMask key="autoresizingMask" />
-          <view key="contentView" id="XzI-12-6dm" identifier="settings.XzI-12-6dm">
-            <rect key="frame" x="0.0" y="0.0" width="260" height="38" />
-            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
-            <subviews>
-              <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8pA-l1-G9L" identifier="settings.8pA-l1-G9L">
-                <rect key="frame" x="17" y="11" width="231" height="18" />
-                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
-                <buttonCell key="cell" type="check" title="Use -dALLOWPSTRANSPARENCY" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="xwP-lA-zVw">
-                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
-                  <font key="font" metaFont="system" />
-                </buttonCell>
-                <connections>
-                  <action selector="useTransparencyPressed:" target="-2" id="HYy-zt-GNS" />
-                </connections>
-              </button>
             </subviews>
           </view>
           <font key="titleFont" metaFont="system" />

@@ -162,6 +162,7 @@
 <li><strong>スタイルファイルを開く</strong>：「ヘルプ」メニューから「ファイル」メニューへ移しました。</li>
 <li><strong>Apple Distiller</strong>：macOS 14にないため選択肢を取り除き、PostScriptはGhostscriptで変換します。</li>
 <li><strong>テキストとラインアートを滑らかに表示</strong>：この設定を取り除きました。PDFの中の画像は常に滑らかに表示します。</li>
+<li><strong>「PostScriptファイルを保存」と「-dALLOWPSTRANSPARENCY」</strong>：「設定」→「タイプセット」からこの2つをなくしました。オンにしていた場合は、TeXShopがDVI経由のコマンドに<code>--keep-psfile</code>や<code>--distilleropts "-dALLOWPSTRANSPARENCY"</code>を書き足します。PostScriptファイルを開くときは、Ghostscriptが対応していれば常に透明効果を扱います。</li>
 <li><strong>古い設定</strong>：旧PDFSyncの選択肢と効果のない設定を取り除きました。</li>
 <li><strong>旧バージョンの設定から移行</strong>：以前の版の色の設定からテーマを作る、「設定」→「テーマ」のボタンをなくしました。</li>
 <li><strong><code>\UTF</code>コマンド</strong>：utf.styの書き出しで書いた<code>\UTF</code>コマンドを、ファイルを開くときに文字に戻すようにしました。</li>

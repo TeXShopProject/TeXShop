@@ -84,7 +84,6 @@
             [TSSettingsLayoutRow controls:@[@"settings.202"] kind:TSSettingsRowControls indentation:0], // texGSCommandTextField
             [TSSettingsLayoutRow controls:@[@"settings.1072"] kind:TSSettingsRowControls indentation:0], // LaTeX
             [TSSettingsLayoutRow controls:@[@"settings.199"] kind:TSSettingsRowControls indentation:0], // latexGSCommandTextField
-            [TSSettingsLayoutRow controls:@[@"settings.225"] kind:TSSettingsRowControls indentation:0], // savePSButton
         ]],
         @"settings.DBm-wM-PDK": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.1022"] kind:TSSettingsRowField indentation:0],
@@ -324,7 +323,6 @@
             [TSSettingsLayoutRow controls:@[@"settings.314"] kind:TSSettingsRowSection indentation:0], // During File Save
             [TSSettingsLayoutRow controls:@[@"settings.188"] kind:TSSettingsRowSection indentation:0], // Default Script
             [TSSettingsLayoutRow controls:@[@"settings.823"] kind:TSSettingsRowSection indentation:0], // Sync Method
-            [TSSettingsLayoutRow controls:@[@"settings.163-F5-v8Z"] kind:TSSettingsRowSection indentation:0], // Ghostscript Options
             [TSSettingsLayoutRow controls:@[@"settings.W5U-9S-4OG"] kind:TSSettingsRowSection indentation:0], // If Sync Opens a New Window
         ]],
         @"settings.mpr-dj-yHz": [TSSettingsLayoutGroup rows:@[
@@ -345,9 +343,6 @@
         @"settings.0et-QV-IOa": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.odf-Ny-S9G"] kind:TSSettingsRowControls indentation:0], // syncTabButton
             [TSSettingsLayoutRow controls:@[@"settings.5Py-bW-sDC"] kind:TSSettingsRowControls indentation:0], // (Should be OFF for most users.)
-        ]],
-        @"settings.XzI-12-6dm": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.8pA-l1-G9L"] kind:TSSettingsRowControls indentation:0], // useTransparencyButton
         ]],
     };
 }
