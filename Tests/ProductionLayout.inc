@@ -3,6 +3,13 @@
 // load every localized nib.
 #import "TSDialogButtonLayout.h"
 #import "TSMarkMenu.h"
+// The Matrix and LaTeX panels are loaded by their own controllers, which lay them out after loading. A check
+// that defines TS_PANEL_CONTROLLERS compiles their sources (panel_controller_sources in panel_sources.py).
+#ifdef TS_PANEL_CONTROLLERS
+#import "TSMatrixPanelController.h"
+#import "TSLaTeXPanelController.h"
+#import "PanelEnvironment.h"
+#endif
 // Older nibs set outlets directly on instance variables of these names.
 @interface SpacingOwner : NSObject { @public id linePanel, projectPanel, extensionPanel; }
 @property (strong) NSMutableDictionary *outlets;
@@ -18,6 +25,11 @@
 @end
 // The owner the application gives each nib.
 static id ProductionOwner(NSString *name) {
+#ifdef TS_PANEL_CONTROLLERS
+    TSInstallPanelEnvironment();
+    if ([name isEqual:@"matrixpanel.nib"]) return [[TSMatrixPanelController alloc] initWithWindow:nil];
+    if ([name isEqual:@"completionpanel1.2.nib"]) return [[TSLaTeXPanelController alloc] initWithWindow:nil];
+#endif
     return [SpacingOwner new];
 }
 // The layout the application applies after loading each nib.
@@ -42,4 +54,10 @@ static void ApplyProductionLayout(NSString *name, id owner, NSArray *objects) {
     } else if ([name isEqual:@"FindPanel.nib"]) {
         for (NSWindow *w in windows) TSLayoutBottomActionRow(w);
     }
+#ifdef TS_PANEL_CONTROLLERS
+    else if ([owner isKindOfClass:NSWindowController.class]) {
+        // NSWindowController calls this after loading the nib.
+        [(NSWindowController *)owner windowDidLoad];
+    }
+#endif
 }

@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 """Every window, panel and view in every localized nib keeps its bezel buttons
-apart: no two side-by-side or stacked buttons draw closer than the minimum gap."""
+apart: no two side-by-side or stacked buttons draw closer than the minimum gap.
+Each window is laid out as the application lays it out after loading it; the
+Matrix and LaTeX panels by their own controllers. The cells of a matrix are
+checked by run-interface-label-fit.py."""
 from pathlib import Path
 import subprocess, sys, tempfile, argparse
 from source_tree import include_args
+from panel_sources import DEFINE, panel_controller_sources, panel_environment
 root = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser()
 parser.add_argument('--minimum', type=float, default=12)
@@ -36,8 +40,9 @@ for lproj in sorted((root / 'Resources/Interfaces').glob('*.lproj')):
 with tempfile.TemporaryDirectory(prefix='texshop-button-spacing-') as tmp:
     tmp = Path(tmp)
     binary = tmp / 'ButtonSpacing'
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-framework', 'AVKit', '-I', str(tmp), '-I', str(root / 'Tests'), *include_args(root),
-                    str(root / 'Tests/ButtonSpacing.m'), str(root / 'Sources/Windows/TSDialogButtonLayout.m'), str(root / 'Sources/Editor/TSMarkMenu.m'), '-o', str(binary)], check=True)
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-framework', 'AVKit', DEFINE, '-I', str(tmp), '-I', str(root / 'Tests'), *include_args(root),
+                    str(root / 'Tests/ButtonSpacing.m'), str(root / 'Sources/Windows/TSDialogButtonLayout.m'), str(root / 'Sources/Editor/TSMarkMenu.m'),
+                    *panel_controller_sources(root), '-o', str(binary)], check=True)
     compiled = []
     for index, (label, source) in enumerate(sources):
         if source.suffix == '.xib':
@@ -45,7 +50,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-button-spacing-') as tmp:
             subprocess.run(['xcrun', 'ibtool', '--compile', str(out), str(source)], check=True, capture_output=True)
             source = out / 'keyedobjects.nib' if out.is_dir() else out
         compiled.append(f'{label}={source}')
-    result = subprocess.run([str(binary), str(args.minimum), *compiled], capture_output=True, text=True, timeout=900)
+    # The Matrix and LaTeX panels are laid out by their controllers, with the files they read from ~/Library/TeXShop.
+    result = subprocess.run([str(binary), str(args.minimum), *compiled], capture_output=True, text=True, timeout=900, env=panel_environment(root, tmp / 'home'))
     print(result.stdout, end='')
     if result.returncode: sys.exit(result.stderr[-2000:])
     close = [line for line in result.stdout.splitlines() if line.startswith('CLOSE ')]
