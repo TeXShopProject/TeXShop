@@ -360,11 +360,6 @@
         "class": "TSPrefMiscTwoController"
       },
       {
-        "ivar": "_alternateEngineTextField",
-        "property": "alternateEngineTextField",
-        "class": "TSPrefMiscTwoController"
-      },
-      {
         "ivar": "_convertUTFButton",
         "property": "convertUTFButton",
         "class": "TSPrefMiscTwoController"
@@ -1512,20 +1507,6 @@
         "value": "escapeWarningChanged:"
       },
       {
-        "key": "1062.action",
-        "view": "settings.1062",
-        "kind": "view",
-        "property": "action",
-        "value": "defaultEngineCall:"
-      },
-      {
-        "key": "1070.action",
-        "view": "settings.1070",
-        "kind": "view",
-        "property": "action",
-        "value": "defaultEngineCall:"
-      },
-      {
         "key": "202.action",
         "view": "settings.202",
         "kind": "view",
@@ -1538,20 +1519,6 @@
         "kind": "view",
         "property": "action",
         "value": "latexGSProgramChanged:"
-      },
-      {
-        "key": "1067.action",
-        "view": "settings.1067",
-        "kind": "view",
-        "property": "action",
-        "value": "defaultEngineCall:"
-      },
-      {
-        "key": "1073.action",
-        "view": "settings.1073",
-        "kind": "view",
-        "property": "action",
-        "value": "defaultEngineCall:"
       },
       {
         "key": "1022.action",
@@ -1568,29 +1535,7 @@
         "value": "bibTeXengineChanged:"
       }
     ],
-    "EnginesTags": [
-      {
-        "key": "1070.tag",
-        "view": "settings.1070",
-        "kind": "view",
-        "property": "tag",
-        "value": 1
-      },
-      {
-        "key": "1067.tag",
-        "view": "settings.1067",
-        "kind": "view",
-        "property": "tag",
-        "value": 2
-      },
-      {
-        "key": "1073.tag",
-        "view": "settings.1073",
-        "kind": "view",
-        "property": "tag",
-        "value": 3
-      }
-    ],
+    "EnginesTags": [],
     "MiscOneActions": [
       {
         "key": "405.action",
@@ -1888,13 +1833,6 @@
         "value": "latexScriptProgramChanged:"
       },
       {
-        "key": "gZB-h1-n7P.action",
-        "view": "settings.gZB-h1-n7P",
-        "kind": "view",
-        "property": "action",
-        "value": "alternateEngineChanged:"
-      },
-      {
         "key": "Fww-AH-Uix.action",
         "view": "settings.Fww-AH-Uix",
         "kind": "view",
@@ -2015,13 +1953,6 @@
         "kind": "view",
         "property": "action",
         "value": "currentPdfWindowPosDefault:"
-      },
-      {
-        "key": "116.action",
-        "view": "settings.116",
-        "kind": "view",
-        "property": "action",
-        "value": "magChanged:"
       },
       {
         "key": "345.action",
@@ -3165,22 +3096,13 @@
           "63.title": "Editor"
         },
         "SettingsEngines": {
-          "889.title": "(pdf)TeX (default: /Library/TeX/texbin OR /usr/texbin)",
-          "BYT-g3-3p0.title": "Alternate Path (default: ~/bin/context/tex/texmf-osx-arm64/bin)",
           "engine-auto-cell.title": "Auto Setup…",
-          "1071.title": "Default",
           "1020.title": "Search command",
           "1075.title": "LaTeX ",
           "1069.title": "TeX",
           "1027.title": "BibTeX Engine",
-          "1030.title": "default: bibtex",
-          "1024.title": "kpsewhich (default: kpsewhich -progname=latex -format=tex)",
-          "1063.title": "Default",
           "878.title": "LaTeX ",
           "882.title": "Shell Escape Warning",
-          "1068.title": "Default",
-          "891.title": "Distiller (ghostscript) (default: /usr/local/bin)",
-          "1074.title": "Default",
           "215.title": "Path settings",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -3241,7 +3163,6 @@
           "SS5-tZ-cDa.title": "pTeX support (for Japan)",
           "vEF-zd-SJl.title": "Alternate Engine",
           "DU3-gi-QzY.title": "XML Tag Choices",
-          "mPz-qG-Toi.title": "TeX Program (no default)",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "Personal Script",
           "pkV-qe-XIq.title": "exercises",
@@ -3256,7 +3177,6 @@
           "2Mp-Uf-8n2.title": "personal mark",
           "2x0-tc-yWg.title": "Automatically check for updates",
           "oSw-pG-JGB.title": "Weekly",
-          "8Bw-D6-HlO.title": "LaTeX Program (no default)",
           "a5N-7n-3da.title": "(default: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Monthly"
@@ -3290,7 +3210,6 @@
           "343.title": "Two Page",
           "911.title": "Radio",
           "332.title": "Magnify",
-          "866.title": "Set",
           "501.title": "Two-Page Arrangement",
           "871.title": "Always Watch for PDF Changes by Other Apps",
           "636.title": "Select Text",
@@ -3360,7 +3279,7 @@
           "1080.title": "OgreKit Find Panel (Legacy)",
           "3eF-XA-ahc.title": "Do not check selected parameters",
           "32.title": "Remember last position on close",
-          "adv-Fd-Pnl.title": "Advanced Find Panel"
+          "adv-Fd-Pnl.title": "Advanced Find Panel (recommended)"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Theme Title",
@@ -3438,13 +3357,13 @@
           "590.title": "Engine File",
           "680.title": "Continue Editing",
           "919.title": "Radio",
-          "786.title": "SyncTeX",
+          "786.title": "SyncTeX (Recommended)",
           "675.title": "After Typesetting",
           "785.title": "Search PDF",
           "922.title": "Radio",
           "589.title": "LaTeX",
           "679.title": "Bring Preview Forward",
-          "bYh-V5-ri6.title": "Stay in Current Window",
+          "bYh-V5-ri6.title": "Show Preview and Return to Original Window",
           "183.title": "Default Command",
           "188.title": "Default Script",
           "921.title": "Radio",
@@ -3981,32 +3900,11 @@
       ],
       "Engines": [
         {
-          "key": "889.title",
-          "view": "settings.218",
-          "kind": "cell",
-          "property": "title",
-          "value": "(pdf)TeX (default: /Library/TeX/texbin OR /usr/texbin)"
-        },
-        {
-          "key": "BYT-g3-3p0.title",
-          "view": "settings.PsG-fR-sPc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Alternate Path (default: ~/bin/context/tex/texmf-osx-arm64/bin)"
-        },
-        {
           "key": "engine-auto-cell.title",
           "view": "settings.engine-auto-button",
           "kind": "cell",
           "property": "title",
           "value": "Auto Setup…"
-        },
-        {
-          "key": "1071.title",
-          "view": "settings.1070",
-          "kind": "cell",
-          "property": "title",
-          "value": "Default"
         },
         {
           "key": "1020.title",
@@ -4037,27 +3935,6 @@
           "value": "BibTeX Engine"
         },
         {
-          "key": "1030.title",
-          "view": "settings.1029",
-          "kind": "cell",
-          "property": "title",
-          "value": "default: bibtex"
-        },
-        {
-          "key": "1024.title",
-          "view": "settings.1021",
-          "kind": "cell",
-          "property": "title",
-          "value": "kpsewhich (default: kpsewhich -progname=latex -format=tex)"
-        },
-        {
-          "key": "1063.title",
-          "view": "settings.1062",
-          "kind": "cell",
-          "property": "title",
-          "value": "Default"
-        },
-        {
           "key": "878.title",
           "view": "settings.50",
           "kind": "cell",
@@ -4070,27 +3947,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Shell Escape Warning"
-        },
-        {
-          "key": "1068.title",
-          "view": "settings.1067",
-          "kind": "cell",
-          "property": "title",
-          "value": "Default"
-        },
-        {
-          "key": "891.title",
-          "view": "settings.256",
-          "kind": "cell",
-          "property": "title",
-          "value": "Distiller (ghostscript) (default: /usr/local/bin)"
-        },
-        {
-          "key": "1074.title",
-          "view": "settings.1073",
-          "kind": "cell",
-          "property": "title",
-          "value": "Default"
         },
         {
           "key": "215.title",
@@ -4515,13 +4371,6 @@
           "value": "XML Tag Choices"
         },
         {
-          "key": "mPz-qG-Toi.title",
-          "view": "settings.e8o-CH-MrS",
-          "kind": "cell",
-          "property": "title",
-          "value": "TeX Program (no default)"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -4622,13 +4471,6 @@
           "value": "Weekly",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "8Bw-D6-HlO.title",
-          "view": "settings.0GI-vh-5wv",
-          "kind": "cell",
-          "property": "title",
-          "value": "LaTeX Program (no default)"
         },
         {
           "key": "a5N-7n-3da.title",
@@ -4864,13 +4706,6 @@
           "property": "title",
           "value": "Magnify",
           "index": 2
-        },
-        {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "Set"
         },
         {
           "key": "501.title",
@@ -5359,7 +5194,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Advanced Find Panel",
+          "value": "Advanced Find Panel (recommended)",
           "row": 2,
           "column": 0
         },
@@ -5908,7 +5743,7 @@
           "view": "settings.782",
           "kind": "matrix",
           "property": "title",
-          "value": "SyncTeX",
+          "value": "SyncTeX (Recommended)",
           "row": 1,
           "column": 0
         },
@@ -5958,7 +5793,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "Stay in Current Window",
+          "value": "Show Preview and Return to Original Window",
           "row": 2,
           "column": 0
         },
@@ -6310,22 +6145,13 @@
           "63.title": "Editor"
         },
         "SettingsEngines": {
-          "889.title": "(pdf)TeX (Standard: /Library/TeX/texbin OR /usr/texbin)",
-          "BYT-g3-3p0.title": "Alternate Path (Standard: ~/bin/context/tex/texmf-osx-arm64/bin)",
           "engine-auto-cell.title": "Automatisch einrichten…",
-          "1071.title": "Standard",
           "1020.title": "Suchbefehl",
           "1075.title": "LaTeX ",
           "1069.title": "TeX",
           "1027.title": "BibTeX Engine",
-          "1030.title": "default: bibtex",
-          "1024.title": "kpsewhich (default: kpsewhich -progname=latex -format=tex)",
-          "1063.title": "Standard",
           "878.title": "LaTeX ",
           "882.title": "Shell-Escape-Warnung",
-          "1068.title": "Standard",
-          "891.title": "Distiller (ghostscript) (Standard: /usr/local/bin)",
-          "1074.title": "Standard",
           "215.title": "Pfadeinstellungen",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -6386,7 +6212,6 @@
           "SS5-tZ-cDa.title": "pTeX-Unterstützung (für japanische Benutzer)",
           "vEF-zd-SJl.title": "Alternativer Engine",
           "DU3-gi-QzY.title": "XML-Tag-Auswahlmöglichkeiten",
-          "mPz-qG-Toi.title": "TeX-Programm (keine Voreinstellung)",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "Persönliches Skript",
           "pkV-qe-XIq.title": "exercises",
@@ -6401,7 +6226,6 @@
           "2Mp-Uf-8n2.title": "Individuelle Markierung",
           "2x0-tc-yWg.title": "Automatisch nach Aktualisierungen suchen",
           "oSw-pG-JGB.title": "Wöchentlich",
-          "8Bw-D6-HlO.title": "LaTeX-Programm (keine Voreinstellung)",
           "a5N-7n-3da.title": "(Standard: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Monatlich"
@@ -6435,7 +6259,6 @@
           "343.title": "Doppelseiten",
           "911.title": "Radio",
           "332.title": "Lupe",
-          "866.title": "Anwenden",
           "501.title": "Doppelseiten-Modus",
           "871.title": "PDF-Änderungen durch andere Apps ständig überwachen",
           "636.title": "Textauswahl",
@@ -6505,7 +6328,7 @@
           "1080.title": "OgreKit Suchmaske (veraltet)",
           "3eF-XA-ahc.title": "Ausgewählte Parameter nicht überprüfen",
           "32.title": "Merke zuletzt benutzte Position",
-          "adv-Fd-Pnl.title": "Erweiterte Suchmaske"
+          "adv-Fd-Pnl.title": "Erweiterte Suchmaske (empfohlen)"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Titel des Themas",
@@ -6583,13 +6406,13 @@
           "590.title": "Engine-Datei",
           "680.title": "Weiter bearbeiten",
           "919.title": "Radio",
-          "786.title": "SyncTeX",
+          "786.title": "SyncTeX (empfohlen)",
           "675.title": "Nach dem Setzen",
           "785.title": "PDF durchsuchen",
           "922.title": "Radio",
           "589.title": "LaTeX",
-          "679.title": "Vorschau anzeigen",
-          "bYh-V5-ri6.title": "Im aktuellen Fenster bleiben",
+          "679.title": "Vorschau nach vorne bringen",
+          "bYh-V5-ri6.title": "Vorschau anzeigen und zum ursprünglichen Fenster zurückkehren",
           "183.title": "Standardbefehl",
           "188.title": "Standardskript",
           "921.title": "Radio",
@@ -7126,32 +6949,11 @@
       ],
       "Engines": [
         {
-          "key": "889.title",
-          "view": "settings.218",
-          "kind": "cell",
-          "property": "title",
-          "value": "(pdf)TeX (Standard: /Library/TeX/texbin OR /usr/texbin)"
-        },
-        {
-          "key": "BYT-g3-3p0.title",
-          "view": "settings.PsG-fR-sPc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Alternate Path (Standard: ~/bin/context/tex/texmf-osx-arm64/bin)"
-        },
-        {
           "key": "engine-auto-cell.title",
           "view": "settings.engine-auto-button",
           "kind": "cell",
           "property": "title",
           "value": "Automatisch einrichten…"
-        },
-        {
-          "key": "1071.title",
-          "view": "settings.1070",
-          "kind": "cell",
-          "property": "title",
-          "value": "Standard"
         },
         {
           "key": "1020.title",
@@ -7182,27 +6984,6 @@
           "value": "BibTeX Engine"
         },
         {
-          "key": "1030.title",
-          "view": "settings.1029",
-          "kind": "cell",
-          "property": "title",
-          "value": "default: bibtex"
-        },
-        {
-          "key": "1024.title",
-          "view": "settings.1021",
-          "kind": "cell",
-          "property": "title",
-          "value": "kpsewhich (default: kpsewhich -progname=latex -format=tex)"
-        },
-        {
-          "key": "1063.title",
-          "view": "settings.1062",
-          "kind": "cell",
-          "property": "title",
-          "value": "Standard"
-        },
-        {
           "key": "878.title",
           "view": "settings.50",
           "kind": "cell",
@@ -7215,27 +6996,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Shell-Escape-Warnung"
-        },
-        {
-          "key": "1068.title",
-          "view": "settings.1067",
-          "kind": "cell",
-          "property": "title",
-          "value": "Standard"
-        },
-        {
-          "key": "891.title",
-          "view": "settings.256",
-          "kind": "cell",
-          "property": "title",
-          "value": "Distiller (ghostscript) (Standard: /usr/local/bin)"
-        },
-        {
-          "key": "1074.title",
-          "view": "settings.1073",
-          "kind": "cell",
-          "property": "title",
-          "value": "Standard"
         },
         {
           "key": "215.title",
@@ -7660,13 +7420,6 @@
           "value": "XML-Tag-Auswahlmöglichkeiten"
         },
         {
-          "key": "mPz-qG-Toi.title",
-          "view": "settings.e8o-CH-MrS",
-          "kind": "cell",
-          "property": "title",
-          "value": "TeX-Programm (keine Voreinstellung)"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -7767,13 +7520,6 @@
           "value": "Wöchentlich",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "8Bw-D6-HlO.title",
-          "view": "settings.0GI-vh-5wv",
-          "kind": "cell",
-          "property": "title",
-          "value": "LaTeX-Programm (keine Voreinstellung)"
         },
         {
           "key": "a5N-7n-3da.title",
@@ -8009,13 +7755,6 @@
           "property": "title",
           "value": "Lupe",
           "index": 2
-        },
-        {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "Anwenden"
         },
         {
           "key": "501.title",
@@ -8504,7 +8243,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Erweiterte Suchmaske",
+          "value": "Erweiterte Suchmaske (empfohlen)",
           "row": 2,
           "column": 0
         },
@@ -9053,7 +8792,7 @@
           "view": "settings.782",
           "kind": "matrix",
           "property": "title",
-          "value": "SyncTeX",
+          "value": "SyncTeX (empfohlen)",
           "row": 1,
           "column": 0
         },
@@ -9094,7 +8833,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "Vorschau anzeigen",
+          "value": "Vorschau nach vorne bringen",
           "row": 0,
           "column": 0
         },
@@ -9103,7 +8842,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "Im aktuellen Fenster bleiben",
+          "value": "Vorschau anzeigen und zum ursprünglichen Fenster zurückkehren",
           "row": 2,
           "column": 0
         },
@@ -9455,22 +9194,13 @@
           "63.title": "Editor"
         },
         "SettingsEngines": {
-          "889.title": "(pdf)TeX (por defecto: /Library/TeX/texbin OR /usr/texbin)",
-          "BYT-g3-3p0.title": "Ruta alternativa (por defecto:  ~/bin/context/tex/texmf-osx-arm64/bin)",
           "engine-auto-cell.title": "Configurar automáticamente…",
-          "1071.title": "Por omisión",
           "1020.title": "Comando de búsqueda ",
           "1075.title": "LaTeX ",
           "1069.title": "TeX",
           "1027.title": "Motor BibTeX",
-          "1030.title": "Por defecto: bibtex",
-          "1024.title": "kpsewhich (por defecto: kpsewhich -progname=latex -format=tex)",
-          "1063.title": "Por omisión",
           "878.title": "LaTeX ",
           "882.title": "Avisos shell-escape",
-          "1068.title": "Por omisión",
-          "891.title": "Distiller (por defecto: /usr/local/bin)",
-          "1074.title": "Por omisión",
           "215.title": "Rutas",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -9531,7 +9261,6 @@
           "SS5-tZ-cDa.title": "Soporte pTeX (japonés)",
           "vEF-zd-SJl.title": "Motor alternativo",
           "DU3-gi-QzY.title": "Elección de marcas XML",
-          "mPz-qG-Toi.title": "Programa TeX (nada por defecto)",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "Script personal",
           "pkV-qe-XIq.title": "exercises",
@@ -9546,7 +9275,6 @@
           "2Mp-Uf-8n2.title": "marca personal",
           "2x0-tc-yWg.title": "Búsqueda automática de actualizaciones:",
           "oSw-pG-JGB.title": "Semanal",
-          "8Bw-D6-HlO.title": "Programa LaTeX (nada por defecto)",
           "a5N-7n-3da.title": "(por defecto: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Mensual"
@@ -9580,7 +9308,6 @@
           "343.title": "Página doble",
           "911.title": "Radio",
           "332.title": "Aumentar",
-          "866.title": "Establecer",
           "501.title": "Con páginas dobles",
           "871.title": "Vigilar siempre los cambios del PDF hechos por otras apps",
           "636.title": "Seleccionar texto",
@@ -9650,7 +9377,7 @@
           "1080.title": "Panel de búsquedas de OgreKit (heredado)",
           "3eF-XA-ahc.title": "No comprobar parámetros",
           "32.title": "Conservar la última posición",
-          "adv-Fd-Pnl.title": "Panel de búsqueda avanzada"
+          "adv-Fd-Pnl.title": "Panel de búsqueda avanzada (recomendado)"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Título del tema",
@@ -9728,13 +9455,13 @@
           "590.title": "Archivo de motor",
           "680.title": "Continuar editando",
           "919.title": "Radio",
-          "786.title": "SyncTeX",
+          "786.title": "SyncTeX (recomendado)",
           "675.title": "Tras componer páginas",
           "785.title": "Buscar en PDF",
           "922.title": "Radio",
           "589.title": "LaTeX",
           "679.title": "Pdf previsto al frente",
-          "bYh-V5-ri6.title": "Permanecer en ventana actual",
+          "bYh-V5-ri6.title": "Mostrar la vista previa y volver a la ventana original",
           "183.title": "Formato por defecto",
           "188.title": "Script por defecto",
           "921.title": "Radio",
@@ -10271,32 +9998,11 @@
       ],
       "Engines": [
         {
-          "key": "889.title",
-          "view": "settings.218",
-          "kind": "cell",
-          "property": "title",
-          "value": "(pdf)TeX (por defecto: /Library/TeX/texbin OR /usr/texbin)"
-        },
-        {
-          "key": "BYT-g3-3p0.title",
-          "view": "settings.PsG-fR-sPc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Ruta alternativa (por defecto:  ~/bin/context/tex/texmf-osx-arm64/bin)"
-        },
-        {
           "key": "engine-auto-cell.title",
           "view": "settings.engine-auto-button",
           "kind": "cell",
           "property": "title",
           "value": "Configurar automáticamente…"
-        },
-        {
-          "key": "1071.title",
-          "view": "settings.1070",
-          "kind": "cell",
-          "property": "title",
-          "value": "Por omisión"
         },
         {
           "key": "1020.title",
@@ -10327,27 +10033,6 @@
           "value": "Motor BibTeX"
         },
         {
-          "key": "1030.title",
-          "view": "settings.1029",
-          "kind": "cell",
-          "property": "title",
-          "value": "Por defecto: bibtex"
-        },
-        {
-          "key": "1024.title",
-          "view": "settings.1021",
-          "kind": "cell",
-          "property": "title",
-          "value": "kpsewhich (por defecto: kpsewhich -progname=latex -format=tex)"
-        },
-        {
-          "key": "1063.title",
-          "view": "settings.1062",
-          "kind": "cell",
-          "property": "title",
-          "value": "Por omisión"
-        },
-        {
           "key": "878.title",
           "view": "settings.50",
           "kind": "cell",
@@ -10360,27 +10045,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Avisos shell-escape"
-        },
-        {
-          "key": "1068.title",
-          "view": "settings.1067",
-          "kind": "cell",
-          "property": "title",
-          "value": "Por omisión"
-        },
-        {
-          "key": "891.title",
-          "view": "settings.256",
-          "kind": "cell",
-          "property": "title",
-          "value": "Distiller (por defecto: /usr/local/bin)"
-        },
-        {
-          "key": "1074.title",
-          "view": "settings.1073",
-          "kind": "cell",
-          "property": "title",
-          "value": "Por omisión"
         },
         {
           "key": "215.title",
@@ -10805,13 +10469,6 @@
           "value": "Elección de marcas XML"
         },
         {
-          "key": "mPz-qG-Toi.title",
-          "view": "settings.e8o-CH-MrS",
-          "kind": "cell",
-          "property": "title",
-          "value": "Programa TeX (nada por defecto)"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -10912,13 +10569,6 @@
           "value": "Semanal",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "8Bw-D6-HlO.title",
-          "view": "settings.0GI-vh-5wv",
-          "kind": "cell",
-          "property": "title",
-          "value": "Programa LaTeX (nada por defecto)"
         },
         {
           "key": "a5N-7n-3da.title",
@@ -11154,13 +10804,6 @@
           "property": "title",
           "value": "Aumentar",
           "index": 2
-        },
-        {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "Establecer"
         },
         {
           "key": "501.title",
@@ -11649,7 +11292,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Panel de búsqueda avanzada",
+          "value": "Panel de búsqueda avanzada (recomendado)",
           "row": 2,
           "column": 0
         },
@@ -12198,7 +11841,7 @@
           "view": "settings.782",
           "kind": "matrix",
           "property": "title",
-          "value": "SyncTeX",
+          "value": "SyncTeX (recomendado)",
           "row": 1,
           "column": 0
         },
@@ -12248,7 +11891,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "Permanecer en ventana actual",
+          "value": "Mostrar la vista previa y volver a la ventana original",
           "row": 2,
           "column": 0
         },
@@ -12600,22 +12243,13 @@
           "63.title": "Éditeur"
         },
         "SettingsEngines": {
-          "889.title": "(pdf)TeX & dvips (par défaut: /Library/TeX/texbin OR /usr/texbin)",
-          "BYT-g3-3p0.title": "Chemin alternatif (par défaut : ~/bin/context/tex/texmf-osx-arm64/bin)",
           "engine-auto-cell.title": "Configuration automatique…",
-          "1071.title": "Par défaut",
           "1020.title": "Commande pour la Recherche",
           "1075.title": "LaTeX ",
           "1069.title": "TeX",
           "1027.title": "Moteur BibTeX",
-          "1030.title": "Par défaut : bibtex",
-          "1024.title": "kpsewhich (Par défaut : kpsewhich -progname=latex -format=tex)",
-          "1063.title": "Par défaut",
           "878.title": "LaTeX ",
           "882.title": "Avertissement de Shell Escape",
-          "1068.title": "Par défaut",
-          "891.title": "Distiller (ghostscript) (par défaut: /usr/local/bin)",
-          "1074.title": "Par défaut",
           "215.title": "Réglage des chemins",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -12676,7 +12310,6 @@
           "SS5-tZ-cDa.title": "Support pTeX (Japon)",
           "vEF-zd-SJl.title": "Moteur TeX alternatif",
           "DU3-gi-QzY.title": "Choix d’étiquette XML",
-          "mPz-qG-Toi.title": "Commande TeX (pas de défaut)",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "Script personnel",
           "pkV-qe-XIq.title": "exercises",
@@ -12691,7 +12324,6 @@
           "2Mp-Uf-8n2.title": "marque personnelle",
           "2x0-tc-yWg.title": "Vérification automatique des mises à jour",
           "oSw-pG-JGB.title": "Hebdomadaire",
-          "8Bw-D6-HlO.title": "Commande LaTeX (pas de défaut)",
           "a5N-7n-3da.title": "(par défaut :  pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Mensuelle"
@@ -12725,7 +12357,6 @@
           "343.title": "Page double",
           "911.title": "Radio",
           "332.title": "Agrandir",
-          "866.title": "Confirmer",
           "501.title": "Page double (variantes)",
           "871.title": "Toujours surveiller les modifications du PDF par d’autres apps",
           "636.title": "Sélectionner le texte",
@@ -12795,7 +12426,7 @@
           "1080.title": "Palette OgreKit (ancienne)",
           "3eF-XA-ahc.title": "Ne pas vérifier les paramètres",
           "32.title": "Conserver la dernière position",
-          "adv-Fd-Pnl.title": "Palette de recherche avancée"
+          "adv-Fd-Pnl.title": "Palette de recherche avancée (recommandée)"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Titre du thème",
@@ -12873,13 +12504,13 @@
           "590.title": "Fichier de moteur",
           "680.title": "Continuer l'édition",
           "919.title": "Radio",
-          "786.title": "SyncTeX",
+          "786.title": "SyncTeX (recommandé)",
           "675.title": "Après composition",
           "785.title": "Rechercher dans le PDF",
           "922.title": "Radio",
           "589.title": "LaTeX",
           "679.title": "Amener l'aperçu devant",
-          "bYh-V5-ri6.title": "Rester dans la fenêtre au premier plan",
+          "bYh-V5-ri6.title": "Afficher l'aperçu puis revenir à la fenêtre d'origine",
           "183.title": "Format par défaut",
           "188.title": "Script par défaut",
           "921.title": "Radio",
@@ -13416,32 +13047,11 @@
       ],
       "Engines": [
         {
-          "key": "889.title",
-          "view": "settings.218",
-          "kind": "cell",
-          "property": "title",
-          "value": "(pdf)TeX & dvips (par défaut: /Library/TeX/texbin OR /usr/texbin)"
-        },
-        {
-          "key": "BYT-g3-3p0.title",
-          "view": "settings.PsG-fR-sPc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Chemin alternatif (par défaut : ~/bin/context/tex/texmf-osx-arm64/bin)"
-        },
-        {
           "key": "engine-auto-cell.title",
           "view": "settings.engine-auto-button",
           "kind": "cell",
           "property": "title",
           "value": "Configuration automatique…"
-        },
-        {
-          "key": "1071.title",
-          "view": "settings.1070",
-          "kind": "cell",
-          "property": "title",
-          "value": "Par défaut"
         },
         {
           "key": "1020.title",
@@ -13472,27 +13082,6 @@
           "value": "Moteur BibTeX"
         },
         {
-          "key": "1030.title",
-          "view": "settings.1029",
-          "kind": "cell",
-          "property": "title",
-          "value": "Par défaut : bibtex"
-        },
-        {
-          "key": "1024.title",
-          "view": "settings.1021",
-          "kind": "cell",
-          "property": "title",
-          "value": "kpsewhich (Par défaut : kpsewhich -progname=latex -format=tex)"
-        },
-        {
-          "key": "1063.title",
-          "view": "settings.1062",
-          "kind": "cell",
-          "property": "title",
-          "value": "Par défaut"
-        },
-        {
           "key": "878.title",
           "view": "settings.50",
           "kind": "cell",
@@ -13505,27 +13094,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Avertissement de Shell Escape"
-        },
-        {
-          "key": "1068.title",
-          "view": "settings.1067",
-          "kind": "cell",
-          "property": "title",
-          "value": "Par défaut"
-        },
-        {
-          "key": "891.title",
-          "view": "settings.256",
-          "kind": "cell",
-          "property": "title",
-          "value": "Distiller (ghostscript) (par défaut: /usr/local/bin)"
-        },
-        {
-          "key": "1074.title",
-          "view": "settings.1073",
-          "kind": "cell",
-          "property": "title",
-          "value": "Par défaut"
         },
         {
           "key": "215.title",
@@ -13950,13 +13518,6 @@
           "value": "Choix d’étiquette XML"
         },
         {
-          "key": "mPz-qG-Toi.title",
-          "view": "settings.e8o-CH-MrS",
-          "kind": "cell",
-          "property": "title",
-          "value": "Commande TeX (pas de défaut)"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -14057,13 +13618,6 @@
           "value": "Hebdomadaire",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "8Bw-D6-HlO.title",
-          "view": "settings.0GI-vh-5wv",
-          "kind": "cell",
-          "property": "title",
-          "value": "Commande LaTeX (pas de défaut)"
         },
         {
           "key": "a5N-7n-3da.title",
@@ -14299,13 +13853,6 @@
           "property": "title",
           "value": "Agrandir",
           "index": 2
-        },
-        {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "Confirmer"
         },
         {
           "key": "501.title",
@@ -14794,7 +14341,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Palette de recherche avancée",
+          "value": "Palette de recherche avancée (recommandée)",
           "row": 2,
           "column": 0
         },
@@ -15343,7 +14890,7 @@
           "view": "settings.782",
           "kind": "matrix",
           "property": "title",
-          "value": "SyncTeX",
+          "value": "SyncTeX (recommandé)",
           "row": 1,
           "column": 0
         },
@@ -15393,7 +14940,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "Rester dans la fenêtre au premier plan",
+          "value": "Afficher l'aperçu puis revenir à la fenêtre d'origine",
           "row": 2,
           "column": 0
         },
@@ -15745,22 +15292,13 @@
           "63.title": "Editor"
         },
         "SettingsEngines": {
-          "889.title": "(pdf)TeX (default: /Library/TeX/texbin OR /usr/texbin)",
-          "BYT-g3-3p0.title": "Percorso alternativo (default: ~/bin/context/tex/texmf-osx-arm64/bin)",
           "engine-auto-cell.title": "Configurazione automatica…",
-          "1071.title": "default",
           "1020.title": "Comando di ricerca",
           "1075.title": "LaTeX ",
           "1069.title": "TeX",
           "1027.title": "Motore BibTeX",
-          "1030.title": "default: bibtex",
-          "1024.title": "kpsewhich (default: kpsewhich -progname=latex -format=tex)",
-          "1063.title": "default",
           "878.title": "LaTeX ",
           "882.title": "Avvisa se si usa Shell Escape",
-          "1068.title": "default",
-          "891.title": "Distiller (ghostscript) (default: /usr/local/bin)",
-          "1074.title": "default",
           "215.title": "Impostazioni Percorso",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -15821,7 +15359,6 @@
           "SS5-tZ-cDa.title": "Supporto pTeX (solo giapponese)",
           "vEF-zd-SJl.title": "Motore alternativo",
           "DU3-gi-QzY.title": "Scelta di Tag XML",
-          "mPz-qG-Toi.title": "Programma TeX (no default)",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "Script Personale",
           "pkV-qe-XIq.title": "exercises",
@@ -15836,7 +15373,6 @@
           "2Mp-Uf-8n2.title": "segnaposto personale",
           "2x0-tc-yWg.title": "Controlla aggiornamenti automaticamente",
           "oSw-pG-JGB.title": "una volta alla settimana",
-          "8Bw-D6-HlO.title": "Programma LaTeX (no default)",
           "a5N-7n-3da.title": "(default: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "una volta al mese"
@@ -15870,7 +15406,6 @@
           "343.title": "Pagine affiancate",
           "911.title": "Radio",
           "332.title": "Ingrandimento",
-          "866.title": "Imposta",
           "501.title": "Modalità pagine affiancate",
           "871.title": "Controlla sempre le modifiche al PDF fatte da altre app",
           "636.title": "Selezione testo",
@@ -15940,7 +15475,7 @@
           "1080.title": "Pannello di ricerca OgreKit (obsoleto)",
           "3eF-XA-ahc.title": "Non controllare i parametri selezionati",
           "32.title": "Conserva l'ultima posizione",
-          "adv-Fd-Pnl.title": "Pannello di ricerca avanzata"
+          "adv-Fd-Pnl.title": "Pannello di ricerca avanzata (consigliato)"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Titolo del tema",
@@ -16016,15 +15551,15 @@
           "823.title": "Metodo di sincronizzazione",
           "190.title": "Script personale",
           "590.title": "File del motore",
-          "680.title": "Rimani nella finestra sorgente",
+          "680.title": "Continua a modificare",
           "919.title": "Radio",
-          "786.title": "SyncTeX",
+          "786.title": "SyncTeX (consigliato)",
           "675.title": "Dopo la compilazione",
           "785.title": "Cerca nel PDF",
           "922.title": "Radio",
           "589.title": "LaTeX",
           "679.title": "Porta anteprima in primo piano",
-          "bYh-V5-ri6.title": "Rimani nella finetra corrente",
+          "bYh-V5-ri6.title": "Mostra anteprima e torna alla finestra di partenza",
           "183.title": "Formato TeX Default",
           "188.title": "Script di Default",
           "921.title": "Radio",
@@ -16561,32 +16096,11 @@
       ],
       "Engines": [
         {
-          "key": "889.title",
-          "view": "settings.218",
-          "kind": "cell",
-          "property": "title",
-          "value": "(pdf)TeX (default: /Library/TeX/texbin OR /usr/texbin)"
-        },
-        {
-          "key": "BYT-g3-3p0.title",
-          "view": "settings.PsG-fR-sPc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Percorso alternativo (default: ~/bin/context/tex/texmf-osx-arm64/bin)"
-        },
-        {
           "key": "engine-auto-cell.title",
           "view": "settings.engine-auto-button",
           "kind": "cell",
           "property": "title",
           "value": "Configurazione automatica…"
-        },
-        {
-          "key": "1071.title",
-          "view": "settings.1070",
-          "kind": "cell",
-          "property": "title",
-          "value": "default"
         },
         {
           "key": "1020.title",
@@ -16617,27 +16131,6 @@
           "value": "Motore BibTeX"
         },
         {
-          "key": "1030.title",
-          "view": "settings.1029",
-          "kind": "cell",
-          "property": "title",
-          "value": "default: bibtex"
-        },
-        {
-          "key": "1024.title",
-          "view": "settings.1021",
-          "kind": "cell",
-          "property": "title",
-          "value": "kpsewhich (default: kpsewhich -progname=latex -format=tex)"
-        },
-        {
-          "key": "1063.title",
-          "view": "settings.1062",
-          "kind": "cell",
-          "property": "title",
-          "value": "default"
-        },
-        {
           "key": "878.title",
           "view": "settings.50",
           "kind": "cell",
@@ -16650,27 +16143,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Avvisa se si usa Shell Escape"
-        },
-        {
-          "key": "1068.title",
-          "view": "settings.1067",
-          "kind": "cell",
-          "property": "title",
-          "value": "default"
-        },
-        {
-          "key": "891.title",
-          "view": "settings.256",
-          "kind": "cell",
-          "property": "title",
-          "value": "Distiller (ghostscript) (default: /usr/local/bin)"
-        },
-        {
-          "key": "1074.title",
-          "view": "settings.1073",
-          "kind": "cell",
-          "property": "title",
-          "value": "default"
         },
         {
           "key": "215.title",
@@ -17095,13 +16567,6 @@
           "value": "Scelta di Tag XML"
         },
         {
-          "key": "mPz-qG-Toi.title",
-          "view": "settings.e8o-CH-MrS",
-          "kind": "cell",
-          "property": "title",
-          "value": "Programma TeX (no default)"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -17202,13 +16667,6 @@
           "value": "una volta alla settimana",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "8Bw-D6-HlO.title",
-          "view": "settings.0GI-vh-5wv",
-          "kind": "cell",
-          "property": "title",
-          "value": "Programma LaTeX (no default)"
         },
         {
           "key": "a5N-7n-3da.title",
@@ -17444,13 +16902,6 @@
           "property": "title",
           "value": "Ingrandimento",
           "index": 2
-        },
-        {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "Imposta"
         },
         {
           "key": "501.title",
@@ -17939,7 +17390,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Pannello di ricerca avanzata",
+          "value": "Pannello di ricerca avanzata (consigliato)",
           "row": 2,
           "column": 0
         },
@@ -18472,7 +17923,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "Rimani nella finestra sorgente",
+          "value": "Continua a modificare",
           "row": 1,
           "column": 0
         },
@@ -18488,7 +17939,7 @@
           "view": "settings.782",
           "kind": "matrix",
           "property": "title",
-          "value": "SyncTeX",
+          "value": "SyncTeX (consigliato)",
           "row": 1,
           "column": 0
         },
@@ -18538,7 +17989,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "Rimani nella finetra corrente",
+          "value": "Mostra anteprima e torna alla finestra di partenza",
           "row": 2,
           "column": 0
         },
@@ -18890,22 +18341,13 @@
           "63.title": "エディタ"
         },
         "SettingsEngines": {
-          "889.title": "(pdf)TeX (デフォルト: /Library/TeX/texbin OR /usr/texbin)",
-          "BYT-g3-3p0.title": "別のパス (デフォルト:  ~/bin/context/tex/texmf-osx-arm64/bin)",
           "engine-auto-cell.title": "自動設定…",
-          "1071.title": "デフォルト",
           "1020.title": "検索用コマンド",
           "1075.title": "LaTeX",
           "1069.title": "TeX",
           "1027.title": "BibTeXエンジン",
-          "1030.title": "デフォルト: bibtex",
-          "1024.title": "kpsewhich (デフォルト: kpsewhich -progname=latex -format=tex)",
-          "1063.title": "デフォルト",
           "878.title": "LaTeX",
           "882.title": "Shell Escapeを警告",
-          "1068.title": "デフォルト",
-          "891.title": "Distiller (Ghostscript) (デフォルト: /usr/local/bin)",
-          "1074.title": "デフォルト",
           "215.title": "パス設定",
           "200.title": "TeX+dvipdfmx / TeX+dvips+distiller",
           "880.title": "TeX",
@@ -18966,7 +18408,6 @@
           "SS5-tZ-cDa.title": "pTeXサポート（日本用）",
           "vEF-zd-SJl.title": " 代替エンジン",
           "DU3-gi-QzY.title": "リストアップするXMLタグ",
-          "mPz-qG-Toi.title": "TeXプログラム（デフォルト：空）",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "パーソナルスクリプト",
           "pkV-qe-XIq.title": "exercises",
@@ -18981,7 +18422,6 @@
           "2Mp-Uf-8n2.title": "カスタムマーク",
           "2x0-tc-yWg.title": "アップデートを自動的に確認",
           "oSw-pG-JGB.title": "毎週",
-          "8Bw-D6-HlO.title": "LaTeXプログラム（デフォルト：空）",
           "a5N-7n-3da.title": "(デフォルト:  pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "毎月"
@@ -19015,7 +18455,6 @@
           "343.title": "見開きページ",
           "911.title": "Radio",
           "332.title": "拡大鏡",
-          "866.title": "設定",
           "501.title": "見開きの配置",
           "871.title": "ほかのアプリによるPDFの変更を常に監視",
           "636.title": "文字選択",
@@ -19085,7 +18524,7 @@
           "1080.title": "OgreKit検索パネル（レガシー）",
           "3eF-XA-ahc.title": "特定のコマンド引数を対象外にする",
           "32.title": "閉じたときの位置を保存",
-          "adv-Fd-Pnl.title": "詳細検索パネル"
+          "adv-Fd-Pnl.title": "詳細検索パネル（推奨）"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "テーマのタイトル",
@@ -19163,13 +18602,13 @@
           "590.title": "エンジンファイル",
           "680.title": "編集を続ける",
           "919.title": "Radio",
-          "786.title": "SyncTeX",
+          "786.title": "SyncTeX（推奨）",
           "675.title": "タイプセット後の動作",
           "785.title": "PDFを検索",
           "922.title": "Radio",
           "589.title": "LaTeX",
           "679.title": "プレビューを手前に移動",
-          "bYh-V5-ri6.title": "タイプセット開始ウインドウを手前に",
+          "bYh-V5-ri6.title": "プレビューを表示して元のウインドウに戻る",
           "183.title": "デフォルトのコマンド",
           "188.title": "デフォルトのスクリプト",
           "921.title": "Radio",
@@ -19706,32 +19145,11 @@
       ],
       "Engines": [
         {
-          "key": "889.title",
-          "view": "settings.218",
-          "kind": "cell",
-          "property": "title",
-          "value": "(pdf)TeX (デフォルト: /Library/TeX/texbin OR /usr/texbin)"
-        },
-        {
-          "key": "BYT-g3-3p0.title",
-          "view": "settings.PsG-fR-sPc",
-          "kind": "cell",
-          "property": "title",
-          "value": "別のパス (デフォルト:  ~/bin/context/tex/texmf-osx-arm64/bin)"
-        },
-        {
           "key": "engine-auto-cell.title",
           "view": "settings.engine-auto-button",
           "kind": "cell",
           "property": "title",
           "value": "自動設定…"
-        },
-        {
-          "key": "1071.title",
-          "view": "settings.1070",
-          "kind": "cell",
-          "property": "title",
-          "value": "デフォルト"
         },
         {
           "key": "1020.title",
@@ -19762,27 +19180,6 @@
           "value": "BibTeXエンジン"
         },
         {
-          "key": "1030.title",
-          "view": "settings.1029",
-          "kind": "cell",
-          "property": "title",
-          "value": "デフォルト: bibtex"
-        },
-        {
-          "key": "1024.title",
-          "view": "settings.1021",
-          "kind": "cell",
-          "property": "title",
-          "value": "kpsewhich (デフォルト: kpsewhich -progname=latex -format=tex)"
-        },
-        {
-          "key": "1063.title",
-          "view": "settings.1062",
-          "kind": "cell",
-          "property": "title",
-          "value": "デフォルト"
-        },
-        {
           "key": "878.title",
           "view": "settings.50",
           "kind": "cell",
@@ -19795,27 +19192,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Shell Escapeを警告"
-        },
-        {
-          "key": "1068.title",
-          "view": "settings.1067",
-          "kind": "cell",
-          "property": "title",
-          "value": "デフォルト"
-        },
-        {
-          "key": "891.title",
-          "view": "settings.256",
-          "kind": "cell",
-          "property": "title",
-          "value": "Distiller (Ghostscript) (デフォルト: /usr/local/bin)"
-        },
-        {
-          "key": "1074.title",
-          "view": "settings.1073",
-          "kind": "cell",
-          "property": "title",
-          "value": "デフォルト"
         },
         {
           "key": "215.title",
@@ -20240,13 +19616,6 @@
           "value": "リストアップするXMLタグ"
         },
         {
-          "key": "mPz-qG-Toi.title",
-          "view": "settings.e8o-CH-MrS",
-          "kind": "cell",
-          "property": "title",
-          "value": "TeXプログラム（デフォルト：空）"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -20347,13 +19716,6 @@
           "value": "毎週",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "8Bw-D6-HlO.title",
-          "view": "settings.0GI-vh-5wv",
-          "kind": "cell",
-          "property": "title",
-          "value": "LaTeXプログラム（デフォルト：空）"
         },
         {
           "key": "a5N-7n-3da.title",
@@ -20589,13 +19951,6 @@
           "property": "title",
           "value": "拡大鏡",
           "index": 2
-        },
-        {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "設定"
         },
         {
           "key": "501.title",
@@ -21084,7 +20439,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "詳細検索パネル",
+          "value": "詳細検索パネル（推奨）",
           "row": 2,
           "column": 0
         },
@@ -21633,7 +20988,7 @@
           "view": "settings.782",
           "kind": "matrix",
           "property": "title",
-          "value": "SyncTeX",
+          "value": "SyncTeX（推奨）",
           "row": 1,
           "column": 0
         },
@@ -21683,7 +21038,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "タイプセット開始ウインドウを手前に",
+          "value": "プレビューを表示して元のウインドウに戻る",
           "row": 2,
           "column": 0
         },
@@ -22035,22 +21390,13 @@
           "63.title": "에디터"
         },
         "SettingsEngines": {
-          "889.title": "(pdf)TeX (default: /Library/TeX/texbin OR /usr/texbin)",
-          "BYT-g3-3p0.title": "Alternate Path (default: ~/bin/context/tex/texmf-osx-arm64/bin)",
           "engine-auto-cell.title": "자동 설정…",
-          "1071.title": "기본값",
           "1020.title": "명령 찾기",
           "1075.title": "LaTeX ",
           "1069.title": "TeX",
           "1027.title": "BibTeX 엔진",
-          "1030.title": "default: bibtex",
-          "1024.title": "kpsewhich (default: kpsewhich -progname=latex -format=tex)",
-          "1063.title": "기본값",
           "878.title": "LaTeX ",
           "882.title": "Shell Escape시 경고",
-          "1068.title": "기본값",
-          "891.title": "Distiller (ghostscript) (default: /usr/local/bin)",
-          "1074.title": "기본값",
           "215.title": "경로 설정",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -22111,7 +21457,6 @@
           "SS5-tZ-cDa.title": "일본어 pTeX 지원",
           "vEF-zd-SJl.title": "대체 엔진",
           "DU3-gi-QzY.title": "XML 테그 선택",
-          "mPz-qG-Toi.title": "TeX 프로그램 (기본값없음)",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "사용자 스크립트",
           "pkV-qe-XIq.title": "exercises",
@@ -22126,7 +21471,6 @@
           "2Mp-Uf-8n2.title": "사용자 표시",
           "2x0-tc-yWg.title": "업데이트를 자동으로 확인",
           "oSw-pG-JGB.title": "매주",
-          "8Bw-D6-HlO.title": "LaTeX 프로그램 (기본값없음)",
           "a5N-7n-3da.title": "(default: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "매월"
@@ -22160,7 +21504,6 @@
           "343.title": "두 페이지",
           "911.title": "Radio",
           "332.title": "확대경",
-          "866.title": "설정",
           "501.title": "두 페이지 배열",
           "871.title": "다른 앱의 PDF 변경을 항상 감시",
           "636.title": "글자 선택",
@@ -22230,7 +21573,7 @@
           "1080.title": "OgreKit 찾기 패널(레거시)",
           "3eF-XA-ahc.title": "파라미터 부분 제외",
           "32.title": "닫을 때 위치 저장",
-          "adv-Fd-Pnl.title": "고급 찾기 패널"
+          "adv-Fd-Pnl.title": "고급 찾기 패널(권장)"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": " 테마 타이틀",
@@ -22308,13 +21651,13 @@
           "590.title": "엔진 파일",
           "680.title": "편집 창에서 계속 작업",
           "919.title": "Radio",
-          "786.title": "SyncTeX",
+          "786.title": "SyncTeX(권장)",
           "675.title": "조판 후 동작",
           "785.title": "PDF 검색",
           "922.title": "Radio",
           "589.title": "LaTeX",
           "679.title": "보기 창을 전면으로",
-          "bYh-V5-ri6.title": "현재 창 유지",
+          "bYh-V5-ri6.title": "보기 창을 표시한 후 원래 창으로 돌아가기",
           "183.title": "기본 조판 명령",
           "188.title": "디폴트 스트립트",
           "921.title": "Radio",
@@ -22851,32 +22194,11 @@
       ],
       "Engines": [
         {
-          "key": "889.title",
-          "view": "settings.218",
-          "kind": "cell",
-          "property": "title",
-          "value": "(pdf)TeX (default: /Library/TeX/texbin OR /usr/texbin)"
-        },
-        {
-          "key": "BYT-g3-3p0.title",
-          "view": "settings.PsG-fR-sPc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Alternate Path (default: ~/bin/context/tex/texmf-osx-arm64/bin)"
-        },
-        {
           "key": "engine-auto-cell.title",
           "view": "settings.engine-auto-button",
           "kind": "cell",
           "property": "title",
           "value": "자동 설정…"
-        },
-        {
-          "key": "1071.title",
-          "view": "settings.1070",
-          "kind": "cell",
-          "property": "title",
-          "value": "기본값"
         },
         {
           "key": "1020.title",
@@ -22907,27 +22229,6 @@
           "value": "BibTeX 엔진"
         },
         {
-          "key": "1030.title",
-          "view": "settings.1029",
-          "kind": "cell",
-          "property": "title",
-          "value": "default: bibtex"
-        },
-        {
-          "key": "1024.title",
-          "view": "settings.1021",
-          "kind": "cell",
-          "property": "title",
-          "value": "kpsewhich (default: kpsewhich -progname=latex -format=tex)"
-        },
-        {
-          "key": "1063.title",
-          "view": "settings.1062",
-          "kind": "cell",
-          "property": "title",
-          "value": "기본값"
-        },
-        {
           "key": "878.title",
           "view": "settings.50",
           "kind": "cell",
@@ -22940,27 +22241,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Shell Escape시 경고"
-        },
-        {
-          "key": "1068.title",
-          "view": "settings.1067",
-          "kind": "cell",
-          "property": "title",
-          "value": "기본값"
-        },
-        {
-          "key": "891.title",
-          "view": "settings.256",
-          "kind": "cell",
-          "property": "title",
-          "value": "Distiller (ghostscript) (default: /usr/local/bin)"
-        },
-        {
-          "key": "1074.title",
-          "view": "settings.1073",
-          "kind": "cell",
-          "property": "title",
-          "value": "기본값"
         },
         {
           "key": "215.title",
@@ -23385,13 +22665,6 @@
           "value": "XML 테그 선택"
         },
         {
-          "key": "mPz-qG-Toi.title",
-          "view": "settings.e8o-CH-MrS",
-          "kind": "cell",
-          "property": "title",
-          "value": "TeX 프로그램 (기본값없음)"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -23492,13 +22765,6 @@
           "value": "매주",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "8Bw-D6-HlO.title",
-          "view": "settings.0GI-vh-5wv",
-          "kind": "cell",
-          "property": "title",
-          "value": "LaTeX 프로그램 (기본값없음)"
         },
         {
           "key": "a5N-7n-3da.title",
@@ -23734,13 +23000,6 @@
           "property": "title",
           "value": "확대경",
           "index": 2
-        },
-        {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "설정"
         },
         {
           "key": "501.title",
@@ -24229,7 +23488,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "고급 찾기 패널",
+          "value": "고급 찾기 패널(권장)",
           "row": 2,
           "column": 0
         },
@@ -24778,7 +24037,7 @@
           "view": "settings.782",
           "kind": "matrix",
           "property": "title",
-          "value": "SyncTeX",
+          "value": "SyncTeX(권장)",
           "row": 1,
           "column": 0
         },
@@ -24828,7 +24087,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "현재 창 유지",
+          "value": "보기 창을 표시한 후 원래 창으로 돌아가기",
           "row": 2,
           "column": 0
         },
@@ -25180,22 +24439,13 @@
           "63.title": "Editor"
         },
         "SettingsEngines": {
-          "889.title": "(pdf)TeX (standaard: /Library/TeX/texbin OR /usr/texbin)",
-          "BYT-g3-3p0.title": "Alternate Path (default: ~/bin/context/tex/texmf-osx-arm64/bin)",
           "engine-auto-cell.title": "Automatisch instellen…",
-          "1071.title": "standaard",
           "1020.title": "Search command",
           "1075.title": "LaTeX ",
           "1069.title": "TeX",
           "1027.title": "BibTeX-engine",
-          "1030.title": "default: bibtex",
-          "1024.title": "kpsewhich (default: kpsewhich -progname=latex -format=tex)",
-          "1063.title": "standaard",
           "878.title": "LaTeX ",
           "882.title": "Waarschuwing voor shell escape",
-          "1068.title": "standaard",
-          "891.title": "Distiller (ghostscript) (standaard: /usr/local/bin)",
-          "1074.title": "standaard",
           "215.title": "Zoekpaden",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -25256,7 +24506,6 @@
           "SS5-tZ-cDa.title": "pTeX-ondersteuning (voor Japan)",
           "vEF-zd-SJl.title": "Alternatieve engine",
           "DU3-gi-QzY.title": "XML Tag Choices",
-          "mPz-qG-Toi.title": "TeX-programma (geen standaard)",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "Eigen script",
           "pkV-qe-XIq.title": "exercises",
@@ -25271,7 +24520,6 @@
           "2Mp-Uf-8n2.title": "persoonlijke markering",
           "2x0-tc-yWg.title": "Automatisch naar updates zoeken",
           "oSw-pG-JGB.title": "Wekelijks",
-          "8Bw-D6-HlO.title": "LaTeX-programma (geen standaard)",
           "a5N-7n-3da.title": "(default: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Maandelijks"
@@ -25305,7 +24553,6 @@
           "343.title": "Twee pagina’s",
           "911.title": "Radio",
           "332.title": "Vergroten",
-          "866.title": "Stel in",
           "501.title": "Indeling van dubbele pagina’s",
           "871.title": "Pdf-wijzigingen door andere apps altijd volgen",
           "636.title": "Tekst selecteren",
@@ -25375,7 +24622,7 @@
           "1080.title": "OgreKit zoekpaneel (verouderd)",
           "3eF-XA-ahc.title": "Geselecteerde parameters overslaan",
           "32.title": "Onthoud laatste positie bij sluiten",
-          "adv-Fd-Pnl.title": "Geavanceerd zoekpaneel"
+          "adv-Fd-Pnl.title": "Geavanceerd zoekpaneel (aanbevolen)"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Style Title",
@@ -25453,13 +24700,13 @@
           "590.title": "Engine-bestand",
           "680.title": "Doorgaan met editor",
           "919.title": "Radio",
-          "786.title": "SyncTeX",
+          "786.title": "SyncTeX (aanbevolen)",
           "675.title": "Na zetten",
           "785.title": "PDF doorzoeken",
           "922.title": "Radio",
           "589.title": "LaTeX",
-          "679.title": "Toon voorvertoning",
-          "bYh-V5-ri6.title": "In huidig venster blijven",
+          "679.title": "Voorvertoning op voorgrond",
+          "bYh-V5-ri6.title": "Toon voorvertoning en ga terug naar vorig venster",
           "183.title": "Standaard TeX-opdracht",
           "188.title": "Standaard script",
           "921.title": "Radio",
@@ -25996,32 +25243,11 @@
       ],
       "Engines": [
         {
-          "key": "889.title",
-          "view": "settings.218",
-          "kind": "cell",
-          "property": "title",
-          "value": "(pdf)TeX (standaard: /Library/TeX/texbin OR /usr/texbin)"
-        },
-        {
-          "key": "BYT-g3-3p0.title",
-          "view": "settings.PsG-fR-sPc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Alternate Path (default: ~/bin/context/tex/texmf-osx-arm64/bin)"
-        },
-        {
           "key": "engine-auto-cell.title",
           "view": "settings.engine-auto-button",
           "kind": "cell",
           "property": "title",
           "value": "Automatisch instellen…"
-        },
-        {
-          "key": "1071.title",
-          "view": "settings.1070",
-          "kind": "cell",
-          "property": "title",
-          "value": "standaard"
         },
         {
           "key": "1020.title",
@@ -26052,27 +25278,6 @@
           "value": "BibTeX-engine"
         },
         {
-          "key": "1030.title",
-          "view": "settings.1029",
-          "kind": "cell",
-          "property": "title",
-          "value": "default: bibtex"
-        },
-        {
-          "key": "1024.title",
-          "view": "settings.1021",
-          "kind": "cell",
-          "property": "title",
-          "value": "kpsewhich (default: kpsewhich -progname=latex -format=tex)"
-        },
-        {
-          "key": "1063.title",
-          "view": "settings.1062",
-          "kind": "cell",
-          "property": "title",
-          "value": "standaard"
-        },
-        {
           "key": "878.title",
           "view": "settings.50",
           "kind": "cell",
@@ -26085,27 +25290,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Waarschuwing voor shell escape"
-        },
-        {
-          "key": "1068.title",
-          "view": "settings.1067",
-          "kind": "cell",
-          "property": "title",
-          "value": "standaard"
-        },
-        {
-          "key": "891.title",
-          "view": "settings.256",
-          "kind": "cell",
-          "property": "title",
-          "value": "Distiller (ghostscript) (standaard: /usr/local/bin)"
-        },
-        {
-          "key": "1074.title",
-          "view": "settings.1073",
-          "kind": "cell",
-          "property": "title",
-          "value": "standaard"
         },
         {
           "key": "215.title",
@@ -26530,13 +25714,6 @@
           "value": "XML Tag Choices"
         },
         {
-          "key": "mPz-qG-Toi.title",
-          "view": "settings.e8o-CH-MrS",
-          "kind": "cell",
-          "property": "title",
-          "value": "TeX-programma (geen standaard)"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -26637,13 +25814,6 @@
           "value": "Wekelijks",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "8Bw-D6-HlO.title",
-          "view": "settings.0GI-vh-5wv",
-          "kind": "cell",
-          "property": "title",
-          "value": "LaTeX-programma (geen standaard)"
         },
         {
           "key": "a5N-7n-3da.title",
@@ -26879,13 +26049,6 @@
           "property": "title",
           "value": "Vergroten",
           "index": 2
-        },
-        {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "Stel in"
         },
         {
           "key": "501.title",
@@ -27374,7 +26537,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Geavanceerd zoekpaneel",
+          "value": "Geavanceerd zoekpaneel (aanbevolen)",
           "row": 2,
           "column": 0
         },
@@ -27923,7 +27086,7 @@
           "view": "settings.782",
           "kind": "matrix",
           "property": "title",
-          "value": "SyncTeX",
+          "value": "SyncTeX (aanbevolen)",
           "row": 1,
           "column": 0
         },
@@ -27964,7 +27127,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "Toon voorvertoning",
+          "value": "Voorvertoning op voorgrond",
           "row": 0,
           "column": 0
         },
@@ -27973,7 +27136,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "In huidig venster blijven",
+          "value": "Toon voorvertoning en ga terug naar vorig venster",
           "row": 2,
           "column": 0
         },
@@ -28325,22 +27488,13 @@
           "63.title": "Editor"
         },
         "SettingsEngines": {
-          "889.title": "(pdf)TeX (por omissão: /Library/TeX/texbin OR /usr/texbin)",
-          "BYT-g3-3p0.title": "Alternate Path (default: ~/bin/context/tex/texmf-osx-arm64/bin)",
           "engine-auto-cell.title": "Configuração automática…",
-          "1071.title": "Predefinição",
           "1020.title": "Search command",
           "1075.title": "LaTeX ",
           "1069.title": "TeX",
           "1027.title": "Motor BibTeX",
-          "1030.title": "default: bibtex",
-          "1024.title": "kpsewhich (default: kpsewhich -progname=latex -format=tex)",
-          "1063.title": "Predefinição",
           "878.title": "LaTeX ",
           "882.title": "Aviso de shell escape",
-          "1068.title": "Predefinição",
-          "891.title": "Distiller (por omissão: /usr/local/bin)",
-          "1074.title": "Predefinição",
           "215.title": "Caminho",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -28401,7 +27555,6 @@
           "SS5-tZ-cDa.title": "Suporte a pTeX (para o Japão)",
           "vEF-zd-SJl.title": "Motor alternativo",
           "DU3-gi-QzY.title": "XML Tag Choices",
-          "mPz-qG-Toi.title": "Programa TeX (nenhum por omissão):",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "Script pessoal",
           "pkV-qe-XIq.title": "exercises",
@@ -28416,7 +27569,6 @@
           "2Mp-Uf-8n2.title": "marca pessoal",
           "2x0-tc-yWg.title": "Procurar atualizações automaticamente",
           "oSw-pG-JGB.title": "Semanalmente",
-          "8Bw-D6-HlO.title": "Programa LaTeX (nenhum por omissão):",
           "a5N-7n-3da.title": "(default: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Mensalmente"
@@ -28450,7 +27602,6 @@
           "343.title": "Duas páginas",
           "911.title": "Radio",
           "332.title": "Ampliar",
-          "866.title": "Definir",
           "501.title": "Disposição de páginas duplas",
           "871.title": "Vigiar sempre as alterações ao PDF feitas por outras apps",
           "636.title": "Selecionar texto",
@@ -28520,7 +27671,7 @@
           "1080.title": "Painel de pesquisa OgreKit (legado)",
           "3eF-XA-ahc.title": "Ignorar os parâmetros selecionados",
           "32.title": "Lembrar-se da última posição",
-          "adv-Fd-Pnl.title": "Painel de pesquisa avançada"
+          "adv-Fd-Pnl.title": "Painel de pesquisa avançada (recomendado)"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Style Title",
@@ -28598,13 +27749,13 @@
           "590.title": "Ficheiro de motor",
           "680.title": "Continuar a editar",
           "919.title": "Radio",
-          "786.title": "SyncTeX",
+          "786.title": "SyncTeX (recomendado)",
           "675.title": "Após a composição",
           "785.title": "Pesquisar PDF",
           "922.title": "Radio",
           "589.title": "LaTeX",
           "679.title": "Trazer a pré-visualização para a frente",
-          "bYh-V5-ri6.title": "Permanecer na janela atual",
+          "bYh-V5-ri6.title": "Mostrar a pré-visualização e voltar à janela original",
           "183.title": "Formato por omissão",
           "188.title": "Script por omissão",
           "921.title": "Radio",
@@ -29141,32 +28292,11 @@
       ],
       "Engines": [
         {
-          "key": "889.title",
-          "view": "settings.218",
-          "kind": "cell",
-          "property": "title",
-          "value": "(pdf)TeX (por omissão: /Library/TeX/texbin OR /usr/texbin)"
-        },
-        {
-          "key": "BYT-g3-3p0.title",
-          "view": "settings.PsG-fR-sPc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Alternate Path (default: ~/bin/context/tex/texmf-osx-arm64/bin)"
-        },
-        {
           "key": "engine-auto-cell.title",
           "view": "settings.engine-auto-button",
           "kind": "cell",
           "property": "title",
           "value": "Configuração automática…"
-        },
-        {
-          "key": "1071.title",
-          "view": "settings.1070",
-          "kind": "cell",
-          "property": "title",
-          "value": "Predefinição"
         },
         {
           "key": "1020.title",
@@ -29197,27 +28327,6 @@
           "value": "Motor BibTeX"
         },
         {
-          "key": "1030.title",
-          "view": "settings.1029",
-          "kind": "cell",
-          "property": "title",
-          "value": "default: bibtex"
-        },
-        {
-          "key": "1024.title",
-          "view": "settings.1021",
-          "kind": "cell",
-          "property": "title",
-          "value": "kpsewhich (default: kpsewhich -progname=latex -format=tex)"
-        },
-        {
-          "key": "1063.title",
-          "view": "settings.1062",
-          "kind": "cell",
-          "property": "title",
-          "value": "Predefinição"
-        },
-        {
           "key": "878.title",
           "view": "settings.50",
           "kind": "cell",
@@ -29230,27 +28339,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Aviso de shell escape"
-        },
-        {
-          "key": "1068.title",
-          "view": "settings.1067",
-          "kind": "cell",
-          "property": "title",
-          "value": "Predefinição"
-        },
-        {
-          "key": "891.title",
-          "view": "settings.256",
-          "kind": "cell",
-          "property": "title",
-          "value": "Distiller (por omissão: /usr/local/bin)"
-        },
-        {
-          "key": "1074.title",
-          "view": "settings.1073",
-          "kind": "cell",
-          "property": "title",
-          "value": "Predefinição"
         },
         {
           "key": "215.title",
@@ -29675,13 +28763,6 @@
           "value": "XML Tag Choices"
         },
         {
-          "key": "mPz-qG-Toi.title",
-          "view": "settings.e8o-CH-MrS",
-          "kind": "cell",
-          "property": "title",
-          "value": "Programa TeX (nenhum por omissão):"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -29782,13 +28863,6 @@
           "value": "Semanalmente",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "8Bw-D6-HlO.title",
-          "view": "settings.0GI-vh-5wv",
-          "kind": "cell",
-          "property": "title",
-          "value": "Programa LaTeX (nenhum por omissão):"
         },
         {
           "key": "a5N-7n-3da.title",
@@ -30024,13 +29098,6 @@
           "property": "title",
           "value": "Ampliar",
           "index": 2
-        },
-        {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "Definir"
         },
         {
           "key": "501.title",
@@ -30519,7 +29586,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Painel de pesquisa avançada",
+          "value": "Painel de pesquisa avançada (recomendado)",
           "row": 2,
           "column": 0
         },
@@ -31068,7 +30135,7 @@
           "view": "settings.782",
           "kind": "matrix",
           "property": "title",
-          "value": "SyncTeX",
+          "value": "SyncTeX (recomendado)",
           "row": 1,
           "column": 0
         },
@@ -31118,7 +30185,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "Permanecer na janela atual",
+          "value": "Mostrar a pré-visualização e voltar à janela original",
           "row": 2,
           "column": 0
         },
@@ -31470,22 +30537,13 @@
           "63.title": "Editor"
         },
         "SettingsEngines": {
-          "889.title": "(pdf)TeX (por padrão: /Library/TeX/texbin OR /usr/texbin)",
-          "BYT-g3-3p0.title": "Caminho alternativo (padrão: /bin/context/tex/texmf-osx-arm64/bin)",
           "engine-auto-cell.title": "Configuração automática…",
-          "1071.title": "padrão",
           "1020.title": "Comando de busca",
           "1075.title": "LaTeX ",
           "1069.title": "TeX",
           "1027.title": "Motor BibTeX",
-          "1030.title": "por padrão: bibtex",
-          "1024.title": "kpsewhich (por padrão: kpsewhich -progname=latex -format=tex)",
-          "1063.title": "padrão",
           "878.title": "LaTeX ",
           "882.title": "Alerta para Shell Escape",
-          "1068.title": "padrão",
-          "891.title": "Distiller (por padrão: /usr/local/bin)",
-          "1074.title": "padrão",
           "215.title": "Caminho",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -31546,7 +30604,6 @@
           "SS5-tZ-cDa.title": "suporte a pTeX (para usuários no Japão)",
           "vEF-zd-SJl.title": "Compilador alternativo",
           "DU3-gi-QzY.title": "Escolhas para elementos XML",
-          "mPz-qG-Toi.title": "Programa TeX (nenhum por padrão):",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "Script pessoal",
           "pkV-qe-XIq.title": "exercises",
@@ -31561,7 +30618,6 @@
           "2Mp-Uf-8n2.title": "marca pessoal",
           "2x0-tc-yWg.title": "Verificar automaticamente se há atualizações",
           "oSw-pG-JGB.title": "Semanalmente",
-          "8Bw-D6-HlO.title": "Programa LaTeX (nenhum por padrão):",
           "a5N-7n-3da.title": "(por padrão: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Mensalmente"
@@ -31595,7 +30651,6 @@
           "343.title": "Página dupla",
           "911.title": "Radio",
           "332.title": "Ampliar",
-          "866.title": "Definir",
           "501.title": "Modo de página dupla",
           "871.title": "Sempre monitorar alterações no PDF feitas por outros apps",
           "636.title": "Selecionar texto",
@@ -31665,7 +30720,7 @@
           "1080.title": "Painel de localizar OgreKit (legado)",
           "3eF-XA-ahc.title": "Não verificar parâmetros de alguns comandos",
           "32.title": "Lembrar-se da última posição",
-          "adv-Fd-Pnl.title": "Painel de localizar avançado"
+          "adv-Fd-Pnl.title": "Painel de localizar avançado (recomendado)"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Título do tema",
@@ -31743,13 +30798,13 @@
           "590.title": "Arquivo de motor",
           "680.title": "Continuar editando",
           "919.title": "Radio",
-          "786.title": "SyncTeX",
+          "786.title": "SyncTeX (recomendado)",
           "675.title": "Depois de compor",
           "785.title": "Pesquisar PDF",
           "922.title": "Radio",
           "589.title": "LaTeX",
           "679.title": "Trazer a visualização para frente",
-          "bYh-V5-ri6.title": "Permanecer na janela atual",
+          "bYh-V5-ri6.title": "Mostrar a visualização e voltar à janela original",
           "183.title": "Formato padrão",
           "188.title": "Script padrão",
           "921.title": "Radio",
@@ -32286,32 +31341,11 @@
       ],
       "Engines": [
         {
-          "key": "889.title",
-          "view": "settings.218",
-          "kind": "cell",
-          "property": "title",
-          "value": "(pdf)TeX (por padrão: /Library/TeX/texbin OR /usr/texbin)"
-        },
-        {
-          "key": "BYT-g3-3p0.title",
-          "view": "settings.PsG-fR-sPc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Caminho alternativo (padrão: /bin/context/tex/texmf-osx-arm64/bin)"
-        },
-        {
           "key": "engine-auto-cell.title",
           "view": "settings.engine-auto-button",
           "kind": "cell",
           "property": "title",
           "value": "Configuração automática…"
-        },
-        {
-          "key": "1071.title",
-          "view": "settings.1070",
-          "kind": "cell",
-          "property": "title",
-          "value": "padrão"
         },
         {
           "key": "1020.title",
@@ -32342,27 +31376,6 @@
           "value": "Motor BibTeX"
         },
         {
-          "key": "1030.title",
-          "view": "settings.1029",
-          "kind": "cell",
-          "property": "title",
-          "value": "por padrão: bibtex"
-        },
-        {
-          "key": "1024.title",
-          "view": "settings.1021",
-          "kind": "cell",
-          "property": "title",
-          "value": "kpsewhich (por padrão: kpsewhich -progname=latex -format=tex)"
-        },
-        {
-          "key": "1063.title",
-          "view": "settings.1062",
-          "kind": "cell",
-          "property": "title",
-          "value": "padrão"
-        },
-        {
           "key": "878.title",
           "view": "settings.50",
           "kind": "cell",
@@ -32375,27 +31388,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Alerta para Shell Escape"
-        },
-        {
-          "key": "1068.title",
-          "view": "settings.1067",
-          "kind": "cell",
-          "property": "title",
-          "value": "padrão"
-        },
-        {
-          "key": "891.title",
-          "view": "settings.256",
-          "kind": "cell",
-          "property": "title",
-          "value": "Distiller (por padrão: /usr/local/bin)"
-        },
-        {
-          "key": "1074.title",
-          "view": "settings.1073",
-          "kind": "cell",
-          "property": "title",
-          "value": "padrão"
         },
         {
           "key": "215.title",
@@ -32820,13 +31812,6 @@
           "value": "Escolhas para elementos XML"
         },
         {
-          "key": "mPz-qG-Toi.title",
-          "view": "settings.e8o-CH-MrS",
-          "kind": "cell",
-          "property": "title",
-          "value": "Programa TeX (nenhum por padrão):"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -32927,13 +31912,6 @@
           "value": "Semanalmente",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "8Bw-D6-HlO.title",
-          "view": "settings.0GI-vh-5wv",
-          "kind": "cell",
-          "property": "title",
-          "value": "Programa LaTeX (nenhum por padrão):"
         },
         {
           "key": "a5N-7n-3da.title",
@@ -33169,13 +32147,6 @@
           "property": "title",
           "value": "Ampliar",
           "index": 2
-        },
-        {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "Definir"
         },
         {
           "key": "501.title",
@@ -33664,7 +32635,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Painel de localizar avançado",
+          "value": "Painel de localizar avançado (recomendado)",
           "row": 2,
           "column": 0
         },
@@ -34213,7 +33184,7 @@
           "view": "settings.782",
           "kind": "matrix",
           "property": "title",
-          "value": "SyncTeX",
+          "value": "SyncTeX (recomendado)",
           "row": 1,
           "column": 0
         },
@@ -34263,7 +33234,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "Permanecer na janela atual",
+          "value": "Mostrar a visualização e voltar à janela original",
           "row": 2,
           "column": 0
         },
@@ -34615,22 +33586,13 @@
           "63.title": "Editor"
         },
         "SettingsEngines": {
-          "889.title": "(pdf)TeX (default: /Library/TeX/texbin OR /usr/texbin)",
-          "BYT-g3-3p0.title": "Alternate Path (default: ~/bin/context/tex/texmf-osx-arm64/bin)",
           "engine-auto-cell.title": "Configurare automată…",
-          "1071.title": "Implicit",
           "1020.title": "Search command",
           "1075.title": "LaTeX ",
           "1069.title": "TeX",
           "1027.title": "Motor BibTeX",
-          "1030.title": "default: bibtex",
-          "1024.title": "kpsewhich (default: kpsewhich -progname=latex -format=tex)",
-          "1063.title": "Implicit",
           "878.title": "LaTeX ",
           "882.title": "Avertisment shell escape",
-          "1068.title": "Implicit",
-          "891.title": "Distiller (ghostscript) (default: /usr/local/bin)",
-          "1074.title": "Implicit",
           "215.title": "Path settings",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -34691,7 +33653,6 @@
           "SS5-tZ-cDa.title": "Suport pTeX (pentru Japonia)",
           "vEF-zd-SJl.title": "Motor alternativ",
           "DU3-gi-QzY.title": "XML Tag Choices",
-          "mPz-qG-Toi.title": "TeX Program (no default)",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "Script Personal",
           "pkV-qe-XIq.title": "exercises",
@@ -34706,7 +33667,6 @@
           "2Mp-Uf-8n2.title": "marcaj personal",
           "2x0-tc-yWg.title": "Caută automat actualizări",
           "oSw-pG-JGB.title": "Săptămânal",
-          "8Bw-D6-HlO.title": "LaTeX Program (no default)",
           "a5N-7n-3da.title": "(default: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Lunar"
@@ -34740,7 +33700,6 @@
           "343.title": "Pagină Dublă",
           "911.title": "Radio",
           "332.title": "Lupă",
-          "866.title": "Stabilește",
           "501.title": "Aranjarea paginilor duble",
           "871.title": "Urmărește permanent modificările PDF-ului făcute de alte aplicații",
           "636.title": "Selectează textul",
@@ -34810,7 +33769,7 @@
           "1080.title": "Panoul de căutare OgreKit (vechi)",
           "3eF-XA-ahc.title": "Omite parametrii selectați",
           "32.title": "Înregistrează ultima poziție la închidere",
-          "adv-Fd-Pnl.title": "Panou de căutare avansată"
+          "adv-Fd-Pnl.title": "Panou de căutare avansată (recomandat)"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Style Title",
@@ -34888,13 +33847,13 @@
           "590.title": "Fișier de motor",
           "680.title": "Continuă editarea",
           "919.title": "Radio",
-          "786.title": "SyncTeX",
+          "786.title": "SyncTeX (recomandat)",
           "675.title": "După tehnoredactare",
           "785.title": "Caută în PDF",
           "922.title": "Radio",
           "589.title": "LaTeX",
           "679.title": "Adu previzualizarea în prim-plan",
-          "bYh-V5-ri6.title": "Rămâi în fereastra curentă",
+          "bYh-V5-ri6.title": "Arată previzualizarea și revino la fereastra inițială",
           "183.title": "Comanda Standard",
           "188.title": "Scriptul Standard",
           "921.title": "Radio",
@@ -35431,32 +34390,11 @@
       ],
       "Engines": [
         {
-          "key": "889.title",
-          "view": "settings.218",
-          "kind": "cell",
-          "property": "title",
-          "value": "(pdf)TeX (default: /Library/TeX/texbin OR /usr/texbin)"
-        },
-        {
-          "key": "BYT-g3-3p0.title",
-          "view": "settings.PsG-fR-sPc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Alternate Path (default: ~/bin/context/tex/texmf-osx-arm64/bin)"
-        },
-        {
           "key": "engine-auto-cell.title",
           "view": "settings.engine-auto-button",
           "kind": "cell",
           "property": "title",
           "value": "Configurare automată…"
-        },
-        {
-          "key": "1071.title",
-          "view": "settings.1070",
-          "kind": "cell",
-          "property": "title",
-          "value": "Implicit"
         },
         {
           "key": "1020.title",
@@ -35487,27 +34425,6 @@
           "value": "Motor BibTeX"
         },
         {
-          "key": "1030.title",
-          "view": "settings.1029",
-          "kind": "cell",
-          "property": "title",
-          "value": "default: bibtex"
-        },
-        {
-          "key": "1024.title",
-          "view": "settings.1021",
-          "kind": "cell",
-          "property": "title",
-          "value": "kpsewhich (default: kpsewhich -progname=latex -format=tex)"
-        },
-        {
-          "key": "1063.title",
-          "view": "settings.1062",
-          "kind": "cell",
-          "property": "title",
-          "value": "Implicit"
-        },
-        {
           "key": "878.title",
           "view": "settings.50",
           "kind": "cell",
@@ -35520,27 +34437,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Avertisment shell escape"
-        },
-        {
-          "key": "1068.title",
-          "view": "settings.1067",
-          "kind": "cell",
-          "property": "title",
-          "value": "Implicit"
-        },
-        {
-          "key": "891.title",
-          "view": "settings.256",
-          "kind": "cell",
-          "property": "title",
-          "value": "Distiller (ghostscript) (default: /usr/local/bin)"
-        },
-        {
-          "key": "1074.title",
-          "view": "settings.1073",
-          "kind": "cell",
-          "property": "title",
-          "value": "Implicit"
         },
         {
           "key": "215.title",
@@ -35965,13 +34861,6 @@
           "value": "XML Tag Choices"
         },
         {
-          "key": "mPz-qG-Toi.title",
-          "view": "settings.e8o-CH-MrS",
-          "kind": "cell",
-          "property": "title",
-          "value": "TeX Program (no default)"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -36072,13 +34961,6 @@
           "value": "Săptămânal",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "8Bw-D6-HlO.title",
-          "view": "settings.0GI-vh-5wv",
-          "kind": "cell",
-          "property": "title",
-          "value": "LaTeX Program (no default)"
         },
         {
           "key": "a5N-7n-3da.title",
@@ -36314,13 +35196,6 @@
           "property": "title",
           "value": "Lupă",
           "index": 2
-        },
-        {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "Stabilește"
         },
         {
           "key": "501.title",
@@ -36809,7 +35684,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Panou de căutare avansată",
+          "value": "Panou de căutare avansată (recomandat)",
           "row": 2,
           "column": 0
         },
@@ -37358,7 +36233,7 @@
           "view": "settings.782",
           "kind": "matrix",
           "property": "title",
-          "value": "SyncTeX",
+          "value": "SyncTeX (recomandat)",
           "row": 1,
           "column": 0
         },
@@ -37408,7 +36283,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "Rămâi în fereastra curentă",
+          "value": "Arată previzualizarea și revino la fereastra inițială",
           "row": 2,
           "column": 0
         },
@@ -37760,22 +36635,13 @@
           "63.title": "编辑器"
         },
         "SettingsEngines": {
-          "889.title": "(pdf)TeX (默认: /Library/TeX/texbin OR /usr/texbin)",
-          "BYT-g3-3p0.title": "替代路径 (默认: ~/bin/context/tex/texmf-osx-arm64/bin)",
           "engine-auto-cell.title": "自动设置…",
-          "1071.title": "默认",
           "1020.title": "搜索命令",
           "1075.title": "LaTeX ",
           "1069.title": "TeX",
           "1027.title": "BibTeX引擎",
-          "1030.title": "默认: bibtex",
-          "1024.title": "kpsewhich (默认: kpsewhich -progname=latex -format=tex)",
-          "1063.title": "默认",
           "878.title": "LaTeX ",
           "882.title": "Shell Escape警告",
-          "1068.title": "默认",
-          "891.title": "Distiller (ghostscript) (默认: /usr/local/bin)",
-          "1074.title": "默认",
           "215.title": "路径设置",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -37836,7 +36702,6 @@
           "SS5-tZ-cDa.title": "pTeX支持 (仅日语用户)",
           "vEF-zd-SJl.title": "替代引擎",
           "DU3-gi-QzY.title": "XML标签选择",
-          "mPz-qG-Toi.title": "TeX程序 (无默认值)",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "个性化脚本",
           "pkV-qe-XIq.title": "exercises",
@@ -37851,7 +36716,6 @@
           "2Mp-Uf-8n2.title": "自定义标记",
           "2x0-tc-yWg.title": "自动检查更新",
           "oSw-pG-JGB.title": "每周",
-          "8Bw-D6-HlO.title": "LaTeX程序 (无默认值)",
           "a5N-7n-3da.title": "(默认: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "每月"
@@ -37885,7 +36749,6 @@
           "343.title": "双页",
           "911.title": "Radio",
           "332.title": "放大镜",
-          "866.title": "设定",
           "501.title": "双页模式",
           "871.title": "始终监视其他应用对PDF的更改",
           "636.title": "选择文本",
@@ -37955,7 +36818,7 @@
           "1080.title": "OgreKit查找面板（旧版）",
           "3eF-XA-ahc.title": "不检查命令参数",
           "32.title": "关闭时记住上一次位置",
-          "adv-Fd-Pnl.title": "高级查找面板"
+          "adv-Fd-Pnl.title": "高级查找面板（推荐）"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "主题标题",
@@ -38033,13 +36896,13 @@
           "590.title": "引擎文件",
           "680.title": "继续编辑",
           "919.title": "Radio",
-          "786.title": "SyncTeX",
+          "786.title": "SyncTeX（推荐）",
           "675.title": "排版后",
           "785.title": "搜索PDF",
           "922.title": "Radio",
           "589.title": "LaTeX",
           "679.title": "调出预览窗口",
-          "bYh-V5-ri6.title": "留在当前窗口",
+          "bYh-V5-ri6.title": "显示预览后返回原窗口",
           "183.title": "默认指令",
           "188.title": "默认脚本",
           "921.title": "Radio",
@@ -38576,32 +37439,11 @@
       ],
       "Engines": [
         {
-          "key": "889.title",
-          "view": "settings.218",
-          "kind": "cell",
-          "property": "title",
-          "value": "(pdf)TeX (默认: /Library/TeX/texbin OR /usr/texbin)"
-        },
-        {
-          "key": "BYT-g3-3p0.title",
-          "view": "settings.PsG-fR-sPc",
-          "kind": "cell",
-          "property": "title",
-          "value": "替代路径 (默认: ~/bin/context/tex/texmf-osx-arm64/bin)"
-        },
-        {
           "key": "engine-auto-cell.title",
           "view": "settings.engine-auto-button",
           "kind": "cell",
           "property": "title",
           "value": "自动设置…"
-        },
-        {
-          "key": "1071.title",
-          "view": "settings.1070",
-          "kind": "cell",
-          "property": "title",
-          "value": "默认"
         },
         {
           "key": "1020.title",
@@ -38632,27 +37474,6 @@
           "value": "BibTeX引擎"
         },
         {
-          "key": "1030.title",
-          "view": "settings.1029",
-          "kind": "cell",
-          "property": "title",
-          "value": "默认: bibtex"
-        },
-        {
-          "key": "1024.title",
-          "view": "settings.1021",
-          "kind": "cell",
-          "property": "title",
-          "value": "kpsewhich (默认: kpsewhich -progname=latex -format=tex)"
-        },
-        {
-          "key": "1063.title",
-          "view": "settings.1062",
-          "kind": "cell",
-          "property": "title",
-          "value": "默认"
-        },
-        {
           "key": "878.title",
           "view": "settings.50",
           "kind": "cell",
@@ -38665,27 +37486,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Shell Escape警告"
-        },
-        {
-          "key": "1068.title",
-          "view": "settings.1067",
-          "kind": "cell",
-          "property": "title",
-          "value": "默认"
-        },
-        {
-          "key": "891.title",
-          "view": "settings.256",
-          "kind": "cell",
-          "property": "title",
-          "value": "Distiller (ghostscript) (默认: /usr/local/bin)"
-        },
-        {
-          "key": "1074.title",
-          "view": "settings.1073",
-          "kind": "cell",
-          "property": "title",
-          "value": "默认"
         },
         {
           "key": "215.title",
@@ -39110,13 +37910,6 @@
           "value": "XML标签选择"
         },
         {
-          "key": "mPz-qG-Toi.title",
-          "view": "settings.e8o-CH-MrS",
-          "kind": "cell",
-          "property": "title",
-          "value": "TeX程序 (无默认值)"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -39217,13 +38010,6 @@
           "value": "每周",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "8Bw-D6-HlO.title",
-          "view": "settings.0GI-vh-5wv",
-          "kind": "cell",
-          "property": "title",
-          "value": "LaTeX程序 (无默认值)"
         },
         {
           "key": "a5N-7n-3da.title",
@@ -39459,13 +38245,6 @@
           "property": "title",
           "value": "放大镜",
           "index": 2
-        },
-        {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "设定"
         },
         {
           "key": "501.title",
@@ -39954,7 +38733,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "高级查找面板",
+          "value": "高级查找面板（推荐）",
           "row": 2,
           "column": 0
         },
@@ -40503,7 +39282,7 @@
           "view": "settings.782",
           "kind": "matrix",
           "property": "title",
-          "value": "SyncTeX",
+          "value": "SyncTeX（推荐）",
           "row": 1,
           "column": 0
         },
@@ -40553,7 +39332,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": "留在当前窗口",
+          "value": "显示预览后返回原窗口",
           "row": 2,
           "column": 0
         },

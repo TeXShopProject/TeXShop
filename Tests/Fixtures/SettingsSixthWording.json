@@ -122,7 +122,7 @@
       "catalog.appearance.2.0.column.2": "Dekking",
       "group.appearance.0.title": "Thema’s",
       "group.console.1.title": "Acties",
-      "group.typesetting.9.title": "pTeX-ondersteuning (voor Japan)",
+      "group.typesetting.9.title": "Japans pLaTeX",
       "catalog.editor.4.1.choice.1": "( )",
       "catalog.general.2.2.button": "Huidige positie gebruiken",
       "group.editor.5.title": "Onzichtbare tekens",
@@ -265,7 +265,7 @@
     "SettingsTypesetting.strings": {
       "191.title": "Direct PDF",
       "YQv-fE-Uzg.title": "Als tabblad in hoofdvenster openen",
-      "bYh-V5-ri6.title": "In huidig venster blijven",
+      "bYh-V5-ri6.title": "Toon voorvertoning en ga terug naar vorig venster",
       "785.title": "PDF doorzoeken"
     }
   },
@@ -300,7 +300,7 @@
       "catalog.appearance.2.0.column.2": "Opacidade",
       "group.appearance.0.title": "Temas",
       "group.console.1.title": "Ações",
-      "group.typesetting.9.title": "Suporte a pTeX (para o Japão)",
+      "group.typesetting.9.title": "pLaTeX japonês",
       "catalog.editor.4.1.choice.1": "( )",
       "catalog.general.2.2.button": "Usar a posição atual",
       "group.editor.5.title": "Carateres invisíveis",
@@ -469,7 +469,7 @@
       "675.title": "Após a composição",
       "785.title": "Pesquisar PDF",
       "679.title": "Trazer a pré-visualização para a frente",
-      "bYh-V5-ri6.title": "Permanecer na janela atual"
+      "bYh-V5-ri6.title": "Mostrar a pré-visualização e voltar à janela original"
     }
   },
   "ro": {
@@ -513,7 +513,7 @@
       "catalog.editor.6.1.title": "Culoarea cursorului:",
       "group.console.1.title": "Acțiuni",
       "catalog.appearance.9.0.item.4": "Valoare",
-      "group.typesetting.9.title": "Suport pTeX (pentru Japonia)",
+      "group.typesetting.9.title": "pLaTeX japonez",
       "catalog.editor.4.1.choice.1": "( )",
       "catalog.general.2.2.button": "Folosește poziția actuală",
       "group.editor.5.title": "Caractere invizibile",
@@ -556,7 +556,6 @@
       "catalog.appearance.0.0.title": "Tema modului luminos",
       "group.editor.1.title": "Stilul editorului",
       "catalog.appearance.1.0.title": "Tema de editat",
-      "catalog.preview.0.2.button": "Stabilește",
       "catalog.general.2.1.button": "Folosește poziția actuală",
       "catalog.appearance.2.0.column.0": "Prim-plan",
       "catalog.editor.4.4.title": "Arată indicatorul la deplasare",
@@ -638,7 +637,6 @@
       "337.title": "Selectează PDF",
       "tVs-uh-QcM.title": "Deschide toate ferestrele în poziția fixată",
       "332.title": "Lupă",
-      "866.title": "Stabilește",
       "501.title": "Aranjarea paginilor duble",
       "871.title": "Urmărește permanent modificările PDF-ului făcute de alte aplicații",
       "636.title": "Selectează textul",
@@ -716,7 +714,7 @@
       "675.title": "După tehnoredactare",
       "785.title": "Caută în PDF",
       "679.title": "Adu previzualizarea în prim-plan",
-      "bYh-V5-ri6.title": "Rămâi în fereastra curentă"
+      "bYh-V5-ri6.title": "Arată previzualizarea și revino la fereastra inițială"
     }
   },
   "zh_CN": {

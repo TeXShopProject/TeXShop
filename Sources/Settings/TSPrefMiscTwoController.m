@@ -14,7 +14,6 @@
 - (IBAction)XMLSubsectionButtonChanged:(id)sender { [self.preferences XMLSubsectionButtonChanged:sender]; }
 - (IBAction)XMLSubsubsectionButtonChanged:(id)sender { [self.preferences XMLSubsubsectionButtonChanged:sender]; }
 - (IBAction)XMLTableButtonChanged:(id)sender { [self.preferences XMLTableButtonChanged:sender]; }
-- (IBAction)alternateEngineChanged:(id)sender { [self.preferences alternateEngineChanged:sender]; }
 - (IBAction)convertUTFPressed:(id)sender { [self.preferences convertUTFPressed:sender]; }
 - (IBAction)latexScriptProgramChanged:(id)sender { [self.preferences latexScriptProgramChanged:sender]; }
 - (IBAction)miniaturizeRootFilePressed:(id)sender { [self.preferences miniaturizeRootFilePressed:sender]; }

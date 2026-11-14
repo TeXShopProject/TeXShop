@@ -369,4 +369,13 @@
 "Use latexmk" = "latexmk verwenden";
 "Detect Paths" = "Pfade erkennen";
 "%@ (Not Found)" = "%@ (nicht gefunden)";
+"%1$@ (%2$@)" = "%1$@ (%2$@)";
+"None" = "Keine";
+"Typeset with Alternate Engine" = "Setzen mit Alternate Engine";
+"In the %1$@ menu, this item appears in place of %2$@ while you hold %3$@." = "Im Menü „%1$@“ erscheint dieser Befehl anstelle von „%2$@“, solange Sie %3$@ gedrückt halten.";
+"This item is in the %@ menu." = "Dieser Befehl steht im Menü „%@“.";
+"Key: %@" = "Taste: %@";
+"No key is assigned." = "Keine Taste zugewiesen.";
+"Typesets once with this engine instead of the one chosen in the toolbar." = "Setzt einmal mit dieser Engine statt mit der in der Symbolleiste gewählten.";
+"A % !TEX TS-program line at the top of the document takes precedence." = "Eine Zeile % !TEX TS-program am Anfang des Dokuments hat Vorrang.";
 "Choose an Engine Profile" = "Engine-Profil wählen";

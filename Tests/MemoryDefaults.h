@@ -36,7 +36,8 @@
 - (NSData *)dataForKey:(NSString *)key { id value = [self objectForKey:key]; return [value isKindOfClass:NSData.class] ? value : nil; }
 - (NSDictionary *)dictionaryRepresentation { NSMutableDictionary *result = [self.fallbacks mutableCopy]; [result addEntriesFromDictionary:self.persistentValues[[self applicationDomainName]] ?: @{}]; [result addEntriesFromDictionary:self.values]; [result addEntriesFromDictionary:self.volatileValues[NSArgumentDomain] ?: @{}]; return result; }
 - (void)setVolatileDomain:(NSDictionary *)domain forName:(NSString *)name { self.volatileValues[name] = [domain copy]; }
-- (NSDictionary *)volatileDomainForName:(NSString *)name { return self.volatileValues[name] ?: @{}; }
+// Registered defaults form the registration domain, as with NSUserDefaults.
+- (NSDictionary *)volatileDomainForName:(NSString *)name { if ([name isEqual:NSRegistrationDomain]) return [self.fallbacks copy]; return self.volatileValues[name] ?: @{}; }
 - (void)removeVolatileDomainForName:(NSString *)name { [self.volatileValues removeObjectForKey:name]; }
 - (NSArray *)volatileDomainNames { return self.volatileValues.allKeys; }
 - (NSString *)applicationDomainName { return NSBundle.mainBundle.bundleIdentifier ?: @"TeXShop"; }

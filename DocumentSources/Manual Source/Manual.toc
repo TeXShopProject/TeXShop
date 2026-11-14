@@ -45,239 +45,239 @@
 \contentsline {section}{\numberline {9.5}latexmk History}{52}{section.9.5}%
 \contentsline {section}{\numberline {9.6}The Inactive Folder}{53}{section.9.6}%
 \contentsline {section}{\numberline {9.7}Creating a New Engine}{53}{section.9.7}%
-\contentsline {section}{\numberline {9.8}Useful Engine Commands}{54}{section.9.8}%
-\contentsline {section}{\numberline {9.9}Recent Additional Engine Commands}{56}{section.9.9}%
-\contentsline {chapter}{\numberline {10}Projects with Multiple Input Files}{58}{chapter.10}%
-\contentsline {chapter}{\numberline {11}Goto Error, Trash Aux Files, SyncTeX}{60}{chapter.11}%
-\contentsline {section}{\numberline {11.1}Goto Error}{60}{section.11.1}%
-\contentsline {section}{\numberline {11.2}Trash Aux Files}{61}{section.11.2}%
-\contentsline {section}{\numberline {11.3}SyncTeX}{62}{section.11.3}%
-\contentsline {chapter}{\numberline {12}Synchronizing Page Numbers}{64}{chapter.12}%
-\contentsline {section}{\numberline {12.1}Synchronizing}{64}{section.12.1}%
-\contentsline {section}{\numberline {12.2}Activating the Fix}{65}{section.12.2}%
-\contentsline {section}{\numberline {12.3}Outputting the Crucial Line}{66}{section.12.3}%
-\contentsline {section}{\numberline {12.4}Earlier Way to Fix}{66}{section.12.4}%
-\contentsline {chapter}{\numberline {13}Organizing Windows in TeXShop}{68}{chapter.13}%
-\contentsline {section}{\numberline {13.1}Introduction}{68}{section.13.1}%
-\contentsline {section}{\numberline {13.2}Single Window Mode}{68}{section.13.2}%
-\contentsline {section}{\numberline {13.3}Multiple Windows with Tabs}{70}{section.13.3}%
-\contentsline {section}{\numberline {13.4}Single Window Mode and Tabs}{72}{section.13.4}%
-\contentsline {section}{\numberline {13.5}Obsolete Tab Commands}{74}{section.13.5}%
-\contentsline {chapter}{\numberline {14}Macros}{75}{chapter.14}%
-\contentsline {section}{\numberline {14.1}Introduction}{76}{section.14.1}%
-\contentsline {section}{\numberline {14.2}Default Macros}{77}{section.14.2}%
-\contentsline {section}{\numberline {14.3}Rearranging Macros}{78}{section.14.3}%
-\contentsline {section}{\numberline {14.4}AppleScript Macros}{78}{section.14.4}%
-\contentsline {section}{\numberline {14.5}Included AppleScript Commands}{79}{section.14.5}%
-\contentsline {subsubsection}{Column Macros, Insert Reference, Open Quickly}{79}{section*.3}%
-\contentsline {subsubsection}{Paste Spreadsheet Cells}{79}{section*.4}%
-\contentsline {subsubsection}{Convert to MAC, Convert to Unix, Convert to Windows}{80}{section*.5}%
-\contentsline {subsubsection}{Bibliography}{80}{section*.6}%
-\contentsline {subsubsection}{htlatexc, htlatexr}{81}{section*.7}%
-\contentsline {subsubsection}{pdfselectc}{81}{section*.8}%
-\contentsline {subsubsection}{mpostc, mpostcpl, latex-makeindex-mpost}{81}{section*.9}%
-\contentsline {section}{\numberline {14.6}Defining AppleScripts}{82}{section.14.6}%
-\contentsline {section}{\numberline {14.7}Dialogs}{83}{section.14.7}%
-\contentsline {section}{\numberline {14.8}Writing Complete AppleScripts}{84}{section.14.8}%
-\contentsline {section}{\numberline {14.9}Writing Command Scripts}{86}{section.14.9}%
-\contentsline {chapter}{\numberline {15}Editing Aids}{90}{chapter.15}%
-\contentsline {section}{\numberline {15.1}Emacs Mode}{90}{section.15.1}%
-\contentsline {section}{\numberline {15.2}Key Bindings}{92}{section.15.2}%
-\contentsline {section}{\numberline {15.3}Command Completion}{94}{section.15.3}%
-\contentsline {subsection}{\numberline {15.3.1}Introduction}{94}{subsection.15.3.1}%
-\contentsline {subsection}{\numberline {15.3.2}Herbert Schulz and Command Completion}{95}{subsection.15.3.2}%
-\contentsline {subsection}{\numberline {15.3.3}Completing Using First Few Characters}{95}{subsection.15.3.3}%
-\contentsline {subsection}{\numberline {15.3.4}Abbreviations}{96}{subsection.15.3.4}%
-\contentsline {subsection}{\numberline {15.3.5}Comments}{97}{subsection.15.3.5}%
-\contentsline {subsection}{\numberline {15.3.6}Other Environments}{98}{subsection.15.3.6}%
-\contentsline {subsection}{\numberline {15.3.7}When Typing \texttt {\textbackslash } is Difficult}{98}{subsection.15.3.7}%
-\contentsline {subsection}{\numberline {15.3.8}Editing the Command Completion File}{98}{subsection.15.3.8}%
-\contentsline {section}{\numberline {15.4}The Advanced Find Panel}{100}{section.15.4}%
-\contentsline {subsection}{\numberline {15.4.1}Finding and Replacing}{100}{subsection.15.4.1}%
-\contentsline {subsection}{\numberline {15.4.2}Regular Expressions}{102}{subsection.15.4.2}%
-\contentsline {subsection}{\numberline {15.4.3}Multiple Replace}{103}{subsection.15.4.3}%
-\contentsline {chapter}{\numberline {16}Automatic Saving; Finding Documents on Disk}{105}{chapter.16}%
-\contentsline {section}{\numberline {16.1}Automatic Saving}{105}{section.16.1}%
-\contentsline {section}{\numberline {16.2}Lock}{106}{section.16.2}%
-\contentsline {section}{\numberline {16.3}Revert To}{107}{section.16.3}%
-\contentsline {section}{\numberline {16.4}Finding the Disk Version of a Document}{108}{section.16.4}%
-\contentsline {chapter}{\numberline {17}Preview Window}{109}{chapter.17}%
-\contentsline {section}{\numberline {17.1}History}{109}{section.17.1}%
-\contentsline {section}{\numberline {17.2}Display Modes}{110}{section.17.2}%
-\contentsline {section}{\numberline {17.3}Magnification}{111}{section.17.3}%
-\contentsline {section}{\numberline {17.4}A Formerly Mysterious Setting}{113}{section.17.4}%
-\contentsline {section}{\numberline {17.5}Preview Mouse Tools}{114}{section.17.5}%
-\contentsline {section}{\numberline {17.6}Back, Forward, Rotation}{115}{section.17.6}%
-\contentsline {section}{\numberline {17.7}The Drawer and Two Search Fields}{115}{section.17.7}%
-\contentsline {section}{\numberline {17.8}Following Links and URLs}{116}{section.17.8}%
-\contentsline {section}{\numberline {17.9}Popup Windows and Hovering Over Links}{116}{section.17.9}%
-\contentsline {subsection}{\numberline {17.9.1}Modifying Popup Windows}{117}{subsection.17.9.1}%
-\contentsline {chapter}{\numberline {18}Printing}{120}{chapter.18}%
-\contentsline {chapter}{\numberline {19}The Console}{122}{chapter.19}%
-\contentsline {chapter}{\numberline {20}HTML, Interactive TeX4ht, PreTeXt}{124}{chapter.20}%
-\contentsline {section}{\numberline {20.1}Html Preview Window}{124}{section.20.1}%
-\contentsline {section}{\numberline {20.2}Html Files}{125}{section.20.2}%
-\contentsline {section}{\numberline {20.3}Help File for Html Commands}{126}{section.20.3}%
-\contentsline {section}{\numberline {20.4}TeX4ht}{127}{section.20.4}%
-\contentsline {section}{\numberline {20.5}Historical Intermission}{128}{section.20.5}%
-\contentsline {section}{\numberline {20.6}TeX4ht and Interactive Documents}{130}{section.20.6}%
-\contentsline {section}{\numberline {20.7}PreTeXt}{131}{section.20.7}%
-\contentsline {section}{\numberline {20.8}Special Features of TeXShop for html, xml, and ptx Files}{133}{section.20.8}%
-\contentsline {subsection}{\numberline {20.8.1}Syntax Coloring}{133}{subsection.20.8.1}%
-\contentsline {subsection}{\numberline {20.8.2}The Tags Item in the Toolbar}{133}{subsection.20.8.2}%
-\contentsline {subsection}{\numberline {20.8.3}Keyboard Tricks with Tags}{134}{subsection.20.8.3}%
-\contentsline {subsection}{\numberline {20.8.4}Command Completion}{135}{subsection.20.8.4}%
-\contentsline {chapter}{\numberline {21}ConTeXt}{136}{chapter.21}%
-\contentsline {section}{\numberline {21.1}ConTeXt Garden}{137}{section.21.1}%
-\contentsline {section}{\numberline {21.2}SyncTeX in ConTeXt}{138}{section.21.2}%
-\contentsline {section}{\numberline {21.3}2024 and Beyond}{138}{section.21.3}%
-\contentsline {section}{\numberline {21.4}Typesetting the Traditional ConTeXt in TeX Live}{139}{section.21.4}%
-\contentsline {section}{\numberline {21.5}Typesetting ConTeXt in TeX Live using luametatex}{139}{section.21.5}%
-\contentsline {section}{\numberline {21.6}Installing the ConTeXt Garden Version}{140}{section.21.6}%
-\contentsline {section}{\numberline {21.7}Typesetting ConTeXt from ConTeXt Garden}{140}{section.21.7}%
-\contentsline {chapter}{\numberline {22}Typst}{142}{chapter.22}%
-\contentsline {section}{\numberline {22.1}Introduction}{142}{section.22.1}%
-\contentsline {section}{\numberline {22.2}Packages and Templates}{143}{section.22.2}%
-\contentsline {section}{\numberline {22.3}Other Samples}{144}{section.22.3}%
-\contentsline {chapter}{\numberline {23}Using an External Editor}{145}{chapter.23}%
-\contentsline {section}{\numberline {23.1}Basics}{145}{section.23.1}%
-\contentsline {section}{\numberline {23.2}Preliminary Version: Using Sync with an External Editor}{147}{section.23.2}%
-\contentsline {section}{\numberline {23.3}More on External Sync}{148}{section.23.3}%
-\contentsline {section}{\numberline {23.4}Irrelevant Comments}{150}{section.23.4}%
-\contentsline {section}{\numberline {23.5}More Recent Interaction Methods}{151}{section.23.5}%
-\contentsline {chapter}{\numberline {24}Themes}{158}{chapter.24}%
-\contentsline {chapter}{\numberline {25}expl3 Syntax Coloring}{163}{chapter.25}%
-\contentsline {section}{\numberline {25.1}Latex3 and expl3}{163}{section.25.1}%
-\contentsline {section}{\numberline {25.2}Activating expl3 Syntax Coloring}{163}{section.25.2}%
-\contentsline {section}{\numberline {25.3}expl3 Coloring Rules}{164}{section.25.3}%
-\contentsline {chapter}{\numberline {26}Splitting Windows}{166}{chapter.26}%
-\contentsline {section}{\numberline {26.1}Splitting Source and Preview Windows}{166}{section.26.1}%
-\contentsline {section}{\numberline {26.2}The Active View in a Split Window}{167}{section.26.2}%
-\contentsline {section}{\numberline {26.3}Switching Views}{169}{section.26.3}%
-\contentsline {section}{\numberline {26.4}Showing a Link in the Other Part}{171}{section.26.4}%
-\contentsline {section}{\numberline {26.5}Revising the Document and Typesetting}{171}{section.26.5}%
-\contentsline {section}{\numberline {26.6}Changing the Display Format While Using Switch Views}{171}{section.26.6}%
-\contentsline {section}{\numberline {26.7}Avoiding Creep When Unsplitting}{172}{section.26.7}%
-\contentsline {section}{\numberline {26.8}Two Options When Splitting Horizontally}{173}{section.26.8}%
-\contentsline {section}{\numberline {26.9}Splitting Vertically}{173}{section.26.9}%
-\contentsline {section}{\numberline {26.10}Final Note}{173}{section.26.10}%
-\contentsline {chapter}{\numberline {27}Switching Preview Views}{174}{chapter.27}%
-\contentsline {section}{\numberline {27.1}Back and Forward Arrows}{174}{section.27.1}%
-\contentsline {section}{\numberline {27.2}Switch Views}{174}{section.27.2}%
-\contentsline {section}{\numberline {27.3}Independence from Split Window}{176}{section.27.3}%
-\contentsline {chapter}{\numberline {28}Presenting with TeXShop (Schmock)}{177}{chapter.28}%
-\contentsline {section}{\numberline {28.1}Introduction (Koch)}{177}{section.28.1}%
-\contentsline {section}{\numberline {28.2}Presenting (Schmock)}{178}{section.28.2}%
-\contentsline {chapter}{\numberline {29}Additional TeXShop Features}{185}{chapter.29}%
-\contentsline {section}{\numberline {29.1}Experiments}{185}{section.29.1}%
-\contentsline {section}{\numberline {29.2}Tags Toolbar Item and Menu; Labels Item}{187}{section.29.2}%
-\contentsline {section}{\numberline {29.3}Latex Panel, Matrix Panel, Unicode Panel}{189}{section.29.3}%
-\contentsline {section}{\numberline {29.4}Show Invisible}{191}{section.29.4}%
-\contentsline {section}{\numberline {29.5}Swap with Clipboard}{191}{section.29.5}%
-\contentsline {section}{\numberline {29.6}Character Type Conversion and Unicode Normalization}{191}{section.29.6}%
-\contentsline {section}{\numberline {29.7}A Magic Line for Beamer and Other Slide Packages}{192}{section.29.7}%
-\contentsline {section}{\numberline {29.8}Counting Words in a Document}{193}{section.29.8}%
-\contentsline {section}{\numberline {29.9}Useful Items in the TeXShop Menu}{194}{section.29.9}%
-\contentsline {chapter}{\numberline {30}Other Miscellaneous Features}{195}{chapter.30}%
-\contentsline {section}{\numberline {30.1}Items in the TeXShop Help Menu}{195}{section.30.1}%
-\contentsline {section}{\numberline {30.2}Help with Style and Class Files}{195}{section.30.2}%
-\contentsline {section}{\numberline {30.3}Opening Other Files}{196}{section.30.3}%
-\contentsline {section}{\numberline {30.4}Arabic, Hebrew, Persian}{196}{section.30.4}%
-\contentsline {section}{\numberline {30.5}Localizations}{197}{section.30.5}%
-\contentsline {section}{\numberline {30.6}Redefining Menu Shortcut Keystrokes}{197}{section.30.6}%
-\contentsline {section}{\numberline {30.7}The Block Insertion Cursor}{199}{section.30.7}%
-\contentsline {chapter}{\numberline {31}Spell Checking}{201}{chapter.31}%
-\contentsline {section}{\numberline {31.1}Introduction}{201}{section.31.1}%
-\contentsline {section}{\numberline {31.2}LaTeX-aware Spell Checking}{202}{section.31.2}%
-\contentsline {section}{\numberline {31.3}Dictionaries}{203}{section.31.3}%
-\contentsline {section}{\numberline {31.4}Spell Checking LaTeX Commands}{204}{section.31.4}%
-\contentsline {section}{\numberline {31.5}cocoAspell}{206}{section.31.5}%
-\contentsline {section}{\numberline {31.6}cocoAspell Usage (Koch)}{206}{section.31.6}%
-\contentsline {section}{\numberline {31.7}cocoAspell Installing (Schulz)}{208}{section.31.7}%
-\contentsline {subsection}{\numberline {31.7.1}Introduction}{208}{subsection.31.7.1}%
-\contentsline {subsection}{\numberline {31.7.2}First Check for \texttt {make}}{208}{subsection.31.7.2}%
-\contentsline {subsection}{\numberline {31.7.3}Building the \texttt {cocoAspell} Dictionaries}{209}{subsection.31.7.3}%
-\contentsline {chapter}{\numberline {32}Annotations}{210}{chapter.32}%
-\contentsline {section}{\numberline {32.1}Annotations in General}{210}{section.32.1}%
-\contentsline {section}{\numberline {32.2}Who Defined Annotations?}{210}{section.32.2}%
-\contentsline {section}{\numberline {32.3}Using LaTeX to Annotate}{212}{section.32.3}%
-\contentsline {section}{\numberline {32.4}Why Add Annotations to TeXShop?}{213}{section.32.4}%
-\contentsline {section}{\numberline {32.5}Annotating in TeXShop}{213}{section.32.5}%
-\contentsline {section}{\numberline {32.6}Adding Annotations to a Page}{214}{section.32.6}%
-\contentsline {section}{\numberline {32.7}Editing Text in Annotations}{215}{section.32.7}%
-\contentsline {section}{\numberline {32.8}Changing Annotation Colors}{216}{section.32.8}%
-\contentsline {section}{\numberline {32.9}Changing Annotation Fonts}{216}{section.32.9}%
-\contentsline {chapter}{\numberline {33}More on Annotations}{217}{chapter.33}%
-\contentsline {section}{\numberline {33.1}Saving Annotated PDF Files}{217}{section.33.1}%
-\contentsline {section}{\numberline {33.2}Removing Image Streams}{218}{section.33.2}%
-\contentsline {section}{\numberline {33.3}Guard Rails}{219}{section.33.3}%
-\contentsline {section}{\numberline {33.4}Interacting with Adobe Acrobat}{219}{section.33.4}%
-\contentsline {section}{\numberline {33.5}Interacting with Preview}{220}{section.33.5}%
-\contentsline {section}{\numberline {33.6}History of the Annotation Code}{221}{section.33.6}%
-\contentsline {section}{\numberline {33.7}Arrows}{221}{section.33.7}%
-\contentsline {section}{\numberline {33.8}Don't Do This}{222}{section.33.8}%
-\contentsline {chapter}{\numberline {34}Fermat as Annotator}{223}{chapter.34}%
-\contentsline {section}{\numberline {34.1}A Difficult Theorem of Fermat}{224}{section.34.1}%
-\contentsline {section}{\numberline {34.2}Euclid's Formula}{225}{section.34.2}%
-\contentsline {section}{\numberline {34.3}Progressions of Squares}{226}{section.34.3}%
-\contentsline {section}{\numberline {34.4}The Method of Descent}{227}{section.34.4}%
-\contentsline {section}{\numberline {34.5}Fermat's Argument by Descent}{228}{section.34.5}%
-\contentsline {section}{\numberline {34.6}Generalizing Fermat's Area Theorem}{229}{section.34.6}%
-\contentsline {chapter}{\numberline {35}Writing Tools}{230}{chapter.35}%
-\contentsline {chapter}{\numberline {36}Japan}{232}{chapter.36}%
-\contentsline {chapter}{\numberline {37}Updating TeXShop}{234}{chapter.37}%
-\contentsline {chapter}{\numberline {38}Opening Encrypted PDF Files}{236}{chapter.38}%
-\contentsline {chapter}{\numberline {39}Left Over Items}{238}{chapter.39}%
-\contentsline {section}{\numberline {39.1}Menus}{238}{section.39.1}%
-\contentsline {section}{\numberline {39.2}Items in TeXShop Settings}{240}{section.39.2}%
-\contentsline {section}{\numberline {39.3}Modifying the Latex Panel}{241}{section.39.3}%
-\contentsline {section}{\numberline {39.4}Adding to the List of Files That Can Be Typeset}{242}{section.39.4}%
-\contentsline {chapter}{\numberline {40}Magic Comment Lines}{243}{chapter.40}%
-\contentsline {section}{\numberline {40.1}Commonly Used Magic Lines}{243}{section.40.1}%
-\contentsline {section}{\numberline {40.2}Magic Lines to Control Preview in Double Page Modes}{244}{section.40.2}%
-\contentsline {section}{\numberline {40.3}Magic Lines for ConTeXt}{245}{section.40.3}%
-\contentsline {section}{\numberline {40.4}A Magic Line for Beamer}{245}{section.40.4}%
-\contentsline {section}{\numberline {40.5}Obsolete Magic Lines}{246}{section.40.5}%
-\contentsline {section}{\numberline {40.6}Pseudo-Magic Lines for Engine Files}{246}{section.40.6}%
-\contentsline {chapter}{\numberline {41}Hidden Settings}{248}{chapter.41}%
-\contentsline {section}{\numberline {41.1}Introduction}{248}{section.41.1}%
-\contentsline {section}{\numberline {41.2}Long Standing Hidden Settings }{250}{section.41.2}%
-\contentsline {subsubsection}{<Settings for Line Spacing in the Source Window>}{250}{section*.10}%
-\contentsline {subsubsection}{<Settings for Trashing AUX Files>}{250}{section*.11}%
-\contentsline {subsubsection}{<Settings for Command Completion>}{251}{section*.12}%
-\contentsline {subsubsection}{<Settings for the Preview Window>}{251}{section*.13}%
-\contentsline {subsubsection}{<Settings for the Preview Window Drawer>}{252}{section*.14}%
-\contentsline {subsubsection}{<Settings for Automatic Saving>}{252}{section*.15}%
-\contentsline {subsubsection}{<Settings for the Matrix Panel>}{252}{section*.16}%
-\contentsline {subsubsection}{<Settings for Server Problems>}{252}{section*.17}%
-\contentsline {subsubsection}{<Settings for the Tags Menu>}{254}{section*.18}%
-\contentsline {section}{\numberline {41.3}Newer Hidden Settings}{254}{section.41.3}%
-\contentsline {subsubsection}{<Settings for the Source Window>}{254}{section*.19}%
-\contentsline {subsubsection}{<Settings for Syntax Coloring>}{254}{section*.20}%
-\contentsline {subsubsection}{<Settings to Control Spell Checking>}{255}{section*.21}%
-\contentsline {subsubsection}{<Settings to Control Apple Find Bar>}{256}{section*.22}%
-\contentsline {subsubsection}{<Settings to Control Tags and Labels>}{256}{section*.23}%
-\contentsline {subsubsection}{<Settings for Coloring Indices>}{256}{section*.24}%
-\contentsline {subsubsection}{<Setting for Tabs>}{256}{section*.25}%
-\contentsline {subsubsection}{<Settings for Save Dialog>}{256}{section*.26}%
-\contentsline {subsubsection}{<Settings for the Preview Window>}{257}{section*.27}%
-\contentsline {subsubsection}{<Settings for External Editors>}{257}{section*.28}%
-\contentsline {subsubsection}{<Settings for Accessibility>}{257}{section*.29}%
-\contentsline {subsubsection}{<Settings for Apple Intelligence>}{257}{section*.30}%
-\contentsline {section}{\numberline {41.4}Obsolete Hidden Settings}{258}{section.41.4}%
-\contentsline {subsubsection}{<Obsolete Settings Introduced To Fix a Bug>}{258}{section*.31}%
-\contentsline {subsubsection}{<Obsolete Settings Related to the Flash Bug>}{258}{section*.32}%
-\contentsline {subsubsection}{<Various Obsolete Bugfixes>}{259}{section*.33}%
-\contentsline {subsubsection}{<Obsolete Bug for the Entire Program>}{260}{section*.34}%
-\contentsline {subsubsection}{<Other Obsolete Settings>}{260}{section*.35}%
-\contentsline {subsubsection}{<Other Obsolete Items>}{262}{section*.36}%
-\contentsline {subsubsection}{<Obsolete Color Settings>}{262}{section*.37}%
-\contentsline {chapter}{\numberline {42}Unusual Bugs}{265}{chapter.42}%
-\contentsline {section}{\numberline {42.1}Tags}{265}{section.42.1}%
-\contentsline {section}{\numberline {42.2}Zombie Untitled Windows}{265}{section.42.2}%
-\contentsline {chapter}{\numberline {43}Contributors}{267}{chapter.43}%
-\contentsline {subsubsection}{Overall Architecture}{267}{section*.38}%
-\contentsline {subsubsection}{Specific Features}{267}{section*.39}%
-\contentsline {subsubsection}{Independent Projects Used by TeXShop}{267}{section*.40}%
-\contentsline {subsubsection}{Localization}{268}{section*.41}%
-\contentsline {subsubsection}{Icon}{268}{section*.42}%
+\contentsline {section}{\numberline {9.8}Useful Engine Commands}{55}{section.9.8}%
+\contentsline {section}{\numberline {9.9}Recent Additional Engine Commands}{57}{section.9.9}%
+\contentsline {chapter}{\numberline {10}Projects with Multiple Input Files}{59}{chapter.10}%
+\contentsline {chapter}{\numberline {11}Goto Error, Trash Aux Files, SyncTeX}{61}{chapter.11}%
+\contentsline {section}{\numberline {11.1}Goto Error}{61}{section.11.1}%
+\contentsline {section}{\numberline {11.2}Trash Aux Files}{62}{section.11.2}%
+\contentsline {section}{\numberline {11.3}SyncTeX}{63}{section.11.3}%
+\contentsline {chapter}{\numberline {12}Synchronizing Page Numbers}{65}{chapter.12}%
+\contentsline {section}{\numberline {12.1}Synchronizing}{65}{section.12.1}%
+\contentsline {section}{\numberline {12.2}Activating the Fix}{66}{section.12.2}%
+\contentsline {section}{\numberline {12.3}Outputting the Crucial Line}{67}{section.12.3}%
+\contentsline {section}{\numberline {12.4}Earlier Way to Fix}{67}{section.12.4}%
+\contentsline {chapter}{\numberline {13}Organizing Windows in TeXShop}{69}{chapter.13}%
+\contentsline {section}{\numberline {13.1}Introduction}{69}{section.13.1}%
+\contentsline {section}{\numberline {13.2}Single Window Mode}{69}{section.13.2}%
+\contentsline {section}{\numberline {13.3}Multiple Windows with Tabs}{71}{section.13.3}%
+\contentsline {section}{\numberline {13.4}Single Window Mode and Tabs}{73}{section.13.4}%
+\contentsline {section}{\numberline {13.5}Obsolete Tab Commands}{75}{section.13.5}%
+\contentsline {chapter}{\numberline {14}Macros}{76}{chapter.14}%
+\contentsline {section}{\numberline {14.1}Introduction}{77}{section.14.1}%
+\contentsline {section}{\numberline {14.2}Default Macros}{78}{section.14.2}%
+\contentsline {section}{\numberline {14.3}Rearranging Macros}{79}{section.14.3}%
+\contentsline {section}{\numberline {14.4}AppleScript Macros}{79}{section.14.4}%
+\contentsline {section}{\numberline {14.5}Included AppleScript Commands}{80}{section.14.5}%
+\contentsline {subsubsection}{Column Macros, Insert Reference, Open Quickly}{80}{section*.3}%
+\contentsline {subsubsection}{Paste Spreadsheet Cells}{80}{section*.4}%
+\contentsline {subsubsection}{Convert to MAC, Convert to Unix, Convert to Windows}{81}{section*.5}%
+\contentsline {subsubsection}{Bibliography}{81}{section*.6}%
+\contentsline {subsubsection}{htlatexc, htlatexr}{82}{section*.7}%
+\contentsline {subsubsection}{pdfselectc}{82}{section*.8}%
+\contentsline {subsubsection}{mpostc, mpostcpl, latex-makeindex-mpost}{82}{section*.9}%
+\contentsline {section}{\numberline {14.6}Defining AppleScripts}{83}{section.14.6}%
+\contentsline {section}{\numberline {14.7}Dialogs}{84}{section.14.7}%
+\contentsline {section}{\numberline {14.8}Writing Complete AppleScripts}{85}{section.14.8}%
+\contentsline {section}{\numberline {14.9}Writing Command Scripts}{87}{section.14.9}%
+\contentsline {chapter}{\numberline {15}Editing Aids}{91}{chapter.15}%
+\contentsline {section}{\numberline {15.1}Emacs Mode}{91}{section.15.1}%
+\contentsline {section}{\numberline {15.2}Key Bindings}{93}{section.15.2}%
+\contentsline {section}{\numberline {15.3}Command Completion}{95}{section.15.3}%
+\contentsline {subsection}{\numberline {15.3.1}Introduction}{95}{subsection.15.3.1}%
+\contentsline {subsection}{\numberline {15.3.2}Herbert Schulz and Command Completion}{96}{subsection.15.3.2}%
+\contentsline {subsection}{\numberline {15.3.3}Completing Using First Few Characters}{96}{subsection.15.3.3}%
+\contentsline {subsection}{\numberline {15.3.4}Abbreviations}{97}{subsection.15.3.4}%
+\contentsline {subsection}{\numberline {15.3.5}Comments}{98}{subsection.15.3.5}%
+\contentsline {subsection}{\numberline {15.3.6}Other Environments}{99}{subsection.15.3.6}%
+\contentsline {subsection}{\numberline {15.3.7}When Typing \texttt {\textbackslash } is Difficult}{99}{subsection.15.3.7}%
+\contentsline {subsection}{\numberline {15.3.8}Editing the Command Completion File}{99}{subsection.15.3.8}%
+\contentsline {section}{\numberline {15.4}The Advanced Find Panel}{101}{section.15.4}%
+\contentsline {subsection}{\numberline {15.4.1}Finding and Replacing}{101}{subsection.15.4.1}%
+\contentsline {subsection}{\numberline {15.4.2}Regular Expressions}{103}{subsection.15.4.2}%
+\contentsline {subsection}{\numberline {15.4.3}Multiple Replace}{104}{subsection.15.4.3}%
+\contentsline {chapter}{\numberline {16}Automatic Saving; Finding Documents on Disk}{106}{chapter.16}%
+\contentsline {section}{\numberline {16.1}Automatic Saving}{106}{section.16.1}%
+\contentsline {section}{\numberline {16.2}Lock}{107}{section.16.2}%
+\contentsline {section}{\numberline {16.3}Revert To}{108}{section.16.3}%
+\contentsline {section}{\numberline {16.4}Finding the Disk Version of a Document}{109}{section.16.4}%
+\contentsline {chapter}{\numberline {17}Preview Window}{110}{chapter.17}%
+\contentsline {section}{\numberline {17.1}History}{110}{section.17.1}%
+\contentsline {section}{\numberline {17.2}Display Modes}{111}{section.17.2}%
+\contentsline {section}{\numberline {17.3}Magnification}{112}{section.17.3}%
+\contentsline {section}{\numberline {17.4}A Formerly Mysterious Setting}{114}{section.17.4}%
+\contentsline {section}{\numberline {17.5}Preview Mouse Tools}{115}{section.17.5}%
+\contentsline {section}{\numberline {17.6}Back, Forward, Rotation}{116}{section.17.6}%
+\contentsline {section}{\numberline {17.7}The Drawer and Two Search Fields}{116}{section.17.7}%
+\contentsline {section}{\numberline {17.8}Following Links and URLs}{117}{section.17.8}%
+\contentsline {section}{\numberline {17.9}Popup Windows and Hovering Over Links}{117}{section.17.9}%
+\contentsline {subsection}{\numberline {17.9.1}Modifying Popup Windows}{118}{subsection.17.9.1}%
+\contentsline {chapter}{\numberline {18}Printing}{121}{chapter.18}%
+\contentsline {chapter}{\numberline {19}The Console}{123}{chapter.19}%
+\contentsline {chapter}{\numberline {20}HTML, Interactive TeX4ht, PreTeXt}{125}{chapter.20}%
+\contentsline {section}{\numberline {20.1}Html Preview Window}{125}{section.20.1}%
+\contentsline {section}{\numberline {20.2}Html Files}{126}{section.20.2}%
+\contentsline {section}{\numberline {20.3}Help File for Html Commands}{127}{section.20.3}%
+\contentsline {section}{\numberline {20.4}TeX4ht}{128}{section.20.4}%
+\contentsline {section}{\numberline {20.5}Historical Intermission}{129}{section.20.5}%
+\contentsline {section}{\numberline {20.6}TeX4ht and Interactive Documents}{131}{section.20.6}%
+\contentsline {section}{\numberline {20.7}PreTeXt}{132}{section.20.7}%
+\contentsline {section}{\numberline {20.8}Special Features of TeXShop for html, xml, and ptx Files}{134}{section.20.8}%
+\contentsline {subsection}{\numberline {20.8.1}Syntax Coloring}{134}{subsection.20.8.1}%
+\contentsline {subsection}{\numberline {20.8.2}The Tags Item in the Toolbar}{134}{subsection.20.8.2}%
+\contentsline {subsection}{\numberline {20.8.3}Keyboard Tricks with Tags}{135}{subsection.20.8.3}%
+\contentsline {subsection}{\numberline {20.8.4}Command Completion}{136}{subsection.20.8.4}%
+\contentsline {chapter}{\numberline {21}ConTeXt}{137}{chapter.21}%
+\contentsline {section}{\numberline {21.1}ConTeXt Garden}{138}{section.21.1}%
+\contentsline {section}{\numberline {21.2}SyncTeX in ConTeXt}{139}{section.21.2}%
+\contentsline {section}{\numberline {21.3}2024 and Beyond}{139}{section.21.3}%
+\contentsline {section}{\numberline {21.4}Typesetting the Traditional ConTeXt in TeX Live}{140}{section.21.4}%
+\contentsline {section}{\numberline {21.5}Typesetting ConTeXt in TeX Live using luametatex}{140}{section.21.5}%
+\contentsline {section}{\numberline {21.6}Installing the ConTeXt Garden Version}{141}{section.21.6}%
+\contentsline {section}{\numberline {21.7}Typesetting ConTeXt from ConTeXt Garden}{141}{section.21.7}%
+\contentsline {chapter}{\numberline {22}Typst}{143}{chapter.22}%
+\contentsline {section}{\numberline {22.1}Introduction}{143}{section.22.1}%
+\contentsline {section}{\numberline {22.2}Packages and Templates}{144}{section.22.2}%
+\contentsline {section}{\numberline {22.3}Other Samples}{145}{section.22.3}%
+\contentsline {chapter}{\numberline {23}Using an External Editor}{146}{chapter.23}%
+\contentsline {section}{\numberline {23.1}Basics}{146}{section.23.1}%
+\contentsline {section}{\numberline {23.2}Preliminary Version: Using Sync with an External Editor}{148}{section.23.2}%
+\contentsline {section}{\numberline {23.3}More on External Sync}{149}{section.23.3}%
+\contentsline {section}{\numberline {23.4}Irrelevant Comments}{151}{section.23.4}%
+\contentsline {section}{\numberline {23.5}More Recent Interaction Methods}{152}{section.23.5}%
+\contentsline {chapter}{\numberline {24}Themes}{159}{chapter.24}%
+\contentsline {chapter}{\numberline {25}expl3 Syntax Coloring}{164}{chapter.25}%
+\contentsline {section}{\numberline {25.1}Latex3 and expl3}{164}{section.25.1}%
+\contentsline {section}{\numberline {25.2}Activating expl3 Syntax Coloring}{164}{section.25.2}%
+\contentsline {section}{\numberline {25.3}expl3 Coloring Rules}{165}{section.25.3}%
+\contentsline {chapter}{\numberline {26}Splitting Windows}{167}{chapter.26}%
+\contentsline {section}{\numberline {26.1}Splitting Source and Preview Windows}{167}{section.26.1}%
+\contentsline {section}{\numberline {26.2}The Active View in a Split Window}{168}{section.26.2}%
+\contentsline {section}{\numberline {26.3}Switching Views}{170}{section.26.3}%
+\contentsline {section}{\numberline {26.4}Showing a Link in the Other Part}{172}{section.26.4}%
+\contentsline {section}{\numberline {26.5}Revising the Document and Typesetting}{172}{section.26.5}%
+\contentsline {section}{\numberline {26.6}Changing the Display Format While Using Switch Views}{172}{section.26.6}%
+\contentsline {section}{\numberline {26.7}Avoiding Creep When Unsplitting}{173}{section.26.7}%
+\contentsline {section}{\numberline {26.8}Two Options When Splitting Horizontally}{174}{section.26.8}%
+\contentsline {section}{\numberline {26.9}Splitting Vertically}{174}{section.26.9}%
+\contentsline {section}{\numberline {26.10}Final Note}{174}{section.26.10}%
+\contentsline {chapter}{\numberline {27}Switching Preview Views}{175}{chapter.27}%
+\contentsline {section}{\numberline {27.1}Back and Forward Arrows}{175}{section.27.1}%
+\contentsline {section}{\numberline {27.2}Switch Views}{175}{section.27.2}%
+\contentsline {section}{\numberline {27.3}Independence from Split Window}{177}{section.27.3}%
+\contentsline {chapter}{\numberline {28}Presenting with TeXShop (Schmock)}{178}{chapter.28}%
+\contentsline {section}{\numberline {28.1}Introduction (Koch)}{178}{section.28.1}%
+\contentsline {section}{\numberline {28.2}Presenting (Schmock)}{179}{section.28.2}%
+\contentsline {chapter}{\numberline {29}Additional TeXShop Features}{186}{chapter.29}%
+\contentsline {section}{\numberline {29.1}Experiments}{186}{section.29.1}%
+\contentsline {section}{\numberline {29.2}Tags Toolbar Item and Menu; Labels Item}{188}{section.29.2}%
+\contentsline {section}{\numberline {29.3}Latex Panel, Matrix Panel, Unicode Panel}{190}{section.29.3}%
+\contentsline {section}{\numberline {29.4}Show Invisible}{192}{section.29.4}%
+\contentsline {section}{\numberline {29.5}Swap with Clipboard}{192}{section.29.5}%
+\contentsline {section}{\numberline {29.6}Character Type Conversion and Unicode Normalization}{192}{section.29.6}%
+\contentsline {section}{\numberline {29.7}A Magic Line for Beamer and Other Slide Packages}{193}{section.29.7}%
+\contentsline {section}{\numberline {29.8}Counting Words in a Document}{194}{section.29.8}%
+\contentsline {section}{\numberline {29.9}Useful Items in the TeXShop Menu}{195}{section.29.9}%
+\contentsline {chapter}{\numberline {30}Other Miscellaneous Features}{196}{chapter.30}%
+\contentsline {section}{\numberline {30.1}Items in the TeXShop Help Menu}{196}{section.30.1}%
+\contentsline {section}{\numberline {30.2}Help with Style and Class Files}{196}{section.30.2}%
+\contentsline {section}{\numberline {30.3}Opening Other Files}{197}{section.30.3}%
+\contentsline {section}{\numberline {30.4}Arabic, Hebrew, Persian}{197}{section.30.4}%
+\contentsline {section}{\numberline {30.5}Localizations}{198}{section.30.5}%
+\contentsline {section}{\numberline {30.6}Redefining Menu Shortcut Keystrokes}{198}{section.30.6}%
+\contentsline {section}{\numberline {30.7}The Block Insertion Cursor}{200}{section.30.7}%
+\contentsline {chapter}{\numberline {31}Spell Checking}{202}{chapter.31}%
+\contentsline {section}{\numberline {31.1}Introduction}{202}{section.31.1}%
+\contentsline {section}{\numberline {31.2}LaTeX-aware Spell Checking}{203}{section.31.2}%
+\contentsline {section}{\numberline {31.3}Dictionaries}{204}{section.31.3}%
+\contentsline {section}{\numberline {31.4}Spell Checking LaTeX Commands}{205}{section.31.4}%
+\contentsline {section}{\numberline {31.5}cocoAspell}{207}{section.31.5}%
+\contentsline {section}{\numberline {31.6}cocoAspell Usage (Koch)}{207}{section.31.6}%
+\contentsline {section}{\numberline {31.7}cocoAspell Installing (Schulz)}{209}{section.31.7}%
+\contentsline {subsection}{\numberline {31.7.1}Introduction}{209}{subsection.31.7.1}%
+\contentsline {subsection}{\numberline {31.7.2}First Check for \texttt {make}}{209}{subsection.31.7.2}%
+\contentsline {subsection}{\numberline {31.7.3}Building the \texttt {cocoAspell} Dictionaries}{210}{subsection.31.7.3}%
+\contentsline {chapter}{\numberline {32}Annotations}{211}{chapter.32}%
+\contentsline {section}{\numberline {32.1}Annotations in General}{211}{section.32.1}%
+\contentsline {section}{\numberline {32.2}Who Defined Annotations?}{211}{section.32.2}%
+\contentsline {section}{\numberline {32.3}Using LaTeX to Annotate}{213}{section.32.3}%
+\contentsline {section}{\numberline {32.4}Why Add Annotations to TeXShop?}{214}{section.32.4}%
+\contentsline {section}{\numberline {32.5}Annotating in TeXShop}{214}{section.32.5}%
+\contentsline {section}{\numberline {32.6}Adding Annotations to a Page}{215}{section.32.6}%
+\contentsline {section}{\numberline {32.7}Editing Text in Annotations}{216}{section.32.7}%
+\contentsline {section}{\numberline {32.8}Changing Annotation Colors}{217}{section.32.8}%
+\contentsline {section}{\numberline {32.9}Changing Annotation Fonts}{217}{section.32.9}%
+\contentsline {chapter}{\numberline {33}More on Annotations}{218}{chapter.33}%
+\contentsline {section}{\numberline {33.1}Saving Annotated PDF Files}{218}{section.33.1}%
+\contentsline {section}{\numberline {33.2}Removing Image Streams}{219}{section.33.2}%
+\contentsline {section}{\numberline {33.3}Guard Rails}{220}{section.33.3}%
+\contentsline {section}{\numberline {33.4}Interacting with Adobe Acrobat}{220}{section.33.4}%
+\contentsline {section}{\numberline {33.5}Interacting with Preview}{221}{section.33.5}%
+\contentsline {section}{\numberline {33.6}History of the Annotation Code}{222}{section.33.6}%
+\contentsline {section}{\numberline {33.7}Arrows}{222}{section.33.7}%
+\contentsline {section}{\numberline {33.8}Don't Do This}{223}{section.33.8}%
+\contentsline {chapter}{\numberline {34}Fermat as Annotator}{224}{chapter.34}%
+\contentsline {section}{\numberline {34.1}A Difficult Theorem of Fermat}{225}{section.34.1}%
+\contentsline {section}{\numberline {34.2}Euclid's Formula}{226}{section.34.2}%
+\contentsline {section}{\numberline {34.3}Progressions of Squares}{227}{section.34.3}%
+\contentsline {section}{\numberline {34.4}The Method of Descent}{228}{section.34.4}%
+\contentsline {section}{\numberline {34.5}Fermat's Argument by Descent}{229}{section.34.5}%
+\contentsline {section}{\numberline {34.6}Generalizing Fermat's Area Theorem}{230}{section.34.6}%
+\contentsline {chapter}{\numberline {35}Writing Tools}{231}{chapter.35}%
+\contentsline {chapter}{\numberline {36}Japan}{233}{chapter.36}%
+\contentsline {chapter}{\numberline {37}Updating TeXShop}{235}{chapter.37}%
+\contentsline {chapter}{\numberline {38}Opening Encrypted PDF Files}{237}{chapter.38}%
+\contentsline {chapter}{\numberline {39}Left Over Items}{239}{chapter.39}%
+\contentsline {section}{\numberline {39.1}Menus}{239}{section.39.1}%
+\contentsline {section}{\numberline {39.2}Items in TeXShop Settings}{241}{section.39.2}%
+\contentsline {section}{\numberline {39.3}Modifying the Latex Panel}{242}{section.39.3}%
+\contentsline {section}{\numberline {39.4}Adding to the List of Files That Can Be Typeset}{243}{section.39.4}%
+\contentsline {chapter}{\numberline {40}Magic Comment Lines}{244}{chapter.40}%
+\contentsline {section}{\numberline {40.1}Commonly Used Magic Lines}{244}{section.40.1}%
+\contentsline {section}{\numberline {40.2}Magic Lines to Control Preview in Double Page Modes}{245}{section.40.2}%
+\contentsline {section}{\numberline {40.3}Magic Lines for ConTeXt}{246}{section.40.3}%
+\contentsline {section}{\numberline {40.4}A Magic Line for Beamer}{246}{section.40.4}%
+\contentsline {section}{\numberline {40.5}Obsolete Magic Lines}{247}{section.40.5}%
+\contentsline {section}{\numberline {40.6}Pseudo-Magic Lines for Engine Files}{247}{section.40.6}%
+\contentsline {chapter}{\numberline {41}Hidden Settings}{249}{chapter.41}%
+\contentsline {section}{\numberline {41.1}Introduction}{249}{section.41.1}%
+\contentsline {section}{\numberline {41.2}Long Standing Hidden Settings }{251}{section.41.2}%
+\contentsline {subsubsection}{<Settings for Line Spacing in the Source Window>}{251}{section*.10}%
+\contentsline {subsubsection}{<Settings for Trashing AUX Files>}{251}{section*.11}%
+\contentsline {subsubsection}{<Settings for Command Completion>}{252}{section*.12}%
+\contentsline {subsubsection}{<Settings for the Preview Window>}{252}{section*.13}%
+\contentsline {subsubsection}{<Settings for the Preview Window Drawer>}{253}{section*.14}%
+\contentsline {subsubsection}{<Settings for Automatic Saving>}{253}{section*.15}%
+\contentsline {subsubsection}{<Settings for the Matrix Panel>}{253}{section*.16}%
+\contentsline {subsubsection}{<Settings for Server Problems>}{253}{section*.17}%
+\contentsline {subsubsection}{<Settings for the Tags Menu>}{255}{section*.18}%
+\contentsline {section}{\numberline {41.3}Newer Hidden Settings}{255}{section.41.3}%
+\contentsline {subsubsection}{<Settings for the Source Window>}{255}{section*.19}%
+\contentsline {subsubsection}{<Settings for Syntax Coloring>}{255}{section*.20}%
+\contentsline {subsubsection}{<Settings to Control Spell Checking>}{256}{section*.21}%
+\contentsline {subsubsection}{<Settings to Control Apple Find Bar>}{257}{section*.22}%
+\contentsline {subsubsection}{<Settings to Control Tags and Labels>}{257}{section*.23}%
+\contentsline {subsubsection}{<Settings for Coloring Indices>}{257}{section*.24}%
+\contentsline {subsubsection}{<Setting for Tabs>}{257}{section*.25}%
+\contentsline {subsubsection}{<Settings for Save Dialog>}{257}{section*.26}%
+\contentsline {subsubsection}{<Settings for the Preview Window>}{258}{section*.27}%
+\contentsline {subsubsection}{<Settings for External Editors>}{258}{section*.28}%
+\contentsline {subsubsection}{<Settings for Accessibility>}{258}{section*.29}%
+\contentsline {subsubsection}{<Settings for Apple Intelligence>}{258}{section*.30}%
+\contentsline {section}{\numberline {41.4}Obsolete Hidden Settings}{259}{section.41.4}%
+\contentsline {subsubsection}{<Obsolete Settings Introduced To Fix a Bug>}{259}{section*.31}%
+\contentsline {subsubsection}{<Obsolete Settings Related to the Flash Bug>}{259}{section*.32}%
+\contentsline {subsubsection}{<Various Obsolete Bugfixes>}{260}{section*.33}%
+\contentsline {subsubsection}{<Obsolete Bug for the Entire Program>}{261}{section*.34}%
+\contentsline {subsubsection}{<Other Obsolete Settings>}{261}{section*.35}%
+\contentsline {subsubsection}{<Other Obsolete Items>}{263}{section*.36}%
+\contentsline {subsubsection}{<Obsolete Color Settings>}{263}{section*.37}%
+\contentsline {chapter}{\numberline {42}Unusual Bugs}{266}{chapter.42}%
+\contentsline {section}{\numberline {42.1}Tags}{266}{section.42.1}%
+\contentsline {section}{\numberline {42.2}Zombie Untitled Windows}{266}{section.42.2}%
+\contentsline {chapter}{\numberline {43}Contributors}{268}{chapter.43}%
+\contentsline {subsubsection}{Overall Architecture}{268}{section*.38}%
+\contentsline {subsubsection}{Specific Features}{268}{section*.39}%
+\contentsline {subsubsection}{Independent Projects Used by TeXShop}{268}{section*.40}%
+\contentsline {subsubsection}{Localization}{269}{section*.41}%
+\contentsline {subsubsection}{Icon}{269}{section*.42}%

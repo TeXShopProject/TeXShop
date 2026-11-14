@@ -111,5 +111,28 @@ static void SearchCoverage(NSDictionary<NSString *,NSViewController *> *panes,NS
  }
  Check(HasCategory(index,@"Unique Command 93762",@"keyboard"),@"Command names indexed");
  Check(![index resultsForQuery:@"/private/user-only-path-93762"].count && ![index resultsForQuery:@"My Private Theme 93762"].count,@"No user values in index");
+ // The former names of the otf conversion and its group, as each language showed them
+ // before they were renamed, still find the setting under its current name.
+ NSDictionary<NSString *,NSArray<NSString *> *> *formerOtfNames=@{
+  @"Base":@[@"otf Package Support",@"pTeX support (for Japan)",@"otf package support"],
+  @"de":@[@"Unterstützung für das otf-Paket",@"pTeX-Unterstützung (für japanische Benutzer)"],
+  @"es":@[@"Compatibilidad con el paquete otf",@"Soporte pTeX (japonés)"],
+  @"fr":@[@"Prise en charge du paquet otf",@"Support pTeX (Japon)"],
+  @"it":@[@"Supporto per il pacchetto otf",@"Supporto pTeX (solo giapponese)"],
+  @"ja":@[@"otfパッケージ対応",@"pTeXサポート（日本用）",@"pTeX サポート"],
+  @"ko":@[@"otf 패키지 지원",@"일본어 pTeX 지원"],
+  @"nl":@[@"Ondersteuning voor het otf-pakket",@"pTeX-ondersteuning (voor Japan)"],
+  @"pt":@[@"Suporte ao pacote otf",@"suporte a pTeX (para usuários no Japão)"],
+  @"pt-PT":@[@"Suporte para o pacote otf",@"Suporte a pTeX (para o Japão)"],
+  @"ro":@[@"Suport pentru pachetul otf",@"Suport pTeX (pentru Japonia)"],
+  @"zh_CN":@[@"otf宏包支持",@"pTeX支持 (仅日语用户)"]};
+ NSString *otfLanguage=resources.bundlePath.lastPathComponent.stringByDeletingPathExtension;
+ NSString *otfTitle=[resources localizedStringForKey:@"catalog.typesetting.9.0.title" value:nil table:@"SettingsCategories"];
+ for(NSString *query in [formerOtfNames[otfLanguage] ?: @[] arrayByAddingObject:@"pTeX"]){
+  BOOL found=NO;
+  for(TSSettingsSearchResult *hit in [index resultsForQuery:query])
+   if([hit.category isEqual:@"typesetting"] && [hit.targetIdentifier isEqual:@"row.catalog.typesetting.9.0"] && [hit.title isEqual:otfTitle])found=YES;
+  Check(found,[NSString stringWithFormat:@"Former otf name finds the renamed setting: %@ (%@)",query,otfLanguage]);searchChecks++;
+ }
  printf("SEARCH PASS %lu queries\n",(unsigned long)searchChecks);
 }

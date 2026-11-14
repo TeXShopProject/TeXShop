@@ -122,7 +122,7 @@ add(TSSettingsCategorySpelling, @"row.catalog.spelling.0.2", @"SettingsCategorie
 add(TSSettingsCategorySpelling, @"heading.group.spelling.1", @"SettingsCategories", @"group.spelling.1.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.0", @"SettingsCategories", @"catalog.spelling.1.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.0", @"SettingsCategories", @"catalog.spelling.1.0.note", TSSettingsSearchWeightDescription);
-add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.1", @"SettingsCategories", @"catalog.spelling.1.1.title", TSSettingsSearchWeightLabel);
+add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.0", @"SettingsCategories", @"catalog.spelling.1.0.button", TSSettingsSearchWeightLabel);
 add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.2", @"SettingsCategories", @"catalog.spelling.1.2.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.3", @"SettingsCategories", @"catalog.spelling.1.3.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.4", @"SettingsCategories", @"catalog.spelling.1.4.title", TSSettingsSearchWeightLabel);
@@ -191,7 +191,6 @@ add(TSSettingsCategoryPreview, @"row.catalog.preview.0.0", @"SettingsCategories"
 add(TSSettingsCategoryPreview, @"row.catalog.preview.0.1", @"SettingsCategories", @"catalog.preview.0.1.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.0.2", @"SettingsCategories", @"catalog.preview.0.2.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.0.2", @"SettingsCategories", @"catalog.preview.0.2.unit", TSSettingsSearchWeightDescription);
-add(TSSettingsCategoryPreview, @"row.catalog.preview.0.2", @"SettingsCategories", @"catalog.preview.0.2.button", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.0.3", @"SettingsCategories", @"catalog.preview.0.3.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.0.4", @"SettingsCategories", @"catalog.preview.0.4.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.0.4", @"SettingsCategories", @"catalog.preview.0.4.note", TSSettingsSearchWeightDescription);
@@ -225,6 +224,8 @@ add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.1", @"SettingsCat
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.2", @"SettingsCategories", @"catalog.typesetting.0.2.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.3", @"SettingsCategories", @"catalog.typesetting.0.3.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.3", @"SettingsCategories", @"catalog.typesetting.0.3.note", TSSettingsSearchWeightDescription);
+add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.3", @"SettingsCategories", @"catalog.typesetting.0.1.button", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.3", @"SettingsCategories", @"catalog.typesetting.0.3.info", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryTypesetting, @"heading.group.typesetting.1", @"SettingsCategories", @"group.typesetting.1.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.1.0", @"SettingsCategories", @"catalog.typesetting.1.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryTypesetting, @"heading.group.typesetting.2", @"SettingsCategories", @"group.typesetting.2.title", TSSettingsSearchWeightHeading);
@@ -233,38 +234,27 @@ add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.2.1", @"SettingsCat
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.2.1", @"SettingsCategories", @"catalog.typesetting.2.1.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryTypesetting, @"heading.group.typesetting.3", @"SettingsCategories", @"group.typesetting.3.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.3.0", @"SettingsCategories", @"catalog.typesetting.3.0.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.3.0", @"SettingsCategories", @"catalog.typesetting.3.0.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.3.1", @"SettingsCategories", @"catalog.typesetting.3.1.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.3.1", @"SettingsCategories", @"catalog.typesetting.3.1.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.3.2", @"SettingsCategories", @"catalog.typesetting.3.2.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.3.2", @"SettingsCategories", @"catalog.typesetting.3.2.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.3.3", @"SettingsCategories", @"catalog.typesetting.3.3.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryTypesetting, @"heading.group.typesetting.4", @"SettingsCategories", @"group.typesetting.4.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.4.0", @"SettingsCategories", @"catalog.typesetting.4.0.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.4.0", @"SettingsCategories", @"catalog.typesetting.4.0.button", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.4.1", @"SettingsCategories", @"catalog.typesetting.4.1.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.4.1", @"SettingsCategories", @"catalog.typesetting.4.1.button", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.4.2", @"SettingsCategories", @"catalog.typesetting.4.2.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.4.2", @"SettingsCategories", @"catalog.typesetting.4.2.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryTypesetting, @"heading.group.typesetting.5", @"SettingsCategories", @"group.typesetting.5.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.5.0", @"SettingsCategories", @"catalog.typesetting.5.0.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.5.0", @"SettingsCategories", @"catalog.typesetting.5.0.button", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.5.1", @"SettingsCategories", @"catalog.typesetting.5.1.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.5.1", @"SettingsCategories", @"catalog.typesetting.5.1.button", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryTypesetting, @"heading.group.typesetting.6", @"SettingsCategories", @"group.typesetting.6.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.6.0", @"SettingsCategories", @"catalog.typesetting.6.0.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.6.0", @"SettingsCategories", @"catalog.typesetting.6.0.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.6.1", @"SettingsCategories", @"catalog.typesetting.6.1.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.6.1", @"SettingsCategories", @"catalog.typesetting.6.1.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryTypesetting, @"heading.group.typesetting.8", @"SettingsCategories", @"group.typesetting.8.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.8.0", @"SettingsCategories", @"catalog.typesetting.8.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.8.0", @"SettingsCategories", @"catalog.typesetting.8.0.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.8.1", @"SettingsCategories", @"catalog.typesetting.8.1.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.8.1", @"SettingsCategories", @"catalog.typesetting.8.1.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.8.2", @"SettingsCategories", @"catalog.typesetting.8.2.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.8.2", @"SettingsCategories", @"catalog.typesetting.8.2.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.8.3", @"SettingsCategories", @"catalog.typesetting.8.3.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.8.3", @"SettingsCategories", @"catalog.typesetting.8.3.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryTypesetting, @"heading.group.typesetting.9", @"SettingsCategories", @"group.typesetting.9.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.9.0", @"SettingsCategories", @"catalog.typesetting.9.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryConsole, @"heading.group.console.0", @"SettingsCategories", @"group.console.0.title", TSSettingsSearchWeightHeading);
@@ -412,7 +402,7 @@ add(TSSettingsCategoryPreview, @"row.catalog.preview.0.2", @"SettingsPreview", @
 add(TSSettingsCategoryPreview, @"row.catalog.preview.4.2", @"SettingsMiscOne", @"434.ibShadowedToolTip", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.4.1", @"SettingsMiscOne", @"437.ibShadowedToolTip", TSSettingsSearchWeightDescription);
 add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.0", @"SettingsSource", @"ts-aware-spelling.ibShadowedToolTip", TSSettingsSearchWeightDescription);
-add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.1", @"SettingsSource", @"ts-edit-spelling.ibShadowedToolTip", TSSettingsSearchWeightDescription);
+add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.0", @"SettingsSource", @"ts-edit-spelling.ibShadowedToolTip", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryDocuments, @"row.catalog.documents.0.0", @"Encodings", @"Ascii", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryDocuments, @"row.catalog.documents.0.0", @"Encodings", @"DOS Chinese Simplified", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryDocuments, @"row.catalog.documents.0.0", @"Encodings", @"DOS Chinese Traditional", TSSettingsSearchWeightChoice);
@@ -459,6 +449,9 @@ add(TSSettingsCategoryAppearance, @"settings.c9R-58-ggg", @"SettingsCategories",
 add(TSSettingsCategoryAppearance, @"settings.cnt-Xt-iQF", @"SettingsCategories", @"catalog.appearance.2.0.column.2", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryDocuments, @"row.catalog.documents.1.3", @"SettingsCategories", @"catalog.documents.1.3.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.9.0", @"SettingsCategories", @"catalog.typesetting.9.0.note", TSSettingsSearchWeightDescription);
+// The former names of the otf setting and its group still find the setting.
+add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.9.0", @"SettingsCategories", @"catalog.typesetting.9.0.former", TSSettingsSearchWeightDescription);
+add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.9.0", @"SettingsCategories", @"group.typesetting.9.former", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.0.4", @"SettingsCategories", @"catalog.editor.0.1.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.0.5", @"SettingsCategories", @"catalog.editor.0.1.note", TSSettingsSearchWeightDescription);
 

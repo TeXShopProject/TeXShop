@@ -366,4 +366,13 @@
 "Use latexmk" = "使用latexmk";
 "Detect Paths" = "自动检测路径";
 "%@ (Not Found)" = "%@（未找到）";
+"%1$@ (%2$@)" = "%1$@（%2$@）";
+"None" = "无";
+"Typeset with Alternate Engine" = "使用替代引擎排版";
+"In the %1$@ menu, this item appears in place of %2$@ while you hold %3$@." = "在“%1$@”菜单中按住%3$@时，此项会代替“%2$@”出现。";
+"This item is in the %@ menu." = "此项在“%@”菜单中。";
+"Key: %@" = "按键：%@";
+"No key is assigned." = "未指定按键。";
+"Typesets once with this engine instead of the one chosen in the toolbar." = "仅此一次用此引擎代替工具栏中所选的引擎进行排版。";
+"A % !TEX TS-program line at the top of the document takes precedence." = "文稿开头有 % !TEX TS-program行时，以该行为准。";
 "Choose an Engine Profile" = "选择引擎配置";

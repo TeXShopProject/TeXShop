@@ -265,7 +265,7 @@
       ],
       "label_row": null,
       "key_symbol": "TSTeXAwareSpellCheckingKey",
-      "whole_row": true,
+      "whole_row": false,
       "value_kind": "boolean"
     },
     {

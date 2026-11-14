@@ -91,7 +91,7 @@ NSDictionary<TSPreferenceKey, id> *TSEngineProfileValues(TSEngineProfile profile
     values[BibTeXengineKey] = row[4];
     values[MakeIndexEngineKey] = row[5];
     values[MetaPostEngineKey] = row[6];
-    // otf package support is a pTeX feature: every other engine turns it off.
+    // Conversion to the \UTF and \CID of the otf package is for pLaTeX: every other engine turns it off.
     values[ptexUtfOutputEnabledKey] = profile == TSEngineProfilePLaTeXDvipdfmx ? @YES : @NO;
     if (TSEngineProfileIsJapanese(profile)) {
         // New documents in UTF-8, which the Japanese engines of today read.

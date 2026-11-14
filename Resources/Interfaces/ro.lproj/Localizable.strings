@@ -369,4 +369,13 @@
 "Use latexmk" = "Utilizați latexmk";
 "Detect Paths" = "Detectați căile";
 "%@ (Not Found)" = "%@ (negăsit)";
+"%1$@ (%2$@)" = "%1$@ (%2$@)";
+"None" = "Niciunul";
+"Typeset with Alternate Engine" = "Compilare cu motorul alternativ";
+"In the %1$@ menu, this item appears in place of %2$@ while you hold %3$@." = "În meniul „%1$@”, acest articol apare în locul lui „%2$@” cât timp țineți apăsat %3$@.";
+"This item is in the %@ menu." = "Acest articol se află în meniul „%@”.";
+"Key: %@" = "Tastă: %@";
+"No key is assigned." = "Nicio tastă atribuită.";
+"Typesets once with this engine instead of the one chosen in the toolbar." = "Culege o dată cu acest motor în locul celui ales în bara de instrumente.";
+"A % !TEX TS-program line at the top of the document takes precedence." = "O linie % !TEX TS-program la începutul documentului are prioritate.";
 "Choose an Engine Profile" = "Alegeți un profil al motorului";

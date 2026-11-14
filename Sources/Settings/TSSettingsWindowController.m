@@ -52,8 +52,15 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
 @property (strong, nullable) NSViewController<TSSettingsKeyboardPane> *keyboardPane;
 @property (strong, nullable) NSScrollView *keyboardScroll;
 - (BOOL)handleKeySearchEvent:(NSEvent *)event;
+- (void)firstResponderChanged;
 @end
 @implementation TSSettingsWindow
+- (BOOL)makeFirstResponder:(NSResponder *)responder
+{
+    BOOL changed = [super makeFirstResponder:responder];
+    if (changed) [self.settingsController firstResponderChanged];
+    return changed;
+}
 - (void)sendEvent:(NSEvent *)event
 {
     // Keep recording consistent after clicking a result row. Capture ordinary
@@ -117,6 +124,11 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
 - (BOOL)handleKeySearchEvent:(NSEvent *)event {
     if (![self.history.currentIdentifier isEqualToString:TSSettingsCategoryKeyboard] || self.keyboardPane == nil) { return NO; }
     return [self.keyboardPane handleKeySearchEvent:event];
+}
+- (void)firstResponderChanged
+{
+    NSViewController<TSSettingsKeyboardPane> *pane = self.keyboardPane;
+    if ([pane respondsToSelector:@selector(windowFirstResponderChanged:)]) [pane windowFirstResponderChanged:self.window.firstResponder];
 }
 - (NSNibName)windowNibName { return @"SettingsWindow"; }
 - (void)windowDidLoad

@@ -148,6 +148,7 @@ alone
 along
 alongside
 already
+alternate
 although
 altogether
 always
@@ -1652,7 +1653,6 @@ software
 solarizeddark
 solarizedlite
 some
-something
 sometime
 sometimes
 soon

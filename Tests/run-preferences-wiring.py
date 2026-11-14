@@ -18,6 +18,13 @@ def declared_methods():
     names.add("setDefaults:")
     # The engine field of the earlier window. Settings chooses the engine file from a menu.
     names.add("setEngine:")
+    # The Alternate Engine field of the earlier window. Settings chooses it from a menu.
+    names.add("alternateEngineChanged:")
+    # The Set button next to the magnification field of the earlier window. Settings saves
+    # the field when its editing ends.
+    names.add("magChanged:")
+    # The Default buttons of the earlier window's commands. Settings restores them with the engine profiles.
+    names.add("defaultEngineCall:")
     # Save PostScript File and -dALLOWPSTRANSPARENCY of earlier windows; Via DVI commands take
     # --keep-psfile and --distilleropts themselves.
     names.add("savePSPressed:")
@@ -104,8 +111,8 @@ for p in [x for x in (root/'Resources/Interfaces/Base.lproj').glob('Settings*.xi
   new[original]=p.name
 missing=set(old)-set(new)
 # _scrollButton ("Do not scroll" with page buttons), _distillerMatrix and _antialiasButton were removed.
-# _engineTextField gave way to the Engine File menu built in code; _savePSButton (Save PostScript
-# File) and _useTransparencyButton (-dALLOWPSTRANSPARENCY) were removed.
-assert missing <= {'_prefsWindow','_tabView','_samplePanel','_fontTextView','_scrollButton','_distillerMatrix','_antialiasButton','_engineTextField','_savePSButton','_useTransparencyButton'},missing
-assert len(new)==167
+# _engineTextField and _alternateEngineTextField gave way to menus built in code; _savePSButton
+# (Save PostScript File) and _useTransparencyButton (-dALLOWPSTRANSPARENCY) were removed.
+assert missing <= {'_prefsWindow','_tabView','_samplePanel','_fontTextView','_scrollButton','_distillerMatrix','_antialiasButton','_engineTextField','_alternateEngineTextField','_savePSButton','_useTransparencyButton'},missing
+assert len(new)==166
 print('PASS: 170 used outlets each migrate exactly once into shared panes')

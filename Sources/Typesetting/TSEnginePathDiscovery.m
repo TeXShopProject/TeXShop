@@ -49,7 +49,7 @@
         for (NSString *line in [contents componentsSeparatedByCharactersInSet:NSCharacterSet.newlineCharacterSet]) add(line);
     }
     for (NSString *path in [NSProcessInfo.processInfo.environment[@"PATH"] componentsSeparatedByString:@":"]) add(path);
-    for (NSString *path in @[@"/Library/TeX/texbin", @"/usr/texbin", @"/Applications/TeXLive/Library/mactexaddons/bin"]) add(path);
+    for (NSString *path in @[@"/Library/TeX/texbin", @"/Applications/TeXLive/Library/mactexaddons/bin"]) add(path);
     NSArray *roots = @[@"/Applications/TeXLive", @"/Applications/TeXLive/Library/texlive", @"/Applications/TeXLive/texlive", @"/usr/local/texlive", @"/opt/texlive"];
     for (NSString *path in [self texLivePathsUnderRoots:roots]) add(path);
     for (NSString *path in @[@"/Applications/UpTeX.app/Contents/Resources/TEX/texbin", @"/Applications/UpTeX.app/Contents/Resources/texbin", @"/Applications/UpTeX.app/teTeX/bin", @"/Applications/pTeX.app/teTeX/bin", @"/usr/local/teTeX/bin", @"/opt/homebrew/bin", @"/usr/local/bin", @"/opt/local/bin", @"/sw/bin"]) add(path);

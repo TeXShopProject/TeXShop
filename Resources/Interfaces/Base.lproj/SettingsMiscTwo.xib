@@ -19,7 +19,6 @@
         <outlet property="XMLsubsection" destination="leH-sT-cbJ" id="7gY-7E-pzQ" />
         <outlet property="XMLsubsubsection" destination="ct9-Gf-9nT" id="x4R-gH-kJO" />
         <outlet property="XMLtable" destination="F6b-YV-mvL" id="gji-6Q-ytU" />
-        <outlet property="alternateEngineTextField" destination="gZB-h1-n7P" id="JqO-fq-T0B" />
         <outlet property="convertUTFButton" destination="sPQ-5E-qId" id="qJj-IM-dId" />
         <outlet property="latexScriptCommandTextField" destination="KBV-98-EKO" id="2pL-Wh-2wM" />
         <outlet property="miniaturizeRootFileButton" destination="4J7-3F-0ja" id="H19-zo-8gu" />
@@ -173,15 +172,6 @@
             <rect key="frame" x="0.0" y="0.0" width="356" height="104.5" />
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
             <subviews>
-              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0GI-vh-5wv" identifier="settings.0GI-vh-5wv">
-                <rect key="frame" x="15" y="31.5" width="153" height="18" />
-                <autoresizingMask key="autoresizingMask" />
-                <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="LaTeX Program (no default)" id="8Bw-D6-HlO">
-                  <font key="font" metaFont="message" size="11" />
-                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
-                  <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
-                </textFieldCell>
-              </textField>
               <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="10b-du-keV" identifier="settings.10b-du-keV">
                 <rect key="frame" x="19" y="56" width="325" height="21" />
                 <autoresizingMask key="autoresizingMask" />
@@ -193,16 +183,6 @@
                 <connections>
                   <action selector="texScriptProgramChanged:" target="-2" id="kBQ-Fq-9BY" />
                 </connections>
-              </textField>
-              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e8o-CH-MrS" identifier="settings.e8o-CH-MrS">
-                <rect key="frame" x="14" y="76.5" width="142" height="18" />
-                <autoresizingMask key="autoresizingMask" />
-                <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" id="mPz-qG-Toi">
-                  <font key="font" metaFont="message" size="11" />
-                  <string key="title">TeX Program (no default)</string>
-                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
-                  <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
-                </textFieldCell>
               </textField>
               <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KBV-98-EKO" identifier="settings.KBV-98-EKO">
                 <rect key="frame" x="19" y="11" width="325" height="21" />
@@ -235,18 +215,6 @@
                   <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
                   <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
                 </textFieldCell>
-              </textField>
-              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gZB-h1-n7P" identifier="settings.gZB-h1-n7P">
-                <rect key="frame" x="18" y="11" width="327" height="21" />
-                <autoresizingMask key="autoresizingMask" />
-                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Nm3-EN-nuZ">
-                  <font key="font" metaFont="system" />
-                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
-                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
-                </textFieldCell>
-                <connections>
-                  <action selector="alternateEngineChanged:" target="-2" id="WDL-xY-voj" />
-                </connections>
               </textField>
             </subviews>
           </view>

@@ -1179,7 +1179,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
         BOOL linkBad = NO;
          
         NSString* binPath = [[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath];
-        if (([binPath isEqualToString: @"/usr/texbin"]) || ([binPath isEqualToString: @"/Library/TeX/texbin"]))
+        if ([binPath isEqualToString: @"/Library/TeX/texbin"])
             standardPath = YES;
         
         NSFileManager *myManager = [NSFileManager defaultManager];

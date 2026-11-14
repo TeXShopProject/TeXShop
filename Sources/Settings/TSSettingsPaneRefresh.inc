@@ -224,7 +224,9 @@
         itemIndex = 2;
     [_colorParam1Popup selectItemAtIndex:itemIndex];
 #endif
-    [_HtmlHomeField setStringValue:[defaults stringForKey:HtmlHomeKey] ?: @""];
+    // An empty field stands for the default, shown as the placeholder.
+    _HtmlHomeField.stringValue = TSPreferenceTextBesideDefault(defaults, HtmlHomeKey);
+    _HtmlHomeField.placeholderString = TSPreferenceRegisteredText(defaults, HtmlHomeKey);
 }
 
 - (void)refreshTypesettingSettingsFromDefaults:(NSUserDefaults *)defaults
@@ -234,12 +236,8 @@
 #endif
     [_escapeWarningButton setState:[defaults boolForKey:WarnForShellEscapeKey]];
     [_ptexUtfOutputButton setState:[defaults boolForKey:ptexUtfOutputEnabledKey]];
-    NSString *kpsetool = [defaults objectForKey:KpsetoolKey];
-    if (!kpsetool || [kpsetool isEqualToString:@""])
-    {
-        kpsetool = @"kpsewhich -progname=latex -format=tex";
-    }
-    [_kpsetoolField setStringValue:kpsetool];
+    _kpsetoolField.stringValue = TSPreferenceTextBesideDefault(defaults, KpsetoolKey);
+    _kpsetoolField.placeholderString = TSPreferenceRegisteredText(defaults, KpsetoolKey);
     NSString *bibTeXengine = [defaults objectForKey:BibTeXengineKey];
     if (!bibTeXengine || [bibTeXengine isEqualToString:@""])
     {
@@ -264,7 +262,7 @@
     [_gsBinPathField setStringValue:[defaults stringForKey:GSBinPath] ?: @""];
     [_texScriptCommandTextField setStringValue:[defaults stringForKey:TexScriptCommandKey] ?: @""];
     [_latexScriptCommandTextField setStringValue:[defaults stringForKey:LatexScriptCommandKey] ?: @""];
-    [_alternateEngineTextField setStringValue:[defaults stringForKey:AlternateEngineKey] ?: @""];
+    [self refreshAlternateEngineFromDefaults:defaults];
     [_defaultCommandMatrix selectCellWithTag:[defaults integerForKey:DefaultCommandKey]];
     [self refreshDefaultEngineFromDefaults:defaults];
     [_defaultScriptMatrix selectCellWithTag:[defaults integerForKey:DefaultScriptKey]];

@@ -40,7 +40,7 @@
       "SfP-Ak-pn3.title": "Usa finestre separate"
     },
     "SettingsTypesetting.strings": {
-      "680.title": "Rimani nella finestra sorgente"
+      "680.title": "Continua a modificare"
     }
   },
   "fr": {
@@ -71,10 +71,6 @@
       "catalog.spelling.0.2.title": "사전",
       "group.editor.5.title": "보이지 않는 문자",
       "catalog.preview.0.2.title": "배율",
-      "catalog.typesetting.4.0.button": "기본값",
-      "catalog.typesetting.4.1.button": "기본값",
-      "catalog.typesetting.5.0.button": "기본값",
-      "catalog.typesetting.5.1.button": "기본값",
       "catalog.preview.1.1.title": "첫 페이지를 표지로 따로 표시",
       "catalog.appearance.2.0.column.2": "불투명도"
     },
@@ -88,12 +84,6 @@
     "SettingsSource.strings": {
       "ENd-QB-0Uf.title": "사전",
       "Xrb-Fe-9cg.title": "작게"
-    },
-    "SettingsEngines.strings": {
-      "1063.title": "기본값",
-      "1068.title": "기본값",
-      "1071.title": "기본값",
-      "1074.title": "기본값"
     },
     "SettingsPreview.strings": {
       "preview-cover-cell.title": "첫 페이지를 표지로 따로 표시"
@@ -112,7 +102,7 @@
     "SettingsCategories.strings": {
       "catalog.typesetting.0.2.title": "Método de composición",
       "catalog.preview.1.1.title": "Mostrar la primera página sola como portada",
-      "group.typesetting.9.title": "Soporte pTeX (japonés)"
+      "group.typesetting.9.title": "pLaTeX japonés"
     },
     "SettingsPreview.strings": {
       "preview-cover-cell.title": "Mostrar la primera página sola como portada"

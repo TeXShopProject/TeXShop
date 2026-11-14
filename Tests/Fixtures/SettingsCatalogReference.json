@@ -794,21 +794,15 @@
        "selected": 0,
        "on": true,
        "note": "コマンド、数式、コメント、参照の引数などを除いて、本文だけを検査します。",
-       "src": [
-        "ts-aware-spelling"
-       ]
-      },
-      {
-       "kind": "button",
-       "title": "LaTeXの除外規則を編集…",
-       "indent": 1,
-       "enabledWhen": {
+       "button": "LaTeXの除外規則を編集…",
+       "buttonEnabledWhen": {
         "row": "spellMode",
         "values": [
          0
         ]
        },
        "src": [
+        "ts-aware-spelling",
         "ts-edit-spelling"
        ]
       },
@@ -1404,10 +1398,8 @@
        "title": "倍率",
        "value": "100",
        "unit": "%",
-       "button": "設定",
        "src": [
-        "113",
-        "116"
+        "113"
        ]
       },
       {
@@ -1549,7 +1541,7 @@
        "src": [
         "Q1c-5s-qjb"
        ],
-       "note": "HTMLウインドウを表示したときに最初に開くページです。Webのアドレスか、ファイルのパスを入れます。デフォルト: https://texshop.app"
+       "note": "HTMLウインドウを表示したときに最初に開くページです。Webのアドレスか、ファイルのパスを入れます。"
       }
      ]
     }
@@ -1569,7 +1561,7 @@
       {
        "kind": "popup",
        "title": "エンジンのプロファイル",
-       "note": "タイプセットのコマンド、BibTeXエンジン、索引作成とMetaPostのコマンド、otfパッケージ対応を設定します。日本語のプロファイルは、新しい書類のエンコーディング（UTF-8）、辞書、UTF-8-MACの変換も設定します。",
+       "note": "タイプセットのコマンド、BibTeXエンジン、索引作成とMetaPostのコマンド、otfパッケージの\\UTF / \\CIDへの自動変換を設定します。日本語のプロファイルは、新しい書類のエンコーディング（UTF-8）、辞書、UTF-8-MACの変換も設定します。",
        "choices": [
         "pdfLaTeX",
         "XeLaTeX",
@@ -1644,7 +1636,7 @@
        "choices": [
         "プレビューを手前に移動",
         "編集を続ける",
-        "タイプセット開始ウインドウを手前に"
+        "プレビューを表示して元のウインドウに戻る"
        ],
        "src": [
         "678"
@@ -1660,7 +1652,7 @@
        "title": "Sync方式",
        "choices": [
         "PDFを検索",
-        "SyncTeX"
+        "SyncTeX（推奨）"
        ],
        "selected": 1,
        "src": [
@@ -1669,8 +1661,8 @@
       },
       {
        "kind": "switch",
-       "title": "Syncで開く新しい書類を、ルートウインドウのタブで開く",
-       "note": "通常はオフにします。",
+       "title": "Syncで開くファイルを、ルートファイルのウインドウのタブにする",
+       "note": "プレビューからSyncして別のファイルが開くとき、新しいウインドウではなく、ルートファイルのウインドウにタブとして加えます。",
        "src": [
         "snd-4x-vSh"
        ]
@@ -1684,7 +1676,6 @@
        "kind": "path",
        "title": "(pdf)TeX",
        "value": "/Library/TeX/texbin",
-       "note": "デフォルト: /Library/TeX/texbinまたは /usr/texbin",
        "src": [
         "217"
        ]
@@ -1693,7 +1684,6 @@
        "kind": "path",
        "title": "Distiller (Ghostscript)",
        "value": "/usr/local/bin",
-       "note": "デフォルト: /usr/local/bin",
        "src": [
         "255"
        ]
@@ -1702,7 +1692,6 @@
        "kind": "path",
        "title": "別のパス",
        "value": "~/bin/context/tex/texmf-osx-arm64/bin",
-       "note": "デフォルト: ~/bin/context/tex/texmf-osx-arm64/bin",
        "src": [
         "kfQ-Qh-Vcc"
        ]
@@ -1723,7 +1712,6 @@
        "kind": "path",
        "title": "TeX",
        "value": "pdftex --file-line-error --synctex=1",
-       "button": "デフォルト",
        "src": [
         "51",
         "1234"
@@ -1733,7 +1721,6 @@
        "kind": "path",
        "title": "LaTeX",
        "value": "pdflatex --file-line-error --synctex=1",
-       "button": "デフォルト",
        "src": [
         "53",
         "1242"
@@ -1757,7 +1744,6 @@
        "kind": "path",
        "title": "TeX",
        "value": "tex --file-line-error --synctex=1",
-       "button": "デフォルト",
        "src": [
         "202",
         "1238"
@@ -1767,7 +1753,6 @@
        "kind": "path",
        "title": "LaTeX",
        "value": "latex --file-line-error --synctex=1",
-       "button": "デフォルト",
        "src": [
         "199",
         "1246"
@@ -1782,7 +1767,6 @@
        "kind": "path",
        "title": "TeXプログラム",
        "value": "",
-       "note": "デフォルト: 空",
        "src": [
         "156"
        ]
@@ -1791,7 +1775,6 @@
        "kind": "path",
        "title": "LaTeXプログラム",
        "value": "",
-       "note": "デフォルト: 空",
        "src": [
         "152"
        ]
@@ -1805,7 +1788,7 @@
        "kind": "path",
        "title": "kpsewhich",
        "value": "kpsewhich -progname=latex -format=tex",
-       "note": "「ファイル」メニューの「スタイルファイルを開く」で、ファイルを探すコマンドです。デフォルト: kpsewhich -progname=latex -format=tex",
+       "note": "「ファイル」メニューの「スタイルファイルを開く」で、ファイルを探すコマンドです。",
        "src": [
         "1195"
        ]
@@ -1814,7 +1797,6 @@
        "kind": "path",
        "title": "BibTeXエンジン",
        "value": "bibtex",
-       "note": "デフォルト: bibtex",
        "src": [
         "1207"
        ]
@@ -1823,7 +1805,6 @@
        "kind": "path",
        "title": "索引作成",
        "value": "makeindex",
-       "note": "デフォルト: makeindex",
        "src": [
         "new:makeindex-command"
        ]
@@ -1832,7 +1813,6 @@
        "kind": "path",
        "title": "MetaPost",
        "value": "mpost",
-       "note": "デフォルト: mpost",
        "src": [
         "new:metapost-command"
        ]
@@ -1840,11 +1820,11 @@
      ]
     },
     {
-     "title": "pTeXサポート（日本用）",
+     "title": "日本語pLaTeX用",
      "rows": [
       {
        "kind": "switch",
-       "title": "otfパッケージ対応",
+       "title": "otfパッケージの\\UTF / \\CIDに自動変換",
        "src": [
         "573"
        ]
