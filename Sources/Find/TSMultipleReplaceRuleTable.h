@@ -27,6 +27,9 @@ NS_SWIFT_NAME(MultipleReplaceRuleTable)
 @property (nonatomic, copy, nullable) NSAttributedString *_Nullable (^fieldStyler)(NSString *string, TSRegexReplacementRule *rule,
     TSMultipleReplaceRuleField field, TSRegexFindOptions options, NSDictionary<NSAttributedStringKey, id> *attributes);
 
+/// Makes the find and replacement cells again, as `fieldStyler` colors them now; not the cell being edited.
+- (void)reloadFieldCells;
+
 /// A cell holding one control, centered in the row's height (and in the column's width for a check box).
 + (NSTableCellView *)cellWithControl:(NSControl *)control;
 

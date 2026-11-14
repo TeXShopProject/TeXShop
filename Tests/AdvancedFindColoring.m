@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // The coloring of the Advanced Find panel's fields and of the multiple replacement rules: the tokens of patterns and
 // replacement strings as the engine reads them, the brackets that pair up, the real named groups (also the engine's),
-// the marks of OgreKit's differences from the one table, bracket matching in the find field, the message line, and
-// the panel and the rule table in every language, with images. Built by Tests/run-advanced-find-coloring.py; no
-// window is ever shown and the defaults stay in memory.
+// the marks of OgreKit's differences from the one table, bracket matching in the find field, the message line, the
+// panel and the rule table in every language, with images, and the source's theme, font and TeX coloring in the
+// fields and the rules (light and dark, a change of theme, syntax coloring off). Built by
+// Tests/run-advanced-find-coloring.py; no window is ever shown and the defaults stay in memory.
 #import <Cocoa/Cocoa.h>
 #import "TestAppKitIsolation.h"
 #import "TSAdvancedFindPanelController+Private.h"
@@ -11,6 +12,7 @@
 #import "TSMultipleReplaceWindowController.h"
 #import "TSMultipleReplaceLibrary.h"
 #import "TSRegexOnigmoIncompatibility.h"
+#import "TSAdvancedFindFieldStyle.h"
 
 static int failures;
 static void Check(BOOL ok, NSString *what)
@@ -33,6 +35,60 @@ static TSAdvancedFindController *MakeController(void)
     TSAdvancedFindController *controller = [[TSAdvancedFindController alloc] initWithSettings:settings];
     controller.beepHandler = ^{};
     return controller;
+}
+
+#pragma mark Themes
+
+/// The bundled themes (Resources/TeXShop/Themes, given by the runner).
+static NSDictionary *Theme(NSString *name)
+{
+    NSString *directory = NSProcessInfo.processInfo.environment[@"ADVANCED_FIND_THEMES"] ?: @"";
+    NSDictionary *theme = [NSDictionary dictionaryWithContentsOfFile:[[directory stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"plist"]];
+    if (!theme) {
+        fprintf(stderr, "FAIL: no theme %s in %s\n", name.UTF8String, directory.UTF8String);
+        exit(1);
+    }
+    return theme;
+}
+
+/// A color of a theme as the source shows it: opaque, whatever alpha the theme stores.
+static NSColor *ThemeColor(NSDictionary *theme, NSString *key)
+{
+    NSArray<NSNumber *> *rgb = theme[key];
+    return [NSColor colorWithRed:rgb[0].doubleValue green:rgb[1].doubleValue blue:rgb[2].doubleValue alpha:1];
+}
+
+static BOOL SameColor(id a, id b)
+{
+    if (![a isKindOfClass:[NSColor class]] || ![b isKindOfClass:[NSColor class]])
+        return NO;
+    NSColor *x = [a colorUsingColorSpace:NSColorSpace.sRGBColorSpace], *y = [b colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+    return x && y && fabs(x.redComponent - y.redComponent) < 0.002 && fabs(x.greenComponent - y.greenComponent) < 0.002
+        && fabs(x.blueComponent - y.blueComponent) < 0.002 && fabs(x.alphaComponent - y.alphaComponent) < 0.002;
+}
+
+/// What the application gives (TSAppDelegate.m, checked by run-advanced-find-field-style.py), with these themes.
+static NSDictionary *LightTheme, *DarkTheme;
+static BOOL ColorsSyntax = YES;
+static NSFont *SourceFont;
+
+static void InstallProvider(void)
+{
+    TSAdvancedFindFieldStyle.provider = ^TSAdvancedFindFieldStyle *(BOOL dark) {
+        NSDictionary *theme = dark ? DarkTheme : LightTheme;
+        TSSyntaxColorScheme *scheme = ColorsSyntax ? [[TSSyntaxColorScheme alloc] initWithTheme:theme dark:dark] : nil;
+        return [[TSAdvancedFindFieldStyle alloc] initWithScheme:scheme texOptions:[TSSyntaxTeXOptions new] font:SourceFont
+                                                      textColor:ThemeColor(theme, @"EditorText") backgroundColor:ThemeColor(theme, @"EditorBackground")
+                                            insertionPointColor:ThemeColor(theme, @"EditorInsertionPoint")];
+    };
+}
+
+/// The theme keys of the regular expression roles (Sources/Syntax/TSSyntaxColorScheme.m, TSSyntaxRoleThemeKeys).
+static NSDictionary<NSNumber *, NSString *> *RegexKeys(void)
+{
+    return @{@(TSSyntaxRoleRegexCharacterClass): @"SyntaxCommand", @(TSSyntaxRoleRegexEscape): @"explIntenseFunction",
+             @(TSSyntaxRoleRegexBackreference): @"explVariable", @(TSSyntaxRoleRegexQuantifier): @"SyntaxMarker",
+             @(TSSyntaxRoleRegexAnchor): @"explFunction", @(TSSyntaxRoleRegexSymbol): @"SyntaxMarkerParen", @(TSSyntaxRoleComment): @"SyntaxComment"};
 }
 
 #pragma mark Tokens
@@ -275,7 +331,7 @@ static void TestPanelFields(void)
     TSAdvancedFindController *controller = MakeController();
     TSAdvancedFindSettings *settings = controller.settings;
     TSAdvancedFindPanelController *panel = [[TSAdvancedFindPanelController alloc] initWithFindController:controller];
-    TSSyntaxColorScheme *scheme = TSAdvancedFindFieldColorScheme();
+    TSSyntaxColorScheme *scheme = panel.fieldStyle.fieldScheme;
     NSTextView *find = panel.findField, *replace = panel.replaceField;
     settings.options = TSRegexFindDefaultOptions | TSRegexFindRegularExpression;
     settings.replacementSyntax = TSRegexReplacementSyntaxICU;
@@ -317,10 +373,14 @@ static void TestPanelFields(void)
     [panel reloadFromSettings];
     Check(ForegroundAt(replace, 0) == [scheme attributesForRole:TSSyntaxRoleRegexBackreference][NSForegroundColorAttributeName] && ForegroundAt(replace, 2) == nil,
           @"with OgreKit's syntax \\1 is a reference and $2 text");
-    // Without regular expressions, nothing is colored or marked; the line is empty.
+    // Without regular expressions, the fields are read as TeX: nothing is marked and the line is empty.
     settings.options = TSRegexFindDefaultOptions;
     [panel optionsDidChange];
-    Check(ForegroundAt(find, 1) == nil && ForegroundAt(replace, 0) == nil && panel.statusField.stringValue.length == 0, @"plain text is not colored, and has no message");
+    Check(ForegroundAt(find, 1) == nil && UnderlineAt(find, 0) == nil && UnderlineAt(replace, 2) == nil && panel.statusField.stringValue.length == 0,
+          @"plain text is read as TeX, without marks or a message");
+    Check(ForegroundAt(find, 0) == [scheme attributesForRole:TSSyntaxRoleBracketParen][NSForegroundColorAttributeName]
+          && ForegroundAt(replace, 0) == [scheme attributesForRole:TSSyntaxRoleCommand][NSForegroundColorAttributeName],
+          @"( is a TeX bracket and \\1 a TeX command");
     // With the pattern read literally, neither.
     settings.options = TSRegexFindDefaultOptions | TSRegexFindRegularExpression | TSRegexFindIgnoreMetacharacters;
     settings.findString = @"(a)+";
@@ -421,28 +481,243 @@ static TSMultipleReplaceWindowController *MakeRuleWindow(TSMultipleReplaceLibrar
     return [[TSMultipleReplaceWindowController alloc] initWithFindController:MakeController() library:*library];
 }
 
+static id CellColor(NSAttributedString *cell, NSUInteger index)
+{
+    return index < cell.length ? [cell attribute:NSForegroundColorAttributeName atIndex:index effectiveRange:NULL] : nil;
+}
+
 static void TestRuleTable(void)
 {
     TSMultipleReplaceLibrary *library = nil;
     TSMultipleReplaceWindowController *window = MakeRuleWindow(&library);
-    TSSyntaxColorScheme *scheme = TSAdvancedFindFieldColorScheme();
-    NSColor *quantifier = [scheme attributesForRole:TSSyntaxRoleRegexQuantifier][NSForegroundColorAttributeName];
+    NSColor *quantifier = ThemeColor(LightTheme, RegexKeys()[@(TSSyntaxRoleRegexQuantifier)]);
     NSAttributedString *find = CellText(window, 0, @"find"), *replace = CellText(window, 0, @"replace");
-    Check([find.string isEqualToString:@"(\\w+)\\h"] && [find attribute:NSForegroundColorAttributeName atIndex:3 effectiveRange:NULL] == quantifier
+    Check([find.string isEqualToString:@"(\\w+)\\h"] && SameColor(CellColor(find, 3), quantifier)
           && [find attribute:NSUnderlineColorAttributeName atIndex:6 effectiveRange:NULL] != nil, @"a regular expression rule's pattern is colored and \\h marked");
     Check([replace attribute:NSUnderlineColorAttributeName atIndex:0 effectiveRange:NULL] == nil && [replace attribute:NSUnderlineColorAttributeName atIndex:2 effectiveRange:NULL] != nil,
           @"its replacement knows the rule's groups: $2 is marked");
     NSAttributedString *plain = CellText(window, 1, @"find"), *plainReplace = CellText(window, 1, @"replace");
-    Check([plain attribute:NSForegroundColorAttributeName atIndex:1 effectiveRange:NULL] != quantifier && [plainReplace attribute:NSUnderlineColorAttributeName atIndex:0 effectiveRange:NULL] == nil,
-          @"a plain text rule is not colored");
-    Check([CellText(window, 2, @"find") attribute:NSForegroundColorAttributeName atIndex:1 effectiveRange:NULL] != quantifier, @"a disabled rule is not colored");
+    Check(SameColor(CellColor(plain, 1), NSColor.labelColor) && [plainReplace attribute:NSUnderlineColorAttributeName atIndex:0 effectiveRange:NULL] == nil
+          && SameColor(CellColor(plainReplace, 0), ThemeColor(LightTheme, @"SyntaxMarker")) && SameColor(CellColor(plainReplace, 1), NSColor.labelColor),
+          @"a plain text rule is read as TeX: + is text and $ the TeX marker");
+    Check(SameColor(CellColor(CellText(window, 2, @"find"), 1), NSColor.tertiaryLabelColor), @"a disabled rule is gray, not colored");
     TSRegexMultipleReplace *set = window.ruleTable.set;
     window.ruleTable.set = [[TSRegexMultipleReplace alloc] initWithRules:set.rules textualOptions:set.textualOptions regularExpressionOptions:set.regularExpressionOptions
                                                        replacementSyntax:TSRegexReplacementSyntaxOgreKit];
     NSAttributedString *ogre = CellText(window, 3, @"replace"); // \\section*{$1}
-    Check([ogre attribute:NSForegroundColorAttributeName atIndex:11 effectiveRange:NULL] != [scheme attributesForRole:TSSyntaxRoleRegexBackreference][NSForegroundColorAttributeName]
-          && [ogre attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:NULL] == [scheme attributesForRole:TSSyntaxRoleRegexEscape][NSForegroundColorAttributeName],
+    Check(!SameColor(CellColor(ogre, 11), ThemeColor(LightTheme, RegexKeys()[@(TSSyntaxRoleRegexBackreference)]))
+          && SameColor(CellColor(ogre, 0), ThemeColor(LightTheme, RegexKeys()[@(TSSyntaxRoleRegexEscape)])),
           @"with the set's OgreKit syntax, $1 is text and \\\\ an escape");
+    [NSFileManager.defaultManager removeItemAtURL:library.directory error:NULL];
+}
+
+#pragma mark The theme
+
+static id BackgroundAt(NSTextView *field, NSUInteger index)
+{
+    return [field.layoutManager temporaryAttribute:NSBackgroundColorAttributeName atCharacterIndex:index effectiveRange:NULL];
+}
+
+/// The first index of `part` in the field.
+static NSUInteger At(NSTextView *field, NSString *part)
+{
+    return [field.string rangeOfString:part].location;
+}
+
+/// Every role of a pattern and a replacement in the colors of the theme's keys, and both fields in the theme's text,
+/// background and insertion point colors, in a light and a dark window.
+static void CheckFieldsInTheme(TSAdvancedFindPanelController *panel, NSDictionary *theme, NSString *label)
+{
+    TSAdvancedFindSettings *settings = panel.findController.settings;
+    TSAdvancedFindFieldView *find = (TSAdvancedFindFieldView *)panel.findField, *replace = (TSAdvancedFindFieldView *)panel.replaceField;
+    for (TSAdvancedFindFieldView *field in @[find, replace]) {
+        Check(SameColor(field.textColor, ThemeColor(theme, @"EditorText")) && SameColor(field.typingAttributes[NSForegroundColorAttributeName], field.textColor)
+              && SameColor(field.insertionPointColor, ThemeColor(theme, @"EditorInsertionPoint")) && !field.drawsBackground
+              && SameColor(field.box.fillColor, ThemeColor(theme, @"EditorBackground")),
+              [NSString stringWithFormat:@"%@: the field's text, insertion point and box take the theme's colors", label]);
+        __block CGColorRef fill = NULL;
+        [field.box updateLayer];
+        fill = field.box.layer.backgroundColor;
+        Check(fill && SameColor([NSColor colorWithCGColor:fill], ThemeColor(theme, @"EditorBackground")) && field.box.layer.cornerRadius == 7,
+              [NSString stringWithFormat:@"%@: the rounded box is filled with the theme's background", label]);
+    }
+    // With "Regular expression" on, every role in the color of its key.
+    settings.options = TSRegexFindDefaultOptions | TSRegexFindRegularExpression;
+    settings.replacementSyntax = TSRegexReplacementSyntaxICU;
+    settings.findString = @"^\\\\sec\\{([a-z]*)\\}\\b\\1(?#n)";
+    settings.replaceString = @"\\\\textbf{$1}";
+    [panel reloadFromSettings];
+    RunLoopOnce();
+    struct { NSTextView *field; NSString *part; TSSyntaxRole role; } roles[] = {
+        {find, @"^", TSSyntaxRoleRegexAnchor}, {find, @"\\\\", TSSyntaxRoleRegexEscape}, {find, @"(", TSSyntaxRoleRegexSymbol},
+        {find, @"[a-z]", TSSyntaxRoleRegexCharacterClass}, {find, @"*", TSSyntaxRoleRegexQuantifier}, {find, @"\\b", TSSyntaxRoleRegexAnchor},
+        {find, @"\\1", TSSyntaxRoleRegexBackreference}, {find, @"(?#", TSSyntaxRoleComment},
+        {replace, @"\\\\", TSSyntaxRoleRegexEscape}, {replace, @"$1", TSSyntaxRoleRegexBackreference},
+    };
+    for (size_t i = 0; i < sizeof roles / sizeof roles[0]; i++) {
+        NSString *key = RegexKeys()[@(roles[i].role)];
+        id color = ForegroundAt(roles[i].field, At(roles[i].field, roles[i].part));
+        Check(SameColor(color, ThemeColor(theme, key)), [NSString stringWithFormat:@"%@: %@ in the %@ field has the color of %@ (%@)", label, roles[i].part,
+                                                         roles[i].field == find ? @"find" : @"replace", key, color]);
+    }
+    Check(ForegroundAt(find, At(find, @"sec")) == nil && ForegroundAt(replace, At(replace, @"textbf")) == nil, [NSString stringWithFormat:@"%@: literal text keeps the text color", label]);
+    // With it off, as the source reads TeX.
+    settings.options = TSRegexFindDefaultOptions;
+    settings.findString = @"\\section{a} $x$ % note";
+    settings.replaceString = @"\\textbf{[1]}";
+    [panel optionsDidChange];
+    [panel reloadFromSettings];
+    RunLoopOnce();
+    struct { NSTextView *field; NSString *part; NSString *key; } tex[] = {
+        {find, @"\\section", @"SyntaxCommand"}, {find, @"{", @"SyntaxMarkerCurly"}, {find, @"$", @"SyntaxMarker"}, {find, @"% note", @"SyntaxComment"},
+        {replace, @"\\textbf", @"SyntaxCommand"}, {replace, @"[", @"SyntaxMarkerSquare"}, {replace, @"}", @"SyntaxMarkerCurly"},
+    };
+    for (size_t i = 0; i < sizeof tex / sizeof tex[0]; i++) {
+        id color = ForegroundAt(tex[i].field, At(tex[i].field, tex[i].part));
+        Check(SameColor(color, ThemeColor(theme, tex[i].key)), [NSString stringWithFormat:@"%@: TeX %@ in the %@ field has the color of %@ (%@)", label, tex[i].part,
+                                                                tex[i].field == find ? @"find" : @"replace", tex[i].key, color]);
+    }
+    Check(!find.bracketScanner && ForegroundAt(find, At(find, @"a")) == nil, [NSString stringWithFormat:@"%@: TeX text keeps the text color", label]);
+}
+
+static void TestThemedFields(void)
+{
+    TSAdvancedFindController *controller = MakeController();
+    TSAdvancedFindPanelController *panel = [[TSAdvancedFindPanelController alloc] initWithFindController:controller];
+    TSAdvancedFindFieldView *find = (TSAdvancedFindFieldView *)panel.findField;
+    CheckFieldsInTheme(panel, LightTheme, @"light Solarized");
+    Check(panel.findBox.appearance && !TSAdvancedFindAppearanceIsDark(panel.findBox.appearance), @"a light background gives the box a light appearance");
+
+    // The window turns dark: the dark theme, at once.
+    NSApp.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
+    CheckFieldsInTheme(panel, DarkTheme, @"dark (application)");
+    Check(TSAdvancedFindAppearanceIsDark(panel.findBox.appearance), @"a dark background gives the box a dark appearance");
+    NSApp.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    CheckFieldsInTheme(panel, LightTheme, @"light again");
+    panel.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
+    CheckFieldsInTheme(panel, DarkTheme, @"dark (window)");
+    panel.window.appearance = nil;
+
+    // Another theme in Settings.
+    NSDictionary *solarized = LightTheme;
+    LightTheme = Theme(@"LiteTheme");
+    [TSAdvancedFindFieldStyle styleDidChange];
+    CheckFieldsInTheme(panel, LightTheme, @"another light theme");
+    // A dark theme for light windows: the box's buttons, status and marks are those of a dark background.
+    LightTheme = Theme(@"Dracula");
+    [TSAdvancedFindFieldStyle styleDidChange];
+    CheckFieldsInTheme(panel, LightTheme, @"a dark theme in a light window");
+    Check(TSAdvancedFindAppearanceIsDark(panel.findBox.appearance) && TSAdvancedFindAppearanceIsDark(panel.replaceBox.appearance)
+          && !TSAdvancedFindAppearanceIsDark(panel.window.effectiveAppearance), @"the boxes of a dark theme are dark in a light window");
+    LightTheme = solarized;
+
+    // Syntax coloring off: no colors and no fullwidth backgrounds, but the theme's text and background; errors are
+    // still marked.
+    ColorsSyntax = NO;
+    [TSAdvancedFindFieldStyle styleDidChange];
+    TSAdvancedFindSettings *settings = controller.settings;
+    settings.options = TSRegexFindDefaultOptions | TSRegexFindRegularExpression;
+    settings.findString = @"(a)+\\1\\h[a]";
+    settings.replaceString = @"$1$5";
+    [panel reloadFromSettings];
+    BOOL colorless = YES;
+    for (NSTextView *field in @[panel.findField, panel.replaceField])
+        for (NSUInteger i = 0; i < field.string.length; i++) {
+            id color = ForegroundAt(field, i);
+            BOOL mark = UnderlineAt(field, i) != nil;
+            colorless = colorless && (color == nil || mark) && BackgroundAt(field, i) == nil;
+        }
+    Check(colorless && UnderlineAt(find, At(find, @"\\h")) && UnderlineAt(panel.replaceField, 2), @"coloring off: only the marks of errors are left in a regular expression");
+    settings.options = TSRegexFindDefaultOptions;
+    settings.findString = @"\\section{a}$ %c Ａ";
+    [panel optionsDidChange];
+    [panel reloadFromSettings];
+    colorless = YES;
+    for (NSUInteger i = 0; i < find.string.length; i++)
+        colorless = colorless && ForegroundAt(find, i) == nil && BackgroundAt(find, i) == nil && UnderlineAt(find, i) == nil;
+    Check(colorless && SameColor(find.textColor, ThemeColor(LightTheme, @"EditorText")) && SameColor(panel.findBox.fillColor, ThemeColor(LightTheme, @"EditorBackground")),
+          @"coloring off: TeX is plain, in the theme's text and background colors");
+    ColorsSyntax = YES;
+    [TSAdvancedFindFieldStyle styleDidChange];
+    Check(SameColor(ForegroundAt(find, 0), ThemeColor(LightTheme, @"SyntaxCommand")), @"coloring on again colors at once");
+
+    // The source font, kept between 11 and 16 points; without one, a monospaced font.
+    struct { CGFloat size; CGFloat shown; } sizes[] = {{13, 13}, {24, 16}, {8, 11}, {16, 16}, {11, 11}};
+    for (size_t i = 0; i < sizeof sizes / sizeof sizes[0]; i++) {
+        SourceFont = [NSFont fontWithName:@"Menlo-Regular" size:sizes[i].size];
+        [TSAdvancedFindFieldStyle styleDidChange];
+        for (NSTextView *field in @[panel.findField, panel.replaceField])
+            Check([field.font.fontName isEqualToString:@"Menlo-Regular"] && field.font.pointSize == sizes[i].shown
+                  && [field.typingAttributes[NSFontAttributeName] isEqual:field.font],
+                  [NSString stringWithFormat:@"a source font of %.0f points is %.0f in the field (%@ %.1f)", sizes[i].size, sizes[i].shown, field.font.fontName, field.font.pointSize]);
+    }
+    SourceFont = nil;
+    [TSAdvancedFindFieldStyle styleDidChange];
+    Check(find.font.pointSize == NSFont.systemFontSize + 1 && (find.font.fontDescriptor.symbolicTraits & NSFontDescriptorTraitMonoSpace), @"without a source font, a monospaced one");
+
+    // Without the application's provider (as in the other tests), the fields are those of a text field.
+    TSAdvancedFindFieldStyle *(^provider)(BOOL) = TSAdvancedFindFieldStyle.provider;
+    TSAdvancedFindFieldStyle.provider = nil;
+    [TSAdvancedFindFieldStyle styleDidChange];
+    Check(SameColor(find.textColor, NSColor.textColor) && panel.findBox.fillColor == nil && panel.findBox.appearance == nil, @"no provider: the look of a text field");
+    TSAdvancedFindFieldStyle.provider = provider;
+    [TSAdvancedFindFieldStyle styleDidChange];
+}
+
+static void TestThemedRules(void)
+{
+    TSMultipleReplaceLibrary *library = nil;
+    TSMultipleReplaceWindowController *window = MakeRuleWindow(&library);
+    TSRegexMultipleReplace *set = window.ruleTable.set;
+    window.ruleTable.set = [[TSRegexMultipleReplace alloc] initWithRules:[set.rules arrayByAddingObject:Rule(@"\\section{a} % b", @"\\emph{$1}", NO, YES)]
+                                                          textualOptions:set.textualOptions regularExpressionOptions:set.regularExpressionOptions
+                                                       replacementSyntax:set.replacementSyntax];
+    NSInteger tex = (NSInteger)window.ruleTable.set.rules.count - 1;
+    void (^check)(NSDictionary *, NSString *) = ^(NSDictionary *theme, NSString *label) {
+        NSAttributedString *regex = CellText(window, 4, @"find"), *replace = CellText(window, 4, @"replace"); // \\section{(.*)} and \\section*{$1}
+        NSAttributedString *plain = CellText(window, tex, @"find"), *plainReplace = CellText(window, tex, @"replace");
+        Check(SameColor(CellColor(regex, 0), ThemeColor(theme, RegexKeys()[@(TSSyntaxRoleRegexEscape)]))
+              && SameColor(CellColor(regex, 10), ThemeColor(theme, RegexKeys()[@(TSSyntaxRoleRegexSymbol)]))
+              && SameColor(CellColor(regex, 11), ThemeColor(theme, RegexKeys()[@(TSSyntaxRoleRegexCharacterClass)]))
+              && SameColor(CellColor(regex, 12), ThemeColor(theme, RegexKeys()[@(TSSyntaxRoleRegexQuantifier)]))
+              && SameColor(CellColor(replace, 11), ThemeColor(theme, RegexKeys()[@(TSSyntaxRoleRegexBackreference)])),
+              [NSString stringWithFormat:@"%@: a regular expression rule in the theme's colors", label]);
+        Check(SameColor(CellColor(plain, 0), ThemeColor(theme, @"SyntaxCommand")) && SameColor(CellColor(plain, 8), ThemeColor(theme, @"SyntaxMarkerCurly"))
+              && SameColor(CellColor(plain, 12), ThemeColor(theme, @"SyntaxComment")) && SameColor(CellColor(plain, 9), NSColor.labelColor)
+              && SameColor(CellColor(plainReplace, 0), ThemeColor(theme, @"SyntaxCommand")) && SameColor(CellColor(plainReplace, 6), ThemeColor(theme, @"SyntaxMarker")),
+              [NSString stringWithFormat:@"%@: a plain rule read as TeX in the theme's colors", label]);
+    };
+    check(LightTheme, @"rules, light");
+    // The cells shown in the table are made again when the appearance or the theme changes.
+    NSTableView *table = window.ruleTable.tableView;
+    [window.window.contentView layoutSubtreeIfNeeded];
+    NSInteger findColumn = [table columnWithIdentifier:@"find"];
+    NSAttributedString *(^shown)(NSInteger) = ^NSAttributedString *(NSInteger row) {
+        NSView *cell = [table viewAtColumn:findColumn row:row makeIfNecessary:NO];
+        NSTextField *field = [cell isKindOfClass:[NSTableCellView class]] ? ((NSTableCellView *)cell).textField : (NSTextField *)cell;
+        return [field isKindOfClass:[NSTextField class]] ? field.attributedStringValue : [NSAttributedString new];
+    };
+    Check(SameColor(CellColor(shown(tex), 0), ThemeColor(LightTheme, @"SyntaxCommand")), @"the table shows the TeX rule in the light theme");
+    // The cells follow the window's appearance and the theme.
+    NSApp.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
+    check(DarkTheme, @"rules, dark");
+    Check(SameColor(CellColor(shown(tex), 0), ThemeColor(DarkTheme, @"SyntaxCommand")), @"the table shows the TeX rule in the dark theme at once");
+    NSApp.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    NSDictionary *solarized = LightTheme;
+    LightTheme = Theme(@"LiteTheme");
+    [TSAdvancedFindFieldStyle styleDidChange];
+    check(LightTheme, @"rules, another theme");
+    Check(SameColor(CellColor(shown(tex), 0), ThemeColor(LightTheme, @"SyntaxCommand")) && SameColor(CellColor(shown(4), 12), ThemeColor(LightTheme, @"SyntaxMarker")),
+          @"the table shows the rules in another theme at once");
+    LightTheme = solarized;
+    [TSAdvancedFindFieldStyle styleDidChange];
+    ColorsSyntax = NO;
+    [TSAdvancedFindFieldStyle styleDidChange];
+    NSAttributedString *off = CellText(window, tex, @"find");
+    Check(SameColor(CellColor(off, 0), NSColor.labelColor) && SameColor(CellColor(CellText(window, 4, @"find"), 0), NSColor.labelColor),
+          @"rules with coloring off are plain");
+    ColorsSyntax = YES;
+    [TSAdvancedFindFieldStyle styleDidChange];
     [NSFileManager.defaultManager removeItemAtURL:library.directory error:NULL];
 }
 
@@ -522,32 +797,59 @@ static void TestMessagesFit(NSString *language)
     }
 }
 
+/// The panel with a TeX pattern read as a regular expression and as TeX, with every role of a regular expression, and
+/// the rules, in the bundled themes of a light and a dark window.
 static void WriteImages(NSString *directory, NSString *language)
 {
     [NSFileManager.defaultManager createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:NULL];
-    TSAdvancedFindController *controller = MakeController();
-    TSAdvancedFindSettings *settings = controller.settings;
-    TSAdvancedFindPanelController *panel = [[TSAdvancedFindPanelController alloc] initWithFindController:controller];
-    settings.options = TSRegexFindDefaultOptions | TSRegexFindRegularExpression;
-    settings.replacementSyntax = TSRegexReplacementSyntaxICU;
-    // The lab's image (AdvancedFindLab shots/*-panel.png): every role, OgreKit's differences and a reference to a
-    // group the pattern does not have
-    settings.findString = @"\\\\(bf|it)\\s+([^}]*)\\}|\\d{4}+\\h";
-    settings.replaceString = @"\\\\text$1{$2}$3\\n";
-    [panel reloadFromSettings];
-    TSMultipleReplaceLibrary *library = nil;
-    TSMultipleReplaceWindowController *rules = MakeRuleWindow(&library);
-    for (NSAppearanceName name in @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]) {
-        NSAppearance *appearance = [NSAppearance appearanceNamed:name];
-        NSString *tag = [name isEqualToString:NSAppearanceNameAqua] ? @"light" : @"dark";
-        panel.window.appearance = appearance;
-        rules.window.appearance = appearance;
-        [rules.ruleTable.tableView reloadData];
-        NSString *base = [directory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%@", language, tag]];
-        Check(WritePNG(panel.window.contentView, appearance, [base stringByAppendingString:@"-colored-panel.png"])
-              && WritePNG(rules.window.contentView, appearance, [base stringByAppendingString:@"-colored-rules.png"]), @"images written");
+    NSDictionary *light = LightTheme, *dark = DarkTheme;
+    // The source font of the factory settings (TSAppDelegate.m: the user font of 12 points).
+    SourceFont = [NSFont userFontOfSize:12];
+    NSArray<NSArray<NSString *> *> *pairs = @[@[@"SolarizedLite", @"SolarizedDark"], @[@"LiteTheme", @"DarkTheme"], @[@"GLG-Lite", @"Dracula"]];
+    for (NSArray<NSString *> *pair in pairs) {
+        LightTheme = Theme(pair[0]);
+        DarkTheme = Theme(pair[1]);
+        TSAdvancedFindController *controller = MakeController();
+        TSAdvancedFindSettings *settings = controller.settings;
+        TSAdvancedFindPanelController *panel = [[TSAdvancedFindPanelController alloc] initWithFindController:controller];
+        TSMultipleReplaceLibrary *library = nil;
+        TSMultipleReplaceWindowController *rules = MakeRuleWindow(&library);
+        TSRegexMultipleReplace *set = rules.ruleTable.set;
+        rules.ruleTable.set = [[TSRegexMultipleReplace alloc] initWithRules:[set.rules arrayByAddingObject:Rule(@"\\section{a} % b", @"\\emph{$1}", NO, YES)]
+                                                             textualOptions:set.textualOptions regularExpressionOptions:set.regularExpressionOptions
+                                                          replacementSyntax:set.replacementSyntax];
+        for (NSAppearanceName name in @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]) {
+            NSAppearance *appearance = [NSAppearance appearanceNamed:name];
+            BOOL isDark = [name isEqualToString:NSAppearanceNameDarkAqua];
+            NSString *base = [directory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%@-%@", language, isDark ? pair[1] : pair[0], isDark ? @"dark" : @"light"]];
+            // Windows that are never shown do not follow the application's appearance by themselves.
+            NSApp.appearance = appearance;
+            panel.window.appearance = appearance;
+            rules.window.appearance = appearance;
+            struct { NSString *name; BOOL regex; NSString *find; NSString *replace; } shots[] = {
+                {@"regex", YES, @"\\section{(.*)}", @"\\\\textbf{$1}"},
+                {@"tex", NO, @"\\section{(.*)}", @"\\\\textbf{$1}"},
+                {@"roles", YES, @"^\\\\(bf|it)\\b\\s+([^}]*)\\}|\\d{4}+\\h(?#note)", @"\\\\text$1{$2}$3\\n"},
+            };
+            for (size_t i = 0; i < sizeof shots / sizeof shots[0]; i++) {
+                settings.options = TSRegexFindDefaultOptions | (shots[i].regex ? TSRegexFindRegularExpression : 0);
+                settings.replacementSyntax = TSRegexReplacementSyntaxICU;
+                settings.findString = shots[i].find;
+                settings.replaceString = shots[i].replace;
+                [panel optionsDidChange];
+                [panel reloadFromSettings];
+                RunLoopOnce();
+                Check(WritePNG(panel.window.contentView, appearance, [base stringByAppendingFormat:@"-panel-%@.png", shots[i].name]), @"panel image written");
+            }
+            [rules.ruleTable.tableView reloadData];
+            Check(WritePNG(rules.window.contentView, appearance, [base stringByAppendingString:@"-rules.png"]), @"rules image written");
+        }
+        NSApp.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+        [NSFileManager.defaultManager removeItemAtURL:library.directory error:NULL];
     }
-    [NSFileManager.defaultManager removeItemAtURL:library.directory error:NULL];
+    LightTheme = light;
+    DarkTheme = dark;
+    SourceFont = nil;
 }
 
 #pragma mark Main
@@ -557,6 +859,10 @@ int main(int argc, const char *argv[])
     @autoreleasepool {
         TSInstallAppKitIsolation();
         [NSApplication sharedApplication];
+        NSApp.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+        LightTheme = Theme(@"SolarizedLite");
+        DarkTheme = Theme(@"DarkTheme");
+        InstallProvider();
         NSString *mode = argc > 1 ? @(argv[1]) : @"all";
         NSString *images = argc > 2 && argv[2][0] != '-' ? @(argv[2]) : nil; // not the -AppleLanguages that follows
         NSString *language = NSBundle.mainBundle.preferredLocalizations.firstObject ?: @"en";
@@ -568,6 +874,8 @@ int main(int argc, const char *argv[])
             TestPanelFields();
             TestBrackets();
             TestRuleTable();
+            TestThemedFields();
+            TestThemedRules();
         }
         if ([mode isEqualToString:@"all"] || [mode isEqualToString:@"layout"]) {
             TestMessagesFit(language);
