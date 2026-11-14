@@ -88,6 +88,7 @@ NSImage *TSMacroSeparatorImage(CGFloat width);
 - (void)installContentsBezel;
 - (NSEvent *)keyForContents:(NSEvent *)event;
 - (void)stopKeyMonitor;
+- (void)releaseWindowControls;
 - (void)useSystemFont;
 - (void)installShortcutField;
 - (void)syncShortcutField;

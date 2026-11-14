@@ -10,7 +10,9 @@ body=layout_body(root)
 # What the harness does not run: closing the window removes the key monitor, and the list draws its separators
 # with TSMacroSeparatorImage, not the old groove image.
 editor=(root/'Sources/Macros/TSMacroEditor.m').read_text()
-assert '[self stopKeyMonitor];' in editor[editor.index('- (void) windowWillClose:'):], 'closing the editor removes its key monitor'
+closing=editor[editor.index('- (void) windowWillClose:'):]
+closing=closing[:closing.index('\n}\n')]
+assert '[self releaseWindowControls];' in closing, 'closing the editor lets go of the controls of its window and of its key monitor'
 outline=(root/'Sources/Macros/TSMacroOutlineController.m').read_text()
 assert 'setImage1: TSMacroSeparatorImage(' in outline and 'imageNamed: SEPARATOR_IMAGE' not in outline, 'separators are drawn as lines'
 with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
@@ -40,6 +42,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
             'the first row is higher than the sets\'': ('    list.contentInsets = NSEdgeInsetsMake(5, 0, 0, 0);\n', ''),
             'the fields keep the nib\'s margin from the list': ('    CGFloat shift = NSMinX([nameField frame]) - TSDialogMargin;', '    CGFloat shift = NSMinX([nameField frame]) - 2 * TSDialogMargin;'),
             'the buttons do not hold the narrowest window': ('                            TSDialogButtonsWidth(@[saveButton, cancelButton], @[testButton]));', '                            0);'),
+            'a reopened window keeps the closed one\'s sidebar': ('    self.sidebar = nil; self.listBar = nil; self.editorView = nil; self.contentsBezel = nil;\n', ''),
             'Return in the contents saves': ('    [editor sendEvent:event];\n    return nil;\n', '    return event;\n'),
             'Escape does not cancel': ('    cancelButton.keyEquivalent = @"\\033";\n', ''),
             'Save is not the default button': ('    saveButton.keyEquivalent = @"\\r";\n', ''),

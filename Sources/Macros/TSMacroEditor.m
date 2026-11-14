@@ -544,6 +544,20 @@ static const CGFloat TSMacroEditorSidebarWidth = 240;
     if (monitor) [NSEvent removeMonitor:monitor];
     self.contentsKeyMonitor = nil;
 }
+// The editor outlives its window (it is shared): when the window closes, it lets go of the
+// controls it added, so that the next window gets its own sidebar, fields and key monitor.
+- (void)releaseWindowControls
+{
+    [self stopKeyMonitor];
+    [self.shortcutField endRecording];
+    [self.placeholdersPopover close];
+    self.placeholdersPopover = nil;
+    self.shortcutStatus = nil;
+    self.sidebar = nil; self.listBar = nil; self.editorView = nil; self.contentsBezel = nil;
+    self.insertPlaceholderButton = nil; self.placeholdersButton = nil;
+    self.shortcutLabel = nil; self.shortcutField = nil;
+    self.pendingShortcutKey = @"";
+}
 // The contents in a field drawn as the name field is, rounded as text fields are now, and not
 // in the square bezel of their scroll view: the field behind, the contents inside its border.
 - (void)installContentsBezel
@@ -1249,8 +1263,9 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 		self.previousItem = nil;
 	self.previousItem = nil;
 	[outlineController setRootOfTree: nil]; // this release the tree structure
-    [self stopKeyMonitor];
-    self.originalShortcutKeys = nil; self.shortcutConflicts = nil; self.shortcutStatus = nil;
+    self.originalShortcutKeys = nil; self.shortcutConflicts = nil;
+    [self releaseWindowControls];
+    [NSApp removeObserver:self forKeyPath:@"effectiveAppearance" context:TSMacroContentAppearanceContext];
 	outlineView = nil;
 	window = nil;
 	// restore menu item

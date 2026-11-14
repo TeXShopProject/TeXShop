@@ -542,6 +542,30 @@ static void DumpControls(TSMacroEditor *owner) {
     DumpControl(@"code-label",[NSTextField labelWithString:@"x"]);
     NSButton *help=[NSButton buttonWithTitle:@"" target:nil action:NULL]; help.bezelStyle=NSBezelStyleHelpButton; DumpControl(@"code-help",help);
 }
+// The editor is shared and outlives its window: closed and opened again, each new window gets
+// its own sidebar, fields, buttons and key monitor, as the first did. Closing does what the
+// editor's windowWillClose: does with the controls (releaseWindowControls; the runner checks
+// that windowWillClose: calls it).
+static void CheckReopening(const char *path) {
+    TSMacroEditor *owner=[TSMacroEditor new]; NSWindow *previous=nil; NSVisualEffectView *previousSidebar=nil; id previousMonitor=nil;
+    for(int open=0;open<3;open++) {
+        NSNib *nib=[[NSNib alloc] initWithNibData:[NSData dataWithContentsOfFile:@(path)] bundle:nil];
+        NSArray *objects; REQUIRE([nib instantiateWithOwner:owner topLevelObjects:&objects]);
+        NSWindow *window=[owner valueForKey:@"window"]; REQUIRE(window && window!=previous && !window.visible);
+        [owner useSystemFont]; [owner installShortcutStatus]; [owner installShortcutField]; [owner installPlaceholderControls]; [owner layoutDialogButtons]; [owner installSidebar];
+        REQUIRE(owner.sidebar && owner.sidebar!=previousSidebar && owner.sidebar.window==window && owner.editorView.window==window && owner.contentsBezel.window==window);
+        REQUIRE(owner.shortcutField.window==window && owner.insertPlaceholderButton.window==window && owner.shortcutStatus.window==window && owner.listBar.window==window);
+        REQUIRE(owner.contentsKeyMonitor && owner.contentsKeyMonitor!=previousMonitor);
+        CheckEditor(owner,window);
+        CheckReturnKey(owner);
+        // The shortcut field, Insert and its help work in the new window too.
+        CheckShortcutBehavior(owner); CheckPlaceholderControls(owner);
+        previous=window; previousSidebar=owner.sidebar; previousMonitor=owner.contentsKeyMonitor;
+        [owner releaseWindowControls];
+        REQUIRE(!owner.sidebar && !owner.listBar && !owner.editorView && !owner.contentsBezel && !owner.shortcutField && !owner.shortcutLabel && !owner.insertPlaceholderButton && !owner.placeholdersButton && !owner.shortcutStatus && !owner.contentsKeyMonitor);
+        window.releasedWhenClosed=NO; [window close];
+    }
+}
 int main(int argc,char **argv) { @autoreleasepool {
     memoryDefaults=[TSMemoryDefaults new];
     UseTestStrings();
@@ -676,5 +700,6 @@ int main(int argc,char **argv) { @autoreleasepool {
     [owner stopKeyMonitor]; REQUIRE(!owner.contentsKeyMonitor);
     window.releasedWhenClosed=NO; [window close];
     }
-    printf("PASS: %s sidebar, status band: bounds, wrapping, control separation, resizing, idempotence, offscreen light/dark rendering\n",argv[1]);
+    CheckReopening(argv[1]);
+    printf("PASS: %s sidebar, reopening, status band: bounds, wrapping, control separation, resizing, idempotence, offscreen light/dark rendering\n",argv[1]);
 } return 0; }
