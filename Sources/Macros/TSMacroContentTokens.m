@@ -197,33 +197,52 @@
     return [layout isKindOfClass:TSMacroContentLayoutManager.class] ? (TSMacroContentLayoutManager *)layout : nil;
 }
 
-// A selection takes in every token it touches; an insertion point inside a token goes to the end it moves toward.
-- (void)setSelectedRanges:(NSArray<NSValue *> *)ranges affinity:(NSSelectionAffinity)affinity stillSelecting:(BOOL)stillSelecting
+// The ranges with every token they touch taken in; an insertion point inside a token goes to the end it moves toward:
+// the start when it moved back from `previous`, else the end.
+- (NSArray<NSValue *> *)rangesSnappedToTokens:(NSArray<NSValue *> *)ranges previous:(NSUInteger)previous
 {
     TSMacroContentLayoutManager *layout = self.tokenLayout;
-    if (layout.tokenRanges.count) {
-        NSUInteger previous = self.selectedRange.location;
-        NSMutableArray<NSValue *> *snapped = [NSMutableArray arrayWithCapacity:ranges.count];
-        for (NSValue *value in ranges) {
-            NSRange range = value.rangeValue;
-            NSRange first = [layout tokenRangeContainingIndex:range.location];
-            if (range.length == 0) {
-                if (first.location != NSNotFound && range.location > first.location)
-                    range.location = range.location < previous ? first.location : NSMaxRange(first);
-            } else {
-                NSUInteger start = range.location, end = NSMaxRange(range);
-                if (first.location != NSNotFound && start > first.location)
-                    start = first.location;
-                NSRange last = [layout tokenRangeContainingIndex:end - 1];
-                if (last.location != NSNotFound)
-                    end = MAX(end, NSMaxRange(last));
-                range = NSMakeRange(start, end - start);
-            }
-            [snapped addObject:[NSValue valueWithRange:range]];
+    if (layout.tokenRanges.count == 0)
+        return ranges;
+    NSMutableArray<NSValue *> *snapped = [NSMutableArray arrayWithCapacity:ranges.count];
+    for (NSValue *value in ranges) {
+        NSRange range = value.rangeValue;
+        NSRange first = [layout tokenRangeContainingIndex:range.location];
+        if (range.length == 0) {
+            if (first.location != NSNotFound && range.location > first.location)
+                range.location = range.location < previous ? first.location : NSMaxRange(first);
+        } else {
+            NSUInteger start = range.location, end = NSMaxRange(range);
+            if (first.location != NSNotFound && start > first.location)
+                start = first.location;
+            NSRange last = [layout tokenRangeContainingIndex:end - 1];
+            if (last.location != NSNotFound)
+                end = MAX(end, NSMaxRange(last));
+            range = NSMakeRange(start, end - start);
         }
-        ranges = snapped;
+        [snapped addObject:[NSValue valueWithRange:range]];
     }
-    [super setSelectedRanges:ranges affinity:affinity stillSelecting:stillSelecting];
+    return snapped;
+}
+
+// Only what the user does moves the selection by whole tokens: the movement commands of the keyboard, and the mouse.
+// Find, replace, undo and the editor set exact ranges, which stay as they are (a match may be part of a token).
+- (void)doCommandBySelector:(SEL)selector
+{
+    NSUInteger previous = self.selectedRange.location;
+    [super doCommandBySelector:selector];
+    if (![NSStringFromSelector(selector) hasPrefix:@"move"])
+        return;
+    NSArray<NSValue *> *ranges = self.selectedRanges, *snapped = [self rangesSnappedToTokens:ranges previous:previous];
+    if (![snapped isEqualToArray:ranges])
+        [self setSelectedRanges:snapped affinity:self.selectionAffinity stillSelecting:NO];
+}
+
+// A click or a drag: a click on a token puts the insertion point after it.
+- (NSRange)selectionRangeForProposedRange:(NSRange)proposedCharRange granularity:(NSSelectionGranularity)granularity
+{
+    NSRange range = [super selectionRangeForProposedRange:proposedCharRange granularity:granularity];
+    return [[self rangesSnappedToTokens:@[[NSValue valueWithRange:range]] previous:0].firstObject rangeValue];
 }
 
 - (void)deleteToken:(NSRange)token

@@ -21,7 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)titleOfTokenRange:(NSRange)range;
 @end
 
-/// The insertion point and selections never fall inside a token, and deleting next to a token deletes all of it.
+/// Moving with the keyboard or selecting with the mouse goes by whole tokens, and deleting next to a token deletes all
+/// of it. Ranges that Find, undo or the editor set stay exact.
 @interface TSMacroContentTextView : TSTextView
 @end
 

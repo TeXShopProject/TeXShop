@@ -16,7 +16,13 @@ MUTATIONS = {
     'the whole note of a mark is a token': ('TSSyntaxMacroContentScanner.m', '[found addObject:[NSValue valueWithRange:NSMakeRange(range.location, 1)]];', '[found addObject:[NSValue valueWithRange:range]];'),
     'the characters after the first take room': ('TSMacroContentTokens.m', ' ? NSGlyphPropertyControlCharacter : NSGlyphPropertyNull;', ' ? NSGlyphPropertyControlCharacter : properties[i];'),
     'tokens on another line are not laid out again': ('TSMacroContentTokens.m', '        invalidatedCharRange = invalidated;\n', ''),
-    'the insertion point stops inside a token': ('TSMacroContentTokens.m', '                    range.location = range.location < previous ? first.location : NSMaxRange(first);', '                    ;'),
+    'the insertion point stops inside a token': ('TSMacroContentTokens.m', '                range.location = range.location < previous ? first.location : NSMaxRange(first);', '                ;'),
+    'every selection goes by whole tokens (Find)': ('TSMacroContentTokens.m', '// Only what the user does moves the selection by whole tokens', '''- (void)setSelectedRanges:(NSArray<NSValue *> *)ranges affinity:(NSSelectionAffinity)affinity stillSelecting:(BOOL)still
+{
+    [super setSelectedRanges:[self rangesSnappedToTokens:ranges previous:self.selectedRange.location] affinity:affinity stillSelecting:still];
+}
+// Only what the user does moves the selection by whole tokens'''),
+    'the mouse stops inside a token': ('TSMacroContentTokens.m', '    return [[self rangesSnappedToTokens:@[[NSValue valueWithRange:range]] previous:0].firstObject rangeValue];', '    return range;'),
     'delete takes one character of a token': ('TSMacroContentTokens.m', '            [self deleteToken:token];\n            return;\n        }\n    }\n    [super deleteBackward:sender];',
                                               '        }\n    }\n    [super deleteBackward:sender];'),
     'no pill is drawn': ('TSMacroContentTokens.m', '        TSDrawPlaceholderToken(title, font, pill);\n', ''),
@@ -34,6 +40,8 @@ def run(changes=None):
                 path = tmp / name
                 path.write_text(text.replace(changes[1], changes[2]))
             sources.append(str(path))
+        # The Advanced Find panel's search and replace, which set the selection of the contents.
+        sources += [str(path) for path in sorted((root / 'Sources/Find').glob('TSRegex*.m'))]
         binary = tmp / 'test'
         subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-mmacosx-version-min=14.6', '-framework', 'Cocoa', '-I', str(tmp), '-I', str(root / 'Tests'),
                         *include_args(root), str(root / 'Tests/MacroContentTokens.m'), *sources, '-o', str(binary)], check=True)

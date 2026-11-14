@@ -9,6 +9,9 @@
 #import "TSPlaceholderToken.h"
 #import "TSSyntaxMacroContentScanner.h"
 #import "TSAdvancedFindPanelController.h"
+#import "TSRegexTextFind.h"
+#import "TSRegexFindPattern.h"
+#import "TSRegexFindReplacement.h"
 #define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr,"FAIL %d: %s\n",__LINE__,#__VA_ARGS__); exit(1); } } while(0)
 // The source's text view and the Advanced Find controllers are not needed here, only their classes.
 @implementation TSTextView
@@ -120,17 +123,44 @@ int main(int argc, char **argv) { @autoreleasepool {
     view.selectedRange = NSMakeRange(5, 0); [view deleteBackward:nil];
     REQUIRE([Ranges() isEqual:@[[NSValue valueWithRange:NSMakeRange(3, 5)]]] && fabs(Width(NSMakeRange(3, 5)) - TSPlaceholderTokenSize(TSPlaceholderTokenTitle(@"#INS#"), font).width) < .5);
 
-    // The insertion point never stops inside a token: it goes to the end it moves toward. A selection takes in every
-    // token it touches.
+    // Moving with the keyboard goes by whole tokens: the insertion point never stops inside one, it goes to the end it
+    // moves toward; extending the selection takes in the whole token. A click on a token puts the insertion point after
+    // it; a drag takes in every token it touches.
     view.string = @"ab#PASTE#cd";
-    view.selectedRange = NSMakeRange(2, 0); view.selectedRange = NSMakeRange(3, 0);
+    view.selectedRange = NSMakeRange(2, 0); [view doCommandBySelector:@selector(moveRight:)];
     REQUIRE(NSEqualRanges(view.selectedRange, NSMakeRange(9, 0)));
-    view.selectedRange = NSMakeRange(8, 0);
-    REQUIRE(NSEqualRanges(view.selectedRange, NSMakeRange(2, 0)));
-    [view moveRight:nil]; REQUIRE(NSEqualRanges(view.selectedRange, NSMakeRange(9, 0)));
-    [view moveLeft:nil]; REQUIRE(NSEqualRanges(view.selectedRange, NSMakeRange(2, 0)));
-    view.selectedRange = NSMakeRange(1, 3); REQUIRE(NSEqualRanges(view.selectedRange, NSMakeRange(1, 8)));
-    view.selectedRange = NSMakeRange(5, 5); REQUIRE(NSEqualRanges(view.selectedRange, NSMakeRange(2, 8)));
+    [view doCommandBySelector:@selector(moveLeft:)]; REQUIRE(NSEqualRanges(view.selectedRange, NSMakeRange(2, 0)));
+    view.selectedRange = NSMakeRange(1, 0);
+    [view doCommandBySelector:@selector(moveRightAndModifySelection:)]; [view doCommandBySelector:@selector(moveRightAndModifySelection:)];
+    REQUIRE(NSEqualRanges(view.selectedRange, NSMakeRange(1, 8)));
+    REQUIRE(NSEqualRanges([view selectionRangeForProposedRange:NSMakeRange(5, 0) granularity:NSSelectByCharacter], NSMakeRange(9, 0)));
+    REQUIRE(NSEqualRanges([view selectionRangeForProposedRange:NSMakeRange(2, 0) granularity:NSSelectByCharacter], NSMakeRange(2, 0)));
+    REQUIRE(NSEqualRanges([view selectionRangeForProposedRange:NSMakeRange(1, 3) granularity:NSSelectByCharacter], NSMakeRange(1, 8)));
+    REQUIRE(NSEqualRanges([view selectionRangeForProposedRange:NSMakeRange(5, 5) granularity:NSSelectByCharacter], NSMakeRange(2, 8)));
+
+    // Find, replace and undo set exact ranges, which stay: a match may be a part of a token. Searched as the Advanced Find
+    // panel does, the last # of #SEL# found backward is the one replaced, and searching forward visits both.
+    view.string = @"#SEL#"; view.selectedRange = NSMakeRange(5, 0);
+    TSRegexFindPattern *hash = [[TSRegexFindPattern alloc] initWithFindString:@"#" options:0 error:NULL];
+    TSRegexTextFind *(^find)(void) = ^{ return [[TSRegexTextFind alloc] initWithString:view.string pattern:hash selectedRanges:view.selectedRanges inSelection:NO error:NULL]; };
+    NSArray *matches = [find() matchRangesWithCancellation:nil];
+    NSRange hit = [find() nextMatchInRanges:matches forward:NO includingSelection:NO wraps:YES wrapped:NULL];
+    view.selectedRange = hit;
+    REQUIRE(NSEqualRanges(hit, NSMakeRange(4, 1)) && NSEqualRanges(view.selectedRange, hit));
+    TSRegexReplacementTemplate *x = [[TSRegexReplacementTemplate alloc] initWithString:@"X" pattern:hash syntax:TSRegexReplacementSyntaxICU];
+    TSRegexFindReplacement *replacement = [find() replacementInSelectionWithTemplate:x];
+    REQUIRE(NSEqualRanges(replacement.range, NSMakeRange(4, 1)));
+    [view insertText:replacement.string replacementRange:replacement.range];
+    REQUIRE([view.string isEqual:@"#SELX"] && Ranges().count == 0);
+    view.string = @"#SEL#"; view.selectedRange = NSMakeRange(0, 0);
+    matches = [find() matchRangesWithCancellation:nil];
+    hit = [find() nextMatchInRanges:matches forward:YES includingSelection:YES wraps:NO wrapped:NULL];
+    view.selectedRange = hit; REQUIRE(NSEqualRanges(view.selectedRange, NSMakeRange(0, 1)));
+    hit = [find() nextMatchInRanges:matches forward:YES includingSelection:NO wraps:NO wrapped:NULL];
+    REQUIRE(NSEqualRanges(hit, NSMakeRange(4, 1)));
+    view.selectedRange = hit; REQUIRE(NSEqualRanges(view.selectedRange, NSMakeRange(4, 1)));
+    // The editor sets the insertion point inside a token, after Insert of a mark with a note: it stays.
+    view.string = @"•‹›"; view.selectedRange = NSMakeRange(2, 0); REQUIRE(NSEqualRanges(view.selectedRange, NSMakeRange(2, 0)));
 
     // Delete next to a token deletes all of it, as one change that undo brings back.
     view.string = @"ab#PASTE#cd"; [view.undoManager removeAllActions];
