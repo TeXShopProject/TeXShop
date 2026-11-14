@@ -13,8 +13,14 @@ match the compiled nibs next to it, so that no source change waits for a compile
 The Romanian document nib once connected the editor outlet to the text
 annotation panel (#42); the Spanish one the Previous button to the log window;
 ten matrix panels named a class that no longer exists.
+
+The annotation window lays transparent buttons over a picture of the annotation
+kinds. In every language they must keep the place they have over the picture in
+Base: the French window moved the picture 68 points to the right but not the buttons,
+so they covered the buttons on the left and missed the kinds they name.
 """
 import argparse, json, shutil, subprocess, sys, tempfile
+import xml.etree.ElementTree as ElementTree
 from collections import Counter
 from pathlib import Path
 
@@ -83,6 +89,32 @@ with tempfile.TemporaryDirectory(prefix='texshop-localized-nibs-') as tmp:
             if (e['nib'], e['change'], e['fact'], code) not in seen:
                 problems.append('listed difference no longer occurs (%s, %s): %s %s' % (e['nib'], code, e['change'], e['fact']))
     print('Compared %d compiled localized nibs with Base' % checked)
+
+    def annotation_buttons(designable):
+        tree = ElementTree.parse(designable).getroot()
+        ids = {e.get('id'): e for e in tree.iter() if e.get('id')}
+        window = ids[next(o for o in tree.iter('outlet') if o.get('property') == 'annotationChoices').get('destination')]
+        views = list(window.find('view/subviews'))
+        picture = [v for v in views if v.tag == 'imageView']
+        assert len(picture) == 1, designable
+        px, py = (float(picture[0].find('rect').get(k)) for k in 'xy')
+        frames = []
+        for v in views:
+            cell = v.find('buttonCell')
+            if v.tag == 'button' and cell is not None and cell.get('transparent') == 'YES':
+                r = v.find('rect'); action = v.find('connections/action')
+                frames.append((action.get('selector') if action is not None else None,
+                               float(r.get('x')) - px, float(r.get('y')) - py, float(r.get('width')), float(r.get('height'))))
+        return Counter(frames)
+
+    base_buttons = annotation_buttons(interfaces / 'Base.lproj/TSDocument.nib/designable.nib')
+    assert sum(base_buttons.values()) == 12 and any(f[0] == 'strikeoutAnnotation:' for f in base_buttons), base_buttons
+    for designable in sorted(interfaces.glob('*.lproj/TSDocument.nib/designable.nib')):
+        ours = annotation_buttons(designable)
+        for frame in sorted((base_buttons - ours) + (ours - base_buttons), key=str):
+            problems.append('TSDocument %s: the annotation button %s is not where Base puts it over the picture: %s'
+                            % (designable.parent.parent.name, frame[0], 'missing' if frame in base_buttons else frame[1:]))
+    print('Compared the annotation buttons of %d document nibs with Base' % len(list(interfaces.glob('*.lproj/TSDocument.nib/designable.nib'))))
 
     if not args.skip_compile:
         compiled = 0

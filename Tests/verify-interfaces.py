@@ -18,7 +18,8 @@ CORRECTED={
     # Previous pointed to the log window's content view; the encoding pop-up of the older Save accessory changed the file type.
     'es.lproj':([outlet('previousButton','1606','qdu-yl-BAe'),action('setSaveExtension:','fqS-Vq-hgb')],
                 [outlet('previousButton','393','qdu-yl-BAe')]),
-    'fr.lproj':([],[outlet('tLog','LqC-fO-238','VgR-V5-IfL')]),
+    # The text annotation choices lacked the strikeout button; it was added where Base has it.
+    'fr.lproj':([],[outlet('tLog','LqC-fO-238','VgR-V5-IfL'),action('strikeoutAnnotation:','Stk-Fr-a01','-1')]),
     'ko.lproj':([action('lockDocument:','NLs-gZ-1iV')],[action('gotoURL:','NLs-gZ-1iV')]),
     'pt-PT.lproj':([action('convertTiff:','yKe-Uz-9qP')],
                    [action('doTag:','yKe-Uz-9qP'),outlet('showFullPathButton','3921','Bcb-fn-oGM'),outlet('slabels','OUv-dr-rDM','bJm-TP-SIA')]),

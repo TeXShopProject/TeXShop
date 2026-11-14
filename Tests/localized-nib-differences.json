@@ -794,15 +794,6 @@
  {
   "nib": "TSDocument",
   "change": "missing",
-  "fact": "- | @annotationChoices | NSButton action=strikeoutAnnotation:>FirstResponder",
-  "languages": [
-   "fr"
-  ],
-  "reason": "open: the French text annotation choices have no strikeout button; adding one needs a layout change"
- },
- {
-  "nib": "TSDocument",
-  "change": "missing",
   "fact": "- | @smagnificationOutletKK | NSTextField",
   "languages": [
    "de",
@@ -1123,15 +1114,6 @@
    "pt-PT"
   ],
   "reason": "the action sits on the button cell instead of the button; same effect"
- },
- {
-  "nib": "TSDocument",
-  "change": "missing",
-  "fact": "action NSButton (NSButton in @annotationChoices) strikeoutAnnotation: -> FirstResponder",
-  "languages": [
-   "fr"
-  ],
-  "reason": "open: the French text annotation choices have no strikeout button; adding one needs a layout change"
  },
  {
   "nib": "TSDocument",
