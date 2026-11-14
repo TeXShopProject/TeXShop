@@ -65,9 +65,6 @@
 #import "TSAdvancedFindFieldStyle.h"
 #import "TSPreferenceEffects.h"
 
-#include <sys/sysctl.h>     // for testForIntel
-#include <mach/machine.h>   // for testForIntel
-
 /*
 #define NSAppKitVersionNumber10_8 1187
 #define NSAppKitVersionNumber10_9 1265
@@ -152,53 +149,6 @@ static void TSInstallAdvancedFindFieldStyle(void)
 - (BOOL)applicationSupportsSecureRestorableState:(NSApplication *)app {
     return YES;
 }
-
-- (void)testForIntel;
-{	
-	// The default value for the preference is now /usr/texbin as of Jan 11, 2007.
-	// I make this change unless a hidden preference says not to.
-	// 
-	// if the processor is intel and the path variable preference is /usr/local/tetex/bin/powerpc-apple-darwin-current,
-	// then change that preference permanently to /usr/local/tetex/bin/i386-apple-darwin-current
-    
-    // The default value has changed to /Library/TeX/texbin as of July, 2015. This is
-    // done because OS X El Capitan does not allow user entries in /usr.
-    
-    BOOL usrLocationBad = NO;
-    BOOL LibraryLocationBad = NO;
-    NSDictionary *myAttributes;
-    
-    NSFileManager *myManager = [NSFileManager defaultManager];
-    
-    myAttributes = [myManager attributesOfItemAtPath: @"/usr/texbin" error: nil];
-    if (myAttributes == nil)
-        usrLocationBad = YES;
-    else if ([myAttributes objectForKey: NSFileType ] != NSFileTypeSymbolicLink)
-        usrLocationBad = YES;
-    
-    myAttributes = [myManager attributesOfItemAtPath: @"/Library/TeX/texbin" error: nil];
-    if (myAttributes == nil)
-        LibraryLocationBad = YES;
-    else if ([myAttributes objectForKey: NSFileType ] != NSFileTypeSymbolicLink)
-        LibraryLocationBad = YES;
-    
-    NSString *currentBinPath = [[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath];
-    
-    if (([currentBinPath isEqualToString: @"/usr/texbin"]) &&  usrLocationBad && (! LibraryLocationBad))
-        {
-        [SUD setObject:@"/Library/TeX/texbin" forKey:TetexBinPath];
-        [SUD synchronize];
-        }
-    
-    else  if (([currentBinPath isEqualToString: @"/Library/TeX/texbin"]) && LibraryLocationBad && (! usrLocationBad))
-        {
-        [SUD setObject:@"/usr/texbin" forKey:TetexBinPath];
-        [SUD synchronize];
-        }
-
-}
-
-
 
 /*
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
@@ -921,8 +871,6 @@ static void TSInstallAdvancedFindFieldStyle(void)
     TSKeepEarlierFactoryEngineFile(SUD, [SUD persistentDomainForName:NSBundle.mainBundle.bundleIdentifier ?: @"TeXShop"] ?: @{});
   
 	    
-	[self testForIntel];
-	
 	[self finishMenuKeyEquivalentsConfigure];
 
 }
