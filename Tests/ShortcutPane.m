@@ -288,6 +288,55 @@ int main(int argc,char **argv){@autoreleasepool{
  method_setImplementation(class_getInstanceMethod(NSWindow.class,@selector(sendEvent:)),appKitSendEvent);
  REQUIRE(pane.searchMatches.count==0 && [pane.searchMessage containsString:@"cannot be used"] && forwardedKeys==0 && forwardedWindowEvents==0);
  fixtureCharacters=@"\r";forwardedKeys=0;REQUIRE([shell.window performKeyEquivalent:Event(@"\r",0,36)] && pane.searchingByKey && forwardedKeys==0 && [pane.searchMessage containsString:@"cannot be used"]);
+ // Focus that moves to a control outside the menu shortcut controls ends key search, and keys then reach that control.
+ {
+  NSSearchField *settingsSearch=[shell valueForKey:@"settingsSearchField"];NSTableView *sidebar=[shell valueForKey:@"categoryTable"];
+  for(NSView *outside in @[settingsSearch,sidebar]){
+   if(!pane.searchingByKey){pane.searchMode.selectedSegment=1;[pane changeSearchMode:pane.searchMode];}
+   fixtureCharacters=@"f";[shell.window performKeyEquivalent:Event(@"f",C,3)];REQUIRE(pane.searchingByKey && pane.searchEvent!=nil);
+   // The results and the key field are part of key search.
+   for(NSView *inside in @[pane.table,pane.keySearchView]) REQUIRE([shell.window makeFirstResponder:inside] && pane.searchingByKey && pane.searchEvent!=nil);
+   REQUIRE([shell.window makeFirstResponder:outside]);
+   REQUIRE(!pane.searchingByKey && pane.searchMode.selectedSegment==0 && pane.search.editable && pane.keySearchView.hidden && [pane.search.stringValue isEqual:@"First"]);
+   REQUIRE(![(id)shell handleKeySearchEvent:Event(@"f",C,3)]);
+  }
+  REQUIRE([(id<NSSearchFieldDelegate>)shell control:settingsSearch textShouldBeginEditing:[NSText new]] && [shell setSettingsSearchQuery:@""]);
+  pane.searchMode.selectedSegment=1;[pane changeSearchMode:pane.searchMode];REQUIRE(pane.searchingByKey && shell.window.firstResponder==pane.keySearchView);
+ }
+ // The search field's cancel button clears the recorded key: key search stays on and takes the next key.
+ {
+  NSView *frameView=shell.window.contentView.superview;
+  NSPoint fieldPoint=[pane.search convertPoint:NSMakePoint(NSMidX(pane.search.bounds),NSMidY(pane.search.bounds)) toView:nil];
+  // Delivers a click the way the window does: the hit view takes focus, then gets the mouse down and up.
+  void (^Click)(NSPoint)=^(NSPoint point){
+   NSView *hit=[frameView hitTest:point];REQUIRE(hit!=nil);
+   if(hit.acceptsFirstResponder)[shell.window makeFirstResponder:hit];
+   NSEvent *(^Mouse)(NSEventType)=^NSEvent *(NSEventType type){return [NSEvent mouseEventWithType:type location:point modifierFlags:0 timestamp:0 windowNumber:shell.window.windowNumber context:nil eventNumber:0 clickCount:1 pressure:type==NSEventTypeLeftMouseDown];};
+   [hit mouseDown:Mouse(NSEventTypeLeftMouseDown)];[hit mouseUp:Mouse(NSEventTypeLeftMouseUp)];
+  };
+  fixtureCharacters=@"f";[shell.window performKeyEquivalent:Event(@"f",C,3)];
+  NSString *recorded=[pane.search.stringValue copy];REQUIRE(pane.searchEvent!=nil && pane.searchMatches.count==3 && recorded.length>0);
+  // The field places its cancel button only while it shows text.
+  NSRect cancelRect=[pane.search convertRect:[(NSSearchFieldCell *)pane.search.cell cancelButtonRectForBounds:pane.search.bounds] toView:nil];
+  NSPoint cancelPoint=NSMakePoint(NSMidX(cancelRect),NSMidY(cancelRect));REQUIRE(NSWidth(cancelRect)>0 && !NSPointInRect(fieldPoint,cancelRect));
+  REQUIRE([pane.keySearchView isAccessibilitySelectorAllowed:@selector(accessibilityPerformCancel)]);
+  // A click elsewhere in the field keeps the key.
+  Click(fieldPoint);REQUIRE(pane.searchEvent!=nil && [pane.search.stringValue isEqual:recorded] && pane.searchMatches.count==3);
+  REQUIRE([shell.window makeFirstResponder:pane.table]);
+  Click(cancelPoint);
+  REQUIRE(pane.searchingByKey && pane.searchMode.selectedSegment==1 && !pane.search.editable && !pane.keySearchView.hidden);
+  REQUIRE(pane.searchEvent==nil && pane.searchMatches.count==0 && pane.search.stringValue.length==0);
+  REQUIRE([pane.searchMessage isEqual:NSLocalizedString(@"Press a key",@"")] && [pane.hint.stringValue isEqual:pane.searchMessage] && [pane.keySearchView.accessibilityValue isEqual:pane.searchMessage]);
+  REQUIRE(pane.table.numberOfRows==(NSInteger)pane.visibleCommands.count && pane.table.selectedRow==-1 && !pane.selectionButtons[0].enabled && !pane.macroButton.enabled);
+  REQUIRE(shell.window.firstResponder==pane.keySearchView);
+  // With no key recorded the field shows no cancel button, and the same spot does nothing.
+  REQUIRE(![pane.keySearchView isAccessibilitySelectorAllowed:@selector(accessibilityPerformCancel)] && ![pane.keySearchView accessibilityPerformCancel]);
+  Click(cancelPoint);REQUIRE(pane.searchingByKey && pane.searchEvent==nil && shell.window.firstResponder==pane.keySearchView);
+  fixtureCharacters=@"z";[shell.window performKeyEquivalent:Event(@"z",C,6)];REQUIRE(pane.searchingByKey && pane.searchMatches.count==2 && pane.search.stringValue.length>0);
+  // Assistive technologies clear the key with the cancel action.
+  REQUIRE([shell.window makeFirstResponder:pane.table] && [pane.keySearchView accessibilityPerformCancel]);
+  REQUIRE(pane.searchingByKey && pane.searchEvent==nil && pane.search.stringValue.length==0 && shell.window.firstResponder==pane.keySearchView);
+ }
  // Existing non-assignable shortcuts remain searchable, but new assignments stay restricted.
  NSMenuItem *rotate=Item(@"Rotate",@"c",O),*switchViews=Item(@"Switch views",@"2",O);
  [menu addItem:rotate];[menu addItem:switchViews];
