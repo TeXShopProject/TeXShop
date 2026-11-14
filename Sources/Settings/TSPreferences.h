@@ -430,7 +430,6 @@
 - (IBAction)EditingStyleChoice:sender;
 - (IBAction)SaveEditedStyle:sender;
 - (IBAction)SaveNewStyle:sender;
-- (IBAction)NewStyleFromPrefs:sender;
 // Actual Colors
 - (IBAction)SourceTextColorChanged:sender;
 - (IBAction)SourceBackgroundColorChanged:sender;

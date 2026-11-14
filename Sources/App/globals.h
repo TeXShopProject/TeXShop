@@ -364,29 +364,7 @@ extern NSString *MatrixSizeKey; // Jonas' Matrix addition
 extern NSString *TSHasBeenUsedKey;
 extern NSString *UserInfoPath;
 
-extern NSString *commentredKey;
-extern NSString *commentgreenKey;
-extern NSString *commentblueKey;
-extern NSString *commandredKey;
-extern NSString *commandgreenKey;
-extern NSString *commandblueKey;
-extern NSString *markerredKey;
-extern NSString *markergreenKey;
-extern NSString *markerblueKey;
-extern NSString *indexredKey;
-extern NSString *indexgreenKey;
-extern NSString *indexblueKey;
 
-extern NSString *background_RKey;
-extern NSString *background_GKey;
-extern NSString *background_BKey;
-extern NSString *backgroundAlphaKey; // added by Terada
-extern NSString *foreground_RKey;
-extern NSString *foreground_BKey;
-extern NSString *foreground_GKey;
-extern NSString *insertionpoint_RKey;
-extern NSString *insertionpoint_GKey;
-extern NSString *insertionpoint_BKey;
 
 extern NSString *tabsKey;
 extern NSString *WarnForShellEscapeKey;
@@ -429,13 +407,6 @@ extern NSString *PreviewDrawerOpenKey;
 extern NSString *ConTeXtTagsKey;
 extern NSString *OtherTeXExtensionsKey;
 extern NSString *BibDeskCompletionKey;
-extern NSString *ConsoleBackgroundColor_RKey;
-extern NSString *ConsoleBackgroundColor_GKey;
-extern NSString *ConsoleBackgroundColor_BKey;
-extern NSString *ConsoleBackgroundAlphaKey; // added by Terada
-extern NSString *ConsoleForegroundColor_RKey;
-extern NSString *ConsoleForegroundColor_GKey;
-extern NSString *ConsoleForegroundColor_BKey;
 extern NSString *ConsoleFontNameKey;
 extern NSString *ConsoleFontSizeKey;
 extern NSString *ConsoleWidthResizeKey;
@@ -467,15 +438,6 @@ extern NSString *AutomaticQuoteSubstitutionKey; // Koch
 extern NSString *AutomaticUTF8MACtoUTF8ConversionKey; //Koch
 extern NSString *AutoOpenRootFileKey;
 extern NSString *MiniaturizeRootFileKey;
-extern NSString *highlightBracesRedKey; //Koch
-extern NSString *highlightBracesBlueKey; //Koch
-extern NSString *highlightBracesGreenKey; //Koch
-extern NSString *highlightContentRedKey; //Koch
-extern NSString *highlightContentGreenKey; //Koch
-extern NSString *highlightContentBlueKey; //Koch
-extern NSString *invisibleCharRedKey; //Koch
-extern NSString *invisibleCharGreenKey; //Koch
-extern NSString *invisibleCharBlueKey; //Koch
 extern NSString *brieflyFlashYellowForMatchKey; //Koch
 extern NSString *syncWithRedOvalsKey;
 extern NSString *RightJustifyIfAnyKey; //Koch; right justify lines containing Persian anywhere in the line
@@ -498,9 +460,6 @@ extern NSString *SparkleAutomaticUpdateKey;
 extern NSString *SparkleIntervalKey;
 extern NSString *SparklePrereleaseUpdatesKey;
 extern NSString *SparklePrereleaseForcedVersionKey;
-extern NSString *reverseSyncRedKey;
-extern NSString *reverseSyncGreenKey;
-extern NSString *reverseSyncBlueKey;
 extern NSString *AutomaticSpellingCorrectionEnabledKey;
 extern NSString *IndexColorStartKey;
 extern NSString *spellingLanguageDefaultKey;

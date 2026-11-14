@@ -918,12 +918,10 @@
        "kind": "buttons",
        "title": "",
        "choices": [
-        "旧バージョンの設定から移行",
         "新規テーマを作成",
         "編集中のテーマに上書き保存"
        ],
        "src": [
-        "QdA-w4-ZtO",
         "OWo-zD-aVB",
         "kSG-nU-o3l"
        ]
