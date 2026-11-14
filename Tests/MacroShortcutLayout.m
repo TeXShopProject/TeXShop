@@ -7,6 +7,9 @@
 #import "TSMacroTreeNode.h"
 #import "TSMacroMenuController.h"
 #import "TSShortcutInternal.h"
+#import "TSPlaceholderToken.h"
+#import "TSMacroContentKind.h"
+#import "TSSyntaxMacroContentScanner.h"
 #import <objc/runtime.h>
 #import "MemoryDefaults.h"
 static TSMemoryDefaults *memoryDefaults;
@@ -194,13 +197,78 @@ static void CheckShortcutBehavior(TSMacroEditor *owner) {
     [field beginRecording]; owner.previousItem=nil; [owner syncShortcutField]; REQUIRE(!field.recording && !field.enabled);
     owner.previousItem=macro; [owner syncShortcutField];
 }
-// The list bar, the placeholder note and the dismissal row follow the Human Interface Guidelines.
+// Below the contents, as in the key binding list: Insert at the leading edge and the help
+// button at the trailing edge, in one row between the contents and the shortcut.
+static void CheckPlaceholderRow(TSMacroEditor *owner) {
+    NSWindow *window=[owner valueForKey:@"window"]; NSView *host=window.contentView;
+    NSPopUpButton *insert=owner.insertPlaceholderButton; NSButton *help=owner.placeholdersButton;
+    NSScrollView *contents=[[owner valueForKey:@"contentTextView"] enclosingScrollView];
+    REQUIRE(insert && help && insert.superview==host && help.superview==host && !insert.hidden && !help.hidden);
+    REQUIRE(insert.pullsDown && [insert.itemArray.firstObject.title isEqual:NSLocalizedString(@"Insert",@"")] && help.bezelStyle==NSBezelStyleHelpButton);
+    REQUIRE([help.accessibilityLabel isEqual:NSLocalizedString(@"Symbols",@"")] && [help.toolTip isEqual:help.accessibilityLabel]);
+    REQUIRE(fabs(NSMinX(insert.frame)-NSMinX(contents.frame))<.5 && fabs(NSMaxX(help.frame)-NSMaxX(contents.frame))<.5);
+    REQUIRE(NSMaxX(insert.frame)+12<=NSMinX(help.frame) && fabs(NSMidY(insert.frame)-NSMidY(help.frame))<=1);
+    REQUIRE(NSMaxY(insert.frame)<=NSMinY(contents.frame)-5.5 && NSMaxY(help.frame)<=NSMinY(contents.frame)-5.5);
+    REQUIRE(insert.fittingSize.width<=NSWidth(insert.frame)+.5 && NSHeight(contents.frame)>=64);
+}
+// What Insert offers and does, and what the help button lists: the placeholders of a TeX macro
+// and those of an AppleScript macro, each kind enabled for its own macros only.
+static void CheckPlaceholderControls(TSMacroEditor *owner) {
+    NSWindow *window=[owner valueForKey:@"window"]; NSPopUpButton *insert=owner.insertPlaceholderButton;
+    NSArray<NSString *> *teX=@[@"#SEL#",@"#INS#",@"#PASTE#",@"•",@"•‹›"], *appleScript=TSSyntaxMacroContentScanner.appleScriptPlaceholders;
+    REQUIRE(appleScript.count==13);
+    NSMutableArray *symbols=[NSMutableArray array], *headers=[NSMutableArray array];
+    for(NSMenuItem *item in insert.menu.itemArray) {
+        if(item.isSectionHeader) [headers addObject:item.title];
+        if([item.representedObject isKindOfClass:NSString.class]) {
+            [symbols addObject:item.representedObject];
+            REQUIRE(item.target==owner && item.action==@selector(insertPlaceholder:));
+            NSString *title=[item.representedObject isEqual:@"•‹›"]?NSLocalizedString(@"Mark with Note",@""):TSPlaceholderTokenTitle(item.representedObject);
+            REQUIRE([item.title isEqual:title] && item.title.length>0);
+        }
+    }
+    REQUIRE([headers isEqual:(@[@"TeX",@"AppleScript"])] && [symbols isEqual:[teX arrayByAddingObjectsFromArray:appleScript]]);
+    for(NSString *symbol in appleScript) REQUIRE(![TSPlaceholderTokenTitle(symbol) isEqual:TSPlaceholderTokenTitle(@"•")]);
+    NSTextView *contents=[owner valueForKey:@"contentTextView"];
+    TSMacroTreeNode *macro=[TSMacroTreeNode nodeWithName:@"Macro" content:@"" key:@""];
+    owner.previousItem=nil; contents.editable=NO; [owner syncPlaceholderControls]; REQUIRE(!insert.enabled);
+    owner.previousItem=macro; contents.editable=YES; [owner syncPlaceholderControls]; REQUIRE(insert.enabled);
+    for(NSString *text in @[@"\\begin{x}",@"--applescript direct\ntell application \"TeXShop\""]) {
+        contents.string=text; BOOL isTeX=![text hasPrefix:@"--"];
+        [owner menuNeedsUpdate:insert.menu];
+        for(NSMenuItem *item in insert.menu.itemArray) if([item.representedObject isKindOfClass:NSString.class])
+            REQUIRE(item.enabled==([appleScript containsObject:item.representedObject]?!isTeX:isTeX));
+    }
+    // Insert puts the placeholder as it is written at the selection; a mark with a note leaves the insertion point in the note.
+    contents.string=@"\\begin{}"; contents.selectedRange=NSMakeRange(7,0);
+    NSMenuItem *sel=[insert.menu itemAtIndex:[insert.menu indexOfItemWithRepresentedObject:@"#SEL#"]];
+    [owner insertPlaceholder:sel];
+    REQUIRE([contents.string isEqual:@"\\begin{#SEL#}"] && NSEqualRanges(contents.selectedRange,NSMakeRange(12,0)) && window.firstResponder==contents);
+    [owner insertPlaceholder:[insert.menu itemAtIndex:[insert.menu indexOfItemWithRepresentedObject:@"•‹›"]]];
+    REQUIRE([contents.string isEqual:@"\\begin{#SEL#•‹›}"] && NSEqualRanges(contents.selectedRange,NSMakeRange(14,0)));
+    contents.editable=NO; [owner insertPlaceholder:sel]; REQUIRE([contents.string isEqual:@"\\begin{#SEL#•‹›}"]);
+    contents.editable=YES; contents.string=@""; owner.previousItem=nil; [owner syncPlaceholderControls];
+    // The help: a token and how it is written, for each placeholder of each kind, and how to use marks.
+    NSView *list=[owner makePlaceholderListView]; [list setFrameSize:list.fittingSize]; [list layoutSubtreeIfNeeded];
+    NSMutableArray<NSString *> *tokens=[NSMutableArray array], *written=[NSMutableArray array]; NSMutableArray *pending=[list.subviews mutableCopy]; BOOL marks=NO;
+    while(pending.count){ NSView *v=pending.firstObject; [pending removeObjectAtIndex:0]; [pending addObjectsFromArray:v.subviews];
+        if([v isKindOfClass:NSImageView.class]) [tokens addObject:((NSImageView *)v).image.accessibilityDescription?:@""];
+        if([v isKindOfClass:NSTextField.class] && ((NSTextField *)v).isSelectable) [written addObject:((NSTextField *)v).stringValue];
+        if([v isKindOfClass:NSButton.class] && ((NSButton *)v).action==@selector(showMarkHelp:)) marks=YES;
+        if([v isKindOfClass:NSTextField.class]) REQUIRE([((NSTextField *)v).cell cellSize].width<=NSWidth(v.frame)+.5); }
+    NSString *note=NSLocalizedString(@"note",@"");
+    NSArray *expected=[@[@"#SEL#",@"#INS#",@"#PASTE#",@"•",[NSString stringWithFormat:@"•‹%@›",note]] arrayByAddingObjectsFromArray:appleScript];
+    REQUIRE(marks && [[NSSet setWithArray:written] isEqual:[NSSet setWithArray:expected]] && written.count==expected.count && tokens.count==expected.count);
+    for(NSString *symbol in appleScript) REQUIRE([tokens containsObject:TSPlaceholderTokenTitle(symbol)]);
+    REQUIRE(NSWidth(list.frame)<1200 && NSHeight(list.frame)<700);
+}
+// The list bar, the insert row and the dismissal row follow the Human Interface Guidelines.
 static void CheckEditor(TSMacroEditor *owner, NSWindow *window) {
     NSView *host=window.contentView; [host layoutSubtreeIfNeeded];
     if(getenv("TS_DUMP")) for(NSView *v in host.subviews) fprintf(stderr,"SUB %s %s hidden=%d %s\n",NSStringFromClass(v.class).UTF8String,NSStringFromRect(v.frame).UTF8String,v.hidden,[v isKindOfClass:NSTextField.class]?((NSTextField*)v).stringValue.UTF8String:"");
     NSScrollView *list=[[owner valueForKey:@"outlineView"] enclosingScrollView];
     NSButton *save=[owner valueForKey:@"saveButton"],*cancel=[owner valueForKey:@"cancelButton"],*test=[owner valueForKey:@"testButton"];
-    REQUIRE(owner.listBox && owner.listBar && owner.placeholderNote);
+    REQUIRE(owner.listBox && owner.listBar && owner.insertPlaceholderButton);
     for(NSString *key in @[@"newItemButton",@"submenuButton",@"separatorButton",@"deleteButton",@"duplicateButton"]) REQUIRE([[owner valueForKey:key] isHidden]);
     CheckListBar(owner,list);
     CheckShortcutField(owner);
@@ -208,13 +276,11 @@ static void CheckEditor(TSMacroEditor *owner, NSWindow *window) {
     REQUIRE(fabs(NSMinX(test.frame)-20)<.5 && NSMaxX(test.frame)+12<=NSMinX(cancel.frame));
     for(NSButton *b in @[save,cancel,test]) REQUIRE(b.fittingSize.width<=NSWidth(b.frame)+.5);
     NSRect s=Drawn(host,save),c=Drawn(host,cancel); REQUIRE(NSMinX(s)-NSMaxX(c)>=11);
-    NSTextField *note=owner.placeholderNote;
-    REQUIRE([note.stringValue containsString:@"#SEL#"] && [note.stringValue containsString:@"#INS#"] && [note.stringValue containsString:@"#PASTE#"]);
-    REQUIRE([note.cell cellSizeForBounds:NSMakeRect(0,0,NSWidth(note.bounds),CGFLOAT_MAX)].height<=NSHeight(note.bounds)+.5);
+    CheckPlaceholderRow(owner);
     NSArray *attached=@[owner.listBox];
     // What this layout adds or moves must not overlap anything; older labels in the
     // nibs may run into their fields by a few points.
-    NSArray *placed=@[owner.listBox,owner.placeholderNote,owner.shortcutLabel,owner.shortcutField,save,cancel,test];
+    NSArray *placed=@[owner.listBox,owner.insertPlaceholderButton,owner.placeholdersButton,owner.shortcutLabel,owner.shortcutField,save,cancel,test];
     for(NSView *a in placed) {
         REQUIRE(NSContainsRect(NSInsetRect(host.bounds,-.5,-.5),a.frame));
         for(NSView *b in host.subviews) if(a!=b && !b.hidden && !([attached containsObject:a]&&[attached containsObject:b])) {
@@ -261,12 +327,12 @@ int main(int argc,char **argv) { @autoreleasepool {
     NSTableViewStyle styleBefore=((NSOutlineView*)[owner valueForKey:@"outlineView"]).effectiveStyle;
     [owner installListControls];
     if(getenv("TS_DUMP")) fprintf(stderr,"BEFORE key %s shift %s contents %s\n",NSStringFromRect([[owner valueForKey:@"keyField"] frame]).UTF8String,NSStringFromRect([[owner valueForKey:@"shiftCheckBox"] frame]).UTF8String,NSStringFromRect([[[owner valueForKey:@"contentTextView"] enclosingScrollView] frame]).UTF8String);
-    [owner installShortcutField];[owner installPlaceholderNote];
+    [owner installShortcutField];[owner installPlaceholderControls];
     // In its frame the list keeps the style it had in its own border.
     REQUIRE(styleBefore==NSTableViewStyleFullWidth && ((NSOutlineView*)[owner valueForKey:@"outlineView"]).effectiveStyle==styleBefore);
     [owner layoutDialogButtons];
     CheckEditor(owner,window);
-    if(round==0) CheckShortcutBehavior(owner);
+    if(round==0) { CheckShortcutBehavior(owner); CheckPlaceholderControls(owner); }
     // Images with a macro selected (its shortcut and ⊗), and, as -recording, while the field waits for keys.
     TSMacroTreeNode *shown=[TSMacroTreeNode nodeWithName:@"Macro" content:@"x" key:@"M+ShiftKey"];
     if(getenv("TS_RENDER_DIR") && round==0) { owner.previousItem=shown; owner.pendingShortcutKey=shown.key; [owner syncShortcutField]; }

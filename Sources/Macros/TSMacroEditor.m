@@ -36,6 +36,9 @@
 #import "TSListBottomBar.h"
 #import "TSMacroShortcutField.h"
 #import "TSShortcutInternal.h"
+#import "TSPlaceholderToken.h"
+#import "TSMacroContentTokens.h"
+#import "TSMacroContentKind.h"
 #import "TSColorSupport.h"
 #import "TSMarkMenu.h"
 #import "TSPreferenceEffects.h"
@@ -210,12 +213,13 @@ static TSFilterMode savedFilter = kNoFilterMode;
 - (NSTextView *)makeContentTextViewWithSize:(NSSize)contentSize
 {
     NSTextStorage *storage = [[NSTextStorage alloc] init];
-    NSLayoutManager *layout = [[TSAdvancedFindLayoutManager alloc] init];
+    // The placeholders show as tokens (TSMacroContentTokens), over the Advanced Find highlights.
+    NSLayoutManager *layout = [[TSMacroContentLayoutManager alloc] init];
     [storage addLayoutManager:layout];
     NSTextContainer *container = [[NSTextContainer alloc] initWithSize:NSMakeSize(contentSize.width, CGFLOAT_MAX)];
     [container setWidthTracksTextView:YES];
     [layout addTextContainer:container];
-    NSTextView *view = [[TSTextView alloc] initWithFrame:NSMakeRect(0, 0, contentSize.width, contentSize.height) textContainer:container];
+    NSTextView *view = [[TSMacroContentTextView alloc] initWithFrame:NSMakeRect(0, 0, contentSize.width, contentSize.height) textContainer:container];
     [view setMinSize:NSMakeSize(0, contentSize.height)];
     [view setMaxSize:NSMakeSize(CGFLOAT_MAX, CGFLOAT_MAX)];
     [view setVerticallyResizable:YES];
@@ -275,7 +279,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
         [self installShortcutStatus];
         [self installListControls];
         [self installShortcutField];
-        [self installPlaceholderNote];
+        [self installPlaceholderControls];
         [self layoutDialogButtons];
 
 		// set up window and UI elements
@@ -316,6 +320,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		[contentTextView setEditable: NO];
 		self.pendingShortcutKey = @"";
 		[self syncShortcutField];
+		[self syncPlaceholderControls];
 		[testButton setEnabled: NO];
 		[deleteButton setEnabled: NO];
 		[duplicateButton setEnabled: NO];
@@ -508,6 +513,10 @@ static void TSSendButtonAction(NSButton *button)
     }
     field.nextKeyView = next;
     self.shortcutLabel = label; self.shortcutField = field;
+    // The smallest window keeps the field within the name field's right edge.
+    NSSize smallest = [window minSize];
+    smallest.width = MAX(smallest.width, NSWidth([window frame]) - (NSMaxX([nameField frame]) - NSMaxX(field.frame)));
+    [window setMinSize:smallest];
     [self syncShortcutField];
 }
 // The field shows the shortcut being edited; only a macro (not a submenu or a separator) has one.
@@ -534,21 +543,36 @@ static void TSSendButtonAction(NSButton *button)
     [self updatePendingShortcutStatus];
     [self reflectChangesInEditor:YES];
 }
-// What the placeholders in a macro stand for, below its contents.
-- (void)installPlaceholderNote
+// Below the contents, as in the key binding list of Settings › Keyboard: Insert
+// adds a placeholder (shown as a token), and the help button lists them.
+- (void)installPlaceholderControls
 {
-    if (self.placeholderNote) return;
+    if (self.insertPlaceholderButton) return;
     NSView *host = [window contentView];
     NSScrollView *contents = [contentTextView enclosingScrollView];
-    NSTextField *note = [NSTextField wrappingLabelWithString:[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help).", @"Macro editor placeholder guide"), [TSMarkMenu markGuide]]];
-    note.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
-    note.textColor = NSColor.secondaryLabelColor;
-    note.identifier = @"macro.placeholders";
-    note.selectable = YES;
+    NSPopUpButton *insert = [[NSPopUpButton alloc] initWithFrame:NSZeroRect pullsDown:YES];
+    insert.identifier = @"macro.insert";
+    insert.autoenablesItems = NO;
+    [insert addItemWithTitle:NSLocalizedString(@"Insert", @"Key binding Insert menu")];
+    NSMenu *menu = insert.menu;
+    [menu addItem:[NSMenuItem sectionHeaderWithTitle:@"TeX"]];
+    for (NSString *symbol in @[@"#SEL#", @"#INS#", @"#PASTE#", @"•"])
+        [menu addItem:[self placeholderItemWithTitle:TSPlaceholderTokenTitle(symbol) symbol:symbol]];
+    [menu addItem:[self placeholderItemWithTitle:NSLocalizedString(@"Mark with Note", @"Key binding Insert menu") symbol:@"•‹›"]];
+    [menu addItem:NSMenuItem.separatorItem];
+    [menu addItem:[NSMenuItem sectionHeaderWithTitle:@"AppleScript"]];
+    for (NSString *symbol in TSSyntaxMacroContentScanner.appleScriptPlaceholders)
+        [menu addItem:[self placeholderItemWithTitle:TSPlaceholderTokenTitle(symbol) symbol:symbol]];
+    menu.delegate = self;
+    [insert sizeToFit];
+    NSButton *help = [NSButton buttonWithTitle:@"" target:self action:@selector(showPlaceholders:)];
+    help.bezelStyle = NSBezelStyleHelpButton;
+    help.identifier = @"macro.placeholders";
+    help.accessibilityLabel = NSLocalizedString(@"Symbols", @"Key binding symbols help button");
+    help.toolTip = help.accessibilityLabel;
+    [help sizeToFit];
     NSRect frame = contents.frame;
-    // Size the note for its narrowest width, which the window's minimum width keeps.
-    CGFloat narrowest = MIN(NSWidth(frame), 300);
-    CGFloat height = ceil([note.cell cellSizeForBounds:NSMakeRect(0, 0, narrowest, CGFLOAT_MAX)].height);
+    CGFloat height = ceil(MAX(NSHeight(insert.frame), NSHeight(help.frame)));
     const CGFloat gap = 6;
     // When the contents cannot give up the room and keep 64pt, grow the window
     // downwards first, keeping its top edge, so the contents grow with it.
@@ -559,15 +583,19 @@ static void TSSendButtonAction(NSButton *button)
         [window setFrame:grown display:NO];
         frame = contents.frame;
     }
-    note.frame = NSMakeRect(NSMinX(frame), NSMinY(frame), NSWidth(frame), height);
+    insert.frame = NSMakeRect(NSMinX(frame), NSMinY(frame) + round((height - NSHeight(insert.frame)) / 2), NSWidth(insert.frame), NSHeight(insert.frame));
+    help.frame = NSMakeRect(NSMaxX(frame) - NSWidth(help.frame), NSMinY(frame) + round((height - NSHeight(help.frame)) / 2), NSWidth(help.frame), NSHeight(help.frame));
     frame.origin.y += height + gap; frame.size.height -= height + gap;
     contents.frame = frame;
-    note.autoresizingMask = NSViewWidthSizable | NSViewMaxYMargin;
-    [host addSubview:note];
-    self.placeholderNote = note;
-    // The contents keep the room they had at the smallest window size.
+    insert.autoresizingMask = NSViewMaxXMargin | NSViewMaxYMargin;
+    help.autoresizingMask = NSViewMinXMargin | NSViewMaxYMargin;
+    [host addSubview:insert];
+    [host addSubview:help];
+    self.insertPlaceholderButton = insert;
+    self.placeholdersButton = help;
+    // The contents keep at least 64pt at the smallest window size, and the row its two controls.
     NSSize smallest = [window minSize];
-    // The contents keep at least 64pt at the smallest window size.
+    CGFloat narrowest = NSWidth(insert.frame) + 12 + NSWidth(help.frame);
     smallest.height = MAX(smallest.height + height + gap, NSHeight([window frame]) - NSHeight(frame) + 64);
     smallest.width = MAX(smallest.width, narrowest + NSWidth([window frame]) - NSWidth(frame));
     [window setMinSize:smallest];
@@ -578,6 +606,131 @@ static void TSSendButtonAction(NSButton *button)
         current.size.width = MAX(NSWidth(current), smallest.width);
         [window setFrame:current display:NO];
     }
+    [self syncPlaceholderControls];
+}
+- (NSMenuItem *)placeholderItemWithTitle:(NSString *)title symbol:(NSString *)symbol
+{
+    NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:title action:@selector(insertPlaceholder:) keyEquivalent:@""];
+    item.target = self;
+    item.representedObject = symbol;
+    return item;
+}
+// Insert works on a macro, not on a submenu or a separator. Its items are those
+// of the kind of the macro: a TeX macro does not replace #FILEPATH#, nor an
+// AppleScript macro #SEL#.
+- (void)syncPlaceholderControls
+{
+    self.insertPlaceholderButton.enabled = self.previousItem.isStandardItem && [contentTextView isEditable];
+}
+- (void)menuNeedsUpdate:(NSMenu *)menu
+{
+    if (menu != self.insertPlaceholderButton.menu) return;
+    BOOL teX = TSMacroContentKindForString([contentTextView string] ?: @"") == TSMacroContentKindTeX;
+    NSArray<NSString *> *appleScript = TSSyntaxMacroContentScanner.appleScriptPlaceholders;
+    for (NSMenuItem *item in menu.itemArray) {
+        NSString *symbol = item.representedObject;
+        if (![symbol isKindOfClass:NSString.class]) continue;
+        item.enabled = [appleScript containsObject:symbol] ? !teX : teX;
+    }
+}
+- (void)insertPlaceholder:(NSMenuItem *)sender
+{
+    NSString *symbol = sender.representedObject;
+    if (![symbol isKindOfClass:NSString.class] || ![contentTextView isEditable]) return;
+    [window makeFirstResponder:contentTextView];
+    NSRange range = [contentTextView selectedRange];
+    [contentTextView insertText:symbol replacementRange:range];
+    // A mark with a note leaves the insertion point in the note.
+    if ([symbol hasSuffix:@"›"]) [contentTextView setSelectedRange:NSMakeRange(range.location + symbol.length - 1, 0)];
+}
+- (IBAction)showPlaceholders:(id)sender
+{
+    if (self.placeholdersPopover.shown) { [self.placeholdersPopover close]; return; }
+    NSPopover *popover = [NSPopover new];
+    popover.behavior = NSPopoverBehaviorTransient;
+    NSViewController *content = [[NSViewController alloc] initWithNibName:nil bundle:nil];
+    NSView *list = [self makePlaceholderListView];
+    list.frame = (NSRect){NSZeroPoint, list.fittingSize};
+    content.view = list;
+    content.preferredContentSize = list.frame.size;
+    popover.contentViewController = content;
+    self.placeholdersPopover = popover;
+    NSView *anchor = self.placeholdersButton;
+    [popover showRelativeToRect:anchor.bounds ofView:anchor preferredEdge:NSRectEdgeMaxY];
+}
+// What each token stands for and how it is typed: the TeX placeholders and marks,
+// and beside them the AppleScript ones, with the help about marks below.
+- (NSView *)makePlaceholderListView
+{
+    NSFont *font = [NSFont monospacedSystemFontOfSize:NSFont.systemFontSize - 1 weight:NSFontWeightRegular];
+    NSTextField *(^heading)(NSString *, BOOL) = ^NSTextField *(NSString *title, BOOL section) {
+        NSTextField *label = [NSTextField labelWithString:title];
+        label.font = section ? [NSFont boldSystemFontOfSize:NSFont.systemFontSize]
+                             : [NSFont systemFontOfSize:NSFont.smallSystemFontSize weight:NSFontWeightSemibold];
+        label.textColor = section ? NSColor.labelColor : NSColor.secondaryLabelColor;
+        return label;
+    };
+    NSView *(^token)(NSString *, NSString *) = ^NSView *(NSString *title, NSString *after) {
+        NSImageView *image = [NSImageView imageViewWithImage:TSPlaceholderTokenImage(title, font)];
+        image.imageAlignment = NSImageAlignLeft;
+        if (after.length == 0) return image;
+        NSTextField *note = [NSTextField labelWithString:after];
+        note.font = font;
+        NSStackView *both = [NSStackView stackViewWithViews:@[image, note]];
+        both.spacing = 0;
+        return both;
+    };
+    NSView *(^typed)(NSString *) = ^NSView *(NSString *symbol) {
+        NSTextField *label = [NSTextField labelWithString:symbol];
+        label.font = font;
+        label.selectable = YES;
+        return label;
+    };
+    NSView *(^section)(NSString *, NSArray<NSArray<NSView *> *> *) = ^NSView *(NSString *title, NSArray<NSArray<NSView *> *> *rows) {
+        NSMutableArray<NSArray<NSView *> *> *all = [NSMutableArray arrayWithObject:@[heading(NSLocalizedString(@"Display", @"Key binding symbols: how a symbol is shown"), NO),
+                                                                                     heading(NSLocalizedString(@"Typed As", @"Key binding symbols: how a symbol is typed in an output string"), NO)]];
+        [all addObjectsFromArray:rows];
+        NSGridView *grid = [NSGridView gridViewWithViews:all];
+        grid.rowSpacing = 6; grid.columnSpacing = 18;
+        for (NSInteger r = 0; r < grid.numberOfRows; r++) [grid rowAtIndex:r].yPlacement = NSGridCellPlacementCenter;
+        [grid rowAtIndex:0].bottomPadding = 2;
+        [grid columnAtIndex:0].xPlacement = NSGridCellPlacementLeading;
+        NSStackView *stack = [NSStackView stackViewWithViews:@[heading(title, YES), grid]];
+        stack.orientation = NSUserInterfaceLayoutOrientationVertical;
+        stack.alignment = NSLayoutAttributeLeading;
+        stack.spacing = 8;
+        // The shorter list keeps its rows together at the top.
+        for (NSView *view in @[grid, stack])
+            [view setContentHuggingPriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationVertical];
+        return stack;
+    };
+    NSMutableArray<NSArray<NSView *> *> *teX = [NSMutableArray array];
+    for (NSString *symbol in @[@"#SEL#", @"#INS#", @"#PASTE#", @"•"])
+        [teX addObject:@[token(TSPlaceholderTokenTitle(symbol), nil), typed(symbol)]];
+    NSString *note = NSLocalizedString(@"note", @"Placeholder for the note of a mark: •‹note›");
+    [teX addObject:@[token(TSPlaceholderTokenTitle(@"•"), [NSString stringWithFormat:@"‹%@›", note]), typed([NSString stringWithFormat:@"•‹%@›", note])]];
+    NSMutableArray<NSArray<NSView *> *> *appleScript = [NSMutableArray array];
+    for (NSString *symbol in TSSyntaxMacroContentScanner.appleScriptPlaceholders)
+        [appleScript addObject:@[token(TSPlaceholderTokenTitle(symbol), nil), typed(symbol)]];
+    NSView *left = section(@"TeX", teX), *right = section(@"AppleScript", appleScript);
+    NSStackView *columns = [NSStackView stackViewWithViews:@[left, right]];
+    columns.alignment = NSLayoutAttributeTop;
+    columns.spacing = 28;
+
+    NSButton *marks = [NSButton buttonWithTitle:NSLocalizedString(@"How to Use Marks…", @"Edit › Mark") target:[TSMarkMenu sharedInstance] action:@selector(showMarkHelp:)];
+    marks.bordered = NO;
+    marks.attributedTitle = [[NSAttributedString alloc] initWithString:marks.title attributes:@{NSForegroundColorAttributeName: NSColor.linkColor, NSFontAttributeName: [NSFont systemFontOfSize:NSFont.smallSystemFontSize]}];
+
+    NSStackView *stack = [NSStackView stackViewWithViews:@[columns, marks]];
+    stack.orientation = NSUserInterfaceLayoutOrientationVertical;
+    stack.alignment = NSLayoutAttributeLeading;
+    stack.spacing = 12;
+    stack.edgeInsets = NSEdgeInsetsMake(14, 16, 14, 16);
+    stack.identifier = @"macro.placeholder-list";
+    // Leading alignment alone lets the fitting width cut the widest column.
+    for (NSView *child in stack.arrangedSubviews)
+        [stack.widthAnchor constraintGreaterThanOrEqualToAnchor:child.widthAnchor constant:stack.edgeInsets.left + stack.edgeInsets.right].active = YES;
+    return stack;
 }
 // Save is the default button at the trailing edge with Cancel before it; Test,
 // which does not close the window, starts the row at the leading edge.
@@ -879,6 +1032,7 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
         self.previousItem = nil;
 //	self.previousItem = (newItem)?[newItem retain]:nil;
 	[self syncShortcutField];
+	[self syncPlaceholderControls];
 	nameTouched = NO;
 	contentTouched = NO;
 	keyTouched = NO;
