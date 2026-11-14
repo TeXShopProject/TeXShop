@@ -97,6 +97,7 @@
 "AdvancedFind.Menu.Unhighlight" = "하이라이트 제거";
 "AdvancedFind.MoreMarks" = "(외 %lu개)";
 "AdvancedFind.MoreOptions" = "추가 옵션";
+"AdvancedFind.MultipleReplace" = "일괄 대치…";
 "AdvancedFind.Next" = "다음";
 "AdvancedFind.NoHistory" = "최근 사용 문자열 없음";
 "AdvancedFind.NotFound" = "찾을 수 없음";

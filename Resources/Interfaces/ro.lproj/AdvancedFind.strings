@@ -97,6 +97,7 @@
 "AdvancedFind.Menu.Unhighlight" = "Eliminați evidențierile";
 "AdvancedFind.MoreMarks" = "(încă %lu)";
 "AdvancedFind.MoreOptions" = "Alte opțiuni";
+"AdvancedFind.MultipleReplace" = "Înlocuire multiplă…";
 "AdvancedFind.Next" = "Următor";
 "AdvancedFind.NoHistory" = "Niciun șir recent";
 "AdvancedFind.NotFound" = "Nu a fost găsit";

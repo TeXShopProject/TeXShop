@@ -3,6 +3,7 @@
 // view takes (no replacing in a read-only text view).
 #import "TSAdvancedFindPanelController+Private.h"
 #import "TSAdvancedFindTextView.h"
+#import "TSMultipleReplaceMenu.h"
 
 @implementation TSAdvancedFindPanelController (Actions)
 
@@ -103,6 +104,16 @@
 - (IBAction)previousOrNext:(NSSegmentedControl *)sender
 {
     [self perform:sender.selectedSegment == 0 ? TSAdvancedFindActionPrevious : TSAdvancedFindActionNext];
+}
+
+/// As the menu's Edit Multiple Replace…: the application's window, in front.
+- (IBAction)showMultipleReplace:(nullable id)sender
+{
+    TSMultipleReplaceMenu *menu = TSMultipleReplaceMenu.sharedMenu;
+    if (menu)
+        [menu showMultipleReplace:sender];
+    else
+        self.findController.beepHandler();
 }
 
 @end
