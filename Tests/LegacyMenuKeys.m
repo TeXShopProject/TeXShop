@@ -150,5 +150,41 @@ int main(int argc,char **argv){@autoreleasepool{
   Apply(main,@{@"Typeset":@{@"TeX和DVI":@[@"5",@NO,@NO]}});
   Check([dvi.keyEquivalent isEqual:@"5"],@"A former title reaches its item with or without the space between CJK and Latin text");
  }
- puts("PASS: Find and Replace… skipped in positions of the menus that lacked it; 12 legacy title fixtures; CJK-Latin spacing; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File; former typesetting method titles in 12 languages; Command Completion submenu entries in 12 languages reach Add to Command Completion List");
+ // Titles that had a stray space at the start or end lost it in 6.00. Entries saved with
+ // the former title, in the menus as they are now in each language, still reach the item.
+ NSArray *stray=fixture[@"stray_spaces"];
+ Check(stray.count==18,@"18 former titles with a stray space");
+ NSUInteger reached=0;
+ for(NSDictionary *entry in stray){
+  NSArray<NSString *> *former=entry[@"former"],*current=entry[@"current"];
+  NSString *where=[NSString stringWithFormat:@"%@: %@",entry[@"language"],[former componentsJoinedByString:@" › "]];
+  Check(former.count==current.count && ![former isEqual:current],where);
+  for(NSUInteger i=0;i<former.count;i++)Check([TSLegacyComparableTitle(former[i]) isEqualToString:TSLegacyComparableTitle(current[i])],[where stringByAppendingString:@": former and current titles compare equal"]);
+  if(former.count>3)continue; // KeyEquivalents.plist reaches three levels at most
+  NSMenu *main=[NSMenu new];NSMenu *menu=main;NSMenuItem *leaf=nil;NSMutableArray<NSMenuItem *> *decoys=[NSMutableArray array];
+  for(NSString *title in current){
+   if(menu!=main)[decoys addObject:Item(menu,[title stringByAppendingString:@" 2"])];
+   leaf=Item(menu,title);
+   if(title!=current.lastObject){leaf.submenu=[NSMenu new];menu=leaf.submenu;}
+  }
+  NSArray *key=@[@"y",@YES,@NO];id entries=key;
+  for(NSInteger i=(NSInteger)former.count-1;i>=1;i--)entries=@{former[i]:entries};
+  Apply(main,@{former[0]:entries});
+  Check([leaf.keyEquivalent isEqual:@"y"] && (leaf.keyEquivalentModifierMask & NSEventModifierFlagOption),[where stringByAppendingString:@": the former title reaches the item"]);
+  for(NSMenuItem *decoy in decoys)Check([decoy.keyEquivalent isEqual:@""],[where stringByAppendingString:@": no other item is reached"]);
+  reached++;
+ }
+ Check(reached==17,@"17 of the former titles are within the three levels KeyEquivalents.plist reaches");
+ {
+  NSMenu *main=[NSMenu new];NSMenuItem *top=Item(main,@"Window");top.submenu=[NSMenu new];
+  NSMenuItem *spaced=Item(top.submenu,@" Switch Views");NSMenuItem *plain=Item(top.submenu,@"Switch Views");
+  NSMenuItem *korean=Item(top.submenu,@"보기 전환");[top.submenu addItem:NSMenuItem.separatorItem];NSMenuItem *separator=top.submenu.itemArray.lastObject;
+  Apply(main,@{@"Window":@{@" Switch Views":@[@"1",@NO,@NO],@"보기전환":@[@"2",@NO,@NO],@" ":@[@"3",@NO,@NO]}});
+  Check([spaced.keyEquivalent isEqual:@"1"] && [plain.keyEquivalent isEqual:@""],@"An exact title match wins over a match without the stray space");
+  Check([korean.keyEquivalent isEqual:@""],@"A space inside a Korean title still matters");
+  Check([separator.keyEquivalent isEqual:@""],@"A title of spaces alone names no item");
+  Apply(main,@{@"Window":@{@" 보기  전환":@[@"4",@NO,@NO]}});
+  Check([korean.keyEquivalent isEqual:@"4"],@"A doubled space inside a former title compares as one");
+ }
+ puts("PASS: Find and Replace… skipped in positions of the menus that lacked it; 12 legacy title fixtures; CJK-Latin spacing; 18 former titles with a stray space; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File; former typesetting method titles in 12 languages; Command Completion submenu entries in 12 languages reach Add to Command Completion List");
 }return 0;}

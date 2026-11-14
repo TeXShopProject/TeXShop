@@ -778,7 +778,7 @@
                                     <action selector="showHideInvisibleCharacters:" target="-1" id="924"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title=" マジックコメントを再読み込み" id="kpU-8x-3bf" identifier="TSShortcut.RescanMagicComments:.0">
+                            <menuItem title="マジックコメントを再読み込み" id="kpU-8x-3bf" identifier="TSShortcut.RescanMagicComments:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="RescanMagicComments:" target="-1" id="VMF-nV-Hma"/>
@@ -845,7 +845,7 @@
                                                             <action selector="tightenKerning:" target="-1" id="wmY-1o-PGQ"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title=" ゆるく" id="Spr-Q3-s2V" identifier="TSShortcut.loosenKerning:.0">
+                                                    <menuItem title="ゆるく" id="Spr-Q3-s2V" identifier="TSShortcut.loosenKerning:.0">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="loosenKerning:" target="-1" id="c1d-Qj-j7p"/>
@@ -979,7 +979,7 @@
                                     <action selector="doTypeset:" target="-1" id="1033"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title=" 代替エンジンでタイプセット" tag="-2" alternate="YES" keyEquivalent="t" id="gxJ-Lq-6gD" identifier="TSShortcut.doAlternateTypeset:.-2">
+                            <menuItem title="代替エンジンでタイプセット" tag="-2" alternate="YES" keyEquivalent="t" id="gxJ-Lq-6gD" identifier="TSShortcut.doAlternateTypeset:.-2">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="doAlternateTypeset:" target="-1" id="MDZ-vy-5nq"/>

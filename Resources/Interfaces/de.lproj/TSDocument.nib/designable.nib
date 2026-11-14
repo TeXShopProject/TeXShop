@@ -2090,7 +2090,7 @@ DQ
                                     <action selector="textAnnotation:" target="-1" id="95R-BY-Pfb"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Text mit Hintergrund " id="eq0-bL-Gbq">
+                            <menuItem title="Text mit Hintergrund" id="eq0-bL-Gbq">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="btextAnnotation:" target="-1" id="drC-0m-Pcq"/>
