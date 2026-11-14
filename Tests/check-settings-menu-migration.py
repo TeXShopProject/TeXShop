@@ -8,9 +8,11 @@ removed={'openAutoCompletionListEditor:','openCommandCompletionList:'}
 added={'convertCharacterType:','normalizeSelectedString:','exchangePaste:'}
 # Find and Replace… joined the Find submenu of the other languages in 6.00; the Base menu always had it.
 added_outside_base={'performTextFinderAction:'}
+# Change Encoding joined Edit > Transformations of the Base menu in 6.00; the other languages always had it.
+added_to_base={'changeEncoding:'}
 def records(tree,language='Base'):
  result=[]
- skipped=added|(added_outside_base if language!='Base' else set())
+ skipped=added|(added_outside_base if language!='Base' else added_to_base)
  for item in tree.iter('menuItem'):
   action=item.find('connections/action')
   if action is None or action.get('selector') in removed|skipped:continue
@@ -22,6 +24,11 @@ def main():
  for language,expected in contract['languages'].items():
   p=root/f'Resources/Interfaces/{language}.lproj/MainMenu.nib/designable.nib';tree=E.parse(p).getroot()
   assert digest(tree,language)==expected,(language,'unrelated command identity or key changed')
+  encoding=[i for i in tree.iter('menuItem') if i.find("connections/action[@selector='changeEncoding:']") is not None]
+  assert len(encoding)==1 and encoding[0].get('identifier')=='TSShortcut.changeEncoding:.0',(language,'one Change Encoding item')
+  assert not encoding[0].get('keyEquivalent'),(language,'Change Encoding has no default key')
+  siblings=[item for item in tree.iter('items') if encoding[0] in list(item)][0]
+  assert list(siblings)[0] is encoding[0] and siblings.find("menuItem/connections/action[@selector='uppercaseWord:']") is not None,(language,'Change Encoding opens Edit > Transformations')
   assert not any(a.get('selector') in removed for a in tree.iter('action')),(language,'old editor menu remains')
   toggle=[i for i in tree.iter('menuItem') if i.find("connections/action[@selector='changeAutoComplete:']") is not None]
   assert len(toggle)==1 and toggle[0].get('identifier')=='TSShortcut.changeAutoComplete:.0'

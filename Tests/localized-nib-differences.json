@@ -76,25 +76,6 @@
  {
   "nib": "MainMenu",
   "change": "extra",
-  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.changeEncoding:.0 action=changeEncoding:>FirstResponder",
-  "languages": [
-   "de",
-   "es",
-   "fr",
-   "it",
-   "ja",
-   "ko",
-   "nl",
-   "pt",
-   "pt-PT",
-   "ro",
-   "zh_CN"
-  ],
-  "reason": "open: the English Edit > Transformations submenu has no Change Encoding item; the other languages have one"
- },
- {
-  "nib": "MainMenu",
-  "change": "extra",
   "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.doCommentOrIndent:.1 action=doCommentOrIndent:>FirstResponder tag=1 key=3+1048576",
   "languages": [
    "de"
@@ -246,25 +227,6 @@
    "zh_CN"
   ],
   "reason": "key equivalents chosen for the keyboard of the language"
- },
- {
-  "nib": "MainMenu",
-  "change": "extra",
-  "fact": "action NSMenuItem#TSShortcut.changeEncoding:.0 (NSMenuItem in top:NSMenu) changeEncoding: -> FirstResponder",
-  "languages": [
-   "de",
-   "es",
-   "fr",
-   "it",
-   "ja",
-   "ko",
-   "nl",
-   "pt",
-   "pt-PT",
-   "ro",
-   "zh_CN"
-  ],
-  "reason": "open: the English Edit > Transformations submenu has no Change Encoding item; the other languages have one"
  },
  {
   "nib": "MainMenu",
