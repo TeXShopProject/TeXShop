@@ -10,6 +10,10 @@
 #include "LayoutChecks.inc"
 #include "ProductionLayout.inc"
 #import "TSMacroEditor.h"
+#import "TSListBottomBar.h"
+#import "TSMacroShortcutField.h"
+#import "TSMacroMenuController.h"
+#import "TSShortcutInternal.h"
 
 // The macro editor adds its status line, list buttons and placeholder guide and
 // lays out its buttons after loading; MacroEditorLayout.inc is that code, copied
@@ -17,6 +21,9 @@
 @implementation TSMacroEditor
 #include "MacroEditorLayout.inc"
 - (void)setValue:(id)v forUndefinedKey:(NSString *)k {}
+// What the shortcut field asks of the rest of the editor, which these checks leave out.
+- (void)updatePendingShortcutStatus {}
+- (void)reflectChangesInEditor:(BOOL)force {}
 @end
 @interface TSMacroOutlineController : NSObject @end
 @implementation TSMacroOutlineController
@@ -56,7 +63,7 @@ int main(int argc, char **argv) { @autoreleasepool {
         NSApp.mainMenu = nil;
         if (macroEditor) {
             TSMacroEditor *editor = owner;
-            [editor installShortcutStatus]; [editor installListControls]; [editor installPlaceholderNote]; [editor layoutDialogButtons];
+            [editor installShortcutStatus]; [editor installListControls]; [editor installShortcutField]; [editor installPlaceholderNote]; [editor layoutDialogButtons];
         } else ApplyProductionLayout(name, owner, objects);
         for (id o in objects) {
             if ([o isKindOfClass:NSWindow.class]) {

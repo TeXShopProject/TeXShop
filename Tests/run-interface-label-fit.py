@@ -31,6 +31,7 @@ labels and is checked by run-settings-product-shell.py.
   --only NAME    check only the interfaces whose file name contains NAME"""
 from pathlib import Path
 import argparse, subprocess, sys, tempfile
+from macro_editor_sources import write_sources
 from source_tree import include_args
 root = Path(__file__).resolve().parents[1]
 interfaces = root / 'Resources/Interfaces'
@@ -40,7 +41,7 @@ parser.add_argument('--only')
 parser.add_argument('--focus-rings', action='store_true')
 args = parser.parse_args()
 macro_source = root / 'Sources/Macros/TSMacroEditor.m'
-assert '[self installShortcutStatus];\n        [self installListControls];\n        [self installPlaceholderNote];\n        [self layoutDialogButtons];' in macro_source.read_text(), \
+assert '[self installShortcutStatus];\n        [self installListControls];\n        [self installShortcutField];\n        [self installPlaceholderNote];\n        [self layoutDialogButtons];' in macro_source.read_text(), \
     'The application lays out the macro editor as the check does'
 
 def strings_for(lproj):
@@ -50,7 +51,7 @@ def strings_for(lproj):
 with tempfile.TemporaryDirectory(prefix='texshop-label-fit-') as tmp:
     tmp = Path(tmp)
     macro = macro_source.read_text()
-    (tmp / 'MacroEditorLayout.inc').write_text(macro[macro.index('- (void)installShortcutStatus'):macro.index('- (void)collectShortcutCandidates:')])
+    macro_sources = write_sources(root, tmp, 'MacroEditorLayout.inc')
     entries = []
     for lproj in sorted(interfaces.glob('*.lproj')):
         strings = strings_for(lproj)
@@ -76,9 +77,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-label-fit-') as tmp:
             for nib in compiled:
                 entries.append(f'{label}/{nib.name}|{nib}|{strings}')
     binary = tmp / 'InterfaceLabelFit'
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-Wno-incomplete-implementation', '-framework', 'Cocoa', '-framework', 'Quartz', '-framework', 'AVKit', '-framework', 'WebKit',
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-Wno-incomplete-implementation', '-framework', 'Carbon', '-framework', 'Cocoa', '-framework', 'Quartz', '-framework', 'AVKit', '-framework', 'WebKit',
                     '-I', str(tmp), '-I', str(root / 'Tests'), *include_args(root),
-                    str(root / 'Tests/InterfaceLabelFit.m'), str(root / 'Sources/Windows/TSDialogButtonLayout.m'), str(root / 'Sources/Editor/TSMarkMenu.m'),
+                    str(root / 'Tests/InterfaceLabelFit.m'), *macro_sources,
                     '-o', str(binary)], check=True)
     extra = (['--images', str(Path(args.images).resolve())] + (['--focus-rings'] if args.focus_rings else [])) if args.images else []
     if args.images:

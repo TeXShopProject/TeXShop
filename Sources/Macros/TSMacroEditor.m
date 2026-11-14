@@ -33,6 +33,9 @@
 #import "NSText-Extras.h"
 #import "globals.h"
 #import "TSDialogButtonLayout.h"
+#import "TSListBottomBar.h"
+#import "TSMacroShortcutField.h"
+#import "TSShortcutInternal.h"
 #import "TSColorSupport.h"
 #import "TSMarkMenu.h"
 #import "TSPreferenceEffects.h"
@@ -271,6 +274,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		}
         [self installShortcutStatus];
         [self installListControls];
+        [self installShortcutField];
         [self installPlaceholderNote];
         [self layoutDialogButtons];
 
@@ -279,7 +283,6 @@ static TSFilterMode savedFilter = kNoFilterMode;
 
 		[outlineView setTarget: self];
 		[outlineView setDoubleAction: @selector(doMacroTest:)];
-        [outlineView setBackgroundColor: NSColor.textBackgroundColor];
 		// custom text view
 		NSScrollView *scrollView = [contentTextView enclosingScrollView];
 		NSSize contentSize = [scrollView contentSize];
@@ -308,18 +311,11 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		// [contentTextView release];
 		// text fields
         [nameField setDelegate: [TSEncodingSupport sharedInstance]];
-		[keyField setDelegate: [TSEncodingSupport sharedInstance]];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pendingKeyChanged:) name:NSControlTextDidChangeNotification object:keyField];
 		// set up properties for UI
 		[nameField setEditable: NO];
 		[contentTextView setEditable: NO];
-		[keyField setEditable: NO];
-		[shiftCheckBox setState: NSOffState];
-		[shiftCheckBox setEnabled: NO];
-		[optionCheckBox setState: NSOffState];
-		[optionCheckBox setEnabled: NO];
-		[controlCheckBox setState: NSOffState];
-		[controlCheckBox setEnabled: NO];
+		self.pendingShortcutKey = @"";
+		[self syncShortcutField];
 		[testButton setEnabled: NO];
 		[deleteButton setEnabled: NO];
 		[duplicateButton setEnabled: NO];
@@ -375,69 +371,168 @@ static TSFilterMode savedFilter = kNoFilterMode;
     [host addSubview:self.shortcutStatus];
 }
 
-// The list is edited with the standard + and - buttons attached below it and an
-// action menu for the less frequent commands. The nib's five text buttons stay
+// The list is edited with ＋ and − and a menu of the less frequent commands in a
+// bar at its bottom, as the sets of the Multiple Replace window are. The list and
+// the bar share one frame and one background. The nib's five text buttons stay
 // hidden and keep their actions, titles and enabled state.
 - (void)installListControls
 {
-    if (self.listButtons) return;
+    if (self.listBar) return;
     NSView *host = [window contentView];
     NSScrollView *list = [outlineView enclosingScrollView];
     NSArray<NSButton *> *old = @[newItemButton, submenuButton, separatorButton, deleteButton, duplicateButton];
     CGFloat oldBottom = CGFLOAT_MAX;
     for (NSButton *button in old) { oldBottom = MIN(oldBottom, NSMinY([host convertRect:button.bounds fromView:button])); button.hidden = YES; }
-    const CGFloat barHeight = 24, segmentWidth = 32;
-    NSImage *more = [NSImage imageWithSystemSymbolName:@"ellipsis" accessibilityDescription:nil];
-    NSSegmentedControl *buttons = [NSSegmentedControl segmentedControlWithImages:@[[[NSImage imageNamed:NSImageNameAddTemplate] copy], [[NSImage imageNamed:NSImageNameRemoveTemplate] copy], more]
-        trackingMode:NSSegmentSwitchTrackingMomentary target:self action:@selector(listButtonPressed:)];
-    buttons.segmentStyle = NSSegmentStyleSmallSquare;
-    buttons.identifier = @"macro.list.buttons";
-    NSMenu *actions = [[NSMenu alloc] initWithTitle:@""];
-    actions.autoenablesItems = NO;
+    NSString *more = [NSString stringWithFormat:@"%@, %@, %@", submenuButton.title, separatorButton.title, duplicateButton.title];
+    TSListBottomBar *bar = [[TSListBottomBar alloc] initWithTarget:self addAction:@selector(listAddPressed:) addToolTip:newItemButton.title
+                                                      removeAction:@selector(listRemovePressed:) removeToolTip:deleteButton.title actionsToolTip:more];
+    bar.identifier = @"macro.list.bar";
+    bar.actionsButton.autoenablesItems = NO;
     for (NSButton *source in @[submenuButton, separatorButton, duplicateButton]) {
         NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:source.title action:@selector(listActionChosen:) keyEquivalent:@""];
         item.target = self; item.representedObject = source;
-        [actions addItem:item];
+        [bar.actionsButton.menu addItem:item];
     }
-    NSArray<NSString *> *labels = @[newItemButton.title, deleteButton.title, [NSString stringWithFormat:@"%@, %@, %@", submenuButton.title, separatorButton.title, duplicateButton.title]];
-    for (NSInteger segment = 0; segment < 3; segment++) {
-        [buttons setWidth:segmentWidth forSegment:segment];
-        [buttons setToolTip:labels[segment] forSegment:segment];
-        [buttons imageForSegment:segment].accessibilityDescription = labels[segment];
-    }
-    // The third segment opens the menu of the less frequent commands on a click.
-    [buttons setMenu:actions forSegment:2];
-    [buttons setShowsMenuIndicator:YES forSegment:2];
-    // The bar takes the place of the old buttons, directly below the list,
-    // which grows into the space they left.
+    // The frame of the list takes the place of the old buttons too: the list
+    // above, the bar at its bottom edge, where the old buttons ended.
     NSRect listFrame = list.frame;
-    CGFloat barY = oldBottom;
-    [buttons sizeToFit];
-    buttons.frame = NSMakeRect(NSMinX(listFrame), barY, NSWidth(buttons.frame), barHeight);
-    CGFloat top = NSMaxY(listFrame);
-    listFrame.origin.y = barY + barHeight - 1; listFrame.size.height = top - listFrame.origin.y;
-    list.frame = listFrame;
-    buttons.autoresizingMask = NSViewMaxXMargin | NSViewMaxYMargin;
-    [host addSubview:buttons];
-    self.listButtons = buttons; self.listActions = actions;
+    NSRect boxFrame = NSMakeRect(NSMinX(listFrame), oldBottom, NSWidth(listFrame), NSMaxY(listFrame) - oldBottom);
+    NSBox *box = [[NSBox alloc] initWithFrame:boxFrame];
+    box.boxType = NSBoxCustom;
+    box.titlePosition = NSNoTitle;
+    box.borderWidth = 1;
+    box.borderColor = NSColor.separatorColor; // the color of the list's former bezel
+    box.fillColor = NSColor.textBackgroundColor;
+    box.contentViewMargins = NSZeroSize;
+    box.identifier = @"macro.list.box";
+    box.autoresizingMask = list.autoresizingMask;
+    [host addSubview:box positioned:NSWindowBelow relativeTo:list];
+    [list removeFromSuperview];
+    NSView *inside = box.contentView;
+    CGFloat barHeight = ceil(bar.fittingSize.height);
+    bar.frame = NSMakeRect(0, 0, NSWidth(inside.bounds), barHeight);
+    bar.autoresizingMask = NSViewWidthSizable | NSViewMaxYMargin;
+    // Without its own border the list would turn to the inset style: it keeps its rows' full width.
+    NSOutlineView *rows = outlineView;
+    if (rows.style == NSTableViewStyleAutomatic) rows.style = rows.effectiveStyle;
+    list.borderType = NSNoBorder;
+    list.drawsBackground = NO;
+    list.frame = NSMakeRect(0, barHeight, NSWidth(inside.bounds), NSHeight(inside.bounds) - barHeight);
+    list.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+    rows.backgroundColor = NSColor.textBackgroundColor;
+    [inside addSubview:list];
+    [inside addSubview:bar];
+    self.listBox = box; self.listBar = bar;
     [self syncListControls];
 }
 - (void)syncListControls
 {
-    [self.listButtons setEnabled:newItemButton.enabled forSegment:0];
-    [self.listButtons setEnabled:deleteButton.enabled forSegment:1];
-    for (NSMenuItem *item in self.listActions.itemArray) item.enabled = [item.representedObject isEnabled];
+    self.listBar.addButton.enabled = newItemButton.enabled;
+    self.listBar.removeButton.enabled = deleteButton.enabled;
+    for (NSMenuItem *item in self.listBar.actionItems) item.enabled = [item.representedObject isEnabled];
 }
-- (void)listButtonPressed:(NSSegmentedControl *)sender
+// What one of the hidden nib buttons does, while it is enabled.
+static void TSSendButtonAction(NSButton *button)
 {
-    if (sender.selectedSegment > 1) return;
-    NSButton *source = sender.selectedSegment == 0 ? newItemButton : deleteButton;
-    if (source.enabled) [NSApp sendAction:source.action to:source.target from:source];
+    SEL action = button.action;
+    if (button.enabled && action) [NSApp sendAction:action to:button.target from:button];
 }
-- (void)listActionChosen:(NSMenuItem *)sender
+- (void)listAddPressed:(id)sender { TSSendButtonAction(newItemButton); }
+- (void)listRemovePressed:(id)sender { TSSendButtonAction(deleteButton); }
+- (void)listActionChosen:(NSMenuItem *)sender { TSSendButtonAction(sender.representedObject); }
+// The shortcut is set as in Settings > Keyboard: a click on the field and the keys
+// pressed. It takes the two rows of the nib's key field and its Shift, Option and
+// Control boxes, which stay hidden; the contents above take the row it frees.
+- (void)installShortcutField
 {
-    NSButton *source = sender.representedObject;
-    if (source.enabled) [NSApp sendAction:source.action to:source.target from:source];
+    if (self.shortcutField) return;
+    NSView *host = [window contentView];
+    NSArray<NSView *> *controls = @[keyField, shiftCheckBox, optionCheckBox, controlCheckBox];
+    NSRect upper = NSInsetRect([keyField frame], 0, -4), lower = NSInsetRect([shiftCheckBox frame], 0, -4);
+    NSMutableArray<NSView *> *hidden = [controls mutableCopy];
+    NSTextField *keyLabel = nil, *nameLabel = nil;
+    CGFloat leading = NSMinX([nameField frame]) - 3, nameGap = CGFLOAT_MAX;
+    for (NSView *view in host.subviews) {
+        if (![view isKindOfClass:NSTextField.class] || [controls containsObject:view] || [(NSTextField *)view isEditable]) continue;
+        NSRect frame = view.frame;
+        if (NSMinX(frame) < NSMinX([nameField frame]) - 12) continue; // the right column only
+        BOOL keyRow = NSMinY(frame) < NSMaxY(upper) && NSMaxY(frame) > NSMinY(upper);
+        if (keyRow || (NSMinY(frame) < NSMaxY(lower) && NSMaxY(frame) > NSMinY(lower))) {
+            [hidden addObject:view];
+            if (keyRow && NSMaxX(frame) <= NSMinX([keyField frame]) + 1) keyLabel = (NSTextField *)view;
+            leading = MIN(leading, NSMinX(frame));
+        }
+        // The name's label is right above the name field.
+        CGFloat gap = NSMinY(frame) - NSMaxY([nameField frame]);
+        if (gap > -4 && gap < nameGap) { nameGap = gap; nameLabel = (NSTextField *)view; }
+    }
+    for (NSView *view in hidden) view.hidden = YES;
+    // "Shortcut" with the colon of the name's label, as this language writes it (Name:, Nom :, 項目名：).
+    NSString *name = nameLabel.stringValue ?: @"";
+    NSRange last = [name rangeOfCharacterFromSet:[[NSCharacterSet characterSetWithCharactersInString:@":：  "] invertedSet] options:NSBackwardsSearch];
+    NSString *suffix = last.location == NSNotFound || NSMaxRange(last) >= name.length ? @":" : [name substringFromIndex:NSMaxRange(last)];
+    NSTextField *label = [NSTextField labelWithString:[NSLocalizedString(@"Shortcut", @"") stringByAppendingString:suffix]];
+    if (keyLabel.font) label.font = keyLabel.font;
+    [label sizeToFit];
+    CGFloat middle = NSMidY([shiftCheckBox frame]), height = NSHeight([keyField frame]);
+    label.frame = NSMakeRect(leading, round(middle - NSHeight(label.frame) / 2), NSWidth(label.frame), NSHeight(label.frame));
+    TSMacroShortcutField *field = [[TSMacroShortcutField alloc] initWithFrame:NSMakeRect(NSMaxX(label.frame) + 8, round(middle - height / 2), 150, height)
+        model:keyField placeholder:NSLocalizedString(@"Press a key", @"") clearTitle:NSLocalizedString(@"Remove Shortcut", @"")];
+    NSRect frame = field.frame;
+    frame.size.width = MIN(MAX(150, field.minimumWidth), NSMaxX([nameField frame]) - NSMinX(frame));
+    field.frame = frame;
+    field.identifier = @"macro.shortcut";
+    field.accessibilityLabel = NSLocalizedString(@"Shortcut", @"");
+    label.autoresizingMask = field.autoresizingMask = [shiftCheckBox autoresizingMask];
+    __weak TSMacroEditor *weakSelf = self;
+    field.recordEvent = ^BOOL(NSEvent *event) { return [weakSelf recordShortcutEvent:event]; };
+    field.clearShortcut = ^{ [weakSelf setPendingShortcut:@""]; };
+    [host addSubview:label];
+    [host addSubview:field];
+    // The contents take the row above, which the shortcut no longer needs, and keep
+    // the gap they had above the key field (at least 8 points).
+    NSScrollView *contents = [contentTextView enclosingScrollView];
+    NSRect contentsFrame = contents.frame;
+    CGFloat gap = MAX(8, NSMinY(contentsFrame) - NSMaxY([keyField frame]));
+    CGFloat freed = NSMinY(contentsFrame) - (NSMaxY(field.frame) + gap);
+    if (freed > 0) { contentsFrame.origin.y -= freed; contentsFrame.size.height += freed; }
+    contents.frame = contentsFrame;
+    // The field takes the key field's place between the contents and the buttons.
+    NSView *next = [keyField nextKeyView];
+    for (NSUInteger guard = 0; next && [hidden containsObject:next] && guard < 8; guard++) next = [next nextKeyView];
+    NSMutableArray<NSView *> *pending = [host.subviews mutableCopy];
+    while (pending.count) {
+        NSView *view = pending.lastObject; [pending removeLastObject];
+        [pending addObjectsFromArray:view.subviews];
+        if (view.nextKeyView == keyField) view.nextKeyView = field;
+    }
+    field.nextKeyView = next;
+    self.shortcutLabel = label; self.shortcutField = field;
+    [self syncShortcutField];
+}
+// The field shows the shortcut being edited; only a macro (not a submenu or a separator) has one.
+- (void)syncShortcutField
+{
+    self.shortcutField.enabled = self.previousItem.isStandardItem;
+    self.shortcutField.shortcut = getMenuItemString(self.pendingShortcutKey ?: @"");
+    self.shortcutLabel.textColor = self.shortcutField.enabled ? NSColor.labelColor : NSColor.disabledControlTextColor;
+}
+// A key pressed in the field: Command or Control with a key, or F1–F20, as in Settings.
+- (BOOL)recordShortcutEvent:(NSEvent *)event
+{
+    if (!self.previousItem.isStandardItem) return NO;
+    TSShortcutBinding *binding = TSRecordedBinding(event, [event charactersByApplyingModifiers:0]);
+    if (binding.key.length != 1 || ![TSShortcutStore isAllowedKey:binding.key modifiers:binding.modifiers]) return NO;
+    [self setPendingShortcut:getStringFormKeyEquivalentWithModifiers(binding.key, binding.modifiers)];
+    return YES;
+}
+- (void)setPendingShortcut:(NSString *)key
+{
+    if (!self.previousItem.isStandardItem) return;
+    self.pendingShortcutKey = key;
+    keyTouched = YES;
+    [self updatePendingShortcutStatus];
+    [self reflectChangesInEditor:YES];
 }
 // What the placeholders in a macro stand for, below its contents.
 - (void)installPlaceholderNote
@@ -505,13 +600,11 @@ static TSFilterMode savedFilter = kNoFilterMode;
     }
 }
 
-- (void)pendingKeyChanged:(NSNotification *)notification { [self updatePendingShortcutStatus]; }
 - (void)updatePendingShortcutStatus
 {
     if (!self.previousItem.isStandardItem) return;
     NSString *saved = self.previousItem.key;
-    self.previousItem.key = getStringFormKeyEquivalent(keyField.stringValue, shiftCheckBox.state == NSControlStateValueOn,
-        optionCheckBox.state == NSControlStateValueOn, controlCheckBox.state == NSControlStateValueOn);
+    self.previousItem.key = self.pendingShortcutKey ?: @"";
     [self refreshShortcutConflicts];
     self.previousItem.key = saved;
 }
@@ -614,7 +707,7 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
     for (TSMacroTreeNode *parent = node.nodeParent; parent; parent = parent.nodeParent) [parents addObject:parent];
     for (TSMacroTreeNode *parent in parents.reverseObjectEnumerator) [outlineView expandItem:parent];
     [outlineView selectItems:@[node] byExtendingSelection:NO];
-    [self reflectChangesInEditor:YES]; [window makeFirstResponder:keyField];
+    [self reflectChangesInEditor:YES]; [self.shortcutField beginRecording];
     return NO;
 }
 
@@ -696,24 +789,14 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 	contentTouched = YES;
 }
 
-// action for keyField
+// The nib's key field and Shift/Option/Control boxes are hidden: the shortcut field
+// takes their place (installShortcutField). Their actions stay for the nibs' connections.
 - (IBAction)keyFieldAction:(id)sender
 {
-	NSString *key = [keyField stringValue];
-	if ([key length] > 1) {
-		[keyField setStringValue: [key substringToIndex: 1]];
-	}
-	keyTouched = YES;
-    [self updatePendingShortcutStatus];
-	[self reflectChangesInEditor: YES];
 }
 
-// action for Shift/Option/Control check box
 - (IBAction)modifiersAction:(id)sender
 {
-	keyTouched = YES;
-    [self updatePendingShortcutStatus];
-	[self reflectChangesInEditor: YES];
 }
 
 // action for outline view
@@ -764,9 +847,7 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 			}
 			if (keyTouched)
 			{
-				[self.previousItem setKey: getStringFormKeyEquivalent([keyField stringValue],
-																 ([shiftCheckBox state] == NSOnState), ([optionCheckBox state] == NSOnState),
-																 ([controlCheckBox state] == NSOnState))];
+				[self.previousItem setKey: self.pendingShortcutKey ?: @""];
 				dataTouched = YES;
 			}
 		}
@@ -784,29 +865,12 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 		savedFilter = g_shouldFilter;	// remember this filter option
 		[contentTextView setString: contentString];
 		[contentTextView setEditable: YES];
-		NSString *KeyEquiv = getKeyEquivalentFromString([newItem key]);
-		BOOL hasKeyEquiv = ([KeyEquiv length] > 0);
-		[keyField setStringValue: (hasKeyEquiv)?(KeyEquiv):@""];
-		[keyField setEditable: YES];
-		NSUInteger modifier = getKeyModifierMaskFromString([newItem key]);
-		[shiftCheckBox setState: (hasKeyEquiv && (modifier & NSShiftKeyMask))?NSOnState:NSOffState];
-		[shiftCheckBox setEnabled: YES];
-		[optionCheckBox setState: (hasKeyEquiv && (modifier & NSAlternateKeyMask))?NSOnState:NSOffState];
-		[optionCheckBox setEnabled: YES];
-		[controlCheckBox setState: (hasKeyEquiv && (modifier & NSControlKeyMask))?NSOnState:NSOffState];
-		[controlCheckBox setEnabled: YES];
+		self.pendingShortcutKey = [newItem key] ?: @"";
 		[testButton setEnabled: YES];
 	} else {
 		[contentTextView setString: @""];
 		[contentTextView setEditable: NO];
-		[keyField setStringValue: @""];
-		[keyField setEditable: NO];
-		[shiftCheckBox setState: NSOffState];
-		[shiftCheckBox setEnabled: NO];
-		[optionCheckBox setState: NSOffState];
-		[optionCheckBox setEnabled: NO];
-		[controlCheckBox setState: NSOffState];
-		[controlCheckBox setEnabled: NO];
+		self.pendingShortcutKey = @"";
 		[testButton setEnabled: NO];
 	}
     if (newItem)
@@ -814,6 +878,7 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
     else
         self.previousItem = nil;
 //	self.previousItem = (newItem)?[newItem retain]:nil;
+	[self syncShortcutField];
 	nameTouched = NO;
 	contentTouched = NO;
 	keyTouched = NO;
