@@ -1649,6 +1649,7 @@ smooth
 so
 software
 solarizeddark
+solarizedlite
 some
 something
 sometime
@@ -1758,7 +1759,6 @@ targets
 tcsh
 teaching
 tell
-telling
 tells
 template
 templates
@@ -1797,7 +1797,6 @@ these
 they
 thickness
 thin
-think
 third
 this
 thomas
@@ -1832,6 +1831,7 @@ trackpad
 trailing
 transitioning
 transparency
+transparenttheme
 trash
 treat
 triangles
