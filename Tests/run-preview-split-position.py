@@ -10,7 +10,7 @@ from source_tree import include_args
 from production_fragments import closing_brace, verify_embedded
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['first-not-restored', 'switch-not-swapped', 'shift-not-same',
+parser.add_argument('--mutation', choices=['band-counted', 'heights-with-band', 'first-not-restored', 'switch-not-swapped', 'shift-not-same',
                                            'second-not-saved', 'edge-ignores-flip',
                                            'deferred-restore', 'restore-before-layout'])
 args = parser.parse_args()
@@ -44,6 +44,10 @@ for problem, old, new in (
         ('switch-not-swapped', 'TSPreviewPaneRestore(upperView, lower);', 'TSPreviewPaneRestore(upperView, upper);'),
         ('shift-not-same', 'TSPreviewPaneRestore(secondView, firstTop);', ';'),
         ('second-not-saved', '[secondView saveLocation];', ''),
+        # The band under the toolbar is counted as part of the first pane.
+        ('band-counted', '            else\n                TSDocumentWindowSplitEvenly(self.pdfKitSplitView);\n', '            else\n                ;\n'),
+        # The height saved for the first pane includes the band under the toolbar.
+        ('heights-with-band', 'temp1 = MAX(0, theFrame1.size.height - TSDocumentWindowHiddenTop(self.pdfKitSplitView));', 'temp1 = theFrame1.size.height;'),
         ('restore-before-layout', '    [self.pdfKitSplitView adjustSubviews];\n    [self.pdfKitSplitView layoutSubtreeIfNeeded];\n    TSPreviewPaneRestore', '    TSPreviewPaneRestore')):
     if args.mutation == problem:
         assert split.count(old) + parts.count(old) >= 1, problem
@@ -135,6 +139,26 @@ PARTSMETHOD
 SPLITTERMETHOD
 @end
 
+// The window's content runs under its toolbar, as the Preview window's on macOS 26 and later.
+@interface GlassToolbar : NSObject <NSToolbarDelegate> @end
+@implementation GlassToolbar
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar { return @[@"item"]; }
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar { return @[@"item"]; }
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)identifier willBeInsertedIntoToolbar:(BOOL)flag {
+    NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+    item.label = @"Item"; item.image = [NSImage imageWithSystemSymbolName:@"doc" accessibilityDescription:nil];
+    return item;
+}
+@end
+static GlassToolbar *glassToolbar;
+static void runUnderToolbar(NSWindow *window) {
+    if (!glassToolbar) glassToolbar = [GlassToolbar new];
+    window.toolbarStyle = NSWindowToolbarStyleExpanded;
+    NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"glass"];
+    toolbar.delegate = glassToolbar; window.toolbar = toolbar;
+    window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+    [window layoutIfNeeded];
+}
 static void settle(NSWindow *w) {
     for (int i = 0; i < 4; i++) {
         [w layoutIfNeeded];
@@ -293,6 +317,30 @@ int main(int argc, char **argv) { @autoreleasepool {
         settle(p.window);
         check(near(distanceFromTop(p.first, upper)) && near(distanceFromTop(p.second, lower)),
               [NSString stringWithFormat:@"switching twice in a row returns both panes (%.2f, %.2f)", distanceFromTop(p.first, upper), distanceFromTop(p.second, lower)]);
+        [p.window close];
+    }
+    if (@available(macOS 26.0, *)) {
+        // A window whose content runs under the toolbar: the parts share the area below the
+        // toolbar, and a divider moved by the user comes back with the same shares.
+        Preview p = makePreview(doc, 1, 3);
+        runUnderToolbar(p.window); settle(p.window);
+        CGFloat band = TSDocumentWindowHiddenTop(p.window.pdfKitSplitView);
+        check(band > 20, [NSString stringWithFormat:@"full-size window: the band under the toolbar is seen (%.1f)", band]);
+        scrollTo(p.first, 1, 500); settle(p.window);
+        TSPreviewPanePlace start = topOf(p.first);
+        split(p, 0);
+        CGFloat shown1 = NSHeight(p.first.frame) - band, shown2 = NSHeight(p.second.frame);
+        check(fabs(shown1 - shown2) <= 1, [NSString stringWithFormat:@"full-size window: the parts share the area below the toolbar evenly (%.1f, %.1f)", shown1, shown2]);
+        check(near(distanceFromTop(p.first, start)), @"full-size window: splitting keeps the top of the first pane");
+        NSSplitView *sv = p.window.pdfKitSplitView;
+        CGFloat usable = NSHeight(sv.bounds) - band - sv.dividerThickness;
+        [sv setPosition:round(band + usable / 3) ofDividerAtIndex:0]; settle(p.window);
+        CGFloat share = (NSHeight(p.first.frame) - band) / (NSHeight(p.first.frame) - band + NSHeight(p.second.frame));
+        split(p, 0);
+        NSRect frame = p.window.frame; frame.size.height -= 180; [p.window setFrame:frame display:NO]; settle(p.window);
+        split(p, 0);
+        CGFloat again = (NSHeight(p.first.frame) - band) / (NSHeight(p.first.frame) - band + NSHeight(p.second.frame));
+        check(fabs(again - share) < 0.01, [NSString stringWithFormat:@"full-size window: the parts come back with the shares the user left (%.3f, %.3f)", share, again]);
         [p.window close];
     }
     printf("PASS: %lu checks\n", (unsigned long)checks);
