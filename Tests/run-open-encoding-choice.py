@@ -76,6 +76,8 @@ program = r'''
 }
 - (BOOL)takeEncoding:(NSStringEncoding *)encoding chosenForURL:(NSURL *)url;
 @end
+// The label of the accessory is fitted by TSOlderPanelLayout, which run-older-panel-layout.py checks.
+static void TSFitLabelsBeforePopUps(id view) {}
 static NSMutableDictionary *gRead;   // path -> encoding the document was read in
 @interface ProbeDocument : NSDocument
 @end

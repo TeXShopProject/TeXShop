@@ -25,6 +25,7 @@
 
 
 #import "TSDocumentController.h"
+#import "TSOlderPanelLayout.h"
 #import "TSEncodingSupport.h"
 #import "TSDocument.h"
 
@@ -85,6 +86,7 @@
 	NSInteger					result;
 
 	// Set an accessory view, with the encoding popup button in it.
+	TSFitLabelsBeforePopUps(encodingView);
 	[openPanel setAccessoryView: encodingView];
 //	[encodingView retain];	// FIXME: Is this line really necessary?
 
