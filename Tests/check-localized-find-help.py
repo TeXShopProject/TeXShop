@@ -44,14 +44,18 @@ def strings(language, table):
     return json.loads(subprocess.check_output(['plutil', '-convert', 'json', '-o', '-', str(path)]))
 
 
-def page(language, name):
+def raw_page(language, name):
     raw = (INTERFACES / f'{language}.lproj/TeXShopHelp/pgs/{name}').read_bytes()
     match = re.search(br'charset=([^"\s>]+)', raw, re.I)
     encoding = match[1].decode().lower() if match else 'latin-1'
     encoding = {'shift_jis': 'cp932', 'x-sjis': 'cp932', 'iso-8859-1': 'latin-1'}.get(encoding, encoding)
     text = raw.decode(encoding)
     assert text.encode(encoding) == raw, name
-    text = html.unescape(re.sub(r'<!--.*?-->', ' ', text, flags=re.S))
+    return re.sub(r'<!--.*?-->', ' ', text, flags=re.S)
+
+
+def page(language, name):
+    text = html.unescape(raw_page(language, name))
     return re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', text))
 
 
@@ -63,6 +67,12 @@ for language in LANGUAGES:
         value = strings(language, table)[key]
         if value.casefold() not in folded:
             failures.append(f'{language} basic_edittricks.htm lacks {table} {key} “{value}”')
+    # The ? button of the Multiple Replace window opens the help at this anchor.
+    anchored = re.search(r'<a name="multiplereplace"></a>\s*(.{0,80})',
+                         html.unescape(raw_page(language, 'basic_edittricks.htm')), re.S)
+    edit_menu = strings(language, 'AdvancedFind')['MultipleReplace.EditMenu']
+    if not anchored or edit_menu not in anchored[1]:
+        failures.append(f'{language} basic_edittricks.htm lacks the anchor multiplereplace before “{edit_menu}”')
     old = OLD_EDITING.search(tricks)
     if old:
         failures.append(f'{language} basic_edittricks.htm still has “{old[0]}”')
@@ -75,4 +85,4 @@ if failures:
     print('\n'.join(f'FAIL: {f}' for f in failures))
     sys.exit(1)
 print(f'PASS: the Editing Tricks help in {len(LANGUAGES)} languages describes the Advanced Find panel '
-      f'with the {len(TERMS)} interface terms of each language, and no page presents OgreKit as the new panel')
+      f'with the {len(TERMS)} interface terms of each language and the anchor of Multiple Replace, and no page presents OgreKit as the new panel')
