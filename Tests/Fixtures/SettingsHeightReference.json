@@ -1,5 +1,5 @@
 {
-  "provenance": "Approved SettingsPanelLab full-light captures, 570 points at 2x. Includes user-approved notes; Keyboard follows the 2026-11-13 key binding list decision: the list and the menu shortcuts each show at least six rows (reference image keyboard-ja-570.png in the audit notes).",
+  "provenance": "Approved SettingsPanelLab full-light captures, 570 points at 2x. Includes user-approved notes; Keyboard follows the 2026-11-13 key binding list decision: the list and the menu shortcuts each show at least six rows (reference image keyboard-ja-570.png in the audit notes). Typesetting follows the 2026-11-14 decision to add the index program and MetaPost rows to Related Tools: the mockup height plus the 114 points of the two rows and the longer note of Engine Profile.",
   "width": 570,
   "maximum_ratio": 1.15,
   "categories": {
@@ -36,7 +36,7 @@
       "reference_sha256": "d692a7a8b6cebc09eab5b2c34003bd52076505cbfbfd04ec71aac882cbaac870"
     },
     "typesetting": {
-      "height": 1629.0,
+      "height": 1743.0,
       "reference_sha256": "d4f560fc245793ed6b40c8bfaca053dbc83768b7d13c396a015dbe02b781e308"
     },
     "updates": {

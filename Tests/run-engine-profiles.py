@@ -12,30 +12,32 @@ PDF = '--file-line-error --synctex=1'
 SIMP = '--extratexopts "-file-line-error -synctex=1"'
 PT = '-ot "-synctex=1 -file-line-error"'
 DVIPDF = '-e "$dvipdf=q/dvipdfmx %O -o %D %S/"'
-# The expected table, written out independently of the source: place, LaTeX, TeX, LaTeX with latexmk, BibTeX.
+# The expected table, written out independently of the source: place, LaTeX, TeX, LaTeX with latexmk, BibTeX,
+# the index command and the MetaPost command.
 TABLE = {
-    1: (100, 'pdflatex ' + PDF, 'pdftex ' + PDF, 'latexmk -pdf -e "$pdflatex=q/pdflatex -synctex=1 -file-line-error/" -norc', 'bibtex'),
-    2: (100, 'xelatex ' + PDF, 'xetex ' + PDF, 'latexmk -xelatex -e "$xelatex=q/xelatex -synctex=1 -file-line-error/" -norc', 'bibtex'),
-    3: (100, 'lualatex ' + PDF, 'luatex ' + PDF, 'latexmk -lualatex -e "$lualatex=q/lualatex -synctex=1 -file-line-error/" -norc', 'bibtex'),
+    1: (100, 'pdflatex ' + PDF, 'pdftex ' + PDF, 'latexmk -pdf -e "$pdflatex=q/pdflatex -synctex=1 -file-line-error/" -norc', 'bibtex', 'makeindex', 'mpost'),
+    2: (100, 'xelatex ' + PDF, 'xetex ' + PDF, 'latexmk -xelatex -e "$xelatex=q/xelatex -synctex=1 -file-line-error/" -norc', 'bibtex', 'makeindex', 'mpost'),
+    3: (100, 'lualatex ' + PDF, 'luatex ' + PDF, 'latexmk -lualatex -e "$lualatex=q/lualatex -synctex=1 -file-line-error/" -norc', 'bibtex', 'makeindex', 'mpost'),
     4: (101, 'simpdftex latex --mode dvipdfmx ' + SIMP, 'simpdftex etex --mode dvipdfmx ' + SIMP,
-        'latexmk -pdfdvi -e "$latex=q/latex -synctex=1 -file-line-error/" ' + DVIPDF + ' -norc', 'bibtex'),
+        'latexmk -pdfdvi -e "$latex=q/latex -synctex=1 -file-line-error/" ' + DVIPDF + ' -norc', 'bibtex', 'makeindex', 'mpost'),
     5: (100, 'lualatex ' + PDF, 'luatex ' + PDF,
-        'latexmk -lualatex -e "$lualatex=q/lualatex -synctex=1 -file-line-error/" -e "$bibtex=q/upbibtex/" -e "$makeindex=q/upmendex/" -norc', 'upbibtex'),
+        'latexmk -lualatex -e "$lualatex=q/lualatex -synctex=1 -file-line-error/" -e "$bibtex=q/upbibtex/" -e "$makeindex=q/upmendex/" -norc', 'upbibtex', 'upmendex', 'mpost'),
     6: (101, 'ptex2pdf -l ' + PT, 'ptex2pdf -e ' + PT,
-        'latexmk -pdfdvi -e "$latex=q/platex -synctex=1 -file-line-error/" -e "$bibtex=q/pbibtex/" -e "$makeindex=q/mendex/" ' + DVIPDF + ' -norc', 'pbibtex'),
+        'latexmk -pdfdvi -e "$latex=q/platex -synctex=1 -file-line-error/" -e "$bibtex=q/pbibtex/" -e "$makeindex=q/mendex/" ' + DVIPDF + ' -norc', 'pbibtex', 'mendex', 'pmpost'),
     7: (101, 'ptex2pdf -u -l ' + PT, 'ptex2pdf -e -u ' + PT,
-        'latexmk -pdfdvi -e "$latex=q/uplatex -synctex=1 -file-line-error/" -e "$bibtex=q/upbibtex/" -e "$makeindex=q/mendex/" ' + DVIPDF + ' -norc', 'upbibtex'),
+        'latexmk -pdfdvi -e "$latex=q/uplatex -synctex=1 -file-line-error/" -e "$bibtex=q/upbibtex/" -e "$makeindex=q/upmendex/" ' + DVIPDF + ' -norc', 'upbibtex', 'upmendex', 'upmpost'),
     8: (101, 'simpdftex latex --maxpfb ' + SIMP, 'simpdftex etex --maxpfb ' + SIMP,
-        'latexmk -pdfps -e "$latex=q/latex -synctex=1 -file-line-error/" -norc', 'bibtex'),
+        'latexmk -pdfps -e "$latex=q/latex -synctex=1 -file-line-error/" -norc', 'bibtex', 'makeindex', 'mpost'),
 }
 JAPANESE = {5, 6, 7}
 
 
 def expected(profile, latexmk):
-    place, latex, tex, mk, bib = TABLE[profile]
+    place, latex, tex, mk, bib, index, metapost = TABLE[profile]
     direct = place == 100
     values = {'DefaultScript': place, 'LatexCommand' if direct else 'LatexGSCommand': mk if latexmk else latex,
-              'TexCommand' if direct else 'TexGSCommand': tex, 'BibTeXengine': bib, 'ptexUtfOutput': profile == 6}
+              'TexCommand' if direct else 'TexGSCommand': tex, 'BibTeXengine': bib,
+              'MakeIndexEngine': index, 'MetaPostEngine': metapost, 'ptexUtfOutput': profile == 6}
     if profile in JAPANESE:
         values.update({'Encoding': 'UTF-8 Unicode', 'AutomaticUTF8MACtoUTF8Conversion': True, 'SpellingAutomaticDefault': True, 'SpellingLanguageDefault': ' '})
     return values
@@ -83,9 +85,21 @@ int main(int argc, char **argv) { @autoreleasepool {
         BOOL latexmk = !mk.boolValue;
         check(TSEngineProfileMatchingSettings(d, &latexmk) == p.integerValue && latexmk == mk.boolValue,
               [NSString stringWithFormat:@"profile %@ latexmk %@ is recognized", p, mk]);
-        // The settings that go with a profile do not decide.
-        d.values[@"SpellingAutomaticDefault"] = @NO; d.values[@"ptexUtfOutput"] = @(p.integerValue != 6);
-        check(TSEngineProfileMatchingSettings(d, NULL) == p.integerValue, @"companion settings do not change the match");
+        // Every value the profile writes decides, the settings that go with the commands too: one changed
+        // value is Custom, and putting it back is the profile again.
+        NSDictionary *own = TSEngineProfileValues(p.integerValue, mk.boolValue);
+        for (NSString *key in own) {
+            id saved = d.values[key];
+            id other = [own[key] isKindOfClass:NSString.class] ? [own[key] stringByAppendingString:@"x"] : @(![own[key] boolValue] + ([own[key] integerValue] > 1 ? 7 : 0));
+            d.values[key] = other;
+            check(TSEngineProfileMatchingSettings(d, NULL) == 0, [NSString stringWithFormat:@"profile %@ with another %@ is Custom", p, key]);
+            d.values[key] = saved;
+            check(TSEngineProfileMatchingSettings(d, NULL) == p.integerValue, [NSString stringWithFormat:@"profile %@ with %@ again", p, key]);
+        }
+        // Settings no profile writes do not decide.
+        d.values[@"FindMethod"] = @0; d.values[@"TetexBinPath"] = @"/elsewhere";
+        if (!TSEngineProfileIsJapanese(p.integerValue)) { d.values[@"Encoding"] = @"DOSJapanese"; d.values[@"SpellingAutomaticDefault"] = @NO; }
+        check(TSEngineProfileMatchingSettings(d, NULL) == p.integerValue, @"settings that the profile does not write do not change the match");
         // A command typed by hand, or another BibTeX engine, is Custom.
         NSString *key = [TSEngineProfileValues(p.integerValue, mk.boolValue)[@"DefaultScript"] integerValue] == 100 ? @"LatexCommand" : @"LatexGSCommand";
         d.values[key] = [d.values[key] stringByAppendingString:@" --shell-escape"];
@@ -97,6 +111,38 @@ int main(int argc, char **argv) { @autoreleasepool {
         d.values[@"DefaultScript"] = @102;
         check(TSEngineProfileMatchingSettings(d, NULL) == 0, @"the personal script is Custom");
     }
+    // The keys watched for the menu: every key of every profile, once.
+    NSMutableSet *all = [NSMutableSet set];
+    for (NSArray<NSNumber *> *section in TSEngineProfileMenuSections()) for (NSNumber *p in section) for (NSNumber *mk in @[@NO, @YES])
+        [all addObjectsFromArray:TSEngineProfileValues(p.integerValue, mk.boolValue).allKeys];
+    check([[NSSet setWithArray:TSEngineProfileKeys()] isEqualToSet:all] && TSEngineProfileKeys().count == all.count, [NSString stringWithFormat:@"watched keys: %@", TSEngineProfileKeys()]);
+    for (NSString *key in @[@"MakeIndexEngine", @"MetaPostEngine", @"BibTeXengine", @"Encoding", @"ptexUtfOutput", @"SpellingLanguageDefault", @"AutomaticUTF8MACtoUTF8Conversion"])
+        check([TSEngineProfileKeys() containsObject:key], [NSString stringWithFormat:@"%@ is watched", key]);
+    // The watcher calls its handler once on the main queue for a burst of changes, for each watched key, and not
+    // for other keys or after it is released.
+    {
+        TSMemoryDefaults *k = [TSMemoryDefaults new]; [k registerDefaults:factory];
+        __block NSUInteger calls = 0;
+        TSEngineProfileWatcher *watcher = [[TSEngineProfileWatcher alloc] initWithDefaults:k handler:^{ calls++; }];
+        check(watcher != nil, @"a watcher is made");
+        void (^drain)(void) = ^{ for (int i = 0; i < 5; i++) [NSRunLoop.mainRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]]; };
+        TSEngineProfileApply(k, TSEngineProfileValues(7, YES)); drain();
+        check(calls == 1, [NSString stringWithFormat:@"one call for a whole profile: %lu", (unsigned long)calls]);
+        for (NSString *key in TSEngineProfileKeys()) {
+            NSUInteger before = calls; [k setObject:@"changed" forKey:key]; drain();
+            check(calls == before + 1, [NSString stringWithFormat:@"a change of %@ is seen", key]);
+        }
+        NSUInteger before = calls; [k setObject:@"x" forKey:@"FindMethod"]; [k setObject:@"/x" forKey:@"TetexBinPath"]; drain();
+        check(calls == before, @"other keys are not watched");
+        __block BOOL fromThread = NO;
+        before = calls;
+        [NSThread detachNewThreadWithBlock:^{ [k setObject:@"elsewhere" forKey:@"MakeIndexEngine"]; fromThread = YES; }];
+        for (int i = 0; i < 100 && (!fromThread || calls == before); i++) drain();
+        check(calls == before + 1, @"a change made on another thread is handled on the main queue");
+        @autoreleasepool { watcher = nil; }
+        before = calls; [k setObject:@"after" forKey:@"MakeIndexEngine"]; drain();
+        check(calls == before, @"a released watcher stops");
+    }
     TSMemoryDefaults *fresh = [TSMemoryDefaults new]; [fresh registerDefaults:factory];
     BOOL mk = YES;
     check(TSEngineProfileMatchingSettings(fresh, &mk) == 1 && !mk, @"factory settings are pdfLaTeX");
@@ -105,7 +151,11 @@ int main(int argc, char **argv) { @autoreleasepool {
     [upTeX.values addEntriesFromDictionary:@{@"DefaultScript": @101, @"LatexGSCommand": @"ptex2pdf -u -l -ot \"-synctex=1 -file-line-error\"",
         @"TexGSCommand": @"ptex2pdf -e -u -ot \"-synctex=1 -file-line-error\"", @"BibTeXengine": @"upbibtex",
         @"LatexCommand": @"lualatex --file-line-error --synctex=1", @"TexCommand": @"luatex --file-line-error --synctex=1"}];
-    check(TSEngineProfileMatchingSettings(upTeX, NULL) == 7, @"the earlier upTeX (ptex2pdf) settings are upLaTeX + dvipdfmx");
+    // They have the commands but not the settings that go with them: Custom, until those are set as well.
+    check(TSEngineProfileMatchingSettings(upTeX, NULL) == 0, @"the earlier upTeX (ptex2pdf) commands alone are Custom");
+    [upTeX.values addEntriesFromDictionary:@{@"MakeIndexEngine": @"upmendex", @"MetaPostEngine": @"upmpost", @"ptexUtfOutput": @"NO", @"Encoding": @"UTF-8 Unicode",
+        @"AutomaticUTF8MACtoUTF8Conversion": @"YES", @"SpellingAutomaticDefault": @YES, @"SpellingLanguageDefault": @" "}];
+    check(TSEngineProfileMatchingSettings(upTeX, NULL) == 7, @"the earlier upTeX (ptex2pdf) settings with the rest are upLaTeX + dvipdfmx");
     upTeX.values[@"LatexGSCommand"] = @"  ptex2pdf -u -l -ot \"-synctex=1 -file-line-error\"\n";
     check(TSEngineProfileMatchingSettings(upTeX, NULL) == 7, @"surrounding blanks do not decide");
     // 3. Apply: only the profile's keys, one deferred notification, and the keys that changed.
@@ -167,8 +217,16 @@ MUTATIONS = {
     'no Japanese companions': ('    if (TSEngineProfileIsJapanese(profile)) {\n        // New documents', '    if (NO) {\n        // New documents'),
     'stored NO differs from @NO': ('        return [value respondsToSelector:@selector(boolValue)] && [value boolValue] == [expected boolValue];', '        return [value isEqual:expected];'),
     'no Japanese encoding': ('        values[EncodingKey] = @"UTF-8 Unicode";\n', ''),
-    'match ignores BibTeX': ('TexGSCommandKey, BibTeXengineKey]', 'TexGSCommandKey]'),
-    'match only one form': ("for (NSNumber *form in @[@NO, @YES])", "for (NSNumber *form in @[@NO])"),
+    'no index command': ('    values[MakeIndexEngineKey] = row[5];\n', ''),
+    'MetaPost command from the index column': ('    values[MetaPostEngineKey] = row[6];', '    values[MetaPostEngineKey] = row[5];'),
+    'upLaTeX latexmk with mendex': ('-e \\"$bibtex=q/upbibtex/\\" -e \\"$makeindex=q/upmendex/\\" %@', '-e \\"$bibtex=q/upbibtex/\\" -e \\"$makeindex=q/mendex/\\" %@'),
+    'match only the commands': ('                for (NSString *key in values)\n                    if (!TSEngineProfileSame',
+                                '                for (NSString *key in @[DefaultScriptKey, LatexCommandKey, TexCommandKey, LatexGSCommandKey, TexGSCommandKey, BibTeXengineKey])\n                    if (values[key] != nil && !TSEngineProfileSame'),
+    'index command not watched': ('[keys addObjectsFromArray:[TSEngineProfileValues(profile.integerValue, form.boolValue).allKeys sortedArrayUsingSelector:@selector(compare:)]];',
+                                  '{ NSMutableArray *k = [[TSEngineProfileValues(profile.integerValue, form.boolValue).allKeys sortedArrayUsingSelector:@selector(compare:)] mutableCopy]; [k removeObject:MakeIndexEngineKey]; [keys addObjectsFromArray:k]; }'),
+    'watcher calls for every key': ('        if (_pending) return;\n', ''),
+    'watcher off the main queue': ('    dispatch_async(dispatch_get_main_queue(), ^{', '    dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{'),
+    'match only one form': ("for (NSNumber *form in @[@NO, @YES]) {", "for (NSNumber *form in @[@NO]) {"),
     'no deferral': ('    profileApplicationDepth++;\n', '\n'),
     'every key reported changed': ('if (!TSEngineProfileSame([defaults objectForKey:key], value)) [changed addObject:key];', '[changed addObject:key];'),
     'every language Japanese': ('? TSEngineProfileUpLaTeXDvipdfmx : TSEngineProfilePdfLaTeX', '? TSEngineProfileUpLaTeXDvipdfmx : TSEngineProfileUpLaTeXDvipdfmx'),

@@ -101,7 +101,7 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     IMP originalAlert = method_setImplementation(alertMethod, (IMP)CaptureOwnerAlert);
     NSArray *contract=[NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfURL:[fixture URLForResource:@"SettingsInputRules" withExtension:@"json"]] options:0 error:NULL];
     NSMapTable *rules=[owner valueForKey:@"inputRules"];
-    Check(contract.count==18 && rules.count==contract.count,@"All eighteen independent input rules are installed");
+    Check(contract.count==20 && rules.count==contract.count,@"All twenty independent input rules are installed");
     for(NSDictionary *entry in contract){
         NSTextField *field=[owner valueForKey:entry[@"outlet"]];TSPreferenceInput *rule=[rules objectForKey:field];
         Check(rule && [rule.key isEqual:entry[@"key"]] && rule.kind==[entry[@"kind"]integerValue] && rule.minimum==[entry[@"minimum"]doubleValue] && rule.maximum==[entry[@"maximum"]doubleValue] && rule.allowsEmpty==[entry[@"allowsEmpty"]boolValue],[NSString stringWithFormat:@"Independent rule contract for %@",entry[@"outlet"]]);
@@ -154,28 +154,45 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     Check([owner windowShouldClose:shell.window], @"Restored input permits close");
     [shell selectCategoryIdentifier:TSSettingsCategoryEditor];
     EditOwnerField(owner,tabs,@"nonsense");
-    NSPopUpButton *profileChoice=[owner valueForKey:@"engineProfilePopup"];[profileChoice selectItemWithTag:TSEngineProfileUpLaTeXDvipdfmx];
-    NSButton *applyProfile=[owner valueForKey:@"engineProfileApplyButton"];
-    alerts=ownerAlertCount;[owner applyEngineProfile:applyProfile];
+    // Choosing a profile in the menu asks at once, through the menu's own action; there is no Apply button.
+    NSPopUpButton *profileChoice=[owner valueForKey:@"engineProfilePopup"];
+    Check(profileChoice.target==owner && profileChoice.action==@selector(applyEngineProfile:),@"The profile menu asks when a profile is chosen");
+    void (^chooseProfile)(TSEngineProfile)=^(TSEngineProfile profile){[profileChoice selectItemWithTag:profile];[profileChoice sendAction:profileChoice.action to:profileChoice.target];};
+    alerts=ownerAlertCount;chooseProfile(TSEngineProfileUpLaTeXDvipdfmx);
     Check(ownerAlertCount==alerts+1 && [[owner valueForKey:@"inputErrorPresented"]boolValue],@"Profile selection validates an edit before showing its confirmation");
     FinishOwnerAlert(NSAlertSecondButtonReturn);
-    EditOwnerField(owner,tabs,@"22");alerts=ownerAlertCount;[owner applyEngineProfile:applyProfile];
+    TSEngineProfile shownBefore=TSEngineProfileMatchingSettings(TSIsolatedAppKitDefaults,NULL);
+    Check(profileChoice.selectedTag==shownBefore && shownBefore!=TSEngineProfileUpLaTeXDvipdfmx,@"An edit that cannot be committed puts the menu back");
+    EditOwnerField(owner,tabs,@"22");alerts=ownerAlertCount;chooseProfile(TSEngineProfileUpLaTeXDvipdfmx);
     Check([TSIsolatedAppKitDefaults integerForKey:tabsKey]==22 && ownerAlertCount==alerts+1 && ![[owner valueForKey:@"inputErrorPresented"]boolValue],@"Valid edit commits before profile confirmation");
     Check([capturedOwnerAlert.messageText containsString:@"upLaTeX + dvipdfmx"] && capturedOwnerAlert.informativeText.length==0,@"Profile confirmation names the profile and shows no paths");
     Check([capturedOwnerAlert.buttons.firstObject.keyEquivalent isEqual:@"\r"] && [capturedOwnerAlert.buttons.lastObject.keyEquivalent isEqual:@"\e"],@"Profile confirmation applies on Return and reserves Escape for Cancel");
     NSButton *(^sheetLatexmk)(void)=^NSButton *{return (NSButton *)Find(capturedOwnerAlert.accessoryView,@"settings.engine-profile-latexmk");};
     NSButton *latexmk=sheetLatexmk();
     Check([latexmk isKindOfClass:NSButton.class] && latexmk.enabled && latexmk.state==(TSEngineProfileSettingsUseLatexmk(TSIsolatedAppKitDefaults)?NSControlStateValueOn:NSControlStateValueOff),@"The latexmk choice starts from the commands in use");
+    Check(profileChoice.selectedTag==TSEngineProfileUpLaTeXDvipdfmx,@"While the sheet asks, the menu shows the profile chosen");
     NSString *commandBefore=[TSIsolatedAppKitDefaults stringForKey:LatexGSCommandKey];
+    NSDictionary *valuesBefore=[TSIsolatedAppKitDefaults.values copy];
     FinishOwnerAlert(NSAlertSecondButtonReturn);
     Check([TSIsolatedAppKitDefaults integerForKey:tabsKey]==22 && [[TSIsolatedAppKitDefaults stringForKey:LatexGSCommandKey] isEqual:commandBefore],@"Cancelling the profile preserves the committed edit");
+    Check([TSIsolatedAppKitDefaults.values isEqual:valuesBefore],@"Cancel changes no setting");
+    Check(profileChoice.selectedTag==shownBefore && [profileChoice.titleOfSelectedItem isEqual:(shownBefore==TSEngineProfileNone?NSLocalizedString(@"Custom",@""):TSEngineProfileTitle(shownBefore))],[NSString stringWithFormat:@"Cancel shows the earlier choice again: %@",profileChoice.titleOfSelectedItem]);
     // Applying a confirmed profile ends the field editor; a later focus change
     // cannot write its prior text over the profile's value.
     [shell selectCategoryIdentifier:TSSettingsCategoryTypesetting];
     NSTextField *latexGS=[owner valueForKey:@"latexGSCommandTextField"];
     NSString *texPath=[TSIsolatedAppKitDefaults stringForKey:TetexBinPath],*gsPath=[TSIsolatedAppKitDefaults stringForKey:GSBinPath];
-    EditOwnerField(owner,latexGS,@"typed-command");alerts=ownerAlertCount;[owner applyEngineProfile:applyProfile];
+    EditOwnerField(owner,latexGS,@"typed-command");alerts=ownerAlertCount;chooseProfile(TSEngineProfileUpLaTeXDvipdfmx);
     Check(ownerAlertCount==alerts+1,@"The profile sheet comes after the commit");
+    // While the sheet waits, the change notices of the commit, and of an owned setting changed elsewhere, leave the
+    // chosen profile in the menu.
+    for(int i=0;i<5;i++)[NSRunLoop.mainRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+    Check(profileChoice.selectedTag==TSEngineProfileUpLaTeXDvipdfmx,[NSString stringWithFormat:@"While the sheet waits, the menu keeps the profile chosen after the commit: %@",profileChoice.titleOfSelectedItem]);
+    NSString *indexBefore=[TSIsolatedAppKitDefaults stringForKey:MakeIndexEngineKey];
+    [TSIsolatedAppKitDefaults setObject:@"elsewhere" forKey:MakeIndexEngineKey];
+    for(int i=0;i<5;i++)[NSRunLoop.mainRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+    Check(profileChoice.selectedTag==TSEngineProfileUpLaTeXDvipdfmx,@"While the sheet waits, a setting changed elsewhere leaves the profile chosen in the menu");
+    if(indexBefore)[TSIsolatedAppKitDefaults setObject:indexBefore forKey:MakeIndexEngineKey];else [TSIsolatedAppKitDefaults removeObjectForKey:MakeIndexEngineKey];
     sheetLatexmk().state=NSControlStateValueOn;
     FinishOwnerAlert(NSAlertFirstButtonReturn);
     NSString *profileCommand=TSEngineProfileValues(TSEngineProfileUpLaTeXDvipdfmx,YES)[LatexGSCommandKey];

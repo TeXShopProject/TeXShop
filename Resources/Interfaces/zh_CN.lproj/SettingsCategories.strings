@@ -236,8 +236,7 @@
 "catalog.preview.5.0.note" = "打开HTML窗口时首先显示的页面。输入网址或文件路径。默认值：https://texshop.app";
 "group.typesetting.0.title" = "引擎";
 "catalog.typesetting.0.4.title" = "引擎配置";
-"catalog.typesetting.0.4.note" = "设置排版命令、BibTeX引擎和otf宏包支持。日语配置还会设置新文档的编码（UTF-8）、词典和UTF-8-MAC转换。";
-"catalog.typesetting.0.4.button" = "应用…";
+"catalog.typesetting.0.4.note" = "设置排版命令、BibTeX引擎、索引生成、MetaPost和otf宏包支持。日语配置还会设置新文档的编码（UTF-8）、词典和UTF-8-MAC转换。";
 "catalog.typesetting.0.0.title" = "新文稿的排版";
 "catalog.typesetting.0.0.note" = "打开文稿时，工具栏中“排版”旁边最先选中的项。文稿中有 % !TEX TS-program行时，以该行为准。";
 "catalog.typesetting.0.1.title" = "引擎文件";
@@ -282,11 +281,15 @@
 "group.typesetting.7.title" = "Ghostscript";
 "catalog.typesetting.7.1.title" = "-dALLOWPSTRANSPARENCY";
 "catalog.typesetting.7.1.note" = "Ghostscript将PostScript转换为PDF时加上此选项，以保留PSTricks等的透明效果。需要Ghostscript 9.51或更高版本。";
-"group.typesetting.8.title" = "查找命令和BibTeX";
+"group.typesetting.8.title" = "相关工具";
 "catalog.typesetting.8.0.title" = "kpsewhich";
 "catalog.typesetting.8.0.note" = "“文件”菜单中“打开样式文件”用来查找文件的命令。默认值：kpsewhich -progname=latex -format=tex";
 "catalog.typesetting.8.1.title" = "BibTeX引擎";
 "catalog.typesetting.8.1.note" = "默认值：bibtex";
+"catalog.typesetting.8.2.title" = "索引生成";
+"catalog.typesetting.8.2.note" = "默认值：makeindex";
+"catalog.typesetting.8.3.title" = "MetaPost";
+"catalog.typesetting.8.3.note" = "默认值：mpost";
 "group.typesetting.9.title" = "pTeX支持 (仅日语用户)";
 "catalog.typesetting.9.0.title" = "otf宏包支持";
 "group.console.0.title" = "字体";

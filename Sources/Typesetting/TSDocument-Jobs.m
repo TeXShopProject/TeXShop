@@ -1644,6 +1644,15 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 			// Koch: Feb 20; this allows spaces everywhere in path except
 			// file name itself
 			[args addObject: [sourcePath lastPathComponent]];
+			// metapostwrap takes the MetaPost command of Settings > Typesetting after the file name:
+			// the program, then its options.
+			if (whichEngineLocal == MetapostEngine) {
+				NSString *metapostCommand = [[SUD stringForKey:MetaPostEngineKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+				NSMutableArray *metapostOptions = [NSMutableArray array];
+				NSString *metapostProgram = [self separate:(metapostCommand.length > 0 ? metapostCommand : @"mpost") into:metapostOptions];
+				[args addObject: [metapostProgram stringByExpandingTildeInPath]];
+				[args addObjectsFromArray: metapostOptions];
+			}
 			
 			/*
 			 if ((enginePath != nil) && ([[NSFileManager defaultManager] fileExistsAtPath: enginePath])) {
@@ -1793,6 +1802,9 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
              }  else if (whichEngineLocal == IndexEngine) {
 				 NSString* indexPath = [sourcePath stringByDeletingPathExtension];
 				 // Koch: ditto, spaces in path
+                 // The index command of Settings > Typesetting, with its options before the index file.
+                 NSString *indexCommand = [[SUD stringForKey:MakeIndexEngineKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                 NSString *indexEngineString = [self separate:(indexCommand.length > 0 ? indexCommand : @"makeindex") into:args];
                  [args addObject: [[indexPath lastPathComponent] stringByAppendingPathExtension: @"idx"]];
 				 
 				 if (self.indexTask != nil) {
@@ -1802,7 +1814,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 					 self.indexTask = nil;
 				 }
 				 self.indexTask = [[NSTask alloc] init];
-				 if ([self startTask: self.indexTask running: @"makeindex" withArgs: args inDirectoryContaining: sourcePath withEngine:whichEngineLocal] == FALSE)
+				 if ([self startTask: self.indexTask running: indexEngineString withArgs: args inDirectoryContaining: sourcePath withEngine:whichEngineLocal] == FALSE)
 					 self.indexTask = nil;
 			  } else if (whichEngineLocal >= UserEngine) {
 				 NSString* userEngineName = [[[programButton itemAtIndex:(whichEngineLocal - 1)] title] stringByAppendingString:@".engine"];
