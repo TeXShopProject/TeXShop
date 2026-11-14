@@ -186,11 +186,11 @@
                 </buttonCell>
                 <cells>
                   <column>
-                    <buttonCell type="radio" title="LaTeX" imagePosition="left" alignment="left" tag="1" state="on" inset="2" id="589">
+                    <buttonCell type="radio" title="plain TeX" imagePosition="left" alignment="left" inset="2" id="588">
                       <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                       <font key="font" metaFont="system" />
                     </buttonCell>
-                    <buttonCell type="radio" title="plain TeX" imagePosition="left" alignment="left" inset="2" id="588">
+                    <buttonCell type="radio" title="LaTeX" imagePosition="left" alignment="left" tag="1" state="on" inset="2" id="589">
                       <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                       <font key="font" metaFont="system" />
                     </buttonCell>
