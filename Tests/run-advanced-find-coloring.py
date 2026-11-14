@@ -13,6 +13,7 @@ pairs of bundled themes, light and dark, in English and Japanese (--image-all-la
 from pathlib import Path
 import argparse
 import os
+import plistlib
 import re
 import shutil
 import subprocess
@@ -164,6 +165,29 @@ def check_project():
     print('PASS: the coloring files and their strings in all 12 languages are in the application')
 
 
+def bracket_problems(themes):
+    """The brackets of every bundled theme are readable on its background: the find and replace fields show groups
+    and alternatives, and TeX brackets, in these colors (contrast as WCAG measures it, at least 3)."""
+    def luminance(rgb):
+        linear = [c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in rgb[:3]]
+        return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+    problems = []
+    for name, theme in themes.items():
+        background = luminance(theme['EditorBackground'])
+        for key in ('SyntaxMarkerParen', 'SyntaxMarkerCurly', 'SyntaxMarkerSquare'):
+            color = theme.get(key) or theme.get('SyntaxMarker')
+            if color:
+                lighter, darker = sorted([luminance(color), background], reverse=True)
+                if (lighter + 0.05) / (darker + 0.05) < 3:
+                    problems.append(f'{name} {key}')
+    return problems
+
+
+def bundled_themes():
+    return {f'{folder}/{path.stem}': plistlib.loads(path.read_bytes())
+            for folder in ('Resources/TeXShop/Themes', 'Resources/Themes') for path in sorted((root / folder).glob('*.plist'))}
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--image', type=Path)
@@ -171,6 +195,10 @@ def main():
     parser.add_argument('--mutations', action='store_true')
     args = parser.parse_args()
     check_project()
+    problems = bracket_problems(bundled_themes())
+    if problems:
+        sys.exit(f'FAIL: brackets that cannot be read on the background: {problems}')
+    print('PASS: the brackets of every bundled theme can be read on its background')
     with tempfile.TemporaryDirectory(prefix='texshop-advanced-find-coloring-') as tmp:
         tmp = Path(tmp)
         probe = build(tmp, copy_sources(tmp))
@@ -187,6 +215,11 @@ def main():
         if args.image:
             print(f'images in {args.image}')
         if args.mutations:
+            themes = bundled_themes()
+            themes['Resources/TeXShop/Themes/Dracula'] = dict(themes['Resources/TeXShop/Themes/Dracula'], SyntaxMarkerParen=[0, 0, 0, 1])
+            if not bracket_problems(themes):
+                sys.exit('FAIL: mutation \'Dracula has black parentheses again\' was not detected')
+            print('PASS: detected mutation \'Dracula has black parentheses again\'')
             survivors = []
             for name, (file, old, new) in MUTATIONS.items():
                 with tempfile.TemporaryDirectory(prefix='texshop-advanced-find-coloring-mutation-') as mtmp:

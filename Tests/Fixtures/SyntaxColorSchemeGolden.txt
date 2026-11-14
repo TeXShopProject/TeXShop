@@ -77,9 +77,9 @@
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.4850 0.8957 0.9893 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.3120 0.3641 0.5760 1.0000
   markerColorAttribute NSColor kCGColorSpaceSRGB 0.9882 0.3641 0.7281 1.0000
-  markerColorParenAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
-  markerColorCurlyAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
-  markerColorSquareAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  markerColorParenAttribute NSColor kCGColorSpaceSRGB 0.9725 0.9725 0.9490 1.0000
+  markerColorCurlyAttribute NSColor kCGColorSpaceSRGB 0.9725 0.9725 0.9490 1.0000
+  markerColorSquareAttribute NSColor kCGColorSpaceSRGB 0.9725 0.9725 0.9490 1.0000
   indexColorAttribute NSColor kCGColorSpaceSRGB 0.2842 0.9997 0.4079 1.0000
   footnoteColorAttribute NSColor kCGColorSpaceSRGB 0.9931 0.6653 0.3510 1.0000
   fullwidthSymbolColorAttribute NSBackgroundColor kCGColorSpaceSRGB 0.1000 0.0000 0.0000 1.0000
@@ -107,16 +107,16 @@
   regexBackreference NSColor kCGColorSpaceSRGB 0.3137 0.9804 0.4824 1.0000
   regexQuantifier NSColor kCGColorSpaceSRGB 0.9882 0.3641 0.7281 1.0000
   regexAnchor NSColor kCGColorSpaceSRGB 0.7412 0.5765 0.9765 1.0000
-  regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.9725 0.9725 0.9490 1.0000
   regexIncompatible empty
   invalid empty
 == Dracula dark
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.4850 0.8957 0.9893 1.0000
   commentColorAttribute NSColor kCGColorSpaceSRGB 0.3120 0.3641 0.5760 1.0000
   markerColorAttribute NSColor kCGColorSpaceSRGB 0.9882 0.3641 0.7281 1.0000
-  markerColorParenAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
-  markerColorCurlyAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
-  markerColorSquareAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  markerColorParenAttribute NSColor kCGColorSpaceSRGB 0.9725 0.9725 0.9490 1.0000
+  markerColorCurlyAttribute NSColor kCGColorSpaceSRGB 0.9725 0.9725 0.9490 1.0000
+  markerColorSquareAttribute NSColor kCGColorSpaceSRGB 0.9725 0.9725 0.9490 1.0000
   indexColorAttribute NSColor kCGColorSpaceSRGB 0.2842 0.9997 0.4079 1.0000
   footnoteColorAttribute NSColor kCGColorSpaceSRGB 0.9931 0.6653 0.3510 1.0000
   fullwidthSymbolColorAttribute NSBackgroundColor kCGColorSpaceSRGB 0.1000 0.0000 0.0000 1.0000
@@ -144,7 +144,7 @@
   regexBackreference NSColor kCGColorSpaceSRGB 0.3137 0.9804 0.4824 1.0000
   regexQuantifier NSColor kCGColorSpaceSRGB 0.9882 0.3641 0.7281 1.0000
   regexAnchor NSColor kCGColorSpaceSRGB 0.7412 0.5765 0.9765 1.0000
-  regexSymbol NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
+  regexSymbol NSColor kCGColorSpaceSRGB 0.9725 0.9725 0.9490 1.0000
   regexIncompatible empty
   invalid empty
 == GLG-Lite light
