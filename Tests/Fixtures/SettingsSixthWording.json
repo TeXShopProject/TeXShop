@@ -265,7 +265,7 @@
     "SettingsTypesetting.strings": {
       "191.title": "Direct PDF",
       "YQv-fE-Uzg.title": "Als tabblad in hoofdvenster openen",
-      "bYh-V5-ri6.title": "In huidig venster blijven",
+      "bYh-V5-ri6.title": "Toon voorvertoning en ga terug naar vorig venster",
       "785.title": "PDF doorzoeken"
     }
   },
@@ -469,7 +469,7 @@
       "675.title": "Após a composição",
       "785.title": "Pesquisar PDF",
       "679.title": "Trazer a pré-visualização para a frente",
-      "bYh-V5-ri6.title": "Permanecer na janela atual"
+      "bYh-V5-ri6.title": "Mostrar a pré-visualização e voltar à janela original"
     }
   },
   "ro": {
@@ -718,7 +718,7 @@
       "675.title": "După tehnoredactare",
       "785.title": "Caută în PDF",
       "679.title": "Adu previzualizarea în prim-plan",
-      "bYh-V5-ri6.title": "Rămâi în fereastra curentă"
+      "bYh-V5-ri6.title": "Arată previzualizarea și revino la fereastra inițială"
     }
   },
   "zh_CN": {

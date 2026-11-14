@@ -890,7 +890,7 @@ Preview Window to the top. But some users
 prefer to glance at Preview and immediately begin writing additional source. The item
 ``Continue Editing'' brings the Edit Window forward to make this task easy.
 
-There is yet a third option, ``Stay in Current Window''. The keyboard shortcut Command-T can be typed in any of the
+There is yet a third option, ``Show Preview and Return to Original Window''. The keyboard shortcut Command-T can be typed in any of the
  windows Source, Preview, Console, Log and  asks TeX to typeset the document. When the
  third option is chosen and typesetting ends, the window where Command-T was typed
  comes to the front.
@@ -1379,7 +1379,7 @@ Later TeXShop provided a method directly in the program, bypassing Laurens's pac
 \newpage
 Eventually Laurens provided a version of SyncTeX which outputs sync information during typesetting directly from the typesetting engines. This no longer modifies typesetting output. His code is built into most of the typesetting engines supplied by TeX Live. When a source file, say Galois.tex, is typeset by one of these engines, and the engine  is called with the flag ``--synctex=1'', it outputs a file named Galois.synctex.gz containing the required sync information. Laurens  provides a library written in C to interpret this information; TeXShop contains that library and uses it to provide syncing.
 
-SyncTeX is turned on in TeXShop Settings by an item under the Typesetting category. Be sure to select the last item in the {\bf Sync Method} pop-up menu, called ``SyncTeX''. The other item is for a previous sync method now obsolete.
+SyncTeX is turned on in TeXShop Settings by an item under the Typesetting category. Be sure to select the last item in the {\bf Sync Method} pop-up menu, called ``SyncTeX (Recommended)''. The other item is for a previous sync method now obsolete.
 
 To sync from the source to the preview window, hold down the Command key and click at a point. The Preview window will scroll to the appropriate spot and highlight the corresponding text in the output. To Sync the other way, hold down the Command key and click at a point in the Preview window. 
 

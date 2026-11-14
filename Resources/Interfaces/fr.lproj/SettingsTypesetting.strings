@@ -13,7 +13,7 @@
 "679.title" = "Amener l'aperçu devant";
 "680.title" = "Continuer l'édition";
 "785.title" = "Rechercher dans le PDF";
-"786.title" = "SyncTeX";
+"786.title" = "SyncTeX (recommandé)";
 "823.title" = "Méthode de synchronisation";
 "898.title" = "Fichiers apparentés sauvegardés";
 "919.title" = "Radio";
@@ -23,5 +23,5 @@
 "O6H-3y-7Ca.title" = "Obsoleto; dovrebbe essere spento";
 "W5U-9S-4OG.title" = "Si la synchro ouvre une nouvelle fenêtre";
 "YQv-fE-Uzg.title" = "Ouvrir un onglet dans la fenêtre initiale";
-"bYh-V5-ri6.title" = "Rester dans la fenêtre au premier plan";
+"bYh-V5-ri6.title" = "Afficher l'aperçu puis revenir à la fenêtre d'origine";
 "xwP-lA-zVw.title" = "Utiliser -dALLOWPSTRANSPARENCY";
