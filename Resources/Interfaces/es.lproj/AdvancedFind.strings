@@ -86,6 +86,14 @@
 "AdvancedFind.Mark.UnclosedName" = "El nombre del grupo no se cierra con >.";
 "AdvancedFind.Mark.UnclosedParen" = "Este grupo no está cerrado.";
 "AdvancedFind.Mark.UnmatchedParen" = "Este ) no cierra ningún grupo.";
+"AdvancedFind.Menu.FindAll" = "Buscar todo";
+"AdvancedFind.Menu.Highlight" = "Resaltar todo";
+"AdvancedFind.Menu.Replace" = "Reemplazar";
+"AdvancedFind.Menu.ReplaceAll" = "Reemplazar todo";
+"AdvancedFind.Menu.ReplaceAndFind" = "Reemplazar y buscar";
+"AdvancedFind.Menu.SelectAll" = "Seleccionar todas las coincidencias";
+"AdvancedFind.Menu.SetReplaceString" = "Usar selección para reemplazar";
+"AdvancedFind.Menu.Unhighlight" = "Quitar resaltados";
 "AdvancedFind.MoreMarks" = "(%lu más)";
 "AdvancedFind.MoreOptions" = "Más opciones";
 "AdvancedFind.Next" = "Siguiente";

@@ -86,6 +86,14 @@
 "AdvancedFind.Mark.UnclosedName" = "分组名称未用 > 闭合。";
 "AdvancedFind.Mark.UnclosedParen" = "此分组未闭合。";
 "AdvancedFind.Mark.UnmatchedParen" = "此 ) 没有对应的分组。";
+"AdvancedFind.Menu.FindAll" = "全部查找";
+"AdvancedFind.Menu.Highlight" = "全部高亮标记";
+"AdvancedFind.Menu.Replace" = "替换";
+"AdvancedFind.Menu.ReplaceAll" = "全部替换";
+"AdvancedFind.Menu.ReplaceAndFind" = "替换并查找";
+"AdvancedFind.Menu.SelectAll" = "选择所有匹配项";
+"AdvancedFind.Menu.SetReplaceString" = "用所选内容替换";
+"AdvancedFind.Menu.Unhighlight" = "移除高亮标记";
 "AdvancedFind.MoreMarks" = "（另有%lu处）";
 "AdvancedFind.MoreOptions" = "更多选项";
 "AdvancedFind.Next" = "下一个";
