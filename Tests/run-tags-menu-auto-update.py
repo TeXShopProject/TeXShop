@@ -517,10 +517,10 @@ elif args.mutation == 'ignore-external-editor':
 elif args.mutation == 'no-log-window':
     mutate(' (window == self.logWindow) ||', '')
 elif args.mutation == 'ordered-windows-only':
-    mutate('''    if ([NSApp keyWindow] != nil)
-        [windows addObject: [NSApp keyWindow]];
-    if ([NSApp mainWindow] != nil)
-        [windows addObject: [NSApp mainWindow]];
+    mutate('''    if (keyWindow != nil)
+        [windows addObject: keyWindow];
+    if (mainWindow != nil)
+        [windows addObject: mainWindow];
 ''', '')
 elif args.mutation == 'no-sheet-parent':
     mutate('''    while ([window sheetParent] != nil)

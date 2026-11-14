@@ -5076,10 +5076,12 @@ if ( ! skipTextWindow) {
         return;
     
     NSMutableArray *windows = [NSMutableArray array];
-    if ([NSApp keyWindow] != nil)
-        [windows addObject: [NSApp keyWindow]];
-    if ([NSApp mainWindow] != nil)
-        [windows addObject: [NSApp mainWindow]];
+    NSWindow *keyWindow = [NSApp keyWindow];
+    NSWindow *mainWindow = [NSApp mainWindow];
+    if (keyWindow != nil)
+        [windows addObject: keyWindow];
+    if (mainWindow != nil)
+        [windows addObject: mainWindow];
     [windows addObjectsFromArray: [NSApp orderedWindows]];
     for (NSWindow *window in windows) {
         if (! [window isVisible])
