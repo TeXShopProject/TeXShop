@@ -249,8 +249,8 @@
 "catalog.typesetting.1.0.title" = "Após a composição";
 "group.typesetting.2.title" = "Sincronização do código-fonte e da pré-visualização";
 "catalog.typesetting.2.0.title" = "Método de sincronização";
-"catalog.typesetting.2.1.title" = "Abrir como separadores na janela principal os documentos encontrados pela sincronização";
-"catalog.typesetting.2.1.note" = "Normalmente desativado.";
+"catalog.typesetting.2.1.title" = "Abrir como separadores na janela do ficheiro principal os ficheiros encontrados pela sincronização";
+"catalog.typesetting.2.1.note" = "Quando a sincronização a partir da pré-visualização abre outro ficheiro, este é adicionado como separador à janela do ficheiro principal em vez de abrir numa janela própria.";
 "group.typesetting.3.title" = "Caminhos";
 "catalog.typesetting.3.0.title" = "Motores TeX";
 "catalog.typesetting.3.0.note" = "Predefinição: /Library/TeX/texbin ou /usr/texbin";
