@@ -22,6 +22,8 @@
 @property (nonatomic, strong, nullable) TSAdvancedFindProgressSheet *progressSheet;
 /// The text views made read-only, to make editable again at the end.
 @property (nonatomic, strong) NSMutableArray<NSTextView *> *lockedViews;
+/// Every text view of the text storage while the task runs.
+@property (nonatomic, copy) NSArray<NSTextView *> *watchedViews;
 @property (nonatomic, strong) NSMutableArray<TSAdvancedFindTextEdit *> *edits;
 @property (nonatomic, weak, nullable) NSTextStorage *watchedStorage;
 @end
@@ -37,6 +39,7 @@
         _message = @"";
         _sheetDelay = 0.4;
         _lockedViews = [NSMutableArray array];
+        _watchedViews = @[];
         _edits = [NSMutableArray array];
     }
     return self;
@@ -58,22 +61,51 @@
     return self.progressSheet.window;
 }
 
-/// Every view of the text storage: the two of a split window, for example.
+static void *TSLockedViewContext = &TSLockedViewContext;
+
+/// Every view of the text storage: the two of a split window, for example. Each is watched until the end: TeXShop may
+/// set the editability of any of them meanwhile.
 - (void)lockTextViews
 {
     NSTextStorage *storage = self.textView.textStorage;
+    NSMutableArray<NSTextView *> *views = [NSMutableArray array];
     for (NSLayoutManager *layout in storage.layoutManagers)
         for (NSTextContainer *container in layout.textContainers) {
             NSTextView *view = container.textView;
+            if (!view)
+                continue;
+            [views addObject:view];
             if (view.isEditable) {
                 view.editable = NO;
                 [self.lockedViews addObject:view];
             }
         }
+    for (NSTextView *view in views)
+        [view addObserver:self forKeyPath:@"editable" options:0 context:TSLockedViewContext];
+    self.watchedViews = views;
+}
+
+/// TeXShop set a view's editability meanwhile (a typesetting that starts makes the console read-only): that stands.
+/// The views of one layout manager share it, so none of them is made editable at the end.
+- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary<NSKeyValueChangeKey, id> *)change
+                       context:(nullable void *)context
+{
+    if (context != TSLockedViewContext) {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+        return;
+    }
+    NSTextView *changed = object;
+    NSLayoutManager *layout = changed.layoutManager;
+    for (NSTextView *view in [self.lockedViews copy])
+        if (view == changed || (layout && view.layoutManager == layout))
+            [self.lockedViews removeObject:view];
 }
 
 - (void)unlockTextViews
 {
+    for (NSTextView *view in self.watchedViews)
+        [view removeObserver:self forKeyPath:@"editable" context:TSLockedViewContext];
+    self.watchedViews = @[];
     for (NSTextView *view in self.lockedViews)
         view.editable = YES;
     [self.lockedViews removeAllObjects];
