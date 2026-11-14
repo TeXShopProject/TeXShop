@@ -28,6 +28,8 @@
 #import "TSEncodingSupport.h"
 #import "TSColorSupport.h"
 #import "TSExperimentTheme.h"
+#import "TSTextView.h"
+#import "TSSpellSupport.h"
 
 @implementation ScrapTextView
 
@@ -142,6 +144,73 @@
 {
     [super changeFont:sender];
     [self.document applyExperimentFontToSource:self.font];
+}
+
+// ---- TeX-aware spell checking -------------------------------------------------
+// The Experiment source is a piece of the document's LaTeX, so its spelling is
+// checked as in the document's source: with the rules of SpellingExclusions.txt
+// whenever the source uses them (see -[TSTextView usesTeXAwareSpellChecking]).
+// The source has the document as its delegate, which keeps the check while typing
+// from marking excluded text; the Experiment source has no delegate and does that
+// itself. The Spelling and Grammar panel works as in TSTextView.
+
+- (BOOL)usesTeXAwareSpellChecking
+{
+    TSTextView *source = self.document.textView;
+    return [source usesTeXAwareSpellChecking];
+}
+
+// As -[TSDocument textView:shouldSetSpellingState:range:] for the source: the
+// check while typing does not mark words in text that the rules exclude.
+- (void)setSpellingState:(NSInteger)value range:(NSRange)charRange
+{
+    if (value != 0 && [self usesTeXAwareSpellChecking]) {
+        // No mask while a long text that has just been edited is masked again: the
+        // mark is then set as usual, and removed once the mask is there if need be.
+        TSSpellMask *mask = [self spellMaskForCheckingRange:charRange];
+        if (mask && [TSSpellSupport mask:mask excludesSpellingInRange:charRange])
+            value = 0;
+    }
+    [super setSpellingState:value range:charRange];
+}
+
+- (TSSpellMask *)spellMaskForCheckingRange:(NSRange)range
+{
+    return [[TSSpellMaskCache cacheForTextStorage:self.textStorage] maskForCheckingRange:range];
+}
+
+- (TSSpellMask *)freshSpellMask
+{
+    return [[TSSpellMaskCache cacheForTextStorage:self.textStorage] freshMask];
+}
+
+- (void)changeSpelling:(id)sender
+{
+    if ([TSSpellSupport refuseStaleChangeInTextView:self]) return;
+    [super changeSpelling:sender];
+}
+
+- (void)checkSpelling:(id)sender
+{
+    if ([TSSpellSupport skipsSearchAfterRefusedChange]) return;
+    if (![self usesTeXAwareSpellChecking] || ([NSEvent modifierFlags] & NSEventModifierFlagOption)) {
+        [TSSpellSupport endReview];
+        [super checkSpelling:sender];
+        return;
+    }
+    [TSSpellSupport findNextMisspellingInTextView:self mask:[self freshSpellMask]];
+}
+
+- (void)showGuessPanel:(id)sender
+{
+    if (![self usesTeXAwareSpellChecking] || ([NSEvent modifierFlags] & NSEventModifierFlagOption)) {
+        [TSSpellSupport endReview];
+        [super showGuessPanel:sender];
+        return;
+    }
+    [TSSpellSupport showSpellingPanelForTextView:self mask:[self freshSpellMask] hidePanel:^{
+        [super showGuessPanel:sender];
+    }];
 }
 
 

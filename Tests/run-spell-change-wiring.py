@@ -4,6 +4,8 @@ The panel's Change asks TSSpellSupport first; the search the panel's Change
 button runs after a refused Change is skipped; the system's own search
 (Option, or a view without TeX-aware checking) ends the TeX-aware review. Runs the
 production methods against a recording stand-in; opens no panel or window.
+The document's source (TSTextView) and the Experiment source (ScrapTextView)
+are checked alike; --view runs only one of them.
 """
 import argparse, subprocess, tempfile
 from pathlib import Path
@@ -11,12 +13,10 @@ from production_fragments import method, verify_embedded
 root = Path(__file__).resolve().parents[1]
 p = argparse.ArgumentParser()
 p.add_argument('--mutation', choices=['no-refuse', 'no-end-check', 'no-end-guess', 'end-tex-aware', 'no-skip', 'system-search'])
+p.add_argument('--view', choices=['source', 'experiment'])
 args = p.parse_args()
-source = (root/'Sources/Editor/TSTextView.m').read_text(encoding='latin1')
-change = method(source, '- (void)changeSpelling:(id)sender')
-check = method(source, '- (void)checkSpelling:(id)sender')
-guess = method(source, '- (void)showGuessPanel:(id)sender')
-program = r'''
+VIEWS = {'source': 'Sources/Editor/TSTextView.m', 'experiment': 'Sources/Editor/ScrapTextView.m'}
+template = r'''
 #import <Cocoa/Cocoa.h>
 #import "TestAppKitIsolation.h"
 #define REQUIRE(x, what) do { if (!(x)) { NSLog(@"FAIL: %s (%@)", what, steps); exit(1); } } while(0)
@@ -84,26 +84,36 @@ int main(void) { @autoreleasepool {
     skip = NO; flags = 0;
     puts("PASS: Change asks the review guard; the system's own search ends the review; the search after a refusal is skipped");
 } return 0; }
-'''.replace('CHANGE', change).replace('CHECK', check).replace('GUESS', guess)
-verify_embedded(program, [('complete method: changeSpelling', source, change),
-                          ('complete method: checkSpelling', source, check),
-                          ('complete method: showGuessPanel', source, guess)])
-mutations = {
-    'no-refuse': (change, change.replace('if ([TSSpellSupport refuseStaleChangeInTextView:self]) return;', '')),
-    'no-end-check': (check, check.replace('[TSSpellSupport endReview];', '')),
-    'no-end-guess': (guess, guess.replace('[TSSpellSupport endReview];', '')),
-    # Open the panel with the system's own search first, as before #38.
-    'system-search': (guess, guess.replace('    [TSSpellSupport showSpellingPanelForTextView:', '    [super showGuessPanel:sender];\n    [TSSpellSupport showSpellingPanelForTextView:')),
-    'no-skip': (check, check.replace('if ([TSSpellSupport skipsSearchAfterRefusedChange]) return;', '')),
-    'end-tex-aware': (check, check.replace('[TSSpellSupport findNextMisspellingInTextView:',
-                                           '[TSSpellSupport endReview]; [TSSpellSupport findNextMisspellingInTextView:')),
-}
-if args.mutation:
-    old, new = mutations[args.mutation]
-    assert old != new and program.count(old) == 1
-    program = program.replace(old, new)
-with tempfile.TemporaryDirectory(prefix='texshop-spell-change-wiring-') as td:
-    t = Path(td); (t/'probe.m').write_text(program)
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-I', str(root/'Tests'), '-framework', 'Cocoa',
-                    str(t/'probe.m'), '-o', str(t/'probe')], check=True)
-    subprocess.run([str(t/'probe')], check=True, timeout=30)
+'''
+def run(view):
+    source = (root/VIEWS[view]).read_text(encoding='latin1')
+    change = method(source, '- (void)changeSpelling:(id)sender')
+    check = method(source, '- (void)checkSpelling:(id)sender')
+    guess = method(source, '- (void)showGuessPanel:(id)sender')
+    program = template.replace('CHANGE', change).replace('CHECK', check).replace('GUESS', guess)
+    verify_embedded(program, [('complete method: %s changeSpelling' % view, source, change),
+                              ('complete method: %s checkSpelling' % view, source, check),
+                              ('complete method: %s showGuessPanel' % view, source, guess)])
+    mutations = {
+        'no-refuse': (change, change.replace('if ([TSSpellSupport refuseStaleChangeInTextView:self]) return;', '')),
+        'no-end-check': (check, check.replace('[TSSpellSupport endReview];', '')),
+        'no-end-guess': (guess, guess.replace('[TSSpellSupport endReview];', '')),
+        # Open the panel with the system's own search first, as before #38.
+        'system-search': (guess, guess.replace('    [TSSpellSupport showSpellingPanelForTextView:', '    [super showGuessPanel:sender];\n    [TSSpellSupport showSpellingPanelForTextView:')),
+        'no-skip': (check, check.replace('if ([TSSpellSupport skipsSearchAfterRefusedChange]) return;', '')),
+        'end-tex-aware': (check, check.replace('[TSSpellSupport findNextMisspellingInTextView:',
+                                               '[TSSpellSupport endReview]; [TSSpellSupport findNextMisspellingInTextView:')),
+    }
+    if args.mutation:
+        old, new = mutations[args.mutation]
+        assert old != new and program.count(old) == 1
+        program = program.replace(old, new)
+    with tempfile.TemporaryDirectory(prefix='texshop-spell-change-wiring-') as td:
+        t = Path(td); (t/'probe.m').write_text(program)
+        subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-I', str(root/'Tests'), '-framework', 'Cocoa',
+                        str(t/'probe.m'), '-o', str(t/'probe')], check=True)
+        subprocess.run([str(t/'probe')], check=True, timeout=30)
+
+for view in ([args.view] if args.view else ['source', 'experiment']):
+    print('VIEW', view, flush=True)
+    run(view)
