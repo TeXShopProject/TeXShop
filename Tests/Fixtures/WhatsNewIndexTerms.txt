@@ -1500,6 +1500,7 @@ resolutions
 resolves
 rest
 restart
+restarted
 restore
 restoring
 result
@@ -1961,7 +1962,6 @@ window
 window's
 windows
 with
-within
 without
 won't
 word
