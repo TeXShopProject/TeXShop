@@ -244,7 +244,8 @@
 "catalog.typesetting.0.1.button" = "Modifier la liste des moteurs…";
 "catalog.typesetting.0.2.title" = "Méthode de composition";
 "catalog.typesetting.0.3.title" = "Moteur TeX alternatif";
-"catalog.typesetting.0.3.note" = "Le moteur utilisé pour composer avec le moteur alternatif. Par défaut : pdflatexmk";
+"catalog.typesetting.0.3.note" = "Le moteur utilisé pour composer avec le moteur alternatif.";
+"catalog.typesetting.0.3.info" = "À propos de « Composer avec un moteur TeX alternatif »";
 "group.typesetting.1.title" = "Après la composition";
 "catalog.typesetting.1.0.title" = "Après composition";
 "group.typesetting.2.title" = "Synchronisation de la source et de l’aperçu";

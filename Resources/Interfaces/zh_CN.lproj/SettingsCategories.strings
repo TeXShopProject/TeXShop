@@ -244,7 +244,8 @@
 "catalog.typesetting.0.1.button" = "编辑引擎列表…";
 "catalog.typesetting.0.2.title" = "排版方式";
 "catalog.typesetting.0.3.title" = "替代引擎";
-"catalog.typesetting.0.3.note" = "“使用替代引擎排版”时使用的引擎。默认值：pdflatexmk";
+"catalog.typesetting.0.3.note" = "“使用替代引擎排版”时使用的引擎。";
+"catalog.typesetting.0.3.info" = "关于“使用替代引擎排版”";
 "group.typesetting.1.title" = "排版后";
 "catalog.typesetting.1.0.title" = "排版后";
 "group.typesetting.2.title" = "源文件和预览同步";

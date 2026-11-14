@@ -196,6 +196,18 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
             [labels addObjectsFromArray:candidate.subviews];
         }
     }
+    // An info button follows the end of the row's name.
+    if(row && model[@"info"]){
+        NSButton *info=(NSButton *)[self take:model[@"info"] from:views];info.translatesAutoresizingMaskIntoConstraints=NO;
+        info.accessibilityLabel=text(model[@"infoLabel"]);info.toolTip=info.accessibilityLabel;
+        NSTextField *name=nil;NSMutableArray<NSView *> *pending=[NSMutableArray arrayWithObject:row];
+        while(pending.count && name==nil){NSView *v=pending.lastObject;[pending removeLastObject];if([v.identifier isEqual:@"label.catalog-row"])name=(NSTextField *)v;else [pending addObjectsFromArray:v.subviews];}
+        TSCatalogRequired(name);[row addSubview:info];
+        CGFloat width=ceil([name.attributedStringValue size].width)+4;
+        [NSLayoutConstraint activateConstraints:@[[info.leadingAnchor constraintEqualToAnchor:name.leadingAnchor constant:width+4],
+            [info.centerYAnchor constraintEqualToAnchor:name.firstBaselineAnchor constant:-ceil(name.font.capHeight/2)],
+            [info.widthAnchor constraintEqualToConstant:16],[info.heightAnchor constraintEqualToConstant:16]]];
+    }
     if(row)row.identifier=[@"row." stringByAppendingString:TSCatalogRequired(model[@"id"])];
     return row;
 }
@@ -223,6 +235,10 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
         views[commandIDs[i]]=field;
     }
     NSButton *editEngines=[NSButton buttonWithTitle:@"" target:preferences action:@selector(openEnginesFolder:)];editEngines.identifier=@"settings.default-engine-edit";preferences.editEnginesButton=editEngines;views[@"settings.default-engine-edit"]=editEngines;
+    // Alternate Engine: the programs and engine files, Edit Engine List, and an info button beside its name.
+    NSPopUpButton *alternateEngine=[[NSPopUpButton alloc]initWithFrame:NSZeroRect pullsDown:NO];alternateEngine.identifier=@"settings.alternate-engine";alternateEngine.target=preferences;alternateEngine.action=@selector(alternateEngineChosen:);alternateEngine.menu.delegate=(id<NSMenuDelegate>)preferences;preferences.alternateEnginePopup=alternateEngine;views[@"settings.alternate-engine"]=alternateEngine;
+    NSButton *editAlternate=[NSButton buttonWithTitle:@"" target:preferences action:@selector(openEnginesFolder:)];editAlternate.identifier=@"settings.alternate-engine-edit";preferences.editAlternateEnginesButton=editAlternate;views[@"settings.alternate-engine-edit"]=editAlternate;
+    NSButton *alternateInfo=[NSButton buttonWithImage:[NSImage imageWithSystemSymbolName:@"info.circle" accessibilityDescription:nil] target:preferences action:@selector(showAlternateEngineInfo:)];alternateInfo.identifier=@"settings.alternate-engine-info";alternateInfo.title=@"";alternateInfo.imagePosition=NSImageOnly;alternateInfo.bordered=NO;alternateInfo.contentTintColor=NSColor.secondaryLabelColor;preferences.alternateEngineInfoButton=alternateInfo;views[@"settings.alternate-engine-info"]=alternateInfo;
     NSButton *prerelease=[NSButton checkboxWithTitle:@"" target:preferences action:@selector(sparklePrereleaseUpdates:)];prerelease.identifier=@"settings.sparkle-prerelease";preferences.sparklePrereleaseButton=prerelease;views[@"settings.sparkle-prerelease"]=prerelease;
     NSTextField *lastCheck=[NSTextField labelWithString:@""];lastCheck.identifier=@"settings.sparkle-last-check";preferences.sparkleLastCheckField=lastCheck;views[@"settings.sparkle-last-check"]=lastCheck;
     NSButton *checkNow=[NSButton buttonWithTitle:@"" target:preferences action:@selector(checkForUpdatesFromSettings:)];checkNow.identifier=@"settings.sparkle-check-now";preferences.sparkleCheckNowButton=checkNow;views[@"settings.sparkle-check-now"]=checkNow;

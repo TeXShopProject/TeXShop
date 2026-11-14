@@ -365,11 +365,6 @@
         "class": "TSPrefMiscTwoController"
       },
       {
-        "ivar": "_alternateEngineTextField",
-        "property": "alternateEngineTextField",
-        "class": "TSPrefMiscTwoController"
-      },
-      {
         "ivar": "_convertUTFButton",
         "property": "convertUTFButton",
         "class": "TSPrefMiscTwoController"
@@ -1903,13 +1898,6 @@
         "kind": "view",
         "property": "action",
         "value": "latexScriptProgramChanged:"
-      },
-      {
-        "key": "gZB-h1-n7P.action",
-        "view": "settings.gZB-h1-n7P",
-        "kind": "view",
-        "property": "action",
-        "value": "alternateEngineChanged:"
       },
       {
         "key": "Fww-AH-Uix.action",

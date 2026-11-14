@@ -365,4 +365,13 @@
 "Use latexmk" = "Use latexmk";
 "Detect Paths" = "Detect Paths";
 "%@ (Not Found)" = "%@ (Not Found)";
+"%1$@ (%2$@)" = "%1$@ (%2$@)";
+"None" = "None";
+"Typeset with Alternate Engine" = "Typeset with Alternate Engine";
+"In the %1$@ menu, this item appears in place of %2$@ while you hold %3$@." = "In the %1$@ menu, this item appears in place of %2$@ while you hold %3$@.";
+"This item is in the %@ menu." = "This item is in the %@ menu.";
+"Key: %@" = "Key: %@";
+"No key is assigned." = "No key is assigned.";
+"Typesets once with this engine instead of the one chosen in the toolbar." = "Typesets once with this engine instead of the one chosen in the toolbar.";
+"A % !TEX TS-program line at the top of the document takes precedence." = "A % !TEX TS-program line at the top of the document takes precedence.";
 "Choose an Engine Profile" = "Choose an Engine Profile";

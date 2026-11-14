@@ -59,5 +59,12 @@
   "engine-file-whole-row": "Edit Engine List stays available beside Engine File",
   "engine-file-folder-not-made": "Edit Engine List opens the Engines folder, made again if it was removed",
   "typeset-choice-stored-by-old-row": "Choosing LaTeX stores its value",
-  "typeset-choice-shown-by-old-row": "New documents are typeset with LaTeX by default"
+  "typeset-choice-shown-by-old-row": "New documents are typeset with LaTeX by default",
+  "alternate-builtins-order": "Alternate Engine lists the built-in programs, plain TeX first, then the engine files",
+  "alternate-builtin-case": "A built-in program is found in any case, as the typesetting does",
+  "alternate-none-hidden": "An empty Alternate Engine is shown as None",
+  "alternate-folder-refresh": "The Alternate Engine menu follows the folder and stores an engine file by its name",
+  "alternate-info-held-keys": "The info tells where the item is, its key and what it does",
+  "alternate-info-fixed-key": "A changed shortcut is told as the menu has it",
+  "alternate-info-over-name": "The info button follows the name of the Alternate Engine"
 }

@@ -246,29 +246,147 @@ NSArray<NSString *> *TSEngineFileNames(NSString *folder)
     return names;
 }
 
-// A document finds the engine file of the setting by its name in any case.
-- (void)refreshDefaultEngineFromDefaults:(NSUserDefaults *)defaults
+// Fills an engine menu: the built-in programs given as name and title pairs, then the engine
+// files. A document finds an engine file by its name in any case, and a built-in program by its
+// name in lowercase. A name that is in neither stays shown until another is chosen; no name is
+// shown as None when showsNone.
+static void TSFillEngineMenu(NSPopUpButton *popup, NSArray<NSArray<NSString *> *> *programs, NSString *current, BOOL showsNone)
 {
-    NSPopUpButton *popup = self.defaultEnginePopup;
-    if (popup == nil) return;
-    NSString *current = [defaults stringForKey:DefaultEngineKey] ?: @"";
     NSMenu *menu = popup.menu;
     [menu removeAllItems];
     popup.autoenablesItems = NO;
     NSMenuItem *selected = nil;
-    for (NSString *name in TSEngineFileNames([EnginePath stringByStandardizingPath])) {
+    for (NSArray<NSString *> *program in programs) {
+        NSMenuItem *item = [menu addItemWithTitle:program[1] action:NULL keyEquivalent:@""];
+        item.representedObject = program[0];
+        if (selected == nil && [program[0] isEqualToString:current.lowercaseString]) selected = item;
+    }
+    NSArray<NSString *> *files = TSEngineFileNames([EnginePath stringByStandardizingPath]);
+    if (programs.count > 0 && files.count > 0) [menu addItem:NSMenuItem.separatorItem];
+    for (NSString *name in files) {
         NSMenuItem *item = [menu addItemWithTitle:name action:NULL keyEquivalent:@""];
         item.representedObject = name;
         if (selected == nil && [name caseInsensitiveCompare:current] == NSOrderedSame) selected = item;
     }
-    // An engine file that is not in the folder stays shown until another is chosen.
-    if (selected == nil && current.length > 0) {
+    if (selected == nil && (current.length > 0 || showsNone)) {
         if (menu.numberOfItems > 0) [menu insertItem:NSMenuItem.separatorItem atIndex:0];
-        selected = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"%@ (Not Found)", @"An engine file that is not in the Engines folder"), current] action:NULL keyEquivalent:@""];
+        NSString *title = current.length > 0
+            ? [NSString stringWithFormat:NSLocalizedString(@"%@ (Not Found)", @"An engine file that is not in the Engines folder"), current]
+            : NSLocalizedString(@"None", @"No engine is set");
+        selected = [[NSMenuItem alloc] initWithTitle:title action:NULL keyEquivalent:@""];
         selected.representedObject = current;
         [menu insertItem:selected atIndex:0];
     }
     if (selected != nil) [popup selectItem:selected];
+}
+
+- (void)refreshDefaultEngineFromDefaults:(NSUserDefaults *)defaults
+{
+    NSPopUpButton *popup = self.defaultEnginePopup;
+    if (popup == nil) return;
+    TSFillEngineMenu(popup, @[], [defaults stringForKey:DefaultEngineKey] ?: @"", NO);
+}
+
+// The programs that the Alternate Engine can name besides the engine files, with the names
+// that the typesetting understands (TSDocument-Jobs.m), plain TeX before LaTeX.
+NSArray<NSArray<NSString *> *> *TSAlternateEnginePrograms(void)
+{
+    NSBundle *bundle = NSBundle.mainBundle;
+    NSString *(^method)(NSString *) = ^NSString *(NSString *key) { return [bundle localizedStringForKey:key value:key table:@"SettingsCategories"]; };
+    NSString *format = NSLocalizedString(@"%1$@ (%2$@)", @"A program and its typesetting method, as in plain TeX (Direct PDF)");
+    NSArray *methods = @[@[@"pdf", method(@"group.typesetting.4.title")], @[@"", method(@"group.typesetting.5.title")], @[@"personal", method(@"group.typesetting.6.title")]];
+    NSMutableArray *programs = [NSMutableArray array];
+    for (NSArray *m in methods) {
+        [programs addObject:@[[m[0] stringByAppendingString:@"tex"], [NSString stringWithFormat:format, @"plain TeX", m[1]]]];
+        [programs addObject:@[[m[0] stringByAppendingString:@"latex"], [NSString stringWithFormat:format, @"LaTeX", m[1]]]];
+    }
+    return programs;
+}
+
+- (void)refreshAlternateEngineFromDefaults:(NSUserDefaults *)defaults
+{
+    NSPopUpButton *popup = self.alternateEnginePopup;
+    if (popup == nil) return;
+    TSFillEngineMenu(popup, TSAlternateEnginePrograms(), [defaults stringForKey:AlternateEngineKey] ?: @"", YES);
+}
+
+- (IBAction)alternateEngineChosen:(NSPopUpButton *)sender
+{
+    NSString *name = sender.selectedItem.representedObject;
+    if (name.length == 0) return;
+    [SUD setObject:name forKey:AlternateEngineKey];
+    [self refreshAlternateEngineFromDefaults:SUD];
+}
+
+// The menu item that typesets with the Alternate Engine, wherever its shortcut puts it.
+static NSMenuItem *TSAlternateTypesetItem(NSMenu *menu)
+{
+    for (NSMenuItem *item in menu.itemArray) {
+        if (item.action == @selector(doAlternateTypeset:)) return item;
+        NSMenuItem *found = item.submenu ? TSAlternateTypesetItem(item.submenu) : nil;
+        if (found) return found;
+    }
+    return nil;
+}
+
+// What the info button of the Alternate Engine says: where the command is, its key as the menu
+// has it now, and what it does.
+NSArray<NSString *> *TSAlternateEngineInfoLines(NSMenu *mainMenu)
+{
+    NSMenuItem *item = TSAlternateTypesetItem(mainMenu);
+    NSMutableArray<NSString *> *lines = [NSMutableArray arrayWithObject:item.title.length ? item.title : NSLocalizedString(@"Typeset with Alternate Engine", @"")];
+    if (item != nil) {
+        NSString *menuTitle = item.menu.title;
+        NSMenuItem *base = nil;
+        if (item.isAlternate)
+            for (NSInteger i = [item.menu indexOfItem:item] - 1; i >= 0 && base == nil; i--)
+                if (![item.menu itemAtIndex:i].isAlternate) base = [item.menu itemAtIndex:i];
+        NSEventModifierFlags held = base ? (item.keyEquivalentModifierMask & ~base.keyEquivalentModifierMask) & (NSEventModifierFlagControl | NSEventModifierFlagOption | NSEventModifierFlagShift | NSEventModifierFlagCommand) : 0;
+        if (base != nil && held != 0) {
+            NSMutableString *keys = [NSMutableString string];
+            if (held & NSEventModifierFlagControl) [keys appendString:@"⌃"];
+            if (held & NSEventModifierFlagOption) [keys appendString:@"⌥"];
+            if (held & NSEventModifierFlagShift) [keys appendString:@"⇧"];
+            if (held & NSEventModifierFlagCommand) [keys appendString:@"⌘"];
+            [lines addObject:[NSString stringWithFormat:NSLocalizedString(@"In the %1$@ menu, this item appears in place of %2$@ while you hold %3$@.", @""), menuTitle, base.title, keys]];
+        } else {
+            [lines addObject:[NSString stringWithFormat:NSLocalizedString(@"This item is in the %@ menu.", @""), menuTitle]];
+        }
+        [lines addObject:item.keyEquivalent.length
+            ? [NSString stringWithFormat:NSLocalizedString(@"Key: %@", @"The shortcut of a menu item"), TSShortcutDisplayKey(item.keyEquivalent, item.keyEquivalentModifierMask)]
+            : NSLocalizedString(@"No key is assigned.", @"")];
+    }
+    [lines addObject:NSLocalizedString(@"Typesets once with this engine instead of the one chosen in the toolbar.", @"")];
+    [lines addObject:NSLocalizedString(@"A % !TEX TS-program line at the top of the document takes precedence.", @"")];
+    return lines;
+}
+
+// The first line is the heading; each following line is a paragraph.
+- (NSViewController *)alternateEngineInfoController
+{
+    NSArray<NSString *> *lines = TSAlternateEngineInfoLines(NSApp.mainMenu);
+    NSStackView *stack = [NSStackView stackViewWithViews:@[]];
+    stack.orientation = NSUserInterfaceLayoutOrientationVertical; stack.alignment = NSLayoutAttributeLeading; stack.spacing = 8;
+    stack.edgeInsets = NSEdgeInsetsMake(14, 16, 16, 16); stack.identifier = @"settings.alternate-engine-info.content";
+    for (NSUInteger i = 0; i < lines.count; i++) {
+        NSTextField *text = [NSTextField wrappingLabelWithString:lines[i]];
+        text.font = i == 0 ? [NSFont boldSystemFontOfSize:NSFont.systemFontSize] : [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
+        text.textColor = i == 0 ? NSColor.labelColor : NSColor.secondaryLabelColor;
+        text.preferredMaxLayoutWidth = 300; text.selectable = NO;
+        [text.widthAnchor constraintEqualToConstant:300].active = YES;
+        [stack addArrangedSubview:text];
+    }
+    NSViewController *controller = [NSViewController new];
+    controller.view = stack;
+    return controller;
+}
+
+- (IBAction)showAlternateEngineInfo:(NSButton *)sender
+{
+    NSPopover *popover = [NSPopover new];
+    popover.behavior = NSPopoverBehaviorTransient;
+    popover.contentViewController = [self alternateEngineInfoController];
+    [popover showRelativeToRect:sender.bounds ofView:sender preferredEdge:NSRectEdgeMaxY];
 }
 
 - (IBAction)defaultEngineChosen:(NSPopUpButton *)sender
@@ -290,6 +408,7 @@ NSArray<NSString *> *TSEngineFileNames(NSString *folder)
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
     if (menu == self.defaultEnginePopup.menu) [self refreshDefaultEngineFromDefaults:SUD];
+    if (menu == self.alternateEnginePopup.menu) [self refreshAlternateEngineFromDefaults:SUD];
 }
 
 //==============================================================================
@@ -1760,11 +1879,6 @@ static NSAlert *TSEnginePathAlert(NSDictionary *found, NSMutableDictionary *matr
 
 /*" This method is connected to the textField that holds the alternate engine command. It is located on the Misc pane.
 "*/
-- (IBAction)alternateEngineChanged:(id)sender
-{
-    [self commitPreferenceField:_alternateEngineTextField showError:YES reflect:YES];
-}
-
 
 /*" This method is connected to the "Default Program" matrix on the TeX pane.
 
@@ -2188,8 +2302,6 @@ A tag of 0 means "no", a tag of 1 means "yes".
     [self addPreferenceField:_texScriptCommandTextField rule:[[TSPreferenceInput alloc] initWithKey:TexScriptCommandKey
         kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:YES notification:nil]];
     [self addPreferenceField:_latexScriptCommandTextField rule:[[TSPreferenceInput alloc] initWithKey:LatexScriptCommandKey
-        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:YES notification:nil]];
-    [self addPreferenceField:_alternateEngineTextField rule:[[TSPreferenceInput alloc] initWithKey:AlternateEngineKey
         kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:YES notification:nil]];
 }
 

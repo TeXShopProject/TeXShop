@@ -244,7 +244,8 @@
 "catalog.typesetting.0.1.button" = "Edit Engine List…";
 "catalog.typesetting.0.2.title" = "Typesetting Method";
 "catalog.typesetting.0.3.title" = "Alternate Engine";
-"catalog.typesetting.0.3.note" = "The engine used by Typeset with Alternate Engine. Default: pdflatexmk";
+"catalog.typesetting.0.3.note" = "The engine used by Typeset with Alternate Engine.";
+"catalog.typesetting.0.3.info" = "About Typeset with Alternate Engine";
 "group.typesetting.1.title" = "After Typesetting";
 "catalog.typesetting.1.0.title" = "After Typesetting";
 "group.typesetting.2.title" = "Source and Preview Synchronization";

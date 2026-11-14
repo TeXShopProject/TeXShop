@@ -176,7 +176,6 @@
     XMLsubsection = miscTwo.XMLsubsection;
     XMLsubsubsection = miscTwo.XMLsubsubsection;
     XMLtable = miscTwo.XMLtable;
-    _alternateEngineTextField = miscTwo.alternateEngineTextField;
     _convertUTFButton = miscTwo.convertUTFButton;
     _latexScriptCommandTextField = miscTwo.latexScriptCommandTextField;
     _miniaturizeRootFileButton = miscTwo.miniaturizeRootFileButton;
