@@ -2,7 +2,8 @@
 // The Advanced Find panel in the console, the log and the Experiment windows: the shipped TSDocument nibs (12
 // languages) make the console and the log TSAdvancedFindTextViews, the Experiment controller makes its output one, and
 // all of them route the Find menu by the find method, gray the replacing actions when read-only and draw the highlights
-// (checked in pixels). The panel acts on the Experiment panels, which never become main. Built by
+// (checked in pixels). The panel acts on the Experiment panels, which never become main. Find All runs while TeX's
+// output comes in, and the text views are read-only meanwhile, then as before. Built by
 // Tests/run-advanced-find-consoles.py; no window is ever shown and the defaults stay in memory.
 #import <Cocoa/Cocoa.h>
 #import <objc/runtime.h>
@@ -15,6 +16,9 @@
 #import "AdvancedFindTaskWait.h"
 #import "TSExperimentConsoleController.h"
 #import "TestDocumentFind.h"
+#import "TSAdvancedFindResults.h"
+#import "TSAdvancedFindTask.h"
+#import "TSConsoleOutput.h"
 
 static int failures;
 static void Check(BOOL ok, NSString *what)
@@ -439,6 +443,239 @@ static void TestLeavingThePanel(NSTextView *console, NSTextView *log, NSTextView
     [document findInterfacePreferencesChanged:nil];
 }
 
+#pragma mark Find All while output comes in, and the text views read-only meanwhile
+
+/// The work of a task (Find All, Replace All, Multiple Replace) waits at this gate while it is set, so that output can
+/// come in, and the text views be looked at, while the task runs.
+static dispatch_semaphore_t SearchGate;
+static IMP originalRunWork;
+static void GatedRunWork(id self, SEL _cmd, id _Nullable (^work)(TSAdvancedFindTask *), id completion)
+{
+    dispatch_semaphore_t gate = SearchGate;
+    id _Nullable (^gated)(TSAdvancedFindTask *) = ^id _Nullable(TSAdvancedFindTask *task) {
+        if (gate)
+            dispatch_semaphore_wait(gate, dispatch_time(DISPATCH_TIME_NOW, 30 * NSEC_PER_SEC));
+        return work(task);
+    };
+    ((void (*)(id, SEL, id, id))originalRunWork)(self, _cmd, gated, completion);
+}
+
+static TSAdvancedFindResults *listed;
+
+/// Starts Find All of "Overfull" in `view`; its search waits at the gate. YES when a task runs.
+static BOOL StartGatedFindAll(NSTextView *view)
+{
+    TestShared.settings.findString = @"Overfull";
+    TestShared.settings.options = TSRegexFindDefaultOptions;
+    TestShared.settings.inSelection = NO;
+    listed = nil;
+    TestShared.findAllHandler = ^(TSAdvancedFindResults *results, NSTextView *textView) { listed = results; };
+    SearchGate = dispatch_semaphore_create(0);
+    return [TestShared performAction:TSAdvancedFindActionFindAll inTextView:view] && TestShared.runningTask != nil;
+}
+
+/// Starts Replace All of "Overfull" by "X" in `view`, or a multiple replacement doing the same; the work waits at the
+/// gate. YES when a task runs.
+static BOOL StartGatedReplacing(NSTextView *view, BOOL multiple)
+{
+    TestShared.settings.findString = @"Overfull";
+    TestShared.settings.replaceString = @"X";
+    TestShared.settings.options = TSRegexFindDefaultOptions;
+    TestShared.settings.inSelection = NO;
+    SearchGate = dispatch_semaphore_create(0);
+    if (!multiple)
+        return [TestShared performAction:TSAdvancedFindActionReplaceAll inTextView:view] && TestShared.runningTask != nil;
+    TSRegexReplacementRule *rule = [[TSRegexReplacementRule alloc] initWithFindString:@"Overfull" replaceString:@"X" usesRegularExpression:NO
+                                                                          ignoresCase:NO enabled:YES note:nil];
+    TSRegexMultipleReplace *set = [[TSRegexMultipleReplace alloc] initWithRules:@[rule] textualOptions:TSRegexMultipleReplace.defaultTextualOptions
+                                                       regularExpressionOptions:TSRegexMultipleReplace.defaultRegularExpressionOptions
+                                                              replacementSyntax:TSRegexReplacementSyntaxICU];
+    return [TestShared applyMultipleReplace:set inTextView:view inSelection:NO completion:nil] && TestShared.runningTask != nil;
+}
+
+/// Lets the work go on and waits for the end of the task. YES when it ended.
+static BOOL FinishGatedFindAll(void)
+{
+    dispatch_semaphore_signal(SearchGate);
+    BOOL ended = TSTestWaitForTask(TestShared, 60);
+    SearchGate = nil;
+    return ended;
+}
+
+static BOOL ListedAt(NSArray<NSValue *> *ranges, BOOL stale)
+{
+    if (listed.items.count != ranges.count)
+        return NO;
+    for (NSUInteger i = 0; i < ranges.count; i++)
+        if (listed.items[i].isStale != stale || (!stale && !NSEqualRanges(listed.items[i].currentRange, ranges[i].rangeValue)))
+            return NO;
+    return YES;
+}
+
+/// The start of a typesetting (TSDocument-Jobs.m, taken verbatim by the script): the console is emptied and made
+/// read-only.
+void TestStartTypesetting(NSTextView *outputText, id self);
+
+/// A real console from the nib, fed by the code that shows TeX's output, while Find All runs in it.
+static void TestFindAllWhileOutputComes(NSString *nibPath, TSExperimentConsoleController *experimentController, NSTextView *log)
+{
+    NSTextView *console = MakeConsole(nibPath);
+    NSString *output = @"\nOverfull \\hbox (2.0pt too wide) in paragraph at lines 3--4\n[]\\JY2/hmc/m/n/10 関数 []\n";
+    NSArray<NSValue *> *before = RangesOf(@"Overfull", console.string);
+    NSUInteger length = console.string.length;
+    Check(StartGatedFindAll(console), @"Find All in the console runs as a background task");
+    TSAppendConsoleOutput(console, output, nil);
+    TSAppendConsoleOutput(console, output, NSColor.redColor);
+    Check(console.string.length == length + 2 * output.length, @"TeX's output comes into the console while Find All runs");
+    Check(FinishGatedFindAll() && ListedAt(before, NO), @"Find All lists the matches of the console as it was, at their places, after the output that came in");
+    Check([console.string isEqualToString:[[console.string substringToIndex:length] stringByAppendingFormat:@"%@%@", output, output]] && !console.isEditable,
+          @"the output stays, and the console stays read-only");
+    TSAppendConsoleOutput(console, output, nil);
+    Check(ListedAt(before, NO), @"the list follows the output that comes in later");
+    // A new typesetting empties the console while Find All runs: the list is kept, every match stale.
+    console.string = SampleLog(12);
+    Check(StartGatedFindAll(console), @"Find All in the console again");
+    TestStartTypesetting(console, nil);
+    TSAppendConsoleOutput(console, output, nil);
+    Check(FinishGatedFindAll() && ListedAt(before, YES) && listed.staleCount == before.count,
+          @"a typesetting that started meanwhile makes every match of the list stale, and the list is not thrown away");
+    // The Experiment output, emptied by a new run, and the log, filled again at the end of a typesetting.
+    [experimentController.outputText setString:SampleLog(12)];
+    Check(StartGatedFindAll(experimentController.outputText), @"Find All in the Experiment output");
+    experimentController.outputText.string = @"";
+    [experimentController appendText:output];
+    Check(FinishGatedFindAll() && ListedAt(before, YES), @"a new Experiment run meanwhile makes the matches stale");
+    log.string = SampleLog(12);
+    Check(StartGatedFindAll(log), @"Find All in the log");
+    log.string = [@"(./sample.tex)\n" stringByAppendingString:SampleLog(12)];
+    Check([log.string hasPrefix:@"(./sample.tex)\n"], @"the log is filled again while Find All runs in it");
+    Check(FinishGatedFindAll() && ListedAt(before, YES), @"the log filled again meanwhile makes the matches stale");
+    // Output ends with the start of a match while Find All runs; afterwards the log is edited by hand above the matches:
+    // the matches move with it.
+    log.string = SampleLog(12);
+    Check(StartGatedFindAll(log), @"Find All in the log, once more");
+    [log.textStorage appendAttributedString:[[NSAttributedString alloc] initWithString:@"\nOver"]];
+    Check(FinishGatedFindAll() && ListedAt(before, NO), @"output that ends inside a word leaves the matches where they are");
+    log.selectedRange = NSMakeRange(0, 0);
+    [log insertText:@"(./sample.tex)\n" replacementRange:NSMakeRange(0, 0)];
+    NSMutableArray<NSValue *> *moved = [NSMutableArray array];
+    for (NSValue *value in before)
+        [moved addObject:[NSValue valueWithRange:NSMakeRange(value.rangeValue.location + 15, value.rangeValue.length)]];
+    Check(ListedAt(moved, NO) && [[log.string substringWithRange:moved.lastObject.rangeValue] isEqualToString:@"Overfull"],
+          @"the matches move with a later edit of the log above them");
+}
+
+/// While a task runs, every text view that could be edited is read-only; afterwards each is as before. Output still
+/// comes in.
+static void TestReadOnlyMeanwhile(NSString *nibPath, TSExperimentConsoleController *experimentController, NSTextView *log, NSTextView *source)
+{
+    NSTextView *console = MakeConsole(nibPath), *experiment = experimentController.outputText;
+    NSTextView *fresh = LoadDocumentNib(nibPath).outputText; // before the first typesetting
+    fresh.string = SampleLog(12);
+    log.string = SampleLog(12);
+    source.string = SampleLog(12);
+    experiment.string = SampleLog(12);
+    NSArray<NSTextView *> *views = @[console, fresh, log, experiment, source];
+    NSArray<NSString *> *names = @[@"the console", @"the console before the first typesetting", @"the log", @"the Experiment output", @"the Experiment source"];
+    for (NSUInteger i = 0; i < views.count; i++) {
+        NSTextView *view = views[i];
+        NSString *name = names[i];
+        BOOL editable = view.isEditable;
+        NSString *text = [view.string copy];
+        Check(StartGatedFindAll(view), [NSString stringWithFormat:@"Find All in %@ runs as a background task", name]);
+        Check(!view.isEditable, [NSString stringWithFormat:@"%@ is read-only while it runs", name]);
+        [view insertText:@"typed" replacementRange:NSMakeRange(0, 0)];
+        Check([view.string isEqualToString:text], [NSString stringWithFormat:@"typing changes nothing in %@ meanwhile", name]);
+        Check(![TestShared validateAction:TSAdvancedFindActionNext forTextView:view] && ![TestShared performAction:TSAdvancedFindActionFindAll inTextView:view],
+              [NSString stringWithFormat:@"one task at a time in %@", name]);
+        Check(FinishGatedFindAll() && view.isEditable == editable && listed.items.count == RangesOf(@"Overfull", text).count,
+              [NSString stringWithFormat:@"%@ is %@ again afterwards", name, editable ? @"editable" : @"read-only"]);
+    }
+    // The text views of the Experiment window are locked one at a time: the other stays as it is.
+    Check(StartGatedFindAll(source) && !source.isEditable && !experiment.isEditable, @"Find All in the Experiment source");
+    [experimentController appendText:@"\nOverfull \\hbox\n"];
+    Check([experiment.string hasSuffix:@"\nOverfull \\hbox\n"], @"the Experiment output still receives output meanwhile");
+    Check(FinishGatedFindAll() && source.isEditable && !experiment.isEditable, @"afterwards the Experiment source is editable and the output read-only");
+    // A typesetting that starts meanwhile makes the console read-only for good ("it is never editable" while TeX
+    // runs); the end of Find All must not make it editable again.
+    fresh = LoadDocumentNib(nibPath).outputText;
+    fresh.string = SampleLog(12);
+    Check(fresh.isEditable && StartGatedFindAll(fresh), @"Find All in the console before the first typesetting");
+    TestStartTypesetting(fresh, nil);
+    TSAppendConsoleOutput(fresh, @"This is e-upTeX\n", nil);
+    Check(FinishGatedFindAll() && !fresh.isEditable && [fresh.string isEqualToString:@"This is e-upTeX\n"],
+          @"a typesetting that started meanwhile leaves the console read-only after Find All");
+}
+
+/// Replace All and a multiple replacement run only where replacing is allowed: in the Experiment source. Meanwhile it is
+/// read-only and the Experiment output stays so; afterwards the source is editable and replaced. When TeXShop sets the
+/// source's editability meanwhile, that stands.
+static void TestReplacingMeanwhile(TSExperimentConsoleController *experimentController, NSTextView *source)
+{
+    NSTextView *experiment = experimentController.outputText;
+    for (NSNumber *multiple in @[@NO, @YES]) {
+        NSString *name = multiple.boolValue ? @"a multiple replacement" : @"Replace All";
+        source.string = @"Overfull Overfull";
+        Check(source.isEditable && StartGatedReplacing(source, multiple.boolValue), [NSString stringWithFormat:@"%@ in the Experiment source runs as a background task", name]);
+        Check(!source.isEditable && !experiment.isEditable, [NSString stringWithFormat:@"during %@ the Experiment source is read-only, and the output too", name]);
+        [source insertText:@"typed" replacementRange:NSMakeRange(0, 0)];
+        Check([source.string isEqualToString:@"Overfull Overfull"], [NSString stringWithFormat:@"typing changes nothing during %@", name]);
+        Check(FinishGatedFindAll() && [source.string isEqualToString:@"X X"] && source.isEditable && !experiment.isEditable,
+              [NSString stringWithFormat:@"after %@ the Experiment source is replaced and editable, the output read-only", name]);
+        // TeXShop makes the source read-only meanwhile: it stays so, and nothing is replaced in it.
+        source.string = @"Overfull Overfull";
+        Check(StartGatedReplacing(source, multiple.boolValue), [NSString stringWithFormat:@"%@ again", name]);
+        source.editable = NO;
+        Check(FinishGatedFindAll() && !source.isEditable && [source.string isEqualToString:@"Overfull Overfull"],
+              [NSString stringWithFormat:@"a source made read-only during %@ stays so, unchanged", name]);
+        // TeXShop makes it editable meanwhile: it stays so; a text typed meanwhile keeps the replacement from applying.
+        source.editable = YES;
+        source.string = @"Overfull Overfull";
+        Check(StartGatedReplacing(source, multiple.boolValue), [NSString stringWithFormat:@"%@ once more", name]);
+        source.editable = YES;
+        [source insertText:@"typed " replacementRange:NSMakeRange(0, 0)];
+        Check(FinishGatedFindAll() && source.isEditable && [source.string isEqualToString:@"typed Overfull Overfull"],
+              [NSString stringWithFormat:@"a source made editable during %@ stays so, and what was typed is not overwritten", name]);
+    }
+    // A read-only view made editable by TeXShop during a task in another view is left alone.
+    source.string = @"Overfull Overfull";
+    Check(StartGatedReplacing(source, NO), @"Replace All in the Experiment source, the last time");
+    experiment.editable = YES;
+    Check(FinishGatedFindAll() && experiment.isEditable && source.isEditable, @"a view the task did not lock is not touched");
+    experiment.editable = NO;
+}
+
+/// Two editable views of one text: in one layout manager, which they share the editability of, or each in its own (a
+/// split window). TeXShop makes the second read-only while a task runs, to its end or cancelled: what it set stands.
+static void TestEditabilitySetOnAnotherView(void)
+{
+    for (NSNumber *shared in @[@YES, @NO])
+        for (NSNumber *cancel in @[@NO, @YES]) {
+            NSTextStorage *storage = [[NSTextStorage alloc] initWithString:SampleLog(3)];
+            NSMutableArray<NSTextView *> *views = [NSMutableArray array];
+            NSLayoutManager *layout = nil;
+            for (NSUInteger i = 0; i < 2; i++) {
+                if (!layout || !shared.boolValue) {
+                    layout = [NSLayoutManager new];
+                    [storage addLayoutManager:layout];
+                }
+                NSTextContainer *container = [[NSTextContainer alloc] initWithSize:NSMakeSize(300, 1e7)];
+                [layout addTextContainer:container];
+                [views addObject:[[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 300, 100) textContainer:container]];
+            }
+            NSString *name = [NSString stringWithFormat:@"%@ layout manager%@", shared.boolValue ? @"one" : @"a", cancel.boolValue ? @", cancelled" : @""];
+            Check(views[0].isEditable && views[1].isEditable && StartGatedFindAll(views[0]) && !views[0].isEditable && !views[1].isEditable,
+                  [NSString stringWithFormat:@"%@: both views are read-only while Find All runs", name]);
+            views[1].editable = NO;
+            if (cancel.boolValue)
+                [TestShared.runningTask cancel];
+            BOOL ended = FinishGatedFindAll();
+            BOOL first = shared.boolValue ? NO : YES; // the first view shares the second's editability, or not
+            Check(ended && views[0].isEditable == first && !views[1].isEditable,
+                  [NSString stringWithFormat:@"%@: a view made read-only meanwhile stays so (%d %d)", name, views[0].isEditable, views[1].isEditable]);
+        }
+}
+
 #pragma mark Images
 
 /// Windows that are never shown do not draw buttons; each button's own cell is drawn at its measured frame.
@@ -559,6 +796,8 @@ int main(int argc, const char *argv[])
         method_setImplementation(class_getInstanceMethod(NSTextView.class, @selector(performTextFinderAction:)), (IMP)RecordTextViewFind);
         method_setImplementation(class_getInstanceMethod(NSApplication.class, @selector(keyWindow)), (IMP)KeyWindowForTests);
         originalIsVisible = method_setImplementation(class_getInstanceMethod(NSWindow.class, @selector(isVisible)), (IMP)IsVisibleForTests);
+        originalRunWork = method_setImplementation(class_getInstanceMethod(TSAdvancedFindTask.class, @selector(runWork:completion:)), (IMP)GatedRunWork);
+        TestShared.sheetDelay = 600; // no progress sheet: nothing is shown
 
         NSString *mode = argc > 1 ? @(argv[1]) : @"behavior";
         NSMutableArray<NSString *> *nibs = [NSMutableArray array];
@@ -588,6 +827,10 @@ int main(int argc, const char *argv[])
             TestButtons(console, log, source);
             TestPanelTarget(experimentController, log);
             TestLeavingThePanel(console, log, experiment);
+            TestFindAllWhileOutputComes(nibs.firstObject, experimentController, log);
+            TestReadOnlyMeanwhile(nibs.firstObject, experimentController, log, source);
+            TestReplacingMeanwhile(experimentController, source);
+            TestEditabilitySetOnAnotherView();
         } else if ([mode isEqualToString:@"images"]) {
             [NSUserDefaults.standardUserDefaults setInteger:3 forKey:@"FindMethod"];
             WriteImages(nibs.firstObject, nibs.lastObject, experimentController);
