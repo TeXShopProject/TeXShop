@@ -208,12 +208,17 @@ JSON_MUTATIONS = {
     'the end of the text adds %': (TO_MACROS, lambda rules: edit_regex(rules, '(?=\\r|\\n)', '(?=\\r|\\n|$)'), 'equivalence'),
     'the end-of-line replacement has single backslashes': (TO_MACROS, single_backslash, 'equivalence'),
     'a short form is missing': (TO_CHARACTERS, drop_short_form, 'equivalence'),
+    'the patterns take line breaks again': (TO_CHARACTERS, lambda rules: edit_regex(rules, '[ \\t]*', '\\s*'), 'equivalence'),
+    'a duplicate entry is kept': (TO_MACROS, lambda rules: rules.append(dict(next(r for r in rules if r['findString'] == '㌃'))), 'equivalence'),
     'a note is not in the tables': (TO_MACROS, lambda rules: rules[5].__setitem__('description', 'Circled digits'), 'tables'),
 }
 
 # Leaving out the check that the folder exists is not a mutation: the move that follows never replaces a folder,
 # so nothing changes. Replacing it is 'samples are written over the user's sets'.
 SOURCE_MUTATIONS = {
+    'the menu takes the line break after \\ajMasu again': ('utilities', 'NSString-CharacterConversion.m',
+        '[str replaceAllOccurrencesOfPattern:@"\\\\\\\\ajMasu[ \\\\t]*" withString:@"〼"];',
+        '[str replaceAllOccurrencesOfPattern:@"\\\\\\\\ajMasu\\\\s*" withString:@"〼"];'),
     'the conversion table changes': ('utilities', 'NSString-CharacterConversion.m',
         '[str replaceAllOccurrencesOfString:@"㍾" withString:@"\\\\ajLig{明治}" addingPercentForEndOfLine:YES];',
         '[str replaceAllOccurrencesOfString:@"㍾" withString:@"\\\\ajLig{明冶}" addingPercentForEndOfLine:YES];'),
@@ -270,6 +275,13 @@ def main():
                 if not caught:
                     sys.exit(f'FAIL: mutation {name!r} was not detected')
                 print(f'PASS: detected mutation {name!r}')
+            kept = tmp / 'with-duplicates'
+            environment = dict(os.environ, TS_SAMPLES_KEEP_DUPLICATES='1')
+            subprocess.run([str(probe), 'generate', str(kept)], capture_output=True, text=True, timeout=600, env=environment, check=True)
+            if sample_files(kept) != sample_files(SAMPLES) or all((kept / n).read_bytes() == (SAMPLES / n).read_bytes() for n in sample_files(kept)) \
+                    or run(probe, 'equivalence', kept, stop_at_failure=True).returncode == 0:
+                sys.exit('FAIL: mutation \'the duplicates are not left out\' was not detected')
+            print('PASS: detected mutation \'the duplicates are not left out\'')
             missing = tmp / 'missing-tables'
             shutil.copytree(interfaces, missing, ignore=shutil.ignore_patterns('*.nib', 'TeXShopHelp', '*.pdf', '*.rtf'))
             table = missing / 'fr.lproj/MultipleReplaceSamples.strings'

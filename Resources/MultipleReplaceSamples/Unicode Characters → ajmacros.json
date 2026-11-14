@@ -4809,28 +4809,6 @@
     },
     {
       "description" : "Ligatures, symbols and variants (end of line)",
-      "findString" : "㌃(?=\\r|\\n)",
-      "replacementString" : "\\\\ajLig{アール}%",
-      "usesRegularExpression" : true
-    },
-    {
-      "description" : "Ligatures, symbols and variants",
-      "findString" : "㌃",
-      "replacementString" : "\\ajLig{アール}"
-    },
-    {
-      "description" : "Ligatures, symbols and variants (end of line)",
-      "findString" : "㍗(?=\\r|\\n)",
-      "replacementString" : "\\\\ajLig{ワット}%",
-      "usesRegularExpression" : true
-    },
-    {
-      "description" : "Ligatures, symbols and variants",
-      "findString" : "㍗",
-      "replacementString" : "\\ajLig{ワット}"
-    },
-    {
-      "description" : "Ligatures, symbols and variants (end of line)",
       "findString" : "㍂(?=\\r|\\n)",
       "replacementString" : "\\\\ajLig{ホーン}%",
       "usesRegularExpression" : true
@@ -4850,17 +4828,6 @@
       "description" : "Ligatures, symbols and variants",
       "findString" : "㌹",
       "replacementString" : "\\ajLig{ヘルツ}"
-    },
-    {
-      "description" : "Ligatures, symbols and variants (end of line)",
-      "findString" : "㌻(?=\\r|\\n)",
-      "replacementString" : "\\\\ajLig{ページ}%",
-      "usesRegularExpression" : true
-    },
-    {
-      "description" : "Ligatures, symbols and variants",
-      "findString" : "㌻",
-      "replacementString" : "\\ajLig{ページ}"
     },
     {
       "description" : "Ligatures, symbols and variants (end of line)",
@@ -4960,50 +4927,6 @@
       "description" : "Ligatures, symbols and variants",
       "findString" : "㍎",
       "replacementString" : "\\ajLig{ヤード}"
-    },
-    {
-      "description" : "Ligatures, symbols and variants (end of line)",
-      "findString" : "㌹(?=\\r|\\n)",
-      "replacementString" : "\\\\ajLig{ヘルツ}%",
-      "usesRegularExpression" : true
-    },
-    {
-      "description" : "Ligatures, symbols and variants",
-      "findString" : "㌹",
-      "replacementString" : "\\ajLig{ヘルツ}"
-    },
-    {
-      "description" : "Ligatures, symbols and variants (end of line)",
-      "findString" : "㍂(?=\\r|\\n)",
-      "replacementString" : "\\\\ajLig{ホーン}%",
-      "usesRegularExpression" : true
-    },
-    {
-      "description" : "Ligatures, symbols and variants",
-      "findString" : "㍂",
-      "replacementString" : "\\ajLig{ホーン}"
-    },
-    {
-      "description" : "Ligatures, symbols and variants (end of line)",
-      "findString" : "㌞(?=\\r|\\n)",
-      "replacementString" : "\\\\ajLig{コーポ}%",
-      "usesRegularExpression" : true
-    },
-    {
-      "description" : "Ligatures, symbols and variants",
-      "findString" : "㌞",
-      "replacementString" : "\\ajLig{コーポ}"
-    },
-    {
-      "description" : "Ligatures, symbols and variants (end of line)",
-      "findString" : "㌪(?=\\r|\\n)",
-      "replacementString" : "\\\\ajLig{ハイツ}%",
-      "usesRegularExpression" : true
-    },
-    {
-      "description" : "Ligatures, symbols and variants",
-      "findString" : "㌪",
-      "replacementString" : "\\ajLig{ハイツ}"
     },
     {
       "description" : "Ligatures, symbols and variants (end of line)",
@@ -5920,17 +5843,6 @@
     },
     {
       "description" : "Ligatures, symbols and variants (end of line)",
-      "findString" : "㊡(?=\\r|\\n)",
-      "replacementString" : "\\\\ajLig{○休}%",
-      "usesRegularExpression" : true
-    },
-    {
-      "description" : "Ligatures, symbols and variants",
-      "findString" : "㊡",
-      "replacementString" : "\\ajLig{○休}"
-    },
-    {
-      "description" : "Ligatures, symbols and variants (end of line)",
       "findString" : "㊛(?=\\r|\\n)",
       "replacementString" : "\\\\ajLig{○女}%",
       "usesRegularExpression" : true
@@ -5972,17 +5884,6 @@
       "description" : "Ligatures, symbols and variants",
       "findString" : "㊢",
       "replacementString" : "\\ajLig{○写}"
-    },
-    {
-      "description" : "Ligatures, symbols and variants (end of line)",
-      "findString" : "㊗(?=\\r|\\n)",
-      "replacementString" : "\\\\ajLig{○祝}%",
-      "usesRegularExpression" : true
-    },
-    {
-      "description" : "Ligatures, symbols and variants",
-      "findString" : "㊗",
-      "replacementString" : "\\ajLig{○祝}"
     },
     {
       "description" : "Ligatures, symbols and variants (end of line)",
@@ -6192,28 +6093,6 @@
       "description" : "Ligatures, symbols and variants",
       "findString" : "㈺",
       "replacementString" : "\\ajLig{(呼)}"
-    },
-    {
-      "description" : "Ligatures, symbols and variants (end of line)",
-      "findString" : "㈷(?=\\r|\\n)",
-      "replacementString" : "\\\\ajLig{(祝)}%",
-      "usesRegularExpression" : true
-    },
-    {
-      "description" : "Ligatures, symbols and variants",
-      "findString" : "㈷",
-      "replacementString" : "\\ajLig{(祝)}"
-    },
-    {
-      "description" : "Ligatures, symbols and variants (end of line)",
-      "findString" : "㉁(?=\\r|\\n)",
-      "replacementString" : "\\\\ajLig{(休)}%",
-      "usesRegularExpression" : true
-    },
-    {
-      "description" : "Ligatures, symbols and variants",
-      "findString" : "㉁",
-      "replacementString" : "\\ajLig{(休)}"
     },
     {
       "description" : "Ligatures, symbols and variants (end of line)",
@@ -6922,11 +6801,6 @@
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "〶",
-      "replacementString" : "\\ajvarPostal "
-    },
-    {
-      "description" : "Ligatures, symbols and variants",
       "findString" : "☀",
       "replacementString" : "\\ajSun "
     },
@@ -6944,11 +6818,6 @@
       "description" : "Ligatures, symbols and variants",
       "findString" : "☃",
       "replacementString" : "\\ajSnowman "
-    },
-    {
-      "description" : "Ligatures, symbols and variants",
-      "findString" : "〄",
-      "replacementString" : "\\ajJIS "
     },
     {
       "description" : "Ligatures, symbols and variants",

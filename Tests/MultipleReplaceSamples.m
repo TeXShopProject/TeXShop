@@ -198,13 +198,37 @@ static TSRegexFindOptions TSSampleRegexOptions(void)
 
 /// The user's choice (2026-11-12): an entry that adds % at the end of a line is a regular expression rule for the end
 /// of a line, with the backslashes doubled, and then a plain rule for the rest. Other entries are one plain rule.
+/// An entry whose text an earlier entry has already replaced everywhere does nothing, unless some replacement of the
+/// conversion writes that text again. The menu's tables have such entries (㌃ twice, ㈷ as a day and as a ligature);
+/// the samples leave them out (user's decision, 2026-11-14), and the equivalence test shows that nothing changes.
+static BOOL TSNeverApplies(TSTableEntry *entry, NSSet<NSString *> *replaced, NSArray<NSDictionary *> *kinds)
+{
+    if (entry.isPattern || ![replaced containsObject:entry.target])
+        return NO;
+    for (NSDictionary *kind in kinds)
+        for (TSTableEntry *other in kind[@"entries"])
+            if ([other.replacement rangeOfString:entry.target].location != NSNotFound)
+                return NO;
+    return YES;
+}
+
+static NSUInteger TSLeftOut;
+
 static TSRegexMultipleReplace *TSMakeSet(NSArray<NSDictionary *> *kinds)
 {
     NSMutableArray<TSRegexReplacementRule *> *rules = [NSMutableArray array];
+    NSMutableSet<NSString *> *replaced = [NSMutableSet set];
+    TSLeftOut = 0;
     for (NSDictionary *kind in kinds) {
         NSString *note = kind[@"name"];
         for (TSTableEntry *entry in kind[@"entries"]) {
             Check(!entry.isBlock, [NSString stringWithFormat:@"%@: the pattern %@ is replaced by a block, which no rule can do", note, entry.target]);
+            if (getenv("TS_SAMPLES_KEEP_DUPLICATES") == NULL && TSNeverApplies(entry, replaced, kinds)) {
+                TSLeftOut++;
+                continue;
+            }
+            if (!entry.isPattern)
+                [replaced addObject:entry.target];
             if (entry.isPattern) {
                 // The menu puts the replacement in as it is: a template that gives it back.
                 [rules addObject:[[TSRegexReplacementRule alloc] initWithFindString:entry.target replaceString:[NSRegularExpression escapedTemplateForString:entry.replacement]
@@ -248,6 +272,7 @@ static void Generate(NSString *directory)
         NSUInteger entries = 0;
         for (NSDictionary *kind in kinds)
             entries += [kind[@"entries"] count];
+        printf("%s: %lu entries that never apply left out\n", (toMacros.boolValue ? TSToMacrosName : TSToCharactersName).UTF8String, (unsigned long)TSLeftOut);
         printf("%s: %lu kinds, %lu entries, %lu rules\n", (toMacros.boolValue ? TSToMacrosName : TSToCharactersName).UTF8String,
                (unsigned long)kinds.count, (unsigned long)entries, (unsigned long)set.rules.count);
     }
@@ -409,6 +434,24 @@ static void Equivalence(NSString *directory)
               [name stringByAppendingString:@": CotEditor's options without the yen sign"]);
         NSString *(^menu)(NSString *) = f ? ^NSString *(NSString *s) { return s.stringByReplacingUnicodeCharactersWithAjMacros; }
                                           : ^NSString *(NSString *s) { return s.stringByReplacingAjMacrosWithUnicodeCharacters; };
+        // No rule repeats an earlier one: the menu's duplicate entries, which never apply, are left out.
+        NSMutableSet<NSString *> *finds = [NSMutableSet set];
+        for (TSRegexReplacementRule *rule in set.rules) {
+            NSString *key = [NSString stringWithFormat:@"%d %@", rule.usesRegularExpression, rule.findString];
+            Check(![finds containsObject:key], [NSString stringWithFormat:@"%@: the rule for %@ is there once", name, rule.findString]);
+            [finds addObject:key];
+        }
+        if (!f) {
+            // The commands that take the white space after them (\ajMasu) take spaces and tabs, not a line break:
+            // the paragraph after them stays a paragraph (user's decision, 2026-11-14), in the menu and in the sample.
+            NSDictionary<NSString *, NSString *> *paragraphs = @{
+                @"\\ajMasu\n\nNext": @"\u303C\n\nNext", @"\\ajMasu \t \nNext": @"\u303C\nNext",
+                @"a\\ajCheckmark\r\n\r\nb": @"a\u2713\r\n\r\nb", @"\\ajMasu  \\ajYori\tx": @"\u303C\u309Fx"};
+            for (NSString *input in paragraphs) {
+                Check([menu(input) isEqualToString:paragraphs[input]], [NSString stringWithFormat:@"the menu keeps the line break after the command: %@ → %@", TSVisible(input), TSVisible(menu(input))]);
+                Check([TSApply(set, input, nil) isEqualToString:paragraphs[input]], [NSString stringWithFormat:@"%@ keeps the line break after the command: %@", name, TSVisible(input)]);
+            }
+        }
         NSArray<TSTableEntry *> *entries = f ? toMacros : toCharacters;
         NSArray<NSString *> *documents = TSDocuments(entries, f, f ? toCharacters : toMacros);
         NSDictionary<NSString *, TSRegexMultipleReplace *> *variants = @{
