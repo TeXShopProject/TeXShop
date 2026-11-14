@@ -135,6 +135,24 @@
     "notification": null
   },
   {
+    "outlet": "makeIndexEngineField",
+    "key": "MakeIndexEngine",
+    "kind": 0,
+    "minimum": 0,
+    "maximum": 0,
+    "allowsEmpty": false,
+    "notification": null
+  },
+  {
+    "outlet": "metaPostEngineField",
+    "key": "MetaPostEngine",
+    "kind": 0,
+    "minimum": 0,
+    "maximum": 0,
+    "allowsEmpty": false,
+    "notification": null
+  },
+  {
     "outlet": "texScriptCommandTextField",
     "key": "TexScriptCommand",
     "kind": 0,

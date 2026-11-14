@@ -453,6 +453,8 @@ extern NSString *NewLineCharacterKindKey; // added by Terada
 extern NSString *LastStyNameKey; // added by Terada
 extern NSString *KpsetoolKey; // added by Terada
 extern NSString *BibTeXengineKey; // added by Terada
+extern NSString *MakeIndexEngineKey;
+extern NSString *MetaPostEngineKey;
 
 // end mitsu 1.29
 

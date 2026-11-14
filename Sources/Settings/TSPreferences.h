@@ -244,9 +244,13 @@
 @property (strong) NSButton *legacySpellCheckButton;
 @property (strong) NSButton *sparklePrereleaseButton;
 @property (strong) NSPopUpButton *engineProfilePopup;
-@property (strong) NSButton *engineProfileApplyButton;
+@property (strong) id engineProfileWatcher;
+// The profile that the sheet asks about, shown in the menu until the sheet ends; 0 when none.
+@property NSInteger engineProfileAsked;
 @property (strong) NSPopUpButton *defaultEnginePopup;
 @property (strong) NSButton *editEnginesButton;
+@property (strong) NSTextField *makeIndexEngineField;
+@property (strong) NSTextField *metaPostEngineField;
 @property (strong) NSTextField *sparkleLastCheckField;
 @property (strong) NSButton *sparkleCheckNowButton;
 @property (strong) TSKeyBindingsController *keyBindings;
@@ -365,6 +369,8 @@
 - (IBAction)invisibleCharacterChanged:sender; // added by Terada
 - (IBAction)kpsetoolChanged:sender; // added by Terada
 - (IBAction)bibTeXengineChanged:sender; // added by Terada
+- (IBAction)makeIndexEngineChanged:(id)sender;
+- (IBAction)metaPostEngineChanged:(id)sender;
 - (IBAction)makeatletterChanged:sender; // added by Terada
 - (IBAction)expl3SyntaxColorPressed:sender;
 - (IBAction)autoSaveEnabledPressed:sender;

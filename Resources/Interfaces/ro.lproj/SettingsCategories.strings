@@ -236,8 +236,7 @@
 "catalog.preview.5.0.note" = "Pagina pe care fereastra HTML o deschide prima. Introduceți o adresă web sau calea unui fișier. Implicit: https://texshop.app";
 "group.typesetting.0.title" = "Motor";
 "catalog.typesetting.0.4.title" = "Profilul motorului";
-"catalog.typesetting.0.4.note" = "Stabilește comenzile de compunere, motorul BibTeX și suportul pentru pachetul otf. Profilurile japoneze stabilesc și UTF-8 drept codificare a documentelor noi, dicționarul și conversia UTF-8-MAC.";
-"catalog.typesetting.0.4.button" = "Aplicați…";
+"catalog.typesetting.0.4.note" = "Stabilește comenzile de compunere, motorul BibTeX, programul pentru index, MetaPost și suportul pentru pachetul otf. Profilurile japoneze stabilesc și UTF-8 drept codificare a documentelor noi, dicționarul și conversia UTF-8-MAC.";
 "catalog.typesetting.0.0.title" = "Culege documentele noi cu";
 "catalog.typesetting.0.0.note" = "Ce alege bara de instrumente lângă Compilare când se deschide un document. O linie % !TEX TS-program din document are prioritate.";
 "catalog.typesetting.0.1.title" = "Fișier de motor";
@@ -282,11 +281,15 @@
 "group.typesetting.7.title" = "Ghostscript";
 "catalog.typesetting.7.1.title" = "-dALLOWPSTRANSPARENCY";
 "catalog.typesetting.7.1.note" = "Adaugă această opțiune când Ghostscript convertește PostScript în PDF, pentru a păstra transparența, de exemplu cea din PSTricks. Necesită Ghostscript 9.51 sau mai nou.";
-"group.typesetting.8.title" = "Comenzi de căutare și BibTeX";
+"group.typesetting.8.title" = "Instrumente asociate";
 "catalog.typesetting.8.0.title" = "kpsewhich";
 "catalog.typesetting.8.0.note" = "Comanda cu care „Deschide fișierul de stil” din meniul Fișier caută fișierul. Implicit: kpsewhich -progname=latex -format=tex";
 "catalog.typesetting.8.1.title" = "Motor BibTeX";
 "catalog.typesetting.8.1.note" = "Implicit: bibtex";
+"catalog.typesetting.8.2.title" = "Program pentru index";
+"catalog.typesetting.8.2.note" = "Implicit: makeindex";
+"catalog.typesetting.8.3.title" = "MetaPost";
+"catalog.typesetting.8.3.note" = "Implicit: mpost";
 "group.typesetting.9.title" = "Suport pTeX (pentru Japonia)";
 "catalog.typesetting.9.0.title" = "Suport pentru pachetul otf";
 "group.console.0.title" = "Font";

@@ -246,6 +246,10 @@
         bibTeXengine = @"bibtex";
     }
     [_bibTeXengineField setStringValue:bibTeXengine];
+    NSString *makeIndexEngine = [defaults stringForKey:MakeIndexEngineKey];
+    self.makeIndexEngineField.stringValue = makeIndexEngine.length ? makeIndexEngine : @"makeindex";
+    NSString *metaPostEngine = [defaults stringForKey:MetaPostEngineKey];
+    self.metaPostEngineField.stringValue = metaPostEngine.length ? metaPostEngine : @"mpost";
     [_savePSButton setState:[defaults boolForKey:SavePSEnabledKey]];
 #ifdef MITSU_PDF
     myInteger = [defaults integerForKey:BringFrontOnTypesetKey];

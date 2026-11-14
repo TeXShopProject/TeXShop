@@ -232,7 +232,6 @@ bar
 based
 baseline
 be
-became
 become
 becomes
 beep
@@ -1082,6 +1081,7 @@ maintained
 maintainer
 major
 make
+makeindex
 makes
 making
 malumbres
@@ -1125,6 +1125,7 @@ message
 messages
 met
 metal
+metapost
 method
 microtype
 middle
@@ -1275,7 +1276,6 @@ outline’s
 output
 outside
 over
-overflowed
 overkill
 overlapping
 overlay

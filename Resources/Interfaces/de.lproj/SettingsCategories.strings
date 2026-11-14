@@ -236,8 +236,7 @@
 "catalog.preview.5.0.note" = "Die Seite, die das HTML-Fenster zuerst öffnet. Geben Sie eine Webadresse oder den Pfad einer Datei ein. Vorgabe: https://texshop.app";
 "group.typesetting.0.title" = "Engine";
 "catalog.typesetting.0.4.title" = "Engine-Profil";
-"catalog.typesetting.0.4.note" = "Legt die Satzbefehle, das BibTeX-Programm und die Unterstützung für das otf-Paket fest. Die japanischen Profile legen auch UTF-8 als Kodierung für neue Dokumente, das Wörterbuch und die Umwandlung von UTF-8-MAC fest.";
-"catalog.typesetting.0.4.button" = "Anwenden…";
+"catalog.typesetting.0.4.note" = "Legt die Satzbefehle, das BibTeX-Programm, das Indexprogramm, MetaPost und die Unterstützung für das otf-Paket fest. Die japanischen Profile legen auch UTF-8 als Kodierung für neue Dokumente, das Wörterbuch und die Umwandlung von UTF-8-MAC fest.";
 "catalog.typesetting.0.0.title" = "Neue Dokumente setzen mit";
 "catalog.typesetting.0.0.note" = "Was die Symbolleiste neben „Setzen“ auswählt, wenn ein Dokument geöffnet wird. Eine Zeile % !TEX TS-program im Dokument hat Vorrang.";
 "catalog.typesetting.0.1.title" = "Engine-Datei";
@@ -282,11 +281,15 @@
 "group.typesetting.7.title" = "Ghostscript";
 "catalog.typesetting.7.1.title" = "-dALLOWPSTRANSPARENCY";
 "catalog.typesetting.7.1.note" = "Übergibt diese Option, wenn Ghostscript PostScript in PDF umwandelt, damit Transparenz, etwa aus PSTricks, erhalten bleibt. Erfordert Ghostscript 9.51 oder neuer.";
-"group.typesetting.8.title" = "Suchbefehle und BibTeX";
+"group.typesetting.8.title" = "Zugehörige Programme";
 "catalog.typesetting.8.0.title" = "kpsewhich";
 "catalog.typesetting.8.0.note" = "Der Befehl, mit dem „Stil-Datei öffnen“ im Menü „Ablage“ die Datei sucht. Vorgabe: kpsewhich -progname=latex -format=tex";
 "catalog.typesetting.8.1.title" = "BibTeX-Programm";
 "catalog.typesetting.8.1.note" = "Vorgabe: bibtex";
+"catalog.typesetting.8.2.title" = "Indexprogramm";
+"catalog.typesetting.8.2.note" = "Vorgabe: makeindex";
+"catalog.typesetting.8.3.title" = "MetaPost";
+"catalog.typesetting.8.3.note" = "Vorgabe: mpost";
 "group.typesetting.9.title" = "pTeX-Unterstützung (für japanische Benutzer)";
 "catalog.typesetting.9.0.title" = "Unterstützung für das otf-Paket";
 "group.console.0.title" = "Schrift";

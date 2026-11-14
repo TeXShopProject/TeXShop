@@ -1569,7 +1569,7 @@
       {
        "kind": "popup",
        "title": "エンジンのプロファイル",
-       "note": "タイプセットのコマンド、BibTeXエンジン、otfパッケージ対応を設定します。日本語のプロファイルは、新しい書類のエンコーディング（UTF-8）、辞書、UTF-8-MACの変換も設定します。",
+       "note": "タイプセットのコマンド、BibTeXエンジン、索引作成とMetaPostのコマンド、otfパッケージ対応を設定します。日本語のプロファイルは、新しい書類のエンコーディング（UTF-8）、辞書、UTF-8-MACの変換も設定します。",
        "choices": [
         "pdfLaTeX",
         "XeLaTeX",
@@ -1580,7 +1580,6 @@
         "upLaTeX + dvipdfmx",
         "LaTeX + dvips + Ghostscript"
        ],
-       "button": "適用…",
        "src": [
         "new:engine-profile"
        ]
@@ -1821,7 +1820,7 @@
      ]
     },
     {
-     "title": "検索用コマンドとBibTeX",
+     "title": "周辺ツール",
      "rows": [
       {
        "kind": "path",
@@ -1839,6 +1838,24 @@
        "note": "デフォルト: bibtex",
        "src": [
         "1207"
+       ]
+      },
+      {
+       "kind": "path",
+       "title": "索引作成",
+       "value": "makeindex",
+       "note": "デフォルト: makeindex",
+       "src": [
+        "new:makeindex-command"
+       ]
+      },
+      {
+       "kind": "path",
+       "title": "MetaPost",
+       "value": "mpost",
+       "note": "デフォルト: mpost",
+       "src": [
+        "new:metapost-command"
        ]
       }
      ]
