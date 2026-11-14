@@ -876,7 +876,10 @@ After making these choices, typesetting with TeXShop is easy. When you want to t
 
 When typesetting Via DVI, graphics are processed by Ghostscript. Modern versions of Ghostscript have been made
 safer, and by default they no longer accept the postscript transparency operators. To have Ghostscript process
-transparency, add \verb|--distilleropts "-dALLOWPSTRANSPARENCY"| to the plain \TeX\ or \LaTeX\ command in the {\bf Via DVI} group; simpdftex passes it to Ghostscript.
+transparency, add the following to the end of the plain \TeX\ or \LaTeX\ command in the {\bf Via DVI} group; simpdftex passes it to Ghostscript.
+\begin{verbatim}
+     --distilleropts "-dALLOWPSTRANSPARENCY"
+\end{verbatim}
 This will be irrelevant for most people.
 
 Below the Engine group is the {\bf After Typesetting} pop-up menu.
@@ -6306,7 +6309,11 @@ When TeXShop opens a postscript file, it always sets this flag if Ghostscript is
 The DVI typesetting chain is controlled by the items in the group ``Via DVI'' in the Typesetting category of TeXShop Settings.
 These items call a script named {\em simpdftex} in TeXLive to control the typesetting process. This script recognizes many optional flags. A few are set by default. One of the optional flags not set by default is named
 {\em --distilleropts}; it allows a user to send  flags directly to the distiller (i.e., Ghostscript) portion of the chain,
-for instance \verb|--distilleropts "-dALLOWPSTRANSPARENCY"|. Another optional flag, \verb|--keep-psfile|, keeps the intermediate postscript file.
+for instance
+\begin{verbatim}
+     --distilleropts "-dALLOWPSTRANSPARENCY"
+\end{verbatim}
+Another optional flag, \verb|--keep-psfile|, keeps the intermediate postscript file.
 
 
 
