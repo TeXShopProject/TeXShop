@@ -50,6 +50,24 @@
 // centre it when the text is laid out in full.
 + (void)centerRange:(NSRange)range inTextView:(NSTextView *)tv
 {
+    [self centerRangeOnce:range inTextView:tv];
+    // In a large document the layout above `range` is only estimated until it is
+    // laid out, which happens as the view scrolls there, and the line then ends up
+    // away from the middle of the window. Centre it again once layout has caught up.
+    NSUInteger length = tv.textStorage.length;
+    __weak NSTextView *weakView = tv;
+    for (NSNumber *delay in @[@0.0, @0.15, @0.5]) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay.doubleValue * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{
+            NSTextView *view = weakView;
+            if (view && view.textStorage.length == length && NSEqualRanges(view.selectedRange, range))
+                [self centerRangeOnce:range inTextView:view];
+        });
+    }
+}
+
++ (void)centerRangeOnce:(NSRange)range inTextView:(NSTextView *)tv
+{
     NSScrollView *sv = tv.enclosingScrollView;
     if (!sv) { [tv scrollRangeToVisible:range]; return; }
     NSLayoutManager *lm = tv.layoutManager;
