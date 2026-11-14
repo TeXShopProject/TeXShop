@@ -27,6 +27,18 @@ static int reflections, pendingUpdates;
 @interface TSMacroOutlineView : NSOutlineView @end
 @implementation TSMacroOutlineView @end
 static void NoOrder(id self, SEL cmd, NSWindowOrderingMode mode, NSInteger relative) {}
+// With TS_STRINGS (a Localizable.strings), NSLocalizedString gives that language's text, as the application does.
+static NSDictionary *TestStrings; static IMP OriginalLocalizedString;
+static NSString *TestLocalizedString(id self, SEL cmd, NSString *key, NSString *value, NSString *table) {
+    if ((!table.length || [table isEqual:@"Localizable"]) && TestStrings[key]) return TestStrings[key];
+    return ((NSString *(*)(id, SEL, NSString *, NSString *, NSString *))OriginalLocalizedString)(self, cmd, key, value, table);
+}
+static void UseTestStrings(void) {
+    if (!getenv("TS_STRINGS")) return;
+    TestStrings=[[NSString stringWithContentsOfFile:@(getenv("TS_STRINGS")) encoding:NSUTF8StringEncoding error:nil] propertyListFromStringsFileFormat];
+    REQUIRE(TestStrings.count>0);
+    OriginalLocalizedString=method_setImplementation(class_getInstanceMethod(NSBundle.class,@selector(localizedStringForKey:value:table:)),(IMP)TestLocalizedString);
+}
 // Bounding box, in points from the top left, of pixels that differ between two renderings.
 static NSRect Drawn(NSView *host, NSView *control) {
     NSBitmapImageRep *a=[host bitmapImageRepForCachingDisplayInRect:host.bounds];[host cacheDisplayInRect:host.bounds toBitmapImageRep:a];
@@ -213,6 +225,7 @@ static void CheckEditor(TSMacroEditor *owner, NSWindow *window) {
 }
 int main(int argc,char **argv) { @autoreleasepool {
     memoryDefaults=[TSMemoryDefaults new];
+    UseTestStrings();
     method_setImplementation(class_getClassMethod(NSUserDefaults.class,@selector(standardUserDefaults)),(IMP)StandardDefaults);
     REQUIRE(NSUserDefaults.standardUserDefaults==memoryDefaults);
     [NSApplication sharedApplication]; [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];

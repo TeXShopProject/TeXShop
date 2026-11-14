@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check status layout against all localized macro-editor nibs without showing windows."""
 from pathlib import Path
-import subprocess, tempfile, sys
+import os, subprocess, tempfile, sys
 from source_tree import include_args
 from macro_editor_sources import write_sources, layout_body, FRAMEWORKS
 root=Path(__file__).resolve().parents[1]
@@ -12,10 +12,14 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
     binary=Path(td)/'layout'
     subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-incomplete-implementation','-Wno-deprecated-declarations','-Wno-nullability-completeness',*FRAMEWORKS,'-I',td,'-I',str(root/'Tests'),*include_args(root),str(root/'Tests/MacroShortcutLayout.m'),*extra,'-o',str(binary)],check=True)
     for path in sorted((root/'Resources/Interfaces').glob('*.lproj/MacroEditor.nib/keyedobjects*.nib')):
+        # The language's own strings, as the application shows them (Base is English).
+        lproj=path.parts[-3]
+        strings=root/'Resources/Interfaces'/('en.lproj' if lproj=='Base.lproj' else lproj)/'Localizable.strings'
+        env=dict(os.environ,TS_STRINGS=str(strings)) if strings.exists() else dict(os.environ)
         args=[str(binary),str(path)]
         if len(sys.argv)>1 and sys.argv[1]!='--mutations' and path.parts[-3] in ('Base.lproj','ja.lproj'):
             args.append(str(Path(sys.argv[1])/f'macro-{path.parts[-3]}.png'))
-        subprocess.run(args,check=True)
+        subprocess.run(args,check=True,env=env)
     if mutation:
         cases={
             'grow window above its saved top edge': ('windowFrame.origin.y -= minimum.height - NSHeight(windowFrame);', ''),
