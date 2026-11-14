@@ -258,6 +258,7 @@ bibstuff
 bibtex
 big
 bin
+binding
 bindings
 bit
 block
@@ -708,7 +709,6 @@ fixes
 fixing
 flag
 floats
-flows
 focus
 folder
 folders
@@ -791,6 +791,7 @@ group
 groups
 grows
 guard
+guide
 guidelines
 gz
 h
@@ -1331,7 +1332,6 @@ pinned
 pins
 place
 placed
-placeholder
 placeholders
 plain
 played
@@ -1699,6 +1699,7 @@ stored
 strike
 strikeout
 string
+strings
 sty
 style
 subfolder
@@ -1835,7 +1836,6 @@ transparenttheme
 trash
 treat
 triangles
-trick
 tried
 trigger
 triggers
