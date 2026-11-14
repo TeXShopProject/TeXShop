@@ -94,6 +94,9 @@ if '--mutations' in sys.argv:
         'snapshot ignores key equivalents': [(k, '[NSValue valueWithNonretainedObject:item], item.keyEquivalent,', '[NSValue valueWithNonretainedObject:item], @"",')],
         'ignore items whose keys AppKit hides': [(k, 'if (!item.submenu && !item.separatorItem && item.action != TSMacroAction())', 'if (!item.submenu && !item.separatorItem && item.action != TSMacroAction() && (item.keyEquivalent.length || [item.identifier hasPrefix:@"TSShortcut."]))')],
         'PDF drops legacy shifted punctuation': [(k, 'return [TSEventBindings(event, [event charactersByApplyingModifiers:0]) containsObject:', 'return [TSRecordedBinding(event, [event charactersByApplyingModifiers:0]) isEqual:')],
+        'keys saved before lose Command': [('MacroKeyProduction.inc', 'NSUInteger mask = [modifiersStr rangeOfString: TSMacroNoCommandKey].location == NSNotFound ? NSEventModifierFlagCommand : 0;', 'NSUInteger mask = 0;')],
+        'a shortcut without Command is saved with Command': [('MacroKeyProduction.inc', '\tif (!(modifiers & NSEventModifierFlagCommand))\n\t\t[string appendFormat: @"+%@", TSMacroNoCommandKey];\n', '')],
+        'the pending shortcut is not previewed': [(e, '    self.previousItem.key = self.pendingShortcutKey ?: @"";', '    ;')],
         'leave Shift for dead keys': [(k, 'key.length == 1 &&\n        ![key isEqual:unshifted]', 'key.length == 1 && unshifted.length == 1 &&\n        ![key isEqual:unshifted]')],
     }
     for name, changes in cases.items():

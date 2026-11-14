@@ -72,13 +72,13 @@
 \contentsline {subsubsection}{Paste Spreadsheet Cells}{78}{section*.4}%
 \contentsline {subsubsection}{Convert to MAC, Convert to Unix, Convert to Windows}{79}{section*.5}%
 \contentsline {subsubsection}{Bibliography}{79}{section*.6}%
-\contentsline {subsubsection}{htlatexc, htlatexr}{79}{section*.7}%
+\contentsline {subsubsection}{htlatexc, htlatexr}{80}{section*.7}%
 \contentsline {subsubsection}{pdfselectc}{80}{section*.8}%
 \contentsline {subsubsection}{mpostc, mpostcpl, latex-makeindex-mpost}{80}{section*.9}%
 \contentsline {section}{\numberline {14.6}Defining AppleScripts}{80}{section.14.6}%
 \contentsline {section}{\numberline {14.7}Dialogs}{82}{section.14.7}%
 \contentsline {section}{\numberline {14.8}Writing Complete AppleScripts}{83}{section.14.8}%
-\contentsline {section}{\numberline {14.9}Writing Command Scripts}{84}{section.14.9}%
+\contentsline {section}{\numberline {14.9}Writing Command Scripts}{85}{section.14.9}%
 \contentsline {chapter}{\numberline {15}Editing Aids}{88}{chapter.15}%
 \contentsline {section}{\numberline {15.1}Emacs Mode}{88}{section.15.1}%
 \contentsline {section}{\numberline {15.2}Key Bindings}{90}{section.15.2}%

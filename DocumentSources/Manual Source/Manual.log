@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.10.17)  14 NOV 2026 15:04
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.10.17)  14 NOV 2026 17:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -503,7 +503,7 @@ Overfull \hbox (35.64401pt too wide) in paragraph at lines 1995--1995
 ry/TeXShop/Scripts/ex")[] 
  []
 
-
+[85]
 Overfull \hbox (58.63902pt too wide) in paragraph at lines 2008--2008
 []  \TU/lmtt/m/n/10.95 set dirName to quoted form of (characters 1 thru (n - m 
 - 1) of fileName as string)[] 
@@ -515,7 +515,7 @@ Overfull \hbox (35.64401pt too wide) in paragraph at lines 2011--2011
 pdflatexc  " & baseName[] 
  []
 
-[85] [86]
+[86]
 Overfull \hbox (24.14651pt too wide) in paragraph at lines 2080--2080
 []\TU/lmtt/m/n/10.95 set shellScript to shellScript & "~/Library/TeXShop/bin/pd
 flatexc  " & baseName[] 

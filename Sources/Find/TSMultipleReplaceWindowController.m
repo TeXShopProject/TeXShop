@@ -5,6 +5,7 @@
 #import "TSAdvancedFindController+MultipleReplace.h"
 #import "TSAdvancedFindOptionsForm.h"
 #import "TSAdvancedFindHighlights.h"
+#import "TSListBottomBar.h"
 
 #define TSLocalized TSAdvancedFindLocalized
 
@@ -96,20 +97,6 @@ static const CGFloat TSSidebarWidth = 240;
     return scroll;
 }
 
-/// A button of the sidebar's bottom bar: a symbol without a border.
-- (NSButton *)barButton:(NSString *)symbol tipKey:(NSString *)key english:(NSString *)english action:(SEL)action
-{
-    NSString *tip = TSLocalized(key, english);
-    NSImage *image = [NSImage imageWithSystemSymbolName:symbol accessibilityDescription:tip] ?: [NSImage new];
-    NSButton *button = [NSButton buttonWithImage:image target:self action:action];
-    button.bordered = NO;
-    button.imageScaling = NSImageScaleProportionallyDown;
-    button.toolTip = tip;
-    [button.widthAnchor constraintEqualToConstant:24].active = YES;
-    [button.heightAnchor constraintEqualToConstant:22].active = YES;
-    return button;
-}
-
 - (NSButton *)button:(NSString *)key english:(NSString *)english action:(SEL)action
 {
     return [NSButton buttonWithTitle:TSLocalized(key, english) target:self action:action];
@@ -154,44 +141,34 @@ static const CGFloat TSSidebarWidth = 240;
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(fitSetColumn) name:NSViewFrameDidChangeNotification
                                              object:self.setTable];
 
-    NSPopUpButton *action = [[NSPopUpButton alloc] initWithFrame:NSZeroRect pullsDown:YES];
-    action.bordered = NO;
-    action.toolTip = TSLocalized(@"MultipleReplace.SetActions", @"Actions for Sets");
-    NSMenuItem *icon = [[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""];
-    icon.image = [NSImage imageWithSystemSymbolName:@"ellipsis.circle" accessibilityDescription:action.toolTip];
-    [action.menu addItem:icon];
-    [action.menu addItemWithTitle:TSLocalized(@"MultipleReplace.Duplicate", @"Duplicate") action:@selector(duplicateSet:) keyEquivalent:@""].target = self;
-    [action.menu addItemWithTitle:TSLocalized(@"MultipleReplace.Import", @"Import…") action:@selector(importSet:) keyEquivalent:@""].target = self;
-    [action.menu addItemWithTitle:TSLocalized(@"MultipleReplace.Export", @"Export…") action:@selector(exportSet:) keyEquivalent:@""].target = self;
-    [action.menu addItem:NSMenuItem.separatorItem];
-    [action.menu addItemWithTitle:TSLocalized(@"MultipleReplace.ShowInFinder", @"Show in Finder") action:@selector(showInFinder:) keyEquivalent:@""].target = self;
-    self.removeSetButton = [self barButton:@"minus" tipKey:@"MultipleReplace.RemoveSet" english:@"Move the Set to the Trash" action:@selector(removeSet:)];
-    NSView *left = [self stackOf:@[[self barButton:@"plus" tipKey:@"MultipleReplace.AddSet" english:@"New Set" action:@selector(addSet:)], self.removeSetButton] spacing:4];
-    action.translatesAutoresizingMaskIntoConstraints = NO;
-    [action.heightAnchor constraintEqualToConstant:22].active = YES;
-
-    NSBox *line = [NSBox new];
-    line.boxType = NSBoxSeparator;
-    line.translatesAutoresizingMaskIntoConstraints = NO;
+    // ＋ − and the menu with three dots, as under the macro editor's items.
+    TSListBottomBar *bar = [[TSListBottomBar alloc] initWithTarget:self
+                                                         addAction:@selector(addSet:) addToolTip:TSLocalized(@"MultipleReplace.AddSet", @"New Set")
+                                                      removeAction:@selector(removeSet:) removeToolTip:TSLocalized(@"MultipleReplace.RemoveSet", @"Move the Set to the Trash")
+                                                    actionsToolTip:TSLocalized(@"MultipleReplace.SetActions", @"Actions for Sets")];
+    bar.translatesAutoresizingMaskIntoConstraints = NO;
+    NSMenu *actions = bar.actionsButton.menu;
+    [actions addItemWithTitle:TSLocalized(@"MultipleReplace.Duplicate", @"Duplicate") action:@selector(duplicateSet:) keyEquivalent:@""].target = self;
+    [actions addItemWithTitle:TSLocalized(@"MultipleReplace.Import", @"Import…") action:@selector(importSet:) keyEquivalent:@""].target = self;
+    [actions addItemWithTitle:TSLocalized(@"MultipleReplace.Export", @"Export…") action:@selector(exportSet:) keyEquivalent:@""].target = self;
+    [actions addItem:NSMenuItem.separatorItem];
+    [actions addItemWithTitle:TSLocalized(@"MultipleReplace.ShowInFinder", @"Show in Finder") action:@selector(showInFinder:) keyEquivalent:@""].target = self;
+    self.removeSetButton = bar.removeButton;
 
     // A sidebar flush with the window's edges, as CotEditor's (AppKit's own sidebar floats as glass in macOS 26).
     NSVisualEffectView *view = [[NSVisualEffectView alloc] initWithFrame:NSMakeRect(0, 0, 200, 400)];
     view.material = NSVisualEffectMaterialSidebar;
     view.blendingMode = NSVisualEffectBlendingModeBehindWindow;
-    for (NSView *child in @[scroll, line, left, action])
+    for (NSView *child in @[scroll, bar])
         [view addSubview:child];
     [NSLayoutConstraint activateConstraints:@[
         [scroll.topAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.topAnchor],
         [scroll.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
         [scroll.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
-        [scroll.bottomAnchor constraintEqualToAnchor:line.topAnchor],
-        [line.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
-        [line.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
-        [line.bottomAnchor constraintEqualToAnchor:left.topAnchor constant:-6],
-        [left.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:12],
-        [left.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-8],
-        [action.centerYAnchor constraintEqualToAnchor:left.centerYAnchor],
-        [action.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-12],
+        [scroll.bottomAnchor constraintEqualToAnchor:bar.topAnchor],
+        [bar.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+        [bar.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
+        [bar.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
         [view.widthAnchor constraintGreaterThanOrEqualToConstant:160],
     ]];
     NSViewController *controller = [NSViewController new];
