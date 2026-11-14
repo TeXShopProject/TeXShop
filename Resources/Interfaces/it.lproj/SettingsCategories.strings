@@ -212,7 +212,6 @@
 "catalog.preview.0.1.title" = "Dopo il ridimensionamento della finestra";
 "catalog.preview.0.2.title" = "Ingrandimento";
 "catalog.preview.0.2.unit" = "%";
-"catalog.preview.0.2.button" = "Imposta";
 "catalog.preview.0.3.title" = "Funzione predefinita del mouse";
 "catalog.preview.0.4.title" = "Non cambiare pagina scorrendo";
 "catalog.preview.0.4.note" = "Con «Pagina singola» e «Pagine affiancate», lo scorrimento con la rotella del mouse o il trackpad si ferma all’inizio e alla fine della pagina.";

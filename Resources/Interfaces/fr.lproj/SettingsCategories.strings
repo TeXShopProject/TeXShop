@@ -212,7 +212,6 @@
 "catalog.preview.0.1.title" = "Après le redimensionnement de la fenêtre";
 "catalog.preview.0.2.title" = "Agrandissement";
 "catalog.preview.0.2.unit" = "%";
-"catalog.preview.0.2.button" = "Confirmer";
 "catalog.preview.0.3.title" = "Réglage de la souris par défaut";
 "catalog.preview.0.4.title" = "Ne pas changer de page en faisant défiler";
 "catalog.preview.0.4.note" = "En « Page simple » et « Page double », le défilement avec la molette de la souris ou le trackpad s’arrête en haut et en bas de la page.";

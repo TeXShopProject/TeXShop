@@ -2022,13 +2022,6 @@
         "value": "currentPdfWindowPosDefault:"
       },
       {
-        "key": "116.action",
-        "view": "settings.116",
-        "kind": "view",
-        "property": "action",
-        "value": "magChanged:"
-      },
-      {
         "key": "345.action",
         "view": "settings.345",
         "kind": "view",
@@ -3303,7 +3296,6 @@
           "343.title": "Two Page",
           "911.title": "Radio",
           "332.title": "Magnify",
-          "866.title": "Set",
           "501.title": "Two-Page Arrangement",
           "871.title": "Always Watch for PDF Changes by Other Apps",
           "636.title": "Select Text",
@@ -4888,13 +4880,6 @@
           "index": 2
         },
         {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "Set"
-        },
-        {
           "key": "501.title",
           "view": "settings.501",
           "kind": "view",
@@ -6476,7 +6461,6 @@
           "343.title": "Doppelseiten",
           "911.title": "Radio",
           "332.title": "Lupe",
-          "866.title": "Anwenden",
           "501.title": "Doppelseiten-Modus",
           "871.title": "PDF-Änderungen durch andere Apps ständig überwachen",
           "636.title": "Textauswahl",
@@ -8061,13 +8045,6 @@
           "index": 2
         },
         {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "Anwenden"
-        },
-        {
           "key": "501.title",
           "view": "settings.501",
           "kind": "view",
@@ -9649,7 +9626,6 @@
           "343.title": "Página doble",
           "911.title": "Radio",
           "332.title": "Aumentar",
-          "866.title": "Establecer",
           "501.title": "Con páginas dobles",
           "871.title": "Vigilar siempre los cambios del PDF hechos por otras apps",
           "636.title": "Seleccionar texto",
@@ -11234,13 +11210,6 @@
           "index": 2
         },
         {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "Establecer"
-        },
-        {
           "key": "501.title",
           "view": "settings.501",
           "kind": "view",
@@ -12822,7 +12791,6 @@
           "343.title": "Page double",
           "911.title": "Radio",
           "332.title": "Agrandir",
-          "866.title": "Confirmer",
           "501.title": "Page double (variantes)",
           "871.title": "Toujours surveiller les modifications du PDF par d’autres apps",
           "636.title": "Sélectionner le texte",
@@ -14407,13 +14375,6 @@
           "index": 2
         },
         {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "Confirmer"
-        },
-        {
           "key": "501.title",
           "view": "settings.501",
           "kind": "view",
@@ -15995,7 +15956,6 @@
           "343.title": "Pagine affiancate",
           "911.title": "Radio",
           "332.title": "Ingrandimento",
-          "866.title": "Imposta",
           "501.title": "Modalità pagine affiancate",
           "871.title": "Controlla sempre le modifiche al PDF fatte da altre app",
           "636.title": "Selezione testo",
@@ -17580,13 +17540,6 @@
           "index": 2
         },
         {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "Imposta"
-        },
-        {
           "key": "501.title",
           "view": "settings.501",
           "kind": "view",
@@ -19168,7 +19121,6 @@
           "343.title": "見開きページ",
           "911.title": "Radio",
           "332.title": "拡大鏡",
-          "866.title": "設定",
           "501.title": "見開きの配置",
           "871.title": "ほかのアプリによるPDFの変更を常に監視",
           "636.title": "文字選択",
@@ -20753,13 +20705,6 @@
           "index": 2
         },
         {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "設定"
-        },
-        {
           "key": "501.title",
           "view": "settings.501",
           "kind": "view",
@@ -22341,7 +22286,6 @@
           "343.title": "두 페이지",
           "911.title": "Radio",
           "332.title": "확대경",
-          "866.title": "설정",
           "501.title": "두 페이지 배열",
           "871.title": "다른 앱의 PDF 변경을 항상 감시",
           "636.title": "글자 선택",
@@ -23926,13 +23870,6 @@
           "index": 2
         },
         {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "설정"
-        },
-        {
           "key": "501.title",
           "view": "settings.501",
           "kind": "view",
@@ -25514,7 +25451,6 @@
           "343.title": "Twee pagina’s",
           "911.title": "Radio",
           "332.title": "Vergroten",
-          "866.title": "Stel in",
           "501.title": "Indeling van dubbele pagina’s",
           "871.title": "Pdf-wijzigingen door andere apps altijd volgen",
           "636.title": "Tekst selecteren",
@@ -27099,13 +27035,6 @@
           "index": 2
         },
         {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "Stel in"
-        },
-        {
           "key": "501.title",
           "view": "settings.501",
           "kind": "view",
@@ -28687,7 +28616,6 @@
           "343.title": "Duas páginas",
           "911.title": "Radio",
           "332.title": "Ampliar",
-          "866.title": "Definir",
           "501.title": "Disposição de páginas duplas",
           "871.title": "Vigiar sempre as alterações ao PDF feitas por outras apps",
           "636.title": "Selecionar texto",
@@ -30272,13 +30200,6 @@
           "index": 2
         },
         {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "Definir"
-        },
-        {
           "key": "501.title",
           "view": "settings.501",
           "kind": "view",
@@ -31860,7 +31781,6 @@
           "343.title": "Página dupla",
           "911.title": "Radio",
           "332.title": "Ampliar",
-          "866.title": "Definir",
           "501.title": "Modo de página dupla",
           "871.title": "Sempre monitorar alterações no PDF feitas por outros apps",
           "636.title": "Selecionar texto",
@@ -33445,13 +33365,6 @@
           "index": 2
         },
         {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "Definir"
-        },
-        {
           "key": "501.title",
           "view": "settings.501",
           "kind": "view",
@@ -35033,7 +34946,6 @@
           "343.title": "Pagină Dublă",
           "911.title": "Radio",
           "332.title": "Lupă",
-          "866.title": "Stabilește",
           "501.title": "Aranjarea paginilor duble",
           "871.title": "Urmărește permanent modificările PDF-ului făcute de alte aplicații",
           "636.title": "Selectează textul",
@@ -36618,13 +36530,6 @@
           "index": 2
         },
         {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "Stabilește"
-        },
-        {
           "key": "501.title",
           "view": "settings.501",
           "kind": "view",
@@ -38206,7 +38111,6 @@
           "343.title": "双页",
           "911.title": "Radio",
           "332.title": "放大镜",
-          "866.title": "设定",
           "501.title": "双页模式",
           "871.title": "始终监视其他应用对PDF的更改",
           "636.title": "选择文本",
@@ -39789,13 +39693,6 @@
           "property": "title",
           "value": "放大镜",
           "index": 2
-        },
-        {
-          "key": "866.title",
-          "view": "settings.116",
-          "kind": "cell",
-          "property": "title",
-          "value": "设定"
         },
         {
           "key": "501.title",

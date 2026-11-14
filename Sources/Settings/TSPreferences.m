@@ -1290,15 +1290,6 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 }
 
 
-/*" This method is connected to the magnification text field on the Preview pane'.
-"*/
-- (IBAction)magChanged:(id)sender
-{
-    [self commitPreferenceField:_magTextField showError:YES reflect:YES];
-}
-
-
-
 - (IBAction)autoPDFChanged:sender
 {
 	[SUD setBool:[(NSCell *)sender state] forKey:PdfRefreshKey];
