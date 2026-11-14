@@ -54,7 +54,20 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
         command.path = path; [commands addObject:command];
     });
     self.commands = commands;
+    [self adoptRenamedCommands];
     [self applySavedOverrides];
+}
+// Before 6.00, the Italian File Encoding and TeXShop item had the identifier of the
+// ConTeXt item. A shortcut saved for it moves to the item it was assigned to, unless
+// the menu has an item with the old identifier or the item already has a shortcut.
+- (void)adoptRenamedCommands {
+    NSDictionary<NSString *, NSString *> *renamed = @{@"TSShortcut.displayGettingStartedConTeXt:.0": @"TSShortcut.displayFileEncoding:.0"};
+    NSSet *present = [NSSet setWithArray:[self.commands valueForKey:@"commandID"]];
+    [renamed enumerateKeysAndObjectsUsingBlock:^(NSString *old, NSString *current, BOOL *stop) {
+        if (!self.overrides[old] || self.overrides[current] || [present containsObject:old] || ![present containsObject:current]) return;
+        self.overrides[current] = self.overrides[old];
+        [self.overrides removeObjectForKey:old];
+    }];
 }
 - (void)applySavedOverrides {
     NSMutableSet *active = [NSMutableSet set];

@@ -73,7 +73,7 @@
                 <outlet property="pdfView" destination="314" id="81"/>
                 <outlet property="pdfWindow" destination="26" id="85"/>
                 <outlet property="popupButton" destination="360" id="380"/>
-                <outlet property="previousButton" destination="1606" id="qdu-yl-BAe"/>
+                <outlet property="previousButton" destination="393" id="qdu-yl-BAe"/>
                 <outlet property="printRequestPanel" destination="232" id="238"/>
                 <outlet property="programButton" destination="399" id="413"/>
                 <outlet property="programButtonEE" destination="421" id="428"/>
@@ -2513,9 +2513,6 @@ Gw
                             </items>
                         </menu>
                     </popUpButtonCell>
-                    <connections>
-                        <action selector="setSaveExtension:" target="-2" id="fqS-Vq-hgb"/>
-                    </connections>
                 </popUpButton>
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2oq-sK-3E1">
                     <rect key="frame" x="96" y="6" width="246" height="26"/>
