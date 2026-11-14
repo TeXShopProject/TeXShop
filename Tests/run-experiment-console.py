@@ -156,7 +156,8 @@ int main(void) { @autoreleasepool {
     NSScrollView *output = console.outputText.enclosingScrollView;
     for (NSValue *size in @[[NSValue valueWithSize:NSMakeSize(504,430)], [NSValue valueWithSize:NSMakeSize(720,600)]]) {
         [console.window setContentSize:size.sizeValue];
-        check(fabs(NSMaxY(output.frame)-NSMinY(console.stopButton.frame))<1, @"stop button sits above output");
+        check(fabs(NSMinY(console.stopButton.frame)-NSMaxY(output.frame)-8)<1 && fabs(NSMaxY(console.window.contentView.bounds)-NSMaxY(console.stopButton.frame)-8)<1, @"stop button sits 8 points above output and below the top");
+        check(fabs(NSMaxX(console.window.contentView.bounds)-NSMaxX(console.stopButton.frame)-20)<1 && console.stopButton.bezelStyle == NSBezelStylePush, @"stop button is a push button 20 points from the right");
         check(NSMaxY(console.commandField.frame)<=NSMinY(output.frame), @"input sits below output");
         check(NSMaxX(console.commandField.frame)<=NSWidth(console.window.contentView.bounds), @"input fits resized console");
     }

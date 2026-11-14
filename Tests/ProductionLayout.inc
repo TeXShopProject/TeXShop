@@ -2,9 +2,10 @@
 // applies to each window after loading its nib. Shared by the checks that
 // load every localized nib.
 #import "TSDialogButtonLayout.h"
+#import "TSConsoleButtonRow.h"
 #import "TSMarkMenu.h"
 // Older nibs set outlets directly on instance variables of these names.
-@interface SpacingOwner : NSObject { @public id linePanel, projectPanel, extensionPanel; }
+@interface SpacingOwner : NSObject { @public id linePanel, projectPanel, extensionPanel, outputWindow; }
 @property (strong) NSMutableDictionary *outlets;
 @end
 @implementation SpacingOwner
@@ -27,6 +28,9 @@ static void ApplyProductionLayout(NSString *name, id owner, NSArray *objects) {
         SpacingOwner *document = owner;
         if (!document->linePanel || !document->projectPanel || !document->extensionPanel) { printf("ERROR TSDocument.nib panels are not connected\n"); exit(2); }
         for (NSWindow *panel in @[document->linePanel, document->projectPanel, document->extensionPanel]) TSLayoutDialogButtonRow(panel);
+        // TSDocument -setupConsole: push buttons along the top of the console.
+        if (![document->outputWindow isKindOfClass:NSWindow.class]) { printf("ERROR TSDocument.nib console is not connected\n"); exit(2); }
+        TSLayoutConsoleButtonRow(document->outputWindow);
     } else if ([name isEqual:@"MainMenu.nib"]) {
         // HelpDocuments (two panels) and TSStationery lay out their OK/Cancel panels.
         NSUInteger dialogs = 0;
