@@ -212,7 +212,8 @@
     },
     "ko": {
       "catalog.appearance.5.0.item.0": "( )",
-      "catalog.editor.4.1.choice.1": "( )"
+      "catalog.editor.4.1.choice.1": "( )",
+      "catalog.appearance.0.1.title": "어두운 테마"
     },
     "pt": {
       "catalog.appearance.5.0.item.0": "( )",

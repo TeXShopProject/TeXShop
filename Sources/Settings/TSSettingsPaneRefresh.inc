@@ -105,12 +105,8 @@
         [_wrapMatrix selectCellWithTag:1];
     else
         [_wrapMatrix selectCellWithTag:2];
-    if ([defaults integerForKey:FindMethodKey] == 0)
-        [_findMatrix selectCellWithTag:0];
-    else if ([defaults integerForKey:FindMethodKey] == 1)
-        [_findMatrix selectCellWithTag:1];
-    else
-        [_findMatrix selectCellWithTag:2];
+    NSInteger findMethod = [defaults integerForKey:FindMethodKey];
+    [_findMatrix selectCellWithTag:(findMethod >= 0 && findMethod <= 3 ? findMethod : 0)];
     if ([defaults integerForKey:LineNumberSizeKey] == 0)
         [_lineSizeMatrix selectCellWithTag:0];
     else if ([defaults integerForKey:LineNumberSizeKey] == 1)
@@ -312,6 +308,8 @@
     [_sparkleAutomaticButton setState:[defaults boolForKey:SparkleAutomaticUpdateKey]];
 
     [_sparkleIntervalMatrix selectCellWithTag:[defaults integerForKey:SparkleIntervalKey]];
+    self.sparklePrereleaseButton.state = [defaults boolForKey:SparklePrereleaseUpdatesKey] ? NSControlStateValueOn : NSControlStateValueOff;
+    if (defaults == SUD) [self refreshSparkleLastCheck];
 #ifdef USESPARKLE
     if (defaults == SUD && [TSSparkleController sharedUpdater] != nil)
     {

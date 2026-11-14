@@ -151,9 +151,11 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     shortcut.title = NSLocalizedString(@"Shortcut", @""); shortcut.width = 110; shortcut.minWidth = 90;
     [self.table addTableColumn:command]; [self.table addTableColumn:shortcut];
     scroll.documentView = self.table;
-    // The command list absorbs the space left by the three always-open groups.
-    [scroll.heightAnchor constraintGreaterThanOrEqualToConstant:80].active = YES;
-    NSLayoutConstraint *compactList = [scroll.heightAnchor constraintEqualToConstant:80];
+    // The command list shows at least six commands and takes, with the key
+    // binding list, the height a taller window leaves.
+    CGFloat minimum = 6 * (self.table.rowHeight + self.table.intercellSpacing.height) + 28;
+    [scroll.heightAnchor constraintGreaterThanOrEqualToConstant:minimum].active = YES;
+    NSLayoutConstraint *compactList = [scroll.heightAnchor constraintEqualToConstant:minimum];
     compactList.priority = 1; compactList.active = YES;
     [scroll setContentHuggingPriority:1 forOrientation:NSLayoutConstraintOrientationVertical];
     self.table.headerView.identifier = @"shortcut.columns";
@@ -206,6 +208,12 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
         // Rebuild this card after adding its real content, so its fill starts below the heading.
         for (NSView *view in group.subviews.copy) if ([view.identifier isEqual:@"card.background"]) [view removeFromSuperview];
         [TSPrefPaneLayout decorateGroupsInView:group];
+        // The two lists share the extra height equally.
+        NSView *bindings = [self viewWithIdentifier:@"keybindings.list" inView:settingsHeader];
+        if (bindings != nil) {
+            NSLayoutConstraint *share = [scroll.heightAnchor constraintEqualToAnchor:bindings.heightAnchor];
+            share.priority = 150; share.active = YES;
+        }
         self.view = settingsHeader;
     }
     [self reloadCommands];

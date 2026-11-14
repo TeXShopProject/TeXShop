@@ -49,7 +49,9 @@ static void CheckOwnerSearch(TSPreferences *owner,TSSettingsWindowController *sh
     [keyboard stopKeySearch];Check([keyboard valueForKey:@"highlightedCompletionRow"]==nil && row.layer.backgroundColor==nil,@"Stopping key search clears the real completion highlight");
     // Each merged color result must mark only its own grid row.
     NSGridView *grid=(NSGridView *)Find([shell viewForCategoryIdentifier:TSSettingsCategoryAppearance],@"settings.color-table");
-    Check(grid.numberOfRows==5,@"Color table retains header and four named rows");
+    // Rows: the column headings, Source, Console, Log, the Light Pages heading, Preview.
+    NSArray<NSNumber *> *named=@[@1,@2,@3,@5];
+    Check(grid.numberOfRows==6,@"Color table retains header, four named rows and the Light Pages heading");
     for(NSInteger c=1;c<4;c++){
         NSTextField *header=(NSTextField *)[grid cellAtColumnIndex:c rowIndex:0].contentView;
         CGFloat required=[header.stringValue sizeWithAttributes:@{NSFontAttributeName:header.font}].width;
@@ -63,15 +65,15 @@ static void CheckOwnerSearch(TSPreferences *owner,TSSettingsWindowController *sh
         Check(marks.count==1 && marks[0].superview==grid,@"Merged color search highlights only its selected grid row");
         NSRect selected=marks[0].frame;
         for(NSInteger c=0;c<4;c++){
-            NSView *content=[grid cellAtColumnIndex:c rowIndex:i+1].contentView;
+            NSView *content=[grid cellAtColumnIndex:c rowIndex:named[i].integerValue].contentView;
             if(content==nil || content==NSGridCell.emptyContentView)continue;
             NSRect bounds=[content convertRect:content.bounds toView:grid];
             Check(NSContainsRect(NSInsetRect(selected,4,2),bounds),@"Color row highlight leaves padding around names and percent fields");
         }
-        for(NSInteger j=1;j<5;j++){
-            NSView *label=[grid cellAtColumnIndex:0 rowIndex:j].contentView;
+        for(NSNumber *j in named){
+            NSView *label=[grid cellAtColumnIndex:0 rowIndex:j.integerValue].contentView;
             NSRect bounds=[label convertRect:label.bounds toView:grid];
-            Check(NSIntersectsRect(selected,bounds)==(j==(NSInteger)i+1),@"Color highlight identifies one named row without neighboring rows");
+            Check(NSIntersectsRect(selected,bounds)==(j.integerValue==named[i].integerValue),@"Color highlight identifies one named row without neighboring rows");
         }
     }
     [shell setSettingsSearchQuery:@""];

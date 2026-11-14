@@ -15,14 +15,8 @@ parser.add_argument("--mutation", choices=["no-window-load", "no-yen-filter", "n
 parser.add_argument("--artifacts", type=Path, help="Save headless light/dark console previews")
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
-def cut(text, start, end):
-    a = text.index(start)
-    return text[a:text.index(end, a)]
-enc = (root / 'Sources/App/TSEncodingSupport.m').read_text(encoding='latin1')
-helpers = cut(enc, '// UTF-8 in which each byte that does not start or continue a valid character is replaced', '// The byte order mark that starts data')
-japanese = cut(enc, '// Japanese encodings read the byte 0x5C', '- (BOOL)ptexUtfOutputCheck:')
-filters = enc[enc.index('// replace backslashes by yens'):].rstrip() + '\n'
-controller = (root / 'Sources/Typesetting/TSExperimentConsoleController.m').read_text().replace('#import "TSEncodingSupport.h"', '').replace('#import "globals.h"', '')
+from experiment_console_source import prefix as console_prefix, controller_source, advanced_find_sources
+controller = controller_source(root)
 if args.mutation == "no-window-load":
     assert "[self loadWindow];" in controller
     controller = controller.replace("[self loadWindow];", "", 1)
@@ -57,47 +51,7 @@ elif args.mutation == "echo-scanned":
     controller = controller.replace(echo, "        self.engineLine = [self.engineLine stringByAppendingString:displayCommand];\n        self.outputCount++;", 1)
 if args.mutation == "no-console-alpha":
     controller = controller.replace('self.window.alphaValue = TSThemeWindowAlpha(theme, TSThemeConsoleAlphaKey);', '')
-prefix = r'''
-#import <Cocoa/Cocoa.h>
-#import "TestAppKitIsolation.h"
-#import "TSExperimentJob.h"
-#import "TSColorSupport.h"
-#import "TSEncodingSupport.h"
-typedef enum { kNoFilterMode = 0, kMacJapaneseFilterMode = 1, kOtherJapaneseFilterMode = 2 } TSFilterMode;
-static TSFilterMode g_shouldFilter = kNoFilterMode;
-static NSString *yenString = @"\u00a5";
-@implementation TSEncodingSupport
-+ (instancetype)sharedInstance { static TSEncodingSupport *s; if (!s) s = [self new]; return s; }
-HELPERS
-JAPANESE
-@end
-FILTERS
-static NSDictionary *liteColors;
-static NSDictionary *darkColors;
-@implementation TSColorSupport
-+ (id)sharedInstance { static id s; if (!s) s = [self new]; return s; }
-- (NSColor *)opaqueColorForKey:(NSString *)key fromDictionary:(NSDictionary *)theme isWindowDark:(BOOL)dark
-{ return theme[key] ?: (dark ? NSColor.blackColor : NSColor.whiteColor); }
-@end
-static BOOL behind;
-@interface TestDefaults : NSObject
-- (BOOL)boolForKey:(NSString *)key;
-- (NSString *)stringForKey:(NSString *)key;
-- (float)floatForKey:(NSString *)key;
-@end
-@implementation TestDefaults
-- (NSString *)stringForKey:(NSString *)key { return @"Menlo"; }
-- (float)floatForKey:(NSString *)key { return 15; }
-- (BOOL)boolForKey:(NSString *)key { return [key isEqualToString:@"ConsoleBehavior"] ? behind : YES; }
-@end
-#define SUD ((TestDefaults *)[TestDefaults new])
-#define SourceColorChangedNotification @"SourceColorChanged"
-#define ConsoleFontNameKey @"ConsoleFontName"
-#define ConsoleFontSizeKey @"ConsoleFontSize"
-#define ConsoleFontChangedNotification @"ConsoleFontChanged"
-#define ConsoleBehaviorKey @"ConsoleBehavior"
-#define BringPdfFrontOnTypesetKey @"BringPdfFront"
-'''.replace('HELPERS', helpers).replace('JAPANESE', japanese).replace('FILTERS', filters)
+prefix = console_prefix(root)
 tests = r'''
 // Keep the production initializer, window getter, loadWindow and appendText.
 // Keep frame autosave bookkeeping in memory.
@@ -361,7 +315,7 @@ int main(void) { @autoreleasepool {
 with tempfile.TemporaryDirectory(prefix='texshop-experiment-console-') as tmp:
     src, exe = Path(tmp) / 'test.m', Path(tmp) / 'test'
     src.write_text(prefix + controller + tests)
-    subprocess.run(['xcrun', 'clang', '-I', str(root/'Tests'), '-w', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit', '-framework', 'WebKit', '-framework', 'Quartz', *include_args(root), str(src), str(root / 'Sources/Typesetting/TSExperimentJob.m'), str(root / 'Sources/Typesetting/TSConsoleOutput.m'), '-o', str(exe)], check=True)
+    subprocess.run(['xcrun', 'clang', '-I', str(root/'Tests'), '-w', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit', '-framework', 'WebKit', '-framework', 'Quartz', *include_args(root), str(src), str(root / 'Sources/Typesetting/TSExperimentJob.m'), str(root / 'Sources/Typesetting/TSConsoleOutput.m'), *advanced_find_sources(root, tmp), '-o', str(exe)], check=True)
     (Path(tmp)/'home'/'Library'/'Preferences').mkdir(parents=True)
     env = dict(os.environ, HOME=str(Path(tmp)/'home'), CFFIXED_USER_HOME=str(Path(tmp)/'home'),
                TSDOCUMENT_NIB=str(root / 'Resources/Interfaces/Base.lproj/TSDocument.nib/keyedobjects.nib'))

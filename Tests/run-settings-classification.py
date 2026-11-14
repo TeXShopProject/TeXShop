@@ -2,7 +2,7 @@
 """Exercise final categories, original controls and dependencies without showing a window."""
 from pathlib import Path
 import argparse,json,subprocess,tempfile
-from pane_fixtures import bundles,sources
+from pane_fixtures import bundles,sources,key_binding_sources
 from encoding_menu_fixture import encoding_menu_fixture
 from source_tree import include_args, source_file
 r=Path(__file__).resolve().parents[1]
@@ -19,7 +19,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
  SearchCoverage(panes,bundle);return 0;
  NSMutableDictionary *after=[NSMutableDictionary dictionary];''')
  (t/'test.m').write_text(program)
- extra=[r/'Sources/Settings/TSPreferences.m',r/'Sources/Settings/TSPreferences-Color.m',r/'Sources/Editor/TSColorSupport.m',r/'Sources/Settings/TSThemeFileStore.m',r/'Sources/App/globals.m',r/'Sources/Settings/TSPreferenceInput.m',r/'Tests/PreferencesTestServices.m',*sorted((r/'Sources').rglob('TSSettings*.m'))]
+ extra=[r/'Sources/Settings/TSPreferences.m',r/'Sources/Settings/TSPreferences-Color.m',r/'Sources/Editor/TSColorSupport.m',r/'Sources/Settings/TSThemeFileStore.m',r/'Sources/App/globals.m',r/'Sources/Settings/TSPreferenceInput.m',r/'Tests/PreferencesTestServices.m',*key_binding_sources(r),*sorted((r/'Sources').rglob('TSSettings*.m'))]
  compile_command=['xcrun','clang','-fobjc-arc','-F',str(r/'Frameworks'),'-Wno-deprecated-declarations','-Wnullability-completeness','-Wnullable-to-nonnull-conversion','-Wunguarded-availability-new','-mmacosx-version-min=14.6',*include_args(r),'-I',str(r/'Tests'),'-framework','Cocoa',str(t/'test.m'),*map(str,sources(r)),str(r/'Sources/Settings/TSPreferences+Panes.m'),*map(str,extra),str(r/'Sources/App/TSDockIconController.m'),'-o',str(t/'probe')]
  if args.search_catalog or args.search_source:
   (t/'TSSettingsSearch.m').write_text((args.search_source or r/'Sources/Settings/TSSettingsSearch.m').read_text())

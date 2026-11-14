@@ -18,6 +18,7 @@ is read. --mutation=NAME undoes one part, and the test must then fail."""
 from pathlib import Path
 import argparse, os, subprocess, tempfile
 from source_tree import include_args
+from experiment_console_source import advanced_find_sources
 
 MUTATIONS = ['no-experiment-delegate', 'no-normal-delegate', 'send-field', 'modifiers', 'no-focus',
              'select-draft', 'send-when-stopped', 'normal-always-send', 'sigpipe',
@@ -493,7 +494,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-console-output-return-') as tmp
     jsrc.write_text(job)
     (Path(tmp) / 'TSConsoleOutput.h').write_text(header)
     subprocess.run(['xcrun', 'clang', '-I', tmp, '-I', str(root / 'Tests'), '-w', '-fobjc-arc', '-framework', 'Cocoa',
-                    f'-DTEXBIN="{texbin}"', *include_args(root), str(src), str(dsrc), str(jsrc), '-o', str(exe)], check=True)
+                    f'-DTEXBIN="{texbin}"', *include_args(root), str(src), str(dsrc), str(jsrc), *advanced_find_sources(root, tmp), '-o', str(exe)], check=True)
     home = Path(tmp) / 'home'
     (home / 'Library' / 'Preferences').mkdir(parents=True)
     env = dict(os.environ, HOME=str(home), CFFIXED_USER_HOME=str(home))

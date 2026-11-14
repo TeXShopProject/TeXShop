@@ -231,7 +231,6 @@
 "Use LaTeX-aware spell checking (recommended)" = "LaTeX-bewusste Rechtschreibprüfung verwenden (empfohlen)";
 "Use legacy spell checking" = "Bisherige Rechtschreibprüfung verwenden";
 "LaTeX Spell Checking" = "LaTeX-Rechtschreibprüfung";
-"Edit Key Bindings…" = "Tastenbelegungs-Editor…";
 "Key Bindings" = "Tastenbelegungen";
 "Edit Command Completion…" = "Befehlsvervollständigung bearbeiten…";
 "Command Completion" = "Befehlsvervollständigung";
@@ -323,7 +322,6 @@
 /* Macro editor placeholder guide */
 "#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = ausgewählter Text, #INS# = Einfügemarke nach dem Makro, #PASTE# = Text in der Zwischenablage. AppleScript-Makros können auch #FILEPATH# und weitere Platzhalter verwenden (siehe Hilfe).";
 /* Key binding editor placeholder guide */
-"* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = ausgewählte Zeichen, #INS# = Einfügemarke, #PASTE# = Text in der Zwischenablage";
 
 /* Edit › Mark */
 "Insert Mark with Note" = "Marke mit Notiz einfügen";
@@ -336,3 +334,25 @@
 "Deletes the previous • and selects its note, if it has one." = "Löscht das vorhergehende • und wählt seine Notiz aus, falls vorhanden.";
 "• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = Marke, •‹Notiz› = Marke mit Notiz; mit %@ › %@ springen Sie zwischen ihnen.";
 "Marks" = "Marken";
+
+/* Settings › Keyboard › Key Bindings */
+"Input Character" = "Eingabezeichen";
+"Output String" = "Ausgabetext";
+"Selected Text" = "Ausgewählter Text";
+"Insertion Point" = "Einfügemarke";
+"Clipboard Text" = "Text aus der Zwischenablage";
+"Line Break" = "Zeilenumbruch";
+"Tab" = "Tabulator";
+"Mark" = "Marke";
+"Mark with Note" = "Marke mit Notiz";
+"note" = "Notiz";
+"Insert" = "Einfügen";
+"Add" = "Hinzufügen";
+"Delete" = "Löschen";
+"Symbols" = "Symbole";
+"Display" = "Darstellung";
+"Typed As" = "Eingabe";
+"Add Key Binding" = "Tastenbelegung hinzufügen";
+"Change Key Binding" = "Tastenbelegung ändern";
+"Delete Key Binding" = "Tastenbelegung löschen";
+"Move Key Binding" = "Tastenbelegung bewegen";

@@ -58,6 +58,8 @@
 #import "OgreKit/OgreTextFinder.h"
 #import "TSSettingsChangeNote.h"
 #import "TextFinder.h"
+#import "TSPreferenceLaunch.h"
+#import "TSMultipleReplaceMenu.h"
 
 #include <sys/sysctl.h>     // for testForIntel
 #include <mach/machine.h>   // for testForIntel
@@ -224,6 +226,13 @@
     // Marks work without command completion; their commands belong in Edit.
     [TSMarkMenu installInMenu:NSApp.mainMenu];
     // OgreKit replaces the Find submenu during the launch notification.
+    // Multiple Replace joins the Find submenu after that, and before the shortcuts are read from the menu.
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSString *directory = [[TeXShopPath stringByStandardizingPath] stringByAppendingPathComponent:@"MultipleReplace"];
+        NSMenu *mainMenu = NSApp.mainMenu;
+        if (mainMenu)
+            [TSMultipleReplaceMenu installInMainMenu:mainMenu directory:[NSURL fileURLWithPath:directory isDirectory:YES]];
+    });
     [[TSKeyboardShortcuts sharedController] startAfterLaunchWithConfiguration:^(TSKeyboardShortcuts *shortcuts) {
         shortcuts.showSettings = ^{ [[TSPreferences sharedInstance] showKeyboardSettings:nil]; };
         shortcuts.macroProvider = ^{ return [[TSMacroMenuController sharedInstance] shortcutEntries]; };
@@ -347,11 +356,12 @@
 
 	// if this is the first time the app is used, register a set of defaults to make sure
 	// that the app is useable.
-	if (([[NSUserDefaults standardUserDefaults] boolForKey:TSHasBeenUsedKey] == NO) ||
-		([[NSUserDefaults standardUserDefaults] objectForKey:TetexBinPath] == nil)) {
+	if (TSPreferencesNeedFactoryReset(SUD)) {
         // then no defaults have ever been set, so we need to set them on disk
 		[[TSPreferences sharedInstance] registerFactoryDefaults];
 	} else {
+		// after the decision above, and only for those whose settings were kept
+		TSPreferencesMigrateEarlierUser(SUD, savedSettings);
 		// register defaults; this does not interfere with values previously set by the user, but provides default values for all other defaults
 		fileName = [[NSBundle mainBundle] pathForResource:@"FactoryDefaults" ofType:@"plist" inDirectory:@"Defaults"];
 		NSParameterAssert(fileName != nil);
@@ -862,10 +872,6 @@
 	    
 	[self testForIntel];
 	
-	PreviewBackgroundColor = [NSColor colorWithCalibratedRed: [SUD floatForKey:PdfPageBack_RKey]
-										  green: [SUD floatForKey:PdfPageBack_GKey] blue: [SUD floatForKey:PdfPageBack_BKey]
-										  alpha: 1];
-	// [PreviewBackgroundColor retain];
 	[self finishMenuKeyEquivalentsConfigure];
 
 }

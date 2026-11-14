@@ -190,7 +190,6 @@
 @property BOOL                                      oldUsed;
 @property BOOL                                      doScroll;
 @property BOOL                                      skipLinks;
-@property BOOL                                      globalLongTerm;
 @property NSInteger                                 stringAlignment;
 
 @property BOOL                                      firstTime;
@@ -256,6 +255,7 @@
 - (void) scrollByDragging: (NSEvent *)theEvent;
 - (void) zoomIn: (id)sender;
 - (void) zoomOut: (id)sender;
+- (void)zoomToContentWidthOnly:(BOOL)widthOnly;
 - (void) fancyMouseDown: (NSEvent *)theEvent;
 - (BOOL) toolIsMagnification;
 - (BOOL) validateMenuItem:(NSMenuItem *)anItem;
@@ -273,8 +273,9 @@
 - (void)selectAll: (id)sender;
 - (void)updateMarquee: (NSTimer *)timer;
 - (void)cleanupMarquee: (BOOL)terminate;
-// The same cleanup, but a pinned link popup stays: for another window becoming main and for
-// splitting or unsplitting the window, which keep the page where it is (#14).
+// The same cleanup, but a pinned link popup stays: for another window becoming main, for
+// splitting or unsplitting the window (#14), and for zoom and turning pages, which do not
+// go to another place (#35).
 - (void)cleanupMarqueeKeepingPinnedLinkPreview;
 // Whether `point`, in window coordinates, is in the visible part of a pinned link popup.
 - (BOOL)pinnedLinkPreviewContainsWindowPoint:(NSPoint)point;
@@ -286,6 +287,9 @@
 // Brings a pinned link popup back into view, as far as dragging it would, after the view
 // changed size.
 - (void)keepPinnedLinkPreviewInView;
+// Closes the pinned link popup of this part, which goes to another place: following a link,
+// the outline, Back and Forward, a page number, a search result or a sync (#35).
+- (void)closePinnedLinkPreview;
 - (void)recacheMarquee;
 - (BOOL)hasSelection;
 - (NSData *)imageDataFromSelectionType: (NSInteger)type;
@@ -308,6 +312,7 @@
 - (void)keyDown:(NSEvent *)theEvent;
 - (void)updateBackground: (NSRect)aRect;
 // - (void)goToKitPageNumber: (NSInteger) thePage;
+- (MyPDFKitView *)previewPartForMenuEvent: (NSEvent *)theEvent;
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent;
 - (PDFDestination *)internalLinkDestinationAtPoint: (NSPoint)viewPoint;
 - (void)splitWindowWithLink: (id)sender;
@@ -339,6 +344,10 @@
 - (void)applyDarkModeInversionFilter;
 - (void)removeDarkModeInversionFilter;
 - (void)updateDarkModeInversion;
+// The paper of pages shown light, from the theme of the window's appearance; nil
+// while pages are shown dark. Read while PDFKit draws pages.
+@property (atomic, strong, readonly) NSColor *previewPaperColor;
+- (void)updatePreviewPaperColor;
 
 // splittingWindow
 - (void)saveLocation;

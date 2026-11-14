@@ -226,6 +226,8 @@ NSString *ConsoleWindowFixedPosKey = @"ConsoleWindowFixedPos";
 NSString *ConsoleWindowPosModeKey = @"ConsoleWindowPosMode";
 NSString *SparkleAutomaticUpdateKey = @"SparkleAutomaticUpdate";
 NSString *SparkleIntervalKey = @"SparkleInterval";
+NSString *SparklePrereleaseUpdatesKey = @"SparklePrereleaseUpdates";
+NSString *SparklePrereleaseForcedVersionKey = @"SparklePrereleaseForcedVersion";
 NSString *reverseSyncRedKey = @"ReverseSyncRed";
 NSString *reverseSyncGreenKey = @"ReverseSyncGreen";
 NSString *reverseSyncBlueKey = @"ReverseSyncBlue";
@@ -401,7 +403,6 @@ BOOL g_canRegisterCommandCompletion = NO;
 
 NSColor *InvisibleColor = nil;
 NSColor *ReverseSyncColor = nil;
-NSColor *PreviewBackgroundColor = nil;
 NSDictionary *highlightBracesColorDict; // added by Terada
 NSDictionary *highlightContentColorDict; // added by Terada
 NSColor *ImageForegroundColor = nil;

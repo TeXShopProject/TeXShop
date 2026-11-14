@@ -37,18 +37,37 @@
 
 // Scroll so the line containing `range` is vertically centred in the visible
 // area, as far as the ends of the document allow.
+//
+// A long text is laid out only where it is needed (non-contiguous layout), and
+// where text that has not been laid out lies is an estimate. Laid out alone,
+// the range is placed among estimates. Once the lines to be shown above it are
+// laid out, it moves, often by more than a screen, while the view keeps its
+// top line, so that it could end up below the visible area (#38). So the text
+// that is to be shown around the range is laid out first, until the range
+// stays where it is, and the view is then scrolled once. About a screen of
+// text is laid out, not the whole text before the range. This also lays out
+// the text below the range, so that the text view is already tall enough to
+// centre it when the text is laid out in full.
 + (void)centerRange:(NSRange)range inTextView:(NSTextView *)tv
 {
     NSScrollView *sv = tv.enclosingScrollView;
     if (!sv) { [tv scrollRangeToVisible:range]; return; }
     NSLayoutManager *lm = tv.layoutManager;
-    // Lay out only as much as is needed to place the range, not the whole text.
-    [lm ensureLayoutForCharacterRange:range];
-    NSRange glyphs = [lm glyphRangeForCharacterRange:range actualCharacterRange:NULL];
-    NSRect r = [lm boundingRectForGlyphRange:glyphs inTextContainer:tv.textContainer];
-    CGFloat midY = NSMidY(r) + tv.textContainerOrigin.y;
+    NSTextContainer *tc = tv.textContainer;
     NSClipView *clip = sv.contentView;
     CGFloat viewH = clip.bounds.size.height;
+    NSRect r = NSZeroRect;
+    for (NSUInteger pass = 0; pass < 8; pass++) {
+        [lm ensureLayoutForCharacterRange:range];
+        NSRange glyphs = [lm glyphRangeForCharacterRange:range actualCharacterRange:NULL];
+        NSRect placed = [lm boundingRectForGlyphRange:glyphs inTextContainer:tc];
+        if (pass > 0 && NSEqualRects(placed, r)) break;
+        r = placed;
+        // The part of the text container that is to be visible.
+        [lm ensureLayoutForBoundingRect:NSMakeRect(0, NSMidY(r) - viewH / 2, tc.size.width, viewH)
+                        inTextContainer:tc];
+    }
+    CGFloat midY = NSMidY(r) + tv.textContainerOrigin.y;
     CGFloat docH = MAX(tv.frame.size.height, NSMaxY(r) + 2 * tv.textContainerOrigin.y);
     CGFloat topY = midY - viewH / 2;
     topY = MAX(0, MIN(topY, MAX(docH - viewH, 0)));
@@ -364,29 +383,45 @@ static NSString *SuggestionAtRow(NSTableView *table, NSInteger row)
     sReplacementStatus.stringValue = @"";
 }
 
+// BEGIN change all accessory
+// The view below the Spelling and Grammar panel: the replacement field, Change All
+// and a line for what Change All reports. The field and the line are returned
+// through the arguments.
+static NSView *TSChangeAllAccessory(id target, NSTextField * __strong *field, NSTextField * __strong *status)
+{
+    NSView *accessory = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 431, 76)];
+    NSTextField *replacement = [[NSTextField alloc] initWithFrame:NSMakeRect(8, 47, 290, 22)];
+    replacement.placeholderString = NSLocalizedString(@"Replacement for Change All", @"");
+    replacement.autoresizingMask = NSViewWidthSizable;
+    // One line that scrolls, as a search field does, not text that wraps out of sight.
+    replacement.cell.wraps = NO;
+    replacement.cell.scrollable = YES;
+    replacement.usesSingleLineMode = YES;
+    replacement.target = target;
+    replacement.action = @selector(changeAll:);
+    [accessory addSubview:replacement];
+    NSTextField *line = [NSTextField wrappingLabelWithString:@""];
+    line.frame = NSMakeRect(8, 3, 415, 38);
+    line.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
+    line.textColor = NSColor.secondaryLabelColor;
+    line.autoresizingMask = NSViewWidthSizable;
+    [accessory addSubview:line];
+    NSButton *button = [NSButton buttonWithTitle:NSLocalizedString(@"Change All", @"")
+                                        target:target action:@selector(changeAll:)];
+    button.frame = NSMakeRect(307, 45, 116, 26);
+    button.autoresizingMask = NSViewMinXMargin;
+    [accessory addSubview:button];
+    *field = replacement; *status = line;
+    return accessory;
+}
+// END change all accessory
+
 // The replacement field remains a documented accessoryView and can always be
 // edited manually. Selecting a suggestion only fills it; it does not replace text.
 + (void)installChangeAllButton
 {
     if (sReplacementField) return;
-    NSView *accessory = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 431, 76)];
-    sReplacementField = [[NSTextField alloc] initWithFrame:NSMakeRect(8, 47, 290, 22)];
-    sReplacementField.placeholderString = NSLocalizedString(@"Replacement for Change All", @"");
-    sReplacementField.autoresizingMask = NSViewWidthSizable;
-    sReplacementField.target = self;
-    sReplacementField.action = @selector(changeAll:);
-    [accessory addSubview:sReplacementField];
-    sReplacementStatus = [NSTextField wrappingLabelWithString:@""];
-    sReplacementStatus.frame = NSMakeRect(8, 3, 415, 38);
-    sReplacementStatus.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
-    sReplacementStatus.textColor = NSColor.secondaryLabelColor;
-    sReplacementStatus.autoresizingMask = NSViewWidthSizable;
-    [accessory addSubview:sReplacementStatus];
-    NSButton *button = [NSButton buttonWithTitle:NSLocalizedString(@"Change All", @"")
-                                        target:self action:@selector(changeAll:)];
-    button.frame = NSMakeRect(307, 45, 116, 26);
-    button.autoresizingMask = NSViewMinXMargin;
-    [accessory addSubview:button];
+    NSView *accessory = TSChangeAllAccessory(self, &sReplacementField, &sReplacementStatus);
     [NSSpellChecker sharedSpellChecker].accessoryView = accessory;
     [NSNotificationCenter.defaultCenter addObserver:self
         selector:@selector(spellingSuggestionSelectionDidChange:)
@@ -452,12 +487,21 @@ static NSString *SuggestionAtRow(NSTableView *table, NSInteger row)
     return word;
 }
 
-+ (void)showSpellingPanelForTextView:(NSTextView *)tv mask:(TSSpellMask *)mask openPanel:(void (^)(void))openPanel
++ (void)showSpellingPanelForTextView:(NSTextView *)tv mask:(TSSpellMask *)mask hidePanel:(void (^)(void))hidePanel
 {
-    NSRange before = tv.selectedRange;
+    NSPanel *panel = [NSSpellChecker sharedSpellChecker].spellingPanel;
+    // While the panel is shown, the menu item reads Hide Spelling and Grammar.
+    if (panel.isVisible) {
+        hidePanel();
+        return;
+    }
+    // The panel is shown here, not by the text view's own showGuessPanel:. That
+    // one also starts the system's search, which does not know the rules, and
+    // in a long text, or when grammar is checked too, carries on after it has
+    // returned. It would then select its own finding in place of the one below,
+    // and show it in the panel.
     [self installChangeAllButton];
-    openPanel();                        // shows the panel; the system also selects "its" first misspelling
-    tv.selectedRange = before;          // undo that markup-blind search
+    [panel orderFront:nil];
     NSString *word = [self findNextMisspellingInTextView:tv mask:mask];
 
     // Do not schedule another search with a captured mask: the document or
@@ -581,6 +625,36 @@ static NSTextView *FrontTextView(void)
     }];
 }
 
+// BEGIN learned words alert
+// The alert that lists the learned words of a document so that some can be
+// forgotten; the table is returned in table.
+static NSAlert *TSLearnedWordsAlert(NSString *language, id<NSTableViewDataSource> list, NSTableView * __strong *table)
+{
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.messageText = NSLocalizedString(@"Forget learned words", @"");
+    alert.informativeText = [NSString stringWithFormat:NSLocalizedString(
+        @"These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several.", @""), language];
+
+    NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, 340, 220)];
+    scroll.hasVerticalScroller = YES;
+    scroll.borderType = NSBezelBorder;
+    NSTableView *wordsTable = [[NSTableView alloc] initWithFrame:scroll.bounds];
+    NSTableColumn *column = [[NSTableColumn alloc] initWithIdentifier:@"word"];
+    column.width = 316;
+    [wordsTable addTableColumn:column];
+    wordsTable.headerView = nil;
+    wordsTable.allowsMultipleSelection = YES;
+    wordsTable.dataSource = list;
+    [wordsTable reloadData];
+    scroll.documentView = wordsTable;
+    alert.accessoryView = scroll;
+    [alert addButtonWithTitle:NSLocalizedString(@"Forget Selected", @"")];
+    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+    *table = wordsTable;
+    return alert;
+}
+// END learned words alert
+
 + (void)showLearnedWords:(NSArray<NSString *> *)words
 {
     NSSpellChecker *checker = [NSSpellChecker sharedSpellChecker];
@@ -595,27 +669,10 @@ static NSTextView *FrontTextView(void)
         return;
     }
 
-    alert.messageText = NSLocalizedString(@"Forget learned words", @"");
-    alert.informativeText = [NSString stringWithFormat:NSLocalizedString(
-        @"These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several.", @""), language];
-
     TSLearnedWordsList *list = [[TSLearnedWordsList alloc] init];
     list.words = words;
-    NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, 340, 220)];
-    scroll.hasVerticalScroller = YES;
-    scroll.borderType = NSBezelBorder;
-    NSTableView *table = [[NSTableView alloc] initWithFrame:scroll.bounds];
-    NSTableColumn *column = [[NSTableColumn alloc] initWithIdentifier:@"word"];
-    column.width = 316;
-    [table addTableColumn:column];
-    table.headerView = nil;
-    table.allowsMultipleSelection = YES;
-    table.dataSource = list;
-    [table reloadData];
-    scroll.documentView = table;
-    alert.accessoryView = scroll;
-    [alert addButtonWithTitle:NSLocalizedString(@"Forget Selected", @"")];
-    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+    NSTableView *table = nil;
+    alert = TSLearnedWordsAlert(language, list, &table);
     alert.window.initialFirstResponder = table;
 
     if ([alert runModal] != NSAlertFirstButtonReturn) return;

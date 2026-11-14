@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-"1080.title" = "Painel de localizar OgreKit";
+"1080.title" = "Painel de localizar OgreKit (legado)";
+"adv-Fd-Pnl.title" = "Painel de localizar avançado";
 "14.title" = "Fonte para o documento";
 "19.title" = "Posição da janela do código fonte";
 "236.title" = "No início";

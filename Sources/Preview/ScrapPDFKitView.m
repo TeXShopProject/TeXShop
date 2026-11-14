@@ -46,6 +46,8 @@
 #import "TSPreviewAppearance.h"
 #import "TSExperimentTheme.h"
 #import "TSMagnifyingGlass.h"
+#import "TSContentZoom.h"
+#import "TSPDFScreenRendering.h"
 
 
 
@@ -67,6 +69,8 @@ static const NSInteger TSExperimentToolCount = 4;
 @property (nonatomic, strong) PDFPage *selectionPage;
 @property (nonatomic) NSRect selectionPageRect;
 @property (nonatomic, strong) PDFPage *lensPage;
+@property (nonatomic, strong) NSColor *themePaperColor;
+@property (atomic, strong) NSColor *previewPaperColor;
 @end
 
 @implementation ScrapPDFKitView
@@ -91,9 +95,40 @@ static const NSInteger TSExperimentToolCount = 4;
     BOOL dark = [[self.effectiveAppearance bestMatchFromAppearancesWithNames:
         @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] isEqualToString:NSAppearanceNameDarkAqua];
     NSDictionary *theme = notification.userInfo ?: (dark ? darkColors : liteColors);
-    self.backgroundColor = [[TSColorSupport sharedInstance] opaqueColorForKey:@"PreviewBackground"
+    self.themePaperColor = [[TSColorSupport sharedInstance] opaqueColorForKey:@"PreviewBackground"
         fromDictionary:theme isWindowDark:dark];
     self.window.alphaValue = TSThemeWindowAlpha(theme, TSThemePreviewAlphaKey);
+    [self updateExperimentPaper];
+}
+
+// The paper of pages shown light, as in the document's preview.
+- (void)updateExperimentPaper
+{
+    if (!self.experimentViewReady) return;
+    NSColor *paper = TSPreviewPaperColor([SUD integerForKey:TSPreviewAppearanceModeKey], NSApp.effectiveAppearance,
+        self.themePaperColor);
+    NSColor *old = self.previewPaperColor;
+    if (old == paper || [old isEqual:paper]) return;
+    self.previewPaperColor = paper;
+    TSRedrawPreviewPages(self);
+}
+
+- (void)drawPage:(PDFPage *)page toContext:(CGContextRef)context
+{
+    NSColor *paper = self.previewPaperColor;
+    BOOL screen = [NSGraphicsContext graphicsContextWithCGContext:context flipped:NO].drawingToScreen;
+    void (^draw)(CGContextRef) = ^(CGContextRef target) {
+        if (screen) TSFillPreviewPaper(target, page, self.displayBox, paper);
+        [super drawPage:page toContext:target];
+    };
+    // Drawing a page in a subclass needs the same care as the document's preview on macOS 27.
+    if (@available(macOS 27.0, *)) {
+        if (screen) {
+            TSDrawPDFScreenTiles(context, draw);
+            return;
+        }
+    }
+    draw(context);
 }
 
 - (void)updateExperimentAppearance:(NSNotification *)notification
@@ -102,6 +137,7 @@ static const NSInteger TSExperimentToolCount = 4;
     self.updatingExperimentAppearance = YES;
     TSApplyPreviewInversion(self.documentView.enclosingScrollView,
         TSPreviewShouldInvert([SUD integerForKey:TSPreviewAppearanceModeKey], NSApp.effectiveAppearance));
+    [self updateExperimentPaper];
     self.updatingExperimentAppearance = NO;
 }
 
@@ -379,38 +415,6 @@ static NSInteger TSExperimentGroupIndex(id sender)
     return NSNotFound;
 }
 
-// The area of a page that is not blank, in page coordinates; empty if the page is blank.
-NSRect TSExperimentInkBounds(PDFPage *page, PDFDisplayBox box)
-{
-    NSRect bounds = [page boundsForBox:box];
-    if (!page || page.rotation % 360 != 0 || NSIsEmptyRect(bounds)) return NSZeroRect;
-    CGFloat resolution = MIN(2.0, 4000.0 / MAX(NSWidth(bounds), NSHeight(bounds)));
-    size_t width = MAX(1, (size_t)ceil(NSWidth(bounds) * resolution));
-    size_t height = MAX(1, (size_t)ceil(NSHeight(bounds) * resolution));
-    CGColorSpaceRef gray = CGColorSpaceCreateDeviceGray();
-    CGContextRef context = CGBitmapContextCreate(NULL, width, height, 8, 0, gray, (CGBitmapInfo)kCGImageAlphaNone);
-    CGColorSpaceRelease(gray);
-    if (!context) return NSZeroRect;
-    CGContextSetGrayFillColor(context, 1, 1);
-    CGContextFillRect(context, CGRectMake(0, 0, width, height));
-    CGContextScaleCTM(context, resolution, resolution);
-    [page drawWithBox:box toContext:context];
-    const uint8_t *pixels = CGBitmapContextGetData(context);
-    size_t bytesPerRow = CGBitmapContextGetBytesPerRow(context);
-    NSInteger minX = width, minY = height, maxX = -1, maxY = -1;
-    for (size_t row = 0; row < height; row++)
-        for (size_t column = 0; column < width; column++)
-            if (pixels[row * bytesPerRow + column] < 240) {
-                minX = MIN(minX, (NSInteger)column); maxX = MAX(maxX, (NSInteger)column);
-                minY = MIN(minY, (NSInteger)row); maxY = MAX(maxY, (NSInteger)row);
-            }
-    CGContextRelease(context);
-    if (maxX < 0) return NSZeroRect;
-    // Row 0 of the bitmap is the top of the page.
-    return NSMakeRect(NSMinX(bounds) + minX / resolution, NSMinY(bounds) + (height - 1 - maxY) / resolution,
-                      (maxX - minX + 1) / resolution, (maxY - minY + 1) / resolution);
-}
-
 // Image data of part of a page in a Copy Format type (TIFF, JPEG, PNG or PDF).
 NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CGFloat pixelsPerPoint,
                                   NSPasteboardType *pasteboardType)
@@ -491,13 +495,12 @@ NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CG
 
 - (NSToolbarItem *)experimentZoomItem
 {
-    NSArray *symbols = @[@"minus.magnifyingglass", @"plus.magnifyingglass", @"viewfinder"];
-    NSArray *labels = @[TSExperimentText(@"ExperimentZoomOut", @"Zoom Out"),
-                        TSExperimentText(@"ExperimentZoomIn", @"Zoom In"),
-                        TSExperimentText(@"ExperimentZoomToContent", @"Zoom to Content")];
+    NSArray *symbols = [@[@"minus.magnifyingglass", @"plus.magnifyingglass"] arrayByAddingObjectsFromArray:TSContentZoomSymbols()];
+    NSArray *labels = [@[TSExperimentText(@"ExperimentZoomOut", @"Zoom Out"),
+                         TSExperimentText(@"ExperimentZoomIn", @"Zoom In")] arrayByAddingObjectsFromArray:TSContentZoomLabels()];
     NSMutableArray *images = [NSMutableArray array];
     for (NSUInteger i = 0; i < symbols.count; i++)
-        [images addObject:[NSImage imageWithSystemSymbolName:symbols[i] accessibilityDescription:labels[i]]];
+        [images addObject:[NSImage imageWithSystemSymbolName:symbols[i] accessibilityDescription:labels[i]] ?: [NSImage new]];
     NSToolbarItemGroup *group = [NSToolbarItemGroup groupWithItemIdentifier:TSExperimentZoomToolbarID images:images
         selectionMode:NSToolbarItemGroupSelectionModeMomentary labels:labels target:self action:@selector(experimentZoom:)];
     // Kept as separate buttons: AppKit would size them by their labels and fold them into a menu.
@@ -534,64 +537,22 @@ NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CG
     switch (TSExperimentGroupIndex(sender)) {
         case 0: [self zoomOut:sender]; break;
         case 1: [self zoomIn:sender]; break;
-        case 2: [self zoomToContent]; break;
+        case 2: [self zoomToContentWidthOnly:NO]; break;
+        case 3: [self zoomToContentWidthOnly:YES]; break;
         default: break;
     }
 }
 
-// The unobscured part of the view, in clip view (document) units.
-- (NSRect)experimentVisibleArea
+// Zoom to Content, or Zoom to Content Width (TSContentZoom.h).
+- (void)zoomToContentWidthOnly:(BOOL)widthOnly
 {
-    NSScrollView *scroll = self.documentView.enclosingScrollView;
-    NSClipView *clip = scroll.contentView;
-    NSRect area = clip.bounds;
-    if (!clip || NSHeight(clip.frame) <= 0) return area;
-    CGFloat unit = NSHeight(area) / NSHeight(clip.frame);
-    NSEdgeInsets insets = scroll.contentInsets;
-    area.origin.x += insets.left * unit;
-    area.size.width -= (insets.left + insets.right) * unit;
-    area.origin.y += (clip.isFlipped ? insets.top : insets.bottom) * unit;
-    area.size.height -= (insets.top + insets.bottom) * unit;
-    return area;
-}
-
-- (void)scrollExperimentToShowPoint:(NSPoint)point
-{
-    NSScrollView *scroll = self.documentView.enclosingScrollView;
-    NSClipView *clip = scroll.contentView;
-    if (!clip) return;
-    NSRect area = [self experimentVisibleArea], target = clip.bounds;
-    target.origin.x += point.x - NSMidX(area);
-    target.origin.y += point.y - NSMidY(area);
-    target = [clip constrainBoundsRect:target];
-    [clip scrollToPoint:target.origin];
-    [scroll reflectScrolledClipView:clip];
-}
-
-// Enlarges the non-blank part of the page in view to fill the preview.
-- (void)zoomToContent
-{
-    NSClipView *clip = self.documentView.enclosingScrollView.contentView;
-    if (!self.document.pageCount || !clip) return;
-    NSRect area = [self experimentVisibleArea];
-    NSPoint middle = [self convertPoint:NSMakePoint(NSMidX(area), NSMidY(area)) fromView:clip];
-    PDFPage *page = [self pageForPoint:middle nearest:YES];
-    NSRect ink = TSExperimentInkBounds(page, self.displayBox);
-    if (NSIsEmptyRect(ink)) return;
-    ink = NSIntersectionRect(NSInsetRect(ink, -8, -8), [page boundsForBox:self.displayBox]);
-    NSEdgeInsets insets = self.documentView.enclosingScrollView.contentInsets;
-    CGFloat width = NSWidth(clip.frame) - insets.left - insets.right;
-    CGFloat height = NSHeight(clip.frame) - insets.top - insets.bottom;
-    if (width <= 0 || height <= 0) return;
-    CGFloat scale = MIN(width / NSWidth(ink), height / NSHeight(ink));
-    scale = MAX(self.minScaleFactor, MIN(scale, MIN(self.maxScaleFactor, 8.0)));
-    [self clearExperimentSelection];
-    self.autoScales = NO;
-    self.scaleFactor = scale;
-    [self layoutDocumentView];
-    [self layoutSubtreeIfNeeded];
-    NSPoint center = [self convertPoint:NSMakePoint(NSMidX(ink), NSMidY(ink)) fromPage:page];
-    [self scrollExperimentToShowPoint:[self.documentView convertPoint:center fromView:self]];
+    CGFloat least = self.minScaleFactor, most = MIN(self.maxScaleFactor, 8.0);
+    TSContentZoom(self, widthOnly, ^CGFloat(CGFloat scale) {
+        [self clearExperimentSelection];
+        self.autoScales = NO;
+        self.scaleFactor = MAX(least, MIN(scale, most));
+        return self.scaleFactor;
+    });
 }
 
 - (OverView *)experimentOverlayView
@@ -661,6 +622,7 @@ NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CG
     [overlay setMagnifiedRect:drawn];
     overlay.magnifiedPage = page;
     overlay.magnifiedBox = box;
+    overlay.magnifiedPaperColor = self.previewPaperColor;
     [overlay setNeedsDisplay:YES];
 }
 

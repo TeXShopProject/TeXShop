@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-"1080.title" = "OgreKit Find Panel";
+"1080.title" = "OgreKit Find Panel (Legacy)";
+"adv-Fd-Pnl.title" = "Advanced Find Panel";
 "14.title" = "Document Font";
 "19.title" = "Source Window Position";
 "236.title" = "On Startup";

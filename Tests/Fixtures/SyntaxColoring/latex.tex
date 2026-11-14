@@ -1,0 +1,64 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb} % math packages
+\usepackage[colorlinks=true]{hyperref}
+\makeatletter
+\renewcommand\@seccntformat[1]{\csname the#1\endcsname.\quad}
+\def\my@helper#1{\textbf{#1}}
+\makeatother
+%% A full-line comment with $math$ & {braces} [brackets] (parens)
+\newcommand{\vect}[1]{\mathbf{#1}}
+\newenvironment{note}{\begin{quote}\itshape}{\end{quote}}
+
+\title{Syntax Coloring Sample}
+\author{A. Author\thanks{Supported by \emph{nothing}.}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+Plain text with an escaped percent \% and an escaped dollar \$ and \& too.
+Inline math $a^2 + b^2 = c^2$, display math \[ \int_0^1 f(x)\,dx \] and \( x \) here.
+$$ \sum_{k=1}^{n} k = \frac{n(n+1)}{2} $$
+A forced break\\ and \\[2pt] a spaced one. Accents: \'e \"o \^{a} \~n \c{c}.
+Ties~and dashes -- --- and quotes ``quoted'' text.
+
+\subsection*{Citations, footnotes and indices}
+See \cite{knuth84}, \cite[p.~3]{lamport94}, \citep{a,b} and \citet[see][ch.~2]{c}.
+Also \autocite[12]{d}, \Cite{e}, \footcite{f} and \parencite{g}.
+A footnote\footnote{With {nested {braces}} and $x$ inside.} and another\footnote[3]{Numbered.}.
+An index entry\index{coloring!syntax|textbf} and \index[names]{Koch, Richard}.
+A Spanish one\esindex{coloreado} and \indexentry{not this}.
+
+\begin{itemize}
+  \item First item with \textit{italic} and \texttt{\textbackslash verb}.
+  \item[$\star$] Second item & an ampersand.
+\end{itemize}
+
+\begin{tabular}{|l|c|r|}
+  \hline
+  a & b & c \\ \hline
+  1 & 2 & 3 \\
+\end{tabular}
+
+\begin{align}
+  f(x) &= (x+1)^2 \label{eq:f} \\
+       &= x^2 + 2x + 1 \tag{$*$}
+\end{align}
+
+Verbatim: \verb|%$&{}| and \verb+\foo{bar}+ and \verb*|a b|.
+\begin{verbatim}
+\notacommand % not a comment either { [ (
+\end{verbatim}
+
+Spelling: \ref{sec:intro}, \pageref{eq:f}, \label{x:y}, \emph{checked words}, \textbf{bold words}.
+\setcounter{page}{3}\addtocounter{section}{-1}\hspace*{1em}\vspace{2ex plus 1fil}
+\includegraphics[width=0.5\linewidth,angle=90]{figures/plot.pdf}
+\usepackage[utf8]{inputenc}\input{chapter1}\include{chapter2}
+\begin{figure}[htbp]\centering\caption[Short]{Long caption}\end{figure}
+
+Odd commands: \@ \_ \# \{ \} \, \; \! \  \\* \@@ \a@b \x_y:z \foo.bar
+Command at line end \LaTeX
+Trailing backslash at end of line \
+\end{document}

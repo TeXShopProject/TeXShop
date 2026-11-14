@@ -55,6 +55,7 @@ static TSMemoryDefaults *defaults;
 #define SUD defaults
 @interface MyPDFKitView : PDFView
 @property (retain) OverView *overView;
+@property (retain) NSColor *previewPaperColor; // nil: the glass shows white paper
 @end
 @implementation MyPDFKitView
 - (void)doMagnifyingGlassMavericks:(NSEvent *)event level:(NSInteger)level {}

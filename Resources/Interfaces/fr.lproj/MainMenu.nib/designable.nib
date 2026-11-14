@@ -693,16 +693,10 @@
                                     <action selector="changeAutoComplete:" target="-1" id="945"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Commande de complètement" id="539">
-                                <menu key="submenu" title="Commande de complètement" id="540">
-                                    <items>
-                                        <menuItem title="Ajouter un mot" keyEquivalent="W" id="541" identifier="TSShortcut.registerForCommandCompletion:.0">
-                                            <connections>
-                                                <action selector="registerForCommandCompletion:" target="-1" id="545"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
+                            <menuItem title="Ajouter à la liste de complétion des commandes" keyEquivalent="W" id="541" identifier="TSShortcut.registerForCommandCompletion:.0">
+                                <connections>
+                                    <action selector="registerForCommandCompletion:" target="-1" id="545"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Enroulement des lignes" id="635">
                                 <menu key="submenu" title="Enroulement des lignes" id="636">

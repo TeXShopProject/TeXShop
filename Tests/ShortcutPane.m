@@ -273,8 +273,10 @@ int main(int argc,char **argv){@autoreleasepool{
  REQUIRE(![pane.keySearchView.accessibilityValue containsString:@"depends"]);
  REQUIRE([pane.keySearchView.accessibilityValue containsString:@"Matches: 3"]);
  NSScrollView *outer=pane.view.enclosingScrollView;
- REQUIRE(outer!=nil && !outer.hasVerticalScroller && pane.table.enclosingScrollView.hasVerticalScroller);
- REQUIRE(fabs(outer.documentView.frame.size.height-outer.contentView.bounds.size.height)<1);
+ // Keyboard scrolls like the other categories; in a window taller than its
+ // content it fills the window, and the command list takes the extra height.
+ REQUIRE(outer!=nil && outer.hasVerticalScroller && pane.table.enclosingScrollView.hasVerticalScroller);
+ REQUIRE(outer.documentView.frame.size.height>=outer.contentView.bounds.size.height-1);
 
  [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:3] byExtendingSelection:NO];[pane updateSelectionButtons];
  REQUIRE(!pane.selectionButtons[0].enabled && pane.macroButton.enabled);

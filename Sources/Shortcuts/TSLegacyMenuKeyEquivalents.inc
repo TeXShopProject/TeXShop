@@ -41,8 +41,12 @@ static NSString *TSLegacyComparableTitle(NSString *title)
     });
     return [space stringByReplacingMatchesInString:title options:0 range:NSMakeRange(0, title.length) withTemplate:@""];
 }
-// Titles of the Typeset menu's typesetting methods before 5.60 named them by
-// what they do (Direct PDF, Via DVI), in every language.
+// Source › Command Completion was a submenu before 5.60 whose first item was
+// Add Word; the Source menu now has that command itself in its place.
+static NSString *const TSLegacyCompletionItem = @"TSShortcut.registerForCommandCompletion:.0";
+// Titles that no longer exist but still name an item: the Typeset menu's
+// typesetting methods before 5.60 named them by what they do (Direct PDF,
+// Via DVI), and the former Command Completion submenu, in every language.
 static NSString *TSLegacyFormerTitleIdentifier(NSString *title)
 {
     static NSDictionary<NSString *, NSString *> *identifiers;
@@ -51,9 +55,19 @@ static NSString *TSLegacyFormerTitleIdentifier(NSString *title)
         NSMutableDictionary<NSString *, NSString *> *map = [NSMutableDictionary dictionary];
         for (NSString *former in @[@"Pdftex", @"pdfTeX"]) map[TSLegacyComparableTitle(former)] = @"TSShortcut.doChooseMethod:.100";
         for (NSString *former in @[@"TeX and DVI", @"TeX und DVI", @"TeX y DVI", @"TeX et DVI", @"TeX e DVI", @"TeX en DVI", @"TeX + DVI", @"Tex și  DVI", @"TeX 和 DVI"]) map[TSLegacyComparableTitle(former)] = @"TSShortcut.doChooseMethod:.101";
+        for (NSString *former in @[@"Command Completion", @"Vervollständigung", @"Compleción de comandos ", @"Compleción de comandos", @"Commande de complètement", @"Completamento comandi", @"コマンド補完", @"명령 완성", @"Aanvullen", @"Completion", @"Completar", @"Completare", @"命令补全"]) map[TSLegacyComparableTitle(former)] = TSLegacyCompletionItem;
         identifiers = map;
     });
     return identifiers[TSLegacyComparableTitle(title)];
+}
+// An entry for the first item of the former Command Completion submenu, by
+// position or by any title Add Word had, reaches the command. Its other items
+// (Marks, the removed file editor) stay inert.
+static BOOL TSLegacyIsFormerCompletionChild(NSMenuItem *item, id childKey)
+{
+    if (![item.identifier isEqualToString:TSLegacyCompletionItem] || item.hasSubmenu || ![childKey isKindOfClass:NSString.class]) return NO;
+    NSSet<NSString *> *oldTitles = [NSSet setWithArray:@[@"Add Word", @"Wort hinzufügen", @"Añadir palabra", @"Ajouter un mot", @"Aggiungi comando", @"用語を追加", @"항목 추가", @"Voeg woord toe", @"Adicionar palavra", @"Adaugă un Cuvânt", @"新增单词"]];
+    return [childKey isEqualToString:@"1"] || [oldTitles containsObject:childKey];
 }
 static NSMenuItem *TSLegacyMenuItem(NSMenu *menu, id key)
 {
@@ -101,6 +115,7 @@ static void TSApplyLegacyMenuKeys(NSMenu *mainMenu, NSDictionary *shortcuts)
                         NSSet<NSString *> *oldTitles = [NSSet setWithArray:@[@"Activar/desactivar",@"Activer/Désactiver",@"Alternar Ligar/Desligar",@"Attiva/Disattiva",@"Ein/Aus",@"ON/OFF 切り替え",@"ON/OFF 교체",@"Toggle On/Off",@"打开/关闭"]];
                         if ([childKey isEqualToString:@"1"] || [oldTitles containsObject:childKey]) child = item;
                     }
+                    if (TSLegacyIsFormerCompletionChild(item, childKey)) child = item;
                     TSApplyLegacyKeyEquivalent(child, value[childKey]);
                 }
             } else TSApplyLegacyKeyEquivalent(item, value);

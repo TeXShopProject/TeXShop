@@ -80,9 +80,10 @@ NSDictionary *liteColors, *darkColors;
 @end
 @interface PreviewFixture : NSView
 @property BOOL experimentViewReady;
-@property (strong) NSColor *backgroundColor;
+@property (strong) NSColor *themePaperColor;
 @end
 @implementation PreviewFixture
+- (void)updateExperimentPaper {}
 @@PREVIEW@@
 @end
 
@@ -111,7 +112,7 @@ static void CheckColors(NSString *name, NSDictionary *theme, BOOL dark, SourceFi
                        @[@"EditorInsertionPoint", source.insertionPointColor ?: NSNull.null],
                        @[@"ConsoleBackground", console.outputText.backgroundColor ?: NSNull.null],
                        @[@"ConsoleText", console.outputText.textColor ?: NSNull.null],
-                       @[@"PreviewBackground", preview.backgroundColor ?: NSNull.null]];
+                       @[@"PreviewBackground", preview.themePaperColor ?: NSNull.null]];
     for (NSArray *pair in pairs) {
         NSString *key = pair[0]; NSColor *shown = pair[1] == NSNull.null ? nil : pair[1];
         NSColor *expected = DocumentColor(theme, key, dark);

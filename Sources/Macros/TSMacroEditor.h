@@ -26,6 +26,8 @@
 
 #import "TSMacroTreeNode.h"
 
+@class TSSyntaxHighlighter;
+
 @interface TSMacroEditor : NSObject <NSTextViewDelegate>
 {
 	IBOutlet id outlineController;
@@ -67,6 +69,8 @@
 - (void)syncListControls;
 - (NSString *)shortcutConflictForNode:(TSMacroTreeNode *)node;
 - (void)refreshShortcutConflicts;
+// Colors the contents as the source is colored.
+@property (retain) TSSyntaxHighlighter *contentHighlighter;
 @property (retain) TSMacroTreeNode *previousItem;	// record previously selected item
 
 + (id)sharedInstance;

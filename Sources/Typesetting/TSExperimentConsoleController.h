@@ -4,6 +4,8 @@
 @property (nonatomic, copy) void (^typesetHandler)(void);
 @property (nonatomic, copy) void (^returnHandler)(void);
 @property (nonatomic, weak) NSWindow *returnWindow;
+/// The output, read-only; nil until the window is loaded.
+@property (nonatomic, readonly) NSTextView *outputText;
 - (void)startExecutable:(NSString *)path arguments:(NSArray<NSString *> *)arguments
            environment:(NSDictionary<NSString *, NSString *> *)environment
              directory:(NSURL *)directory encoding:(NSStringEncoding)encoding title:(NSString *)title

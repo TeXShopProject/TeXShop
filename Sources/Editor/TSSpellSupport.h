@@ -41,12 +41,12 @@
 + (void)endReview;
 + (NSString *)findNextMisspellingInTextView:(NSTextView *)textView mask:(TSSpellMask *)mask;
 
-/*" Opening the Spelling and Grammar panel (Show Spelling and Grammar, Command-:)
-    makes the system run its own search at once, which knows nothing about the
-    exclusion rules. This runs `openPanel` (the text view's original
-    showGuessPanel:), puts the selection back where it was, and does the
-    TeX-aware search instead. "*/
-+ (void)showSpellingPanelForTextView:(NSTextView *)textView mask:(TSSpellMask *)mask openPanel:(void (^)(void))openPanel;
+/*" Show Spelling and Grammar (Command-:). The text view's original
+    showGuessPanel: would also run the system's own search, which knows nothing
+    about the exclusion rules. This shows the panel itself and does the
+    TeX-aware search instead. While the panel is shown, the command hides it:
+    `hidePanel` (the original showGuessPanel:) is run, and nothing is searched. "*/
++ (void)showSpellingPanelForTextView:(NSTextView *)textView mask:(TSSpellMask *)mask hidePanel:(void (^)(void))hidePanel;
 
 /*" Menu actions (the target is the class). "*/
 + (void)forgetLearnedWords:(id)sender;

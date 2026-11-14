@@ -232,7 +232,6 @@
 "Use LaTeX-aware spell checking (recommended)" = "Utiliser la vérification adaptée à LaTeX (recommandé)";
 "Use legacy spell checking" = "Utiliser la vérification classique";
 "LaTeX Spell Checking" = "Orthographe LaTeX";
-"Edit Key Bindings…" = "Éditeur de raccourcis de saisie…";
 "Key Bindings" = "Raccourcis de saisie";
 "Edit Command Completion…" = "Modifier la complétion des commandes…";
 "Command Completion" = "Complétion des commandes";
@@ -323,7 +322,6 @@
 /* Macro editor placeholder guide */
 "#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = texte sélectionné, #INS# = point d’insertion après la macro, #PASTE# = texte du presse-papiers. Les macros AppleScript peuvent aussi utiliser #FILEPATH# et d’autres marqueurs (voir l’Aide).";
 /* Key binding editor placeholder guide */
-"* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = caractères sélectionnés, #INS# = point d’insertion, #PASTE# = texte du presse-papiers";
 
 /* Edit › Mark */
 "Insert Mark with Note" = "Insérer un repère avec note";
@@ -336,3 +334,25 @@
 "Deletes the previous • and selects its note, if it has one." = "Supprime le • précédent et sélectionne sa note, s’il en a une.";
 "• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = repère, •‹note› = repère avec note ; %@ › %@ permet de passer de l’un à l’autre.";
 "Marks" = "Repères";
+
+/* Settings › Keyboard › Key Bindings */
+"Input Character" = "Caractère saisi";
+"Output String" = "Texte produit";
+"Selected Text" = "Texte sélectionné";
+"Insertion Point" = "Point d’insertion";
+"Clipboard Text" = "Texte du presse-papiers";
+"Line Break" = "Saut de ligne";
+"Tab" = "Tabulation";
+"Mark" = "Repère";
+"Mark with Note" = "Repère avec note";
+"note" = "note";
+"Insert" = "Insérer";
+"Add" = "Ajouter";
+"Delete" = "Supprimer";
+"Symbols" = "Symboles";
+"Display" = "Affichage";
+"Typed As" = "Saisie";
+"Add Key Binding" = "Ajouter un raccourci de saisie";
+"Change Key Binding" = "Modifier un raccourci de saisie";
+"Delete Key Binding" = "Supprimer un raccourci de saisie";
+"Move Key Binding" = "Déplacer un raccourci de saisie";

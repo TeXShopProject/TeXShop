@@ -95,11 +95,11 @@ tiToolTipAutoComplete			= "(Dis)attiva autocompletamento";
 
 tiLabelSplit				= "Dividi finestra";
 tiPaletteLabelSplit			= "Dividi finestra";
-tiToolTipSplit				= "(Dis)attiva divisione finestra";
+tiToolTipSplit				= "(Dis)attiva divisione finestra; fai clic tenendo premuto il tasto Opzione per dividere verticalmente";
 
 tiLabelSplitKIT				= "Dividi finestra";
 tiPaletteLabelSplitKIT		= "Dividi finestra";
-tiToolTipSplitKIT			= "(Dis)attiva divisione finestra";
+tiToolTipSplitKIT			= "(Dis)attiva divisione finestra; fai clic tenendo premuto il tasto Opzione per dividere verticalmente";
 
 tiLabelMacros				= "Macro";
 tiPaletteLabelMacros			= "Macro";
@@ -172,11 +172,13 @@ tiToolTipSearchKIT				= "Ricerca";
 
 tiLabelBackForthKIT				= "Indietro/Avanti";
 tiPaletteLabelBackForthKIT		= "Indietro/Avanti";
-tiToolTipBackForthKIT			= "Pulsanti Indietro e Avanti";
+tiToolTipGoBack				= "Indietro";
+tiToolTipGoForward			= "Avanti";
+tiBack					= "Indietro";
+tiForward				= "Avanti";
 
 tiLabelBackForthKITSplit                = "Indietro/Avanti";
 tiPaletteLabelBackForthKITSplit        = "Indietro/Avanti";
-tiToolTipBackForthKITSplit            = "Pulsanti Indietro e Avanti";
 
 tiLabelDrawerKIT				= "Cassetto";
 tiPaletteLabelDrawerKIT			= "Cassetto";
@@ -273,6 +275,7 @@ tiToolTipHtmlSearch           = "Cerca";
 "ExperimentZoomOut" = "Riduci";
 "ExperimentZoomIn" = "Ingrandisci";
 "ExperimentZoomToContent" = "Adatta al contenuto";
+"ExperimentZoomToContentWidth" = "Adatta alla larghezza del contenuto";
 
 "Page Layout" = "Vista documento";
 "tiLabelTSPreviewAppearance" = "Aspetto";

@@ -27,7 +27,8 @@ for p in (root/'Resources/Defaults').glob('*Defaults*.plist'):
 # Values assembled by the invisible-character compatibility adapter.
 for prefix in ['Space','FullwidthSpace','NewLine','Tab']:add(prefix+'CharacterKindExtended','Sources/Editor/TSInvisibleCharacters.h:dynamic suffix')
 # Runtime-only strings and non-defaults file dictionary keys declared with Key suffix.
-nondefaults={'/tmp/TeXShop_Output'}
+# Keys of the multiple replacement definition files (the JSON of CotEditor's replacement definitions), not defaults.
+nondefaults={'/tmp/TeXShop_Output'}|{key for key,sources in uses.items() if sources and all(s.startswith('Sources/Find/TSRegex') for s in sources)}
 missing=set(uses)-known-nondefaults
 if missing:
  print(json.dumps({k:uses[k] for k in sorted(missing)},ensure_ascii=False,indent=2));raise SystemExit(1)

@@ -2005,6 +2005,7 @@
    "section": 3,
    "summary": "TeXShopのアップデートを確認する方法を設定します。",
    "groups": [
+    {"title": "アップデートの対象", "rows": [{"kind": "switch", "title": "プレリリース版を対象に含める", "on": false, "src": [], "id": "prereleaseUpdates"}]},
     {
      "title": "自動確認",
      "rows": [

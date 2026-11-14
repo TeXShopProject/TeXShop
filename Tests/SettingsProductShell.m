@@ -33,8 +33,6 @@
 @end
 @interface HelpDocuments:NSObject @end
 @implementation HelpDocuments @end
-@interface TSAutoCompletionListEditor:NSObject @end
-@implementation TSAutoCompletionListEditor @end
 static NSUInteger spellRefreshes;
 @interface TSSpellSupport:NSObject @end
 @implementation TSSpellSupport
@@ -183,6 +181,19 @@ int main(int argc,char **argv){@autoreleasepool{
   if(original)[TSIsolatedAppKitDefaults setObject:original forKey:key];else[TSIsolatedAppKitDefaults removeObjectForKey:key];
   [owner updateSettingsCategory:category fromDefaults:TSIsolatedAppKitDefaults];
  }
+ // Prerelease updates are refreshed from defaults and do not depend on automatic checks.
+ {
+  NSButton *prerelease=[owner valueForKey:@"sparklePrereleaseButton"];Check(prerelease!=nil,@"The prerelease switch has its owner");
+  id originalPrerelease=[TSIsolatedAppKitDefaults objectForKey:SparklePrereleaseUpdatesKey],originalAutomatic=[TSIsolatedAppKitDefaults objectForKey:SparkleAutomaticUpdateKey];
+  for(NSNumber *on in @[@YES,@NO])for(NSNumber *automatic in @[@YES,@NO]){
+   [TSIsolatedAppKitDefaults setBool:on.boolValue forKey:SparklePrereleaseUpdatesKey];[TSIsolatedAppKitDefaults setBool:automatic.boolValue forKey:SparkleAutomaticUpdateKey];
+   [owner updateSettingsCategory:TSSettingsCategoryUpdates fromDefaults:TSIsolatedAppKitDefaults];
+   Check((prerelease.state==NSControlStateValueOn)==on.boolValue && prerelease.enabled,[NSString stringWithFormat:@"Prerelease switch shows %@ and stays enabled with automatic checks %@",on,automatic]);
+  }
+  if(originalPrerelease)[TSIsolatedAppKitDefaults setObject:originalPrerelease forKey:SparklePrereleaseUpdatesKey];else[TSIsolatedAppKitDefaults removeObjectForKey:SparklePrereleaseUpdatesKey];
+  if(originalAutomatic)[TSIsolatedAppKitDefaults setObject:originalAutomatic forKey:SparkleAutomaticUpdateKey];else[TSIsolatedAppKitDefaults removeObjectForKey:SparkleAutomaticUpdateKey];
+  [owner updateSettingsCategory:TSSettingsCategoryUpdates fromDefaults:TSIsolatedAppKitDefaults];
+ }
  NSPopUpButton *dictionary=[owner valueForKey:@"dictionaryPopup"];
  NSArray *dictionaryTitles=dictionary.itemTitles;
  [dictionary addItemWithTitle:@"Unavailable dictionary fixture"];
@@ -308,6 +319,35 @@ int main(int argc,char **argv){@autoreleasepool{
   }
   [shell setSettingsSearchQuery:@""];
  }
+ {
+  // The paper of light pages has its own heading, in the Background column right above the
+  // Preview color well; the window opacity beside it has none. Its text is shown whole.
+  [shell selectCategoryIdentifier:TSSettingsCategoryAppearance];
+  NSView *themes=[shell viewForCategoryIdentifier:TSSettingsCategoryAppearance];
+  NSGridView *table=(NSGridView *)Find(themes,@"settings.color-table");
+  NSTextField *heading=(NSTextField *)Find(themes,@"heading.catalog.appearance.2.0.item.3.heading.1");
+  NSView *paper=Find(themes,@"settings.hCM-4U-XkM");
+  Check([table isKindOfClass:NSGridView.class] && [heading isKindOfClass:NSTextField.class] && paper!=nil,@"Themes shows the Light Pages heading in the color table");
+  NSInteger headingRow=-1,headingColumn=-1,paperRow=-1,paperColumn=-1;
+  for(NSInteger r=0;r<table.numberOfRows;r++)for(NSInteger c=0;c<table.numberOfColumns;c++){
+   NSView *content=[table cellAtColumnIndex:c rowIndex:r].contentView;
+   if(content==heading){headingRow=r;headingColumn=c;}
+   if(content==paper || [paper isDescendantOf:content]){paperRow=r;paperColumn=c;}
+  }
+  Check(headingColumn==2 && paperColumn==2 && headingRow+1==paperRow,[NSString stringWithFormat:@"Light Pages heads the Preview color well: heading %ld/%ld, well %ld/%ld",(long)headingRow,(long)headingColumn,(long)paperRow,(long)paperColumn]);
+  for(NSInteger c=0;c<table.numberOfColumns;c++)if(c!=2 && headingRow>=0){
+   NSView *content=[table cellAtColumnIndex:c rowIndex:headingRow].contentView;
+   Check(content==nil || content==NSGridCell.emptyContentView || content.subviews.count==0 && ![content isKindOfClass:NSControl.class],@"Only the Preview color has a heading");
+  }
+  Check([heading.stringValue isEqual:[fixture localizedStringForKey:@"catalog.appearance.2.0.item.3.heading.1" value:nil table:@"SettingsCategories"]] && heading.stringValue.length && ![heading.stringValue isEqual:@"catalog.appearance.2.0.item.3.heading.1"],@"Light Pages heading is localized");
+  for(NSString *appearance in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]){
+   shell.window.appearance=[NSAppearance appearanceNamed:appearance];[shell.window.contentView layoutSubtreeIfNeeded];
+   Check(!heading.hiddenOrHasHiddenAncestor && NSHeight(heading.frame)>0 && heading.cell.cellSize.width<=NSWidth(heading.frame)+1,[NSString stringWithFormat:@"Light Pages heading fits: %@ %.1f <= %.1f",heading.stringValue,heading.cell.cellSize.width,NSWidth(heading.frame)]);
+   NSRect inTable=[heading convertRect:heading.bounds toView:table];
+   Check(NSContainsRect(NSInsetRect(table.bounds,-1,-1),inTable) && NSMaxX([table convertRect:table.bounds toView:themes])<=NSWidth(themes.bounds)+1,@"Light Pages heading stays inside the color table and the pane");
+   if(argc>2)Save(themes,[@(argv[2]) stringByAppendingPathComponent:[NSString stringWithFormat:@"themes-light-pages-%@.png",appearance]]);
+  }
+ }
  NSMutableDictionary *current=[[TSIsolatedAppKitDefaults dictionaryRepresentation]mutableCopy];[current removeObjectForKey:TSSettingsSelectedCategoryKey];NSMutableDictionary *before=[saved mutableCopy];[before removeObjectForKey:TSSettingsSelectedCategoryKey];Check([current isEqual:before],@"Opening and navigating changes only remembered category");
  [shell selectCategoryIdentifier:TSSettingsCategoryDocuments];
  id windowManager=[NSClassFromString(@"TSWindowManager") performSelector:@selector(sharedInstance)];
@@ -348,16 +388,19 @@ int main(int argc,char **argv){@autoreleasepool{
  SaveNote(shell,spellingNote.superview.superview,argc>2?@(argv[2]):nil,@"spelling");
  NSMutableDictionary *replacement=[[TSIsolatedAppKitDefaults dictionaryRepresentation]mutableCopy];
  replacement[AutoSaveEnabledKey]=@(![TSIsolatedAppKitDefaults boolForKey:AutoSaveEnabledKey]);
- replacement[FindMethodKey]=@([TSIsolatedAppKitDefaults integerForKey:FindMethodKey]==2?0:2);
+ NSInteger findMethodBefore=[TSIsolatedAppKitDefaults integerForKey:FindMethodKey];
+ replacement[FindMethodKey]=@(findMethodBefore==2?0:2); // a profile keeps the find method (plan §5), whatever the file says
  replacement[EncodingKey]=@"MacOSRoman";replacement[PdfMagnificationKey]=@1.75;
  NSFont *profileFont=[NSFont userFontOfSize:12];
  TSPreferenceProfile *profile=[[TSPreferenceProfile alloc]initWithProfile:replacement documentFont:[NSArchiver archivedDataWithRootObject:profileFont] registeredDefaults:factory];
  Check(profile!=nil,@"Actual profile proposal is valid");[owner applyPreferenceProfile:profile font:profileFont];
  Check(spellingNote.hidden,@"Actual profile replacement clears a visible transient warning");
  for(NSArray *entry in @[@[TSSettingsCategoryPreview,@"row.catalog.preview.0.2"],@[TSSettingsCategoryDocuments,@"row.catalog.documents.0.0"]])Check(Find(Find([shell viewForCategoryIdentifier:entry[0]],entry[1]),@"settings.change-note").hidden,@"Profile application never creates transient zoom or encoding warnings");
- NSArray *restartRows=@[@[TSSettingsCategoryDocuments,@"row.catalog.documents.1.0"],@[TSSettingsCategoryEditor,@"row.catalog.editor.7.0"]];
+ Check([TSIsolatedAppKitDefaults integerForKey:FindMethodKey]==findMethodBefore,@"A profile keeps the find method");
+ Check(Find(Find([shell viewForCategoryIdentifier:TSSettingsCategoryEditor],@"row.catalog.editor.7.0"),@"settings.change-note").hidden,@"A profile never shows the find method's restart warning");
+ NSArray *restartRows=@[@[TSSettingsCategoryDocuments,@"row.catalog.documents.1.0"]];
  for(NSArray *entry in restartRows)Check(!Find(Find([shell viewForCategoryIdentifier:entry[0]],entry[1]),@"settings.change-note").hidden,@"Actual profile differences show restart warnings");
- for(NSArray *entry in restartRows){[shell selectCategoryIdentifier:entry[0]];SaveNote(shell,Find([shell viewForCategoryIdentifier:entry[0]],entry[1]),argc>2?@(argv[2]):nil,[entry[0]isEqual:TSSettingsCategoryDocuments]?@"autosave-restart":@"find-restart");}
+ for(NSArray *entry in restartRows){[shell selectCategoryIdentifier:entry[0]];SaveNote(shell,Find([shell viewForCategoryIdentifier:entry[0]],entry[1]),argc>2?@(argv[2]):nil,@"autosave-restart");}
  [shell selectCategoryIdentifier:TSSettingsCategoryGeneral];[shell endSession];[shell beginSession];
  for(NSArray *entry in restartRows)Check(!Find(Find([shell viewForCategoryIdentifier:entry[0]],entry[1]),@"settings.change-note").hidden,@"Profile restart warnings survive category transition and reopening");
  CheckOwnerPresentation(shell);

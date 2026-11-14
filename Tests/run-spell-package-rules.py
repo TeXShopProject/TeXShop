@@ -3,7 +3,7 @@
 
 Tests/SpellCheck/packages.tex uses the commands and environments of amsmath,
 mathtools, graphicx, xcolor, tikz, geometry, fancyhdr, microtype, booktabs,
-tabularx, enumitem, hyperref, cleveref, biblatex, natbib and siunitx. Words
+tabularx, enumitem, hyperref, cleveref, biblatex, natbib, amsthm and siunitx. Words
 starting with skipqzx are not prose and must be masked by the shipped
 SpellingExclusions.txt; words starting with keepqzx are prose and must stay.
 
@@ -20,7 +20,7 @@ parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation',choices=['package-args-as-skip-args','defined-ignored','user-rules-yield',
                                           'no-newline','two-line-ends','no-comment','probe-without-defined',
                                           'no-names-pass','package-pattern-as-skip-pattern','defined-pattern-ignored',
-                                          'user-pattern-yields'])
+                                          'user-pattern-yields','newtheoremstyle-one-arg','newtheoremstyle-eight-args'])
 args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
 rules=root/'Resources/TeXShop/SpellCheck/SpellingExclusions.txt'
@@ -50,6 +50,13 @@ if args.mutation in engine_mutations:
 if args.mutation=='package-pattern-as-skip-pattern':
     assert rules_text.count('\npackage-pattern  ')==2
     rules_text=rules_text.replace('\npackage-pattern  ','\nskip-pattern  ')
+# \newtheoremstyle has nine arguments, none of them prose.
+if args.mutation=='newtheoremstyle-one-arg':
+    assert rules_text.count('\nskip-args  9  newtheoremstyle\n')==1
+    rules_text=rules_text.replace('\nskip-args  9  newtheoremstyle\n','\nskip-args  1  newtheoremstyle\n')
+if args.mutation=='newtheoremstyle-eight-args':
+    assert rules_text.count('\nskip-args  9  newtheoremstyle\n')==1
+    rules_text=rules_text.replace('\nskip-args  9  newtheoremstyle\n','\nskip-args  8  newtheoremstyle\n')
 if args.mutation=='package-args-as-skip-args':
     assert rules_text.count('\npackage-args  ')>10
     rules_text=rules_text.replace('\npackage-args  ','\nskip-args  ')

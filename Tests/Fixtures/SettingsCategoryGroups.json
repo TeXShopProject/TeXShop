@@ -71,7 +71,9 @@
       "group.shortcuts"
     ],
     "updates": [
-      "group.updates.0"
+      "group.updates.1",
+      "group.updates.0",
+      "group.updates.2"
     ]
   },
   "titles": {
@@ -145,6 +147,7 @@
       "メニューのショートカット"
     ],
     "updates": [
+      "アップデートの対象",
       "自動確認"
     ]
   }

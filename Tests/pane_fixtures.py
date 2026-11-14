@@ -8,6 +8,10 @@ NAMES = ('Source','Editor','Preview','Console','Typesetting','Engines','MiscOne'
 def sources(root, names=NAMES):
     return [source_file(root, ('TSPref'+n+'Controller.m')) for n in (*names,'Pane')] + [root/'Sources/Settings/TSPrefPaneLayout.m']
 
+# The key binding list that Settings › Keyboard embeds, and what it uses.
+def key_binding_sources(root):
+    return [root/'Sources/Settings/TSKeyBindingsController.m', root/'Sources/App/GlobalData.m', root/'Sources/Editor/TSMarkMenu.m']
+
 def bundles(root, temp, names=NAMES, product=None, dock=False):
     compiled=temp/'compiled';compiled.mkdir()
     for name in names:

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-"1080.title" = "OgreKit 찾기 패널";
+"1080.title" = "OgreKit 찾기 패널(레거시)";
+"adv-Fd-Pnl.title" = "고급 찾기 패널";
 "14.title" = "서체";
 "19.title" = "편집창 위치";
 "236.title" = "실행할 때";

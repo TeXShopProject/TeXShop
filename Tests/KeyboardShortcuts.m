@@ -122,7 +122,7 @@ int main(int argc, char **argv) { @autoreleasepool {
 
     [NSApplication sharedApplication]; [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
     if (argc > 1) {
-        for (NSString *name in @[@"HelpDocuments",@"TSAppDelegate",@"TSAutoCompletionListEditor",@"TSDocumentController",@"TSMacroEditor",@"TSMacroMenuController",@"TSMovie",@"TSPreferences",@"TSSparkleController",@"TSStationery",@"TextFinder"]) {
+        for (NSString *name in @[@"HelpDocuments",@"TSAppDelegate",@"TSDocumentController",@"TSMacroEditor",@"TSMacroMenuController",@"TSMovie",@"TSPreferences",@"TSSparkleController",@"TSStationery",@"TextFinder"]) {
             Class c = objc_allocateClassPair(NSObject.class,name.UTF8String,0);
             class_addMethod(c,@selector(setValue:forUndefinedKey:),(IMP)IgnoreShortcutOutlet,"v@:@@");
             objc_registerClassPair(c);
@@ -156,6 +156,16 @@ int main(int argc, char **argv) { @autoreleasepool {
             REQUIRE(candidates.count>100 && conflicts.count==0);
         }
         CheckRecordedMenuConflicts(store);
+        // Add to Command Completion List took the place of the Command Completion submenu:
+        // Menu Shortcuts lists it right in Source with ⇧⌘W, and a key saved for it still applies.
+        TSShortcutCommand *completion = Command(store,@"TSShortcut.registerForCommandCompletion:.0");
+        REQUIRE(completion && completion.item.menu.supermenu == NSApp.mainMenu && !completion.item.hasSubmenu);
+        REQUIRE([completion.path componentsSeparatedByString:@" › "].count == 2 && [completion.path hasSuffix:completion.item.title]);
+        REQUIRE([completion.defaultKey isEqual:@"W"] && completion.defaultModifiers == NSEventModifierFlagCommand);
+        ShortcutMemoryDefaults *saved = [ShortcutMemoryDefaults new];
+        saved.values[TSMenuShortcutOverridesKey] = @{completion.commandID:@{@"key":@"7", @"modifiers":@(NSEventModifierFlagCommand|NSEventModifierFlagControl)}};
+        TSShortcutStore *restored = [[TSShortcutStore alloc] initWithMenu:NSApp.mainMenu defaults:(id)saved];
+        REQUIRE([completion.item.keyEquivalent isEqual:@"7"] && Command(restored,completion.commandID).item == completion.item);
         return 0;
     }
     const NSEventModifierFlags cmd = NSEventModifierFlagCommand, shift = NSEventModifierFlagShift;

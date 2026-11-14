@@ -95,11 +95,11 @@ tiToolTipAutoComplete			= "Alterar estado de autocompleción";
 
 tiLabelSplit				= "Dividir ventana";
 tiPaletteLabelSplit			= "Dividir ventana";
-tiToolTipSplit				= "Alterar división de ventana";
+tiToolTipSplit				= "Alterar división de ventana. Para dividir verticalmente, hacer clic pulsando la tecla Opción.";
 
 tiLabelSplitKIT				= "Dividir ventana";
 tiPaletteLabelSplitKIT		= "Dividir ventana";
-tiToolTipSplitKIT			= "Alterar división de ventana";
+tiToolTipSplitKIT			= "Alterar división de ventana. Para dividir verticalmente, hacer clic pulsando la tecla Opción.";
 
 tiLabelMacros				= "Macros";
 tiPaletteLabelMacros			= "Macros";
@@ -172,11 +172,13 @@ tiToolTipSyncMarksKIT			= "Mostrar Sync Marks";
 
 tiLabelBackForthKIT				= "Atrás/Adelante";
 tiPaletteLabelBackForthKIT		= "Atrás/Adelante";
-tiToolTipBackForthKIT			= "Botones Atrás/Adelante";
+tiToolTipGoBack				= "Atrás";
+tiToolTipGoForward			= "Adelante";
+tiBack					= "Atrás";
+tiForward				= "Adelante";
 
 tiLabelBackForthKITSplit                = "Atrás/Adelante";
 tiPaletteLabelBackForthKITSplit        = "Atrás/Adelante";
-tiToolTipBackForthKITSplit            = "Botones Atrás/Adelante";
 
 tiLabelDrawerKIT				= "Cajón";
 tiPaletteLabelDrawerKIT			= "Cajón";
@@ -273,6 +275,7 @@ tiToolTipHtmlSearch           = "Buscar";
 "ExperimentZoomOut" = "Alejar";
 "ExperimentZoomIn" = "Acercar";
 "ExperimentZoomToContent" = "Ajustar al contenido";
+"ExperimentZoomToContentWidth" = "Ajustar al ancho del contenido";
 
 "Page Layout" = "Disposición de página";
 "tiLabelTSPreviewAppearance" = "Aspecto";

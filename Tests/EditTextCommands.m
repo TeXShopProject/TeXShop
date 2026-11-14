@@ -359,7 +359,7 @@ int main(int argc, char **argv)
         [NSApplication sharedApplication];
         method_setImplementation(class_getInstanceMethod(NSAlert.class, @selector(runModal)), (IMP)TestRunModal);
         method_setImplementation(class_getInstanceMethod(NSAlert.class, @selector(beginSheetModalForWindow:completionHandler:)), (IMP)TestBeginSheet);
-        for (NSString *name in @[@"HelpDocuments", @"TSAppDelegate", @"TSAutoCompletionListEditor", @"TSDocumentController", @"TSMacroEditor",
+        for (NSString *name in @[@"HelpDocuments", @"TSAppDelegate", @"TSDocumentController", @"TSMacroEditor",
                                  @"TSMacroMenuController", @"TSMovie", @"TSPreferences", @"TSSparkleController", @"TSStationery", @"TextFinder"]) {
             Class c = objc_allocateClassPair(NSObject.class, name.UTF8String, 0);
             class_addMethod(c, @selector(setValue:forUndefinedKey:), (IMP)IgnoreOutlet, "v@:@@");

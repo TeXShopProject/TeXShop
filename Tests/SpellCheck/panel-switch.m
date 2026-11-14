@@ -11,7 +11,7 @@ int main(void) {@autoreleasepool {
  NSTextView *a=[[NSTextView alloc] initWithFrame:NSMakeRect(0,0,300,200)],*b=[[NSTextView alloc] initWithFrame:NSMakeRect(0,0,300,200)];
  a.string=@"zzqqa word";b.string=@"zzqqb word";
  TSSpellExclusions *e=[TSSpellExclusions sharedExclusions];
- [TSSpellSupport showSpellingPanelForTextView:a mask:[e maskForText:a.string] openPanel:^{}];
+ [TSSpellSupport showSpellingPanelForTextView:a mask:[e maskForText:a.string] hidePanel:^{}];
  [TSSpellSupport findNextMisspellingInTextView:b mask:[e maskForText:b.string]];
  NSTextField *field=Field(NSSpellChecker.sharedSpellChecker.spellingPanel.contentView);
  printf("B selected=%s panel before wait=%s\n",[b.string substringWithRange:b.selectedRange].UTF8String,field.stringValue.UTF8String);

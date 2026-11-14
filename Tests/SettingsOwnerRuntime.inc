@@ -22,7 +22,6 @@ static void CheckOwnerRuntime(TSPreferences *owner) {
     NSDictionary *saved=[TSIsolatedAppKitDefaults.values copy];
     id<NSApplicationDelegate> previous=NSApp.delegate;
     SettingsRuntimeDelegate *delegate=[SettingsRuntimeDelegate new];NSApp.delegate=delegate;
-    NSColor *savedPreview=PreviewBackgroundColor;
     BOOL savedAuto=doAutoSave,savedWatch=activateBauerPatch,savedBrackets=editorCanAddBrackets;
     doAutoSave=YES;activateBauerPatch=YES;
     NSButton *autoSave=[owner valueForKey:@"autoSaveEnabledButton"];
@@ -46,11 +45,10 @@ static void CheckOwnerRuntime(TSPreferences *owner) {
         [TSIsolatedAppKitDefaults setBool:value.boolValue forKey:EditorCanAddBracketsKey];
         [TSIsolatedAppKitDefaults setBool:value.boolValue forKey:AutoSaveEnabledKey];
         [TSIsolatedAppKitDefaults setBool:value.boolValue forKey:TagMenuInMenuBarKey];
-        [TSIsolatedAppKitDefaults setDouble:0.25 forKey:PdfPageBack_RKey];
         for(NSString *name in names)[TSIsolatedAppKitDefaults setBool:value.boolValue forKey:[NSString stringWithFormat:@"XML%@Tag",name]];
         NSUInteger count=delegate.xmlUpdates;[owner refreshRuntimePreferences];
         Check(editorCanAddBrackets==value.boolValue && doAutoSave && activateBauerPatch,@"Bulk refresh respects restart-only runtime copies");
-        Check(tags.hidden==!value.boolValue && fabs(PreviewBackgroundColor.redComponent-0.25)<0.001,@"Bulk refresh updates Tags visibility and preview background");
+        Check(tags.hidden==!value.boolValue,@"Bulk refresh updates Tags visibility");
         Check(delegate.xmlUpdates==count+1,@"Bulk refresh calls the XML menu once");
         for(NSString *name in names)Check([delegate.xmlValues[[NSString stringWithFormat:@"XML%@Tag",name]] boolValue]==value.boolValue,@"Every XML value reaches the menu refresh");
     }
@@ -65,7 +63,7 @@ static void CheckOwnerRuntime(TSPreferences *owner) {
     Check(delegate.copyUpdates==copies+1 && [TSIsolatedAppKitDefaults integerForKey:PdfCopyTypeKey]!=previousCopy,@"Profile refreshes the PDF copy menu once with the new value");
     [owner applyPreferenceProfile:profile font:font];Check(delegate.copyUpdates==copies+1,@"Unchanged profile does not refresh PDF copy menu twice");
     [NSApp.mainMenu removeItem:tags];NSApp.delegate=previous;
-    PreviewBackgroundColor=savedPreview;doAutoSave=savedAuto;activateBauerPatch=savedWatch;editorCanAddBrackets=savedBrackets;
+    doAutoSave=savedAuto;activateBauerPatch=savedWatch;editorCanAddBrackets=savedBrackets;
     TSIsolatedAppKitDefaults.values=[saved mutableCopy];[owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
     puts("PASS: real owner runtime copies and eleven XML actions before menu refresh");
 }

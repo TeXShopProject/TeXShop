@@ -2,7 +2,7 @@
 static void IgnoreOutlet(id self, SEL cmd, id value, NSString *key) {}
 int main(int argc, char **argv) { @autoreleasepool {
     TSInstallAppKitIsolation(); [NSApplication sharedApplication];
-    for (NSString *name in @[@"HelpDocuments", @"TSAppDelegate", @"TSAutoCompletionListEditor", @"TSDocumentController", @"TSMacroEditor", @"TSMacroMenuController", @"TSMovie", @"TSPreferences", @"TSSparkleController", @"TSStationery", @"TextFinder"]) {
+    for (NSString *name in @[@"HelpDocuments", @"TSAppDelegate", @"TSDocumentController", @"TSMacroEditor", @"TSMacroMenuController", @"TSMovie", @"TSPreferences", @"TSSparkleController", @"TSStationery", @"TextFinder"]) {
         Class c = objc_allocateClassPair(NSObject.class, name.UTF8String, 0);
         class_addMethod(c, @selector(setValue:forUndefinedKey:), (IMP)IgnoreOutlet, "v@:@@");
         objc_registerClassPair(c);

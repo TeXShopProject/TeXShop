@@ -16,7 +16,8 @@ MUTATIONS = {
     'keep-band-on-zoom': ('    // The rubber band is drawn at the old scale; select again after zooming.\n    [self clearExperimentSelection];',
                           '    // The rubber band is drawn at the old scale; select again after zooming.'),
     'pdf-as-bitmap': ('    if (type == IMAGE_TYPE_PDF) {', '    if (NO) {'),
-    'ink-upside-down': ('NSMinY(bounds) + (height - 1 - maxY) / resolution', 'NSMinY(bounds) + minY / resolution'),
+    'ink-upside-down': ('CGRectGetMinY(drawn) + (height - 1 - maxY) / resolution', 'CGRectGetMinY(drawn) + minY / resolution'),
+    'width-button-whole': ('        case 3: [self zoomToContentWidthOnly:YES]; break;', '        case 3: [self zoomToContentWidthOnly:NO]; break;'),
     'scroll-backwards': ('    target.origin.x = origin.x - delta.width * unit;', '    target.origin.x = origin.x + delta.width * unit;'),
     'folded-tools': ('labels:labels target:self action:@selector(changeExperimentTool:)];\n    // Kept as separate buttons: AppKit would size them by their labels and fold them into a menu.\n    group.controlRepresentation = NSToolbarItemGroupControlRepresentationExpanded;\n',
                      'labels:labels target:self action:@selector(changeExperimentTool:)];\n'),
@@ -32,6 +33,8 @@ parser.add_argument('--mutation', choices=sorted(MUTATIONS))
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 pdf = (root/'Sources/Preview/ScrapPDFKitView.m').read_text()
+# The zoom shared with the Preview window, included so that mutations reach it.
+pdf = pdf.replace('#import "TSContentZoom.h"', (root/'Sources/Preview/TSContentZoom.h').read_text().replace('#pragma once\n', '', 1))
 if args.mutation:
     old, new = MUTATIONS[args.mutation]
     assert pdf.count(old) == 1, args.mutation
@@ -114,7 +117,7 @@ static NSToolbarItemGroup *Group(NSWindow *window, NSString *identifier) {
 static NSClipView *Clip(PDFView *view) { return view.documentView.enclosingScrollView.contentView; }
 // The page rectangle visible on screen, in page 1 coordinates.
 static NSRect SeenOnPage(ScrapPDFKitView *view) {
-    NSRect area = [view experimentVisibleArea];
+    NSRect area = TSContentVisibleArea(view);
     NSRect inView = [view convertRect:area fromView:Clip(view)];
     return [view convertRect:inView toPage:[view.document pageAtIndex:0]];
 }
@@ -140,23 +143,41 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check(NSPasteboard.generalPasteboard == privateBoard, @"The user's clipboard is not used");
     testDefaults = [NotifyingDefaults new];
 
-    // Toolbar: four tools, three zoom buttons, the appearance menu; the row keeps its height.
+    // Toolbar: four tools, four zoom buttons, the appearance menu; the row keeps its height.
     context = @"toolbar";
     ScrapPDFKitView *view; NSPanel *panel = Panel(NSMakeSize(276, 378), &view);
     Check([[view toolbarDefaultItemIdentifiers:panel.toolbar] isEqual:(@[@"TSExperimentTools", @"TSExperimentZoom",
         NSToolbarFlexibleSpaceItemIdentifier, TSPreviewAppearanceToolbarID])], @"Toolbar order");
     NSToolbarItemGroup *tools = Group(panel, @"TSExperimentTools"), *zoom = Group(panel, @"TSExperimentZoom");
     Check(tools.subitems.count == 4 && tools.selectionMode == NSToolbarItemGroupSelectionModeSelectOne, @"Four selectable tools");
-    Check(zoom.subitems.count == 3 && zoom.selectionMode == NSToolbarItemGroupSelectionModeMomentary, @"Three zoom buttons");
+    Check(zoom.subitems.count == 4 && zoom.selectionMode == NSToolbarItemGroupSelectionModeMomentary, @"Four zoom buttons");
     // Labels would otherwise widen the buttons and fold the tools into a menu at the default width.
     Check(tools.controlRepresentation == NSToolbarItemGroupControlRepresentationExpanded &&
           zoom.controlRepresentation == NSToolbarItemGroupControlRepresentationExpanded, @"Groups stay separate buttons");
     NSArray *toolNames = @[@"Scroll", @"Select Text", @"Magnify", @"Select PDF"];
     for (NSUInteger i = 0; i < 4; i++)
         Check([tools.subitems[i].label isEqual:toolNames[i]] && [tools.subitems[i].toolTip isEqual:toolNames[i]] && tools.subitems[i].image, @"Tool names and icons");
-    NSArray *zoomNames = @[@"Zoom Out", @"Zoom In", @"Zoom to Content"];
-    for (NSUInteger i = 0; i < 3; i++) Check([zoom.subitems[i].toolTip isEqual:zoomNames[i]] && zoom.subitems[i].image, @"Zoom names and icons");
+    NSArray *zoomNames = @[@"Zoom Out", @"Zoom In", @"Zoom to Content", @"Zoom to Content Width"];
+    for (NSUInteger i = 0; i < 4; i++) Check([zoom.subitems[i].toolTip isEqual:zoomNames[i]] && zoom.subitems[i].image, @"Zoom names and icons");
     Check(tools.selectedIndex == 1 && view.experimentMouseMode == NEW_MOUSE_MODE_SELECT_TEXT, @"Text selection by default");
+    // At the panel's width in the nib (276pt) the eight buttons and the appearance menu
+    // all fit; none goes into the overflow menu (#33 added a fourth zoom button).
+    {
+        NSMutableArray *viewers = [NSMutableArray array];
+        __block void (^walk)(NSView *) = nil;
+        void (^collect)(NSView *) = ^(NSView *v) {
+            if ([NSStringFromClass(v.class) isEqualToString:@"NSToolbarItemViewer"] && !v.isHiddenOrHasHiddenAncestor)
+                [viewers addObject:[NSValue valueWithRect:[v convertRect:v.bounds toView:nil]]];
+            for (NSView *sub in v.subviews) walk(sub);
+        };
+        walk = collect;
+        walk(panel.contentView.superview);
+        walk = nil;
+        CGFloat right = 0;
+        for (NSValue *frame in viewers) right = MAX(right, NSMaxX(frame.rectValue));
+        Check(viewers.count == 4 && right <= NSWidth(panel.frame), [NSString stringWithFormat:@"All items fit (%lu, right edge %.0f of %.0f)",
+              (unsigned long)viewers.count, right, NSWidth(panel.frame)]);
+    }
     CGFloat withTools = NSHeight(panel.frame) - NSHeight([panel contentRectForFrameRect:panel.frame]);
     // 53pt is the title bar and toolbar of beta-6's Experiment preview, which had only the appearance menu.
     Check(withTools > 0 && withTools <= 53.5, [NSString stringWithFormat:@"Title bar and toolbar stay %.1f <= 53pt", withTools]);
@@ -187,10 +208,10 @@ int main(int argc, char **argv) { @autoreleasepool {
     // Ink bounds and zoom to content.
     context = @"zoom";
     PDFPage *first = [view.document pageAtIndex:0];
-    NSRect ink = TSExperimentInkBounds(first, kPDFDisplayBoxCropBox);
+    NSRect ink = TSContentInkBounds(first, kPDFDisplayBoxCropBox);
     Check(fabs(NSMinX(ink) - 220) < 1.5 && fabs(NSMinY(ink) - 740) < 1.5 && fabs(NSMaxX(ink) - 380) < 1.5 && fabs(NSMaxY(ink) - 770) < 1.5,
           [NSString stringWithFormat:@"Ink bounds %@", NSStringFromRect(ink)]);
-    Check(NSIsEmptyRect(TSExperimentInkBounds([Document(2) pageAtIndex:1], kPDFDisplayBoxCropBox)), @"Blank page has no ink");
+    Check(NSIsEmptyRect(TSContentInkBounds([Document(2) pageAtIndex:1], kPDFDisplayBoxCropBox)), @"Blank page has no ink");
     CGFloat fitted = view.scaleFactor;
     zoom.selectedIndex = 1; [view experimentZoom:zoom]; Pump();
     Check(view.scaleFactor > fitted * 1.05, @"Zoom in");
@@ -205,6 +226,13 @@ int main(int argc, char **argv) { @autoreleasepool {
     // Centred, unless that would scroll past the top of the document.
     Check(fabs(NSMidX(seen) - NSMidX(Formula)) < 10, [NSString stringWithFormat:@"Formula centred across %@", NSStringFromRect(seen)]);
     Check(fabs(NSMidY(seen) - NSMidY(Formula)) < 10 || NSMaxY(seen) >= 842 - 1, [NSString stringWithFormat:@"Formula centred or page top shown %@", NSStringFromRect(seen)]);
+    // Zoom to Content Width (#33): the formula across the panel, its top at the top.
+    view.autoScales = YES; Pump();
+    zoom.selectedIndex = 3; [view experimentZoom:zoom]; Pump();
+    seen = SeenOnPage(view);
+    Check(!view.autoScales && fabs(NSMinX(seen) - (NSMinX(Formula) - 8)) < 1.5 && fabs(NSMaxX(seen) - (NSMaxX(Formula) + 8)) < 1.5,
+          [NSString stringWithFormat:@"Formula width fills the panel %@", NSStringFromRect(seen)]);
+    Check(fabs(NSMaxY(seen) - (NSMaxY(Formula) + 8)) < 1.5, [NSString stringWithFormat:@"Formula top at the top %@", NSStringFromRect(seen)]);
 
     // Hand: the page point under the pointer follows the pointer.
     context = @"hand";
@@ -247,8 +275,8 @@ int main(int argc, char **argv) { @autoreleasepool {
             PDFDocument *copied = [[PDFDocument alloc] initWithData:data];
             NSRect box = [[copied pageAtIndex:0] boundsForBox:kPDFDisplayBoxCropBox];
             Check(copied.pageCount == 1 && fabs(NSWidth(box) - 200) < 2 && fabs(NSHeight(box) - 70) < 2, @"PDF of the selection");
-            Check(NSEqualRects(NSIntegralRect(TSExperimentInkBounds([copied pageAtIndex:0], kPDFDisplayBoxCropBox)),
-                  NSIntegralRect(NSIntersectionRect(Formula, box))) || NSWidth(TSExperimentInkBounds([copied pageAtIndex:0], kPDFDisplayBoxCropBox)) > 150,
+            Check(NSEqualRects(NSIntegralRect(TSContentInkBounds([copied pageAtIndex:0], kPDFDisplayBoxCropBox)),
+                  NSIntegralRect(NSIntersectionRect(Formula, box))) || NSWidth(TSContentInkBounds([copied pageAtIndex:0], kPDFDisplayBoxCropBox)) > 150,
                   @"PDF keeps the formula");
         } else {
             NSBitmapImageRep *rep = Bitmap(data);

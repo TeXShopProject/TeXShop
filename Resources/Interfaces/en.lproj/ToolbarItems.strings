@@ -99,11 +99,11 @@ tiToolTipAutoComplete			= "Toggle key bindings";
 
 tiLabelSplit				= "Split Source";
 tiPaletteLabelSplit			= "Split Source";
-tiToolTipSplit				= "Toggle source split";
+tiToolTipSplit				= "Toggle source split; Option-click to split vertically";
 
 tiLabelSplitKIT				= "Split Preview";
 tiPaletteLabelSplitKIT		= "Split Preview";
-tiToolTipSplitKIT			= "Toggle preview split";
+tiToolTipSplitKIT			= "Toggle preview split; Option-click to split vertically";
 
 tiLabelMacros				= "Macros";
 tiPaletteLabelMacros		= "Macros";
@@ -175,11 +175,13 @@ tiToolTipSyncMarksKIT			= "Show Sync Marks";
 
 tiLabelBackForthKIT				= "Back/Forward";
 tiPaletteLabelBackForthKIT		= "Back/Forward";
-tiToolTipBackForthKIT			= "Back Forward Buttons";
+tiToolTipGoBack				= "Go Back";
+tiToolTipGoForward			= "Go Forward";
+tiBack					= "Back";
+tiForward				= "Forward";
 
 tiLabelBackForthKITSplit          = "Back/Forward";
 tiPaletteLabelBackForthKITSplit   = "Back/Forward";
-tiToolTipBackForthKITSplit        = "Back Forward Buttons";
 
 tiLabelDrawerKIT				= "Drawer";
 tiPaletteLabelDrawerKIT			= "Drawer";
@@ -292,3 +294,4 @@ tiToolTipHtmlSearch           = "Search";
 "ExperimentZoomOut" = "Zoom Out";
 "ExperimentZoomIn" = "Zoom In";
 "ExperimentZoomToContent" = "Zoom to Content";
+"ExperimentZoomToContentWidth" = "Zoom to Content Width";

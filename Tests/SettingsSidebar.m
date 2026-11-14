@@ -145,7 +145,9 @@ static void CheckOwnerNavigation(TSPreferences *owner,TSSettingsWindowController
     }
     method_setImplementation(alertMethod,oldAlert);
     Check((shell.window.styleMask&NSWindowStyleMaskFullSizeContentView)!=0 && shell.contentScroll.documentView.isFlipped,@"Full-height shell keeps a top-origin document");
-    Check([shell.categoryIdentifiers isEqual:@[@"general",@"documents",@"editor",@"spelling",@"appearance",@"preview",@"typesetting",@"console",@"keyboard",@"updates"]] && shell.categoryTable.numberOfRows==13,@"Ten categories retain stable order and three grouping gaps");
+    Check([shell.categoryIdentifiers isEqual:@[@"general",@"documents",@"editor",@"keyboard",@"spelling",@"appearance",@"preview",@"typesetting",@"console",@"updates"]] && shell.categoryTable.numberOfRows==13,@"Ten categories retain stable order and three grouping gaps");
+    {NSMutableArray *starts=[NSMutableArray array];for(NSString *category in shell.categoryIdentifiers)if([TSSettingsCategory standardCategoryWithIdentifier:category].startsGroup)[starts addObject:category];
+     Check([starts isEqual:@[@"editor",@"preview",@"updates"]],@"Keyboard follows Editor in its group; Updates is a group of its own");}
     for(NSString *category in shell.categoryIdentifiers){BOOL selected=[shell selectCategoryIdentifier:category];[shell.window.contentView layoutSubtreeIfNeeded];NSView *view=[category isEqual:TSSettingsCategoryKeyboard]?[[shell valueForKey:@"keyboardPane"]view]:[shell viewForCategoryIdentifier:category];Check(selected && view.window==shell.window,[NSString stringWithFormat:@"Selected %@ current %@ attached %@ expected %@ accepted %d",category,shell.history.currentIdentifier,view.window,shell.window,selected]);}
     [owner setValue:@0 forKey:@"fontEditingContext"];
     method_setImplementation(key,oldKey);method_setImplementation(sheet,oldSheet);navigationTestWindow=nil;

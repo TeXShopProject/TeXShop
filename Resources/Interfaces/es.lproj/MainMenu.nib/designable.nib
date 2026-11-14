@@ -693,16 +693,10 @@
                                     <action selector="changeAutoComplete:" target="-1" id="943"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Compleción de comandos " id="539">
-                                <menu key="submenu" title="Compleción de comandos " id="540">
-                                    <items>
-                                        <menuItem title="Añadir palabra" keyEquivalent="W" id="541" identifier="TSShortcut.registerForCommandCompletion:.0">
-                                            <connections>
-                                                <action selector="registerForCommandCompletion:" target="-1" id="545"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
+                            <menuItem title="Añadir a la lista de autocompletado de comandos" keyEquivalent="W" id="541" identifier="TSShortcut.registerForCommandCompletion:.0">
+                                <connections>
+                                    <action selector="registerForCommandCompletion:" target="-1" id="545"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Ajuste de línea dinámico" id="635">
                                 <menu key="submenu" title="Ajuste de línea dinámico" id="636">

@@ -20,6 +20,29 @@ static inline BOOL TSPreviewShouldInvert(NSInteger mode, NSAppearance *systemApp
     return [match isEqualToString:NSAppearanceNameDarkAqua];
 }
 
+// The Preview color of a theme is the paper of pages shown light. Pages shown dark
+// keep PDFKit's own paper, which the luminosity filter turns deep black.
+static inline NSColor *TSPreviewPaperColor(NSInteger mode, NSAppearance *systemAppearance, NSColor *themeColor) {
+    return TSPreviewShouldInvert(mode, systemAppearance) ? nil : themeColor;
+}
+
+// Fills the box of page that -[PDFPage drawWithBox:toContext:] draws; nothing for nil.
+static inline void TSFillPreviewPaper(CGContextRef context, PDFPage *page, PDFDisplayBox box, NSColor *color) {
+    if (!context || !page || !color) return;
+    CGContextSaveGState(context);
+    CGContextConcatCTM(context, [page transformForBox:box]);
+    CGContextSetFillColorWithColor(context, color.CGColor);
+    CGContextFillRect(context, NSRectToCGRect([page boundsForBox:box]));
+    CGContextRestoreGState(context);
+}
+
+// PDFKit keeps drawn pages; have it draw them again after the paper has changed.
+// Marking the PDF view redraws the pages shown, and PDFKit draws the others again
+// when they are scrolled back; -annotationsChangedOnPage: draws nothing again.
+static inline void TSRedrawPreviewPages(PDFView *view) {
+    [view setNeedsDisplay:YES];
+}
+
 static inline NSMenuToolbarItem *TSPreviewAppearanceItem(id target) {
     NSMenuToolbarItem *item = [[NSMenuToolbarItem alloc] initWithItemIdentifier:TSPreviewAppearanceToolbarID];
     NSString *label = NSLocalizedStringFromTable(@"tiLabelTSPreviewAppearance", @"ToolbarItems", @"Appearance");

@@ -45,49 +45,18 @@ nutzen, ist folgender Befehl einzuf&uuml;gen:<br>
   <dd><tt>\usepackage[dvipsnames,usenames]{color}</tt>&nbsp;</dd>
 </dl>
 <p>Farbiger Text kann auf dem
-Bildschirm schwer zu lesen sein. Daher kann man bei TeXShop durch eine
-versteckte Einstellung die Hintergrundfarbe des Vorschau-Fensters
-einstellen. Diese Hintergrundfarbe wird nicht mit ausgedruckt. Um den
-Hintergrund zum Besipiel grau zu f&auml;rben, geben Sie im Terminal
-folgenden Befehl ein: </p>
-<dl>
-  <dd><tt>defaults
-write edu.uoregon.math.koch.TeXShop Pdfbackground_R 0.5</tt>
-  </dd>
-  <dd><tt>defaults
-write edu.uoregon.math.koch.TeXShop Pdfbackground_G 0.5</tt>
-  </dd>
-  <dd><tt>defaults
-write edu.uoregon.math.koch.TeXShop Pdfbackground_B 0.5</tt>
-  </dd>
-</dl>
-<p>&Auml;ndern Sie
-&bdquo;0.5&ldquo; in &bdquo;1&ldquo; um zu einem
-wei&szlig;en Hintergrund zur&uuml;ck zu kehren. Wollen Sie den
-Hintergrund h&auml;ufig &auml;ndern, erstellen Sie sich ein
-AppleScript, dass die Hintergrundfarbe auf grau setzt und den Namen
-&bdquo;PDF Hintergrund grau&ldquo; tr&auml;gt. Sie
-k&ouml;nnen hierzu den Makro-Editor benutzen:</p>
-<dl>
-  <dd><tt>
---AppleScript</tt> </dd>
-  <dd><tt>do
-shell script "defaults write edu.uoregon.math.koch.TeXShop
-Pdfbackground_R 0.5"
-    </tt> </dd>
-  <dd><tt>do
-shell script "defaults write edu.uoregon.math.koch.TeXShop
-Pdfbackground_G 0.5"
-    </tt> </dd>
-  <dd><tt>do
-shell script "defaults write edu.uoregon.math.koch.TeXShop
-Pdfbackground_B 0.5"
-    </tt> </dd>
-</dl>
-<p>Erstellen Sie ein
-&auml;hnliches Skript, dass den Hintergrund wieder auf
-wei&szlig; setzt und nennen Sie es &bdquo;PDF Hintergrund
-wei&szlig;&ldquo;.</p>
+Bildschirm schwer zu lesen sein. Die Farbe der Seiten in der Vorschau
+l&auml;sst sich in den Einstellungen unter &bdquo;Themen&ldquo; &auml;ndern: Die Farbe unter
+&bdquo;Helle Seiten&ldquo; in der Zeile &bdquo;Vorschau&ldquo; f&uuml;llt die Seiten, solange sie hell
+dargestellt werden. Jedes Thema hat seine eigene Farbe, so dass das Hellmodus-Thema
+und das Dunkelmodus-Thema verschiedene Farben verwenden k&ouml;nnen. Die Farbe wird
+nicht ausgedruckt und erscheint auch nicht, wenn ein Teil einer Seite kopiert wird.
+Seiten, die mit &bdquo;Erscheinungsbild&ldquo; in der Symbolleiste des Vorschau-Fensters
+dunkel dargestellt werden, werden nicht mit dieser Farbe gef&uuml;llt.</p>
+<p>Fr&uuml;here Versionen von TeXShop stellten diese Farbe mit den versteckten
+Einstellungen Pdfbackground_R, Pdfbackground_G und Pdfbackground_B ein. Sie werden
+nur noch von &bdquo;Alte Einstellungen &uuml;bernehmen&ldquo; verwendet, das ein Thema aus den
+Einstellungen fr&uuml;herer Versionen erstellt.</p>
 </div>
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><img

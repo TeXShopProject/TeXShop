@@ -5,6 +5,7 @@
 #import "globals.h"
 #import "TSColorSupport.h"
 #import "TSExperimentTheme.h"
+#import "TSAdvancedFindTextView.h"
 
 @interface TSExperimentConsoleController (Colors)
 - (void)updateConsoleColors:(NSNotification *)notification;
@@ -123,11 +124,14 @@ static BOOL TSExperimentIsPrompt(NSString *line)
     window.minSize = NSMakeSize(420, 220);
     TSExperimentConsoleContentView *content = [[TSExperimentConsoleContentView alloc] initWithFrame:window.contentView.bounds];
     window.contentView = content;
-    NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 55, 504, 343)];
+    // As in the console of a document: the input field is 5 points above the
+    // bottom edge and 5 points below the output, and holds two lines of text.
+    NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 46, 504, 352)];
     scroll.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     scroll.hasVerticalScroller = YES;
     scroll.borderType = NSNoBorder;
-    NSTextView *text = [[NSTextView alloc] initWithFrame:scroll.contentView.bounds];
+    // Routes the find menu to the Advanced Find panel and draws its highlights; it is read-only, so nothing is replaced.
+    TSAdvancedFindTextView *text = [[TSAdvancedFindTextView alloc] initWithFrame:scroll.contentView.bounds];
     text.editable = NO;
     text.richText = NO;
     text.font = [NSFont monospacedSystemFontOfSize:12 weight:NSFontWeightRegular];
@@ -140,11 +144,14 @@ static BOOL TSExperimentIsPrompt(NSString *line)
     scroll.documentView = text;
     [content addSubview:scroll];
     self.outputText = text;
-    NSTextField *field = [[NSTextField alloc] initWithFrame:NSMakeRect(20, 0, 464, 53)];
-    field.autoresizingMask = NSViewWidthSizable;
+    NSTextField *field = [[NSTextField alloc] initWithFrame:NSMakeRect(20, 5, 464, 36)];
+    field.autoresizingMask = NSViewWidthSizable | NSViewMaxYMargin;
     field.bezelStyle = NSTextFieldRoundedBezel;
-    field.focusRingType = NSFocusRingTypeNone;
+    field.controlSize = NSControlSizeSmall;
     field.font = [NSFont systemFontOfSize:11];
+    field.cell.wraps = YES;
+    field.cell.scrollable = NO;
+    field.lineBreakMode = NSLineBreakByWordWrapping;
     field.target = self;
     field.action = @selector(sendCommand:);
     field.placeholderString = NSLocalizedString(@"Experiment input", @"Experiment console input placeholder");

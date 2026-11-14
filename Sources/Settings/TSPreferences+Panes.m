@@ -9,6 +9,7 @@
 #import "TSPrefMiscOneController.h"
 #import "TSPrefMiscTwoController.h"
 #import "TSPrefThemesController.h"
+#import "TSKeyBindingsController.h"
 #import "TSPrefFooterController.h"
 #import "TSPrefThemeNameController.h"
 #import "TSSettingsCategory.h"

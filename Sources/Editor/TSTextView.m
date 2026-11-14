@@ -44,6 +44,9 @@
 #import "NSString-CharacterConversion.h"
 #import "NSString-Extras.h"
 #import "TSSourceFormatRanges.h"
+#import "TSFindInterface.h"
+#import "TSAdvancedFindPanelController.h"
+#import "TSAdvancedFindTextView.h"
 
 @protocol BDSKCompletionProtocol <NSObject>
 - (NSArray *)completionsForString:(NSString *)searchString;
@@ -56,6 +59,10 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 // end Adam Maxwell addition
 
 // end addition
+
+// The Advanced Find panel acts on the source that had the focus last.
+@interface TSTextView () <TSAdvancedFindTarget>
+@end
 
 @implementation TSTextView
 // added by Terada (- (void)awakeFromNib)
@@ -241,9 +248,9 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 }
 
 // Edit > Spelling and Grammar > Show Spelling and Grammar (Command-:) opens the
-// panel, and the system then runs its own search at once, without going through
-// -checkSpelling:. Replace that search with the TeX-aware one. Holding Option
-// gives the original behaviour.
+// panel, and the system then runs its own search, without going through
+// -checkSpelling:. Open the panel without that search and run the TeX-aware one.
+// Holding Option gives the original behaviour.
 - (void)showGuessPanel:(id)sender
 {
     if (![self usesTeXAwareSpellChecking] || ([NSEvent modifierFlags] & NSEventModifierFlagOption)) {
@@ -251,7 +258,7 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
         [super showGuessPanel:sender];
         return;
     }
-    [TSSpellSupport showSpellingPanelForTextView:self mask:[self freshSpellMask] openPanel:^{
+    [TSSpellSupport showSpellingPanelForTextView:self mask:[self freshSpellMask] hidePanel:^{
         [super showGuessPanel:sender];
     }];
 }
@@ -1617,6 +1624,20 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 - (id)initWithFrame:(NSRect)frameRect
 {
 	self = [super initWithFrame: frameRect];
+	[self setUpCompletionAndDragging];
+	return self;
+}
+
+// A view made with its own text system, such as the TextKit 1 contents of the macro editor.
+- (instancetype)initWithFrame:(NSRect)frameRect textContainer:(NSTextContainer *)container
+{
+	self = [super initWithFrame: frameRect textContainer: container];
+	[self setUpCompletionAndDragging];
+	return self;
+}
+
+- (void)setUpCompletionAndDragging
+{
 	[ self registerForDraggedTypes:
 			[NSArray arrayWithObjects: NSStringPboardType, NSFilenamesPboardType, nil] ];
 	self.document = nil;
@@ -1627,9 +1648,6 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 	replaceLocation = NSNotFound; // completion started here
 	completionListLocation = 0; // location to start search in the list
 	textLocation = NSNotFound; // location of insertion point
-
-    
-	return self;
 }
 
 // Adam Maxwell addition
@@ -2941,8 +2959,38 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 	BOOL enabled;
 	if ([self validateEditTextCommand:anItem enabled:&enabled])
 		return enabled;
+	TSAdvancedFindController *advancedFind = [self advancedFindController];
+	if (advancedFind && ([anItem action] == @selector(performFindPanelAction:) || [anItem action] == @selector(performTextFinderAction:)))
+		return [advancedFind validateFindMenuItem:anItem inTextView:self];
     
 	return [super validateMenuItem: anItem];
+}
+
+#pragma mark ========Advanced Find Panel==========
+
+// With the Advanced Find panel (FindMethod 3) the Find menu's actions go to it instead of NSTextView's find; the menu
+// itself is not changed, so the setting takes effect without a restart.
+- (nullable TSAdvancedFindController *)advancedFindController
+{
+	return TSAdvancedFindControllerForFindMethod();
+}
+
+- (void)performFindPanelAction:(id)sender
+{
+	TSAdvancedFindController *advancedFind = [self advancedFindController];
+	if (advancedFind)
+		[advancedFind performFindPanelAction:sender inTextView:self];
+	else
+		[super performFindPanelAction:sender];
+}
+
+- (void)performTextFinderAction:(id)sender
+{
+	TSAdvancedFindController *advancedFind = [self advancedFindController];
+	if (advancedFind)
+		[advancedFind performFindPanelAction:sender inTextView:self];
+	else
+		[super performTextFinderAction:sender];
 }
 
 #pragma mark ========Ruler==========

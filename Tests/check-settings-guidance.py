@@ -69,7 +69,7 @@ for language in LANGUAGES:
         # Release history describes old versions deliberately; current instructions never do.
         text = read_help(path, language)
         if path.stem == 'whatisnew':
-            current = re.search(r'<h5>TeXShop Changes 5\.60</h5>(.*?)(?=<h5>|$)', text, re.S)
+            current = re.search(r'<h5>TeXShop Changes 6\.00</h5>(.*?)(?=<h5>|$)', text, re.S)
             if current is None: continue
             text = current[1]
         check_obsolete(text, language, path)
@@ -110,11 +110,12 @@ for language in LANGUAGES:
             if not (chrome and heading_or_link and not any(t in ('p','dd','dt') for t,i in self.stack)):self.outside.append(text.strip()[:80])
     for name in ('basic_preferences','basic_spelling','configure_menushortcuts','configure_prefchanges','configure_hidden'):
         parser=ContentParser();parser.feed(pages[name]);assert not parser.outside,(language,name,'body text outside content_border',parser.outside)
-    for name, key in (('basic_autocompletion', 'Edit Key Bindings…'), ('basic_commandcompletion', 'Edit Command Completion…')):
-        # Older de/es key-binding articles do not name an editor command; their
-        # command-completion article does, and must use the current button label.
-        if name == 'basic_commandcompletion' or language in ('en', 'ko', 'ja'):
-            assert labels[key] in pages[name] and categories['keyboard'] in pages[name], (language, name, key)
+    # Older de/es key-binding articles do not describe the list; the others name its
+    # columns as Settings shows them. Every command-completion article uses the
+    # current button label.
+    if language in ('en', 'ko', 'ja'):
+        assert all(labels[key] in pages['basic_autocompletion'] for key in ('Input Character', 'Output String', 'Insert')) and categories['keyboard'] in pages['basic_autocompletion'], (language, 'basic_autocompletion')
+    assert labels['Edit Command Completion…'] in pages['basic_commandcompletion'] and categories['keyboard'] in pages['basic_commandcompletion'], (language, 'basic_commandcompletion')
 
 ja_unicode=read_help(ROOT/'Resources/Interfaces/ja.lproj/TeXShopHelp/pgs/advanced_unicode.htm','ja')
 assert strings(ROOT/'Resources/Interfaces/ja.lproj/SettingsMiscTwo.strings')['ahm-aK-Qi9.title'] in ja_unicode
@@ -194,7 +195,7 @@ for target in ('Base','en'):
 print('PASS: hidden PDF current text and distribution identity')
 
 # The current public English copies carry identical Settings layout wording.
-phrase='Settings has a compact sidebar with ten categories: General, Documents and Saving, Editor, Spell Checking, Themes, Preview, Typesetting, Console, Keyboard, and Updates. Each category shows overview cards and named groups with switches, right-aligned controls, wrapping labels and indented dependent options. Settings Profile and the Dock icon are in General; Themes contains only what themes store.'
+phrase='Settings has a compact sidebar with ten categories: General, Documents and Saving, Editor, Keyboard, Spell Checking, Themes, Preview, Typesetting, Console, and Updates. Each category shows overview cards and named groups with switches, right-aligned controls, wrapping labels and indented dependent options. Settings Profile and the Dock icon are in General; Themes contains only what themes store.'
 for filename in ('Documentation/Releases/6.00.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm'):
     assert phrase in (ROOT/filename).read_text(),('Current release layout copies agree',filename)
 
@@ -203,7 +204,7 @@ for language in ('en','ko'):
     assert not (ROOT/f'Resources/Interfaces/{language}.lproj/TeXShopHelp/pgs/basic_preferences1.htm').exists(),'Obsolete duplicate preferences help page'
 assert 'Transparency settings bring up a full Color Well' not in manual,'Opacity uses a slider in the manual'
 
-warning='A note with a yellow warning symbol explains changes to the spell-checking method, new-PDF zoom or default encoding when relevant. Auto Save requires a restart. The standard Find Panel and Find Bar switch immediately; switching to or from OgreKit requires a restart.'
+warning='A note with a yellow warning symbol explains changes to the spell-checking method, new-PDF zoom or default encoding when relevant. Auto Save requires a restart. The standard Find Panel, the Find Bar and the Advanced Find panel switch immediately; switching to or from OgreKit requires a restart.'
 for filename in ('Documentation/Releases/6.00.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm'):
     text=(ROOT/filename).read_text()
     assert warning in text,('Current release warning copies agree',filename)

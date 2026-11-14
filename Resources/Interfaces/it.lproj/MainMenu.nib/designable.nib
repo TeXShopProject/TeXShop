@@ -693,16 +693,10 @@
                                     <action selector="changeAutoComplete:" target="-1" id="922"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Completamento comandi" id="539">
-                                <menu key="submenu" title="Completamento comandi" id="540">
-                                    <items>
-                                        <menuItem title="Aggiungi comando" keyEquivalent="W" id="541" identifier="TSShortcut.registerForCommandCompletion:.0">
-                                            <connections>
-                                                <action selector="registerForCommandCompletion:" target="-1" id="545"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
+                            <menuItem title="Aggiungi all’elenco di completamento comandi" keyEquivalent="W" id="541" identifier="TSShortcut.registerForCommandCompletion:.0">
+                                <connections>
+                                    <action selector="registerForCommandCompletion:" target="-1" id="545"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Vai a Capo" id="636">
                                 <menu key="submenu" title="Vai a Capo" id="637">
@@ -1279,7 +1273,8 @@
                                     <action selector="splitWindow:" target="-1" id="495"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Dividi finestra verticalmente" alternate="YES" keyEquivalent="v" id="a3v-rF-k9e" identifier="TSShortcut.splitWindow:.vertical">
+                            <menuItem title="Dividi finestra verticalmente" alternate="YES" keyEquivalent="2" id="a3v-rF-k9e" identifier="TSShortcut.splitWindow:.vertical">
+                                <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES"/>
                                 <connections>
                                     <action selector="splitWindow:" target="-1" id="XlU-vW-yjy"/>
                                 </connections>

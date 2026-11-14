@@ -131,7 +131,22 @@ static void CheckOwnerPresentation(TSSettingsWindowController *shell) {
         }
         CountPresentedControls(pane, actual);
     }
-    Check(expected[0] == 50 && expected[1] == 15 && expected[2] == 2, @"Reference contains fifty switches and two exclusive spelling choices");
+    Check(expected[0] == 51 && expected[1] == 15 && expected[2] == 2, @"Reference contains fifty-one switches and two exclusive spelling choices");
+    {
+        // Updates: Updates to Include above Automatic Checks; the last check and Check for Updates below the cards.
+        NSView *updates=[shell viewForCategoryIdentifier:@"updates"];
+        NSStackView *updatesBody=(NSStackView *)updates.subviews.firstObject;
+        NSMutableArray *order=[NSMutableArray array];for(NSView *child in updatesBody.arrangedSubviews)[order addObject:child.identifier ?: @""];
+        Check([order isEqual:@[@"category.header",@"group.updates.1",@"group.updates.0",@"group.updates.2"]],[NSString stringWithFormat:@"Updates order: %@",order]);
+        Check([Find(Find(updates,@"group.updates.1"),@"toggle.settings.sparkle-prerelease") isKindOfClass:NSSwitch.class],@"Prereleases are a switch in their own group");
+        NSView *footer=Find(updates,@"group.updates.2");
+        Check(footer!=nil && ![footer isKindOfClass:TSSettingsGroupView.class] && Find(footer,@"card.background")==nil,@"The check line is outside the cards");
+        NSButton *check=(NSButton *)Find(footer,@"settings.sparkle-check-now");NSTextField *last=(NSTextField *)Find(footer,@"settings.sparkle-last-check");
+        Check([check.title isEqual:[fixture localizedStringForKey:@"catalog.updates.2.0.title" value:nil table:@"SettingsCategories"]] && check.action==@selector(checkForUpdatesFromSettings:),@"Check for Updates button");
+        NSString *lastFormat=[fixture localizedStringForKey:@"catalog.updates.2.0.last" value:nil table:@"SettingsCategories"],*never=[fixture localizedStringForKey:@"catalog.updates.2.0.never" value:nil table:@"SettingsCategories"];
+        Check([lastFormat containsString:@"%@"] && [last.stringValue isEqual:[NSString stringWithFormat:lastFormat,never]],[NSString stringWithFormat:@"Without a check the line says so: %@",last.stringValue]);
+        Check(NSMaxX([check convertRect:check.bounds toView:updates])>NSMaxX([last convertRect:last.bounds toView:updates]) && NSMinX([last convertRect:last.bounds toView:updates])<NSMinX([check convertRect:check.bounds toView:updates]),@"The last check is on the left and the button on the right");
+    }
     // The reference describes checkbox labels as items in its checks/grid rows.
     Check(actual[0] == expected[0] && actual[1] == expected[1] && actual[2] == expected[2] && actual[3] == 0,
           [NSString stringWithFormat:@"Displayed controls: switches=%lu checks=%lu radios=%lu matrices=%lu",(unsigned long)actual[0],(unsigned long)actual[1],(unsigned long)actual[2],(unsigned long)actual[3]]);

@@ -77,6 +77,7 @@
 #import "TSSourceFormatRanges.h"
 #import "TSPreviewAppearance.h"  // added by Terada
 #import "TSFullSplitDivider.h"
+#import "TSAdvancedFindPanelController.h"
 
 
 #define COLORTIME  0.02
@@ -989,6 +990,18 @@ withDarkColors = NO;
 {
     NSInteger current = [SUD integerForKey:FindMethodKey];
     NSNumber *initial = TSSettingsLaunchValues()[FindMethodKey];
+    if (current != TSFindMethodAdvancedPanel) {
+        // Away from the Advanced Find panel: it closes, and its highlights in this document, its console, log and
+        // Experiment windows go, since nothing else removes them.
+        if (TSAdvancedFindPanelController.hasSharedPanelController)
+            [TSAdvancedFindPanelController.sharedPanelController close];
+        NSTextView *views[] = {textView1, outputText, self.logTextView, scrapTextView, self.experimentConsole.outputText};
+        for (size_t index = 0; index < sizeof(views) / sizeof(views[0]); index++) {
+            NSTextStorage *storage = views[index].textStorage;
+            if (storage)
+                [[TSAdvancedFindHighlights existingHighlightsForTextStorage:storage] removeAll];
+        }
+    }
     if (current == 2 || (initial != nil && initial.integerValue == 2)) return;
     BOOL incremental = [SUD boolForKey:IncrementalSearchKey];
     TSConfigureFindInterface(textView1, current, incremental);
@@ -3738,6 +3751,7 @@ static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice
 		textView = textView1;
         [self removeCurrentLineColor:textView2];
 	}
+    TSSplitToggleItemsFollowSplit();
 }
 
 - (void)annotationPanelWillClose:(NSNotification *)notification
@@ -10861,7 +10875,9 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
                 
                 
                 // NSLog(@"got here");
-                [self.logTextView setString: @""];
+                // The error lines are put in at once, as the whole log is below: typing (insertText:) would be refused
+                // while the Advanced Find panel searches the log, which is read-only meanwhile.
+                NSMutableString *errorLines = [NSMutableString string];
                 
                 myLength = [content length];
                 lineRange.location = 0;
@@ -10891,9 +10907,9 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
                             errorLineNumber = [numberOutput integerValue];
                             if (errorLineNumber > 0)
                             {
-                                [self.logTextView insertText: previousLine];
-                                [self.logTextView insertText: lineString];
-                                [self.logTextView insertText: @"\r"];
+                                [errorLines appendString: previousLine];
+                                [errorLines appendString: lineString];
+                                [errorLines appendString: @"\r"];
                             }
                             
                         }
@@ -10903,6 +10919,8 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
                     
                    // [self.logTextView insertText: lineString];
                 }
+                [self.logTextView setString: errorLines];
+                [self.logTextView setSelectedRange: NSMakeRange(errorLines.length, 0)];
                             
                     
                 

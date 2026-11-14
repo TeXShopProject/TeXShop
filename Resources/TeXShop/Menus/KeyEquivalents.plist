@@ -90,15 +90,12 @@
 
 	<key>Source</key>
 	<dict>
-		<key>Completion</key> 
-		<dict>
-			<key>Add Word</key>  
-			<array>
-				<string>W</string>
-				<true/>
-				<true/>
-			</array>
-		</dict>
+		<key>Add to Command Completion List</key>  
+		<array>
+			<string>W</string>
+			<true/>
+			<true/>
+		</array>
 	</dict>
 
 	<key>4</key>  

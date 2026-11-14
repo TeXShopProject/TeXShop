@@ -562,7 +562,7 @@ static NSColor *TSSettingsCardColor(void)
     _unit.accessibilityIdentifier=@"settings.user-data";
     _stepper=[[TSSettingsIntegerStepper alloc]initWithField:_field];_stepper.controlSize=NSControlSizeSmall;
     [self addArrangedSubview:_slider];[self addArrangedSubview:_field];[self addArrangedSubview:_stepper];[self addArrangedSubview:_unit];
-    [self setCustomSpacing:6 afterView:_slider];[self setCustomSpacing:2 afterView:_field];[self setCustomSpacing:2 afterView:_stepper];
+    [self setCustomSpacing:6 afterView:_slider];[self setCustomSpacing:4 afterView:_field];[self setCustomSpacing:2 afterView:_stepper];
     [_slider.widthAnchor constraintEqualToConstant:60].active=YES;[_field.widthAnchor constraintEqualToConstant:36].active=YES;
     for(NSString *key in @[@"color",@"enabled"])[well addObserver:self forKeyPath:key options:0 context:NULL];
     [self synchronize];return self;

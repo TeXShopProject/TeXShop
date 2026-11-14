@@ -1,0 +1,37 @@
+\documentclass{article}
+\usepackage{expl3,xparse}
+\ExplSyntaxOn
+\tl_new:N \l_my_name_tl
+\int_new:N \g_my_count_int
+\int_const:Nn \c_my_max_int { 100 }
+\tl_new:N \l__my_internal_tl
+\int_new:N \g__my_private_int
+\bool_new:N \c__my_flag_bool
+\cs_new_protected:Npn \my_set:n #1 { \tl_set:Nn \l_my_name_tl {#1} }
+\cs_new:Npn \__my_helper:nn #1#2 { #1 -- #2 }
+\cs_generate_variant:Nn \my_set:n { V , x }
+\msg_new:nnn { my } { unknown } { Unknown~key~'#1' }
+\msg_error:nnn { my } { unknown } { foo }
+\msg_warning:nn { my } { other }
+\keys_define:nn { my }
+  {
+    name .tl_set:N = \l_my_name_tl ,
+    count .int_set:N = \g_my_count_int ,
+    flag .bool_set:N = \l_my_flag_bool ,
+    mode .choice: ,
+    mode / fast .code:n = { \int_set:Nn \g_my_count_int { 1 } } ,
+    plain .value_required:n = true ,
+    words with spaces    .tl_set:N = \l_tmpa_tl ,
+    trailing
+  }
+\NewDocumentCommand \MySet { m } { \my_set:n {#1} }
+\prg_new_conditional:Npnn \my_if_empty:n #1 { p , T , F , TF }
+  { \tl_if_empty:nTF {#1} { \prg_return_true: } { \prg_return_false: } }
+\l_ \g_ \c_ \l_a \g_b \c_c \l__ \__ \__x \__x:n \msg \msg_x \msgss \my:nn \my_x \@@_foo:n
+\pdfmanagement_add:nnn{ThisPage}{Rotate}{90}
+\AddToHook{env/sidewaysfigure/end}{\pdfmanagement_add:nnn{ThisPage}{Rotate}{90}}
+\ExplSyntaxOff
+\begin{document}
+word.key value.other x.y:z abc .def ghi
+\MySet{Name}
+\end{document}

@@ -7,6 +7,45 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FA4642139FF362346A674FF5 /* TSAdvancedFindController+MultipleReplace.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EA30567B06FD1BA89176E55 /* TSAdvancedFindController+MultipleReplace.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		FD453ED734C26F5EAAF40FE3 /* TSMultipleReplaceLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = A97846D41CA596CF8F893971 /* TSMultipleReplaceLibrary.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		094E7C9C3FBE59845DC3EFC4 /* TSMultipleReplaceMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 252405F35BD91BD35A20B6D8 /* TSMultipleReplaceMenu.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		8D9C544E6040A435574B945C /* TSMultipleReplaceRuleTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D6CD786A2345A199607427D /* TSMultipleReplaceRuleTable.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		68F8103ED328E7DEC5654F0D /* TSMultipleReplaceWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 794A81611DD32BA919336BF8 /* TSMultipleReplaceWindowController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		0E535BA487AD036033330CF4 /* TSAdvancedFindController.m in Sources */ = {isa = PBXBuildFile; fileRef = D371658982921FCA3CEAE427 /* TSAdvancedFindController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		95C92AEAEF35E49033C476EA /* TSAdvancedFindFieldScanners.m in Sources */ = {isa = PBXBuildFile; fileRef = CDB0F89D2173B57C20009B7D /* TSAdvancedFindFieldScanners.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		64C16BC63959452A63153E9F /* TSAdvancedFindPanelController+Coloring.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E48753CB168F6C34693C4AD /* TSAdvancedFindPanelController+Coloring.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		81F76D02AB2DC23DC76FB163 /* TSRegexPatternLexer.m in Sources */ = {isa = PBXBuildFile; fileRef = E4A2535150250CF8E9A90197 /* TSRegexPatternLexer.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		7530E692A6FADDC97BE3A764 /* TSAdvancedFindController+Tasks.m in Sources */ = {isa = PBXBuildFile; fileRef = F334B074A4B975D548EC5C01 /* TSAdvancedFindController+Tasks.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		4D79D6E8FCC51539A6787C26 /* TSAdvancedFindMatchCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 51E3505E53F40BE928C10F9E /* TSAdvancedFindMatchCache.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		EDAD6FCBA6E07E73D8F030F1 /* TSAdvancedFindProgressSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 186B6B5BE36730C156DD7A82 /* TSAdvancedFindProgressSheet.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		94C6902FB2F0DD13B05C0CFD /* TSAdvancedFindTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 86D35FB1EE567A0E3FFFC6F8 /* TSAdvancedFindTask.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		3E28439E4331B75239F78E1E /* TSAdvancedFindHighlights.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EE63785520FA8CB2B6FF24C /* TSAdvancedFindHighlights.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		129A84463E3189A2848E7DA5 /* TSAdvancedFindInputBox.m in Sources */ = {isa = PBXBuildFile; fileRef = F56648C2E54E22BBF5A070A6 /* TSAdvancedFindInputBox.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		469AA3DB7D935CA1B232678B /* TSAdvancedFindOptionsForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 8862EBA5FD34F66E2FA2D3B6 /* TSAdvancedFindOptionsForm.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		D50CE16F90F64FDBE3758709 /* TSAdvancedFindPanelController+Actions.m in Sources */ = {isa = PBXBuildFile; fileRef = DB29034FA28C8124507DFF25 /* TSAdvancedFindPanelController+Actions.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		15DF76C178AFF47DC3F19EA6 /* TSAdvancedFindPanelController+History.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C43187D643C8B79289AB25 /* TSAdvancedFindPanelController+History.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		F909CBB2A6D94D6A5696B0C9 /* TSAdvancedFindPanelController+Options.m in Sources */ = {isa = PBXBuildFile; fileRef = 0967693A34326EE9E6FBA327 /* TSAdvancedFindPanelController+Options.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		1895D6CEBE4D7B48C7EF5492 /* TSAdvancedFindPanelController+Results.m in Sources */ = {isa = PBXBuildFile; fileRef = 41B52FCFCFDDAFFAA4549511 /* TSAdvancedFindPanelController+Results.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		C87CF08715A6CC2BD4D75FC2 /* TSAdvancedFindResults.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F95C110DB3998509E8EE01F /* TSAdvancedFindResults.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		6CAD22D2940E41528C2B376B /* TSAdvancedFindResultsView.m in Sources */ = {isa = PBXBuildFile; fileRef = C797C937301893B2449D5004 /* TSAdvancedFindResultsView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		2DD5D09308284E4DFF5E3324 /* TSAdvancedFindCheatSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BA245EE589086F8BB208254 /* TSAdvancedFindCheatSheet.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		482A3A0740ACA1A4E2CA3A30 /* TSRegexOnigmoIncompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 46B1E2089286828DDC828770 /* TSRegexOnigmoIncompatibility.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		CAE36867C8D37DB17E702F0D /* TSAdvancedFindPanelController+CheatSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F28323883C7A0B51BBE7D63 /* TSAdvancedFindPanelController+CheatSheet.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		1515E934D4D5C57D578A0B70 /* TSAdvancedFindPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FCF2A3181BB2E666FF3BE52 /* TSAdvancedFindPanelController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		CA2B36C2CA1477FDBB2CF755 /* TSAdvancedFindSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 80D87B64004DCACC0F91003B /* TSAdvancedFindSettings.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		E7D37A94A8A25460D369D60C /* TSAdvancedFindTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92C81BD7E5D80BF55BE94E34 /* TSAdvancedFindTextView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		18ED0114B6072AE86BC14850 /* TSPreferenceLaunch.m in Sources */ = {isa = PBXBuildFile; fileRef = 43313E338B87973F030A3810 /* TSPreferenceLaunch.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new"; }; };
+		00BF469646F14357C53A1246 /* AdvancedFind.strings in Resources */ = {isa = PBXBuildFile; fileRef = 377E3DDD07AA8FE81002D25F /* AdvancedFind.strings */; };
+		AD9114C58B8D73DBFEA212A9 /* AdvancedFindEngine.strings in Resources */ = {isa = PBXBuildFile; fileRef = 53E3AF03C779790C023AC048 /* AdvancedFindEngine.strings */; };
+		A12627FA47A94107E91A0354 /* TSRegexFindOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BAB36C46A874188F41DC0B2 /* TSRegexFindOptions.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		24F1158918A8E62736CE6FFD /* TSRegexFindPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D2EB0097D0878293A8CB554 /* TSRegexFindPattern.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		925124931FE605F31756F6DD /* TSRegexReplacementTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B779315E1E594F3CC15741E /* TSRegexReplacementTemplate.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		CECFB19823AD78E51D1BD74D /* TSRegexFindReplacement.m in Sources */ = {isa = PBXBuildFile; fileRef = D038A5C08901EDDE4300CF51 /* TSRegexFindReplacement.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		E1B65A56BD2D987F27CFE39E /* TSRegexReplaceAllResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E3C11620D0A8469C767DC49 /* TSRegexReplaceAllResult.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		BEA7F20E7D0F181D04711CEC /* TSRegexTextFind.m in Sources */ = {isa = PBXBuildFile; fileRef = 771CB91746C3A83D941E1F15 /* TSRegexTextFind.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		5842AEFCEA920C9547F699A0 /* TSRegexReplacementRule.m in Sources */ = {isa = PBXBuildFile; fileRef = B3700B91921E42111A05D9B9 /* TSRegexReplacementRule.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		A5D7F238722E8B97651943FD /* TSRegexMultipleReplace.m in Sources */ = {isa = PBXBuildFile; fileRef = FB5FBF86FABC267FCFA5F316 /* TSRegexMultipleReplace.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		D8E47C4EB3FAA770E2CF0E59 /* Themes in Resources */ = {isa = PBXBuildFile; fileRef = E02B7D6185C396B053047A24 /* Themes */; };
 		D20D45B3736189BFBE1C0F51 /* Defaults in Resources */ = {isa = PBXBuildFile; fileRef = 0A89878BCF6577E7A8F002E5 /* Defaults */; };
 		7A9051C11D9E4EA1A5210013 = {isa = PBXBuildFile; fileRef = 7A9051C11D9E4EA1A5210011; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
@@ -80,13 +119,9 @@
 		F29CAC13458CF5539134DBD6 /* TSLinkPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA13866BF3622A550CEA0B84 /* TSLinkPreviewView.m */; };
 		85F95A45B305235593F1F001 /* TSOutlineExpansion.m in Sources */ = {isa = PBXBuildFile; fileRef = 61C426C1306DC86F5A07099E /* TSOutlineExpansion.m */; };
 		0BF38A67E94FE8E7E9361D96 /* TSPreviewSplitDivider.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF3DDBE9DD040A7E58F0C3F /* TSPreviewSplitDivider.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		A6625D53553E040AB0754A5E /* TSPreviewScrollerKeeper.m in Sources */ = {isa = PBXBuildFile; fileRef = 256546D6030BAEB5035BE49B /* TSPreviewScrollerKeeper.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		403E76BE218E7008006975A8 /* TeXShop.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 403E76BD218E7008006975A8 /* TeXShop.scriptSuite */; };
 		403F25EA0F20770F001031A0 /* TSDocument-Console.m in Sources */ = {isa = PBXBuildFile; fileRef = 403F25E90F20770F001031A0 /* TSDocument-Console.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		4040A2C9135BE98200AC4C27 /* TSAutoCompletionListEditor.h in Headers */ = {isa = PBXBuildFile; fileRef = 4040A2C7135BE98200AC4C27 /* TSAutoCompletionListEditor.h */; };
-		4040A2CA135BE98200AC4C27 /* TSAutoCompletionListEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4040A2C8135BE98200AC4C27 /* TSAutoCompletionListEditor.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		4040A2CF135BE99500AC4C27 /* TSListEditorTableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4040A2CD135BE99500AC4C27 /* TSListEditorTableView.h */; };
-		4040A2D0135BE99500AC4C27 /* TSListEditorTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4040A2CE135BE99500AC4C27 /* TSListEditorTableView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		4040A7F6135BEA8200AC4C27 /* AutoCompletionListEditor.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4040A7F4135BEA8200AC4C27 /* AutoCompletionListEditor.nib */; };
 		40415E3D131CAB3700226AF4 /* TeXShop Tips & Tricks.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 40415E3B131CAB3700226AF4 /* TeXShop Tips & Tricks.pdf */; };
 		40473FAE0C68273C009311CF /* Course Supplements in Resources */ = {isa = PBXBuildFile; fileRef = 40473FA90C68273C009311CF /* Course Supplements */; };
 		404D1B632891B23400402802 /* TSHTMLWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 404D1B612891B23400402802 /* TSHTMLWindow.h */; };
@@ -148,6 +183,14 @@
 		4078818A0519249A006979EA /* TSEncodingSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AA2B8203C79AF800000009 /* TSEncodingSupport.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4078818B0519249A006979EA /* TSMacroEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4077C62303C7FAE800000009 /* TSMacroEditor.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4078818C0519249A006979EA /* TSMacroMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4077C62503C7FAE800000009 /* TSMacroMenuController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		A2C500010000000000000012 /* TSSyntaxScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = A2C500010000000000000011 /* TSSyntaxScanner.m */; };
+		A2C500010000000000000015 /* TSSyntaxTeXOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = A2C500010000000000000014 /* TSSyntaxTeXOptions.m */; };
+		A2C500010000000000000018 /* TSSyntaxTeXScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = A2C500010000000000000017 /* TSSyntaxTeXScanner.m */; };
+		A2C50001000000000000001B /* TSSyntaxXMLScanning.m in Sources */ = {isa = PBXBuildFile; fileRef = A2C50001000000000000001A /* TSSyntaxXMLScanning.m */; };
+		A2C50001000000000000001E /* TSSyntaxHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = A2C50001000000000000001D /* TSSyntaxHighlighter.m */; };
+		A2C500010000000000000032 /* TSSyntaxAppleScriptScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = A2C500010000000000000031 /* TSSyntaxAppleScriptScanner.m */; };
+		A2C500010000000000000035 /* TSSyntaxMacroContentScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = A2C500010000000000000034 /* TSSyntaxMacroContentScanner.m */; };
+		A2C500010000000000000005 /* TSSyntaxColorScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = A2C500010000000000000004 /* TSSyntaxColorScheme.m */; };
 		A2A0000100000000000000C3 /* TSMacroContentKind.m in Sources */ = {isa = PBXBuildFile; fileRef = A2A0000100000000000000C2 /* TSMacroContentKind.m */; };
 		4078818D0519249A006979EA /* TSMacroTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4077C62B03C7FB0200000009 /* TSMacroTreeNode.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4078818E0519249A006979EA /* TSMacroOutlineController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4077C62F03C7FB1E00000009 /* TSMacroOutlineController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -248,6 +291,7 @@
 		E18300000000000000000001 = {isa = PBXBuildFile; fileRef = E18200000000000000000110; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		E18300000000000000000002 = {isa = PBXBuildFile; fileRef = E18200000000000000000210; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		E18300000000000000000003 = {isa = PBXBuildFile; fileRef = E18200000000000000000310; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		E18300000000000000000005 = {isa = PBXBuildFile; fileRef = E18200000000000000000510; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		E18300000000000000000004 = {isa = PBXBuildFile; fileRef = E18200000000000000000410; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		F5BAC2E9ED1431D54CC853B8 = {isa = PBXBuildFile; fileRef = 9E2B2A2E258A950674839CF0; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		0E1D12D0E21A008917374A1E = {isa = PBXBuildFile; fileRef = 83392E91D403FD331C9F5227; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
@@ -374,6 +418,99 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5F2E5F32D20D36A3DDA91CC3 /* TSAdvancedFindController+MultipleReplace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TSAdvancedFindController+MultipleReplace.h"; sourceTree = "<group>"; };
+		7EA30567B06FD1BA89176E55 /* TSAdvancedFindController+MultipleReplace.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindController+MultipleReplace.m"; sourceTree = "<group>"; };
+		BE3AD0138793FD2DD9BA11C4 /* TSMultipleReplaceLibrary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMultipleReplaceLibrary.h; sourceTree = "<group>"; };
+		A97846D41CA596CF8F893971 /* TSMultipleReplaceLibrary.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMultipleReplaceLibrary.m; sourceTree = "<group>"; };
+		D9BDE11BDAB519A0996E6A9A /* TSMultipleReplaceMenu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMultipleReplaceMenu.h; sourceTree = "<group>"; };
+		252405F35BD91BD35A20B6D8 /* TSMultipleReplaceMenu.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMultipleReplaceMenu.m; sourceTree = "<group>"; };
+		E42286060335BFF931F8B8B2 /* TSMultipleReplaceRuleTable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMultipleReplaceRuleTable.h; sourceTree = "<group>"; };
+		2D6CD786A2345A199607427D /* TSMultipleReplaceRuleTable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMultipleReplaceRuleTable.m; sourceTree = "<group>"; };
+		4B810EAE0F187A33679EC51C /* TSMultipleReplaceWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMultipleReplaceWindowController.h; sourceTree = "<group>"; };
+		794A81611DD32BA919336BF8 /* TSMultipleReplaceWindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMultipleReplaceWindowController.m; sourceTree = "<group>"; };
+		EEDE5776A4F985316C5A2148 /* TSAdvancedFindController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindController.h; sourceTree = "<group>"; };
+		D371658982921FCA3CEAE427 /* TSAdvancedFindController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindController.m; sourceTree = "<group>"; };
+		80307A525061C45A608A3767 /* TSAdvancedFindFieldScanners.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindFieldScanners.h; sourceTree = "<group>"; };
+		CDB0F89D2173B57C20009B7D /* TSAdvancedFindFieldScanners.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindFieldScanners.m; sourceTree = "<group>"; };
+		5E48753CB168F6C34693C4AD /* TSAdvancedFindPanelController+Coloring.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindPanelController+Coloring.m"; sourceTree = "<group>"; };
+		37A31621A2DC8C85D459EA88 /* TSRegexPatternLexer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRegexPatternLexer.h; sourceTree = "<group>"; };
+		E4A2535150250CF8E9A90197 /* TSRegexPatternLexer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRegexPatternLexer.m; sourceTree = "<group>"; };
+		D9ACEBB4CC50171FB2AEC94E /* TSAdvancedFindController+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TSAdvancedFindController+Private.h"; sourceTree = "<group>"; };
+		F334B074A4B975D548EC5C01 /* TSAdvancedFindController+Tasks.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindController+Tasks.m"; sourceTree = "<group>"; };
+		3F6C089A590CA6575408A20A /* TSAdvancedFindMatchCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindMatchCache.h; sourceTree = "<group>"; };
+		51E3505E53F40BE928C10F9E /* TSAdvancedFindMatchCache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindMatchCache.m; sourceTree = "<group>"; };
+		4AECCF8DD377F1BC9ED2E3CA /* TSAdvancedFindProgressSheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindProgressSheet.h; sourceTree = "<group>"; };
+		186B6B5BE36730C156DD7A82 /* TSAdvancedFindProgressSheet.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindProgressSheet.m; sourceTree = "<group>"; };
+		F26C3591F893C00080E72394 /* TSAdvancedFindTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindTask.h; sourceTree = "<group>"; };
+		86D35FB1EE567A0E3FFFC6F8 /* TSAdvancedFindTask.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindTask.m; sourceTree = "<group>"; };
+		1F8F715B9FF420B7989F30AC /* TSAdvancedFindHighlights.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindHighlights.h; sourceTree = "<group>"; };
+		3EE63785520FA8CB2B6FF24C /* TSAdvancedFindHighlights.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindHighlights.m; sourceTree = "<group>"; };
+		7AEFC934AA5B01FE309793AB /* TSAdvancedFindInputBox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindInputBox.h; sourceTree = "<group>"; };
+		F56648C2E54E22BBF5A070A6 /* TSAdvancedFindInputBox.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindInputBox.m; sourceTree = "<group>"; };
+		8D9A0C4E9B27EA807C50DF9D /* TSAdvancedFindOptionsForm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindOptionsForm.h; sourceTree = "<group>"; };
+		8862EBA5FD34F66E2FA2D3B6 /* TSAdvancedFindOptionsForm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindOptionsForm.m; sourceTree = "<group>"; };
+		DB29034FA28C8124507DFF25 /* TSAdvancedFindPanelController+Actions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindPanelController+Actions.m"; sourceTree = "<group>"; };
+		27C43187D643C8B79289AB25 /* TSAdvancedFindPanelController+History.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindPanelController+History.m"; sourceTree = "<group>"; };
+		0967693A34326EE9E6FBA327 /* TSAdvancedFindPanelController+Options.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindPanelController+Options.m"; sourceTree = "<group>"; };
+		41B52FCFCFDDAFFAA4549511 /* TSAdvancedFindPanelController+Results.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindPanelController+Results.m"; sourceTree = "<group>"; };
+		A1AA8C04CAF0B6DA6DCAEC4E /* TSAdvancedFindResults.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindResults.h; sourceTree = "<group>"; };
+		2F95C110DB3998509E8EE01F /* TSAdvancedFindResults.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindResults.m; sourceTree = "<group>"; };
+		569D7D77C416E27B3DB38FB9 /* TSAdvancedFindResultsView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindResultsView.h; sourceTree = "<group>"; };
+		C797C937301893B2449D5004 /* TSAdvancedFindResultsView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindResultsView.m; sourceTree = "<group>"; };
+		32F268DBF9C127E1D5EF970B /* TSAdvancedFindCheatSheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindCheatSheet.h; sourceTree = "<group>"; };
+		7BA245EE589086F8BB208254 /* TSAdvancedFindCheatSheet.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindCheatSheet.m; sourceTree = "<group>"; };
+		E1091878DF6ECF40EA9A039B /* TSRegexOnigmoIncompatibility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRegexOnigmoIncompatibility.h; sourceTree = "<group>"; };
+		46B1E2089286828DDC828770 /* TSRegexOnigmoIncompatibility.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRegexOnigmoIncompatibility.m; sourceTree = "<group>"; };
+		0F28323883C7A0B51BBE7D63 /* TSAdvancedFindPanelController+CheatSheet.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindPanelController+CheatSheet.m"; sourceTree = "<group>"; };
+		D39F26F1E3FD4FC8AF0F8847 /* TSAdvancedFindPanelController+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TSAdvancedFindPanelController+Private.h"; sourceTree = "<group>"; };
+		452157E5DF6449194BF0E926 /* TSAdvancedFindPanelController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindPanelController.h; sourceTree = "<group>"; };
+		9FCF2A3181BB2E666FF3BE52 /* TSAdvancedFindPanelController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindPanelController.m; sourceTree = "<group>"; };
+		06EAF730931230D8B0E2F3BB /* TSAdvancedFindSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindSettings.h; sourceTree = "<group>"; };
+		80D87B64004DCACC0F91003B /* TSAdvancedFindSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindSettings.m; sourceTree = "<group>"; };
+		129E025F1EB924880C4110F7 /* TSAdvancedFindTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindTextView.h; sourceTree = "<group>"; };
+		92C81BD7E5D80BF55BE94E34 /* TSAdvancedFindTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindTextView.m; sourceTree = "<group>"; };
+		79386E4CA9C716CC593C87C4 /* TSPreferenceLaunch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPreferenceLaunch.h; sourceTree = "<group>"; };
+		43313E338B87973F030A3810 /* TSPreferenceLaunch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPreferenceLaunch.m; sourceTree = "<group>"; };
+		68D59A59B5C51AE8F1C6576D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		61C24FA90E8E67BCA1E76D4F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		C839101565395C1DAA12A6D0 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		3C3FDBA8541E4BCAAB06C0CA /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		DAB908B89C188D565AFE2FCF /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		FA8BFA90CC779203C3422B15 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		C0B84827762155CF6DA0E9AB /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		0D4064C3543B2A6AD2D65C1D /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		42463966167902CAE9AAA5D9 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		E0EC6F12A003D1D1E6AAD626 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/AdvancedFind.strings"; sourceTree = "<group>"; };
+		C5AD42C1E00BAFF4ADDE951E /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		2D2AF363E895884992626801 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		6B5D5B335A8B1488C95B2753 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		38EA7C87B9AAF2825D90469A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		A38621F3D0CCE45110CF97A1 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		223780129540EA1940F485DB /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		4B5F03C074481F8C87D3D426 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		BA4276D11450A61E76A21C45 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		6ECCC0A54554F32F7265EE4E /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		C1DFF8D388534BB9611F63DA /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		07FA8F4B972874FA76FBBB5F /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		1DDD228880E2230F29F8E2EF /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/AdvancedFindEngine.strings"; sourceTree = "<group>"; };
+		1F97FB1460ABE9AFF27D3D14 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		2568E490DFF3393BED7721C4 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		AAC18B54FE17729AEBDCACD3 /* TSRegexFindOptions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRegexFindOptions.h; sourceTree = "<group>"; };
+		8BAB36C46A874188F41DC0B2 /* TSRegexFindOptions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRegexFindOptions.m; sourceTree = "<group>"; };
+		44A1DA9ECAA9302F78780C97 /* TSRegexFindPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRegexFindPattern.h; sourceTree = "<group>"; };
+		5D2EB0097D0878293A8CB554 /* TSRegexFindPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRegexFindPattern.m; sourceTree = "<group>"; };
+		7FDEF05CF1564F1E291B3951 /* TSRegexReplacementTemplate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRegexReplacementTemplate.h; sourceTree = "<group>"; };
+		0B779315E1E594F3CC15741E /* TSRegexReplacementTemplate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRegexReplacementTemplate.m; sourceTree = "<group>"; };
+		16431FC52F2B9E1F8ADD26BA /* TSRegexFindReplacement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRegexFindReplacement.h; sourceTree = "<group>"; };
+		D038A5C08901EDDE4300CF51 /* TSRegexFindReplacement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRegexFindReplacement.m; sourceTree = "<group>"; };
+		F8D8A36C78B1F3D29AB41637 /* TSRegexReplaceAllResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRegexReplaceAllResult.h; sourceTree = "<group>"; };
+		4E3C11620D0A8469C767DC49 /* TSRegexReplaceAllResult.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRegexReplaceAllResult.m; sourceTree = "<group>"; };
+		2D7F734C0A2BB6F1FAD716B3 /* TSRegexTextFind.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRegexTextFind.h; sourceTree = "<group>"; };
+		771CB91746C3A83D941E1F15 /* TSRegexTextFind.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRegexTextFind.m; sourceTree = "<group>"; };
+		A53419A8610F75D0369307C3 /* TSRegexReplacementRule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRegexReplacementRule.h; sourceTree = "<group>"; };
+		B3700B91921E42111A05D9B9 /* TSRegexReplacementRule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRegexReplacementRule.m; sourceTree = "<group>"; };
+		DE76E486CF388F181690E591 /* TSRegexMultipleReplace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRegexMultipleReplace.h; sourceTree = "<group>"; };
+		FB5FBF86FABC267FCFA5F316 /* TSRegexMultipleReplace.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRegexMultipleReplace.m; sourceTree = "<group>"; };
 		E02B7D6185C396B053047A24 /* Themes */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources/Themes; sourceTree = SOURCE_ROOT; };
 		0A89878BCF6577E7A8F002E5 /* Defaults */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources/Defaults; sourceTree = SOURCE_ROOT; };
 		7A9051C11D9E4EA1A5210011 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsChangeNote.m; sourceTree = "<group>"; };
@@ -462,8 +599,6 @@
 		40154D62131C06B000526CCA /* zh_CN */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/Localizable.strings; sourceTree = "<group>"; };
 		40154D63131C06BD00526CCA /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.scriptTerminology; name = zh_CN; path = zh_CN.lproj/TeXShop.scriptTerminology; sourceTree = "<group>"; };
 		40154D64131C06C900526CCA /* zh_CN */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/ToolbarItems.strings; sourceTree = "<group>"; };
-		4015C22A199AF62C005C5ED3 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = "pt-PT"; path = "Resources/Interfaces/pt-PT.lproj/AutoCompletionListEditor.nib"; sourceTree = SOURCE_ROOT; };
-		4015C22B199AF650005C5ED3 /* pt */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt; path = Resources/Interfaces/pt.lproj/AutoCompletionListEditor.nib; sourceTree = SOURCE_ROOT; };
 		4015F924218F458C00F6F883 /* ScriptRunner.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; name = ScriptRunner.app; path = Resources/ScriptRunner.app; sourceTree = SOURCE_ROOT; };
 		40162B2A0F1873F200E9336E /* NoodleLineNumberMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoodleLineNumberMarker.h; sourceTree = "<group>"; };
 		40162B2B0F1873F200E9336E /* NoodleLineNumberMarker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoodleLineNumberMarker.m; sourceTree = "<group>"; };
@@ -492,13 +627,10 @@
 		61C426C1306DC86F5A07099E /* TSOutlineExpansion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSOutlineExpansion.m; sourceTree = "<group>"; };
 		45C811148691F6D3DDB84B92 /* TSPreviewSplitDivider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSPreviewSplitDivider.h; sourceTree = "<group>"; };
 		1AF3DDBE9DD040A7E58F0C3F /* TSPreviewSplitDivider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSPreviewSplitDivider.m; sourceTree = "<group>"; };
+		6E0950068EE4DDB97AE53783 /* TSPreviewScrollerKeeper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSPreviewScrollerKeeper.h; sourceTree = "<group>"; };
+		256546D6030BAEB5035BE49B /* TSPreviewScrollerKeeper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSPreviewScrollerKeeper.m; sourceTree = "<group>"; };
 		403E76BD218E7008006975A8 /* TeXShop.scriptSuite */ = {isa = PBXFileReference; lastKnownFileType = text.plist.scriptSuite; path = TeXShop.scriptSuite; sourceTree = "<group>"; };
 		403F25E90F20770F001031A0 /* TSDocument-Console.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-Console.m"; sourceTree = "<group>"; };
-		4040A2C7135BE98200AC4C27 /* TSAutoCompletionListEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSAutoCompletionListEditor.h; sourceTree = "<group>"; };
-		4040A2C8135BE98200AC4C27 /* TSAutoCompletionListEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSAutoCompletionListEditor.m; sourceTree = "<group>"; };
-		4040A2CD135BE99500AC4C27 /* TSListEditorTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSListEditorTableView.h; sourceTree = "<group>"; };
-		4040A2CE135BE99500AC4C27 /* TSListEditorTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSListEditorTableView.m; sourceTree = "<group>"; };
-		4040A811135BEB9B00AC4C27 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/Interfaces/zh_CN.lproj/AutoCompletionListEditor.nib; sourceTree = SOURCE_ROOT; };
 		40473FA90C68273C009311CF /* Course Supplements */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Course Supplements"; sourceTree = "<group>"; };
 		40496C1F26067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/First Steps with TeXShop.pdf"; sourceTree = "<group>"; };
 		40496C2026067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/First Steps with General Typesetting.pdf"; sourceTree = "<group>"; };
@@ -509,7 +641,6 @@
 		40496C2526067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/First Steps with Mathematical Typesetting.pdf"; sourceTree = "<group>"; };
 		40496C2626067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/GPLv2 License.pdf"; sourceTree = "<group>"; };
 		40496C2726067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/Notes on Applescript in TeXShop.pdf"; sourceTree = "<group>"; };
-		404CFF162102A1AB00C77471 /* Base */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Base; path = ../Resources/Interfaces/Base.lproj/AutoCompletionListEditor.nib; sourceTree = "<group>"; };
 		404CFF172102A1AB00C77471 /* Base */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Base; path = Base.lproj/completionpanel1.2.nib; sourceTree = "<group>"; };
 		404CFF182102A1AB00C77471 /* Base */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Base; path = Base.lproj/FindPanel.nib; sourceTree = "<group>"; };
 		404CFF192102A1AB00C77471 /* Base */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Base; path = Base.lproj/MacroEditor.nib; sourceTree = "<group>"; };
@@ -544,6 +675,23 @@
 		4077C62403C7FAE800000009 /* TSMacroMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSMacroMenuController.h; sourceTree = "<group>"; };
 		4077C62503C7FAE800000009 /* TSMacroMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSMacroMenuController.m; sourceTree = "<group>"; };
 		A2A000010000000000000001 /* TSMacroSelection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMacroSelection.h; sourceTree = "<group>"; };
+		A2C500010000000000000010 /* TSSyntaxScanner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSyntaxScanner.h; sourceTree = "<group>"; };
+		A2C500010000000000000011 /* TSSyntaxScanner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSyntaxScanner.m; sourceTree = "<group>"; };
+		A2C500010000000000000013 /* TSSyntaxTeXOptions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSyntaxTeXOptions.h; sourceTree = "<group>"; };
+		A2C500010000000000000014 /* TSSyntaxTeXOptions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSyntaxTeXOptions.m; sourceTree = "<group>"; };
+		A2C500010000000000000016 /* TSSyntaxTeXScanner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSyntaxTeXScanner.h; sourceTree = "<group>"; };
+		A2C500010000000000000017 /* TSSyntaxTeXScanner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSyntaxTeXScanner.m; sourceTree = "<group>"; };
+		A2C500010000000000000019 /* TSSyntaxXMLScanning.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSyntaxXMLScanning.h; sourceTree = "<group>"; };
+		A2C50001000000000000001A /* TSSyntaxXMLScanning.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSyntaxXMLScanning.m; sourceTree = "<group>"; };
+		A2C50001000000000000001C /* TSSyntaxHighlighter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSyntaxHighlighter.h; sourceTree = "<group>"; };
+		A2C50001000000000000001D /* TSSyntaxHighlighter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSyntaxHighlighter.m; sourceTree = "<group>"; };
+		A2C500010000000000000030 /* TSSyntaxAppleScriptScanner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSyntaxAppleScriptScanner.h; sourceTree = "<group>"; };
+		A2C500010000000000000031 /* TSSyntaxAppleScriptScanner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSyntaxAppleScriptScanner.m; sourceTree = "<group>"; };
+		A2C500010000000000000033 /* TSSyntaxMacroContentScanner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSyntaxMacroContentScanner.h; sourceTree = "<group>"; };
+		A2C500010000000000000034 /* TSSyntaxMacroContentScanner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSyntaxMacroContentScanner.m; sourceTree = "<group>"; };
+		A2C500010000000000000002 /* TSSyntaxRole.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSyntaxRole.h; sourceTree = "<group>"; };
+		A2C500010000000000000003 /* TSSyntaxColorScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSyntaxColorScheme.h; sourceTree = "<group>"; };
+		A2C500010000000000000004 /* TSSyntaxColorScheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSyntaxColorScheme.m; sourceTree = "<group>"; };
 		A2A0000100000000000000C1 /* TSMacroContentKind.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMacroContentKind.h; sourceTree = "<group>"; };
 		A2A0000100000000000000C2 /* TSMacroContentKind.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMacroContentKind.m; sourceTree = "<group>"; };
 		4077C62A03C7FB0200000009 /* TSMacroTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSMacroTreeNode.h; sourceTree = "<group>"; };
@@ -554,7 +702,6 @@
 		40795D632AB4E307005A7539 /* ps2pdftransparencywrap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.csh; path = ps2pdftransparencywrap; sourceTree = "<group>"; };
 		407F694D11E65D4F00FD4359 /* TSDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSDocument.m; sourceTree = "<group>"; };
 		4080F36B210BA5520034C707 /* TSPreferences-Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSPreferences-Color.m"; sourceTree = "<group>"; };
-		4082B23A1A0D5899002DE167 /* ko */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ko; path = Resources/Interfaces/ko.lproj/AutoCompletionListEditor.nib; sourceTree = SOURCE_ROOT; };
 		40839127060963C800266FAB /* TextFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFinder.h; sourceTree = "<group>"; };
 		40839128060963C800266FAB /* TextFinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextFinder.m; sourceTree = "<group>"; };
 		4087651E18E71BB70066B908 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = "pt-PT"; path = "pt-PT.lproj/completionpanel1.2.nib"; sourceTree = "<group>"; };
@@ -596,7 +743,6 @@
 		4089E43C2604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/ToolbarItems.strings; sourceTree = "<group>"; };
 		4089E43D2604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = fr.lproj/completionpanel1.2.nib; sourceTree = "<group>"; };
 		4089E43E2604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = fr.lproj/matrixpanel.nib; sourceTree = "<group>"; };
-		4089E43F2604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = ../Resources/Interfaces/fr.lproj/AutoCompletionListEditor.nib; sourceTree = "<group>"; };
 		4089E4402604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = fr; path = fr.lproj/Credits.rtf; sourceTree = "<group>"; };
 		4089E4412604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Encodings.strings; sourceTree = "<group>"; };
 		4089E4422604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = fr; path = "fr.lproj/File Encoding.pdf"; sourceTree = "<group>"; };
@@ -618,7 +764,6 @@
 		4089E4522604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/ToolbarItems.strings; sourceTree = "<group>"; };
 		4089E4532604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ro; path = ro.lproj/completionpanel1.2.nib; sourceTree = "<group>"; };
 		4089E4542604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ro; path = ro.lproj/matrixpanel.nib; sourceTree = "<group>"; };
-		4089E4552604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ro; path = ../Resources/Interfaces/ro.lproj/AutoCompletionListEditor.nib; sourceTree = "<group>"; };
 		4089E4562604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = ro; path = ro.lproj/Credits.rtf; sourceTree = "<group>"; };
 		4089E4572604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/Encodings.strings; sourceTree = "<group>"; };
 		4089E4582604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ro; path = ro.lproj/FindPanel.nib; sourceTree = "<group>"; };
@@ -634,7 +779,6 @@
 		4089E4622604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/ToolbarItems.strings; sourceTree = "<group>"; };
 		4089E4632604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = it.lproj/completionpanel1.2.nib; sourceTree = "<group>"; };
 		4089E4642604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = it.lproj/matrixpanel.nib; sourceTree = "<group>"; };
-		4089E4652604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = ../Resources/Interfaces/it.lproj/AutoCompletionListEditor.nib; sourceTree = "<group>"; };
 		4089E4662604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = it; path = it.lproj/Credits.rtf; sourceTree = "<group>"; };
 		4089E4672604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Encodings.strings; sourceTree = "<group>"; };
 		4089E4682604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = it.lproj/FindPanel.nib; sourceTree = "<group>"; };
@@ -650,7 +794,6 @@
 		4089E4722604154700B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/ToolbarItems.strings; sourceTree = "<group>"; };
 		4089E4732604154800B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = nl.lproj/completionpanel1.2.nib; sourceTree = "<group>"; };
 		4089E4742604154800B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = nl.lproj/matrixpanel.nib; sourceTree = "<group>"; };
-		4089E4752604154800B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = ../Resources/Interfaces/nl.lproj/AutoCompletionListEditor.nib; sourceTree = "<group>"; };
 		4089E4762604154800B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = nl; path = nl.lproj/Credits.rtf; sourceTree = "<group>"; };
 		4089E4772604154800B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Encodings.strings; sourceTree = "<group>"; };
 		4089E4782604154800B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = nl.lproj/FindPanel.nib; sourceTree = "<group>"; };
@@ -668,7 +811,6 @@
 		4089E4842604154E00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/ToolbarItems.strings; sourceTree = "<group>"; };
 		4089E4852604154E00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = es; path = es.lproj/completionpanel1.2.nib; sourceTree = "<group>"; };
 		4089E4862604154E00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = es; path = es.lproj/matrixpanel.nib; sourceTree = "<group>"; };
-		4089E4872604154E00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = es; path = ../Resources/Interfaces/es.lproj/AutoCompletionListEditor.nib; sourceTree = "<group>"; };
 		4089E4882604154E00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = es; path = es.lproj/Credits.rtf; sourceTree = "<group>"; };
 		4089E4892604154E00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Encodings.strings; sourceTree = "<group>"; };
 		4089E48A2604154E00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = es; path = es.lproj/FindPanel.nib; sourceTree = "<group>"; };
@@ -685,7 +827,6 @@
 		4089E4952604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/ToolbarItems.strings; sourceTree = "<group>"; };
 		4089E4962604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ja; path = ja.lproj/completionpanel1.2.nib; sourceTree = "<group>"; };
 		4089E4972604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ja; path = ja.lproj/matrixpanel.nib; sourceTree = "<group>"; };
-		4089E4982604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ja; path = ../Resources/Interfaces/ja.lproj/AutoCompletionListEditor.nib; sourceTree = "<group>"; };
 		4089E4992604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = ja; path = ja.lproj/Credits.rtf; sourceTree = "<group>"; };
 		4089E49A2604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Encodings.strings; sourceTree = "<group>"; };
 		4089E49B2604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ja; path = ja.lproj/FindPanel.nib; sourceTree = "<group>"; };
@@ -723,7 +864,6 @@
 		4089E4BD2604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/ToolbarItems.strings; sourceTree = "<group>"; };
 		4089E4BE2604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = de.lproj/completionpanel1.2.nib; sourceTree = "<group>"; };
 		4089E4BF2604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = de.lproj/matrixpanel.nib; sourceTree = "<group>"; };
-		4089E4C02604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = ../Resources/Interfaces/de.lproj/AutoCompletionListEditor.nib; sourceTree = "<group>"; };
 		4089E4C12604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = de; path = de.lproj/Credits.rtf; sourceTree = "<group>"; };
 		4089E4C22604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Encodings.strings; sourceTree = "<group>"; };
 		4089E4C32604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = de.lproj/FindPanel.nib; sourceTree = "<group>"; };
@@ -862,6 +1002,8 @@
 		E18200000000000000000210 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsStateStore.m; sourceTree = "<group>"; };
 		E18200000000000000000300 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingsSidebarRow.h; sourceTree = "<group>"; };
 		E18200000000000000000310 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsSidebarRow.m; sourceTree = "<group>"; };
+		E18200000000000000000500 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKeyBindingsController.h; sourceTree = "<group>"; };
+		E18200000000000000000510 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSKeyBindingsController.m; sourceTree = "<group>"; };
 		E18200000000000000000400 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingsContentView.h; sourceTree = "<group>"; };
 		E18200000000000000000410 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsContentView.m; sourceTree = "<group>"; };
 		9BEADA65F9CB4B3EC9B86C51 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPrefConsoleController.h; sourceTree = "<group>"; };
@@ -1191,17 +1333,37 @@
 			path = Macros;
 			sourceTree = "<group>";
 		};
+		A2C500010000000000000001 /* Syntax */ = {
+			isa = PBXGroup;
+			children = (
+				A2C500010000000000000030 /* TSSyntaxAppleScriptScanner.h */,
+				A2C500010000000000000031 /* TSSyntaxAppleScriptScanner.m */,
+				A2C500010000000000000003 /* TSSyntaxColorScheme.h */,
+				A2C500010000000000000004 /* TSSyntaxColorScheme.m */,
+				A2C50001000000000000001C /* TSSyntaxHighlighter.h */,
+				A2C50001000000000000001D /* TSSyntaxHighlighter.m */,
+				A2C500010000000000000033 /* TSSyntaxMacroContentScanner.h */,
+				A2C500010000000000000034 /* TSSyntaxMacroContentScanner.m */,
+				A2C500010000000000000002 /* TSSyntaxRole.h */,
+				A2C500010000000000000010 /* TSSyntaxScanner.h */,
+				A2C500010000000000000011 /* TSSyntaxScanner.m */,
+				A2C500010000000000000013 /* TSSyntaxTeXOptions.h */,
+				A2C500010000000000000014 /* TSSyntaxTeXOptions.m */,
+				A2C500010000000000000016 /* TSSyntaxTeXScanner.h */,
+				A2C500010000000000000017 /* TSSyntaxTeXScanner.m */,
+				A2C500010000000000000019 /* TSSyntaxXMLScanning.h */,
+				A2C50001000000000000001A /* TSSyntaxXMLScanning.m */,
+			);
+			path = Syntax;
+			sourceTree = "<group>";
+		};
 		16B3298EA352468D9847E75E /* Panels */ = {
 			isa = PBXGroup;
 			children = (
-				4040A2C7135BE98200AC4C27 /* TSAutoCompletionListEditor.h */,
-				4040A2C8135BE98200AC4C27 /* TSAutoCompletionListEditor.m */,
 				40A9D09019AE7D4400FEFAC6 /* TSGlyphPopoverController.h */,
 				40A9D09119AE7D4400FEFAC6 /* TSGlyphPopoverController.m */,
 				F5B8EA8E01FF59A101DF2474 /* TSLaTeXPanelController.h */,
 				F5B8EA8F01FF59A101DF2474 /* TSLaTeXPanelController.m */,
-				4040A2CD135BE99500AC4C27 /* TSListEditorTableView.h */,
-				4040A2CE135BE99500AC4C27 /* TSListEditorTableView.m */,
 				4096186205824CF2000D94FD /* TSMatrixPanelController.h */,
 				4096186305824CF2000D94FD /* TSMatrixPanelController.m */,
 				40D1F2BD06040B1700087115 /* TSMatrixTableView.h */,
@@ -1239,6 +1401,8 @@
 				61C426C1306DC86F5A07099E /* TSOutlineExpansion.m */,
 				45C811148691F6D3DDB84B92 /* TSPreviewSplitDivider.h */,
 				1AF3DDBE9DD040A7E58F0C3F /* TSPreviewSplitDivider.m */,
+				6E0950068EE4DDB97AE53783 /* TSPreviewScrollerKeeper.h */,
+				256546D6030BAEB5035BE49B /* TSPreviewScrollerKeeper.m */,
 				400CD8BE0C66BD4F00C450D6 /* TSMovie.h */,
 				400CD8BF0C66BD4F00C450D6 /* TSMovie.m */,
 				00CFF0F5000AD1F27F000001 /* TSPrintView.h */,
@@ -1250,6 +1414,8 @@
 		4D96E83320E395C0F250DCAA /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				79386E4CA9C716CC593C87C4 /* TSPreferenceLaunch.h */,
+				43313E338B87973F030A3810 /* TSPreferenceLaunch.m */,
 				9BEADA65F9CB4B3EC9B86C51 /* TSPrefConsoleController.h */,
 				9E2B2A2E258A950674839CF0 /* TSPrefConsoleController.m */,
 				163BED1EC1254A6DDD5193A1 /* TSPrefEditorController.h */,
@@ -1302,6 +1468,8 @@
 				E3B000000000000000000002 /* TSSettingsSearch.m */,
 				E18200000000000000000300 /* TSSettingsSidebarRow.h */,
 				E18200000000000000000310 /* TSSettingsSidebarRow.m */,
+				E18200000000000000000500 /* TSKeyBindingsController.h */,
+				E18200000000000000000510 /* TSKeyBindingsController.m */,
 				E18200000000000000000200 /* TSSettingsStateStore.h */,
 				E18200000000000000000210 /* TSSettingsStateStore.m */,
 				E18000000000000000000004 /* TSSettingsWindowController.h */,
@@ -1451,7 +1619,6 @@
 				40F80CAC1FAD3A2E00377616 /* Changes.pdf */,
 				402613E32144902500DE43FB /* CommentLines.pdf */,
 				4062E2901D7BC08300DC1518 /* GPLv2 License.pdf */,
-				4040A7F4135BEA8200AC4C27 /* AutoCompletionListEditor.nib */,
 				52B13E4D08A8183B00756E5E /* completionpanel1.2.nib */,
 				2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */,
 				52A4036E08AE1F6C0070F041 /* Encodings.strings */,
@@ -1463,6 +1630,8 @@
 				403244B329A037A9000431A1 /* Manual.pdf */,
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
 				03E61892009B32C77F000001 /* Localizable.strings */,
+				377E3DDD07AA8FE81002D25F /* AdvancedFind.strings */,
+				53E3AF03C779790C023AC048 /* AdvancedFindEngine.strings */,
 				52B13E5108A8183B00756E5E /* MacroEditor.nib */,
 				40DD042E1C23893C00422219 /* File Encoding.pdf */,
 				52B13E4708A8182F00756E5E /* MainMenu.nib */,
@@ -1611,10 +1780,12 @@
 				611B6AF034FF2E1DF15D05A8 /* Editor */,
 				D4903D8FE8A591CB57821229 /* Macros */,
 				16B3298EA352468D9847E75E /* Panels */,
+				D707C90D1BAD16743733C16B /* Find */,
 				F356CC42171C4122A4E3237D /* Preview */,
 				4D96E83320E395C0F250DCAA /* Settings */,
 				25DD1CD6DFAF98FBE6AFC225 /* Shortcuts */,
 				2B831F948D7ED3A2FA006811 /* Sync */,
+				A2C500010000000000000001 /* Syntax */,
 				BAF32BAE67FB5165EE1435A9 /* ThirdParty */,
 				AEE62C6F00E71A95BA0EA6D8 /* Typesetting */,
 				F8ADDEB91E3D501662EC57A7 /* Utilities */,
@@ -1625,6 +1796,80 @@
 			sourceTree = "<group>";
 		};
 		BEE2C92FF50430D4B3A23A8C = {isa = PBXGroup; children = (990A808007D20F765F7FE0C6, F52642F891C51F4B3DC14DC6, A9323445DF3DF72222E931D8, B09BD3059910CBD66090E52A, 688B0CC26F55F9608394F6C6, 560B5B73FB1B181B75991C27, 137953CD7A2A727D012D4C92, 5AD71523ECFDA5FF1247B811, 70B23652136601E3B33364A8, E55B71FC15FC1E286C7B4535, 9C1A1390768C69BE4A3AAFA0, 717DB6D9B0CBF322A1841F96, 31E91C29EB2B7A00320EA3FD,); name = "Settings Panes"; sourceTree = "<group>"; };
+		D707C90D1BAD16743733C16B /* Find */ = {
+			isa = PBXGroup;
+			children = (
+				5F2E5F32D20D36A3DDA91CC3 /* TSAdvancedFindController+MultipleReplace.h */,
+				7EA30567B06FD1BA89176E55 /* TSAdvancedFindController+MultipleReplace.m */,
+				BE3AD0138793FD2DD9BA11C4 /* TSMultipleReplaceLibrary.h */,
+				A97846D41CA596CF8F893971 /* TSMultipleReplaceLibrary.m */,
+				D9BDE11BDAB519A0996E6A9A /* TSMultipleReplaceMenu.h */,
+				252405F35BD91BD35A20B6D8 /* TSMultipleReplaceMenu.m */,
+				E42286060335BFF931F8B8B2 /* TSMultipleReplaceRuleTable.h */,
+				2D6CD786A2345A199607427D /* TSMultipleReplaceRuleTable.m */,
+				4B810EAE0F187A33679EC51C /* TSMultipleReplaceWindowController.h */,
+				794A81611DD32BA919336BF8 /* TSMultipleReplaceWindowController.m */,
+				EEDE5776A4F985316C5A2148 /* TSAdvancedFindController.h */,
+				D371658982921FCA3CEAE427 /* TSAdvancedFindController.m */,
+				80307A525061C45A608A3767 /* TSAdvancedFindFieldScanners.h */,
+				CDB0F89D2173B57C20009B7D /* TSAdvancedFindFieldScanners.m */,
+				5E48753CB168F6C34693C4AD /* TSAdvancedFindPanelController+Coloring.m */,
+				37A31621A2DC8C85D459EA88 /* TSRegexPatternLexer.h */,
+				E4A2535150250CF8E9A90197 /* TSRegexPatternLexer.m */,
+				D9ACEBB4CC50171FB2AEC94E /* TSAdvancedFindController+Private.h */,
+				F334B074A4B975D548EC5C01 /* TSAdvancedFindController+Tasks.m */,
+				3F6C089A590CA6575408A20A /* TSAdvancedFindMatchCache.h */,
+				51E3505E53F40BE928C10F9E /* TSAdvancedFindMatchCache.m */,
+				4AECCF8DD377F1BC9ED2E3CA /* TSAdvancedFindProgressSheet.h */,
+				186B6B5BE36730C156DD7A82 /* TSAdvancedFindProgressSheet.m */,
+				F26C3591F893C00080E72394 /* TSAdvancedFindTask.h */,
+				86D35FB1EE567A0E3FFFC6F8 /* TSAdvancedFindTask.m */,
+				1F8F715B9FF420B7989F30AC /* TSAdvancedFindHighlights.h */,
+				3EE63785520FA8CB2B6FF24C /* TSAdvancedFindHighlights.m */,
+				7AEFC934AA5B01FE309793AB /* TSAdvancedFindInputBox.h */,
+				F56648C2E54E22BBF5A070A6 /* TSAdvancedFindInputBox.m */,
+				8D9A0C4E9B27EA807C50DF9D /* TSAdvancedFindOptionsForm.h */,
+				8862EBA5FD34F66E2FA2D3B6 /* TSAdvancedFindOptionsForm.m */,
+				32F268DBF9C127E1D5EF970B /* TSAdvancedFindCheatSheet.h */,
+				7BA245EE589086F8BB208254 /* TSAdvancedFindCheatSheet.m */,
+				DB29034FA28C8124507DFF25 /* TSAdvancedFindPanelController+Actions.m */,
+				0F28323883C7A0B51BBE7D63 /* TSAdvancedFindPanelController+CheatSheet.m */,
+				27C43187D643C8B79289AB25 /* TSAdvancedFindPanelController+History.m */,
+				0967693A34326EE9E6FBA327 /* TSAdvancedFindPanelController+Options.m */,
+				41B52FCFCFDDAFFAA4549511 /* TSAdvancedFindPanelController+Results.m */,
+				D39F26F1E3FD4FC8AF0F8847 /* TSAdvancedFindPanelController+Private.h */,
+				452157E5DF6449194BF0E926 /* TSAdvancedFindPanelController.h */,
+				9FCF2A3181BB2E666FF3BE52 /* TSAdvancedFindPanelController.m */,
+				A1AA8C04CAF0B6DA6DCAEC4E /* TSAdvancedFindResults.h */,
+				2F95C110DB3998509E8EE01F /* TSAdvancedFindResults.m */,
+				569D7D77C416E27B3DB38FB9 /* TSAdvancedFindResultsView.h */,
+				C797C937301893B2449D5004 /* TSAdvancedFindResultsView.m */,
+				06EAF730931230D8B0E2F3BB /* TSAdvancedFindSettings.h */,
+				80D87B64004DCACC0F91003B /* TSAdvancedFindSettings.m */,
+				129E025F1EB924880C4110F7 /* TSAdvancedFindTextView.h */,
+				92C81BD7E5D80BF55BE94E34 /* TSAdvancedFindTextView.m */,
+				DE76E486CF388F181690E591 /* TSRegexMultipleReplace.h */,
+				FB5FBF86FABC267FCFA5F316 /* TSRegexMultipleReplace.m */,
+				A53419A8610F75D0369307C3 /* TSRegexReplacementRule.h */,
+				B3700B91921E42111A05D9B9 /* TSRegexReplacementRule.m */,
+				AAC18B54FE17729AEBDCACD3 /* TSRegexFindOptions.h */,
+				8BAB36C46A874188F41DC0B2 /* TSRegexFindOptions.m */,
+				44A1DA9ECAA9302F78780C97 /* TSRegexFindPattern.h */,
+				5D2EB0097D0878293A8CB554 /* TSRegexFindPattern.m */,
+				E1091878DF6ECF40EA9A039B /* TSRegexOnigmoIncompatibility.h */,
+				46B1E2089286828DDC828770 /* TSRegexOnigmoIncompatibility.m */,
+				7FDEF05CF1564F1E291B3951 /* TSRegexReplacementTemplate.h */,
+				0B779315E1E594F3CC15741E /* TSRegexReplacementTemplate.m */,
+				16431FC52F2B9E1F8ADD26BA /* TSRegexFindReplacement.h */,
+				D038A5C08901EDDE4300CF51 /* TSRegexFindReplacement.m */,
+				F8D8A36C78B1F3D29AB41637 /* TSRegexReplaceAllResult.h */,
+				4E3C11620D0A8469C767DC49 /* TSRegexReplaceAllResult.m */,
+				2D7F734C0A2BB6F1FAD716B3 /* TSRegexTextFind.h */,
+				771CB91746C3A83D941E1F15 /* TSRegexTextFind.m */,
+			);
+			path = Find;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1687,8 +1932,6 @@
 				346FA9FD1309961900DAA25D /* TSLayoutManager.h in Headers */,
 				40D5BB2F19632B9C0081BC77 /* ScrapTextView.h in Headers */,
 				40328ADC1340380800AD2EA7 /* TSToolbar.h in Headers */,
-				4040A2C9135BE98200AC4C27 /* TSAutoCompletionListEditor.h in Headers */,
-				4040A2CF135BE99500AC4C27 /* TSListEditorTableView.h in Headers */,
 				40B288CE1398A366005C921D /* synctex_parser_utils.h in Headers */,
 				40B288D21398A373005C921D /* synctex_parser.h in Headers */,
 				40A3575F13CA151400793021 /* TSApplication.h in Headers */,
@@ -1815,6 +2058,8 @@
 				52B13E5408A8183B00756E5E /* matrixpanel.nib in Resources */,
 				407880830519249A006979EA /* FindPanel.strings in Resources */,
 				407880A20519249A006979EA /* Localizable.strings in Resources */,
+				00BF469646F14357C53A1246 /* AdvancedFind.strings in Resources */,
+				AD9114C58B8D73DBFEA212A9 /* AdvancedFindEngine.strings in Resources */,
 				4020387D1AD5DC69001674DB /* TeXShop Feature Confusion.pdf in Resources */,
 				4078807F0519249A006979EA /* InfoPlist.strings in Resources */,
 				4078813C0519249A006979EA /* ToolbarItems.strings in Resources */,
@@ -1842,7 +2087,6 @@
 				40A6859F11125D0A00C67A9E /* About This Release.pdf in Resources */,
 				40415E3D131CAB3700226AF4 /* TeXShop Tips & Tricks.pdf in Resources */,
 				402613E52144902500DE43FB /* CommentLines.pdf in Resources */,
-				4040A7F6135BEA8200AC4C27 /* AutoCompletionListEditor.nib in Resources */,
 				40367BB513DFB3B70098E009 /* TeXShopHelp in Resources */,
 				40DD04301C23893C00422219 /* File Encoding.pdf in Resources */,
 			);
@@ -1868,6 +2112,43 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA4642139FF362346A674FF5 /* TSAdvancedFindController+MultipleReplace.m in Sources */,
+				FD453ED734C26F5EAAF40FE3 /* TSMultipleReplaceLibrary.m in Sources */,
+				094E7C9C3FBE59845DC3EFC4 /* TSMultipleReplaceMenu.m in Sources */,
+				8D9C544E6040A435574B945C /* TSMultipleReplaceRuleTable.m in Sources */,
+				68F8103ED328E7DEC5654F0D /* TSMultipleReplaceWindowController.m in Sources */,
+				0E535BA487AD036033330CF4 /* TSAdvancedFindController.m in Sources */,
+				95C92AEAEF35E49033C476EA /* TSAdvancedFindFieldScanners.m in Sources */,
+				64C16BC63959452A63153E9F /* TSAdvancedFindPanelController+Coloring.m in Sources */,
+				81F76D02AB2DC23DC76FB163 /* TSRegexPatternLexer.m in Sources */,
+				7530E692A6FADDC97BE3A764 /* TSAdvancedFindController+Tasks.m in Sources */,
+				4D79D6E8FCC51539A6787C26 /* TSAdvancedFindMatchCache.m in Sources */,
+				EDAD6FCBA6E07E73D8F030F1 /* TSAdvancedFindProgressSheet.m in Sources */,
+				94C6902FB2F0DD13B05C0CFD /* TSAdvancedFindTask.m in Sources */,
+				3E28439E4331B75239F78E1E /* TSAdvancedFindHighlights.m in Sources */,
+				129A84463E3189A2848E7DA5 /* TSAdvancedFindInputBox.m in Sources */,
+				469AA3DB7D935CA1B232678B /* TSAdvancedFindOptionsForm.m in Sources */,
+				2DD5D09308284E4DFF5E3324 /* TSAdvancedFindCheatSheet.m in Sources */,
+				D50CE16F90F64FDBE3758709 /* TSAdvancedFindPanelController+Actions.m in Sources */,
+				CAE36867C8D37DB17E702F0D /* TSAdvancedFindPanelController+CheatSheet.m in Sources */,
+				15DF76C178AFF47DC3F19EA6 /* TSAdvancedFindPanelController+History.m in Sources */,
+				F909CBB2A6D94D6A5696B0C9 /* TSAdvancedFindPanelController+Options.m in Sources */,
+				1895D6CEBE4D7B48C7EF5492 /* TSAdvancedFindPanelController+Results.m in Sources */,
+				1515E934D4D5C57D578A0B70 /* TSAdvancedFindPanelController.m in Sources */,
+				C87CF08715A6CC2BD4D75FC2 /* TSAdvancedFindResults.m in Sources */,
+				6CAD22D2940E41528C2B376B /* TSAdvancedFindResultsView.m in Sources */,
+				CA2B36C2CA1477FDBB2CF755 /* TSAdvancedFindSettings.m in Sources */,
+				E7D37A94A8A25460D369D60C /* TSAdvancedFindTextView.m in Sources */,
+				18ED0114B6072AE86BC14850 /* TSPreferenceLaunch.m in Sources */,
+				A5D7F238722E8B97651943FD /* TSRegexMultipleReplace.m in Sources */,
+				5842AEFCEA920C9547F699A0 /* TSRegexReplacementRule.m in Sources */,
+				A12627FA47A94107E91A0354 /* TSRegexFindOptions.m in Sources */,
+				24F1158918A8E62736CE6FFD /* TSRegexFindPattern.m in Sources */,
+				482A3A0740ACA1A4E2CA3A30 /* TSRegexOnigmoIncompatibility.m in Sources */,
+				925124931FE605F31756F6DD /* TSRegexReplacementTemplate.m in Sources */,
+				CECFB19823AD78E51D1BD74D /* TSRegexFindReplacement.m in Sources */,
+				E1B65A56BD2D987F27CFE39E /* TSRegexReplaceAllResult.m in Sources */,
+				BEA7F20E7D0F181D04711CEC /* TSRegexTextFind.m in Sources */,
 				F5BAC2E9ED1431D54CC853B8,
 				0E1D12D0E21A008917374A1E,
 				606589B6401E6D11869F9676,
@@ -1906,6 +2187,7 @@
 				E18300000000000000000002,
 				E18300000000000000000003,
 				E18300000000000000000004,
+				E18300000000000000000005,
 				E18100000000000000000001,
 				E3B000000000000000000001,
 				7A9051C11D9E4EA1A5210013,
@@ -1925,6 +2207,14 @@
 				4078818B0519249A006979EA /* TSMacroEditor.m in Sources */,
 				4078818C0519249A006979EA /* TSMacroMenuController.m in Sources */,
 				A2A0000100000000000000C3 /* TSMacroContentKind.m in Sources */,
+				A2C500010000000000000005 /* TSSyntaxColorScheme.m in Sources */,
+				A2C500010000000000000032 /* TSSyntaxAppleScriptScanner.m in Sources */,
+				A2C500010000000000000035 /* TSSyntaxMacroContentScanner.m in Sources */,
+				A2C500010000000000000012 /* TSSyntaxScanner.m in Sources */,
+				A2C500010000000000000015 /* TSSyntaxTeXOptions.m in Sources */,
+				A2C500010000000000000018 /* TSSyntaxTeXScanner.m in Sources */,
+				A2C50001000000000000001B /* TSSyntaxXMLScanning.m in Sources */,
+				A2C50001000000000000001E /* TSSyntaxHighlighter.m in Sources */,
 				4078818D0519249A006979EA /* TSMacroTreeNode.m in Sources */,
 				403649E4211BDA810086DDD1 /* TSPreferenceWindow.m in Sources */,
 				4078818E0519249A006979EA /* TSMacroOutlineController.m in Sources */,
@@ -1984,8 +2274,6 @@
 				4080F36C210BA5520034C707 /* TSPreferences-Color.m in Sources */,
 				40328ADD1340380800AD2EA7 /* TSToolbar.m in Sources */,
 				40AA6A721BCB498D00533975 /* MyPDFKitView-Magnification.m in Sources */,
-				4040A2CA135BE98200AC4C27 /* TSAutoCompletionListEditor.m in Sources */,
-				4040A2D0135BE99500AC4C27 /* TSListEditorTableView.m in Sources */,
 				40B288CD1398A366005C921D /* synctex_parser_utils.c in Sources */,
 				40B288D11398A373005C921D /* synctex_parser.c in Sources */,
 				40A3576013CA151400793021 /* TSApplication.m in Sources */,
@@ -1993,6 +2281,7 @@
 				F29CAC13458CF5539134DBD6 /* TSLinkPreviewView.m in Sources */,
 				85F95A45B305235593F1F001 /* TSOutlineExpansion.m in Sources */,
 				0BF38A67E94FE8E7E9361D96 /* TSPreviewSplitDivider.m in Sources */,
+				A6625D53553E040AB0754A5E /* TSPreviewScrollerKeeper.m in Sources */,
 				40BCDA531FF9589200AAC575 /* TSWindowController.m in Sources */,
 				406B626F199934D000C46D2A /* NSText-Extras.m in Sources */,
 			);
@@ -2001,6 +2290,44 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		377E3DDD07AA8FE81002D25F /* AdvancedFind.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				68D59A59B5C51AE8F1C6576D /* de */,
+				61C24FA90E8E67BCA1E76D4F /* en */,
+				C839101565395C1DAA12A6D0 /* es */,
+				3C3FDBA8541E4BCAAB06C0CA /* fr */,
+				DAB908B89C188D565AFE2FCF /* it */,
+				FA8BFA90CC779203C3422B15 /* ja */,
+				C0B84827762155CF6DA0E9AB /* ko */,
+				0D4064C3543B2A6AD2D65C1D /* nl */,
+				42463966167902CAE9AAA5D9 /* pt */,
+				E0EC6F12A003D1D1E6AAD626 /* pt-PT */,
+				C5AD42C1E00BAFF4ADDE951E /* ro */,
+				2D2AF363E895884992626801 /* zh_CN */,
+			);
+			name = AdvancedFind.strings;
+			sourceTree = "<group>";
+		};
+		53E3AF03C779790C023AC048 /* AdvancedFindEngine.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6B5D5B335A8B1488C95B2753 /* de */,
+				38EA7C87B9AAF2825D90469A /* en */,
+				A38621F3D0CCE45110CF97A1 /* es */,
+				223780129540EA1940F485DB /* fr */,
+				4B5F03C074481F8C87D3D426 /* it */,
+				BA4276D11450A61E76A21C45 /* ja */,
+				6ECCC0A54554F32F7265EE4E /* ko */,
+				C1DFF8D388534BB9611F63DA /* nl */,
+				07FA8F4B972874FA76FBBB5F /* pt */,
+				1DDD228880E2230F29F8E2EF /* pt-PT */,
+				1F97FB1460ABE9AFF27D3D14 /* ro */,
+				2568E490DFF3393BED7721C4 /* zh_CN */,
+			);
+			name = AdvancedFindEngine.strings;
+			sourceTree = "<group>";
+		};
 		A53A4B59BBE2B72F965B083F /* SettingsWindow.xib */ = {isa = PBXVariantGroup; children = (E18000000000000000000005 /* Base */, ); name = SettingsWindow.xib; sourceTree = "<group>"; };
 		D61FA563CE9FC9BEE1BA8618 /* GlyphPopoverMulti.xib */ = {isa = PBXVariantGroup; children = (4054643C19AE9630006EE9D5 /* Base */, ); name = GlyphPopoverMulti.xib; sourceTree = "<group>"; };
 		D55A1544C331DC7DE9A7D6B3 /* GlyphPopoverSingle.xib */ = {isa = PBXVariantGroup; children = (4054643D19AE9630006EE9D5 /* Base */, ); name = GlyphPopoverSingle.xib; sourceTree = "<group>"; };
@@ -2117,26 +2444,6 @@
 				4089E4BC2604156000B8A795 /* de */,
 			);
 			name = TeXShopHelp;
-			sourceTree = "<group>";
-		};
-		4040A7F4135BEA8200AC4C27 /* AutoCompletionListEditor.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				4040A811135BEB9B00AC4C27 /* zh_CN */,
-				4015C22A199AF62C005C5ED3 /* pt-PT */,
-				4015C22B199AF650005C5ED3 /* pt */,
-				4082B23A1A0D5899002DE167 /* ko */,
-				404CFF162102A1AB00C77471 /* Base */,
-				4089E43F2604153000B8A795 /* fr */,
-				4089E4552604153900B8A795 /* ro */,
-				4089E4652604154100B8A795 /* it */,
-				4089E4752604154800B8A795 /* nl */,
-				4089E4872604154E00B8A795 /* es */,
-				4089E4982604155300B8A795 /* ja */,
-				4089E4C02604156000B8A795 /* de */,
-			);
-			name = AutoCompletionListEditor.nib;
-			path = ../../Sources;
 			sourceTree = "<group>";
 		};
 		40415E3B131CAB3700226AF4 /* TeXShop Tips & Tricks.pdf */ = {

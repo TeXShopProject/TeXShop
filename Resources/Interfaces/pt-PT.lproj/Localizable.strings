@@ -231,7 +231,6 @@
 "Use LaTeX-aware spell checking (recommended)" = "Usar verificação adaptada ao LaTeX (recomendado)";
 "Use legacy spell checking" = "Usar verificação tradicional";
 "LaTeX Spell Checking" = "Ortografia LaTeX";
-"Edit Key Bindings…" = "Editor de associações de teclas…";
 "Key Bindings" = "Associações de teclas";
 "Edit Command Completion…" = "Editar conclusão de comandos…";
 "Command Completion" = "Conclusão de comandos";
@@ -323,7 +322,6 @@
 /* Macro editor placeholder guide */
 "#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = texto selecionado, #INS# = ponto de inserção após a macro, #PASTE# = texto da área de transferência. As macros AppleScript também podem usar #FILEPATH# e outros marcadores (consulte a Ajuda).";
 /* Key binding editor placeholder guide */
-"* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = caracteres selecionados, #INS# = ponto de inserção, #PASTE# = texto da área de transferência";
 
 /* Edit › Mark */
 "Insert Mark with Note" = "Inserir marca com nota";
@@ -336,3 +334,25 @@
 "Deletes the previous • and selects its note, if it has one." = "Apaga o • anterior e seleciona a sua nota, se existir.";
 "• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = marca, •‹nota› = marca com nota; utilize %@ › %@ para passar de uma a outra.";
 "Marks" = "Marcas";
+
+/* Settings › Keyboard › Key Bindings */
+"Input Character" = "Carácter escrito";
+"Output String" = "Texto de saída";
+"Selected Text" = "Texto selecionado";
+"Insertion Point" = "Ponto de inserção";
+"Clipboard Text" = "Texto da área de transferência";
+"Line Break" = "Quebra de linha";
+"Tab" = "Tabulação";
+"Mark" = "Marca";
+"Mark with Note" = "Marca com nota";
+"note" = "nota";
+"Insert" = "Inserir";
+"Add" = "Adicionar";
+"Delete" = "Apagar";
+"Symbols" = "Símbolos";
+"Display" = "Aspeto";
+"Typed As" = "Escrita";
+"Add Key Binding" = "Adicionar associação de teclas";
+"Change Key Binding" = "Alterar associação de teclas";
+"Delete Key Binding" = "Apagar associação de teclas";
+"Move Key Binding" = "Mover associação de teclas";

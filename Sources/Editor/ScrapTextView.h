@@ -22,8 +22,11 @@
 
 #import <Cocoa/Cocoa.h>
 #import "TSDocument.h"
+#import "TSAdvancedFindTextView.h"
 
-@interface ScrapTextView : NSTextView 
+// The find menu goes to the Advanced Find panel when it is the find method; the document gives it TSLayoutManager,
+// which draws the highlights.
+@interface ScrapTextView : TSAdvancedFindTextView
 {
     BOOL _alternateDown;
     BOOL latexSpecial; // was last time LaTeX Special?  \begin{...}

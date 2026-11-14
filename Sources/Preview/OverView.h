@@ -28,6 +28,8 @@
 // as TSMagnifyingGlassDrawPage takes it, instead of magnifiedImage.
 @property (retain) PDFPage *magnifiedPage;
 @property PDFDisplayBox magnifiedBox;
+// The paper of the lens, the preview's paper; white when nil.
+@property (strong) NSColor *magnifiedPaperColor;
 
 // - (void) dealloc;
 - (void) setDrawRubberBand: (BOOL)value;

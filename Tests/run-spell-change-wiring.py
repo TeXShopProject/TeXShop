@@ -10,7 +10,7 @@ from pathlib import Path
 from production_fragments import method, verify_embedded
 root = Path(__file__).resolve().parents[1]
 p = argparse.ArgumentParser()
-p.add_argument('--mutation', choices=['no-refuse', 'no-end-check', 'no-end-guess', 'end-tex-aware', 'no-skip'])
+p.add_argument('--mutation', choices=['no-refuse', 'no-end-check', 'no-end-guess', 'end-tex-aware', 'no-skip', 'system-search'])
 args = p.parse_args()
 source = (root/'Sources/Editor/TSTextView.m').read_text(encoding='latin1')
 change = method(source, '- (void)changeSpelling:(id)sender')
@@ -22,7 +22,7 @@ program = r'''
 #define REQUIRE(x, what) do { if (!(x)) { NSLog(@"FAIL: %s (%@)", what, steps); exit(1); } } while(0)
 @class TSSpellMask;
 static NSMutableArray<NSString *> *steps;
-static BOOL refuse, skip;
+static BOOL refuse, skip, panelShown;
 static NSEventModifierFlags flags;
 static NSEventModifierFlags TestModifierFlags(id receiver, SEL selector) { return flags; }
 @interface TSSpellSupport : NSObject @end
@@ -31,8 +31,8 @@ static NSEventModifierFlags TestModifierFlags(id receiver, SEL selector) { retur
 + (void)endReview { [steps addObject:@"end"]; }
 + (BOOL)skipsSearchAfterRefusedChange { [steps addObject:@"skip?"]; return skip; }
 + (NSString *)findNextMisspellingInTextView:(NSTextView *)view mask:(TSSpellMask *)mask { [steps addObject:@"find"]; return nil; }
-+ (void)showSpellingPanelForTextView:(NSTextView *)view mask:(TSSpellMask *)mask openPanel:(void (^)(void))openPanel
-{ [steps addObject:@"panel"]; openPanel(); }
++ (void)showSpellingPanelForTextView:(NSTextView *)view mask:(TSSpellMask *)mask hidePanel:(void (^)(void))hidePanel
+{ [steps addObject:@"panel"]; if (panelShown) hidePanel(); }
 @end
 @interface SystemTextView : NSTextView @end
 @implementation SystemTextView
@@ -64,7 +64,10 @@ int main(void) { @autoreleasepool {
     }
     v.texAware = YES; flags = 0;
     REQUIRE([Run(^{ [v checkSpelling:nil]; }) isEqual:(@[@"skip?", @"find"])], "TeX-aware Find Next keeps the review");
-    REQUIRE([Run(^{ [v showGuessPanel:nil]; }) isEqual:(@[@"panel", @"system panel"])], "TeX-aware panel keeps the review");
+    REQUIRE([Run(^{ [v showGuessPanel:nil]; }) isEqual:(@[@"panel"])], "TeX-aware panel opens without the system's search");
+    panelShown = YES;
+    REQUIRE([Run(^{ [v showGuessPanel:nil]; }) isEqual:(@[@"panel", @"system panel"])], "a shown panel is hidden by the system");
+    panelShown = NO;
     flags = NSEventModifierFlagOption;
     REQUIRE([Run(^{ [v checkSpelling:nil]; }) isEqual:(@[@"skip?", @"end", @"system search"])], "Option search ends the review");
     REQUIRE([Run(^{ [v showGuessPanel:nil]; }) isEqual:(@[@"end", @"system panel"])], "Option panel ends the review");
@@ -89,6 +92,8 @@ mutations = {
     'no-refuse': (change, change.replace('if ([TSSpellSupport refuseStaleChangeInTextView:self]) return;', '')),
     'no-end-check': (check, check.replace('[TSSpellSupport endReview];', '')),
     'no-end-guess': (guess, guess.replace('[TSSpellSupport endReview];', '')),
+    # Open the panel with the system's own search first, as before #38.
+    'system-search': (guess, guess.replace('    [TSSpellSupport showSpellingPanelForTextView:', '    [super showGuessPanel:sender];\n    [TSSpellSupport showSpellingPanelForTextView:')),
     'no-skip': (check, check.replace('if ([TSSpellSupport skipsSearchAfterRefusedChange]) return;', '')),
     'end-tex-aware': (check, check.replace('[TSSpellSupport findNextMisspellingInTextView:',
                                            '[TSSpellSupport endReview]; [TSSpellSupport findNextMisspellingInTextView:')),

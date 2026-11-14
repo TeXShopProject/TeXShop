@@ -302,6 +302,7 @@
       {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"}
     ],
     "nl": [
+      {"text": "Tab", "id": "keybindings.insert", "category": "keyboard", "role": "choice", "reason": "Key name that is the same word in this language"},
       {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
@@ -457,6 +458,7 @@
       {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"}
     ],
     "ro": [
+      {"text": "Tab", "id": "keybindings.insert", "category": "keyboard", "role": "choice", "reason": "Key name that is the same word in this language"},
       {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},

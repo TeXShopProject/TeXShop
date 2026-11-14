@@ -40,6 +40,7 @@
 @class TSExperimentConsoleController;
 @class TSConsoleOutputReturn;
 @class TSFullSplitDivider;
+@class TSSyntaxColorScheme;
 
 #define NUMBEROFERRORS	20
 
@@ -439,6 +440,8 @@ enum RootCommand
 @property (retain)  NSDictionary        *explColorAttribute5;
 @property (retain)  NSDictionary        *explColorAttribute6;
 @property (retain)  NSDictionary        *explColorAttribute7;
+// The colors of syntax coloring, made from the theme; the attributes above come from it.
+@property (strong)  TSSyntaxColorScheme *syntaxColorScheme;
 
 
 @property (retain)  NSTask              *synctexTask;
@@ -1093,12 +1096,6 @@ enum RootCommand
 
 @interface TSDocument (XML)
 
-- (void) syntaxColorXML: (NSUInteger *)location from: (NSUInteger) lineStart to: (NSUInteger) lineEnd
-                  using: (NSString *)textString with: (NSLayoutManager *) layoutManager;
-- (void) syntaxColorLimitedXML: (NSUInteger *)location and: (NSUInteger) lineEnd
-                  using: (NSString *)textString with: (NSLayoutManager *) layoutManager;
-- (void) syntaxColorXMLCommentsfrom: (NSUInteger) aLineStart to: (NSUInteger) aLineEnd using: (NSString *) textString
-                with: (NSLayoutManager *) layoutManager;
 - (NSInteger)xmlTag: (NSString *)line;
 - (NSString *)xmlGetTitle: (NSString *)titleLine;
 - (NSString *)xmlGetImageSource: (NSString *)titleLine;

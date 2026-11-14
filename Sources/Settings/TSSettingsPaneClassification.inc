@@ -117,7 +117,8 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
         if([model[@"unit"] length])[parts addObject:[self label:text(model[@"unit"]) small:YES]];
         if(controls.count>1){((NSButton *)controls[1]).title=text(model[@"button"]);[parts addObject:controls[1]];}
         accessory=parts.count==1?field:[self horizontal:parts spacing:8];
-        if([kind isEqual:@"integer"])[(NSStackView *)accessory setCustomSpacing:2 afterView:field];
+        // 4 points keep the field's focus ring off its stepper.
+        if([kind isEqual:@"integer"])[(NSStackView *)accessory setCustomSpacing:4 afterView:field];
     }else if([kind isEqual:@"font"]){
         controls.firstObject.accessibilityIdentifier=@"settings.user-data";
         ((NSTextField *)controls.firstObject).textColor=NSColor.secondaryLabelColor;
@@ -141,6 +142,33 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
             content=stack;
         }
         row=[TSPrefPaneLayout catalogContent:content trailing:[kind isEqual:@"button"] && !indent indent:indent];
+    }else if([kind isEqual:@"status"]){
+        // A status line on the left and its action on the right, outside a group card.
+        NSTextField *status=(NSTextField *)controls.firstObject;NSButton *action=(NSButton *)controls[1];action.title=title;
+        status.font=[NSFont systemFontOfSize:NSFont.smallSystemFontSize];status.textColor=NSColor.secondaryLabelColor;
+        status.lineBreakMode=NSLineBreakByTruncatingTail;
+        status.accessibilityIdentifier=@"settings.user-data"; // A date that changes at run time, not a setting name.
+        [status setContentCompressionResistancePriority:249 forOrientation:NSLayoutConstraintOrientationHorizontal];
+        [status setContentHuggingPriority:1 forOrientation:NSLayoutConstraintOrientationHorizontal];
+        [action setContentCompressionResistancePriority:751 forOrientation:NSLayoutConstraintOrientationHorizontal];
+        row=[NSView new];row.translatesAutoresizingMaskIntoConstraints=NO;
+        [row addSubview:status];[row addSubview:action];
+        [NSLayoutConstraint activateConstraints:@[
+            [status.leadingAnchor constraintEqualToAnchor:row.leadingAnchor constant:12],
+            [status.firstBaselineAnchor constraintEqualToAnchor:action.firstBaselineAnchor],
+            [action.leadingAnchor constraintGreaterThanOrEqualToAnchor:status.trailingAnchor constant:12],
+            [action.trailingAnchor constraintEqualToAnchor:row.trailingAnchor constant:-12],
+            [action.centerYAnchor constraintEqualToAnchor:row.centerYAnchor],
+            [action.topAnchor constraintGreaterThanOrEqualToAnchor:row.topAnchor],
+            [action.bottomAnchor constraintLessThanOrEqualToAnchor:row.bottomAnchor],
+            [row.heightAnchor constraintGreaterThanOrEqualToConstant:38]]];
+        NSLayoutConstraint *fit=[row.heightAnchor constraintEqualToConstant:38];fit.priority=249;fit.active=YES;
+    }else if([kind isEqual:@"keybindings"]){
+        NSView *list=controls.firstObject;list.accessibilityLabel=title;
+        NSView *body=TSCatalogRequired(list.subviews.firstObject);
+        [NSLayoutConstraint activateConstraints:@[[body.leadingAnchor constraintEqualToAnchor:list.leadingAnchor],[body.trailingAnchor constraintEqualToAnchor:list.trailingAnchor],[body.topAnchor constraintEqualToAnchor:list.topAnchor],[body.bottomAnchor constraintEqualToAnchor:list.bottomAnchor]]];
+        row=[TSPrefPaneLayout catalogContent:list trailing:NO indent:indent];
+        [list.trailingAnchor constraintEqualToAnchor:row.trailingAnchor constant:-12].active=YES;
     }else if([kind isEqual:@"description"]){row=[TSPrefPaneLayout catalogContent:[self label:title small:YES] trailing:NO indent:indent];
     }else if([kind isEqual:@"buttons"] || [kind isEqual:@"checks"] || [kind isEqual:@"checkgrid"]){
         for(NSUInteger i=0;i<controls.count;i++)((NSButton *)controls[i]).title=text(model[@"choices"][i]);
@@ -161,6 +189,19 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
             }
         }
         for(NSDictionary *item in model[@"items"]){
+            // A row of headings above an item names what its colors are for, column by column.
+            if(table && [item[@"headings"] count]){
+                [cells addObject:NSGridCell.emptyContentView];
+                for(NSString *key in item[@"headings"]){
+                    if(!key.length){[cells addObject:NSGridCell.emptyContentView];continue;}
+                    NSTextField *heading=[self label:text(key) small:YES];
+                    heading.identifier=[@"heading." stringByAppendingString:key];
+                    heading.maximumNumberOfLines=1;heading.lineBreakMode=NSLineBreakByClipping;
+                    CGFloat width=ceil([heading.stringValue sizeWithAttributes:@{NSFontAttributeName:TSCatalogRequired(heading.font)}].width)+4;
+                    [heading.widthAnchor constraintGreaterThanOrEqualToConstant:width].active=YES;
+                    [cells addObject:heading];
+                }
+            }
             NSTextField *label=[self label:text(item[@"title"]) small:NO];
             NSMutableArray *wells=[NSMutableArray array];
             for(NSString *key in item[@"controls"]){NSView *well=[self take:key from:views];[self prepare:well];well.accessibilityLabel=label.stringValue;
@@ -176,7 +217,7 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
         row=[TSPrefPaneLayout catalogContent:grid trailing:NO indent:indent];
     }
     if(!row && accessory)row=[TSPrefPaneLayout catalogRowWithTitle:title note:note accessory:accessory expands:[kind isEqual:@"path"] indent:indent];
-    if(row && controls.count && [controls.firstObject isKindOfClass:NSControl.class]) {
+    if(row && controls.count && [controls.firstObject isKindOfClass:NSControl.class] && ![kind isEqual:@"status"]) {
         NSMutableArray<NSView *> *labels=[NSMutableArray arrayWithArray:row.subviews];
         while(labels.count){NSView *candidate=labels.lastObject;[labels removeLastObject];
             if([candidate isKindOfClass:NSTextField.class] && !((NSTextField *)candidate).editable && ([candidate.identifier isEqual:@"label.catalog-row"] || [candidate.identifier isEqual:@"note.catalog-row"]))
@@ -195,13 +236,28 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
     [self splitMatrix:(NSMatrix *)[self take:@"settings.621" from:views] identifiers:@[@"settings.cell.839",@"settings.cell.cgA-o7-Bdw",@"settings.cell.f1k-jx-ley",@"settings.cell.840",@"settings.cell.841",@"settings.cell.842",@"settings.cell.843",@"settings.cell.844",@"settings.cell.845",@"settings.cell.846",@"settings.cell.XoX-gZ-pO3",@"settings.cell.PhR-Vr-jce",@"settings.cell.CPb-hk-Gqb"] into:views];
     [self splitMatrix:(NSMatrix *)[self take:@"settings.cp7-bc-avh" from:views] identifiers:@[@"settings.cell.teg-0p-Q8J",@"settings.cell.3eF-XA-ahc",@"settings.cell.8Wq-gx-FqO"] into:views];
     NSButton *legacy=[NSButton radioButtonWithTitle:@"" target:preferences action:@selector(legacySpellCheckPressed:)];legacy.identifier=@"settings.legacy-spelling";preferences.legacySpellCheckButton=legacy;views[@"settings.legacy-spelling"]=legacy;
-    NSArray *newIDs=@[@"settings.edit-bindings",@"settings.edit-completion",@"settings.hidden-settings-help",@"settings.save-theme"];
-    SEL actions[]={@selector(editKeyBindings:),@selector(openCommandCompletionList:),@selector(displayCommentLines:),@selector(SaveEditedStyle:)};
-    for(NSUInteger i=0;i<newIDs.count;i++){NSButton *b=[NSButton buttonWithTitle:@"" target:i==1?nil:preferences action:actions[i]];b.identifier=newIDs[i];views[newIDs[i]]=b;}
+    NSArray *newIDs=@[@"settings.edit-completion",@"settings.hidden-settings-help",@"settings.save-theme"];
+    SEL actions[]={@selector(openCommandCompletionList:),@selector(displayCommentLines:),@selector(SaveEditedStyle:)};
+    for(NSUInteger i=0;i<newIDs.count;i++){NSButton *b=[NSButton buttonWithTitle:@"" target:i==0?nil:preferences action:actions[i]];b.identifier=newIDs[i];views[newIDs[i]]=b;}
+    NSButton *prerelease=[NSButton checkboxWithTitle:@"" target:preferences action:@selector(sparklePrereleaseUpdates:)];prerelease.identifier=@"settings.sparkle-prerelease";preferences.sparklePrereleaseButton=prerelease;views[@"settings.sparkle-prerelease"]=prerelease;
+    NSTextField *lastCheck=[NSTextField labelWithString:@""];lastCheck.identifier=@"settings.sparkle-last-check";preferences.sparkleLastCheckField=lastCheck;views[@"settings.sparkle-last-check"]=lastCheck;
+    NSButton *checkNow=[NSButton buttonWithTitle:@"" target:preferences action:@selector(checkForUpdatesFromSettings:)];checkNow.identifier=@"settings.sparkle-check-now";preferences.sparkleCheckNowButton=checkNow;views[@"settings.sparkle-check-now"]=checkNow;
+    // The key binding list is edited in place in Keyboard.
+    if(preferences.keyBindings==nil)preferences.keyBindings=[TSKeyBindingsController new];
+    NSView *bindings=preferences.keyBindings.view;bindings.identifier=@"settings.key-bindings";views[@"settings.key-bindings"]=bindings;
     NSMutableDictionary *result=[NSMutableDictionary dictionary];
     for(NSDictionary *category in TSSettingsCatalogLayout()){
         NSString *cid=category[@"id"];NSMutableArray *groups=[NSMutableArray array];
         for(NSDictionary *model in category[@"groups"]){
+            if([model[@"plain"] boolValue]){
+                // Rows below the cards, such as an action for the whole category.
+                NSView *plain=[NSView new];plain.translatesAutoresizingMaskIntoConstraints=NO;plain.identifier=model[@"id"];
+                NSMutableArray *rows=[NSMutableArray array];
+                for(NSDictionary *row in model[@"rows"]){NSView *built=[self buildRow:row views:views text:text];if(built)[rows addObject:built];}
+                [TSPrefPaneLayout attachRows:rows toView:plain];
+                [groups addObject:plain];
+                continue;
+            }
             TSSettingsGroupView *group=[TSSettingsGroupView new];group.identifier=model[@"id"];group.title=text(model[@"title"]);group.accessibilityLabel=group.title;
             NSTextField *heading=[self label:group.title small:NO];heading.font=[NSFont boldSystemFontOfSize:NSFont.systemFontSize];heading.identifier=[@"heading." stringByAppendingString:TSCatalogRequired(group.identifier)];
             NSMutableArray *rows=[NSMutableArray arrayWithObject:heading];
@@ -228,6 +284,7 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
         [stack insertArrangedSubview:header atIndex:0];[stack setCustomSpacing:8 afterView:header];[header.widthAnchor constraintEqualToAnchor:stack.widthAnchor constant:-48].active=YES;
         result[cid]=controller;
     }
+    [preferences sparkleStatusControlsDidLoad];
     // The profile selector has moved to General. Keep its typed owner but no footer band.
     ((NSView *)views[@"settings.settings-footer"]).hidden=YES;
     return result;

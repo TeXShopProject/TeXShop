@@ -244,6 +244,7 @@
                 [[self overView] setMagnifiedRect: thePageOriginalRect];
                 [[self overView] setMagnifiedPage: myPage];
                 [[self overView] setMagnifiedBox: self.displayBox];
+                [[self overView] setMagnifiedPaperColor: self.previewPaperColor];
                 [[self overView] setNeedsDisplayInRect: [[self documentView] visibleRect]];
                 
                 

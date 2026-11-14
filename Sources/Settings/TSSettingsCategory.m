@@ -23,13 +23,13 @@ TSSettingsCategoryID const TSSettingsCategoryUpdates = @"updates";
         @"general": @[@"gearshape", @0x888780, @NO],
         @"documents": @[@"doc.text", @0x378ADD, @NO],
         @"editor": @[@"character.cursor.ibeam", @0xBA7517, @YES],
+        @"keyboard": @[@"keyboard", @0x5F5E5A, @NO],
         @"spelling": @[@"text.badge.checkmark", @0x639922, @NO],
         @"appearance": @[@"paintpalette", @0x7F77DD, @NO],
         @"preview": @[@"doc.text.magnifyingglass", @0xE24B4A, @YES],
         @"typesetting": @[@"hammer", @0x534AB7, @NO],
         @"console": @[@"terminal", @0x2C2C2A, @NO],
-        @"keyboard": @[@"keyboard", @0x5F5E5A, @YES],
-        @"updates": @[@"arrow.triangle.2.circlepath", @0x1D9E75, @NO]
+        @"updates": @[@"arrow.triangle.2.circlepath", @0x1D9E75, @YES]
     };
     NSArray *spec = design[identifier];
     if (spec == nil) [NSException raise:NSInvalidArgumentException format:@"Unknown settings category %@", identifier];

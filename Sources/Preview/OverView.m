@@ -98,7 +98,7 @@
     else if (drawMagnifiedImage) {
       //  [self lockFocus];
         [[NSGraphicsContext currentContext] setShouldAntialias: NO];
-        [[NSColor whiteColor] set];
+        [(self.magnifiedPaperColor ?: [NSColor whiteColor]) set];
         NSRectFill(theSelectionRect);
         if (self.magnifiedPage)
             TSMagnifyingGlassDrawPage(self.magnifiedPage, self.magnifiedBox, magnifiedRect, theSelectionRect);

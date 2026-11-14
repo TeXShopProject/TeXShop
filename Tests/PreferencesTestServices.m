@@ -14,7 +14,9 @@ INERT_CLASS(TSShortcutPaneController,NSViewController)
 @interface TSSparkleController:NSObject @end
 @implementation TSSparkleController
 + (id)sharedUpdater { return nil; }
++ (id)sharedController { return nil; }
 @end
+NSNotificationName const TSSparkleUpdateCheckDidFinishNotification = @"TSSparkleUpdateCheckDidFinishNotification";
 #ifndef TS_TEST_REAL_SHORTCUTS
 @interface TSKeyboardShortcuts : NSObject
 + (id)sharedController;
