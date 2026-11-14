@@ -1660,7 +1660,7 @@
        "title": "Sync方式",
        "choices": [
         "PDFを検索",
-        "SyncTeX"
+        "SyncTeX（推奨）"
        ],
        "selected": 1,
        "src": [
