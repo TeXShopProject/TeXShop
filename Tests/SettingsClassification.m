@@ -223,11 +223,17 @@ int main(int argc,char **argv){@autoreleasepool{
  [encoding selectItemWithTag:NSMacOSRomanStringEncoding];[owner encodingChanged:encoding];Check(!encodingNote.hidden,@"Production encoding action shows inline warning");
  [owner configurePreferenceInputs];NSTextField *magnification=[owner valueForKey:@"magTextField"];
  TSSettingsChangeNote *zoomNote=(id)Find(Find([panes[@"preview"] view],@"row.catalog.preview.0.2"),@"settings.change-note");
+ {
+  // The zoom row holds the field and its percent sign; ending its editing saves it.
+  NSView *zoomRow=Find([panes[@"preview"] view],@"row.catalog.preview.0.2");NSMutableArray *pending=[NSMutableArray arrayWithObject:Required(zoomRow)];NSUInteger buttons=0;BOOL unit=NO;
+  while(pending.count){NSView *view=pending.lastObject;[pending removeLastObject];if([view isKindOfClass:NSButton.class])buttons++;if(view!=magnification && [view isKindOfClass:NSTextField.class] && [((NSTextField *)view).stringValue isEqual:@"%"])unit=YES;[pending addObjectsFromArray:view.subviews];}
+  Check(buttons==0 && unit && [magnification isDescendantOf:zoomRow] && magnification.delegate==(id)owner,@"Magnification row has its field and percent sign, no button, and the field saves when its editing ends");
+ }
  magnification.stringValue=@"125";[owner controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:magnification]];
  Check([owner commitPreferenceField:magnification showError:NO reflect:YES] && fabs([memory doubleForKey:PdfMagnificationKey]-1.25)<0.00001 && zoomNote.hidden,@"Production zoom commit saves percentage and stays quiet without preview");
  pdfOpen=YES;magnification.stringValue=@"125";[owner controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:magnification]];[owner commitPreferenceField:magnification showError:NO reflect:YES];Check(zoomNote.hidden,@"Production same-value commit is quiet");
- magnification.stringValue=@"150";[owner controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:magnification]];[owner magChanged:magnification];Check(!zoomNote.hidden && fabs([memory doubleForKey:PdfMagnificationKey]-1.5)<0.00001,@"Production magnification action shows note after saving");
- magnification.stringValue=@"100";[owner controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:magnification]];[owner magChanged:magnification];Check(zoomNote.hidden,@"Production magnification action clears note at opening value");
+ magnification.stringValue=@"150";[owner controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:magnification]];Check([owner control:magnification textShouldEndEditing:[NSText new]] && !zoomNote.hidden && fabs([memory doubleForKey:PdfMagnificationKey]-1.5)<0.00001,@"Ending magnification editing shows note after saving");
+ magnification.stringValue=@"100";[owner controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:magnification]];Check([owner control:magnification textShouldEndEditing:[NSText new]] && zoomNote.hidden,@"Ending magnification editing clears note at opening value");
  [owner.settingsChangeNotes endSession];
  // Return commits through the actual NSTextField delegate and clamps percentages.
  magnification.stringValue=@"900";[owner controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:magnification]];

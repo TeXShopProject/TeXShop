@@ -172,7 +172,7 @@
             [TSSettingsLayoutRow controls:@[@"settings.46"] kind:TSSettingsRowControls indentation:1], // pdfWindowPosButton
         ]],
         @"settings.HSm-QY-Bs6": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.113", @"settings.116"] kind:TSSettingsRowControls indentation:0], // magTextField
+            [TSSettingsLayoutRow controls:@[@"settings.113"] kind:TSSettingsRowControls indentation:0], // magTextField
         ]],
         @"settings.slE-Lh-2Zi": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.345"] kind:TSSettingsRowControls indentation:0], // mouseModePopup
