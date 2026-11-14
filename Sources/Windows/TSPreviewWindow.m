@@ -135,8 +135,8 @@ extern NSPanel *pageNumberWindow;
     
     self.firstTime = YES;
 
-	// backColor = [NSColor lightGrayColor];
-	backColor = [NSColor colorWithCalibratedRed:0.9 green:0.9 blue:0.9 alpha: 1.0];
+	// The window background follows Light and Dark Mode.
+	backColor = [NSColor windowBackgroundColor];
 	[self setBackgroundColor: backColor];
 
 	CGFloat alpha = [SUD floatForKey: PreviewWindowAlphaKey];
