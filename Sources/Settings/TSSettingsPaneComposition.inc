@@ -67,30 +67,30 @@
             [TSSettingsLayoutRow controls:@[@"settings.1027"] kind:TSSettingsRowSection indentation:0], // BibTeX Engine
         ]],
         @"settings.C6f-GQ-WQW": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.218", @"settings.217"] kind:TSSettingsRowField indentation:0],
-            [TSSettingsLayoutRow controls:@[@"settings.256", @"settings.255"] kind:TSSettingsRowField indentation:0],
-            [TSSettingsLayoutRow controls:@[@"settings.PsG-fR-sPc", @"settings.oMY-Ya-GFE"] kind:TSSettingsRowField indentation:0],
+            [TSSettingsLayoutRow controls:@[@"settings.217"] kind:TSSettingsRowField indentation:0],
+            [TSSettingsLayoutRow controls:@[@"settings.255"] kind:TSSettingsRowField indentation:0],
+            [TSSettingsLayoutRow controls:@[@"settings.oMY-Ya-GFE"] kind:TSSettingsRowField indentation:0],
             [TSSettingsLayoutRow controls:@[@"settings.engine-auto-button"] kind:TSSettingsRowControls indentation:0], // Auto Setup…
         ]],
         @"settings.gPH-WT-0Et": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.52", @"settings.1062"] kind:TSSettingsRowControls indentation:0], // TeX
+            [TSSettingsLayoutRow controls:@[@"settings.52"] kind:TSSettingsRowControls indentation:0], // TeX
             [TSSettingsLayoutRow controls:@[@"settings.51"] kind:TSSettingsRowControls indentation:0], // texCommandTextField
-            [TSSettingsLayoutRow controls:@[@"settings.50", @"settings.1070"] kind:TSSettingsRowControls indentation:0], // LaTeX
+            [TSSettingsLayoutRow controls:@[@"settings.50"] kind:TSSettingsRowControls indentation:0], // LaTeX
             [TSSettingsLayoutRow controls:@[@"settings.53"] kind:TSSettingsRowControls indentation:0], // latexCommandTextField
             [TSSettingsLayoutRow controls:@[@"settings.325"] kind:TSSettingsRowControls indentation:0], // escapeWarningButton
         ]],
         @"settings.Vh1-Vx-3JF": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.1066", @"settings.1067"] kind:TSSettingsRowControls indentation:0], // TeX
+            [TSSettingsLayoutRow controls:@[@"settings.1066"] kind:TSSettingsRowControls indentation:0], // TeX
             [TSSettingsLayoutRow controls:@[@"settings.202"] kind:TSSettingsRowControls indentation:0], // texGSCommandTextField
-            [TSSettingsLayoutRow controls:@[@"settings.1072", @"settings.1073"] kind:TSSettingsRowControls indentation:0], // LaTeX
+            [TSSettingsLayoutRow controls:@[@"settings.1072"] kind:TSSettingsRowControls indentation:0], // LaTeX
             [TSSettingsLayoutRow controls:@[@"settings.199"] kind:TSSettingsRowControls indentation:0], // latexGSCommandTextField
             [TSSettingsLayoutRow controls:@[@"settings.225"] kind:TSSettingsRowControls indentation:0], // savePSButton
         ]],
         @"settings.DBm-wM-PDK": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.1021", @"settings.1022"] kind:TSSettingsRowField indentation:0],
+            [TSSettingsLayoutRow controls:@[@"settings.1022"] kind:TSSettingsRowField indentation:0],
         ]],
         @"settings.xP2-FB-CFh": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.1029", @"settings.1028"] kind:TSSettingsRowField indentation:0],
+            [TSSettingsLayoutRow controls:@[@"settings.1028"] kind:TSSettingsRowField indentation:0],
         ]],
         @"settings.400": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.386"] kind:TSSettingsRowSection indentation:0], // Image Copy Type
@@ -141,8 +141,8 @@
             [TSSettingsLayoutRow controls:@[@"settings.spX-dz-ROL"] kind:TSSettingsRowControls indentation:0], // ptexUtfOutputButton
         ]],
         @"settings.buj-8D-9FL": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.e8o-CH-MrS", @"settings.10b-du-keV"] kind:TSSettingsRowField indentation:0],
-            [TSSettingsLayoutRow controls:@[@"settings.0GI-vh-5wv", @"settings.KBV-98-EKO"] kind:TSSettingsRowField indentation:0],
+            [TSSettingsLayoutRow controls:@[@"settings.10b-du-keV"] kind:TSSettingsRowField indentation:0],
+            [TSSettingsLayoutRow controls:@[@"settings.KBV-98-EKO"] kind:TSSettingsRowField indentation:0],
         ]],
         @"settings.Vy2-Hl-YOQ": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.ETt-2N-toX", @"settings.gZB-h1-n7P"] kind:TSSettingsRowField indentation:0],

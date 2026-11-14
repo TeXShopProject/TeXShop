@@ -410,12 +410,13 @@ static void TSInstallAdvancedFindFieldStyle(void)
 	} else {
 		// after the decision above, and only for those whose settings were kept
 		TSPreferencesMigrateEarlierUser(SUD, savedSettings);
-		// register defaults; this does not interfere with values previously set by the user, but provides default values for all other defaults
-		fileName = [[NSBundle mainBundle] pathForResource:@"FactoryDefaults" ofType:@"plist" inDirectory:@"Defaults"];
-		NSParameterAssert(fileName != nil);
-		factoryDefaults = [[NSString stringWithContentsOfFile:fileName encoding:NSUTF8StringEncoding error:NULL] propertyList];
-		[SUD registerDefaults:factoryDefaults];
 	}
+	// register defaults; this does not interfere with values previously set by the user, but provides default values for all other defaults,
+	// also for a setting removed later, such as a field emptied in Settings
+	fileName = [[NSBundle mainBundle] pathForResource:@"FactoryDefaults" ofType:@"plist" inDirectory:@"Defaults"];
+	NSParameterAssert(fileName != nil);
+	factoryDefaults = [[NSString stringWithContentsOfFile:fileName encoding:NSUTF8StringEncoding error:NULL] propertyList];
+	[SUD registerDefaults:factoryDefaults];
     
     editorCanAddBrackets = [SUD boolForKey:EditorCanAddBracketsKey];
     

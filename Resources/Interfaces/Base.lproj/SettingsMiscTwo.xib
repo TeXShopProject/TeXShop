@@ -173,15 +173,6 @@
             <rect key="frame" x="0.0" y="0.0" width="356" height="104.5" />
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
             <subviews>
-              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0GI-vh-5wv" identifier="settings.0GI-vh-5wv">
-                <rect key="frame" x="15" y="31.5" width="153" height="18" />
-                <autoresizingMask key="autoresizingMask" />
-                <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="LaTeX Program (no default)" id="8Bw-D6-HlO">
-                  <font key="font" metaFont="message" size="11" />
-                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
-                  <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
-                </textFieldCell>
-              </textField>
               <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="10b-du-keV" identifier="settings.10b-du-keV">
                 <rect key="frame" x="19" y="56" width="325" height="21" />
                 <autoresizingMask key="autoresizingMask" />
@@ -193,16 +184,6 @@
                 <connections>
                   <action selector="texScriptProgramChanged:" target="-2" id="kBQ-Fq-9BY" />
                 </connections>
-              </textField>
-              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e8o-CH-MrS" identifier="settings.e8o-CH-MrS">
-                <rect key="frame" x="14" y="76.5" width="142" height="18" />
-                <autoresizingMask key="autoresizingMask" />
-                <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" id="mPz-qG-Toi">
-                  <font key="font" metaFont="message" size="11" />
-                  <string key="title">TeX Program (no default)</string>
-                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
-                  <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
-                </textFieldCell>
               </textField>
               <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KBV-98-EKO" identifier="settings.KBV-98-EKO">
                 <rect key="frame" x="19" y="11" width="325" height="21" />

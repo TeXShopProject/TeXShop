@@ -1243,36 +1243,6 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 }
 
 
-- (IBAction)defaultEngineCall:sender //Koch; change one of four engine Unix calls
-{
-	NSString *defaultValue;
-	
-	NSInteger			which = [sender tag];
-	
-	switch (which) {
-		case 0: defaultValue = @"pdftex --file-line-error --synctex=1";
-				[_texCommandTextField setStringValue: defaultValue];
-				[self texProgramChanged: nil];
-				break;
-			
-		case 1: defaultValue = @"pdflatex --file-line-error --synctex=1";
-				[_latexCommandTextField setStringValue: defaultValue];
-				[self latexProgramChanged: nil];
-				break;
-
-		case 2: defaultValue = @"simpdftex etex --maxpfb --extratexopts \"-file-line-error -synctex=1\"";
-				[_texGSCommandTextField setStringValue: defaultValue];
-				[self texGSProgramChanged: nil];
-				break;
-
-		case 3: defaultValue = @"simpdftex latex --maxpfb --extratexopts \"-file-line-error -synctex=1\"";
-				[_latexGSCommandTextField setStringValue: defaultValue];
-				[self latexGSProgramChanged: nil];
-				break;
-	}
-}
-
-
 /*" This method is connected to resize option popup button. "*/
 - (IBAction)resizeOptionChanged:sender
 {
@@ -2161,8 +2131,7 @@ A tag of 0 means "no", a tag of 1 means "yes".
         kind:TSPreferenceInputInteger minimum:TSInterlineSpaceRange.minimum maximum:TSInterlineSpaceRange.maximum allowsEmpty:NO notification:TSPreferenceNotificationForKey(SourceInterlineSpaceKey)]];
     [self addPreferenceField:_magTextField rule:[[TSPreferenceInput alloc] initWithKey:PdfMagnificationKey
         kind:TSPreferenceInputPercentage minimum:20 maximum:400 allowsEmpty:NO notification:nil]];
-    [self addPreferenceField:_HtmlHomeField rule:[[TSPreferenceInput alloc] initWithKey:HtmlHomeKey
-        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:YES notification:nil]];
+    [self addPreferenceField:_HtmlHomeField rule:[[TSPreferenceInput alloc] initRestoringDefaultForKey:HtmlHomeKey]];
     [self addPreferenceField:_texCommandTextField rule:[[TSPreferenceInput alloc] initWithKey:TexCommandKey
         kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
     [self addPreferenceField:_latexCommandTextField rule:[[TSPreferenceInput alloc] initWithKey:LatexCommandKey
@@ -2177,8 +2146,7 @@ A tag of 0 means "no", a tag of 1 means "yes".
         kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
     [self addPreferenceField:_altPathField rule:[[TSPreferenceInput alloc] initWithKey:AltPathKey
         kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:YES notification:nil]];
-    [self addPreferenceField:_kpsetoolField rule:[[TSPreferenceInput alloc] initWithKey:KpsetoolKey
-        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
+    [self addPreferenceField:_kpsetoolField rule:[[TSPreferenceInput alloc] initRestoringDefaultForKey:KpsetoolKey]];
     [self addPreferenceField:_bibTeXengineField rule:[[TSPreferenceInput alloc] initWithKey:BibTeXengineKey
         kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
     [self addPreferenceField:self.makeIndexEngineField rule:[[TSPreferenceInput alloc] initWithKey:MakeIndexEngineKey

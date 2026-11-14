@@ -18,6 +18,8 @@ def declared_methods():
     names.add("setDefaults:")
     # The engine field of the earlier window. Settings chooses the engine file from a menu.
     names.add("setEngine:")
+    # The Default buttons of the earlier window's commands. Settings restores them with the engine profiles.
+    names.add("defaultEngineCall:")
     for path in [root / 'Sources/Settings/TSPreferences.h', *sorted(root.glob('Sources/TSPreferences*.m'))]:
         text = re.sub(r'/\*.*?\*/', '', path.read_text(errors='replace'), flags=re.S)
         text = re.sub(r'//.*', '', text)

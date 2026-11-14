@@ -104,7 +104,7 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     Check(contract.count==20 && rules.count==contract.count,@"All twenty independent input rules are installed");
     for(NSDictionary *entry in contract){
         NSTextField *field=[owner valueForKey:entry[@"outlet"]];TSPreferenceInput *rule=[rules objectForKey:field];
-        Check(rule && [rule.key isEqual:entry[@"key"]] && rule.kind==[entry[@"kind"]integerValue] && rule.minimum==[entry[@"minimum"]doubleValue] && rule.maximum==[entry[@"maximum"]doubleValue] && rule.allowsEmpty==[entry[@"allowsEmpty"]boolValue],[NSString stringWithFormat:@"Independent rule contract for %@",entry[@"outlet"]]);
+        Check(rule && [rule.key isEqual:entry[@"key"]] && rule.kind==[entry[@"kind"]integerValue] && rule.minimum==[entry[@"minimum"]doubleValue] && rule.maximum==[entry[@"maximum"]doubleValue] && rule.allowsEmpty==[entry[@"allowsEmpty"]boolValue] && rule.restoresDefaultWhenEmpty==[entry[@"restoresDefault"]boolValue],[NSString stringWithFormat:@"Independent rule contract for %@",entry[@"outlet"]]);
         Check((entry[@"notification"]==NSNull.null && rule.notification==nil) || [rule.notification isEqual:entry[@"notification"]], [NSString stringWithFormat:@"Input notification contract for %@",entry[@"outlet"]]);
         if(rule.kind==TSPreferenceInputInteger){
             NSNumberFormatter *formatter=(NSNumberFormatter *)field.formatter;
@@ -265,6 +265,28 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     Check(TSStoredIntegerInRange(TSIsolatedAppKitDefaults,SourceInterlineSpaceKey,TSInterlineSpaceRange)==20 && TSStoredIntegerInRange(TSIsolatedAppKitDefaults,SourceFirstLineHeadIndentKey,TSParagraphIndentRange)==2 && TSIntegerInRange(45,TSInterlineSpaceRange)==20 && TSIntegerInRange(0,TSInterlineSpaceRange)==1 && TSIntegerInRange(-3,TSParagraphIndentRange)==0 && TSIntegerInRange(1,TSTabWidthRange)==2 && TSIntegerInRange(NAN,TSTabWidthRange)==2,@"Source windows use the same ranges as the fields");
     TSPreferenceInput *spacingRule=[rules objectForKey:[owner valueForKey:@"interlineSpacingField"]];
     Check(spacingRule.minimum==TSInterlineSpaceRange.minimum && spacingRule.maximum==TSInterlineSpaceRange.maximum,@"The interline field takes its range from the shared ranges");
+    // kpsewhich and the HTML home page: emptying the field restores the default, which the empty field shows as its
+    // placeholder; the default typed out is not stored either.
+    for(NSArray *entry in @[@[@"kpsetoolField",KpsetoolKey,TSSettingsCategoryTypesetting],@[@"HtmlHomeField",HtmlHomeKey,TSSettingsCategoryPreview]]){
+        NSTextField *field=[owner valueForKey:entry[0]];NSString *key=entry[1],*factoryValue=TSIsolatedAppKitDefaults.fallbacks[key];
+        BOOL (^unset)(void)=^BOOL{return TSIsolatedAppKitDefaults.values[key]==nil && [TSIsolatedAppKitDefaults persistentDomainForName:[TSIsolatedAppKitDefaults applicationDomainName]][key]==nil;};
+        [shell selectCategoryIdentifier:entry[2]];
+        [TSIsolatedAppKitDefaults setObject:@"custom value" forKey:key];[owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
+        Check(factoryValue.length>0 && [field.placeholderString isEqual:factoryValue] && [field.stringValue isEqual:@"custom value"],[NSString stringWithFormat:@"%@ shows the value set, with the default as its placeholder",key]);
+        EditOwnerField(owner,field,@"  ");alerts=ownerAlertCount;[shell.window makeFirstResponder:nil];
+        Check(ownerAlertCount==alerts && unset() && [[TSIsolatedAppKitDefaults stringForKey:key] isEqual:factoryValue] && field.stringValue.length==0 && field.currentEditor==nil,[NSString stringWithFormat:@"Emptying %@ restores its default without a warning and leaves the field empty",key]);
+        [owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
+        Check(field.stringValue.length==0 && [field.placeholderString isEqual:factoryValue],[NSString stringWithFormat:@"%@ stays empty, with its placeholder, when shown again",key]);
+        EditOwnerField(owner,field,@"another value");[shell.window makeFirstResponder:nil];
+        Check([TSIsolatedAppKitDefaults.values[key] isEqual:@"another value"] && [field.stringValue isEqual:@"another value"],[NSString stringWithFormat:@"%@ stores a value typed",key]);
+        EditOwnerField(owner,field,factoryValue);[shell.window makeFirstResponder:nil];
+        Check(unset() && field.stringValue.length==0,[NSString stringWithFormat:@"%@ does not store its default typed out",key]);
+        for(NSString *stored in @[factoryValue,@""]){
+            [TSIsolatedAppKitDefaults setObject:stored forKey:key];[owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
+            Check(field.stringValue.length==0,[NSString stringWithFormat:@"%@ stored as %@ shows the empty field and its placeholder",key,stored]);
+        }
+        [TSIsolatedAppKitDefaults removeObjectForKey:key];
+    }
     TSIsolatedAppKitDefaults.values = [saved mutableCopy];
     [owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
     [shell beginSession];

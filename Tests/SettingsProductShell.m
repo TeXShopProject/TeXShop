@@ -509,6 +509,20 @@ int main(int argc,char **argv){@autoreleasepool{
  profileAnswer=NSAlertFirstButtonReturn;
  [profiles selectItemWithTag:TSEngineProfileXeLaTeX];[profiles sendAction:profiles.action to:profiles.target];drainProfiles();
  Check(profileSheets==2 && profiles.selectedTag==TSEngineProfileXeLaTeX && [[TSIsolatedAppKitDefaults stringForKey:MakeIndexEngineKey] isEqual:@"makeindex"] && [[TSIsolatedAppKitDefaults stringForKey:LatexCommandKey] isEqual:TSEngineProfileValues(TSEngineProfileXeLaTeX,NO)[LatexCommandKey]],@"Apply in the sheet applies the chosen profile");
+  // The commands have no Default buttons: choosing the profile again, while the menu shows it or Custom, asks and
+ // restores its values.
+ [profiles selectItemWithTag:TSEngineProfileXeLaTeX];[profiles sendAction:profiles.action to:profiles.target];drainProfiles();
+ Check(profileSheets==3 && shownWhileAsking==TSEngineProfileXeLaTeX && profiles.selectedTag==TSEngineProfileXeLaTeX,@"Choosing the profile shown asks again");
+ NSArray *restoredKeys=@[TexCommandKey,LatexCommandKey,BibTeXengineKey,MakeIndexEngineKey,MetaPostEngineKey];
+ for(NSString *key in restoredKeys){
+  Check(TSEngineProfileValues(TSEngineProfileXeLaTeX,NO)[key]!=nil,[NSString stringWithFormat:@"XeLaTeX sets %@",key]);
+  [TSIsolatedAppKitDefaults setObject:@"typed by hand" forKey:key];drainProfiles();
+  Check(profiles.selectedTag==TSEngineProfileNone,[NSString stringWithFormat:@"A command typed for %@ shows Custom",key]);
+  [profiles selectItemWithTag:TSEngineProfileXeLaTeX];[profiles sendAction:profiles.action to:profiles.target];drainProfiles();
+  Check(profiles.selectedTag==TSEngineProfileXeLaTeX && [[TSIsolatedAppKitDefaults stringForKey:key] isEqual:TSEngineProfileValues(TSEngineProfileXeLaTeX,NO)[key]],[NSString stringWithFormat:@"Choosing the profile from Custom restores %@",key]);
+ }
+ Check(profileSheets==3+restoredKeys.count,@"Each choice of a profile asks once");
+ Check(Find(shell.window.contentView,@"settings.1062")==nil && Find(shell.window.contentView,@"settings.1070")==nil && Find(shell.window.contentView,@"settings.1067")==nil && Find(shell.window.contentView,@"settings.1073")==nil && ![owner respondsToSelector:NSSelectorFromString(@"defaultEngineCall:")],@"The command rows have no Default buttons");
  method_setImplementation(profileSheet,originalSheet);
  [shell.window makeFirstResponder:nil];
  [NSNotificationCenter.defaultCenter removeObserver:token];

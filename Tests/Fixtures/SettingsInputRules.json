@@ -51,6 +51,7 @@
     "minimum": 0,
     "maximum": 0,
     "allowsEmpty": true,
+    "restoresDefault": true,
     "notification": null
   },
   {
@@ -122,7 +123,8 @@
     "kind": 0,
     "minimum": 0,
     "maximum": 0,
-    "allowsEmpty": false,
+    "allowsEmpty": true,
+    "restoresDefault": true,
     "notification": null
   },
   {

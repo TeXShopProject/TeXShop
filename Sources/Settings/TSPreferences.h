@@ -304,7 +304,6 @@
 - (IBAction)commandCompletionChanged:sender;
 - (IBAction)findPanelChanged:sender;
 - (IBAction)lineSizeChanged:sender;
-- (IBAction)defaultEngineCall:sender;
 - (IBAction)wrapPanelChanged:sender;
 
 
