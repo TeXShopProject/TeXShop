@@ -3153,7 +3153,7 @@
           "03p-fB-1K3.title": "During File Save",
           "e3h-Wk-X7D.title": "Sparkle Updater",
           "5c4-N7-glC.title": "chapter",
-          "SS5-tZ-cDa.title": "pTeX support (for Japan)",
+          "SS5-tZ-cDa.title": "Japanese pLaTeX",
           "vEF-zd-SJl.title": "Alternate Engine",
           "DU3-gi-QzY.title": "XML Tag Choices",
           "xaE-Ux-0eA.title": "introduction",
@@ -3163,7 +3163,7 @@
           "K8n-in-y4T.title": "Automatic UTF-8-Mac to UTF-8 Conversion",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "Daily",
-          "ahm-aK-Qi9.title": "utf export",
+          "ahm-aK-Qi9.title": "Convert to otf Package \\UTF / \\CID",
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "Miniaturize the opened root window",
           "A9l-al-gxE.title": "Radio",
@@ -4346,7 +4346,7 @@
           "view": "settings.SS5-tZ-cDa",
           "kind": "view",
           "property": "title",
-          "value": "pTeX support (for Japan)"
+          "value": "Japanese pLaTeX"
         },
         {
           "key": "vEF-zd-SJl.title",
@@ -4418,7 +4418,7 @@
           "view": "settings.spX-dz-ROL",
           "kind": "cell",
           "property": "title",
-          "value": "utf export"
+          "value": "Convert to otf Package \\UTF / \\CID"
         },
         {
           "key": "WeQ-Qd-mPg.title",
@@ -5922,7 +5922,7 @@
         },
         {
           "id": "heading.settings.SS5-tZ-cDa",
-          "title": "pTeX support (for Japan)"
+          "title": "Japanese pLaTeX"
         },
         {
           "id": "heading.settings.Eb6-59-PxD",
@@ -6194,7 +6194,7 @@
           "03p-fB-1K3.title": "Abspeichern von Dateien",
           "e3h-Wk-X7D.title": "Sparkle-Updater",
           "5c4-N7-glC.title": "chapter",
-          "SS5-tZ-cDa.title": "pTeX-Unterstützung (für japanische Benutzer)",
+          "SS5-tZ-cDa.title": "Japanisches pLaTeX",
           "vEF-zd-SJl.title": "Alternativer Engine",
           "DU3-gi-QzY.title": "XML-Tag-Auswahlmöglichkeiten",
           "xaE-Ux-0eA.title": "introduction",
@@ -6204,7 +6204,7 @@
           "K8n-in-y4T.title": "Automatische Konvertierung UTF-8-Mac zu UTF-8",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "Täglich",
-          "ahm-aK-Qi9.title": "UTF-Export",
+          "ahm-aK-Qi9.title": "In \\UTF / \\CID des otf-Pakets umwandeln",
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "Das geöffnete Stammfenster verkleinern",
           "A9l-al-gxE.title": "Radio",
@@ -7387,7 +7387,7 @@
           "view": "settings.SS5-tZ-cDa",
           "kind": "view",
           "property": "title",
-          "value": "pTeX-Unterstützung (für japanische Benutzer)"
+          "value": "Japanisches pLaTeX"
         },
         {
           "key": "vEF-zd-SJl.title",
@@ -7459,7 +7459,7 @@
           "view": "settings.spX-dz-ROL",
           "kind": "cell",
           "property": "title",
-          "value": "UTF-Export"
+          "value": "In \\UTF / \\CID des otf-Pakets umwandeln"
         },
         {
           "key": "WeQ-Qd-mPg.title",
@@ -8963,7 +8963,7 @@
         },
         {
           "id": "heading.settings.SS5-tZ-cDa",
-          "title": "pTeX-Unterstützung (für japanische Benutzer)"
+          "title": "Japanisches pLaTeX"
         },
         {
           "id": "heading.settings.Eb6-59-PxD",
@@ -9235,7 +9235,7 @@
           "03p-fB-1K3.title": "Al guardar",
           "e3h-Wk-X7D.title": "Actualizador Sparkle",
           "5c4-N7-glC.title": "chapter",
-          "SS5-tZ-cDa.title": "Soporte pTeX (japonés)",
+          "SS5-tZ-cDa.title": "pLaTeX japonés",
           "vEF-zd-SJl.title": "Motor alternativo",
           "DU3-gi-QzY.title": "Elección de marcas XML",
           "xaE-Ux-0eA.title": "introduction",
@@ -9245,7 +9245,7 @@
           "K8n-in-y4T.title": "Conversión automática de UTF-8-Mac a UTF-8",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "Diaria",
-          "ahm-aK-Qi9.title": "Exportar utf",
+          "ahm-aK-Qi9.title": "Convertir a \\UTF / \\CID del paquete otf",
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "Miniaturizar la ventana raíz abierta",
           "A9l-al-gxE.title": "Radio",
@@ -10428,7 +10428,7 @@
           "view": "settings.SS5-tZ-cDa",
           "kind": "view",
           "property": "title",
-          "value": "Soporte pTeX (japonés)"
+          "value": "pLaTeX japonés"
         },
         {
           "key": "vEF-zd-SJl.title",
@@ -10500,7 +10500,7 @@
           "view": "settings.spX-dz-ROL",
           "kind": "cell",
           "property": "title",
-          "value": "Exportar utf"
+          "value": "Convertir a \\UTF / \\CID del paquete otf"
         },
         {
           "key": "WeQ-Qd-mPg.title",
@@ -12004,7 +12004,7 @@
         },
         {
           "id": "heading.settings.SS5-tZ-cDa",
-          "title": "Soporte pTeX (japonés)"
+          "title": "pLaTeX japonés"
         },
         {
           "id": "heading.settings.Eb6-59-PxD",
@@ -12276,7 +12276,7 @@
           "03p-fB-1K3.title": "Pendant l’enregistrement du fichier",
           "e3h-Wk-X7D.title": "Mise à jour par Sparkle",
           "5c4-N7-glC.title": "chapter",
-          "SS5-tZ-cDa.title": "Support pTeX (Japon)",
+          "SS5-tZ-cDa.title": "pLaTeX japonais",
           "vEF-zd-SJl.title": "Moteur TeX alternatif",
           "DU3-gi-QzY.title": "Choix d’étiquette XML",
           "xaE-Ux-0eA.title": "introduction",
@@ -12286,7 +12286,7 @@
           "K8n-in-y4T.title": "Conversion automatique de UTF-8-Mac à UTF-8",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "Journalière",
-          "ahm-aK-Qi9.title": "utf export",
+          "ahm-aK-Qi9.title": "Convertir en \\UTF / \\CID du paquet otf",
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "Miniaturiser la fenêtre-maître ouverte",
           "A9l-al-gxE.title": "Radio",
@@ -13469,7 +13469,7 @@
           "view": "settings.SS5-tZ-cDa",
           "kind": "view",
           "property": "title",
-          "value": "Support pTeX (Japon)"
+          "value": "pLaTeX japonais"
         },
         {
           "key": "vEF-zd-SJl.title",
@@ -13541,7 +13541,7 @@
           "view": "settings.spX-dz-ROL",
           "kind": "cell",
           "property": "title",
-          "value": "utf export"
+          "value": "Convertir en \\UTF / \\CID du paquet otf"
         },
         {
           "key": "WeQ-Qd-mPg.title",
@@ -15045,7 +15045,7 @@
         },
         {
           "id": "heading.settings.SS5-tZ-cDa",
-          "title": "Support pTeX (Japon)"
+          "title": "pLaTeX japonais"
         },
         {
           "id": "heading.settings.Eb6-59-PxD",
@@ -15317,7 +15317,7 @@
           "03p-fB-1K3.title": "Quando si salva un file",
           "e3h-Wk-X7D.title": "Aggiornamento tramite Sparkle",
           "5c4-N7-glC.title": "chapter",
-          "SS5-tZ-cDa.title": "Supporto pTeX (solo giapponese)",
+          "SS5-tZ-cDa.title": "pLaTeX giapponese",
           "vEF-zd-SJl.title": "Motore alternativo",
           "DU3-gi-QzY.title": "Scelta di Tag XML",
           "xaE-Ux-0eA.title": "introduction",
@@ -15327,7 +15327,7 @@
           "K8n-in-y4T.title": "Conversione automatica da UTF-8-Mac a UTF-8",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "una volta al giorno",
-          "ahm-aK-Qi9.title": "utf export",
+          "ahm-aK-Qi9.title": "Converti in \\UTF / \\CID del pacchetto otf",
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "Riduci la finestra principale all'apertura",
           "A9l-al-gxE.title": "Radio",
@@ -16510,7 +16510,7 @@
           "view": "settings.SS5-tZ-cDa",
           "kind": "view",
           "property": "title",
-          "value": "Supporto pTeX (solo giapponese)"
+          "value": "pLaTeX giapponese"
         },
         {
           "key": "vEF-zd-SJl.title",
@@ -16582,7 +16582,7 @@
           "view": "settings.spX-dz-ROL",
           "kind": "cell",
           "property": "title",
-          "value": "utf export"
+          "value": "Converti in \\UTF / \\CID del pacchetto otf"
         },
         {
           "key": "WeQ-Qd-mPg.title",
@@ -18086,7 +18086,7 @@
         },
         {
           "id": "heading.settings.SS5-tZ-cDa",
-          "title": "Supporto pTeX (solo giapponese)"
+          "title": "pLaTeX giapponese"
         },
         {
           "id": "heading.settings.Eb6-59-PxD",
@@ -18358,7 +18358,7 @@
           "03p-fB-1K3.title": "ファイル保存時",
           "e3h-Wk-X7D.title": "アップデート",
           "5c4-N7-glC.title": "chapter",
-          "SS5-tZ-cDa.title": "pTeXサポート（日本用）",
+          "SS5-tZ-cDa.title": "日本語pLaTeX用",
           "vEF-zd-SJl.title": " 代替エンジン",
           "DU3-gi-QzY.title": "リストアップするXMLタグ",
           "xaE-Ux-0eA.title": "introduction",
@@ -18368,7 +18368,7 @@
           "K8n-in-y4T.title": "UTF-8-MACをUTF-8に自動変換",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "毎日",
-          "ahm-aK-Qi9.title": "otfパッケージ対応",
+          "ahm-aK-Qi9.title": "otfパッケージの\\UTF / \\CIDに自動変換",
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "開いたルートファイルを最小化する",
           "A9l-al-gxE.title": "Radio",
@@ -19551,7 +19551,7 @@
           "view": "settings.SS5-tZ-cDa",
           "kind": "view",
           "property": "title",
-          "value": "pTeXサポート（日本用）"
+          "value": "日本語pLaTeX用"
         },
         {
           "key": "vEF-zd-SJl.title",
@@ -19623,7 +19623,7 @@
           "view": "settings.spX-dz-ROL",
           "kind": "cell",
           "property": "title",
-          "value": "otfパッケージ対応"
+          "value": "otfパッケージの\\UTF / \\CIDに自動変換"
         },
         {
           "key": "WeQ-Qd-mPg.title",
@@ -21127,7 +21127,7 @@
         },
         {
           "id": "heading.settings.SS5-tZ-cDa",
-          "title": "pTeXサポート（日本用）"
+          "title": "日本語pLaTeX用"
         },
         {
           "id": "heading.settings.Eb6-59-PxD",
@@ -21399,7 +21399,7 @@
           "03p-fB-1K3.title": "일본어 파일 저장",
           "e3h-Wk-X7D.title": "Sparkle 업데이트 관리자",
           "5c4-N7-glC.title": "chapter",
-          "SS5-tZ-cDa.title": "일본어 pTeX 지원",
+          "SS5-tZ-cDa.title": "일본어 pLaTeX",
           "vEF-zd-SJl.title": "대체 엔진",
           "DU3-gi-QzY.title": "XML 테그 선택",
           "xaE-Ux-0eA.title": "introduction",
@@ -21409,7 +21409,7 @@
           "K8n-in-y4T.title": "UTF-8-Mac을 UTF-8로 자동 변환",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "매일",
-          "ahm-aK-Qi9.title": "utf 패키지 대응",
+          "ahm-aK-Qi9.title": "otf 패키지의 \\UTF / \\CID로 자동 변환",
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "루트 파일 창을 최소화",
           "A9l-al-gxE.title": "Radio",
@@ -22592,7 +22592,7 @@
           "view": "settings.SS5-tZ-cDa",
           "kind": "view",
           "property": "title",
-          "value": "일본어 pTeX 지원"
+          "value": "일본어 pLaTeX"
         },
         {
           "key": "vEF-zd-SJl.title",
@@ -22664,7 +22664,7 @@
           "view": "settings.spX-dz-ROL",
           "kind": "cell",
           "property": "title",
-          "value": "utf 패키지 대응"
+          "value": "otf 패키지의 \\UTF / \\CID로 자동 변환"
         },
         {
           "key": "WeQ-Qd-mPg.title",
@@ -24168,7 +24168,7 @@
         },
         {
           "id": "heading.settings.SS5-tZ-cDa",
-          "title": "일본어 pTeX 지원"
+          "title": "일본어 pLaTeX"
         },
         {
           "id": "heading.settings.Eb6-59-PxD",
@@ -24440,7 +24440,7 @@
           "03p-fB-1K3.title": "During File Save",
           "e3h-Wk-X7D.title": "Sparkle Updater",
           "5c4-N7-glC.title": "chapter",
-          "SS5-tZ-cDa.title": "pTeX-ondersteuning (voor Japan)",
+          "SS5-tZ-cDa.title": "Japans pLaTeX",
           "vEF-zd-SJl.title": "Alternatieve engine",
           "DU3-gi-QzY.title": "XML Tag Choices",
           "xaE-Ux-0eA.title": "introduction",
@@ -24450,7 +24450,7 @@
           "K8n-in-y4T.title": "Automatic UTF-8-Mac to UTF-8 Conversion",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "Dagelijks",
-          "ahm-aK-Qi9.title": "utf export",
+          "ahm-aK-Qi9.title": "Omzetten naar \\UTF / \\CID van het otf-pakket",
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "Geopend hoofdvenster minimaliseren",
           "A9l-al-gxE.title": "Radio",
@@ -25633,7 +25633,7 @@
           "view": "settings.SS5-tZ-cDa",
           "kind": "view",
           "property": "title",
-          "value": "pTeX-ondersteuning (voor Japan)"
+          "value": "Japans pLaTeX"
         },
         {
           "key": "vEF-zd-SJl.title",
@@ -25705,7 +25705,7 @@
           "view": "settings.spX-dz-ROL",
           "kind": "cell",
           "property": "title",
-          "value": "utf export"
+          "value": "Omzetten naar \\UTF / \\CID van het otf-pakket"
         },
         {
           "key": "WeQ-Qd-mPg.title",
@@ -27209,7 +27209,7 @@
         },
         {
           "id": "heading.settings.SS5-tZ-cDa",
-          "title": "pTeX-ondersteuning (voor Japan)"
+          "title": "Japans pLaTeX"
         },
         {
           "id": "heading.settings.Eb6-59-PxD",
@@ -27481,7 +27481,7 @@
           "03p-fB-1K3.title": "During File Save",
           "e3h-Wk-X7D.title": "Sparkle Updater",
           "5c4-N7-glC.title": "chapter",
-          "SS5-tZ-cDa.title": "Suporte a pTeX (para o Japão)",
+          "SS5-tZ-cDa.title": "pLaTeX japonês",
           "vEF-zd-SJl.title": "Motor alternativo",
           "DU3-gi-QzY.title": "XML Tag Choices",
           "xaE-Ux-0eA.title": "introduction",
@@ -27491,7 +27491,7 @@
           "K8n-in-y4T.title": "Automatic UTF-8-Mac to UTF-8 Conversion",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "Diariamente",
-          "ahm-aK-Qi9.title": "utf export",
+          "ahm-aK-Qi9.title": "Converter para \\UTF / \\CID do pacote otf",
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "Minimizar a janela principal aberta",
           "A9l-al-gxE.title": "Radio",
@@ -28674,7 +28674,7 @@
           "view": "settings.SS5-tZ-cDa",
           "kind": "view",
           "property": "title",
-          "value": "Suporte a pTeX (para o Japão)"
+          "value": "pLaTeX japonês"
         },
         {
           "key": "vEF-zd-SJl.title",
@@ -28746,7 +28746,7 @@
           "view": "settings.spX-dz-ROL",
           "kind": "cell",
           "property": "title",
-          "value": "utf export"
+          "value": "Converter para \\UTF / \\CID do pacote otf"
         },
         {
           "key": "WeQ-Qd-mPg.title",
@@ -30250,7 +30250,7 @@
         },
         {
           "id": "heading.settings.SS5-tZ-cDa",
-          "title": "Suporte a pTeX (para o Japão)"
+          "title": "pLaTeX japonês"
         },
         {
           "id": "heading.settings.Eb6-59-PxD",
@@ -30522,7 +30522,7 @@
           "03p-fB-1K3.title": "Ao salvar o arquivo",
           "e3h-Wk-X7D.title": "Atualizando TeXShop por meio do Sparkle",
           "5c4-N7-glC.title": "chapter",
-          "SS5-tZ-cDa.title": "suporte a pTeX (para usuários no Japão)",
+          "SS5-tZ-cDa.title": "pLaTeX japonês",
           "vEF-zd-SJl.title": "Compilador alternativo",
           "DU3-gi-QzY.title": "Escolhas para elementos XML",
           "xaE-Ux-0eA.title": "introduction",
@@ -30532,7 +30532,7 @@
           "K8n-in-y4T.title": "Conversão automática do UTF-8-Mac para UTF-8",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "Diariamente",
-          "ahm-aK-Qi9.title": "exportar utf",
+          "ahm-aK-Qi9.title": "Converter para \\UTF / \\CID do pacote otf",
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "Minimizar a janela do arquivo raiz",
           "A9l-al-gxE.title": "Radio",
@@ -31715,7 +31715,7 @@
           "view": "settings.SS5-tZ-cDa",
           "kind": "view",
           "property": "title",
-          "value": "suporte a pTeX (para usuários no Japão)"
+          "value": "pLaTeX japonês"
         },
         {
           "key": "vEF-zd-SJl.title",
@@ -31787,7 +31787,7 @@
           "view": "settings.spX-dz-ROL",
           "kind": "cell",
           "property": "title",
-          "value": "exportar utf"
+          "value": "Converter para \\UTF / \\CID do pacote otf"
         },
         {
           "key": "WeQ-Qd-mPg.title",
@@ -33291,7 +33291,7 @@
         },
         {
           "id": "heading.settings.SS5-tZ-cDa",
-          "title": "suporte a pTeX (para usuários no Japão)"
+          "title": "pLaTeX japonês"
         },
         {
           "id": "heading.settings.Eb6-59-PxD",
@@ -33563,7 +33563,7 @@
           "03p-fB-1K3.title": "During File Save",
           "e3h-Wk-X7D.title": "Sparkle Updater",
           "5c4-N7-glC.title": "chapter",
-          "SS5-tZ-cDa.title": "Suport pTeX (pentru Japonia)",
+          "SS5-tZ-cDa.title": "pLaTeX japonez",
           "vEF-zd-SJl.title": "Motor alternativ",
           "DU3-gi-QzY.title": "XML Tag Choices",
           "xaE-Ux-0eA.title": "introduction",
@@ -33573,7 +33573,7 @@
           "K8n-in-y4T.title": "Automatic UTF-8-Mac to UTF-8 Conversion",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "Zilnic",
-          "ahm-aK-Qi9.title": "utf export",
+          "ahm-aK-Qi9.title": "Conversie în \\UTF / \\CID din pachetul otf",
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "Minimizează fereastra principală deschisă",
           "A9l-al-gxE.title": "Radio",
@@ -34756,7 +34756,7 @@
           "view": "settings.SS5-tZ-cDa",
           "kind": "view",
           "property": "title",
-          "value": "Suport pTeX (pentru Japonia)"
+          "value": "pLaTeX japonez"
         },
         {
           "key": "vEF-zd-SJl.title",
@@ -34828,7 +34828,7 @@
           "view": "settings.spX-dz-ROL",
           "kind": "cell",
           "property": "title",
-          "value": "utf export"
+          "value": "Conversie în \\UTF / \\CID din pachetul otf"
         },
         {
           "key": "WeQ-Qd-mPg.title",
@@ -36332,7 +36332,7 @@
         },
         {
           "id": "heading.settings.SS5-tZ-cDa",
-          "title": "Suport pTeX (pentru Japonia)"
+          "title": "pLaTeX japonez"
         },
         {
           "id": "heading.settings.Eb6-59-PxD",
@@ -36604,7 +36604,7 @@
           "03p-fB-1K3.title": "文件保存时",
           "e3h-Wk-X7D.title": "升级工具",
           "5c4-N7-glC.title": "chapter",
-          "SS5-tZ-cDa.title": "pTeX支持 (仅日语用户)",
+          "SS5-tZ-cDa.title": "日语pLaTeX",
           "vEF-zd-SJl.title": "替代引擎",
           "DU3-gi-QzY.title": "XML标签选择",
           "xaE-Ux-0eA.title": "introduction",
@@ -36614,7 +36614,7 @@
           "K8n-in-y4T.title": "自动转换UTF-8-Mac为UTF-8 ",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "每天",
-          "ahm-aK-Qi9.title": "utf输出",
+          "ahm-aK-Qi9.title": "自动转换为otf宏包的\\UTF / \\CID",
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "最小化打开的根窗口",
           "A9l-al-gxE.title": "Radio",
@@ -37797,7 +37797,7 @@
           "view": "settings.SS5-tZ-cDa",
           "kind": "view",
           "property": "title",
-          "value": "pTeX支持 (仅日语用户)"
+          "value": "日语pLaTeX"
         },
         {
           "key": "vEF-zd-SJl.title",
@@ -37869,7 +37869,7 @@
           "view": "settings.spX-dz-ROL",
           "kind": "cell",
           "property": "title",
-          "value": "utf输出"
+          "value": "自动转换为otf宏包的\\UTF / \\CID"
         },
         {
           "key": "WeQ-Qd-mPg.title",
@@ -39373,7 +39373,7 @@
         },
         {
           "id": "heading.settings.SS5-tZ-cDa",
-          "title": "pTeX支持 (仅日语用户)"
+          "title": "日语pLaTeX"
         },
         {
           "id": "heading.settings.Eb6-59-PxD",
