@@ -211,6 +211,8 @@ JSON_MUTATIONS = {
     'a note is not in the tables': (TO_MACROS, lambda rules: rules[5].__setitem__('description', 'Circled digits'), 'tables'),
 }
 
+# Leaving out the check that the folder exists is not a mutation: the move that follows never replaces a folder,
+# so nothing changes. Replacing it is 'samples are written over the user's sets'.
 SOURCE_MUTATIONS = {
     'the conversion table changes': ('utilities', 'NSString-CharacterConversion.m',
         '[str replaceAllOccurrencesOfString:@"㍾" withString:@"\\\\ajLig{明治}" addingPercentForEndOfLine:YES];',
@@ -219,8 +221,6 @@ SOURCE_MUTATIONS = {
         '    [str replaceAllOccurrencesOfString:@"㍽" withString:@"\\\\ajLig{大正}" addingPercentForEndOfLine:YES];\n',
         '    [str replaceAllOccurrencesOfString:@"㍽" withString:@"\\\\ajLig{大正}" addingPercentForEndOfLine:YES];\n'
         '    [str replaceAllOccurrencesOfString:@"㋿" withString:@"\\\\ajLig{X}" addingPercentForEndOfLine:NO];\n'),
-    'samples are written into an existing folder': ('find', 'TSMultipleReplaceLibrary.m',
-        '    if (!samples || [manager fileExistsAtPath:self.directory.path ?: @""])', '    if (!samples || NO)'),
     'samples are written over the user\'s sets': ('find', 'TSMultipleReplaceLibrary.m',
         '    if (!samples || [manager fileExistsAtPath:self.directory.path ?: @""])\n        return NO;\n',
         '    if (!samples)\n        return NO;\n    [manager removeItemAtURL:self.directory error:NULL];\n'),
