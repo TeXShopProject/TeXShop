@@ -66,5 +66,7 @@
   "alternate-folder-refresh": "The Alternate Engine menu follows the folder and stores an engine file by its name",
   "alternate-info-held-keys": "The info tells where the item is, its key and what it does",
   "alternate-info-fixed-key": "A changed shortcut is told as the menu has it",
-  "alternate-info-over-name": "The info button follows the name of the Alternate Engine"
+  "alternate-info-over-name": "The info button follows the name of the Alternate Engine",
+  "alternate-untrimmed": "A built-in program with spaces around it is found, and the stored value stays",
+  "alternate-old-programs-not-found": "bibtex, which the typesetting understands, is shown as itself"
 }

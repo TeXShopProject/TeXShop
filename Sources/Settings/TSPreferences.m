@@ -248,10 +248,12 @@ NSArray<NSString *> *TSEngineFileNames(NSString *folder)
 
 // Fills an engine menu: the built-in programs given as name and title pairs, then the engine
 // files. A document finds an engine file by its name in any case, and a built-in program by its
-// name in lowercase. A name that is in neither stays shown until another is chosen; no name is
-// shown as None when showsNone.
-static void TSFillEngineMenu(NSPopUpButton *popup, NSArray<NSArray<NSString *> *> *programs, NSString *current, BOOL showsNone)
+// name in lowercase. A name that is in neither stays shown until another is chosen: as itself when
+// it is one of otherPrograms, which the typesetting also understands, and otherwise as not found.
+// No name is shown as None when showsNone. The stored value itself is never changed here.
+static void TSFillEngineMenu(NSPopUpButton *popup, NSArray<NSArray<NSString *> *> *programs, NSSet<NSString *> *otherPrograms, NSString *stored, BOOL trims, BOOL showsNone)
 {
+    NSString *current = trims ? [stored stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet] : stored;
     NSMenu *menu = popup.menu;
     [menu removeAllItems];
     popup.autoenablesItems = NO;
@@ -270,11 +272,11 @@ static void TSFillEngineMenu(NSPopUpButton *popup, NSArray<NSArray<NSString *> *
     }
     if (selected == nil && (current.length > 0 || showsNone)) {
         if (menu.numberOfItems > 0) [menu insertItem:NSMenuItem.separatorItem atIndex:0];
-        NSString *title = current.length > 0
-            ? [NSString stringWithFormat:NSLocalizedString(@"%@ (Not Found)", @"An engine file that is not in the Engines folder"), current]
-            : NSLocalizedString(@"None", @"No engine is set");
+        NSString *title = current.length == 0 ? NSLocalizedString(@"None", @"No engine is set")
+            : [otherPrograms containsObject:current.lowercaseString] ? current
+            : [NSString stringWithFormat:NSLocalizedString(@"%@ (Not Found)", @"An engine file that is not in the Engines folder"), current];
         selected = [[NSMenuItem alloc] initWithTitle:title action:NULL keyEquivalent:@""];
-        selected.representedObject = current;
+        selected.representedObject = stored;
         [menu insertItem:selected atIndex:0];
     }
     if (selected != nil) [popup selectItem:selected];
@@ -284,7 +286,7 @@ static void TSFillEngineMenu(NSPopUpButton *popup, NSArray<NSArray<NSString *> *
 {
     NSPopUpButton *popup = self.defaultEnginePopup;
     if (popup == nil) return;
-    TSFillEngineMenu(popup, @[], [defaults stringForKey:DefaultEngineKey] ?: @"", NO);
+    TSFillEngineMenu(popup, @[], [NSSet set], [defaults stringForKey:DefaultEngineKey] ?: @"", NO, NO);
 }
 
 // The programs that the Alternate Engine can name besides the engine files, with the names
@@ -307,7 +309,8 @@ NSArray<NSArray<NSString *> *> *TSAlternateEnginePrograms(void)
 {
     NSPopUpButton *popup = self.alternateEnginePopup;
     if (popup == nil) return;
-    TSFillEngineMenu(popup, TSAlternateEnginePrograms(), [defaults stringForKey:AlternateEngineKey] ?: @"", YES);
+    // The typesetting trims the setting and also understands bibtex, makeindex and metapost.
+    TSFillEngineMenu(popup, TSAlternateEnginePrograms(), [NSSet setWithArray:@[@"bibtex", @"makeindex", @"metapost"]], [defaults stringForKey:AlternateEngineKey] ?: @"", YES, YES);
 }
 
 - (IBAction)alternateEngineChosen:(NSPopUpButton *)sender

@@ -59,6 +59,16 @@ static void CheckOwnerAlternateEngine(TSPreferences *owner, TSSettingsWindowCont
     Check([alternate.selectedItem.representedObject isEqual:@"pdflatex"] && [alternate.itemArray.firstObject.representedObject isEqual:@"pdftex"],@"A built-in program is found in any case, as the typesetting does");
     [TSIsolatedAppKitDefaults setObject:@"luaLATEX" forKey:AlternateEngineKey];[owner refreshAlternateEngineFromDefaults:TSIsolatedAppKitDefaults];
     Check([alternate.selectedItem.representedObject isEqual:@"LuaLaTeX"],@"An engine file is found in any case");
+    // As the typesetting does, a stored name is trimmed, and bibtex, makeindex and metapost are understood.
+    [TSIsolatedAppKitDefaults setObject:@" PDFLaTeX \n" forKey:AlternateEngineKey];[owner refreshAlternateEngineFromDefaults:TSIsolatedAppKitDefaults];
+    Check([alternate.selectedItem.representedObject isEqual:@"pdflatex"] && [[TSIsolatedAppKitDefaults stringForKey:AlternateEngineKey] isEqual:@" PDFLaTeX \n"],@"A built-in program with spaces around it is found, and the stored value stays");
+    [TSIsolatedAppKitDefaults setObject:@" luaLaTeX\t" forKey:AlternateEngineKey];[owner refreshAlternateEngineFromDefaults:TSIsolatedAppKitDefaults];
+    Check([alternate.selectedItem.representedObject isEqual:@"LuaLaTeX"],@"An engine file with spaces around it is found");
+    for(NSString *old in @[@"bibtex",@" MakeIndex ",@"metapost"]){
+        [TSIsolatedAppKitDefaults setObject:old forKey:AlternateEngineKey];[owner refreshAlternateEngineFromDefaults:TSIsolatedAppKitDefaults];
+        NSString *shown=[old stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+        Check(alternate.indexOfSelectedItem==0 && [alternate.titleOfSelectedItem isEqual:shown] && [alternate.selectedItem.representedObject isEqual:old] && [alternate itemAtIndex:1].isSeparatorItem,[NSString stringWithFormat:@"%@, which the typesetting understands, is shown as itself",shown]);
+    }
     [TSIsolatedAppKitDefaults setObject:@"Gone" forKey:AlternateEngineKey];[owner refreshAlternateEngineFromDefaults:TSIsolatedAppKitDefaults];
     NSString *missing=[NSString stringWithFormat:NSLocalizedString(@"%@ (Not Found)",nil),@"Gone"];
     Check([alternate.titleOfSelectedItem isEqual:missing] && alternate.indexOfSelectedItem==0 && [alternate itemAtIndex:1].isSeparatorItem,@"An Alternate Engine that is nowhere stays shown as not found");
