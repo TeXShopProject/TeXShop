@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8C4C480943627392332351CF /* TSListBottomBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 186AA1C2E05E995AA9E7AE85 /* TSListBottomBar.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		FA4642139FF362346A674FF5 /* TSAdvancedFindController+MultipleReplace.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EA30567B06FD1BA89176E55 /* TSAdvancedFindController+MultipleReplace.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		FD453ED734C26F5EAAF40FE3 /* TSMultipleReplaceLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = A97846D41CA596CF8F893971 /* TSMultipleReplaceLibrary.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		094E7C9C3FBE59845DC3EFC4 /* TSMultipleReplaceMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 252405F35BD91BD35A20B6D8 /* TSMultipleReplaceMenu.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
@@ -418,6 +419,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4FECA7E6A4562DD30C5D2E0D /* TSListBottomBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSListBottomBar.h; sourceTree = "<group>"; };
+		186AA1C2E05E995AA9E7AE85 /* TSListBottomBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSListBottomBar.m; sourceTree = "<group>"; };
 		5F2E5F32D20D36A3DDA91CC3 /* TSAdvancedFindController+MultipleReplace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TSAdvancedFindController+MultipleReplace.h"; sourceTree = "<group>"; };
 		7EA30567B06FD1BA89176E55 /* TSAdvancedFindController+MultipleReplace.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindController+MultipleReplace.m"; sourceTree = "<group>"; };
 		BE3AD0138793FD2DD9BA11C4 /* TSMultipleReplaceLibrary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMultipleReplaceLibrary.h; sourceTree = "<group>"; };
@@ -1591,6 +1594,8 @@
 				40BCDA511FF9589100AAC575 /* TSWindowController.m */,
 				3B5450D753C8B6DC243DDB55 /* TSDialogButtonLayout.h */,
 				5EFF8B56412A39CCA9BB4FE4 /* TSDialogButtonLayout.m */,
+				4FECA7E6A4562DD30C5D2E0D /* TSListBottomBar.h */,
+				186AA1C2E05E995AA9E7AE85 /* TSListBottomBar.m */,
 				00E5E439003E251B7F000001 /* TSWindowManager.h */,
 				00E5E43A003E251B7F000001 /* TSWindowManager.m */,
 			);
@@ -2199,6 +2204,7 @@
 				407881820519249A006979EA /* globals.m in Sources */,
 				407881830519249A006979EA /* TSAppDelegate.m in Sources */,
 				D1FD5E9C1699033F4DD1FA82 /* TSDialogButtonLayout.m in Sources */,
+				8C4C480943627392332351CF /* TSListBottomBar.m in Sources */,
 				407881840519249A006979EA /* TSWindowManager.m in Sources */,
 				407881860519249A006979EA /* TSLaTeXPanelController.m in Sources */,
 				407881880519249A006979EA /* TSToolbarController.m in Sources */,
