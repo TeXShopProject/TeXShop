@@ -81,7 +81,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Más opciones" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" inset="2" id="717">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="titleBar" size="12" textStyle="headline"/>
+                            <font key="font" metaFont="smallSystem"/>
                         </buttonCell>
                         <connections>
                             <action selector="toggle:" target="39" id="474"/>
@@ -92,7 +92,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Reemplazar &amp; Buscar" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" inset="2" id="718">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="titleBar" size="12" textStyle="headline"/>
+                            <font key="font" metaFont="smallSystem"/>
                         </buttonCell>
                         <connections>
                             <action selector="replaceAndFind:" target="242" id="276"/>
@@ -103,7 +103,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Resaltar" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" inset="2" id="716">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="titleBar" size="12" textStyle="headline"/>
+                            <font key="font" metaFont="smallSystem"/>
                         </buttonCell>
                         <connections>
                             <action selector="highlight:" target="242" id="277"/>
@@ -151,14 +151,14 @@
                                 </matrix>
                             </subviews>
                         </view>
-                        <font key="titleFont" metaFont="titleBar" size="12" textStyle="headline"/>
+                        <font key="titleFont" metaFont="message" size="11"/>
                     </box>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="10">
                         <rect key="frame" x="375" y="8" width="151" height="20"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Siguiente" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" inset="2" id="712">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="titleBar" size="12" textStyle="headline"/>
+                            <font key="font" metaFont="smallSystem"/>
                             <string key="keyEquivalent">g</string>
                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                         </buttonCell>
@@ -171,7 +171,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Anterior" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" inset="2" id="709">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="titleBar" size="12" textStyle="headline"/>
+                            <font key="font" metaFont="smallSystem"/>
                             <string key="keyEquivalent">G</string>
                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                         </buttonCell>
@@ -184,7 +184,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Reemplazar" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" inset="2" id="715">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="titleBar" size="12" textStyle="headline"/>
+                            <font key="font" metaFont="smallSystem"/>
                         </buttonCell>
                         <connections>
                             <action selector="replace:" target="242" id="275"/>
@@ -195,7 +195,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Reemplazar todos" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" inset="2" id="714">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="titleBar" size="12" textStyle="headline"/>
+                            <font key="font" metaFont="smallSystem"/>
                         </buttonCell>
                         <connections>
                             <action selector="replaceAll:" target="242" id="274"/>
@@ -206,7 +206,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Buscar todos" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" inset="2" id="713">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="titleBar" size="12" textStyle="headline"/>
+                            <font key="font" metaFont="smallSystem"/>
                             <string key="keyEquivalent">F</string>
                         </buttonCell>
                         <connections>
@@ -255,7 +255,7 @@
                                 </matrix>
                             </subviews>
                         </view>
-                        <font key="titleFont" metaFont="titleBar" size="12" textStyle="headline"/>
+                        <font key="titleFont" metaFont="message" size="11"/>
                     </box>
                     <box fixedFrame="YES" title="Opciones" translatesAutoresizingMaskIntoConstraints="NO" id="8">
                         <rect key="frame" x="17" y="72" width="303" height="63"/>
@@ -323,7 +323,7 @@
                                 </button>
                             </subviews>
                         </view>
-                        <font key="titleFont" metaFont="titleBar" size="12" textStyle="headline"/>
+                        <font key="titleFont" metaFont="message" size="11"/>
                     </box>
                     <progressIndicator hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" bezeled="NO" indeterminate="YES" controlSize="small" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="466">
                         <rect key="frame" x="20" y="59" width="49" height="12"/>
@@ -334,7 +334,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="719">
                             <font key="font" metaFont="smallSystem"/>
-                            <color key="textColor" red="0.29803922999999999" green="0.29803922999999999" blue="0.29803922999999999" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
@@ -343,7 +343,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="720">
                             <font key="font" metaFont="smallSystem"/>
-                            <color key="textColor" red="0.29803922999999999" green="0.29803922999999999" blue="0.29803922999999999" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
@@ -438,7 +438,7 @@
                                 <popUpButton fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="458">
                                     <rect key="frame" x="395" y="52" width="17" height="20"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                    <popUpButtonCell key="cell" type="square" bezelStyle="shadowlessSquare" alignment="left" controlSize="small" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" pullsDown="YES" preferredEdge="maxY" selectedItem="459" id="726">
+                                    <popUpButtonCell key="cell" type="bevel" bezelStyle="regularSquare" alignment="left" controlSize="small" lineBreakMode="clipping" state="on" inset="2" pullsDown="YES" preferredEdge="maxY" selectedItem="459" id="726">
                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="smallSystem"/>
                                         <menu key="menu" title="OtherViews" id="461">
@@ -453,7 +453,7 @@
                                 <popUpButton fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="455">
                                     <rect key="frame" x="395" y="130" width="17" height="20"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                    <popUpButtonCell key="cell" type="square" bezelStyle="shadowlessSquare" alignment="left" controlSize="small" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" pullsDown="YES" preferredEdge="maxY" selectedItem="456" id="725">
+                                    <popUpButtonCell key="cell" type="bevel" bezelStyle="regularSquare" alignment="left" controlSize="small" lineBreakMode="clipping" state="on" inset="2" pullsDown="YES" preferredEdge="maxY" selectedItem="456" id="725">
                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="smallSystem"/>
                                         <menu key="menu" title="OtherViews" id="453">
@@ -469,7 +469,7 @@
                                     <rect key="frame" x="26" y="107" width="60" height="17"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Buscar:" id="727">
-                                        <font key="font" metaFont="cellTitle"/>
+                                        <font key="font" metaFont="system"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
@@ -478,7 +478,7 @@
                                     <rect key="frame" x="4" y="14" width="82" height="32"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Reemplazar:" id="728">
-                                        <font key="font" metaFont="cellTitle"/>
+                                        <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
@@ -495,7 +495,7 @@
                         </buttonCell>
                     </button>
                     <button horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="528">
-                        <rect key="frame" x="530" y="285" width="13" height="13"/>
+                        <rect key="frame" x="514" y="285" width="13" height="13"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="disclosureTriangle" bezelStyle="disclosure" imagePosition="above" alignment="left" state="on" borderStyle="border" inset="2" id="721">
                             <behavior key="behavior" pushIn="YES" changeBackground="YES" changeGray="YES" lightByContents="YES"/>
@@ -563,7 +563,7 @@
                             </popUpButton>
                         </subviews>
                     </view>
-                    <font key="titleFont" metaFont="titleBar" size="12" textStyle="headline"/>
+                    <font key="titleFont" metaFont="message" size="11"/>
                 </box>
                 <box fixedFrame="YES" title="Sintaxis de búsqueda" translatesAutoresizingMaskIntoConstraints="NO" id="383">
                     <rect key="frame" x="167" y="228" width="155" height="45"/>
@@ -598,7 +598,7 @@
                             </popUpButton>
                         </subviews>
                     </view>
-                    <font key="titleFont" metaFont="titleBar" size="12" textStyle="headline"/>
+                    <font key="titleFont" metaFont="message" size="11"/>
                 </box>
                 <box fixedFrame="YES" title="Máx n.º en historial" translatesAutoresizingMaskIntoConstraints="NO" id="361">
                     <rect key="frame" x="167" y="1" width="155" height="73"/>
@@ -664,7 +664,7 @@
                             </textField>
                         </subviews>
                     </view>
-                    <font key="titleFont" metaFont="titleBar" size="12" textStyle="headline"/>
+                    <font key="titleFont" metaFont="message" size="11"/>
                 </box>
                 <box fixedFrame="YES" title="Barra de progreso" translatesAutoresizingMaskIntoConstraints="NO" id="359">
                     <rect key="frame" x="167" y="95" width="155" height="43"/>
@@ -687,7 +687,7 @@
                             </button>
                         </subviews>
                     </view>
-                    <font key="titleFont" metaFont="titleBar" size="12" textStyle="headline"/>
+                    <font key="titleFont" metaFont="message" size="11"/>
                 </box>
                 <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="66">
                     <rect key="frame" x="282" y="160" width="20" height="20"/>
@@ -698,7 +698,7 @@
                     <rect key="frame" x="176" y="146" width="110" height="32"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Color de resalte:" id="743">
-                        <font key="font" metaFont="cellTitle"/>
+                        <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
@@ -860,7 +860,7 @@
                             </button>
                         </subviews>
                     </view>
-                    <font key="titleFont" metaFont="titleBar" size="12" textStyle="headline"/>
+                    <font key="titleFont" metaFont="message" size="11"/>
                 </box>
             </subviews>
             <point key="canvasLocation" x="106" y="475"/>
