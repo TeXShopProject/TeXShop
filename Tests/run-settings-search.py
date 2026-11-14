@@ -12,7 +12,7 @@ if mutations:
  expected_failures.update({'legacy-label':'Result name is the visible row name','dock-obsolete-label':'Dock result uses the visible group name'})
  source=(r/'Sources/Settings/TSSettingsSearchCatalog.inc').read_text()
  cases=[('boolean-label-weight','@"catalog.general.0.0.title", TSSettingsSearchWeightLabel','@"catalog.general.0.0.title", TSSettingsSearchWeightChoice'),('radio-choice-weight','@"Xrb-Fe-9cg.title", TSSettingsSearchWeightChoice','@"Xrb-Fe-9cg.title", TSSettingsSearchWeightLabel')]
- cases.extend([('legacy-label','@"ahm-aK-Qi9.title", TSSettingsSearchWeightDescription','@"ahm-aK-Qi9.title", TSSettingsSearchWeightLabel'),('dock-obsolete-label','@"group.general.6.title", TSSettingsSearchWeightLabel','@"Dock Icon While Running", TSSettingsSearchWeightLabel')])
+ cases.extend([('legacy-label','@"catalog.typesetting.9.0.former", TSSettingsSearchWeightDescription','@"catalog.typesetting.9.0.former", TSSettingsSearchWeightLabel'),('dock-obsolete-label','@"group.general.6.title", TSSettingsSearchWeightLabel','@"Dock Icon While Running", TSSettingsSearchWeightLabel')])
  with tempfile.TemporaryDirectory(prefix='texshop-search-roles-') as temp:
   for name,old,new in cases:
    assert source.count(old)==1
@@ -20,8 +20,8 @@ if mutations:
    # Both radio options must retain their role, not merely one option.
    if name=='radio-choice-weight':text=text.replace('@"odm-Dy-TNW.title", TSSettingsSearchWeightChoice','@"odm-Dy-TNW.title", TSSettingsSearchWeightLabel')
    path=Path(temp)/'catalog.inc';path.write_text(text)
-   # The old otf label is identical in Japanese; the old Dock label is
-   # identical in English. Exercise each non-equivalent localized case.
+   # A former name of the otf setting must never name its result; the old
+   # Dock label is identical in English. Exercise each in one language.
    mutated_command=command.copy()
    if name in ('legacy-label','dock-obsolete-label'):
     if '--language' in mutated_command:
