@@ -726,7 +726,6 @@ format
 formats
 former
 formerly
-formula
 formulas
 forth
 forward
@@ -739,6 +738,7 @@ frame
 frames
 freed
 freely
+french
 from
 front
 frontmost
@@ -948,6 +948,7 @@ issue
 issues
 it
 it's
+italian
 item
 items
 its
@@ -1345,6 +1346,7 @@ popup
 popups
 portion
 portions
+portuguese
 position
 positioning
 positive
@@ -1530,6 +1532,7 @@ right
 risking
 rivas
 roman
+romanian
 room
 root
 rounded
@@ -1735,7 +1738,6 @@ symbol
 symbols
 sync
 synced
-synchronization
 synctex
 syntax
 system
@@ -1758,7 +1760,6 @@ targets
 tcsh
 teaching
 tell
-telling
 tells
 template
 templates
@@ -1797,7 +1798,6 @@ these
 they
 thickness
 thin
-think
 third
 this
 thomas
@@ -1818,6 +1818,7 @@ titles
 to
 today
 together
+tom
 took
 tool
 toolbar
@@ -1828,7 +1829,6 @@ tooltips
 top
 toward
 trace
-track
 trackpad
 trailing
 transitioning
