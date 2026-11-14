@@ -120,7 +120,7 @@
             [TSSettingsLayoutRow controls:@[@"settings.Eb6-59-PxD"] kind:TSSettingsRowSection indentation:0], // Personal Script
             [TSSettingsLayoutRow controls:@[@"settings.DU3-gi-QzY"] kind:TSSettingsRowSection indentation:0], // XML Tag Choices
             [TSSettingsLayoutRow controls:@[@"settings.vEF-zd-SJl"] kind:TSSettingsRowSection indentation:0], // Alternate Engine
-            [TSSettingsLayoutRow controls:@[@"settings.SS5-tZ-cDa"] kind:TSSettingsRowSection indentation:0], // pTeX support (for Japan)
+            [TSSettingsLayoutRow controls:@[@"settings.SS5-tZ-cDa"] kind:TSSettingsRowSection indentation:0], // Japanese pLaTeX
             [TSSettingsLayoutRow controls:@[@"settings.03p-fB-1K3"] kind:TSSettingsRowSection indentation:0], // During File Save
             [TSSettingsLayoutRow controls:@[@"settings.Kin-Cw-xVc"] kind:TSSettingsRowSection indentation:0], // Project Root File
             [TSSettingsLayoutRow controls:@[@"settings.e3h-Wk-X7D"] kind:TSSettingsRowSection indentation:0], // Sparkle Updater
