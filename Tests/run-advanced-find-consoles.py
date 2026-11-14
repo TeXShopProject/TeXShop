@@ -2,8 +2,10 @@
 """The Advanced Find panel in the console, the log and the Experiment windows (Tests/AdvancedFindConsoles.m).
 
 The shipped TSDocument nibs of all 12 languages, the production Experiment console controller, the Find sources, the
-TSDocument method that reacts to a change of the find method (taken verbatim) and TSLayoutManager are compiled into a
-small application. Nothing is displayed; the defaults stay in memory and the find pasteboard is unique.
+TSDocument method that reacts to a change of the find method and the start of a typesetting in the console (both taken
+verbatim), the code that shows TeX's output and TSLayoutManager are compiled into a small application. Find All runs as
+a background task while output comes in, and the text views are read-only meanwhile, then as before. Nothing is
+displayed; the defaults stay in memory and the find pasteboard is unique.
 
 --image DIR writes the console, the Experiment source and output with highlights and the panel acting on the console,
 light and dark, in English and Japanese.
@@ -57,6 +59,20 @@ MUTATIONS = {
     'the console and the log take replacing': ('TSAdvancedFindController.m',
         '            return textView.isEditable && !TSTextViewRefusesReplacing(textView);', '            return textView.isEditable;'),
     'the Experiment source finds with NSTextView': ('ScrapTextView.h', '@interface ScrapTextView : TSAdvancedFindTextView', '@interface ScrapTextView : NSTextView'),
+    'a task makes the console editable after a typesetting started': ('TSAdvancedFindTask.m',
+        '        if (view == changed || (layout && view.layoutManager == layout))', '        if (NO)'),
+    'a task restores the views of a layout manager whose other view was made read-only': ('TSAdvancedFindTask.m',
+        '        if (view == changed || (layout && view.layoutManager == layout))', '        if (view == changed)'),
+    'a task watches only the views it locked': ('TSAdvancedFindTask.m',
+        '            [views addObject:view];\n            if (view.isEditable) {\n                view.editable = NO;\n',
+        '            if (view.isEditable) {\n                [views addObject:view];\n                view.editable = NO;\n'),
+    'a task leaves the text views read-only': ('TSAdvancedFindTask.m',
+        '    for (NSTextView *view in self.lockedViews)\n        view.editable = YES;', '    for (NSTextView *view in self.lockedViews)\n        (void)view;'),
+    'Find All does not follow the output that came in meanwhile': ('TSAdvancedFindController+Tasks.m', '        [results followEdits:edits];\n', ''),
+    'Find All is thrown away when output came in meanwhile': ('TSAdvancedFindController.m',
+        '} else if (!followsEdits && storage && [TSAdvancedFindMatchCache', '} else if (storage && [TSAdvancedFindMatchCache'),
+    'the log is typed into when it is filled': ('TSDocument.m',
+        '                                [errorLines appendString: lineString];', '                                [self.logTextView insertText: lineString];'),
 }
 
 DOCUMENT_HEADER = r'''
@@ -92,10 +108,29 @@ METHOD
 @end
 '''
 
+TYPESET = r'''
+// The start of a typesetting in the console (-[TSDocument completeSaveFinished] in Sources/Typesetting/TSDocument-Jobs.m),
+// taken verbatim.
+#import <Cocoa/Cocoa.h>
+void TestStartTypesetting(NSTextView *outputText, id self)
+{
+    BOOL consoleCleanStart = NO, typesetStart = YES;
+    NSTextField *texCommand = nil;
+BLOCK
+    (void)consoleCleanStart; (void)typesetStart;
+}
+'''
+
+
+def typeset_start(text):
+    start = text.index('\t\tconsoleCleanStart = YES;\n')
+    end = text.index('\t\ttypesetStart = NO;\n', start)
+    return text[start:end + len('\t\ttypesetStart = NO;\n')]
+
 
 def check_sources(sources):
     """ScrapTextView is not compiled here (it needs the whole TSDocument): its superclass routes and draws, and it
-    overrides none of the routing."""
+    overrides none of the routing. -[TSDocument fillLogWindow] is not either: it puts the text in, never types it."""
     header = (sources / 'ScrapTextView.h').read_text(encoding='latin1')
     body = (sources / 'ScrapTextView.m').read_text(encoding='latin1')
     problems = []
@@ -104,6 +139,11 @@ def check_sources(sources):
     for name in ['performFindPanelAction:', 'performTextFinderAction:', 'validateMenuItem:', 'findController']:
         if re.search(r'^-\s*\([^)]*\)\s*' + re.escape(name), body, re.M):
             problems.append(f'ScrapTextView overrides {name}')
+    # The log is filled while a task may run on it: typing into a text view is refused while it is read-only.
+    document = (sources / 'TSDocument.m').read_text(encoding='latin1')
+    start = document.index('- (BOOL)fillLogWindow\n')
+    if re.search(r'^(?!\s*//).*\[self\.logTextView insertText:', document[start:document.index('\n}\n', start)], re.M):
+        problems.append('-fillLogWindow types into the log')
     for nib in NIB_DIRS:
         text = (root / 'Resources/Interfaces' / f'{nib}.lproj/TSDocument.nib/designable.nib').read_text(encoding='utf-8')
         for outlet in ['outputText', 'logTextView']:
@@ -148,11 +188,12 @@ def build(tmp, sources):
     (tmp / 'console.m').write_text(console_prefix(root).replace('#import "TestAppKitIsolation.h"', '') + controller)
     (tmp / 'TestDocumentFind.h').write_text(DOCUMENT_HEADER)
     (tmp / 'document.m').write_text(DOCUMENT.replace('METHOD', document_method((sources / 'TSDocument.m').read_text(encoding='latin1'))))
+    (tmp / 'typeset.m').write_text(TYPESET.replace('BLOCK', typeset_start((sources / 'TSDocument-Jobs.m').read_text(encoding='latin1'))))
     probe = app / 'Contents/MacOS/probe'
-    finds = [str(p) for p in sorted(sources.glob('TS*.m')) if p.name not in ('TSExperimentConsoleController.m', 'TSDocument.m')]
+    finds = [str(p) for p in sorted(sources.glob('TS*.m')) if p.name not in ('TSExperimentConsoleController.m', 'TSDocument.m', 'TSDocument-Jobs.m')]
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-fmodules', '-mmacosx-version-min=14.6', '-w', '-I', str(tmp), '-I', str(sources),
                     *include_args(root), '-I', str(root / 'Tests'), '-framework', 'Cocoa', '-framework', 'PDFKit', '-framework', 'Quartz',
-                    str(root / 'Tests/AdvancedFindConsoles.m'), str(tmp / 'console.m'), str(tmp / 'document.m'), str(tmp / 'keys.m'),
+                    str(root / 'Tests/AdvancedFindConsoles.m'), str(tmp / 'console.m'), str(tmp / 'document.m'), str(tmp / 'typeset.m'), str(tmp / 'keys.m'),
                     str(root / 'Sources/Typesetting/TSExperimentJob.m'), str(root / 'Sources/Typesetting/TSConsoleOutput.m'), *finds,
                     *(str(p) for p in advanced_find_syntax_sources(root) if p.name != 'TSColorSupportStub.m'),
                     '-o', str(probe)], check=True)
@@ -176,7 +217,7 @@ def copy_sources(tmp):
     sources = tmp / 'sources'
     sources.mkdir()
     for path in [*(root / 'Sources/Find').glob('*.[mh]'), source_file(root, 'TSLayoutManager.m'), source_file(root, 'TSLayoutManager.h'),
-                 source_file(root, 'TSExperimentConsoleController.m'), source_file(root, 'TSDocument.m'),
+                 source_file(root, 'TSExperimentConsoleController.m'), source_file(root, 'TSDocument.m'), source_file(root, 'TSDocument-Jobs.m'),
                  source_file(root, 'ScrapTextView.h'), source_file(root, 'ScrapTextView.m')]:
         shutil.copy(path, sources / path.name)
     return sources

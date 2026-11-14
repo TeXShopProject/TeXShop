@@ -8,13 +8,17 @@
 
 #define TSLocalized TSAdvancedFindLocalized
 
-@interface TSMultipleReplaceWindowController () <NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate>
+@interface TSMultipleReplaceWindowController () <NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate, NSUserInterfaceValidations>
 @property (nonatomic, readwrite) TSMultipleReplaceRuleTable *ruleTable;
 @property (nonatomic, readwrite, copy, nullable) NSString *selectedSetName;
 @property (nonatomic, readwrite) NSTextField *statusField;
 @property (nonatomic) NSTableView *setTable;
 @property (nonatomic, copy) NSArray<NSString *> *setNames;
 @property (nonatomic) NSButton *inSelectionBox;
+@property (nonatomic, readwrite) NSButton *removeSetButton;
+@property (nonatomic, readwrite) NSSegmentedControl *ruleButtons;
+@property (nonatomic, readwrite) NSButton *optionsButton;
+@property (nonatomic, readwrite) NSButton *helpButton;
 /// Highlight and Replace All.
 @property (nonatomic, copy) NSArray<NSButton *> *actionButtons;
 @property (nonatomic, strong, nullable) NSPopover *optionsPopover;
@@ -39,20 +43,22 @@ static NSAttributedString *_Nullable TSMultipleReplaceColoredField(NSString *str
     return TSAdvancedFindColoredString(string, scanner, TSAdvancedFindFieldColorScheme(), attributes);
 }
 
-/// Wide enough for the names of the bundled samples in every language (“ajmacros → Caracteres Unicode”).
-static const CGFloat TSSetListWidth = 240;
+/// Wide enough at first for the names of the bundled samples in every language (“ajmacros → Caracteres Unicode”).
+static const CGFloat TSSidebarWidth = 240;
 
 @implementation TSMultipleReplaceWindowController
 
 - (instancetype)initWithFindController:(TSAdvancedFindController *)findController library:(TSMultipleReplaceLibrary *)library
 {
+    // The sidebar runs up to the top, under the title bar, as in CotEditor and the macOS apps with a sidebar.
     NSPanel *panel = [[NSPanel alloc] initWithContentRect:NSMakeRect(0, 0, 980, 440)
-                                                styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable | NSWindowStyleMaskMiniaturizable
+                                                styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable
+                                                          | NSWindowStyleMaskMiniaturizable | NSWindowStyleMaskFullSizeContentView
                                                   backing:NSBackingStoreBuffered defer:YES];
     panel.title = TSLocalized(@"MultipleReplace.Title", @"Multiple Replace");
     panel.hidesOnDeactivate = YES;
     panel.becomesKeyOnlyIfNeeded = NO;
-    panel.contentMinSize = NSMakeSize(740, 300);
+    panel.contentMinSize = NSMakeSize(680, 300);
     if (!(self = [super initWithWindow:panel]))
         return nil;
     _findController = findController;
@@ -70,6 +76,9 @@ static const CGFloat TSSetListWidth = 240;
         return TSMultipleReplaceColoredField(string, rule, field, options, weakSelf.ruleTable.set.replacementSyntax, attributes);
     };
     [self buildContent];
+    // The minus button of the rules follows the selection.
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(ruleSelectionChanged:) name:NSTableViewSelectionDidChangeNotification
+                                             object:_ruleTable.tableView];
     [self reloadSets];
     return self;
 }
@@ -86,13 +95,17 @@ static const CGFloat TSSetListWidth = 240;
     return scroll;
 }
 
-- (NSButton *)symbolButton:(NSString *)symbol tipKey:(NSString *)key english:(NSString *)english action:(SEL)action
+/// A button of the sidebar's bottom bar: a symbol without a border.
+- (NSButton *)barButton:(NSString *)symbol tipKey:(NSString *)key english:(NSString *)english action:(SEL)action
 {
     NSString *tip = TSLocalized(key, english);
     NSImage *image = [NSImage imageWithSystemSymbolName:symbol accessibilityDescription:tip] ?: [NSImage new];
     NSButton *button = [NSButton buttonWithImage:image target:self action:action];
-    button.bezelStyle = NSBezelStyleSmallSquare;
+    button.bordered = NO;
+    button.imageScaling = NSImageScaleProportionallyDown;
     button.toolTip = tip;
+    [button.widthAnchor constraintEqualToConstant:24].active = YES;
+    [button.heightAnchor constraintEqualToConstant:22].active = YES;
     return button;
 }
 
@@ -101,9 +114,19 @@ static const CGFloat TSSetListWidth = 240;
     return [NSButton buttonWithTitle:TSLocalized(key, english) target:self action:action];
 }
 
-- (NSView *)makeSetList
+- (NSView *)stackOf:(NSArray<NSView *> *)views spacing:(CGFloat)spacing
 {
-    self.setTable = [[NSTableView alloc] initWithFrame:NSMakeRect(0, 0, TSSetListWidth, 300)];
+    NSStackView *stack = [NSStackView stackViewWithViews:views];
+    stack.spacing = spacing;
+    stack.alignment = NSLayoutAttributeCenterY;
+    stack.translatesAutoresizingMaskIntoConstraints = NO;
+    return stack;
+}
+
+/// The sets, the whole height of the sidebar, and under them ＋ − and the menu with three dots, without borders.
+- (NSViewController *)makeSidebar
+{
+    self.setTable = [[NSTableView alloc] initWithFrame:NSMakeRect(0, 0, TSSidebarWidth, 300)];
     NSTableColumn *column = [[NSTableColumn alloc] initWithIdentifier:@"name"];
     column.title = TSLocalized(@"MultipleReplace.Sets", @"Sets");
     // The names take the width of the list, not a new column's 100 points.
@@ -115,71 +138,162 @@ static const CGFloat TSSetListWidth = 240;
     self.setTable.style = NSTableViewStyleSourceList;
     self.setTable.dataSource = self;
     self.setTable.delegate = self;
+    NSScrollView *scroll = [self scroll:self.setTable];
+    scroll.borderType = NSNoBorder;
+    scroll.drawsBackground = NO;
+    scroll.automaticallyAdjustsContentInsets = NO; // it starts below the title bar
+
     NSPopUpButton *action = [[NSPopUpButton alloc] initWithFrame:NSZeroRect pullsDown:YES];
-    action.bezelStyle = NSBezelStyleSmallSquare;
+    action.bordered = NO;
+    action.toolTip = TSLocalized(@"MultipleReplace.SetActions", @"Actions for Sets");
     NSMenuItem *icon = [[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""];
-    icon.image = [NSImage imageWithSystemSymbolName:@"ellipsis.circle" accessibilityDescription:nil];
+    icon.image = [NSImage imageWithSystemSymbolName:@"ellipsis.circle" accessibilityDescription:action.toolTip];
     [action.menu addItem:icon];
     [action.menu addItemWithTitle:TSLocalized(@"MultipleReplace.Duplicate", @"Duplicate") action:@selector(duplicateSet:) keyEquivalent:@""].target = self;
     [action.menu addItemWithTitle:TSLocalized(@"MultipleReplace.Import", @"Import…") action:@selector(importSet:) keyEquivalent:@""].target = self;
     [action.menu addItemWithTitle:TSLocalized(@"MultipleReplace.Export", @"Export…") action:@selector(exportSet:) keyEquivalent:@""].target = self;
+    [action.menu addItem:NSMenuItem.separatorItem];
     [action.menu addItemWithTitle:TSLocalized(@"MultipleReplace.ShowInFinder", @"Show in Finder") action:@selector(showInFinder:) keyEquivalent:@""].target = self;
-    NSStackView *bar = [NSStackView stackViewWithViews:@[
-        [self symbolButton:@"plus" tipKey:@"MultipleReplace.AddSet" english:@"New Set" action:@selector(addSet:)],
-        [self symbolButton:@"minus" tipKey:@"MultipleReplace.RemoveSet" english:@"Move the Set to the Trash" action:@selector(removeSet:)],
-        action]];
-    bar.spacing = 0;
-    NSScrollView *scroll = [self scroll:self.setTable];
-    NSStackView *list = [NSStackView stackViewWithViews:@[scroll, bar]];
-    list.orientation = NSUserInterfaceLayoutOrientationVertical;
-    list.alignment = NSLayoutAttributeLeading;
-    list.spacing = 0;
-    [scroll.widthAnchor constraintEqualToAnchor:list.widthAnchor].active = YES;
-    [list.widthAnchor constraintEqualToConstant:TSSetListWidth].active = YES;
-    return list;
+    self.removeSetButton = [self barButton:@"minus" tipKey:@"MultipleReplace.RemoveSet" english:@"Move the Set to the Trash" action:@selector(removeSet:)];
+    NSView *left = [self stackOf:@[[self barButton:@"plus" tipKey:@"MultipleReplace.AddSet" english:@"New Set" action:@selector(addSet:)], self.removeSetButton] spacing:4];
+    action.translatesAutoresizingMaskIntoConstraints = NO;
+    [action.heightAnchor constraintEqualToConstant:22].active = YES;
+
+    NSBox *line = [NSBox new];
+    line.boxType = NSBoxSeparator;
+    line.translatesAutoresizingMaskIntoConstraints = NO;
+
+    // A sidebar flush with the window's edges, as CotEditor's (AppKit's own sidebar floats as glass in macOS 26).
+    NSVisualEffectView *view = [[NSVisualEffectView alloc] initWithFrame:NSMakeRect(0, 0, 200, 400)];
+    view.material = NSVisualEffectMaterialSidebar;
+    view.blendingMode = NSVisualEffectBlendingModeBehindWindow;
+    for (NSView *child in @[scroll, line, left, action])
+        [view addSubview:child];
+    [NSLayoutConstraint activateConstraints:@[
+        [scroll.topAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.topAnchor],
+        [scroll.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+        [scroll.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
+        [scroll.bottomAnchor constraintEqualToAnchor:line.topAnchor],
+        [line.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+        [line.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
+        [line.bottomAnchor constraintEqualToAnchor:left.topAnchor constant:-6],
+        [left.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:12],
+        [left.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-8],
+        [action.centerYAnchor constraintEqualToAnchor:left.centerYAnchor],
+        [action.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-12],
+        [view.widthAnchor constraintGreaterThanOrEqualToConstant:160],
+    ]];
+    NSViewController *controller = [NSViewController new];
+    controller.view = view;
+    return controller;
 }
 
-- (NSView *)makeRuleArea
+/// The rules in order with ＋|− and the set's options under them; at the bottom, help on the left and the
+/// actions on the right.
+- (NSViewController *)makeRuleArea
 {
+    NSTextField *heading = [NSTextField labelWithString:TSLocalized(@"MultipleReplace.RulesHeading", @"Apply the rules from the top down:")];
+    heading.translatesAutoresizingMaskIntoConstraints = NO;
     NSScrollView *scroll = [self scroll:self.ruleTable.tableView];
-    NSStackView *ruleButtons = [NSStackView stackViewWithViews:@[
-        [self symbolButton:@"plus" tipKey:@"MultipleReplace.AddRule" english:@"Add a Rule" action:@selector(addRule:)],
-        [self symbolButton:@"minus" tipKey:@"MultipleReplace.RemoveRule" english:@"Remove the Selected Rules" action:@selector(removeRules:)]]];
-    ruleButtons.spacing = 0;
-    NSButton *options = [self button:@"MultipleReplace.Options" english:@"Options…" action:@selector(showOptions:)];
-    self.inSelectionBox = [NSButton checkboxWithTitle:TSLocalized(@"AdvancedFind.InSelection", @"In selection") target:self action:@selector(inSelectionChanged:)];
-    NSButton *highlight = [self button:@"AdvancedFind.Highlight" english:@"Highlight" action:@selector(highlight:)];
-    NSButton *replace = [self button:@"AdvancedFind.ReplaceAll" english:@"Replace All" action:@selector(replaceAll:)];
-    replace.keyEquivalent = @"\r";
-    self.actionButtons = @[highlight, replace];
-    NSStackView *bar = [NSStackView stackViewWithViews:@[ruleButtons, [NSView new], options, self.inSelectionBox, highlight, replace]];
-    bar.spacing = 8;
-    [bar setHuggingPriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
+
+    NSImage *plus = [NSImage imageWithSystemSymbolName:@"plus" accessibilityDescription:TSLocalized(@"MultipleReplace.AddRule", @"Add a Rule")] ?: [NSImage new];
+    NSImage *minus = [NSImage imageWithSystemSymbolName:@"minus" accessibilityDescription:TSLocalized(@"MultipleReplace.RemoveRule", @"Remove the Selected Rules")] ?: [NSImage new];
+    self.ruleButtons = [NSSegmentedControl segmentedControlWithImages:@[plus, minus] trackingMode:NSSegmentSwitchTrackingMomentary
+                                                               target:self action:@selector(ruleButtonClicked:)];
+    self.ruleButtons.segmentStyle = NSSegmentStyleSeparated;
+    [self.ruleButtons setToolTip:TSLocalized(@"MultipleReplace.AddRule", @"Add a Rule") forSegment:0];
+    [self.ruleButtons setToolTip:TSLocalized(@"MultipleReplace.RemoveRule", @"Remove the Selected Rules") forSegment:1];
+    for (NSInteger segment = 0; segment < 2; segment++)
+        [self.ruleButtons setWidth:28 forSegment:segment];
+
+    // The options of the whole set (the popover's title names it).
+    NSString *optionsTip = TSLocalized(@"MultipleReplace.SetOptions", @"Options for This Set");
+    NSImage *ellipsis = [NSImage imageWithSystemSymbolName:@"ellipsis.circle" accessibilityDescription:optionsTip] ?: [NSImage new];
+    self.optionsButton = [NSButton buttonWithImage:ellipsis target:self action:@selector(showOptions:)];
+    self.optionsButton.toolTip = optionsTip;
+    [self.optionsButton setContentHuggingPriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationHorizontal];
+
     // A message wraps rather than being cut: in some languages a rule's problem is two or three lines long.
     self.statusField = [NSTextField wrappingLabelWithString:@""];
     self.statusField.selectable = NO;
     self.statusField.textColor = NSColor.secondaryLabelColor;
+    self.statusField.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
     [self.statusField setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [self.statusField setContentHuggingPriority:1 forOrientation:NSLayoutConstraintOrientationHorizontal];
     [self.statusField setContentCompressionResistancePriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationVertical];
-    NSStackView *area = [NSStackView stackViewWithViews:@[scroll, bar, self.statusField]];
-    area.orientation = NSUserInterfaceLayoutOrientationVertical;
-    area.alignment = NSLayoutAttributeLeading;
-    area.spacing = 8;
-    for (NSView *view in @[scroll, bar, self.statusField])
-        [view.widthAnchor constraintEqualToAnchor:area.widthAnchor].active = YES;
-    return area;
+    for (NSView *child in @[self.ruleButtons, self.statusField, self.optionsButton])
+        child.translatesAutoresizingMaskIntoConstraints = NO;
+
+    self.helpButton = [NSButton buttonWithTitle:@"" target:self action:@selector(showHelp:)];
+    self.helpButton.bezelStyle = NSBezelStyleHelpButton;
+    self.helpButton.accessibilityLabel = TSLocalized(@"MultipleReplace.Help", @"Help");
+    self.inSelectionBox = [NSButton checkboxWithTitle:TSLocalized(@"AdvancedFind.InSelection", @"In selection") target:self action:@selector(inSelectionChanged:)];
+    NSButton *highlight = [self button:@"AdvancedFind.HighlightAll" english:@"Highlight All" action:@selector(highlight:)];
+    NSButton *replace = [self button:@"AdvancedFind.ReplaceAll" english:@"Replace All" action:@selector(replaceAll:)];
+    replace.keyEquivalent = @"\r";
+    self.actionButtons = @[highlight, replace];
+    NSView *actions = [self stackOf:@[self.inSelectionBox, highlight, replace] spacing:12];
+    self.helpButton.translatesAutoresizingMaskIntoConstraints = NO;
+
+    NSView *view = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 640, 400)];
+    for (NSView *child in @[heading, scroll, self.ruleButtons, self.statusField, self.optionsButton, self.helpButton, actions])
+        [view addSubview:child];
+    NSLayoutGuide *safe = view.safeAreaLayoutGuide;
+    // A message of one line is on the line of the buttons; a longer one starts there and goes down.
+    NSLayoutConstraint *centered = [self.statusField.centerYAnchor constraintEqualToAnchor:self.ruleButtons.centerYAnchor];
+    centered.priority = NSLayoutPriorityDefaultHigh;
+    NSLayoutConstraint *close = [actions.topAnchor constraintEqualToAnchor:self.ruleButtons.bottomAnchor constant:16];
+    close.priority = NSLayoutPriorityDefaultLow;
+    [NSLayoutConstraint activateConstraints:@[centered, close]];
+    [NSLayoutConstraint activateConstraints:@[
+        [heading.topAnchor constraintEqualToAnchor:safe.topAnchor constant:6],
+        [heading.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:20],
+        [heading.trailingAnchor constraintLessThanOrEqualToAnchor:view.trailingAnchor constant:-20],
+        [scroll.topAnchor constraintEqualToAnchor:heading.bottomAnchor constant:8],
+        [scroll.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:20],
+        [scroll.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-20],
+        [scroll.heightAnchor constraintGreaterThanOrEqualToConstant:100],
+        // ＋|− on the left, ⋯ on the right, the message between them (wrapped, it may take more lines)
+        [self.ruleButtons.topAnchor constraintEqualToAnchor:scroll.bottomAnchor constant:8],
+        [self.ruleButtons.leadingAnchor constraintEqualToAnchor:scroll.leadingAnchor],
+        [self.optionsButton.centerYAnchor constraintEqualToAnchor:self.ruleButtons.centerYAnchor],
+        [self.optionsButton.trailingAnchor constraintEqualToAnchor:scroll.trailingAnchor],
+        [self.statusField.leadingAnchor constraintEqualToAnchor:self.ruleButtons.trailingAnchor constant:12],
+        [self.statusField.trailingAnchor constraintEqualToAnchor:self.optionsButton.leadingAnchor constant:-12],
+        [self.statusField.topAnchor constraintGreaterThanOrEqualToAnchor:scroll.bottomAnchor constant:8],
+
+        [self.helpButton.leadingAnchor constraintEqualToAnchor:scroll.leadingAnchor],
+        [self.helpButton.centerYAnchor constraintEqualToAnchor:actions.centerYAnchor],
+        [actions.topAnchor constraintGreaterThanOrEqualToAnchor:self.ruleButtons.bottomAnchor constant:16],
+        [actions.topAnchor constraintGreaterThanOrEqualToAnchor:self.statusField.bottomAnchor constant:12],
+        [actions.leadingAnchor constraintGreaterThanOrEqualToAnchor:self.helpButton.trailingAnchor constant:12],
+        [actions.trailingAnchor constraintEqualToAnchor:scroll.trailingAnchor],
+        [actions.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-20],
+    ]];
+    NSViewController *controller = [NSViewController new];
+    controller.view = view;
+    return controller;
 }
 
 - (void)buildContent
 {
-    NSStackView *content = [NSStackView stackViewWithViews:@[[self makeSetList], [self makeRuleArea]]];
-    content.alignment = NSLayoutAttributeTop;
-    content.distribution = NSStackViewDistributionFill;
-    content.spacing = 20;
-    content.edgeInsets = NSEdgeInsetsMake(20, 20, 20, 20);
-    for (NSView *view in content.arrangedSubviews)
-        [view.heightAnchor constraintEqualToAnchor:content.heightAnchor constant:-40].active = YES;
-    self.window.contentView = content;
+    NSSplitViewController *split = [NSSplitViewController new];
+    NSSplitViewItem *sidebar = [NSSplitViewItem splitViewItemWithViewController:[self makeSidebar]];
+    sidebar.canCollapse = NO;
+    sidebar.holdingPriority = NSLayoutPriorityDefaultLow + 10; // a wider window widens the rules
+    sidebar.titlebarSeparatorStyle = NSTitlebarSeparatorStyleNone;
+    sidebar.minimumThickness = 160;
+    sidebar.maximumThickness = 320;
+    [split addSplitViewItem:sidebar];
+    NSSplitViewItem *rules = [NSSplitViewItem splitViewItemWithViewController:[self makeRuleArea]];
+    rules.minimumThickness = 480;
+    rules.titlebarSeparatorStyle = NSTitlebarSeparatorStyleNone;
+    [split addSplitViewItem:rules];
+    split.splitView.autosaveName = @"TSMultipleReplaceSplit";
+    NSRect frame = self.window.frame;
+    self.window.contentViewController = split;
+    [self.window setFrame:frame display:NO];
+    [split.splitView setPosition:TSSidebarWidth ofDividerAtIndex:0];
 }
 
 #pragma mark Sets
@@ -217,6 +331,7 @@ static const CGFloat TSSetListWidth = 240;
     self.selectedSetName = set ? name : nil;
     self.ruleTable.set = set;
     [self showStatus:error ? error.localizedDescription : @"" error:error != nil];
+    [self updateSetButtons];
 }
 
 - (void)saveSet:(TSRegexMultipleReplace *)set
@@ -264,8 +379,11 @@ static const CGFloat TSSetListWidth = 240;
     [self.setTable reloadData];
     [self selectSetNamed:name];
     NSInteger row = (NSInteger)[self.setNames indexOfObject:name];
-    if (self.window.isVisible && row >= 0)
-        [self.setTable editColumn:0 row:row withEvent:nil select:YES];
+    if (self.window.isVisible && row >= 0) { // the name is edited at once
+        NSView *field = [self.setTable viewAtColumn:0 row:row makeIfNecessary:YES].subviews.firstObject;
+        if ([field isKindOfClass:[NSTextField class]])
+            [(NSTextField *)field selectText:nil];
+    }
 }
 
 - (IBAction)duplicateSet:(nullable id)sender
@@ -283,9 +401,16 @@ static const CGFloat TSSetListWidth = 240;
     [self selectSetNamed:copyName];
 }
 
+/// The set chosen in the list, even one that cannot be read.
+- (nullable NSString *)listedSetName
+{
+    NSInteger row = self.setTable.selectedRow;
+    return row >= 0 && (NSUInteger)row < self.setNames.count ? self.setNames[(NSUInteger)row] : nil;
+}
+
 - (IBAction)removeSet:(nullable id)sender
 {
-    NSString *name = self.selectedSetName;
+    NSString *name = self.listedSetName;
     if (!name)
         return;
     NSAlert *alert = [NSAlert new];
@@ -369,7 +494,9 @@ static const CGFloat TSSetListWidth = 240;
     field.delegate = self;
     field.lineBreakMode = NSLineBreakByTruncatingTail;
     field.allowsExpansionToolTips = YES;
-    return field;
+    NSTableCellView *cell = [TSMultipleReplaceRuleTable cellWithControl:field];
+    cell.textField = nil; // plain text, as the list's rows: the source list would restyle its own text field
+    return cell;
 }
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
@@ -402,6 +529,43 @@ static const CGFloat TSSetListWidth = 240;
 
 - (void)addRule:(id)sender { [self.ruleTable addRule]; }
 - (void)removeRules:(id)sender { [self.ruleTable removeSelectedRules]; }
+- (void)ruleButtonClicked:(NSSegmentedControl *)sender
+{
+    if (sender.selectedSegment == 0)
+        [self addRule:sender];
+    else if (sender.selectedSegment == 1)
+        [self removeRules:sender];
+}
+- (void)ruleSelectionChanged:(NSNotification *)notification { [self updateSetButtons]; }
+
+/// The buttons that need a set (the options, ＋ of the rules), a selected rule (− of the rules) or a set chosen in
+/// the list (− of the sets): gray otherwise, never a button that does nothing.
+- (void)updateSetButtons
+{
+    BOOL set = self.ruleTable.set != nil;
+    self.optionsButton.enabled = set;
+    [self.ruleButtons setEnabled:set forSegment:0];
+    [self.ruleButtons setEnabled:set && self.ruleTable.tableView.selectedRowIndexes.count > 0 forSegment:1];
+    self.removeSetButton.enabled = self.listedSetName != nil;
+}
+
+- (BOOL)validateUserInterfaceItem:(id<NSValidatedUserInterfaceItem>)item
+{
+    if (item.action == @selector(duplicateSet:) || item.action == @selector(exportSet:))
+        return self.ruleTable.set != nil;
+    if (item.action == @selector(removeSet:))
+        return self.listedSetName != nil;
+    return YES;
+}
+
++ (NSString *)helpAnchor { return @"multiplereplace"; }
+
+- (void)showHelp:(id)sender
+{
+    NSString *book = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleHelpBookName"];
+    if (book)
+        [NSHelpManager.sharedHelpManager openHelpAnchor:TSMultipleReplaceWindowController.helpAnchor inBook:book];
+}
 - (void)inSelectionChanged:(NSButton *)sender { self.inSelection = sender.state == NSControlStateValueOn; }
 
 - (void)setInSelection:(BOOL)inSelection
@@ -417,6 +581,13 @@ static const CGFloat TSSetListWidth = 240;
         textualOptions:set ? set.textualOptions : TSRegexMultipleReplace.defaultTextualOptions
         regularExpressionOptions:set ? set.regularExpressionOptions : TSRegexMultipleReplace.defaultRegularExpressionOptions
         replacementSyntax:set ? set.replacementSyntax : TSRegexReplacementSyntaxICU];
+    // Titled with the set's name: the options belong to the whole set, not to a rule.
+    NSString *name = self.selectedSetName ?: @"";
+    [form insertTitle:[NSString stringWithFormat:TSLocalized(@"MultipleReplace.SetOptionsTitle", @"Options for “%@”"), name] rows:@[]];
+    NSTextField *title = (NSTextField *)form.view.arrangedSubviews.firstObject;
+    title.lineBreakMode = NSLineBreakByTruncatingMiddle; // a long name does not widen the popover
+    [title setContentCompressionResistancePriority:NSLayoutPriorityFittingSizeCompression - 1 forOrientation:NSLayoutConstraintOrientationHorizontal];
+    title.toolTip = name;
     __weak typeof(self) weakSelf = self;
     form.changeHandler = ^(TSAdvancedFindOptionsForm *changed) {
         TSRegexMultipleReplace *current = weakSelf.ruleTable.set;
@@ -512,6 +683,7 @@ static const CGFloat TSSetListWidth = 240;
 /// they stay as they are and beep.
 - (void)updateButtons
 {
+    [self updateSetButtons];
     NSTextView *target = [self target:nil];
     TSAdvancedFindController *controller = self.findController;
     static const TSAdvancedFindAction actions[] = {TSAdvancedFindActionHighlight, TSAdvancedFindActionReplaceAll};
