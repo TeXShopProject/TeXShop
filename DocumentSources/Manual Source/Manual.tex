@@ -564,7 +564,7 @@ I do not recommend the other choice, but try it if you wish.
 
 {\bf Find interface}
 
-TeXShop provides four ways to find and replace text. Select each and try it. Switching among the Apple Find Panel, the Apple Find Bar and the Advanced Find Panel takes effect immediately. Switching to or from the OgreKit Find Panel requires restarting TeXShop. The Apple Find Panel was the original choice in TeXShop twenty years ago. It is very basic. The Apple Find Bar is the newer method by Apple, used in Safari, Xcode, and many other official Apple programs. It looks very minimal, but a close inspection shows that it has unexpected features. The Advanced Find Panel supports regular expressions, lists all matches, and replaces with several pairs of strings at once; it is described in \cref{AdvancedFind}. It is the choice of new users. Users of earlier versions who never chose a method keep the Apple Find Bar. Applying a settings profile does not change the method. The OgreKit Find Panel is an open source project from Isao Sonobe in Japan. It is full featured and supports Regular Expressions. It remains available as a legacy choice.
+TeXShop provides four ways to find and replace text. Select each and try it. Switching among the Apple Find Panel, the Apple Find Bar and the Advanced Find Panel takes effect immediately. Switching to or from the OgreKit Find Panel requires restarting TeXShop. The Apple Find Panel was the original choice in TeXShop twenty years ago. It is very basic. The Apple Find Bar is the newer method by Apple, used in Safari, Xcode, and many other official Apple programs. It looks very minimal, but a close inspection shows that it has unexpected features. The Advanced Find Panel supports regular expressions, lists all matches, and replaces with several pairs of strings at once; it is described in \cref{AdvancedFind}. It is the choice of every user: at the first launch of TeXShop 6.00, users of earlier versions are switched to it once, whatever method they had. To go back, choose another method here; the choice is kept, and applying a settings profile does not change it. Users who came from the OgreKit Find Panel find the OgreKit replacement syntax chosen in the Advanced Find Panel (\cref{AdvancedFind}). The OgreKit Find Panel is an open source project from Isao Sonobe in Japan. It is full featured and supports Regular Expressions. It remains available as a legacy choice.
 
 {\bf Line Number Size}
 
@@ -2383,11 +2383,11 @@ The creation of the existing Command Completion list was the joint work of sever
 
 \section{The Advanced Find Panel}\label{AdvancedFind}
 
-The Advanced Find Panel is chosen in TeXShop Settings, in the Editor category under Find Panel. New users start with it. It supports regular expressions, lists all matches, and replaces with sets of find and replace pairs.
+The Advanced Find Panel is chosen in TeXShop Settings, in the Editor category under Find Panel. Every user starts with it: at the first launch of TeXShop 6.00, users of earlier versions are switched to it once, whatever method they had, and can choose another method there again. It supports regular expressions, lists all matches, and replaces with sets of find and replace pairs.
 
 \subsection{Finding and Replacing}
 
-The usual commands in the Find submenu of the Edit menu work with the panel. Find (command-F) opens it with the find field selected, and Find and Replace with the replacement field selected. Find Next (command-G), Find Previous (shift-command-G) and Use Selection for Find (command-E) act on the source window, also while the panel is in front.
+The usual commands in the Find submenu of the Edit menu work with the panel. Find (command-F) opens it with the find field selected, and Find and Replace with the replacement field selected. Find Next (command-G), Find Previous (shift-command-G) and Use Selection for Find (command-E) act on the source window, also while the panel is in front. With the Advanced Find Panel, the Find submenu also has the panel's other commands, in the order of the Find menu of CotEditor: Find All (shift-command-F), Select All Matches, Use Selection for Replace (shift-command-E), Replace, Replace and Find (option-command-G), Replace All, Highlight All (shift-command-H) and Remove Highlights (control-shift-command-H). They act as the buttons of the panel do, also while the panel is closed, and are dimmed where they cannot act, for example replacing in the console. Their keys can be changed in the Keyboard category of TeXShop Settings. With the other find methods the Find submenu is as before.
 
 The panel also finds in the console, the log, and the source panel and the console of Experiment. While one of them has the focus, the commands of the Find submenu go to the panel, and its highlights are drawn there. The panel acts on the text that had the focus last. The console, the log and the Experiment console show the output of \TeX, so the commands and buttons that replace are dimmed there; the log can still be edited by hand.
 
@@ -2398,7 +2398,7 @@ Below the fields are Regular expression, Ignore case and In selection. The butto
 \item Wrap around, Start the next search at the top, and Close the panel after finding.
 \item Options for text search, used when Regular expression is off: whole words only, any of the words separated by spaces, ignoring diacritical marks, and ignoring the difference between full-width and half-width characters.
 \item Options for regular expressions: treating the find pattern literally, letting \verb|.| match line breaks, letting \verb|^| and \verb|$| match at each line (on by default), counting only Unix line breaks as line ends, ignoring spaces and \verb|#| comments in the pattern, Unicode word boundaries, and ignoring empty matches.
-\item The replacement syntax, and whether \verb|\n|, \verb|\t| and other escapes in the replacement are read.
+\item The replacement syntax, and whether \verb|\n|, \verb|\t| and other escapes in the replacement are read. The syntax is ICU (\verb|$1|) by default. Users who came from the OgreKit Find Panel start with the OgreKit syntax (\verb|\1|), unless they had already chosen one.
 \item Treat \textyen\ as \textbackslash, on by default, for both kinds of search.
 \end{itemize}
 

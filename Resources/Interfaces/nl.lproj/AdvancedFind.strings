@@ -86,6 +86,15 @@
 "AdvancedFind.Mark.UnclosedName" = "De groepsnaam wordt niet afgesloten met >.";
 "AdvancedFind.Mark.UnclosedParen" = "Deze groep wordt niet afgesloten.";
 "AdvancedFind.Mark.UnmatchedParen" = "Deze ) sluit geen groep af.";
+"AdvancedFind.Menu.FindAll" = "Zoek alles";
+"AdvancedFind.Menu.Highlight" = "Markeer alles";
+"AdvancedFind.Menu.Replace" = "Vervang";
+"AdvancedFind.Menu.ReplaceAll" = "Vervang alles";
+"AdvancedFind.Menu.ReplaceAndFind" = "Vervang en zoek";
+"AdvancedFind.Menu.SelectAll" = "Selecteer alle overeenkomsten";
+"AdvancedFind.Menu.SetReplaceString" = "Gebruik selectie voor vervanging";
+"AdvancedFind.Menu.ShowReplacePanel" = "Zoek en vervang…";
+"AdvancedFind.Menu.Unhighlight" = "Verwijder markeringen";
 "AdvancedFind.MoreMarks" = "(nog %lu)";
 "AdvancedFind.MoreOptions" = "Meer opties";
 "AdvancedFind.Next" = "Volgende";

@@ -320,6 +320,8 @@
 	<string>NO</string>
 	<key>FindMethod</key>
 	<string>3</string>
+	<key>FindMethodSwitchedToAdvancedFind</key>
+	<string>YES</string>
 	<key>RightJustifyIfAny</key>
 	<string>NO</string>
 	<key>AutoSaveEnabled</key>
