@@ -1436,10 +1436,14 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
         
         [self.pdfKitSplitView addSubview: self.myPDFKitView2];
          [self.pdfKitSplitView adjustSubviews];
-        BOOL savedSizes = self.horizontal ? (! splitInMiddle && ((MyPDFKitView *)self.myPDFKitView2).horizontalSplitSaved)
-                                          : ((MyPDFKitView *)self.myPDFKitView2).verticalSplitSaved;
-        if (! savedSizes)
-            TSDocumentWindowSplitEvenly(self.pdfKitSplitView);
+        // In a window whose content runs under the toolbar, the parts share the area that can
+        // be seen: the band under the toolbar is not counted, as when their heights were saved.
+        if (self.horizontal && TSDocumentWindowHiddenTop(self.pdfKitSplitView) > 0) {
+            if ((! splitInMiddle) && ((MyPDFKitView *)self.myPDFKitView2).horizontalSplitSaved)
+                TSDocumentWindowSplitInShares(self.pdfKitSplitView, newSize1.height, newSize2.height);
+            else
+                TSDocumentWindowSplitEvenly(self.pdfKitSplitView);
+        }
         
         // The second view holds the document only while the preview is split;
         // give it the document before its display parameters are set.
@@ -1470,7 +1474,8 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
             {
                 theFrame1 = [self.myPDFKitView frame];
                 theFrame2 = [self.myPDFKitView2 frame];
-                temp1 = theFrame1.size.height;
+                // The height that can be seen: the band under the toolbar is left out.
+                temp1 = MAX(0, theFrame1.size.height - TSDocumentWindowHiddenTop(self.pdfKitSplitView));
                 temp2 = theFrame2.size.height;
                 ((MyPDFKitView *)self.myPDFKitView2).horizontalSplitSaved = YES;
                 ((MyPDFKitView *)self.myPDFKitView2).horizontalHeight1 = temp1;

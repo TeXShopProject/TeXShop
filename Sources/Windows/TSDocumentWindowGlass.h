@@ -15,13 +15,21 @@ NS_ASSUME_NONNULL_BEGIN
 // YES when document windows are built with a full-size content view.
 BOOL TSDocumentWindowsUseFullSizeContent(void);
 
-// Extends the window's content under the title bar and the toolbar. A drawer at the
-// side of the window then starts below the toolbar.
-void TSDocumentWindowUseFullSizeContent(NSWindow * _Nullable window);
+// Gets a document window ready after its toolbar is set. On macOS 26 and later its
+// content runs under the title bar and the toolbar, and a drawer at its side starts
+// below the toolbar. On every system the drawer's frame takes the window's colors.
+void TSDocumentWindowPrepare(NSWindow * _Nullable window);
 
-// Puts the divider of a split view with two parts in the middle of the area that can
-// be seen. In a window whose content runs under the toolbar, the band under the
-// toolbar is not counted. Other windows keep the divider where AppKit put it.
+// The height of the band at the top of a view that lies under the title bar and the
+// toolbar, or 0 in a window whose content does not run under them.
+CGFloat TSDocumentWindowHiddenTop(NSView *view);
+
+// Puts the divider of a split view with two parts so that the parts share the area
+// that can be seen in the ratio first : second. The band under the toolbar is not
+// counted.
+void TSDocumentWindowSplitInShares(NSSplitView *splitView, CGFloat first, CGFloat second);
+
+// The same, with two parts of equal size.
 void TSDocumentWindowSplitEvenly(NSSplitView *splitView);
 
 NS_ASSUME_NONNULL_END

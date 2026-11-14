@@ -7,6 +7,7 @@
 #import <objc/runtime.h>
 
 static const void *TSDrawerBaseOffsetKey = &TSDrawerBaseOffsetKey;
+static const void *TSPreparedWindowKey = &TSPreparedWindowKey;
 
 // The height of the band of the content view that lies under the title bar and the toolbar.
 static CGFloat TSHiddenTopBand(NSWindow *window)
@@ -17,14 +18,42 @@ static CGFloat TSHiddenTopBand(NSWindow *window)
     return MAX(0, NSHeight(content.frame) - NSMaxY(window.contentLayoutRect));
 }
 
-// A drawer at the side of a window starts below the toolbar, as it did before the
-// content ran under it.
+// AppKit draws the frame of a drawer as a light gray bezel, in Dark Mode too. This
+// view goes behind the drawer's content and paints the frame in the window's colors.
+@interface TSDrawerBacking : NSView
+@end
+
+@implementation TSDrawerBacking
+
+- (NSView *)hitTest:(NSPoint)point
+{
+    // Dragging the edge of the drawer still resizes it.
+    return nil;
+}
+
+- (BOOL)isOpaque
+{
+    return NO;
+}
+
+- (void)drawRect:(NSRect)dirtyRect
+{
+    [NSColor.windowBackgroundColor setFill];
+    NSRectFill(self.bounds);
+    NSBezierPath *edge = [NSBezierPath bezierPathWithRect:NSInsetRect(self.bounds, 0.5, 0.5)];
+    [NSColor.separatorColor setStroke];
+    [edge stroke];
+}
+
+@end
+
 static void TSDrawerWillOpen(NSNotification *notification)
 {
     NSDrawer *drawer = notification.object;
     NSWindow *window = drawer.parentWindow;
-    if (![drawer isKindOfClass:NSDrawer.class] || !window)
+    if (![drawer isKindOfClass:NSDrawer.class] || !window || !objc_getAssociatedObject(window, TSPreparedWindowKey))
         return;
+    // In a window whose content runs under the toolbar, a drawer at its side starts below the toolbar.
     NSNumber *base = objc_getAssociatedObject(drawer, TSDrawerBaseOffsetKey);
     if (!base) {
         base = @(drawer.leadingOffset);
@@ -33,6 +62,16 @@ static void TSDrawerWillOpen(NSNotification *notification)
     NSRectEdge edge = drawer.edge == 0 ? drawer.preferredEdge : drawer.edge;
     BOOL side = edge == NSMinXEdge || edge == NSMaxXEdge;
     drawer.leadingOffset = base.doubleValue + (side ? TSHiddenTopBand(window) : 0);
+    // The frame of the drawer takes the window's colors.
+    NSView *frame = drawer.contentView.superview;
+    if (!frame)
+        return;
+    for (NSView *subview in frame.subviews)
+        if ([subview isKindOfClass:TSDrawerBacking.class])
+            return;
+    TSDrawerBacking *backing = [[TSDrawerBacking alloc] initWithFrame:frame.bounds];
+    backing.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+    [frame addSubview:backing positioned:NSWindowBelow relativeTo:nil];
 }
 
 BOOL TSDocumentWindowsUseFullSizeContent(void)
@@ -42,30 +81,48 @@ BOOL TSDocumentWindowsUseFullSizeContent(void)
     return NO;
 }
 
-void TSDocumentWindowUseFullSizeContent(NSWindow *window)
+void TSDocumentWindowPrepare(NSWindow *window)
 {
-    if (!window || !TSDocumentWindowsUseFullSizeContent())
+    if (!window)
         return;
-    if (window.styleMask & NSWindowStyleMaskFullSizeContentView)
-        return;
-    window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+    objc_setAssociatedObject(window, TSPreparedWindowKey, @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         [NSNotificationCenter.defaultCenter addObserverForName:NSDrawerWillOpenNotification object:nil queue:nil
                                                     usingBlock:^(NSNotification *notification) { TSDrawerWillOpen(notification); }];
     });
+    if (TSDocumentWindowsUseFullSizeContent() && !(window.styleMask & NSWindowStyleMaskFullSizeContentView)) {
+        // AppKit keeps the content size and makes the window lower by the height of the title
+        // bar and the toolbar; the window keeps the frame it was given instead.
+        NSRect frame = window.frame;
+        window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+        [window setFrame:frame display:NO];
+    }
+}
+
+CGFloat TSDocumentWindowHiddenTop(NSView *view)
+{
+    if (!(view.window.styleMask & NSWindowStyleMaskFullSizeContentView))
+        return 0;
+    return MAX(0, view.safeAreaInsets.top);
+}
+
+void TSDocumentWindowSplitInShares(NSSplitView *splitView, CGFloat first, CGFloat second)
+{
+    if (splitView.arrangedSubviews.count != 2 || first < 0 || second < 0 || first + second <= 0)
+        return;
+    CGFloat thickness = splitView.dividerThickness;
+    CGFloat share = first / (first + second);
+    if (splitView.isVertical) {
+        [splitView setPosition:round((NSWidth(splitView.bounds) - thickness) * share) ofDividerAtIndex:0];
+        return;
+    }
+    CGFloat hidden = TSDocumentWindowHiddenTop(splitView);
+    CGFloat height = NSHeight(splitView.bounds);
+    [splitView setPosition:round(hidden + MAX(0, height - hidden - thickness) * share) ofDividerAtIndex:0];
 }
 
 void TSDocumentWindowSplitEvenly(NSSplitView *splitView)
 {
-    if (splitView.arrangedSubviews.count != 2 || !(splitView.window.styleMask & NSWindowStyleMaskFullSizeContentView))
-        return;
-    CGFloat thickness = splitView.dividerThickness;
-    if (splitView.isVertical) {
-        [splitView setPosition:floor((NSWidth(splitView.bounds) - thickness) / 2) ofDividerAtIndex:0];
-        return;
-    }
-    CGFloat hidden = splitView.safeAreaInsets.top;
-    CGFloat height = NSHeight(splitView.bounds);
-    [splitView setPosition:floor(hidden + (height - hidden - thickness) / 2) ofDividerAtIndex:0];
+    TSDocumentWindowSplitInShares(splitView, 1, 1);
 }

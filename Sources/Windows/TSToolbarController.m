@@ -756,7 +756,7 @@ if (@available(macOS 11.0, *))
     for (NSWindow *window in @[(NSWindow *)[self textWindow] ?: NSNull.null, (NSWindow *)self.pdfKitWindow ?: NSNull.null,
                                (NSWindow *)[self fullSplitWindow] ?: NSNull.null])
         if ([window isKindOfClass:NSWindow.class])
-            TSDocumentWindowUseFullSizeContent(window);
+            TSDocumentWindowPrepare(window);
 }
 
 // -----------------------------------------------------------------------------
