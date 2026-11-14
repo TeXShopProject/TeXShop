@@ -55,7 +55,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
   result=wording();p.write_bytes(original);assert result.returncode and 'Search counts refer to settings' in result.stderr,result.stderr
   print('DETECTED search count',lang,flush=True)
  for lang in search_wording['prefixes']:
-  actual='Base' if lang=='en' else lang;p=T/f'Resources/Interfaces/{actual}.lproj/SettingsCategories.strings';original=p.read_bytes();values=json.loads(subprocess.check_output(['plutil','-convert','json','-o','-',str(p)]));values['catalog.typesetting.0.3.note']='(default: pdflatexmk)'
+  actual='Base' if lang=='en' else lang;p=T/f'Resources/Interfaces/{actual}.lproj/SettingsCategories.strings';original=p.read_bytes();values=json.loads(subprocess.check_output(['plutil','-convert','json','-o','-',str(p)]));values['catalog.typesetting.8.1.note']='(default: bibtex)'
   p.write_text('\n'.join(json.dumps(k,ensure_ascii=False)+' = '+json.dumps(v,ensure_ascii=False)+';' for k,v in values.items())+'\n')
   result=wording();p.write_bytes(original);assert result.returncode and 'Engine defaults use consistent localized wording' in result.stderr,result.stderr
   print('DETECTED engine default',lang,flush=True)

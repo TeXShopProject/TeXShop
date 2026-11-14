@@ -82,7 +82,6 @@
 	IBOutlet NSTextField	*_gsBinPathField;		/*" connected to tetex bin path "*/
 	IBOutlet NSTextField	*_texScriptCommandTextField;	/*" connected to "Personal Tex" "*/
 	IBOutlet NSTextField	*_latexScriptCommandTextField; /*" connected to Personal Latex" "*/
-    IBOutlet NSTextField    *_alternateEngineTextField;    /*" connected to "Personal Tex" "*/
 	IBOutlet NSMatrix	*_defaultScriptMatrix;		/*" connected to "Default Script" "*/
 	IBOutlet NSMatrix       *_defaultMetaPostMatrix;        /*" connected to "MetaPost" "*/
 	IBOutlet NSMatrix       *_defaultBibtexMatrix;          /*" connected to "Bibtex" "*/ // comment out by Terada
@@ -249,6 +248,9 @@
 @property NSInteger engineProfileAsked;
 @property (strong) NSPopUpButton *defaultEnginePopup;
 @property (strong) NSButton *editEnginesButton;
+@property (strong) NSPopUpButton *alternateEnginePopup;
+@property (strong) NSButton *editAlternateEnginesButton;
+@property (strong) NSButton *alternateEngineInfoButton;
 @property (strong) NSTextField *makeIndexEngineField;
 @property (strong) NSTextField *metaPostEngineField;
 @property (strong) NSTextField *sparkleLastCheckField;
@@ -329,7 +331,8 @@
 - (IBAction)gsBinPathChanged:sender;
 - (IBAction)texScriptProgramChanged:sender;
 - (IBAction)latexScriptProgramChanged:sender;
-- (IBAction)alternateEngineChanged:sender;
+- (IBAction)alternateEngineChosen:(NSPopUpButton *)sender;
+- (IBAction)showAlternateEngineInfo:(NSButton *)sender;
 - (IBAction)defaultScriptChanged:sender;
 - (IBAction)syncChanged:sender;
 // - (IBAction)defaultMetaPostChanged:sender;

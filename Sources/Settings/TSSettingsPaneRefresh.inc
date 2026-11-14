@@ -265,7 +265,7 @@
     [_gsBinPathField setStringValue:[defaults stringForKey:GSBinPath] ?: @""];
     [_texScriptCommandTextField setStringValue:[defaults stringForKey:TexScriptCommandKey] ?: @""];
     [_latexScriptCommandTextField setStringValue:[defaults stringForKey:LatexScriptCommandKey] ?: @""];
-    [_alternateEngineTextField setStringValue:[defaults stringForKey:AlternateEngineKey] ?: @""];
+    [self refreshAlternateEngineFromDefaults:defaults];
     [_defaultCommandMatrix selectCellWithTag:[defaults integerForKey:DefaultCommandKey]];
     [self refreshDefaultEngineFromDefaults:defaults];
     [_defaultScriptMatrix selectCellWithTag:[defaults integerForKey:DefaultScriptKey]];

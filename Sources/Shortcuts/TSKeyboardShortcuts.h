@@ -8,6 +8,26 @@ FOUNDATION_EXPORT NSNotificationName const TSMacroShortcutsChangedNotification;
 // First button is the safe choice for both Return and Escape.
 NSModalResponse TSRunShortcutAlert(NSAlert *alert);
 
+/// A key and its modifiers as menus show them, such as ⌃⌥⌘T; an em dash when there is no key.
+/// Inline, so that a view showing a menu item's key needs no shortcut store.
+static inline NSString *TSShortcutDisplayKey(NSString *key, NSEventModifierFlags flags)
+{
+    if (!key.length) return @"—";
+    // Display the actual menu definition. Canonicalization is for comparison only.
+    if (key.length == 1 && [key characterAtIndex:0] >= 'A' && [key characterAtIndex:0] <= 'Z')
+        flags |= NSEventModifierFlagShift;
+    NSMutableString *text = [NSMutableString string];
+    if (flags & NSEventModifierFlagControl) [text appendString:@"⌃"];
+    if (flags & NSEventModifierFlagOption) [text appendString:@"⌥"];
+    if (flags & NSEventModifierFlagShift) [text appendString:@"⇧"];
+    if (flags & NSEventModifierFlagCommand) [text appendString:@"⌘"];
+    unichar c = [key characterAtIndex:0];
+    NSDictionary *symbols = @{@(NSLeftArrowFunctionKey):@"←", @(NSRightArrowFunctionKey):@"→", @(NSUpArrowFunctionKey):@"↑", @(NSDownArrowFunctionKey):@"↓", @13:@"↩", @9:@"⇥", @27:@"⎋", @32:@"␣", @127:@"⌫", @(NSDeleteFunctionKey):@"⌦"};
+    if (c >= NSF1FunctionKey && c <= NSF20FunctionKey) [text appendFormat:@"F%u", c - NSF1FunctionKey + 1];
+    else [text appendString:symbols[@(c)] ?: key.uppercaseString];
+    return text;
+}
+
 /// Immutable key/modifier value. NSDictionary primitives preserve the existing
 /// property-list representation at persistence and macro-editor boundaries.
 @interface TSShortcutBinding : NSDictionary<NSString *, id>

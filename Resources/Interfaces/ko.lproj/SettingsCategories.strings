@@ -244,7 +244,8 @@
 "catalog.typesetting.0.1.button" = "엔진 목록 편집…";
 "catalog.typesetting.0.2.title" = "조판 방식";
 "catalog.typesetting.0.3.title" = "대체 엔진";
-"catalog.typesetting.0.3.note" = "'대체 엔진으로 조판'에 사용하는 엔진입니다. 기본값: pdflatexmk";
+"catalog.typesetting.0.3.note" = "'대체 엔진으로 조판'에 사용하는 엔진입니다.";
+"catalog.typesetting.0.3.info" = "‘대체 엔진으로 조판’에 대하여";
 "group.typesetting.1.title" = "조판 후";
 "catalog.typesetting.1.0.title" = "조판 후 동작";
 "group.typesetting.2.title" = "소스와 미리보기 동기화";

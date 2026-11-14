@@ -244,7 +244,8 @@
 "catalog.typesetting.0.1.button" = "Editar a lista de motores…";
 "catalog.typesetting.0.2.title" = "Método de composição";
 "catalog.typesetting.0.3.title" = "Motor alternativo";
-"catalog.typesetting.0.3.note" = "O motor usado para compor com o motor alternativo. Predefinição: pdflatexmk";
+"catalog.typesetting.0.3.note" = "O motor usado para compor com o motor alternativo.";
+"catalog.typesetting.0.3.info" = "Sobre “Compor com motor alternativo”";
 "group.typesetting.1.title" = "Após a composição";
 "catalog.typesetting.1.0.title" = "Após a composição";
 "group.typesetting.2.title" = "Sincronização do código-fonte e da pré-visualização";

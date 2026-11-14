@@ -369,4 +369,13 @@
 "Use latexmk" = "Gebruik latexmk";
 "Detect Paths" = "Paden detecteren";
 "%@ (Not Found)" = "%@ (niet gevonden)";
+"%1$@ (%2$@)" = "%1$@ (%2$@)";
+"None" = "Geen";
+"Typeset with Alternate Engine" = "Zet met alternatieve engine";
+"In the %1$@ menu, this item appears in place of %2$@ while you hold %3$@." = "In het menu ‘%1$@’ verschijnt dit onderdeel in plaats van ‘%2$@’ zolang u %3$@ ingedrukt houdt.";
+"This item is in the %@ menu." = "Dit onderdeel staat in het menu ‘%@’.";
+"Key: %@" = "Toets: %@";
+"No key is assigned." = "Er is geen toets toegewezen.";
+"Typesets once with this engine instead of the one chosen in the toolbar." = "Zet één keer met deze engine in plaats van de engine die in de knoppenbalk is gekozen.";
+"A % !TEX TS-program line at the top of the document takes precedence." = "Een regel % !TEX TS-program bovenaan het document gaat voor.";
 "Choose an Engine Profile" = "Kies een engineprofiel";
