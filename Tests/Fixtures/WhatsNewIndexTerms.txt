@@ -660,6 +660,7 @@ external
 extra
 extracted
 extreme
+f
 facility
 fact
 failed
@@ -790,6 +791,7 @@ grows
 guard
 guidelines
 gz
+h
 habits
 half
 halfwidth
@@ -1100,6 +1102,7 @@ martignoni
 martin
 match
 matched
+matches
 matching
 material
 math
@@ -1734,7 +1737,6 @@ symbol
 symbols
 sync
 synced
-synchronization
 synctex
 syntax
 system
@@ -1796,7 +1798,6 @@ these
 they
 thickness
 thin
-think
 third
 this
 thomas
@@ -1827,7 +1828,6 @@ tooltips
 top
 toward
 trace
-track
 trackpad
 trailing
 transitioning
