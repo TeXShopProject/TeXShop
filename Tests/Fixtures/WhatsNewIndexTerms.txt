@@ -183,7 +183,6 @@ application
 applications
 applies
 apply
-applying
 approach
 appropriate
 apps
@@ -462,7 +461,6 @@ curiously
 curly
 current
 cursor
-custom
 customization
 cut
 daisuke
@@ -1204,7 +1202,6 @@ nicolas
 nightmare
 nishihama
 no
-none
 nonintrusive
 normal
 normalization
@@ -1265,6 +1262,7 @@ origin
 original
 originally
 originating
+otf
 other
 others
 oudenhove
@@ -1499,8 +1497,8 @@ require
 required
 requires
 reread
+rescan
 reserved
-reset
 resize
 resized
 resolutions
@@ -1595,7 +1593,6 @@ set
 sets
 setting
 settings
-setup
 seven
 several
 shape
@@ -1737,6 +1734,7 @@ symbol
 symbols
 sync
 synced
+synchronization
 synctex
 syntax
 system
@@ -1798,6 +1796,7 @@ these
 they
 thickness
 thin
+think
 third
 this
 thomas
@@ -1828,6 +1827,7 @@ tooltips
 top
 toward
 trace
+track
 trackpad
 trailing
 transitioning
