@@ -56,6 +56,8 @@ MUTATIONS = {
         '[control.centerYAnchor constraintEqualToAnchor:cell.centerYAnchor]', '[control.topAnchor constraintEqualToAnchor:cell.topAnchor]'),
     'the sidebar starts narrower than the samples\' names': ('TSMultipleReplaceWindowController.m', 'static const CGFloat TSSidebarWidth = 240;', 'static const CGFloat TSSidebarWidth = 180;'),
     'the names take a fixed width': ('TSMultipleReplaceWindowController.m', '    if (fabs(column.width - width) > 0.5)\n        column.width = width;\n', ''),
+    'the list is not fitted when the table changes its size': ('TSMultipleReplaceWindowController.m',
+        '    self.setTable.postsFrameChangedNotifications = YES;\n', '    self.setTable.postsFrameChangedNotifications = NO;\n'),
     'the list scrolls sideways': ('TSMultipleReplaceWindowController.m', '    scroll.horizontalScrollElasticity = NSScrollElasticityNone;\n', ''),
     'a help button comes back': ('TSMultipleReplaceWindowController.m',
         '    NSView *actions = [self stackOf:@[self.inSelectionBox, highlight, replace] spacing:12];',
