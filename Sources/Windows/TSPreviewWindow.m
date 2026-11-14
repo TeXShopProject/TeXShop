@@ -33,6 +33,7 @@
  * is set here from calls in split window or in the pdfkitview's activate routine.
  */
 
+#import "TSDocumentWindowGlass.h"
 #import "UseMitsu.h"
 
 #import <AppKit/AppKit.h>
@@ -180,7 +181,8 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
         [NSLayoutConstraint activateConstraints: @[
             [line.leadingAnchor constraintEqualToAnchor: view.leadingAnchor],
             [line.trailingAnchor constraintEqualToAnchor: view.trailingAnchor],
-            [line.topAnchor constraintEqualToAnchor: view.topAnchor],
+            // Below the toolbar when the content runs under it.
+            [line.topAnchor constraintEqualToAnchor: view.safeAreaLayoutGuide.topAnchor],
             [line.bottomAnchor constraintEqualToAnchor: view.bottomAnchor]]];
     } else if (view.subviews.lastObject != line)
         [view addSubview: line positioned: NSWindowAbove relativeTo: nil];
@@ -1434,6 +1436,10 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
         
         [self.pdfKitSplitView addSubview: self.myPDFKitView2];
          [self.pdfKitSplitView adjustSubviews];
+        BOOL savedSizes = self.horizontal ? (! splitInMiddle && ((MyPDFKitView *)self.myPDFKitView2).horizontalSplitSaved)
+                                          : ((MyPDFKitView *)self.myPDFKitView2).verticalSplitSaved;
+        if (! savedSizes)
+            TSDocumentWindowSplitEvenly(self.pdfKitSplitView);
         
         // The second view holds the document only while the preview is split;
         // give it the document before its display parameters are set.

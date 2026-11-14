@@ -1,3 +1,4 @@
+#import "TSDocumentWindowGlass.h"
 #import "TSFindInterface.h"
 #import "TSPreferenceKey.h"
 #import "TSSettingsChangeNote.h"
@@ -3747,6 +3748,7 @@ static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice
 		[scrollView2 setFrameSize:newSize];
 		[splitView addSubview: scrollView2];
 		[splitView adjustSubviews];
+		TSDocumentWindowSplitEvenly(splitView);
 		[textView1 scrollRangeToVisible: selectedRange];
 		[textView2 scrollRangeToVisible: selectedRange];
 		selectedRange.length = 0;
