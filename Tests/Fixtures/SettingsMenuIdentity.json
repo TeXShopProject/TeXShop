@@ -1,11 +1,11 @@
 {
-  "source": "Fixed command identity of commit 127ecbab90b1ad199c9d7e6adfa86258e3f36c6c, excluding the two intentionally removed editor actions. Update only after reviewing a deliberate command migration.",
+  "source": "Fixed command identity of commit 127ecbab90b1ad199c9d7e6adfa86258e3f36c6c, excluding the two intentionally removed editor actions. The Italian File Encoding and TeXShop item calls displayFileEncoding: since 6.00; it called displayGettingStartedConTeXt: before. Update only after reviewing a deliberate command migration.",
   "languages": {
     "Base": "2c742097c6a0cac931899e43dae006c7e892eb2413d2465b5973880f7f26ce3f",
     "de": "3615367150ca5a9daa58a0dab99f35d9ef4e3f9b3b89d8671739065da9300d38",
     "es": "d01319ab29b3d62df3562ed93c2831ded2f3960d92c3b04d0c867e936882bf6a",
     "fr": "986ae35aab6192edf825fc243c20303327f8cec5bdf4481815377c3daa2033a0",
-    "it": "42a79d0bf6111323e943337fe276839378ee3d7ef8dea026ed4fb0214e616df3",
+    "it": "986ae35aab6192edf825fc243c20303327f8cec5bdf4481815377c3daa2033a0",
     "ja": "c78b494ac19505f8e106eae3699b521fb88b32fff952da3a09e82e1624d89744",
     "ko": "ae769ef41e9385ef0435f1ad410ec3e7f587bb0eb042deca305033118a049759",
     "nl": "986ae35aab6192edf825fc243c20303327f8cec5bdf4481815377c3daa2033a0",

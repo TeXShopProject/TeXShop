@@ -1,0 +1,1195 @@
+[
+ {
+  "nib": "FindPanel",
+  "change": "missing",
+  "fact": "- | @replaceAllScopeMatrix | NSButtonCell",
+  "languages": [
+   "nl"
+  ],
+  "reason": "the Base Find panel keeps two unused Radio cells beyond the one row and two columns of the Replace All scope matrix; the Dutch one does not",
+  "count": 2
+ },
+ {
+  "nib": "MacroEditor",
+  "change": "missing",
+  "fact": "- | @window | NSTextField",
+  "languages": [
+   "ja",
+   "ko"
+  ],
+  "reason": "Japanese and Korean join the Key label and its explanation in one label"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "extra",
+  "fact": "- | top | NSPanel",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro"
+  ],
+  "reason": "OgreTextFinder instance and Stationery panel delegate: TSAppDelegate turns the OgreKit menu hack off unless OgreKit is the find method, and implements no window delegate methods"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "extra",
+  "fact": "- | top | OgreTextFinder",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro"
+  ],
+  "reason": "OgreTextFinder instance and Stationery panel delegate: TSAppDelegate turns the OgreKit menu hack off unless OgreKit is the find method, and implements no window delegate methods"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "extra",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.doCommentOrIndent:.1 action=doCommentOrIndent:>FirstResponder tag=1 key=3+1048576",
+  "languages": [
+   "de"
+  ],
+  "reason": "key equivalents chosen for the keyboard of the language"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "extra",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.doCommentOrIndent:.2 action=doCommentOrIndent:>FirstResponder tag=2 key=4+1048576",
+  "languages": [
+   "de"
+  ],
+  "reason": "key equivalents chosen for the keyboard of the language"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "extra",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.doCommentOrIndent:.3 action=doCommentOrIndent:>FirstResponder tag=3 key=]+1048576",
+  "languages": [
+   "pt"
+  ],
+  "reason": "key equivalents chosen for the keyboard of the language"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "extra",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.doCommentOrIndent:.4 action=doCommentOrIndent:>FirstResponder tag=4 key=[+1048576",
+  "languages": [
+   "pt"
+  ],
+  "reason": "key equivalents chosen for the keyboard of the language"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "extra",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.hide:.0 action=hide:>FirstResponder key=h+1048576",
+  "languages": [
+   "ja",
+   "ko"
+  ],
+  "reason": "File's Owner (NSApp), the app delegate and the first responder reach the same method"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "extra",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.hideOtherApplications:.0 action=hideOtherApplications:>FirstResponder key=h+1572864",
+  "languages": [
+   "ja",
+   "ko"
+  ],
+  "reason": "File's Owner (NSApp), the app delegate and the first responder reach the same method"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "extra",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.modifyFont:.3 action=modifyFont:>NSFontManager tag=3 key=++1048576",
+  "languages": [
+   "de"
+  ],
+  "reason": "key equivalents chosen for the keyboard of the language"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "extra",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.nextTeXWindow:.0 action=nextTeXWindow:>FirstResponder key=+1048576",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "File's Owner (NSApp), the app delegate and the first responder reach the same method"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "extra",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.previousTeXWindow:.0 action=previousTeXWindow:>FirstResponder key=+1179648",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "File's Owner (NSApp), the app delegate and the first responder reach the same method"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "extra",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.unhideAllApplications:.0 action=unhideAllApplications:>FirstResponder",
+  "languages": [
+   "ja",
+   "ko"
+  ],
+  "reason": "File's Owner (NSApp), the app delegate and the first responder reach the same method"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "extra",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.zoomIn:.0 action=zoomIn:>FirstResponder key=++1048576",
+  "languages": [
+   "ja"
+  ],
+  "reason": "key equivalents chosen for the keyboard of the language"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "extra",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.zoomIn:.0 action=zoomIn:>FirstResponder key=++1179648",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "key equivalents chosen for the keyboard of the language"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "extra",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.zoomOut:.0 action=zoomOut:>FirstResponder key=_+1179648",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "key equivalents chosen for the keyboard of the language"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "extra",
+  "fact": "action NSMenuItem#TSShortcut.hide:.0 (NSMenuItem in top:NSMenu) hide: -> FirstResponder",
+  "languages": [
+   "ja",
+   "ko"
+  ],
+  "reason": "File's Owner (NSApp), the app delegate and the first responder reach the same method"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "extra",
+  "fact": "action NSMenuItem#TSShortcut.hideOtherApplications:.0 (NSMenuItem in top:NSMenu) hideOtherApplications: -> FirstResponder",
+  "languages": [
+   "ja",
+   "ko"
+  ],
+  "reason": "File's Owner (NSApp), the app delegate and the first responder reach the same method"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "extra",
+  "fact": "action NSMenuItem#TSShortcut.nextTeXWindow:.0 (NSMenuItem in top:NSMenu) nextTeXWindow: -> FirstResponder",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "File's Owner (NSApp), the app delegate and the first responder reach the same method"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "extra",
+  "fact": "action NSMenuItem#TSShortcut.previousTeXWindow:.0 (NSMenuItem in top:NSMenu) previousTeXWindow: -> FirstResponder",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "File's Owner (NSApp), the app delegate and the first responder reach the same method"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "extra",
+  "fact": "action NSMenuItem#TSShortcut.unhideAllApplications:.0 (NSMenuItem in top:NSMenu) unhideAllApplications: -> FirstResponder",
+  "languages": [
+   "ja",
+   "ko"
+  ],
+  "reason": "File's Owner (NSApp), the app delegate and the first responder reach the same method"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "- | top | NSMenuItem",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "placeholder items, separators and empty submenus of the Base menu"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "- | top | NSPanel delegate=@delegate",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro"
+  ],
+  "reason": "OgreTextFinder instance and Stationery panel delegate: TSAppDelegate turns the OgreKit menu hack off unless OgreKit is the find method, and implements no window delegate methods"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "- | top:NSMenu | NSMenu",
+  "languages": [
+   "zh_CN"
+  ],
+  "reason": "placeholder items, separators and empty submenus of the Base menu"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "- | top:NSMenu | NSMenuItem",
+  "languages": [
+   "de",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "pt",
+   "pt-PT",
+   "ro"
+  ],
+  "reason": "placeholder items, separators and empty submenus of the Base menu"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "- | top:NSMenu | NSMenuItem action=submenuAction:>NSMenu",
+  "languages": [
+   "zh_CN"
+  ],
+  "reason": "placeholder items, separators and empty submenus of the Base menu"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.doCommentOrIndent:.1 action=doCommentOrIndent:>FirstResponder tag=1 key={+1048576",
+  "languages": [
+   "de"
+  ],
+  "reason": "key equivalents chosen for the keyboard of the language"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.doCommentOrIndent:.2 action=doCommentOrIndent:>FirstResponder tag=2 key=}+1048576",
+  "languages": [
+   "de"
+  ],
+  "reason": "key equivalents chosen for the keyboard of the language"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.doCommentOrIndent:.3 action=doCommentOrIndent:>FirstResponder tag=3",
+  "languages": [
+   "pt"
+  ],
+  "reason": "key equivalents chosen for the keyboard of the language"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.doCommentOrIndent:.4 action=doCommentOrIndent:>FirstResponder tag=4",
+  "languages": [
+   "pt"
+  ],
+  "reason": "key equivalents chosen for the keyboard of the language"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.hide:.0 key=h+1048576",
+  "languages": [
+   "ja",
+   "ko"
+  ],
+  "reason": "File's Owner (NSApp), the app delegate and the first responder reach the same method"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.hideOtherApplications:.0 key=h+1572864",
+  "languages": [
+   "ja",
+   "ko"
+  ],
+  "reason": "File's Owner (NSApp), the app delegate and the first responder reach the same method"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.modifyFont:.3 action=modifyFont:>NSFontManager tag=3 key==+1048576",
+  "languages": [
+   "de"
+  ],
+  "reason": "key equivalents chosen for the keyboard of the language"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.nextTeXWindow:.0 key=+1048576",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "File's Owner (NSApp), the app delegate and the first responder reach the same method"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.previousTeXWindow:.0 key=+1179648",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "File's Owner (NSApp), the app delegate and the first responder reach the same method"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.unhideAllApplications:.0",
+  "languages": [
+   "ja",
+   "ko"
+  ],
+  "reason": "File's Owner (NSApp), the app delegate and the first responder reach the same method"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.zoomIn:.0 action=zoomIn:>FirstResponder key==+1179648",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "key equivalents chosen for the keyboard of the language"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "- | top:NSMenu | NSMenuItem id=TSShortcut.zoomOut:.0 action=zoomOut:>FirstResponder key=-+1179648",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "key equivalents chosen for the keyboard of the language"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "- | top:NSMenu | NSMenuItem separator",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "placeholder items, separators and empty submenus of the Base menu"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "action NSMenuItem#TSShortcut.hide:.0 (NSMenuItem in top:NSMenu) hide: -> Owner",
+  "languages": [
+   "ja",
+   "ko"
+  ],
+  "reason": "File's Owner (NSApp), the app delegate and the first responder reach the same method"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "action NSMenuItem#TSShortcut.hideOtherApplications:.0 (NSMenuItem in top:NSMenu) hideOtherApplications: -> Owner",
+  "languages": [
+   "ja",
+   "ko"
+  ],
+  "reason": "File's Owner (NSApp), the app delegate and the first responder reach the same method"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "action NSMenuItem#TSShortcut.nextTeXWindow:.0 (NSMenuItem in top:NSMenu) nextTeXWindow: -> @delegate",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "File's Owner (NSApp), the app delegate and the first responder reach the same method"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "action NSMenuItem#TSShortcut.previousTeXWindow:.0 (NSMenuItem in top:NSMenu) previousTeXWindow: -> @delegate",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "File's Owner (NSApp), the app delegate and the first responder reach the same method"
+ },
+ {
+  "nib": "MainMenu",
+  "change": "missing",
+  "fact": "action NSMenuItem#TSShortcut.unhideAllApplications:.0 (NSMenuItem in top:NSMenu) unhideAllApplications: -> Owner",
+  "languages": [
+   "ja",
+   "ko"
+  ],
+  "reason": "File's Owner (NSApp), the app delegate and the first responder reach the same method"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "extra",
+  "fact": "- | @mouseModeMatrix | NSButtonCell tag=5",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "legacy mouseModeMatrix of MyPDFView; its toolbar item exists only with MITSU_PDF, which is not defined"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "extra",
+  "fact": "- | @smagnificationOutletKK | NSTextField delegate=@pdfView",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "MyPDFView text field delegate acts only on its own fields, not on this one"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "extra",
+  "fact": "- | top | NSMenuItem tag=6",
+  "languages": [
+   "ko"
+  ],
+  "reason": "unused top-level menu item"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "extra",
+  "fact": "action @mouseModeMatrix (NSMatrix in top:NSMatrix) changeMouseMode: -> Owner",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "legacy mouseModeMatrix of MyPDFView; its toolbar item exists only with MITSU_PDF, which is not defined"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "extra",
+  "fact": "action @mouseModeMatrixFull (NSMatrix in top:NSMatrix) changeMouseMode: -> Owner",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "TSDocument changeMouseMode: forwards to the Preview window, so both targets do the same"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "extra",
+  "fact": "action NSButtonCell (NSButtonCell in top) showIndexColor: -> Owner",
+  "languages": [
+   "es"
+  ],
+  "reason": "the action sits on the button cell instead of the button; same effect"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "extra",
+  "fact": "action NSButtonCell (NSButtonCell in top) showTextPanel: -> Owner",
+  "languages": [
+   "pt-PT"
+  ],
+  "reason": "the action sits on the button cell instead of the button; same effect"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "extra",
+  "fact": "action NSButtonCell (NSButtonCell in top) stringCenterPushed: -> Owner",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "the action sits on the button cell instead of the button; same effect"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "extra",
+  "fact": "action NSButtonCell (NSButtonCell in top) stringLeftPushed: -> Owner",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "the action sits on the button cell instead of the button; same effect"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "extra",
+  "fact": "action NSButtonCell (NSButtonCell in top) stringRightPushed: -> Owner",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "the action sits on the button cell instead of the button; same effect"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "extra",
+  "fact": "action NSMatrix (NSMatrix in top:NSMatrix) changeMouseMode: -> @pdfView",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "extra",
+  "fact": "action NSSearchField (NSSearchField in top:NSMatrix) doPDFSearch: -> Owner",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "- | @smagnificationOutletKK | NSTextField",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "MyPDFView text field delegate acts only on its own fields, not on this one"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "- | top | NSBox",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "- | top | NSImageCell tag=-1",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "- | top | NSObject",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "- | top | NSPopUpButton action=setSaveExtension:>Owner",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "- | top | NSTextField",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them",
+  "count": 2
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "- | top:NSBox | NSView",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "- | top:NSMatrix | NSButton",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "- | top:NSMatrix | NSButtonCell tag=5",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "legacy mouseModeMatrix of MyPDFView; its toolbar item exists only with MITSU_PDF, which is not defined"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "- | top:NSPopUpButton | NSMenu",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "- | top:NSPopUpButton | NSMenuItem id=_popUpItemAction: action=_popUpItemAction:>NSPopUpButtonCell",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them",
+  "count": 3
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "action @indexColorSplitBox (NSButton in top:NSMatrix) showIndexColor: -> Owner",
+  "languages": [
+   "es"
+  ],
+  "reason": "the action sits on the button cell instead of the button; same effect"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "action @mouseModeMatrix (NSMatrix in top:NSMatrix) changeMouseMode: -> @pdfView",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "legacy mouseModeMatrix of MyPDFView; its toolbar item exists only with MITSU_PDF, which is not defined"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "action @mouseModeMatrixFull (NSMatrix in top:NSMatrix) changeMouseMode: -> @pdfKitWindow",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "TSDocument changeMouseMode: forwards to the Preview window, so both targets do the same"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "action @stringCenter (NSButton in @stringWindow) stringCenterPushed: -> Owner",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "the action sits on the button cell instead of the button; same effect"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "action @stringLeft (NSButton in @stringWindow) stringLeftPushed: -> Owner",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "the action sits on the button cell instead of the button; same effect"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "action @stringRight (NSButton in @stringWindow) stringRightPushed: -> Owner",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "the action sits on the button cell instead of the button; same effect"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "action NSButton (NSButton in @annotationChoices) showTextPanel: -> Owner",
+  "languages": [
+   "pt-PT"
+  ],
+  "reason": "the action sits on the button cell instead of the button; same effect"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "action NSButton (NSButton in top:NSMatrix) doTypeset: -> Owner",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "action NSMatrix (NSMatrix in top:NSMatrix) changeMouseMode: -> @pdfKitWindow",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "action NSPopUpButton (NSPopUpButton in top) setSaveExtension: -> Owner",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "action NSSearchField (NSSearchField in top:NSMatrix) doFindOne: -> @myPDFKitView",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them"
+ },
+ {
+  "nib": "TSDocument",
+  "change": "missing",
+  "fact": "action NSTextField (NSTextField in top) gotoURL: -> Owner",
+  "languages": [
+   "de",
+   "es",
+   "fr",
+   "it",
+   "ja",
+   "ko",
+   "nl",
+   "pt",
+   "pt-PT",
+   "ro",
+   "zh_CN"
+  ],
+  "reason": "unconnected leftovers in the palette or at the top level of the Base nib; nothing refers to them"
+ }
+]

@@ -939,9 +939,14 @@ withDarkColors = NO;
 
 - (void) applyInvisibleCharactersShowing
 {
-	[(TSLayoutManager*)[textView layoutManager] setInvisibleCharactersEnabled:invisibleCharactersShowing];
-	[(TSLayoutManager*)[textView1 layoutManager] setInvisibleCharactersEnabled:invisibleCharactersShowing];
-	[(TSLayoutManager*)[textView2 layoutManager] setInvisibleCharactersEnabled:invisibleCharactersShowing];
+	// Only a TSLayoutManager draws invisible characters. A text view with another layout
+	// manager is skipped instead of stopping the document window from opening.
+	NSTextView *views[] = {textView, textView1, textView2};
+	for (NSUInteger i = 0; i < sizeof(views) / sizeof(views[0]); i++) {
+		NSLayoutManager *layoutManager = [views[i] layoutManager];
+		if ([layoutManager isKindOfClass:[TSLayoutManager class]])
+			[(TSLayoutManager *)layoutManager setInvisibleCharactersEnabled:invisibleCharactersShowing];
+	}
 	[self applyExperimentInvisibleCharacters];
 }
 

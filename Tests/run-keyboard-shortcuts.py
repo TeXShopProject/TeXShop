@@ -85,6 +85,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-shortcuts-') as td:
             'apply shortcut without checking event spellings': (
                 'NSString *conflict = [self conflictForCapturedShortcut];',
                 'NSString *conflict = [self.store conflictForKey:self.capturedKey modifiers:self.capturedModifiers except:self.editingCommand.item restoring:nil];'),
+            'drop a shortcut saved under the old Italian File Encoding identifier': (
+                '    [self adoptRenamedCommands];\n', ''),
         }
         for name,(before,after) in cases.items():
             assert production.count(before)==1,(name,before)

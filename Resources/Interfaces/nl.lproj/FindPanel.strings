@@ -2,5 +2,5 @@
  "Not found" = "Niet gevonden";
  
 /* Status displayed in find panel when indicated number of matches are replaced. */
- "%d replaced" = "%d vergangen";
+ "%d replaced" = "%d vervangen";
  

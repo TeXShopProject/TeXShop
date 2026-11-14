@@ -96,6 +96,8 @@
                 <outlet property="shareButton" destination="8YZ-kA-03M" id="qWO-Nf-dmF"/>
                 <outlet property="shareButtonEE" destination="3926" id="3930"/>
                 <outlet property="shareButtonFull" destination="3925" id="FgS-M5-Dks"/>
+                <outlet property="showFullPathButton" destination="3921" id="Bcb-fn-oGM"/>
+                <outlet property="slabels" destination="OUv-dr-rDM" id="bJm-TP-SIA"/>
                 <outlet property="smacroButton" destination="n9F-3Z-BcR" id="qzr-B5-QeX"/>
                 <outlet property="smagnificationOutletKK" destination="5qf-gO-pJV" id="gTM-rw-OMi"/>
                 <outlet property="splitView" destination="445" id="446"/>
@@ -1088,7 +1090,7 @@ DQ
                         </menu>
                     </popUpButtonCell>
                     <connections>
-                        <action selector="convertTiff:" target="-2" id="yKe-Uz-9qP"/>
+                        <action selector="doTag:" target="-2" id="yKe-Uz-9qP"/>
                     </connections>
                 </popUpButton>
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0yu-Am-1gn">

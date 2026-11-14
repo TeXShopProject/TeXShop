@@ -1941,7 +1941,7 @@ y7bMNcy1zTXNtc42zrbPN8+40DnQutE80b7SP9LB00TTxtRJ1MvVTtXR1lXW2Ndc1+DYZNjo2WzZ8dp2
 				</object>
 				<string key="2368.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="2369.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="2383.CustomClassName">MatrixTableView</string>
+				<string key="2383.CustomClassName">TSMatrixTableView</string>
 				<string key="2383.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<object class="NSMutableDictionary" key="2384.IBAttributePlaceholdersKey">
 					<string key="NS.key.0">ToolTip</string>

@@ -98,6 +98,14 @@ for language in LANGUAGES:
         assert 'LaTeXの構文を考慮するスペルチェック' in categories['spelling.summary'], 'Japanese Spelling summary'
         for name,text in [*pages.items(),('Localizable',str(labels)),('SettingsCategories',str(categories))]:
             assert '構造を考慮' not in text, ('Japanese spell checking says structure',name)
+    if language=='ko':
+        # The recommended method considers the syntax (구문, as in 구문 색상) of LaTeX, not its structure.
+        method='LaTeX 구문을 고려한 맞춤법 검사 사용(권장)'
+        assert labels['Use LaTeX-aware spell checking (recommended)']==method and categories['catalog.spelling.1.0.title']==method, 'Korean spell checking method name'
+        assert '구문' in categories['group.editor.3.title'], 'Korean word for syntax'
+        assert '“'+method+'”' in overview, 'Korean help names the spell checking method'
+        for name,text in [*pages.items(),('Localizable',str(labels)),('SettingsCategories',str(categories))]:
+            assert '구조를 고려' not in text and 'LaTeX 구조' not in text, ('Korean spell checking says structure',name)
     # Check the DOM location, not just whether the added paragraph exists.
     from html.parser import HTMLParser
     class ContentParser(HTMLParser):
@@ -122,6 +130,16 @@ for language in LANGUAGES:
     if language in ('en', 'ko', 'ja'):
         assert all(labels[key] in pages['basic_autocompletion'] for key in ('Input Character', 'Output String', 'Insert')) and categories['keyboard'] in pages['basic_autocompletion'], (language, 'basic_autocompletion')
     assert labels['Edit Command Completion…'] in pages['basic_commandcompletion'] and categories['keyboard'] in pages['basic_commandcompletion'], (language, 'basic_commandcompletion')
+
+# Simplified Chinese has no help; its method name uses 语法 as in 语法高亮, not 结构.
+zh_labels=strings(ROOT/'Resources/Interfaces/zh_CN.lproj/Localizable.strings')
+zh_categories=strings(ROOT/'Resources/Interfaces/zh_CN.lproj/SettingsCategories.strings')
+method='使用考虑LaTeX语法的拼写检查（推荐）'
+assert zh_labels['Use LaTeX-aware spell checking (recommended)']==method and zh_categories['catalog.spelling.1.0.title']==method, 'Chinese spell checking method name'
+assert '语法' in zh_categories['group.editor.3.title'], 'Chinese word for syntax'
+assert 'LaTeX结构' not in str(zh_labels)+str(zh_categories), 'Chinese spell checking says structure'
+overrides=json.loads((ROOT/'Tests/Fixtures/SettingsClassificationStrings.json').read_text())['strings']['Use LaTeX-aware spell checking (recommended)']['overrides']
+assert overrides['ko']=='LaTeX 구문을 고려한 맞춤법 검사 사용(권장)' and overrides['zh_CN']==method, 'classification fixture method names'
 
 ja_unicode=read_help(ROOT/'Resources/Interfaces/ja.lproj/TeXShopHelp/pgs/advanced_unicode.htm','ja')
 assert strings(ROOT/'Resources/Interfaces/ja.lproj/SettingsMiscTwo.strings')['ahm-aK-Qi9.title'] in ja_unicode

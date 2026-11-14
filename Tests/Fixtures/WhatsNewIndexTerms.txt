@@ -740,6 +740,7 @@ frame
 frames
 freed
 freely
+french
 from
 front
 frontmost
@@ -827,7 +828,6 @@ highlighted
 highlighting
 highlights
 hint
-hinted
 hiragana
 hiragino
 his
@@ -950,6 +950,7 @@ issue
 issues
 it
 it's
+italian
 item
 items
 its
@@ -1300,7 +1301,6 @@ parse
 parser
 parsing
 part
-particular
 particularly
 parts
 party
@@ -1347,6 +1347,7 @@ popup
 popups
 portion
 portions
+portuguese
 position
 positioning
 positive
@@ -1423,7 +1424,6 @@ ralph
 ran
 range
 ranges
-rare
 rather
 reached
 read
@@ -1459,7 +1459,6 @@ reinserted
 reject
 related
 relative
-relatively
 release
 released
 releases
@@ -1531,6 +1530,7 @@ right
 risking
 rivas
 roman
+romanian
 room
 root
 rounded
@@ -1651,7 +1651,6 @@ software
 solarizeddark
 solarizedlite
 some
-something
 sometime
 sometimes
 soon
@@ -1818,6 +1817,7 @@ to
 today
 together
 tokens
+tom
 took
 tool
 toolbar

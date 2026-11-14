@@ -108,6 +108,7 @@ static NSMenu *MainMenu(void) {
     parent.submenu = menu; [root addItem:parent]; NSApp.mainMenu = root; return menu;
 }
 static void IgnoreShortcutOutlet(id self, SEL cmd, id value, NSString *key) {}
+static void IgnoreShortcutAction(id self, SEL cmd, id sender) {}
 int main(int argc, char **argv) { @autoreleasepool {
     TSInstallAppKitIsolation();
     NSMutableString *mutableKey=[@"q" mutableCopy];
@@ -125,6 +126,8 @@ int main(int argc, char **argv) { @autoreleasepool {
         for (NSString *name in @[@"HelpDocuments",@"TSAppDelegate",@"TSDocumentController",@"TSMacroEditor",@"TSMacroMenuController",@"TSMovie",@"TSPreferences",@"TSSparkleController",@"TSStationery",@"TextFinder"]) {
             Class c = objc_allocateClassPair(NSObject.class,name.UTF8String,0);
             class_addMethod(c,@selector(setValue:forUndefinedKey:),(IMP)IgnoreShortcutOutlet,"v@:@@");
+            // AppKit keeps a menu action only when its target answers to it.
+            if ([name isEqual:@"HelpDocuments"]) class_addMethod(c,@selector(displayFileEncoding:),(IMP)IgnoreShortcutAction,"v@:@");
             objc_registerClassPair(c);
         }
         NSNib *nib = [[NSNib alloc] initWithNibData:[NSData dataWithContentsOfFile:@(argv[1])] bundle:nil];
@@ -166,6 +169,20 @@ int main(int argc, char **argv) { @autoreleasepool {
         saved.values[TSMenuShortcutOverridesKey] = @{completion.commandID:@{@"key":@"7", @"modifiers":@(NSEventModifierFlagCommand|NSEventModifierFlagControl)}};
         TSShortcutStore *restored = [[TSShortcutStore alloc] initWithMenu:NSApp.mainMenu defaults:(id)saved];
         REQUIRE([completion.item.keyEquivalent isEqual:@"7"] && Command(restored,completion.commandID).item == completion.item);
+        // Before 6.00 the Italian File Encoding and TeXShop item had the identifier of the ConTeXt item.
+        // A shortcut saved under that identifier applies to File Encoding and TeXShop; one saved for
+        // the item itself wins.
+        TSShortcutCommand *encoding = Command(restored,@"TSShortcut.displayFileEncoding:.0");
+        REQUIRE(encoding && !Command(restored,@"TSShortcut.displayGettingStartedConTeXt:.0"));
+        const NSEventModifierFlags legacyFlags = NSEventModifierFlagCommand|NSEventModifierFlagControl|NSEventModifierFlagOption;
+        ShortcutMemoryDefaults *legacy = [ShortcutMemoryDefaults new];
+        legacy.values[TSMenuShortcutOverridesKey] = @{@"TSShortcut.displayGettingStartedConTeXt:.0":@{@"key":@"9", @"modifiers":@(legacyFlags)}};
+        TSShortcutStore *adopted = [[TSShortcutStore alloc] initWithMenu:NSApp.mainMenu defaults:(id)legacy];
+        REQUIRE([encoding.item.keyEquivalent isEqual:@"9"] && encoding.item.keyEquivalentModifierMask == legacyFlags && adopted.unavailableCommands.count == 0);
+        legacy.values[TSMenuShortcutOverridesKey] = @{@"TSShortcut.displayGettingStartedConTeXt:.0":@{@"key":@"9", @"modifiers":@(legacyFlags)},
+                                                      encoding.commandID:@{@"key":@"8", @"modifiers":@(legacyFlags)}};
+        adopted = [[TSShortcutStore alloc] initWithMenu:NSApp.mainMenu defaults:(id)legacy];
+        REQUIRE([encoding.item.keyEquivalent isEqual:@"8"] && encoding.item.keyEquivalentModifierMask == legacyFlags);
         return 0;
     }
     const NSEventModifierFlags cmd = NSEventModifierFlagCommand, shift = NSEventModifierFlagShift;

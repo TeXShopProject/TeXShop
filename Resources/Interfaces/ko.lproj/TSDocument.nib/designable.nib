@@ -2741,7 +2741,7 @@ Gw
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                         <connections>
-                            <action selector="lockDocument:" target="-2" id="NLs-gZ-1iV"/>
+                            <action selector="gotoURL:" target="-2" id="NLs-gZ-1iV"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kEy-pu-Mdb">

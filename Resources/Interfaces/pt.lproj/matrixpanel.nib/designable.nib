@@ -215,7 +215,7 @@
                             <rect key="frame" x="1" y="17" width="358" height="151"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" emptySelection="NO" autosaveName="matrixtable" headerView="2501" id="2383" customClass="MatrixTableView">
+                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" emptySelection="NO" autosaveName="matrixtable" headerView="2501" id="2383" customClass="TSMatrixTableView">
                                     <rect key="frame" x="0.0" y="0.0" width="358" height="151"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
