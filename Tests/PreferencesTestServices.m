@@ -7,7 +7,16 @@
 #define INERT_CLASS(Name, Parent) @interface Name : Parent @end @implementation Name @end
 INERT_CLASS(TSConsoleWindow,NSWindow)
 INERT_CLASS(TSDocument,NSObject)
-INERT_CLASS(TSEnginePathDiscovery,NSObject)
+// Installations as the search reports them, without looking at the disk or running programs.
+@interface TSEnginePathDiscovery : NSObject @end
+@implementation TSEnginePathDiscovery
++ (NSArray<NSString *> *)systemSearchPaths { return @[]; }
++ (BOOL)directory:(NSString *)directory containsPrograms:(NSArray<NSString *> *)programs { return [directory isEqual:@"/test/texbin"]; }
++ (NSDictionary *)candidatesForPaths:(NSArray *)paths currentTeX:(NSString *)tex currentGhostscript:(NSString *)gs
+{
+    return @{@"TeX": @[@{@"path": @"/test/texbin", @"version": @"TeX Live 2026"}], @"Ghostscript": @[@{@"path": @"/test/gs", @"version": @"10.06.0"}]};
+}
+@end
 #ifndef TS_TEST_REAL_SHORTCUTS
 INERT_CLASS(TSShortcutPaneController,NSViewController)
 #endif
@@ -53,12 +62,6 @@ NSUInteger TSSettingsEncodingPreparations;
 - (void)setupForEncoding {TSSettingsEncodingPreparations++;}
 @end
 #ifndef TS_TEST_REAL_PROFILE
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wincomplete-implementation"
-@implementation TSPreferenceProfile @end
-#pragma clang diagnostic pop
-NSSet<TSPreferenceKey> *TSKnownPreferenceKeys(void) { [NSException raise:NSInternalInconsistencyException format:@"Unexpected profile lookup"]; return [NSSet set]; }
-
-TSPreferenceKey const TSSettingsSelectedCategoryKey = @"TSSettingsSelectedCategory";
-
+// The engine profile table has no outside dependencies: the production one is used.
+#include "TSPreferenceProfile.m"
 #endif

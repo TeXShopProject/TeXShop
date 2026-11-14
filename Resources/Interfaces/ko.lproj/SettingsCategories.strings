@@ -16,13 +16,13 @@
 "updates" = "업데이트";
 
 /* Category overview */
-"general.summary" = "시작 동작, 윈도우 위치, 설정 프로파일 및 Dock 아이콘을 설정합니다.";
+"general.summary" = "시작 동작, 윈도우 위치 및 Dock 아이콘을 설정합니다.";
 "documents.summary" = "텍스트 인코딩과 문서 저장 방식을 설정합니다.";
 "editor.summary" = "편집, 구문 색상, 들여쓰기 및 괄호 짝 표시를 설정합니다.";
 "spelling.summary" = "입력 중 맞춤법 검사와 LaTeX 맞춤법 검사 방식을 설정합니다.";
 "appearance.summary" = "색상 테마를 선택하고 편집합니다.";
 "preview.summary" = "PDF 미리보기의 표시와 조작을 설정합니다.";
-"typesetting.summary" = "조판, 동기화 및 도구 경로를 설정합니다.";
+"typesetting.summary" = "엔진 프로파일, 조판, 동기화 및 도구 경로를 설정합니다.";
 "console.summary" = "조판 출력을 표시하는 콘솔을 설정합니다.";
 "keyboard.summary" = "키 바인딩, 명령 완성 및 메뉴 단축키를 설정합니다.";
 "updates.summary" = "자동 확인 및 소프트웨어 업데이트를 설정합니다.";
@@ -49,10 +49,6 @@
 "group.general.3.title" = "프로젝트 루트 파일";
 "catalog.general.3.0.title" = "문서를 열 때 루트 파일 열기";
 "catalog.general.3.1.title" = "루트 파일 창을 최소화";
-"group.general.4.title" = "설정 프로파일";
-"catalog.general.4.0.title" = "일본어 조판 등의 설정 프로파일을 적용합니다.";
-"catalog.general.4.1.title" = "프로파일";
-"catalog.general.4.1.button" = "적용";
 "group.general.5.title" = "고급";
 "group.general.6.title" = "실행 중인 Dock 아이콘";
 "catalog.general.5.0.title" = "여기에 표시되지 않는 설정은 도움말 ‘주석 줄과 숨겨진 설정’에서 설명합니다.";
@@ -239,6 +235,9 @@
 "catalog.preview.5.0.title" = "홈 URL";
 "catalog.preview.5.0.note" = "HTML 창을 열 때 처음 표시할 페이지입니다. 웹 주소나 파일 경로를 입력합니다. 기본값: https://texshop.app";
 "group.typesetting.0.title" = "초기값";
+"catalog.typesetting.0.4.title" = "엔진 프로파일";
+"catalog.typesetting.0.4.note" = "조판 명령, BibTeX 엔진, otf 패키지 지원, TeX 및 Ghostscript 경로를 설정합니다. 일본어 프로파일은 사전과 UTF-8-MAC 변환도 설정합니다.";
+"catalog.typesetting.0.4.button" = "적용…";
 "catalog.typesetting.0.0.title" = "기본 조판 명령";
 "catalog.typesetting.0.1.title" = "사용할 명령";
 "catalog.typesetting.0.2.title" = "조판 방식";

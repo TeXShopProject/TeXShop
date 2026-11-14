@@ -1,5 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #import "TestAppKitIsolation.h"
+#import "TSPreferenceProfile.h"
 
 @interface MemoryDefaults : NSObject
 @property NSMutableDictionary *values;
@@ -17,6 +18,7 @@ static NSUInteger modalCount;
 #define SUD defaults
 static NSString *TetexBinPath = @"TetexBinPath", *GSBinPath = @"GSBinPath";
 static NSDictionary *results;
+static NSDictionary *applied;
 static BOOL validPaths = YES;
 static void check(BOOL ok, NSString *message) { if (!ok) { NSLog(@"FAIL: %@", message); exit(1); } }
 static void spin(void) {
@@ -60,6 +62,8 @@ static TestAlert *shown;
 @end
 @implementation PreferencesProbe
 - (BOOL)finishPreferenceEditing:(BOOL)showError { return YES; }
+// The first-launch choice is written as one group of values.
+- (void)applyEngineProfileValues:(NSDictionary *)values { applied = values; [values enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) { [defaults setObject:value forKey:key]; }]; }
 #define NSAlert TestAlert
 #include "PreferencesMethods.h"
 #undef NSAlert
@@ -122,11 +126,27 @@ int main(void) { @autoreleasepool {
     [p discoverInitialEnginePaths]; spin();
     check(shown != nil && modalCount == 1 && [[defaults stringForKey:TetexBinPath] isEqual:@"/old/tex"], @"initial modal Cancel is non-destructive");
 
+    check(applied == nil, @"initial Cancel applies no profile");
+    // The first-launch setup: the engine profiles but the one under Other, chosen by language, and latexmk.
+    NSPopUpButton *profiles = nil; NSButton *latexmk = nil;
+    for (NSView *v in shown.accessoryView.subviews) {
+        if ([v.identifier isEqual:@"settings.first-launch-profile"]) profiles = (NSPopUpButton *)v;
+        if ([v.identifier isEqual:@"settings.engine-profile-latexmk"]) latexmk = (NSButton *)v;
+    }
+    NSMutableArray *tags = [NSMutableArray array];
+    for (NSMenuItem *item in profiles.itemArray) if (!item.isSeparatorItem) [tags addObject:@(item.tag)];
+    check([tags isEqual:@[@1, @2, @3, @4, @5, @6, @7]], [NSString stringWithFormat:@"first launch offers seven profiles, without dvips: %@", tags]);
+    check(profiles.selectedTag == TSEngineProfileForLanguages(NSLocale.preferredLanguages) && latexmk.state == NSControlStateValueOff, @"the profile for the preferred language is chosen, without latexmk");
+    check([shown.messageText isEqual:@"Set Up Typesetting"] && shown.buttons.count == 2, @"first launch: one setup dialog with OK and Cancel");
+
     modalResponse = NSAlertFirstButtonReturn;
     [p discoverInitialEnginePaths]; spin();
     check(modalCount == 2 && [[defaults stringForKey:TetexBinPath] isEqual:@"/new/tex"] &&
           [[defaults stringForKey:GSBinPath] isEqual:@"/new/gs"],
           @"initial modal confirmation applies without Settings undo group");
+    NSDictionary *chosen = TSEngineProfileValues(TSEngineProfileForLanguages(NSLocale.preferredLanguages), NO);
+    for (NSString *key in chosen) check([applied[key] isEqual:chosen[key]], [NSString stringWithFormat:@"initial confirmation applies the chosen profile: %@", key]);
+    check(applied.count == chosen.count + 2, @"the profile and the two paths, nothing else");
     [defaults setObject:@"/old/tex" forKey:TetexBinPath];
     [defaults setObject:@"/old/gs" forKey:GSBinPath];
 

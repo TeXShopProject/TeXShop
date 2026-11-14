@@ -144,7 +144,6 @@
 "TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShopはすべての改行をLFに揃えました。書類を保存すると、ファイルの改行コードはLFになります。";
 "Don’t show again for this document" = "この書類では今後表示しない";
 
-"Set Up TeX Engine Paths" = "TeXエンジンのパス設定";
 
 "Detected Engine Paths" = "エンジンの検出結果";
 
@@ -192,10 +191,7 @@
 "This shortcut is already used by:\n%@" = "このショートカットは次のコマンドで使用されています：\n%@";
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
-"The selected profile is invalid." = "選択した設定プロファイルが正しくありません。";
-"Apply Settings Profile?" = "設定プロファイルを適用しますか？";
 
-"Apply Profile" = "プロファイルを適用";
 "Settings could not be saved" = "設定を保存できませんでした";
 "Enter a valid setting" = "有効な設定値を入力してください";
 
@@ -318,7 +314,6 @@
 
 "Custom menu shortcuts will be removed." = "メニューのカスタムショートカットを削除します。";
 
-"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "エンジン・編集・表示・既知の隠し設定とDockアイコンを初期化します。テーマの選択は変更されることがあります。TeXエンジンのパス: %@";
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "言語を自動判別";
@@ -364,3 +359,15 @@
 "Change Key Binding" = "キーバインドの変更";
 "Delete Key Binding" = "キーバインドの削除";
 "Move Key Binding" = "キーバインドの移動";
+
+/* Engine profiles */
+"LuaLaTeX (Japanese)" = "LuaLaTeX（日本語）";
+"Other" = "その他";
+"Custom" = "カスタム";
+"Apply the “%@” profile?" = "プロファイル“%@”を適用しますか？";
+"Not found: %@" = "見つかりません：%@";
+"Use latexmk" = "latexmkを使用";
+"TeX Not Found" = "TeXが見つかりません";
+"Install TeX Live or MacTeX, then apply the profile again." = "TeX LiveかMacTeXをインストールしてから、もう一度プロファイルを適用してください。";
+"Set Up Typesetting" = "タイプセットの設定";
+"Engine Profile" = "エンジンのプロファイル";

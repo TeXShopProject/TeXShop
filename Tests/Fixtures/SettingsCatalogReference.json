@@ -7,7 +7,7 @@
    "symbol": "gearshape",
    "color": "#888780",
    "section": 0,
-   "summary": "起動時の動作、ウインドウの開き方と位置、設定プロファイル、Dockのアイコンを設定します。",
+   "summary": "起動時の動作、ウインドウの開き方と位置、Dockのアイコンを設定します。",
    "groups": [
     {
      "title": "起動時",
@@ -213,34 +213,6 @@
        "selected": 4,
        "src": [
         "code:TSDockIconController"
-       ]
-      }
-     ]
-    },
-    {
-     "title": "設定プロファイル",
-     "rows": [
-      {
-       "kind": "description",
-       "title": "日本語環境向けなどの設定をまとめて適用します。キーボードショートカット、アップデートの設定、ウインドウの配置は保たれます。"
-      },
-      {
-       "kind": "popup",
-       "title": "プロファイル",
-       "choices": [
-        "TeXShop標準",
-        "upTeX (ptex2pdf)",
-        "upTeX (latexmk)",
-        "upTeX (シェルスクリプト)",
-        "pTeX (ptex2pdf)",
-        "pTeX (latexmk)",
-        "pTeX (シェルスクリプト)",
-        "旧pTeX (Shift JIS)",
-        "旧pTeX (EUC)"
-       ],
-       "button": "適用…",
-       "src": [
-        "window:setDefaults"
        ]
       }
      ]
@@ -1589,11 +1561,30 @@
    "symbol": "hammer",
    "color": "#534AB7",
    "section": 2,
-   "summary": "既定のエンジンとスクリプト、TeX・Ghostscriptの場所、各エンジンのコマンドを設定します。",
+   "summary": "エンジンのプロファイル、既定のエンジンとスクリプト、TeX・Ghostscriptの場所、各エンジンのコマンドを設定します。",
    "groups": [
     {
      "title": "既定",
      "rows": [
+      {
+       "kind": "popup",
+       "title": "エンジンのプロファイル",
+       "note": "タイプセットのコマンド、BibTeXエンジン、otfパッケージ対応、TeXとGhostscriptのパスを設定します。日本語のプロファイルは、辞書とUTF-8-MACの変換も設定します。",
+       "choices": [
+        "pdfLaTeX",
+        "XeLaTeX",
+        "LuaLaTeX",
+        "LaTeX + dvipdfmx",
+        "LuaLaTeX（日本語）",
+        "pLaTeX + dvipdfmx",
+        "upLaTeX + dvipdfmx",
+        "LaTeX + dvips + Ghostscript"
+       ],
+       "button": "適用…",
+       "src": [
+        "new:engine-profile"
+       ]
+      },
       {
        "kind": "popup",
        "title": "デフォルトのコマンド",

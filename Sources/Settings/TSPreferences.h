@@ -244,6 +244,8 @@
 @property NSUInteger themeOperationGeneration;
 @property (strong) NSButton *legacySpellCheckButton;
 @property (strong) NSButton *sparklePrereleaseButton;
+@property (strong) NSPopUpButton *engineProfilePopup;
+@property (strong) NSButton *engineProfileApplyButton;
 @property (strong) NSTextField *sparkleLastCheckField;
 @property (strong) NSButton *sparkleCheckNowButton;
 @property (strong) TSKeyBindingsController *keyBindings;
@@ -355,7 +357,7 @@
 - (IBAction)colorParam1Changed:sender; // mitsu 1.29 (O)
 #endif
 
-- (IBAction)setDefaults:sender;
+- (IBAction)applyEngineProfile:(id)sender;
 
 - (IBAction)highlightChanged:sender; // added by Terada
 - (IBAction)invisibleCharacterChanged:sender; // added by Terada

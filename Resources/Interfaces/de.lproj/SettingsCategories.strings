@@ -16,13 +16,13 @@
 "updates" = "Updates";
 
 /* Category overview */
-"general.summary" = "Startverhalten, Fensterpositionen, Einstellungsprofile und das Dock-Symbol.";
+"general.summary" = "Startverhalten, Fensterpositionen und das Dock-Symbol.";
 "documents.summary" = "Textkodierung und Speichern von Dokumenten.";
 "editor.summary" = "Bearbeitung, Syntaxfarben, Einzüge und Klammerpaare.";
 "spelling.summary" = "Rechtschreibung beim Schreiben und in LaTeX.";
 "appearance.summary" = "Farbschemata auswählen und bearbeiten.";
 "preview.summary" = "Anzeige und Bedienung der PDF-Vorschau.";
-"typesetting.summary" = "Satzbefehle, Synchronisierung und Werkzeugpfade.";
+"typesetting.summary" = "Engine-Profile, Satzbefehle, Synchronisierung und Werkzeugpfade.";
 "console.summary" = "Die Konsole mit den Ausgaben des Schriftsatzes.";
 "keyboard.summary" = "Tastenbelegung, Vervollständigung und Menükurzbefehle.";
 "updates.summary" = "Automatische Suche und Softwareaktualisierungen.";
@@ -49,10 +49,6 @@
 "group.general.3.title" = "Projekt-Hauptdatei";
 "catalog.general.3.0.title" = "Beim Öffnen eines Dokuments auch die Hauptdatei öffnen";
 "catalog.general.3.1.title" = "Das geöffnete Stammfenster verkleinern";
-"group.general.4.title" = "Alle Einstellungen zurücksetzen";
-"catalog.general.4.0.title" = "Ein Einstellungsprofil anwenden, etwa für japanischen Textsatz.";
-"catalog.general.4.1.title" = "Profil";
-"catalog.general.4.1.button" = "Anwenden";
 "group.general.5.title" = "Erweitert";
 "group.general.6.title" = "Dock-Symbol während der Laufzeit";
 "catalog.general.5.0.title" = "Nicht hier angezeigte Einstellungen sind im Hilfedokument „Kommentarzeilen und versteckte Einstellungen“ beschrieben.";
@@ -239,6 +235,9 @@
 "catalog.preview.5.0.title" = "Standard URL-Adresse";
 "catalog.preview.5.0.note" = "Die Seite, die das HTML-Fenster zuerst öffnet. Geben Sie eine Webadresse oder den Pfad einer Datei ein. Vorgabe: https://texshop.app";
 "group.typesetting.0.title" = "Vorgaben";
+"catalog.typesetting.0.4.title" = "Engine-Profil";
+"catalog.typesetting.0.4.note" = "Legt die Satzbefehle, das BibTeX-Programm, die Unterstützung für das otf-Paket und die Pfade zu TeX und Ghostscript fest. Die japanischen Profile legen auch das Wörterbuch und die Umwandlung von UTF-8-MAC fest.";
+"catalog.typesetting.0.4.button" = "Anwenden…";
 "catalog.typesetting.0.0.title" = "Standardbefehl";
 "catalog.typesetting.0.1.title" = "Zu verwendender Befehl";
 "catalog.typesetting.0.2.title" = "Satzmethode";

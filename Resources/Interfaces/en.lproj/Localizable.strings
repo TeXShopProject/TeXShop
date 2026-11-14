@@ -144,10 +144,7 @@
 "This shortcut is already used by:\n%@" = "This shortcut is already used by:\n%@";
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
-"The selected profile is invalid." = "The selected profile is invalid.";
-"Apply Settings Profile?" = "Apply Settings Profile?";
 
-"Apply Profile" = "Apply Profile";
 "Settings could not be saved" = "Settings could not be saved";
 "Enter a valid setting" = "Enter a valid setting";
 
@@ -280,7 +277,6 @@
 "Restore all keyboard shortcuts?" = "Restore all keyboard shortcuts?";
 "Search commands" = "Search commands";
 
-"Set Up TeX Engine Paths" = "Set Up TeX Engine Paths";
 "Shortcut" = "Shortcut";
 "Shortcut Unavailable" = "Shortcut Unavailable";
 "Spell Checking Help" = "Spell Checking Help";
@@ -306,7 +302,6 @@
 
 "Custom menu shortcuts will be removed." = "Custom menu shortcuts will be removed.";
 
-"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@";
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "Automatic Language";
@@ -352,3 +347,15 @@
 "Change Key Binding" = "Change Key Binding";
 "Delete Key Binding" = "Delete Key Binding";
 "Move Key Binding" = "Move Key Binding";
+
+/* Engine profiles */
+"LuaLaTeX (Japanese)" = "LuaLaTeX (Japanese)";
+"Other" = "Other";
+"Custom" = "Custom";
+"Apply the “%@” profile?" = "Apply the “%@” profile?";
+"Not found: %@" = "Not found: %@";
+"Use latexmk" = "Use latexmk";
+"TeX Not Found" = "TeX Not Found";
+"Install TeX Live or MacTeX, then apply the profile again." = "Install TeX Live or MacTeX, then apply the profile again.";
+"Set Up Typesetting" = "Set Up Typesetting";
+"Engine Profile" = "Engine Profile";

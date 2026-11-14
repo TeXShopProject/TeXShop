@@ -16,13 +16,13 @@
 "updates" = "Atualizações";
 
 /* Category overview */
-"general.summary" = "Inicialização, posições das janelas, perfis de ajustes e ícone do Dock.";
+"general.summary" = "Inicialização, posições das janelas e ícone do Dock.";
 "documents.summary" = "Codificação de texto e salvamento de documentos.";
 "editor.summary" = "Edição, cores de sintaxe, recuos e parênteses.";
 "spelling.summary" = "Verificação ortográfica ao digitar e no LaTeX.";
 "appearance.summary" = "Escolher e editar temas de cores.";
 "preview.summary" = "Exibição e controles da pré-visualização de PDF.";
-"typesetting.summary" = "Composição, sincronização e caminhos das ferramentas.";
+"typesetting.summary" = "Perfis do motor, composição, sincronização e caminhos das ferramentas.";
 "console.summary" = "O console que exibe a saída da composição.";
 "keyboard.summary" = "Associações de teclas, complementação e atalhos de menus.";
 "updates.summary" = "Verificação automática e atualizações do software.";
@@ -49,10 +49,6 @@
 "group.general.3.title" = "Arquivo principal do projeto";
 "catalog.general.3.0.title" = "Abrir o arquivo principal ao abrir um documento";
 "catalog.general.3.1.title" = "Minimizar a janela do arquivo raiz";
-"group.general.4.title" = "Restaurar valores padrões";
-"catalog.general.4.0.title" = "Aplicar um perfil de configurações, por exemplo, para composição em japonês.";
-"catalog.general.4.1.title" = "Perfil";
-"catalog.general.4.1.button" = "Aplicar";
 "group.general.5.title" = "Avançado";
 "group.general.6.title" = "Ícone do Dock durante a execução";
 "catalog.general.5.0.title" = "As configurações que não aparecem aqui são descritas na ajuda “Linhas de comentário e configurações ocultas”.";
@@ -239,6 +235,9 @@
 "catalog.preview.5.0.title" = "URL inicial";
 "catalog.preview.5.0.note" = "A página que a janela HTML abre primeiro. Digite um endereço da web ou o caminho de um arquivo. Padrão: https://texshop.app";
 "group.typesetting.0.title" = "Valores padrão";
+"catalog.typesetting.0.4.title" = "Perfil do motor";
+"catalog.typesetting.0.4.note" = "Define os comandos de composição, o motor BibTeX, o suporte ao pacote otf e os caminhos do TeX e do Ghostscript. Os perfis japoneses também definem o dicionário e a conversão de UTF-8-MAC.";
+"catalog.typesetting.0.4.button" = "Aplicar…";
 "catalog.typesetting.0.0.title" = "Formato padrão";
 "catalog.typesetting.0.1.title" = "Comando a usar";
 "catalog.typesetting.0.2.title" = "Método de composição";

@@ -24,7 +24,6 @@
  */
 #import "TSShortcutPaneController.h"
 #import "TSPreferences+Panes.h"
-#import "TSPrefFooterController.h"
 
 
 #import "UseMitsu.h"
@@ -202,12 +201,7 @@ Loads the .nib file if necessary, fills all the controls with the values from th
         keyboard.settingsHeader = keyboardOptions;
         return keyboard;
     };
-    NSView *footer = nil;
-    for (TSPrefPaneController *pane in self.preferencePanes) {
-        if ([pane isKindOfClass:TSPrefFooterController.class]) { footer = pane.view; }
-    }
-    if (footer == nil) { return NO; }
-    [controller hostPaneControllers:panes footer:footer];
+    [controller hostPaneControllers:panes footer:nil];
     _prefsWindow = newWindow;
     self.settingsController = controller;
     return YES;
@@ -228,64 +222,110 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 }
 
 //==============================================================================
-// Entire panel
+// Engine profile
 //==============================================================================
-/*" This method is connected to the 'Set Defaults' menu
 
-
-"*/
-
-//-----------------------------------
-
-
-
-- (IBAction)setDefaults:(NSMenuItem *)sender
+// The profile menu of Settings > Typesetting shows the profile whose commands are set now,
+// or Custom when none is.
+- (void)refreshEngineProfileFromDefaults:(NSUserDefaults *)defaults
 {
+    NSPopUpButton *popup = self.engineProfilePopup;
+    if (popup == nil) return;
+    TSEngineProfile current = TSEngineProfileMatchingSettings(defaults, NULL);
+    [popup removeAllItems];
+    popup.autoenablesItems = NO;
+    NSMenu *menu = popup.menu;
+    NSArray *sections = TSEngineProfileMenuSections();
+    // Separators and the heading get a tag no profile has, so that a tag selects only a profile.
+    void (^add)(NSMenuItem *) = ^(NSMenuItem *item) { item.tag = -1; [menu addItem:item]; };
+    for (NSUInteger i = 0; i < sections.count; i++) {
+        if (i > 0) add(NSMenuItem.separatorItem);
+        if (i == sections.count - 1) add([NSMenuItem sectionHeaderWithTitle:NSLocalizedString(@"Other", @"Engine profile section")]);
+        for (NSNumber *profile in sections[i]) {
+            NSMenuItem *item = [menu addItemWithTitle:TSEngineProfileTitle(profile.integerValue) action:NULL keyEquivalent:@""];
+            item.tag = profile.integerValue;
+        }
+    }
+    if (current == TSEngineProfileNone) {
+        add(NSMenuItem.separatorItem);
+        NSMenuItem *custom = [menu addItemWithTitle:NSLocalizedString(@"Custom", @"Engine profile matching no settings") action:NULL keyEquivalent:@""];
+        custom.tag = TSEngineProfileNone;
+        custom.enabled = NO;
+        [popup selectItem:custom];
+    } else {
+        [popup selectItemWithTag:current];
+    }
+}
+
+// Built with the engine path alert, below.
+static NSAlert *TSEngineProfileAlert(TSEngineProfile profile, NSDictionary *tex, NSDictionary *gs, NSArray<NSString *> *missing, NSButton *latexmk);
+static NSButton *TSEngineProfileLatexmkButton(BOOL on);
+static BOOL TSEngineProfileContains(NSString *directory, NSArray<NSString *> *programs);
+
+
+- (IBAction)applyEngineProfile:(id)sender
+{
+    // Read the choice first: committing a command being edited refreshes the menu.
+    TSEngineProfile profile = self.engineProfilePopup.selectedTag;
     if (![self finishPreferenceEditing:YES]) return;
-    NSString *name = TSPreferenceProfileNameForTag((TSPreferenceProfileTag)sender.tag);
-    if (name == nil) return;
-    NSURL *url = [NSBundle.mainBundle URLForResource:name withExtension:@"plist" subdirectory:@"Defaults"];
-    if (url == nil) return;
-    NSDictionary<NSString *, id> *profile = [NSDictionary dictionaryWithContentsOfURL:url];
-    NSFont *font = [NSFont userFontOfSize:12.0];
-    if (profile == nil || font == nil) return;
-    NSURL *factoryURL = [NSBundle.mainBundle URLForResource:@"FactoryDefaults" withExtension:@"plist" subdirectory:@"Defaults"];
-    NSDictionary<NSString *, id> *factory = factoryURL == nil ? nil : [NSDictionary dictionaryWithContentsOfURL:factoryURL];
-    if (factory == nil) return;
-    TSPreferenceProfile *proposal = [[TSPreferenceProfile alloc] initWithProfile:profile
-        documentFont:[NSArchiver archivedDataWithRootObject:font] registeredDefaults:factory];
-    if (proposal == nil) { [self showPreferenceError:NSLocalizedString(@"The selected profile is invalid.", @"")]; return; }
-    NSAlert *alert = [NSAlert new];
-    alert.messageText = NSLocalizedString(@"Apply Settings Profile?", @"");
-    alert.informativeText = [NSString stringWithFormat:NSLocalizedString(@"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@", @""), proposal.enginePath];
-    [alert addButtonWithTitle:NSLocalizedString(@"Apply Profile", @"")].keyEquivalent = @"";
-    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")].keyEquivalent = @"\e";
-    __weak TSPreferences *weakSelf = self;
+    if (TSEngineProfileTitle(profile) == nil) return;
+    BOOL latexmk = NO;
+    TSEngineProfileMatchingSettings(SUD, &latexmk);
+    [self cancelEnginePathDiscovery];
+    NSUInteger generation = self.enginePathSearchGeneration;
+    NSButton *button = [sender isKindOfClass:NSButton.class] ? sender : nil;
+    self.enginePathSearchButton = button;
+    button.enabled = NO;
+    NSArray *snapshot = @[[SUD stringForKey:TetexBinPath] ?: @"", [SUD stringForKey:GSBinPath] ?: @""];
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
+        NSDictionary *found = [TSEnginePathDiscovery candidatesForPaths:[TSEnginePathDiscovery systemSearchPaths]
+                                                  currentTeX:snapshot[0] currentGhostscript:snapshot[1]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (generation != self.enginePathSearchGeneration) return;
+            button.enabled = YES;
+            // Closing Settings cancels the search (tearDownPreferenceEditing), so the window is still there.
+            if (self.endingPreferences || self->_prefsWindow == nil || self->_prefsWindow.attachedSheet != nil) return;
+            [self presentEngineProfile:profile latexmk:latexmk found:found generation:generation];
+        });
+    });
+}
+
+- (void)presentEngineProfile:(TSEngineProfile)profile latexmk:(BOOL)latexmk found:(NSDictionary *)found generation:(NSUInteger)generation
+{
+    if ([found[@"TeX"] count] == 0) {
+        NSAlert *alert = [NSAlert new];
+        alert.alertStyle = NSAlertStyleWarning;
+        alert.messageText = NSLocalizedString(@"TeX Not Found", @"");
+        alert.informativeText = NSLocalizedString(@"Install TeX Live or MacTeX, then apply the profile again.", @"");
+        [alert beginSheetModalForWindow:_prefsWindow completionHandler:nil];
+        return;
+    }
+    NSArray<NSString *> *missing = nil;
+    NSDictionary *tex = TSEngineProfileTeXCandidate(found[@"TeX"], TSEngineProfileRequiredPrograms(profile, NO),
+        ^BOOL(NSString *directory, NSArray<NSString *> *programs) { return TSEngineProfileContains(directory, programs); }, &missing);
+    NSDictionary *gs = [found[@"Ghostscript"] firstObject];
+    if (TSEngineProfileNeedsGhostscript(profile) && gs == nil) missing = [missing arrayByAddingObject:@"gs"];
+    // latexmk can be chosen only where it is installed.
+    BOOL hasLatexmk = TSEngineProfileContains(tex[@"path"], @[@"latexmk"]);
+    NSButton *latexmkButton = TSEngineProfileLatexmkButton(latexmk && hasLatexmk);
+    latexmkButton.enabled = hasLatexmk;
+    NSAlert *alert = TSEngineProfileAlert(profile, tex, gs, missing, latexmkButton);
     [alert beginSheetModalForWindow:_prefsWindow completionHandler:^(NSModalResponse response) {
-        TSPreferences *strongSelf = weakSelf;
-        if (strongSelf == nil || strongSelf.endingPreferences || response != NSAlertFirstButtonReturn) return;
-        [strongSelf cancelEnginePathDiscovery];
-        [strongSelf releasePreferencePanels];
-        [strongSelf applyPreferenceProfile:proposal font:font];
+        if (response != NSAlertFirstButtonReturn || generation != self.enginePathSearchGeneration || self.endingPreferences) return;
+        NSMutableDictionary *values = [TSEngineProfileValues(profile, latexmkButton.state == NSControlStateValueOn) mutableCopy];
+        values[TetexBinPath] = tex[@"path"];
+        if (gs[@"path"]) values[GSBinPath] = gs[@"path"];
+        [self applyEngineProfileValues:values];
     }];
 }
 
-
-// Compare effective values, then reuse the notifications of individual actions.
-- (void)applyPreferenceProfile:(TSPreferenceProfile *)proposal font:(NSFont *)font
+// Writes the values of a profile and refreshes what depends on them.
+- (void)applyEngineProfileValues:(NSDictionary<NSString *, id> *)values
 {
-    NSMutableDictionary<NSString *, id> *before = [NSMutableDictionary dictionary];
-    for (NSString *key in TSKnownPreferenceKeys()) before[key] = [SUD objectForKey:key] ?: NSNull.null;
-    [proposal applyToDefaults:SUD];
+    NSSet *changed = TSEngineProfileApply(SUD, values);
     [self.settingsChangeNotes valuesReplaced];
-    NSMutableSet<NSString *> *changed = [NSMutableSet set];
-    for (NSString *key in TSKnownPreferenceKeys())
-        if (![before[key] isEqual:[SUD objectForKey:key] ?: NSNull.null]) [changed addObject:key];
-    self.documentFont = font;
-    self.fontAttributes = nil;
     [self refreshRuntimePreferences];
     [self updateControlsFromUserDefaults:SUD];
-    [self PrepareColorPane:SUD];
     [self applyEffectsForPreferenceKeys:changed];
 }
 
@@ -1262,16 +1302,103 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 }
 
 // BEGIN engine path alert
+static BOOL TSEngineProfileContains(NSString *directory, NSArray<NSString *> *programs)
+{
+    return [TSEnginePathDiscovery directory:directory containsPrograms:programs];
+}
+
+// After first launch: the TeX installation chosen lacks programs of the profile chosen.
+static void TSEngineProfileMissingAlert(NSString *path, NSArray<NSString *> *missing)
+{
+    NSAlert *alert = [NSAlert new];
+    alert.alertStyle = NSAlertStyleWarning;
+    alert.messageText = [NSString stringWithFormat:NSLocalizedString(@"Not found: %@", @"Programs missing for an engine profile"), [missing componentsJoinedByString:@", "]];
+    alert.informativeText = path;
+    [alert runModal];
+}
+
+// The first-launch list of engine profiles: every profile but those under Other.
+static NSPopUpButton *TSEngineProfileFirstLaunchPopup(TSEngineProfile selected)
+{
+    NSPopUpButton *popup = [[NSPopUpButton alloc] initWithFrame:NSZeroRect pullsDown:NO];
+    popup.identifier = @"settings.first-launch-profile";
+    popup.autoenablesItems = NO;
+    NSArray *sections = TSEngineProfileMenuSections();
+    for (NSUInteger i = 0; i + 1 < sections.count; i++) {
+        if (i > 0) { NSMenuItem *separator = NSMenuItem.separatorItem; separator.tag = -1; [popup.menu addItem:separator]; }
+        for (NSNumber *profile in sections[i]) {
+            NSMenuItem *item = [popup.menu addItemWithTitle:TSEngineProfileTitle(profile.integerValue) action:NULL keyEquivalent:@""];
+            item.tag = profile.integerValue;
+        }
+    }
+    [popup selectItemWithTag:selected];
+    return popup;
+}
+
+// The confirmation sheet: the TeX and Ghostscript installations the profile will use, the
+// programs it needs that are not there, and the latexmk choice.
+static NSAlert *TSEngineProfileAlert(TSEngineProfile profile, NSDictionary *tex, NSDictionary *gs, NSArray<NSString *> *missing, NSButton *latexmk)
+{
+    NSAlert *alert = [NSAlert new];
+    alert.messageText = [NSString stringWithFormat:NSLocalizedString(@"Apply the “%@” profile?", @"Engine profile sheet"), TSEngineProfileTitle(profile)];
+    NSString *(^describe)(NSDictionary *) = ^NSString *(NSDictionary *found) {
+        if (found == nil) return NSLocalizedString(@"Not found", @"");
+        NSString *version = [found[@"version"] length] ? found[@"version"] : NSLocalizedString(@"Version unavailable", @"");
+        return [NSString stringWithFormat:@"%@\n%@", version, found[@"path"]];
+    };
+    NSMutableArray *lines = [NSMutableArray arrayWithObjects:[NSString stringWithFormat:@"TeX: %@", describe(tex)],
+        [NSString stringWithFormat:@"Ghostscript: %@", describe(gs)], nil];
+    if (missing.count)
+        [lines addObject:[NSString stringWithFormat:NSLocalizedString(@"Not found: %@", @"Programs missing for an engine profile"),
+            [missing componentsJoinedByString:@", "]]];
+    alert.informativeText = [lines componentsJoinedByString:@"\n\n"];
+    alert.accessoryView = latexmk;
+    [latexmk sizeToFit];
+    [alert addButtonWithTitle:NSLocalizedString(@"Apply", @"")].keyEquivalent = @"\r";
+    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")].keyEquivalent = @"\e";
+    return alert;
+}
+
+static NSButton *TSEngineProfileLatexmkButton(BOOL on)
+{
+    NSButton *button = [NSButton checkboxWithTitle:NSLocalizedString(@"Use latexmk", @"Engine profile option") target:nil action:NULL];
+    button.identifier = @"settings.engine-profile-latexmk";
+    button.state = on ? NSControlStateValueOn : NSControlStateValueOff;
+    return button;
+}
+
 // The alert that lists the TeX and Ghostscript installations found, with the
 // newest of each selected; the radio matrices are returned in matrices.
 static NSAlert *TSEnginePathAlert(NSDictionary *found, BOOL initial, NSMutableDictionary *matrices)
 {
     NSAlert *alert = [NSAlert new];
-    alert.messageText = NSLocalizedString(initial ? @"Set Up TeX Engine Paths" : @"Detected Engine Paths", @"");
+    alert.messageText = NSLocalizedString(initial ? @"Set Up Typesetting" : @"Detected Engine Paths", @"");
     BOOL hasPaths = [found[@"TeX"] count] || [found[@"Ghostscript"] count];
     alert.informativeText = NSLocalizedString(@"The newest detected installation is selected. You can choose another candidate below.", @"");
-    NSView *choices = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 560, 340)];
-    CGFloat top = 340;
+    CGFloat fullHeight = initial ? 420 : 340;
+    NSView *choices = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 560, fullHeight)];
+    CGFloat top = fullHeight;
+    if (initial) {
+        // On first launch the engine profile is chosen together with the paths.
+        NSTextField *label = [NSTextField labelWithString:NSLocalizedString(@"Engine Profile", @"")];
+        label.font = [NSFont boldSystemFontOfSize:13];
+        top -= 22;
+        label.frame = NSMakeRect(0, top, 560, 20);
+        [choices addSubview:label];
+        NSPopUpButton *popup = TSEngineProfileFirstLaunchPopup(TSEngineProfileForLanguages(NSLocale.preferredLanguages));
+        [popup sizeToFit];
+        top -= 28;
+        popup.frame = NSMakeRect(0, top, MAX(NSWidth(popup.frame), 260), 26);
+        [choices addSubview:popup];
+        NSButton *latexmk = TSEngineProfileLatexmkButton(NO);
+        [latexmk sizeToFit];
+        top -= 24;
+        latexmk.frame = NSMakeRect(0, top, 560, 20);
+        [choices addSubview:latexmk];
+        top -= 16;
+        matrices[@"Profile"] = popup;
+        matrices[@"latexmk"] = latexmk;
+    }
     for (NSString *key in @[@"TeX", @"Ghostscript"]) {
         NSTextField *label = [NSTextField labelWithString:key];
         label.font = [NSFont boldSystemFontOfSize:13];
@@ -1316,11 +1443,12 @@ static NSAlert *TSEnginePathAlert(NSDictionary *found, BOOL initial, NSMutableDi
     }
     // Remove unused space when there are only one or two installations.
     for (NSView *view in choices.subviews) [view setFrameOrigin:NSMakePoint(view.frame.origin.x, view.frame.origin.y - top)];
-    [choices setFrameSize:NSMakeSize(560, 340 - top)];
+    [choices setFrameSize:NSMakeSize(560, fullHeight - top)];
     alert.accessoryView = choices;
     if (![found[@"TeX"] count]) alert.informativeText = [alert.informativeText stringByAppendingFormat:@"\n\n%@", NSLocalizedString(@"Install a TeX distribution, then run Auto Setup in Settings > Typesetting.", @"")];
-    [alert addButtonWithTitle:NSLocalizedString(hasPaths ? @"Use These Paths" : @"OK", @"")];
-    if (hasPaths) [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+    if (initial) [alert addButtonWithTitle:NSLocalizedString(@"OK", @"")];
+    else [alert addButtonWithTitle:NSLocalizedString(hasPaths ? @"Use These Paths" : @"OK", @"")];
+    if (hasPaths || initial) [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
     return alert;
 }
 // END engine path alert
@@ -1347,18 +1475,32 @@ static NSAlert *TSEnginePathAlert(NSDictionary *found, BOOL initial, NSMutableDi
             NSAlert *alert = TSEnginePathAlert(found, initial, matrices);
             BOOL hasPaths = [found[@"TeX"] count] || [found[@"Ghostscript"] count];
             void (^finish)(NSModalResponse) = ^(NSModalResponse response) {
-                if (response != NSAlertFirstButtonReturn || !hasPaths || generation != self.enginePathSearchGeneration ||
+                if (response != NSAlertFirstButtonReturn || (!hasPaths && !applyInitial) || generation != self.enginePathSearchGeneration ||
                     (!applyInitial && !self->_prefsWindow.visible) ||
                     ![self enginePathSnapshotMatches:snapshot initial:applyInitial]) return;
                 NSArray *keys = @[TetexBinPath, GSBinPath];
                 NSArray *names = @[@"TeX", @"Ghostscript"];
                 NSArray *required = @[@[@"tex", @"latex", @"pdftex", @"pdflatex"], @[@"gs"]];
+                NSMutableDictionary *values = [NSMutableDictionary dictionary];
                 for (NSUInteger i = 0; i < keys.count; i++) {
                     NSMatrix *matrix = matrices[names[i]];
                     NSString *path = matrix ? found[names[i]][matrix.selectedRow][@"path"] : nil;
                     if (!path || ![TSEnginePathDiscovery directory:path containsPrograms:required[i]]) continue;
-                    [SUD setObject:path forKey:keys[i]];
+                    values[keys[i]] = path;
                 }
+                if (applyInitial) {
+                    TSEngineProfile profile = [(NSPopUpButton *)matrices[@"Profile"] selectedTag];
+                    BOOL latexmk = [(NSButton *)matrices[@"latexmk"] state] == NSControlStateValueOn;
+                    [values addEntriesFromDictionary:TSEngineProfileValues(profile, latexmk)];
+                    [self applyEngineProfileValues:values];
+                    NSString *texPath = values[TetexBinPath];
+                    NSMutableArray *missing = [NSMutableArray array];
+                    for (NSString *program in TSEngineProfileRequiredPrograms(profile, latexmk))
+                        if (texPath && !TSEngineProfileContains(texPath, @[program])) [missing addObject:program];
+                    if (missing.count) TSEngineProfileMissingAlert(texPath, missing);
+                    return;
+                }
+                [values enumerateKeysAndObjectsUsingBlock:^(NSString *key, id value, BOOL *stop) { [SUD setObject:value forKey:key]; }];
                 if (!applyInitial) {
                     self->_tetexBinPathField.stringValue = [SUD stringForKey:TetexBinPath];
                     self->_gsBinPathField.stringValue = [SUD stringForKey:GSBinPath];
@@ -1592,6 +1734,7 @@ person script. See also: DefaultTypesetMode.
 	// since the default program values map identically to the tags of the NSButtonCells,
 	// we can use the tag directly here.
 	[SUD setInteger:[[sender selectedCell] tag] forKey:DefaultScriptKey];
+    [self refreshEngineProfileFromDefaults:SUD];
 }
 
 - (IBAction)syncChanged: sender
@@ -2026,6 +2169,8 @@ A tag of 0 means "no", a tag of 1 means "yes".
     BOOL valid = [self.inputEditing commitField:field rule:rule defaults:SUD reflect:reflect sender:self];
     if (valid && !self.endingPreferences) [self.settingsChangeNotes recordUserChangeForKey:rule.key previousValue:previousNoteValue];
     if (!valid && showError) [self presentInputErrorForField:field];
+    // A command typed by hand may no longer match the profile shown.
+    if (valid) [self refreshEngineProfileFromDefaults:SUD];
     return valid;
 }
 - (void)controlTextDidBeginEditing:(NSNotification *)notification

@@ -145,7 +145,6 @@
 "Don’t show again for this document" = "Nu mai afișa pentru acest document";
 
 /* Engine path discovery */
-"Set Up TeX Engine Paths" = "Configurarea căilor motoarelor TeX";
 "Detected Engine Paths" = "Căi ale motoarelor detectate";
 
 "Not found" = "Nu a fost găsit";
@@ -171,10 +170,7 @@
 
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
-"The selected profile is invalid." = "Profilul selectat nu este valid.";
-"Apply Settings Profile?" = "Aplicați profilul de configurare?";
 
-"Apply Profile" = "Aplicați profilul";
 "Settings could not be saved" = "Configurările nu au putut fi salvate";
 "Enter a valid setting" = "Introduceți o valoare validă";
 
@@ -311,7 +307,6 @@
 
 "Custom menu shortcuts will be removed." = "Scurtăturile de meniu personalizate vor fi eliminate.";
 
-"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Resetează motorul, editarea, afișarea, configurările ascunse cunoscute și pictograma din Dock. Temele selectate se pot schimba. Calea motorului TeX: %@";
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "Detectare automată a limbii";
@@ -356,3 +351,15 @@
 "Change Key Binding" = "Modificare asociere de taste";
 "Delete Key Binding" = "Ștergere asociere de taste";
 "Move Key Binding" = "Mutare asociere de taste";
+
+/* Engine profiles */
+"LuaLaTeX (Japanese)" = "LuaLaTeX (japoneză)";
+"Other" = "Altele";
+"Custom" = "Personalizat";
+"Apply the “%@” profile?" = "Aplicați profilul „%@”?";
+"Not found: %@" = "Nu a fost găsit: %@";
+"Use latexmk" = "Utilizați latexmk";
+"TeX Not Found" = "TeX nu a fost găsit";
+"Install TeX Live or MacTeX, then apply the profile again." = "Instalați TeX Live sau MacTeX, apoi aplicați din nou profilul.";
+"Set Up Typesetting" = "Configurați compunerea";
+"Engine Profile" = "Profilul motorului";

@@ -145,7 +145,6 @@
 "Don’t show again for this document" = "Ne plus afficher pour ce document";
 
 /* Engine path discovery */
-"Set Up TeX Engine Paths" = "Configurer les chemins des moteurs TeX";
 "Detected Engine Paths" = "Chemins des moteurs détectés";
 
 "Not found" = "Introuvable";
@@ -171,10 +170,7 @@
 
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
-"The selected profile is invalid." = "Le profil sélectionné n’est pas valide.";
-"Apply Settings Profile?" = "Appliquer le profil de réglages ?";
 
-"Apply Profile" = "Appliquer le profil";
 "Settings could not be saved" = "Impossible d’enregistrer les réglages";
 "Enter a valid setting" = "Saisissez un réglage valide";
 
@@ -311,7 +307,6 @@
 
 "Custom menu shortcuts will be removed." = "Les raccourcis de menu personnalisés seront supprimés.";
 
-"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Réinitialise le moteur, l’édition, l’affichage, les réglages cachés connus et l’icône du Dock. La sélection des thèmes peut changer. Chemin du moteur TeX : %@";
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "Détection automatique de la langue";
@@ -356,3 +351,15 @@
 "Change Key Binding" = "Modifier un raccourci de saisie";
 "Delete Key Binding" = "Supprimer un raccourci de saisie";
 "Move Key Binding" = "Déplacer un raccourci de saisie";
+
+/* Engine profiles */
+"LuaLaTeX (Japanese)" = "LuaLaTeX (japonais)";
+"Other" = "Autre";
+"Custom" = "Personnalisé";
+"Apply the “%@” profile?" = "Appliquer le profil « %@ » ?";
+"Not found: %@" = "Introuvable : %@";
+"Use latexmk" = "Utiliser latexmk";
+"TeX Not Found" = "TeX introuvable";
+"Install TeX Live or MacTeX, then apply the profile again." = "Installez TeX Live ou MacTeX, puis appliquez de nouveau le profil.";
+"Set Up Typesetting" = "Configurer la composition";
+"Engine Profile" = "Profil du moteur";

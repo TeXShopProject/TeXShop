@@ -16,13 +16,13 @@
 "updates" = "アップデート";
 
 /* Category overview */
-"general.summary" = "起動時の動作、ウインドウの開き方と位置、設定プロファイル、Dockのアイコンを設定します。";
+"general.summary" = "起動時の動作、ウインドウの開き方と位置、Dockのアイコンを設定します。";
 "documents.summary" = "新しい書類のエンコーディングと、保存の方法を設定します。";
 "editor.summary" = "ソースのウインドウの表示と入力を設定します。";
 "spelling.summary" = "スペルチェックと、LaTeXの構造を考慮するスペルチェックを設定します。";
 "appearance.summary" = "配色のテーマを選び、編集します。";
 "preview.summary" = "PDFのプレビューの表示と操作を設定します。";
-"typesetting.summary" = "既定のエンジンとスクリプト、TeX・Ghostscriptの場所、各エンジンのコマンドを設定します。";
+"typesetting.summary" = "エンジンのプロファイル、既定のエンジンとスクリプト、TeX・Ghostscriptの場所、各エンジンのコマンドを設定します。";
 "console.summary" = "タイプセットの出力を表示するコンソールを設定します。";
 "keyboard.summary" = "キーバインド、コマンド補完、メニューのショートカットを設定します。";
 "updates.summary" = "TeXShopのアップデートを確認する方法を設定します。";
@@ -49,10 +49,6 @@
 "group.general.3.title" = "プロジェクトのルートファイル";
 "catalog.general.3.0.title" = "ファイルを開いたときにルートファイルも開く";
 "catalog.general.3.1.title" = "開いたルートファイルを最小化する";
-"group.general.4.title" = "設定プロファイル";
-"catalog.general.4.0.title" = "日本語環境向けなどの設定をまとめて適用します。";
-"catalog.general.4.1.title" = "プロファイル";
-"catalog.general.4.1.button" = "適用…";
 "group.general.5.title" = "詳細";
 "group.general.6.title" = "起動中のDockアイコン";
 "catalog.general.5.0.title" = "設定画面にない隠し設定は、ヘルプの「コメント行と隠し設定」で説明しています。";
@@ -239,6 +235,9 @@
 "catalog.preview.5.0.title" = "ホームURL";
 "catalog.preview.5.0.note" = "HTMLウインドウを表示したときに最初に開くページです。Webのアドレスか、ファイルのパスを入れます。デフォルト: https://texshop.app";
 "group.typesetting.0.title" = "既定";
+"catalog.typesetting.0.4.title" = "エンジンのプロファイル";
+"catalog.typesetting.0.4.note" = "タイプセットのコマンド、BibTeXエンジン、otfパッケージ対応、TeXとGhostscriptのパスを設定します。日本語のプロファイルは、辞書とUTF-8-MACの変換も設定します。";
+"catalog.typesetting.0.4.button" = "適用…";
 "catalog.typesetting.0.0.title" = "デフォルトのコマンド";
 "catalog.typesetting.0.1.title" = "利用するコマンド";
 "catalog.typesetting.0.2.title" = "コンパイル法";

@@ -280,6 +280,7 @@
     }
     [_useTransparencyButton setState:[defaults boolForKey:UseTransparencyKey]];
     [_syncTabButton setState:[defaults boolForKey:SyncUseTabsKey]];
+    [self refreshEngineProfileFromDefaults:defaults];
 }
 
 - (void)refreshConsoleSettingsFromDefaults:(NSUserDefaults *)defaults

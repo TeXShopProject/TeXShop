@@ -145,7 +145,6 @@
 "Don’t show again for this document" = "이 문서에 대해 다시 표시하지 않음";
 
 /* Engine path discovery */
-"Set Up TeX Engine Paths" = "TeX 엔진 경로 설정";
 "Detected Engine Paths" = "검색된 엔진 경로";
 
 "Not found" = "찾을 수 없음";
@@ -171,10 +170,7 @@
 
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
-"The selected profile is invalid." = "선택한 프로파일이 유효하지 않습니다.";
-"Apply Settings Profile?" = "설정 프로파일을 적용하시겠습니까?";
 
-"Apply Profile" = "프로파일 적용";
 "Settings could not be saved" = "설정을 저장할 수 없습니다";
 "Enter a valid setting" = "유효한 설정값을 입력하십시오";
 
@@ -311,7 +307,6 @@
 
 "Custom menu shortcuts will be removed." = "사용자 지정 메뉴 단축키가 삭제됩니다.";
 
-"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "엔진, 편집, 표시, 알려진 숨겨진 설정 및 Dock 아이콘을 재설정합니다. 테마 선택이 변경될 수 있습니다. TeX 엔진 경로: %@";
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "언어 자동 감지";
@@ -356,3 +351,15 @@
 "Change Key Binding" = "키 바인딩 변경";
 "Delete Key Binding" = "키 바인딩 삭제";
 "Move Key Binding" = "키 바인딩 이동";
+
+/* Engine profiles */
+"LuaLaTeX (Japanese)" = "LuaLaTeX(일본어)";
+"Other" = "기타";
+"Custom" = "사용자화";
+"Apply the “%@” profile?" = "‘%@’ 프로파일을 적용하시겠습니까?";
+"Not found: %@" = "찾을 수 없음: %@";
+"Use latexmk" = "latexmk 사용";
+"TeX Not Found" = "TeX를 찾을 수 없음";
+"Install TeX Live or MacTeX, then apply the profile again." = "TeX Live 또는 MacTeX를 설치한 다음 프로파일을 다시 적용하십시오.";
+"Set Up Typesetting" = "조판 설정";
+"Engine Profile" = "엔진 프로파일";

@@ -7,7 +7,9 @@
 //     (TSChangeAllAccessory in TSSpellSupport.m), with each message it shows;
 //   * the alert that lists the TeX and Ghostscript installations found
 //     (TSEnginePathAlert in TSPreferences.m), laid out by NSAlert, with several
-//     installations, with one, and with none;
+//     installations, with one, and with none, also as the first-launch setup with
+//     the engine profile menu and latexmk; and the sheet that applies an engine
+//     profile (TSEngineProfileAlert), with programs missing and without;
 //   * the alerts that list macro shortcut conflicts (TSShortcutConflictsAlert in
 //     TSMacroEditor.m) and the learned words of a document (TSLearnedWordsAlert
 //     in TSSpellSupport.m), laid out by NSAlert;
@@ -101,6 +103,19 @@ int main(int argc, char **argv) { @autoreleasepool {
             SaveImage(alert.window.contentView, where);
         }
 
+        // The sheet that applies an engine profile: with the longest title and programs missing, and plainly.
+        NSDictionary *tex = Candidate(@"TeX Live 2026 (3.141592653-2.6-1.40.28)", @"/Library/TeX/texbin"), *gs = Candidate(@"10.06.0", @"/usr/local/bin");
+        NSArray *sheets = @[@[@(TSEngineProfileLaTeXDvipsGhostscript), @[@"latex", @"simpdftex", @"dvips", @"gs"], @"missing programs"],
+                            @[@(TSEngineProfileLuaLaTeXJapanese), @[], @"all programs"]];
+        for (NSArray *sheet in sheets) {
+            NSButton *latexmk = TSEngineProfileLatexmkButton(YES);
+            NSAlert *alert = TSEngineProfileAlert([sheet[0] integerValue], tex, [sheet[1] count] ? nil : gs, sheet[1], latexmk);
+            [alert layout];
+            NSString *where = [NSString stringWithFormat:@"%@ [engine profile sheet, %@]", language, sheet[2]];
+            CheckRoot(alert.window.contentView, where); roots++;
+            SaveImage(alert.window.contentView, where);
+        }
+
         NSArray<NSAlert *> *alerts = @[TSShortcutConflictsAlert(@"⌘T: Typeset › Plain TeX\n⇧⌘M: Typeset › MetaPost"),
                                        TSLearnedWordsAlert(@"en", [WordList new], &(NSTableView *__strong){nil})];
         NSArray<NSString *> *names = @[@"macro shortcut conflicts alert", @"learned words alert"];
@@ -118,5 +133,5 @@ int main(int argc, char **argv) { @autoreleasepool {
     if (need > SIZE_WINDOW_WIDTH) Report([NSString stringWithFormat:@"CLIPPED [selection size overlay] \"8888 x 8888\": needs %.1f, has %d", need, SIZE_WINDOW_WIDTH]);
 
     if (problems) { printf("FAIL: %d problems\n", problems); return 1; }
-    printf("PASS: the Experiment console, the Change All view, the engine path, shortcut conflicts and learned words alerts and the selection size overlay show their whole text, inside their windows and apart, with room for focus rings and even margins (%lu windows and views in %lu languages)\n", (unsigned long)roots, (unsigned long)entries.count);
+    printf("PASS: the Experiment console, the Change All view, the engine path, engine profile, shortcut conflicts and learned words alerts and the selection size overlay show their whole text, inside their windows and apart, with room for focus rings and even margins (%lu windows and views in %lu languages)\n", (unsigned long)roots, (unsigned long)entries.count);
 } return 0; }

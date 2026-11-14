@@ -27,8 +27,6 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
   shutil.copy2(r/'Tests/Fixtures/SettingsHeightReference.json',bundle/'Contents/Resources/SettingsHeightReference.json')
   for themeName in ['LiteTheme','DarkTheme']:
    shutil.copy2(r/('Resources/TeXShop/Themes/'+themeName+'.plist'),bundle/('Contents/Resources/Themes/'+themeName+'.plist'))
-  profiles=bundle/'Contents/Resources/Profiles';profiles.mkdir()
-  for profile in sorted((r/'Resources/Defaults').glob('*Defaults*.plist')):shutil.copy2(profile,profiles/profile.name);shutil.copy2(profile,bundle/'Contents/Resources/Defaults'/profile.name)
   shutil.copy2(shell,bundle/'Contents/Resources/SettingsWindow.nib')
   if (a.visible_text_mutation or a.visible_text_whitespace_mutation) and bundle.stem=='fr':
    path=bundle/'Contents/Resources/fr.lproj/SettingsCategories.strings'
@@ -67,7 +65,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
    cases.extend([
     ('legacy-spelling-note','TSPreferences.m','[self.settingsChangeNotes recordUserChangeForKey:TSTeXAwareSpellCheckingKey previousValue:previousNoteValue];\n}\n\n- (IBAction)editSpellingExclusions:', ';\n}\n\n- (IBAction)editSpellingExclusions:'),
     ('input-range','TSPreferences.m','minimum:2 maximum:50 allowsEmpty:NO','minimum:2 maximum:51 allowsEmpty:NO'),
-    ('profile-validation','TSPreferences.m','- (IBAction)setDefaults:(NSMenuItem *)sender\n{\n    if (![self finishPreferenceEditing:YES]) return;','- (IBAction)setDefaults:(NSMenuItem *)sender\n{'),
+    ('profile-validation','TSPreferences.m','    TSEngineProfile profile = self.engineProfilePopup.selectedTag;\n    if (![self finishPreferenceEditing:YES]) return;','    TSEngineProfile profile = self.engineProfilePopup.selectedTag;'),
+    ('profile-separator-tags','TSPreferences.m','^(NSMenuItem *item) { item.tag = -1; [menu addItem:item]; };','^(NSMenuItem *item) { [menu addItem:item]; };'),
+    ('profile-choice-after-commit','TSPreferences.m','    TSEngineProfile profile = self.engineProfilePopup.selectedTag;\n    if (![self finishPreferenceEditing:YES]) return;','    if (![self finishPreferenceEditing:YES]) return;\n    TSEngineProfile profile = self.engineProfilePopup.selectedTag;'),
     ('history-bound','TSSettingsNavigationHistory.m','self.entries.count > 50','self.entries.count > 51'),
     ('history-inactive-key','TSSettingsWindowController.m','if (controller != nil && self.isKeyWindow && self.attachedSheet == nil)', 'if (controller != nil && self.attachedSheet == nil)'),
     ('sidebar-wrap','TSSettingsSidebarRow.m','label.maximumNumberOfLines = 2;','label.maximumNumberOfLines = 1;'),

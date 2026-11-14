@@ -16,13 +16,13 @@
 "updates" = "更新";
 
 /* Category overview */
-"general.summary" = "设置启动行为、窗口位置、设置配置文件和Dock图标。";
+"general.summary" = "设置启动行为、窗口位置和Dock图标。";
 "documents.summary" = "设置文本编码和文稿保存方式。";
 "editor.summary" = "设置编辑、语法着色、缩进和括号匹配。";
 "spelling.summary" = "设置输入时的拼写检查和LaTeX拼写检查方式。";
 "appearance.summary" = "选择和编辑配色主题。";
 "preview.summary" = "设置PDF预览的显示和操作。";
-"typesetting.summary" = "设置排版、同步和工具路径。";
+"typesetting.summary" = "设置引擎配置、排版、同步和工具路径。";
 "console.summary" = "设置显示排版输出的控制台。";
 "keyboard.summary" = "设置按键绑定、命令补全和菜单快捷键。";
 "updates.summary" = "设置自动检查和软件更新。";
@@ -49,10 +49,6 @@
 "group.general.3.title" = "项目主文件";
 "catalog.general.3.0.title" = "打开文档时打开主文件";
 "catalog.general.3.1.title" = "最小化打开的根窗口";
-"group.general.4.title" = "恢复默认设置";
-"catalog.general.4.0.title" = "应用设置配置，例如日文排版配置。";
-"catalog.general.4.1.title" = "配置";
-"catalog.general.4.1.button" = "应用";
 "group.general.5.title" = "高级";
 "group.general.6.title" = "运行时的Dock图标";
 "catalog.general.5.0.title" = "此处未显示的设置在帮助文档“注释行和隐藏设置”中说明。";
@@ -239,6 +235,9 @@
 "catalog.preview.5.0.title" = "主页URL";
 "catalog.preview.5.0.note" = "打开HTML窗口时首先显示的页面。输入网址或文件路径。默认值：https://texshop.app";
 "group.typesetting.0.title" = "默认值";
+"catalog.typesetting.0.4.title" = "引擎配置";
+"catalog.typesetting.0.4.note" = "设置排版命令、BibTeX引擎、otf宏包支持以及TeX和Ghostscript的路径。日语配置还会设置词典和UTF-8-MAC转换。";
+"catalog.typesetting.0.4.button" = "应用…";
 "catalog.typesetting.0.0.title" = "默认指令";
 "catalog.typesetting.0.1.title" = "使用的命令";
 "catalog.typesetting.0.2.title" = "排版方式";

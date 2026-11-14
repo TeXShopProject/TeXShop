@@ -1,409 +1,188 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSPreferenceProfile.h"
 #import "globals.h"
-#import "TSDockIcon.h"
-static TSPreferenceKey const TSProfileKeyDarkModeInvertPreview = @"DarkModeInvertPreview";
 
-static TSPreferenceKey const TSProfileKeyAppleLanguages = @"AppleLanguages";
-static TSPreferenceKey const TSProfileKeyApplePersistence = @"ApplePersistence";
-static TSPreferenceKey const TSProfileKeyContiguousTextLayout = @"ContiguousTextLayout";
-static TSPreferenceKey const TSProfileKeyConvertToBackslash = @"ConvertToBackslash";
-static TSPreferenceKey const TSProfileKeyConvertToYen = @"ConvertToYen";
-static TSPreferenceKey const TSProfileKeyFullwidthSpaceCharacterKindExtended = @"FullwidthSpaceCharacterKindExtended";
-static TSPreferenceKey const TSProfileKeyNSUserKeyEquivalents = @"NSUserKeyEquivalents";
-static TSPreferenceKey const TSProfileKeyNewLineCharacterKindExtended = @"NewLineCharacterKindExtended";
-static TSPreferenceKey const TSProfileKeySpaceCharacterKindExtended = @"SpaceCharacterKindExtended";
-static TSPreferenceKey const TSProfileKeyTSMenuShortcutOverrides = @"TSMenuShortcutOverrides";
 TSPreferenceKey const TSSettingsSelectedCategoryKey = @"TSSettingsSelectedCategory";
-static TSPreferenceKey const TSProfileKeyTSPreviewAppearanceMode = @"TSPreviewAppearanceMode";
-static TSPreferenceKey const TSProfileKeyTabCharacterKindExtended = @"TabCharacterKindExtended";
 
 static NSUInteger profileApplicationDepth;
 BOOL TSPreferenceProfileIsApplying(void) { return profileApplicationDepth != 0; }
-NSSet<TSPreferenceKey> *TSKnownPreferenceKeys(void)
+
+// The two places for typesetting commands: DefaultScript 100 runs the commands that make PDF
+// directly, 101 the commands that go through DVI.
+static NSInteger const TSEngineProfileDirectPDF = 100;
+static NSInteger const TSEngineProfileViaDVI = 101;
+
+NSArray<NSArray<NSNumber *> *> *TSEngineProfileMenuSections(void)
 {
-    static NSSet<NSString *> *keys;
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{
-        keys = [NSSet setWithArray:@[
-            AcceptFirstMouseKey,
-            @"AdvancedFindClosesWhenDone",
-            @"AdvancedFindHistory",
-            @"AdvancedFindHistoryLimit",
-            @"AdvancedFindInSelection",
-            @"AdvancedFindLiveUpdate",
-            @"AdvancedFindOptions",
-            @"AdvancedFindReplaceHistory",
-            @"AdvancedFindReplacementSyntax",
-            @"AdvancedFindWraps",
-            AggressiveTrashAUXKey,
-            AltPathKey,
-            AlternateEngineKey,
-            AlwaysHighlightEnabledKey,
-            TSProfileKeyAppleLanguages,
-            TSProfileKeyApplePersistence,
-            AutoCompleteEnabledKey,
-            AutoOpenRootFileKey,
-            AutoSaveEnabledKey,
-            AutomaticDashSubstitutionKey,
-            AutomaticDataDetectionKey,
-            AutomaticLinkDetectionKey,
-            AutomaticQuoteSubstitutionKey,
-            AutomaticSpellingCorrectionEnabledKey,
-            AutomaticTextReplacementKey,
-            AutomaticUTF8MACtoUTF8ConversionKey,
-            BeepEnabledKey,
-            BibDeskCompletionKey,
-            BibTeXengineKey,
-            BlockCursorKey,
-            BlockCursorBKey,
-            BlockCursorGKey,
-            BlockCursorRKey,
-            BlockSideKey,
-            BlockWidthKey,
-            BringFrontOnTypesetKey,
-            BringPdfFrontOnAutomaticUpdateKey,
-            BringPdfFrontOnTypesetKey,
-            CheckBraceEnabledKey,
-            CheckBracketEnabledKey,
-            CheckParenEnabledKey,
-            CheckSquareBracketEnabledKey,
-            ColorImmediatelyKey,
-            CommandCompletionAlternateMarkShortcutKey,
-            CommandCompletionCharKey,
-            ConTeXtTagsKey,
-            ConsoleBackgroundAlphaKey,
-            ConsoleBackgroundColor_BKey,
-            ConsoleBackgroundColor_GKey,
-            ConsoleBackgroundColor_RKey,
-            ConsoleBehaviorKey,
-            ConsoleFontNameKey,
-            ConsoleFontSizeKey,
-            ConsoleForegroundColor_BKey,
-            ConsoleForegroundColor_GKey,
-            ConsoleForegroundColor_RKey,
-            ConsoleWidthResizeKey,
-            ConsoleWindowNameKey,
-            ConsoleWindowAlphaKey,
-            ConsoleWindowFixedPosKey,
-            ConsoleWindowPosModeKey,
-            TSProfileKeyContiguousTextLayout,
-            ConvertLFKey,
-            TSProfileKeyConvertToBackslash,
-            TSProfileKeyConvertToYen,
-            CreateLabelListKey,
-            CreateTagListKey,
-            TSProfileKeyDarkModeInvertPreview,
-            DefaultCommandKey,
-            DefaultDarkThemeKey,
-            DefaultEngineKey,
-            DefaultLiteThemeKey,
-            DefaultScriptKey,
-            DisplayAsBookKey,
-            TSDockIconKey,
-            DocumentFontKey,
-            DocumentFontAttributesKey,
-            DocumentSplitWindowPositionKey,
-            DocumentWindowNameKey,
-            DocumentWindowFixedPosKey,
-            DocumentWindowPosModeKey,
-            EditorCanAddBracketsKey,
-            EncodingKey,
-            EncodingAutoDetectionKey,
-            EncodingMenuInSaveDialogKey,
-            ExceptionListExcludesParametersKey,
-            ExperimentMouseModeKey,
-            ExternalEditorTypesetAtStartKey,
-            ExtraCommandsNotToCheckParametersKey,
-            ExtraCommandsToCheckParametersKey,
-            FindMethodKey,
-            FlashBackgroundEnabledKey,
-            FlashDelayKey,
-            FlashFixKey,
-            FullSplitSourceFractionKey,
-            FullwidthSpaceCharacterKindKey,
-            TSProfileKeyFullwidthSpaceCharacterKindExtended,
-            GSBinPath,
-            HighlightContentEnabledKey,
-            HtmlHomeKey,
-            HtmlWindowFixedPosKey,
-            HtmlWindowNameKey,
-            HtmlWindowPosModeKey,
-            IgnoreStartOnRebootKey,
-            IncrementalSearchKey,
-            IndexColorStartKey,
-            InterpolationValueKey,
-            KeepBackupKey,
-            KpsetoolKey,
-            LPanelOutlinesKey,
-            LastStyNameKey,
-            LatexCommandKey,
-            LatexGSCommandKey,
-            LatexPanelNameKey,
-            LatexScriptCommandKey,
-            LeftRightArrowsAlwaysPageKey,
-            LineBreakModeKey,
-            LineNumberEnabledKey,
-            LineNumberSizeKey,
-            LinkPopupsKey,
-            MPanelOriginXKey,
-            MPanelOriginYKey,
-            MakeEmptyDocumentKey,
-            MakeatletterEnabledKey,
-            MathExpressionCompletionKey,
-            MiniaturizeRootFileKey,
-            TSProfileKeyNSUserKeyEquivalents,
-            NewLineCharacterKindKey,
-            TSProfileKeyNewLineCharacterKindExtended,
-            NoScrollPageTurnKey,
-            OpenAsTabsKey,
-            OpenWithSourceInFrontKey,
-            originalSpellingKey,
-            OtherEditorSyncKey,
-            OtherTeXExtensionsKey,
-            OtherTrashExtensionsKey,
-            PanelOriginXKey,
-            PanelOriginYKey,
-            ParensMatchingEnabledKey,
-            PdfBack_AKey,
-            PdfBack_BKey,
-            PdfBack_GKey,
-            PdfBack_RKey,
-            PdfColorMapKey,
-            PdfColorParam1Key,
-            PdfColorParam2Key,
-            PdfCopyTypeKey,
-            PdfExportTypeKey,
-            PdfFileRefreshKey,
-            PdfFirstPageStyleKey,
-            PdfFitSizeKey,
-            PdfFore_AKey,
-            PdfFore_BKey,
-            PdfFore_GKey,
-            PdfFore_RKey,
-            PdfKitFitSizeKey,
-            PdfKitMouseModeKey,
-            PdfKitWindowNameKey,
-            PdfMagnificationKey,
-            PdfMouseModeKey,
-            PdfPageStyleKey,
-            PdfQuickDragKey,
-            PdfRefreshKey,
-            PdfWindowNameKey,
-            PdfWindowFixedPosKey,
-            PdfWindowPosModeKey,
-            PdfPageBack_BKey,
-            PdfPageBack_GKey,
-            PdfPageBack_RKey,
-            PortableDocumentWindowFixedPosKey,
-            PortablePdfWindowFixedPosKey,
-            PreviewDrawerOpenKey,
-            PreviewWindowAlphaKey,
-            RedConsoleAfterErrorKey,
-            RefreshTimeKey,
-            ResetSourceTextColorEachTimeKey,
-            reverseSyncBlueKey,
-            reverseSyncGreenKey,
-            reverseSyncRedKey,
-            RightJustifyKey,
-            RightJustifyIfAnyKey,
-            SameFontForMacroKey,
-            SaveDocumentFontKey,
-            SavePSEnabledKey,
-            SaveRelatedKey,
-            ShowFullPathEnabledKey,
-            showFullwidthSpaceCharacterKey,
-            ShowIndicatorForMoveEnabledKey,
-            ShowInvisibleCharactersEnabledKey,
-            showNewLineCharacterKey,
-            showSpaceCharacterKey,
-            ShowSyncMarksKey,
-            showTabCharacterKey,
-            SmartInsertDeleteKey,
-            SourceAndPreviewInSameWindowKey,
-            SourceFirstLineHeadIndentKey,
-            SourceHeadIndentKey,
-            SourceInterlineSpaceKey,
-            SourceWindowAlphaKey,
-            SpaceCharacterKindKey,
-            TSProfileKeySpaceCharacterKindExtended,
-            SparkleAutomaticUpdateKey,
-            SparkleIntervalKey,
-            SparklePrereleaseUpdatesKey,
-            SparklePrereleaseForcedVersionKey,
-            SpellCheckEnabledKey,
-            spellingAutomaticDefaultKey,
-            spellingLanguageDefaultKey,
-            SwitchSidesKey,
-            SyncMethodKey,
-            SyncUseTabsKey,
-            SyntaxColorEntryLineKey,
-            SyntaxColorFootnoteKey,
-            SyntaxColoringEnabledKey,
-            TSHasBeenUsedKey,
-            TSProfileKeyTSMenuShortcutOverrides,
-            TSSettingsSelectedCategoryKey,
-            TSProfileKeyTSPreviewAppearanceMode,
-            TabCharacterKindKey,
-            TSProfileKeyTabCharacterKindExtended,
-            TabIndentKey,
-            tabsAlsoForInputFilesKey,
-            TagMenuInMenuBarKey,
-            TagSectionsKey,
-            TSTeXAwareSpellCheckingKey,
-            TetexBinPath,
-            TexCommandKey,
-            TexGSCommandKey,
-            TexScriptCommandKey,
-            TextMateSyncKey,
-            TurnOffCommandSpellCheckKey,
-            TurnOffCommentSpellCheckKey,
-            TurnOffParameterSpellCheckKey,
-            UseExternalEditorKey,
-            UseNewTagsAndLabelsKey,
-            UseOldHeadingCommandsKey,
-            UseOutlineKey,
-            UseTransparencyKey,
-            UserInfoPath,
-            WarnForShellEscapeKey,
-            WatchServerKey,
-            XMLChapterTagKey,
-            XMLConclusionTagKey,
-            XMLExercisesTagKey,
-            XMLFigureTagKey,
-            XMLIntroductionTagKey,
-            XMLMarkTagKey,
-            XMLProjectTagKey,
-            XMLSectionTagKey,
-            XMLSubsectionTagKey,
-            XMLSubsubsectionTagKey,
-            XMLTableTagKey,
-            backgroundAlphaKey,
-            background_BKey,
-            background_GKey,
-            background_RKey,
-            brieflyFlashYellowForMatchKey,
-            commandblueKey,
-            commandgreenKey,
-            commandredKey,
-            commentblueKey,
-            commentgreenKey,
-            commentredKey,
-            expl3SyntaxColoringKey,
-            foreground_BKey,
-            foreground_GKey,
-            foreground_RKey,
-            fullscreenPageStyleKey,
-            fullscreenResizeOptionKey,
-            highlightBracesBlueKey,
-            highlightBracesGreenKey,
-            highlightBracesRedKey,
-            highlightContentBlueKey,
-            highlightContentGreenKey,
-            highlightContentRedKey,
-            indexblueKey,
-            indexgreenKey,
-            indexredKey,
-            insertionpoint_BKey,
-            insertionpoint_GKey,
-            insertionpoint_RKey,
-            invisibleCharBlueKey,
-            invisibleCharGreenKey,
-            invisibleCharRedKey,
-            markerblueKey,
-            markergreenKey,
-            markerredKey,
-            MatrixSizeKey,
-            ptexUtfOutputEnabledKey,
-            syncWithRedOvalsKey,
-            tabsKey
-        ]];
-    });
-    return keys;
+    return @[@[@(TSEngineProfilePdfLaTeX), @(TSEngineProfileXeLaTeX), @(TSEngineProfileLuaLaTeX), @(TSEngineProfileLaTeXDvipdfmx)],
+             @[@(TSEngineProfileLuaLaTeXJapanese), @(TSEngineProfilePLaTeXDvipdfmx), @(TSEngineProfileUpLaTeXDvipdfmx)],
+             @[@(TSEngineProfileLaTeXDvipsGhostscript)]];
 }
 
-BOOL TSPreferenceProfilePreservesKey(TSPreferenceKey key)
+NSString *TSEngineProfileTitle(TSEngineProfile profile)
 {
-    if ([key hasPrefix:@"SU"] || [key hasPrefix:@"NSWindow Frame "] ||
-        [key hasPrefix:@"NSToolbar Configuration "] || [key hasPrefix:@"NSSplitView Subview Frames "] ||
-        [key hasPrefix:@"TSSettingsUI"] ||
-        [key hasPrefix:@"AdvancedFind"]) return YES; // the Advanced Find panel's own state and recent strings
-    return [@[
-        TSProfileKeyAppleLanguages,
-        ConsoleWindowNameKey,
-        DocumentSplitWindowPositionKey,
-        DocumentWindowNameKey,
-        FindMethodKey, // a matter of taste, not of the TeX engine: a profile keeps the find method
-        FullSplitSourceFractionKey,
-        HtmlWindowNameKey,
-        LastStyNameKey,
-        LatexPanelNameKey,
-        MPanelOriginXKey,
-        MPanelOriginYKey,
-        TSProfileKeyNSUserKeyEquivalents,
-        PanelOriginXKey,
-        PanelOriginYKey,
-        PdfKitWindowNameKey,
-        PdfWindowNameKey,
-        SparkleAutomaticUpdateKey,
-        SparkleIntervalKey,
-        SparklePrereleaseUpdatesKey,
-        SparklePrereleaseForcedVersionKey,
-        TSProfileKeyTSMenuShortcutOverrides,
-        TSSettingsSelectedCategoryKey
-    ] containsObject:key];
-}
-
-@interface TSPreferenceProfile ()
-@property (copy) NSDictionary<NSString *, id> *registeredDefaults;
-@end
-
-@implementation TSPreferenceProfile
-- (nullable instancetype)initWithProfile:(NSDictionary<NSString *, id> *)profile documentFont:(NSData *)fontData
-{
-    return [self initWithProfile:profile documentFont:fontData registeredDefaults:@{}];
-}
-- (nullable instancetype)initWithProfile:(NSDictionary<NSString *, id> *)profile documentFont:(NSData *)fontData registeredDefaults:(NSDictionary<NSString *, id> *)registeredDefaults
-{
-    if (![profile isKindOfClass:NSDictionary.class] || fontData.length == 0) return nil;
-    id path = profile[TetexBinPath];
-    if (![path isKindOfClass:NSString.class] ||
-        [[path stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet] length] == 0) return nil;
-    if (![NSPropertyListSerialization propertyList:profile isValidForFormat:NSPropertyListBinaryFormat_v1_0]) return nil;
-    self = [super init];
-    if (self == nil) return nil;
-    NSMutableDictionary<NSString *, id> *updates = [NSMutableDictionary dictionary];
-    NSMutableSet<NSString *> *removals = [NSMutableSet set];
-    for (NSString *key in TSKnownPreferenceKeys()) {
-        if (TSPreferenceProfilePreservesKey(key)) continue;
-        id value = profile[key];
-        if (value != nil) updates[key] = value;
-        else [removals addObject:key];
+    switch (profile) {
+        case TSEngineProfilePdfLaTeX: return @"pdfLaTeX";
+        case TSEngineProfileXeLaTeX: return @"XeLaTeX";
+        case TSEngineProfileLuaLaTeX: return @"LuaLaTeX";
+        case TSEngineProfileLaTeXDvipdfmx: return @"LaTeX + dvipdfmx";
+        case TSEngineProfileLuaLaTeXJapanese: return NSLocalizedString(@"LuaLaTeX (Japanese)", @"Engine profile");
+        case TSEngineProfilePLaTeXDvipdfmx: return @"pLaTeX + dvipdfmx";
+        case TSEngineProfileUpLaTeXDvipdfmx: return @"upLaTeX + dvipdfmx";
+        case TSEngineProfileLaTeXDvipsGhostscript: return @"LaTeX + dvips + Ghostscript";
+        default: return nil;
     }
-    updates[TSProfileKeyConvertToYen] = @YES;
-    [removals removeObject:TSProfileKeyConvertToYen];
-    _registeredDefaults = [registeredDefaults copy];
-    updates[TSHasBeenUsedKey] = @YES;
-    updates[DocumentFontKey] = fontData;
-    [removals removeObject:TSHasBeenUsedKey];
-    [removals removeObject:DocumentFontKey];
-    // Reset attributed-font overrides alongside the standard document font.
-    [updates removeObjectForKey:DocumentFontAttributesKey];
-    [removals addObject:DocumentFontAttributesKey];
-    _updates = [updates copy];
-    _removals = [removals copy];
-    _enginePath = [path copy];
-    return self;
 }
 
-- (void)applyToDefaults:(NSUserDefaults *)defaults
+BOOL TSEngineProfileIsJapanese(TSEngineProfile profile)
 {
-    NSAssert(NSThread.isMainThread, @"Apply a preference profile on the main thread");
+    return profile == TSEngineProfileLuaLaTeXJapanese || profile == TSEngineProfilePLaTeXDvipdfmx || profile == TSEngineProfileUpLaTeXDvipdfmx;
+}
+
+BOOL TSEngineProfileNeedsGhostscript(TSEngineProfile profile)
+{
+    return profile == TSEngineProfileLaTeXDvipsGhostscript;
+}
+
+// One row of the table: the place, the LaTeX and TeX commands without latexmk, the LaTeX
+// command with latexmk, and the BibTeX engine.
+static NSArray *TSEngineProfileRow(TSEngineProfile profile)
+{
+    NSString *const pdfOptions = @"--file-line-error --synctex=1";
+    NSString *const simpdfOptions = @"--extratexopts \"-file-line-error -synctex=1\"";
+    NSString *const ptexOptions = @"-ot \"-synctex=1 -file-line-error\"";
+    NSString *const dvipdfmx = @"-e \"$dvipdf=q/dvipdfmx %O -o %D %S/\"";
+    switch (profile) {
+        case TSEngineProfilePdfLaTeX:
+            return @[@(TSEngineProfileDirectPDF), [@"pdflatex " stringByAppendingString:pdfOptions], [@"pdftex " stringByAppendingString:pdfOptions],
+                     @"latexmk -pdf -e \"$pdflatex=q/pdflatex -synctex=1 -file-line-error/\" -norc", @"bibtex"];
+        case TSEngineProfileXeLaTeX:
+            return @[@(TSEngineProfileDirectPDF), [@"xelatex " stringByAppendingString:pdfOptions], [@"xetex " stringByAppendingString:pdfOptions],
+                     @"latexmk -xelatex -e \"$xelatex=q/xelatex -synctex=1 -file-line-error/\" -norc", @"bibtex"];
+        case TSEngineProfileLuaLaTeX:
+            return @[@(TSEngineProfileDirectPDF), [@"lualatex " stringByAppendingString:pdfOptions], [@"luatex " stringByAppendingString:pdfOptions],
+                     @"latexmk -lualatex -e \"$lualatex=q/lualatex -synctex=1 -file-line-error/\" -norc", @"bibtex"];
+        case TSEngineProfileLaTeXDvipdfmx:
+            return @[@(TSEngineProfileViaDVI), [@"simpdftex latex --mode dvipdfmx " stringByAppendingString:simpdfOptions],
+                     [@"simpdftex etex --mode dvipdfmx " stringByAppendingString:simpdfOptions],
+                     [NSString stringWithFormat:@"latexmk -pdfdvi -e \"$latex=q/latex -synctex=1 -file-line-error/\" %@ -norc", dvipdfmx], @"bibtex"];
+        case TSEngineProfileLuaLaTeXJapanese:
+            return @[@(TSEngineProfileDirectPDF), [@"lualatex " stringByAppendingString:pdfOptions], [@"luatex " stringByAppendingString:pdfOptions],
+                     @"latexmk -lualatex -e \"$lualatex=q/lualatex -synctex=1 -file-line-error/\" -e \"$bibtex=q/upbibtex/\" -e \"$makeindex=q/upmendex/\" -norc", @"upbibtex"];
+        case TSEngineProfilePLaTeXDvipdfmx:
+            return @[@(TSEngineProfileViaDVI), [@"ptex2pdf -l " stringByAppendingString:ptexOptions], [@"ptex2pdf -e " stringByAppendingString:ptexOptions],
+                     [NSString stringWithFormat:@"latexmk -pdfdvi -e \"$latex=q/platex -synctex=1 -file-line-error/\" -e \"$bibtex=q/pbibtex/\" -e \"$makeindex=q/mendex/\" %@ -norc", dvipdfmx], @"pbibtex"];
+        case TSEngineProfileUpLaTeXDvipdfmx:
+            return @[@(TSEngineProfileViaDVI), [@"ptex2pdf -u -l " stringByAppendingString:ptexOptions], [@"ptex2pdf -e -u " stringByAppendingString:ptexOptions],
+                     [NSString stringWithFormat:@"latexmk -pdfdvi -e \"$latex=q/uplatex -synctex=1 -file-line-error/\" -e \"$bibtex=q/upbibtex/\" -e \"$makeindex=q/mendex/\" %@ -norc", dvipdfmx], @"upbibtex"];
+        case TSEngineProfileLaTeXDvipsGhostscript:
+            return @[@(TSEngineProfileViaDVI), [@"simpdftex latex --maxpfb " stringByAppendingString:simpdfOptions],
+                     [@"simpdftex etex --maxpfb " stringByAppendingString:simpdfOptions],
+                     @"latexmk -pdfps -e \"$latex=q/latex -synctex=1 -file-line-error/\" -norc", @"bibtex"];
+        default: return nil;
+    }
+}
+
+NSDictionary<TSPreferenceKey, id> *TSEngineProfileValues(TSEngineProfile profile, BOOL latexmk)
+{
+    NSArray *row = TSEngineProfileRow(profile);
+    if (row == nil) return @{};
+    BOOL direct = [row[0] integerValue] == TSEngineProfileDirectPDF;
+    NSMutableDictionary *values = [NSMutableDictionary dictionary];
+    // Only the place that becomes the default is written; the other keeps the user's commands.
+    values[DefaultScriptKey] = row[0];
+    values[direct ? LatexCommandKey : LatexGSCommandKey] = latexmk ? row[3] : row[1];
+    values[direct ? TexCommandKey : TexGSCommandKey] = row[2];
+    values[BibTeXengineKey] = row[4];
+    // otf package support is a pTeX feature: every other engine turns it off.
+    values[ptexUtfOutputEnabledKey] = profile == TSEngineProfilePLaTeXDvipdfmx ? @YES : @NO;
+    if (TSEngineProfileIsJapanese(profile)) {
+        values[AutomaticUTF8MACtoUTF8ConversionKey] = @YES;
+        // macOS has no Japanese spelling dictionary: the language is identified automatically,
+        // stored as the Settings choice of Automatic stores it.
+        values[spellingAutomaticDefaultKey] = @YES;
+        values[spellingLanguageDefaultKey] = @" ";
+    }
+    return values;
+}
+
+NSArray<NSString *> *TSEngineProfileRequiredPrograms(TSEngineProfile profile, BOOL latexmk)
+{
+    NSArray *programs;
+    switch (profile) {
+        case TSEngineProfilePdfLaTeX: programs = @[@"pdflatex"]; break;
+        case TSEngineProfileXeLaTeX: programs = @[@"xelatex"]; break;
+        case TSEngineProfileLuaLaTeX: programs = @[@"lualatex"]; break;
+        case TSEngineProfileLaTeXDvipdfmx: programs = @[@"latex", @"simpdftex", @"dvipdfmx"]; break;
+        case TSEngineProfileLuaLaTeXJapanese: programs = @[@"lualatex", @"upbibtex"]; break;
+        case TSEngineProfilePLaTeXDvipdfmx: programs = @[@"platex", @"ptex2pdf", @"dvipdfmx", @"pbibtex"]; break;
+        case TSEngineProfileUpLaTeXDvipdfmx: programs = @[@"uplatex", @"ptex2pdf", @"dvipdfmx", @"upbibtex"]; break;
+        case TSEngineProfileLaTeXDvipsGhostscript: programs = @[@"latex", @"simpdftex", @"dvips"]; break;
+        default: return @[];
+    }
+    return latexmk ? [programs arrayByAddingObject:@"latexmk"] : programs;
+}
+
+// Equal in meaning: a stored "NO" is the same switch as @NO, and blanks around a command do not count.
+static BOOL TSEngineProfileSame(id value, id expected)
+{
+    if ([expected isKindOfClass:NSNumber.class] && CFGetTypeID((__bridge CFTypeRef)expected) == CFBooleanGetTypeID())
+        return [value respondsToSelector:@selector(boolValue)] && [value boolValue] == [expected boolValue];
+    if ([value isKindOfClass:NSNumber.class] || [expected isKindOfClass:NSNumber.class])
+        return [value respondsToSelector:@selector(integerValue)] && [value integerValue] == [expected integerValue];
+    if (![value isKindOfClass:NSString.class]) return NO;
+    NSCharacterSet *blank = NSCharacterSet.whitespaceAndNewlineCharacterSet;
+    return [[value stringByTrimmingCharactersInSet:blank] isEqualToString:[expected stringByTrimmingCharactersInSet:blank]];
+}
+
+TSEngineProfile TSEngineProfileMatchingSettings(NSUserDefaults *defaults, BOOL *latexmk)
+{
+    for (NSArray<NSNumber *> *section in TSEngineProfileMenuSections())
+        for (NSNumber *number in section)
+            for (NSNumber *form in @[@NO, @YES]) {
+                NSDictionary *values = TSEngineProfileValues(number.integerValue, form.boolValue);
+                BOOL same = YES;
+                // The commands decide; the settings that go with them do not.
+                for (NSString *key in @[DefaultScriptKey, LatexCommandKey, TexCommandKey, LatexGSCommandKey, TexGSCommandKey, BibTeXengineKey])
+                    if (values[key] != nil && !TSEngineProfileSame([defaults objectForKey:key], values[key])) { same = NO; break; }
+                if (!same) continue;
+                if (latexmk != NULL) *latexmk = form.boolValue;
+                return number.integerValue;
+            }
+    if (latexmk != NULL) *latexmk = NO;
+    return TSEngineProfileNone;
+}
+
+TSEngineProfile TSEngineProfileForLanguages(NSArray<NSString *> *languages)
+{
+    NSString *first = languages.firstObject.lowercaseString ?: @"";
+    return [first isEqualToString:@"ja"] || [first hasPrefix:@"ja-"] || [first hasPrefix:@"ja_"] ? TSEngineProfileUpLaTeXDvipdfmx : TSEngineProfilePdfLaTeX;
+}
+
+NSDictionary *TSEngineProfileTeXCandidate(NSArray<NSDictionary *> *candidates, NSArray<NSString *> *required,
+    BOOL (^contains)(NSString *, NSArray<NSString *> *), NSArray<NSString *> **missing)
+{
+    NSDictionary *chosen = nil;
+    for (NSDictionary *candidate in candidates)
+        if ([candidate[@"path"] isKindOfClass:NSString.class] && contains(candidate[@"path"], required)) { chosen = candidate; break; }
+    if (chosen == nil) chosen = candidates.firstObject;
+    if (missing != NULL) {
+        NSMutableArray *absent = [NSMutableArray array];
+        for (NSString *program in required)
+            if (chosen == nil || !contains(chosen[@"path"], @[program])) [absent addObject:program];
+        *missing = absent;
+    }
+    return chosen;
+}
+
+NSSet<TSPreferenceKey> *TSEngineProfileApply(NSUserDefaults *defaults, NSDictionary<TSPreferenceKey, id> *values)
+{
+    NSCAssert(NSThread.isMainThread, @"Apply an engine profile on the main thread");
+    NSMutableSet *changed = [NSMutableSet set];
     profileApplicationDepth++;
     @try {
-        [defaults registerDefaults:self.registeredDefaults];
-        for (NSString *key in self.removals) [defaults removeObjectForKey:key];
-        [self.updates enumerateKeysAndObjectsUsingBlock:^(NSString *key, id value, BOOL *stop) {
+        [values enumerateKeysAndObjectsUsingBlock:^(NSString *key, id value, BOOL *stop) {
+            if (!TSEngineProfileSame([defaults objectForKey:key], value)) [changed addObject:key];
             [defaults setObject:value forKey:key];
         }];
     } @finally {
@@ -411,5 +190,5 @@ BOOL TSPreferenceProfilePreservesKey(TSPreferenceKey key)
     }
     // Observers of individual defaults changes were deferred above.
     [NSNotificationCenter.defaultCenter postNotificationName:NSUserDefaultsDidChangeNotification object:defaults];
+    return changed;
 }
-@end
