@@ -11,7 +11,7 @@
 "590.title" = "File del motore";
 "675.title" = "Dopo la compilazione";
 "679.title" = "Porta anteprima in primo piano";
-"680.title" = "Rimani nella finestra sorgente";
+"680.title" = "Continua a modificare";
 "785.title" = "Cerca nel PDF";
 "786.title" = "SyncTeX";
 "823.title" = "Metodo di sincronizzazione";
@@ -23,5 +23,5 @@
 "O6H-3y-7Ca.title" = "(Should be OFF for most users.)";
 "W5U-9S-4OG.title" = "Se la sincronizzazione apre una nuova finestra";
 "YQv-fE-Uzg.title" = "Apri come scheda nella finestra principale";
-"bYh-V5-ri6.title" = "Rimani nella finetra corrente";
+"bYh-V5-ri6.title" = "Mostra anteprima e torna alla finestra di partenza";
 "xwP-lA-zVw.title" = " -dALLOWPSTRANSPARENCY";

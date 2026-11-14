@@ -10,7 +10,7 @@
 "589.title" = "LaTeX";
 "590.title" = "Engine-Datei";
 "675.title" = "Nach dem Setzen";
-"679.title" = "Vorschau anzeigen";
+"679.title" = "Vorschau nach vorne bringen";
 "680.title" = "Weiter bearbeiten";
 "785.title" = "PDF durchsuchen";
 "786.title" = "SyncTeX";
@@ -23,5 +23,5 @@
 "O6H-3y-7Ca.title" = "(Sollte AUS sein für die meisten Systeme)";
 "W5U-9S-4OG.title" = "Wenn Sync ein neues Fenster öffnet";
 "YQv-fE-Uzg.title" = "Öffnen als Tab im Stammfenster";
-"bYh-V5-ri6.title" = "Im aktuellen Fenster bleiben";
+"bYh-V5-ri6.title" = "Vorschau anzeigen und zum ursprünglichen Fenster zurückkehren";
 "xwP-lA-zVw.title" = " -dALLOWPSTRANSPARENCY";
