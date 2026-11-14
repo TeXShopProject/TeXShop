@@ -206,8 +206,7 @@
     "Sans"
    ],
    "AdvancedFind.strings": [
-    "Note",
-    "Options…"
+    "Description"
    ]
   },
   "it": {
@@ -280,6 +279,7 @@
     "Sans"
    ],
    "AdvancedFind.strings": [
+    "Help",
     "Sets"
    ]
   },

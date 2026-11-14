@@ -3,8 +3,8 @@
 the rule table, the window, the Find menu's items, and the window in all 12 languages. Nothing is displayed; the
 defaults stay in memory, the pasteboards are unique and the sets go into temporary folders.
 
---image DIR writes the window, an empty window and a set's options, light and dark, in English and Japanese
-(--image-all-languages: in all 12).
+--image DIR writes the window, a set without rules, a window without sets and a set's options, light and dark, in
+English, German and Japanese (--image-all-languages: in all 12).
 --mutations breaks one rule at a time in a copy of the sources and checks that the test notices."""
 from pathlib import Path
 import argparse
@@ -42,7 +42,16 @@ MUTATIONS = {
         '        return target && [self.findController validateAction:TSAdvancedFindActionReplaceAll forTextView:(NSTextView *_Nonnull)target];',
         '        return target != nil;'),
     'Replace All ignores a read-only target': ('TSMultipleReplaceWindowController.m',
-        '        BOOL enabled = target ? [controller validateAction:actions[index] forTextView:target] : YES;', '        BOOL enabled = YES;'),
+        '        BOOL enabled = target ? [controller validateAction:actions[index] forTextView:target] : controller.runningTask == nil;', '        BOOL enabled = YES;'),
+    'the set options can be opened without a set': ('TSMultipleReplaceWindowController.m', '    self.optionsButton.enabled = set;', '    self.optionsButton.enabled = YES;'),
+    'the set options need a rule': ('TSMultipleReplaceWindowController.m', '    self.optionsButton.enabled = set;', '    self.optionsButton.enabled = set && self.ruleTable.set.rules.count > 0;'),
+    'minus of the rules ignores the selection': ('TSMultipleReplaceWindowController.m',
+        '[self.ruleButtons setEnabled:set && self.ruleTable.tableView.selectedRowIndexes.count > 0 forSegment:1];', '[self.ruleButtons setEnabled:set forSegment:1];'),
+    'the regular expression column is .*': ('TSMultipleReplaceRuleTable.m', 'title:@"RE"', 'title:@".*"'),
+    'the set names fill their rows': ('TSMultipleReplaceWindowController.m',
+        '    NSTableCellView *cell = [TSMultipleReplaceRuleTable cellWithControl:field];\n    cell.textField = nil;', '    NSView *cell = field;'),
+    'the cells sit at the top of the row': ('TSMultipleReplaceRuleTable.m',
+        '[control.centerYAnchor constraintEqualToAnchor:cell.centerYAnchor]', '[control.topAnchor constraintEqualToAnchor:cell.topAnchor]'),
     'the set options take the panel\'s rule': ('TSMultipleReplaceWindowController.m',
         'initWithStyle:TSAdvancedFindOptionsFormStyleSet', 'initWithStyle:TSAdvancedFindOptionsFormStylePanel'),
 }
@@ -113,13 +122,19 @@ def main():
         if moved == delegate or check_launch_order(moved, shortcuts):
             sys.exit('FAIL: the launch order check does not notice an install that is not queued')
         print('PASS: launch order (after OgreKit, before the shortcuts are read)')
+        # The help button opens this anchor of the English help (the other help books take it as they describe the window).
+        help_page = (root / 'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/basic_edittricks.htm').read_text(encoding='latin1')
+        window_source = (root / 'Sources/Find/TSMultipleReplaceWindowController.m').read_text()
+        if '+ (NSString *)helpAnchor { return @"multiplereplace"; }' not in window_source or '<a name="multiplereplace"></a>' not in help_page:
+            sys.exit('FAIL: the help button\'s anchor is in the English help')
+        print('PASS: the help anchor of Multiple Replace')
         probe = build(tmp, copy_sources(tmp))
         result = run(probe, 'behavior')
         print(result.stdout + result.stderr, end='')
         if result.returncode:
             sys.exit('FAIL: multiple replacement')
         for language in LANGUAGES:
-            images = args.image if args.image and (args.image_all_languages or language in ('en', 'ja')) else None
+            images = args.image if args.image and (args.image_all_languages or language in ('en', 'de', 'ja')) else None
             result = run(probe, 'layout', language, images)
             print(result.stdout + result.stderr, end='')
             if result.returncode:
