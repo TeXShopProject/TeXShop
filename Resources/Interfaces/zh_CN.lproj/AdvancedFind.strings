@@ -93,7 +93,6 @@
 "AdvancedFind.Menu.ReplaceAndFind" = "替换并查找";
 "AdvancedFind.Menu.SelectAll" = "选择所有匹配项";
 "AdvancedFind.Menu.SetReplaceString" = "用所选内容替换";
-"AdvancedFind.Menu.ShowReplacePanel" = "查找和替换...";
 "AdvancedFind.Menu.Unhighlight" = "移除高亮标记";
 "AdvancedFind.MoreMarks" = "（另有%lu处）";
 "AdvancedFind.MoreOptions" = "更多选项";

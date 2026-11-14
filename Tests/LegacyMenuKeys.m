@@ -45,6 +45,30 @@ int main(int argc,char **argv){@autoreleasepool{
   Check([other.keyEquivalent isEqual:@"z"],@"Malformed entries do not rewrite unrelated keys");
   Check([completion.keyEquivalent isEqual:@"a"] && [other.keyEquivalent isEqual:@"z"],@"Every child dictionary entry is processed; the former Marks position stays inert");
  }
+ // Edit › Find: only the English menu had Find and Replace… before 6.00. Positions saved for another language's menu
+ // skip it, which that menu now has after Find…; the English positions count it, as before. Titles reach it in both.
+ for(NSNumber *english in @[@YES,@NO]){
+  NSMenu *main=[NSMenu new];NSMenuItem *edit=Item(main,@"Edit");edit.submenu=[NSMenu new];
+  NSMenuItem *findItem=Item(edit.submenu,@"Find");findItem.submenu=[NSMenu new];
+  NSMenuItem *find=Item(findItem.submenu,@"Find…");NSMenuItem *replace=Item(findItem.submenu,@"Find and Replace…");replace.identifier=@"TSShortcut.performTextFinderAction:.12";
+  NSMenuItem *next=Item(findItem.submenu,@"Find Next");NSMenuItem *previous=Item(findItem.submenu,@"Find Previous");
+  TSLegacyMenuHadFindAndReplace=english.intValue;
+  Apply(main,@{@"Edit":@{@"Find":@{@"2":@[@"n",@NO,@YES],@"3":@[@"p",@NO,@YES],@"1":@[@"f",@NO,@YES]}}});
+  NSString *language=english.boolValue?@"English":@"another language";
+  Check([find.keyEquivalent isEqual:@"f"],[NSString stringWithFormat:@"%@: position 1 is Find…",language]);
+  if(english.boolValue) Check([replace.keyEquivalent isEqual:@"n"] && [next.keyEquivalent isEqual:@"p"] && [previous.keyEquivalent isEqual:@""],@"English: positions count Find and Replace…, as in 5.58");
+  else Check([next.keyEquivalent isEqual:@"n"] && [previous.keyEquivalent isEqual:@"p"] && [replace.keyEquivalent isEqual:@""],@"another language: positions skip the Find and Replace… added in 6.00");
+  replace.keyEquivalent=@"";
+  Apply(main,@{@"2":@{@"1":@{@"Find and Replace…":@[@"r",@NO,@YES]}}});
+  Check([replace.keyEquivalent isEqual:@""],[NSString stringWithFormat:@"%@: a missing top-level position changes nothing",language]);
+  Apply(main,@{@"Edit":@{@"Find":@{@"Find and Replace…":@[@"r",@NO,@YES]}}});
+  Check([replace.keyEquivalent isEqual:@"r"],[NSString stringWithFormat:@"%@: the title reaches Find and Replace…",language]);
+ }
+ TSLegacyMenuHadFindAndReplace=1;
+ Check(TSLegacyMenuPathHadFindAndReplace(@"/Applications/TeXShop.app/Contents/Resources/Base.lproj/MainMenu.nib") && TSLegacyMenuPathHadFindAndReplace(nil)
+       && !TSLegacyMenuPathHadFindAndReplace(@"/Applications/TeXShop.app/Contents/Resources/ja.lproj/MainMenu.nib")
+       && !TSLegacyMenuPathHadFindAndReplace(@"/Applications/TeXShop.app/Contents/Resources/pt-PT.lproj/MainMenu.nib"),
+       @"the Base menu had Find and Replace… before 6.00, the other languages' menus did not");
  // Source › Command Completion was a submenu whose first item was Add Word. It is now
  // the command itself, Add to Command Completion List, at the same position.
  NSDictionary *completions=fixture[@"command_completion"];
@@ -126,5 +150,5 @@ int main(int argc,char **argv){@autoreleasepool{
   Apply(main,@{@"Typeset":@{@"TeX和DVI":@[@"5",@NO,@NO]}});
   Check([dvi.keyEquivalent isEqual:@"5"],@"A former title reaches its item with or without the space between CJK and Latin text");
  }
- puts("PASS: 12 legacy title fixtures; CJK-Latin spacing; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File; former typesetting method titles in 12 languages; Command Completion submenu entries in 12 languages reach Add to Command Completion List");
+ puts("PASS: Find and Replace… skipped in positions of the menus that lacked it; 12 legacy title fixtures; CJK-Latin spacing; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File; former typesetting method titles in 12 languages; Command Completion submenu entries in 12 languages reach Add to Command Completion List");
 }return 0;}

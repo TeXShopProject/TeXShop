@@ -93,7 +93,6 @@
 "AdvancedFind.Menu.ReplaceAndFind" = "대치 및 찾기";
 "AdvancedFind.Menu.SelectAll" = "모든 일치 항목 선택";
 "AdvancedFind.Menu.SetReplaceString" = "선택 부분으로 대치";
-"AdvancedFind.Menu.ShowReplacePanel" = "찾기 및 대치...";
 "AdvancedFind.Menu.Unhighlight" = "하이라이트 제거";
 "AdvancedFind.MoreMarks" = "(외 %lu개)";
 "AdvancedFind.MoreOptions" = "추가 옵션";
