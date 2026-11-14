@@ -518,11 +518,11 @@ static void TestMenu(void)
 
 /// Windows that are never shown do not draw buttons; each button's own cell is drawn at its measured frame
 /// at its measured frame. Window glass and translucency are not reproduced.
-static BOOL WritePNG(NSView *view, NSAppearance *appearance, NSString *path)
+/// A sidebar's material blends with what is behind the window, which an offscreen image does not have: its
+/// contents are drawn as within the window. The selection of a source list is a material too, which is drawn black:
+/// the selected row gets the color of a selection in a window that is not key instead.
+static void DrawMaterialsWithinWindow(NSView *view)
 {
-    __block BOOL written = NO;
-    // A sidebar's material blends with what is behind the window, which an offscreen image does not have: its
-    // contents are drawn as within the window.
     NSMutableArray<NSView *> *pendingEffects = [view.subviews mutableCopy];
     while (pendingEffects.count) {
         NSView *v = pendingEffects.lastObject;
@@ -530,16 +530,21 @@ static BOOL WritePNG(NSView *view, NSAppearance *appearance, NSString *path)
         [pendingEffects addObjectsFromArray:v.subviews];
         if ([v isKindOfClass:[NSVisualEffectView class]])
             ((NSVisualEffectView *)v).blendingMode = NSVisualEffectBlendingModeWithinWindow;
-        // The selection of a source list is a material too, which is drawn black: the selected row gets the color
-        // of a selection in a window that is not key instead.
         if ([v isKindOfClass:[NSVisualEffectView class]] && [v.superview isKindOfClass:[NSTableRowView class]]) {
             v.hidden = YES;
             ((NSTableRowView *)v.superview).backgroundColor = NSColor.unemphasizedSelectedContentBackgroundColor;
         }
     }
+}
+
+static BOOL WritePNG(NSView *view, NSAppearance *appearance, NSString *path)
+{
+    __block BOOL written = NO;
     [appearance performAsCurrentDrawingAppearance:^{
+        DrawMaterialsWithinWindow(view);
         [view layoutSubtreeIfNeeded];
         [view displayIfNeeded];
+        DrawMaterialsWithinWindow(view); // the rows made by the layout too
         NSBitmapImageRep *raw = [view bitmapImageRepForCachingDisplayInRect:view.bounds];
         if (!raw)
             return;
