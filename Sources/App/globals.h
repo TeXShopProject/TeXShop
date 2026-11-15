@@ -388,6 +388,7 @@ extern NSString *ExternalEditorTypesetAtStartKey;
 extern NSString *ConvertLFKey;
 extern NSString *FindMethodKey;
 extern NSString *FindMethodSwitchedToAdvancedFindKey;
+extern NSString *BundledThemeColorsUpdateKey;
 extern NSString *LineNumberSizeKey;
 extern NSString *BringPdfFrontOnAutomaticUpdateKey;
 extern NSString *BringPdfFrontOnTypesetKey;
