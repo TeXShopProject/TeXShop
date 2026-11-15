@@ -161,6 +161,27 @@ with tempfile.TemporaryDirectory(prefix='texshop-glyph-popover-') as tmp:
         if out.returncode or out.stdout.strip() != 'read once':
             print(f'FAIL: the table is read once: {out.stdout.strip()} {out.stderr[-300:]}')
             block_failures += 1
+    # The check after an update of macOS (Scripts/check-unicode-block-titles.py): 0 for a good table, 1 for a table
+    # that is missing, broken, without a language of TeXShop, or with names of another kind or none in a language.
+    if SYSTEM_TABLE.exists():
+        good = plistlib.loads(SYSTEM_TABLE.read_bytes())
+        def variant(name, change):
+            table = json.loads(json.dumps(good))
+            change(table)
+            (broken / name).write_bytes(plistlib.dumps(table, fmt=plistlib.FMT_BINARY))
+            return broken / name
+        checker_cases = [(SYSTEM_TABLE, 0), (tmp / 'missing.loctable', 1), (broken / 'garbage.loctable', 1), (broken / 'array.loctable', 1),
+                         (broken / 'values.loctable', 1),
+                         (variant('bad-value.loctable', lambda t: t.update(ja={k: {'new_format': v} for k, v in t['ja'].items()})), 1),
+                         (variant('empty-japanese.loctable', lambda t: t.update(ja={})), 1),
+                         (variant('no-romanian.loctable', lambda t: t.pop('ro')), 1),
+                         (variant('one-empty-name.loctable', lambda t: t['de'].update({'Basic Latin': ' '})), 1),
+                         (variant('unknown-name.loctable', lambda t: t['ja'].update({'Klingon Ext. Z': 'クリンゴン'})), 1)]
+        for table, status in checker_cases:
+            out = subprocess.run([sys.executable, str(root / 'Scripts/check-unicode-block-titles.py'), str(table)], capture_output=True, text=True, timeout=300)
+            if out.returncode != status:
+                print(f'FAIL: check-unicode-block-titles.py {table.name} ends with {out.returncode}, not {status}: {out.stdout[-400:]}')
+                block_failures += 1
     if block_failures:
         print(f'FAIL: {block_failures} block name checks')
 

@@ -8,7 +8,8 @@ TABLE defaults to the Character Viewer's table of this Mac:
 
 It reports
   1. whether the table exists and can be read (a binary property list {language: {block name: name}});
-  2. whether it has the twelve languages of TeXShop (pt is pt_BR, pt-PT is pt_PT);
+  2. whether it has the twelve languages of TeXShop (pt is pt_BR, pt-PT is pt_PT), each with names that are
+     strings and no entry of another kind;
   3. whether every block name of the table matches a block of ICU (the libicucore of this Mac), as
      Sources/Panels/TSUnicodeBlockNames.m matches them; a name that matches none is a change of naming
      that TeXShop must learn, and its translations are lost until then;
@@ -76,17 +77,34 @@ def main():
         return 1
     print(f'OK 1: {table} is read')
 
-    missing = [f'{folder} ({language})' for folder, language in LANGUAGES.items() if not isinstance(data.get(language), dict)]
-    if missing:
-        print(f'FAIL 2: languages missing: {", ".join(missing)}')
+    missing, broken, counts = [], [], {}
+    for folder, language in LANGUAGES.items():
+        names = data.get(language)
+        if not isinstance(names, dict):
+            missing.append(f'{folder} ({language})')
+            continue
+        bad = [k for k, v in names.items() if not isinstance(k, str) or not isinstance(v, str) or not v.strip()]
+        if bad:
+            broken.append(f'{folder} ({language}): {len(bad)} entries are not names, such as {bad[:3]!r}')
+        counts[folder] = len(names) - len(bad)
+        if counts[folder] == 0:
+            broken.append(f'{folder} ({language}): no names')
+    if missing or broken:
+        if missing:
+            print(f'FAIL 2: languages missing: {", ".join(missing)}')
+        for line in broken:
+            print(f'FAIL 2: {line}')
         problems += 1
     else:
-        counts = sorted({len(data[language]) for language in LANGUAGES.values()})
-        print(f'OK 2: the twelve languages of TeXShop are there, with {"/".join(map(str, counts))} names')
+        print(f'OK 2: the twelve languages of TeXShop are there, with {"/".join(map(str, sorted(set(counts.values()))))} names')
+    if len(set(counts.values())) > 1:
+        print('NOTE 2: the languages have different numbers of names: '
+              + ', '.join(f'{folder} {count}' for folder, count in counts.items()))
 
     unicode, blocks = icu_blocks()
     keys = {key(block) for block in blocks}
-    names = {name for language in LANGUAGES.values() if isinstance(data.get(language), dict) for name in data[language] if isinstance(name, str)}
+    names = {name for language in LANGUAGES.values() if isinstance(data.get(language), dict)
+             for name, value in data[language].items() if isinstance(name, str) and isinstance(value, str) and value.strip()}
     unknown = sorted(name for name in names if key(name) not in keys)
     if unknown:
         print(f'FAIL 3: {len(unknown)} names of the table match no block of ICU ({unicode}): {unknown}')
