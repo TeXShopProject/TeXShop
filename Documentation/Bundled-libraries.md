@@ -60,9 +60,9 @@ is shown. That file has to be checked after each major update of macOS; see
 Do not infer OgreKit's recency from the largest version number: upstream tag
 `3.0.2` points to `7f7ab1e452336fb73f23fcc57451e61919f87b3d` (2018), whereas
 `2.1.12` points to `6bcba98650d3099bec84fa33443e6e0d8856a1bd` (2022).
-The upstream README currently offers 2.1.12. The bundled framework reports
-2.1.12 and its Onigmo headers report 6.2.0; neither is replaced by the older
-`3rdparty/FlipUniversal/OgreKit-3.0.2` sources.
+The upstream README currently offers 2.1.12. The bundled framework
+(`Frameworks/OgreKit.framework`) reports 2.1.12 and its Onigmo headers report
+6.2.0.
 
 The Sparkle framework in `Frameworks/` is the one linked and embedded by the target.
 
