@@ -82,7 +82,7 @@
     " does not exist." = " 未找到。";
     "failed to copy selection." = "无法拷贝选中的区域。";
     "failed to save selection to the file." = "无法将选中的区域保存至文件。";
-    "<a letter consisting of %d characters>" = "<包含 %d个字符的单字>";
+    "<a letter consisting of %d characters>" = "<由%d个字符组成的字符>";
     "%d letters, %d words, %d lines" = "%d个字符, %d个单词, 共 %d行";
     "Emoji Style" = "Emoji样式";
     "Text Style" = "文本样式";
@@ -94,6 +94,13 @@
 "Skin Tone IV" = "中等";
 "Skin Tone V" = "较深";
 "Skin Tone VI" = "深色";
+"Code Point:" = "码位：";
+"Block:" = "区块：";
+"Category:" = "类别：";
+"Version:" = "版本：";
+"Unknown" = "未知";
+"No Block" = "无区块";
+"deprecated" = "已弃用";
 "Unknown encoding; using UTF-8." = "未知编码；使用UTF-8编码。";
 "Demo Movies require Mac OS 10.9, Mavericks, or higher." = "演示视频需要Mac OS 10.9 Mavericks或更高版本。";
 "Source" = "源代码";
@@ -149,16 +156,15 @@
 "Search commands" = "搜索命令";
 "Command" = "命令";
 "Shortcut" = "快捷键";
-"Change…" = "更改…";
 "Remove Shortcut" = "移除快捷键";
 "Restore Default" = "恢复默认";
+"Default shortcut: %@" = "默认快捷键：%@";
+"Default shortcut: None" = "默认快捷键：无";
 "Restore All…" = "全部恢复…";
 "Restore All" = "全部恢复";
 "Change Shortcut" = "更改快捷键";
-"Apply" = "应用";
 "Shortcut Unavailable" = "快捷键不可用";
 "Restore all keyboard shortcuts?" = "恢复所有键盘快捷键？";
-"New shortcut" = "新快捷键";
 "This command is no longer available." = "此命令已不可用。";
 "This shortcut is already used by “%@”." = "此快捷键已被“%@”使用。";
 
@@ -391,3 +397,24 @@
 "Typesets once with this engine instead of the one chosen in the toolbar." = "仅此一次用此引擎代替工具栏中所选的引擎进行排版。";
 "A % !TEX TS-program line at the top of the document takes precedence." = "文稿开头有 % !TEX TS-program行时，以该行为准。";
 "Choose an Engine Profile" = "选择引擎配置";
+
+/* The status bar under the source */
+"Status Bar" = "状态栏";
+"%1$@: %2$@" = "%1$@：%2$@";
+"Lines" = "行";
+"Characters" = "字符";
+"Words" = "字";
+"Location" = "位置";
+"Line" = "行";
+"Column" = "列";
+
+/* Text Statistics, opened from the status bar */
+"Text Statistics…" = "正文统计…";
+"Whole Document" = "整个文稿";
+"Selection" = "所选内容";
+"Text" = "正文";
+"Refresh" = "刷新";
+"Counting…" = "正在统计…";
+"detex was not found." = "找不到detex。";
+"detex failed." = "detex失败。";
+"Counted by detex without the TeX commands, with the files read by \\input and \\include." = "由detex去除TeX命令后统计，包括用\\input和\\include读取的文件。";

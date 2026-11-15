@@ -159,12 +159,11 @@ int main(int argc,char **argv) { @autoreleasepool {
             // Its own live override must not prevent restoring the original spelling.
             RestorationUI *selfUI=[[RestorationUI alloc] initWithShortcuts:[TSKeyboardShortcuts new]];
             selfUI.store=store;selfUI.editingCommand=zoom;selfUI.selection=zoom;
-            selfUI.captureDisplay=[NSTextField new];selfUI.captureError=[NSTextField new];selfUI.applyButton=[NSButton new];
-            [selfUI recordShortcutEvent:chosen];
+            REQUIRE([selfUI captureShortcutEvent:chosen]);
             if (![selfUI conflictForCapturedShortcut]) {
-                REQUIRE(selfUI.applyButton.enabled);
-                [selfUI applyCapturedShortcut:nil];
                 NSDictionary *recorded=TSBinding(selfUI.capturedKey,selfUI.capturedModifiers);
+                [selfUI applyCapturedShortcut:nil];
+                REQUIRE(selfUI.editingCommand==nil);
                 REQUIRE(![recorded isEqual:original]);
                 REQUIRE([TSBinding(zoom.item.keyEquivalent,zoom.item.keyEquivalentModifierMask) isEqual:recorded]);
                 REQUIRE([store.overrides[zoom.commandID] isEqual:recorded]);
@@ -178,14 +177,14 @@ int main(int argc,char **argv) { @autoreleasepool {
             [store restoreAll];
             REQUIRE(![store setKey:@"z" modifiers:C|K forCommand:zoom]);
             RestorationUI *ui=[[RestorationUI alloc] initWithShortcuts:[TSKeyboardShortcuts new]];ui.store=store;ui.editingCommand=typeset;ui.selection=zoom;
-            ui.captureDisplay=[NSTextField new];ui.captureError=[NSTextField new];ui.applyButton=[NSButton new];
-            [ui recordShortcutEvent:chosen];
+            REQUIRE([ui captureShortcutEvent:chosen]);
             // A few locales have another factory key for the same stroke; free it first.
             for(TSShortcutCommand *other in store.commands) if(other!=zoom && other!=typeset &&
                 [ui.capturedBindings containsObject:TSBinding(other.item.keyEquivalent,other.item.keyEquivalentModifierMask)])
                 REQUIRE(![store setKey:@"" modifiers:0 forCommand:other]);
             REQUIRE(![ui conflictForCapturedShortcut]);
-            [ui applyCapturedShortcut:nil];REQUIRE([typeset.item.keyEquivalent isEqual:ui.capturedKey]);
+            NSString *capturedKey=ui.capturedKey;NSEventModifierFlags capturedModifiers=ui.capturedModifiers;
+            [ui applyCapturedShortcut:nil];REQUIRE([typeset.item.keyEquivalent isEqual:capturedKey] && ui.editingCommand==nil);
             NSDictionary *saved=[[defaults objectForKey:TSMenuShortcutOverridesKey] copy];
             ui.confirmations=0;[ui restoreShortcut:nil];
             REQUIRE([ui.error containsString:typeset.path] && ui.confirmations==0);
@@ -193,8 +192,8 @@ int main(int argc,char **argv) { @autoreleasepool {
             REQUIRE([[store restoreCommand:zoom] containsString:typeset.path]);
             REQUIRE([zoom.item.keyEquivalent isEqual:@"z"] && [[defaults objectForKey:TSMenuShortcutOverridesKey] isEqual:saved]);
             REQUIRE(![store setKey:@"" modifiers:0 forCommand:typeset]);
-            NSMenuItem *macro=[[NSMenuItem alloc] initWithTitle:@"Macro" action:NSSelectorFromString(@"doMacro:") keyEquivalent:ui.capturedKey];
-            macro.keyEquivalentModifierMask=ui.capturedModifiers;[typeset.item.menu addItem:macro];
+            NSMenuItem *macro=[[NSMenuItem alloc] initWithTitle:@"Macro" action:NSSelectorFromString(@"doMacro:") keyEquivalent:capturedKey];
+            macro.keyEquivalentModifierMask=capturedModifiers;[typeset.item.menu addItem:macro];
             REQUIRE(![store conflictForRestoringCommand:zoom]);
             [ui restoreShortcut:nil];REQUIRE(!ui.error && ui.confirmations==1);
             REQUIRE([TSBinding(zoom.item.keyEquivalent,zoom.item.keyEquivalentModifierMask) isEqual:original]);

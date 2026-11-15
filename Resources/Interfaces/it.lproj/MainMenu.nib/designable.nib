@@ -746,6 +746,12 @@
                                     <action selector="showHideLineNumbers:" target="-1" id="782"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Mostra la barra di stato" id="Stb-Bq-7Kd" identifier="TSShortcut.toggleStatusBar:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="toggleStatusBar:" target="-1" id="Stb-Ac-7Kd"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Colorazione sintassi" tag="14" id="l8L-JE-sHF" identifier="TSShortcut.toggleSyntaxColor:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
@@ -1595,7 +1601,7 @@ Gw
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" id="810">
                             <font key="font" metaFont="system"/>
-                            <string key="title">Package name whose documentation you want to see:
+                            <string key="title">Nome del pacchetto di cui vuoi vedere la documentazione:
 </string>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

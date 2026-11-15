@@ -51,8 +51,8 @@
 "catalog.general.3.1.title" = "最小化打开的根窗口";
 "group.general.5.title" = "高级";
 "group.general.6.title" = "运行时的Dock图标";
-"catalog.general.5.0.title" = "此处未显示的设置在帮助文档“注释行和隐藏设置”中说明。";
-"catalog.general.5.1.title" = "打开注释行和隐藏设置";
+"catalog.general.5.0.title" = "此处未显示的设置在帮助文档“魔术行; 隐藏设置”中说明。";
+"catalog.general.5.1.title" = "打开魔术行与隐藏设置手册…";
 "group.encoding.title" = "编码";
 "catalog.documents.0.0.title" = "新文档的编码";
 "catalog.documents.0.1.title" = "在保存对话框中显示编码";

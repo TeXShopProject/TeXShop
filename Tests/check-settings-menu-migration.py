@@ -4,8 +4,8 @@ from pathlib import Path
 import hashlib,json,xml.etree.ElementTree as E
 root=Path(__file__).resolve().parents[1]
 removed={'openAutoCompletionListEditor:','openCommandCompletionList:'}
-# Commands added to the Edit menu later; they are outside the fixed contract.
-added={'convertCharacterType:','normalizeSelectedString:','exchangePaste:'}
+# Commands added to the Edit menu later, and Source > Show Status Bar (6.00); they are outside the fixed contract.
+added={'convertCharacterType:','normalizeSelectedString:','exchangePaste:','toggleStatusBar:'}
 # Find and Replace… joined the Find submenu of the other languages in 6.00; the Base menu always had it.
 added_outside_base={'performTextFinderAction:'}
 # Change Encoding joined Edit > Transformations of the Base menu in 6.00; the other languages always had it.

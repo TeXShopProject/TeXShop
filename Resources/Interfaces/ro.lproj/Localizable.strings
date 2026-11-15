@@ -86,7 +86,7 @@
 " does not exist." = " nu există.";
 "failed to copy selection." = "copierea selecției a eșuat.";
 "failed to save selection to the file." = "salvarea selecției în fișier a eșuat.";
-"<a letter consisting of %d characters>" = "<o literă formată din %d caractere>";
+"<a letter consisting of %d characters>" = "<un caracter format din %d caractere>";
 "%d letters, %d words, %d lines" = "Litere: %d, cuvinte: %d, linii: %d";
 "Emoji Style" = "Stil emoji";
 "Text Style" = "Stil text";
@@ -98,6 +98,13 @@
 "Skin Tone IV" = "Ton mediu";
 "Skin Tone V" = "Ton mediu-închis";
 "Skin Tone VI" = "Ton închis";
+"Code Point:" = "Punct de cod:";
+"Block:" = "Bloc:";
+"Category:" = "Categorie:";
+"Version:" = "Versiune:";
+"Unknown" = "Necunoscut";
+"No Block" = "Niciun bloc";
+"deprecated" = "învechit";
 "Unknown encoding; using UTF-8." = "Codificare necunoscută; se folosește UTF-8.";
 "Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Filmele demonstrative necesită Mac OS 10.9 Mavericks sau o versiune ulterioară.";
 "Source" = "Sursă";
@@ -153,16 +160,15 @@
 "Search commands" = "Caută comenzi";
 "Command" = "Comandă";
 "Shortcut" = "Scurtătură";
-"Change…" = "Schimbați…";
 "Remove Shortcut" = "Elimină scurtătura";
 "Restore Default" = "Restaurați valoarea implicită";
+"Default shortcut: %@" = "Scurtătură implicită: %@";
+"Default shortcut: None" = "Scurtătură implicită: niciuna";
 "Restore All…" = "Restaurați tot…";
 "Restore All" = "Restaurați tot";
 "Change Shortcut" = "Modificarea scurtăturii";
-"Apply" = "Aplicați";
 "Shortcut Unavailable" = "Scurtătură indisponibilă";
 "Restore all keyboard shortcuts?" = "Restaurați toate scurtăturile de tastatură?";
-"New shortcut" = "Scurtătură nouă";
 "This command is no longer available." = "Această comandă nu mai este disponibilă.";
 "This shortcut is already used by “%@”." = "Această scurtătură este deja folosită de „%@”.";
 
@@ -394,3 +400,24 @@
 "Typesets once with this engine instead of the one chosen in the toolbar." = "Culege o dată cu acest motor în locul celui ales în bara de instrumente.";
 "A % !TEX TS-program line at the top of the document takes precedence." = "O linie % !TEX TS-program la începutul documentului are prioritate.";
 "Choose an Engine Profile" = "Alegeți un profil al motorului";
+
+/* The status bar under the source */
+"Status Bar" = "Bara de stare";
+"%1$@: %2$@" = "%1$@: %2$@";
+"Lines" = "Linii";
+"Characters" = "Caractere";
+"Words" = "Cuvinte";
+"Location" = "Poziție";
+"Line" = "Linie";
+"Column" = "Coloană";
+
+/* Text Statistics, opened from the status bar */
+"Text Statistics…" = "Statistici text…";
+"Whole Document" = "Întregul document";
+"Selection" = "Selecție";
+"Text" = "Text";
+"Refresh" = "Reîmprospătați";
+"Counting…" = "Se numără…";
+"detex was not found." = "detex nu a fost găsit.";
+"detex failed." = "detex a eșuat.";
+"Counted by detex without the TeX commands, with the files read by \\input and \\include." = "Numărat de detex fără comenzile TeX, inclusiv fișierele citite cu \\input și \\include.";

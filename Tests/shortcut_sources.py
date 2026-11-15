@@ -5,7 +5,7 @@ from source_tree import source_file
 NAMES = (
     "TSShortcutUtilities.m", "TSShortcutModels.m", "TSShortcutStore.m",
     "TSShortcutSearch.m", "TSShortcutAlerts.m", "TSKeyboardShortcuts.m",
-    "TSShortcutPaneController.m",
+    "TSShortcutKeyRecorder.m", "TSShortcutPaneController.m",
 )
 
 def production_source(root: Path) -> str:

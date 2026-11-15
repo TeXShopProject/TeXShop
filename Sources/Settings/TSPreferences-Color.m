@@ -346,7 +346,7 @@ NSInteger stringSort(id s1, id s2, void *context)
         }
         NSAlert *alert = [NSAlert new];
         alert.messageText = [NSString stringWithFormat:NSLocalizedString(@"The theme “%@” already exists. Replace it?", @""), title];
-        [alert addButtonWithTitle:NSLocalizedString(@"Replace", @"")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Replace", @"")].hasDestructiveAction = YES;
         [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
         [alert beginSheetModalForWindow:coordinator->_prefsWindow completionHandler:^(NSModalResponse answer) {
             __strong __typeof(weakSelf) confirmedCoordinator = weakSelf;

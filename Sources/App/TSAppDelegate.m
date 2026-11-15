@@ -62,6 +62,7 @@
 #import "TSPreferenceLaunch.h"
 #import "TSMultipleReplaceMenu.h"
 #import "TSAdvancedFindMenu.h"
+#import "TSSourceStatusBar.h"
 #import "TSAdvancedFindFieldStyle.h"
 #import "TSPreferenceEffects.h"
 
@@ -783,6 +784,7 @@ static void TSInstallAdvancedFindFieldStyle(void)
 	[self finishAutoCompletionConfigure];
 	[self configureExternalEditor];
 	[self configureMovieMenu];
+    [[TSColorSupport sharedInstance] updateBundledThemeColors];
     [[TSColorSupport sharedInstance]  initializeColors];
     TSInstallAdvancedFindFieldStyle();
     
@@ -1217,10 +1219,20 @@ static void TSInstallAdvancedFindFieldStyle(void)
 
 
 
+// Source > Show Status Bar: the bars of all documents, also those opened later.
+- (IBAction)toggleStatusBar:(id)sender
+{
+    TSSourceStatusBar.shown = !TSSourceStatusBar.shown;
+}
+
 - (BOOL)validateMenuItem:(NSMenuItem *)anItem
 {
     BOOL value1, value2;
     
+    if ([anItem action] == @selector(toggleStatusBar:)) {
+        [anItem setState:TSSourceStatusBar.shown ? NSControlStateValueOn : NSControlStateValueOff];
+        return YES;
+    }
     value1 = [[NSApp mainWindow] isKindOfClass:[TSTextEditorWindow class]];
     value2 = [[NSApp mainWindow] isKindOfClass:[TSFullSplitWindow class]];
 	if ([anItem action] == @selector(displayLatexPanel:)) {

@@ -8,6 +8,7 @@
 
 #import "TSStationery.h"
 #import "TSDialogButtonLayout.h"
+#import "TSOlderPanelLayout.h"
 #import "globals.h"
 #import "TSDocument.h"
 
@@ -19,6 +20,7 @@
 	[super awakeFromNib];
 	// Older nibs put OK and Cancel edge to edge; space them as the guidelines describe.
 	if (stationeryWindow) TSLayoutDialogButtonRow(stationeryWindow);
+	TSRemoveVerticalGridLines(stationeryWindow.contentView);
 }
 
 - (id)init

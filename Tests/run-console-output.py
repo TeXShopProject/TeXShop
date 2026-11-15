@@ -135,12 +135,10 @@ static BOOL TSWriteConsoleInput(FakeHandle *handle, NSData *data, NSError **erro
     NSWindow *outputWindow;
     NSTextView *outputText;
     NSTextField *texCommand;
-    NSForm *statisticsForm;
 }
-@property id readHandle, texloganalyserHandle, detexHandle, inputPipe;
+@property id readHandle, texloganalyserHandle, inputPipe;
 @property FakeHandle *writeHandle;
 @property NSTextView *logTextView;
-@property NSString *statTempFile;
 @property BOOL automaticCorrection;
 @property NSInteger numberingCorrection;
 @end

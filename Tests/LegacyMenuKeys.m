@@ -45,6 +45,18 @@ int main(int argc,char **argv){@autoreleasepool{
   Check([other.keyEquivalent isEqual:@"z"],@"Malformed entries do not rewrite unrelated keys");
   Check([completion.keyEquivalent isEqual:@"a"] && [other.keyEquivalent isEqual:@"z"],@"Every child dictionary entry is processed; the former Marks position stays inert");
  }
+ // Source › Show Status Bar is new in 6.00, right after Show Line Numbers: positions saved before skip it.
+ {
+  TSLegacyMenuHadFindAndReplace=1;
+  NSMenu *main=[NSMenu new];NSMenuItem *source=Item(main,@"Source");source.submenu=[NSMenu new];
+  NSMenuItem *numbers=Item(source.submenu,@"Show Line Numbers");numbers.identifier=@"TSShortcut.showHideLineNumbers:.0";
+  NSMenuItem *bar=Item(source.submenu,@"Show Status Bar");bar.identifier=@"TSShortcut.toggleStatusBar:.0";
+  NSMenuItem *syntax=Item(source.submenu,@"Show Syntax Color");
+  Apply(main,@{@"1":@{@"1":@[@"1",@NO,@YES],@"2":@[@"2",@NO,@YES]}});
+  Check([numbers.keyEquivalent isEqual:@"1"] && [syntax.keyEquivalent isEqual:@"2"] && [bar.keyEquivalent isEqual:@""],@"positions skip Show Status Bar, added in 6.00");
+  Apply(main,@{@"Source":@{@"Show Status Bar":@[@"b",@NO,@YES]}});
+  Check([bar.keyEquivalent isEqual:@"b"],@"the title reaches Show Status Bar");
+ }
  // Edit › Find: only the English menu had Find and Replace… before 6.00. Positions saved for another language's menu
  // skip it, which that menu now has after Find…; the English positions count it, as before. Titles reach it in both.
  for(NSNumber *english in @[@YES,@NO]){
@@ -186,5 +198,5 @@ int main(int argc,char **argv){@autoreleasepool{
   Apply(main,@{@"Window":@{@" 보기  전환":@[@"4",@NO,@NO]}});
   Check([korean.keyEquivalent isEqual:@"4"],@"A doubled space inside a former title compares as one");
  }
- puts("PASS: Find and Replace… skipped in positions of the menus that lacked it; 12 legacy title fixtures; CJK-Latin spacing; 18 former titles with a stray space; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File; former typesetting method titles in 12 languages; Command Completion submenu entries in 12 languages reach Add to Command Completion List");
+ puts("PASS: Show Status Bar skipped in positions; Find and Replace… skipped in positions of the menus that lacked it; 12 legacy title fixtures; CJK-Latin spacing; 18 former titles with a stray space; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File; former typesetting method titles in 12 languages; Command Completion submenu entries in 12 languages reach Add to Command Completion List");
 }return 0;}

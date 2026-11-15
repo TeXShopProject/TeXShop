@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		2319C1143559AA364726B686 /* TSMacroContentTokens.m in Sources */ = {isa = PBXBuildFile; fileRef = A416D39112908450597128E6 /* TSMacroContentTokens.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		C69C962943C84891A9D4A517 /* TSPlaceholderToken.m in Sources */ = {isa = PBXBuildFile; fileRef = E517448419B1AE5EE15D8A27 /* TSPlaceholderToken.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		4CE936E95067E603FEDC8357 /* TSMacroShortcutField.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D5E0A836A0E6E7EA6CBF8E8 /* TSMacroShortcutField.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		8C4C480943627392332351CF /* TSListBottomBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 186AA1C2E05E995AA9E7AE85 /* TSListBottomBar.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		FA4642139FF362346A674FF5 /* TSAdvancedFindController+MultipleReplace.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EA30567B06FD1BA89176E55 /* TSAdvancedFindController+MultipleReplace.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		FD453ED734C26F5EAAF40FE3 /* TSMultipleReplaceLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = A97846D41CA596CF8F893971 /* TSMultipleReplaceLibrary.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
@@ -64,7 +63,6 @@
 		62E064B4D3D199B9A57677E5 /* metapostwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = F5332B17016CD72701DF2474 /* metapostwrap */; };
 		18785E129DC4160859C27CC9 /* contextdviwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = F5332B18016CD72701DF2474 /* contextdviwrap */; };
 		BD71E00A8C372A28D0A6F5E9 /* altpdflatex in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 40923AD00570A1770089F69B /* altpdflatex */; };
-		B98E8DB8612F61AD44AC4C6F /* detexwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 406A69F4060F8C170028E210 /* detexwrap */; };
 		E94FA851A5D9BF24B6659ADA /* altpdftex in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 40B1DDC706EB6E540083A311 /* altpdftex */; };
 		D4103F5BCDA7C2F59678F352 /* contextforwardsyncwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 400839512665407800037D3C /* contextforwardsyncwrap */; };
 		7CE990D93D49A733AF7E8927 /* texloganalyserwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 406774A218F7800D00204AF4 /* texloganalyserwrap */; };
@@ -136,8 +134,10 @@
 		404D7902199FF471008B8D64 /* TSFullSplitWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 404D7900199FF471008B8D64 /* TSFullSplitWindow.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		26F5B11D7C0A4E9D2B3A6C01 /* TSFullSplitDivider.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6C03 /* TSFullSplitDivider.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		26F5B11D7C0A4E9D2B3A6D01 /* TSDocumentWindowGlass.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6D03 /* TSDocumentWindowGlass.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		4054643E19AE9630006EE9D5 /* GlyphPopoverMulti.xib in Resources */ = {isa = PBXBuildFile; fileRef = D61FA563CE9FC9BEE1BA8618 /* GlyphPopoverMulti.xib */; };
-		4054643F19AE9630006EE9D5 /* GlyphPopoverSingle.xib in Resources */ = {isa = PBXBuildFile; fileRef = D55A1544C331DC7DE9A7D6B3 /* GlyphPopoverSingle.xib */; };
+		26F5B11D7C0A4E9D2B3A6E01 /* TSSourceStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6E03 /* TSSourceStatusBar.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		26F5B11D7C0A4E9D2B3A6E04 /* TSStatusBarCounting.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6E06 /* TSStatusBarCounting.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		26F5B11D7C0A4E9D2B3A6E07 /* TSTextStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6E09 /* TSTextStatistics.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		26F5B11D7C0A4E9D2B3A6E10 /* TSTextStatisticsPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6E12 /* TSTextStatisticsPopover.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4061BA9E1991979600C890DB /* RecentTexFonts.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 4061BA9C1991979600C890DB /* RecentTexFonts.pdf */; };
 		4062E2921D7BC08300DC1518 /* GPLv2 License.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 4062E2901D7BC08300DC1518 /* GPLv2 License.pdf */; };
 		406AB0B0136A5E03009F4D8F /* OgreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 406AB0AF136A5E03009F4D8F /* OgreKit.framework */; };
@@ -182,6 +182,7 @@
 		407881820519249A006979EA /* globals.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC768C80010B25E7F000001 /* globals.m */; settings = {ATTRIBUTES = (); COMPILER_FLAGS = "-fobjc-arc"; }; };
 		407881830519249A006979EA /* TSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E7EAC2001D35FA7F000001 /* TSAppDelegate.m */; settings = {ATTRIBUTES = (); COMPILER_FLAGS = "-fobjc-arc"; }; };
 		D1FD5E9C1699033F4DD1FA82 /* TSDialogButtonLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EFF8B56412A39CCA9BB4FE4 /* TSDialogButtonLayout.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		C2E9369302366A2905914CE7 /* TSOlderPanelLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C84490F8CAF8AC370AB6D97 /* TSOlderPanelLayout.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		407881840519249A006979EA /* TSWindowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E5E43A003E251B7F000001 /* TSWindowManager.m */; settings = {ATTRIBUTES = (); COMPILER_FLAGS = "-fobjc-arc"; }; };
 		407881860519249A006979EA /* TSLaTeXPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B8EA8F01FF59A101DF2474 /* TSLaTeXPanelController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		407881880519249A006979EA /* TSToolbarController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5ECC3210214678B01DF2474 /* TSToolbarController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -234,6 +235,7 @@
 		40A6859F11125D0A00C67A9E /* About This Release.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 40A6859D11125D0A00C67A9E /* About This Release.pdf */; };
 		40A9D09219AE7D4400FEFAC6 /* TSGlyphPopoverController.h in Headers */ = {isa = PBXBuildFile; fileRef = 40A9D09019AE7D4400FEFAC6 /* TSGlyphPopoverController.h */; };
 		40A9D09319AE7D4400FEFAC6 /* TSGlyphPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40A9D09119AE7D4400FEFAC6 /* TSGlyphPopoverController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		D223C17F4D9A1BA3456556B1 /* TSUnicodeBlockNames.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F50AFB98C6BCB2A167A493 /* TSUnicodeBlockNames.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		BB80F541D8508D741318A647 /* TSSpellExclusions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B07AF9DC05BCC3F8444C4D5 /* TSSpellExclusions.h */; };
 		15035E52E5C5DD7C4317400E /* TSSpellExclusions.m in Sources */ = {isa = PBXBuildFile; fileRef = DB778C6DE0EE0C1AE1E0909B /* TSSpellExclusions.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		F581F6404E539E8EA53B676E /* TSSpellSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 3086BAFCCC5CABC6D0FD3D2C /* TSSpellSupport.h */; };
@@ -246,6 +248,7 @@
 		40B288D11398A373005C921D /* synctex_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 40B288CF1398A373005C921D /* synctex_parser.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		40B288D21398A373005C921D /* synctex_parser.h in Headers */ = {isa = PBXBuildFile; fileRef = 40B288D01398A373005C921D /* synctex_parser.h */; };
 		40B288D41398A399005C921D /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B288D31398A399005C921D /* libz.a */; };
+		B05241B00556A32D264987EF /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 71F06080C1AC31FAEC12D846 /* libicucore.tbd */; };
 		40B42AED1BBB6CC30007C9FB /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B42AEC1BBB6CC30007C9FB /* Sparkle.framework */; };
 		40B42AEF1BBB6D840007C9FB /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40B42AEC1BBB6CC30007C9FB /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		40B7DEAB057139E2002872F2 /* TSDocumentScripting.h in Headers */ = {isa = PBXBuildFile; fileRef = 40B7DEA9057139E2002872F2 /* TSDocumentScripting.h */; };
@@ -315,6 +318,7 @@
 		9C4FE249828AFAEDE06BEB54 = {isa = PBXBuildFile; fileRef = 0731721CBFD6F17AD0DD4F24; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		ED635084DB6403693BED4C9A = {isa = PBXBuildFile; fileRef = F4EB4ACA7ED000B71ADE66E6; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		BCC3EA04E08B38760A6DFA77 = {isa = PBXBuildFile; fileRef = 197586F0A4601BC5C8BCBB2E; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		7A4C2E91B03D5F6A18C0E201 /* TSShortcutKeyRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2E91B03D5F6A18C0E202 /* TSShortcutKeyRecorder.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		6557BE8AC597BF69E384ECD7 = {isa = PBXBuildFile; fileRef = 3F36D4D0A156D4E499455DB0; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		74D2A5947C2DD85F835BB9DE = {isa = PBXBuildFile; fileRef = 9F49BE4A6403EFC7BED1FE8F; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		8CD3CD5CE098B44C82C78055 = {isa = PBXBuildFile; fileRef = 7A5D3AFB511E81E0D1A4BA2D; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
@@ -374,7 +378,6 @@
 				62E064B4D3D199B9A57677E5 /* metapostwrap in Copy Shell Scripts */,
 				18785E129DC4160859C27CC9 /* contextdviwrap in Copy Shell Scripts */,
 				BD71E00A8C372A28D0A6F5E9 /* altpdflatex in Copy Shell Scripts */,
-				B98E8DB8612F61AD44AC4C6F /* detexwrap in Copy Shell Scripts */,
 				E94FA851A5D9BF24B6659ADA /* altpdftex in Copy Shell Scripts */,
 				D4103F5BCDA7C2F59678F352 /* contextforwardsyncwrap in Copy Shell Scripts */,
 				7CE990D93D49A733AF7E8927 /* texloganalyserwrap in Copy Shell Scripts */,
@@ -424,8 +427,6 @@
 		A416D39112908450597128E6 /* TSMacroContentTokens.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMacroContentTokens.m; sourceTree = "<group>"; };
 		5FF4987736A8FFE348FDE345 /* TSPlaceholderToken.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPlaceholderToken.h; sourceTree = "<group>"; };
 		E517448419B1AE5EE15D8A27 /* TSPlaceholderToken.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPlaceholderToken.m; sourceTree = "<group>"; };
-		0745FD2015898714572C469E /* TSMacroShortcutField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMacroShortcutField.h; sourceTree = "<group>"; };
-		4D5E0A836A0E6E7EA6CBF8E8 /* TSMacroShortcutField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMacroShortcutField.m; sourceTree = "<group>"; };
 		4FECA7E6A4562DD30C5D2E0D /* TSListBottomBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSListBottomBar.h; sourceTree = "<group>"; };
 		186AA1C2E05E995AA9E7AE85 /* TSListBottomBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSListBottomBar.m; sourceTree = "<group>"; };
 		5F2E5F32D20D36A3DDA91CC3 /* TSAdvancedFindController+MultipleReplace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TSAdvancedFindController+MultipleReplace.h"; sourceTree = "<group>"; };
@@ -552,6 +553,8 @@
 		E18000000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsNavigationHistory.m; sourceTree = "<group>"; };
 		EA1100000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSKeyboardShortcuts.m; sourceTree = "<group>"; };
 		E2A000000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSShortcutPaneController.h; sourceTree = "<group>"; };
+		7A4C2E91B03D5F6A18C0E203 /* TSShortcutKeyRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSShortcutKeyRecorder.h; sourceTree = "<group>"; };
+		7A4C2E91B03D5F6A18C0E202 /* TSShortcutKeyRecorder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSShortcutKeyRecorder.m; sourceTree = "<group>"; };
 		EA1100000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKeyboardShortcuts.h; sourceTree = "<group>"; };
 		E16E00000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSEnginePathDiscovery.m; sourceTree = "<group>"; };
 		E17000000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPreferenceProfile.m; sourceTree = "<group>"; };
@@ -587,6 +590,8 @@
 		0AC768C80010B25E7F000001 /* globals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = globals.m; sourceTree = "<group>"; };
 		3B5450D753C8B6DC243DDB55 /* TSDialogButtonLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialogButtonLayout.h; sourceTree = "<group>"; };
 		5EFF8B56412A39CCA9BB4FE4 /* TSDialogButtonLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialogButtonLayout.m; sourceTree = "<group>"; };
+		33BB84560BF92DDA90B50604 /* TSOlderPanelLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSOlderPanelLayout.h; sourceTree = "<group>"; };
+		9C84490F8CAF8AC370AB6D97 /* TSOlderPanelLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSOlderPanelLayout.m; sourceTree = "<group>"; };
 		1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		2A37F4AEFDCFA73011CA2CEA /* TSDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSDocument.h; sourceTree = "<group>"; };
 		2A37F4B0FDCFA73011CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -684,15 +689,20 @@
 		26F5B11D7C0A4E9D2B3A6C03 /* TSFullSplitDivider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSFullSplitDivider.m; sourceTree = "<group>"; };
 		26F5B11D7C0A4E9D2B3A6D02 /* TSDocumentWindowGlass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSDocumentWindowGlass.h; sourceTree = "<group>"; };
 		26F5B11D7C0A4E9D2B3A6D03 /* TSDocumentWindowGlass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSDocumentWindowGlass.m; sourceTree = "<group>"; };
-		4054643C19AE9630006EE9D5 /* Base */ = {isa = PBXFileReference; name = Base; fileEncoding = 4; lastKnownFileType = file.xib; path = Base.lproj/GlyphPopoverMulti.xib; sourceTree = "<group>"; };
-		4054643D19AE9630006EE9D5 /* Base */ = {isa = PBXFileReference; name = Base; fileEncoding = 4; lastKnownFileType = file.xib; path = Base.lproj/GlyphPopoverSingle.xib; sourceTree = "<group>"; };
+		26F5B11D7C0A4E9D2B3A6E02 /* TSSourceStatusBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSourceStatusBar.h; sourceTree = "<group>"; };
+		26F5B11D7C0A4E9D2B3A6E03 /* TSSourceStatusBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSourceStatusBar.m; sourceTree = "<group>"; };
+		26F5B11D7C0A4E9D2B3A6E05 /* TSStatusBarCounting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSStatusBarCounting.h; sourceTree = "<group>"; };
+		26F5B11D7C0A4E9D2B3A6E06 /* TSStatusBarCounting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSStatusBarCounting.m; sourceTree = "<group>"; };
+		26F5B11D7C0A4E9D2B3A6E08 /* TSTextStatistics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSTextStatistics.h; sourceTree = "<group>"; };
+		26F5B11D7C0A4E9D2B3A6E09 /* TSTextStatistics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSTextStatistics.m; sourceTree = "<group>"; };
+		26F5B11D7C0A4E9D2B3A6E11 /* TSTextStatisticsPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSTextStatisticsPopover.h; sourceTree = "<group>"; };
+		26F5B11D7C0A4E9D2B3A6E12 /* TSTextStatisticsPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSTextStatisticsPopover.m; sourceTree = "<group>"; };
 		405F8B43199AF6F50005C0AE /* pt */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt; path = Resources/Interfaces/pt.lproj/Movie.nib; sourceTree = "<group>"; };
 		405F8B44199AF7040005C0AE /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = "pt-PT"; path = "Resources/Interfaces/pt-PT.lproj/Movie.nib"; sourceTree = "<group>"; };
 		406774A218F7800D00204AF4 /* texloganalyserwrap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.csh; path = texloganalyserwrap; sourceTree = "<group>"; };
 		4068429A0405969B00000009 /* MyPDFView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyPDFView.h; sourceTree = "<group>"; };
 		4068429B0405969B00000009 /* MyPDFView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyPDFView.m; sourceTree = "<group>"; };
 		4068429E0405A20000000009 /* UseMitsu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UseMitsu.h; sourceTree = "<group>"; };
-		406A69F4060F8C170028E210 /* detexwrap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.csh; path = detexwrap; sourceTree = "<group>"; };
 		406AB0AF136A5E03009F4D8F /* OgreKit.framework */ = {isa = PBXFileReference; name = OgreKit.framework; lastKnownFileType = wrapper.framework; path = Frameworks/OgreKit.framework; sourceTree = "<group>"; };
 		406B626C199934CF00C46D2A /* NSText-Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSText-Extras.h"; sourceTree = "<group>"; };
 		406B626D199934D000C46D2A /* NSText-Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSText-Extras.m"; sourceTree = "<group>"; };
@@ -930,6 +940,8 @@
 		40A56E1D11E67546002BEED6 /* TSStationery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSStationery.m; sourceTree = "<group>"; };
 		40A9D09019AE7D4400FEFAC6 /* TSGlyphPopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSGlyphPopoverController.h; sourceTree = "<group>"; };
 		40A9D09119AE7D4400FEFAC6 /* TSGlyphPopoverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSGlyphPopoverController.m; sourceTree = "<group>"; };
+		23C7D7FBD4C3A29E4A69349C /* TSUnicodeBlockNames.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSUnicodeBlockNames.h; sourceTree = "<group>"; };
+		A6F50AFB98C6BCB2A167A493 /* TSUnicodeBlockNames.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSUnicodeBlockNames.m; sourceTree = "<group>"; };
 		1B07AF9DC05BCC3F8444C4D5 /* TSSpellExclusions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSpellExclusions.h; sourceTree = "<group>"; };
 		DB778C6DE0EE0C1AE1E0909B /* TSSpellExclusions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSpellExclusions.m; sourceTree = "<group>"; };
 		3086BAFCCC5CABC6D0FD3D2C /* TSSpellSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSpellSupport.h; sourceTree = "<group>"; };
@@ -946,6 +958,7 @@
 		40B288CF1398A373005C921D /* synctex_parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = synctex_parser.c; sourceTree = "<group>"; };
 		40B288D01398A373005C921D /* synctex_parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = synctex_parser.h; sourceTree = "<group>"; };
 		40B288D31398A399005C921D /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = 3rdparty/zlib/libz.a; sourceTree = SOURCE_ROOT; };
+		71F06080C1AC31FAEC12D846 /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
 		40B42AEC1BBB6CC30007C9FB /* Sparkle.framework */ = {isa = PBXFileReference; name = Sparkle.framework; lastKnownFileType = wrapper.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		40B7DEA9057139E2002872F2 /* TSDocumentScripting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSDocumentScripting.h; sourceTree = "<group>"; };
 		40B7DEAA057139E2002872F2 /* TSDocumentScripting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSDocumentScripting.m; sourceTree = "<group>"; };
@@ -1243,6 +1256,7 @@
 				40B42AED1BBB6CC30007C9FB /* Sparkle.framework in Frameworks */,
 				406AB0B0136A5E03009F4D8F /* OgreKit.framework in Frameworks */,
 				40B288D41398A399005C921D /* libz.a in Frameworks */,
+				B05241B00556A32D264987EF /* libicucore.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1303,6 +1317,10 @@
 				40162B2B0F1873F200E9336E /* NoodleLineNumberMarker.m */,
 				40162B2C0F1873F200E9336E /* NoodleLineNumberView.h */,
 				40162B2D0F1873F200E9336E /* NoodleLineNumberView.m */,
+				26F5B11D7C0A4E9D2B3A6E05 /* TSStatusBarCounting.h */,
+				26F5B11D7C0A4E9D2B3A6E06 /* TSStatusBarCounting.m */,
+				26F5B11D7C0A4E9D2B3A6E08 /* TSTextStatistics.h */,
+				26F5B11D7C0A4E9D2B3A6E09 /* TSTextStatistics.m */,
 				40D5BB2D19632B9C0081BC77 /* ScrapTextView.h */,
 				40D5BB2E19632B9C0081BC77 /* ScrapTextView.m */,
 				40839127060963C800266FAB /* TextFinder.h */,
@@ -1336,8 +1354,6 @@
 				A2A0000100000000000000C2 /* TSMacroContentKind.m */,
 				4077C62203C7FAE800000009 /* TSMacroEditor.h */,
 				4077C62303C7FAE800000009 /* TSMacroEditor.m */,
-				0745FD2015898714572C469E /* TSMacroShortcutField.h */,
-				4D5E0A836A0E6E7EA6CBF8E8 /* TSMacroShortcutField.m */,
 				5FFE9532AD27014213EA0D40 /* TSMacroContentTokens.h */,
 				A416D39112908450597128E6 /* TSMacroContentTokens.m */,
 				4077C62403C7FAE800000009 /* TSMacroMenuController.h */,
@@ -1386,6 +1402,8 @@
 				4096186305824CF2000D94FD /* TSMatrixPanelController.m */,
 				40D1F2BD06040B1700087115 /* TSMatrixTableView.h */,
 				40D1F2BE06040B1700087115 /* TSMatrixTableView.m */,
+				23C7D7FBD4C3A29E4A69349C /* TSUnicodeBlockNames.h */,
+				A6F50AFB98C6BCB2A167A493 /* TSUnicodeBlockNames.m */,
 			);
 			path = Panels;
 			sourceTree = "<group>";
@@ -1506,6 +1524,8 @@
 				F4EB4ACA7ED000B71ADE66E6 /* TSShortcutModels.m */,
 				E2A000000000000000000001 /* TSShortcutPaneController.h */,
 				197586F0A4601BC5C8BCBB2E /* TSShortcutPaneController.m */,
+				7A4C2E91B03D5F6A18C0E203 /* TSShortcutKeyRecorder.h */,
+				7A4C2E91B03D5F6A18C0E202 /* TSShortcutKeyRecorder.m */,
 				3F36D4D0A156D4E499455DB0 /* TSShortcutSearch.m */,
 				9F49BE4A6403EFC7BED1FE8F /* TSShortcutStore.m */,
 				7A5D3AFB511E81E0D1A4BA2D /* TSShortcutUtilities.m */,
@@ -1593,6 +1613,10 @@
 				26F5B11D7C0A4E9D2B3A6C03 /* TSFullSplitDivider.m */,
 				26F5B11D7C0A4E9D2B3A6D02 /* TSDocumentWindowGlass.h */,
 				26F5B11D7C0A4E9D2B3A6D03 /* TSDocumentWindowGlass.m */,
+				26F5B11D7C0A4E9D2B3A6E02 /* TSSourceStatusBar.h */,
+				26F5B11D7C0A4E9D2B3A6E03 /* TSSourceStatusBar.m */,
+				26F5B11D7C0A4E9D2B3A6E11 /* TSTextStatisticsPopover.h */,
+				26F5B11D7C0A4E9D2B3A6E12 /* TSTextStatisticsPopover.m */,
 				404D1B612891B23400402802 /* TSHTMLWindow.h */,
 				404D1B622891B23400402802 /* TSHTMLWindow.m */,
 				408B6DCE0F3D516C0098CCED /* TSLogWindow.h */,
@@ -1611,6 +1635,8 @@
 				40BCDA511FF9589100AAC575 /* TSWindowController.m */,
 				3B5450D753C8B6DC243DDB55 /* TSDialogButtonLayout.h */,
 				5EFF8B56412A39CCA9BB4FE4 /* TSDialogButtonLayout.m */,
+				33BB84560BF92DDA90B50604 /* TSOlderPanelLayout.h */,
+				9C84490F8CAF8AC370AB6D97 /* TSOlderPanelLayout.m */,
 				4FECA7E6A4562DD30C5D2E0D /* TSListBottomBar.h */,
 				186AA1C2E05E995AA9E7AE85 /* TSListBottomBar.m */,
 				00E5E439003E251B7F000001 /* TSWindowManager.h */,
@@ -1668,8 +1694,6 @@
 				F5ECC3240214678B01DF2474 /* ToolbarItems.strings */,
 				52B13E4908A8183B00756E5E /* TSDocument.nib */,
 				40E76BF2292FDD9200CBE5F9 /* CustomModalWindowController.xib */,
-				D61FA563CE9FC9BEE1BA8618 /* GlyphPopoverMulti.xib */,
-				D55A1544C331DC7DE9A7D6B3 /* GlyphPopoverSingle.xib */,
 			);
 			path = Interfaces;
 			sourceTree = "<group>";
@@ -1678,6 +1702,7 @@
 			isa = PBXGroup;
 			children = (
 				40B288D31398A399005C921D /* libz.a */,
+				71F06080C1AC31FAEC12D846 /* libicucore.tbd */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -1778,7 +1803,6 @@
 				40143F70156F52B600CAFAFC /* sipswrap */,
 				40795D632AB4E307005A7539 /* ps2pdftransparencywrap */,
 				F50B193D0152A11D01000001 /* contextwrap */,
-				406A69F4060F8C170028E210 /* detexwrap */,
 				400839512665407800037D3C /* contextforwardsyncwrap */,
 				4008394F2665406700037D3C /* contextbackwardsyncwrap */,
 				406774A218F7800D00204AF4 /* texloganalyserwrap */,
@@ -2092,7 +2116,6 @@
 				4078813B0519249A006979EA /* TeXShop.scriptTerminology in Resources */,
 				40AC8583181E0CCF00E69820 /* Notes on Applescript in TeXShop.pdf in Resources */,
 				403E76BE218E7008006975A8 /* TeXShop.scriptSuite in Resources */,
-				4054643F19AE9630006EE9D5 /* GlyphPopoverSingle.xib in Resources */,
 				4061BA9E1991979600C890DB /* RecentTexFonts.pdf in Resources */,
 				4015F925218F458C00F6F883 /* ScriptRunner.app in Resources */,
 				40F80CAE1FAD3A2F00377616 /* Changes.pdf in Resources */,
@@ -2102,7 +2125,6 @@
 				408F90900C681BCF00B79EA5 /* Movie.nib in Resources */,
 				4062E2921D7BC08300DC1518 /* GPLv2 License.pdf in Resources */,
 				EF5590000000000000000001 /* TeXShop.icon in Resources */,
-				4054643E19AE9630006EE9D5 /* GlyphPopoverMulti.xib in Resources */,
 				40473FAE0C68273C009311CF /* Course Supplements in Resources */,
 				4009C6D70D0BAA9C00B23013 /* hiero.icns in Resources */,
 				40A03E800F3A47580014104E /* First Steps with General Typesetting.pdf in Resources */,
@@ -2138,6 +2160,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA4642139FF362346A674FF5 /* TSAdvancedFindController+MultipleReplace.m in Sources */,
+				D223C17F4D9A1BA3456556B1 /* TSUnicodeBlockNames.m in Sources */,
 				FD453ED734C26F5EAAF40FE3 /* TSMultipleReplaceLibrary.m in Sources */,
 				094E7C9C3FBE59845DC3EFC4 /* TSMultipleReplaceMenu.m in Sources */,
 				C91ADF2509A371420278D47D /* TSAdvancedFindMenu.m in Sources */,
@@ -2191,6 +2214,7 @@
 				9C4FE249828AFAEDE06BEB54,
 				ED635084DB6403693BED4C9A,
 				BCC3EA04E08B38760A6DFA77,
+				7A4C2E91B03D5F6A18C0E201 /* TSShortcutKeyRecorder.m in Sources */,
 				6557BE8AC597BF69E384ECD7,
 				74D2A5947C2DD85F835BB9DE,
 				8CD3CD5CE098B44C82C78055,
@@ -2222,6 +2246,7 @@
 				407881820519249A006979EA /* globals.m in Sources */,
 				407881830519249A006979EA /* TSAppDelegate.m in Sources */,
 				D1FD5E9C1699033F4DD1FA82 /* TSDialogButtonLayout.m in Sources */,
+				C2E9369302366A2905914CE7 /* TSOlderPanelLayout.m in Sources */,
 				8C4C480943627392332351CF /* TSListBottomBar.m in Sources */,
 				407881840519249A006979EA /* TSWindowManager.m in Sources */,
 				407881860519249A006979EA /* TSLaTeXPanelController.m in Sources */,
@@ -2233,7 +2258,6 @@
 				40356AD11F8D157F0093399B /* synctex_parser_old.c in Sources */,
 				4016DD872109FC6200745019 /* TSColorSupport.m in Sources */,
 				4078818B0519249A006979EA /* TSMacroEditor.m in Sources */,
-				4CE936E95067E603FEDC8357 /* TSMacroShortcutField.m in Sources */,
 				2319C1143559AA364726B686 /* TSMacroContentTokens.m in Sources */,
 				4078818C0519249A006979EA /* TSMacroMenuController.m in Sources */,
 				A2A0000100000000000000C3 /* TSMacroContentKind.m in Sources */,
@@ -2262,6 +2286,10 @@
 				404D7902199FF471008B8D64 /* TSFullSplitWindow.m in Sources */,
 				26F5B11D7C0A4E9D2B3A6C01 /* TSFullSplitDivider.m in Sources */,
 				26F5B11D7C0A4E9D2B3A6D01 /* TSDocumentWindowGlass.m in Sources */,
+				26F5B11D7C0A4E9D2B3A6E01 /* TSSourceStatusBar.m in Sources */,
+				26F5B11D7C0A4E9D2B3A6E04 /* TSStatusBarCounting.m in Sources */,
+				26F5B11D7C0A4E9D2B3A6E07 /* TSTextStatistics.m in Sources */,
+				26F5B11D7C0A4E9D2B3A6E10 /* TSTextStatisticsPopover.m in Sources */,
 				4017CF9B266454D700981011 /* TSDocument-SyncConTeXt.m in Sources */,
 				4083912A060963C800266FAB /* TextFinder.m in Sources */,
 				40E76BF1292FDD1E00CBE5F9 /* CustomModalWindowController.m in Sources */,
@@ -2379,8 +2407,6 @@
 			sourceTree = "<group>";
 		};
 		A53A4B59BBE2B72F965B083F /* SettingsWindow.xib */ = {isa = PBXVariantGroup; children = (E18000000000000000000005 /* Base */, ); name = SettingsWindow.xib; sourceTree = "<group>"; };
-		D61FA563CE9FC9BEE1BA8618 /* GlyphPopoverMulti.xib */ = {isa = PBXVariantGroup; children = (4054643C19AE9630006EE9D5 /* Base */, ); name = GlyphPopoverMulti.xib; sourceTree = "<group>"; };
-		D55A1544C331DC7DE9A7D6B3 /* GlyphPopoverSingle.xib */ = {isa = PBXVariantGroup; children = (4054643D19AE9630006EE9D5 /* Base */, ); name = GlyphPopoverSingle.xib; sourceTree = "<group>"; };
 		01E48F61FF2A05357F000001 /* FindPanel.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

@@ -5085,7 +5085,7 @@
 										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView" ref="1003"/>
 									</object>
-									<string key="NSLabel">사용자설정</string>
+									<string key="NSLabel">사용자화</string>
 									<reference key="NSColor" ref="1109"/>
 									<reference key="NSTabView" ref="776510021"/>
 								</object>

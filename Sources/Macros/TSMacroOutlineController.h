@@ -82,7 +82,27 @@
 @interface TSMacroOutlineView : NSOutlineView
 {
 }
+// The row a second click on its name renames, after the double-click interval (nil: none).
+@property (nonatomic, strong) NSNumber *pendingRename;
+- (void)scheduleRenameOfRow:(NSInteger)row;
+- (void)cancelPendingRename;
+// The row that was selected alone when the mouse went down (-1: none, or several): a click on its
+// shortcut records a new one (TSMacroEditor's listClicked:).
+@property (nonatomic) NSInteger rowSelectedAtMouseDown;
+// While a shortcut is recorded (TSMacroEditor): its item, and the field shown over the item's shortcut,
+// at least recordingWidth wide.
+@property (nonatomic, strong) id recordingItem;
+@property (nonatomic, strong) NSView *recordingView;
+@property (nonatomic) CGFloat recordingWidth;
+- (void)placeRecordingView;
 @end
+
+// The shortcut of an item in the list; an inactive one has the yellow warning triangle before it.
+@interface TSMacroShortcutCell : NSTextFieldCell
+@property (nonatomic) BOOL showsWarning;
+@end
+// The list's shortcuts in a TSMacroShortcutCell, as the nib's cell has them.
+void TSMacroUseShortcutCell(NSOutlineView *view);
 
 
 @interface ImageAndTextCell : NSTextFieldCell

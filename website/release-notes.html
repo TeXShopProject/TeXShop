@@ -7,13 +7,14 @@
 <main class="archive-content release-notes"><h1>Release Notes</h1>
 <article id="v6.00"><h2 id="v5.60">TeXShop 6.00</h2><p class="release-date">In preparation · <a href="https://github.com/TeXShopProject/TeXShop/releases">Try the latest beta</a></p>
 <!-- release-status: draft -->
-<p>TeXShop 6.00 follows TeXShop 5.59. It adds the Advanced Find panel, LaTeX-aware spell checking, pinned link previews and a new Settings window, changes how a split Preview window behaves, and fixes many problems. “Changes in behavior from earlier versions” lists what works differently from earlier versions and how to get the earlier behavior back.</p>
+<p>TeXShop 6.00 follows TeXShop 5.59. It adds the Advanced Find panel, LaTeX-aware spell checking, pinned link previews, a new Settings window and a status bar under the source, changes how a split Preview window behaves, and fixes many problems. “Changes in behavior from earlier versions” lists what works differently from earlier versions and how to get the earlier behavior back.</p>
 <h3>Main changes</h3>
 <ul>
 <li><strong>Advanced Find panel:</strong> a find and replace panel with regular expressions, a list of all matches, highlighting of all matches, and multiple replacement with saved sets of find and replace pairs.</li>
 <li><strong>LaTeX-aware spell checking:</strong> spell checking skips TeX commands, comments, mathematics, and arguments such as labels and keys.</li>
 <li><strong>Pinned link previews:</strong> Option pins the preview of an internal link; a pinned preview can be moved, resized and scrolled.</li>
 <li><strong>Settings window:</strong> ten categories, a search field, editors for menu shortcuts and key bindings, and automatic detection of TeX and Ghostscript.</li>
+<li><strong>Status bar:</strong> a status bar under the source shows the lines, characters and words of the document and of the selection, the line and column of the insertion point, and the file size. Text Statistics… counts the text without TeX commands, also in files read with <code>\input</code> and <code>\include</code>, without saving.</li>
 <li><strong>Stop:</strong> Stop, and starting another typesetting job, end TeX and its child processes.</li>
 </ul>
 <h3>Advanced Find panel</h3>
@@ -70,7 +71,7 @@
 <li>Unicode Normalization in the Edit menu applies NFC, NFD, NFKC or NFKD, or Modified NFC or NFD, which keep CJK compatibility ideographs.</li>
 <li>Swap with Clipboard in the Edit menu replaces the selection with the clipboard text and puts the replaced text on the clipboard.</li>
 <li><code>#PASTE#</code> in macros and key bindings inserts the text on the clipboard.</li>
-<li>The Macro Editor colors its contents like the source, in the theme’s colors, and shows the placeholders of a macro as tokens such as Selected Text, as in the key binding list. The Insert menu below the contents adds them, and the help button beside it lists them.<figure class="note-shot"><img src="assets/release-notes/en/macro-editor.png" width="585" height="452" alt="The Macro Editor showing a TeX macro whose placeholders are tokens, with the Insert menu and a shortcut without Command" loading="lazy"></figure></li>
+<li>The Macro Editor lists its items in a sidebar, as in the Multiple Replace window; rename an item in the list, and Command-S saves the macros. It colors its contents like the source, in the theme’s colors and the source font, and shows the placeholders of a macro as tokens such as Selected Text, as in the key binding list. The Insert menu below the contents adds them, and the help button beside it lists them.<figure class="note-shot"><img src="assets/release-notes/en/macro-editor.png" width="585" height="452" alt="The Macro Editor with its macros listed in a sidebar, a TeX macro whose placeholders are tokens, the Insert menu and a shortcut without Command" loading="lazy"></figure></li>
 <li>Fullwidth letters, digits and symbols, and the minus sign, which look like ASCII in Japanese text, can be colored with the Fullwidth colors under Settings → Themes → Highlights.<figure class="note-shot"><img src="assets/release-notes/en/fullwidth.png" width="591" height="220" alt="A source with fullwidth letters, digits and symbols shown in their own color" loading="lazy"></figure></li>
 <li>Files without an encoding magic comment are opened in the encoding they use, including Unicode, Japanese, Chinese and Korean files.</li>
 <li>Experiment jobs run in their own console, so they do not interfere with typesetting the document. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/8">#8</a>).<figure class="note-shot"><img src="assets/release-notes/en/experiment.png" width="572" height="431" alt="The Experiment source panel with a fragment that refers to Theorem 1, and the Experiment preview showing it typeset" loading="lazy"></figure></li>
@@ -80,15 +81,17 @@
 <li>The Experiment windows use the theme’s colors and the window opacity.</li>
 <li>The Experiment preview has the Scroll, Select Text, Magnify and Select PDF tools and zoom buttons in its toolbar.</li>
 <li>The Tags menus in the toolbar and in the menu bar are up to date whenever they open, so the Update button is removed from the toolbar.</li>
+<li>Source › Show Status Bar hides the status bar; Edit › Statistics… opens the same Text Statistics as the status bar.</li>
+<li>Character Info shows the Unicode name, code point, block, category and version of a character, as CotEditor does, and each code point of a character made of several. For several characters it counts characters, words and lines as the status bar does.</li>
 </ul>
 <h3>Settings window</h3>
 <ul>
-<li>Settings has a sidebar with ten categories: General, Documents and Saving, Editor, Keyboard, Spell Checking, Themes, Preview, Typesetting, Console, and Updates.<figure class="note-shot"><img src="assets/whats-new/en/settings.png" width="600" height="450" alt="The Settings window with the results of a search for font" loading="lazy"></figure></li>
+<li>Settings has a sidebar with ten categories: General, Documents and Saving, Editor, Keyboard, Spell Checking, Themes, Typesetting, Console, Preview, and Updates.<figure class="note-shot"><img src="assets/whats-new/en/settings.png" width="600" height="450" alt="The Settings window with the results of a search for font" loading="lazy"></figure></li>
 <li>Search Settings finds a setting and shows it.</li>
 <li>TeXShop finds the TeX and Ghostscript installations, at first launch and with Detect Paths… under Settings → Typesetting, and lists them with their versions to choose from.<figure class="note-shot"><img src="assets/release-notes/en/detect-paths.png" width="600" height="450" alt="The Detect Paths sheet listing the TeX and Ghostscript installations found" loading="lazy"></figure></li>
 <li>The commands of MakeIndex and MetaPost can be set in Settings → Typesetting → Related Tools, and the engine profiles set them too, with the Japanese programs for the Japanese profiles.<figure class="note-shot"><img src="assets/release-notes/en/related-tools.png" width="600" height="450" alt="The Related Tools group of the Typesetting category of Settings with the index program and MetaPost" loading="lazy"></figure></li>
 <li>Choose the Alternate Engine from a menu of the built-in programs and the engine files in Settings → Typesetting.</li>
-<li>Change the shortcuts of menu commands in Settings → Keyboard: search by command or by key, record a new shortcut by pressing it, and restore one or all shortcuts. Shortcuts already in use are reported. In the Macro Editor, a macro’s shortcut is set the same way, and it may use Control without Command, or F1–F20.<figure class="note-shot"><img src="assets/release-notes/en/settings-keyboard.png" width="600" height="450" alt="The Keyboard category of Settings with the key bindings list and menu shortcuts" loading="lazy"></figure></li>
+<li>Change the shortcuts of menu commands in Settings → Keyboard: search by command or by key, record a new shortcut right in the list, as in Xcode, by clicking the shortcut and pressing the keys, and restore one or all shortcuts. A shortcut already in use is refused, with the reason below the list. In the Macro Editor, a macro’s shortcut is recorded in its list the same way, and it may use Control without Command, or F1–F20.<figure class="note-shot"><img src="assets/release-notes/en/settings-keyboard.png" width="600" height="450" alt="The Keyboard category of Settings with the key bindings list and menu shortcuts" loading="lazy"></figure></li>
 <li>Key bindings are edited in a list in Settings → Keyboard, in place of the Key Bindings Editor window. Placeholders such as <code>#SEL#</code> appear as tokens and are added from the Insert menu.</li>
 <li>Keyboard also holds command completion and the editor of the command completion file, which has moved from the Source menu.</li>
 <li>Spell Checking chooses between LaTeX-aware spell checking with its exclusion rules and the legacy method.</li>
@@ -119,15 +122,16 @@
 <li>Each mouse tool in the preview toolbar has a tool tip that names it and says what it does. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/28">#28</a>).</li>
 <li>Back and Forward in the preview toolbar have their own tool tips and translated names. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/34">#34</a>).</li>
 <li>Each bundled theme has expl3 colors that suit it.</li>
-<li>The bundled Dracula, TransparentTheme and SolarizedLite themes use readable colors for brackets and markers. Themes already in <code>~/Library/TeXShop/Themes</code> keep their colors.</li>
 <li>Line numbers use the system’s monospaced font, so their digits line up.</li>
-<li>The buttons of dialogs are placed as the Human Interface Guidelines describe. The Macro Editor has a bar below its list, as in the Multiple Replace window, and shows its contents in the source font.</li>
+<li>The buttons of dialogs are placed as the Human Interface Guidelines describe.</li>
 <li>Interface text uses the system font in every language, and labels that were cut off show their whole text.</li>
 <li>Labels and choices that were cut off or drawn over each other in some windows and languages are shown in full.</li>
 <li>The input field of the Experiment console, the replacement field below the spelling panel and the number fields are drawn without overlapping.</li>
 <li>The bar below the Experiment source is narrow, with a small Typeset button.</li>
 <li>The buttons of the OgreKit Find panel no longer draw over each other in any language.</li>
 <li>The localized Settings windows no longer have overlapping controls, cut-off labels or wrongly connected controls.</li>
+<li>In every language, the log window, the encoding sheet, the OgreKit Find panel and the Open and Save panels have the current macOS look. Notices before printing or choosing a root file are standard alerts, buttons whose action cannot be undone are marked as such, and link popups have round corners.</li>
+<li>The Matrix panel numbers its rows like its columns and is readable in Dark Mode. The LaTeX panel switches its groups with segmented controls, and its symbols follow Light and Dark Mode.</li>
 </ul>
 <h3>Changes in behavior from earlier versions</h3>
 <ul>
@@ -137,7 +141,7 @@
 <li><strong>Typesetting settings:</strong> in Settings → Typesetting, Default Command is now Typeset New Documents With, and Command to use is now Engine File, a menu of the engine files of TeXShop. The engine file chosen at first is LuaLaTeX instead of XeLaTeX. The Typeset menu, the toolbar and Settings say plain TeX where TeX is set against LaTeX.</li>
 <li><strong>Arrow keys in the preview:</strong> in single-page and two-page layouts, the Up and Down Arrow keys scroll an enlarged page instead of turning the page. Use Command-Right/Left Arrow, Page Up/Page Down, or Space to change pages. Suggested by <a href="https://github.com/svb-bit">svb-bit</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>).</li>
 <li><strong>Menu shortcuts set in macOS:</strong> some menu items have been renamed, so shortcuts assigned to TeXShop in macOS System Settings may no longer work. Set them in Settings → Keyboard instead.</li>
-<li><strong>Macro shortcuts:</strong> a macro’s shortcut is now set in the Macro Editor by pressing it, and may use Control without Command, or F1–F20. Shortcuts saved by earlier versions keep Command.</li>
+<li><strong>Macro shortcuts:</strong> a macro’s shortcut is now recorded in the list of the Macro Editor by pressing it, and may use Control without Command, or F1–F20. Shortcuts saved by earlier versions keep Command.</li>
 <li><strong>Marks:</strong> the mark commands are in Edit → Marks. Insert Mark with Note is always in the menu.</li>
 <li><strong>Command completion:</strong> the Command Completion submenu of the Source menu is replaced by one item, Add to Command Completion List, with the same shortcut.</li>
 <li><strong>Open Style File:</strong> it has moved from the Help menu to the File menu.</li>
@@ -148,6 +152,7 @@
 <li><strong>Themes from earlier color settings:</strong> the button in Settings → Themes that made a theme from the color settings of earlier versions is removed, and so are the macros Colored source and Default Colored source.</li>
 <li><strong><code>\UTF</code> commands:</strong> <code>\UTF</code> commands written by conversion to otf package <code>\UTF</code> / <code>\CID</code> are turned back into characters when a file is opened.</li>
 <li><strong>Line endings:</strong> when an opened file has Windows (CRLF), classic Mac (CR) or mixed line endings, TeXShop says that they have been changed to LF. The notice can be turned off for each file.<figure class="note-shot"><img src="assets/release-notes/en/line-endings.png" width="534" height="520" alt="The notice that a document used Windows line endings, which were changed to LF" loading="lazy"></figure></li>
+<li><strong>Statistics:</strong> Edit › Statistics… opens Text Statistics in the status bar instead of a separate window.</li>
 </ul>
 <h3>Fixes: typesetting and the console</h3>
 <ul>
@@ -204,6 +209,8 @@
 <li>The Home URL setting of the HTML window works, and the window opens the TeXShop web site by default.</li>
 <li>Controls that did nothing or the wrong thing in some languages work: opening images in Spanish, the log window in French, toolbar items in Portuguese and Simplified Chinese, the URL field of the HTML window in Korean and Simplified Chinese, a help item in Italian, and the Matrix panel in ten languages.</li>
 <li>The annotation panel shows its buttons correctly in French and Portuguese, and the English Edit menu has Change Encoding.</li>
+<li>Texts of panels and windows that were left in English or in another language are translated.</li>
+<li>The Matrix panel no longer quits TeXShop after a row is dragged and the table is cleared or filled, and the LaTeX panel shows custom commands also when the hidden setting LPanelOutlines is NO.</li>
 </ul>
 <h3>Manual, help and bundled tools</h3>
 <ul>

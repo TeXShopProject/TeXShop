@@ -23,11 +23,13 @@
 #import "TSMatrixTableView.h"
 #import "TSMatrixPanelController.h"
 
-// RGB values for stripe color (light blue)
-#define STRIPE_RED   (237.0 / 255.0)
-#define STRIPE_GREEN (243.0 / 255.0)
-#define STRIPE_BLUE  (254.0 / 255.0)
-static NSColor *sStripeColor = nil;
+NSString *const TSMatrixRowNumberColumn = @"col";
+
+// The cells that are inserted are shown on blue, in light and dark appearance.
+static NSColor *StripeColor(void)
+{
+	return [NSColor.systemBlueColor colorWithAlphaComponent:0.14];
+}
 
 @implementation TSMatrixTableView
 
@@ -44,22 +46,42 @@ static NSColor *sStripeColor = nil;
 	return YES;
 }
 
-- (void) highlightSelectionInClipRect:(NSRect)rect
+// The selection is not shown: the cells that are inserted are shown on blue instead. The table follows
+// the light or dark appearance.
+- (void)awakeFromNib
 {
-	[self drawStripesInRect:rect];
-	//[super highlightSelectionInClipRect:rect];
+	[super awakeFromNib];
+	[self setSelectionHighlightStyle:NSTableViewSelectionHighlightStyleNone];
+	// The compiled panels give the table a fixed white background.
+	[self setBackgroundColor:[NSColor controlBackgroundColor]];
+}
+
+- (void)drawBackgroundInClipRect:(NSRect)clipRect
+{
+	[super drawBackgroundInClipRect:clipRect];
+	[self drawStripesInRect:clipRect];
 }
 
 -(void) reloadData
 {
 	[super reloadData];
-	NSInteger i;
-	for (i = 0; i < [self numberOfColumns]; i++) {
-		if (i >= [[(TSMatrixPanelController *)[self dataSource] theMatrix] actCols])
-			[[[self tableColumns] objectAtIndex:i] setDataCell:[[InactiveTextFieldCell alloc] init]];
+	NSInteger i = 0, actCols = [[(TSMatrixPanelController *)[self dataSource] theMatrix] actCols];
+	for (NSTableColumn *column in [self matrixColumns]) {
+		if (i >= actCols)
+			[column setDataCell:[[InactiveTextFieldCell alloc] init]];
 		else
-			[[[self tableColumns] objectAtIndex:i] setDataCell:[[ActiveTextFieldCell alloc] init]];
+			[column setDataCell:[[ActiveTextFieldCell alloc] init]];
+		i++;
 	}
+}
+
+- (NSArray<NSTableColumn *> *)matrixColumns
+{
+	NSMutableArray<NSTableColumn *> *columns = [NSMutableArray array];
+	for (NSTableColumn *column in [self tableColumns])
+		if (![[column identifier] isEqualToString:TSMatrixRowNumberColumn])
+			[columns addObject:column];
+	return columns;
 }
 
 -(id)init
@@ -74,38 +96,19 @@ static NSColor *sStripeColor = nil;
 
 - (void) drawStripesInRect:(NSRect)clipRect
 {
-    
-	NSRect stripeRect;
 	NSInteger actCols = [[(TSMatrixPanelController *)[self dataSource] theMatrix] actCols];
 	NSInteger actRows = [[(TSMatrixPanelController *)[self dataSource] theMatrix] actRows];
-	CGFloat fullRowHeight = [self rowHeight] + [self intercellSpacing].height;
-	CGFloat clipBottom = MIN(NSMaxY(clipRect), actRows*fullRowHeight);
-	CGFloat clipRight=0;
-	NSInteger i;
-	NSArray* tableCols;
-	
-	NSInteger firstStripe = clipRect.origin.y / fullRowHeight;
-	if (firstStripe < actRows) {
-		
-		tableCols = [self tableColumns];
-		for (i = 0; i < actCols;i++) {
-			clipRight += [[tableCols objectAtIndex:i] width] + [self intercellSpacing].width;
-		}
-		
-		stripeRect.origin.x = clipRect.origin.x;
-		stripeRect.origin.y = firstStripe * fullRowHeight;
-		stripeRect.size.width = MIN(clipRect.size.width, clipRight-clipRect.origin.x);
-		stripeRect.size.height = fullRowHeight;
-		// set the color
-		if (sStripeColor == nil)
-			sStripeColor = [NSColor colorWithCalibratedRed:STRIPE_RED green:STRIPE_GREEN blue:STRIPE_BLUE alpha:1.0];  //retain];
-		[sStripeColor set];
-		// and draw the stripes
-		while (stripeRect.origin.y < clipBottom) {
-			NSRectFill(stripeRect);
-			stripeRect.origin.y += fullRowHeight;
-		}
-	}
+	NSArray<NSTableColumn *> *columns = [self matrixColumns];
+	if (actCols < 1 || actRows < 1 || [columns count] == 0 || [self numberOfRows] == 0)
+		return;
+	actCols = MIN(actCols, (NSInteger)[columns count]);
+	// From the first column of the matrix to the last one inserted, and from the top to the last row inserted.
+	NSRect first = [self rectOfColumn:[[self tableColumns] indexOfObject:[columns objectAtIndex:0]]];
+	NSRect last = [self rectOfColumn:[[self tableColumns] indexOfObject:[columns objectAtIndex:actCols - 1]]];
+	NSRect lastRow = [self rectOfRow:MIN(actRows, [self numberOfRows]) - 1];
+	NSRect stripes = NSMakeRect(NSMinX(first), 0, NSMaxX(last) - NSMinX(first), NSMaxY(lastRow));
+	[StripeColor() set];
+	NSRectFillUsingOperation(NSIntersectionRect(stripes, clipRect), NSCompositingOperationSourceOver);
 }
 
 @end
@@ -150,13 +153,10 @@ static NSColor *sStripeColor = nil;
 -(id)init
 {
 	if ((self = [super init])) {
-		[self setTextColor:[NSColor colorWithCalibratedWhite:0.827 alpha:1]];
-       // [self setTextColor: [NSColor blackColor]];  //textColor
+		[self setTextColor:[NSColor tertiaryLabelColor]];
 		[self setEditable:YES];
 		[self setEnabled:YES];
-		[self setDrawsBackground:YES];
-		[self setBackgroundColor:[NSColor colorWithCalibratedRed:1 green:1 blue:.985 alpha:1]];
-       // [self setBackgroundColor: [NSColor textBackgroundColor]];
+		[self setDrawsBackground:NO];
 	}
 	return self;
 }
@@ -171,7 +171,7 @@ static NSColor *sStripeColor = nil;
 {
 	if ((self = [super init])) {
 		// [self setTextColor:[NSColor disabledControlTextColor]];
-        [self setTextColor:[NSColor redColor]];
+        [self setTextColor:[NSColor systemRedColor]];
         // [self setTextColor:[NSColor colorWithCalibratedWhite:0.011 alpha:1]];
        // [self setTextColor:[NSColor blackColor]];
  		[self setEditable:YES];

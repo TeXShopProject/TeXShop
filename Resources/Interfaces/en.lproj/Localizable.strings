@@ -98,6 +98,13 @@
 "Skin Tone IV" = "Medium";
 "Skin Tone V" = "Medium Dark";
 "Skin Tone VI" = "Dark";
+"Code Point:" = "Code Point:";
+"Block:" = "Block:";
+"Category:" = "Category:";
+"Version:" = "Version:";
+"Unknown" = "Unknown";
+"No Block" = "No Block";
+"deprecated" = "deprecated";
 "Unknown encoding; using UTF-8." = "Unknown encoding; using UTF-8.";
 "Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Demo Movies require Mac OS 10.9, Mavericks, or higher.";
 "Source" = "Source";
@@ -252,10 +259,8 @@
 "Experiment stopped.\n" = "Experiment stopped.\n";
 
 /* Explicit fallback for shared keys without a translation. */
-"Apply" = "Apply";
 "Change All" = "Change All";
 "Change Shortcut" = "Change Shortcut";
-"Change…" = "Change…";
 "Command" = "Command";
 "Edit Spelling Exclusions…" = "Edit Spelling Exclusions…";
 "Forget Learned Words…" = "Forget Learned Words…";
@@ -267,12 +272,13 @@
 "None of the words in this document have been learned for %@." = "None of the words in this document have been learned for %@.";
 "Not found" = "Not found";
 "OK" = "OK";
-"New shortcut" = "New shortcut";
 "Problems in the spelling exclusions file" = "Problems in the spelling exclusions file";
 "Remove Shortcut" = "Remove Shortcut";
 "Restore All" = "Restore All";
 "Restore All…" = "Restore All…";
 "Restore Default" = "Restore Default";
+"Default shortcut: %@" = "Default shortcut: %@";
+"Default shortcut: None" = "Default shortcut: None";
 "Restore all keyboard shortcuts?" = "Restore all keyboard shortcuts?";
 "Search commands" = "Search commands";
 
@@ -390,3 +396,24 @@
 "Typesets once with this engine instead of the one chosen in the toolbar." = "Typesets once with this engine instead of the one chosen in the toolbar.";
 "A % !TEX TS-program line at the top of the document takes precedence." = "A % !TEX TS-program line at the top of the document takes precedence.";
 "Choose an Engine Profile" = "Choose an Engine Profile";
+
+/* The status bar under the source */
+"Status Bar" = "Status Bar";
+"%1$@: %2$@" = "%1$@: %2$@";
+"Lines" = "Lines";
+"Characters" = "Characters";
+"Words" = "Words";
+"Location" = "Location";
+"Line" = "Line";
+"Column" = "Column";
+
+/* Text Statistics, opened from the status bar */
+"Text Statistics…" = "Text Statistics…";
+"Whole Document" = "Whole Document";
+"Selection" = "Selection";
+"Text" = "Text";
+"Refresh" = "Refresh";
+"Counting…" = "Counting…";
+"detex was not found." = "detex was not found.";
+"detex failed." = "detex failed.";
+"Counted by detex without the TeX commands, with the files read by \\input and \\include." = "Counted by detex without the TeX commands, including the files read with \\input and \\include.";

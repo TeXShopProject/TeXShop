@@ -29,6 +29,7 @@
 #import "TSMacroEditor.h"
 #import "TSMacroTreeNode.h"
 #import "TSEncodingSupport.h"
+#import "TSPrefPaneLayout.h"
 #import "globals.h"
 
 // ================================================================
@@ -99,6 +100,7 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 	imageAndTextCell = [[ImageAndTextCell alloc] init];
 	[imageAndTextCell setEditable: YES];
 	[tableColumn setDataCell:imageAndTextCell];
+	TSMacroUseShortcutCell(outlineView);
 
 	// Register to get only our custom type.
 	[outlineView registerForDraggedTypes:[NSArray arrayWithObjects: DragDropSimplePboardType, NSStringPboardType, nil]];
@@ -296,21 +298,21 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 			objectValue = [(TSMacroTreeNode*)item name];
  		}
 	} else if([[tableColumn identifier] isEqualToString: COLUMNID_KEY]) {
-		objectValue = getMenuItemString([(TSMacroTreeNode*)item key]);
-        if ([[TSMacroEditor sharedInstance] shortcutConflictForNode:item])
-            objectValue = [@"⚠ " stringByAppendingString:objectValue];
+		// While its shortcut is recorded, the field over the cell shows it (TSMacroEditor).
+		objectValue = item == [[TSMacroEditor sharedInstance] recordingItem] ? @"" : getMenuItemString([(TSMacroTreeNode*)item key]);
 	}
 	return objectValue;
 }
 
 // Optional method: needed to allow editing.
+// The name typed when an item is renamed in the list. An empty name keeps the old one, as in Finder.
 - (void)outlineView:(NSOutlineView *)olv setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
-	if([[tableColumn identifier] isEqualToString: COLUMNID_NAME]) {
-		[(TSMacroTreeNode*)item setName: object];
-	} else if ([[tableColumn identifier] isEqualToString: COLUMNID_KEY]) {
-		[(TSMacroTreeNode*)item setKey: object];
-	}
+	if (![[tableColumn identifier] isEqualToString: COLUMNID_NAME] || [(TSMacroTreeNode*)item isSeparator]) return;
+	NSString *name = [object isKindOfClass:NSString.class] ? object : [object description];
+	if ([name stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet].length == 0) return;
+	if ([name isEqualToString:[(TSMacroTreeNode*)item name]]) return;
+	[(TSMacroTreeNode*)item setName: name];
     [[TSMacroEditor sharedInstance] outlineViewItemsChanged:nil];
 }
 
@@ -325,9 +327,16 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 	return [(TSMacroTreeNode*)item isExpandable];
 }
 
+// Only the editor's renaming edits a name (TSMacroEditor's beginRenamingSelectedItem): a double click runs the macro.
 - (BOOL)outlineView:(NSOutlineView *)olv shouldEditTableColumn: (NSTableColumn *)tableColumn item: (id)item
 {
-	return [(TSMacroTreeNode*)item isEditable];
+	return [[TSMacroEditor sharedInstance] isRenaming] && [[tableColumn identifier] isEqualToString: COLUMNID_NAME] && ![(TSMacroTreeNode*)item isSeparator];
+}
+
+// A name typed in the list is filtered as the name field was (the yen sign and the backslash).
+- (void)controlTextDidChange:(NSNotification *)note
+{
+	[[TSEncodingSupport sharedInstance] controlTextDidChange:note];
 }
 
 - (void)outlineView: (NSOutlineView *)olv willDisplayCell: (NSCell *)cell forTableColumn: (NSTableColumn *)tableColumn item: (id)item
@@ -339,15 +348,29 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 		//	[(ImageAndTextCell*)cell setImage: [(TSMacroTreeNode*)item iconRep]];
 		// else
 		if ([item isSeparator]) {
-			[(ImageAndTextCell*)cell setImage1: [NSImage imageNamed: SEPARATOR_IMAGE]];
+			[(ImageAndTextCell*)cell setImage1: TSMacroSeparatorImage(tableColumn.width - 8)];
 		}
         else {
 			 [(ImageAndTextCell*)cell setImage1: nil];
         }
 	} else if ([[tableColumn identifier] isEqualToString: COLUMNID_KEY]) {
-		[(NSTextFieldCell *)cell setTextColor:[[TSMacroEditor sharedInstance] shortcutConflictForNode:item]
-            ? NSColor.secondaryLabelColor : NSColor.controlTextColor];
+		NSString *conflict = [[TSMacroEditor sharedInstance] shortcutConflictForNode:item];
+		[(NSTextFieldCell *)cell setTextColor:conflict ? NSColor.secondaryLabelColor : NSColor.controlTextColor];
+		if ([cell isKindOfClass:TSMacroShortcutCell.class])
+			((TSMacroShortcutCell *)cell).showsWarning = conflict != nil && item != [[TSMacroEditor sharedInstance] recordingItem];
+		// The item whose shortcut VoiceOver's press records (TSMacroShortcutCell).
+		cell.representedObject = item;
+		// VoiceOver reads the shortcut and why it is inactive, not the triangle.
+		cell.accessibilityValue = conflict ? getMenuItemString([(TSMacroTreeNode*)item key]) : nil;
+		cell.accessibilityLabel = conflict;
 	}
+}
+
+// Why a shortcut with the warning triangle is inactive, as the item in the Macros menu says.
+- (NSString *)outlineView:(NSOutlineView *)olv toolTipForCell:(NSCell *)cell rect:(NSRectPointer)rect tableColumn:(NSTableColumn *)tableColumn item:(id)item mouseLocation:(NSPoint)mouseLocation
+{
+	if (![[tableColumn identifier] isEqualToString: COLUMNID_KEY]) return nil;
+	return [[TSMacroEditor sharedInstance] shortcutConflictForNode:item];
 }
 
 // ================================================================
@@ -556,7 +579,134 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 @end
 
 
+// While an item is renamed, its field is as wide as the name and grows with it, as in Finder,
+// up to the name's column.
+static const CGFloat TSNameEditingSlack = 10, TSNameEditingMinimum = 48;
+static CGFloat TSNameEditingWidth(NSString *string, NSFont *font)
+{
+	return MAX(TSNameEditingMinimum, ceil([string ?: @"" sizeWithAttributes:@{NSFontAttributeName: font ?: [NSFont systemFontOfSize:NSFont.systemFontSize]}].width) + TSNameEditingSlack);
+}
+
 @implementation TSMacroOutlineView
+
+// As in Finder, a click on the name of the item that is already selected, and not followed by
+// a second click, renames it: the editor's renameSelectedMacro:, reached through the responder
+// chain (the window's delegate). Anything done before then (a second click, a key, another
+// selection, the list leaving its window) cancels it.
+- (void)mouseDown:(NSEvent *)event
+{
+	[self cancelPendingRename];
+	NSPoint point = [self convertPoint:event.locationInWindow fromView:nil];
+	NSInteger row = [self rowAtPoint:point];
+	NSEventModifierFlags modifiers = event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagShift | NSEventModifierFlagOption | NSEventModifierFlagControl);
+	BOOL again = event.clickCount == 1 && modifiers == 0 && row >= 0 && self.numberOfSelectedRows == 1 && [self isRowSelected:row]
+		&& self.window.isKeyWindow && self.window.firstResponder == self && [self isNameAtPoint:point row:row];
+	self.rowSelectedAtMouseDown = modifiers == 0 && self.numberOfSelectedRows == 1 ? self.selectedRow : -1;
+	[super mouseDown:event];
+	NSEvent *up = NSApp.currentEvent;
+	NSPoint end = [self convertPoint:up.locationInWindow fromView:nil];
+	if (again && up.type == NSEventTypeLeftMouseUp && hypot(end.x - point.x, end.y - point.y) < 4 && self.selectedRow == row && self.numberOfSelectedRows == 1)
+		[self scheduleRenameOfRow:row];
+}
+
+- (void)scheduleRenameOfRow:(NSInteger)row
+{
+	[self cancelPendingRename];
+	self.pendingRename = @(row);
+	[self performSelector:@selector(renameAfterClick) withObject:nil afterDelay:NSEvent.doubleClickInterval];
+}
+
+- (void)cancelPendingRename
+{
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(renameAfterClick) object:nil];
+	self.pendingRename = nil;
+}
+
+- (void)renameAfterClick
+{
+	NSNumber *row = self.pendingRename;
+	self.pendingRename = nil;
+	if (row == nil || !self.window.isKeyWindow || self.window.firstResponder != self || self.numberOfSelectedRows != 1 || self.selectedRow != row.integerValue) return;
+	[NSApp sendAction:@selector(renameSelectedMacro:) to:nil from:self];
+}
+
+- (void)selectRowIndexes:(NSIndexSet *)indexes byExtendingSelection:(BOOL)extend
+{
+	[self cancelPendingRename];
+	[super selectRowIndexes:indexes byExtendingSelection:extend];
+}
+
+// The field of the name being renamed follows what is typed.
+- (void)textDidChange:(NSNotification *)note
+{
+	[super textDidChange:note];
+	NSText *editor = self.currentEditor;
+	NSView *clip = editor.superview;
+	if (editor == nil || clip == nil || self.editedRow < 0 || self.editedColumn < 0) return;
+	NSRect cell = [self frameOfCellAtColumn:self.editedColumn row:self.editedRow], frame = clip.frame, before = frame;
+	frame.size.width = MIN(NSMaxX(cell) - NSMinX(frame), TSNameEditingWidth(editor.string, editor.font));
+	if (NSWidth(frame) == NSWidth(before)) return;
+	clip.frame = frame;
+	[self setNeedsDisplayInRect:NSInsetRect(NSUnionRect(before, frame), -4, -4)];
+}
+
+- (void)keyDown:(NSEvent *)event
+{
+	[self cancelPendingRename];
+	[super keyDown:event];
+}
+
+// The name itself, not the space after it or the shortcut.
+- (BOOL)isNameAtPoint:(NSPoint)point row:(NSInteger)row
+{
+	NSInteger column = [self columnWithIdentifier:COLUMNID_NAME];
+	if (column < 0 || [self columnAtPoint:point] != column || [[self itemAtRow:row] isSeparator]) return NO;
+	NSRect frame = [self frameOfCellAtColumn:column row:row];
+	NSFont *font = ((NSCell *)[self.tableColumns[column] dataCell]).font ?: [NSFont systemFontOfSize:NSFont.systemFontSize];
+	CGFloat name = [[[self itemAtRow:row] name] ?: @"" sizeWithAttributes:@{NSFontAttributeName: font}].width;
+	return point.x <= NSMinX(frame) + MIN(NSWidth(frame), name + 4) + 2; // the text is inset 2 points in its cell
+}
+
+- (void)viewWillMoveToWindow:(NSWindow *)newWindow
+{
+	[self cancelPendingRename];
+	[super viewWillMoveToWindow:newWindow];
+}
+
+// The field of a shortcut being recorded, over the shortcut of its item: as wide as the shortcut's cell,
+// or, where the field needs more, wider towards the name, as far as the name's column begins.
+- (void)placeRecordingView
+{
+	NSView *view = self.recordingView;
+	if (view == nil) return;
+	if (view.superview != self) [self addSubview:view];
+	NSInteger row = [self rowForItem:self.recordingItem], key = [self columnWithIdentifier:COLUMNID_KEY], name = [self columnWithIdentifier:COLUMNID_NAME];
+	if (row < 0 || key < 0) { view.hidden = YES; return; }
+	NSRect cell = [self frameOfCellAtColumn:key row:row], line = [self rectOfRow:row];
+	CGFloat leading = name >= 0 ? NSMinX([self rectOfColumn:name]) : NSMinX(cell);
+	CGFloat width = MAX(NSWidth(cell), MIN(self.recordingWidth, NSMaxX(cell) - leading));
+	view.frame = NSMakeRect(NSMaxX(cell) - width, NSMinY(line), width, NSHeight(line));
+	view.hidden = NO;
+}
+
+- (void)setRecordingView:(NSView *)view
+{
+	if (_recordingView != view) [_recordingView removeFromSuperview];
+	_recordingView = view;
+	[self placeRecordingView];
+}
+
+- (void)tile
+{
+	[super tile];
+	[self placeRecordingView];
+}
+
+- (void)setFrameSize:(NSSize)size
+{
+	[super setFrameSize:size];
+	[self placeRecordingView];
+}
 
 - (NSDragOperation)draggingSourceOperationMaskForLocal:(BOOL)isLocal {
 	if (isLocal)
@@ -614,12 +764,14 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 - (void)editWithFrame:(NSRect)aRect inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject event:(NSEvent *)theEvent {
 	NSRect textFrame, imageFrame;
 	NSDivideRect (aRect, &imageFrame, &textFrame, 3 + [self.image1 size].width, NSMinXEdge);
+	textFrame.size.width = MIN(NSWidth(textFrame), TSNameEditingWidth(self.stringValue, self.font));
 	[super editWithFrame: textFrame inView: controlView editor:textObj delegate:anObject event: theEvent];
 }
 
 - (void)selectWithFrame:(NSRect)aRect inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength {
 	NSRect textFrame, imageFrame;
 	NSDivideRect (aRect, &imageFrame, &textFrame, 3 + [self.image1 size].width, NSMinXEdge);
+	textFrame.size.width = MIN(NSWidth(textFrame), TSNameEditingWidth(self.stringValue, self.font));
 	[super selectWithFrame: textFrame inView: controlView editor:textObj delegate:anObject start:selStart length:selLength];
 }
 
@@ -671,3 +823,59 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 }
 
 @end
+
+
+// The shortcut at the trailing edge of its cell, as in a menu; an inactive one with the yellow warning
+// triangle of the shortcut warnings (TSShortcutRecordingCell, the message below the contents) before it,
+// 4 points from it, on the middle of its capitals.
+static const CGFloat TSMacroShortcutWarningSpacing = 4;
+@implementation TSMacroShortcutCell
+
+- (id)copyWithZone:(NSZone *)zone {
+	TSMacroShortcutCell *cell = [super copyWithZone:zone];
+	cell.showsWarning = self.showsWarning;
+	return cell;
+}
+
+- (void)drawInteriorWithFrame:(NSRect)frame inView:(NSView *)controlView {
+	if (!self.showsWarning) { [super drawInteriorWithFrame:frame inView:controlView]; return; }
+	NSImage *mark = [TSPrefPaneLayout warningSymbolImageForFont:[NSFont systemFontOfSize:NSFont.smallSystemFontSize]];
+	NSSize size = mark.size;
+	NSRect title = [self titleRectForBounds:frame], text = frame;
+	NSFont *font = self.font ?: [NSFont systemFontOfSize:NSFont.systemFontSize];
+	// The shortcut where it always is; when the cell is too narrow for both, the triangle at the leading edge
+	// and the shortcut, shortened, after it.
+	CGFloat width = ceil(self.attributedStringValue.size.width), room = NSWidth(title) - size.width - TSMacroShortcutWarningSpacing;
+	CGFloat x = NSMaxX(title) - MIN(width, room) - TSMacroShortcutWarningSpacing - size.width;
+	if (width > room) { text.origin.x += size.width + TSMacroShortcutWarningSpacing; text.size.width -= size.width + TSMacroShortcutWarningSpacing; }
+	CGFloat middle = controlView.isFlipped ? NSMinY(title) + font.ascender - font.capHeight / 2 : NSMaxY(title) - font.ascender + font.capHeight / 2;
+	// Over what the cell draws, which may fill its frame.
+	[super drawInteriorWithFrame:text inView:controlView];
+	[mark drawInRect:NSMakeRect(x, round(middle - size.height / 2), size.width, size.height) fromRect:NSZeroRect
+		operation:NSCompositingOperationSourceOver fraction:1 respectFlipped:YES hints:nil];
+}
+
+// VoiceOver's press records a new shortcut for the item of the row (outlineView:willDisplayCell:...).
+- (BOOL)isAccessibilitySelectorAllowed:(SEL)selector {
+	if (selector == @selector(accessibilityPerformPress)) return [self.representedObject isKindOfClass:TSMacroTreeNode.class] && [self.representedObject isStandardItem];
+	return [super isAccessibilitySelectorAllowed:selector];
+}
+
+- (BOOL)accessibilityPerformPress {
+	TSMacroTreeNode *item = self.representedObject;
+	return [item isKindOfClass:TSMacroTreeNode.class] && [[TSMacroEditor sharedInstance] beginRecordingShortcutForItem:item];
+}
+
+@end
+
+void TSMacroUseShortcutCell(NSOutlineView *view)
+{
+	NSTableColumn *column = [view tableColumnWithIdentifier:COLUMNID_KEY];
+	NSTextFieldCell *old = column.dataCell;
+	if (column == nil || [old isKindOfClass:TSMacroShortcutCell.class]) return;
+	TSMacroShortcutCell *cell = [[TSMacroShortcutCell alloc] initTextCell:@""];
+	cell.font = old.font; cell.alignment = old.alignment; cell.lineBreakMode = old.lineBreakMode; cell.controlSize = old.controlSize;
+	cell.textColor = old.textColor; cell.drawsBackground = old.drawsBackground; cell.backgroundColor = old.backgroundColor;
+	cell.editable = NO; cell.selectable = old.isSelectable;
+	column.dataCell = cell;
+}

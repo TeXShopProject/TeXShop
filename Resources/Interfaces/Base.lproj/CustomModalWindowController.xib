@@ -52,9 +52,8 @@ DQ
                             <action selector="didTapDoneButton:" target="-2" id="alf-hV-Jvy"/>
                         </connections>
                     </button>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="306" translatesAutoresizingMaskIntoConstraints="NO" id="1ge-zo-KC4">
-                        <rect key="frame" x="18" y="85" width="338" height="70"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" preferredMaxLayoutWidth="323" translatesAutoresizingMaskIntoConstraints="NO" id="1ge-zo-KC4">
+                        <rect key="frame" x="18" y="91" width="327" height="64"/>
                         <textFieldCell key="cell" selectable="YES" id="Prr-63-EQ4">
                             <font key="font" metaFont="system"/>
                             <string key="title">Changing the encoding of a file can lead to loss of data. Only use this panel if the current file is a copy of the original file.</string>
@@ -62,18 +61,16 @@ DQ
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BEr-Px-Bqw">
-                        <rect key="frame" x="20" y="67" width="81" height="16"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="760" translatesAutoresizingMaskIntoConstraints="NO" id="BEr-Px-Bqw">
+                        <rect key="frame" x="18" y="67" width="69" height="16"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" title="Encoding: " id="gGW-lx-NCF">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jo5-hk-3mm">
-                        <rect key="frame" x="109" y="60" width="213" height="25"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <popUpButton verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="jo5-hk-3mm">
+                        <rect key="frame" x="90" y="60" width="216" height="25"/>
                         <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="VTQ-2K-Yam" id="zxJ-nw-qWt">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="menu"/>
@@ -97,6 +94,17 @@ DQ
                     <constraint firstItem="XX0-l9-AZe" firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="tsW-mn-Btn"/>
                     <constraint firstAttribute="bottom" secondItem="XX0-l9-AZe" secondAttribute="bottom" constant="20" id="trI-N5-gEi"/>
                     <constraint firstAttribute="trailing" secondItem="XX0-l9-AZe" secondAttribute="trailing" constant="20" id="wWY-hW-d1g"/>
+                    <constraint firstItem="BEr-Px-Bqw" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="Enc-lb-Ldg"/>
+                    <constraint firstItem="1ge-zo-KC4" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="14" id="Enc-tx-Top"/>
+                    <constraint firstItem="1ge-zo-KC4" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" id="Enc-tx-Ldg"/>
+                    <constraint firstAttribute="trailing" secondItem="1ge-zo-KC4" secondAttribute="trailing" constant="20" id="Enc-tx-Trl"/>
+                    <constraint firstItem="BEr-Px-Bqw" firstAttribute="top" secondItem="1ge-zo-KC4" secondAttribute="bottom" constant="12" id="Enc-lb-Top"/>
+                    <constraint firstItem="XX0-l9-AZe" firstAttribute="top" relation="greaterThanOrEqual" secondItem="jo5-hk-3mm" secondAttribute="bottom" constant="20" id="Enc-bt-Top"/>
+                    <constraint firstItem="jo5-hk-3mm" firstAttribute="leading" secondItem="BEr-Px-Bqw" secondAttribute="trailing" constant="8" id="Enc-pu-Gap"/>
+                    <constraint firstItem="jo5-hk-3mm" firstAttribute="firstBaseline" secondItem="BEr-Px-Bqw" secondAttribute="firstBaseline" id="Enc-pu-Bas"/>
+                    <constraint firstItem="jo5-hk-3mm" firstAttribute="width" constant="213" priority="500" id="Enc-pu-Wid"/>
+                    <constraint firstItem="jo5-hk-3mm" firstAttribute="width" relation="greaterThanOrEqual" constant="160" id="Enc-pu-Min"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="jo5-hk-3mm" secondAttribute="trailing" constant="20" id="Enc-pu-Trl"/>
                 </constraints>
             </view>
             <connections>

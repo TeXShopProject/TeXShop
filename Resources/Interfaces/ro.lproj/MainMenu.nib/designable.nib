@@ -746,6 +746,12 @@
                                     <action selector="showHideLineNumbers:" target="-1" id="799"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Afișați bara de stare" id="Stb-Bq-7Kd" identifier="TSShortcut.toggleStatusBar:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="toggleStatusBar:" target="-1" id="Stb-Ac-7Kd"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Toggle Syntax Color" tag="14" id="0R0-xZ-eff" identifier="TSShortcut.toggleSyntaxColor:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
@@ -1595,7 +1601,7 @@ Gw
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" id="827">
                             <font key="font" metaFont="system"/>
-                            <string key="title">Package name whose documentation you want to see:
+                            <string key="title">Numele pachetului a cărui documentație doriți să o vedeți:
 </string>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

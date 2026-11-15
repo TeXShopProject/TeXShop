@@ -78,6 +78,31 @@ static void CheckOwnerNavigation(TSPreferences *owner,TSSettingsWindowController
     Check([shell.history.currentIdentifier isEqual:TSSettingsCategoryDocuments],@"Arrow keys navigate the actual sidebar");
     [shell.categoryTable keyDown:NavigationKeyEvent(@"\uF701",NSEventModifierFlagFunction|NSEventModifierFlagNumericPad,125)];
     Check([shell.history.currentIdentifier isEqual:TSSettingsCategoryEditor],@"Arrow navigation skips group gaps");
+    // The third group follows the work: Typesetting, Console, then Preview.
+    [shell selectCategoryIdentifier:TSSettingsCategoryAppearance];[shell.window makeFirstResponder:shell.categoryTable];
+    NSMutableArray *walked=[NSMutableArray array];
+    for(int i=0;i<4;i++){[shell.categoryTable keyDown:NavigationKeyEvent(@"\uF701",NSEventModifierFlagFunction|NSEventModifierFlagNumericPad,125)];[walked addObject:shell.history.currentIdentifier ?: @""];}
+    Check([walked isEqual:@[TSSettingsCategoryTypesetting,TSSettingsCategoryConsole,TSSettingsCategoryPreview,TSSettingsCategoryUpdates]],[NSString stringWithFormat:@"Down arrow walks Typesetting, Console, Preview, Updates: %@",walked]);
+    [walked removeAllObjects];
+    for(int i=0;i<4;i++){[shell.categoryTable keyDown:NavigationKeyEvent(@"\uF700",NSEventModifierFlagFunction|NSEventModifierFlagNumericPad,126)];[walked addObject:shell.history.currentIdentifier ?: @""];}
+    Check([walked isEqual:@[TSSettingsCategoryPreview,TSSettingsCategoryConsole,TSSettingsCategoryTypesetting,TSSettingsCategoryAppearance]],[NSString stringWithFormat:@"Up arrow walks back Preview, Console, Typesetting, Themes: %@",walked]);
+    {NSDictionary *before=[TSIsolatedAppKitDefaults.values copy];
+     [TSIsolatedAppKitDefaults setObject:TSSettingsCategoryPreview forKey:TSSettingsSelectedCategoryKey];[shell endSession];[shell beginSession];
+     Check([shell.history.currentIdentifier isEqual:TSSettingsCategoryPreview] && shell.categoryTable.selectedRow==10,[NSString stringWithFormat:@"A stored Preview selection reopens Preview in its new row (row %ld)",(long)shell.categoryTable.selectedRow]);
+     [TSIsolatedAppKitDefaults setObject:TSSettingsCategoryTypesetting forKey:TSSettingsSelectedCategoryKey];[shell endSession];[shell beginSession];
+     Check([shell.history.currentIdentifier isEqual:TSSettingsCategoryTypesetting] && shell.categoryTable.selectedRow==8,[NSString stringWithFormat:@"A stored Typesetting selection reopens Typesetting in its new row (row %ld)",(long)shell.categoryTable.selectedRow]);
+     TSIsolatedAppKitDefaults.values=[before mutableCopy];}
+    // Equal-scoring search results keep the sidebar order of their categories.
+    {NSArray *third=@[TSSettingsCategoryTypesetting,TSSettingsCategoryConsole,TSSettingsCategoryPreview];NSMutableSet *pairs=[NSMutableSet set];
+     for(NSString *query in @[@"e",@"a",@"i",@"n",@"r",@"s",@"t",@"o",@"p",@"TeX",@"PDF",@"の",@"ー",@"ン",@"이",@"다",@"的"]){
+      Check([shell setSettingsSearchQuery:query],@"Settings search accepts a query");NSArray<TSSettingsSearchResult *> *hits=shell.searchResults;
+      for(NSUInteger i=1;i<hits.count;i++)if(hits[i-1].score==hits[i].score)Check([shell.categoryIdentifiers indexOfObject:hits[i-1].category]<=[shell.categoryIdentifiers indexOfObject:hits[i].category],[NSString stringWithFormat:@"Equal-scoring results for %@ follow the sidebar: %@ before %@",query,hits[i-1].category,hits[i].category]);
+      for(NSUInteger i=0;i<hits.count;i++)for(NSUInteger j=i+1;j<hits.count && hits[j].score==hits[i].score;j++)
+       if([third containsObject:hits[i].category] && [third containsObject:hits[j].category] && ![hits[i].category isEqual:hits[j].category])[pairs addObject:[NSString stringWithFormat:@"%@<%@",hits[i].category,hits[j].category]];
+     }
+     [shell setSettingsSearchQuery:@""];
+     Check([pairs containsObject:@"typesetting<console"] && [pairs containsObject:@"console<preview"] && [pairs containsObject:@"typesetting<preview"],[NSString stringWithFormat:@"Searches tie Typesetting, Console and Preview in that order: %@",pairs]);}
+    [shell selectCategoryIdentifier:TSSettingsCategoryEditor];
     [shell endSession];[shell beginSession];Check(shell.history.count==1 && [shell.history.currentIdentifier isEqual:TSSettingsCategoryEditor] && ![navigation isEnabledForSegment:0] && ![navigation isEnabledForSegment:1],@"Reopening retains category and clears history/buttons");
     Method visible=class_getInstanceMethod(NSWindow.class,@selector(isVisible)),front=class_getInstanceMethod(NSWindow.class,@selector(makeKeyAndOrderFront:));
     IMP oldVisible=method_setImplementation(visible,(IMP)NavigationVisible),oldFront=method_setImplementation(front,(IMP)NavigationFront);
@@ -145,9 +170,9 @@ static void CheckOwnerNavigation(TSPreferences *owner,TSSettingsWindowController
     }
     method_setImplementation(alertMethod,oldAlert);
     Check((shell.window.styleMask&NSWindowStyleMaskFullSizeContentView)!=0 && shell.contentScroll.documentView.isFlipped,@"Full-height shell keeps a top-origin document");
-    Check([shell.categoryIdentifiers isEqual:@[@"general",@"documents",@"editor",@"keyboard",@"spelling",@"appearance",@"preview",@"typesetting",@"console",@"updates"]] && shell.categoryTable.numberOfRows==13,@"Ten categories retain stable order and three grouping gaps");
+    Check([shell.categoryIdentifiers isEqual:@[@"general",@"documents",@"editor",@"keyboard",@"spelling",@"appearance",@"typesetting",@"console",@"preview",@"updates"]] && shell.categoryTable.numberOfRows==13,@"Ten categories retain stable order and three grouping gaps");
     {NSMutableArray *starts=[NSMutableArray array];for(NSString *category in shell.categoryIdentifiers)if([TSSettingsCategory standardCategoryWithIdentifier:category].startsGroup)[starts addObject:category];
-     Check([starts isEqual:@[@"editor",@"preview",@"updates"]],@"Keyboard follows Editor in its group; Updates is a group of its own");}
+     Check([starts isEqual:@[@"editor",@"typesetting",@"updates"]],@"Keyboard follows Editor in its group; Typesetting starts the third group; Updates is a group of its own");}
     for(NSString *category in shell.categoryIdentifiers){BOOL selected=[shell selectCategoryIdentifier:category];[shell.window.contentView layoutSubtreeIfNeeded];NSView *view=[category isEqual:TSSettingsCategoryKeyboard]?[[shell valueForKey:@"keyboardPane"]view]:[shell viewForCategoryIdentifier:category];Check(selected && view.window==shell.window,[NSString stringWithFormat:@"Selected %@ current %@ attached %@ expected %@ accepted %d",category,shell.history.currentIdentifier,view.window,shell.window,selected]);}
     [owner setValue:@0 forKey:@"fontEditingContext"];
     method_setImplementation(key,oldKey);method_setImplementation(sheet,oldSheet);navigationTestWindow=nil;

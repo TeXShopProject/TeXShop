@@ -11,29 +11,43 @@
 #include "ProductionLayout.inc"
 #import "TSMacroEditor.h"
 #import "TSListBottomBar.h"
-#import "TSMacroShortcutField.h"
+#import "TSShortcutKeyRecorder.h"
+#import "TSPrefPaneLayout.h"
 #import "TSMacroMenuController.h"
 #import "TSShortcutInternal.h"
 #import "TSPlaceholderToken.h"
 #import "TSMacroContentKind.h"
 #import "TSSyntaxMacroContentScanner.h"
 
-// The macro editor adds its status line, list buttons and placeholder guide and
-// lays out its buttons after loading; MacroEditorLayout.inc is that code, copied
+// The macro editor adds its status line and placeholder row, hides the nib's shortcut rows, lays
+// out its buttons and puts its list in a sidebar after loading; MacroEditorLayout.inc is that code, copied
 // from its source.
+// The list as far as the editor's layout and recording of a shortcut ask of it.
+@interface TSMacroOutlineView : NSOutlineView
+@property (nonatomic) NSInteger rowSelectedAtMouseDown;
+@property (nonatomic, strong) id recordingItem;
+@property (nonatomic, strong) NSView *recordingView;
+@property (nonatomic) CGFloat recordingWidth;
+@end
+@interface NSOutlineView (MyExtensions)
+- (NSArray *)allSelectedItems;
+@end
+@interface TSMacroOutlineController : NSObject
+- (id)rootOfTree;
+@end
 @implementation TSMacroEditor
 #include "MacroEditorLayout.inc"
 - (void)setValue:(id)v forUndefinedKey:(NSString *)k {}
-// What the shortcut field asks of the rest of the editor, which these checks leave out.
+// What the recording of a shortcut asks of the rest of the editor, which these checks leave out.
 - (void)updatePendingShortcutStatus {}
 - (void)reflectChangesInEditor:(BOOL)force {}
+- (NSString *)shortcutConflictForNode:(TSMacroTreeNode *)node { return nil; }
 @end
-@interface TSMacroOutlineController : NSObject @end
 @implementation TSMacroOutlineController
+- (id)rootOfTree { return nil; }
 - (void)setValue:(id)v forUndefinedKey:(NSString *)k {}
 - (NSInteger)outlineView:(NSOutlineView *)view numberOfChildrenOfItem:(id)item { return 0; }
 @end
-@interface TSMacroOutlineView : NSOutlineView @end
 @implementation TSMacroOutlineView @end
 
 int main(int argc, char **argv) { @autoreleasepool {
@@ -66,18 +80,21 @@ int main(int argc, char **argv) { @autoreleasepool {
         NSApp.mainMenu = nil;
         if (macroEditor) {
             TSMacroEditor *editor = owner;
-            [editor installShortcutStatus]; [editor installListControls]; [editor installShortcutField]; [editor installPlaceholderControls]; [editor layoutDialogButtons];
+            [editor installShortcutStatus]; [editor hideNibShortcutRows]; [editor installPlaceholderControls]; [editor layoutDialogButtons]; [editor installSidebar];
         } else ApplyProductionLayout(name, owner, objects);
         for (id o in objects) {
             if ([o isKindOfClass:NSWindow.class]) {
                 NSWindow *w = o;
                 NSString *where = [NSString stringWithFormat:@"%@ [%@]", label, w.title.length ? w.title : @"untitled window"];
                 CheckWindow(w, where); roots++;
+            } else if (ToolbarParts(o)) {
+                // Named by the number of parts: TSDocument.nib has two such views.
+                CheckToolbarParts(o, [NSString stringWithFormat:@"%@ [toolbar parts, %lu views]", label, (unsigned long)[o subviews].count]); roots++;
             } else if ([o isKindOfClass:NSView.class]) {
                 CheckRoot(o, [NSString stringWithFormat:@"%@ [view]", label]); roots++;
             }
         }
     }}
     if (problems) { printf("FAIL: %d problems\n", problems); return 1; }
-    printf("PASS: text, controls and pop-up choices are whole, inside their windows and apart, input fields have room for their focus rings, and wrapping fields have even margins, in %lu windows and views of %lu localized interfaces (also with the automatic toolbar bezel)\n", (unsigned long)roots / 2, (unsigned long)entries.count);
+    printf("PASS: text, controls and pop-up choices are whole, inside their windows and apart (4 points, 8 after a radio button or check box, also the cells of a matrix), words are not broken, table headers and first rows show, no view draws outside what holds it, input fields have room for their focus rings, and wrapping fields have even margins, in %lu windows and views of %lu localized interfaces (also with the automatic toolbar bezel)\n", (unsigned long)roots / 2, (unsigned long)entries.count);
 } return 0; }

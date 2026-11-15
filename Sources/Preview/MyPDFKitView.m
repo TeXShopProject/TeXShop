@@ -1,5 +1,6 @@
 #import "TSPreferenceProfile.h"
 #import "TSKeyboardShortcuts.h"
+#import "TSOlderPanelLayout.h"
 #import "TSPDFScreenRendering.h" // added by Terada
 /*
  * TeXShop - TeX editor for Mac OS
@@ -6169,6 +6170,7 @@ else
     NSInteger imageExportType;
     
     NSSavePanel *savePanel = [NSSavePanel savePanel];
+    TSFitLabelsBeforePopUps(self.imageTypeView);
     [savePanel  setAccessoryView: self.imageTypeView];
 //    [self.imageTypeView retain];
     NSInteger itemIndex = [self.imageTypePopup indexOfItemWithTag: [SUD integerForKey: PdfExportTypeKey]];

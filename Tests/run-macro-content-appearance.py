@@ -19,7 +19,7 @@ def run(text):
         (tmp / 'MacroContentAppearance.inc').write_text(text)
         binary = tmp / 'test'
         subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-I', str(tmp), '-I', str(root / 'Tests'), *include_args(root),
-                        str(root / 'Tests/MacroContentAppearance.m'), str(root / 'Sources/Editor/TSColorSupport.m'), str(root / 'Sources/App/globals.m'),
+                        str(root / 'Tests/MacroContentAppearance.m'), str(root / 'Sources/Editor/TSColorSupport.m'), str(root / 'Sources/Settings/TSThemeFileStore.m'), str(root / 'Sources/App/globals.m'),
                         *map(str, sorted((root / 'Sources/Syntax').glob('*.m'))), str(root / 'Sources/Macros/TSMacroContentKind.m'),
                         str(root / 'Sources/Find/TSAdvancedFindTextView.m'), str(root / 'Sources/Find/TSAdvancedFindHighlights.m'),
                         str(root / 'Sources/Macros/TSMacroContentTokens.m'), str(root / 'Sources/Editor/TSPlaceholderToken.m'), '-o', str(binary)], check=True)

@@ -55,7 +55,7 @@
   "lbx" = "lbc";
   "bbx" = "bbx";
   "skt" = "skt";
-  "py" = "py";
+  "py" = "Pythonファイル";
   NSStringPboardType = "UTF-8標準テキスト";
   "md" = "md";
   "Plain Text" = "標準テキスト";

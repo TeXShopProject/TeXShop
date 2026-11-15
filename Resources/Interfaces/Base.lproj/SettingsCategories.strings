@@ -52,7 +52,7 @@
 "group.general.5.title" = "Advanced";
 "group.general.6.title" = "Dock Icon While Running";
 "catalog.general.5.0.title" = "Settings not shown here are described in the help document “Comment Lines and Hidden Settings”.";
-"catalog.general.5.1.title" = "Open Comment Lines and Hidden Settings";
+"catalog.general.5.1.title" = "Open the Comment Lines and Hidden Settings Manual…";
 "group.encoding.title" = "Encoding";
 "catalog.documents.0.0.title" = "Encoding for new documents";
 "catalog.documents.0.1.title" = "Show Encoding in Save Dialog";

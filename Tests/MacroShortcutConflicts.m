@@ -3,7 +3,6 @@
 #pragma clang diagnostic ignored "-Wnullability-completeness"
 #import "TSKeyboardShortcuts.m"
 #import "TSMacroEditor.h"
-#import "TSMacroShortcutField.h"
 #import "TSMacroMenuController.h"
 #import "TSMacroOutlineController.h"
 #define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr,"FAIL %d: %s\n",__LINE__,#__VA_ARGS__); exit(1); } } while (0)
@@ -113,6 +112,8 @@ static void CaptureSheet(id self, SEL cmd, NSWindow *window, void (^handler)(NSM
 @property TestWindow *testWindow;
 @property TestOutline *testOutline;
 @property BOOL failWrite;
+@property int recordingRequests;
+@property TSMacroTreeNode *recordingRequest;
 - (void)rememberOriginalShortcutKeys;
 - (BOOL)validateMacroShortcutsBeforeSaving;
 - (void)updatePendingShortcutStatus;
@@ -126,6 +127,8 @@ static void CaptureSheet(id self, SEL cmd, NSWindow *window, void (^handler)(NSM
 } return self; }
 - (NSModalResponse)showShortcutConflicts:(NSString *)details { self.prompts++; self.details=details; return self.answer; }
 - (void)reflectChangesInEditor:(BOOL)force {} // No live field editor in these save-path tests.
+// Return to Editing records the shortcut of the item it selects; the list is not built in these tests.
+- (BOOL)beginRecordingShortcutForItem:(TSMacroTreeNode *)item { self.recordingRequests++; self.recordingRequest=item; return YES; }
 - (BOOL)saveNodes:(id)nodes toFile:(NSString *)path { return [super saveNodes:nodes toFile:self.failWrite ? [path stringByAppendingPathComponent:@"missing/file"] : path]; }
 @end
 @interface TestShortcuts : TSShortcutPaneController
@@ -219,9 +222,11 @@ int main(int argc, char **argv) { @autoreleasepool {
     [ui restoreShortcut:nil]; REQUIRE(ui.confirmations==1 && [find.keyEquivalent isEqual:@"k"]);
     ui.consent=YES; [ui restoreShortcut:nil]; REQUIRE(ui.confirmations==2 && [find.keyEquivalent isEqual:@"f"] && macroMenu.itemArray[2].keyEquivalent.length==0);
     REQUIRE(![store setKey:@"k" modifiers:cmd forCommand:findCommand]); [coordinator refreshMenuAndMacros];
-    ui.capturedKey=@"f";ui.capturedModifiers=cmd;ui.editingCommand=findCommand;ui.applyButton=[NSButton new];ui.applyButton.enabled=YES;ui.consent=NO;
-    [ui applyCapturedShortcut:nil]; REQUIRE(ui.confirmations==3 && [find.keyEquivalent isEqual:@"k"]);
-    ui.consent=YES;[ui applyCapturedShortcut:nil];REQUIRE(ui.confirmations==4 && [find.keyEquivalent isEqual:@"f"]);
+    // Cancel in the confirmation ends the recording and keeps the shortcut.
+    ui.capturedKey=@"f";ui.capturedModifiers=cmd;ui.editingCommand=findCommand;ui.consent=NO;
+    [ui applyCapturedShortcut:nil]; REQUIRE(ui.confirmations==3 && [find.keyEquivalent isEqual:@"k"] && ui.editingCommand==nil);
+    ui.capturedKey=@"f";ui.capturedModifiers=cmd;ui.editingCommand=findCommand;
+    ui.consent=YES;[ui applyCapturedShortcut:nil];REQUIRE(ui.confirmations==4 && [find.keyEquivalent isEqual:@"f"] && ui.editingCommand==nil);
     macros.macroDict=@{@"submenu":@[Macro(@"Engine switch",@"F"),Macro(@"Still free",@"Z")]};[coordinator refreshMenuAndMacros];
     REQUIRE([find.keyEquivalent isEqual:@"f"] && !macroMenu.itemArray[2].keyEquivalent.length && store.unavailableCommands.count==0);
     // Exercise the UI actions themselves, including the restore-all sheet callback.
@@ -354,7 +359,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     [editor savePressed:nil];REQUIRE(editor.prompts==0 && editor.testWindow.closes==1 && reloads==1);
     a.key=@"F";editor.answer=NSAlertFirstButtonReturn;[editor savePressed:nil];
     REQUIRE(editor.prompts==1 && editor.testWindow.closes==1 && reloads==1 && [a.key isEqual:@"F"]);
-    REQUIRE(editor.testOutline.selection.firstObject==a && ![editor.details containsString:@"Old collision"]);
+    REQUIRE(editor.testOutline.selection.firstObject==a && editor.recordingRequests==1 && editor.recordingRequest==a && ![editor.details containsString:@"Old collision"]);
     REQUIRE([editor.details componentsSeparatedByString:@"Find"].count==2); // one opponent, with its key
     editor.testWindow.rejectCommit=YES;[editor savePressed:nil];REQUIRE(editor.prompts==1);editor.testWindow.rejectCommit=NO;
     editor.answer=NSAlertSecondButtonReturn;[editor savePressed:nil];

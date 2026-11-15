@@ -8,6 +8,7 @@
 
 #import "globals.h"
 #import "TSColorSupport.h"
+#import "TSThemeFileStore.h"
 
 @implementation TSColorSupport
 
@@ -46,6 +47,153 @@ static id sharedColorSupport = nil;
         reserveDarkPath = [[NSBundle mainBundle] pathForResource:@"DarkTheme" ofType:@"plist" inDirectory:@"Themes"];
         [fileManager copyItemAtPath: reserveDarkPath toPath: darkColorPath error: nil];
     }
+}
+
+// Colors of the bundled themes that a later version changed, because text could not be read in them or on them.
+// The themes in ~/Library/TeXShop/Themes are copies made when that folder was created, so each copy is given the new
+// color where it still has the color that TeXShop gave it. A color the user chose, a renamed copy and a theme of the
+// user's own stay as they are. Each change belongs to an update; the last update done is kept in the settings.
+typedef struct {
+    NSInteger update;
+    __unsafe_unretained NSString *theme;
+    __unsafe_unretained NSString *key;
+    double from[3];
+    double to[3];
+} TSBundledThemeColorChange;
+
+static const TSBundledThemeColorChange TSBundledThemeColorChanges[] = {
+    // 6.00: the content of braces, the active line and the text found by SyncTeX are painted behind the text, which
+    // must stay readable on them; brackets, markers, index entries, XML and the commands of Manteuffel are made
+    // readable on the background of their themes.
+    {1, @"DarkTheme", @"EditorHighlightContent", {0.4756349325, 0.4756467342, 0.4756404161}, {0.270588, 0.25098, 0.176471}},
+    {1, @"DarkTheme", @"EntryColor", {0.6386525630950928, 0.1230164617300034, 0.1503929197788239}, {0.258824, 0.258824, 0.258824}},
+    {1, @"DarkTheme", @"XMLSpecial", {0.0, 0.3, 1.0}, {0.431373, 0.607843, 1.0}},
+    {1, @"Dracula", @"EditorHighlightContent", {0.4756349325, 0.4756467342, 0.4756404161}, {0.25098, 0.243137, 0.172549}},
+    {1, @"Dracula", @"EditorReverseSync", {0.9872317910194397, 0.2329826056957245, 0.2662559449672699}, {0.478431, 0.14902, 0.2}},
+    {1, @"Dracula", @"EntryColor", {1.0, 0.0, 0.0630970448255539}, {0.180392, 0.188235, 0.243137}},
+    {1, @"Dracula", @"SyntaxMarkerCurly", {0.0, 0.0, 0.0}, {0.9725490196078431, 0.9725490196078431, 0.9490196078431372}},
+    {1, @"Dracula", @"SyntaxMarkerParen", {0.0, 0.0, 0.0}, {0.9725490196078431, 0.9725490196078431, 0.9490196078431372}},
+    {1, @"Dracula", @"SyntaxMarkerSquare", {0.0, 0.0, 0.0}, {0.9725490196078431, 0.9725490196078431, 0.9490196078431372}},
+    {1, @"Dracula", @"XMLSpecial", {0.0, 0.3, 1.0}, {0.431373, 0.607843, 1.0}},
+    {1, @"GLG-Lite", @"EditorReverseSync", {0.2000000029802322, 0.6000000238418579, 0.9900000095367432}, {0.74902, 0.866667, 0.988235}},
+    {1, @"GLG-Lite", @"SyntaxIndex", {1.0, 1.0, 0.0}, {0.541176, 0.427451, 0.0}},
+    {1, @"GLG-Lite", @"XMLParameter", {0.0, 1.0, 0.0}, {0.0, 0.541176, 0.0}},
+    {1, @"GLG-Lite", @"XMLValue", {0.6, 0.6, 0.2}, {0.478431, 0.478431, 0.121569}},
+    {1, @"LiteTheme", @"EditorHighlightContent", {0.8946298956871033, 0.241200892533709, 0.2138740761137153}, {1.0, 0.956863, 0.768627}},
+    {1, @"LiteTheme", @"SyntaxIndex", {1.0, 0.9932006001472473, 0.0}, {0.541176, 0.427451, 0.0}},
+    {1, @"LiteTheme", @"XMLParameter", {0.0, 1.0, 0.0}, {0.0, 0.541176, 0.0}},
+    {1, @"LiteTheme", @"XMLValue", {0.6, 0.6, 0.2}, {0.478431, 0.478431, 0.121569}},
+    {1, @"Manteuffel", @"SyntaxCommand", {0.08235294371843338, 0.7098039388656616, 0.9137254953384399}, {0.043137, 0.52549, 0.701961}},
+    {1, @"Manteuffel", @"SyntaxIndex", {1.0, 1.0, 0.0}, {0.541176, 0.427451, 0.0}},
+    {1, @"Manteuffel", @"XMLParameter", {0.0, 1.0, 0.0}, {0.0, 0.541176, 0.0}},
+    {1, @"Manteuffel", @"XMLValue", {0.6, 0.6, 0.2}, {0.478431, 0.478431, 0.121569}},
+    {1, @"PreTeXt-Dark", @"EditorHighlightContent", {0.4756349325, 0.4756467342, 0.4756404161}, {0.239216, 0.227451, 0.156863}},
+    {1, @"PreTeXt-Dark", @"EntryColor", {1.0, 0.0, 0.0}, {0.188235, 0.192157, 0.164706}},
+    {1, @"PreTeXt-Dark", @"XMLSpecial", {0.0, 0.3, 1.0}, {0.431373, 0.607843, 1.0}},
+    {1, @"SolarizedDark", @"EditorHighlightContent", {1.0, 1.0, 0.0}, {0.2, 0.188235, 0.039216}},
+    {1, @"SolarizedDark", @"EditorReverseSync", {1.0, 1.0, 0.0}, {0.352941, 0.121569, 0.105882}},
+    {1, @"SolarizedDark", @"EntryColor", {1.0, 0.0, 0.07932668179273605}, {0.027451, 0.211765, 0.258824}},
+    {1, @"SolarizedDark", @"XMLSpecial", {0.0, 0.3, 1.0}, {0.431373, 0.607843, 1.0}},
+    {1, @"SolarizedLite", @"SyntaxMarker", {0.1650000065565109, 0.6299999952316284, 0.5960000157356262}, {0.8299999833106995, 0.2099999934434891, 0.5099999904632568}},
+    {1, @"SolarizedLite", @"XMLParameter", {0.0, 1.0, 0.0}, {0.0, 0.541176, 0.0}},
+    {1, @"SolarizedLite", @"XMLValue", {0.6, 0.6, 0.2}, {0.478431, 0.478431, 0.121569}},
+    {1, @"TransparentTheme", @"EditorHighlightContent", {0.9816838723753915, 0.3395324724758731, 0.1522207877986456}, {1.0, 0.956863, 0.768627}},
+    {1, @"TransparentTheme", @"SyntaxIndex", {1.0, 1.0, 0.0}, {0.541176, 0.427451, 0.0}},
+    {1, @"TransparentTheme", @"SyntaxMarker", {1.0, 0.9703128892638841, 0.2354147580939638}, {0.5, 0.4, 0.0}},
+    {1, @"TransparentTheme", @"XMLParameter", {0.0, 1.0, 0.0}, {0.0, 0.541176, 0.0}},
+    {1, @"TransparentTheme", @"XMLValue", {0.6, 0.6, 0.2}, {0.478431, 0.478431, 0.121569}},
+};
+
+// Gives the colors of the updates after the given one to a copy of a bundled theme, where it still has the old color.
+static BOOL TSApplyBundledThemeColorChanges(NSMutableDictionary *colors, NSString *theme, NSInteger update)
+{
+    const size_t count = sizeof(TSBundledThemeColorChanges) / sizeof(TSBundledThemeColorChanges[0]);
+    BOOL changed = NO;
+    for (size_t i = 0; i < count; i++) {
+        const TSBundledThemeColorChange *change = &TSBundledThemeColorChanges[i];
+        if (change->update <= update || ![change->theme isEqualToString:theme])
+            continue;
+        NSMutableArray *color = colors[change->key];
+        if (![color isKindOfClass:NSMutableArray.class] || color.count < 3)
+            continue;
+        BOOL unchanged = YES;
+        for (NSUInteger c = 0; c < 3; c++)
+            unchanged = unchanged && [color[c] isKindOfClass:NSNumber.class] && fabs([color[c] doubleValue] - change->from[c]) < 0.0005;
+        if (!unchanged)
+            continue;
+        // The opacity, if any, stays.
+        for (NSUInteger c = 0; c < 3; c++)
+            color[c] = @(change->to[c]);
+        changed = YES;
+    }
+    return changed;
+}
+
+// Updates one theme file; NO if it exists but could not be read or written. Another TeXShop may save the theme at the
+// same time: the file is coordinated with the theme saves of this version, and it is replaced only if it still holds
+// what was read; otherwise it is read again, so that a color saved meanwhile is kept.
+static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger update)
+{
+    __block BOOL done = NO;
+    NSError *coordinationError = nil;
+    NSFileCoordinator *coordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+    [coordinator coordinateWritingItemAtURL:url options:NSFileCoordinatorWritingForMerging error:&coordinationError byAccessor:^(NSURL *fileURL) {
+        for (NSUInteger attempt = 0; attempt < 5; attempt++) {
+            NSData *data = [NSData dataWithContentsOfURL:fileURL];
+            NSMutableDictionary *colors = data ? [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListMutableContainers format:NULL error:NULL] : nil;
+            if (![colors isKindOfClass:NSMutableDictionary.class])
+                return;
+            if (!TSApplyBundledThemeColorChanges(colors, theme, update)) {
+                done = YES;
+                return;
+            }
+            NSData *updated = [NSPropertyListSerialization dataWithPropertyList:colors format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL];
+            if (updated == nil)
+                return;
+            if (![[NSData dataWithContentsOfURL:fileURL] isEqualToData:data])
+                continue;
+            done = [updated writeToURL:fileURL options:NSDataWritingAtomic error:NULL];
+            return;
+        }
+    }];
+    return done;
+}
+
+// Returns the last update done: every update after the given one, or the given one if a theme that is there could not
+// be read or written, so that the update is tried again at the next launch.
+- (NSInteger)updateBundledThemeColorsInDirectory: (NSURL *)directory after: (NSInteger)update
+{
+    const size_t count = sizeof(TSBundledThemeColorChanges) / sizeof(TSBundledThemeColorChanges[0]);
+    NSInteger last = update;
+    for (size_t i = 0; i < count; i++)
+        last = MAX(last, TSBundledThemeColorChanges[i].update);
+    if (last == update)
+        return update;
+
+    TSThemeFileStore *store = [[TSThemeFileStore alloc] initWithDirectory:directory];
+    NSMutableOrderedSet<NSString *> *themes = [NSMutableOrderedSet orderedSet];
+    for (size_t i = 0; i < count; i++)
+        if (TSBundledThemeColorChanges[i].update > update)
+            [themes addObject:TSBundledThemeColorChanges[i].theme];
+    BOOL written = YES;
+    for (NSString *theme in themes) {
+        // A theme that is not there, or is reached through a symbolic link, is left alone.
+        NSURL *url = [store URLForTitle:theme];
+        if (url == nil || ![[NSFileManager defaultManager] fileExistsAtPath:url.path])
+            continue;
+        if (!TSUpdateBundledThemeFile(url, theme, update))
+            written = NO;
+    }
+    return written ? last : update;
+}
+
+- (void)updateBundledThemeColors
+{
+    NSInteger update = [SUD integerForKey:BundledThemeColorsUpdateKey];
+    NSURL *directory = [NSURL fileURLWithPath:[ColorPath stringByExpandingTildeInPath] isDirectory:YES];
+    NSInteger done = [self updateBundledThemeColorsInDirectory:directory after:update];
+    if (done != update)
+        [SUD setInteger:done forKey:BundledThemeColorsUpdateKey];
 }
 
 // This routine sets the Lite and Dark color dictionaries. It also checks to make sure the default color plist exists.

@@ -44,7 +44,7 @@
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{414, 289}, {585, 420}}</string>
 				<int key="NSWTFlags">813170688</int>
-				<string key="NSWindowTitle">Macro Editor</string>
+				<string key="NSWindowTitle">Macro-editor</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<object class="NSMutableString" key="NSViewClass">
 					<characters key="NS.bytes">View</characters>
@@ -1520,7 +1520,7 @@
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="933593816"/>
-						<string key="toolTip">Name which appears in Macros menu</string>
+						<string key="toolTip">Naam die in het menu Macro's verschijnt</string>
 					</object>
 				</object>
 				<string key="11.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1545,8 +1545,8 @@
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="521114110"/>
-						<string type="base64-UTF8" key="toolTip">VGV4dCB0byBiZSBpbnNlcnRlZDoKI1NFTCMgd2lsbCBiZSByZXBsYWNlZCBieSB0aGUgc2VsZWN0aW9u
-OwppbnNlcnRpb24gcG9pbnQgd2lsbCBjb21lIHRvICNJTlMjLg</string>
+						<string type="base64-UTF8" key="toolTip">VGVrc3QgZGllIHdvcmR0IGluZ2V2b2VnZDoKI1NFTCMgd29yZHQgdmVydmFuZ2VuIGRvb3IgZGUgc2Vs
+ZWN0aWU7CmhldCBpbnZvZWdwdW50IGtvbXQgYmlqICNJTlMjLg</string>
 					</object>
 				</object>
 				<string key="19.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1557,7 +1557,7 @@ OwppbnNlcnRpb24gcG9pbnQgd2lsbCBjb21lIHRvICNJTlMjLg</string>
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="618924028"/>
-						<string key="toolTip">Save edited macros</string>
+						<string key="toolTip">Bewaar de gewijzigde macro's</string>
 					</object>
 				</object>
 				<string key="22.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1566,7 +1566,7 @@ OwppbnNlcnRpb24gcG9pbnQgd2lsbCBjb21lIHRvICNJTlMjLg</string>
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="783560080"/>
-						<string key="toolTip">Discard changes</string>
+						<string key="toolTip">Verwerp de wijzigingen</string>
 					</object>
 				</object>
 				<string key="23.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1575,7 +1575,7 @@ OwppbnNlcnRpb24gcG9pbnQgd2lsbCBjb21lIHRvICNJTlMjLg</string>
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="928182507"/>
-						<string key="toolTip">Insert the content of current macro</string>
+						<string key="toolTip">Voeg de inhoud van de huidige macro in</string>
 					</object>
 				</object>
 				<string key="24.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1584,7 +1584,7 @@ OwppbnNlcnRpb24gcG9pbnQgd2lsbCBjb21lIHRvICNJTlMjLg</string>
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="250831801"/>
-						<string key="toolTip">Add new macro item</string>
+						<string key="toolTip">Voeg een nieuwe macro toe</string>
 					</object>
 				</object>
 				<string key="25.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1593,7 +1593,7 @@ OwppbnNlcnRpb24gcG9pbnQgd2lsbCBjb21lIHRvICNJTlMjLg</string>
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="291376034"/>
-						<string key="toolTip">Add new submenu</string>
+						<string key="toolTip">Voeg een nieuw submenu toe</string>
 					</object>
 				</object>
 				<string key="26.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1602,7 +1602,7 @@ OwppbnNlcnRpb24gcG9pbnQgd2lsbCBjb21lIHRvICNJTlMjLg</string>
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="531318039"/>
-						<string key="toolTip">Add new separator</string>
+						<string key="toolTip">Voeg een nieuwe scheiding toe</string>
 					</object>
 				</object>
 				<string key="27.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1611,7 +1611,7 @@ OwppbnNlcnRpb24gcG9pbnQgd2lsbCBjb21lIHRvICNJTlMjLg</string>
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="177156927"/>
-						<string key="toolTip">Delete the selection</string>
+						<string key="toolTip">Verwijder de selectie</string>
 					</object>
 				</object>
 				<string key="28.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1620,7 +1620,7 @@ OwppbnNlcnRpb24gcG9pbnQgd2lsbCBjb21lIHRvICNJTlMjLg</string>
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="65650735"/>
-						<string key="toolTip">Duplicate the selection</string>
+						<string key="toolTip">Dupliceer de selectie</string>
 					</object>
 				</object>
 				<string key="29.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>

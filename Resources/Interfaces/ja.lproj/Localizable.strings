@@ -98,6 +98,13 @@
 "Skin Tone IV" = "スキントーンIV";
 "Skin Tone V" = "スキントーンV";
 "Skin Tone VI" = "スキントーンVI";
+"Code Point:" = "コードポイント：";
+"Block:" = "ブロック：";
+"Category:" = "カテゴリ：";
+"Version:" = "バージョン：";
+"Unknown" = "不明";
+"No Block" = "ブロックなし";
+"deprecated" = "非推奨";
 "Unknown encoding; using UTF-8." = "未知のエンコーディングが指定されたため、代わりにUTF-8エンコーディングを使用しました。";
 "Demo Movies require Mac OS 10.9, Mavericks, or higher." = "デモ動画の再生にはOS X 10.9 Mavericks以上が必要です。";
 "Source" = "ソース";
@@ -158,16 +165,15 @@
 "Search commands" = "機能を検索";
 "Command" = "コマンド";
 "Shortcut" = "ショートカット";
-"Change…" = "変更…";
 "Remove Shortcut" = "解除";
 "Restore Default" = "デフォルトに戻す";
+"Default shortcut: %@" = "デフォルトのショートカット: %@";
+"Default shortcut: None" = "デフォルトのショートカット: なし";
 "Restore All…" = "すべて元に戻す…";
 "Restore All" = "すべて元に戻す";
 "Change Shortcut" = "ショートカットを変更";
-"Apply" = "適用";
 "Shortcut Unavailable" = "割り当てできません";
 "Restore all keyboard shortcuts?" = "すべてのショートカットを元に戻しますか？";
-"New shortcut" = "新しいショートカット";
 "This command is no longer available." = "このコマンドは利用できなくなりました。";
 "This shortcut is already used by “%@”." = "このショートカットは「%@」で使用されています。";
 
@@ -402,3 +408,24 @@
 "Typesets once with this engine instead of the one chosen in the toolbar." = "その回だけ、ツールバーで選んでいるものの代わりに、このエンジンでタイプセットします。";
 "A % !TEX TS-program line at the top of the document takes precedence." = "書類の先頭に % !TEX TS-programの行があるときは、そちらが優先されます。";
 "Choose an Engine Profile" = "エンジンのプロファイルを選択";
+
+/* The status bar under the source */
+"Status Bar" = "ステータスバー";
+"%1$@: %2$@" = "%1$@: %2$@";
+"Lines" = "行";
+"Characters" = "文字";
+"Words" = "単語";
+"Location" = "位置";
+"Line" = "行";
+"Column" = "列";
+
+/* Text Statistics, opened from the status bar */
+"Text Statistics…" = "本文の統計…";
+"Whole Document" = "書類全体";
+"Selection" = "選択範囲";
+"Text" = "本文";
+"Refresh" = "更新";
+"Counting…" = "数えています…";
+"detex was not found." = "detexが見つかりません。";
+"detex failed." = "detexが失敗しました。";
+"Counted by detex without the TeX commands, with the files read by \\input and \\include." = "detexでTeXの命令を除いた数です（\\input・\\includeで読み込むファイルを含みます）。";

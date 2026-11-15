@@ -28,7 +28,10 @@
 
 @class TSSyntaxHighlighter;
 @class TSListBottomBar;
-@class TSMacroShortcutField;
+@class TSShortcutRecordingCell;
+
+// The line of a separator in the list of macros, `width` points long.
+NSImage *TSMacroSeparatorImage(CGFloat width);
 
 @interface TSMacroEditor : NSObject <NSTextViewDelegate, NSMenuDelegate>
 {
@@ -62,23 +65,51 @@
 @property (retain) NSMapTable *originalShortcutKeys;
 @property (retain) NSMapTable *shortcutConflicts;
 @property (retain) NSTextField *shortcutStatus;
-// The list and the bar under it (＋, − and the menu of the other commands), in one frame.
-@property (retain) NSBox *listBox;
+// The warning triangle before the message (hidden without one).
+@property (retain) NSImageView *shortcutStatusMark;
+// The sidebar: the list and the bar under it (＋, − and the menu of the other commands).
+@property (retain) NSVisualEffectView *sidebar;
 @property (retain) TSListBottomBar *listBar;
+// Beside the sidebar: the fields, the message and the buttons.
+@property (retain) NSView *editorView;
+// Return, Enter and Escape for the contents, before the buttons take them (keyForContents:).
+@property (retain) id contentsKeyMonitor;
+// While the list starts renaming an item (beginRenamingSelectedItem).
+@property (getter=isRenaming) BOOL renaming;
 // Below the contents: Insert adds a placeholder, the help button lists them.
 @property (retain) NSPopUpButton *insertPlaceholderButton;
 @property (retain) NSButton *placeholdersButton;
 @property (retain) NSPopover *placeholdersPopover;
-// The shortcut of the selected macro, set by pressing it; the nib's key field and
-// Shift, Option and Control boxes stay hidden.
-@property (retain) NSTextField *shortcutLabel;
-@property (retain) TSMacroShortcutField *shortcutField;
-// The shortcut being edited, as the macros store it (for example @"M+ShiftKey").
+// The shortcut of the selected macro, as the macros store it (for example @"M+ShiftKey"); it is
+// recorded in the list, and the nib's key field and Shift, Option and Control boxes stay hidden.
 @property (copy) NSString *pendingShortcutKey;
-- (void)installListControls;
-- (void)installShortcutField;
-- (void)syncShortcutField;
+// While a shortcut is recorded in the list: the item, the field over its shortcut with the place of the
+// warning triangle, why the last key pressed was refused, and that key as the field shows it (⌃⌘E, A).
+@property (retain) TSMacroTreeNode *recordingItem;
+@property (retain) TSShortcutRecordingCell *recordingCell;
+@property (copy) NSString *recordingError;
+@property (copy) NSString *refusedShortcut;
+@property BOOL endingShortcutRecording;
+- (void)installSidebar;
+- (NSEvent *)keyForContents:(NSEvent *)event;
+- (BOOL)beginRenamingSelectedItem;
+- (void)cancelPendingListRename;
+- (IBAction)renameSelectedMacro:(id)sender;
+- (IBAction)saveDocument:(id)sender;
+- (void)stopKeyMonitor;
+- (void)releaseWindowControls;
+- (void)useSystemFont;
+- (void)hideNibShortcutRows;
+- (BOOL)beginRecordingShortcutAtRow:(NSInteger)row;
+- (BOOL)beginRecordingShortcutForItem:(TSMacroTreeNode *)item;
+- (void)endShortcutRecording;
+- (void)finishShortcutRecordingFocusingList:(BOOL)focusList;
+- (void)endShortcutRecordingUnlessSelected;
+- (void)handleShortcutRecordingEvent:(NSEvent *)event;
 - (BOOL)recordShortcutEvent:(NSEvent *)event;
+- (NSString *)shortcutConflictForEvent:(NSEvent *)event;
+- (IBAction)removeRecordedShortcut:(id)sender;
+- (void)listClicked:(id)sender;
 - (void)setPendingShortcut:(NSString *)key;
 - (void)installPlaceholderControls;
 - (void)syncPlaceholderControls;
@@ -89,6 +120,9 @@
 - (void)syncListControls;
 - (NSString *)shortcutConflictForNode:(TSMacroTreeNode *)node;
 - (void)refreshShortcutConflicts;
+- (void)layoutShortcutStatusInBand:(NSRect)band;
+- (void)updateShortcutStatus;
+- (void)showShortcutStatus:(NSString *)message;
 // Colors the contents as the source is colored.
 @property (retain) TSSyntaxHighlighter *contentHighlighter;
 @property (retain) TSMacroTreeNode *previousItem;	// record previously selected item

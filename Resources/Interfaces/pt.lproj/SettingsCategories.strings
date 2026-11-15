@@ -51,8 +51,8 @@
 "catalog.general.3.1.title" = "Minimizar a janela do arquivo raiz";
 "group.general.5.title" = "Avançado";
 "group.general.6.title" = "Ícone do Dock durante a execução";
-"catalog.general.5.0.title" = "As configurações que não aparecem aqui são descritas na ajuda “Linhas de comentário e configurações ocultas”.";
-"catalog.general.5.1.title" = "Abrir Linhas de comentário e configurações ocultas";
+"catalog.general.5.0.title" = "As configurações que não aparecem aqui são descritas na ajuda “Linhas Especiais e Ajustes Ocultos”.";
+"catalog.general.5.1.title" = "Abrir o manual de linhas especiais e ajustes ocultos…";
 "group.encoding.title" = "Codificação";
 "catalog.documents.0.0.title" = "Codificação dos novos documentos";
 "catalog.documents.0.1.title" = "Mostrar codificação no diálogo Salvar";

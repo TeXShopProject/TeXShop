@@ -85,7 +85,7 @@
 " does not exist." = " no existe.";
 "failed to copy selection." = "fallado al copiar selección.";
 "failed to save selection to the file." = "fallado al guardar selección en archivo.";
-"<a letter consisting of %d characters>" = "<una letra que consta de %d caracteres>";
+"<a letter consisting of %d characters>" = "<un carácter compuesto por %d caracteres>";
 "%d letters, %d words, %d lines" = "%d letras, %d palabras, %d líneas";
 "Emoji Style" = "Estilo emoji";
 "Text Style" = "Estilo texto";
@@ -97,6 +97,13 @@
 "Skin Tone IV" = "Tono de piel moreno";
 "Skin Tone V" = "Tono de piel moreno oscuro";
 "Skin Tone VI" = "Tono de piel negro";
+"Code Point:" = "Punto de código:";
+"Block:" = "Bloque:";
+"Category:" = "Categoría:";
+"Version:" = "Versión:";
+"Unknown" = "Desconocido";
+"No Block" = "Sin bloque";
+"deprecated" = "obsoleto";
 "Unknown encoding; using UTF-8." = "Codificación desconocida; se usará UTF-8.";
 "Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Mostrar vídeos con demos requiere Mac OS 10.9, Mavericks, o superior.";
 "Source" = "Código";
@@ -152,16 +159,15 @@
 "Search commands" = "Buscar comandos";
 "Command" = "Comando";
 "Shortcut" = "Atajo";
-"Change…" = "Cambiar…";
 "Remove Shortcut" = "Eliminar atajo";
 "Restore Default" = "Restaurar predeterminado";
+"Default shortcut: %@" = "Atajo predeterminado: %@";
+"Default shortcut: None" = "Atajo predeterminado: ninguno";
 "Restore All…" = "Restaurar todos…";
 "Restore All" = "Restaurar todos";
 "Change Shortcut" = "Cambiar atajo";
-"Apply" = "Aplicar";
 "Shortcut Unavailable" = "Atajo no disponible";
 "Restore all keyboard shortcuts?" = "¿Restaurar todos los atajos de teclado?";
-"New shortcut" = "Nuevo atajo";
 "This command is no longer available." = "Este comando ya no está disponible.";
 "This shortcut is already used by “%@”." = "Este atajo ya se usa para «%@».";
 
@@ -394,3 +400,24 @@
 "Typesets once with this engine instead of the one chosen in the toolbar." = "Compone una vez con este motor en lugar del elegido en la barra de herramientas.";
 "A % !TEX TS-program line at the top of the document takes precedence." = "Una línea % !TEX TS-program al principio del documento tiene prioridad.";
 "Choose an Engine Profile" = "Elegir un perfil del motor";
+
+/* The status bar under the source */
+"Status Bar" = "Barra de estado";
+"%1$@: %2$@" = "%1$@: %2$@";
+"Lines" = "Líneas";
+"Characters" = "Caracteres";
+"Words" = "Palabras";
+"Location" = "Posición";
+"Line" = "Línea";
+"Column" = "Columna";
+
+/* Text Statistics, opened from the status bar */
+"Text Statistics…" = "Estadísticas del texto…";
+"Whole Document" = "Documento completo";
+"Selection" = "Selección";
+"Text" = "Texto";
+"Refresh" = "Actualizar";
+"Counting…" = "Contando…";
+"detex was not found." = "No se ha encontrado detex.";
+"detex failed." = "detex ha fallado.";
+"Counted by detex without the TeX commands, with the files read by \\input and \\include." = "Contado por detex sin los comandos de TeX, incluidos los archivos leídos con \\input e \\include.";

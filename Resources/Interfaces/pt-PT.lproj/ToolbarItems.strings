@@ -12,8 +12,8 @@ tiLabelTypeset				= "Compor";
 tiPaletteLabelTypeset			= "Compor";
 tiToolTipTypeset			= "Correr o programa de composição";
 
-tiLabelSharing				= "Sharing";
-tiPaletteLabelSharing		= "Sharing";
+tiLabelSharing				= "Partilhar";
+tiPaletteLabelSharing		= "Partilhar";
 tiToolTipSharing			= "Partilhar texto e imagens";
 
 
@@ -89,16 +89,16 @@ tiLabelProgramEE			= "Programa";
 tiPaletteLabelProgramEE			= "Programa";
 tiToolTipProgramEE			= "Escolher o programa de composição";
 
-tiLabelAutoComplete			= "AutoComplete";
-tiPaletteLabelAutoComplete		= "AutoComplete";
-tiToolTipAutoComplete			= "Toggle auto completion";
+tiLabelAutoComplete			= "Associações de teclas";
+tiPaletteLabelAutoComplete		= "Associações de teclas";
+tiToolTipAutoComplete			= "Ativar/desativar associações de teclas";
 
-tiLabelSplit				= "Split Window";
-tiPaletteLabelSplit			= "Split Window";
+tiLabelSplit				= "Dividir janela";
+tiPaletteLabelSplit			= "Dividir janela";
 tiToolTipSplit				= "Alternar a divisão da janela; clique mantendo premida a tecla Opção para dividir verticalmente";
 
-tiLabelSplitKIT				= "Split Window";
-tiPaletteLabelSplitKIT		= "Split Window";
+tiLabelSplitKIT				= "Dividir janela";
+tiPaletteLabelSplitKIT		= "Dividir janela";
 tiToolTipSplitKIT			= "Alternar a divisão da janela; clique mantendo premida a tecla Opção para dividir verticalmente";
 
 tiLabelMacros				= "Macros";
@@ -125,8 +125,8 @@ tiLabelTypesetKIT				= "Compor";
 tiPaletteLabelTypesetKIT		= "Compor";
 tiToolTipTypesetKIT				= "Correr o programa de composição";
 
-tiLabelSharingKIT				= "Sharing";
-tiPaletteLabelSharingKIT		= "Sharing";
+tiLabelSharingKIT				= "Partilhar";
+tiPaletteLabelSharingKIT		= "Partilhar";
 tiToolTipSharingKIT				= "Partilhar texto e imagens";
 
 tiLabelSearchKIT				= "Pesquisa";
