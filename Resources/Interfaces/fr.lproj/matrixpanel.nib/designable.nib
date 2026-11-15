@@ -272,7 +272,7 @@
 								<object class="NSButtonCell" id="722361630">
 									<int key="NSCellFlags">67239424</int>
 									<int key="NSCellFlags2">134348800</int>
-									<string key="NSContents">Matrice zéro</string>
+									<string key="NSContents">Matrice nulle</string>
 									<reference key="NSSupport" ref="413013574"/>
 									<reference key="NSControlView" ref="612366847"/>
 									<int key="NSTag">2</int>

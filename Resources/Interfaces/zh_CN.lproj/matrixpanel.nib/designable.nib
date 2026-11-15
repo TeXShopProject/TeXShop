@@ -247,7 +247,7 @@
 								<object class="NSButtonCell" id="643175965">
 									<int key="NSCellFlags">67239424</int>
 									<int key="NSCellFlags2">134348800</int>
-									<string key="NSContents">删除</string>
+									<string key="NSContents">清除</string>
 									<reference key="NSSupport" ref="460002106"/>
 									<reference key="NSControlView" ref="357019753"/>
 									<int key="NSButtonFlags">-2038284033</int>

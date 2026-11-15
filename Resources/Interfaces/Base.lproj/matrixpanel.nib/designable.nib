@@ -120,19 +120,19 @@
                         </buttonCell>
                         <cells>
                             <column>
-                                <buttonCell type="push" title="Delete" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" toolTip="Delete all entries" inset="2" id="2351">
+                                <buttonCell type="push" title="Clear" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" toolTip="Delete all entries" inset="2" id="2351">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="label"/>
                                 </buttonCell>
                             </column>
                             <column>
-                                <buttonCell type="push" title="Identitymatrix" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" toolTip="Set matrix to identity" tag="1" inset="2" id="2350">
+                                <buttonCell type="push" title="Identity Matrix" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" toolTip="Set matrix to identity" tag="1" inset="2" id="2350">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="label"/>
                                 </buttonCell>
                             </column>
                             <column>
-                                <buttonCell type="push" title="Zeromatrix" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" toolTip="Set all matrix entries to zero" tag="2" inset="2" id="2348">
+                                <buttonCell type="push" title="Zero Matrix" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" toolTip="Set all matrix entries to zero" tag="2" inset="2" id="2348">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="label"/>
                                 </buttonCell>

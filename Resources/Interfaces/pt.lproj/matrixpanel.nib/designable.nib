@@ -131,7 +131,7 @@
                                 </buttonCell>
                             </column>
                             <column>
-                                <buttonCell type="push" title="Matriz com zeros" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" toolTip="Definir todas as entradas da matriz como zero" tag="2" inset="2" id="2348">
+                                <buttonCell type="push" title="Matriz nula" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" toolTip="Definir todas as entradas da matriz como zero" tag="2" inset="2" id="2348">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="label"/>
                                 </buttonCell>

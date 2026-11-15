@@ -243,7 +243,7 @@
 								<object class="NSButtonCell" id="159850729">
 									<int key="NSCellFlags">67239424</int>
 									<int key="NSCellFlags2">134348800</int>
-									<string key="NSContents">Verwijder</string>
+									<string key="NSContents">Wis</string>
 									<reference key="NSSupport" ref="143750659"/>
 									<reference key="NSControlView" ref="136834847"/>
 									<int key="NSButtonFlags">-2038284033</int>

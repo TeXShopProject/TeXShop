@@ -272,7 +272,7 @@
 								<object class="NSButtonCell" id="76074668">
 									<int key="NSCellFlags">67239424</int>
 									<int key="NSCellFlags2">134348800</int>
-									<string key="NSContents">０行列</string>
+									<string key="NSContents">零行列</string>
 									<reference key="NSSupport" ref="470778763"/>
 									<reference key="NSControlView" ref="935608417"/>
 									<int key="NSTag">2</int>
