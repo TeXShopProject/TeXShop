@@ -11,7 +11,7 @@ static TSSparkleController *mainUpdaterController;
 - (void)awakeFromNib
 {
     // The channel must be known before the updater starts its first cycle.
-    [TSSparkleController preparePrereleaseDefaultsForVersion:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] defaults:SUD];
+    [TSSparkleController preparePrereleaseDefaultsForBundle:[NSBundle mainBundle] defaults:SUD];
     updaterDelegate = self;
     mainUpdaterController = self;
     [super awakeFromNib];
@@ -30,6 +30,18 @@ static TSSparkleController *mainUpdaterController;
 + (BOOL)isPrereleaseVersion:(NSString *)version
 {
     return version != nil && [version rangeOfCharacterFromSet:NSCharacterSet.letterCharacterSet].location != NSNotFound;
+}
+
+// The display version (6.00 beta-1) tells a prerelease; CFBundleVersion is a build number that changes with every build.
++ (NSString *)prereleaseVersionOfBundle:(NSBundle *)bundle
+{
+    id version = [bundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    return [version isKindOfClass:NSString.class] ? version : nil;
+}
+
++ (void)preparePrereleaseDefaultsForBundle:(NSBundle *)bundle defaults:(NSUserDefaults *)defaults
+{
+    [self preparePrereleaseDefaultsForVersion:[self prereleaseVersionOfBundle:bundle] defaults:defaults];
 }
 
 + (void)preparePrereleaseDefaultsForVersion:(NSString *)version defaults:(NSUserDefaults *)defaults

@@ -12,9 +12,13 @@ FOUNDATION_EXPORT NSNotificationName const TSSparkleUpdateCheckDidFinishNotifica
 @interface TSSparkleController : SPUStandardUpdaterController <SPUUpdaterDelegate>
 + (nullable SPUUpdater *)sharedUpdater;
 + (nullable TSSparkleController *)sharedController;
-// A build version with a letter, such as 5.60b10, is a prerelease.
+// A display version with a letter, such as 6.00 beta-1, is a prerelease.
 + (BOOL)isPrereleaseVersion:(nullable NSString *)version;
-// Prereleases are off by default. The first launch of each prerelease build turns them on.
+// The display version (CFBundleShortVersionString) of the bundle.
++ (nullable NSString *)prereleaseVersionOfBundle:(NSBundle *)bundle;
+// Prereleases are off by default. The first launch of each prerelease version turns them on;
+// later builds of the same version do not.
++ (void)preparePrereleaseDefaultsForBundle:(NSBundle *)bundle defaults:(NSUserDefaults *)defaults;
 + (void)preparePrereleaseDefaultsForVersion:(nullable NSString *)version defaults:(NSUserDefaults *)defaults;
 + (NSSet<NSString *> *)allowedChannelsWithDefaults:(NSUserDefaults *)defaults;
 @end
