@@ -875,6 +875,8 @@ static void TSInstallAdvancedFindFieldStyle(void)
     NSDictionary *storedSettings = [SUD persistentDomainForName:NSBundle.mainBundle.bundleIdentifier ?: @"TeXShop"] ?: @{};
     TSKeepEarlierFactoryEngineFile(SUD, storedSettings);
     TSMoveViaDVIOptionsIntoCommands(SUD, storedSettings);
+    // The commands as they are now, after the options moved into them, tell the profile the settings follow.
+    TSWriteKpsewhichOfEngineProfile(SUD, [SUD persistentDomainForName:NSBundle.mainBundle.bundleIdentifier ?: @"TeXShop"] ?: @{});
   
 	    
 	[self finishMenuKeyEquivalentsConfigure];

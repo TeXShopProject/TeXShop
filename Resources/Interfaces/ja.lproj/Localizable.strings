@@ -389,6 +389,7 @@
 "Engine profile row: Typesetting Method" = "コンパイル法";
 "Engine profile row: plain TeX" = "plain TeX";
 "Engine profile row: LaTeX" = "LaTeX";
+"Engine profile row: kpsewhich" = "kpsewhich";
 "Engine profile row: BibTeX Engine" = "BibTeXエンジン";
 "Engine profile row: Index Program" = "索引作成";
 "Engine profile row: MetaPost" = "MetaPost";

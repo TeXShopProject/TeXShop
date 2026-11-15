@@ -60,6 +60,14 @@ FOUNDATION_EXPORT void TSKeepEarlierFactoryEngineFile(NSUserDefaults *defaults, 
 /// the option written into them, and both settings are removed, so that this happens once.
 /// stored is the persistent domain of the application.
 FOUNDATION_EXPORT void TSMoveViaDVIOptionsIntoCommands(NSUserDefaults *defaults, NSDictionary *stored);
+/// Each profile writes the kpsewhich command of Open Style File (Kpsetool) with the program name of its engine.
+/// Settings that have every value of a profile but this one keep that profile: once, if the command is not
+/// stored or is a factory command (kpsetool -w -n latex tex of 5.58, kpsewhich -progname=latex -format=tex of the
+/// betas of 5.60, or kpsewhich -progname=latex), it becomes that of the profile. An earlier factory command of
+/// settings that match no profile is removed, so that the factory command of now applies. A command typed by hand
+/// stays. KpsewhichOfEngineProfileWritten marks this as done; the factory defaults carry the mark, so new users
+/// never go through it. stored is the persistent domain of the application.
+FOUNDATION_EXPORT void TSWriteKpsewhichOfEngineProfile(NSUserDefaults *defaults, NSDictionary *stored);
 
 // Runtime observers defer their work until a complete profile has been stored.
 FOUNDATION_EXPORT BOOL TSPreferenceProfileIsApplying(void);

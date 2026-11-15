@@ -381,6 +381,7 @@
 "Engine profile row: Typesetting Method" = "Metoda de tehnoredactare";
 "Engine profile row: plain TeX" = "plain TeX";
 "Engine profile row: LaTeX" = "LaTeX";
+"Engine profile row: kpsewhich" = "kpsewhich";
 "Engine profile row: BibTeX Engine" = "Motor BibTeX";
 "Engine profile row: Index Program" = "Program pentru index";
 "Engine profile row: MetaPost" = "MetaPost";

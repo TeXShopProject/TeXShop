@@ -159,6 +159,7 @@ NSString *TabCharacterKindKey = @"TabCharacterKind"; // added by Terada
 NSString *NewLineCharacterKindKey = @"NewLineCharacterKind"; // added by Terada
 NSString *LastStyNameKey = @"LastStyName"; // added by Terada
 NSString *KpsetoolKey = @"Kpsetool"; // added by Terada
+NSString *KpsewhichOfEngineProfileWrittenKey = @"KpsewhichOfEngineProfileWritten";
 NSString *BibTeXengineKey = @"BibTeXengine"; // added by Terada
 NSString *MakeIndexEngineKey = @"MakeIndexEngine";
 NSString *MetaPostEngineKey = @"MetaPostEngine";

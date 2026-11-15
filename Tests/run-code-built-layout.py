@@ -63,7 +63,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-code-built-layout-') as tmp:
     (tmp / 'EnginePathAlert.inc').write_text('#import "TSPreferenceProfile.h"\n#import "TSEnginePathDiscovery.h"\n'
                                                  # The keys of globals.m that the list reads; globals.h clashes with the console stubs.
                                                  'extern NSString *DefaultScriptKey, *LatexCommandKey, *TexCommandKey, *LatexGSCommandKey, *TexGSCommandKey, '
-                                                 '*BibTeXengineKey, *MakeIndexEngineKey, *MetaPostEngineKey, *ptexUtfOutputEnabledKey, *EncodingKey, '
+                                                 '*KpsetoolKey, *BibTeXengineKey, *MakeIndexEngineKey, *MetaPostEngineKey, *ptexUtfOutputEnabledKey, *EncodingKey, '
                                                  '*AutomaticUTF8MACtoUTF8ConversionKey, *spellingAutomaticDefaultKey, *spellingLanguageDefaultKey;\n' + engine)
     (tmp / 'SizeWindow.inc').write_text(size_window + '\n')
     (tmp / 'ShortcutConflictsAlert.inc').write_text(conflicts)

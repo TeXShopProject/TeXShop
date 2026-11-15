@@ -205,7 +205,6 @@ assigned
 associated
 assume
 assumed
-assumptions
 at
 attempt
 author
@@ -958,6 +957,7 @@ knowledge
 koch
 koch's
 korean
+kpsewhich
 label
 labeled
 labels
