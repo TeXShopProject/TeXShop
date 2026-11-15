@@ -39,7 +39,11 @@ assert 'Preferences.nib in Resources' not in project, 'Preferences.nib is in the
 # 1. Menus in the nib wrappers and the XIBs.
 wrappers = sorted(p.parent for p in interfaces.glob('*.lproj/*.nib/designable.nib') if p.parent.name != 'Preferences.nib')
 xibs = sorted(p for d in ('Resources', 'Sources') for p in (root / d).rglob('*.xib'))
-assert len(wrappers) >= 60 and len(xibs) >= 14, (len(wrappers), len(xibs))
+# Guard against a glob that finds nothing: the files the mutations edit must be among them,
+# rather than a count that goes stale when an interface file is removed.
+assert len(wrappers) >= 60 and len(xibs) >= 10, (len(wrappers), len(xibs))
+assert root / 'Resources/Interfaces/ja.lproj/MainMenu.nib' in wrappers, 'ja MainMenu.nib not found'
+assert any(p.name == 'SettingsPreview.xib' for p in xibs), 'SettingsPreview.xib not found'
 titles_checked = 0
 for path in [w / 'designable.nib' for w in wrappers] + xibs:
     text = path.read_text(encoding='utf-8')
