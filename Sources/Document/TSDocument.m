@@ -3467,15 +3467,6 @@ else {
     [self.textStatistics showRelativeToRect:rect ofView:view preferredEdge:NSRectEdgeMaxY];
 }
 
-// TSDocument.nib still holds the former Statistics panel, whose outlets the nib sets as it loads. The panel is no longer
-// used; until it leaves the nibs, those two outlets are ignored here.
-- (void)setValue:(id)value forUndefinedKey:(NSString *)key
-{
-    if ([@[@"statisticsPanel", @"statisticsWords", @"statisticsLines", @"statisticsCharacters"] containsObject:key])
-        return;
-    [super setValue:value forUndefinedKey:key];
-}
-
 
 #pragma mark Encodings
 

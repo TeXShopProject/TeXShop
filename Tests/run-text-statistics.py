@@ -19,8 +19,8 @@ popover's show is recorded instead):
    while counting; the ⓘ mark's tool tip and VoiceOver label.
 4. Edit > Statistics… and the status bar's button (the production TSDocument methods): the
    popover points at the button; with the status bar hidden, at the bottom edge of the part
-   of the source being typed in; also in the window that shows both. The nib's former
-   Statistics panel outlets no longer reach the document.
+   of the source being typed in; also in the window that shows both. The document nibs
+   no longer hold the former Statistics panel.
 5. The menus keep Edit > Statistics… with its shortcut identifier in 12 languages; the old
    statistics code and detexwrap are gone.
 
@@ -82,7 +82,6 @@ fragments = {
     'show': method(document, '- (void)showStatistics: sender'),
     'from': method(document, '- (void)showStatisticsFromView:(NSView *)anchor'),
     'rect': method(document, '- (void)showStatisticsRelativeToRect:(NSRect)rect ofView:(NSView *)view'),
-    'kvc': method(document, '- (void)setValue:(id)value forUndefinedKey:(NSString *)key'),
 }
 originals = dict(fragments)
 if args.mutation:
@@ -107,12 +106,8 @@ static void Check(BOOL ok, NSString *name) { checks++; if (!ok) { printf("FAIL: 
 static NSView *shownView; static NSRect shownRect; static NSRectEdge shownEdge; static NSUInteger shows;
 static void RecordShow(NSPopover *p, SEL s, NSRect rect, NSView *view, NSRectEdge edge) { shownView = view; shownRect = rect; shownEdge = edge; shows++; }
 
-// Records the outlets of the nib that reach NSObject's setValue:forUndefinedKey: (which would raise).
-static NSMutableSet<NSString *> *undefinedKeys;
 @interface TSDocumentBase : NSObject @end
-@implementation TSDocumentBase
-- (void)setValue:(id)value forUndefinedKey:(NSString *)key { [undefinedKeys addObject:key]; }
-@end
+@implementation TSDocumentBase @end
 @interface TSDocument : TSDocumentBase
 {
 @public
@@ -136,7 +131,6 @@ static NSMutableSet<NSString *> *undefinedKeys;
 @@SHOW@@
 @@FROM@@
 @@RECT@@
-@@KVC@@
 @end
 
 static void Register(NSString *name, Class base) {
@@ -163,7 +157,6 @@ static NSData *nibData;
 static TSDocument *Open(NSString *string) {
     TSDocument *doc = [TSDocument new];
     NSArray *objects;
-    // Loading the nib sets the former Statistics panel's outlets: the document ignores them.
     if (![[[NSNib alloc] initWithNibData:nibData bundle:nil] instantiateWithOwner:doc topLevelObjects:&objects]) return nil;
     for (NSWindow *w in objects) if ([w isKindOfClass:NSWindow.class]) w.releasedWhenClosed = NO;
     doc->textView = doc->textView1;
@@ -354,10 +347,11 @@ int main(int argc, char **argv) { @autoreleasepool {
     }
 
     // 3 and 4. The document: Edit > Statistics… and the status bar's button.
-    undefinedKeys = [NSMutableSet set];
     TSDocument *doc = Open(memory);
-    Check(doc && ![undefinedKeys containsObject:@"statisticsPanel"] && ![undefinedKeys containsObject:@"statisticsForm"],
-          [@"the former Statistics panel's outlets in the nib stop at the document" stringByAppendingString:tag]);
+    BOOL panel = NO;
+    for (NSString *name in @[@"statisticsPanel", @"statisticsWords", @"updateStatistics:"])
+        if ([nibData rangeOfData:[name dataUsingEncoding:NSUTF8StringEncoding] options:0 range:NSMakeRange(0, nibData.length)].location != NSNotFound) panel = YES;
+    Check(doc && !panel, [@"the compiled nib no longer holds the former Statistics panel" stringByAppendingString:tag]);
     doc.fileURL = [folder URLByAppendingPathComponent:@"main.tex"];
     [doc.sourceStatusBar fileDidChangeAtURL:doc.fileURL];
     TSSourceStatusBar *bar = doc.sourceStatusBar;
@@ -468,7 +462,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-text-statistics-') as tmp:
     for name in ('TSStatusBarCounting.m', 'TSSourceStatusBar.m', 'TSTextStatistics.m', 'TSTextStatisticsPopover.m', 'TSDocumentWindowGlass.m'):
         (tmp / name).write_text(text[name], encoding='utf-8', errors='surrogateescape')
     program = (PROGRAM.replace('@@SHOW@@', fragments['show']).replace('@@FROM@@', fragments['from'])
-               .replace('@@RECT@@', fragments['rect']).replace('@@KVC@@', fragments['kvc']))
+               .replace('@@RECT@@', fragments['rect']))
     if not args.mutation:
         verify_embedded(program, [(k, document, v) for k, v in originals.items()])
     (tmp / 'probe.m').write_text(program, encoding='utf-8')

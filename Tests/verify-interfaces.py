@@ -28,17 +28,9 @@ CORRECTED={
                    [action('gotoURL:','LJq-e2-BPE'),outlet('autoCompleteSplitButton','oCL-rZ-3aW','2wM-qZ-cUD'),
                     outlet('indexColorSplitBox','Ih7-yf-Js1','o3g-yr-DO1'),action('changeAutoComplete:','9Wv-gf-ygw'),action('showIndexColor:','ecQ-oX-sf2')]),
 }
-# Statistics shows three labeled fields in place of the 5.58 form: in every language the form's
-# outlet gives way to one outlet per field, and each field names its label for accessibility.
-STATISTICS=('statisticsWords','statisticsLines','statisticsCharacters')
-def statistics_fields(r):
-    outlets={e.get('property'):e.get('destination') for e in r.findall('.//outlet') if e.get('property') in STATISTICS}
-    assert sorted(outlets)==sorted(STATISTICS),outlets
-    for destination in outlets.values():
-        field=r.find(f'.//textField[@id="{destination}"]')
-        title=field.find('./connections/accessibilityConnection[@property="title"]')
-        assert title is not None and r.find(f'.//textField[@id="{title.get("destination")}"]') is not None,destination
-    return outlets
+# The former Statistics panel left the document nib in 6.00 (Text Statistics is a popover of the
+# status bar): its outlets and its button's action are no longer there in any language.
+STATISTICS=('statisticsPanel','statisticsForm','statisticsWords','statisticsLines','statisticsCharacters')
 for kind in ('TSDocument',):
     for path in sorted((root/'Resources/Interfaces').glob(f'*/{kind}.nib/designable.nib')):
         relative=path.relative_to(root)
@@ -47,7 +39,7 @@ for kind in ('TSDocument',):
             result=[]
             for e in r.findall('.//connections/*'):
                 attrs=dict(e.attrib)
-                if kind=='TSDocument' and (attrs.get('property') in STATISTICS+('statisticsForm',) or e.tag=='accessibilityConnection'): continue
+                if kind=='TSDocument' and (attrs.get('property') in STATISTICS or attrs.get('selector')=='updateStatistics:' or e.tag=='accessibilityConnection'): continue
                 if kind=='TSDocument' and attrs.get('property')=='htmlView': attrs['property']='htmlViewContainer'
                 result.append((e.tag,tuple(sorted(attrs.items()))))
             return sorted(result)
@@ -63,8 +55,9 @@ for kind in ('TSDocument',):
             assert not set(added)&set(expected),(path,'added connection was already in 5.58')
             expected=sorted(expected+added)
             assert expected==connections(current),path
-            statistics_fields(current)
-            assert current.find('.//outlet[@property="statisticsForm"]') is None and current.find('.//form') is None,path
+            assert not [e for e in current.iter('outlet') if e.get('property') in STATISTICS],path
+            assert not [e for e in current.iter('action') if e.get('selector')=='updateStatistics:'],path
+            assert current.find('.//form') is None,path
             outlet=current.find('.//outlet[@property="htmlViewContainer"]')
             assert outlet is not None,path
             assert current.find(f'.//customView[@id="{outlet.get("destination")}"]') is not None,path
