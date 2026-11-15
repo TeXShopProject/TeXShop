@@ -8324,8 +8324,7 @@ if (! useFullSplitWindow) {
 {
     TSTextView *aView = self.textView;
     NSRange selectedRange = [aView selectedRange];
-    NSString *selectedString = [[aView string] substringWithRange:selectedRange];
-    TSGlyphPopoverController *popoverController = [[TSGlyphPopoverController alloc] initWithCharacter:selectedString];
+    TSGlyphPopoverController *popoverController = [[TSGlyphPopoverController alloc] initWithText:[aView string] ranges:[aView selectedRanges]];
     
     if (!popoverController) { return; }
     

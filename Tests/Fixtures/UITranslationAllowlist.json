@@ -117,13 +117,15 @@
  "languages": {
   "de": {
    "Localizable.strings": [
+    "Block:",
     "Drag && Drop",
     "Editor",
     "Info: %@",
     "Labels",
     "TeXShop Demos",
     "Text",
-    "Updates"
+    "Updates",
+    "Version:"
    ],
    "MacroEditor.nib": [
     "Name",

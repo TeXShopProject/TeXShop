@@ -82,7 +82,7 @@
     " does not exist." = " 未找到。";
     "failed to copy selection." = "无法拷贝选中的区域。";
     "failed to save selection to the file." = "无法将选中的区域保存至文件。";
-    "<a letter consisting of %d characters>" = "<包含 %d个字符的单字>";
+    "<a letter consisting of %d characters>" = "<由%d个字符组成的字符>";
     "%d letters, %d words, %d lines" = "%d个字符, %d个单词, 共 %d行";
     "Emoji Style" = "Emoji样式";
     "Text Style" = "文本样式";
@@ -94,6 +94,13 @@
 "Skin Tone IV" = "中等";
 "Skin Tone V" = "较深";
 "Skin Tone VI" = "深色";
+"Code Point:" = "码位：";
+"Block:" = "区块：";
+"Category:" = "类别：";
+"Version:" = "版本：";
+"Unknown" = "未知";
+"No Block" = "无区块";
+"deprecated" = "已弃用";
 "Unknown encoding; using UTF-8." = "未知编码；使用UTF-8编码。";
 "Demo Movies require Mac OS 10.9, Mavericks, or higher." = "演示视频需要Mac OS 10.9 Mavericks或更高版本。";
 "Source" = "源代码";

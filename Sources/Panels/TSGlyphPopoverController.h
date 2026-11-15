@@ -34,7 +34,17 @@
 #import "NSString-Extras.h"
 
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface TSGlyphPopoverController : NSViewController
-- (instancetype)initWithCharacter:(NSString *)singleString;
+/// Character Info for the characters of `ranges` in `text` (the selected ranges of a text view), counted as the
+/// status bar counts the selection, with the code points of every range; nil when the ranges hold no character.
+- (nullable instancetype)initWithText:(NSString *)text ranges:(NSArray<NSValue *> *)ranges;
+/// Character Info for the characters of `range` in `text`.
+- (nullable instancetype)initWithText:(NSString *)text range:(NSRange)range;
+/// Character Info for the whole string.
+- (nullable instancetype)initWithCharacter:(NSString *)singleString;
 - (void)showPopoverRelativeToRect:(NSRect)positioningRect ofView:(NSView *)parentView;
 @end
+
+NS_ASSUME_NONNULL_END
