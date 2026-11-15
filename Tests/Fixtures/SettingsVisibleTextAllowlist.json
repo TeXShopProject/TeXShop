@@ -3,7 +3,7 @@
   "languages": {
     "de": [
       {"text": "https://texshop.app", "id": "settings.gxJ-rd-D1v", "category": "preview", "role": "placeholder", "reason": "Default web address shown while the field is empty"},
-      {"text": "kpsewhich -progname=latex -format=tex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
+      {"text": "kpsewhich -progname=latex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
       {"text": "Escape", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
@@ -60,7 +60,7 @@
     ],
     "es": [
       {"text": "https://texshop.app", "id": "settings.gxJ-rd-D1v", "category": "preview", "role": "placeholder", "reason": "Default web address shown while the field is empty"},
-      {"text": "kpsewhich -progname=latex -format=tex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
+      {"text": "kpsewhich -progname=latex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
       {"text": "Escape", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
@@ -117,7 +117,7 @@
     ],
     "fr": [
       {"text": "https://texshop.app", "id": "settings.gxJ-rd-D1v", "category": "preview", "role": "placeholder", "reason": "Default web address shown while the field is empty"},
-      {"text": "kpsewhich -progname=latex -format=tex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
+      {"text": "kpsewhich -progname=latex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
       {"text": "Tab", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
@@ -183,7 +183,7 @@
     ],
     "it": [
       {"text": "https://texshop.app", "id": "settings.gxJ-rd-D1v", "category": "preview", "role": "placeholder", "reason": "Default web address shown while the field is empty"},
-      {"text": "kpsewhich -progname=latex -format=tex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
+      {"text": "kpsewhich -progname=latex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
@@ -238,7 +238,7 @@
     ],
     "ja": [
       {"text": "https://texshop.app", "id": "settings.gxJ-rd-D1v", "category": "preview", "role": "placeholder", "reason": "Default web address shown while the field is empty"},
-      {"text": "kpsewhich -progname=latex -format=tex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
+      {"text": "kpsewhich -progname=latex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
       {"text": "Escape", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "Tab", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
@@ -288,7 +288,7 @@
     ],
     "ko": [
       {"text": "https://texshop.app", "id": "settings.gxJ-rd-D1v", "category": "preview", "role": "placeholder", "reason": "Default web address shown while the field is empty"},
-      {"text": "kpsewhich -progname=latex -format=tex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
+      {"text": "kpsewhich -progname=latex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
       {"text": "Escape", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "Tab", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
@@ -337,7 +337,7 @@
     ],
     "nl": [
       {"text": "https://texshop.app", "id": "settings.gxJ-rd-D1v", "category": "preview", "role": "placeholder", "reason": "Default web address shown while the field is empty"},
-      {"text": "kpsewhich -progname=latex -format=tex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
+      {"text": "kpsewhich -progname=latex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
       {"text": "Escape", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "Tab", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "Tab", "id": "keybindings.insert", "category": "keyboard", "role": "choice", "reason": "Key name that is the same word in this language"},
@@ -404,7 +404,7 @@
     ],
     "pt": [
       {"text": "https://texshop.app", "id": "settings.gxJ-rd-D1v", "category": "preview", "role": "placeholder", "reason": "Default web address shown while the field is empty"},
-      {"text": "kpsewhich -progname=latex -format=tex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
+      {"text": "kpsewhich -progname=latex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
       {"text": "Escape", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "Tab", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
@@ -465,7 +465,7 @@
     ],
     "pt-PT": [
       {"text": "https://texshop.app", "id": "settings.gxJ-rd-D1v", "category": "preview", "role": "placeholder", "reason": "Default web address shown while the field is empty"},
-      {"text": "kpsewhich -progname=latex -format=tex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
+      {"text": "kpsewhich -progname=latex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
       {"text": "Escape", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "Tab", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
@@ -520,7 +520,7 @@
     ],
     "ro": [
       {"text": "https://texshop.app", "id": "settings.gxJ-rd-D1v", "category": "preview", "role": "placeholder", "reason": "Default web address shown while the field is empty"},
-      {"text": "kpsewhich -progname=latex -format=tex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
+      {"text": "kpsewhich -progname=latex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
       {"text": "Escape", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "Tab", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "Tab", "id": "keybindings.insert", "category": "keyboard", "role": "choice", "reason": "Key name that is the same word in this language"},
@@ -577,7 +577,7 @@
     ],
     "zh_CN": [
       {"text": "https://texshop.app", "id": "settings.gxJ-rd-D1v", "category": "preview", "role": "placeholder", "reason": "Default web address shown while the field is empty"},
-      {"text": "kpsewhich -progname=latex -format=tex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
+      {"text": "kpsewhich -progname=latex", "id": "settings.1022", "category": "typesetting", "role": "placeholder", "reason": "Default command shown while the field is empty"},
       {"text": "Escape", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "Tab", "id": "choice.settings.926", "category": "keyboard", "role": "choice", "reason": "Key name as macOS writes it in this language"},
       {"text": "Ghostscript", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},

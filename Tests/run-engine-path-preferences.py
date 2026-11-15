@@ -26,7 +26,7 @@ with tempfile.TemporaryDirectory() as td:
     # The sheet of the engine profile, at file level before the methods that show it, with the keys of globals.m it reads.
     sheet = source[source.index('// BEGIN engine profile list'):source.index('// END engine profile list')]
     (td / 'EngineProfileSheet.h').write_text('extern NSString *DefaultScriptKey, *LatexCommandKey, *TexCommandKey, *LatexGSCommandKey, *TexGSCommandKey, '
-                                            '*BibTeXengineKey, *MakeIndexEngineKey, *MetaPostEngineKey, *ptexUtfOutputEnabledKey, *EncodingKey, '
+                                            '*KpsetoolKey, *BibTeXengineKey, *MakeIndexEngineKey, *MetaPostEngineKey, *ptexUtfOutputEnabledKey, *EncodingKey, '
                                             '*AutomaticUTF8MACtoUTF8ConversionKey, *spellingAutomaticDefaultKey, *spellingLanguageDefaultKey;\n' + sheet)
     exe = td / 'EnginePathPreferences'
     subprocess.run(['clang', '-fobjc-arc', '-framework', 'Cocoa', '-I', str(td), *include_args(root),
