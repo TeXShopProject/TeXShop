@@ -384,7 +384,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
     // The message says why a key was refused or a shortcut is inactive, as the warnings of Settings ›
     // Keyboard say it: after the yellow warning triangle, in the label color.
     self.shortcutStatus.textColor = NSColor.labelColor;
-    NSImageView *mark = [TSPrefPaneLayout warningSymbolForFont:status.font];
+    NSImageView *mark = [TSPrefPaneLayout warningSymbolForFont:status.font ?: [NSFont systemFontOfSize:NSFont.smallSystemFontSize]];
     mark.identifier = @"macro.shortcut.warning";
     mark.hidden = YES;
     mark.autoresizingMask = NSViewMaxXMargin | NSViewMaxYMargin;
@@ -778,7 +778,7 @@ static void TSSendButtonAction(NSButton *button)
         if ([rows numberOfSelectedRows] != 1 || [rows selectedRow] != row)
             [rows selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)row] byExtendingSelection:NO];
         if (self.previousItem != item) return NO;
-        self.recordingItem = item; self.recordingError = nil; self.refusedShortcutKey = nil;
+        self.recordingItem = item; self.recordingError = nil; self.refusedShortcut = nil;
         [self updateShortcutRecorder];
         rows.recordingItem = item;
         rows.recordingView = self.recordingCell;
@@ -797,7 +797,7 @@ static void TSSendButtonAction(NSButton *button)
     TSMacroTreeNode *item = self.recordingItem;
     if (item == nil || self.endingShortcutRecording) return;
     self.endingShortcutRecording = YES;
-    self.recordingItem = nil; self.recordingError = nil; self.refusedShortcutKey = nil;
+    self.recordingItem = nil; self.recordingError = nil; self.refusedShortcut = nil;
     if (focusList) {
         if ([window firstResponder] == self.recordingCell.recorder) [window makeFirstResponder:outlineView];
         [self removeShortcutRecorderOfItem:item];
@@ -870,14 +870,15 @@ static void TSSendButtonAction(NSButton *button)
     if (!item.isStandardItem || self.previousItem != item) return NO;
     TSShortcutBinding *binding = TSRecordedBinding(event, [event charactersByApplyingModifiers:0]);
     if (binding.key.length != 1 || ![TSShortcutStore isAllowedKey:binding.key modifiers:binding.modifiers]) {
-        self.refusedShortcutKey = nil;
+        // The field shows the key pressed, as for a key another command uses; a key without a character, the shortcut.
+        self.refusedShortcut = binding.key.length ? TSShortcutDisplayKey(binding.key, binding.modifiers) : nil;
         [self showShortcutRecordingError:NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.", @"")];
         return NO;
     }
     NSString *shortcut = getStringFormKeyEquivalentWithModifiers(binding.key, binding.modifiers);
     NSString *conflict = [self shortcutConflictForEvent:event];
     if (conflict) {
-        self.refusedShortcutKey = shortcut;
+        self.refusedShortcut = getMenuItemString(shortcut);
         [self showShortcutRecordingError:conflict];
         return NO;
     }
@@ -900,8 +901,9 @@ static void TSSendButtonAction(NSButton *button)
             if (!match.menuItem.hidden || match.menuItem.allowsKeyEquivalentWhenHidden) [users addObject:match.path];
         for (NSUInteger index = 0; index < candidates.count; index++) {
             NSDictionary *candidate = candidates[index];
-            if (nodes[index] != self.recordingItem && [TSBinding(candidate[@"key"], [candidate[@"modifiers"] unsignedIntegerValue]) isEqual:binding])
-                [users addObject:candidate[@"path"]];
+            NSString *path = candidate[@"path"];
+            if (path && nodes[index] != self.recordingItem && [TSBinding(candidate[@"key"], [candidate[@"modifiers"] unsignedIntegerValue]) isEqual:binding])
+                [users addObject:path];
         }
     }
     if (users.count == 0) return nil;
@@ -918,14 +920,14 @@ static void TSSendButtonAction(NSButton *button)
         NSAccessibilityPostNotificationWithUserInfo(self.recordingCell.recorder, NSAccessibilityAnnouncementRequestedNotification,
             @{NSAccessibilityAnnouncementKey: error, NSAccessibilityPriorityKey: @(NSAccessibilityPriorityHigh)});
 }
-// The field shows the shortcut, or the refused key another command uses; empty for a macro without one
+// The field shows the shortcut, or the key pressed that was refused; empty for a macro without one
 // (the list shows nothing either). ⊖ only while the macro has a shortcut to remove.
 - (void)updateShortcutRecorder
 {
     TSMacroTreeNode *item = self.recordingItem;
     if (item == nil) return;
     NSString *current = (self.previousItem == item ? self.pendingShortcutKey : item.key) ?: @"";
-    self.recordingCell.recorder.shortcut = getMenuItemString(self.refusedShortcutKey ?: current);
+    self.recordingCell.recorder.shortcut = self.refusedShortcut ?: getMenuItemString(current);
     self.recordingCell.recorder.removeButton.hidden = current.length == 0;
     self.recordingCell.warning.hidden = self.recordingError == nil;
 }

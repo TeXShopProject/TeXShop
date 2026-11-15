@@ -427,11 +427,13 @@ static void CheckRecording(TSMacroEditor *owner) {
     // Another macro's shortcut, as the path of its menu item.
     SendKey(owner,window,Typed(window,@"\x05",@"e",14,NSEventModifierFlagControl|NSEventModifierFlagCommand));
     REQUIRE(recording(macro) && [recorder.shortcut isEqual:@"⌃⌘E"] && [owner.shortcutStatus.stringValue isEqual:[NSString stringWithFormat:used,[macros stringByAppendingString:@" › Begin/End › equation"]]]);
-    // A key that cannot be a shortcut: the field shows the shortcut again, the triangle and the reason stay; recording goes on.
+    // A key that cannot be a shortcut: the field shows the key pressed, the triangle and the reason stay; recording goes on.
     NSEvent *refused[]={KeyIn(window,@"a",0,0),Typed(window,@"K",@"K",40,NSEventModifierFlagShift),Typed(window,@"˚",@"k",40,NSEventModifierFlagOption),KeyIn(window,@"\r",36,NSEventModifierFlagCommand),KeyIn(window,@"\t",48,NSEventModifierFlagCommand)};
     for(size_t i=0;i<5;i++) {
         SendKey(owner,window,refused[i]);
-        REQUIRE(recording(macro) && [recorder.shortcut isEqual:@"⇧⌘M"] && !cell.warning.hidden && [owner.shortcutStatus.stringValue isEqual:unusable] && !owner.shortcutStatusMark.hidden && [macro.key isEqual:@"M+ShiftKey"]);
+        TSShortcutBinding *pressedKey=TSRecordedBinding(refused[i],[refused[i] charactersByApplyingModifiers:0]); NSString *shown=TSShortcutDisplayKey(pressedKey.key,pressedKey.modifiers);
+        if(![recorder.shortcut isEqual:shown]) fprintf(stderr,"REFUSED KEY %zu shown %s, pressed %s\n",i,recorder.shortcut.UTF8String,shown.UTF8String);
+        REQUIRE(recording(macro) && [recorder.shortcut isEqual:shown] && ![shown isEqual:@"⇧⌘M"] && !cell.warning.hidden && [owner.shortcutStatus.stringValue isEqual:unusable] && !owner.shortcutStatusMark.hidden && [macro.key isEqual:@"M+ShiftKey"]);
     }
     // The next key that can be one becomes the shortcut and ends the recording: no triangle, no message.
     int before=reflections; [owner setValue:@NO forKey:@"dataTouched"];
@@ -458,6 +460,8 @@ static void CheckRecording(TSMacroEditor *owner) {
     // Delete removes the shortcut and ends; then the field is empty, without ⊖, and reads "Press a key".
     Click(owner,row,@"Key",NO); SendKey(owner,window,KeyIn(window,@"\x7f",51,0)); ended(); REQUIRE([macro.key isEqual:@""] && [Shown(rows,row) isEqual:@""]);
     Click(owner,row,@"Key",NO); REQUIRE(recording(macro) && recorder.shortcut.length==0 && recorder.removeButton.hidden && [recorder.accessibilityValue isEqual:NSLocalizedString(@"Press a key",@"")]);
+    // Without a shortcut too, the field shows a refused key until the next key that can be one.
+    SendKey(owner,window,KeyIn(window,@"a",0,0)); REQUIRE(recording(macro) && [recorder.shortcut isEqual:@"A"] && !cell.warning.hidden && recorder.removeButton.hidden && [macro.key isEqual:@""]);
     SendKey(owner,window,KeyIn(window,@"m",46,NSEventModifierFlagCommand|NSEventModifierFlagShift)); ended(); REQUIRE([macro.key isEqual:@"M+ShiftKey"]);
     // ⊖ removes it.
     Click(owner,row,@"Key",NO); REQUIRE(!recorder.removeButton.hidden && [recorder hitTest:[recorder convertPoint:NSMakePoint(NSMidX(recorder.removeButton.frame),NSMidY(recorder.removeButton.frame)) toView:recorder.superview]]==recorder.removeButton);
@@ -984,8 +988,8 @@ static void RenderOnly(const char *path, NSString *only) {
     if([state isEqual:@"renaming"]) REQUIRE([owner beginRenamingSelectedItem]);
     if([state isEqual:@"contents"]) { REQUIRE([window makeFirstResponder:contents]); contents.selectedRange=NSMakeRange(18,10); }
     if([@[@"recording",@"refused",@"invalid"] containsObject:state]) REQUIRE([owner beginRecordingShortcutAtRow:row]);
-    if([state isEqual:@"refused"]) { SendKey(owner,window,Typed(window,@"\x05",@"e",14,NSEventModifierFlagControl|NSEventModifierFlagCommand)); REQUIRE(owner.recordingError && owner.refusedShortcutKey); }
-    if([state isEqual:@"invalid"]) { SendKey(owner,window,KeyIn(window,@"a",0,0)); REQUIRE(owner.recordingError && !owner.refusedShortcutKey); }
+    if([state isEqual:@"refused"]) { SendKey(owner,window,Typed(window,@"\x05",@"e",14,NSEventModifierFlagControl|NSEventModifierFlagCommand)); REQUIRE(owner.recordingError && [owner.refusedShortcut isEqual:@"⌃⌘E"]); }
+    if([state isEqual:@"invalid"]) { SendKey(owner,window,KeyIn(window,@"a",0,0)); REQUIRE(owner.recordingError && [owner.refusedShortcut isEqual:@"A"]); }
     NSString *name=[[@(path) stringByDeletingLastPathComponent].stringByDeletingLastPathComponent.lastPathComponent stringByDeletingPathExtension];
     if([@(path).lastPathComponent containsString:@"101300"]) name=[name stringByAppendingString:@"-10.13"];
     WritePNG(window.contentView.superview,[NSAppearance appearanceNamed:dark?NSAppearanceNameDarkAqua:NSAppearanceNameAqua],[NSString stringWithFormat:@"%s/%@-%@.png",getenv("TS_RENDER_DIR"),name,only]);

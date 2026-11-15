@@ -84,12 +84,11 @@ NSImage *TSMacroSeparatorImage(CGFloat width);
 // recorded in the list, and the nib's key field and Shift, Option and Control boxes stay hidden.
 @property (copy) NSString *pendingShortcutKey;
 // While a shortcut is recorded in the list: the item, the field over its shortcut with the place of the
-// warning triangle, why the last key pressed was refused, and that key if another command uses it
-// (as the macros store it), which the field shows.
+// warning triangle, why the last key pressed was refused, and that key as the field shows it (⌃⌘E, A).
 @property (retain) TSMacroTreeNode *recordingItem;
 @property (retain) TSShortcutRecordingCell *recordingCell;
 @property (copy) NSString *recordingError;
-@property (copy) NSString *refusedShortcutKey;
+@property (copy) NSString *refusedShortcut;
 @property BOOL endingShortcutRecording;
 - (void)installSidebar;
 - (NSEvent *)keyForContents:(NSEvent *)event;
