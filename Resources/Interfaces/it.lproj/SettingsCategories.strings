@@ -51,8 +51,8 @@
 "catalog.general.3.1.title" = "Riduci la finestra principale all'apertura";
 "group.general.5.title" = "Avanzate";
 "group.general.6.title" = "Icona del Dock durante l’esecuzione";
-"catalog.general.5.0.title" = "Le impostazioni non presenti qui sono descritte nella guida «Righe di commento e impostazioni nascoste».";
-"catalog.general.5.1.title" = "Apri Righe di commento e impostazioni nascoste";
+"catalog.general.5.0.title" = "Le impostazioni non presenti qui sono descritte nella guida «Linee di commento e impostazioni nascoste».";
+"catalog.general.5.1.title" = "Apri il manuale delle linee di commento e impostazioni nascoste…";
 "group.encoding.title" = "Codifica";
 "catalog.documents.0.0.title" = "Codifica dei nuovi documenti";
 "catalog.documents.0.1.title" = "Mostra la codifica nel dialogo Salva";

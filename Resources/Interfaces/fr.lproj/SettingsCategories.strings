@@ -51,8 +51,8 @@
 "catalog.general.3.1.title" = "Miniaturiser la fenêtre-maître ouverte";
 "group.general.5.title" = "Avancé";
 "group.general.6.title" = "Icône du Dock pendant l’exécution";
-"catalog.general.5.0.title" = "Les réglages absents de cette fenêtre sont décrits dans l’aide « Lignes de commentaire et réglages cachés ».";
-"catalog.general.5.1.title" = "Ouvrir Lignes de commentaire et réglages cachés";
+"catalog.general.5.0.title" = "Les réglages absents de cette fenêtre sont décrits dans l’aide « Commentaires spéciaux et réglages cachés ».";
+"catalog.general.5.1.title" = "Ouvrir le manuel des commentaires spéciaux et réglages cachés…";
 "group.encoding.title" = "Encodage";
 "catalog.documents.0.0.title" = "Encodage des nouveaux documents";
 "catalog.documents.0.1.title" = "Afficher l’encodage dans le dialogue d’enregistrement";

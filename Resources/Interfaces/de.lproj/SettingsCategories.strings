@@ -52,7 +52,7 @@
 "group.general.5.title" = "Erweitert";
 "group.general.6.title" = "Dock-Symbol während der Laufzeit";
 "catalog.general.5.0.title" = "Nicht hier angezeigte Einstellungen sind im Hilfedokument „Kommentarzeilen und versteckte Einstellungen“ beschrieben.";
-"catalog.general.5.1.title" = "Kommentarzeilen und versteckte Einstellungen öffnen";
+"catalog.general.5.1.title" = "Handbuch zu Kommentarzeilen und versteckten Einstellungen öffnen…";
 "group.encoding.title" = "Kodierung";
 "catalog.documents.0.0.title" = "Kodierung für neue Dokumente";
 "catalog.documents.0.1.title" = "Kodierung im Sichern-Dialog anzeigen";
