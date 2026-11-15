@@ -387,10 +387,15 @@ static NSString *SuggestionAtRow(NSTableView *table, NSInteger row)
 // The view below the Spelling and Grammar panel: the replacement field, Change All
 // and a line for what Change All reports. The field and the line are returned
 // through the arguments.
+// The row follows the panel's own columns: the word field and the language
+// pop-up start 20 points in and are 275.5 wide, and the buttons are small,
+// 20 points high, from x 309.5 to 411. The field is as high as the word field,
+// and Change All is centered on it, as Change is on the word field. The line
+// below starts where the panel's own message under the word field starts.
 static NSView *TSChangeAllAccessory(id target, NSTextField * __strong *field, NSTextField * __strong *status)
 {
     NSView *accessory = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 431, 76)];
-    NSTextField *replacement = [[NSTextField alloc] initWithFrame:NSMakeRect(8, 47, 290, 22)];
+    NSTextField *replacement = [[NSTextField alloc] initWithFrame:NSMakeRect(20, 48, 275.5, 24)];
     replacement.placeholderString = NSLocalizedString(@"Replacement for Change All", @"");
     replacement.autoresizingMask = NSViewWidthSizable;
     // One line that scrolls, as a search field does, not text that wraps out of sight.
@@ -401,14 +406,17 @@ static NSView *TSChangeAllAccessory(id target, NSTextField * __strong *field, NS
     replacement.action = @selector(changeAll:);
     [accessory addSubview:replacement];
     NSTextField *line = [NSTextField wrappingLabelWithString:@""];
-    line.frame = NSMakeRect(8, 3, 415, 38);
+    line.frame = NSMakeRect(23, 8, 388, 34);
     line.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
     line.textColor = NSColor.secondaryLabelColor;
     line.autoresizingMask = NSViewWidthSizable;
     [accessory addSubview:line];
     NSButton *button = [NSButton buttonWithTitle:NSLocalizedString(@"Change All", @"")
                                         target:target action:@selector(changeAll:)];
-    button.frame = NSMakeRect(307, 45, 116, 26);
+    button.bezelStyle = NSBezelStylePush;
+    button.controlSize = NSControlSizeSmall;
+    button.font = [NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSControlSizeSmall]];
+    button.frame = NSMakeRect(309.5, 50, 101.5, 20);
     button.autoresizingMask = NSViewMinXMargin;
     [accessory addSubview:button];
     *field = replacement; *status = line;
