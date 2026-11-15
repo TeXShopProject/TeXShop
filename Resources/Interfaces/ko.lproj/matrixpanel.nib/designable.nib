@@ -1845,7 +1845,7 @@ y7bMNcy1zTXNtc42zrbPN8+40DnQutE80b7SP9LB00TTxtRJ1MvVTtXR1lXW2Ndc1+DYZNjo2WzZ8dp2
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="523133841"/>
-						<string key="toolTip">行列の全項目を０にします</string>
+						<string key="toolTip">행렬의 모든 항을 0으로 만듭니다</string>
 					</object>
 				</object>
 				<string key="2348.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1902,7 +1902,7 @@ y7bMNcy1zTXNtc42zrbPN8+40DnQutE80b7SP9LB00TTxtRJ1MvVTtXR1lXW2Ndc1+DYZNjo2WzZ8dp2
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="950008844"/>
-						<string key="toolTip">Custom left delimiter</string>
+						<string key="toolTip">왼쪽 괄호 기호를 정의합니다</string>
 					</object>
 				</object>
 				<string key="2358.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1936,7 +1936,7 @@ y7bMNcy1zTXNtc42zrbPN8+40DnQutE80b7SP9LB00TTxtRJ1MvVTtXR1lXW2Ndc1+DYZNjo2WzZ8dp2
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="368690415"/>
-						<string key="toolTip">custom right delimiter</string>
+						<string key="toolTip">오른쪽 괄호 기호를 정의합니다</string>
 					</object>
 				</object>
 				<string key="2368.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1975,7 +1975,7 @@ y7bMNcy1zTXNtc42zrbPN8+40DnQutE80b7SP9LB00TTxtRJ1MvVTtXR1lXW2Ndc1+DYZNjo2WzZ8dp2
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="554775005"/>
-						<string key="toolTip">항목을 그립니다</string>
+						<string key="toolTip">테두리를 그립니다</string>
 					</object>
 				</object>
 				<string key="2441.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
