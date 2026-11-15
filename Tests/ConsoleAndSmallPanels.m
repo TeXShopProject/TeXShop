@@ -13,19 +13,22 @@
 //   * Statistics shows three right-aligned labels and three fields with one
 //     left edge and one width (no NSForm, whose square cells stay white in Dark
 //     Mode), connected to the outlets the document fills;
-//   * the label of each Magnification panel shows its whole word on one line.
+//   * the label of each Magnification panel shows its whole word on one line;
+//   * the labels of the page number panels stand at least PageLabelGap from the
+//     fields beside them.
 // run-console-and-small-panels.py compiles this file with ProductionLayout.inc.
 // Usage: ConsoleAndSmallPanels <language>=<compiled TSDocument.nib> ...
 #import "TestAppKitIsolation.h"
 #include "ProductionLayout.inc"
 
 @interface PanelOwner : SpacingOwner {
-@public id stringWindow, statisticsPanel, statisticsWords, statisticsLines, statisticsCharacters, magnificationPanel, magnificationKitPanel;
+@public id stringWindow, statisticsPanel, statisticsWords, statisticsLines, statisticsCharacters, magnificationPanel, magnificationKitPanel, pagenumberPanel, pagenumberKitPanel;
 }
 @end
 @implementation PanelOwner @end
 
 static int failures, checks;
+static const CGFloat PageLabelGap = 4;   // as the TOUCH check of the layout checks
 static void Check(BOOL ok, NSString *what) { checks++; if (!ok) { failures++; printf("FAIL %s\n", what.UTF8String); } }
 static void All(NSView *v, NSMutableArray *out) { [out addObject:v]; for (NSView *s in v.subviews) All(s, out); }
 
@@ -191,6 +194,22 @@ int main(int argc, char **argv) { @autoreleasepool {
                       [NSString stringWithFormat:@"%@ Statistics: \"%@\" stands beside its field", lang, label.stringValue]);
             }
             Check(fabs(NSWidth(statistics.contentView.bounds) - NSMaxX(fields[0].frame) - 20) < 0.5, [NSString stringWithFormat:@"%@ Statistics: 20 points to the right edge", lang]);
+        }
+
+        // Page number panels: each label stands apart from the fields beside it, as far as
+        // the labels of the panel for the PDFKit preview do (the older panel's "ページ" and
+        // "페이지" ran into the field before them).
+        for (NSWindow *panel in @[owner->pagenumberKitPanel, owner->pagenumberPanel]) {
+            NSMutableArray<NSView *> *all = [NSMutableArray array]; All(panel.contentView, all);
+            NSMutableArray<NSTextField *> *labels = [NSMutableArray array], *fields = [NSMutableArray array];
+            for (NSView *v in all) if ([v isKindOfClass:NSTextField.class]) [(((NSTextField *)v).isBezeled ? fields : labels) addObject:(NSTextField *)v];
+            Check(labels.count >= 2 && fields.count == 2, [NSString stringWithFormat:@"%@ page number panel: labels and two fields", lang]);
+            for (NSTextField *label in labels) for (NSTextField *field in fields) {
+                NSRect l = [label convertRect:Ink(label) toView:nil], f = [field convertRect:Ink(field) toView:nil];
+                if (NSIsEmptyRect(l) || NSMaxY(l) < NSMinY(f) || NSMaxY(f) < NSMinY(l)) continue;
+                CGFloat gap = MAX(NSMinX(l) - NSMaxX(f), NSMinX(f) - NSMaxX(l));
+                Check(gap >= PageLabelGap, [NSString stringWithFormat:@"%@ page number panel \"%@\": \"%@\" is %.1f points from a field (need %.0f)", lang, panel.title, label.stringValue, gap, PageLabelGap]);
+            }
         }
 
         // Magnification: the label shows the whole word on one line.
