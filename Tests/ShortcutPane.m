@@ -1,6 +1,7 @@
 // Settings integration tests. No visible windows, user defaults or macro files.
 #import "TSMacroSelection.h"
 #import "TestAppKitIsolation.h"
+#import "StripedRows.h"
 #import "TSKeyboardShortcuts.m"
 #import "TSSettingsCategory.h"
 #import "TSMacroTreeNode.h"
@@ -520,7 +521,12 @@ int main(int argc,char **argv){@autoreleasepool{
   REQUIRE(translated.table.enclosingScrollView.documentView==translated.table && translated.table.headerView.superview!=nil);
   REQUIRE(![inputHeader isDescendantOf:translated.table.enclosingScrollView]);
   REQUIRE([translated.table isDescendantOf:[translated viewWithIdentifier:@"group.shortcuts" inView:translated.view]]);
-  REQUIRE(translated.table.rowHeight==22 && translated.table.style==NSTableViewStyleInset && !translated.table.usesAlternatingRowBackgroundColors);
+  // Striped rows, like the key binding list above it, light and dark.
+  {NSIndexSet *selected=translated.table.selectedRowIndexes;[translated.table deselectAll:nil];
+   for(NSAppearanceName name in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]){NSString *detail=nil;BOOL menuRowsStriped=TSTestRowsStriped(translated.table,name,&detail);
+    if([language hasPrefix:@"ja"])printf("STRIPES %s\n",detail.UTF8String);REQUIRE(menuRowsStriped);}
+   [translated.table selectRowIndexes:selected byExtendingSelection:NO];}
+  REQUIRE(translated.table.rowHeight==22 && translated.table.style==NSTableViewStyleInset && translated.table.usesAlternatingRowBackgroundColors);
   [translated.table scrollRowToVisible:translated.table.numberOfRows-1];
   REQUIRE(NSIntersectsRect(translated.table.visibleRect,[translated.table rectOfRow:translated.table.numberOfRows-1]));
   TSSettingsSearch *index=[[TSSettingsSearch alloc]initWithBundle:NSBundle.mainBundle categoryOrder:@[@"keyboard"] commandNames:@[]];

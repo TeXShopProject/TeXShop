@@ -27,7 +27,7 @@ Static part:
   * the link popup of the preview has round corners and a thin gray edge, not a
     square black frame;
   * the key binding list in Settings > Keyboard has the form of the menu shortcut
-    list below it: no border, no background of its own, inset rows without
+    list below it: no border, no background of its own, inset rows with
     alternating colors.
 
   --mutations  check that each mutation listed below is caught"""
@@ -84,10 +84,10 @@ def static_problems(base):
         problems.append('Sources/Preview/TSLinkPreviewView.m draws a square popup')
     bindings = (base / 'Sources/Settings/TSKeyBindingsController.m').read_text(encoding='utf-8')
     shortcuts = (base / 'Sources/Shortcuts/TSShortcutPaneController.m').read_text(encoding='utf-8')
-    for line in ('scroll.borderType = NSNoBorder;', 'scroll.drawsBackground = NO;', 'table.style = NSTableViewStyleInset;', 'table.usesAlternatingRowBackgroundColors = NO;'):
+    for line in ('scroll.borderType = NSNoBorder;', 'scroll.drawsBackground = NO;', 'table.style = NSTableViewStyleInset;', 'table.usesAlternatingRowBackgroundColors = YES;'):
         if line not in bindings:
             problems.append(f'Sources/Settings/TSKeyBindingsController.m: the key binding list does not have {line}')
-    for part in ('scroll.borderType = NSNoBorder;', 'scroll.drawsBackground = NO;', 'self.table.style = NSTableViewStyleInset;', 'self.table.usesAlternatingRowBackgroundColors = NO;'):
+    for part in ('scroll.borderType = NSNoBorder;', 'scroll.drawsBackground = NO;', 'self.table.style = NSTableViewStyleInset;', 'self.table.usesAlternatingRowBackgroundColors = YES;'):
         if part not in shortcuts:
             problems.append(f'Sources/Shortcuts/TSShortcutPaneController.m: the menu shortcut list no longer has {part}; the key binding list follows it')
     for xib in sorted((base / '3rdparty/OgreKit-2.1.12-FindPanel').glob('*.lproj/*.xib')):
@@ -184,7 +184,8 @@ MUTATIONS = {
     'encoding label fixed width': ('Resources/Interfaces/Base.lproj/CustomModalWindowController.xib', '<constraint firstItem="jo5-hk-3mm" firstAttribute="leading" secondItem="BEr-Px-Bqw" secondAttribute="trailing" constant="8" id="Enc-pu-Gap"/>',
                                    '<constraint firstItem="BEr-Px-Bqw" firstAttribute="width" constant="81" id="Enc-lb-Wid"/><constraint firstItem="jo5-hk-3mm" firstAttribute="leading" secondItem="BEr-Px-Bqw" secondAttribute="trailing" constant="8" id="Enc-pu-Gap"/>'),
     'key binding list framed': ('Sources/Settings/TSKeyBindingsController.m', 'scroll.borderType = NSNoBorder;', 'scroll.borderType = NSBezelBorder;'),
-    'key binding rows alternate': ('Sources/Settings/TSKeyBindingsController.m', 'table.usesAlternatingRowBackgroundColors = NO;', 'table.usesAlternatingRowBackgroundColors = YES;'),
+    'key binding rows plain': ('Sources/Settings/TSKeyBindingsController.m', 'table.usesAlternatingRowBackgroundColors = YES;', 'table.usesAlternatingRowBackgroundColors = NO;'),
+    'menu shortcut rows plain': ('Sources/Shortcuts/TSShortcutPaneController.m', 'self.table.usesAlternatingRowBackgroundColors = YES;', 'self.table.usesAlternatingRowBackgroundColors = NO;'),
     'call removed': ('Sources/Document/TSDocument.m', 'if (self.logWindow) TSLayoutLogWindow(self.logWindow);', ''),
 }
 

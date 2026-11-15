@@ -212,9 +212,10 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
 
     TSKeyBindingsTableView *table = [TSKeyBindingsTableView new];
     table.bindings = self;
-    // The same list as the menu shortcuts below it: no border, rows inset in the card.
+    // The same list as the menu shortcuts below it: no border, rows inset in the
+    // card, and striped rows.
     table.style = NSTableViewStyleInset;
-    table.usesAlternatingRowBackgroundColors = NO;
+    table.usesAlternatingRowBackgroundColors = YES;
     table.rowHeight = 24;
     table.intercellSpacing = NSMakeSize(0, 0);
     table.gridStyleMask = NSTableViewGridNone;
