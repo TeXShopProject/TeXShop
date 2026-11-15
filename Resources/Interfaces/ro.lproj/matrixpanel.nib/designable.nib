@@ -38,7 +38,7 @@
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{202, 434}, {398, 382}}</string>
 				<int key="NSWTFlags">-260562944</int>
-				<string key="NSWindowTitle">Matrix Panel</string>
+				<string key="NSWindowTitle">Tablou de Comandă Matrix</string>
 				<string key="NSWindowClass">NSPanel</string>
 				<object class="NSMutableString" key="NSViewClass">
 					<characters key="NS.bytes">View</characters>

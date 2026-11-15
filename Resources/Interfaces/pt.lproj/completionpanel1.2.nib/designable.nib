@@ -4438,7 +4438,7 @@
 													<object class="NSButtonCell" id="457756676">
 														<int key="NSCellFlags">67108864</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Matrix</string>
+														<string key="NSContents">Matriz</string>
 														<reference key="NSSupport" ref="26"/>
 														<reference key="NSControlView" ref="529823433"/>
 														<int key="NSTag">11</int>

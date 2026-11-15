@@ -38,7 +38,7 @@
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{202, 434}, {398, 382}}</string>
 				<int key="NSWTFlags">-260562944</int>
-				<string key="NSWindowTitle">Matrix Panel</string>
+				<string key="NSWindowTitle">Pannello Matrici</string>
 				<string key="NSWindowClass">NSPanel</string>
 				<object class="NSMutableString" key="NSViewClass">
 					<characters key="NS.bytes">View</characters>
@@ -682,7 +682,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="141061981">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">4194304</int>
-								<string key="NSContents">Righe</string>
+								<string key="NSContents">Righe:</string>
 								<reference key="NSSupport" ref="26"/>
 								<reference key="NSControlView" ref="712265275"/>
 								<reference key="NSBackgroundColor" ref="274505132"/>
@@ -703,7 +703,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="923927272">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">205520896</int>
-								<string key="NSContents">Colonne</string>
+								<string key="NSContents">Colonne:</string>
 								<reference key="NSSupport" ref="26"/>
 								<reference key="NSControlView" ref="457063505"/>
 								<reference key="NSBackgroundColor" ref="274505132"/>

@@ -1909,7 +1909,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="47446208"/>
-							<string key="toolTip">Sólo se insertarán las celdas con fondo azulado</string>
+							<string key="toolTip">Solo se insertan las celdas azules</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>

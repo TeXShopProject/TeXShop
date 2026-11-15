@@ -39,7 +39,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="398" height="382"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button toolTip="Insert matrix into project" verticalHuggingPriority="750" fixedFrame="YES" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2349">
+                    <button toolTip="Insert the matrix into the document" verticalHuggingPriority="750" fixedFrame="YES" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2349">
                         <rect key="frame" x="300" y="19" width="83" height="28"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES"/>
                         <buttonCell key="cell" type="push" title="Insert" bezelStyle="rounded" alignment="center" controlSize="small" state="on" borderStyle="border" id="2483">
@@ -98,7 +98,7 @@
                                 </buttonCell>
                             </column>
                             <column>
-                                <buttonCell type="radio" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="mini" toolTip="custom right delimiter" tag="5" inset="2" id="2368">
+                                <buttonCell type="radio" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="mini" toolTip="Custom right delimiter" tag="5" inset="2" id="2368">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="miniSystem"/>
                                 </buttonCell>
@@ -209,7 +209,7 @@
                             <action selector="brselChange:" target="-2" id="2447"/>
                         </connections>
                     </matrix>
-                    <scrollView toolTip="Only blue cells are being inserted" fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2384">
+                    <scrollView toolTip="Only the blue cells are inserted" fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2384">
                         <rect key="frame" x="20" y="151" width="360" height="169"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" id="h1Q-UV-wcM">

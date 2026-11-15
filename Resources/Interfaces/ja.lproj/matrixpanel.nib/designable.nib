@@ -59,7 +59,7 @@
 							<object class="NSButtonCell" key="NSCell" id="602367929">
 								<int key="NSCellFlags">-2080244224</int>
 								<int key="NSCellFlags2">134348800</int>
-								<string key="NSContents">OK</string>
+								<string key="NSContents">挿入</string>
 								<object class="NSFont" key="NSSupport" id="470778763">
 									<string key="NSName">LucidaGrande</string>
 									<double key="NSSize">10</double>
@@ -1788,7 +1788,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="76074668"/>
-							<string key="toolTip">行列の全項目を０にします</string>
+							<string key="toolTip">行列の全項目を0にします</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1798,7 +1798,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="81059978"/>
-							<string key="toolTip">ソースを書類に書き込みます</string>
+							<string key="toolTip">行列を書類に挿入します</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>

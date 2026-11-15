@@ -65,7 +65,7 @@
 							<object class="NSButtonCell" key="NSCell" id="624546823">
 								<int key="NSCellFlags">-2080374784</int>
 								<int key="NSCellFlags2">134348800</int>
-								<string key="NSContents">OK</string>
+								<string key="NSContents">삽입</string>
 								<object class="NSFont" key="NSSupport" id="447192047">
 									<bool key="IBIsSystemFont">YES</bool>
 									<double key="NSSize">10</double>
@@ -731,7 +731,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="532932958">
 								<int key="NSCellFlags">67108864</int>
 								<int key="NSCellFlags2">4194304</int>
-								<string key="NSContents">행 :</string>
+								<string key="NSContents">행:</string>
 								<object class="NSFont" key="NSSupport" id="670038781">
 									<string key="NSName">AppleSDGothicNeo-Regular</string>
 									<double key="NSSize">11</double>
@@ -760,7 +760,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="85167393">
 								<int key="NSCellFlags">67108864</int>
 								<int key="NSCellFlags2">205520896</int>
-								<string key="NSContents">열 :</string>
+								<string key="NSContents">열:</string>
 								<reference key="NSSupport" ref="670038781"/>
 								<reference key="NSControlView" ref="9174509"/>
 								<reference key="NSBackgroundColor" ref="730612635"/>
@@ -1854,7 +1854,7 @@ y7bMNcy1zTXNtc42zrbPN8+40DnQutE80b7SP9LB00TTxtRJ1MvVTtXR1lXW2Ndc1+DYZNjo2WzZ8dp2
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="80555102"/>
-						<string key="toolTip">소스를 문서에 삽입합니다</string>
+						<string key="toolTip">행렬을 문서에 삽입합니다</string>
 					</object>
 				</object>
 				<string key="2349.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1963,7 +1963,7 @@ y7bMNcy1zTXNtc42zrbPN8+40DnQutE80b7SP9LB00TTxtRJ1MvVTtXR1lXW2Ndc1+DYZNjo2WzZ8dp2
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="57875258"/>
-						<string key="toolTip">이용환경을 선택합니다</string>
+						<string key="toolTip">사용할 환경을 선택합니다</string>
 					</object>
 				</object>
 				<string key="2430.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>

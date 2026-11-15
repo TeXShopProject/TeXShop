@@ -686,7 +686,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="631068453">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">4194304</int>
-								<string key="NSContents">行:</string>
+								<string key="NSContents">行：</string>
 								<object class="NSFont" key="NSSupport" id="882608988">
 									<string key="NSName">STHeitiSC-Light</string>
 									<double key="NSSize">11</double>
@@ -711,7 +711,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="240456448">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">205520896</int>
-								<string key="NSContents">列:</string>
+								<string key="NSContents">列：</string>
 								<reference key="NSSupport" ref="882608988"/>
 								<reference key="NSControlView" ref="915044272"/>
 								<reference key="NSBackgroundColor" ref="735877899"/>
@@ -741,7 +741,7 @@
 												<object class="NSButtonCell" id="188781376">
 													<int key="NSCellFlags">-2080244224</int>
 													<int key="NSCellFlags2">262144</int>
-													<string key="NSContents">矩阵式</string>
+													<string key="NSContents">matrix</string>
 													<reference key="NSSupport" ref="22"/>
 													<reference key="NSControlView" ref="317151631"/>
 													<int key="NSButtonFlags">1211912703</int>
@@ -757,7 +757,7 @@
 												<object class="NSButtonCell" id="441374270">
 													<int key="NSCellFlags">67239424</int>
 													<int key="NSCellFlags2">262144</int>
-													<string key="NSContents">表格式</string>
+													<string key="NSContents">tabular</string>
 													<reference key="NSSupport" ref="22"/>
 													<reference key="NSControlView" ref="317151631"/>
 													<int key="NSTag">1</int>
@@ -847,7 +847,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 											<object class="NSButtonCell" key="NSCell" id="1058979583">
 												<int key="NSCellFlags">604110336</int>
 												<int key="NSCellFlags2">262144</int>
-												<string key="NSContents">嵌入表格环境</string>
+												<string key="NSContents">嵌入table环境</string>
 												<object class="NSFont" key="NSSupport">
 													<string key="NSName">STHeitiSC-Light</string>
 													<double key="NSSize">9</double>

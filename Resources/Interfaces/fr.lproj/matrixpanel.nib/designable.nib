@@ -38,7 +38,7 @@
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{202, 434}, {398, 382}}</string>
 				<int key="NSWTFlags">-260562944</int>
-				<string key="NSWindowTitle">Matrix Panel</string>
+				<string key="NSWindowTitle">Palette Matrice</string>
 				<string key="NSWindowClass">NSPanel</string>
 				<object class="NSMutableString" key="NSViewClass">
 					<characters key="NS.bytes">View</characters>
@@ -682,7 +682,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="941924995">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">4194304</int>
-								<string key="NSContents">Lignes</string>
+								<string key="NSContents">Lignes :</string>
 								<reference key="NSSupport" ref="26"/>
 								<reference key="NSControlView" ref="740377680"/>
 								<reference key="NSBackgroundColor" ref="393773709"/>
@@ -703,7 +703,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="735931834">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">205520896</int>
-								<string key="NSContents">Colonnes</string>
+								<string key="NSContents">Colonnes :</string>
 								<reference key="NSSupport" ref="26"/>
 								<reference key="NSControlView" ref="649910861"/>
 								<reference key="NSBackgroundColor" ref="393773709"/>
@@ -733,7 +733,7 @@
 												<object class="NSButtonCell" id="1056640184">
 													<int key="NSCellFlags">-2080244224</int>
 													<int key="NSCellFlags2">262144</int>
-													<string key="NSContents">Matrice</string>
+													<string key="NSContents">matrix</string>
 													<reference key="NSSupport" ref="22"/>
 													<reference key="NSControlView" ref="610094676"/>
 													<int key="NSButtonFlags">1211912703</int>
@@ -749,7 +749,7 @@
 												<object class="NSButtonCell" id="280139933">
 													<int key="NSCellFlags">67239424</int>
 													<int key="NSCellFlags2">262144</int>
-													<string key="NSContents">Tabulaire</string>
+													<string key="NSContents">tabular</string>
 													<reference key="NSSupport" ref="22"/>
 													<reference key="NSControlView" ref="610094676"/>
 													<int key="NSTag">1</int>
@@ -839,7 +839,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 											<object class="NSButtonCell" key="NSCell" id="70619758">
 												<int key="NSCellFlags">604110336</int>
 												<int key="NSCellFlags2">262144</int>
-												<string key="NSContents"> Incorporer dans un environnement "table"</string>
+												<string key="NSContents">Incorporer dans un environnement table</string>
 												<reference key="NSSupport" ref="22"/>
 												<reference key="NSControlView" ref="1007007408"/>
 												<int key="NSButtonFlags">1211912703</int>

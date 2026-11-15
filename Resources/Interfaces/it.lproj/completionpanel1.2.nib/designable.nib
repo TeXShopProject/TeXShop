@@ -38,7 +38,7 @@
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{325, 317}, {380, 413}}</string>
 				<int key="NSWTFlags">-260571136</int>
-				<string key="NSWindowTitle">Pannello Latex</string>
+				<string key="NSWindowTitle">Pannello LaTeX</string>
 				<string key="NSWindowClass">NSPanel</string>
 				<object class="NSMutableString" key="NSViewClass">
 					<characters key="NS.bytes">View</characters>
@@ -4487,7 +4487,7 @@
 													<object class="NSButtonCell" id="483257920">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Personale</string>
+														<string key="NSContents">Personalizzato</string>
 														<reference key="NSSupport" ref="778872542"/>
 														<reference key="NSControlView" ref="938479300"/>
 														<int key="NSTag">15</int>
@@ -5076,7 +5076,7 @@
 										</object>
 										<string key="NSFrame">{{10, 25}, {360, 141}}</string>
 									</object>
-									<string key="NSLabel">Ad hoc</string>
+									<string key="NSLabel">Personalizzato</string>
 									<reference key="NSColor" ref="634904072"/>
 									<reference key="NSTabView" ref="934198690"/>
 								</object>

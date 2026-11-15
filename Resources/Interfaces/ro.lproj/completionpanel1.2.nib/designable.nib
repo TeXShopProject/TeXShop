@@ -37,7 +37,7 @@
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{493, 449}, {380, 413}}</string>
 				<int key="NSWTFlags">-260571136</int>
-				<string key="NSWindowTitle">LaTeX Panel</string>
+				<string key="NSWindowTitle">Tablou de Comandă LaTeX</string>
 				<string key="NSWindowClass">NSPanel</string>
 				<object class="NSMutableString" key="NSViewClass">
 					<characters key="NS.bytes">View</characters>
@@ -1102,7 +1102,7 @@
 										<string key="NSFrame">{{10, 25}, {360, 195}}</string>
 										<reference key="NSSuperview" ref="558499145"/>
 									</object>
-									<string key="NSLabel">Math</string>
+									<string key="NSLabel">Matematică</string>
 									<reference key="NSColor" ref="483413538"/>
 									<reference key="NSTabView" ref="558499145"/>
 								</object>
@@ -1920,7 +1920,7 @@
 										</object>
 										<string key="NSFrame">{{10, 25}, {360, 195}}</string>
 									</object>
-									<string key="NSLabel">Greek</string>
+									<string key="NSLabel">Litere grecești</string>
 									<reference key="NSColor" ref="483413538"/>
 									<reference key="NSTabView" ref="558499145"/>
 								</object>
@@ -2918,7 +2918,7 @@
 										</object>
 										<string key="NSFrame">{{10, 25}, {360, 195}}</string>
 									</object>
-									<string key="NSLabel">Symbols</string>
+									<string key="NSLabel">Simboluri</string>
 									<reference key="NSColor" ref="483413538"/>
 									<reference key="NSTabView" ref="558499145"/>
 								</object>
@@ -3390,7 +3390,7 @@
 										</object>
 										<string key="NSFrame">{{10, 25}, {360, 195}}</string>
 									</object>
-									<string key="NSLabel">Functions</string>
+									<string key="NSLabel">Funcții</string>
 									<reference key="NSColor" ref="483413538"/>
 									<reference key="NSTabView" ref="558499145"/>
 								</object>
@@ -4233,7 +4233,7 @@
 										</object>
 										<string key="NSFrame">{{10, 25}, {360, 195}}</string>
 									</object>
-									<string key="NSLabel">International</string>
+									<string key="NSLabel">Internațional</string>
 									<reference key="NSColor" ref="483413538"/>
 									<reference key="NSTabView" ref="558499145"/>
 								</object>
@@ -4525,7 +4525,7 @@
 										<string key="NSFrame">{{10, 25}, {360, 141}}</string>
 										<reference key="NSSuperview" ref="257176599"/>
 									</object>
-									<string key="NSLabel">Environments</string>
+									<string key="NSLabel">Medii</string>
 									<reference key="NSColor" ref="483413538"/>
 									<reference key="NSTabView" ref="257176599"/>
 								</object>
@@ -4608,7 +4608,7 @@
 													<object class="NSButtonCell" id="328469892">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Majuscule</string>
+														<string key="NSContents">Majuscule mici</string>
 														<reference key="NSSupport" ref="698508377"/>
 														<reference key="NSControlView" ref="712090884"/>
 														<int key="NSTag">4</int>
@@ -4802,7 +4802,7 @@
 										</object>
 										<string key="NSFrame">{{10, 25}, {360, 141}}</string>
 									</object>
-									<string key="NSLabel">Typeface</string>
+									<string key="NSLabel">Tipografie</string>
 									<reference key="NSColor" ref="483413538"/>
 									<reference key="NSTabView" ref="257176599"/>
 								</object>
@@ -5074,7 +5074,7 @@
 										</object>
 										<string key="NSFrame">{{10, 25}, {360, 141}}</string>
 									</object>
-									<string key="NSLabel">Custom</string>
+									<string key="NSLabel">Personalizat</string>
 									<reference key="NSColor" ref="483413538"/>
 									<reference key="NSTabView" ref="257176599"/>
 								</object>
