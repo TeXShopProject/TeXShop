@@ -357,7 +357,7 @@
 			
 			NSString* kpsetool = [SUD objectForKey:KpsetoolKey];
 			if(!kpsetool || [kpsetool isEqualToString:@""]){
-				kpsetool = @"kpsewhich -progname=latex -format=tex";
+				kpsetool = @"kpsewhich -progname=latex";
 			}
 			[SUD setObject:target forKey:LastStyNameKey];
 			NSString* cmdLine = [NSString stringWithFormat:@"%@ PATH=%@:$PATH; open `%@ \"%@\"`", cd, [[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath], kpsetool, target];

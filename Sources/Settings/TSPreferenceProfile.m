@@ -40,7 +40,8 @@ BOOL TSEngineProfileIsJapanese(TSEngineProfile profile)
 }
 
 // One row of the table: the place, the LaTeX and TeX commands without latexmk, the LaTeX
-// command with latexmk, the BibTeX engine, the index command and the MetaPost command.
+// command with latexmk, the BibTeX engine, the index command, the MetaPost command and the
+// program name with which kpsewhich finds the files of Open Style File.
 static NSArray *TSEngineProfileRow(TSEngineProfile profile)
 {
     NSString *const pdfOptions = @"--file-line-error --synctex=1";
@@ -50,30 +51,30 @@ static NSArray *TSEngineProfileRow(TSEngineProfile profile)
     switch (profile) {
         case TSEngineProfilePdfLaTeX:
             return @[@(TSEngineProfileDirectPDF), [@"pdflatex " stringByAppendingString:pdfOptions], [@"pdftex " stringByAppendingString:pdfOptions],
-                     @"latexmk -pdf -e \"$pdflatex=q/pdflatex -synctex=1 -file-line-error/\" -norc", @"bibtex", @"makeindex", @"mpost"];
+                     @"latexmk -pdf -e \"$pdflatex=q/pdflatex -synctex=1 -file-line-error/\" -norc", @"bibtex", @"makeindex", @"mpost", @"latex"];
         case TSEngineProfileXeLaTeX:
             return @[@(TSEngineProfileDirectPDF), [@"xelatex " stringByAppendingString:pdfOptions], [@"xetex " stringByAppendingString:pdfOptions],
-                     @"latexmk -xelatex -e \"$xelatex=q/xelatex -synctex=1 -file-line-error/\" -norc", @"bibtex", @"makeindex", @"mpost"];
+                     @"latexmk -xelatex -e \"$xelatex=q/xelatex -synctex=1 -file-line-error/\" -norc", @"bibtex", @"makeindex", @"mpost", @"xelatex"];
         case TSEngineProfileLuaLaTeX:
             return @[@(TSEngineProfileDirectPDF), [@"lualatex " stringByAppendingString:pdfOptions], [@"luatex " stringByAppendingString:pdfOptions],
-                     @"latexmk -lualatex -e \"$lualatex=q/lualatex -synctex=1 -file-line-error/\" -norc", @"bibtex", @"makeindex", @"mpost"];
+                     @"latexmk -lualatex -e \"$lualatex=q/lualatex -synctex=1 -file-line-error/\" -norc", @"bibtex", @"makeindex", @"mpost", @"lualatex"];
         case TSEngineProfileLaTeXDvipdfmx:
             return @[@(TSEngineProfileViaDVI), [@"simpdftex latex --mode dvipdfmx " stringByAppendingString:simpdfOptions],
                      [@"simpdftex etex --mode dvipdfmx " stringByAppendingString:simpdfOptions],
-                     [NSString stringWithFormat:@"latexmk -pdfdvi -e \"$latex=q/latex -synctex=1 -file-line-error/\" %@ -norc", dvipdfmx], @"bibtex", @"makeindex", @"mpost"];
+                     [NSString stringWithFormat:@"latexmk -pdfdvi -e \"$latex=q/latex -synctex=1 -file-line-error/\" %@ -norc", dvipdfmx], @"bibtex", @"makeindex", @"mpost", @"latex"];
         case TSEngineProfileLuaLaTeXJapanese:
             return @[@(TSEngineProfileDirectPDF), [@"lualatex " stringByAppendingString:pdfOptions], [@"luatex " stringByAppendingString:pdfOptions],
-                     @"latexmk -lualatex -e \"$lualatex=q/lualatex -synctex=1 -file-line-error/\" -e \"$bibtex=q/upbibtex/\" -e \"$makeindex=q/upmendex/\" -norc", @"upbibtex", @"upmendex", @"mpost"];
+                     @"latexmk -lualatex -e \"$lualatex=q/lualatex -synctex=1 -file-line-error/\" -e \"$bibtex=q/upbibtex/\" -e \"$makeindex=q/upmendex/\" -norc", @"upbibtex", @"upmendex", @"mpost", @"lualatex"];
         case TSEngineProfilePLaTeXDvipdfmx:
             return @[@(TSEngineProfileViaDVI), [@"ptex2pdf -l " stringByAppendingString:ptexOptions], [@"ptex2pdf -e " stringByAppendingString:ptexOptions],
-                     [NSString stringWithFormat:@"latexmk -pdfdvi -e \"$latex=q/platex -synctex=1 -file-line-error/\" -e \"$bibtex=q/pbibtex/\" -e \"$makeindex=q/mendex/\" %@ -norc", dvipdfmx], @"pbibtex", @"mendex", @"pmpost"];
+                     [NSString stringWithFormat:@"latexmk -pdfdvi -e \"$latex=q/platex -synctex=1 -file-line-error/\" -e \"$bibtex=q/pbibtex/\" -e \"$makeindex=q/mendex/\" %@ -norc", dvipdfmx], @"pbibtex", @"mendex", @"pmpost", @"platex"];
         case TSEngineProfileUpLaTeXDvipdfmx:
             return @[@(TSEngineProfileViaDVI), [@"ptex2pdf -u -l " stringByAppendingString:ptexOptions], [@"ptex2pdf -e -u " stringByAppendingString:ptexOptions],
-                     [NSString stringWithFormat:@"latexmk -pdfdvi -e \"$latex=q/uplatex -synctex=1 -file-line-error/\" -e \"$bibtex=q/upbibtex/\" -e \"$makeindex=q/upmendex/\" %@ -norc", dvipdfmx], @"upbibtex", @"upmendex", @"upmpost"];
+                     [NSString stringWithFormat:@"latexmk -pdfdvi -e \"$latex=q/uplatex -synctex=1 -file-line-error/\" -e \"$bibtex=q/upbibtex/\" -e \"$makeindex=q/upmendex/\" %@ -norc", dvipdfmx], @"upbibtex", @"upmendex", @"upmpost", @"uplatex"];
         case TSEngineProfileLaTeXDvipsGhostscript:
             return @[@(TSEngineProfileViaDVI), [@"simpdftex latex --maxpfb " stringByAppendingString:simpdfOptions],
                      [@"simpdftex etex --maxpfb " stringByAppendingString:simpdfOptions],
-                     @"latexmk -pdfps -e \"$latex=q/latex -synctex=1 -file-line-error/\" -norc", @"bibtex", @"makeindex", @"mpost"];
+                     @"latexmk -pdfps -e \"$latex=q/latex -synctex=1 -file-line-error/\" -norc", @"bibtex", @"makeindex", @"mpost", @"latex"];
         default: return nil;
     }
 }
@@ -91,6 +92,8 @@ NSDictionary<TSPreferenceKey, id> *TSEngineProfileValues(TSEngineProfile profile
     values[BibTeXengineKey] = row[4];
     values[MakeIndexEngineKey] = row[5];
     values[MetaPostEngineKey] = row[6];
+    // Without -format, kpsewhich tells the kind of file by its extension, and finds .bst and .ist files as well.
+    values[KpsetoolKey] = [@"kpsewhich -progname=" stringByAppendingString:row[7]];
     // Conversion to the \UTF and \CID of the otf package is for pLaTeX: every other engine turns it off.
     values[ptexUtfOutputEnabledKey] = profile == TSEngineProfilePLaTeXDvipdfmx ? @YES : @NO;
     if (TSEngineProfileIsJapanese(profile)) {
@@ -117,7 +120,8 @@ BOOL TSEngineProfileSame(id value, id expected)
     return [[value stringByTrimmingCharactersInSet:blank] isEqualToString:[expected stringByTrimmingCharactersInSet:blank]];
 }
 
-TSEngineProfile TSEngineProfileMatchingSettings(NSUserDefaults *defaults, BOOL *latexmk)
+// The profile all of whose values but those of the ignored key the settings have now.
+static TSEngineProfile TSEngineProfileMatchingSettingsBut(NSUserDefaults *defaults, TSPreferenceKey _Nullable ignored, BOOL *latexmk)
 {
     for (NSArray<NSNumber *> *section in TSEngineProfileMenuSections())
         for (NSNumber *number in section)
@@ -127,13 +131,18 @@ TSEngineProfile TSEngineProfileMatchingSettings(NSUserDefaults *defaults, BOOL *
                 // Every value the profile writes decides, the settings that go with the commands too:
                 // a change to any of them makes the settings Custom.
                 for (NSString *key in values)
-                    if (!TSEngineProfileSame([defaults objectForKey:key], values[key])) { same = NO; break; }
+                    if (![ignored isEqualToString:key] && !TSEngineProfileSame([defaults objectForKey:key], values[key])) { same = NO; break; }
                 if (!same) continue;
                 if (latexmk != NULL) *latexmk = form.boolValue;
                 return number.integerValue;
             }
     if (latexmk != NULL) *latexmk = NO;
     return TSEngineProfileNone;
+}
+
+TSEngineProfile TSEngineProfileMatchingSettings(NSUserDefaults *defaults, BOOL *latexmk)
+{
+    return TSEngineProfileMatchingSettingsBut(defaults, nil, latexmk);
 }
 
 BOOL TSEngineProfileSettingsUseLatexmk(NSUserDefaults *defaults)
@@ -252,4 +261,25 @@ void TSMoveViaDVIOptionsIntoCommands(NSUserDefaults *defaults, NSDictionary *sto
     }
     [defaults removeObjectForKey:SavePSEnabledKey];
     [defaults removeObjectForKey:UseTransparencyKey];
+}
+
+void TSWriteKpsewhichOfEngineProfile(NSUserDefaults *defaults, NSDictionary *stored)
+{
+    id done = stored[KpsewhichOfEngineProfileWrittenKey];
+    if ([done respondsToSelector:@selector(boolValue)] && [done boolValue]) return;
+    id command = stored[KpsetoolKey];
+    NSString *trimmed = [command isKindOfClass:NSString.class] ? [command stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet] : nil;
+    // The factory commands of TeXShop 5.58 and earlier and of the betas of 5.60.
+    BOOL earlier = [@[@"kpsetool -w -n latex tex", @"kpsewhich -progname=latex -format=tex"] containsObject:trimmed ?: @""];
+    BOOL factory = command == nil || trimmed.length == 0 || earlier || [trimmed isEqualToString:@"kpsewhich -progname=latex"];
+    if (factory) {
+        BOOL latexmk = NO;
+        TSEngineProfile profile = TSEngineProfileMatchingSettingsBut(defaults, KpsetoolKey, &latexmk);
+        NSString *value = TSEngineProfileValues(profile, latexmk)[KpsetoolKey];
+        if (value != nil) {
+            if (!TSEngineProfileSame([defaults objectForKey:KpsetoolKey], value)) [defaults setObject:value forKey:KpsetoolKey];
+        } else if (earlier)
+            [defaults removeObjectForKey:KpsetoolKey];
+    }
+    [defaults setBool:YES forKey:KpsewhichOfEngineProfileWrittenKey];
 }

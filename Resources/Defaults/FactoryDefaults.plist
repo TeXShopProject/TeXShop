@@ -87,7 +87,9 @@
 	<key>KeepBackup</key>
 	<string>NO</string>
 	<key>Kpsetool</key>
-	<string>kpsewhich -progname=latex -format=tex</string>
+	<string>kpsewhich -progname=latex</string>
+	<key>KpsewhichOfEngineProfileWritten</key>
+	<string>YES</string>
 	<key>LastStyName</key>
 	<string>latex.ltx</string>
 	<key>LatexCommand</key>

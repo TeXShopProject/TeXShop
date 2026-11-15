@@ -381,6 +381,7 @@
 "Engine profile row: Typesetting Method" = "조판 방식";
 "Engine profile row: plain TeX" = "plain TeX";
 "Engine profile row: LaTeX" = "LaTeX";
+"Engine profile row: kpsewhich" = "kpsewhich";
 "Engine profile row: BibTeX Engine" = "BibTeX 엔진";
 "Engine profile row: Index Program" = "색인 작성";
 "Engine profile row: MetaPost" = "MetaPost";

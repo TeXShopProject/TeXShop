@@ -138,6 +138,7 @@ static NSArray<NSArray *> *TSEngineProfileListRows(TSEngineProfile profile, BOOL
         name(direct ? @"group.typesetting.4.title" : @"group.typesetting.5.title"), NO, DefaultScriptKey);
     add(NSLocalizedString(@"Engine profile row: plain TeX", @"Engine profile list: the plain TeX command"), values[tex], YES, tex);
     add(NSLocalizedString(@"Engine profile row: LaTeX", @"Engine profile list: the LaTeX command"), values[latex], YES, latex);
+    add(NSLocalizedString(@"Engine profile row: kpsewhich", @"Engine profile list: the kpsewhich command of Settings > Typesetting, named as there"), values[KpsetoolKey], YES, KpsetoolKey);
     add(NSLocalizedString(@"Engine profile row: BibTeX Engine", @"Engine profile list: BibTeX Engine of Settings > Typesetting"), values[BibTeXengineKey], YES, BibTeXengineKey);
     add(NSLocalizedString(@"Engine profile row: Index Program", @"Engine profile list: Index Program of Settings > Typesetting"), values[MakeIndexEngineKey], YES, MakeIndexEngineKey);
     add(NSLocalizedString(@"Engine profile row: MetaPost", @"Engine profile list: the MetaPost command"), values[MetaPostEngineKey], YES, MetaPostEngineKey);

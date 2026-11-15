@@ -273,8 +273,9 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     NSString *(^listValue)(NSInteger)=^NSString *(NSInteger row){return [[(NSTextField *)[listRows() cellAtColumnIndex:3 rowIndex:row].contentView stringValue] stringByReplacingOccurrencesOfString:@"\u2060" withString:@""];};
     BOOL (^listMarked)(NSInteger)=^BOOL(NSInteger row){return [[listRows() cellAtColumnIndex:2 rowIndex:row].contentView.identifier isEqual:@"settings.engine-profile-list.changes"] && [[listRows() cellAtColumnIndex:0 rowIndex:row].contentView isKindOfClass:NSButton.class];};
     NSDictionary *upValues=TSEngineProfileValues(TSEngineProfileUpLaTeXDvipdfmx,latexmk.selectedSegment==1);
-    Check(profileList!=nil && latexmk.target==profileList && listRows().numberOfRows==10,@"The sheet lists the ten settings a Japanese profile sets, and latexmk belongs to the list");
-    Check([listValue(2) isEqual:upValues[LatexGSCommandKey]] && [listValue(5) isEqual:@"upmpost"] && !listMarked(5) && listMarked(4)==![[TSIsolatedAppKitDefaults stringForKey:MakeIndexEngineKey] isEqual:@"upmendex"],
+    Check(profileList!=nil && latexmk.target==profileList && listRows().numberOfRows==11,@"The sheet lists the eleven settings a Japanese profile sets, and latexmk belongs to the list");
+    Check([listValue(2) isEqual:upValues[LatexGSCommandKey]] && [listValue(3) isEqual:@"kpsewhich -progname=uplatex"] && listMarked(3)==![[TSIsolatedAppKitDefaults stringForKey:KpsetoolKey] isEqual:@"kpsewhich -progname=uplatex"]
+          && [listValue(6) isEqual:@"upmpost"] && !listMarked(6) && listMarked(5)==![[TSIsolatedAppKitDefaults stringForKey:MakeIndexEngineKey] isEqual:@"upmendex"],
           @"The list shows the profile's values and marks those that differ from the settings in use, not from the factory settings");
     NSInteger firstForm=latexmk.selectedSegment;
     chooseLatexmk(1-firstForm);
@@ -317,7 +318,7 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     alerts=ownerAlertCount;chooseProfile(TSEngineProfilePLaTeXDvipdfmx);
     Check(ownerAlertCount==alerts+1,@"Choosing pLaTeX + dvipdfmx asks");
     NSGridView *pRows=(NSGridView *)Find(sheetView(@"settings.engine-profile-list"),@"settings.engine-profile-list.rows");
-    NSButton *indexBox=(NSButton *)[pRows cellAtColumnIndex:0 rowIndex:4].contentView;
+    NSButton *indexBox=(NSButton *)[pRows cellAtColumnIndex:0 rowIndex:5].contentView;
     Check([indexBox isKindOfClass:NSButton.class] && indexBox.state==NSControlStateValueOn && [indexBox.accessibilityLabel length]>0,@"The index command, which changes, has its checkbox, on, named for VoiceOver");
     [indexBox performClick:nil];
     Check(sheetOK().enabled,@"OK stays available while some value is set");
@@ -339,6 +340,10 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     chooseLatexmk(1);
     FinishOwnerAlert(NSModalResponseOK);
     Check(profileChoice.selectedTag==TSEngineProfileUpLaTeXDvipdfmx && [[TSIsolatedAppKitDefaults stringForKey:LatexGSCommandKey] isEqual:profileCommand],@"Applying in full shows the profile again");
+    // The kpsewhich command of the profile is written and shown in its field of Settings > Typesetting.
+    NSTextField *kpsewhichField=[owner valueForKey:@"kpsetoolField"];
+    Check([[TSIsolatedAppKitDefaults stringForKey:KpsetoolKey] isEqual:@"kpsewhich -progname=uplatex"] && [kpsewhichField.stringValue isEqual:@"kpsewhich -progname=uplatex"] && [kpsewhichField.placeholderString isEqual:@"kpsewhich -progname=latex"],
+          [NSString stringWithFormat:@"The profile writes its kpsewhich command, shown in Settings: %@ / %@",kpsewhichField.stringValue,kpsewhichField.placeholderString]);
     // With a value turned off, the menu shows Custom even when the settings left happen to be those of another profile:
     // LuaLaTeX (Japanese), then a MetaPost command of one's own, then LuaLaTeX keeping the BibTeX engine and the index
     // program leaves exactly the settings of LuaLaTeX (Japanese).
@@ -347,7 +352,7 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     [TSIsolatedAppKitDefaults setObject:@"custom-metapost" forKey:MetaPostEngineKey];spin();
     chooseProfile(TSEngineProfileLuaLaTeX);chooseLatexmk(0);
     NSGridView *lRows=(NSGridView *)Find(sheetView(@"settings.engine-profile-list"),@"settings.engine-profile-list.rows");
-    for(NSInteger r=3;r<5;r++){NSButton *box=(NSButton *)[lRows cellAtColumnIndex:0 rowIndex:r].contentView;Check([box isKindOfClass:NSButton.class],@"The BibTeX engine and the index program change, each with its checkbox");[box performClick:nil];}
+    for(NSInteger r=4;r<6;r++){NSButton *box=(NSButton *)[lRows cellAtColumnIndex:0 rowIndex:r].contentView;Check([box isKindOfClass:NSButton.class],@"The BibTeX engine and the index program change, each with its checkbox");[box performClick:nil];}
     FinishOwnerAlert(NSModalResponseOK);
     Check([[TSIsolatedAppKitDefaults stringForKey:MetaPostEngineKey] isEqual:@"mpost"] && [[TSIsolatedAppKitDefaults stringForKey:MakeIndexEngineKey] isEqual:@"upmendex"] && TSEngineProfileMatchingSettings(TSIsolatedAppKitDefaults,NULL)==TSEngineProfileLuaLaTeXJapanese,
           @"The settings left are those of LuaLaTeX (Japanese)");
