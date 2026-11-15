@@ -3464,7 +3464,9 @@ else {
             *encoding = document->_encoding;
         }];
     }
-    [self.textStatistics showRelativeToRect:rect ofView:view preferredEdge:NSRectEdgeMaxY];
+    // The popover opens above the anchor, over the source. NSPopover takes the edge in the anchor's own coordinates,
+    // where the top is the minimum y of a flipped view (the status bar's button, the source's scroll view).
+    [self.textStatistics showRelativeToRect:rect ofView:view preferredEdge:view.isFlipped ? NSRectEdgeMinY : NSRectEdgeMaxY];
 }
 
 
