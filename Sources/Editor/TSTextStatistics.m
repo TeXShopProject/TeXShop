@@ -5,6 +5,9 @@
 
 #import "TSTextStatistics.h"
 #import <stdatomic.h>
+#import <fcntl.h>
+#import <signal.h>
+#import <unistd.h>
 
 @interface TSTextStatisticsResult ()
 @property (nonatomic, readwrite) TSTextStatisticsState state;
@@ -136,6 +139,28 @@ static void TSRemoveFile(NSURL *_Nullable file)
                 task.standardOutput = output;
                 task.standardError = NSFileHandle.fileHandleWithNullDevice;
                 task.standardInput = NSFileHandle.fileHandleWithNullDevice;
+                // The output is read as it comes, so that detex never waits for room in the pipe, and without waiting
+                // for the end of the pipe: a process that detex started could keep the pipe open after detex ends.
+                int fd = output.fileHandleForReading.fileDescriptor;
+                fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) | O_NONBLOCK);
+                NSMutableData *result = [NSMutableData data];
+                dispatch_queue_t reading = dispatch_queue_create("TeXShop.textStatistics.read", DISPATCH_QUEUE_SERIAL);
+                // Reads what is in the pipe; YES at its end.
+                BOOL (^drain)(void) = ^BOOL{
+                    char buffer[65536];
+                    ssize_t count;
+                    while ((count = read(fd, buffer, sizeof buffer)) > 0)
+                        [result appendBytes:buffer length:(NSUInteger)count];
+                    return count == 0;
+                };
+                dispatch_source_t reader = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, (uintptr_t)fd, 0, reading);
+                dispatch_semaphore_t readerDone = dispatch_semaphore_create(0), exited = dispatch_semaphore_create(0);
+                dispatch_source_set_event_handler(reader, ^{
+                    if (drain())
+                        dispatch_source_cancel(reader);
+                });
+                dispatch_source_set_cancel_handler(reader, ^{ dispatch_semaphore_signal(readerDone); });
+                task.terminationHandler = ^(NSTask *ended) { dispatch_semaphore_signal(exited); };
                 BOOL launched = NO;
                 @synchronized (run) {
                     if (!atomic_load(&run->cancelled)) {
@@ -143,9 +168,29 @@ static void TSRemoveFile(NSURL *_Nullable file)
                         launched = [task launchAndReturnError:NULL];
                     }
                 }
+                dispatch_resume(reader);
                 if (launched) {
-                    NSData *result = [output.fileHandleForReading readDataToEndOfFile];
-                    [task waitUntilExit];
+                    // detex ends by itself, or by -stop; one that does not end within 2 seconds after -stop is killed.
+                    CFAbsoluteTime stopped = 0;
+                    while (dispatch_semaphore_wait(exited, dispatch_time(DISPATCH_TIME_NOW, 100 * NSEC_PER_MSEC))) {
+                        if (!atomic_load(&run->cancelled))
+                            continue;
+                        CFAbsoluteTime now = CFAbsoluteTimeGetCurrent();
+                        if (stopped == 0)
+                            stopped = now;
+                        else if (now - stopped > 2 && task.processIdentifier > 0)
+                            kill(task.processIdentifier, SIGKILL);
+                    }
+                }
+                // What detex wrote before it ended is in the pipe: read it, then stop reading.
+                dispatch_sync(reading, ^{
+                    if (!dispatch_source_testcancel(reader)) {
+                        dispatch_source_cancel(reader);
+                        drain();
+                    }
+                });
+                dispatch_semaphore_wait(readerDone, DISPATCH_TIME_FOREVER);
+                if (launched) {
                     if (!atomic_load(&run->cancelled) && task.terminationReason == NSTaskTerminationReasonExit && task.terminationStatus == 0) {
                         NSString *stripped = [[NSString alloc] initWithData:result encoding:encoding]
                             ?: [[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding]
