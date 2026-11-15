@@ -74,6 +74,7 @@ NSDictionary *liteColors, *darkColors;
 @interface ConsoleFixture : NSObject
 @property (strong) NSWindow *window;
 @property (strong) NSTextView *outputText;
+@property (strong) NSColor *themeTextColor;
 @end
 @implementation ConsoleFixture
 @@CONSOLE@@

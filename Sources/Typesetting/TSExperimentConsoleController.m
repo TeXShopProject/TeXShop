@@ -76,6 +76,9 @@ static BOOL TSExperimentIsPrompt(NSString *line)
 // RedConsoleAfterError, as in the console of a document: after a line is typed to answer TeX,
 // the line and the rest of the output of that run are red.
 @property (nonatomic) BOOL redOutput;
+// The theme's text color. The text view's textColor answers the color of the first character,
+// which is red when the output starts with a typed line.
+@property (nonatomic, strong) NSColor *themeTextColor;
 @end
 
 @implementation TSExperimentConsoleController
@@ -109,7 +112,8 @@ static BOOL TSExperimentIsPrompt(NSString *line)
     TSColorSupport *colors = [TSColorSupport sharedInstance];
     NSDictionary *theme = notification.userInfo ?: (dark ? darkColors : liteColors);
     self.outputText.backgroundColor = [colors opaqueColorForKey:@"ConsoleBackground" fromDictionary:theme isWindowDark:dark];
-    self.outputText.textColor = [colors opaqueColorForKey:@"ConsoleText" fromDictionary:theme isWindowDark:dark];
+    self.themeTextColor = [colors opaqueColorForKey:@"ConsoleText" fromDictionary:theme isWindowDark:dark];
+    self.outputText.textColor = self.themeTextColor;
     self.window.alphaValue = TSThemeWindowAlpha(theme, TSThemeConsoleAlphaKey);
 }
 
@@ -187,7 +191,7 @@ static BOOL TSExperimentIsPrompt(NSString *line)
 - (void)appendText:(NSString *)text
 {
     if (!text.length) return;
-    NSColor *color = self.redOutput ? NSColor.redColor : (self.outputText.textColor ?: NSColor.textColor);
+    NSColor *color = self.redOutput ? NSColor.redColor : (self.themeTextColor ?: NSColor.textColor);
     NSAttributedString *addition = [[NSAttributedString alloc] initWithString:text attributes:@{
         NSFontAttributeName:self.outputText.font, NSForegroundColorAttributeName:color}];
     // Appending keeps any selection; follow the output only when nothing is selected.

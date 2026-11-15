@@ -12,7 +12,7 @@ from source_tree import include_args
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--mutation", choices=["no-window-load", "no-yen-filter", "no-appearance-hook", "stale-child-appearance", "no-console-alpha",
                                            "no-floating", "no-error-front", "no-prompt", "front-always", "prompt-no-wait", "echo-scanned",
-                                           "no-red-echo", "red-output-not-kept", "red-kept-next-run", "red-always", "red-stop-message"])
+                                           "no-red-echo", "red-output-not-kept", "red-kept-next-run", "red-always", "red-stop-message", "stop-takes-first-color"])
 parser.add_argument("--artifacts", type=Path, help="Save headless light/dark console previews")
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
@@ -55,15 +55,19 @@ elif args.mutation == "no-red-echo":
     assert red in controller
     controller = controller.replace(red, "        [self appendText:displayCommand];\n        if ([SUD boolForKey:RedConsoleAfterErrorKey])\n            self.redOutput = YES;", 1)
 elif args.mutation == "red-output-not-kept":
-    color = "NSColor *color = self.redOutput ? NSColor.redColor : (self.outputText.textColor ?: NSColor.textColor);"
+    color = "NSColor *color = self.redOutput ? NSColor.redColor : (self.themeTextColor ?: NSColor.textColor);"
     assert color in controller
-    controller = controller.replace(color, "NSColor *color = self.redOutput ? NSColor.redColor : (self.outputText.textColor ?: NSColor.textColor); self.redOutput = NO;", 1)
+    controller = controller.replace(color, color + " self.redOutput = NO;", 1)
 elif args.mutation == "red-kept-next-run":
     assert "    self.carry = nil;\n    self.redOutput = NO;\n" in controller
     controller = controller.replace("    self.carry = nil;\n    self.redOutput = NO;\n", "    self.carry = nil;\n", 1)
 elif args.mutation == "red-stop-message":
     assert "            self.redOutput = NO;\n            [self appendText:" in controller
     controller = controller.replace("            self.redOutput = NO;\n            [self appendText:", "            [self appendText:", 1)
+elif args.mutation == "stop-takes-first-color":
+    color = "(self.themeTextColor ?: NSColor.textColor)"
+    assert color in controller
+    controller = controller.replace(color, "(self.outputText.textColor ?: NSColor.textColor)", 1)
 elif args.mutation == "red-always":
     assert "if ([SUD boolForKey:RedConsoleAfterErrorKey])" in controller
     controller = controller.replace("if ([SUD boolForKey:RedConsoleAfterErrorKey])", "if (YES)", 1)
@@ -271,6 +275,20 @@ int main(void) { @autoreleasepool {
             [console abort:console];
             NSString *stopped = NSLocalizedString(@"Experiment stopped.\n", @"Experiment stopped message");
             check([colorAt(@"still running") isEqual:NSColor.redColor] && [colorAt(stopped) isEqual:themeText], @"red stop: the stop message has the text color");
+            // A line typed before TeX writes anything: the output starts in red, and the stop
+            // message still takes the theme's text color, in Light and in Dark.
+            for (NSString *mode in @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]) {
+                console.window.appearance = [NSAppearance appearanceNamed:mode];
+                NSColor *modeText = mode == NSAppearanceNameAqua ? liteColors[@"ConsoleText"] : darkColors[@"ConsoleText"];
+                dir = directory();
+                [console startExecutable:@"/bin/sh" arguments:@[@"-c", @"read line; printf 'silent running\\n'; read line"] environment:@{@"PATH":@"/usr/bin:/bin"} directory:dir encoding:NSUTF8StringEncoding title:@"Red" completion:nil];
+                check([console sendLine:@"early"], @"red early: input before any output");
+                check(waitFor(^BOOL{ return [console.outputText.string containsString:@"silent running"]; }), @"red early: output after the input");
+                [console abort:console];
+                check([colorAt(@"early") isEqual:NSColor.redColor] && [colorAt(@"silent running") isEqual:NSColor.redColor] &&
+                      [colorAt(stopped) isEqual:modeText], [@"red early: the stop message has the text color, " stringByAppendingString:mode]);
+            }
+            console.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
         }
     }
     redAfterError = NO;
