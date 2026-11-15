@@ -15,6 +15,9 @@
 + (id)sharedInstance;
 
 - (void)checkAndRestoreDefaults;
+// Gives the bundled themes in ~/Library/TeXShop/Themes the colors that later versions changed, once.
+- (void)updateBundledThemeColors;
+- (NSInteger)updateBundledThemeColorsInDirectory: (NSURL *)directory after: (NSInteger)update;
 - (void)initializeColors;
 - (NSMutableDictionary *) dictionaryForColorFile: (NSString *) fileTitle;
 - (NSColor *)colorFromDictionary:(NSDictionary *)theDictionary andKey: (NSString *)theKey;

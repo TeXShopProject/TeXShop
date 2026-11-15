@@ -123,6 +123,7 @@ NSString *ExternalEditorTypesetAtStartKey = @"ExternalEditorTypesetAtStart";
 NSString *ConvertLFKey = @"ConvertLF";
 NSString *FindMethodKey = @"FindMethod";
 NSString *FindMethodSwitchedToAdvancedFindKey = @"FindMethodSwitchedToAdvancedFind";
+NSString *BundledThemeColorsUpdateKey = @"BundledThemeColorsUpdate";
 NSString *LineNumberSizeKey = @"LineNumberSize";
 NSString *BringPdfFrontOnAutomaticUpdateKey = @"BringPdfFrontOnAutomaticUpdate";
 NSString *BringPdfFrontOnTypesetKey = @"BringPdfFrontOnTypeset";

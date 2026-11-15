@@ -784,6 +784,7 @@ static void TSInstallAdvancedFindFieldStyle(void)
 	[self finishAutoCompletionConfigure];
 	[self configureExternalEditor];
 	[self configureMovieMenu];
+    [[TSColorSupport sharedInstance] updateBundledThemeColors];
     [[TSColorSupport sharedInstance]  initializeColors];
     TSInstallAdvancedFindFieldStyle();
     
