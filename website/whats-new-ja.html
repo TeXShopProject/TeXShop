@@ -9,39 +9,36 @@
 <p class="release-date">TeXShop 6.00（準備中） · <a href="https://github.com/TeXShopProject/TeXShop/releases">最新のベータを試す</a></p>
 <p class="lead">TeXShop 6では、新しく設計し直された設定画面、あらゆるキーバインドのカスタマイズ、LaTeXの構文を考慮するスペルチェック、新しい検索パネルと複数置換、TeXのパスの自動設定、プロファイルによるエンジンの選択、固定できるリンクのポップアップ、本文の統計を備えたステータスバーを加え、分割したプレビューウインドウの動きを改め、アプリのアイコンを新しくしました。</p>
 <section class="feature-list" aria-label="主な変更">
-<article class="feature" id="settings"><div class="feature-text"><h2>新しく設計し直された設定画面</h2><p>設定画面を一から作り直しました。10の分類のサイドバーと、すべての設定を探せる検索欄を備え、分類ごとに名前の付いたグループに整理しました。</p></div><figure><img src="assets/whats-new/ja/settings.png" width="600" height="450" alt="「フォント」で検索した結果を示す設定画面"></figure></article>
-<article class="feature" id="shortcuts"><div class="feature-text"><h2>あらゆるキーバインドをカスタマイズ</h2><p>メニューのショートカットは、Xcodeと同じように「設定」→「キーボード」の一覧の中でキーを押して記録します。機能の名前でもキーでも探せ、ほかで使われているキーは知らせ、1つずつでもまとめてでも元に戻せます。1文字の入力を決まった文字列に置き換えるキーバインドは、同じ所の一覧で編集します。文字列には、選択中の文字列、出力後のカーソル位置、クリップボードの文字列、マークを入れられます。マクロのショートカットも、マクロエディタの一覧の中で同じように記録します。</p></div><figure><img src="assets/whats-new/ja/menu-shortcuts.png" width="600" height="450" alt="「タイプセット」で探したメニューのショートカットの一覧" loading="lazy"><figcaption>メニューのショートカット</figcaption></figure><figure><img src="assets/whats-new/ja/key-bindings.png" width="600" height="450" alt="選択中の文字列や出力後のカーソル位置を入れたキーバインドの一覧" loading="lazy"><figcaption>キーバインド</figcaption></figure><figure><img src="assets/release-notes/ja/macro-editor.png" width="585" height="452" alt="マクロの一覧をサイドバーに置き、プレースホルダを札で示すTeXのマクロと、Commandなしのショートカットを示すマクロエディタ" loading="lazy"><figcaption>マクロエディタ</figcaption></figure></article>
-<article class="feature" id="spell-checking"><div class="feature-text"><h2>LaTeXの構文を考慮するスペルチェック</h2><p>TeXのコマンド、コメント、数式と、ラベル・キー・長さなどの引数を飛ばして検査します。よく使うパッケージの規則を備え、規則は編集できます。「すべて変更」は書類の中の同じ語をまとめて置き換え、1回で取り消せます。</p></div><figure><img src="assets/whats-new/ja/spell.png" width="600" height="530" alt="LaTeXのソースの本文で印の付いた2つの綴りの誤りと、「すべて変更」の欄に候補が入ったスペルのパネル" loading="lazy"></figure></article>
-<article class="feature" id="find-panel"><div class="feature-text"><h2>新しい検索パネル</h2><p>正規表現を使える、新しい検索と置換のパネルです。「すべて検索」はすべての一致を行とともに一覧にし、「すべてハイライト」は本文の中の一致を示します。検索欄と置換欄はソースのフォントの大きさの等幅フォントとソースのテーマで表示し、正規表現の部分ごとに色を分けて、誤りを示します。時間のかかる処理は裏で進み、キャンセルできます。</p></div><figure><img src="assets/whats-new/ja/advanced-find.png" width="600" height="494" alt="正規表現を入れた新しい検索パネルと、すべての一致の一覧、ソースで強調された一致" loading="lazy"></figure></article>
-<article class="feature" id="multiple-replace"><div class="feature-text"><h2>複数置換</h2><p>検索と置換の組を並べた一覧に名前を付けて保存し、上から順にまとめて適用します。正規表現も使え、選択範囲だけにも適用でき、取り消しは1回です。一覧はCotEditorの置換定義と同じJSONで保存し、「編集」→「検索」→「複数置換」から本文全体にすぐ適用できます。Unicode文字とajmacrosの命令を相互に変換する見本の組を同梱しました。</p></div><figure><img src="assets/release-notes/ja/multiple-replace.png" width="600" height="270" alt="検索と置換の組を4つ並べた複数置換の窓" loading="lazy"></figure></article>
-<article class="feature" id="status-bar"><div class="feature-text"><h2>ステータスバーと本文の統計</h2><p>ソースの下のステータスバーに、書類の行数・文字数・単語数と、その横に選択範囲の数、カーソルの行と列、ファイルの大きさを表示します。文字は見たとおりの1文字で数えます。「本文の統計…」を開くと、TeXの命令を除いた本文を、<code>\input</code>・<code>\include</code>で読み込むファイルも含めて、ソースと並べて数えます。保存は要りません。「ソース」→「ステータスバーを表示」でバーを隠せます。</p></div><figure><img src="assets/whats-new/ja/status-bar.png" width="689" height="886" alt="ステータスバーと、ソースと本文の数を並べた「本文の統計」のポップオーバーを示すソースウインドウ" loading="lazy"></figure></article>
-<article class="feature" id="detect-paths"><div class="feature-text"><h2>TeXとGhostscriptのパスを自動で設定</h2><p>初めて起動したとき、TeXShopはTeXとGhostscriptのインストール先を探し、バージョンとともに一覧にします。いちばん新しいものが選ばれ、TeXとGhostscriptのそれぞれでほかのものも選べます。あとからでも、「設定」→「タイプセット」の「パスの自動検出…」で探し直せます。</p></div><figure><img src="assets/release-notes/ja/detect-paths.png" width="600" height="450" alt="見つかったTeXとGhostscriptを並べた「パスの自動検出」のシート" loading="lazy"></figure></article>
-<article class="feature" id="engine-profiles"><div class="feature-text"><h2>プロファイルでエンジンを選ぶ</h2><p>「設定」→「タイプセット」のメニューでエンジンのプロファイルを選ぶと、確認のあと、そのTeXエンジンのタイプセットとkpsewhichのコマンド、BibTeXエンジン、索引作成とMetaPostのコマンド、otfパッケージの<code>\UTF</code> / <code>\CID</code>への自動変換がまとめて設定されます。日本語のプロファイルは、新しい書類のエンコーディングをUTF-8にし、辞書を「言語を自動判別」にし、UTF-8-MACの変換もオンにします。適用する前に、設定される値が一覧になり、変わる値に印が付きます。今の設定を残したい値は外せ、latexmkを使うかどうかも選べます。初めて起動したときにも選べます。ほかの設定は変わりません。</p></div><figure><img src="assets/release-notes/ja/engine-profiles.png" width="600" height="450" alt="エンジンのプロファイルのメニューのある設定の「タイプセット」" loading="lazy"></figure></article>
-<article class="feature" id="link-previews"><div class="feature-text"><h2>固定できるリンクのポップアップ</h2><p>Optionキーで内部リンクのポップアップを固定できます。固定したポップアップは、動かす、大きさを変える、スクロールすることができます。ポップアップは本文の段の幅に合わせ、リンク先のページのラベルを示し、連続表示では次のページへ続けて表示します。</p></div><figure><img src="assets/whats-new/ja/link-preview.png" width="386" height="560" alt="2ページの定理1を示す固定したリンクのポップアップ。右下にページのラベル" loading="lazy"></figure></article>
-<article class="feature" id="split-preview"><div class="feature-text"><h2>分割したプレビューウインドウ</h2><p>境界線をドラッグしても、それぞれの部分の上端の内容は動きません。「ビューを切り替え」は二つの部分をそっくり入れ替え、作業中の部分は細い線で示します。「ウインドウを分割してリンク先を表示」は、リンク先をもう一方の部分に表示します。「内容の幅に合わせる」は、本文がウインドウの幅いっぱいになるように倍率を変えます。</p></div><figure><img src="assets/whats-new/ja/split-preview.png" width="386" height="560" alt="「ウインドウを分割してリンク先を表示」で分割したプレビューウインドウ。作業中の部分に線" loading="lazy"></figure></article>
-<article class="feature" id="line-numbers"><div class="feature-text"><h2>行番号で行を選択</h2><p>行番号をクリックまたはドラッグすると、行全体をまとめて選択できます。ソース、ログ、「実験」のソースで使えます。</p></div></article>
-<article class="feature" id="look"><div class="feature-text"><h2>新しいアイコン</h2><p>macOS 26 Tahoe以降のアイコンのデザインに合わせた、新しいアイコンを搭載しました。ただし、起動中のDockのアイコンは、「設定」→「一般」の「起動中のDockアイコン」で、懐かしのあのデザインに戻せます。2000年から2026年までの4つのデザインから選べ、TeXShopを終了すると新しいアイコンに戻ります。</p></div><figure><img src="assets/whats-new/ja/dock-icons.png" width="600" height="411" alt="設定の「一般」の「起動中のDockアイコン」。2000年から使われてきた4つのデザインと、新しいアイコン" loading="lazy"></figure></article>
+<article class="feature" id="settings"><div class="feature-text"><h2>新しく設計し直された設定画面</h2><p>サイドバーと検索欄を備えた、新しい設定画面になりました。</p></div><figure><img src="assets/whats-new/ja/settings.png" width="600" height="450" alt="分類のサイドバーと「一般」を示す設定画面"></figure></article>
+<article class="feature" id="shortcuts"><div class="feature-text"><h2>あらゆるキーバインドをカスタマイズ</h2><p>メニューとマクロのショートカット、キーバインドを自由にカスタマイズできます。</p></div><figure><img src="assets/whats-new/ja/menu-shortcuts.png" width="600" height="450" alt="「タイプセット」で探したメニューのショートカットの一覧" loading="lazy"><figcaption>メニューのショートカット</figcaption></figure><figure><img src="assets/whats-new/ja/key-bindings.png" width="600" height="450" alt="選択中の文字列や出力後のカーソル位置を入れたキーバインドの一覧" loading="lazy"><figcaption>キーバインド</figcaption></figure><figure><img src="assets/release-notes/ja/macro-editor.png" width="585" height="452" alt="マクロの一覧をサイドバーに置き、プレースホルダを札で示すTeXのマクロと、Commandなしのショートカットを示すマクロエディタ" loading="lazy"><figcaption>マクロエディタ</figcaption></figure></article>
+<article class="feature" id="spell-checking"><div class="feature-text"><h2>LaTeXの構文を考慮するスペルチェック</h2><p>TeXの命令や数式、コメントを飛ばして、本文だけをスペルチェックできます。</p></div><figure><img src="assets/whats-new/ja/spell.png" width="600" height="530" alt="LaTeXのソースの本文で印の付いた2つの綴りの誤りと、「すべて変更」の欄に候補が入ったスペルのパネル" loading="lazy"></figure></article>
+<article class="feature" id="find-panel"><div class="feature-text"><h2>新しい検索パネル</h2><p>正規表現を使える新しい検索パネルで、すべての一致を一覧にしたり、ハイライトしたりできます。</p></div><figure><img src="assets/whats-new/ja/advanced-find.png" width="600" height="494" alt="正規表現を入れた新しい検索パネルと、すべての一致の一覧、ソースで強調された一致" loading="lazy"></figure></article>
+<article class="feature" id="multiple-replace"><div class="feature-text"><h2>複数置換</h2><p>検索と置換の組をいくつも登録して、まとめて置換できます。</p></div><figure><img src="assets/release-notes/ja/multiple-replace.png" width="600" height="270" alt="検索と置換の組を4つ並べた複数置換の窓" loading="lazy"></figure></article>
+<article class="feature" id="status-bar"><div class="feature-text"><h2>ステータスバーと本文の統計</h2><p>ソースの下に行数・文字数・単語数を表示し、TeXの命令を除いた本文の文字数も数えられます。</p></div><figure><img src="assets/whats-new/ja/status-bar.png" width="689" height="886" alt="ステータスバーと、ソースと本文の数を並べた「本文の統計」のポップオーバーを示すソースウインドウ" loading="lazy"></figure></article>
+<article class="feature" id="detect-paths"><div class="feature-text"><h2>TeXとGhostscriptのパスを自動で設定</h2><p>TeXとGhostscriptのインストール先を自動で見つけて設定します。</p></div><figure><img src="assets/release-notes/ja/detect-paths.png" width="600" height="450" alt="見つかったTeXとGhostscriptを並べた「パスの自動検出」のシート" loading="lazy"></figure></article>
+<article class="feature" id="engine-profiles"><div class="feature-text"><h2>プロファイルでエンジンを選ぶ</h2><p>エンジンのプロファイルを選ぶだけで、そのTeXエンジンに合ったタイプセットの設定がまとめて済みます。</p></div><figure><img src="assets/release-notes/ja/engine-profiles.png" width="600" height="450" alt="エンジンのプロファイルのメニューのある設定の「タイプセット」" loading="lazy"></figure></article>
+<article class="feature" id="link-previews"><div class="feature-text"><h2>固定できるリンクのポップアップ</h2><p>Optionキーでリンク先のポップアップを固定できます。</p></div><figure><img src="assets/whats-new/ja/link-preview.png" width="386" height="560" alt="2ページの定理1を示す固定したリンクのポップアップ。右下にページのラベル" loading="lazy"></figure></article>
+<article class="feature" id="split-preview"><div class="feature-text"><h2>分割したプレビューウインドウ</h2><p>分割したプレビューウインドウで、リンク先をもう一方に表示したり、二つの部分を入れ替えたりできます。</p></div><figure><img src="assets/whats-new/ja/split-preview.png" width="386" height="560" alt="「ウインドウを分割してリンク先を表示」で分割したプレビューウインドウ。作業中の部分に線" loading="lazy"></figure></article>
+<article class="feature" id="line-numbers"><div class="feature-text"><h2>行番号で行を選択</h2><p>行番号をクリックまたはドラッグして、行をまとめて選択できます。</p></div></article>
+<article class="feature" id="look"><div class="feature-text"><h2>新しいアイコン</h2><p>macOS 26 Tahoe以降のデザインに合わせた、新しいアイコンを搭載しました。さらに、起動中のDockのアイコンは、「設定」→「一般」で懐かしのデザインに戻せます。</p></div><figure><img src="assets/whats-new/ja/dock-icons.png" width="600" height="411" alt="設定の「一般」の「起動中のDockアイコン」。2000年から使われてきた4つのデザインと、新しいアイコン" loading="lazy"></figure></article>
 </section>
 <h2>そのほかの変更</h2>
 <ul>
-<li>「中止」を押したときと、次のタイプセットを始めたときに、TeXとその子プロセスを止めます。</li>
-<li>Command＋0で書類のコンソールを表示し、もう一度押すと元の窓に戻ります。</li>
+<li>Command＋0で、書類のコンソールと元の窓を切り替えられます。</li>
 <li>編集メニューに「文字種一括変換」「Unicode 正規化」「交換ペースト」を加えました。</li>
-<li>文字コードのマジックコメントがないファイルも、開くときに文字コードを判定します。</li>
-<li>「実験」のタイプセットは専用のコンソールで動き、書類の画像や参照を見つけ、ソースを書類と同じように表示します。</li>
-<li>OneDriveやGoogle Driveなどで同期しているフォルダのファイルを編集しても、カーソルがファイルの末尾へ飛ばなくなりました。</li>
-<li>プレビューは、再読み込みのあとも、macOS 27でも、表示位置を保ちます。</li>
+<li>ソースコードの文字コード自動判定機能を搭載しました。</li>
+<li>「実験」で、書類の画像や参照を使ってタイプセットできます。</li>
 </ul>
 <h2>以前の版から変わった動き</h2>
 <ul>
-<li>LaTeXの構文を考慮するスペルチェックが初めから有効です。以前のように検査するには、「設定」→「スペルチェック」で「従来の方式」を選びます。</li>
-<li>TeXShop 6を初めて起動したとき、すべての利用者が一度だけ新しい検索パネル（詳細検索パネル）に切り替わります。元に戻すには、「設定」→「エディタ」の「検索パネル」でほかの方式を選びます。</li>
-<li>「設定プロファイル」を、「設定」→「タイプセット」の「エンジンのプロファイル」に置き換えました。プロファイルはタイプセットの方法を設定し、ほかの設定は変えません。</li>
-<li>「設定」→「タイプセット」の「デフォルトのコマンド」を「新しい書類のタイプセット」に、「利用するコマンド」をエンジンファイルを選ぶ「エンジンファイル」のメニューにしました。最初に選ばれるエンジンファイルはXeLaTeXからLuaLaTeXになりました。</li>
-<li>単ページ・見開き表示では、上下矢印キーは拡大したページの中をスクロールします。ページを送るには、Command＋右／左矢印、Page Up／Page Down、スペースキーを使います。</li>
-<li>一部のメニュー名が変わったため、macOSの「システム設定」で登録したTeXShop用のショートカットが効かなくなることがあります。「設定」→「キーボード」で設定し直してください。</li>
-<li>「編集」→「統計情報…」は、別の窓ではなく、ステータスバーの「本文の統計」を開きます。</li>
-<li>マークの操作は「編集」→「マーク」に、「スタイルファイルを開く」は「ファイル」メニューに移りました。Apple Distillerは取り除き、PostScriptはGhostscriptで変換します。</li>
+<li>LaTeXの構文を考慮するスペルチェックが初めから有効です。「設定」→「スペルチェック」で従来の方式に戻せます。</li>
+<li>検索パネルは新しい検索パネルになります。「設定」→「エディタ」で元に戻せます。</li>
+<li>「設定プロファイル」は、「設定」→「タイプセット」の「エンジンのプロファイル」に置き換わりました。</li>
+<li>「デフォルトのコマンド」は「新しい書類のタイプセット」に、「利用するコマンド」は「エンジンファイル」になりました。</li>
+<li>単ページ・見開き表示では、上下矢印キーでページを送らず、ページの中をスクロールします。</li>
+<li>macOSの「システム設定」で登録したTeXShopのショートカットは、「設定」→「キーボード」で設定し直してください。</li>
+<li>「編集」→「統計情報…」は、ステータスバーの「本文の統計」を開きます。</li>
+<li>マークの操作は「編集」→「マーク」に、「スタイルファイルを開く」は「ファイル」メニューに移りました。Apple Distillerは取り除きました。</li>
 </ul>
 <p class="all-changes"><a href="release-notes-ja.html#v6.00">すべての変更点と、以前の動きに戻す方法は、変更履歴にあります</a></p>
 </main>
