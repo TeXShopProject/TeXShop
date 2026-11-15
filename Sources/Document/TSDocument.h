@@ -40,6 +40,7 @@
 @class TSExperimentConsoleController;
 @class TSConsoleOutputReturn;
 @class TSFullSplitDivider;
+@class TSSourceStatusBar;
 @class TSSyntaxColorScheme;
 
 #define NUMBEROFERRORS	20
@@ -608,6 +609,9 @@ enum RootCommand
 
 // Remembers where the user leaves the divider of the window that shows the source and the Preview.
 @property (strong) TSFullSplitDivider *fullSplitDivider;
+
+// The status bar under the source; it moves with the source between the windows.
+@property (strong) TSSourceStatusBar *sourceStatusBar;
 
 
 

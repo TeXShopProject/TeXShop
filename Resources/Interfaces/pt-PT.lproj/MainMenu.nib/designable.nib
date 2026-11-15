@@ -746,6 +746,12 @@
                                     <action selector="showHideLineNumbers:" target="-1" id="780"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Mostrar barra de estado" id="Stb-Bq-7Kd" identifier="TSShortcut.toggleStatusBar:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="toggleStatusBar:" target="-1" id="Stb-Ac-7Kd"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Exibir destaque de sintaxe" tag="14" id="sTX-uf-FJw" identifier="TSShortcut.toggleSyntaxColor:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

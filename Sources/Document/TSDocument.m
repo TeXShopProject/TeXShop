@@ -1,4 +1,5 @@
 #import "TSDocumentWindowGlass.h"
+#import "TSSourceStatusBar.h"
 #import "TSFindInterface.h"
 #import "TSPreferenceKey.h"
 #import "TSSettingsChangeNote.h"
@@ -1494,6 +1495,13 @@ if (! skipTextWindow) {
         scrollView2.horizontalScrollElasticity = NSScrollElasticityNone;
         scrollView2.verticalScrollElasticity = NSScrollElasticityNone;
     }
+
+    // The status bar under the source.
+    __weak TSDocument *weakDocument = self;
+    self.sourceStatusBar = [[TSSourceStatusBar alloc] initWithTextStorage:_textStorage textViews:@[textView1, textView2]
+                                                           activeTextView:^NSTextView *{ return [weakDocument textView]; }];
+    [self.sourceStatusBar placeBelowView:splitView];
+    [self.sourceStatusBar fileDidChangeAtURL:[self fileURL]];
     
 /*
 #ifdef MOJAVEORHIGHER
@@ -3299,8 +3307,20 @@ else {
 	return [SUD boolForKey:KeepBackupKey];
 }
 
+// NSDocument sets the date whenever the file is read, saved or reverted: the status bar reads the file's size again.
+- (void)setFileModificationDate:(NSDate *)date
+{
+    [super setFileModificationDate:date];
+    dispatch_block_t update = ^{ [self.sourceStatusBar fileDidChangeAtURL:[self fileURL]]; };
+    if (NSThread.isMainThread)
+        update();
+    else
+        dispatch_async(dispatch_get_main_queue(), update);
+}
+
 - (void)close
 {
+    [self.sourceStatusBar stop];
     [self closeExperiment];
     [self cancelWatchFile];
     [self stopExternalPDFObservation];
@@ -3683,6 +3703,8 @@ static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice
 {
 	NSRange		theRange;
  	textView = aView;
+	// The status bar follows the part being typed in.
+	[self.sourceStatusBar selectionDidChange];
 	if (textView == textView1) {
 		theRange = [textView2 selectedRange];
 		theRange.length = 0;
@@ -3758,6 +3780,7 @@ static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice
 		textView = textView1;
         [self removeCurrentLineColor:textView2];
 	}
+	[self.sourceStatusBar selectionDidChange];
     TSSplitToggleItemsFollowSplit();
 }
 
@@ -11851,6 +11874,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
                 [leftView addSubview: splitView];
                 [splitView setFrame: [leftView bounds]];
                 }
+            [self.sourceStatusBar placeBelowView: splitView];
             [self.pdfKitWindow.pdfKitSplitView removeFromSuperview];
             if (interchange) {
                 [leftView addSubview: self.pdfKitWindow.pdfKitSplitView];
@@ -11910,6 +11934,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
             [splitView removeFromSuperview];
             [[textWindow contentView] addSubview: splitView];
             [splitView setFrame: [[textWindow contentView] bounds]];
+            [self.sourceStatusBar placeBelowView: splitView];
             [self.pdfKitWindow.pdfKitSplitView removeFromSuperview];
             [[self.pdfKitWindow contentView] addSubview: self.pdfKitWindow.pdfKitSplitView];
             [self.pdfKitWindow.pdfKitSplitView setFrame: [[self.pdfKitWindow contentView] bounds]];

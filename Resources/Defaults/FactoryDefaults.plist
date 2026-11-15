@@ -204,6 +204,8 @@
 	<string>NO</string>
 	<key>ShowSpaceCharacter</key>
 	<string>NO</string>
+	<key>ShowStatusBar</key>
+	<string>YES</string>
 	<key>ShowSyncMarks</key>
 	<string>NO</string>
 	<key>ShowTabCharacter</key>

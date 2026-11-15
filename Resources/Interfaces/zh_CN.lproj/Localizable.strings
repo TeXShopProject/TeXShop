@@ -391,3 +391,13 @@
 "Typesets once with this engine instead of the one chosen in the toolbar." = "仅此一次用此引擎代替工具栏中所选的引擎进行排版。";
 "A % !TEX TS-program line at the top of the document takes precedence." = "文稿开头有 % !TEX TS-program行时，以该行为准。";
 "Choose an Engine Profile" = "选择引擎配置";
+
+/* The status bar under the source */
+"Status Bar" = "状态栏";
+"%1$@: %2$@" = "%1$@：%2$@";
+"Lines" = "行";
+"Characters" = "字符";
+"Words" = "字";
+"Location" = "位置";
+"Line" = "行";
+"Column" = "列";

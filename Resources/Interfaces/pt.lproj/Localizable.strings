@@ -394,3 +394,13 @@
 "Typesets once with this engine instead of the one chosen in the toolbar." = "Compõe uma vez com este compilador em vez do escolhido na barra de ferramentas.";
 "A % !TEX TS-program line at the top of the document takes precedence." = "Uma linha % !TEX TS-program no início do documento tem prioridade.";
 "Choose an Engine Profile" = "Escolher um perfil do motor";
+
+/* The status bar under the source */
+"Status Bar" = "Barra de Estado";
+"%1$@: %2$@" = "%1$@: %2$@";
+"Lines" = "Linhas";
+"Characters" = "Caracteres";
+"Words" = "Palavras";
+"Location" = "Localização";
+"Line" = "Linha";
+"Column" = "Coluna";

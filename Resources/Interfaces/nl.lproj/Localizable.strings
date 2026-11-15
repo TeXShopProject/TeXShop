@@ -394,3 +394,13 @@
 "Typesets once with this engine instead of the one chosen in the toolbar." = "Zet één keer met deze engine in plaats van de engine die in de knoppenbalk is gekozen.";
 "A % !TEX TS-program line at the top of the document takes precedence." = "Een regel % !TEX TS-program bovenaan het document gaat voor.";
 "Choose an Engine Profile" = "Kies een engineprofiel";
+
+/* The status bar under the source */
+"Status Bar" = "Statusbalk";
+"%1$@: %2$@" = "%1$@: %2$@";
+"Lines" = "Regels";
+"Characters" = "Tekens";
+"Words" = "Woorden";
+"Location" = "Locatie";
+"Line" = "Regel";
+"Column" = "Kolom";

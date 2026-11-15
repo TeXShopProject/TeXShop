@@ -394,3 +394,13 @@
 "Typesets once with this engine instead of the one chosen in the toolbar." = "Culege o dată cu acest motor în locul celui ales în bara de instrumente.";
 "A % !TEX TS-program line at the top of the document takes precedence." = "O linie % !TEX TS-program la începutul documentului are prioritate.";
 "Choose an Engine Profile" = "Alegeți un profil al motorului";
+
+/* The status bar under the source */
+"Status Bar" = "Bara de stare";
+"%1$@: %2$@" = "%1$@: %2$@";
+"Lines" = "Linii";
+"Characters" = "Caractere";
+"Words" = "Cuvinte";
+"Location" = "Poziție";
+"Line" = "Linie";
+"Column" = "Coloană";
