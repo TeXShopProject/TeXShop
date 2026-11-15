@@ -1595,7 +1595,7 @@ Gw
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" id="810">
                             <font key="font" metaFont="system"/>
-                            <string key="title">Package name whose documentation you want to see:
+                            <string key="title">Nome del pacchetto di cui vuoi vedere la documentazione:
 </string>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

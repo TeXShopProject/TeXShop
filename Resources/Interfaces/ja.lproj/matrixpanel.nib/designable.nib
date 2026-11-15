@@ -59,7 +59,7 @@
 							<object class="NSButtonCell" key="NSCell" id="602367929">
 								<int key="NSCellFlags">-2080244224</int>
 								<int key="NSCellFlags2">134348800</int>
-								<string key="NSContents">OK</string>
+								<string key="NSContents">挿入</string>
 								<object class="NSFont" key="NSSupport" id="470778763">
 									<string key="NSName">LucidaGrande</string>
 									<double key="NSSize">10</double>
@@ -272,7 +272,7 @@
 								<object class="NSButtonCell" id="76074668">
 									<int key="NSCellFlags">67239424</int>
 									<int key="NSCellFlags2">134348800</int>
-									<string key="NSContents">０行列</string>
+									<string key="NSContents">零行列</string>
 									<reference key="NSSupport" ref="470778763"/>
 									<reference key="NSControlView" ref="935608417"/>
 									<int key="NSTag">2</int>
@@ -1788,7 +1788,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="76074668"/>
-							<string key="toolTip">行列の全項目を０にします</string>
+							<string key="toolTip">行列の全項目を0にします</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1798,7 +1798,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="81059978"/>
-							<string key="toolTip">ソースを書類に書き込みます</string>
+							<string key="toolTip">行列を書類に挿入します</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1854,7 +1854,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="986394011"/>
-							<string key="toolTip">Custom left delimiter</string>
+							<string key="toolTip">左かっこ記号を自分で定義します</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1898,7 +1898,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="51306940"/>
-							<string key="toolTip">custom right delimiter</string>
+							<string key="toolTip">右かっこ記号を自分で定義します</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>

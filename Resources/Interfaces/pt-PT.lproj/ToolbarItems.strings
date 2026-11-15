@@ -89,9 +89,9 @@ tiLabelProgramEE			= "Programa";
 tiPaletteLabelProgramEE			= "Programa";
 tiToolTipProgramEE			= "Escolher o programa de composição";
 
-tiLabelAutoComplete			= "AutoComplete";
-tiPaletteLabelAutoComplete		= "AutoComplete";
-tiToolTipAutoComplete			= "Toggle auto completion";
+tiLabelAutoComplete			= "Associações de teclas";
+tiPaletteLabelAutoComplete		= "Associações de teclas";
+tiToolTipAutoComplete			= "Ativar/desativar associações de teclas";
 
 tiLabelSplit				= "Split Window";
 tiPaletteLabelSplit			= "Split Window";

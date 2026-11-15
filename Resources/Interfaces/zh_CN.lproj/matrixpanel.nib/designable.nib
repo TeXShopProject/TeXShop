@@ -247,7 +247,7 @@
 								<object class="NSButtonCell" id="643175965">
 									<int key="NSCellFlags">67239424</int>
 									<int key="NSCellFlags2">134348800</int>
-									<string key="NSContents">删除</string>
+									<string key="NSContents">清除</string>
 									<reference key="NSSupport" ref="460002106"/>
 									<reference key="NSControlView" ref="357019753"/>
 									<int key="NSButtonFlags">-2038284033</int>
@@ -686,7 +686,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="631068453">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">4194304</int>
-								<string key="NSContents">行:</string>
+								<string key="NSContents">行：</string>
 								<object class="NSFont" key="NSSupport" id="882608988">
 									<string key="NSName">STHeitiSC-Light</string>
 									<double key="NSSize">11</double>
@@ -711,7 +711,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="240456448">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">205520896</int>
-								<string key="NSContents">列:</string>
+								<string key="NSContents">列：</string>
 								<reference key="NSSupport" ref="882608988"/>
 								<reference key="NSControlView" ref="915044272"/>
 								<reference key="NSBackgroundColor" ref="735877899"/>
@@ -741,7 +741,7 @@
 												<object class="NSButtonCell" id="188781376">
 													<int key="NSCellFlags">-2080244224</int>
 													<int key="NSCellFlags2">262144</int>
-													<string key="NSContents">矩阵式</string>
+													<string key="NSContents">matrix</string>
 													<reference key="NSSupport" ref="22"/>
 													<reference key="NSControlView" ref="317151631"/>
 													<int key="NSButtonFlags">1211912703</int>
@@ -757,7 +757,7 @@
 												<object class="NSButtonCell" id="441374270">
 													<int key="NSCellFlags">67239424</int>
 													<int key="NSCellFlags2">262144</int>
-													<string key="NSContents">表格式</string>
+													<string key="NSContents">tabular</string>
 													<reference key="NSSupport" ref="22"/>
 													<reference key="NSControlView" ref="317151631"/>
 													<int key="NSTag">1</int>
@@ -847,7 +847,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 											<object class="NSButtonCell" key="NSCell" id="1058979583">
 												<int key="NSCellFlags">604110336</int>
 												<int key="NSCellFlags2">262144</int>
-												<string key="NSContents">嵌入表格环境</string>
+												<string key="NSContents">嵌入table环境</string>
 												<object class="NSFont" key="NSSupport">
 													<string key="NSName">STHeitiSC-Light</string>
 													<double key="NSSize">9</double>
@@ -1800,7 +1800,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="978826202"/>
-							<string key="toolTip">Set all matrix entries to zero</string>
+							<string key="toolTip">将所有元素设为零</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1810,7 +1810,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="382747989"/>
-							<string key="toolTip">Insert matrix into project</string>
+							<string key="toolTip">将矩阵插入文稿</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1820,7 +1820,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="132874519"/>
-							<string key="toolTip">Set matrix to identity</string>
+							<string key="toolTip">设为单位矩阵</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1830,7 +1830,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="643175965"/>
-							<string key="toolTip">Delete all entries</string>
+							<string key="toolTip">清除所有元素</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1840,7 +1840,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="80516505"/>
-							<string key="toolTip">Right matrix delimiter</string>
+							<string key="toolTip">矩阵右侧的定界符</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1854,7 +1854,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="336760970"/>
-							<string key="toolTip">Custom left delimiter</string>
+							<string key="toolTip">自定义左侧定界符</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1866,7 +1866,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="551352317"/>
-							<string key="toolTip">Custom left delimiter</string>
+							<string key="toolTip">自定义左侧定界符</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1876,7 +1876,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="526243381"/>
-							<string key="toolTip">Custom right delimiter</string>
+							<string key="toolTip">自定义右侧定界符</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1886,7 +1886,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="407606694"/>
-							<string key="toolTip">Left matrix delimiter</string>
+							<string key="toolTip">矩阵左侧的定界符</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1910,7 +1910,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="478965203"/>
-							<string key="toolTip">custom right delimiter</string>
+							<string key="toolTip">自定义右侧定界符</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1925,7 +1925,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="685747468"/>
-							<string key="toolTip">Only blue cells are being inserted</string>
+							<string key="toolTip">只插入蓝色单元格</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1947,7 +1947,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="317151631"/>
-							<string key="toolTip">Select environment: matrix for math and tabular for text</string>
+							<string key="toolTip">选择环境：matrix用于数学，tabular用于文本</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1963,7 +1963,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="163818308"/>
-							<string key="toolTip">Draw border</string>
+							<string key="toolTip">绘制边框</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1973,7 +1973,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="696208530"/>
-							<string key="toolTip">Draw grid</string>
+							<string key="toolTip">绘制网格</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>

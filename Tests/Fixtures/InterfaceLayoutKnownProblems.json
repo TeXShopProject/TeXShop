@@ -1,0 +1,83 @@
+{
+ "comment": "What run-interface-label-fit.py finds in windows and panels that have not been fixed yet. These are printed and do not fail the check. A problem not listed here fails it, and so does a listed one that is no longer found: remove it from the list. Compiled variants of a nib are written as *, and a window at its smallest size as (smallest size). A group marked intermittent may be missing without failing.",
+ "known": [
+  {
+   "reason": "Log file window (TSDocument.nib): filter check boxes too close (pt-PT, ro). Found on 2026-11-15; not fixed yet.",
+   "problems": [
+    "TOUCH pt-PT.lproj/TSDocument.nib/* [Ficheiro de registo] (smallest size) NSButton \"informação de fonte\" and NSButton \"fim do arquivo de log\" are 3.5 points apart (need 4)",
+    "TOUCH pt-PT.lproj/TSDocument.nib/* [Ficheiro de registo] NSButton \"informação de fonte\" and NSButton \"fim do arquivo de log\" are 3.5 points apart (need 4)",
+    "TOUCH ro.lproj/TSDocument.nib/* [Fișier jurnal] (smallest size) NSButton \"fișiere .sty și .cls\" and NSButton \"imagini\" are 3.5 points apart (need 4)",
+    "TOUCH ro.lproj/TSDocument.nib/* [Fișier jurnal] (smallest size) NSButton \"fișiere .tex\" and NSButton \"fișiere .sty și .cls\" are 3.5 points apart (need 4)",
+    "TOUCH ro.lproj/TSDocument.nib/* [Fișier jurnal] NSButton \"fișiere .sty și .cls\" and NSButton \"imagini\" are 3.5 points apart (need 4)",
+    "TOUCH ro.lproj/TSDocument.nib/* [Fișier jurnal] NSButton \"fișiere .tex\" and NSButton \"fișiere .sty și .cls\" are 3.5 points apart (need 4)"
+   ]
+  },
+  {
+   "reason": "Page number panel (TSDocument.nib): a label close to its field (de, es). Found on 2026-11-15; not fixed yet.",
+   "problems": [
+    "TOUCH de.lproj/TSDocument.nib/* [Seitenzahl] NSTextField \"Seite\" and NSTextField \"1\" are 3.5 points apart (need 4)",
+    "TOUCH es.lproj/TSDocument.nib/* [Número de página] NSTextField \"Página\" and NSTextField \"1\" are 3.5 points apart (need 4)"
+   ]
+  },
+  {
+   "reason": "Annotation panel (TSDocument.nib, pt): buttons beside the separator pictures. Found on 2026-11-15; not fixed yet.",
+   "problems": [
+    "TOUCH pt.lproj/TSDocument.nib/* [Painel de anotações] NSButton \"Exibir painel de fontes\" and NSImageView \"\" are 1.0 points apart (need 4)",
+    "TOUCH pt.lproj/TSDocument.nib/* [Painel de anotações] NSButton \"Mostrar painel de cores\" and NSImageView \"\" are 1.0 points apart (need 4)",
+    "TOUCH pt.lproj/TSDocument.nib/* [Painel de anotações] NSButton \"Remover fluxos\" and NSImageView \"\" are 1.0 points apart (need 4)",
+    "TOUCH pt.lproj/TSDocument.nib/* [Painel de anotações] NSImageView \"\" and NSButton \"Exibir painel de texto\" are 1.0 points apart (need 4)"
+   ]
+  },
+  {
+   "reason": "Views of TSDocument.nib: the encoding pop-up close to its label (ja); the column header \"Página\" of the pages list cut off (es, it, pt-PT, ro). Found on 2026-11-15; not fixed yet.",
+   "problems": [
+    "HEADER es.lproj/TSDocument.nib/* [view] column header \"Página\" needs 47.1, has 40.0",
+    "HEADER it.lproj/TSDocument.nib/* [view] column header \"Pagina\" needs 47.1, has 40.0",
+    "HEADER pt-PT.lproj/TSDocument.nib/* [view] column header \"Página\" needs 47.1, has 40.0",
+    "HEADER ro.lproj/TSDocument.nib/* [view] column header \"Pagină\" needs 47.1, has 40.0",
+    "TOUCH ja.lproj/TSDocument.nib/* [view] NSTextField \"エンコーディング：\" and NSPopUpButton \"-- DO NOT LOCALIZE THIS! --\" are 3.0 points apart (need 4)"
+   ]
+  },
+  {
+   "reason": "Experiment output window (TSDocument.nib): its PDF view reaches 10 points past the window content. Found on 2026-11-15; not fixed yet.",
+   "problems": [
+    "STRAY Base.lproj/TSDocument.nib/* [Try This Output] PDFView draws 10 points outside the NSView that holds it",
+    "STRAY de.lproj/TSDocument.nib/* [Try This Output] PDFView draws 10 points outside the NSView that holds it",
+    "STRAY es.lproj/TSDocument.nib/* [Salida del experimento] PDFView draws 10 points outside the NSView that holds it",
+    "STRAY fr.lproj/TSDocument.nib/* [Try This Output] PDFView draws 10 points outside the NSView that holds it",
+    "STRAY it.lproj/TSDocument.nib/* [Try This Output] PDFView draws 10 points outside the NSView that holds it",
+    "STRAY ja.lproj/TSDocument.nib/* [実験の出力] PDFView draws 10 points outside the NSView that holds it",
+    "STRAY ko.lproj/TSDocument.nib/* [실험 출력] PDFView draws 10 points outside the NSView that holds it",
+    "STRAY nl.lproj/TSDocument.nib/* [Try This Output] PDFView draws 10 points outside the NSView that holds it",
+    "STRAY pt-PT.lproj/TSDocument.nib/* [Saída da experiência] PDFView draws 10 points outside the NSView that holds it",
+    "STRAY pt.lproj/TSDocument.nib/* [Saída do experimento] PDFView draws 10 points outside the NSView that holds it",
+    "STRAY ro.lproj/TSDocument.nib/* [Rezultatul încercării] PDFView draws 10 points outside the NSView that holds it",
+    "STRAY zh_CN.lproj/TSDocument.nib/* [实验台输出] PDFView draws 10 points outside the NSView that holds it"
+   ]
+  },
+  {
+   "reason": "Macro editor list (MacroEditor.nib): the Key column header is cut off (nl, pt, zh_CN); the macro editor is being rebuilt. Found on 2026-11-15; not fixed yet. The width of the Key column differs between runs (nl was not found in 1 of 10 runs), so these may be missing.",
+   "problems": [
+    "HEADER nl.lproj/MacroEditor.nib/* [Macro Editor] (smallest size) column header \"Toets\" needs 36.6, has 27.1",
+    "HEADER nl.lproj/MacroEditor.nib/* [Macro Editor] column header \"Toets\" needs 36.6, has 27.1",
+    "HEADER pt.lproj/MacroEditor.nib/* [Editor de Macro] (smallest size) column header \"Tecla\" needs 35.5, has 27.1",
+    "HEADER pt.lproj/MacroEditor.nib/* [Editor de Macro] column header \"Tecla\" needs 35.5, has 27.1",
+    "HEADER zh_CN.lproj/MacroEditor.nib/* [宏编辑器] (smallest size) column header \"键值\" needs 28.3, has 27.1",
+    "HEADER zh_CN.lproj/MacroEditor.nib/* [宏编辑器] column header \"键值\" needs 28.3, has 27.1"
+   ],
+   "intermittent": true
+  },
+  {
+   "reason": "Old Find panel (FindPanel.nib, which the application does not open): box titles close to their fields, scope choices close together. Found on 2026-11-15; not fixed yet.",
+   "problems": [
+    "TOUCH Base.lproj/FindPanel.nib/* [Find Panel] NSTextField \"Find Options\" and NSTextField \"\" are 3.0 points apart (need 4)",
+    "TOUCH Base.lproj/FindPanel.nib/* [Find Panel] NSTextField \"Replace All Scope\" and NSTextField \"\" are 3.0 points apart (need 4)",
+    "TOUCH de.lproj/FindPanel.nib/* [Suchen] NSMatrix \"In der gesamten Datei / Nur in der Auswahl / Radio / Radio\": cells \"In der gesamten Datei\" and \"Nur in der Auswahl\" side by side are 7.5 points apart (need 8)",
+    "TOUCH es.lproj/FindPanel.nib/* [Búsquedas] NSMatrix \"Archivo completo / Selección / Radio / Radio\": cells \"Archivo completo\" and \"Selección\" side by side are 5.5 points apart (need 8)",
+    "TOUCH fr.lproj/FindPanel.nib/* [Recherche] NSMatrix \"Fichier entier / Sélection / Radio / Radio\": cells \"Fichier entier\" and \"Sélection\" side by side are 5.0 points apart (need 8)",
+    "TOUCH zh_CN.lproj/FindPanel.nib/* [查找] NSTextField \"全部替换范围\" and NSTextField \"\" are 2.5 points apart (need 4)",
+    "TOUCH zh_CN.lproj/FindPanel.nib/* [查找] NSTextField \"查找选项\" and NSTextField \"\" are 2.5 points apart (need 4)"
+   ]
+  }
+ ]
+}

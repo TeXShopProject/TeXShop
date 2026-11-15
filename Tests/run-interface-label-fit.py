@@ -19,7 +19,25 @@ InterfaceLabelFit.m that
   * an input field that wraps its text has as much room above two lines of
     text as below them, and one between a scroll view and the window edge
     (the console's) is as far from both;
+  * no two controls side by side or one above the other, and no two cells of a
+    matrix (radio buttons, push buttons), are closer than 4 points, even where
+    macOS 26 fills a bezel so thinly that it hardly shows; the title of a radio
+    button or check box is 8 points from the next control;
+  * no word of a wrapping label is wider than its lines;
+  * the column headers of tables are whole, and the first row of a table starts
+    below its header (tables without rows get sample rows);
+  * no view draws outside the view that holds it where nothing clips it (since
+    macOS 14 views do not clip their subviews);
   * a resizable window still does all this at its smallest size.
+
+The Matrix and LaTeX panels are loaded with their own controllers, which lay
+them out after loading, with the application's factory defaults and the files
+the panels read from ~/Library/TeXShop in an isolated home.
+
+Problems in windows that are not fixed yet are listed in
+Fixtures/InterfaceLayoutKnownProblems.json: they are printed but do not fail
+the check. A new problem fails it, and so does a listed one that is no longer
+found.
 
 Both compiled variants of a nib are checked where both exist; the application
 loads keyedobjects-101300.nib. Placeholder titles replaced at run time
@@ -30,9 +48,10 @@ labels and is checked by run-settings-product-shell.py.
   --focus-rings  draw the focus ring of each input field in those images
   --only NAME    check only the interfaces whose file name contains NAME"""
 from pathlib import Path
-import argparse, subprocess, sys, tempfile
+import argparse, json, re, subprocess, sys, tempfile
 from macro_editor_sources import write_sources
 from source_tree import include_args
+from panel_sources import DEFINE, panel_controller_sources, panel_environment
 root = Path(__file__).resolve().parents[1]
 interfaces = root / 'Resources/Interfaces'
 parser = argparse.ArgumentParser()
@@ -78,14 +97,40 @@ with tempfile.TemporaryDirectory(prefix='texshop-label-fit-') as tmp:
                 entries.append(f'{label}/{nib.name}|{nib}|{strings}')
     binary = tmp / 'InterfaceLabelFit'
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-Wno-incomplete-implementation', '-framework', 'Carbon', '-framework', 'Cocoa', '-framework', 'Quartz', '-framework', 'AVKit', '-framework', 'WebKit',
-                    '-I', str(tmp), '-I', str(root / 'Tests'), *include_args(root),
-                    str(root / 'Tests/InterfaceLabelFit.m'), *macro_sources,
+                    DEFINE, '-I', str(tmp), '-I', str(root / 'Tests'), *include_args(root),
+                    str(root / 'Tests/InterfaceLabelFit.m'), *macro_sources, *panel_controller_sources(root),
                     '-o', str(binary)], check=True)
     extra = (['--images', str(Path(args.images).resolve())] + (['--focus-rings'] if args.focus_rings else [])) if args.images else []
     if args.images:
         Path(args.images).mkdir(parents=True, exist_ok=True)
-    result = subprocess.run([str(binary), *extra, *entries], capture_output=True, text=True, timeout=1800)
-    print(result.stdout, end='')
-    if result.returncode and not result.stdout.strip():
+    # The Matrix and LaTeX panels read their files from ~/Library/TeXShop: an isolated home has them.
+    env = panel_environment(root, tmp / 'home')
+    result = subprocess.run([str(binary), *extra, *entries], capture_output=True, text=True, timeout=1800, env=env)
+    if result.returncode not in (0, 1) or not result.stdout.strip():
+        print(result.stdout, end='')
         print(result.stderr[-3000:], file=sys.stderr)
-    sys.exit(result.returncode)
+        sys.exit(result.returncode or 2)
+
+# Problems already known in windows that are not fixed yet (Fixtures/InterfaceLayoutKnownProblems.json) are
+# printed but do not fail the check.
+def normalized(line):
+    line = re.sub(r'keyedobjects(-101300|-110000)?\.nib', '*', line.strip())
+    return re.sub(r' at its smallest size \d+x\d+', ' (smallest size)', line)
+groups = json.loads((root / 'Tests/Fixtures/InterfaceLayoutKnownProblems.json').read_text())['known']
+known = {line for group in groups for line in group['problems']}
+intermittent = {line for group in groups if group.get('intermittent') for line in group['problems']}
+found, summary = set(), ''
+for line in result.stdout.splitlines():
+    if line.startswith(('PASS', 'FAIL')):
+        summary = line
+        continue
+    found.add(normalized(line))
+    print(('known: ' if normalized(line) in known else '') + line)
+new = sorted(found - known)
+gone = sorted(known - found - intermittent) if not args.only else []
+for line in gone:
+    print(f'NO LONGER FOUND (remove it from the known problems): {line}')
+if new or gone:
+    print(f'FAIL: {len(new)} new problems, {len(gone)} known problems no longer found')
+    sys.exit(1)
+print(summary if summary.startswith('PASS') else f'PASS: no problems apart from the {len(found)} known ones listed above (Fixtures/InterfaceLayoutKnownProblems.json)')

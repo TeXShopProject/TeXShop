@@ -4604,7 +4604,7 @@
 													<object class="NSButtonCell" id="205326495">
 														<int key="NSCellFlags">67108864</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">CAPS</string>
+														<string key="NSContents">Small Caps</string>
 														<reference key="NSSupport" ref="26"/>
 														<reference key="NSControlView" ref="1002444953"/>
 														<int key="NSTag">4</int>
