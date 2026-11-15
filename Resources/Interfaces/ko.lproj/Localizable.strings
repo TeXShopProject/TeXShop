@@ -394,3 +394,24 @@
 "Typesets once with this engine instead of the one chosen in the toolbar." = "도구 막대에서 선택한 것 대신 이 엔진으로 한 번 조판합니다.";
 "A % !TEX TS-program line at the top of the document takes precedence." = "문서 맨 앞에 % !TEX TS-program 줄이 있으면 그것이 우선합니다.";
 "Choose an Engine Profile" = "엔진 프로파일 선택";
+
+/* The status bar under the source */
+"Status Bar" = "상태 막대";
+"%1$@: %2$@" = "%1$@: %2$@";
+"Lines" = "줄";
+"Characters" = "문자";
+"Words" = "단어";
+"Location" = "위치";
+"Line" = "줄";
+"Column" = "열";
+
+/* Text Statistics, opened from the status bar */
+"Text Statistics…" = "본문 통계…";
+"Whole Document" = "문서 전체";
+"Selection" = "선택 부분";
+"Text" = "본문";
+"Refresh" = "새로 고침";
+"Counting…" = "세는 중…";
+"detex was not found." = "detex를 찾을 수 없습니다.";
+"detex failed." = "detex가 실패했습니다.";
+"Counted by detex without the TeX commands, with the files read by \\input and \\include." = "detex로 TeX 명령을 제외하고 센 수입니다. \\input과 \\include로 읽는 파일도 포함합니다.";

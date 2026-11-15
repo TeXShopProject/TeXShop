@@ -30,9 +30,14 @@ static BOOL TSLegacySkipsFindAndReplace(void)
         TSLegacyMenuHadFindAndReplace = TSLegacyMenuPathHadFindAndReplace([NSBundle.mainBundle pathForResource:@"MainMenu" ofType:@"nib"]);
     return TSLegacyMenuHadFindAndReplace == 0;
 }
+// Source › Show Status Bar is new in 6.00; positions saved before it skip it.
+static NSString *const TSLegacyStatusBarItem = @"TSShortcut.toggleStatusBar:.0";
 static NSArray<NSMenuItem *> *TSLegacyItems(NSMenu *menu)
 {
     NSMutableArray<NSMenuItem *> *items = [menu.itemArray mutableCopy];
+    [items filterUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NSMenuItem *item, NSDictionary *bindings) {
+        return ![item.identifier isEqualToString:TSLegacyStatusBarItem];
+    }]];
     if (TSLegacySkipsFindAndReplace()) {
         NSUInteger added = [items indexOfObjectPassingTest:^BOOL(NSMenuItem *item, NSUInteger index, BOOL *stop) {
             return [item.identifier isEqualToString:TSLegacyFindAndReplaceItem];

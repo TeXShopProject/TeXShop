@@ -40,6 +40,8 @@
 @class TSExperimentConsoleController;
 @class TSConsoleOutputReturn;
 @class TSFullSplitDivider;
+@class TSSourceStatusBar;
+@class TSTextStatisticsPopover;
 @class TSSyntaxColorScheme;
 
 #define NUMBEROFERRORS	20
@@ -148,10 +150,6 @@ enum RootCommand
 	IBOutlet NSPanel			*pagenumberKitPanel;
 	IBOutlet NSPanel			*magnificationPanel;
 	IBOutlet NSPanel			*magnificationKitPanel;
-	IBOutlet NSPanel			*statisticsPanel;
-	IBOutlet NSTextField		*statisticsWords;
-	IBOutlet NSTextField		*statisticsLines;
-	IBOutlet NSTextField		*statisticsCharacters;
 	IBOutlet NSPanel			*extensionPanel;
 	IBOutlet NSTextField		*extensionResult;
 	IBOutlet NSPopUpButton		*openSaveBox;		// TODO: Rename this to 'encodingPopUp' (don't forget to update the NIBs)
@@ -271,9 +269,6 @@ enum RootCommand
 //	NSTask              *bibTask;
 //	NSTask              *indexTask;
 //	NSTask              *metaFontTask;
-//	NSTask              *detexTask;
-//	NSPipe              *detexPipe;
-//	NSFileHandle        *detexHandle;
 //	NSTask              *synctexTask;
 //	NSPipe              *synctexPipe;
 //	NSFileHandle        *synctexHandle;
@@ -377,7 +372,6 @@ enum RootCommand
     BOOL                secondTime;
 //	NSString			*spellLanguage;
 	BOOL				consoleCleanStart;
-//	NSString			*statTempFile; // when get statistics for selection, name of temp file where selection is stored.
 
 	NSInteger lastCursorLocation; // added by Terada
 	NSInteger lastStringLength; // added by Terada
@@ -460,9 +454,6 @@ enum RootCommand
 @property (retain) NSTask              *bibTask;
 @property (retain) NSTask              *indexTask;
 @property (retain) NSTask              *metaFontTask;
-@property (retain) NSTask              *detexTask;
-@property (retain) NSPipe              *detexPipe;
-@property (retain) NSFileHandle        *detexHandle;
 @property (retain) NSTask              *texloganalyserTask;
 @property (retain) NSPipe              *texloganalyserPipe;
 @property (retain) NSFileHandle        *texloganalyserHandle;
@@ -500,7 +491,6 @@ enum RootCommand
 
 @property           BOOL                pdfSinglePage;
 
-@property (retain)  NSString			*statTempFile; // when get statistics for selection, name of temp file where selection is stored.
 @property (retain)  NSWindow            *ourCallingWindow;
 // Set by a typeset or Command-1 given in this document's source window; the next
 // root file check then makes that window the calling window again.
@@ -611,6 +601,12 @@ enum RootCommand
 // Remembers where the user leaves the divider of the window that shows the source and the Preview.
 @property (strong) TSFullSplitDivider *fullSplitDivider;
 
+// The status bar under the source; it moves with the source between the windows.
+@property (strong) TSSourceStatusBar *sourceStatusBar;
+// Text Statistics, opened from the status bar or Edit > Statistics….
+@property (strong) TSTextStatisticsPopover *textStatistics;
+- (void)showStatisticsFromView:(NSView *)anchor;
+
 
 
 
@@ -649,7 +645,6 @@ enum RootCommand
 - (void) okForPanel: sender;  //needed?
 - (void) cancelForPanel: sender;  //needed?
 - (void) showStatistics: sender;
-- (void) updateStatistics: sender;
 
 - (IBAction) saveAnnotations: sender;
 - (IBAction) callSaveAnnotations;

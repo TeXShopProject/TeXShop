@@ -104,10 +104,6 @@
                 <outlet property="spopupButton" destination="CaN-mt-SIe" id="vHv-2w-fIh"/>
                 <outlet property="sprogramButton" destination="0yu-Am-1gn" id="4rb-he-vrE"/>
                 <outlet property="stags" destination="UxI-pZ-QKJ" id="jOZ-GU-ybv"/>
-                <outlet property="statisticsCharacters" destination="miK-Gx-mX6" id="Xd4-3e-7Ze"/>
-                <outlet property="statisticsLines" destination="kxv-7o-GkF" id="0MN-Vl-ZRk"/>
-                <outlet property="statisticsWords" destination="wzv-2Z-Pl8" id="HV9-jt-4OS"/>
-                <outlet property="statisticsPanel" destination="658" id="665"/>
                 <outlet property="stringCenter" destination="9e3-vB-yks" id="3b6-Bm-VYd"/>
                 <outlet property="stringLeft" destination="Ud7-4g-kEB" id="ojx-9i-ld6"/>
                 <outlet property="stringRight" destination="oSP-vw-MRG" id="tHM-eq-e4N"/>
@@ -1549,93 +1545,6 @@ DQ
             </subviews>
             <point key="canvasLocation" x="139" y="-352"/>
         </customView>
-        <window title="Estatísticas" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="Statistics" animationBehavior="default" id="658" userLabel="Statistics" customClass="NSPanel">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
-            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="372" y="521" width="229" height="165"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1055"/>
-            <value key="minSize" type="size" width="213" height="107"/>
-            <view key="contentView" id="657">
-                <rect key="frame" x="0.0" y="0.0" width="229" height="165"/>
-                <autoresizingMask key="autoresizingMask"/>
-                <subviews>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8ne-yB-zZ9">
-                        <rect key="frame" x="18" y="126" width="75" height="16"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Palavras:" id="mvL-35-QG2">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wzv-2Z-Pl8">
-                        <rect key="frame" x="98" y="123" width="111" height="22"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="wMj-gh-99c">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                        <connections>
-                            <accessibilityConnection property="title" destination="8ne-yB-zZ9" id="IDm-R6-QgS"/>
-                        </connections>
-                    </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jpL-Qr-kcH">
-                        <rect key="frame" x="18" y="95" width="75" height="16"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Linhas:" id="pGj-jF-KS4">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kxv-7o-GkF">
-                        <rect key="frame" x="98" y="92" width="111" height="22"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="35V-Z1-1OH">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                        <connections>
-                            <accessibilityConnection property="title" destination="jpL-Qr-kcH" id="GEs-8X-uqL"/>
-                        </connections>
-                    </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kzI-Za-ANE">
-                        <rect key="frame" x="18" y="64" width="75" height="16"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Caracteres:" id="KZM-SQ-mfK">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="miK-Gx-mX6">
-                        <rect key="frame" x="98" y="61" width="111" height="22"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="5qr-Eo-wBJ">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                        <connections>
-                            <accessibilityConnection property="title" destination="kzI-Za-ANE" id="Joz-Y9-lJg"/>
-                        </connections>
-                    </textField>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="667">
-                        <rect key="frame" x="124" y="12" width="85" height="32"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" title="Atualizar" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="3884">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="updateStatistics:" target="-2" id="669"/>
-                        </connections>
-                    </button>
-                </subviews>
-            </view>
-        </window>
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="PdfKitWindow" animationBehavior="default" id="675" userLabel="PDFKit Window" customClass="TSPreviewWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>

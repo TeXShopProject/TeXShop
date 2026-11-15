@@ -2187,7 +2187,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 //
 // Until 2018, we did not use a TerminationHandler, and instead relied on NSTaskDidTerminateNotification, which was handled by
 // "checkATaskStatus", one routine below. This still holds for many tasks: displayPackageHelpTask (calling texdoc to display
-// documentation, detexTask (to find statistics for a source), convertTask (to
+// documentation), convertTask (to
 // convert tiff to pdf), and scriptTask (to run Applescript). All of these tasks still use the old NSTask API and call "checkATaskStatus".
 // Experiment jobs own their completion and output handlers separately.
 // All other tasks are sent to checkATaskStatusFromTerminationRoutine, but this routine really does something significant only

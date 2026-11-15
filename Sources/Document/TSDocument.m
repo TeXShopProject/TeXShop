@@ -1,4 +1,6 @@
 #import "TSDocumentWindowGlass.h"
+#import "TSSourceStatusBar.h"
+#import "TSTextStatisticsPopover.h"
 #import "TSFindInterface.h"
 #import "TSPreferenceKey.h"
 #import "TSSettingsChangeNote.h"
@@ -1499,6 +1501,14 @@ if (! skipTextWindow) {
         scrollView2.horizontalScrollElasticity = NSScrollElasticityNone;
         scrollView2.verticalScrollElasticity = NSScrollElasticityNone;
     }
+
+    // The status bar under the source.
+    __weak TSDocument *weakDocument = self;
+    self.sourceStatusBar = [[TSSourceStatusBar alloc] initWithTextStorage:_textStorage textViews:@[textView1, textView2]
+                                                           activeTextView:^NSTextView *{ return [weakDocument textView]; }];
+    [self.sourceStatusBar placeBelowView:splitView];
+    [self.sourceStatusBar fileDidChangeAtURL:[self fileURL]];
+    self.sourceStatusBar.showStatistics = ^(NSView *anchor) { [weakDocument showStatisticsFromView:anchor]; };
     
 /*
 #ifdef MOJAVEORHIGHER
@@ -1693,8 +1703,6 @@ if (! skipTextWindow) {
 	self.bibTask = nil;
 	self.indexTask = nil;
 	self.metaFontTask = nil;
-	self.detexTask = nil;
-	self.detexPipe = nil;
     self.backwardSyncTask = nil;
     self.backwardSyncPipe = nil;
     self.forwardSyncTask = nil;
@@ -3303,8 +3311,21 @@ else {
 	return [SUD boolForKey:KeepBackupKey];
 }
 
+// NSDocument sets the date whenever the file is read, saved or reverted: the status bar reads the file's size again.
+- (void)setFileModificationDate:(NSDate *)date
+{
+    [super setFileModificationDate:date];
+    dispatch_block_t update = ^{ [self.sourceStatusBar fileDidChangeAtURL:[self fileURL]]; };
+    if (NSThread.isMainThread)
+        update();
+    else
+        dispatch_async(dispatch_get_main_queue(), update);
+}
+
 - (void)close
 {
+    [self.sourceStatusBar stop];
+    [self.textStatistics close];
     [self closeExperiment];
     [self cancelWatchFile];
     [self stopExternalPDFObservation];
@@ -3401,109 +3422,49 @@ else {
 }
 
 
-#pragma mark Statistics dialog
+#pragma mark Text Statistics
 
-// FIXME: The statistics dialog relies on the detex command. If that can't be found or
-// doesn't work, this command silently fails.
-// To fix this, at the very least we should show an error dialog if using 'detex' fails.
-// Better: Include a copy of detex in TeXShop. Even better: Write our own stats code,
-// possibly based on the detex source, so that we just have to call a function to
-// gather the stats.
+// Edit > Statistics… and the status bar's Text Statistics… open the same popover: from the button of the status bar,
+// or, while the status bar is hidden, from the bottom edge of the source being typed in. It counts the source as the
+// status bar does and what detex leaves of it; nothing is saved.
 - (void)showStatistics: sender
 {
-	NSDate          *myDate;
-	NSString        *enginePath, *myFileName, *tetexBinPath;
-	NSMutableArray  *args;
-	NSRange			theRange;
-	BOOL			doSelection;
-	
-	[statisticsPanel setTitle:[self displayName]];
-	[statisticsPanel makeKeyAndOrderFront:self];
-
-	doSelection = NO;
-	NSArray *theRanges = [textView selectedRanges];
-	NSValue *theValue = [theRanges objectAtIndex:0];
-	theRange = [theValue rangeValue];
-	if (theRange.length > 0) {
-		NSString *statString = [[textView string] substringWithRange:theRange];
-		NSString *tempDir = NSTemporaryDirectory();
-		myFileName = [tempDir stringByAppendingPathComponent: [NSString stringWithFormat: @"%.0f.%@", [NSDate timeIntervalSinceReferenceDate] * 1000.0, @"txt"]];
-		self.statTempFile = myFileName; // when we are done, the file will be erased and the variable released and set to zero
-		[statString writeToFile:myFileName atomically:YES encoding:_encoding error: NULL];
-		doSelection = YES;
-	}
-	
-	if (! doSelection) {
-		myFileName = [[self fileURL] path];
-		if (! myFileName)
-			return;
-		}
-	
-	if (self.detexTask != nil) {
-		if ([self.detexTask isRunning])
-			[self.detexTask terminate];
-		myDate = [NSDate date];
-		while (([self.detexTask isRunning]) && ([myDate timeIntervalSinceNow] > -0.5)) ;
-		if (([self.detexTask isRunning]) && ([self.detexTask processIdentifier] > 0))
-			kill([self.detexTask processIdentifier], SIGKILL);
-//		[self.detexTask release];
-//		[self.detexPipe release];
-		self.detexTask = nil;
-		self.detexPipe = nil;
-	}
-	
-	self.detexTask = [[NSTask alloc] init];
-	[self.detexTask setCurrentDirectoryPath: [myFileName stringByDeletingLastPathComponent]];
-	[self.detexTask setEnvironment: [self environmentForSubTask]];
-	enginePath = [[NSBundle mainBundle] pathForResource:@"detexwrap" ofType:nil inDirectory:@"Shellscripts"];
-	tetexBinPath = [[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath];
-	args = [NSMutableArray array];
-	[args addObject:tetexBinPath];
- 	[args addObject: [myFileName  stringByStandardizingPath]];
-	self.detexPipe = [NSPipe pipe];
-	self.detexHandle = [self.detexPipe fileHandleForReading];
-	//[self.detexHandle readInBackgroundAndNotify];
-    [self.detexHandle waitForDataInBackgroundAndNotify];
-	[self.detexTask setStandardOutput: self.detexPipe];
-	if ((enginePath != nil) && ([[NSFileManager defaultManager] fileExistsAtPath: enginePath])) {
-		[self.detexTask setLaunchPath:enginePath];
-		[self.detexTask setArguments:args];
-		[self.detexTask launch];
-  //      NSLog(enginePath);
-  //      NSLog(tetexBinPath);
-  //      NSLog([myFileName stringByStandardizingPath]);
-	} else {
-//		if (self.detexPipe)
-//			[self.detexTask release];
-		self.detexTask = nil;
-	}
-	
+    NSView *anchor = self.sourceStatusBar.statisticsButton;
+    if (anchor) {
+        [self showStatisticsFromView:anchor];
+        return;
+    }
+    NSScrollView *scroll = [textView enclosingScrollView] ?: scrollView;
+    if (!scroll.window)
+        return;
+    NSRect bottom = scroll.bounds;
+    bottom.origin.y = scroll.isFlipped ? NSMaxY(bottom) - 1 : NSMinY(bottom);
+    bottom.size.height = 1;
+    [self showStatisticsRelativeToRect:bottom ofView:scroll];
 }
 
-- (void)saveForStatistics: (NSDocument *)doc didSave:(BOOL)didSave contextInfo:(void *)contextInfo
+- (void)showStatisticsFromView:(NSView *)anchor
 {
-	// Runs as the completion of NSDocument's save; no exception may escape.
-	@try {
-		[self showStatistics:self];
-	}
-	@catch (NSException *exception) {
-		NSLog(@"Statistics stopped by an exception: %@: %@", [exception name], [exception reason]);
-	}
+    [self showStatisticsRelativeToRect:anchor.bounds ofView:anchor];
 }
 
-- (void)updateStatistics: sender
+- (void)showStatisticsRelativeToRect:(NSRect)rect ofView:(NSView *)view
 {
-	SEL		saveForStatistics;
-	
-	NSArray *theRanges = [textView selectedRanges];
-	NSValue *theValue = [theRanges objectAtIndex:0];
-	NSRange theRange = [theValue rangeValue];
-	if (theRange.length > 0)
-		[self showStatistics:nil];
-	else {
-		saveForStatistics = @selector(saveForStatistics:didSave:contextInfo:);
-		[self saveDocumentWithDelegate: self didSaveSelector: saveForStatistics contextInfo: nil];
-		}
+    if (!self.textStatistics) {
+        __weak TSDocument *weakSelf = self;
+        self.textStatistics = [[TSTextStatisticsPopover alloc] initWithSource:^(NSString **text, NSArray<NSValue *> **ranges, NSURL **folder, NSStringEncoding *encoding) {
+            TSDocument *document = weakSelf;
+            if (!document)
+                return;
+            NSTextView *view = [document textView];
+            *text = [view.textStorage.string copy];
+            *ranges = view.selectedRanges;
+            NSURL *file = [document fileURL];
+            *folder = file.isFileURL ? file.URLByDeletingLastPathComponent : nil;
+            *encoding = document->_encoding;
+        }];
+    }
+    [self.textStatistics showRelativeToRect:rect ofView:view preferredEdge:NSRectEdgeMaxY];
 }
 
 
@@ -3687,6 +3648,8 @@ static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice
 {
 	NSRange		theRange;
  	textView = aView;
+	// The status bar follows the part being typed in.
+	[self.sourceStatusBar selectionDidChange];
 	if (textView == textView1) {
 		theRange = [textView2 selectedRange];
 		theRange.length = 0;
@@ -3762,6 +3725,7 @@ static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice
 		textView = textView1;
         [self removeCurrentLineColor:textView2];
 	}
+	[self.sourceStatusBar selectionDidChange];
     TSSplitToggleItemsFollowSplit();
 }
 
@@ -8087,11 +8051,8 @@ if (! useFullSplitWindow) {
 
 - (void) writeTexOutput: (NSNotification *)aNotification
 {
-    NSString        *detexString, *texloganalyserString;
-    NSData        *detexData, *texloganalyserData;
-    NSInteger  charCount;
-    NSInteger                 lineCount, wordCount;
-    BOOL                result;
+    NSString        *texloganalyserString;
+    NSData        *texloganalyserData;
 
     NSFileHandle *myFileHandle = [aNotification object];
     if (myFileHandle == self.readHandle) {
@@ -8161,32 +8122,6 @@ if (! useFullSplitWindow) {
     
    
     
-    else if (myFileHandle == self.detexHandle) {
-        // detexData = [[aNotification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"];
-        detexData = [self availableDataOrError: myFileHandle];
-        if ([detexData length]) {
-            detexString = [TSEncodingSupport displayStringForData: detexData encoding: _encoding];
-            NSScanner *myScanner = [NSScanner scannerWithString:detexString];
-            result = [myScanner scanInteger:&lineCount];
-            if (result)
-                result = [myScanner scanInteger:&wordCount];
-            if (result)
-                result = [myScanner scanInteger:&charCount];
-            if (result) {
-                NSNumber *lineNumber = [NSNumber numberWithInteger:lineCount];
-                NSNumber *wordNumber = [NSNumber numberWithInteger:wordCount];
-                NSNumber *charNumber = [NSNumber numberWithInteger:charCount];
-                [statisticsWords setObjectValue:[wordNumber stringValue]];
-                [statisticsLines setObjectValue:[lineNumber stringValue]];
-                [statisticsCharacters setObjectValue:[charNumber stringValue]];
-            }
-        }
-        if (self.statTempFile) { // we got statistics for a selection and need to erase the temp file
-            [[NSFileManager defaultManager] removeItemAtPath:self.statTempFile error: NULL];
-        //    [self.statTempFile release];
-            self.statTempFile = nil;
-            }
-    }
 }
     
     
@@ -11854,6 +11789,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
                 [leftView addSubview: splitView];
                 [splitView setFrame: [leftView bounds]];
                 }
+            [self.sourceStatusBar placeBelowView: splitView];
             [self.pdfKitWindow.pdfKitSplitView removeFromSuperview];
             if (interchange) {
                 [leftView addSubview: self.pdfKitWindow.pdfKitSplitView];
@@ -11913,6 +11849,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
             [splitView removeFromSuperview];
             [[textWindow contentView] addSubview: splitView];
             [splitView setFrame: [[textWindow contentView] bounds]];
+            [self.sourceStatusBar placeBelowView: splitView];
             [self.pdfKitWindow.pdfKitSplitView removeFromSuperview];
             [[self.pdfKitWindow contentView] addSubview: self.pdfKitWindow.pdfKitSplitView];
             [self.pdfKitWindow.pdfKitSplitView setFrame: [[self.pdfKitWindow contentView] bounds]];

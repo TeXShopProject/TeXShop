@@ -40,6 +40,7 @@
 - (IBAction)displayMatrixPanel:(id)sender; //  MatrixPanel Addition by Jonas 1.32 Nov 28 03
 - (IBAction)openForPreview:(id)sender;
 - (IBAction)displayLatexPanel:(id)sender;
+- (IBAction)toggleStatusBar:(id)sender;
 // - (IBAction)displayMatrixPanel:(id)sender;
 
 - (BOOL)validateMenuItem:(NSMenuItem *)anItem;

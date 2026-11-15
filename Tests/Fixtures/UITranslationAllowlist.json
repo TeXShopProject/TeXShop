@@ -122,6 +122,7 @@
     "Info: %@",
     "Labels",
     "TeXShop Demos",
+    "Text",
     "Updates"
    ],
    "MacroEditor.nib": [
@@ -353,7 +354,8 @@
    "Localizable.strings": [
     "Editor",
     "General",
-    "Tab"
+    "Tab",
+    "Text"
    ],
    "MacroEditor.nib": [
     "Separator"
@@ -392,7 +394,8 @@
  },
  "shared": {
   "fr": [
-   "PDF direct"
+   "PDF direct",
+   "Parole"
   ],
   "it": [
    "Formato:",
@@ -412,7 +415,8 @@
    "Macro",
    "Pag.",
    "PDF direct",
-   "Principal:"
+   "Principal:",
+   "Texte"
   ]
  },
  "pending": {

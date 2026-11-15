@@ -31,13 +31,19 @@ source while reading a second part of the source.
 TeXShop can be instructed to keep a backup file every time a file is saved. When &ldquo;&#51088;&#46041; &#51200;&#51109; &#48143; &#48260;&#51204; &#49324;&#50857;&rdquo; (Enable Autosave and Versions) is off, turn on &ldquo;&#51200;&#51109;&#54624; &#46412; &#51060;&#51204; &#54028;&#51068;&#51012; &#8216;&#51060;&#47492;~&#8217;&#51004;&#47196; &#45224;&#44592;&#44592;&rdquo; (Keep the previous file as &ldquo;name~&rdquo; when saving) in &#49444;&#51221; &gt; &#47928;&#49436; &#48143; &#51200;&#51109; (Settings &gt; Documents and Saving). The backup has the name of the file followed by a tilde.
 </P>
 
-<p> A Statistics panel lists the number of words, line, and characters in a document. Internally, this
-panel calls</p>
-<dl>
-<dd> detex myfile | wc
-</dl>
-<p> The detex command removes tex commands, but the word count is still only approximate. Input and
-include files are counted automatically by this command.</p>
+<P>
+A status bar under the source shows the lines, characters and words of the document, with the numbers in the selection in parentheses,
+and where the insertion point is: its location, line and column. Characters are counted as they are seen, so an accented letter or an
+emoji counts as one, and TeX commands are counted as they are written. The size of the saved file is shown at the right.
+Source &gt; Show Status Bar shows or hides the status bar in every window.
+</P>
+
+<P>
+Text Statistics&hellip; in the status bar, or Edit &gt; Statistics&hellip;, counts the text without the TeX commands. The TeX Live
+program detex removes them from the document, or from the selection, and adds the files read with \input and \include; TeXShop
+counts what is left in the same way as the status bar. The document need not be saved. The count is made when the popover opens
+and when its refresh button is clicked, and the time of the count is shown at the top.
+</P>
 
 <P>
 File icons can be dragged and dropped onto the source text. If the file is a tex file, an \input command will be
