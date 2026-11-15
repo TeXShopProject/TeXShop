@@ -153,16 +153,15 @@
 "Search commands" = "Cerca comandi";
 "Command" = "Comando";
 "Shortcut" = "Abbreviazione";
-"Change…" = "Modifica…";
 "Remove Shortcut" = "Rimuovi abbreviazione";
 "Restore Default" = "Ripristina predefinita";
+"Default shortcut: %@" = "Abbreviazione predefinita: %@";
+"Default shortcut: None" = "Abbreviazione predefinita: nessuna";
 "Restore All…" = "Ripristina tutte…";
 "Restore All" = "Ripristina tutte";
 "Change Shortcut" = "Modifica abbreviazione";
-"Apply" = "Applica";
 "Shortcut Unavailable" = "Abbreviazione non disponibile";
 "Restore all keyboard shortcuts?" = "Ripristinare tutte le abbreviazioni da tastiera?";
-"New shortcut" = "Nuova scorciatoia";
 "This command is no longer available." = "Questo comando non è più disponibile.";
 "This shortcut is already used by “%@”." = "Questa abbreviazione è già usata da “%@”.";
 

@@ -49,44 +49,113 @@
 }
 @end
 
-@interface TSShortcutRecorder : NSView
-@property (copy) void (^record)(NSEvent *);
-@property (copy) dispatch_block_t accept;
-@property (copy) dispatch_block_t cancel;
+// The menu shortcut list. As in Xcode's key bindings, a click on the shortcut of
+// the selected row, a double click, or Return records a new shortcut in the row.
+@interface TSShortcutTableView : NSTableView
+@property (copy, nullable) void (^beginRecording)(NSInteger row);
+@property NSInteger rowSelectedAtMouseDown;
 @end
-@implementation TSShortcutRecorder
-- (BOOL)acceptsFirstResponder { return YES; }
-- (BOOL)isAccessibilityElement { return YES; }
-- (NSString *)accessibilityRole { return NSAccessibilityTextFieldRole; }
-- (NSString *)accessibilityLabel { return NSLocalizedString(@"Change Shortcut", @""); }
-- (NSString *)accessibilityHelp { return NSLocalizedString(@"New shortcut", @""); }
-- (void)keyDown:(NSEvent *)event { [self performKeyEquivalent:event]; }
-- (BOOL)performKeyEquivalent:(NSEvent *)event {
+@implementation TSShortcutTableView
+- (void)mouseDown:(NSEvent *)event {
+    self.rowSelectedAtMouseDown = self.selectedRow;
+    [super mouseDown:event];
+}
+- (void)keyDown:(NSEvent *)event {
     NSString *key = event.charactersIgnoringModifiers;
-    NSEventModifierFlags flags = event.modifierFlags & TSShortcutModifiers;
-    if ([key isEqual:@"\r"] && !flags) { if (self.accept) self.accept(); return YES; }
-    if ([key isEqual:@"\033"] && !flags) { if (self.cancel) self.cancel(); return YES; }
-    if (([key isEqual:@"\t"] || [key isEqual:@"\031"]) && !(flags & ~NSEventModifierFlagShift)) {
-        if ((flags & NSEventModifierFlagShift) || [key isEqual:@"\031"]) [self.window selectPreviousKeyView:self];
-        else [self.window selectNextKeyView:self];
-        return YES;
+    if (!(event.modifierFlags & TSShortcutModifiers) && ([key isEqual:@"\r"] || [key isEqual:@"\003"]) && self.selectedRow >= 0 && self.beginRecording) {
+        self.beginRecording(self.selectedRow);
+        return;
     }
-    if (self.record) self.record(event);
+    [super keyDown:event];
+}
+@end
+
+// A shortcut in the list; assistive technologies press it to record a new one.
+@interface TSShortcutKeyLabel : NSTextField
+@property (copy, nullable) void (^press)(NSTextField *label);
+@end
+@implementation TSShortcutKeyLabel
+- (BOOL)isAccessibilitySelectorAllowed:(SEL)selector {
+    if (selector == @selector(accessibilityPerformPress)) { return self.press != nil; }
+    return [super isAccessibilitySelectorAllowed:selector];
+}
+- (BOOL)accessibilityPerformPress {
+    if (self.press == nil) { return NO; }
+    self.press(self);
     return YES;
 }
 @end
-@interface TSShortcutCapturePanel : NSPanel
-@property TSShortcutRecorder *recorder;
+
+// The shortcut cell while it records: a field with the key, selected, and a
+// button that removes the shortcut. The pane receives the keys (handleKeySearchEvent:).
+@interface TSShortcutKeyRecorder : NSView
+@property (readonly) NSTextField *label;
+@property (readonly) NSButton *removeButton;
+@property (copy, nonatomic) NSString *shortcut;
+@property (copy, nullable) dispatch_block_t resigned;
 @end
-@implementation TSShortcutCapturePanel
-- (BOOL)performKeyEquivalent:(NSEvent *)event {
-    NSString *key = event.charactersIgnoringModifiers;
-    NSEventModifierFlags flags = event.modifierFlags & TSShortcutModifiers;
-    BOOL buttonNavigation = (([key isEqual:@"\t"] || [key isEqual:@"\031"]) && !(flags & ~NSEventModifierFlagShift)) ||
-        (([key isEqual:@"\r"] || [key isEqual:@" "]) && !flags);
-    if (self.firstResponder != self.recorder && buttonNavigation) return [super performKeyEquivalent:event];
-    return [self.recorder performKeyEquivalent:event];
+@implementation TSShortcutKeyRecorder
+- (instancetype)initWithFrame:(NSRect)frame {
+    self = [super initWithFrame:frame];
+    if (self == nil) { return nil; }
+    _shortcut = @"";
+    _label = [NSTextField labelWithString:@""];
+    _label.alignment = NSTextAlignmentCenter; _label.lineBreakMode = NSLineBreakByTruncatingMiddle;
+    _label.accessibilityElement = NO; _label.identifier = @"shortcut.recorder-text";
+    NSString *remove = NSLocalizedString(@"Remove Shortcut", @"");
+    NSImage *minus = [NSImage imageWithSystemSymbolName:@"minus.circle.fill" accessibilityDescription:remove] ?: [NSImage new];
+    _removeButton = [NSButton buttonWithImage:minus target:nil action:NULL];
+    _removeButton.bordered = NO; _removeButton.imageScaling = NSImageScaleProportionallyDown;
+    _removeButton.contentTintColor = NSColor.secondaryLabelColor; _removeButton.refusesFirstResponder = YES;
+    _removeButton.toolTip = remove; _removeButton.identifier = @"shortcut.recorder-remove";
+    [_label setContentCompressionResistancePriority:249 forOrientation:NSLayoutConstraintOrientationHorizontal];
+    for (NSView *view in @[_label, _removeButton]) { view.translatesAutoresizingMaskIntoConstraints = NO; [self addSubview:view]; }
+    [NSLayoutConstraint activateConstraints:@[
+        [_label.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant:4],
+        [_label.trailingAnchor constraintEqualToAnchor:_removeButton.leadingAnchor constant:-2],
+        [_label.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
+        [_removeButton.trailingAnchor constraintEqualToAnchor:self.trailingAnchor constant:-3],
+        [_removeButton.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
+        [_removeButton.widthAnchor constraintEqualToConstant:14], [_removeButton.heightAnchor constraintEqualToConstant:14]]];
+    self.focusRingType = NSFocusRingTypeExterior;
+    self.identifier = @"shortcut.recorder";
+    return self;
 }
+- (void)setShortcut:(NSString *)shortcut {
+    _shortcut = [shortcut copy] ?: @"";
+    NSMutableParagraphStyle *centered = [NSMutableParagraphStyle new];
+    centered.alignment = NSTextAlignmentCenter; centered.lineBreakMode = NSLineBreakByTruncatingMiddle;
+    NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:_shortcut attributes:@{NSFontAttributeName: [NSFont systemFontOfSize:NSFont.systemFontSize], NSForegroundColorAttributeName: NSColor.labelColor, NSParagraphStyleAttributeName: centered}];
+    // The key is selected, as text in a field that waits for a replacement.
+    if (_shortcut.length) { [text addAttribute:NSBackgroundColorAttributeName value:NSColor.selectedTextBackgroundColor range:NSMakeRange(0, text.length)]; }
+    self.label.attributedStringValue = text;
+    NSAccessibilityPostNotification(self, NSAccessibilityValueChangedNotification);
+}
+- (void)drawRect:(NSRect)dirtyRect {
+    [NSColor.textBackgroundColor setFill];
+    [[NSBezierPath bezierPathWithRoundedRect:self.bounds xRadius:4 yRadius:4] fill];
+}
+- (NSRect)focusRingMaskBounds { return self.bounds; }
+- (void)drawFocusRingMask { [[NSBezierPath bezierPathWithRoundedRect:self.bounds xRadius:4 yRadius:4] fill]; }
+- (BOOL)acceptsFirstResponder { return YES; }
+- (BOOL)resignFirstResponder {
+    if (![super resignFirstResponder]) { return NO; }
+    if (self.resigned) { self.resigned(); }
+    return YES;
+}
+- (NSView *)hitTest:(NSPoint)point {
+    NSView *hit = [super hitTest:point];
+    if (hit == nil || hit == self.removeButton) { return hit; }
+    return self;
+}
+- (void)mouseDown:(NSEvent *)event {
+    if (self.window.firstResponder != self) { [self.window makeFirstResponder:self]; }
+}
+- (BOOL)isAccessibilityElement { return YES; }
+- (NSString *)accessibilityRole { return NSAccessibilityTextFieldRole; }
+- (NSString *)accessibilityLabel { return NSLocalizedString(@"Change Shortcut", @""); }
+- (id)accessibilityValue { return self.shortcut.length ? self.shortcut : NSLocalizedString(@"Press a key", @""); }
+- (NSString *)accessibilityHelp { return NSLocalizedString(@"Press a key", @""); }
 @end
 
 typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
@@ -114,12 +183,16 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 @property NSSearchField *search;
 @property NSArray<TSShortcutCommand *> *visibleCommands;
 @property NSArray<NSButton *> *selectionButtons;
-@property TSShortcutCapturePanel *capturePanel;
-@property TSShortcutCommand *editingCommand;
-@property NSTextField *captureDisplay;
-@property NSTextField *captureError;
-@property NSButton *applyButton;
-@property NSString *capturedKey;
+@property (nullable) TSShortcutCommand *editingCommand;
+@property TSShortcutKeyRecorder *recorder;
+@property NSView *recordingCell;
+@property NSImageView *recordingWarning;
+@property (copy, nullable) NSString *recordingError;
+@property BOOL endingRecording;
+@property BOOL confirmingRecording;
+@property NSStackView *status;
+@property NSTextField *statusText;
+@property (nullable) NSString *capturedKey;
 @property (copy) NSArray<TSShortcutBinding *> *capturedBindings;
 @property NSEventModifierFlags capturedModifiers;
 @end
@@ -173,15 +246,18 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     hint.textColor = NSColor.secondaryLabelColor; self.hint = hint;
     NSScrollView *scroll = [NSScrollView new];
     scroll.hasVerticalScroller = YES; scroll.hasHorizontalScroller = YES; scroll.borderType = NSNoBorder; scroll.drawsBackground = NO; scroll.automaticallyAdjustsContentInsets = NO;
-    self.table = [NSTableView new];
+    TSShortcutTableView *table = [TSShortcutTableView new];
+    self.table = table;
     self.table.delegate = self; self.table.dataSource = self;
     self.table.rowHeight = 22; self.table.style = NSTableViewStyleInset; self.table.usesAlternatingRowBackgroundColors = NO;
     self.table.columnAutoresizingStyle = NSTableViewFirstColumnOnlyAutoresizingStyle;
-    self.table.doubleAction = @selector(editShortcut:); self.table.target = self;
+    self.table.doubleAction = @selector(editShortcut:); self.table.action = @selector(tableClicked:); self.table.target = self;
+    __weak TSShortcutPaneController *weakPane = self;
+    table.beginRecording = ^(NSInteger row) { [weakPane beginRecordingAtRow:row]; };
     NSTableColumn *command = [[NSTableColumn alloc] initWithIdentifier:@"command"];
     command.title = NSLocalizedString(@"Command", @""); command.width = 300; command.minWidth = 200;
     NSTableColumn *shortcut = [[NSTableColumn alloc] initWithIdentifier:@"shortcut"];
-    shortcut.title = NSLocalizedString(@"Shortcut", @""); shortcut.width = 110; shortcut.minWidth = 90;
+    shortcut.title = NSLocalizedString(@"Shortcut", @""); shortcut.width = 150; shortcut.minWidth = 130;
     [self.table addTableColumn:command]; [self.table addTableColumn:shortcut];
     scroll.documentView = self.table;
     // The command list shows at least six commands and takes, with the key
@@ -192,23 +268,28 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     compactList.priority = 1; compactList.active = YES;
     [scroll setContentHuggingPriority:1 forOrientation:NSLayoutConstraintOrientationVertical];
     self.table.headerView.identifier = @"shortcut.columns";
-    NSButton *edit = [self button:@"Change…" action:@selector(editShortcut:)];
-    NSButton *clear = [self button:@"Remove Shortcut" action:@selector(removeShortcut:)];
     NSButton *restore = [self button:@"Restore Default" action:@selector(restoreShortcut:)];
     NSButton *all = [self button:@"Restore All…" action:@selector(restoreAll:)];
-    edit.identifier = @"shortcut.edit"; clear.identifier = @"shortcut.remove"; restore.identifier = @"shortcut.restore"; all.identifier = @"shortcut.restore-all";
-    self.selectionButtons = @[edit, clear, restore];
+    restore.identifier = @"shortcut.restore"; all.identifier = @"shortcut.restore-all";
+    self.selectionButtons = @[restore];
     self.macroButton = [self button:@"Show in Macro Editor" action:@selector(showSelectedMacro:)];
     self.macroButton.identifier = @"shortcut.macro";
     self.macroButton.enabled = NO;
     NSView *spacer = [NSView new];
     [spacer setContentHuggingPriority:249 forOrientation:NSLayoutConstraintOrientationHorizontal];
-    NSStackView *buttons = [NSStackView stackViewWithViews:@[edit,clear,restore,self.macroButton,spacer,all]];
+    NSStackView *buttons = [NSStackView stackViewWithViews:@[restore,self.macroButton,spacer,all]];
     buttons.orientation = NSUserInterfaceLayoutOrientationHorizontal; buttons.spacing = 8;
-    for (NSButton *button in @[edit,clear,restore,self.macroButton,all]) {
+    for (NSButton *button in @[restore,self.macroButton,all]) {
         button.controlSize = NSControlSizeSmall; button.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
     }
-    for (NSView *view in @[self.searchMode,self.search,hint,scroll,buttons,self.keySearchView]) { view.translatesAutoresizingMaskIntoConstraints = NO; [content addSubview:view]; }
+    [self makeRecorder];
+    // Under the list, as in Xcode: the selected command's default shortcut, or why a recorded key was refused.
+    self.status = [self warningWithText:@" "];
+    self.status.identifier = @"shortcut.status";
+    self.statusText = (NSTextField *)self.status.arrangedSubviews[1];
+    self.statusText.identifier = @"shortcut.status-text"; self.statusText.alignment = NSTextAlignmentCenter;
+    self.status.arrangedSubviews[0].hidden = YES;
+    for (NSView *view in @[self.searchMode,self.search,hint,scroll,self.status,buttons,self.keySearchView]) { view.translatesAutoresizingMaskIntoConstraints = NO; [content addSubview:view]; }
     content.identifier = @"shortcut.commands"; self.commandsView = content;
     hint.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
     [NSLayoutConstraint activateConstraints:@[
@@ -226,7 +307,11 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
         [hint.leadingAnchor constraintEqualToAnchor:self.search.leadingAnchor], [hint.trailingAnchor constraintEqualToAnchor:content.trailingAnchor constant:-12],
         [scroll.topAnchor constraintEqualToAnchor:hint.bottomAnchor constant:4],
         [scroll.leadingAnchor constraintEqualToAnchor:content.leadingAnchor constant:4], [scroll.trailingAnchor constraintEqualToAnchor:content.trailingAnchor constant:-4],
-        [buttons.topAnchor constraintEqualToAnchor:scroll.bottomAnchor constant:6],
+        [self.status.topAnchor constraintEqualToAnchor:scroll.bottomAnchor constant:4],
+        [self.status.centerXAnchor constraintEqualToAnchor:content.centerXAnchor],
+        [self.status.leadingAnchor constraintGreaterThanOrEqualToAnchor:content.leadingAnchor constant:12],
+        [self.status.trailingAnchor constraintLessThanOrEqualToAnchor:content.trailingAnchor constant:-12],
+        [buttons.topAnchor constraintEqualToAnchor:self.status.bottomAnchor constant:6],
         [buttons.leadingAnchor constraintEqualToAnchor:self.search.leadingAnchor],
         [buttons.trailingAnchor constraintEqualToAnchor:content.trailingAnchor constant:-12],
         [buttons.bottomAnchor constraintEqualToAnchor:content.bottomAnchor constant:-10]
@@ -256,7 +341,12 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     for (NSView *child in view.subviews) { NSView *found = [self viewWithIdentifier:identifier inView:child]; if (found) return found; }
     return nil;
 }
-- (void)reloadTable { [self.table reloadData]; }
+- (void)reloadTable {
+    // A pending macro confirmation keeps its command; the reply checks it again.
+    if (self.editingCommand != nil && !self.confirmingRecording) { [self endRecording]; }
+    [self.table reloadData];
+    [self updateStatus];
+}
 - (void)reloadFunctionCommands {
     self.hint.stringValue = @"";
     if (self.store.unavailableCommands.count)
@@ -271,6 +361,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     self.visibleCommands = visible;
     [self reloadTable];
     for (NSButton *button in self.selectionButtons) button.enabled = [self selectedCommand] != nil;
+    [self updateStatus];
 }
 - (void)controlTextDidChange:(NSNotification *)notification { if (!self.searchingByKey) { [self reloadCommands]; } }
 - (void)reloadCommands {
@@ -327,6 +418,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     if (window != nil) { [window makeFirstResponder:self.keySearchView]; }
 }
 - (BOOL)handleKeySearchEvent:(NSEvent *)event {
+    if (self.editingCommand != nil && self.window.firstResponder == self.recorder) { return [self handleRecordingEvent:event]; }
     if (!self.searchingByKey) { return NO; }
     if (event.type != NSEventTypeKeyDown) { return YES; }
     NSEventModifierFlags flags = event.modifierFlags & TSShortcutModifiers;
@@ -423,6 +515,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 - (void)updateSelectionButtons {
     for (NSButton *button in self.selectionButtons) { button.enabled = [self selectedCommand] != nil; }
     self.macroButton.enabled = [self matchAtRow:self.table.selectedRow].macro != nil;
+    [self updateStatus];
 }
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
     return self.searchingByKey && self.searchEvent != nil ? (NSInteger)self.searchMatches.count + ([self macroHeaderRow] >= 0 ? 1 : 0) : (NSInteger)self.visibleCommands.count;
@@ -485,9 +578,10 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
         NSEventModifierFlags flags = match.macro != nil ? match.macro.modifiers : match.menuItem.keyEquivalentModifierMask;
         NSString *reason = [self inactiveReasonForMatch:match];
         BOOL isCommand = [column.identifier isEqualToString:@"command"];
+        if (!isCommand && match.command != nil && match.command == self.editingCommand) { return self.recordingCell; }
         NSString *text = !isCommand ? [TSShortcutStore displayKey:key modifiers:flags]
             : reason == nil ? [match.path stringByAppendingFormat:@" — %@", NSLocalizedString(@"Assigned", @"")] : match.path;
-        NSTextField *label = [NSTextField labelWithString:text]; label.lineBreakMode = NSLineBreakByTruncatingMiddle; label.toolTip = text;
+        NSTextField *label = isCommand || match.command == nil ? [NSTextField labelWithString:text] : [self shortcutLabel:text]; label.lineBreakMode = NSLineBreakByTruncatingMiddle; label.toolTip = text;
         if (!isCommand || reason == nil) { return label; }
         NSView *cell = [NSView new]; cell.identifier = @"shortcut.inactive-command";
         NSStackView *warning = [self warningWithText:reason];
@@ -506,7 +600,9 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     if (row < 0 || row >= (NSInteger)self.visibleCommands.count) { return nil; }
     TSShortcutCommand *command = self.visibleCommands[(NSUInteger)row];
     BOOL isCommand = [column.identifier isEqualToString:@"command"];
-    NSTextField *label = [NSTextField labelWithString:isCommand ? command.path : [TSShortcutStore displayKey:command.item.keyEquivalent modifiers:command.item.keyEquivalentModifierMask]];
+    if (!isCommand && command == self.editingCommand) { return self.recordingCell; }
+    NSString *text = isCommand ? command.path : [TSShortcutStore displayKey:command.item.keyEquivalent modifiers:command.item.keyEquivalentModifierMask];
+    NSTextField *label = isCommand ? [NSTextField labelWithString:text] : [self shortcutLabel:text];
     label.lineBreakMode = NSLineBreakByTruncatingMiddle;
     label.toolTip = command.path;
     return label;
@@ -518,7 +614,7 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
 }
 - (void)tableViewSelectionDidChange:(NSNotification *)notification { [self updateSelectionButtons]; }
 - (void)showError:(NSString *)error {
-    NSWindow *parent = self.capturePanel ?: self.window;
+    NSWindow *parent = self.window;
     if (error == nil || parent == nil || parent.attachedSheet != nil) { return; }
     NSAlert *alert = [NSAlert new]; alert.messageText = NSLocalizedString(@"Shortcut Unavailable", @""); alert.informativeText = error;
     [alert beginSheetModalForWindow:parent completionHandler:nil];
@@ -526,7 +622,7 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
 - (void)confirmMacrosUsingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags completion:(void (^)(BOOL))completion {
     NSArray *macros = [self.store macrosUsingKey:key modifiers:flags];
     if (!macros.count) { completion(YES); return; }
-    NSWindow *parent = self.capturePanel ?: self.window;
+    NSWindow *parent = self.window;
     if (parent == nil || parent.attachedSheet != nil) { completion(NO); return; }
     NSAlert *alert = [NSAlert new];
     alert.messageText = NSLocalizedString(@"Assign a shortcut used by macros?", @"");
@@ -542,11 +638,13 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     }];
 }
 - (void)removeShortcut:(id)sender {
-    TSShortcutCommand *command = self.selectedCommand; if (!command) return;
+    TSShortcutCommand *command = self.editingCommand ?: self.selectedCommand; if (!command) return;
+    [self endRecording];
     [self showError:[self.store setKey:@"" modifiers:0 forCommand:command]];
     [self refreshMenuAndMacros];
 }
 - (void)restoreShortcut:(id)sender {
+    [self endRecording];
     TSShortcutCommand *command = self.selectedCommand; if (!command) return;
     NSString *error = [self.store conflictForRestoringCommand:command];
     if (error) { [self showError:[NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), error]]; return; }
@@ -559,6 +657,7 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     }];
 }
 - (void)restoreAll:(id)sender {
+    [self endRecording];
     NSWindow *parent = self.window;
     if (parent == nil || parent.attachedSheet != nil) { return; }
     NSAlert *alert = [NSAlert new]; alert.messageText = NSLocalizedString(@"Restore all keyboard shortcuts?", @"");
@@ -574,65 +673,179 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
         [strongSelf.store restoreAll]; [strongSelf refreshMenuAndMacros];
     }];
 }
-- (void)editShortcut:(id)sender {
-    NSWindow *parent = self.window;
-    TSShortcutCommand *command = self.selectedCommand;
-    if (command == nil || parent == nil || parent.attachedSheet != nil) { return; }
-    [self stopKeySearch];
-    self.editingCommand = command; self.capturedKey = nil; self.capturedBindings = nil;
-    TSShortcutCapturePanel *panel = [[TSShortcutCapturePanel alloc] initWithContentRect:NSMakeRect(0,0,640,240) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
-    self.capturePanel = panel;
-    panel.title = NSLocalizedString(@"Change Shortcut", @"");
-    TSShortcutRecorder *recorder = [[TSShortcutRecorder alloc] initWithFrame:panel.contentView.bounds];
-    recorder.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
-    panel.contentView = recorder; panel.recorder = recorder;
-    NSTextField *title = [NSTextField labelWithString:command.path]; title.frame = NSMakeRect(20,195,600,25); title.lineBreakMode = NSLineBreakByTruncatingMiddle; title.toolTip = command.path;
-    self.captureDisplay = [NSTextField labelWithString:NSLocalizedString(@"New shortcut", @"")];
-    self.captureDisplay.frame = NSMakeRect(20,145,600,40); self.captureDisplay.font = [NSFont systemFontOfSize:18]; self.captureDisplay.alignment = NSTextAlignmentCenter;
-    self.captureError = [NSTextField wrappingLabelWithString:@""]; self.captureError.frame = NSMakeRect(20,65,600,70); self.captureError.textColor = NSColor.secondaryLabelColor;
-    self.applyButton = [self button:@"Apply" action:@selector(applyCapturedShortcut:)]; self.applyButton.enabled = NO;
-    NSButton *cancel = [self button:@"Cancel" action:@selector(cancelCapture:)];
-    self.applyButton.keyEquivalent = @"\r"; cancel.keyEquivalent = @"\033";
-    recorder.nextKeyView = self.applyButton; self.applyButton.nextKeyView = cancel; cancel.nextKeyView = recorder;
-    [self.applyButton sizeToFit]; [cancel sizeToFit];
-    self.applyButton.frame = NSMakeRect(620-NSWidth(self.applyButton.frame),18,NSWidth(self.applyButton.frame),32);
-    cancel.frame = NSMakeRect(NSMinX(self.applyButton.frame)-NSWidth(cancel.frame)-12,18,NSWidth(cancel.frame),32);
-    for (NSView *view in @[title,self.captureDisplay,self.captureError,self.applyButton,cancel]) [recorder addSubview:view];
-    __weak typeof(self) weakSelf = self;
-    recorder.record = ^(NSEvent *event) { TSShortcutPaneController *strongSelf = weakSelf; if (strongSelf != nil) { [strongSelf recordShortcutEvent:event]; } };
-    recorder.accept = ^{ TSShortcutPaneController *strongSelf = weakSelf; if (strongSelf != nil) { [strongSelf applyCapturedShortcut:nil]; } };
-    recorder.cancel = ^{ TSShortcutPaneController *strongSelf = weakSelf; if (strongSelf != nil) { [strongSelf cancelCapture:nil]; } };
-    [parent beginSheet:panel completionHandler:^(NSModalResponse result) {
-        panel.recorder.record = nil; panel.recorder.accept = nil; panel.recorder.cancel = nil;
+- (NSTextField *)shortcutLabel:(NSString *)text {
+    TSShortcutKeyLabel *label = [TSShortcutKeyLabel labelWithString:text];
+    __weak TSShortcutPaneController *weakSelf = self;
+    label.press = ^(NSTextField *pressed) {
         TSShortcutPaneController *strongSelf = weakSelf;
-        if (strongSelf == nil) { return; }
-        strongSelf.capturePanel = nil; strongSelf.editingCommand = nil;
-        [strongSelf reloadCommands];
-    }];
-    [panel makeFirstResponder:recorder];
-    panel.initialFirstResponder = recorder;
+        if (strongSelf != nil) { [strongSelf beginRecordingAtRow:[strongSelf.table rowForView:pressed]]; }
+    };
+    return label;
 }
-- (void)recordShortcutEvent:(NSEvent *)event {
+- (void)makeRecorder {
+    self.recorder = [[TSShortcutKeyRecorder alloc] initWithFrame:NSMakeRect(0, 0, 120, 20)];
+    self.recorder.removeButton.target = self; self.recorder.removeButton.action = @selector(removeShortcut:);
+    __weak TSShortcutPaneController *weakSelf = self;
+    // A click elsewhere ends the recording and keeps the shortcut; the focus goes where it was going.
+    self.recorder.resigned = ^{ [weakSelf finishRecordingFocusingList:NO]; };
+    NSFont *font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
+    self.recordingWarning = [TSPrefPaneLayout warningSymbolForFont:font];
+    self.recordingWarning.identifier = @"shortcut.recording-warning";
+    NSView *cell = [NSView new]; cell.identifier = @"shortcut.recording";
+    for (NSView *view in @[self.recorder, self.recordingWarning]) { view.translatesAutoresizingMaskIntoConstraints = NO; [cell addSubview:view]; }
+    [NSLayoutConstraint activateConstraints:@[
+        [self.recorder.leadingAnchor constraintEqualToAnchor:cell.leadingAnchor],
+        [self.recorder.trailingAnchor constraintEqualToAnchor:cell.trailingAnchor constant:-20],
+        [self.recorder.centerYAnchor constraintEqualToAnchor:cell.centerYAnchor],
+        [self.recorder.heightAnchor constraintEqualToConstant:18],
+        [self.recordingWarning.trailingAnchor constraintEqualToAnchor:cell.trailingAnchor constant:-2],
+        [self.recordingWarning.centerYAnchor constraintEqualToAnchor:cell.centerYAnchor]]];
+    self.recordingCell = cell;
+}
+- (TSShortcutCommand *)commandAtRow:(NSInteger)row {
+    if (self.searchingByKey && self.searchEvent != nil) { return [self matchAtRow:row].command; }
+    return row >= 0 && row < (NSInteger)self.visibleCommands.count ? self.visibleCommands[(NSUInteger)row] : nil;
+}
+- (NSInteger)rowForCommand:(TSShortcutCommand *)command {
+    if (command == nil) { return -1; }
+    for (NSInteger row = 0; row < self.table.numberOfRows; row++) { if ([self commandAtRow:row] == command) { return row; } }
+    return -1;
+}
+- (void)reloadShortcutCellAtRow:(NSInteger)row {
+    NSInteger column = [self.table columnWithIdentifier:@"shortcut"];
+    if (row < 0 || row >= self.table.numberOfRows || column < 0) { return; }
+    [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)row] columnIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)column]];
+}
+// The double action, and Return in the list.
+- (void)editShortcut:(id)sender {
+    NSInteger row = sender == self.table ? self.table.clickedRow : self.table.selectedRow;
+    [self beginRecordingAtRow:row];
+}
+// A single click on the shortcut of the row that was already selected.
+- (void)tableClicked:(id)sender {
+    TSShortcutTableView *table = (TSShortcutTableView *)self.table;
+    NSInteger row = table.clickedRow;
+    if (row < 0 || row != table.rowSelectedAtMouseDown || table.clickedColumn != [table columnWithIdentifier:@"shortcut"]) { return; }
+    [self beginRecordingAtRow:row];
+}
+- (void)beginRecordingAtRow:(NSInteger)row {
+    TSShortcutCommand *command = [self commandAtRow:row];
+    NSWindow *window = self.window;
+    if (command == nil || window == nil || window.attachedSheet != nil) { return; }
+    if (self.editingCommand != command) {
+        [self endRecording];
+        // A row whose recording ended by a click elsewhere may still hold the field.
+        NSInteger stale = [self.table rowForView:self.recordingCell];
+        if (stale >= 0 && stale != row) { [self reloadShortcutCellAtRow:stale]; }
+        if (self.table.selectedRow != row) { [self.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)row] byExtendingSelection:NO]; }
+        self.editingCommand = command; self.capturedKey = nil; self.capturedBindings = nil; self.capturedModifiers = 0; self.recordingError = nil;
+        [self updateRecorder];
+        [self reloadShortcutCellAtRow:row];
+        [self.table scrollRowToVisible:row];
+    }
+    // The field is in the row before it takes the keys.
+    NSInteger column = [self.table columnWithIdentifier:@"shortcut"];
+    if (self.recorder.window != window && column >= 0) { [self.table viewAtColumn:column row:row makeIfNecessary:YES]; }
+    if (self.recorder.window != window) { [self endRecording]; return; }
+    [window makeFirstResponder:self.recorder];
+    [self updateStatus];
+}
+// Ends recording and keeps the shortcut as it is now; the list takes the focus the recorder had.
+- (void)endRecording { [self finishRecordingFocusingList:YES]; }
+- (void)finishRecordingFocusingList:(BOOL)focusList {
+    TSShortcutCommand *command = self.editingCommand;
+    if (command == nil || self.endingRecording) { return; }
+    self.endingRecording = YES;
+    NSWindow *window = self.window;
+    self.editingCommand = nil; self.capturedKey = nil; self.capturedBindings = nil; self.capturedModifiers = 0; self.recordingError = nil;
+    if (focusList) {
+        if (window != nil && window.firstResponder == self.recorder) { [window makeFirstResponder:self.table]; }
+        [self reloadShortcutCellAtRow:[self rowForCommand:command]];
+        [self.recordingCell removeFromSuperview];
+    } else {
+        // The recorder is resigning: the row shows its shortcut again once the focus has moved.
+        __weak TSShortcutPaneController *weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            TSShortcutPaneController *strongSelf = weakSelf;
+            if (strongSelf == nil || strongSelf.editingCommand == command) { return; }
+            [strongSelf reloadShortcutCellAtRow:[strongSelf rowForCommand:command]];
+            if (strongSelf.editingCommand == nil) { [strongSelf.recordingCell removeFromSuperview]; }
+        });
+    }
+    self.endingRecording = NO;
+    [self updateStatus];
+}
+- (BOOL)isRecording { return self.editingCommand != nil; }
+// Escape and Return end recording, Tab moves on, Delete removes the shortcut; any other key may become it.
+- (BOOL)handleRecordingEvent:(NSEvent *)event {
+    if (event.type != NSEventTypeKeyDown) return YES;
+    NSString *key = event.charactersIgnoringModifiers;
+    unichar c = key.length == 1 ? [key characterAtIndex:0] : 0;
+    NSEventModifierFlags flags = event.modifierFlags & TSShortcutModifiers;
+    if (!flags && (c == 27 || c == '\r' || c == 3)) { [self endRecording]; return YES; }
+    if ((c == '\t' || c == 25) && !(flags & ~NSEventModifierFlagShift)) {
+        NSWindow *window = self.window;
+        [self endRecording];
+        if (c == 25 || (flags & NSEventModifierFlagShift)) { [window selectPreviousKeyView:nil]; } else { [window selectNextKeyView:nil]; }
+        return YES;
+    }
+    if (!flags && (c == 127 || c == 8 || c == NSDeleteFunctionKey)) { [self removeShortcut:nil]; return YES; }
+    [self recordShortcutEvent:event];
+    return YES;
+}
+- (void)updateRecorder {
+    TSShortcutCommand *command = self.editingCommand;
+    if (command == nil) { return; }
+    // An empty field, as in Xcode, for a command without a shortcut (the list shows a dash).
+    NSString *current = command.item.keyEquivalent.length ? [TSShortcutStore displayKey:command.item.keyEquivalent modifiers:command.item.keyEquivalentModifierMask] : @"";
+    NSString *captured = self.capturedKey;
+    self.recorder.shortcut = captured != nil ? [TSShortcutStore displayKey:captured modifiers:self.capturedModifiers] : current;
+    self.recorder.removeButton.hidden = command.item.keyEquivalent.length == 0;
+    self.recordingWarning.hidden = self.recordingError == nil;
+}
+// The line under the list: why a recorded key was refused, otherwise the selected command's default.
+- (void)updateStatus {
+    if (self.statusText == nil) { return; }
+    NSString *error = self.editingCommand != nil ? self.recordingError : nil;
+    TSShortcutCommand *command = self.editingCommand ?: [self selectedCommand];
+    NSString *text = error;
+    if (text == nil && command != nil) {
+        text = command.defaultKey.length == 0 ? NSLocalizedString(@"Default shortcut: None", @"")
+            : [NSString stringWithFormat:NSLocalizedString(@"Default shortcut: %@", @""), [TSShortcutStore displayKey:command.defaultKey modifiers:command.defaultModifiers]];
+    }
+    // A blank line keeps the list and the buttons where they are.
+    self.statusText.stringValue = text.length ? text : @" ";
+    self.status.arrangedSubviews[0].hidden = error == nil;
+}
+- (void)showRecordingError:(NSString *)error {
+    self.recordingError = error;
+    [self updateRecorder];
+    [self updateStatus];
+    NSWindow *window = self.window;
+    if (window.isKeyWindow) {
+        NSAccessibilityPostNotificationWithUserInfo(self.recorder, NSAccessibilityAnnouncementRequestedNotification,
+            @{NSAccessibilityAnnouncementKey: error, NSAccessibilityPriorityKey: @(NSAccessibilityPriorityHigh)});
+    }
+}
+// Reads a key press as a shortcut; NO, with the reason under the list, for a key that cannot be one.
+- (BOOL)captureShortcutEvent:(NSEvent *)event {
     NSString *key = TSShortcutCharacterForEvent(event);
     NSEventModifierFlags flags = event.modifierFlags & TSShortcutModifiers;
-    self.captureError.stringValue = @"";
-    self.applyButton.enabled = [TSShortcutStore isAllowedKey:key modifiers:flags] && key.length > 0;
-    if (!self.applyButton.enabled) {
-        self.capturedKey = nil; self.capturedBindings = nil;
-        self.captureDisplay.stringValue = NSLocalizedString(@"New shortcut", @"");
-        self.captureError.stringValue = NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.", @"");
-    } else {
-        self.capturedBindings = TSEventBindings(event, [event charactersByApplyingModifiers:0]);
-        TSShortcutBinding *binding = self.capturedBindings.firstObject;
-        self.capturedKey = binding.key; self.capturedModifiers = binding.modifiers;
-        self.captureDisplay.stringValue = [TSShortcutStore displayKey:self.capturedKey modifiers:self.capturedModifiers];
+    if (key.length == 0 || ![TSShortcutStore isAllowedKey:key modifiers:flags]) {
+        self.capturedKey = nil; self.capturedBindings = nil; self.capturedModifiers = 0;
+        [self showRecordingError:NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.", @"")];
+        return NO;
     }
-    self.capturePanel.recorder.accessibilityValue = self.captureDisplay.stringValue;
+    self.capturedBindings = TSEventBindings(event, [event charactersByApplyingModifiers:0]);
+    TSShortcutBinding *binding = self.capturedBindings.firstObject;
+    self.capturedKey = binding.key; self.capturedModifiers = binding.modifiers;
+    self.recordingError = nil;
+    [self updateRecorder];
+    return YES;
 }
-- (void)cancelCapture:(id)sender {
-    NSWindow *parent = self.window;
-    TSShortcutCapturePanel *panel = self.capturePanel;
-    if (parent != nil && panel != nil && panel.attachedSheet == nil) { [parent endSheet:panel returnCode:NSModalResponseCancel]; }
+// A key pressed while recording becomes the shortcut at once when it can.
+- (void)recordShortcutEvent:(NSEvent *)event {
+    if ([self captureShortcutEvent:event]) { [self applyCapturedShortcut:nil]; }
 }
 - (NSString *)conflictForCapturedShortcut {
     NSArray<TSShortcutBinding *> *bindings = self.capturedBindings ?: @[TSBinding(self.capturedKey, self.capturedModifiers)];
@@ -648,29 +861,31 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by:\n%@", @""),
         [conflicts.array componentsJoinedByString:@"\n"]];
 }
+// A key in use by another command is refused and recording goes on; a key that
+// macros use is assigned after the confirmation.
 - (void)applyCapturedShortcut:(id)sender {
     NSString *key = self.capturedKey;
     TSShortcutCommand *command = self.editingCommand;
     NSEventModifierFlags flags = self.capturedModifiers;
-    if (key == nil || command == nil || !self.applyButton.enabled) { return; }
+    if (key == nil || command == nil) { return; }
     NSString *conflict = [self conflictForCapturedShortcut];
-    if (conflict != nil) { self.captureError.stringValue = conflict; return; }
+    if (conflict != nil) { [self showRecordingError:conflict]; return; }
+    self.recordingError = nil; [self updateRecorder]; [self updateStatus];
     __weak typeof(self) weakSelf = self;
+    self.confirmingRecording = YES;
     [self confirmMacrosUsingKey:key modifiers:flags completion:^(BOOL accepted) {
         TSShortcutPaneController *strongSelf = weakSelf;
-        if (strongSelf == nil || !accepted || strongSelf.editingCommand != command ||
-            ![strongSelf.capturedKey isEqualToString:key] || strongSelf.capturedModifiers != flags) { return; }
+        if (strongSelf == nil) { return; }
+        strongSelf.confirmingRecording = NO;
+        if (strongSelf.editingCommand != command || ![strongSelf.capturedKey isEqualToString:key] || strongSelf.capturedModifiers != flags) { return; }
+        if (!accepted) { [strongSelf endRecording]; return; }
         NSString *error = [strongSelf conflictForCapturedShortcut];
-        if (error == nil) { error = [strongSelf.store setKey:key modifiers:flags forCommand:command]; }
+        if (error != nil) { [strongSelf showRecordingError:error]; return; }
+        error = [strongSelf.store setKey:key modifiers:flags forCommand:command];
+        if (error == nil) { [strongSelf endRecording]; }
         [strongSelf refreshMenuAndMacros];
-        TSShortcutCapturePanel *panel = strongSelf.capturePanel;
-        if (error != nil) {
-            strongSelf.captureError.stringValue = error;
-            if (panel != nil) { [panel makeFirstResponder:panel.recorder]; }
-            return;
-        }
-        NSWindow *parent = strongSelf.window;
-        if (parent != nil && panel != nil) { [parent endSheet:panel returnCode:NSModalResponseOK]; }
+        if (error == nil) { return; }
+        if (strongSelf.editingCommand == command) { [strongSelf showRecordingError:error]; } else { [strongSelf showError:error]; }
     }];
 }
 - (void)applySettingsQuery:(NSString *)query targets:(NSArray<NSString *> *)targets filterCommands:(BOOL)filter

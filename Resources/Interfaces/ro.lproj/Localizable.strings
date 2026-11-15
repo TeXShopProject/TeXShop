@@ -153,16 +153,15 @@
 "Search commands" = "Caută comenzi";
 "Command" = "Comandă";
 "Shortcut" = "Scurtătură";
-"Change…" = "Schimbați…";
 "Remove Shortcut" = "Elimină scurtătura";
 "Restore Default" = "Restaurați valoarea implicită";
+"Default shortcut: %@" = "Scurtătură implicită: %@";
+"Default shortcut: None" = "Scurtătură implicită: niciuna";
 "Restore All…" = "Restaurați tot…";
 "Restore All" = "Restaurați tot";
 "Change Shortcut" = "Modificarea scurtăturii";
-"Apply" = "Aplicați";
 "Shortcut Unavailable" = "Scurtătură indisponibilă";
 "Restore all keyboard shortcuts?" = "Restaurați toate scurtăturile de tastatură?";
-"New shortcut" = "Scurtătură nouă";
 "This command is no longer available." = "Această comandă nu mai este disponibilă.";
 "This shortcut is already used by “%@”." = "Această scurtătură este deja folosită de „%@”.";
 

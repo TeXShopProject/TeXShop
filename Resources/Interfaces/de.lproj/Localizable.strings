@@ -152,16 +152,15 @@
 "Search commands" = "Befehle suchen";
 "Command" = "Befehl";
 "Shortcut" = "Kurzbefehl";
-"Change…" = "Ändern…";
 "Remove Shortcut" = "Kurzbefehl entfernen";
 "Restore Default" = "Standard wiederherstellen";
+"Default shortcut: %@" = "Standardkurzbefehl: %@";
+"Default shortcut: None" = "Standardkurzbefehl: Keiner";
 "Restore All…" = "Alle zurücksetzen…";
 "Restore All" = "Alle zurücksetzen";
 "Change Shortcut" = "Kurzbefehl ändern";
-"Apply" = "Anwenden";
 "Shortcut Unavailable" = "Kurzbefehl nicht verfügbar";
 "Restore all keyboard shortcuts?" = "Alle Tastaturkurzbefehle zurücksetzen?";
-"New shortcut" = "Neuer Kurzbefehl";
 "This command is no longer available." = "Dieser Befehl ist nicht mehr verfügbar.";
 "This shortcut is already used by “%@”." = "Dieser Kurzbefehl wird bereits von „%@“ verwendet.";
 

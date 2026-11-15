@@ -332,10 +332,8 @@ add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"I
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Symbols", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Mark with Note", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.2", @"Localizable", @"Edit Command Completion…", TSSettingsSearchWeightChoice);
-add(TSSettingsCategoryKeyboard, @"shortcut.edit", @"Localizable", @"Change…", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"shortcut.columns", @"Localizable", @"Command", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"shortcut.key", @"Localizable", @"Search by Key", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryKeyboard, @"shortcut.remove", @"Localizable", @"Remove Shortcut", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"shortcut.restore-all", @"Localizable", @"Restore All…", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"shortcut.restore", @"Localizable", @"Restore Default", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"shortcut.mode", @"Localizable", @"Search by Function", TSSettingsSearchWeightLabel);

@@ -94,6 +94,7 @@ for language in LANGUAGES:
         for key in ('Search by Function','Search by Key','Remove Shortcut','Restore Default','Restore All…'):
             assert key in labels and '「'+labels[key]+'」' in pages['configure_menushortcuts'],('Japanese shortcut button missing',key)
         assert '割り当てを解除' not in pages['configure_menushortcuts'] and '初期状態に戻す' not in pages['configure_menushortcuts'], 'Japanese obsolete shortcut button'
+        assert '「変更…」' not in pages['configure_menushortcuts'] and '「適用」' not in pages['configure_menushortcuts'], 'Japanese recording sheet buttons'
         # The recommended method considers the syntax of LaTeX, not its structure.
         method='LaTeXの構文を考慮する（推奨）'
         assert labels['Use LaTeX-aware spell checking (recommended)']==method and categories['catalog.spelling.1.0.title']==method, 'Japanese spell checking method name'
