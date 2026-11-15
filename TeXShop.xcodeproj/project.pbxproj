@@ -296,6 +296,7 @@
 		52B13E5408A8183B00756E5E /* matrixpanel.nib in Resources */ = {isa = PBXBuildFile; fileRef = 52B13E5308A8183B00756E5E /* matrixpanel.nib */; };
 		52E4BF8D08CA74C300726E11 /* TeXShop in Resources */ = {isa = PBXBuildFile; fileRef = 52E4BF4408CA74C300726E11 /* TeXShop */; };
 		EF5890000000000000000001 /* TSSparkleController.m in Sources */ = {isa = PBXBuildFile; fileRef = EF5890000000000000000002; };
+		044F5752D41407B75A0A33AA /* TSLibraryVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 201C96D30AFE8EF7EE852DB2 /* TSLibraryVersion.m */; };
 		EF5590000000000000000001 /* TeXShop.icon in Resources */ = {isa = PBXBuildFile; fileRef = EF5590000000000000000002; };
 		E18300000000000000000000 = {isa = PBXBuildFile; fileRef = E18200000000000000000010; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		E18300000000000000000001 = {isa = PBXBuildFile; fileRef = E18200000000000000000110; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
@@ -1033,6 +1034,8 @@
 		068A0284B4D8986B4C59306F /* TSMarkMenu.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMarkMenu.m; sourceTree = "<group>"; };
 		EF5890000000000000000002 /* TSSparkleController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSparkleController.m; sourceTree = "<group>"; };
 		EF5890000000000000000003 /* TSSparkleController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSparkleController.h; sourceTree = "<group>"; };
+		201C96D30AFE8EF7EE852DB2 /* TSLibraryVersion.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSLibraryVersion.m; sourceTree = "<group>"; };
+		18A717FA0C930F8D03EC3E08 /* TSLibraryVersion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSLibraryVersion.h; sourceTree = "<group>"; };
 		EF5590000000000000000002 /* TeXShop.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.icon; path = Artwork/TeXShop.icon; sourceTree = SOURCE_ROOT; };
 		E18200000000000000000000 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingsCategory.h; sourceTree = "<group>"; };
 		E18200000000000000000010 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsCategory.m; sourceTree = "<group>"; };
@@ -1282,6 +1285,8 @@
 				ED0C00000000000000000002 /* TSDockIconController.m */,
 				40AA2B8103C79AF800000009 /* TSEncodingSupport.h */,
 				40AA2B8203C79AF800000009 /* TSEncodingSupport.m */,
+				18A717FA0C930F8D03EC3E08 /* TSLibraryVersion.h */,
+				201C96D30AFE8EF7EE852DB2 /* TSLibraryVersion.m */,
 				EF5890000000000000000003 /* TSSparkleController.h */,
 				EF5890000000000000000002 /* TSSparkleController.m */,
 				40A56E1C11E67546002BEED6 /* TSStationery.h */,
@@ -2005,6 +2010,7 @@
 				40C894C306080105000B55B4 /* CopyFiles */,
 				522BC4C20A2A007A007CAB82 /* CopyFiles */,
 				40C889D10F1A803E00B5B8A9 /* CopyFiles */,
+				CD6726A519ED123EBEE9D303 /* Set Build Number */,
 			);
 			buildRules = (
 				40E08A5707B741D50025F50B /* PBXBuildRule */,
@@ -2152,6 +2158,28 @@
 /* End PBXRezBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		CD6726A519ED123EBEE9D303 /* Set Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
+				"$(SRCROOT)/Scripts/set-build-number.sh",
+			);
+			name = "Set Build Number";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/sh \"$SRCROOT/Scripts/set-build-number.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -2227,6 +2255,7 @@
 				E17100000000000000000001,
 				ED0C00000000000000000001,
 				EF5890000000000000000001 /* TSSparkleController.m in Sources */,
+				044F5752D41407B75A0A33AA /* TSLibraryVersion.m in Sources */,
 				407881790519249A006979EA /* main.m in Sources */,
 				4078817C0519249A006979EA /* TSConsoleWindow.m in Sources */,
 				4078817D0519249A006979EA /* TSTextEditorWindow.m in Sources */,

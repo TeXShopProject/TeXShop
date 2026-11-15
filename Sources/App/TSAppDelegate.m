@@ -65,6 +65,7 @@
 #import "TSSourceStatusBar.h"
 #import "TSAdvancedFindFieldStyle.h"
 #import "TSPreferenceEffects.h"
+#import "TSLibraryVersion.h"
 
 /*
 #define NSAppKitVersionNumber10_8 1187
@@ -337,11 +338,10 @@ static void TSInstallAdvancedFindFieldStyle(void)
     // NSLog(@"The app kit version number is %lf", NSAppKitVersionNumber);
     
     
-	NSString *fileName, *currentVersion, *versionString, *myVersion;
+	NSString *fileName, *currentVersion;
 	NSDictionary *factoryDefaults;
 //	OgreTextFinder *theFinder;
 //	id theFinder;
-	CGFloat oldVersion, newVersion;
 	BOOL needsUpdating;
     id item;
 
@@ -406,22 +406,10 @@ static void TSInstallAdvancedFindFieldStyle(void)
     
  	NSFileManager *fileManager = [NSFileManager defaultManager];
 	
-	oldVersion = 0.0;
+	// Compare display versions (6.00 beta-1), not build numbers, so a new build of the same version copies nothing.
 	currentVersion = [[[NSBundle bundleForClass:[self class]]
-					   infoDictionary] objectForKey:@"CFBundleVersion"];
-	newVersion = [currentVersion doubleValue];
-
-	if ([fileManager fileExistsAtPath: [NewPath stringByStandardizingPath]] ) {
-		versionString = [[NewPath stringByAppendingPathComponent:@".Version"] stringByStandardizingPath];
-		if ([fileManager fileExistsAtPath: versionString]) {
-			myVersion = [NSString stringWithContentsOfFile:versionString encoding:NSASCIIStringEncoding error:nil];
-			oldVersion = [myVersion doubleValue];
-			}
-		}
-	if (newVersion > (oldVersion + 0.005))
-		needsUpdating = TRUE;
-	else 
-		needsUpdating = FALSE;
+					   infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+	needsUpdating = TSLibraryNeedsUpdating(TSLibraryVersionInFolder(NewPath), currentVersion);
 
 		
 	if (! [fileManager fileExistsAtPath: [TeXShopPath stringByStandardizingPath]] ) {
@@ -539,9 +527,11 @@ static void TSInstallAdvancedFindFieldStyle(void)
 	if (([fileManager fileExistsAtPath: [NewPath stringByStandardizingPath]]) && needsUpdating)
         [fileManager removeItemAtPath: [NewPath stringByStandardizingPath] error: NULL];
 	
-	if (needsUpdating)
+	if (needsUpdating) {
 		[self mirrorPath:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"TeXShop/New"]
 				  toPath:[NewPath stringByStandardizingPath]];
+		TSLibraryRecordVersion(NewPath, currentVersion);
+	}
 
 	
 // Finish configuration of various pieces

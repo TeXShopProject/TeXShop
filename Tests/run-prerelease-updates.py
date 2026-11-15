@@ -17,6 +17,12 @@ MUTATIONS = {
     'force-every-launch': ('if ([[defaults stringForKey:SparklePrereleaseForcedVersionKey] isEqualToString:version]) return;', ';'),
     # Releases also turn it on.
     'force-release': ('if (![self isPrereleaseVersion:version]) return;', ';'),
+    # The build number (CFBundleVersion) decides, so a beta is not seen and every build looks new.
+    'build-version': ('id version = [bundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];',
+                      'id version = [bundle objectForInfoDictionaryKey:@"CFBundleVersion"];'),
+    # The application passes its build number instead of its display version.
+    'launch-build-version': ('[TSSparkleController preparePrereleaseDefaultsForBundle:[NSBundle mainBundle] defaults:SUD];',
+                             '[TSSparkleController preparePrereleaseDefaultsForVersion:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] defaults:SUD];'),
     # The switch does not decide the channel.
     'channel-always': ('return [defaults boolForKey:SparklePrereleaseUpdatesKey] ? [NSSet setWithObject:TSSparklePrereleaseChannel] : [NSSet set];',
                        'return [NSSet setWithObject:TSSparklePrereleaseChannel];'),
@@ -32,6 +38,13 @@ def run(mutation=None):
             assert text.count(old) == 1, 'mutation target must be unique: ' + mutation
             source = Path(tmp) / 'TSSparkleController.m'
             source.write_text(text.replace(old, new), encoding='utf-8')
+        # The application itself prepares the defaults from its bundle's display version.
+        text = source.read_text(encoding='utf-8')
+        awake = text[text.index('- (void)awakeFromNib'):]
+        awake = awake[:awake.index('\n}')]
+        if '[TSSparkleController preparePrereleaseDefaultsForBundle:[NSBundle mainBundle] defaults:SUD];' not in awake \
+                or '@"CFBundleVersion"' in awake:
+            return subprocess.CompletedProcess([], 1, '', 'FAIL: awakeFromNib must prepare the defaults from the display version of the main bundle\n')
         frameworks = root / 'Frameworks'
         exe = Path(tmp) / 'prerelease-updates'
         subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-F', str(frameworks), '-framework', 'Sparkle',
