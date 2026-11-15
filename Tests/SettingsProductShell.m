@@ -526,15 +526,27 @@ int main(int argc,char **argv){@autoreleasepool{
  Check(profiles!=nil && profileRow!=nil && [profiles isDescendantOf:profileRow] && Find(profileRow,@"settings.engine-profile-apply")==nil && [owner valueForKey:@"engineProfileWatcher"]!=nil,@"The engine profile menu is in Typesetting, without an Apply button, and follows the settings");
  NSUInteger profileRowButtons=0;for(NSView *v in [profileRow.subviews arrayByAddingObjectsFromArray:profileRow.subviews.firstObject.subviews])if([v isMemberOfClass:NSButton.class])profileRowButtons++;
  Check(profileRowButtons==0,@"No button beside the profile menu");
- // The profile row is its name and menu only; choosing a profile lists what it sets. Words that were only in its
- // former note (kpsewhich, UTF-8-MAC) find their own rows, never the profile row.
+ // The profile row is its name and menu only; choosing a profile lists what it sets. What a profile sets is
+ // still searched, without being shown: kpsewhich, BibTeX, MetaPost and UTF-8-MAC find Engine Profile by its name.
  [shell.window.contentView layoutSubtreeIfNeeded];
- NSView *plainPopupRow=Find([shell viewForCategoryIdentifier:TSSettingsCategoryTypesetting],@"row.catalog.typesetting.0.2");
+ NSView *typesettingPane=[shell viewForCategoryIdentifier:TSSettingsCategoryTypesetting];
+ NSView *plainPopupRow=Find(typesettingPane,@"row.catalog.typesetting.0.2");
  Check(Find(profileRow,@"note.catalog-row")==nil && plainPopupRow!=nil && Find(plainPopupRow,@"note.catalog-row")==nil && NSHeight(profileRow.frame)>0 && fabs(NSHeight(profileRow.frame)-NSHeight(plainPopupRow.frame))<0.5,
        [NSString stringWithFormat:@"The engine profile row has no note and is as tall as a one-line menu row: %.1f / %.1f",NSHeight(profileRow.frame),NSHeight(plainPopupRow.frame)]);
- for(NSString *query in @[@"kpsewhich",@"UTF-8-MAC"]){
-  Check([shell setSettingsSearchQuery:query],@"Search for a word of the former profile note is accepted");
-  for(TSSettingsSearchResult *result in shell.searchResults)Check(![result.targetIdentifier isEqual:@"row.catalog.typesetting.0.4"],[NSString stringWithFormat:@"Search for %@ does not lead to the engine profile row",query]);
+ NSString *profileSearchText=[fixture localizedStringForKey:@"catalog.typesetting.0.4.search" value:@"" table:@"SettingsCategories"];
+ __block BOOL searchTextShown=NO;
+ __block void (^findShown)(NSView *)=nil;
+ void (^findShownBlock)(NSView *)=^(NSView *view){
+  if([view isKindOfClass:NSTextField.class] && [((NSTextField *)view).stringValue isEqual:profileSearchText])searchTextShown=YES;
+  for(NSView *child in view.subviews)findShown(child);
+ };
+ findShown=findShownBlock;findShown(typesettingPane);findShown=nil;
+ Check(profileSearchText.length>40 && !searchTextShown,@"What a profile sets is in the search text, and not shown in Typesetting");
+ NSString *profileTitle=[fixture localizedStringForKey:@"catalog.typesetting.0.4.title" value:nil table:@"SettingsCategories"];
+ for(NSString *query in @[@"kpsewhich",@"BibTeX",@"MetaPost",@"UTF-8-MAC"]){
+  Check([shell setSettingsSearchQuery:query],@"Search for what a profile sets is accepted");
+  BOOL found=NO;for(TSSettingsSearchResult *result in shell.searchResults)if([result.category isEqual:TSSettingsCategoryTypesetting] && [result.targetIdentifier isEqual:@"row.catalog.typesetting.0.4"] && [result.title isEqual:profileTitle])found=YES;
+  Check(found,[NSString stringWithFormat:@"Search for %@ finds Engine Profile by its name",query]);
  }
  [shell setSettingsSearchQuery:@""];[shell selectCategoryIdentifier:TSSettingsCategoryTypesetting];
  Check(profiles.target==owner && profiles.action==@selector(applyEngineProfile:),@"Choosing a profile asks the owner at once");
