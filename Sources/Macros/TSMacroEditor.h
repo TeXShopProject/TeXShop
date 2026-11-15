@@ -30,6 +30,9 @@
 @class TSListBottomBar;
 @class TSMacroShortcutField;
 
+// The line of a separator in the list of macros, `width` points long.
+NSImage *TSMacroSeparatorImage(CGFloat width);
+
 @interface TSMacroEditor : NSObject <NSTextViewDelegate, NSMenuDelegate>
 {
 	IBOutlet id outlineController;
@@ -62,9 +65,15 @@
 @property (retain) NSMapTable *originalShortcutKeys;
 @property (retain) NSMapTable *shortcutConflicts;
 @property (retain) NSTextField *shortcutStatus;
-// The list and the bar under it (＋, − and the menu of the other commands), in one frame.
-@property (retain) NSBox *listBox;
+// The sidebar: the list and the bar under it (＋, − and the menu of the other commands).
+@property (retain) NSVisualEffectView *sidebar;
 @property (retain) TSListBottomBar *listBar;
+// Beside the sidebar: the fields, the message and the buttons.
+@property (retain) NSView *editorView;
+// Return, Enter and Escape for the contents, before the buttons take them (keyForContents:).
+@property (retain) id contentsKeyMonitor;
+// While the list starts renaming an item (beginRenamingSelectedItem).
+@property (getter=isRenaming) BOOL renaming;
 // Below the contents: Insert adds a placeholder, the help button lists them.
 @property (retain) NSPopUpButton *insertPlaceholderButton;
 @property (retain) NSButton *placeholdersButton;
@@ -75,7 +84,15 @@
 @property (retain) TSMacroShortcutField *shortcutField;
 // The shortcut being edited, as the macros store it (for example @"M+ShiftKey").
 @property (copy) NSString *pendingShortcutKey;
-- (void)installListControls;
+- (void)installSidebar;
+- (NSEvent *)keyForContents:(NSEvent *)event;
+- (BOOL)beginRenamingSelectedItem;
+- (void)cancelPendingListRename;
+- (IBAction)renameSelectedMacro:(id)sender;
+- (IBAction)saveDocument:(id)sender;
+- (void)stopKeyMonitor;
+- (void)releaseWindowControls;
+- (void)useSystemFont;
 - (void)installShortcutField;
 - (void)syncShortcutField;
 - (BOOL)recordShortcutEvent:(NSEvent *)event;

@@ -43,19 +43,23 @@ void TSLayoutTrailingButtons(NSView *host, NSArray<NSButton *> *rightToLeft)
     }
 }
 
+CGFloat TSDialogButtonsWidth(NSArray<NSButton *> *trailing, NSArray<NSButton *> *leading)
+{
+    CGFloat shared = TSDialogMinimumButtonWidth;
+    for (NSButton *button in trailing) shared = MAX(shared, ceil(button.fittingSize.width));
+    CGFloat needed = TSDialogMargin * 2 + trailing.count * shared + MAX(0, (NSInteger)trailing.count - 1) * TSDialogButtonSpacing;
+    for (NSButton *button in leading) needed += MAX(TSDialogMinimumButtonWidth, ceil(button.fittingSize.width)) + TSDialogButtonSpacing;
+    if (leading.count && trailing.count) needed += TSDialogButtonSpacing; // keep the two groups apart
+    return needed;
+}
+
 void TSLayoutDialogButtons(NSView *host, NSArray<NSButton *> *trailing, NSArray<NSButton *> *leading)
 {
     CGFloat shared = TSDialogMinimumButtonWidth;
     for (NSButton *button in trailing) shared = MAX(shared, ceil(button.fittingSize.width));
     NSMutableArray<NSNumber *> *leadingWidths = [NSMutableArray array];
-    CGFloat needed = TSDialogMargin * 2 + trailing.count * shared + MAX(0, (NSInteger)trailing.count - 1) * TSDialogButtonSpacing;
-    for (NSButton *button in leading) {
-        CGFloat width = MAX(TSDialogMinimumButtonWidth, ceil(button.fittingSize.width));
-        [leadingWidths addObject:@(width)];
-        needed += width + TSDialogButtonSpacing;
-    }
-    if (leading.count && trailing.count) needed += TSDialogButtonSpacing; // keep the two groups apart
-    TSGrowWindowToFit(host, needed);
+    for (NSButton *button in leading) [leadingWidths addObject:@(MAX(TSDialogMinimumButtonWidth, ceil(button.fittingSize.width)))];
+    TSGrowWindowToFit(host, TSDialogButtonsWidth(trailing, leading));
     CGFloat x = NSWidth(host.bounds) - TSDialogMargin;
     for (NSButton *button in trailing) {
         NSRect frame = TSFittingFrame(button, shared);

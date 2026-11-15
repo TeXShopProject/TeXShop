@@ -82,6 +82,10 @@
 @interface TSMacroOutlineView : NSOutlineView
 {
 }
+// The row a second click on its name renames, after the double-click interval (nil: none).
+@property (nonatomic, strong) NSNumber *pendingRename;
+- (void)scheduleRenameOfRow:(NSInteger)row;
+- (void)cancelPendingRename;
 @end
 
 

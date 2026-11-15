@@ -142,11 +142,6 @@ static const CGFloat TSSidebarWidth = 240;
     self.setTable.dataSource = self;
     self.setTable.delegate = self;
     NSScrollView *scroll = [self scroll:self.setTable];
-    scroll.borderType = NSNoBorder;
-    scroll.drawsBackground = NO;
-    scroll.automaticallyAdjustsContentInsets = NO; // it starts below the title bar
-    scroll.hasHorizontalScroller = NO;
-    scroll.horizontalScrollElasticity = NSScrollElasticityNone;
     scroll.contentView.postsFrameChangedNotifications = YES;
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(fitSetColumn) name:NSViewFrameDidChangeNotification
                                              object:scroll.contentView];
@@ -160,7 +155,6 @@ static const CGFloat TSSidebarWidth = 240;
                                                          addAction:@selector(addSet:) addToolTip:TSLocalized(@"MultipleReplace.AddSet", @"New Set")
                                                       removeAction:@selector(removeSet:) removeToolTip:TSLocalized(@"MultipleReplace.RemoveSet", @"Move the Set to the Trash")
                                                     actionsToolTip:TSLocalized(@"MultipleReplace.SetActions", @"Actions for Sets")];
-    bar.translatesAutoresizingMaskIntoConstraints = NO;
     NSMenu *actions = bar.actionsButton.menu;
     [actions addItemWithTitle:TSLocalized(@"MultipleReplace.Duplicate", @"Duplicate") action:@selector(duplicateSet:) keyEquivalent:@""].target = self;
     [actions addItemWithTitle:TSLocalized(@"MultipleReplace.Import", @"Import…") action:@selector(importSet:) keyEquivalent:@""].target = self;
@@ -170,21 +164,7 @@ static const CGFloat TSSidebarWidth = 240;
     self.removeSetButton = bar.removeButton;
 
     // A sidebar flush with the window's edges, as CotEditor's (AppKit's own sidebar floats as glass in macOS 26).
-    NSVisualEffectView *view = [[NSVisualEffectView alloc] initWithFrame:NSMakeRect(0, 0, 200, 400)];
-    view.material = NSVisualEffectMaterialSidebar;
-    view.blendingMode = NSVisualEffectBlendingModeBehindWindow;
-    for (NSView *child in @[scroll, bar])
-        [view addSubview:child];
-    [NSLayoutConstraint activateConstraints:@[
-        [scroll.topAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.topAnchor],
-        [scroll.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
-        [scroll.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
-        [scroll.bottomAnchor constraintEqualToAnchor:bar.topAnchor],
-        [bar.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
-        [bar.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
-        [bar.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
-        [view.widthAnchor constraintGreaterThanOrEqualToConstant:160],
-    ]];
+    NSVisualEffectView *view = TSListSidebarView(scroll, bar);
     NSViewController *controller = [NSViewController new];
     controller.view = view;
     return controller;
@@ -272,23 +252,10 @@ static const CGFloat TSSidebarWidth = 240;
 
 - (void)buildContent
 {
-    NSSplitViewController *split = [NSSplitViewController new];
-    NSSplitViewItem *sidebar = [NSSplitViewItem splitViewItemWithViewController:[self makeSidebar]];
-    sidebar.canCollapse = NO;
-    sidebar.holdingPriority = NSLayoutPriorityDefaultLow + 10; // a wider window widens the rules
-    sidebar.titlebarSeparatorStyle = NSTitlebarSeparatorStyleNone;
-    sidebar.minimumThickness = 160;
-    sidebar.maximumThickness = 320;
-    [split addSplitViewItem:sidebar];
-    NSSplitViewItem *rules = [NSSplitViewItem splitViewItemWithViewController:[self makeRuleArea]];
-    rules.minimumThickness = 480;
-    rules.titlebarSeparatorStyle = NSTitlebarSeparatorStyleNone;
-    [split addSplitViewItem:rules];
-    split.splitView.autosaveName = @"TSMultipleReplaceSplit";
-    NSRect frame = self.window.frame;
-    self.window.contentViewController = split;
-    [self.window setFrame:frame display:NO];
-    [split.splitView setPosition:TSSidebarWidth ofDividerAtIndex:0];
+    NSViewController *sidebar = [self makeSidebar];
+    NSWindow *window = self.window;
+    if (window)
+        TSInstallListSidebar(window, sidebar, [self makeRuleArea], TSSidebarWidth, 480, @"TSMultipleReplaceSplit");
     [self fitSetColumn];
 }
 

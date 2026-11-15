@@ -29,4 +29,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/// The narrowest and the widest a sidebar of TSListSidebarView can be.
+FOUNDATION_EXPORT const CGFloat TSListSidebarMinimumWidth, TSListSidebarMaximumWidth;
+
+/// A sidebar flush with the window's edges, as CotEditor's: from the top edge, under the title bar, to the bottom edge,
+/// the list down to the bar at its bottom. AppKit's own sidebar item is not used: in macOS 26 it floats as glass. The
+/// list scrolls up and down only and has no border or background of its own.
+FOUNDATION_EXPORT NSVisualEffectView *TSListSidebarView(NSScrollView *list, TSListBottomBar *bar);
+
+/// Makes a sidebar (TSListSidebarView) and the main part beside it the window's contents, which run under its title
+/// bar: the sidebar `width` points wide at first, the main part at least `mainMinimumWidth`, and the one that a wider
+/// or narrower window widens or narrows first. The window keeps its frame, widened if it cannot hold both.
+FOUNDATION_EXPORT NSSplitViewController *TSInstallListSidebar(NSWindow *window, NSViewController *sidebar, NSViewController *main,
+                                                              CGFloat width, CGFloat mainMinimumWidth, NSString *autosaveName);
+
 NS_ASSUME_NONNULL_END

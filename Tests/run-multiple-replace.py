@@ -58,7 +58,7 @@ MUTATIONS = {
     'the names take a fixed width': ('TSMultipleReplaceWindowController.m', '    if (fabs(column.width - width) > 0.5)\n        column.width = width;\n', ''),
     'the list is not fitted when the table changes its size': ('TSMultipleReplaceWindowController.m',
         '    self.setTable.postsFrameChangedNotifications = YES;\n', '    self.setTable.postsFrameChangedNotifications = NO;\n'),
-    'the list scrolls sideways': ('TSMultipleReplaceWindowController.m', '    scroll.horizontalScrollElasticity = NSScrollElasticityNone;\n', ''),
+    'the list scrolls sideways': ('TSListBottomBar.m', '    list.horizontalScrollElasticity = NSScrollElasticityNone;\n', ''),
     'a help button comes back': ('TSMultipleReplaceWindowController.m',
         '    NSView *actions = [self stackOf:@[self.inSelectionBox, highlight, replace] spacing:12];',
         '    NSButton *help = [NSButton buttonWithTitle:@"" target:nil action:NULL];\n    help.bezelStyle = NSBezelStyleHelpButton;\n'
@@ -89,7 +89,8 @@ def build(tmp, sources):
     probe = app / 'Contents/MacOS/probe'
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-fmodules', '-mmacosx-version-min=14.6', '-Wall', '-Wno-unused-parameter',
                     '-Wno-deprecated-declarations', '-I', str(sources), *include_args(root), '-I', str(root / 'Tests'),
-                    '-framework', 'Cocoa', str(root / 'Tests/MultipleReplace.m'), *map(str, sorted(sources.glob('*.m'))), *map(str, advanced_find_syntax_sources(root)),
+                    '-framework', 'Cocoa', str(root / 'Tests/MultipleReplace.m'), *map(str, sorted(sources.glob('*.m'))),
+                    *(str(path) for path in advanced_find_syntax_sources(root) if not (sources / path.name).exists()),
                     '-o', str(probe)], check=True)
     return probe
 
@@ -100,9 +101,10 @@ def run(probe, mode, language='en', images=None):
 
 
 def copy_sources(tmp):
+    """The window's sources and the sidebar and bar it shares with the macro editor, which the mutations may change."""
     sources = tmp / 'sources'
     sources.mkdir()
-    for path in (root / 'Sources/Find').glob('*.[mh]'):
+    for path in [*(root / 'Sources/Find').glob('*.[mh]'), *(root / 'Sources/Windows').glob('TSListBottomBar.[mh]')]:
         shutil.copy(path, sources / path.name)
     return sources
 
