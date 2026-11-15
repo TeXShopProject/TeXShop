@@ -3,6 +3,129 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
 --><rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
   <channel>
     <item>
+      <title>TeXShop 6.00 beta-1</title>
+      <pubDate>Sun, 15 Nov 2026 18:09:51 +0000</pubDate>
+      <sparkle:version>1627</sparkle:version>
+      <sparkle:shortVersionString>6.00 beta-1</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+      <sparkle:channel>prerelease</sparkle:channel>
+      <description xml:lang="en" sparkle:format="markdown">This is the first **beta** of TeXShop 6.00, for testing. TeXShop 5.59 remains the current release. Please keep a copy of 5.59 if you depend on TeXShop for daily work. See [What's New in TeXShop 6](https://texshop.app/whats-new.html) for an overview.
+
+## Installation
+
+Download `TeXShop-6.00-beta-1.zip`, extract it, and copy `TeXShop.app` to Applications (replacing 5.59 or a 5.60 beta), or run it from another folder. The application is signed and notarized, and runs on Apple Silicon and Intel Macs with macOS 14.6 or later. A TeX distribution such as MacTeX is required for typesetting.
+
+This beta has to be installed by hand. From now on, while Settings → Updates → “Update to prereleases when available” is on, later betas and the final 6.00 are offered through TeXShop's automatic updates.
+
+TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell checking, pinned link previews, a new Settings window and a status bar, and fixes many problems.
+
+## Main changes
+
+- **Advanced Find panel:** a new Find panel with regular expressions lists every match and does multiple replacement.
+- **LaTeX-aware spell checking:** check the spelling of the text alone, skipping TeX commands and mathematics.
+- **Pinned link previews:** pin a link preview with the Option key.
+- **Settings window:** a new Settings window with a sidebar and a search field.
+- **Status bar:** the lines, characters and words are shown under the source.
+
+## Advanced Find panel
+
+- A new find and replace panel with regular expressions, the Advanced Find panel. Find All lists every match, and Highlight All marks them in the text.
+- Multiple Replace applies saved sets of find and replace pairs at once.
+- A cheat sheet shows how to write regular expressions, and Find also works in the console, the log and the Experiment windows.
+
+## LaTeX-aware spell checking
+
+- Check the spelling of the text alone, skipping TeX commands, comments, mathematics and arguments that are not prose. The spelling panel and the choice of dictionaries are easier to use too ([#32](https://github.com/TeXShopProject/TeXShop/issues/32)). Suggested and reported by [Ralph Martin](https://github.com/ralphrmartin) and [Herb Schulz](https://github.com/herbs), and contributed by [Ralph Martin](https://github.com/ralphrmartin), also in [PR #40](https://github.com/TeXShopProject/TeXShop/pull/40).
+
+## Preview
+
+- Link previews are easier to read; pin one with the Option key, and turn previews on or off with the Control key. Suggested and reported by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#7](https://github.com/TeXShopProject/TeXShop/issues/7), [#10](https://github.com/TeXShopProject/TeXShop/issues/10), [#12](https://github.com/TeXShopProject/TeXShop/issues/12), [#14](https://github.com/TeXShopProject/TeXShop/issues/14), [#17](https://github.com/TeXShopProject/TeXShop/issues/17), [#30](https://github.com/TeXShopProject/TeXShop/issues/30), [#35](https://github.com/TeXShopProject/TeXShop/issues/35)).
+- In a split Preview window, show a link’s target in the other part or switch the two parts. Suggested by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#14](https://github.com/TeXShopProject/TeXShop/issues/14), [#25](https://github.com/TeXShopProject/TeXShop/issues/25), [#31](https://github.com/TeXShopProject/TeXShop/issues/31)). The single window opens with the divider where it was last, suggested by [Felix Finster](https://github.com/felix-finster) ([#26](https://github.com/TeXShopProject/TeXShop/issues/26)).
+- Zoom to Content Width, scrolling that does not turn pages and a magnifying glass at any magnification are added, and the outline in the drawer stays as it was after typesetting. Suggested and reported by [Uwe Schmock](https://github.com/Uwe-Schmock) and [svb-bit](https://github.com/svb-bit) ([#9](https://github.com/TeXShopProject/TeXShop/issues/9), [#19](https://github.com/TeXShopProject/TeXShop/issues/19), [#33](https://github.com/TeXShopProject/TeXShop/issues/33)). When another application such as latexmk rewrites the PDF, the preview is updated at the same place.
+- The preview toolbar has the icons of Apple’s Preview, tool tips and page layout menus. Suggested by Bruno Voisin and [Uwe Schmock](https://github.com/Uwe-Schmock) ([#28](https://github.com/TeXShopProject/TeXShop/issues/28), [#34](https://github.com/TeXShopProject/TeXShop/issues/34)).
+
+## Editing
+
+- Command-0 shows the document’s console. Suggested by [Nicolas Martignoni](https://github.com/martignoni) ([#2](https://github.com/TeXShopProject/TeXShop/issues/2)).
+- Click or drag over the line numbers to select whole lines.
+- The Edit menu has Character Type Conversion, Unicode Normalization and Swap with Clipboard.
+- The Macro Editor has a new design, and macros and key bindings can insert the clipboard text.
+- Fullwidth letters, digits and symbols can be shown in their own color.
+- The encoding of a source file is detected automatically.
+- Experiment typesets with the document’s pictures and references, and its source looks like the document’s source. Suggested and reported by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#8](https://github.com/TeXShopProject/TeXShop/issues/8), [#20](https://github.com/TeXShopProject/TeXShop/issues/20)).
+- The Tags menu is always up to date, and Character Info shows details of a character.
+
+## Settings window
+
+- Settings has a sidebar with ten categories: General, Documents and Saving, Editor, Keyboard, Spell Checking, Themes, Typesetting, Console, Preview, and Updates. Search Settings finds a setting.
+- Detect Paths… sets the TeX and Ghostscript installations automatically.
+- The index program and MetaPost can be set.
+- Change the shortcut of any menu command and the key bindings in Settings → Keyboard.
+- Settings → Updates can include betas.
+- Autosave and Versions can be turned off, the first page can be shown alone as a cover, @ can count as part of command names, expl3 coloring can be on at opening, the markers for invisible characters can be chosen, and window opacity can also be typed as a number.
+- General links to Comment Lines and Hidden Settings.
+
+## App icon and appearance
+
+- A new app icon, and the Dock icon while TeXShop is running can be one of the earlier designs. Suggested by [LaTeX fetishist](https://github.com/LaTeX-fetishist) and [Nicolas Martignoni](https://github.com/martignoni) ([#3](https://github.com/TeXShopProject/TeXShop/issues/3)).
+- On macOS 26 and later, TeXShop has the Liquid Glass appearance.
+- The digits of line numbers line up, and the Matrix and LaTeX panels are easier to read in Dark Mode.
+
+## Changes in behavior from earlier versions
+
+- **Spell checking:** LaTeX-aware spell checking is on by default. The legacy method is in Settings → Spell Checking.
+- **Find:** the Advanced Find panel is used by default. The earlier panel can be chosen in Settings → Editor → Find Panel.
+- **Settings profiles:** settings profiles are replaced by engine profiles in Settings → Typesetting. Choose a profile to set up typesetting for that TeX engine in one step.
+- **Typesetting settings:** Default Command is now Typeset New Documents With, and Command to use is now Engine File.
+- **Arrow keys in the preview:** in single-page and two-page layouts, the Up and Down Arrow keys scroll within the page instead of turning it. Suggested by [svb-bit](https://github.com/svb-bit) ([#9](https://github.com/TeXShopProject/TeXShop/issues/9)).
+- **Menu shortcuts set in macOS:** shortcuts for TeXShop made in macOS System Settings may need to be set again in Settings → Keyboard.
+- **Macro shortcuts:** macro shortcuts are set in the list of the Macro Editor.
+- **Marks:** the mark commands are in Edit → Marks.
+- **Command completion:** the Command Completion submenu of the Source menu is now one item, Add to Command Completion List.
+- **Open Style File:** it has moved from the Help menu to the File menu.
+- **Smooth text and line art:** this setting is removed.
+- **Save PostScript File and -dALLOWPSTRANSPARENCY:** these settings are removed.
+- **Obsolete settings:** settings that had no effect are removed.
+- **Themes from earlier color settings:** this button in Settings → Themes and the macro Colored source are removed.
+- **`\UTF` commands:** `\UTF` commands of the otf package are turned back into characters when a file is opened.
+- **Line endings:** opening a file with Windows or other line endings tells you that they were changed to LF.
+- **Statistics:** Edit › Statistics… opens Text Statistics in the status bar.
+
+## Fixes: typesetting and the console
+
+- **Critical fix:** Stop now ends TeX; before, TeX kept running.
+- Fix problems with the console and typesetting: console output can be copied while TeX runs, broken characters in console output and logs are shown correctly, Command-1 returns to the file typeset with `% !TEX root`, stopping no longer hangs when a typesetting tool cannot start, and TeXShop tells you when the root file cannot be found.
+
+## Fixes: preview
+
+- Fix the position and display of the preview: it no longer moves after reloading or turning pages on macOS 26 and 27, when it is split or its divider is dragged, or when it is reopened during typesetting; parts of the linked page no longer show around a link preview; pages take the theme’s color again; and a split Preview window no longer shows a light band in Dark Mode. Reported by [svb-bit](https://github.com/svb-bit), [Uwe Schmock](https://github.com/Uwe-Schmock) and [ethanphil4-a11y](https://github.com/ethanphil4-a11y) ([#5](https://github.com/TeXShopProject/TeXShop/issues/5), [#9](https://github.com/TeXShopProject/TeXShop/issues/9), [#21](https://github.com/TeXShopProject/TeXShop/issues/21), [#23](https://github.com/TeXShopProject/TeXShop/issues/23), [#24](https://github.com/TeXShopProject/TeXShop/issues/24), [#39](https://github.com/TeXShopProject/TeXShop/issues/39)).
+- SyncTeX goes to the place clicked, a crash while the preview reloads is fixed, and Space scrolls correctly through large pages.
+
+## Fixes: opening and saving documents
+
+- The cursor no longer jumps in files synced by OneDrive, Google Drive and similar services, document windows open again in Romanian, and TeXShop notices changes saved by other editors. Reported by [Steuard](https://github.com/Steuard) and [Tom](https://github.com/yo3iti) ([#29](https://github.com/TeXShopProject/TeXShop/issues/29), [#42](https://github.com/TeXShopProject/TeXShop/issues/42)), with a contribution from [Daisuke Nishihama](https://github.com/ddd3h) in [PR #1](https://github.com/TeXShopProject/TeXShop/pull/1).
+- Fix reading and saving in several encodings: UTF-8 with a byte order mark, UTF-16, GB 2312, the backslash and the tilde in Japanese encodings, the encoding menu in the Save dialog, Automatic UTF-8-Mac to UTF-8 Conversion and conversion to otf package `\UTF` / `\CID` work correctly, and Make Default Editor works for `.tex` files.
+
+## Fixes: editing and other
+
+- Fix the coloring and display of the source: a line break in a comment and an unclosed argument no longer upset the colors, a form feed no longer hides the rest of the document, and a `% !TEX spellcheck` line no longer changes the language of other documents. Long documents are faster to show and edit. Reported in part by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#16](https://github.com/TeXShopProject/TeXShop/issues/16)).
+- Splitting the source in the single window divides it evenly, the Home URL of the HTML window works, and a crash in the Matrix panel is fixed.
+- Fix text that was cut off or drawn over other text, buttons and menus that did not work, and texts left in English, in some languages.
+
+## Manual, help and bundled tools
+
+- Update the manual’s RaiseHook example for current hyperref, following [Uwe Schmock](https://github.com/Uwe-Schmock)’s proposal ([#6](https://github.com/TeXShopProject/TeXShop/issues/6)).
+- The manual and the help point to the current TeXShop web site, [texshop.app](https://texshop.app/). Suggested by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#15](https://github.com/TeXShopProject/TeXShop/issues/15)).
+- Remove Skype from the manual. Suggested by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#11](https://github.com/TeXShopProject/TeXShop/issues/11)).
+- The contact information in the credits points to the current maintainer. Reported by [Ralph Martin](https://github.com/ralphrmartin) ([#13](https://github.com/TeXShopProject/TeXShop/issues/13)).
+- Add help for LaTeX-aware spell checking.
+- Update the bundled zlib to 1.4 and the SyncTeX parser to 1.21.
+- Update the bundled latexmk to 4.89, provided by Herbert Schulz.
+- TeXShop can be built from an extracted source archive again ([#4](https://github.com/TeXShopProject/TeXShop/issues/4)).</description>
+      <sparkle:fullReleaseNotesLink>https://github.com/TeXShopProject/TeXShop/releases/tag/v.6.00-beta.1</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/TeXShopProject/TeXShop/releases/download/v.6.00-beta.1/TeXShop-6.00-beta-1.zip" length="66564736" type="application/octet-stream" sparkle:edSignature="PcvR1tNtvgexzZnlrDE4/sqEt+CgEUWe2g/IYu5L/yZb/gBkrKrGvOKka/kUPY5DObWlJB8xNAzEIEFbuwaWCA=="></enclosure>
+    </item>
+    <item>
       <title>TeXShop 5.59</title>
       <pubDate>Wed, 28 Oct 2026 12:29:12 +0000</pubDate>
       <sparkle:version>5.59</sparkle:version>
@@ -16,6 +139,6 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
     <language>en</language>
   </channel>
 </rss><!-- sparkle-signatures:
-edSignature: TP3emPTO4XDvuVgr1E94GJuB3pnTK4bP1Rs1xgVZuzn/Z0BFQEeEfPRmMgfcd/+G3Db557oGah1wcR6ueuTSBQ==
-length: 1148
+edSignature: l4GbAJbHHR09kYqrz3r8Yqe9umU3vxd8SPQgdOJ2AasczuO615BPulXAhtL7EcM353ENuyYhW++BP2Zu5Lz2AQ==
+length: 14795
 -->
