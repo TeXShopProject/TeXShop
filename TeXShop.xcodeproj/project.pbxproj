@@ -64,7 +64,6 @@
 		62E064B4D3D199B9A57677E5 /* metapostwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = F5332B17016CD72701DF2474 /* metapostwrap */; };
 		18785E129DC4160859C27CC9 /* contextdviwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = F5332B18016CD72701DF2474 /* contextdviwrap */; };
 		BD71E00A8C372A28D0A6F5E9 /* altpdflatex in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 40923AD00570A1770089F69B /* altpdflatex */; };
-		B98E8DB8612F61AD44AC4C6F /* detexwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 406A69F4060F8C170028E210 /* detexwrap */; };
 		E94FA851A5D9BF24B6659ADA /* altpdftex in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 40B1DDC706EB6E540083A311 /* altpdftex */; };
 		D4103F5BCDA7C2F59678F352 /* contextforwardsyncwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 400839512665407800037D3C /* contextforwardsyncwrap */; };
 		7CE990D93D49A733AF7E8927 /* texloganalyserwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 406774A218F7800D00204AF4 /* texloganalyserwrap */; };
@@ -138,6 +137,8 @@
 		26F5B11D7C0A4E9D2B3A6D01 /* TSDocumentWindowGlass.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6D03 /* TSDocumentWindowGlass.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		26F5B11D7C0A4E9D2B3A6E01 /* TSSourceStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6E03 /* TSSourceStatusBar.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		26F5B11D7C0A4E9D2B3A6E04 /* TSStatusBarCounting.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6E06 /* TSStatusBarCounting.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		26F5B11D7C0A4E9D2B3A6E07 /* TSTextStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6E09 /* TSTextStatistics.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		26F5B11D7C0A4E9D2B3A6E10 /* TSTextStatisticsPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6E12 /* TSTextStatisticsPopover.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4054643E19AE9630006EE9D5 /* GlyphPopoverMulti.xib in Resources */ = {isa = PBXBuildFile; fileRef = D61FA563CE9FC9BEE1BA8618 /* GlyphPopoverMulti.xib */; };
 		4054643F19AE9630006EE9D5 /* GlyphPopoverSingle.xib in Resources */ = {isa = PBXBuildFile; fileRef = D55A1544C331DC7DE9A7D6B3 /* GlyphPopoverSingle.xib */; };
 		4061BA9E1991979600C890DB /* RecentTexFonts.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 4061BA9C1991979600C890DB /* RecentTexFonts.pdf */; };
@@ -377,7 +378,6 @@
 				62E064B4D3D199B9A57677E5 /* metapostwrap in Copy Shell Scripts */,
 				18785E129DC4160859C27CC9 /* contextdviwrap in Copy Shell Scripts */,
 				BD71E00A8C372A28D0A6F5E9 /* altpdflatex in Copy Shell Scripts */,
-				B98E8DB8612F61AD44AC4C6F /* detexwrap in Copy Shell Scripts */,
 				E94FA851A5D9BF24B6659ADA /* altpdftex in Copy Shell Scripts */,
 				D4103F5BCDA7C2F59678F352 /* contextforwardsyncwrap in Copy Shell Scripts */,
 				7CE990D93D49A733AF7E8927 /* texloganalyserwrap in Copy Shell Scripts */,
@@ -693,6 +693,10 @@
 		26F5B11D7C0A4E9D2B3A6E03 /* TSSourceStatusBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSourceStatusBar.m; sourceTree = "<group>"; };
 		26F5B11D7C0A4E9D2B3A6E05 /* TSStatusBarCounting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSStatusBarCounting.h; sourceTree = "<group>"; };
 		26F5B11D7C0A4E9D2B3A6E06 /* TSStatusBarCounting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSStatusBarCounting.m; sourceTree = "<group>"; };
+		26F5B11D7C0A4E9D2B3A6E08 /* TSTextStatistics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSTextStatistics.h; sourceTree = "<group>"; };
+		26F5B11D7C0A4E9D2B3A6E09 /* TSTextStatistics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSTextStatistics.m; sourceTree = "<group>"; };
+		26F5B11D7C0A4E9D2B3A6E11 /* TSTextStatisticsPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSTextStatisticsPopover.h; sourceTree = "<group>"; };
+		26F5B11D7C0A4E9D2B3A6E12 /* TSTextStatisticsPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSTextStatisticsPopover.m; sourceTree = "<group>"; };
 		4054643C19AE9630006EE9D5 /* Base */ = {isa = PBXFileReference; name = Base; fileEncoding = 4; lastKnownFileType = file.xib; path = Base.lproj/GlyphPopoverMulti.xib; sourceTree = "<group>"; };
 		4054643D19AE9630006EE9D5 /* Base */ = {isa = PBXFileReference; name = Base; fileEncoding = 4; lastKnownFileType = file.xib; path = Base.lproj/GlyphPopoverSingle.xib; sourceTree = "<group>"; };
 		405F8B43199AF6F50005C0AE /* pt */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt; path = Resources/Interfaces/pt.lproj/Movie.nib; sourceTree = "<group>"; };
@@ -701,7 +705,6 @@
 		4068429A0405969B00000009 /* MyPDFView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyPDFView.h; sourceTree = "<group>"; };
 		4068429B0405969B00000009 /* MyPDFView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyPDFView.m; sourceTree = "<group>"; };
 		4068429E0405A20000000009 /* UseMitsu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UseMitsu.h; sourceTree = "<group>"; };
-		406A69F4060F8C170028E210 /* detexwrap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.csh; path = detexwrap; sourceTree = "<group>"; };
 		406AB0AF136A5E03009F4D8F /* OgreKit.framework */ = {isa = PBXFileReference; name = OgreKit.framework; lastKnownFileType = wrapper.framework; path = Frameworks/OgreKit.framework; sourceTree = "<group>"; };
 		406B626C199934CF00C46D2A /* NSText-Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSText-Extras.h"; sourceTree = "<group>"; };
 		406B626D199934D000C46D2A /* NSText-Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSText-Extras.m"; sourceTree = "<group>"; };
@@ -1314,6 +1317,8 @@
 				40162B2D0F1873F200E9336E /* NoodleLineNumberView.m */,
 				26F5B11D7C0A4E9D2B3A6E05 /* TSStatusBarCounting.h */,
 				26F5B11D7C0A4E9D2B3A6E06 /* TSStatusBarCounting.m */,
+				26F5B11D7C0A4E9D2B3A6E08 /* TSTextStatistics.h */,
+				26F5B11D7C0A4E9D2B3A6E09 /* TSTextStatistics.m */,
 				40D5BB2D19632B9C0081BC77 /* ScrapTextView.h */,
 				40D5BB2E19632B9C0081BC77 /* ScrapTextView.m */,
 				40839127060963C800266FAB /* TextFinder.h */,
@@ -1606,6 +1611,8 @@
 				26F5B11D7C0A4E9D2B3A6D03 /* TSDocumentWindowGlass.m */,
 				26F5B11D7C0A4E9D2B3A6E02 /* TSSourceStatusBar.h */,
 				26F5B11D7C0A4E9D2B3A6E03 /* TSSourceStatusBar.m */,
+				26F5B11D7C0A4E9D2B3A6E11 /* TSTextStatisticsPopover.h */,
+				26F5B11D7C0A4E9D2B3A6E12 /* TSTextStatisticsPopover.m */,
 				404D1B612891B23400402802 /* TSHTMLWindow.h */,
 				404D1B622891B23400402802 /* TSHTMLWindow.m */,
 				408B6DCE0F3D516C0098CCED /* TSLogWindow.h */,
@@ -1793,7 +1800,6 @@
 				40143F70156F52B600CAFAFC /* sipswrap */,
 				40795D632AB4E307005A7539 /* ps2pdftransparencywrap */,
 				F50B193D0152A11D01000001 /* contextwrap */,
-				406A69F4060F8C170028E210 /* detexwrap */,
 				400839512665407800037D3C /* contextforwardsyncwrap */,
 				4008394F2665406700037D3C /* contextbackwardsyncwrap */,
 				406774A218F7800D00204AF4 /* texloganalyserwrap */,
@@ -2280,6 +2286,8 @@
 				26F5B11D7C0A4E9D2B3A6D01 /* TSDocumentWindowGlass.m in Sources */,
 				26F5B11D7C0A4E9D2B3A6E01 /* TSSourceStatusBar.m in Sources */,
 				26F5B11D7C0A4E9D2B3A6E04 /* TSStatusBarCounting.m in Sources */,
+				26F5B11D7C0A4E9D2B3A6E07 /* TSTextStatistics.m in Sources */,
+				26F5B11D7C0A4E9D2B3A6E10 /* TSTextStatisticsPopover.m in Sources */,
 				4017CF9B266454D700981011 /* TSDocument-SyncConTeXt.m in Sources */,
 				4083912A060963C800266FAB /* TextFinder.m in Sources */,
 				40E76BF1292FDD1E00CBE5F9 /* CustomModalWindowController.m in Sources */,

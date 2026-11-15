@@ -47,6 +47,11 @@ extern NSNotificationName const TSSourceStatusBarShownDidChangeNotification;
 /// Stops counting and watching; the document is closing.
 - (void)stop;
 
+/// The button that opens Text Statistics, at the right before the file size. Its action calls `showStatistics` with the
+/// button. It is left out, with the items, when the bar is too narrow; it is nil then (and while the bar is hidden).
+@property (nonatomic, readonly, nullable) NSButton *statisticsButton;
+@property (nonatomic, copy, nullable) void (^showStatistics)(NSView *anchor);
+
 /// The numbers shown, NSNotFound for those not counted yet.
 @property (nonatomic, readonly) TSStatusBarCounts counts;
 /// The size of the file, or nil when the document has no saved file.

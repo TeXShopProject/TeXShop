@@ -400,3 +400,14 @@
 "Location" = "Location";
 "Line" = "Line";
 "Column" = "Column";
+
+/* Text Statistics, opened from the status bar */
+"Text Statistics…" = "Text Statistics…";
+"Whole Document" = "Whole Document";
+"Selection" = "Selection";
+"Text" = "Text";
+"Refresh" = "Refresh";
+"Counting…" = "Counting…";
+"detex was not found." = "detex was not found.";
+"detex failed." = "detex failed.";
+"Counted by detex without the TeX commands, with the files read by \\input and \\include." = "Counted by detex without the TeX commands, including the files read with \\input and \\include.";
