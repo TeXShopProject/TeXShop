@@ -419,26 +419,5 @@
    "Texte"
   ]
  },
- "pending": {
-  "fr": {
-   "MacroEditor.nib": [
-    "Macro Editor"
-   ]
-  },
-  "nl": {
-   "MacroEditor.nib": [
-    "Macro Editor"
-   ]
-  },
-  "pt-PT": {
-   "MacroEditor.nib": [
-    "Macro Editor"
-   ]
-  },
-  "ro": {
-   "MacroEditor.nib": [
-    "Macro Editor"
-   ]
-  }
- }
+ "pending": {}
 }
