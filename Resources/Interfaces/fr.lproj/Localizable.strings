@@ -86,7 +86,7 @@
 " does not exist." = " n'existe pas.";
 "failed to copy selection." = "échec de la copie de la sélection.";
 "failed to save selection to the file." = "échec de la sauvegarde de la sélection dans le fichier.";
-"<a letter consisting of %d characters>" = "<une lettre composée de %d caractères>";
+"<a letter consisting of %d characters>" = "<un caractère composé de %d caractères>";
 "%d letters, %d words, %d lines" = "%d lettres, %d mots, %d lignes";
 "Emoji Style" = "Style des émoticones";
 "Text Style" = "Style du texte";
@@ -98,6 +98,13 @@
 "Skin Tone IV" = "Mate";
 "Skin Tone V" = "Mate";
 "Skin Tone VI" = "Noire";
+"Code Point:" = "Point de code :";
+"Block:" = "Bloc :";
+"Category:" = "Catégorie :";
+"Version:" = "Version :";
+"Unknown" = "Inconnu";
+"No Block" = "Aucun bloc";
+"deprecated" = "obsolète";
 "Unknown encoding; using UTF-8." = "Encodage inconnu ; UTF-8 utilisé";
 "Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Les démos requièrent Mac OS 10.9, Mavericks ou plus.";
 "Source" = "Source";

@@ -41,6 +41,20 @@ paths, reduced magnification, and missing/invalid input. It runs the current and
 legacy parsers on both architectures. Set `TEXLIVE_BIN` if TeX Live is installed
 elsewhere. Intel execution on Apple Silicon requires Rosetta.
 
+## Unicode block names
+
+Character Info shows the Unicode block of a character. The block comes from ICU
+(`unicode/uchar.h` of the macOS SDK, linked as `libicucore`), which also gives the
+name, general category and version. The English names in
+`Sources/Panels/TSUnicodeBlockNames.m` are those of Blocks.txt in the Unicode
+Character Database; `Scripts/update-unicode-block-names.py` writes them from a
+Blocks.txt. The names in other languages are read at run time from the table of the
+Character Viewer of macOS
+(`/System/Library/Input Methods/CharacterPalette.app/Contents/Resources/UnicodeBlocks_Title.loctable`);
+where it is missing, or has no name for the language or the block, the English name
+is shown. That file has to be checked after each major update of macOS; see
+[Resources read from macOS](macOS-resources.md).
+
 ## OgreKit and Sparkle
 
 Do not infer OgreKit's recency from the largest version number: upstream tag

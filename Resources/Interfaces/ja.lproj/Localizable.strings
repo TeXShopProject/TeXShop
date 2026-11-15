@@ -98,6 +98,13 @@
 "Skin Tone IV" = "スキントーンIV";
 "Skin Tone V" = "スキントーンV";
 "Skin Tone VI" = "スキントーンVI";
+"Code Point:" = "コードポイント：";
+"Block:" = "ブロック：";
+"Category:" = "カテゴリ：";
+"Version:" = "バージョン：";
+"Unknown" = "不明";
+"No Block" = "ブロックなし";
+"deprecated" = "非推奨";
 "Unknown encoding; using UTF-8." = "未知のエンコーディングが指定されたため、代わりにUTF-8エンコーディングを使用しました。";
 "Demo Movies require Mac OS 10.9, Mavericks, or higher." = "デモ動画の再生にはOS X 10.9 Mavericks以上が必要です。";
 "Source" = "ソース";

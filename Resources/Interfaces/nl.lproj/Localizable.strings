@@ -83,7 +83,7 @@
 " does not exist." = " bestaat niet.";
 "failed to copy selection." = "kopiëren van selectie mislukt.";
 "failed to save selection to the file." = "bewaren van selectie in bestand mislukt.";
-"<a letter consisting of %d characters>" = "<een letter bestaande uit %d tekens>";
+"<a letter consisting of %d characters>" = "<een teken bestaande uit %d tekens>";
 "%d letters, %d words, %d lines" = "%d letters, %d woorden, %d regels";
 "Emoji Style" = "Emojistijl";
 "Text Style" = "Tekststijl";
@@ -95,6 +95,13 @@
 "Skin Tone IV" = "Getinte huidskleur";
 "Skin Tone V" = "Donkergetinte huidskleur";
 "Skin Tone VI" = "Donkere huidskleur";
+"Code Point:" = "Codepunt:";
+"Block:" = "Blok:";
+"Category:" = "Categorie:";
+"Version:" = "Versie:";
+"Unknown" = "Onbekend";
+"No Block" = "Geen blok";
+"deprecated" = "verouderd";
 "Unknown encoding; using UTF-8." = "Onbekende codering; UTF-8 wordt gebruikt.";
 "Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Voor demofilms is Mac OS 10.9 (Mavericks) of hoger vereist.";
 "Source" = "Bron";
