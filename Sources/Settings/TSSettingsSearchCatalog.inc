@@ -213,7 +213,6 @@ add(TSSettingsCategoryPreview, @"row.catalog.preview.5.0", @"SettingsCategories"
 add(TSSettingsCategoryPreview, @"row.catalog.preview.5.0", @"SettingsCategories", @"catalog.preview.5.0.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryTypesetting, @"heading.group.typesetting.0", @"SettingsCategories", @"group.typesetting.0.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.4", @"SettingsCategories", @"catalog.typesetting.0.4.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.4", @"SettingsCategories", @"catalog.typesetting.0.4.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.4", @"Localizable", @"LuaLaTeX (Japanese)", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.0", @"SettingsCategories", @"catalog.typesetting.0.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.0.0", @"SettingsCategories", @"catalog.typesetting.0.0.note", TSSettingsSearchWeightDescription);

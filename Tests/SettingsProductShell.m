@@ -526,6 +526,17 @@ int main(int argc,char **argv){@autoreleasepool{
  Check(profiles!=nil && profileRow!=nil && [profiles isDescendantOf:profileRow] && Find(profileRow,@"settings.engine-profile-apply")==nil && [owner valueForKey:@"engineProfileWatcher"]!=nil,@"The engine profile menu is in Typesetting, without an Apply button, and follows the settings");
  NSUInteger profileRowButtons=0;for(NSView *v in [profileRow.subviews arrayByAddingObjectsFromArray:profileRow.subviews.firstObject.subviews])if([v isMemberOfClass:NSButton.class])profileRowButtons++;
  Check(profileRowButtons==0,@"No button beside the profile menu");
+ // The profile row is its name and menu only; choosing a profile lists what it sets. Words that were only in its
+ // former note (kpsewhich, UTF-8-MAC) find their own rows, never the profile row.
+ [shell.window.contentView layoutSubtreeIfNeeded];
+ NSView *plainPopupRow=Find([shell viewForCategoryIdentifier:TSSettingsCategoryTypesetting],@"row.catalog.typesetting.0.2");
+ Check(Find(profileRow,@"note.catalog-row")==nil && plainPopupRow!=nil && Find(plainPopupRow,@"note.catalog-row")==nil && NSHeight(profileRow.frame)>0 && fabs(NSHeight(profileRow.frame)-NSHeight(plainPopupRow.frame))<0.5,
+       [NSString stringWithFormat:@"The engine profile row has no note and is as tall as a one-line menu row: %.1f / %.1f",NSHeight(profileRow.frame),NSHeight(plainPopupRow.frame)]);
+ for(NSString *query in @[@"kpsewhich",@"UTF-8-MAC"]){
+  Check([shell setSettingsSearchQuery:query],@"Search for a word of the former profile note is accepted");
+  for(TSSettingsSearchResult *result in shell.searchResults)Check(![result.targetIdentifier isEqual:@"row.catalog.typesetting.0.4"],[NSString stringWithFormat:@"Search for %@ does not lead to the engine profile row",query]);
+ }
+ [shell setSettingsSearchQuery:@""];[shell selectCategoryIdentifier:TSSettingsCategoryTypesetting];
  Check(profiles.target==owner && profiles.action==@selector(applyEngineProfile:),@"Choosing a profile asks the owner at once");
  __block NSMutableArray<NSString *> *effects=[NSMutableArray array];
  id token=[NSNotificationCenter.defaultCenter addObserverForName:nil object:owner queue:nil usingBlock:^(NSNotification *note){[effects addObject:note.name];Check(note.userInfo==nil,@"Profile notifications contain no transient theme dictionary");}];
