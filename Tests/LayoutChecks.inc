@@ -159,16 +159,25 @@ static void CheckText(NSView *v, NSString *where) {
     if ([v isKindOfClass:NSPopUpButton.class] && !automaticBezel) {
         // Every choice of a pop-up menu, and the title of a pull-down menu, fits the
         // button: each item is selected in a copy of the cell and measured with it.
-        // Placeholder items ("Item 1") are replaced at run time.
+        // The title of a pull-down menu is its first item, which the menu hides, so a
+        // hidden first item is measured too. Placeholder items ("Item 1") are replaced
+        // at run time.
         NSPopUpButton *p = (NSPopUpButton *)v;
         CGFloat have = p.bounds.size.width;
         NSInteger count = p.pullsDown ? MIN(1, p.numberOfItems) : p.numberOfItems;
         for (NSInteger i = 0; i < count; i++) {
             NSMenuItem *item = [p itemAtIndex:i];
-            if (item.isSeparatorItem || item.isHidden || !item.title.length) continue;
+            if (item.isSeparatorItem || (item.isHidden && !p.pullsDown) || !item.title.length) continue;
             if (Placeholder(item.title) || [item.title hasPrefix:@"-- DO NOT LOCALIZE"]) continue;
             NSPopUpButtonCell *cell = [(NSPopUpButtonCell *)p.cell copy];
             [cell removeAllItems]; [cell addItemWithTitle:item.title]; [cell selectItemAtIndex:0];
+            if (p.pullsDown) {
+                // A pull-down button draws its title in the room its arrow leaves, as a button
+                // does (cellSize asks for more room than the title takes there).
+                CGFloat text = cell.attributedTitle.size.width, room = [cell titleRectForBounds:p.bounds].size.width;
+                if (text > room + 0.5) Report([NSString stringWithFormat:@"CLIPPED %@ pull-down \"%@\": needs %.1f, has %.1f", where, item.title, text, room]);
+                continue;
+            }
             CGFloat need = cell.cellSize.width;
             if (need > have + 1) Report([NSString stringWithFormat:@"CLIPPED %@ popup \"%@\": needs %.1f, has %.1f", where, item.title, need, have]);
         }
@@ -632,6 +641,18 @@ static void CheckRoot(NSView *root, NSString *where) {
         }
         if (selected) [tabs selectTabViewItem:selected];
     }
+}
+
+// TSDocument.nib keeps the custom views of the toolbars (pop-up menus, check boxes,
+// page fields) in a view of their own, of class NSMatrix but without cells. The
+// toolbar takes each view out of it, so the text of each part is checked on its own,
+// and where the parts lie in that view does not matter.
+static BOOL ToolbarParts(NSView *v) {
+    return [v isKindOfClass:NSMatrix.class] && ((NSMatrix *)v).cells.count == 0 && v.subviews.count > 0;
+}
+static void CheckToolbarParts(NSView *box, NSString *where) {
+    for (NSView *part in box.subviews) Collect(part, part, where, [NSMutableArray array], [NSMutableArray array]);
+    if (!automaticBezel) SaveImage(box, where);
 }
 
 // A window as it opens, and, when it can be made smaller, at its smallest size,

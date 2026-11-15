@@ -59,6 +59,7 @@
 #import "TSPreviewLayout.h"
 #import "TSPreviewAppearance.h"  // added by Terada
 #import "TSSplitToggleCue.h"
+#import "TSOlderPanelLayout.h"
 #import <objc/runtime.h>
 
 
@@ -1042,6 +1043,8 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 	}
 
 	if ([itemIdent isEqual: kTagsTID]) {
+		// The title the document gives the pull-down, and the width it needs in this language.
+		TSFitToolbarPullDown(tags, NSLocalizedString(@"Tags", @"Tags"));
 		toolbarItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent customView:tags];
 		menuFormRep = [[NSMenuItem alloc] init];
 
@@ -1052,6 +1055,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 	}
     
     if ([itemIdent isEqual: skTagsTID]) {
+		TSFitToolbarPullDown(stags, NSLocalizedString(@"Tags", @"Tags"));
 		toolbarItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent customView:stags];
 		menuFormRep = [[NSMenuItem alloc] init];
         
@@ -1064,6 +1068,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
     
     //NDS added dropdown for going to a label
     if ([itemIdent isEqual: kLabelsTID]) {
+        TSFitToolbarPullDown(labels, NSLocalizedString(@"Labels", @"Labels"));
         toolbarItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent customView:labels];
          menuFormRep = [[NSMenuItem alloc] init] ;
         
@@ -1077,6 +1082,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
     }
     //NDS added dropdown for going to a label
     if ([itemIdent isEqual: skLabelsTID]) {
+        TSFitToolbarPullDown(slabels, NSLocalizedString(@"Labels", @"Labels"));
         toolbarItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent customView:slabels];
          menuFormRep = [[NSMenuItem alloc] init] ;
         

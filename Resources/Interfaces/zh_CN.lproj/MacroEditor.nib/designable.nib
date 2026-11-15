@@ -1626,7 +1626,7 @@
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="153616915"/>
-							<string key="toolTip">Name which appears in Macros menu</string>
+							<string key="toolTip">显示在“宏”菜单中的名称</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1658,8 +1658,8 @@
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="75666898"/>
-							<string type="base64-UTF8" key="toolTip">VGV4dCB0byBiZSBpbnNlcnRlZDoKI1NFTCMgd2lsbCBiZSByZXBsYWNlZCBieSB0aGUgc2VsZWN0aW9u
-OwppbnNlcnRpb24gcG9pbnQgd2lsbCBjb21lIHRvICNJTlMjLg</string>
+							<string type="base64-UTF8" key="toolTip">6KaB5o+S5YWl55qE5paH5pys77yaCiNTRUwj5bCG6KKr5pu/5o2i5Li65omA6YCJ5YaF5a6577ybCuaP
+kuWFpeeCueWwhuS9jeS6jiNJTlMj44CC</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1670,7 +1670,7 @@ OwppbnNlcnRpb24gcG9pbnQgd2lsbCBjb21lIHRvICNJTlMjLg</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="24810083"/>
-							<string key="toolTip">Save edited macros</string>
+							<string key="toolTip">保存编辑过的宏</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1679,7 +1679,7 @@ OwppbnNlcnRpb24gcG9pbnQgd2lsbCBjb21lIHRvICNJTlMjLg</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="680739676"/>
-							<string key="toolTip">Discard changes</string>
+							<string key="toolTip">放弃更改</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1688,7 +1688,7 @@ OwppbnNlcnRpb24gcG9pbnQgd2lsbCBjb21lIHRvICNJTlMjLg</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="877209310"/>
-							<string key="toolTip">Insert the content of current macro</string>
+							<string key="toolTip">插入当前宏的内容</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1697,7 +1697,7 @@ OwppbnNlcnRpb24gcG9pbnQgd2lsbCBjb21lIHRvICNJTlMjLg</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="998296693"/>
-							<string key="toolTip">Add new macro item</string>
+							<string key="toolTip">添加新的宏</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1706,7 +1706,7 @@ OwppbnNlcnRpb24gcG9pbnQgd2lsbCBjb21lIHRvICNJTlMjLg</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="722697449"/>
-							<string key="toolTip">Add new submenu</string>
+							<string key="toolTip">添加新的子菜单</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1715,7 +1715,7 @@ OwppbnNlcnRpb24gcG9pbnQgd2lsbCBjb21lIHRvICNJTlMjLg</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="713721865"/>
-							<string key="toolTip">Add new separator</string>
+							<string key="toolTip">添加新的分割线</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1724,7 +1724,7 @@ OwppbnNlcnRpb24gcG9pbnQgd2lsbCBjb21lIHRvICNJTlMjLg</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="259650443"/>
-							<string key="toolTip">Delete the selection</string>
+							<string key="toolTip">删除所选项</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1733,7 +1733,7 @@ OwppbnNlcnRpb24gcG9pbnQgd2lsbCBjb21lIHRvICNJTlMjLg</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="867337780"/>
-							<string key="toolTip">Duplicate the selection</string>
+							<string key="toolTip">复制所选项</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>

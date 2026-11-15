@@ -21,6 +21,9 @@
 @interface SpacingOwner () { @public id printRequestPanel, requestWindow; }
 @property (strong) id logWindow;
 @end
+// The pull-down buttons of the toolbars, which TSToolbarController titles and fits.
+@interface SpacingOwner () { @public id tags, stags, labels, slabels; }
+@end
 @implementation SpacingOwner
 - (instancetype)init { if ((self = [super init])) _outlets = [NSMutableDictionary dictionary]; return self; }
 - (void)setValue:(id)v forUndefinedKey:(NSString *)k { if (v) self.outlets[k] = v; }
@@ -49,6 +52,10 @@ static void ApplyProductionLayout(NSString *name, id owner, NSArray *objects) {
         // TSDocument -setupConsole: push buttons along the top of the console.
         if (![document->outputWindow isKindOfClass:NSWindow.class]) { printf("ERROR TSDocument.nib console is not connected\n"); exit(2); }
         TSLayoutConsoleButtonRow(document->outputWindow);
+        // TSToolbarController: the Tags and Labels pull-downs, titled as the document titles them.
+        if (!document->tags || !document->stags || !document->labels || !document->slabels) { printf("ERROR TSDocument.nib toolbar pull-downs are not connected\n"); exit(2); }
+        for (NSPopUpButton *tag in @[document->tags, document->stags]) TSFitToolbarPullDown(tag, NSLocalizedString(@"Tags", @"Tags"));
+        for (NSPopUpButton *label in @[document->labels, document->slabels]) TSFitToolbarPullDown(label, NSLocalizedString(@"Labels", @"Labels"));
     } else if ([name isEqual:@"MainMenu.nib"]) {
         // HelpDocuments (two panels) and TSStationery lay out their OK/Cancel panels.
         NSUInteger dialogs = 0;
