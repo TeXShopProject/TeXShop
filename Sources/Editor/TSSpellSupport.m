@@ -419,15 +419,13 @@ static NSString *SuggestionAtRow(NSTableView *table, NSInteger row)
 // The row below the Spelling and Grammar panel: the replacement field and Change
 // All. The field is returned through `field`, and through `status` the label for
 // what Change All reports, which TSChangeAllStatusView lays out for a popover.
-// The row follows the panel's own columns: the word field and the language
-// pop-up start 20 points in and end 135.5 points before the right edge, and the
-// buttons are small, 20 points high, 101.5 wide and 20 points before the right
-// edge. The field is as high as the word field, and Change All is centered on
-// it, as Change is on the word field. AppKit puts the row 8 points above the
-// bottom of the panel and 8 points below the pop-up, so the field is 16 points
-// above the bottom, as the pop-up is in the panel without the row, and 12 points
-// below the pop-up. The row is 431 wide, the panel's width; once it is in the
-// panel, FitChangeAllRow makes it follow the panel's width.
+// The row follows the panel's own columns, which FitChangeAllRow ties it to once
+// it is in the panel; the sizes here are those of the English panel at its
+// default width. The field is as high as the word field, and Change All, a
+// small button as the panel's are, is centered on it, as Change is on the word
+// field. AppKit puts the row 8 points above the bottom of the panel and 8 points
+// below the pop-up, so the field is 16 points above the bottom, as the pop-up is
+// in the panel without the row, and 12 points below the pop-up.
 static NSView *TSChangeAllAccessory(id target, NSTextField * __strong *field, NSTextField * __strong *status)
 {
     NSView *accessory = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 431, 36)];
@@ -472,10 +470,33 @@ static NSView *TSChangeAllStatusView(NSTextField *status)
 }
 
 // AppKit keeps the accessory view at the width it was given and centers it when
-// the panel is resized, so a row of the panel's own width would leave the
-// columns when the panel is wider and be cut off when it is narrower. Give the
-// row the panel's width and let it follow it; the field then grows and shrinks
-// with the pop-up above it, and Change All stays in the button column.
+// the panel is resized, so the row would leave the panel's columns when the
+// panel is wider and be cut off when it is narrower. The panel also lays its
+// columns out for the language it is shown in: the buttons are as wide as their
+// titles need. So give the row the panel's width, let it follow it, and tie the
+// field to the edges of the panel's language pop-up and Change All to those of
+// the panel's buttons. The sizes TSChangeAllAccessory gives remain when the
+// panel's controls cannot be found.
+static NSView *PanelControl(NSView *view, Class cls, NSView *skip, BOOL topmost)
+{
+    NSView *found = nil;
+    NSMutableArray<NSView *> *views = [NSMutableArray arrayWithObject:view];
+    while (views.count) {
+        NSView *v = views.lastObject;
+        [views removeLastObject];
+        if (v == skip) continue;
+        [views addObjectsFromArray:v.subviews];
+        if (![v isKindOfClass:cls]) continue;
+        if (cls == NSButton.class && ([v isKindOfClass:NSPopUpButton.class] ||
+                                      ((NSButton *)v).bezelStyle != NSBezelStylePush)) continue;
+        NSRect r = [v convertRect:v.bounds toView:nil];
+        if (!found || (topmost && NSMaxY(r) > NSMaxY([found convertRect:found.bounds toView:nil])))
+            found = v;
+        if (!topmost) break;
+    }
+    return found;
+}
+
 static void FitChangeAllRow(NSView *accessory)
 {
     NSView *container = accessory.superview;
@@ -485,6 +506,28 @@ static void FitChangeAllRow(NSView *accessory)
     frame.size.width = NSWidth(container.bounds);
     accessory.frame = frame;
     accessory.autoresizingMask = NSViewWidthSizable | NSViewMaxYMargin;
+
+    NSView *popUp = PanelControl(container, NSPopUpButton.class, accessory, NO);
+    NSView *column = PanelControl(container, NSButton.class, accessory, YES);
+    NSTextField *field = nil;
+    NSButton *button = nil;
+    for (NSView *view in accessory.subviews) {
+        if ([view isKindOfClass:NSTextField.class]) field = (NSTextField *)view;
+        else if ([view isKindOfClass:NSButton.class]) button = (NSButton *)view;
+    }
+    if (!popUp || !column || !field || !button) return;
+    field.translatesAutoresizingMaskIntoConstraints = NO;
+    button.translatesAutoresizingMaskIntoConstraints = NO;
+    [NSLayoutConstraint activateConstraints:@[
+        [field.leadingAnchor constraintEqualToAnchor:popUp.leadingAnchor],
+        [field.trailingAnchor constraintEqualToAnchor:popUp.trailingAnchor],
+        [field.bottomAnchor constraintEqualToAnchor:accessory.bottomAnchor constant:-8],
+        [field.heightAnchor constraintEqualToConstant:24],
+        [button.leadingAnchor constraintEqualToAnchor:column.leadingAnchor],
+        [button.trailingAnchor constraintEqualToAnchor:column.trailingAnchor],
+        [button.centerYAnchor constraintEqualToAnchor:field.centerYAnchor],
+    ]];
+    [container layoutSubtreeIfNeeded];
 }
 // END change all accessory
 
