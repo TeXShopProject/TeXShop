@@ -249,7 +249,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     TSShortcutTableView *table = [TSShortcutTableView new];
     self.table = table;
     self.table.delegate = self; self.table.dataSource = self;
-    self.table.rowHeight = 22; self.table.style = NSTableViewStyleInset; self.table.usesAlternatingRowBackgroundColors = NO;
+    self.table.rowHeight = 22; self.table.style = NSTableViewStyleInset; self.table.usesAlternatingRowBackgroundColors = YES;
     self.table.columnAutoresizingStyle = NSTableViewFirstColumnOnlyAutoresizingStyle;
     self.table.doubleAction = @selector(editShortcut:); self.table.action = @selector(tableClicked:); self.table.target = self;
     __weak TSShortcutPaneController *weakPane = self;

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """The key binding list in Settings › Keyboard: tokens and their file text, line
 breaks and tabs, saving at once, Undo, empty rows, repeated and one-character
-input characters, copy and paste, Insert, and moving rows. No window is ordered,
+input characters, copy and paste, Insert, moving rows, and striped
+rows in light and dark. No window is ordered,
 beeps are counted, and key bindings are written to a temporary folder only.
 
-  --mutations   also check that the test finds four deliberate faults"""
+  --mutations   also check that the test finds five deliberate faults"""
 from pathlib import Path
 import subprocess, sys, tempfile
 from source_tree import include_args
@@ -14,6 +15,7 @@ mutations = {
     'line-break-not-a-token': ('@"#PASTE#", @"\\n", @"\\t", TSKeyBindingMark]', '@"#PASTE#", @"\\t", TSKeyBindingMark]', 'Symbols, line breaks and tabs are tokens'),
     'not-used-at-once': ('    [GlobalData sharedGlobalData].g_autocompletionDictionary = dictionary;\n', '', 'save a real line break and tab, at once'),
     'replacement-character-dropped': ('        } else if (value == nil) {', '        } else if (value == nil && NO) {', 'A pasted U+FFFC without an attachment is saved'),
+    'rows-not-striped': ('    table.usesAlternatingRowBackgroundColors = YES;', '    table.usesAlternatingRowBackgroundColors = NO;', 'Neighboring rows have different backgrounds'),
     'input-not-limited': ('    if (text.length == 0 || [text rangeOfComposedCharacterSequenceAtIndex:0].length == text.length) return;', '    return;', 'Typing in an input character keeps only the new character'),
 }
 def run(text):
