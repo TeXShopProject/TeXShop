@@ -447,6 +447,9 @@ static const NSSize TSMacroContentsInset = {8, 8};
     rows.cornerView = nil;
     rows.style = NSTableViewStyleInset;
     rows.backgroundColor = NSColor.clearColor;
+    // No focus ring around the sidebar, as around the sets: the selection shows the focus. (AppKit draws one
+    // around the scroll view of a list of cells, as this nib's, not around one of views, as the sets'.)
+    rows.focusRingType = NSFocusRingTypeNone;
     // Rows 24 points apart, as the sets', their text in the middle of each.
     rows.rowHeight = 17;
     rows.intercellSpacing = NSMakeSize(rows.intercellSpacing.width, 7);
