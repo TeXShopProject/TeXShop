@@ -13,31 +13,31 @@ SIMP = '--extratexopts "-file-line-error -synctex=1"'
 PT = '-ot "-synctex=1 -file-line-error"'
 DVIPDF = '-e "$dvipdf=q/dvipdfmx %O -o %D %S/"'
 # The expected table, written out independently of the source: place, LaTeX, TeX, LaTeX with latexmk, BibTeX,
-# the index command and the MetaPost command.
+# the index command, the MetaPost command and the kpsewhich command of Open Style File.
 TABLE = {
-    1: (100, 'pdflatex ' + PDF, 'pdftex ' + PDF, 'latexmk -pdf -e "$pdflatex=q/pdflatex -synctex=1 -file-line-error/" -norc', 'bibtex', 'makeindex', 'mpost'),
-    2: (100, 'xelatex ' + PDF, 'xetex ' + PDF, 'latexmk -xelatex -e "$xelatex=q/xelatex -synctex=1 -file-line-error/" -norc', 'bibtex', 'makeindex', 'mpost'),
-    3: (100, 'lualatex ' + PDF, 'luatex ' + PDF, 'latexmk -lualatex -e "$lualatex=q/lualatex -synctex=1 -file-line-error/" -norc', 'bibtex', 'makeindex', 'mpost'),
+    1: (100, 'pdflatex ' + PDF, 'pdftex ' + PDF, 'latexmk -pdf -e "$pdflatex=q/pdflatex -synctex=1 -file-line-error/" -norc', 'bibtex', 'makeindex', 'mpost', 'kpsewhich -progname=latex'),
+    2: (100, 'xelatex ' + PDF, 'xetex ' + PDF, 'latexmk -xelatex -e "$xelatex=q/xelatex -synctex=1 -file-line-error/" -norc', 'bibtex', 'makeindex', 'mpost', 'kpsewhich -progname=xelatex'),
+    3: (100, 'lualatex ' + PDF, 'luatex ' + PDF, 'latexmk -lualatex -e "$lualatex=q/lualatex -synctex=1 -file-line-error/" -norc', 'bibtex', 'makeindex', 'mpost', 'kpsewhich -progname=lualatex'),
     4: (101, 'simpdftex latex --mode dvipdfmx ' + SIMP, 'simpdftex etex --mode dvipdfmx ' + SIMP,
-        'latexmk -pdfdvi -e "$latex=q/latex -synctex=1 -file-line-error/" ' + DVIPDF + ' -norc', 'bibtex', 'makeindex', 'mpost'),
+        'latexmk -pdfdvi -e "$latex=q/latex -synctex=1 -file-line-error/" ' + DVIPDF + ' -norc', 'bibtex', 'makeindex', 'mpost', 'kpsewhich -progname=latex'),
     5: (100, 'lualatex ' + PDF, 'luatex ' + PDF,
-        'latexmk -lualatex -e "$lualatex=q/lualatex -synctex=1 -file-line-error/" -e "$bibtex=q/upbibtex/" -e "$makeindex=q/upmendex/" -norc', 'upbibtex', 'upmendex', 'mpost'),
+        'latexmk -lualatex -e "$lualatex=q/lualatex -synctex=1 -file-line-error/" -e "$bibtex=q/upbibtex/" -e "$makeindex=q/upmendex/" -norc', 'upbibtex', 'upmendex', 'mpost', 'kpsewhich -progname=lualatex'),
     6: (101, 'ptex2pdf -l ' + PT, 'ptex2pdf -e ' + PT,
-        'latexmk -pdfdvi -e "$latex=q/platex -synctex=1 -file-line-error/" -e "$bibtex=q/pbibtex/" -e "$makeindex=q/mendex/" ' + DVIPDF + ' -norc', 'pbibtex', 'mendex', 'pmpost'),
+        'latexmk -pdfdvi -e "$latex=q/platex -synctex=1 -file-line-error/" -e "$bibtex=q/pbibtex/" -e "$makeindex=q/mendex/" ' + DVIPDF + ' -norc', 'pbibtex', 'mendex', 'pmpost', 'kpsewhich -progname=platex'),
     7: (101, 'ptex2pdf -u -l ' + PT, 'ptex2pdf -e -u ' + PT,
-        'latexmk -pdfdvi -e "$latex=q/uplatex -synctex=1 -file-line-error/" -e "$bibtex=q/upbibtex/" -e "$makeindex=q/upmendex/" ' + DVIPDF + ' -norc', 'upbibtex', 'upmendex', 'upmpost'),
+        'latexmk -pdfdvi -e "$latex=q/uplatex -synctex=1 -file-line-error/" -e "$bibtex=q/upbibtex/" -e "$makeindex=q/upmendex/" ' + DVIPDF + ' -norc', 'upbibtex', 'upmendex', 'upmpost', 'kpsewhich -progname=uplatex'),
     8: (101, 'simpdftex latex --maxpfb ' + SIMP, 'simpdftex etex --maxpfb ' + SIMP,
-        'latexmk -pdfps -e "$latex=q/latex -synctex=1 -file-line-error/" -norc', 'bibtex', 'makeindex', 'mpost'),
+        'latexmk -pdfps -e "$latex=q/latex -synctex=1 -file-line-error/" -norc', 'bibtex', 'makeindex', 'mpost', 'kpsewhich -progname=latex'),
 }
 JAPANESE = {5, 6, 7}
 
 
 def expected(profile, latexmk):
-    place, latex, tex, mk, bib, index, metapost = TABLE[profile]
+    place, latex, tex, mk, bib, index, metapost, kpsewhich = TABLE[profile]
     direct = place == 100
     values = {'DefaultScript': place, 'LatexCommand' if direct else 'LatexGSCommand': mk if latexmk else latex,
               'TexCommand' if direct else 'TexGSCommand': tex, 'BibTeXengine': bib,
-              'MakeIndexEngine': index, 'MetaPostEngine': metapost, 'ptexUtfOutput': profile == 6}
+              'MakeIndexEngine': index, 'MetaPostEngine': metapost, 'Kpsetool': kpsewhich, 'ptexUtfOutput': profile == 6}
     if profile in JAPANESE:
         values.update({'Encoding': 'UTF-8 Unicode', 'AutomaticUTF8MACtoUTF8Conversion': True, 'SpellingAutomaticDefault': True, 'SpellingLanguageDefault': ' '})
     return values
@@ -157,6 +157,9 @@ int main(int argc, char **argv) { @autoreleasepool {
     check(TSEngineProfileMatchingSettings(upTeX, NULL) == 0, @"the earlier upTeX (ptex2pdf) commands alone are Custom");
     [upTeX.values addEntriesFromDictionary:@{@"MakeIndexEngine": @"upmendex", @"MetaPostEngine": @"upmpost", @"ptexUtfOutput": @"NO", @"Encoding": @"UTF-8 Unicode",
         @"AutomaticUTF8MACtoUTF8Conversion": @"YES", @"SpellingAutomaticDefault": @YES, @"SpellingLanguageDefault": @" "}];
+    // The kpsewhich command decides as well: the factory one is not that of upLaTeX.
+    check(TSEngineProfileMatchingSettings(upTeX, NULL) == 0, @"the earlier upTeX (ptex2pdf) settings with the factory kpsewhich command are Custom");
+    upTeX.values[@"Kpsetool"] = @"kpsewhich -progname=uplatex";
     check(TSEngineProfileMatchingSettings(upTeX, NULL) == 7, @"the earlier upTeX (ptex2pdf) settings with the rest are upLaTeX + dvipdfmx");
     upTeX.values[@"LatexGSCommand"] = @"  ptex2pdf -u -l -ot \"-synctex=1 -file-line-error\"\n";
     check(TSEngineProfileMatchingSettings(upTeX, NULL) == 7, @"surrounding blanks do not decide");
@@ -229,8 +232,78 @@ int main(int argc, char **argv) { @autoreleasepool {
         check([[d stringForKey:@"TexGSCommand"] isEqual:c[1]] && [[d stringForKey:@"LatexGSCommand"] isEqual:c[2]] && [d objectForKey:@"SavePSEnabled"] == nil && [d objectForKey:@"UseTransparency"] == nil,
               [NSString stringWithFormat:@"%@ moves into the commands that understand it, once", c[0]]);
     }
+    // 8. The kpsewhich command: the factory one is that of pdfLaTeX, and new users carry the mark of the move below.
+    check([factory[@"Kpsetool"] isEqual:@"kpsewhich -progname=latex"], [NSString stringWithFormat:@"the factory kpsewhich command: %@", factory[@"Kpsetool"]]);
+    check([factory[@"KpsewhichOfEngineProfileWritten"] boolValue], @"the factory defaults carry the mark of the kpsewhich move");
+    // Once, settings that have every value of a profile but the kpsewhich command get the command of that profile, if
+    // theirs is not stored or is a factory one; one typed by hand stays. An earlier factory command of settings that
+    // match no profile is removed. Each case: the stored values, the profile (number and form) or nil for custom
+    // settings, and the command stored afterwards (NSNull: none).
+    NSString *const mark = @"KpsewhichOfEngineProfileWritten";
+    NSDictionary *(^profileBut)(NSInteger, BOOL, id) = ^NSDictionary *(NSInteger profile, BOOL latexmk, id command) {
+        NSMutableDictionary *values = [TSEngineProfileValues(profile, latexmk) mutableCopy];
+        [values removeObjectForKey:@"Kpsetool"];
+        if (command != nil) values[@"Kpsetool"] = command;
+        return values;
+    };
+    NSDictionary *custom = @{@"LatexCommand": @"pdflatex --shell-escape"};
+    NSDictionary *(^with)(NSDictionary *, NSDictionary *) = ^NSDictionary *(NSDictionary *a, NSDictionary *b) {
+        NSMutableDictionary *m = [a mutableCopy]; [m addEntriesFromDictionary:b]; return m;
+    };
+    NSArray *moves = @[
+        @[profileBut(7, NO, nil), @"kpsewhich -progname=uplatex"],
+        @[profileBut(7, NO, @"kpsewhich -progname=latex -format=tex"), @"kpsewhich -progname=uplatex"],
+        @[profileBut(7, YES, @"kpsetool -w -n latex tex"), @"kpsewhich -progname=uplatex"],
+        @[profileBut(7, NO, @" kpsewhich -progname=latex\n"), @"kpsewhich -progname=uplatex"],
+        @[profileBut(7, NO, @""), @"kpsewhich -progname=uplatex"],
+        @[profileBut(6, YES, nil), @"kpsewhich -progname=platex"],
+        @[profileBut(5, NO, @"kpsewhich -progname=latex -format=tex"), @"kpsewhich -progname=lualatex"],
+        @[profileBut(3, YES, nil), @"kpsewhich -progname=lualatex"],
+        @[profileBut(2, NO, @"kpsetool -w -n latex tex"), @"kpsewhich -progname=xelatex"],
+        @[profileBut(4, NO, @"kpsewhich -progname=latex -format=tex"), @"kpsewhich -progname=latex"],
+        @[profileBut(8, YES, @"kpsewhich -progname=latex -format=tex"), @"kpsewhich -progname=latex"],
+        @[@{@"Kpsetool": @"kpsewhich -progname=latex -format=tex"}, @"kpsewhich -progname=latex"],
+        @[@{}, NSNull.null],
+        // Typed by hand: kept.
+        @[profileBut(7, NO, @"kpsewhich -progname=platex -format=tex"), @"kpsewhich -progname=platex -format=tex"],
+        @[profileBut(7, NO, @"kpsewhich -progname=latex -format=sty"), @"kpsewhich -progname=latex -format=sty"],
+        @[profileBut(7, NO, @"/usr/local/bin/kpsetool -w -n latex tex"), @"/usr/local/bin/kpsetool -w -n latex tex"],
+        @[with(profileBut(7, NO, @"kpsewhich -progname=latex"), @{@"MetaPostEngine": @"mpost"}), @"kpsewhich -progname=latex"],
+        // No profile: an earlier factory command is removed, the factory command of now and one typed by hand stay.
+        @[with(custom, @{@"Kpsetool": @"kpsewhich -progname=latex -format=tex"}), NSNull.null],
+        @[with(custom, @{@"Kpsetool": @"kpsetool -w -n latex tex"}), NSNull.null],
+        @[with(custom, @{@"Kpsetool": @"kpsewhich -progname=latex"}), @"kpsewhich -progname=latex"],
+        @[with(custom, @{@"Kpsetool": @"kpsewhich -progname=uplatex"}), @"kpsewhich -progname=uplatex"],
+        @[custom, NSNull.null],
+        // Done already: nothing changes.
+        @[with(profileBut(7, NO, nil), @{mark: @YES}), NSNull.null],
+        @[with(profileBut(7, NO, @"kpsewhich -progname=latex -format=tex"), @{mark: @"YES"}), @"kpsewhich -progname=latex -format=tex"],
+        @[with(custom, @{@"Kpsetool": @"kpsetool -w -n latex tex", mark: @"YES"}), @"kpsetool -w -n latex tex"]];
+    for (NSArray *c in moves) {
+        TSMemoryDefaults *d = [TSMemoryDefaults new]; [d registerDefaults:factory];
+        [d.values addEntriesFromDictionary:c[0]];
+        TSWriteKpsewhichOfEngineProfile(d, [d.values copy]);
+        id want = c[1] == NSNull.null ? nil : c[1];
+        id got = d.values[@"Kpsetool"];
+        check((want == nil && got == nil) || [got isEqual:want], [NSString stringWithFormat:@"stored %@: the kpsewhich command is %@, expected %@", c[0], got, want]);
+        check([d.values[mark] boolValue], [NSString stringWithFormat:@"stored %@: the mark is set", c[0]]);
+        // Once: put back what was there, and the move is not made again.
+        NSMutableDictionary *again = [c[0] mutableCopy]; again[mark] = @YES;
+        d.values = again;
+        TSWriteKpsewhichOfEngineProfile(d, [d.values copy]);
+        check([d.values isEqual:again], [NSString stringWithFormat:@"stored %@: nothing is moved a second time", c[0]]);
+    }
+    // The settings of an earlier upLaTeX user match the profile again after the move.
+    {
+        TSMemoryDefaults *d = [TSMemoryDefaults new]; [d registerDefaults:factory];
+        [d.values addEntriesFromDictionary:profileBut(7, YES, @"kpsewhich -progname=latex -format=tex")];
+        check(TSEngineProfileMatchingSettings(d, NULL) == 0, @"before the move, the earlier upLaTeX user is Custom");
+        TSWriteKpsewhichOfEngineProfile(d, [d.values copy]);
+        BOOL mkNow = NO;
+        check(TSEngineProfileMatchingSettings(d, &mkNow) == 7 && mkNow, @"after the move, the earlier upLaTeX user is upLaTeX + dvipdfmx with latexmk");
+    }
     if (failures) return 1;
-    puts("PASS: 8 profiles x 2 forms write exactly their keys; matching, apply, latexmk in use, first-launch language choice and the earlier factory engine file");
+    puts("PASS: 8 profiles x 2 forms write exactly their keys; matching, apply, latexmk in use, first-launch language choice, the earlier factory engine file and the one-time kpsewhich move");
 } return 0; }
 '''
 
@@ -245,7 +318,7 @@ MUTATIONS = {
     'no index command': ('    values[MakeIndexEngineKey] = row[5];\n', ''),
     'MetaPost command from the index column': ('    values[MetaPostEngineKey] = row[6];', '    values[MetaPostEngineKey] = row[5];'),
     'upLaTeX latexmk with mendex': ('-e \\"$bibtex=q/upbibtex/\\" -e \\"$makeindex=q/upmendex/\\" %@', '-e \\"$bibtex=q/upbibtex/\\" -e \\"$makeindex=q/mendex/\\" %@'),
-    'match only the commands': ('                for (NSString *key in values)\n                    if (!TSEngineProfileSame',
+    'match only the commands': ('                for (NSString *key in values)\n                    if (![ignored isEqualToString:key] && !TSEngineProfileSame',
                                 '                for (NSString *key in @[DefaultScriptKey, LatexCommandKey, TexCommandKey, LatexGSCommandKey, TexGSCommandKey, BibTeXengineKey])\n                    if (values[key] != nil && !TSEngineProfileSame'),
     'index command not watched': ('[keys addObjectsFromArray:[TSEngineProfileValues(profile.integerValue, form.boolValue).allKeys sortedArrayUsingSelector:@selector(compare:)]];',
                                   '{ NSMutableArray *k = [[TSEngineProfileValues(profile.integerValue, form.boolValue).allKeys sortedArrayUsingSelector:@selector(compare:)] mutableCopy]; [k removeObject:MakeIndexEngineKey]; [keys addObjectsFromArray:k]; }'),
@@ -264,8 +337,30 @@ MUTATIONS = {
     'keep-psfile twice': ('if (on(savePS) && ![moved containsString:@"--keep-psfile"])', 'if (on(savePS))'),
     'transparency over a distiller': ('if (on(transparency) && ![moved containsString:@"--distiller"])', 'if (on(transparency))'),
     'settings kept': ('    [defaults removeObjectForKey:UseTransparencyKey];\n', ''),
+    'kpsewhich not written': ('    values[KpsetoolKey] = [@"kpsewhich -progname=" stringByAppendingString:row[7]];\n', ''),
+    'kpsewhich with -format=tex': ('[@"kpsewhich -progname=" stringByAppendingString:row[7]]', '[[@"kpsewhich -progname=" stringByAppendingString:row[7]] stringByAppendingString:@" -format=tex"]'),
+    'upLaTeX finds files as pLaTeX': ('@"upmpost", @"uplatex"]', '@"upmpost", @"platex"]'),
+    'kpsewhich does not decide': ('if (![ignored isEqualToString:key] && !TSEngineProfileSame', 'if (![KpsetoolKey isEqualToString:key] && !TSEngineProfileSame'),
+    'kpsewhich moved at every launch': ('    if ([done respondsToSelector:@selector(boolValue)] && [done boolValue]) return;\n', '    (void)done;\n'),
+    'kpsewhich typed by hand moved': ('    if (factory) {\n', '    if (YES || factory) {\n'),
+    'earlier factory kpsewhich kept': ('        } else if (earlier)\n            [defaults removeObjectForKey:KpsetoolKey];\n', '        }\n'),
+    'kpsewhich of now removed': ('        } else if (earlier)\n', '        } else if (factory)\n'),
+    'kpsewhich move not marked': ('    [defaults setBool:YES forKey:KpsewhichOfEngineProfileWrittenKey];\n', ''),
+    'kpsetool of 5.58 typed by hand': ('@[@"kpsetool -w -n latex tex", @"kpsewhich -progname=latex -format=tex"]', '@[@"kpsewhich -progname=latex -format=tex"]'),
     'dvips offered first': ('             @[@(TSEngineProfileLaTeXDvipsGhostscript)]];', '             @[@(TSEngineProfileLaTeXDvipsGhostscript), @(TSEngineProfilePdfLaTeX)]];'),
 }
+
+# Open Style File falls back on the factory kpsewhich command when the setting is empty, in both places that run it.
+for name in ('TSDocument.m', 'HelpDocuments.m'):
+    text = source_file(R, name).read_text()
+    assert text.count('kpsetool = @"kpsewhich -progname=latex";') == 1 and '-format=tex' not in text, f'{name}: the fallback kpsewhich command'
+# The kpsewhich move runs once at launch for whoever has settings, after the Via DVI options moved into the commands,
+# on the persistent domain as it is then.
+delegate = source_file(R, 'TSAppDelegate.m').read_text()
+move = delegate.index('TSWriteKpsewhichOfEngineProfile(SUD, [SUD persistentDomainForName:')
+assert delegate.count('TSWriteKpsewhichOfEngineProfile(') == 1 and delegate.index('TSMoveViaDVIOptionsIntoCommands(SUD, storedSettings);') < move \
+    and delegate.index('[SUD registerDefaults:factoryDefaults];') < move, 'the kpsewhich move at launch'
+print('PASS: Open Style File falls back on kpsewhich -progname=latex; the kpsewhich move runs at launch after the other moves', flush=True)
 
 # Via DVI commands take --keep-psfile themselves; typesetting adds it to none.
 jobs = source_file(R, 'TSDocument-Jobs.m').read_text()
@@ -300,5 +395,15 @@ with tempfile.TemporaryDirectory(prefix='texshop-engine-profiles-') as temp:
     result = subprocess.run([str(t / 'probe'), str(t / 'table.json'), str(t / 'factory.plist')], capture_output=True, text=True)
     assert result.returncode and 'FAIL: the factory engine file is LuaLaTeX and new documents use LaTeX' in result.stderr, (result.stdout, result.stderr)
     print('DETECTED factory plain TeX for new documents', flush=True)
+    # The factory kpsewhich command of the betas of 5.60, or factory defaults without the mark of the move, are refused.
+    for key, value, message in [('Kpsetool', 'kpsewhich -progname=latex -format=tex', 'the factory kpsewhich command'),
+                                ('KpsewhichOfEngineProfileWritten', None, 'the factory defaults carry the mark of the kpsewhich move')]:
+        factory = plistlib.loads(FACTORY.read_bytes())
+        if value is None: factory.pop(key)
+        else: factory[key] = value
+        (t / 'factory.plist').write_bytes(plistlib.dumps(factory))
+        result = subprocess.run([str(t / 'probe'), str(t / 'table.json'), str(t / 'factory.plist')], capture_output=True, text=True)
+        assert result.returncode and 'FAIL: ' + message in result.stderr, (key, result.stdout, result.stderr)
+        print('DETECTED factory', key, 'of', value, flush=True)
     assert run(original).returncode == 0
     print('NORMAL CONTROL passes again')

@@ -424,6 +424,7 @@ extern NSString *TabCharacterKindKey; // added by Terada
 extern NSString *NewLineCharacterKindKey; // added by Terada
 extern NSString *LastStyNameKey; // added by Terada
 extern NSString *KpsetoolKey; // added by Terada
+extern NSString *KpsewhichOfEngineProfileWrittenKey;
 extern NSString *BibTeXengineKey; // added by Terada
 extern NSString *MakeIndexEngineKey;
 extern NSString *MetaPostEngineKey;

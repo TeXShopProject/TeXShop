@@ -38,7 +38,7 @@ int main(int argc, const char *argv[])
         NSDictionary *earlier = @{@"TSHasBeenUsed": @"YES", @"TetexBinPath": library, @"FindMethodSwitchedToAdvancedFind": @YES, @"Mine": @"kept"};
         NSMutableDictionary *(^with)(NSDictionary *) = ^NSMutableDictionary *(NSDictionary *b) {
             NSMutableDictionary *m = [earlier mutableCopy]; [m addEntriesFromDictionary:b]; return m; };
-        NSString *factoryKpsetool = @"kpsewhich -progname=latex -format=tex", *factoryHome = @"https://texshop.app";
+        NSString *factoryKpsetool = @"kpsewhich -progname=latex", *factoryHome = @"https://texshop.app";
 
         for (NSString *path in @[@"/usr/texbin", @"/usr/texbin/", @" /usr/texbin ", @"/usr//texbin"]) {
             Launch(with(@{@"TetexBinPath": path}));

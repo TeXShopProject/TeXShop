@@ -142,7 +142,7 @@ MUTATIONS = {
     'MetaPost program not passed': ('TSDocument-Jobs.m', '\t\t\t\t[args addObject: [metapostProgram stringByExpandingTildeInPath]];\n', ''),
     'wrapper ignores the program': ('metapostwrap', '        set mpprogram = "$argv[5]"\n', ''),
     'wrapper drops the options': ('metapostwrap', '"$mpprogram" $mpoptions:q --interaction=nonstopmode', '"$mpprogram" --interaction=nonstopmode'),
-    'pLaTeX profile with mpost': ('TSPreferenceProfile.m', '@"pbibtex", @"mendex", @"pmpost"]', '@"pbibtex", @"mendex", @"mpost"]'),
+    'pLaTeX profile with mpost': ('TSPreferenceProfile.m', '@"pbibtex", @"mendex", @"pmpost", @"platex"]', '@"pbibtex", @"mendex", @"mpost", @"platex"]'),
 }
 
 

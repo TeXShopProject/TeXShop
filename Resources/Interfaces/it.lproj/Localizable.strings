@@ -381,6 +381,7 @@
 "Engine profile row: Typesetting Method" = "Metodo di composizione";
 "Engine profile row: plain TeX" = "plain TeX";
 "Engine profile row: LaTeX" = "LaTeX";
+"Engine profile row: kpsewhich" = "kpsewhich";
 "Engine profile row: BibTeX Engine" = "Motore BibTeX";
 "Engine profile row: Index Program" = "Programma per indici";
 "Engine profile row: MetaPost" = "MetaPost";

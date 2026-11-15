@@ -31,7 +31,7 @@ for node in ast.parse((R / 'Tests/run-engine-profiles.py').read_text()).body:
 TABLE, JAPANESE = _table_source['TABLE'], _table_source['JAPANESE']
 MENU = [1, 2, 3, 4, 5, 6, 7, 8]
 FIRST_LAUNCH = [1, 2, 3, 4, 5, 6, 7]
-ROW_NAMES = ['Typesetting Method', 'plain TeX', 'LaTeX', 'BibTeX Engine', 'Index Program', 'MetaPost', 'Convert to \\UTF / \\CID',
+ROW_NAMES = ['Typesetting Method', 'plain TeX', 'LaTeX', 'kpsewhich', 'BibTeX Engine', 'Index Program', 'MetaPost', 'Convert to \\UTF / \\CID',
              'New Document Encoding', 'UTF-8-MAC Conversion', 'Dictionary']
 NAME_LIMIT = 200
 
@@ -55,10 +55,10 @@ def table(language, name):
 
 
 def profile_values(profile, latexmk):
-    place, latex, tex, mk, bib, index, metapost = TABLE[profile]
+    place, latex, tex, mk, bib, index, metapost, kpsewhich = TABLE[profile]
     direct = place == 100
     values = {'DefaultScript': place, 'LatexCommand' if direct else 'LatexGSCommand': mk if latexmk else latex,
-              'TexCommand' if direct else 'TexGSCommand': tex, 'BibTeXengine': bib, 'MakeIndexEngine': index,
+              'TexCommand' if direct else 'TexGSCommand': tex, 'Kpsetool': kpsewhich, 'BibTeXengine': bib, 'MakeIndexEngine': index,
               'MetaPostEngine': metapost, 'ptexUtfOutput': profile == 6}
     if profile in JAPANESE:
         values.update({'Encoding': 'UTF-8 Unicode', 'AutomaticUTF8MACtoUTF8Conversion': True, 'SpellingAutomaticDefault': True, 'SpellingLanguageDefault': ' '})
@@ -106,15 +106,16 @@ def expected_rows(language, profile, latexmk, current):
     rows = [(name(0), settings['group.typesetting.4.title' if direct else 'group.typesetting.5.title'], False, mark('DefaultScript'), ['DefaultScript']),
             (name(1), v[tex], True, mark(tex), [tex]),
             (name(2), v[latex], True, mark(latex), [latex]),
-            (name(3), v['BibTeXengine'], True, mark('BibTeXengine'), ['BibTeXengine']),
-            (name(4), v['MakeIndexEngine'], True, mark('MakeIndexEngine'), ['MakeIndexEngine']),
-            (name(5), v['MetaPostEngine'], True, mark('MetaPostEngine'), ['MetaPostEngine']),
-            (name(6), words['On' if v['ptexUtfOutput'] else 'Off'], False, mark('ptexUtfOutput'), ['ptexUtfOutput'])]
+            (name(3), v['Kpsetool'], True, mark('Kpsetool'), ['Kpsetool']),
+            (name(4), v['BibTeXengine'], True, mark('BibTeXengine'), ['BibTeXengine']),
+            (name(5), v['MakeIndexEngine'], True, mark('MakeIndexEngine'), ['MakeIndexEngine']),
+            (name(6), v['MetaPostEngine'], True, mark('MetaPostEngine'), ['MetaPostEngine']),
+            (name(7), words['On' if v['ptexUtfOutput'] else 'Off'], False, mark('ptexUtfOutput'), ['ptexUtfOutput'])]
     if profile in JAPANESE:
         automatic = None if current is None else not truthy(current.get('SpellingAutomaticDefault', FACTORY.get('SpellingAutomaticDefault')))
-        rows += [(name(7), encodings['UTF-8 Unicode'], False, mark('Encoding'), ['Encoding']),
-                 (name(8), words['On'], False, mark('AutomaticUTF8MACtoUTF8Conversion'), ['AutomaticUTF8MACtoUTF8Conversion']),
-                 (name(9), words['Automatic Language'], False, automatic, ['SpellingAutomaticDefault', 'SpellingLanguageDefault'])]
+        rows += [(name(8), encodings['UTF-8 Unicode'], False, mark('Encoding'), ['Encoding']),
+                 (name(9), words['On'], False, mark('AutomaticUTF8MACtoUTF8Conversion'), ['AutomaticUTF8MACtoUTF8Conversion']),
+                 (name(10), words['Automatic Language'], False, automatic, ['SpellingAutomaticDefault', 'SpellingLanguageDefault'])]
     return rows
 
 
@@ -312,6 +313,8 @@ MUTATIONS = {
     'latexmk does not replace the list': ('    _latexmk = sender.selectedSegment == 1;\n    [self showRows];', '    _latexmk = sender.selectedSegment == 1;'),
     'latexmk read the other way': ('    _latexmk = sender.selectedSegment == 1;', '    _latexmk = sender.selectedSegment != 1;'),
     'the choice shows the other form': ('_latexmkChoice.selectedSegment = latexmk ? 1 : 0;', '_latexmkChoice.selectedSegment = latexmk ? 0 : 1;'),
+    'no kpsewhich row': ('    add(NSLocalizedString(@"Engine profile row: kpsewhich", @"Engine profile list: the kpsewhich command of Settings > Typesetting, named as there"), values[KpsetoolKey], YES, KpsetoolKey);\n', ''),
+    'kpsewhich row after the BibTeX engine': ('    add(NSLocalizedString(@"Engine profile row: kpsewhich", @"Engine profile list: the kpsewhich command of Settings > Typesetting, named as there"), values[KpsetoolKey], YES, KpsetoolKey);\n    add(NSLocalizedString(@"Engine profile row: BibTeX Engine", @"Engine profile list: BibTeX Engine of Settings > Typesetting"), values[BibTeXengineKey], YES, BibTeXengineKey);\n', '    add(NSLocalizedString(@"Engine profile row: BibTeX Engine", @"Engine profile list: BibTeX Engine of Settings > Typesetting"), values[BibTeXengineKey], YES, BibTeXengineKey);\n    add(NSLocalizedString(@"Engine profile row: kpsewhich", @"Engine profile list: the kpsewhich command of Settings > Typesetting, named as there"), values[KpsetoolKey], YES, KpsetoolKey);\n'),
     'no MetaPost row': ('    add(NSLocalizedString(@"Engine profile row: MetaPost", @"Engine profile list: the MetaPost command"), values[MetaPostEngineKey], YES, MetaPostEngineKey);\n', ''),
     'no dictionary row': ('    if (values[spellingAutomaticDefaultKey] != nil) {\n', '    if (NO) {\n'),
     'every row marked': ('@(settings != nil && !TSEngineProfileSame([settings objectForKey:key], values[key]))', '@(settings != nil)'),
@@ -361,6 +364,12 @@ def main():
                 if not text:
                     print(f'FAIL: "{key}" has no text in {language}')
                     return 1
+        # The kpsewhich row is named as the kpsewhich field of Settings > Typesetting, in every language.
+        for language in LANGUAGES:
+            row, field = table(language, 'Localizable')['Engine profile row: kpsewhich'], table(language, 'SettingsCategories')['catalog.typesetting.8.0.title']
+            if row != field:
+                print(f'FAIL: {language} names the kpsewhich row "{row}", Settings "{field}"')
+                return 1
         results, error = run_probe(compile_probe(tmp, original), tmp, LANGUAGES)
         if results is None:
             print('FAIL: the probe stopped:', error)
