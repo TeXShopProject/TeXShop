@@ -67,18 +67,48 @@ _standard = re.search(r'for \(TSSettingsCategoryID identifier in @\[([^\]]+)\]',
 SIDEBAR = [_constants[name.strip()] for name in _standard.split(',')]
 assert sorted(SIDEBAR) == sorted(CATEGORIES), SIDEBAR
 
-def check_sidebar_order(text, names, where):
-    """The overview lists all ten categories in one place, in the order of the sidebar."""
-    text = plain(text)
-    for match in re.finditer(re.escape(names[SIDEBAR[0]]), text):
+# The order the help and the manual listed before the sidebar changed (Keyboard came late, Preview first).
+EARLIER_LIST = ['general', 'documents', 'editor', 'spelling', 'appearance', 'preview', 'typesetting', 'console', 'keyboard', 'updates']
+
+def listed_in_order(text, names, order):
+    """True when all the categories are named in one place, in this order."""
+    for match in re.finditer(re.escape(names[order[0]]), text):
         start = cursor = match.start(); listed = 0
-        for key in SIDEBAR:
+        for key in order:
             cursor = text.find(names[key], cursor)
             if cursor < 0 or cursor - start > 400: break
             cursor += len(names[key]); listed += 1
-        if listed == len(SIDEBAR):
-            return
-    raise AssertionError((where, 'the category list does not follow the sidebar order', [names[key] for key in SIDEBAR]))
+        if listed == len(order):
+            return True
+    return False
+
+def check_sidebar_order(text, names, where):
+    """The overview lists all ten categories in one place, in the order of the sidebar."""
+    if not listed_in_order(plain(text), names, SIDEBAR):
+        raise AssertionError((where, 'the category list does not follow the sidebar order', [names[key] for key in SIDEBAR]))
+
+def core_spotlight_text(path):
+    """The page texts a .cshelpindex keeps: an LZFSE-compressed keyed archive whose
+    attribute sets hold their strings as UTF-8, or as UTF-16LE after a byte order mark
+    when the text is not ASCII."""
+    import ctypes, plistlib
+    library = ctypes.CDLL('/usr/lib/libcompression.dylib'); decode = library.compression_decode_buffer
+    decode.argtypes = [ctypes.c_void_p, ctypes.c_size_t, ctypes.c_void_p, ctypes.c_size_t, ctypes.c_void_p, ctypes.c_int]
+    decode.restype = ctypes.c_size_t
+    data = path.read_bytes(); buffer = ctypes.create_string_buffer(64 * 1024 * 1024)
+    size = decode(buffer, len(buffer), data, len(data), None, 0x801)  # COMPRESSION_LZFSE
+    assert size, (str(path), 'not an LZFSE help index')
+    archive = plistlib.loads(buffer.raw[:size])
+    texts = []
+    for item in archive['$objects']:
+        if isinstance(item, str): texts.append(item)
+        if not isinstance(item, bytes): continue
+        texts.append(item.decode('utf-8', 'replace'))
+        start = item.find(b'\xff\xfe')
+        while start >= 0:
+            texts.append(item[start + 2:].decode('utf-16-le', 'replace'))
+            start = item.find(b'\xff\xfe', start + 2)
+    return '\n'.join(texts)
 
 page_count = 0
 for language in LANGUAGES:
@@ -103,6 +133,11 @@ for language in LANGUAGES:
     assert 'id="settings-search"' in overview,(language,'central search instructions')
     for key in CATEGORIES: assert categories[key] in overview,(language,'overview',key)
     check_sidebar_order(overview, categories, (language, 'basic_preferences'))
+    # Spotlight in the Help viewer searches the text kept in the index, so it must be rebuilt with the page.
+    index = next((ROOT / f'Resources/Interfaces/{language}.lproj/TeXShopHelp').glob('*.cshelpindex'))
+    indexed = core_spotlight_text(index)
+    assert listed_in_order(indexed, categories, SIDEBAR), (language, index.name, 'the indexed category list does not follow the sidebar order')
+    assert not listed_in_order(indexed, categories, EARLIER_LIST), (language, index.name, 'the index still has the earlier category list')
     for name in ('basic_spelling','configure_menushortcuts','configure_prefchanges'):
         assert 'id="settings-search"' not in pages[name],(language,name,'duplicate search section')
         assert 'basic_preferences.htm#settings-search' in pages[name],(language,name,'central overview link')
