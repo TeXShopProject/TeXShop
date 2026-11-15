@@ -15,7 +15,7 @@ mutations = {
     'change-view': ('textView == sReviewView && ReviewIsCurrent(textView)', 'ReviewIsCurrent(textView)'),
     'change-current': ('textView == sReviewView && ReviewIsCurrent(textView)', 'textView == sReviewView'),
     'change-no-review': ('sReviewWord.length == 0 || (textView', '(textView'),
-    'change-status': ('ReviewIsCurrent(textView))) return NO;\n    sReplacementStatus.stringValue', 'ReviewIsCurrent(textView))) return NO;\n    if (0) sReplacementStatus.stringValue'),
+    'change-status': ('ReviewIsCurrent(textView))) return NO;\n    ShowChangeAllStatus(', 'ReviewIsCurrent(textView))) return NO;\n    if (0) ShowChangeAllStatus('),
     'skip-unset': ('    sSkipSearchAfterRefusal = YES;\n', ''),
     'skip-sticky': ('    dispatch_async(dispatch_get_main_queue(), ^{ sSkipSearchAfterRefusal = NO; });\n', ''),
     'skip-once': ('    sSkipSearchAfterRefusal = NO;\n    return skip;', '    return skip;'),
