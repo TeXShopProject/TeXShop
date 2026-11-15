@@ -641,9 +641,7 @@
 		401B9EC01F8C568300B48034 /* TSDocument-SyncOld.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-SyncOld.m"; sourceTree = "<group>"; };
 		401EF0740D0B3F8800203D7B /* MyDragView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyDragView.h; sourceTree = "<group>"; };
 		401EF0750D0B3F8800203D7B /* MyDragView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyDragView.m; sourceTree = "<group>"; };
-		4020276325D06FAA0039F253 /* TeX.mdimporter */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.spotlight-importer"; name = TeX.mdimporter; path = 3rdparty/TeX.mdimporter; sourceTree = "<group>"; };
 		4020276425D06FD70039F253 /* TeX.mdimporter */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.spotlight-importer"; name = TeX.mdimporter; path = 3rdparty/TeX.mdimporter; sourceTree = "<group>"; };
-		403244B429A037A9000431A1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = Resources/Interfaces/Base.lproj/Manual.pdf; sourceTree = "<group>"; };
 		40328ADA1340380800AD2EA7 /* TSToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSToolbar.h; sourceTree = "<group>"; };
 		40328ADB1340380800AD2EA7 /* TSToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSToolbar.m; sourceTree = "<group>"; };
 		40356ACC1F8D157F0093399B /* synctex_parser_old.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = synctex_parser_old.h; sourceTree = "<group>"; };
@@ -1675,7 +1673,6 @@
 				40A03E7E0F3A47580014104E /* First Steps with General Typesetting.pdf */,
 				40A03E850F3A47760014104E /* First Steps with Mathematical Typesetting.pdf */,
 				40A03E8A0F3A47860014104E /* First Steps with TeXShop.pdf */,
-				403244B329A037A9000431A1 /* Manual.pdf */,
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
 				03E61892009B32C77F000001 /* Localizable.strings */,
 				377E3DDD07AA8FE81002D25F /* AdvancedFind.strings */,
@@ -1740,7 +1737,6 @@
 				40E81A6729A0788D0014D82A /* Manual.pdf */,
 				4020276425D06FD70039F253 /* TeX.mdimporter */,
 				40C0FF2E217AA3D100DF8F67 /* TeXShop.entitlements */,
-				4020276325D06FAA0039F253 /* TeX.mdimporter */,
 				5288888E089D06B50095E82D /* Sources */,
 				2A37F4B8FDCFA73011CA2CEA /* Resources */,
 				2A37F4C3FDCFA73011CA2CEA /* Frameworks */,
@@ -2002,7 +1998,6 @@
 				88CDD585E18B6040AEDE304A /* Copy Base Search Tables */,
 				407881770519249A006979EA /* Sources */,
 				407881910519249A006979EA /* Frameworks */,
-				407881940519249A006979EA /* Rez */,
 				40C894C306080105000B55B4 /* CopyFiles */,
 				522BC4C20A2A007A007CAB82 /* CopyFiles */,
 				40C889D10F1A803E00B5B8A9 /* CopyFiles */,
@@ -2142,16 +2137,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXRezBuildPhase section */
-		407881940519249A006979EA /* Rez */ = {
-			isa = PBXRezBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXRezBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		CD6726A519ED123EBEE9D303 /* Set Build Number */ = {
@@ -2525,14 +2510,6 @@
 				400E8FBD26067D6B009AA6C9 /* Base */,
 			);
 			name = CommentLines.pdf;
-			sourceTree = "<group>";
-		};
-		403244B329A037A9000431A1 /* Manual.pdf */ = {
-			isa = PBXVariantGroup;
-			children = (
-				403244B429A037A9000431A1 /* Base */,
-			);
-			name = Manual.pdf;
 			sourceTree = "<group>";
 		};
 		40367BB313DFB3B70098E009 /* TeXShopHelp */ = {
