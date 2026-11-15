@@ -212,8 +212,9 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
 
     TSKeyBindingsTableView *table = [TSKeyBindingsTableView new];
     table.bindings = self;
-    table.style = NSTableViewStyleFullWidth;
-    table.usesAlternatingRowBackgroundColors = YES;
+    // The same list as the menu shortcuts below it: no border, rows inset in the card.
+    table.style = NSTableViewStyleInset;
+    table.usesAlternatingRowBackgroundColors = NO;
     table.rowHeight = 24;
     table.intercellSpacing = NSMakeSize(0, 0);
     table.gridStyleMask = NSTableViewGridNone;
@@ -227,7 +228,9 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
     key.width = MAX(110, ceil(key.headerCell.cellSize.width) + 16); key.minWidth = 70; key.maxWidth = 240;
     NSTableColumn *output = [[NSTableColumn alloc] initWithIdentifier:TSKeyBindingOutputColumn];
     output.title = NSLocalizedString(@"Output String", @"Key binding column");
-    output.width = 420; output.minWidth = 160;
+    // The inset rows take 16 points on each side; the list starts narrow enough for the
+    // narrowest Settings window, and the last column grows with the list.
+    output.width = 300; output.minWidth = 120;
     [table addTableColumn:key];
     [table addTableColumn:output];
     table.dataSource = self;
@@ -238,7 +241,8 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
 
     NSScrollView *scroll = [NSScrollView new];
     scroll.translatesAutoresizingMaskIntoConstraints = NO;
-    scroll.borderType = NSBezelBorder;
+    scroll.borderType = NSNoBorder;
+    scroll.drawsBackground = NO;
     scroll.hasVerticalScroller = YES;
     scroll.autohidesScrollers = YES;
     scroll.documentView = table;

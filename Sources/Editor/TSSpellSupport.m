@@ -648,7 +648,7 @@ static NSAlert *TSLearnedWordsAlert(NSString *language, id<NSTableViewDataSource
     [wordsTable reloadData];
     scroll.documentView = wordsTable;
     alert.accessoryView = scroll;
-    [alert addButtonWithTitle:NSLocalizedString(@"Forget Selected", @"")];
+    [alert addButtonWithTitle:NSLocalizedString(@"Forget Selected", @"")].hasDestructiveAction = YES;
     [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
     *table = wordsTable;
     return alert;
