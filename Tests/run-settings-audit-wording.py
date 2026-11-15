@@ -7,8 +7,10 @@ with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
  T=Path(td)
  for folder in ['Resources/Interfaces','Tests/Fixtures','Documentation/Releases','website','DocumentSources/Manual Source','DocumentSources/CommentLinesRevised','DocumentSources/ChangesDocument']:
   for p in (R/folder).rglob('*'):
-   if p.is_file() and p.suffix in ['.strings','.htm','.html','.json','.md','.tex','.pdf']:
+   if p.is_file() and p.suffix in ['.strings','.htm','.html','.json','.md','.tex','.pdf','.cshelpindex']:
     dest=T/p.relative_to(R);dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(p,dest)
+ for name in ['Sources/Settings/TSSettingsCategory.m','Sources/Settings/TSSettingsCategoryList.m']:
+  dest=T/name;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(R/name,dest)
  check=(R/'Tests/check-settings-guidance.py').read_text().replace('ROOT = Path(__file__).resolve().parents[1]','ROOT = Path('+repr(str(T))+')')
  def guidance():return subprocess.run(['python3','-c',check],capture_output=True,text=True)
  def wording():return subprocess.run(['python3',str(R/'Tests/run-settings-ui-wording.py'),'--interfaces',str(T/'Resources/Interfaces')],capture_output=True,text=True)

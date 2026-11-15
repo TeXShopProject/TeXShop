@@ -8,8 +8,10 @@ with tempfile.TemporaryDirectory(prefix='texshop-sixth-wording-') as td:
     T=Path(td)
     for directory in ['Resources/Interfaces','Tests/Fixtures','Documentation/Releases','website','DocumentSources/Manual Source','DocumentSources/CommentLinesRevised','DocumentSources/ChangesDocument']:
         for source in (R/directory).rglob('*'):
-            if source.is_file() and source.suffix in ['.strings','.htm','.html','.json','.md','.tex','.pdf']:
+            if source.is_file() and source.suffix in ['.strings','.htm','.html','.json','.md','.tex','.pdf','.cshelpindex']:
                 dest=T/source.relative_to(R);dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(source,dest)
+    for name in ['Sources/Settings/TSSettingsCategory.m','Sources/Settings/TSSettingsCategoryList.m']:
+        dest=T/name;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(R/name,dest)
     def wording():
         return subprocess.run(['python3',str(R/'Tests/run-settings-ui-wording.py'),'--interfaces',str(T/'Resources/Interfaces')],capture_output=True,text=True)
     checker=(R/'Tests/check-settings-guidance.py').read_text().replace('ROOT = Path(__file__).resolve().parents[1]','ROOT = Path('+repr(str(T))+')')
