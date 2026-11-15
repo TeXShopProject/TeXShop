@@ -71,12 +71,30 @@ class PrereleaseTest(unittest.TestCase):
         return [i.findtext(f'{{{release.SPARKLE}}}shortVersionString') for i in channel.findall('item')]
 
     def test_identity_of_a_beta(self):
-        self.assertEqual(release.prerelease_identity({'CFBundleShortVersionString': '5.60 beta-11', 'CFBundleVersion': '5.60b11'}),
+        # The tag and the archive come from the display version; CFBundleVersion is the build number.
+        self.assertEqual(release.prerelease_identity({'CFBundleShortVersionString': '6.00 beta-1', 'CFBundleVersion': '1512'}),
+                         ('v.6.00-beta.1', 'TeXShop-6.00-beta-1.zip'))
+        self.assertEqual(release.prerelease_identity({'CFBundleShortVersionString': '5.60 beta-11', 'CFBundleVersion': '1400'}),
                          ('v.5.60-beta.11', 'TeXShop-5.60-beta-11.zip'))
-        for info in [{'CFBundleShortVersionString': '5.60', 'CFBundleVersion': '5.60'},
-                     {'CFBundleShortVersionString': '5.60 beta-11', 'CFBundleVersion': '5.60b10'}]:
+        for short in ['6.00', '6.00b1', '6.00 beta', 'beta-1']:
             with self.assertRaisesRegex(ValueError, 'Expected a beta'):
-                release.prerelease_identity(info)
+                release.prerelease_identity({'CFBundleShortVersionString': short, 'CFBundleVersion': '1512'})
+
+    def test_build_number_is_digits_only(self):
+        self.assertEqual(release.build_number({'CFBundleVersion': '1512'}), '1512')
+        for build in ['5.59', '5.60b10', '6.00b1', '1512a', '1.512', '0', '01', '', ' 1512']:
+            with self.assertRaisesRegex(ValueError, 'numeric build number'):
+                release.build_number({'CFBundleVersion': build})
+
+    def test_build_number_must_be_newer_than_the_feed(self):
+        channel = ET.Element('channel')
+        for build in ['5.59', '5.60b10', '1512']:
+            item = ET.SubElement(channel, 'item')
+            ET.SubElement(item, f'{{{release.SPARKLE}}}version').text = build
+        release.check_newer_than_feed('1513', channel)
+        release.check_newer_than_feed('1512', channel)  # the same build is refused later unless it is replaced
+        with self.assertRaisesRegex(ValueError, 'older than build 1512'):
+            release.check_newer_than_feed('1511', channel)
 
     def test_a_beta_replaces_the_previous_beta_only(self):
         channel = ET.Element('channel')
@@ -110,13 +128,13 @@ class PrereleaseTest(unittest.TestCase):
 class MainFeedTest(unittest.TestCase):
     """Run main() end to end with the signing, notarization and archive tools replaced."""
 
-    def prepare(self, short, build):
+    def prepare(self, short, build, feed_build='5.59'):
         self.root = Path(self.enterContext(tempfile.TemporaryDirectory()))
         (self.root / 'website').mkdir()
         (self.root / 'website/appcast.xml').write_text(
             '<?xml version="1.0" encoding="utf-8"?><rss xmlns:sparkle="%s" version="2.0"><channel>'
-            '<item><title>TeXShop 5.59</title><sparkle:version>5.59</sparkle:version>'
-            '<sparkle:shortVersionString>5.59</sparkle:shortVersionString></item></channel></rss>' % release.SPARKLE,
+            '<item><title>TeXShop 5.59</title><sparkle:version>%s</sparkle:version>'
+            '<sparkle:shortVersionString>5.59</sparkle:shortVersionString></item></channel></rss>' % (release.SPARKLE, feed_build),
             encoding='utf-8')
         notes = self.root / 'Documentation/Releases'
         notes.mkdir(parents=True)
@@ -140,8 +158,8 @@ class MainFeedTest(unittest.TestCase):
             return 'TEST_SIGNATURE_NOT_FOR_PUBLICATION'
         return ''
 
-    def feed(self, short, build, *options):
-        app = self.prepare(short, build)
+    def feed(self, short, build, *options, feed_build='5.59'):
+        app = self.prepare(short, build, feed_build)
         options = [str(self.root / 'beta.md') if option == 'BETA_NOTES' else option for option in options]
         out = self.root / 'staging'
         with mock.patch.object(release, 'ROOT', self.root), mock.patch.object(release, 'run', self.fake_run), \
@@ -151,19 +169,36 @@ class MainFeedTest(unittest.TestCase):
         return ET.parse(out / 'appcast.xml').getroot().find('channel').find('item')
 
     def test_release_urls_use_the_release_tag(self):
-        item = self.feed('5.60', '5.60')
+        item = self.feed('5.60', '1700')
         self.assertEqual(item.find('enclosure').get('url'),
                          'https://github.com/TeXShopProject/TeXShop/releases/download/v.5.60/TeXShop-5.60.zip')
         self.assertIsNone(item.find(f'{{{release.SPARKLE}}}channel'))
+        self.assertEqual(item.findtext(f'{{{release.SPARKLE}}}version'), '1700')
+        self.assertEqual(item.findtext(f'{{{release.SPARKLE}}}shortVersionString'), '5.60')
 
     def test_beta_urls_use_the_beta_tag(self):
-        item = self.feed('5.60 beta-11', '5.60b11', '--prerelease', 'BETA_NOTES')
+        item = self.feed('6.00 beta-1', '1512', '--prerelease', 'BETA_NOTES')
         self.assertEqual(item.find('enclosure').get('url'),
-                         'https://github.com/TeXShopProject/TeXShop/releases/download/v.5.60-beta.11/TeXShop-5.60-beta-11.zip')
+                         'https://github.com/TeXShopProject/TeXShop/releases/download/v.6.00-beta.1/TeXShop-6.00-beta-1.zip')
         self.assertEqual(item.findtext(f'{{{release.SPARKLE}}}fullReleaseNotesLink'),
-                         'https://github.com/TeXShopProject/TeXShop/releases/tag/v.5.60-beta.11')
+                         'https://github.com/TeXShopProject/TeXShop/releases/tag/v.6.00-beta.1')
         self.assertEqual(item.findtext(f'{{{release.SPARKLE}}}channel'), 'prerelease')
         self.assertEqual(item.findtext('description'), '## Changes since Beta 10')
+        # Sparkle compares sparkle:version with the build number; the display version is shown.
+        self.assertEqual(item.findtext(f'{{{release.SPARKLE}}}version'), '1512')
+        self.assertEqual(item.findtext(f'{{{release.SPARKLE}}}shortVersionString'), '6.00 beta-1')
+        self.assertEqual(item.findtext('title'), 'TeXShop 6.00 beta-1')
+
+    def test_a_build_without_a_build_number_is_refused(self):
+        for short, build, options in [('6.00 beta-1', '6.00b1', ['--prerelease', 'BETA_NOTES']), ('5.60', '5.60', [])]:
+            with self.assertRaisesRegex(SystemExit, 'numeric build number'):
+                self.feed(short, build, *options)
+            self.assertFalse((self.root / 'staging').exists(), 'Nothing is staged')
+
+    def test_an_older_build_is_refused(self):
+        with self.assertRaisesRegex(SystemExit, 'older than build 1600'):
+            self.feed('6.00 beta-1', '1512', '--prerelease', 'BETA_NOTES', feed_build='1600')
+        self.assertFalse((self.root / 'staging').exists(), 'Nothing is staged')
 
 
 if __name__ == '__main__':
