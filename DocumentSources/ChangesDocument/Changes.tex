@@ -34,44 +34,24 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \subsection{Advanced Find panel}
 
 \begin{itemize}
-\item A new find and replace panel with regular expressions, the Advanced Find panel.
-\item Find All lists every match.
-\item Highlight All marks every match in the text.
+\item A new find and replace panel with regular expressions, the Advanced Find panel. Find All lists every match, and Highlight All marks them in the text.
 \item Multiple Replace applies saved sets of find and replace pairs at once.
-\item A cheat sheet shows how to write regular expressions.
-\item Find also works in the console, the log and the Experiment windows.
+\item A cheat sheet shows how to write regular expressions, and Find also works in the console, the log and the Experiment windows.
 \end{itemize}
 
 \subsection{LaTeX-aware spell checking}
 
 \begin{itemize}
-\item Check the spelling of the text alone, skipping TeX commands, comments and mathematics. Suggested by \href{https://github.com/ralphrmartin}{Ralph Martin}.
-\item Arguments that are not prose, of the commands of common packages, are not checked. Provided by \href{https://github.com/ralphrmartin}{Ralph Martin}.
-\item The arguments of \texttt{\textbackslash{}newtheoremstyle} of amsthm are not checked. Suggested by \href{https://github.com/herbs}{Herb Schulz} and contributed by \href{https://github.com/ralphrmartin}{Ralph Martin} in \href{https://github.com/TeXShopProject/TeXShop/pull/40}{PR \#40}.
-\item Parts of a document in another language can be checked too.
-\item Change All corrects a word throughout the document.
-\item Click a suggestion in the spelling panel to use it for Change All. Proposed by \href{https://github.com/ralphrmartin}{Ralph Martin}.
-\item The dictionaries in Settings \(\rightarrow\) Spell Checking are listed by the names of their languages. Reported by \href{https://github.com/herbs}{Herb Schulz} (\href{https://github.com/TeXShopProject/TeXShop/issues/32}{\#32}).
-\item Spell checking is faster in long documents.
+\item Check the spelling of the text alone, skipping TeX commands, comments, mathematics and arguments that are not prose. The spelling panel and the choice of dictionaries are easier to use too (\href{https://github.com/TeXShopProject/TeXShop/issues/32}{\#32}). Suggested and reported by \href{https://github.com/ralphrmartin}{Ralph Martin} and \href{https://github.com/herbs}{Herb Schulz}, and contributed by \href{https://github.com/ralphrmartin}{Ralph Martin}, also in \href{https://github.com/TeXShopProject/TeXShop/pull/40}{PR \#40}.
 \end{itemize}
 
 \subsection{Preview}
 
 \begin{itemize}
-\item Pin a link preview with the Option key, and move or resize it. Suggested and reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/10}{\#10}, \href{https://github.com/TeXShopProject/TeXShop/issues/14}{\#14}, \href{https://github.com/TeXShopProject/TeXShop/issues/35}{\#35}).
-\item Link previews are easier to read. Suggested by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/7}{\#7}, \href{https://github.com/TeXShopProject/TeXShop/issues/12}{\#12}, \href{https://github.com/TeXShopProject/TeXShop/issues/14}{\#14}).
-\item Link previews show the page number of the target. Suggested by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/17}{\#17}).
-\item Hold Control over a link to turn its preview on or off. Suggested by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/30}{\#30}).
-\item Split Window with Link shows a link’s target in the other part of the window. Suggested by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/31}{\#31}).
-\item Zoom to Content Width fills the window with the text of the page. Suggested by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/33}{\#33}).
-\item Page layout menus can be added to the preview toolbar.
-\item Switch Views exchanges the two parts of a split Preview window. Suggested by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/25}{\#25}).
-\item A split Preview window shows which part is active. Suggested and reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/14}{\#14}, \href{https://github.com/TeXShopProject/TeXShop/issues/25}{\#25}).
-\item The single window opens with the divider where it was last. Suggested by \href{https://github.com/felix-finster}{Felix Finster} (\href{https://github.com/TeXShopProject/TeXShop/issues/26}{\#26}).
-\item The outline in the drawer stays as it was when the document is typeset again. Suggested by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/19}{\#19}).
-\item Scrolling can be set not to turn pages. Suggested by \href{https://github.com/svb-bit}{svb-bit} (\href{https://github.com/TeXShopProject/TeXShop/issues/9}{\#9}).
-\item When another application such as latexmk rewrites the PDF, the preview is updated at the same place.
-\item The magnifying glass works at any magnification. Reported by \href{https://github.com/svb-bit}{svb-bit} (\href{https://github.com/TeXShopProject/TeXShop/issues/9}{\#9}).
+\item Link previews are easier to read; pin one with the Option key, and turn previews on or off with the Control key. Suggested and reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/7}{\#7}, \href{https://github.com/TeXShopProject/TeXShop/issues/10}{\#10}, \href{https://github.com/TeXShopProject/TeXShop/issues/12}{\#12}, \href{https://github.com/TeXShopProject/TeXShop/issues/14}{\#14}, \href{https://github.com/TeXShopProject/TeXShop/issues/17}{\#17}, \href{https://github.com/TeXShopProject/TeXShop/issues/30}{\#30}, \href{https://github.com/TeXShopProject/TeXShop/issues/35}{\#35}).
+\item In a split Preview window, show a link’s target in the other part or switch the two parts. Suggested by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/14}{\#14}, \href{https://github.com/TeXShopProject/TeXShop/issues/25}{\#25}, \href{https://github.com/TeXShopProject/TeXShop/issues/31}{\#31}). The single window opens with the divider where it was last, suggested by \href{https://github.com/felix-finster}{Felix Finster} (\href{https://github.com/TeXShopProject/TeXShop/issues/26}{\#26}).
+\item Zoom to Content Width, scrolling that does not turn pages and a magnifying glass at any magnification are added, and the outline in the drawer stays as it was after typesetting. Suggested and reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} and \href{https://github.com/svb-bit}{svb-bit} (\href{https://github.com/TeXShopProject/TeXShop/issues/9}{\#9}, \href{https://github.com/TeXShopProject/TeXShop/issues/19}{\#19}, \href{https://github.com/TeXShopProject/TeXShop/issues/33}{\#33}). When another application such as latexmk rewrites the PDF, the preview is updated at the same place.
+\item The preview toolbar has the icons of Apple’s Preview, tool tips and page layout menus. Suggested by Bruno Voisin and \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/28}{\#28}, \href{https://github.com/TeXShopProject/TeXShop/issues/34}{\#34}).
 \end{itemize}
 
 \subsection{Editing}
@@ -79,48 +59,32 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \begin{itemize}
 \item Command-0 shows the document’s console. Suggested by \href{https://github.com/martignoni}{Nicolas Martignoni} (\href{https://github.com/TeXShopProject/TeXShop/issues/2}{\#2}).
 \item Click or drag over the line numbers to select whole lines.
-\item Character Type Conversion in the Edit menu converts between hiragana and katakana, fullwidth and halfwidth, and more.
-\item Unicode Normalization in the Edit menu normalizes the selection.
-\item Swap with Clipboard in the Edit menu exchanges the selection and the clipboard text.
-\item Macros and key bindings can insert the clipboard text.
-\item The Macro Editor has a new design with a sidebar.
+\item The Edit menu has Character Type Conversion, Unicode Normalization and Swap with Clipboard.
+\item The Macro Editor has a new design, and macros and key bindings can insert the clipboard text.
 \item Fullwidth letters, digits and symbols can be shown in their own color.
 \item The encoding of a source file is detected automatically.
-\item Experiment typesets with the document’s pictures and references. Suggested and reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/8}{\#8}, \href{https://github.com/TeXShopProject/TeXShop/issues/20}{\#20}).
-\item The Experiment source looks like the document’s source.
-\item The Tags menu is always up to date.
-\item Character Info shows details of a character, such as its Unicode name and version.
+\item Experiment typesets with the document’s pictures and references, and its source looks like the document’s source. Suggested and reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/8}{\#8}, \href{https://github.com/TeXShopProject/TeXShop/issues/20}{\#20}).
+\item The Tags menu is always up to date, and Character Info shows details of a character.
 \end{itemize}
 
 \subsection{Settings window}
 
 \begin{itemize}
-\item Settings has a sidebar with ten categories: General, Documents and Saving, Editor, Keyboard, Spell Checking, Themes, Typesetting, Console, Preview, and Updates.
-\item Search Settings finds a setting.
+\item Settings has a sidebar with ten categories: General, Documents and Saving, Editor, Keyboard, Spell Checking, Themes, Typesetting, Console, Preview, and Updates. Search Settings finds a setting.
 \item Detect Paths… sets the TeX and Ghostscript installations automatically.
 \item The index program and MetaPost can be set.
-\item Change the shortcut of any menu command in Settings \(\rightarrow\) Keyboard.
-\item Edit key bindings in Settings \(\rightarrow\) Keyboard.
+\item Change the shortcut of any menu command and the key bindings in Settings \(\rightarrow\) Keyboard.
 \item Settings \(\rightarrow\) Updates can include betas.
-\item Autosave and Versions can be turned off.
-\item The first page can be shown alone as a cover in two-page layouts.
-\item Syntax coloring can treat @ as part of command names.
-\item expl3 coloring can be on when a document opens.
-\item Choose the markers for invisible characters from menus.
-\item Window opacity can also be typed as a number.
+\item Autosave and Versions can be turned off, the first page can be shown alone as a cover, @ can count as part of command names, expl3 coloring can be on at opening, the markers for invisible characters can be chosen, and window opacity can also be typed as a number.
 \item General links to Comment Lines and Hidden Settings.
 \end{itemize}
 
 \subsection{App icon and appearance}
 
 \begin{itemize}
-\item A new app icon. Suggested by \href{https://github.com/LaTeX-fetishist}{LaTeX fetishist} and \href{https://github.com/martignoni}{Nicolas Martignoni} (\href{https://github.com/TeXShopProject/TeXShop/issues/3}{\#3}).
-\item The Dock icon while TeXShop is running can be one of the earlier designs. Suggested by \href{https://github.com/LaTeX-fetishist}{LaTeX fetishist} (\href{https://github.com/TeXShopProject/TeXShop/issues/3}{\#3}).
+\item A new app icon, and the Dock icon while TeXShop is running can be one of the earlier designs. Suggested by \href{https://github.com/LaTeX-fetishist}{LaTeX fetishist} and \href{https://github.com/martignoni}{Nicolas Martignoni} (\href{https://github.com/TeXShopProject/TeXShop/issues/3}{\#3}).
 \item On macOS 26 and later, TeXShop has the Liquid Glass appearance.
-\item The buttons of the preview toolbar have the icons of Apple’s Preview. Suggested by Bruno Voisin.
-\item The buttons of the preview toolbar have tool tips. Suggested by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/28}{\#28}, \href{https://github.com/TeXShopProject/TeXShop/issues/34}{\#34}).
-\item The digits of line numbers line up.
-\item The Matrix and LaTeX panels are easier to read in Dark Mode.
+\item The digits of line numbers line up, and the Matrix and LaTeX panels are easier to read in Dark Mode.
 \end{itemize}
 
 \subsection{Changes in behavior from earlier versions}
@@ -149,60 +113,29 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 
 \begin{itemize}
 \item \textbf{Critical fix:} Stop now ends TeX; before, TeX kept running.
-\item Console output can be copied while TeX runs.
-\item Console output and logs with broken characters are shown correctly.
-\item Command-1 returns to the file typeset with \texttt{\% !TEX root}.
-\item Stopping no longer hangs when a typesetting tool cannot start.
-\item TeXShop tells you when the root file cannot be found.
+\item Fix problems with the console and typesetting: console output can be copied while TeX runs, broken characters in console output and logs are shown correctly, Command-1 returns to the file typeset with \texttt{\% !TEX root}, stopping no longer hangs when a typesetting tool cannot start, and TeXShop tells you when the root file cannot be found.
 \end{itemize}
 
 \subsection{Fixes: preview}
 
 \begin{itemize}
-\item The preview no longer moves after reloading or turning pages on macOS 26 and 27. Reported by \href{https://github.com/svb-bit}{svb-bit} (\href{https://github.com/TeXShopProject/TeXShop/issues/9}{\#9}).
-\item Splitting and Switch Views no longer make the Preview creep. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/23}{\#23}).
-\item Dragging the divider of a split Preview window no longer moves the text. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/24}{\#24}).
-\item Parts of the linked page no longer show around a link preview. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/21}{\#21}).
-\item Reopening the preview during typesetting no longer changes its position. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/5}{\#5}).
-\item Pages in the preview take the theme’s color again. Reported by \href{https://github.com/ethanphil4-a11y}{ethanphil4-a11y} (\href{https://github.com/TeXShopProject/TeXShop/issues/39}{\#39}).
-\item SyncTeX goes to the place clicked.
-\item Fix a crash while the preview reloads.
-\item Space scrolls correctly through large pages.
-\item In Dark Mode, a split Preview window no longer shows a light band.
+\item Fix the position and display of the preview: it no longer moves after reloading or turning pages on macOS 26 and 27, when it is split or its divider is dragged, or when it is reopened during typesetting; parts of the linked page no longer show around a link preview; pages take the theme’s color again; and a split Preview window no longer shows a light band in Dark Mode. Reported by \href{https://github.com/svb-bit}{svb-bit}, \href{https://github.com/Uwe-Schmock}{Uwe Schmock} and \href{https://github.com/ethanphil4-a11y}{ethanphil4-a11y} (\href{https://github.com/TeXShopProject/TeXShop/issues/5}{\#5}, \href{https://github.com/TeXShopProject/TeXShop/issues/9}{\#9}, \href{https://github.com/TeXShopProject/TeXShop/issues/21}{\#21}, \href{https://github.com/TeXShopProject/TeXShop/issues/23}{\#23}, \href{https://github.com/TeXShopProject/TeXShop/issues/24}{\#24}, \href{https://github.com/TeXShopProject/TeXShop/issues/39}{\#39}).
+\item SyncTeX goes to the place clicked, a crash while the preview reloads is fixed, and Space scrolls correctly through large pages.
 \end{itemize}
 
 \subsection{Fixes: opening and saving documents}
 
 \begin{itemize}
-\item The cursor no longer jumps while editing files synced by OneDrive, Google Drive and similar services. Reported by \href{https://github.com/Steuard}{Steuard} (\href{https://github.com/TeXShopProject/TeXShop/issues/29}{\#29}).
-\item Document windows open again in Romanian. Reported and suggested by \href{https://github.com/yo3iti}{Tom} (\href{https://github.com/TeXShopProject/TeXShop/issues/42}{\#42}).
-\item TeXShop notices changes to a source file after other editors save it. Contributed by \href{https://github.com/ddd3h}{Daisuke Nishihama} in \href{https://github.com/TeXShopProject/TeXShop/pull/1}{PR \#1}.
-\item UTF-8 files with a byte order mark and UTF-16 files are saved correctly.
-\item GB 2312 files are read correctly.
-\item The backslash and the tilde are saved correctly in Japanese encodings.
-\item The encoding menu in the Save dialog works.
-\item Automatic UTF-8-Mac to UTF-8 Conversion no longer saves an empty file.
-\item Conversion to otf package \texttt{\textbackslash{}UTF} / \texttt{\textbackslash{}CID} no longer loses line breaks.
-\item Make Default Editor works for \texttt{.tex} files.
+\item The cursor no longer jumps in files synced by OneDrive, Google Drive and similar services, document windows open again in Romanian, and TeXShop notices changes saved by other editors. Reported by \href{https://github.com/Steuard}{Steuard} and \href{https://github.com/yo3iti}{Tom} (\href{https://github.com/TeXShopProject/TeXShop/issues/29}{\#29}, \href{https://github.com/TeXShopProject/TeXShop/issues/42}{\#42}), with a contribution from \href{https://github.com/ddd3h}{Daisuke Nishihama} in \href{https://github.com/TeXShopProject/TeXShop/pull/1}{PR \#1}.
+\item Fix reading and saving in several encodings: UTF-8 with a byte order mark, UTF-16, GB 2312, the backslash and the tilde in Japanese encodings, the encoding menu in the Save dialog, Automatic UTF-8-Mac to UTF-8 Conversion and conversion to otf package \texttt{\textbackslash{}UTF} / \texttt{\textbackslash{}CID} work correctly, and Make Default Editor works for \texttt{.tex} files.
 \end{itemize}
 
 \subsection{Fixes: editing and other}
 
 \begin{itemize}
-\item The spelling panel shows the misspelled word in long documents. Reported by \href{https://github.com/herbs}{Herb Schulz} (\href{https://github.com/TeXShopProject/TeXShop/issues/38}{\#38}).
-\item A \texttt{\% !TEX spellcheck} line no longer changes the language of other documents.
-\item Fix the coloring after a line break in a comment. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/16}{\#16}).
-\item An unclosed argument no longer removes the colors of the rest of the text.
-\item Typing Japanese no longer slows down.
-\item A form feed no longer hides the rest of the document.
-\item Long documents are faster to show and edit.
-\item Left alignment is kept in right-to-left paragraphs.
-\item Splitting the source in the single window divides it evenly.
-\item The Home URL of the HTML window works.
-\item Text is no longer cut off or drawn over other text in any language.
-\item Fix buttons and menus that did not work in some languages.
-\item Texts left in English are translated.
-\item Fix a crash in the Matrix panel.
+\item Fix the coloring and display of the source: a line break in a comment and an unclosed argument no longer upset the colors, a form feed no longer hides the rest of the document, and a \texttt{\% !TEX spellcheck} line no longer changes the language of other documents. Long documents are faster to show and edit. Reported in part by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/16}{\#16}).
+\item Splitting the source in the single window divides it evenly, the Home URL of the HTML window works, and a crash in the Matrix panel is fixed.
+\item Fix text that was cut off or drawn over other text, buttons and menus that did not work, and texts left in English, in some languages.
 \end{itemize}
 
 \subsection{Manual, help and bundled tools}

@@ -1,6 +1,7 @@
 ''
 0
 00
+03
 1
 10
 100
@@ -45,7 +46,6 @@
 35
 36
 37
-38
 39
 4
 40
@@ -70,6 +70,7 @@
 58
 59
 6
+61
 7
 718
 72
@@ -136,7 +137,6 @@ ahead
 alan
 alarming
 align
-alignment
 all
 allow
 allowing
@@ -150,7 +150,6 @@ although
 altogether
 always
 am
-amsthm
 an
 and
 annotate
@@ -252,6 +251,8 @@ beta
 betas
 better
 beyond
+bib
+bibdesk
 bibliography
 bibstuff
 bibtex
@@ -270,7 +271,7 @@ bowen
 box
 boxes
 break
-breaks
+breaking
 bring
 brings
 broke
@@ -320,6 +321,7 @@ check
 checked
 checking
 checks
+choice
 choices
 choose
 chooses
@@ -406,13 +408,13 @@ context
 contextual
 continue
 contributed
+contribution
 contributor
 control
 convenient
 convergence
 conversion
 converted
-converts
 coordinates
 copied
 copy
@@ -421,9 +423,9 @@ correct
 corrected
 correction
 correctly
-corrects
 corresponding
 corresponds
+count
 country
 couple
 course
@@ -539,9 +541,9 @@ done
 double
 down
 downarrow
+download
 drag
 dragged
-dragging
 drastic
 draw
 drawer
@@ -627,7 +629,6 @@ example
 examples
 except
 exceptions
-exchanges
 exist
 existed
 existing
@@ -684,7 +685,6 @@ filepath
 files
 fill
 filled
-fills
 filter
 final
 finally
@@ -781,7 +781,6 @@ grows
 guard
 habits
 half
-halfwidth
 halves
 handle
 handling
@@ -812,7 +811,6 @@ high
 highlight
 highlighting
 hinted
-hiragana
 his
 hold
 holding
@@ -865,6 +863,7 @@ incidentally
 include
 included
 including
+incompetently
 inconsistency
 incorrect
 increasing
@@ -941,7 +940,6 @@ jump
 jumped
 jumps
 just
-katakana
 keep
 kept
 kernel
@@ -1034,7 +1032,6 @@ looked
 looking
 looks
 lose
-loses
 losses
 lost
 lot
@@ -1090,6 +1087,7 @@ math
 mathematical
 mathematics
 mathexpressioncompletion
+mathjax
 matrix
 matter
 may
@@ -1116,7 +1114,6 @@ miraculously
 misc2
 misplaced
 missing
-misspelled
 mistake
 mistaken
 mitsuhiro
@@ -1170,7 +1167,6 @@ negative
 never
 new
 news
-newtheoremstyle
 next
 nicolas
 nightmare
@@ -1182,7 +1178,6 @@ none
 nonintrusive
 normal
 normalization
-normalizes
 normally
 not
 note
@@ -1207,6 +1202,7 @@ numerals
 object
 objects
 obsolete
+obtain
 occasionally
 occur
 occurred
@@ -1239,6 +1235,7 @@ optional
 or
 order
 ordinary
+org
 original
 originally
 otf
@@ -1316,6 +1313,7 @@ pin
 pinned
 place
 placed
+places
 plain
 played
 please
@@ -1380,7 +1378,6 @@ proof
 proofreading
 propagating
 proposal
-proposed
 propositions
 prose
 protected
@@ -1453,6 +1450,7 @@ relax
 release
 released
 releases
+relevant
 relic
 reloading
 reloads
@@ -1471,7 +1469,7 @@ removing
 renamed
 render
 rendering
-reopening
+reopened
 repeatedly
 replace
 replaced
@@ -1638,7 +1636,6 @@ skype
 slight
 slightly
 slowly
-slows
 small
 smith
 smooth
@@ -1650,6 +1647,7 @@ someone
 something
 sometime
 sometimes
+sonoma
 soon
 sophisticated
 sort
@@ -1666,6 +1664,7 @@ splits
 splitting
 spot
 spotlight
+spots
 stable
 stackoverflow
 standard
@@ -1674,6 +1673,7 @@ started
 starting
 starts
 statement
+static
 statistics
 status
 stay
@@ -1691,6 +1691,7 @@ strange
 strike
 strikeout
 string
+structures
 struggle
 students
 stupid
@@ -1712,7 +1713,6 @@ succeeds
 such
 suddenly
 suggested
-suggestion
 suggestions
 suggests
 summer
@@ -1803,7 +1803,6 @@ thomas
 thousand
 three
 through
-throughout
 thus
 tiff
 tilde
@@ -1820,7 +1819,6 @@ toggle
 toggled
 told
 tom
-too
 tool
 toolbar
 toolbar's
@@ -1832,9 +1830,8 @@ trace
 track
 trackpad
 transitioning
-translated
+transparency
 trash
-treat
 trick
 tricks
 tricky
@@ -1846,6 +1843,7 @@ true
 try
 ts
 tuc
+tug
 turn
 turned
 turning
@@ -1899,6 +1897,7 @@ updating
 upgraded
 uploaded
 upper
+upset
 url
 urlcolor
 us
@@ -1915,6 +1914,7 @@ usr
 usual
 usually
 utf
+uti
 utube
 uwe
 v
