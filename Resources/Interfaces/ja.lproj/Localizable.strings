@@ -402,3 +402,13 @@
 "Typesets once with this engine instead of the one chosen in the toolbar." = "その回だけ、ツールバーで選んでいるものの代わりに、このエンジンでタイプセットします。";
 "A % !TEX TS-program line at the top of the document takes precedence." = "書類の先頭に % !TEX TS-programの行があるときは、そちらが優先されます。";
 "Choose an Engine Profile" = "エンジンのプロファイルを選択";
+
+/* The status bar under the source */
+"Status Bar" = "ステータスバー";
+"%1$@: %2$@" = "%1$@: %2$@";
+"Lines" = "行";
+"Characters" = "文字";
+"Words" = "単語";
+"Location" = "位置";
+"Line" = "行";
+"Column" = "列";
