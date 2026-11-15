@@ -150,16 +150,15 @@
 "Search commands" = "Zoek commando’s";
 "Command" = "Commando";
 "Shortcut" = "Toetscombinatie";
-"Change…" = "Wijzig…";
 "Remove Shortcut" = "Verwijder combinatie";
 "Restore Default" = "Herstel standaard";
+"Default shortcut: %@" = "Standaardtoetscombinatie: %@";
+"Default shortcut: None" = "Standaardtoetscombinatie: geen";
 "Restore All…" = "Herstel alles…";
 "Restore All" = "Herstel alles";
 "Change Shortcut" = "Wijzig toetscombinatie";
-"Apply" = "Pas toe";
 "Shortcut Unavailable" = "Toetscombinatie niet beschikbaar";
 "Restore all keyboard shortcuts?" = "Alle toetscombinaties herstellen?";
-"New shortcut" = "Nieuwe sneltoets";
 "This command is no longer available." = "Dit commando is niet meer beschikbaar.";
 "This shortcut is already used by “%@”." = "Deze toetscombinatie wordt al gebruikt door ‘%@’.";
 

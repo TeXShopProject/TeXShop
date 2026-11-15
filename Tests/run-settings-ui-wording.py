@@ -36,7 +36,8 @@ for lang,expected in fixture['languages'].items():
     assert not any('/usr/texbin' in value or '9.51' in value for value in engine.values()),(lang,'Settings notes state no default value','retired path or version')
     assert "Changes the Dock icon only. Click OK to keep your choice." not in strings(panes/"SettingsDock.strings"),(lang,"obsolete Dock confirmation guidance")
     for (table,key),value in zip(reviewed['keys'],reviewed['languages'][lang]):assert strings(panes/(table+'.strings'))[key]==value,(lang,key)
-    assert actual['New shortcut']==reviewed['languages'][lang][3],(lang,'recording label')
+    # Shortcuts are recorded in the list; the recording sheet and its texts are gone.
+    assert not {'New shortcut','Change…','Apply'}&actual.keys(),(lang,'recording sheet texts')
     category_strings=strings(panes/'SettingsCategories.strings')
     dock_contract=json.loads((r/'Tests/Fixtures/SettingsDockLabels.json').read_text())
     translated=dock_contract['languages']['Base' if lang=='en' else lang]

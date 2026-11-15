@@ -59,7 +59,6 @@ static void CheckRecordedMenuConflicts(TSShortcutStore *store) {
     const NSUInteger cmd=NSEventModifierFlagCommand, shift=NSEventModifierFlagShift;
     TSShortcutPaneController *ui=[[TSShortcutPaneController alloc] initWithShortcuts:[TSKeyboardShortcuts new]];
     ui.store=store; ui.editingCommand=Command(store,@"TSShortcut.doTypeset:.-1");
-    ui.captureError=[NSTextField new]; ui.captureDisplay=[NSTextField new]; ui.applyButton=[NSButton new];
     NSString *original=ui.editingCommand.item.keyEquivalent;
     NSArray *cases=@[@[@"+",@"=",@24,@"zoomIn:"],@[@"_",@"-",@27,@"zoomOut:"]];
     if ([Command(store,@"TSShortcut.zoomOut:.0").item.keyEquivalent isEqual:@"_"])
@@ -68,24 +67,24 @@ static void CheckRecordedMenuConflicts(TSShortcutStore *store) {
     originalUnshifted=method_setImplementation(method,(IMP)UnshiftedForFixture);
     for (NSArray *c in cases) {
         fixtureUnshifted=c[1];
+        // Recording refuses a key in use at once and goes on recording.
         [ui recordShortcutEvent:LayoutEvent(c[0],c[0],[c[2] unsignedShortValue],cmd|shift)];
         TSShortcutCommand *zoom=Command(store,[@"TSShortcut." stringByAppendingFormat:@"%@.0",c[3]]);
         REQUIRE(zoom);
         REQUIRE([[ui conflictForCapturedShortcut] containsString:zoom.path]);
-        [ui applyCapturedShortcut:nil];
-        REQUIRE([ui.captureError.stringValue containsString:zoom.path]);
-        REQUIRE([ui.editingCommand.item.keyEquivalent isEqual:original]);
+        REQUIRE([ui.recordingError containsString:zoom.path]);
+        REQUIRE(ui.editingCommand!=nil && [ui.editingCommand.item.keyEquivalent isEqual:original]);
     }
     // A German unshifted plus must not acquire the shifted Zoom In alias.
     TSShortcutCommand *zoom=Command(store,@"TSShortcut.zoomIn:.0");
     if ([zoom.item.keyEquivalent isEqual:@"+"] && zoom.item.keyEquivalentModifierMask==(cmd|shift)) {
-        fixtureUnshifted=@"+"; [ui recordShortcutEvent:LayoutEvent(@"+",@"+",30,cmd)];
+        fixtureUnshifted=@"+"; [ui captureShortcutEvent:LayoutEvent(@"+",@"+",30,cmd)];
         REQUIRE(ui.capturedBindings.count==1);
         REQUIRE(![[ui conflictForCapturedShortcut] containsString:zoom.path]);
     }
     // Re-recording a command's own key must not conflict with that command's aliases.
     ui.editingCommand=zoom; fixtureUnshifted=@"=";
-    [ui recordShortcutEvent:LayoutEvent(@"+",@"+",24,cmd|shift)];
+    [ui captureShortcutEvent:LayoutEvent(@"+",@"+",24,cmd|shift)];
     REQUIRE(![[ui conflictForCapturedShortcut] containsString:zoom.path]);
     // German menus have both the unshifted text-size and shifted preview-zoom commands.
     ui.editingCommand=Command(store,@"TSShortcut.doTypeset:.-1");
@@ -94,10 +93,10 @@ static void CheckRecordedMenuConflicts(TSShortcutStore *store) {
         REQUIRE([[ui conflictForCapturedShortcut] containsString:bigger.path]);
         REQUIRE([[ui conflictForCapturedShortcut] containsString:zoom.path]);
         [ui applyCapturedShortcut:nil];
-        REQUIRE([ui.captureError.stringValue containsString:bigger.path] && [ui.captureError.stringValue containsString:zoom.path]);
-        REQUIRE([[ui.captureError.stringValue componentsSeparatedByString:@"\n"] containsObject:bigger.path]);
-        REQUIRE([[ui.captureError.stringValue componentsSeparatedByString:@"\n"] containsObject:zoom.path]);
-        NSTextField *error=[NSTextField wrappingLabelWithString:ui.captureError.stringValue];
+        REQUIRE([ui.recordingError containsString:bigger.path] && [ui.recordingError containsString:zoom.path]);
+        REQUIRE([[ui.recordingError componentsSeparatedByString:@"\n"] containsObject:bigger.path]);
+        REQUIRE([[ui.recordingError componentsSeparatedByString:@"\n"] containsObject:zoom.path]);
+        NSTextField *error=[NSTextField wrappingLabelWithString:ui.recordingError];
         REQUIRE([error.cell cellSizeForBounds:NSMakeRect(0,0,600,CGFLOAT_MAX)].height<=70);
     }
     method_setImplementation(method,originalUnshifted); fixtureUnshifted=nil;
@@ -334,27 +333,17 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE(![TSShortcutStore isAllowedKey:@"ab" modifiers:cmd]);
     puts("PASS: Shift punctuation, shifted letters, function keys and invalid input");
 
-    TSShortcutRecorder *recorder=[TSShortcutRecorder new];
-    __block int recorded=0, accepted=0, cancelled=0;
-    recorder.record=^(NSEvent *event){recorded++;}; recorder.accept=^{accepted++;}; recorder.cancel=^{cancelled++;};
-    REQUIRE([recorder performKeyEquivalent:Event(@"x",cmd)] && recorded==1);
-    REQUIRE([recorder performKeyEquivalent:Event(@"\r",0)] && accepted==1 && recorded==1);
-    REQUIRE([recorder performKeyEquivalent:Event(@"\033",0)] && cancelled==1 && recorded==1);
-    REQUIRE([recorder performKeyEquivalent:Event(@"\t",0)] && recorded==1);
-    REQUIRE([recorder performKeyEquivalent:Event(@"\031",shift)] && recorded==1);
+    TSShortcutKeyRecorder *recorder=[TSShortcutKeyRecorder new];
     REQUIRE(recorder.accessibilityLabel.length && [recorder.accessibilityRole isEqual:NSAccessibilityTextFieldRole]);
-    puts("PASS: capture consumes commands, Return accepts, Escape cancels, accessibility metadata");
+    REQUIRE([recorder.accessibilityValue isEqual:NSLocalizedString(@"Press a key",@"")]);
+    recorder.shortcut=@"⌘X";REQUIRE([recorder.accessibilityValue isEqual:@"⌘X"] && [recorder.label.stringValue isEqual:@"⌘X"]);
+    REQUIRE(recorder.removeButton.refusesFirstResponder && recorder.removeButton.toolTip.length);
+    puts("PASS: recorder accessibility metadata");
     TSShortcutPaneController *controller = [[TSShortcutPaneController alloc] initWithShortcuts:[TSKeyboardShortcuts new]];
-    controller.captureDisplay = [NSTextField labelWithString:@""];
-    controller.captureError = [NSTextField labelWithString:@""];
-    controller.applyButton = [NSButton new];
-    [controller recordShortcutEvent:Event(@"q",cmd)];
-    REQUIRE(controller.applyButton.enabled && [controller.capturedKey isEqual:@"q"]);
-    NSString *validDisplay = controller.captureDisplay.stringValue;
-    [controller recordShortcutEvent:Event(@"a",0)];
-    REQUIRE(!controller.applyButton.enabled && !controller.capturedKey);
-    REQUIRE(![controller.captureDisplay.stringValue isEqual:validDisplay] && controller.captureError.stringValue.length);
-    puts("PASS: invalid input clears the previous valid capture and disables Apply");
+    REQUIRE([controller captureShortcutEvent:Event(@"q",cmd)] && [controller.capturedKey isEqual:@"q"] && controller.recordingError==nil);
+    REQUIRE(![controller captureShortcutEvent:Event(@"a",0)] && !controller.capturedKey);
+    REQUIRE(controller.recordingError.length);
+    puts("PASS: invalid input clears the previous valid capture and says why");
     menu=MainMenu(); NSMenuItem *latinFind=Item(@"TSShortcut.performFindPanelAction:.1",@"f",cmd);
     latinFind.action=@selector(performFindPanelAction:); latinFind.tag=1; [menu addItem:latinFind];
     NSMenuItem *latinNext=Item(@"TSShortcut.performFindPanelAction:.2",@"g",cmd);
@@ -364,7 +353,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     for (NSString *nonLatin in @[@"а",@"φ",@"כ"]) {
         NSEvent *event=LayoutEvent(@"f",nonLatin,kVK_ANSI_F,cmd);
         REQUIRE([TSKeyboardShortcuts event:event matchesAction:@selector(performFindPanelAction:) tag:1]);
-        [controller recordShortcutEvent:event];
+        [controller captureShortcutEvent:event];
         REQUIRE([controller.capturedKey isEqual:@"f"]);
         REQUIRE([store setKey:controller.capturedKey modifiers:controller.capturedModifiers forCommand:Command(store,other.identifier)] != nil);
     }
@@ -372,28 +361,28 @@ int main(int argc, char **argv) { @autoreleasepool {
     for (NSArray *entry in @[@[@"f",@"u",@(kVK_ANSI_F),@1], @[@"g",@"i",@(kVK_ANSI_G),@2]]) {
         NSEvent *event=LayoutEvent(entry[0],entry[1],[entry[2] unsignedShortValue],cmd);
         REQUIRE([TSKeyboardShortcuts event:event matchesAction:@selector(performFindPanelAction:) tag:[entry[3] integerValue]]);
-        [controller recordShortcutEvent:event];
+        [controller captureShortcutEvent:event];
         REQUIRE([controller.capturedKey isEqual:entry[0]] && controller.capturedModifiers==cmd);
         REQUIRE([store setKey:controller.capturedKey modifiers:controller.capturedModifiers forCommand:Command(store,other.identifier)] != nil);
     }
-    [controller recordShortcutEvent:LayoutEvent(@"F",@"",kVK_ANSI_F,cmd|shift)];
+    [controller captureShortcutEvent:LayoutEvent(@"F",@"",kVK_ANSI_F,cmd|shift)];
     REQUIRE([controller.capturedKey isEqual:@"f"] && controller.capturedModifiers==(cmd|shift));
-    [controller recordShortcutEvent:LayoutEvent(@"F",@"f",kVK_ANSI_F,cmd|NSEventModifierFlagCapsLock)];
+    [controller captureShortcutEvent:LayoutEvent(@"F",@"f",kVK_ANSI_F,cmd|NSEventModifierFlagCapsLock)];
     REQUIRE([controller.capturedKey isEqual:@"f"] && controller.capturedModifiers==cmd);
     REQUIRE([TSKeyboardShortcuts event:LayoutEvent(@"F",@"f",kVK_ANSI_F,cmd|NSEventModifierFlagCapsLock) matchesAction:@selector(performFindPanelAction:) tag:1]);
     puts("PASS: Dvorak–QWERTY Command, empty unmodified characters and Caps Lock");
-    [controller recordShortcutEvent:LayoutEvent(@"F",@"φ",kVK_ANSI_F,cmd)];
+    [controller captureShortcutEvent:LayoutEvent(@"F",@"φ",kVK_ANSI_F,cmd)];
     REQUIRE([controller.capturedKey isEqual:@"f"] && controller.capturedModifiers==cmd);
     NSEvent *swedishColon = LayoutEvent(@".",@":",kVK_ANSI_Period,cmd|shift);
     REQUIRE([TSShortcutCharacterForEvent(swedishColon) isEqual:@":"]);
-    [controller recordShortcutEvent:swedishColon];
+    [controller captureShortcutEvent:swedishColon];
     NSDictionary *expectedColon = TSBinding(@":",cmd);
     REQUIRE([controller.capturedKey isEqual:expectedColon[@"key"]]);
     REQUIRE(controller.capturedModifiers==[expectedColon[@"modifiers"] unsignedIntegerValue]);
     REQUIRE(![controller.capturedKey isEqual:@"."]);
     REQUIRE([TSShortcutCharacterForEvent(LayoutEvent(@"/",@"?",kVK_ANSI_Minus,cmd|shift)) isEqual:@"?"]);
     REQUIRE([TSShortcutCharacterForEvent(LayoutEvent(@",",@";",kVK_ANSI_Comma,cmd|shift)) isEqual:@";"]);
-    [controller recordShortcutEvent:LayoutEvent(@"[",@"[",kVK_ANSI_LeftBracket,cmd|shift)];
+    [controller captureShortcutEvent:LayoutEvent(@"[",@"[",kVK_ANSI_LeftBracket,cmd|shift)];
     NSDictionary *expectedBracket = TSRecordedBinding(LayoutEvent(@"[",@"[",kVK_ANSI_LeftBracket,cmd|shift), [LayoutEvent(@"[",@"[",kVK_ANSI_LeftBracket,cmd|shift) charactersByApplyingModifiers:0]);
     REQUIRE([TSRecordedBinding(LayoutEvent(@"[",@"[",kVK_ANSI_LeftBracket,cmd|shift), @"[") isEqual:TSBinding(@"[",cmd|shift)]);
     REQUIRE([controller.capturedKey isEqual:expectedBracket[@"key"]]);
@@ -413,7 +402,7 @@ int main(int argc, char **argv) { @autoreleasepool {
 
     NSEvent *optionG=LayoutEvent(@"©",@"g",kVK_ANSI_G,cmd|NSEventModifierFlagOption);
     REQUIRE([TSShortcutCharacterForEvent(optionG) isEqual:@"g"]);
-    [controller recordShortcutEvent:optionG];
+    [controller captureShortcutEvent:optionG];
     REQUIRE([controller.capturedKey isEqual:@"g"] && controller.capturedModifiers==(cmd|NSEventModifierFlagOption));
     REQUIRE(![TSKeyboardShortcuts event:optionG matchesAction:@selector(performFindPanelAction:) tag:2]);
     TISInputSourceRef asciiSource=TISCopyCurrentASCIICapableKeyboardLayoutInputSource();
@@ -422,7 +411,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE([TSShortcutCharacterForEvent(LayoutEvent(@"©",@"п",kVK_ANSI_G,cmd|NSEventModifierFlagOption)) isEqual:asciiG]);
     REQUIRE([TSShortcutCharacterForEvent(LayoutEvent(@"\007",@"п",kVK_ANSI_G,cmd|NSEventModifierFlagControl)) isEqual:asciiG]);
     CFRelease(asciiSource);
-    [controller recordShortcutEvent:LayoutEvent(@"F",@"А",kVK_ANSI_F,cmd|shift)];
+    [controller captureShortcutEvent:LayoutEvent(@"F",@"А",kVK_ANSI_F,cmd|shift)];
     REQUIRE([controller.capturedKey isEqual:@"f"] && controller.capturedModifiers==(cmd|shift));
     MainMenu();
     REQUIRE([TSKeyboardShortcuts event:Event(@"f",cmd) matchesAction:@selector(performFindPanelAction:) tag:1]);

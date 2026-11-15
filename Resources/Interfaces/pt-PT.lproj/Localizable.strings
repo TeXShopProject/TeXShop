@@ -152,16 +152,15 @@
 "Search commands" = "Pesquisar comandos";
 "Command" = "Comando";
 "Shortcut" = "Atalho";
-"Change…" = "Alterar…";
 "Remove Shortcut" = "Remover atalho";
 "Restore Default" = "Repor predefinição";
+"Default shortcut: %@" = "Atalho predefinido: %@";
+"Default shortcut: None" = "Atalho predefinido: nenhum";
 "Restore All…" = "Repor todos…";
 "Restore All" = "Repor todos";
 "Change Shortcut" = "Alterar atalho";
-"Apply" = "Aplicar";
 "Shortcut Unavailable" = "Atalho indisponível";
 "Restore all keyboard shortcuts?" = "Repor todos os atalhos de teclado?";
-"New shortcut" = "Novo atalho";
 "This command is no longer available." = "Este comando já não está disponível.";
 "This shortcut is already used by “%@”." = "Este atalho já é usado por «%@».";
 

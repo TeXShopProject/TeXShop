@@ -153,16 +153,15 @@
 "Search commands" = "Rechercher des commandes";
 "Command" = "Commande";
 "Shortcut" = "Raccourci";
-"Change…" = "Modifier…";
 "Remove Shortcut" = "Supprimer le raccourci";
 "Restore Default" = "Rétablir par défaut";
+"Default shortcut: %@" = "Raccourci par défaut : %@";
+"Default shortcut: None" = "Raccourci par défaut : aucun";
 "Restore All…" = "Tout rétablir…";
 "Restore All" = "Tout rétablir";
 "Change Shortcut" = "Modifier le raccourci";
-"Apply" = "Appliquer";
 "Shortcut Unavailable" = "Raccourci indisponible";
 "Restore all keyboard shortcuts?" = "Rétablir tous les raccourcis clavier ?";
-"New shortcut" = "Nouveau raccourci";
 "This command is no longer available." = "Cette commande n’est plus disponible.";
 "This shortcut is already used by “%@”." = "Ce raccourci est déjà utilisé par « %@ ».";
 

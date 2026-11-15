@@ -111,11 +111,9 @@ static void CheckEventPriority(void) {
  puts("PASS: nested live macro positions, primary/fallback tiers, raw inactive macros, macro-only and file-order owners");
 }
 static NSWindow *sheetParent;
-static NSWindow *fakeSheetOwner;
-static NSWindow *fakeAttachedSheet;
-static NSWindow *AttachedSheet(id self,SEL cmd){return self==fakeSheetOwner ? fakeAttachedSheet : nil;}
-static NSUInteger endedSheets;
-static void EndSheet(id self,SEL cmd,NSWindow *sheet,NSModalResponse response){endedSheets++;}
+static NSInteger fixtureClickedRow=-1,fixtureClickedColumn=-1;
+static NSInteger ClickedRow(id self,SEL cmd){return fixtureClickedRow;}
+static NSInteger ClickedColumn(id self,SEL cmd){return fixtureClickedColumn;}
 static void (^sheetReply)(NSModalResponse);
 static void CaptureSheet(id self,SEL cmd,NSWindow *parent,void (^reply)(NSModalResponse)){sheetParent=parent;sheetReply=[reply copy];}
 @interface ProbePane:TSShortcutPaneController
@@ -377,38 +375,127 @@ int main(int argc,char **argv){@autoreleasepool{
  REQUIRE(sheetParent==shell.window && sheetReply!=nil && !accepted);sheetReply(NSAlertFirstButtonReturn);REQUIRE(!accepted);
  [pane confirmMacrosUsingKey:@"z" modifiers:C completion:^(BOOL value){accepted=value;}];sheetReply(NSAlertSecondButtonReturn);REQUIRE(accepted);
  [pane restoreAll:nil];REQUIRE(sheetParent==shell.window && sheetReply!=nil);
- // Model an attached recording sheet without displaying or attaching an actual window.
- TSReplaceTestMethod(class_getInstanceMethod(NSWindow.class,@selector(attachedSheet)),(IMP)AttachedSheet);
- TSReplaceTestMethod(class_getInstanceMethod(NSWindow.class,@selector(endSheet:returnCode:)),(IMP)EndSheet);
- pane.capturePanel=[[TSShortcutCapturePanel alloc]initWithContentRect:NSMakeRect(0,0,400,200) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
- fakeSheetOwner=shell.window;fakeAttachedSheet=pane.capturePanel;
- sheetParent=nil;sheetReply=nil;accepted=NO;
- [pane confirmMacrosUsingKey:@"z" modifiers:C completion:^(BOOL value){accepted=value;}];
- REQUIRE(sheetParent==pane.capturePanel && sheetReply!=nil);sheetReply(NSAlertSecondButtonReturn);REQUIRE(accepted);
  sheetParent=nil;
  IMP showError=class_getMethodImplementation(TSShortcutPaneController.class,@selector(showError:));
- ((void(*)(id,SEL,id))showError)(pane,@selector(showError:),@"Fixture error");REQUIRE(sheetParent==pane.capturePanel);
+ ((void(*)(id,SEL,id))showError)(pane,@selector(showError:),@"Fixture error");REQUIRE(sheetParent==shell.window);
  // Changing any captured value while a confirmation is pending must cancel the write.
- pane.applyButton=[NSButton new];pane.applyButton.enabled=YES;pane.captureError=[NSTextField new];
  for(NSUInteger change=0;change<3;change++){
   pane.editingCommand=firstCommand;pane.capturedKey=@"z";pane.capturedModifiers=C;pane.capturedBindings=nil;
   NSDictionary *before=[TSIsolatedAppKitDefaults.values copy];NSString *originalKey=[first.keyEquivalent copy];
-  sheetReply=nil;[pane applyCapturedShortcut:nil];REQUIRE(sheetReply!=nil);
+  sheetReply=nil;sheetParent=nil;[pane applyCapturedShortcut:nil];REQUIRE(sheetReply!=nil && sheetParent==shell.window);
   if(change==0)pane.editingCommand=coordinator.store.commands.lastObject;
   if(change==1)pane.capturedKey=@"v";
   if(change==2)pane.capturedModifiers=C|S;
   sheetReply(NSAlertSecondButtonReturn);
-  REQUIRE([TSIsolatedAppKitDefaults.values isEqual:before] && [first.keyEquivalent isEqual:originalKey] && endedSheets==0);
+  REQUIRE([TSIsolatedAppKitDefaults.values isEqual:before] && [first.keyEquivalent isEqual:originalKey]);
+  [pane endRecording];
  }
  // The macro reservation is checked again when the asynchronous reply arrives.
  accepted=NO;sheetReply=nil;[pane confirmMacrosUsingKey:@"z" modifiers:C completion:^(BOOL value){accepted=value;}];REQUIRE(sheetReply!=nil);
  macroItem.keyEquivalent=@"v";sheetReply(NSAlertSecondButtonReturn);REQUIRE(!accepted);macroItem.keyEquivalent=@"z";
- // An unchanged confirmation still applies the requested shortcut normally.
+ // An unchanged confirmation still applies the requested shortcut normally and ends recording.
  pane.editingCommand=firstCommand;pane.capturedKey=@"z";pane.capturedModifiers=C;pane.capturedBindings=nil;
  sheetReply=nil;[pane applyCapturedShortcut:nil];REQUIRE(sheetReply!=nil);sheetReply(NSAlertSecondButtonReturn);
- REQUIRE([first.keyEquivalent isEqual:@"z"] && endedSheets==1);
- fakeSheetOwner=nil;fakeAttachedSheet=nil;pane.capturePanel=nil;pane.editingCommand=nil;
+ REQUIRE([first.keyEquivalent isEqual:@"z"] && pane.editingCommand==nil);
  puts("PASS: confirmations are asynchronous sheets attached to Settings");
+ // In-cell recording, as in Xcode's key bindings.
+ {
+  [shell selectCategoryIdentifier:TSSettingsCategoryKeyboard];
+  if(pane.searchingByKey)[pane stopKeySearch];
+  pane.search.stringValue=@"";[pane reloadCommands];[shell.window.contentView layoutSubtreeIfNeeded];
+  TSShortcutStore *store=coordinator.store;TSShortcutCommand *secondCommand=nil;
+  for(TSShortcutCommand *command in store.commands)if(command.item==second)secondCommand=command;
+  REQUIRE(secondCommand!=nil && [store setKey:@"k" modifiers:C forCommand:firstCommand]==nil && [store setKey:@"u" modifiers:C forCommand:secondCommand]==nil);
+  [coordinator refreshMenuAndMacros];
+  NSInteger firstRow=[pane rowForCommand:firstCommand],secondRow=[pane rowForCommand:secondCommand],shortcutColumn=[pane.table columnWithIdentifier:@"shortcut"];
+  REQUIRE(firstRow>=0 && secondRow>=0 && shortcutColumn==1);
+  NSStackView *status=(NSStackView *)[pane viewWithIdentifier:@"shortcut.status" inView:pane.view];
+  REQUIRE(status==pane.status && [pane.statusText.identifier isEqual:@"shortcut.status-text"]);
+  // Under the list: the selected command's default shortcut.
+  [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)firstRow] byExtendingSelection:NO];
+  NSString *firstDefault=firstCommand.defaultKey.length?[NSString stringWithFormat:NSLocalizedString(@"Default shortcut: %@",@""),[TSShortcutStore displayKey:firstCommand.defaultKey modifiers:firstCommand.defaultModifiers]]:NSLocalizedString(@"Default shortcut: None",@"");
+  REQUIRE([pane.statusText.stringValue isEqual:firstDefault] && status.arrangedSubviews[0].hidden);
+  REQUIRE(![pane.view.subviews containsObject:pane.recordingCell] && [pane viewWithIdentifier:@"shortcut.edit" inView:pane.view]==nil && [pane viewWithIdentifier:@"shortcut.remove" inView:pane.view]==nil);
+  // A click on the shortcut of the row that was already selected records; other clicks only select.
+  IMP originalClickedRow=method_setImplementation(class_getInstanceMethod(NSTableView.class,@selector(clickedRow)),(IMP)ClickedRow);
+  IMP originalClickedColumn=method_setImplementation(class_getInstanceMethod(NSTableView.class,@selector(clickedColumn)),(IMP)ClickedColumn);
+  TSShortcutTableView *table=(TSShortcutTableView *)pane.table;REQUIRE([table isKindOfClass:TSShortcutTableView.class]);
+  fixtureClickedRow=firstRow;fixtureClickedColumn=shortcutColumn;table.rowSelectedAtMouseDown=-1;[pane tableClicked:table];REQUIRE(pane.editingCommand==nil);
+  fixtureClickedColumn=0;table.rowSelectedAtMouseDown=firstRow;[pane tableClicked:table];REQUIRE(pane.editingCommand==nil);
+  fixtureClickedColumn=shortcutColumn;[pane tableClicked:table];
+  REQUIRE(pane.editingCommand==firstCommand && shell.window.firstResponder==pane.recorder);
+  REQUIRE([pane.table viewAtColumn:shortcutColumn row:firstRow makeIfNecessary:NO]==pane.recordingCell && [pane.recorder isDescendantOf:pane.table]);
+  NSString *firstShown=[TSShortcutStore displayKey:@"k" modifiers:C];
+  REQUIRE([pane.recorder.shortcut isEqual:firstShown] && [pane.recorder.accessibilityValue isEqual:firstShown] && !pane.recorder.removeButton.hidden && pane.recordingWarning.hidden);
+  NSDictionary *saved=[TSIsolatedAppKitDefaults.values copy];
+  // Escape ends recording, keeps the shortcut and gives the list the focus.
+  REQUIRE([shell.window performKeyEquivalent:Event(@"\033",0,53)]);
+  REQUIRE(pane.editingCommand==nil && shell.window.firstResponder==pane.table && [first.keyEquivalent isEqual:@"k"] && [TSIsolatedAppKitDefaults.values isEqual:saved]);
+  REQUIRE(![pane.recorder isDescendantOf:pane.table] && [[pane.table viewAtColumn:shortcutColumn row:firstRow makeIfNecessary:YES] isKindOfClass:TSShortcutKeyLabel.class]);
+  // A double click on a row records in it.
+  fixtureClickedRow=secondRow;[pane editShortcut:pane.table];REQUIRE(pane.editingCommand==secondCommand && pane.table.selectedRow==secondRow);
+  [shell.window makeFirstResponder:pane.table];REQUIRE(pane.editingCommand==nil);
+  method_setImplementation(class_getInstanceMethod(NSTableView.class,@selector(clickedRow)),originalClickedRow);
+  method_setImplementation(class_getInstanceMethod(NSTableView.class,@selector(clickedColumn)),originalClickedColumn);
+  // Return in the list records in the selected row.
+  [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)firstRow] byExtendingSelection:NO];
+  [pane.table keyDown:Event(@"\r",0,36)];REQUIRE(pane.editingCommand==firstCommand && shell.window.firstResponder==pane.recorder);
+  // A key in use is refused: recording goes on, a triangle marks the row and the reason replaces the default under the list.
+  fixtureCharacters=@"=";REQUIRE([shell.window performKeyEquivalent:Event(@"=",C,24)]);
+  REQUIRE(pane.editingCommand==firstCommand && shell.window.firstResponder==pane.recorder && [first.keyEquivalent isEqual:@"k"] && [TSIsolatedAppKitDefaults.values isEqual:saved]);
+  REQUIRE([pane.recordingError containsString:equals.title] && [pane.statusText.stringValue isEqual:pane.recordingError] && !status.arrangedSubviews[0].hidden);
+  REQUIRE(!pane.recordingWarning.hidden && [pane.recorder.shortcut isEqual:[TSShortcutStore displayKey:@"=" modifiers:C]]);
+  // A key that cannot be a shortcut says so, through the window as typed.
+  fixtureCharacters=@"a";[shell.window keyDown:Event(@"a",0,0)];
+  REQUIRE(pane.editingCommand==firstCommand && [pane.statusText.stringValue isEqual:NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.",@"")] && forwardedKeys==0);
+  // Focus that moves elsewhere ends recording; the default returns under the list.
+  REQUIRE([shell.window makeFirstResponder:pane.search]);
+  REQUIRE(pane.editingCommand==nil && pane.recordingError==nil && [first.keyEquivalent isEqual:@"k"] && [pane.statusText.stringValue isEqual:firstDefault] && status.arrangedSubviews[0].hidden);
+  REQUIRE(shell.window.firstResponder==pane.search.currentEditor || shell.window.firstResponder==pane.search);
+  // The row shows its shortcut again once the focus has moved.
+  [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.05]];
+  REQUIRE(![pane.recorder isDescendantOf:pane.table] && [[pane.table viewAtColumn:shortcutColumn row:firstRow makeIfNecessary:YES] isKindOfClass:TSShortcutKeyLabel.class]);
+  // Recording that starts before then takes the field from the earlier row.
+  [pane beginRecordingAtRow:firstRow];REQUIRE([shell.window makeFirstResponder:pane.search] && pane.editingCommand==nil);
+  [pane beginRecordingAtRow:secondRow];
+  REQUIRE([[pane.table viewAtColumn:shortcutColumn row:firstRow makeIfNecessary:YES] isKindOfClass:TSShortcutKeyLabel.class] && [pane.table viewAtColumn:shortcutColumn row:secondRow makeIfNecessary:NO]==pane.recordingCell);
+  [shell.window performKeyEquivalent:Event(@"\033",0,53)];REQUIRE(pane.editingCommand==nil);
+  // Assistive technologies press a shortcut to record it; a free key is assigned at once.
+  TSShortcutKeyLabel *label=(TSShortcutKeyLabel *)[pane.table viewAtColumn:shortcutColumn row:secondRow makeIfNecessary:YES];
+  REQUIRE([label isKindOfClass:TSShortcutKeyLabel.class] && [label isAccessibilitySelectorAllowed:@selector(accessibilityPerformPress)] && [label accessibilityPerformPress]);
+  REQUIRE(pane.editingCommand==secondCommand && pane.table.selectedRow==secondRow && shell.window.firstResponder==pane.recorder);
+  fixtureCharacters=@"y";REQUIRE([shell.window performKeyEquivalent:Event(@"y",C,16)]);
+  REQUIRE(pane.editingCommand==nil && [second.keyEquivalent isEqual:@"y"] && shell.window.firstResponder==pane.table);
+  REQUIRE([TSIsolatedAppKitDefaults.values[TSMenuShortcutOverridesKey][secondCommand.commandID] isEqual:TSBinding(@"y",C)]);
+  // A key that a macro uses waits for the confirmation; Cancel ends recording and keeps the shortcut.
+  [pane beginRecordingAtRow:secondRow];sheetReply=nil;sheetParent=nil;
+  fixtureCharacters=@"z";[shell.window performKeyEquivalent:Event(@"z",C,6)];
+  REQUIRE(sheetReply!=nil && sheetParent==shell.window && pane.editingCommand==secondCommand && [second.keyEquivalent isEqual:@"y"]);
+  sheetReply(NSAlertFirstButtonReturn);REQUIRE(pane.editingCommand==nil && [second.keyEquivalent isEqual:@"y"]);
+  [pane beginRecordingAtRow:secondRow];sheetReply=nil;
+  fixtureCharacters=@"z";[shell.window performKeyEquivalent:Event(@"z",C,6)];REQUIRE(sheetReply!=nil);
+  sheetReply(NSAlertSecondButtonReturn);REQUIRE(pane.editingCommand==nil && [second.keyEquivalent isEqual:@"z"]);
+  // Delete while recording removes the shortcut; so does the button in the field.
+  [pane beginRecordingAtRow:secondRow];fixtureCharacters=@"\177";[shell.window keyDown:Event(@"\177",0,51)];
+  REQUIRE(pane.editingCommand==nil && second.keyEquivalent.length==0);
+  [pane beginRecordingAtRow:secondRow];REQUIRE(pane.recorder.removeButton.hidden && [pane.recorder.accessibilityValue isEqual:NSLocalizedString(@"Press a key",@"")]);
+  [shell.window performKeyEquivalent:Event(@"\033",0,53)];
+  REQUIRE([store setKey:@"u" modifiers:C forCommand:secondCommand]==nil);
+  [pane beginRecordingAtRow:secondRow];REQUIRE(!pane.recorder.removeButton.hidden);
+  [pane.recorder.removeButton performClick:nil];REQUIRE(pane.editingCommand==nil && second.keyEquivalent.length==0);
+  // Tab ends recording and moves on; a reload of the list ends it too.
+  [pane beginRecordingAtRow:firstRow];fixtureCharacters=@"\t";[shell.window keyDown:Event(@"\t",0,48)];
+  REQUIRE(pane.editingCommand==nil && shell.window.firstResponder!=pane.recorder && [first.keyEquivalent isEqual:@"k"]);
+  [pane beginRecordingAtRow:firstRow];[pane reloadCommands];REQUIRE(pane.editingCommand==nil && ![pane.recorder isDescendantOf:pane.table]);
+  // Key search results record in place, and the results follow the change.
+  pane.searchMode.selectedSegment=1;[pane changeSearchMode:pane.searchMode];
+  fixtureCharacters=@"k";[shell.window performKeyEquivalent:Event(@"k",C,40)];REQUIRE(pane.searchMatches.count==1 && pane.searchMatches[0].command==firstCommand);
+  [pane beginRecordingAtRow:0];REQUIRE(pane.editingCommand==firstCommand && pane.searchingByKey && shell.window.firstResponder==pane.recorder);
+  fixtureCharacters=@"b";REQUIRE([shell.window performKeyEquivalent:Event(@"b",C,11)]);
+  REQUIRE(pane.editingCommand==nil && [first.keyEquivalent isEqual:@"b"] && pane.searchingByKey && pane.searchMatches.count==0);
+  [pane stopKeySearch];
+ }
+ puts("PASS: in-cell recording starts from the selected shortcut, double click, Return and VoiceOver; Escape, Tab and focus elsewhere end it; keys in use are refused under the list; free keys apply at once; macro keys confirm; Delete and the field button remove");
  TSMacroTreeNode *tree=[TSMacroTreeNode submenuNodeWithName:@"root"],*group=[TSMacroTreeNode submenuNodeWithName:@"group"];
  TSMacroTreeNode *a=[TSMacroTreeNode nodeWithName:@"same" content:@"unsaved" key:@"A"],*b=[TSMacroTreeNode nodeWithName:@"same" content:@"other" key:@"B"];
  [tree addChild:group];[group addChild:a];[group addChild:b];NSUInteger indexes[]={0,0};NSIndexPath *path=[NSIndexPath indexPathWithIndexes:indexes length:2];
@@ -499,6 +586,27 @@ int main(int argc,char **argv){@autoreleasepool{
   CheckButtons(translated.view,translated.view);
   REQUIRE(NSContainsRect(translated.view.bounds,translated.table.enclosingScrollView.frame));
   REQUIRE(NSWidth(translated.searchMode.frame)+1>=translated.searchMode.intrinsicContentSize.width);
+  // The line under the list shows the longest default and refusal texts whole, and the recording field shows the longest key.
+  {
+   [translated stopKeySearch];translated.search.stringValue=@"";[translated reloadCommands];
+   REQUIRE(translated.table.numberOfRows>0);[translated.table selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+   for(NSString *text in @[NSLocalizedString(@"Default shortcut: None",@""),[NSString stringWithFormat:NSLocalizedString(@"Default shortcut: %@",@""),@"⌃⌥⇧⌘F12"],
+     [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.",@""),@"Format ▸ Font ▸ Bigger"],NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.",@"")]){
+    translated.statusText.stringValue=text;translated.status.arrangedSubviews[0].hidden=NO;[translated.view layoutSubtreeIfNeeded];
+    NSRect line=[translated.status convertRect:translated.status.bounds toView:translated.view];
+    REQUIRE(NSContainsRect(NSInsetRect(translated.view.bounds,-.5,-.5),line));
+    CGFloat needed=[translated.statusText.cell cellSizeForBounds:NSMakeRect(0,0,NSWidth(translated.statusText.bounds),CGFLOAT_MAX)].height;
+    REQUIRE(needed<=NSHeight(translated.statusText.bounds)+.5);
+    NSRect buttons=[translated.selectionButtons[0] convertRect:translated.selectionButtons[0].bounds toView:translated.view];
+    REQUIRE(!NSIntersectsRect(line,buttons) && !NSIntersectsRect(line,[translated.table.enclosingScrollView convertRect:translated.table.enclosingScrollView.bounds toView:translated.view]));
+   }
+   [translated updateStatus];
+   NSView *cell=translated.recordingCell;cell.frame=NSMakeRect(0,0,translated.table.tableColumns[1].width,translated.table.rowHeight);[cell layoutSubtreeIfNeeded];
+   translated.recorder.shortcut=@"⌃⌥⇧⌘F12";[cell layoutSubtreeIfNeeded];
+   REQUIRE(NSWidth(translated.recorder.label.frame)+.5>=translated.recorder.label.intrinsicContentSize.width);
+   REQUIRE(NSMaxX(translated.recorder.frame)<=NSMinX(translated.recordingWarning.frame) && NSMaxX(translated.recordingWarning.frame)<=NSWidth(cell.bounds));
+   REQUIRE(translated.table.tableColumns[1].width>=translated.table.tableColumns[1].headerCell.cellSize.width);
+  }
   fprintf(stdout,"PASS: %s pane controls fit minimum content size\n",language.UTF8String);
  }}
  localizedStrings=nil;method_setImplementation(class_getInstanceMethod(NSBundle.class,@selector(localizedStringForKey:value:table:)),originalLocalization);

@@ -219,9 +219,11 @@ int main(int argc, char **argv) { @autoreleasepool {
     [ui restoreShortcut:nil]; REQUIRE(ui.confirmations==1 && [find.keyEquivalent isEqual:@"k"]);
     ui.consent=YES; [ui restoreShortcut:nil]; REQUIRE(ui.confirmations==2 && [find.keyEquivalent isEqual:@"f"] && macroMenu.itemArray[2].keyEquivalent.length==0);
     REQUIRE(![store setKey:@"k" modifiers:cmd forCommand:findCommand]); [coordinator refreshMenuAndMacros];
-    ui.capturedKey=@"f";ui.capturedModifiers=cmd;ui.editingCommand=findCommand;ui.applyButton=[NSButton new];ui.applyButton.enabled=YES;ui.consent=NO;
-    [ui applyCapturedShortcut:nil]; REQUIRE(ui.confirmations==3 && [find.keyEquivalent isEqual:@"k"]);
-    ui.consent=YES;[ui applyCapturedShortcut:nil];REQUIRE(ui.confirmations==4 && [find.keyEquivalent isEqual:@"f"]);
+    // Cancel in the confirmation ends the recording and keeps the shortcut.
+    ui.capturedKey=@"f";ui.capturedModifiers=cmd;ui.editingCommand=findCommand;ui.consent=NO;
+    [ui applyCapturedShortcut:nil]; REQUIRE(ui.confirmations==3 && [find.keyEquivalent isEqual:@"k"] && ui.editingCommand==nil);
+    ui.capturedKey=@"f";ui.capturedModifiers=cmd;ui.editingCommand=findCommand;
+    ui.consent=YES;[ui applyCapturedShortcut:nil];REQUIRE(ui.confirmations==4 && [find.keyEquivalent isEqual:@"f"] && ui.editingCommand==nil);
     macros.macroDict=@{@"submenu":@[Macro(@"Engine switch",@"F"),Macro(@"Still free",@"Z")]};[coordinator refreshMenuAndMacros];
     REQUIRE([find.keyEquivalent isEqual:@"f"] && !macroMenu.itemArray[2].keyEquivalent.length && store.unavailableCommands.count==0);
     // Exercise the UI actions themselves, including the restore-all sheet callback.
