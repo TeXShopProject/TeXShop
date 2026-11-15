@@ -15,8 +15,8 @@ import sys
 MUTATIONS = {
     # A word is pushed out (nstextview, started and tasks were, #25 audit, the Advanced Find panel, #38 and the version number 6.00; synchronization, think and track for the Find submenu of the Advanced Find panel; rescan for the Dracula theme; synchronization and track for TransparentTheme and SolarizedLite; formula, synchronization, telling, think and track for the names of languages and of the reporter of #42; 72 and 78 for the annotation buttons and the English Change Encoding item; sort and suddenly for MakeIndex and MetaPost under Related Tools); the word must be in the fixture.
     'word-pushed-out': lambda terms: terms - {'advanced'},
-    # A new word comes in.
-    'word-added': lambda terms: terms | {'else'},
+    # A new word comes in; a word no release note uses, since common words such as else are already in the index.
+    'word-added': lambda terms: terms | {'xyzzy'},
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
