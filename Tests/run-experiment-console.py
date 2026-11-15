@@ -12,7 +12,7 @@ from source_tree import include_args
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--mutation", choices=["no-window-load", "no-yen-filter", "no-appearance-hook", "stale-child-appearance", "no-console-alpha",
                                            "no-floating", "no-error-front", "no-prompt", "front-always", "prompt-no-wait", "echo-scanned",
-                                           "no-red-echo", "red-output-not-kept", "red-kept-next-run", "red-always"])
+                                           "no-red-echo", "red-output-not-kept", "red-kept-next-run", "red-always", "red-stop-message"])
 parser.add_argument("--artifacts", type=Path, help="Save headless light/dark console previews")
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
@@ -59,8 +59,11 @@ elif args.mutation == "red-output-not-kept":
     assert color in controller
     controller = controller.replace(color, "NSColor *color = self.redOutput ? NSColor.redColor : (self.outputText.textColor ?: NSColor.textColor); self.redOutput = NO;", 1)
 elif args.mutation == "red-kept-next-run":
-    assert "    self.redOutput = NO;\n" in controller
-    controller = controller.replace("    self.redOutput = NO;\n", "", 1)
+    assert "    self.carry = nil;\n    self.redOutput = NO;\n" in controller
+    controller = controller.replace("    self.carry = nil;\n    self.redOutput = NO;\n", "    self.carry = nil;\n", 1)
+elif args.mutation == "red-stop-message":
+    assert "            self.redOutput = NO;\n            [self appendText:" in controller
+    controller = controller.replace("            self.redOutput = NO;\n            [self appendText:", "            [self appendText:", 1)
 elif args.mutation == "red-always":
     assert "if ([SUD boolForKey:RedConsoleAfterErrorKey])" in controller
     controller = controller.replace("if ([SUD boolForKey:RedConsoleAfterErrorKey])", "if (YES)", 1)
@@ -209,6 +212,7 @@ int main(void) { @autoreleasepool {
             NSData *png = [bitmap representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
             check([png writeToFile:[artifacts stringByAppendingPathComponent:[mode stringByAppendingString:@".png"]] atomically:YES], @"save console preview");
         }
+        console.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
     }
     NSURL *dir = directory();
     behind = YES;
@@ -238,6 +242,7 @@ int main(void) { @autoreleasepool {
         return [console.outputText.textStorage attribute:NSForegroundColorAttributeName atIndex:range.location effectiveRange:NULL];
     };
     // NSTextView's textColor answers the color of the first character, so compare with the theme.
+    console.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
     check(console.window.effectiveAppearance.name == NSAppearanceNameAqua, @"red: light console");
     NSColor *themeText = liteColors[@"ConsoleText"];
     NSString *answer = @"printf '! Undefined control sequence.\\n? '; read line; printf 'after the answer\\n'";
@@ -256,6 +261,16 @@ int main(void) { @autoreleasepool {
             [console startExecutable:@"/bin/sh" arguments:@[@"-c", @"printf 'next run\\n'"] environment:@{@"PATH":@"/usr/bin:/bin"} directory:dir encoding:NSUTF8StringEncoding title:@"Red" completion:^(NSURL *pdf) { completed = YES; }];
             check(waitFor(^BOOL{ return completed; }), @"red: next job ends");
             check([colorAt(@"next run") isEqual:themeText], @"red: the next run starts in the theme color");
+            // Stopped after an answer: TeX's last output stays red, the stop message has the text color,
+            // as "Process aborted" in the console of a document.
+            dir = directory();
+            [console startExecutable:@"/bin/sh" arguments:@[@"-c", @"printf '? '; read line; printf 'still running\\n'; sleep 10"] environment:@{@"PATH":@"/usr/bin:/bin"} directory:dir encoding:NSUTF8StringEncoding title:@"Red" completion:nil];
+            check(waitFor(^BOOL{ return [console.outputText.string hasSuffix:@"? "]; }), @"red stop: prompt");
+            [console sendLine:@"answer"];
+            check(waitFor(^BOOL{ return [console.outputText.string containsString:@"still running"]; }), @"red stop: output after the answer");
+            [console abort:console];
+            NSString *stopped = NSLocalizedString(@"Experiment stopped.\n", @"Experiment stopped message");
+            check([colorAt(@"still running") isEqual:NSColor.redColor] && [colorAt(stopped) isEqual:themeText], @"red stop: the stop message has the text color");
         }
     }
     redAfterError = NO;

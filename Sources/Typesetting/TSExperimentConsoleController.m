@@ -367,7 +367,11 @@ static BOOL TSExperimentIsPrompt(NSString *line)
     self.job = nil;
     if (self.isWindowLoaded) {
         [self appendData:nil atEnd:YES];
-        if (active && sender) [self appendText:NSLocalizedString(@"Experiment stopped.\n", @"Experiment stopped message")];
+        if (active && sender) {
+            // As in the console of a document, the message is not TeX's output and keeps the text color.
+            self.redOutput = NO;
+            [self appendText:NSLocalizedString(@"Experiment stopped.\n", @"Experiment stopped message")];
+        }
         self.commandField.enabled = NO;
         self.stopButton.enabled = NO;
     }
