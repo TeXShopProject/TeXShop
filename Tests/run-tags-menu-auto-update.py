@@ -19,7 +19,8 @@ strings in the 12 languages and its command. A toolbar saved with Update shows t
 items, and nothing is written to the console.
 
 The production code is compiled from TSDocument.m, TSAppDelegate.m and
-TSToolbarController.m onto small stand-ins. Windows are never shown and no menu is opened:
+TSToolbarController.m onto small stand-ins, with TSOlderPanelLayout.m, which fits the
+Tags and Labels pull-down buttons to their titles. Windows are never shown and no menu is opened:
 the test checks which menu AppKit would open and calls its delegate as AppKit does before
 opening it. Preferences stay in memory.
 """
@@ -135,6 +136,7 @@ program = r'''
 #import "TestAppKitIsolation.h"
 #import <Cocoa/Cocoa.h>
 #import <PDFKit/PDFKit.h>
+#import "TSOlderPanelLayout.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
 #define SUD [NSUserDefaults standardUserDefaults]
@@ -552,8 +554,10 @@ with tempfile.TemporaryDirectory(prefix='TeXShop-tags-menu-') as tmp:
     res = app/'Contents/Resources/en.lproj'; res.mkdir(parents=True)
     shutil.copy(root/'Resources/Interfaces/en.lproj/ToolbarItems.strings', res)
     source = tmp/'Test.m'; source.write_text(program)
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-fmodules', '-w', '-I' + str(root/'Tests'), '-framework', 'Cocoa', '-framework', 'PDFKit',
-                    str(source), '-o', str(mac/'TagsMenuTest')], check=True)
+    # The toolbar items fit their pull-down buttons with the real TSFitToolbarPullDown.
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-fmodules', '-w', '-I' + str(root/'Tests'), *include_args(root), '-framework', 'Cocoa', '-framework', 'PDFKit',
+                    str(source), str(source_file(root, 'TSOlderPanelLayout.m')), str(source_file(root, 'TSDialogButtonLayout.m')),
+                    '-o', str(mac/'TagsMenuTest')], check=True)
     nibs = sorted((root/'Resources/Interfaces').glob('*.lproj/TSDocument.nib/keyedobjects*.nib'))
     check(len(nibs) == 12, 'Compiled TSDocument.nib in 12 languages')
     home = tmp/'Home'; (home/'Library/Preferences').mkdir(parents=True)
