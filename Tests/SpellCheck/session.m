@@ -300,22 +300,18 @@ static void TestSuggestionSync(void) {
 }
 // The panel's Change replaces the selection of the view it is sent to. Refuse it
 // unless that view still shows the word the review found.
-static NSTextField *Status(void) {
-    for (NSView *view in SessionChecker.sharedSpellChecker.accessoryView.subviews)
-        if ([view isKindOfClass:NSTextField.class] && view != Replacement()) return (NSTextField *)view;
-    abort();
-}
+static NSString *Status(void) { return [TSSpellSupport changeAllStatus]; }
 static BOOL Refused(NSTextView *v) { return [TSSpellSupport refuseStaleChangeInTextView:v]; }
 static void TestChangeGuard(NSTextView *a, NSTextView *b) {
     [TSSpellSupport preferencesDidChange];
     a.string=@"zzqqa zzqqa"; b.string=@"zzqqb zzqqb";
     NSCAssert(!Refused(a), @"without a review Change works as usual");
     Review(a);
-    NSCAssert(!Refused(a) && Status().stringValue.length==0, @"Change works on the word just found");
+    NSCAssert(!Refused(a) && Status().length==0, @"Change works on the word just found");
     NSCAssert(![TSSpellSupport skipsSearchAfterRefusedChange], @"the search after an allowed Change goes ahead");
     a.selectedRange=NSMakeRange(6,5);
     NSCAssert(Refused(a), @"Change refused after selecting other text");
-    NSCAssert(Status().stringValue.length>0, @"the refusal says what to do");
+    NSCAssert(Status().length>0, @"the refusal says what to do");
     NSCAssert([a.string isEqual:@"zzqqa zzqqa"], @"refusal leaves the text alone");
     // The panel's Change button searches on at once; that search is skipped,
     // only once, and only until the action is over.
@@ -341,7 +337,7 @@ static void TestChangeGuard(NSTextView *a, NSTextView *b) {
     NSCAssert([b.string isEqual:@"zzqqb zzqqb"], @"other document left alone");
     Review(a); a.selectedRange=NSMakeRange(6,5); [TSSpellSupport endReview];
     NSCAssert(!Refused(a), @"the system's own search ends the review");
-    NSCAssert(Replacement().stringValue.length==0 && Status().stringValue.length==0, @"ending the review clears the replacement");
+    NSCAssert(Replacement().stringValue.length==0 && Status().length==0, @"ending the review clears the replacement");
     Replacement().stringValue=@"fixed"; [TSSpellSupport changeAll:nil];
     NSCAssert([a.string isEqual:@"zzqqa zzqqa"], @"Change All does nothing after the review ended");
     Review(a); a.selectedRange=NSMakeRange(6,5); [TSSpellSupport preferencesDidChange];

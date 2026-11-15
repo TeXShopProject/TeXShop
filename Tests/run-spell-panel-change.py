@@ -75,11 +75,9 @@ static NSTextField *WordField(void) {
     for (NSView *child in Panel().contentView.subviews) if ([child isKindOfClass:NSTextField.class]) field = (id)child;
     return field;
 }
-static NSString *Status(void) {
-    for (NSView *child in NSSpellChecker.sharedSpellChecker.accessoryView.subviews)
-        if ([child isKindOfClass:NSTextField.class] && ![(NSTextField *)child isEditable]) return [(NSTextField *)child stringValue];
-    return nil;
-}
+// What Change All reports, shown in a popover from its button when the panel is
+// on screen; the panel stays off screen here.
+static NSString *Status(void) { return [TSSpellSupport changeAllStatus]; }
 static void PressChange(void) {
     WordField().stringValue = @"fixed";
     [(NSButton *)Control(Panel().contentView, NSButton.class, @"Change") performClick:nil];
