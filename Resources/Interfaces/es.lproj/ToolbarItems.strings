@@ -33,9 +33,9 @@ tiLabelBibTeX				= "BibTeX";
 tiPaletteLabelBibTeX			= "BibTeX";
 tiToolTipBibTeX				= "Ejecutar BibTeX";
 
-tiLabelMakeIndex			= "Make Index";
-tiPaletteLabelMakeIndex			= "Make Index";
-tiToolTipMakeIndex			= "Ejecutar Make Index";
+tiLabelMakeIndex			= "MakeIndex";
+tiPaletteLabelMakeIndex			= "MakeIndex";
+tiToolTipMakeIndex			= "Ejecutar MakeIndex";
 
 tiLabelMetaPost				= "MetaPost";
 tiPaletteLabelMetaPost			= "MetaPost";
@@ -115,7 +115,7 @@ tiToolTipMouseMode			= "Cambiar modo de ratón";
 
 tiLabelSyncMarks			= "Marcas sinc.";
 tiPaletteLabelSyncMarks			= "Marcas de sincronización";
-tiToolTipSyncMarks			= "Mostrar Sync Marks";
+tiToolTipSyncMarks			= "Mostrar marcas de sincronización";
 
 tiLabelSearchKIT				= "Buscar";
 tiPaletteLabelSearchKIT         = "Buscar";
@@ -168,7 +168,7 @@ tiToolTipMouseModeSelectPDF = "Seleccionar PDF: arrastrar para seleccionar un á
 
 tiLabelSyncMarksKIT				= "Marcas sinc.";
 tiPaletteLabelSyncMarksKIT		= "Marcas de sincronización";
-tiToolTipSyncMarksKIT			= "Mostrar Sync Marks";
+tiToolTipSyncMarksKIT			= "Mostrar marcas de sincronización";
 
 tiLabelBackForthKIT				= "Atrás/Adelante";
 tiPaletteLabelBackForthKIT		= "Atrás/Adelante";
@@ -209,7 +209,7 @@ tiPaletteLabelMagnificationSplit	= "Escala";
 tiToolTipMagnificationSplit		= "Establecer escala de página";
 
 tiLabelColorIndexSplit			= "Colorear índice";
-tiPaletteLabelColorIndexSplit	= "Color Index";
+tiPaletteLabelColorIndexSplit	= "Colorear índice";
 tiToolTipColorIndexSplit		= "Colorear comandos del índice";
 
 tiLabelAutoCompleteSplit		= "Autocompleción";

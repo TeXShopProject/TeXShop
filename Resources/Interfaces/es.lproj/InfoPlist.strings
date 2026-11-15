@@ -29,7 +29,7 @@
   "epsi" = "Documento EPSI";
   "log" = "Archivo Log de TeX";
   "aux" = "Archivo Aux de TeX";
-  "PostscriptFile" = "Postscript File";
+  "PostscriptFile" = "Archivo PostScript";
   "HieroTeX File" = "Archivo HieroTeX";
   "Sketch File" = "Archivo Sketch";
   "texshop" = "texshop";
@@ -55,7 +55,7 @@
   "lbx" = "Archivo lbc";
   "bbx" = "Archivo bbx";
   "skt" = "Archivo skt";
-  "py" = "py";
+  "py" = "Archivo Python";
   NSStringPboardType = "Documento de texto normal";
   "md" = "Archivo md";
   "Plain Text" = "Texto sin formato";

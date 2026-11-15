@@ -12,8 +12,8 @@ tiLabelTypeset				= "Compila";
 tiPaletteLabelTypeset			= "Compila";
 tiToolTipTypeset			= "Esegui il programma di compilazione";
 
-tiLabelSharing				= "Sharing";
-tiPaletteLabelSharing		= "Sharing";
+tiLabelSharing				= "Condividi";
+tiPaletteLabelSharing		= "Condividi";
 tiToolTipSharing			= "Condividi testo e immagini";
 
 
@@ -125,8 +125,8 @@ tiLabelTypesetKIT				= "Compila";
 tiPaletteLabelTypesetKIT		= "Compila";
 tiToolTipTypesetKIT				= "Esegui il programma di compilazione";
 
-tiLabelSharingKIT				= "Sharing";
-tiPaletteLabelSharingKIT		= "Sharing";
+tiLabelSharingKIT				= "Condividi";
+tiPaletteLabelSharingKIT		= "Condividi";
 tiToolTipSharingKIT				= "Condividi testo e immagini";
 
 

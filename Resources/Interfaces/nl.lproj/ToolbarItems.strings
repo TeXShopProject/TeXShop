@@ -12,8 +12,8 @@ tiLabelTypeset				= "Zet";
 tiPaletteLabelTypeset			= "Zet";
 tiToolTipTypeset			= "Voer zetprogramma uit";
 
-tiLabelSharing				= "Sharing";
-tiPaletteLabelSharing		= "Sharing";
+tiLabelSharing				= "Deel";
+tiPaletteLabelSharing		= "Deel";
 tiToolTipSharing			= "Deel tekst en afbeeldingen";
 
 
@@ -115,11 +115,11 @@ tiToolTipMouseMode			= "Verander de muismodus";
 
 tiLabelSyncMarks			= "Syncpunten";
 tiPaletteLabelSyncMarks			= "Synchronisatiepunten";
-tiToolTipSyncMarks			= "Toon Sync Marks";
+tiToolTipSyncMarks			= "Toon synchronisatiepunten";
 
 tiLabelColorIndex				= "Kleurindex";
 tiPaletteLabelColorIndex		= "Kleurindex";
-tiToolTipColorIndex				= "Commando's Color Index";
+tiToolTipColorIndex				= "Kleur de indexcommando's";
 
 tiLabelTypesetKIT				= "Zet";
 tiPaletteLabelTypesetKIT		= "Zet";
@@ -129,8 +129,8 @@ tiLabelSearchKIT				= "Zoek";
 tiPaletteLabelSearchKIT         = "Zoek";
 tiToolTipSearchKIT				= "Zoek";
 
-tiLabelSharingKIT				= "Sharing";
-tiPaletteLabelSharingKIT		= "Sharing";
+tiLabelSharingKIT				= "Deel";
+tiPaletteLabelSharingKIT		= "Deel";
 tiToolTipSharingKIT				= "Deel tekst en afbeeldingen";
 
 
@@ -168,7 +168,7 @@ tiToolTipMouseModeSelectPDF = "PDF selecteren: sleep om een gebied te selecteren
 
 tiLabelSyncMarksKIT				= "Syncpunten";
 tiPaletteLabelSyncMarksKIT		= "Synchronisatiepunten";
-tiToolTipSyncMarksKIT			= "Toon Sync Marks";
+tiToolTipSyncMarksKIT			= "Toon synchronisatiepunten";
 
 tiLabelBackForthKIT				= "Terug/Vooruit";
 tiPaletteLabelBackForthKIT		= "Terug/Vooruit";
@@ -210,7 +210,7 @@ tiToolTipMagnificationSplit     = "Stel vergroting in";
 
 tiLabelColorIndexSplit			= "Kleurindex";
 tiPaletteLabelColorIndexSplit     = "Kleurindex";
-tiToolTipColorIndexSplit          = "Commando's Color Index";
+tiToolTipColorIndexSplit          = "Kleur de indexcommando's";
 
 tiLabelAutoCompleteSplit		= "Automatisch aanvullen";
 tiPaletteLabelAutoCompleteSplit   = "Automatisch aanvullen";

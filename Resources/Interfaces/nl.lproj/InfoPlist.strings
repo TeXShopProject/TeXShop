@@ -25,11 +25,11 @@
   NSTIFFPboardType = "TIFF-document";
   "PNG image" = "PNG-afbeelding";
   "jpeg" = "JPEG-afbeelding";
-  NSEPSPboardType = "EPS File";
+  NSEPSPboardType = "EPS-afbeelding";
   "epsi" = "epsi";
   "log" = "log";
   "aux" = "aux";
-  "PostscriptFile" = "Postscript File";
+  "PostscriptFile" = "PostScript-bestand";
   "HieroTeX File" = "HieroTeX-bestand";
   "Sketch File" = "Sketch-bestand";
   "texshop" = "texshop";
@@ -55,8 +55,8 @@
   "lbx" = "lbc";
   "bbx" = "bbx";
   "skt" = "skt";
-  "py" = "py";
-  NSStringPboardType = "UTF8 Plain Text";
+  "py" = "Python-bestand";
+  NSStringPboardType = "Tekstdocument";
   "md" = "md";
   "Plain Text" = "Platte tekst";
   "Any File" = "Willekeurig bestand";
