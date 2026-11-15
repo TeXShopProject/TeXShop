@@ -4,7 +4,7 @@
 + (instancetype)standardList
 {
     NSMutableArray<TSSettingsCategory *> *categories = [NSMutableArray array];
-    for (TSSettingsCategoryID identifier in @[TSSettingsCategoryGeneral, TSSettingsCategoryDocuments, TSSettingsCategoryEditor, TSSettingsCategoryKeyboard, TSSettingsCategorySpelling, TSSettingsCategoryAppearance, TSSettingsCategoryPreview, TSSettingsCategoryTypesetting, TSSettingsCategoryConsole, TSSettingsCategoryUpdates]) {
+    for (TSSettingsCategoryID identifier in @[TSSettingsCategoryGeneral, TSSettingsCategoryDocuments, TSSettingsCategoryEditor, TSSettingsCategoryKeyboard, TSSettingsCategorySpelling, TSSettingsCategoryAppearance, TSSettingsCategoryTypesetting, TSSettingsCategoryConsole, TSSettingsCategoryPreview, TSSettingsCategoryUpdates]) {
         [categories addObject:[TSSettingsCategory standardCategoryWithIdentifier:identifier]];
     }
     return [[self alloc] initWithCategories:categories];

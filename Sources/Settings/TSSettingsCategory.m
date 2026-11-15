@@ -26,9 +26,9 @@ TSSettingsCategoryID const TSSettingsCategoryUpdates = @"updates";
         @"keyboard": @[@"keyboard", @0x5F5E5A, @NO],
         @"spelling": @[@"text.badge.checkmark", @0x639922, @NO],
         @"appearance": @[@"paintpalette", @0x7F77DD, @NO],
-        @"preview": @[@"doc.text.magnifyingglass", @0xE24B4A, @YES],
-        @"typesetting": @[@"hammer", @0x534AB7, @NO],
+        @"typesetting": @[@"hammer", @0x534AB7, @YES],
         @"console": @[@"terminal", @0x2C2C2A, @NO],
+        @"preview": @[@"doc.text.magnifyingglass", @0xE24B4A, @NO],
         @"updates": @[@"arrow.triangle.2.circlepath", @0x1D9E75, @YES]
     };
     NSArray *spec = design[identifier];
