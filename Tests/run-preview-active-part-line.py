@@ -15,7 +15,7 @@ from production_fragments import method as production_method, verify_embedded
 from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['no-key-check', 'no-split-check', 'line-below', 'no-resign-observer', 'fixed-size', 'drawn-in-pdf'])
+parser.add_argument('--mutation', choices=['line-under-toolbar', 'no-key-check', 'no-split-check', 'line-below', 'no-resign-observer', 'fixed-size', 'drawn-in-pdf'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root/'Sources/Windows/TSPreviewWindow.m').read_text()
@@ -53,6 +53,10 @@ elif args.mutation == 'line-below':
     old = '    } else if (view.subviews.lastObject != line)\n        [view addSubview: line positioned: NSWindowAbove relativeTo: nil];'
     assert methods.count(old) == 1
     methods = methods.replace(old, '    }')
+elif args.mutation == 'line-under-toolbar':
+    old = '[line.topAnchor constraintEqualToAnchor: view.safeAreaLayoutGuide.topAnchor]'
+    assert methods.count(old) == 1
+    methods = methods.replace(old, '[line.topAnchor constraintEqualToAnchor: view.topAnchor]')
 elif args.mutation == 'no-resign-observer':
     old = '@[NSWindowDidBecomeKeyNotification, NSWindowDidResignKeyNotification]'
     assert line_class.count(old) == 1
@@ -99,6 +103,17 @@ static NSBitmapImageRep *Drawn(NSView *view) {
     [view cacheDisplayInRect:view.bounds toBitmapImageRep:rep];
     return rep;
 }
+
+@interface GlassToolbar : NSObject <NSToolbarDelegate> @end
+@implementation GlassToolbar
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar { return @[@"item"]; }
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar { return @[@"item"]; }
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)identifier willBeInsertedIntoToolbar:(BOOL)flag {
+    NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+    item.label = @"Item"; item.image = [NSImage imageWithSystemSymbolName:@"doc" accessibilityDescription:nil];
+    return item;
+}
+@end
 
 int main(int argc, char **argv) { @autoreleasepool {
     TSInstallAppKitIsolation(); [NSApplication sharedApplication];
@@ -197,6 +212,32 @@ int main(int argc, char **argv) { @autoreleasepool {
     single.releasedWhenClosed = NO;
     [single.contentView addSubview:split];
     Check(!Shown(bottom), @"In a window that is not key, the moved parts show no line");
+    if (@available(macOS 26.0, *)) {
+        // A window whose content runs under the toolbar: the line starts below the toolbar.
+        TSPreviewWindow *g = [[TSPreviewWindow alloc] initWithContentRect:NSMakeRect(0, 0, 600, 800)
+            styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskResizable | NSWindowStyleMaskFullSizeContentView backing:NSBackingStoreBuffered defer:NO];
+        g.releasedWhenClosed = NO;
+        GlassToolbar *delegate = [GlassToolbar new];
+        NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"glass"]; toolbar.delegate = delegate;
+        g.toolbarStyle = NSWindowToolbarStyleExpanded; g.toolbar = toolbar;
+        NSSplitView *gs = [[NSSplitView alloc] initWithFrame:g.contentView.bounds];
+        gs.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+        [g.contentView addSubview:gs];
+        PDFView *gt = [[PDFView alloc] initWithFrame:NSMakeRect(0, 0, 600, 400)], *gb = [[PDFView alloc] initWithFrame:NSMakeRect(0, 0, 600, 400)];
+        for (PDFView *v in @[gt, gb]) { v.autoresizesSubviews = NO; [gs addSubview:v]; }
+        [gs adjustSubviews]; [g layoutIfNeeded];
+        g.myPDFKitView = gt; g.myPDFKitView2 = gb; g.testKey = YES; g.activeView = gt; g.windowIsSplit = YES;
+        [g layoutIfNeeded];
+        CGFloat band = NSHeight(g.contentView.frame) - NSMaxY(g.contentLayoutRect);
+        NSRect line = [Line(gt) convertRect:Line(gt).bounds toView:nil];
+        Check(band > 20 && Shown(gt), [NSString stringWithFormat:@"Full-size window: the top part has the line (band %.1f)", band]);
+        Check(fabs(NSMaxY(line) - NSMaxY(g.contentLayoutRect)) < 0.5 && fabs(NSMinY(line) - NSMinY([gt convertRect:gt.bounds toView:nil])) < 0.5,
+              [NSString stringWithFormat:@"Full-size window: the line starts below the toolbar (%@, toolbar from %.1f)", NSStringFromRect(line), NSMaxY(g.contentLayoutRect)]);
+        g.activeView = gb; [g layoutIfNeeded];
+        NSRect lower = [Line(gb) convertRect:Line(gb).bounds toView:nil];
+        Check(NSEqualRects(lower, [gb convertRect:gb.bounds toView:nil]), @"Full-size window: the bottom part's line covers the part");
+        [g close];
+    }
     [w close]; [single close]; [other close];
     printf("PASS: %lu checks\n", (unsigned long)checks);
     return 0;
