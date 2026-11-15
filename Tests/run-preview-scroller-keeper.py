@@ -139,6 +139,29 @@ static void ScrollIntoPage(PDFView *view, NSUInteger index, CGFloat into) {
     [Scroll(view) reflectScrolledClipView:clip];
     [view.window layoutIfNeeded]; RunLoop();
 }
+// A window whose content runs under its toolbar, as the Preview window on macOS 26 and later.
+@interface GlassToolbar : NSObject <NSToolbarDelegate> @end
+@implementation GlassToolbar
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar { return @[@"item"]; }
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar { return @[@"item"]; }
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)identifier willBeInsertedIntoToolbar:(BOOL)flag {
+    NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+    item.label = @"Item"; item.image = [NSImage imageWithSystemSymbolName:@"doc" accessibilityDescription:nil];
+    return item;
+}
+@end
+static GlassToolbar *glassToolbar;
+static NSWindow *MakeGlassWindow(CGFloat width, CGFloat height) {
+    NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, width, height)
+        styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskResizable | NSWindowStyleMaskFullSizeContentView
+          backing:NSBackingStoreBuffered defer:NO];
+    window.releasedWhenClosed = NO;
+    window.toolbarStyle = NSWindowToolbarStyleExpanded;
+    if (!glassToolbar) glassToolbar = [GlassToolbar new];
+    NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"glass"];
+    toolbar.delegate = glassToolbar; window.toolbar = toolbar;
+    return window;
+}
 static NSWindow *MakeWindow(CGFloat width, CGFloat height) {
     NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, width, height)
         styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskResizable backing:NSBackingStoreBuffered defer:NO];
@@ -298,6 +321,32 @@ int main(int argc, char **argv) { @autoreleasepool {
             Control(bare >= 5, [NSString stringWithFormat:@"without the fix the text jumps by half the scroller (%.2fpt)", bare]);
         else
             Check(fabs(bare - kept) <= 0.01, @"overlay scrollers: the magnification is left to PDFKit");
+    }
+
+    // A window whose content runs under the toolbar (macOS 26 and later): the band under the
+    // toolbar is a lasting top inset. The text just below it stays when the scroller comes or
+    // goes, with or without the keeper, which leaves such a view to PDFKit.
+    if (@available(macOS 26.0, *)) {
+        CGFloat moved[2] = {0, 0}; BOOL toggled = NO, banded = YES;
+        for (int keep = 0; keep < 2; keep++) {
+            NSWindow *window = MakeGlassWindow(900, 700);
+            PDFView *view = MakeView(window.contentView.bounds, document, NO, keep);
+            [window.contentView addSubview:view]; [window layoutIfNeeded]; RunLoop();
+            CGFloat band = Scroll(view).contentInsets.top;
+            banded = banded && band > 20 && fabs(Scroll(view).safeAreaInsets.top - band) < 0.5 && Scroll(view).contentInsets.bottom == 0;
+            ScrollIntoPage(view, 2, 60);
+            Mark mark = MarkAt(view, band); BOOL appeared = NO, gone = NO;
+            for (NSNumber *width in @[@500, @900, @450, @760, @430, @900]) {
+                SetWidth(window, width.doubleValue);
+                if (HasScroller(view)) appeared = YES; else gone = YES;
+                moved[keep] = fmax(moved[keep], fabs(Below(view, mark) - band));
+            }
+            toggled = appeared && gone;
+        }
+        Check(banded, @"in a full-size window the Preview view's top inset is the band under the toolbar");
+        Check(overlay || toggled, @"full-size window: the horizontal scroller comes and goes with the width");
+        Check(moved[1] <= 0.5, [NSString stringWithFormat:@"full-size window: the text below the toolbar stays when the scroller comes or goes (%.2fpt)", moved[1]]);
+        Check(moved[0] <= 0.5, [NSString stringWithFormat:@"full-size window: without the keeper the text stays too (%.2fpt)", moved[0]]);
     }
 
     // A view with content insets is left to PDFKit: the text noted while the scroller comes or

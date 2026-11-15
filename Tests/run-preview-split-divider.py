@@ -150,6 +150,26 @@ static Preview MakePreview(PDFDocument *document, BOOL vertical, BOOL keeper, BO
     ScrollParts(p.upper, p.lower);
     return p;
 }
+// The window's content runs under its toolbar, as the Preview window's on macOS 26 and later.
+@interface GlassToolbar : NSObject <NSToolbarDelegate> @end
+@implementation GlassToolbar
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar { return @[@"item"]; }
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar { return @[@"item"]; }
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)identifier willBeInsertedIntoToolbar:(BOOL)flag {
+    NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+    item.label = @"Item"; item.image = [NSImage imageWithSystemSymbolName:@"doc" accessibilityDescription:nil];
+    return item;
+}
+@end
+static GlassToolbar *glassToolbar;
+static void RunUnderToolbar(NSWindow *window) {
+    if (!glassToolbar) glassToolbar = [GlassToolbar new];
+    window.toolbarStyle = NSWindowToolbarStyleExpanded;
+    NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"glass"];
+    toolbar.delegate = glassToolbar; window.toolbar = toolbar;
+    window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+    [window layoutIfNeeded];
+}
 // One drag of the divider through the positions, in a single mouse-down.
 static void Drag(NSSplitView *split, NSArray<NSNumber *> *positions) {
     NSWindow *window = split.window;
@@ -312,6 +332,33 @@ int main(void) { @autoreleasepool {
                Off(p.upper, upperMark), Off(p.lower, lowerMark));
         Check(Kept(p), [@"a content inset the top part has only during the resize does not move its text" stringByAppendingString:how]);
         [center removeObserver:watcher];
+    }
+
+    // A window whose content runs under the toolbar (macOS 26 and later): the top part has a
+    // lasting top inset, the band under the toolbar. Dragging the divider and changing the
+    // height of the window keep the text at the top of both parts.
+    if (@available(macOS 26.0, *)) for (NSNumber *autoScales in @[@NO, @YES]) {
+        NSString *how = autoScales.boolValue ? @" (full-size window, fit to width)" : @" (full-size window, fixed scale)";
+        Preview p = MakePreview(document, NO, YES, autoScales.boolValue);
+        RunUnderToolbar(p.window); RunLoop();
+        CGFloat band = p.upper.documentView.enclosingScrollView.contentInsets.top;
+        Check(band > 20 && p.lower.documentView.enclosingScrollView.contentInsets.top == 0,
+              [@"only the top part has the band under the toolbar as its top inset" stringByAppendingString:how]);
+        ScrollParts(p.upper, p.lower);
+        Watch(p);
+        NSMutableArray<NSNumber *> *path = [NSMutableArray array];
+        for (CGFloat y = 500; y <= 700; y += 25) [path addObject:@(y)];
+        for (CGFloat y = 700; y >= 300; y -= 25) [path addObject:@(y)];
+        Drag(p.split, path);
+        RunLoop();
+        Check(Kept(p) && worstAfter <= 0.5, [NSString stringWithFormat:@"dragging the divider keeps both tops%@ (%.2f pt)", how, worstAfter]);
+        ScrollParts(p.upper, p.lower);
+        Watch(p);
+        for (NSNumber *h in @[@900, @760, @1040, @980]) { SetWindowSize(p.window, 786, h.doubleValue); RunLoop(); }
+        printf("window height%s: the text at the tops is %.2f and %.2f pt away\n", how.UTF8String, Off(p.upper, upperMark), Off(p.lower, lowerMark));
+        Check(Kept(p), [@"changing the height of the window keeps both tops" stringByAppendingString:how]);
+        Check(fabs(p.upper.documentView.enclosingScrollView.contentInsets.top - band) < 0.5,
+              [@"the band under the toolbar stays the same through the resizes" stringByAppendingString:how]);
     }
 
     // An unsplit window, or one split side by side, is resized as before.
