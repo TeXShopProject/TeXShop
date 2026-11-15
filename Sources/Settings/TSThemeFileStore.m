@@ -46,6 +46,17 @@
     copy[@"Title"] = title;
     NSData *data = [NSPropertyListSerialization dataWithPropertyList:copy format:NSPropertyListXMLFormat_v1_0 options:0 error:error];
     if (data == nil) return NO;
-    return [data writeToURL:url options:NSDataWritingAtomic error:error];
+    // Coordinated with the update of the bundled themes at the launch of another TeXShop.
+    __block BOOL written = NO;
+    __block NSError *writeError = nil;
+    NSError *coordinationError = nil;
+    NSFileCoordinator *coordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+    [coordinator coordinateWritingItemAtURL:url options:NSFileCoordinatorWritingForReplacing error:&coordinationError byAccessor:^(NSURL *fileURL) {
+        NSError *accessError = nil;
+        written = [data writeToURL:fileURL options:NSDataWritingAtomic error:&accessError];
+        writeError = accessError;
+    }];
+    if (!written && error != NULL) *error = writeError ?: coordinationError;
+    return written;
 }
 @end

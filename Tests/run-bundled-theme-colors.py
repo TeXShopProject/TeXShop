@@ -11,7 +11,8 @@
    copies of the themes that TeXShop 5.58 put in ~/Library/TeXShop/Themes: every color that the bundled themes changed
    since then is updated, and nothing else. A color the user chose, a renamed copy, a theme of the user's own, a key
    the theme lacks and a theme reached through a symbolic link stay; the opacity stays; a second run changes nothing;
-   a theme that cannot be written leaves the update to be done again.
+   a theme that cannot be read or written leaves the update to be done again; a theme that another TeXShop saves
+   right after it is read keeps what was saved (its old colors are still updated).
 3. The table of changes is complete: it holds every color of a bundled theme that differs from 5.58, from its 5.58
    value to its current value. The update runs at launch before the themes are read.
 
@@ -31,11 +32,13 @@ DELEGATE = 'Sources/App/TSAppDelegate.m'
 BASE = 'db040b9b'  # the import of TeXShop 5.58
 
 MUTATIONS = {
-    'a color the user chose is replaced': (SUPPORT, '            if (!unchanged)\n                continue;\n', ''),
-    'the opacity is replaced': (SUPPORT, '            for (NSUInteger c = 0; c < 3; c++)\n                color[c] = @(change->to[c]);',
-                                '            [color setArray:@[@(change->to[0]), @(change->to[1]), @(change->to[2]), @1]];'),
+    'a color the user chose is replaced': (SUPPORT, '        if (!unchanged)\n            continue;\n', ''),
+    'the opacity is replaced': (SUPPORT, '        for (NSUInteger c = 0; c < 3; c++)\n            color[c] = @(change->to[c]);',
+                                '        [color setArray:@[@(change->to[0]), @(change->to[1]), @(change->to[2]), @1]];'),
     'a failed write still counts as done': (SUPPORT, '    return written ? last : update;', '    return last;'),
     'an update is done again': (SUPPORT, '    NSInteger last = update;\n', '    NSInteger last = update;\n    update = 0;\n'),
+    'the file is replaced without checking what is there': (SUPPORT, '            if (![[NSData dataWithContentsOfURL:fileURL] isEqualToData:data])\n                continue;\n', ''),
+    'a theme that cannot be read counts as done': (SUPPORT, '            if (![colors isKindOfClass:NSMutableDictionary.class])\n                return;', '            if (![colors isKindOfClass:NSMutableDictionary.class]) {\n                done = YES;\n                return;\n            }'),
     'symbolic links are followed': (SUPPORT, '        NSURL *url = [store URLForTitle:theme];',
                                     '        NSURL *url = [store.directory URLByAppendingPathComponent:[theme stringByAppendingPathExtension:@"plist"]];'),
     'the LiteTheme content color is left out': (SUPPORT, '    {1, @"LiteTheme", @"EditorHighlightContent",', '    {0, @"LiteTheme", @"EditorHighlightContent",'),
@@ -46,9 +49,24 @@ MUTATIONS = {
 
 PROBE = r'''
 #import <Cocoa/Cocoa.h>
+#import <objc/runtime.h>
 #import "TSColorSupport.h"
+// TS_CONCURRENT_SAVE: right after the first read of LiteTheme.plist, another TeXShop saves that file with these bytes.
+static IMP originalRead;
+static BOOL saved;
+static id readThenSave(id self, SEL _cmd, NSURL *url) {
+    id data = ((id (*)(id, SEL, NSURL *))originalRead)(self, _cmd, url);
+    const char *path = getenv("TS_CONCURRENT_SAVE");
+    if (path && !saved && [url.lastPathComponent isEqualToString:@"LiteTheme.plist"]) {
+        saved = YES;
+        [[NSData dataWithContentsOfFile:@(path)] writeToURL:url options:0 error:NULL];
+    }
+    return data;
+}
 int main(int argc, const char **argv) {
     @autoreleasepool {
+        Method m = class_getClassMethod(NSData.class, @selector(dataWithContentsOfURL:));
+        originalRead = method_setImplementation(m, (IMP)readThenSave);
         NSURL *directory = [NSURL fileURLWithPath:@(argv[1]) isDirectory:YES];
         printf("%ld\n", (long)[[TSColorSupport sharedInstance] updateBundledThemeColorsInDirectory:directory after:atol(argv[2])]);
     }
@@ -125,8 +143,9 @@ def build(text, tmp):
     return tmp / 'probe'
 
 
-def run(probe, folder, after):
-    out = subprocess.run([str(probe), str(folder), str(after)], capture_output=True, text=True, check=True)
+def run(probe, folder, after, concurrent=None):
+    env = dict(os.environ, **({'TS_CONCURRENT_SAVE': str(concurrent)} if concurrent else {}))
+    out = subprocess.run([str(probe), str(folder), str(after)], capture_output=True, text=True, check=True, env=env)
     return int(out.stdout.strip())
 
 
@@ -202,6 +221,32 @@ def update_problems(text):
             problems.append('a renamed copy is changed')
         if own.read_bytes() != plistlib.dumps(olds['DarkTheme']) or not (folder / 'DarkTheme.plist').is_symlink():
             problems.append('a theme reached through a symbolic link is changed')
+
+        # Another TeXShop saves LiteTheme right after it is read: what it saved stays, and the old colors in it are updated.
+        folder = fresh(tmp / 'concurrent')
+        theirs = dict(olds['LiteTheme'])
+        theirs['SyntaxIndex'] = [0.1, 0.2, 0.3, 1]
+        theirs['EditorBackground'] = [0.25, 0.35, 0.45, 1]
+        theirs['Title'] = 'Saved meanwhile'
+        (tmp / 'theirs.plist').write_bytes(plistlib.dumps(theirs))
+        if run(probe, folder, 0, concurrent=tmp / 'theirs.plist') != 1:
+            problems.append('the update with a save meanwhile is not reported as done')
+        now = plistlib.loads((folder / 'LiteTheme.plist').read_bytes())
+        if now['SyntaxIndex'] != [0.1, 0.2, 0.3, 1] or now['EditorBackground'] != [0.25, 0.35, 0.45, 1] or now['Title'] != 'Saved meanwhile':
+            problems.append('a theme saved meanwhile by another TeXShop is overwritten')
+        if not close(now['EditorHighlightContent'], changes[('LiteTheme', 'EditorHighlightContent')][1]):
+            problems.append('the old colors of a theme saved meanwhile are not updated')
+
+        # A theme that is there but cannot be read: the update is left to be done, and done once it can be read.
+        folder = fresh(tmp / 'unreadable')
+        os.chmod(folder / 'LiteTheme.plist', 0)
+        try:
+            if run(probe, folder, 0) != 0:
+                problems.append('an update with a theme that could not be read is reported as done')
+        finally:
+            os.chmod(folder / 'LiteTheme.plist', 0o644)
+        if run(probe, folder, 0) != 1 or not close(plistlib.loads((folder / 'LiteTheme.plist').read_bytes())['EditorHighlightContent'], changes[('LiteTheme', 'EditorHighlightContent')][1]):
+            problems.append('a theme that can be read again is not updated')
 
         # A folder that cannot be written: nothing is lost, and the update is left to be done.
         folder = fresh(tmp / 'locked')

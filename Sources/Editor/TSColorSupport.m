@@ -104,7 +104,63 @@ static const TSBundledThemeColorChange TSBundledThemeColorChanges[] = {
     {1, @"TransparentTheme", @"XMLValue", {0.6, 0.6, 0.2}, {0.478431, 0.478431, 0.121569}},
 };
 
-// Returns the last update done: every update after the given one, or the given one if a theme could not be written.
+// Gives the colors of the updates after the given one to a copy of a bundled theme, where it still has the old color.
+static BOOL TSApplyBundledThemeColorChanges(NSMutableDictionary *colors, NSString *theme, NSInteger update)
+{
+    const size_t count = sizeof(TSBundledThemeColorChanges) / sizeof(TSBundledThemeColorChanges[0]);
+    BOOL changed = NO;
+    for (size_t i = 0; i < count; i++) {
+        const TSBundledThemeColorChange *change = &TSBundledThemeColorChanges[i];
+        if (change->update <= update || ![change->theme isEqualToString:theme])
+            continue;
+        NSMutableArray *color = colors[change->key];
+        if (![color isKindOfClass:NSMutableArray.class] || color.count < 3)
+            continue;
+        BOOL unchanged = YES;
+        for (NSUInteger c = 0; c < 3; c++)
+            unchanged = unchanged && [color[c] isKindOfClass:NSNumber.class] && fabs([color[c] doubleValue] - change->from[c]) < 0.0005;
+        if (!unchanged)
+            continue;
+        // The opacity, if any, stays.
+        for (NSUInteger c = 0; c < 3; c++)
+            color[c] = @(change->to[c]);
+        changed = YES;
+    }
+    return changed;
+}
+
+// Updates one theme file; NO if it exists but could not be read or written. Another TeXShop may save the theme at the
+// same time: the file is coordinated with the theme saves of this version, and it is replaced only if it still holds
+// what was read; otherwise it is read again, so that a color saved meanwhile is kept.
+static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger update)
+{
+    __block BOOL done = NO;
+    NSError *coordinationError = nil;
+    NSFileCoordinator *coordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+    [coordinator coordinateWritingItemAtURL:url options:NSFileCoordinatorWritingForMerging error:&coordinationError byAccessor:^(NSURL *fileURL) {
+        for (NSUInteger attempt = 0; attempt < 5; attempt++) {
+            NSData *data = [NSData dataWithContentsOfURL:fileURL];
+            NSMutableDictionary *colors = data ? [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListMutableContainers format:NULL error:NULL] : nil;
+            if (![colors isKindOfClass:NSMutableDictionary.class])
+                return;
+            if (!TSApplyBundledThemeColorChanges(colors, theme, update)) {
+                done = YES;
+                return;
+            }
+            NSData *updated = [NSPropertyListSerialization dataWithPropertyList:colors format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL];
+            if (updated == nil)
+                return;
+            if (![[NSData dataWithContentsOfURL:fileURL] isEqualToData:data])
+                continue;
+            done = [updated writeToURL:fileURL options:NSDataWritingAtomic error:NULL];
+            return;
+        }
+    }];
+    return done;
+}
+
+// Returns the last update done: every update after the given one, or the given one if a theme that is there could not
+// be read or written, so that the update is tried again at the next launch.
 - (NSInteger)updateBundledThemeColorsInDirectory: (NSURL *)directory after: (NSInteger)update
 {
     const size_t count = sizeof(TSBundledThemeColorChanges) / sizeof(TSBundledThemeColorChanges[0]);
@@ -121,33 +177,11 @@ static const TSBundledThemeColorChange TSBundledThemeColorChanges[] = {
             [themes addObject:TSBundledThemeColorChanges[i].theme];
     BOOL written = YES;
     for (NSString *theme in themes) {
+        // A theme that is not there, or is reached through a symbolic link, is left alone.
         NSURL *url = [store URLForTitle:theme];
-        NSData *data = url ? [NSData dataWithContentsOfURL:url] : nil;
-        NSMutableDictionary *colors = data ? [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListMutableContainers format:NULL error:NULL] : nil;
-        if (![colors isKindOfClass:NSMutableDictionary.class])
+        if (url == nil || ![[NSFileManager defaultManager] fileExistsAtPath:url.path])
             continue;
-        BOOL changed = NO;
-        for (size_t i = 0; i < count; i++) {
-            const TSBundledThemeColorChange *change = &TSBundledThemeColorChanges[i];
-            if (change->update <= update || ![change->theme isEqualToString:theme])
-                continue;
-            NSMutableArray *color = colors[change->key];
-            if (![color isKindOfClass:NSMutableArray.class] || color.count < 3)
-                continue;
-            BOOL unchanged = YES;
-            for (NSUInteger c = 0; c < 3; c++)
-                unchanged = unchanged && [color[c] isKindOfClass:NSNumber.class] && fabs([color[c] doubleValue] - change->from[c]) < 0.0005;
-            if (!unchanged)
-                continue;
-            // The opacity, if any, stays.
-            for (NSUInteger c = 0; c < 3; c++)
-                color[c] = @(change->to[c]);
-            changed = YES;
-        }
-        if (!changed)
-            continue;
-        NSData *updated = [NSPropertyListSerialization dataWithPropertyList:colors format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL];
-        if (!updated || ![updated writeToURL:url options:NSDataWritingAtomic error:NULL])
+        if (!TSUpdateBundledThemeFile(url, theme, update))
             written = NO;
     }
     return written ? last : update;
