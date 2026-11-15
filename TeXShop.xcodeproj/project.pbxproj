@@ -57,7 +57,6 @@
 		D20D45B3736189BFBE1C0F51 /* Defaults in Resources */ = {isa = PBXBuildFile; fileRef = 0A89878BCF6577E7A8F002E5 /* Defaults */; };
 		7A9051C11D9E4EA1A5210013 = {isa = PBXBuildFile; fileRef = 7A9051C11D9E4EA1A5210011; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		E107B90C6AEA90757B575812 /* contextbackwardsyncwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 4008394F2665406700037D3C /* contextbackwardsyncwrap */; };
-		87ED044C590112494BDD9A75 /* epstopdf in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 66A63DCE0114947700000001 /* epstopdf */; };
 		88454FF93C9DF16FD6563358 /* epstopdfwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 66A63DCF0114947700000001 /* epstopdfwrap */; };
 		E47135E74945944E26FF1403 /* contextwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = F50B193D0152A11D01000001 /* contextwrap */; };
 		62E064B4D3D199B9A57677E5 /* metapostwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = F5332B17016CD72701DF2474 /* metapostwrap */; };
@@ -373,7 +372,6 @@
 			dstSubfolderSpec = 7;
 			files = (
 				E107B90C6AEA90757B575812 /* contextbackwardsyncwrap in Copy Shell Scripts */,
-				87ED044C590112494BDD9A75 /* epstopdf in Copy Shell Scripts */,
 				88454FF93C9DF16FD6563358 /* epstopdfwrap in Copy Shell Scripts */,
 				E47135E74945944E26FF1403 /* contextwrap in Copy Shell Scripts */,
 				62E064B4D3D199B9A57677E5 /* metapostwrap in Copy Shell Scripts */,
@@ -643,9 +641,7 @@
 		401B9EC01F8C568300B48034 /* TSDocument-SyncOld.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-SyncOld.m"; sourceTree = "<group>"; };
 		401EF0740D0B3F8800203D7B /* MyDragView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyDragView.h; sourceTree = "<group>"; };
 		401EF0750D0B3F8800203D7B /* MyDragView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyDragView.m; sourceTree = "<group>"; };
-		4020276325D06FAA0039F253 /* TeX.mdimporter */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.spotlight-importer"; name = TeX.mdimporter; path = 3rdparty/TeX.mdimporter; sourceTree = "<group>"; };
 		4020276425D06FD70039F253 /* TeX.mdimporter */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.spotlight-importer"; name = TeX.mdimporter; path = 3rdparty/TeX.mdimporter; sourceTree = "<group>"; };
-		403244B429A037A9000431A1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = Resources/Interfaces/Base.lproj/Manual.pdf; sourceTree = "<group>"; };
 		40328ADA1340380800AD2EA7 /* TSToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSToolbar.h; sourceTree = "<group>"; };
 		40328ADB1340380800AD2EA7 /* TSToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSToolbar.m; sourceTree = "<group>"; };
 		40356ACC1F8D157F0093399B /* synctex_parser_old.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = synctex_parser_old.h; sourceTree = "<group>"; };
@@ -1018,7 +1014,6 @@
 		24986CA2B58F4A705143F8B8 /* NSString-CharacterConversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString-CharacterConversion.m"; sourceTree = "<group>"; };
 		527DA9F40A24F30800A76865 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 		52E4BF4408CA74C300726E11 /* TeXShop */ = {isa = PBXFileReference; lastKnownFileType = folder; path = TeXShop; sourceTree = "<group>"; };
-		66A63DCE0114947700000001 /* epstopdf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = epstopdf; sourceTree = "<group>"; };
 		66A63DCF0114947700000001 /* epstopdfwrap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.csh; path = epstopdfwrap; sourceTree = "<group>"; };
 		F506285400F4F04801000001 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		F50B193D0152A11D01000001 /* contextwrap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.csh; path = contextwrap; sourceTree = "<group>"; };
@@ -1678,7 +1673,6 @@
 				40A03E7E0F3A47580014104E /* First Steps with General Typesetting.pdf */,
 				40A03E850F3A47760014104E /* First Steps with Mathematical Typesetting.pdf */,
 				40A03E8A0F3A47860014104E /* First Steps with TeXShop.pdf */,
-				403244B329A037A9000431A1 /* Manual.pdf */,
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
 				03E61892009B32C77F000001 /* Localizable.strings */,
 				377E3DDD07AA8FE81002D25F /* AdvancedFind.strings */,
@@ -1743,7 +1737,6 @@
 				40E81A6729A0788D0014D82A /* Manual.pdf */,
 				4020276425D06FD70039F253 /* TeX.mdimporter */,
 				40C0FF2E217AA3D100DF8F67 /* TeXShop.entitlements */,
-				4020276325D06FAA0039F253 /* TeX.mdimporter */,
 				5288888E089D06B50095E82D /* Sources */,
 				2A37F4B8FDCFA73011CA2CEA /* Resources */,
 				2A37F4C3FDCFA73011CA2CEA /* Frameworks */,
@@ -1803,7 +1796,6 @@
 		528029DB089D3DD900696FB9 /* Shellscripts */ = {
 			isa = PBXGroup;
 			children = (
-				66A63DCE0114947700000001 /* epstopdf */,
 				66A63DCF0114947700000001 /* epstopdfwrap */,
 				40143F70156F52B600CAFAFC /* sipswrap */,
 				40795D632AB4E307005A7539 /* ps2pdftransparencywrap */,
@@ -2006,7 +1998,6 @@
 				88CDD585E18B6040AEDE304A /* Copy Base Search Tables */,
 				407881770519249A006979EA /* Sources */,
 				407881910519249A006979EA /* Frameworks */,
-				407881940519249A006979EA /* Rez */,
 				40C894C306080105000B55B4 /* CopyFiles */,
 				522BC4C20A2A007A007CAB82 /* CopyFiles */,
 				40C889D10F1A803E00B5B8A9 /* CopyFiles */,
@@ -2146,16 +2137,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXRezBuildPhase section */
-		407881940519249A006979EA /* Rez */ = {
-			isa = PBXRezBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXRezBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		CD6726A519ED123EBEE9D303 /* Set Build Number */ = {
@@ -2529,14 +2510,6 @@
 				400E8FBD26067D6B009AA6C9 /* Base */,
 			);
 			name = CommentLines.pdf;
-			sourceTree = "<group>";
-		};
-		403244B329A037A9000431A1 /* Manual.pdf */ = {
-			isa = PBXVariantGroup;
-			children = (
-				403244B429A037A9000431A1 /* Base */,
-			);
-			name = Manual.pdf;
 			sourceTree = "<group>";
 		};
 		40367BB313DFB3B70098E009 /* TeXShopHelp */ = {

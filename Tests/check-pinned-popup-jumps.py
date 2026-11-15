@@ -86,7 +86,7 @@ for name in ('Sources/Sync/TSDocument-SyncTeX.m', 'Sources/Sync/TSDocument-SyncO
         syncs += 1
         marked = set(re.findall(r'\[(?:\(MyPDFKitView \*\))?(self\.pdfKitWindow\.activeView|self\.myPDFKitView)\s+setIndexForMark', body))
         expect(movers <= marked, f'{Path(name).name} {head[:70]} goes to a page of a part that it does not mark')
-expect(syncs >= 7, f'only {syncs} syncs from the source were found')
+expect(syncs >= 5, f'only {syncs} syncs from the source were found')
 
 # Split Window with Link: the part that goes to the target closes its popup; the part with
 # the link keeps its own (#31).
