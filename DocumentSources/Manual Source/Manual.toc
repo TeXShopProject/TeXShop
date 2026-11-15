@@ -174,8 +174,8 @@
 \contentsline {section}{\numberline {29.3}Latex Panel, Matrix Panel, Unicode Panel}{190}{section.29.3}%
 \contentsline {section}{\numberline {29.4}Show Invisible}{192}{section.29.4}%
 \contentsline {section}{\numberline {29.5}Swap with Clipboard}{192}{section.29.5}%
-\contentsline {section}{\numberline {29.6}Character Type Conversion and Unicode Normalization}{192}{section.29.6}%
-\contentsline {section}{\numberline {29.7}A Magic Line for Beamer and Other Slide Packages}{193}{section.29.7}%
+\contentsline {section}{\numberline {29.6}Character Type Conversion and Unicode Normalization}{193}{section.29.6}%
+\contentsline {section}{\numberline {29.7}A Magic Line for Beamer and Other Slide Packages}{194}{section.29.7}%
 \contentsline {section}{\numberline {29.8}Counting Words in a Document}{194}{section.29.8}%
 \contentsline {section}{\numberline {29.9}Useful Items in the TeXShop Menu}{195}{section.29.9}%
 \contentsline {chapter}{\numberline {30}Other Miscellaneous Features}{196}{chapter.30}%

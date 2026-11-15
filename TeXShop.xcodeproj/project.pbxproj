@@ -139,8 +139,6 @@
 		26F5B11D7C0A4E9D2B3A6E04 /* TSStatusBarCounting.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6E06 /* TSStatusBarCounting.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		26F5B11D7C0A4E9D2B3A6E07 /* TSTextStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6E09 /* TSTextStatistics.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		26F5B11D7C0A4E9D2B3A6E10 /* TSTextStatisticsPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6E12 /* TSTextStatisticsPopover.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		4054643E19AE9630006EE9D5 /* GlyphPopoverMulti.xib in Resources */ = {isa = PBXBuildFile; fileRef = D61FA563CE9FC9BEE1BA8618 /* GlyphPopoverMulti.xib */; };
-		4054643F19AE9630006EE9D5 /* GlyphPopoverSingle.xib in Resources */ = {isa = PBXBuildFile; fileRef = D55A1544C331DC7DE9A7D6B3 /* GlyphPopoverSingle.xib */; };
 		4061BA9E1991979600C890DB /* RecentTexFonts.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 4061BA9C1991979600C890DB /* RecentTexFonts.pdf */; };
 		4062E2921D7BC08300DC1518 /* GPLv2 License.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 4062E2901D7BC08300DC1518 /* GPLv2 License.pdf */; };
 		406AB0B0136A5E03009F4D8F /* OgreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 406AB0AF136A5E03009F4D8F /* OgreKit.framework */; };
@@ -238,6 +236,7 @@
 		40A6859F11125D0A00C67A9E /* About This Release.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 40A6859D11125D0A00C67A9E /* About This Release.pdf */; };
 		40A9D09219AE7D4400FEFAC6 /* TSGlyphPopoverController.h in Headers */ = {isa = PBXBuildFile; fileRef = 40A9D09019AE7D4400FEFAC6 /* TSGlyphPopoverController.h */; };
 		40A9D09319AE7D4400FEFAC6 /* TSGlyphPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40A9D09119AE7D4400FEFAC6 /* TSGlyphPopoverController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		D223C17F4D9A1BA3456556B1 /* TSUnicodeBlockNames.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F50AFB98C6BCB2A167A493 /* TSUnicodeBlockNames.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		BB80F541D8508D741318A647 /* TSSpellExclusions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B07AF9DC05BCC3F8444C4D5 /* TSSpellExclusions.h */; };
 		15035E52E5C5DD7C4317400E /* TSSpellExclusions.m in Sources */ = {isa = PBXBuildFile; fileRef = DB778C6DE0EE0C1AE1E0909B /* TSSpellExclusions.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		F581F6404E539E8EA53B676E /* TSSpellSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 3086BAFCCC5CABC6D0FD3D2C /* TSSpellSupport.h */; };
@@ -698,8 +697,6 @@
 		26F5B11D7C0A4E9D2B3A6E09 /* TSTextStatistics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSTextStatistics.m; sourceTree = "<group>"; };
 		26F5B11D7C0A4E9D2B3A6E11 /* TSTextStatisticsPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSTextStatisticsPopover.h; sourceTree = "<group>"; };
 		26F5B11D7C0A4E9D2B3A6E12 /* TSTextStatisticsPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSTextStatisticsPopover.m; sourceTree = "<group>"; };
-		4054643C19AE9630006EE9D5 /* Base */ = {isa = PBXFileReference; name = Base; fileEncoding = 4; lastKnownFileType = file.xib; path = Base.lproj/GlyphPopoverMulti.xib; sourceTree = "<group>"; };
-		4054643D19AE9630006EE9D5 /* Base */ = {isa = PBXFileReference; name = Base; fileEncoding = 4; lastKnownFileType = file.xib; path = Base.lproj/GlyphPopoverSingle.xib; sourceTree = "<group>"; };
 		405F8B43199AF6F50005C0AE /* pt */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt; path = Resources/Interfaces/pt.lproj/Movie.nib; sourceTree = "<group>"; };
 		405F8B44199AF7040005C0AE /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = "pt-PT"; path = "Resources/Interfaces/pt-PT.lproj/Movie.nib"; sourceTree = "<group>"; };
 		406774A218F7800D00204AF4 /* texloganalyserwrap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.csh; path = texloganalyserwrap; sourceTree = "<group>"; };
@@ -943,6 +940,8 @@
 		40A56E1D11E67546002BEED6 /* TSStationery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSStationery.m; sourceTree = "<group>"; };
 		40A9D09019AE7D4400FEFAC6 /* TSGlyphPopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSGlyphPopoverController.h; sourceTree = "<group>"; };
 		40A9D09119AE7D4400FEFAC6 /* TSGlyphPopoverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSGlyphPopoverController.m; sourceTree = "<group>"; };
+		23C7D7FBD4C3A29E4A69349C /* TSUnicodeBlockNames.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSUnicodeBlockNames.h; sourceTree = "<group>"; };
+		A6F50AFB98C6BCB2A167A493 /* TSUnicodeBlockNames.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSUnicodeBlockNames.m; sourceTree = "<group>"; };
 		1B07AF9DC05BCC3F8444C4D5 /* TSSpellExclusions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSpellExclusions.h; sourceTree = "<group>"; };
 		DB778C6DE0EE0C1AE1E0909B /* TSSpellExclusions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSpellExclusions.m; sourceTree = "<group>"; };
 		3086BAFCCC5CABC6D0FD3D2C /* TSSpellSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSpellSupport.h; sourceTree = "<group>"; };
@@ -1405,6 +1404,8 @@
 				4096186305824CF2000D94FD /* TSMatrixPanelController.m */,
 				40D1F2BD06040B1700087115 /* TSMatrixTableView.h */,
 				40D1F2BE06040B1700087115 /* TSMatrixTableView.m */,
+				23C7D7FBD4C3A29E4A69349C /* TSUnicodeBlockNames.h */,
+				A6F50AFB98C6BCB2A167A493 /* TSUnicodeBlockNames.m */,
 			);
 			path = Panels;
 			sourceTree = "<group>";
@@ -1693,8 +1694,6 @@
 				F5ECC3240214678B01DF2474 /* ToolbarItems.strings */,
 				52B13E4908A8183B00756E5E /* TSDocument.nib */,
 				40E76BF2292FDD9200CBE5F9 /* CustomModalWindowController.xib */,
-				D61FA563CE9FC9BEE1BA8618 /* GlyphPopoverMulti.xib */,
-				D55A1544C331DC7DE9A7D6B3 /* GlyphPopoverSingle.xib */,
 			);
 			path = Interfaces;
 			sourceTree = "<group>";
@@ -2117,7 +2116,6 @@
 				4078813B0519249A006979EA /* TeXShop.scriptTerminology in Resources */,
 				40AC8583181E0CCF00E69820 /* Notes on Applescript in TeXShop.pdf in Resources */,
 				403E76BE218E7008006975A8 /* TeXShop.scriptSuite in Resources */,
-				4054643F19AE9630006EE9D5 /* GlyphPopoverSingle.xib in Resources */,
 				4061BA9E1991979600C890DB /* RecentTexFonts.pdf in Resources */,
 				4015F925218F458C00F6F883 /* ScriptRunner.app in Resources */,
 				40F80CAE1FAD3A2F00377616 /* Changes.pdf in Resources */,
@@ -2127,7 +2125,6 @@
 				408F90900C681BCF00B79EA5 /* Movie.nib in Resources */,
 				4062E2921D7BC08300DC1518 /* GPLv2 License.pdf in Resources */,
 				EF5590000000000000000001 /* TeXShop.icon in Resources */,
-				4054643E19AE9630006EE9D5 /* GlyphPopoverMulti.xib in Resources */,
 				40473FAE0C68273C009311CF /* Course Supplements in Resources */,
 				4009C6D70D0BAA9C00B23013 /* hiero.icns in Resources */,
 				40A03E800F3A47580014104E /* First Steps with General Typesetting.pdf in Resources */,
@@ -2163,6 +2160,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA4642139FF362346A674FF5 /* TSAdvancedFindController+MultipleReplace.m in Sources */,
+				D223C17F4D9A1BA3456556B1 /* TSUnicodeBlockNames.m in Sources */,
 				FD453ED734C26F5EAAF40FE3 /* TSMultipleReplaceLibrary.m in Sources */,
 				094E7C9C3FBE59845DC3EFC4 /* TSMultipleReplaceMenu.m in Sources */,
 				C91ADF2509A371420278D47D /* TSAdvancedFindMenu.m in Sources */,
@@ -2409,8 +2407,6 @@
 			sourceTree = "<group>";
 		};
 		A53A4B59BBE2B72F965B083F /* SettingsWindow.xib */ = {isa = PBXVariantGroup; children = (E18000000000000000000005 /* Base */, ); name = SettingsWindow.xib; sourceTree = "<group>"; };
-		D61FA563CE9FC9BEE1BA8618 /* GlyphPopoverMulti.xib */ = {isa = PBXVariantGroup; children = (4054643C19AE9630006EE9D5 /* Base */, ); name = GlyphPopoverMulti.xib; sourceTree = "<group>"; };
-		D55A1544C331DC7DE9A7D6B3 /* GlyphPopoverSingle.xib */ = {isa = PBXVariantGroup; children = (4054643D19AE9630006EE9D5 /* Base */, ); name = GlyphPopoverSingle.xib; sourceTree = "<group>"; };
 		01E48F61FF2A05357F000001 /* FindPanel.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

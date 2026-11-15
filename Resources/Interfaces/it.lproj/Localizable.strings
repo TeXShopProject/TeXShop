@@ -86,7 +86,7 @@
 " does not exist." = " non esiste.";
 "failed to copy selection." = "non è possibile copiare la selezione.";
 "failed to save selection to the file." = "non è possibile salvare la selezione in un file.";
-"<a letter consisting of %d characters>" = " <lettera composta da %d caratteri>";
+"<a letter consisting of %d characters>" = "<un carattere composto da %d caratteri>";
 "%d letters, %d words, %d lines" = "%d lettere, %d parole, %d linee";
 "Emoji Style" = "Stile Emoji";
 "Text Style" = "Stile del testo";
@@ -98,6 +98,13 @@
 "Skin Tone IV" = "Carnagione Leggermente Scura/Olivastra";
 "Skin Tone V" = "Carnagione Scura";
 "Skin Tone VI" = "Carnagione Scurissima/Nera";
+"Code Point:" = "Punto di codice:";
+"Block:" = "Blocco:";
+"Category:" = "Categoria:";
+"Version:" = "Versione:";
+"Unknown" = "Sconosciuto";
+"No Block" = "Nessun blocco";
+"deprecated" = "obsoleto";
 "Unknown encoding; using UTF-8." = "Encoding sconosciuto; attivato UTF-8.";
 "Demo Movies require Mac OS 10.9, Mavericks, or higher." = "I filmati dimostrativi richiedono Mac OS 10.9, Mavericks, o superiore.";
 "Source" = "Sorgente";

@@ -98,6 +98,13 @@
 "Skin Tone IV" = "Medium";
 "Skin Tone V" = "Medium Dark";
 "Skin Tone VI" = "Dark";
+"Code Point:" = "Code Point:";
+"Block:" = "Block:";
+"Category:" = "Category:";
+"Version:" = "Version:";
+"Unknown" = "Unknown";
+"No Block" = "No Block";
+"deprecated" = "deprecated";
 "Unknown encoding; using UTF-8." = "Unknown encoding; using UTF-8.";
 "Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Demo Movies require Mac OS 10.9, Mavericks, or higher.";
 "Source" = "Source";
