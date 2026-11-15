@@ -17,7 +17,8 @@ file: names, commands and words that are the same in that language. The check co
   tip translated in the source but not in the compiled nib is found too. LaTeX code in
   the tool tips of the LaTeX panel is the same in every language. The tool tips of the
   old Find panel (FindPanel.nib) are left out while nothing opens that panel: the check
-  looks for code or a menu item that opens it, and then checks them too.
+  looks, on the safe side, for any code that uses TextFinder beyond creating it or that
+  names findPanel, and for a nib that connects TextFinder, and then checks them too.
 
 Japanese, Korean and Chinese text must also contain a character of that script unless
 it is allowed (catches English that differs from the current English wording), and
@@ -265,16 +266,46 @@ def all_strings(nib_dir):
     return out
 
 
+def opens_old_find_panel(source):
+    """Whether source code may open the old Find panel (FindPanel.nib, TextFinder's panel). Kept on the safe
+    side: any use of TextFinder but creating its shared instance and importing its header, any findPanel getter
+    or message however it is written, the panel's actions, and the nib's name."""
+    source = re.sub(r'#import\s+"TextFinder\.h"', '', source)
+    source = re.sub(r'\[\s*TextFinder\s+sharedInstance\s*\]\s*;', '', source)
+    return bool(re.search(r'\bTextFinder\b|\bfindPanel\b|orderFrontFindPanel|findNextAndOrderFindPanelOut|"FindPanel"', source))
+
+
+# What the check must take for opening the panel, and what it must not (the application's only use of TextFinder).
+assert all(opens_old_find_panel(code) for code in (
+    '[[TextFinder sharedInstance] orderFrontFindPanel:nil];',
+    '[((TextFinder *)[TextFinder sharedInstance]).findPanel makeKeyAndOrderFront:nil];',
+    '[[[TextFinder sharedInstance] findPanel ] makeKeyAndOrderFront:nil];',
+    '[[[TextFinder sharedInstance]\n    findPanel] orderFront:nil];',
+    'TextFinder *finder = [TextFinder sharedInstance]; [finder.findPanel orderFront:nil];',
+    '[NSBundle loadNibNamed: @"FindPanel" owner:self];',
+    '[[NSNib alloc] initWithNibNamed:@"FindPanel" bundle:nil];'))
+assert not opens_old_find_panel('#import "TextFinder.h"\n        [TextFinder sharedInstance];\n[outputText setUsesFindPanel: YES];')
+
+
 def old_find_panel_callers():
-    """What opens the old Find panel (FindPanel.nib, TextFinder's panel): sources that ask TextFinder for its
-    panel, and nibs that send it orderFrontFindPanel:. Advanced Find and the system's find bar replaced it."""
-    callers = [str(f.relative_to(ROOT)) for f in sorted((ROOT / 'Sources').rglob('*.[mh]')) if not f.name.startswith('TextFinder.')
-               and re.search(r'orderFrontFindPanel|findNextAndOrderFindPanelOut|\bfindPanel\]|loadNibNamed:\s*@"FindPanel"', f.read_text(errors='replace'))]
+    """What opens the old Find panel: sources (other than TextFinder's own) that may open it, and nibs that
+    connect TextFinder or send its actions. Advanced Find and the system's find bar replaced it."""
+    callers = [str(f.relative_to(ROOT)) for f in sorted((ROOT / 'Sources').rglob('*'))
+               if f.is_file() and f.suffix in ('.m', '.mm', '.h', '.inc', '.c', '.swift') and not f.name.startswith('TextFinder.')
+               and opens_old_find_panel(f.read_text(errors='replace'))]
     for nib in sorted(INTERFACES.glob('*.lproj/*.nib')):
-        if nib.stem != 'FindPanel':
-            for f in ([nib] if nib.is_file() else sorted(p for p in nib.iterdir() if p.is_file())):
-                if b'orderFrontFindPanel' in f.read_bytes():
-                    callers.append(str(f.relative_to(ROOT)))
+        if nib.stem == 'FindPanel':
+            continue
+        for f in ([nib] if nib.is_file() else sorted(p for p in nib.iterdir() if p.is_file())):
+            data = f.read_bytes()
+            if b'orderFrontFindPanel' in data or b'findNextAndOrderFindPanelOut' in data:
+                callers.append(str(f.relative_to(ROOT)))
+            elif f.name == 'designable.nib':
+                # The TextFinder object of MainMenu.nib, connected to nothing.
+                text = data.decode('utf-8', 'replace')
+                for finder in re.findall(r'<customObject id="([^"]+)"[^>]*customClass="TextFinder"', text):
+                    if re.search(r'(?:target|destination)="' + re.escape(finder) + '"', text):
+                        callers.append(str(f.relative_to(ROOT)))
     return callers
 
 
