@@ -79,7 +79,7 @@ for ja in (False,True):
  latest_cells=re.findall(r'<td\b[^>]*>.*?</td>',latest_row,re.S)
  assert len(latest_cells)==6, 'Expected the current Downloads row with release notes'
  latest_version=re.search(r'<strong>TeXShop ([^<]+)</strong>',latest_cells[0]).group(1)
- notes_path=('release-notes-ja.html' if ja else 'release-notes.html')+'#v'+latest_version
+ notes_path=('release-notes-ja.html' if ja else 'release-notes.html')+'#v'+latest_version.split()[0]  # a beta such as 6.00 beta 1 shares the notes of 6.00
  latest_cells[0]=latest_cells[0].replace('<strong>TeXShop '+latest_version+'</strong>',f'<a href="{html.escape(notes_path,quote=True)}">TeXShop {html.escape(latest_version)}</a>')
  rows=[('latest','', '<tr>'+''.join(latest_cells[:5])+'</tr>')]
  for r in meta:
