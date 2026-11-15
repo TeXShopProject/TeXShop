@@ -3,6 +3,7 @@
 #import "TSPreferenceKey.h"
 #import "TSPrefPaneLayout.h"
 #import "TSSettingsSearchText.h"
+#import "TSShortcutKeyRecorder.h"
 #import <QuartzCore/QuartzCore.h>
 // Lies over the search field, so it also handles the field's cancel button.
 @interface TSShortcutKeySearchView : NSView
@@ -68,94 +69,6 @@
     }
     [super keyDown:event];
 }
-@end
-
-// A shortcut in the list; assistive technologies press it to record a new one.
-@interface TSShortcutKeyLabel : NSTextField
-@property (copy, nullable) void (^press)(NSTextField *label);
-@end
-@implementation TSShortcutKeyLabel
-- (BOOL)isAccessibilitySelectorAllowed:(SEL)selector {
-    if (selector == @selector(accessibilityPerformPress)) { return self.press != nil; }
-    return [super isAccessibilitySelectorAllowed:selector];
-}
-- (BOOL)accessibilityPerformPress {
-    if (self.press == nil) { return NO; }
-    self.press(self);
-    return YES;
-}
-@end
-
-// The shortcut cell while it records: a field with the key, selected, and a
-// button that removes the shortcut. The pane receives the keys (handleKeySearchEvent:).
-@interface TSShortcutKeyRecorder : NSView
-@property (readonly) NSTextField *label;
-@property (readonly) NSButton *removeButton;
-@property (copy, nonatomic) NSString *shortcut;
-@property (copy, nullable) dispatch_block_t resigned;
-@end
-@implementation TSShortcutKeyRecorder
-- (instancetype)initWithFrame:(NSRect)frame {
-    self = [super initWithFrame:frame];
-    if (self == nil) { return nil; }
-    _shortcut = @"";
-    _label = [NSTextField labelWithString:@""];
-    _label.alignment = NSTextAlignmentCenter; _label.lineBreakMode = NSLineBreakByTruncatingMiddle;
-    _label.accessibilityElement = NO; _label.identifier = @"shortcut.recorder-text";
-    NSString *remove = NSLocalizedString(@"Remove Shortcut", @"");
-    NSImage *minus = [NSImage imageWithSystemSymbolName:@"minus.circle.fill" accessibilityDescription:remove] ?: [NSImage new];
-    _removeButton = [NSButton buttonWithImage:minus target:nil action:NULL];
-    _removeButton.bordered = NO; _removeButton.imageScaling = NSImageScaleProportionallyDown;
-    _removeButton.contentTintColor = NSColor.secondaryLabelColor; _removeButton.refusesFirstResponder = YES;
-    _removeButton.toolTip = remove; _removeButton.identifier = @"shortcut.recorder-remove";
-    [_label setContentCompressionResistancePriority:249 forOrientation:NSLayoutConstraintOrientationHorizontal];
-    for (NSView *view in @[_label, _removeButton]) { view.translatesAutoresizingMaskIntoConstraints = NO; [self addSubview:view]; }
-    [NSLayoutConstraint activateConstraints:@[
-        [_label.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant:4],
-        [_label.trailingAnchor constraintEqualToAnchor:_removeButton.leadingAnchor constant:-2],
-        [_label.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
-        [_removeButton.trailingAnchor constraintEqualToAnchor:self.trailingAnchor constant:-3],
-        [_removeButton.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
-        [_removeButton.widthAnchor constraintEqualToConstant:14], [_removeButton.heightAnchor constraintEqualToConstant:14]]];
-    self.focusRingType = NSFocusRingTypeExterior;
-    self.identifier = @"shortcut.recorder";
-    return self;
-}
-- (void)setShortcut:(NSString *)shortcut {
-    _shortcut = [shortcut copy] ?: @"";
-    NSMutableParagraphStyle *centered = [NSMutableParagraphStyle new];
-    centered.alignment = NSTextAlignmentCenter; centered.lineBreakMode = NSLineBreakByTruncatingMiddle;
-    NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:_shortcut attributes:@{NSFontAttributeName: [NSFont systemFontOfSize:NSFont.systemFontSize], NSForegroundColorAttributeName: NSColor.labelColor, NSParagraphStyleAttributeName: centered}];
-    // The key is selected, as text in a field that waits for a replacement.
-    if (_shortcut.length) { [text addAttribute:NSBackgroundColorAttributeName value:NSColor.selectedTextBackgroundColor range:NSMakeRange(0, text.length)]; }
-    self.label.attributedStringValue = text;
-    NSAccessibilityPostNotification(self, NSAccessibilityValueChangedNotification);
-}
-- (void)drawRect:(NSRect)dirtyRect {
-    [NSColor.textBackgroundColor setFill];
-    [[NSBezierPath bezierPathWithRoundedRect:self.bounds xRadius:4 yRadius:4] fill];
-}
-- (NSRect)focusRingMaskBounds { return self.bounds; }
-- (void)drawFocusRingMask { [[NSBezierPath bezierPathWithRoundedRect:self.bounds xRadius:4 yRadius:4] fill]; }
-- (BOOL)acceptsFirstResponder { return YES; }
-- (BOOL)resignFirstResponder {
-    if (![super resignFirstResponder]) { return NO; }
-    if (self.resigned) { self.resigned(); }
-    return YES;
-}
-- (NSView *)hitTest:(NSPoint)point {
-    NSView *hit = [super hitTest:point];
-    if (hit == nil || hit == self.removeButton) { return hit; }
-    return self;
-}
-- (void)mouseDown:(NSEvent *)event {
-    if (self.window.firstResponder != self) { [self.window makeFirstResponder:self]; }
-}
-- (BOOL)isAccessibilityElement { return YES; }
-- (NSString *)accessibilityRole { return NSAccessibilityTextFieldRole; }
-- (NSString *)accessibilityLabel { return NSLocalizedString(@"Change Shortcut", @""); }
-- (id)accessibilityValue { return self.shortcut.length ? self.shortcut : NSLocalizedString(@"Press a key", @""); }
-- (NSString *)accessibilityHelp { return NSLocalizedString(@"Press a key", @""); }
 @end
 
 typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
@@ -535,19 +448,9 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     return NSLocalizedString(@"Inactive for this key", @"");
 }
 // Ordinary rows draw their text 2pt inside the cell; the warning row lines up with them.
-static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSShortcutWarningBottom = 4, TSShortcutWarningSpacing = 4;
+static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSShortcutWarningBottom = 4;
 // The same warning line the settings window shows elsewhere: yellow triangle, small label-colored text.
-- (NSStackView *)warningWithText:(NSString *)text {
-    NSFont *font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
-    NSTextField *label = [NSTextField wrappingLabelWithString:text];
-    label.font = font; label.textColor = NSColor.labelColor; label.identifier = @"shortcut.inactive-reason";
-    [label setContentCompressionResistancePriority:249 forOrientation:NSLayoutConstraintOrientationHorizontal];
-    NSStackView *warning = [NSStackView stackViewWithViews:@[[TSPrefPaneLayout warningSymbolForFont:font], label]];
-    warning.orientation = NSUserInterfaceLayoutOrientationHorizontal; warning.alignment = NSLayoutAttributeFirstBaseline;
-    warning.spacing = TSShortcutWarningSpacing; warning.translatesAutoresizingMaskIntoConstraints = NO;
-    warning.identifier = @"shortcut.inactive-warning";
-    return warning;
-}
+- (NSStackView *)warningWithText:(NSString *)text { return TSShortcutWarningLine(text); }
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row {
     NSString *reason = self.searchingByKey && self.searchEvent != nil ? [self inactiveReasonForMatch:[self matchAtRow:row]] : nil;
     if (reason == nil) { return tableView.rowHeight; }
@@ -557,7 +460,7 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     // The command cell is as wide as its column; the note's frame adds its own alignment insets.
     NSEdgeInsets insets = note.alignmentRectInsets;
     CGFloat width = tableView.tableColumns.firstObject.width - TSShortcutWarningIndent
-        - warning.arrangedSubviews[0].intrinsicContentSize.width - TSShortcutWarningSpacing + insets.left + insets.right;
+        - warning.arrangedSubviews[0].intrinsicContentSize.width - warning.spacing + insets.left + insets.right;
     CGFloat height = [note.cell cellSizeForBounds:NSMakeRect(0, 0, MAX(width, 1), CGFLOAT_MAX)].height;
     return ceil(path.intrinsicContentSize.height + TSShortcutWarningGap + height + TSShortcutWarningBottom + tableView.intercellSpacing.height);
 }
@@ -683,23 +586,12 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     return label;
 }
 - (void)makeRecorder {
-    self.recorder = [[TSShortcutKeyRecorder alloc] initWithFrame:NSMakeRect(0, 0, 120, 20)];
+    TSShortcutRecordingCell *cell = [TSShortcutRecordingCell new];
+    self.recorder = cell.recorder; self.recordingWarning = cell.warning;
     self.recorder.removeButton.target = self; self.recorder.removeButton.action = @selector(removeShortcut:);
     __weak TSShortcutPaneController *weakSelf = self;
     // A click elsewhere ends the recording and keeps the shortcut; the focus goes where it was going.
     self.recorder.resigned = ^{ [weakSelf finishRecordingFocusingList:NO]; };
-    NSFont *font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
-    self.recordingWarning = [TSPrefPaneLayout warningSymbolForFont:font];
-    self.recordingWarning.identifier = @"shortcut.recording-warning";
-    NSView *cell = [NSView new]; cell.identifier = @"shortcut.recording";
-    for (NSView *view in @[self.recorder, self.recordingWarning]) { view.translatesAutoresizingMaskIntoConstraints = NO; [cell addSubview:view]; }
-    [NSLayoutConstraint activateConstraints:@[
-        [self.recorder.leadingAnchor constraintEqualToAnchor:cell.leadingAnchor],
-        [self.recorder.trailingAnchor constraintEqualToAnchor:cell.trailingAnchor constant:-20],
-        [self.recorder.centerYAnchor constraintEqualToAnchor:cell.centerYAnchor],
-        [self.recorder.heightAnchor constraintEqualToConstant:18],
-        [self.recordingWarning.trailingAnchor constraintEqualToAnchor:cell.trailingAnchor constant:-2],
-        [self.recordingWarning.centerYAnchor constraintEqualToAnchor:cell.centerYAnchor]]];
     self.recordingCell = cell;
 }
 - (TSShortcutCommand *)commandAtRow:(NSInteger)row {

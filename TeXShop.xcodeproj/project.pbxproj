@@ -319,6 +319,7 @@
 		9C4FE249828AFAEDE06BEB54 = {isa = PBXBuildFile; fileRef = 0731721CBFD6F17AD0DD4F24; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		ED635084DB6403693BED4C9A = {isa = PBXBuildFile; fileRef = F4EB4ACA7ED000B71ADE66E6; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		BCC3EA04E08B38760A6DFA77 = {isa = PBXBuildFile; fileRef = 197586F0A4601BC5C8BCBB2E; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		7A4C2E91B03D5F6A18C0E201 /* TSShortcutKeyRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4C2E91B03D5F6A18C0E202 /* TSShortcutKeyRecorder.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		6557BE8AC597BF69E384ECD7 = {isa = PBXBuildFile; fileRef = 3F36D4D0A156D4E499455DB0; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		74D2A5947C2DD85F835BB9DE = {isa = PBXBuildFile; fileRef = 9F49BE4A6403EFC7BED1FE8F; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		8CD3CD5CE098B44C82C78055 = {isa = PBXBuildFile; fileRef = 7A5D3AFB511E81E0D1A4BA2D; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
@@ -555,6 +556,8 @@
 		E18000000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsNavigationHistory.m; sourceTree = "<group>"; };
 		EA1100000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSKeyboardShortcuts.m; sourceTree = "<group>"; };
 		E2A000000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSShortcutPaneController.h; sourceTree = "<group>"; };
+		7A4C2E91B03D5F6A18C0E203 /* TSShortcutKeyRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSShortcutKeyRecorder.h; sourceTree = "<group>"; };
+		7A4C2E91B03D5F6A18C0E202 /* TSShortcutKeyRecorder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSShortcutKeyRecorder.m; sourceTree = "<group>"; };
 		EA1100000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKeyboardShortcuts.h; sourceTree = "<group>"; };
 		E16E00000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSEnginePathDiscovery.m; sourceTree = "<group>"; };
 		E17000000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPreferenceProfile.m; sourceTree = "<group>"; };
@@ -1522,6 +1525,8 @@
 				F4EB4ACA7ED000B71ADE66E6 /* TSShortcutModels.m */,
 				E2A000000000000000000001 /* TSShortcutPaneController.h */,
 				197586F0A4601BC5C8BCBB2E /* TSShortcutPaneController.m */,
+				7A4C2E91B03D5F6A18C0E203 /* TSShortcutKeyRecorder.h */,
+				7A4C2E91B03D5F6A18C0E202 /* TSShortcutKeyRecorder.m */,
 				3F36D4D0A156D4E499455DB0 /* TSShortcutSearch.m */,
 				9F49BE4A6403EFC7BED1FE8F /* TSShortcutStore.m */,
 				7A5D3AFB511E81E0D1A4BA2D /* TSShortcutUtilities.m */,
@@ -2212,6 +2217,7 @@
 				9C4FE249828AFAEDE06BEB54,
 				ED635084DB6403693BED4C9A,
 				BCC3EA04E08B38760A6DFA77,
+				7A4C2E91B03D5F6A18C0E201 /* TSShortcutKeyRecorder.m in Sources */,
 				6557BE8AC597BF69E384ECD7,
 				74D2A5947C2DD85F835BB9DE,
 				8CD3CD5CE098B44C82C78055,
