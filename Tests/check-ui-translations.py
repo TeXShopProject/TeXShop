@@ -11,9 +11,12 @@ file: names, commands and words that are the same in that language. The check co
 - the localized nibs: visible titles, tool tips, placeholders and labels that equal a
   text of the Base nib. Hidden views, untitled boxes and image-only buttons are skipped.
   A nib that exists only compiled is read from the compiled archive (all its texts).
+  In older archives, tool tips are read in the Matrix and LaTeX panels; LaTeX code in
+  them is the same in every language.
 
 Japanese, Korean and Chinese text must also contain a character of that script unless
-it is allowed (catches English that differs from the current English wording).
+it is allowed (catches English that differs from the current English wording). Korean
+and Chinese text of the Matrix and LaTeX panels must not contain Japanese kana.
 """
 from pathlib import Path
 import json
@@ -30,7 +33,12 @@ TABLES = ['Localizable', 'ToolbarItems', 'InfoPlist', 'Encodings', 'FindPanel', 
 NIBS = ['MainMenu', 'TSDocument', 'MacroEditor', 'matrixpanel', 'completionpanel1.2', 'Movie', 'FindPanel']
 ATTRIBUTES = ('title', 'toolTip', 'placeholderString', 'label', 'paletteLabel')
 ARCHIVE_KEYS = ('NSTitle', 'NSToolTip', 'NSContents', 'NSPlaceholderString')
+# Older Interface Builder archives keep tool tips as toolTip attributes of their own. They are checked in the
+# nibs below, whose tool tips are translated, and so is Japanese text left in their Korean and Chinese
+# versions; the other older nibs are not translated that far yet.
+ARCHIVE_TOOLTIP_NIBS = ('matrixpanel', 'completionpanel1.2')
 CJK = re.compile(r'[぀-ヿ㐀-鿿가-힯＀-￯]')
+KANA = re.compile(r'[぀-ヿ]')
 WORD = re.compile(r'[A-Za-z]{3,}')
 
 
@@ -38,11 +46,12 @@ def strings(path):
     return json.loads(subprocess.check_output(['plutil', '-convert', 'json', '-o', '-', str(path)]))
 
 
-def nib_texts(path):
+def nib_texts(path, tooltips=False):
     """Visible texts of a nib (modern XIB or old archive format)."""
     root = ET.parse(path).getroot()
     if root.tag == 'archive':
-        return {s.text for s in root.iter('string') if s.get('key') in ARCHIVE_KEYS and s.text}
+        keys = ARCHIVE_KEYS + (('toolTip',) if tooltips else ())
+        return {s.text for s in root.iter('string') if s.get('key') in keys and s.text}
     parents = {child: parent for parent in root.iter() for child in parent}
     def hidden(e):
         while e is not None:
@@ -95,7 +104,7 @@ def compiled_texts(nib_dir):
 def interface_texts(nib_dir):
     """A localized nib is checked from its source when it has one, otherwise from the compiled nib."""
     source = nib_dir / 'designable.nib'
-    return nib_texts(source) if source.exists() else compiled_texts(nib_dir)
+    return nib_texts(source, nib_dir.stem in ARCHIVE_TOOLTIP_NIBS) if source.exists() else compiled_texts(nib_dir)
 
 
 def main():
@@ -132,12 +141,15 @@ def main():
             if not path.exists():
                 continue  # this language uses the Base interface
             for text in sorted(interface_texts(path)):
-                if not WORD.search(text):
+                # LaTeX code (the tool tips of the LaTeX Panel) is the same in every language.
+                if (not WORD.search(text) and not KANA.search(text)) or '\\' in text:
                     continue
                 if text in base_nibs[nib]:
                     report(f'{nib}.nib', text, 'English')
                 elif lang in ('ja', 'ko', 'zh_CN') and not CJK.search(text):
                     report(f'{nib}.nib', text, 'no CJK text')
+                elif lang in ('ko', 'zh_CN') and nib in ARCHIVE_TOOLTIP_NIBS and KANA.search(text):
+                    report(f'{nib}.nib', text, 'Japanese text')
     if problems:
         print('\n'.join(problems))
         print(f'FAIL: {len(problems)} untranslated texts')
