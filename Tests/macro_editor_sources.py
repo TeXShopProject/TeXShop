@@ -8,8 +8,10 @@ FRAMEWORKS = ['-framework', 'Cocoa', '-framework', 'Carbon']
 
 
 def layout_body(root):
+    """From the status band to the message below the contents: the layout, the recording of a shortcut in the list,
+    the shortcuts of the list (collectShortcutCandidates:) and the message (the block "shortcut status")."""
     editor = (Path(root) / 'Sources/Macros/TSMacroEditor.m').read_text()
-    return editor[editor.index('- (void)installShortcutStatus'):editor.index('- (void)collectShortcutCandidates:')]
+    return editor[editor.index('- (void)installShortcutStatus'):editor.index('- (void)updatePendingShortcutStatus')]
 
 
 def write_sources(root, directory, inc_name):
@@ -22,7 +24,7 @@ def write_sources(root, directory, inc_name):
     (directory / 'ShortcutProduction.m').write_text(production_source(root))
     return [str(directory / 'MacroKeyFunctions.m'), str(directory / 'ShortcutProduction.m'), *companion_sources(root),
             *(str(source_file(root, name)) for name in ('TSDialogButtonLayout.m', 'TSOlderPanelLayout.m', 'TSMarkMenu.m', 'TSListBottomBar.m',
-                                                        'TSMacroShortcutField.m', 'TSMacroTreeNode.m', 'TSPlaceholderToken.m',
+                                                        'TSMacroTreeNode.m', 'TSPlaceholderToken.m',
                                                         'TSMacroContentKind.m', *PLACEHOLDER_RULES))]
 
 

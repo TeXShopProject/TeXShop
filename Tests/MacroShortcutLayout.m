@@ -1,11 +1,13 @@
 // Instantiate existing localized nibs offscreen and run the production layout of the macro editor: the sidebar,
-// the contents, the status band, the shortcut field and the placeholder row; the keys, and renaming in the list.
+// the contents, the status band and the placeholder row; the keys, renaming in the list, and the recording of a
+// shortcut in the list's own cell, with its warnings.
 #import "TSMacroEditor.h"
 #import "TSMacroOutlineController.h"
 #import "TSDialogButtonLayout.h"
 #import "TSMarkMenu.h"
 #import "TSListBottomBar.h"
-#import "TSMacroShortcutField.h"
+#import "TSShortcutKeyRecorder.h"
+#import "TSPrefPaneLayout.h"
 #import "TSMacroTreeNode.h"
 #import "TSMacroMenuController.h"
 #import "TSShortcutInternal.h"
@@ -22,44 +24,68 @@
 static TSMemoryDefaults *memoryDefaults;
 static id StandardDefaults(id self, SEL cmd) { return memoryDefaults; }
 #define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr,"FAIL %d: %s\n",__LINE__,#__VA_ARGS__); exit(1); } } while(0)
-static int reflections, pendingUpdates;
+static int reflections, pendingUpdates, tests;
 // The editor of the window being checked (the outline controller asks the shared editor).
 static TSMacroEditor *Editor;
+// Why a macro's saved shortcut is inactive, as the editor's refreshShortcutConflicts finds it.
+static NSMapTable *Conflicts;
 @implementation TSMacroEditor
 #include "MacroStatusLayout.inc"
-// The rest of the editor: what the shortcut field and the list ask of it.
+#include "MacroListDoubleClick.inc"
+// The rest of the editor, as far as the list and the recording ask of it: another selection ends a recording and
+// brings the selected item's shortcut; a shortcut set is kept in the item, which the list shows again.
 + (id)sharedInstance { return Editor; }
 - (void)updatePendingShortcutStatus { pendingUpdates++; }
-- (void)reflectChangesInEditor:(BOOL)force { reflections++; [self syncShortcutField]; }
-- (void)outlineViewItemsChanged:(NSNotification *)note { [self setValue:@YES forKey:@"dataTouched"]; }
-- (NSString *)shortcutConflictForNode:(TSMacroTreeNode *)node { return nil; }
+- (void)outlineViewSelectionChanged:(NSNotification *)note { [self endShortcutRecordingUnlessSelected]; [self reflectChangesInEditor:NO]; }
+- (void)reflectChangesInEditor:(BOOL)force {
+    reflections++;
+    if (self.previousItem && keyTouched) { self.previousItem.key=self.pendingShortcutKey?:@""; dataTouched=YES; [outlineView reloadItem:self.previousItem]; }
+    keyTouched=NO;
+    NSArray *selected=[outlineView allSelectedItems]; TSMacroTreeNode *item=selected.count==1?selected.firstObject:nil;
+    if (item!=self.previousItem || force) { self.previousItem=item; self.pendingShortcutKey=item.isStandardItem?(item.key?:@""):@""; }
+    [self updateShortcutStatus];
+}
+- (void)outlineViewItemsChanged:(NSNotification *)note { [self setValue:@YES forKey:@"dataTouched"]; [self endShortcutRecording]; }
+- (NSString *)shortcutConflictForNode:(TSMacroTreeNode *)node { return node ? [Conflicts objectForKey:node] : nil; }
+- (IBAction)doMacroTest:(id)sender { tests++; }
 @end
-// The list shows the items of SampleRoot (none unless set), as the editor's outline controller does, and takes a
-// name typed in it with the controller's own code (MacroOutlineEditing.inc); the list and its cells are the
-// application's (MacroOutlineView.inc).
+// The list shows the items of SampleRoot (none unless set) in the outline controller's own cells
+// (MacroOutlineCells.inc), and takes a name typed in it with the controller's own code (MacroOutlineEditing.inc);
+// the list and its cells are the application's (MacroOutlineView.inc).
 static TSMacroTreeNode *SampleRoot;
 @implementation TSMacroOutlineController
 - (void)setValue:(id)v forUndefinedKey:(NSString *)key {}
 - (NSInteger)outlineView:(NSOutlineView *)view numberOfChildrenOfItem:(id)item { return [(item ?: SampleRoot) numberOfChildren]; }
 - (id)outlineView:(NSOutlineView *)view child:(NSInteger)index ofItem:(id)item { return [(item ?: SampleRoot) childAtIndex:index]; }
 - (BOOL)outlineView:(NSOutlineView *)view isItemExpandable:(id)item { return [item isExpandable]; }
-- (id)outlineView:(NSOutlineView *)view objectValueForTableColumn:(NSTableColumn *)column byItem:(id)item {
-    if ([item isSeparator]) return @"";
-    return [column.identifier isEqual:@"Key"] ? getMenuItemString([item key]) : [item name];
-}
-- (void)outlineView:(NSOutlineView *)view willDisplayCell:(NSCell *)cell forTableColumn:(NSTableColumn *)column item:(id)item {
-    if ([column.identifier isEqual:@"Name"] && [cell isKindOfClass:ImageAndTextCell.class]) ((ImageAndTextCell *)cell).image1=[item isSeparator]?TSMacroSeparatorImage(column.width-8):nil;
-}
+#include "MacroOutlineCells.inc"
 - (TSMacroTreeNode *)rootOfTree { return SampleRoot; }
 - (void)setRootOfTree:(TSMacroTreeNode *)root { SampleRoot=root; }
 #include "MacroOutlineEditing.inc"
 #include "MacroOutlineAdding.inc"
 @end
 #include "MacroOutlineView.inc"
-// The names in cells that can be edited, as the outline controller's awakeFromNib makes them.
+// The names in cells that can be edited and the shortcuts in the list's own cells, as the outline controller's
+// awakeFromNib makes them.
 static void UseNameCells(TSMacroEditor *owner) {
-    NSTableColumn *name=[[owner valueForKey:@"outlineView"] tableColumnWithIdentifier:@"Name"];
+    NSOutlineView *rows=[owner valueForKey:@"outlineView"]; NSTableColumn *name=[rows tableColumnWithIdentifier:@"Name"];
     ImageAndTextCell *cell=[ImageAndTextCell new]; cell.editable=YES; name.dataCell=cell;
+    TSMacroUseShortcutCell(rows);
+    REQUIRE([[rows tableColumnWithIdentifier:@"Key"].dataCell isKindOfClass:TSMacroShortcutCell.class]);
+    // The list sends the editor its clicks, as loadUI sets it, and what the selection changes, as openMacroEditor: asks.
+    rows.target=owner; rows.action=@selector(listClicked:); rows.doubleAction=@selector(listDoubleClicked:);
+    [[NSNotificationCenter defaultCenter] removeObserver:owner name:NSOutlineViewSelectionDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:owner selector:@selector(outlineViewSelectionChanged:) name:NSOutlineViewSelectionDidChangeNotification object:rows];
+}
+// The menus whose commands a recorded shortcut may not take: File › Save (⌘S), File › Close (⌘W), Typeset › Typeset (⌘T);
+// a hidden command's key (⌘U) works for nothing, so a macro may have it.
+static void UseTestMenu(void) {
+    NSMenu *main=[NSMenu new];
+    for(NSArray *m in @[@[@"File",@[@[@"Save",@"s"],@[@"Close",@"w"]]],@[@"Typeset",@[@[@"Typeset",@"t"],@[@"Hidden",@"u"]]]]) {
+        NSMenu *sub=[[NSMenu alloc] initWithTitle:m[0]]; NSMenuItem *root=[[NSMenuItem alloc] initWithTitle:m[0] action:NULL keyEquivalent:@""]; root.submenu=sub; [main addItem:root];
+        for(NSArray *i in m[1]) { NSMenuItem *item=[[NSMenuItem alloc] initWithTitle:i[0] action:@selector(description) keyEquivalent:i[1]]; item.keyEquivalentModifierMask=NSEventModifierFlagCommand; item.hidden=[i[0] isEqual:@"Hidden"]; [sub addItem:item]; }
+    }
+    [[TSKeyboardShortcuts sharedController] setValue:[[TSShortcutStore alloc] initWithMenu:main defaults:memoryDefaults] forKey:@"store"];
 }
 static void NoOrder(id self, SEL cmd, NSWindowOrderingMode mode, NSInteger relative) {}
 // With TS_STRINGS (a Localizable.strings), NSLocalizedString gives that language's text, as the application does.
@@ -236,44 +262,188 @@ static NSEvent *Key(NSString *characters, NSString *ignoring, unsigned short cod
     return [NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:flags timestamp:0 windowNumber:0 context:nil
         characters:characters charactersIgnoringModifiers:ignoring isARepeat:NO keyCode:code];
 }
-// The shortcut is set as in Settings > Keyboard: a field takes the rows of the nib's key field and
-// Shift/Option/Control boxes, records the keys pressed and removes them with ⊗.
-static void CheckShortcutField(TSMacroEditor *owner) {
+// The nib's rows of the shortcut (its key field, the Shift, Option and Control boxes and their labels) are hidden;
+// the contents take them, down to the bottom of the field the shortcut had there, and the row of Insert comes below
+// them; the key view loop goes past the hidden controls.
+static void CheckNibShortcutRows(TSMacroEditor *owner) {
     NSView *host=owner.editorView;
-    TSMacroShortcutField *field=owner.shortcutField; NSTextField *label=owner.shortcutLabel;
     NSTextField *nameField=[owner valueForKey:@"nameField"],*keyField=[owner valueForKey:@"keyField"];
-    REQUIRE(field && label && field.superview==host && label.superview==host && !field.hidden && !label.hidden);
-    NSArray *old=@[keyField,[owner valueForKey:@"shiftCheckBox"],[owner valueForKey:@"optionCheckBox"],[owner valueForKey:@"controlCheckBox"]];
-    for(NSView *v in old) REQUIRE(v.hidden);
-    // No label of the old rows is left: only the new label and field in the field's row of the right column.
-    for(NSView *v in host.subviews) if(!v.hidden && v!=field && v!=label && NSMinX(v.frame)>=NSMinX(nameField.frame)-12)
-        { if(NSMinY(v.frame)<NSMaxY(field.frame) && NSMaxY(v.frame)>NSMinY(field.frame)) fprintf(stderr,"ROW %s %s %s\n",NSStringFromClass(v.class).UTF8String,NSStringFromRect(v.frame).UTF8String,[v isKindOfClass:NSTextField.class]?((NSTextField*)v).stringValue.UTF8String:"");
-          REQUIRE(!(NSMinY(v.frame)<NSMaxY(field.frame) && NSMaxY(v.frame)>NSMinY(field.frame))); }
-    REQUIRE([label.stringValue hasPrefix:NSLocalizedString(@"Shortcut",@"")] && label.stringValue.length>NSLocalizedString(@"Shortcut",@"").length);
-    REQUIRE([label.cell cellSize].width<=NSWidth(label.frame)+.5 && fabs(NSMidY(label.frame)-NSMidY(field.frame))<=1);
-    REQUIRE(fabs(NSMinX(field.frame)-NSMaxX(label.frame)-8)<.5 && NSMaxX(field.frame)<=NSMaxX(nameField.frame)+.5);
-    REQUIRE(NSWidth(field.frame)>=field.minimumWidth-.5 || fabs(NSMaxX(field.frame)-NSMaxX(nameField.frame))<.5);
-    // As tall as a text field made now, and drawn as the nib's key field.
-    REQUIRE(NSHeight(field.frame)==MAX(NSHeight(keyField.frame),[NSTextField textFieldWithString:@""].fittingSize.height) && field.display.bezelStyle==keyField.bezelStyle);
-    NSRect cross=field.clearButton.frame;
-    REQUIRE(NSMaxX(cross)<=NSWidth(field.bounds)-3.5 && fabs(NSMidY(cross)-NSMidY(field.bounds))<=1);
-    REQUIRE([field.clearButton.toolTip isEqual:NSLocalizedString(@"Remove Shortcut",@"")] && [field.clearButton.image.accessibilityDescription isEqual:field.clearButton.toolTip]);
-    REQUIRE([field.accessibilityLabel isEqual:NSLocalizedString(@"Shortcut",@"")] && field.isAccessibilityElement && [field.accessibilityRole isEqual:NSAccessibilityButtonRole]);
-    // In the key view loop where the key field was.
-    BOOL reached=NO; NSMutableArray *pending=[host.subviews mutableCopy];
-    while(pending.count){ NSView *v=pending.lastObject; [pending removeLastObject]; [pending addObjectsFromArray:v.subviews]; if(v.nextKeyView==field) reached=YES; REQUIRE(v.nextKeyView!=keyField || v.hidden); }
-    REQUIRE(reached && ![old containsObject:field.nextKeyView]);
+    NSButton *shift=[owner valueForKey:@"shiftCheckBox"];
+    NSArray *old=@[keyField,shift,[owner valueForKey:@"optionCheckBox"],[owner valueForKey:@"controlCheckBox"]];
+    for(NSView *v in old) REQUIRE(v.hidden && v.superview==host);
+    CGFloat height=MAX(NSHeight(keyField.frame),[NSTextField textFieldWithString:@""].fittingSize.height), bottom=round(NSMidY(shift.frame)-height/2);
+    NSRect rows=NSUnionRect(NSInsetRect(keyField.frame,0,-4),NSInsetRect(shift.frame,0,-4));
+    NSPopUpButton *insert=owner.insertPlaceholderButton;
+    // Nothing visible is left in the old rows but the row of Insert, which takes the bottom of the shortcut's field.
+    for(NSView *v in host.subviews) if(!v.hidden && v!=insert && v!=owner.placeholdersButton && v!=[contentsOf(owner) enclosingScrollView] && NSMinX(v.frame)>=NSMinX(nameField.frame)-12 && NSIntersectsRect(NSInsetRect(v.frame,.5,.5),rows) && ![v isKindOfClass:NSBox.class]) {
+        fprintf(stderr,"LEFT IN THE SHORTCUT ROWS %s %s %s\n",NSStringFromClass(v.class).UTF8String,NSStringFromRect(v.frame).UTF8String,[v isKindOfClass:NSTextField.class]?((NSTextField*)v).stringValue.UTF8String:""); REQUIRE(NO); }
+    NSRect row=NSUnionRect(insert.frame,owner.placeholdersButton.frame);
+    if(fabs(NSMinY(row)-bottom)>1) fprintf(stderr,"INSERT ROW %s, the shortcut's field began at %.1f\n",NSStringFromRect(row).UTF8String,bottom);
+    REQUIRE(fabs(NSMinY(row)-bottom)<=1);
+    NSMutableArray *pending=[host.subviews mutableCopy];
+    while(pending.count){ NSView *v=pending.lastObject; [pending removeLastObject]; [pending addObjectsFromArray:v.subviews]; REQUIRE(v.nextKeyView!=keyField || v.hidden); }
 }
-// What the field does: records Command or Control with a key, or F1–F20, as Settings does;
-// Escape and Return keep the shortcut; Delete and ⊗ remove it; only a macro has one.
-static void CheckShortcutBehavior(TSMacroEditor *owner) {
-    NSWindow *window=[owner valueForKey:@"window"]; TSMacroShortcutField *field=owner.shortcutField;
-    owner.previousItem=nil; owner.pendingShortcutKey=@""; [owner syncShortcutField];
-    REQUIRE(!field.enabled && field.clearButton.hidden && ![field acceptsFirstResponder] && ![owner recordShortcutEvent:Key(@"j",@"j",38,NSEventModifierFlagCommand)]);
-    TSMacroTreeNode *macro=[TSMacroTreeNode nodeWithName:@"Macro" content:@"x" key:@"M+ShiftKey"], *group=[TSMacroTreeNode submenuNodeWithName:@"Group"];
-    owner.previousItem=group; [owner syncShortcutField]; REQUIRE(!field.enabled);
-    owner.previousItem=macro; owner.pendingShortcutKey=macro.key; [owner syncShortcutField];
-    REQUIRE(field.enabled && [field.shortcut isEqual:@"⇧⌘M"] && [field.display.stringValue isEqual:@"⇧⌘M"] && !field.clearButton.hidden);
+// What a click on a cell of the list sends, as the list does: the row that was selected alone when the mouse went
+// down, the focus and the selection the click leaves, the clicked row and column, then the action. A double click
+// sends the action of its first click, then, unless that click put the field over the cell, the double action.
+static NSInteger ClickedRow=-1, ClickedColumn=-1;
+static NSInteger FakeClickedRow(id self, SEL cmd) { return ClickedRow; }
+static NSInteger FakeClickedColumn(id self, SEL cmd) { return ClickedColumn; }
+static void Click(TSMacroEditor *owner, NSInteger row, NSString *column, BOOL twice) {
+    TSMacroOutlineView *rows=[owner valueForKey:@"outlineView"]; NSWindow *window=rows.window;
+    IMP r=method_setImplementation(class_getInstanceMethod(NSTableView.class,@selector(clickedRow)),(IMP)FakeClickedRow);
+    IMP c=method_setImplementation(class_getInstanceMethod(NSTableView.class,@selector(clickedColumn)),(IMP)FakeClickedColumn);
+    for(int click=0;click<(twice?2:1);click++) {
+        if(click && window.firstResponder==owner.recordingCell.recorder) break; // the second click goes to the field
+        rows.rowSelectedAtMouseDown=rows.numberOfSelectedRows==1?rows.selectedRow:-1;
+        [window makeFirstResponder:rows];
+        [rows selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)row] byExtendingSelection:NO];
+        ClickedRow=row; ClickedColumn=[rows columnWithIdentifier:column];
+        [NSApp sendAction:click?rows.doubleAction:rows.action to:rows.target from:rows];
+        ClickedRow=ClickedColumn=-1;
+    }
+    method_setImplementation(class_getInstanceMethod(NSTableView.class,@selector(clickedRow)),r);
+    method_setImplementation(class_getInstanceMethod(NSTableView.class,@selector(clickedColumn)),c);
+}
+static void Wait(NSTimeInterval seconds) { [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:seconds]]; }
+static NSEvent *KeyIn(NSWindow *window, NSString *c, unsigned short code, NSEventModifierFlags flags);
+static NSEvent *Typed(NSWindow *window, NSString *characters, NSString *ignoring, unsigned short code, NSEventModifierFlags flags) {
+    return [NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:flags timestamp:0 windowNumber:window.windowNumber context:nil
+        characters:characters charactersIgnoringModifiers:ignoring isARepeat:NO keyCode:code];
+}
+static void SendKey(TSMacroEditor *owner, NSWindow *window, NSEvent *event);
+// The text a row's shortcut cell shows, as the list draws it.
+static NSString *Shown(NSOutlineView *rows, NSInteger row) { return [rows preparedCellAtColumn:[rows columnWithIdentifier:@"Key"] row:row].stringValue; }
+// How many pixels of the yellow of the warning triangle the shortcut cell of a row draws, drawn alone into a bitmap
+// (caching the list's own drawing would end its later editing of names).
+static NSInteger YellowPixels(NSOutlineView *rows, NSInteger row) {
+    NSInteger key=[rows columnWithIdentifier:@"Key"]; NSRect frame=[rows frameOfCellAtColumn:key row:row]; NSCell *cell=[rows preparedCellAtColumn:key row:row];
+    NSBitmapImageRep *rep=[[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL pixelsWide:(NSInteger)ceil(NSWidth(frame))*2 pixelsHigh:(NSInteger)ceil(NSHeight(frame))*2 bitsPerSample:8 samplesPerPixel:4 hasAlpha:YES isPlanar:NO colorSpaceName:NSDeviceRGBColorSpace bytesPerRow:0 bitsPerPixel:0];
+    CGContextRef cg=[NSGraphicsContext graphicsContextWithBitmapImageRep:rep].CGContext;
+    CGContextScaleCTM(cg,2,2); CGContextTranslateCTM(cg,0,ceil(NSHeight(frame))); CGContextScaleCTM(cg,1,-1); CGContextTranslateCTM(cg,-NSMinX(frame),-NSMinY(frame));
+    [NSGraphicsContext saveGraphicsState]; NSGraphicsContext.currentContext=[NSGraphicsContext graphicsContextWithCGContext:cg flipped:YES];
+    [rows.effectiveAppearance performAsCurrentDrawingAppearance:^{ [cell drawWithFrame:frame inView:rows]; }];
+    [NSGraphicsContext restoreGraphicsState];
+    NSInteger yellow=0;
+    for(NSInteger y=0;y<rep.pixelsHigh;y++) for(NSInteger x=0;x<rep.pixelsWide;x++) {
+        NSColor *c=[[rep colorAtX:x y:y] colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+        if(c.alphaComponent>.5 && c.redComponent>.8 && c.greenComponent>.55 && c.blueComponent<.35) yellow++; }
+    return yellow;
+}
+// The field over the shortcut of a row: from the trailing edge of the shortcut's cell, at least as wide as the
+// longest shortcut, ⊖ and the triangle need, but not beyond the start of the names; the row's height. The field
+// 18 points high, the triangle's 20 points after it; the longest shortcut shows whole.
+static void CheckRecordingCell(TSMacroEditor *owner, NSInteger row) {
+    TSMacroOutlineView *rows=[owner valueForKey:@"outlineView"]; TSShortcutRecordingCell *cell=owner.recordingCell; [cell layoutSubtreeIfNeeded];
+    NSRect key=[rows frameOfCellAtColumn:[rows columnWithIdentifier:@"Key"] row:row], line=[rows rectOfRow:row];
+    CGFloat leading=NSMinX([rows rectOfColumn:[rows columnWithIdentifier:@"Name"]]), room=NSMaxX(key)-leading;
+    if(fabs(NSMaxX(cell.frame)-NSMaxX(key))>=.5 || NSMinX(cell.frame)<leading-.5 || fabs(NSWidth(cell.frame)-MAX(NSWidth(key),MIN(rows.recordingWidth,room)))>=.5) fprintf(stderr,"RECORDING CELL %s, shortcut %s, names from %.1f, wanted %.1f\n",NSStringFromRect(cell.frame).UTF8String,NSStringFromRect(key).UTF8String,leading,rows.recordingWidth);
+    REQUIRE(cell.superview==rows && !cell.hidden && fabs(NSMaxX(cell.frame)-NSMaxX(key))<.5 && NSMinX(cell.frame)>=leading-.5);
+    REQUIRE(fabs(NSWidth(cell.frame)-MAX(NSWidth(key),MIN(rows.recordingWidth,room)))<.5 && fabs(NSMinY(cell.frame)-NSMinY(line))<.5 && fabs(NSHeight(cell.frame)-NSHeight(line))<.5);
+    NSRect field=cell.recorder.frame, warning=cell.warning.frame;
+    REQUIRE(fabs(NSHeight(field)-18)<.5 && NSMinX(field)==0 && fabs(NSMaxX(field)-(NSWidth(cell.bounds)-20))<.5 && fabs(NSMidY(field)-NSMidY(cell.bounds))<.5);
+    REQUIRE(NSMinX(warning)>=NSMaxX(field) && NSMaxX(warning)<=NSWidth(cell.bounds) && fabs(NSMidY(warning)-NSMidY(cell.bounds))<1);
+    NSString *kept=cell.recorder.shortcut;
+    if(rows.recordingWidth<=room+.5) for(NSString *longest in @[@"⌃⌥⇧⌘F20",@"⌃⌥⇧⌘F12",@"⌃⌥⇧⌘W"]) {
+        cell.recorder.shortcut=longest; [cell layoutSubtreeIfNeeded];
+        NSTextField *label=cell.recorder.label; CGFloat needed=label.attributedStringValue.size.width;
+        if(needed>NSWidth(label.frame)+.5) fprintf(stderr,"FIELD %s needs %.1f, has %.1f\n",longest.UTF8String,needed,NSWidth(label.frame));
+        REQUIRE(needed<=NSWidth(label.frame)+.5 && NSMaxX(label.frame)<=NSMinX(cell.recorder.removeButton.frame));
+    }
+    cell.recorder.shortcut=kept;
+}
+// A shortcut is recorded in the list, in its item's own cell, as in Settings › Keyboard (Xcode's key bindings): a
+// click on the shortcut of the item selected alone, a double click on a shortcut, VoiceOver's press. The key
+// pressed becomes it at once, Command-S, -W and -Q too; a key another command uses is refused, shown with the
+// triangle and the reason below the contents, and the recording goes on, as after a key that cannot be one.
+// Escape and Return end it, Tab moves on, Delete and ⊖ remove the shortcut; a click elsewhere, another selection
+// and changed items end it. Separators and submenus have none. A saved shortcut that is inactive has the
+// triangle before it in the list, and the reason below the contents when it is selected.
+static NSEvent *KeyIn(NSWindow *window, NSString *c, unsigned short code, NSEventModifierFlags flags);
+static NSEvent *Mouse(NSWindow *window, NSEventType type, NSPoint at, NSInteger clicks);
+static TSMacroTreeNode *MakeSampleRoot(TSMacroTreeNode **selected, TSMacroTreeNode **separator);
+static NSTextView *Renaming(NSWindow *window, NSOutlineView *rows);
+static void CheckRecording(TSMacroEditor *owner) {
+    NSWindow *window=[owner valueForKey:@"window"]; TSMacroOutlineView *rows=[owner valueForKey:@"outlineView"];
+    NSButton *save=[owner valueForKey:@"saveButton"],*cancel=[owner valueForKey:@"cancelButton"]; NSTextView *contents=contentsOf(owner);
+    TSMacroTreeNode *kept=SampleRoot,*macro=nil,*separator=nil; SampleRoot=MakeSampleRoot(&macro,&separator);
+    [rows reloadData]; [rows expandItem:nil expandChildren:YES]; [window.contentView layoutSubtreeIfNeeded];
+    id targets[]={save.target,cancel.target}; SEL actions[]={save.action,cancel.action};
+    ActionRecorder *pressed=[ActionRecorder new]; pressed.log=[NSMutableArray new];
+    for(NSButton *b in @[save,cancel]) { b.target=pressed; b.action=@selector(hit:); }
+    TSShortcutRecordingCell *cell=owner.recordingCell; TSShortcutKeyRecorder *recorder=cell.recorder;
+    REQUIRE(cell && recorder && cell.superview==nil && rows.recordingWidth>=[TSShortcutRecordingCell widthForShortcut:@"⌃⌥⇧⌘F20"]);
+    REQUIRE(recorder.removeButton.target==owner && recorder.removeButton.action==@selector(removeRecordedShortcut:));
+    TSMacroTreeNode *group=[SampleRoot childAtIndex:0], *equation=[group childAtIndex:0], *other=[SampleRoot childAtIndex:2], *noKey=[SampleRoot childAtIndex:5];
+    NSInteger row=[rows rowForItem:macro], otherRow=[rows rowForItem:other], groupRow=[rows rowForItem:group], line=[rows rowForItem:separator];
+    NSString *macros=NSLocalizedString(@"Macros",@""), *used=NSLocalizedString(@"This shortcut is already used by “%@”.",@"");
+    NSString *unusable=NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.",@"");
+    BOOL (^recording)(TSMacroTreeNode *)=^BOOL(TSMacroTreeNode *item) { return owner.recordingItem==item && window.firstResponder==recorder && cell.superview==rows && rows.recordingItem==item; };
+    void (^ended)(void)=^{ REQUIRE(!owner.recordingItem && window.firstResponder==rows && cell.superview==nil && !rows.recordingItem && pressed.log.count==0); };
+    // The list keeps, from the mouse going down, the row that was selected alone then (a real mouse down on a cell, its
+    // mouse up already waiting; the actions are not sent here, and the window, not key, does not select): none after a click with Command or with several rows selected.
+    { SEL single=rows.action, twice=rows.doubleAction; rows.action=NULL; rows.doubleAction=NULL;
+      NSPoint (^at)(NSInteger)=^NSPoint(NSInteger r){ NSRect c=[rows frameOfCellAtColumn:[rows columnWithIdentifier:@"Key"] row:r]; return [rows convertPoint:NSMakePoint(NSMidX(c),NSMidY(c)) toView:nil]; };
+      void (^press)(NSInteger,NSEventModifierFlags)=^(NSInteger r,NSEventModifierFlags flags){ NSEvent *down=Mouse(window,NSEventTypeLeftMouseDown,at(r),1);
+          if(flags) down=[NSEvent mouseEventWithType:NSEventTypeLeftMouseDown location:at(r) modifierFlags:flags timestamp:down.timestamp windowNumber:window.windowNumber context:nil eventNumber:0 clickCount:1 pressure:1];
+          [NSApp postEvent:Mouse(window,NSEventTypeLeftMouseUp,at(r),1) atStart:YES]; [rows mouseDown:down]; };
+      [rows selectRowIndexes:[NSIndexSet indexSetWithIndex:otherRow] byExtendingSelection:NO];
+      press(row,0); REQUIRE(rows.rowSelectedAtMouseDown==otherRow);
+      [rows selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO]; press(row,0); REQUIRE(rows.rowSelectedAtMouseDown==row);
+      press(row,NSEventModifierFlagCommand); REQUIRE(rows.rowSelectedAtMouseDown==-1);
+      [rows selectRowIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(row,2)] byExtendingSelection:NO]; press(row,0); REQUIRE(rows.rowSelectedAtMouseDown==-1);
+      [rows cancelPendingRename]; rows.action=single; rows.doubleAction=twice; REQUIRE(!owner.recordingItem); }
+    // A click on the shortcut of an item that was not selected only selects it; one on the name of the selected item does not record.
+    [rows deselectAll:nil]; Click(owner,row,@"Key",NO);
+    REQUIRE(rows.selectedRow==row && owner.previousItem==macro && !owner.recordingItem && window.firstResponder==rows);
+    Click(owner,row,@"Name",NO); REQUIRE(!owner.recordingItem);
+    // Several items selected: a click selects the one clicked; it does not record.
+    [rows selectRowIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(row,2)] byExtendingSelection:NO]; Click(owner,row,@"Key",NO); REQUIRE(!owner.recordingItem && rows.selectedRow==row);
+    // A click on the shortcut of the selected item records: the field over its shortcut, the key in it, ⊖, no triangle, no message.
+    Click(owner,row,@"Key",NO);
+    REQUIRE(recording(macro) && [recorder.shortcut isEqual:@"⇧⌘M"] && !recorder.removeButton.hidden && cell.warning.hidden);
+    REQUIRE(owner.shortcutStatusMark.hidden && owner.shortcutStatus.stringValue.length==0 && [Shown(rows,row) isEqual:@""]);
+    CheckRecordingCell(owner,row);
+    REQUIRE([recorder.accessibilityRole isEqual:NSAccessibilityTextFieldRole] && [recorder.accessibilityLabel isEqual:NSLocalizedString(@"Change Shortcut",@"")] && [recorder.accessibilityValue isEqual:@"⇧⌘M"] && [recorder.accessibilityHelp isEqual:NSLocalizedString(@"Press a key",@"")]);
+    REQUIRE([recorder.removeButton.toolTip isEqual:NSLocalizedString(@"Remove Shortcut",@"")] && recorder.removeButton.refusesFirstResponder);
+    // Escape ends it and keeps the shortcut; the list is focused again, the window stays open.
+    SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); ended(); REQUIRE([macro.key isEqual:@"M+ShiftKey"] && [Shown(rows,row) isEqual:@"⇧⌘M"]);
+    // Escape in the list, not recording, does nothing.
+    SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); ended();
+    // Return and Enter end it as Escape does; neither saves. Return in the list then renames, it does not record.
+    for(NSString *c in @[@"\r",@"\x03"]) { Click(owner,row,@"Key",NO); REQUIRE(recording(macro)); SendKey(owner,window,KeyIn(window,c,[c isEqual:@"\r"]?36:76,0)); ended(); REQUIRE([macro.key isEqual:@"M+ShiftKey"]); }
+    SendKey(owner,window,KeyIn(window,@"\r",36,0)); REQUIRE(Renaming(window,rows) && !owner.recordingItem); SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); REQUIRE(!Renaming(window,rows));
+    // Keys of menu commands reach the recording, not the menus or Save, and are refused: the key in the field, the
+    // triangle after it, the reason below the contents with the triangle before it; the recording goes on.
+    Click(owner,row,@"Key",NO);
+    struct { NSString *c; unsigned short code; NSString *shown, *user; } taken[]={{@"s",1,@"⌘S",@"File › Save"},{@"w",13,@"⌘W",@"File › Close"},{@"t",17,@"⌘T",@"Typeset › Typeset"}};
+    for(size_t i=0;i<3;i++) {
+        SendKey(owner,window,KeyIn(window,taken[i].c,taken[i].code,NSEventModifierFlagCommand));
+        NSString *reason=[NSString stringWithFormat:used,taken[i].user];
+        if(![owner.shortcutStatus.stringValue isEqual:reason]) fprintf(stderr,"REFUSED %s: %s\n",taken[i].shown.UTF8String,owner.shortcutStatus.stringValue.UTF8String);
+        REQUIRE(recording(macro) && [recorder.shortcut isEqual:taken[i].shown] && !cell.warning.hidden && [owner.recordingError isEqual:reason]);
+        REQUIRE([owner.shortcutStatus.stringValue isEqual:reason] && !owner.shortcutStatusMark.hidden && pressed.log.count==0 && [macro.key isEqual:@"M+ShiftKey"]);
+    }
+    // Another macro's shortcut, as the path of its menu item.
+    SendKey(owner,window,Typed(window,@"\x05",@"e",14,NSEventModifierFlagControl|NSEventModifierFlagCommand));
+    REQUIRE(recording(macro) && [recorder.shortcut isEqual:@"⌃⌘E"] && [owner.shortcutStatus.stringValue isEqual:[NSString stringWithFormat:used,[macros stringByAppendingString:@" › Begin/End › equation"]]]);
+    // A key that cannot be a shortcut: the field shows the key pressed, the triangle and the reason stay; recording goes on.
+    NSEvent *refused[]={KeyIn(window,@"a",0,0),Typed(window,@"K",@"K",40,NSEventModifierFlagShift),Typed(window,@"˚",@"k",40,NSEventModifierFlagOption),KeyIn(window,@"\r",36,NSEventModifierFlagCommand),KeyIn(window,@"\t",48,NSEventModifierFlagCommand)};
+    for(size_t i=0;i<5;i++) {
+        SendKey(owner,window,refused[i]);
+        TSShortcutBinding *pressedKey=TSRecordedBinding(refused[i],[refused[i] charactersByApplyingModifiers:0]); NSString *shown=TSShortcutDisplayKey(pressedKey.key,pressedKey.modifiers);
+        if(![recorder.shortcut isEqual:shown]) fprintf(stderr,"REFUSED KEY %zu shown %s, pressed %s\n",i,recorder.shortcut.UTF8String,shown.UTF8String);
+        REQUIRE(recording(macro) && [recorder.shortcut isEqual:shown] && ![shown isEqual:@"⇧⌘M"] && !cell.warning.hidden && [owner.shortcutStatus.stringValue isEqual:unusable] && !owner.shortcutStatusMark.hidden && [macro.key isEqual:@"M+ShiftKey"]);
+    }
+    // The next key that can be one becomes the shortcut and ends the recording: no triangle, no message.
+    int before=reflections; [owner setValue:@NO forKey:@"dataTouched"];
+    SendKey(owner,window,KeyIn(window,@"j",38,NSEventModifierFlagCommand)); ended();
+    REQUIRE([macro.key isEqual:@"J"] && [owner.pendingShortcutKey isEqual:@"J"] && [Shown(rows,row) isEqual:@"⌘J"] && reflections>before && [[owner valueForKey:@"dataTouched"] boolValue]);
+    REQUIRE(owner.shortcutStatus.stringValue.length==0 && owner.shortcutStatusMark.hidden && !owner.recordingError);
+    // Command-Q, which no menu command has here, becomes the shortcut too, and so does the key of a hidden command.
+    Click(owner,row,@"Key",NO); SendKey(owner,window,KeyIn(window,@"q",12,NSEventModifierFlagCommand)); ended(); REQUIRE([macro.key isEqual:@"Q"]);
+    Click(owner,row,@"Key",NO); SendKey(owner,window,KeyIn(window,@"u",32,NSEventModifierFlagCommand)); ended(); REQUIRE([macro.key isEqual:@"U"]);
+    // How shortcuts are saved: +NoCommandKey only without Command; F1–F20 alone.
     struct { NSString *chars, *ignoring; unsigned short code; NSEventModifierFlags flags; NSString *saved, *shown; } cases[]={
         {@"K",@"K",40,NSEventModifierFlagCommand|NSEventModifierFlagShift,@"K+ShiftKey",@"⇧⌘K"},
         {@"\x0b",@"k",40,NSEventModifierFlagControl,@"K+ControlKey+NoCommandKey",@"⌃K"},
@@ -282,34 +452,104 @@ static void CheckShortcutBehavior(TSMacroEditor *owner) {
         {@"k",@"k",40,NSEventModifierFlagCommand,@"K",@"⌘K"},
     };
     for(size_t i=0;i<sizeof cases/sizeof *cases;i++) {
-        int before=reflections; [owner setValue:@NO forKey:@"keyTouched"];
-        REQUIRE([owner recordShortcutEvent:Key(cases[i].chars,cases[i].ignoring,cases[i].code,cases[i].flags)]);
-        if(![owner.pendingShortcutKey isEqual:cases[i].saved]) fprintf(stderr,"saved %s for case %zu\n",owner.pendingShortcutKey.UTF8String,i);
-        REQUIRE([owner.pendingShortcutKey isEqual:cases[i].saved] && [field.shortcut isEqual:cases[i].shown]);
-        REQUIRE(reflections==before+1 && [[owner valueForKey:@"keyTouched"] boolValue]);
+        Click(owner,row,@"Key",NO); REQUIRE(recording(macro));
+        SendKey(owner,window,Typed(window,cases[i].chars,cases[i].ignoring,cases[i].code,cases[i].flags));
+        if(![macro.key isEqual:cases[i].saved]) fprintf(stderr,"saved %s for case %zu\n",macro.key.UTF8String,i);
+        ended(); REQUIRE([macro.key isEqual:cases[i].saved] && [Shown(rows,row) isEqual:cases[i].shown]);
     }
-    // Typing keys stay typing keys: not plain, Shift or Option alone, not Return or Tab with Command.
-    NSString *kept=owner.pendingShortcutKey;
-    NSEvent *refused[]={Key(@"k",@"k",40,0),Key(@"K",@"K",40,NSEventModifierFlagShift),Key(@"˚",@"k",40,NSEventModifierFlagOption),Key(@"\r",@"\r",36,NSEventModifierFlagCommand),Key(@"\t",@"\t",48,NSEventModifierFlagCommand)};
-    for(size_t i=0;i<5;i++) REQUIRE(![owner recordShortcutEvent:refused[i]] && [owner.pendingShortcutKey isEqual:kept]);
-    owner.previousItem=group; REQUIRE(![owner recordShortcutEvent:Key(@"j",@"j",38,NSEventModifierFlagCommand)]); owner.previousItem=macro; [owner syncShortcutField];
-    // The field itself: a click starts, the key pressed ends; Escape and Return keep, Delete and ⊗ remove.
-    [field beginRecording];
-    REQUIRE(window.firstResponder==field && field.recording && [field.display.placeholderString isEqual:NSLocalizedString(@"Press a key",@"")] && field.display.stringValue.length==0 && [field valueForKey:@"keyMonitor"]);
-    [field keyDown:Key(@"\x1b",@"\x1b",53,0)]; REQUIRE(!field.recording && window.firstResponder!=field && [owner.pendingShortcutKey isEqual:kept] && ![field valueForKey:@"keyMonitor"]);
-    [field beginRecording]; [field keyDown:Key(@"\r",@"\r",36,0)]; REQUIRE(!field.recording && [owner.pendingShortcutKey isEqual:kept]);
-    [field beginRecording]; REQUIRE([field performKeyEquivalent:Key(@"j",@"j",38,NSEventModifierFlagCommand)]);
-    REQUIRE(!field.recording && [owner.pendingShortcutKey isEqual:@"J"] && [field.display.stringValue isEqual:@"⌘J"]);
-    REQUIRE(![field performKeyEquivalent:Key(@"s",@"s",1,NSEventModifierFlagCommand)] && [owner.pendingShortcutKey isEqual:@"J"]); // not waiting: the menus get it
-    [field beginRecording]; [field keyDown:Key(@"k",@"k",40,0)]; REQUIRE(field.recording && [owner.pendingShortcutKey isEqual:@"J"]); // refused: still waiting
-    [field keyDown:Key(@"\x7f",@"\x7f",51,0)]; REQUIRE(!field.recording && [owner.pendingShortcutKey isEqual:@""] && field.clearButton.hidden && field.display.stringValue.length==0);
-    owner.pendingShortcutKey=@"J"; [owner syncShortcutField]; REQUIRE(!field.clearButton.hidden);
-    REQUIRE([field hitTest:[field convertPoint:NSMakePoint(NSMidX(field.clearButton.frame),NSMidY(field.clearButton.frame)) toView:field.superview]]==field.clearButton);
-    REQUIRE([field hitTest:[field convertPoint:NSMakePoint(10,NSMidY(field.bounds)) toView:field.superview]]==field);
-    [field.clearButton performClick:nil]; REQUIRE([owner.pendingShortcutKey isEqual:@""]);
-    owner.pendingShortcutKey=macro.key; [owner syncShortcutField];
-    [field beginRecording]; owner.previousItem=nil; [owner syncShortcutField]; REQUIRE(!field.recording && !field.enabled);
-    owner.previousItem=macro; [owner syncShortcutField];
+    // Delete removes the shortcut and ends; then the field is empty, without ⊖, and reads "Press a key".
+    Click(owner,row,@"Key",NO); SendKey(owner,window,KeyIn(window,@"\x7f",51,0)); ended(); REQUIRE([macro.key isEqual:@""] && [Shown(rows,row) isEqual:@""]);
+    Click(owner,row,@"Key",NO); REQUIRE(recording(macro) && recorder.shortcut.length==0 && recorder.removeButton.hidden && [recorder.accessibilityValue isEqual:NSLocalizedString(@"Press a key",@"")]);
+    // Without a shortcut too, the field shows a refused key until the next key that can be one.
+    SendKey(owner,window,KeyIn(window,@"a",0,0)); REQUIRE(recording(macro) && [recorder.shortcut isEqual:@"A"] && !cell.warning.hidden && recorder.removeButton.hidden && [macro.key isEqual:@""]);
+    SendKey(owner,window,KeyIn(window,@"m",46,NSEventModifierFlagCommand|NSEventModifierFlagShift)); ended(); REQUIRE([macro.key isEqual:@"M+ShiftKey"]);
+    // ⊖ removes it.
+    Click(owner,row,@"Key",NO); REQUIRE(!recorder.removeButton.hidden && [recorder hitTest:[recorder convertPoint:NSMakePoint(NSMidX(recorder.removeButton.frame),NSMidY(recorder.removeButton.frame)) toView:recorder.superview]]==recorder.removeButton);
+    [recorder.removeButton performClick:nil]; ended(); REQUIRE([macro.key isEqual:@""]);
+    macro.key=@"M+ShiftKey"; owner.pendingShortcutKey=macro.key; [rows reloadItem:macro];
+    // Tab and Shift-Tab end it and move on.
+    Click(owner,row,@"Key",NO); SendKey(owner,window,KeyIn(window,@"\t",48,0)); REQUIRE(!owner.recordingItem && window.firstResponder!=recorder && cell.superview==nil && [macro.key isEqual:@"M+ShiftKey"]);
+    Click(owner,row,@"Key",NO); SendKey(owner,window,KeyIn(window,@"\x19",48,NSEventModifierFlagShift)); REQUIRE(!owner.recordingItem && window.firstResponder!=recorder && cell.superview==nil);
+    // A click elsewhere ends it, the focus where the click put it; the field leaves the row once the focus has moved.
+    Click(owner,row,@"Key",NO); BOOL editable=contents.editable; contents.editable=YES;
+    REQUIRE([window makeFirstResponder:contents] && !owner.recordingItem && window.firstResponder==contents); Wait(.05);
+    REQUIRE(cell.superview==nil && [Shown(rows,row) isEqual:@"⇧⌘M"] && [macro.key isEqual:@"M+ShiftKey"]);
+    // Started on another item before then, the field goes there and stays.
+    Click(owner,row,@"Key",NO); REQUIRE([window makeFirstResponder:contents]); Click(owner,otherRow,@"Key",YES);
+    REQUIRE(recording(other)); Wait(.05); REQUIRE(recording(other) && [Shown(rows,row) isEqual:@"⇧⌘M"]); CheckRecordingCell(owner,otherRow);
+    SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); ended(); contents.editable=editable;
+    // A double click on a shortcut records, on an item that was not selected too; on a name it tests the macro.
+    [rows deselectAll:nil]; Click(owner,otherRow,@"Key",YES); REQUIRE(recording(other)); SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); ended();
+    tests=0; [rows deselectAll:nil]; Click(owner,otherRow,@"Name",YES); REQUIRE(tests==1 && !owner.recordingItem);
+    // A double click on a submenu opens or closes it, on its name or its shortcut; submenus and separators have no shortcut.
+    BOOL open=[rows isItemExpanded:group];
+    Click(owner,groupRow,@"Key",YES); REQUIRE([rows isItemExpanded:group]!=open && !owner.recordingItem);
+    Click(owner,[rows rowForItem:group],@"Name",YES); REQUIRE([rows isItemExpanded:group]==open && !owner.recordingItem);
+    [rows expandItem:group]; row=[rows rowForItem:macro]; otherRow=[rows rowForItem:other]; line=[rows rowForItem:separator];
+    for(TSMacroTreeNode *item in @[group,separator]) {
+        Click(owner,[rows rowForItem:item],@"Key",NO); Click(owner,[rows rowForItem:item],@"Key",NO); Click(owner,[rows rowForItem:item],@"Key",YES);
+        REQUIRE(!owner.recordingItem && ![owner beginRecordingShortcutAtRow:[rows rowForItem:item]] && cell.superview==nil);
+        [rows expandItem:group];
+    }
+    row=[rows rowForItem:macro]; otherRow=[rows rowForItem:other]; line=[rows rowForItem:separator];
+    // VoiceOver's press on a macro's shortcut records; a submenu's and a separator's cannot be pressed.
+    NSInteger key=[rows columnWithIdentifier:@"Key"];
+    TSMacroShortcutCell *pressedCell=(TSMacroShortcutCell *)[rows preparedCellAtColumn:key row:otherRow];
+    REQUIRE([pressedCell isAccessibilitySelectorAllowed:@selector(accessibilityPerformPress)] && [pressedCell accessibilityPerformPress] && recording(other));
+    SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); ended();
+    for(NSNumber *n in @[@([rows rowForItem:group]),@(line)]) { NSCell *c=[rows preparedCellAtColumn:key row:n.integerValue]; REQUIRE(![c isAccessibilitySelectorAllowed:@selector(accessibilityPerformPress)] && ![c accessibilityPerformPress] && !owner.recordingItem); }
+    // Another selection ends it; so do changed items (added, removed, moved), and closing the window (releaseWindowControls).
+    Click(owner,row,@"Key",NO); [rows selectRowIndexes:[NSIndexSet indexSetWithIndex:otherRow] byExtendingSelection:NO]; REQUIRE(!owner.recordingItem && cell.superview==nil);
+    Click(owner,otherRow,@"Key",NO); REQUIRE(recording(other)); [owner outlineViewItemsChanged:nil]; ended();
+    // The conflicts sheet's Return to Editing records the shortcut of the item it selects.
+    REQUIRE([owner beginRecordingShortcutForItem:macro] && recording(macro) && rows.selectedRow==row); SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); ended();
+    // While an item is renamed, recording ends the renaming first, keeping the name typed.
+    [rows selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO]; REQUIRE([window makeFirstResponder:rows] && [owner beginRenamingSelectedItem]);
+    [Renaming(window,rows) insertText:@"MetaPost 2" replacementRange:NSMakeRange(0,8)];
+    REQUIRE([owner beginRecordingShortcutAtRow:row] && recording(macro) && [macro.name isEqual:@"MetaPost 2"] && !Renaming(window,rows));
+    SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); ended(); macro.name=@"MetaPost";
+    // Not recording, Command-S is the menus' (Save, saveDocument:): the editor's key monitor passes it on.
+    NSEvent *commandS=KeyIn(window,@"s",1,NSEventModifierFlagCommand); REQUIRE([owner keyForContents:commandS]==commandS);
+    // A sheet on the window: no recording.
+    { NSWindow *sheet=[[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,10,10) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
+      Method m=class_getInstanceMethod(NSWindow.class,@selector(attachedSheet)); IMP real=method_setImplementation(m,imp_implementationWithBlock(^id(id w){ return w==window?sheet:nil; }));
+      REQUIRE(![owner beginRecordingShortcutAtRow:row] && !owner.recordingItem); method_setImplementation(m,real); }
+    // A saved shortcut that is inactive: the triangle before it in the list, read out with the reason; the reason
+    // below the contents, after the triangle, while the item is selected.
+    NSString *reason=[NSString stringWithFormat:NSLocalizedString(@"This shortcut is inactive because macro “%@” (%@) uses it first.",@""),[macros stringByAppendingString:@" › MetaPost"],@"⌃⌥⌘R"];
+    [Conflicts setObject:reason forKey:other]; [rows reloadData]; [rows expandItem:nil expandChildren:YES]; [window.contentView layoutSubtreeIfNeeded];
+    TSMacroShortcutCell *warned=(TSMacroShortcutCell *)[rows preparedCellAtColumn:key row:otherRow]; NSRect tipRect=[rows frameOfCellAtColumn:key row:otherRow];
+    REQUIRE(warned.showsWarning && [warned.accessibilityLabel isEqual:reason] && [warned.accessibilityValue isEqual:@"⌃⌥⌘R"] && [warned.stringValue isEqual:@"⌃⌥⌘R"]);
+    REQUIRE(![(TSMacroShortcutCell *)[rows preparedCellAtColumn:key row:row] showsWarning] && [(id)rows.delegate outlineView:rows toolTipForCell:warned rect:&tipRect tableColumn:[rows tableColumnWithIdentifier:@"Key"] item:other mouseLocation:NSZeroPoint]==reason);
+    REQUIRE(YellowPixels(rows,otherRow)>3 && YellowPixels(rows,row)==0);
+    [rows selectRowIndexes:[NSIndexSet indexSetWithIndex:otherRow] byExtendingSelection:NO];
+    REQUIRE([owner.shortcutStatus.stringValue isEqual:reason] && !owner.shortcutStatusMark.hidden && YellowPixels(rows,otherRow)>3);
+    // Recorded, the field shows the shortcut without a triangle; a refusal replaces the reason, which comes back after it.
+    Click(owner,otherRow,@"Key",NO); REQUIRE(recording(other) && cell.warning.hidden && [owner.shortcutStatus.stringValue isEqual:reason]);
+    SendKey(owner,window,KeyIn(window,@"a",0,0)); REQUIRE([owner.shortcutStatus.stringValue isEqual:unusable] && !cell.warning.hidden);
+    SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); ended(); REQUIRE([owner.shortcutStatus.stringValue isEqual:reason] && !owner.shortcutStatusMark.hidden);
+    [rows selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO]; REQUIRE(owner.shortcutStatus.stringValue.length==0 && owner.shortcutStatusMark.hidden);
+    [Conflicts removeAllObjects];
+    // The status mark sits on the first line of the message, just before it.
+    owner.recordingError=nil; [owner showShortcutStatus:unusable]; [owner.editorView layoutSubtreeIfNeeded];
+    { NSTextField *label=owner.shortcutStatus; NSImageView *mark=owner.shortcutStatusMark; NSRect m=[mark alignmentRectForFrame:mark.frame], t=[label alignmentRectForFrame:label.frame];
+      REQUIRE(fabs(NSMaxX(m)+4-NSMinX(t))<.5 && NSMaxY(m)<=NSMaxY(t)+2 && NSMinY(m)>=NSMaxY(t)-2*label.font.boundingRectForFont.size.height); }
+    [owner showShortcutStatus:nil]; REQUIRE(owner.shortcutStatusMark.hidden && owner.shortcutStatus.stringValue.length==0);
+    (void)noKey;
+    save.target=targets[0]; save.action=actions[0]; cancel.target=targets[1]; cancel.action=actions[1];
+    [window makeFirstResponder:window]; [owner setValue:@NO forKey:@"dataTouched"];
+    SampleRoot=kept; [rows reloadData]; [rows expandItem:nil expandChildren:YES];
+}
+// The field follows its row when the sidebar is resized, at the narrowest, the first and the widest width.
+static void CheckRecordingAtSidebarWidths(TSMacroEditor *owner) {
+    NSWindow *window=[owner valueForKey:@"window"]; TSMacroOutlineView *rows=[owner valueForKey:@"outlineView"]; NSSplitView *splitView=SplitOf(window).splitView;
+    TSMacroTreeNode *kept=SampleRoot,*macro=nil; SampleRoot=MakeSampleRoot(&macro,NULL); [rows reloadData]; [rows expandItem:nil expandChildren:YES]; [window.contentView layoutSubtreeIfNeeded];
+    NSInteger row=[rows rowForItem:macro]; CGFloat first=NSWidth(splitView.arrangedSubviews.firstObject.frame);
+    REQUIRE([owner beginRecordingShortcutAtRow:row]);
+    for(NSNumber *wanted in @[@160,@(first),@320]) { [splitView setPosition:wanted.doubleValue ofDividerAtIndex:0]; [window.contentView layoutSubtreeIfNeeded]; CheckRecordingCell(owner,row); }
+    [splitView setPosition:first ofDividerAtIndex:0]; [window.contentView layoutSubtreeIfNeeded];
+    [owner endShortcutRecording]; REQUIRE(!owner.recordingCell.superview);
+    SampleRoot=kept; [rows reloadData]; [rows expandItem:nil expandChildren:YES];
 }
 // The line under the contents.
 static NSBox *ContentsLine(TSMacroEditor *owner) {
@@ -345,9 +585,9 @@ static void CheckContents(TSMacroEditor *owner, NSWindow *window) {
     NSBox *line=ContentsLine(owner); NSRect drawn=[line alignmentRectForFrame:line.frame];
     REQUIRE(line && line.boxType==NSBoxSeparator && fabs(NSMaxY(drawn)-NSMinY(scroll.frame))<.5 && NSMinX(drawn)==0 && fabs(NSWidth(drawn)-NSWidth(main.bounds))<.5);
     REQUIRE([[owner valueForKey:@"nameField"] isHidden]);
-    // No label is left but the shortcut's and the message; nothing runs into the contents.
+    // No label is left but the message; nothing runs into the contents.
     for(NSView *v in main.subviews) if(!v.hidden && v!=scroll && v!=line) {
-        if([v isKindOfClass:NSTextField.class] && v!=owner.shortcutStatus && v!=owner.shortcutLabel) { fprintf(stderr,"LABEL LEFT %s\n",((NSTextField *)v).stringValue.UTF8String); REQUIRE(NO); }
+        if([v isKindOfClass:NSTextField.class] && v!=owner.shortcutStatus) { fprintf(stderr,"LABEL LEFT %s\n",((NSTextField *)v).stringValue.UTF8String); REQUIRE(NO); }
         REQUIRE(!NSIntersectsRect(NSInsetRect(v.frame,.5,.5),scroll.frame));
     }
 }
@@ -411,12 +651,16 @@ static void CheckEditor(TSMacroEditor *owner, NSWindow *window) {
     NSButton *save=[owner valueForKey:@"saveButton"],*cancel=[owner valueForKey:@"cancelButton"],*test=[owner valueForKey:@"testButton"];
     REQUIRE(owner.sidebar && owner.listBar && host && owner.insertPlaceholderButton);
     CheckSidebar(owner,list);
-    CheckShortcutField(owner);
+    CheckNibShortcutRows(owner);
     CheckContents(owner,window);
     NSScrollView *scroll=[contentsOf(owner) enclosingScrollView];
-    // The shortcut's label 20 points from the sidebar, as Insert and the message.
-    REQUIRE(fabs(NSMinX(owner.shortcutLabel.frame)-20)<3.5);
-    REQUIRE(owner.shortcutStatus.superview==host && fabs(NSMinX(owner.shortcutStatus.frame)-20)<.5 && fabs(NSMaxX(owner.shortcutStatus.frame)-(NSWidth(host.bounds)-20))<.5);
+    // The message in the band 20 points from the sidebar and from the trailing edge, as Insert: the triangle where
+    // the text of a label in that band begins, the text 4 points after it.
+    { NSTextField *label=owner.shortcutStatus; NSImageView *mark=owner.shortcutStatusMark; NSRect m=[mark alignmentRectForFrame:mark.frame], t=[label alignmentRectForFrame:label.frame];
+      NSEdgeInsets inset=label.alignmentRectInsets; CGFloat start=20+inset.left, end=NSWidth(host.bounds)-20-inset.right;
+      REQUIRE(label.superview==host && mark.superview==host && [label.textColor isEqual:NSColor.labelColor] && label.font.pointSize==NSFont.smallSystemFontSize);
+      if(fabs(NSMinX(m)-start)>=.5 || fabs(NSMinX(t)-NSMaxX(m)-4)>=.5 || fabs(NSMaxX(t)-end)>=.5) fprintf(stderr,"MESSAGE mark %s text %s in %.1f\n",NSStringFromRect(m).UTF8String,NSStringFromRect(t).UTF8String,NSWidth(host.bounds));
+      REQUIRE(fabs(NSMinX(m)-start)<.5 && fabs(NSMinX(t)-NSMaxX(m)-4)<.5 && fabs(NSMaxX(t)-end)<.5); }
     REQUIRE(fabs(NSMaxX(save.frame)-(NSWidth(host.bounds)-20))<.5 && fabs(NSMinX(save.frame)-12-NSMaxX(cancel.frame))<.5 && NSWidth(save.frame)==NSWidth(cancel.frame));
     REQUIRE(fabs(NSMinX(test.frame)-20)<.5 && NSMaxX(test.frame)+12<=NSMinX(cancel.frame));
     for(NSButton *b in @[save,cancel,test]) REQUIRE(b.superview==host && b.fittingSize.width<=NSWidth(b.frame)+.5);
@@ -432,7 +676,7 @@ static void CheckEditor(TSMacroEditor *owner, NSWindow *window) {
     CheckPlaceholderRow(owner);
     // What this layout adds or moves must not overlap anything; older labels in the
     // nibs may run into their fields by a few points.
-    NSArray *placed=@[scroll,owner.insertPlaceholderButton,owner.placeholdersButton,owner.shortcutLabel,owner.shortcutField,save,cancel,test];
+    NSArray *placed=@[scroll,owner.insertPlaceholderButton,owner.placeholdersButton,save,cancel,test];
     for(NSView *a in placed) {
         REQUIRE(NSContainsRect(NSInsetRect(host.bounds,-.5,-.5),a.frame));
         for(NSView *b in host.subviews) if(a!=b && !b.hidden && b!=ContentsLine(owner)) {
@@ -461,7 +705,7 @@ static TSMacroTreeNode *MakeSampleRoot(TSMacroTreeNode **selected, TSMacroTreeNo
 // - an item renamed: Return and Enter keep the new name (an empty one keeps the old), Escape the old one, a focus
 //   change the new one; none closes the window;
 // - the contents: Return and Enter start a new line, Escape does not cancel;
-// - elsewhere (the shortcut field when it does not wait for keys): Return saves, Escape cancels.
+// - elsewhere (nothing focused, Insert, the buttons): Return saves, Escape cancels.
 // A double click never edits a name; the field of the name is as wide as the name and grows with it.
 static void CheckKeys(TSMacroEditor *owner) {
     NSWindow *window=[owner valueForKey:@"window"]; NSOutlineView *rows=[owner valueForKey:@"outlineView"];
@@ -527,14 +771,14 @@ static void CheckKeys(TSMacroEditor *owner) {
     }
     contents.string=@"ab"; SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); REQUIRE(recorder.log.count==0 && [contents.string hasPrefix:@"ab"]);
     // Elsewhere: Return saves, Escape cancels.
-    BOOL enabled=owner.shortcutField.enabled; owner.shortcutField.enabled=YES; REQUIRE([window makeFirstResponder:owner.shortcutField]);
+    REQUIRE([window makeFirstResponder:window]);
     SendKey(owner,window,KeyIn(window,@"\r",36,0)); SendKey(owner,window,KeyIn(window,@"\x1b",53,0));
     REQUIRE([recorder.log isEqual:(@[save.title,cancel.title])]);
     // Other keys, and Command-Return, are not the monitor's.
     REQUIRE([window makeFirstResponder:contents]);
     NSEvent *letter=KeyIn(window,@"x",7,0); REQUIRE([owner keyForContents:letter]==letter);
     NSEvent *commandReturn=KeyIn(window,@"\r",36,NSEventModifierFlagCommand); REQUIRE([owner keyForContents:commandReturn]==commandReturn);
-    owner.shortcutField.enabled=enabled; contents.editable=editable; contents.string=@""; [window makeFirstResponder:window];
+    contents.editable=editable; contents.string=@""; [window makeFirstResponder:window];
     save.target=targets[0]; save.action=actions[0]; cancel.target=targets[1]; cancel.action=actions[1];
     [owner setValue:@NO forKey:@"dataTouched"];
     SampleRoot=kept; [rows reloadData]; [rows expandItem:nil expandChildren:YES];
@@ -563,7 +807,6 @@ static void CheckSecondClick(TSMacroEditor *owner) {
 // key window here, as on screen.
 static IMP KeyWindowIMP, AppKeyWindowIMP; static BOOL KeyWindow(id self, SEL cmd) { return YES; }
 static NSWindow *TheKeyWindow; static id AppKeyWindow(id self, SEL cmd) { return TheKeyWindow; }
-static void Wait(NSTimeInterval seconds) { [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:seconds]]; }
 static NSEvent *Mouse(NSWindow *window, NSEventType type, NSPoint at, NSInteger clicks) {
     return [NSEvent mouseEventWithType:type location:at modifierFlags:0 timestamp:NSProcessInfo.processInfo.systemUptime windowNumber:window.windowNumber context:nil eventNumber:0 clickCount:clicks pressure:type==NSEventTypeLeftMouseDown?1:0];
 }
@@ -708,8 +951,10 @@ static TSMacroTreeNode *MakeSampleRoot(TSMacroTreeNode **selected, TSMacroTreeNo
 }
 // TS_RENDER_DIR with TS_RENDER_ONLY (state-light or state-dark): the image of one state of the window, title bar
 // and all, alone in its run: drawn again, the title bar of an offscreen window draws a line under it that the
-// window does not have at first. The states: as it opens (a macro selected, its contents, shortcut and ⊗, and a
-// conflict), an item renamed, the contents focused, the shortcut field waiting for keys, larger, and smallest.
+// window does not have at first. The states: as it opens (a macro selected, its contents), an item renamed, the
+// contents focused, a shortcut recorded in the list (recording), a key refused there because another macro uses
+// it (refused) or because it cannot be a shortcut (invalid), a saved shortcut that is inactive selected (conflict),
+// larger, and smallest.
 static void RenderOnly(const char *path, NSString *only) {
     DrawAsKeyWindow();
     TSMacroEditor *owner=[TSMacroEditor new]; Editor=owner;
@@ -718,17 +963,23 @@ static void RenderOnly(const char *path, NSString *only) {
     NSWindow *window=[owner valueForKey:@"window"]; REQUIRE(window && !window.visible);
     UseNameCells(owner);
     [window setFrameUsingName:@"Macro Editor"];
-    [owner useSystemFont]; [owner installShortcutStatus]; [owner installShortcutField]; [owner installPlaceholderControls]; [owner layoutDialogButtons]; [owner installSidebar];
+    [owner useSystemFont]; [owner installShortcutStatus]; [owner hideNibShortcutRows]; [owner installPlaceholderControls]; [owner layoutDialogButtons]; [owner installSidebar];
+    NSArray *parts=[only componentsSeparatedByString:@"-"]; NSString *state=parts.firstObject; BOOL dark=[parts.lastObject isEqual:@"dark"];
     NSOutlineView *rows=[owner valueForKey:@"outlineView"];
-    TSMacroTreeNode *shown=nil; SampleRoot=MakeSampleRoot(&shown,NULL); [rows reloadData]; [rows expandItem:nil expandChildren:YES];
+    TSMacroTreeNode *shown=nil; SampleRoot=MakeSampleRoot(&shown,NULL);
+    if([state isEqual:@"conflict"]) {
+        // Two saved shortcuts that another macro uses first: the selected one and \ref{•‹label›}.
+        NSString *format=NSLocalizedString(@"This shortcut is inactive because macro “%@” (%@) uses it first.",@""), *macros=NSLocalizedString(@"Macros",@"");
+        [Conflicts setObject:[NSString stringWithFormat:format,[macros stringByAppendingString:@" › Begin/End › equation*"],@"⇧⌘M"] forKey:shown];
+        [Conflicts setObject:[NSString stringWithFormat:format,[macros stringByAppendingString:@" › Insert Reference"],@"⌃⌥⌘R"] forKey:[SampleRoot childAtIndex:2]];
+    }
+    [rows reloadData]; [rows expandItem:nil expandChildren:YES];
     NSInteger row=[rows rowForItem:shown]; [rows selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)row] byExtendingSelection:NO];
-    owner.previousItem=shown; owner.pendingShortcutKey=shown.key; [owner syncShortcutField];
+    REQUIRE(owner.previousItem==shown);
     [[owner valueForKey:@"nameField"] setStringValue:shown.name];
     NSTextView *contents=contentsOf(owner); contents.editable=YES; contents.string=shown.content; [owner syncPlaceholderControls];
-    owner.shortcutStatus.stringValue=[NSString stringWithFormat:NSLocalizedString(@"This shortcut is inactive because it conflicts with “%@” (%@).",@""),@"MetaPost",@"⇧⌘M"];
     // As after the first key the window has had: the default button drawn as such.
     { NSButton *save=[owner valueForKey:@"saveButton"]; [save highlight:YES]; [save highlight:NO]; }
-    NSArray *parts=[only componentsSeparatedByString:@"-"]; NSString *state=parts.firstObject; BOOL dark=[parts.lastObject isEqual:@"dark"];
     NSRect frame=window.frame;
     if([state isEqual:@"resized"]) { frame.size.width+=260; frame.size.height+=160; frame.origin.y-=160; }
     if([state isEqual:@"smallest"]) frame.size=window.minSize;
@@ -736,11 +987,13 @@ static void RenderOnly(const char *path, NSString *only) {
     [window makeFirstResponder:rows];
     if([state isEqual:@"renaming"]) REQUIRE([owner beginRenamingSelectedItem]);
     if([state isEqual:@"contents"]) { REQUIRE([window makeFirstResponder:contents]); contents.selectedRange=NSMakeRange(18,10); }
-    if([state isEqual:@"recording"]) [owner.shortcutField beginRecording];
+    if([@[@"recording",@"refused",@"invalid"] containsObject:state]) REQUIRE([owner beginRecordingShortcutAtRow:row]);
+    if([state isEqual:@"refused"]) { SendKey(owner,window,Typed(window,@"\x05",@"e",14,NSEventModifierFlagControl|NSEventModifierFlagCommand)); REQUIRE(owner.recordingError && [owner.refusedShortcut isEqual:@"⌃⌘E"]); }
+    if([state isEqual:@"invalid"]) { SendKey(owner,window,KeyIn(window,@"a",0,0)); REQUIRE(owner.recordingError && [owner.refusedShortcut isEqual:@"A"]); }
     NSString *name=[[@(path) stringByDeletingLastPathComponent].stringByDeletingLastPathComponent.lastPathComponent stringByDeletingPathExtension];
     if([@(path).lastPathComponent containsString:@"101300"]) name=[name stringByAppendingString:@"-10.13"];
     WritePNG(window.contentView.superview,[NSAppearance appearanceNamed:dark?NSAppearanceNameDarkAqua:NSAppearanceNameAqua],[NSString stringWithFormat:@"%s/%@-%@.png",getenv("TS_RENDER_DIR"),name,only]);
-    [owner.shortcutField endRecording]; [owner stopKeyMonitor];
+    [owner endShortcutRecording]; [owner stopKeyMonitor];
     window.releasedWhenClosed=NO; [window close];
 }
 // TS_CONTROLS: the kind of each control beside the sidebar and of those AppKit makes in code (as the Multiple Replace window's).
@@ -766,23 +1019,26 @@ static void DumpControls(TSMacroEditor *owner) {
 // editor's windowWillClose: does with the controls (releaseWindowControls; the runner checks
 // that windowWillClose: calls it).
 static void CheckReopening(const char *path) {
-    TSMacroEditor *owner=[TSMacroEditor new]; Editor=owner; NSWindow *previous=nil; NSVisualEffectView *previousSidebar=nil; id previousMonitor=nil;
+    TSMacroEditor *owner=[TSMacroEditor new]; Editor=owner; NSWindow *previous=nil; NSVisualEffectView *previousSidebar=nil; id previousMonitor=nil; TSShortcutRecordingCell *previousCell=nil;
     for(int open=0;open<3;open++) {
         NSNib *nib=[[NSNib alloc] initWithNibData:[NSData dataWithContentsOfFile:@(path)] bundle:nil];
         NSArray *objects; REQUIRE([nib instantiateWithOwner:owner topLevelObjects:&objects]);
         NSWindow *window=[owner valueForKey:@"window"]; REQUIRE(window && window!=previous && !window.visible);
         UseNameCells(owner);
-        [owner useSystemFont]; [owner installShortcutStatus]; [owner installShortcutField]; [owner installPlaceholderControls]; [owner layoutDialogButtons]; [owner installSidebar];
+        [owner useSystemFont]; [owner installShortcutStatus]; [owner hideNibShortcutRows]; [owner installPlaceholderControls]; [owner layoutDialogButtons]; [owner installSidebar];
         REQUIRE(owner.sidebar && owner.sidebar!=previousSidebar && owner.sidebar.window==window && owner.editorView.window==window && contentsOf(owner).window==window && ContentsLine(owner).window==window);
-        REQUIRE(owner.shortcutField.window==window && owner.insertPlaceholderButton.window==window && owner.shortcutStatus.window==window && owner.listBar.window==window);
+        REQUIRE(owner.recordingCell && owner.recordingCell!=previousCell && owner.recordingCell.window==nil && owner.insertPlaceholderButton.window==window && owner.shortcutStatus.window==window && owner.shortcutStatusMark.window==window && owner.listBar.window==window);
         REQUIRE(owner.contentsKeyMonitor && owner.contentsKeyMonitor!=previousMonitor);
         CheckEditor(owner,window);
         CheckKeys(owner); CheckSecondClick(owner);
-        // The shortcut field, Insert and its help work in the new window too.
-        CheckShortcutBehavior(owner); CheckPlaceholderControls(owner);
-        previous=window; previousSidebar=owner.sidebar; previousMonitor=owner.contentsKeyMonitor;
-        { TSMacroOutlineView *rows=[owner valueForKey:@"outlineView"]; [rows scheduleRenameOfRow:0]; [owner releaseWindowControls]; REQUIRE(!rows.pendingRename); }
-        REQUIRE(!owner.sidebar && !owner.listBar && !owner.editorView && !owner.shortcutField && !owner.shortcutLabel && !owner.insertPlaceholderButton && !owner.placeholdersButton && !owner.shortcutStatus && !owner.contentsKeyMonitor);
+        // The recording of a shortcut, Insert and its help work in the new window too.
+        CheckRecording(owner); CheckPlaceholderControls(owner);
+        previous=window; previousSidebar=owner.sidebar; previousMonitor=owner.contentsKeyMonitor; previousCell=owner.recordingCell;
+        // Closing ends a recording and takes the field away with the other controls.
+        { TSMacroOutlineView *rows=[owner valueForKey:@"outlineView"]; TSMacroTreeNode *macro=nil; SampleRoot=MakeSampleRoot(&macro,NULL); [rows reloadData]; [rows expandItem:nil expandChildren:YES];
+          REQUIRE([owner beginRecordingShortcutAtRow:[rows rowForItem:macro]]); [rows scheduleRenameOfRow:0]; [owner releaseWindowControls];
+          REQUIRE(!rows.pendingRename && !owner.recordingItem && !rows.recordingView && previousCell.superview==nil); SampleRoot=nil; }
+        REQUIRE(!owner.sidebar && !owner.listBar && !owner.editorView && !owner.recordingCell && !owner.insertPlaceholderButton && !owner.placeholdersButton && !owner.shortcutStatus && !owner.shortcutStatusMark && !owner.contentsKeyMonitor);
         window.releasedWhenClosed=NO; [window close];
     }
 }
@@ -794,6 +1050,7 @@ int main(int argc,char **argv) { @autoreleasepool {
     [NSApplication sharedApplication]; [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
     // Make even an accidentally-visible nib incapable of ordering a window onscreen.
     method_setImplementation(class_getInstanceMethod(NSWindow.class,@selector(orderWindow:relativeTo:)),(IMP)NoOrder);
+    Conflicts=[NSMapTable strongToStrongObjectsMapTable]; UseTestMenu();
     [memoryDefaults setObject:@"414 289 585 100 0 0 1920 1080 " forKey:@"NSWindow Frame Macro Editor"];
     CGFloat savedHeight=0;
     if(getenv("TS_RENDER_DIR") && getenv("TS_RENDER_ONLY")) { RenderOnly(argv[1],@(getenv("TS_RENDER_ONLY"))); return 0; }
@@ -825,7 +1082,7 @@ int main(int argc,char **argv) { @autoreleasepool {
     REQUIRE(window.frame.size.height==MAX(originalHeight,window.minSize.height));
     if(round) REQUIRE(originalHeight==savedHeight);
     if(getenv("TS_DUMP")) fprintf(stderr,"BEFORE key %s shift %s contents %s\n",NSStringFromRect([[owner valueForKey:@"keyField"] frame]).UTF8String,NSStringFromRect([[owner valueForKey:@"shiftCheckBox"] frame]).UTF8String,NSStringFromRect([[[owner valueForKey:@"contentTextView"] enclosingScrollView] frame]).UTF8String);
-    [owner installShortcutField];[owner installPlaceholderControls];
+    [owner hideNibShortcutRows];[owner installPlaceholderControls];
     [owner layoutDialogButtons];
     TSMacroTreeNode *shown=nil; SampleRoot=nil;
     NSOutlineView *rows=[owner valueForKey:@"outlineView"];
@@ -845,29 +1102,35 @@ int main(int argc,char **argv) { @autoreleasepool {
     CheckEditor(owner,window);
     if(getenv("TS_CONTROLS") && round==0) DumpControls(owner);
     CheckListFitsSidebarWidths(owner);
-    if(round==0) { CheckShortcutBehavior(owner); CheckPlaceholderControls(owner); CheckKeys(owner); CheckSecondClick(owner); CheckPendingRename(owner); CheckNewItemNamed(owner); CheckSeparatorImage(); }
+    if(round==0) { CheckRecording(owner); CheckRecordingAtSidebarWidths(owner); CheckPlaceholderControls(owner); CheckKeys(owner); CheckSecondClick(owner); CheckPendingRename(owner); CheckNewItemNamed(owner); CheckSeparatorImage(); }
     NSArray<NSValue *> *openedFrames=MainFrames(owner);
     NSTextField *label=owner.shortcutStatus; NSView *host=owner.editorView;
     // The messages, as long as they come, wrap within the band, at this width and at the narrowest.
     NSMutableArray<NSString *> *messages=[NSMutableArray arrayWithObjects:@"This shortcut is inactive because it conflicts with “Typeset › plain TeX” (⇧⌘T).",@"このキーは“タイプセット › plain TeX”（⇧⌘T）と重なっているため無効です。",nil];
     for(NSString *format in @[@"This shortcut is inactive because macro “%@” (%@) uses it first.",@"This shortcut is inactive because it conflicts with “%@” (%@).",@"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later."])
         [messages addObject:[NSString stringWithFormat:NSLocalizedString(format,@""),[NSString stringWithFormat:@"%@ › Begin/End › equation*",NSLocalizedString(@"Macros",@"")],@"⌃⌥⇧⌘W"]];
+    // The reasons a key pressed while recording is refused: one command that uses it, two, or a key that cannot be one.
+    NSString *longMacro=[NSString stringWithFormat:@"%@ › Begin/End › equation*",NSLocalizedString(@"Macros",@"")];
+    [messages addObject:[NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.",@""),longMacro]];
+    [messages addObject:[NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by:\n%@",@""),[@[@"Typeset › Typeset",longMacro] componentsJoinedByString:@"\n"]]];
+    [messages addObject:NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.",@"")];
     NSRect frame=window.frame;
     for(int narrow=0;narrow<2;narrow++) {
       if(narrow) { NSRect n=window.frame; n.size.width=window.minSize.width; [window setFrame:n display:NO]; [window.contentView layoutSubtreeIfNeeded]; }
       for (NSString *text in messages)
       for (NSAppearanceName mode in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]) {
-        host.appearance=[NSAppearance appearanceNamed:mode];label.stringValue=text;
+        host.appearance=[NSAppearance appearanceNamed:mode];[owner showShortcutStatus:text];
         REQUIRE(NSContainsRect(host.bounds,label.frame));
         CGFloat needed=[label.cell cellSizeForBounds:NSMakeRect(0,0,label.bounds.size.width,CGFLOAT_MAX)].height;
         if(needed>label.bounds.size.height) fprintf(stderr,"MESSAGE %.0f > %.0f at width %.0f: %s\n",needed,label.bounds.size.height,label.bounds.size.width,text.UTF8String);
         REQUIRE(needed<=label.bounds.size.height);
-        for (NSView *v in host.subviews) if(v!=label && !v.hidden) { if([v isKindOfClass:NSScrollView.class]) REQUIRE(NSContainsRect(host.bounds,v.frame)); if(NSIntersectsRect(label.frame,v.frame)) fprintf(stderr,"OVERLAP %s %s label %s\n",NSStringFromClass(v.class).UTF8String,NSStringFromRect(v.frame).UTF8String,NSStringFromRect(label.frame).UTF8String); REQUIRE(!NSIntersectsRect(label.frame,v.frame)); }
+        REQUIRE(!owner.shortcutStatusMark.hidden && NSContainsRect(host.bounds,owner.shortcutStatusMark.frame));
+        for (NSView *v in host.subviews) if(v!=label && v!=owner.shortcutStatusMark && !v.hidden) { if([v isKindOfClass:NSScrollView.class]) REQUIRE(NSContainsRect(host.bounds,v.frame)); if(NSIntersectsRect(label.frame,v.frame)) fprintf(stderr,"OVERLAP %s %s label %s\n",NSStringFromClass(v.class).UTF8String,NSStringFromRect(v.frame).UTF8String,NSStringFromRect(label.frame).UTF8String); REQUIRE(!NSIntersectsRect(label.frame,v.frame)); }
         NSBitmapImageRep *rep=[window.contentView bitmapImageRepForCachingDisplayInRect:[window.contentView bounds]];[window.contentView cacheDisplayInRect:[window.contentView bounds] toBitmapImageRep:rep];
         REQUIRE(rep.pixelsWide>400 && rep.pixelsHigh>300 && !window.visible);
       }
     }
-    label.stringValue=@""; host.appearance=nil;
+    [owner showShortcutStatus:nil]; host.appearance=nil;
     [window setFrame:frame display:NO]; [window.contentView layoutSubtreeIfNeeded];
     { NSRect again=window.frame; [owner installShortcutStatus]; REQUIRE(NSEqualRects(again,window.frame)); }
     smallest=window.frame; smallest.size.height=window.minSize.height; [window setFrame:smallest display:NO];
@@ -901,5 +1164,5 @@ int main(int argc,char **argv) { @autoreleasepool {
     window.releasedWhenClosed=NO; [window close];
     }
     CheckReopening(argv[1]);
-    printf("PASS: %s sidebar, contents, keys, renaming in the list, reopening, status band: bounds, wrapping, control separation, resizing, idempotence\n",argv[1]);
+    printf("PASS: %s sidebar, contents, keys, renaming in the list, recording shortcuts in the list and their warnings, reopening, status band: bounds, wrapping, control separation, resizing, idempotence\n",argv[1]);
 } return 0; }
