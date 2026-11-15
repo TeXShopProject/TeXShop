@@ -51,8 +51,8 @@
 "catalog.general.3.1.title" = "Miniaturizar la ventana raíz abierta";
 "group.general.5.title" = "Avanzado";
 "group.general.6.title" = "Icono del Dock durante la ejecución";
-"catalog.general.5.0.title" = "Los ajustes que no aparecen aquí se describen en la ayuda «Líneas de comentario y ajustes ocultos».";
-"catalog.general.5.1.title" = "Abrir Líneas de comentario y ajustes ocultos";
+"catalog.general.5.0.title" = "Los ajustes que no aparecen aquí se describen en la ayuda «Líneas mágicas y ajustes ocultos».";
+"catalog.general.5.1.title" = "Abrir el manual de líneas mágicas y ajustes ocultos…";
 "group.encoding.title" = "Codificación de caracteres";
 "catalog.documents.0.0.title" = "Codificación de documentos nuevos";
 "catalog.documents.0.1.title" = "Mostrar codificación en el diálogo Guardar";
