@@ -909,7 +909,9 @@ static void TestLayout(NSString *_Nullable imageDirectory)
                   && WritePNG(options, appearance, [base stringByAppendingString:@"-set-options.png"])
                   && WritePNG((NSView *_Nonnull)empty.window.contentView, appearance, [base stringByAppendingString:@"-multiple-replace-empty.png"])
                   && WritePNG((NSView *_Nonnull)noRules.window.contentView, appearance, [base stringByAppendingString:@"-multiple-replace-norules.png"])
-                  && WritePNG(samplesContent, appearance, [base stringByAppendingString:@"-multiple-replace-samples.png"]), @"images written");
+                  && WritePNG(samplesContent, appearance, [base stringByAppendingString:@"-multiple-replace-samples.png"])
+                  // With its title bar (the window's frame view), to compare with the macro editor's (Tests/MacroShortcutLayout.m).
+                  && WritePNG((NSView *_Nonnull)content.superview, appearance, [base stringByAppendingString:@"-multiple-replace-window.png"]), @"images written");
         }
     }
     [NSFileManager.defaultManager removeItemAtURL:directory.URLByDeletingLastPathComponent error:NULL];
