@@ -404,3 +404,14 @@
 "Location" = "위치";
 "Line" = "줄";
 "Column" = "열";
+
+/* Text Statistics, opened from the status bar */
+"Text Statistics…" = "본문 통계…";
+"Whole Document" = "문서 전체";
+"Selection" = "선택 부분";
+"Text" = "본문";
+"Refresh" = "새로 고침";
+"Counting…" = "세는 중…";
+"detex was not found." = "detex를 찾을 수 없습니다.";
+"detex failed." = "detex가 실패했습니다.";
+"Counted by detex without the TeX commands, with the files read by \\input and \\include." = "detex로 TeX 명령을 제외하고 센 수입니다. \\input과 \\include로 읽는 파일도 포함합니다.";

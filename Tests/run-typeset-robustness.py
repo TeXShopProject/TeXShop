@@ -95,7 +95,6 @@ pieces = {
     'SEPARATE': method(jobs, '- (NSString *) separate: (NSString *)myEngine into:(NSMutableArray *)args'),
     'OLD_HEADING': block(jobs, '- (void) saveFinished:',
                          'if ((! done) && ([SUD boolForKey:UseOldHeadingCommandsKey])) {'),
-    'SAVE_FOR_STATISTICS': method('TSDocument.m', '- (void)saveForStatistics:'),
     'HTML_HOME_CHANGED': method('TSPreferences.m', '- (IBAction)HtmlHomeChanged:(id)sender'),
 }
 
@@ -180,18 +179,15 @@ static int probe_kill(pid_t pid, int sig) {
 }
 @property (strong) NSTask *texTask, *bibTask, *indexTask, *metaFontTask;
 @property (strong) NSPipe *outputPipe, *inputPipe;
-@property BOOL statisticsRaise;
 @property (copy) NSString *helpEnginePath, *helpPATH;
 - (NSDictionary *)environmentForSubTask;
 - (void)checkATaskStatusFromTerminationRoutine:(id)task;
 - (void)fixMacroMenu;
-- (void)showStatistics:sender;
 @end
 
 @implementation Probe
 - (void)checkATaskStatusFromTerminationRoutine:(id)task { }
 - (void)fixMacroMenu { }
-- (void)showStatistics:sender { if (self.statisticsRaise) [NSException raise:NSRangeException format:@"probe"]; }
 ENVIRONMENT
 SCRAP_ENVIRONMENT
 - (void)helpPathFor:(id)unused
@@ -224,7 +220,6 @@ SEPARATE
     BOOL done = NO;
 OLD_HEADING
 }
-SAVE_FOR_STATISTICS
 @end
 
 @interface ProbePreferencesController : NSObject {
@@ -509,14 +504,6 @@ int main(int argc, char **argv) {
                 BOOL empty = p->theScript == kTypesetViaGhostScript;
                 [p oldHeadingFor:@"%&pdflatex\n\\relax\n"];
                 ok = empty && p->theScript == kTypesetViaPDFTeX && p->withLatex;
-            });
-
-            // Save completion (A8).
-            CHECK(@"saveForStatistics:didSave:contextInfo: contains exceptions", {
-                p.statisticsRaise = YES;
-                [p saveForStatistics:nil didSave:YES contextInfo:NULL];
-                p.statisticsRaise = NO;
-                ok = YES;
             });
 
             // Immediate HTML Home persistence (A5); full validator lifecycle is tested separately.

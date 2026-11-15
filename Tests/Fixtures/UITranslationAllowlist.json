@@ -117,6 +117,7 @@
     "Info: %@",
     "Labels",
     "TeXShop Demos",
+    "Text",
     "Updates"
    ],
    "MacroEditor.nib": [
@@ -336,7 +337,8 @@
    "Localizable.strings": [
     "Editor",
     "General",
-    "Tab"
+    "Tab",
+    "Text"
    ],
    "MacroEditor.nib": [
     "Separator"

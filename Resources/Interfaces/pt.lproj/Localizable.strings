@@ -404,3 +404,14 @@
 "Location" = "Localização";
 "Line" = "Linha";
 "Column" = "Coluna";
+
+/* Text Statistics, opened from the status bar */
+"Text Statistics…" = "Estatísticas do Texto…";
+"Whole Document" = "Documento Inteiro";
+"Selection" = "Seleção";
+"Text" = "Texto";
+"Refresh" = "Atualizar";
+"Counting…" = "Contando…";
+"detex was not found." = "O detex não foi encontrado.";
+"detex failed." = "O detex falhou.";
+"Counted by detex without the TeX commands, with the files read by \\input and \\include." = "Contado pelo detex sem os comandos do TeX, incluindo os arquivos lidos com \\input e \\include.";

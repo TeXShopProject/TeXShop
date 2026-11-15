@@ -35,6 +35,7 @@ static const CGFloat TSSizeGap = 16;
 @property (nonatomic) dispatch_queue_t queue;
 @property (nonatomic) BOOL contentNeedsCount, waiting, stopped;
 @property (nonatomic) NSUInteger contentVersion;
+@property (nonatomic, strong) NSButton *button;
 @end
 
 @implementation TSSourceStatusBar
@@ -69,6 +70,8 @@ static CGFloat TSEdgePadding(void)
     return 12;
 }
 
+static NSFont *TSBarFont(void);
+
 #pragma mark Making
 
 - (instancetype)initWithTextStorage:(NSTextStorage *)textStorage textViews:(NSArray<NSTextView *> *)textViews
@@ -90,8 +93,29 @@ static CGFloat TSEdgePadding(void)
         for (NSTextView *view in textViews)
             [center addObserver:self selector:@selector(textViewDidChangeSelection:) name:NSTextViewDidChangeSelectionNotification object:view];
         [center addObserver:self selector:@selector(shownDidChange:) name:TSSourceStatusBarShownDidChangeNotification object:nil];
+        // Text Statistics…, a borderless button at the right, as the controls of CotEditor's status bar.
+        _button = [NSButton buttonWithTitle:NSLocalizedString(@"Text Statistics…", @"status bar: the button that opens Text Statistics")
+                                     target:self action:@selector(openStatistics:)];
+        _button.bordered = NO;
+        _button.showsBorderOnlyWhileMouseInside = YES;
+        _button.font = TSBarFont();
+        _button.controlSize = NSControlSizeSmall;
+        _button.contentTintColor = NSColor.labelColor;
+        [_button sizeToFit];
+        [self addSubview:_button];
     }
     return self;
+}
+
+- (void)openStatistics:(id)sender
+{
+    if (self.showStatistics)
+        self.showStatistics(self.button);
+}
+
+- (nullable NSButton *)statisticsButton
+{
+    return self.superview && !self.button.hidden ? self.button : nil;
 }
 
 - (void)dealloc
@@ -258,6 +282,7 @@ static CGFloat TSEdgePadding(void)
     self.needsDisplay = YES;
     [self updateAccessibility];
     [self updateToolTip];
+    [self placeButton];
 }
 
 - (void)countNow
@@ -287,6 +312,7 @@ static CGFloat TSEdgePadding(void)
     self.needsDisplay = YES;
     [self updateAccessibility];
     [self updateToolTip];
+    [self placeButton];
 }
 
 #pragma mark Drawing
@@ -372,6 +398,11 @@ static NSAttributedString *TSItem(NSString *label, NSString *value)
 // left out, with all after it, rather than cut.
 - (NSArray<NSAttributedString *> *)fittingItems:(NSAttributedString *_Nullable *_Nullable)fileSize
 {
+    return [self fittingItems:fileSize buttonX:NULL];
+}
+
+- (NSArray<NSAttributedString *> *)fittingItems:(NSAttributedString *_Nullable *_Nullable)fileSize buttonX:(CGFloat *)buttonX
+{
     CGFloat padding = TSEdgePadding();
     CGFloat room = NSWidth(self.bounds) - 2 * padding;
     NSAttributedString *size = [self fileSizeItem];
@@ -383,6 +414,13 @@ static NSAttributedString *TSItem(NSString *label, NSString *value)
     }
     if (fileSize)
         *fileSize = size;
+    // The button keeps its place before the file size while there is room for it.
+    CGFloat button = ceil(NSWidth(self.button.frame));
+    BOOL buttonFits = button + TSSizeGap <= room;
+    if (buttonFits)
+        room -= button + TSSizeGap;
+    if (buttonX)
+        *buttonX = buttonFits ? NSWidth(self.bounds) - padding - (size ? ceil(size.size.width) + TSSizeGap : 0) - button : -1;
     NSMutableArray<NSAttributedString *> *fitting = [NSMutableArray array];
     CGFloat used = 0;
     for (NSAttributedString *item in [self items]) {
@@ -444,6 +482,22 @@ static NSAttributedString *TSItem(NSString *label, NSString *value)
     [super setFrameSize:newSize];
     self.needsDisplay = YES;
     [self updateToolTip];
+    [self placeButton];
+}
+
+// The button sits before the file size, centered on the text's line; it goes when there is no room for it.
+- (void)placeButton
+{
+    CGFloat x = -1;
+    [self fittingItems:NULL buttonX:&x];
+    self.button.hidden = x < 0;
+    if (x < 0)
+        return;
+    NSRect frame = self.button.frame;
+    CGFloat scale = self.window.backingScaleFactor > 0 ? self.window.backingScaleFactor : 2;
+    CGFloat line = 1 / scale;
+    frame.origin = NSMakePoint(x, floor((NSHeight(self.bounds) - line - NSHeight(frame)) / 2) + (self.isFlipped ? line : 0));
+    self.button.frame = frame;
 }
 
 // When the bar is too narrow for every item, its tool tip lists them all.

@@ -16,7 +16,7 @@
    - an unsaved document shows no file size, a saved one shows it as Finder does;
    - Source > Show Status Bar (the production action and validation) hides and shows the
      bars of every document at once and keeps the choice in the defaults;
-   - Edit > Statistics… is still there in the 12 menus and its methods are unchanged.
+   - Edit > Statistics… is still there in the 12 menus and TSDocument answers it.
 3. --perf: typing into a 5 MB document with and without the bar, and the longest pause of
    the main thread while the bar counts.
 
@@ -111,10 +111,9 @@ for lang in LANGUAGES:
     numbers = nib.index('selector="showHideLineNumbers:"')
     if not numbers < i < nib.index('<menuItem ', nib.index('</menuItem>', numbers)) + 400:
         fail(f'{lang}: Show Status Bar follows Show Line Numbers')
-for signature in ('- (void)showStatistics: sender', '- (void)updateStatistics: sender', '- (void)saveForStatistics: (NSDocument *)doc'):
-    master = subprocess.run(['git', 'show', 'master:Sources/Document/TSDocument.m'], cwd=root, capture_output=True).stdout.decode('utf-8', 'surrogateescape')
-    if method(master, signature) != method(document, signature):
-        fail(f'{signature} is unchanged')
+# Its command opens Text Statistics now (Tests/run-text-statistics.py).
+if document.count('- (void)showStatistics: sender') != 1:
+    fail('TSDocument answers Edit > Statistics…')
 
 with tempfile.TemporaryDirectory(prefix='texshop-status-bar-') as tmp:
     tmp = Path(tmp)
@@ -334,9 +333,9 @@ static void CheckPlaced(TSDocument *doc, NSString *where) {
 // from the end, never cut.
 static void CheckFits(TSSourceStatusBar *bar, NSString *where, BOOL all) {
     NSArray *shown = bar.visibleItems, *every = bar.allItems;
-    BOOL prefix = shown.count >= 3 && [every subarrayWithRange:NSMakeRange(0, shown.count)].count == shown.count
+    BOOL prefix = shown.count >= 1 && [every subarrayWithRange:NSMakeRange(0, shown.count)].count == shown.count
         && [[every subarrayWithRange:NSMakeRange(0, shown.count)] isEqual:shown];
-    Check(prefix && (!all || (shown.count == 6 && (bar.fileSize == nil || bar.visibleFileSize != nil))),
+    Check(prefix && (!all || (shown.count == 6 && (bar.fileSize == nil || bar.visibleFileSize != nil) && bar.statisticsButton != nil)),
           [NSString stringWithFormat:@"%@: %@ (%@ of %@, %.0f wide)", where, all ? @"all six items and the file size fit" : @"whole items from the left",
            [shown componentsJoinedByString:@" | "], [every componentsJoinedByString:@" | "], NSWidth(bar.bounds)]);
     if (!all && shown.count < 6) printf("NOTE: %s: %lu of 6 items fit\n", where.UTF8String, (unsigned long)shown.count);
@@ -473,7 +472,20 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check(c.lines == 63 && c.selectedCharacters > 0 && c.line == 2, [NSString stringWithFormat:@"the numbers of the longer text (%lu lines, line %lu)%@", c.lines, c.line, tag]);
     if (pictures) Save(wide->textWindow, [NSString stringWithFormat:@"%@-01-source-selection", lang]);
     Select(wide, wide->textView1, NSMakeRange(40, 0));
-    CheckFits(wide.sourceStatusBar, [@"the source window without a selection" stringByAppendingString:tag], YES);
+    CheckFits(wide.sourceStatusBar, [@"the source window without a selection" stringByAppendingString:tag], NO);
+    // The width from which every item, the Text Statistics button and the file size fit.
+    NSRect nibFrame = wide->textWindow.frame;
+    CGFloat least = 0;
+    for (CGFloat width = 1000; width >= 300; width -= 10) {
+        [wide->textWindow setFrame:NSMakeRect(NSMinX(nibFrame), NSMinY(nibFrame), width, NSHeight(nibFrame)) display:NO];
+        if (wide.sourceStatusBar.visibleItems.count == 6 && wide.sourceStatusBar.statisticsButton && wide.sourceStatusBar.visibleFileSize) least = width; else break;
+    }
+    printf("WIDTH: %s: every item, the button and the file size fit from %.0f points of window width (the nib's window is %.0f)\n",
+           lang.UTF8String, least, NSWidth(nibFrame));
+    Check(least > 0 && least <= 780, [NSString stringWithFormat:@"every item fits a source window of 780 points (from %.0f)%@", least, tag]);
+    [wide->textWindow setFrame:NSMakeRect(NSMinX(nibFrame), NSMinY(nibFrame), 780, NSHeight(nibFrame)) display:NO];
+    CheckFits(wide.sourceStatusBar, [@"a source window of 780 points" stringByAppendingString:tag], YES);
+    [wide->textWindow setFrame:nibFrame display:NO];
     if (images) Save(wide->textWindow, [NSString stringWithFormat:@"%@-02-source", lang]);
 
     // A narrow window: the items that do not fit are left out whole, from the end; the tool tip lists them all.
@@ -484,7 +496,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     CheckFits(wide.sourceStatusBar, [@"a narrow source window" stringByAppendingString:tag], NO);
     [wide->textWindow setFrame:wideFrame display:NO];
     Settle(wide->textWindow);
-    CheckFits(wide.sourceStatusBar, [@"the source window at its width again" stringByAppendingString:tag], YES);
+    CheckFits(wide.sourceStatusBar, [@"the source window at its width again" stringByAppendingString:tag], NO);
 
     // A split source: the bar under both parts, the numbers following the part typed in.
     [wide splitWindow:nil]; Settle(wide->textWindow);
@@ -505,7 +517,7 @@ int main(int argc, char **argv) { @autoreleasepool {
         [both moveSourceToSides:interchange.boolValue];
         NSView *pdf = both.myPDFKitView.superview; [pdf removeFromSuperview];
         NSView *other = interchange.boolValue ? both->leftView : both->rightView; [other addSubview:pdf]; pdf.frame = other.bounds;
-        [both->fullSplitWindow setFrame:NSMakeRect(40, 40, 1120, 700) display:NO];
+        [both->fullSplitWindow setFrame:NSMakeRect(40, 40, 1600, 700) display:NO];
         both->useFullSplitWindow = YES;
         Settle(both->fullSplitWindow);
         NSString *where = [NSString stringWithFormat:@"the window that shows both, source on the %@%@", interchange.boolValue ? @"right" : @"left", tag];

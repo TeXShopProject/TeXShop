@@ -401,3 +401,14 @@
 "Location" = "位置";
 "Line" = "行";
 "Column" = "列";
+
+/* Text Statistics, opened from the status bar */
+"Text Statistics…" = "正文统计…";
+"Whole Document" = "整个文稿";
+"Selection" = "所选内容";
+"Text" = "正文";
+"Refresh" = "刷新";
+"Counting…" = "正在统计…";
+"detex was not found." = "找不到detex。";
+"detex failed." = "detex失败。";
+"Counted by detex without the TeX commands, with the files read by \\input and \\include." = "由detex去除TeX命令后统计，包括用\\input和\\include读取的文件。";

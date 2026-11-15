@@ -404,3 +404,14 @@
 "Location" = "Poziție";
 "Line" = "Linie";
 "Column" = "Coloană";
+
+/* Text Statistics, opened from the status bar */
+"Text Statistics…" = "Statistici text…";
+"Whole Document" = "Întregul document";
+"Selection" = "Selecție";
+"Text" = "Text";
+"Refresh" = "Reîmprospătați";
+"Counting…" = "Se numără…";
+"detex was not found." = "detex nu a fost găsit.";
+"detex failed." = "detex a eșuat.";
+"Counted by detex without the TeX commands, with the files read by \\input and \\include." = "Numărat de detex fără comenzile TeX, inclusiv fișierele citite cu \\input și \\include.";
