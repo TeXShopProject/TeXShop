@@ -32,7 +32,9 @@ is faked far off the real screens (NSScreen's frame), and nothing is ordered in:
 with the popover's content (production views) in a drawn popover frame where AppKit placed
 the popover (the picture grows when the popover is outside the window): whole document,
 selection, counting, detex missing, the status bar hidden, and the ⓘ tool tip (drawn as a
-box, because tool tips cannot be drawn offscreen).
+box, because tool tips cannot be drawn offscreen). For each picture the popover is shown again
+in its appearance (its secondary labels are drawn for the appearance it was shown in), and the
+pictures are checked to hold every secondary label (time, Source column, warning, Counting…).
 """
 import argparse, json, os, shutil, subprocess, sys, tempfile
 from pathlib import Path
@@ -56,6 +58,8 @@ MUTATIONS = {
     'edge-always-maxy': ('TSDocument.m', 'preferredEdge:view.isFlipped ? NSRectEdgeMinY : NSRectEdgeMaxY];', 'preferredEdge:NSRectEdgeMaxY];'),
     # The other constant: right for the flipped anchors only.
     'edge-always-miny': ('TSDocument.m', 'preferredEdge:view.isFlipped ? NSRectEdgeMinY : NSRectEdgeMaxY];', 'preferredEdge:NSRectEdgeMinY];'),
+    # The pictures (--images) take the content as shown once: the dark pictures lose their secondary labels.
+    'picture-shown-once': ('PROGRAM', '        real.delegate = nil;\n        [real close];\n        real.contentViewController = nil; real.contentViewController = content;\n        real.appearance = appearance;\n        ((void (*)(id, SEL, NSRect, NSView *, NSRectEdge))originalShow)(real, @selector(showRelativeToRect:ofView:preferredEdge:), shownRect, shownView, shownEdge);\n        real.delegate = (id<NSPopoverDelegate>)doc.textStatistics;\n', ''),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -95,7 +99,9 @@ fragments = {
 originals = dict(fragments)
 if args.mutation:
     name, old, new = MUTATIONS[args.mutation]
-    if name == 'TSDocument.m':
+    if name == 'PROGRAM':
+        pass
+    elif name == 'TSDocument.m':
         key, = [k for k, v in fragments.items() if old in v]
         assert fragments[key].count(old) == 1; fragments[key] = fragments[key].replace(old, new)
     else:
@@ -212,6 +218,32 @@ static TSDocument *Open(NSString *string) {
 
 // Pictures: the window, with the popover's content in a drawn popover frame above the anchor.
 static NSString *images;
+// The visible labels in the secondary label color, and whether a label's place in a snapshot holds any text: the
+// lightest and darkest pixels there differ.
+static NSArray<NSTextField *> *SecondaryLabels(NSView *root) {
+    NSMutableArray *found = [NSMutableArray array], *queue = [NSMutableArray arrayWithObject:root];
+    while (queue.count) {
+        NSView *view = queue.firstObject; [queue removeObjectAtIndex:0];
+        [queue addObjectsFromArray:view.subviews];
+        if ([view isKindOfClass:NSTextField.class] && !view.hiddenOrHasHiddenAncestor && NSWidth(view.frame) > 0
+            && [(NSTextField *)view stringValue].length > 0 && [[(NSTextField *)view textColor] isEqual:NSColor.secondaryLabelColor])
+            [found addObject:view];
+    }
+    return found;
+}
+static BOOL Inked(NSBitmapImageRep *rep, NSView *root, NSView *view) {
+    NSRect r = [view convertRect:view.bounds toView:root];
+    CGFloat scale = rep.pixelsWide / NSWidth(root.bounds);
+    NSInteger x0 = MAX(0, (NSInteger)floor(NSMinX(r) * scale)), x1 = MIN(rep.pixelsWide, (NSInteger)ceil(NSMaxX(r) * scale));
+    NSInteger y0 = MAX(0, (NSInteger)floor((NSHeight(root.bounds) - NSMaxY(r)) * scale)), y1 = MIN(rep.pixelsHigh, (NSInteger)ceil((NSHeight(root.bounds) - NSMinY(r)) * scale));
+    CGFloat lightest = 0, darkest = 1;
+    for (NSInteger y = y0; y < y1; y++)
+        for (NSInteger x = x0; x < x1; x++) {
+            NSColor *c = [[rep colorAtX:x y:y] colorUsingColorSpace:NSColorSpace.genericGrayColorSpace];
+            lightest = MAX(lightest, c.whiteComponent); darkest = MIN(darkest, c.whiteComponent);
+        }
+    return lightest - darkest > 0.15;
+}
 static NSBitmapImageRep *Snapshot(NSView *view) {
     NSBitmapImageRep *rep = [view bitmapImageRepForCachingDisplayInRect:view.bounds];
     [view cacheDisplayInRect:view.bounds toBitmapImageRep:rep];
@@ -219,14 +251,14 @@ static NSBitmapImageRep *Snapshot(NSView *view) {
 }
 // The picture takes the content out of the popover. The popover is then closed and given its content again, also
 // without pictures, so that the checks see the same states either way (left out, the next show placed no content).
-// The window goes back to the system's appearance: a popover shown from a window left in Dark Mode drew no secondary
-// labels in the next Light Mode picture.
+// The window goes back to the system's appearance.
 static void DrawPictures(TSDocument *doc, NSString *name, NSString *tip);
 static void DrawWithPopover(TSDocument *doc, NSString *name, NSString *tip) {
     if (images) DrawPictures(doc, name, tip);
     TSTextStatisticsPopover *popover = doc.textStatistics;
     [popover close];
     NSViewController *content = popover.popover.contentViewController;
+    popover.popover.appearance = nil;
     popover.popover.contentViewController = nil;
     popover.popover.contentViewController = content;
 }
@@ -236,6 +268,16 @@ static void DrawPictures(TSDocument *doc, NSString *name, NSString *tip) {
     for (NSString *look in @[@"light", @"dark"]) {
         NSAppearance *appearance = [NSAppearance appearanceNamed:[look isEqual:@"dark"] ? NSAppearanceNameDarkAqua : NSAppearanceNameAqua];
         window.appearance = appearance;
+        // The popover draws its secondary labels for the appearance it was shown in (vibrancy): show it again from the
+        // same anchor in this one (not recorded), then take its content out.
+        NSPopover *real = doc.textStatistics.popover;
+        real.delegate = nil;
+        [real close];
+        real.contentViewController = nil; real.contentViewController = content;
+        real.appearance = appearance;
+        ((void (*)(id, SEL, NSRect, NSView *, NSRectEdge))originalShow)(real, @selector(showRelativeToRect:ofView:preferredEdge:), shownRect, shownView, shownEdge);
+        real.delegate = (id<NSPopoverDelegate>)doc.textStatistics;
+        Spin(0.1);
         NSWindow *holder = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 300, 200) styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:YES];
         holder.appearance = appearance;
         [NSAppearance setCurrentAppearance:appearance];
@@ -246,6 +288,15 @@ static void DrawPictures(TSDocument *doc, NSString *name, NSString *tip) {
         [holder setContentSize:content.view.fittingSize];
         [content.view layoutSubtreeIfNeeded];
         NSBitmapImageRep *pop = Snapshot(holder.contentView.superview);
+        // Every secondary label of the content (time, Source column, warning, Counting…) is drawn in the picture.
+        NSMutableArray<NSString *> *blank = [NSMutableArray array];
+        NSUInteger labels = 0;
+        for (NSTextField *label in SecondaryLabels(content.view)) {
+            labels++;
+            if (!Inked(pop, holder.contentView.superview, label)) [blank addObject:label.stringValue];
+        }
+        Check(labels > 0 && blank.count == 0, [NSString stringWithFormat:@"picture %@-%@: the %lu secondary labels are drawn (blank: %@)", name, look,
+              (unsigned long)labels, [blank componentsJoinedByString:@", "]]);
         NSView *frame = window.contentView.superview;
         [window layoutIfNeeded]; [frame layoutSubtreeIfNeeded];
         NSBitmapImageRep *win = Snapshot(frame);
@@ -584,6 +635,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-text-statistics-') as tmp:
                .replace('@@RECT@@', fragments['rect']))
     if not args.mutation:
         verify_embedded(program, [(k, document, v) for k, v in originals.items()])
+    elif MUTATIONS[args.mutation][0] == 'PROGRAM':
+        _, old, new = MUTATIONS[args.mutation]
+        assert program.count(old) == 1, args.mutation; program = program.replace(old, new)
     (tmp / 'probe.m').write_text(program, encoding='utf-8')
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-framework', 'Quartz', '-licucore', '-I', str(tmp), *include_args(root), '-I', str(root / 'Tests'),
                     str(tmp / 'probe.m'), *(str(tmp / n) for n in ('TSStatusBarCounting.m', 'TSSourceStatusBar.m', 'TSTextStatistics.m',
