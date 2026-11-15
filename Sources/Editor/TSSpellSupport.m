@@ -197,8 +197,35 @@ static NSString *sReviewText;
 static NSRange sReviewSelection;
 static NSTextField *sReplacementField;
 static NSTextField *sReplacementStatus;
+static __weak NSButton *sChangeAllButton;
+static NSPopover *sStatusPopover;
 static BOOL sUpdatingSpellingPanel;
 static __weak NSEvent *sPanelUpdateEvent;
+
+static NSView *TSChangeAllStatusView(NSTextField *status);
+
+// Say what Change All reports in a popover from its button, or close the
+// popover when `message` is empty. The row below the panel keeps no room for
+// these messages, which only come with a beep when Change All is refused.
+static void ShowChangeAllStatus(NSString *message)
+{
+    sReplacementStatus.stringValue = message;
+    if (message.length == 0) {
+        [sStatusPopover close];
+        return;
+    }
+    NSButton *button = sChangeAllButton;
+    if (!sReplacementStatus || !button.window.isVisible) return;
+    NSView *view = TSChangeAllStatusView(sReplacementStatus);
+    if (!sStatusPopover) {
+        sStatusPopover = [[NSPopover alloc] init];
+        sStatusPopover.behavior = NSPopoverBehaviorTransient;
+        sStatusPopover.contentViewController = [[NSViewController alloc] init];
+    }
+    sStatusPopover.contentViewController.view = view;
+    sStatusPopover.contentSize = view.frame.size;
+    [sStatusPopover showRelativeToRect:button.bounds ofView:button preferredEdge:NSRectEdgeMinY];
+}
 
 static BOOL ReviewIsCurrent(NSTextView *view)
 {
@@ -241,11 +268,16 @@ static BOOL sSkipSearchAfterRefusal;
 + (BOOL)refuseStaleChangeInTextView:(NSTextView *)textView
 {
     if (sReviewWord.length == 0 || (textView == sReviewView && ReviewIsCurrent(textView))) return NO;
-    sReplacementStatus.stringValue = NSLocalizedString(@"Return to the word and choose Find Next before replacing.", @"");
+    ShowChangeAllStatus(NSLocalizedString(@"Return to the word and choose Find Next before replacing.", @""));
     NSBeep();
     sSkipSearchAfterRefusal = YES;
     dispatch_async(dispatch_get_main_queue(), ^{ sSkipSearchAfterRefusal = NO; });
     return YES;
+}
+
++ (NSString *)changeAllStatus
+{
+    return sReplacementStatus.stringValue ?: @"";
 }
 
 + (BOOL)skipsSearchAfterRefusedChange
@@ -261,7 +293,7 @@ static BOOL sSkipSearchAfterRefusal;
     sReviewWord = nil;
     sReviewText = nil;
     sReplacementField.stringValue = @"";
-    sReplacementStatus.stringValue = @"";
+    ShowChangeAllStatus(@"");
 }
 
 // The panel's "Change All" button: replace the misspelling the panel is showing
@@ -274,14 +306,14 @@ static BOOL sSkipSearchAfterRefusal;
     NSString *word = sReviewWord;
     NSString *replacement = [sReplacementField.stringValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if (!ReviewIsCurrent(tv) || word.length == 0) {
-        sReplacementStatus.stringValue = NSLocalizedString(@"Return to the word and choose Find Next before replacing.", @"");
+        ShowChangeAllStatus(NSLocalizedString(@"Return to the word and choose Find Next before replacing.", @""));
         NSBeep(); return;
     }
     if (replacement.length == 0 || [replacement isEqualToString:word]) {
-        sReplacementStatus.stringValue = NSLocalizedString(@"Enter a different replacement in the Change All field.", @"");
+        ShowChangeAllStatus(NSLocalizedString(@"Enter a different replacement in the Change All field.", @""));
         NSBeep(); return;
     }
-    sReplacementStatus.stringValue = @"";
+    ShowChangeAllStatus(@"");
     TSSpellExclusions *exclusions = [TSSpellExclusions sharedExclusions];
     [exclusions reloadIfChanged];
     TSSpellMask *mask = [exclusions maskForText:tv.string];
@@ -380,22 +412,26 @@ static NSString *SuggestionAtRow(NSTableView *table, NSInteger row)
     NSString *value = SuggestionAtRow(table, table.selectedRow);
     if (!value) return;
     sReplacementField.stringValue = value;
-    sReplacementStatus.stringValue = @"";
+    ShowChangeAllStatus(@"");
 }
 
 // BEGIN change all accessory
-// The view below the Spelling and Grammar panel: the replacement field, Change All
-// and a line for what Change All reports. The field and the line are returned
-// through the arguments.
+// The row below the Spelling and Grammar panel: the replacement field and Change
+// All. The field is returned through `field`, and through `status` the label for
+// what Change All reports, which TSChangeAllStatusView lays out for a popover.
 // The row follows the panel's own columns: the word field and the language
-// pop-up start 20 points in and are 275.5 wide, and the buttons are small,
-// 20 points high, from x 309.5 to 411. The field is as high as the word field,
-// and Change All is centered on it, as Change is on the word field. The line
-// below starts where the panel's own message under the word field starts.
+// pop-up start 20 points in and end 135.5 points before the right edge, and the
+// buttons are small, 20 points high, 101.5 wide and 20 points before the right
+// edge. The field is as high as the word field, and Change All is centered on
+// it, as Change is on the word field. AppKit puts the row 8 points above the
+// bottom of the panel and 8 points below the pop-up, so the field is 16 points
+// above the bottom, as the pop-up is in the panel without the row, and 12 points
+// below the pop-up. The row is 431 wide, the panel's width; once it is in the
+// panel, FitChangeAllRow makes it follow the panel's width.
 static NSView *TSChangeAllAccessory(id target, NSTextField * __strong *field, NSTextField * __strong *status)
 {
-    NSView *accessory = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 431, 76)];
-    NSTextField *replacement = [[NSTextField alloc] initWithFrame:NSMakeRect(20, 48, 275.5, 24)];
+    NSView *accessory = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 431, 36)];
+    NSTextField *replacement = [[NSTextField alloc] initWithFrame:NSMakeRect(20, 8, 275.5, 24)];
     replacement.placeholderString = NSLocalizedString(@"Replacement for Change All", @"");
     replacement.autoresizingMask = NSViewWidthSizable;
     // One line that scrolls, as a search field does, not text that wraps out of sight.
@@ -405,22 +441,50 @@ static NSView *TSChangeAllAccessory(id target, NSTextField * __strong *field, NS
     replacement.target = target;
     replacement.action = @selector(changeAll:);
     [accessory addSubview:replacement];
-    NSTextField *line = [NSTextField wrappingLabelWithString:@""];
-    line.frame = NSMakeRect(23, 8, 388, 34);
-    line.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
-    line.textColor = NSColor.secondaryLabelColor;
-    line.autoresizingMask = NSViewWidthSizable;
-    [accessory addSubview:line];
     NSButton *button = [NSButton buttonWithTitle:NSLocalizedString(@"Change All", @"")
                                         target:target action:@selector(changeAll:)];
     button.bezelStyle = NSBezelStylePush;
     button.controlSize = NSControlSizeSmall;
     button.font = [NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSControlSizeSmall]];
-    button.frame = NSMakeRect(309.5, 50, 101.5, 20);
+    button.frame = NSMakeRect(309.5, 10, 101.5, 20);
     button.autoresizingMask = NSViewMinXMargin;
     [accessory addSubview:button];
-    *field = replacement; *status = line;
+    *field = replacement;
+    *status = [NSTextField wrappingLabelWithString:@""];
     return accessory;
+}
+
+// The view of the popover for what Change All reports: `status`, at most 260
+// points wide, with even margins, sized to its present text.
+static NSView *TSChangeAllStatusView(NSTextField *status)
+{
+    NSView *view = status.superview;
+    if (!view) {
+        view = [[NSView alloc] initWithFrame:NSZeroRect];
+        [view addSubview:status];
+    }
+    status.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
+    NSSize size = [status.cell cellSizeForBounds:NSMakeRect(0, 0, 260, CGFLOAT_MAX)];
+    size = NSMakeSize(ceil(size.width), ceil(size.height));
+    status.frame = NSMakeRect(12, 10, size.width, size.height);
+    view.frame = NSMakeRect(0, 0, size.width + 24, size.height + 20);
+    return view;
+}
+
+// AppKit keeps the accessory view at the width it was given and centers it when
+// the panel is resized, so a row of the panel's own width would leave the
+// columns when the panel is wider and be cut off when it is narrower. Give the
+// row the panel's width and let it follow it; the field then grows and shrinks
+// with the pop-up above it, and Change All stays in the button column.
+static void FitChangeAllRow(NSView *accessory)
+{
+    NSView *container = accessory.superview;
+    if (!container) return;
+    NSRect frame = accessory.frame;
+    frame.origin.x = NSMinX(container.bounds);
+    frame.size.width = NSWidth(container.bounds);
+    accessory.frame = frame;
+    accessory.autoresizingMask = NSViewWidthSizable | NSViewMaxYMargin;
 }
 // END change all accessory
 
@@ -430,7 +494,10 @@ static NSView *TSChangeAllAccessory(id target, NSTextField * __strong *field, NS
 {
     if (sReplacementField) return;
     NSView *accessory = TSChangeAllAccessory(self, &sReplacementField, &sReplacementStatus);
+    for (NSView *view in accessory.subviews)
+        if ([view isKindOfClass:NSButton.class]) sChangeAllButton = (NSButton *)view;
     [NSSpellChecker sharedSpellChecker].accessoryView = accessory;
+    FitChangeAllRow(accessory);
     [NSNotificationCenter.defaultCenter addObserver:self
         selector:@selector(spellingSuggestionSelectionDidChange:)
         name:NSTableViewSelectionDidChangeNotification object:nil];
@@ -446,7 +513,7 @@ static NSView *TSChangeAllAccessory(id target, NSTextField * __strong *field, NS
     sReviewWord = nil;
     sReviewText = nil;
     sReplacementField.stringValue = @"";
-    sReplacementStatus.stringValue = @"";
+    ShowChangeAllStatus(@"");
     NSUInteger startMasked = [mask maskedIndexForOriginalIndex:NSMaxRange(tv.selectedRange)];
 
     // Look from the end of the selection, then wrap round to the top.
@@ -816,8 +883,10 @@ static NSMenuItem *FindMenuItemWithAction(NSMenu *menu, SEL action)
         NSView *accessory = sReplacementField.superview;
         NSSpellChecker *checker = NSSpellChecker.sharedSpellChecker;
         if (checker.accessoryView == accessory) checker.accessoryView = nil;
+        [sStatusPopover close];
         sReplacementField = nil;
         sReplacementStatus = nil;
+        sChangeAllButton = nil;
     }
     for (NSWindow *window in NSApp.windows)
         [self refreshSpellingInView:window.contentView];

@@ -37,6 +37,9 @@
     to look for the next misspelling, and that search is to be skipped so that
     the selection and the notice stay. A later Find Next is not affected. "*/
 + (BOOL)skipsSearchAfterRefusedChange;
+/*" What Change All last reported, shown in a popover from its button; empty
+    when nothing is reported. "*/
++ (NSString *)changeAllStatus;
 /*" Forget the review, when the system's own search is used instead. "*/
 + (void)endReview;
 + (NSString *)findNextMisspellingInTextView:(NSTextView *)textView mask:(TSSpellMask *)mask;
