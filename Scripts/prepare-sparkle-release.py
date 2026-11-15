@@ -62,11 +62,27 @@ def is_prerelease_item(item):
 
 
 def prerelease_identity(info):
-    """Return the release tag and archive name of a beta such as 5.60 beta-11 (5.60b11)."""
+    """Return the release tag and archive name of a beta such as 6.00 beta-1, from its display version."""
     beta = re.fullmatch(r'(\d+(?:\.\d+)+) beta-(\d+)', info['CFBundleShortVersionString'])
-    if not beta or info['CFBundleVersion'] != f'{beta[1]}b{beta[2]}':
-        raise ValueError('Expected a beta version such as 5.60 beta-11 with build version 5.60b11')
+    if not beta:
+        raise ValueError('Expected a beta version such as 6.00 beta-1')
     return f'v.{beta[1]}-beta.{beta[2]}', f'TeXShop-{beta[1]}-beta-{beta[2]}.zip'
+
+
+def build_number(info):
+    """The build number (CFBundleVersion) is the commit count set at build time: digits only."""
+    build = info['CFBundleVersion']
+    if not re.fullmatch(r'[1-9]\d*', build):
+        raise ValueError(f'Expected a numeric build number (the commit count), not {build}; build from a full git checkout')
+    return build
+
+
+def check_newer_than_feed(build, channel):
+    """Sparkle compares build numbers, so a new build must have a larger one than every build in the feed."""
+    for item in channel.findall('item'):
+        other = item.findtext(f'{{{SPARKLE}}}version') or ''
+        if re.fullmatch(r'\d+', other) and int(other) > int(build):
+            raise ValueError(f'Build {build} is older than build {other} in the feed')
 
 
 def retire_prereleases(channel, version, prerelease):
@@ -100,6 +116,10 @@ def main():
     app = args.app.resolve()
     info = plistlib.loads((app / 'Contents/Info.plist').read_bytes())
     version = info['CFBundleShortVersionString']
+    try:
+        build = build_number(info)
+    except ValueError as error:
+        raise SystemExit(str(error)) from error
     if args.prerelease:
         try:
             tag, archive_name = prerelease_identity(info)
@@ -124,8 +144,12 @@ def main():
     channel = tree.getroot().find('channel')
     if channel is None:
         raise SystemExit('Invalid appcast')
+    try:
+        check_newer_than_feed(build, channel)
+    except ValueError as error:
+        raise SystemExit(str(error)) from error
     existing = [item for item in channel.findall('item')
-                if item.findtext(f'{{{SPARKLE}}}version') == info['CFBundleVersion']]
+                if item.findtext(f'{{{SPARKLE}}}version') == build]
     if existing and not args.replace_existing:
         raise SystemExit('This build version already exists in the feed')
     if args.replace_existing:
@@ -144,7 +168,7 @@ def main():
     run(args.tools / 'sign_update', '--account', 'TeXShopProject', '--verify', archive, signature)
     item = ET.Element('item')
     for element, value in [('title', f'TeXShop {version}'), ('pubDate', format_datetime(datetime.now(timezone.utc))),
-                       (f'{{{SPARKLE}}}version', info['CFBundleVersion']),
+                       (f'{{{SPARKLE}}}version', build),
                        (f'{{{SPARKLE}}}shortVersionString', version),
                        (f'{{{SPARKLE}}}minimumSystemVersion', info['LSMinimumSystemVersion'])]:
         ET.SubElement(item, element).text = value
