@@ -1559,7 +1559,6 @@
       {
        "kind": "popup",
        "title": "エンジンのプロファイル",
-       "note": "タイプセットとkpsewhichのコマンド、BibTeXエンジン、索引作成とMetaPostのコマンド、otfパッケージの\\UTF / \\CIDへの自動変換を設定します。日本語のプロファイルは、新しい書類のエンコーディング（UTF-8）、辞書、UTF-8-MACの変換も設定します。",
        "choices": [
         "pdfLaTeX",
         "XeLaTeX",
