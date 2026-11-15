@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Check the macro editor's layout (the sidebar, the contents, the status band, the shortcut field and the placeholder
-row), its keys and the renaming of items in its list against all localized macro-editor nibs without showing windows.
-With a directory, writes the window's images there: as it opens, an item renamed, the contents focused, the shortcut
-field waiting for keys, larger and smallest, light and dark."""
+"""Check the macro editor's layout (the sidebar, the contents, the status band and the placeholder row), its keys, the
+renaming of items in its list and the recording of a shortcut in the list's own cell, with its warnings, against all
+localized macro-editor nibs without showing windows. With a directory, writes the window's images there: as it opens,
+an item renamed, the contents focused, a shortcut recorded in the list, a key refused there because another macro uses
+it or because it cannot be a shortcut, a saved shortcut that is inactive selected, larger and smallest, light and
+dark."""
 from pathlib import Path
 import os, subprocess, tempfile, sys
 from source_tree import include_args
@@ -22,19 +24,34 @@ def method(text,signature):
     body=text[text.index(signature):]
     return body[:body.index('\n}\n')]
 assert '[self savePressed:sender];' in method(editor,'- (IBAction)saveDocument:(id)sender'), 'Command-S saves'
-double=method(editor,'- (void)listDoubleClicked:(id)sender')
-assert '[outlineView setDoubleAction: @selector(listDoubleClicked:)];' in editor and '[self doMacroTest:sender];' in double and 'isStandardItem' in double and 'expandItem:item' in double and 'collapseItem:item' in double, 'a double click tests a macro and opens or closes a submenu'
+# The list sends a click to listClicked: and a double click to listDoubleClicked: (the harness sends them as the list does).
+assert '[outlineView setAction: @selector(listClicked:)];' in editor and '[outlineView setDoubleAction: @selector(listDoubleClicked:)];' in editor, 'the list sends its clicks to the editor'
+# Another selection ends a recording before the fields take the new item, and changed items end it (the harness's
+# stand-ins for the selection and the items do the same).
+assert method(editor,'- (void)outlineViewSelectionChanged: (NSNotification *)note').split('\n')[2].strip()=='[self endShortcutRecordingUnlessSelected];', 'another selection ends a recording'
+assert '[self endShortcutRecording];' in method(editor,'- (void)outlineViewItemsChanged: (NSNotification *)note'), 'changed items end a recording'
+# The conflicts sheet's Return to Editing records the shortcut of the item it selects.
+assert '[self beginRecordingShortcutForItem:node];' in method(editor,'- (BOOL)validateMacroShortcutsBeforeSaving'), 'Return to Editing records the shortcut'
+assert 'TSMacroUseShortcutCell(outlineView);' in method(outline,'- (void)awakeFromNib'), 'the list shows its shortcuts in its own cells'
+def write_editor(td,text):
+    """The editor's layout, recording and message (MacroStatusLayout.inc) and its double click, as the harness includes them."""
+    (Path(td)/'MacroStatusLayout.inc').write_text(text[text.index('- (void)installShortcutStatus'):text.index('- (void)updatePendingShortcutStatus')])
+    (Path(td)/'MacroListDoubleClick.inc').write_text(method(text,'- (void)listDoubleClicked:(id)sender')+'\n}\n')
 def write_outline(td,text):
-    """The outline controller's editing of a name, and the list with its cells, as the harness includes them."""
+    """The outline controller's cells and editing of a name, and the list with its cells, as the harness includes them."""
     start='// The name typed when an item is renamed in the list.'
     (Path(td)/'MacroOutlineEditing.inc').write_text(text[text.index(start):text.index('// A name typed in the list is filtered')])
+    cells=text[text.index('- (id)outlineView:(NSOutlineView *)olv objectValueForTableColumn:'):text.index('// Optional method: needed to allow editing.')]
+    display=text[text.index('- (void)outlineView: (NSOutlineView *)olv willDisplayCell:'):text.index('// ================================================================\n//  NSOutlineView data source methods. (dragging related)')]
+    (Path(td)/'MacroOutlineCells.inc').write_text(cells+display)
     (Path(td)/'MacroOutlineView.inc').write_text(text[text.index('@implementation NSOutlineView (MyExtensions)'):])
     # How ＋ and the menu add an item, a submenu or a separator after the selection, and select it.
     (Path(td)/'MacroOutlineAdding.inc').write_text(text[text.index('- (NSArray *)selectedNodes'):text.index('- (void)addNewDataArrayToSelection')])
-STATES=('opened','renaming','contents','recording','resized','smallest')
+STATES=('opened','renaming','contents','recording','refused','invalid','conflict','resized','smallest')
 with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
     mutation='--mutations' in sys.argv
     extra=write_sources(root,td,'MacroStatusLayout.inc')
+    write_editor(td,editor)
     write_outline(td,outline)
     binary=Path(td)/'layout'
     subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-incomplete-implementation','-Wno-deprecated-declarations','-Wno-nullability-completeness',*FRAMEWORKS,'-I',td,'-I',str(root/'Tests'),*include_args(root),str(root/'Tests/MacroShortcutLayout.m'),*extra,'-o',str(binary)],check=True)
@@ -70,7 +87,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
             'zh_CN.lproj: a font the nib names stays': ('        if (font == nil || [font.fontName hasPrefix:@"."]) continue;', '        continue;'),
             'the buttons keep the nib\'s height': ('        frame.size.height = button.fittingSize.height;\n', ''),
             'the window loses its minimum height': ('    editor.minSize = NSMakeSize(TSListSidebarMinimumWidth + split.splitView.dividerThickness + narrowest, minimumHeight);', '    editor.minSize = NSMakeSize(TSListSidebarMinimumWidth + split.splitView.dividerThickness + narrowest, 0);'),
-            'the shortcut field takes typing keys': ('if (binding.key.length != 1 || ![TSShortcutStore isAllowedKey:binding.key modifiers:binding.modifiers]) return NO;', 'if (binding.key.length != 1) return NO;'),
+            'typing keys become shortcuts': ('    if (binding.key.length != 1 || ![TSShortcutStore isAllowedKey:binding.key modifiers:binding.modifiers]) {', '    if (binding.key.length != 1) {'),
             'Return in the list does not rename': ('        if (![self beginRenamingSelectedItem]) NSBeep();\n        return nil;\n', '        return event;\n'),
             'Escape while renaming closes the window': ('        if (escape) [outlineView abortEditing];\n', '        if (escape) return event;\n'),
             'Escape in the list cancels': ('        if (escape) return nil;\n', '        if (escape) return event;\n'),
@@ -82,14 +99,29 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
             'a new item is not named at once': ('    TSSendButtonAction(newItemButton);\n    [self beginRenamingSelectedItem];\n', '    TSSendButtonAction(newItemButton);\n'),
             'a key after a second click still renames': ('    [self cancelPendingListRename];\n    if (event.modifierFlags', '    if (event.modifierFlags'),
             'closing keeps a pending renaming': ('    [self cancelPendingListRename];\n    [self stopKeyMonitor];', '    [self stopKeyMonitor];'),
-            'the contents overlap the shortcut row': ('    CGFloat gap = MAX(8, NSMinY(contentsFrame) - NSMaxY([keyField frame]));', '    CGFloat gap = MIN(8, NSMinY(contentsFrame) - NSMaxY([keyField frame])) - 12;'),
+            'the contents stop above the shortcut\'s rows': ('    if (NSMinY(frame) > bottom) { frame.size.height += NSMinY(frame) - bottom; frame.origin.y = bottom; }\n', ''),
+            # Recording a shortcut in the list.
+            'a click on an item not selected records': ('    if (row < 0 || row != rows.rowSelectedAtMouseDown || [rows clickedColumn]', '    if (row < 0 || [rows clickedColumn]'),
+            'a click on a name records': ('    if (row < 0 || row != rows.rowSelectedAtMouseDown || [rows clickedColumn] != [rows columnWithIdentifier:@"Key"]) return;', '    if (row < 0 || row != rows.rowSelectedAtMouseDown) return;'),
+            'a double click on a name records': ('\tif ([item isStandardItem] && [outlineView clickedColumn] == [outlineView columnWithIdentifier:@"Key"]) {', '\tif ([item isStandardItem]) {'),
+            'a double click on a shortcut tests': ('\tif ([item isStandardItem] && [outlineView clickedColumn] == [outlineView columnWithIdentifier:@"Key"]) {', '\tif (NO) {'),
+            'keys go to the menus and the buttons while recording': ('    if (self.recordingItem && responder == self.recordingCell.recorder) {\n        [self handleShortcutRecordingEvent:event];\n        return nil;\n    }\n', ''),
+            'Escape while recording cancels the window': ('    if (!flags && (c == 27 || c == \'\\r\' || c == 3)) { [self endShortcutRecording]; return; }', '    if (!flags && (c == \'\\r\' || c == 3)) { [self endShortcutRecording]; return; }'),
+            'a key another command uses ends the recording': ('        self.refusedShortcut = getMenuItemString(shortcut);\n        [self showShortcutRecordingError:conflict];\n        return NO;', '        [self endShortcutRecording];\n        return NO;'),
+            'the keys of other macros are taken': ('            if (path && nodes[index] != self.recordingItem && [TSBinding(', '            if (NO && [TSBinding('),
+            'the keys of menu commands are taken': ('            if (!match.menuItem.hidden || match.menuItem.allowsKeyEquivalentWhenHidden) [users addObject:match.path];', '            ;'),
+            'the keys of hidden menu commands are refused': ('            if (!match.menuItem.hidden || match.menuItem.allowsKeyEquivalentWhenHidden) [users addObject:match.path];', '            [users addObject:match.path];'),
+            'the refusal is not below the contents': ('    NSString *message = self.recordingItem ? self.recordingError : nil;', '    NSString *message = nil;'),
+            'the refused cell has no triangle': ('    self.recordingCell.warning.hidden = self.recordingError == nil;', '    self.recordingCell.warning.hidden = YES;'),
+            'the message has no triangle': ('    self.shortcutStatusMark.hidden = message.length == 0;', '    self.shortcutStatusMark.hidden = YES;'),
+            'a refused key is not shown in the field': ('    self.recordingCell.recorder.shortcut = self.refusedShortcut ?: getMenuItemString(current);', '    self.recordingCell.recorder.shortcut = getMenuItemString(current);'),
+            'a key that cannot be one is not shown in the field': ('        self.refusedShortcut = binding.key.length ? TSShortcutDisplayKey(binding.key, binding.modifiers) : nil;', '        self.refusedShortcut = nil;'),
+            'a submenu records': ('    if (![item isKindOfClass:TSMacroTreeNode.class] || !item.isStandardItem || recorder == nil', '    if (![item isKindOfClass:TSMacroTreeNode.class] || recorder == nil'),
+            'the field stays after a click elsewhere': ('            if (strongSelf != nil && strongSelf.recordingItem != item) [strongSelf removeShortcutRecorderOfItem:item];', '            (void)strongSelf;'),
+            'closing keeps recording': ('    [self stopKeyMonitor];\n    [self endShortcutRecording];\n', '    [self stopKeyMonitor];\n'),
         }
-        # Mutations of the shortcut field and of the sidebar shared with the Multiple Replace window.
+        # Mutations of the sidebar shared with the Multiple Replace window.
         file_cases={
-            'TSMacroShortcutField.m': {
-                'Escape does not end the waiting': ('    if (c == 27 && !flags) {\n        [self endRecording];\n        return YES;\n    }\n', ''),
-                '⊗ shows without a shortcut': ('self.clearButton.hidden = !(self.enabled && self.shortcut.length > 0);', 'self.clearButton.hidden = !self.enabled;'),
-            },
             'TSListBottomBar.m': {
                 'the sidebar stops above the bottom edge': ('        [bar.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],', '        [bar.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-20],'),
                 'the window\'s contents stay below the title bar': ('        window.styleMask |= NSWindowStyleMaskFullSizeContentView;', '        (void)0;'),
@@ -105,12 +137,19 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
             'another selection keeps a pending renaming': ('\t[self cancelPendingRename];\n\t[super selectRowIndexes:', '\t[super selectRowIndexes:'),
             'a double click keeps a pending renaming': ('\t[self cancelPendingRename];\n\tNSPoint point', '\tNSPoint point'),
             'a double click edits the name': ('\treturn [[TSMacroEditor sharedInstance] isRenaming] && ', '\treturn YES && '),
+            # The list's part in recording a shortcut, and the triangle of an inactive one.
+            'the cell under the field shows the shortcut': ('\t\tobjectValue = item == [[TSMacroEditor sharedInstance] recordingItem] ? @"" : ', '\t\tobjectValue = '),
+            'an inactive shortcut has no triangle': ('\t\t\t((TSMacroShortcutCell *)cell).showsWarning = conflict != nil && item != [[TSMacroEditor sharedInstance] recordingItem];', '\t\t\t((TSMacroShortcutCell *)cell).showsWarning = NO;'),
+            'the field is only as wide as the shortcut\'s cell': ('\tCGFloat width = MAX(NSWidth(cell), MIN(self.recordingWidth, NSMaxX(cell) - leading));', '\tCGFloat width = NSWidth(cell);'),
+            'the field stays where the row was when the list is resized': ('\t[super tile];\n\t[self placeRecordingView];\n}\n\n- (void)setFrameSize:(NSSize)size\n{\n\t[super setFrameSize:size];\n\t[self placeRecordingView];\n}', '\t[super tile];\n}\n\n- (void)setFrameSize:(NSSize)size\n{\n\t[super setFrameSize:size];\n}'),
+            'the row selected when the mouse went down is not kept': ('\tself.rowSelectedAtMouseDown = modifiers == 0 && self.numberOfSelectedRows == 1 ? self.selectedRow : -1;\n', ''),
+            'VoiceOver presses a submenu\'s shortcut': ('\tif (selector == @selector(accessibilityPerformPress)) return [self.representedObject isKindOfClass:TSMacroTreeNode.class] && [self.representedObject isStandardItem];', '\tif (selector == @selector(accessibilityPerformPress)) return YES;'),
         }
         originals={name:Path(next(x for x in extra if x.endswith('/'+name))) for name in file_cases}
         for name,changed,(before,after) in [*((k,None,v) for k,v in cases.items()),*((f'{f}: {k}',f,v) for f,c in file_cases.items() for k,v in c.items()),*((f'TSMacroOutlineController.m: {k}','outline',v) for k,v in outline_cases.items())]:
-            text=outline if changed=='outline' else originals[changed].read_text() if changed else body
+            text=outline if changed=='outline' else originals[changed].read_text() if changed else editor
             assert text.count(before)==1,name
-            (Path(td)/'MacroStatusLayout.inc').write_text(body if changed else body.replace(before,after))
+            write_editor(td,editor if changed else editor.replace(before,after))
             write_outline(td,text.replace(before,after) if changed=='outline' else outline)
             sources=list(extra)
             if changed and changed!='outline':
@@ -128,7 +167,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
             print('DETECTED:',name,result.stderr.strip())
 
         # Removing the Portuguese minimum size must fail the old-small-frame restoration case.
-        (Path(td)/'MacroStatusLayout.inc').write_text(body); write_outline(td,outline)
+        write_editor(td,editor); write_outline(td,outline)
         subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-incomplete-implementation','-Wno-deprecated-declarations','-Wno-nullability-completeness',*FRAMEWORKS,'-I',td,'-I',str(root/'Tests'),*include_args(root),str(root/'Tests/MacroShortcutLayout.m'),*extra,'-o',str(binary)],check=True)
         nibSource=(root/'Resources/Interfaces/pt.lproj/MacroEditor.nib/designable.nib').read_text()
         minimum='<string key="NSMinSize">{270, 272}</string>'

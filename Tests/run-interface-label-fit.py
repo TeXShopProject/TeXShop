@@ -66,7 +66,7 @@ parser.add_argument('--only')
 parser.add_argument('--focus-rings', action='store_true')
 args = parser.parse_args()
 macro_source = root / 'Sources/Macros/TSMacroEditor.m'
-assert '[self installShortcutStatus];\n        [self installShortcutField];\n        [self installPlaceholderControls];\n        [self layoutDialogButtons];\n        [self installSidebar];' in macro_source.read_text(), \
+assert '[self installShortcutStatus];\n        [self hideNibShortcutRows];\n        [self installPlaceholderControls];\n        [self layoutDialogButtons];\n        [self installSidebar];' in macro_source.read_text(), \
     'The application lays out the macro editor as the check does'
 
 def strings_for(lproj):
