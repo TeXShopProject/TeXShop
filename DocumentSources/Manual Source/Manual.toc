@@ -72,7 +72,7 @@
 \contentsline {subsubsection}{Column Macros, Insert Reference, Open Quickly}{80}{section*.3}%
 \contentsline {subsubsection}{Paste Spreadsheet Cells}{80}{section*.4}%
 \contentsline {subsubsection}{Convert to MAC, Convert to Unix, Convert to Windows}{81}{section*.5}%
-\contentsline {subsubsection}{Bibliography}{81}{section*.6}%
+\contentsline {subsubsection}{Bibliography}{82}{section*.6}%
 \contentsline {subsubsection}{htlatexc, htlatexr}{82}{section*.7}%
 \contentsline {subsubsection}{pdfselectc}{82}{section*.8}%
 \contentsline {subsubsection}{mpostc, mpostcpl, latex-makeindex-mpost}{82}{section*.9}%
@@ -273,11 +273,10 @@
 \contentsline {subsubsection}{<Other Obsolete Items>}{263}{section*.36}%
 \contentsline {subsubsection}{<Obsolete Color Settings>}{263}{section*.37}%
 \contentsline {chapter}{\numberline {42}Unusual Bugs}{266}{chapter.42}%
-\contentsline {section}{\numberline {42.1}Tags}{266}{section.42.1}%
-\contentsline {section}{\numberline {42.2}Zombie Untitled Windows}{266}{section.42.2}%
-\contentsline {chapter}{\numberline {43}Contributors}{268}{chapter.43}%
-\contentsline {subsubsection}{Overall Architecture}{268}{section*.38}%
-\contentsline {subsubsection}{Specific Features}{268}{section*.39}%
-\contentsline {subsubsection}{Independent Projects Used by TeXShop}{268}{section*.40}%
-\contentsline {subsubsection}{Localization}{269}{section*.41}%
-\contentsline {subsubsection}{Icon}{269}{section*.42}%
+\contentsline {section}{\numberline {42.1}Zombie Untitled Windows}{266}{section.42.1}%
+\contentsline {chapter}{\numberline {43}Contributors}{267}{chapter.43}%
+\contentsline {subsubsection}{Overall Architecture}{267}{section*.38}%
+\contentsline {subsubsection}{Specific Features}{267}{section*.39}%
+\contentsline {subsubsection}{Independent Projects Used by TeXShop}{267}{section*.40}%
+\contentsline {subsubsection}{Localization}{268}{section*.41}%
+\contentsline {subsubsection}{Icon}{268}{section*.42}%
