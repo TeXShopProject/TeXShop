@@ -8,8 +8,11 @@
  * A character is what the reader sees as one character (a grapheme cluster): a letter
  * with combining marks, an emoji joined with ZWJ, a character with a variation selector
  * and CR LF each count as one. Words are those of the system's word boundaries for the
- * current language, as the Cocoa text system sees them. TeX commands are counted as they
- * are written. Lines end with LF, CR, CR LF, NEL, LINE SEPARATOR or PARAGRAPH SEPARATOR;
+ * current language, as the Cocoa text system sees them (and CotEditor counts them), with two
+ * differences: a "word" of variation selectors, combining marks or other invisible characters
+ * alone (the selector of 葛󠄀) belongs to the word before it and is not counted, and an emoji
+ * outside the words (😀, 🇯🇵, ❤️, a ZWJ sequence) is a word of its own. TeX commands are
+ * counted as they are written. Lines end with LF, CR, CR LF, NEL, LINE SEPARATOR or PARAGRAPH SEPARATOR;
  * an empty last line is not counted. The location and the column count characters from
  * the start of the text and of the line, from 0; the line counts from 1.
  */

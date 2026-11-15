@@ -2,7 +2,8 @@
 """The status bar under the source (Source > Show Status Bar).
 
 1. Counting: TSStatusBarCounting.m against a Swift restatement of CotEditor's rules
-   (characters = Swift's Character count, words = the localized word boundaries, lines and
+   (characters = Swift's Character count, words = the localized word boundaries, except that a
+   word of invisible attached characters alone is none and an emoji outside the words is one, lines and
    line numbers from the line endings, location and column in characters from 0), on fixed
    cases (combining marks, emoji ZWJ sequences, variation selectors, CR LF, Japanese, tabs)
    and on random texts with selections on character boundaries.
@@ -48,6 +49,13 @@ LOCALES = {'Base': 'en_US', 'de': 'de_DE', 'es': 'es_ES', 'fr': 'fr_FR', 'it': '
 MUTATIONS = {
     # CR LF counts as two characters, as the text system's composed character sequences do.
     'crlf-two': ('TSStatusBarCounting.m', "            i += next == '\\n' ? 2 : 1;\n", '            i += 1;\n'),
+    # A variation selector alone is a word again, as with the word boundaries alone (葛󠄀 is two).
+    'selector-word': ('TSStatusBarCounting.m', '        if (!TSIsAttachedOnly(&buffer, wordRange, length))\n', '        if (YES)\n'),
+    # Emoji outside the words are no words, as with the word boundaries alone (😀 is none).
+    'no-emoji-words': ('TSStatusBarCounting.m', '    if (textSelector)\n        return NO;\n', '    return NO;\n'),
+    # Symbols shown as text, such as © and ™, count as words.
+    'text-symbols': ('TSStatusBarCounting.m', '    if (u_hasBinaryProperty(first, UCHAR_EMOJI) && (presentationSelector || modifier || keycap))\n',
+                     '    if (u_hasBinaryProperty(first, UCHAR_EMOJI))\n'),
     # The parentheses also appear with nothing selected.
     'parentheses-always': ('TSSourceStatusBar.m', '    if (selected != NSNotFound && selected > 0)\n', '    if (selected != NSNotFound)\n'),
     # Moving the source into the window that shows both leaves the bar behind.
@@ -123,7 +131,31 @@ with tempfile.TemporaryDirectory(prefix='texshop-status-bar-') as tmp:
     # 1. Counting against the Swift restatement of CotEditor's rules.
     (tmp / 'oracle.swift').write_text(r'''
 import Foundation
-func words(_ s: Substring) -> Int { var n = 0; s.enumerateSubstrings(in: s.startIndex..<s.endIndex, options: [.byWords, .localized, .substringNotRequired]) { _, _, _, _ in n += 1 }; return n }
+// The words of the localized word boundaries, as CotEditor counts them, with TeXShop's two differences:
+// a word of attached invisible characters alone (the variation selector of 葛󠄀) is none, and each
+// emoji outside the words is one (an emoji presentation: UTS #51).
+func attached(_ u: Unicode.Scalar) -> Bool {
+    let p = u.properties
+    return p.isVariationSelector || p.isGraphemeExtend || p.isDefaultIgnorableCodePoint || p.generalCategory == .format
+}
+func isEmoji(_ c: Character) -> Bool {
+    let s = Array(c.unicodeScalars), first = s[0]
+    if s.contains(where: { $0.value == 0xFE0E }) { return false }
+    if (0x1F1E6...0x1F1FF).contains(first.value) || first.properties.isEmojiPresentation { return true }
+    return first.properties.isEmoji && s.dropFirst().contains { $0.value == 0xFE0F || $0.value == 0x20E3 || $0.properties.isEmojiModifier }
+}
+// Counted one by one: filter() would join the emoji it keeps into fewer characters.
+func emoji(_ s: Substring) -> Int { var n = 0; for c in s where isEmoji(c) { n += 1 }; return n }
+func words(_ s: Substring) -> Int {
+    var n = 0, gap = s.startIndex
+    s.enumerateSubstrings(in: s.startIndex..<s.endIndex, options: [.byWords, .localized, .substringNotRequired]) { _, r, _, _ in
+        if r.lowerBound > gap { n += emoji(s[gap..<r.lowerBound]) }
+        gap = max(gap, r.upperBound)
+        if !s[r].unicodeScalars.allSatisfy(attached) { n += 1 }
+    }
+    if gap < s.endIndex { n += emoji(s[gap..<s.endIndex]) }
+    return n
+}
 func lines(_ s: String) -> Int { if s.isEmpty { return 0 }; var n = 0; (s as NSString).enumerateSubstrings(in: NSRange(location: 0, length: (s as NSString).length), options: [.byLines, .substringNotRequired]) { _, _, _, _ in n += 1 }; return n }
 func isEnd(_ c: unichar) -> Bool { c == 10 || c == 13 || c == 0x85 || c == 0x2028 || c == 0x2029 }
 func lineNumber(_ s: String, _ loc: Int) -> Int {
@@ -165,7 +197,7 @@ int main(void) { @autoreleasepool {
 } return 0; }
 ''')
     subprocess.run(['xcrun', 'swiftc', '-O', str(tmp / 'oracle.swift'), '-o', str(tmp / 'oracle')], check=True, stderr=subprocess.DEVNULL)
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Foundation', '-I', str(tmp), *include_args(root),
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Foundation', '-licucore', '-I', str(tmp), *include_args(root),
                     str(tmp / 'mine.m'), str(tmp / 'TSStatusBarCounting.m'), '-o', str(tmp / 'mine')], check=True)
     run = lambda exe, data: json.loads(subprocess.run([str(tmp / exe), '-AppleLanguages', '(ja)'], input=json.dumps(data).encode(),
                                                       capture_output=True, check=True).stdout)
@@ -174,7 +206,7 @@ int main(void) { @autoreleasepool {
     fixed = [
         ('あああAあ', 5, 0, [1, 5, None, 0, 0, 0, 5, 1, 5]),            # the agreed picture: cursor at the end
         ('a\r\nb', 1, 3, [2, 3, 2, 2, 2, 1, 1, 1, 1]),                 # CotEditor's own CR LF case
-        ('dog is 🐕.\ncow is 🐄.\nBoth are 👍🏼.', 11, 10, [3, 31, 6, 1, 9, 2, 10, 2, 0]),  # CotEditor's own case
+        ('dog is 🐕.\ncow is 🐄.\nBoth are 👍🏼.', 11, 10, [3, 31, 9, 1, 9, 3, 10, 2, 0]),  # CotEditor's own case (6 and 2 words there: TeXShop counts each emoji)
         ('e\u0301te\u0301', 0, 5, [1, 3, None, 1, 3, None, 0, 1, 0]),   # combining acute accents
         ('👨\u200d👩\u200d👧\u200d👦 ok', 11, 0, [1, 4, None, 0, 0, 0, 1, 1, 1]),  # one ZWJ family, then " ok"
         ('葛\U000E0100城', 3, 1, [1, 2, None, 1, 1, None, 1, 1, 1]),     # an ideographic variation selector
@@ -183,11 +215,26 @@ int main(void) { @autoreleasepool {
         ('a\r\n', 3, 0, [1, 2, 1, 0, 0, 0, 2, 2, 0]),                   # an empty last line is not counted
         ('', 0, 0, [0, 0, 0, 0, 0, 0, 0, 1, 0]),
     ]
+    # Words that differ from CotEditor's count (the user's decision, 2026-11-15): a variation selector belongs to
+    # the word before it, an emoji outside the words is a word; Japanese, English, numbers and TeX commands as before.
+    word_cases = [
+        ('葛\U000E0100', 1), ('\U000E0100葛', 1), ('葛\U000E0100飾区', 3), ('😀', 1), ('🧑\u200d🧑\u200d🧒\u200d🧒', 1), ('🇯🇵', 1),
+        ('👍🏽', 1), ('❤\ufe0f', 1), ('😀😀', 2), ('TeX 😀', 2), ('A ❤\ufe0f B', 3), ('日本語の文です。', 5), ('The quick brown fox.', 4),
+        ('3.14 と 2,000 円', 4), ('\\section{はじめに}', 3), ('1\ufe0f\u20e3', 1), ('#\ufe0f\u20e3', 1), ('x 1\ufe0f\u20e3 y', 3),
+        ('©', 0), ('™', 0), ('© 2026', 1), ('©\ufe0f', 1), ('❤', 0), ('A ❤ B', 2), ('☝🏽', 1), ('😀\ufe0e', 0),
+        ('🏳\ufe0f\u200d🌈', 1), ('a😀b', 3), ('\u200d', 0), ('a \u0301 b', 2), ('★', 0), ('\u0301あ\u0301🏽', 2),
+        ('ー🌈\U000E0041\u200d👍', 3),
+    ]
+    for s, w in word_cases:
+        n = len(s.encode('utf-16-le')) // 2
+        fixed.append((s, 0, n, [None, None, w, None, None, w, None, None, None]))
     cases = [{'s': s, 'loc': a, 'len': n} for s, a, n, _ in fixed]
     random.seed(20261115)
     atoms = ['a', 'Z', ' ', '\t', '\n', '\r', '\r\n', '\u2028', '\u2029', '\x85', '\x0c', 'é', 'e\u0301', '\u0301', 'あ', 'か\u3099',
              '漢', '葛\U000E0100', '👍🏼', '👨\u200d👩\u200d👧', '🇯🇵', '🇺', '\u200d', '©\ufe0f', '한', '\u1100\u1161', '각\u11a8', 'ก้',
-             'क्षि', '\\section{x}', '.', "'", '3.14', 'Ａ', 'ｶﾞ', 'ー', '。', '\u302a', '\u0600a']
+             'क्षि', '\\section{x}', '.', "'", '3.14', 'Ａ', 'ｶﾞ', 'ー', '。', '\u302a', '\u0600a',
+             '😀', '❤\ufe0f', '❤', '©', '™', '1\ufe0f\u20e3', '#\ufe0f\u20e3', '☝🏽', '😀\ufe0e', '\U000E0100', '\ufe0f', '🏽', '\u0600',
+             '🧑\u200d🧑\u200d🧒\u200d🧒', '★', '#\u20e3', '\u2764\ufe0e', '\u00ad', '\U000E0041', '🌈', 'x\u20e3', '\u0903']
     texts = [''.join(random.choice(atoms) for _ in range(random.randint(0, 30))) for _ in range(3000)]
     for s, bounds in zip(texts, run('oracle', {'bounds': texts})):
         a = random.choice(bounds); b = random.choice([x for x in bounds if x >= a])
@@ -572,7 +619,7 @@ int main(int argc, char **argv) { @autoreleasepool {
         checked = [(k, document if k not in ('toggle', 'validate') else text['TSAppDelegate.m'], v) for k, v in originals.items() if k != 'filedate']
         verify_embedded(program, checked)
     (tmp / 'probe.m').write_text(program, encoding='utf-8', errors='surrogateescape')
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-framework', 'Quartz', '-I', str(tmp), *include_args(root),
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-framework', 'Quartz', '-licucore', '-I', str(tmp), *include_args(root),
                     '-I', str(root / 'Tests'), str(tmp / 'probe.m'), str(tmp / 'TSSourceStatusBar.m'), str(tmp / 'TSStatusBarCounting.m'),
                     str(tmp / 'TSDocumentWindowGlass.m'), '-o', str(tmp / 'probe')], check=True)
     for lang in LANGUAGES:

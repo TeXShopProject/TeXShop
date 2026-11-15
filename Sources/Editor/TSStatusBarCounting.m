@@ -4,6 +4,7 @@
  */
 
 #import "TSStatusBarCounting.h"
+#import <unicode/uchar.h>
 
 // How many characters the loops read between two looks at `cancel`.
 static const NSUInteger TSCancelStride = 1 << 14;
@@ -72,20 +73,181 @@ NSUInteger TSStatusBarCharacterCount(NSString *string, NSRange range, TSStatusBa
     return count;
 }
 
+// The code point at `i` (a lone surrogate stands for itself) and the number of UTF-16 units it takes.
+static inline UChar32 TSCodePointAt(CFStringInlineBuffer *buffer, NSUInteger i, NSUInteger end, NSUInteger *units)
+{
+    unichar c = CFStringGetCharacterFromInlineBuffer(buffer, (CFIndex)i);
+    if (CFStringIsSurrogateHighCharacter(c) && i + 1 < end) {
+        unichar d = CFStringGetCharacterFromInlineBuffer(buffer, (CFIndex)(i + 1));
+        if (CFStringIsSurrogateLowCharacter(d)) {
+            *units = 2;
+            return (UChar32)CFStringGetLongCharacterForSurrogatePair(c, d);
+        }
+    }
+    *units = 1;
+    return c;
+}
+
+// A location in the middle of a surrogate pair, moved to the start of the pair. The word boundaries can fall
+// there after a combining mark (́🏽): the word is taken from the start of the code point, as Swift takes it.
+static inline NSUInteger TSScalarStart(CFStringInlineBuffer *buffer, NSUInteger i, NSUInteger length)
+{
+    if (i > 0 && i < length && CFStringIsSurrogateLowCharacter(CFStringGetCharacterFromInlineBuffer(buffer, (CFIndex)i))
+        && CFStringIsSurrogateHighCharacter(CFStringGetCharacterFromInlineBuffer(buffer, (CFIndex)(i - 1))))
+        return i - 1;
+    return i;
+}
+
+// Characters that are drawn with the one before them or not at all: variation selectors, combining marks
+// (Grapheme_Extend), format characters such as the zero width joiner and the other default ignorable code points.
+static inline BOOL TSIsAttached(UChar32 c)
+{
+    if (c < 0xAD)
+        return NO;  // none below SOFT HYPHEN
+    return u_hasBinaryProperty(c, UCHAR_VARIATION_SELECTOR) || u_hasBinaryProperty(c, UCHAR_GRAPHEME_EXTEND)
+        || u_hasBinaryProperty(c, UCHAR_DEFAULT_IGNORABLE_CODE_POINT) || u_charType(c) == U_FORMAT_CHAR;
+}
+
+// Whether the word boundaries made a word of attached characters alone, such as the variation selector after
+// 葛 in 葛󠄀. Such a word belongs to the word before it, and is not a word of its own at the start either.
+static BOOL TSIsAttachedOnly(CFStringInlineBuffer *buffer, NSRange word, NSUInteger length)
+{
+    NSUInteger end = TSScalarStart(buffer, NSMaxRange(word), length), units;
+    for (NSUInteger i = TSScalarStart(buffer, word.location, length); i < end; i += units)
+        if (!TSIsAttached(TSCodePointAt(buffer, i, end, &units)))
+            return NO;
+    return YES;
+}
+
+// Whether a grapheme cluster outside every word is shown as an emoji (Unicode Technical Standard #51):
+// - not when U+FE0E asks for text presentation;
+// - a flag or a lone regional indicator (Regional_Indicator);
+// - a character shown as emoji by default (Emoji_Presentation), such as 😀, and the sequences that start with
+//   one: skin tones and ZWJ sequences such as 🧑‍🧑‍🧒‍🧒;
+// - an emoji character shown as text by default (Emoji) followed by U+FE0F, an emoji modifier or the keycap
+//   U+20E3: ❤️, ☝🏽, #️⃣ (1️⃣ is already a word, as the number 1);
+// - a pictographic code point that this version of Unicode has not assigned yet (Extended_Pictographic):
+//   an emoji newer than the system, which shows emoji by default.
+// © ™ ❤ and other symbols without U+FE0F are text, like § or ★, and are not words.
+static BOOL TSIsEmojiCluster(CFStringInlineBuffer *buffer, NSUInteger start, NSUInteger end)
+{
+    NSUInteger units;
+    UChar32 first = TSCodePointAt(buffer, start, end, &units);
+    BOOL presentationSelector = NO, textSelector = NO, modifier = NO, keycap = NO;
+    for (NSUInteger i = start + units; i < end; ) {
+        NSUInteger n;
+        UChar32 c = TSCodePointAt(buffer, i, end, &n);
+        if (c == 0xFE0F) presentationSelector = YES;
+        else if (c == 0xFE0E) textSelector = YES;
+        else if (c == 0x20E3) keycap = YES;
+        else if (u_hasBinaryProperty(c, UCHAR_EMOJI_MODIFIER)) modifier = YES;
+        i += n;
+    }
+    if (textSelector)
+        return NO;
+    if (u_hasBinaryProperty(first, UCHAR_REGIONAL_INDICATOR) || u_hasBinaryProperty(first, UCHAR_EMOJI_PRESENTATION))
+        return YES;
+    if (u_hasBinaryProperty(first, UCHAR_EMOJI) && (presentationSelector || modifier || keycap))
+        return YES;
+    return u_hasBinaryProperty(first, UCHAR_EXTENDED_PICTOGRAPHIC) && u_charType(first) == U_UNASSIGNED;
+}
+
+// Whether a code point can start an emoji: a quick test before the grapheme cluster is looked for.
+static inline BOOL TSMayStartEmoji(UChar32 c)
+{
+    if (c < 0x80)
+        return c == '#' || c == '*' || (c >= '0' && c <= '9');  // the keycaps
+    if (c < 0xA9 || (c >= 0x3000 && c <= 0x302F) || (c >= 0x3041 && c <= 0x30FF) || (c >= 0x4E00 && c <= 0x9FFF) || (c >= 0xFF01 && c <= 0xFF5E))
+        return NO;  // Latin-1 before ©, CJK punctuation, kana, ideographs and full-width forms hold no emoji
+    return (u_hasBinaryProperty(c, UCHAR_EMOJI) || u_hasBinaryProperty(c, UCHAR_EXTENDED_PICTOGRAPHIC));
+}
+
+// The end of the grapheme cluster at `start` in a gap. Joiners and marks at the start of a gap, after a word, are
+// a cluster of their own, as when the gap is taken by itself (Swift's Characters of the substring): ICU's \X
+// would join a ZWJ there to the pictograph after it.
+static NSUInteger TSGapClusterEnd(NSString *string, CFStringInlineBuffer *buffer, NSUInteger start, NSUInteger to)
+{
+    NSUInteger units, i = start;
+    while (i < to) {
+        UChar32 c = TSCodePointAt(buffer, i, to, &units);
+        int32_t kind = u_getIntPropertyValue(c, UCHAR_GRAPHEME_CLUSTER_BREAK);
+        if (kind != U_GCB_EXTEND && kind != U_GCB_ZWJ && kind != U_GCB_SPACING_MARK)
+            break;
+        i += units;
+    }
+    if (i > start)
+        return i;
+    return MIN(MAX(start + 1, TSClusterEnd(string, start, to)), to);
+}
+
+// The emoji among the characters [from, to), which lie outside every word. Sets `*stopped` when `cancel` stops it.
+static NSUInteger TSEmojiCount(NSString *string, CFStringInlineBuffer *buffer, NSUInteger from, NSUInteger to,
+                               TSStatusBarCancel cancel, BOOL *stopped)
+{
+    NSUInteger count = 0, units, check = from + TSCancelStride, boundary = from;
+    for (NSUInteger i = from; i < to; ) {
+        if (i >= check) {
+            if (cancel && cancel()) {
+                *stopped = YES;
+                return count;
+            }
+            check = i + TSCancelStride;
+        }
+        UChar32 c = TSCodePointAt(buffer, i, to, &units);
+        if (!TSMayStartEmoji(c)) {
+            // A simple character before another ends a cluster: the search below starts there.
+            if (units == 1 && c != '\r' && TSIsSimple((unichar)c) && i + 1 < to && TSIsSimple(CFStringGetCharacterFromInlineBuffer(buffer, (CFIndex)(i + 1))))
+                boundary = i + 1;
+            i += units;
+            continue;
+        }
+        // The grapheme cluster that holds it, found from the last boundary known, as a mark or a prepended
+        // character before it can make it part of a cluster that is not an emoji.
+        NSUInteger start = boundary, after;
+        while ((after = TSGapClusterEnd(string, buffer, start, to)) <= i)
+            start = after;
+        if (TSIsEmojiCluster(buffer, start, after))
+            count++;
+        boundary = i = after;
+    }
+    return count;
+}
+
 NSUInteger TSStatusBarWordCount(NSString *string, NSRange range, TSStatusBarCancel cancel)
 {
     NSUInteger length = string.length;
     if (range.location >= length || range.length == 0)
         return 0;
     range.length = MIN(NSMaxRange(range), length) - range.location;
-    __block NSUInteger count = 0;
+    // The words of the system's word boundaries, as CotEditor counts them, but a word of attached characters
+    // alone is not one, and each emoji outside the words is one.
+    __block CFStringInlineBuffer buffer;
+    CFStringInitInlineBuffer((__bridge CFStringRef)string, &buffer, CFRangeMake(0, (CFIndex)length));
+    __block NSUInteger count = 0, seen = 0, gap = range.location;
+    __block BOOL stopped = NO;
     [string enumerateSubstringsInRange:range
                                options:NSStringEnumerationByWords | NSStringEnumerationLocalized | NSStringEnumerationSubstringNotRequired
                             usingBlock:^(NSString *word, NSRange wordRange, NSRange enclosingRange, BOOL *stop) {
-        count++;
-        if ((count & 1023) == 0 && cancel && cancel())
+        NSUInteger start = TSScalarStart(&buffer, wordRange.location, length);
+        if (start > gap) {
+            BOOL gapStopped = NO;
+            count += TSEmojiCount(string, &buffer, gap, start, cancel, &gapStopped);
+            if (gapStopped) {
+                stopped = YES;
+                *stop = YES;
+                return;
+            }
+        }
+        gap = MAX(gap, TSScalarStart(&buffer, NSMaxRange(wordRange), length));
+        if (!TSIsAttachedOnly(&buffer, wordRange, length))
+            count++;
+        if ((++seen & 1023) == 0 && cancel && cancel()) {
+            stopped = YES;
             *stop = YES;
+        }
     }];
+    if (!stopped && gap < NSMaxRange(range))
+        count += TSEmojiCount(string, &buffer, gap, NSMaxRange(range), cancel, &stopped);
     return count;
 }
 
