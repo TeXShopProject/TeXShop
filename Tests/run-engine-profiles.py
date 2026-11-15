@@ -77,6 +77,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     }
     check(seen.count == 8, @"eight profiles");
     check([TSEngineProfileMenuSections().lastObject isEqual:@[@8]], @"the dvips profile alone is under Other");
+    check([TSEngineProfileMenuSections()[1] isEqual:@[@5, @7, @6]], @"the Japanese profiles are LuaLaTeX, then upLaTeX, then pLaTeX");
     check(TSEngineProfileValues(0, NO).count == 0 && TSEngineProfileValues(9, YES).count == 0 && TSEngineProfileTitle(9) == nil, @"unknown profiles write nothing");
     // 2. Matching: each profile and form matches itself, on top of other settings.
     for (NSArray<NSNumber *> *section in TSEngineProfileMenuSections()) for (NSNumber *p in section) for (NSNumber *mk in @[@NO, @YES]) {
@@ -327,6 +328,8 @@ MUTATIONS = {
     'match only one form': ("for (NSNumber *form in @[@NO, @YES]) {", "for (NSNumber *form in @[@NO]) {"),
     'no deferral': ('    profileApplicationDepth++;\n', '\n'),
     'every key reported changed': ('if (!TSEngineProfileSame([defaults objectForKey:key], value)) [changed addObject:key];', '[changed addObject:key];'),
+    'pLaTeX before upLaTeX': ('@[@(TSEngineProfileLuaLaTeXJapanese), @(TSEngineProfileUpLaTeXDvipdfmx), @(TSEngineProfilePLaTeXDvipdfmx)]',
+                              '@[@(TSEngineProfileLuaLaTeXJapanese), @(TSEngineProfilePLaTeXDvipdfmx), @(TSEngineProfileUpLaTeXDvipdfmx)]'),
     'every language Japanese': ('? TSEngineProfileUpLaTeXDvipdfmx : TSEngineProfilePdfLaTeX', '? TSEngineProfileUpLaTeXDvipdfmx : TSEngineProfileUpLaTeXDvipdfmx'),
     'latexmk by prefix only': ('    return [command isEqualToString:@"latexmk"] || [command hasPrefix:@"latexmk "];', '    return [command hasPrefix:@"latexmk"];'),
     'latexmk of the other method': ('[defaults integerForKey:DefaultScriptKey] == TSEngineProfileViaDVI ? LatexGSCommandKey : LatexCommandKey;', 'LatexGSCommandKey;'),

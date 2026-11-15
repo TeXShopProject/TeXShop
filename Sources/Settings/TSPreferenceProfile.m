@@ -15,7 +15,7 @@ static NSInteger const TSEngineProfileViaDVI = 101;
 NSArray<NSArray<NSNumber *> *> *TSEngineProfileMenuSections(void)
 {
     return @[@[@(TSEngineProfilePdfLaTeX), @(TSEngineProfileXeLaTeX), @(TSEngineProfileLuaLaTeX), @(TSEngineProfileLaTeXDvipdfmx)],
-             @[@(TSEngineProfileLuaLaTeXJapanese), @(TSEngineProfilePLaTeXDvipdfmx), @(TSEngineProfileUpLaTeXDvipdfmx)],
+             @[@(TSEngineProfileLuaLaTeXJapanese), @(TSEngineProfileUpLaTeXDvipdfmx), @(TSEngineProfilePLaTeXDvipdfmx)],
              @[@(TSEngineProfileLaTeXDvipsGhostscript)]];
 }
 
