@@ -30,8 +30,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-sixth-wording-') as td:
             print('DETECTED reviewed choice/group translation',lang,table,flush=True)
     cases=[
         ('DocumentSources/Manual Source/Manual.tex',b'slider and a numeric field',b'slider and a label'),
-        ('Documentation/Releases/6.00.md',b'a number field or arrow buttons',b'a label or arrow buttons'),
-        ('website/release-notes.html',b'a number field or arrow buttons',b'a label or arrow buttons'),
+        ('Documentation/Releases/6.00.md',b'typed as a number',b'typed as a label'),
+        ('website/release-notes.html',b'typed as a number',b'typed as a label'),
         ('Documentation/Releases/6.00-ja.md','数値欄'.encode(),b'LABEL'),
         ('website/release-notes-ja.html','数値欄'.encode(),b'LABEL'),
     ]
@@ -39,7 +39,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-sixth-wording-') as td:
         path=f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/basic_preferences.htm'
         cases.append((path,{'en':b'numeric field','ja':'数値欄'.encode('cp932'),'de':b'Zahlenfeld','es':b'campo num','ko':b'&#'}[lang],b'REMOVED'))
     # Reverting the new commit semantics must fail independently of field presence.
-    # Release notes keep only the slider and field; the commit rule is documented in the manual and help.
+    # Release notes keep only the number field; the commit rule is documented in the manual and help.
     cases.append(('DocumentSources/Manual Source/Manual.tex',b'Typed and pasted',b'CHANGED'))
     for lang,old,encoding in [('en','typed and pasted','utf-8'),('ja','打鍵と貼り付け','cp932'),('de','getippten und eingefügten','latin-1'),('es','escrito y el pegado','latin-1')]:
         cases.append((f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/basic_preferences.htm',old.encode(encoding),b'CHANGED'))

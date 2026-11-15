@@ -293,18 +293,16 @@ for language in ('en','ko'):
     assert not (ROOT/f'Resources/Interfaces/{language}.lproj/TeXShopHelp/pgs/basic_preferences1.htm').exists(),'Obsolete duplicate preferences help page'
 assert 'Transparency settings bring up a full Color Well' not in manual,'Opacity uses a slider in the manual'
 
-warning='A yellow warning symbol marks settings that take effect only after a restart or only for new documents.'
 for filename in ('Documentation/Releases/6.00.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm'):
     text=(ROOT/filename).read_text()
-    assert warning in text,('Current release warning copies agree',filename)
     for retired in ('All three groups remain open','Changing the method keeps the inactive options and their values','with all three groups open','without discarding unsaved edits'):
         assert retired not in text,('Retired redundant release explanation',filename,retired)
 
 # Release copies describe Search Settings briefly; details belong to the help and manual.
-search_copy='Search Settings finds a setting and shows it.'
+search_copy='Search Settings finds a setting.'
 for filename in ('Documentation/Releases/6.00.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','DocumentSources/ChangesDocument/Changes.tex'):
     assert search_copy in (ROOT/filename).read_text(),('Release category and color-row guidance',filename)
-ja_copy='「設定を検索」で、設定の項目を探して表示できます。'
+ja_copy='「設定を検索」で、設定の項目を探せるようになりました。'
 for filename in ('Documentation/Releases/6.00-ja.md','website/release-notes-ja.html'):
     assert ja_copy in (ROOT/filename).read_text(),('Release category and color-row guidance',filename)
 ko=html.unescape((ROOT/'Resources/Interfaces/ko.lproj/TeXShopHelp/pgs/basic_preferences.htm').read_text())
@@ -313,7 +311,7 @@ print('PASS: six release copies and Korean category terminology')
 
 for filename in ['Documentation/Releases/6.00.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','DocumentSources/ChangesDocument/Changes.tex']:
     text=(ROOT/filename).read_text()
-    assert 'slider, a number field or arrow buttons' in text,('Opacity numeric field and arrow buttons in release notes',filename)
+    assert 'opacity can also be typed as a number' in text,('Opacity numeric field in release notes',filename)
 assert 'slider and a numeric field' in manual,'Opacity numeric field in manual'
 for lang,term in {'en':'numeric field','ja':'数値欄','de':'Zahlenfeld','es':'campo numérico','ko':'숫자 입력 필드'}.items():
     page=ROOT/f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/basic_preferences.htm'
@@ -324,7 +322,7 @@ for lang,term in {'en':'arrow buttons','ja':'矢印ボタン','de':'Pfeiltasten'
     assert term in read_help(page,lang),('Opacity arrow buttons in help',lang)
 
 for filename in ["Documentation/Releases/6.00-ja.md","website/release-notes-ja.html"]:
-    assert "スライダー、数値欄、矢印ボタン" in (ROOT/filename).read_text(),("Opacity numeric field in release notes",filename)
+    assert "不透明度を数値欄でも変えられる" in (ROOT/filename).read_text(),("Opacity numeric field in release notes",filename)
 
 # Seventh audit: invalid typed text stays intact until commit, as pasted text does.
 assert 'Invalid input, including decimals, restores the previous value at the end of editing. Typed and pasted input follow the same rule.' in manual, 'Opacity commit guidance in manual'
@@ -341,7 +339,7 @@ print('PASS: typed/pasted opacity validation guidance in five helps, manual and 
 
 
 def check_internal_link_release(text):
-    for phrase in ("Internal-link previews show the text column of the target", ">Uwe Schmock</a>", 'issues/12">#12</a>'):
+    for phrase in ("Link previews are easier to read", ">Uwe Schmock</a>", 'issues/12">#12</a>'):
         assert phrase in text, ("Internal-link preview release guidance", phrase)
 
 check_internal_link_release((ROOT/"Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm").read_text())

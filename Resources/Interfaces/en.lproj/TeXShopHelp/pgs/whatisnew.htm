@@ -13,218 +13,174 @@
 
 <div id="content_normal"><P>
 <P><h5>TeXShop Changes 6.00</h5></P>
-<p>TeXShop 6.00 follows TeXShop 5.59. It adds the Advanced Find panel, LaTeX-aware spell checking, pinned link previews, a new Settings window and a status bar under the source, changes how a split Preview window behaves, and fixes many problems. “Changes in behavior from earlier versions” lists what works differently from earlier versions and how to get the earlier behavior back.</p>
+<p>TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell checking, pinned link previews, a new Settings window and a status bar, and fixes many problems.</p>
 <h4>Main changes</h4>
 <ul>
-<li><strong>Advanced Find panel:</strong> a find and replace panel with regular expressions, a list of all matches, highlighting of all matches, and multiple replacement with saved sets of find and replace pairs.</li>
-<li><strong>LaTeX-aware spell checking:</strong> spell checking skips TeX commands, comments, mathematics, and arguments such as labels and keys.</li>
-<li><strong>Pinned link previews:</strong> Option pins the preview of an internal link; a pinned preview can be moved, resized and scrolled.</li>
-<li><strong>Settings window:</strong> ten categories, a search field, editors for menu shortcuts and key bindings, and automatic detection of TeX and Ghostscript.</li>
-<li><strong>Status bar:</strong> a status bar under the source shows the lines, characters and words of the document and of the selection, the line and column of the insertion point, and the file size. Text Statistics… counts the text without TeX commands, also in files read with <code>\input</code> and <code>\include</code>, without saving.</li>
-<li><strong>Stop:</strong> Stop, and starting another typesetting job, end TeX and its child processes.</li>
+<li><strong>Advanced Find panel:</strong> a new Find panel with regular expressions lists every match and does multiple replacement.</li>
+<li><strong>LaTeX-aware spell checking:</strong> check the spelling of the text alone, skipping TeX commands and mathematics.</li>
+<li><strong>Pinned link previews:</strong> pin a link preview with the Option key.</li>
+<li><strong>Settings window:</strong> a new Settings window with a sidebar and a search field.</li>
+<li><strong>Status bar:</strong> the lines, characters and words are shown under the source.</li>
 </ul>
 <h4>Advanced Find panel</h4>
 <ul>
-<li>Add the Advanced Find panel, a new find and replace panel with regular expressions. Choose it in Settings → Editor → Find Panel. The Find submenu of the Edit menu gains Find All, Select All Matches, Use Selection for Replace, Replace and Find, Highlight All and Remove Highlights, whose keys can be changed in Settings → Keyboard. A replacement can be written as <code>$1</code> or in the OgreKit style <code>\1</code>.</li>
-<li>Find All lists every match with its line; click a line to go to the match.</li>
-<li>Highlight All marks every match in the text until Remove Highlights.</li>
-<li>Multiple Replace applies a saved set of find and replace pairs in order, with a single undo. Edit the sets with Edit Multiple Replace… or the Multiple Replace… button of the panel; they are saved in the format of CotEditor’s replacement definitions. Two sample sets convert between Unicode characters and ajmacros commands.</li>
-<li>The find and replace fields use a monospaced font and the colors of the theme, color the parts of a regular expression and mark its errors. The ? button next to Regular expression opens a reference of the syntax.</li>
-<li>Long operations run in the background and can be canceled.</li>
-<li>The panel also finds in the console, the log and the Experiment windows.</li>
+<li>A new find and replace panel with regular expressions, the Advanced Find panel.</li>
+<li>Find All lists every match.</li>
+<li>Highlight All marks every match in the text.</li>
+<li>Multiple Replace applies saved sets of find and replace pairs at once.</li>
+<li>A cheat sheet shows how to write regular expressions.</li>
+<li>Find also works in the console, the log and the Experiment windows.</li>
 </ul>
 <h4>LaTeX-aware spell checking</h4>
 <ul>
-<li>Add LaTeX-aware spell checking, based on suggestions from <a href="https://github.com/ralphrmartin">Ralph Martin</a>. It checks the prose and skips TeX commands, comments, mathematics, and arguments such as references. The Experiment source is checked the same way.</li>
-<li>Check passages in another language that the document switches to, and text in macros the document defines.</li>
-<li>Edit the rules for what is skipped, replace a word throughout the document with Change All (a single undo), and forget words learned by mistake in the current document.</li>
-<li>Skip the arguments that are not prose, such as keys, labels, lengths and colors, of the commands of common packages, including amsmath, graphicx, xcolor, tikz, hyperref, biblatex and siunitx. Provided by <a href="https://github.com/ralphrmartin">Ralph Martin</a>.</li>
-<li>Skip the arguments of <code>\newtheoremstyle</code> of amsthm. Suggested by <a href="https://github.com/herbs">Herb Schulz</a> and contributed by <a href="https://github.com/ralphrmartin">Ralph Martin</a> in <a href="https://github.com/TeXShopProject/TeXShop/pull/40">PR #40</a>.</li>
-<li>Choose the replacement for Change All by clicking a suggestion in the spelling panel. Proposed by <a href="https://github.com/ralphrmartin">Ralph Martin</a>.</li>
-<li>Change in the spelling panel no longer replaces the wrong text after the document was edited. Proposed by <a href="https://github.com/ralphrmartin">Ralph Martin</a>.</li>
-<li>List the dictionaries under Settings → Spell Checking by each language’s name, such as English (United Kingdom), instead of codes such as <code>en_GB</code>. Reported by <a href="https://github.com/herbs">Herb Schulz</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/32">#32</a>).</li>
-<li>A dictionary chosen under Settings → Spell Checking applies to open documents at once. Reported by <a href="https://github.com/herbs">Herb Schulz</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/32">#32</a>).</li>
-<li>Spell checking is faster in long documents and split editors.</li>
+<li>Check the spelling of the text alone, skipping TeX commands, comments and mathematics. Suggested by <a href="https://github.com/ralphrmartin">Ralph Martin</a>.</li>
+<li>Arguments that are not prose, of the commands of common packages, are not checked. Provided by <a href="https://github.com/ralphrmartin">Ralph Martin</a>.</li>
+<li>The arguments of <code>\newtheoremstyle</code> of amsthm are not checked. Suggested by <a href="https://github.com/herbs">Herb Schulz</a> and contributed by <a href="https://github.com/ralphrmartin">Ralph Martin</a> in <a href="https://github.com/TeXShopProject/TeXShop/pull/40">PR #40</a>.</li>
+<li>Parts of a document in another language can be checked too.</li>
+<li>Change All corrects a word throughout the document.</li>
+<li>Click a suggestion in the spelling panel to use it for Change All. Proposed by <a href="https://github.com/ralphrmartin">Ralph Martin</a>.</li>
+<li>The dictionaries in Settings → Spell Checking are listed by the names of their languages. Reported by <a href="https://github.com/herbs">Herb Schulz</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/32">#32</a>).</li>
+<li>Spell checking is faster in long documents.</li>
 </ul>
 <h4>Preview</h4>
 <ul>
-<li>Pin the preview of an internal link with Option, and move, resize and scroll it, or copy text from it, while you explain its contents (<a href="https://github.com/TeXShopProject/TeXShop/issues/10">#10</a>, <a href="https://github.com/TeXShopProject/TeXShop/issues/14">#14</a>). Other links still show their previews meanwhile (<a href="https://github.com/TeXShopProject/TeXShop/issues/35">#35</a>, <a href="https://github.com/TeXShopProject/TeXShop/issues/31">#31</a>). Suggested and reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>.</li>
-<li>Internal-link previews show the text column of the target, so that it is easy to read. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/12">#12</a>).</li>
-<li>Link previews of targets near the edge of a page show the text around the target. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/7">#7</a>).</li>
-<li>In the continuous display formats, a link preview no longer covers the text beside the link, and goes on to the next page, so a theorem broken by a page break can be read in one preview. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/14">#14</a>).</li>
-<li>Internal-link previews show the label of the linked page, such as “Page 157”, as Skim does. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/17">#17</a>).</li>
-<li>Hold Control over an internal link to reverse Link Popups for that link, for example to Control-click it for the contextual menu without a popup. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/30">#30</a>).</li>
-<li>“Split Window with Link” in the contextual menu of an internal link shows the target in the other part of a split window, while the link stays in view. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/31">#31</a>).</li>
-<li>Zoom to Content Width makes the text of the page fill the width of the preview, without its margins. It and Zoom to Content can be added to the toolbar. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/33">#33</a>).</li>
-<li>Page Layout and Two-Page Arrangement menus can be added to the preview toolbar, to change the layout, the page direction and the cover page of the current document.</li>
-<li>Dragging the divider of a split Preview window keeps the text at the top of each part in place, also when the window is resized. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/24">#24</a>).</li>
-<li>Switch Views exchanges the two parts of a split Preview window completely, including their sizes, places and magnifications. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/25">#25</a>).</li>
-<li>In a split Preview window, the outline in the drawer follows the active part. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/25">#25</a>).</li>
-<li>In a split Preview window, a thin line marks the active part. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/14">#14</a>).</li>
-<li>The split buttons of the toolbar show whether they split the window top and bottom or side by side. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/14">#14</a>).</li>
-<li>The window that shows the source and the Preview side by side opens with the divider where it was last dragged. Suggested by <a href="https://github.com/felix-finster">Felix Finster</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/26">#26</a>).</li>
-<li>The outline in the drawer keeps its open chapters and sections and its scroll position when the document is typeset again. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/19">#19</a>).</li>
-<li>“Do not turn pages by scrolling” under Settings → Preview → Display stops scrolling at the edge of a page in single-page and two-page display. Suggested by <a href="https://github.com/svb-bit">svb-bit</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>).</li>
-<li>When another application such as latexmk rewrites the PDF, the preview reloads at the same place on returning to TeXShop. With Always Watch for PDF Changes by Other Apps (formerly Automatic Preview Update), it also reloads while TeXShop is in the background.</li>
-<li>The magnifying glass works at any preview magnification. Reported by <a href="https://github.com/svb-bit">svb-bit</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>).</li>
-<li>The magnifying glass shows the place under the pointer also in cropped PDFs, keeps its size on the screen, and works in the Experiment preview.</li>
+<li>Pin a link preview with the Option key, and move or resize it. Suggested and reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/10">#10</a>, <a href="https://github.com/TeXShopProject/TeXShop/issues/14">#14</a>, <a href="https://github.com/TeXShopProject/TeXShop/issues/35">#35</a>).</li>
+<li>Link previews are easier to read. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/7">#7</a>, <a href="https://github.com/TeXShopProject/TeXShop/issues/12">#12</a>, <a href="https://github.com/TeXShopProject/TeXShop/issues/14">#14</a>).</li>
+<li>Link previews show the page number of the target. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/17">#17</a>).</li>
+<li>Hold Control over a link to turn its preview on or off. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/30">#30</a>).</li>
+<li>Split Window with Link shows a link’s target in the other part of the window. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/31">#31</a>).</li>
+<li>Zoom to Content Width fills the window with the text of the page. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/33">#33</a>).</li>
+<li>Page layout menus can be added to the preview toolbar.</li>
+<li>Switch Views exchanges the two parts of a split Preview window. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/25">#25</a>).</li>
+<li>A split Preview window shows which part is active. Suggested and reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/14">#14</a>, <a href="https://github.com/TeXShopProject/TeXShop/issues/25">#25</a>).</li>
+<li>The single window opens with the divider where it was last. Suggested by <a href="https://github.com/felix-finster">Felix Finster</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/26">#26</a>).</li>
+<li>The outline in the drawer stays as it was when the document is typeset again. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/19">#19</a>).</li>
+<li>Scrolling can be set not to turn pages. Suggested by <a href="https://github.com/svb-bit">svb-bit</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>).</li>
+<li>When another application such as latexmk rewrites the PDF, the preview is updated at the same place.</li>
+<li>The magnifying glass works at any magnification. Reported by <a href="https://github.com/svb-bit">svb-bit</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>).</li>
 </ul>
 <h4>Editing</h4>
 <ul>
-<li>Command-0 shows the document’s console, and pressing it again returns to the source or PDF window. Suggested by <a href="https://github.com/martignoni">Nicolas Martignoni</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/2">#2</a>).</li>
-<li>Click or drag over line numbers to select whole lines, in the source, the log and the Experiment source.</li>
-<li>Character Type Conversion in the Edit menu converts the selection between hiragana and katakana, between fullwidth and halfwidth characters, and between Unicode characters and ajmacros, <code>\UTF</code> or <code>\CID</code> commands, and turns curly quotes into TeX quotes.</li>
-<li>Unicode Normalization in the Edit menu applies NFC, NFD, NFKC or NFKD, or Modified NFC or NFD, which keep CJK compatibility ideographs.</li>
-<li>Swap with Clipboard in the Edit menu replaces the selection with the clipboard text and puts the replaced text on the clipboard.</li>
-<li><code>#PASTE#</code> in macros and key bindings inserts the text on the clipboard.</li>
-<li>The Macro Editor lists its items in a sidebar, as in the Multiple Replace window; rename an item in the list, and Command-S saves the macros. It colors its contents like the source, in the theme’s colors and the source font, and shows the placeholders of a macro as tokens such as Selected Text, as in the key binding list. The Insert menu below the contents adds them, and the help button beside it lists them.</li>
-<li>Fullwidth letters, digits and symbols, and the minus sign, which look like ASCII in Japanese text, can be colored with the Fullwidth colors under Settings → Themes → Highlights.</li>
-<li>Files without an encoding magic comment are opened in the encoding they use, including Unicode, Japanese, Chinese and Korean files.</li>
-<li>Experiment jobs run in their own console, so they do not interfere with typesetting the document. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/8">#8</a>).</li>
-<li>Experiment typesetting finds the pictures and other files of the document, and resolves <code>\ref</code>, <code>\pageref</code> and <code>\cite</code> from the document’s last typesetting. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/8">#8</a>).</li>
-<li>After the first Experiment typesetting, the preview shows the top of the page, where the output is. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/20">#20</a>).</li>
-<li>The Experiment source looks like the document’s source: font, syntax colors, line numbers, invisible characters and the other display settings.</li>
-<li>The Experiment windows use the theme’s colors and the window opacity.</li>
-<li>The Experiment preview has the Scroll, Select Text, Magnify and Select PDF tools and zoom buttons in its toolbar.</li>
-<li>The Tags menus in the toolbar and in the menu bar are up to date whenever they open, so the Update button is removed from the toolbar.</li>
-<li>Source › Show Status Bar hides the status bar; Edit › Statistics… opens the same Text Statistics as the status bar.</li>
-<li>Character Info shows the Unicode name, code point, block, category and version of a character, as CotEditor does, and each code point of a character made of several. For several characters it counts characters, words and lines as the status bar does.</li>
+<li>Command-0 shows the document’s console. Suggested by <a href="https://github.com/martignoni">Nicolas Martignoni</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/2">#2</a>).</li>
+<li>Click or drag over the line numbers to select whole lines.</li>
+<li>Character Type Conversion in the Edit menu converts between hiragana and katakana, fullwidth and halfwidth, and more.</li>
+<li>Unicode Normalization in the Edit menu normalizes the selection.</li>
+<li>Swap with Clipboard in the Edit menu exchanges the selection and the clipboard text.</li>
+<li>Macros and key bindings can insert the clipboard text.</li>
+<li>The Macro Editor has a new design with a sidebar.</li>
+<li>Fullwidth letters, digits and symbols can be shown in their own color.</li>
+<li>The encoding of a source file is detected automatically.</li>
+<li>Experiment typesets with the document’s pictures and references. Suggested and reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/8">#8</a>, <a href="https://github.com/TeXShopProject/TeXShop/issues/20">#20</a>).</li>
+<li>The Experiment source looks like the document’s source.</li>
+<li>The Tags menu is always up to date.</li>
+<li>Character Info shows details of a character, such as its Unicode name and version.</li>
 </ul>
 <h4>Settings window</h4>
 <ul>
 <li>Settings has a sidebar with ten categories: General, Documents and Saving, Editor, Keyboard, Spell Checking, Themes, Typesetting, Console, Preview, and Updates.</li>
-<li>Search Settings finds a setting and shows it.</li>
-<li>TeXShop finds the TeX and Ghostscript installations, at first launch and with Detect Paths… under Settings → Typesetting, and lists them with their versions to choose from.</li>
-<li>The commands of MakeIndex and MetaPost can be set in Settings → Typesetting → Related Tools, and the engine profiles set them too, with the Japanese programs for the Japanese profiles.</li>
-<li>Choose the Alternate Engine from a menu of the built-in programs and the engine files in Settings → Typesetting.</li>
-<li>Change the shortcuts of menu commands in Settings → Keyboard: search by command or by key, record a new shortcut right in the list, as in Xcode, by clicking the shortcut and pressing the keys, and restore one or all shortcuts. A shortcut already in use is refused, with the reason below the list. In the Macro Editor, a macro’s shortcut is recorded in its list the same way, and it may use Control without Command, or F1–F20.</li>
-<li>Key bindings are edited in a list in Settings → Keyboard, in place of the Key Bindings Editor window. Placeholders such as <code>#SEL#</code> appear as tokens and are added from the Insert menu.</li>
-<li>Keyboard also holds command completion and the editor of the command completion file, which has moved from the Source menu.</li>
-<li>Spell Checking chooses between LaTeX-aware spell checking with its exclusion rules and the legacy method.</li>
-<li>Settings → Updates can include betas in updates, and has a Check for Updates button.</li>
-<li>Settings → Documents and Saving can turn autosave and Versions off, and keep the previous file as <code>name~</code>.</li>
-<li>Settings → Preview → Display chooses whether link popups are on when a document opens.</li>
-<li>Settings → Preview can show the first page alone as a cover in two-page layouts.</li>
-<li>Settings → Editor can treat @ as part of command names in syntax coloring.</li>
-<li>Settings → Editor can turn on expl3 coloring for documents when they open.</li>
-<li>Choose the markers for spaces, full-width spaces, line breaks and tabs from menus under Settings → Editor.</li>
-<li>Theme colors are arranged in eight named groups, and a new theme is named in a sheet.</li>
-<li>A yellow warning symbol marks settings that take effect only after a restart or only for new documents.</li>
-<li>The zoom setting applies to new PDFs, and the source and console fonts to open windows as well.</li>
-<li>Window opacity can be set with a slider, a number field or arrow buttons.</li>
-<li>Colors that are always opaque, such as text and background colors, no longer offer an opacity.</li>
-<li>Use Color Mapping and Foreground Prominence are in the Copy Images group of Settings → Preview, and ten settings have short explanations.</li>
-<li>The number fields under Settings → Editor → Format have arrow buttons and accept only digits.</li>
+<li>Search Settings finds a setting.</li>
+<li>Detect Paths… sets the TeX and Ghostscript installations automatically.</li>
+<li>The index program and MetaPost can be set.</li>
+<li>Change the shortcut of any menu command in Settings → Keyboard.</li>
+<li>Edit key bindings in Settings → Keyboard.</li>
+<li>Settings → Updates can include betas.</li>
+<li>Autosave and Versions can be turned off.</li>
+<li>The first page can be shown alone as a cover in two-page layouts.</li>
+<li>Syntax coloring can treat @ as part of command names.</li>
+<li>expl3 coloring can be on when a document opens.</li>
+<li>Choose the markers for invisible characters from menus.</li>
+<li>Window opacity can also be typed as a number.</li>
 <li>General links to Comment Lines and Hidden Settings.</li>
 </ul>
 <h4>App icon and appearance</h4>
 <ul>
-<li>A new app icon in a white rounded square, after the classic circular icon. Suggested by <a href="https://github.com/LaTeX-fetishist">LaTeX fetishist</a> and <a href="https://github.com/martignoni">Nicolas Martignoni</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/3">#3</a>).</li>
-<li>Choose one of five Dock icons, including earlier designs, under Settings → General; it is shown while TeXShop is running. Suggested by <a href="https://github.com/LaTeX-fetishist">LaTeX fetishist</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/3">#3</a>).</li>
-<li>On macOS 26 and later, TeXShop uses the Liquid Glass appearance: Typeset is the prominent button of the toolbars, and the text and pages of the source window, the Preview window and the single window scroll under the toolbar and show through its glass.</li>
-<li>Light pages in the preview are filled with the theme’s Preview background color again, labeled “Light Pages” in Settings → Themes. Reported by <a href="https://github.com/ethanphil4-a11y">ethanphil4-a11y</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/39">#39</a>).</li>
-<li>The Back/Forward item of the preview toolbar has the chevrons of Apple’s Preview and is dimmed when there is nowhere to go. Suggested by Bruno Voisin.</li>
-<li>The preview toolbar offers one pair of Previous Page and Next Page buttons, with the icons of the Preview app.</li>
-<li>Each mouse tool in the preview toolbar has a tool tip that names it and says what it does. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/28">#28</a>).</li>
-<li>Back and Forward in the preview toolbar have their own tool tips and translated names. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/34">#34</a>).</li>
-<li>Each bundled theme has expl3 colors that suit it.</li>
-<li>Line numbers use the system’s monospaced font, so their digits line up.</li>
-<li>The buttons of dialogs are placed as the Human Interface Guidelines describe.</li>
-<li>Interface text uses the system font in every language, and labels that were cut off show their whole text.</li>
-<li>Labels and choices that were cut off or drawn over each other in some windows and languages are shown in full.</li>
-<li>The input field of the Experiment console, the replacement field below the spelling panel and the number fields are drawn without overlapping.</li>
-<li>The bar below the Experiment source is narrow, with a small Typeset button.</li>
-<li>The buttons of the OgreKit Find panel no longer draw over each other in any language.</li>
-<li>The localized Settings windows no longer have overlapping controls, cut-off labels or wrongly connected controls.</li>
-<li>In every language, the log window, the encoding sheet, the OgreKit Find panel and the Open and Save panels have the current macOS look. Notices before printing or choosing a root file are standard alerts, buttons whose action cannot be undone are marked as such, and link popups have round corners.</li>
-<li>The Matrix panel numbers its rows like its columns and is readable in Dark Mode. The LaTeX panel switches its groups with segmented controls, and its symbols follow Light and Dark Mode.</li>
+<li>A new app icon. Suggested by <a href="https://github.com/LaTeX-fetishist">LaTeX fetishist</a> and <a href="https://github.com/martignoni">Nicolas Martignoni</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/3">#3</a>).</li>
+<li>The Dock icon while TeXShop is running can be one of the earlier designs. Suggested by <a href="https://github.com/LaTeX-fetishist">LaTeX fetishist</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/3">#3</a>).</li>
+<li>On macOS 26 and later, TeXShop has the Liquid Glass appearance.</li>
+<li>The buttons of the preview toolbar have the icons of Apple’s Preview. Suggested by Bruno Voisin.</li>
+<li>The buttons of the preview toolbar have tool tips. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/28">#28</a>, <a href="https://github.com/TeXShopProject/TeXShop/issues/34">#34</a>).</li>
+<li>The digits of line numbers line up.</li>
+<li>The Matrix and LaTeX panels are easier to read in Dark Mode.</li>
 </ul>
 <h4>Changes in behavior from earlier versions</h4>
 <ul>
-<li><strong>Spell checking:</strong> LaTeX-aware spell checking is on by default. To check spelling as before, choose “Legacy method” under Settings → Spell Checking.</li>
-<li><strong>Find:</strong> at the first launch of this version, every user is switched once to the Advanced Find panel. To go back, choose another method in Settings → Editor → Find Panel. The OgreKit Find Panel is listed as legacy.</li>
-<li><strong>Settings profiles:</strong> settings profiles are replaced by engine profiles in Settings → Typesetting. A profile sets the typesetting commands for one TeX engine, the kpsewhich command, the BibTeX engine, the index program, MetaPost and conversion to otf package <code>\UTF</code> / <code>\CID</code>; the Japanese profiles also set UTF-8 as the encoding for new documents, the spelling dictionary to automatic language detection and UTF-8-MAC conversion. Other settings stay as they are. Before a profile is applied, it lists the values it sets and marks those that change; you can leave out any value you want to keep, and choose whether to use latexmk. Settings made with the earlier profiles stay as they are.</li>
-<li><strong>Typesetting settings:</strong> in Settings → Typesetting, Default Command is now Typeset New Documents With, and Command to use is now Engine File, a menu of the engine files of TeXShop. The engine file chosen at first is LuaLaTeX instead of XeLaTeX. The Typeset menu, the toolbar and Settings say plain TeX where TeX is set against LaTeX.</li>
-<li><strong>Arrow keys in the preview:</strong> in single-page and two-page layouts, the Up and Down Arrow keys scroll an enlarged page instead of turning the page. Use Command-Right/Left Arrow, Page Up/Page Down, or Space to change pages. Suggested by <a href="https://github.com/svb-bit">svb-bit</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>).</li>
-<li><strong>Menu shortcuts set in macOS:</strong> some menu items have been renamed, so shortcuts assigned to TeXShop in macOS System Settings may no longer work. Set them in Settings → Keyboard instead.</li>
-<li><strong>Macro shortcuts:</strong> a macro’s shortcut is now recorded in the list of the Macro Editor by pressing it, and may use Control without Command, or F1–F20. Shortcuts saved by earlier versions keep Command.</li>
-<li><strong>Marks:</strong> the mark commands are in Edit → Marks. Insert Mark with Note is always in the menu.</li>
-<li><strong>Command completion:</strong> the Command Completion submenu of the Source menu is replaced by one item, Add to Command Completion List, with the same shortcut.</li>
+<li><strong>Spell checking:</strong> LaTeX-aware spell checking is on by default. The legacy method is in Settings → Spell Checking.</li>
+<li><strong>Find:</strong> the Advanced Find panel is used by default. The earlier panel can be chosen in Settings → Editor → Find Panel.</li>
+<li><strong>Settings profiles:</strong> settings profiles are replaced by engine profiles in Settings → Typesetting. Choose a profile to set up typesetting for that TeX engine in one step.</li>
+<li><strong>Typesetting settings:</strong> Default Command is now Typeset New Documents With, and Command to use is now Engine File.</li>
+<li><strong>Arrow keys in the preview:</strong> in single-page and two-page layouts, the Up and Down Arrow keys scroll within the page instead of turning it. Suggested by <a href="https://github.com/svb-bit">svb-bit</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>).</li>
+<li><strong>Menu shortcuts set in macOS:</strong> shortcuts for TeXShop made in macOS System Settings may need to be set again in Settings → Keyboard.</li>
+<li><strong>Macro shortcuts:</strong> macro shortcuts are set in the list of the Macro Editor.</li>
+<li><strong>Marks:</strong> the mark commands are in Edit → Marks.</li>
+<li><strong>Command completion:</strong> the Command Completion submenu of the Source menu is now one item, Add to Command Completion List.</li>
 <li><strong>Open Style File:</strong> it has moved from the Help menu to the File menu.</li>
-<li><strong>Apple Distiller:</strong> the choice is removed, since macOS 14 no longer has it; PostScript is converted with Ghostscript.</li>
-<li><strong>Smooth text and line art:</strong> this setting is removed; images in the PDF are always smoothed.</li>
-<li><strong>Save PostScript File and -dALLOWPSTRANSPARENCY:</strong> these settings are removed from Settings → Typesetting. If you had turned one on, TeXShop adds <code>--keep-psfile</code> or <code>--distilleropts "-dALLOWPSTRANSPARENCY"</code> to the Via DVI command for you. Opening a PostScript file always allows transparency when Ghostscript supports it.</li>
-<li><strong>Obsolete settings:</strong> obsolete PDFSync choices and settings that had no effect are removed.</li>
-<li><strong>Themes from earlier color settings:</strong> the button in Settings → Themes that made a theme from the color settings of earlier versions is removed, and so are the macros Colored source and Default Colored source.</li>
-<li><strong><code>\UTF</code> commands:</strong> <code>\UTF</code> commands written by conversion to otf package <code>\UTF</code> / <code>\CID</code> are turned back into characters when a file is opened.</li>
-<li><strong>Line endings:</strong> when an opened file has Windows (CRLF), classic Mac (CR) or mixed line endings, TeXShop says that they have been changed to LF. The notice can be turned off for each file.</li>
-<li><strong>Statistics:</strong> Edit › Statistics… opens Text Statistics in the status bar instead of a separate window.</li>
+<li><strong>Smooth text and line art:</strong> this setting is removed.</li>
+<li><strong>Save PostScript File and -dALLOWPSTRANSPARENCY:</strong> these settings are removed.</li>
+<li><strong>Obsolete settings:</strong> settings that had no effect are removed.</li>
+<li><strong>Themes from earlier color settings:</strong> this button in Settings → Themes and the macro Colored source are removed.</li>
+<li><strong><code>\UTF</code> commands:</strong> <code>\UTF</code> commands of the otf package are turned back into characters when a file is opened.</li>
+<li><strong>Line endings:</strong> opening a file with Windows or other line endings tells you that they were changed to LF.</li>
+<li><strong>Statistics:</strong> Edit › Statistics… opens Text Statistics in the status bar.</li>
 </ul>
 <h4>Fixes: typesetting and the console</h4>
 <ul>
-<li><strong>Critical fix:</strong> Stop now ends TeX and its child processes; before, it reported that typesetting had stopped but left TeX running. Starting another typesetting job also stops the previous one.</li>
-<li>Console output can be selected and copied while TeX runs or waits for input. The Experiment console works the same way.</li>
-<li>Return in the console output answers TeX, as Return in the empty input field does. The Experiment console works the same way.</li>
-<li>Console output and log files with mixed encodings or broken characters are shown correctly.</li>
-<li>Command-1 in the preview of a root document returns to the file that was typeset with <code>% !TEX root</code>.</li>
-<li>Failures to start typesetting tools are handled reliably, and stopping no longer hangs.</li>
-<li>A sheet tells when the TeX root file named in a document cannot be found.</li>
-<li>Leftover <code>.synctex.gz(busy)</code> files are trashed with the other auxiliary files.</li>
+<li><strong>Critical fix:</strong> Stop now ends TeX; before, TeX kept running.</li>
+<li>Console output can be copied while TeX runs.</li>
+<li>Console output and logs with broken characters are shown correctly.</li>
+<li>Command-1 returns to the file typeset with <code>% !TEX root</code>.</li>
+<li>Stopping no longer hangs when a typesetting tool cannot start.</li>
+<li>TeXShop tells you when the root file cannot be found.</li>
 </ul>
 <h4>Fixes: preview</h4>
 <ul>
-<li>The preview keeps its position after reloading, on macOS 26 and macOS 27. Reported by <a href="https://github.com/svb-bit">svb-bit</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>).</li>
-<li>On macOS 27, an enlarged page keeps its horizontal position when you move to another page or to a search or SyncTeX result. Reported by <a href="https://github.com/svb-bit">svb-bit</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>).</li>
-<li>Splitting, unsplitting and Switch Views no longer make the Preview creep. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/23">#23</a>).</li>
-<li>Parts of the linked page no longer show around a link preview while the Preview scrolls. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/21">#21</a>).</li>
-<li>The preview keeps its position when its window is closed and reopened during typesetting. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/5">#5</a>).</li>
-<li>SyncTeX goes to the place clicked, also at the start of a line, in a split editor and with files reached through aliases.</li>
+<li>The preview no longer moves after reloading or turning pages on macOS 26 and 27. Reported by <a href="https://github.com/svb-bit">svb-bit</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>).</li>
+<li>Splitting and Switch Views no longer make the Preview creep. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/23">#23</a>).</li>
+<li>Dragging the divider of a split Preview window no longer moves the text. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/24">#24</a>).</li>
+<li>Parts of the linked page no longer show around a link preview. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/21">#21</a>).</li>
+<li>Reopening the preview during typesetting no longer changes its position. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/5">#5</a>).</li>
+<li>Pages in the preview take the theme’s color again. Reported by <a href="https://github.com/ethanphil4-a11y">ethanphil4-a11y</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/39">#39</a>).</li>
+<li>SyncTeX goes to the place clicked.</li>
 <li>Fix a crash while the preview reloads.</li>
-<li>Space and Shift-Space scroll correctly when a page is larger than the window.</li>
-<li>A new preview window no longer covers the frontmost one exactly.</li>
-<li>In Dark Mode, a split Preview window no longer shows a light gray band between its parts, and the drawer no longer has a light gray frame.</li>
+<li>Space scrolls correctly through large pages.</li>
+<li>In Dark Mode, a split Preview window no longer shows a light band.</li>
 </ul>
 <h4>Fixes: opening and saving documents</h4>
 <ul>
-<li>The cursor no longer jumps to the end of the file, and typed characters no longer go missing, while editing files in folders synced by OneDrive, Google Drive and similar services. Reported by <a href="https://github.com/Steuard">Steuard</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/29">#29</a>).</li>
+<li>The cursor no longer jumps while editing files synced by OneDrive, Google Drive and similar services. Reported by <a href="https://github.com/Steuard">Steuard</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/29">#29</a>).</li>
 <li>Document windows open again in Romanian. Reported and suggested by <a href="https://github.com/yo3iti">Tom</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/42">#42</a>).</li>
-<li>TeXShop keeps noticing changes to a source file after other editors save it. This includes the contribution from <a href="https://github.com/ddd3h">Daisuke Nishihama</a> in <a href="https://github.com/TeXShopProject/TeXShop/pull/1">PR #1</a>.</li>
-<li>The byte order mark of UTF-8 files and the byte order of UTF-16 files are kept when saving, and UTF-16 files can have encoding magic comments.</li>
-<li>GB 2312 files are read correctly, and a file that could not be read in its encoding is no longer damaged when saved.</li>
-<li>The backslash and the tilde are always saved as the characters TeX expects in Japanese encodings.</li>
-<li>An unknown encoding name opens the file in UTF-8, with a message, and project files are written in UTF-8.</li>
-<li>The encoding menu in the Save dialog works, and can be shown from Settings → Documents and Saving.</li>
-<li>Saving with Automatic UTF-8-Mac to UTF-8 Conversion no longer writes an empty file when the text has only CJK compatibility ideographs.</li>
-<li>Saving with conversion to otf package <code>\UTF</code> / <code>\CID</code> no longer loses a line break followed by a combining mark.</li>
+<li>TeXShop notices changes to a source file after other editors save it. Contributed by <a href="https://github.com/ddd3h">Daisuke Nishihama</a> in <a href="https://github.com/TeXShopProject/TeXShop/pull/1">PR #1</a>.</li>
+<li>UTF-8 files with a byte order mark and UTF-16 files are saved correctly.</li>
+<li>GB 2312 files are read correctly.</li>
+<li>The backslash and the tilde are saved correctly in Japanese encodings.</li>
+<li>The encoding menu in the Save dialog works.</li>
+<li>Automatic UTF-8-Mac to UTF-8 Conversion no longer saves an empty file.</li>
+<li>Conversion to otf package <code>\UTF</code> / <code>\CID</code> no longer loses line breaks.</li>
 <li>Make Default Editor works for <code>.tex</code> files.</li>
-<li>Fix errors with empty documents, isolated quotation marks, and saving.</li>
 </ul>
 <h4>Fixes: editing and other</h4>
 <ul>
-<li>The spelling panel shows the misspelled word in view in long documents. Reported by <a href="https://github.com/herbs">Herb Schulz</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/38">#38</a>).</li>
-<li>Opening a file with a <code>% !TEX spellcheck</code> line no longer changes the language of another document.</li>
-<li>Text moved out of a comment line by a line break loses the comment color. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/16">#16</a>).</li>
-<li>An unclosed argument of <code>\footnote</code>, <code>\cite</code> or <code>\index</code> no longer removes the colors of the rest of the text.</li>
-<li>Typing Japanese with an input method no longer slows down, and the text being composed is not colored until it is committed.</li>
-<li>Theme editing shows bracket and expl3 colors correctly.</li>
-<li>Control characters are shown as visible marks, and a form feed no longer hides the rest of the document.</li>
-<li>Long source documents open, scroll and edit faster.</li>
+<li>The spelling panel shows the misspelled word in long documents. Reported by <a href="https://github.com/herbs">Herb Schulz</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/38">#38</a>).</li>
+<li>A <code>% !TEX spellcheck</code> line no longer changes the language of other documents.</li>
+<li>Fix the coloring after a line break in a comment. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/16">#16</a>).</li>
+<li>An unclosed argument no longer removes the colors of the rest of the text.</li>
+<li>Typing Japanese no longer slows down.</li>
+<li>A form feed no longer hides the rest of the document.</li>
+<li>Long documents are faster to show and edit.</li>
 <li>Left alignment is kept in right-to-left paragraphs.</li>
-<li>The Tags menu stays localized in the single window.</li>
-<li>Splitting the source in the single window divides it evenly; the lower part was sometimes left much smaller.</li>
-<li>The Home URL setting of the HTML window works, and the window opens the TeXShop web site by default.</li>
-<li>Controls that did nothing or the wrong thing in some languages work: opening images in Spanish, the log window in French, toolbar items in Portuguese and Simplified Chinese, the URL field of the HTML window in Korean and Simplified Chinese, a help item in Italian, and the Matrix panel in ten languages.</li>
-<li>The annotation panel shows its buttons correctly in French and Portuguese, and the English Edit menu has Change Encoding.</li>
-<li>Texts of panels and windows that were left in English or in another language are translated.</li>
-<li>The Matrix panel no longer quits TeXShop after a row is dragged and the table is cleared or filled, and the LaTeX panel shows custom commands also when the hidden setting LPanelOutlines is NO.</li>
+<li>Splitting the source in the single window divides it evenly.</li>
+<li>The Home URL of the HTML window works.</li>
+<li>Text is no longer cut off or drawn over other text in any language.</li>
+<li>Fix buttons and menus that did not work in some languages.</li>
+<li>Texts left in English are translated.</li>
+<li>Fix a crash in the Matrix panel.</li>
 </ul>
 <h4>Manual, help and bundled tools</h4>
 <ul>
-<li>Update the manual’s RaiseHook example for amsmath equations with hyperref 7.01q or later, following <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>’s proposal (<a href="https://github.com/TeXShopProject/TeXShop/issues/6">#6</a>).</li>
+<li>Update the manual’s RaiseHook example for current hyperref, following <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>’s proposal (<a href="https://github.com/TeXShopProject/TeXShop/issues/6">#6</a>).</li>
 <li>The manual and the help point to the current TeXShop web site, <a href="https://texshop.app/">texshop.app</a>. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/15">#15</a>).</li>
-<li>Remove Skype from the presentation chapter of the manual. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/11">#11</a>).</li>
+<li>Remove Skype from the manual. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/11">#11</a>).</li>
 <li>The contact information in the credits points to the current maintainer. Reported by <a href="https://github.com/ralphrmartin">Ralph Martin</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/13">#13</a>).</li>
-<li>Add help for LaTeX-aware spell checking, repair broken help links, and update the hidden-settings reference.</li>
+<li>Add help for LaTeX-aware spell checking.</li>
 <li>Update the bundled zlib to 1.4 and the SyncTeX parser to 1.21.</li>
 <li>Update the bundled latexmk to 4.89, provided by Herbert Schulz.</li>
 <li>TeXShop can be built from an extracted source archive again (<a href="https://github.com/TeXShopProject/TeXShop/issues/4">#4</a>).</li>
