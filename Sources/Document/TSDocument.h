@@ -149,7 +149,9 @@ enum RootCommand
 	IBOutlet NSPanel			*magnificationPanel;
 	IBOutlet NSPanel			*magnificationKitPanel;
 	IBOutlet NSPanel			*statisticsPanel;
-	IBOutlet NSForm				*statisticsForm;
+	IBOutlet NSTextField		*statisticsWords;
+	IBOutlet NSTextField		*statisticsLines;
+	IBOutlet NSTextField		*statisticsCharacters;
 	IBOutlet NSPanel			*extensionPanel;
 	IBOutlet NSTextField		*extensionResult;
 	IBOutlet NSPopUpButton		*openSaveBox;		// TODO: Rename this to 'encodingPopUp' (don't forget to update the NIBs)

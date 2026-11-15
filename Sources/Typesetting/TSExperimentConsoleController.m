@@ -6,6 +6,7 @@
 #import "TSColorSupport.h"
 #import "TSExperimentTheme.h"
 #import "TSAdvancedFindTextView.h"
+#import "TSConsoleButtonRow.h"
 
 @interface TSExperimentConsoleController (Colors)
 - (void)updateConsoleColors:(NSNotification *)notification;
@@ -167,12 +168,9 @@ static BOOL TSExperimentIsPrompt(NSString *line)
     text.delegate = self.outputReturn;
     NSButton *stop = [NSButton buttonWithTitle:NSLocalizedString(@"Stop Experiment", @"Stop Experiment job")
                                       target:self action:@selector(abort:)];
-    stop.bezelStyle = NSBezelStyleShadowlessSquare;
-    [stop sizeToFit];
-    CGFloat width = MAX(100, stop.frame.size.width);
-    stop.frame = NSMakeRect(504 - width, 398, width, 33);
-    stop.autoresizingMask = NSViewMinXMargin | NSViewMinYMargin;
     [content addSubview:stop];
+    // A push button at the top right, as in the console of a document.
+    TSLayoutConsoleButtons(content, @[], @[stop], scroll);
     self.stopButton = stop;
     stop.enabled = NO;
     self.window = window;

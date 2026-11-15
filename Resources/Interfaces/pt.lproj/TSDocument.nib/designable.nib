@@ -104,7 +104,9 @@
                 <outlet property="spopupButton" destination="dIs-fa-r8K" id="lNg-K9-zN7"/>
                 <outlet property="sprogramButton" destination="Znw-c7-4O8" id="dVq-tu-vtT"/>
                 <outlet property="stags" destination="PJT-Of-PkH" id="a7J-R3-RYV"/>
-                <outlet property="statisticsForm" destination="661" id="666"/>
+                <outlet property="statisticsCharacters" destination="P5P-4P-kFY" id="c4d-vC-XYQ"/>
+                <outlet property="statisticsLines" destination="diV-3L-FRb" id="163-Rn-PWP"/>
+                <outlet property="statisticsWords" destination="CJy-y5-xxy" id="qQd-Ky-ttl"/>
                 <outlet property="statisticsPanel" destination="658" id="665"/>
                 <outlet property="stringCenter" destination="aQw-kG-RCt" id="c0f-W8-OSW"/>
                 <outlet property="stringLeft" destination="Mi1-Mu-F3i" id="waU-Wa-GOA"/>
@@ -1551,35 +1553,71 @@ DQ
                 <rect key="frame" x="0.0" y="0.0" width="229" height="165"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <form verticalHuggingPriority="750" fixedFrame="YES" mode="track" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="661">
-                        <rect key="frame" x="20" y="60" width="189" height="85"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        <size key="cellSize" width="189" height="23"/>
-                        <size key="intercellSpacing" width="1" height="8"/>
-                        <formCell key="prototype" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="justified" title="Field:" id="3902">
+                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BnG-19-Iqp">
+                        <rect key="frame" x="18" y="126" width="75" height="16"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Palavras:" id="eme-IN-wWS">
                             <font key="font" metaFont="system"/>
-                            <font key="titleFont" metaFont="system"/>
-                        </formCell>
-                        <cells>
-                            <column>
-                                <formCell scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="justified" title="Palavras:" id="662">
-                                    <font key="font" metaFont="system"/>
-                                    <font key="titleFont" metaFont="system"/>
-                                </formCell>
-                                <formCell scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="justified" tag="1" title="Linhas:" id="663">
-                                    <font key="font" metaFont="system"/>
-                                    <font key="titleFont" metaFont="system"/>
-                                </formCell>
-                                <formCell scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="justified" tag="2" title="Caracteres:" id="664">
-                                    <font key="font" metaFont="system"/>
-                                    <font key="titleFont" metaFont="system"/>
-                                </formCell>
-                            </column>
-                        </cells>
-                    </form>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CJy-y5-xxy">
+                        <rect key="frame" x="98" y="123" width="111" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="5IA-DS-pWP">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <accessibilityConnection property="title" destination="BnG-19-Iqp" id="X2v-9X-Dn0"/>
+                        </connections>
+                    </textField>
+                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gox-p1-lYA">
+                        <rect key="frame" x="18" y="95" width="75" height="16"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Linhas:" id="orx-Ap-fvz">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="diV-3L-FRb">
+                        <rect key="frame" x="98" y="92" width="111" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="77P-20-smz">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <accessibilityConnection property="title" destination="Gox-p1-lYA" id="x0n-ai-9GN"/>
+                        </connections>
+                    </textField>
+                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dag-YH-nbt">
+                        <rect key="frame" x="18" y="64" width="75" height="16"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Caracteres:" id="RfM-z3-cfp">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="P5P-4P-kFY">
+                        <rect key="frame" x="98" y="61" width="111" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="5OR-No-PMS">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <accessibilityConnection property="title" destination="Dag-YH-nbt" id="0zb-oh-cMB"/>
+                        </connections>
+                    </textField>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="667">
-                        <rect key="frame" x="124" y="12" width="97" height="32"/>
+                        <rect key="frame" x="112" y="12" width="97" height="32"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="Atualizar" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="3884">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2756,7 +2794,7 @@ Gw
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="1812" y="261" width="370" height="157"/>
             <rect key="screenRect" x="1920" y="-37" width="1728" height="1079"/>
-            <value key="minSize" type="size" width="344" height="100"/>
+            <value key="minSize" type="size" width="353" height="100"/>
             <view key="contentView" id="7oO-No-R2f">
                 <rect key="frame" x="0.0" y="0.0" width="370" height="157"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -2803,7 +2841,7 @@ DQ
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mi1-Mu-F3i">
-                        <rect key="frame" x="18" y="12" width="83" height="18"/>
+                        <rect key="frame" x="18" y="12" width="79" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="radio" title="Esquerda" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="KEV-rj-Wac">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2814,7 +2852,7 @@ DQ
                         </buttonCell>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aQw-kG-RCt">
-                        <rect key="frame" x="106" y="12" width="68" height="18"/>
+                        <rect key="frame" x="113" y="12" width="64" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="radio" title="Centro" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="KnP-mq-z1M">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2825,7 +2863,7 @@ DQ
                         </buttonCell>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CVk-dW-4UN">
-                        <rect key="frame" x="178" y="12" width="68" height="18"/>
+                        <rect key="frame" x="193" y="12" width="62" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="radio" title="Direita" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="A31-hp-vj0">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
