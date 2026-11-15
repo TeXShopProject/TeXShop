@@ -79,5 +79,5 @@ int main(int argc, char **argv) { @autoreleasepool {
         }
     }}
     if (problems) { printf("FAIL: %d problems\n", problems); return 1; }
-    printf("PASS: text, controls and pop-up choices are whole, inside their windows and apart, input fields have room for their focus rings, and wrapping fields have even margins, in %lu windows and views of %lu localized interfaces (also with the automatic toolbar bezel)\n", (unsigned long)roots / 2, (unsigned long)entries.count);
+    printf("PASS: text, controls and pop-up choices are whole, inside their windows and apart (4 points, 8 after a radio button or check box, also the cells of a matrix), words are not broken, table headers and first rows show, no view draws outside what holds it, input fields have room for their focus rings, and wrapping fields have even margins, in %lu windows and views of %lu localized interfaces (also with the automatic toolbar bezel)\n", (unsigned long)roots / 2, (unsigned long)entries.count);
 } return 0; }

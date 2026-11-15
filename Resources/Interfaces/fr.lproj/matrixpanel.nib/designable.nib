@@ -38,7 +38,7 @@
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{202, 434}, {398, 382}}</string>
 				<int key="NSWTFlags">-260562944</int>
-				<string key="NSWindowTitle">Matrix Panel</string>
+				<string key="NSWindowTitle">Palette Matrice</string>
 				<string key="NSWindowClass">NSPanel</string>
 				<object class="NSMutableString" key="NSViewClass">
 					<characters key="NS.bytes">View</characters>
@@ -272,7 +272,7 @@
 								<object class="NSButtonCell" id="722361630">
 									<int key="NSCellFlags">67239424</int>
 									<int key="NSCellFlags2">134348800</int>
-									<string key="NSContents">Matrice zéro</string>
+									<string key="NSContents">Matrice nulle</string>
 									<reference key="NSSupport" ref="413013574"/>
 									<reference key="NSControlView" ref="612366847"/>
 									<int key="NSTag">2</int>
@@ -682,7 +682,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="941924995">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">4194304</int>
-								<string key="NSContents">Lignes</string>
+								<string key="NSContents">Lignes :</string>
 								<reference key="NSSupport" ref="26"/>
 								<reference key="NSControlView" ref="740377680"/>
 								<reference key="NSBackgroundColor" ref="393773709"/>
@@ -703,7 +703,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="735931834">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">205520896</int>
-								<string key="NSContents">Colonnes</string>
+								<string key="NSContents">Colonnes :</string>
 								<reference key="NSSupport" ref="26"/>
 								<reference key="NSControlView" ref="649910861"/>
 								<reference key="NSBackgroundColor" ref="393773709"/>
@@ -733,7 +733,7 @@
 												<object class="NSButtonCell" id="1056640184">
 													<int key="NSCellFlags">-2080244224</int>
 													<int key="NSCellFlags2">262144</int>
-													<string key="NSContents">Matrice</string>
+													<string key="NSContents">matrix</string>
 													<reference key="NSSupport" ref="22"/>
 													<reference key="NSControlView" ref="610094676"/>
 													<int key="NSButtonFlags">1211912703</int>
@@ -749,7 +749,7 @@
 												<object class="NSButtonCell" id="280139933">
 													<int key="NSCellFlags">67239424</int>
 													<int key="NSCellFlags2">262144</int>
-													<string key="NSContents">Tabulaire</string>
+													<string key="NSContents">tabular</string>
 													<reference key="NSSupport" ref="22"/>
 													<reference key="NSControlView" ref="610094676"/>
 													<int key="NSTag">1</int>
@@ -839,7 +839,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 											<object class="NSButtonCell" key="NSCell" id="70619758">
 												<int key="NSCellFlags">604110336</int>
 												<int key="NSCellFlags2">262144</int>
-												<string key="NSContents"> Incorporer dans un environnement "table"</string>
+												<string key="NSContents">Incorporer dans un environnement table</string>
 												<reference key="NSSupport" ref="22"/>
 												<reference key="NSControlView" ref="1007007408"/>
 												<int key="NSButtonFlags">1211912703</int>
@@ -1788,7 +1788,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="722361630"/>
-							<string key="toolTip">Set all matrix entries to zero</string>
+							<string key="toolTip">Mettre tous les coefficients à zéro</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1798,7 +1798,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="639109102"/>
-							<string key="toolTip">Insert matrix into project</string>
+							<string key="toolTip">Insérer la matrice dans le document</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1808,7 +1808,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="600793463"/>
-							<string key="toolTip">Set matrix to identity</string>
+							<string key="toolTip">Transformer en matrice identité</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1818,7 +1818,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="68927048"/>
-							<string key="toolTip">Delete all entries</string>
+							<string key="toolTip">Effacer tous les coefficients</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1828,7 +1828,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="130329448"/>
-							<string key="toolTip">Right matrix delimiter</string>
+							<string key="toolTip">Délimiteur droit de la matrice</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1842,7 +1842,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="446344132"/>
-							<string key="toolTip">Custom left delimiter</string>
+							<string key="toolTip">Délimiteur gauche personnalisé</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1854,7 +1854,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="145708353"/>
-							<string key="toolTip">Custom left delimiter</string>
+							<string key="toolTip">Délimiteur gauche personnalisé</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1864,7 +1864,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="396913732"/>
-							<string key="toolTip">Custom right delimiter</string>
+							<string key="toolTip">Délimiteur droit personnalisé</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1874,7 +1874,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="798110401"/>
-							<string key="toolTip">Left matrix delimiter</string>
+							<string key="toolTip">Délimiteur gauche de la matrice</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1898,7 +1898,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="128697195"/>
-							<string key="toolTip">custom right delimiter</string>
+							<string key="toolTip">Délimiteur droit personnalisé</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1913,7 +1913,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="115711010"/>
-							<string key="toolTip">Only blue cells are being inserted</string>
+							<string key="toolTip">Seules les cellules bleues sont insérées</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1935,7 +1935,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="610094676"/>
-							<string key="toolTip">Select environment: matrix for math and tabular for text</string>
+							<string key="toolTip">Choisir l’environnement : matrix pour les mathématiques, tabular pour le texte</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1951,7 +1951,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="781006762"/>
-							<string key="toolTip">Draw border</string>
+							<string key="toolTip">Tracer un cadre</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1961,7 +1961,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
 							<reference key="object" ref="943486016"/>
-							<string key="toolTip">Draw grid</string>
+							<string key="toolTip">Tracer une grille</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>

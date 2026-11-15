@@ -38,7 +38,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="398" height="391"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button toolTip="Inserir a matriz no projeto" verticalHuggingPriority="750" id="2349">
+                    <button toolTip="Inserir a matriz no documento" verticalHuggingPriority="750" id="2349">
                         <rect key="frame" x="30" y="8" width="112" height="28"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES"/>
                         <buttonCell key="cell" type="push" title="Inserir" bezelStyle="rounded" alignment="center" controlSize="small" state="on" borderStyle="border" id="2483">
@@ -131,7 +131,7 @@
                                 </buttonCell>
                             </column>
                             <column>
-                                <buttonCell type="push" title="Matriz com zeros" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" toolTip="Definir todas as entradas da matriz como zero" tag="2" inset="2" id="2348">
+                                <buttonCell type="push" title="Matriz nula" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" toolTip="Definir todas as entradas da matriz como zero" tag="2" inset="2" id="2348">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="label"/>
                                 </buttonCell>

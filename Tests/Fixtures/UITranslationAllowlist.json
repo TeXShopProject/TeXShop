@@ -419,42 +419,21 @@
   "fr": {
    "MacroEditor.nib": [
     "Macro Editor"
-   ],
-   "matrixpanel.nib": [
-    " Incorporer dans un environnement \"table\"",
-    "Matrix Panel"
-   ]
-  },
-  "it": {
-   "matrixpanel.nib": [
-    "Matrix Panel"
    ]
   },
   "nl": {
    "MacroEditor.nib": [
     "Macro Editor"
-   ],
-   "matrixpanel.nib": [
-    "Matrix Panel"
    ]
   },
   "pt-PT": {
    "MacroEditor.nib": [
     "Macro Editor"
-   ],
-   "matrixpanel.nib": [
-    "Matrix Panel"
    ]
   },
   "ro": {
    "MacroEditor.nib": [
     "Macro Editor"
-   ],
-   "completionpanel1.2.nib": [
-    "LaTeX Panel"
-   ],
-   "matrixpanel.nib": [
-    "Matrix Panel"
    ]
   }
  }
