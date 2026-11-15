@@ -21,8 +21,8 @@ class ReleaseNotesTest(unittest.TestCase):
         self.addCleanup(self.directory.cleanup)
         self.path = Path(self.directory.name)
         for suffix in ['', '-ja']:
-            (self.path / f'5.60{suffix}.md').write_text(
-                '# TeXShop 5.60\n\n- TeX & PDF <preview> 日本語\n', encoding='utf-8')
+            (self.path / f'6.00{suffix}.md').write_text(
+                '# TeXShop 6.00\n\n- TeX & PDF <preview> 日本語\n', encoding='utf-8')
 
     def test_xml_round_trip_preserves_both_languages_and_old_item(self):
         channel = ET.Element('channel')
@@ -30,8 +30,8 @@ class ReleaseNotesTest(unittest.TestCase):
         ET.SubElement(old, 'title').text = 'TeXShop 5.59'
         previous = ET.tostring(old)
         item = ET.Element('item')
-        notes = release.load_release_notes('5.60', self.path)
-        release.append_release_notes(item, '5.60', notes)
+        notes = release.load_release_notes('6.00', self.path)
+        release.append_release_notes(item, '6.00', notes)
         channel.insert(0, item)
         parsed = ET.fromstring(ET.tostring(channel, encoding='utf-8'))
         descriptions = parsed[0].findall('description')
@@ -40,23 +40,23 @@ class ReleaseNotesTest(unittest.TestCase):
         self.assertTrue(all(d.get(f'{{{release.SPARKLE}}}format') == 'markdown' for d in descriptions))
         self.assertEqual(ET.tostring(parsed[1]), previous)
         self.assertEqual(parsed[0].findtext(f'{{{release.SPARKLE}}}fullReleaseNotesLink'),
-                         'https://texshop.app/release-notes.html#v5.60')
+                         'https://texshop.app/release-notes.html#v6.00')
 
     def test_draft_is_rejected(self):
-        with (self.path / '5.60-ja.md').open('a') as stream:
+        with (self.path / '6.00-ja.md').open('a') as stream:
             stream.write('\n<!-- release-status: draft -->\n')
         with self.assertRaisesRegex(ValueError, 'Finalize the draft'):
-            release.load_release_notes('5.60', self.path)
+            release.load_release_notes('6.00', self.path)
 
     def test_missing_translation_is_rejected(self):
-        (self.path / '5.60-ja.md').unlink()
+        (self.path / '6.00-ja.md').unlink()
         with self.assertRaisesRegex(ValueError, 'Missing ja'):
-            release.load_release_notes('5.60', self.path)
+            release.load_release_notes('6.00', self.path)
 
     def test_wrong_version_is_rejected(self):
-        (self.path / '5.60.md').write_text('# TeXShop 5.59\n\n- Old notes\n')
+        (self.path / '6.00.md').write_text('# TeXShop 5.59\n\n- Old notes\n')
         with self.assertRaisesRegex(ValueError, 'wrong version'):
-            release.load_release_notes('5.60', self.path)
+            release.load_release_notes('6.00', self.path)
 
 
 class PrereleaseTest(unittest.TestCase):

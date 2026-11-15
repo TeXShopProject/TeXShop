@@ -97,7 +97,7 @@ In January 2024 he contributed \cref{PresentingWithTeXShopChapter} to this manua
 
 The version number of the manual  increases when changes are made. Small changes are made with most new TeXShop releases, including additional chapters from time to time.
 
-Version 1.4.8 updates the manual for TeXShop 5.60. Starting with TeXShop 5.59, TeXShop is maintained by Yusuke Terada, who has revised and extended this manual; the passages written in the first person are by Richard Koch.
+Version 1.4.8 updates the manual for TeXShop 6.00. Starting with TeXShop 5.59, TeXShop is maintained by Yusuke Terada, who has revised and extended this manual; the passages written in the first person are by Richard Koch.
 
  \newpage
 \pdfbookmark{Table of Contents}{ContentsLabel}
@@ -598,7 +598,7 @@ syntax colored, but a menu item can toggle this behavior for the active window. 
 {\bf Check spelling while typing} (Spell Checking category; Edit menu, Spelling and Grammar submenu) When selected, misspelled words are underlined in light red.
 
 {\bf Show Invisible Characters} When selected, invisible characters like spaces, newlines, and tabs are shown.
-The setting allows users to pick which characters are shown and by what symbol. Starting with TeXShop 5.60, the symbol for spaces, Japanese spaces, newlines, and tabs is chosen from a pop-up menu next to each item. The final  {\bf On by Default} item is usually left off, so these characters are not shown when a window is first opened. If puzzling behavior later develops, it can be turned on using a menu item.
+The setting allows users to pick which characters are shown and by what symbol. Starting with TeXShop 6.00, the symbol for spaces, Japanese spaces, newlines, and tabs is chosen from a pop-up menu next to each item. The final  {\bf On by Default} item is usually left off, so these characters are not shown when a window is first opened. If puzzling behavior later develops, it can be turned on using a menu item.
 
 
 
@@ -628,9 +628,9 @@ in which the hero loses a programming girlfriend because she uses spaces rather 
 
 {\bf Correct Spelling} (Spell Checking category) When selected, the Macintosh will not just underline misspelled words. It will also correct the spelling, and sometimes even change the wording. This item is present so the user can turn it off! We explain. A global preference turns correct spelling on or off for all applications. If this global preference turns it on, the {\bf Correct Spelling} item can turn it back off in TeXShop while leaving it on in other applications. 
 
-{\bf @ as Part of Command Names} When selected, syntax coloring treats the character @ as part of command names, as \LaTeX\ macro authors do. It is on by default. Before TeXShop 5.60, this was the hidden setting MakeatletterEnabled.
+{\bf @ as Part of Command Names} When selected, syntax coloring treats the character @ as part of command names, as \LaTeX\ macro authors do. It is on by default. Before TeXShop 6.00, this was the hidden setting MakeatletterEnabled.
 
-{\bf Color expl3 Code by Default} When selected, expl3 syntax coloring is on when a document is first opened. See \cref{expl3Chapter}. Before TeXShop 5.60, this was the hidden setting expl3SyntaxColoring.
+{\bf Color expl3 Code by Default} When selected, expl3 syntax coloring is on when a document is first opened. See \cref{expl3Chapter}. Before TeXShop 6.00, this was the hidden setting expl3SyntaxColoring.
 
 Most other items in the Editor category will be explained later in the manual.
 
@@ -758,7 +758,7 @@ But people who have been using \TeX\ for a number of years are going to have fil
 
 TeXShop has several features to help  users deal with encoding issues. 
 
-{\bf Automatic Detection} Starting with TeXShop 5.60, when a file without an encoding magic comment line is opened, TeXShop checks which encoding the file uses. A byte order mark identifies UTF-8 and UTF-16 files. A file containing only ASCII characters is read in the encoding selected in TeXShop Settings, or in UTF-8 if that encoding does not write ASCII characters as ASCII, as UTF-16 does. Otherwise TeXShop first uses the encoding recorded with the file by the program which saved it, when macOS has kept this information and the file can be read in it. Then TeXShop tries UTF-8, and then the encodings used for your languages and for the default encoding, such as the Japanese, Chinese, Korean, Cyrillic, and Western European encodings. An encoding declared in the source with a line like
+{\bf Automatic Detection} Starting with TeXShop 6.00, when a file without an encoding magic comment line is opened, TeXShop checks which encoding the file uses. A byte order mark identifies UTF-8 and UTF-16 files. A file containing only ASCII characters is read in the encoding selected in TeXShop Settings, or in UTF-8 if that encoding does not write ASCII characters as ASCII, as UTF-16 does. Otherwise TeXShop first uses the encoding recorded with the file by the program which saved it, when macOS has kept this information and the file can be read in it. Then TeXShop tries UTF-8, and then the encodings used for your languages and for the default encoding, such as the Japanese, Chinese, Korean, Cyrillic, and Western European encodings. An encoding declared in the source with a line like
 \begin{verbatim}
      \usepackage[latin1]{inputenc}
 \end{verbatim}
@@ -778,13 +778,13 @@ The line overrides all other methods used to determine the encoding. If you have
 Select it and a list of known encodings will appear. Select the one you want, and the magic line will be added to the top of the source file. If the magic line names an encoding that TeXShop does not know, TeXShop reads the file as UTF-8 and says so.
 
 {\bf Save Dialog} Versions of TeXShop before 5.04 had an encoding menu in the Save Dialog, allowing users to select the encoding used to write the file. By default, this was the encoding used when the file was opened, so the menu was not needed in most cases. To avoid misuse, the menu was removed in TeXShop 5.04.
-If you updated from an earlier version of TeXShop and routinely used the menu, you can restore it. Starting with TeXShop 5.60, this is done with the item {\bf Show Encoding in Save Dialog} under the Documents and Saving category of TeXShop Settings; earlier versions used the hidden setting EncodingMenuInSaveDialog. The encoding selected in the menu is used to save the file. If the source contains an encoding magic comment line naming an encoding TeXShop knows, the menu shows that encoding and cannot be changed; edit the magic comment line instead. The menu can still be changed when the magic comment line names an unknown encoding, or when the file could not be read in the encoding it names and was opened in IsoLatin9.
+If you updated from an earlier version of TeXShop and routinely used the menu, you can restore it. Starting with TeXShop 6.00, this is done with the item {\bf Show Encoding in Save Dialog} under the Documents and Saving category of TeXShop Settings; earlier versions used the hidden setting EncodingMenuInSaveDialog. The encoding selected in the menu is used to save the file. If the source contains an encoding magic comment line naming an encoding TeXShop knows, the menu shows that encoding and cannot be changed; edit the magic comment line instead. The menu can still be changed when the magic comment line names an unknown encoding, or when the file could not be read in the encoding it names and was opened in IsoLatin9.
 
 I do not recommend using the menu to change encodings. See the following sections for details.
 
-{\bf Byte Order Marks} Some programs begin UTF-8 files with a byte order mark, and UTF-16 files always begin with one. Starting with TeXShop 5.60, TeXShop keeps the byte order mark of a UTF-8 file and the byte order of a UTF-16 file when it saves the file. Encoding magic comment lines are also recognized in UTF-16 files.
+{\bf Byte Order Marks} Some programs begin UTF-8 files with a byte order mark, and UTF-16 files always begin with one. Starting with TeXShop 6.00, TeXShop keeps the byte order mark of a UTF-8 file and the byte order of a UTF-16 file when it saves the file. Encoding magic comment lines are also recognized in UTF-16 files.
 
-{\bf Line Endings} Files written on Windows end lines with a carriage return and a line feed, and files written on very old Macintosh systems end lines with a carriage return. TeXShop converts these line endings to the line feeds used by macOS when a file is opened. Starting with TeXShop 5.60, a notice tells you when this happens, since the file will be saved with the new line endings. The notice has a check box to stop showing it for that file.
+{\bf Line Endings} Files written on Windows end lines with a carriage return and a line feed, and files written on very old Macintosh systems end lines with a carriage return. TeXShop converts these line endings to the line feeds used by macOS when a file is opened. Starting with TeXShop 6.00, a notice tells you when this happens, since the file will be saved with the new line endings. The notice has a check box to stop showing it for that file.
 
 
 
@@ -793,7 +793,7 @@ I do not recommend using the menu to change encodings. See the following section
 Recall that I live in the US, where ASCII is often sufficient. Rather than using this manual, it is best to ask \TeX\ experts in your area about encoding matters.
 
 
-But I can give a minor piece of advice. Many people in the U.S. and Western Europe have used either UTF-8 or IsoLatin9. If you have a mixture of such files, one way to proceed is to switch the default encoding to UTF-8. Starting with TeXShop 5.60, an old document without a magic comment line is then opened in the encoding TeXShop detects, which is usually correct. (With automatic detection turned off, TeXShop instead complains about a document that is not UTF-8 and opens it in IsoLatin9.) Once you know for sure that a document is encoded in IsoLatin9, use the TeXShop Macros menu's ``Encoding''  item to insert the magic line
+But I can give a minor piece of advice. Many people in the U.S. and Western Europe have used either UTF-8 or IsoLatin9. If you have a mixture of such files, one way to proceed is to switch the default encoding to UTF-8. Starting with TeXShop 6.00, an old document without a magic comment line is then opened in the encoding TeXShop detects, which is usually correct. (With automatic detection turned off, TeXShop instead complains about a document that is not UTF-8 and opens it in IsoLatin9.) Once you know for sure that a document is encoded in IsoLatin9, use the TeXShop Macros menu's ``Encoding''  item to insert the magic line
 \begin{verbatim}
      % !TEX encoding = IsoLatin9
 \end{verbatim}
@@ -1016,7 +1016,7 @@ Homebrew, or MiKTeX, the location of the binaries will be different. Consult the
 
 The second item in this group, {\bf Ghostscript}, is a full path to the Ghostscript binary. This is /usr/local/bin for the copy of Ghostscript installed by MacTeX. The standard build sequence for Ghostscript will also install it at this location. If you use the Ghostscript in MacPorts or Homebrew, consult their documentation for the proper location. Many typesetting engines do not use Ghostscript, so this is not a crucial setting.
 
-Starting with TeXShop 5.60, TeXShop can set these two items for you. When TeXShop is first used, and whenever the button {\bf Detect Paths...} in the {\bf Paths} group of the Typesetting category is pressed, TeXShop looks for \TeX\ and Ghostscript in the usual places: the folders listed in /etc/paths and /etc/paths.d, /Library/TeX/texbin, the TeX Live folders in /usr/local/texlive and /Applications/TeXLive, and the folders used by Homebrew, MacPorts, and Fink. It checks that the programs run, asks each one for its version, and lists the installations it finds, newest first; \TeX\ Live installations are ordered by year and then by pdfTeX version. The newest one is selected, but another one can be chosen, separately for \TeX\ and for Ghostscript. Press {\bf OK} to select the installation. Installations in other places can still be entered by hand.
+Starting with TeXShop 6.00, TeXShop can set these two items for you. When TeXShop is first used, and whenever the button {\bf Detect Paths...} in the {\bf Paths} group of the Typesetting category is pressed, TeXShop looks for \TeX\ and Ghostscript in the usual places: the folders listed in /etc/paths and /etc/paths.d, /Library/TeX/texbin, the TeX Live folders in /usr/local/texlive and /Applications/TeXLive, and the folders used by Homebrew, MacPorts, and Fink. It checks that the programs run, asks each one for its version, and lists the installations it finds, newest first; \TeX\ Live installations are ordered by year and then by pdfTeX version. The newest one is selected, but another one can be chosen, separately for \TeX\ and for Ghostscript. Press {\bf OK} to select the installation. Installations in other places can still be entered by hand.
 
 The {\bf Second TeX Engines} setting will be explained later and is not used by the toolchains discussed in this chapter.
 
@@ -2486,7 +2486,7 @@ What happens if you decide to experiment, get confused, end up with a source doc
 When I give talks about TeXShop at TeX User Group Conferences, users of Linux and Windows like to make fun of features of the Macintosh. So when I talked about Automatic Saving, I was sure the Linux users would warn about the danger of losing data. To my surprise, their actual comment was ``we've had that for years!''
 A user has never complained to me about losing data due to automatic saving and  I cannot imagine living without it.
 
-Just in case, TeXShop has a way to turn AutoSave off. Starting with TeXShop 5.60, this is the item {\bf Enable Autosave and Versions} under the Documents and Saving category of TeXShop Settings; it takes effect after TeXShop restarts. In earlier versions it was the hidden setting AutoSaveEnabled.
+Just in case, TeXShop has a way to turn AutoSave off. Starting with TeXShop 6.00, this is the item {\bf Enable Autosave and Versions} under the Documents and Saving category of TeXShop Settings; it takes effect after TeXShop restarts. In earlier versions it was the hidden setting AutoSaveEnabled.
 Turning AutoSave off is strongly discouraged. I never test TeXShop with AutoSave disabled.
 
 When AutoSave is off, the item {\bf Keep the previous file as ``name\textasciitilde'' when saving}, just below it, makes TeXShop keep the previous version of a file as a backup each time the file is saved. The backup has the name of the file followed by a tilde. This item replaces the hidden setting KeepBackup.
@@ -2572,7 +2572,7 @@ As usual, items under the Preview category of TeXShop Settings select the behavi
 The  modes showing two pages side by side are controlled by the item ``Page direction'' in the Two-Page Arrangement group of the Preview category of TeXShop Settings, which allows users to select ``Left to Right'' or
 ``Right to Left''. Select the first item for languages written from left to right and the second one for languages written from right to left, that is,  Arabic, Hebrew, and Persian. By default, the first page is shown by itself, followed by pairs of double pages. This is called {\em Book Mode} by Apple because most books start with an odd number of preliminary pages, followed by the regularly numbered pages. Therefore the pairs of numbered pages correspond to the pairs of visible pages when a book is opened at random.
 
-Starting with TeXShop 5.60, the item {\bf Show first page alone as cover} under the Preview category of TeXShop Settings selects whether the first page is shown by itself. Earlier versions used the hidden setting DisplayAsBook for those very rare users who do not want that isolated starting page. The Settings items apply to documents opened later.
+Starting with TeXShop 6.00, the item {\bf Show first page alone as cover} under the Preview category of TeXShop Settings selects whether the first page is shown by itself. Earlier versions used the hidden setting DisplayAsBook for those very rare users who do not want that isolated starting page. The Settings items apply to documents opened later.
 In addition, two special comment lines are provided so the property can be set on a document by document basis. These overrule the Settings and turn book display mode on or off for that document:
 \begin{verbatim}
      % !TEX bookDisplay
@@ -2583,9 +2583,9 @@ In Japan, text can be written horizontally or vertically. When it is written ver
      % !TEX PageDirectionL2R
      % !TEX PageDirectionR2L
 \end{verbatim}
-If a document has no such comment line, TeXShop 5.60 and later follow the reading direction recorded in the pdf file, when the file records one.
+If a document has no such comment line, TeXShop 6.00 and later follow the reading direction recorded in the pdf file, when the file records one.
 
-TeXShop 5.60 also adds two menus that can be placed in the Preview window's toolbar. {\bf Page Layout} selects the display mode of the current document, like the corresponding items in the Preview menu. {\bf Two-Page Arrangement} selects, for the current document only, the direction in which pages flow and whether the first page is shown alone. When these are changed, the page being viewed and the magnification are kept. The arrangement lasts until the document is closed, or until {\bf Restore Document Settings} is chosen in the Two-Page Arrangement menu, which returns to the Settings and the magic comment lines of the document. If the menus are not in the toolbar, use ``Customize Toolbar...'' to add them.
+TeXShop 6.00 also adds two menus that can be placed in the Preview window's toolbar. {\bf Page Layout} selects the display mode of the current document, like the corresponding items in the Preview menu. {\bf Two-Page Arrangement} selects, for the current document only, the direction in which pages flow and whether the first page is shown alone. When these are changed, the page being viewed and the magnification are kept. The arrangement lasts until the document is closed, or until {\bf Restore Document Settings} is chosen in the Two-Page Arrangement menu, which returns to the Settings and the magic comment lines of the document. If the menus are not in the toolbar, use ``Customize Toolbar...'' to add them.
 
 \section{Magnification}
 
@@ -2595,7 +2595,7 @@ The other choices are ``Fixed Magnification'' and ``Actual Size''. In a sense, t
 
 Note that ``Fit to Window'' and ``Fixed Magnification'' are orthogonal choices. If you select ``Fit to Window'' for ``After resizing the window'' in TeXShop Settings, then the ``Magnification'' just under it will be ignored, because the magnification is actually set by the size of the window. If you open a window in ``Fit to Window'' mode, and then modify the magnification with the ``Magnification'' tool in the toolbar, the magnification mode will silently change to ``Fixed Magnification Mode'' so that resizing the window will no longer change the magnification. To restore ``Fit to Window'' mode for that window, reset the ``Magnification'' method in the Preview menu.
 
-TeXShop 5.60 adds two buttons that can be placed in the Preview window's toolbar with ``Customize Toolbar...''. {\bf Zoom to Content} sets the magnification so that the typeset part of the page in the middle of the window, without the white margins around it, fits in the window. {\bf Zoom to Content Width} sets it so that the typeset part fills the width of the window, and scrolls so that the top of the typeset part is at the top of the window; a page number or footnote at the foot of the page does not make the text smaller. In the two-page formats both pages of the row are measured together, and a rotated page is measured as it is shown. Like the Magnification tool, the buttons switch the window to ``Fixed Magnification'' mode; in a split window they act on the active part. Uwe Schmock suggested Zoom to Content Width.
+TeXShop 6.00 adds two buttons that can be placed in the Preview window's toolbar with ``Customize Toolbar...''. {\bf Zoom to Content} sets the magnification so that the typeset part of the page in the middle of the window, without the white margins around it, fits in the window. {\bf Zoom to Content Width} sets it so that the typeset part fills the width of the window, and scrolls so that the top of the typeset part is at the top of the window; a page number or footnote at the foot of the page does not make the text smaller. In the two-page formats both pages of the row are measured together, and a rotated page is measured as it is shown. Like the Magnification tool, the buttons switch the window to ``Fixed Magnification'' mode; in a split window they act on the active part. Uwe Schmock suggested Zoom to Content Width.
 
 If you use ``Fit to Window'' mode, but want to temporarily magnify  the image so a portion can be studied in detail. I  recommend using an Apple gesture rather than the Magnification tool. Click in the window, place two fingers on the track pad, and spread them to magnify or bring them together to shrink. When you shrink back to the original ``fit to page'' magnification, the display will snap back to this configuration. Note, however, that this gesture changes to ``Fixed Magnification'' mode and resizing the window will not change its magnification. To restore ``Fit to Window'' mode for that window, reset the ``Magnification'' method in the Preview menu.
 
@@ -2609,7 +2609,7 @@ Until TeXShop 5.59, the Preview category had an item labeled ``Change Page Butto
 
 At the start of this chapter, I explained that the original TeXShop used a preliminary version of Apple's PDF code to display pdf documents, together with extensions by Mitsuhiro Shishikura. Some of that old code is still in TeXShop, used to display graphic files and dvi files, as explained later in this document. But most of the code has been replaced by code which calls Apple's PDFKit. The old code is in a source file called MyPDFView, and the new code is in a source file called MyPDFKitView, and for years and years I have only edited the MyPDFKitView file. 
 
-I looked at the code in Settings which controls the mysterious ``Change Page Buttons'' item. It controlled a global setting which was only consulted by the code in MyPDFView. There, in Single Page mode, it made the page buttons move straight to the next page instead of first scrolling through an enlarged page. Whatever this code did was not ported over to MyPDFKitView during the transition to PDFKit in Tiger, so the item had no effect, and it was removed in TeXShop 5.60. Its place in the Preview category is taken by the switch ``Do not turn pages by scrolling'', described in the section on Display Modes.
+I looked at the code in Settings which controls the mysterious ``Change Page Buttons'' item. It controlled a global setting which was only consulted by the code in MyPDFView. There, in Single Page mode, it made the page buttons move straight to the next page instead of first scrolling through an enlarged page. Whatever this code did was not ported over to MyPDFKitView during the transition to PDFKit in Tiger, so the item had no effect, and it was removed in TeXShop 6.00. Its place in the Preview category is taken by the switch ``Do not turn pages by scrolling'', described in the section on Display Modes.
 
 \newpage
 \section{Preview Mouse Tools}
@@ -2729,7 +2729,7 @@ While a popup is pinned, hovering over other links still shows their popups, abo
 %
 %If the Preview window has a large default magnification, then only a small portion of the window is visible on the screen. But the offscreen image of the active page contained the full page in intricate detail, taking a gigantic amount of memory. Hence the out of memory bug.
 %
-%Starting with TeXShop 5.60, the glass no longer makes an image of the page. It draws only the small rectangle it shows, directly from the PDF, so it uses little memory and works at any magnification of the Preview window. The limit and the hidden setting that raised it are gone.
+%Starting with TeXShop 6.00, the glass no longer makes an image of the page. It draws only the small rectangle it shows, directly from the PDF, so it uses little memory and works at any magnification of the Preview window. The limit and the hidden setting that raised it are gone.
 
 \chapter{Printing}
 
@@ -2787,9 +2787,9 @@ A final setting controls the placement of the console. One possibility is for it
 Console text can be selected and copied at any time, also while TeX is running or waiting for input after an error, and pasted elsewhere, like an email document asking for help. New output is added at the end without disturbing the selection, and the console does not scroll while text is selected. Moving to the input field and away from it again does not send anything to TeX; only Return does. It is not possible, of course,
 to edit text in the console. 
 
-Starting with TeXShop 5.60, the menu item {\bf Show Console} has the keyboard shortcut \cmdkey-0. It brings forward the console of the active document. Pressing \cmdkey-0 again in the console returns to the source or preview window from which the console was called, or to the source window if there is no such window. This is similar to \cmdkey-1, which switches between the source and preview windows.
+Starting with TeXShop 6.00, the menu item {\bf Show Console} has the keyboard shortcut \cmdkey-0. It brings forward the console of the active document. Pressing \cmdkey-0 again in the console returns to the source or preview window from which the console was called, or to the source window if there is no such window. This is similar to \cmdkey-1, which switches between the source and preview windows.
 
-Console output and log files sometimes mix encodings, for instance when a document in a Japanese encoding uses packages written in UTF-8, or when they contain broken characters. TeXShop 5.60 reads such output line by line, trying UTF-8 first and then the encoding of the document, with IsoLatin9 as a last resort, so that unreadable data in one line does not spoil the other lines. When \TeX\ breaks a long line in the middle of a UTF-8 character, TeXShop joins the pieces again.
+Console output and log files sometimes mix encodings, for instance when a document in a Japanese encoding uses packages written in UTF-8, or when they contain broken characters. TeXShop 6.00 reads such output line by line, trying UTF-8 first and then the encoding of the document, with IsoLatin9 as a last resort, so that unreadable data in one line does not spoil the other lines. When \TeX\ breaks a long line in the middle of a UTF-8 character, TeXShop joins the pieces again.
 
 
 \chapter{HTML, Interactive TeX4ht, PreTeXt}
@@ -3319,9 +3319,9 @@ The preview window can be configured to contain a typesetting button. If such a 
 
 For users who prefer external editors most of the time, there is a setting called ``Configure for External Editor.'' When this setting is on, the ``Open'' and ``Open Recent...'' menus open tex source files in the above manner for editing with an external editor. Moreover, the ``Open for Preview...'' menu becomes ``Open for Editing...'' and opens the source file in TeXShop's internal editor for those rare occasions when the internal editor is desired. The ``Open'' and ``Open Recent...'' menus can also open jpg, tiff, ps, pdf, dvi, log, and other files; turning on the new setting does not change this behavior.
 
-Some editors are able to call Unix typesetting commands directly. The setting ``Always Watch for PDF Changes by Other Apps'' in the Preview category (called ``Automatic Preview Update'' before TeXShop 5.60) improves your experience with these editors. When this item is active and a .tex file is opened using ``Open for Preview'', the pdf preview display automatically updates whenever the pdf file is rewritten. Thus you can typeset with an external editor and the preview window will automatically show changes. The setting also applies to .pdf files opened in TeXShop, and if TeXShop is configured to use an external editor, the setting applies to .tex files opened with ``Open''.
+Some editors are able to call Unix typesetting commands directly. The setting ``Always Watch for PDF Changes by Other Apps'' in the Preview category (called ``Automatic Preview Update'' before TeXShop 6.00) improves your experience with these editors. When this item is active and a .tex file is opened using ``Open for Preview'', the pdf preview display automatically updates whenever the pdf file is rewritten. Thus you can typeset with an external editor and the preview window will automatically show changes. The setting also applies to .pdf files opened in TeXShop, and if TeXShop is configured to use an external editor, the setting applies to .tex files opened with ``Open''.
 
-Starting with TeXShop 5.60, this setting also applies to source files opened in TeXShop's own editor: when the pdf file is rewritten by another application, for instance by latexmk running in Terminal, the preview is reloaded, keeping the page being viewed and the magnification. If the preview contains annotations which have not been saved, it is not reloaded, so the annotations are not lost. If the other application is still writing the pdf file, TeXShop waits and tries again.
+Starting with TeXShop 6.00, this setting also applies to source files opened in TeXShop's own editor: when the pdf file is rewritten by another application, for instance by latexmk running in Terminal, the preview is reloaded, keeping the page being viewed and the magnification. If the preview contains annotations which have not been saved, it is not reloaded, so the annotations are not lost. If the other application is still writing the pdf file, TeXShop waits and tries again.
 
 Even when this setting is off, the preview is brought up to date when you return to TeXShop or to the preview window: if another application has rewritten the pdf file, it is reloaded, keeping the page being viewed and the magnification. If the pdf file is still being written, TeXShop waits until it is complete, and it also shows the output of further typesetting passes made soon afterwards. Turn the setting on to reload the preview also while TeXShop is in the background, for instance when the preview is placed beside the external editor.
 
@@ -3722,7 +3722,7 @@ The colors ``Invisible, Enclosed, Braces'' in the Highlights group are used for 
  \newpage
  Like most TeXShop menus, ``Syntax Color expl3 Code'' applies to individual document source windows rather than to all windows at once. For a discussion of this philosophy, see \cref{MenuDesign}. Thus expl3 coloring can be active in one source window and inactive in a second source window.
  
- When source windows are first opened, expl3 coloring is off. This design was selected because most \LaTeX\ programmers will use, but not write, \LaTeX\ macros. If you are an exception and want expl3 coloring to be on when documents are first opened, select the item {\bf Color expl3 Code by Default} under the Editor category of TeXShop Settings. In versions before 5.60, this was the hidden setting expl3SyntaxColoring.
+ When source windows are first opened, expl3 coloring is off. This design was selected because most \LaTeX\ programmers will use, but not write, \LaTeX\ macros. If you are an exception and want expl3 coloring to be on when documents are first opened, select the item {\bf Color expl3 Code by Default} under the Editor category of TeXShop Settings. In versions before 6.00, this was the hidden setting expl3SyntaxColoring.
  
  \section{expl3 Coloring Rules}
  
@@ -3900,7 +3900,7 @@ Switch Views exchanges these settings together with the two parts. After switchi
 When splitting the Preview window was introduced, we imagined that users faced with writing related sections of a document would split the window and  work in split mode constantly without unsplitting. To our surprise, a few users
 worked in a different way; they alternated between working with the split window and working with the unsplit top portion. These users noticed that when a document was split and then unsplit, the display  did not return to the exact starting spot, but instead crept up or down. If the two commands were cycled again and again, each cycle produced an additional creep. TeXShop 5.25 reduced the creep by returning a horizontally split window to the position it had before splitting, which ignored any scrolling of the top portion while the window was split.
 
-Since TeXShop 5.60, splitting and unsplitting no longer creep. TeXShop records the place shown at the top edge of the top view as a position on its page, and puts that place back at the top edge after the window is split or unsplit. So the top portion stays where it is on the screen, and scrolling it while the window is split is kept when the window is unsplit. Near the end of the document, where the larger unsplit window cannot scroll that far, the window shows the end of the document instead.
+Since TeXShop 6.00, splitting and unsplitting no longer creep. TeXShop records the place shown at the top edge of the top view as a position on its page, and puts that place back at the top edge after the window is split or unsplit. So the top portion stays where it is on the screen, and scrolling it while the window is split is kept when the window is unsplit. Near the end of the document, where the larger unsplit window cannot scroll that far, the window shows the end of the document instead.
 
 \section{Two Options When Splitting Horizontally}
 \label{Options_Splitting_Horizontally_Section}
@@ -4524,7 +4524,7 @@ The two older methods described below still work. Shortcuts set in KeyEquivalent
 One method is provided by Apple in System Settings under Keyboard. The details which follow apply to Ventura and later, but similar methods are available for earlier systems. Select Keyboard and push the button {\em Keyboard Shortcuts...}. On the left side, select {\em App Shortcuts}. In the resulting dialog, push the plus key. A new dialog appears. On the top line in the pull-down menu, select TeXShop. TeXShop may not be in the resulting list; in that case select {\em Other} at the end of the menu and then choose TeXShop.
 On the second line, type the exact name of the menu command you want to work with. This will be the menu name in the localization you use, not necessarily the English menu name. On the final line, type the desired shortcut. Press {\em Cancel} or {\em Done} to end the session.
 
-App Shortcuts are matched by the exact menu title. When TeXShop renames a menu item, a shortcut assigned this way no longer applies. For example, TeXShop 5.60 renamed ``Pdftex'' and ``TeX and DVI'' in the Typeset menu to ``Direct PDF'' and ``Via DVI'', replaced ``Add Word'' in the Command Completion submenu of the Source menu with ``Add to Command Completion List'' in the Source menu itself, TeXShop 6.00 renamed ``Plain TeX'' in the Typeset menu to ``plain TeX'', and the Japanese and Chinese menus no longer put a space between Chinese characters or kana and Latin letters. Assign menu shortcuts in the Keyboard category of TeXShop Settings instead; those assignments do not depend on the titles.
+App Shortcuts are matched by the exact menu title. When TeXShop renames a menu item, a shortcut assigned this way no longer applies. For example, TeXShop 6.00 renamed ``Pdftex'', ``TeX and DVI'' and ``Plain TeX'' in the Typeset menu to ``Direct PDF'', ``Via DVI'' and ``plain TeX'', replaced ``Add Word'' in the Command Completion submenu of the Source menu with ``Add to Command Completion List'' in the Source menu itself, and the Japanese and Chinese menus no longer put a space between Chinese characters or kana and Latin letters. Assign menu shortcuts in the Keyboard category of TeXShop Settings instead; those assignments do not depend on the titles.
 
 Before Apple created this Preference Item, TeXShop provided a way for users to modify its shortcuts. This method still exists, but it is seldom used. In a pinch, you can try it. 
 
@@ -4570,7 +4570,7 @@ The final way to spell check is to use the menu item {\em Check Spelling While T
 
 \section{LaTeX-aware Spell Checking}
 
-TeXShop 5.60 adds LaTeX-aware spell checking, based on an implementation proposed by Ralph Martin. In Settings, Spell Checking, choose {\bf Use LaTeX-aware spell checking (recommended)} or {\bf Legacy method}. The new method has an ``Edit LaTeX exclusion rules...'' button at the right end of its line; the legacy method has three indented exclusions for commands, parameters and comments. Inactive options remain visible and retain their values. This choice does not turn on {\em Check Spelling While Typing}.
+TeXShop 6.00 adds LaTeX-aware spell checking, based on an implementation proposed by Ralph Martin. In Settings, Spell Checking, choose {\bf Use LaTeX-aware spell checking (recommended)} or {\bf Legacy method}. The new method has an ``Edit LaTeX exclusion rules...'' button at the right end of its line; the legacy method has three indented exclusions for commands, parameters and comments. Inactive options remain visible and retain their values. This choice does not turn on {\em Check Spelling While Typing}.
 
 LaTeX-aware spell checking skips comments, mathematics, TeX commands, and the arguments of commands such as \verb|\label|, \verb|\ref|, \verb|\cite|, and \verb|\usepackage|, and checks the rest of the text. The default rules also skip the arguments that are not prose, such as keys, colors and units, of the commands of common packages, among them hyperref, cleveref, xcolor, siunitx, enumitem, biblatex and natbib; a command that the document defines itself, such as a macro of your own named \verb|\unit|, follows its own definition instead. It works with the standard {\em Spelling and Grammar} panel, and with {\em Check Spelling While Typing}, which then does not underline the skipped parts of the source. The new rules apply to TeX source files and to new documents not yet saved; other kinds of files, including Sweave files, keep the older behavior described in the next sections.
 
@@ -4593,7 +4593,7 @@ Open it with {\em Edit Spelling Exclusions...} in the Spelling and Grammar subme
 \end{verbatim}
 If the file is deleted, TeXShop creates a fresh copy of the default file the next time it starts.
 
-The following sections describe the methods used before TeXShop 5.60. They still apply when LaTeX-aware spell checking is turned off, and to files that are not TeX source files.
+The following sections describe the methods used before TeXShop 6.00. They still apply when LaTeX-aware spell checking is turned off, and to files that are not TeX source files.
 
 \section{Dictionaries}
 
@@ -4630,7 +4630,7 @@ What is the mechanism Sims uses to turn off spell checking? I wish I had thought
 
 %Note that cocoAspell uses more sophisticated methods and operates at the optimal moment when the system is actually checking spelling, rather than at an earlier syntax coloring moment. So if you use cocoAspell, you will want to turn all the "Spell Checking" preferences off.
 
-In Settings under Spell Checking, the three indented options below ``Legacy method'' apply to the legacy method. These options are off by default. Leave them off if you use cocoAspell or another spelling service. Starting with TeXShop 5.60, these items are used only when LaTeX-aware spell checking is turned off.
+In Settings under Spell Checking, the three indented options below ``Legacy method'' apply to the legacy method. These options are off by default. Leave them off if you use cocoAspell or another spelling service. Starting with TeXShop 6.00, these items are used only when LaTeX-aware spell checking is turned off.
 
 The first spell checking item turns off spell checking for all TeX command words like: 
 \begin{verbatim}
@@ -6131,7 +6131,7 @@ Luckily, Donald Knuth had not hardwired the backslash character into TeX, but ha
 Because of the strong input from Japan, TeXShop has a few settings which only affect users in Japan. I do not understand these items. For instance, the list of invisible characters which can be shown contains a ``Japanese space''. The Typesetting category of TeXShop Settings has a group ``Japanese pLaTeX'' with the item ``Convert to otf Package \verb|\UTF|~/~\verb|\CID|'', and the Documents and Saving category has an item labeled ``Automatically convert UTF-8-MAC to UTF-8''. The TeX Live Ghostscript installer also installs a few special files for CJK users.
 Other users can ignore these items.
 
-Starting with TeXShop 5.60, when a file is saved in a Japanese encoding, the backslash and the tilde are always written as the bytes 0x5C and 0x7E which \TeX\ expects. Before, a backslash or tilde typed in a file using the MacJapanese or Shift JIS X0213 encoding could be saved as a full-width character or as the byte 0x80, and a yen sign typed as a backslash in a file using Windows Shift JIS, EUC-JP, or ISO-2022-JP could be saved as a question mark.
+Starting with TeXShop 6.00, when a file is saved in a Japanese encoding, the backslash and the tilde are always written as the bytes 0x5C and 0x7E which \TeX\ expects. Before, a backslash or tilde typed in a file using the MacJapanese or Shift JIS X0213 encoding could be saved as a full-width character or as the byte 0x80, and a yen sign typed as a backslash in a file using Windows Shift JIS, EUC-JP, or ISO-2022-JP could be saved as a question mark.
 
 
 
@@ -6305,7 +6305,7 @@ In recent years, the authors of Ghostscript removed several security problems, o
 To fix this, the Ghostscript authors added a special flag, ``-dALLOWPSTRANSPARENCY''.
 When Ghostscript is called with this flag set, the transparency operators are recognized (while the other more serious security bugs are still quashed).
 
-When TeXShop opens a postscript file, it always sets this flag if Ghostscript is 9.51 or higher. When typesetting Via DVI, TeXShop sets no flag of its own; to set it there, add \verb|--distilleropts "-dALLOWPSTRANSPARENCY"| to the command in the {\bf Via DVI} group, as described below. Earlier versions of TeXShop could also use a distiller provided by Apple in macOS instead of Ghostscript, but macOS 14 removed that distiller, so TeXShop 5.60 always uses Ghostscript. I suspect the flag works for users who have a Ghostscript provided by MacPorts or Homebrew rather than the Ghostscript provided in MacTeX, but this has not been tested. 
+When TeXShop opens a postscript file, it always sets this flag if Ghostscript is 9.51 or higher. When typesetting Via DVI, TeXShop sets no flag of its own; to set it there, add \verb|--distilleropts "-dALLOWPSTRANSPARENCY"| to the command in the {\bf Via DVI} group, as described below. Earlier versions of TeXShop could also use a distiller provided by Apple in macOS instead of Ghostscript, but macOS 14 removed that distiller, so TeXShop 6.00 always uses Ghostscript. I suspect the flag works for users who have a Ghostscript provided by MacPorts or Homebrew rather than the Ghostscript provided in MacTeX, but this has not been tested. 
 
 The DVI typesetting chain is controlled by the items in the group ``Via DVI'' in the Typesetting category of TeXShop Settings.
 These items call a script named {\em simpdftex} in TeXLive to control the typesetting process. This script recognizes many optional flags. A few are set by default. One of the optional flags not set by default is named
@@ -6542,7 +6542,7 @@ There is a way to discover all TeXShop settings and their current values. In Ter
 
 The document ``Comment Lines and Hidden Settings'' in the TeXShop Help menu lists all hidden settings which work in the current version of TeXShop, with the command to change each one. This chapter describes many of them in more detail, together with their history.
 
-TeXShop 5.60 moved several hidden settings into TeXShop Settings: AutoSaveEnabled and KeepBackup (Automatic Saving), EncodingMenuInSaveDialog (the encoding menu in the Save dialog), MakeatletterEnabled and expl3SyntaxColoring (syntax coloring), and DisplayAsBook (showing the first page alone). The sections below say where to find them. TeXShop 5.60 also stopped reading a number of hidden settings which no longer had any effect. These are listed with the obsolete settings at the end of this chapter.
+TeXShop 6.00 moved several hidden settings into TeXShop Settings: AutoSaveEnabled and KeepBackup (Automatic Saving), EncodingMenuInSaveDialog (the encoding menu in the Save dialog), MakeatletterEnabled and expl3SyntaxColoring (syntax coloring), and DisplayAsBook (showing the first page alone). The sections below say where to find them. TeXShop 6.00 also stopped reading a number of hidden settings which no longer had any effect. These are listed with the obsolete settings at the end of this chapter.
 
 %The following list of hidden preferences was created by leafing through the old TeXShop Help Panel and the newer Changes document and listing preference settings. Items that can be set in the TeXShop Preferences Panel are not listed.
 
@@ -6623,9 +6623,9 @@ When the Preview window first appears, its drawer is hidden. A hidden setting ch
 \end{verbatim}
 
 \subsubsection{<Settings for Automatic Saving>}
-By default, automatic saving is on. I strongly recommend leaving it on, but it can be turned off. Starting with TeXShop 5.60, use the item {\bf Enable Autosave and Versions} under the Documents and Saving category of TeXShop Settings instead of the former hidden setting AutoSaveEnabled.
+By default, automatic saving is on. I strongly recommend leaving it on, but it can be turned off. Starting with TeXShop 6.00, use the item {\bf Enable Autosave and Versions} under the Documents and Saving category of TeXShop Settings instead of the former hidden setting AutoSaveEnabled.
 
-Before the days of Automatic Saving, TeXShop could be configured to save a backup file whenever it saves or typesets a source file. Starting with TeXShop 5.60, this is the item {\bf Keep the previous file as ``name\textasciitilde'' when saving} under the Documents and Saving category, which replaces the former hidden setting KeepBackup.
+Before the days of Automatic Saving, TeXShop could be configured to save a backup file whenever it saves or typesets a source file. Starting with TeXShop 6.00, this is the item {\bf Keep the previous file as ``name\textasciitilde'' when saving} under the Documents and Saving category, which replaces the former hidden setting KeepBackup.
 
 
 \subsubsection{<Settings for the Matrix Panel>}
@@ -6707,8 +6707,8 @@ In recent versions of TeXShop, the syntax coloring code was turned off while the
 \end{verbatim}
 
 
-TeXShop gives a Command color to symbols beginning with a backslash and continuing with 'a' - 'z' or 'A' - 'Z'. These are the typical commands used by Latex authors. Latex Macro authors also use '@' in commands. The item {\bf @ as Part of Command Names} under the Editor category of TeXShop Settings adds those to characters receiving a Command color; before TeXShop 5.60, this was the hidden setting MakeatletterEnabled.
-Latex3 programmers use '\_', ':' and '@' in their commands. The item {\bf Color expl3 Code by Default} under the Editor category turns on expl3 coloring, which adds all of these, when documents are first opened; before TeXShop 5.60, this was the hidden setting expl3SyntaxColoring.
+TeXShop gives a Command color to symbols beginning with a backslash and continuing with 'a' - 'z' or 'A' - 'Z'. These are the typical commands used by Latex authors. Latex Macro authors also use '@' in commands. The item {\bf @ as Part of Command Names} under the Editor category of TeXShop Settings adds those to characters receiving a Command color; before TeXShop 6.00, this was the hidden setting MakeatletterEnabled.
+Latex3 programmers use '\_', ':' and '@' in their commands. The item {\bf Color expl3 Code by Default} under the Editor category turns on expl3 coloring, which adds all of these, when documents are first opened; before TeXShop 6.00, this was the hidden setting expl3SyntaxColoring.
          
          
          
@@ -6716,7 +6716,7 @@ Latex3 programmers use '\_', ':' and '@' in their commands. The item {\bf Color 
 
 \subsubsection{<Settings to Control Spell Checking>}
 
-The Spell Checking category of TeXShop Settings has items for spell checking. These items are explained in the main part of this Manual. There are some hidden settings to fine tune this behavior. Starting with TeXShop 5.60, they are used only when LaTeX-aware spell checking is turned off; LaTeX-aware spell checking is configured with the file SpellingExclusions.txt instead.
+The Spell Checking category of TeXShop Settings has items for spell checking. These items are explained in the main part of this Manual. There are some hidden settings to fine tune this behavior. Starting with TeXShop 6.00, they are used only when LaTeX-aware spell checking is turned off; LaTeX-aware spell checking is configured with the file SpellingExclusions.txt instead.
 
 The list of specialized TeX commands can be extended. The first command below adds one more element to the existing array of user supplied exceptions. The second command erases the array so the user can start over. Note that neither command affects TeXShop's default list of special commands.
 \begin{verbatim}
@@ -6770,12 +6770,12 @@ TeXShop has two magic comment lines for tabs, ``useTabs'' and ``useTabsWithFiles
 
 \subsubsection{<Settings for Save Dialog>}
 
-The optional menu to select the encoding was removed from the Save Dialog. Starting with TeXShop 5.60, it can be brought back with the item {\bf Show Encoding in Save Dialog} under the Documents and Saving category of TeXShop Settings, which replaces the former hidden setting EncodingMenuInSaveDialog.
+The optional menu to select the encoding was removed from the Save Dialog. Starting with TeXShop 6.00, it can be brought back with the item {\bf Show Encoding in Save Dialog} under the Documents and Saving category of TeXShop Settings, which replaces the former hidden setting EncodingMenuInSaveDialog.
 
 
 \subsubsection{<Settings for the Preview Window>}
 
-In double page mode, the initial page is shown by itself and then pages are shown side by side. This is called Book Mode. Starting with TeXShop 5.60, it is turned off with the item {\bf Show first page alone as cover} under the Preview category of TeXShop Settings, which replaces the former hidden setting DisplayAsBook.
+In double page mode, the initial page is shown by itself and then pages are shown side by side. This is called Book Mode. Starting with TeXShop 6.00, it is turned off with the item {\bf Show first page alone as cover} under the Preview category of TeXShop Settings, which replaces the former hidden setting DisplayAsBook.
 
 When syncTeX syncs from the source window to the preview window, it highlights the selected text in yellow. This can be a little difficult to see. Years ago, TeXShop circled the selected text with a red oval rather than highlighting it. To make this the default
 \begin{verbatim}
@@ -6798,7 +6798,7 @@ When syncTeX syncs from the source window to the preview window, it highlights t
 Voice Over is technology for those with limited sight; it reads the screen while the user controls the computer with keyboard commands.  A user reported that Voice Over works in the TeXShop Source Window, but not in the Preview Window. This bug was in Monterey, and fixed in Ventura.
 
 Further experiments revealed that Voice Over could be tricked into working in the Preview Window by issuing the menu commands ``Next Page'' and then ``Previous Page''. The trick requires that documents contain at least two pages. Add a blank page to one page documents to make the trick work for them.
-This trick was off by default, but could be turned on to work automatically with the hidden setting FixVoiceOver. Since TeXShop 5.59 requires macOS 14.6 or later, where the bug is fixed, TeXShop 5.60 no longer reads this setting.
+This trick was off by default, but could be turned on to work automatically with the hidden setting FixVoiceOver. Since TeXShop 5.59 requires macOS 14.6 or later, where the bug is fixed, TeXShop 6.00 no longer reads this setting.
 
 \subsubsection{<Settings for Apple Intelligence>}
 
@@ -6822,7 +6822,7 @@ NSTextInputTraitTypeDefault, so the system setting decides. Any other value leav
 These settings work around bugs that were later permanently fixed, or were created for
 older versions of the program.
 
-TeXShop 5.60 no longer reads the following settings in this section, so setting them has no effect: DoNotFixTeXCrash, DisplayLogInfo, UseTerminationHandler, RepeatTypesetOnError13, SourceScrollElasticity, FixLineNumberScroll, YosemiteScrollBug, FixSplitBlankPages, ContinuousHighSierraFix, ScreenFontForLogAndConsole, SyncTeXOnly, ReleaseDocumentClasses, and FixPreviewBlur. The color settings at the end of this section no longer set colors directly, as explained there. The following settings in this section still work, but are seldom needed: FlashFix, FlashDelay, ResetSourceTextColorEachTime, InterpolationValue, IgnoreStartOnReboot, ShowSyncMarks, UseOldHeadingCommands, LeftRightArrowsAlwaysPage, RedConsoleAfterError, and brieflyFlashYellowForMatch.
+TeXShop 6.00 no longer reads the following settings in this section, so setting them has no effect: DoNotFixTeXCrash, DisplayLogInfo, UseTerminationHandler, RepeatTypesetOnError13, SourceScrollElasticity, FixLineNumberScroll, YosemiteScrollBug, FixSplitBlankPages, ContinuousHighSierraFix, ScreenFontForLogAndConsole, SyncTeXOnly, ReleaseDocumentClasses, and FixPreviewBlur. The color settings at the end of this section no longer set colors directly, as explained there. The following settings in this section still work, but are seldom needed: FlashFix, FlashDelay, ResetSourceTextColorEachTime, InterpolationValue, IgnoreStartOnReboot, ShowSyncMarks, UseOldHeadingCommands, LeftRightArrowsAlwaysPage, RedConsoleAfterError, and brieflyFlashYellowForMatch.
 
 \subsubsection{<Obsolete Settings Introduced To Fix a Bug>}
 
@@ -6946,7 +6946,7 @@ TeXShop  supports SyncTeX. Early versions of TeXShop fell back on the Search syn
 \begin{verbatim}
    \ifx\@@input\@undefined\let\@@input\input\fi
 \end{verbatim}
-If you prefer the original method, turn off the item {\bf @ as Part of Command Names} under the Editor category of TeXShop Settings (before TeXShop 5.60, the hidden setting MakeatletterEnabled).
+If you prefer the original method, turn off the item {\bf @ as Part of Command Names} under the Editor category of TeXShop Settings (before TeXShop 6.00, the hidden setting MakeatletterEnabled).
 
 \subsubsection{<Other Obsolete Items>}
 
@@ -7097,7 +7097,7 @@ Localization must be done by native speakers. Twelve localizations including Eng
 
 The TeXShop program icon is by Thiemo Gamma. Designing icons is the most difficult task a programmer can face; I've never been able to come close. Thiemo's icon showed up in my mailbox one day and I immediately switched to it.  I know that Apple's current style is square with rounded corners, but Thiemo's icon will remain.
 
-Starting with TeXShop 5.60, the application icon places Thiemo's round design inside a white rounded square, the shape used by current versions of macOS, with the letters TeX adjusted to look centered. The item {\bf Dock Icon While Running} under the General category of TeXShop Settings selects one of five Dock icons: Original, Classic Triangle, Retina Triangle, Classic Circle, and the current icon. The selected icon is shown only while TeXShop is running; after TeXShop quits, the Dock shows the standard icon again, and the icon in the Finder never changes.
+Starting with TeXShop 6.00, the application icon places Thiemo's round design inside a white rounded square, the shape used by current versions of macOS, with the letters TeX adjusted to look centered. The item {\bf Dock Icon While Running} under the General category of TeXShop Settings selects one of five Dock icons: Original, Classic Triangle, Retina Triangle, Classic Circle, and the current icon. The selected icon is shown only while TeXShop is running; after TeXShop quits, the Dock shows the standard icon again, and the icon in the Finder never changes.
 
 
 \end{document}
