@@ -749,6 +749,12 @@
                                     <action selector="showHideLineNumbers:" target="-1" id="418"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="상태 막대 보기" id="Stb-Bq-7Kd" identifier="TSShortcut.toggleStatusBar:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="toggleStatusBar:" target="-1" id="Stb-Ac-7Kd"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="구문색상 끄기/켜기" tag="14" id="4rD-fK-Ewp" identifier="TSShortcut.toggleSyntaxColor:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

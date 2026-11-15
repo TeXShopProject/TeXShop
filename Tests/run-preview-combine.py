@@ -50,6 +50,11 @@ static Defaults *defaults;
 #define SUD defaults
 #define SwitchSidesKey @"SwitchSides"
 #define DocumentSplitWindowPositionKey @"DocumentSplitWindowPosition"
+// The status bar under the source: only its messages, sent to nil here.
+@interface NSObject (TSSourceStatusBarMessages)
+- (void)selectionDidChange;
+- (void)placeBelowView:(id)view;
+@end
 @interface Document : NSObject {
  @public BOOL useFullSplitWindow, fileIsTex, _externalEditor;
  Node *textView1, *myDrawer, *splitView, *rightView, *leftView, *fullSplitWindow, *textWindow;
@@ -58,6 +63,7 @@ static Defaults *defaults;
 @property id rootDocument;
 @property Node *pdfKitWindow, *splitController;
 @property NSInteger dividerRestores;
+@property id sourceStatusBar; // the status bar under the source; nil here
 - (void)addWindowController:(id)controller;
 - (void)restoreFullSplitDivider;
 - (void)doMove:(id)sender;

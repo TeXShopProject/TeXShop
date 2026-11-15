@@ -394,3 +394,24 @@
 "Typesets once with this engine instead of the one chosen in the toolbar." = "Compose une fois avec ce moteur au lieu de celui choisi dans la barre d’outils.";
 "A % !TEX TS-program line at the top of the document takes precedence." = "Une ligne % !TEX TS-program en tête du document est prioritaire.";
 "Choose an Engine Profile" = "Choisir un profil du moteur";
+
+/* The status bar under the source */
+"Status Bar" = "Barre d’état";
+"%1$@: %2$@" = "%1$@ : %2$@";
+"Lines" = "Lignes";
+"Characters" = "Caractères";
+"Words" = "Mots";
+"Location" = "Position";
+"Line" = "Ligne";
+"Column" = "Colonne";
+
+/* Text Statistics, opened from the status bar */
+"Text Statistics…" = "Statistiques du texte…";
+"Whole Document" = "Document entier";
+"Selection" = "Sélection";
+"Text" = "Texte";
+"Refresh" = "Actualiser";
+"Counting…" = "Comptage…";
+"detex was not found." = "detex est introuvable.";
+"detex failed." = "detex a échoué.";
+"Counted by detex without the TeX commands, with the files read by \\input and \\include." = "Compté par detex sans les commandes TeX, y compris les fichiers lus par \\input et \\include.";

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""The console's buttons, the Text panel's choices, the Statistics fields and the
-Magnification labels of every localized TSDocument.nib, laid out as the
+"""The console's buttons, the Text panel's choices and the Magnification labels
+of every localized TSDocument.nib (which no longer holds the former Statistics panel), laid out as the
 application lays them out (see ConsoleAndSmallPanels.m). Also checks that the
 application lays out the document's console and the Experiment console with
 the shared row (TSConsoleButtonRow.h). No window is shown; AppKit defaults stay

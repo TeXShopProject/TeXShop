@@ -4406,7 +4406,9 @@ causes the document to display in Single Page Mode.
 
 \section{Counting Words in a Document}
 
-The menu item ``Statistics'' in the Edit menu counts the number of words, lines, and characters in the currently active source file. This is roughly the number of such items in the typeset document because the software is designed not to count LaTeX command words. The statistics panel calls ``detex'', a command line program in TeX Live, to do the actual counting.
+The status bar under the source shows the number of lines, characters, and words in the document, followed in parentheses by the numbers in the selection, and the location, line, and column of the insertion point. Characters are counted as they are seen, so an accented letter or an emoji counts as one, and LaTeX commands are counted as they are written. The menu item ``Show Status Bar'' in the Source menu shows or hides the status bar in every window.
+
+To count the text without the LaTeX commands, click ``Text Statistics\ldots'' in the status bar, or choose the menu item ``Statistics'' in the Edit menu. A popover shows two columns. ``Source'' is counted as the status bar counts. ``Text'' is what remains after ``detex'', a command line program in TeX Live, removes the commands from the document, or from the selection; the files read with \verb|\input| and \verb|\include| are counted too. The document need not be saved. The count is made when the popover opens and when its refresh button is clicked, and the time of the count is shown at the top.
 
 \newpage
 \section{Useful Items in the TeXShop Menu}

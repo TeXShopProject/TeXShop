@@ -10,9 +10,7 @@
 //   * the left, center and right choices of the Text panel are as wide as their
 //     titles, at least 12 points apart, and at least 12 points from OK at the
 //     panel's usual and smallest widths;
-//   * Statistics shows three right-aligned labels and three fields with one
-//     left edge and one width (no NSForm, whose square cells stay white in Dark
-//     Mode), connected to the outlets the document fills;
+//   * the former Statistics panel is no longer in the nib;
 //   * the label of each Magnification panel shows its whole word on one line;
 //   * the labels of the page number panels stand at least PageLabelGap from the
 //     fields beside them.
@@ -22,7 +20,7 @@
 #include "ProductionLayout.inc"
 
 @interface PanelOwner : SpacingOwner {
-@public id stringWindow, statisticsPanel, statisticsWords, statisticsLines, statisticsCharacters, magnificationPanel, magnificationKitPanel, pagenumberPanel, pagenumberKitPanel;
+@public id stringWindow, statisticsPanel, magnificationPanel, magnificationKitPanel, pagenumberPanel, pagenumberKitPanel;
 }
 @end
 @implementation PanelOwner @end
@@ -166,35 +164,8 @@ int main(int argc, char **argv) { @autoreleasepool {
             }
         }
 
-        // Statistics.
-        NSWindow *statistics = owner->statisticsPanel;
-        NSMutableArray<NSView *> *views = [NSMutableArray array]; All(statistics.contentView, views);
-        BOOL form = NO; NSMutableArray<NSTextField *> *labels = [NSMutableArray array], *fields = [NSMutableArray array];
-        for (NSView *v in views) {
-            if ([v isKindOfClass:NSForm.class] || [v isKindOfClass:NSMatrix.class]) form = YES;
-            if (![v isKindOfClass:NSTextField.class]) continue;
-            NSTextField *f = (NSTextField *)v;
-            [(f.isBezeled ? fields : labels) addObject:f];
-        }
-        Check(!form, [NSString stringWithFormat:@"%@ Statistics: no form", lang]);
-        NSArray *connected = @[owner->statisticsWords ?: NSNull.null, owner->statisticsLines ?: NSNull.null, owner->statisticsCharacters ?: NSNull.null];
-        Check(labels.count == 3 && fields.count == 3 && [[NSSet setWithArray:connected] isEqual:[NSSet setWithArray:fields]],
-              [NSString stringWithFormat:@"%@ Statistics: three labels and three fields, the fields connected", lang]);
-        if (fields.count == 3 && labels.count == 3) {
-            Check(NSMinY(((NSView *)connected[0]).frame) > NSMinY(((NSView *)connected[1]).frame) && NSMinY(((NSView *)connected[1]).frame) > NSMinY(((NSView *)connected[2]).frame),
-                  [NSString stringWithFormat:@"%@ Statistics: words, lines and characters from the top", lang]);
-            for (NSUInteger k = 0; k < 3; k++) {
-                NSTextField *field = fields[k], *label = labels[k];
-                Check(!field.isEditable && field.isSelectable, [NSString stringWithFormat:@"%@ Statistics: a field can be selected, not edited", lang]);
-                Check(fabs(NSMinX(field.frame) - NSMinX(fields[0].frame)) < 0.5 && fabs(NSWidth(field.frame) - NSWidth(fields[0].frame)) < 0.5,
-                      [NSString stringWithFormat:@"%@ Statistics: the fields share one left edge and width", lang]);
-                Check(label.alignment == NSTextAlignmentRight && fabs(NSMaxX(label.frame) - NSMaxX(labels[0].frame)) < 0.5 && NSWidth(label.frame) >= ceil(label.fittingSize.width) - 0.5,
-                      [NSString stringWithFormat:@"%@ Statistics: \"%@\" is right-aligned, whole, and ends where the others end", lang, label.stringValue]);
-                Check(NSMinX(field.frame) - NSMaxX(label.frame) >= 2 && fabs(NSMidY(field.frame) - NSMidY(label.frame)) < 1.5,
-                      [NSString stringWithFormat:@"%@ Statistics: \"%@\" stands beside its field", lang, label.stringValue]);
-            }
-            Check(fabs(NSWidth(statistics.contentView.bounds) - NSMaxX(fields[0].frame) - 20) < 0.5, [NSString stringWithFormat:@"%@ Statistics: 20 points to the right edge", lang]);
-        }
+        // The former Statistics panel is gone; Text Statistics is a popover of the status bar.
+        Check(owner->statisticsPanel == nil, [NSString stringWithFormat:@"%@: no Statistics panel", lang]);
 
         // Page number panels: each label stands apart from the fields beside it, as far as
         // the labels of the panel for the PDFKit preview do (the older panel's "ページ" and
@@ -228,5 +199,5 @@ int main(int argc, char **argv) { @autoreleasepool {
         }
     }
     if (failures) { printf("FAIL: %d of %d checks\n", failures, checks); return 1; }
-    printf("PASS: the console's push buttons, the Text panel's choices, the Statistics fields and the Magnification labels in %d languages (%d checks)\n", argc - 1, checks);
+    printf("PASS: the console's push buttons, the Text panel's choices and the Magnification labels in %d languages, without the former Statistics panel (%d checks)\n", argc - 1, checks);
 } return 0; }

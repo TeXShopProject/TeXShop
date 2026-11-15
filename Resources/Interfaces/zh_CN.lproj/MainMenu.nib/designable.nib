@@ -746,6 +746,12 @@
                                     <action selector="showHideLineNumbers:" target="-1" id="836"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="显示状态栏" id="Stb-Bq-7Kd" identifier="TSShortcut.toggleStatusBar:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="toggleStatusBar:" target="-1" id="Stb-Ac-7Kd"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="显示语法高亮" tag="14" id="Dg1-i4-sxi" identifier="TSShortcut.toggleSyntaxColor:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

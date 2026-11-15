@@ -13,6 +13,11 @@ NSColor *InvisibleColor;
 static int failures;
 static void Require(NSString *what, BOOL ok) { if (!ok) { printf("FAIL %s\n", what.UTF8String); failures++; } }
 
+// The status bar under the source: only its messages, sent to nil here.
+@interface NSObject (TSSourceStatusBarMessages)
+- (void)selectionDidChange;
+- (void)placeBelowView:(id)view;
+@end
 @interface TSTextView : NSTextView
 @end
 @implementation TSTextView
@@ -29,6 +34,7 @@ static void Require(NSString *what, BOOL ok) { if (!ok) { printf("FAIL %s\n", wh
     BOOL invisibleCharactersShowing;
 }
 @property NSInteger colorized;
+@property (strong) id sourceStatusBar; // the status bar under the source; nil here
 @end
 @implementation TSDocument
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key {}
