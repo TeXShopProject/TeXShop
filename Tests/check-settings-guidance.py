@@ -61,6 +61,25 @@ def check_obsolete(text, language, path):
         match = re.search(pattern, text)
         assert match is None, (str(path), text[max(0, match.start()-60):match.end()+60])
 
+# The sidebar order, read from the list the Settings window shows.
+_constants = dict(re.findall(r'TSSettingsCategoryID const (TSSettingsCategory\w+) = @"([^"]+)"', (ROOT / 'Sources/Settings/TSSettingsCategory.m').read_text()))
+_standard = re.search(r'for \(TSSettingsCategoryID identifier in @\[([^\]]+)\]', (ROOT / 'Sources/Settings/TSSettingsCategoryList.m').read_text())[1]
+SIDEBAR = [_constants[name.strip()] for name in _standard.split(',')]
+assert sorted(SIDEBAR) == sorted(CATEGORIES), SIDEBAR
+
+def check_sidebar_order(text, names, where):
+    """The overview lists all ten categories in one place, in the order of the sidebar."""
+    text = plain(text)
+    for match in re.finditer(re.escape(names[SIDEBAR[0]]), text):
+        start = cursor = match.start(); listed = 0
+        for key in SIDEBAR:
+            cursor = text.find(names[key], cursor)
+            if cursor < 0 or cursor - start > 400: break
+            cursor += len(names[key]); listed += 1
+        if listed == len(SIDEBAR):
+            return
+    raise AssertionError((where, 'the category list does not follow the sidebar order', [names[key] for key in SIDEBAR]))
+
 page_count = 0
 for language in LANGUAGES:
     folder = ROOT / f'Resources/Interfaces/{language}.lproj'
@@ -83,6 +102,7 @@ for language in LANGUAGES:
     overview=pages['basic_preferences']
     assert 'id="settings-search"' in overview,(language,'central search instructions')
     for key in CATEGORIES: assert categories[key] in overview,(language,'overview',key)
+    check_sidebar_order(overview, categories, (language, 'basic_preferences'))
     for name in ('basic_spelling','configure_menushortcuts','configure_prefchanges'):
         assert 'id="settings-search"' not in pages[name],(language,name,'duplicate search section')
         assert 'basic_preferences.htm#settings-search' in pages[name],(language,name,'central overview link')
@@ -159,6 +179,7 @@ for suffix,language in [('', 'en'),('-ja','ja')]:
     check_obsolete(current[1],language,'current website release')
 manual = (ROOT / 'DocumentSources/Manual Source/Manual.tex').read_text()
 check_obsolete(manual, 'en', 'Manual.tex')
+check_sidebar_order(manual, strings(ROOT / 'Resources/Interfaces/Base.lproj/SettingsCategories.strings'), 'Manual.tex')
 assert '\\section{Settings for the Source Window}' in manual
 assert 'After making a selection, TeXShop must be restarted' not in manual, 'Find Panel restart guidance must distinguish OgreKit'
 font_route = manual.split("To change the font in the Source Window,", 1)[1].split("Choose a font and size", 1)[0]
