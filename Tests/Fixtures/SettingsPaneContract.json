@@ -3170,7 +3170,6 @@
           "2Mp-Uf-8n2.title": "personal mark",
           "2x0-tc-yWg.title": "Automatically check for updates",
           "oSw-pG-JGB.title": "Weekly",
-          "a5N-7n-3da.title": "(default: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Monthly"
         },
@@ -4463,13 +4462,6 @@
           "value": "Weekly",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "a5N-7n-3da.title",
-          "view": "settings.ETt-2N-toX",
-          "kind": "cell",
-          "property": "title",
-          "value": "(default: pdflatexmk)"
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -6211,7 +6203,6 @@
           "2Mp-Uf-8n2.title": "Individuelle Markierung",
           "2x0-tc-yWg.title": "Automatisch nach Aktualisierungen suchen",
           "oSw-pG-JGB.title": "Wöchentlich",
-          "a5N-7n-3da.title": "(Standard: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Monatlich"
         },
@@ -7504,13 +7495,6 @@
           "value": "Wöchentlich",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "a5N-7n-3da.title",
-          "view": "settings.ETt-2N-toX",
-          "kind": "cell",
-          "property": "title",
-          "value": "(Standard: pdflatexmk)"
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -9252,7 +9236,6 @@
           "2Mp-Uf-8n2.title": "marca personal",
           "2x0-tc-yWg.title": "Búsqueda automática de actualizaciones:",
           "oSw-pG-JGB.title": "Semanal",
-          "a5N-7n-3da.title": "(por defecto: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Mensual"
         },
@@ -10545,13 +10528,6 @@
           "value": "Semanal",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "a5N-7n-3da.title",
-          "view": "settings.ETt-2N-toX",
-          "kind": "cell",
-          "property": "title",
-          "value": "(por defecto: pdflatexmk)"
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -12293,7 +12269,6 @@
           "2Mp-Uf-8n2.title": "marque personnelle",
           "2x0-tc-yWg.title": "Vérification automatique des mises à jour",
           "oSw-pG-JGB.title": "Hebdomadaire",
-          "a5N-7n-3da.title": "(par défaut :  pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Mensuelle"
         },
@@ -13586,13 +13561,6 @@
           "value": "Hebdomadaire",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "a5N-7n-3da.title",
-          "view": "settings.ETt-2N-toX",
-          "kind": "cell",
-          "property": "title",
-          "value": "(par défaut :  pdflatexmk)"
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -15334,7 +15302,6 @@
           "2Mp-Uf-8n2.title": "segnaposto personale",
           "2x0-tc-yWg.title": "Controlla aggiornamenti automaticamente",
           "oSw-pG-JGB.title": "una volta alla settimana",
-          "a5N-7n-3da.title": "(default: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "una volta al mese"
         },
@@ -16627,13 +16594,6 @@
           "value": "una volta alla settimana",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "a5N-7n-3da.title",
-          "view": "settings.ETt-2N-toX",
-          "kind": "cell",
-          "property": "title",
-          "value": "(default: pdflatexmk)"
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -18375,7 +18335,6 @@
           "2Mp-Uf-8n2.title": "カスタムマーク",
           "2x0-tc-yWg.title": "アップデートを自動的に確認",
           "oSw-pG-JGB.title": "毎週",
-          "a5N-7n-3da.title": "(デフォルト:  pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "毎月"
         },
@@ -19668,13 +19627,6 @@
           "value": "毎週",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "a5N-7n-3da.title",
-          "view": "settings.ETt-2N-toX",
-          "kind": "cell",
-          "property": "title",
-          "value": "(デフォルト:  pdflatexmk)"
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -21416,7 +21368,6 @@
           "2Mp-Uf-8n2.title": "사용자 표시",
           "2x0-tc-yWg.title": "업데이트를 자동으로 확인",
           "oSw-pG-JGB.title": "매주",
-          "a5N-7n-3da.title": "(default: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "매월"
         },
@@ -22709,13 +22660,6 @@
           "value": "매주",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "a5N-7n-3da.title",
-          "view": "settings.ETt-2N-toX",
-          "kind": "cell",
-          "property": "title",
-          "value": "(default: pdflatexmk)"
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -24457,7 +24401,6 @@
           "2Mp-Uf-8n2.title": "persoonlijke markering",
           "2x0-tc-yWg.title": "Automatisch naar updates zoeken",
           "oSw-pG-JGB.title": "Wekelijks",
-          "a5N-7n-3da.title": "(default: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Maandelijks"
         },
@@ -25750,13 +25693,6 @@
           "value": "Wekelijks",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "a5N-7n-3da.title",
-          "view": "settings.ETt-2N-toX",
-          "kind": "cell",
-          "property": "title",
-          "value": "(default: pdflatexmk)"
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -27498,7 +27434,6 @@
           "2Mp-Uf-8n2.title": "marca pessoal",
           "2x0-tc-yWg.title": "Procurar atualizações automaticamente",
           "oSw-pG-JGB.title": "Semanalmente",
-          "a5N-7n-3da.title": "(default: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Mensalmente"
         },
@@ -28791,13 +28726,6 @@
           "value": "Semanalmente",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "a5N-7n-3da.title",
-          "view": "settings.ETt-2N-toX",
-          "kind": "cell",
-          "property": "title",
-          "value": "(default: pdflatexmk)"
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -30539,7 +30467,6 @@
           "2Mp-Uf-8n2.title": "marca pessoal",
           "2x0-tc-yWg.title": "Verificar automaticamente se há atualizações",
           "oSw-pG-JGB.title": "Semanalmente",
-          "a5N-7n-3da.title": "(por padrão: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Mensalmente"
         },
@@ -31832,13 +31759,6 @@
           "value": "Semanalmente",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "a5N-7n-3da.title",
-          "view": "settings.ETt-2N-toX",
-          "kind": "cell",
-          "property": "title",
-          "value": "(por padrão: pdflatexmk)"
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -33580,7 +33500,6 @@
           "2Mp-Uf-8n2.title": "marcaj personal",
           "2x0-tc-yWg.title": "Caută automat actualizări",
           "oSw-pG-JGB.title": "Săptămânal",
-          "a5N-7n-3da.title": "(default: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Lunar"
         },
@@ -34873,13 +34792,6 @@
           "value": "Săptămânal",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "a5N-7n-3da.title",
-          "view": "settings.ETt-2N-toX",
-          "kind": "cell",
-          "property": "title",
-          "value": "(default: pdflatexmk)"
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -36621,7 +36533,6 @@
           "2Mp-Uf-8n2.title": "自定义标记",
           "2x0-tc-yWg.title": "自动检查更新",
           "oSw-pG-JGB.title": "每周",
-          "a5N-7n-3da.title": "(默认: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "每月"
         },
@@ -37914,13 +37825,6 @@
           "value": "每周",
           "row": 1,
           "column": 0
-        },
-        {
-          "key": "a5N-7n-3da.title",
-          "view": "settings.ETt-2N-toX",
-          "kind": "cell",
-          "property": "title",
-          "value": "(默认: pdflatexmk)"
         },
         {
           "key": "ERD-h5-S0j.title",

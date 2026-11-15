@@ -144,7 +144,6 @@
             [TSSettingsLayoutRow controls:@[@"settings.KBV-98-EKO"] kind:TSSettingsRowField indentation:0],
         ]],
         @"settings.Vy2-Hl-YOQ": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.ETt-2N-toX"] kind:TSSettingsRowControls indentation:0],
         ]],
         @"settings.x37-2g-Y5J": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.Fww-AH-Uix", @"settings.J9Y-VM-xKk", @"settings.leH-sT-cbJ"] kind:TSSettingsRowControls indentation:0],
