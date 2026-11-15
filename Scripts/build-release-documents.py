@@ -25,7 +25,7 @@ def escaped(text):
                     '_': r'\_', '~': r'\textasciitilde{}', '^': r'\textasciicircum{}',
                     '→': r'\(\rightarrow\)', '＋': '+', '〜': r'\textasciitilde{}',
                     '＼': r'\textbackslash{}', '•': r'\textbullet{}', '‹': r'\guilsinglleft{}',
-                    '›': r'\guilsinglright{}', '−': r'\textminus{}'}
+                    '›': r'\guilsinglright{}', '−': r'\textminus{}', '⊗': r'\(\otimes\)'}
     return ''.join(replacements.get(c, c) for c in text)
 
 
@@ -99,7 +99,7 @@ def markdown(text):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--notes-dir', type=Path, default=ROOT / 'Documentation/Releases')
-    parser.add_argument('--versions', nargs='+', default=['5.60', '5.59'])
+    parser.add_argument('--versions', nargs='+', default=['6.00', '5.59'])
     parser.add_argument('--changes-only', action='store_true', help='Rebuild Changes without regenerating the unchanged About PDF')
     parser.add_argument('--latex', default='pdflatex')
     args = parser.parse_args()

@@ -17,8 +17,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
  for run in [guidance,wording]:
   result=run();assert result.returncode==0,result.stderr
  cases=[]
- for filename in ['Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','DocumentSources/ChangesDocument/Changes.tex','Documentation/Releases/5.60-ja.md','website/release-notes-ja.html']:
-  phrase='選んだ項目へ移動して強調します。' if '-ja.' in filename else 'Selecting a result shows and highlights the setting.'
+ for filename in ['Documentation/Releases/6.00.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','DocumentSources/ChangesDocument/Changes.tex','Documentation/Releases/6.00-ja.md','website/release-notes-ja.html']:
+  phrase='「設定を検索」で、設定の項目を探せるようになりました。' if '-ja.' in filename else 'Search Settings finds a setting.'
   cases.append(('release-search-'+filename,filename,phrase.encode(),b'REMOVED',guidance,'Release category and color-row guidance'))
  cases.append(('ko-category','Resources/Interfaces/ko.lproj/TeXShopHelp/pgs/basic_preferences.htm',''.join('&#'+str(ord(c))+';' for c in '범주').encode(),''.join('&#'+str(ord(c))+';' for c in '카테고리').encode(),guidance,'Korean category terminology'))
 
@@ -27,7 +27,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
    cases.append((f'outside-{lang}-{name}',f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/{name}.htm',b'</body>',b'<p>fixture paragraph</p></body>',guidance,'body text outside content_border'))
  cases += [('ja-button','Resources/Interfaces/ja.lproj/TeXShopHelp/pgs/configure_menushortcuts.htm',b'</div>','<p>初期状態に戻す</p></div>'.encode('cp932'),guidance,'Japanese obsolete shortcut button'),('ja-sheet','Resources/Interfaces/ja.lproj/TeXShopHelp/pgs/configure_menushortcuts.htm',b'</div>','<p>「適用」</p></div>'.encode('cp932'),guidance,'Japanese recording sheet buttons'),('manual-find','DocumentSources/Manual Source/Manual.tex',b'Select each and try it. Switching among the Apple Find Panel, the Apple Find Bar and the Advanced Find Panel',b'Select each and try it. After making a selection, TeXShop must be restarted. Switching among the Apple Find Panel, the Apple Find Bar and the Advanced Find Panel',guidance,'Find Panel restart guidance')]
  for suffix in ['.md','-ja.md']:
-  file='Documentation/Releases/5.60'+suffix
+  file='Documentation/Releases/6.00'+suffix
   # The checker examines these current release sources directly.
   cases.append(('release-'+suffix,file,b'\n',b'\napproved compact layout\n',guidance,'approved compact layout'))
  for tag,body in [('ul',b'<ul><li>fixture item</li></ul>'),('div',b'<div>fixture division</div>'),('raw',b'fixture bare text'),('dl',b'<dl><dt>fixture term</dt><dd>fixture definition</dd></dl>')]:

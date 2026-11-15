@@ -32,7 +32,7 @@ For the 5.59 domain transition, use `--replace-existing` to replace the existing
 
 ## Localized release notes
 
-Starting with 5.60, prepare both `Documentation/Releases/<version>.md` (English)
+Starting with 6.00, prepare both `Documentation/Releases/<version>.md` (English)
 and `<version>-ja.md` (Japanese). Each must start with `# TeXShop <version>`.
 While the release is being prepared, retain `<!-- release-status: draft -->` in
 each file. Finalize the content and remove that marker before packaging; the
