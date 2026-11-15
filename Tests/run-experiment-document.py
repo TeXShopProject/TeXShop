@@ -232,6 +232,7 @@ static BOOL auxCopied;
 @property NSInteger scrapScript;
 @property NSStringEncoding encoding, scrapEffectiveEncoding;
 @property (strong) NSURL *fileURL;
+@property (strong) id sourceStatusBar; // the status bar under the source; nil here
 @property NSUInteger cancellations, errors, watchCancellations, pdfStops, annotationSaves;
 - (NSString *)getFilePath;
 - (void)typesetFile:(NSURL *)url withAdditionalPath:(NSString *)path;

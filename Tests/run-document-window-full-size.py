@@ -66,6 +66,11 @@ static int failures, checks;
 static void Check(BOOL ok, NSString *name) { checks++; if (!ok) { printf("FAIL: %s\n", name.UTF8String); failures++; } }
 static void TSSplitToggleItemsFollowSplit(void) {}
 
+// The status bar under the source: only its messages, sent to nil here.
+@interface NSObject (TSSourceStatusBarMessages)
+- (void)selectionDidChange;
+- (void)placeBelowView:(id)view;
+@end
 // The nib's File's Owner, with the instance variables splitWindow: uses.
 @interface TSDocument : NSObject
 {
@@ -79,6 +84,7 @@ static void TSSplitToggleItemsFollowSplit(void) {}
     BOOL windowIsSplit, useFullSplitWindow;
 }
 @property (strong) NSWindow *pdfKitWindow;
+@property (strong) id sourceStatusBar; // the status bar under the source; nil here
 @property (strong) PDFView *myPDFKitView, *myPDFKitView2;
 @end
 @implementation TSDocument
