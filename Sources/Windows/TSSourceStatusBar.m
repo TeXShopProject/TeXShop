@@ -278,8 +278,9 @@ static CGFloat TSEdgePadding(void)
 - (void)fileDidChangeAtURL:(NSURL *)fileURL
 {
     NSNumber *size = nil;
-    if (fileURL.isFileURL) {
-        NSDictionary *attributes = [NSFileManager.defaultManager attributesOfItemAtPath:fileURL.path error:NULL];
+    NSString *path = fileURL.isFileURL ? fileURL.path : nil;
+    if (path) {
+        NSDictionary *attributes = [NSFileManager.defaultManager attributesOfItemAtPath:path error:NULL];
         size = attributes[NSFileSize];
     }
     self.fileSize = size;
