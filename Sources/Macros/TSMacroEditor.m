@@ -197,7 +197,6 @@ static TSFilterMode savedFilter = kNoFilterMode;
     NSColor *text = opaque(@"EditorText");
     contentTextView.drawsBackground = YES;
     contentTextView.backgroundColor = opaque(@"EditorBackground");
-    self.contentsBezel.backgroundColor = contentTextView.backgroundColor;
     contentTextView.textColor = text;
     contentTextView.insertionPointColor = opaque(@"EditorInsertionPoint");
     NSMutableDictionary *typing = [contentTextView.typingAttributes mutableCopy] ?: [NSMutableDictionary dictionary];
@@ -288,11 +287,15 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		// [window setDelegate: self];	// not necessary if it is connected in IB
 
 		[outlineView setTarget: self];
-		[outlineView setDoubleAction: @selector(doMacroTest:)];
+		[outlineView setDoubleAction: @selector(listDoubleClicked:)];
 		// custom text view
 		NSScrollView *scrollView = [contentTextView enclosingScrollView];
 		NSSize contentSize = [scrollView contentSize];
+		NSTextView *nibTextView = contentTextView;
 		contentTextView = [self makeContentTextViewWithSize:contentSize];
+		// As installSidebar left the nib's: the margin of the text and the name read out by VoiceOver.
+		[contentTextView setTextContainerInset:[nibTextView textContainerInset]];
+		[contentTextView setAccessibilityLabel:[nibTextView accessibilityLabel]];
 		[contentTextView setDelegate:self];
 		[contentTextView setAllowsUndo:YES];
 		[contentTextView setUsesFontPanel:YES];
@@ -385,6 +388,10 @@ static TSFilterMode savedFilter = kNoFilterMode;
 
 // At first as wide as the sidebar of the Multiple Replace window.
 static const CGFloat TSMacroEditorSidebarWidth = 240;
+// Between the line under the contents and the row of Insert and its help.
+static const CGFloat TSMacroContentsLineGap = 10;
+// The margin of the text from the edges of the contents.
+static const NSSize TSMacroContentsInset = {8, 8};
 // The items run down the left of the window in a sidebar, as the sets of the Multiple
 // Replace window do: the list from the top edge, under the title bar, to the bar of ＋, −
 // and a menu of the less frequent commands at the bottom edge. The rest of the window is
@@ -453,32 +460,43 @@ static const CGFloat TSMacroEditorSidebarWidth = 240;
         view.frame = frame;
         [main addSubview:view];
     }
-    // The name field as tall as a text field is now (the nibs' are 22 points), keeping its top.
-    NSRect nameFrame = [nameField frame];
-    CGFloat taller = [nameField fittingSize].height - NSHeight(nameFrame);
-    if (taller > 0) { nameFrame.origin.y -= taller; nameFrame.size.height += taller; [nameField setFrame:nameFrame]; }
-    // A label of the name or the contents stands just above its field, one line tall, as in
-    // most nibs: some have labels two lines tall that run into the field below them.
+    // The name is edited in the list (renameSelectedMacro:), so the name field and the labels
+    // of the name and the contents go: the contents fill the top of this part, from the title
+    // bar and the sidebar to the window's trailing edge, with a line under them. Below the line,
+    // Insert and its help, the shortcut, the message and the buttons stay where they were.
     NSScrollView *contents = [contentTextView enclosingScrollView];
-    NSArray<NSView *> *fields = contents ? @[nameField, contents] : @[nameField];
-    for (NSView *view in main.subviews) {
-        if (![view isKindOfClass:NSTextField.class] || [(NSTextField *)view isEditable] || view.hidden) continue;
-        for (NSView *field in fields) {
-            NSRect frame = view.frame, below = field.frame;
-            if (NSMinY(frame) >= NSMaxY(below) || NSMaxY(frame) <= NSMaxY(below) || NSMaxX(frame) <= NSMinX(below) || NSMinX(frame) >= NSMaxX(below)) continue;
-            NSTextField *label = (NSTextField *)view;
-            NSString *text = [label.stringValue stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-            label.stringValue = text;
-            frame.size.height = MAX(17, ceil([label.cell cellSize].height));
-            // Between the name field and the contents, the contents give up the room it needs.
-            if (field != nameField && NSMaxY(below) + 3 + NSHeight(frame) > NSMinY([nameField frame]) - 4) {
-                CGFloat top = NSMinY([nameField frame]) - 4 - NSHeight(frame) - 3;
-                below.size.height -= NSMaxY(below) - top;
-                field.frame = below;
-            }
-            frame.origin.y = NSMaxY(below) + 3;
-            view.frame = frame;
+    // What the contents gain in height: the smallest window is that much lower.
+    CGFloat taller = 0;
+    if (contents) {
+        NSString *contentsName = nil;
+        for (NSView *view in main.subviews) {
+            if (view == nameField) { view.hidden = YES; continue; }
+            if (![view isKindOfClass:NSTextField.class] || [(NSTextField *)view isEditable] || view.hidden) continue;
+            // Above the contents (some nibs' labels are two lines tall and run into them).
+            if (NSMaxY(view.frame) <= NSMaxY(contents.frame) + 2) continue;
+            NSString *text = [[(NSTextField *)view stringValue] stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+            // The label nearest above the contents names them (for VoiceOver), without its colon.
+            if (NSMinY(view.frame) < NSMinY([nameField frame])) contentsName = [text stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@":： "]];
+            view.hidden = YES;
         }
+        CGFloat below = 0;
+        for (NSView *view in @[self.insertPlaceholderButton ?: NSNull.null, self.placeholdersButton ?: NSNull.null])
+            if ([view isKindOfClass:NSView.class]) below = MAX(below, NSMaxY(view.frame));
+        NSRect line = NSMakeRect(0, below + TSMacroContentsLineGap, width, 1);
+        NSBox *rule = [[NSBox alloc] initWithFrame:line];
+        rule.boxType = NSBoxSeparator;
+        rule.frame = [rule frameForAlignmentRect:line]; // the line itself where line is
+        rule.identifier = @"macro.contents.line";
+        rule.autoresizingMask = NSViewWidthSizable | NSViewMaxYMargin;
+        [main addSubview:rule];
+        taller = NSHeight(main.bounds) - NSMaxY(line) - NSHeight(contents.frame);
+        contents.frame = NSMakeRect(0, NSMaxY(line), width, NSHeight(main.bounds) - NSMaxY(line));
+        contents.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+        contents.borderType = NSNoBorder;
+        contents.drawsBackground = NO;
+        // The text keeps a margin from the edges it now touches.
+        contentTextView.textContainerInset = TSMacroContentsInset;
+        if (contentsName.length) contentTextView.accessibilityLabel = contentsName;
     }
     NSRect status = self.shortcutStatus.frame;
     self.shortcutStatus.frame = NSMakeRect(TSDialogMargin, NSMinY(status), width - 2 * TSDialogMargin, NSHeight(status));
@@ -511,32 +529,72 @@ static const CGFloat TSMacroEditorSidebarWidth = 240;
     NSViewController *sidebarController = [NSViewController new], *mainController = [NSViewController new];
     sidebarController.view = sidebar;
     mainController.view = pane;
-    CGFloat minimumHeight = editor.minSize.height;
+    CGFloat minimumHeight = editor.minSize.height - MAX(0, taller);
     NSSplitViewController *split = TSInstallListSidebar(editor, sidebarController, mainController, TSMacroEditorSidebarWidth, narrowest, @"TSMacroEditorSplit");
     editor.minSize = NSMakeSize(TSListSidebarMinimumWidth + split.splitView.dividerThickness + narrowest, minimumHeight);
     [split.view layoutSubtreeIfNeeded];
     self.sidebar = sidebar; self.listBar = bar;
-    [self installContentsBezel];
+    // The name is edited in place in the list, not by a double click (listDoubleClicked:).
+    [rows tableColumnWithIdentifier:@"Name"].editable = YES;
+    [rows tableColumnWithIdentifier:@"Key"].editable = NO;
     __weak TSMacroEditor *weakSelf = self;
     self.contentsKeyMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskKeyDown handler:^NSEvent *(NSEvent *event) {
         return weakSelf ? [weakSelf keyForContents:event] : event;
     }];
     [self syncListControls];
 }
-// While the contents have the keyboard focus, Return and Enter start a new line and Escape
-// completes, as in the source: the keys go to the contents before the window looks for a
-// button with that key (Save, Cancel). Elsewhere, as in the name field, they press those.
+// Return, Enter and Escape go where the keyboard focus is before the window looks for a
+// button with that key (Save, Cancel), as in Finder and the source:
+// - in the list, Return and Enter start renaming the selected item, and Escape does nothing;
+// - while an item is renamed, Return and Enter keep the new name, Escape keeps the old one;
+// - in the contents, Return and Enter start a new line and Escape completes.
+// Elsewhere (the shortcut field when it does not wait for keys, Insert, the buttons) Return
+// saves and Escape cancels. Save also takes Command-S (saveDocument:).
 - (NSEvent *)keyForContents:(NSEvent *)event
 {
     NSWindow *editor = window;
     NSResponder *responder = editor.firstResponder;
     if (event.type != NSEventTypeKeyDown || event.windowNumber != editor.windowNumber) return event;
-    if (![responder isKindOfClass:NSTextView.class] || ((NSTextView *)responder).isFieldEditor) return event;
     if (event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagControl)) return event;
     NSString *key = event.charactersIgnoringModifiers;
-    if (!([key isEqual:@"\r"] || [key isEqual:@"\x03"] || [key isEqual:@"\x1b"])) return event;
+    BOOL newline = [key isEqual:@"\r"] || [key isEqual:@"\x03"], escape = [key isEqual:@"\x1b"];
+    if (!newline && !escape) return event;
+    BOOL text = [responder isKindOfClass:NSTextView.class];
+    if (text && ((NSTextView *)responder).isFieldEditor && ((NSTextView *)responder).delegate == outlineView) {
+        if (escape) [outlineView abortEditing];
+        [editor makeFirstResponder:outlineView]; // ends the renaming, keeping what was typed
+        return nil;
+    }
+    if (responder == outlineView) {
+        if (escape) return nil;
+        if (![self beginRenamingSelectedItem]) NSBeep();
+        return nil;
+    }
+    if (!text || ((NSTextView *)responder).isFieldEditor) return event;
     [editor sendEvent:event];
     return nil;
+}
+// Renames the selected item in place in the list, as Finder does: not a separator, which has
+// no name, nor several items at once. The name is kept when the renaming ends (Return, a click
+// elsewhere), and Escape keeps the old one (keyForContents:).
+- (BOOL)beginRenamingSelectedItem
+{
+    NSOutlineView *rows = outlineView;
+    if (rows == nil || rows.numberOfSelectedRows != 1 || [window attachedSheet]) return NO;
+    NSInteger row = rows.selectedRow, column = [rows columnWithIdentifier:@"Name"];
+    TSMacroTreeNode *item = [rows itemAtRow:row];
+    if (column < 0 || ![item isKindOfClass:TSMacroTreeNode.class] || item.isSeparator) return NO;
+    if (![window makeFirstResponder:rows]) return NO;
+    [rows scrollRowToVisible:row];
+    self.renaming = YES;
+    [rows editColumn:column row:row withEvent:nil select:YES];
+    self.renaming = NO;
+    return rows.currentEditor != nil;
+}
+// A second click on the name of the selected item (TSMacroOutlineView) and a new item or submenu.
+- (IBAction)renameSelectedMacro:(id)sender
+{
+    if (![self beginRenamingSelectedItem]) NSBeep();
 }
 - (void)stopKeyMonitor
 {
@@ -553,37 +611,10 @@ static const CGFloat TSMacroEditorSidebarWidth = 240;
     [self.placeholdersPopover close];
     self.placeholdersPopover = nil;
     self.shortcutStatus = nil;
-    self.sidebar = nil; self.listBar = nil; self.editorView = nil; self.contentsBezel = nil;
+    self.sidebar = nil; self.listBar = nil; self.editorView = nil;
     self.insertPlaceholderButton = nil; self.placeholdersButton = nil;
     self.shortcutLabel = nil; self.shortcutField = nil;
     self.pendingShortcutKey = @"";
-}
-// The contents in a field drawn as the name field is, rounded as text fields are now, and not
-// in the square bezel of their scroll view: the field behind, the contents inside its border.
-- (void)installContentsBezel
-{
-    NSScrollView *contents = [contentTextView enclosingScrollView];
-    if (self.contentsBezel || !contents) return;
-    NSTextField *bezel = [NSTextField textFieldWithString:@""];
-    bezel.bezeled = [nameField isBezeled];
-    bezel.bezelStyle = [nameField bezelStyle];
-    bezel.editable = NO;
-    bezel.selectable = NO;
-    bezel.refusesFirstResponder = YES;
-    bezel.drawsBackground = YES;
-    bezel.backgroundColor = [contentTextView backgroundColor] ?: NSColor.textBackgroundColor;
-    bezel.accessibilityElement = NO;
-    bezel.identifier = @"macro.contents.bezel";
-    bezel.frame = contents.frame;
-    bezel.autoresizingMask = contents.autoresizingMask;
-    [contents.superview addSubview:bezel positioned:NSWindowBelow relativeTo:contents];
-    contents.borderType = NSNoBorder;
-    contents.drawsBackground = NO;
-    contents.frame = NSInsetRect(contents.frame, 1, 1);
-    contents.wantsLayer = YES;
-    contents.layer.cornerRadius = 5;
-    contents.layer.masksToBounds = YES;
-    self.contentsBezel = bezel;
 }
 // The line of a separator in the list, as the lines of menus are now.
 NSImage *TSMacroSeparatorImage(CGFloat width)
@@ -622,9 +653,22 @@ static void TSSendButtonAction(NSButton *button)
     SEL action = button.action;
     if (button.enabled && action) [NSApp sendAction:action to:button.target from:button];
 }
-- (void)listAddPressed:(id)sender { TSSendButtonAction(newItemButton); }
+// A new item or submenu is named at once, as a new folder in Finder and a new set of the
+// Multiple Replace window.
+- (void)listAddPressed:(id)sender
+{
+    if (!newItemButton.enabled) return;
+    TSSendButtonAction(newItemButton);
+    [self beginRenamingSelectedItem];
+}
 - (void)listRemovePressed:(id)sender { TSSendButtonAction(deleteButton); }
-- (void)listActionChosen:(NSMenuItem *)sender { TSSendButtonAction(sender.representedObject); }
+- (void)listActionChosen:(NSMenuItem *)sender
+{
+    NSButton *button = sender.representedObject;
+    if (!button.enabled) return;
+    TSSendButtonAction(button);
+    if (button == submenuButton) [self beginRenamingSelectedItem];
+}
 // The shortcut is set as in Settings > Keyboard: a click on the field and the keys
 // pressed. It takes the two rows of the nib's key field and its Shift, Option and
 // Control boxes, which stay hidden; the contents above take the row it frees.
@@ -1091,6 +1135,26 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 					[[TSMacroMenuController sharedInstance] reloadMacros: self];
 		}
 				[window close];
+}
+
+// File › Save (Command-S) saves the macros, as Save does: the editor is not a document, and
+// without this the document behind it would be saved.
+- (IBAction)saveDocument:(id)sender
+{
+	[self savePressed:sender];
+}
+
+// A double click runs a macro (Test) and opens or closes a submenu; it does not rename
+// (a second, slower click on the name does, as in Finder).
+- (void)listDoubleClicked:(id)sender
+{
+	NSInteger row = [outlineView clickedRow];
+	TSMacroTreeNode *item = row >= 0 ? [outlineView itemAtRow:row] : nil;
+	if ([item isGroup]) {
+		if ([outlineView isItemExpanded:item]) [outlineView collapseItem:item];
+		else [outlineView expandItem:item];
+	} else if ([item isStandardItem])
+		[self doMacroTest:sender];
 }
 
 // action for Cancel button

@@ -1,5 +1,7 @@
-// Instantiate existing localized nibs offscreen and run the production status-band layout.
+// Instantiate existing localized nibs offscreen and run the production layout of the macro editor: the sidebar,
+// the contents, the status band, the shortcut field and the placeholder row; the keys, and renaming in the list.
 #import "TSMacroEditor.h"
+#import "TSMacroOutlineController.h"
 #import "TSDialogButtonLayout.h"
 #import "TSMarkMenu.h"
 #import "TSListBottomBar.h"
@@ -11,32 +13,49 @@
 #import "TSMacroContentKind.h"
 #import "TSSyntaxMacroContentScanner.h"
 #import <objc/runtime.h>
+#import <objc/message.h>
 #import "MemoryDefaults.h"
+#define COLUMNID_NAME @"Name"
+#define COLUMNID_KEY @"Key"
 static TSMemoryDefaults *memoryDefaults;
 static id StandardDefaults(id self, SEL cmd) { return memoryDefaults; }
 #define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr,"FAIL %d: %s\n",__LINE__,#__VA_ARGS__); exit(1); } } while(0)
 static int reflections, pendingUpdates;
+// The editor of the window being checked (the outline controller asks the shared editor).
+static TSMacroEditor *Editor;
 @implementation TSMacroEditor
 #include "MacroStatusLayout.inc"
-// The rest of the editor: what the shortcut field asks of it.
+// The rest of the editor: what the shortcut field and the list ask of it.
++ (id)sharedInstance { return Editor; }
 - (void)updatePendingShortcutStatus { pendingUpdates++; }
-
 - (void)reflectChangesInEditor:(BOOL)force { reflections++; [self syncShortcutField]; }
+- (void)outlineViewItemsChanged:(NSNotification *)note { [self setValue:@YES forKey:@"dataTouched"]; }
+- (NSString *)shortcutConflictForNode:(TSMacroTreeNode *)node { return nil; }
 @end
-// The list shows the items of SampleRoot (none unless set), as the editor's outline controller does.
+// The list shows the items of SampleRoot (none unless set), as the editor's outline controller does, and takes a
+// name typed in it with the controller's own code (MacroOutlineEditing.inc); the list and its cells are the
+// application's (MacroOutlineView.inc).
 static TSMacroTreeNode *SampleRoot;
-@interface TSMacroOutlineController : NSObject @end
 @implementation TSMacroOutlineController
 - (void)setValue:(id)v forUndefinedKey:(NSString *)key {}
 - (NSInteger)outlineView:(NSOutlineView *)view numberOfChildrenOfItem:(id)item { return [(item ?: SampleRoot) numberOfChildren]; }
 - (id)outlineView:(NSOutlineView *)view child:(NSInteger)index ofItem:(id)item { return [(item ?: SampleRoot) childAtIndex:index]; }
 - (BOOL)outlineView:(NSOutlineView *)view isItemExpandable:(id)item { return [item isExpandable]; }
 - (id)outlineView:(NSOutlineView *)view objectValueForTableColumn:(NSTableColumn *)column byItem:(id)item {
+    if ([item isSeparator]) return @"";
     return [column.identifier isEqual:@"Key"] ? getMenuItemString([item key]) : [item name];
 }
+- (void)outlineView:(NSOutlineView *)view willDisplayCell:(NSCell *)cell forTableColumn:(NSTableColumn *)column item:(id)item {
+    if ([column.identifier isEqual:@"Name"] && [cell isKindOfClass:ImageAndTextCell.class]) ((ImageAndTextCell *)cell).image1=[item isSeparator]?TSMacroSeparatorImage(column.width-8):nil;
+}
+#include "MacroOutlineEditing.inc"
 @end
-@interface TSMacroOutlineView : NSOutlineView @end
-@implementation TSMacroOutlineView @end
+#include "MacroOutlineView.inc"
+// The names in cells that can be edited, as the outline controller's awakeFromNib makes them.
+static void UseNameCells(TSMacroEditor *owner) {
+    NSTableColumn *name=[[owner valueForKey:@"outlineView"] tableColumnWithIdentifier:@"Name"];
+    ImageAndTextCell *cell=[ImageAndTextCell new]; cell.editable=YES; name.dataCell=cell;
+}
 static void NoOrder(id self, SEL cmd, NSWindowOrderingMode mode, NSInteger relative) {}
 // With TS_STRINGS (a Localizable.strings), NSLocalizedString gives that language's text, as the application does.
 static NSDictionary *TestStrings; static IMP OriginalLocalizedString;
@@ -287,19 +306,45 @@ static void CheckShortcutBehavior(TSMacroEditor *owner) {
     [field beginRecording]; owner.previousItem=nil; [owner syncShortcutField]; REQUIRE(!field.recording && !field.enabled);
     owner.previousItem=macro; [owner syncShortcutField];
 }
-// Below the contents, as in the key binding list: Insert at the leading edge and the help
-// button at the trailing edge, in one row between the contents and the shortcut.
+// The line under the contents.
+static NSBox *ContentsLine(TSMacroEditor *owner) {
+    for(NSView *v in owner.editorView.subviews) if([v.identifier isEqual:@"macro.contents.line"]) return (NSBox *)v;
+    return nil;
+}
+// Below the contents and their line, as in the key binding list: Insert at the leading edge and the help
+// button at the trailing edge, 20 points from the edges, in one row between the line and the shortcut.
 static void CheckPlaceholderRow(TSMacroEditor *owner) {
     NSView *host=owner.editorView;
     NSPopUpButton *insert=owner.insertPlaceholderButton; NSButton *help=owner.placeholdersButton;
-    NSView *contents=owner.contentsBezel; // the contents' frame as drawn
+    NSScrollView *contents=[contentsOf(owner) enclosingScrollView]; NSBox *line=ContentsLine(owner);
+    NSRect drawn=[line alignmentRectForFrame:line.frame];
     REQUIRE(insert && help && insert.superview==host && help.superview==host && !insert.hidden && !help.hidden);
     REQUIRE(insert.pullsDown && [insert.itemArray.firstObject.title isEqual:NSLocalizedString(@"Insert",@"")] && help.bezelStyle==NSBezelStyleHelpButton);
     REQUIRE([help.accessibilityLabel isEqual:NSLocalizedString(@"Symbols",@"")] && [help.toolTip isEqual:help.accessibilityLabel]);
-    REQUIRE(fabs(NSMinX(insert.frame)-NSMinX(contents.frame))<.5 && fabs(NSMaxX(help.frame)-NSMaxX(contents.frame))<.5);
+    REQUIRE(fabs(NSMinX(insert.frame)-20)<.5 && fabs(NSMaxX(help.frame)-(NSWidth(host.bounds)-20))<.5);
     REQUIRE(NSMaxX(insert.frame)+12<=NSMinX(help.frame) && fabs(NSMidY(insert.frame)-NSMidY(help.frame))<=1);
-    REQUIRE(NSMaxY(insert.frame)<=NSMinY(contents.frame)-5.5 && NSMaxY(help.frame)<=NSMinY(contents.frame)-5.5);
+    REQUIRE(fabs(NSMinY(drawn)-MAX(NSMaxY(insert.frame),NSMaxY(help.frame))-10)<.5);
     REQUIRE(insert.fittingSize.width<=NSWidth(insert.frame)+.5 && NSHeight(contents.frame)>=64);
+}
+// The contents without the name field and the labels: from the title bar, the sidebar and the window's
+// trailing edge, without a border, down to a line the width of the part beside the sidebar; the text a
+// little inside; named for VoiceOver by the label they had.
+static void CheckContents(TSMacroEditor *owner, NSWindow *window) {
+    NSView *main=owner.editorView, *content=window.contentView; NSTextView *text=contentsOf(owner); NSScrollView *scroll=text.enclosingScrollView;
+    NSRect c=[scroll convertRect:scroll.bounds toView:content], m=[main convertRect:main.bounds toView:content];
+    CGFloat top=NSMaxY([content convertRect:window.contentLayoutRect fromView:nil]);
+    if(fabs(NSMaxY(c)-top)>=.5 || fabs(NSMinX(c)-NSMinX(m))>=.5 || fabs(NSMaxX(c)-NSWidth(content.bounds))>=.5) fprintf(stderr,"CONTENTS %s in %s, top %.1f\n",NSStringFromRect(c).UTF8String,NSStringFromRect(m).UTF8String,top);
+    REQUIRE(scroll.superview==main && fabs(NSMaxY(c)-top)<.5 && fabs(NSMinX(c)-NSMinX(m))<.5 && fabs(NSMaxX(c)-NSWidth(content.bounds))<.5);
+    REQUIRE(scroll.borderType==NSNoBorder && !scroll.drawsBackground && (scroll.autoresizingMask&NSViewWidthSizable) && (scroll.autoresizingMask&NSViewHeightSizable));
+    REQUIRE(NSEqualSizes(text.textContainerInset,NSMakeSize(8,8)) && text.accessibilityLabel.length>0 && ![text.accessibilityLabel hasSuffix:@":"] && ![text.accessibilityLabel hasSuffix:@"："]);
+    NSBox *line=ContentsLine(owner); NSRect drawn=[line alignmentRectForFrame:line.frame];
+    REQUIRE(line && line.boxType==NSBoxSeparator && fabs(NSMaxY(drawn)-NSMinY(scroll.frame))<.5 && NSMinX(drawn)==0 && fabs(NSWidth(drawn)-NSWidth(main.bounds))<.5);
+    REQUIRE([[owner valueForKey:@"nameField"] isHidden]);
+    // No label is left but the shortcut's and the message; nothing runs into the contents.
+    for(NSView *v in main.subviews) if(!v.hidden && v!=scroll && v!=line) {
+        if([v isKindOfClass:NSTextField.class] && v!=owner.shortcutStatus && v!=owner.shortcutLabel) { fprintf(stderr,"LABEL LEFT %s\n",((NSTextField *)v).stringValue.UTF8String); REQUIRE(NO); }
+        REQUIRE(!NSIntersectsRect(NSInsetRect(v.frame,.5,.5),scroll.frame));
+    }
 }
 // What Insert offers and does, and what the help button lists: the placeholders of a TeX macro
 // and those of an AppleScript macro, each kind enabled for its own macros only.
@@ -362,32 +407,10 @@ static void CheckEditor(TSMacroEditor *owner, NSWindow *window) {
     REQUIRE(owner.sidebar && owner.listBar && host && owner.insertPlaceholderButton);
     CheckSidebar(owner,list);
     CheckShortcutField(owner);
-    // The fields 20 points from the sidebar and from the window's trailing edge, as the rules of the Multiple Replace window.
-    NSTextField *nameField=[owner valueForKey:@"nameField"]; NSView *contents=owner.contentsBezel;
-    // The contents in a field drawn as the name field, their scroll view inside its border with rounded corners.
-    NSScrollView *scroll=[[owner valueForKey:@"contentTextView"] enclosingScrollView];
-    REQUIRE([contents isKindOfClass:NSTextField.class] && contents.superview==host && ((NSTextField *)contents).bezeled==nameField.bezeled && ((NSTextField *)contents).bezelStyle==nameField.bezelStyle && !((NSTextField *)contents).editable && !((NSTextField *)contents).acceptsFirstResponder && !contents.isAccessibilityElement);
-    REQUIRE(scroll.superview==host && [host.subviews indexOfObject:contents]+1==[host.subviews indexOfObject:scroll] && NSEqualRects(scroll.frame,NSInsetRect(contents.frame,1,1)) && scroll.borderType==NSNoBorder && scroll.layer.cornerRadius>=4 && scroll.layer.masksToBounds);
-    for(NSView *v in @[nameField,contents]) REQUIRE(v.superview==host && fabs(NSMinX(v.frame)-20)<.5 && fabs(NSMaxX(v.frame)-(NSWidth(host.bounds)-20))<.5);
-    // The name field as tall as a text field made now (as the shortcut field).
-    REQUIRE(NSHeight(nameField.frame)>=[NSTextField textFieldWithString:@""].fittingSize.height-.5 && fabs(NSHeight(nameField.frame)-NSHeight(owner.shortcutField.frame))<.5);
-    // The labels of the name and the contents stand above their fields, whole, and the shortcut's at their leading edge.
-    NSTextField *nameLabel=nil;
-    for(NSView *v in host.subviews) if([v isKindOfClass:NSTextField.class] && !((NSTextField *)v).isEditable && !v.hidden && v!=owner.shortcutStatus && v!=owner.shortcutLabel && v!=contents)
-        for(NSView *f in @[nameField,contents]) if(NSMaxX(v.frame)>NSMinX(f.frame) && NSMinX(v.frame)<NSMaxX(f.frame) && NSMaxY(v.frame)>NSMaxY(f.frame) && NSMinY(v.frame)<NSMaxY(f.frame)+12) {
-            if(NSMinY(v.frame)<NSMaxY(f.frame)-.5) fprintf(stderr,"LABEL %s %s into %s\n",((NSTextField *)v).stringValue.UTF8String,NSStringFromRect(v.frame).UTF8String,NSStringFromRect(f.frame).UTF8String);
-            // Its text (some nibs end it with a line break) within its height.
-            NSString *text=[((NSTextField *)v).stringValue stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-            if([text sizeWithAttributes:@{NSFontAttributeName:((NSTextField *)v).font}].height>NSHeight(v.frame)+.5) fprintf(stderr,"LABEL [%s] %s needs %.1f\n",text.UTF8String,NSStringFromRect(v.frame).UTF8String,[text sizeWithAttributes:@{NSFontAttributeName:((NSTextField *)v).font}].height);
-            REQUIRE(NSMinY(v.frame)>=NSMaxY(f.frame)-.5 && [text sizeWithAttributes:@{NSFontAttributeName:((NSTextField *)v).font}].height<=NSHeight(v.frame)+.5);
-            if(f==nameField) nameLabel=(NSTextField *)v;
-        }
-    REQUIRE(nameLabel && fabs(NSMinX(owner.shortcutLabel.frame)-NSMinX(nameLabel.frame))<.5);
-    // Nothing of the column runs into the name field.
-    for(NSView *v in host.subviews) if(v!=nameField && !v.hidden) {
-        if(NSIntersectsRect(NSInsetRect(v.frame,.5,.5),nameField.frame)) fprintf(stderr,"INTO NAME %s %s\n",NSStringFromClass(v.class).UTF8String,NSStringFromRect(v.frame).UTF8String);
-        REQUIRE(!NSIntersectsRect(NSInsetRect(v.frame,.5,.5),nameField.frame));
-    }
+    CheckContents(owner,window);
+    NSScrollView *scroll=[contentsOf(owner) enclosingScrollView];
+    // The shortcut's label 20 points from the sidebar, as Insert and the message.
+    REQUIRE(fabs(NSMinX(owner.shortcutLabel.frame)-20)<3.5);
     REQUIRE(owner.shortcutStatus.superview==host && fabs(NSMinX(owner.shortcutStatus.frame)-20)<.5 && fabs(NSMaxX(owner.shortcutStatus.frame)-(NSWidth(host.bounds)-20))<.5);
     REQUIRE(fabs(NSMaxX(save.frame)-(NSWidth(host.bounds)-20))<.5 && fabs(NSMinX(save.frame)-12-NSMaxX(cancel.frame))<.5 && NSWidth(save.frame)==NSWidth(cancel.frame));
     REQUIRE(fabs(NSMinX(test.frame)-20)<.5 && NSMaxX(test.frame)+12<=NSMinX(cancel.frame));
@@ -404,10 +427,10 @@ static void CheckEditor(TSMacroEditor *owner, NSWindow *window) {
     CheckPlaceholderRow(owner);
     // What this layout adds or moves must not overlap anything; older labels in the
     // nibs may run into their fields by a few points.
-    NSArray *placed=@[contents,owner.insertPlaceholderButton,owner.placeholdersButton,owner.shortcutLabel,owner.shortcutField,save,cancel,test];
+    NSArray *placed=@[scroll,owner.insertPlaceholderButton,owner.placeholdersButton,owner.shortcutLabel,owner.shortcutField,save,cancel,test];
     for(NSView *a in placed) {
         REQUIRE(NSContainsRect(NSInsetRect(host.bounds,-.5,-.5),a.frame));
-        for(NSView *b in host.subviews) if(a!=b && !b.hidden && !(a==contents && b==scroll)) {
+        for(NSView *b in host.subviews) if(a!=b && !b.hidden && b!=ContentsLine(owner)) {
             if(NSIntersectsRect(NSInsetRect(a.frame,.5,.5),NSInsetRect(b.frame,.5,.5))) fprintf(stderr,"OVERLAP %s %s / %s %s\n",NSStringFromClass(a.class).UTF8String,NSStringFromRect(a.frame).UTF8String,NSStringFromClass(b.class).UTF8String,NSStringFromRect(b.frame).UTF8String);
             REQUIRE(!NSIntersectsRect(NSInsetRect(a.frame,.5,.5),NSInsetRect(b.frame,.5,.5)));
         }
@@ -419,42 +442,115 @@ static void SendKey(TSMacroEditor *owner, NSWindow *window, NSEvent *event) {
     NSEvent *passed=[owner keyForContents:event];
     if(passed && ![window performKeyEquivalent:passed]) [window sendEvent:passed];
 }
-// In the contents Return and Enter start a new line and Escape does not cancel; in the name
-// field and in the list Return and Enter save and Escape cancels.
-static void CheckReturnKey(TSMacroEditor *owner) {
-    NSWindow *window=[owner valueForKey:@"window"]; NSButton *save=[owner valueForKey:@"saveButton"],*cancel=[owner valueForKey:@"cancelButton"];
-    NSTextView *contents=contentsOf(owner); NSTextField *name=[owner valueForKey:@"nameField"]; NSOutlineView *rows=[owner valueForKey:@"outlineView"];
+// The field editor while an item of the list is renamed, or nil.
+static NSTextView *Renaming(NSWindow *window, NSOutlineView *rows) {
+    NSTextView *editor=(NSTextView *)window.firstResponder;
+    return [editor isKindOfClass:NSTextView.class] && editor.isFieldEditor && editor.delegate==rows ? editor : nil;
+}
+static NSEvent *KeyIn(NSWindow *window, NSString *c, unsigned short code, NSEventModifierFlags flags) {
+    return [NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:flags timestamp:0 windowNumber:window.windowNumber context:nil characters:c charactersIgnoringModifiers:c isARepeat:NO keyCode:code];
+}
+static TSMacroTreeNode *MakeSampleRoot(TSMacroTreeNode **selected, TSMacroTreeNode **separator);
+// The keys, where the keyboard focus is:
+// - the list: Return and Enter rename the selected item (not a separator, nor several items), Escape does nothing;
+// - an item renamed: Return and Enter keep the new name (an empty one keeps the old), Escape the old one, a focus
+//   change the new one; none closes the window;
+// - the contents: Return and Enter start a new line, Escape does not cancel;
+// - elsewhere (the shortcut field when it does not wait for keys): Return saves, Escape cancels.
+// A double click never edits a name; the field of the name is as wide as the name and grows with it.
+static void CheckKeys(TSMacroEditor *owner) {
+    NSWindow *window=[owner valueForKey:@"window"]; NSOutlineView *rows=[owner valueForKey:@"outlineView"];
+    NSButton *save=[owner valueForKey:@"saveButton"],*cancel=[owner valueForKey:@"cancelButton"];
+    NSTextView *contents=contentsOf(owner);
+    TSMacroTreeNode *kept=SampleRoot,*macro=nil,*separator=nil; SampleRoot=MakeSampleRoot(&macro,&separator);
+    [rows reloadData]; [rows expandItem:nil expandChildren:YES]; [window.contentView layoutSubtreeIfNeeded];
     id targets[]={save.target,cancel.target}; SEL actions[]={save.action,cancel.action};
     ActionRecorder *recorder=[ActionRecorder new]; recorder.log=[NSMutableArray new];
     for(NSButton *b in @[save,cancel]) { b.target=recorder; b.action=@selector(hit:); }
-    NSEvent *(^key)(NSString *,unsigned short)=^NSEvent *(NSString *c,unsigned short code){ return [NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:0 timestamp:0 windowNumber:window.windowNumber context:nil characters:c charactersIgnoringModifiers:c isARepeat:NO keyCode:code]; };
-    BOOL editable=contents.editable, nameEditable=name.editable; contents.editable=YES; name.editable=YES;
+    [owner setValue:@NO forKey:@"dataTouched"];
+    NSInteger row=[rows rowForItem:macro]; [rows selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+    REQUIRE([window makeFirstResponder:rows]); SendKey(owner,window,KeyIn(window,@"\r",36,0));
+    NSTextView *editor=Renaming(window,rows);
+    REQUIRE(editor && rows.editedRow==row && rows.editedColumn==[rows columnWithIdentifier:@"Name"] && [editor.string isEqual:@"MetaPost"] && NSEqualRanges(editor.selectedRange,NSMakeRange(0,8)) && recorder.log.count==0);
+    // The field: the name's width, growing with what is typed up to the name's column, at least a few letters wide.
+    NSFont *font=editor.font; NSView *clip=editor.superview; NSRect cell=[rows frameOfCellAtColumn:rows.editedColumn row:row];
+    CGFloat wanted=ceil([@"MetaPost" sizeWithAttributes:@{NSFontAttributeName:font}].width)+10;
+    if(fabs(NSWidth(clip.frame)-wanted)>1) fprintf(stderr,"RENAME FIELD %.1f wide, the name needs %.1f (column %.1f)\n",NSWidth(clip.frame),wanted,NSWidth(cell));
+    REQUIRE(fabs(NSWidth(clip.frame)-wanted)<=1 && NSMaxX(clip.frame)<=NSMaxX(cell)+.5);
+    [editor insertText:@"MetaPost with a longer name" replacementRange:NSMakeRange(0,editor.string.length)];
+    CGFloat longer=MIN(NSMaxX(cell)-NSMinX(clip.frame),ceil([@"MetaPost with a longer name" sizeWithAttributes:@{NSFontAttributeName:font}].width)+10);
+    REQUIRE(fabs(NSWidth(clip.frame)-longer)<=1 && NSWidth(clip.frame)>wanted);
+    [editor insertText:@"A name much longer than the list is wide, and longer again than that" replacementRange:NSMakeRange(0,editor.string.length)];
+    REQUIRE(fabs(NSMaxX(clip.frame)-NSMaxX(cell))<=.5);
+    [editor insertText:@"M" replacementRange:NSMakeRange(0,editor.string.length)];
+    REQUIRE(fabs(NSWidth(clip.frame)-48)<=.5);
+    // Escape: the old name, the list focused, the window open, nothing to save.
+    SendKey(owner,window,KeyIn(window,@"\x1b",53,0));
+    REQUIRE(!Renaming(window,rows) && window.firstResponder==rows && [macro.name isEqual:@"MetaPost"] && recorder.log.count==0 && ![[owner valueForKey:@"dataTouched"] boolValue]);
+    // Return: the new name kept, the list focused, not saved.
+    SendKey(owner,window,KeyIn(window,@"\r",36,0)); editor=Renaming(window,rows); REQUIRE(editor);
+    [editor insertText:@"MetaPost 2" replacementRange:NSMakeRange(0,editor.string.length)];
+    SendKey(owner,window,KeyIn(window,@"\r",36,0));
+    REQUIRE(!Renaming(window,rows) && window.firstResponder==rows && [macro.name isEqual:@"MetaPost 2"] && recorder.log.count==0 && [[owner valueForKey:@"dataTouched"] boolValue]);
+    // Enter as Return; a name of spaces keeps the old one.
+    SendKey(owner,window,KeyIn(window,@"\x03",76,0)); editor=Renaming(window,rows); REQUIRE(editor);
+    [editor insertText:@"  " replacementRange:NSMakeRange(0,editor.string.length)];
+    SendKey(owner,window,KeyIn(window,@"\x03",76,0));
+    REQUIRE(!Renaming(window,rows) && [macro.name isEqual:@"MetaPost 2"] && recorder.log.count==0);
+    // Another control taking the focus keeps the name typed.
+    SendKey(owner,window,KeyIn(window,@"\r",36,0)); editor=Renaming(window,rows); REQUIRE(editor);
+    [editor insertText:@"MetaPost" replacementRange:NSMakeRange(0,editor.string.length)];
+    REQUIRE([window makeFirstResponder:contents] && !Renaming(window,rows) && [macro.name isEqual:@"MetaPost"]);
+    // Only the editor's renaming edits a name: a double click does not.
+    REQUIRE(![rows.delegate outlineView:rows shouldEditTableColumn:[rows tableColumnWithIdentifier:@"Name"] item:macro]);
+    // A separator has no name: Return in the list does nothing more than beep.
+    row=[rows rowForItem:separator]; [rows selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+    REQUIRE([window makeFirstResponder:rows]); SendKey(owner,window,KeyIn(window,@"\r",36,0));
+    REQUIRE(!Renaming(window,rows) && window.firstResponder==rows && recorder.log.count==0 && ![owner beginRenamingSelectedItem]);
+    // Several items: no renaming.
+    [rows selectRowIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1,2)] byExtendingSelection:NO];
+    SendKey(owner,window,KeyIn(window,@"\r",36,0)); REQUIRE(!Renaming(window,rows) && recorder.log.count==0);
+    // Escape in the list does nothing.
+    SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); REQUIRE(recorder.log.count==0 && window.firstResponder==rows && !Renaming(window,rows));
+    // The contents keep Return, Enter and Escape.
+    BOOL editable=contents.editable; contents.editable=YES;
     for(NSString *c in @[@"\r",@"\x03"]) {
         contents.string=@"ab"; contents.selectedRange=NSMakeRange(1,0);
-        REQUIRE([window makeFirstResponder:contents]); SendKey(owner,window,key(c,[c isEqual:@"\r"]?36:76));
+        REQUIRE([window makeFirstResponder:contents]); SendKey(owner,window,KeyIn(window,c,[c isEqual:@"\r"]?36:76,0));
         if(![contents.string isEqual:@"a\nb"] || recorder.log.count) fprintf(stderr,"RETURN contents %s buttons %s\n",contents.string.UTF8String,recorder.log.description.UTF8String);
         REQUIRE([contents.string isEqual:@"a\nb"] && recorder.log.count==0);
-        for(NSView *v in @[name,rows]) {
-            REQUIRE([window makeFirstResponder:v]); SendKey(owner,window,key(c,[c isEqual:@"\r"]?36:76));
-            if(![recorder.log isEqual:@[save.title]]) fprintf(stderr,"RETURN in %s: %s\n",NSStringFromClass(v.class).UTF8String,recorder.log.description.UTF8String);
-            REQUIRE([recorder.log isEqual:@[save.title]]); [recorder.log removeAllObjects];
-        }
     }
-    contents.string=@"ab";
-    REQUIRE([window makeFirstResponder:contents]); SendKey(owner,window,key(@"\x1b",53));
-    REQUIRE(recorder.log.count==0 && [contents.string hasPrefix:@"ab"]);
-    for(NSView *v in @[name,rows]) {
-        REQUIRE([window makeFirstResponder:v]); SendKey(owner,window,key(@"\x1b",53));
-        if(![recorder.log isEqual:@[cancel.title]]) fprintf(stderr,"ESCAPE in %s: %s\n",NSStringFromClass(v.class).UTF8String,recorder.log.description.UTF8String);
-        REQUIRE([recorder.log isEqual:@[cancel.title]]); [recorder.log removeAllObjects];
-    }
+    contents.string=@"ab"; SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); REQUIRE(recorder.log.count==0 && [contents.string hasPrefix:@"ab"]);
+    // Elsewhere: Return saves, Escape cancels.
+    BOOL enabled=owner.shortcutField.enabled; owner.shortcutField.enabled=YES; REQUIRE([window makeFirstResponder:owner.shortcutField]);
+    SendKey(owner,window,KeyIn(window,@"\r",36,0)); SendKey(owner,window,KeyIn(window,@"\x1b",53,0));
+    REQUIRE([recorder.log isEqual:(@[save.title,cancel.title])]);
     // Other keys, and Command-Return, are not the monitor's.
     REQUIRE([window makeFirstResponder:contents]);
-    NSEvent *letter=key(@"x",7); REQUIRE([owner keyForContents:letter]==letter);
-    NSEvent *commandReturn=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:NSEventModifierFlagCommand timestamp:0 windowNumber:window.windowNumber context:nil characters:@"\r" charactersIgnoringModifiers:@"\r" isARepeat:NO keyCode:36];
-    REQUIRE([owner keyForContents:commandReturn]==commandReturn);
-    contents.editable=editable; name.editable=nameEditable; contents.string=@""; [window makeFirstResponder:window];
+    NSEvent *letter=KeyIn(window,@"x",7,0); REQUIRE([owner keyForContents:letter]==letter);
+    NSEvent *commandReturn=KeyIn(window,@"\r",36,NSEventModifierFlagCommand); REQUIRE([owner keyForContents:commandReturn]==commandReturn);
+    owner.shortcutField.enabled=enabled; contents.editable=editable; contents.string=@""; [window makeFirstResponder:window];
     save.target=targets[0]; save.action=actions[0]; cancel.target=targets[1]; cancel.action=actions[1];
+    [owner setValue:@NO forKey:@"dataTouched"];
+    SampleRoot=kept; [rows reloadData]; [rows expandItem:nil expandChildren:YES];
+}
+// A second click renames only on the name of the selected item: not after the name, not on the shortcut,
+// not on a separator (TSMacroOutlineView's isNameAtPoint:row:).
+static void CheckSecondClick(TSMacroEditor *owner) {
+    NSOutlineView *rows=[owner valueForKey:@"outlineView"];
+    TSMacroTreeNode *kept=SampleRoot,*macro=nil,*separator=nil; SampleRoot=MakeSampleRoot(&macro,&separator);
+    [rows reloadData]; [rows expandItem:nil expandChildren:YES]; [rows.window.contentView layoutSubtreeIfNeeded];
+    BOOL (*named)(id,SEL,NSPoint,NSInteger)=(BOOL (*)(id,SEL,NSPoint,NSInteger))objc_msgSend; SEL at=@selector(isNameAtPoint:row:);
+    NSInteger row=[rows rowForItem:macro], name=[rows columnWithIdentifier:@"Name"], key=[rows columnWithIdentifier:@"Key"];
+    NSRect cell=[rows frameOfCellAtColumn:name row:row];
+    CGFloat text=[@"MetaPost" sizeWithAttributes:@{NSFontAttributeName:((NSCell *)[rows tableColumnWithIdentifier:@"Name"].dataCell).font}].width;
+    REQUIRE(named(rows,at,NSMakePoint(NSMinX(cell)+text/2,NSMidY(cell)),row));
+    REQUIRE(!named(rows,at,NSMakePoint(NSMinX(cell)+text+20,NSMidY(cell)),row) && NSMinX(cell)+text+20<NSMaxX(cell));
+    NSRect shortcut=[rows frameOfCellAtColumn:key row:row];
+    REQUIRE(!named(rows,at,NSMakePoint(NSMidX(shortcut),NSMidY(shortcut)),row));
+    NSInteger line=[rows rowForItem:separator]; NSRect lineCell=[rows frameOfCellAtColumn:name row:line];
+    REQUIRE(!named(rows,at,NSMakePoint(NSMinX(lineCell)+5,NSMidY(lineCell)),line));
+    SampleRoot=kept; [rows reloadData]; [rows expandItem:nil expandChildren:YES];
 }
 // The line of a separator: one line of the separator color, light and dark, nothing above or below.
 static void CheckSeparatorImage(void) {
@@ -475,10 +571,15 @@ static NSArray<NSValue *> *MainFrames(TSMacroEditor *owner) {
     for(NSView *v in owner.editorView.subviews) [frames addObject:[NSValue valueWithRect:v.frame]];
     return frames;
 }
-// Windows that are never shown do not draw their buttons as in a key window, and a sidebar's
-// material blends with what is behind the window, which an offscreen image does not have: the
-// images are drawn as the Multiple Replace window's are (Tests/MultipleReplace.m), so the two
-// compare. The selection of a source list is drawn as in a window that is not key.
+// Images: the window is drawn as the key window of the active application (it is never shown), so that the default
+// button, the selection of the focused list and the field of a renamed item look as they do on screen; a sidebar's
+// material blends within the window, which an offscreen image has nothing behind.
+static BOOL Yes(id self, SEL cmd) { return YES; }
+static void DrawAsKeyWindow(void) {
+    for(NSString *name in @[@"isKeyWindow",@"isMainWindow",@"hasKeyAppearance",@"hasMainAppearance",@"_hasKeyAppearance",@"_hasMainAppearance",@"_isKeyWindow",@"_isKeyWindowIgnoringFocus"]) {
+        Method m=class_getInstanceMethod(NSWindow.class,NSSelectorFromString(name)); if(m) method_setImplementation(m,(IMP)Yes); }
+    for(NSString *name in @[@"isActive",@"_isActiveApp"]) { Method m=class_getInstanceMethod(NSApplication.class,NSSelectorFromString(name)); if(m) method_setImplementation(m,(IMP)Yes); }
+}
 static void DrawMaterialsWithinWindow(NSView *view) {
     NSMutableArray<NSView *> *pending=[view.subviews mutableCopy];
     while(pending.count) { NSView *v=pending.lastObject; [pending removeLastObject]; [pending addObjectsFromArray:v.subviews];
@@ -487,32 +588,20 @@ static void DrawMaterialsWithinWindow(NSView *view) {
 static void WritePNG(NSView *view, NSAppearance *appearance, NSString *path) {
     [appearance performAsCurrentDrawingAppearance:^{
         view.appearance=appearance;
-        DrawMaterialsWithinWindow(view); [view layoutSubtreeIfNeeded]; [view displayIfNeeded];
+        DrawMaterialsWithinWindow(view); [view layoutSubtreeIfNeeded]; [view setNeedsDisplay:YES]; [view displayIfNeeded];
         NSBitmapImageRep *raw=[view bitmapImageRepForCachingDisplayInRect:view.bounds]; [view cacheDisplayInRect:view.bounds toBitmapImageRep:raw];
         NSImage *image=[[NSImage alloc] initWithSize:view.bounds.size]; [image lockFocus];
         [NSColor.windowBackgroundColor setFill]; NSRectFill(view.bounds);
         NSImage *cached=[[NSImage alloc] initWithSize:view.bounds.size]; [cached addRepresentation:raw];
         [cached drawInRect:view.bounds fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1];
-        NSMutableArray<NSView *> *pending=[view.subviews mutableCopy];
-        while(pending.count) { NSView *v=pending.lastObject; [pending removeLastObject]; [pending addObjectsFromArray:v.subviews];
-            if(!([v isKindOfClass:NSButton.class]||[v isKindOfClass:NSSegmentedControl.class]) || v.isHiddenOrHasHiddenAncestor) continue;
-            NSRect frame=[v convertRect:v.bounds toView:view], visible=[v convertRect:v.visibleRect toView:view];
-            if(NSIsEmptyRect(visible)) continue;
-            [NSGraphicsContext saveGraphicsState];
-            NSRectClip(NSMakeRect(NSMinX(visible),view.isFlipped?NSHeight(view.bounds)-NSMaxY(visible):NSMinY(visible),NSWidth(visible),NSHeight(visible)));
-            NSAffineTransform *transform=[NSAffineTransform transform];
-            [transform translateXBy:frame.origin.x yBy:view.isFlipped?NSHeight(view.bounds)-NSMaxY(frame):frame.origin.y];
-            if(v.isFlipped){[transform translateXBy:0 yBy:frame.size.height];[transform scaleXBy:1 yBy:-1];}
-            [transform concat]; [[(NSControl *)v cell] drawWithFrame:v.bounds inView:v]; [NSGraphicsContext restoreGraphicsState];
-        }
         [image unlockFocus];
         NSBitmapImageRep *painted=[[NSBitmapImageRep alloc] initWithData:image.TIFFRepresentation];
         REQUIRE([[painted representationUsingType:NSBitmapImageFileTypePNG properties:@{}] writeToFile:path atomically:YES]);
     }];
 }
 // Items to show in the images and to fit in the list: a submenu with macros, macros with and
-// without shortcuts, one with a long name.
-static TSMacroTreeNode *MakeSampleRoot(TSMacroTreeNode **selected) {
+// without shortcuts, a separator, one with a long name.
+static TSMacroTreeNode *MakeSampleRoot(TSMacroTreeNode **selected, TSMacroTreeNode **separator) {
     TSMacroTreeNode *root=[TSMacroTreeNode submenuNodeWithName:@"root"], *group=[TSMacroTreeNode submenuNodeWithName:@"Begin/End"];
     [group addChild:[TSMacroTreeNode nodeWithName:@"equation" content:@"\\begin{equation}\n#SEL##INS#\n\\end{equation}" key:@"E+ControlKey"]];
     [group addChild:[TSMacroTreeNode nodeWithName:@"align" content:@"\\begin{align}\n#SEL##INS#\n\\end{align}" key:@""]];
@@ -520,9 +609,47 @@ static TSMacroTreeNode *MakeSampleRoot(TSMacroTreeNode **selected) {
     *selected=[TSMacroTreeNode nodeWithName:@"MetaPost" content:@"\\begin{mplibcode}\n#SEL##INS#\n\\end{mplibcode}" key:@"M+ShiftKey"];
     [root addChild:*selected];
     [root addChild:[TSMacroTreeNode nodeWithName:@"\\ref{•‹label›}" content:@"\\ref{•‹label›}" key:@"R+ControlKey+OptionKey"]];
+    TSMacroTreeNode *line=[TSMacroTreeNode separatorNode]; [root addChild:line]; if(separator) *separator=line;
     [root addChild:[TSMacroTreeNode nodeWithName:@"A macro with a name longer than the sidebar is wide" content:@"x" key:@"W+ShiftKey+OptionKey+ControlKey"]];
     [root addChild:[TSMacroTreeNode nodeWithName:@"Insert Reference" content:@"x" key:@""]];
     return root;
+}
+// TS_RENDER_DIR with TS_RENDER_ONLY (state-light or state-dark): the image of one state of the window, title bar
+// and all, alone in its run: drawn again, the title bar of an offscreen window draws a line under it that the
+// window does not have at first. The states: as it opens (a macro selected, its contents, shortcut and ⊗, and a
+// conflict), an item renamed, the contents focused, the shortcut field waiting for keys, larger, and smallest.
+static void RenderOnly(const char *path, NSString *only) {
+    DrawAsKeyWindow();
+    TSMacroEditor *owner=[TSMacroEditor new]; Editor=owner;
+    NSNib *nib=[[NSNib alloc] initWithNibData:[NSData dataWithContentsOfFile:@(path)] bundle:nil];
+    NSArray *objects; REQUIRE([nib instantiateWithOwner:owner topLevelObjects:&objects]);
+    NSWindow *window=[owner valueForKey:@"window"]; REQUIRE(window && !window.visible);
+    UseNameCells(owner);
+    [window setFrameUsingName:@"Macro Editor"];
+    [owner useSystemFont]; [owner installShortcutStatus]; [owner installShortcutField]; [owner installPlaceholderControls]; [owner layoutDialogButtons]; [owner installSidebar];
+    NSOutlineView *rows=[owner valueForKey:@"outlineView"];
+    TSMacroTreeNode *shown=nil; SampleRoot=MakeSampleRoot(&shown,NULL); [rows reloadData]; [rows expandItem:nil expandChildren:YES];
+    NSInteger row=[rows rowForItem:shown]; [rows selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)row] byExtendingSelection:NO];
+    owner.previousItem=shown; owner.pendingShortcutKey=shown.key; [owner syncShortcutField];
+    [[owner valueForKey:@"nameField"] setStringValue:shown.name];
+    NSTextView *contents=contentsOf(owner); contents.editable=YES; contents.string=shown.content; [owner syncPlaceholderControls];
+    owner.shortcutStatus.stringValue=[NSString stringWithFormat:NSLocalizedString(@"This shortcut is inactive because it conflicts with “%@” (%@).",@""),@"MetaPost",@"⇧⌘M"];
+    // As after the first key the window has had: the default button drawn as such.
+    { NSButton *save=[owner valueForKey:@"saveButton"]; [save highlight:YES]; [save highlight:NO]; }
+    NSArray *parts=[only componentsSeparatedByString:@"-"]; NSString *state=parts.firstObject; BOOL dark=[parts.lastObject isEqual:@"dark"];
+    NSRect frame=window.frame;
+    if([state isEqual:@"resized"]) { frame.size.width+=260; frame.size.height+=160; frame.origin.y-=160; }
+    if([state isEqual:@"smallest"]) frame.size=window.minSize;
+    [window setFrame:frame display:NO]; [window.contentView layoutSubtreeIfNeeded];
+    [window makeFirstResponder:rows];
+    if([state isEqual:@"renaming"]) REQUIRE([owner beginRenamingSelectedItem]);
+    if([state isEqual:@"contents"]) { REQUIRE([window makeFirstResponder:contents]); contents.selectedRange=NSMakeRange(18,10); }
+    if([state isEqual:@"recording"]) [owner.shortcutField beginRecording];
+    NSString *name=[[@(path) stringByDeletingLastPathComponent].stringByDeletingLastPathComponent.lastPathComponent stringByDeletingPathExtension];
+    if([@(path).lastPathComponent containsString:@"101300"]) name=[name stringByAppendingString:@"-10.13"];
+    WritePNG(window.contentView.superview,[NSAppearance appearanceNamed:dark?NSAppearanceNameDarkAqua:NSAppearanceNameAqua],[NSString stringWithFormat:@"%s/%@-%@.png",getenv("TS_RENDER_DIR"),name,only]);
+    [owner.shortcutField endRecording]; [owner stopKeyMonitor];
+    window.releasedWhenClosed=NO; [window close];
 }
 // TS_CONTROLS: the kind of each control beside the sidebar and of those AppKit makes in code (as the Multiple Replace window's).
 static void DumpControl(NSString *what, NSView *v) {
@@ -547,22 +674,23 @@ static void DumpControls(TSMacroEditor *owner) {
 // editor's windowWillClose: does with the controls (releaseWindowControls; the runner checks
 // that windowWillClose: calls it).
 static void CheckReopening(const char *path) {
-    TSMacroEditor *owner=[TSMacroEditor new]; NSWindow *previous=nil; NSVisualEffectView *previousSidebar=nil; id previousMonitor=nil;
+    TSMacroEditor *owner=[TSMacroEditor new]; Editor=owner; NSWindow *previous=nil; NSVisualEffectView *previousSidebar=nil; id previousMonitor=nil;
     for(int open=0;open<3;open++) {
         NSNib *nib=[[NSNib alloc] initWithNibData:[NSData dataWithContentsOfFile:@(path)] bundle:nil];
         NSArray *objects; REQUIRE([nib instantiateWithOwner:owner topLevelObjects:&objects]);
         NSWindow *window=[owner valueForKey:@"window"]; REQUIRE(window && window!=previous && !window.visible);
+        UseNameCells(owner);
         [owner useSystemFont]; [owner installShortcutStatus]; [owner installShortcutField]; [owner installPlaceholderControls]; [owner layoutDialogButtons]; [owner installSidebar];
-        REQUIRE(owner.sidebar && owner.sidebar!=previousSidebar && owner.sidebar.window==window && owner.editorView.window==window && owner.contentsBezel.window==window);
+        REQUIRE(owner.sidebar && owner.sidebar!=previousSidebar && owner.sidebar.window==window && owner.editorView.window==window && contentsOf(owner).window==window && ContentsLine(owner).window==window);
         REQUIRE(owner.shortcutField.window==window && owner.insertPlaceholderButton.window==window && owner.shortcutStatus.window==window && owner.listBar.window==window);
         REQUIRE(owner.contentsKeyMonitor && owner.contentsKeyMonitor!=previousMonitor);
         CheckEditor(owner,window);
-        CheckReturnKey(owner);
+        CheckKeys(owner); CheckSecondClick(owner);
         // The shortcut field, Insert and its help work in the new window too.
         CheckShortcutBehavior(owner); CheckPlaceholderControls(owner);
         previous=window; previousSidebar=owner.sidebar; previousMonitor=owner.contentsKeyMonitor;
         [owner releaseWindowControls];
-        REQUIRE(!owner.sidebar && !owner.listBar && !owner.editorView && !owner.contentsBezel && !owner.shortcutField && !owner.shortcutLabel && !owner.insertPlaceholderButton && !owner.placeholdersButton && !owner.shortcutStatus && !owner.contentsKeyMonitor);
+        REQUIRE(!owner.sidebar && !owner.listBar && !owner.editorView && !owner.shortcutField && !owner.shortcutLabel && !owner.insertPlaceholderButton && !owner.placeholdersButton && !owner.shortcutStatus && !owner.contentsKeyMonitor);
         window.releasedWhenClosed=NO; [window close];
     }
 }
@@ -576,11 +704,13 @@ int main(int argc,char **argv) { @autoreleasepool {
     method_setImplementation(class_getInstanceMethod(NSWindow.class,@selector(orderWindow:relativeTo:)),(IMP)NoOrder);
     [memoryDefaults setObject:@"414 289 585 100 0 0 1920 1080 " forKey:@"NSWindow Frame Macro Editor"];
     CGFloat savedHeight=0;
+    if(getenv("TS_RENDER_DIR") && getenv("TS_RENDER_ONLY")) { RenderOnly(argv[1],@(getenv("TS_RENDER_ONLY"))); return 0; }
     for(int round=0;round<4;round++) {
-    TSMacroEditor *owner=[TSMacroEditor new];
+    TSMacroEditor *owner=[TSMacroEditor new]; Editor=owner;
     NSNib *nib=[[NSNib alloc] initWithNibData:[NSData dataWithContentsOfFile:@(argv[1])] bundle:nil];
     NSArray *objects; REQUIRE([nib instantiateWithOwner:owner topLevelObjects:&objects]);
     NSWindow *window=[owner valueForKey:@"window"]; REQUIRE(window && !window.visible);
+    UseNameCells(owner);
     [window setFrameUsingName:@"Macro Editor"];
     REQUIRE(window.minSize.height>=272);
     REQUIRE(window.frame.size.height>=window.minSize.height);
@@ -607,20 +737,23 @@ int main(int argc,char **argv) { @autoreleasepool {
     [owner layoutDialogButtons];
     TSMacroTreeNode *shown=nil; SampleRoot=nil;
     NSOutlineView *rows=[owner valueForKey:@"outlineView"];
-    CGFloat heightBefore=NSHeight(window.frame), minimumHeightBefore=window.minSize.height;
+    CGFloat heightBefore=NSHeight(window.frame), minimumHeightBefore=window.minSize.height, contentsBefore=NSHeight([contentsOf(owner) enclosingScrollView].frame);
     [owner installSidebar];
-    // The window keeps its top edge and height; it is at least as wide as both parts need.
-    REQUIRE(fabs(NSMaxY(window.frame)-originalTop)<.1 && NSHeight(window.frame)==heightBefore && window.minSize.height==minimumHeightBefore);
+    // The window keeps its top edge and height; it is at least as wide as both parts need. Its smallest height
+    // is lower by what the contents gained (the name field and the labels): the contents keep their smallest height.
+    CGFloat gained=NSHeight([contentsOf(owner) enclosingScrollView].frame)-contentsBefore;
+    if(fabs(window.minSize.height-(minimumHeightBefore-gained))>=.5) fprintf(stderr,"MINIMUM HEIGHT %.1f, before %.1f, the contents gained %.1f\n",window.minSize.height,minimumHeightBefore,gained);
+    REQUIRE(fabs(NSMaxY(window.frame)-originalTop)<.1 && NSHeight(window.frame)==heightBefore && gained>0 && fabs(window.minSize.height-(minimumHeightBefore-gained))<.5);
     NSSplitViewController *split=SplitOf(window);
     REQUIRE(fabs(window.minSize.width-(160+split.splitView.dividerThickness+split.splitViewItems[1].minimumThickness))<.5 && NSWidth(window.frame)>=window.minSize.width);
     REQUIRE(fabs(NSWidth(owner.sidebar.frame)-240)<.5 || NSWidth(window.frame)<240+split.splitView.dividerThickness+split.splitViewItems[1].minimumThickness+.5);
     // The items come after the window is laid out, as openMacroEditor: gives the list its tree.
-    if(round==0) { SampleRoot=MakeSampleRoot(&shown); [rows reloadData]; [rows expandItem:nil expandChildren:YES]; }
+    if(round==0) { SampleRoot=MakeSampleRoot(&shown,NULL); [rows reloadData]; [rows expandItem:nil expandChildren:YES]; }
     { NSVisualEffectView *sidebar=owner.sidebar; NSView *main=owner.editorView; [owner installSidebar]; REQUIRE(owner.sidebar==sidebar && owner.editorView==main && SplitOf(window)==split); }
     CheckEditor(owner,window);
     if(getenv("TS_CONTROLS") && round==0) DumpControls(owner);
     CheckListFitsSidebarWidths(owner);
-    if(round==0) { CheckShortcutBehavior(owner); CheckPlaceholderControls(owner); CheckReturnKey(owner); CheckSeparatorImage(); }
+    if(round==0) { CheckShortcutBehavior(owner); CheckPlaceholderControls(owner); CheckKeys(owner); CheckSecondClick(owner); CheckSeparatorImage(); }
     NSArray<NSValue *> *openedFrames=MainFrames(owner);
     NSTextField *label=owner.shortcutStatus; NSView *host=owner.editorView;
     // The messages, as long as they come, wrap within the band, at this width and at the narrowest.
@@ -667,31 +800,6 @@ int main(int argc,char **argv) { @autoreleasepool {
     [window setFrame:frame display:NO]; [window.contentView layoutSubtreeIfNeeded];
     NSArray<NSValue *> *backFrames=MainFrames(owner);
     for(NSUInteger i=0;i<openedFrames.count;i++) { if(!NSEqualRects(openedFrames[i].rectValue,backFrames[i].rectValue)) fprintf(stderr,"MOVED %s -> %s\n",NSStringFromRect(openedFrames[i].rectValue).UTF8String,NSStringFromRect(backFrames[i].rectValue).UTF8String); REQUIRE(NSEqualRects(openedFrames[i].rectValue,backFrames[i].rectValue)); }
-    // Images: the window as it opens with a macro selected (its name, contents, shortcut and ⊗, and a
-    // conflict), while the field waits for keys, larger and at its smallest, light and dark.
-    if(getenv("TS_RENDER_DIR") && round==0) {
-        NSString *nibPath=@(argv[1]);
-        NSString *name=[[nibPath stringByDeletingLastPathComponent].stringByDeletingLastPathComponent.lastPathComponent stringByDeletingPathExtension];
-        if([nibPath.lastPathComponent containsString:@"101300"]) name=[name stringByAppendingString:@"-10.13"];
-        NSInteger row=[rows rowForItem:shown]; REQUIRE(row>=0);
-        [rows expandItem:nil expandChildren:YES];
-        row=[rows rowForItem:shown]; [rows selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)row] byExtendingSelection:NO];
-        owner.previousItem=shown; owner.pendingShortcutKey=shown.key; [owner syncShortcutField];
-        [[owner valueForKey:@"nameField"] setStringValue:shown.name]; [contentsOf(owner) setString:shown.content];
-        label.stringValue=[NSString stringWithFormat:NSLocalizedString(@"This shortcut is inactive because it conflicts with “%@” (%@).",@""),@"MetaPost",@"⇧⌘M"];
-        struct { NSString *tag; CGFloat dw, dh; BOOL recording, smallest; } states[]={{@"opened",0,0,NO,NO},{@"recording",0,0,YES,NO},{@"resized",260,160,NO,NO},{@"smallest",0,0,NO,YES}};
-        for(size_t i=0;i<sizeof states/sizeof *states;i++) for (NSAppearanceName mode in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]) {
-            NSRect f=frame; f.size.width+=states[i].dw; f.size.height+=states[i].dh; f.origin.y-=states[i].dh;
-            if(states[i].smallest) f.size=window.minSize;
-            [window setFrame:f display:NO]; [window.contentView layoutSubtreeIfNeeded];
-            if(states[i].recording) [owner.shortcutField beginRecording]; else [owner.shortcutField endRecording];
-            WritePNG(window.contentView,[NSAppearance appearanceNamed:mode],[NSString stringWithFormat:@"%s/%@-%@-%@.png",getenv("TS_RENDER_DIR"),name,states[i].tag,[mode isEqual:NSAppearanceNameAqua]?@"light":@"dark"]);
-            // As it opens, also with its title bar (the window's frame view): the title and the window's buttons.
-            if(i==0) { WritePNG(window.contentView.superview,[NSAppearance appearanceNamed:mode],[NSString stringWithFormat:@"%s/%@-window-%@.png",getenv("TS_RENDER_DIR"),name,[mode isEqual:NSAppearanceNameAqua]?@"light":@"dark"]); window.contentView.superview.appearance=nil; }
-        }
-        [owner.shortcutField endRecording]; window.contentView.appearance=nil;
-        [window setFrame:frame display:NO]; owner.previousItem=nil; owner.pendingShortcutKey=@""; [owner syncShortcutField]; label.stringValue=@"";
-    }
     [window setFrame:frame display:NO];
     if(round==1) { NSRect resized=window.frame; resized.size.height+=80; [window setFrame:resized display:NO]; }
     savedHeight=window.frame.size.height;
@@ -701,5 +809,5 @@ int main(int argc,char **argv) { @autoreleasepool {
     window.releasedWhenClosed=NO; [window close];
     }
     CheckReopening(argv[1]);
-    printf("PASS: %s sidebar, reopening, status band: bounds, wrapping, control separation, resizing, idempotence, offscreen light/dark rendering\n",argv[1]);
+    printf("PASS: %s sidebar, contents, keys, renaming in the list, reopening, status band: bounds, wrapping, control separation, resizing, idempotence\n",argv[1]);
 } return 0; }

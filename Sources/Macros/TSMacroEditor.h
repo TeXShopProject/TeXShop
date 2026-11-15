@@ -72,8 +72,8 @@ NSImage *TSMacroSeparatorImage(CGFloat width);
 @property (retain) NSView *editorView;
 // Return, Enter and Escape for the contents, before the buttons take them (keyForContents:).
 @property (retain) id contentsKeyMonitor;
-// Behind the contents: draws their border as the name field's.
-@property (retain) NSTextField *contentsBezel;
+// While the list starts renaming an item (beginRenamingSelectedItem).
+@property (getter=isRenaming) BOOL renaming;
 // Below the contents: Insert adds a placeholder, the help button lists them.
 @property (retain) NSPopUpButton *insertPlaceholderButton;
 @property (retain) NSButton *placeholdersButton;
@@ -85,8 +85,10 @@ NSImage *TSMacroSeparatorImage(CGFloat width);
 // The shortcut being edited, as the macros store it (for example @"M+ShiftKey").
 @property (copy) NSString *pendingShortcutKey;
 - (void)installSidebar;
-- (void)installContentsBezel;
 - (NSEvent *)keyForContents:(NSEvent *)event;
+- (BOOL)beginRenamingSelectedItem;
+- (IBAction)renameSelectedMacro:(id)sender;
+- (IBAction)saveDocument:(id)sender;
 - (void)stopKeyMonitor;
 - (void)releaseWindowControls;
 - (void)useSystemFont;

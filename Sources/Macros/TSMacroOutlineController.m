@@ -304,13 +304,14 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 }
 
 // Optional method: needed to allow editing.
+// The name typed when an item is renamed in the list. An empty name keeps the old one, as in Finder.
 - (void)outlineView:(NSOutlineView *)olv setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
-	if([[tableColumn identifier] isEqualToString: COLUMNID_NAME]) {
-		[(TSMacroTreeNode*)item setName: object];
-	} else if ([[tableColumn identifier] isEqualToString: COLUMNID_KEY]) {
-		[(TSMacroTreeNode*)item setKey: object];
-	}
+	if (![[tableColumn identifier] isEqualToString: COLUMNID_NAME] || [(TSMacroTreeNode*)item isSeparator]) return;
+	NSString *name = [object isKindOfClass:NSString.class] ? object : [object description];
+	if ([name stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet].length == 0) return;
+	if ([name isEqualToString:[(TSMacroTreeNode*)item name]]) return;
+	[(TSMacroTreeNode*)item setName: name];
     [[TSMacroEditor sharedInstance] outlineViewItemsChanged:nil];
 }
 
@@ -325,9 +326,16 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 	return [(TSMacroTreeNode*)item isExpandable];
 }
 
+// Only the editor's renaming edits a name (TSMacroEditor's beginRenamingSelectedItem): a double click runs the macro.
 - (BOOL)outlineView:(NSOutlineView *)olv shouldEditTableColumn: (NSTableColumn *)tableColumn item: (id)item
 {
-	return [(TSMacroTreeNode*)item isEditable];
+	return [[TSMacroEditor sharedInstance] isRenaming] && [[tableColumn identifier] isEqualToString: COLUMNID_NAME] && ![(TSMacroTreeNode*)item isSeparator];
+}
+
+// A name typed in the list is filtered as the name field was (the yen sign and the backslash).
+- (void)controlTextDidChange:(NSNotification *)note
+{
+	[[TSEncodingSupport sharedInstance] controlTextDidChange:note];
 }
 
 - (void)outlineView: (NSOutlineView *)olv willDisplayCell: (NSCell *)cell forTableColumn: (NSTableColumn *)tableColumn item: (id)item
@@ -556,7 +564,76 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 @end
 
 
+// While an item is renamed, its field is as wide as the name and grows with it, as in Finder,
+// up to the name's column.
+static const CGFloat TSNameEditingSlack = 10, TSNameEditingMinimum = 48;
+static CGFloat TSNameEditingWidth(NSString *string, NSFont *font)
+{
+	return MAX(TSNameEditingMinimum, ceil([string ?: @"" sizeWithAttributes:@{NSFontAttributeName: font ?: [NSFont systemFontOfSize:NSFont.systemFontSize]}].width) + TSNameEditingSlack);
+}
+
 @implementation TSMacroOutlineView
+
+// As in Finder, a click on the name of the item that is already selected, and not followed by
+// a second click, renames it: the editor's renameSelectedMacro:, reached through the responder
+// chain (the window's delegate).
+- (void)mouseDown:(NSEvent *)event
+{
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(renameAfterClick:) object:nil];
+	NSPoint point = [self convertPoint:event.locationInWindow fromView:nil];
+	NSInteger row = [self rowAtPoint:point];
+	NSEventModifierFlags modifiers = event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagShift | NSEventModifierFlagOption | NSEventModifierFlagControl);
+	BOOL again = event.clickCount == 1 && modifiers == 0 && row >= 0 && self.numberOfSelectedRows == 1 && [self isRowSelected:row]
+		&& self.window.isKeyWindow && self.window.firstResponder == self && [self isNameAtPoint:point row:row];
+	[super mouseDown:event];
+	NSEvent *up = NSApp.currentEvent;
+	NSPoint end = [self convertPoint:up.locationInWindow fromView:nil];
+	if (again && up.type == NSEventTypeLeftMouseUp && hypot(end.x - point.x, end.y - point.y) < 4 && self.selectedRow == row && self.numberOfSelectedRows == 1)
+		[self performSelector:@selector(renameAfterClick:) withObject:@(row) afterDelay:NSEvent.doubleClickInterval];
+}
+
+- (void)renameAfterClick:(NSNumber *)row
+{
+	if (!self.window.isKeyWindow || self.window.firstResponder != self || self.numberOfSelectedRows != 1 || self.selectedRow != row.integerValue) return;
+	[NSApp sendAction:@selector(renameSelectedMacro:) to:nil from:self];
+}
+
+// The field of the name being renamed follows what is typed.
+- (void)textDidChange:(NSNotification *)note
+{
+	[super textDidChange:note];
+	NSText *editor = self.currentEditor;
+	NSView *clip = editor.superview;
+	if (editor == nil || clip == nil || self.editedRow < 0 || self.editedColumn < 0) return;
+	NSRect cell = [self frameOfCellAtColumn:self.editedColumn row:self.editedRow], frame = clip.frame, before = frame;
+	frame.size.width = MIN(NSMaxX(cell) - NSMinX(frame), TSNameEditingWidth(editor.string, editor.font));
+	if (NSWidth(frame) == NSWidth(before)) return;
+	clip.frame = frame;
+	[self setNeedsDisplayInRect:NSInsetRect(NSUnionRect(before, frame), -4, -4)];
+}
+
+- (void)keyDown:(NSEvent *)event
+{
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(renameAfterClick:) object:nil];
+	[super keyDown:event];
+}
+
+// The name itself, not the space after it or the shortcut.
+- (BOOL)isNameAtPoint:(NSPoint)point row:(NSInteger)row
+{
+	NSInteger column = [self columnWithIdentifier:COLUMNID_NAME];
+	if (column < 0 || [self columnAtPoint:point] != column || [[self itemAtRow:row] isSeparator]) return NO;
+	NSRect frame = [self frameOfCellAtColumn:column row:row];
+	NSFont *font = ((NSCell *)[self.tableColumns[column] dataCell]).font ?: [NSFont systemFontOfSize:NSFont.systemFontSize];
+	CGFloat name = [[[self itemAtRow:row] name] ?: @"" sizeWithAttributes:@{NSFontAttributeName: font}].width;
+	return point.x <= NSMinX(frame) + MIN(NSWidth(frame), name + 4) + 2; // the text is inset 2 points in its cell
+}
+
+- (void)viewWillMoveToWindow:(NSWindow *)newWindow
+{
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(renameAfterClick:) object:nil];
+	[super viewWillMoveToWindow:newWindow];
+}
 
 - (NSDragOperation)draggingSourceOperationMaskForLocal:(BOOL)isLocal {
 	if (isLocal)
@@ -614,12 +691,14 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 - (void)editWithFrame:(NSRect)aRect inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject event:(NSEvent *)theEvent {
 	NSRect textFrame, imageFrame;
 	NSDivideRect (aRect, &imageFrame, &textFrame, 3 + [self.image1 size].width, NSMinXEdge);
+	textFrame.size.width = MIN(NSWidth(textFrame), TSNameEditingWidth(self.stringValue, self.font));
 	[super editWithFrame: textFrame inView: controlView editor:textObj delegate:anObject event: theEvent];
 }
 
 - (void)selectWithFrame:(NSRect)aRect inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength {
 	NSRect textFrame, imageFrame;
 	NSDivideRect (aRect, &imageFrame, &textFrame, 3 + [self.image1 size].width, NSMinXEdge);
+	textFrame.size.width = MIN(NSWidth(textFrame), TSNameEditingWidth(self.stringValue, self.font));
 	[super selectWithFrame: textFrame inView: controlView editor:textObj delegate:anObject start:selStart length:selLength];
 }
 
