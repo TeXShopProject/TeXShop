@@ -36,7 +36,8 @@ OLD_UI = (r'An obsolete remembered category opens General.|without a separate ba
           r'einen vertikalen Scrollbereich|un área de desplazamiento vertical|'
           r'機能で探す|キーで探す|UTF パッケージ対応|Customizing Menu Shortcuts|'
           r'under Preferences\s*>\s*Source|two tabs inside Themes remain|テーマ内の2つのタブはそのまま|Typesetting tab|'
-          r'pTeX support \(for Japan\)|pTeXサポート（日本用）|MetaPost and otf package support|otfパッケージ対応を設定|Unterstützung für das otf-Paket')
+          r'pTeX support \(for Japan\)|pTeXサポート（日本用）|MetaPost and otf package support|otfパッケージ対応を設定|Unterstützung für das otf-Paket|'
+          r'called "otf Package Support"|then called "utf export"|以前の名前は「otfパッケージ対応」')
 
 def strings(path):
     return json.loads(subprocess.check_output(['plutil', '-convert', 'json', '-o', '-', str(path)]))
