@@ -466,7 +466,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-text-statistics-') as tmp:
     if not args.mutation:
         verify_embedded(program, [(k, document, v) for k, v in originals.items()])
     (tmp / 'probe.m').write_text(program, encoding='utf-8')
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-framework', 'Quartz', '-I', str(tmp), *include_args(root), '-I', str(root / 'Tests'),
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-framework', 'Quartz', '-licucore', '-I', str(tmp), *include_args(root), '-I', str(root / 'Tests'),
                     str(tmp / 'probe.m'), *(str(tmp / n) for n in ('TSStatusBarCounting.m', 'TSSourceStatusBar.m', 'TSTextStatistics.m',
                     'TSTextStatisticsPopover.m', 'TSDocumentWindowGlass.m')), '-o', str(tmp / 'probe')], check=True)
     if args.images:

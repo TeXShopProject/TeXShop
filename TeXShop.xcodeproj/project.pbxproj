@@ -250,6 +250,7 @@
 		40B288D11398A373005C921D /* synctex_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 40B288CF1398A373005C921D /* synctex_parser.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		40B288D21398A373005C921D /* synctex_parser.h in Headers */ = {isa = PBXBuildFile; fileRef = 40B288D01398A373005C921D /* synctex_parser.h */; };
 		40B288D41398A399005C921D /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B288D31398A399005C921D /* libz.a */; };
+		B05241B00556A32D264987EF /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 71F06080C1AC31FAEC12D846 /* libicucore.tbd */; };
 		40B42AED1BBB6CC30007C9FB /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B42AEC1BBB6CC30007C9FB /* Sparkle.framework */; };
 		40B42AEF1BBB6D840007C9FB /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40B42AEC1BBB6CC30007C9FB /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		40B7DEAB057139E2002872F2 /* TSDocumentScripting.h in Headers */ = {isa = PBXBuildFile; fileRef = 40B7DEA9057139E2002872F2 /* TSDocumentScripting.h */; };
@@ -958,6 +959,7 @@
 		40B288CF1398A373005C921D /* synctex_parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = synctex_parser.c; sourceTree = "<group>"; };
 		40B288D01398A373005C921D /* synctex_parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = synctex_parser.h; sourceTree = "<group>"; };
 		40B288D31398A399005C921D /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = 3rdparty/zlib/libz.a; sourceTree = SOURCE_ROOT; };
+		71F06080C1AC31FAEC12D846 /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
 		40B42AEC1BBB6CC30007C9FB /* Sparkle.framework */ = {isa = PBXFileReference; name = Sparkle.framework; lastKnownFileType = wrapper.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		40B7DEA9057139E2002872F2 /* TSDocumentScripting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSDocumentScripting.h; sourceTree = "<group>"; };
 		40B7DEAA057139E2002872F2 /* TSDocumentScripting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSDocumentScripting.m; sourceTree = "<group>"; };
@@ -1255,6 +1257,7 @@
 				40B42AED1BBB6CC30007C9FB /* Sparkle.framework in Frameworks */,
 				406AB0B0136A5E03009F4D8F /* OgreKit.framework in Frameworks */,
 				40B288D41398A399005C921D /* libz.a in Frameworks */,
+				B05241B00556A32D264987EF /* libicucore.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1700,6 +1703,7 @@
 			isa = PBXGroup;
 			children = (
 				40B288D31398A399005C921D /* libz.a */,
+				71F06080C1AC31FAEC12D846 /* libicucore.tbd */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
