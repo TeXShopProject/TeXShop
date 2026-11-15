@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Text Statistics: the popover opened from the status bar or Edit > Statistics….
 
-Offscreen, with in-memory defaults, never ordering a window or a popover on screen (the
-popover's show is recorded instead):
+Offscreen, with in-memory defaults, never ordering a window or a popover on screen. AppKit
+places the popover for real: the document windows say they are visible on a screen that
+is faked far off the real screens (NSScreen's frame), and nothing is ordered in:
 
 1. TSTextStatistics with the TeX Live detex: the Text column is what detex leaves of the
    text, with the files read by \\input, counted as the status bar counts (compared with the
@@ -18,16 +19,20 @@ popover's show is recorded instead):
    typing; the heading says Whole Document or Selection; the time of the count; a spinner
    while counting; the ⓘ mark's tool tip and VoiceOver label.
 4. Edit > Statistics… and the status bar's button (the production TSDocument methods): the
-   popover points at the button; with the status bar hidden, at the bottom edge of the part
-   of the source being typed in; also in the window that shows both. The document nibs
-   no longer hold the former Statistics panel.
+   popover points at the button and AppKit places it above the button, over the source;
+   with the status bar hidden, above the bottom edge of the part of the source being typed
+   in; also in the window that shows both. The window is in the middle of the screen
+   (room above and below), near its top and near its bottom. Both anchors are flipped
+   views, where NSPopover's NSRectEdgeMaxY is the bottom; an unflipped anchor opens above
+   as well. The document nibs no longer hold the former Statistics panel.
 5. The menus keep Edit > Statistics… with its shortcut identifier in 12 languages; the old
    statistics code and detexwrap are gone.
 
 --images DIR draws the source window of the Base and Japanese nibs in Light and Dark Mode
-with the popover's content (production views) in a drawn popover frame above the button:
-whole document, selection, counting, detex missing, and the ⓘ tool tip (drawn as a box,
-because tool tips cannot be drawn offscreen).
+with the popover's content (production views) in a drawn popover frame where AppKit placed
+the popover (the picture grows when the popover is outside the window): whole document,
+selection, counting, detex missing, the status bar hidden, and the ⓘ tool tip (drawn as a
+box, because tool tips cannot be drawn offscreen).
 """
 import argparse, json, os, shutil, subprocess, sys, tempfile
 from pathlib import Path
@@ -47,6 +52,10 @@ MUTATIONS = {
                             '        _popover.delegate = self;\n        [NSNotificationCenter.defaultCenter addObserverForName:NSTextDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification *n) { [weakSelf refresh]; }];\n'),
     # With the status bar hidden, nothing opens.
     'no-anchor-when-hidden': ('TSDocument.m', '    [self showStatisticsRelativeToRect:bottom ofView:scroll];\n', ''),
+    # The edge as before: NSRectEdgeMaxY is the bottom of the flipped button and scroll view.
+    'edge-always-maxy': ('TSDocument.m', 'preferredEdge:view.isFlipped ? NSRectEdgeMinY : NSRectEdgeMaxY];', 'preferredEdge:NSRectEdgeMaxY];'),
+    # The other constant: right for the flipped anchors only.
+    'edge-always-miny': ('TSDocument.m', 'preferredEdge:view.isFlipped ? NSRectEdgeMinY : NSRectEdgeMaxY];', 'preferredEdge:NSRectEdgeMinY];'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -87,7 +96,8 @@ originals = dict(fragments)
 if args.mutation:
     name, old, new = MUTATIONS[args.mutation]
     if name == 'TSDocument.m':
-        assert fragments['show'].count(old) == 1; fragments['show'] = fragments['show'].replace(old, new)
+        key, = [k for k, v in fragments.items() if old in v]
+        assert fragments[key].count(old) == 1; fragments[key] = fragments[key].replace(old, new)
     else:
         assert text[name].count(old) == 1, args.mutation; text[name] = text[name].replace(old, new)
 
@@ -102,9 +112,32 @@ PROGRAM = r'''
 static int failures, checks;
 static void Check(BOOL ok, NSString *name) { checks++; if (!ok) { printf("FAIL: %s\n", name.UTF8String); failures++; } }
 
-// The popover is never shown: where it would point is recorded.
-static NSView *shownView; static NSRect shownRect; static NSRectEdge shownEdge; static NSUInteger shows;
-static void RecordShow(NSPopover *p, SEL s, NSRect rect, NSView *view, NSRectEdge edge) { shownView = view; shownRect = rect; shownEdge = edge; shows++; }
+// What the popover points at is recorded, then AppKit shows it (never ordered in, see below) and where it placed the
+// content on the screen is recorded.
+static IMP originalShow;
+static NSView *shownView; static NSRect shownRect, shownContent; static NSRectEdge shownEdge; static NSUInteger shows;
+static void RecordShow(NSPopover *p, SEL s, NSRect rect, NSView *view, NSRectEdge edge) {
+    shownView = view; shownRect = rect; shownEdge = edge; shows++;
+    ((void (*)(id, SEL, NSRect, NSView *, NSRectEdge))originalShow)(p, s, rect, view, edge);
+    NSView *content = p.contentViewController.view;
+    shownContent = content.window ? [content.window convertRectToScreen:[content convertRect:content.bounds toView:nil]] : NSZeroRect;
+}
+
+// AppKit places a popover on the screen of the window: every screen says it is this one, far off the real screens.
+// The document windows say they are visible on it and keep the frame they are given; nothing is ordered in.
+static const NSRect Screen = {{-40000, -40000}, {1800, 2000}};
+static NSScreen *theScreen;
+static NSRect ScreenFrame(id screen, SEL s) { return Screen; }
+static NSArray *Screens(id c, SEL s) { return theScreen ? @[theScreen] : @[]; }
+static BOOL WindowVisible(id window, SEL s) { return YES; }
+static NSScreen *WindowScreen(id window, SEL s) { return theScreen; }
+static NSRect WindowConstrain(id window, SEL s, NSRect rect, NSScreen *screen) { return rect; }
+static NSRect OnScreen(NSView *view, NSRect rect) { return [view.window convertRectToScreen:[view convertRect:rect toView:nil]]; }
+// The content is above the anchor: the arrow points down at it.
+static BOOL Above(NSRect content, NSRect anchor) { return NSHeight(content) > 0 && NSMinY(content) >= NSMaxY(anchor) - 0.5; }
+static NSString *Where(NSRect content, NSRect anchor) {
+    return [NSString stringWithFormat:@"content %@, anchor %@", NSStringFromRect(content), NSStringFromRect(anchor)];
+}
 
 @interface TSDocumentBase : NSObject @end
 @implementation TSDocumentBase @end
@@ -171,7 +204,8 @@ static TSDocument *Open(NSString *string) {
                                                          activeTextView:^NSTextView *{ return [weakDocument textView]; }];
     [doc.sourceStatusBar placeBelowView:doc->splitView];
     doc.sourceStatusBar.showStatistics = ^(NSView *anchor) { [weakDocument showStatisticsFromView:anchor]; };
-    [doc->textWindow setFrame:NSMakeRect(40, 40, 760, 640) display:NO];
+    // In the middle of the screen: room above and below.
+    [doc->textWindow setFrame:NSMakeRect(NSMinX(Screen) + 400, NSMinY(Screen) + 680, 760, 640) display:NO];
     WaitFor(^BOOL{ return !doc.sourceStatusBar.counting; }, 10);
     return doc;
 }
@@ -183,12 +217,25 @@ static NSBitmapImageRep *Snapshot(NSView *view) {
     [view cacheDisplayInRect:view.bounds toBitmapImageRep:rep];
     return rep;
 }
+// The picture takes the content out of the popover. The popover is then closed and given its content again, also
+// without pictures, so that the checks see the same states either way (left out, the next show placed no content).
+// The window goes back to the system's appearance: a popover shown from a window left in Dark Mode drew no secondary
+// labels in the next Light Mode picture.
+static void DrawPictures(TSDocument *doc, NSString *name, NSString *tip);
 static void DrawWithPopover(TSDocument *doc, NSString *name, NSString *tip) {
-    if (!images) return;
+    if (images) DrawPictures(doc, name, tip);
+    TSTextStatisticsPopover *popover = doc.textStatistics;
+    [popover close];
+    NSViewController *content = popover.popover.contentViewController;
+    popover.popover.contentViewController = nil;
+    popover.popover.contentViewController = content;
+}
+static void DrawPictures(TSDocument *doc, NSString *name, NSString *tip) {
     NSViewController *content = doc.textStatistics.contentController;
+    NSWindow *window = shownView.window;
     for (NSString *look in @[@"light", @"dark"]) {
         NSAppearance *appearance = [NSAppearance appearanceNamed:[look isEqual:@"dark"] ? NSAppearanceNameDarkAqua : NSAppearanceNameAqua];
-        doc->textWindow.appearance = appearance;
+        window.appearance = appearance;
         NSWindow *holder = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 300, 200) styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:YES];
         holder.appearance = appearance;
         [NSAppearance setCurrentAppearance:appearance];
@@ -199,24 +246,30 @@ static void DrawWithPopover(TSDocument *doc, NSString *name, NSString *tip) {
         [holder setContentSize:content.view.fittingSize];
         [content.view layoutSubtreeIfNeeded];
         NSBitmapImageRep *pop = Snapshot(holder.contentView.superview);
-        NSView *frame = doc->textWindow.contentView.superview;
-        [doc->textWindow layoutIfNeeded]; [frame layoutSubtreeIfNeeded];
+        NSView *frame = window.contentView.superview;
+        [window layoutIfNeeded]; [frame layoutSubtreeIfNeeded];
         NSBitmapImageRep *win = Snapshot(frame);
-        NSImage *out = [[NSImage alloc] initWithSize:frame.bounds.size];
-        [out lockFocus];
-        [win drawInRect:frame.bounds];
+        // The popover's content where AppKit placed it, in the window's coordinates; the picture takes it in.
         NSRect anchor = [shownView convertRect:shownRect toView:nil];
+        NSRect placed = [window convertRectFromScreen:shownContent];
         NSSize size = content.view.bounds.size;
-        CGFloat arrow = 10, x = MIN(MAX(NSMidX(anchor) - size.width / 2, 8), NSWidth(frame.bounds) - size.width - 8);
-        NSRect box = NSMakeRect(x, NSMaxY(anchor) + arrow, size.width, size.height);
+        BOOL above = NSMinY(placed) >= NSMaxY(anchor) - 0.5;
+        NSRect box = NSMakeRect(NSMinX(placed), above ? NSMinY(placed) : NSMaxY(placed) - size.height, size.width, size.height);
+        CGFloat arrow = 10, tipX = MIN(MAX(NSMidX(anchor), NSMinX(box) + 2 * arrow), NSMaxX(box) - 2 * arrow);
+        NSRect canvas = NSUnionRect(frame.bounds, NSInsetRect(NSUnionRect(box, anchor), -24, -24));
+        NSImage *out = [[NSImage alloc] initWithSize:canvas.size];
+        [out lockFocus];
+        NSAffineTransform *shift = [NSAffineTransform transform]; [shift translateXBy:-NSMinX(canvas) yBy:-NSMinY(canvas)]; [shift concat];
+        [win drawInRect:frame.bounds];
         [NSAppearance setCurrentAppearance:appearance];
         [NSGraphicsContext saveGraphicsState];
         NSShadow *shadow = [NSShadow new]; shadow.shadowBlurRadius = 14; shadow.shadowOffset = NSMakeSize(0, -3);
         shadow.shadowColor = [NSColor colorWithWhite:0 alpha:0.3]; [shadow set];
         NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:box xRadius:14 yRadius:14];
-        [path moveToPoint:NSMakePoint(NSMidX(anchor) - arrow, NSMinY(box))];
-        [path lineToPoint:NSMakePoint(NSMidX(anchor), NSMaxY(anchor) + 1)];
-        [path lineToPoint:NSMakePoint(NSMidX(anchor) + arrow, NSMinY(box))];
+        CGFloat base = above ? NSMinY(box) : NSMaxY(box), tipY = above ? NSMaxY(anchor) + 1 : NSMinY(anchor) - 1;
+        [path moveToPoint:NSMakePoint(tipX - arrow, base)];
+        [path lineToPoint:NSMakePoint(tipX, tipY)];
+        [path lineToPoint:NSMakePoint(tipX + arrow, base)];
         [[NSColor.windowBackgroundColor blendedColorWithFraction:0.15 ofColor:NSColor.controlBackgroundColor] setFill];
         [path fill];
         [NSGraphicsContext restoreGraphicsState];
@@ -231,7 +284,7 @@ static void DrawWithPopover(TSDocument *doc, NSString *name, NSString *tip) {
             NSPoint at = NSMakePoint(NSMinX(box) + NSMinX(m) + 4, NSMinY(box) + NSMinY(m) - 26);
             NSDictionary *attrs = @{NSFontAttributeName: [NSFont toolTipsFontOfSize:0], NSForegroundColorAttributeName: NSColor.labelColor};
             NSSize ts = [tip sizeWithAttributes:attrs];
-            NSRect tr = NSMakeRect(MIN(at.x, NSWidth(frame.bounds) - ts.width - 20), at.y - ts.height, ts.width + 12, ts.height + 6);
+            NSRect tr = NSMakeRect(MIN(at.x, NSMaxX(canvas) - ts.width - 20), at.y - ts.height, ts.width + 12, ts.height + 6);
             [NSColor.windowBackgroundColor setFill]; NSRectFill(tr);
             [NSColor.separatorColor setStroke]; [NSBezierPath strokeRect:tr];
             [tip drawAtPoint:NSMakePoint(NSMinX(tr) + 6, NSMinY(tr) + 3) withAttributes:attrs];
@@ -242,13 +295,24 @@ static void DrawWithPopover(TSDocument *doc, NSString *name, NSString *tip) {
             [NSString stringWithFormat:@"%@-%@.png", name, look]] atomically:YES];
         holder.contentView = nil;
     }
+    window.appearance = nil;
 }
 
 int main(int argc, char **argv) { @autoreleasepool {
     TSInstallAppKitIsolation();
     [NSApplication sharedApplication];
-    method_setImplementation(class_getInstanceMethod(NSPopover.class, @selector(showRelativeToRect:ofView:preferredEdge:)), (IMP)RecordShow);
+    originalShow = method_setImplementation(class_getInstanceMethod(NSPopover.class, @selector(showRelativeToRect:ofView:preferredEdge:)), (IMP)RecordShow);
     for (NSString *name in @[@"TSConsoleWindow", @"TSFullSplitWindow", @"TSFullscreenWindow", @"TSHTMLWindow", @"TSLogWindow", @"TSPreviewWindow", @"TSTextEditorWindow"]) Register(name, NSWindow.class);
+    theScreen = NSScreen.mainScreen ?: NSScreen.screens.firstObject;
+    method_setImplementation(class_getInstanceMethod(NSScreen.class, @selector(frame)), (IMP)ScreenFrame);
+    method_setImplementation(class_getInstanceMethod(NSScreen.class, @selector(visibleFrame)), (IMP)ScreenFrame);
+    method_setImplementation(class_getClassMethod(NSScreen.class, @selector(screens)), (IMP)Screens);
+    for (NSString *name in @[@"TSTextEditorWindow", @"TSFullSplitWindow"]) {
+        Class c = NSClassFromString(name);
+        class_addMethod(c, @selector(isVisible), (IMP)WindowVisible, "c@:");
+        class_addMethod(c, @selector(screen), (IMP)WindowScreen, "@@:");
+        class_addMethod(c, @selector(constrainFrameRect:toScreen:), (IMP)WindowConstrain, method_getTypeEncoding(class_getInstanceMethod(NSWindow.class, @selector(constrainFrameRect:toScreen:))));
+    }
     Register(@"MyPDFView", NSView.class); Register(@"MyPDFKitView", NSClassFromString(@"PDFView") ?: NSView.class); Register(@"ScrapPDFKitView", NSClassFromString(@"PDFView") ?: NSView.class);
     Register(@"TSTextView", NSTextView.class); Register(@"ScrapTextView", NSTextView.class); Register(@"TSAdvancedFindTextView", NSTextView.class);
     NSDictionary *spec = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfFile:@(argv[1])] options:0 error:NULL];
@@ -361,8 +425,16 @@ int main(int argc, char **argv) { @autoreleasepool {
     TSTextStatisticsPopover *popover = doc.textStatistics;
     TSTextStatisticsViewController *content = popover.contentController;
     popover.detex = ^NSURL *{ return detex; };
-    Check(shows == 1 && shownView == bar.statisticsButton && shownEdge == NSRectEdgeMaxY && popover.popover.behavior == NSPopoverBehaviorTransient,
-          [@"the button opens the popover above itself, closing when clicking outside" stringByAppendingString:tag]);
+    popover.popover.animates = NO;
+    NSRect buttonOnScreen = OnScreen(bar.statisticsButton, bar.statisticsButton.bounds);
+    Check(shows == 1 && shownView == bar.statisticsButton && popover.popover.shown && popover.popover.behavior == NSPopoverBehaviorTransient,
+          [@"the button opens the popover, closing when clicking outside" stringByAppendingString:tag]);
+    Check(bar.statisticsButton.isFlipped && doc->scrollView.isFlipped,
+          [@"the button and the source's scroll view are flipped: NSRectEdgeMaxY is their bottom" stringByAppendingString:tag]);
+    Check(NSMinY(buttonOnScreen) - NSMinY(Screen) > 400 && NSMaxY(Screen) - NSMaxY(doc->textWindow.frame) > 400,
+          [NSString stringWithFormat:@"the window has room above and below on the screen (%@)%@", NSStringFromRect(doc->textWindow.frame), tag]);
+    Check(Above(shownContent, buttonOnScreen) && NSMaxY(shownContent) < NSMaxY(doc->textWindow.frame),
+          [NSString stringWithFormat:@"AppKit places the popover above the button, over the source (%@)%@", Where(shownContent, buttonOnScreen), tag]);
     // The first count used the default detex (the settings' TeX folder); count again with the one of this test.
     [popover refresh];
     Check(content.counting, [@"a spinner while counting" stringByAppendingString:tag]);
@@ -404,26 +476,73 @@ int main(int argc, char **argv) { @autoreleasepool {
     DrawWithPopover(doc, [lang stringByAppendingString:@"-04-detex-missing"], nil);
     popover.detex = ^NSURL *{ return detex; };
 
-    // The status bar hidden: from the bottom edge of the part being typed in.
+    // The window near the top and near the bottom of the screen: above the button too.
+    NSRect middle = doc->textWindow.frame;
+    for (NSNumber *y in @[@(NSMaxY(Screen) - NSHeight(middle)), @(NSMinY(Screen) + 10)]) {
+        [popover close];
+        [doc->textWindow setFrameOrigin:NSMakePoint(NSMinX(middle), y.doubleValue)];
+        [bar.statisticsButton performClick:nil];
+        NSRect button = OnScreen(bar.statisticsButton, bar.statisticsButton.bounds);
+        Check(shownView == bar.statisticsButton && Above(shownContent, button) && NSMaxY(shownContent) < NSMaxY(doc->textWindow.frame),
+              [NSString stringWithFormat:@"the window near the %@ of the screen: above the button (%@)%@", y.doubleValue > NSMidY(Screen) ? @"top" : @"bottom",
+               Where(shownContent, button), tag]);
+    }
+    [popover close];
+    [doc->textWindow setFrameOrigin:middle.origin];
+    // An anchor that is not flipped: its top is its maximum y.
+    NSView *plain = [[NSView alloc] initWithFrame:NSMakeRect(20, 4, 120, 20)];
+    [doc->textWindow.contentView addSubview:plain];
+    [doc showStatisticsFromView:plain];
+    NSRect plainOnScreen = OnScreen(plain, plain.bounds);
+    Check(!plain.isFlipped && shownView == plain && Above(shownContent, plainOnScreen),
+          [NSString stringWithFormat:@"an anchor that is not flipped: above it as well (%@)%@", Where(shownContent, plainOnScreen), tag]);
+    [popover close];
+    [plain removeFromSuperview];
+
+    // The status bar hidden: from the bottom edge of the part being typed in, above it, over the source.
     TSSourceStatusBar.shown = NO;
     Check(bar.statisticsButton == nil, [@"no button while the bar is hidden" stringByAppendingString:tag]);
+    for (NSNumber *y in @[@(NSMinY(middle)), @(NSMaxY(Screen) - NSHeight(middle)), @(NSMinY(Screen) + 10)]) {
+        [popover close];
+        [doc->textWindow setFrameOrigin:NSMakePoint(NSMinX(middle), y.doubleValue)];
+        [doc showStatistics:nil];
+        NSRect bottom = OnScreen(doc->scrollView, shownRect), source = OnScreen(doc->scrollView, doc->scrollView.bounds);
+        NSString *place = y.doubleValue == NSMinY(middle) ? @"middle" : y.doubleValue > NSMidY(Screen) ? @"top" : @"bottom";
+        Check(shownView == doc->scrollView && shownRect.size.height == 1 && fabs(shownRect.origin.y - (doc->scrollView.isFlipped ? NSMaxY(doc->scrollView.bounds) - 1 : 0)) < 0.5
+              && fabs(NSMinY(bottom) - NSMinY(source)) < 0.5, [NSString stringWithFormat:@"with the bar hidden, the popover points at the bottom of the source (%@)%@", NSStringFromRect(shownRect), tag]);
+        Check(Above(shownContent, bottom) && NSMaxY(shownContent) <= NSMaxY(source),
+              [NSString stringWithFormat:@"with the bar hidden, the window in the %@ of the screen: above the bottom edge of the source, over it (%@, source %@)%@",
+               place, Where(shownContent, bottom), NSStringFromRect(source), tag]);
+    }
+    [doc->textWindow setFrameOrigin:middle.origin];
+    [popover close];
     [doc showStatistics:nil];
-    Check(shownView == doc->scrollView && shownRect.size.height == 1 && fabs(shownRect.origin.y - (doc->scrollView.isFlipped ? NSMaxY(doc->scrollView.bounds) - 1 : 0)) < 0.5
-          && shownEdge == NSRectEdgeMaxY, [NSString stringWithFormat:@"with the bar hidden, the popover points at the bottom of the source (%@)%@", NSStringFromRect(shownRect), tag]);
+    WaitFor(^BOOL{ return !content.counting; }, 20);
+    DrawWithPopover(doc, [lang stringByAppendingString:@"-06-bar-hidden"], nil);
     NSSize size = NSMakeSize(NSWidth(doc->scrollView.frame), 100);
     [doc->scrollView setFrameSize:size]; [doc->scrollView2 setFrameSize:size];
     [doc->splitView addSubview:doc->scrollView2]; [doc->splitView adjustSubviews];
     doc->textView = doc->textView2;
+    [popover close];
     [doc showStatistics:nil];
-    Check(shownView == doc->scrollView2, [@"in a split source, at the bottom of the part being typed in" stringByAppendingString:tag]);
+    NSRect part = OnScreen(doc->scrollView2, shownRect);
+    Check(shownView == doc->scrollView2 && Above(shownContent, part),
+          [NSString stringWithFormat:@"in a split source, above the bottom of the part being typed in (%@)%@", Where(shownContent, part), tag]);
     // The window that shows both.
     [doc->splitView removeFromSuperview]; [doc->leftView addSubview:doc->splitView]; doc->splitView.frame = doc->leftView.bounds;
     [doc.sourceStatusBar placeBelowView:doc->splitView];
+    [doc->fullSplitWindow setFrame:NSMakeRect(NSMinX(Screen) + 200, NSMinY(Screen) + 680, 1200, 640) display:NO];
+    [popover close];
     [doc showStatistics:nil];
-    Check(shownView.window == doc->fullSplitWindow, [@"in the window that shows both, with the bar hidden" stringByAppendingString:tag]);
+    part = OnScreen(shownView, shownRect);
+    Check(shownView.window == doc->fullSplitWindow && Above(shownContent, part),
+          [NSString stringWithFormat:@"in the window that shows both, with the bar hidden: above the bottom of the source (%@)%@", Where(shownContent, part), tag]);
     TSSourceStatusBar.shown = YES;
+    [popover close];
     [doc showStatistics:nil];
-    Check(shownView == bar.statisticsButton && shownView.window == doc->fullSplitWindow, [@"in the window that shows both, from the button" stringByAppendingString:tag]);
+    part = OnScreen(bar.statisticsButton, bar.statisticsButton.bounds);
+    Check(shownView == bar.statisticsButton && shownView.window == doc->fullSplitWindow && Above(shownContent, part),
+          [NSString stringWithFormat:@"in the window that shows both, from the button: above it (%@)%@", Where(shownContent, part), tag]);
     [popover close];
     Check(WaitFor(^BOOL{ return TemporaryFiles() == before; }, 10), [@"no temporary file is left" stringByAppendingString:tag]);
 
