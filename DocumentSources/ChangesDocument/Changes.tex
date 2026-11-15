@@ -173,7 +173,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds the Advanced Find panel, LaTeX-aware 
 \item \textbf{Save PostScript File and -dALLOWPSTRANSPARENCY:} these settings are removed from Settings \(\rightarrow\) Typesetting. If you had turned one on, TeXShop adds \texttt{--keep-psfile} or \texttt{--distilleropts "-dALLOWPSTRANSPARENCY"} to the Via DVI command for you. Opening a PostScript file always allows transparency when Ghostscript supports it.
 \item \textbf{Obsolete settings:} obsolete PDFSync choices and settings that had no effect are removed.
 \item \textbf{Themes from earlier color settings:} the button in Settings \(\rightarrow\) Themes that made a theme from the color settings of earlier versions is removed.
-\item \textbf{\texttt{\textbackslash{}UTF} commands:} \texttt{\textbackslash{}UTF} commands written by utf.sty export are turned back into characters when a file is opened.
+\item \textbf{\texttt{\textbackslash{}UTF} commands:} \texttt{\textbackslash{}UTF} commands written by conversion to otf package \texttt{\textbackslash{}UTF} / \texttt{\textbackslash{}CID} are turned back into characters when a file is opened.
 \item \textbf{Line endings:} when an opened file has Windows (CRLF), classic Mac (CR) or mixed line endings, TeXShop says that they have been changed to LF. The notice can be turned off for each file.
 \end{itemize}
 
@@ -216,7 +216,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds the Advanced Find panel, LaTeX-aware 
 \item An unknown encoding name opens the file in UTF-8, with a message, and project files are written in UTF-8.
 \item The encoding menu in the Save dialog works, and can be shown from Settings \(\rightarrow\) Documents and Saving.
 \item Saving with Automatic UTF-8-Mac to UTF-8 Conversion no longer writes an empty file when the text has only CJK compatibility ideographs.
-\item Saving with utf.sty export no longer loses a line break followed by a combining mark.
+\item Saving with conversion to otf package \texttt{\textbackslash{}UTF} / \texttt{\textbackslash{}CID} no longer loses a line break followed by a combining mark.
 \item Make Default Editor works for \texttt{.tex} files.
 \item Fix errors with empty documents, isolated quotation marks, and saving.
 \end{itemize}

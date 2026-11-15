@@ -370,6 +370,7 @@ common
 compatibility
 compilation
 compiled
+complain
 complained
 complaining
 complains
@@ -648,7 +649,6 @@ explaining
 explains
 explanation
 explanations
-export
 expression
 expressions
 extend
@@ -1064,6 +1064,7 @@ make
 makeindex
 makes
 making
+malformed
 malumbres
 management
 manipulated
@@ -1689,7 +1690,6 @@ string
 struggle
 students
 stupid
-sty
 style
 subfolder
 subfolders

@@ -145,7 +145,7 @@
 <li><strong>Save PostScript File and -dALLOWPSTRANSPARENCY:</strong> these settings are removed from Settings → Typesetting. If you had turned one on, TeXShop adds <code>--keep-psfile</code> or <code>--distilleropts "-dALLOWPSTRANSPARENCY"</code> to the Via DVI command for you. Opening a PostScript file always allows transparency when Ghostscript supports it.</li>
 <li><strong>Obsolete settings:</strong> obsolete PDFSync choices and settings that had no effect are removed.</li>
 <li><strong>Themes from earlier color settings:</strong> the button in Settings → Themes that made a theme from the color settings of earlier versions is removed.</li>
-<li><strong><code>\UTF</code> commands:</strong> <code>\UTF</code> commands written by utf.sty export are turned back into characters when a file is opened.</li>
+<li><strong><code>\UTF</code> commands:</strong> <code>\UTF</code> commands written by conversion to otf package <code>\UTF</code> / <code>\CID</code> are turned back into characters when a file is opened.</li>
 <li><strong>Line endings:</strong> when an opened file has Windows (CRLF), classic Mac (CR) or mixed line endings, TeXShop says that they have been changed to LF. The notice can be turned off for each file.<figure class="note-shot"><img src="assets/release-notes/en/line-endings.png" width="534" height="520" alt="The notice that a document used Windows line endings, which were changed to LF" loading="lazy"></figure></li>
 </ul>
 <h3>Fixes: typesetting and the console</h3>
@@ -182,7 +182,7 @@
 <li>An unknown encoding name opens the file in UTF-8, with a message, and project files are written in UTF-8.</li>
 <li>The encoding menu in the Save dialog works, and can be shown from Settings → Documents and Saving.</li>
 <li>Saving with Automatic UTF-8-Mac to UTF-8 Conversion no longer writes an empty file when the text has only CJK compatibility ideographs.</li>
-<li>Saving with utf.sty export no longer loses a line break followed by a combining mark.</li>
+<li>Saving with conversion to otf package <code>\UTF</code> / <code>\CID</code> no longer loses a line break followed by a combining mark.</li>
 <li>Make Default Editor works for <code>.tex</code> files.</li>
 <li>Fix errors with empty documents, isolated quotation marks, and saving.</li>
 </ul>
