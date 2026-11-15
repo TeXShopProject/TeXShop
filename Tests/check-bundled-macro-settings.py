@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Check that bundled macros only write settings that TeXShop still reads.
 
-A macro that runs `defaults write TeXShop KEY …` must name a setting that TeXShop reads: the value
-of a `…Key` string defined in Sources/App/globals.m outside comments, whose name the code outside
-comments uses. Commented-out definitions and notification names do not count. Colored source and
-Default Colored source wrote the color settings used before themes, which TeXShop no longer has."""
+A macro that runs `defaults write TeXShop KEY …` must name a setting that TeXShop reads: a key that
+the code outside comments passes to a defaults accessor (`…forKey:` / `…ForKey:`), either as a
+string literal or as a string defined in Sources/App/globals.m outside comments. Commented-out
+definitions and notification names do not count. Colored source and Default Colored source wrote the
+color settings used before themes, which TeXShop no longer has."""
 from pathlib import Path
 import argparse
 import plistlib
@@ -18,6 +19,8 @@ MUTATIONS = {
     'commented-key': lambda macros: macros + ['--Applescript direct\ndo shell script "defaults write TeXShop DarkModeInvertPreview YES"'],
     # A notification name, which is no setting.
     'notification-name': lambda macros: macros + ['--Applescript direct\ndo shell script "defaults write TeXShop SyntaxColoringChangedNotification 1"'],
+    # A setting whose name has no Key suffix in globals.m (must still pass).
+    'live-path-setting': lambda macros: macros + ['--Applescript direct\ndo shell script "defaults write TeXShop TetexBinPath /Library/TeX/texbin"'],
     # A macro writes a setting that TeXShop reads (must still pass).
     'live-setting': lambda macros: macros + ['--Applescript direct\ndo shell script "defaults write TeXShop SourceWindowAlpha 0.9"'],
 }
@@ -32,12 +35,14 @@ def code(text):
     return re.sub(r'"(?:\\.|[^"\\\n])*"|/\*.*?\*/|//[^\n]*',
                   lambda m: m.group(0) if m.group(0).startswith('"') else '\n' * m.group(0).count('\n') or ' ', text, flags=re.S)
 
-definitions = dict(re.findall(r'NSString \*(\w+Key)\s*=\s*@"([^"]+)"', code((root / 'Sources/App/globals.m').read_text())))
-used = set()
+definitions = dict(re.findall(r'NSString \*(\w+)\s*=\s*@"([^"]+)"', code((root / 'Sources/App/globals.m').read_text())))
+names, literals = set(), set()
 for path in (root / 'Sources').rglob('*'):
-    if path.suffix in ('.m', '.h', '.mm', '.inc') and path.name not in ('globals.m', 'globals.h'):
-        used |= set(re.findall(r'\b\w+Key\b', code(path.read_text(errors='replace'))))
-known = {value for name, value in definitions.items() if name in used}
+    if path.suffix in ('.m', '.h', '.mm', '.inc', '.swift') and path.name not in ('globals.m', 'globals.h'):
+        text = code(path.read_text(errors='replace'))
+        names |= set(re.findall(r'[fF]orKey:\s*(\w+)', text))
+        literals |= set(re.findall(r'[fF]orKey:\s*@"([^"]+)"', text))
+known = {value for name, value in definitions.items() if name in names} | literals
 
 def contents(item, found):
     if isinstance(item, dict):
@@ -63,7 +68,7 @@ def unread(texts):
 if args.mutations:
     for name, mutate in sorted(MUTATIONS.items()):
         caught = bool(unread(mutate(macros)))
-        assert caught == (name != 'live-setting'), f'mutation {name}: caught={caught}'
+        assert caught == (name not in ('live-setting', 'live-path-setting')), f'mutation {name}: caught={caught}'
         print(f'{"DETECTED" if caught else "ACCEPTED"} {name}')
 if args.mutation:
     macros = MUTATIONS[args.mutation](macros)
