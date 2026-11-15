@@ -8,15 +8,35 @@ file: names, commands and words that are the same in that language. The check co
 - the .strings tables (other than Settings*.strings, which run-settings-visible-text.py
   checks in the composed Settings window): every English key must exist, and its value
   must not be the English text;
-- the localized nibs: visible titles, tool tips, placeholders and labels that equal a
-  text of the Base nib. Hidden views, untitled boxes and image-only buttons are skipped.
-  A nib that exists only compiled is read from the compiled archive (all its texts).
-  In older archives, tool tips are read in the Matrix and LaTeX panels; LaTeX code in
-  them is the same in every language.
+- the localized nibs (all of them but Preferences.nib, which is no longer loaded):
+  visible titles, tool tips, placeholders and labels that equal a text of the Base nib.
+  Hidden views, untitled boxes and image-only buttons are skipped. A nib that exists
+  only compiled is read from the compiled archive (all its texts). The tool tips are
+  also read from every compiled variant the application may load (keyed archives and
+  NIBArchive files), where Interface Builder keeps them apart from the views, so a tool
+  tip translated in the source but not in the compiled nib is found too. LaTeX code in
+  the tool tips of the LaTeX panel is the same in every language. The tool tips of the
+  old Find panel (FindPanel.nib) are left out while nothing opens that panel: the check
+  looks for code or a menu item that opens it, and then checks them too.
 
 Japanese, Korean and Chinese text must also contain a character of that script unless
 it is allowed (catches English that differs from the current English wording), and
 must not be written in one of the other two (Japanese kana or kanji in a Korean nib).
+No string of a Korean or Chinese nib, in its source or in any compiled variant, visible
+or not, contains Japanese kana.
+
+In the .strings tables, a value is also reported as English, unless allowed, when
+- it is the English text in other capitals ("Postscript File" for "PostScript File");
+- it reads as an English phrase: common English words make up much of it;
+- it is or holds an English text of two or more words (of the English tables, the keys
+  of Localizable.strings or the Base nibs) that this language does not keep as its own
+  ("Toon Sync Marks" in Dutch, "Split Window" for Split Source in European Portuguese);
+- the same key has the same text in languages of three or more families (Spanish and
+  the two Portuguese are one family) while English says something else: an English
+  wording left from an earlier version ("Sharing" for Share Source in four languages).
+  The allowlist's "shared" lists the words that languages really share ("Variante");
+- in InfoPlist.strings, it is a file extension where English names a kind ("py" for
+  Python File).
 
 Text in the other languages is reported as English, unless allowed, also when
 - it is a word of two letters that the Base nib has ("of" in "Page 1 of 3");
@@ -33,9 +53,11 @@ A localized text must not start with a space. The allowlist's "pending" lists te
 nibs that another change is translating; they are reported as notes, not failures.
 """
 from pathlib import Path
+import base64
 import json
 import plistlib
 import re
+import struct
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
@@ -47,9 +69,6 @@ TABLES = ['Localizable', 'ToolbarItems', 'InfoPlist', 'Encodings', 'FindPanel', 
 NIBS = ['MainMenu', 'TSDocument', 'MacroEditor', 'matrixpanel', 'completionpanel1.2', 'Movie', 'FindPanel']
 ATTRIBUTES = ('title', 'toolTip', 'placeholderString', 'label', 'paletteLabel')
 ARCHIVE_KEYS = ('NSTitle', 'NSToolTip', 'NSContents', 'NSPlaceholderString', 'NSWindowTitle')
-# Older Interface Builder archives keep tool tips as toolTip attributes of their own. They are checked in the
-# nibs below, whose tool tips are translated; the other older nibs are not translated that far yet.
-ARCHIVE_TOOLTIP_NIBS = ('matrixpanel', 'completionpanel1.2')
 CJK = re.compile(r'[぀-ヿ㐀-鿿가-힯＀-￯]')
 WORD = re.compile(r'[A-Za-z]{3,}')
 SHORT = re.compile(r'[A-Za-z]{2}')
@@ -62,16 +81,33 @@ HAN = re.compile(r'[一-鿿]')  # Korean in macOS is written without hanja
 FAMILY = {'es': 'iberian', 'pt': 'iberian', 'pt-PT': 'iberian'}
 
 
+def english_phrase(text):
+    """Two or more common English words that make up much of the text (Dutch and Romanian use some of them too)."""
+    words = re.findall(r"[A-Za-z']{2,}", text)
+    found = ENGLISH.findall(text)
+    return len(found) >= 2 and len(found) >= 0.4 * len(words)
+
+
 def strings(path):
     return json.loads(subprocess.check_output(['plutil', '-convert', 'json', '-o', '-', str(path)]))
 
 
-def nib_texts(path, tooltips=False):
+def archive_string(element):
+    """The text of a <string> of an older Interface Builder archive, also when it is written in base64."""
+    if element.get('type') == 'base64-UTF8':
+        # Interface Builder leaves out the padding and sometimes ends with one character too many.
+        data = re.sub(r'\s', '', element.text or '')
+        data = data[:len(data) - len(data) % 4] if len(data) % 4 == 1 else data + '=' * (-len(data) % 4)
+        return base64.b64decode(data).decode('utf-8', 'replace')
+    return element.text
+
+
+def nib_texts(path):
     """Visible texts of a nib (modern XIB or old archive format)."""
     root = ET.parse(path).getroot()
     if root.tag == 'archive':
-        keys = ARCHIVE_KEYS + (('toolTip',) if tooltips else ())
-        return {s.text for s in root.iter('string') if s.get('key') in keys and s.text}
+        keys = ARCHIVE_KEYS + ('toolTip',)
+        return {archive_string(s) for s in root.iter('string') if s.get('key') in keys and s.text}
     parents = {child: parent for parent in root.iter() for child in parent}
     def hidden(e):
         while e is not None:
@@ -142,10 +178,125 @@ def element_texts(nib_dir):
     return out
 
 
-def interface_texts(nib_dir):
-    """A localized nib is checked from its source when it has one, otherwise from the compiled nib."""
+def nibarchive(data):
+    """The objects of a NIBArchive (keyedobjects-101300.nib and others): a list of (class name, {key: value}),
+    where a value is a number, bytes, or ('object', index)."""
+    def varint(pos):
+        result = shift = 0
+        while True:
+            byte = data[pos]; pos += 1
+            result |= (byte & 0x7f) << shift; shift += 7
+            if byte & 0x80:
+                return result, pos
+    fields = struct.unpack_from('<10I', data, 10)
+    pos, keys = fields[5], []
+    for _ in range(fields[4]):
+        n, pos = varint(pos); keys.append(data[pos:pos + n].decode()); pos += n
+    pos, values = fields[7], []
+    sizes = {0: 1, 1: 2, 2: 4, 3: 8, 4: 0, 5: 0, 6: 4, 7: 8, 9: 0, 10: 4}
+    for _ in range(fields[6]):
+        k, pos = varint(pos); kind = data[pos]; pos += 1
+        if kind == 8:
+            n, pos = varint(pos); value = data[pos:pos + n]; pos += n
+        else:
+            raw = data[pos:pos + sizes[kind]]; pos += sizes[kind]
+            value = ('object', struct.unpack('<I', raw)[0]) if kind == 10 else raw
+        values.append((keys[k], value))
+    pos, classes = fields[9], []
+    for _ in range(fields[8]):
+        n, pos = varint(pos); extra, pos = varint(pos); pos += 4 * extra
+        classes.append(data[pos:pos + n].rstrip(b'\0').decode()); pos += n
+    pos, objects = fields[3], []
+    for _ in range(fields[2]):
+        c, pos = varint(pos); first, pos = varint(pos); count, pos = varint(pos)
+        objects.append((classes[c], dict(values[first:first + count])))
+    return objects
+
+
+def compiled_tooltips(nib_dir):
+    """The tool tips of every compiled variant of a nib. Interface Builder keeps them in NSIBHelpConnector
+    objects (the text in NSMarker, NSToolTipHelpKey in NSFile), apart from the views."""
+    files = [nib_dir] if nib_dir.is_file() else sorted(nib_dir.glob('keyedobjects*.nib'))
+    out = set()
+    for f in files:
+        data = f.read_bytes()
+        if data.startswith(b'bplist'):
+            objects = plistlib.loads(data)['$objects']
+            def deref(value):
+                value = objects[value.data] if isinstance(value, plistlib.UID) else value
+                if isinstance(value, dict) and 'NS.string' in value:
+                    return deref(value['NS.string'])
+                return value
+            for item in objects:
+                if isinstance(item, dict) and '$class' in item and deref(item['$class']).get('$classname') == 'NSIBHelpConnector':
+                    if deref(item.get('NSFile')) == 'NSToolTipHelpKey' and isinstance(deref(item.get('NSMarker')), str):
+                        out.add(deref(item['NSMarker']))
+        elif data.startswith(b'NIBArchive'):
+            objects = nibarchive(data)
+            def deref(value):
+                if isinstance(value, tuple):
+                    cls, fields = objects[value[1]]
+                    return fields.get('NS.bytes', b'').decode('utf-8') if 'NS.bytes' in fields else None
+                return None
+            for cls, fields in objects:
+                if cls == 'NSIBHelpConnector' and deref(fields.get('NSFile')) == 'NSToolTipHelpKey' and deref(fields.get('NSMarker')):
+                    out.add(deref(fields['NSMarker']))
+        else:
+            raise SystemExit(f'FAIL: {f.relative_to(ROOT)} is neither a keyed archive nor a NIBArchive')
+    return out
+
+
+def all_strings(nib_dir):
+    """Every string of a nib, visible or not: the source's text and attributes and the strings of every
+    compiled variant."""
+    out = set()
     source = nib_dir / 'designable.nib'
-    return nib_texts(source, nib_dir.stem in ARCHIVE_TOOLTIP_NIBS) if source.exists() else compiled_texts(nib_dir)
+    if source.exists():
+        for e in ET.parse(source).getroot().iter():
+            out.update(v for v in e.attrib.values())
+            if e.tag == 'string' and e.text:
+                out.add(archive_string(e))
+    for f in ([nib_dir] if nib_dir.is_file() else sorted(nib_dir.glob('keyedobjects*.nib'))):
+        data = f.read_bytes()
+        if data.startswith(b'bplist'):
+            out.update(o for o in plistlib.loads(data)['$objects'] if isinstance(o, str))
+        else:
+            out.update(fields['NS.bytes'].decode('utf-8', 'replace') for cls, fields in nibarchive(data) if isinstance(fields.get('NS.bytes'), bytes))
+    return out
+
+
+def old_find_panel_callers():
+    """What opens the old Find panel (FindPanel.nib, TextFinder's panel): sources that ask TextFinder for its
+    panel, and nibs that send it orderFrontFindPanel:. Advanced Find and the system's find bar replaced it."""
+    callers = [str(f.relative_to(ROOT)) for f in sorted((ROOT / 'Sources').rglob('*.[mh]')) if not f.name.startswith('TextFinder.')
+               and re.search(r'orderFrontFindPanel|findNextAndOrderFindPanelOut|\bfindPanel\]|loadNibNamed:\s*@"FindPanel"', f.read_text(errors='replace'))]
+    for nib in sorted(INTERFACES.glob('*.lproj/*.nib')):
+        if nib.stem != 'FindPanel':
+            for f in ([nib] if nib.is_file() else sorted(p for p in nib.iterdir() if p.is_file())):
+                if b'orderFrontFindPanel' in f.read_bytes():
+                    callers.append(str(f.relative_to(ROOT)))
+    return callers
+
+
+# The tool tips of the old Find panel are never shown while nothing opens it (its other texts are checked).
+# Once something opens it again, its tool tips are checked too.
+UNSHOWN_TOOLTIPS = () if old_find_panel_callers() else ('FindPanel',)
+
+
+def interface_texts(nib_dir):
+    """A localized nib is checked from its source when it has one, otherwise from the compiled nib, and its
+    tool tips from every compiled variant too."""
+    source = nib_dir / 'designable.nib'
+    texts = nib_texts(source) if source.exists() else compiled_texts(nib_dir)
+    if nib_dir.stem in UNSHOWN_TOOLTIPS:
+        return texts - compiled_tooltips(nib_dir) - (tooltip_texts(source) if source.exists() else set())
+    return texts | compiled_tooltips(nib_dir)
+
+
+def tooltip_texts(path):
+    """The tool tips written in the source of an older nib."""
+    root = ET.parse(path).getroot()
+    return {archive_string(s) for s in root.iter('string') if s.get('key') == 'toolTip' and s.text} if root.tag == 'archive' else set()
 
 
 def main():
@@ -163,6 +314,23 @@ def main():
             if path.exists():
                 tables[lang].update({(table, k): v for k, v in strings(path).items() if isinstance(v, str)})
     notes = []
+    # English texts of two or more words (the tables, the keys of Localizable.strings and the Base nibs), which a
+    # text of another language does not hold, unless that language keeps the English text as its own translation.
+    english_texts = set().union(*base_nibs.values())
+    for table in TABLES:
+        if (INTERFACES / f'en.lproj/{table}.strings').exists():
+            english_texts |= {v for v in strings(INTERFACES / f'en.lproj/{table}.strings').values() if isinstance(v, str)}
+    english_texts |= set(strings(INTERFACES / 'en.lproj/Localizable.strings'))
+    phrases = sorted({t for t in english_texts if re.fullmatch(r'[A-Za-z]+(?: [A-Za-z]+)+', t)} - shared, key=lambda t: (-len(t), t))
+    # Every language's values of each table, for the texts that languages of three families share.
+    values_of = {(table, lang): strings(INTERFACES / f'{lang}.lproj/{table}.strings')
+                 for table in TABLES for lang in LANGUAGES if (INTERFACES / f'{lang}.lproj/{table}.strings').exists()}
+    # The English texts a language keeps as its own (a value that is its English text, or an allowed word).
+    own_english = {lang: set().union(*(set(words) for words in allow.get(lang, {}).values())) for lang in LANGUAGES}
+    for (table, lang), table_values in values_of.items():
+        if (INTERFACES / f'en.lproj/{table}.strings').exists():
+            english = strings(INTERFACES / f'en.lproj/{table}.strings')
+            own_english[lang] |= {v for k, v in table_values.items() if english.get(k) == v}
     for lang in LANGUAGES:
         allowed = allow.get(lang, {})
         def report(file, text, why):
@@ -181,14 +349,34 @@ def main():
                     problems.append(f'{lang} {table}.strings: missing key {key!r}')
                     continue
                 value = values[key]
+                if table == 'InfoPlist' and (key.startswith('CF') or re.fullmatch(r'[a-z0-9]+', text)):
+                    continue  # bundle names, and file extensions that English shows as kinds too
+                if table == 'InfoPlist' and isinstance(value, str) and re.fullmatch(r'[a-z0-9]+', value):
+                    report(f'{table}.strings', value, f'a file extension where English says {text!r}:')
+                    continue
                 if not isinstance(value, str) or not WORD.search(value):
                     continue
-                if table == 'InfoPlist' and (key.startswith('CF') or re.fullmatch(r'[a-z0-9]+', value)):
-                    continue  # bundle names and file extensions shown as kinds
                 if value == text:
                     report(f'{table}.strings', value, 'English')
+                elif value.casefold() == text.casefold():
+                    report(f'{table}.strings', value, f'English in other capitals ({text!r}):')
                 elif lang in ('ja', 'ko', 'zh_CN') and not CJK.search(value):
                     report(f'{table}.strings', value, 'no CJK text')
+                elif lang not in ('ja', 'ko', 'zh_CN') and english_phrase(value):
+                    report(f'{table}.strings', value, 'English phrase')
+                else:
+                    for phrase in phrases:
+                        if phrase in own_english.get(lang, set()):
+                            continue
+                        if re.search(r'(?<![A-Za-z])' + re.escape(phrase) + r'(?![A-Za-z])', value):
+                            report(f'{table}.strings', value, f'holds the English {phrase!r}:')
+                            break
+                # The same text in languages of three or more families, where English says something else:
+                # an English wording left from an earlier version.
+                if value.casefold() != text.casefold() and value not in shared_with.get(lang, []):
+                    others = sorted(other for other in LANGUAGES if other != lang and values_of.get((table, other), {}).get(key) == value)
+                    if len({FAMILY.get(other, other) for other in others + [lang]}) >= 3:
+                        report(f'{table}.strings', value, f'same in {"/".join(others)} where English says {text!r}:')
         for nib in NIBS:
             path = INTERFACES / f'{lang}.lproj/{nib}.nib'
             if not path.exists():
@@ -216,6 +404,10 @@ def main():
                     report(f'{nib}.nib', text, 'no CJK text')
                 elif lang not in ('ja', 'ko', 'zh_CN') and len(ENGLISH.findall(text)) >= 2:
                     report(f'{nib}.nib', text, 'English phrase')
+            # No Japanese in a Korean or Chinese nib, in any string of its source or compiled variants.
+            if lang in ('ko', 'zh_CN'):
+                for text in sorted(t for t in all_strings(path) if KANA.search(t)):
+                    report(f'{nib}.nib', text, 'Japanese kana in a string:')
             base_elements, own = elements[('Base', nib)], elements[(lang, nib)]
             for key, text in sorted(own.items()):
                 if not WORD.search(text) or base_elements.get(key) in (None, text) or text in base_nibs[nib]:
