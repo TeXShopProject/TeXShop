@@ -48,5 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSStackView *)stackWithViews:(NSArray<NSView *> *)views orientation:(NSUserInterfaceLayoutOrientation)orientation;
 // The yellow warning triangle used beside settings warnings, sized for font.
 + (NSImageView *)warningSymbolForFont:(NSFont *)font;
+// Its image, for a warning drawn in a cell.
++ (nullable NSImage *)warningSymbolImageForFont:(NSFont *)font;
 @end
 NS_ASSUME_NONNULL_END

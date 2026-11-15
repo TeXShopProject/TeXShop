@@ -34,8 +34,9 @@
 #import "globals.h"
 #import "TSDialogButtonLayout.h"
 #import "TSListBottomBar.h"
-#import "TSMacroShortcutField.h"
+#import "TSShortcutKeyRecorder.h"
 #import "TSShortcutInternal.h"
+#import "TSPrefPaneLayout.h"
 #import "TSPlaceholderToken.h"
 #import "TSMacroContentTokens.h"
 #import "TSMacroContentKind.h"
@@ -278,7 +279,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		}
         [self useSystemFont];
         [self installShortcutStatus];
-        [self installShortcutField];
+        [self hideNibShortcutRows];
         [self installPlaceholderControls];
         [self layoutDialogButtons];
         [self installSidebar];
@@ -287,6 +288,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		// [window setDelegate: self];	// not necessary if it is connected in IB
 
 		[outlineView setTarget: self];
+		[outlineView setAction: @selector(listClicked:)];
 		[outlineView setDoubleAction: @selector(listDoubleClicked:)];
 		// custom text view
 		NSScrollView *scrollView = [contentTextView enclosingScrollView];
@@ -324,7 +326,6 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		[nameField setEditable: NO];
 		[contentTextView setEditable: NO];
 		self.pendingShortcutKey = @"";
-		[self syncShortcutField];
 		[self syncPlaceholderControls];
 		[testButton setEnabled: NO];
 		[deleteButton setEnabled: NO];
@@ -380,10 +381,34 @@ static TSFilterMode savedFilter = kNoFilterMode;
         [window setFrame:windowFrame display:NO];
     }
     self.shortcutStatus = status;
-    self.shortcutStatus.frame = NSMakeRect(20, statusY, NSWidth(host.bounds)-40, statusHeight);
+    // The message says why a key was refused or a shortcut is inactive, as the warnings of Settings ›
+    // Keyboard say it: after the yellow warning triangle, in the label color.
+    self.shortcutStatus.textColor = NSColor.labelColor;
+    NSImageView *mark = [TSPrefPaneLayout warningSymbolForFont:status.font];
+    mark.identifier = @"macro.shortcut.warning";
+    mark.hidden = YES;
+    mark.autoresizingMask = NSViewMaxXMargin | NSViewMaxYMargin;
+    self.shortcutStatusMark = mark;
+    [self layoutShortcutStatusInBand:NSMakeRect(20, statusY, NSWidth(host.bounds)-40, statusHeight)];
     self.shortcutStatus.autoresizingMask = NSViewWidthSizable | NSViewMaxYMargin;
-    self.shortcutStatus.textColor = NSColor.secondaryLabelColor;
     [host addSubview:self.shortcutStatus];
+    [host addSubview:mark];
+}
+
+// Between the warning triangle and the message, as in the warnings of Settings.
+static const CGFloat TSMacroWarningSpacing = 4;
+// The triangle where the message would begin, the message after it; the lines that follow begin under its first.
+- (void)layoutShortcutStatusInBand:(NSRect)band
+{
+    NSTextField *label = self.shortcutStatus;
+    NSImageView *mark = self.shortcutStatusMark;
+    NSRect text = [label alignmentRectForFrame:band];
+    NSSize size = mark.intrinsicContentSize;
+    mark.frame = [mark frameForAlignmentRect:NSMakeRect(NSMinX(text), 0, size.width, size.height)];
+    text.origin.x += size.width + TSMacroWarningSpacing;
+    text.size.width -= size.width + TSMacroWarningSpacing;
+    label.frame = [label frameForAlignmentRect:text];
+    [self alignShortcutStatusMark];
 }
 
 // At first as wide as the sidebar of the Multiple Replace window.
@@ -499,7 +524,7 @@ static const NSSize TSMacroContentsInset = {8, 8};
         if (contentsName.length) contentTextView.accessibilityLabel = contentsName;
     }
     NSRect status = self.shortcutStatus.frame;
-    self.shortcutStatus.frame = NSMakeRect(TSDialogMargin, NSMinY(status), width - 2 * TSDialogMargin, NSHeight(status));
+    [self layoutShortcutStatusInBand:NSMakeRect(TSDialogMargin, NSMinY(status), width - 2 * TSDialogMargin, NSHeight(status))];
     self.editorView = main;
     // The buttons as the Multiple Replace window's: AppKit's own style at its own height, 20
     // points above the bottom edge. Save is the default button (Return), Cancel takes
@@ -538,6 +563,18 @@ static const NSSize TSMacroContentsInset = {8, 8};
     [rows tableColumnWithIdentifier:@"Name"].editable = YES;
     [rows tableColumnWithIdentifier:@"Key"].editable = NO;
     __weak TSMacroEditor *weakSelf = self;
+    // The field a shortcut is recorded in, over the item's shortcut (beginRecordingShortcutAtRow:): ⊖ removes
+    // the shortcut, and a click elsewhere ends the recording.
+    TSShortcutRecordingCell *recording = [TSShortcutRecordingCell new];
+    recording.recorder.removeButton.target = self;
+    recording.recorder.removeButton.action = @selector(removeRecordedShortcut:);
+    recording.recorder.resigned = ^{ [weakSelf finishShortcutRecordingFocusingList:NO]; };
+    self.recordingCell = recording;
+    // Wide enough for the longest shortcut, ⊖ and the triangle.
+    CGFloat recordingWidth = 0;
+    for (NSString *longest in @[@"⌃⌥⇧⌘F20", @"⌃⌥⇧⌘W", @"⌃⌥⇧⌘M"])
+        recordingWidth = MAX(recordingWidth, [TSShortcutRecordingCell widthForShortcut:longest]);
+    ((TSMacroOutlineView *)rows).recordingWidth = recordingWidth;
     self.contentsKeyMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskKeyDown handler:^NSEvent *(NSEvent *event) {
         return weakSelf ? [weakSelf keyForContents:event] : event;
     }];
@@ -548,13 +585,18 @@ static const NSSize TSMacroContentsInset = {8, 8};
 // - in the list, Return and Enter start renaming the selected item, and Escape does nothing;
 // - while an item is renamed, Return and Enter keep the new name, Escape keeps the old one;
 // - in the contents, Return and Enter start a new line and Escape completes.
-// Elsewhere (the shortcut field when it does not wait for keys, Insert, the buttons) Return
-// saves and Escape cancels. Save also takes Command-S (saveDocument:).
+// Elsewhere (Insert, the buttons) Return saves and Escape cancels. Save also takes Command-S
+// (saveDocument:). While a shortcut is recorded, every key goes to the recording first, Command-S,
+// Command-W and Command-Q too (handleShortcutRecordingEvent:).
 - (NSEvent *)keyForContents:(NSEvent *)event
 {
     NSWindow *editor = window;
     NSResponder *responder = editor.firstResponder;
     if (event.type != NSEventTypeKeyDown || event.windowNumber != editor.windowNumber) return event;
+    if (self.recordingItem && responder == self.recordingCell.recorder) {
+        [self handleShortcutRecordingEvent:event];
+        return nil;
+    }
     // Any key cancels the renaming that a second click on a name would start.
     [self cancelPendingListRename];
     if (event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagControl)) return event;
@@ -616,13 +658,13 @@ static const NSSize TSMacroContentsInset = {8, 8};
 {
     [self cancelPendingListRename];
     [self stopKeyMonitor];
-    [self.shortcutField endRecording];
+    [self endShortcutRecording];
     [self.placeholdersPopover close];
     self.placeholdersPopover = nil;
-    self.shortcutStatus = nil;
+    self.shortcutStatus = nil; self.shortcutStatusMark = nil;
     self.sidebar = nil; self.listBar = nil; self.editorView = nil;
     self.insertPlaceholderButton = nil; self.placeholdersButton = nil;
-    self.shortcutLabel = nil; self.shortcutField = nil;
+    self.recordingCell = nil;
     self.pendingShortcutKey = @"";
 }
 // The line of a separator in the list, as the lines of menus are now.
@@ -678,99 +720,216 @@ static void TSSendButtonAction(NSButton *button)
     TSSendButtonAction(button);
     if (button == submenuButton) [self beginRenamingSelectedItem];
 }
-// The shortcut is set as in Settings > Keyboard: a click on the field and the keys
-// pressed. It takes the two rows of the nib's key field and its Shift, Option and
-// Control boxes, which stay hidden; the contents above take the row it frees.
-- (void)installShortcutField
+// The shortcut is recorded in the list (beginRecordingShortcutAtRow:): the nib's key field, its Shift,
+// Option and Control boxes and their labels stay hidden, and the contents take their rows, down to the
+// bottom of the field the shortcut had there; the row of Insert comes below the contents.
+- (void)hideNibShortcutRows
 {
-    if (self.shortcutField) return;
+    if ([keyField isHidden]) return;
     NSView *host = [window contentView];
     NSArray<NSView *> *controls = @[keyField, shiftCheckBox, optionCheckBox, controlCheckBox];
     NSRect upper = NSInsetRect([keyField frame], 0, -4), lower = NSInsetRect([shiftCheckBox frame], 0, -4);
     NSMutableArray<NSView *> *hidden = [controls mutableCopy];
-    NSTextField *keyLabel = nil, *nameLabel = nil;
-    CGFloat leading = NSMinX([nameField frame]) - 3, nameGap = CGFLOAT_MAX;
     for (NSView *view in host.subviews) {
         if (![view isKindOfClass:NSTextField.class] || [controls containsObject:view] || [(NSTextField *)view isEditable]) continue;
         NSRect frame = view.frame;
         if (NSMinX(frame) < NSMinX([nameField frame]) - 12) continue; // the right column only
-        BOOL keyRow = NSMinY(frame) < NSMaxY(upper) && NSMaxY(frame) > NSMinY(upper);
-        if (keyRow || (NSMinY(frame) < NSMaxY(lower) && NSMaxY(frame) > NSMinY(lower))) {
+        if ((NSMinY(frame) < NSMaxY(upper) && NSMaxY(frame) > NSMinY(upper)) || (NSMinY(frame) < NSMaxY(lower) && NSMaxY(frame) > NSMinY(lower)))
             [hidden addObject:view];
-            if (keyRow && NSMaxX(frame) <= NSMinX([keyField frame]) + 1) keyLabel = (NSTextField *)view;
-            leading = MIN(leading, NSMinX(frame));
-        }
-        // The name's label is right above the name field.
-        CGFloat gap = NSMinY(frame) - NSMaxY([nameField frame]);
-        if (gap > -4 && gap < nameGap) { nameGap = gap; nameLabel = (NSTextField *)view; }
     }
     for (NSView *view in hidden) view.hidden = YES;
-    // "Shortcut" with the colon of the name's label, as this language writes it (Name:, Nom :, 項目名：).
-    NSString *name = nameLabel.stringValue ?: @"";
-    NSRange last = [name rangeOfCharacterFromSet:[[NSCharacterSet characterSetWithCharactersInString:@":：  "] invertedSet] options:NSBackwardsSearch];
-    NSString *suffix = last.location == NSNotFound || NSMaxRange(last) >= name.length ? @":" : [name substringFromIndex:NSMaxRange(last)];
-    NSTextField *label = [NSTextField labelWithString:[NSLocalizedString(@"Shortcut", @"") stringByAppendingString:suffix]];
-    if (keyLabel.font) label.font = keyLabel.font;
-    [label sizeToFit];
-    // At least as tall as a text field is now (the nibs' are 22 points).
+    // The field was as tall as a text field is now (the nibs' are 22 points), in the middle of the boxes' row.
     CGFloat middle = NSMidY([shiftCheckBox frame]), height = MAX(NSHeight([keyField frame]), [NSTextField textFieldWithString:@""].fittingSize.height);
-    // At the leading edge of the name's label, as the other labels of the column.
-    if (nameLabel) leading = NSMinX(nameLabel.frame);
-    label.frame = NSMakeRect(leading, round(middle - NSHeight(label.frame) / 2), NSWidth(label.frame), NSHeight(label.frame));
-    TSMacroShortcutField *field = [[TSMacroShortcutField alloc] initWithFrame:NSMakeRect(NSMaxX(label.frame) + 8, round(middle - height / 2), 150, height)
-        model:keyField placeholder:NSLocalizedString(@"Press a key", @"") clearTitle:NSLocalizedString(@"Remove Shortcut", @"")];
-    NSRect frame = field.frame;
-    frame.size.width = MIN(MAX(150, field.minimumWidth), NSMaxX([nameField frame]) - NSMinX(frame));
-    field.frame = frame;
-    field.identifier = @"macro.shortcut";
-    field.accessibilityLabel = NSLocalizedString(@"Shortcut", @"");
-    label.autoresizingMask = field.autoresizingMask = [shiftCheckBox autoresizingMask];
-    __weak TSMacroEditor *weakSelf = self;
-    field.recordEvent = ^BOOL(NSEvent *event) { return [weakSelf recordShortcutEvent:event]; };
-    field.clearShortcut = ^{ [weakSelf setPendingShortcut:@""]; };
-    [host addSubview:label];
-    [host addSubview:field];
-    // The contents take the row above, which the shortcut no longer needs, and keep
-    // the gap they had above the key field (at least 8 points).
+    CGFloat bottom = round(middle - height / 2);
     NSScrollView *contents = [contentTextView enclosingScrollView];
-    NSRect contentsFrame = contents.frame;
-    CGFloat gap = MAX(8, NSMinY(contentsFrame) - NSMaxY([keyField frame]));
-    CGFloat freed = NSMinY(contentsFrame) - (NSMaxY(field.frame) + gap);
-    if (freed > 0) { contentsFrame.origin.y -= freed; contentsFrame.size.height += freed; }
-    contents.frame = contentsFrame;
-    // The field takes the key field's place between the contents and the buttons.
+    NSRect frame = contents.frame;
+    if (NSMinY(frame) > bottom) { frame.size.height += NSMinY(frame) - bottom; frame.origin.y = bottom; }
+    contents.frame = frame;
+    // The key view loop goes past the hidden controls.
     NSView *next = [keyField nextKeyView];
     for (NSUInteger guard = 0; next && [hidden containsObject:next] && guard < 8; guard++) next = [next nextKeyView];
     NSMutableArray<NSView *> *pending = [host.subviews mutableCopy];
     while (pending.count) {
         NSView *view = pending.lastObject; [pending removeLastObject];
         [pending addObjectsFromArray:view.subviews];
-        if (view.nextKeyView == keyField) view.nextKeyView = field;
+        if (view.nextKeyView == keyField) view.nextKeyView = next;
     }
-    field.nextKeyView = next;
-    self.shortcutLabel = label; self.shortcutField = field;
-    // The smallest window keeps the field within the name field's right edge.
-    NSSize smallest = [window minSize];
-    smallest.width = MAX(smallest.width, NSWidth([window frame]) - (NSMaxX([nameField frame]) - NSMaxX(field.frame)));
-    [window setMinSize:smallest];
-    [self syncShortcutField];
 }
-// The field shows the shortcut being edited; only a macro (not a submenu or a separator) has one.
-- (void)syncShortcutField
+// BEGIN shortcut recording
+// A macro's shortcut is recorded in its own cell of the list, as the menu shortcuts are in Settings ›
+// Keyboard: a click on the shortcut of the item that was selected alone, a double click on a shortcut, or
+// VoiceOver's press on it starts; the key pressed becomes the shortcut at once, unless it cannot be one or
+// another command uses it. Separators and submenus have no shortcut.
+- (BOOL)beginRecordingShortcutForItem:(TSMacroTreeNode *)item
 {
-    self.shortcutField.enabled = self.previousItem.isStandardItem;
-    self.shortcutField.shortcut = getMenuItemString(self.pendingShortcutKey ?: @"");
-    self.shortcutLabel.textColor = self.shortcutField.enabled ? NSColor.labelColor : NSColor.disabledControlTextColor;
+    return [self beginRecordingShortcutAtRow:item ? [outlineView rowForItem:item] : -1];
 }
-// A key pressed in the field: Command or Control with a key, or F1–F20, as in Settings.
-- (BOOL)recordShortcutEvent:(NSEvent *)event
+- (BOOL)beginRecordingShortcutAtRow:(NSInteger)row
 {
-    if (!self.previousItem.isStandardItem) return NO;
-    TSShortcutBinding *binding = TSRecordedBinding(event, [event charactersByApplyingModifiers:0]);
-    if (binding.key.length != 1 || ![TSShortcutStore isAllowedKey:binding.key modifiers:binding.modifiers]) return NO;
-    [self setPendingShortcut:getStringFormKeyEquivalentWithModifiers(binding.key, binding.modifiers)];
+    TSMacroOutlineView *rows = outlineView;
+    TSMacroTreeNode *item = row >= 0 && row < [rows numberOfRows] ? [rows itemAtRow:row] : nil;
+    TSShortcutKeyRecorder *recorder = self.recordingCell.recorder;
+    if (![item isKindOfClass:TSMacroTreeNode.class] || !item.isStandardItem || recorder == nil || window == nil || [window attachedSheet]) return NO;
+    [self cancelPendingListRename];
+    if (self.recordingItem != item) {
+        [self endShortcutRecording];
+        // A renaming in the list ends first, keeping the name typed.
+        if ([rows currentEditor] && ![window makeFirstResponder:rows]) return NO;
+        if ([rows numberOfSelectedRows] != 1 || [rows selectedRow] != row)
+            [rows selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)row] byExtendingSelection:NO];
+        if (self.previousItem != item) return NO;
+        self.recordingItem = item; self.recordingError = nil; self.refusedShortcutKey = nil;
+        [self updateShortcutRecorder];
+        rows.recordingItem = item;
+        rows.recordingView = self.recordingCell;
+        [rows setNeedsDisplayInRect:[rows rectOfRow:row]];
+        [rows scrollRowToVisible:row];
+    }
+    [window makeFirstResponder:recorder];
+    if ([window firstResponder] != recorder) { [self endShortcutRecording]; return NO; }
+    [self updateShortcutStatus];
     return YES;
 }
+// Ends the recording and keeps the shortcut as it is now; the list takes the focus the field had.
+- (void)endShortcutRecording { [self finishShortcutRecordingFocusingList:YES]; }
+- (void)finishShortcutRecordingFocusingList:(BOOL)focusList
+{
+    TSMacroTreeNode *item = self.recordingItem;
+    if (item == nil || self.endingShortcutRecording) return;
+    self.endingShortcutRecording = YES;
+    self.recordingItem = nil; self.recordingError = nil; self.refusedShortcutKey = nil;
+    if (focusList) {
+        if ([window firstResponder] == self.recordingCell.recorder) [window makeFirstResponder:outlineView];
+        [self removeShortcutRecorderOfItem:item];
+    } else {
+        // The field is giving up the focus to a click elsewhere: it leaves the row once the focus has moved.
+        __weak TSMacroEditor *weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            TSMacroEditor *strongSelf = weakSelf;
+            if (strongSelf != nil && strongSelf.recordingItem != item) [strongSelf removeShortcutRecorderOfItem:item];
+        });
+    }
+    self.endingShortcutRecording = NO;
+    [self updateShortcutStatus];
+}
+// The row shows its shortcut again; the field leaves the list unless it records another item's by now.
+- (void)removeShortcutRecorderOfItem:(TSMacroTreeNode *)item
+{
+    TSMacroOutlineView *rows = outlineView;
+    if (rows.recordingItem == item) { rows.recordingView = nil; rows.recordingItem = nil; }
+    NSInteger row = [rows rowForItem:item];
+    if (row >= 0) [rows setNeedsDisplayInRect:[rows rectOfRow:row]];
+}
+// Another selection ends the recording and keeps the shortcut.
+- (void)endShortcutRecordingUnlessSelected
+{
+    TSMacroTreeNode *item = self.recordingItem;
+    NSArray *selected = [outlineView allSelectedItems];
+    if (item && !(selected.count == 1 && selected.firstObject == item)) [self endShortcutRecording];
+}
+// A click on the shortcut of the item that was selected alone records a new one; a click on another
+// item only selects it, as in Settings › Keyboard and Xcode.
+- (void)listClicked:(id)sender
+{
+    TSMacroOutlineView *rows = outlineView;
+    NSInteger row = [rows clickedRow];
+    if (row < 0 || row != rows.rowSelectedAtMouseDown || [rows clickedColumn] != [rows columnWithIdentifier:@"Key"]) return;
+    if ([rows numberOfSelectedRows] != 1 || [rows selectedRow] != row) return;
+    [self beginRecordingShortcutAtRow:row];
+}
+// While recording: Escape and Return end it and keep the shortcut, Tab moves on, Delete removes the
+// shortcut; any other key may become it.
+- (void)handleShortcutRecordingEvent:(NSEvent *)event
+{
+    NSString *key = event.charactersIgnoringModifiers;
+    unichar c = key.length == 1 ? [key characterAtIndex:0] : 0;
+    NSEventModifierFlags flags = event.modifierFlags & TSShortcutModifiers;
+    if (!flags && (c == 27 || c == '\r' || c == 3)) { [self endShortcutRecording]; return; }
+    if ((c == '\t' || c == 25) && !(flags & ~NSEventModifierFlagShift)) {
+        NSWindow *editor = window;
+        [self endShortcutRecording];
+        if (c == 25 || (flags & NSEventModifierFlagShift)) [editor selectPreviousKeyView:nil]; else [editor selectNextKeyView:nil];
+        return;
+    }
+    if (!flags && (c == 127 || c == 8 || c == NSDeleteFunctionKey)) { [self removeRecordedShortcut:nil]; return; }
+    [self recordShortcutEvent:event];
+}
+// ⊖ in the field, and Delete.
+- (IBAction)removeRecordedShortcut:(id)sender
+{
+    if (self.recordingItem == nil) return;
+    [self endShortcutRecording];
+    [self setPendingShortcut:@""];
+}
+// A key pressed while recording: Command or Control with a key, or F1–F20, as in Settings, that no menu
+// command and no other macro uses, becomes the shortcut and ends the recording. Another key is refused
+// with the reason below the contents, and the recording goes on.
+- (BOOL)recordShortcutEvent:(NSEvent *)event
+{
+    TSMacroTreeNode *item = self.recordingItem;
+    if (!item.isStandardItem || self.previousItem != item) return NO;
+    TSShortcutBinding *binding = TSRecordedBinding(event, [event charactersByApplyingModifiers:0]);
+    if (binding.key.length != 1 || ![TSShortcutStore isAllowedKey:binding.key modifiers:binding.modifiers]) {
+        self.refusedShortcutKey = nil;
+        [self showShortcutRecordingError:NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.", @"")];
+        return NO;
+    }
+    NSString *shortcut = getStringFormKeyEquivalentWithModifiers(binding.key, binding.modifiers);
+    NSString *conflict = [self shortcutConflictForEvent:event];
+    if (conflict) {
+        self.refusedShortcutKey = shortcut;
+        [self showShortcutRecordingError:conflict];
+        return NO;
+    }
+    [self endShortcutRecording];
+    [self setPendingShortcut:shortcut];
+    return YES;
+}
+// Who else uses the key pressed, as Settings › Keyboard says it: menu commands whose keys work (those
+// that make a macro's shortcut inactive, TSShortcutStore's conflictsForMacroShortcuts:), and the other
+// macros of the list (Macros › …); nil when no one does.
+- (NSString *)shortcutConflictForEvent:(NSEvent *)event
+{
+    NSArray<TSShortcutBinding *> *bindings = TSEventBindings(event, [event charactersByApplyingModifiers:0]);
+    TSShortcutStore *store = [TSKeyboardShortcuts sharedController].store;
+    NSMutableArray *nodes = [NSMutableArray array], *candidates = [NSMutableArray array];
+    [self collectShortcutCandidates:[outlineController rootOfTree] path:NSLocalizedString(@"Macros", @"") nodes:nodes candidates:candidates];
+    NSMutableOrderedSet<NSString *> *users = [NSMutableOrderedSet orderedSet];
+    for (TSShortcutBinding *binding in bindings) {
+        for (TSShortcutMatch *match in [store menuMatchesKey:binding.key modifiers:binding.modifiers excluding:nil])
+            if (!match.menuItem.hidden || match.menuItem.allowsKeyEquivalentWhenHidden) [users addObject:match.path];
+        for (NSUInteger index = 0; index < candidates.count; index++) {
+            NSDictionary *candidate = candidates[index];
+            if (nodes[index] != self.recordingItem && [TSBinding(candidate[@"key"], [candidate[@"modifiers"] unsignedIntegerValue]) isEqual:binding])
+                [users addObject:candidate[@"path"]];
+        }
+    }
+    if (users.count == 0) return nil;
+    if (users.count == 1) return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), users.firstObject];
+    return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by:\n%@", @""), [users.array componentsJoinedByString:@"\n"]];
+}
+// The reason under the contents and the triangle in the field's cell; VoiceOver reads the reason.
+- (void)showShortcutRecordingError:(NSString *)error
+{
+    self.recordingError = error;
+    [self updateShortcutRecorder];
+    [self updateShortcutStatus];
+    if ([window isKeyWindow])
+        NSAccessibilityPostNotificationWithUserInfo(self.recordingCell.recorder, NSAccessibilityAnnouncementRequestedNotification,
+            @{NSAccessibilityAnnouncementKey: error, NSAccessibilityPriorityKey: @(NSAccessibilityPriorityHigh)});
+}
+// The field shows the shortcut, or the refused key another command uses; empty for a macro without one
+// (the list shows nothing either). ⊖ only while the macro has a shortcut to remove.
+- (void)updateShortcutRecorder
+{
+    TSMacroTreeNode *item = self.recordingItem;
+    if (item == nil) return;
+    NSString *current = (self.previousItem == item ? self.pendingShortcutKey : item.key) ?: @"";
+    self.recordingCell.recorder.shortcut = getMenuItemString(self.refusedShortcutKey ?: current);
+    self.recordingCell.recorder.removeButton.hidden = current.length == 0;
+    self.recordingCell.warning.hidden = self.recordingError == nil;
+}
+// END shortcut recording
 - (void)setPendingShortcut:(NSString *)key
 {
     if (!self.previousItem.isStandardItem) return;
@@ -989,6 +1148,36 @@ static void TSSendButtonAction(NSButton *button)
     }
 }
 
+// BEGIN shortcut status
+// The triangle on the message's first line (layoutShortcutStatusInBand: puts it before the message): its
+// baseline on the line's, as the warnings of Settings line them up (NSStackView's first baselines).
+- (void)alignShortcutStatusMark
+{
+    NSTextField *label = self.shortcutStatus;
+    NSImageView *mark = self.shortcutStatusMark;
+    if (label == nil || mark == nil) return;
+    NSRect text = [label alignmentRectForFrame:label.frame];
+    NSSize size = mark.intrinsicContentSize;
+    CGFloat baseline = NSMaxY(text) - label.firstBaselineOffsetFromTop;
+    NSRect rect = NSMakeRect(NSMinX([mark alignmentRectForFrame:mark.frame]),
+                             baseline + mark.firstBaselineOffsetFromTop - size.height, size.width, size.height);
+    mark.frame = [mark frameForAlignmentRect:rect];
+}
+// Below the contents: why the key pressed while recording was refused, otherwise why the selected
+// macro's shortcut is inactive; nothing, not even the triangle, when there is no reason.
+- (void)updateShortcutStatus
+{
+    NSString *message = self.recordingItem ? self.recordingError : nil;
+    [self showShortcutStatus:message ?: [self shortcutConflictForNode:self.previousItem]];
+}
+- (void)showShortcutStatus:(NSString *)message
+{
+    self.shortcutStatus.stringValue = message ?: @"";
+    self.shortcutStatusMark.hidden = message.length == 0;
+    [self alignShortcutStatusMark];
+}
+// END shortcut status
+
 - (void)updatePendingShortcutStatus
 {
     if (!self.previousItem.isStandardItem) return;
@@ -1018,8 +1207,7 @@ static void TSSendButtonAction(NSButton *button)
     self.shortcutConflicts = [NSMapTable strongToStrongObjectsMapTable];
     for (NSDictionary *conflict in conflicts)
         [self.shortcutConflicts setObject:[TSShortcutStore reasonForMacroConflict:conflict] forKey:nodes[[conflict[@"index"] unsignedIntegerValue]]];
-    self.shortcutStatus.stringValue = [self shortcutConflictForNode:self.previousItem] ?: @"";
-    self.shortcutStatus.toolTip = self.shortcutStatus.stringValue;
+    [self updateShortcutStatus];
     // Repaint cells without rebuilding the tree or changing its current selection.
     [outlineView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [outlineView numberOfRows])]
                           columnIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [outlineView numberOfColumns])]];
@@ -1096,7 +1284,8 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
     for (TSMacroTreeNode *parent = node.nodeParent; parent; parent = parent.nodeParent) [parents addObject:parent];
     for (TSMacroTreeNode *parent in parents.reverseObjectEnumerator) [outlineView expandItem:parent];
     [outlineView selectItems:@[node] byExtendingSelection:NO];
-    [self reflectChangesInEditor:YES]; [self.shortcutField beginRecording];
+    // Back to the list, recording a new shortcut for the first of them.
+    [self reflectChangesInEditor:YES]; [self beginRecordingShortcutForItem:node];
     return NO;
 }
 
@@ -1153,12 +1342,17 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 	[self savePressed:sender];
 }
 
-// A double click runs a macro (Test) and opens or closes a submenu; it does not rename
-// (a second, slower click on the name does, as in Finder).
+// A double click on a macro's shortcut records a new one; elsewhere a double click runs a macro
+// (Test) and opens or closes a submenu. It does not rename (a second, slower click on the name
+// does, as in Finder).
 - (void)listDoubleClicked:(id)sender
 {
 	NSInteger row = [outlineView clickedRow];
 	TSMacroTreeNode *item = row >= 0 ? [outlineView itemAtRow:row] : nil;
+	if ([item isStandardItem] && [outlineView clickedColumn] == [outlineView columnWithIdentifier:@"Key"]) {
+		[self beginRecordingShortcutAtRow:row];
+		return;
+	}
 	if ([item isGroup]) {
 		if ([outlineView isItemExpanded:item]) [outlineView collapseItem:item];
 		else [outlineView expandItem:item];
@@ -1198,8 +1392,8 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 	contentTouched = YES;
 }
 
-// The nib's key field and Shift/Option/Control boxes are hidden: the shortcut field
-// takes their place (installShortcutField). Their actions stay for the nibs' connections.
+// The nib's key field and Shift/Option/Control boxes are hidden: the shortcut is recorded in
+// the list (hideNibShortcutRows). Their actions stay for the nibs' connections.
 - (IBAction)keyFieldAction:(id)sender
 {
 }
@@ -1216,6 +1410,7 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 // a method called on "Selection changed" notification
 - (void)outlineViewSelectionChanged: (NSNotification *)note
 {
+	[self endShortcutRecordingUnlessSelected];
 	[self reflectChangesInEditor: NO];
 }
 
@@ -1223,6 +1418,7 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
 - (void)outlineViewItemsChanged: (NSNotification *)note
 {
 	dataTouched = YES;	// user may have changed the order or dropped an item
+    [self endShortcutRecording];
     [self refreshShortcutConflicts];
 }
 
@@ -1287,7 +1483,6 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
     else
         self.previousItem = nil;
 //	self.previousItem = (newItem)?[newItem retain]:nil;
-	[self syncShortcutField];
 	[self syncPlaceholderControls];
 	nameTouched = NO;
 	contentTouched = NO;

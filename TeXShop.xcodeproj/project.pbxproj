@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		2319C1143559AA364726B686 /* TSMacroContentTokens.m in Sources */ = {isa = PBXBuildFile; fileRef = A416D39112908450597128E6 /* TSMacroContentTokens.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		C69C962943C84891A9D4A517 /* TSPlaceholderToken.m in Sources */ = {isa = PBXBuildFile; fileRef = E517448419B1AE5EE15D8A27 /* TSPlaceholderToken.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		4CE936E95067E603FEDC8357 /* TSMacroShortcutField.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D5E0A836A0E6E7EA6CBF8E8 /* TSMacroShortcutField.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		8C4C480943627392332351CF /* TSListBottomBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 186AA1C2E05E995AA9E7AE85 /* TSListBottomBar.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		FA4642139FF362346A674FF5 /* TSAdvancedFindController+MultipleReplace.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EA30567B06FD1BA89176E55 /* TSAdvancedFindController+MultipleReplace.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		FD453ED734C26F5EAAF40FE3 /* TSMultipleReplaceLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = A97846D41CA596CF8F893971 /* TSMultipleReplaceLibrary.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
@@ -428,8 +427,6 @@
 		A416D39112908450597128E6 /* TSMacroContentTokens.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMacroContentTokens.m; sourceTree = "<group>"; };
 		5FF4987736A8FFE348FDE345 /* TSPlaceholderToken.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPlaceholderToken.h; sourceTree = "<group>"; };
 		E517448419B1AE5EE15D8A27 /* TSPlaceholderToken.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPlaceholderToken.m; sourceTree = "<group>"; };
-		0745FD2015898714572C469E /* TSMacroShortcutField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMacroShortcutField.h; sourceTree = "<group>"; };
-		4D5E0A836A0E6E7EA6CBF8E8 /* TSMacroShortcutField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMacroShortcutField.m; sourceTree = "<group>"; };
 		4FECA7E6A4562DD30C5D2E0D /* TSListBottomBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSListBottomBar.h; sourceTree = "<group>"; };
 		186AA1C2E05E995AA9E7AE85 /* TSListBottomBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSListBottomBar.m; sourceTree = "<group>"; };
 		5F2E5F32D20D36A3DDA91CC3 /* TSAdvancedFindController+MultipleReplace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TSAdvancedFindController+MultipleReplace.h"; sourceTree = "<group>"; };
@@ -1355,8 +1352,6 @@
 				A2A0000100000000000000C2 /* TSMacroContentKind.m */,
 				4077C62203C7FAE800000009 /* TSMacroEditor.h */,
 				4077C62303C7FAE800000009 /* TSMacroEditor.m */,
-				0745FD2015898714572C469E /* TSMacroShortcutField.h */,
-				4D5E0A836A0E6E7EA6CBF8E8 /* TSMacroShortcutField.m */,
 				5FFE9532AD27014213EA0D40 /* TSMacroContentTokens.h */,
 				A416D39112908450597128E6 /* TSMacroContentTokens.m */,
 				4077C62403C7FAE800000009 /* TSMacroMenuController.h */,
@@ -2261,7 +2256,6 @@
 				40356AD11F8D157F0093399B /* synctex_parser_old.c in Sources */,
 				4016DD872109FC6200745019 /* TSColorSupport.m in Sources */,
 				4078818B0519249A006979EA /* TSMacroEditor.m in Sources */,
-				4CE936E95067E603FEDC8357 /* TSMacroShortcutField.m in Sources */,
 				2319C1143559AA364726B686 /* TSMacroContentTokens.m in Sources */,
 				4078818C0519249A006979EA /* TSMacroMenuController.m in Sources */,
 				A2A0000100000000000000C3 /* TSMacroContentKind.m in Sources */,

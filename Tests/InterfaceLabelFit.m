@@ -11,29 +11,43 @@
 #include "ProductionLayout.inc"
 #import "TSMacroEditor.h"
 #import "TSListBottomBar.h"
-#import "TSMacroShortcutField.h"
+#import "TSShortcutKeyRecorder.h"
+#import "TSPrefPaneLayout.h"
 #import "TSMacroMenuController.h"
 #import "TSShortcutInternal.h"
 #import "TSPlaceholderToken.h"
 #import "TSMacroContentKind.h"
 #import "TSSyntaxMacroContentScanner.h"
 
-// The macro editor adds its status line, shortcut field and placeholder row, lays
+// The macro editor adds its status line and placeholder row, hides the nib's shortcut rows, lays
 // out its buttons and puts its list in a sidebar after loading; MacroEditorLayout.inc is that code, copied
 // from its source.
+// The list as far as the editor's layout and recording of a shortcut ask of it.
+@interface TSMacroOutlineView : NSOutlineView
+@property (nonatomic) NSInteger rowSelectedAtMouseDown;
+@property (nonatomic, strong) id recordingItem;
+@property (nonatomic, strong) NSView *recordingView;
+@property (nonatomic) CGFloat recordingWidth;
+@end
+@interface NSOutlineView (MyExtensions)
+- (NSArray *)allSelectedItems;
+@end
+@interface TSMacroOutlineController : NSObject
+- (id)rootOfTree;
+@end
 @implementation TSMacroEditor
 #include "MacroEditorLayout.inc"
 - (void)setValue:(id)v forUndefinedKey:(NSString *)k {}
-// What the shortcut field asks of the rest of the editor, which these checks leave out.
+// What the recording of a shortcut asks of the rest of the editor, which these checks leave out.
 - (void)updatePendingShortcutStatus {}
 - (void)reflectChangesInEditor:(BOOL)force {}
+- (NSString *)shortcutConflictForNode:(TSMacroTreeNode *)node { return nil; }
 @end
-@interface TSMacroOutlineController : NSObject @end
 @implementation TSMacroOutlineController
+- (id)rootOfTree { return nil; }
 - (void)setValue:(id)v forUndefinedKey:(NSString *)k {}
 - (NSInteger)outlineView:(NSOutlineView *)view numberOfChildrenOfItem:(id)item { return 0; }
 @end
-@interface TSMacroOutlineView : NSOutlineView @end
 @implementation TSMacroOutlineView @end
 
 int main(int argc, char **argv) { @autoreleasepool {
@@ -66,7 +80,7 @@ int main(int argc, char **argv) { @autoreleasepool {
         NSApp.mainMenu = nil;
         if (macroEditor) {
             TSMacroEditor *editor = owner;
-            [editor installShortcutStatus]; [editor installShortcutField]; [editor installPlaceholderControls]; [editor layoutDialogButtons]; [editor installSidebar];
+            [editor installShortcutStatus]; [editor hideNibShortcutRows]; [editor installPlaceholderControls]; [editor layoutDialogButtons]; [editor installSidebar];
         } else ApplyProductionLayout(name, owner, objects);
         for (id o in objects) {
             if ([o isKindOfClass:NSWindow.class]) {
