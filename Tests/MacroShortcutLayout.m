@@ -162,6 +162,47 @@ static CGFloat SetListFirstRowGap(void) {
     panel.releasedWhenClosed=NO; [panel close];
     return gap;
 }
+// Whether AppKit draws its focus ring around a list's scroll view while the list has the focus (an offscreen image
+// does not get it; WritePNG draws it where AppKit would). AppKit draws it around the scroll view of a list of cells and
+// of a list of an old nib, as the macro editor's, unless the list's focus ring type is none; around a list of views
+// made in code, as the sets of the Multiple Replace window, the ring of the list itself, outside its visible part, is
+// clipped by the scroll view and never seen. Without AppKit's private methods, the focus ring type alone.
+static BOOL AppKitSays(NSView *view, NSString *name, BOOL otherwise) {
+    SEL selector=NSSelectorFromString(name);
+    return [view respondsToSelector:selector] ? ((BOOL(*)(id,SEL))objc_msgSend)(view,selector) : otherwise;
+}
+static BOOL DrawsFocusRingAroundList(NSTableView *table) {
+    SEL effective=NSSelectorFromString(@"_effectiveFocusRingType");
+    NSFocusRingType type=[table respondsToSelector:effective] ? ((NSFocusRingType(*)(id,SEL))objc_msgSend)(table,effective) : table.focusRingType;
+    if(type==NSFocusRingTypeNone) return NO;
+    return AppKitSays(table,@"_willDrawFocusRingAroundEnclosingScrollView",YES) || AppKitSays(table,@"_hasLegacyExternalFocusRingThatWasNormallyDrawnManually",NO);
+}
+@interface TSFocusRingSets : NSObject <NSTableViewDataSource,NSTableViewDelegate> @end
+@implementation TSFocusRingSets
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView { return 2; }
+- (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)column row:(NSInteger)row { return [NSTextField labelWithString:@"Set"]; }
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)column row:(NSInteger)row { return @"Set"; }
+@end
+// No focus ring around the sidebar while the list has the focus, as around the sets of the Multiple Replace window:
+// the selection shows the focus. Beside it, in the same window, a list of cells with AppKit's ring and a list of views
+// as the sets', without one, show that the decision checked is AppKit's own.
+static void CheckSidebarFocusRing(TSMacroEditor *owner) {
+    NSOutlineView *rows=[owner valueForKey:@"outlineView"]; NSWindow *window=rows.window; NSResponder *previous=window.firstResponder;
+    // While a name is edited, the field has the focus and its own ring (the list reports AppKit's default meanwhile).
+    if(rows.editedRow>=0) { REQUIRE(rows.currentEditor && window.firstResponder==rows.currentEditor); return; }
+    REQUIRE(rows.focusRingType==NSFocusRingTypeNone);
+    REQUIRE([window makeFirstResponder:rows] && !DrawsFocusRingAroundList(rows));
+    TSFocusRingSets *source=[TSFocusRingSets new];
+    for(int viewBased=0;viewBased<2;viewBased++) {
+        NSTableView *table=[[NSTableView alloc] initWithFrame:NSMakeRect(0,0,100,60)]; table.style=viewBased?NSTableViewStyleSourceList:NSTableViewStyleInset;
+        [table addTableColumn:[[NSTableColumn alloc] initWithIdentifier:@"name"]];
+        if(viewBased) table.delegate=source; table.dataSource=source; [table reloadData];
+        NSScrollView *scroll=[[NSScrollView alloc] initWithFrame:NSMakeRect(0,0,100,60)]; scroll.documentView=table; [owner.editorView addSubview:scroll];
+        REQUIRE([window makeFirstResponder:table] && DrawsFocusRingAroundList(table)==!viewBased);
+        [window makeFirstResponder:window]; [scroll removeFromSuperview];
+    }
+    [window makeFirstResponder:previous];
+}
 static void CheckSidebar(TSMacroEditor *owner, NSScrollView *list) {
     NSWindow *window=[owner valueForKey:@"window"]; NSVisualEffectView *sidebar=owner.sidebar; TSListBottomBar *bar=owner.listBar; NSView *main=owner.editorView;
     NSView *content=window.contentView; [content layoutSubtreeIfNeeded];
@@ -329,6 +370,44 @@ static NSInteger YellowPixels(NSOutlineView *rows, NSInteger row) {
         NSColor *c=[[rep colorAtX:x y:y] colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
         if(c.alphaComponent>.5 && c.redComponent>.8 && c.greenComponent>.55 && c.blueComponent<.35) yellow++; }
     return yellow;
+}
+// The box of the yellow pixels an image draws, in points (it is drawn at twice its size), and their number.
+static NSRect YellowBoundsOfImage(NSImage *image, NSAppearance *appearance, NSInteger *count) {
+    NSSize size=image.size; NSBitmapImageRep *rep=[[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL pixelsWide:(NSInteger)ceil(size.width)*2 pixelsHigh:(NSInteger)ceil(size.height)*2 bitsPerSample:8 samplesPerPixel:4 hasAlpha:YES isPlanar:NO colorSpaceName:NSDeviceRGBColorSpace bytesPerRow:0 bitsPerPixel:0];
+    [NSGraphicsContext saveGraphicsState]; NSGraphicsContext.currentContext=[NSGraphicsContext graphicsContextWithBitmapImageRep:rep];
+    [appearance performAsCurrentDrawingAppearance:^{ [image drawInRect:NSMakeRect(0,0,rep.pixelsWide,rep.pixelsHigh)]; }];
+    [NSGraphicsContext restoreGraphicsState];
+    NSInteger minX=NSIntegerMax,minY=NSIntegerMax,maxX=-1,maxY=-1,yellow=0;
+    for(NSInteger y=0;y<rep.pixelsHigh;y++) for(NSInteger x=0;x<rep.pixelsWide;x++) {
+        NSColor *c=[[rep colorAtX:x y:y] colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+        if(c.alphaComponent>.5 && c.redComponent>.8 && c.greenComponent>.55 && c.blueComponent<.35) { yellow++; minX=MIN(minX,x); minY=MIN(minY,y); maxX=MAX(maxX,x); maxY=MAX(maxY,y); } }
+    if(count) *count=yellow;
+    return yellow ? NSMakeRect(minX/2.,minY/2.,(maxX-minX+1)/2.,(maxY-minY+1)/2.) : NSZeroRect;
+}
+// The same box for the triangle the shortcut cell of a row draws.
+static NSRect YellowBoundsOfCell(NSOutlineView *rows, NSInteger row) {
+    NSInteger key=[rows columnWithIdentifier:@"Key"]; NSRect frame=[rows frameOfCellAtColumn:key row:row]; NSCell *cell=[rows preparedCellAtColumn:key row:row];
+    NSImage *image=[NSImage imageWithSize:frame.size flipped:YES drawingHandler:^BOOL(NSRect rect) {
+        NSAffineTransform *move=[NSAffineTransform transform]; [move translateXBy:-NSMinX(frame) yBy:-NSMinY(frame)]; [move concat];
+        [cell drawWithFrame:frame inView:rows]; return YES; }];
+    return YellowBoundsOfImage(image,rows.effectiveAppearance,NULL);
+}
+// The triangles of the macro editor are those of Settings › Keyboard (TSShortcutWarningLine, the triangle at the end
+// of the field that records): the multicolor symbol, yellow, of the same size, not read by VoiceOver; the one in
+// the list as large as the one below the contents.
+static void CheckWarningMarksAsSettings(TSMacroEditor *owner, NSOutlineView *rows, NSInteger warnedRow) {
+    NSImageView *mark=owner.shortcutStatusMark, *settings=(NSImageView *)TSShortcutWarningLine(@"x").arrangedSubviews[0], *recording=owner.recordingCell.warning;
+    REQUIRE([settings.identifier isEqual:@"settings.warning-symbol.multicolor"] && !mark.isAccessibilityElement && !settings.isAccessibilityElement);
+    REQUIRE(NSEqualSizes(mark.image.size,settings.image.size) && NSEqualSizes(mark.intrinsicContentSize,settings.intrinsicContentSize) && NSEqualSizes(recording.image.size,settings.image.size));
+    for(NSString *name in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]) {
+        NSAppearance *appearance=[NSAppearance appearanceNamed:name]; NSInteger ours=0, theirs=0;
+        NSRect a=YellowBoundsOfImage(mark.image,appearance,&ours), b=YellowBoundsOfImage(settings.image,appearance,&theirs);
+        if(ours<20 || ours!=theirs || !NSEqualRects(a,b)) fprintf(stderr,"MARK %s %ld %s settings %ld %s\n",name.UTF8String,(long)ours,NSStringFromRect(a).UTF8String,(long)theirs,NSStringFromRect(b).UTF8String);
+        REQUIRE(ours>=20 && ours==theirs && NSEqualRects(a,b));
+    }
+    NSRect cell=YellowBoundsOfCell(rows,warnedRow), status=YellowBoundsOfImage(mark.image,rows.effectiveAppearance,NULL);
+    if(fabs(NSWidth(cell)-NSWidth(status))>.5 || fabs(NSHeight(cell)-NSHeight(status))>.5) fprintf(stderr,"LIST MARK %s message %s\n",NSStringFromRect(cell).UTF8String,NSStringFromRect(status).UTF8String);
+    REQUIRE(NSWidth(status)>5 && fabs(NSWidth(cell)-NSWidth(status))<=.5 && fabs(NSHeight(cell)-NSHeight(status))<=.5);
 }
 // The field over the shortcut of a row: from the trailing edge of the shortcut's cell, at least as wide as the
 // longest shortcut, ⊖ and the triangle need, but not beyond the start of the names; the row's height. The field
@@ -524,6 +603,7 @@ static void CheckRecording(TSMacroEditor *owner) {
     REQUIRE(YellowPixels(rows,otherRow)>3 && YellowPixels(rows,row)==0);
     [rows selectRowIndexes:[NSIndexSet indexSetWithIndex:otherRow] byExtendingSelection:NO];
     REQUIRE([owner.shortcutStatus.stringValue isEqual:reason] && !owner.shortcutStatusMark.hidden && YellowPixels(rows,otherRow)>3);
+    CheckWarningMarksAsSettings(owner,rows,otherRow);
     // Recorded, the field shows the shortcut without a triangle; a refusal replaces the reason, which comes back after it.
     Click(owner,otherRow,@"Key",NO); REQUIRE(recording(other) && cell.warning.hidden && [owner.shortcutStatus.stringValue isEqual:reason]);
     SendKey(owner,window,KeyIn(window,@"a",0,0)); REQUIRE([owner.shortcutStatus.stringValue isEqual:unusable] && !cell.warning.hidden);
@@ -650,7 +730,7 @@ static void CheckEditor(TSMacroEditor *owner, NSWindow *window) {
     NSScrollView *list=[[owner valueForKey:@"outlineView"] enclosingScrollView];
     NSButton *save=[owner valueForKey:@"saveButton"],*cancel=[owner valueForKey:@"cancelButton"],*test=[owner valueForKey:@"testButton"];
     REQUIRE(owner.sidebar && owner.listBar && host && owner.insertPlaceholderButton);
-    CheckSidebar(owner,list);
+    CheckSidebar(owner,list); CheckSidebarFocusRing(owner);
     CheckNibShortcutRows(owner);
     CheckContents(owner,window);
     NSScrollView *scroll=[contentsOf(owner) enclosingScrollView];
@@ -929,6 +1009,13 @@ static void WritePNG(NSView *view, NSAppearance *appearance, NSString *path) {
         [NSColor.windowBackgroundColor setFill]; NSRectFill(view.bounds);
         NSImage *cached=[[NSImage alloc] initWithSize:view.bounds.size]; [cached addRepresentation:raw];
         [cached drawInRect:view.bounds fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1];
+        // The focus ring AppKit draws around the scroll view of a focused list, which caching the display leaves out.
+        NSTableView *focused=(NSTableView *)view.window.firstResponder;
+        if([focused isKindOfClass:NSTableView.class] && focused.enclosingScrollView && DrawsFocusRingAroundList(focused)) {
+            NSScrollView *scroll=focused.enclosingScrollView; NSRect ring=[scroll convertRect:scroll.focusRingMaskBounds toView:view];
+            if(view.isFlipped) ring.origin.y=NSHeight(view.bounds)-NSMaxY(ring);
+            [NSGraphicsContext saveGraphicsState]; NSSetFocusRingStyle(NSFocusRingOnly); NSRectFill(ring); [NSGraphicsContext restoreGraphicsState];
+        }
         [image unlockFocus];
         NSBitmapImageRep *painted=[[NSBitmapImageRep alloc] initWithData:image.TIFFRepresentation];
         REQUIRE([[painted representationUsingType:NSBitmapImageFileTypePNG properties:@{}] writeToFile:path atomically:YES]);
