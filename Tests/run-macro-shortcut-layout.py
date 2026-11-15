@@ -28,7 +28,9 @@ def write_outline(td,text):
     """The outline controller's editing of a name, and the list with its cells, as the harness includes them."""
     start='// The name typed when an item is renamed in the list.'
     (Path(td)/'MacroOutlineEditing.inc').write_text(text[text.index(start):text.index('// A name typed in the list is filtered')])
-    (Path(td)/'MacroOutlineView.inc').write_text(text[text.index('// While an item is renamed, its field is as wide as the name'):])
+    (Path(td)/'MacroOutlineView.inc').write_text(text[text.index('@implementation NSOutlineView (MyExtensions)'):])
+    # How ＋ and the menu add an item, a submenu or a separator after the selection, and select it.
+    (Path(td)/'MacroOutlineAdding.inc').write_text(text[text.index('- (NSArray *)selectedNodes'):text.index('- (void)addNewDataArrayToSelection')])
 STATES=('opened','renaming','contents','recording','resized','smallest')
 with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
     mutation='--mutations' in sys.argv
@@ -77,6 +79,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
             'the contents stop below the title bar': ('        contents.frame = NSMakeRect(0, NSMaxY(line), width, NSHeight(main.bounds) - NSMaxY(line));', '        contents.frame = NSMakeRect(0, NSMaxY(line), width, NSHeight(main.bounds) - NSMaxY(line) - 20);'),
             'the name\'s label stays': ('            view.hidden = YES;\n        }\n', '        }\n'),
             'the smallest window keeps the name field\'s height': ('    CGFloat minimumHeight = editor.minSize.height - MAX(0, taller);', '    CGFloat minimumHeight = editor.minSize.height;'),
+            'a new item is not named at once': ('    TSSendButtonAction(newItemButton);\n    [self beginRenamingSelectedItem];\n', '    TSSendButtonAction(newItemButton);\n'),
+            'a key after a second click still renames': ('    [self cancelPendingListRename];\n    if (event.modifierFlags', '    if (event.modifierFlags'),
+            'closing keeps a pending renaming': ('    [self cancelPendingListRename];\n    [self stopKeyMonitor];', '    [self stopKeyMonitor];'),
             'the contents overlap the shortcut row': ('    CGFloat gap = MAX(8, NSMinY(contentsFrame) - NSMaxY([keyField frame]));', '    CGFloat gap = MIN(8, NSMinY(contentsFrame) - NSMaxY([keyField frame])) - 12;'),
         }
         # Mutations of the shortcut field and of the sidebar shared with the Multiple Replace window.
@@ -96,6 +101,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
             'a name of spaces replaces the old one': ('\tif ([name stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet].length == 0) return;\n', ''),
             'the renamed name takes the whole column': ('\ttextFrame.size.width = MIN(NSWidth(textFrame), TSNameEditingWidth(self.stringValue, self.font));\n\t[super selectWithFrame:', '\t[super selectWithFrame:'),
             'the renamed name\'s field does not grow': ('\tclip.frame = frame;\n', ''),
+            'a pending renaming is not cancelled': ('\t[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(renameAfterClick) object:nil];\n\tself.pendingRename = nil;\n', '\t[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(renameAfterClick) object:@0];\n'),
+            'another selection keeps a pending renaming': ('\t[self cancelPendingRename];\n\t[super selectRowIndexes:', '\t[super selectRowIndexes:'),
+            'a double click keeps a pending renaming': ('\t[self cancelPendingRename];\n\tNSPoint point', '\tNSPoint point'),
             'a double click edits the name': ('\treturn [[TSMacroEditor sharedInstance] isRenaming] && ', '\treturn YES && '),
         }
         originals={name:Path(next(x for x in extra if x.endswith('/'+name))) for name in file_cases}

@@ -576,10 +576,11 @@ static CGFloat TSNameEditingWidth(NSString *string, NSFont *font)
 
 // As in Finder, a click on the name of the item that is already selected, and not followed by
 // a second click, renames it: the editor's renameSelectedMacro:, reached through the responder
-// chain (the window's delegate).
+// chain (the window's delegate). Anything done before then (a second click, a key, another
+// selection, the list leaving its window) cancels it.
 - (void)mouseDown:(NSEvent *)event
 {
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(renameAfterClick:) object:nil];
+	[self cancelPendingRename];
 	NSPoint point = [self convertPoint:event.locationInWindow fromView:nil];
 	NSInteger row = [self rowAtPoint:point];
 	NSEventModifierFlags modifiers = event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagShift | NSEventModifierFlagOption | NSEventModifierFlagControl);
@@ -589,13 +590,34 @@ static CGFloat TSNameEditingWidth(NSString *string, NSFont *font)
 	NSEvent *up = NSApp.currentEvent;
 	NSPoint end = [self convertPoint:up.locationInWindow fromView:nil];
 	if (again && up.type == NSEventTypeLeftMouseUp && hypot(end.x - point.x, end.y - point.y) < 4 && self.selectedRow == row && self.numberOfSelectedRows == 1)
-		[self performSelector:@selector(renameAfterClick:) withObject:@(row) afterDelay:NSEvent.doubleClickInterval];
+		[self scheduleRenameOfRow:row];
 }
 
-- (void)renameAfterClick:(NSNumber *)row
+- (void)scheduleRenameOfRow:(NSInteger)row
 {
-	if (!self.window.isKeyWindow || self.window.firstResponder != self || self.numberOfSelectedRows != 1 || self.selectedRow != row.integerValue) return;
+	[self cancelPendingRename];
+	self.pendingRename = @(row);
+	[self performSelector:@selector(renameAfterClick) withObject:nil afterDelay:NSEvent.doubleClickInterval];
+}
+
+- (void)cancelPendingRename
+{
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(renameAfterClick) object:nil];
+	self.pendingRename = nil;
+}
+
+- (void)renameAfterClick
+{
+	NSNumber *row = self.pendingRename;
+	self.pendingRename = nil;
+	if (row == nil || !self.window.isKeyWindow || self.window.firstResponder != self || self.numberOfSelectedRows != 1 || self.selectedRow != row.integerValue) return;
 	[NSApp sendAction:@selector(renameSelectedMacro:) to:nil from:self];
+}
+
+- (void)selectRowIndexes:(NSIndexSet *)indexes byExtendingSelection:(BOOL)extend
+{
+	[self cancelPendingRename];
+	[super selectRowIndexes:indexes byExtendingSelection:extend];
 }
 
 // The field of the name being renamed follows what is typed.
@@ -614,7 +636,7 @@ static CGFloat TSNameEditingWidth(NSString *string, NSFont *font)
 
 - (void)keyDown:(NSEvent *)event
 {
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(renameAfterClick:) object:nil];
+	[self cancelPendingRename];
 	[super keyDown:event];
 }
 
@@ -631,7 +653,7 @@ static CGFloat TSNameEditingWidth(NSString *string, NSFont *font)
 
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow
 {
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(renameAfterClick:) object:nil];
+	[self cancelPendingRename];
 	[super viewWillMoveToWindow:newWindow];
 }
 

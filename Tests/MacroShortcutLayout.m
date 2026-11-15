@@ -17,6 +17,8 @@
 #import "MemoryDefaults.h"
 #define COLUMNID_NAME @"Name"
 #define COLUMNID_KEY @"Key"
+#define NEW_ITEM_NAME @"New Item"
+#define NEW_SUBMENU_NAME @"Submenu"
 static TSMemoryDefaults *memoryDefaults;
 static id StandardDefaults(id self, SEL cmd) { return memoryDefaults; }
 #define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr,"FAIL %d: %s\n",__LINE__,#__VA_ARGS__); exit(1); } } while(0)
@@ -48,7 +50,10 @@ static TSMacroTreeNode *SampleRoot;
 - (void)outlineView:(NSOutlineView *)view willDisplayCell:(NSCell *)cell forTableColumn:(NSTableColumn *)column item:(id)item {
     if ([column.identifier isEqual:@"Name"] && [cell isKindOfClass:ImageAndTextCell.class]) ((ImageAndTextCell *)cell).image1=[item isSeparator]?TSMacroSeparatorImage(column.width-8):nil;
 }
+- (TSMacroTreeNode *)rootOfTree { return SampleRoot; }
+- (void)setRootOfTree:(TSMacroTreeNode *)root { SampleRoot=root; }
 #include "MacroOutlineEditing.inc"
+#include "MacroOutlineAdding.inc"
 @end
 #include "MacroOutlineView.inc"
 // The names in cells that can be edited, as the outline controller's awakeFromNib makes them.
@@ -552,6 +557,93 @@ static void CheckSecondClick(TSMacroEditor *owner) {
     REQUIRE(!named(rows,at,NSMakePoint(NSMinX(lineCell)+5,NSMidY(lineCell)),line));
     SampleRoot=kept; [rows reloadData]; [rows expandItem:nil expandChildren:YES];
 }
+// The renaming that a second click on a name starts after the double-click interval: it starts then, and
+// whatever comes first cancels it: a key (an arrow, Escape, a letter), another selection, a double click,
+// Return (which renames at once), the list leaving its window, the window closing. The window is taken for the
+// key window here, as on screen.
+static IMP KeyWindowIMP, AppKeyWindowIMP; static BOOL KeyWindow(id self, SEL cmd) { return YES; }
+static NSWindow *TheKeyWindow; static id AppKeyWindow(id self, SEL cmd) { return TheKeyWindow; }
+static void Wait(NSTimeInterval seconds) { [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:seconds]]; }
+static NSEvent *Mouse(NSWindow *window, NSEventType type, NSPoint at, NSInteger clicks) {
+    return [NSEvent mouseEventWithType:type location:at modifierFlags:0 timestamp:NSProcessInfo.processInfo.systemUptime windowNumber:window.windowNumber context:nil eventNumber:0 clickCount:clicks pressure:type==NSEventTypeLeftMouseDown?1:0];
+}
+static void CheckPendingRename(TSMacroEditor *owner) {
+    NSWindow *window=[owner valueForKey:@"window"]; TSMacroOutlineView *rows=[owner valueForKey:@"outlineView"];
+    REQUIRE([rows isKindOfClass:TSMacroOutlineView.class] && (id)window.delegate==owner);
+    // The responder chain of an action sent to no target starts at the application's key window.
+    Method key=class_getInstanceMethod(NSWindow.class,@selector(isKeyWindow)); KeyWindowIMP=method_setImplementation(key,(IMP)KeyWindow);
+    Method appKey=class_getInstanceMethod(NSApplication.class,@selector(keyWindow)); TheKeyWindow=window; AppKeyWindowIMP=method_setImplementation(appKey,(IMP)AppKeyWindow);
+    TSMacroTreeNode *kept=SampleRoot,*macro=nil,*separator=nil; SampleRoot=MakeSampleRoot(&macro,&separator);
+    [rows reloadData]; [rows expandItem:nil expandChildren:YES]; [window.contentView layoutSubtreeIfNeeded];
+    NSInteger row=[rows rowForItem:macro], other=[rows rowForItem:separator];
+    NSTimeInterval later=NSEvent.doubleClickInterval+.25;
+    void (^select)(void)=^{ [rows selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO]; REQUIRE([window makeFirstResponder:rows]); };
+    // Nothing else: the name is renamed.
+    select(); [rows scheduleRenameOfRow:row]; REQUIRE(rows.pendingRename); Wait(later);
+    REQUIRE(Renaming(window,rows) && rows.editedRow==row && !rows.pendingRename);
+    SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); REQUIRE(!Renaming(window,rows) && [macro.name isEqual:@"MetaPost"]);
+    NSString *arrow=[NSString stringWithFormat:@"%C",(unichar)NSRightArrowFunctionKey], *down=[NSString stringWithFormat:@"%C",(unichar)NSDownArrowFunctionKey];
+    NSArray *cancels=@[
+        @[@"an arrow key",^{ SendKey(owner,window,KeyIn(window,arrow,124,NSEventModifierFlagFunction|NSEventModifierFlagNumericPad)); }],
+        @[@"Escape",^{ SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); }],
+        @[@"a letter",^{ SendKey(owner,window,KeyIn(window,@"q",12,0)); }],
+        @[@"another selection and back",^{ [rows selectRowIndexes:[NSIndexSet indexSetWithIndex:other] byExtendingSelection:NO]; select(); }],
+        @[@"the list leaving its window",^{ [rows viewWillMoveToWindow:nil]; }],
+        @[@"a double click",^{
+            // The second click of a double click: its mouse up is already waiting, so the list's tracking ends at once.
+            NSRect cell=[rows frameOfCellAtColumn:[rows columnWithIdentifier:@"Name"] row:row]; NSPoint at=[rows convertPoint:NSMakePoint(NSMinX(cell)+6,NSMidY(cell)) toView:nil];
+            SEL action=rows.doubleAction; id target=rows.target; rows.doubleAction=NULL;
+            [NSApp postEvent:Mouse(window,NSEventTypeLeftMouseUp,at,2) atStart:YES]; [rows mouseDown:Mouse(window,NSEventTypeLeftMouseDown,at,2)];
+            rows.doubleAction=action; rows.target=target; }],
+        @[@"Return",^{ SendKey(owner,window,KeyIn(window,@"\r",36,0)); REQUIRE(Renaming(window,rows)); SendKey(owner,window,KeyIn(window,@"\x1b",53,0)); }],
+        @[@"the window closing",^{ [owner cancelPendingListRename]; }],
+    ];
+    for(NSArray *c in cancels) {
+        select(); [rows scheduleRenameOfRow:row]; ((void (^)(void))c[1])();
+        if(window.firstResponder!=rows) REQUIRE([window makeFirstResponder:rows]);
+        if(rows.selectedRow!=row) select();
+        Wait(later);
+        if(Renaming(window,rows) || rows.pendingRename) fprintf(stderr,"PENDING RENAME after %s\n",[c[0] UTF8String]);
+        REQUIRE(!Renaming(window,rows) && !rows.pendingRename);
+    }
+    // Down arrow moves the selection; the renaming does not follow it.
+    select(); [rows scheduleRenameOfRow:row]; SendKey(owner,window,KeyIn(window,down,125,NSEventModifierFlagFunction|NSEventModifierFlagNumericPad)); Wait(later); REQUIRE(!Renaming(window,rows));
+    method_setImplementation(key,KeyWindowIMP); method_setImplementation(appKey,AppKeyWindowIMP); TheKeyWindow=nil;
+    [window makeFirstResponder:window];
+    SampleRoot=kept; [rows reloadData]; [rows expandItem:nil expandChildren:YES];
+}
+// A new item or submenu, made by ＋ or the menu of the bar, is named at once (the outline controller's own code
+// adds it after the selection and selects it); a new separator is not.
+@interface TSMacroEditor (Bar)
+- (void)listAddPressed:(id)sender;
+- (void)listActionChosen:(NSMenuItem *)sender;
+@end
+static void CheckNewItemNamed(TSMacroEditor *owner) {
+    NSWindow *window=[owner valueForKey:@"window"]; NSOutlineView *rows=[owner valueForKey:@"outlineView"];
+    NSButton *newItem=[owner valueForKey:@"newItemButton"],*submenu=[owner valueForKey:@"submenuButton"],*separatorButton=[owner valueForKey:@"separatorButton"];
+    REQUIRE(newItem.action==@selector(addNewItem:) && submenu.action==@selector(addSubmenu:) && separatorButton.action==@selector(addSeparator:));
+    TSMacroTreeNode *kept=SampleRoot,*macro=nil,*separator=nil; SampleRoot=MakeSampleRoot(&macro,&separator);
+    [rows reloadData]; [rows expandItem:nil expandChildren:YES]; [window.contentView layoutSubtreeIfNeeded];
+    for(NSButton *b in @[newItem,submenu,separatorButton]) b.enabled=YES;
+    [owner syncListControls];
+    NSArray<NSMenuItem *> *items=owner.listBar.actionItems;
+    struct { int how; NSString *name; BOOL named; } cases[]={{0,NEW_ITEM_NAME,YES},{1,NEW_SUBMENU_NAME,YES},{2,nil,NO}};
+    for(size_t i=0;i<3;i++) {
+        [rows selectRowIndexes:[NSIndexSet indexSetWithIndex:[rows rowForItem:macro]] byExtendingSelection:NO]; REQUIRE([window makeFirstResponder:rows]);
+        NSInteger count=SampleRoot.numberOfChildren;
+        if(cases[i].how==0) [owner listAddPressed:nil]; else [owner listActionChosen:items[cases[i].how-1]];
+        REQUIRE(SampleRoot.numberOfChildren==count+1);
+        TSMacroTreeNode *added=[rows itemAtRow:rows.selectedRow];
+        NSTextView *editor=Renaming(window,rows);
+        if(!!editor!=cases[i].named) fprintf(stderr,"NEW %s %s renamed\n",added.name.UTF8String,editor?"is":"is not");
+        REQUIRE(!!editor==cases[i].named && added==[SampleRoot childAtIndex:[SampleRoot indexOfChild:macro]+1]);
+        if(editor) { REQUIRE(rows.editedRow==rows.selectedRow && [editor.string isEqual:cases[i].name] && NSEqualRanges(editor.selectedRange,NSMakeRange(0,cases[i].name.length)));
+            [editor insertText:@"Named" replacementRange:NSMakeRange(0,editor.string.length)]; SendKey(owner,window,KeyIn(window,@"\r",36,0)); REQUIRE([added.name isEqual:@"Named"] && !Renaming(window,rows)); }
+        else REQUIRE(added.isSeparator);
+    }
+    [window makeFirstResponder:window]; [owner setValue:@NO forKey:@"dataTouched"];
+    SampleRoot=kept; [rows reloadData]; [rows expandItem:nil expandChildren:YES];
+}
 // The line of a separator: one line of the separator color, light and dark, nothing above or below.
 static void CheckSeparatorImage(void) {
     NSImage *image=TSMacroSeparatorImage(40);
@@ -689,7 +781,7 @@ static void CheckReopening(const char *path) {
         // The shortcut field, Insert and its help work in the new window too.
         CheckShortcutBehavior(owner); CheckPlaceholderControls(owner);
         previous=window; previousSidebar=owner.sidebar; previousMonitor=owner.contentsKeyMonitor;
-        [owner releaseWindowControls];
+        { TSMacroOutlineView *rows=[owner valueForKey:@"outlineView"]; [rows scheduleRenameOfRow:0]; [owner releaseWindowControls]; REQUIRE(!rows.pendingRename); }
         REQUIRE(!owner.sidebar && !owner.listBar && !owner.editorView && !owner.shortcutField && !owner.shortcutLabel && !owner.insertPlaceholderButton && !owner.placeholdersButton && !owner.shortcutStatus && !owner.contentsKeyMonitor);
         window.releasedWhenClosed=NO; [window close];
     }
@@ -753,7 +845,7 @@ int main(int argc,char **argv) { @autoreleasepool {
     CheckEditor(owner,window);
     if(getenv("TS_CONTROLS") && round==0) DumpControls(owner);
     CheckListFitsSidebarWidths(owner);
-    if(round==0) { CheckShortcutBehavior(owner); CheckPlaceholderControls(owner); CheckKeys(owner); CheckSecondClick(owner); CheckSeparatorImage(); }
+    if(round==0) { CheckShortcutBehavior(owner); CheckPlaceholderControls(owner); CheckKeys(owner); CheckSecondClick(owner); CheckPendingRename(owner); CheckNewItemNamed(owner); CheckSeparatorImage(); }
     NSArray<NSValue *> *openedFrames=MainFrames(owner);
     NSTextField *label=owner.shortcutStatus; NSView *host=owner.editorView;
     // The messages, as long as they come, wrap within the band, at this width and at the narrowest.

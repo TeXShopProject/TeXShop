@@ -87,6 +87,7 @@ NSImage *TSMacroSeparatorImage(CGFloat width);
 - (void)installSidebar;
 - (NSEvent *)keyForContents:(NSEvent *)event;
 - (BOOL)beginRenamingSelectedItem;
+- (void)cancelPendingListRename;
 - (IBAction)renameSelectedMacro:(id)sender;
 - (IBAction)saveDocument:(id)sender;
 - (void)stopKeyMonitor;

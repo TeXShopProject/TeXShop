@@ -555,6 +555,8 @@ static const NSSize TSMacroContentsInset = {8, 8};
     NSWindow *editor = window;
     NSResponder *responder = editor.firstResponder;
     if (event.type != NSEventTypeKeyDown || event.windowNumber != editor.windowNumber) return event;
+    // Any key cancels the renaming that a second click on a name would start.
+    [self cancelPendingListRename];
     if (event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagControl)) return event;
     NSString *key = event.charactersIgnoringModifiers;
     BOOL newline = [key isEqual:@"\r"] || [key isEqual:@"\x03"], escape = [key isEqual:@"\x1b"];
@@ -579,6 +581,7 @@ static const NSSize TSMacroContentsInset = {8, 8};
 // elsewhere), and Escape keeps the old one (keyForContents:).
 - (BOOL)beginRenamingSelectedItem
 {
+    [self cancelPendingListRename];
     NSOutlineView *rows = outlineView;
     if (rows == nil || rows.numberOfSelectedRows != 1 || [window attachedSheet]) return NO;
     NSInteger row = rows.selectedRow, column = [rows columnWithIdentifier:@"Name"];
@@ -590,6 +593,11 @@ static const NSSize TSMacroContentsInset = {8, 8};
     [rows editColumn:column row:row withEvent:nil select:YES];
     self.renaming = NO;
     return rows.currentEditor != nil;
+}
+// The list (TSMacroOutlineView) forgets the renaming a second click on a name would start.
+- (void)cancelPendingListRename
+{
+    if ([outlineView respondsToSelector:@selector(cancelPendingRename)]) [outlineView performSelector:@selector(cancelPendingRename)];
 }
 // A second click on the name of the selected item (TSMacroOutlineView) and a new item or submenu.
 - (IBAction)renameSelectedMacro:(id)sender
@@ -606,6 +614,7 @@ static const NSSize TSMacroContentsInset = {8, 8};
 // controls it added, so that the next window gets its own sidebar, fields and key monitor.
 - (void)releaseWindowControls
 {
+    [self cancelPendingListRename];
     [self stopKeyMonitor];
     [self.shortcutField endRecording];
     [self.placeholdersPopover close];
