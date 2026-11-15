@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Check the macro editor's layout (the sidebar, the contents, the status band and the placeholder row), its keys, the
-renaming of items in its list and the recording of a shortcut in the list's own cell, with its warnings, against all
+"""Check the macro editor's layout (the sidebar, without a focus ring, the contents, the status band and the placeholder
+row), its keys, the renaming of items in its list and the recording of a shortcut in the list's own cell, with its
+warnings and their triangles (those of Settings › Keyboard), against all
 localized macro-editor nibs without showing windows. With a directory, writes the window's images there: as it opens,
 an item renamed, the contents focused, a shortcut recorded in the list, a key refused there because another macro uses
 it or because it cannot be a shortcut, a saved shortcut that is inactive selected, larger and smallest, light and
@@ -119,6 +120,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
             'a submenu records': ('    if (![item isKindOfClass:TSMacroTreeNode.class] || !item.isStandardItem || recorder == nil', '    if (![item isKindOfClass:TSMacroTreeNode.class] || recorder == nil'),
             'the field stays after a click elsewhere': ('            if (strongSelf != nil && strongSelf.recordingItem != item) [strongSelf removeShortcutRecorderOfItem:item];', '            (void)strongSelf;'),
             'closing keeps recording': ('    [self stopKeyMonitor];\n    [self endShortcutRecording];\n', '    [self stopKeyMonitor];\n'),
+            # The focus ring and the triangle below the contents.
+            'the focused list has a focus ring around the sidebar': ('    rows.focusRingType = NSFocusRingTypeNone;\n', ''),
+            'the message\'s triangle is a plain symbol': ('    NSImageView *mark = [TSPrefPaneLayout warningSymbolForFont:status.font ?: [NSFont systemFontOfSize:NSFont.smallSystemFontSize]];', '    NSImageView *mark = [NSImageView imageViewWithImage:[NSImage imageWithSystemSymbolName:@"exclamationmark.triangle.fill" accessibilityDescription:nil]];'),
         }
         # Mutations of the sidebar shared with the Multiple Replace window.
         file_cases={
@@ -139,6 +143,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
             'a double click edits the name': ('\treturn [[TSMacroEditor sharedInstance] isRenaming] && ', '\treturn YES && '),
             # The list's part in recording a shortcut, and the triangle of an inactive one.
             'the cell under the field shows the shortcut': ('\t\tobjectValue = item == [[TSMacroEditor sharedInstance] recordingItem] ? @"" : ', '\t\tobjectValue = '),
+            'the triangle in the list is larger than the message\'s': ('\tNSImage *mark = [TSPrefPaneLayout warningSymbolImageForFont:[NSFont systemFontOfSize:NSFont.smallSystemFontSize]];', '\tNSImage *mark = [TSPrefPaneLayout warningSymbolImageForFont:[NSFont systemFontOfSize:NSFont.systemFontSize]];'),
             'an inactive shortcut has no triangle': ('\t\t\t((TSMacroShortcutCell *)cell).showsWarning = conflict != nil && item != [[TSMacroEditor sharedInstance] recordingItem];', '\t\t\t((TSMacroShortcutCell *)cell).showsWarning = NO;'),
             'the field is only as wide as the shortcut\'s cell': ('\tCGFloat width = MAX(NSWidth(cell), MIN(self.recordingWidth, NSMaxX(cell) - leading));', '\tCGFloat width = NSWidth(cell);'),
             'the field stays where the row was when the list is resized': ('\t[super tile];\n\t[self placeRecordingView];\n}\n\n- (void)setFrameSize:(NSSize)size\n{\n\t[super setFrameSize:size];\n\t[self placeRecordingView];\n}', '\t[super tile];\n}\n\n- (void)setFrameSize:(NSSize)size\n{\n\t[super setFrameSize:size];\n}'),
