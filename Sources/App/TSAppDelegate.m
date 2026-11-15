@@ -129,7 +129,7 @@ static void TSInstallAdvancedFindFieldStyle(void)
 
 /*" This class is registered as the delegate of the TeXShop NSApplication object. We do various stuff here, e.g. registering factory defaults, dealing with keyboard shortcuts etc.
 "*/
-@interface TSAppDelegate ()
+@interface TSAppDelegate () <NSMenuDelegate>
 @property BOOL shouldDiscoverEnginePaths;
 @end
 
@@ -791,6 +791,8 @@ static void TSInstallAdvancedFindFieldStyle(void)
        [[[NSApp mainMenu] itemWithTitle:NSLocalizedString(@"Tags", @"Tags")] setHidden:YES];
         
     }
+    // The Tags menu in the menu bar is filled each time it opens.
+    [[[[NSApp mainMenu] itemWithTitle:NSLocalizedString(@"Tags", @"Tags")] submenu] setDelegate: self];
 	
 
     
@@ -1147,6 +1149,20 @@ static void TSInstallAdvancedFindFieldStyle(void)
             NSAlert *alert = [NSAlert alertWithMessageText:@"Alert" defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:NSLocalizedString(@"Demo Movies require Mac OS 10.9, Mavericks, or higher.", @"Demo Movies require Mac OS 10.9, Mavericks, or higher.")];
             [alert runModal];
         }
+}
+
+// Called by AppKit just before the Tags menu in the menu bar opens.
+- (void)menuNeedsUpdate:(NSMenu *)menu
+{
+    if (menu == [[[NSApp mainMenu] itemWithTitle:NSLocalizedString(@"Tags", @"Tags")] submenu])
+        [TSDocument updateTagsMenuInMenuBar: menu];
+}
+
+// The items of the Tags menu have no key equivalents. Answering here keeps AppKit from
+// filling the menu while it looks for a key equivalent.
+- (BOOL)menuHasKeyEquivalent:(NSMenu *)menu forEvent:(NSEvent *)event target:(id *)target action:(SEL *)action
+{
+    return NO;
 }
 
 - (void)configureMovieMenu
