@@ -12,11 +12,19 @@ from source_tree import include_args, source_file
 root = Path(__file__).resolve().parents[1]
 MUTATIONS = {
     # Only a later number copies, so 6.00 beta-1 → 6.00 copies nothing (the old rule).
-    'number-only': ('    return ![libraryVersion isEqualToString:applicationVersion];', '    return NO;'),
+    'number-only': ('                return a > l;', '                return NO;'),
+    # Any other version of the same number copies, an earlier beta too.
+    'unordered': ('                return a > l;', '                return YES;'),
+    # A beta is taken for later than its release.
+    'beta-after-release': ('[list addObject:@(beta ? 0 : 1)];', '[list addObject:@(beta ? 2 : 1)];'),
+    # Betas are compared as text, so beta-10 comes before beta-9.
+    'beta-as-text': ('[list addObject:@(beta ? group(3).integerValue : 0)];', '[list addObject:@(beta ? (NSInteger)group(3).UTF8String[0] : 0)];'),
+    # An unknown form of the same number never copies.
+    'unknown-never': ('    return ![libraryVersion isEqualToString:applicationVersion];', '    return NO;'),
     # Every launch copies.
-    'always': ('    if (application > library + 0.005)\n        return YES;', '    return YES;'),
+    'always': ('    libraryVersion = [libraryVersion stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];\n    if (libraryVersion.length == 0)', '    if (YES)'),
     # An earlier number copies over a later one.
-    'downgrade': ('    if (application < library - 0.005)\n        return NO;', ''),
+    'downgrade': ('        if (application < library - 0.005)\n            return NO;', ''),
     # Nothing is remembered, so the next launch copies again.
     'no-record': ('    return [text writeToFile:', '    return YES || [text writeToFile:'),
     # The application compares its build number (it changes with every build).
@@ -58,7 +66,7 @@ def run(mutation=None):
         exe = Path(tmp) / 'library-version'
         subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Foundation', *include_args(root),
                         str(root / 'Tests/LibraryVersion.m'), str(library), '-o', str(exe)], check=True)
-        return subprocess.run([str(exe)], capture_output=True, text=True, timeout=60)
+        return subprocess.run([str(exe), str(root / 'Resources/TeXShop/New')], capture_output=True, text=True, timeout=60)
 
 
 def main():
