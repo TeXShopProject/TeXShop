@@ -30,7 +30,7 @@ for node in ast.parse((R / 'Tests/run-engine-profiles.py').read_text()).body:
         exec(compile(ast.Module([node], []), 'run-engine-profiles.py', 'exec'), _table_source)
 TABLE, JAPANESE = _table_source['TABLE'], _table_source['JAPANESE']
 MENU = [1, 2, 3, 4, 5, 6, 7, 8]
-FIRST_LAUNCH = [1, 2, 3, 4, 5, 6, 7]
+FIRST_LAUNCH = [1, 2, 3, 4, 5, 7, 6]
 ROW_NAMES = ['Typesetting Method', 'plain TeX', 'LaTeX', 'kpsewhich', 'BibTeX Engine', 'Index Program', 'MetaPost', 'Convert to \\UTF / \\CID',
              'New Document Encoding', 'UTF-8-MAC Conversion', 'Dictionary']
 NAME_LIMIT = 200
