@@ -2588,40 +2588,6 @@ end tell
 					<key>name</key>
 					<string>Bibliography</string>
 				</dict>
-				<dict>
-					<key>content</key>
-					<string>--Applescript direct
-
---TeXShop restart required for changes to take effect
-
-do shell script "defaults write TeXShop background_R 0.3"
-do shell script "defaults write TeXShop background_G 0.3"
-do shell script "defaults write TeXShop background_B 0.3"
-do shell script "defaults write TeXShop foreground_R 1.0"
-do shell script "defaults write TeXShop foreground_G 1.0"
-do shell script "defaults write TeXShop foreground_B 1.0"</string>
-					<key>key</key>
-					<string></string>
-					<key>name</key>
-					<string>Colored source</string>
-				</dict>
-				<dict>
-					<key>content</key>
-					<string>--Applescript direct
-
---TeXShop restart required for changes to take effect
-
-do shell script "defaults write TeXShop background_R 1.00"
-do shell script "defaults write TeXShop background_G 1.00"
-do shell script "defaults write TeXShop background_B 1.00"
-do shell script "defaults write TeXShop foreground_R .0"
-do shell script "defaults write TeXShop foreground_G .0"
-do shell script "defaults write TeXShop foreground_B .0"</string>
-					<key>key</key>
-					<string></string>
-					<key>name</key>
-					<string>Default Colored source</string>
-				</dict>
 			</array>
 		</dict>
 		<dict>
