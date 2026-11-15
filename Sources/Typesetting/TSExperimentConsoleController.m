@@ -73,6 +73,9 @@ static BOOL TSExperimentIsPrompt(NSString *line)
 @property (nonatomic) NSUInteger generation;
 @property (nonatomic, copy) NSString *engineLine;
 @property (nonatomic) NSUInteger outputCount;
+// RedConsoleAfterError, as in the console of a document: after a line is typed to answer TeX,
+// the line and the rest of the output of that run are red.
+@property (nonatomic) BOOL redOutput;
 @end
 
 @implementation TSExperimentConsoleController
@@ -184,8 +187,9 @@ static BOOL TSExperimentIsPrompt(NSString *line)
 - (void)appendText:(NSString *)text
 {
     if (!text.length) return;
+    NSColor *color = self.redOutput ? NSColor.redColor : (self.outputText.textColor ?: NSColor.textColor);
     NSAttributedString *addition = [[NSAttributedString alloc] initWithString:text attributes:@{
-        NSFontAttributeName:self.outputText.font, NSForegroundColorAttributeName:self.outputText.textColor ?: NSColor.textColor}];
+        NSFontAttributeName:self.outputText.font, NSForegroundColorAttributeName:color}];
     // Appending keeps any selection; follow the output only when nothing is selected.
     BOOL selecting = TSConsoleHasSelection(self.outputText);
     [self.outputText.textStorage appendAttributedString:addition];
@@ -272,6 +276,7 @@ static BOOL TSExperimentIsPrompt(NSString *line)
     self.directory = directory;
     self.encoding = encoding;
     self.carry = nil;
+    self.redOutput = NO;
     self.window.title = [NSString stringWithFormat:NSLocalizedString(@"%@ — Experiment Console", @"Experiment console title"), title];
     self.outputText.string = @"";
     self.engineLine = @"";
@@ -328,6 +333,8 @@ static BOOL TSExperimentIsPrompt(NSString *line)
     NSData *data = [[TSEncodingSupport sharedInstance] dataForText:command encoding:self.encoding byteOrderMark:TSNoByteOrderMark];
     NSError *error = nil;
     if ([self.job sendData:data error:&error]) {
+        if ([SUD boolForKey:RedConsoleAfterErrorKey])
+            self.redOutput = YES;
         [self appendText:displayCommand];
         // TeX continues at the start of a line, and is no longer waiting.
         self.engineLine = @"";

@@ -44,7 +44,7 @@ static NSDictionary *darkColors;
 - (NSColor *)opaqueColorForKey:(NSString *)key fromDictionary:(NSDictionary *)theme isWindowDark:(BOOL)dark
 { return theme[key] ?: (dark ? NSColor.blackColor : NSColor.whiteColor); }
 @end
-static BOOL behind;
+static BOOL behind, redAfterError;
 @interface TestDefaults : NSObject
 - (BOOL)boolForKey:(NSString *)key;
 - (NSString *)stringForKey:(NSString *)key;
@@ -53,7 +53,11 @@ static BOOL behind;
 @implementation TestDefaults
 - (NSString *)stringForKey:(NSString *)key { return @"Menlo"; }
 - (float)floatForKey:(NSString *)key { return 15; }
-- (BOOL)boolForKey:(NSString *)key { return [key isEqualToString:@"ConsoleBehavior"] ? behind : YES; }
+- (BOOL)boolForKey:(NSString *)key
+{
+    if ([key isEqualToString:@"RedConsoleAfterError"]) return redAfterError;
+    return [key isEqualToString:@"ConsoleBehavior"] ? behind : YES;
+}
 @end
 #define SUD ((TestDefaults *)[TestDefaults new])
 #define SourceColorChangedNotification @"SourceColorChanged"
@@ -62,6 +66,7 @@ static BOOL behind;
 #define ConsoleFontChangedNotification @"ConsoleFontChanged"
 #define ConsoleBehaviorKey @"ConsoleBehavior"
 #define BringPdfFrontOnTypesetKey @"BringPdfFront"
+#define RedConsoleAfterErrorKey @"RedConsoleAfterError"
 '''
 
 
