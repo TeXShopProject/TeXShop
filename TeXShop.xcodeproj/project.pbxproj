@@ -57,7 +57,6 @@
 		D20D45B3736189BFBE1C0F51 /* Defaults in Resources */ = {isa = PBXBuildFile; fileRef = 0A89878BCF6577E7A8F002E5 /* Defaults */; };
 		7A9051C11D9E4EA1A5210013 = {isa = PBXBuildFile; fileRef = 7A9051C11D9E4EA1A5210011; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		E107B90C6AEA90757B575812 /* contextbackwardsyncwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 4008394F2665406700037D3C /* contextbackwardsyncwrap */; };
-		87ED044C590112494BDD9A75 /* epstopdf in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 66A63DCE0114947700000001 /* epstopdf */; };
 		88454FF93C9DF16FD6563358 /* epstopdfwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 66A63DCF0114947700000001 /* epstopdfwrap */; };
 		E47135E74945944E26FF1403 /* contextwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = F50B193D0152A11D01000001 /* contextwrap */; };
 		62E064B4D3D199B9A57677E5 /* metapostwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = F5332B17016CD72701DF2474 /* metapostwrap */; };
@@ -373,7 +372,6 @@
 			dstSubfolderSpec = 7;
 			files = (
 				E107B90C6AEA90757B575812 /* contextbackwardsyncwrap in Copy Shell Scripts */,
-				87ED044C590112494BDD9A75 /* epstopdf in Copy Shell Scripts */,
 				88454FF93C9DF16FD6563358 /* epstopdfwrap in Copy Shell Scripts */,
 				E47135E74945944E26FF1403 /* contextwrap in Copy Shell Scripts */,
 				62E064B4D3D199B9A57677E5 /* metapostwrap in Copy Shell Scripts */,
@@ -1018,7 +1016,6 @@
 		24986CA2B58F4A705143F8B8 /* NSString-CharacterConversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString-CharacterConversion.m"; sourceTree = "<group>"; };
 		527DA9F40A24F30800A76865 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 		52E4BF4408CA74C300726E11 /* TeXShop */ = {isa = PBXFileReference; lastKnownFileType = folder; path = TeXShop; sourceTree = "<group>"; };
-		66A63DCE0114947700000001 /* epstopdf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = epstopdf; sourceTree = "<group>"; };
 		66A63DCF0114947700000001 /* epstopdfwrap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.csh; path = epstopdfwrap; sourceTree = "<group>"; };
 		F506285400F4F04801000001 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		F50B193D0152A11D01000001 /* contextwrap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.csh; path = contextwrap; sourceTree = "<group>"; };
@@ -1803,7 +1800,6 @@
 		528029DB089D3DD900696FB9 /* Shellscripts */ = {
 			isa = PBXGroup;
 			children = (
-				66A63DCE0114947700000001 /* epstopdf */,
 				66A63DCF0114947700000001 /* epstopdfwrap */,
 				40143F70156F52B600CAFAFC /* sipswrap */,
 				40795D632AB4E307005A7539 /* ps2pdftransparencywrap */,
