@@ -9,8 +9,9 @@
 NSNotificationName const TSSourceStatusBarShownDidChangeNotification = @"TSSourceStatusBarShownDidChangeNotification";
 static NSString *const TSShowStatusBarKey = @"ShowStatusBar";
 
-// The space between two items, and between the edges of the window and the text.
+// The space between two items, and before the file size.
 static const CGFloat TSItemGap = 10;
+static const CGFloat TSSizeGap = 16;
 
 // One count, which a newer one cancels.
 @interface TSStatusBarJob : NSObject
@@ -256,6 +257,7 @@ static CGFloat TSEdgePadding(void)
     self.counts = shown;
     self.needsDisplay = YES;
     [self updateAccessibility];
+    [self updateToolTip];
 }
 
 - (void)countNow
@@ -283,6 +285,7 @@ static CGFloat TSEdgePadding(void)
     self.fileSize = size;
     self.needsDisplay = YES;
     [self updateAccessibility];
+    [self updateToolTip];
 }
 
 #pragma mark Drawing
@@ -373,7 +376,7 @@ static NSAttributedString *TSItem(NSString *label, NSString *value)
     NSAttributedString *size = [self fileSizeItem];
     if (size) {
         if (ceil(size.size.width) <= room)
-            room -= ceil(size.size.width) + 2 * TSItemGap;
+            room -= ceil(size.size.width) + TSSizeGap;
         else
             size = nil;
     }
@@ -439,6 +442,16 @@ static NSAttributedString *TSItem(NSString *label, NSString *value)
 {
     [super setFrameSize:newSize];
     self.needsDisplay = YES;
+    [self updateToolTip];
+}
+
+// When the bar is too narrow for every item, its tool tip lists them all.
+- (void)updateToolTip
+{
+    NSArray<NSString *> *all = self.allItems;
+    NSString *tip = self.visibleItems.count < all.count ? [all componentsJoinedByString:@"\n"] : nil;
+    if (tip != self.toolTip && ![tip isEqual:self.toolTip])
+        self.toolTip = tip;
 }
 
 - (void)viewDidChangeEffectiveAppearance
