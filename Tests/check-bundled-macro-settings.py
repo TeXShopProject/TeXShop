@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Check that bundled macros only write settings that TeXShop still reads.
 
-A macro that runs `defaults write TeXShop KEY …` must name a key defined in Sources/App/globals.m
-or in the factory defaults. Colored source and Default Colored source wrote the color settings used
-before themes, which TeXShop no longer has."""
+A macro that runs `defaults write TeXShop KEY …` must name a setting that TeXShop reads: the value
+of a `…Key` string defined in Sources/App/globals.m outside comments, whose name the code outside
+comments uses. Commented-out definitions and notification names do not count. Colored source and
+Default Colored source wrote the color settings used before themes, which TeXShop no longer has."""
 from pathlib import Path
 import argparse
 import plistlib
@@ -13,16 +14,30 @@ import sys
 MUTATIONS = {
     # The removed macros come back.
     'colored-source': lambda macros: macros + ['--Applescript direct\ndo shell script "defaults write TeXShop background_R 0.3"'],
+    # A setting whose definition is only in a comment of globals.m.
+    'commented-key': lambda macros: macros + ['--Applescript direct\ndo shell script "defaults write TeXShop DarkModeInvertPreview YES"'],
+    # A notification name, which is no setting.
+    'notification-name': lambda macros: macros + ['--Applescript direct\ndo shell script "defaults write TeXShop SyntaxColoringChangedNotification 1"'],
     # A macro writes a setting that TeXShop reads (must still pass).
     'live-setting': lambda macros: macros + ['--Applescript direct\ndo shell script "defaults write TeXShop SourceWindowAlpha 0.9"'],
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
+parser.add_argument('--mutations', action='store_true', help='check that every mutation is caught, and that the control passes')
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 
-known = set(re.findall(r'NSString \*\w+\s*=\s*@"([^"]+)"', (root / 'Sources/App/globals.m').read_text()))
-known |= set(plistlib.loads((root / 'Resources/Defaults/FactoryDefaults.plist').read_bytes()))
+def code(text):
+    """The text without comments; string literals are kept."""
+    return re.sub(r'"(?:\\.|[^"\\\n])*"|/\*.*?\*/|//[^\n]*',
+                  lambda m: m.group(0) if m.group(0).startswith('"') else '\n' * m.group(0).count('\n') or ' ', text, flags=re.S)
+
+definitions = dict(re.findall(r'NSString \*(\w+Key)\s*=\s*@"([^"]+)"', code((root / 'Sources/App/globals.m').read_text())))
+used = set()
+for path in (root / 'Sources').rglob('*'):
+    if path.suffix in ('.m', '.h', '.mm', '.inc') and path.name not in ('globals.m', 'globals.h'):
+        used |= set(re.findall(r'\b\w+Key\b', code(path.read_text(errors='replace'))))
+known = {value for name, value in definitions.items() if name in used}
 
 def contents(item, found):
     if isinstance(item, dict):
@@ -37,14 +52,23 @@ files = sorted((root / 'Resources/TeXShop/Macros').glob('Macros_*.plist'))
 assert files, 'no bundled macros'
 for path in files:
     contents(plistlib.loads(path.read_bytes()), macros)
+
+
+def unread(texts):
+    return sorted({key for text in texts
+                   for key in re.findall(r'defaults write (?:TeXShop|TeXShop\.app|[\w.]+\.TeXShop) (\w+)', text)
+                   if key not in known})
+
+
+if args.mutations:
+    for name, mutate in sorted(MUTATIONS.items()):
+        caught = bool(unread(mutate(macros)))
+        assert caught == (name != 'live-setting'), f'mutation {name}: caught={caught}'
+        print(f'{"DETECTED" if caught else "ACCEPTED"} {name}')
 if args.mutation:
     macros = MUTATIONS[args.mutation](macros)
-problems = []
-for text in macros:
-    for key in re.findall(r'defaults write (?:TeXShop|TeXShop\.app|[\w.]+\.TeXShop) (\w+)', text):
-        if key not in known:
-            problems.append(key)
+problems = unread(macros)
 if problems:
-    print('FAIL: bundled macros write settings TeXShop does not read: ' + ', '.join(sorted(set(problems))))
+    print('FAIL: bundled macros write settings TeXShop does not read: ' + ', '.join(problems))
     sys.exit(1)
 print(f'PASS: {len(macros)} bundled macros in {len(files)} files write only settings TeXShop reads')
