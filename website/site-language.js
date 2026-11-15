@@ -37,6 +37,10 @@
       const href = link.getAttribute('href');
       if (href === '../downloads.html') link.setAttribute('href', preferred === 'ja' ? '../downloads-ja.html' : '../downloads.html');
       if (href === '../contact.html') link.setAttribute('href', preferred === 'ja' ? '../contact-ja.html' : '../contact.html');
+      if (href === '../whats-new.html') {
+        link.setAttribute('href', preferred === 'ja' ? '../whats-new-ja.html' : '../whats-new.html');
+        link.textContent = preferred === 'ja' ? 'TeXShop 6の新機能' : 'What’s New in TeXShop 6';
+      }
       if (link.classList.contains('history-archive')) link.setAttribute('href', preferred === 'ja' ? 'index-ja.html' : 'index.html');
     });
   });
