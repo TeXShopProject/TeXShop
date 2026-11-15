@@ -35,6 +35,7 @@
 
 #import "TSDocument.h"
 #import "TSDialogButtonLayout.h"
+#import "TSOlderPanelLayout.h"
 #import "TSExperimentConsoleController.h"
 #include <sys/xattr.h>
 #import <OgreKit/OgreKit.h> // zenitani 1.35 (A)
@@ -1251,6 +1252,7 @@ static void TSAddContextCopyOfSubmenu(NSMenu *contextMenu, SEL action)
 	// Older nibs put OK and Cancel edge to edge; space them as the guidelines describe.
 	for (NSWindow *panel in @[linePanel ?: (id)NSNull.null, projectPanel ?: (id)NSNull.null, extensionPanel ?: (id)NSNull.null])
 		if ([panel isKindOfClass:NSWindow.class]) TSLayoutDialogButtonRow(panel);
+	if (self.logWindow) TSLayoutLogWindow(self.logWindow);
 
     // Terada: Create WebKit views on the running OS instead of archiving OS-specific internals in nibs.
     if (self.htmlViewContainer && !self.htmlView) {
@@ -3289,8 +3291,7 @@ else {
 //		[printView release];
 	} else if (self.documentType == isTeX)
 		{
-		result = [NSApp runModalForWindow: printRequestPanel];
-		[printRequestPanel close];
+		result = [TSAlertForNoticePanel(printRequestPanel) runModal];
 		}
 }
 
@@ -4787,8 +4788,7 @@ if ( ! skipTextWindow) {
     NSStringEncoding theEncoding;
 
 	if (! [self fileURL]) {
-		result = [NSApp runModalForWindow: requestWindow];
-		[requestWindow close];
+		result = [TSAlertForNoticePanel(requestWindow) runModal];
 	}
 	else {
 

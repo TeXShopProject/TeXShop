@@ -24,6 +24,7 @@
 
 #import <AppKit/AppKit.h>
 #import "MyPDFView.h"
+#import "TSOlderPanelLayout.h"
 #import "TSDocument.h"
 #import "globals.h"
 #import <Carbon/Carbon.h>
@@ -3302,6 +3303,7 @@ failed. If you change the code below, be sure to test carefully!
 -(void)saveSelectionToFile: (id)sender
 {
 	NSSavePanel *savePanel = [NSSavePanel savePanel];
+	TSFitLabelsBeforePopUps(imageTypeView);
 	[savePanel  setAccessoryView: imageTypeView];
 //	[imageTypeView retain];
 	NSInteger itemIndex = [imageTypePopup indexOfItemWithTag: [SUD integerForKey: PdfExportTypeKey]];

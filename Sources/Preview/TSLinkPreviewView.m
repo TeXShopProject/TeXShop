@@ -16,6 +16,8 @@ static const CGFloat TSLinkPreviewLineSlack = 2;
 // The page label in the lower right corner: white bold text on a gray capsule.
 static const CGFloat TSLinkPreviewLabelFontSize = 11;
 static const CGFloat TSLinkPreviewLabelMargin = 3;
+// The popup's corners, in points on screen, as the corners of current macOS popovers.
+static const CGFloat TSLinkPreviewCornerRadius = 6;
 // A popup shows its linked page and, in the continuous displays, the next one (#14).
 #define TSLinkPreviewMaximumPages 2
 
@@ -101,6 +103,9 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     // Since macOS 14 a view may draw outside its bounds, and the image draws the whole
     // linked page: nothing outside the popup may be drawn (#21).
     NSRectClip(bounds);
+    CGFloat unit = [self unitsPerScreenPoint], radius = TSLinkPreviewCornerRadius * unit;
+    [[NSGraphicsContext currentContext] setShouldAntialias:YES];
+    [[NSBezierPath bezierPathWithRoundedRect:bounds xRadius:radius yRadius:radius] addClip];
     [[NSGraphicsContext currentContext] setShouldAntialias:NO];
     [[NSColor whiteColor] set];
     NSRectFill(bounds);
@@ -121,8 +126,12 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
             }
     }
     [self drawPageLabelInRect:bounds];
-    [[NSColor blackColor] set];
-    NSFrameRect(bounds);
+    // A thin edge that sets the page apart from the page under it; the page is always light.
+    [[NSGraphicsContext currentContext] setShouldAntialias:YES];
+    NSBezierPath *edge = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(bounds, unit / 2, unit / 2) xRadius:radius - unit / 2 yRadius:radius - unit / 2];
+    edge.lineWidth = unit;
+    [[NSColor colorWithWhite:0 alpha:0.35] setStroke];
+    [edge stroke];
 }
 
 - (void)drawPageLabelInRect:(NSRect)bounds

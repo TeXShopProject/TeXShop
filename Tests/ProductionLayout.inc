@@ -3,9 +3,15 @@
 // load every localized nib.
 #import "TSDialogButtonLayout.h"
 #import "TSMarkMenu.h"
+#import "TSOlderPanelLayout.h"
 // Older nibs set outlets directly on instance variables of these names.
 @interface SpacingOwner : NSObject { @public id linePanel, projectPanel, extensionPanel; }
 @property (strong) NSMutableDictionary *outlets;
+@end
+// The windows TSOlderPanelLayout fits after TSDocument loads its nib, and the
+// logWindow property, which the nib sets through its setter.
+@interface SpacingOwner () { @public id printRequestPanel, requestWindow; }
+@property (strong) id logWindow;
 @end
 @implementation SpacingOwner
 - (instancetype)init { if ((self = [super init])) _outlets = [NSMutableDictionary dictionary]; return self; }
@@ -41,5 +47,22 @@ static void ApplyProductionLayout(NSString *name, id owner, NSArray *objects) {
         for (NSWindow *w in windows) [w.contentView layoutSubtreeIfNeeded];
     } else if ([name isEqual:@"FindPanel.nib"]) {
         for (NSWindow *w in windows) TSLayoutBottomActionRow(w);
+    }
+    if ([name isEqual:@"TSDocument.nib"]) {
+        // TSDocument -windowControllerDidLoadNib: lays out the Log File window.
+        SpacingOwner *document = owner;
+        if (![document.logWindow isKindOfClass:NSWindow.class]) { printf("ERROR TSDocument.nib log window is not connected\n"); exit(2); }
+        TSLayoutLogWindow(document.logWindow);
+        // MyPDFKitView fits Image Type: in the accessory of its Save Selection panel.
+        for (id o in objects)
+            if ([o isKindOfClass:NSView.class])
+                for (NSView *v in [o subviews])
+                    if ([v isKindOfClass:NSPopUpButton.class] && [[((NSPopUpButton *)v).itemTitles componentsJoinedByString:@"\n"] containsString:@"JPEG"]) TSFitLabelsBeforePopUps(o);
+    } else if ([name isEqual:@"MainMenu.nib"]) {
+        // TSStationery draws its list without vertical grid lines; TSDocumentController fits Encoding: in the open panel.
+        for (id o in objects) {
+            if ([o isKindOfClass:NSWindow.class]) TSRemoveVerticalGridLines([o contentView]);
+            else if ([o isKindOfClass:NSView.class]) TSFitLabelsBeforePopUps(o);
+        }
     }
 }

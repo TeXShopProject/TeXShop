@@ -566,7 +566,7 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     NSArray *macros = [self.store macrosAffectedByRestoringAll];
     if (macros.count) alert.informativeText = [alert.informativeText stringByAppendingFormat:@"\n\n%@\n%@",
         NSLocalizedString(@"These macro shortcuts will become inactive:", @""), [macros componentsJoinedByString:@"\n"]];
-    [alert addButtonWithTitle:NSLocalizedString(@"Restore All", @"")]; [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+    [alert addButtonWithTitle:NSLocalizedString(@"Restore All", @"")].hasDestructiveAction = YES; [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
     __weak typeof(self) weakSelf = self;
     [alert beginSheetModalForWindow:parent completionHandler:^(NSModalResponse response) {
         TSShortcutPaneController *strongSelf = weakSelf;

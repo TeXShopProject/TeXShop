@@ -21,7 +21,7 @@ def write_sources(root, directory, inc_name):
                                                    + menu[menu.index('NSString *getKeyEquivalentFromString('):])
     (directory / 'ShortcutProduction.m').write_text(production_source(root))
     return [str(directory / 'MacroKeyFunctions.m'), str(directory / 'ShortcutProduction.m'), *companion_sources(root),
-            *(str(source_file(root, name)) for name in ('TSDialogButtonLayout.m', 'TSMarkMenu.m', 'TSListBottomBar.m',
+            *(str(source_file(root, name)) for name in ('TSDialogButtonLayout.m', 'TSOlderPanelLayout.m', 'TSMarkMenu.m', 'TSListBottomBar.m',
                                                         'TSMacroShortcutField.m', 'TSMacroTreeNode.m', 'TSPlaceholderToken.m',
                                                         'TSMacroContentKind.m', *PLACEHOLDER_RULES))]
 

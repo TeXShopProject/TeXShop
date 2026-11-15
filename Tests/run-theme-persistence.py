@@ -69,12 +69,12 @@ static NSString *alertMessage;
 static NSMutableArray *alertButtons;
 @interface FakeAlert:NSObject
 @property(copy) NSString *messageText;
-- (void)addButtonWithTitle:(NSString *)title;
+- (NSButton *)addButtonWithTitle:(NSString *)title;
 - (void)beginSheetModalForWindow:(FakePanel *)parent completionHandler:(void (^)(NSModalResponse))handler;
 @end
 @implementation FakeAlert
 - (instancetype)init { if ((self=[super init])) alertButtons=[NSMutableArray new]; return self; }
-- (void)addButtonWithTitle:(NSString *)title { [alertButtons addObject:title]; }
+- (NSButton *)addButtonWithTitle:(NSString *)title { [alertButtons addObject:title]; return [NSButton new]; }
 - (void)beginSheetModalForWindow:(FakePanel *)parent completionHandler:(void (^)(NSModalResponse))handler { alertMessage=[self.messageText copy];alertCompletion=[handler copy]; }
 @end
 #define NSAlert FakeAlert

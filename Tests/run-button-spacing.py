@@ -37,7 +37,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-button-spacing-') as tmp:
     tmp = Path(tmp)
     binary = tmp / 'ButtonSpacing'
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-framework', 'AVKit', '-I', str(tmp), '-I', str(root / 'Tests'), *include_args(root),
-                    str(root / 'Tests/ButtonSpacing.m'), str(root / 'Sources/Windows/TSDialogButtonLayout.m'), str(root / 'Sources/Editor/TSMarkMenu.m'), '-o', str(binary)], check=True)
+                    str(root / 'Tests/ButtonSpacing.m'), str(root / 'Sources/Windows/TSDialogButtonLayout.m'), str(root / 'Sources/Windows/TSOlderPanelLayout.m'), str(root / 'Sources/Editor/TSMarkMenu.m'), '-o', str(binary)], check=True)
     compiled = []
     for index, (label, source) in enumerate(sources):
         if source.suffix == '.xib':
