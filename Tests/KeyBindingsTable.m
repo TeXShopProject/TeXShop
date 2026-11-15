@@ -3,6 +3,7 @@
 // bindings are read from and written to a temporary folder only; copying and
 // pasting use a private pasteboard; beeps are counted, not sounded.
 #import "TestAppKitIsolation.h"
+#import "StripedRows.h"
 #import "TSKeyBindingsController.h"
 #import "GlobalData.h"
 #import "globals.h"
@@ -89,6 +90,13 @@ int main(int argc, char **argv) { @autoreleasepool {
     NSArray *order = bindings.keys;
     Check([[order subarrayWithRange:NSMakeRange(0, 3)] isEqual:(@[@"_", @"^", @"ab"])] && order.count == 5 && [order containsObject:@"≡"] && ![order containsObject:@"gone"], @"Rows follow the saved order, then the other keys");
     Check(table.numberOfRows == 5 && NSHeight(table.enclosingScrollView.frame) >= 6 * table.rowHeight + 28, @"The list shows at least six rows");
+    // Striped rows, like the menu shortcut list below it, light and dark.
+    for (NSAppearanceName name in @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]) {
+        NSString *detail = nil;
+        BOOL striped = table.selectedRowIndexes.count == 0 && TSTestRowsStriped(table, name, &detail);
+        printf("STRIPES %s\n", detail.UTF8String);
+        Check(striped, @"Neighboring rows have different backgrounds, light and dark");
+    }
     NSTableCellView *cell = [table viewAtColumn:1 row:0 makeIfNecessary:YES];
     Check(Tokens(cell.textField.attributedStringValue) == 2, @"An output is shown with its tokens");
     Check(SavedBindings() == nil, @"Opening the list writes nothing");
