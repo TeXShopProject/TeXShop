@@ -51,8 +51,8 @@
 "catalog.general.3.1.title" = "Minimizează fereastra principală deschisă";
 "group.general.5.title" = "Avansat";
 "group.general.6.title" = "Pictograma din Dock în timpul rulării";
-"catalog.general.5.0.title" = "Setările care nu apar aici sunt descrise în documentul de ajutor „Linii de comentariu și setări ascunse”.";
-"catalog.general.5.1.title" = "Deschide Linii de comentariu și setări ascunse";
+"catalog.general.5.0.title" = "Setările care nu apar aici sunt descrise în documentul de ajutor „Linii de comentarii și configurări ascunse”.";
+"catalog.general.5.1.title" = "Deschide manualul pentru linii de comentarii și configurări ascunse…";
 "group.encoding.title" = "Codificare";
 "catalog.documents.0.0.title" = "Codificarea documentelor noi";
 "catalog.documents.0.1.title" = "Afișează codificarea în dialogul de salvare";

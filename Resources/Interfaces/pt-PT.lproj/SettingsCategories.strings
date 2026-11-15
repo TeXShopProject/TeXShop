@@ -52,7 +52,7 @@
 "group.general.5.title" = "Avançadas";
 "group.general.6.title" = "Ícone da Dock durante a execução";
 "catalog.general.5.0.title" = "As definições que não aparecem aqui são descritas na ajuda «Linhas de comentário e definições ocultas».";
-"catalog.general.5.1.title" = "Abrir Linhas de comentário e definições ocultas";
+"catalog.general.5.1.title" = "Abrir o manual de linhas de comentário e definições ocultas…";
 "group.encoding.title" = "Codificação";
 "catalog.documents.0.0.title" = "Codificação dos novos documentos";
 "catalog.documents.0.1.title" = "Mostrar codificação no diálogo Guardar";
