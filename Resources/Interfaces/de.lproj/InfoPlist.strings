@@ -9,7 +9,7 @@
  	the translation for the interface */
 
   "TeX File" = "TeX Dokument";
-  "LaTeX File" = "LTX File";
+  "LaTeX File" = "LaTeX-Datei";
   "ConTeXt File" = "ctx Datei";
   "HTML File" = "HTML-Datei";
   "TEXI File" = "TEXI-Datei";
@@ -29,7 +29,7 @@
   "epsi" = "EPSI Dokument";
   "log" = "TeX Log Datei";
   "aux" = "TeX Aux Datei";
-  "PostscriptFile" = "Postscript-Dokument";
+  "PostscriptFile" = "PostScript-Dokument";
   "HieroTeX File" = "HieroTeX-Dokument";
   "Sketch File" = "Sketch-Dokument";
   "texshop" = "texshop";
@@ -55,7 +55,7 @@
   "lbx" = "lbc Datei";
   "bbx" = "bbx Datei";
   "skt" = "skt Datei";
-  "py" = "py Datei";
+  "py" = "Python-Datei";
   NSStringPboardType = "Reines Textdokument";
   "md" = "md Datei";
   "Plain Text" = "Reiner Text";

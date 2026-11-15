@@ -115,7 +115,7 @@ tiToolTipMouseMode			= "Alterar modo do Mouse";
 
 tiLabelSyncMarks			= "Marcas sinc.";
 tiPaletteLabelSyncMarks			= "Marcas de sincronismo";
-tiToolTipSyncMarks			= "Exibir Sync Marks";
+tiToolTipSyncMarks			= "Exibir marcas de sincronismo";
 
 tiLabelColorIndex				= "Índice de cores";
 tiPaletteLabelColorIndex		= "Índice de cores";
@@ -163,7 +163,7 @@ tiToolTipMouseModeSelectPDF = "Selecionar PDF: arrastar para selecionar uma áre
 
 tiLabelSyncMarksKIT				= "Marcas sinc.";
 tiPaletteLabelSyncMarksKIT		= "Marcas de sincronismo";
-tiToolTipSyncMarksKIT			= "Exibir Sync Marks";
+tiToolTipSyncMarksKIT			= "Exibir marcas de sincronismo";
 
 tiLabelSearchKIT				= "Buscar";
 tiPaletteLabelSearchKIT         = "Buscar";
@@ -183,8 +183,8 @@ tiLabelDrawerKIT				= "Gaveta";
 tiPaletteLabelDrawerKIT			= "Gaveta";
 tiToolTipDrawerKIT				= "Alternar gaveta";
 
-tiLabelShowFullPath				= "CaminhoCompleto";
-tiPaletteLabelShowFullPath		= "CaminhoCompleto";
+tiLabelShowFullPath				= "Caminho completo";
+tiPaletteLabelShowFullPath		= "Caminho completo";
 tiToolTipShowFullPath			= "Exibir o caminho completo no título da janela";
 
 tiLabelProgramSplit				= "Programa";

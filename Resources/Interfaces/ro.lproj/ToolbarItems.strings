@@ -12,8 +12,8 @@ tiLabelTypeset				= "Compilare";
 tiPaletteLabelTypeset			= "Compilare";
 tiToolTipTypeset			= "Rulați programul de tehnoredactare";
 
-tiLabelSharing				= "Sharing";
-tiPaletteLabelSharing		= "Sharing";
+tiLabelSharing				= "Partajați";
+tiPaletteLabelSharing		= "Partajați";
 tiToolTipSharing			= "Partajați text și imagini";
 
 
@@ -129,8 +129,8 @@ tiLabelTypesetKIT				= "Compilare";
 tiPaletteLabelTypesetKIT		= "Compilare";
 tiToolTipTypesetKIT				= "Rulați programul de tehnoredactare";
 
-tiLabelSharingKIT				= "Sharing";
-tiPaletteLabelSharingKIT		= "Sharing";
+tiLabelSharingKIT				= "Partajați";
+tiPaletteLabelSharingKIT		= "Partajați";
 tiToolTipSharingKIT				= "Partajați text și imagini";
 
 

@@ -1,5 +1,5 @@
 {
- "policy": "Text that may equal the English text. all_languages: program, format, LaTeX command and environment names, math operators, and placeholders that are replaced at run time or never shown (prototype cells, window titles replaced by document names, sheet titles). languages: words that are the same in that language, per file, each reviewed for this localization. Never add a wording because a check failed; translate it. shared: per language, words that an element also has in another language (outside Spanish and the two Portuguese) because they are the same in both. pending: per language and file, untranslated texts of nibs that another change is translating; reported as notes until that change lands, then removed.",
+ "policy": "Text that may equal the English text. all_languages: program, format, LaTeX command and environment names, math operators, and placeholders that are replaced at run time or never shown (prototype cells, window titles replaced by document names, sheet titles). languages: words that are the same in that language, per file, each reviewed for this localization. Never add a wording because a check failed; translate it. shared: per language, words that a nib element or a .strings text also has in other languages (outside Spanish and the two Portuguese) because they are the same in them. pending: per language and file, untranslated texts of nibs that another change is translating; reported as notes until that change lands, then removed.",
  "all_languages": [
   "-- DO NOT LOCALIZE THIS! --",
   "Align",
@@ -171,8 +171,7 @@
     "Macros"
    ],
    "ToolbarItems.strings": [
-    "Macros",
-    "Make Index"
+    "Macros"
    ],
    "completionpanel1.2.nib": [
     "Roman",
@@ -260,7 +259,8 @@
     "Labels",
     "Tab",
     "Updates",
-    "Variant"
+    "Variant",
+    "Stop experiment"
    ],
    "MacroEditor.nib": [
     "Submenu",
@@ -287,7 +287,8 @@
     "Project"
    ],
    "ToolbarItems.strings": [
-    "Labels"
+    "Labels",
+    "Zoom in"
    ],
    "completionpanel1.2.nib": [
     "Matrix",
@@ -395,22 +396,36 @@
   }
  },
  "shared": {
+  "de": [
+   "Variante"
+  ],
+  "es": [
+   "Variante"
+  ],
   "fr": [
    "PDF direct",
-   "Parole"
+   "Parole",
+   "Variante"
   ],
   "it": [
    "Formato:",
    "Macro",
    "Pag.",
-   "Pagina"
+   "Pagina",
+   "Variante",
+   "Pagina %@"
   ],
   "nl": [
-   "Extensie:"
+   "Extensie:",
+   "Pagina %@"
   ],
   "pt-PT": [
    "Formato:",
-   "Principal:"
+   "Principal:",
+   "Variante"
+  ],
+  "pt": [
+   "Variante"
   ],
   "ro": [
    "Extensie:",
@@ -418,29 +433,9 @@
    "Pag.",
    "PDF direct",
    "Principal:",
-   "Texte"
+   "Texte",
+   "Pagina %@"
   ]
  },
- "pending": {
-  "fr": {
-   "MacroEditor.nib": [
-    "Macro Editor"
-   ]
-  },
-  "nl": {
-   "MacroEditor.nib": [
-    "Macro Editor"
-   ]
-  },
-  "pt-PT": {
-   "MacroEditor.nib": [
-    "Macro Editor"
-   ]
-  },
-  "ro": {
-   "MacroEditor.nib": [
-    "Macro Editor"
-   ]
-  }
- }
+ "pending": {}
 }

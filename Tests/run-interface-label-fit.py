@@ -10,6 +10,12 @@ InterfaceLabelFit.m that
   * each button title fits its cell, also with the automatic bezel that toolbar
     buttons use on macOS 26 and later; each matrix cell and each pop-up choice
     fits too;
+  * the title of a pull-down button (its first item, which the menu hides) fits
+    the room its arrow leaves;
+  * each custom view of the toolbars, which TSDocument.nib keeps in views of
+    their own, shows its whole text on its own (where the parts lie in those
+    views does not matter), the Tags and Labels pull-downs with the titles and
+    widths the toolbar gives them;
   * nothing a control draws reaches past its window, box, tab or other
     enclosing view, so a label wider than its window is found even when its
     frame is wide enough for its text;

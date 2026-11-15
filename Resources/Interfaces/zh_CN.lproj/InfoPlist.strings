@@ -55,7 +55,7 @@
   "lbx" = "lbc";
   "bbx" = "bbx";
   "skt" = "skt";
-  "py" = "py";
+  "py" = "Python文件";
   NSStringPboardType = "UTF-8纯文本";
   "md" = "md";
   "Plain Text" = "纯文本";

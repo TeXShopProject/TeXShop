@@ -73,6 +73,9 @@ int main(int argc, char **argv) { @autoreleasepool {
                 NSWindow *w = o;
                 NSString *where = [NSString stringWithFormat:@"%@ [%@]", label, w.title.length ? w.title : @"untitled window"];
                 CheckWindow(w, where); roots++;
+            } else if (ToolbarParts(o)) {
+                // Named by the number of parts: TSDocument.nib has two such views.
+                CheckToolbarParts(o, [NSString stringWithFormat:@"%@ [toolbar parts, %lu views]", label, (unsigned long)[o subviews].count]); roots++;
             } else if ([o isKindOfClass:NSView.class]) {
                 CheckRoot(o, [NSString stringWithFormat:@"%@ [view]", label]); roots++;
             }

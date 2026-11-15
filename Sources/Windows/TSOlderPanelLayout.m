@@ -168,3 +168,20 @@ void TSRemoveVerticalGridLines(NSView * _Nullable root)
     }
     for (NSView *child in root.subviews) TSRemoveVerticalGridLines(child);
 }
+
+void TSFitToolbarPullDown(NSPopUpButton *button, NSString *title)
+{
+    if (button.numberOfItems == 0) [button addItemWithTitle:title];
+    else [[button itemAtIndex:0] setTitle:title];
+    // The title takes the room the arrow leaves. TSToolbarController gives the buttons of
+    // the toolbar the toolbar bezel, so the room is measured with the nib's and with that one.
+    CGFloat missing = 0;
+    for (NSNumber *bezel in @[@(button.bezelStyle), @(NSBezelStyleToolbar)]) {
+        NSPopUpButtonCell *cell = [(NSPopUpButtonCell *)button.cell copy];
+        cell.bezelStyle = bezel.unsignedIntegerValue;
+        [cell removeAllItems]; [cell addItemWithTitle:title]; [cell selectItemAtIndex:0];
+        NSRect bounds = NSMakeRect(0, 0, NSWidth(button.frame), NSHeight(button.frame));
+        missing = MAX(missing, cell.attributedTitle.size.width - [cell titleRectForBounds:bounds].size.width);
+    }
+    if (missing > 0) [button setFrameSize:NSMakeSize(NSWidth(button.frame) + ceil(missing), NSHeight(button.frame))];
+}
