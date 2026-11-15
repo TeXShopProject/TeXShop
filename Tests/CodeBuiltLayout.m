@@ -81,17 +81,24 @@ int main(int argc, char **argv) { @autoreleasepool {
         console.commandField.enabled = YES; console.stopButton.enabled = YES;
         CheckWindow(console.window, [NSString stringWithFormat:@"%@ [Experiment console]", language]); roots++;
 
-        // The Change All view, with each message it shows below the field.
+        // The Change All row, and the popover with each message Change All reports.
         NSTextField *field = nil, *status = nil;
         NSView *accessory = TSChangeAllAccessory([ChangeAllTarget new], &field, &status);
         NSWindow *holder = [[NSWindow alloc] initWithContentRect:accessory.frame styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:YES];
         holder.contentView = accessory;
-        for (NSString *message in @[@"", NSLocalizedString(@"Return to the word and choose Find Next before replacing.", @""),
+        CheckRoot(accessory, [NSString stringWithFormat:@"%@ [Change All below the spelling panel]", language]); roots++;
+        SaveImage(accessory, [NSString stringWithFormat:@"%@ [Change All below the spelling panel]", language]);
+        for (NSString *message in @[NSLocalizedString(@"Return to the word and choose Find Next before replacing.", @""),
                                     NSLocalizedString(@"Enter a different replacement in the Change All field.", @"")]) {
             status.stringValue = message;
-            CheckRoot(accessory, [NSString stringWithFormat:@"%@ [Change All below the spelling panel]%@", language, message.length ? [@" " stringByAppendingString:message] : @""]); roots++;
+            NSView *popover = TSChangeAllStatusView(status);
+            NSWindow *popoverHolder = [[NSWindow alloc] initWithContentRect:popover.frame styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:YES];
+            popoverHolder.contentView = popover;
+            NSString *name = [NSString stringWithFormat:@"%@ [Change All message] %@", language, message];
+            CheckRoot(popover, name); roots++;
+            SaveImage(popover, name);
+            [popover removeFromSuperview]; [popover addSubview:status];
         }
-        SaveImage(accessory, [NSString stringWithFormat:@"%@ [Change All below the spelling panel]", language]);
 
         // The installations found, laid out by NSAlert as it shows them.
         // A path longer than a line is shown with an ellipsis and in full in its
