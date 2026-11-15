@@ -16,7 +16,7 @@ from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
 p = argparse.ArgumentParser()
-p.add_argument('--mutation', choices=['no-fit', 'no-column', 'no-tie', 'tall-row'])
+p.add_argument('--mutation', choices=['no-fit', 'no-column', 'no-tie', 'tall-row', 'no-widen'])
 args = p.parse_args()
 
 source = (root / 'Sources/Editor/TSSpellSupport.m').read_text(encoding='utf-8')
@@ -25,12 +25,16 @@ block = source[source.index(begin):source.index(end) + len(end)]
 assert 'FitChangeAllRow(accessory);' in source, 'the application fits the row to the panel'
 
 mutations = {
+    # Negative control for the check itself: without widening the window to the
+    # content, the panel's own columns, and the row with them, run out of the
+    # window in the languages whose columns need more than the narrowest width.
+    'no-widen': ('if (needed > NSWidth([panel contentRectForFrameRect:panel.frame]) + 0.5) { // WIDEN TO CONTENT', 'if (0) { // WIDEN TO CONTENT'),
     'no-fit': ('    if (!container) return;', '    if (container) return;'),
     'no-tie': ('    if (!popUp || !column || !field || !button) return;', '    return;'),
     'no-column': ('[button.trailingAnchor constraintEqualToAnchor:column.trailingAnchor],', ''),
     'tall-row': ('NSMakeRect(0, 0, 431, 36)', 'NSMakeRect(0, 0, 431, 76)'),
 }
-if args.mutation:
+if args.mutation and args.mutation != 'no-widen':
     old, new = mutations[args.mutation]
     assert block.count(old) == 1, args.mutation
     block = block.replace(old, new)
@@ -82,6 +86,16 @@ int main(void) { @autoreleasepool {
         frame.size.height = NSHeight(start) + (i == 1 ? 200 : 0);
         [panel setFrame:frame display:NO];
         [panel.contentView layoutSubtreeIfNeeded];
+        // AppKit keeps the content as wide as the panel's columns need in this
+        // language, wider than a narrower window. Check at the narrowest width
+        // the window shows all of it, as a user narrowing the panel sees it.
+        CGFloat needed = NSWidth(panel.contentView.bounds);
+        if (needed > NSWidth([panel contentRectForFrameRect:panel.frame]) + 0.5) { // WIDEN TO CONTENT
+            frame.size.width = NSWidth([panel frameRectForContentRect:NSMakeRect(0, 0, needed, 100)]);
+            [panel setFrame:frame display:NO];
+            [panel.contentView layoutSubtreeIfNeeded];
+        } // END WIDEN TO CONTENT
+        CGFloat visible = NSWidth([panel contentRectForFrameRect:panel.frame]);
         NSRect p = Edges(popUp), f = Edges(field);
         NSRect c = Edges(change), a = Edges(changeAll);
         NSString *at = [NSString stringWithFormat:@" (%s, %s, panel %.0f wide)", NSBundle.mainBundle.preferredLocalizations.firstObject.UTF8String, names[i], NSWidth(frame)];
@@ -90,13 +104,19 @@ int main(void) { @autoreleasepool {
         Check(Near(NSMidY(a), NSMidY(f)), [@"Change All is centered on the field" stringByAppendingString:at]);
         Check(Near(NSMinY(f), 16), [NSString stringWithFormat:@"16 points below the field, not %.1f%@", NSMinY(f), at]);
         Check(Near(NSMinY(p) - NSMaxY(f), 12), [NSString stringWithFormat:@"12 points between the field and the pop-up, not %.1f%@", NSMinY(p) - NSMaxY(f), at]);
-        Check(NSMaxX(a) <= NSWidth(panel.contentView.bounds) && NSMinX(f) >= 0, [@"the row stays inside the panel" stringByAppendingString:at]);
+        Check(NSMaxX(a) <= visible + 0.5 && NSMaxX(f) <= visible + 0.5 && NSMinX(f) >= 0,
+              [NSString stringWithFormat:@"the row stays inside the window, %.1f wide, not to %.1f%@", visible, NSMaxX(a), at]);
     }
     checker.accessoryView = nil;
     if (failures) return 1;
     printf("%s ok\n", NSBundle.mainBundle.preferredLocalizations.firstObject.UTF8String);
 }}
 '''
+
+if args.mutation == 'no-widen':
+    old, new = mutations[args.mutation]
+    assert program.count(old) == 1, args.mutation
+    program = program.replace(old, new)
 
 languages = sorted(d.name[:-len('.lproj')] for d in (root / 'Resources/Interfaces').glob('*.lproj') if d.name != 'Base.lproj')
 assert len(languages) >= 12, languages
