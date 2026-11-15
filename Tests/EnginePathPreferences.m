@@ -164,7 +164,7 @@ int main(void) { @autoreleasepool {
     NSSegmentedControl *latexmk = (NSSegmentedControl *)FindIn(profileWindow.window.contentView, @"settings.engine-profile-latexmk");
     NSMutableArray *tags = [NSMutableArray array];
     for (NSMenuItem *item in profiles.itemArray) if (!item.isSeparatorItem) [tags addObject:@(item.tag)];
-    check([tags isEqual:@[@1, @2, @3, @4, @5, @6, @7]], [NSString stringWithFormat:@"first launch offers seven profiles, without dvips: %@", tags]);
+    check([tags isEqual:@[@1, @2, @3, @4, @5, @7, @6]], [NSString stringWithFormat:@"first launch offers seven profiles, without dvips, the Japanese ones LuaLaTeX, upLaTeX, then pLaTeX: %@", tags]);
     check(profiles == profileWindow.profileMenu && latexmk == profileWindow.latexmkChoice && profiles.selectedTag == TSEngineProfileForLanguages(NSLocale.preferredLanguages) && latexmk.selectedSegment == 0,
           @"the profile for the preferred language is chosen, without latexmk");
     check([profileWindow.okButton.keyEquivalent isEqual:@"\r"] && [profileWindow.cancelButton.keyEquivalent isEqual:@"\e"] && NSMinX(profiles.frame) <= 20, @"the profile window has OK and Cancel, its menu at the left");
