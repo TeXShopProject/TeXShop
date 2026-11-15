@@ -22,7 +22,7 @@ def run(text):
         binary = tmp / 'test'
         syntax = [root / 'Sources/Syntax' / name for name in ('TSSyntaxColorScheme.m', 'TSSyntaxTeXOptions.m')]
         subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-I', str(tmp), '-I', str(root / 'Tests'), *include_args(root),
-                        str(root / 'Tests/AdvancedFindFieldStyle.m'), str(root / 'Sources/Editor/TSColorSupport.m'), str(root / 'Sources/App/globals.m'),
+                        str(root / 'Tests/AdvancedFindFieldStyle.m'), str(root / 'Sources/Editor/TSColorSupport.m'), str(root / 'Sources/Settings/TSThemeFileStore.m'), str(root / 'Sources/App/globals.m'),
                         *map(str, syntax), str(root / 'Sources/Find/TSAdvancedFindFieldStyle.m'), '-o', str(binary)], check=True)
         themes = root / 'Resources/TeXShop/Themes'
         return subprocess.run([str(binary), str(themes / 'SolarizedLite.plist'), str(themes / 'Dracula.plist')], capture_output=True, text=True, timeout=60)
