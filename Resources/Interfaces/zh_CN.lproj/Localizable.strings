@@ -149,16 +149,15 @@
 "Search commands" = "搜索命令";
 "Command" = "命令";
 "Shortcut" = "快捷键";
-"Change…" = "更改…";
 "Remove Shortcut" = "移除快捷键";
 "Restore Default" = "恢复默认";
+"Default shortcut: %@" = "默认快捷键：%@";
+"Default shortcut: None" = "默认快捷键：无";
 "Restore All…" = "全部恢复…";
 "Restore All" = "全部恢复";
 "Change Shortcut" = "更改快捷键";
-"Apply" = "应用";
 "Shortcut Unavailable" = "快捷键不可用";
 "Restore all keyboard shortcuts?" = "恢复所有键盘快捷键？";
-"New shortcut" = "新快捷键";
 "This command is no longer available." = "此命令已不可用。";
 "This shortcut is already used by “%@”." = "此快捷键已被“%@”使用。";
 

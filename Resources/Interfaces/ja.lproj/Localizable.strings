@@ -158,16 +158,15 @@
 "Search commands" = "機能を検索";
 "Command" = "コマンド";
 "Shortcut" = "ショートカット";
-"Change…" = "変更…";
 "Remove Shortcut" = "解除";
 "Restore Default" = "デフォルトに戻す";
+"Default shortcut: %@" = "デフォルトのショートカット: %@";
+"Default shortcut: None" = "デフォルトのショートカット: なし";
 "Restore All…" = "すべて元に戻す…";
 "Restore All" = "すべて元に戻す";
 "Change Shortcut" = "ショートカットを変更";
-"Apply" = "適用";
 "Shortcut Unavailable" = "割り当てできません";
 "Restore all keyboard shortcuts?" = "すべてのショートカットを元に戻しますか？";
-"New shortcut" = "新しいショートカット";
 "This command is no longer available." = "このコマンドは利用できなくなりました。";
 "This shortcut is already used by “%@”." = "このショートカットは「%@」で使用されています。";
 

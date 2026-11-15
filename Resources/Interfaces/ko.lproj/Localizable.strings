@@ -153,16 +153,15 @@
 "Search commands" = "명령 검색";
 "Command" = "명령";
 "Shortcut" = "단축키";
-"Change…" = "변경…";
 "Remove Shortcut" = "단축키 제거";
 "Restore Default" = "기본값 복원";
+"Default shortcut: %@" = "기본 단축키: %@";
+"Default shortcut: None" = "기본 단축키: 없음";
 "Restore All…" = "모두 복원…";
 "Restore All" = "모두 복원";
 "Change Shortcut" = "단축키 변경";
-"Apply" = "적용";
 "Shortcut Unavailable" = "사용할 수 없는 단축키";
 "Restore all keyboard shortcuts?" = "모든 키보드 단축키를 복원하시겠습니까?";
-"New shortcut" = "새 단축키";
 "This command is no longer available." = "이 명령은 더 이상 사용할 수 없습니다.";
 "This shortcut is already used by “%@”." = "이 단축키는 이미 “%@”에서 사용 중입니다.";
 
