@@ -37,7 +37,10 @@ static CGFloat TSTop(NSClipView *clip)
 // that PDFKit is about to change again (measured on macOS 14 and 15, and in the test with
 // a document view that is not flipped): the text noted then is not the text at the top.
 // The views are left to PDFKit then, as before. The Preview views have no content insets
-// (measured on macOS 14, 15 and 26), except for a moment while the window's height changes.
+// (measured on macOS 14, 15 and 26), except for a moment while the window's height changes,
+// and except for the band under the toolbar of a window whose content runs under it (macOS 26
+// and later). With that band the text does not move when a scroller comes or goes, also with
+// a document view that is not flipped (measured in the test), so it is left to PDFKit too.
 static BOOL TSHasInsets(NSScrollView *scroll)
 {
     NSEdgeInsets insets = scroll.contentInsets;

@@ -79,6 +79,7 @@
 <li>The Experiment source looks like the document’s source: font, syntax colors, line numbers, invisible characters and the other display settings.</li>
 <li>The Experiment windows use the theme’s colors and the window opacity.</li>
 <li>The Experiment preview has the Scroll, Select Text, Magnify and Select PDF tools and zoom buttons in its toolbar.</li>
+<li>The Tags menus in the toolbar and in the menu bar are up to date whenever they open, so the Update button is removed from the toolbar.</li>
 </ul>
 <h3>Settings window</h3>
 <ul>
@@ -111,7 +112,7 @@
 <ul>
 <li>A new app icon in a white rounded square, after the classic circular icon. Suggested by <a href="https://github.com/LaTeX-fetishist">LaTeX fetishist</a> and <a href="https://github.com/martignoni">Nicolas Martignoni</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/3">#3</a>).</li>
 <li>Choose one of five Dock icons, including earlier designs, under Settings → General; it is shown while TeXShop is running. Suggested by <a href="https://github.com/LaTeX-fetishist">LaTeX fetishist</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/3">#3</a>).<figure class="note-shot"><img src="assets/whats-new/en/dock-icons.png" width="600" height="450" alt="The choice of Dock icons in the General category of Settings" loading="lazy"></figure></li>
-<li>On macOS 26 and later, the toolbars use the Liquid Glass appearance, with Typeset as the prominent button.</li>
+<li>On macOS 26 and later, TeXShop uses the Liquid Glass appearance: Typeset is the prominent button of the toolbars, and the text and pages of the source window, the Preview window and the single window scroll under the toolbar and show through its glass.</li>
 <li>Light pages in the preview are filled with the theme’s Preview background color again, labeled “Light Pages” in Settings → Themes. Reported by <a href="https://github.com/ethanphil4-a11y">ethanphil4-a11y</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/39">#39</a>).</li>
 <li>The Back/Forward item of the preview toolbar has the chevrons of Apple’s Preview and is dimmed when there is nowhere to go. Suggested by Bruno Voisin.<figure class="note-shot"><img src="assets/release-notes/en/preview-toolbar.png" width="600" height="244" alt="The toolbar of the Preview window with the Back and Forward chevrons and the page layout menus" loading="lazy"></figure></li>
 <li>The preview toolbar offers one pair of Previous Page and Next Page buttons, with the icons of the Preview app.</li>
@@ -170,6 +171,7 @@
 <li>Fix a crash while the preview reloads.</li>
 <li>Space and Shift-Space scroll correctly when a page is larger than the window.</li>
 <li>A new preview window no longer covers the frontmost one exactly.</li>
+<li>In Dark Mode, a split Preview window no longer shows a light gray band between its parts, and the drawer no longer has a light gray frame.</li>
 </ul>
 <h3>Fixes: opening and saving documents</h3>
 <ul>
@@ -198,6 +200,7 @@
 <li>Long source documents open, scroll and edit faster.</li>
 <li>Left alignment is kept in right-to-left paragraphs.</li>
 <li>The Tags menu stays localized in the single window.</li>
+<li>Splitting the source in the single window divides it evenly; the lower part was sometimes left much smaller.</li>
 <li>The Home URL setting of the HTML window works, and the window opens the TeXShop web site by default.</li>
 <li>Controls that did nothing or the wrong thing in some languages work: opening images in Spanish, the log window in French, toolbar items in Portuguese and Simplified Chinese, the URL field of the HTML window in Korean and Simplified Chinese, a help item in Italian, and the Matrix panel in ten languages.</li>
 <li>The annotation panel shows its buttons correctly in French and Portuguese, and the English Edit menu has Change Encoding.</li>

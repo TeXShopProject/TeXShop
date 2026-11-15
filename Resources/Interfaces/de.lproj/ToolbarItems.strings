@@ -242,14 +242,6 @@ tiLabelLabelsSplit                = "Labels";
 tiPaletteLabelLabelsSplit         = "Labels";
 tiToolTipLabelsSplit              = "Label auswählen, zu dem gescrollt werden soll";
 
-tiLabelUpdate              = "Aktualisieren";
-tiPaletteLabelUpdate         = "Aktualisieren";
-tiToolTipUpdate              = "Tags und Labels aktualisieren";
-
-tiLabelUpdateSplit                = "Aktualisieren";
-tiPaletteLabelUpdateSplit         = "Aktualisieren";
-tiToolTipUpdateSplit              = "Tags und Labels aktualisieren";
-
 tiLabelHtmlPreviousPageButton                = "Zurück";
 tiPaletteLabelHtmlPreviousPageButton            = "Zurück";
 tiToolTipHtmlPreviousPageButton            = "Zurück";

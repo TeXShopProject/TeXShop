@@ -101,6 +101,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds the Advanced Find panel, LaTeX-aware 
 \item The Experiment source looks like the document’s source: font, syntax colors, line numbers, invisible characters and the other display settings.
 \item The Experiment windows use the theme’s colors and the window opacity.
 \item The Experiment preview has the Scroll, Select Text, Magnify and Select PDF tools and zoom buttons in its toolbar.
+\item The Tags menus in the toolbar and in the menu bar are up to date whenever they open, so the Update button is removed from the toolbar.
 \end{itemize}
 
 \subsection{Settings window}
@@ -137,7 +138,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds the Advanced Find panel, LaTeX-aware 
 \begin{itemize}
 \item A new app icon in a white rounded square, after the classic circular icon. Suggested by \href{https://github.com/LaTeX-fetishist}{LaTeX fetishist} and \href{https://github.com/martignoni}{Nicolas Martignoni} (\href{https://github.com/TeXShopProject/TeXShop/issues/3}{\#3}).
 \item Choose one of five Dock icons, including earlier designs, under Settings \(\rightarrow\) General; it is shown while TeXShop is running. Suggested by \href{https://github.com/LaTeX-fetishist}{LaTeX fetishist} (\href{https://github.com/TeXShopProject/TeXShop/issues/3}{\#3}).
-\item On macOS 26 and later, the toolbars use the Liquid Glass appearance, with Typeset as the prominent button.
+\item On macOS 26 and later, TeXShop uses the Liquid Glass appearance: Typeset is the prominent button of the toolbars, and the text and pages of the source window, the Preview window and the single window scroll under the toolbar and show through its glass.
 \item Light pages in the preview are filled with the theme’s Preview background color again, labeled “Light Pages” in Settings \(\rightarrow\) Themes. Reported by \href{https://github.com/ethanphil4-a11y}{ethanphil4-a11y} (\href{https://github.com/TeXShopProject/TeXShop/issues/39}{\#39}).
 \item The Back/Forward item of the preview toolbar has the chevrons of Apple’s Preview and is dimmed when there is nowhere to go. Suggested by Bruno Voisin.
 \item The preview toolbar offers one pair of Previous Page and Next Page buttons, with the icons of the Preview app.
@@ -202,6 +203,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds the Advanced Find panel, LaTeX-aware 
 \item Fix a crash while the preview reloads.
 \item Space and Shift-Space scroll correctly when a page is larger than the window.
 \item A new preview window no longer covers the frontmost one exactly.
+\item In Dark Mode, a split Preview window no longer shows a light gray band between its parts, and the drawer no longer has a light gray frame.
 \end{itemize}
 
 \subsection{Fixes: opening and saving documents}
@@ -234,6 +236,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds the Advanced Find panel, LaTeX-aware 
 \item Long source documents open, scroll and edit faster.
 \item Left alignment is kept in right-to-left paragraphs.
 \item The Tags menu stays localized in the single window.
+\item Splitting the source in the single window divides it evenly; the lower part was sometimes left much smaller.
 \item The Home URL setting of the HTML window works, and the window opens the TeXShop web site by default.
 \item Controls that did nothing or the wrong thing in some languages work: opening images in Spanish, the log window in French, toolbar items in Portuguese and Simplified Chinese, the URL field of the HTML window in Korean and Simplified Chinese, a help item in Italian, and the Matrix panel in ten languages.
 \item The annotation panel shows its buttons correctly in French and Portuguese, and the English Edit menu has Change Encoding.

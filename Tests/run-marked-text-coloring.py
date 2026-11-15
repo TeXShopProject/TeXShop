@@ -216,7 +216,7 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
 @property (strong) NoodleLineNumberView *lineNumberView1, *lineNumberView2, *logLineNumberView;
 @property (strong) NSButton *indexColorBox;
 - (BOOL)indexColorState;
-- (IBAction)doUpdate:(id)sender;
+- (void)setupTagsAndLabelsAfterLoading;
 - (void)setupTags;
 - (void)colorizeAll;
 - (void)colorizeVisibleAreaInTextView:(NSTextView *)aTextView;
@@ -298,7 +298,7 @@ static TSSyntaxColorScheme *SchemeOf(TSDocument *doc)
 @implementation TSDocument
 @synthesize textView = textView;
 - (TSSyntaxColorScheme *)syntaxColorScheme { return SchemeOf(self); }
-- (IBAction)doUpdate:(id)sender {}
+- (void)setupTagsAndLabelsAfterLoading {}
 - (void)setupTags {}
 @@DOCUMENT_METHODS@@
 @@TOGGLE_XML@@

@@ -227,6 +227,7 @@ background
 backslash
 backward
 bad
+band
 bar
 bars
 based
@@ -370,7 +371,6 @@ common
 compatibility
 compilation
 compiled
-complain
 complained
 complaining
 complains
@@ -531,6 +531,7 @@ displays
 distiller
 distilleropts
 divider
+divides
 do
 dock
 document
@@ -555,7 +556,6 @@ dread
 drive
 driver
 due
-duplicate
 duplicated
 duplicating
 during
@@ -619,6 +619,7 @@ etc
 ethanphil4
 european
 even
+evenly
 eventually
 everything
 exact
@@ -653,7 +654,6 @@ expression
 expressions
 extend
 extended
-extends
 extension
 extensions
 extra
@@ -692,7 +692,6 @@ filter
 final
 finally
 find
-finder's
 finds
 fine
 finster
@@ -735,6 +734,7 @@ four
 fourier
 fraction
 fractional
+frame
 french
 friend
 from
@@ -777,6 +777,7 @@ graphicx
 graphs
 grateful
 gratzer
+gray
 green
 group
 groups
@@ -881,7 +882,6 @@ indicator
 individual
 induces
 information
-inherits
 initial
 initialized
 initializes
@@ -1064,7 +1064,6 @@ make
 makeindex
 makes
 making
-malformed
 malumbres
 management
 manipulated
@@ -1149,6 +1148,7 @@ moved
 moves
 moving
 mr
+much
 multipage
 multiple
 must
@@ -1211,7 +1211,6 @@ numerals
 object
 objects
 obsolete
-occasionally
 occur
 occurred
 occurrences
@@ -1636,6 +1635,7 @@ slightly
 slowly
 slows
 small
+smaller
 smith
 smooth
 smoothed

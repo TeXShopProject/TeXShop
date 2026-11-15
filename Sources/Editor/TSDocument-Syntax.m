@@ -186,7 +186,7 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
             }
             else {
                 isLoading = NO;
-                [self doUpdate:self];
+                [self setupTagsAndLabelsAfterLoading];
                 // NSLog(@"it ended");
             }
         }

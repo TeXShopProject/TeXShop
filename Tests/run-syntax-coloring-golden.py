@@ -160,7 +160,7 @@ static void LoadSpellLists(void) {
 
 @implementation TSDocument
 @synthesize textView = textView;
-- (IBAction)doUpdate:(id)sender {}
+- (void)setupTagsAndLabelsAfterLoading {}
 - (void)setupTags {}
 - (BOOL)indexColorState { return indexColor; }
 - (void)colorizeExperimentSource { if (experimentShown) [self colorizeVisibleAreaInTextView:scrapTextView]; }

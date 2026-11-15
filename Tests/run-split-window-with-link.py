@@ -86,6 +86,7 @@ program = r'''
 #import <objc/runtime.h>
 #import "TestAppKitIsolation.h"
 #import "TSPreviewPanePlace.h"
+#import "TSDocumentWindowGlass.h"
 #import "TSPreviewSplitDivider.h"
 // Values from globals.h.
 enum { PDF_SINGLE_PAGE_STYLE = 1, PDF_TWO_PAGE_STYLE = 2, PDF_MULTI_PAGE_STYLE = 3, PDF_DOUBLE_MULTI_PAGE_STYLE = 4 };
@@ -652,7 +653,7 @@ with tempfile.TemporaryDirectory() as temp:
     (temp / 'test.m').write_text(program, encoding='latin1')
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit',
                     '-I', str(root / 'Tests'), *include_args(root),
-                    str(temp / 'test.m'), str(divider), '-o', str(temp / 'test')], check=True)
+                    str(temp / 'test.m'), str(divider), str(root / 'Sources/Windows/TSDocumentWindowGlass.m'), '-o', str(temp / 'test')], check=True)
     result = subprocess.run([str(temp / 'test'), str(temp / 'doc.pdf')], capture_output=True, text=True)
     output = result.stdout + result.stderr
     if args.mutation:

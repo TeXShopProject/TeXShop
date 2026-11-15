@@ -95,7 +95,7 @@ enum RootCommand
 @class NoodleLineNumberView;
 // END FIX RULER SCROLL
 
-@interface TSDocument : NSDocument <NSTextViewDelegate, NSToolbarDelegate, NSWindowDelegate>
+@interface TSDocument : NSDocument <NSTextViewDelegate, NSToolbarDelegate, NSWindowDelegate, NSMenuDelegate>
 {
 	IBOutlet NSTextView			*textView1;
 	IBOutlet NSTextView			*textView2;
@@ -700,8 +700,7 @@ enum RootCommand
 - (id) pdfKitView;
 - (void) doCompletion:(NSNotification *)notification;
 // - (void) updateTagsAtClick2:(NSNotification *)notification;
-- (void) TagsAtClick2:(NSNotification *)notification;
-- (void) LabelsAtClick2:(NSNotification *)notification;
++ (void) updateTagsMenuInMenuBar:(NSMenu *)menu;
   
 
 - (void) doMatrix:(NSNotification *)notification; // Matrix by Jonas
@@ -965,7 +964,7 @@ enum RootCommand
 - (void) doMetaFontTemp: sender;
 - (IBAction) doTypeset: sender;
 - (IBAction) doAlternateTypeset: sender;
-- (IBAction) doUpdate: sender; // Tool to update tags and labels
+- (void) setupTagsAndLabelsAfterLoading;
 - (void) doTypesetForScriptContinuously:(BOOL)method;
 - (void) doJob:(NSInteger)type withError:(BOOL)error runContinuously:(BOOL)continuous;
 - (void) doJobForScript:(NSInteger)type withError:(BOOL)error runContinuously:(BOOL)continuous;

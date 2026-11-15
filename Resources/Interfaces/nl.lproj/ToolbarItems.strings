@@ -243,14 +243,6 @@ tiLabelLabelsSplit                = "Labels";
 tiPaletteLabelLabelsSplit         = "Labels";
 tiToolTipLabelsSplit              = "Kies een label om naartoe te scrollen";
 
-tiLabelUpdate              = "Werk bij";
-tiPaletteLabelUpdate         = "Werk bij";
-tiToolTipUpdate              = "Werk markeringen en labels bij";
-
-tiLabelUpdateSplit                = "Werk bij";
-tiPaletteLabelUpdateSplit         = "Werk bij";
-tiToolTipUpdateSplit              = "Werk markeringen en labels bij";
-
 tiLabelHtmlPreviousPageButton                = "Terug";
 tiPaletteLabelHtmlPreviousPageButton            = "Terug";
 tiToolTipHtmlPreviousPageButton            = "Ga naar vorige pagina";

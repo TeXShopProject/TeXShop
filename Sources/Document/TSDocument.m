@@ -1,3 +1,4 @@
+#import "TSDocumentWindowGlass.h"
 #import "TSFindInterface.h"
 #import "TSPreferenceKey.h"
 #import "TSSettingsChangeNote.h"
@@ -3747,6 +3748,7 @@ static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice
 		[scrollView2 setFrameSize:newSize];
 		[splitView addSubview: scrollView2];
 		[splitView adjustSubviews];
+		TSDocumentWindowSplitEvenly(splitView);
 		[textView1 scrollRangeToVisible: selectedRange];
 		[textView2 scrollRangeToVisible: selectedRange];
 		selectedRange.length = 0;
@@ -3790,16 +3792,13 @@ static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice
    
 if ( ! skipTextWindow) {
    // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLabelsAndTagsAtClick:) name:NSPopUpButtonWillPopUpNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(TagsAtClick2:) name:NSMenuDidBeginTrackingNotification object:[tags menu]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(TagsAtClick2:) name:NSMenuDidBeginTrackingNotification object:[stags menu]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(LabelsAtClick2:) name:NSMenuDidBeginTrackingNotification object:[labels menu]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(LabelsAtClick2:) name:NSMenuDidBeginTrackingNotification object:[slabels menu]];
-    
-    //NSMenu *tagsMenu = [[[NSApp mainMenu] itemWithTitle:
-    //                     NSLocalizedString(@"Tags", @"Tags")] submenu];
-    // if ([[NSUserDefaults standardUserDefaults] boolForKey:TagMenuInMenuBarKey])
-    //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(TagsAtClick3:) name:NSMenuDidBeginTrackingNotification
-    //                                             object:tagsMenu];
+    // The Tags and Labels menus of the toolbars are filled each time they open: from the
+    // toolbar item, from the item's label when the toolbar shows text only, and from the
+    // overflow menu. AppKit asks the menu's delegate before showing it in each case.
+    [[tags menu] setDelegate: self];
+    [[stags menu] setDelegate: self];
+    [[labels menu] setDelegate: self];
+    [[slabels menu] setDelegate: self];
     
     [[NSNotificationCenter defaultCenter] addObserver:[TSWindowManager sharedInstance] selector:@selector(textWindowDidBecomeKey:) name:NSWindowDidBecomeKeyNotification object:textWindow];
 	[[NSNotificationCenter defaultCenter] addObserver:[TSLaTeXPanelController sharedInstance] selector:@selector(textWindowDidBecomeKey:) name:NSWindowDidBecomeKeyNotification object:textWindow];
@@ -5022,25 +5021,86 @@ if ( ! skipTextWindow) {
     [self setupTags1];
 }
 
-- (void) TagsAtClick2:(NSNotification *)notification
-{
-     
-    if ( ! [SUD boolForKey:UseNewTagsAndLabelsKey])
-        return;
-    
-    [self setupTags1];
-}
-
-
-- (void) LabelsAtClick2:(NSNotification *)notification
+// Called by AppKit just before one of the toolbar's Tags and Labels menus opens.
+- (void)menuNeedsUpdate:(NSMenu *)menu
 {
     if ( ! [SUD boolForKey:UseNewTagsAndLabelsKey])
         return;
     
-    [self setupLabels1];
+    if ((menu == [tags menu]) || (menu == [stags menu]))
+        [self setupTags1];
+    else if ((menu == [labels menu]) || (menu == [slabels menu]))
+        [self setupLabels1];
 }
 
-- (void)doUpdate: (id)sender;
+// The items of these menus have no key equivalents. Answering here keeps AppKit from
+// filling the menus while it looks for a key equivalent.
+- (BOOL)menuHasKeyEquivalent:(NSMenu *)menu forEvent:(NSEvent *)event target:(id *)target action:(SEL *)action
+{
+    return NO;
+}
+
+// Whether the window is one of this document's own windows: the source, preview and
+// single windows, the console, the log, the HTML and full screen windows, and the
+// Experiment windows.
+- (BOOL)ownsWindow:(NSWindow *)window
+{
+    if (window == nil)
+        return NO;
+    return ((window == textWindow) || (window == pdfWindow) || (window == self.pdfKitWindow) ||
+            (window == fullSplitWindow) || (window == outputWindow) || (window == self.logWindow) ||
+            (window == self.htmlWindow) || (window == self.fullscreenWindow) ||
+            (window == scrapWindow) || (window == scrapPDFWindow) ||
+            (self.experimentConsole.isWindowLoaded && (window == self.experimentConsole.window)));
+}
+
+// The document a window belongs to, also for a sheet on one of its windows.
++ (TSDocument *)documentOwningWindow:(NSWindow *)window
+{
+    while ([window sheetParent] != nil)
+        window = [window sheetParent];
+    for (NSDocument *document in [[NSDocumentController sharedDocumentController] documents])
+        if ([document isKindOfClass:[TSDocument class]] && [(TSDocument *)document ownsWindow: window])
+            return (TSDocument *)document;
+    return nil;
+}
+
+// The Tags menu in the menu bar is filled each time it opens, with the tags of the
+// frontmost document: the document of the key window, else of the main window, else of
+// the frontmost visible window that belongs to a document. Windows of no document, such
+// as Settings and the panels, are passed over. The menu is empty when that document is
+// not a TeX source edited in TeXShop, and when there is no document.
++ (void)updateTagsMenuInMenuBar:(NSMenu *)menu
+{
+    TSDocument  *document = nil;
+    
+    if ( ! [SUD boolForKey:UseNewTagsAndLabelsKey])
+        return;
+    
+    NSMutableArray *windows = [NSMutableArray array];
+    NSWindow *keyWindow = [NSApp keyWindow];
+    NSWindow *mainWindow = [NSApp mainWindow];
+    if (keyWindow != nil)
+        [windows addObject: keyWindow];
+    if (mainWindow != nil)
+        [windows addObject: mainWindow];
+    [windows addObjectsFromArray: [NSApp orderedWindows]];
+    for (NSWindow *window in windows) {
+        if (! [window isVisible])
+            continue;
+        document = [self documentOwningWindow: window];
+        if (document != nil)
+            break;
+    }
+    
+    if ((document != nil) && (! [document externalEditor]) && (! [document skipTextWindow]))
+        [document setupTags1];
+    else
+        [menu removeAllItems];
+}
+
+// Fills the menus once the document has loaded.
+- (void)setupTagsAndLabelsAfterLoading
 {
     if ( ! [SUD boolForKey:UseNewTagsAndLabelsKey])
         return;

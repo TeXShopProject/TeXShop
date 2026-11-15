@@ -243,14 +243,6 @@ tiLabelLabelsSplit                = "Referințe";
 tiPaletteLabelLabelsSplit         = "Referințe";
 tiToolTipLabelsSplit              = "Selectați o referință la care să derulați";
 
-tiLabelUpdate              = "Actualizare";
-tiPaletteLabelUpdate         = "Actualizare";
-tiToolTipUpdate              = "Actualizați etichetele și referințele";
-
-tiLabelUpdateSplit                = "Actualizare";
-tiPaletteLabelUpdateSplit         = "Actualizare";
-tiToolTipUpdateSplit              = "Actualizați etichetele și referințele";
-
 tiLabelHtmlPreviousPageButton                = "Înapoi";
 tiPaletteLabelHtmlPreviousPageButton            = "Înapoi";
 tiToolTipHtmlPreviousPageButton            = "Accesați pagina anterioară";
