@@ -38,6 +38,8 @@ DETEX = next((p for p in ('/Applications/TeXLive/2026/bin/universal-darwin/detex
 MUTATIONS = {
     # A second count leaves the first detex running.
     'previous-not-stopped': ('TSTextStatistics.m', '    [self stop];\n    BOOL selection = NO;\n', '    BOOL selection = NO;\n'),
+    # Stopping waits for the end of detex's output, which a process detex left may hold open.
+    'waits-for-pipe-end': ('TSTextStatistics.m', '                    if (!dispatch_source_testcancel(reader)) {\n', '                    while (!dispatch_source_testcancel(reader)) usleep(10000);\n                    if (!dispatch_source_testcancel(reader)) {\n'),
     # The temporary file stays.
     'file-kept': ('TSTextStatistics.m', '        TSRemoveFile(file);\n        if (atomic_load(&run->cancelled))\n', '        if (atomic_load(&run->cancelled))\n'),
     # Typing counts again while the popover is open.
@@ -322,6 +324,26 @@ int main(int argc, char **argv) { @autoreleasepool {
     [statistics stop];
     Check(WaitFor(^BOOL{ return !Alive(stopped) && TemporaryFiles() == before; }, 5) && firstDone == 0, [@"stop ends detex and removes the file" stringByAppendingString:tag]);
     Spin(0.2);
+    // A process that detex left holds the output open: stopping detex does not wait for it, nor does detex's own end.
+    NSURL *holding = [NSURL fileURLWithPath:spec[@"holding"]], *leaving = [NSURL fileURLWithPath:spec[@"leaving"]];
+    [NSFileManager.defaultManager removeItemAtPath:pidFile error:NULL];
+    [statistics countString:memory ranges:@[] folder:folder detex:holding encoding:NSUTF8StringEncoding completion:^(TSTextStatisticsResult *r) { firstDone++; }];
+    NSURL *heldFile = statistics.temporaryFile;
+    Check(WaitFor(^BOOL{ return Alive(PidIn(pidFile)); }, 10), [@"the detex that leaves a process runs" stringByAppendingString:tag]);
+    Spin(0.3);
+    result = nil;
+    CFAbsoluteTime started = CFAbsoluteTimeGetCurrent();
+    [statistics countString:memory ranges:@[] folder:folder detex:nil encoding:NSUTF8StringEncoding completion:^(TSTextStatisticsResult *r) { result = r; }];
+    Check(WaitFor(^BOOL{ return result != nil; }, 1.5) && firstDone == 0 && ![NSFileManager.defaultManager fileExistsAtPath:heldFile.path],
+          [NSString stringWithFormat:@"a stopped detex whose output another process holds does not hold up the next count or the removal of its file (%.2f s)%@",
+           CFAbsoluteTimeGetCurrent() - started, tag]);
+    result = nil;
+    started = CFAbsoluteTimeGetCurrent();
+    [statistics countString:memory ranges:@[] folder:folder detex:leaving encoding:NSUTF8StringEncoding completion:^(TSTextStatisticsResult *r) { result = r; }];
+    Check(WaitFor(^BOOL{ return result != nil; }, 3) && result.state == TSTextStatisticsDone && result.text.characters == source.characters,
+          [NSString stringWithFormat:@"a detex that ends leaving a process with its output is counted without waiting for that process (%.2f s, %lu)%@",
+           CFAbsoluteTimeGetCurrent() - started, result.text.characters, tag]);
+    Check(WaitFor(^BOOL{ return TemporaryFiles() == before; }, 2), [@"and its file is removed" stringByAppendingString:tag]);
     for (NSArray *c in @[@[[NSNull null], @(TSTextStatisticsDetexMissing)], @[failing, @(TSTextStatisticsDetexFailed)]]) {
         result = nil;
         [statistics countString:memory ranges:@[] folder:folder detex:c[0] == NSNull.null ? nil : c[0] encoding:NSUTF8StringEncoding
@@ -440,6 +462,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-text-statistics-') as tmp:
     pid = tmp / 'pid'
     (bin_ / 'slow').write_text(f'#!/bin/sh\necho $$ > {pid}\nsleep 30\ncat "$1"\n'); (bin_ / 'slow').chmod(0o755)
     (bin_ / 'failing').write_text('#!/bin/sh\nexit 3\n'); (bin_ / 'failing').chmod(0o755)
+    # A detex that leaves a process holding its output open: stopped while it runs, and ending by itself.
+    (bin_ / 'holding').write_text(f'#!/bin/sh\necho $$ > {pid}\n( exec sleep 8 ) &\nsleep 30\ncat "$1"\n'); (bin_ / 'holding').chmod(0o755)
+    (bin_ / 'leaving').write_text('#!/bin/sh\n( exec sleep 8 ) &\ncat "$1"\n'); (bin_ / 'leaving').chmod(0o755)
     for name in ('TSStatusBarCounting.m', 'TSSourceStatusBar.m', 'TSTextStatistics.m', 'TSTextStatisticsPopover.m', 'TSDocumentWindowGlass.m'):
         (tmp / name).write_text(text[name], encoding='utf-8', errors='surrogateescape')
     program = (PROGRAM.replace('@@SHOW@@', fragments['show']).replace('@@FROM@@', fragments['from'])
@@ -458,7 +483,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-text-statistics-') as tmp:
         shutil.copy2(root / f'Resources/Interfaces/{folder_name}.lproj/Localizable.strings', tmp / f'{folder_name}.lproj/Localizable.strings')
         spec = {'nib': str(root / f'Resources/Interfaces/{lang}.lproj/TSDocument.nib/keyedobjects.nib'), 'lang': lang,
                 'images': str(args.images.resolve()) if args.images else '', 'detex': DETEX, 'slow': str(bin_ / 'slow'),
-                'failing': str(bin_ / 'failing'), 'folder': str(folder), 'memory': memory, 'oracle': oracle, 'disk': disk,
+                'failing': str(bin_ / 'failing'), 'holding': str(bin_ / 'holding'), 'leaving': str(bin_ / 'leaving'), 'folder': str(folder), 'memory': memory, 'oracle': oracle, 'disk': disk,
                 'sentence': sentence, 'pid': str(pid), 'wcWords': wc_words, 'wcBytes': wc_bytes}
         (tmp / 'spec.json').write_text(json.dumps(spec, ensure_ascii=False))
         result = subprocess.run([str(tmp / 'probe'), str(tmp / 'spec.json'), '-AppleLanguages', f'({folder_name})'], capture_output=True, text=True, timeout=600)
