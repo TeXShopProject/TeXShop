@@ -11,7 +11,8 @@ import subprocess, tempfile, os, argparse
 from source_tree import include_args
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--mutation", choices=["no-window-load", "no-yen-filter", "no-appearance-hook", "stale-child-appearance", "no-console-alpha",
-                                           "no-floating", "no-error-front", "no-prompt", "front-always", "prompt-no-wait", "echo-scanned"])
+                                           "no-floating", "no-error-front", "no-prompt", "front-always", "prompt-no-wait", "echo-scanned",
+                                           "no-red-echo", "red-output-not-kept", "red-kept-next-run", "red-always", "red-stop-message", "stop-takes-first-color"])
 parser.add_argument("--artifacts", type=Path, help="Save headless light/dark console previews")
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
@@ -49,6 +50,27 @@ elif args.mutation == "echo-scanned":
     echo = "        self.engineLine = @\"\";\n        self.outputCount++;"
     assert echo in controller
     controller = controller.replace(echo, "        self.engineLine = [self.engineLine stringByAppendingString:displayCommand];\n        self.outputCount++;", 1)
+elif args.mutation == "no-red-echo":
+    red = "        if ([SUD boolForKey:RedConsoleAfterErrorKey])\n            self.redOutput = YES;\n        [self appendText:displayCommand];"
+    assert red in controller
+    controller = controller.replace(red, "        [self appendText:displayCommand];\n        if ([SUD boolForKey:RedConsoleAfterErrorKey])\n            self.redOutput = YES;", 1)
+elif args.mutation == "red-output-not-kept":
+    color = "NSColor *color = self.redOutput ? NSColor.redColor : (self.themeTextColor ?: NSColor.textColor);"
+    assert color in controller
+    controller = controller.replace(color, color + " self.redOutput = NO;", 1)
+elif args.mutation == "red-kept-next-run":
+    assert "    self.carry = nil;\n    self.redOutput = NO;\n" in controller
+    controller = controller.replace("    self.carry = nil;\n    self.redOutput = NO;\n", "    self.carry = nil;\n", 1)
+elif args.mutation == "red-stop-message":
+    assert "            self.redOutput = NO;\n            [self appendText:" in controller
+    controller = controller.replace("            self.redOutput = NO;\n            [self appendText:", "            [self appendText:", 1)
+elif args.mutation == "stop-takes-first-color":
+    color = "(self.themeTextColor ?: NSColor.textColor)"
+    assert color in controller
+    controller = controller.replace(color, "(self.outputText.textColor ?: NSColor.textColor)", 1)
+elif args.mutation == "red-always":
+    assert "if ([SUD boolForKey:RedConsoleAfterErrorKey])" in controller
+    controller = controller.replace("if ([SUD boolForKey:RedConsoleAfterErrorKey])", "if (YES)", 1)
 if args.mutation == "no-console-alpha":
     controller = controller.replace('self.window.alphaValue = TSThemeWindowAlpha(theme, TSThemeConsoleAlphaKey);', '')
 prefix = console_prefix(root)
@@ -194,6 +216,7 @@ int main(void) { @autoreleasepool {
             NSData *png = [bitmap representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
             check([png writeToFile:[artifacts stringByAppendingPathComponent:[mode stringByAppendingString:@".png"]] atomically:YES], @"save console preview");
         }
+        console.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
     }
     NSURL *dir = directory();
     behind = YES;
@@ -215,6 +238,60 @@ int main(void) { @autoreleasepool {
     check(waitFor(^BOOL{ return completed; }), @"yen job completes");
     check([console.outputText.string containsString:@"¥a\n"] && [console.outputText.string containsString:@"5c  61"], @"yen display and ASCII backslash bytes");
     g_shouldFilter = kNoFilterMode;
+    // RedConsoleAfterError, as in the console of a document: the line typed to answer TeX and the
+    // rest of the output of that run are red; the next run starts in the theme color.
+    NSColor *(^colorAt)(NSString *) = ^NSColor *(NSString *found) {
+        NSRange range = [console.outputText.string rangeOfString:found];
+        check(range.location != NSNotFound, [@"output has " stringByAppendingString:found]);
+        return [console.outputText.textStorage attribute:NSForegroundColorAttributeName atIndex:range.location effectiveRange:NULL];
+    };
+    // NSTextView's textColor answers the color of the first character, so compare with the theme.
+    console.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    check(console.window.effectiveAppearance.name == NSAppearanceNameAqua, @"red: light console");
+    NSColor *themeText = liteColors[@"ConsoleText"];
+    NSString *answer = @"printf '! Undefined control sequence.\\n? '; read line; printf 'after the answer\\n'";
+    for (int on = 1; on >= 0; on--) {
+        redAfterError = on; dir = directory(); completed = NO;
+        [console startExecutable:@"/bin/sh" arguments:@[@"-c", answer] environment:@{@"PATH":@"/usr/bin:/bin"} directory:dir encoding:NSUTF8StringEncoding title:@"Red" completion:^(NSURL *pdf) { completed = YES; }];
+        check(waitFor(^BOOL{ return [console.outputText.string hasSuffix:@"? "]; }), @"red: error prompt");
+        check([colorAt(@"! Undefined") isEqual:themeText], @"red: output before the answer has the theme color");
+        [console sendLine:@"typed answer"];
+        check(waitFor(^BOOL{ return completed; }), @"red: job ends");
+        NSColor *typed = colorAt(@"typed answer"), *after = colorAt(@"after the answer");
+        if (on) check([typed isEqual:NSColor.redColor] && [after isEqual:NSColor.redColor], @"red: the answer and later output are red");
+        else check([typed isEqual:themeText] && [after isEqual:themeText], @"red off: the answer and later output have the theme color");
+        if (on) {
+            dir = directory(); completed = NO;
+            [console startExecutable:@"/bin/sh" arguments:@[@"-c", @"printf 'next run\\n'"] environment:@{@"PATH":@"/usr/bin:/bin"} directory:dir encoding:NSUTF8StringEncoding title:@"Red" completion:^(NSURL *pdf) { completed = YES; }];
+            check(waitFor(^BOOL{ return completed; }), @"red: next job ends");
+            check([colorAt(@"next run") isEqual:themeText], @"red: the next run starts in the theme color");
+            // Stopped after an answer: TeX's last output stays red, the stop message has the text color,
+            // as "Process aborted" in the console of a document.
+            dir = directory();
+            [console startExecutable:@"/bin/sh" arguments:@[@"-c", @"printf '? '; read line; printf 'still running\\n'; sleep 10"] environment:@{@"PATH":@"/usr/bin:/bin"} directory:dir encoding:NSUTF8StringEncoding title:@"Red" completion:nil];
+            check(waitFor(^BOOL{ return [console.outputText.string hasSuffix:@"? "]; }), @"red stop: prompt");
+            [console sendLine:@"answer"];
+            check(waitFor(^BOOL{ return [console.outputText.string containsString:@"still running"]; }), @"red stop: output after the answer");
+            [console abort:console];
+            NSString *stopped = NSLocalizedString(@"Experiment stopped.\n", @"Experiment stopped message");
+            check([colorAt(@"still running") isEqual:NSColor.redColor] && [colorAt(stopped) isEqual:themeText], @"red stop: the stop message has the text color");
+            // A line typed before TeX writes anything: the output starts in red, and the stop
+            // message still takes the theme's text color, in Light and in Dark.
+            for (NSString *mode in @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]) {
+                console.window.appearance = [NSAppearance appearanceNamed:mode];
+                NSColor *modeText = mode == NSAppearanceNameAqua ? liteColors[@"ConsoleText"] : darkColors[@"ConsoleText"];
+                dir = directory();
+                [console startExecutable:@"/bin/sh" arguments:@[@"-c", @"read line; printf 'silent running\\n'; read line"] environment:@{@"PATH":@"/usr/bin:/bin"} directory:dir encoding:NSUTF8StringEncoding title:@"Red" completion:nil];
+                check([console sendLine:@"early"], @"red early: input before any output");
+                check(waitFor(^BOOL{ return [console.outputText.string containsString:@"silent running"]; }), @"red early: output after the input");
+                [console abort:console];
+                check([colorAt(@"early") isEqual:NSColor.redColor] && [colorAt(@"silent running") isEqual:NSColor.redColor] &&
+                      [colorAt(stopped) isEqual:modeText], [@"red early: the stop message has the text color, " stringByAppendingString:mode]);
+            }
+            console.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+        }
+    }
+    redAfterError = NO;
     // Closing/replacing an Experiment cancels its job and suppresses stale completion.
     dir = directory(); completed = NO;
     [console startExecutable:@"/bin/sh" arguments:@[@"-c", @"sleep 10; printf pdf > file.pdf"] environment:@{@"PATH":@"/usr/bin:/bin"} directory:dir encoding:NSUTF8StringEncoding title:@"Sample" completion:^(NSURL *pdf) { completed = YES; }];
