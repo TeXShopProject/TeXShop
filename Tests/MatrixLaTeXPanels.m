@@ -9,6 +9,7 @@
 //     posts the same text as before; the custom buttons have their names whatever LPanelOutlines says;
 //     every button shows a rounded frame under the pointer (always when LPanelOutlines is NO) and its
 //     words in the color of text; the symbols are drawn in the color of text in light and dark appearance.
+//   * Neither panel shows a placeholder title left in its compiled nibs ("Box", "Radio", "Switch", ...).
 // Usage: MatrixLaTeXPanels <language>|<matrixpanel nib>|<completionpanel nib> ...
 #import <Cocoa/Cocoa.h>
 #import <objc/message.h>
@@ -72,6 +73,37 @@ static NSColor *ColorAt(NSView *view, NSPoint point) {
     return [[rep colorAtX:(NSInteger)(point.x * scale) y:MIN(MAX(0, y), rep.pixelsHigh - 1)] colorUsingColorSpace:NSColorSpace.genericGrayColorSpace];
 }
 
+// The placeholder titles that Interface Builder gives new parts ("Box", "Radio", "Switch", "Button", and
+// "Sy" and "Löschen" in these panels) are left in the compiled panels on prototype cells and an untitled
+// line. None of them is ever on screen: every text the panel shows, on every page.
+static NSArray<NSString *> *ShownTexts(NSView *view) {
+    NSMutableArray<NSString *> *texts = [NSMutableArray array];
+    if (view.isHiddenOrHasHiddenAncestor) return texts;
+    if ([view isKindOfClass:NSBox.class] && ((NSBox *)view).titlePosition != NSNoTitle) [texts addObject:((NSBox *)view).title];
+    if ([view isKindOfClass:NSTextField.class]) [texts addObject:((NSTextField *)view).stringValue];
+    if ([view isKindOfClass:NSButton.class]) [texts addObject:((NSButton *)view).title];
+    if ([view isKindOfClass:NSSegmentedControl.class])
+        for (NSInteger i = 0; i < ((NSSegmentedControl *)view).segmentCount; i++) [texts addObject:[(NSSegmentedControl *)view labelForSegment:i] ?: @""];
+    if ([view isKindOfClass:NSMatrix.class]) {
+        for (NSCell *cell in ((NSMatrix *)view).cells) [texts addObject:cell.title ?: @""];
+        return texts;
+    }
+    if ([view isKindOfClass:NSTabView.class]) {
+        for (NSTabViewItem *item in ((NSTabView *)view).tabViewItems) if (item.view) [texts addObjectsFromArray:ShownTexts(item.view)];
+        return texts;
+    }
+    for (NSView *sub in view.subviews) [texts addObjectsFromArray:ShownTexts(sub)];
+    return texts;
+}
+static void CheckNoPlaceholders(NSWindow *w, NSString *language, NSString *what) {
+    // In German, Löschen is also the real title of Clear.
+    NSMutableSet *placeholders = [NSMutableSet setWithArray:@[@"Box", @"Radio", @"Switch", @"Button", @"Sy"]];
+    if (![language isEqual:@"de"]) [placeholders addObject:@"Löschen"];
+    NSMutableSet *shown = [NSMutableSet setWithArray:ShownTexts(w.contentView)];
+    [shown intersectSet:placeholders];
+    Expect(shown.count == 0, [NSString stringWithFormat:@"%@: no placeholder title is shown (%@)", what, [shown.allObjects componentsJoinedByString:@", "]]);
+}
+
 static void CheckMatrixPanel(NSString *language, NSString *path, Listener *listener) {
     NSWindow *w = nil;
     TSMatrixPanelController *panel = Load(TSMatrixPanelController.class, path, &w);
@@ -85,6 +117,7 @@ static void CheckMatrixPanel(NSString *language, NSString *path, Listener *liste
 
     // The row numbers.
     Expect(!scroll.hasVerticalRuler && !scroll.rulersVisible, name(@"no ruler"));
+    CheckNoPlaceholders(w, language, name(@"as it opens"));
     NSTableColumn *numbers = table.tableColumns.firstObject;
     Expect([numbers.identifier isEqual:TSMatrixRowNumberColumn] && !numbers.isEditable && numbers.resizingMask == NSTableColumnNoResizing, name(@"the first column numbers the rows and cannot be edited or resized"));
     Expect([[panel tableView:table objectValueForTableColumn:numbers row:4] isEqual:@5], name(@"the fifth row is numbered 5"));
@@ -199,6 +232,7 @@ static void CheckLaTeXPanel(NSString *language, NSString *path, Listener *listen
         if ([v isKindOfClass:NSSegmentedControl.class]) [choosers addObject:(NSSegmentedControl *)v];
     }
     Expect(pages.count == 2 && choosers.count == 2, name(@"two groups, each with a segmented control"));
+    CheckNoPlaceholders(w, language, name(@"on every page"));
     [pages sortUsingComparator:^NSComparisonResult(NSView *a, NSView *b) { return NSMaxY(a.frame) > NSMaxY(b.frame) ? NSOrderedAscending : NSOrderedDescending; }];
     [choosers sortUsingComparator:^NSComparisonResult(NSView *a, NSView *b) { return NSMaxY(a.frame) > NSMaxY(b.frame) ? NSOrderedAscending : NSOrderedDescending; }];
     for (NSUInteger i = 0; i < 2 && pages.count == 2 && choosers.count == 2; i++) {
