@@ -93,6 +93,10 @@ NS_SWIFT_NAME(TeXRootReplaceRun)
 @property (nonatomic, copy) BOOL (^isIncluded)(TSTeXRootProjectFile *file);
 /// The text view of an open document of the plan, nil when it is closed (main thread).
 @property (nonatomic, copy) NSTextView *_Nullable (^textViewForFile)(TSTeXRootReplaceFile *file);
+/// The text storage of each open document of the plan when Replace All was approved (the confirmation sheet). Only
+/// that text storage is replaced in: a document opened again since (another text storage, even with the same text) is
+/// not (spec §2.5.1a). When nil, those of the start of the run stand.
+@property (nonatomic, strong, nullable) NSMapTable<TSTeXRootReplaceFile *, NSTextStorage *> *approvedTextStorages;
 /// For the backup of an open document: called on the main thread (where the document's encoding is read), it returns
 /// what turns the text approved into bytes on a background queue (in UTF-8, `usedUTF8`, when the encoding cannot
 /// hold it).

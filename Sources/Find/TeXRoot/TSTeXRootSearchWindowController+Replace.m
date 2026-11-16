@@ -15,6 +15,8 @@
 @property (nonatomic, copy) NSSet *filesOn;
 @property (nonatomic, strong, nullable) TSTeXRootReplacePlan *plan;
 @property (nonatomic) NSUInteger request;
+/// The text storage of each open document of the plan when the confirmation is shown.
+@property (nonatomic, strong, nullable) NSMapTable<TSTeXRootReplaceFile *, NSTextStorage *> *storages;
 @end
 
 @implementation TSTeXRootApproval
@@ -155,6 +157,14 @@ static NSUInteger TSReplaceRequest;
 - (void)confirmApproval:(TSTeXRootApproval *)approval codec:(TSTeXRootSourceCodec *)codec
 {
     TSTeXRootReplacePlan *plan = (TSTeXRootReplacePlan *_Nonnull)approval.plan;
+    // What is approved is the text storage of each open document now (Codex 4b F8).
+    NSMapTable<TSTeXRootReplaceFile *, NSTextStorage *> *storages = [NSMapTable strongToWeakObjectsMapTable];
+    for (TSTeXRootReplaceFile *file in plan.files) {
+        NSTextStorage *storage = file.openDocument && self.textViewForFile ? self.textViewForFile(file).textStorage : nil;
+        if (storage)
+            [storages setObject:storage forKey:file];
+    }
+    approval.storages = storages;
     NSAlert *alert = [NSAlert new];
     alert.alertStyle = NSAlertStyleWarning;
     alert.messageText = [NSString localizedStringWithFormat:TSLocalized(@"TeXRootSearch.Confirm.Title", @"Replace %1$lu matches in %2$lu files?"),
@@ -203,6 +213,7 @@ static NSUInteger TSReplaceRequest;
     run.isIncluded = ^BOOL(TSTeXRootProjectFile *file) { return [filesOn containsObject:file.identifier]; };
     if (self.textViewForFile)
         run.textViewForFile = (NSTextView *_Nullable (^_Nonnull)(TSTeXRootReplaceFile *))self.textViewForFile;
+    run.approvedTextStorages = approval.storages;
     if (self.backupEncoderForOpenDocument)
         run.backupEncoderForOpenDocument = (NSData *_Nullable (^_Nonnull (^_Nonnull)(TSTeXRootReplaceFile *))(BOOL *))self.backupEncoderForOpenDocument;
     run.actionName = TSLocalized(@"AdvancedFind.ReplaceAllAction", @"Replace All");

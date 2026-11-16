@@ -62,6 +62,8 @@ static NSMutableDictionary<NSString *, TestDocument *> *Documents;
 /// A slow file system while a collector is prepared (a download waited for), and the collectors made.
 static useconds_t PrepareDelay;
 static NSMutableArray<TSTeXRootProjectCollector *> *Collectors;
+/// Called when a collector is made (TeXShop refreshes its list of open documents there).
+static void (^OnCollect)(void);
 
 static NSString *PathOf(NSString *relative) { return [Folder stringByAppendingPathComponent:relative]; }
 
@@ -110,6 +112,8 @@ static TSTeXRootSearchEnvironment *Environment(void)
     TSTeXRootSearchEnvironment *environment = [TSTeXRootSearchEnvironment new];
     environment.codec = Codec();
     environment.collectorForRoot = ^TSTeXRootProjectCollector *(NSURL *rootURL) {
+        if (OnCollect)
+            OnCollect();
         TSTeXRootProjectCollector *collector = [[TSTeXRootProjectCollector alloc] initWithRootURL:rootURL codec:Codec() allowsSourceDoc:NO jobNameToken:@"\\jobname"];
         NSMutableDictionary *texts = [NSMutableDictionary dictionary];
         for (NSString *relative in Documents)
@@ -469,6 +473,40 @@ static void TestRoundOne(void)
           && [Alerts.lastObject.informativeText containsString:@"Not replaced: chapters/two.tex (the document could not be edited)"],
           [NSString stringWithFormat:@"made read-only meanwhile: not replaced in, still read-only (%@)", Alerts.lastObject.informativeText]);
     two.view.editable = YES;
+
+    // F8: the document opened again while the confirmation is shown (another text storage with the same text, read-only
+    // or editable), or during check 2 after the run locked the documents: the new one is not replaced in.
+    for (NSUInteger variant = 0; variant < 3; variant++) {
+        MakeProject();
+        Alerts = [NSMutableArray array];
+        window = OpenWindow(NO);
+        NSString *approvedText = [Documents[@"chapters/two.tex"].view.string copy];
+        __block TestDocument *reopened = nil, *closed = Documents[@"chapters/two.tex"];
+        void (^reopen)(void) = ^{
+            reopened = Open(@"chapters/two.tex");
+            reopened.view.editable = variant == 1;
+        };
+        Answer = ^NSModalResponse(NSAlert *alert) {
+            if (alert.buttons.count > 1 && alert.buttons[1].hasDestructiveAction) {
+                if (variant < 2)
+                    reopen();
+                else
+                    OnCollect = ^{ if (!reopened) { reopen(); reopened.view.editable = YES; } };
+                return NSAlertSecondButtonReturn;
+            }
+            return NSAlertFirstButtonReturn;
+        };
+        [window replaceAll:nil];
+        Spin(^BOOL { return Alerts.count >= 2 && Idle(window); }, 60);
+        Answer = nil;
+        OnCollect = nil;
+        NSArray *names = @[@"opened again read-only", @"opened again editable", @"opened again during check 2"];
+        BOOL editableAsBefore = reopened.view.isEditable == (variant != 0);
+        Check(reopened && [reopened.view.string isEqualToString:approvedText] && editableAsBefore && [closed.view.string isEqualToString:approvedText]
+              && [Alerts.lastObject.informativeText containsString:@"Not replaced: chapters/two.tex (the document was closed or edited)"]
+              && [Read(@"chapters/one.tex") containsString:@"eq:central"],
+              [NSString stringWithFormat:@"%@: the new text storage is not replaced in (%@)", names[variant], Alerts.lastObject.informativeText]);
+    }
 
     // F3: every file replaced in, a backup in UTF-8: said in a sheet headed with what was done. F6: the bytes are
     // made off the main thread.

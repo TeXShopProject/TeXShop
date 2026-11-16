@@ -52,6 +52,8 @@ MUTATIONS = {
     "the confirmation says the panel's Replace": ('TSTeXRootSearchWindowController+Replace.m', 'TSLocalized(@"TeXRootSearch.Confirm.Replace", @"Replace")', 'TSLocalized(@"AdvancedFind.Replace", @"Replace")', 'language'),
     'every file is guarded from typesetting': ('TSTeXRootDocumentApplier.m', '    return [TSProjectPaths containsObject:(NSString *_Nonnull)path];', '    return YES;'),
     'the backup is made on the main thread': ('TSTeXRootReplaceRun.m', '    dispatch_async(self.queue, ^{\n        NSError *error = nil;', '    ((void (^)(dispatch_queue_t, dispatch_block_t))^(dispatch_queue_t q, dispatch_block_t b) { b(); })(self.queue, ^{\n        NSError *error = nil;'),
+    'a document opened again is replaced in': ('TSTeXRootReplaceRun.m', '    if (!approved || view.textStorage != approved)\n        view = nil;\n', ''),
+    'the text storage approved is not kept': ('TSTeXRootSearchWindowController+Replace.m', '    run.approvedTextStorages = approval.storages;\n', ''),
     'a document made read-only is replaced in': ('TSTeXRootReplaceRun.m', '        if (!main.isEditable)\n            [self.notEditable addObject:', '        if (NO)\n            [self.notEditable addObject:'),
 }
 
@@ -95,9 +97,9 @@ def build(tmp, sources):
     return probe, ''
 
 
-def run(probe, mode, language='en', images=None):
+def run(probe, mode, language='en', images=None, timeout=600):
     command = [str(probe), mode, *([str(images)] if images else []), '-AppleLanguages', f'({language})']
-    return subprocess.run(command, capture_output=True, text=True, timeout=600)
+    return subprocess.run(command, capture_output=True, text=True, timeout=timeout)
 
 
 def main():
@@ -135,7 +137,12 @@ def main():
                     if not mprobe:
                         print(f'mutation {name!r} does not compile:\n{errors}')
                         return 1
-                    caught = any(run(mprobe, mode, 'ja' if mode == 'language' else 'en').returncode != 0 for mode in (modes or ['behavior']))
+                    caught = False
+                    for mode in (modes or ['behavior']):
+                        try:
+                            caught |= run(mprobe, mode, 'ja' if mode == 'language' else 'en', timeout=300).returncode != 0
+                        except subprocess.TimeoutExpired:
+                            caught = True  # a sheet answered wrongly leaves the test waiting: noticed too
                     print(f"{'caught' if caught else 'SURVIVED'}: {name}")
                     if not caught:
                         survived.append(name)

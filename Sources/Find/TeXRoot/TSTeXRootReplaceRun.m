@@ -127,6 +127,8 @@ NSArray<NSString *> *TSTeXRootChangedFiles(TSTeXRootProject *listed, TSTeXRootPr
 @property (nonatomic, strong, nullable) TSTeXRootProjectCollector *checkCollector;
 /// The text storages whose view could not be edited when the run began: not replaced in (spec §2.5.1a).
 @property (nonatomic, strong) NSHashTable<NSTextStorage *> *notEditable;
+/// The text storage each open document of the plan is replaced in: the one approved (Codex 4b F8).
+@property (nonatomic, strong) NSMapTable<TSTeXRootReplaceFile *, NSTextStorage *> *storageOfFile;
 @end
 
 @implementation TSTeXRootReplaceRun
@@ -145,6 +147,7 @@ NSArray<NSString *> *TSTeXRootChangedFiles(TSTeXRootProject *listed, TSTeXRootPr
     _actionName = @"Replace All";
     _makeCollector = ^TSTeXRootProjectCollector *_Nullable { return nil; };
     _notEditable = [NSHashTable weakObjectsHashTable];
+    _storageOfFile = [NSMapTable strongToWeakObjectsMapTable];
     _isIncluded = ^BOOL(TSTeXRootProjectFile *file) { return YES; };
     _textViewForFile = ^NSTextView *_Nullable(TSTeXRootReplaceFile *file) { return nil; };
     _backupEncoderForOpenDocument = ^NSData *_Nullable (^(TSTeXRootReplaceFile *file))(BOOL *) {
@@ -230,8 +233,10 @@ NSArray<NSString *> *TSTeXRootChangedFiles(TSTeXRootProject *listed, TSTeXRootPr
             continue;
         NSTextView *main = self.textViewForFile(file);
         NSTextStorage *storage = main.textStorage;
-        if (!storage)
-            continue;
+        NSTextStorage *approved = self.approvedTextStorages ? [self.approvedTextStorages objectForKey:file] : storage;
+        if (!storage || storage != approved)
+            continue; // closed or opened again since it was approved: not replaced in, nor locked
+        [self.storageOfFile setObject:storage forKey:file];
         [storages addObject:storage];
         // Made read-only meanwhile (the list was made while it could be edited): it is not replaced in, and is never
         // made editable here (Codex 4b F7).
@@ -373,6 +378,11 @@ NSArray<NSString *> *TSTeXRootChangedFiles(TSTeXRootProject *listed, TSTeXRootPr
     }
     TSTeXRootReplaceFile *file = files[index];
     NSTextView *view = self.textViewForFile(file);
+    NSTextStorage *approved = [self.storageOfFile objectForKey:file];
+    // The document approved, in the text storage approved: one opened again since, whatever its text, is not
+    // replaced in (Codex 4b F8).
+    if (!approved || view.textStorage != approved)
+        view = nil;
     if (view && [self.notEditable containsObject:(NSTextStorage *_Nonnull)view.textStorage]) {
         [self.records addObject:[[TSTeXRootReplaceRecord alloc] initWithFile:file status:TSTeXRootReplaceStatusNotApplied reason:TSTeXRootReplaceReasonNotEditable error:nil]];
         [self applyToOpenDocumentAtIndex:index + 1];
