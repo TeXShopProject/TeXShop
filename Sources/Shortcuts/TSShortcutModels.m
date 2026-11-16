@@ -33,6 +33,7 @@
 @end
 @interface TSShortcutCommand ()
 @property (nonatomic, readwrite, copy) NSString *path;
+@property (nonatomic, readwrite) BOOL managedBySystem;
 @end
 @implementation TSShortcutCommand
 - (instancetype)initWithItem:(NSMenuItem *)item identifier:(NSString *)identifier path:(NSString *)path {

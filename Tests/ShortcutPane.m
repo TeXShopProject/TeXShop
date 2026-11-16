@@ -495,8 +495,32 @@ int main(int argc,char **argv){@autoreleasepool{
   fixtureCharacters=@"b";REQUIRE([shell.window performKeyEquivalent:Event(@"b",C,11)]);
   REQUIRE(pane.editingCommand==nil && [first.keyEquivalent isEqual:@"b"] && pane.searchingByKey && pane.searchMatches.count==0);
   [pane stopKeySearch];
+  // While documents autosave, Save As… keeps macOS's ⌥⇧⌘S: dimmed as in Xcode, not recorded, no buttons (#46).
+  const NSUInteger O=NSEventModifierFlagOption;
+  NSMenuItem *saveAsItem=Item(@"SaveAs",@"S",C|O);saveAsItem.action=@selector(saveDocumentAs:);
+  NSMenuItem *duplicateItem=[[NSMenuItem alloc]initWithTitle:@"Duplicate" action:@selector(duplicateDocument:) keyEquivalent:@"S"];duplicateItem.identifier=@"duplicateDocument:";duplicateItem.alternate=YES;
+  [first.menu addItem:saveAsItem];[first.menu addItem:duplicateItem];[coordinator refreshMenuAndMacros];[pane reloadCommands];
+  TSShortcutCommand *saveAsCommand=nil,*duplicateCommand=nil;
+  for(TSShortcutCommand *command in store.commands){if(command.item==saveAsItem)saveAsCommand=command;if(command.item==duplicateItem)duplicateCommand=command;}
+  NSInteger saveAsRow=[pane rowForCommand:saveAsCommand],duplicateRow=[pane rowForCommand:duplicateCommand];
+  REQUIRE(saveAsCommand.managedBySystem && !duplicateCommand.managedBySystem && saveAsRow>=0 && duplicateRow>=0);
+  NSString *saveAsShown=[TSShortcutStore displayKey:@"S" modifiers:C|O];
+  for(NSInteger column=0;column<2;column++){
+   NSTextField *cell=(NSTextField *)[pane.table viewAtColumn:column row:saveAsRow makeIfNecessary:YES];
+   REQUIRE(![cell isKindOfClass:TSShortcutKeyLabel.class] && [cell.textColor isEqual:NSColor.disabledControlTextColor]);
+   if(column==shortcutColumn)REQUIRE([cell.stringValue isEqual:saveAsShown]);
+  }
+  REQUIRE([[pane.table viewAtColumn:shortcutColumn row:duplicateRow makeIfNecessary:YES] isKindOfClass:TSShortcutKeyLabel.class]);
+  [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)saveAsRow] byExtendingSelection:NO];
+  for(NSButton *button in pane.selectionButtons)REQUIRE(!button.enabled);
+  REQUIRE([pane.statusText.stringValue containsString:saveAsShown]);
+  [pane beginRecordingAtRow:saveAsRow];REQUIRE(pane.editingCommand==nil);
+  [pane removeShortcut:nil];[pane restoreShortcut:nil];REQUIRE([saveAsItem.keyEquivalent isEqual:@"S"] && saveAsItem.keyEquivalentModifierMask==(C|O));
+  [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)duplicateRow] byExtendingSelection:NO];
+  REQUIRE(pane.selectionButtons[0].enabled);
+  [first.menu removeItem:saveAsItem];[first.menu removeItem:duplicateItem];[coordinator refreshMenuAndMacros];[pane reloadCommands];
  }
- puts("PASS: in-cell recording starts from the selected shortcut, double click, Return and VoiceOver; Escape, Tab and focus elsewhere end it; keys in use are refused under the list; free keys apply at once; macro keys confirm; Delete and the field button remove");
+ puts("PASS: in-cell recording starts from the selected shortcut, double click, Return and VoiceOver; Escape, Tab and focus elsewhere end it; keys in use are refused under the list; free keys apply at once; macro keys confirm; Delete and the field button remove; Save As… under autosave is dimmed and kept");
  TSMacroTreeNode *tree=[TSMacroTreeNode submenuNodeWithName:@"root"],*group=[TSMacroTreeNode submenuNodeWithName:@"group"];
  TSMacroTreeNode *a=[TSMacroTreeNode nodeWithName:@"same" content:@"unsaved" key:@"A"],*b=[TSMacroTreeNode nodeWithName:@"same" content:@"other" key:@"B"];
  [tree addChild:group];[group addChild:a];[group addChild:b];NSUInteger indexes[]={0,0};NSIndexPath *path=[NSIndexPath indexPathWithIndexes:indexes length:2];

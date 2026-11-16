@@ -298,6 +298,51 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE(alternate.keyEquivalentModifierMask == (cmd|NSEventModifierFlagOption));
     puts("PASS: alternate commands remain selectable and dispatch after removing Option from their shortcut");
 
+    // With autosave, AppKit adds Duplicate (⇧⌘S) and moves Save As… to ⌥⇧⌘S, which it restores
+    // whenever it updates the menu; it adds Close All as the Option alternate of Close (#46).
+    // These items carry AppKit's own identifiers.
+    ShortcutMemoryDefaults *fileDefaults = [ShortcutMemoryDefaults new];
+    // A Save As… shortcut saved while documents did not autosave.
+    fileDefaults.values[TSMenuShortcutOverridesKey] = @{@"TSShortcut.saveDocumentAs:.0": @{@"key":@"k", @"modifiers":@(cmd|NSEventModifierFlagControl)}};
+    NSMenuItem *saveAs = nil, *duplicate = nil, *closeAll = nil;
+    for (int launch = 0; launch < 3; launch++) {
+        BOOL autosave = launch < 2;
+        menu = MainMenu(); menu.autoenablesItems = NO;
+        NSMenuItem *save = Item(@"TSShortcut.saveDocument:.0",@"s",cmd);
+        saveAs = Item(@"TSShortcut.saveDocumentAs:.0",@"S",autosave ? cmd|NSEventModifierFlagOption : cmd); saveAs.action = @selector(saveDocumentAs:);
+        duplicate = Item(@"duplicateDocument:",@"S",cmd); duplicate.action = @selector(duplicateDocument:); duplicate.alternate = YES;
+        NSMenuItem *close = Item(@"TSShortcut.performClose:.0",@"w",cmd);
+        closeAll = Item(@"closeAll:",@"w",cmd|NSEventModifierFlagOption); closeAll.action = NSSelectorFromString(@"closeAll:"); closeAll.alternate = YES;
+        for (NSMenuItem *item in autosave ? @[save, saveAs, duplicate, close, closeAll] : @[save, saveAs, close, closeAll]) [menu addItem:item];
+        store = [[TSShortcutStore alloc] initWithMenu:NSApp.mainMenu defaults:(id)fileDefaults];
+        TSShortcutCommand *saveAsCommand = Command(store,saveAs.identifier);
+        if (launch == 0) {
+            TSShortcutCommand *duplicateCommand = Command(store,@"TSShortcut.duplicateDocument:.0");
+            REQUIRE(duplicateCommand.item == duplicate && Command(store,@"TSShortcut.closeAll:.0").item == closeAll);
+            REQUIRE([duplicateCommand.defaultKey isEqual:@"S"] && duplicateCommand.defaultModifiers == cmd && !duplicateCommand.managedBySystem);
+            // Save As… keeps ⌥⇧⌘S; its saved shortcut stays saved without being applied.
+            REQUIRE(saveAsCommand.managedBySystem && [saveAs.keyEquivalent isEqual:@"S"] && saveAs.keyEquivalentModifierMask == (cmd|NSEventModifierFlagOption));
+            REQUIRE(store.unavailableCommands.count == 0 && fileDefaults.values[TSMenuShortcutOverridesKey][saveAs.identifier]);
+            REQUIRE([store setKey:@"s" modifiers:cmd|shift forCommand:saveAsCommand] != nil);
+            REQUIRE([store setKey:@"" modifiers:0 forCommand:duplicateCommand] == nil && duplicate.keyEquivalent.length == 0);
+            REQUIRE([store setKey:@"s" modifiers:cmd|shift forCommand:saveAsCommand] != nil);
+            REQUIRE([saveAs.keyEquivalent isEqual:@"S"] && saveAs.keyEquivalentModifierMask == (cmd|NSEventModifierFlagOption));
+            REQUIRE([store setKey:@"w" modifiers:cmd|NSEventModifierFlagControl forCommand:Command(store,@"TSShortcut.closeAll:.0")] == nil);
+        } else if (launch == 1) {
+            // The choices apply again when AppKit adds Duplicate with ⇧⌘S at the next launch.
+            REQUIRE(duplicate.keyEquivalent.length == 0 && store.unavailableCommands.count == 0 && saveAsCommand.managedBySystem);
+            REQUIRE([TSBinding(closeAll.keyEquivalent, closeAll.keyEquivalentModifierMask) isEqual:TSBinding(@"w",cmd|NSEventModifierFlagControl)]);
+        } else {
+            // Without autosave there is no Duplicate, and Save As… takes its saved shortcut.
+            REQUIRE(!saveAsCommand.managedBySystem && [TSBinding(saveAs.keyEquivalent, saveAs.keyEquivalentModifierMask) isEqual:TSBinding(@"k",cmd|NSEventModifierFlagControl)]);
+            REQUIRE([store setKey:@"s" modifiers:cmd|shift forCommand:saveAsCommand] == nil);
+        }
+    }
+    [store restoreAll];
+    REQUIRE([saveAs.keyEquivalent isEqual:@"S"] && saveAs.keyEquivalentModifierMask == cmd);
+    REQUIRE([closeAll.keyEquivalent isEqual:@"w"] && closeAll.keyEquivalentModifierMask == (cmd|NSEventModifierFlagOption));
+    puts("PASS: AppKit's Duplicate and Close All are listed and keep their keys across launches; Save As… keeps macOS's key while documents autosave");
+
     menu=MainMenu(); menu.autoenablesItems=NO;
     NSMenuItem *minus=Item(nil,@"-",cmd|shift), *equals=Item(nil,@"=",cmd);
     for(NSMenuItem *item in @[minus,equals]) { item.action=@selector(run:);item.target=target;item.enabled=YES;item.allowsAutomaticKeyEquivalentLocalization=NO;[menu addItem:item]; }

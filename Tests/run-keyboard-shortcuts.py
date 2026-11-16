@@ -87,17 +87,27 @@ with tempfile.TemporaryDirectory(prefix='texshop-shortcuts-') as td:
                 'NSString *conflict = [self.store conflictForKey:self.capturedKey modifiers:self.capturedModifiers except:self.editingCommand.item restoring:nil];'),
             'drop a shortcut saved under the old Italian File Encoding identifier': (
                 '    [self adoptRenamedCommands];\n', ''),
+            'leave AppKit-added Duplicate and Close All out of the list': (
+                'if (action == @selector(duplicateDocument:) || action == NSSelectorFromString(@"closeAll:"))',
+                'if (NO)'),
+            'let Save As take a saved shortcut while AppKit keeps ⌥⇧⌘S': (
+                'if (self.overrides[command.commandID] && !command.managedBySystem) [active addObject:command.commandID];',
+                'if (self.overrides[command.commandID]) [active addObject:command.commandID];'),
+            'treat Save As as AppKit-managed without Duplicate': (
+                'command.managedBySystem = appKitSaveAs && item.action == @selector(saveDocumentAs:);',
+                'command.managedBySystem = item.action == @selector(saveDocumentAs:);'),
         }
         for name,(before,after) in cases.items():
             assert production.count(before)==1,(name,before)
             (Path(td)/'TSKeyboardShortcuts.m').write_text(production.replace(before,after))
             subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-nullability-completeness','-framework','Cocoa','-framework','Carbon','-I',td,*include_args(root),str(root/'Tests/KeyboardShortcuts.m'),str(root/'Sources/Settings/TSPrefPaneLayout.m'),'-o',str(binary)],check=True)
             detected=False
-            for path in paths:
-                result=subprocess.run([str(binary),str(path),str(root/'Resources/TeXShop/Macros/Macros_Latex.plist')],capture_output=True,text=True)
+            # The store fixtures run without arguments; the compiled menus run with them.
+            for args in [[]]+[[str(path),str(root/'Resources/TeXShop/Macros/Macros_Latex.plist')] for path in paths]:
+                result=subprocess.run([str(binary),*args],capture_output=True,text=True)
                 if result.returncode:
                     assert 'FAIL ' in result.stderr,(name,result.stderr)
-                    print('DETECTED:',name,path.parts[-3],result.stderr.strip())
+                    print('DETECTED:',name,Path(args[0]).parts[-3] if args else 'fixtures',result.stderr.strip().splitlines()[-1])
                     detected=True
                     break
             assert detected,name

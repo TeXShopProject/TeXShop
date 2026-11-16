@@ -3,6 +3,7 @@
 NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
 @interface TSShortcutCommand (PathUpdates)
 @property (nonatomic, readwrite, copy) NSString *path;
+@property (nonatomic, readwrite) BOOL managedBySystem;
 @end
 @interface TSShortcutStore ()
 @property NSMenu *menu;
@@ -43,6 +44,12 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
     for (TSShortcutCommand *command in self.commands) [previous setObject:command forKey:command.item];
     NSMutableArray *commands = [NSMutableArray array];
     NSMutableSet *seen = [NSMutableSet set];
+    // When documents autosave, AppKit adds Duplicate and resets Save As… to ⌥⇧⌘S whenever
+    // it updates the menu, so Save As… keeps the shortcut macOS gives it, as in Xcode.
+    __block BOOL appKitSaveAs = NO;
+    TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
+        if (item.action == @selector(duplicateDocument:)) appKitSaveAs = YES;
+    });
     TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
         NSString *identifier = item.identifier ?: @"";
         if (![identifier hasPrefix:@"TSShortcut."] || !item.action || item.submenu || [seen containsObject:identifier]) return;
@@ -51,7 +58,8 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
         if (!command) {
             command = [[TSShortcutCommand alloc] initWithItem:item identifier:identifier path:path];
         }
-        command.path = path; [commands addObject:command];
+        command.path = path; command.managedBySystem = appKitSaveAs && item.action == @selector(saveDocumentAs:);
+        [commands addObject:command];
     });
     self.commands = commands;
     [self adoptRenamedCommands];
@@ -72,8 +80,9 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
 - (void)applySavedOverrides {
     NSMutableSet *active = [NSMutableSet set];
     NSMutableOrderedSet *unavailable = [NSMutableOrderedSet orderedSet];
+    // A saved shortcut of a command macOS keeps stays saved and applies when macOS lets it.
     for (TSShortcutCommand *command in self.commands)
-        if (self.overrides[command.commandID]) [active addObject:command.commandID];
+        if (self.overrides[command.commandID] && !command.managedBySystem) [active addObject:command.commandID];
     NSMapTable<NSMenuItem *, TSShortcutBinding *> *planned = [NSMapTable strongToStrongObjectsMapTable];
     BOOL changed;
     do {
@@ -121,7 +130,7 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
     self.unavailableCommands = unavailable.array;
 }
 // Only the effective menu bindings reserve keys. AppKit-inserted commands
-// participate while present, but without a stable identifier cannot be customized.
+// participate while present; only those TSFindCommandID names can be customized.
 + (NSArray<NSDictionary *> *)menuBindings:(NSMenu *)menu {
     NSMutableArray *result = [NSMutableArray array];
     TSVisitMenu(menu, @"", ^(NSMenuItem *item, NSString *path) {
@@ -244,6 +253,7 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
 }
 - (nullable NSString *)setKey:(NSString *)key modifiers:(NSEventModifierFlags)flags forCommand:(TSShortcutCommand *)command {
     if (![self.commands containsObject:command]) return NSLocalizedString(@"This command is no longer available.", @"");
+    if (command.managedBySystem) return NSLocalizedString(@"Shortcut Unavailable", @"");
     if (![TSShortcutStore isAllowedKey:key modifiers:flags]) return NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.", @"");
     TSShortcutBinding *binding = TSBinding(key, flags);
     if ([binding isEqual:TSBinding(command.defaultKey, command.defaultModifiers)]) return [self restoreCommand:command];
@@ -256,6 +266,7 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
 }
 - (nullable NSString *)restoreCommand:(TSShortcutCommand *)command {
     if (![self.commands containsObject:command]) return NSLocalizedString(@"This command is no longer available.", @"");
+    if (command.managedBySystem) return nil;
     NSString *conflict = [self conflictForRestoringCommand:command];
     if (conflict) return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), conflict];
     [self.overrides removeObjectForKey:command.commandID];
