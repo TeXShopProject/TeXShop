@@ -1,18 +1,18 @@
 <html>
 <head>
-<meta content="text/html;charset=Shift_JIS" http-equiv="content-type"/>
-<title>�B�ꂽ�ݒ荀��</title>
+<meta content="text/html;charset=UTF-8" http-equiv="content-type"/>
+<title>隠れた設定項目</title>
 <meta content="Copyright (c) 2003 Richard Koch under the GNU FDL" name="copyright"/>
-<meta content="�^�O�̒ǉ��@�\�[�X�̃J���[�\���@�E�C���h�E�̔w�i�F�@�v���r���[�̎����X�V" name="description"/>
+<meta content="タグの追加　ソースのカラー表示　ウインドウの背景色　プレビューの自動更新" name="description"/>
 <link href="../sty/screen.css" media="all" rel="stylesheet"/>
 </head>
 <body>
 <div id="content_border">
 <p>
-���̃y�[�W�Ő������Ă���̂́A�B���ݒ�̈ꕔ�����ł��B���ׂẲB���ݒ�ƁA���ꂼ���ύX����^�[�~�i���̃R�}���h�́A�w���v���j���[�́u�}�W�b�N�R�����g�ƉB���ݒ�i�p��j�v�ɂ܂Ƃ߂Ă���܂��B
+このページで説明しているのは、隠し設定の一部だけです。すべての隠し設定と、それぞれを変更するターミナルのコマンドは、ヘルプメニューの「マジックコメントと隠し設定（英語）」にまとめてあります。
 </p>
 <p>
-TeXShop�ł́A\section�E \subsection�E \subsubsection���邢�� \chapter�Ƃ�����Ŏn�܂��Ă���s���^�O���j���[�ɒǉ����܂��B������I�t�ɂ���ɂ́A�^�[�~�i�����N�����A�ȉ��̃R�}���h��ł����݂܂��BNO��YES�ɕς���΁A����͂܂����ɖ߂�܂��B
+TeXShopでは、\section・ \subsection・ \subsubsectionあるいは \chapterという語で始まっている行をタグメニューに追加します。これをオフにするには、ターミナルを起動し、以下のコマンドを打ち込みます。NOをYESに変えれば、動作はまた元に戻ります。
 </p>
 <tt>
 <dl>
@@ -20,7 +20,7 @@ TeXShop�ł́A\section�E \subsection�E \subsubsection���邢�� \chapter�Ƃ�����Ŏ
 		</dd></dl>
 </tt>
 <p>
-ConTeXt���[�U�[�́A�����Ƒ����̌�傪�^�O���j���[�ɒǉ�����邱�Ƃ����]�݂ł��傤�B�ȉ��̐ݒ������ƁA\subsubsubsection, \subsubsubsubsection, \part, \title, \subject, \subsubject, \subsubsubject, \subsubsubsubject, ������ \subsubsubsubsubject�Ȃǂ̌�傪�F�������悤�ɂȂ��āA�^�O���j���[�ɒǉ�����܂��B
+ConTeXtユーザーは、もっと多くの語句がタグメニューに追加されることをお望みでしょう。以下の設定をすると、\subsubsubsection, \subsubsubsubsection, \part, \title, \subject, \subsubject, \subsubsubject, \subsubsubsubject, そして \subsubsubsubsubjectなどの語句が認識されるようになって、タグメニューに追加されます。
 </p>
 <tt>
 <dl>
@@ -29,11 +29,11 @@ ConTeXt���[�U�[�́A�����Ƒ����̌�傪�^�O���j���[�ɒǉ�����邱�Ƃ����]�݂ł���
 </tt>
 <hr/>
 <p>
-�\�[�X�E�v���r���[�E�R���\�[���̊e�E�C���h�E�̐F�i�\�[�X�̃J���[�\���̐F�A�w�i�F�╶���F�A�}���|�C���g�̐F�A�Ή����ʂ̋����F��s�������̐F�A�v���r���[�E�C���h�E�̔w�i�F�Ȃǁj�ƁA�����̃E�C���h�E�̓����x�́A���݂́u�ݒ�v�́u�e�[�}�v�J�e�S���Őݒ肵�܂��B
+ソース・プレビュー・コンソールの各ウインドウの色（ソースのカラー表示の色、背景色や文字色、挿入ポイントの色、対応括弧の強調色や不可視文字の色、プレビューウインドウの背景色など）と、これらのウインドウの透明度は、現在は「設定」の「テーマ」カテゴリで設定します。
 </p>
 <hr/>
 <p>
-�^�C�v�Z�b�g�̍ۂɎ����܁ATeX�ɂ���Ď����I�ɐ�������� .aux�t�@�C���� .log�t�@�C���A���̑��̃t�@�C�������������Ȃ����肵�āA��菜���˂΂Ȃ�Ȃ����Ƃ�����܂��BTeXShop�ɂ́u��ƃt�@�C�����폜�v�Ƃ������j���[���ڂ�����A����ɃR���\�[���E�C���h�E�ɂ�����ƘA�����Ă���{�^��������܂��B���̂����ꂩ��I�������TeXShop�́A�\�[�X�t�@�C�����܂ރt�H���_���ɂ����āA�\�[�X�Ɠ������O�ŁA�g���q��aux�Ebcf�Eblg�Ebrf�Ecss�Eent�Efdb_latexmk�Efff�Efls�Egaux�Eglo�Eglog�Egtex�Eidv�Eidx�Eilg�Eind�Elg�Eloa�Elof�Elog�Elot�Emlf�Emtc�Eout�Epdfsync�Erun.xml�Esynctex�Esynctex.gz�Esynctex(busy) �Etoc�Ettt�Ewrm�Exref�E4ct�E4tc�ƂȂ��Ă���t�@�C�������ׂăS�~���ւƈړ����܂��B���̃��X�g�ɂ́A���̑��̊g���q���A�ЂƂ��ǉ����邱�Ƃ��ł��܂��B��Ƃ��āA.dvi�t�@�C����������ɂ́F
+タイプセットの際に時たま、TeXによって自動的に生成される .auxファイルや .logファイル、その他のファイルがおかしくなったりして、取り除かねばならないことがあります。TeXShopには「作業ファイルを削除」というメニュー項目があり、さらにコンソールウインドウにもこれと連動しているボタンがあります。このいずれかを選択するとTeXShopは、ソースファイルを含むフォルダ内にあって、ソースと同じ名前で、拡張子がaux・bcf・blg・brf・css・ent・fdb_latexmk・fff・fls・gaux・glo・glog・gtex・idv・idx・ilg・ind・lg・loa・lof・log・lot・mlf・mtc・out・pdfsync・run.xml・synctex・synctex.gz・synctex(busy) ・toc・ttt・wrm・xref・4ct・4tcとなっているファイルをすべてゴミ箱へと移動します。このリストには、その他の拡張子を、ひとつずつ追加することができます。例として、.dviファイルを加えるには：
 </p>
 <tt>
 <dl>
@@ -41,7 +41,7 @@ ConTeXt���[�U�[�́A�����Ƒ����̌�傪�^�O���j���[�ɒǉ�����邱�Ƃ����]�݂ł���
 		</dd></dl>
 </tt>
 <p>
-�ǉ������g���q����菜���Č��X�̃��X�g�ɖ߂��ɂ̈́���
+追加した拡張子を取り除いて元々のリストに戻すには──
 </p>
 <tt>
 <dl>
@@ -49,7 +49,7 @@ ConTeXt���[�U�[�́A�����Ƒ����̌�傪�^�O���j���[�ɒǉ�����邱�Ƃ����]�݂ł���
 		</dd></dl>
 </tt>
 <p>
-���Ƃ��āA����ɓO�ꂵ���N���[���i�b�v���]�܂������Ƃ�����܂��B�I�v�V�����L�[�������Ȃ���u��ƃt�@�C�����폜�v��I�������TeXShop�́A�u% !TEX root = ...�v����сu�v���W�F�N�g���[�g�̐ݒ�v�@�\���g���ă��[�g�t�@�C����T�����Ă܂��B�����ă��[�g�t�@�C���̂���t�H���_���A����т��̃t�H���_���̃T�u�t�H���_�̒��ɂ���A�Y������g���q�̕t�������ׂẴt�@�C�����A���̃t�@�C�����̔@���Ɋւ�炸�A�S�~���Ɉڂ��܂��B�u��ƃt�@�C�����폜�v�̓�����A�I�v�V�����L�[���������ƂȂ���q�̂悤�ɂ��邱�Ƃ��ł��܂� �G ���̂悤�ȃR�}���h�����Ă�����������
+時として、さらに徹底したクリーンナップが望ましいことがあります。オプションキーを押しながら「作業ファイルを削除」を選択するとTeXShopは、「% !TEX root = ...」および「プロジェクトルートの設定」機能を使ってルートファイルを探し当てます。そしてルートファイルのあるフォルダ内、およびこのフォルダ内のサブフォルダの中にあり、該当する拡張子の付いたすべてのファイルを、そのファイル名の如何に関わらず、ゴミ箱に移します。「作業ファイルを削除」の動作を、オプションキーを押すことなく上述のようにすることもできます ； 次のようなコマンドを入れてください──
 </p>
 <tt>
 <dl>
@@ -58,7 +58,7 @@ ConTeXt���[�U�[�́A�����Ƒ����̌�傪�^�O���j���[�ɒǉ�����邱�Ƃ����]�݂ł���
 </tt>
 <hr/>
 <p>
-pdf�t�@�C�����ύX���ꂽ�Ƃ���pdf��ʂ������I�ɍX�V����悤TeXShop��ݒ肷�邱�Ƃ��ł��܂��B�����X�V�̂��߂�TeXShop�́A�P�b�ɂP�x�Apdf���Ō�ɏ����ς���ꂽ���t�Ǝ����ɕύX�����������ǂ����`�F�b�N���܂��B���̃`�F�b�N�̊Ԋu�͕ύX���邱�Ƃ��ł��܂��BTerminal�𗧂��グ�A���̃R�}���h��ł����݂܂��B1.00�����D�݂̕b���ɕς��Ă��������B
+pdfファイルが変更されたときにpdf画面を自動的に更新するようTeXShopを設定することができます。自動更新のためにTeXShopは、１秒に１度、pdfが最後に書き変えられた日付と時刻に変更があったかどうかチェックします。このチェックの間隔は変更することができます。Terminalを立ち上げ、次のコマンドを打ち込みます。1.00をお好みの秒数に変えてください。
 </p>
 <tt>
 <dl>
@@ -66,7 +66,7 @@ pdf�t�@�C�����ύX���ꂽ�Ƃ���pdf��ʂ������I�ɍX�V����悤TeXShop��ݒ肷�邱�Ƃ
 		</dd></dl>
 </tt>
 <p>
-pdf�̎����X�V�́A�O���G�f�B�^���g���悤�ݒ肵�Ă��邩�A���邢�́u�v���r���[���J��...�v��TeX�t�@�C�����J�����Ƃ��ɕ֗��ł��B�����̏ꍇ�ɂ́A.tex�t�@�C���͊J����Ă��܂����ATeXShop�ł͂����֘A�Â��̍s�Ȃ�ꂽpdf�t�@�C����\�����Ă���ɂ����܂���BTeXShop�͂܂��Apdf�t�@�C���𒼐ڊJ�����Ƃ��ł��܂� �G ����̓C���X�g��TeX�����ɖ��ߍ��ޑO�Ɉ�˂��Ă����̂ɕ֗��ł��B�O���G�f�B�^�̂��߂ɊJ����pdf�t�@�C���͎����I�ɍX�V������������ǂ��A��˂��邽�߂ɊJ����pdf�t�@�C���͎����X�V���������Ȃ��ꍇ�ɂ́ATerminal�𗧂��グ�A�ȉ��̃R�}���h��ł����݂܂��B���̐ݒ�̃f�t�H���g�̒l��YES�ł��B
+pdfの自動更新は、外部エディタを使うよう設定しているか、あるいは「プレビューを開く...」でTeXファイルを開いたときに便利です。これらの場合には、.texファイルは開かれていますが、TeXShopではただ関連づけの行なわれたpdfファイルを表示しているにすぎません。TeXShopはまた、pdfファイルを直接開くこともできます ； これはイラストをTeX文書に埋め込む前に一瞥しておくのに便利です。外部エディタのために開いたpdfファイルは自動的に更新させたいけれども、一瞥するために開いたpdfファイルは自動更新させたくない場合には、Terminalを立ち上げ、以下のコマンドを打ち込みます。この設定のデフォルトの値はYESです。
 </p>
 <tt>
 <dl>
@@ -74,7 +74,7 @@ pdf�̎����X�V�́A�O���G�f�B�^���g���悤�ݒ肵�Ă��邩�A���邢�́u�v���r���[���J�
 		</dd></dl>
 </tt>
 <p>
-�O���G�f�B�^�� .tex�t�@�C�����J�����ۂɁATeXShop��TeX�t�@�C����pdf�t�@�C���̓��t���`�F�b�N���Apdf�o�͂��ŐV�̏�ԂɂȂ��Ă��邩�ǂ����m�F���܂��B�����o�͂��Â��Ȃ��Ă��邩�A�܂��������݂��Ȃ��悤�Ȃ�ATeXShop�� .tex�t�@�C�������߂ă^�C�v�Z�b�g���܂��B���̓�����I�t�ɂ���ɂ́ATerminal�𗧂��グ�A�ȉ��̃R�}���h��ł����݂܂��B
+外部エディタで .texファイルを開いた際に、TeXShopはTeXファイルとpdfファイルの日付をチェックし、pdf出力が最新の状態になっているかどうか確認します。もし出力が古くなっているか、まったく存在しないようなら、TeXShopは .texファイルを改めてタイプセットします。この動作をオフにするには、Terminalを立ち上げ、以下のコマンドを打ち込みます。
 </p>
 <tt>
 <dl>
@@ -83,7 +83,7 @@ pdf�̎����X�V�́A�O���G�f�B�^���g���悤�ݒ肵�Ă��邩�A���邢�́u�v���r���[���J�
 </tt>
 <hr/>
 <p>
-�s��p�l���ɂ�����s��̍ő�̃T�C�Y�i�s���E�񐔁j��ݒ肷��B�ꂽ�ݒ肪����܂��F
+行列パネルにおける行列の最大のサイズ（行数・列数）を設定する隠れた設定があります：
 </p>
 <tt>
 <dl>
@@ -92,7 +92,7 @@ pdf�̎����X�V�́A�O���G�f�B�^���g���悤�ݒ肵�Ă��邩�A���邢�́u�v���r���[���J�
 </tt>
 <hr/>
 <p>
-�uSync�v�Ƃ������O�̐V�����`�F�b�N�{�b�N�X���A�v���r���[�E�C���h�E�p�c�[���ɂ���܂��B����̓f�t�H���g�̃c�[���E�L�b�g�̈ꕔ�ɂ͂Ȃ��Ă��܂���B���̍��ڂ��`�F�b�N�����ƁA�V���N���E�X�|�b�g���v���r���[�������Ō��邱�Ƃ��ł��܂��B�v���r���[�E�C���h�E���ŏ��ɕ\�����ꂽ�ۂ͌����܂��񂪁A������ȉ��̂悤�ɂ��ĕύX�ł��܂��F
+「Sync」という名前の新しいチェックボックスが、プレビューウインドウ用ツールにあります。これはデフォルトのツール・キットの一部にはなっていません。この項目がチェックされると、シンクロ・スポットをプレビュー文書内で見ることができます。プレビューウインドウが最初に表示された際は見えませんが、これを以下のようにして変更できます：
 </p>
 <tt>
 <dl>
@@ -101,7 +101,7 @@ pdf�̎����X�V�́A�O���G�f�B�^���g���悤�ݒ肵�Ă��邩�A���邢�́u�v���r���[���J�
 </tt>
 <hr/>
 <p>
-�^�C�v�Z�b�g��Ƀv���r���[�E�C���h�E���X�V�����ƁA�E�C���h�E�͑O�ʂɗ��܂��B���̓���́AApple��X11 Window Manager�Ŏ��s�����Ă���X11�G�f�B�^�̎g�p�Ńg���u���̎�ɂȂ�܂��B���������ꍇ�ɂ́A�ȉ��̂悤�ɂ��Ă��̓�����I�t�ɂł��܂��F
+タイプセット後にプレビューウインドウが更新されると、ウインドウは前面に来ます。この動作は、AppleのX11 Window Managerで実行させているX11エディタの使用でトラブルの種になります。そうした場合には、以下のようにしてこの動作をオフにできます：
 </p>
 <tt>
 <dl>
@@ -110,7 +110,7 @@ pdf�̎����X�V�́A�O���G�f�B�^���g���悤�ݒ肵�Ă��邩�A���邢�́u�v���r���[���J�
 </tt>
 <hr/>
 <p>
-TeXShop�ł͂���܂ŁA�^�C�v�Z�b�g�G���W����t�@�C���̃G���R�[�f�B���O�����A���[�g�t�@�C�������߂�̂ɁA���s�̂��̂Ƃ͈قȂ�\�[�X�R�}���h���T�|�[�g���Ă��܂����G ���Ƃ��΁A%&amp;latex�E %&amp;encoding=UTF-8 Unicode�E %SourceDoc ../Main.tex�ȂǂƂ��������̂ł��B���̍\���͎��̕s�p�ӂȑI��ɂ����̂ł����̂ŁA�ύX���܂����B�����Â��t�@�C�����������񂠂��āA�ꎞ�I�ɈȑO�̏�Ԃɖ߂��ɂ́A���L�̃R�}���h���g�p���Ă��������B��������΁A�V�����\�[�X�R�}���h���F������邾���łȂ��A�Â��\�[�X�R�}���h���܂����l�ɋ@�\���܂��B���̐ݒ�ύX�͉��}�̏ꍇ�ɂ̂ݗp���Ă��������B
+TeXShopではこれまで、タイプセットエンジンやファイルのエンコーディング方式、ルートファイルを決めるのに、現行のものとは異なるソースコマンドをサポートしていました； たとえば、%&amp;latex・ %&amp;encoding=UTF-8 Unicode・ %SourceDoc ../Main.texなどといったものです。この構文は私の不用意な選定によるものでしたので、変更しました。もし古いファイルがたくさんあって、一時的に以前の状態に戻すには、下記のコマンドを使用してください。そうすれば、新しいソースコマンドが認識されるだけでなく、古いソースコマンドもまた同様に機能します。この設定変更は応急の場合にのみ用いてください。
 </p>
 <tt>
 <dl>
@@ -119,7 +119,7 @@ TeXShop�ł͂���܂ŁA�^�C�v�Z�b�g�G���W����t�@�C���̃G���R�[�f�B���O�����A���[�
 </tt>
 <hr/>
 <p>
-�v���r���[�E�C���h�E�̕����y�[�W�S�̂̕����������Ƃ��ɂ́A������щE�̃J�[�\���L�[�ō��E�ɃX�N���[�����܂����A�����łȂ��ꍇ�ɂ͏㉺�Ƀy�[�W�ړ����܂��B�B�ꂽ�ݒ�ł��̋�����ύX����ƁA���E�̃J�[�\���L�[�͏�Ƀy�[�W�ړ��ƂȂ�܂��B
+プレビューウインドウの幅がページ全体の幅よりも狭いときには、左および右のカーソルキーで左右にスクロールしますが、そうでない場合には上下にページ移動します。隠れた設定でこの挙動を変更すると、左右のカーソルキーは常にページ移動となります。
 </p>
 <tt>
 <dl>
@@ -128,10 +128,10 @@ TeXShop�ł͂���܂ŁA�^�C�v�Z�b�g�G���W����t�@�C���̃G���R�[�f�B���O�����A���[�
 </tt>
 <hr/>
 <p>
-�^�C�v�Z�b�g�̏󋵂�G���[��`����R���\�[���E�C���h�E�̃e�L�X�g�͍��ŕ\������܂��B�B�ꂽ�ݒ�ɂ��A�ŏ��̃G���[�ȍ~�̕\���e�L�X�g��ԕ����ɂ��邱�Ƃ��ł��܂��B
+タイプセットの状況やエラーを伝えるコンソールウインドウのテキストは黒で表示されます。隠れた設定により、最初のエラー以降の表示テキストを赤文字にすることができます。
 </p>
 <blockquote>
-<small>�󒍁F�G���[���X�L�b�v���ă^�C�v�Z�b�g���p������ƁA����ȍ~�̃R���\�[���e�L�X�g���ԂɂȂ�܂��B</small>
+<small>訳注：エラーをスキップしてタイプセットを継続すると、それ以降のコンソールテキストが赤になります。</small>
 </blockquote>
 <tt>
 <dl>
@@ -140,7 +140,7 @@ TeXShop�ł͂���܂ŁA�^�C�v�Z�b�g�G���W����t�@�C���̃G���R�[�f�B���O�����A���[�
 </tt>
 <hr/>
 <p>
-�v���r���[�E�C���h�E���J���ƁA�����̓h�����[����\���ɂȂ��Ă��܂��B�B�ꂽ�ݒ�ł��̋�����ύX����ƁA�ŏ�����h�����[���\�����ꂽ��ԂŃv���r���[�E�C���h�E���J���܂��B
+プレビューウインドウを開くと、当初はドロワーが非表示になっています。隠れた設定でこの挙動を変更すると、最初からドロワーが表示された状態でプレビューウインドウを開きます。
 </p>
 <tt>
 <dl>
@@ -148,39 +148,39 @@ TeXShop�ł͂���܂ŁA�^�C�v�Z�b�g�G���W����t�@�C���̃G���R�[�f�B���O�����A���[�
 		</dd></dl>
 </tt>
 <hr/>
-<p> TeXShop�̓R�}���h�⊮���T�|�[�g���Ă��܂��BTeX�̕��G�ȃR�}���h�̍ŏ�����������͂��ăG�X�P�[�v�L�[�������Ǝc�肪�⊮����܂��B����́C�������܂ޕ��G�ȃR�}���h�ł����v�ł��B�������܂ޏꍇ�CTeXShop�́u�}�[�N�v�Ƃ��������̃v���[�X�z���_���T�|�[�g���Ă��܂��B���j���[�R�}���h�� �R�}���h�⊮���}�[�N �Ń}�[�N�Ԃ��W�����v�ł��܂��B���̃V���[�g�J�b�g�̓��j���[�ɏ�����Ă��܂��B
+<p> TeXShopはコマンド補完をサポートしています。TeXの複雑なコマンドの最初数文字を入力してエスケープキーを押すと残りが補完されます。これは，引数を含む複雑なコマンドでも大丈夫です。引数を含む場合，TeXShopは「マーク」という引数のプレースホルダをサポートしています。メニューコマンドの コマンド補完→マーク でマーク間をジャンプできます。そのショートカットはメニューに書かれています。
 </p>
-<p> ���̃}�[�N�E�O�̃}�[�N�ɃW�����v����̂͋ɂ߂ĕp�ɂɍs���̂ŁC�u���̃}�[�N�v��option + escape, �u�O�̃}�[�N�v��control + escape�ɂ����蓖�ĂĂ��܂��B</p>
-<p> �R�}���h�⊮�̃L�[�Ƃ��āC�ݒ�E�C���h�E�ŃG�X�P�[�v�L�[�̑���Ƀ^�u�L�[��I�Ԃ��Ƃ��o���܂��B���̏ꍇ�C�}�[�N�Ԃ̃W�����v��option + tab��control + tab�ɂȂ�܂��B</p>
-<p> �������C���X�C�T�[�h�p�[�e�B���̃��[�e�B���e�B��option + escape, control + escape, option + tab, control + tab�𑼂̖ړI�Ŏg�p���Ă��āCTeXShop�ƏՓ˂���ꍇ������܂��B���̏ꍇ�̂��߂ɁCTeXShop�������̃V���[�g�J�b�g���g��Ȃ��悤�ݒ�ύX�ł��܂��B
+<p> 次のマーク・前のマークにジャンプするのは極めて頻繁に行うので，「次のマーク」をoption + escape, 「前のマーク」をcontrol + escapeにも割り当てています。</p>
+<p> コマンド補完のキーとして，設定ウインドウでエスケープキーの代わりにタブキーを選ぶことも出来ます。その場合，マーク間のジャンプはoption + tabとcontrol + tabになります。</p>
+<p> しかし，時々，サードパーティ製のユーティリティがoption + escape, control + escape, option + tab, control + tabを他の目的で使用していて，TeXShopと衝突する場合があります。その場合のために，TeXShopがこれらのショートカットを使わないよう設定変更できます。
 <dl>
 <dd>
 					defaults write TeXShop CommandCompletionAlternateMarkShortcut NO
 			</dd></dl>
 <hr/>
-<p> TeXShop Ver.2.38�ł́C���ʂ�ł����񂾂Ƃ��ɁC�Ή����銇�ʂ����F���C���W�P�[�^�ŕ����オ��C�����ɏ����܂��B����ɂ��C�����ԗv������Ă����C���₷���̉��P�v�]�𖞂������Ƃ��ł��܂����B�i���̋@�\�ɂ�Leopard�ȍ~���K�v�ł��B�j�������C���̉��F���C���W�P�[�^�����������ꍇ�́C���̐ݒ�ŕύX�ł��܂��B
+<p> TeXShop Ver.2.38では，括弧を打ち込んだときに，対応する括弧が黄色いインジケータで浮き上がり，すぐに消えます。これにより，長い間要求されていた，見やすさの改善要望を満たすことができました。（この機能にはLeopard以降が必要です。）ただし，この黄色いインジケータを消したい場合は，次の設定で変更できます。
 <dl>
 <dd> defaults write TeXShop brieflyFlashYellowForMatch NO
 </dd></dl>
-</p></p><p><a href="basic_preferences.htm#settings-search">�ݒ�̎g�����Ɛݒ�̌���</a></p><p>�B���ݒ��WatchServer�AExtraCommandsToCheckParameters�AExtraCommandsNotToCheckParameters�ƁAmacOS�̐ݒ�ApplePersistence�́ATeXShop�̋N�����ɓǂݍ��܂�܂��B�ύX�����ꍇ��TeXShop���ċN�����Ă��������B</p></div>
+</p></p><p><a href="basic_preferences.htm#settings-search">設定の使い方と設定の検索</a></p><p>隠し設定のWatchServer、ExtraCommandsToCheckParameters、ExtraCommandsNotToCheckParametersと、macOSの設定ApplePersistenceは、TeXShopの起動時に読み込まれます。変更した場合はTeXShopを再起動してください。</p></div>
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/xicnsc.gif" width="40"/></a></div>
-<div id="header_chapter">TeXShop�̐ݒ�͂ǂ�����΂悢���H</div>
-<div id="header_title">�B�ꂽ�ݒ荀��</div>
+<div id="header_chapter">TeXShopの設定はどうすればよいか？</div>
+<div id="header_title">隠れた設定項目</div>
 <div id="menu_border">
 <ul>
-<li><a href="configure_preliminaries.htm">�܂�����</a>
-<li><a href="configure_correctinstall.htm">������ƃC���X�g�[�����܂������H</a>
-<li><a href="configure_prefchanges.htm">�������߂̐ݒ�ύX</a>
-<li><a href="configure_convertgraphics.htm">�摜�`���������I�ɕϊ�����</a>
-<li><a href="configure_defaults.htm">�����ݒ�ɂ���</a>
-<li><a href="configure_latextemplate.htm">�f�t�H���g��LaTeX�e���v���[�g</a>
-<li><a href="configure_hidden.htm">�B�ꂽ�ݒ荀��</a>
-<li><a href="configure_plist.htm">.plist�t�@�C��</a>
-<li><a href="configure_panel.htm">LaTeX�p�l�����ꕔ�ύX����</a>
-<li><a href="configure_autocompletion.htm">�L�[�o�C���h��ύX����</a>
-<li><a href="configure_menushortcuts.htm">���j���[���ڂ̃V���[�g�J�b�g�L�[���Ē�`����</a>
-<li><a href="configure_macros.htm">�}�N�����j���[��ύX����</a>
+<li><a href="configure_preliminaries.htm">まえがき</a>
+<li><a href="configure_correctinstall.htm">きちんとインストールしましたか？</a>
+<li><a href="configure_prefchanges.htm">おすすめの設定変更</a>
+<li><a href="configure_convertgraphics.htm">画像形式を自動的に変換する</a>
+<li><a href="configure_defaults.htm">初期設定について</a>
+<li><a href="configure_latextemplate.htm">デフォルトのLaTeXテンプレート</a>
+<li><a href="configure_hidden.htm">隠れた設定項目</a>
+<li><a href="configure_plist.htm">.plistファイル</a>
+<li><a href="configure_panel.htm">LaTeXパネルを一部変更する</a>
+<li><a href="configure_autocompletion.htm">キーバインドを変更する</a>
+<li><a href="configure_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
+<li><a href="configure_macros.htm">マクロメニューを変更する</a>
 </li></li></li></li></li></li></li></li></li></li></li></li></ul>
 </div>
 

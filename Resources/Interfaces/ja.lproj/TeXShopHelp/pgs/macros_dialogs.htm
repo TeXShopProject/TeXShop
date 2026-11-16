@@ -1,10 +1,10 @@
 <HTML>
 
 <HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-			<TITLE>�_�C�A���O�����</TITLE>
+			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
+			<TITLE>ダイアログを作る</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="AppleScript�ō��_�C�A���O�̍��">
+			<META NAME="description" CONTENT="AppleScriptで作るダイアログの作例">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -13,22 +13,22 @@
 <div id="content_border">
 
 <p>
-AppleScript�Ń_�C�A���O���쐬���A���[�U�̓��͂ɉ����ē��삷��悤�ɂł��܂��B���Ƃ��΁A�ȉ��̃X�N���v�g����������āA�ӂ�܂��������Ă݂Ă��������B
+AppleScriptでダイアログを作成し、ユーザの入力に応じて動作するようにできます。たとえば、以下のスクリプトを書き入れて、ふるまいを試してみてください。
 </p>
 
 <tt>
 	<dl>
 		<dd>-- AppleScript
 		<dd>-- Use a dialog to enter user defined information into an applescript.
-		<dd>-- �_�C�A���O���g���A���[�U�̒�߂�f�[�^��AppleScript�Ɏ�荞�݂܂��B
+		<dd>-- ダイアログを使い、ユーザの定めるデータをAppleScriptに取り込みます。
 		<dd>-- There are two feedbacks possible 'text' and "choice of buttons".
-		<dd>-- �u�e�L�X�g�v�Ɓu�{�^���I���v�ɂ��Q�̃t�B�[�h�o�b�N�����p�\�ł��B
+		<dd>-- 「テキスト」と「ボタン選択」による２つのフィードバックが利用可能です。
 		<dd>-- The returned information can be used to define corresponding variables.
-		<dd>-- �Ԃ��ꂽ�f�[�^�͊Y������ϐ����`����̂Ɏg���܂��B
+		<dd>-- 返されたデータは該当する変数を定義するのに使えます。
 		<dd>-- The number of buttons may not exceed three.
-		<dd>-- �{�^���̐��͂R�𒴂��Ȃ��悤�ɁB
+		<dd>-- ボタンの数は３つを超えないように。
 		<dd>-- In the three examples below it is shown how to use text return, button return, and both.
-		<dd>-- �ȉ��̂R�̗�ł́A�e�L�X�g�A�{�^���A�e�L�X�g���{�^���̎g�����ɂ��Ď����Ă��܂��B
+		<dd>-- 以下の３つの例では、テキスト、ボタン、テキスト＆ボタンの使い方について示しています。
 		<p>
 		<dd>activate
 		<dd>display dialog "Test dialog: type something below" default answer "Hello World!" buttons {"A", "B", "C"} default button "B"
@@ -43,29 +43,29 @@ AppleScript�Ń_�C�A���O���쐬���A���[�U�̓��͂ɉ����ē��삷��悤�ɂł��܂��B���
 </tt>
 
 <p>
-���̗�ɂ���R�}���h�uactivate�v�ɂ͉�����K�v�ł��BAppleScript�����s����悤�v��������TeXShop�́A�ʂ̃v���O�������Ăяo���ăX�N���v�g�����s���܂��B���̃v���O��������Scriptrunner�́ATeXShop�ɑg�ݍ��܂�Ă��܂��B�X�N���v�g�ō쐬�����_�C�A���O�͂��ׂāATeXShop�ł͂Ȃ�Scriptrunner�ŕ\������܂��B�uactivate�v�R�}���h��Scriptrunner��O�ʂɎ����Ă���̂ŁA�_�C�A���O�͑��̃E�C���h�E������O�ɕ\������܂��B
+この例にあるコマンド「activate」には解説が必要です。AppleScriptを実行するよう要請されるとTeXShopは、別のプログラムを呼び出してスクリプトを実行します。そのプログラム──Scriptrunnerは、TeXShopに組み込まれています。スクリプトで作成したダイアログはすべて、TeXShopではなくScriptrunnerで表示されます。「activate」コマンドはScriptrunnerを前面に持ってくるので、ダイアログは他のウインドウよりも手前に表示されます。
 </p>
 
 </div>
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">�}�N���E�w���v</div>
-<div id="header_title">�_�C�A���O�����</div>
+<div id="header_chapter">マクロ・ヘルプ</div>
+<div id="header_title">ダイアログを作る</div>
 
 <div id="menu_border">
 
 	<UL>
-		<li><a href="macros_preliminaries.htm">�܂�����</a> 
-		<li><a href="macros_default.htm">�f�t�H���g�̃}�N���𗝉�����</a>
-		<li><a href="macros_rearrange.htm">�}�N���̍��ږ�����בւ���</a>
-		<li><a href="macros_define.htm">�V�����}�N�����`����</a>
-		<li><a href="macros_applescript.htm">AppleScript�}�N��</a>
+		<li><a href="macros_preliminaries.htm">まえがき</a> 
+		<li><a href="macros_default.htm">デフォルトのマクロを理解する</a>
+		<li><a href="macros_rearrange.htm">マクロの項目名を並べ替える</a>
+		<li><a href="macros_define.htm">新しいマクロを定義する</a>
+		<li><a href="macros_applescript.htm">AppleScriptマクロ</a>
 
-		<li><a href="macros_includedscripts.htm">�f�t�H���g��AppleScript�}�N��</a>
-		<li><a href="macros_defapplescript.htm">AppleScript�}�N�����`����</a>
-		<li><a href="macros_dialogs.htm">�_�C�A���O�����</a>
-		<li><a href="macros_writingcompletescripts.htm">TeXShop�̃^�C�v�Z�b�g�R�}���h�ŃX�N���v�g������</a>
-		<li><a href="macros_writingcommandscripts.htm">�V�F���R�}���h�ŃX�N���v�g������</a>
+		<li><a href="macros_includedscripts.htm">デフォルトのAppleScriptマクロ</a>
+		<li><a href="macros_defapplescript.htm">AppleScriptマクロを定義する</a>
+		<li><a href="macros_dialogs.htm">ダイアログを作る</a>
+		<li><a href="macros_writingcompletescripts.htm">TeXShopのタイプセットコマンドでスクリプトを書く</a>
+		<li><a href="macros_writingcommandscripts.htm">シェルコマンドでスクリプトを書く</a>
 	</UL>
 </div>
 </BODY>

@@ -1,10 +1,10 @@
 <HTML>
 
 <HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-			<TITLE>AppleScript�}�N��</TITLE>
+			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
+			<TITLE>AppleScriptマクロ</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="AppleScript�����s����^�C�v�̃}�N��">
+			<META NAME="description" CONTENT="AppleScriptを実行するタイプのマクロ">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -13,7 +13,7 @@
 <div id="content_border">
 
 <p>
-�}�N�������̂����ꂩ�̕�����Ŏn�܂��Ă���ꍇ����
+マクロが次のいずれかの文字列で始まっている場合──
 </p>
 
 <tt>
@@ -25,11 +25,11 @@
 </tt>
 
 <p>
-���̃}�N����I������ƁAAppleScript�̃R�[�h�����s����܂��B
-���Ƃ��΁uView pdf with Acrobat�v�Ƒ肳�ꂽ�}�N�����l���Ă݂܂��B
-�\�[�X�t�@�C�����A�N�e�B�u�ɂȂ��Ă���i������pdf�t�@�C�������łɐ����ς݂ɂȂ��Ă���j�Ƃ��ɂ��̃}�N����I������ƁA
-Adobe Acrobat Reader�������オ����pdf�o�̓t�@�C�����J���܂��B
-����AppleScript�̃R�[�h�́A���̂悤�ɂȂ��Ă��܂�����
+そのマクロを選択すると、AppleScriptのコードが実行されます。
+たとえば「View pdf with Acrobat」と題されたマクロを考えてみます。
+ソースファイルがアクティブになっている（加えてpdfファイルもすでに生成済みになっている）ときにこのマクロを選択すると、
+Adobe Acrobat Readerが立ち上がってpdf出力ファイルを開きます。
+このAppleScriptのコードは、次のようになっています──
 </p>
 
 <tt>
@@ -46,37 +46,37 @@ Adobe Acrobat Reader�������オ����pdf�o�̓t�@�C�����J���܂��B
 </tt>
 
 <p>
-�u--AppleScript direct�v�Ŏn�܂�R�}���h�́ATeXShop�ɂ�蒼�ڎ��s����܂��B����AppleScript�����s����Ă���Ԃ́ATeXShop�̃C�x���g�E���[�v�͗L���ɂȂ�܂���B���������Ă��̃X�N���v�g�ɂ́ATeXShop���Ăяo���āA���[�U�̓��͂�K�v�Ƃ��邩������Ȃ�������s�Ȃ킹�邱�Ƃ͂ł��܂���B���Ƃ��΁ATeXShop��LaTeX�����s����悤�v�����邱�Ƃ��ł��܂��񄟄��Ƃ����̂��ALaTeX�t�@�C���ɃG���[���������ꍇ�A�R���\�[�����\�����ꃆ�[�U�̓��͂�҂��܂����A�����������͂͂ł��Ȃ��̂ł��B
+「--AppleScript direct」で始まるコマンドは、TeXShopにより直接実行されます。このAppleScriptが実行されている間は、TeXShopのイベント・ループは有効になりません。したがってこのスクリプトには、TeXShopを呼び出して、ユーザの入力を必要とするかもしれない動作を行なわせることはできません。たとえば、TeXShopにLaTeXを実行するよう要請することができません──というのも、LaTeXファイルにエラーがあった場合、コンソールが表示されユーザの入力を待ちますが、そうした入力はできないのです。
 </p>
 
 <p>
-�u--AppleScript�v�Ŏn�܂�R�}���h�́ATeXShop�ɑg�ݍ��܂�Ă��鏬���ȕ⏕�v���O�����ɂ����s����܂��B���������R�}���h�́A���[�U�̓��͂�K�v�Ƃ��邩������Ȃ�������s�Ȃ����Ƃ�TeXShop�ɗv���ł��܂������Ƃ����̂��A���̏ꍇ�A�⏕�v���O�����͈ꎞ�I�ɒ�~���܂����ATeXShop�̓A�N�e�B�u�̂܂܂�����ł��B
+「--AppleScript」で始まるコマンドは、TeXShopに組み込まれている小さな補助プログラムにより実行されます。こうしたコマンドは、ユーザの入力を必要とするかもしれない動作を行なうことをTeXShopに要求できます──というのも、この場合、補助プログラムは一時的に停止しますが、TeXShopはアクティブのままだからです。
 </p>
 
 <p>
-�Ȃ̂Łu--AppleScript direct�v�\���̓��[�e�B���E�}�N���ɓK���Ă��܂����A��̍��񂾃}�N���ɂ́u--AppleScript�v���K�v�ƂȂ�ł��傤�B
+なので「--AppleScript direct」構文はルーティン・マクロに適していますが、手の込んだマクロには「--AppleScript」が必要となるでしょう。
 </p>
 
 </div>
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">�}�N���E�w���v</div>
-<div id="header_title">AppleScript�}�N��</div>
+<div id="header_chapter">マクロ・ヘルプ</div>
+<div id="header_title">AppleScriptマクロ</div>
 
 <div id="menu_border">
 
 	<UL>
-		<li><a href="macros_preliminaries.htm">�܂�����</a> 
-		<li><a href="macros_default.htm">�f�t�H���g�̃}�N���𗝉�����</a>
-		<li><a href="macros_rearrange.htm">�}�N���̍��ږ�����בւ���</a>
-		<li><a href="macros_define.htm">�V�����}�N�����`����</a>
-		<li><a href="macros_applescript.htm">AppleScript�}�N��</a>
+		<li><a href="macros_preliminaries.htm">まえがき</a> 
+		<li><a href="macros_default.htm">デフォルトのマクロを理解する</a>
+		<li><a href="macros_rearrange.htm">マクロの項目名を並べ替える</a>
+		<li><a href="macros_define.htm">新しいマクロを定義する</a>
+		<li><a href="macros_applescript.htm">AppleScriptマクロ</a>
 
-		<li><a href="macros_includedscripts.htm">�f�t�H���g��AppleScript�}�N��</a>
-		<li><a href="macros_defapplescript.htm">AppleScript�}�N�����`����</a>
-		<li><a href="macros_dialogs.htm">�_�C�A���O�����</a>
-		<li><a href="macros_writingcompletescripts.htm">TeXShop�̃^�C�v�Z�b�g�R�}���h�ŃX�N���v�g������</a>
-		<li><a href="macros_writingcommandscripts.htm">�V�F���R�}���h�ŃX�N���v�g������</a>
+		<li><a href="macros_includedscripts.htm">デフォルトのAppleScriptマクロ</a>
+		<li><a href="macros_defapplescript.htm">AppleScriptマクロを定義する</a>
+		<li><a href="macros_dialogs.htm">ダイアログを作る</a>
+		<li><a href="macros_writingcompletescripts.htm">TeXShopのタイプセットコマンドでスクリプトを書く</a>
+		<li><a href="macros_writingcommandscripts.htm">シェルコマンドでスクリプトを書く</a>
 	</UL>
 </div>
 </BODY>

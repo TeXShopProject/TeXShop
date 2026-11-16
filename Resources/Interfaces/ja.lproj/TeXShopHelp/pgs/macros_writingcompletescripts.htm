@@ -1,10 +1,10 @@
 <HTML>
 
 <HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-			<TITLE>TeXShop�̃^�C�v�Z�b�g�R�}���h�ŃX�N���v�g������</TITLE>
+			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
+			<TITLE>TeXShopのタイプセットコマンドでスクリプトを書く</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="AppleScript�ɂ��^�C�v�Z�b�g�̎������ɂ���">
+			<META NAME="description" CONTENT="AppleScriptによるタイプセットの自動化について">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -13,15 +13,15 @@
 <div id="content_border">
 
 <p>
-TeX�v���W�F�N�g���Q�l�����ژ^���܂�ł���ꍇ�ɂ́A��A�̃^�C�v�Z�b�g�R�}���h�����s���Ėژ^���A�b�v�f�[�g���Ȃ���΂Ȃ�܂���B�܂�LaTeX�����s���� .aux�t�@�C�����쐬����BBibTeX�����s���� .aux�t�@�C������ .bbl����� .blg�t�@�C�����쐬����B�ēxLaTeX�����s���ĎQ�l�����ژ^�𕶏��ɕt��������BLaTeX���ŏI�I�Ɏ��s���Ėژ^�ɑ΂��镶�����̎Q�Ƃ��A�b�v�f�[�g����B
+TeXプロジェクトが参考文献目録を含んでいる場合には、一連のタイプセットコマンドを実行して目録をアップデートしなければなりません。まずLaTeXを実行して .auxファイルを作成する。BibTeXを実行して .auxファイルから .bblおよび .blgファイルを作成する。再度LaTeXを実行して参考文献目録を文書に付け加える。LaTeXを最終的に実行して目録に対する文書内の参照をアップデートする。
 </p>
 
 <p>
-�����̃v���W�F�N�g�ɁA��A�̓��l�ȃ^�C�v�Z�b�g�R�}���h���܂܂�Ă��邱�Ƃ�����ł��傤�BAppleScript���g���΁A����������Ƃ����������邱�Ƃ��ł��܂��B
+複数のプロジェクトに、一連の同様なタイプセットコマンドが含まれていることもあるでしょう。AppleScriptを使えば、こうした作業を自動化することができます。
 </p>
 
 <p>
-�ǂ�Ȃӂ��ɂ���΂����̂��ATeXShop�ɕt������uOtherScripts->Bibliography�v�Ƃ����R�}���h���ɒ��ׂĂ݂܂��B���̃R�}���h�̖{�͎̂��̂悤�ɂȂ��Ă��܂��B
+どんなふうにすればいいのか、TeXShopに付属する「OtherScripts->Bibliography」というコマンドを例に調べてみます。このコマンドの本体は次のようになっています。
 </p>
 
 <tt>
@@ -87,37 +87,37 @@ TeX�v���W�F�N�g���Q�l�����ژ^���܂�ł���ꍇ�ɂ́A��A�̃^�C�v�Z�b�g�R�}���h���
 
 
 <p>
-�R�}���h�̑�P�s�ڂ́A���ꂪAppleScript�}�N���ł��邱�Ƃ������Ă��܂��B���̍s�ł� #FILEPATH#�iTeX�\�[�X�̃t���p�X����^����p�����[�^�j���`�F�b�N���Ă��܂��B���̃p�����[�^�́A�V�K���ނ��쐬����Ă��Ȃ���܂��ۑ�����Ă��Ȃ��ƁA����ۂ̕�����ɂȂ�܂��B���̏ꍇ�A���[�U�͕�����ۑ�����悤�Ɍ����A�X�N���v�g�͏I�����܂��B
+コマンドの第１行目は、これがAppleScriptマクロであることを示しています。次の行では #FILEPATH#（TeXソースのフルパス名を与えるパラメータ）をチェックしています。このパラメータは、新規書類が作成されていながらまだ保存されていないと、空っぽの文字列になります。その場合、ユーザは文書を保存するように言われ、スクリプトは終了します。
 </p>
 
 <p>
-���ɂÂ��s�ł́A������ۑ�����悤TeXShop�ɖ����Ă��܂��B�ΏۂƂȂ镶�����Q�Ƃ���̂� #DOCUMENTNAME# ���g���Ă��邱�Ƃɒ��ӂ��܂��B
+次につづく行では、文書を保存するようTeXShopに命じています。対象となる文書を参照するのに #DOCUMENTNAME# を使っていることに注意します。
 </p>
 
 <p>
-�c��̃R�}���h��latexinteractive�Ebibtex�Elatex�����latex�����s���Ă��܂��B�^�C�v�Z�b�g�R�}���h���Ăяo������A�^�C�v�Z�b�g��Ƃ���������O�ɁA�R���g���[���͂�����AppleScript�ɖ߂邱�Ƃ��v���o���Ă��������Brepeat�̃��[�v�����ł́A���̃^�C�v�Z�b�g���������s�����O�ɁA�旧��Ƃ������������ǂ������`�F�b�N����悤�X�N���v�g�ɖ����Ă��܂��B�udelay 2�v�Ƃ����s�́A��Ƃ������������ǂ�����₦���₢���킹�Â��邱�ƂŃR���s���[�^�S�̂̑��x��ቺ�����Ȃ��悤AppleScript�Ɋԍ�������点�Ă��܂��B
+残りのコマンドでlatexinteractive・bibtex・latexそれにlatexを実行しています。タイプセットコマンドを呼び出した後、タイプセット作業が完了する前に、コントロールはすぐにAppleScriptに戻ることを思い出してください。repeatのループ部分では、次のタイプセット処理が実行される前に、先立つ作業が完了したかどうかをチェックするようスクリプトに命じています。「delay 2」という行は、作業が完了したかどうかを絶えず問い合わせつづけることでコンピュータ全体の速度を低下させないようAppleScriptに間合いを取らせています。
 </p>
 
 </div>
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">�}�N���E�w���v</div>
-<div id="header_title">TeXShop�̃^�C�v�Z�b�g�R�}���h�ŃX�N���v�g������</div>
+<div id="header_chapter">マクロ・ヘルプ</div>
+<div id="header_title">TeXShopのタイプセットコマンドでスクリプトを書く</div>
 
 <div id="menu_border">
 
 	<UL>
-		<li><a href="macros_preliminaries.htm">�܂�����</a> 
-		<li><a href="macros_default.htm">�f�t�H���g�̃}�N���𗝉�����</a>
-		<li><a href="macros_rearrange.htm">�}�N���̍��ږ�����בւ���</a>
-		<li><a href="macros_define.htm">�V�����}�N�����`����</a>
-		<li><a href="macros_applescript.htm">AppleScript�}�N��</a>
+		<li><a href="macros_preliminaries.htm">まえがき</a> 
+		<li><a href="macros_default.htm">デフォルトのマクロを理解する</a>
+		<li><a href="macros_rearrange.htm">マクロの項目名を並べ替える</a>
+		<li><a href="macros_define.htm">新しいマクロを定義する</a>
+		<li><a href="macros_applescript.htm">AppleScriptマクロ</a>
 
-		<li><a href="macros_includedscripts.htm">�f�t�H���g��AppleScript�}�N��</a>
-		<li><a href="macros_defapplescript.htm">AppleScript�}�N�����`����</a>
-		<li><a href="macros_dialogs.htm">�_�C�A���O�����</a>
-		<li><a href="macros_writingcompletescripts.htm">TeXShop�̃^�C�v�Z�b�g�R�}���h�ŃX�N���v�g������</a>
-		<li><a href="macros_writingcommandscripts.htm">�V�F���R�}���h�ŃX�N���v�g������</a>
+		<li><a href="macros_includedscripts.htm">デフォルトのAppleScriptマクロ</a>
+		<li><a href="macros_defapplescript.htm">AppleScriptマクロを定義する</a>
+		<li><a href="macros_dialogs.htm">ダイアログを作る</a>
+		<li><a href="macros_writingcompletescripts.htm">TeXShopのタイプセットコマンドでスクリプトを書く</a>
+		<li><a href="macros_writingcommandscripts.htm">シェルコマンドでスクリプトを書く</a>
 	</UL>
 </div>
 </BODY>

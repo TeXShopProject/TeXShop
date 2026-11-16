@@ -88,10 +88,7 @@ import json, subprocess
 help_pages, font_names = 0, set()
 for path in sorted((root / 'Resources/Interfaces/ja.lproj/TeXShopHelp').rglob('*.htm*')):
     raw = path.read_bytes()
-    try:
-        page = raw.decode('utf-8')
-    except UnicodeDecodeError:
-        page = raw.decode('cp932')
+    page = raw.decode('utf-8')
     if mutation == 'help-font' and path.name == 'basic_j_ptex.htm':
         page = page.replace('ヒラギノ角ゴ Pro W3', 'ヒラギノ角ゴPro W3')
     help_pages += 1

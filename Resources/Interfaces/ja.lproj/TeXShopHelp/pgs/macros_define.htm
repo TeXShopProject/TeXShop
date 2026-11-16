@@ -1,10 +1,10 @@
 <HTML>
 
 <HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-			<TITLE>�V�����}�N�����`����</TITLE>
+			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
+			<TITLE>新しいマクロを定義する</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="�}�N���G�f�B�^�ŐV�K���ڂ�ǉ�������@">
+			<META NAME="description" CONTENT="マクロエディタで新規項目を追加する方法">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -12,37 +12,37 @@
 <div id="content_border">
 
 <p>
-�V�K�̍��ځi�V�K�}�N���j�͈ꗗ�̉��� �{ �{�^���ŁA�V�K�̃T�u���j���[�i�T�u���j���[�j�ƐV�K�̋�؂���i��؂�j�͈ꗗ�̉��̉E�[�̃��j���[�i&#8857;�j�ō쐬�ł��܂��B���̃��j���[�ł͑I�񂾍��ڂ̕������ł��A�| �{�^���͑I�񂾍��ڂ��폜���܂��B�V�K�̍��ڂƃT�u���j���[�́A���Ƃ������O���������ԂɂȂ�܂��B���O������ return �L�[�������܂��B�����������Ă݂�΁A�G�f�B�^�̊�{�I�ȓ���͖��炩�ɂȂ�ł��傤�B�T�u���j���[�͂ǂ̊K�w�ɂ��쐬�ł��܂��B
+新規の項目（新規マクロ）は一覧の下の ＋ ボタンで、新規のサブメニュー（サブメニュー）と新規の区切り線（区切り）は一覧の下の右端のメニュー（&#8857;）で作成できます。このメニューでは選んだ項目の複製もでき、－ ボタンは選んだ項目を削除します。新規の項目とサブメニューは、作るとすぐ名前を入れられる状態になります。名前を入れて return キーを押します。少しいじってみれば、エディタの基本的な動作は明らかになるでしょう。サブメニューはどの階層にも作成できます。
 </p>
 
 <p>
-������̍��ڂɂ��A�V���[�g�J�b�g���ʂɊ��蓖�Ă邱�Ƃ��ł��܂��B���ڂ�I��ňꗗ�̃V���[�g�J�b�g���N���b�N���i�V���[�g�J�b�g�̃_�u���N���b�N�ł����܂��܂���j�A���蓖�Ă�L�[�������܂��B�g����̂́Acommand �� control ���܂ޑg�ݍ��킹�ƁAF1�`F20 �ł��ishift �� option �͕K�v�ɉ����ĉ����܂��j�B���j���[�R�}���h��ق��̃}�N�������łɎg���Ă���V���[�g�J�b�g�́A���̂��Ƃ���e�̗��̉��ɒm�点�ĕύX���܂���B�ʂ̃V���[�g�J�b�g�������Ă��������B�V���[�g�J�b�g���O���ɂ́A���̒��́u�����v�i&#8854;�j���N���b�N���邩�Adelete �L�[�������܂��Besc �L�[�������ƁA���̃V���[�g�J�b�g�̂܂܂ɂȂ�܂��B���j���[�R�}���h���ɕ��ԃ}�N�����g���Ă��邽�߂ɖ����ȃV���[�g�J�b�g�ɂ́A�ꗗ�ŉ��F�̎O�p�̈󂪕t���܂��B���̍��ڂ�I�ԂƁA���R�����e�̗��̉��ɏo�܂��B
+いずれの項目にも、ショートカットを個別に割り当てることができます。項目を選んで一覧のショートカットをクリックし（ショートカットのダブルクリックでもかまいません）、割り当てるキーを押します。使えるのは、command か control を含む組み合わせと、F1～F20 です（shift と option は必要に応じて加えます）。メニューコマンドやほかのマクロがすでに使っているショートカットは、そのことを内容の欄の下に知らせて変更しません。別のショートカットを押してください。ショートカットを外すには、欄の中の「解除」（&#8854;）をクリックするか、delete キーを押します。esc キーを押すと、元のショートカットのままになります。メニューコマンドや先に並ぶマクロが使っているために無効なショートカットには、一覧で黄色の三角の印が付きます。その項目を選ぶと、理由が内容の欄の下に出ます。
 </p>
 
 <p>
-���e�̗��ł́A�}�N�����u��������v���[�X�z���_�i#SEL#�E#INS#�E#PASTE#�A�}�[�N&bull;�AAppleScript �̃}�N���� #FILEPATH# �Ȃǂ̃p�X�j���A�u�I�𒆂̕�����v�̂悤�ɉ���\�������������p�ۂ̎D�ŕ\�����܂��B�}�N���ɂ͏������Ƃ���̕����̂܂ܕۑ�����܂��B�v���[�X�z���_�́A���̂܂ܑł��A���e�̗��̉��́u�}���v���j���[�������܂��B�E�́u?�v�{�^���ňꗗ��\�����܂��B�D�ׂ̗ō폜����ƁA�D���Ə����܂��B
+内容の欄では、マクロが置き換えるプレースホルダ（#SEL#・#INS#・#PASTE#、マーク&bull;、AppleScript のマクロの #FILEPATH# などのパス）を、「選択中の文字列」のように何を表すかを書いた角丸の札で表示します。マクロには書いたとおりの文字のまま保存されます。プレースホルダは、そのまま打つか、内容の欄の下の「挿入」メニューから入れます。右の「?」ボタンで一覧を表示します。札の隣で削除すると、札ごと消えます。
 </p>
 
 </div>
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">�}�N���E�w���v</div>
-<div id="header_title">�V�����}�N�����`����</div>
+<div id="header_chapter">マクロ・ヘルプ</div>
+<div id="header_title">新しいマクロを定義する</div>
 
 <div id="menu_border">
 
 	<UL>
-		<li><a href="macros_preliminaries.htm">�܂�����</a> 
-		<li><a href="macros_default.htm">�f�t�H���g�̃}�N���𗝉�����</a>
-		<li><a href="macros_rearrange.htm">�}�N���̍��ږ�����בւ���</a>
-		<li><a href="macros_define.htm">�V�����}�N�����`����</a>
-		<li><a href="macros_applescript.htm">AppleScript�}�N��</a>
+		<li><a href="macros_preliminaries.htm">まえがき</a> 
+		<li><a href="macros_default.htm">デフォルトのマクロを理解する</a>
+		<li><a href="macros_rearrange.htm">マクロの項目名を並べ替える</a>
+		<li><a href="macros_define.htm">新しいマクロを定義する</a>
+		<li><a href="macros_applescript.htm">AppleScriptマクロ</a>
 
-		<li><a href="macros_includedscripts.htm">�f�t�H���g��AppleScript�}�N��</a>
-		<li><a href="macros_defapplescript.htm">AppleScript�}�N�����`����</a>
-		<li><a href="macros_dialogs.htm">�_�C�A���O�����</a>
-		<li><a href="macros_writingcompletescripts.htm">TeXShop�̃^�C�v�Z�b�g�R�}���h�ŃX�N���v�g������</a>
-		<li><a href="macros_writingcommandscripts.htm">�V�F���R�}���h�ŃX�N���v�g������</a>
+		<li><a href="macros_includedscripts.htm">デフォルトのAppleScriptマクロ</a>
+		<li><a href="macros_defapplescript.htm">AppleScriptマクロを定義する</a>
+		<li><a href="macros_dialogs.htm">ダイアログを作る</a>
+		<li><a href="macros_writingcompletescripts.htm">TeXShopのタイプセットコマンドでスクリプトを書く</a>
+		<li><a href="macros_writingcommandscripts.htm">シェルコマンドでスクリプトを書く</a>
 	</UL>
 </div>
 </BODY>

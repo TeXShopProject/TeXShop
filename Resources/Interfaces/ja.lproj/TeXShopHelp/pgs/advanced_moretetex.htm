@@ -1,10 +1,10 @@
 <HTML>
 
 <HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-			<TITLE>teTeX�ɂ��Ă����</TITLE>
+			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
+			<TITLE>teTeXについてさらに</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="�ǉ��̃h�L�������g�ނ݂̍菈��teTeX�̃f�B���N�g���\���ɂ���">
+			<META NAME="description" CONTENT="追加のドキュメント類の在り処やteTeXのディレクトリ構造について">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -13,11 +13,11 @@
 <div id="content_border">
 
 <p>
-teTeX�� /usr/local/teTeX�Ƃ����f�B���N�g���ɃC���X�g�[������܂����A�t�@�C���_����͌��邱�Ƃ��ł��܂���B����ǂ��C���X�g�[���́A���̃f�B���N�g���̃V���{���b�N�E�����N�� /Library/teTeX�ɍ��܂��B�Ȃ̂�teTeX�� �t�@�C���𒲂ׂ�ɂ� /Library/teTeX�ɍs���܂��B
+teTeXは /usr/local/teTeXというディレクトリにインストールされますが、ファインダからは見ることができません。けれどもインストーラは、このディレクトリのシンボリック・リンクを /Library/teTeXに作ります。なのでteTeXの ファイルを調べるには /Library/teTeXに行きます。
 </p>
 
 <p>
-teTeX�ɂ��Ẵh�L�������g�ނ� /Library/teTeX/share/texmf/doc/tetex�ɂ���܂��B���ɁA���̃t�@�C���𒲂ׂĂ݂Ă�����������
+teTeXについてのドキュメント類は /Library/teTeX/share/texmf/doc/tetexにあります。特に、次のファイルを調べてみてください──
 </p>
 
 		<dl>
@@ -27,12 +27,12 @@ teTeX�ɂ��Ẵh�L�������g�ނ� /Library/teTeX/share/texmf/doc/tetex�ɂ���܂��B
 
 <!-- 
 <p>
-Gerben Wierda�ɂ��Mac OS X�ւ̈ڐA�ɂ��Ă̒ǉ��̃h�L�������g�ނ͎��̏ꏊ�ɂ���܂�����
+Gerben WierdaによるMac OS Xへの移植についての追加のドキュメント類は次の場所にあります──
 </p>
  -->
 
 <p>
-Gerben Wierda����ɂ��Mac OS X�ւ̈ڐA�ɂ��Ă̒ǉ��̃h�L�������g�ނ͎��̏ꏊ�ɂ���܂�����
+Gerben WierdaさんによるMac OS Xへの移植についての追加のドキュメント類は次の場所にあります──
 </p>
 
 		<dl>
@@ -40,57 +40,57 @@ Gerben Wierda����ɂ��Mac OS X�ւ̈ڐA�ɂ��Ă̒ǉ��̃h�L�������g�ނ͎��̏ꏊ�
 		</dl>
 
 <p>
-�ǉ��̃N���X�t�@�C����t�H���g�Ȃǂ�teTeX���̂��̂Ɋi�[���Ă������Ƃ��ł��܂��B����ǂ�teTeX�͏��L�҂����[�g�E���[�U�ɂȂ��Ă���A/usr/local/teTeX�ɂ���̂Ńt�@�C���_����͌��邱�Ƃ��ł��܂���B����Ɍ����΁A���̃f�B���N�g���͂����炸�ɂ����ق��������ł��傤������ɐV�����o�[�W�����������[�X���ꂽ�Ƃ��ɃA�b�v�O���[�h���ȒP�ɂł��܂�����BteTeX�̃f�B���N�g���\���Ƃ܂����������������[�U�̃��C�u�����E�t�H���_�ɍ��A�����Ɍl�I�ȃt�@�C�������Ă����̂��悢�ł��傤�B
+追加のクラスファイルやフォントなどをteTeXそのものに格納しておくことができます。けれどもteTeXは所有者がルート・ユーザになっており、/usr/local/teTeXにあるのでファインダからは見ることができません。さらに言えば、このディレクトリはいじらずにおくほうがいいでしょう──後に新しいバージョンがリリースされたときにアップグレードが簡単にできますから。teTeXのディレクトリ構造とまったく同じ物をユーザのライブラリ・フォルダに作り、そこに個人的なファイルを入れておくのがよいでしょう。
 </p>
 
 <p>
-�t�@�C���͓K�؂ȃf�B���N�g���ɒu���Ă��˂΂Ȃ�܂���BteTeX��TeX���[�L���O�O���[�v�̍l�Ă����f�B���N�g���\����p���Ă��܂��Bnew.sty�Ƃ������O�̓��ʂȃX�^�C���t�@�C�����ALaTeX�Ŏg����悤�ɒǉ��������Ƃ��܂��BteTeX�̒�������ƁA���̃t�@�C�������߂鎩�R�ȏꏊ�͈ȉ��̂悤���Ƃ킩�邱�Ƃł��傤����
+ファイルは適切なディレクトリに置いてやらねばなりません。teTeXはTeXワーキンググループの考案したディレクトリ構造を用いています。new.styという名前の特別なスタイルファイルを、LaTeXで使えるように追加したいとします。teTeXの中を見ると、このファイルを収める自然な場所は以下のようだとわかることでしょう──
 </p>
 		<dl>
 			<dd>/usr/local/teTeX/share/texmf/tex/latex/misc/
 		</dl>
 
 <p>
-�Ƃ������ƂŁA�z�[���E�f�B���N�g���̃��C�u�����E�t�H���_���ɁA���̂悤�Ȉ�A�̃T�u�f�B���N�g�����쐬���Ă��������F
+ということで、ホーム・ディレクトリのライブラリ・フォルダ内に、次のような一連のサブディレクトリを作成してください：
 </p>
 		<dl>
 			<dd>Library  --&gt;  texmf  --&gt;  tex  --&gt;  latex  --&gt;  misc
 		</dl>
 
 <p>
-���̂����Łunew.sty�v������misc�f�B���N�g���Ɋi�[���܂��B
+そのうえで「new.sty」をこのmiscディレクトリに格納します。
 </p>
 
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">�㋉�����̃w���v</div>
-<div id="header_title">teTeX�ɂ��Ă����</div>
+<div id="header_chapter">上級向けのヘルプ</div>
+<div id="header_title">teTeXについてさらに</div>
 
 		<div id="menu_border">
 		<ul>
-			<li><a href="advanced_personaltetex.htm">�X�^�C���ƃ}�N����teTeX�ɒǉ�����</a>
-			<li><a href="advanced_addengine.htm">�ǉ��̃^�C�v�Z�b�g�G���W��</a>
-			<li><a href="advanced_removeaux.htm">��ƃt�@�C�����폜����</a>
-			<li><a href="advanced_externaleditor.htm">�O���G�f�B�^���g�p����</a>
-			<li><a href="advanced_pdfcopypaste.htm">�v���r���[�E�C���h�E����̃R�s�[���y�[�X�g����уh���b�O���h���b�v </a>
-			<li><a href="advanced_root.htm">�v���W�F�N�g�̃��[�g�t�@�C����ݒ肷��</a>
+			<li><a href="advanced_personaltetex.htm">スタイルとマクロをteTeXに追加する</a>
+			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
+			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
+			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
+			<li><a href="advanced_pdfcopypaste.htm">プレビューウインドウからのコピー＆ペーストおよびドラッグ＆ドロップ </a>
+			<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a>
 			<li><a href="advanced_pdfsync.htm">Pdfsync</a>
-			<li><a href="advanced_unicode.htm">Unicode�i���j�R�[�h�j</a>
+			<li><a href="advanced_unicode.htm">Unicode（ユニコード）</a>
 			<li><a href="advanced_bibtex.htm">BibTeX</a>
 			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">�V�K�t�H�[�}�b�g�̍쐬�Ɨ��p</a>
-			<li><a href="advanced_otherfiles.htm">���̑��̃t�@�C����TeXShop�ŊJ��</a>
+			<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a>
+			<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a>
 			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">�e����łւ̃��[�J���C�Y</a>
-			<li><a href="advanced_syntaxcolor.htm">�\�[�X�̃J���[�\��</a>
-			<li><a href="advanced_shellescape.htm">Shell-Escape�̕ی�</a>			
-			<li><a href="advanced_coloredtext.htm">TeX�ɂ����镶���̐F�w��</a>			
-			<li><a href="advanced_moretetex.htm">teTeX�ɂ��Ă����</a>
-			<li><a href="advanced_fink.htm">Fink�Ƃ̋���</a>
-			<li><a href="advanced_otherdistributions.htm">����TeX�f�B�X�g���r���[�V�����Ƃ̋���</a>
-			<li><a href="advanced_context.htm">ConTeXt��MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist�t�@�C��</a>
-			<li><a href="advanced_menushortcuts.htm">���j���[���ڂ̃V���[�g�J�b�g�L�[���Ē�`����</a>
+			<li><a href="advanced_localization.htm">各国語版へのローカライズ</a>
+			<li><a href="advanced_syntaxcolor.htm">ソースのカラー表示</a>
+			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
+			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
+			<li><a href="advanced_moretetex.htm">teTeXについてさらに</a>
+			<li><a href="advanced_fink.htm">Finkとの共存</a>
+			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
+			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
+			<li><a href="advanced_plist.htm">Plistファイル</a>
+			<li><a href="advanced_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
 		</ul>
 	</div>
 	</body>

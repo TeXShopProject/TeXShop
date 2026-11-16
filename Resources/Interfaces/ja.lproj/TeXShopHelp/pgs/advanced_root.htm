@@ -1,21 +1,21 @@
 <HTML>
 
 <HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-			<TITLE>�v���W�F�N�g�̃��[�g�t�@�C����ݒ肷��</TITLE>
+			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
+			<TITLE>プロジェクトのルートファイルを設定する</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="�傫�ȓ��̓t�@�C���𕪊����ĊǗ�������@">
+			<META NAME="description" CONTENT="大きな入力ファイルを分割して管理する方法">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
-<!--�R�����g�A�E�g���Ă��镔���̓o�[�W����1.35�̋����ł��B-->
+<!--コメントアウトしてある部分はバージョン1.35の旧文です。-->
 
 <body>	
 
 <div id="content_border">
 
 <p>
-�傫�ȓ��̓t�@�C�����������������ɕ������āA���[�g�t�@�C���ŊǗ�����̂́A�悭�s�Ȃ��邱�Ƃł��B���Ƃ��΁A���Ђ̃v���W�F�N�g�̃��[�g�t�@�C���͎��̂悤�Ȍ`�ɂȂ��Ă��邩������܂��񄟄�
+大きな入力ファイルを小さくいくつかに分割して、ルートファイルで管理するのは、よく行なわれることです。たとえば、書籍のプロジェクトのルートファイルは次のような形になっているかもしれません──
 </p>
 
 <tt>
@@ -33,13 +33,13 @@
 </tt>
 
 <p>
-���̃��[�g�t�@�C���ɂ̓v���W�F�N�g�S�̂ɑ΂���t�H�[�}�b�g�E�R�}���h�͂���܂����A���̓��e�ɂ��Ă�one.tex�Etwo.tex�Ethree.tex�Ƃ����R�̃t�@�C���Ɏ��߂��Ă��܂��B��L�̑�Q�s�ڂ́A��Q�͂������^�C�v�Z�b�g����悤TeX�Ɏw�����Ă��܂�������Q�͂̎��M���Ƀ^�C�v�Z�b�g�ɂ����鎞�Ԃ�Z�k���邽�߂ł��B�{�����������łɂ́A���̍s�̓R�����g�A�E�g���āA�{�S�̂��ŏI�I�Ƀ^�C�v�Z�b�g���邱�Ƃ��ł��܂��B
+このルートファイルにはプロジェクト全体に対するフォーマット・コマンドはありますが、その内容についてはone.tex・two.tex・three.texという３つのファイルに収められています。上記の第２行目は、第２章だけをタイプセットするようTeXに指示しています──第２章の執筆中にタイプセットにかかる時間を短縮するためです。本が完成した暁には、この行はコメントアウトして、本全体を最終的にタイプセットすることができます。
 </p>
 
 <p>
-��Q�͂������Ă���Ƃ��ɁA�t�@�C��two.tex��TeXShop�ŊJ���Ƃ����̂͂������R�Ȃ��Ƃł��傤�B����ǂ����̓��̓t�@�C���ɕύX���{������Atwo.tex���^�C�v�Z�b�g���ׂ��ł͂���܂��� �G ����Ƀ��[�g�t�@�C�����^�C�v�Z�b�g���܂��B��������悤TeXShop�Ɏw���ł�����@���Q����܂��B
-<!--�P�ڂ́A�e�͂��Ƃ̃t�@�C���̑�P�s�ڂɎ��̂悤�ɏ������ƂŁA���[�g�t�@�C�����w�肵�܂�����-->
-�P�ڂ́A�e�͂��Ƃ̃t�@�C���̖`��20�s�ȓ��̂P�s�Ɏ��̂悤�ɏ������ƂŁA���[�g�t�@�C�����w�肵�܂�����
+第２章を書いているときに、ファイルtwo.texをTeXShopで開くというのはごく自然なことでしょう。けれどもこの入力ファイルに変更を施した後、two.texをタイプセットすべきではありません ； 代わりにルートファイルをタイプセットします。そうするようTeXShopに指示できる方法が２つあります。
+<!--１つ目は、各章ごとのファイルの第１行目に次のように書くことで、ルートファイルを指定します──-->
+１つ目は、各章ごとのファイルの冒頭20行以内の１行に次のように書くことで、ルートファイルを指定します──
 </p>
 <tt>
 	<dl>
@@ -48,63 +48,63 @@
 	</dl>
 </tt>
 <p>
-�Q�ڂ́u�v���W�F�N�g���[�g�̐ݒ�...�v�Ƃ������j���[�R�}���h���g�����@�ł��B���̃��j���[�R�}���h���񎦂���p�l���ɂ̓e�L�X�g�{�b�N�X������܂�����A�����Ƀ��[�g�t�@�C���̖��O�����܂��B
+２つ目は「プロジェクトルートの設定...」というメニューコマンドを使う方法です。このメニューコマンドが提示するパネルにはテキストボックスがありますから、そこにルートファイルの名前を入れます。
 </p>
 
 <p>
-���[�g�t�@�C�������̓t�@�C���Ɠ����t�H���_���ɂ���Ƃ��́A�t�@�C���������ŏ\���ł������g���q�u.tex�v���܂߂����O�ł��B���Ƃ��΁A���[�g�t�@�C���̖��O��Main�Ȃ�A�\�[�X�̑�P�s�ڂ܂��̓_�C�A���O�E�C���h�E�ɂ�Main.tex�Ə�������܂��B
+ルートファイルが入力ファイルと同じフォルダ内にあるときは、ファイル名だけで十分です──拡張子「.tex」を含めた名前です。たとえば、ルートファイルの名前がMainなら、ソースの第１行目またはダイアログウインドウにはMain.texと書き入れます。
 </p>
 
 <p>
-�������[�g�t�@�C�����قȂ�f�B���N�g���ɂ���Ȃ�A���̓t�@�C���̈ʒu�ɑ΂��鑊�΃p�X����t���邱�Ƃ��ł��܂��B��L�̗�ł́A�X�̏͂̓��[�g�t�@�C���̂���t�H���_���̃T�u�t�H���_�̒��ɓ����Ă��܂��B���̂悤�ȏꍇ�A�\�[�X�̑�P�s�ڂ܂��̓_�C�A���O�E�C���h�E�� ../Main.tex�Ɠ��͂���΁A�͂��Ƃ̓��̓t�@�C���ɑ΂��鑊�΃p�X�Ń��[�g�t�@�C���̏ꏊ���������Ƃ��ł��܂��B
+もしルートファイルが異なるディレクトリにあるなら、入力ファイルの位置に対する相対パス名を付けることもできます。上記の例では、個々の章はルートファイルのあるフォルダ内のサブフォルダの中に入っています。このような場合、ソースの第１行目またはダイアログウインドウに ../Main.texと入力すれば、章ごとの入力ファイルに対する相対パスでルートファイルの場所を示すことができます。
 </p>
 
 <p>
-�Ō�ɁA���[�g�̖��O�́A��΃p�X���ł��w��ł��܂�����/Users/me/Main.tex�̂悤�ɁB
+最後に、ルートの名前は、絶対パス名でも指定できます──/Users/me/Main.texのように。
 </p>
 
 <p>
-TeX�\�[�X�S�̂��P��̃t�@�C���ɂȂ��Ă���ꍇ�ɂ́A�v���W�F�N�g���[�g��ݒ肷��K�v�͂���܂���B
+TeXソース全体が単一のファイルになっている場合には、プロジェクトルートを設定する必要はありません。
 </p>
 
 <p>
-�u�v���W�F�N�g���[�g�̐ݒ�...�v�R�}���h���g���ă��[�g�t�@�C�����w�肷��ƁATeXShop�́A���̓t�@�C���Ɩ��O�������Ŋg���q���u.texshop�v�ƂȂ��Ă���t�@�C���ɏ����������ނ��ƂŁA���[�g�t�@�C�������L�����܂��B���Ƃ��΁A��Q�͂̓��̓t�@�C����two.tex�̏ꍇ�ATeXShop�́Atwo.tex�Ɠ����f�B���N�g���ɂ���two.texshop�Ƀ��[�g�t�@�C�������������݂܂��B���two.texshop���̂ĂĂ��܂��ƁATeXShop��Main.tex�ł͂Ȃ�two.tex���^�C�v�Z�b�g����悤�ɂȂ��Ă��܂��܂��B�\�[�X�t�@�C���̑�P�s�ڂŃ��[�g�t�@�C������肷��΁A�]���ȁu.texshop�v�t�@�C���͕s�v�ɂȂ�܂��B
+「プロジェクトルートの設定...」コマンドを使ってルートファイルを指定すると、TeXShopは、入力ファイルと名前が同じで拡張子が「.texshop」となっているファイルに情報を書き込むことで、ルートファイル名を記憶します。たとえば、第２章の入力ファイルがtwo.texの場合、TeXShopは、two.texと同じディレクトリにあるtwo.texshopにルートファイル名を書き込みます。後でtwo.texshopを捨ててしまうと、TeXShopはMain.texではなくtwo.texをタイプセットするようになってしまいます。ソースファイルの第１行目でルートファイルを特定すれば、余分な「.texshop」ファイルは不要になります。
 </p>
 
 <p>
-���[�g�t�@�C�����L���Ȃ�A����̃\�[�X�E�C���h�E���O�ʂɏo�Ă����Ԃ�command�{1�������ƁA�Ή�����v���r���[�E�C���h�E���A�N�e�B�u�ɂȂ�܂��B������xcommand�{1�������΁A�\�[�X�E�C���h�E���A�N�e�B�u�ɂȂ�܂��B�v���r���[�E�C���h�E�͕����̃\�[�X�E�C���h�E�ɑΉ����Ă��邩������Ȃ��̂ŁAcommand�{1�ŃA�N�e�B�u�ɂȂ�̂́A���O�Ƀv���r���[�E�C���h�E���A�N�e�B�u�ɂ����\�[�X�E�C���h�E�ł���������܂łɈ�x��command�{1��������Ă��Ȃ������ꍇ�́A���[�g�\�[�X���A�N�e�B�u�ɂ��܂��B
+ルートファイルが有効なら、所定のソースウインドウが前面に出ている状態でcommand＋1を押すと、対応するプレビューウインドウがアクティブになります。もう一度command＋1を押せば、ソースウインドウがアクティブになります。プレビューウインドウは複数のソースウインドウに対応しているかもしれないので、command＋1でアクティブになるのは、直前にプレビューウインドウをアクティブにしたソースウインドウです──それまでに一度もcommand＋1が押されていなかった場合は、ルートソースをアクティブにします。
 </p>
 
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">�㋉�����̃w���v</div>
-<div id="header_title">�v���W�F�N�g�̃��[�g�t�@�C����ݒ肷��</div>
+<div id="header_chapter">上級向けのヘルプ</div>
+<div id="header_title">プロジェクトのルートファイルを設定する</div>
 
 		<div id="menu_border">
 		<ul>
-			<li><a href="advanced_personaltetex.htm">�X�^�C���ƃ}�N����teTeX�ɒǉ�����</a>
-			<li><a href="advanced_addengine.htm">�ǉ��̃^�C�v�Z�b�g�G���W��</a>
-			<li><a href="advanced_removeaux.htm">��ƃt�@�C�����폜����</a>
-			<li><a href="advanced_externaleditor.htm">�O���G�f�B�^���g�p����</a>
-			<li><a href="advanced_pdfcopypaste.htm">�v���r���[�E�C���h�E����̃R�s�[���y�[�X�g����уh���b�O���h���b�v </a>
-			<li><a href="advanced_root.htm">�v���W�F�N�g�̃��[�g�t�@�C����ݒ肷��</a>
+			<li><a href="advanced_personaltetex.htm">スタイルとマクロをteTeXに追加する</a>
+			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
+			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
+			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
+			<li><a href="advanced_pdfcopypaste.htm">プレビューウインドウからのコピー＆ペーストおよびドラッグ＆ドロップ </a>
+			<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a>
 			<li><a href="advanced_pdfsync.htm">Pdfsync</a>
-			<li><a href="advanced_unicode.htm">Unicode�i���j�R�[�h�j</a>
+			<li><a href="advanced_unicode.htm">Unicode（ユニコード）</a>
 			<li><a href="advanced_bibtex.htm">BibTeX</a>
 			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">�V�K�t�H�[�}�b�g�̍쐬�Ɨ��p</a>
-			<li><a href="advanced_otherfiles.htm">���̑��̃t�@�C����TeXShop�ŊJ��</a>
+			<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a>
+			<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a>
 			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">�e����łւ̃��[�J���C�Y</a>
-			<li><a href="advanced_syntaxcolor.htm">�\�[�X�̃J���[�\��</a>
-			<li><a href="advanced_shellescape.htm">Shell-Escape�̕ی�</a>			
-			<li><a href="advanced_coloredtext.htm">TeX�ɂ����镶���̐F�w��</a>			
-			<li><a href="advanced_moretetex.htm">teTeX�ɂ��Ă����</a>
-			<li><a href="advanced_fink.htm">Fink�Ƃ̋���</a>
-			<li><a href="advanced_otherdistributions.htm">����TeX�f�B�X�g���r���[�V�����Ƃ̋���</a>
-			<li><a href="advanced_context.htm">ConTeXt��MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist�t�@�C��</a>
-			<li><a href="advanced_menushortcuts.htm">���j���[���ڂ̃V���[�g�J�b�g�L�[���Ē�`����</a>
+			<li><a href="advanced_localization.htm">各国語版へのローカライズ</a>
+			<li><a href="advanced_syntaxcolor.htm">ソースのカラー表示</a>
+			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
+			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
+			<li><a href="advanced_moretetex.htm">teTeXについてさらに</a>
+			<li><a href="advanced_fink.htm">Finkとの共存</a>
+			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
+			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
+			<li><a href="advanced_plist.htm">Plistファイル</a>
+			<li><a href="advanced_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
 		</ul>
 	</div>
 	</body>

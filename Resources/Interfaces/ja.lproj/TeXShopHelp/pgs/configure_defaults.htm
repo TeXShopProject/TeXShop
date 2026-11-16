@@ -1,10 +1,10 @@
 <HTML>
 
 <HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-			<TITLE>�����ݒ�ɂ���</TITLE>
+			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
+			<TITLE>初期設定について</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="�u�^�C�v�Z�b�g�v�ɂ��ĂƁA1.26�ȑO����̓��{�̃��[�U�ւ̒��ӓ_�B">
+			<META NAME="description" CONTENT="「タイプセット」についてと、1.26以前からの日本のユーザへの注意点。">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -12,26 +12,26 @@
 <div id="content_border">
 
 <p>
-��������̉���́A1.33�ȑO�̃o�[�W�����̃��[�U�p�̂��̂ł������ȉ��̕ύX��O�����čs�Ȃ��Ă��Ȃ���������Ȃ��̂ŁBTeXShop�̐ݒ�E�C���h�E�ɂ́u�^�C�v�Z�b�g�v�J�e�S��������܂����A���̂悤�ɕύX���Ă��������F
+ここからの解説は、1.33以前のバージョンのユーザ用のものです──以下の変更を前もって行なっていないかもしれないので。TeXShopの設定ウインドウには「タイプセット」カテゴリがありますが、次のように変更してください：
 </p>
 
 	<ol>
-		<li type="1">pdftex�̐ݒ�̈́���
+		<li type="1">pdftexの設定は──
 				<dl>
 					<dd><tt>pdftex  --shell-escape</tt>
 				</dl>
 		<p>
-		<li>pdflatex�̐ݒ�̈́���
+		<li>pdflatexの設定は──
 				<dl>
 					<dd><tt>pdflatex  --shell-escape</tt>
 				</dl>
 		<p>
-		<li>altpdftex�̐ݒ�̈́���
+		<li>altpdftexの設定は──
 				<dl>
 					<dd><tt>altpdftex  --maxpfb</tt>
 				</dl>
 		<p>
-		<li>altpdflatex�̐ݒ�̈́���
+		<li>altpdflatexの設定は──
 				<dl>
 					<dd><tt>altpdflatex --maxpfb</tt>
 				</dl>
@@ -39,48 +39,48 @@
 </font>
 
 <p>
-TeXShop 1.26�ȑO����̓��{�̃��[�U�́A~/Library/TeXShop/LatexPanel/completion.plist�Ƃ����t�@�C�����p��ł̂��̂ƍ����ւ��Ă�����������Japanese(ShiftJIS &#x00A5;) �p�̏C���͂��łɕs�v�ƂȂ�܂����B���邢�͂���completion.plist�t�@�C�����t�H���_�����菜���Ă��������Ƃł� �G �V�����t�@�C���́A����TeXShop���N�������Ƃ��ɍ���܂��B
+TeXShop 1.26以前からの日本のユーザは、~/Library/TeXShop/LatexPanel/completion.plistというファイルを英語版のものと差し替えてください──Japanese(ShiftJIS &#x00A5;) 用の修正はすでに不要となりました。あるいはこのcompletion.plistファイルをフォルダから取り除いても同じことです ； 新しいファイルは、次にTeXShopを起動したときに作られます。
 </p>
 
 <hr>
 
 <p>
-<b>���{�����TeXShop 1.35�ɃA�b�v�O���[�h����ۂ̒��ӓ_</b>
+<b>日本語環境でTeXShop 1.35にアップグレードする際の注意点</b>
 </p>
 
 <p>
-TeXShop 1.35�ł́A���{��pTeX�p�̐ݒ�v���t�@�C�����ύX����܂����B�ȑO�̃o�[�W�������g���Ă������́A
+TeXShop 1.35では、日本語pTeX用の設定プロファイルが変更されました。以前のバージョンを使っていた方は、
 </p>
 	<dl>
 		<dd>~/Library/TeXShop/bin
 		<p>
-		<dd>�i�܂�z�[���E�f�B���N�g���́u���C�u�����v�t�H���_�̒��́uTeXShop�v�t�H���_���ɂ���ubin�v�Ƃ����t�H���_�j
+		<dd>（つまりホーム・ディレクトリの「ライブラリ」フォルダの中の「TeXShop」フォルダ内にある「bin」というフォルダ）
 	</dl>
 <p>
-����x�폜���Ă���TeXShop���N���������ĉ������B���̃t�H���_���Â��܂܂ł́A�V�����ݒ�v���t�@�C���𗘗p�ł��܂��񂵁A�^�C�v�Z�b�g���s�Ȃ��Ȃ����Ƃ�����܂��B
+を一度削除してからTeXShopを起動し直して下さい。このフォルダが古いままでは、新しい設定プロファイルを利用できませんし、タイプセットが行なえないこともあります。
 </p>
 
 </div>		
 		<div id="header_background"></div>
 		<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-		<div id="header_chapter">TeXShop�̐ݒ�͂ǂ�����΂悢���H</div>
-		<div id="header_title">�����ݒ�ɂ���</div>
+		<div id="header_chapter">TeXShopの設定はどうすればよいか？</div>
+		<div id="header_title">初期設定について</div>
 		<div id="menu_border">
 			<UL>
-				<li><a href="configure_preliminaries.htm">�܂�����</a>
-				<li><a href="configure_correctinstall.htm">������ƃC���X�g�[�����܂������H</a>
-				<li><a href="configure_prefchanges.htm">�������߂̐ݒ�ύX</a>
-				<li><a href="configure_convertgraphics.htm">�摜�`���������I�ɕϊ�����</a>
-				<li><a href="configure_defaults.htm">�����ݒ�ɂ���</a>
+				<li><a href="configure_preliminaries.htm">まえがき</a>
+				<li><a href="configure_correctinstall.htm">きちんとインストールしましたか？</a>
+				<li><a href="configure_prefchanges.htm">おすすめの設定変更</a>
+				<li><a href="configure_convertgraphics.htm">画像形式を自動的に変換する</a>
+				<li><a href="configure_defaults.htm">初期設定について</a>
 		
-				<li><a href="configure_latextemplate.htm">�f�t�H���g��LaTeX�e���v���[�g</a>
-				<li><a href="configure_hidden.htm">�B�ꂽ�ݒ荀��</a>
-				<li><a href="configure_plist.htm">.plist�t�@�C��</a>
-				<li><a href="configure_panel.htm">LaTeX�p�l�����ꕔ�ύX����</a>
-				<li><a href="configure_autocompletion.htm">�L�[�o�C���h��ύX����</a>
+				<li><a href="configure_latextemplate.htm">デフォルトのLaTeXテンプレート</a>
+				<li><a href="configure_hidden.htm">隠れた設定項目</a>
+				<li><a href="configure_plist.htm">.plistファイル</a>
+				<li><a href="configure_panel.htm">LaTeXパネルを一部変更する</a>
+				<li><a href="configure_autocompletion.htm">キーバインドを変更する</a>
 		
-				<li><a href="configure_menushortcuts.htm">���j���[���ڂ̃V���[�g�J�b�g�L�[���Ē�`����</a>
-				<li><a href="configure_macros.htm">�}�N�����j���[��ύX����</a>
+				<li><a href="configure_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
+				<li><a href="configure_macros.htm">マクロメニューを変更する</a>
 			</UL>
 		</div>
 </BODY>

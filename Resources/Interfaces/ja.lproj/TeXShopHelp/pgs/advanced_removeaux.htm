@@ -1,14 +1,14 @@
 <HTML>
 
 <HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-			<TITLE>��ƃt�@�C�����폜����</TITLE>
+			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
+			<TITLE>作業ファイルを削除する</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="�g���q��aux��log���t�����t�@�C���̏���">
+			<META NAME="description" CONTENT="拡張子にauxやlogが付いたファイルの除去">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
-<!--�R�����g�A�E�g���Ă��镔���̓o�[�W����1.35�̋����ł��B-->
+<!--コメントアウトしてある部分はバージョン1.35の旧文です。-->
 
 <body>	
 
@@ -16,37 +16,37 @@
 
 
 <p>
-�h�L�������g���^�C�v�Z�b�g����ƁA�u.aux�v �u.log�v �u.bbl�v�Ȃǂ̊g���q���t�����⏕�I�ȃt�@�C������������܂��B���������t�@�C���͂Ƃ��ǂ��A���������Ȃ�����A�\�����ʃ^�C�v�Z�b�g�E�G���[���������肷�邱�Ƃ�����܂��BTeXShop�ɂ́u��ƃt�@�C�����폜�v�Ƃ������j���[�R�}���h������A���������t�@�C�������ׂĎ�菜����̂ŁA�Ђ��Â��^�C�v�Z�b�g���s�Ȃ����Ƃ��ł��܂��B���l�Ȗ��O�̃{�^�����R���\�[���E�C���h�E�ɂ�����܂��B���̂����ꂩ�����s����ƁA���݂̃\�[�X������f�B���N�g�����ɂ���A�\�[�X�t�@�C���Ɩ��O�������ŁA�g���q��aux�Eblg�Ebrf�Eccs�Eent�Efff�Eglo�Eidx�Eidv�Eilg�Eind�Eioa�Elg�Elog�Elot�Emtc�Emlf�Eout�Epdfsync�Etoc�Ettt�Ewrm�Exref�E4ct�E4tc�ƂȂ��Ă���t�@�C�������ׂăS�~���ւƈړ�����܂��B
+ドキュメントをタイプセットすると、「.aux」 「.log」 「.bbl」などの拡張子が付いた補助的なファイルが生成されます。こうしたファイルはときどき、おかしくなったり、予期せぬタイプセット・エラーを招いたりすることがあります。TeXShopには「作業ファイルを削除」というメニューコマンドがあり、こうしたファイルをすべて取り除けるので、ひきつづきタイプセットを行なうことができます。同様な名前のボタンがコンソールウインドウにもあります。このいずれかを実行すると、現在のソースがあるディレクトリ内にあり、ソースファイルと名前が同じで、拡張子がaux・blg・brf・ccs・ent・fff・glo・idx・idv・ilg・ind・ioa・lg・log・lot・mtc・mlf・out・pdfsync・toc・ttt・wrm・xref・4ct・4tcとなっているファイルがすべてゴミ箱へと移動されます。
 </p>
 
 <p>
-���̃��X�g�Ɋg���q��ǉ����邱�Ƃ��ł��܂��B�udvi�v��������ɂ́A�^�[�~�i�������s���A�ȉ��̂悤�Ƀ^�C�v���܂�����
+このリストに拡張子を追加することもできます。「dvi」を加えるには、ターミナルを実行し、以下のようにタイプします──
 </P>
 	<dl>
 		<dd><tt>defaults write TeXShop OtherTrashExtensions -array-add "dvi"</tt>
 	</dl>
 
 <p>
-�ǉ�����������菜���Č��X�̃f�t�H���g�̃��X�g�ɖ߂��ɂ́A���̂悤�Ƀ^�C�v���܂�����
+追加した分を取り除いて元々のデフォルトのリストに戻すには、次のようにタイプします──
 </p>
 	<dl>
 		<dd><tt>defaults write TeXShop OtherTrashExtensions -array</tt>
 	</dl>
 
 <p>
-���Ƃ��āA����ɓO�ꂵ���N���[���i�b�v���K�v�ɂȂ邱�Ƃ�����܂��B���Ƃ��΁Amain.tex�Łu�{�v���Ǘ����Ă���A�e�͂��T�u�t�H���_���ɂ����� \include{chapter1/chapter1} �̂悤�ȃR�}���h�ŃA�N�Z�X���Ă���ꍇ�A�u�{�v���^�C�v�Z�b�g����ƁA���C���̃t�H���_���ɂ�main.aux�Emain.pdfsync�Emain.log����������Achapter1�t�H���_�ɂ�chapter1.aux����������܂��B
+時として、さらに徹底したクリーンナップが必要になることがあります。たとえば、main.texで「本」を管理しており、各章がサブフォルダ内にあって \include{chapter1/chapter1} のようなコマンドでアクセスしている場合、「本」をタイプセットすると、メインのフォルダ内にはmain.aux・main.pdfsync・main.logが生成され、chapter1フォルダにはchapter1.auxが生成されます。
 </p>
 
 <p>
-����ɉ������O��I�ȃN���[���i�b�v�́A�I�v�V�����L�[�������Ȃ���u��ƃt�@�C�����폜�v��I�����邱�ƂŎ��s�ł��܂��B������s�Ȃ��ƁF
+これに応じた徹底的なクリーンナップは、オプションキーを押しながら「作業ファイルを削除」を選択することで実行できます。これを行なうと：
 <ul>
-<!--		<li>SourceDoc�ƃ��[�g�t�@�C���̏�񂪁A���[�g�����Ƃ��̃t�H���_��T�����Ă�̂Ɏg���܂�-->
-		<li><tt>%!TEX root</tt> �ƃ��[�g�t�@�C���̏�񂪁A���[�g�����Ƃ��̃t�H���_��T�����Ă�̂Ɏg���܂�
-		<li>���̃t�H���_�܂��͂����ꂩ�̃T�u�t�H���_���ɂ���A�Y������g���q�̕t�����t�@�C���͂��ׂāA�t�@�C�����̔@���ɂ�炸�S�~���Ɉڂ���܂�
+<!--		<li>SourceDocとルートファイルの情報が、ルート文書とそのフォルダを探し当てるのに使われます-->
+		<li><tt>%!TEX root</tt> とルートファイルの情報が、ルート文書とそのフォルダを探し当てるのに使われます
+		<li>このフォルダまたはいずれかのサブフォルダ内にあり、該当する拡張子の付いたファイルはすべて、ファイル名の如何によらずゴミ箱に移されます
 </ul>
 
 <p>
-�u��ƃt�@�C�����폜�v�̓�����A�I�v�V�����L�[���������ƂȂ���L�̂悤�ɂ�����@������܂��F
+「作業ファイルを削除」の動作を、オプションキーを押すことなく上記のようにする方法もあります：
 </p>
 <dl>
 	<dd><tt>defaults write TeXShop AggressiveTrashAUX YES</tt>
@@ -56,34 +56,34 @@
 
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">�㋉�����̃w���v</div>
-<div id="header_title">��ƃt�@�C�����폜����</div>
+<div id="header_chapter">上級向けのヘルプ</div>
+<div id="header_title">作業ファイルを削除する</div>
 
 		<div id="menu_border">
 		<ul>
-			<li><a href="advanced_personaltetex.htm">�X�^�C���ƃ}�N����teTeX�ɒǉ�����</a>
-			<li><a href="advanced_addengine.htm">�ǉ��̃^�C�v�Z�b�g�G���W��</a>
-			<li><a href="advanced_removeaux.htm">��ƃt�@�C�����폜����</a>
-			<li><a href="advanced_externaleditor.htm">�O���G�f�B�^���g�p����</a>
-			<li><a href="advanced_pdfcopypaste.htm">�v���r���[�E�C���h�E����̃R�s�[���y�[�X�g����уh���b�O���h���b�v </a>
-			<li><a href="advanced_root.htm">�v���W�F�N�g�̃��[�g�t�@�C����ݒ肷��</a>
+			<li><a href="advanced_personaltetex.htm">スタイルとマクロをteTeXに追加する</a>
+			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
+			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
+			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
+			<li><a href="advanced_pdfcopypaste.htm">プレビューウインドウからのコピー＆ペーストおよびドラッグ＆ドロップ </a>
+			<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a>
 			<li><a href="advanced_pdfsync.htm">Pdfsync</a>
-			<li><a href="advanced_unicode.htm">Unicode�i���j�R�[�h�j</a>
+			<li><a href="advanced_unicode.htm">Unicode（ユニコード）</a>
 			<li><a href="advanced_bibtex.htm">BibTeX</a>
 			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">�V�K�t�H�[�}�b�g�̍쐬�Ɨ��p</a>
-			<li><a href="advanced_otherfiles.htm">���̑��̃t�@�C����TeXShop�ŊJ��</a>
+			<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a>
+			<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a>
 			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">�e����łւ̃��[�J���C�Y</a>
-			<li><a href="advanced_syntaxcolor.htm">�\�[�X�̃J���[�\��</a>
-			<li><a href="advanced_shellescape.htm">Shell-Escape�̕ی�</a>			
-			<li><a href="advanced_coloredtext.htm">TeX�ɂ����镶���̐F�w��</a>			
-			<li><a href="advanced_moretetex.htm">teTeX�ɂ��Ă����</a>
-			<li><a href="advanced_fink.htm">Fink�Ƃ̋���</a>
-			<li><a href="advanced_otherdistributions.htm">����TeX�f�B�X�g���r���[�V�����Ƃ̋���</a>
-			<li><a href="advanced_context.htm">ConTeXt��MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist�t�@�C��</a>
-			<li><a href="advanced_menushortcuts.htm">���j���[���ڂ̃V���[�g�J�b�g�L�[���Ē�`����</a>
+			<li><a href="advanced_localization.htm">各国語版へのローカライズ</a>
+			<li><a href="advanced_syntaxcolor.htm">ソースのカラー表示</a>
+			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
+			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
+			<li><a href="advanced_moretetex.htm">teTeXについてさらに</a>
+			<li><a href="advanced_fink.htm">Finkとの共存</a>
+			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
+			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
+			<li><a href="advanced_plist.htm">Plistファイル</a>
+			<li><a href="advanced_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
 		</ul>
 	</div>
 	</body>
