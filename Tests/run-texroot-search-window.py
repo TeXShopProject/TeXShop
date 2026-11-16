@@ -54,6 +54,7 @@ MUTATIONS = {
     '21 lines are cut': ('TSTeXRootSearchResultsList.m', '    if (more >= 2) {', '    if (more >= 1) {'),
     'the collector is prepared on the main thread': ('TSTeXRootSearchModel.m', '    dispatch_async(self.queue, ^{\n        if (prepare)\n            prepare(collector);', '    if (prepare)\n        prepare(collector);\n    dispatch_async(self.queue, ^{', 'main-thread'),
     'the whole change is laid out all at once': ('TSTeXRootSearchResultsList.m', 'view.layoutManager.allowsNonContiguousLayout = YES;', 'view.layoutManager.allowsNonContiguousLayout = NO;', 'main-thread'),
+    'a whole change of the list before is shown': ('TSTeXRootSearchResultsList.m', 'if (!list || list.wholeRequest != request || list.model.generation != generation || [list objectAtRow:row] != item)', 'if (!list)'),
     '.TEX counts as .tex': ('TSTeXRootEntryRules.m', 'return [url.pathExtension isEqualToString:@"tex"];', 'return [url.pathExtension.lowercaseString isEqualToString:@"tex"];'),
 }
 

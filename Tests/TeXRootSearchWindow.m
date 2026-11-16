@@ -582,6 +582,32 @@ static void TestWindow(NSString *images)
             }
             window.window.appearance = nil;
         }
+        // The whole change asked for, then the conditions changed while it is made, with a new item in the same row:
+        // it is not shown (Codex 3b F6); asked again, it is.
+        __block NSUInteger shownWhole = 0;
+        __block NSString *shownWholeText = nil;
+        window.resultsList.wholeChangeShowHandler = ^(NSViewController *shownController, NSInteger shownRow) {
+            shownWhole++;
+            for (NSView *view in AllViews(shownController.view))
+                if ([view isKindOfClass:[NSTextView class]] && [view.accessibilityLabel isEqualToString:@"After"])
+                    shownWholeText = ((NSTextView *)view).string;
+        };
+        TSTeXRootSearchResultsList.testDelayBeforeWholeChange = 0.15;
+        [window.resultsList showWholeChangeOfRow:longRow];
+        controller.settings.findString = @"BEGIN";
+        controller.settings.replaceString = @"NOW";
+        [model searchNow];
+        Spin(^BOOL { return model.activity == TSTeXRootSearchActivityIdle && model.resultGeneration == model.generation; }, 30);
+        [window updateFromModel];
+        Spin(^BOOL { return NO; }, 0.4);
+        Check(shownWhole == 0 && [[window.resultsList objectAtRow:longRow] isKindOfClass:[TSTeXRootSearchItem class]],
+              [NSString stringWithFormat:@"a whole change made for the list before is not shown in the new one (%lu shown)", (unsigned long)shownWhole]);
+        [window.resultsList showWholeChangeOfRow:longRow];
+        Spin(^BOOL { return shownWhole > 0; }, 5);
+        Check(shownWhole == 1 && [shownWholeText hasPrefix:@"NOW"], @"asked again, the whole change of the new list is shown");
+        TSTeXRootSearchResultsList.testDelayBeforeWholeChange = 0;
+        window.resultsList.wholeChangeShowHandler = nil;
+
         // 21 lines are shown whole: one line more fits where its count would go.
         NSMutableString *twentyOne = [NSMutableString string];
         for (NSUInteger k = 1; k <= 21; k++)

@@ -5,6 +5,8 @@
 #define TSLocalized TSAdvancedFindLocalized
 
 static const NSUInteger TSShownLines = TSTeXRootSearchMaximumShownLines;
+/// A wait before the whole change is built, set by the tests to change the list meanwhile.
+static NSTimeInterval TSWholeChangeTestDelay;
 /// Characters kept before a match whose line starts are cut so that the match shows in its column ("…" in their place).
 static const NSUInteger TSLeadKept = 8;
 
@@ -90,6 +92,8 @@ NSString *TSTeXRootSearchOnlyReasonText(TSTeXRootSearchOnlyReason reason)
 @property (nonatomic) BOOL fitting;
 @property (nonatomic, strong, nullable) NSPopover *wholePopover;
 @property (nonatomic) NSUInteger wholeRequest;
+/// The generation the whole change shown, or being made, was asked for.
+@property (nonatomic) NSUInteger wholeGeneration;
 @end
 
 @implementation TSTeXRootSearchResultsList
@@ -221,6 +225,10 @@ NSString *TSTeXRootSearchOnlyReasonText(TSTeXRootSearchOnlyReason reason)
     BOOL replacing = self.shownMode != TSTeXRootSearchModeFind;
     [self.tableView tableColumnWithIdentifier:@"check"].hidden = !replacing;
     [self.tableView tableColumnWithIdentifier:@"after"].hidden = !replacing;
+    // A whole change shown or being made belongs to the list before.
+    self.wholeRequest++;
+    [self.wholePopover close];
+    self.wholePopover = nil;
     [self fitColumns];
     [self.tableView reloadData];
     if (sameFiles)
@@ -701,8 +709,11 @@ static NSAttributedString *TSWholeText(NSString *text, NSRange highlight, NSColo
     }
     NSArray<NSArray *> *parts = [self wholeChangePartsOfItem:object inFile:file];
     NSFont *font = self.font;
+    NSTimeInterval delay = TSWholeChangeTestDelay;
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+        if (delay > 0)
+            usleep((useconds_t)(delay * 1000000));
         NSMutableArray<NSArray *> *texts = [NSMutableArray array];
         for (NSArray *part in parts)
             [texts addObject:@[part[0], TSWholeText(part[1], [part[2] rangeValue], part[3] == [NSNull null] ? nil : part[3], part[4], font)]];
@@ -724,16 +735,37 @@ static NSAttributedString *TSWholeText(NSString *text, NSRange highlight, NSColo
     return [self wholeChangeViewControllerWithTexts:texts];
 }
 
++ (NSTimeInterval)testDelayBeforeWholeChange { return TSWholeChangeTestDelay; }
++ (void)setTestDelayBeforeWholeChange:(NSTimeInterval)delay { TSWholeChangeTestDelay = delay; }
+
+/// The whole change shown belongs to the list it was asked from: a new list, or any change of what Replace All would
+/// do (the generation), closes it, and one still being made is not shown (Codex 3b F6).
+- (void)modelDidChange
+{
+    if (self.model.generation != self.wholeGeneration) {
+        self.wholeRequest++;
+        [self.wholePopover close];
+        self.wholePopover = nil;
+    }
+}
+
 - (void)showWholeChangeOfRow:(NSInteger)row
 {
     NSUInteger request = ++self.wholeRequest;
+    NSUInteger generation = self.model.generation;
+    id item = [self objectAtRow:row];
+    self.wholeGeneration = generation;
     __weak typeof(self) weakSelf = self;
     [self makeWholeChangeViewControllerForRow:row completion:^(NSViewController *controller) {
         typeof(self) list = weakSelf;
-        if (!list || list.wholeRequest != request)
-            return;
+        if (!list || list.wholeRequest != request || list.model.generation != generation || [list objectAtRow:row] != item)
+            return; // asked again, or the list is no longer the one it was asked from
         if (!controller) {
             NSBeep();
+            return;
+        }
+        if (list.wholeChangeShowHandler) {
+            list.wholeChangeShowHandler(controller, row);
             return;
         }
         [list.wholePopover close];
@@ -741,7 +773,7 @@ static NSAttributedString *TSWholeText(NSString *text, NSRange highlight, NSColo
         list.wholePopover.behavior = NSPopoverBehaviorTransient;
         list.wholePopover.contentViewController = controller;
         list.wholePopover.contentSize = controller.preferredContentSize;
-        if (list.tableView.window && row < list.tableView.numberOfRows)
+        if (list.tableView.window.isVisible && row < list.tableView.numberOfRows)
             [list.wholePopover showRelativeToRect:[list.tableView rectOfRow:row] ofView:list.tableView preferredEdge:NSRectEdgeMaxY];
     }];
 }

@@ -751,8 +751,10 @@
 {
     if (model != self.model)
         return;
-    // Replace All follows at once: it must never be pressable for a list that is not that of the conditions.
+    // Replace All follows at once: it must never be pressable for a list that is not that of the conditions; nor is a
+    // whole change of the list before shown.
     self.replaceAllButton.enabled = model.canReplaceAll && self.replaceAllHandler != nil;
+    [self.resultsList modelDidChange];
     if (self.updatePending)
         return;
     self.updatePending = YES;

@@ -41,6 +41,11 @@ NS_SWIFT_NAME(TeXRootSearchResultsList)
 - (void)makeWholeChangeViewControllerForRow:(NSInteger)row completion:(void (^)(NSViewController *_Nullable controller))completion;
 /// Made all at once (for the tests and images).
 - (nullable NSViewController *)wholeChangeViewControllerForRow:(NSInteger)row;
+/// Closes the whole change shown, and forgets one being made, when the model's generation moved on since it was asked.
+- (void)modelDidChange;
+/// For the tests: called in place of showing the popover; a wait before the whole change is built.
+@property (nonatomic, copy, nullable) void (^wholeChangeShowHandler)(NSViewController *controller, NSInteger row);
+@property (class, nonatomic) NSTimeInterval testDelayBeforeWholeChange;
 
 /// For the tests: the rows as VoiceOver reads them, and the texts shown in an item's row.
 - (NSString *)accessibilityLabelOfRow:(NSInteger)row;
