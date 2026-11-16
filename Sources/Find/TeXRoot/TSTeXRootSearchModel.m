@@ -155,6 +155,7 @@ NSUInteger TSTeXRootSearchShownLines(NSString *_Nullable text)
     [self userChanged];
     self.generation++;
     [self.excludedItems removeAllObjects];
+    [self.rangesOff removeAllObjects];
     [self searchAfterPause];
     [self changed];
 }
@@ -427,6 +428,9 @@ static NSData *TSShownLinesOfFile(TSTeXRootSearchFileResult *file, TSTeXRootSear
                 [model.shownLines setObject:[foundLines objectForKey:file] forKey:file];
             for (TSTeXRootSearchFileResult *file in found.allValues)
                 [model takeRangesOffForFile:file];
+            // The files searched are done with; a file not searched (off in the tree) keeps its ranges until it is.
+            for (TSTeXRootSearchSource *source in sources)
+                [model.rangesOff removeObjectForKey:source.file.relativePath];
             model.reachedLimit = limit;
             model.resultGeneration = model.generation;
             model.activity = TSTeXRootSearchActivityIdle;
@@ -440,6 +444,8 @@ static NSData *TSShownLinesOfFile(TSTeXRootSearchFileResult *file, TSTeXRootSear
 - (void)collect
 {
     [self userChanged];
+    // Ranges off after a Replace All belong to the search that follows it only (set again just after this).
+    [self.rangesOff removeAllObjects];
     self.token.cancelled = YES;
     [self.collector cancel];
     self.requestNumber++;
@@ -581,6 +587,8 @@ static NSData *TSShownLinesOfFile(TSTeXRootSearchFileResult *file, TSTeXRootSear
     if (!changedFile)
         return;
     [self userChanged];
+    // The ranges off after a Replace All no longer tell where the items are.
+    [self.rangesOff removeAllObjects];
     self.generation++;
     if (![self isFileIncluded:changedFile] || self.activity == TSTeXRootSearchActivityCollecting) {
         [self changed];
@@ -746,7 +754,8 @@ static NSString *TSItemKey(TSTeXRootSearchItem *item)
 }
 
 /// The items of a file searched again after Replace All that overlap an item that was off are off (spec §2.6: where
-/// it is not clear, they are not turned back on).
+/// it is not clear, they are not turned back on). One pass over both, in the order of the text (the items are
+/// ascending and do not overlap one another, nor do the ranges).
 - (void)takeRangesOffForFile:(TSTeXRootSearchFileResult *)file
 {
     NSString *path = file.source.file.relativePath;
@@ -754,14 +763,24 @@ static NSString *TSItemKey(TSTeXRootSearchItem *item)
     if (!ranges)
         return;
     [self.rangesOff removeObjectForKey:path];
+    ranges = [ranges sortedArrayUsingComparator:^NSComparisonResult(NSValue *a, NSValue *b) {
+        NSUInteger x = a.rangeValue.location, y = b.rangeValue.location;
+        return x < y ? NSOrderedAscending : x > y ? NSOrderedDescending : NSOrderedSame;
+    }];
     id identifier = file.source.file.identifier;
     NSMutableSet<NSString *> *excluded = self.excludedItems[identifier] ?: [NSMutableSet set];
-    for (TSTeXRootSearchItem *item in file.items)
-        for (NSValue *range in ranges)
-            if ([TSTeXRootReplaceMapping range:item.range overlapsRange:range.rangeValue]) {
+    NSUInteger first = 0, count = ranges.count;
+    for (TSTeXRootSearchItem *item in file.items) {
+        NSRange range = item.range;
+        // The ranges wholly before this item are before every later one too.
+        while (first < count && NSMaxRange(ranges[first].rangeValue) < range.location)
+            first++;
+        for (NSUInteger i = first; i < count && ranges[i].rangeValue.location <= NSMaxRange(range); i++)
+            if ([TSTeXRootReplaceMapping range:range overlapsRange:ranges[i].rangeValue]) {
                 [excluded addObject:TSItemKey(item)];
                 break;
             }
+    }
     self.excludedItems[identifier] = excluded;
     [self.includedCounts removeAllObjects];
 }
@@ -778,6 +797,7 @@ static NSString *TSItemKey(TSTeXRootSearchItem *item)
     self.collector = nil;
     self.requestNumber++;
     [self.fileResults removeAllObjects];
+    [self.rangesOff removeAllObjects];
     self.reachedLimit = NO;
     self.stopped = YES;
     self.eventMessage = nil;

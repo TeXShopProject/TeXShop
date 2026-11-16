@@ -211,6 +211,35 @@ int main(void) { @autoreleasepool {
     NSArray *made = [NSFileManager.defaultManager contentsOfDirectoryAtPath:backups error:NULL];
     Check(!stopped && error.code == TSTeXRootReplaceErrorStopped && made.count == 2, [NSString stringWithFormat:@"stopped while backing up: the folder goes (%@)", made]);
 
+    // A file that got a second name (a hard link) or became read-only since it was approved: its content is the same,
+    // but it can no longer be replaced in (spec §2.5.2). The check stops, and so does the writer.
+    NSString *extraName = P(@"chapters/link-to-sjis.tex");
+    link(P(@"chapters/sjis.tex").fileSystemRepresentation, extraName.fileSystemRepresentation);
+    NSArray *linked = [plan filesOnDiskChangedInProject:Collect()];
+    BOOL sjisReported = NO;
+    for (TSTeXRootReplaceFile *file in linked) sjisReported |= [file.file.relativePath isEqualToString:@"chapters/sjis.tex"];
+    NSData *sjisBefore = Bytes(@"chapters/sjis.tex");
+    TSTeXRootReplaceFile *sjisPlanned = nil;
+    for (TSTeXRootReplaceFile *file in plan.files) if ([file.file.relativePath isEqualToString:@"chapters/sjis.tex"]) sjisPlanned = file;
+    TSTeXRootDiskWriter *strict = [[TSTeXRootDiskWriter alloc] initWithCodec:Codec(NO)];
+    error = nil;
+    Check(sjisReported && ![strict writeFile:sjisPlanned error:&error] && error.code == TSTeXRootReplaceErrorChanged
+          && [Bytes(@"chapters/sjis.tex") isEqualToData:sjisBefore] && [[NSData dataWithContentsOfFile:extraName] isEqualToData:sjisBefore] && Leftovers().count == 0,
+          @"a hard link added since: the check reports it, the writer refuses, both names keep the content");
+    unlink(extraName.fileSystemRepresentation);
+    chmod(P(@"chapters/sjis.tex").fileSystemRepresentation, 0444);
+    linked = [plan filesOnDiskChangedInProject:Collect()];
+    sjisReported = NO;
+    for (TSTeXRootReplaceFile *file in linked) sjisReported |= [file.file.relativePath isEqualToString:@"chapters/sjis.tex"];
+    Check(sjisReported, @"a file made read-only since: the check reports it");
+    chmod(P(@"chapters/sjis.tex").fileSystemRepresentation, 0644);
+    // A hard link made right before the writer looks again (inside the coordination).
+    strict.beforeCheck = ^(NSURL *url) { link(url.fileSystemRepresentation, extraName.fileSystemRepresentation); };
+    error = nil;
+    Check(![strict writeFile:sjisPlanned error:&error] && error.code == TSTeXRootReplaceErrorChanged && [Bytes(@"chapters/sjis.tex") isEqualToData:sjisBefore]
+          && [[NSData dataWithContentsOfFile:extraName] isEqualToData:sjisBefore] && Leftovers().count == 0, @"a hard link made right before replacing: refused, nothing written");
+    unlink(extraName.fileSystemRepresentation);
+
     // Writing: check 3, attributes, and the text read back.
     TSTeXRootDiskWriter *writer = [[TSTeXRootDiskWriter alloc] initWithCodec:Codec(NO)];
     NSDate *created = [NSFileManager.defaultManager attributesOfItemAtPath:P(@"chapters/crlf.tex") error:NULL][NSFileCreationDate];
@@ -280,6 +309,47 @@ int main(void) { @autoreleasepool {
     model.findString = @"x";
     Check(model.eventMessage == nil, @"the next change clears the status");
 
+    // New conditions while the search after Replace All runs: every item is on (spec §2.7.4), none of the old ranges.
+    [model setMode:TSTeXRootSearchModeReplace findString:@"\\bx\\b" replaceString:@"y" options:TSRegexFindRegularExpression syntax:TSRegexReplacementSyntaxICU multipleReplace:nil];
+    [model searchNow];
+    Spin(^BOOL { return model.activity == TSTeXRootSearchActivityIdle && model.resultGeneration == model.generation; }, 30);
+    for (TSTeXRootSearchFileResult *file in model.results) if ([file.source.file.relativePath isEqualToString:@"chapters/xx.tex"]) after = file;
+    NSUInteger collections = model.numberOfCollections;
+    [model searchAgainAfterReplacingWithRangesOff:@{after.source.file.relativePath: @[[NSValue valueWithRange:after.items[0].range]]} message:@"Replaced"];
+    model.findString = @"x";
+    Spin(^BOOL { return model.activity == TSTeXRootSearchActivityIdle && model.resultGeneration == model.generation && model.numberOfCollections > collections; }, 30);
+    Spin(^BOOL { return model.activity == TSTeXRootSearchActivityIdle && model.resultGeneration == model.generation && model.results.count > 0; }, 30);
+    Check(model.numberOfIncludedItems == model.numberOfItems && model.numberOfItems > 0,
+          [NSString stringWithFormat:@"new conditions during the search after Replace All: every item on (%lu of %lu)", (unsigned long)model.numberOfIncludedItems, (unsigned long)model.numberOfItems]);
+
+    // Many items and many ranges off: taken in one pass, the main thread is not held (spec §2.9).
+    for (int f = 0; f < 10; f++) {
+        NSMutableString *many = [NSMutableString stringWithString:@"% !TEX root = ../root.tex\n"];
+        for (int i = 0; i < 4999; i++) [many appendString:@"x\n"];
+        WriteBytes([NSString stringWithFormat:@"chapters/many%d.tex", f], U8(many));
+    }
+    [model setMode:TSTeXRootSearchModeReplace findString:@"^x$" replaceString:@"y" options:TSRegexFindRegularExpression | TSRegexFindAnchorsMatchLines syntax:TSRegexReplacementSyntaxICU multipleReplace:nil];
+    [model collect];
+    Spin(^BOOL { return model.activity == TSTeXRootSearchActivityIdle && model.resultGeneration == model.generation && model.results.count >= 10; }, 60);
+    NSMutableDictionary *manyOff = [NSMutableDictionary dictionary];
+    for (TSTeXRootSearchFileResult *file in model.results) {
+        if (![file.source.file.relativePath hasPrefix:@"chapters/many"]) continue;
+        NSMutableArray *ranges = [NSMutableArray array];
+        for (NSUInteger i = 0; i < file.items.count; i += 2) [ranges addObject:[NSValue valueWithRange:file.items[i].range]];
+        manyOff[file.source.file.relativePath] = ranges;
+    }
+    __block double longest = 0, last = CFAbsoluteTimeGetCurrent();
+    NSTimer *timer = [NSTimer timerWithTimeInterval:0.002 repeats:YES block:^(NSTimer *t) { double now = CFAbsoluteTimeGetCurrent(); longest = MAX(longest, now - last); last = now; }];
+    [NSRunLoop.currentRunLoop addTimer:timer forMode:NSRunLoopCommonModes];
+    collections = model.numberOfCollections;
+    [model searchAgainAfterReplacingWithRangesOff:manyOff message:@"Replaced"];
+    last = CFAbsoluteTimeGetCurrent();
+    Spin(^BOOL { return model.numberOfCollections > collections && model.activity == TSTeXRootSearchActivityIdle && model.resultGeneration == model.generation && model.results.count >= 10; }, 60);
+    longest = MAX(longest, CFAbsoluteTimeGetCurrent() - last); // the last pause, which no firing of the timer follows
+    [timer invalidate];
+    NSUInteger offCount = model.numberOfItems - model.numberOfIncludedItems;
+    Check(offCount == 10 * 2500 && longest < 0.1, [NSString stringWithFormat:@"10 × 4,999 items with 2,500 ranges off each: %lu off, the main thread held %.0f ms at most", (unsigned long)offCount, longest * 1000]);
+
     [NSFileManager.defaultManager removeItemAtPath:Folder error:NULL];
     if (failures) { printf("%d failures\n", failures); return 1; }
     printf("PASS: the plan of Replace All, the checks of the files' versions, the backup, writing on the disk, and the items off after replacing\n");
@@ -289,18 +359,21 @@ int main(void) { @autoreleasepool {
 
 MUTATIONS = {
     'open documents first': ('TSTeXRootReplace.m', 'plan.files = [onDisk arrayByAddingObjectsFromArray:open];', 'plan.files = [open arrayByAddingObjectsFromArray:onDisk];'),
-    'the content is not compared': ('TSTeXRootReplace.m', 'BOOL same = now && !now.isOpen && now.sha256 && [now.sha256 isEqualToData:(NSData *_Nonnull)planned.originalSHA256]',
-                                    'BOOL same = now && !now.isOpen'),
+    'the content is not compared': ('TSTeXRootReplace.m', '            && now.sha256 && [now.sha256 isEqualToData:(NSData *_Nonnull)planned.originalSHA256]\n', '\n'),
     'check 3 is skipped': ('TSTeXRootReplace.m', 'if (!current || ![[TSTeXRootProjectCollector sha256OfData:current] isEqualToData:(NSData *_Nonnull)file.originalSHA256]) {', 'if (!current) {'),
     'attributes are not required': ('TSTeXRootReplace.m', 'if (self.failsCopyingAttributes || !TSCopyAttributes(url, temporary, NO, &problem)) {', 'if (NO) {'),
     'the backup reuses a folder': ('TSTeXRootReplace.m', '        else if (errno != EEXIST) {', '        else if (errno == EEXIST) {\n            made = url;\n        } else {'),
     'a failed backup is left': ('TSTeXRootReplace.m', '        [manager removeItemAtURL:made error:NULL];\n', ''),
     'the backup takes changed bytes': ('TSTeXRootReplace.m', '            if (data && ![[TSTeXRootProjectCollector sha256OfData:data] isEqualToData:(NSData *_Nonnull)file.originalSHA256]) {', '            if (NO) {'),
     'the text is not read back': ('TSTeXRootReplace.m', '|| !reading.decodedStrictly || ![reading.text isEqualToString:file.replacedText]) {', ') {'),
-    'ranges do not move': ('TSTeXRootReplace.m', 'shift += (NSInteger)replacement.string.length - (NSInteger)replacement.range.length;', 'shift += 0;'),
+    'ranges do not move': ('TSTeXRootReplace.m', 'shift += (NSInteger)replacements[next].string.length - (NSInteger)replaced.length;', 'shift += 0;'),
     'empty ranges never overlap': ('TSTeXRootReplace.m', '        return a.location >= b.location && a.location <= NSMaxRange(b);', '        return NO;'),
     # Taken both when the first list streams in and when it is complete; either alone is enough.
     'items off are forgotten after replacing': ('TSTeXRootSearchModel.m', 'NSArray<NSValue *> *ranges = self.rangesOff[path];', 'NSArray<NSValue *> *ranges = nil;'),
+    'a hard link added since is not seen': ('TSTeXRootReplace.m', 'BOOL same = now && !now.isOpen && now.searchOnlyReason == TSTeXRootSearchOnlyReasonNone', 'BOOL same = now && !now.isOpen'),
+    'the writer does not look at the file again': ('TSTeXRootReplace.m', '        if (!TSStillReplaceable(writing)) {', '        if (NO) {'),
+    'new conditions keep the ranges off': ('TSTeXRootSearchModel.m', '    [self.excludedItems removeAllObjects];\n    [self.rangesOff removeAllObjects];', '    [self.excludedItems removeAllObjects];'),
+    'every item against every range': ('TSTeXRootSearchModel.m', 'for (NSUInteger i = first; i < count && ranges[i].rangeValue.location <= NSMaxRange(range); i++)', 'for (NSUInteger i = 0; i < count; i++)'),
     'the UTF-8 note is lost': ('TSTeXRootReplace.m', '                [utf8 addObject:file.file.relativePath];', '                ;'),
     'the temporary file is left': ('TSTeXRootReplace.m', '    if (failure) {\n        [manager removeItemAtURL:temporary error:NULL];', '    if (failure) {'),
 }

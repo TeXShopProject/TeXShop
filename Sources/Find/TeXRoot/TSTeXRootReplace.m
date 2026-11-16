@@ -3,6 +3,7 @@
 #include <sys/xattr.h>
 #include <sys/stat.h>
 #include <errno.h>
+#include <unistd.h>
 
 NSErrorDomain const TSTeXRootReplaceErrorDomain = @"TSTeXRootReplaceErrorDomain";
 
@@ -118,7 +119,10 @@ static NSError *TSReplaceError(TSTeXRootReplaceError code, NSURL *_Nullable url,
             if ([file.identifier isEqual:planned.file.identifier])
                 now = file;
         TSTeXRootProjectFile *then = planned.file;
-        BOOL same = now && !now.isOpen && now.sha256 && [now.sha256 isEqualToData:(NSData *_Nonnull)planned.originalSHA256]
+        // Still one that can be replaced in: a file that got another name (a hard link), became read-only or locked
+        // since is not written, though its content is the same (spec §2.5.2).
+        BOOL same = now && !now.isOpen && now.searchOnlyReason == TSTeXRootSearchOnlyReasonNone
+            && now.sha256 && [now.sha256 isEqualToData:(NSData *_Nonnull)planned.originalSHA256]
             && now.size == then.size && (now.modificationDate == then.modificationDate || [now.modificationDate isEqualToDate:(NSDate *_Nonnull)then.modificationDate]);
         if (!same)
             [changed addObject:planned];
@@ -129,6 +133,17 @@ static NSError *TSReplaceError(TSTeXRootReplaceError code, NSURL *_Nullable url,
 @end
 
 #pragma mark Attributes
+
+/// The conditions under which the collector lets a file on the disk be replaced in, checked again on the item itself.
+static BOOL TSStillReplaceable(NSURL *url)
+{
+    struct stat info;
+    if (lstat(url.fileSystemRepresentation, &info) != 0 || !S_ISREG(info.st_mode) || info.st_nlink != 1)
+        return NO;
+    if (info.st_flags & (UF_IMMUTABLE | SF_IMMUTABLE))
+        return NO;
+    return access(url.fileSystemRepresentation, W_OK) == 0;
+}
 
 /// The original's permissions, creation and modification dates and extended attributes, given to `target`.
 static BOOL TSCopyAttributes(NSURL *source, NSURL *target, BOOL keepsModificationDate, NSError **error)
@@ -317,6 +332,12 @@ static BOOL TSCopyAttributes(NSURL *source, NSURL *target, BOOL keepsModificatio
     [coordinator coordinateWritingItemAtURL:url options:NSFileCoordinatorWritingForReplacing error:&coordinationError byAccessor:^(NSURL *writing) {
         if (self.beforeCheck)
             self.beforeCheck(writing);
+        // Still a file that can be replaced in (spec §2.2, §2.5.2): a regular file, not a symbolic link, with no other
+        // name, writable and not locked. Replacing a hard link would part its names.
+        if (!TSStillReplaceable(writing)) {
+            failure = TSReplaceError(TSTeXRootReplaceErrorChanged, url, nil);
+            return;
+        }
         // Check 3 of §2.5.1: the file is still the one approved, read right before it is replaced.
         NSError *readError = nil;
         NSData *current = [NSData dataWithContentsOfURL:writing options:NSDataReadingUncached error:&readError];
@@ -356,14 +377,30 @@ static BOOL TSCopyAttributes(NSURL *source, NSURL *target, BOOL keepsModificatio
 
 + (NSArray<NSValue *> *)ranges:(NSArray<NSValue *> *)ranges afterReplacements:(NSArray<TSRegexFindReplacement *> *)replacements
 {
-    NSMutableArray<NSValue *> *moved = [NSMutableArray arrayWithCapacity:ranges.count];
-    for (NSValue *value in ranges) {
-        NSRange range = value.rangeValue;
-        NSInteger shift = 0;
-        for (TSRegexFindReplacement *replacement in replacements)
-            if (NSMaxRange(replacement.range) <= range.location && !(replacement.range.length == 0 && replacement.range.location == range.location && range.length == 0))
-                shift += (NSInteger)replacement.string.length - (NSInteger)replacement.range.length;
-        [moved addObject:[NSValue valueWithRange:NSMakeRange((NSUInteger)((NSInteger)range.location + shift), range.length)]];
+    // One pass over both, in the order of the text: the replacements are ascending; the ranges are taken in their
+    // order of location and given back in theirs.
+    NSUInteger count = ranges.count;
+    NSMutableArray<NSNumber *> *order = [NSMutableArray arrayWithCapacity:count];
+    for (NSUInteger i = 0; i < count; i++)
+        [order addObject:@(i)];
+    [order sortUsingComparator:^NSComparisonResult(NSNumber *a, NSNumber *b) {
+        NSUInteger x = ranges[a.unsignedIntegerValue].rangeValue.location, y = ranges[b.unsignedIntegerValue].rangeValue.location;
+        return x < y ? NSOrderedAscending : x > y ? NSOrderedDescending : NSOrderedSame;
+    }];
+    NSMutableArray<NSValue *> *moved = [ranges mutableCopy];
+    NSInteger shift = 0;
+    NSUInteger next = 0, total = replacements.count;
+    for (NSNumber *index in order) {
+        NSRange range = ranges[index.unsignedIntegerValue].rangeValue;
+        // A replacement before the range (an insertion at the very place of an empty range is not before it).
+        while (next < total) {
+            NSRange replaced = replacements[next].range;
+            if (NSMaxRange(replaced) > range.location || (replaced.length == 0 && replaced.location == range.location && range.length == 0))
+                break;
+            shift += (NSInteger)replacements[next].string.length - (NSInteger)replaced.length;
+            next++;
+        }
+        moved[index.unsignedIntegerValue] = [NSValue valueWithRange:NSMakeRange((NSUInteger)((NSInteger)range.location + shift), range.length)];
     }
     return moved;
 }
