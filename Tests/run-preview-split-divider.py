@@ -2,6 +2,10 @@
 """Dragging the divider of a Preview window split into a top and a bottom part,
 and changing the height of such a window.
 
+The parts also follow the size of the window when a view in the window uses Auto
+Layout, as the line along the active part does (#47): NSSplitView then leaves their
+sizes to the keeper.
+
 Each part keeps the text at its top edge: when the divider is dragged, the top part
 shows more or less below it and the text of the bottom part moves with the divider;
 when the window gets taller or shorter, both parts keep their tops. Moves of the
@@ -48,6 +52,15 @@ MUTATIONS = {
     # Window resizes are not seen.
     'no-window-resize': ('TSPreviewSplitDivider.m',
         '        if (splitView.delegate == nil)\n            splitView.delegate = self;\n', ''),
+    # The sizing is handed back to NSSplitView, which leaves the parts as they were under Auto Layout (#47).
+    'sizing-handed-back': ('TSPreviewSplitDivider.m',
+        '    if (TSSplitViewPartsFill(splitView, parts))\n        return;\n', '    return;\n'),
+    # The parts of a top and bottom split keep their width (#47).
+    'width-kept': ('TSPreviewSplitDivider.m', ': NSMakeRect(NSMinX(bounds), position, NSWidth(bounds), length);', ': NSMakeRect(NSMinX(bounds), position, NSWidth(part.frame), length);'),
+    # The parts keep their length along the split, and the last one takes all of the change.
+    'last-takes-all': ('TSPreviewSplitDivider.m',
+        '            length = round((vertical ? NSWidth(part.frame) : NSHeight(part.frame)) * newTotal / oldTotal);\n',
+        '            length = vertical ? NSWidth(part.frame) : NSHeight(part.frame);\n'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -182,6 +195,31 @@ static void Drag(NSSplitView *split, NSArray<NSNumber *> *positions) {
                                 [split convertPoint:NSMakePoint(300, positions.lastObject.doubleValue + half) toView:nil]) atStart:NO];
     [split mouseDown:MouseEvent(window, NSEventTypeLeftMouseDown, from)];
     [window layoutIfNeeded];
+}
+// A view held by Auto Layout in each part, as the line along the active part: with it,
+// the window lays itself out with Auto Layout, and NSSplitView leaves the sizes of the
+// parts to its delegate.
+static void UseAutoLayout(Preview p) {
+    for (NSView *part in p.split.subviews) {
+        NSView *line = [[NSView alloc] initWithFrame:part.bounds];
+        line.translatesAutoresizingMaskIntoConstraints = NO;
+        [part addSubview:line];
+        [NSLayoutConstraint activateConstraints:@[
+            [line.leadingAnchor constraintEqualToAnchor:part.leadingAnchor], [line.trailingAnchor constraintEqualToAnchor:part.trailingAnchor],
+            [line.topAnchor constraintEqualToAnchor:part.safeAreaLayoutGuide.topAnchor], [line.bottomAnchor constraintEqualToAnchor:part.bottomAnchor]]];
+    }
+    [p.window layoutIfNeeded];
+}
+// The parts fill the split view: they line up with its edges, with the dividers between them.
+static BOOL Fill(NSSplitView *split) {
+    NSRect b = split.bounds; CGFloat t = split.dividerThickness, at = split.isVertical ? NSMinX(b) : NSMinY(b);
+    for (NSView *part in split.subviews) {
+        NSRect f = part.frame;
+        if (split.isVertical ? (NSMinX(f) != at || NSMinY(f) != NSMinY(b) || NSHeight(f) != NSHeight(b))
+                             : (NSMinY(f) != at || NSMinX(f) != NSMinX(b) || NSWidth(f) != NSWidth(b))) return NO;
+        at = (split.isVertical ? NSMaxX(f) : NSMaxY(f)) + t;
+    }
+    return at - t == (split.isVertical ? NSMaxX(b) : NSMaxY(b));
 }
 // The window keeps its top edge, as when its bottom edge is dragged.
 static void SetWindowSize(NSWindow *window, CGFloat width, CGFloat height) {
@@ -394,6 +432,52 @@ int main(void) { @autoreleasepool {
         Check(same, @"resizing the window gives the parts the same sizes as before");
     }
 
+    // A window that uses Auto Layout, as the Preview window with its line along the active part (#47).
+    for (NSNumber *vertical in @[@NO, @YES]) for (NSNumber *split in @[@YES, @NO]) {
+        if (vertical.boolValue && !split.boolValue) continue;
+        NSString *how = !split.boolValue ? @" (unsplit)" : vertical.boolValue ? @" (side by side)" : @" (top and bottom)";
+        Preview p = MakePreview(document, vertical.boolValue, YES, NO);
+        if (!split.boolValue) { [p.lower removeFromSuperview]; [p.split adjustSubviews]; }
+        UseAutoLayout(p);
+        RunLoop();
+        ScrollParts(p.upper, p.lower);
+        Watch(p);
+        CGFloat share = vertical.boolValue ? NSWidth(p.upper.frame) / NSWidth(p.split.bounds) : NSHeight(p.upper.frame) / NSHeight(p.split.bounds);
+        BOOL fill = YES, kept = YES;
+        for (NSValue *size in @[[NSValue valueWithSize:NSMakeSize(1186, 984)], [NSValue valueWithSize:NSMakeSize(1186, 760)],
+                                [NSValue valueWithSize:NSMakeSize(700, 1040)], [NSValue valueWithSize:NSMakeSize(900, 900)]]) {
+            SetWindowSize(p.window, size.sizeValue.width, size.sizeValue.height);
+            fill = fill && Fill(p.split);
+            RunLoop();
+            fill = fill && Fill(p.split);
+            if (split.boolValue && !vertical.boolValue) kept = kept && Kept(p);
+            for (NSView *part in p.split.subviews) {
+                NSScrollView *scroll = ((PDFView *)part).documentView.enclosingScrollView;
+                fill = fill && NSEqualSizes(scroll.frame.size, part.bounds.size);
+            }
+        }
+        CGFloat newShare = vertical.boolValue ? NSWidth(p.upper.frame) / NSWidth(p.split.bounds) : NSHeight(p.upper.frame) / NSHeight(p.split.bounds);
+        printf("Auto Layout%s: the first part has %.3f of the split view, before %.3f\n", how.UTF8String, newShare, share);
+        Check(fill, [@"with Auto Layout in the window, the parts and their scroll views follow the width and the height of the window" stringByAppendingString:how]);
+        Check(fabs(newShare - share) < 0.01, [@"with Auto Layout in the window, the first part keeps its share of the window" stringByAppendingString:how]);
+        if (split.boolValue && !vertical.boolValue) {
+            Check(kept, @"with Auto Layout in the window, resizing the window keeps the text at the top of both parts");
+            // Dragging the divider.
+            ScrollParts(p.upper, p.lower);
+            Watch(p);
+            NSMutableArray<NSNumber *> *path = [NSMutableArray array];
+            for (CGFloat y = 450; y <= 650; y += 25) [path addObject:@(y)];
+            for (CGFloat y = 650; y >= 300; y -= 25) [path addObject:@(y)];
+            Drag(p.split, path);
+            BOOL filled = Fill(p.split);
+            RunLoop();
+            printf("Auto Layout drag: the text at the tops is %.2f and %.2f pt away; the upper part is %.1f pt high\n",
+                   Off(p.upper, upperMark), Off(p.lower, lowerMark), NSHeight(p.upper.frame));
+            Check(filled && Fill(p.split) && fabs(NSHeight(p.upper.frame) - 300) < 4 && Kept(p),
+                  @"with Auto Layout in the window, dragging the divider moves it and keeps the text at the top of both parts");
+        }
+    }
+
     // The last page cannot scroll past its end: the lower part shows its bottom.
     {
         Preview p = MakePreview(document, NO, YES, NO);
@@ -443,7 +527,7 @@ int main(void) { @autoreleasepool {
     }
 
     if (failures) return 1;
-    printf("PASS: both Preview parts keep their tops when the divider is dragged or the window height changes; other resizes are left alone\n");
+    printf("PASS: both Preview parts keep their tops when the divider is dragged or the window height changes, and follow the window also under Auto Layout; other resizes are left alone\n");
 } return 0; }
 '''.replace('INSTALLED', 'YES' if installed else 'NO')
 
