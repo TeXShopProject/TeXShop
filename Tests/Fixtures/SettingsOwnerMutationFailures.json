@@ -1,6 +1,6 @@
 {
   "dependency-PdfWindowPosModeKey": "Ledger dependency PdfWindowPositionMode=0 -> pdfWindowPosButton",
-  "switch-to-checkbox": "Displayed controls: switches=0 checks=65 radios=2 matrices=0",
+  "switch-to-checkbox": "Displayed controls: switches=0 checks=64 radios=2 matrices=0",
   "close-validation": "Close clamps 99 to 50",
   "profile-theme-order": "Theme notification recipients already see the new colors",
   "dependency-SparkleAutomaticUpdateKey": "Ledger dependency SparkleAutomaticUpdate=0 -> sparkleIntervalMatrix",

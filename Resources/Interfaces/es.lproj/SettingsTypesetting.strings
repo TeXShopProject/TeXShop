@@ -4,7 +4,6 @@
 "188.title" = "Script por defecto";
 "190.title" = "Script personal";
 "191.title" = "PDF directo";
-"314.title" = "Al guardar";
 "588.title" = "plain TeX";
 "589.title" = "LaTeX";
 "590.title" = "Archivo de motor";
@@ -14,7 +13,6 @@
 "785.title" = "Buscar en PDF";
 "786.title" = "SyncTeX (recomendado)";
 "823.title" = "Tipo de sincronía";
-"898.title" = "Guardar relacionados";
 "919.title" = "Radio";
 "920.title" = "Radio";
 "921.title" = "Radio";

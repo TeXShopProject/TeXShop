@@ -2559,18 +2559,6 @@ A tag of 0 means "Activate Preview"; a tag of 1 means "Continue Editing".
     
 }
 
-/*" This method is connected to the "Console" matrix on the TeX pane.
-
-A tag of 0 means "always", a tag of 1 means "when errors occur".
-"*/
-- (IBAction)saveRelatedButtonPressed:sender
-{
-
-	// since the default program values map identically to the tags of the NSButtonCells,
-	// we can use the tag directly here.
-	[SUD setBool:[(NSCell *)sender state] forKey:SaveRelatedKey];
-}
-
 /*" On Typesetting Pane
 
 A tag of 0 means "no", a tag of 1 means "yes".

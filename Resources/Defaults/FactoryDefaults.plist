@@ -194,8 +194,6 @@
 	<string>NO</string>
 	<key>SaveDocumentFont</key>
 	<string>YES</string>
-	<key>SaveRelated</key>
-	<string>NO</string>
 	<key>ShowFullPathEnabled</key>
 	<string>NO</string>
 	<key>ShowFullwidthSpaceCharacter</key>
