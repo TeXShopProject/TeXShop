@@ -30,7 +30,7 @@
 <p>TeXShop 6.00は、TeXShop 5.59の次の版です。新しい検索パネル、LaTeXの構文を考慮するスペルチェック、固定できるリンクのポップアップ、新しい設定画面、ステータスバーが加わり、多くの不具合を修正しました。</p>
 <h3>主な変更</h3>
 <ul>
-<li><strong>詳細検索パネル</strong>：正規表現を使える新しい検索パネルで、すべての一致の一覧や複数置換ができるようになりました。</li>
+<li><strong>詳細検索パネル</strong>：正規表現を使える新しい検索パネルで、すべての一致の一覧や複数置換、分割したファイルの一括検索・置換ができるようになりました。</li>
 <li><strong>LaTeXの構文を考慮するスペルチェック</strong>：TeXの命令や数式を飛ばして、本文だけをスペルチェックできるようになりました。</li>
 <li><strong>固定できるリンクのポップアップ</strong>：Optionキーで、リンク先のポップアップを固定できるようになりました。</li>
 <li><strong>設定画面</strong>：サイドバーと検索欄を備えた、新しい設定画面になりました。</li>
@@ -40,6 +40,7 @@
 <ul>
 <li>正規表現を使える新しい検索パネル「詳細検索パネル」が加わりました。「すべて検索」で一致を一覧にし、「すべてハイライト」で本文に示せます。<figure class="note-shot"><img class="shot-light" src="assets/whats-new/ja/advanced-find.png" width="600" height="494" alt="正規表現を入れた詳細検索パネルと、すべての一致の一覧、ソースで強調された一致" loading="lazy"><img class="shot-dark" src="assets/whats-new/ja/advanced-find-dark.png" width="600" height="494" alt="正規表現を入れた詳細検索パネルと、すべての一致の一覧、ソースで強調された一致" loading="lazy"></figure></li>
 <li>「複数置換」で、登録した検索と置換の組をまとめて適用できるようになりました。<figure class="note-shot"><img class="shot-light" src="assets/release-notes/ja/multiple-replace.png" width="600" height="269" alt="検索と置換の組を4つ並べた複数置換の窓" loading="lazy"><img class="shot-dark" src="assets/release-notes/ja/multiple-replace-dark.png" width="600" height="269" alt="検索と置換の組を4つ並べた複数置換の窓" loading="lazy"></figure></li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、分割したファイルをまとめて検索・置換できるようになりました。「TeXソースの検索と置換」の窓で、ルートファイルと、それをTEX rootに指定しているTeXソースの一致を一覧にし、置換の前後を確かめてから、バックアップを保存して一度に置換できます（「編集」→「検索」→「同じTEX rootを持つTeXソースを検索…」）（<a href="https://github.com/TeXShopProject/TeXShop/issues/45">#45</a>）。</li>
 <li>正規表現の早見表を開けるようになり、コンソール、ログ、「実験」のウインドウでも検索できるようになりました。</li>
 </ul>
 <h3>LaTeXの構文を考慮するスペルチェック</h3>
