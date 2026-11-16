@@ -9,15 +9,21 @@
 #import "TSAdvancedFindTextView.h"
 #import "TSRegexTextFind.h"
 #import "globals.h"
+#import <objc/runtime.h>
 
 #define TSLocalized TSAdvancedFindLocalized
 
 static NSString *const TSFindItemIdentifier = @"TSShortcut.showTeXRootSearch:.0";
 static TSTeXRootSearchEntry *TSSharedEntry;
+/// The open documents and their texts taken for a collector on the main thread, which its preparation takes.
+static char TSOpenDocumentsSnapshotKey;
 
 /// An open document as the window sees it: its text, the file it shows, and whether it can be edited.
 @interface TSTeXRootOpenDocument : NSObject
 @property (nonatomic, weak) TSDocument *document;
+@property (nonatomic, copy) NSURL *url;
+/// The identity of its file, found on the background queue when the files are collected (nil until then): the main
+/// thread never waits for the file system to tell it (spec §2.9).
 @property (nonatomic, strong, nullable) id identifier;
 @property (nonatomic, weak) NSTextStorage *storage;
 @end
@@ -38,6 +44,7 @@ static TSTeXRootSearchEntry *TSSharedEntry;
 @property (nonatomic, strong) NSMutableSet<NSURL *> *pendingExternalStates;
 /// Moves on with each choice of an item: only the last one opens the window.
 @property (nonatomic) NSUInteger openRequest;
+
 @end
 
 @implementation TSTeXRootSearchEntry
@@ -290,28 +297,34 @@ static TSTeXRootSearchEntry *TSSharedEntry;
     return signature;
 }
 
-/// The open TeX documents with a file, not in the external editor mode (whose text is the file's).
+/// The open TeX documents with a file, not in the external editor mode (whose text is the file's). Nothing is read
+/// from the disk: a document already known on the same file keeps the identity found for it.
 - (void)refreshOpenDocuments
 {
     NSMutableArray<TSTeXRootOpenDocument *> *open = [NSMutableArray array];
-    NSMutableArray *signature = [NSMutableArray array], *editable = [NSMutableArray array];
+    NSMutableArray *editable = [NSMutableArray array];
     for (NSDocument *document in NSDocumentController.sharedDocumentController.documents) {
         if (![document isKindOfClass:[TSDocument class]] || !document.fileURL)
             continue;
         TSDocument *source = (TSDocument *)document;
         if (source.externalEditor || !source.textStorage)
             continue;
-        TSTeXRootOpenDocument *entry = [TSTeXRootOpenDocument new];
-        entry.document = source;
+        TSTeXRootOpenDocument *entry = nil;
+        for (TSTeXRootOpenDocument *known in self.openDocuments)
+            if (known.document == source && [known.url isEqual:source.fileURL])
+                entry = known;
+        if (!entry) {
+            entry = [TSTeXRootOpenDocument new];
+            entry.document = source;
+            entry.url = (NSURL *_Nonnull)source.fileURL;
+        }
         entry.storage = source.textStorage;
-        entry.identifier = [TSTeXRootSearchEntry identifierOfURL:source.fileURL];
         [open addObject:entry];
-        [signature addObject:@[[NSValue valueWithNonretainedObject:source], (NSURL *_Nonnull)source.fileURL]];
         NSTextView *view = [source textView];
         [editable addObject:@(view.isEditable)];
     }
     self.openDocuments = open;
-    self.signature = signature;
+    self.signature = [self currentSignature];
     self.editableSignature = editable;
 }
 
@@ -339,14 +352,35 @@ static TSTeXRootSearchEntry *TSSharedEntry;
                                                                                   allowsSourceDoc:[SUD boolForKey:UseOldHeadingCommandsKey]
                                                                                      jobNameToken:[weakSelf jobNameToken]];
         [weakSelf refreshOpenDocuments];
+        // The open documents' texts are taken now; their files' identities are found before collecting (below).
+        NSMutableArray *snapshot = [NSMutableArray array];
+        for (TSTeXRootOpenDocument *open in weakSelf.openDocuments)
+            if (open.storage)
+                [snapshot addObject:@[open, [open.storage.string copy]]];
+        // Given with the collector: the background queue takes it after this (dispatch_async orders the two).
+        objc_setAssociatedObject(collector, &TSOpenDocumentsSnapshotKey, snapshot, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        return collector;
+    };
+    environment.prepareCollector = ^(TSTeXRootProjectCollector *collector) {
+        // On the background queue: the identities of the open documents' files, then their texts by identity.
+        NSArray *snapshot = objc_getAssociatedObject(collector, &TSOpenDocumentsSnapshotKey);
         NSMutableDictionary *texts = [NSMutableDictionary dictionary];
-        for (TSTeXRootOpenDocument *open in weakSelf.openDocuments) {
-            id identifier = open.identifier;
-            if (identifier && !texts[identifier] && open.storage)
-                texts[identifier] = [open.storage.string copy];
+        NSMutableArray *found = [NSMutableArray array];
+        for (NSArray *pair in snapshot) {
+            TSTeXRootOpenDocument *open = pair[0];
+            id identifier = [TSTeXRootSearchEntry identifierOfURL:open.url];
+            if (!identifier)
+                continue;
+            [found addObject:@[open, identifier]];
+            if (!texts[identifier])
+                texts[identifier] = pair[1];
         }
         collector.openDocumentTexts = texts;
-        return collector;
+        // Before the collector's result reaches the main thread (the main queue keeps the order).
+        dispatch_async(dispatch_get_main_queue(), ^{
+            for (NSArray *pair in found)
+                ((TSTeXRootOpenDocument *)pair[0]).identifier = pair[1];
+        });
     };
     environment.sourcesForFiles = ^NSArray<TSTeXRootSearchSource *> *(NSArray<TSTeXRootProjectFile *> *files) {
         NSMutableArray<TSTeXRootSearchSource *> *sources = [NSMutableArray array];

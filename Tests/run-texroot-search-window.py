@@ -41,15 +41,19 @@ MUTATIONS = {
     'the panel\'s strings do not reach the window': ('TSTeXRootSearchWindowController.m', '    self.model.findString = settings.findString;\n', ''),
     'a mixed folder turns off': ('TSTeXRootSearchFileTree.m', '    [self setNodes:@[node] on:[self stateOfNode:node] != NSControlStateValueOn];\n}\n\n- (NSControlStateValue)stateOfRow',
                                  '    [self setNodes:@[node] on:[self stateOfNode:node] == NSControlStateValueOff];\n}\n\n- (NSControlStateValue)stateOfRow'),
-    'the match is not marked': ('TSTeXRootSearchResultsList.m', 'value:(NSColor *_Nonnull)color range:highlight];', 'value:(NSColor *_Nonnull)color range:NSMakeRange(0, 0)];'),
+    'the match is not marked': ('TSTeXRootSearchResultsList.m', '[shown addAttribute:NSBackgroundColorAttributeName value:(NSColor *_Nonnull)color range:highlight];',
+                                '[shown addAttribute:NSBackgroundColorAttributeName value:(NSColor *_Nonnull)color range:NSMakeRange(0, 0)];'),
     'Escape does not stop': ('TSTeXRootSearchWindowController.m', '    if (self.model.activity != TSTeXRootSearchActivityIdle)\n        [self.model stop];\n}', '}'),
     'the %SourceDoc sentence always': ('TSTeXRootSearchWindowController.m', '    if (self.mentionsSourceDoc)\n        rule =', '    if (YES)\n        rule ='),
     'Return does not press Replace All ▾': ('TSMultipleReplaceWindowController.m', '        [self sendAction:self.action to:self.target];\n        return YES;', '        return NO;'),
     'a document closed since collecting is kept': ('TSTeXRootSearchModel.m', '    if (self.project && ![self collectedDocumentsStand]) {', '    if (NO) {'),
     'choosing an item reads on the main thread': ('TSTeXRootEntryRules.m', '    dispatch_async(self.queue, ^{\n        NSURL *root = nil;', '    dispatch_async(dispatch_get_main_queue(), ^{\n        NSURL *root = nil;'),
     'a long item hides how many lines it has more': ('TSTeXRootSearchResultsList.m', 'NSString *rest = [NSString stringWithFormat:TSLocalized(@"TeXRootSearch.MoreLines", @"⋯ %lu more lines"), (unsigned long)more];', 'NSString *rest = @"⋯";'),
-    'the whole change is cut too': ('TSTeXRootSearchResultsList.m', '    if (whole)\n        return shown;\n', ''),
+    'the whole change is cut too': ('TSTeXRootSearchResultsList.m', 'NSMutableAttributedString *whole = [[NSMutableAttributedString alloc] initWithString:text attributes:base];',
+                                    'NSMutableAttributedString *whole = [[NSMutableAttributedString alloc] initWithString:[text substringToIndex:MIN(text.length, (NSUInteger)60)] attributes:base];'),
     '21 lines are cut': ('TSTeXRootSearchResultsList.m', '    if (more >= 2) {', '    if (more >= 1) {'),
+    'the collector is prepared on the main thread': ('TSTeXRootSearchModel.m', '    dispatch_async(self.queue, ^{\n        if (prepare)\n            prepare(collector);', '    if (prepare)\n        prepare(collector);\n    dispatch_async(self.queue, ^{', 'main-thread'),
+    'the whole change is laid out all at once': ('TSTeXRootSearchResultsList.m', 'view.layoutManager.allowsNonContiguousLayout = YES;', 'view.layoutManager.allowsNonContiguousLayout = NO;', 'main-thread'),
     '.TEX counts as .tex': ('TSTeXRootEntryRules.m', 'return [url.pathExtension isEqualToString:@"tex"];', 'return [url.pathExtension.lowercaseString isEqualToString:@"tex"];'),
 }
 
@@ -126,7 +130,7 @@ def main():
             return 1
         if args.mutations:
             survived = []
-            for name, (file, old, new) in MUTATIONS.items():
+            for name, (file, old, new, *modes) in MUTATIONS.items():
                 with tempfile.TemporaryDirectory(prefix='texshop-texroot-window-mutation-') as mtmp:
                     mtmp = Path(mtmp)
                     sources = copy_sources(mtmp)
@@ -139,7 +143,7 @@ def main():
                     if not mprobe:
                         print(f'mutation {name!r} does not compile:\n{errors}')
                         return 1
-                    caught = any(run(mprobe, mode).returncode != 0 for mode in ('behavior',))
+                    caught = any(run(mprobe, mode).returncode != 0 for mode in (modes or ['behavior']))
                     print(f"{'caught' if caught else 'SURVIVED'}: {name}")
                     if not caught:
                         survived.append(name)

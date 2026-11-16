@@ -459,7 +459,10 @@ static NSData *TSShownLinesOfFile(TSTeXRootSearchFileResult *file, TSTeXRootSear
         });
     };
     [self changed];
+    void (^prepare)(TSTeXRootProjectCollector *) = self.environment.prepareCollector;
     dispatch_async(self.queue, ^{
+        if (prepare)
+            prepare(collector);
         TSTeXRootProject *project = [collector collect];
         dispatch_async(dispatch_get_main_queue(), ^{
             typeof(self) model = weakSelf;

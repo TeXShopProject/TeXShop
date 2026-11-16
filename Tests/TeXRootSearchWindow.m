@@ -57,6 +57,9 @@ static NSMutableArray<NSArray<NSString *> *> *SourceRequests;
 static BOOL DelayRunsAtOnce;
 /// What the environment says of the open documents (which are open, on which files).
 static NSString *DocumentsSignature = @"start";
+/// A slow file system while the collector is prepared (the identities of the open documents' files).
+static useconds_t PrepareDelay;
+static BOOL PreparedOnMain;
 
 static void RunPending(void)
 {
@@ -95,6 +98,12 @@ static TSTeXRootSearchEnvironment *Environment(void)
         return sources;
     };
     environment.documentsSignature = ^id<NSObject> { return [DocumentsSignature copy]; };
+    environment.prepareCollector = ^(TSTeXRootProjectCollector *collector) {
+        if (NSThread.isMainThread)
+            PreparedOnMain = YES;
+        if (PrepareDelay)
+            usleep(PrepareDelay);
+    };
     environment.performAfterDelay = ^(NSTimeInterval delay, dispatch_block_t block) {
         if (DelayRunsAtOnce)
             dispatch_async(dispatch_get_main_queue(), block);
@@ -849,6 +858,21 @@ static NSTimeInterval LongestPause(void (^start)(void), BOOL (^done)(void))
 
 static void TestMainThread(void)
 {
+    // The collector is prepared (the open documents' files identified) on the background queue (Codex 3b F4).
+    {
+        PrepareDelay = 150000;
+        PreparedOnMain = NO;
+        __block TSTeXRootSearchModel *slow = nil;
+        NSTimeInterval preparing = LongestPause(^{
+            slow = [[TSTeXRootSearchModel alloc] initWithRootURL:RootURL() environment:Environment()];
+            [slow setMode:TSTeXRootSearchModeFind findString:@"eq:main" replaceString:@"" options:0 syntax:TSRegexReplacementSyntaxICU multipleReplace:nil];
+            [slow collect];
+        }, ^BOOL { return slow.activity == TSTeXRootSearchActivityIdle && slow.project != nil; });
+        printf("main thread: a slow file system while preparing to collect: longest pause %.0f ms\n", preparing * 1000);
+        Check(!PreparedOnMain && preparing < 0.1, [NSString stringWithFormat:@"preparing to collect waits for the file system off the main thread (%.0f ms)", preparing * 1000]);
+        PrepareDelay = 0;
+    }
+
     // 25 files of 5,000 matches each (the limit per file), 10 MB in all: searching, listing, turning an item off.
     NSMutableString *body = [NSMutableString string];
     for (NSUInteger k = 0; k < 5000; k++)
@@ -916,6 +940,51 @@ static void TestMainThread(void)
     printf("main thread: one file off: %.0f ms\n", fileOff * 1000);
     Check(fileOff < 0.1, [NSString stringWithFormat:@"turning a file off keeps the main thread free (%.0f ms)", fileOff * 1000]);
     [window close];
+
+    // The whole change of one item 20,000 lines long (Codex 3b F5): built without stopping the main thread.
+    {
+        NSMutableString *longText = [NSMutableString stringWithString:@"BEGIN\n"];
+        for (NSUInteger k = 0; k < 20000; k++)
+            [longText appendFormat:@"line %lu of a long environment\n", (unsigned long)k];
+        [longText appendString:@"END"];
+        OpenTexts[@"chapters/three.tex"] = [NSString stringWithFormat:@"%% !TEX root = ../thesis.tex\n%@\n", longText];
+        TSTeXRootSearchWindowController *longWindow = [[TSTeXRootSearchWindowController alloc] initWithFindController:controller library:[[TSMultipleReplaceLibrary alloc] initWithDirectory:libraryDirectory]];
+        controller.settings.options = TSRegexFindRegularExpression;
+        controller.settings.findString = @"(?s)BEGIN.*?END";
+        controller.settings.replaceString = @"$0!";
+        [longWindow openForRootURL:RootURL() environment:Environment() mode:TSTeXRootSearchModeReplace setName:nil];
+        TSTeXRootSearchModel *longModel = longWindow.model;
+        Spin(^BOOL { return longModel.activity == TSTeXRootSearchActivityIdle && longModel.project && longModel.resultGeneration == longModel.generation && longModel.numberOfItems > 0; }, 60);
+        [longWindow updateFromModel];
+        TSTeXRootSearchFileResult *longFile = longModel.results.firstObject;
+        NSInteger longRow = [longWindow.resultsList rowOfObject:longFile.items.firstObject];
+        __block NSViewController *whole = nil;
+        __block BOOL made = NO;
+        NSTimeInterval showing = LongestPause(^{
+            [longWindow.resultsList makeWholeChangeViewControllerForRow:longRow completion:^(NSViewController *controller) {
+                // Shown as the popover shows it: in a window, laid out and drawn (offscreen).
+                NSWindow *shown = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, controller.preferredContentSize.width, controller.preferredContentSize.height)
+                                                              styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO];
+                shown.contentView = controller.view;
+                [controller.view layoutSubtreeIfNeeded];
+                [shown displayIfNeeded];
+                whole = controller;
+                made = YES;
+            }];
+        }, ^BOOL { return made; });
+        NSString *afterText = nil;
+        for (NSView *view in AllViews(whole.view))
+            if ([view isKindOfClass:[NSTextView class]] && [view.accessibilityLabel isEqualToString:@"After"])
+                afterText = ((NSTextView *)view).string;
+        printf("main thread: the whole change of 20,000 lines: longest pause %.0f ms\n", showing * 1000);
+        Check(showing < 0.1 && [afterText hasSuffix:@"END!"] && afterText.length > 500000,
+              [NSString stringWithFormat:@"the whole change of 20,000 lines keeps the main thread free (%.0f ms) and has every line", showing * 1000]);
+        [longWindow close];
+        [OpenTexts removeAllObjects];
+        controller.settings.options = 0;
+        controller.settings.findString = @"eq:main";
+        controller.settings.replaceString = @"eq:central";
+    }
 
     // 1,000 files in folders 20 deep (spec §2.9): collected and searched without stopping the main thread.
     NSString *deep = @"deep";

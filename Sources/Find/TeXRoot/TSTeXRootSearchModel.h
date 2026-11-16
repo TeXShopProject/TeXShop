@@ -31,8 +31,12 @@ typedef NS_ENUM(NSInteger, TSTeXRootSearchActivity) {
 /// the main thread.
 NS_SWIFT_NAME(TeXRootSearchEnvironment)
 @interface TSTeXRootSearchEnvironment : NSObject
-/// A collector for the root, with the texts of the open documents and the codec set.
+/// A collector for the root, with the codec set. Called on the main thread: it only takes what must be taken there (the
+/// texts of the open documents as they are now), never waiting for the file system.
 @property (nonatomic, copy) TSTeXRootProjectCollector *_Nonnull (^collectorForRoot)(NSURL *rootURL);
+/// Called on the background queue right before the collector collects: what needs the file system to prepare it (the
+/// identities of the open documents' files, for its `openDocumentTexts`) is done here (spec §2.9).
+@property (nonatomic, copy, nullable) void (^prepareCollector)(TSTeXRootProjectCollector *collector);
 /// The texts to search: an open document's text as it is now (with its line ending and whether it can be edited),
 /// the text read when collecting for a file that is not open.
 @property (nonatomic, copy) NSArray<TSTeXRootSearchSource *> *_Nonnull (^sourcesForFiles)(NSArray<TSTeXRootProjectFile *> *files);

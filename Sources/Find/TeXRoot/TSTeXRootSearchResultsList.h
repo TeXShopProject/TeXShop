@@ -36,8 +36,11 @@ NS_SWIFT_NAME(TeXRootSearchResultsList)
 
 /// The whole change of an item's row, every line before and after (a row shows 20 at most), in two scrolling texts
 /// that VoiceOver reads: shown by "Show All Lines" in the row's menu and by Command-Y.
-- (nullable NSViewController *)wholeChangeViewControllerForRow:(NSInteger)row;
 - (void)showWholeChangeOfRow:(NSInteger)row;
+/// The same view made with its texts built on a background queue; `completion` on the main thread (nil for no item).
+- (void)makeWholeChangeViewControllerForRow:(NSInteger)row completion:(void (^)(NSViewController *_Nullable controller))completion;
+/// Made all at once (for the tests and images).
+- (nullable NSViewController *)wholeChangeViewControllerForRow:(NSInteger)row;
 
 /// For the tests: the rows as VoiceOver reads them, and the texts shown in an item's row.
 - (NSString *)accessibilityLabelOfRow:(NSInteger)row;
