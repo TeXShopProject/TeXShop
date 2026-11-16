@@ -67,6 +67,8 @@ typedef NS_ENUM(NSInteger, TSByteOrderMark) {
 + (TSByteOrderMark)byteOrderMarkOfData:(NSData *)data;
 - (NSData *)dataForText:(NSString *)text encoding:(NSStringEncoding)encoding byteOrderMark:(TSByteOrderMark)mark;
 - (NSString *)textForEditing:(NSString *)text encoding:(NSStringEncoding)encoding;
+// The text as -dataForText:encoding:byteOrderMark: writes it, before it is turned into bytes.
+- (NSString *)textForSaving:(NSString *)text encoding:(NSStringEncoding)encoding;
 
 // A string for showing output or a log that may not be in encoding. Output that is not all in
 // the encoding is read line by line: UTF-8, then the encoding, then UTF-8 with the bytes that
