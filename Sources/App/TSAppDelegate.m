@@ -489,9 +489,13 @@ static void TSInstallAdvancedFindFieldStyle(void)
 		}
 	else if (needsUpdating) {
 		// Bundled macros that still open the former web site, unedited, open texshop.app.
-		for (NSString *name in @[@"Macros_Latex.plist", @"Macros_Context.plist"])
-			TSUpdateUnchangedBundledMacros([[MacrosPath stringByStandardizingPath] stringByAppendingPathComponent:name],
-				[[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"TeXShop/Macros"] stringByAppendingPathComponent:name]);
+		NSString *resources = [[NSBundle mainBundle] resourcePath];
+		if (resources) {
+			NSString *bundledMacros = [resources stringByAppendingPathComponent:@"TeXShop/Macros"];
+			for (NSString *name in @[@"Macros_Latex.plist", @"Macros_Context.plist"])
+				TSUpdateUnchangedBundledMacros([[MacrosPath stringByStandardizingPath] stringByAppendingPathComponent:name],
+					[bundledMacros stringByAppendingPathComponent:name]);
+		}
 	}
 		
 	if (! [fileManager fileExistsAtPath: [MatrixPanelPath stringByStandardizingPath]] ) {

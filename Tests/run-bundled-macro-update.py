@@ -31,7 +31,9 @@ MUTATIONS = {
     # A binary file becomes XML.
     'format-lost': ('format:format options:0 error:NULL]', 'format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL]'),
     # The application never calls the update.
-    'not-called': ('			TSUpdateUnchangedBundledMacros([[MacrosPath', '			if (0) TSUpdateUnchangedBundledMacros([[MacrosPath'),
+    'not-called': ('				TSUpdateUnchangedBundledMacros([[MacrosPath', '				if (0) TSUpdateUnchangedBundledMacros([[MacrosPath'),
+    # Nothing is updated when the bundle has a resource folder.
+    'no-resources': ('		if (resources) {', '		if (!resources) {'),
 }
 
 
@@ -48,8 +50,10 @@ def check_delegate(text):
     start = text.index('if (! [fileManager fileExistsAtPath: [MacrosPath stringByStandardizingPath]] ) {')
     block = text[start:text.index('if (! [fileManager fileExistsAtPath: [MatrixPanelPath', start)]
     update = block[block.index('else if (needsUpdating) {'):]
+    if 'if (resources) {' not in update:
+        return 'TSAppDelegate must update the macros when the bundle has its resource folder'
     call = ('for (NSString *name in @[@"Macros_Latex.plist", @"Macros_Context.plist"])\n'
-            '\t\t\tTSUpdateUnchangedBundledMacros([[MacrosPath stringByStandardizingPath] stringByAppendingPathComponent:name],')
+            '\t\t\t\tTSUpdateUnchangedBundledMacros([[MacrosPath stringByStandardizingPath] stringByAppendingPathComponent:name],')
     if call not in update:
         return 'TSAppDelegate must update unedited bundled macros of both files when a new version is copied'
     return None
