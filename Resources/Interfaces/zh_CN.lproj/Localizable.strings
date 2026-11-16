@@ -58,7 +58,6 @@
     Sync = "\U540c\U6b65";
     "Sync Marks" = "\U540c\U6b65\U6807\U8bb0";
     Tags = "标签";
-    "TeXShop Demos" = "TeXShop\U6f14\U793a";
     Template = "\U6a21\U677f";
     "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "该文件无法以 %@ 编码打开，因为它并未以此编码保存。如果您想以其他编码打开，请关闭窗口再打开。";
     "The file encoding changed; characters can be lost if the wrong encoding is used." = "\U6587\U4ef6\U7f16\U7801\U5df2\U66f4\U6539\Uff0c\U5982\U679c\U4f7f\U7528\U9519\U8bef\U7684\U7f16\U7801\U5c06\U4f1a\U5bfc\U81f4\U5b57\U7b26\U4e22\U5931\U3002";
@@ -102,7 +101,6 @@
 "No Block" = "无区块";
 "deprecated" = "已弃用";
 "Unknown encoding; using UTF-8." = "未知编码；使用UTF-8编码。";
-"Demo Movies require Mac OS 10.9, Mavericks, or higher." = "演示视频需要Mac OS 10.9 Mavericks或更高版本。";
 "Source" = "源代码";
 "Type sample text here.\nUse several lines to test\ninterline spacing." = "在此输入示例文本。\n输入多行\n以测试行间距。";
 "<<Close All - unlocalized>>" = "全部关闭";

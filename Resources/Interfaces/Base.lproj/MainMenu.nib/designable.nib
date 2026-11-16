@@ -1393,9 +1393,6 @@
                                     <action selector="displayGettingStartedTeXShop:" target="705" id="710"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop Demos" id="699">
-                                <menu key="submenu" title="TeXShop Demos" id="700"/>
-                            </menuItem>
                             <menuItem title="TeXShop Manual" id="OB1-NJ-gVv" identifier="TSShortcut.displayManual:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
@@ -1492,7 +1489,6 @@
         <customObject id="380" userLabel="TSPreferences" customClass="TSPreferences"/>
         <customObject id="382" userLabel="TSAppDelegate" customClass="TSAppDelegate">
             <connections>
-                <outlet property="myMovie" destination="706" id="773"/>
             </connections>
         </customObject>
         <customObject id="485" userLabel="TSMacroMenuConroller" customClass="TSMacroMenuController">
@@ -1544,7 +1540,6 @@
                 <outlet property="styleFileResult" destination="1071" id="1080"/>
             </connections>
         </customObject>
-        <customObject id="706" userLabel="TSMovie" customClass="TSMovie"/>
         <customObject id="837" userLabel="SUUpdater" customClass="TSSparkleController"/>
         <window title="Texdoc" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="854" userLabel="PackageHelp" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES"/>

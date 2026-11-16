@@ -76,7 +76,6 @@
 "Newline Removal" = "Suppression de la nouvelle ligne";
 "Color Index" = "Index des couleurs";
 "Help" = "Aide";
-"TeXShop Demos" = "Démos de TeXShop";
 "Sync" = "Synchroniser";
 "ShowFullPath" = "Afficher le chemin entier";
 "Close Current Environment" = "Clore l'environnement en cours"; // Terada
@@ -106,7 +105,6 @@
 "No Block" = "Aucun bloc";
 "deprecated" = "obsolète";
 "Unknown encoding; using UTF-8." = "Encodage inconnu ; UTF-8 utilisé";
-"Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Les démos requièrent Mac OS 10.9, Mavericks ou plus.";
 "Source" = "Source";
 "Type sample text here.\nUse several lines to test\ninterline spacing." = "Taper ici un exemple de texte.\nUtiliser plusieurs lignes pour tester\ninterlignage.";
 "<<Close All - unlocalized>>" = "Tout fermer";

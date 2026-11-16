@@ -76,7 +76,6 @@
 "Newline Removal" = "改行を削除";
 "Color Index" = "索引の色づけ";
 "Help" = "ヘルプ";
-"TeXShop Demos" = "TeXShopデモ";
 "Sync" = "同期";
 "ShowFullPath" = "フルパス表示";
 "Close Current Environment" = "現在の環境を閉じる"; // Terada
@@ -106,7 +105,6 @@
 "No Block" = "ブロックなし";
 "deprecated" = "非推奨";
 "Unknown encoding; using UTF-8." = "未知のエンコーディングが指定されたため、代わりにUTF-8エンコーディングを使用しました。";
-"Demo Movies require Mac OS 10.9, Mavericks, or higher." = "デモ動画の再生にはOS X 10.9 Mavericks以上が必要です。";
 "Source" = "ソース";
 "Type sample text here.\nUse several lines to test\ninterline spacing." = "ここにサンプルテキストを打ち込んでください。\n行間隔をチェックするには複数行にまたがる文字列が必要です。";
 "<<Close All - unlocalized>>" = "すべてを閉じる";

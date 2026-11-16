@@ -363,7 +363,7 @@ int main(int argc, char **argv)
         method_setImplementation(class_getInstanceMethod(NSAlert.class, @selector(runModal)), (IMP)TestRunModal);
         method_setImplementation(class_getInstanceMethod(NSAlert.class, @selector(beginSheetModalForWindow:completionHandler:)), (IMP)TestBeginSheet);
         for (NSString *name in @[@"HelpDocuments", @"TSAppDelegate", @"TSDocumentController", @"TSMacroEditor",
-                                 @"TSMacroMenuController", @"TSMovie", @"TSPreferences", @"TSSparkleController", @"TSStationery", @"TextFinder"]) {
+                                 @"TSMacroMenuController", @"TSPreferences", @"TSSparkleController", @"TSStationery", @"TextFinder"]) {
             Class c = objc_allocateClassPair(NSObject.class, name.UTF8String, 0);
             class_addMethod(c, @selector(setValue:forUndefinedKey:), (IMP)IgnoreOutlet, "v@:@@");
             objc_registerClassPair(c);

@@ -39,7 +39,7 @@ assert 'Preferences.nib in Resources' not in project, 'Preferences.nib is not bu
 kinds.remove('Preferences')
 for kind in kinds:
     assert '/* %s.nib in Resources */' % kind in project, kind + '.nib is copied into the app'
-assert len(kinds) == 7, kinds
+assert len(kinds) == 6, kinds
 
 
 def variants(nib):

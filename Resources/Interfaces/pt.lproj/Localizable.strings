@@ -76,7 +76,6 @@
 "Newline Removal" = "Remoção de nova linha";
 "Color Index" = "Índice de cor";
 "Help" = "Ajuda";
-"TeXShop Demos" = "Demos do TeXShop";
 "Sync" = "Sincronizar";
 "ShowFullPath" = "ExibirCaminhoCompleto";
 "Close Current Environment" = "Fechar ambiente atual"; // Terada
@@ -105,7 +104,6 @@
 "No Block" = "Nenhum bloco";
 "deprecated" = "obsoleto";
 "Unknown encoding; using UTF-8." = "Codificação desconhecida; usando UTF-8.";
-"Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Vídeos demo requerem Mac OS 10.9, Mavericks, ou superior";
 "Source" = "Fonte";
 "Type sample text here.\nUse several lines to test\ninterline spacing." = "Digite algum texto aqui.\nEscreva diversas para testar\no espaçamento entre linhas.";
 "<<Close All - unlocalized>>" = "Fechar todas";

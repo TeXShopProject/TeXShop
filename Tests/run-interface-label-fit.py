@@ -81,10 +81,10 @@ with tempfile.TemporaryDirectory(prefix='texshop-label-fit-') as tmp:
     for lproj in sorted(interfaces.glob('*.lproj')):
         strings = strings_for(lproj)
         for item in sorted(lproj.iterdir()):
-            # Preferences.nib is no longer loaded and Movie.nib holds no text. Settings*.xib
+            # Preferences.nib is no longer loaded. Settings*.xib
             # only supply controls: the Settings window builds its own labels from
             # SettingsCategories.strings (run-settings-product-shell.py covers them).
-            if item.name in ('Preferences.nib', 'Movie.nib') or item.name.startswith('Settings'):
+            if item.name == 'Preferences.nib' or item.name.startswith('Settings'):
                 continue
             if args.only and args.only not in item.name:
                 continue

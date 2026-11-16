@@ -519,11 +519,6 @@ static void TSInstallAdvancedFindFieldStyle(void)
 			  toPath:[BinaryPath stringByStandardizingPath]];
 		}
 		
-	if (! [fileManager fileExistsAtPath: [MoviesPath stringByStandardizingPath]] ) {
-		[self mirrorPath:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"TeXShop/Movies"]
-			  toPath:[MoviesPath stringByStandardizingPath]];
-		}
-		
 	if (([fileManager fileExistsAtPath: [NewPath stringByStandardizingPath]]) && needsUpdating)
         [fileManager removeItemAtPath: [NewPath stringByStandardizingPath] error: NULL];
 	
@@ -773,7 +768,6 @@ static void TSInstallAdvancedFindFieldStyle(void)
 	[[TSMacroMenuController sharedInstance] loadMacros];
 	[self finishAutoCompletionConfigure];
 	[self configureExternalEditor];
-	[self configureMovieMenu];
     [[TSColorSupport sharedInstance] updateBundledThemeColors];
     [[TSColorSupport sharedInstance]  initializeColors];
     TSInstallAdvancedFindFieldStyle();
@@ -1131,20 +1125,6 @@ static void TSInstallAdvancedFindFieldStyle(void)
 	}
 }
 
-- (IBAction)doMovie:(id)sender
-{
-	if (atLeastMavericks)
-        {
-            NSString *title = [[sender title] stringByAppendingString:@".mp4"];
-            [self.myMovie doMovie:title];
-        }
-    else
-        {
-            NSAlert *alert = [NSAlert alertWithMessageText:@"Alert" defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:NSLocalizedString(@"Demo Movies require Mac OS 10.9, Mavericks, or higher.", @"Demo Movies require Mac OS 10.9, Mavericks, or higher.")];
-            [alert runModal];
-        }
-}
-
 // Called by AppKit just before the Tags menu in the menu bar opens.
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
@@ -1158,58 +1138,6 @@ static void TSInstallAdvancedFindFieldStyle(void)
 {
     return NO;
 }
-
-- (void)configureMovieMenu
-{
-	NSFileManager *fm;
-	NSString      *basePath, *path, *title;
-	NSArray       *fileList;
-	// NSMenu 	  *submenu;
-	BOOL	   isDirectory;
-	NSUInteger i;
-	// unsigned lv = 3;
-	
-	NSMenu *helpMenu = [[[NSApp mainMenu] itemWithTitle:
-					NSLocalizedString(@"Help", @"Help")] submenu];
-
-	
-	NSMenu *texshopDemosMenu = [[helpMenu itemWithTitle:
-					NSLocalizedString(@"TeXShop Demos", @"TeXShop Demos")] submenu];
-	
-	if (!texshopDemosMenu)
-		return;
-    
-    [texshopDemosMenu addItemWithTitle:@"Getting Started" action: @selector(doMovie:) keyEquivalent:@"" ];
-    [texshopDemosMenu addItemWithTitle:@"Initial Preferences" action: @selector(doMovie:) keyEquivalent:@"" ];
-		
-	fm       = [ NSFileManager defaultManager ];
-	basePath = [[ MoviesPath stringByAppendingString:@"/TeXShop"] stringByStandardizingPath ];
-	fileList = [ fm contentsOfDirectoryAtPath: basePath error:NULL ];
-
-	for (i = 0; i < [fileList count]; i++) {
-		title = [ fileList objectAtIndex: i ];
-		path  = [ basePath stringByAppendingPathComponent: title ];
-		if ([fm fileExistsAtPath:path isDirectory: &isDirectory]) {
-			if (isDirectory )
-				{;
-				// [popupButton addItemWithTitle: @""];
-				// newItem = [popupButton lastItem];
-				// [newItem setTitle: title];
-				// submenu = [[[NSMenu alloc] init] autorelease];
-				// [self makeMenuFromDirectory: submenu basePath: path
-				//					 action: @selector(doTemplate:) level: lv];
-				// [newItem setSubmenu: submenu];
-				} 
-			else if ([[[title pathExtension] lowercaseString] isEqualToString: @"mp4"]) {
-				title = [title stringByDeletingPathExtension];
-                if (( ! [title isEqualToString:@"Getting Started"]) && ( ! [title isEqualToString:@"Initial Preferences"]))
-                    [texshopDemosMenu addItemWithTitle:title action: @selector(doMovie:) keyEquivalent:@"" ];
-			}
-		}
-	}
-}
-
-
 
 // Source > Show Status Bar: the bars of all documents, also those opened later.
 - (IBAction)toggleStatusBar:(id)sender

@@ -92,10 +92,6 @@
 		4009C6D70D0BAA9C00B23013 /* hiero.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4009C6D60D0BAA9C00B23013 /* hiero.icns */; };
 		400CD8BA0C66BD3900C450D6 /* HelpDocuments.h in Headers */ = {isa = PBXBuildFile; fileRef = 400CD8B80C66BD3900C450D6 /* HelpDocuments.h */; };
 		400CD8BB0C66BD3900C450D6 /* HelpDocuments.m in Sources */ = {isa = PBXBuildFile; fileRef = 400CD8B90C66BD3900C450D6 /* HelpDocuments.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		400CD8C20C66BD4F00C450D6 /* TSMovie.h in Headers */ = {isa = PBXBuildFile; fileRef = 400CD8BE0C66BD4F00C450D6 /* TSMovie.h */; };
-		400CD8C30C66BD4F00C450D6 /* TSMovie.m in Sources */ = {isa = PBXBuildFile; fileRef = 400CD8BF0C66BD4F00C450D6 /* TSMovie.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		400CD8C40C66BD4F00C450D6 /* TSMovieWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 400CD8C00C66BD4F00C450D6 /* TSMovieWindow.h */; };
-		400CD8C50C66BD4F00C450D6 /* TSMovieWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 400CD8C10C66BD4F00C450D6 /* TSMovieWindow.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4015F925218F458C00F6F883 /* ScriptRunner.app in Resources */ = {isa = PBXBuildFile; fileRef = 4015F924218F458C00F6F883 /* ScriptRunner.app */; };
 		40162B2E0F1873F200E9336E /* NoodleLineNumberMarker.h in Headers */ = {isa = PBXBuildFile; fileRef = 40162B2A0F1873F200E9336E /* NoodleLineNumberMarker.h */; };
 		40162B2F0F1873F200E9336E /* NoodleLineNumberMarker.m in Sources */ = {isa = PBXBuildFile; fileRef = 40162B2B0F1873F200E9336E /* NoodleLineNumberMarker.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -213,7 +209,6 @@
 		408B6DD10F3D516C0098CCED /* TSLogWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 408B6DCF0F3D516C0098CCED /* TSLogWindow.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		408F8D7518DB671100277EDB /* GlobalData.h in Headers */ = {isa = PBXBuildFile; fileRef = 408F8D7318DB671100277EDB /* GlobalData.h */; };
 		408F8D7618DB671100277EDB /* GlobalData.m in Sources */ = {isa = PBXBuildFile; fileRef = 408F8D7418DB671100277EDB /* GlobalData.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		408F90900C681BCF00B79EA5 /* Movie.nib in Resources */ = {isa = PBXBuildFile; fileRef = 408F908E0C681BCF00B79EA5 /* Movie.nib */; };
 		4093BBEA22CECA7D00D37BD7 /* TSDocument-XML.m in Sources */ = {isa = PBXBuildFile; fileRef = 4093BBE922CECA7D00D37BD7 /* TSDocument-XML.m */; };
 		4096186405824CF2000D94FD /* TSMatrixPanelController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4096186205824CF2000D94FD /* TSMatrixPanelController.h */; };
 		4096186505824CF2000D94FD /* TSMatrixPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4096186305824CF2000D94FD /* TSMatrixPanelController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -607,10 +602,6 @@
 		4009C6D60D0BAA9C00B23013 /* hiero.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Resources/DocumentIcons/hiero.icns; sourceTree = SOURCE_ROOT; };
 		400CD8B80C66BD3900C450D6 /* HelpDocuments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpDocuments.h; sourceTree = "<group>"; };
 		400CD8B90C66BD3900C450D6 /* HelpDocuments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpDocuments.m; sourceTree = "<group>"; };
-		400CD8BE0C66BD4F00C450D6 /* TSMovie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSMovie.h; sourceTree = "<group>"; };
-		400CD8BF0C66BD4F00C450D6 /* TSMovie.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSMovie.m; sourceTree = "<group>"; };
-		400CD8C00C66BD4F00C450D6 /* TSMovieWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSMovieWindow.h; sourceTree = "<group>"; };
-		400CD8C10C66BD4F00C450D6 /* TSMovieWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSMovieWindow.m; sourceTree = "<group>"; };
 		400E8FBB26067D6B009AA6C9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = Base.lproj/Changes.pdf; sourceTree = "<group>"; };
 		400E8FBC26067D6B009AA6C9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/About This Release.pdf"; sourceTree = "<group>"; };
 		400E8FBD26067D6B009AA6C9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = Base.lproj/CommentLines.pdf; sourceTree = "<group>"; };
@@ -622,7 +613,6 @@
 		40154D5A131C064800526CCA /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = zh_CN.lproj/FindPanel.nib; sourceTree = "<group>"; };
 		40154D5B131C065500526CCA /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = zh_CN.lproj/MacroEditor.nib; sourceTree = "<group>"; };
 		40154D5C131C066100526CCA /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = zh_CN.lproj/matrixpanel.nib; sourceTree = "<group>"; };
-		40154D5D131C066D00526CCA /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/Interfaces/zh_CN.lproj/Movie.nib; sourceTree = "<group>"; };
 		40154D5E131C067C00526CCA /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = zh_CN; path = zh_CN.lproj/Credits.rtf; sourceTree = "<group>"; };
 		40154D5F131C068A00526CCA /* zh_CN */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		40154D60131C069600526CCA /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/Encodings.strings; sourceTree = "<group>"; };
@@ -675,7 +665,6 @@
 		404CFF192102A1AB00C77471 /* Base */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Base; path = Base.lproj/MacroEditor.nib; sourceTree = "<group>"; };
 		404CFF1A2102A1AB00C77471 /* Base */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Base; path = Base.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		404CFF1B2102A1AB00C77471 /* Base */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Base; path = Base.lproj/matrixpanel.nib; sourceTree = "<group>"; };
-		404CFF1C2102A1AB00C77471 /* Base */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Base; path = Resources/Interfaces/Base.lproj/Movie.nib; sourceTree = "<group>"; };
 		404CFF1D2102A1AC00C77471 /* Base */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Base; path = Base.lproj/Preferences.nib; sourceTree = "<group>"; };
 		404CFF1E2102A1AC00C77471 /* Base */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Base; path = Base.lproj/TSDocument.nib; sourceTree = "<group>"; };
 		404D1B612891B23400402802 /* TSHTMLWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSHTMLWindow.h; sourceTree = "<group>"; };
@@ -694,8 +683,6 @@
 		26F5B11D7C0A4E9D2B3A6E09 /* TSTextStatistics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSTextStatistics.m; sourceTree = "<group>"; };
 		26F5B11D7C0A4E9D2B3A6E11 /* TSTextStatisticsPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSTextStatisticsPopover.h; sourceTree = "<group>"; };
 		26F5B11D7C0A4E9D2B3A6E12 /* TSTextStatisticsPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSTextStatisticsPopover.m; sourceTree = "<group>"; };
-		405F8B43199AF6F50005C0AE /* pt */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt; path = Resources/Interfaces/pt.lproj/Movie.nib; sourceTree = "<group>"; };
-		405F8B44199AF7040005C0AE /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = "pt-PT"; path = "Resources/Interfaces/pt-PT.lproj/Movie.nib"; sourceTree = "<group>"; };
 		406774A218F7800D00204AF4 /* texloganalyserwrap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.csh; path = texloganalyserwrap; sourceTree = "<group>"; };
 		4068429A0405969B00000009 /* MyPDFView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyPDFView.h; sourceTree = "<group>"; };
 		4068429B0405969B00000009 /* MyPDFView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyPDFView.m; sourceTree = "<group>"; };
@@ -769,7 +756,6 @@
 		4087654818E71BC10066B908 /* pt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/ToolbarItems.strings; sourceTree = "<group>"; };
 		4087654918E71BC10066B908 /* pt */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt; path = pt.lproj/TSDocument.nib; sourceTree = "<group>"; };
 		4088EB2D1F0D26E500F00E00 /* synctex_parser_version.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = synctex_parser_version.txt; sourceTree = "<group>"; };
-		4089E4352604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = Resources/Interfaces/fr.lproj/Movie.nib; sourceTree = "<group>"; };
 		4089E4362604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = fr.lproj/Preferences.nib; sourceTree = "<group>"; };
 		4089E4372604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = fr.lproj/TSDocument.nib; sourceTree = "<group>"; };
 		4089E4382604153000B8A795 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = fr; path = fr.lproj/TeXLiveDocumentation.pdf; sourceTree = "<group>"; };
@@ -793,7 +779,6 @@
 		4089E44B2604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4089E44C2604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ro; path = ro.lproj/MacroEditor.nib; sourceTree = "<group>"; };
 		4089E44D2604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ro; path = ro.lproj/MainMenu.nib; sourceTree = "<group>"; };
-		4089E44E2604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ro; path = Resources/Interfaces/ro.lproj/Movie.nib; sourceTree = "<group>"; };
 		4089E44F2604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ro; path = ro.lproj/Preferences.nib; sourceTree = "<group>"; };
 		4089E4502604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ro; path = ro.lproj/TSDocument.nib; sourceTree = "<group>"; };
 		4089E4512604153900B8A795 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.scriptTerminology; name = ro; path = ro.lproj/TeXShop.scriptTerminology; sourceTree = "<group>"; };
@@ -808,7 +793,6 @@
 		4089E45B2604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4089E45C2604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = it.lproj/MacroEditor.nib; sourceTree = "<group>"; };
 		4089E45D2604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = it.lproj/MainMenu.nib; sourceTree = "<group>"; };
-		4089E45E2604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = Resources/Interfaces/it.lproj/Movie.nib; sourceTree = "<group>"; };
 		4089E45F2604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = it.lproj/Preferences.nib; sourceTree = "<group>"; };
 		4089E4602604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = it.lproj/TSDocument.nib; sourceTree = "<group>"; };
 		4089E4612604154100B8A795 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.scriptTerminology; name = it; path = it.lproj/TeXShop.scriptTerminology; sourceTree = "<group>"; };
@@ -823,7 +807,6 @@
 		4089E46B2604154700B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4089E46C2604154700B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = nl.lproj/MacroEditor.nib; sourceTree = "<group>"; };
 		4089E46D2604154700B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = nl.lproj/MainMenu.nib; sourceTree = "<group>"; };
-		4089E46E2604154700B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = Resources/Interfaces/nl.lproj/Movie.nib; sourceTree = "<group>"; };
 		4089E46F2604154700B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = nl.lproj/Preferences.nib; sourceTree = "<group>"; };
 		4089E4702604154700B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = nl.lproj/TSDocument.nib; sourceTree = "<group>"; };
 		4089E4712604154700B8A795 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.scriptTerminology; name = nl; path = nl.lproj/TeXShop.scriptTerminology; sourceTree = "<group>"; };
@@ -838,7 +821,6 @@
 		4089E47B2604154D00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4089E47C2604154D00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = es; path = es.lproj/MacroEditor.nib; sourceTree = "<group>"; };
 		4089E47D2604154D00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = es; path = es.lproj/MainMenu.nib; sourceTree = "<group>"; };
-		4089E47E2604154D00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = es; path = Resources/Interfaces/es.lproj/Movie.nib; sourceTree = "<group>"; };
 		4089E47F2604154E00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = es; path = es.lproj/Preferences.nib; sourceTree = "<group>"; };
 		4089E4802604154E00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = es; path = es.lproj/TSDocument.nib; sourceTree = "<group>"; };
 		4089E4812604154E00B8A795 /* es */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = es; path = es.lproj/TeXLiveDocumentation.pdf; sourceTree = "<group>"; };
@@ -855,7 +837,6 @@
 		4089E48D2604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4089E48E2604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ja; path = ja.lproj/MacroEditor.nib; sourceTree = "<group>"; };
 		4089E48F2604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ja; path = ja.lproj/MainMenu.nib; sourceTree = "<group>"; };
-		4089E4902604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ja; path = Resources/Interfaces/ja.lproj/Movie.nib; sourceTree = "<group>"; };
 		4089E4912604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ja; path = ja.lproj/Preferences.nib; sourceTree = "<group>"; };
 		4089E4922604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ja; path = ja.lproj/TSDocument.nib; sourceTree = "<group>"; };
 		4089E4932604155300B8A795 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.scriptTerminology; name = ja; path = ja.lproj/TeXShop.scriptTerminology; sourceTree = "<group>"; };
@@ -892,7 +873,6 @@
 		4089E4B52604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4089E4B62604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = de.lproj/MacroEditor.nib; sourceTree = "<group>"; };
 		4089E4B72604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = de.lproj/MainMenu.nib; sourceTree = "<group>"; };
-		4089E4B82604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = Resources/Interfaces/de.lproj/Movie.nib; sourceTree = "<group>"; };
 		4089E4B92604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = de.lproj/Preferences.nib; sourceTree = "<group>"; };
 		4089E4BA2604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = de.lproj/TSDocument.nib; sourceTree = "<group>"; };
 		4089E4BB2604156000B8A795 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.scriptTerminology; name = de; path = de.lproj/TeXShop.scriptTerminology; sourceTree = "<group>"; };
@@ -973,7 +953,6 @@
 		40CD91E207E4D82400DE6448 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = /System/Library/Frameworks/Quartz.framework; sourceTree = "<absolute>"; };
 		40D1F2BD06040B1700087115 /* TSMatrixTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSMatrixTableView.h; sourceTree = "<group>"; };
 		40D1F2BE06040B1700087115 /* TSMatrixTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSMatrixTableView.m; sourceTree = "<group>"; };
-		40D29A8B1FABBC180066FEFF /* ko */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ko; path = Resources/Interfaces/ko.lproj/Movie.nib; sourceTree = "<group>"; };
 		40D5BB2D19632B9C0081BC77 /* ScrapTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrapTextView.h; sourceTree = "<group>"; };
 		40D5BB2E19632B9C0081BC77 /* ScrapTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrapTextView.m; sourceTree = "<group>"; };
 		40D67167210A5F9C0021D69C /* TSDocument-Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-Color.m"; sourceTree = "<group>"; };
@@ -1439,8 +1418,6 @@
 				1AF3DDBE9DD040A7E58F0C3F /* TSPreviewSplitDivider.m */,
 				6E0950068EE4DDB97AE53783 /* TSPreviewScrollerKeeper.h */,
 				256546D6030BAEB5035BE49B /* TSPreviewScrollerKeeper.m */,
-				400CD8BE0C66BD4F00C450D6 /* TSMovie.h */,
-				400CD8BF0C66BD4F00C450D6 /* TSMovie.m */,
 				00CFF0F5000AD1F27F000001 /* TSPrintView.h */,
 				00CFF0F6000AD1F27F000001 /* TSPrintView.m */,
 			);
@@ -1621,8 +1598,6 @@
 				404D1B622891B23400402802 /* TSHTMLWindow.m */,
 				408B6DCE0F3D516C0098CCED /* TSLogWindow.h */,
 				408B6DCF0F3D516C0098CCED /* TSLogWindow.m */,
-				400CD8C00C66BD4F00C450D6 /* TSMovieWindow.h */,
-				400CD8C10C66BD4F00C450D6 /* TSMovieWindow.m */,
 				00CFF0F1000AD1547F000001 /* TSPreviewWindow.h */,
 				00CFF0F2000AD1547F000001 /* TSPreviewWindow.m */,
 				00CFF0ED000AD0B87F000001 /* TSTextEditorWindow.h */,
@@ -1683,7 +1658,6 @@
 				52B13E4708A8182F00756E5E /* MainMenu.nib */,
 				4020387B1AD5DC69001674DB /* TeXShop Feature Confusion.pdf */,
 				52B13E5308A8183B00756E5E /* matrixpanel.nib */,
-				408F908E0C681BCF00B79EA5 /* Movie.nib */,
 				52B13E4B08A8183B00756E5E /* Preferences.nib */,
 				40415E3B131CAB3700226AF4 /* TeXShop Tips & Tricks.pdf */,
 				40C1E9E925CB9FE10091614B /* TeXLiveDocumentation.pdf */,
@@ -1964,8 +1938,6 @@
 				F264AA2798678AB4A0B0DDB3 /* NSMutableString-Extras.h in Headers */,
 				F622D4390A4C96776A65CC4E /* NSString-CharacterConversion.h in Headers */,
 				400CD8BA0C66BD3900C450D6 /* HelpDocuments.h in Headers */,
-				400CD8C20C66BD4F00C450D6 /* TSMovie.h in Headers */,
-				400CD8C40C66BD4F00C450D6 /* TSMovieWindow.h in Headers */,
 				4098635C0C66CC4D00221E87 /* TSFullscreenWindow.h in Headers */,
 				401EF0760D0B3F8800203D7B /* MyDragView.h in Headers */,
 				40162B2E0F1873F200E9336E /* NoodleLineNumberMarker.h in Headers */,
@@ -2119,7 +2091,6 @@
 				40E76BF4292FDD9200CBE5F9 /* CustomModalWindowController.xib in Resources */,
 				40BC8E871922D7DD00F3EF2D /* IconsPDF.icns in Resources */,
 				52E4BF8D08CA74C300726E11 /* TeXShop in Resources */,
-				408F90900C681BCF00B79EA5 /* Movie.nib in Resources */,
 				4062E2921D7BC08300DC1518 /* GPLv2 License.pdf in Resources */,
 				EF5590000000000000000001 /* TeXShop.icon in Resources */,
 				40473FAE0C68273C009311CF /* Course Supplements in Resources */,
@@ -2318,10 +2289,8 @@
 				409F89D21960A6A200D6F7AD /* ScrapPDFKitView.m in Sources */,
 				4093BBEA22CECA7D00D37BD7 /* TSDocument-XML.m in Sources */,
 				408F8D7618DB671100277EDB /* GlobalData.m in Sources */,
-				400CD8C30C66BD4F00C450D6 /* TSMovie.m in Sources */,
 				400CD8BB0C66BD3900C450D6 /* HelpDocuments.m in Sources */,
 				4002427928921A3800851717 /* MyHTMLView.m in Sources */,
-				400CD8C50C66BD4F00C450D6 /* TSMovieWindow.m in Sources */,
 				4098635D0C66CC4D00221E87 /* TSFullscreenWindow.m in Sources */,
 				401EF0770D0B3F8800203D7B /* MyDragView.m in Sources */,
 				404D1B642891B23400402802 /* TSHTMLWindow.m in Sources */,
@@ -2550,26 +2519,6 @@
 				40496C2626067EDA005E885D /* Base */,
 			);
 			name = "GPLv2 License.pdf";
-			sourceTree = "<group>";
-		};
-		408F908E0C681BCF00B79EA5 /* Movie.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				40154D5D131C066D00526CCA /* zh_CN */,
-				405F8B43199AF6F50005C0AE /* pt */,
-				405F8B44199AF7040005C0AE /* pt-PT */,
-				40D29A8B1FABBC180066FEFF /* ko */,
-				404CFF1C2102A1AB00C77471 /* Base */,
-				4089E4352604153000B8A795 /* fr */,
-				4089E44E2604153900B8A795 /* ro */,
-				4089E45E2604154100B8A795 /* it */,
-				4089E46E2604154700B8A795 /* nl */,
-				4089E47E2604154D00B8A795 /* es */,
-				4089E4902604155300B8A795 /* ja */,
-				4089E4B82604156000B8A795 /* de */,
-			);
-			name = Movie.nib;
-			path = ../..;
 			sourceTree = "<group>";
 		};
 		40A03E7E0F3A47580014104E /* First Steps with General Typesetting.pdf */ = {

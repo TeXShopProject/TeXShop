@@ -314,33 +314,18 @@
  {
   "nib": "MainMenu",
   "change": "missing",
-  "fact": "- | top:NSMenu | NSMenu",
-  "languages": [
-   "zh_CN"
-  ],
-  "reason": "placeholder items, separators and empty submenus of the Base menu"
- },
- {
-  "nib": "MainMenu",
-  "change": "missing",
   "fact": "- | top:NSMenu | NSMenuItem",
   "languages": [
    "de",
+   "es",
    "fr",
    "it",
    "ja",
    "ko",
+   "nl",
    "pt",
    "pt-PT",
-   "ro"
-  ],
-  "reason": "placeholder items, separators and empty submenus of the Base menu"
- },
- {
-  "nib": "MainMenu",
-  "change": "missing",
-  "fact": "- | top:NSMenu | NSMenuItem action=submenuAction:>NSMenu",
-  "languages": [
+   "ro",
    "zh_CN"
   ],
   "reason": "placeholder items, separators and empty submenus of the Base menu"

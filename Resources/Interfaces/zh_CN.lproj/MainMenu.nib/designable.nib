@@ -1399,7 +1399,6 @@
                                     <action selector="displayGettingStartedTeXShop:" target="705" id="710"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop演示" id="699"/>
                             <menuItem title="TeXShop手册" id="wEg-wt-tOY" identifier="TSShortcut.displayManual:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
@@ -1496,7 +1495,6 @@
         <customObject id="380" userLabel="TSPreferences" customClass="TSPreferences"/>
         <customObject id="382" userLabel="TSAppDelegate" customClass="TSAppDelegate">
             <connections>
-                <outlet property="myMovie" destination="706" id="773"/>
             </connections>
         </customObject>
         <customObject id="485" userLabel="TSMacroMenuConroller" customClass="TSMacroMenuController">
@@ -1548,7 +1546,6 @@
                 <outlet property="styleFileResult" destination="1067" id="1077"/>
             </connections>
         </customObject>
-        <customObject id="706" userLabel="TSMovie" customClass="TSMovie"/>
         <customObject id="837" userLabel="SUUpdater" customClass="TSSparkleController"/>
         <window title="Tex文档" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="854" userLabel="PackageHelp" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES"/>

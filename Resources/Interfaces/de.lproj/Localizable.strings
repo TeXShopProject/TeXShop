@@ -75,7 +75,6 @@
 "Newline Removal" = "Zeilenumbrüche entfernen";
 "Color Index" = "Farbindex";
 "Help" = "Hilfe";
-"TeXShop Demos" = "TeXShop Demos";
 "Sync" = "Synchronisieren";
 "ShowFullPath" = "Kompletten Pfad zeigen";
 "Close Current Environment" = "Aktuelle Umgebung schließen"; // Terada
@@ -105,7 +104,6 @@
 "No Block" = "Kein Block";
 "deprecated" = "veraltet";
 "Unknown encoding; using UTF-8." = "Unbekannte Zeichenkodierung; UTF-8 wird verwendet";
-"Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Demofilme erfordern Mac OS 10.9 (Mavericks) oder neuer.";
 "Source" = "Quelltext";
 "Type sample text here.\nUse several lines to test\ninterline spacing." = "Geben Sie den Beispieltext hier ein.\nVerwenden Sie mehrere Zeilen,\num den Zeilenabstand zu testen.";
 "<<Close All - unlocalized>>" = "Alle schließen";
