@@ -47,6 +47,8 @@ static inline NSString *TSShortcutDisplayKey(NSString *key, NSEventModifierFlags
 @property (nonatomic, readonly, copy) NSString *defaultKey;
 @property (nonatomic, readonly) NSEventModifierFlags defaultModifiers;
 @property (nonatomic, readonly) BOOL defaultLocalization;
+/// macOS keeps this command's shortcut (Save As… while documents autosave); it is shown, not changed.
+@property (nonatomic, readonly) BOOL managedBySystem;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)initWithItem:(NSMenuItem *)item identifier:(NSString *)identifier path:(NSString *)path NS_DESIGNATED_INITIALIZER;

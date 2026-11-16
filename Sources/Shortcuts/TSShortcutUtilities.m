@@ -130,6 +130,11 @@ NSString *TSFindCommandID(NSMenuItem *item) {
     SEL action = item.action;
     NSNumber *tag = tags[action ? NSStringFromSelector(action) : @""];
     if (tag) return [NSString stringWithFormat:@"TSShortcut.performFindPanelAction:.%@", tag];
+    // AppKit adds Duplicate to the File menu when documents autosave (and moves Save As… to
+    // ⌥⇧⌘S), and Close All as the Option alternate of Close. Their actions do not change, so
+    // they are listed and customized like the menu's own commands.
+    if (action == @selector(duplicateDocument:) || action == NSSelectorFromString(@"closeAll:"))
+        return [NSString stringWithFormat:@"TSShortcut.%@.0", NSStringFromSelector(action)];
     return nil;
 }
 void TSPrepareMenuIdentifiers(NSMenu *menu) {
