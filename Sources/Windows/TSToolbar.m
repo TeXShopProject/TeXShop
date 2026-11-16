@@ -30,6 +30,18 @@ NSToolbarItemVisibilityPriority TSToolbarVisibilityPriority(NSUInteger index, NS
     return (NSInteger)index > lastFlexibleSpace ? NSToolbarItemVisibilityPriorityHigh : NSToolbarItemVisibilityPriorityStandard;
 }
 
+// On macOS 26, the customization sheet of a toolbar whose window has the expanded (or
+// preference) style draws the default set in a picture a few points shorter than its box.
+// When the default set is pressed, the picture is stretched to the box, so the default set
+// grows upwards and shows twice. The picture is made as the sheet opens and has the height of
+// its box when the window has the unified style then, so the window has that style while the
+// sheet is made. macOS 14, 15 and 27 are not affected. Check after each major update of macOS
+// whether this is still needed.
+BOOL TSToolbarMakesSheetInUnifiedStyle(NSInteger majorVersion, NSWindowToolbarStyle style)
+{
+    return majorVersion == 26 && (style == NSWindowToolbarStyleExpanded || style == NSWindowToolbarStylePreference);
+}
+
 @implementation TSToolbar {
     // The priority each item had before the toolbar gave it one.
     NSMapTable<NSToolbarItem *, NSNumber *> *_ownPriorities;
@@ -124,6 +136,28 @@ NSToolbarItemVisibilityPriority TSToolbarVisibilityPriority(NSUInteger index, NS
     [super validateVisibleItems];
     if (_ownPriorities && !visibleOff && !_arrangementPending && ![[self.items valueForKey:@"itemIdentifier"] isEqual:_arrangedIdentifiers])
         [self arrangeVisibilityPriorities];
+}
+
+- (void)runCustomizationPalette:(id)sender
+{
+    NSWindow *window = nil;
+    for (NSWindow *candidate in NSApp.windows)
+        if (candidate.toolbar == self) {
+            window = candidate;
+            break;
+        }
+    if (!window || !TSToolbarMakesSheetInUnifiedStyle(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion, window.toolbarStyle)) {
+        [super runCustomizationPalette:sender];
+        return;
+    }
+    // The window is taller while it has the unified style, and the frame is put back afterwards.
+    // Putting it back in between leaves the window a few points shorter in the end.
+    NSRect frame = window.frame;
+    NSWindowToolbarStyle style = window.toolbarStyle;
+    window.toolbarStyle = NSWindowToolbarStyleUnified;
+    [super runCustomizationPalette:sender];
+    window.toolbarStyle = style;
+    [window setFrame:frame display:NO];
 }
 
 - (NSArray *)visibleItems
