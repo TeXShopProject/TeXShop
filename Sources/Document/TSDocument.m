@@ -36,6 +36,7 @@
 #import <Foundation/Foundation.h>
 
 #import "TSDocument.h"
+#import "TSSourceMagicComments.h"
 #import "TSDialogButtonLayout.h"
 #import "TSOlderPanelLayout.h"
 #import "TSConsoleButtonRow.h"
@@ -2560,52 +2561,11 @@ in other code when an external editor is being used. */
 	
 	// FIXME: Unify this with the code in dataRepresentationOfType:
 	if ((GetCurrentKeyModifiers() & optionKey) == 0) {
-		length = [firstBytes length];
-		done = NO;
-		linesTested = 0;
-		myRange.location = 0;
-		myRange.length = 1;
-
-		while ((myRange.location < length) && (!done) && (linesTested < 20)) {
-			[firstBytes getLineStart: &start end: &end contentsEnd: nil forRange: myRange];
-			myRange.location = end;
-			myRange.length = 1;
-			linesTested++;
-
-			// FIXME: Simplify the following code
-			theRange.location = start; theRange.length = (end - start);
-			testString = [firstBytes substringWithRange: theRange];
-			encodingRange = [testString rangeOfString:@"%!TEX encoding ="];
-			offset = 16;
-			if (encodingRange.location == NSNotFound) {
-				encodingRange = [testString rangeOfString:@"% !TEX encoding ="];
-				
-				offset = 17;
-				}
-			if (encodingRange.location != NSNotFound) {
-				done = YES;
-				newEncodingRange.location = encodingRange.location + offset;
-				newEncodingRange.length = [testString length] - newEncodingRange.location;
-				if (newEncodingRange.length > 0) {
-					encodingString = [[testString substringWithRange: newEncodingRange]
-						stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-					theEncoding = [[TSEncodingSupport sharedInstance] stringEncodingForKey: encodingString];
-					_encodingFromMagicComment = YES;
-				}
-			} else if ([SUD boolForKey:UseOldHeadingCommandsKey]) {
-				encodingRange = [testString rangeOfString:@"%&encoding="];
-				if (encodingRange.location != NSNotFound) {
-					done = YES;
-					newEncodingRange.location = encodingRange.location + 11;
-					newEncodingRange.length = [testString length] - newEncodingRange.location;
-					if (newEncodingRange.length > 0) {
-						encodingString = [[testString substringWithRange: newEncodingRange]
-							stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-						theEncoding = [[TSEncodingSupport sharedInstance] stringEncodingForKey: encodingString];
-						_encodingFromMagicComment = YES;
-					}
-				}
-			}
+		encodingString = [TSSourceMagicComments encodingNameInHeaderText: firstBytes
+		                                              allowingOldHeading: [SUD boolForKey:UseOldHeadingCommandsKey]];
+		if (encodingString) {
+			theEncoding = [[TSEncodingSupport sharedInstance] stringEncodingForKey: encodingString];
+			_encodingFromMagicComment = YES;
 		}
 	}
 	

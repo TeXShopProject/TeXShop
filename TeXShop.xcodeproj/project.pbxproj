@@ -51,6 +51,7 @@
 		CECFB19823AD78E51D1BD74D /* TSRegexFindReplacement.m in Sources */ = {isa = PBXBuildFile; fileRef = D038A5C08901EDDE4300CF51 /* TSRegexFindReplacement.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		E1B65A56BD2D987F27CFE39E /* TSRegexReplaceAllResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E3C11620D0A8469C767DC49 /* TSRegexReplaceAllResult.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		BEA7F20E7D0F181D04711CEC /* TSRegexTextFind.m in Sources */ = {isa = PBXBuildFile; fileRef = 771CB91746C3A83D941E1F15 /* TSRegexTextFind.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		9A109F3CAEF639918A84167F /* TSTeXRootProject.m in Sources */ = {isa = PBXBuildFile; fileRef = 10A9432F999A68D513A2F3DD /* TSTeXRootProject.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		5842AEFCEA920C9547F699A0 /* TSRegexReplacementRule.m in Sources */ = {isa = PBXBuildFile; fileRef = B3700B91921E42111A05D9B9 /* TSRegexReplacementRule.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		A5D7F238722E8B97651943FD /* TSRegexMultipleReplace.m in Sources */ = {isa = PBXBuildFile; fileRef = FB5FBF86FABC267FCFA5F316 /* TSRegexMultipleReplace.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		D8E47C4EB3FAA770E2CF0E59 /* Themes in Resources */ = {isa = PBXBuildFile; fileRef = E02B7D6185C396B053047A24 /* Themes */; };
@@ -82,6 +83,7 @@
 		E17100000000000000000001 = {isa = PBXBuildFile; fileRef = E17100000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new"; }; };
 		AABB05910000000000000001 /* TSFileChangeMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = AABB05910000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		32957AB1B3BD0EBF407B6214 /* TSRootFileResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = C06DF919A28A11E7E611D1FB /* TSRootFileResolver.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		DFBB479B8240ABD7B42C8C0D /* TSSourceMagicComments.m in Sources */ = {isa = PBXBuildFile; fileRef = E6ECF8E6BDAD04FC461D677B /* TSSourceMagicComments.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		ED0C00000000000000000001 = {isa = PBXBuildFile; fileRef = ED0C00000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		ED0C00000000000000000003 = {isa = PBXBuildFile; fileRef = ED0C00000000000000000004; };
 		346FA9FD1309961900DAA25D /* TSLayoutManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 346FA9FB1309961900DAA25D /* TSLayoutManager.h */; };
@@ -531,6 +533,8 @@
 		4E3C11620D0A8469C767DC49 /* TSRegexReplaceAllResult.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRegexReplaceAllResult.m; sourceTree = "<group>"; };
 		2D7F734C0A2BB6F1FAD716B3 /* TSRegexTextFind.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRegexTextFind.h; sourceTree = "<group>"; };
 		771CB91746C3A83D941E1F15 /* TSRegexTextFind.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRegexTextFind.m; sourceTree = "<group>"; };
+		157BCCCE6B2B9CCBB8F7C966 /* TSTeXRootProject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSTeXRootProject.h; sourceTree = "<group>"; };
+		10A9432F999A68D513A2F3DD /* TSTeXRootProject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSTeXRootProject.m; sourceTree = "<group>"; };
 		A53419A8610F75D0369307C3 /* TSRegexReplacementRule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRegexReplacementRule.h; sourceTree = "<group>"; };
 		B3700B91921E42111A05D9B9 /* TSRegexReplacementRule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRegexReplacementRule.m; sourceTree = "<group>"; };
 		DE76E486CF388F181690E591 /* TSRegexMultipleReplace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRegexMultipleReplace.h; sourceTree = "<group>"; };
@@ -566,6 +570,8 @@
 		AABB05910000000000000002 /* TSFileChangeMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSFileChangeMonitor.m; sourceTree = "<group>"; };
 		EE525C84A4B76E4611DDF639 /* TSRootFileResolver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRootFileResolver.h; sourceTree = "<group>"; };
 		C06DF919A28A11E7E611D1FB /* TSRootFileResolver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRootFileResolver.m; sourceTree = "<group>"; };
+		213100878FDB50693B8E7E8D /* TSSourceMagicComments.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSourceMagicComments.h; sourceTree = "<group>"; };
+		E6ECF8E6BDAD04FC461D677B /* TSSourceMagicComments.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSourceMagicComments.m; sourceTree = "<group>"; };
 		ED0C00000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDockIconController.m; sourceTree = "<group>"; };
 		ED0C00000000000000000004 = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources/DockIcons; sourceTree = SOURCE_ROOT; };
 		ED0C00000000000000000006 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDockIcon.h; sourceTree = "<group>"; };
@@ -1293,6 +1299,10 @@
 				AABB05910000000000000002 /* TSFileChangeMonitor.m */,
 				EE525C84A4B76E4611DDF639 /* TSRootFileResolver.h */,
 				C06DF919A28A11E7E611D1FB /* TSRootFileResolver.m */,
+				213100878FDB50693B8E7E8D /* TSSourceMagicComments.h */,
+				E6ECF8E6BDAD04FC461D677B /* TSSourceMagicComments.m */,
+				157BCCCE6B2B9CCBB8F7C966 /* TSTeXRootProject.h */,
+				10A9432F999A68D513A2F3DD /* TSTeXRootProject.m */,
 			);
 			path = Document;
 			sourceTree = "<group>";
@@ -2219,6 +2229,7 @@
 				CECFB19823AD78E51D1BD74D /* TSRegexFindReplacement.m in Sources */,
 				E1B65A56BD2D987F27CFE39E /* TSRegexReplaceAllResult.m in Sources */,
 				BEA7F20E7D0F181D04711CEC /* TSRegexTextFind.m in Sources */,
+				9A109F3CAEF639918A84167F /* TSTeXRootProject.m in Sources */,
 				F5BAC2E9ED1431D54CC853B8,
 				0E1D12D0E21A008917374A1E,
 				606589B6401E6D11869F9676,
@@ -2346,6 +2357,7 @@
 				407F694E11E65D4F00FD4359 /* TSDocument.m in Sources */,
 				AABB05910000000000000001 /* TSFileChangeMonitor.m in Sources */,
 				32957AB1B3BD0EBF407B6214 /* TSRootFileResolver.m in Sources */,
+				DFBB479B8240ABD7B42C8C0D /* TSSourceMagicComments.m in Sources */,
 				40A56E1F11E67546002BEED6 /* TSStationery.m in Sources */,
 				346FA9FE1309961900DAA25D /* TSLayoutManager.m in Sources */,
 				AE9500010000000000000001 /* TSExternalPDFSnapshot.m in Sources */,

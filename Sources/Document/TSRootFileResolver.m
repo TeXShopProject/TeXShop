@@ -51,7 +51,11 @@
 
     if (!allowsSourceDoc)
         return nil;
+    return [self sourceDocSpecifierInSource:(NSString *)source];   // not nil: checked above
+}
 
++ (nullable TSRootFileSpecifier *)sourceDocSpecifierInSource:(NSString *)source
+{
     // The old heading: only the first "%SourceDoc " of the whole source, and only when it starts its line.
     NSRange marker = [source rangeOfString:@"%SourceDoc "];
     if (marker.location == NSNotFound)

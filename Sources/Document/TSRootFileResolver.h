@@ -33,6 +33,8 @@ NS_SWIFT_NAME(RootFileResolver)
 @interface TSRootFileResolver : NSObject
 
 + (nullable TSRootFileSpecifier *)specifierInSource:(nullable NSString *)source allowingSourceDoc:(BOOL)allowsSourceDoc;
+/// Only the "%SourceDoc " part of the above, as if no "% !TEX root" had been found in the first 20 lines.
++ (nullable TSRootFileSpecifier *)sourceDocSpecifierInSource:(NSString *)source;
 
 /// The full path of `name`, relative to the folder `home`, as TeXShop's -decodeFile:homePath:job: has always made it:
 /// the name is trimmed of spaces; "~" is expanded; a name starting with "/" is absolute; leading "../" climb from
