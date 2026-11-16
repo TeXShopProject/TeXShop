@@ -127,11 +127,11 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
             }
     }
     [self drawPageLabelInRect:bounds];
-    // A thin edge that sets the page apart from the page under it; the page is always light.
+    // A thin black edge that sets the page apart from the light page under it (#14).
     [[NSGraphicsContext currentContext] setShouldAntialias:YES];
     NSBezierPath *edge = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(bounds, unit / 2, unit / 2) xRadius:radius - unit / 2 yRadius:radius - unit / 2];
     edge.lineWidth = unit;
-    [[NSColor colorWithWhite:0 alpha:0.35] setStroke];
+    [[NSColor blackColor] setStroke];
     [edge stroke];
 }
 
