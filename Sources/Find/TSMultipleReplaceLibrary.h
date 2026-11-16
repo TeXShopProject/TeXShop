@@ -4,6 +4,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// Posted when a set was saved, removed, renamed or added (samples, import).
+FOUNDATION_EXPORT NSNotificationName const TSMultipleReplaceLibraryDidChangeNotification;
+
 /// The saved multiple replacement sets: one file per set in one folder (in TeXShop ~/Library/TeXShop/MultipleReplace/).
 /// The file is CotEditor's replacement definition, so the name of a set is the name of its file. Foundation only.
 NS_SWIFT_NAME(MultipleReplaceLibrary)

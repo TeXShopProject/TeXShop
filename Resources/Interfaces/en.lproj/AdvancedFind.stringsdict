@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>TeXRootSearch.Confirm.Disk</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@f@ You can’t undo this action.</string>
+		<key>f</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%lu file that is not open will be changed on the disk.</string>
+			<key>other</key>
+			<string>%lu files that are not open will be changed on the disk.</string>
+		</dict>
+	</dict>
+	<key>TeXRootSearch.Confirm.Title</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>Replace %1$#@m@ in %2$#@f@?</string>
+		<key>f</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%2$lu file</string>
+			<key>other</key>
+			<string>%2$lu files</string>
+		</dict>
+		<key>m</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%1$lu match</string>
+			<key>other</key>
+			<string>%1$lu matches</string>
+		</dict>
+	</dict>
+	<key>TeXRootSearch.Status.Replaced</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>Replaced %1$#@m@ in %2$#@f@</string>
+		<key>f</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%2$lu file</string>
+			<key>other</key>
+			<string>%2$lu files</string>
+		</dict>
+		<key>m</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%1$lu match</string>
+			<key>other</key>
+			<string>%1$lu matches</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

@@ -43,6 +43,11 @@ NSNotificationName const TSAdvancedFindTaskDidChangeNotification = @"TSAdvancedF
 
 @implementation TSAdvancedFindController
 
+static __weak id<TSTeXRootSearchActions> TSTeXRootSearchTarget;
+
++ (nullable id<TSTeXRootSearchActions>)texRootSearchTarget { return TSTeXRootSearchTarget; }
++ (void)setTexRootSearchTarget:(nullable id<TSTeXRootSearchActions>)target { TSTeXRootSearchTarget = target; }
+
 + (TSAdvancedFindController *)sharedController
 {
     static TSAdvancedFindController *shared;

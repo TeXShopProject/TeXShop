@@ -11,7 +11,27 @@
 
 #define TSLocalized TSAdvancedFindLocalized
 
-@interface TSMultipleReplaceWindowController () <NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate, NSUserInterfaceValidations>
+/// Replace All with its ▾ menu (applying the set to the TeX sources of a root): Return presses it, as it did when it was
+/// a plain default button.
+@interface TSMultipleReplaceComboButton : NSComboButton
+@end
+
+@implementation TSMultipleReplaceComboButton
+
+- (BOOL)performKeyEquivalent:(NSEvent *)event
+{
+    NSEventModifierFlags modifiers = event.modifierFlags & NSEventModifierFlagDeviceIndependentFlagsMask & ~(NSEventModifierFlagNumericPad | NSEventModifierFlagFunction);
+    NSString *key = event.charactersIgnoringModifiers;
+    if (self.enabled && !self.hiddenOrHasHiddenAncestor && modifiers == 0 && ([key isEqualToString:@"\r"] || [key isEqualToString:@"\x03"])) {
+        [self sendAction:self.action to:self.target];
+        return YES;
+    }
+    return [super performKeyEquivalent:event];
+}
+
+@end
+
+@interface TSMultipleReplaceWindowController () <NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate, NSUserInterfaceValidations, NSMenuDelegate>
 @property (nonatomic, readwrite) TSMultipleReplaceRuleTable *ruleTable;
 @property (nonatomic, readwrite, copy, nullable) NSString *selectedSetName;
 @property (nonatomic, readwrite) NSTextField *statusField;
@@ -24,7 +44,7 @@
 @property (nonatomic, readwrite) NSSegmentedControl *ruleButtons;
 @property (nonatomic, readwrite) NSButton *optionsButton;
 /// Highlight and Replace All.
-@property (nonatomic, copy) NSArray<NSButton *> *actionButtons;
+@property (nonatomic, copy) NSArray<NSControl *> *actionButtons;
 @property (nonatomic, strong, nullable) NSPopover *optionsPopover;
 /// Kept while its view is shown: the check boxes target it.
 @property (nonatomic, strong, nullable) TSAdvancedFindOptionsForm *optionsForm;
@@ -207,8 +227,16 @@ static const CGFloat TSSidebarWidth = 240;
 
     self.inSelectionBox = [NSButton checkboxWithTitle:TSLocalized(@"AdvancedFind.InSelection", @"In selection") target:self action:@selector(inSelectionChanged:)];
     NSButton *highlight = [self button:@"AdvancedFind.HighlightAll" english:@"Highlight All" action:@selector(highlight:)];
-    NSButton *replace = [self button:@"AdvancedFind.ReplaceAll" english:@"Replace All" action:@selector(replaceAll:)];
-    replace.keyEquivalent = @"\r";
+    // ▾ applies the set to the TeX sources of the main window's root (spec §2.7.1); the item's title is set when it is
+    // validated, by the window's opener, which the application sets.
+    NSMenu *replaceMenu = [[NSMenu alloc] initWithTitle:@""];
+    NSMenuItem *texRoot = [replaceMenu addItemWithTitle:TSLocalized(@"TeXRootSearch.Menu.ApplySameRoot", @"Apply to TeX Sources with the Same TEX root…")
+                                                 action:@selector(applySetToTeXRootSources:) keyEquivalent:@""];
+    texRoot.identifier = @"TSTeXRootSearch.multipleReplaceItem";
+    texRoot.target = TSAdvancedFindController.texRootSearchTarget;
+    replaceMenu.delegate = self;
+    TSMultipleReplaceComboButton *replace = [TSMultipleReplaceComboButton comboButtonWithTitle:TSLocalized(@"AdvancedFind.ReplaceAll", @"Replace All")
+                                                                                          menu:replaceMenu target:self action:@selector(replaceAll:)];
     self.actionButtons = @[highlight, replace];
     NSView *actions = [self stackOf:@[self.inSelectionBox, highlight, replace] spacing:12];
 
@@ -660,7 +688,7 @@ static const CGFloat TSSidebarWidth = 240;
     NSTextView *target = [self target:nil];
     TSAdvancedFindController *controller = self.findController;
     static const TSAdvancedFindAction actions[] = {TSAdvancedFindActionHighlight, TSAdvancedFindActionReplaceAll};
-    NSArray<NSButton *> *buttons = self.actionButtons;
+    NSArray<NSControl *> *buttons = self.actionButtons;
     for (NSUInteger index = 0; index < buttons.count && index < sizeof(actions) / sizeof(actions[0]); index++) {
         BOOL enabled = target ? [controller validateAction:actions[index] forTextView:target] : controller.runningTask == nil;
         if (buttons[index].enabled != enabled)
@@ -692,5 +720,12 @@ static const CGFloat TSSidebarWidth = 240;
     [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 - (void)highlight:(id)sender { [self highlightInTextView:nil]; }
+
+- (void)menuNeedsUpdate:(NSMenu *)menu
+{
+    for (NSMenuItem *item in menu.itemArray)
+        if (item.action == @selector(applySetToTeXRootSources:))
+            item.target = TSAdvancedFindController.texRootSearchTarget;
+}
 
 @end

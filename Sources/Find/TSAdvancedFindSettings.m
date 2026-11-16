@@ -16,7 +16,14 @@ static NSString *const TSAdvancedFindReplaceHistoryKey = @"AdvancedFindReplaceHi
 @property (nonatomic, readonly, nullable) NSPasteboard *pasteboard;
 @end
 
+NSNotificationName const TSAdvancedFindSettingsDidChangeNotification = @"TSAdvancedFindSettingsDidChangeNotification";
+
 @implementation TSAdvancedFindSettings
+
+- (void)settingsDidChange
+{
+    [NSNotificationCenter.defaultCenter postNotificationName:TSAdvancedFindSettingsDidChangeNotification object:self];
+}
 
 - (instancetype)initWithDefaults:(NSUserDefaults *)defaults findPasteboard:(nullable NSPasteboard *)pasteboard
 {
@@ -44,7 +51,10 @@ static NSString *const TSAdvancedFindReplaceHistoryKey = @"AdvancedFindReplaceHi
 
 - (void)setOptions:(TSRegexFindOptions)options
 {
+    BOOL changes = options != self.options;
     [self.defaults setInteger:(NSInteger)options forKey:TSAdvancedFindOptionsKey];
+    if (changes)
+        [self settingsDidChange];
 }
 
 - (TSRegexReplacementSyntax)replacementSyntax
@@ -52,7 +62,13 @@ static NSString *const TSAdvancedFindReplaceHistoryKey = @"AdvancedFindReplaceHi
     return [self.defaults integerForKey:TSAdvancedFindReplacementSyntaxKey] == TSRegexReplacementSyntaxOgreKit ? TSRegexReplacementSyntaxOgreKit : TSRegexReplacementSyntaxICU;
 }
 
-- (void)setReplacementSyntax:(TSRegexReplacementSyntax)syntax { [self.defaults setInteger:syntax forKey:TSAdvancedFindReplacementSyntaxKey]; }
+- (void)setReplacementSyntax:(TSRegexReplacementSyntax)syntax
+{
+    BOOL changes = syntax != self.replacementSyntax;
+    [self.defaults setInteger:syntax forKey:TSAdvancedFindReplacementSyntaxKey];
+    if (changes)
+        [self settingsDidChange];
+}
 - (BOOL)inSelection { return [self boolForKey:TSAdvancedFindInSelectionKey fallback:NO]; }
 - (void)setInSelection:(BOOL)inSelection { [self.defaults setBool:inSelection forKey:TSAdvancedFindInSelectionKey]; }
 - (BOOL)wraps { return [self boolForKey:TSAdvancedFindWrapsKey fallback:YES]; }
@@ -120,13 +136,24 @@ static NSString *const TSAdvancedFindReplaceHistoryKey = @"AdvancedFindReplaceHi
         [self.pasteboard clearContents];
         [self.pasteboard setString:findString forType:NSPasteboardTypeString];
     }
+    [self settingsDidChange];
+}
+
+- (void)setReplaceString:(NSString *)replaceString
+{
+    if ([replaceString isEqualToString:_replaceString])
+        return;
+    _replaceString = [replaceString copy];
+    [self settingsDidChange];
 }
 
 - (void)reloadFindStringFromPasteboard
 {
     NSString *string = [self.pasteboard stringForType:NSPasteboardTypeString];
-    if (string.length > 0)
+    if (string.length > 0 && ![string isEqualToString:_findString]) {
         _findString = [string copy];
+        [self settingsDidChange];
+    }
 }
 
 @end

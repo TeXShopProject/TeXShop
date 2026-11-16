@@ -289,8 +289,9 @@ static NSArray<NSControl *> *ActionButtons(TSMultipleReplaceWindowController *wi
     while (pending.count) {
         NSView *v = pending.lastObject;
         [pending removeLastObject];
-        [pending addObjectsFromArray:v.subviews];
-        if ([v isKindOfClass:[NSButton class]] && (((NSButton *)v).action == NSSelectorFromString(@"highlight:") || ((NSButton *)v).action == NSSelectorFromString(@"replaceAll:")))
+        if (![v isKindOfClass:[NSComboButton class]]) // Replace All ▾ is one control, whatever it is made of
+            [pending addObjectsFromArray:v.subviews];
+        if ([v isKindOfClass:[NSControl class]] && (((NSControl *)v).action == NSSelectorFromString(@"highlight:") || ((NSControl *)v).action == NSSelectorFromString(@"replaceAll:")))
             [buttons addObject:(NSControl *)v];
     }
     return buttons.count == 2 ? buttons : @[];

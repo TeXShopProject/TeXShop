@@ -240,6 +240,7 @@ static BOOL auxCopied;
 - (void)searchFile:(NSString *)source;
 - (void)windowWillClose:(NSNotification *)notification;
 - (void)closeExperiment;
+- (BOOL)isBeingReplacedIn;
 - (Console *)ensureExperimentConsole;
 - (NSDictionary *)environmentWithNewPath:(NSString *)path;
 - (NSString *)separate:(NSString *)command into:(NSMutableArray *)args;
@@ -259,6 +260,7 @@ static NSUInteger spellingDefaultsApplied;
 @implementation Document
 + (void)applySpellingDefaultUnlessDocumentIsMain { spellingDefaultsApplied++; }
 - (void)annotationWindowWillClose:(id)window {}
+- (BOOL)isBeingReplacedIn { return NO; }
 - (Console *)ensureExperimentConsole {
     if (!self.experimentConsole) self.experimentConsole = [Console new];
     return self.experimentConsole;

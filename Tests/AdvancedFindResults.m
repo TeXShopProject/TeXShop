@@ -458,10 +458,11 @@ static void TestPanelList(void)
     NSArray<NSControl *> *buttons = panel.buttons;
     NSComboButton *findAll = buttons.count == 4 && [buttons[0] isKindOfClass:[NSComboButton class]] ? (NSComboButton *)buttons[0] : nil;
     NSArray<NSMenuItem *> *items = findAll.menu.itemArray;
-    Check(findAll.action == @selector(advancedFindAll:) && items.count == 4 && items[0].action == @selector(advancedHighlight:)
+    Check(findAll.action == @selector(advancedFindAll:) && items.count == 6 && items[0].action == @selector(advancedHighlight:)
           && items[1].action == @selector(advancedSelectAll:) && items[2].isSeparatorItem && items[3].action == @selector(advancedUnhighlight:)
+          && items[4].isSeparatorItem && items[5].action == NSSelectorFromString(@"showTeXRootSearch:")
           && [findAll.title isEqualToString:TSAdvancedFindLocalized(@"AdvancedFind.FindAll", @"Find All")],
-          [NSString stringWithFormat:@"Find All, with Highlight All, Select All and Remove Highlights under ▾ (%lu items)", (unsigned long)items.count]);
+          [NSString stringWithFormat:@"Find All, with Highlight All, Select All, Remove Highlights and the TeX sources of the root under ▾ (%lu items)", (unsigned long)items.count]);
     Check(list.hidden, @"no list before Find All");
 
     settings.findString = @"zz";

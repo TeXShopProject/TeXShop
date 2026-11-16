@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSRange)bracketPairAtIndex:(NSUInteger)index;
 @end
 
-@interface TSAdvancedFindPanelController () <NSTextViewDelegate, NSPopoverDelegate>
+@interface TSAdvancedFindPanelController () <NSTextViewDelegate, NSPopoverDelegate, NSMenuDelegate>
 @property (nonatomic, strong) TSAdvancedFindFieldView *findFieldView;
 @property (nonatomic, strong) TSAdvancedFindFieldView *replaceFieldView;
 @property (nonatomic, strong) TSAdvancedFindInputBox *findBox;

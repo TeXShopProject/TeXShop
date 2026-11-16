@@ -12,6 +12,10 @@ static NSString *const TSAdvancedFindReplacementSyntaxKey = @"AdvancedFindReplac
 /// The Advanced Find panel stays in front of the document windows (Settings > Editor); without it, it does not.
 static NSString *const TSAdvancedFindPanelFloatsKey = @"AdvancedFindPanelFloats";
 
+/// Posted by the settings when the find string, the replacement string, the options or the replacement syntax change,
+/// so that the panel and the window of the TeX sources of a root, which share them, show the same.
+FOUNDATION_EXPORT NSNotificationName const TSAdvancedFindSettingsDidChangeNotification;
+
 /// The state of the Advanced Find panel kept between launches (the AdvancedFind… settings).
 /// The defaults are passed in, so tests can use their own.
 NS_SWIFT_NAME(AdvancedFindSettings)
