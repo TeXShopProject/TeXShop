@@ -3207,8 +3207,8 @@ else {
     [self.logWindow close];
     [scrapPDFWindow close];
     [scrapWindow close];
-    [[NSColorPanel sharedColorPanel] close];
-    [[NSFontPanel sharedFontPanel] close];
+    // The shared color and font panels close only if this document's annotation toolbar opened
+    // them and they still serve it (annotationWindowWillClose: above).
 	
 	/* The next line fixes a crash bug in Jaguar; see notifyActiveTextWindowClosed for
 	a description. */

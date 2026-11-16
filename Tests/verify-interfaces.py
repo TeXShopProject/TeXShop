@@ -13,13 +13,14 @@ def outlet(prop,dest,ident):return ('outlet',(('destination',dest),('id',ident),
 def action(sel,ident,target='-2'):return ('action',(('id',ident),('selector',sel),('target',target)))
 CORRECTED={
     # #42: the editor outlet pointed to the text annotation panel, whose outlet was missing.
+    # (The text annotation panel itself left the nib in 6.00; see PANELS.)
     'ro.lproj':([outlet('textView','RAn-kp-SNH','Jbj-v1-ByF')],
-                [outlet('textView','21','Jbj-v1-ByF'),outlet('stringWindowTextView','RAn-kp-SNH','Ohb-Vr-poi')]),
+                [outlet('textView','21','Jbj-v1-ByF')]),
     # Previous pointed to the log window's content view; the encoding pop-up of the older Save accessory changed the file type.
     'es.lproj':([outlet('previousButton','1606','qdu-yl-BAe'),action('setSaveExtension:','fqS-Vq-hgb')],
                 [outlet('previousButton','393','qdu-yl-BAe')]),
-    # The text annotation choices lacked the strikeout button; it was added where Base has it.
-    'fr.lproj':([],[outlet('tLog','LqC-fO-238','VgR-V5-IfL'),action('strikeoutAnnotation:','Stk-Fr-a01','-1')]),
+    # (The text annotation choices, which lacked the strikeout button, left the nib in 6.00; see PANELS.)
+    'fr.lproj':([],[outlet('tLog','LqC-fO-238','VgR-V5-IfL')]),
     'ko.lproj':([action('lockDocument:','NLs-gZ-1iV')],[action('gotoURL:','NLs-gZ-1iV')]),
     'pt-PT.lproj':([action('convertTiff:','yKe-Uz-9qP')],
                    [action('doTag:','yKe-Uz-9qP'),outlet('showFullPathButton','3921','Bcb-fn-oGM'),outlet('slabels','OUv-dr-rDM','bJm-TP-SIA')]),
@@ -31,14 +32,30 @@ CORRECTED={
 # The former Statistics panel left the document nib in 6.00 (Text Statistics is a popover of the
 # status bar): its outlets and its button's action are no longer there in any language.
 STATISTICS=('statisticsPanel','statisticsForm','statisticsWords','statisticsLines','statisticsCharacters')
+# The Annotation Panel and the Text panel left the document nib in 6.00 (Issue #49: the annotation
+# toolbar and its text popover are made in code): their outlets and every connection inside them
+# are gone in every language. Nothing else may change.
+PANELS=('annotationChoices','EditModeCheckBox','SaveAllCheckBox','stringWindow','stringWindowTextView','stringLeft','stringCenter','stringRight')
+PANEL_WINDOWS=('annotationChoices','stringWindow')
+def inside_panels(r):
+    """The connection elements inside the two panel windows of a nib (none once they are gone)."""
+    ids={e.get('id'):e for e in r.iter() if e.get('id')}
+    inside=set()
+    for o in r.iter('outlet'):
+        if o.get('property') in PANEL_WINDOWS and o.get('destination') in ids:
+            for e in ids[o.get('destination')].iter():
+                if e.tag in ('outlet','action'): inside.add(id(e))
+    return inside
 for kind in ('TSDocument',):
     for path in sorted((root/'Resources/Interfaces').glob(f'*/{kind}.nib/designable.nib')):
         relative=path.relative_to(root)
         current=ET.parse(path).getroot()
         def connections(r):
             result=[]
+            panel_connections=inside_panels(r) if kind=='TSDocument' else set()
             for e in r.findall('.//connections/*'):
                 attrs=dict(e.attrib)
+                if kind=='TSDocument' and (id(e) in panel_connections or attrs.get('property') in PANELS): continue
                 if kind=='TSDocument' and (attrs.get('property') in STATISTICS or attrs.get('selector')=='updateStatistics:' or e.tag=='accessibilityConnection'): continue
                 if kind=='TSDocument' and attrs.get('property')=='htmlView': attrs['property']='htmlViewContainer'
                 result.append((e.tag,tuple(sorted(attrs.items()))))
@@ -56,6 +73,8 @@ for kind in ('TSDocument',):
             expected=sorted(expected+added)
             assert expected==connections(current),path
             assert not [e for e in current.iter('outlet') if e.get('property') in STATISTICS],path
+            assert not [e for e in current.iter('outlet') if e.get('property') in PANELS],path
+            assert not [w for w in current.iter('window') if w.get('identifier')=='TextPanel'],path
             assert not [e for e in current.iter('action') if e.get('selector')=='updateStatistics:'],path
             assert current.find('.//form') is None,path
             outlet=current.find('.//outlet[@property="htmlViewContainer"]')

@@ -405,9 +405,11 @@
 
 - (void)close
 {
-    [self.myDocument annotationWindowWillClose: self];
     self.wasClosed = YES;
+    // Closing the source closes the document, which asks to save unsaved annotations (with the
+    // text being edited) before it takes the annotation toolbar off; then this is a no-op.
     [[self.myDocument textWindow] close];
+    [self.myDocument annotationWindowWillClose: self];
     // MAYBE NOW IRRELEVANT?
     
     // Yusuke Terada addition to fix crash at close

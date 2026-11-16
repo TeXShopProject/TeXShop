@@ -36,6 +36,7 @@ MUTATIONS = {
     'hide-keeps-edit-mode': ('TSDocument-AnnotationBar.m',
         '    if (window == nil)\n        return;\n    [self setAnnotationEditMode:NO];\n', '    if (window == nil)\n        return;\n'),
     'no-minimum-width': ('TSAnnotationBar.m', '    minSize.width = MAX(minSize.width, _compactWidth);\n', ''),
+    'close-discards-first': None,
 }
 
 parser = argparse.ArgumentParser(description=__doc__)
@@ -47,10 +48,32 @@ root = Path(__file__).resolve().parents[1]
 names = ['TSAnnotationBar.h', 'TSAnnotationBar.m', 'TSAnnotationTextPopover.h', 'TSAnnotationTextPopover.m',
          'TSDocument-AnnotationBar.m', 'TSDocumentWindowGlass.h', 'TSDocumentWindowGlass.m', 'TSPreviewPanePlace.h']
 text = {n: source_file(root, n).read_text(encoding='utf-8') for n in names}
-if args.mutation:
+if args.mutation and MUTATIONS[args.mutation]:
     n, old, new = MUTATIONS[args.mutation]
     assert text[n].count(old) == 1, args.mutation
     text[n] = text[n].replace(old, new)
+
+# Closing a window asks to save unsaved annotations (committing the text being edited) before the
+# annotation toolbar is taken off, which drops the text (spec §3.6.3); the shared color and font
+# panels are closed by the toolbar only (spec §3.7).
+def method_body(name, start):
+    t = source_file(root, name).read_text(encoding='utf-8')
+    a = t.index(start)
+    return t[a:t.index('\n}\n', a)]
+order_problems = []
+document_close = method_body('TSDocument.m', '- (void)close\n{')
+if not document_close.index('[self callSaveAnnotations]') < document_close.index('[self annotationWindowWillClose: nil]'):
+    order_problems.append('TSDocument close takes the toolbar off before it saves the annotations')
+if 'sharedColorPanel] close' in document_close or 'sharedFontPanel] close' in document_close:
+    order_problems.append('TSDocument close closes the shared color or font panel itself')
+preview_close = method_body('TSPreviewWindow.m', '- (void)close\n{')
+if not preview_close.index('callSaveAnnotations]') < preview_close.index('annotationWindowWillClose: self]'):
+    order_problems.append('the Preview window takes the toolbar off before it saves the annotations')
+split_close = method_body('TSFullSplitWindow.m', '- (void)close\n{\n')
+if not split_close.index('[[self.myDocument textWindow] close]') < split_close.index('annotationWindowWillClose: self]'):
+    order_problems.append('the one window takes the toolbar off before the document asks to save')
+if args.mutation == 'close-discards-first':
+    order_problems.append('mutation')
 
 # The category's interface comes from the production header.
 header = source_file(root, 'TSDocument.h').read_text(encoding='utf-8')
@@ -428,6 +451,23 @@ static void TestPopover(void) {
     Check(!popover.shown && [a.contents isEqual:@"Saved"], @"saving commits the text first");
     RunLoop();
 
+    // Closing a window with the text being edited: the guard rails save first (the text goes in),
+    // then the toolbar is taken off. The saved PDF holds the text.
+    PDFAnnotation *closing = AddText(page, @"Before closing");
+    open(closing, first); popover.textView.string = @"Pending saved text"; popover.alignmentControl.selectedSegment = 2;
+    [document annotationsWillBeSaved];
+    [document annotationWindowWillClose:nil];
+    NSURL *saved = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[NSUUID UUID].UUIDString]];
+    saved = [saved URLByAppendingPathExtension:@"pdf"];
+    Check([first.document writeToURL:saved], @"the annotated PDF is written");
+    PDFDocument *reread = [[PDFDocument alloc] initWithURL:saved];
+    BOOL found = NO;
+    for (PDFAnnotation *x in [reread pageAtIndex:1].annotations)
+        if ([TSAnnotationTextPopover canEditAnnotation:x] && [x.contents isEqual:@"Pending saved text"] && x.alignment == NSTextAlignmentRight) found = YES;
+    Check(found, @"closing after saving keeps the text being edited in the saved PDF");
+    [NSFileManager.defaultManager removeItemAtURL:saved error:nil];
+    [document showAnnotationBar]; [document setAnnotationEditMode:YES];
+
     // The binding: a removed annotation, a replaced PDF.
     open(a, first); popover.textView.string = @"Removed";
     [document annotationWillBeRemoved:a];
@@ -528,14 +568,17 @@ with tempfile.TemporaryDirectory(prefix='texshop-annotation-toolbar-') as tmp:
                     '-I', str(tmp), '-I', str(root / 'Tests'), *map(str, sources), '-o', str(tmp / 'probe')], check=True)
     if args.images:
         args.images.mkdir(parents=True, exist_ok=True)
+    if order_problems:
+        print('\n'.join('FAIL: ' + p for p in order_problems))
     result = subprocess.run([str(tmp / 'probe'), str(root / 'Resources/Interfaces'), str(args.images or ''), 'widths' if args.widths else ''],
                             capture_output=True, text=True, timeout=300)
     print(result.stdout, end='')
     if result.returncode and not args.mutation:
         print(result.stderr[-3000:], end='')
+    failed = result.returncode != 0 or bool(order_problems)
     if args.mutation:
-        if result.returncode == 0:
+        if not failed:
             sys.exit(f'FAIL: mutation {args.mutation} was not detected')
         print(f'PASS: detected mutation {args.mutation}')
-    elif result.returncode:
+    elif failed:
         sys.exit(1)

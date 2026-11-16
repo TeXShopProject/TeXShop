@@ -9,9 +9,26 @@
 static const CGFloat TSAnnotationBarHeight = 36;
 static const CGFloat TSAnnotationBarToolSize = 28;
 
-// The parts of the Preview answer with the annotation selected for editing.
+// The parts of the Preview answer with the annotation selected for editing, and take the
+// actions the bar sends them (MyPDFKitView-Annotations.m).
 @protocol TSAnnotationSelecting
 - (nullable PDFAnnotation *)selectedAnnotationForEditing;
+@optional
+- (void)strikeoutAnnotation:(nullable id)sender;
+- (void)highlightAnnotation:(nullable id)sender;
+- (void)underlineAnnotation:(nullable id)sender;
+- (void)squareAnnotation:(nullable id)sender;
+- (void)bsquareAnnotation:(nullable id)sender;
+- (void)circleAnnotation:(nullable id)sender;
+- (void)bcircleAnnotation:(nullable id)sender;
+- (void)arrowAnnotation:(nullable id)sender;
+- (void)textAnnotation:(nullable id)sender;
+- (void)btextAnnotation:(nullable id)sender;
+- (void)popupAnnotation:(nullable id)sender;
+- (void)showColorPanel:(nullable id)sender;
+- (void)showFontPanel:(nullable id)sender;
+- (void)removeStreams:(nullable id)sender;
+- (void)saveAnnotations:(nullable id)sender;
 @end
 
 static const NSUInteger TSAnnotationToolsCount = 11;
@@ -201,7 +218,7 @@ static BOOL TSIsSharedPanel(NSWindow *window)
 }
 @end
 
-@interface TSAnnotationBar () <NSMenuDelegate>
+@interface TSAnnotationBar () <NSMenuDelegate, NSMenuItemValidation>
 @end
 
 @implementation TSAnnotationBar {
@@ -619,11 +636,11 @@ static BOOL TSIsSharedPanel(NSWindow *window)
         [menu removeItemAtIndex:1];
     BOOL edit = _host.annotationEditMode;
     NSMenuItem *item;
-    item = [menu addItemWithTitle:_colorButton.toolTip action:edit ? @selector(showColors:) : NULL keyEquivalent:@""];
+    item = [menu addItemWithTitle:_colorButton.toolTip ?: @"" action:edit ? @selector(showColors:) : NULL keyEquivalent:@""];
     item.target = self;
-    item = [menu addItemWithTitle:_fontButton.toolTip action:edit ? @selector(showFonts:) : NULL keyEquivalent:@""];
+    item = [menu addItemWithTitle:_fontButton.toolTip ?: @"" action:edit ? @selector(showFonts:) : NULL keyEquivalent:@""];
     item.target = self;
-    item = [menu addItemWithTitle:_textButton.toolTip action:_textButton.enabled ? @selector(editText:) : NULL keyEquivalent:@""];
+    item = [menu addItemWithTitle:_textButton.toolTip ?: @"" action:_textButton.enabled ? @selector(editText:) : NULL keyEquivalent:@""];
     item.target = self;
     [menu addItem:[NSMenuItem separatorItem]];
     [self addRemoveStreamsItemTo:menu];

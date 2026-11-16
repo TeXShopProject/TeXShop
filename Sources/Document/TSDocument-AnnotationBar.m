@@ -205,8 +205,9 @@
 // A part of the Preview got another PDF, as after typesetting: the text being edited is dropped.
 - (void)annotationViewDocumentChanged:(NSNotification *)notification
 {
-    if ([self annotationViewBelongsToHost:notification.object])
-        [_annotationBar.textPopover discardIfBoundToView:notification.object];
+    id view = notification.object;
+    if ([view isKindOfClass:PDFView.class] && [self annotationViewBelongsToHost:view])
+        [_annotationBar.textPopover discardIfBoundToView:(PDFView *)view];
 }
 
 #pragma mark Keeping the Preview in place (spec §3.8)
