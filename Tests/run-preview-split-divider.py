@@ -4,7 +4,8 @@ and changing the height of such a window.
 
 The parts also follow the size of the window when a view in the window uses Auto
 Layout, as the line along the active part does (#47): NSSplitView then leaves their
-sizes to the keeper.
+sizes to the keeper. So does the part that remains when the window is unsplit, and Fit to
+Window follows the size of the window there (#50).
 
 Each part keeps the text at its top edge: when the divider is dragged, the top part
 shows more or less below it and the text of the bottom part moves with the divider;
@@ -476,6 +477,40 @@ int main(void) { @autoreleasepool {
             Check(filled && Fill(p.split) && fabs(NSHeight(p.upper.frame) - 300) < 4 && Kept(p),
                   @"with Auto Layout in the window, dragging the divider moves it and keeps the text at the top of both parts");
         }
+    }
+
+    // Fit to Window after the window was split and unsplit (#50): the line along the active
+    // part came with the split and stays in the part that remains, so the window still uses
+    // Auto Layout, and the magnification follows the size of the window.
+    for (NSNumber *continuous in @[@YES, @NO]) {
+        NSString *how = continuous.boolValue ? @" (continuous pages)" : @" (single page)";
+        Preview p = MakePreview(document, NO, YES, YES);
+        for (PDFView *view in @[p.upper, p.lower])
+            view.displayMode = continuous.boolValue ? kPDFDisplaySinglePageContinuous : kPDFDisplaySinglePage;
+        UseAutoLayout(p);
+        RunLoop();
+        [p.lower removeFromSuperview];
+        [p.split adjustSubviews];
+        [p.window layoutIfNeeded];
+        RunLoop();
+        SetWindowSize(p.window, 786, 984);
+        RunLoop();
+        CGFloat wide = p.upper.scaleFactor;
+        // Narrower; then, for a single page, which fits its height too, also lower.
+        SetWindowSize(p.window, 600, 984);
+        RunLoop();
+        CGFloat narrow = p.upper.scaleFactor;
+        BOOL fill = Fill(p.split) && NSEqualSizes(p.upper.documentView.enclosingScrollView.frame.size, p.upper.bounds.size);
+        CGFloat low = narrow;
+        if (!continuous.boolValue) {
+            SetWindowSize(p.window, 600, 500);
+            RunLoop();
+            low = p.upper.scaleFactor;
+            fill = fill && Fill(p.split);
+        }
+        printf("Fit to Window after a split%s: magnification %.3f wide, %.3f narrow, %.3f low\n", how.UTF8String, wide, narrow, low);
+        Check(p.upper.autoScales && fill && narrow < wide * 0.9 && (continuous.boolValue || low < narrow * 0.9),
+              [@"after the window was split and unsplit, the part that remains follows the window and Fit to Window its size" stringByAppendingString:how]);
     }
 
     // The last page cannot scroll past its end: the lower part shows its bottom.
