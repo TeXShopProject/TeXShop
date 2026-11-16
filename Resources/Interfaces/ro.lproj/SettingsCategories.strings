@@ -214,6 +214,8 @@
 "catalog.preview.0.3.title" = "Mod maus implicit";
 "catalog.preview.0.4.title" = "Nu schimba pagina la derulare";
 "catalog.preview.0.4.note" = "La „Pagină Simplă” și „Pagină Dublă”, derularea cu rotița mouse-ului sau cu trackpadul se oprește la marginea de sus și de jos a paginii.";
+"catalog.preview.0.5.title" = "Schimbă mereu pagina cu tastele săgeată stânga și dreapta";
+"catalog.preview.0.5.note" = "Și când o pagină mărită este mai lată decât fereastra, tastele săgeată stânga și dreapta schimbă pagina în loc să deruleze pe orizontală.";
 "catalog.preview.0.6.title" = "Ferestre pop-up";
 "catalog.preview.0.6.note" = "Valoarea inițială pentru documentele deschise de acum înainte. Într-un document deschis, se schimbă din meniul „Previzualizare”.";
 "group.preview.1.title" = "Aranjarea paginilor duble";

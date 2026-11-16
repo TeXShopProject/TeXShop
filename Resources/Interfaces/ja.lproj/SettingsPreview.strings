@@ -45,6 +45,7 @@
 "preview-cover-note-cell.title" = "これから開く文書に適用。マジックコメントと\nPDF内の表示方向を優先します。";
 "preview-link-popups-cell.title" = "リンク先をポップアップ";
 "preview-scroll-page-turn-cell.title" = "スクロールでページを送らない";
+"preview-arrow-keys-page-cell.title" = "左右の矢印キーでいつもページを送る";
 "sa2-VV-W1K.title" = "閉じたときの位置を保存";
 "tVs-uh-QcM.title" = "いつも同じ位置で開く";
 "vOt-2m-d2s.title" = "1つのウインドウに統合";

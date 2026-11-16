@@ -45,6 +45,7 @@
 "preview-cover-note-cell.title" = "Applies on opening. Magic comments and\nPDF reading direction take precedence.";
 "preview-link-popups-cell.title" = "Beweeg pop-ups";
 "preview-scroll-page-turn-cell.title" = "Niet bladeren door te scrollen";
+"preview-arrow-keys-page-cell.title" = "Altijd bladeren met de pijltoetsen links en rechts";
 "sa2-VV-W1K.title" = "Positie bij sluiten bewaren";
 "tVs-uh-QcM.title" = "Alle vensters op vaste positie openen";
 "vOt-2m-d2s.title" = "Samenvoegen in één venster";

@@ -214,6 +214,8 @@
 "catalog.preview.0.3.title" = "Modo de ratón";
 "catalog.preview.0.4.title" = "No pasar de página al desplazar";
 "catalog.preview.0.4.note" = "Con «Página simple» y «Página doble», el desplazamiento con la rueda del ratón o el trackpad se detiene en los bordes superior e inferior de la página.";
+"catalog.preview.0.5.title" = "Pasar siempre de página con las teclas de flecha izquierda y derecha";
+"catalog.preview.0.5.note" = "También cuando una página ampliada es más ancha que la ventana, las teclas de flecha izquierda y derecha pasan de página en lugar de desplazar en horizontal.";
 "catalog.preview.0.6.title" = "Desplegar enlaces";
 "catalog.preview.0.6.note" = "Valor inicial para los documentos que se abran a partir de ahora. En un documento abierto, se cambia en el menú «PDF».";
 "group.preview.1.title" = "Con páginas dobles";

@@ -45,6 +45,7 @@
 "preview-cover-note-cell.title" = "Applies on opening. Magic comments and\nPDF reading direction take precedence.";
 "preview-link-popups-cell.title" = "Pop-ups de links";
 "preview-scroll-page-turn-cell.title" = "Não mudar de página ao deslocar";
+"preview-arrow-keys-page-cell.title" = "Mudar sempre de página com as teclas de seta esquerda e direita";
 "sa2-VV-W1K.title" = "Guardar a posição ao fechar";
 "tVs-uh-QcM.title" = "Abrir todas as janelas numa posição fixa";
 "vOt-2m-d2s.title" = "Unir numa única janela";

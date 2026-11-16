@@ -192,6 +192,7 @@
         @"settings.024-V2-dVf": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.preview-link-popups-button"] kind:TSSettingsRowControls indentation:0], // linkPopupsButton
             [TSSettingsLayoutRow controls:@[@"settings.preview-scroll-page-turn-button"] kind:TSSettingsRowControls indentation:0], // scrollPageTurnButton
+            [TSSettingsLayoutRow controls:@[@"settings.preview-arrow-keys-page-button"] kind:TSSettingsRowControls indentation:0], // arrowKeysPageButton
         ]],
         @"settings.7Xo-ey-gfu": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.G6V-Sw-jFT"] kind:TSSettingsRowControls indentation:0], // useTwoWindowsButton
