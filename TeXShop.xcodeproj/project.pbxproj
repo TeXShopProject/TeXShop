@@ -81,6 +81,7 @@
 		E17200000000000000000001 = {isa = PBXBuildFile; fileRef = E17200000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new"; }; };
 		E17100000000000000000001 = {isa = PBXBuildFile; fileRef = E17100000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new"; }; };
 		AABB05910000000000000001 /* TSFileChangeMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = AABB05910000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		32957AB1B3BD0EBF407B6214 /* TSRootFileResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = C06DF919A28A11E7E611D1FB /* TSRootFileResolver.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		ED0C00000000000000000001 = {isa = PBXBuildFile; fileRef = ED0C00000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		ED0C00000000000000000003 = {isa = PBXBuildFile; fileRef = ED0C00000000000000000004; };
 		346FA9FD1309961900DAA25D /* TSLayoutManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 346FA9FB1309961900DAA25D /* TSLayoutManager.h */; };
@@ -563,6 +564,8 @@
 		E17100000000000000000005 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TSPreferences+LiveSettings.h"; sourceTree = "<group>"; };
 		AABB05910000000000000003 /* TSFileChangeMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSFileChangeMonitor.h; sourceTree = "<group>"; };
 		AABB05910000000000000002 /* TSFileChangeMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSFileChangeMonitor.m; sourceTree = "<group>"; };
+		EE525C84A4B76E4611DDF639 /* TSRootFileResolver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRootFileResolver.h; sourceTree = "<group>"; };
+		C06DF919A28A11E7E611D1FB /* TSRootFileResolver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRootFileResolver.m; sourceTree = "<group>"; };
 		ED0C00000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDockIconController.m; sourceTree = "<group>"; };
 		ED0C00000000000000000004 = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources/DockIcons; sourceTree = SOURCE_ROOT; };
 		ED0C00000000000000000006 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDockIcon.h; sourceTree = "<group>"; };
@@ -1288,6 +1291,8 @@
 				40B7DEAA057139E2002872F2 /* TSDocumentScripting.m */,
 				AABB05910000000000000003 /* TSFileChangeMonitor.h */,
 				AABB05910000000000000002 /* TSFileChangeMonitor.m */,
+				EE525C84A4B76E4611DDF639 /* TSRootFileResolver.h */,
+				C06DF919A28A11E7E611D1FB /* TSRootFileResolver.m */,
 			);
 			path = Document;
 			sourceTree = "<group>";
@@ -2340,6 +2345,7 @@
 				408B6DD10F3D516C0098CCED /* TSLogWindow.m in Sources */,
 				407F694E11E65D4F00FD4359 /* TSDocument.m in Sources */,
 				AABB05910000000000000001 /* TSFileChangeMonitor.m in Sources */,
+				32957AB1B3BD0EBF407B6214 /* TSRootFileResolver.m in Sources */,
 				40A56E1F11E67546002BEED6 /* TSStationery.m in Sources */,
 				346FA9FE1309961900DAA25D /* TSLayoutManager.m in Sources */,
 				AE9500010000000000000001 /* TSExternalPDFSnapshot.m in Sources */,
