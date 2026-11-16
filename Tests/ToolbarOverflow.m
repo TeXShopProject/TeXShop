@@ -195,6 +195,23 @@ static void Checks(void)
           [NSString stringWithFormat:@"a flexible space added again: %@", Priorities(window.toolbar)]);
     [window close];
 
+    // A change made while the window is about to close leaves the priorities alone until the toolbar is
+    // turned on again; validation then gives them.
+    items = [Items new];
+    items.identifiers = Identifiers(@"img0,flex,img1");
+    window = Window(items, 900);
+    check(Soon(window, ^{ return @[@0, @0, @(high)]; }), @"priorities before closing");
+    TSToolbar *closing = (TSToolbar *)window.toolbar;
+    [closing removeItemAtIndex:1];
+    [closing turnVisibleOff:YES];
+    for (int i = 0; i < 20; i++)
+        Spin(window);
+    check([Priorities(closing) isEqual:(@[@0, @(high)])], [NSString stringWithFormat:@"no priorities given while about to close: %@", Priorities(closing)]);
+    [closing turnVisibleOff:NO];
+    [closing validateVisibleItems];
+    check([Priorities(closing) isEqual:(@[@0, @1])], [NSString stringWithFormat:@"turned on again, validation gives them: %@", Priorities(closing)]);
+    [window close];
+
     // A change that no notification told of is caught when the toolbar validates its items.
     items = [Items new];
     items.identifiers = Identifiers(@"img0,flex,img1");

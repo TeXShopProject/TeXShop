@@ -15,7 +15,7 @@ macOS, run the test with --find-bands to see where they now lie, and check wheth
 still needed (TeXShop-audit Future Tasks, "new macOS")."""
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-import argparse, subprocess, sys, tempfile
+import argparse, re, subprocess, sys, tempfile
 from source_tree import include_args, source_file
 
 R = Path(__file__).resolve().parents[1]
@@ -39,6 +39,7 @@ MUTATIONS = {
     'own priority dropped': ('MAX(TSToolbarVisibilityPriority(i, lastFlexibleSpace), own.integerValue)', 'TSToolbarVisibilityPriority(i, lastFlexibleSpace)'),
     'not given on a change': ('        [center addObserver:self selector:@selector(itemsWillChange:) name:NSToolbarWillAddItemNotification object:self];\n'
                               '        [center addObserver:self selector:@selector(itemsWillChange:) name:NSToolbarDidRemoveItemNotification object:self];\n', ''),
+    'not given while about to close': ('    if (visibleOff) {\n        [_comingItems removeAllObjects];\n        return;\n    }\n', ''),
     'not given on validation': ('    [super validateVisibleItems];\n    if (_ownPriorities', '    [super validateVisibleItems];\n    if (NO && _ownPriorities'),
 }
 
@@ -54,10 +55,22 @@ def build(tmp, source, name):
     return binary
 
 
+class ProbeFailed(Exception):
+    pass
+
+
 def settle(binary, home, items, width):
+    """'steady' or 'OSCILLATES' with the items shown (none in a very narrow window); a probe that fails or prints
+    anything else stops the test."""
     env = {'HOME': str(home), 'CFFIXED_USER_HOME': str(home), 'PATH': '/usr/bin:/bin'}
-    result = subprocess.run([str(binary), 'settle', items, str(width)], capture_output=True, text=True, timeout=120, env=env)
-    return result.stdout.strip() or result.stderr.strip()
+    try:
+        result = subprocess.run([str(binary), 'settle', items, str(width)], capture_output=True, text=True, timeout=120, env=env)
+    except subprocess.TimeoutExpired:
+        raise ProbeFailed(f'{items} at {width}: no answer in 120 s')
+    line = result.stdout.strip()
+    if result.returncode or not re.fullmatch(rf'{width}(\.0+)? (steady|OSCILLATES)( .*)?', line):
+        raise ProbeFailed(f'{items} at {width}: exit {result.returncode}, output {line!r}, errors {result.stderr.strip()[-500:]!r}')
+    return line
 
 
 def sweep(binary, home, configs):
@@ -73,6 +86,14 @@ def checks(binary, home):
 
 
 def main():
+    try:
+        return run()
+    except ProbeFailed as error:
+        print(f'FAIL: the probe fails: {error}')
+        return 1
+
+
+def run():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--find-bands', action='store_true', help='sweep 150-900 points without the priorities and print where the toolbars oscillate')
     args = parser.parse_args()
@@ -89,9 +110,13 @@ def main():
             old, new = MUTATIONS['no priorities']
             binary = build(tmp, source.replace(old, new), 'ToolbarOverflowWithout')
             wide = {name: (items, range(150, 901)) for name, (items, _) in CONFIGS.items()}
-            for name, line in sweep(binary, home, wide):
-                if 'OSCILLATES' in line:
-                    print(name, line)
+            results = sweep(binary, home, wide)
+            oscillating = [(name, line) for name, line in results if 'OSCILLATES' in line]
+            for name, line in oscillating:
+                print(name, line)
+            # Every width was laid out and answered (a failed probe stops the sweep above).
+            print(f'{len(results)} widths of {len(wide)} arrangements laid out without the priorities: '
+                  f'{len(oscillating)} oscillate' + ('' if oscillating else '; none oscillates between 150 and 900 points'))
             return 0
         binary = build(tmp, source, 'ToolbarOverflow')
         result = checks(binary, home)
@@ -129,7 +154,10 @@ def main():
         if missed:
             print('FAIL: mutations not detected:', ', '.join(missed))
             return 1
-        print('NORMAL CONTROL passes again' if checks(build(tmp, source, 'ToolbarOverflow'), home).returncode == 0 else 'FAIL: the control fails')
+        if checks(build(tmp, source, 'ToolbarOverflow'), home).returncode:
+            print('FAIL: the control fails')
+            return 1
+        print('NORMAL CONTROL passes again')
     return 0
 
 

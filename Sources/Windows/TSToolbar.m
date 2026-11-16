@@ -80,6 +80,11 @@ NSToolbarItemVisibilityPriority TSToolbarVisibilityPriority(NSUInteger index, NS
 - (void)arrangeVisibilityPrioritiesTrying:(NSInteger)tries
 {
     _arrangementPending = NO;
+    // A window about to close leaves its items alone; turned on again, validation gives the priorities.
+    if (visibleOff) {
+        [_comingItems removeAllObjects];
+        return;
+    }
     for (NSToolbarItem *item in _comingItems.allObjects) {
         if ([self.items indexOfObjectIdenticalTo:item] != NSNotFound)
             [_comingItems removeObject:item];
