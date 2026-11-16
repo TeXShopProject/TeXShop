@@ -36,3 +36,10 @@
 - (void)turnVisibleOff:(BOOL)value;
 
 @end
+
+// Whether the toolbar gives its items visibility priorities that keep AppKit from moving a
+// group of items in and out of the overflow menu without end (macOS 26 and later).
+FOUNDATION_EXPORT BOOL TSToolbarArrangesVisibilityPriorities(void);
+// The priority of the item at index: high after the last flexible space, standard before it,
+// and rising from left to right in a toolbar without a flexible space (lastFlexibleSpace < 0).
+FOUNDATION_EXPORT NSToolbarItemVisibilityPriority TSToolbarVisibilityPriority(NSUInteger index, NSInteger lastFlexibleSpace);
