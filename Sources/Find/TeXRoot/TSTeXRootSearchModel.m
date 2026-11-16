@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSTeXRootSearchModel.h"
 #import "TSRegexMultipleReplace.h"
+#import "TSTeXRootReplace.h"
 #import <stdatomic.h>
 
 NSUInteger TSTeXRootSearchShownLines(NSString *_Nullable text)
@@ -95,6 +96,9 @@ NSUInteger TSTeXRootSearchShownLines(NSString *_Nullable text)
 @property (nonatomic, strong, nullable) id collectingSignature;
 @property (nonatomic, strong, nullable) id collectedSignature;
 @property (nonatomic, readwrite) NSUInteger numberOfCollections;
+/// The ranges of the items that were off before Replace All, where they are in the replaced texts, by file identifier:
+/// taken in once the file is searched again.
+@property (nonatomic, strong) NSMutableDictionary<NSString *, NSArray<NSValue *> *> *rangesOff;
 /// The items on in each file with items off, until the next change (the status asks several times per change).
 @property (nonatomic, strong) NSMapTable<TSTeXRootSearchFileResult *, NSNumber *> *includedCounts;
 @end
@@ -120,6 +124,7 @@ NSUInteger TSTeXRootSearchShownLines(NSString *_Nullable text)
     _sourceReasons = [NSMutableDictionary dictionary];
     _includedCounts = [NSMapTable strongToStrongObjectsMapTable];
     _shownLines = [NSMapTable weakToStrongObjectsMapTable];
+    _rangesOff = [NSMutableDictionary dictionary];
     return self;
 }
 
@@ -398,6 +403,7 @@ static NSData *TSShownLinesOfFile(TSTeXRootSearchFileResult *file, TSTeXRootSear
                         return;
                     weakSelf.fileResults[source.file.identifier] = file;
                     [weakSelf.shownLines setObject:lines forKey:file];
+                    [weakSelf takeRangesOffForFile:file];
                     [weakSelf changed];
                 });
             if (result.reachedLimit) {
@@ -419,6 +425,8 @@ static NSData *TSShownLinesOfFile(TSTeXRootSearchFileResult *file, TSTeXRootSear
             }
             for (TSTeXRootSearchFileResult *file in foundLines)
                 [model.shownLines setObject:[foundLines objectForKey:file] forKey:file];
+            for (TSTeXRootSearchFileResult *file in found.allValues)
+                [model takeRangesOffForFile:file];
             model.reachedLimit = limit;
             model.resultGeneration = model.generation;
             model.activity = TSTeXRootSearchActivityIdle;
@@ -726,6 +734,36 @@ static NSString *TSItemKey(TSTeXRootSearchItem *item)
 {
     return self.mode != TSTeXRootSearchModeFind && self.activity == TSTeXRootSearchActivityIdle && self.resultGeneration == self.generation
         && !self.reachedLimit && !self.stopped && self.project && self.numberOfIncludedItems > 0;
+}
+
+#pragma mark After Replace All
+
+- (void)searchAgainAfterReplacingWithRangesOff:(NSDictionary<NSString *, NSArray<NSValue *> *> *)rangesOff message:(NSString *)message
+{
+    [self collect];
+    [self.rangesOff setDictionary:rangesOff];
+    self.eventMessage = message;
+}
+
+/// The items of a file searched again after Replace All that overlap an item that was off are off (spec §2.6: where
+/// it is not clear, they are not turned back on).
+- (void)takeRangesOffForFile:(TSTeXRootSearchFileResult *)file
+{
+    NSString *path = file.source.file.relativePath;
+    NSArray<NSValue *> *ranges = self.rangesOff[path];
+    if (!ranges)
+        return;
+    [self.rangesOff removeObjectForKey:path];
+    id identifier = file.source.file.identifier;
+    NSMutableSet<NSString *> *excluded = self.excludedItems[identifier] ?: [NSMutableSet set];
+    for (TSTeXRootSearchItem *item in file.items)
+        for (NSValue *range in ranges)
+            if ([TSTeXRootReplaceMapping range:item.range overlapsRange:range.rangeValue]) {
+                [excluded addObject:TSItemKey(item)];
+                break;
+            }
+    self.excludedItems[identifier] = excluded;
+    [self.includedCounts removeAllObjects];
 }
 
 #pragma mark Stopping

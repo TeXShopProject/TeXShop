@@ -53,6 +53,7 @@
 		BEA7F20E7D0F181D04711CEC /* TSRegexTextFind.m in Sources */ = {isa = PBXBuildFile; fileRef = 771CB91746C3A83D941E1F15 /* TSRegexTextFind.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		1547ACA899EC91F8B4B14EBF /* TSTeXRootSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B717253A58EDDD886884C4 /* TSTeXRootSearch.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		19632EDAFB94CBB4921C992E /* TSTeXRootEntryRules.m in Sources */ = {isa = PBXBuildFile; fileRef = A348BBDE790AACB21814AF65 /* TSTeXRootEntryRules.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		40B259847FA6CE1B8B4A9B51 /* TSTeXRootReplace.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7DC0D77D941C26789807E7 /* TSTeXRootReplace.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		5A0972AC38EEE8798105DCAF /* TSTeXRootSearchModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2AF52824EF9BA9E32678264C /* TSTeXRootSearchModel.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		5207C3D591A271989A517F44 /* TSTeXRootSearchResultsList.m in Sources */ = {isa = PBXBuildFile; fileRef = AE61FDE24492145E029B074C /* TSTeXRootSearchResultsList.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		620ADECC17A3832685398650 /* TSTeXRootSearchFileTree.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8B222B8E33C53F01EAEAC0 /* TSTeXRootSearchFileTree.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
@@ -543,6 +544,8 @@
 		78D2CB88DBAED7C7D6A6BFF7 /* TSTeXRootSearch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSTeXRootSearch.h; sourceTree = "<group>"; };
 		8F1F60D6B446CDC0CE9D7497 /* TSTeXRootEntryRules.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSTeXRootEntryRules.h; sourceTree = "<group>"; };
 		A348BBDE790AACB21814AF65 /* TSTeXRootEntryRules.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSTeXRootEntryRules.m; sourceTree = "<group>"; };
+		AB5FC3F85B001B04D42C85EF /* TSTeXRootReplace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSTeXRootReplace.h; sourceTree = "<group>"; };
+		CC7DC0D77D941C26789807E7 /* TSTeXRootReplace.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSTeXRootReplace.m; sourceTree = "<group>"; };
 		966FD680F753C6A7AE83058C /* TSTeXRootSearchModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSTeXRootSearchModel.h; sourceTree = "<group>"; };
 		2AF52824EF9BA9E32678264C /* TSTeXRootSearchModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSTeXRootSearchModel.m; sourceTree = "<group>"; };
 		0FEAA1AF6F4F53DFEEEABDAD /* TSTeXRootSearchResultsList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSTeXRootSearchResultsList.h; sourceTree = "<group>"; };
@@ -1948,6 +1951,8 @@
 				C8DFA25778349777A1804D3E /* TSTeXRootSearchEntry.m */,
 				8F1F60D6B446CDC0CE9D7497 /* TSTeXRootEntryRules.h */,
 				A348BBDE790AACB21814AF65 /* TSTeXRootEntryRules.m */,
+				AB5FC3F85B001B04D42C85EF /* TSTeXRootReplace.h */,
+				CC7DC0D77D941C26789807E7 /* TSTeXRootReplace.m */,
 			);
 			path = TeXRoot;
 			sourceTree = "<group>";
@@ -2275,6 +2280,7 @@
 				9A109F3CAEF639918A84167F /* TSTeXRootProject.m in Sources */,
 				1547ACA899EC91F8B4B14EBF /* TSTeXRootSearch.m in Sources */,
 				19632EDAFB94CBB4921C992E /* TSTeXRootEntryRules.m in Sources */,
+				40B259847FA6CE1B8B4A9B51 /* TSTeXRootReplace.m in Sources */,
 				5A0972AC38EEE8798105DCAF /* TSTeXRootSearchModel.m in Sources */,
 				5207C3D591A271989A517F44 /* TSTeXRootSearchResultsList.m in Sources */,
 				620ADECC17A3832685398650 /* TSTeXRootSearchFileTree.m in Sources */,

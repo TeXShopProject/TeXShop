@@ -152,6 +152,12 @@ NS_SWIFT_NAME(TeXRootSearchModel)
 /// Stops collecting or computing (■, Escape, ⌘.).
 - (void)stop;
 
+/// After Replace All (spec §2.5.5, §2.6): collects the files again and searches them with the same conditions, keeping
+/// `message` in the status line. An item of the new list that overlaps a range of `rangesOff` (by the file's path below
+/// the root's folder, as a file written gets another identity: the items that were off, moved to where they are in the
+/// replaced text) is off; items off in files not replaced in stay off as they were.
+- (void)searchAgainAfterReplacingWithRangesOff:(NSDictionary<NSString *, NSArray<NSValue *> *> *)rangesOff message:(NSString *)message;
+
 @end
 
 NS_ASSUME_NONNULL_END
