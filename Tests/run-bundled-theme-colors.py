@@ -9,12 +9,15 @@
    a theme whose source window is opaque.
 2. -[TSColorSupport updateBundledThemeColorsInDirectory:after:], compiled unchanged with TSThemeFileStore, run on
    copies of the themes that TeXShop 5.58 put in ~/Library/TeXShop/Themes: every color that the bundled themes changed
-   since then is updated, and nothing else. A color the user chose, a renamed copy, a theme of the user's own, a key
+   since then is updated, and nothing else; run after the first update on copies that 6.00 beta 1 put there: every
+   color changed since beta 1 is updated, the expl3 colors (which 5.58 did not have) included. A color the user chose, a renamed copy, a theme of the user's own, a key
    the theme lacks and a theme reached through a symbolic link stay; the opacity stays; a second run changes nothing;
    a theme that cannot be read or written leaves the update to be done again; a theme that another TeXShop saves
    right after it is read keeps what was saved (its old colors are still updated).
-3. The table of changes is complete: it holds every color of a bundled theme that differs from 5.58, from its 5.58
-   value to its current value. The update runs at launch before the themes are read.
+3. The table of changes is complete: update 1 holds every color of a bundled theme that differs between 5.58 and
+   6.00 beta 1, from its 5.58 value to its beta 1 value, and update 2 every color that differs between beta 1 and
+   now, from its beta 1 value to its current value. The update runs at launch before the themes are read.
+4. Comments can be read on the background of every bundled theme (contrast at least 3).
 
 No window is opened; the harness works in a temporary folder.
 
@@ -30,6 +33,9 @@ RESERVE = ROOT / 'Resources/Themes'
 SUPPORT = 'Sources/Editor/TSColorSupport.m'
 DELEGATE = 'Sources/App/TSAppDelegate.m'
 BASE = 'db040b9b'  # the import of TeXShop 5.58
+# The bundled themes each update of the table starts from: update 1 from 5.58, update 2 from 6.00 beta 1.
+UPDATES = {1: BASE, 2: '8b9db011'}  # 8b9db011 is the tag v.6.00-beta.1
+LAST = max(UPDATES)
 
 MUTATIONS = {
     'a color the user chose is replaced': (SUPPORT, '        if (!unchanged)\n            continue;\n', ''),
@@ -42,6 +48,7 @@ MUTATIONS = {
     'symbolic links are followed': (SUPPORT, '        NSURL *url = [store URLForTitle:theme];',
                                     '        NSURL *url = [store.directory URLByAppendingPathComponent:[theme stringByAppendingPathExtension:@"plist"]];'),
     'the LiteTheme content color is left out': (SUPPORT, '    {1, @"LiteTheme", @"EditorHighlightContent",', '    {0, @"LiteTheme", @"EditorHighlightContent",'),
+    'the DarkTheme comment is left out of update 2': (SUPPORT, '    {2, @"DarkTheme", @"SyntaxComment",', '    {1, @"DarkTheme", @"SyntaxComment",'),
     'the update runs after the themes are read': (DELEGATE,
         '    [[TSColorSupport sharedInstance] updateBundledThemeColors];\n    [[TSColorSupport sharedInstance]  initializeColors];\n',
         '    [[TSColorSupport sharedInstance]  initializeColors];\n    [[TSColorSupport sharedInstance] updateBundledThemeColors];\n'),
@@ -86,7 +93,8 @@ def contrast(a, b):
 
 
 def bundled():
-    return {f'{folder.name}/{p.stem}': plistlib.loads(p.read_bytes()) for folder in (THEMES, RESERVE) for p in sorted(folder.glob('*.plist'))}
+    # Named by their folder under Resources, so that the reserve copies do not hide the bundled themes of the same name.
+    return {f'{folder.relative_to(ROOT / "Resources")}/{p.stem}': plistlib.loads(p.read_bytes()) for folder in (THEMES, RESERVE) for p in sorted(folder.glob('*.plist'))}
 
 
 def readability_problems(themes):
@@ -108,20 +116,24 @@ def readability_problems(themes):
         for key in ['SyntaxIndex', 'XMLComment', 'XMLTag', 'XMLSpecial', 'XMLParameter', 'XMLValue'] + (['SyntaxCommand'] if opaque else []):
             if key in theme and contrast(theme[key], background) < 3:
                 problems.append(f'{name}: {key} on the background')
+        comment = theme.get('SyntaxComment')
+        if comment and contrast(comment, background) < 3:
+            problems.append(f'{name}: SyntaxComment on the background')
     return problems
 
 
-def old_theme(name):
-    result = subprocess.run(['git', 'show', f'{BASE}:Resources/TeXShop/Themes/{name}.plist'], cwd=ROOT, capture_output=True)
+def old_theme(name, base=BASE):
+    result = subprocess.run(['git', 'show', f'{base}:Resources/TeXShop/Themes/{name}.plist'], cwd=ROOT, capture_output=True)
     return plistlib.loads(result.stdout) if result.returncode == 0 else None
 
 
-def changed_colors():
-    """Every color of a bundled theme that differs from 5.58, keyed by (theme, key): (old, new)."""
+def changed_colors(base=BASE, target=None):
+    """Every color of a bundled theme that differs between base and target (now when None), keyed by (theme, key): (old, new)."""
     changes = {}
     for path in sorted(THEMES.glob('*.plist')):
-        old, new = old_theme(path.stem), plistlib.loads(path.read_bytes())
-        if old is None:
+        old = old_theme(path.stem, base)
+        new = plistlib.loads(path.read_bytes()) if target is None else old_theme(path.stem, target)
+        if old is None or new is None:
             continue
         for key, value in new.items():
             if isinstance(old.get(key), list) and any(abs(a - b) > 1e-9 for a, b in zip(old[key][:3], value[:3])):
@@ -173,7 +185,7 @@ def update_problems(text):
 
         # Themes as 5.58 left them: every changed color is updated and nothing else.
         folder = fresh(tmp / 'plain')
-        if run(probe, folder, 0) != 1:
+        if run(probe, folder, 0) != LAST:
             problems.append('the update is not reported as done')
         for theme, old in olds.items():
             now = plistlib.loads((folder / f'{theme}.plist').read_bytes())
@@ -190,8 +202,30 @@ def update_problems(text):
         lite['EditorHighlightContent'] = olds['LiteTheme']['EditorHighlightContent']
         (folder / 'LiteTheme.plist').write_bytes(plistlib.dumps(lite))
         before = {p.name: p.read_bytes() for p in folder.iterdir()}
-        if run(probe, folder, 1) != 1 or {p.name: p.read_bytes() for p in folder.iterdir()} != before:
+        if run(probe, folder, LAST) != LAST or {p.name: p.read_bytes() for p in folder.iterdir()} != before:
             problems.append('a second run changes the themes')
+
+        # Themes as 6.00 beta 1 left them, after update 1: every color changed since beta 1 is updated, the expl3
+        # colors included, and nothing else.
+        betas = {p.stem: old_theme(p.stem, UPDATES[2]) for p in sorted(THEMES.glob('*.plist'))}
+        betas = {k: v for k, v in betas.items() if v is not None}
+        since = changed_colors(UPDATES[2])
+        folder = tmp / 'beta'
+        folder.mkdir()
+        for theme, colors in betas.items():
+            (folder / f'{theme}.plist').write_bytes(plistlib.dumps(colors))
+        if run(probe, folder, 1) != LAST:
+            problems.append('the update after beta 1 is not reported as done')
+        for theme, old in betas.items():
+            now = plistlib.loads((folder / f'{theme}.plist').read_bytes())
+            for key in set(old) | set(now):
+                expected = since[(theme, key)][1] if (theme, key) in since else old.get(key)
+                value = now.get(key)
+                if isinstance(expected, list):
+                    if not isinstance(value, list) or not close(value, expected) or value[3:] != old[key][3:]:
+                        problems.append(f'beta 1 {theme} {key} is {value}, not {expected}')
+                elif value != expected:
+                    problems.append(f'beta 1 {theme} {key} changed')
 
         # The user's own choices.
         folder = fresh(tmp / 'user')
@@ -229,7 +263,7 @@ def update_problems(text):
         theirs['EditorBackground'] = [0.25, 0.35, 0.45, 1]
         theirs['Title'] = 'Saved meanwhile'
         (tmp / 'theirs.plist').write_bytes(plistlib.dumps(theirs))
-        if run(probe, folder, 0, concurrent=tmp / 'theirs.plist') != 1:
+        if run(probe, folder, 0, concurrent=tmp / 'theirs.plist') != LAST:
             problems.append('the update with a save meanwhile is not reported as done')
         now = plistlib.loads((folder / 'LiteTheme.plist').read_bytes())
         if now['SyntaxIndex'] != [0.1, 0.2, 0.3, 1] or now['EditorBackground'] != [0.25, 0.35, 0.45, 1] or now['Title'] != 'Saved meanwhile':
@@ -245,7 +279,7 @@ def update_problems(text):
                 problems.append('an update with a theme that could not be read is reported as done')
         finally:
             os.chmod(folder / 'LiteTheme.plist', 0o644)
-        if run(probe, folder, 0) != 1 or not close(plistlib.loads((folder / 'LiteTheme.plist').read_bytes())['EditorHighlightContent'], changes[('LiteTheme', 'EditorHighlightContent')][1]):
+        if run(probe, folder, 0) != LAST or not close(plistlib.loads((folder / 'LiteTheme.plist').read_bytes())['EditorHighlightContent'], changes[('LiteTheme', 'EditorHighlightContent')][1]):
             problems.append('a theme that can be read again is not updated')
 
         # A folder that cannot be written: nothing is lost, and the update is left to be done.
@@ -260,21 +294,25 @@ def update_problems(text):
 
 
 def table_problems(text):
-    """Every color that changed since 5.58 is in the table, from its 5.58 value to its current value."""
+    """Each update holds every color that changed between its release and the next one (or now), with those values."""
     import re
     source = text[SUPPORT]
     rows = re.findall(r'\{(\d+), @"([^"]+)", @"([^"]+)", \{([^}]*)\}, \{([^}]*)\}\}', source)
-    table = {(theme, key): ([float(x) for x in old.split(',')], [float(x) for x in new.split(',')]) for _, theme, key, old, new in rows}
     problems = []
-    changes = changed_colors()
-    for (theme, key), (old, new) in changes.items():
-        if (theme, key) not in table:
-            problems.append(f'{theme} {key} is not in the table')
-        elif any(abs(a - b) > 1e-6 for a, b in zip(table[(theme, key)][0], old[:3])) or any(abs(a - b) > 1e-6 for a, b in zip(table[(theme, key)][1], new[:3])):
-            problems.append(f'{theme} {key} has other values in the table')
-    for entry in table:
-        if entry not in changes:
-            problems.append(f'{entry} is in the table but did not change')
+    for update, base in UPDATES.items():
+        table = {(theme, key): ([float(x) for x in old.split(',')], [float(x) for x in new.split(',')])
+                 for n, theme, key, old, new in rows if int(n) == update}
+        changes = changed_colors(base, UPDATES.get(update + 1))
+        for (theme, key), (old, new) in changes.items():
+            if (theme, key) not in table:
+                problems.append(f'update {update}: {theme} {key} is not in the table')
+            elif any(abs(a - b) > 1e-6 for a, b in zip(table[(theme, key)][0], old[:3])) or any(abs(a - b) > 1e-6 for a, b in zip(table[(theme, key)][1], new[:3])):
+                problems.append(f'update {update}: {theme} {key} has other values in the table')
+        for entry in table:
+            if entry not in changes:
+                problems.append(f'update {update}: {entry} is in the table but did not change')
+    if any(int(n) not in UPDATES for n, *_ in rows):
+        problems.append('the table has an update that the test does not know')
     return problems
 
 

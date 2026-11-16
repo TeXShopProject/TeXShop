@@ -102,9 +102,9 @@
 	</array>
 	<key>FootnoteColor</key>
 	<array>
-		<real>0.2264918088912964</real>
-		<real>0.5419937968254089</real>
-		<real>0.9477165937423706</real>
+		<real>0.058824</real>
+		<real>0.411765</real>
+		<real>0.870588</real>
 		<real>1</real>
 	</array>
 	<key>ImageBackground</key>
@@ -165,16 +165,16 @@
 	</array>
 	<key>SyntaxCommand</key>
 	<array>
-		<real>0.2747414999891776</real>
-		<real>0.6231743567483239</real>
-		<real>0.9596965909004211</real>
+		<real>0.043137</real>
+		<real>0.431373</real>
+		<real>0.807843</real>
 		<real>1</real>
 	</array>
 	<key>SyntaxComment</key>
 	<array>
-		<real>0.9175150990486145</real>
-		<real>0.4509730964372159</real>
-		<real>0.05484317457009981</real>
+		<real>0.878431</real>
+		<real>0.415686</real>
+		<real>0.0</real>
 		<real>1</real>
 	</array>
 	<key>SyntaxIndex</key>

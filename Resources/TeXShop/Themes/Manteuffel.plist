@@ -67,9 +67,9 @@
 	</array>
 	<key>EditorInsertionPoint</key>
 	<array>
-		<real>0.08235294371843338</real>
-		<real>0.7098039388656616</real>
-		<real>0.9137254953384399</real>
+		<real>0.054902</real>
+		<real>0.466667</real>
+		<real>0.603922</real>
 		<real>1</real>
 	</array>
 	<key>EditorInvisibleChar</key>
@@ -102,9 +102,9 @@
 	</array>
 	<key>FootnoteColor</key>
 	<array>
-		<real>0.1077135801315308</real>
-		<real>0.6468018293380737</real>
-		<real>0.8915331959724426</real>
+		<real>0.07451</real>
+		<real>0.466667</real>
+		<real>0.639216</real>
 		<real>1</real>
 	</array>
 	<key>ImageBackground</key>
@@ -165,16 +165,16 @@
 	</array>
 	<key>SyntaxCommand</key>
 	<array>
-		<real>0.043137</real>
-		<real>0.52549</real>
-		<real>0.701961</real>
+		<real>0.039216</real>
+		<real>0.466667</real>
+		<real>0.623529</real>
 		<real>1</real>
 	</array>
 	<key>SyntaxComment</key>
 	<array>
-		<real>0.7529411911964417</real>
-		<real>0.7411764860153198</real>
-		<real>0.729411780834198</real>
+		<real>0.45098</real>
+		<real>0.431373</real>
+		<real>0.411765</real>
 		<real>1</real>
 	</array>
 	<key>SyntaxIndex</key>
@@ -286,9 +286,9 @@
 	</array>
 	<key>explmykey</key>
 	<array>
-		<real>0.8157</real>
-		<real>0.5176</real>
-		<real>0.1098</real>
+		<real>0.611765</real>
+		<real>0.388235</real>
+		<real>0.082353</real>
 		<real>1</real>
 	</array>
 	<key>explmykeyArgument</key>
