@@ -107,8 +107,16 @@
     [(MyPDFKitView *)[[self myDocument] pdfKitView] zoomToContentWidth:sender];
 }
 
+// Preview > Show Annotation Toolbar / Hide Annotation Toolbar, also while the source is focused.
+- (void)displayChoicesPanel:(id)sender
+{
+    [self.myDocument displayChoicesPanel: sender];
+}
+
 - (BOOL)validateMenuItem:(NSMenuItem *)item
 {
+    if (item.action == @selector(displayChoicesPanel:))
+        return [self.myDocument validateAnnotationBarItem: item];
     if (item.action == @selector(changePageStyle:))
         return [self.myDocument validatePreviewLayoutItem:item];
     // The magnification of the active part of the preview.
@@ -398,7 +406,10 @@
 - (void)close
 {
     self.wasClosed = YES;
+    // Closing the source closes the document, which asks to save unsaved annotations (with the
+    // text being edited) before it takes the annotation toolbar off; then this is a no-op.
     [[self.myDocument textWindow] close];
+    [self.myDocument annotationWindowWillClose: self];
     // MAYBE NOW IRRELEVANT?
     
     // Yusuke Terada addition to fix crash at close

@@ -127,7 +127,9 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 @implementation TSLinkPreviewView
 - (void)keepInView {}
 @end
+@class TestDocument;
 @interface TestWindow : NSWindow
+@property (weak) TestDocument *myDocument;
 @property BOOL firstTime, windowIsSplit, horizontal;
 @property PDFView *activeView, *myPDFKitView, *myPDFKitView2;
 @property NSSplitView *pdfKitSplitView;
@@ -144,8 +146,10 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 @property NSInteger numberingCorrection;
 - (id)myPDFKitView;
 - (NSWindow *)pagenumberPanel;
+- (void)annotationPartWillCollapse:(id)view;
 @end
 @implementation TestDocument
+- (void)annotationPartWillCollapse:(id)view {}
 - (id)topView { return self.window.myPDFKitView; }
 - (id)myPDFKitView { return self.window.myPDFKitView; }
 - (NSWindow *)pagenumberPanel { return nil; }

@@ -213,6 +213,7 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
         theDocument.annotationsExist = NO;
         [theDocument callSaveAnnotations];
         }
+    [theDocument annotationWindowWillClose: self];
     
 //	[self.myPDFKitView setDocument: nil];
 //	[self.myPDFKitView2 setDocument: nil];
@@ -717,8 +718,16 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
 	[super sendEvent: theEvent];
 }
 
+// Preview > Show Annotation Toolbar / Hide Annotation Toolbar, also while no part of the Preview is focused.
+- (void)displayChoicesPanel:(id)sender
+{
+    [self.myDocument displayChoicesPanel: sender];
+}
+
 - (BOOL)validateMenuItem:(NSMenuItem *)anItem
 {
+    if (anItem.action == @selector(displayChoicesPanel:))
+        return [self.myDocument validateAnnotationBarItem: anItem];
     
 	if ([anItem action] == @selector(splitWindow:)) {
 		if (self.windowIsSplit)
@@ -1423,6 +1432,8 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     
     
     if (self.windowIsSplit) {
+        // The second part goes away: annotation text being edited for it is dropped.
+        [self.myDocument annotationPartWillCollapse: self.myPDFKitView2];
         self.windowIsSplit = NO;
         self.activeView = self.myPDFKitView;
         result = [self.activeView becomeFirstResponder];

@@ -1096,7 +1096,7 @@
                                     <action selector="toggleLinkPopups:" target="-1" id="8g8-bw-p3O"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="批注面板..." id="IJR-TR-fA8" identifier="TSShortcut.displayChoicesPanel:.0">
+                            <menuItem title="显示批注工具栏" id="IJR-TR-fA8" identifier="TSShortcut.displayChoicesPanel:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayChoicesPanel:" target="-1" id="9N9-BM-cjE"/>

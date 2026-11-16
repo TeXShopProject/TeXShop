@@ -1098,7 +1098,7 @@
                                     <action selector="toggleLinkPopups:" target="-1" id="oG0-Z3-2Z5"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Fenêtre des annotations..." id="nf4-K9-td2" identifier="TSShortcut.displayChoicesPanel:.0">
+                            <menuItem title="Afficher la barre d’outils d’annotation" id="nf4-K9-td2" identifier="TSShortcut.displayChoicesPanel:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayChoicesPanel:" target="-1" id="UdS-br-ZPi"/>

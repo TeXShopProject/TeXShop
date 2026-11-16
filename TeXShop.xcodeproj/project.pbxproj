@@ -242,6 +242,8 @@
 		40AA6A721BCB498D00533975 /* MyPDFKitView-Magnification.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AA6A701BCB498D00533975 /* MyPDFKitView-Magnification.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		40AC8583181E0CCF00E69820 /* Notes on Applescript in TeXShop.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 40AC8581181E0CCF00E69820 /* Notes on Applescript in TeXShop.pdf */; };
 		40ACD3702C2787F900436D64 /* MyPDFKitView-Annotations.m in Sources */ = {isa = PBXBuildFile; fileRef = 40ACD36F2C2787F800436D64 /* MyPDFKitView-Annotations.m */; };
+		BAE674CA9C9C40B0726B7182 /* TSAnnotationTextPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 99F799A49C8D0042B3141A63 /* TSAnnotationTextPopover.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		4DF19B971971371B8584CA59 /* TSAnnotationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DE56DCBFE61FE4C02AB135 /* TSAnnotationBar.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		40B288CD1398A366005C921D /* synctex_parser_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 40B288CB1398A366005C921D /* synctex_parser_utils.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		40B288CE1398A366005C921D /* synctex_parser_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 40B288CC1398A366005C921D /* synctex_parser_utils.h */; };
 		40B288D11398A373005C921D /* synctex_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 40B288CF1398A373005C921D /* synctex_parser.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -278,6 +280,7 @@
 		40F80CAE1FAD3A2F00377616 /* Changes.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 40F80CAC1FAD3A2E00377616 /* Changes.pdf */; };
 		520C2EEB08AE92850010B1F8 /* TSDocument-Jobs.m in Sources */ = {isa = PBXBuildFile; fileRef = 520C2EEA08AE92850010B1F8 /* TSDocument-Jobs.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		520C2EF008AE984C0010B1F8 /* TSDocument-RootFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 520C2EEE08AE984C0010B1F8 /* TSDocument-RootFile.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		A19D4C98889AE58F0EFB88CB /* TSDocument-AnnotationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B01434850482066EBB3F4D /* TSDocument-AnnotationBar.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		520C2EF108AE984C0010B1F8 /* TSDocument-Syntax.m in Sources */ = {isa = PBXBuildFile; fileRef = 520C2EEF08AE984C0010B1F8 /* TSDocument-Syntax.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		41D66DDAA7C313F1591AEC67 /* TSDocument-ExperimentSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 056081BD34CC0A97EF97164E /* TSDocument-ExperimentSource.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		5217898608A7FAD600FC1D44 /* NSString-Extras.h in Headers */ = {isa = PBXBuildFile; fileRef = 5217898408A7FAD600FC1D44 /* NSString-Extras.h */; };
@@ -944,6 +947,10 @@
 		40AA6A701BCB498D00533975 /* MyPDFKitView-Magnification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MyPDFKitView-Magnification.m"; sourceTree = "<group>"; };
 		40AAFA3C0E573F8100419621 /* synctexviewwrap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.csh; path = synctexviewwrap; sourceTree = "<group>"; };
 		40ACD36F2C2787F800436D64 /* MyPDFKitView-Annotations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MyPDFKitView-Annotations.m"; sourceTree = "<group>"; };
+		99F799A49C8D0042B3141A63 /* TSAnnotationTextPopover.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAnnotationTextPopover.m; sourceTree = "<group>"; };
+		25BCA118C1AC22F70E56AA20 /* TSAnnotationTextPopover.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAnnotationTextPopover.h; sourceTree = "<group>"; };
+		58DE56DCBFE61FE4C02AB135 /* TSAnnotationBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAnnotationBar.m; sourceTree = "<group>"; };
+		4C9EEC8EBD97DE1B7CDDF379 /* TSAnnotationBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAnnotationBar.h; sourceTree = "<group>"; };
 		40B1DDC706EB6E540083A311 /* altpdftex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = altpdftex; sourceTree = "<group>"; };
 		40B288CB1398A366005C921D /* synctex_parser_utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = synctex_parser_utils.c; sourceTree = "<group>"; };
 		40B288CC1398A366005C921D /* synctex_parser_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = synctex_parser_utils.h; sourceTree = "<group>"; };
@@ -998,6 +1005,7 @@
 		40EC12140C66C4BE00B9A448 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		520C2EEA08AE92850010B1F8 /* TSDocument-Jobs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-Jobs.m"; sourceTree = "<group>"; };
 		520C2EEE08AE984C0010B1F8 /* TSDocument-RootFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-RootFile.m"; sourceTree = "<group>"; };
+		52B01434850482066EBB3F4D /* TSDocument-AnnotationBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDocument-AnnotationBar.m; sourceTree = "<group>"; };
 		520C2EEF08AE984C0010B1F8 /* TSDocument-Syntax.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-Syntax.m"; sourceTree = "<group>"; };
 		056081BD34CC0A97EF97164E /* TSDocument-ExperimentSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-ExperimentSource.m"; sourceTree = "<group>"; };
 		5217898408A7FAD600FC1D44 /* NSString-Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString-Extras.h"; sourceTree = "<group>"; };
@@ -1290,6 +1298,7 @@
 			isa = PBXGroup;
 			children = (
 				520C2EEE08AE984C0010B1F8 /* TSDocument-RootFile.m */,
+				52B01434850482066EBB3F4D /* TSDocument-AnnotationBar.m */,
 				40770A9E195F1AB700A67050 /* TSDocument-Scrap.m */,
 				4093BBE922CECA7D00D37BD7 /* TSDocument-XML.m */,
 				2A37F4AEFDCFA73011CA2CEA /* TSDocument.h */,
@@ -1420,6 +1429,10 @@
 				4002427828921A3800851717 /* MyHTMLView.h */,
 				4002427728921A3800851717 /* MyHTMLView.m */,
 				40ACD36F2C2787F800436D64 /* MyPDFKitView-Annotations.m */,
+				99F799A49C8D0042B3141A63 /* TSAnnotationTextPopover.m */,
+				25BCA118C1AC22F70E56AA20 /* TSAnnotationTextPopover.h */,
+				58DE56DCBFE61FE4C02AB135 /* TSAnnotationBar.m */,
+				4C9EEC8EBD97DE1B7CDDF379 /* TSAnnotationBar.h */,
 				4076227522075CE200FB6C80 /* MyPDFKitView-ExternalEditor.m */,
 				40AA6A701BCB498D00533975 /* MyPDFKitView-Magnification.m */,
 				407622732207340F00FB6C80 /* MyPDFKitView-TextMate.m */,
@@ -2347,8 +2360,11 @@
 				57659D7CF0C626BFAB6DAC96 /* NSString-CharacterConversion.m in Sources */,
 				520C2EEB08AE92850010B1F8 /* TSDocument-Jobs.m in Sources */,
 				40ACD3702C2787F900436D64 /* MyPDFKitView-Annotations.m in Sources */,
+				BAE674CA9C9C40B0726B7182 /* TSAnnotationTextPopover.m in Sources */,
+				4DF19B971971371B8584CA59 /* TSAnnotationBar.m in Sources */,
 				40D5BB3019632B9C0081BC77 /* ScrapTextView.m in Sources */,
 				520C2EF008AE984C0010B1F8 /* TSDocument-RootFile.m in Sources */,
+				A19D4C98889AE58F0EFB88CB /* TSDocument-AnnotationBar.m in Sources */,
 				407622742207340F00FB6C80 /* MyPDFKitView-TextMate.m in Sources */,
 				520C2EF108AE984C0010B1F8 /* TSDocument-Syntax.m in Sources */,
 				41D66DDAA7C313F1591AEC67 /* TSDocument-ExperimentSource.m in Sources */,

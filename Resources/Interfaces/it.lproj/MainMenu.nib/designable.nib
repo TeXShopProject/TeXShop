@@ -1096,7 +1096,7 @@
                                     <action selector="toggleLinkPopups:" target="-1" id="CfU-mi-ZyD"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Pannello annotazioni..." id="JEY-wV-bOT" identifier="TSShortcut.displayChoicesPanel:.0">
+                            <menuItem title="Mostra barra strumenti annotazioni" id="JEY-wV-bOT" identifier="TSShortcut.displayChoicesPanel:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayChoicesPanel:" target="-1" id="4Mz-GS-WlU"/>

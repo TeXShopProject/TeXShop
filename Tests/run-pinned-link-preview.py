@@ -366,8 +366,10 @@ static NSPasteboard *generalPasteboard(id self, SEL sel) { return testPasteboard
 - (NSMenu *)mousemodeMenu;
 - (NSMatrix *)mousemodeMatrix;
 - (NSWindow *)magnificationPanel;
+- (BOOL)validateAnnotationBarItem:(NSMenuItem *)item;
 @end
 @implementation TestDocument
+- (BOOL)validateAnnotationBarItem:(NSMenuItem *)item { return YES; }
 - (void)updatePreviewLayoutControls {}
 - (BOOL)validatePreviewLayoutItem:(NSMenuItem *)item { return YES; }
 - (NSMenu *)mousemodeMenu { return nil; }

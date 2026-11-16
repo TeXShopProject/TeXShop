@@ -4775,7 +4775,7 @@ in Terminal. You will have to give your administrator password to run the second
 
 \section{Annotations in General}
 
-TeXShop has the ability to open annotated pdf files and view the annotations, because PDFKit supports annotations and TeXShop can open arbitrary pdf files. Recently TeXShop gained the ability to {\em create} these annotations. The new feature has been designed in a nonintrusive manner. If the feature is not used, the only visible change in the interface is an additional item in the Preview menu named ``Annotation Panel;''  no new tools have been added to the toolbar and no additional code will run. 
+TeXShop has the ability to open annotated pdf files and view the annotations, because PDFKit supports annotations and TeXShop can open arbitrary pdf files. Recently TeXShop gained the ability to {\em create} these annotations. The new feature has been designed in a nonintrusive manner. If the feature is not used, the only visible change in the interface is an additional item in the Preview menu named ``Show Annotation Toolbar;''  no new tools have been added to the toolbar of the window and no additional code will run. 
 
 \section{Who Defined Annotations?}
 The PDF document format was created by Adobe. The resulting API allows annotations to be added to the individual pages of such a document. These annotations become part of the pdf file and are shown by pdf display software conforming to the standards. Most annotations prescribed by Adobe are supported by PDFKit, Apple's pdf rendering framework. 
@@ -5262,21 +5262,24 @@ Finally, adding annotations was an interesting summer project for me.
 
 
 Activate TeXShop's Preview window. Suppose a particular page is visible in this window and you wish to add annotations to the page.
-Select the item ``Annotation Panel...'' in TeXShop's Preview menu. A small panel will appear, floating over the screen.
-This panel contains all tools needed to annotate. The eleven graphic items on the right side correspond to the eleven annotations which TeXShop can create. More about them in a minute.
+Select the item ``Show Annotation Toolbar'' in TeXShop's Preview menu. An annotation toolbar appears directly below the toolbar of the window. If the source and the Preview are shown in the same window, the annotation toolbar appears below the toolbar of that window.
+The annotation toolbar contains all tools needed to annotate, and these tools always act on the document of the window that shows them. The eleven colored buttons in the middle correspond to the eleven annotations which TeXShop can create. More about them in a minute.
+To remove the annotation toolbar, click the round button with a cross at its right end, or select ``Hide Annotation Toolbar'' in the Preview menu.
+
+When the window is too narrow for the whole annotation toolbar, the buttons at its right end move into a menu, which opens from the button marked $\gg$ next to the close button.
 
 \begin{figure}[htbp] %  figure placement: here, top, bottom, or page
    \centering
-   \includegraphics[width=3.5in]{Graphics/annotationPanel.png} 
-   \caption{Annotation Panel}
-   \label{fig:annotationPanel}
+   \includegraphics[width=\textwidth]{Graphics/annotationToolbar.png} 
+   \caption{Annotation Toolbar}
+   \label{fig:annotationToolbar}
 \end{figure}
 
 
 
 \newpage
 
-When annotations are being created in TeXShop, the user toggles the program between two modes known as ``Edit Mode'' and ``Run Mode''. Run mode is the standard mode which TeXShop has used up to now. Annotations can be displayed in this mode, but not created. Edit mode is the mode which allows creation and manipulation of new annotations. To toggle between the two modes, click the top left ``Edit Mode'' button.
+When annotations are being created in TeXShop, the user toggles the program between two modes known as ``Edit Mode'' and ``Run Mode''. Run mode is the standard mode which TeXShop has used up to now. Annotations can be displayed in this mode, but not created. Edit mode is the mode which allows creation and manipulation of new annotations. To toggle between the two modes, click the ``Edit Mode'' button at the left end of the annotation toolbar. This button is highlighted while Edit mode is on, and the annotation buttons can only be used in Edit mode. When the Preview is split into two parts, both parts are in the same mode, and the annotation buttons act on the part that you last clicked in.
 
 While this mode is off, click in the Preview window while holding down the Control key. The standard Preview  contextual menu appears. TeXShop creates the first three items in this menu, but most items come directly from Apple. Repeat this procedure when Edit Mode is on. A different contextual menu appears, designed specifically for annotation. Some users may prefer annotating with this contextual menu. Experiment if you like. Annotating using this contextual menu will not be mentioned again in the manual.
 
@@ -5285,12 +5288,10 @@ The Adobe API for annotations states that each annotation must contain  the name
 
 \section{Adding Annotations to a Page}
 The top three annotations are created by first selecting one or several
-lines of text. Next click on the words ``strike'', ``emphasize'', or ``underline'' to annotate the selection. If a selection involves several lines, each line becomes a separate annotation. Click on an annotated line to select it. Drag the mouse
+lines of text. Next click on the first, second, or third annotation button (strike out, highlight, underline) to annotate the selection. If a selection involves several lines, each line becomes a separate annotation. Click on an annotated line to select it. Drag the mouse
 to drag the annotated portion left or right. Click on the small red box at the right side to resize the annotation, making the annotated portion shorter or longer. After you are satisfied, click elsewhere to deselect the new annotation.
 
-Each remaining annotation is created as follows. If you like, select a small portion of text. Then click in the Panel on the annotation you want. This annotation will appear near your selection if you selected text first. Otherwise the annotation will appear near the bottom of the page. Click inside the new annotation and move it to its desired spot. Click on the small red rectangle at bottom right to resize the annotation. Resizing squares and circles creates rectangles and ovals. But if the Option key is down, resizing is constrained to only create larger or smaller squares and circles. To use this constraint, begin resizing as usual. Then press and hold down Option and the resized figure will immediately snap to become a circle or square.
-
-In the above, click in the center of the icon in the Annotation Panel rather than near the boundary. Otherwise you may miss the area that registers the click.
+Each remaining annotation is created as follows. If you like, select a small portion of text. Then click the button of the annotation you want in the annotation toolbar. This annotation will appear near your selection if you selected text first. Otherwise the annotation will appear near the bottom of the page. Click inside the new annotation and move it to its desired spot. Click on the small red rectangle at bottom right to resize the annotation. Resizing squares and circles creates rectangles and ovals. But if the Option key is down, resizing is constrained to only create larger or smaller squares and circles. To use this constraint, begin resizing as usual. Then press and hold down Option and the resized figure will immediately snap to become a circle or square.
 
 \newpage
 The same dragging technique is used to move the arrow anywhere you like. In this case the small resizing rectangle is the head of the arrow and is not drawn. Click on the head and drag to fix the tail of the arrow and move the head anywhere you like. Selecting and moving arrows is slightly tricky; for details, read the section about arrows later in this chapter.
@@ -5312,20 +5313,14 @@ The keystrokes call  the menu items ``Bigger'' and ``Smaller'' in the Source men
  Popups originally created a fairly small region to display  text, but here there is good news. In Apple's operating system Sequoia and later, the region for text has been enlarged. 
 
 \section{Editing  Text in Annotations}
-We have already explained how to create the text in popup annotations. The text in the other two textual annotations is created using the panel which appears by pushing ``Show Text Panel''. A small editing panel will float over the screen. Every time one of the textual annotations is selected, the text of the annotation will  appear in the Text Panel. Edit this text in the usual way, modifying words or adding new text. Push OK and the new text will appear in the selected annotation.
+We have already explained how to create the text in popup annotations. The text in the other two textual annotations is edited as follows. Select the annotation, and then push the ``Edit Text...'' button in the annotation toolbar; it shows a speech bubble and sits to the right of the font button. A small editing area opens below the button, showing the text of the annotation. Edit this text in the usual way, modifying words or adding new text. Push OK or type command-return, and the new text will appear in the annotation. Clicking anywhere else also keeps the new text, but pushing the escape key closes the editing area and leaves the annotation as it was.
 
-The text panel has three radio buttons at the bottom labeled ``Left'', ``Center'', ``Right''. Select a button to
-determine the alignment of text in the Text Panel and corresponding alignment in the annotation.
-
-The Text Panel contains {\em Rich Text}, which leads to an annoyance. In rich text, each paragraph can have its own alignment, so a centered paragraph could be followed by a left justified paragraph. We will not use this feature in TeXShop, but it causes a problem. When you select an annotation containing text, that text automatically appears in the Text Panel with the correct justification.
-If you click at the very end of this text and then begin adding extra lines, those lines may be left justified even if the original text is centered. To avoid this, click at the end of the text, and  then delete one character. Type to add that character back and after that text entered in the panel will be correctly justified.
-
-This trick is not needed if you click in the middle of the text to revise it, or if you select and delete all the old text and type entirely different text.
+Three buttons below the text, labeled ``Left'', ``Center'', and ``Right'', determine the alignment of the text in the annotation. The whole text has a single alignment.
 
 
 \section{Changing Annotation Colors}
 
-To edit colors, push the ``Show Color Panel'' button in the Annotation Panel. A Color Picker will float over the page;
+To edit colors, push the ``Show Colors'' button, showing a palette, in the annotation toolbar. A Color Picker will float over the page;
 move it near the bottom. To change the color of an annotation, select the annotation and then select a color in the Color Panel. The annotation color will immediately change. This process can modify colors of selection annotations, colors of rectangles and circles, colors of arrows, and background colors of textual annotations. To change the color of the actual text in such an annotation, hold down the option key when selecting the color.
 
 Changing the color of  a Popup annotation initially changes the color of its icon. But when the annotation  pops up, the icon color becomes the color of the text background. Thus a very light gray is useful, while a dark color will make the text difficult to read. The color of the text itself cannot be changed.
@@ -5333,7 +5328,7 @@ Changing the color of  a Popup annotation initially changes the color of its ico
 The Color Picker has several modes of operation. Colors can be selected by picking a point in a circle filled with colors, or by adjusting sliders, or by selecting a particular crayon. Once you select a mode, the picker will use that mode whenever the Color Picker opens, until you again change modes. 
 
 
-\section{Changing Annotation Fonts} Push the ``Show Font Panel'' button in the Annotation Panel to make a floating Font Panel appear; move it near the bottom of the page. This panel can change the font of the text with transparent background, and also the font of the text with colored background. First select the appropriate annotation, and then select a new font in the Font Panel.
+\section{Changing Annotation Fonts} Push the ``Show Fonts'' button, showing the letters Aa, in the annotation toolbar to make a floating Font Panel appear; move it near the bottom of the page. This panel can change the font of the text with transparent background, and also the font of the text with colored background. First select the appropriate annotation, and then select a new font in the Font Panel.
 
 \chapter{More on Annotations}
 
@@ -5342,7 +5337,7 @@ The Color Picker has several modes of operation. Colors can be selected by picki
 Recall that annotation data is not part of the source file. If you annotate a page of the preview output and then typeset again, the preview pdf will be replaced by a new typeset copy and the annotations will be lost. 
 As we will see later, TeXShop has guard-rails to prevent this from happening, but these guards ultimately depend on saving your annotated pdf file.
 
-To do this, push the ``Save Annotations'' button in the Annotation Panel. The panel will automatically switch to Run mode and a standard Macintosh Save Dialog will appear. This dialog will contain a default folder where the file will be saved, and a default file name for the file. The folder will be the folder containing your source document, so if you are working with a document titled ``Fourier.tex'', it will be the folder containing this file. If instead you opened a pdf file,
+To do this, push the ``Save Annotations...'' button in the annotation toolbar. TeXShop will automatically switch to Run mode and a standard Macintosh Save Dialog will appear. This dialog will contain a default folder where the file will be saved, and a default file name for the file. The folder will be the folder containing your source document, so if you are working with a document titled ``Fourier.tex'', it will be the folder containing this file. If instead you opened a pdf file,
 it will be the folder containing that file.  
 
 The default name of the file being saved will be the name of the source followed by the phrase ``-Annotated''. So in the case of Fourier.tex,
@@ -5352,8 +5347,8 @@ If you choose a new name or new location to save the annotated file, the Save Pa
 the next time the panel opens, it will suggest writing to ``Fourier-Annotated1.pdf'' and you can
 easily change that to ``Fourier-Annotated2.pdf''. 
 
-The entire pdf file, including all annotated pages, will be saved. But if you remove the check mark from the box titled ``Save All'' to the right of the Save Annotations button, only pages containing annotations will be saved. 
-This check mark is present when the Panel first appears because many users prefer to annotate,
+The entire pdf file, including all annotated pages, will be saved. But if you remove the check mark from the box titled ``All Pages'' to the right of the Save Annotations button, only pages containing annotations will be saved. 
+This check mark is present when the document is opened because many users prefer to annotate,
 save, continue annotating, save again, etc., and obtain full documents with more and more pages annotated. But if you remove the check mark, it will remain off while the current document is still open,
 unless you turn it back on.
 
@@ -5365,14 +5360,14 @@ unless you turn it back on.
 \section{Removing Image Streams}
 
 Suppose you have an annotated pdf file like Fourier-Annotated.pdf, or perhaps an annotated document created by Adobe Acrobat, Skim, Preview, or something else. These files can all be opened in TeXShop, of course. 
-Then by opening the Annotation Panel and switching to Edit mode, the annotations can be revised.
+Then by showing the annotation toolbar and switching to Edit mode, the annotations can be revised.
 
 When annotated copies are saved to disk, it is common for the software to save an ``image stream'' for each annotation. This image stream is a sort of picture of the annotation, which can be displayed quickly and rapidly, without looking at the underlying data describing the annotation in detail. One advantage of this technique is that annotations created by one program on a particular computer can  be opened accurately by a different program on a different computer.
 
 But a disadvantage is that if you decide to edit these annotations, the images cannot be modified. They can only be resized and usually this process is constrained to preserve aspect ratio. So if you have an oval, for instance, and you resize, the resized oval may no longer touch all four sides of the bounding rectangle. It is impossible to change colors, or fonts.
 
-There is a way to fix this problem. If an annotated pdf file is loaded, then soon after switching to Edit mode push the
-``Remove Streams'' button. All image streams of annotations will then be removed, and annotations again
+There is a way to fix this problem. If an annotated pdf file is loaded, then soon after switching to Edit mode choose
+``Remove Image Streams'' in the menu of the button with three dots in the annotation toolbar. All image streams of annotations will then be removed, and annotations again
 become editable. 
 
 This trick is not important if the annotated file you create in TeXShop will be opened by someone who will only view the annotations. It is usually not important if the annotated file you create in TeXShop is opened by another program like Adobe Acrobat or Preview which can edit annotations (perhaps because these programs automatically remove image streams). But it is very important if the annotated file you create in TeXShop is being opened for further editing in TeXShop. Otherwise the editing process will be miserable.
@@ -5385,7 +5380,7 @@ and have already been written to disk by the typesetting software when TeXShop r
 
 Therefore if pages are annotated and  the user has not yet saved these annotations,  several actions may cause the user to lose their annotations. These include typesetting the document again, closing the Preview Window, quitting the entire document being annotated, or quitting TeXShop altogether.
 
-Therefore a series of guard rails have been added to the program to prevent these accidental losses of data. Recall that the annotation panel switches between two modes, ``Edit Mode'' and ``Run Mode''. If the user selects ``Edit Mode'' in the Panel, TeXShop decides that the user is  adding new annotations or modifying annotations that already exist. So the next time the user typesets or does another of the dangerous actions listed earlier, the ``Save Annotations'' panel appears, allowing the user to save annotations. 
+Therefore a series of guard rails have been added to the program to prevent these accidental losses of data. Recall that the annotation toolbar switches between two modes, ``Edit Mode'' and ``Run Mode''. If the user turns on ``Edit Mode'' in the annotation toolbar, TeXShop decides that the user is  adding new annotations or modifying annotations that already exist. So the next time the user typesets or does another of the dangerous actions listed earlier, the ``Save Annotations'' panel appears, allowing the user to save annotations. 
 As soon as annotations are saved or the user chooses ``Cancel'', typesetting or the other action occurs. Since this is an attempt to save data, the entire annotated file is saved even if some pages are not annotated. 
 
 
@@ -5410,7 +5405,7 @@ Double click the text annotation and a small window will pop up next to it. This
 
 That's it. Save any changes.
 
-If an Acrobat-edited document is opened in TeXShop, it will look exactly like it did in Adobe. After switching to Edit mode, arrows may vanish. If that happens, select ``Remove Streams''. Arrows will immediately return, and with the TeXShop arrow head rather than the Adobe head. Editing in TeXShop then proceeds normally.
+If an Acrobat-edited document is opened in TeXShop, it will look exactly like it did in Adobe. After switching to Edit mode, arrows may vanish. If that happens, select ``Remove Image Streams''. Arrows will immediately return, and with the TeXShop arrow head rather than the Adobe head. Editing in TeXShop then proceeds normally.
 
 \section{Interacting with Preview}
 
@@ -5422,11 +5417,11 @@ Resizing text is slightly different because Preview only resizes horizontally. T
 The main difference between TeXShop and Preview is their treatment of arrows. In Preview, arrows have three small selection points, at both ends and in the middle. Grab the beginning or end point to resize the arrow. As long as you do not touch the middle, all is well. 
 
 Save the file when you are done editing.
-Then open the file in TeXShop. It will look exactly the same. Change to Edit Mode and Remove Streams.
+Then open the file in TeXShop. It will look exactly the same. Change to Edit Mode and Remove Image Streams.
 Everything will work as before with one exception. If you select or resize text annotations, they will forget the font choices and switch to default fonts. These fonts can be changed back to desired fonts in TeXShop.
 
 Return to editing in Preview, and this time also resize arrows by moving the middle point. This creates curved arrows, a nifty touch. When the file is moved back to TeXShop, the curved arrows initially remain. But this time, changing to
-Edit mode makes the arrows disappear. Remove streams. The arrow still is gone. Select any annotation and then begin pushing the tab key. This cycles through all existing annotations. When the cycle reaches an arrow, at first you will see an empty box, but shortly after that the arrow will reappear. It has the same start and end, but is now straight. 
+Edit mode makes the arrows disappear. Remove image streams. The arrow still is gone. Select any annotation and then begin pushing the tab key. This cycles through all existing annotations. When the cycle reaches an arrow, at first you will see an empty box, but shortly after that the arrow will reappear. It has the same start and end, but is now straight. 
 After this step, proceed normally.
 
 
@@ -5480,10 +5475,6 @@ Because of this design, moving and resizing arrows should be done as follows. To
 %{\bf Warning:} TeXShop 5.42 does not issue a warning if you typeset or quit the program before saving your annotations.  This feature  may be added
 %in the future. In the initial version, I wanted to avoid the distraction of such warnings because they would confuse users who activate automatic saving.  You may lose some annotations at first; complain and I'll be motivated to fix this in a later version. 
 
-
-\section{Don't Do This}
-
-Each document has its own individual annotation panel, so if several projects are open and each is being annotated, confusion will ensue. Don't do this.
 
 \chapter{Fermat as Annotator}
 

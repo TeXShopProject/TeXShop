@@ -1096,7 +1096,7 @@
                                     <action selector="toggleLinkPopups:" target="-1" id="wig-Tw-paE"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Annotatievenster..." id="DmQ-bT-1mf" identifier="TSShortcut.displayChoicesPanel:.0">
+                            <menuItem title="Toon annotatieknoppenbalk" id="DmQ-bT-1mf" identifier="TSShortcut.displayChoicesPanel:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayChoicesPanel:" target="-1" id="WpS-oA-iqI"/>

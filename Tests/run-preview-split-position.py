@@ -127,7 +127,15 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 - (void)attachPinnedLinkPreview:(TSLinkPreviewView *)p windowFrame:(NSRect)f {}
 VIEWMETHODS
 @end
+// The document: it hears that the second part goes away (annotation text being edited for it is dropped).
+@interface TestHost : NSObject
+- (void)annotationPartWillCollapse:(id)view;
+@end
+@implementation TestHost
+- (void)annotationPartWillCollapse:(id)view {}
+@end
 @interface TestWindow : NSWindow
+@property (strong) TestHost *myDocument;
 @property BOOL firstTime, windowIsSplit, horizontal;
 @property PDFView *activeView, *myPDFKitView, *myPDFKitView2;
 @property NSSplitView *pdfKitSplitView;
