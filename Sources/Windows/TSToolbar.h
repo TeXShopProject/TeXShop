@@ -43,3 +43,6 @@ FOUNDATION_EXPORT BOOL TSToolbarArrangesVisibilityPriorities(void);
 // The priority of the item at index: high after the last flexible space, standard before it,
 // and rising from left to right in a toolbar without a flexible space (lastFlexibleSpace < 0).
 FOUNDATION_EXPORT NSToolbarItemVisibilityPriority TSToolbarVisibilityPriority(NSUInteger index, NSInteger lastFlexibleSpace);
+// Whether the window of a toolbar is given the unified style while the customization sheet is
+// made, so that the sheet shows the default set at its height (macOS 26, expanded windows).
+FOUNDATION_EXPORT BOOL TSToolbarMakesSheetInUnifiedStyle(NSInteger majorVersion, NSWindowToolbarStyle style);
