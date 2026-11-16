@@ -265,8 +265,8 @@ tiToolTipHtmlSearch           = "Pesquisar";
 "ExperimentToolSelectPDF" = "Selecionar PDF";
 "ExperimentZoomOut" = "Reduzir";
 "ExperimentZoomIn" = "Ampliar";
-"ExperimentZoomToContent" = "Ajustar ao conteúdo";
-"ExperimentZoomToContentWidth" = "Ajustar à largura do conteúdo";
+"ExperimentZoomToContent" = "Ampliar para o conteúdo";
+"ExperimentZoomToContentWidth" = "Ampliar para a largura do conteúdo";
 
 "Page Layout" = "Disposição da página";
 "tiLabelTSPreviewAppearance" = "Apresentação";

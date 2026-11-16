@@ -16,6 +16,7 @@ MUTATIONS = {
     # window code
     'divider-stays': ('window', '    [splitView setPosition:start + lowerExtent ofDividerAtIndex:0];\n', ''),
     'magnification-stays': ('window', '            [view setMagnification:scales[i]];\n', '            ;\n'),
+    'content-width-not-fitted': ('window', '    [lowerView fitContentWidth];\n', ''),
     'format-stays': ('window', '        if (view.pageStyle != styles[i]) {', '        if (NO) {'),
     'fit-lost': ('window', '        if (autoScales[i])\n', '        if (NO)\n'),
     'selection-stays': ('window', '    [upperView setCurrentSelection:lowerSelection];\n    [lowerView setCurrentSelection:upperSelection];\n', ''),
@@ -97,7 +98,7 @@ program = r'''
 #import "TSPreviewSplitDivider.h"
 // Values from globals.h.
 enum { PDF_SINGLE_PAGE_STYLE = 1, PDF_TWO_PAGE_STYLE = 2, PDF_MULTI_PAGE_STYLE = 3, PDF_DOUBLE_MULTI_PAGE_STYLE = 4 };
-enum { NEW_PDF_ACTUAL_SIZE = 1, NEW_PDF_FIT_TO_NONE = 2, NEW_PDF_FIT_TO_WINDOW = 3, NEW_PDF_FIT_TO_WIDTH = 4 };
+enum { NEW_PDF_ACTUAL_SIZE = 1, NEW_PDF_FIT_TO_NONE = 2, NEW_PDF_FIT_TO_WINDOW = 3, NEW_PDF_FIT_TO_WIDTH = 4, NEW_PDF_FIT_TO_CONTENT_WIDTH = 6 };
 enum { NEW_MOUSE_MODE_SCROLL = 1, NEW_MOUSE_MODE_SELECT_TEXT = 2 };
 enum { MOUSE_MODE_MAG_GLASS = 2 };
 // The settings are in memory only (TestAppKitIsolation.h).
@@ -176,6 +177,8 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 @property BOOL globalLongTerm;
 @property BOOL oldUsed, doScroll; @property NSRect oldVisibleRect; @property NSInteger oldIndex;
 @property (readonly) TSLinkPreviewView *preview;
+@property NSInteger contentWidthFits;
+- (void)fitContentWidth;
 - (void)moveSplitToCorrectSpot:(NSInteger)index;
 - (void)saveLocation;
 - (void)restoreLocation;
@@ -213,6 +216,9 @@ static void TSSplitToggleItemsFollowSplit(void) {}
     [self setDisplaysPageBreaks:pageStyle != PDF_SINGLE_PAGE_STYLE];
 }
 - (void)setupMagnificationStyle { if (resizeOption == NEW_PDF_FIT_TO_NONE) [self setScaleFactor:1]; else [self setAutoScales:YES]; }
+// Fit to Content Width (run-fit-content-width.py): counted here, as it fits the part at its new size.
+- (void)fitContentWidth { if (resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH) self.contentWidthFits++; }
+- (void)centreContentRowLater {}
 - (void)cleanupMarqueeKeepingPinnedLinkPreview {}
 - (void)observeLinkPreviewEvents {}
 - (void)killTransientLinkPreview { [linkPreview removeFromSuperview]; linkPreview = nil; self.handlingLink = 0; }
@@ -562,6 +568,21 @@ int main(int argc, char **argv) { @autoreleasepool {
         checkSwitched(p, before, @"fit, first switch", NO);
         [p.window switchViews]; settle(p.window);
         checkSame(p, before, @"fit, second switch");
+        [p.window close];
+    }
+    {   // A part that fits the content to its width is fitted again at its new place, and keeps
+        // that magnification instead of taking the scale it had.
+        Preview p = makePreview(doc, YES);
+        NSSplitView *sv = p.window.pdfKitSplitView;
+        [sv setPosition:round(NSWidth(sv.bounds) * 0.35) ofDividerAtIndex:0]; settle(p.window);
+        [p.upper setAutoScales:NO]; [p.upper setMagnification:0.8]; [p.upper setResizeOption:NEW_PDF_FIT_TO_CONTENT_WIDTH];
+        [p.lower setMagnification:1.25];
+        settle(p.window);
+        p.upper.contentWidthFits = p.lower.contentWidthFits = 0;
+        [p.window switchViews]; settle(p.window);
+        check(p.lower.resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH && p.lower.contentWidthFits > 0 && !p.lower.autoScales,
+              @"content width: the part that takes it is fitted at its new size");
+        check(near(p.upper.scaleFactor - 1.25), @"content width: the other part takes the fixed magnification");
         [p.window close];
     }
     for (NSNumber *sideBySide in @[@NO, @YES]) {

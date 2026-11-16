@@ -182,8 +182,94 @@
 
 - (void)setScaleFactor:(CGFloat)scale
 {
+    // Fit to Content Width stays while it sets the magnification itself, and when the
+    // magnification is only set again, as when a page step puts the place back. Any other
+    // change makes the magnification fixed.
+    BOOL keep = _fittingContentWidth ||
+        (resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH && fabs(scale - self.scaleFactor) < 1e-6);
     TSPreviewChangeScale(self, ^{ [super setScaleFactor: scale]; });
-    resizeOption =  NEW_PDF_FIT_TO_NONE;
+    if (!keep)
+        resizeOption =  NEW_PDF_FIT_TO_NONE;
+}
+
+// Fit to Content Width (TSContentZoom.h): the content of the pages fills the width of the view.
+- (void)fitContentWidth
+{
+    [self fitContentWidthKeepingTop:TSContentTopOf(self)];
+}
+
+- (void)fitContentWidthKeepingTop:(TSContentTop)top
+{
+    if (resizeOption != NEW_PDF_FIT_TO_CONTENT_WIDTH || _fittingContentWidth || !self.document.pageCount)
+        return;
+    _fittingContentWidth = YES;
+    if (self.autoScales)
+        self.autoScales = NO;
+    TSContentFitWidthKeeping(self, top, ^CGFloat(CGFloat scale) {
+        [self setScaleFactor: MAX(0.2, MIN(scale, PDF_MAX_SCALE / 100.0))];
+        return self.scaleFactor;
+    });
+    _fittingContentWidth = NO;
+    [self scaleChanged: nil];
+    [self keepPinnedLinkPreviewInView];
+    [self measureContentLater];
+}
+
+// The pages that are not measured yet are measured a few at a time; then the content of all
+// of them is fitted.
+- (void)measureContentLater
+{
+    PDFDocument *document = self.document;
+    if (_measuringContent || resizeOption != NEW_PDF_FIT_TO_CONTENT_WIDTH || !document ||
+        TSContentAllMeasured(document, self.displayBox))
+        return;
+    _measuringContent = YES;
+    __weak MyPDFKitView *weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [weakSelf measureContentOf:document];
+    });
+}
+
+- (void)measureContentOf:(PDFDocument *)document
+{
+    _measuringContent = NO;
+    if (resizeOption != NEW_PDF_FIT_TO_CONTENT_WIDTH)
+        return;
+    if (document != self.document)
+        [self measureContentLater];
+    else if (TSContentMeasurePages(document, self.displayBox, 0.008))
+        [self fitContentWidth];
+    else
+        [self measureContentLater];
+}
+
+// Fit to Content Width, one page or one row at a time: the content of the new page or row
+// comes to the middle, after the page step has put the place back.
+- (void)centreContentRowLater
+{
+    if (resizeOption != NEW_PDF_FIT_TO_CONTENT_WIDTH || TSContentContinuous(self))
+        return;
+    __weak MyPDFKitView *weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        MyPDFKitView *view = weakSelf;
+        if (view.resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH)
+            TSContentCentreRow(view);
+    });
+}
+
+// The width of the view sets the magnification of Fit to Content Width. The text at the top
+// is taken before PDFKit moves to the top of the page.
+- (void)setFrameSize:(NSSize)newSize
+{
+    BOOL refit = resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH && self.document.pageCount &&
+        fabs(newSize.width - NSWidth(self.frame)) >= 0.5;
+    TSContentTop top = refit ? TSContentTopOf(self) : (TSContentTop){nil, NSZeroPoint};
+    PDFPage *topPage = top.page;
+    [super setFrameSize:newSize];
+    if (refit) {
+        top.page = topPage;
+        [self fitContentWidthKeepingTop:top];
+    }
 }
 
 
@@ -345,6 +431,11 @@
 		case NEW_PDF_FIT_TO_WIDTH:
 		case NEW_PDF_FIT_TO_HEIGHT:
 		case NEW_PDF_FIT_TO_WINDOW:	[self setAutoScales: YES];
+									break;
+
+		case NEW_PDF_FIT_TO_CONTENT_WIDTH:
+									[self setAutoScales: NO];
+									[self fitContentWidth];
 									break;
 
 		}
@@ -1795,6 +1886,9 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     PDFPage            *aPage;
     NSInteger          pageNumber;
     
+    if (notification.object == self)
+        [self centreContentRowLater];
+    
     if (notification.object != self.myPDFWindow.activeView)
         return;
     
@@ -2201,6 +2295,18 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 		[self changeScale: self];
 		return self.scaleFactor;
 	});
+	// A fixed magnification, as Zoom In sets, also when it did not change.
+	resizeOption = NEW_PDF_FIT_TO_NONE;
+}
+
+- (void)zoomToContent:(id)sender
+{
+	[self zoomToContentWidthOnly:NO];
+}
+
+- (void)zoomToContentWidth:(id)sender
+{
+	[self zoomToContentWidthOnly:YES];
 }
 
 - (void) changeScale: sender
@@ -2245,6 +2351,9 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	magSize = [myScale doubleValue] / 100.0;
 // changed by Terada (until this line)
 	[self setScaleFactor: magSize];
+	// A magnification chosen in the field, with the stepper, Zoom In or Zoom Out is fixed, also
+	// when it is the one Fit to Content Width had set.
+	resizeOption = NEW_PDF_FIT_TO_NONE;
 	[self keepPinnedLinkPreviewInView];
 	if (sender == myScale1) {
 		[NSApp endSheet: [self.myDocument magnificationPanel]];
@@ -5102,6 +5211,10 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
 {
     if (anItem.action == @selector(changePageStyle:))
         return [self.myDocument validatePreviewLayoutItem:anItem];
+    if (anItem.action == @selector(changePDFViewSize:))
+        anItem.state = anItem.tag == resizeOption ? NSControlStateValueOn : NSControlStateValueOff;
+    if (anItem.action == @selector(zoomToContent:) || anItem.action == @selector(zoomToContentWidth:))
+        return self.document.pageCount > 0;
     if (anItem.action == @selector(copy:) && pinnedLinkPreview.selectionIsRecent && pinnedLinkPreview.selection.string.length)
         return YES;
 	
@@ -8592,6 +8705,15 @@ else
     if (preserveZoom) {
         [super setScaleFactor:previousScale];
         [self scaleChanged:nil];
+    }
+    // Fit to Content Width: a new PDF keeps the magnification until its pages are measured.
+    // A PDF whose pages are all measured already, as when the other part of a split window
+    // showed it first, is fitted now.
+    if (document && resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH) {
+        if (preserveZoom && !TSContentAllMeasured(document, self.displayBox))
+            [self measureContentLater];
+        else
+            [self fitContentWidth];
     }
     [self updateDarkModeInversion];
     __weak MyPDFKitView *weakSelf = self;

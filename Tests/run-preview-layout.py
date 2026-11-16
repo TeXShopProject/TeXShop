@@ -55,6 +55,8 @@ static NSStringEncoding NSISOLatin9StringEncoding = 0x8000020f;
 #define NEW_PDF_FIT_TO_WINDOW 3
 #define NEW_PDF_FIT_TO_WIDTH 4
 #define NEW_PDF_FIT_TO_HEIGHT 5
+#define NEW_PDF_FIT_TO_CONTENT_WIDTH 6
+static inline BOOL TSContentAllMeasured(PDFDocument *document, PDFDisplayBox box) { return NO; }
 @class TSDocument,MyPDFKitView;
 @interface TestWindow : NSWindow
 @property MyPDFKitView *activeView;
@@ -75,7 +77,7 @@ static NSStringEncoding NSISOLatin9StringEncoding = 0x8000020f;
 @end
 BACKFORWARDITEM
 @interface MyPDFKitView : PDFView {
- @public NSInteger pageStyle,firstPageStyle,resizeOption; id myStepper,myStepper1; BOOL _pdfViewReady;
+ @public NSInteger pageStyle,firstPageStyle,resizeOption; id myStepper,myStepper1; BOOL _pdfViewReady, _fittingContentWidth;
  NSView *pinnedLinkPreview;
 }
 @property (weak) TSDocument *myDocument;
@@ -92,6 +94,9 @@ BACKFORWARDITEM
 - (void)keepPinnedLinkPreviewInView {}
 - (void)updateDarkModeInversion {}
 - (void)scaleChanged:(id)sender {}
+// Fit to Content Width has its own test, run-fit-content-width.py.
+- (void)fitContentWidth {}
+- (void)measureContentLater {}
 VIEWMETHODS
 @end
 @implementation TSDocument

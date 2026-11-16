@@ -153,6 +153,7 @@
                       <menuItem title="Actual Size" tag="1" id="637" />
                       <menuItem title="Fixed Magnification" tag="2" id="344" />
                       <menuItem title="Fit to Window" state="on" tag="3" id="339" />
+                      <menuItem title="Fit to Content Width" tag="6" id="Fc6-Pp-tH1" />
                     </items>
                   </menu>
                 </popUpButtonCell>

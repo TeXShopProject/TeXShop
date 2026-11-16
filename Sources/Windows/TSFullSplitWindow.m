@@ -80,25 +80,42 @@
     [[self myDocument].myPDFKitView saveSelectionToFile:sender];
 }
 
+// The magnification commands act on the active part of the preview, as in the Preview window
+// and as the toolbar does; the menu shows the magnification of that part.
 - (void)changePDFViewSize: sender;
 {
-    [[self myDocument].myPDFKitView changePDFViewSize:sender];
+    [(MyPDFKitView *)[[self myDocument] pdfKitView] changePDFViewSize:sender];
 }
 
 - (void)zoomIn: sender;
 {
-    [[self myDocument].myPDFKitView zoomIn:sender];
+    [(MyPDFKitView *)[[self myDocument] pdfKitView] zoomIn:sender];
 }
 
 - (void)zoomOut: sender;
 {
-    [[self myDocument].myPDFKitView zoomOut:sender];
+    [(MyPDFKitView *)[[self myDocument] pdfKitView] zoomOut:sender];
+}
+
+- (void)zoomToContent: (id)sender
+{
+    [(MyPDFKitView *)[[self myDocument] pdfKitView] zoomToContent:sender];
+}
+
+- (void)zoomToContentWidth: (id)sender
+{
+    [(MyPDFKitView *)[[self myDocument] pdfKitView] zoomToContentWidth:sender];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)item
 {
     if (item.action == @selector(changePageStyle:))
         return [self.myDocument validatePreviewLayoutItem:item];
+    // The magnification of the active part of the preview.
+    if (item.action == @selector(changePDFViewSize:))
+        item.state = item.tag == [(MyPDFKitView *)[[self myDocument] pdfKitView] resizeOption] ? NSControlStateValueOn : NSControlStateValueOff;
+    if (item.action == @selector(zoomToContent:) || item.action == @selector(zoomToContentWidth:))
+        return [[[[self myDocument] pdfKitView] document] pageCount] > 0;
     return [super validateMenuItem:item];
 }
 

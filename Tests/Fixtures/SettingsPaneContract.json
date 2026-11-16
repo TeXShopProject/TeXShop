@@ -2189,6 +2189,14 @@
         "index": 2
       },
       {
+        "key": "Fc6-Pp-tH1.tag",
+        "view": "settings.334",
+        "kind": "menuItem",
+        "property": "tag",
+        "value": 6,
+        "index": 3
+      },
+      {
         "key": "333.tag",
         "view": "settings.340",
         "kind": "menuItem",
@@ -3225,7 +3233,8 @@
           "p2D-Mi-Gyc.title": "Home URL",
           "preview-link-popups-cell.title": "Link Popups",
           "preview-scroll-page-turn-cell.title": "Do not turn pages by scrolling",
-          "preview-arrow-keys-page-cell.title": "Always turn pages with the left and right arrow keys"
+          "preview-arrow-keys-page-cell.title": "Always turn pages with the left and right arrow keys",
+          "Fc6-Pp-tH1.title": "Fit to Content Width"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -4722,6 +4731,14 @@
           "property": "title",
           "value": "Fit to Window",
           "index": 2
+        },
+        {
+          "key": "Fc6-Pp-tH1.title",
+          "view": "settings.334",
+          "kind": "menuItem",
+          "property": "title",
+          "value": "Fit to Content Width",
+          "index": 3
         },
         {
           "key": "328.title",
@@ -6254,7 +6271,8 @@
           "p2D-Mi-Gyc.title": "Standard URL-Adresse",
           "preview-link-popups-cell.title": "Link-Popups",
           "preview-scroll-page-turn-cell.title": "Beim Scrollen nicht umblättern",
-          "preview-arrow-keys-page-cell.title": "Mit den Pfeiltasten links und rechts immer umblättern"
+          "preview-arrow-keys-page-cell.title": "Mit den Pfeiltasten links und rechts immer umblättern",
+          "Fc6-Pp-tH1.title": "An Inhaltsbreite anpassen"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -7751,6 +7769,14 @@
           "property": "title",
           "value": "An Fenster anpassen",
           "index": 2
+        },
+        {
+          "key": "Fc6-Pp-tH1.title",
+          "view": "settings.334",
+          "kind": "menuItem",
+          "property": "title",
+          "value": "An Inhaltsbreite anpassen",
+          "index": 3
         },
         {
           "key": "328.title",
@@ -9283,7 +9309,8 @@
           "p2D-Mi-Gyc.title": "URL base",
           "preview-link-popups-cell.title": "Desplegar enlaces",
           "preview-scroll-page-turn-cell.title": "No pasar de página al desplazar",
-          "preview-arrow-keys-page-cell.title": "Pasar siempre de página con las teclas de flecha izquierda y derecha"
+          "preview-arrow-keys-page-cell.title": "Pasar siempre de página con las teclas de flecha izquierda y derecha",
+          "Fc6-Pp-tH1.title": "Ajustar al ancho del contenido"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -10780,6 +10807,14 @@
           "property": "title",
           "value": "Ajustar a la ventana",
           "index": 2
+        },
+        {
+          "key": "Fc6-Pp-tH1.title",
+          "view": "settings.334",
+          "kind": "menuItem",
+          "property": "title",
+          "value": "Ajustar al ancho del contenido",
+          "index": 3
         },
         {
           "key": "328.title",
@@ -12312,7 +12347,8 @@
           "p2D-Mi-Gyc.title": "URL personnelle",
           "preview-link-popups-cell.title": "Pop-up pour les liens",
           "preview-scroll-page-turn-cell.title": "Ne pas changer de page en faisant défiler",
-          "preview-arrow-keys-page-cell.title": "Toujours changer de page avec les touches fléchées gauche et droite"
+          "preview-arrow-keys-page-cell.title": "Toujours changer de page avec les touches fléchées gauche et droite",
+          "Fc6-Pp-tH1.title": "Adapter à la largeur du contenu"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -13809,6 +13845,14 @@
           "property": "title",
           "value": "Adapter à la fenêtre",
           "index": 2
+        },
+        {
+          "key": "Fc6-Pp-tH1.title",
+          "view": "settings.334",
+          "kind": "menuItem",
+          "property": "title",
+          "value": "Adapter à la largeur du contenu",
+          "index": 3
         },
         {
           "key": "328.title",
@@ -15341,7 +15385,8 @@
           "p2D-Mi-Gyc.title": "URL personale",
           "preview-link-popups-cell.title": "Collegamento popup",
           "preview-scroll-page-turn-cell.title": "Non cambiare pagina scorrendo",
-          "preview-arrow-keys-page-cell.title": "Cambia sempre pagina con i tasti freccia sinistra e destra"
+          "preview-arrow-keys-page-cell.title": "Cambia sempre pagina con i tasti freccia sinistra e destra",
+          "Fc6-Pp-tH1.title": "Adatta alla larghezza del contenuto"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -16838,6 +16883,14 @@
           "property": "title",
           "value": "Adatta alla finestra",
           "index": 2
+        },
+        {
+          "key": "Fc6-Pp-tH1.title",
+          "view": "settings.334",
+          "kind": "menuItem",
+          "property": "title",
+          "value": "Adatta alla larghezza del contenuto",
+          "index": 3
         },
         {
           "key": "328.title",
@@ -18370,7 +18423,8 @@
           "p2D-Mi-Gyc.title": "ホームURL",
           "preview-link-popups-cell.title": "リンク先をポップアップ",
           "preview-scroll-page-turn-cell.title": "スクロールでページを送らない",
-          "preview-arrow-keys-page-cell.title": "左右の矢印キーでいつもページを送る"
+          "preview-arrow-keys-page-cell.title": "左右の矢印キーでいつもページを送る",
+          "Fc6-Pp-tH1.title": "内容の幅に合わせる"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -19867,6 +19921,14 @@
           "property": "title",
           "value": "ウインドウに合わせる",
           "index": 2
+        },
+        {
+          "key": "Fc6-Pp-tH1.title",
+          "view": "settings.334",
+          "kind": "menuItem",
+          "property": "title",
+          "value": "内容の幅に合わせる",
+          "index": 3
         },
         {
           "key": "328.title",
@@ -21399,7 +21461,8 @@
           "p2D-Mi-Gyc.title": "홈 URL",
           "preview-link-popups-cell.title": "링크 팝업",
           "preview-scroll-page-turn-cell.title": "스크롤로 페이지를 넘기지 않음",
-          "preview-arrow-keys-page-cell.title": "왼쪽·오른쪽 화살표 키로 항상 페이지를 넘김"
+          "preview-arrow-keys-page-cell.title": "왼쪽·오른쪽 화살표 키로 항상 페이지를 넘김",
+          "Fc6-Pp-tH1.title": "내용 너비에 맞추기"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -22896,6 +22959,14 @@
           "property": "title",
           "value": "창에 맞추기",
           "index": 2
+        },
+        {
+          "key": "Fc6-Pp-tH1.title",
+          "view": "settings.334",
+          "kind": "menuItem",
+          "property": "title",
+          "value": "내용 너비에 맞추기",
+          "index": 3
         },
         {
           "key": "328.title",
@@ -24428,7 +24499,8 @@
           "p2D-Mi-Gyc.title": "Start-URL",
           "preview-link-popups-cell.title": "Beweeg pop-ups",
           "preview-scroll-page-turn-cell.title": "Niet bladeren door te scrollen",
-          "preview-arrow-keys-page-cell.title": "Altijd bladeren met de pijltoetsen links en rechts"
+          "preview-arrow-keys-page-cell.title": "Altijd bladeren met de pijltoetsen links en rechts",
+          "Fc6-Pp-tH1.title": "Aan inhoudsbreedte aanpassen"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -25925,6 +25997,14 @@
           "property": "title",
           "value": "Aan venster aanpassen",
           "index": 2
+        },
+        {
+          "key": "Fc6-Pp-tH1.title",
+          "view": "settings.334",
+          "kind": "menuItem",
+          "property": "title",
+          "value": "Aan inhoudsbreedte aanpassen",
+          "index": 3
         },
         {
           "key": "328.title",
@@ -27457,7 +27537,8 @@
           "p2D-Mi-Gyc.title": "URL inicial",
           "preview-link-popups-cell.title": "Pop-ups de links",
           "preview-scroll-page-turn-cell.title": "Não mudar de página ao deslocar",
-          "preview-arrow-keys-page-cell.title": "Mudar sempre de página com as teclas de seta esquerda e direita"
+          "preview-arrow-keys-page-cell.title": "Mudar sempre de página com as teclas de seta esquerda e direita",
+          "Fc6-Pp-tH1.title": "Ajustar à largura do conteúdo"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -28954,6 +29035,14 @@
           "property": "title",
           "value": "Ajustar à janela",
           "index": 2
+        },
+        {
+          "key": "Fc6-Pp-tH1.title",
+          "view": "settings.334",
+          "kind": "menuItem",
+          "property": "title",
+          "value": "Ajustar à largura do conteúdo",
+          "index": 3
         },
         {
           "key": "328.title",
@@ -30486,7 +30575,8 @@
           "p2D-Mi-Gyc.title": "URL inicial",
           "preview-link-popups-cell.title": "Pop-ups de links",
           "preview-scroll-page-turn-cell.title": "Não mudar de página ao rolar",
-          "preview-arrow-keys-page-cell.title": "Sempre mudar de página com as teclas de seta esquerda e direita"
+          "preview-arrow-keys-page-cell.title": "Sempre mudar de página com as teclas de seta esquerda e direita",
+          "Fc6-Pp-tH1.title": "Ajustar à largura do conteúdo"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -31983,6 +32073,14 @@
           "property": "title",
           "value": "Ajustar à janela",
           "index": 2
+        },
+        {
+          "key": "Fc6-Pp-tH1.title",
+          "view": "settings.334",
+          "kind": "menuItem",
+          "property": "title",
+          "value": "Ajustar à largura do conteúdo",
+          "index": 3
         },
         {
           "key": "328.title",
@@ -33515,7 +33613,8 @@
           "p2D-Mi-Gyc.title": "URL inițial",
           "preview-link-popups-cell.title": "Ferestre pop-up",
           "preview-scroll-page-turn-cell.title": "Nu schimba pagina la derulare",
-          "preview-arrow-keys-page-cell.title": "Schimbă mereu pagina cu tastele săgeată stânga și dreapta"
+          "preview-arrow-keys-page-cell.title": "Schimbă mereu pagina cu tastele săgeată stânga și dreapta",
+          "Fc6-Pp-tH1.title": "Adaptează la lățimea conținutului"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -35012,6 +35111,14 @@
           "property": "title",
           "value": "Adaptează la Fereastră",
           "index": 2
+        },
+        {
+          "key": "Fc6-Pp-tH1.title",
+          "view": "settings.334",
+          "kind": "menuItem",
+          "property": "title",
+          "value": "Adaptează la lățimea conținutului",
+          "index": 3
         },
         {
           "key": "328.title",
@@ -36544,7 +36651,8 @@
           "p2D-Mi-Gyc.title": "主页URL",
           "preview-link-popups-cell.title": "链接预览",
           "preview-scroll-page-turn-cell.title": "滚动时不翻页",
-          "preview-arrow-keys-page-cell.title": "左右方向键总是翻页"
+          "preview-arrow-keys-page-cell.title": "左右方向键总是翻页",
+          "Fc6-Pp-tH1.title": "适合内容宽度"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -38041,6 +38149,14 @@
           "property": "title",
           "value": "适合窗口",
           "index": 2
+        },
+        {
+          "key": "Fc6-Pp-tH1.title",
+          "view": "settings.334",
+          "kind": "menuItem",
+          "property": "title",
+          "value": "适合内容宽度",
+          "index": 3
         },
         {
           "key": "328.title",
