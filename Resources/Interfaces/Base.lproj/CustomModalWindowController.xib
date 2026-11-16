@@ -17,13 +17,13 @@
         <window title="Modal Sheet (title will be hidden)" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="F0z-JX-Cv5">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="244" y="676" width="363" height="169"/>
+            <rect key="contentRect" x="244" y="676" width="354" height="158"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1728" height="1079"/>
-            <value key="minSize" type="size" width="350" height="190"/>
-            <value key="minFullScreenContentSize" type="size" width="350" height="190"/>
-            <value key="maxFullScreenContentSize" type="size" width="350" height="190"/>
+            <value key="minSize" type="size" width="354" height="158"/>
+            <value key="minFullScreenContentSize" type="size" width="354" height="158"/>
+            <value key="maxFullScreenContentSize" type="size" width="354" height="158"/>
             <view key="contentView" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="0.0" width="363" height="169"/>
+                <rect key="frame" x="0.0" y="0.0" width="354" height="158"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Rer-xE-vmi">
