@@ -458,6 +458,9 @@ static void TSInstallAdvancedFindFieldStyle(void)
     else if (needsUpdating) {
         [self mirrorPath:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"TeXShop/HTML/Inactive"]
                   toPath:[HTMLInactivePath stringByStandardizingPath]];
+        // Help.html is TeXShop's own page, shown by Help > HTML Commands; a new version replaces it.
+        [self mirrorPath:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"TeXShop/HTML/Help.html"]
+                  toPath:[[HTMLHelpPath stringByStandardizingPath] stringByAppendingPathComponent:@"Help.html"]];
     }
     
     if (! [fileManager fileExistsAtPath: [ExternalEditorScriptsPath stringByStandardizingPath]] ){
