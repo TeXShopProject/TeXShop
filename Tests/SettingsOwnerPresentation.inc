@@ -131,8 +131,8 @@ static void CheckOwnerPresentation(TSSettingsWindowController *shell) {
         }
         CountPresentedControls(pane, actual);
     }
-    // Save PostScript File and -dALLOWPSTRANSPARENCY were removed.
-    Check(expected[0] == 49 && expected[1] == 15 && expected[2] == 2, @"Reference contains forty-nine switches and two exclusive spelling choices");
+    // Save PostScript File and -dALLOWPSTRANSPARENCY were removed; the arrow keys switch of Preview was added.
+    Check(expected[0] == 50 && expected[1] == 15 && expected[2] == 2, @"Reference contains fifty switches and two exclusive spelling choices");
     {
         // Updates: Updates to Include above Automatic Checks; the last check and Check for Updates below the cards.
         NSView *updates=[shell viewForCategoryIdentifier:@"updates"];

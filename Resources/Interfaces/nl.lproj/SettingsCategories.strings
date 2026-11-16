@@ -214,6 +214,8 @@
 "catalog.preview.0.3.title" = "Standaard muismodus";
 "catalog.preview.0.4.title" = "Niet bladeren door te scrollen";
 "catalog.preview.0.4.note" = "Bij ‘Enkele pagina’ en ‘Twee pagina’s’ stopt scrollen met het muiswiel of het trackpad aan de boven- en onderkant van de pagina.";
+"catalog.preview.0.5.title" = "Altijd bladeren met de pijltoetsen links en rechts";
+"catalog.preview.0.5.note" = "Ook als een vergrote pagina breder is dan het venster, bladeren de pijltoetsen links en rechts in plaats van zijwaarts te scrollen.";
 "catalog.preview.0.6.title" = "Beweeg pop-ups";
 "catalog.preview.0.6.note" = "Beginwaarde voor documenten die u hierna opent. In een geopend document wijzigt u dit in het menu ‘Pagina’.";
 "group.preview.1.title" = "Indeling van dubbele pagina’s";

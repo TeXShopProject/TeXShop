@@ -179,6 +179,7 @@
     [_autoPDFButton setState:[defaults boolForKey:PdfRefreshKey]];
     [_linkPopupsButton setState:[defaults boolForKey:LinkPopupsKey] ? NSControlStateValueOn : NSControlStateValueOff];
     [_scrollPageTurnButton setState:[defaults boolForKey:NoScrollPageTurnKey] ? NSControlStateValueOn : NSControlStateValueOff];
+    [_arrowKeysPageButton setState:[defaults boolForKey:LeftRightArrowsAlwaysPageKey] ? NSControlStateValueOn : NSControlStateValueOff];
     magnification = [defaults floatForKey:PdfMagnificationKey];
     mag = round(magnification * 100.0);
     myNumber = [NSNumber numberWithInteger:mag];

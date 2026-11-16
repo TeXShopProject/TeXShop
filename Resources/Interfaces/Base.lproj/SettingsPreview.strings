@@ -45,6 +45,7 @@
 "preview-cover-note-cell.title" = "Applies on opening. Magic comments and\nPDF reading direction take precedence.";
 "preview-link-popups-cell.title" = "Link Popups";
 "preview-scroll-page-turn-cell.title" = "Do not turn pages by scrolling";
+"preview-arrow-keys-page-cell.title" = "Always turn pages with the left and right arrow keys";
 "sa2-VV-W1K.title" = "Remember last position on close";
 "tVs-uh-QcM.title" = "All windows start at fixed position";
 "vOt-2m-d2s.title" = "Use One Window";

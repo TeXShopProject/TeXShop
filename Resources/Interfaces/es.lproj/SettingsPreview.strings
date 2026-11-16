@@ -45,6 +45,7 @@
 "preview-cover-note-cell.title" = "Applies on opening. Magic comments and\nPDF reading direction take precedence.";
 "preview-link-popups-cell.title" = "Desplegar enlaces";
 "preview-scroll-page-turn-cell.title" = "No pasar de página al desplazar";
+"preview-arrow-keys-page-cell.title" = "Pasar siempre de página con las teclas de flecha izquierda y derecha";
 "sa2-VV-W1K.title" = "Conservar la última position";
 "tVs-uh-QcM.title" = "Comenzar con posición fija";
 "vOt-2m-d2s.title" = "Usar una ventana";

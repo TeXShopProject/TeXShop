@@ -214,6 +214,8 @@
 "catalog.preview.0.3.title" = "Funzione predefinita del mouse";
 "catalog.preview.0.4.title" = "Non cambiare pagina scorrendo";
 "catalog.preview.0.4.note" = "Con «Pagina singola» e «Pagine affiancate», lo scorrimento con la rotella del mouse o il trackpad si ferma all’inizio e alla fine della pagina.";
+"catalog.preview.0.5.title" = "Cambia sempre pagina con i tasti freccia sinistra e destra";
+"catalog.preview.0.5.note" = "Anche quando una pagina ingrandita è più larga della finestra, i tasti freccia sinistra e destra cambiano pagina invece di scorrere in orizzontale.";
 "catalog.preview.0.6.title" = "Collegamento popup";
 "catalog.preview.0.6.note" = "Valore iniziale per i documenti aperti d’ora in poi. In un documento aperto, si cambia dal menu «Pagina».";
 "group.preview.1.title" = "Modalità pagine affiancate";

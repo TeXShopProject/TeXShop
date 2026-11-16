@@ -45,6 +45,7 @@
 "preview-cover-note-cell.title" = "Applies on opening. Magic comments and\nPDF reading direction take precedence.";
 "preview-link-popups-cell.title" = "링크 팝업";
 "preview-scroll-page-turn-cell.title" = "스크롤로 페이지를 넘기지 않음";
+"preview-arrow-keys-page-cell.title" = "왼쪽·오른쪽 화살표 키로 항상 페이지를 넘김";
 "sa2-VV-W1K.title" = "닫을 때 위치 저장";
 "tVs-uh-QcM.title" = "항상 같은 위치에서 열기";
 "vOt-2m-d2s.title" = "단일 창으로";
