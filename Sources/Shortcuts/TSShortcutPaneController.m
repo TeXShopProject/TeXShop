@@ -273,7 +273,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     }
     self.visibleCommands = visible;
     [self reloadTable];
-    for (NSButton *button in self.selectionButtons) button.enabled = [self selectedCommand] != nil;
+    for (NSButton *button in self.selectionButtons) button.enabled = [self selectedCommand] != nil && ![self selectedCommand].managedBySystem;
     [self updateStatus];
 }
 - (void)controlTextDidChange:(NSNotification *)notification { if (!self.searchingByKey) { [self reloadCommands]; } }
@@ -426,7 +426,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     self.shortcuts.showMacro(macro);
 }
 - (void)updateSelectionButtons {
-    for (NSButton *button in self.selectionButtons) { button.enabled = [self selectedCommand] != nil; }
+    for (NSButton *button in self.selectionButtons) { button.enabled = [self selectedCommand] != nil && ![self selectedCommand].managedBySystem; }
     self.macroButton.enabled = [self matchAtRow:self.table.selectedRow].macro != nil;
     [self updateStatus];
 }
@@ -484,7 +484,8 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
         if (!isCommand && match.command != nil && match.command == self.editingCommand) { return self.recordingCell; }
         NSString *text = !isCommand ? [TSShortcutStore displayKey:key modifiers:flags]
             : reason == nil ? [match.path stringByAppendingFormat:@" — %@", NSLocalizedString(@"Assigned", @"")] : match.path;
-        NSTextField *label = isCommand || match.command == nil ? [NSTextField labelWithString:text] : [self shortcutLabel:text]; label.lineBreakMode = NSLineBreakByTruncatingMiddle; label.toolTip = text;
+        NSTextField *label = isCommand || match.command == nil || match.command.managedBySystem ? [NSTextField labelWithString:text] : [self shortcutLabel:text]; label.lineBreakMode = NSLineBreakByTruncatingMiddle; label.toolTip = text;
+        if (match.command.managedBySystem) label.textColor = NSColor.disabledControlTextColor;
         if (!isCommand || reason == nil) { return label; }
         NSView *cell = [NSView new]; cell.identifier = @"shortcut.inactive-command";
         NSStackView *warning = [self warningWithText:reason];
@@ -505,7 +506,9 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     BOOL isCommand = [column.identifier isEqualToString:@"command"];
     if (!isCommand && command == self.editingCommand) { return self.recordingCell; }
     NSString *text = isCommand ? command.path : [TSShortcutStore displayKey:command.item.keyEquivalent modifiers:command.item.keyEquivalentModifierMask];
-    NSTextField *label = isCommand ? [NSTextField labelWithString:text] : [self shortcutLabel:text];
+    // A command whose shortcut macOS keeps is dimmed and not recorded, as alternates are in Xcode.
+    NSTextField *label = isCommand || command.managedBySystem ? [NSTextField labelWithString:text] : [self shortcutLabel:text];
+    if (command.managedBySystem) label.textColor = NSColor.disabledControlTextColor;
     label.lineBreakMode = NSLineBreakByTruncatingMiddle;
     label.toolTip = command.path;
     return label;
@@ -541,14 +544,14 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     }];
 }
 - (void)removeShortcut:(id)sender {
-    TSShortcutCommand *command = self.editingCommand ?: self.selectedCommand; if (!command) return;
+    TSShortcutCommand *command = self.editingCommand ?: self.selectedCommand; if (!command || command.managedBySystem) return;
     [self endRecording];
     [self showError:[self.store setKey:@"" modifiers:0 forCommand:command]];
     [self refreshMenuAndMacros];
 }
 - (void)restoreShortcut:(id)sender {
     [self endRecording];
-    TSShortcutCommand *command = self.selectedCommand; if (!command) return;
+    TSShortcutCommand *command = self.selectedCommand; if (!command || command.managedBySystem) return;
     NSString *error = [self.store conflictForRestoringCommand:command];
     if (error) { [self showError:[NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), error]]; return; }
     __weak typeof(self) weakSelf = self;
@@ -623,7 +626,7 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
 - (void)beginRecordingAtRow:(NSInteger)row {
     TSShortcutCommand *command = [self commandAtRow:row];
     NSWindow *window = self.window;
-    if (command == nil || window == nil || window.attachedSheet != nil) { return; }
+    if (command == nil || command.managedBySystem || window == nil || window.attachedSheet != nil) { return; }
     if (self.editingCommand != command) {
         [self endRecording];
         // A row whose recording ended by a click elsewhere may still hold the field.
