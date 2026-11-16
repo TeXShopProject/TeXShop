@@ -24,8 +24,9 @@ Static part:
     styles beyond the uses listed below, which are left to the work on those
     windows (a listed use that is gone is reported so the list can shrink);
   * code names no font for interface text beyond the ones listed;
-  * the link popup of the preview has round corners and a thin gray edge, not a
-    square black frame;
+  * the link popup of the preview has round corners and a thin black edge, not a
+    square frame (the edge stays black so that the popup stands out from the page
+    under it, #14);
   * the key binding list in Settings > Keyboard has the form of the menu shortcut
     list below it: no border, no background of its own, inset rows with
     alternating colors.
@@ -82,6 +83,8 @@ def static_problems(base):
     popup = (base / 'Sources/Preview/TSLinkPreviewView.m').read_text(encoding='utf-8')
     if 'NSFrameRect(bounds)' in popup or '[[NSBezierPath bezierPathWithRoundedRect:bounds xRadius:radius yRadius:radius] addClip];' not in popup:
         problems.append('Sources/Preview/TSLinkPreviewView.m draws a square popup')
+    if '[[NSColor blackColor] setStroke];\n    [edge stroke];' not in popup:
+        problems.append('Sources/Preview/TSLinkPreviewView.m: the popup edge is not black')
     bindings = (base / 'Sources/Settings/TSKeyBindingsController.m').read_text(encoding='utf-8')
     shortcuts = (base / 'Sources/Shortcuts/TSShortcutPaneController.m').read_text(encoding='utf-8')
     for line in ('scroll.borderType = NSNoBorder;', 'scroll.drawsBackground = NO;', 'table.style = NSTableViewStyleInset;', 'table.usesAlternatingRowBackgroundColors = YES;'):
@@ -181,6 +184,7 @@ MUTATIONS = {
     'not destructive': ('Sources/Settings/TSPreferences-Color.m', '.hasDestructiveAction = YES;', ';'),
     'new square bezel': ('Sources/Find/TSAdvancedFindProgressSheet.m', '_cancelButton.bordered = NO;', '_cancelButton.bordered = NO; _cancelButton.bezelStyle = NSBezelStyleShadowlessSquare;'),
     'square link popup': ('Sources/Preview/TSLinkPreviewView.m', '[edge stroke];', '[edge stroke]; NSFrameRect(bounds);'),
+    'gray link popup edge': ('Sources/Preview/TSLinkPreviewView.m', '[[NSColor blackColor] setStroke];', '[[NSColor colorWithWhite:0 alpha:0.35] setStroke];'),
     'encoding label fixed width': ('Resources/Interfaces/Base.lproj/CustomModalWindowController.xib', '<constraint firstItem="jo5-hk-3mm" firstAttribute="leading" secondItem="BEr-Px-Bqw" secondAttribute="trailing" constant="8" id="Enc-pu-Gap"/>',
                                    '<constraint firstItem="BEr-Px-Bqw" firstAttribute="width" constant="81" id="Enc-lb-Wid"/><constraint firstItem="jo5-hk-3mm" firstAttribute="leading" secondItem="BEr-Px-Bqw" secondAttribute="trailing" constant="8" id="Enc-pu-Gap"/>'),
     'key binding list framed': ('Sources/Settings/TSKeyBindingsController.m', 'scroll.borderType = NSNoBorder;', 'scroll.borderType = NSBezelBorder;'),
