@@ -20,6 +20,7 @@ parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'oth
                                            'window-layout-not-kept', 'drag-cursor-stays', 'hidden-part-cursor', 'no-exit-tracking', 'exit-ignored',
                                            'outside-always-arrow', 'visible-beyond-bounds', 'escape-ignores-active-part',
                                            'outside-on-toolbar-tool-cursor', 'under-toolbar-counts-as-seen',
+                                           'popup-under-toolbar',
                                            'popup-side-fitted', 'popup-side-always-kept', 'no-next-page', 'selection-first-page',
                                            'control-ignored-when-off', 'control-ignored-when-on', 'command-still-shows', 'control-popup-stays',
                                            'timer-ignores-release', 'tooltip-ignores-control', 'tooltip-back-under-popup',
@@ -63,6 +64,9 @@ methods = '\n'.join(method(signature) for signature in (
     '- (void) mouseUp:', '- (PDFDestination *)internalLinkDestinationAtPoint:', '- (void) firstPage:', '- (void) lastPage:',
     '- (void) previousPage:', '- (void) nextPage:', '- (void) changeScale:', '- (void) goToKitPageNumber:'))
 view_mutations = {
+    # A popup that was to come appears after the pointer has gone on to the toolbar (#44).
+    'popup-under-toolbar': ('    if (TSDocumentWindowPointIsUnderToolbar(self.window, [self.window convertPointFromScreen: currentPoint]))',
+                            '    if (NO)'),
     'magnifier-kills-pin': ('[self keepingPinnedLinkPreview:^{ [self fancyMouseDownKeepingPinnedLinkPreview: theEvent]; }];',
                             '[self fancyMouseDownKeepingPinnedLinkPreview: theEvent];'),
     'switch-kills-pin': ('    [self keepingPinnedLinkPreview:^{ [self cleanupMarquee: YES]; }];\n}\n- (BOOL)hasPinnedLinkPreview',
@@ -322,7 +326,8 @@ static void check(BOOL ok, NSString *message) {
 }
 static NSEventModifierFlags flags;
 static NSEventModifierFlags currentFlags(id self, SEL sel) { return flags; }
-static NSPoint currentMouse(id self, SEL sel) { return NSZeroPoint; }
+static NSPoint testMouse; // where the pointer is on the screen, for handleLink:
+static NSPoint currentMouse(id self, SEL sel) { return testMouse; }
 // handleLink: reads Shift and Command from the event being handled.
 static NSEventModifierFlags eventFlags;
 static NSEvent *currentEvent(id self, SEL sel) {
@@ -946,6 +951,63 @@ static PDFDocument *labeledDocument(void) {
     web.URL = [NSURL URLWithString:@"https://example.com/"];
     [[doc pageAtIndex:0] addAnnotation:web];
     return doc;
+}
+// The center of an annotation in the window's coordinates.
+static NSPoint annotationInWindow(PDFView *view, PDFAnnotation *annotation) {
+    NSPoint center = [view convertPoint:NSMakePoint(NSMidX(annotation.bounds), NSMidY(annotation.bounds)) fromPage:annotation.page];
+    return [view convertPoint:center toView:nil];
+}
+// Scrolls the pages until the center of `annotation` is at `y` in the window.
+static void scrollAnnotationTo(PDFView *view, PDFAnnotation *annotation, CGFloat y) {
+    NSScrollView *scroll = view.documentView.enclosingScrollView;
+    NSClipView *clip = scroll.contentView;
+    CGFloat gain = 0;
+    for (int i = 0; i < 8; i++) {
+        CGFloat now = annotationInWindow(view, annotation).y, distance = y - now;
+        if (fabs(distance) < 0.5) return;
+        CGFloat step = gain != 0 ? distance / gain : distance;
+        NSRect bounds = clip.bounds; bounds.origin.y += step;
+        [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin]; [scroll reflectScrolledClipView:clip];
+        CGFloat moved = annotationInWindow(view, annotation).y - now;
+        if (fabs(moved) > 0.01) gain = moved / step;
+    }
+}
+// On macOS 26 and later the pages run under the title bar and the toolbar. A popup that was to
+// come does not appear once the pointer has gone on to the toolbar (#44).
+static void testLinksUnderToolbar(MyPDFKitView *view, NSWindow *window) {
+    PDFDocument *doc = labeledDocument();
+    view.document = doc; view.autoScales = NO; view.scaleFactor = 1; [view layoutDocumentView];
+    [view goToPage:[doc pageAtIndex:0]];
+    [view setTestMouseMode:NEW_MOUSE_MODE_SCROLL];
+    [window.contentView display];
+    [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.3]];
+    PDFAnnotation *link = nil;
+    for (PDFAnnotation *annotation in [doc pageAtIndex:0].annotations)
+        if (annotation.destination) link = annotation;
+    NSRect layout = window.contentLayoutRect;
+    CGFloat band = NSHeight(window.contentView.frame) - NSMaxY(layout);
+    check(link && band > 20, @"fixture: a link and a toolbar over the pages");
+
+    // A popup that was to come: the pointer was over a link just below the toolbar and went on
+    // to the toolbar, closer than the 30 points that otherwise end the wait.
+    scrollAnnotationTo(view, link, NSMaxY(layout) - 10);
+    NSPoint onLink = annotationInWindow(view, link), onToolbar = NSMakePoint(onLink.x, NSMaxY(layout) + 8);
+    check(fabs(onLink.y - (NSMaxY(layout) - 10)) < 1 && onToolbar.y - onLink.y < 30 && onToolbar.y < NSMaxY(layout) + band,
+          @"fixture: a link just below the toolbar");
+    NSPoint screenLink = [window convertPointToScreen:onLink], screenToolbar = [window convertPointToScreen:onToolbar];
+    NSEvent *move = event(window, NSEventTypeMouseMoved, 0, @"", onLink);
+    flags = 0;
+    NSArray *(^info)(void) = ^NSArray *{ return @[@(view.timerNumber), [NSValue valueWithPoint:screenLink], move]; };
+    testMouse = screenLink; view.handlingLink = 1;
+    [view handleLink:[NSTimer timerWithTimeInterval:.2 target:view selector:@selector(handleLink:) userInfo:info() repeats:NO]];
+    check(view.handlingLink == 2 && view.preview.superview, @"fixture: still over the link, its popup appears");
+    [view doKillPopup];
+    testMouse = screenToolbar; view.handlingLink = 1;
+    [view handleLink:[NSTimer timerWithTimeInterval:.2 target:view selector:@selector(handleLink:) userInfo:info() repeats:NO]];
+    check(view.handlingLink == 0 && !view.preview, @"the popup of a link stays away once the pointer has gone on to the toolbar");
+    testMouse = NSZeroPoint;
+    [view doKillPopup];
+    [view setTestMouseMode:0];
 }
 static void testPageLabelAndToolTips(MyPDFKitView *view, NSWindow *window, PDFDocument *doc) {
     view.document = doc; view.autoScales = NO; view.scaleFactor = 2; [view layoutDocumentView];
@@ -1780,6 +1842,7 @@ int main(void) { @autoreleasepool {
         [barred layoutIfNeeded];
         check(NSHeight(barred.contentView.frame) - NSMaxY(barred.contentLayoutRect) > 20, @"the toolbar lies over the content of the second window");
         testCursorOutside(under, barred);
+        testLinksUnderToolbar(under, barred);
         [under doKillPopup];
         [under removeFromSuperview];
     }
@@ -1967,6 +2030,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'exit-ignored':'leaving the popup straight onto the toolbar shows the arrow',
                     'outside-always-arrow':"releasing a drag in the preview outside the popup shows the tool's cursor",
                     'visible-beyond-bounds':'releasing the edge over the toolbar shows the arrow',
+                    'popup-under-toolbar':'the popup of a link stays away once the pointer has gone on to the toolbar',
                     'outside-on-toolbar-tool-cursor':('releasing the edge over the toolbar shows the arrow', 'leaving the popup straight onto the toolbar shows the arrow'),
                     'under-toolbar-counts-as-seen':('the top edge stops below the toolbar', 'the hidden part of the popup shows no cursor of its own'),
                     'escape-ignores-active-part':'Escape dismisses the pinned popup of the active part',
