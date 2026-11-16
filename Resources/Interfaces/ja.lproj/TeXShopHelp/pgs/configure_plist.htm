@@ -1,10 +1,10 @@
 <HTML>
 
 <HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-			<TITLE>.plist�t�@�C��</TITLE>
+			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
+			<TITLE>.plistファイル</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="TeXShop�Ŏg���Ă���plist�t�@�C���ɂ���">
+			<META NAME="description" CONTENT="TeXShopで使われているplistファイルについて">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -12,46 +12,46 @@
 <div id="content_border">
 
 <p>
-Mac OS X��xml�t�@�C�����L�Ăɗ��p���Ă��܂� �G  xml��html�Ɩ��ڂȊ֘A�̂���\��������ł��B
+Mac OS Xはxmlファイルを広汎に利用しています ；  xmlはhtmlと密接な関連のある構造化言語です。
 </p>
 
 <p>
-TeXShop�͂T��xml�t�@�C����ݒ�̂��߂ɗp���Ă��܂��Fcompletion.plist�Eautocompletion.plist�EKeyEquivalents.plist�EMacros_Latex.plist�����Macros_Context.plist�ł��B�����̃t�@�C����LaTeX�p�l���A�L�[�o�C���h�A���j���[���ڂ̃V���[�g�J�b�g�L�[�A�}�N�����j���[�Ȃǂ̐ݒ�ɗ��p����Ă��܂��B�ڍׂɂ��Ă͌�q���܂��B�����̃t�@�C����TeXShop�����߂ċN������ۂ� ~/Library/TeXShop�̃T�u�t�H���_�̒��ɍ���܂��B
+TeXShopは５つのxmlファイルを設定のために用いています：completion.plist・autocompletion.plist・KeyEquivalents.plist・Macros_Latex.plistそれにMacros_Context.plistです。これらのファイルはLaTeXパネル、キーバインド、メニュー項目のショートカットキー、マクロメニューなどの設定に利用されています。詳細については後述します。これらのファイルはTeXShopを初めて起動する際に ~/Library/TeXShopのサブフォルダの中に作られます。
 </p>
 
 <p>
-plist�`���̃t�@�C���͂������ʂ̃e�L�X�g�t�@�C���ł��BTeXShop��TextEdit���邢�͂��̑��̃e�L�X�g�G�f�B�^�ŊJ������ҏW������ł��܂��BMacros.plist�ȊO�́A���ꂼ��̃t�@�C���̍ŏ��Ƀt�@�C���`���ɂ��Đ�������Ă��܂��B�ҏW�͊ȒP�ł����A�����Ԃ�ދ��ł��BMacros_Latex.plist��Macros_Context.plist��autocompletion.plist�̂R�́A�ҏW�̕K�v�͂Ȃ��ł��傤����TeXShop�ɂ͐�p�̕ҏW�G�f�B�^����������Ă��܂��̂ŁB
+plist形式のファイルはごく普通のテキストファイルです。TeXShopやTextEditあるいはその他のテキストエディタで開いたり編集したりできます。Macros.plist以外は、それぞれのファイルの最初にファイル形式について説明されています。編集は簡単ですが、いくぶん退屈です。Macros_Latex.plistとMacros_Context.plistとautocompletion.plistの３つは、編集の必要はないでしょう──TeXShopには専用の編集エディタが内蔵されていますので。
 </p>
 
 <p>
-����plist�t�@�C����Unicode�������܂�ł���̂ł���΁AUTF-8�`���ŕҏW���ۑ�����K�v������܂��BTeXShop�ł��������t�@�C�����J���O�ɁATeXShop�̃G���R�[�f�B���O�ݒ��UTF-8�ɕύX���Ă��������B���̂����Ńt�@�C����ҏW������ۑ������肵�܂��B���̌�G���R�[�f�B���O�ݒ�͌��ɖ߂��Ă����܂��B�����ȑO�ɐݒ肵�Ȃ����Ă��Ȃ��Ȃ�A�f�t�H���g�ł�MacOSRoman�ł��B
+もしplistファイルがUnicode文字を含んでいるのであれば、UTF-8形式で編集し保存する必要があります。TeXShopでそうしたファイルを開く前に、TeXShopのエンコーディング設定をUTF-8に変更してください。そのうえでファイルを編集したり保存したりします。その後エンコーディング設定は元に戻しておきます。もし以前に設定しなおしていないなら、デフォルトではMacOSRomanです。
 </p>
 
 <p>
-Developer Tools���C���X�g�[���������[�U�[�Ȃ�A.plist�t�@�C�����_�u���N���b�N����ƁAProperty List Editor�Ƃ����v���O�����Ńt�@�C�����J����邱�Ƃł��傤�BProperty List Editor��plist�t�@�C����ҏW����̂ɕ֗��ł����A�o�O���炯�ł����A�R�����g��\���ł��܂���BTeXShop���g���ق��������ł��傤�B
+Developer Toolsをインストールしたユーザーなら、.plistファイルをダブルクリックすると、Property List Editorというプログラムでファイルが開かれることでしょう。Property List Editorはplistファイルを編集するのに便利ですが、バグだらけですし、コメントを表示できません。TeXShopを使うほうがいいでしょう。
 </p>
 
 </div>		
 		<div id="header_background"></div>
 		<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-		<div id="header_chapter">TeXShop�̐ݒ�͂ǂ�����΂悢���H</div>
-		<div id="header_title">.plist�t�@�C��</div>
+		<div id="header_chapter">TeXShopの設定はどうすればよいか？</div>
+		<div id="header_title">.plistファイル</div>
 		<div id="menu_border">
 			<UL>
-				<li><a href="configure_preliminaries.htm">�܂�����</a>
-				<li><a href="configure_correctinstall.htm">������ƃC���X�g�[�����܂������H</a>
-				<li><a href="configure_prefchanges.htm">�������߂̐ݒ�ύX</a>
-				<li><a href="configure_convertgraphics.htm">�摜�`���������I�ɕϊ�����</a>
-				<li><a href="configure_defaults.htm">�����ݒ�ɂ���</a>
+				<li><a href="configure_preliminaries.htm">まえがき</a>
+				<li><a href="configure_correctinstall.htm">きちんとインストールしましたか？</a>
+				<li><a href="configure_prefchanges.htm">おすすめの設定変更</a>
+				<li><a href="configure_convertgraphics.htm">画像形式を自動的に変換する</a>
+				<li><a href="configure_defaults.htm">初期設定について</a>
 		
-				<li><a href="configure_latextemplate.htm">�f�t�H���g��LaTeX�e���v���[�g</a>
-				<li><a href="configure_hidden.htm">�B�ꂽ�ݒ荀��</a>
-				<li><a href="configure_plist.htm">.plist�t�@�C��</a>
-				<li><a href="configure_panel.htm">LaTeX�p�l�����ꕔ�ύX����</a>
-				<li><a href="configure_autocompletion.htm">�L�[�o�C���h��ύX����</a>
+				<li><a href="configure_latextemplate.htm">デフォルトのLaTeXテンプレート</a>
+				<li><a href="configure_hidden.htm">隠れた設定項目</a>
+				<li><a href="configure_plist.htm">.plistファイル</a>
+				<li><a href="configure_panel.htm">LaTeXパネルを一部変更する</a>
+				<li><a href="configure_autocompletion.htm">キーバインドを変更する</a>
 		
-				<li><a href="configure_menushortcuts.htm">���j���[���ڂ̃V���[�g�J�b�g�L�[���Ē�`����</a>
-				<li><a href="configure_macros.htm">�}�N�����j���[��ύX����</a>
+				<li><a href="configure_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
+				<li><a href="configure_macros.htm">マクロメニューを変更する</a>
 			</UL>
 		</div>
 </BODY>

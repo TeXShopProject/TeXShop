@@ -1,10 +1,10 @@
 <HTML>
 
 <HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-			<TITLE>Plist�t�@�C��</TITLE>
+			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
+			<TITLE>Plistファイル</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="�eplist�t�@�C���̗p�r�ɂ���">
+			<META NAME="description" CONTENT="各plistファイルの用途について">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -13,65 +13,65 @@
 <div id="content_border">
 
 <p>
-Mac OS X��xml�t�@�C�����L�Ăɗ��p���Ă��܂� �G  xml��html�Ɩ��ڂȊ֘A�̂���\��������ł��B
+Mac OS Xはxmlファイルを広汎に利用しています ；  xmlはhtmlと密接な関連のある構造化言語です。
 </p>
 
 <p>
-TeXShop�ł͂T��xml�t�@�C����ݒ�̂��߂ɗp���Ă��܂��Fcompletion.plist�Eautocompletion.plist�EKeyEquivalents.plist�EMacros_Latex.plist�����Macros_Context.plist�ł��B�����̃t�@�C���̓��[�U�l�̃��C�u�������ɂ��� ~/Library/TeXShop�Ƃ����t�H���_���ɒu����Ă��܂��������̃t�H���_��TeXShop�����߂ċN�������ۂɍ���܂��B����TeXShop�̃f�t�H���g�ݒ���������Ă���A��������̂܂ܑ��̃}�V���Ɉڍs���������̂ł���΁A~/Library/TeXShop���R�s�[���Ă��������B
+TeXShopでは５つのxmlファイルを設定のために用いています：completion.plist・autocompletion.plist・KeyEquivalents.plist・Macros_Latex.plistそれにMacros_Context.plistです。これらのファイルはユーザ個人のライブラリ内にある ~/Library/TeXShopというフォルダ内に置かれています──このフォルダはTeXShopが初めて起動した際に作られます。もしTeXShopのデフォルト設定をいじっており、それをそのまま他のマシンに移行させたいのであれば、~/Library/TeXShopをコピーしてください。
 </p>
 
 <p>
-�t�@�C���́ALaTeX�p�l���A�L�[�o�C���h�A���j���[���ڂ̃V���[�g�J�b�g�L�[�A�}�N�����j���[�Ȃǂ̐ݒ�ɗ��p����Ă��܂��B�ڍׂɂ��Ă͂��̃h�L�������g�̕ʂ̏ꏊ�ŏq�ׂĂ���܂��B
+ファイルは、LaTeXパネル、キーバインド、メニュー項目のショートカットキー、マクロメニューなどの設定に利用されています。詳細についてはこのドキュメントの別の場所で述べてあります。
 </p>
 
 <!-- 
 <p>
-plist�`���̃t�@�C���͂������ʂ̃e�L�X�g�t�@�C���Ȃ̂ŁATeXShop��TextEdit�Ȃ����͑��̃e�L�X�g�G�f�B�^�[�ŊJ������ҏW������ł��܂��B�t�@�C����ҏW����̂͊ȒP�ł����A�����Ԃ�ދ��ł��B
+plist形式のファイルはごく普通のテキストファイルなので、TeXShopやTextEditないしは他のテキストエディターで開いたり編集したりできます。ファイルを編集するのは簡単ですが、いくぶん退屈です。
 </p>
  -->
 
 <p>
-plist�`���̃t�@�C���͂������ʂ̃e�L�X�g�t�@�C���Ȃ̂ŁATeXShop��TextEdit�Ȃ����͑��̃e�L�X�g�G�f�B�^�ŊJ������ҏW������ł��܂��B�t�@�C����ҏW����̂͊ȒP�ł����A�����Ԃ�ދ��ł��B
+plist形式のファイルはごく普通のテキストファイルなので、TeXShopやTextEditないしは他のテキストエディタで開いたり編集したりできます。ファイルを編集するのは簡単ですが、いくぶん退屈です。
 </p>
 
 <p>
-����plist�t�@�C����Unicode�������܂܂�Ă���Ȃ�AUTF-8�`���ŕҏW���ۑ�����K�v������܂��BTeXShop�ł��������t�@�C�����J���O�ɁATeXShop�̃G���R�[�f�B���O�ݒ��UTF-8�ɕύX���Ă��������B���̂����Ńt�@�C����ҏW������ۑ������肵�܂��B���̌�G���R�[�f�B���O�ݒ�͌��ɖ߂��Ă����܂��B�����ȑO�ɐݒ肵�Ȃ����Ă��Ȃ��Ȃ�A�f�t�H���g�ł�MacOSRoman�ł��B
+もしplistファイルにUnicode文字が含まれているなら、UTF-8形式で編集し保存する必要があります。TeXShopでそうしたファイルを開く前に、TeXShopのエンコーディング設定をUTF-8に変更してください。そのうえでファイルを編集したり保存したりします。その後エンコーディング設定は元に戻しておきます。もし以前に設定しなおしていないなら、デフォルトではMacOSRomanです。
 </p>
 
 <p>
-Mac OS X��Developer Tools���C���X�g�[�����Ă���̂ł���΁A.plist�t�@�C�����_�u���N���b�N����ƁAProperty List Editor�Ƃ����v���O�����ŊJ�����Ǝv���܂��B���̃v���O������plist�t�@�C����ҏW����̂ɕ֗��ł����A�o�O���炯�ł����A�t�@�C���̂��ׂĂ̏���\���ł��܂���B���ƂɁA�R�����g�������Ă��܂��܂��BTeXShop���g���ق��������ł��傤�B
+Mac OS XのDeveloper Toolsをインストールしているのであれば、.plistファイルをダブルクリックすると、Property List Editorというプログラムで開かれると思います。このプログラムはplistファイルを編集するのに便利ですが、バグだらけですし、ファイルのすべての情報を表示できません。ことに、コメントが欠けてしまいます。TeXShopを使うほうがいいでしょう。
 </p>
 
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">�㋉�����̃w���v</div>
-<div id="header_title">Plist�t�@�C��</div>
+<div id="header_chapter">上級向けのヘルプ</div>
+<div id="header_title">Plistファイル</div>
 
 		<div id="menu_border">
 		<ul>
-			<li><a href="advanced_personaltetex.htm">�X�^�C���ƃ}�N����teTeX�ɒǉ�����</a>
-			<li><a href="advanced_addengine.htm">�ǉ��̃^�C�v�Z�b�g�G���W��</a>
-			<li><a href="advanced_removeaux.htm">��ƃt�@�C�����폜����</a>
-			<li><a href="advanced_externaleditor.htm">�O���G�f�B�^���g�p����</a>
-			<li><a href="advanced_pdfcopypaste.htm">�v���r���[�E�C���h�E����̃R�s�[���y�[�X�g����уh���b�O���h���b�v </a>
-			<li><a href="advanced_root.htm">�v���W�F�N�g�̃��[�g�t�@�C����ݒ肷��</a>
+			<li><a href="advanced_personaltetex.htm">スタイルとマクロをteTeXに追加する</a>
+			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
+			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
+			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
+			<li><a href="advanced_pdfcopypaste.htm">プレビューウインドウからのコピー＆ペーストおよびドラッグ＆ドロップ </a>
+			<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a>
 			<li><a href="advanced_pdfsync.htm">Pdfsync</a>
-			<li><a href="advanced_unicode.htm">Unicode�i���j�R�[�h�j</a>
+			<li><a href="advanced_unicode.htm">Unicode（ユニコード）</a>
 			<li><a href="advanced_bibtex.htm">BibTeX</a>
 			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">�V�K�t�H�[�}�b�g�̍쐬�Ɨ��p</a>
-			<li><a href="advanced_otherfiles.htm">���̑��̃t�@�C����TeXShop�ŊJ��</a>
+			<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a>
+			<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a>
 			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">�e����łւ̃��[�J���C�Y</a>
-			<li><a href="advanced_syntaxcolor.htm">�\�[�X�̃J���[�\��</a>
-			<li><a href="advanced_shellescape.htm">Shell-Escape�̕ی�</a>			
-			<li><a href="advanced_coloredtext.htm">TeX�ɂ����镶���̐F�w��</a>			
-			<li><a href="advanced_moretetex.htm">teTeX�ɂ��Ă����</a>
-			<li><a href="advanced_fink.htm">Fink�Ƃ̋���</a>
-			<li><a href="advanced_otherdistributions.htm">����TeX�f�B�X�g���r���[�V�����Ƃ̋���</a>
-			<li><a href="advanced_context.htm">ConTeXt��MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist�t�@�C��</a>
-			<li><a href="advanced_menushortcuts.htm">���j���[���ڂ̃V���[�g�J�b�g�L�[���Ē�`����</a>
+			<li><a href="advanced_localization.htm">各国語版へのローカライズ</a>
+			<li><a href="advanced_syntaxcolor.htm">ソースのカラー表示</a>
+			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
+			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
+			<li><a href="advanced_moretetex.htm">teTeXについてさらに</a>
+			<li><a href="advanced_fink.htm">Finkとの共存</a>
+			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
+			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
+			<li><a href="advanced_plist.htm">Plistファイル</a>
+			<li><a href="advanced_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
 		</ul>
 	</div>
 	</body>

@@ -1,10 +1,10 @@
 <HTML>
 
 <HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-			<TITLE>�R�}���h�̕⊮</TITLE>
+			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
+			<TITLE>コマンドの補完</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="TeX�R�}���h�̏ȓ��͂ƕ⊮�����ւ̗p��̒ǉ�">
+			<META NAME="description" CONTENT="TeXコマンドの省入力と補完辞書への用語の追加">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -13,63 +13,63 @@
 <div id="content_border">
 
 <p>
-�\�[�X�G�f�B�^�̓R�}���h�̕⊮���T�|�[�g���Ă��܂��B�P��̍ŏ��̐�������ł����݁A�G�X�P�[�v�E�L�[�������Ă��������B�c��̕��������͂���܂��B������x�G�X�P�[�v�E�L�[�������ƁA���ׂĂ̕⊮�\�Ȍ������肩�����\�����܂��B
+ソースエディタはコマンドの補完をサポートしています。単語の最初の数文字を打ち込み、エスケープ・キーを押してください。残りの文字が入力されます。もう一度エスケープ・キーを押すと、すべての補完可能な候補をくりかえし表示します。
 </p>
 
 <!-- 
 <p>
-���߂̂����⊮�̗��֐��͌���I�Ȃ��̂ł��傤�����Ƃ����̂��A�⊮�������قƂ�ǃJ���b�|�Ȃ̂ŁB�����ɒP���ǉ�����ɂ́A�P���I�����A�u�\�[�X�v���j���[�́u�R�}���h�⊮�v����u�p���ǉ��v��I�т܂��B�Q�l�������̃��j���[�E�R�}���h�̓L�[������ł��܂��B�����S�̂�������ҏW�����肷��ɂ́A�u�ݒ�v���u�L�[�{�[�h�v�Łu�R�}���h�⊮�t�@�C����ҏW�c�v�������܂��B�Q�l�����⊮�͂P��ȏ�̕��G�Ȃ��̂ł����܂��܂��񂵁A�⊮�������̂̓����ɃJ�[�\���𐳊m�ɔz�u���邱�Ƃ��ł��܂��B�ڍׂɂ��Ă̓f�t�H���g�E�t�@�C���ɂ���T���v���𒲂ׂĂ݂Ă��������B
+初めのうち補完の利便性は限定的なものでしょう──というのも、補完辞書がほとんどカラッポなので。辞書に単語を追加するには、単語を選択し、「ソース」メニューの「コマンド補完」から「用語を追加」を選びます。参考──このメニュー・コマンドはキー操作もできます。辞書全体を見たり編集したりするには、「設定」→「キーボード」で「コマンド補完ファイルを編集…」を押します。参考──補完は１語以上の複雑なものでもかまいませんし、補完したものの内側にカーソルを正確に配置することもできます。詳細についてはデフォルト・ファイルにあるサンプルを調べてみてください。
 </p>
  -->
 
 <p>
-���߂̂����́A���̕⊮�@�\�͂������ĕ֗��łȂ���������܂��񄟄��Ƃ����̂��A�⊮�������قƂ�ǃJ���b�|������ł��B�����ɒP���ǉ�����ɂ́A�P���I�����āu�\�[�X�v���j���[�́u�R�}���h�⊮���X�g�ɒǉ��v��I��ŉ������B���̃��j���[�R�}���h�̓L�[������ł��܂��B�����S�̂�������ҏW�����肷��ɂ́A�u�ݒ�v���u�L�[�{�[�h�v�Łu�R�}���h�⊮�t�@�C����ҏW�c�v�������܂��B�⊮�͂P��ȏ�̕��G�Ȃ��̂ł����܂��܂��񂵁A&del(�⊮�������̂̓�����)�⊮����������̓r���ɃJ�[�\����z�u���邱�Ƃ��ł��܂��B�ڍׂɂ��Ă̓f�t�H���g�E�t�@�C���ɂ���T���v���𒲂ׂĂ݂Ă��������B
+初めのうちは、この補完機能はたいして便利でないかもしれません──というのも、補完辞書がほとんどカラッポだからです。辞書に単語を追加するには、単語を選択して「ソース」メニューの「コマンド補完リストに追加」を選んで下さい。このメニューコマンドはキー操作もできます。辞書全体を見たり編集したりするには、「設定」→「キーボード」で「コマンド補完ファイルを編集…」を押します。補完は１語以上の複雑なものでもかまいませんし、&del(補完したものの内側に)補完した文字列の途中にカーソルを配置することもできます。詳細についてはデフォルト・ファイルにあるサンプルを調べてみてください。
 </p>
 
 <!-- 
 <p>
-���̋@�\��TeXShop�̌�X�̃o�[�W�����Ŋg�[����邱�Ƃł��傤�B
+この機能はTeXShopの後々のバージョンで拡充されることでしょう。
 </p>
  -->
 
 <p>
-���̋@�\��TeXShop�̏����̃o�[�W�����ŉ��ǂ����ł��傤�B
+この機能はTeXShopの将来のバージョンで改良されるでしょう。
 </p>
 
-<h3><a name="marks"></a>�}�[�N</h3>
-<p>�}�[�N�i&#8226;�j�́A���ƂŖ߂��Ă���ꏊ�̖ڈ�ł��B�����t���}�[�N�i&#8226;&#8249;����&#8250;�j�́A�����ɉ����������������܂��B�}�[�N�̓R�}���h�⊮�A�}�N���A�L�[�o�C���h�̒��Ŏg����ق��A�u�ҏW�v���u�}�[�N�v�́u�}�[�N��}���v�i&#8984;8�j�Ɓu�����t���}�[�N��}���v�i&#8963;&#8984;8�j�œ�����܂��B�u�����t���}�[�N��}���v�� &#8226;&#8249;&#8250; �����āA���ʂ̊ԂɃJ�[�\����u���܂��B������I��ł���΁A���̕����������ɂȂ�܂��B</p>
-<p>�u���̃}�[�N�ֈړ��v�i&#8963;&#8984;F�j�Ɓu�O�̃}�[�N�ֈړ��v�i&#8963;&#8984;G�j�́A�}�[�N���������ƑI�Ԃ̂ŁA���̂܂ܓ��͂���Βu�������܂��BOption�L�[�������Ɓu�c���č폜�v�ɂȂ�A&#8226; �����������ă�����I�т܂��i&#8963;&#8997;&#8984;F�A&#8963;&#8997;&#8984;G�j�B</p>
+<h3><a name="marks"></a>マーク</h3>
+<p>マーク（&#8226;）は、あとで戻ってくる場所の目印です。メモ付きマーク（&#8226;&#8249;メモ&#8250;）は、そこに何を書くかも示します。マークはコマンド補完、マクロ、キーバインドの中で使えるほか、「編集」→「マーク」の「マークを挿入」（&#8984;8）と「メモ付きマークを挿入」（&#8963;&#8984;8）で入れられます。「メモ付きマークを挿入」は &#8226;&#8249;&#8250; を入れて、括弧の間にカーソルを置きます。文字を選んでいれば、その文字がメモになります。</p>
+<p>「次のマークへ移動」（&#8963;&#8984;F）と「前のマークへ移動」（&#8963;&#8984;G）は、マークをメモごと選ぶので、そのまま入力すれば置き換わります。Optionキーを押すと「…して削除」になり、&#8226; だけを消してメモを選びます（&#8963;&#8997;&#8984;F、&#8963;&#8997;&#8984;G）。</p>
 </div>
 
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">��{�I�ȃw���v</div>
-<div id="header_title">�R�}���h�̕⊮</div>
+<div id="header_chapter">基本的なヘルプ</div>
+<div id="header_title">コマンドの補完</div>
 
 		<div id="menu_border">
 		<ul>
-			<li><a href="basic_preliminaries.htm">�܂�����</a>
-			<li><a href="basic_j_ptex.htm">pTeX��TeXShop�œ��{������\�z����</a>
-			<li><a href="basic_installtetex.htm">teTeX�̓���ƃC���X�g�[��</a>
-			<li><a href="basic_installtexshop.htm">TeXShop�̓���ƃC���X�g�[��</a>
-			<li><a href="basic_typesetting.htm">�h�L�������g���^�C�v�Z�b�g����</a>
-			<li><a href="basic_alternatetypeset.htm">�����ЂƂ̃^�C�v�Z�b�g����</a>	
-			<li><a href="basic_spelling.htm">�X�y�����`�F�b�N����</a>
-			<li><a href="basic_latexpanel.htm">Latex�p�l��</a>
-			<li><a href="basic_matrixpanel.htm">�s��p�l��</a>
-			<li><a href="basic_macros.htm">�}�N��</a>
-			<li><a href="basic_toolbar.htm">�c�[���o�[��Applescript</a>
-			<li><a href="basic_graphics.htm">�摜������</a>
-			<li><a href="basic_printing.htm">���</a>
-			<li><a href="basic_preferences.htm">�ݒ�</a>
-			<li><a href="basic_j_encoding.htm">���{��G���R�[�f�B���O�� &#x005C; &#x00A5; �����̈���</a>
-			<li><a href="basic_templates.htm">�e���v���[�g���j���[��ύX����</a>
-			<li><a href="basic_edittricks.htm">�ҏW��̃R�c</a>
-			<li><a href="basic_autocompletion.htm">�L�[�o�C���h</a>
-			<li><a href="basic_commandcompletion.htm">�R�}���h�̕⊮</a>
-			<li><a href="basic_bugs.htm">�o�O���|�[�g�𑗂�</a>
-			<li><a href="basic_websites.htm">���ɗ��E�F�u�T�C�g</a>
-			<li><a href="basic_license.htm">�g�p����</a>
+			<li><a href="basic_preliminaries.htm">まえがき</a>
+			<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a>
+			<li><a href="basic_installtetex.htm">teTeXの入手とインストール</a>
+			<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a>
+			<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a>
+			<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a>	
+			<li><a href="basic_spelling.htm">スペルをチェックする</a>
+			<li><a href="basic_latexpanel.htm">Latexパネル</a>
+			<li><a href="basic_matrixpanel.htm">行列パネル</a>
+			<li><a href="basic_macros.htm">マクロ</a>
+			<li><a href="basic_toolbar.htm">ツールバーとApplescript</a>
+			<li><a href="basic_graphics.htm">画像を入れる</a>
+			<li><a href="basic_printing.htm">印刷</a>
+			<li><a href="basic_preferences.htm">設定</a>
+			<li><a href="basic_j_encoding.htm">日本語エンコーディングと &#x005C; &#x00A5; 文字の扱い</a>
+			<li><a href="basic_templates.htm">テンプレートメニューを変更する</a>
+			<li><a href="basic_edittricks.htm">編集上のコツ</a>
+			<li><a href="basic_autocompletion.htm">キーバインド</a>
+			<li><a href="basic_commandcompletion.htm">コマンドの補完</a>
+			<li><a href="basic_bugs.htm">バグレポートを送る</a>
+			<li><a href="basic_websites.htm">役に立つウェブサイト</a>
+			<li><a href="basic_license.htm">使用許諾</a>
 		</ul>
 	</div>
 </body>

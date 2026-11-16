@@ -45,7 +45,7 @@ def strings(path):
 def read_help(path, language):
     raw = path.read_bytes()
     match = re.search(br'charset=([^"\s>]+)', raw, re.I)
-    encoding = match[1].decode() if match else ('cp932' if language == 'ja' else 'latin-1')
+    encoding = match[1].decode() if match else ('utf-8' if language == 'ja' else 'latin-1')
     encoding = {'x-sjis': 'cp932', 'shift_jis': 'cp932'}.get(encoding.lower(), encoding)
     decoded = raw.decode(encoding)  # No replacement of invalid bytes.
     assert decoded.encode(encoding) == raw, path

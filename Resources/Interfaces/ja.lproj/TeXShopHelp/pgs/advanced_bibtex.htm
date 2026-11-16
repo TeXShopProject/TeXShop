@@ -1,10 +1,10 @@
 <HTML>
 
 <HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
+			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
 			<TITLE>BibTeX</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="�Q�l�����ژ^�̍쐬�ɂ���">
+			<META NAME="description" CONTENT="参考文献目録の作成について">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -13,31 +13,31 @@
 <div id="content_border">
 
 <p>
-BibTeX��LaTeX�������ɎQ�l�����ژ^���쐬���邽�߂̃c�[���ł��B���̃c�[���́A���΂��Έ��p���镶�����W�������f�[�^�x�[�X�����邱�Ƃ�O��Ƃ��Ă��܂��B�V���v���ȃR�}���h���g����LaTeX�\�[�X���ŕ����̈ꕔ���Q�Ƃ��邱�Ƃ��ł��܂�����BibTeX�́A�_�����ŎQ�Ƃ������ڂ������܂񂾎Q�l�����ژ^���쐬���܂��B
+BibTeXはLaTeX文書内に参考文献目録を作成するためのツールです。このツールは、しばしば引用する文献を集成したデータベースがあることを前提としています。シンプルなコマンドを使ってLaTeXソース内で文献の一部を参照することができます──BibTeXは、論文内で参照した項目だけを含んだ参考文献目録を作成します。
 </p>
 
 <BLOCKQUOTE>
 <p>
 <small>
-�󒍁FpTeX�f�B�X�g���r���[�V�����ɂ͓��{��ɑΉ�����jBibTeX���܂܂�Ă��܂��BTeXShop�̐ݒ�E�C���h�E�ł́ABibTeX�̑����jBibTeX���g���悤�A�ݒ肷�邱�Ƃ��ł��܂��B
+訳注：pTeXディストリビューションには日本語に対応したjBibTeXが含まれています。TeXShopの設定ウインドウでは、BibTeXの代わりにjBibTeXを使うよう、設定することができます。
 </small>
 </p>
 </BLOCKQUOTE>
 
 <!-- 
 <p>
-������Goossens�EMittelbach�ESamarin�̋����wThe LaTeX Companion�x���������Z���Ⴊ����܂��B���ڂ������Ƃɂ��Ă͂��̖{�ł����ׂ��������B�f�[�^�x�[�X�́umybibliography.bib�v�Ƃ������O�̃t�@�C���ŁA�ȉ��Ɏ����e�L�X�g���܂ނ��̂Ƃ��܂��B���̃e�L�X�g���́A�o�^���� �uFelici:1991�v �uKnuth:WEB�v �uLiang:1983�v�́ALaTeX�\�[�X���Ř_�����Q�Ƃ���̂Ɏg���錮�l�i�Q�Ɩ��j�ł��B
+ここにGoossens・Mittelbach・Samarinの共著『The LaTeX Companion』から取った短い例があります。より詳しいことについてはこの本でお調べください。データベースは「mybibliography.bib」という名前のファイルで、以下に示すテキストを含むものとします。このテキスト内の、登録項目 「Felici:1991」 「Knuth:WEB」 「Liang:1983」は、LaTeXソース内で論文を参照するのに使われる鍵値（参照名）です。
 </p>
  -->
 
 <p>
-������Goossens����EMittelbach����ESamarin����̋����wThe LaTeX Companion�x���������Z���Ⴊ����܂��B���ڂ������Ƃɂ��Ă͂��̖{�ł����ׂ��������B�f�[�^�x�[�X�́umybibliography.bib�v�Ƃ������O�̃t�@�C���ŁA�ȉ��Ɏ����e�L�X�g���܂ނ��̂Ƃ��܂��B���̃e�L�X�g���́A�o�^���ځuFelici:1991�v �uKnuth:WEB�v �uLiang:1983�v�́ALaTeX�\�[�X���Ř_�����Q�Ƃ���̂Ɏg���錮�l�i�Q�Ɩ��j�ł��B
+ここにGoossensさん・Mittelbachさん・Samarinさんの共著『The LaTeX Companion』から取った短い例があります。より詳しいことについてはこの本でお調べください。データベースは「mybibliography.bib」という名前のファイルで、以下に示すテキストを含むものとします。このテキスト内の、登録項目「Felici:1991」 「Knuth:WEB」 「Liang:1983」は、LaTeXソース内で論文を参照するのに使われる鍵値（参照名）です。
 </p>
 
 <BLOCKQUOTE>
 <p>
 <small>
-�⑫�F�wThe LaTeX�R���p�j�I���x�A�X�L�[���ЕҏW���Ė�i1998�N�j
+補足：『The LaTeXコンパニオン』アスキー書籍編集部監訳（1998年）
 </small>
 </p>
 </BLOCKQUOTE>
@@ -76,7 +76,7 @@ BibTeX��LaTeX�������ɎQ�l�����ژ^���쐬���邽�߂̃c�[���ł��B���̃c�[���́A���΂
 </tt>
 
 <p>
-LaTeX�̃\�[�X�t�@�C���́umyfile.tex�v�Ƃ������O�ŁA�ȉ��̃e�L�X�g���܂ނ��̂Ƃ��܂��F
+LaTeXのソースファイルは「myfile.tex」という名前で、以下のテキストを含むものとします：
 </p>
 
 <tt>
@@ -92,47 +92,47 @@ LaTeX�̃\�[�X�t�@�C���́umyfile.tex�v�Ƃ������O�ŁA�ȉ��̃e�L�X�g���܂ނ��̂Ƃ��
 </tt>
 
 <p>
-���̃\�[�X���^�C�v�Z�b�g����ƁAFelici�̘_���ւ̎Q�Ƃ����͓��Ɏ�����A�Q�l�����ژ^�����͂̍Ō�ɍ쐬����܂����������ɂ�Felici��Liang�̘_���͂���܂����AKnuth�̘_���͌�������܂���B
+このソースをタイプセットすると、Feliciの論文への参照が文章内に示され、参考文献目録が文章の最後に作成されます──そこにはFeliciとLiangの論文はありますが、Knuthの論文は見あたりません。
 </p>
 
 <p>
-TeXShop�ł͎��Ɏ������@�ł��̗�𗘗p�ł��܂��B�ŏ��Ɂumyfile.tex�v�Ƃ��������������ʂ�ɕҏW���ă^�C�v�Z�b�g���܂��B�Q�Ƃ́u [?] �v�Ƃ��ďo�͌��ʂɎ�����A�Q�l�����ژ^�͌������܂��B���̂܂܃v���O�����E�{�^���ɂ���uBibTeX�v��I�����Ď��s���܂��B���ɁuLaTeX�v��I��ōēx�^�C�v�Z�b�g���܂��B�Q�Ƃ͂Ȃ����u [?] �v�ƕ\������܂����A�Q�l�����ژ^�͏o�͂ɕt�������܂��B�ŏI�I�Ƀ^�C�v�Z�b�g����ƁA�Q�Ƃ��������l�ɂȂ��Ă��܂��B
+TeXShopでは次に示す方法でこの例を利用できます。最初に「myfile.tex」という文書をいつも通りに編集してタイプセットします。参照は「 [?] 」として出力結果に示され、参考文献目録は欠落します。そのままプログラム・ボタンにある「BibTeX」を選択して実行します。次に「LaTeX」を選んで再度タイプセットします。参照はなおも「 [?] 」と表示されますが、参考文献目録は出力に付け加わります。最終的にタイプセットすると、参照も正しい値になっています。
 </p>
 
 <p>
-�umybibliography.bib�v�Ƃ����t�@�C���́ATeXShop�ŊJ������ҏW������ł��܂��B�����ŏ�����TeXShop���g���āumybibliography.bib�v���쐬����̂ł���΁A�ۑ���ʂ́u�t�H�[�}�b�g�F�v�ƕ\���̂���v���_�E�����j���[�ŁAtex�t�@�C���ł͂Ȃ�bib�t�@�C���Ƃ��ĕۑ����܂��B
+「mybibliography.bib」というファイルは、TeXShopで開いたり編集したりできます。もし最初からTeXShopを使って「mybibliography.bib」を作成するのであれば、保存画面の「フォーマット：」と表示のあるプルダウンメニューで、texファイルではなくbibファイルとして保存します。
 </p>
 
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">�㋉�����̃w���v</div>
+<div id="header_chapter">上級向けのヘルプ</div>
 <div id="header_title"> BibTeX </div>
 
 		<div id="menu_border">
 		<ul>
-			<li><a href="advanced_personaltetex.htm">�X�^�C���ƃ}�N����teTeX�ɒǉ�����</a>
-			<li><a href="advanced_addengine.htm">�ǉ��̃^�C�v�Z�b�g�G���W��</a>
-			<li><a href="advanced_removeaux.htm">��ƃt�@�C�����폜����</a>
-			<li><a href="advanced_externaleditor.htm">�O���G�f�B�^���g�p����</a>
-			<li><a href="advanced_pdfcopypaste.htm">�v���r���[�E�C���h�E����̃R�s�[���y�[�X�g����уh���b�O���h���b�v </a>
-			<li><a href="advanced_root.htm">�v���W�F�N�g�̃��[�g�t�@�C����ݒ肷��</a>
+			<li><a href="advanced_personaltetex.htm">スタイルとマクロをteTeXに追加する</a>
+			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
+			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
+			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
+			<li><a href="advanced_pdfcopypaste.htm">プレビューウインドウからのコピー＆ペーストおよびドラッグ＆ドロップ </a>
+			<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a>
 			<li><a href="advanced_pdfsync.htm">Pdfsync</a>
-			<li><a href="advanced_unicode.htm">Unicode�i���j�R�[�h�j</a>
+			<li><a href="advanced_unicode.htm">Unicode（ユニコード）</a>
 			<li><a href="advanced_bibtex.htm">BibTeX</a>
 			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">�V�K�t�H�[�}�b�g�̍쐬�Ɨ��p</a>
-			<li><a href="advanced_otherfiles.htm">���̑��̃t�@�C����TeXShop�ŊJ��</a>
+			<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a>
+			<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a>
 			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">�e����łւ̃��[�J���C�Y</a>
-			<li><a href="advanced_syntaxcolor.htm">�\�[�X�̃J���[�\��</a>
-			<li><a href="advanced_shellescape.htm">Shell-Escape�̕ی�</a>			
-			<li><a href="advanced_coloredtext.htm">TeX�ɂ����镶���̐F�w��</a>			
-			<li><a href="advanced_moretetex.htm">teTeX�ɂ��Ă����</a>
-			<li><a href="advanced_fink.htm">Fink�Ƃ̋���</a>
-			<li><a href="advanced_otherdistributions.htm">����TeX�f�B�X�g���r���[�V�����Ƃ̋���</a>
-			<li><a href="advanced_context.htm">ConTeXt��MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist�t�@�C��</a>
-			<li><a href="advanced_menushortcuts.htm">���j���[���ڂ̃V���[�g�J�b�g�L�[���Ē�`����</a>
+			<li><a href="advanced_localization.htm">各国語版へのローカライズ</a>
+			<li><a href="advanced_syntaxcolor.htm">ソースのカラー表示</a>
+			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
+			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
+			<li><a href="advanced_moretetex.htm">teTeXについてさらに</a>
+			<li><a href="advanced_fink.htm">Finkとの共存</a>
+			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
+			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
+			<li><a href="advanced_plist.htm">Plistファイル</a>
+			<li><a href="advanced_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
 		</ul>
 	</div>
 	</body>

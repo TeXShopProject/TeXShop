@@ -1,10 +1,10 @@
 <HTML>
 
 <HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-			<TITLE>�O���G�f�B�^���g�p����</TITLE>
+			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
+			<TITLE>外部エディタを使用する</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="�����̍D���ȃG�f�B�^�Ń\�[�X��ҏW������@">
+			<META NAME="description" CONTENT="自分の好きなエディタでソースを編集する方法">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -13,30 +13,30 @@
 <div id="content_border">
 
 <p>
-TeXShop�ł͂������̕��@�ŊO���G�f�B�^��ݒ肷�邱�Ƃ��ł��܂��B�ȉ��Ɏ������@�͕֗��ł����A�G�f�B�^�̋@�\�ɂ͈ˑ����܂���B�����I�ɂ́A�ݒ�ŃG�f�B�^���w�肷��悤�ɂȂ邩������܂���B
+TeXShopではいくつかの方法で外部エディタを設定することができます。以下に示す方法は便利ですし、エディタの機能には依存しません。将来的には、設定でエディタを指定するようになるかもしれません。
 </p>
 
 <p>
-�u�v���r���[���J��...�v�Ƃ������j���[���ڂ�����܂��B���̍��ڂ�I�ԂƁA�g���q�� .tex�̃\�[�X�t�@�C����I������悤�Ɍ����܂��B�ł����J�����̂́A�֘A�Â��̍s�Ȃ�ꂽpdf�v���r���[�E�C���h�E�݂̂ł��B�\�[�X���܂��^�C�v�Z�b�g����Ă��Ȃ�������Apdf���Â��Ȃ��Ă����ꍇ�A�t�@�C�����J���ƂƂ���TeXShop���^�C�v�Z�b�g���s�Ȃ��܂��B�\�[�X�t�@�C���͂ǂ̃G�f�B�^�ł��J�����Ƃ��ł��܂��B�^�C�v�Z�b�g�̏�������������A�ύX�ӏ����G�f�B�^�ŕۑ����A�v���r���[�E�C���h�E�ɐ؂�ւ��ă^�C�v�Z�b�g���܂��B���̂����̏ꍇ�ATeXShop�̓\�[�X�t�@�C�����J�����A�܂��C�����s�Ȃ��܂���B�����P�Ƀt�@�C����UNIX��TeX��������LaTeX�v���Z�X�ɓn�������ł��B
+「プレビューを開く...」というメニュー項目があります。この項目を選ぶと、拡張子が .texのソースファイルを選択するように言われます。ですが開かれるのは、関連づけの行なわれたpdfプレビューウインドウのみです。ソースがまだタイプセットされていなかったり、pdfが古くなっていた場合、ファイルを開くとともにTeXShopがタイプセットを行ないます。ソースファイルはどのエディタでも開くことができます。タイプセットの準備が整ったら、変更箇所をエディタで保存し、プレビューウインドウに切り替えてタイプセットします。このやり方の場合、TeXShopはソースファイルを開かず、また修正も行ないません。ただ単にファイルをUNIXのTeXもしくはLaTeXプロセスに渡すだけです。
 </p>
 
 <p>
-�v���r���[�E�C���h�E�ɂ̓^�C�v�Z�b�g�E�{�^����z�u���邱�Ƃ��ł��܂��B�������������{�^������������Ȃ��ꍇ�́A�E�C���h�E�E���j���[�́u�c�[���o�[���J�X�^�}�C�Y...�v���g���ă{�^����t�������Ă��������B
+プレビューウインドウにはタイプセット・ボタンを配置することができます。もしそうしたボタンが見あたらない場合は、ウインドウ・メニューの「ツールバーをカスタマイズ...」を使ってボタンを付け加えてください。
 </p>
 
 <p>
-�قƂ�Ǐ�ɊO���G�f�B�^���g���������[�U�[�̂��߂ɁA�ݒ�E�C���h�E�ɂ́u�O���G�f�B�^�Ń\�[�X��ҏW�v�Ƃ������ڂ�����܂��B���̐ݒ肪�I������Ă���ƁA�u�J��...�v�Ɓu�ŋߎg�������ڂ��J���v���j���[�ł́ATeX�\�[�X�t�@�C�����O���G�f�B�^�ŕҏW���邽�߂ɁA��q�̕��@�ŊJ���܂��B����Ɂu�v���r���[���J��...�v���j���[�́u�J���ĕҏW����...�v�ƕς��ATeXShop�̓����G�f�B�^�Ń\�[�X�t�@�C�����J���悤�ɂȂ�܂����A����͂����܂�ɓ����G�f�B�^���g�������ꍇ�̂��߂ł��B�u�J��...�v�Ɓu�ŋߎg�������ڂ��J���v���j���[�ł͂܂��Ajpg�Etiff�Eps�Epdf�Edvi�Elog����т��̑��̃t�@�C�����J�����Ƃ��ł��܂� �G ���̓���ɂ��ẮA�V�����ݒ�ɂ����ꍇ�ł��ς��܂���B
+ほとんど常に外部エディタを使いたいユーザーのために、設定ウインドウには「外部エディタでソースを編集」という項目があります。この設定が選択されていると、「開く...」と「最近使った項目を開く」メニューでは、TeXソースファイルを外部エディタで編集するために、上述の方法で開きます。さらに「プレビューを開く...」メニューは「開いて編集する...」と変わり、TeXShopの内蔵エディタでソースファイルを開くようになりますが、これはごくまれに内蔵エディタを使いたい場合のためです。「開く...」と「最近使った項目を開く」メニューではまた、jpg・tiff・ps・pdf・dvi・logおよびその他のファイルを開くこともできます ； この動作については、新しい設定にした場合でも変わりません。
 </p>
 
 <p>
-UNIX�̃^�C�v�Z�b�g�R�}���h�𒼐ڌĂяo�����Ƃ̂ł���G�f�B�^������܂��B�V�����ݒ荀�ځu�ق��̃A�v���ɂ��PDF�̕ύX����ɊĎ��v�́A���������G�f�B�^�ł̍�Ƃ����P���邽�߂ɕt���������܂����B���̍��ڂ��I������Ă���A�u�v���r���[���J��...�v���g���� .tex�t�@�C�����J�����ꍇ�ɂ́Apdf���������߂�ꂽ�Ƃ��ɂ͂��ł��Apdf�v���r���[���̉�ʂ��X�V����܂��B�Ȃ̂ŁA�O���G�f�B�^����̃^�C�v�Z�b�g���\�ɂȂ�A�v���r���[�E�C���h�E�͎����I�ɕύX��\�����܂��B���̐ݒ�́ATeXShop�ŊJ���� .pdf�t�@�C���ɂ��Ă����l�ɓK�p����܂����ATeXShop���O���G�f�B�^�𗘗p����悤�ɐݒ肳��Ă���΁A�u�J��...�v���g���ĊJ���� .tex�t�@�C���ɂ��Ă��܂��K�p����܂��B
+UNIXのタイプセットコマンドを直接呼び出すことのできるエディタもあります。新しい設定項目「ほかのアプリによるPDFの変更を常に監視」は、こうしたエディタでの作業を改善するために付け加えられました。この項目が選択されており、「プレビューを開く...」を使って .texファイルを開いた場合には、pdfが書き改められたときにはいつでも、pdfプレビューワの画面が更新されます。なので、外部エディタからのタイプセットが可能になり、プレビューウインドウは自動的に変更を表示します。この設定は、TeXShopで開いた .pdfファイルについても同様に適用されますし、TeXShopが外部エディタを利用するように設定されていれば、「開く...」を使って開いた .texファイルについてもまた適用されます。
 </p>
 <p>
-TeXShop 6.00����́ATeXShop�̃G�f�B�^�ŊJ�����\�[�X�ɂ��K�p����܂��B�܂��A���̐ݒ肪�I�t�̂Ƃ����ATeXShop��v���r���[�̃E�C���h�E�ɖ߂����Ƃ��ɁA�ق��̃A�v���P�[�V�����iTerminal��latexmk�Ȃǁj��pdf�����������Ă���΁A�\�����̃y�[�W�Ɗg�嗦��ۂ����܂ܓǂݒ����܂��Bpdf���������݂̓r���Ȃ�A�����I���̂�҂��A�����čs��ꂽ�g�ł̌��ʂ��\�����܂��B�ۑ����Ă��Ȃ����߂�����Ԃ͓ǂݒ����܂���B�ݒ���I���ɂ���ƁATeXShop�����ɂ���Ƃ��i�v���r���[���O���G�f�B�^�̉��ɕ��ׂĂ���Ƃ��Ȃǁj���ǂݒ����܂��B
+TeXShop 6.00からは、TeXShopのエディタで開いたソースにも適用されます。また、この設定がオフのときも、TeXShopやプレビューのウインドウに戻ったときに、ほかのアプリケーション（Terminalのlatexmkなど）がpdfを書き換えていれば、表示中のページと拡大率を保ったまま読み直します。pdfが書き込みの途中なら、書き終わるのを待ち、続けて行われた組版の結果も表示します。保存していない注釈がある間は読み直しません。設定をオンにすると、TeXShopが後ろにあるとき（プレビューを外部エディタの横に並べているときなど）も読み直します。
 </p>
 
 <p>
-�G�f�B�^���璼��TeXShop���Ăяo����悤�ɁA�ȉ���AppleScript�R�}���h���ǉ�����Ă��܂��F
+エディタから直接TeXShopを呼び出せるように、以下のAppleScriptコマンドが追加されています：
 </p>
 	<ol>
 		<li>typesetinteractive
@@ -52,47 +52,47 @@ TeXShop 6.00����́ATeXShop�̃G�f�B�^�ŊJ�����\�[�X�ɂ��K�p����܂��B�܂��A���̐
 	</ol>
 
 <p>
-�ŏ��̂V�̃R�}���h��TeXShop�̃^�C�v�Z�b�e�B���O�E�R�}���h���쓮�����܂��B�����̃R�[���̌��AppleScript�́A�^�C�v�Z�b�g�̊�����҂����ɂ������^�[�����܂��B�utaskdone�v�R�[���͊����������ǂ����𒲂ׂ�̂Ɏg���܂� �G ����̓^�C�v�Z�b�g���s�Ȃ��Ă���Ԃ�NO��Ԃ��A�I�������YES��Ԃ��̂ł��B�����̃R�[���͂��ꂼ��ɁA�^�C�v�Z�b�g�������ɂ̓v���r���[�E�C���h�E���X�V���܂��B�g�p����G�f�B�^��TeXShop���Ăяo���ă^�C�v�Z�b�g����̂ł���΁A�ݒ�́u�ق��̃A�v���ɂ��PDF�̕ύX����ɊĎ��v�̓I�t�ɂ��Ă����܂��B
+最初の７つのコマンドはTeXShopのタイプセッティング・コマンドを作動させます。これらのコールの後でAppleScriptは、タイプセットの完了を待たずにすぐリターンします。「taskdone」コールは完了したかどうかを調べるのに使えます ； これはタイプセットが行なわれている間はNOを返し、終了するとYESを返すのです。これらのコールはそれぞれに、タイプセット完了時にはプレビューウインドウを更新します。使用するエディタがTeXShopを呼び出してタイプセットするのであれば、設定の「ほかのアプリによるPDFの変更を常に監視」はオフにしておけます。
 </p>
 
 <p>
-�����O���G�f�B�^��pdf�o�͂������ɏC������̂ł���΁A�urefreshpdf�v���Ăяo����pdf��ʂ��X�V���邱�Ƃ��ł��܂��B����́u�ق��̃A�v���ɂ��PDF�̕ύX����ɊĎ��v���I�t�ɂȂ��Ă���ꍇ�ɂ̂ݕK�v�ƂȂ�܂��B�Ō�́uopen_for_externaleditor�v�́u�v���r���[���J��...�v���Ăяo����tex�t�@�C�����J���܂��B
+もし外部エディタがpdf出力をじかに修正するのであれば、「refreshpdf」を呼び出してpdf画面を更新することができます。これは「ほかのアプリによるPDFの変更を常に監視」がオフになっている場合にのみ必要となります。最後の「open_for_externaleditor」は「プレビューを開く...」を呼び出してtexファイルを開きます。
 </p>
 
 <p>
-AlphaX���炱���̃R�[�����s�Ȃ����߂�Tcl�R�[�h�́ATeXShop�f�B�X�g���r���[�V������TeXShop_Folder�̒��ɂ���AlphaTcl�t�H���_���ɓ����Ă��܂��B�t�@�C���̏��߂ɏ�����Ă��邱�Ƃ�ǂ݁A�Ӑ}�ɉ�����AlphaX��ݒ肷����@���m�F���Ă��������B
+AlphaXからこれらのコールを行なうためのTclコードは、TeXShopディストリビューションのTeXShop_Folderの中にあるAlphaTclフォルダ内に入っています。ファイルの初めに書かれていることを読み、意図に沿ってAlphaXを設定する方法を確認してください。
 </p>
 
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">�㋉�����̃w���v</div>
-<div id="header_title">�O���G�f�B�^���g�p����</div>
+<div id="header_chapter">上級向けのヘルプ</div>
+<div id="header_title">外部エディタを使用する</div>
 
 		<div id="menu_border">
 		<ul>
-			<li><a href="advanced_personaltetex.htm">�X�^�C���ƃ}�N����teTeX�ɒǉ�����</a>
-			<li><a href="advanced_addengine.htm">�ǉ��̃^�C�v�Z�b�g�G���W��</a>
-			<li><a href="advanced_removeaux.htm">��ƃt�@�C�����폜����</a>
-			<li><a href="advanced_externaleditor.htm">�O���G�f�B�^���g�p����</a>
-			<li><a href="advanced_pdfcopypaste.htm">�v���r���[�E�C���h�E����̃R�s�[���y�[�X�g����уh���b�O���h���b�v </a>
-			<li><a href="advanced_root.htm">�v���W�F�N�g�̃��[�g�t�@�C����ݒ肷��</a>
+			<li><a href="advanced_personaltetex.htm">スタイルとマクロをteTeXに追加する</a>
+			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
+			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
+			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
+			<li><a href="advanced_pdfcopypaste.htm">プレビューウインドウからのコピー＆ペーストおよびドラッグ＆ドロップ </a>
+			<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a>
 			<li><a href="advanced_pdfsync.htm">Pdfsync</a>
-			<li><a href="advanced_unicode.htm">Unicode�i���j�R�[�h�j</a>
+			<li><a href="advanced_unicode.htm">Unicode（ユニコード）</a>
 			<li><a href="advanced_bibtex.htm">BibTeX</a>
 			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">�V�K�t�H�[�}�b�g�̍쐬�Ɨ��p</a>
-			<li><a href="advanced_otherfiles.htm">���̑��̃t�@�C����TeXShop�ŊJ��</a>
+			<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a>
+			<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a>
 			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">�e����łւ̃��[�J���C�Y</a>
-			<li><a href="advanced_syntaxcolor.htm">�\�[�X�̃J���[�\��</a>
-			<li><a href="advanced_shellescape.htm">Shell-Escape�̕ی�</a>			
-			<li><a href="advanced_coloredtext.htm">TeX�ɂ����镶���̐F�w��</a>			
-			<li><a href="advanced_moretetex.htm">teTeX�ɂ��Ă����</a>
-			<li><a href="advanced_fink.htm">Fink�Ƃ̋���</a>
-			<li><a href="advanced_otherdistributions.htm">����TeX�f�B�X�g���r���[�V�����Ƃ̋���</a>
-			<li><a href="advanced_context.htm">ConTeXt��MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist�t�@�C��</a>
-			<li><a href="advanced_menushortcuts.htm">���j���[���ڂ̃V���[�g�J�b�g�L�[���Ē�`����</a>
+			<li><a href="advanced_localization.htm">各国語版へのローカライズ</a>
+			<li><a href="advanced_syntaxcolor.htm">ソースのカラー表示</a>
+			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
+			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
+			<li><a href="advanced_moretetex.htm">teTeXについてさらに</a>
+			<li><a href="advanced_fink.htm">Finkとの共存</a>
+			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
+			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
+			<li><a href="advanced_plist.htm">Plistファイル</a>
+			<li><a href="advanced_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
 		</ul>
 	</div>
 	</body>

@@ -1,80 +1,80 @@
 <HTML>
 
 <HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-		<TITLE>�����ЂƂ̃^�C�v�Z�b�g����</TITLE>
+		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
+		<TITLE>もうひとつのタイプセット方式</TITLE>
 		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="�uDVI�o�R�v�ɂ���">
+		<META NAME="description" CONTENT="「DVI経由」について">
 		<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
-<!--�R�����g�A�E�g���Ă��镔���̓o�[�W����1.35�̋����ł��B-->
+<!--コメントアウトしてある部分はバージョン1.35の旧文です。-->
 
 <body>
 
 	<div id="content_border">
 
 <p>
-TeXShop�Ń^�C�v�Z�b�g���s�Ȃ����@�����ɂ�����܂� �G ���̕��@�ł�eps�`���̃C���X�g��ϊ��Ȃ��ł����ɓ��͂ł��܂��B���̂����ЂƂ̕������g���ɂ́A�^�C�v�Z�b�g�E���j���[����uDVI�o�R�v��I�т܂��B�����TeXShop��TeX�Ȃ�����LaTeX���Ăяo���ă^�C�v�Z�b�g���s�Ȃ��udvi�v�t�@�C���𐶐����Advips���Ăяo���ă|�X�g�X�N���v�g�E�t�@�C���ɕϊ����A���̂�����ps2pdf���Ăяo���ă|�X�g�X�N���v�g�E�t�@�C����pdf�ɕϊ����܂��B�^�C�v�Z�b�g�E���j���[�őI�����������́A�őO�ʂ̃t�@�C���ɂ̂ݍ�p���܂� �G ���̑��̏��ނ͂Ђ��Â�pdftex��������pdflatex�Ń^�C�v�Z�b�g����܂��B���ނ��J�������_�ōŏ��ɗp����������͐ݒ�E�C���h�E�őI���ł��܂��B
+TeXShopでタイプセットを行なう方法が他にもあります ； この方法ではeps形式のイラストを変換なしでじかに入力できます。このもうひとつの方式を使うには、タイプセット・メニューから「DVI経由」を選びます。するとTeXShopはTeXないしはLaTeXを呼び出してタイプセットを行ない「dvi」ファイルを生成し、dvipsを呼び出してポストスクリプト・ファイルに変換し、そのうえでps2pdfを呼び出してポストスクリプト・ファイルをpdfに変換します。タイプセット・メニューで選択した方式は、最前面のファイルにのみ作用します ； その他の書類はひきつづきpdftexもしくはpdflatexでタイプセットされます。書類を開いた時点で最初に用いられる方式は設定ウインドウで選択できます。
 </p>
 
 <p>
-�uDVI�o�R�v�����́A������eps�`���̃C���X�g������̂̃v���W�F�N�g�A���邢�̓|�X�g�X�N���v�g�E�X�y�V�����E�R�}���h���g����TeX�t�@�C���A�Ȃ�����pdflatex�Ń^�C�v�Z�b�g����Ɛ������\������Ȃ��r�b�g�}�b�v�E�t�H���g���܂�TeX�t�@�C���ɑ΂��ėp������ׂ��ł��B�������Ă݂�΂�����̃^�C�v�Z�b�g�G���W�����]�܂������킩�邱�Ƃł��傤�B
+「DVI経由」方式は、多数のeps形式のイラストがある昔のプロジェクト、あるいはポストスクリプト・スペシャル・コマンドを使ったTeXファイル、ないしはpdflatexでタイプセットすると正しく表示されないビットマップ・フォントを含むTeXファイルに対して用いられるべきです。実験してみればいずれのタイプセットエンジンが望ましいかわかることでしょう。
 </p>
 
 <p>
 <!--
-�ݒ�ɂ�����I���̔@���ɂ�炸�A���镶���̃^�C�v�Z�b�g��������ɌŒ肷����@������܂��B�����̑�P�s�ڂ� %&tex�Ȃ����� <b>%&program=tex</b> �ƂȂ��Ă���΄����s���ɃX�y�[�X�͓���܂��񄟄�TeX�{Ghostscript���g���܂��B��P�s�ڂ� %&latex�Ȃ����� <b>%&program=latex</b> �ɂȂ��Ă����LaTeX�{Ghostscript�ƂȂ�܂��B��P�s�ڂ� %&pdftex�� <b>%&program=pdftex</b> �������� %&pdflatex�� <b>%&program=pdflatex</b> �ƂȂ��Ă���΁Apdftex��������pdflatex���g���܂��B�����Ă����ŏ��̂P�s�� %&personaltex�Ȃ����� <b>%&program=personaltex</b> �܂��� %&personallatex�Ȃ����� <b>%&program=personallatex</b> �ƂȂ��Ă����ꍇ�ɂ́A�ݒ�E�C���h�E�ł̐ݒ�ɂ��������ăp�[�\�i���X�N���v�g���p�����܂��B
+設定における選択の如何によらず、ある文書のタイプセット方式を常に固定する方法があります。文書の第１行目が %&texないしは <b>%&program=tex</b> となっていれば──行頭にスペースは入れません──TeX＋Ghostscriptが使われます。第１行目が %&latexないしは <b>%&program=latex</b> になっていればLaTeX＋Ghostscriptとなります。第１行目が %&pdftexか <b>%&program=pdftex</b> もしくは %&pdflatexか <b>%&program=pdflatex</b> となっていれば、pdftexもしくはpdflatexが使われます。そしてもし最初の１行が %&personaltexないしは <b>%&program=personaltex</b> または %&personallatexないしは <b>%&program=personallatex</b> となっていた場合には、設定ウインドウでの設定にしたがってパーソナルスクリプトが用いられます。
 -->
-�ݒ�ɂ�����I���̔@���ɂ�炸�A
-���镶���̃^�C�v�Z�b�g��������ɌŒ肷����@������܂��B
-�\�[�X�t�@�C���̖`��20�s�ȓ��̂����̂P�s��
-<b>%!TEX TS-program = tex</b> �ƂȂ��Ă���΁A
-TeX�{Ghostscript���g���܂��B
-�`��20�s�ȓ��̂����̂P�s��
-<b>%!TEX TS-program = latex</b> �ƂȂ��Ă���΁A
-LaTeX�{Ghostscript�ƂȂ�܂��B
-���̂P�s��
+設定における選択の如何によらず、
+ある文書のタイプセット方式を常に固定する方法があります。
+ソースファイルの冒頭20行以内のうちの１行が
+<b>%!TEX TS-program = tex</b> となっていれば、
+TeX＋Ghostscriptが使われます。
+冒頭20行以内のうちの１行が
+<b>%!TEX TS-program = latex</b> となっていれば、
+LaTeX＋Ghostscriptとなります。
+その１行が
 <b>%!TEX TS-program = pdftex</b>
-�������� <b>%!TEX TS-program = pdflatex</b> �ł���΁A
-pdftex��������pdflatex���g���܂��B
-�����Ă����`��20�s�ȓ��ɁA
+もしくは <b>%!TEX TS-program = pdflatex</b> であれば、
+pdftexもしくはpdflatexが使われます。
+そしてもし冒頭20行以内に、
 <b>%!TEX TS-program = personaltex</b>
-�Ȃ����� <b>%!TEX TS-program = personallatex</b> �Ƃ����P�s������΁A
-�ݒ�E�C���h�E�ł̐ݒ�ɂ��������ăp�[�\�i���X�N���v�g���p�����܂��B
+ないしは <b>%!TEX TS-program = personallatex</b> という１行があれば、
+設定ウインドウでの設定にしたがってパーソナルスクリプトが用いられます。
 </p>
 
 </div>
 
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">��{�I�ȃw���v</div>
-<div id="header_title">�����ЂƂ̃^�C�v�Z�b�g����</div>
+<div id="header_chapter">基本的なヘルプ</div>
+<div id="header_title">もうひとつのタイプセット方式</div>
 
 		<div id="menu_border">
 		<ul>
-			<li><a href="basic_preliminaries.htm">�܂�����</a>
-			<li><a href="basic_j_ptex.htm">pTeX��TeXShop�œ��{������\�z����</a>
-			<li><a href="basic_installtetex.htm">teTeX�̓���ƃC���X�g�[��</a>
-			<li><a href="basic_installtexshop.htm">TeXShop�̓���ƃC���X�g�[��</a>
-			<li><a href="basic_typesetting.htm">�h�L�������g���^�C�v�Z�b�g����</a>
-			<li><a href="basic_alternatetypeset.htm">�����ЂƂ̃^�C�v�Z�b�g����</a>	
-			<li><a href="basic_spelling.htm">�X�y�����`�F�b�N����</a>
-			<li><a href="basic_latexpanel.htm">Latex�p�l��</a>
-			<li><a href="basic_matrixpanel.htm">�s��p�l��</a>
-			<li><a href="basic_macros.htm">�}�N��</a>
-			<li><a href="basic_toolbar.htm">�c�[���o�[��Applescript</a>
-			<li><a href="basic_graphics.htm">�摜������</a>
-			<li><a href="basic_printing.htm">���</a>
-			<li><a href="basic_preferences.htm">�ݒ�</a>
-			<li><a href="basic_j_encoding.htm">���{��G���R�[�f�B���O�� &#x005C; &#x00A5; �����̈���</a>
-			<li><a href="basic_templates.htm">�e���v���[�g���j���[��ύX����</a>
-			<li><a href="basic_edittricks.htm">�ҏW��̃R�c</a>
-			<li><a href="basic_autocompletion.htm">�L�[�o�C���h</a>
-			<li><a href="basic_commandcompletion.htm">�R�}���h�̕⊮</a>
-			<li><a href="basic_bugs.htm">�o�O���|�[�g�𑗂�</a>
-			<li><a href="basic_websites.htm">���ɗ��E�F�u�T�C�g</a>
-			<li><a href="basic_license.htm">�g�p����</a>
+			<li><a href="basic_preliminaries.htm">まえがき</a>
+			<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a>
+			<li><a href="basic_installtetex.htm">teTeXの入手とインストール</a>
+			<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a>
+			<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a>
+			<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a>	
+			<li><a href="basic_spelling.htm">スペルをチェックする</a>
+			<li><a href="basic_latexpanel.htm">Latexパネル</a>
+			<li><a href="basic_matrixpanel.htm">行列パネル</a>
+			<li><a href="basic_macros.htm">マクロ</a>
+			<li><a href="basic_toolbar.htm">ツールバーとApplescript</a>
+			<li><a href="basic_graphics.htm">画像を入れる</a>
+			<li><a href="basic_printing.htm">印刷</a>
+			<li><a href="basic_preferences.htm">設定</a>
+			<li><a href="basic_j_encoding.htm">日本語エンコーディングと &#x005C; &#x00A5; 文字の扱い</a>
+			<li><a href="basic_templates.htm">テンプレートメニューを変更する</a>
+			<li><a href="basic_edittricks.htm">編集上のコツ</a>
+			<li><a href="basic_autocompletion.htm">キーバインド</a>
+			<li><a href="basic_commandcompletion.htm">コマンドの補完</a>
+			<li><a href="basic_bugs.htm">バグレポートを送る</a>
+			<li><a href="basic_websites.htm">役に立つウェブサイト</a>
+			<li><a href="basic_license.htm">使用許諾</a>
 		</ul>
 	</div>
 </body>

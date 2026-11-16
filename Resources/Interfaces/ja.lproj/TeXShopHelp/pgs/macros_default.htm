@@ -1,10 +1,10 @@
 <HTML>
 
 <HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-			<TITLE>�f�t�H���g�̃}�N���𗝉�����</TITLE>
+			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
+			<TITLE>デフォルトのマクロを理解する</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="�������}������^�C�v�̃}�N���̊�{�I�Ȍ���">
+			<META NAME="description" CONTENT="文字列を挿入するタイプのマクロの基本的な原理">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -13,7 +13,7 @@
 <div id="content_border">
 
 <p>
-�f�t�H���g�̃}�N���𗝉����邢���΂񂢂����@�́A���̒�`���}�N���G�f�B�^�Œ��ׂĂ݂邱�Ƃł��B���Ƃ��΁uBegin/End�v�Ƒ肳�ꂽ�}�N���ɂ��čl���Ă݂܂��傤�Btheorem���̂悤�Ȋ����g�������Ƃ��܂��B�utheorem�v�Ƃ����P���ł����݁A�����I�����Ă��������B�����āuBegin/End�v�}�N����I�т܂��B�utheorem�v�Ƃ����ꂪ�A���̂悤�ȃe�L�X�g�ɒu���������܂�����
+デフォルトのマクロを理解するいちばんいい方法は、その定義をマクロエディタで調べてみることです。たとえば「Begin/End」と題されたマクロについて考えてみましょう。theorem環境のような環境を使いたいとします。「theorem」という単語を打ち込み、これを選択してください。そして「Begin/End」マクロを選びます。「theorem」という語が、次のようなテキストに置き換えられます──
 </p>
 
 <tt>
@@ -25,11 +25,11 @@
 </tt>
 
 <p>
-�J�[�\����begin��end�̊Ԃɔz�u����Ă��܂��B
+カーソルはbeginとendの間に配置されています。
 </p>
 
 <p>
-�ł́uBegin/End�v�Ƃ����}�N���̃R�[�h�𒲂ׂĂ݂܂��F
+では「Begin/End」というマクロのコードを調べてみます：
 </p>
 
 <tt>
@@ -41,33 +41,33 @@
 </tt>
 
 <p>
-�}�N�����̃e�L�X�g���\�[�X�t�@�C���ɑ}�������B#SEL# �Ƃ���������͂��ꂼ��ɁA�}�N�������s���ꂽ�Ƃ��ɑI������Ă����e�L�X�g�Œu����������B�����e�L�X�g�������I������Ă��Ȃ���΁A#SEL# �͋���ۂ̕�����Œu����������B#PASTE# �Ƃ���������͂��ꂼ��ɁA�N���b�v�{�[�h�̃e�L�X�g�Œu����������i�N���b�v�{�[�h�Ƀe�L�X�g���Ȃ���΋���ۂ̕�����j�B�J�[�\���͑}�������e�L�X�g�̍Ō�ɒu����邪�A#INS# �Ƃ��������񂪊܂܂�Ă���ꍇ�ɂ́A�����ɃJ�[�\�����z�u�����B
+マクロ内のテキストがソースファイルに挿入される。#SEL# という文字列はそれぞれに、マクロが実行されたときに選択されていたテキストで置き換えられる。もしテキストが何も選択されていなければ、#SEL# は空っぽの文字列で置き換えられる。#PASTE# という文字列はそれぞれに、クリップボードのテキストで置き換えられる（クリップボードにテキストがなければ空っぽの文字列）。カーソルは挿入したテキストの最後に置かれるが、#INS# という文字列が含まれている場合には、そこにカーソルが配置される。
 </p>
 
 <p>
-���ꂪ�킩���Ă���΁A�f�t�H���g�̃}�N���𗝉�������C�������肷��̂͊ȒP�Ȃ��Ƃł��B
+これがわかっていれば、デフォルトのマクロを理解したり修正したりするのは簡単なことです。
 </p>
 
 </div>
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">�}�N���E�w���v</div>
-<div id="header_title">�f�t�H���g�̃}�N���𗝉�����</div>
+<div id="header_chapter">マクロ・ヘルプ</div>
+<div id="header_title">デフォルトのマクロを理解する</div>
 
 <div id="menu_border">
 
 	<UL>
-		<li><a href="macros_preliminaries.htm">�܂�����</a> 
-		<li><a href="macros_default.htm">�f�t�H���g�̃}�N���𗝉�����</a>
-		<li><a href="macros_rearrange.htm">�}�N���̍��ږ�����בւ���</a>
-		<li><a href="macros_define.htm">�V�����}�N�����`����</a>
-		<li><a href="macros_applescript.htm">AppleScript�}�N��</a>
+		<li><a href="macros_preliminaries.htm">まえがき</a> 
+		<li><a href="macros_default.htm">デフォルトのマクロを理解する</a>
+		<li><a href="macros_rearrange.htm">マクロの項目名を並べ替える</a>
+		<li><a href="macros_define.htm">新しいマクロを定義する</a>
+		<li><a href="macros_applescript.htm">AppleScriptマクロ</a>
 
-		<li><a href="macros_includedscripts.htm">�f�t�H���g��AppleScript�}�N��</a>
-		<li><a href="macros_defapplescript.htm">AppleScript�}�N�����`����</a>
-		<li><a href="macros_dialogs.htm">�_�C�A���O�����</a>
-		<li><a href="macros_writingcompletescripts.htm">TeXShop�̃^�C�v�Z�b�g�R�}���h�ŃX�N���v�g������</a>
-		<li><a href="macros_writingcommandscripts.htm">�V�F���R�}���h�ŃX�N���v�g������</a>
+		<li><a href="macros_includedscripts.htm">デフォルトのAppleScriptマクロ</a>
+		<li><a href="macros_defapplescript.htm">AppleScriptマクロを定義する</a>
+		<li><a href="macros_dialogs.htm">ダイアログを作る</a>
+		<li><a href="macros_writingcompletescripts.htm">TeXShopのタイプセットコマンドでスクリプトを書く</a>
+		<li><a href="macros_writingcommandscripts.htm">シェルコマンドでスクリプトを書く</a>
 	</UL>
 </div>
 </BODY>
