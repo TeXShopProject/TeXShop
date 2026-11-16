@@ -24,6 +24,8 @@ typedef NS_ENUM(NSInteger, TSTeXRootReplaceReason) {
     TSTeXRootReplaceReasonChanged,
     /// The document did not accept the change.
     TSTeXRootReplaceReasonRefused,
+    /// The document could no longer be edited when the run began.
+    TSTeXRootReplaceReasonNotEditable,
     /// Its text was changed meanwhile by something else.
     TSTeXRootReplaceReasonUnexpectedChange,
     /// Writing the file failed: `error` (TSTeXRootReplaceErrorDomain) says how.
@@ -83,14 +85,18 @@ NS_SWIFT_NAME(TeXRootReplaceRun)
 @property (nonatomic, readonly) TSTeXRootReplacePlan *plan;
 /// The backup goes next to the root (nil: none).
 @property (nonatomic, copy, nullable) NSURL *backupFolder;
-/// Collects the files again for check 2: called on the main thread, it returns what is called on a background queue.
-@property (nonatomic, copy) TSTeXRootProject *_Nullable (^_Nonnull (^collector)(void))(void);
+/// The collector of check 2, made on the main thread (it takes the open documents' texts); Stop cancels it.
+@property (nonatomic, copy) TSTeXRootProjectCollector *_Nullable (^makeCollector)(void);
+/// Called on a background queue before the collector collects (the open documents' files identified).
+@property (nonatomic, copy, nullable) void (^prepareCollector)(TSTeXRootProjectCollector *collector);
 /// The files of the listed project that are on in the tree (main thread, when check 2 starts).
 @property (nonatomic, copy) BOOL (^isIncluded)(TSTeXRootProjectFile *file);
 /// The text view of an open document of the plan, nil when it is closed (main thread).
 @property (nonatomic, copy) NSTextView *_Nullable (^textViewForFile)(TSTeXRootReplaceFile *file);
-/// An open document's text as approved, in its encoding, or in UTF-8 (`usedUTF8`), for the backup (main thread).
-@property (nonatomic, copy) NSData *_Nullable (^backupDataForOpenDocument)(TSTeXRootReplaceFile *file, BOOL *usedUTF8);
+/// For the backup of an open document: called on the main thread (where the document's encoding is read), it returns
+/// what turns the text approved into bytes on a background queue (in UTF-8, `usedUTF8`, when the encoding cannot
+/// hold it).
+@property (nonatomic, copy) NSData *_Nullable (^_Nonnull (^backupEncoderForOpenDocument)(TSTeXRootReplaceFile *file))(BOOL *usedUTF8);
 /// The Undo name of the replacements in an open document.
 @property (nonatomic, copy) NSString *actionName;
 /// The date of the backup folder (now unless set, for the tests).

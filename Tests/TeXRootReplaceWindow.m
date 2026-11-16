@@ -59,6 +59,9 @@ static NSTimeInterval LongestPause(void (^start)(void), BOOL (^done)(void))
 
 static NSString *Folder;
 static NSMutableDictionary<NSString *, TestDocument *> *Documents;
+/// A slow file system while a collector is prepared (a download waited for), and the collectors made.
+static useconds_t PrepareDelay;
+static NSMutableArray<TSTeXRootProjectCollector *> *Collectors;
 
 static NSString *PathOf(NSString *relative) { return [Folder stringByAppendingPathComponent:relative]; }
 
@@ -112,7 +115,12 @@ static TSTeXRootSearchEnvironment *Environment(void)
         for (NSString *relative in Documents)
             texts[Identity(relative)] = [Documents[relative].view.string copy];
         collector.openDocumentTexts = texts;
+        [Collectors addObject:collector];
         return collector;
+    };
+    environment.prepareCollector = ^(TSTeXRootProjectCollector *collector) {
+        if (PrepareDelay)
+            usleep(PrepareDelay);
     };
     environment.sourcesForFiles = ^NSArray<TSTeXRootSearchSource *> *(NSArray<TSTeXRootProjectFile *> *files) {
         NSMutableArray *sources = [NSMutableArray array];
@@ -436,6 +444,127 @@ static void TestFailures(void)
     Check(OpenedTexts.count == 1 && [OpenedTexts.firstObject isEqualToString:approved], @"\"Open the Original Text in a New Document\" opens the text as approved");
 }
 
+#pragma mark Codex 4b round 1
+
+static void TestRoundOne(void)
+{
+    // F7: a document made read-only while the confirmation is shown is not replaced in, nor made editable.
+    MakeProject();
+    Alerts = [NSMutableArray array];
+    TSTeXRootSearchWindowController *window = OpenWindow(NO);
+    TSTeXRootSearchModel *model = window.model;
+    TestDocument *two = Documents[@"chapters/two.tex"];
+    NSString *twoText = [two.view.string copy];
+    Answer = ^NSModalResponse(NSAlert *alert) {
+        if (alert.buttons.count > 1 && alert.buttons[1].hasDestructiveAction) {
+            two.view.editable = NO;
+            return NSAlertSecondButtonReturn;
+        }
+        return NSAlertFirstButtonReturn;
+    };
+    [window replaceAll:nil];
+    Spin(^BOOL { return Alerts.count >= 2 && Idle(window); }, 60);
+    Answer = nil;
+    Check([two.view.string isEqualToString:twoText] && !two.view.isEditable && [Alerts.lastObject.messageText isEqualToString:@"Some files could not be replaced in"]
+          && [Alerts.lastObject.informativeText containsString:@"Not replaced: chapters/two.tex (the document could not be edited)"],
+          [NSString stringWithFormat:@"made read-only meanwhile: not replaced in, still read-only (%@)", Alerts.lastObject.informativeText]);
+    two.view.editable = YES;
+
+    // F3: every file replaced in, a backup in UTF-8: said in a sheet headed with what was done. F6: the bytes are
+    // made off the main thread.
+    MakeProject();
+    Alerts = [NSMutableArray array];
+    window = OpenWindow(YES);
+    model = window.model;
+    __block BOOL encodedOnMain = NO;
+    window.backupEncoderForOpenDocument = ^NSData *(^(TSTeXRootReplaceFile *file))(BOOL *) {
+        NSString *text = file.originalText;
+        return ^NSData *(BOOL *usedUTF8) {
+            encodedOnMain |= NSThread.isMainThread;
+            *usedUTF8 = YES;
+            return [text dataUsingEncoding:NSUTF8StringEncoding];
+        };
+    };
+    [window replaceAll:nil];
+    Spin(^BOOL { return Alerts.count >= 2 && Idle(window); }, 60);
+    NSAlert *done = Alerts.lastObject;
+    Check(Alerts.count == 2 && [done.messageText isEqualToString:@"Replaced 6 matches in 4 files"] && [done.informativeText containsString:@"Backed up in UTF-8: chapters/two.tex"]
+          && ![done.informativeText containsString:@"Replaced:"] && done.buttons.count == 2 && [done.buttons[1].title isEqualToString:@"Show in Finder"],
+          [NSString stringWithFormat:@"a backup in UTF-8 is told: %@ / %@", done.messageText, done.informativeText]);
+    Check(!encodedOnMain, @"the open document's backup is made into bytes off the main thread");
+
+    // F2: stopped while check 2 waits for a slow file system: it ends at once, the collection is cancelled.
+    MakeProject();
+    Alerts = [NSMutableArray array];
+    Collectors = [NSMutableArray array];
+    window = OpenWindow(NO);
+    model = window.model;
+    NSString *one = Read(@"chapters/one.tex");
+    Answer = ^NSModalResponse(NSAlert *alert) {
+        PrepareDelay = 2000000;
+        return alert.buttons.count > 1 ? NSAlertSecondButtonReturn : NSAlertFirstButtonReturn;
+    };
+    [window replaceAll:nil];
+    Spin(^BOOL { return window.run != nil; }, 30);
+    Spin(^BOOL { return NO; }, 0.1);
+    NSUInteger shown = Alerts.count;
+    TSTeXRootProjectCollector *checking = Collectors.lastObject;
+    [window stop:nil];
+    CFAbsoluteTime stopped = CFAbsoluteTimeGetCurrent();
+    Spin(^BOOL { return !window.replacing; }, 1);
+    double waited = CFAbsoluteTimeGetCurrent() - stopped;
+    Check(!window.replacing && !TSTeXRootReplaceGuard.isRunning && waited < 0.3 && checking.isCancelled && [Read(@"chapters/one.tex") isEqualToString:one]
+          && Documents[@"chapters/two.tex"].view.isEditable, [NSString stringWithFormat:@"stopped during check 2: ended in %.0f ms, collection cancelled %d", waited * 1000, checking.isCancelled]);
+    Answer = nil;
+    PrepareDelay = 0;
+    Spin(^BOOL { return NO; }, 2.5); // the slow preparation ends; its result is dropped
+    Check([Read(@"chapters/one.tex") isEqualToString:one] && Alerts.count <= shown + 1, @"the late result of check 2 replaces nothing");
+    // Check 1 the same.
+    Spin(^BOOL { return Idle(window) && model.canReplaceAll; }, 30);
+    PrepareDelay = 2000000;
+    [window replaceAll:nil];
+    Spin(^BOOL { return NO; }, 0.1);
+    checking = Collectors.lastObject;
+    [window stop:nil];
+    Check(!window.replacing && checking.isCancelled, @"stopped during check 1: the collection is cancelled");
+    PrepareDelay = 0;
+    Spin(^BOOL { return NO; }, 2.5);
+
+    // F1, F5: two open documents. What waits for the end (Quit) runs once the whole Replace All is over, never between
+    // two documents; meanwhile the files of the root are not typeset, other files are.
+    for (NSUInteger stopping = 0; stopping < 2; stopping++) {
+        MakeProject();
+        Open(@"auxiliary/conventions.tex");
+        Alerts = [NSMutableArray array];
+        window = OpenWindow(NO);
+        __block NSUInteger waits = 0, firedBusy = 0, fired = 0;
+        __block BOOL projectGuarded = NO, otherFree = NO;
+        window.runMade = ^(TSTeXRootReplaceRun *run) {
+            run.applierMade = ^(TSTeXRootDocumentApplier *applier) {
+                applier.maximumReplacements = 1;
+                applier.betweenParts = ^(TSTeXRootDocumentApplier *a) {
+                    projectGuarded = [TSTeXRootReplaceGuard isApplyingInProjectOfURL:[NSURL fileURLWithPath:PathOf(@"thesis.tex")]];
+                    otherFree = ![TSTeXRootReplaceGuard isApplyingInProjectOfURL:[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"other.tex"]]];
+                    if (waits++ == 0)
+                        [TSTeXRootReplaceGuard performWhenNotApplying:^{
+                            fired++;
+                            if (TSTeXRootReplaceGuard.isApplying || TSTeXRootReplaceGuard.isRunning)
+                                firedBusy++;
+                        }];
+                    if (stopping && waits == 3)
+                        [window stop:nil];
+                };
+            };
+        };
+        [window replaceAll:nil];
+        Spin(^BOOL { return Idle(window) && fired > 0; }, 60);
+        window.runMade = nil;
+        Check(fired == 1 && firedBusy == 0 && projectGuarded && otherFree && ![TSTeXRootReplaceGuard isApplyingInProjectOfURL:[NSURL fileURLWithPath:PathOf(@"thesis.tex")]],
+              [NSString stringWithFormat:@"%@: the wait ends with the Replace All (fired %lu, while busy %lu), typesetting is refused for the root's files only",
+               stopping ? @"stopped" : @"two documents", (unsigned long)fired, (unsigned long)firedBusy]);
+    }
+}
+
 #pragma mark The main thread
 
 static void TestMainThread(void)
@@ -510,7 +639,7 @@ static void TestLanguage(void)
         @"TeXRootSearch.Report.FileReason", @"TeXRootSearch.Outcome.Stopped", @"TeXRootSearch.Outcome.NotReached", @"TeXRootSearch.Outcome.DocumentChanged",
         @"TeXRootSearch.Outcome.Refused", @"TeXRootSearch.Outcome.UnexpectedChange", @"TeXRootSearch.Outcome.FileChanged", @"TeXRootSearch.Outcome.Attributes",
         @"TeXRootSearch.Outcome.Verification", @"TeXRootSearch.Outcome.Write", @"TeXRootSearch.Outcome.Unencodable", @"TeXRootSearch.ShowInFinder",
-        @"TeXRootSearch.OpenOriginal", @"TeXRootSearch.Status.Replacing", @"TeXRootSearch.Status.Replaced", @"TeXRootSearch.ScriptRefused"];
+        @"TeXRootSearch.OpenOriginal", @"TeXRootSearch.Confirm.Replace", @"TeXRootSearch.Outcome.NotEditable", @"TeXRootSearch.Status.Replacing", @"TeXRootSearch.Status.Replaced", @"TeXRootSearch.ScriptRefused"];
     for (NSString *key in keys)
         Check(![TSAdvancedFindLocalized(key, @"\u2400") isEqualToString:@"\u2400"], [@"missing: " stringByAppendingString:key]);
     // Every count: the numbers are in, with no format left.
@@ -522,7 +651,18 @@ static void TestLanguage(void)
         for (NSString *text in @[title, disk, done])
             Check(![text containsString:@"%"] && [text containsString:n.stringValue] && text.length > 4, [NSString stringWithFormat:@"%@ with %lu", text, count]);
     }
-    if ([NSBundle.mainBundle.preferredLocalizations.firstObject isEqualToString:@"en"]) {
+    // The confirmation's button as the sheet shows it: in Japanese 「置換」 (decision 29), not the panel's 「置き換え」.
+    MakeProject();
+    Alerts = [NSMutableArray array];
+    Answer = ^NSModalResponse(NSAlert *alert) { return NSAlertFirstButtonReturn; };
+    TSTeXRootSearchWindowController *window = OpenWindow(NO);
+    [window replaceAll:nil];
+    Spin(^BOOL { return Alerts.count >= 1 && Idle(window); }, 30);
+    Answer = nil;
+    NSString *language = NSBundle.mainBundle.preferredLocalizations.firstObject;
+    Check(Alerts.firstObject.buttons.count == 2 && [Alerts.firstObject.buttons[1].title isEqualToString:TSAdvancedFindLocalized(@"TeXRootSearch.Confirm.Replace", @"")]
+          && (![language isEqualToString:@"ja"] || [Alerts.firstObject.buttons[1].title isEqualToString:@"置換"]), [@"the confirmation's button: " stringByAppendingString:Alerts.firstObject.buttons.lastObject.title ?: @""]);
+    if ([language isEqualToString:@"en"]) {
         Check([[NSString localizedStringWithFormat:TSAdvancedFindLocalized(@"TeXRootSearch.Confirm.Title", @""), 1UL, 1UL] isEqualToString:@"Replace 1 match in 1 file?"]
               && [[NSString localizedStringWithFormat:TSAdvancedFindLocalized(@"TeXRootSearch.Confirm.Disk", @""), 1UL] hasPrefix:@"1 file that is not open will be changed"]
               && [[NSString localizedStringWithFormat:TSAdvancedFindLocalized(@"TeXRootSearch.Status.Replaced", @""), 2UL, 1UL] isEqualToString:@"Replaced 2 matches in 1 file"],
@@ -535,11 +675,13 @@ int main(int argc, const char *argv[])
     @autoreleasepool {
         TSInstallAppKitIsolation();
         [NSApplication sharedApplication];
+        Collectors = [NSMutableArray array];
         NSString *mode = argc > 1 ? @(argv[1]) : @"behavior";
         if ([mode isEqualToString:@"behavior"]) {
             TestReplaceAll();
             TestChecks();
             TestFailures();
+            TestRoundOne();
         } else if ([mode isEqualToString:@"main-thread"]) {
             TestMainThread();
         } else if ([mode isEqualToString:@"language"]) {

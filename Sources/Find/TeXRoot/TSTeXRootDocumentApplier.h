@@ -82,8 +82,13 @@ NS_SWIFT_NAME(TeXRootReplaceGuard)
 + (BOOL)locksTextStorage:(nullable NSTextStorage *)storage;
 + (void)setLockedTextStorages:(nullable NSArray<NSTextStorage *> *)storages;
 + (BOOL)isApplying;
-/// Called once nothing is being applied any more (at once when nothing is).
+/// Called at once when nothing is being applied; otherwise once the Replace All that applies is over, however it
+/// ends (not between two of its documents).
 + (void)performWhenNotApplying:(dispatch_block_t)block;
+/// The files of the root being replaced in, for typesetting (spec §2.5.3a): while a document is being replaced in, the
+/// documents of its root are not typeset, as typesetting saves them.
++ (void)setProjectFiles:(nullable NSArray<NSURL *> *)files;
++ (BOOL)isApplyingInProjectOfURL:(nullable NSURL *)url;
 + (void)setRunning:(BOOL)running;
 + (void)addApplier:(TSTeXRootDocumentApplier *)applier;
 + (void)removeApplier:(TSTeXRootDocumentApplier *)applier;

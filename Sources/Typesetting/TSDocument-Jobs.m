@@ -247,8 +247,9 @@ for(NSString *key in enu)
 
 - (void) doJobForScript:(NSInteger)type withError:(BOOL)error runContinuously:(BOOL)continuous
 {
-	// Typesetting saves the documents: not while a Replace All puts its replacements in one (Issue #45).
-	if ([TSTeXRootReplaceGuard isApplying]) {
+	// Typesetting saves the documents: not while a Replace All puts its replacements in this one or in one of its root
+	// (Issue #45).
+	if ([self isBeingReplacedIn] || [TSTeXRootReplaceGuard isApplyingInProjectOfURL:self.fileURL]) {
 		NSBeep();
 		return;
 	}
@@ -317,8 +318,9 @@ for(NSString *key in enu)
 
 - (void) doJob:(NSInteger)type withError:(BOOL)error runContinuously:(BOOL)continuous
 {
-	// Typesetting saves the documents: not while a Replace All puts its replacements in one (Issue #45).
-	if ([TSTeXRootReplaceGuard isApplying]) {
+	// Typesetting saves the documents: not while a Replace All puts its replacements in this one or in one of its root
+	// (Issue #45).
+	if ([self isBeingReplacedIn] || [TSTeXRootReplaceGuard isApplyingInProjectOfURL:self.fileURL]) {
 		NSBeep();
 		return;
 	}

@@ -192,6 +192,7 @@
 "TeXRootSearch.Changed.Text" = "%@ a fost modificat. Lista a fost refăcută.";
 "TeXRootSearch.Changed.Title" = "Nu s-a înlocuit nimic";
 "TeXRootSearch.Confirm.Disk" = "%lu fișiere care nu sunt deschise vor fi modificate direct pe disc. Această acțiune nu poate fi anulată.";
+"TeXRootSearch.Confirm.Replace" = "Înlocuiți";
 "TeXRootSearch.Confirm.Title" = "Înlocuiți %1$lu potriviri în %2$lu fișiere?";
 "TeXRootSearch.EditSet" = "Editați…";
 "TeXRootSearch.Explanation" = "Caută în %@ și în sursele TeX din dosarul și subdosarele lui care îl indică drept TEX root.";
@@ -207,6 +208,7 @@
 "TeXRootSearch.Outcome.Attributes" = "permisiunile sau alte atribute nu au putut fi păstrate";
 "TeXRootSearch.Outcome.DocumentChanged" = "documentul a fost închis sau editat";
 "TeXRootSearch.Outcome.FileChanged" = "fișierul fusese modificat";
+"TeXRootSearch.Outcome.NotEditable" = "documentul nu putea fi editat";
 "TeXRootSearch.Outcome.NotReached" = "neprocesat";
 "TeXRootSearch.Outcome.Refused" = "documentul nu a acceptat modificarea";
 "TeXRootSearch.Outcome.Stopped" = "oprit";

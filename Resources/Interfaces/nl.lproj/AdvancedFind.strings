@@ -192,6 +192,7 @@
 "TeXRootSearch.Changed.Text" = "%@ is gewijzigd. De lijst is opnieuw gemaakt.";
 "TeXRootSearch.Changed.Title" = "Er is niets vervangen";
 "TeXRootSearch.Confirm.Disk" = "%lu bestanden die niet geopend zijn, worden direct op de schijf gewijzigd. Je kunt deze actie niet ongedaan maken.";
+"TeXRootSearch.Confirm.Replace" = "Vervang";
 "TeXRootSearch.Confirm.Title" = "%1$lu treffers in %2$lu bestanden vervangen?";
 "TeXRootSearch.EditSet" = "Wijzig…";
 "TeXRootSearch.Explanation" = "Doorzoekt %@ en de TeX-bronnen in de map en submappen die het als TEX root opgeven.";
@@ -207,6 +208,7 @@
 "TeXRootSearch.Outcome.Attributes" = "de rechten of andere kenmerken konden niet behouden blijven";
 "TeXRootSearch.Outcome.DocumentChanged" = "het document is gesloten of gewijzigd";
 "TeXRootSearch.Outcome.FileChanged" = "het bestand was gewijzigd";
+"TeXRootSearch.Outcome.NotEditable" = "het document kon niet worden gewijzigd";
 "TeXRootSearch.Outcome.NotReached" = "niet verwerkt";
 "TeXRootSearch.Outcome.Refused" = "het document heeft de wijziging geweigerd";
 "TeXRootSearch.Outcome.Stopped" = "gestopt";

@@ -93,6 +93,7 @@ static NSUInteger TSReplaceRequest;
     TSTeXRootSearchEnvironment *environment = model.environment;
     TSTeXRootProjectCollector *collector = environment.collectorForRoot(model.rootURL);
     void (^prepare)(TSTeXRootProjectCollector *) = environment.prepareCollector;
+    self.checkCollector = collector;
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
         if (prepare)
@@ -105,11 +106,9 @@ static NSUInteger TSReplaceRequest;
         }) : @[approval.listed.rootURL.lastPathComponent ?: @""];
         dispatch_async(dispatch_get_main_queue(), ^{
             typeof(self) controller = weakSelf;
-            if (!controller || approval.request != TSReplaceRequest || controller.model != model) {
-                controller.replacing = controller.run != nil;
-                [controller updateFromModel];
-                return;
-            }
+            if (!controller || approval.request != TSReplaceRequest || controller.model != model)
+                return; // stopped meanwhile (and already ended), or the window was tied to another root
+            controller.checkCollector = nil;
             approval.plan = plan;
             if (changed.count) {
                 [controller showChangedFiles:changed];
@@ -171,7 +170,7 @@ static NSUInteger TSReplaceRequest;
     alert.informativeText = [lines componentsJoinedByString:@"\n"];
     NSButton *cancel = [alert addButtonWithTitle:TSLocalized(@"AdvancedFind.Cancel", @"Cancel")];
     cancel.keyEquivalent = @"\r";
-    NSButton *replace = [alert addButtonWithTitle:TSLocalized(@"AdvancedFind.Replace", @"Replace")];
+    NSButton *replace = [alert addButtonWithTitle:TSLocalized(@"TeXRootSearch.Confirm.Replace", @"Replace")];
     replace.keyEquivalent = @"";
     replace.hasDestructiveAction = YES;
     __weak typeof(self) weakSelf = self;
@@ -198,23 +197,14 @@ static NSUInteger TSReplaceRequest;
         run.backupFolder = approval.listed.folderURL;
     TSTeXRootSearchEnvironment *environment = model.environment;
     NSURL *rootURL = model.rootURL;
-    run.collector = ^TSTeXRootProject *_Nullable (^(void))(void) {
-        TSTeXRootProjectCollector *collector = environment.collectorForRoot(rootURL);
-        void (^prepare)(TSTeXRootProjectCollector *) = environment.prepareCollector;
-        return ^TSTeXRootProject *_Nullable {
-            if (prepare)
-                prepare(collector);
-            return [collector collect];
-        };
-    };
+    run.makeCollector = ^TSTeXRootProjectCollector *_Nullable { return environment.collectorForRoot(rootURL); };
+    run.prepareCollector = environment.prepareCollector;
     NSSet *filesOn = approval.filesOn;
     run.isIncluded = ^BOOL(TSTeXRootProjectFile *file) { return [filesOn containsObject:file.identifier]; };
     if (self.textViewForFile)
         run.textViewForFile = (NSTextView *_Nullable (^_Nonnull)(TSTeXRootReplaceFile *))self.textViewForFile;
-    run.backupDataForOpenDocument = self.backupDataForOpenDocument ?: ^NSData *(TSTeXRootReplaceFile *file, BOOL *usedUTF8) {
-        *usedUTF8 = YES;
-        return [file.originalText dataUsingEncoding:NSUTF8StringEncoding];
-    };
+    if (self.backupEncoderForOpenDocument)
+        run.backupEncoderForOpenDocument = (NSData *_Nullable (^_Nonnull (^_Nonnull)(TSTeXRootReplaceFile *))(BOOL *))self.backupEncoderForOpenDocument;
     run.actionName = TSLocalized(@"AdvancedFind.ReplaceAllAction", @"Replace All");
     self.run = run;
     if (self.runMade)
@@ -282,8 +272,10 @@ static NSUInteger TSReplaceRequest;
             if (controller.model == approval.model)
                 [approval.model searchAgainAfterReplacingWithRangesOff:rangesOff message:message];
             [controller updateFromModel];
-            if (!report.allApplied)
-                [controller showReport:report];
+            // Every file replaced in: a sheet only when a backup had to be saved in UTF-8 (spec §2.5.5), headed with
+            // what was done.
+            if (!report.allApplied || report.backupNotes.count)
+                [controller showReport:report title:report.allApplied ? message : nil];
         });
     });
 }
@@ -334,6 +326,8 @@ static NSUInteger TSReplaceRequest;
             return TSLocalized(@"TeXRootSearch.Outcome.NotReached", @"not reached");
         case TSTeXRootReplaceReasonChanged:
             return TSLocalized(@"TeXRootSearch.Outcome.DocumentChanged", @"the document was closed or edited");
+        case TSTeXRootReplaceReasonNotEditable:
+            return TSLocalized(@"TeXRootSearch.Outcome.NotEditable", @"the document could not be edited");
         case TSTeXRootReplaceReasonRefused:
             return TSLocalized(@"TeXRootSearch.Outcome.Refused", @"the document did not accept the change");
         case TSTeXRootReplaceReasonUnexpectedChange:
@@ -347,7 +341,7 @@ static NSUInteger TSReplaceRequest;
 }
 
 /// What was replaced and what was not (spec §2.5.5), with the backup's folder.
-- (void)showReport:(TSTeXRootReplaceReport *)report
+- (void)showReport:(TSTeXRootReplaceReport *)report title:(nullable NSString *)title
 {
     NSMutableArray<NSString *> *replaced = [NSMutableArray array], *notReplaced = [NSMutableArray array], *partly = [NSMutableArray array];
     NSMutableArray<TSTeXRootReplaceFile *> *partlyFiles = [NSMutableArray array];
@@ -370,10 +364,10 @@ static NSUInteger TSReplaceRequest;
     }
     NSAlert *alert = [NSAlert new];
     alert.alertStyle = NSAlertStyleWarning;
-    alert.messageText = replaced.count || partly.count ? TSLocalized(@"TeXRootSearch.Report.SomeTitle", @"Some files could not be replaced in")
-                                                        : TSLocalized(@"TeXRootSearch.Changed.Title", @"Nothing was replaced");
+    alert.messageText = title ?: ((replaced.count || partly.count) ? TSLocalized(@"TeXRootSearch.Report.SomeTitle", @"Some files could not be replaced in")
+                                                                 : TSLocalized(@"TeXRootSearch.Changed.Title", @"Nothing was replaced"));
     NSMutableArray<NSString *> *lines = [NSMutableArray array];
-    if (replaced.count)
+    if (replaced.count && !title)
         [lines addObject:[NSString stringWithFormat:TSLocalized(@"TeXRootSearch.Report.Replaced", @"Replaced: %@"), [self listOfPaths:replaced]]];
     if (partly.count)
         [lines addObject:[NSString stringWithFormat:TSLocalized(@"TeXRootSearch.Report.Partly", @"Partly replaced: %@"), [self listOfPaths:partly]]];
@@ -420,6 +414,9 @@ static NSUInteger TSReplaceRequest;
         [self.run stop];
         return;
     }
+    // Check 1: its collection is cancelled (a download it waits for, too) and its result dropped (Codex 4b F2).
+    [self.checkCollector cancel];
+    self.checkCollector = nil;
     TSReplaceRequest++;
     self.replacing = NO;
     [self updateFromModel];

@@ -192,6 +192,7 @@
 "TeXRootSearch.Changed.Text" = "%@が変更されていました。一覧を作り直しました。";
 "TeXRootSearch.Changed.Title" = "置換しませんでした";
 "TeXRootSearch.Confirm.Disk" = "開いていない%luファイルは直接書き換えられます。この操作は取り消せません。";
+"TeXRootSearch.Confirm.Replace" = "置換";
 "TeXRootSearch.Confirm.Title" = "%2$luファイルの%1$lu件を置換しますか？";
 "TeXRootSearch.EditSet" = "編集…";
 "TeXRootSearch.Explanation" = "%@と、それをTEX rootに指定している、同じフォルダ以下のTeXソースが対象です。";
@@ -207,6 +208,7 @@
 "TeXRootSearch.Outcome.Attributes" = "権限などの属性を引き継げませんでした";
 "TeXRootSearch.Outcome.DocumentChanged" = "書類が閉じられたか編集されました";
 "TeXRootSearch.Outcome.FileChanged" = "ファイルが変更されていました";
+"TeXRootSearch.Outcome.NotEditable" = "書類を編集できませんでした";
 "TeXRootSearch.Outcome.NotReached" = "未処理";
 "TeXRootSearch.Outcome.Refused" = "書類が変更を受け付けませんでした";
 "TeXRootSearch.Outcome.Stopped" = "停止";

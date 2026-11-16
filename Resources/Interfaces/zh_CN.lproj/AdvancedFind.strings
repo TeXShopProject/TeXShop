@@ -192,6 +192,7 @@
 "TeXRootSearch.Changed.Text" = "%@已被更改。已重新生成列表。";
 "TeXRootSearch.Changed.Title" = "未替换任何内容";
 "TeXRootSearch.Confirm.Disk" = "未打开的%lu个文件将在磁盘上直接更改。此操作无法撤销。";
+"TeXRootSearch.Confirm.Replace" = "替换";
 "TeXRootSearch.Confirm.Title" = "要替换%2$lu个文件中的%1$lu处吗？";
 "TeXRootSearch.EditSet" = "编辑…";
 "TeXRootSearch.Explanation" = "查找%@，以及同一文件夹及其子文件夹中将其指定为TEX root的TeX源文件。";
@@ -207,6 +208,7 @@
 "TeXRootSearch.Outcome.Attributes" = "无法保留权限等属性";
 "TeXRootSearch.Outcome.DocumentChanged" = "文稿已关闭或已编辑";
 "TeXRootSearch.Outcome.FileChanged" = "文件已被更改";
+"TeXRootSearch.Outcome.NotEditable" = "文稿无法编辑";
 "TeXRootSearch.Outcome.NotReached" = "未处理";
 "TeXRootSearch.Outcome.Refused" = "文稿未接受更改";
 "TeXRootSearch.Outcome.Stopped" = "已停止";

@@ -119,8 +119,8 @@ static char TSOpenDocumentsSnapshotKey;
         };
         controller.replaceAllHandler = ^(TSTeXRootSearchWindowController *window) { [window beginReplaceAll]; };
         controller.textViewForFile = ^NSTextView *(TSTeXRootReplaceFile *file) { return [weakSelf textViewOfOpenFile:file]; };
-        controller.backupDataForOpenDocument = ^NSData *(TSTeXRootReplaceFile *file, BOOL *usedUTF8) {
-            return [weakSelf backupDataOfOpenFile:file usedUTF8:usedUTF8];
+        controller.backupEncoderForOpenDocument = ^NSData *_Nullable (^(TSTeXRootReplaceFile *file))(BOOL *) {
+            return [weakSelf backupEncoderOfOpenFile:file];
         };
         controller.openTextHandler = ^(NSString *text) { [weakSelf openUntitledDocumentWithText:text]; };
         self.madeWindowController = controller;
@@ -467,20 +467,23 @@ static char TSOpenDocumentsSnapshotKey;
     return nil;
 }
 
-/// The text approved, as the document would save it in its encoding; in UTF-8 when that encoding cannot hold it.
-- (nullable NSData *)backupDataOfOpenFile:(TSTeXRootReplaceFile *)file usedUTF8:(BOOL *)usedUTF8
+/// The text approved, as the document would save it in its encoding (read here, on the main thread); in UTF-8 when
+/// that encoding cannot hold it. The bytes are made by the block returned, on a background queue.
+- (NSData *_Nullable (^)(BOOL *))backupEncoderOfOpenFile:(TSTeXRootReplaceFile *)file
 {
     TSDocument *document = nil;
     for (TSTeXRootOpenDocument *open in [self openDocumentsWithIdentifier:file.file.identifier])
         document = document ?: open.document;
-    TSEncodingSupport *support = [TSEncodingSupport sharedInstance];
     NSStringEncoding encoding = document ? [document encoding] : NSUTF8StringEncoding;
-    NSString *saving = [support textForSaving:file.originalText encoding:encoding];
-    NSData *data = [saving dataUsingEncoding:encoding allowLossyConversion:NO];
-    if (data)
-        return data;
-    *usedUTF8 = YES;
-    return [file.originalText dataUsingEncoding:NSUTF8StringEncoding];
+    TSEncodingSupport *support = [TSEncodingSupport sharedInstance];
+    NSString *text = file.originalText;
+    return ^NSData *(BOOL *usedUTF8) {
+        NSData *data = [[support textForSaving:text encoding:encoding] dataUsingEncoding:encoding allowLossyConversion:NO];
+        if (data)
+            return data;
+        *usedUTF8 = YES;
+        return [text dataUsingEncoding:NSUTF8StringEncoding];
+    };
 }
 
 - (void)openUntitledDocumentWithText:(NSString *)text

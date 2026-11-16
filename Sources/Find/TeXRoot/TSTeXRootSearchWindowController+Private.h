@@ -48,6 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// Replace All (stage 4): from the press of the button until its report.
 @property (nonatomic, readwrite, getter=isReplacing) BOOL replacing;
 @property (nonatomic, readwrite, strong, nullable) TSTeXRootReplaceRun *run;
+/// The collector of check 1 while it runs; Stop cancels it.
+@property (nonatomic, strong, nullable) TSTeXRootProjectCollector *checkCollector;
 @end
 
 @interface TSTeXRootSearchWindowController (ReplaceAllPrivate)

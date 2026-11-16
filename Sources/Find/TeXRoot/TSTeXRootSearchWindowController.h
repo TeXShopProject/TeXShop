@@ -51,8 +51,9 @@ NS_SWIFT_NAME(TeXRootSearchWindowController)
 
 /// The text view of the open document of a file of the plan, nil when it is not open any more.
 @property (nonatomic, copy, nullable) NSTextView *_Nullable (^textViewForFile)(TSTeXRootReplaceFile *file);
-/// An open document's text as approved, in its encoding, or in UTF-8 (`usedUTF8`) when that cannot hold it.
-@property (nonatomic, copy, nullable) NSData *_Nullable (^backupDataForOpenDocument)(TSTeXRootReplaceFile *file, BOOL *usedUTF8);
+/// For the backup of an open document (main thread): what turns its text as approved into bytes in its encoding, or in
+/// UTF-8 (`usedUTF8`) when that cannot hold it, on a background queue.
+@property (nonatomic, copy, nullable) NSData *_Nullable (^_Nonnull (^backupEncoderForOpenDocument)(TSTeXRootReplaceFile *file))(BOOL *usedUTF8);
 /// "Open the Original Text in a New Document" of the report: an untitled document with `text`.
 @property (nonatomic, copy, nullable) void (^openTextHandler)(NSString *text);
 /// From the press of Replace All until its report: only ■ (and Escape, ⌘.) can be used, which stops it.

@@ -5,6 +5,7 @@ static NSMutableArray<TSTeXRootDocumentApplier *> *TSAppliers;
 static NSMutableArray<dispatch_block_t> *TSWaitingForNotApplying;
 static NSPointerArray *TSLockedStorages;
 static BOOL TSRunning;
+static NSSet<NSString *> *TSProjectPaths;
 
 /// The changes that take `replacements` (ascending, in `text`) back after the first `applied` of them, counted from
 /// the end, and `inserted` characters of the next one's string are in: in the text of now, ascending.
@@ -367,6 +368,9 @@ static void TSRegisterChanges(NSUndoManager *undo, NSTextView *view, NSArray<TSR
 + (void)setRunning:(BOOL)running
 {
     TSRunning = running;
+    if (!running)
+        TSProjectPaths = nil;
+    [self runWaitingBlocks];
 }
 
 + (BOOL)isApplyingToTextStorage:(nullable NSTextStorage *)storage
@@ -382,6 +386,25 @@ static void TSRegisterChanges(NSUndoManager *undo, NSTextView *view, NSArray<TSR
 + (BOOL)isApplying
 {
     return TSAppliers.count > 0;
+}
+
++ (void)setProjectFiles:(nullable NSArray<NSURL *> *)files
+{
+    NSMutableSet<NSString *> *paths = [NSMutableSet set];
+    for (NSURL *url in files) {
+        NSString *path = url.URLByResolvingSymlinksInPath.path.stringByStandardizingPath;
+        if (path)
+            [paths addObject:(NSString *_Nonnull)path];
+    }
+    TSProjectPaths = files ? paths : nil;
+}
+
++ (BOOL)isApplyingInProjectOfURL:(nullable NSURL *)url
+{
+    NSString *path = url.URLByResolvingSymlinksInPath.path.stringByStandardizingPath;
+    if (!path || !TSAppliers.count || !TSProjectPaths)
+        return NO;
+    return [TSProjectPaths containsObject:(NSString *_Nonnull)path];
 }
 
 + (BOOL)locksTextStorage:(nullable NSTextStorage *)storage
@@ -414,6 +437,22 @@ static void TSRegisterChanges(NSUndoManager *undo, NSTextView *view, NSArray<TSR
     [TSWaitingForNotApplying addObject:[block copy]];
 }
 
+/// What waits runs once the whole Replace All is over: between two documents no applier is left for a moment, but the
+/// next one is about to start (Codex 4b F1). Checked again when the block's turn comes.
++ (void)runWaitingBlocks
+{
+    if (TSAppliers.count || TSRunning || !TSWaitingForNotApplying.count)
+        return;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (TSAppliers.count || TSRunning)
+            return; // waits for the next end
+        NSArray<dispatch_block_t> *waiting = TSWaitingForNotApplying;
+        TSWaitingForNotApplying = nil;
+        for (dispatch_block_t block in waiting)
+            block();
+    });
+}
+
 + (void)addApplier:(TSTeXRootDocumentApplier *)applier
 {
     if (!TSAppliers)
@@ -424,15 +463,7 @@ static void TSRegisterChanges(NSUndoManager *undo, NSTextView *view, NSArray<TSR
 + (void)removeApplier:(TSTeXRootDocumentApplier *)applier
 {
     [TSAppliers removeObjectIdenticalTo:applier];
-    if (TSAppliers.count || !TSWaitingForNotApplying.count)
-        return;
-    NSArray<dispatch_block_t> *waiting = TSWaitingForNotApplying;
-    TSWaitingForNotApplying = nil;
-    // After the applier's own completion: what waited sees the outcome.
-    dispatch_async(dispatch_get_main_queue(), ^{
-        for (dispatch_block_t block in waiting)
-            block();
-    });
+    [self runWaitingBlocks];
 }
 
 @end

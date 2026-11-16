@@ -34,7 +34,7 @@ MUTATIONS = {
     'no Undo is registered': ('TSTeXRootDocumentApplier.m', '    TSRegisterChanges(undo, view, back, self.replacements, self.actionName);\n', ''),
     'a change by something else is not seen': ('TSTeXRootDocumentApplier.m', '    if (self.changedUnexpectedly || !view || !storage || view.textStorage != storage) {', '    if (!view || !storage || view.textStorage != storage) {'),
     'the guard is not told': ('TSTeXRootDocumentApplier.m', '    [TSTeXRootReplaceGuard addApplier:self];\n', ''),
-    'the report is not shown': ('TSTeXRootSearchWindowController+Replace.m', '            if (!report.allApplied)\n                [controller showReport:report];\n', ''),
+    'the report is not shown': ('TSTeXRootSearchWindowController+Replace.m', '                [controller showReport:report title:report.allApplied ? message : nil];\n', '                ;\n'),
     'no backup': ('TSTeXRootSearchWindowController+Replace.m', '    if (self.backupBox.state == NSControlStateValueOn)\n        run.backupFolder', '    if (NO)\n        run.backupFolder'),
     'the items off are forgotten': ('TSTeXRootSearchWindowController+Replace.m', '            rangesOff[path] = [TSTeXRootReplaceMapping ranges:off afterReplacements:record.file.replacements];\n', ''),
     'Escape in check 1 is ignored': ('TSTeXRootSearchWindowController+Replace.m', '    TSReplaceRequest++;\n    self.replacing = NO;', '    self.replacing = NO;'),
@@ -44,6 +44,15 @@ MUTATIONS = {
     'the original text is not offered': ('TSTeXRootSearchWindowController+Replace.m', '    if (partlyFiles.count && self.openTextHandler) {', '    if (NO) {'),
     'parts of any size': ('TSTeXRootDocumentApplier.m', '    _maximumReplacements = 1000;\n    _maximumCharacters = 50000;', '    _maximumReplacements = 100000000;\n    _maximumCharacters = 100000000;', 'main-thread'),
     'a long string in one insert': ('TSTeXRootDocumentApplier.m', '        if (take > self.maximumCharacters) {', '        if (NO) {', 'main-thread'),
+    'Quit is answered between two documents': ('TSTeXRootDocumentApplier.m', '+ (void)runWaitingBlocks\n{\n    if (TSAppliers.count || TSRunning || !TSWaitingForNotApplying.count)\n        return;\n    dispatch_async(dispatch_get_main_queue(), ^{\n        if (TSAppliers.count || TSRunning)\n            return; // waits for the next end\n        NSArray<dispatch_block_t> *waiting = TSWaitingForNotApplying;\n        TSWaitingForNotApplying = nil;\n        for (dispatch_block_t block in waiting)\n            block();\n    });\n}\n\n', '+ (void)runWaitingBlocks\n{\n    if (TSAppliers.count || !TSWaitingForNotApplying.count)\n        return;\n    NSArray<dispatch_block_t> *waiting = TSWaitingForNotApplying;\n    TSWaitingForNotApplying = nil;\n    dispatch_async(dispatch_get_main_queue(), ^{\n        for (dispatch_block_t block in waiting)\n            block();\n    });\n}\n\n'),
+    'Stop in check 2 does not cancel the collection': ('TSTeXRootReplaceRun.m', '        [collector cancel];\n        [self markRestFrom:0 reason:TSTeXRootReplaceReasonStopped];', '        [self markRestFrom:0 reason:TSTeXRootReplaceReasonStopped];'),
+    'Stop in check 1 does not cancel the collection': ('TSTeXRootSearchWindowController+Replace.m', '    [self.checkCollector cancel];\n', ''),
+    'Stop in check 2 waits for it': ('TSTeXRootReplaceRun.m', '    TSTeXRootProjectCollector *collector = self.checkCollector;\n    if (collector) {', '    TSTeXRootProjectCollector *collector = self.checkCollector;\n    if (NO) {'),
+    'a backup in UTF-8 is not told when all is replaced': ('TSTeXRootSearchWindowController+Replace.m', '            if (!report.allApplied || report.backupNotes.count)', '            if (!report.allApplied)'),
+    "the confirmation says the panel's Replace": ('TSTeXRootSearchWindowController+Replace.m', 'TSLocalized(@"TeXRootSearch.Confirm.Replace", @"Replace")', 'TSLocalized(@"AdvancedFind.Replace", @"Replace")', 'language'),
+    'every file is guarded from typesetting': ('TSTeXRootDocumentApplier.m', '    return [TSProjectPaths containsObject:(NSString *_Nonnull)path];', '    return YES;'),
+    'the backup is made on the main thread': ('TSTeXRootReplaceRun.m', '    dispatch_async(self.queue, ^{\n        NSError *error = nil;', '    ((void (^)(dispatch_queue_t, dispatch_block_t))^(dispatch_queue_t q, dispatch_block_t b) { b(); })(self.queue, ^{\n        NSError *error = nil;'),
+    'a document made read-only is replaced in': ('TSTeXRootReplaceRun.m', '        if (!main.isEditable)\n            [self.notEditable addObject:', '        if (NO)\n            [self.notEditable addObject:'),
 }
 
 
@@ -126,7 +135,7 @@ def main():
                     if not mprobe:
                         print(f'mutation {name!r} does not compile:\n{errors}')
                         return 1
-                    caught = any(run(mprobe, mode).returncode != 0 for mode in (modes or ['behavior']))
+                    caught = any(run(mprobe, mode, 'ja' if mode == 'language' else 'en').returncode != 0 for mode in (modes or ['behavior']))
                     print(f"{'caught' if caught else 'SURVIVED'}: {name}")
                     if not caught:
                         survived.append(name)

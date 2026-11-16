@@ -192,6 +192,7 @@
 "TeXRootSearch.Changed.Text" = "%@ a été modifié. La liste a été refaite.";
 "TeXRootSearch.Changed.Title" = "Aucun remplacement effectué";
 "TeXRootSearch.Confirm.Disk" = "%lu fichiers non ouverts seront modifiés directement sur le disque. Vous ne pourrez pas annuler cette action.";
+"TeXRootSearch.Confirm.Replace" = "Remplacer";
 "TeXRootSearch.Confirm.Title" = "Remplacer %1$lu occurrences dans %2$lu fichiers ?";
 "TeXRootSearch.EditSet" = "Modifier…";
 "TeXRootSearch.Explanation" = "Recherche dans %@ et dans les sources TeX de son dossier et de ses sous-dossiers qui l’indiquent comme TEX root.";
@@ -207,6 +208,7 @@
 "TeXRootSearch.Outcome.Attributes" = "impossible de conserver les autorisations ou d’autres attributs";
 "TeXRootSearch.Outcome.DocumentChanged" = "le document a été fermé ou modifié";
 "TeXRootSearch.Outcome.FileChanged" = "le fichier avait été modifié";
+"TeXRootSearch.Outcome.NotEditable" = "le document ne pouvait pas être modifié";
 "TeXRootSearch.Outcome.NotReached" = "non traité";
 "TeXRootSearch.Outcome.Refused" = "le document a refusé la modification";
 "TeXRootSearch.Outcome.Stopped" = "arrêté";

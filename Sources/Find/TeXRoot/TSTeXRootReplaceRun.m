@@ -123,6 +123,10 @@ NSArray<NSString *> *TSTeXRootChangedFiles(TSTeXRootProject *listed, TSTeXRootPr
 /// The text views made read-only, to make editable again at the end.
 @property (nonatomic, strong) NSMutableArray<NSTextView *> *lockedViews;
 @property (nonatomic, strong, nullable) TSTeXRootDocumentApplier *applier;
+/// The collector of check 2 while it runs.
+@property (nonatomic, strong, nullable) TSTeXRootProjectCollector *checkCollector;
+/// The text storages whose view could not be edited when the run began: not replaced in (spec §2.5.1a).
+@property (nonatomic, strong) NSHashTable<NSTextStorage *> *notEditable;
 @end
 
 @implementation TSTeXRootReplaceRun
@@ -139,10 +143,14 @@ NSArray<NSString *> *TSTeXRootChangedFiles(TSTeXRootProject *listed, TSTeXRootPr
     _records = [NSMutableArray array];
     _lockedViews = [NSMutableArray array];
     _actionName = @"Replace All";
-    _collector = ^TSTeXRootProject *_Nullable (^(void))(void) { return ^TSTeXRootProject *_Nullable { return nil; }; };
+    _makeCollector = ^TSTeXRootProjectCollector *_Nullable { return nil; };
+    _notEditable = [NSHashTable weakObjectsHashTable];
     _isIncluded = ^BOOL(TSTeXRootProjectFile *file) { return YES; };
     _textViewForFile = ^NSTextView *_Nullable(TSTeXRootReplaceFile *file) { return nil; };
-    _backupDataForOpenDocument = ^NSData *_Nullable(TSTeXRootReplaceFile *file, BOOL *usedUTF8) { return nil; };
+    _backupEncoderForOpenDocument = ^NSData *_Nullable (^(TSTeXRootReplaceFile *file))(BOOL *) {
+        NSString *text = file.originalText;
+        return ^NSData *_Nullable(BOOL *usedUTF8) { return [text dataUsingEncoding:NSUTF8StringEncoding]; };
+    };
     atomic_init(&_stopRequested, false);
     return self;
 }
@@ -156,6 +164,15 @@ NSArray<NSString *> *TSTeXRootChangedFiles(TSTeXRootProject *listed, TSTeXRootPr
 {
     atomic_store(&_stopRequested, true);
     [self.applier stop];
+    // During check 2 it ends at once: the collection is cancelled (a download it waits for, too), and its result,
+    // when it comes, is dropped (Codex 4b F2).
+    TSTeXRootProjectCollector *collector = self.checkCollector;
+    if (collector) {
+        self.checkCollector = nil;
+        [collector cancel];
+        [self markRestFrom:0 reason:TSTeXRootReplaceReasonStopped];
+        [self finish];
+    }
 }
 
 - (void)runWithCompletion:(void (^)(TSTeXRootReplaceReport *report))completion
@@ -170,14 +187,25 @@ NSArray<NSString *> *TSTeXRootChangedFiles(TSTeXRootProject *listed, TSTeXRootPr
     for (TSTeXRootProjectFile *file in self.listed.files)
         if (self.isIncluded(file))
             [included addObject:file.identifier];
-    TSTeXRootProject *_Nullable (^collect)(void) = self.collector();
+    TSTeXRootProjectCollector *collector = self.makeCollector();
+    void (^prepare)(TSTeXRootProjectCollector *) = self.prepareCollector;
+    self.checkCollector = collector;
     TSTeXRootProject *listed = self.listed;
+    NSMutableArray<NSURL *> *projectFiles = [NSMutableArray array];
+    for (TSTeXRootProjectFile *file in listed.files)
+        [projectFiles addObject:file.url];
+    [TSTeXRootReplaceGuard setProjectFiles:projectFiles];
     dispatch_async(self.queue, ^{
-        TSTeXRootProject *now = collect();
+        if (prepare && collector)
+            prepare((TSTeXRootProjectCollector *_Nonnull)collector);
+        TSTeXRootProject *now = [collector collect];
         NSArray<NSString *> *changed = now ? TSTeXRootChangedFiles(listed, (TSTeXRootProject *_Nonnull)now, ^BOOL(TSTeXRootProjectFile *file) {
             return [included containsObject:file.identifier];
         }) : @[listed.rootFile.relativePath ?: @""];
         dispatch_async(dispatch_get_main_queue(), ^{
+            if (self.checkCollector != collector || !self.running)
+                return; // stopped meanwhile: already reported
+            self.checkCollector = nil;
             if (changed.count) {
                 self.report.changedFiles = changed;
                 [self finish];
@@ -200,10 +228,15 @@ NSArray<NSString *> *TSTeXRootChangedFiles(TSTeXRootProject *listed, TSTeXRootPr
     for (TSTeXRootReplaceFile *file in self.plan.files) {
         if (!file.openDocument)
             continue;
-        NSTextStorage *storage = self.textViewForFile(file).textStorage;
+        NSTextView *main = self.textViewForFile(file);
+        NSTextStorage *storage = main.textStorage;
         if (!storage)
             continue;
         [storages addObject:storage];
+        // Made read-only meanwhile (the list was made while it could be edited): it is not replaced in, and is never
+        // made editable here (Codex 4b F7).
+        if (!main.isEditable)
+            [self.notEditable addObject:(NSTextStorage *_Nonnull)storage];
         for (NSLayoutManager *layout in storage.layoutManagers)
             for (NSTextContainer *container in layout.textContainers) {
                 NSTextView *view = container.textView;
@@ -233,19 +266,12 @@ NSArray<NSString *> *TSTeXRootChangedFiles(TSTeXRootProject *listed, TSTeXRootPr
         [self writeFilesOnDisk];
         return;
     }
-    // The open documents' texts as approved, in their encodings, taken here on the main thread.
-    NSMapTable<TSTeXRootReplaceFile *, NSData *> *openData = [NSMapTable strongToStrongObjectsMapTable];
-    NSMutableSet<TSTeXRootReplaceFile *> *utf8 = [NSMutableSet set];
-    for (TSTeXRootReplaceFile *file in self.plan.files) {
-        if (!file.openDocument)
-            continue;
-        BOOL usedUTF8 = NO;
-        NSData *data = self.backupDataForOpenDocument(file, &usedUTF8);
-        if (data)
-            [openData setObject:data forKey:file];
-        if (usedUTF8)
-            [utf8 addObject:file];
-    }
+    // The open documents' encodings are read here on the main thread; their texts as approved become bytes on the
+    // background queue (spec §2.9).
+    NSMapTable<TSTeXRootReplaceFile *, NSData *_Nullable (^)(BOOL *)> *encoders = [NSMapTable strongToStrongObjectsMapTable];
+    for (TSTeXRootReplaceFile *file in self.plan.files)
+        if (file.openDocument)
+            [encoders setObject:self.backupEncoderForOpenDocument(file) forKey:file];
     TSTeXRootReplacePlan *plan = self.plan;
     NSDate *date = self.date ?: [NSDate date];
     __weak typeof(self) weakSelf = self;
@@ -254,8 +280,8 @@ NSArray<NSString *> *TSTeXRootChangedFiles(TSTeXRootProject *listed, TSTeXRootPr
         NSArray<NSString *> *notes = nil;
         NSURL *made = [TSTeXRootBackup backUpPlan:plan inFolder:(NSURL *_Nonnull)folder date:date
                                  openDocumentData:^NSData *(TSTeXRootReplaceFile *file, BOOL *usedUTF8) {
-            *usedUTF8 = [utf8 containsObject:file];
-            return [openData objectForKey:file];
+            NSData *_Nullable (^encode)(BOOL *) = [encoders objectForKey:file];
+            return encode ? encode(usedUTF8) : nil;
         } notes:&notes cancellation:^BOOL { return weakSelf.stopRequested; } error:&error];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (!made) {
@@ -347,6 +373,11 @@ NSArray<NSString *> *TSTeXRootChangedFiles(TSTeXRootProject *listed, TSTeXRootPr
     }
     TSTeXRootReplaceFile *file = files[index];
     NSTextView *view = self.textViewForFile(file);
+    if (view && [self.notEditable containsObject:(NSTextStorage *_Nonnull)view.textStorage]) {
+        [self.records addObject:[[TSTeXRootReplaceRecord alloc] initWithFile:file status:TSTeXRootReplaceStatusNotApplied reason:TSTeXRootReplaceReasonNotEditable error:nil]];
+        [self applyToOpenDocumentAtIndex:index + 1];
+        return;
+    }
     if (!view) {
         [self.records addObject:[[TSTeXRootReplaceRecord alloc] initWithFile:file status:TSTeXRootReplaceStatusNotApplied reason:TSTeXRootReplaceReasonChanged error:nil]];
         [self applyToOpenDocumentAtIndex:index + 1];
@@ -387,6 +418,8 @@ NSArray<NSString *> *TSTeXRootChangedFiles(TSTeXRootProject *listed, TSTeXRootPr
 
 - (void)finish
 {
+    if (!self.running)
+        return; // once
     [self unlockOpenDocuments];
     self.report.records = self.records;
     self.running = NO;
