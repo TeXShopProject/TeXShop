@@ -41,7 +41,6 @@ wrappers = sorted(p.parent for p in interfaces.glob('*.lproj/*.nib/designable.ni
 xibs = sorted(p for d in ('Resources', 'Sources') for p in (root / d).rglob('*.xib'))
 # Guard against a glob that finds nothing: the files the mutations edit must be among them,
 # rather than a count that goes stale when an interface file is removed.
-assert len(wrappers) >= 60 and len(xibs) >= 10, (len(wrappers), len(xibs))
 assert root / 'Resources/Interfaces/ja.lproj/MainMenu.nib' in wrappers, 'ja MainMenu.nib not found'
 assert any(p.name == 'SettingsPreview.xib' for p in xibs), 'SettingsPreview.xib not found'
 titles_checked = 0
@@ -146,6 +145,7 @@ def nib_archive_strings(data):
     return texts
 
 compiled = 0
+nl_main_compiled = False
 for wrapper in wrappers:
     tree = ET.parse(wrapper / 'designable.nib').getroot()
     menu_titles = {normal(e.get('title')) for e in menu_elements(tree)}
@@ -157,13 +157,16 @@ for wrapper in wrappers:
         else:
             texts = nib_archive_strings(data)
         assert texts, nib
-        if mutation == 'compiled' and wrapper.parts[-2:] == ('nl.lproj', 'MainMenu.nib'):
-            texts.append(' Wis Aux-bestanden & Zet')
+        if wrapper.parts[-2:] == ('nl.lproj', 'MainMenu.nib'):
+            nl_main_compiled = True
+            if mutation == 'compiled':
+                texts.append(' Wis Aux-bestanden & Zet')
         compiled += 1
         for text in texts:
             if stray(text) and normal(text) in menu_titles and text not in written:
                 failures.append(f'{nib.relative_to(root)}: {text!r}')
-assert compiled > 100, compiled
+# As above, require the compiled nib the mutation edits rather than a count of compiled nibs.
+assert nl_main_compiled, 'compiled nl MainMenu.nib not found'
 
 if mutation:
     if not failures:
