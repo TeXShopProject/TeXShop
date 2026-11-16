@@ -58,7 +58,6 @@
 // - (void)setForPreview: (BOOL)value;
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender;
 - (void)ogreKitWillHackFindMenu:(OgreTextFinder*)textFinder;
-- (IBAction)checkForUpdate:(id)sender; // Update checker
 // - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename;
 - (void)makeDefaultEditor:(id)sender;
 - (void)updateXMLTabs;

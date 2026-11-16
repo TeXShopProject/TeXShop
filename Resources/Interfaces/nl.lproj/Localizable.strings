@@ -66,11 +66,6 @@
 "This file was opened with IsoLatin9 encoding." = "Dit bestand is geopend met IsoLatin9-codering.";
 "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "Het bestand kan niet worden geopend met de codering %@, omdat het niet met die codering is bewaard. Als u het met een andere codering wilt openen, sluit u het venster en opent u het opnieuw.";
 "Error" = "Fout";
-"There was an error checking for updates." = "Er is een fout opgetreden bij het zoeken naar updates.";
-"Your copy of TeXShop is up-to-date" = "Uw exemplaar van TeXShop is up-to-date";
-"You have the most recent version of TeXShop." = "U hebt de nieuwste versie van TeXShop.";
-"New version available" = "Nieuwe versie beschikbaar";
-"A new version of TeXShop is available (version %@). Would you like to download it now?" = "Er is een nieuwe versie van TeXShop beschikbaar (versie %@). Wilt u deze nu downloaden?";
 "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "Voor deze versie van TeXShop is Mac OS X 10.4 of hoger vereist. Gebruik in plaats daarvan TeXShop 1.37.";
 "Hard Wrap" = "Harde omloop";
 "Newline Removal" = "Regeleinden verwijderen";

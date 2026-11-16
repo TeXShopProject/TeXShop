@@ -487,6 +487,7 @@ delay
 deleted
 demo
 demonstration
+demos
 depends
 describe
 design
@@ -574,7 +575,6 @@ editing
 editor
 editors
 edits
-edu
 edward
 effect
 effort
@@ -721,6 +721,7 @@ forgotten
 form
 format
 formats
+former
 formula
 formulas
 forth
@@ -827,7 +828,6 @@ hovers
 how
 however
 html
-https
 huh
 hyperfigures
 hyperref
@@ -959,6 +959,7 @@ knowledge
 known
 koch
 koch's
+koch’s
 labeled
 language
 languages
@@ -1887,7 +1888,6 @@ unsplitting
 until
 untitled
 unusual
-uoregon
 up
 uparrow
 update

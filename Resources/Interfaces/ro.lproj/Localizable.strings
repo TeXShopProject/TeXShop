@@ -66,11 +66,6 @@
 "This file was opened with IsoLatin9 encoding." = "Acest fișier a fost deschis cu codificarea IsoLatin9.";
 "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "Fișierul nu a putut fi deschis cu codificarea %@ deoarece nu a fost salvat cu această codificare. Dacă doriți să-l deschideți cu altă codificare, închideți fereastra și deschideți-l din nou.";
 "Error" = "Eroare";
-"There was an error checking for updates." = "A apărut o eroare la căutarea actualizărilor.";
-"Your copy of TeXShop is up-to-date" = "Copia dvs. de TeXShop este actualizată";
-"You have the most recent version of TeXShop." = "Aveți cea mai recentă versiune de TeXShop.";
-"New version available" = "Versiune nouă disponibilă";
-"A new version of TeXShop is available (version %@). Would you like to download it now?" = "Este disponibilă o versiune nouă de TeXShop (versiunea %@). Doriți să o descărcați acum?";
 "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "Această versiune de TeXShop necesită Mac OS X 10.4 sau o versiune ulterioară. Folosiți TeXShop 1.37.";
 "Hard Wrap" = "Împărțire fixă";
 "Newline Removal" = "Eliminarea sfârșiturilor de rând";

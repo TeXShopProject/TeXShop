@@ -66,11 +66,6 @@
 "This file was opened with IsoLatin9 encoding." = "Este ficheiro foi aberto com a codificação IsoLatin9.";
 "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "Não foi possível abrir o ficheiro com a codificação %@ porque não foi guardado com essa codificação. Para o abrir noutra codificação, feche a janela e volte a abri-lo.";
 "Error" = "Erro";
-"There was an error checking for updates." = "Ocorreu um erro ao procurar atualizações.";
-"Your copy of TeXShop is up-to-date" = "A sua cópia do TeXShop está atualizada";
-"You have the most recent version of TeXShop." = "Tem a versão mais recente do TeXShop.";
-"New version available" = "Nova versão disponível";
-"A new version of TeXShop is available (version %@). Would you like to download it now?" = "Está disponível uma nova versão do TeXShop (versão %@). Pretende descarregá-la agora?";
 "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "Esta versão do TeXShop requer o Mac OS X 10.4 ou posterior. Utilize o TeXShop 1.37.";
 "Hard Wrap" = "Quebra de linha manual";
 "Newline Removal" = "Remoção de quebras de linha";
