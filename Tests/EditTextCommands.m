@@ -336,6 +336,9 @@ static void CheckCompiledMenu(NSString *path)
     Require([path stringByAppendingString:@": swap wiring"],
             exchange.target == nil && exchange.tag == 0 && [exchange.identifier isEqualToString:@"TSShortcut.exchangePaste:.0"] &&
             exchange.keyEquivalent.length == 0 && exchange.title.length > 0);
+    if ([path containsString:@"/ja.lproj/"])
+        Require([path stringByAppendingString:@": Japanese name of Swap with Clipboard"],
+                [exchange.title isEqualToString:@"クリップボードと交換"]);
 
     NSMenuItem *normalize = FindSubmenu(menu, @selector(normalizeSelectedString:));
     Require([path stringByAppendingString:@": normalization follows conversion"],
