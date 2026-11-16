@@ -199,7 +199,8 @@ int main(int argc, const char **argv) { @autoreleasepool {
     }
     // 170 migrated from the legacy Preferences window and 4 added since; the Engine File and
     // Alternate Engine text fields gave way to menus built in code; Save PostScript File and
-    // -dALLOWPSTRANSPARENCY were removed; the arrow keys switch of Preview was added.
-    Check(outlets == 171, @"Every typed outlet loads");
-    puts("PASS: 11 panes and 171 typed outlets");
+    // -dALLOWPSTRANSPARENCY were removed; the arrow keys switch of Preview and the Advanced Find panel switch
+    // of Editor were added.
+    Check(outlets == 172, @"Every typed outlet loads");
+    puts("PASS: 11 panes and 172 typed outlets");
 } return 0; }

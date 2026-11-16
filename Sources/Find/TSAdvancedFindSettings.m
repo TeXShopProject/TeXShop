@@ -59,6 +59,7 @@ static NSString *const TSAdvancedFindReplaceHistoryKey = @"AdvancedFindReplaceHi
 - (void)setWraps:(BOOL)wraps { [self.defaults setBool:wraps forKey:TSAdvancedFindWrapsKey]; }
 - (BOOL)closesWhenDone { return [self boolForKey:TSAdvancedFindClosesWhenDoneKey fallback:NO]; }
 - (void)setClosesWhenDone:(BOOL)closesWhenDone { [self.defaults setBool:closesWhenDone forKey:TSAdvancedFindClosesWhenDoneKey]; }
+- (BOOL)panelFloats { return [self.defaults boolForKey:TSAdvancedFindPanelFloatsKey]; }
 - (BOOL)updatesResultsLive { return [self boolForKey:TSAdvancedFindLiveUpdateKey fallback:NO]; }
 - (void)setUpdatesResultsLive:(BOOL)live { [self.defaults setBool:live forKey:TSAdvancedFindLiveUpdateKey]; }
 

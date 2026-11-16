@@ -20,6 +20,7 @@
         <outlet property="documentFontTextField" destination="18" id="82" />
         <outlet property="externalEditorButton" destination="272" id="274" />
         <outlet property="findMatrix" destination="581" id="586" />
+        <outlet property="findPanelFloatsButton" destination="find-panel-floats-button" id="find-panel-floats-outlet" />
         <outlet property="lineSizeMatrix" destination="yo8-RP-pZK" id="cVE-T9-51X" />
         <outlet property="openAsTabsMatrix" destination="M7m-FU-qKi" id="hBZ-Kc-cvo" />
         <outlet property="openEmptyButton" destination="238" id="240" />
@@ -401,6 +402,17 @@
                   <action selector="findPanelChanged:" target="-2" id="587" />
                 </connections>
               </matrix>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="find-panel-floats-button" identifier="settings.find-panel-floats-button">
+                <rect key="frame" x="16" y="9" width="230" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <buttonCell key="cell" type="check" title="Keep the Advanced Find panel on top" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="find-panel-floats-cell">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="findPanelFloatsChanged:" target="-2" id="find-panel-floats-action" />
+                </connections>
+              </button>
             </subviews>
           </view>
           <font key="titleFont" metaFont="system" />

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "1080.title" = "Painel de pesquisa OgreKit (legado)";
 "adv-Fd-Pnl.title" = "Painel de pesquisa avançada (recomendado)";
+"find-panel-floats-cell.title" = "Manter o painel de pesquisa avançada em primeiro plano";
 "14.title" = "Tipo para o documento";
 "19.title" = "Source Window Position";
 "236.title" = "No início";

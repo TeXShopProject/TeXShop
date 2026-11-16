@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "1080.title" = "OgreKit Suchmaske (veraltet)";
 "adv-Fd-Pnl.title" = "Erweiterte Suchmaske (empfohlen)";
+"find-panel-floats-cell.title" = "Erweiterte Suchmaske immer im Vordergrund halten";
 "14.title" = "Dokument-Schriftart";
 "19.title" = "Quelltext-Fensterposition";
 "236.title" = "Bei Programmstart";

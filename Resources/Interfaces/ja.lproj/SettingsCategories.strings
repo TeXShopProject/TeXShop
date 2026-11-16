@@ -125,6 +125,7 @@
 "catalog.editor.6.3.title" = "左右時のブロック長";
 "group.editor.7.title" = "検索";
 "catalog.editor.7.0.title" = "検索パネル";
+"catalog.editor.7.1.title" = "詳細検索パネルを常に手前に表示";
 
 "group.editor.8.title" = "タグリストに表示するXMLタグ";
 "catalog.editor.8.0.choice.0" = "chapter";

@@ -125,6 +125,7 @@
 "catalog.editor.6.3.title" = "Breite (Links bzw. Rechts):";
 "group.editor.7.title" = "Suchen";
 "catalog.editor.7.0.title" = "Suchoberfläche";
+"catalog.editor.7.1.title" = "Erweiterte Suchmaske immer im Vordergrund halten";
 
 "group.editor.8.title" = "XML-Tags in der Tag-Liste";
 "catalog.editor.8.0.choice.0" = "chapter";

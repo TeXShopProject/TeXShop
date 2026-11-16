@@ -18,6 +18,7 @@
 - (IBAction)encodingChanged:(id)sender { [self.preferences encodingChanged:sender]; }
 - (IBAction)externalEditorButtonPressed:(id)sender { [self.preferences externalEditorButtonPressed:sender]; }
 - (IBAction)findPanelChanged:(id)sender { [self.preferences findPanelChanged:sender]; }
+- (IBAction)findPanelFloatsChanged:(id)sender { [self.preferences findPanelFloatsChanged:sender]; }
 - (IBAction)highlightChanged:(id)sender { [self.preferences highlightChanged:sender]; }
 - (IBAction)lineSizeChanged:(id)sender { [self.preferences lineSizeChanged:sender]; }
 - (IBAction)openAsTabsChanged:(id)sender { [self.preferences openAsTabsChanged:sender]; }

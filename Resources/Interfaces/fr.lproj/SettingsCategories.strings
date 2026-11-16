@@ -125,6 +125,7 @@
 "catalog.editor.6.3.title" = "Largeur pour Gauche ou Droite:";
 "group.editor.7.title" = "Recherche";
 "catalog.editor.7.0.title" = "Interface de recherche";
+"catalog.editor.7.1.title" = "Garder la palette de recherche avancée au premier plan";
 
 "group.editor.8.title" = "Balises XML dans la liste des balises";
 "catalog.editor.8.0.choice.0" = "chapter";

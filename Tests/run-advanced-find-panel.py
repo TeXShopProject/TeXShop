@@ -19,6 +19,12 @@ root = Path(__file__).resolve().parents[1]
 LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt', 'pt-PT', 'ro', 'zh_CN']
 
 MUTATIONS = {
+    'the panel floats above the document windows': ('TSAdvancedFindPanelController.m',
+        'unless -updateWindowLevel says that it floats.\n    [self updateWindowLevel];\n', 'unless -updateWindowLevel says that it floats.\n'),
+    'the panel ignores the setting of Settings': ('TSAdvancedFindPanelController.m',
+        'BOOL floats = self.findController.settings.panelFloats || ', 'BOOL floats = '),
+    'the panel stays under a floating target': ('TSAdvancedFindPanelController.m',
+        ' || TSAdvancedFindController.targetTextView.window.level > NSNormalWindowLevel;', ';'),
     'Multiple Replace… does not open the window': ('TSAdvancedFindPanelController+Actions.m', '        [menu showMultipleReplace:sender];', '        (void)menu;'),
     'Multiple Replace… is not in the row': ('TSAdvancedFindPanelController.m',
         '[NSStackView stackViewWithViews:@[findAll, replaceAll, self.multipleReplaceButton]]', '[NSStackView stackViewWithViews:@[findAll, replaceAll]]'),

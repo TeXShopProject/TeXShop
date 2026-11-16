@@ -702,6 +702,13 @@
        "src": [
         "581"
        ]
+      },
+      {
+       "kind": "switch",
+       "title": "詳細検索パネルを常に手前に表示",
+       "src": [
+        "find-panel-floats-button"
+       ]
       }
      ]
     },

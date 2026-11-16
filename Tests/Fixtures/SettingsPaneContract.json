@@ -2374,6 +2374,13 @@
         "value": "findPanelChanged:"
       },
       {
+        "key": "find-panel-floats-button.action",
+        "view": "settings.find-panel-floats-button",
+        "kind": "view",
+        "property": "action",
+        "value": "findPanelFloatsChanged:"
+      },
+      {
         "key": "M7m-FU-qKi.action",
         "view": "settings.M7m-FU-qKi",
         "kind": "view",
@@ -3279,7 +3286,8 @@
           "1080.title": "OgreKit Find Panel (Legacy)",
           "3eF-XA-ahc.title": "Do not check selected parameters",
           "32.title": "Remember last position on close",
-          "adv-Fd-Pnl.title": "Advanced Find Panel (recommended)"
+          "adv-Fd-Pnl.title": "Advanced Find Panel (recommended)",
+          "find-panel-floats-cell.title": "Keep the Advanced Find panel on top"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Theme Title",
@@ -5198,6 +5206,13 @@
           "column": 0
         },
         {
+          "key": "find-panel-floats-cell.title",
+          "view": "settings.find-panel-floats-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Keep the Advanced Find panel on top"
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -6320,7 +6335,8 @@
           "1080.title": "OgreKit Suchmaske (veraltet)",
           "3eF-XA-ahc.title": "Ausgewählte Parameter nicht überprüfen",
           "32.title": "Merke zuletzt benutzte Position",
-          "adv-Fd-Pnl.title": "Erweiterte Suchmaske (empfohlen)"
+          "adv-Fd-Pnl.title": "Erweiterte Suchmaske (empfohlen)",
+          "find-panel-floats-cell.title": "Erweiterte Suchmaske immer im Vordergrund halten"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Titel des Themas",
@@ -8239,6 +8255,13 @@
           "column": 0
         },
         {
+          "key": "find-panel-floats-cell.title",
+          "view": "settings.find-panel-floats-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Erweiterte Suchmaske immer im Vordergrund halten"
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -9361,7 +9384,8 @@
           "1080.title": "Panel de búsquedas de OgreKit (heredado)",
           "3eF-XA-ahc.title": "No comprobar parámetros",
           "32.title": "Conservar la última posición",
-          "adv-Fd-Pnl.title": "Panel de búsqueda avanzada (recomendado)"
+          "adv-Fd-Pnl.title": "Panel de búsqueda avanzada (recomendado)",
+          "find-panel-floats-cell.title": "Mantener el panel de búsqueda avanzada en primer plano"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Título del tema",
@@ -11280,6 +11304,13 @@
           "column": 0
         },
         {
+          "key": "find-panel-floats-cell.title",
+          "view": "settings.find-panel-floats-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Mantener el panel de búsqueda avanzada en primer plano"
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -12402,7 +12433,8 @@
           "1080.title": "Palette OgreKit (ancienne)",
           "3eF-XA-ahc.title": "Ne pas vérifier les paramètres",
           "32.title": "Conserver la dernière position",
-          "adv-Fd-Pnl.title": "Palette de recherche avancée (recommandée)"
+          "adv-Fd-Pnl.title": "Palette de recherche avancée (recommandée)",
+          "find-panel-floats-cell.title": "Garder la palette de recherche avancée au premier plan"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Titre du thème",
@@ -14321,6 +14353,13 @@
           "column": 0
         },
         {
+          "key": "find-panel-floats-cell.title",
+          "view": "settings.find-panel-floats-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Garder la palette de recherche avancée au premier plan"
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -15443,7 +15482,8 @@
           "1080.title": "Pannello di ricerca OgreKit (obsoleto)",
           "3eF-XA-ahc.title": "Non controllare i parametri selezionati",
           "32.title": "Conserva l'ultima posizione",
-          "adv-Fd-Pnl.title": "Pannello di ricerca avanzata (consigliato)"
+          "adv-Fd-Pnl.title": "Pannello di ricerca avanzata (consigliato)",
+          "find-panel-floats-cell.title": "Mantieni il pannello di ricerca avanzata in primo piano"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Titolo del tema",
@@ -17362,6 +17402,13 @@
           "column": 0
         },
         {
+          "key": "find-panel-floats-cell.title",
+          "view": "settings.find-panel-floats-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Mantieni il pannello di ricerca avanzata in primo piano"
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -18484,7 +18531,8 @@
           "1080.title": "OgreKit検索パネル（レガシー）",
           "3eF-XA-ahc.title": "特定のコマンド引数を対象外にする",
           "32.title": "閉じたときの位置を保存",
-          "adv-Fd-Pnl.title": "詳細検索パネル（推奨）"
+          "adv-Fd-Pnl.title": "詳細検索パネル（推奨）",
+          "find-panel-floats-cell.title": "詳細検索パネルを常に手前に表示"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "テーマのタイトル",
@@ -20403,6 +20451,13 @@
           "column": 0
         },
         {
+          "key": "find-panel-floats-cell.title",
+          "view": "settings.find-panel-floats-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "詳細検索パネルを常に手前に表示"
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -21525,7 +21580,8 @@
           "1080.title": "OgreKit 찾기 패널(레거시)",
           "3eF-XA-ahc.title": "파라미터 부분 제외",
           "32.title": "닫을 때 위치 저장",
-          "adv-Fd-Pnl.title": "고급 찾기 패널(권장)"
+          "adv-Fd-Pnl.title": "고급 찾기 패널(권장)",
+          "find-panel-floats-cell.title": "고급 찾기 패널을 항상 맨 앞에 표시"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": " 테마 타이틀",
@@ -23444,6 +23500,13 @@
           "column": 0
         },
         {
+          "key": "find-panel-floats-cell.title",
+          "view": "settings.find-panel-floats-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "고급 찾기 패널을 항상 맨 앞에 표시"
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -24566,7 +24629,8 @@
           "1080.title": "OgreKit zoekpaneel (verouderd)",
           "3eF-XA-ahc.title": "Geselecteerde parameters overslaan",
           "32.title": "Onthoud laatste positie bij sluiten",
-          "adv-Fd-Pnl.title": "Geavanceerd zoekpaneel (aanbevolen)"
+          "adv-Fd-Pnl.title": "Geavanceerd zoekpaneel (aanbevolen)",
+          "find-panel-floats-cell.title": "Houd het geavanceerde zoekpaneel op de voorgrond"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Style Title",
@@ -26485,6 +26549,13 @@
           "column": 0
         },
         {
+          "key": "find-panel-floats-cell.title",
+          "view": "settings.find-panel-floats-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Houd het geavanceerde zoekpaneel op de voorgrond"
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -27607,7 +27678,8 @@
           "1080.title": "Painel de pesquisa OgreKit (legado)",
           "3eF-XA-ahc.title": "Ignorar os parâmetros selecionados",
           "32.title": "Lembrar-se da última posição",
-          "adv-Fd-Pnl.title": "Painel de pesquisa avançada (recomendado)"
+          "adv-Fd-Pnl.title": "Painel de pesquisa avançada (recomendado)",
+          "find-panel-floats-cell.title": "Manter o painel de pesquisa avançada em primeiro plano"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Style Title",
@@ -29526,6 +29598,13 @@
           "column": 0
         },
         {
+          "key": "find-panel-floats-cell.title",
+          "view": "settings.find-panel-floats-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Manter o painel de pesquisa avançada em primeiro plano"
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -30648,7 +30727,8 @@
           "1080.title": "Painel de localizar OgreKit (legado)",
           "3eF-XA-ahc.title": "Não verificar parâmetros de alguns comandos",
           "32.title": "Lembrar-se da última posição",
-          "adv-Fd-Pnl.title": "Painel de localizar avançado (recomendado)"
+          "adv-Fd-Pnl.title": "Painel de localizar avançado (recomendado)",
+          "find-panel-floats-cell.title": "Manter o painel de localizar avançado em primeiro plano"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Título do tema",
@@ -32567,6 +32647,13 @@
           "column": 0
         },
         {
+          "key": "find-panel-floats-cell.title",
+          "view": "settings.find-panel-floats-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Manter o painel de localizar avançado em primeiro plano"
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -33689,7 +33776,8 @@
           "1080.title": "Panoul de căutare OgreKit (vechi)",
           "3eF-XA-ahc.title": "Omite parametrii selectați",
           "32.title": "Înregistrează ultima poziție la închidere",
-          "adv-Fd-Pnl.title": "Panou de căutare avansată (recomandat)"
+          "adv-Fd-Pnl.title": "Panou de căutare avansată (recomandat)",
+          "find-panel-floats-cell.title": "Păstrează panoul de căutare avansată deasupra"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Style Title",
@@ -35608,6 +35696,13 @@
           "column": 0
         },
         {
+          "key": "find-panel-floats-cell.title",
+          "view": "settings.find-panel-floats-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Păstrează panoul de căutare avansată deasupra"
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
@@ -36730,7 +36825,8 @@
           "1080.title": "OgreKit查找面板（旧版）",
           "3eF-XA-ahc.title": "不检查命令参数",
           "32.title": "关闭时记住上一次位置",
-          "adv-Fd-Pnl.title": "高级查找面板（推荐）"
+          "adv-Fd-Pnl.title": "高级查找面板（推荐）",
+          "find-panel-floats-cell.title": "高级查找面板始终显示在最前面"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "主题标题",
@@ -38647,6 +38743,13 @@
           "value": "高级查找面板（推荐）",
           "row": 2,
           "column": 0
+        },
+        {
+          "key": "find-panel-floats-cell.title",
+          "view": "settings.find-panel-floats-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "高级查找面板始终显示在最前面"
         },
         {
           "key": "1080.title",

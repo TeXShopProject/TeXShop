@@ -59,7 +59,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
     ('spelling-checkbox','TSSettingsPaneClassification.inc','button.cell=radio.cell;','[button setButtonType:NSButtonTypeRadio];'),
     ('keyboard-card','TSShortcutPaneController.m','[TSPrefPaneLayout decorateGroupsInView:group];',';'),
    ]
-   dependency_rules=[('DocumentWindowPosModeKey, 0','DocumentWindowPosModeKey, 1'),('PdfWindowPosModeKey, 0','PdfWindowPosModeKey, 1'),('ConsoleWindowPosModeKey, 0','ConsoleWindowPosModeKey, 1'),('HtmlWindowPosModeKey, 0','HtmlWindowPosModeKey, 1'),('SparkleAutomaticUpdateKey, 1','SparkleAutomaticUpdateKey, 0'),('DefaultCommandKey, 2','DefaultCommandKey, 1')]
+   dependency_rules=[('DocumentWindowPosModeKey, 0','DocumentWindowPosModeKey, 1'),('PdfWindowPosModeKey, 0','PdfWindowPosModeKey, 1'),('ConsoleWindowPosModeKey, 0','ConsoleWindowPosModeKey, 1'),('HtmlWindowPosModeKey, 0','HtmlWindowPosModeKey, 1'),('SparkleAutomaticUpdateKey, 1','SparkleAutomaticUpdateKey, 0'),('DefaultCommandKey, 2','DefaultCommandKey, 1'),('FindMethodKey, 3','FindMethodKey, 1')]
    for old,new in dependency_rules:cases.append(('dependency-'+old.split(',')[0],'TSSettingsDependencies.inc',old,new))
    if a.additional_mutations:cases=[]
    cases.extend([
