@@ -57,8 +57,9 @@ NS_SWIFT_NAME(TeXRootReplacePlan)
 @property (nonatomic, readonly) NSUInteger numberOfItems;
 @property (nonatomic, readonly) NSUInteger numberOfFilesOnDisk;
 /// The files on the disk whose version is no longer the one approved, in a project collected again just now: gone,
-/// or with another identity, size, modification date or content (spec §2.5.1, checks 1 and 2). Open documents are
-/// compared by the caller (their edits).
+/// or with another identity, size, modification date or content, or no longer one that can be replaced in (another
+/// name, read-only, locked: spec §2.5.2), though the content is the same (spec §2.5.1, checks 1 and 2). Open documents
+/// are compared by the caller (their edits).
 - (NSArray<TSTeXRootReplaceFile *> *)filesOnDiskChangedInProject:(TSTeXRootProject *)project;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -84,8 +85,9 @@ NS_SWIFT_NAME(TeXRootBackup)
 
 /// Writes one file on the disk (spec §2.5.4): the new bytes to a hidden temporary file in the same folder, the
 /// original's permissions, extended attributes and creation date copied to it (nothing is written when they cannot
-/// be), then, coordinated with NSFileCoordinator, the original read again and compared with the SHA-256 approved
-/// (check 3 of §2.5.1) and replaced at once; last, the file read back strictly and compared with the text meant.
+/// be), then, coordinated with NSFileCoordinator, the original looked at again (still a regular file, not a symbolic
+/// link, with no other name, writable and not locked), read again and compared with the SHA-256 approved (check 3 of
+/// §2.5.1) and replaced at once; last, the file read back strictly and compared with the text meant.
 NS_SWIFT_NAME(TeXRootDiskWriter)
 @interface TSTeXRootDiskWriter : NSObject
 - (instancetype)initWithCodec:(TSTeXRootSourceCodec *)codec NS_DESIGNATED_INITIALIZER;

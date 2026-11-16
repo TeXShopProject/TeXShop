@@ -444,8 +444,6 @@ static NSData *TSShownLinesOfFile(TSTeXRootSearchFileResult *file, TSTeXRootSear
 - (void)collect
 {
     [self userChanged];
-    // Ranges off after a Replace All belong to the search that follows it only (set again just after this).
-    [self.rangesOff removeAllObjects];
     self.token.cancelled = YES;
     [self.collector cancel];
     self.requestNumber++;
@@ -587,8 +585,8 @@ static NSData *TSShownLinesOfFile(TSTeXRootSearchFileResult *file, TSTeXRootSear
     if (!changedFile)
         return;
     [self userChanged];
-    // The ranges off after a Replace All no longer tell where the items are.
-    [self.rangesOff removeAllObjects];
+    // The ranges off after a Replace All no longer tell where this file's items are; those of other files still do.
+    [self.rangesOff removeObjectForKey:changedFile.relativePath];
     self.generation++;
     if (![self isFileIncluded:changedFile] || self.activity == TSTeXRootSearchActivityCollecting) {
         [self changed];
@@ -754,7 +752,9 @@ static NSString *TSItemKey(TSTeXRootSearchItem *item)
 }
 
 /// The items of a file searched again after Replace All that overlap an item that was off are off (spec §2.6: where
-/// it is not clear, they are not turned back on). One pass over both, in the order of the text (the items are
+/// it is not clear, they are not turned back on). The ranges of a file stand, as the checks of the items do (spec
+/// §2.7.4), until its items are listed again with the same conditions: through a stop, a collection (↻, documents
+/// opened or closed) and the edits of other files; new conditions drop them all, an edit of the file its own. One pass over both, in the order of the text (the items are
 /// ascending and do not overlap one another, nor do the ranges).
 - (void)takeRangesOffForFile:(TSTeXRootSearchFileResult *)file
 {
@@ -797,7 +797,6 @@ static NSString *TSItemKey(TSTeXRootSearchItem *item)
     self.collector = nil;
     self.requestNumber++;
     [self.fileResults removeAllObjects];
-    [self.rangesOff removeAllObjects];
     self.reachedLimit = NO;
     self.stopped = YES;
     self.eventMessage = nil;

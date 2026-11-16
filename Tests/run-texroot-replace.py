@@ -309,6 +309,36 @@ int main(void) { @autoreleasepool {
     model.findString = @"x";
     Check(model.eventMessage == nil, @"the next change clears the status");
 
+    // Meanwhile, before the replaced file is listed again: an edit of another document, a collection (documents opened
+    // or closed, ↻), a stop and a collection. The x that was off stays off through all of them.
+    NSArray<NSString *> *meanwhile = @[@"another document edited", @"collected again", @"stopped and collected again"];
+    for (NSUInteger kind = 0; kind < meanwhile.count; kind++) {
+        WriteBytes(@"chapters/xx.tex", U8(@"% !TEX root = ../root.tex\nx x\n"));
+        [model setMode:TSTeXRootSearchModeReplace findString:@"\\bx\\b" replaceString:@"xxxx" options:TSRegexFindRegularExpression syntax:TSRegexReplacementSyntaxICU multipleReplace:nil];
+        [model collect];
+        Spin(^BOOL { return model.activity == TSTeXRootSearchActivityIdle && model.project && model.resultGeneration == model.generation; }, 30);
+        TSTeXRootSearchFileResult *fresh = nil;
+        for (TSTeXRootSearchFileResult *file in model.results) if ([file.source.file.relativePath isEqualToString:@"chapters/xx.tex"]) fresh = file;
+        [model setItems:@[fresh.items[1]] inFile:fresh included:NO];
+        TSTeXRootReplacePlan *again = [TSTeXRootReplacePlan planWithResults:@[fresh] isIncluded:^BOOL(TSTeXRootSearchItem *item, TSTeXRootSearchFileResult *file) { return [model isItemIncluded:item inFile:file]; } codec:Codec(NO) error:NULL];
+        [writer writeFile:again.files.firstObject error:NULL];
+        NSArray *moved = [TSTeXRootReplaceMapping ranges:@[[NSValue valueWithRange:fresh.items[1].range]] afterReplacements:again.files.firstObject.replacements];
+        NSUInteger before = model.numberOfCollections;
+        [model searchAgainAfterReplacingWithRangesOff:@{@"chapters/xx.tex": moved} message:@"Replaced"];
+        if (kind == 0) {
+            [model textDidChangeForFileWithIdentifier:Identity(@"root.tex")];
+        } else {
+            if (kind == 2)
+                [model stop];
+            [model collect];
+        }
+        Spin(^BOOL { return model.numberOfCollections > before && model.activity == TSTeXRootSearchActivityIdle && model.project && model.resultGeneration == model.generation; }, 30);
+        TSTeXRootSearchFileResult *listed = nil;
+        for (TSTeXRootSearchFileResult *file in model.results) if ([file.source.file.relativePath isEqualToString:@"chapters/xx.tex"]) listed = file;
+        Check(listed.items.count == 1 && ![model isItemIncluded:listed.items[0] inFile:listed],
+              [NSString stringWithFormat:@"%@ before the replaced file is listed again: the x that was off stays off", meanwhile[kind]]);
+    }
+
     // New conditions while the search after Replace All runs: every item is on (spec §2.7.4), none of the old ranges.
     [model setMode:TSTeXRootSearchModeReplace findString:@"\\bx\\b" replaceString:@"y" options:TSRegexFindRegularExpression syntax:TSRegexReplacementSyntaxICU multipleReplace:nil];
     [model searchNow];
@@ -372,6 +402,8 @@ MUTATIONS = {
     'items off are forgotten after replacing': ('TSTeXRootSearchModel.m', 'NSArray<NSValue *> *ranges = self.rangesOff[path];', 'NSArray<NSValue *> *ranges = nil;'),
     'a hard link added since is not seen': ('TSTeXRootReplace.m', 'BOOL same = now && !now.isOpen && now.searchOnlyReason == TSTeXRootSearchOnlyReasonNone', 'BOOL same = now && !now.isOpen'),
     'the writer does not look at the file again': ('TSTeXRootReplace.m', '        if (!TSStillReplaceable(writing)) {', '        if (NO) {'),
+    'an edit of one document drops the ranges of every file': ('TSTeXRootSearchModel.m', '[self.rangesOff removeObjectForKey:changedFile.relativePath];', '[self.rangesOff removeAllObjects];'),
+    'a collection drops the ranges off': ('TSTeXRootSearchModel.m', '    [self userChanged];\n    self.token.cancelled = YES;', '    [self userChanged];\n    [self.rangesOff removeAllObjects];\n    self.token.cancelled = YES;'),
     'new conditions keep the ranges off': ('TSTeXRootSearchModel.m', '    [self.excludedItems removeAllObjects];\n    [self.rangesOff removeAllObjects];', '    [self.excludedItems removeAllObjects];'),
     'every item against every range': ('TSTeXRootSearchModel.m', 'for (NSUInteger i = first; i < count && ranges[i].rangeValue.location <= NSMaxRange(range); i++)', 'for (NSUInteger i = 0; i < count; i++)'),
     'the UTF-8 note is lost': ('TSTeXRootReplace.m', '                [utf8 addObject:file.file.relativePath];', '                ;'),
