@@ -555,7 +555,7 @@
     for (TSRegexReplacementRule *rule in set.rules)
         if (rule.enabled)
             enabled++;
-    self.ruleCountLabel.stringValue = set ? [NSString stringWithFormat:TSLocalized(@"TeXRootSearch.RuleCount", @"%lu rules"), (unsigned long)enabled] : @"";
+    self.ruleCountLabel.stringValue = set ? [NSString stringWithFormat:TSLocalized(@"TeXRootSearch.RuleCount", @"Rules: %lu"), (unsigned long)enabled] : @"";
 }
 
 - (void)setChosen:(NSPopUpButton *)sender
@@ -801,9 +801,9 @@
     if (model.numberOfItems == 0)
         return TSLocalized(@"AdvancedFind.NotFound", @"Not found");
     if (model.mode == TSTeXRootSearchModeFind)
-        return [NSString stringWithFormat:TSLocalized(@"TeXRootSearch.Status.Found", @"%3$lu matches in %2$lu of %1$lu files"),
+        return [NSString stringWithFormat:TSLocalized(@"TeXRootSearch.Status.Found", @"Found: %3$lu · Files: %2$lu of %1$lu"),
                 (unsigned long)model.numberOfIncludedFiles, (unsigned long)model.results.count, (unsigned long)model.numberOfItems];
-    return [NSString stringWithFormat:TSLocalized(@"TeXRootSearch.Status.ToReplace", @"%1$lu to replace in %2$lu files"),
+    return [NSString stringWithFormat:TSLocalized(@"TeXRootSearch.Status.ToReplace", @"To replace: %1$lu · Files: %2$lu"),
             (unsigned long)model.numberOfIncludedItems, (unsigned long)model.numberOfFilesWithIncludedItems];
 }
 

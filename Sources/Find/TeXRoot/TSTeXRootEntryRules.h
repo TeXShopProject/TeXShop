@@ -27,6 +27,21 @@ NS_SWIFT_NAME(TeXRootEntryRules)
 + (TSTeXRootEntryState)stateForDocumentURL:(nullable NSURL *)url text:(nullable NSString *)text
                          allowingSourceDoc:(BOOL)allowsSourceDoc jobNameToken:(NSString *)jobNameToken
                                    rootURL:(NSURL *_Nullable *_Nullable)rootURL;
+/// The state for the menus: from the text alone, without the file system (no path is resolved), so that validating
+/// an item never waits for a disk. A document that names a root is a child; whether that root exists is found when
+/// the item is chosen.
++ (TSTeXRootEntryState)menuStateForDocumentURL:(nullable NSURL *)url text:(nullable NSString *)text allowingSourceDoc:(BOOL)allowsSourceDoc;
+/// The same for a document whose text is its file's (the external editor mode): `loader` reads it on a background
+/// queue; `completion` is called on the main thread.
++ (void)menuStateForDocumentURL:(NSURL *)url textLoader:(NSString *_Nullable (^)(void))loader allowingSourceDoc:(BOOL)allowsSourceDoc
+                     completion:(void (^)(TSTeXRootEntryState state))completion;
+/// What choosing an item does first, all on a background queue (spec §2.9): `loader` gives the document's text (a
+/// copy of the text on screen, or the file read for the external editor mode), the root is resolved (symbolic links,
+/// "~", "\jobname") and checked (it exists, is a regular file, ends in ".tex"). `completion` is called on the main
+/// thread with the root and its problem.
++ (void)resolveRootForDocumentURL:(NSURL *)url textLoader:(NSString *_Nullable (^)(void))loader allowingSourceDoc:(BOOL)allowsSourceDoc
+                     jobNameToken:(NSString *)jobNameToken
+                       completion:(void (^)(TSTeXRootEntryState state, NSURL *_Nullable rootURL, TSTeXRootProblem problem))completion;
 /// The item's title in a state; `applying` for the Multiple Replace window's item.
 + (NSString *)titleForState:(TSTeXRootEntryState)state applying:(BOOL)applying;
 /// The message of the warning when the root cannot be used (its path is the explanation).

@@ -12,7 +12,7 @@ FOUNDATION_EXPORT NSString *TSTeXRootSearchOnlyReasonText(TSTeXRootSearchOnlyRea
 /// in), the line number, the lines as they are with the match marked, and in the replacing modes the lines after
 /// the replacement with what was put in marked. An empty match is a thin mark at its place.
 NS_SWIFT_NAME(TeXRootSearchResultsList)
-@interface TSTeXRootSearchResultsList : NSObject <NSTableViewDataSource, NSTableViewDelegate>
+@interface TSTeXRootSearchResultsList : NSObject <NSTableViewDataSource, NSTableViewDelegate, NSMenuItemValidation>
 
 - (instancetype)initWithModel:(TSTeXRootSearchModel *)model NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
@@ -33,6 +33,11 @@ NS_SWIFT_NAME(TeXRootSearchResultsList)
 /// The row of a file's heading or of an item, -1 when it is not listed; the file or item of a row.
 - (NSInteger)rowOfObject:(id)object;
 - (nullable id)objectAtRow:(NSInteger)row;
+
+/// The whole change of an item's row, every line before and after (a row shows 20 at most), in two scrolling texts
+/// that VoiceOver reads: shown by "Show All Lines" in the row's menu and by Command-Y.
+- (nullable NSViewController *)wholeChangeViewControllerForRow:(NSInteger)row;
+- (void)showWholeChangeOfRow:(NSInteger)row;
 
 /// For the tests: the rows as VoiceOver reads them, and the texts shown in an item's row.
 - (NSString *)accessibilityLabelOfRow:(NSInteger)row;

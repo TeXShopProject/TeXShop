@@ -45,7 +45,12 @@ MUTATIONS = {
     'Escape does not stop': ('TSTeXRootSearchWindowController.m', '    if (self.model.activity != TSTeXRootSearchActivityIdle)\n        [self.model stop];\n}', '}'),
     'the %SourceDoc sentence always': ('TSTeXRootSearchWindowController.m', '    if (self.mentionsSourceDoc)\n        rule =', '    if (YES)\n        rule ='),
     'Return does not press Replace All ▾': ('TSMultipleReplaceWindowController.m', '        [self sendAction:self.action to:self.target];\n        return YES;', '        return NO;'),
-    '.TEX counts as .tex': ('TSTeXRootEntryRules.m', "    if (![url.pathExtension isEqualToString:@\"tex\"])", "    if (![url.pathExtension.lowercaseString isEqualToString:@\"tex\"])"),
+    'a document closed since collecting is kept': ('TSTeXRootSearchModel.m', '    if (self.project && ![self collectedDocumentsStand]) {', '    if (NO) {'),
+    'choosing an item reads on the main thread': ('TSTeXRootEntryRules.m', '    dispatch_async(self.queue, ^{\n        NSURL *root = nil;', '    dispatch_async(dispatch_get_main_queue(), ^{\n        NSURL *root = nil;'),
+    'a long item hides how many lines it has more': ('TSTeXRootSearchResultsList.m', 'NSString *rest = [NSString stringWithFormat:TSLocalized(@"TeXRootSearch.MoreLines", @"⋯ %lu more lines"), (unsigned long)more];', 'NSString *rest = @"⋯";'),
+    'the whole change is cut too': ('TSTeXRootSearchResultsList.m', '    if (whole)\n        return shown;\n', ''),
+    '21 lines are cut': ('TSTeXRootSearchResultsList.m', '    if (more >= 2) {', '    if (more >= 1) {'),
+    '.TEX counts as .tex': ('TSTeXRootEntryRules.m', 'return [url.pathExtension isEqualToString:@"tex"];', 'return [url.pathExtension.lowercaseString isEqualToString:@"tex"];'),
 }
 
 

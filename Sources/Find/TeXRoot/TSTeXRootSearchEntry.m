@@ -33,6 +33,11 @@ static TSTeXRootSearchEntry *TSSharedEntry;
 @property (nonatomic, copy) NSArray<TSTeXRootOpenDocument *> *openDocuments;
 @property (nonatomic, copy, nullable) NSArray *signature;
 @property (nonatomic, copy, nullable) NSArray *editableSignature;
+/// The menus' states of documents in the external editor mode, read in the background, by file.
+@property (nonatomic, strong) NSMutableDictionary<NSURL *, NSNumber *> *externalStates;
+@property (nonatomic, strong) NSMutableSet<NSURL *> *pendingExternalStates;
+/// Moves on with each choice of an item: only the last one opens the window.
+@property (nonatomic) NSUInteger openRequest;
 @end
 
 @implementation TSTeXRootSearchEntry
@@ -84,6 +89,8 @@ static TSTeXRootSearchEntry *TSSharedEntry;
     _findController = findController;
     _library = library;
     _openDocuments = @[];
+    _externalStates = [NSMutableDictionary dictionary];
+    _pendingExternalStates = [NSMutableSet set];
     return self;
 }
 
@@ -121,24 +128,44 @@ static TSTeXRootSearchEntry *TSSharedEntry;
     return [document isKindOfClass:[TSDocument class]] ? (TSDocument *)document : nil;
 }
 
-/// The document's text as typesetting reads it for the root: on screen, or on the disk in the external editor mode.
-- (nullable NSString *)textOfDocument:(TSDocument *)document
+/// What gives a document's text as typesetting reads it for the root: a copy of the text on screen, taken now on the
+/// main thread, or for the external editor mode its file, read when the loader is called (on a background queue).
+- (NSString *_Nullable (^)(void))textLoaderOfDocument:(TSDocument *)document
 {
-    if (!document.externalEditor)
-        return [document.textStorage.string copy];
-    NSData *data = document.fileURL ? [NSData dataWithContentsOfURL:(NSURL *_Nonnull)document.fileURL] : nil;
-    return data ? [[self makeCodec] readData:(NSData *_Nonnull)data url:(NSURL *_Nonnull)document.fileURL verifyingRoundTrip:NO].text : nil;
+    if (!document.externalEditor) {
+        NSString *text = [document.textStorage.string copy];
+        return ^NSString *{ return text; };
+    }
+    NSURL *url = document.fileURL;
+    TSTeXRootSourceCodec *codec = [self makeCodec];
+    return ^NSString *{
+        NSData *data = url ? [NSData dataWithContentsOfURL:(NSURL *_Nonnull)url] : nil;
+        return data ? [codec readData:(NSData *_Nonnull)data url:(NSURL *_Nonnull)url verifyingRoundTrip:NO].text : nil;
+    };
 }
 
-- (TSTeXRootEntryState)stateOfDocument:(nullable TSDocument *)document rootURL:(NSURL *_Nullable *_Nullable)rootURL
+/// The menus' state of a document, without waiting for a disk: from the text on screen; for the external editor mode
+/// from what was last read of its file (it is read again in the background, and the menu shows the new state the next
+/// time it opens; meanwhile it reads as a child, which only names the item).
+- (TSTeXRootEntryState)menuStateOfDocument:(nullable TSDocument *)document
 {
-    if (rootURL)
-        *rootURL = nil;
     if (!document)
         return TSTeXRootEntryStateNoDocument;
-    return [TSTeXRootEntryRules stateForDocumentURL:document.fileURL text:[self textOfDocument:document]
-                                   allowingSourceDoc:[SUD boolForKey:UseOldHeadingCommandsKey]
-                                        jobNameToken:[document filterBackslashes:@"\\jobname"] ?: @"\\jobname" rootURL:rootURL];
+    BOOL allows = [SUD boolForKey:UseOldHeadingCommandsKey];
+    if (!document.externalEditor || !document.fileURL || ![document.fileURL.pathExtension isEqualToString:@"tex"])
+        return [TSTeXRootEntryRules menuStateForDocumentURL:document.fileURL text:document.externalEditor ? nil : document.textStorage.string allowingSourceDoc:allows];
+    NSURL *url = (NSURL *_Nonnull)document.fileURL;
+    NSNumber *known = self.externalStates[url];
+    if (![self.pendingExternalStates containsObject:url]) {
+        [self.pendingExternalStates addObject:url];
+        __weak typeof(self) weakSelf = self;
+        [TSTeXRootEntryRules menuStateForDocumentURL:url textLoader:[self textLoaderOfDocument:document] allowingSourceDoc:allows
+                                          completion:^(TSTeXRootEntryState state) {
+            weakSelf.externalStates[url] = @(state);
+            [weakSelf.pendingExternalStates removeObject:url];
+        }];
+    }
+    return known ? (TSTeXRootEntryState)known.integerValue : TSTeXRootEntryStateChild;
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)item
@@ -146,7 +173,7 @@ static TSTeXRootSearchEntry *TSSharedEntry;
     BOOL applying = item.action == @selector(applySetToTeXRootSources:);
     if (item.action != @selector(showTeXRootSearch:) && !applying)
         return YES;
-    TSTeXRootEntryState state = [self stateOfDocument:[self targetDocument] rootURL:NULL];
+    TSTeXRootEntryState state = [self menuStateOfDocument:[self targetDocument]];
     item.title = [TSTeXRootEntryRules titleForState:state applying:applying];
     if (state != TSTeXRootEntryStateChild && state != TSTeXRootEntryStateRoot)
         return NO;
@@ -172,33 +199,48 @@ static TSTeXRootSearchEntry *TSSharedEntry;
     [self openWithMode:TSTeXRootSearchModeMultipleReplace setName:name sender:sender];
 }
 
+/// The root is found and checked on a background queue (the file system may be slow, or the file not yet downloaded);
+/// then the window opens, or the warning is shown.
 - (void)openWithMode:(TSTeXRootSearchMode)mode setName:(nullable NSString *)name sender:(nullable id)sender
 {
     TSDocument *document = [self targetDocument];
-    NSURL *rootURL = nil;
-    TSTeXRootEntryState state = [self stateOfDocument:document rootURL:&rootURL];
-    if ((state != TSTeXRootEntryStateChild && state != TSTeXRootEntryStateRoot) || !rootURL) {
+    NSURL *documentURL = document.fileURL;
+    if (!document || !documentURL || ![documentURL.pathExtension isEqualToString:@"tex"]) {
         NSBeep();
         return;
     }
-    TSTeXRootProblem problem = [TSTeXRootProjectCollector problemWithRootURL:(NSURL *_Nonnull)rootURL];
-    if (problem != TSTeXRootProblemNone) {
-        NSAlert *alert = [NSAlert new];
-        alert.alertStyle = NSAlertStyleWarning;
-        alert.messageText = [TSTeXRootEntryRules messageForProblem:problem];
-        alert.informativeText = rootURL.path ?: @"";
-        NSWindow *window = NSApp.keyWindow ?: [document textWindow];
-        if (window)
-            [alert beginSheetModalForWindow:(NSWindow *_Nonnull)window completionHandler:nil];
-        else
-            [alert runModal];
-        return;
-    }
-    TSTeXRootSearchWindowController *controller = self.windowController;
-    controller.mentionsSourceDoc = [SUD boolForKey:UseOldHeadingCommandsKey];
-    [self refreshOpenDocuments];
-    [controller openForRootURL:(NSURL *_Nonnull)rootURL environment:[self makeEnvironment] mode:mode setName:name];
-    [controller showWindow:sender];
+    NSUInteger request = ++self.openRequest;
+    __weak typeof(self) weakSelf = self;
+    __weak TSDocument *weakDocument = document;
+    [TSTeXRootEntryRules resolveRootForDocumentURL:(NSURL *_Nonnull)documentURL textLoader:[self textLoaderOfDocument:document]
+                                 allowingSourceDoc:[SUD boolForKey:UseOldHeadingCommandsKey]
+                                      jobNameToken:[document filterBackslashes:@"\\jobname"] ?: @"\\jobname"
+                                        completion:^(TSTeXRootEntryState state, NSURL *rootURL, TSTeXRootProblem problem) {
+        typeof(self) entry = weakSelf;
+        if (!entry || entry.openRequest != request) // chosen again meanwhile
+            return;
+        if ((state != TSTeXRootEntryStateChild && state != TSTeXRootEntryStateRoot) || !rootURL) {
+            NSBeep();
+            return;
+        }
+        if (problem != TSTeXRootProblemNone) {
+            NSAlert *alert = [NSAlert new];
+            alert.alertStyle = NSAlertStyleWarning;
+            alert.messageText = [TSTeXRootEntryRules messageForProblem:problem];
+            alert.informativeText = rootURL.path ?: @"";
+            NSWindow *window = NSApp.keyWindow ?: [weakDocument textWindow];
+            if (window)
+                [alert beginSheetModalForWindow:(NSWindow *_Nonnull)window completionHandler:nil];
+            else
+                [alert runModal];
+            return;
+        }
+        TSTeXRootSearchWindowController *controller = entry.windowController;
+        controller.mentionsSourceDoc = [SUD boolForKey:UseOldHeadingCommandsKey];
+        [entry refreshOpenDocuments];
+        [controller openForRootURL:(NSURL *_Nonnull)rootURL environment:[entry makeEnvironment] mode:mode setName:name];
+        [controller showWindow:sender];
+    }];
 }
 
 #pragma mark What the window needs from TeXShop
@@ -230,6 +272,22 @@ static TSTeXRootSearchEntry *TSSharedEntry;
     id identifier = nil;
     [url.URLByResolvingSymlinksInPath getResourceValue:&identifier forKey:NSURLFileResourceIdentifierKey error:NULL];
     return identifier;
+}
+
+/// The open TeX documents with a file, not in the external editor mode, and their files: what tells whether the texts
+/// taken from open documents still stand. Nothing is read from the disk.
+- (NSArray *)currentSignature
+{
+    NSMutableArray *signature = [NSMutableArray array];
+    for (NSDocument *document in NSDocumentController.sharedDocumentController.documents) {
+        if (![document isKindOfClass:[TSDocument class]] || !document.fileURL)
+            continue;
+        TSDocument *source = (TSDocument *)document;
+        if (source.externalEditor || !source.textStorage)
+            continue;
+        [signature addObject:@[[NSValue valueWithNonretainedObject:source], (NSURL *_Nonnull)source.fileURL]];
+    }
+    return signature;
 }
 
 /// The open TeX documents with a file, not in the external editor mode (whose text is the file's).
@@ -270,6 +328,10 @@ static TSTeXRootSearchEntry *TSSharedEntry;
 {
     TSTeXRootSearchEnvironment *environment = [TSTeXRootSearchEnvironment new];
     TSTeXRootSourceCodec *codec = [self makeCodec];
+    __weak typeof(self) weakEntry = self;
+    environment.documentsSignature = ^id<NSObject> {
+        return [weakEntry currentSignature] ?: @[];
+    };
     environment.codec = codec;
     __weak typeof(self) weakSelf = self;
     environment.collectorForRoot = ^TSTeXRootProjectCollector *(NSURL *rootURL) {
@@ -324,12 +386,10 @@ static TSTeXRootSearchEntry *TSSharedEntry;
         return;
     NSArray *oldSignature = self.signature, *oldEditable = self.editableSignature;
     [self refreshOpenDocuments];
-    if (![oldSignature isEqual:self.signature]) {
-        if (model.activity != TSTeXRootSearchActivityCollecting)
-            [model collect];
-    } else if (![oldEditable isEqual:self.editableSignature]) {
+    if (![oldSignature isEqual:self.signature])
+        [model openDocumentsDidChange]; // also while collecting: the model checks the signature again before listing
+    else if (![oldEditable isEqual:self.editableSignature])
         [model documentsDidChange];
-    }
 }
 
 /// An open document of the project was edited: only it is searched again (after the pause).

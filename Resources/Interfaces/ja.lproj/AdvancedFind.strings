@@ -185,6 +185,8 @@
 "TeXRootSearch.AX.Results" = "結果";
 "TeXRootSearch.AX.Searched" = "検索する";
 "TeXRootSearch.AX.Set" = "複数置換の組";
+"TeXRootSearch.After" = "置換後";
+"TeXRootSearch.Before" = "置換前";
 "TeXRootSearch.EditSet" = "編集…";
 "TeXRootSearch.Explanation" = "%@と、それをTEX rootに指定している、同じフォルダ以下のTeXソースが対象です。";
 "TeXRootSearch.Menu.ApplySameRoot" = "同じTEX rootを持つTeXソースに適用…";
@@ -193,6 +195,7 @@
 "TeXRootSearch.Menu.FindThisRoot" = "これをTEX rootとするTeXソースを検索…";
 "TeXRootSearch.Mode.Find" = "検索";
 "TeXRootSearch.Mode.Replace" = "置換";
+"TeXRootSearch.MoreLines" = "⋯ ほか%lu行";
 "TeXRootSearch.OpenHelp" = "ヘルプを開く";
 "TeXRootSearch.Problem.Missing" = "TEX rootのファイルが見つかりません。";
 "TeXRootSearch.Problem.NotFile" = "TEX rootに指定されているのはファイルではありません。";
@@ -211,6 +214,7 @@
 "TeXRootSearch.RuleJoin" = "%1$@%2$@";
 "TeXRootSearch.RuleSourceDoc" = "%SourceDocで指しているものも含みます。";
 "TeXRootSearch.SaveBackups" = "バックアップを保存";
+"TeXRootSearch.ShowAll" = "すべての行を表示";
 "TeXRootSearch.Status.Collecting" = "フォルダ%1$lu・ファイル%2$lu／%3$@";
 "TeXRootSearch.Status.Found" = "%1$luファイル中%2$luファイル、%3$lu件";
 "TeXRootSearch.Status.Limit" = "上限に達したため、すべての一致は出していません。";

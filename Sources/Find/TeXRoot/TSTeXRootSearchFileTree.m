@@ -393,7 +393,7 @@
     NSString *stateText = state == NSControlStateValueOn ? TSLocalized(@"TeXRootSearch.AX.Searched", @"searched")
                         : state == NSControlStateValueOff ? TSLocalized(@"TeXRootSearch.AX.NotSearched", @"not searched")
                         : TSLocalized(@"TeXRootSearch.AX.PartlySearched", @"partly searched");
-    NSString *label = [NSString stringWithFormat:TSLocalized(@"TeXRootSearch.AX.Node", @"%1$@, %2$lu items, %3$@"),
+    NSString *label = [NSString stringWithFormat:TSLocalized(@"TeXRootSearch.AX.Node", @"%1$@, items: %2$lu, %3$@"),
                        node.name, (unsigned long)[self countOfNode:node], stateText];
     TSTeXRootSearchOnlyReason reason = [self reasonOfNode:node];
     if (reason != TSTeXRootSearchOnlyReasonNone)

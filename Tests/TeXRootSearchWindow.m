@@ -55,6 +55,8 @@ static NSMutableDictionary<NSString *, NSString *> *OpenTexts;
 static NSMutableSet<NSString *> *ReadOnly;
 static NSMutableArray<NSArray<NSString *> *> *SourceRequests;
 static BOOL DelayRunsAtOnce;
+/// What the environment says of the open documents (which are open, on which files).
+static NSString *DocumentsSignature = @"start";
 
 static void RunPending(void)
 {
@@ -92,6 +94,7 @@ static TSTeXRootSearchEnvironment *Environment(void)
         [SourceRequests addObject:names];
         return sources;
     };
+    environment.documentsSignature = ^id<NSObject> { return [DocumentsSignature copy]; };
     environment.performAfterDelay = ^(NSTimeInterval delay, dispatch_block_t block) {
         if (DelayRunsAtOnce)
             dispatch_async(dispatch_get_main_queue(), block);
@@ -294,6 +297,33 @@ static void TestModel(void)
     Check([model.eventMessage isEqualToString:@"Replaced"], @"the event line stays over a search");
     model.replaceString = @"changed";
     Check(model.eventMessage == nil, @"the event line goes with the next change");
+
+    // A document closed while collecting, its unsaved text thrown away: that text is never listed (Codex 3b F1).
+    TSTeXRootSearchModel *closing = [[TSTeXRootSearchModel alloc] initWithRootURL:RootURL() environment:Environment()];
+    OpenTexts[@"chapters/two.tex"] = @"% !TEX root = ../thesis.tex\nUNSAVED text\n";
+    DocumentsSignature = @"two open";
+    [closing setMode:TSTeXRootSearchModeReplace findString:@"UNSAVED" replaceString:@"x" options:0 syntax:TSRegexReplacementSyntaxICU multipleReplace:nil];
+    [closing collect]; // the open document's text is taken now
+    [OpenTexts removeAllObjects];
+    DocumentsSignature = @"two closed";
+    Spin(^BOOL { return closing.activity == TSTeXRootSearchActivityIdle && closing.project && closing.resultGeneration == closing.generation; }, 30);
+    Check(closing.numberOfCollections == 2 && closing.numberOfItems == 0 && !closing.canReplaceAll,
+          [NSString stringWithFormat:@"a document closed while collecting: collected again (%lu), its unsaved text not listed (%lu items)",
+           (unsigned long)closing.numberOfCollections, (unsigned long)closing.numberOfItems]);
+    // Opened while collecting: told by the entry, collecting starts again.
+    OpenTexts[@"chapters/two.tex"] = @"% !TEX root = ../thesis.tex\nUNSAVED again\n";
+    [closing collect];
+    DocumentsSignature = @"two open again";
+    [closing openDocumentsDidChange];
+    Spin(^BOOL { return closing.activity == TSTeXRootSearchActivityIdle && closing.resultGeneration == closing.generation; }, 30);
+    Check(closing.numberOfCollections == 4 && closing.numberOfItems == 1, [NSString stringWithFormat:@"a document opened while collecting is searched in its text (%lu items)", (unsigned long)closing.numberOfItems]);
+    // Closed after the files were collected: searching collects again first.
+    [OpenTexts removeAllObjects];
+    DocumentsSignature = @"two closed again";
+    [closing searchNow];
+    Spin(^BOOL { return closing.activity == TSTeXRootSearchActivityIdle && closing.resultGeneration == closing.generation; }, 30);
+    Check(closing.numberOfCollections == 5 && closing.numberOfItems == 0, @"a document closed since collecting: searching collects again first");
+    DocumentsSignature = @"start";
 }
 
 #pragma mark Window
@@ -418,7 +448,7 @@ static void TestWindow(NSString *images)
     Check([window.rootLabel.stringValue containsString:@"thesis.tex"] && [window.rootLabel.toolTip isEqualToString:RootURL().path], @"the root's name, its path in the tool tip");
     Check([window.explanationLabel.stringValue containsString:@"thesis.tex"] && [window.explanationLabel.stringValue containsString:@"TEX root"], @"the line says what is searched");
     Check([window.findField.string isEqualToString:@"eq:main"], @"the find string is the panel's");
-    Check([window.statusField.stringValue isEqualToString:@"6 matches in 4 of 5 files"], [@"status: " stringByAppendingString:window.statusField.stringValue]);
+    Check([window.statusField.stringValue isEqualToString:@"Found: 6 · Files: 4 of 5"], [@"status: " stringByAppendingString:window.statusField.stringValue]);
     Check(!window.unreadableButton.hidden && [window.unreadableButton.title containsString:@"1"], @"the file not read is shown");
     NSViewController *unreadable = [window makeUnreadableViewController];
     BOOL listsLocked = NO;
@@ -442,7 +472,7 @@ static void TestWindow(NSString *images)
     window.replaceAllHandler = ^(TSTeXRootSearchWindowController *c) { replaces++; };
     Spin(^BOOL { return model.activity == TSTeXRootSearchActivityIdle && model.resultGeneration == model.generation; }, 30);
     [window updateFromModel];
-    Check(window.replaceAllButton.enabled && [window.statusField.stringValue isEqualToString:@"6 to replace in 4 files"], [@"Replace All can be pressed: " stringByAppendingString:window.statusField.stringValue]);
+    Check(window.replaceAllButton.enabled && [window.statusField.stringValue isEqualToString:@"To replace: 6 · Files: 4"], [@"Replace All can be pressed: " stringByAppendingString:window.statusField.stringValue]);
     [window replaceAll:nil];
     Check(replaces == 1, @"Replace All calls its handler");
     controller.settings.replaceString = @"eq:new";
@@ -493,6 +523,79 @@ static void TestWindow(NSString *images)
                                     characters:@"\r" charactersIgnoringModifiers:@"\r" isARepeat:NO keyCode:36];
     [list keyDown:enter];
     Check(shows == 1, @"Return shows the item in its document");
+
+    // An item longer than 20 lines: the row says how many more, and the whole change shows every line (Codex 3b F3).
+    {
+        NSMutableString *before = [NSMutableString stringWithString:@"BEGIN\n"], *after = [NSMutableString stringWithString:@"BEGIN\n"];
+        for (NSUInteger k = 2; k <= 23; k++) {
+            [before appendFormat:@"line %lu\n", (unsigned long)k];
+            [after appendFormat:k == 21 ? @"SECRET_REPLACEMENT_21\n" : @"line %lu\n", (unsigned long)k];
+        }
+        [before appendString:@"END"];
+        [after appendString:@"END"];
+        OpenTexts[@"chapters/three.tex"] = [NSString stringWithFormat:@"%% !TEX root = ../thesis.tex\n%@\n", before];
+        controller.settings.findString = before;
+        controller.settings.replaceString = after;
+        [model documentsDidChange];
+        Spin(^BOOL { return model.activity == TSTeXRootSearchActivityIdle && model.resultGeneration == model.generation; }, 30);
+        [window updateFromModel];
+        TSTeXRootSearchFileResult *three = nil;
+        for (TSTeXRootSearchFileResult *file in model.results)
+            if ([file.source.file.relativePath isEqualToString:@"chapters/three.tex"])
+                three = file;
+        TSTeXRootSearchItem *longItem = three.items.firstObject;
+        NSString *shownAfter = [window.resultsList shownTextOfItem:longItem inFile:three after:YES].string;
+        NSInteger longRow = [window.resultsList rowOfObject:longItem];
+        NSString *spokenLong = [window.resultsList accessibilityLabelOfRow:longRow];
+        NSViewController *wholeChange = [window.resultsList wholeChangeViewControllerForRow:longRow];
+        NSString *wholeAfter = nil;
+        for (NSView *view in AllViews(wholeChange.view))
+            if ([view isKindOfClass:[NSTextView class]] && [view.accessibilityLabel isEqualToString:@"After"])
+                wholeAfter = ((NSTextView *)view).string;
+        Check(three && ![shownAfter containsString:@"SECRET"] && [shownAfter hasSuffix:@"⋯ 4 more lines"] && [spokenLong containsString:@"4 more lines"]
+              && [wholeAfter containsString:@"SECRET_REPLACEMENT_21"] && [wholeAfter hasSuffix:@"END"],
+              [NSString stringWithFormat:@"a long item: the row says 4 more lines, the whole change shows line 21 (%@)", shownAfter]);
+        if (images) {
+            [NSFileManager.defaultManager createDirectoryAtPath:images withIntermediateDirectories:YES attributes:nil error:NULL];
+            NSString *language = NSBundle.mainBundle.preferredLocalizations.firstObject ?: @"en";
+            for (NSAppearanceName name in @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]) {
+                NSAppearance *appearance = [NSAppearance appearanceNamed:name];
+                NSViewController *shown = [window.resultsList wholeChangeViewControllerForRow:longRow];
+                shown.view.appearance = appearance;
+                NSString *path = [images stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%@-whole-change.png", language,
+                                                                         [name isEqualToString:NSAppearanceNameAqua] ? @"light" : @"dark"]];
+                Check(WritePNG(shown.view, appearance, path), @"whole change image");
+                window.window.appearance = appearance;
+                [window updateFromModel];
+                [window.resultsList.tableView scrollRowToVisible:longRow];
+                Check(WritePNG((NSView *_Nonnull)window.window.contentView, appearance,
+                               [path stringByReplacingOccurrencesOfString:@"-whole-change" withString:@"-long-item"]), @"long item image");
+            }
+            window.window.appearance = nil;
+        }
+        // 21 lines are shown whole: one line more fits where its count would go.
+        NSMutableString *twentyOne = [NSMutableString string];
+        for (NSUInteger k = 1; k <= 21; k++)
+            [twentyOne appendFormat:k < 21 ? @"row %lu\n" : @"row %lu", (unsigned long)k];
+        OpenTexts[@"chapters/three.tex"] = [NSString stringWithFormat:@"%% !TEX root = ../thesis.tex\n%@\n", twentyOne];
+        controller.settings.findString = twentyOne;
+        controller.settings.replaceString = [twentyOne stringByReplacingOccurrencesOfString:@"row 21" withString:@"ROW 21"];
+        [model documentsDidChange];
+        Spin(^BOOL { return model.activity == TSTeXRootSearchActivityIdle && model.resultGeneration == model.generation; }, 30);
+        TSTeXRootSearchFileResult *twentyOneFile = nil;
+        for (TSTeXRootSearchFileResult *file in model.results)
+            if ([file.source.file.relativePath isEqualToString:@"chapters/three.tex"])
+                twentyOneFile = file;
+        NSString *shown21 = [window.resultsList shownTextOfItem:twentyOneFile.items.firstObject inFile:twentyOneFile after:YES].string;
+        Check([shown21 containsString:@"ROW 21"] && ![shown21 containsString:@"more lines"],
+              [NSString stringWithFormat:@"21 lines are shown whole (%@)", [shown21 substringFromIndex:shown21.length > 30 ? shown21.length - 30 : 0]]);
+        [OpenTexts removeAllObjects];
+        controller.settings.findString = @"eq:main";
+        controller.settings.replaceString = @"eq:new";
+        [model documentsDidChange];
+        Spin(^BOOL { return model.activity == TSTeXRootSearchActivityIdle && model.resultGeneration == model.generation; }, 30);
+        [window updateFromModel];
+    }
 
     // The tree: three states, the spoken labels.
     NSOutlineView *tree = window.fileTree.outlineView;
@@ -557,7 +660,7 @@ static void TestWindow(NSString *images)
     window.modeControl.selectedSegment = 2;
     [window.modeControl sendAction:window.modeControl.action to:window.modeControl.target];
     Check(window.findRow.hidden && !window.setRow.hidden && [window.setPopUp.titleOfSelectedItem isEqualToString:@"Refs"]
-          && [window.ruleCountLabel.stringValue isEqualToString:@"1 rules"], @"Multiple Replace mode shows the set");
+          && [window.ruleCountLabel.stringValue isEqualToString:@"Rules: 1"], @"Multiple Replace mode shows the set");
     Spin(^BOOL { return model.activity == TSTeXRootSearchActivityIdle && model.resultGeneration == model.generation; }, 30);
     Check(model.numberOfItems == 3, [NSString stringWithFormat:@"the set's hunks: %lu", (unsigned long)model.numberOfItems]);
     [window.editSetButton sendAction:window.editSetButton.action to:window.editSetButton.target];
@@ -565,7 +668,7 @@ static void TestWindow(NSString *images)
     TSRegexReplacementRule *more = [[TSRegexReplacementRule alloc] initWithFindString:@"\\label" replaceString:@"\\tag" usesRegularExpression:NO ignoresCase:NO enabled:YES note:nil];
     [library saveSet:[[TSRegexMultipleReplace alloc] initWithRules:@[rule, more] textualOptions:0 regularExpressionOptions:0 replacementSyntax:TSRegexReplacementSyntaxICU] named:@"Refs" error:NULL];
     Spin(^BOOL { return model.activity == TSTeXRootSearchActivityIdle && model.resultGeneration == model.generation; }, 30);
-    Check(model.multipleReplace.rules.count == 2 && [window.ruleCountLabel.stringValue isEqualToString:@"2 rules"], @"a saved change of the set is searched again");
+    Check(model.multipleReplace.rules.count == 2 && [window.ruleCountLabel.stringValue isEqualToString:@"Rules: 2"], @"a saved change of the set is searched again");
 
     // The line that says what is searched wraps in a narrow window.
     [window.window setContentSize:NSMakeSize(720, 420)];
@@ -628,6 +731,8 @@ static void TestLanguage(void)
     DelayRunsAtOnce = NO;
 }
 
+static NSTimeInterval LongestPause(void (^start)(void), BOOL (^done)(void));
+
 #pragma mark Entry rules, panel and Multiple Replace items
 
 @interface TSFakeTeXRootTarget : NSObject <TSTeXRootSearchActions>
@@ -658,6 +763,37 @@ static void TestEntry(void)
           @"the titles of the items");
     Check([TSTeXRootProjectCollector problemWithRootURL:[NSURL fileURLWithPath:[Folder stringByAppendingPathComponent:@"missing.tex"]]] == TSTeXRootProblemMissing
           && [[TSTeXRootEntryRules messageForProblem:TSTeXRootProblemMissing] containsString:@"TEX root"], @"a missing root is warned of");
+
+    // The menus decide from the text alone; choosing an item reads and checks on a background queue (Codex 3b F2).
+    NSURL *nowhere = [NSURL fileURLWithPath:@"/nonexistent/folder/child.tex"];
+    Check([TSTeXRootEntryRules menuStateForDocumentURL:nowhere text:@"% !TEX root = main.tex\n" allowingSourceDoc:NO] == TSTeXRootEntryStateChild
+          && [TSTeXRootEntryRules menuStateForDocumentURL:nowhere text:@"x" allowingSourceDoc:NO] == TSTeXRootEntryStateRoot
+          && [TSTeXRootEntryRules menuStateForDocumentURL:nil text:@"x" allowingSourceDoc:NO] == TSTeXRootEntryStateUntitled, @"the menus' state from the text alone");
+    __block TSTeXRootEntryState resolved = TSTeXRootEntryStateNoDocument;
+    __block NSURL *resolvedRoot = nil;
+    __block TSTeXRootProblem resolvedProblem = TSTeXRootProblemNone;
+    __block BOOL loadedOnMain = NO;
+    NSTimeInterval choosing = LongestPause(^{
+        [TSTeXRootEntryRules resolveRootForDocumentURL:child textLoader:^NSString *{
+            loadedOnMain = NSThread.isMainThread;
+            usleep(150000); // a slow disk
+            return @"% !TEX root = ../missing.tex\n";
+        } allowingSourceDoc:NO jobNameToken:@"\\jobname" completion:^(TSTeXRootEntryState state, NSURL *root, TSTeXRootProblem problem) {
+            resolved = state;
+            resolvedRoot = root;
+            resolvedProblem = problem;
+        }];
+    }, ^BOOL { return resolvedRoot != nil; });
+    Check(!loadedOnMain && choosing < 0.05 && resolved == TSTeXRootEntryStateChild && resolvedProblem == TSTeXRootProblemMissing
+          && [resolvedRoot.lastPathComponent isEqualToString:@"missing.tex"],
+          [NSString stringWithFormat:@"choosing an item reads on a background queue (%.0f ms on the main thread), and finds the root missing", choosing * 1000]);
+    __block TSTeXRootEntryState menuState = TSTeXRootEntryStateNoDocument;
+    __block BOOL menuDone = NO;
+    NSTimeInterval validating = LongestPause(^{
+        [TSTeXRootEntryRules menuStateForDocumentURL:child textLoader:^NSString *{ usleep(150000); return @"no root line\n"; } allowingSourceDoc:NO
+                                          completion:^(TSTeXRootEntryState state) { menuState = state; menuDone = YES; }];
+    }, ^BOOL { return menuDone; });
+    Check(validating < 0.05 && menuState == TSTeXRootEntryStateRoot, [NSString stringWithFormat:@"the external editor's file is read for the menus in the background (%.0f ms)", validating * 1000]);
 
     // The panel's Find All menu and the Multiple Replace window's Replace All menu go to the opener.
     TSFakeTeXRootTarget *target = [TSFakeTeXRootTarget new];
@@ -702,8 +838,8 @@ static NSTimeInterval LongestPause(void (^start)(void), BOOL (^done)(void))
         longest = MAX(longest, now - last);
         last = now;
     }];
+    last = CFAbsoluteTimeGetCurrent(); // what start() does on the main thread counts too
     start();
-    last = CFAbsoluteTimeGetCurrent();
     Spin(done, 120);
     CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
     longest = MAX(longest, end - last);
@@ -763,6 +899,16 @@ static void TestMainThread(void)
     NSTimeInterval toggling = CFAbsoluteTimeGetCurrent() - start;
     printf("main thread: one item off in a list of %lu: %.0f ms\n", (unsigned long)model.numberOfItems, toggling * 1000);
     Check(toggling < 0.1, [NSString stringWithFormat:@"turning an item off keeps the main thread free (%.0f ms)", toggling * 1000]);
+    // An open 10 MB document with 100,000 matches (spec §2.9): listed up to the limit per file without stopping.
+    NSMutableString *bigOpen = [NSMutableString stringWithString:@"% !TEX root = ../thesis.tex\n"];
+    while (bigOpen.length < 10000000)
+        [bigOpen appendString:@"eq:main eq:main eq:main eq:main eq:main eq:main eq:main eq:main eq:main eq:main and some more text\n"];
+    OpenTexts[@"chapters/three.tex"] = bigOpen;
+    NSTimeInterval openDocument = LongestPause(^{ [model documentsDidChange]; },
+                                               ^BOOL { return model.activity == TSTeXRootSearchActivityIdle && model.resultGeneration == model.generation; });
+    printf("main thread: an open 10 MB document with 100,000 matches: longest pause %.0f ms\n", openDocument * 1000);
+    Check(openDocument < 0.1, [NSString stringWithFormat:@"an open 10 MB document keeps the main thread free (%.0f ms)", openDocument * 1000]);
+    [OpenTexts removeAllObjects];
     start = CFAbsoluteTimeGetCurrent();
     [window.fileTree toggleRow:[window.fileTree.outlineView numberOfRows] - 1];
     [window updateFromModel];
@@ -770,6 +916,31 @@ static void TestMainThread(void)
     printf("main thread: one file off: %.0f ms\n", fileOff * 1000);
     Check(fileOff < 0.1, [NSString stringWithFormat:@"turning a file off keeps the main thread free (%.0f ms)", fileOff * 1000]);
     [window close];
+
+    // 1,000 files in folders 20 deep (spec §2.9): collected and searched without stopping the main thread.
+    NSString *deep = @"deep";
+    for (NSUInteger level = 0; level < 20; level++)
+        deep = [deep stringByAppendingPathComponent:[NSString stringWithFormat:@"level%02lu", (unsigned long)level]];
+    for (NSUInteger f = 0; f < 1000; f++) {
+        NSString *folder = deep;
+        for (NSUInteger cut = 0; cut < f % 20; cut++)
+            folder = folder.stringByDeletingLastPathComponent;
+        NSUInteger depth = folder.pathComponents.count;
+        NSMutableString *up = [NSMutableString string];
+        for (NSUInteger k = 0; k < depth; k++)
+            [up appendString:@"../"];
+        Write([folder stringByAppendingPathComponent:[NSString stringWithFormat:@"f%04lu.tex", (unsigned long)f]],
+              [NSString stringWithFormat:@"%% !TEX root = %@thesis.tex\neq:main here\n", up]);
+    }
+    TSTeXRootSearchWindowController *deepWindow = [[TSTeXRootSearchWindowController alloc] initWithFindController:controller library:[[TSMultipleReplaceLibrary alloc] initWithDirectory:libraryDirectory]];
+    __block TSTeXRootSearchModel *deepModel = nil;
+    NSTimeInterval collecting = LongestPause(^{
+        [deepWindow openForRootURL:RootURL() environment:Environment() mode:TSTeXRootSearchModeFind setName:nil];
+        deepModel = deepWindow.model;
+    }, ^BOOL { return deepModel.activity == TSTeXRootSearchActivityIdle && deepModel.project && deepModel.resultGeneration == deepModel.generation; });
+    printf("main thread: collecting %lu files 20 folders deep: longest pause %.0f ms\n", (unsigned long)deepModel.project.files.count, collecting * 1000);
+    Check(deepModel.project.files.count > 1000 && collecting < 0.1, [NSString stringWithFormat:@"1,000 files 20 deep keep the main thread free (%.0f ms)", collecting * 1000]);
+    [deepWindow close];
     DelayRunsAtOnce = NO;
 }
 

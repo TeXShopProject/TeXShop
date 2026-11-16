@@ -91,6 +91,10 @@ NSUInteger TSTeXRootSearchShownLines(NSString *_Nullable text)
 @property (nonatomic, strong) NSMutableSet *pendingFileIdentifiers;
 /// The lines each item takes in the list, by file (one byte per item), worked out on the background queue.
 @property (nonatomic, strong) NSMapTable<TSTeXRootSearchFileResult *, NSData *> *shownLines;
+/// The documents' signature when the files being collected, or listed, were collected.
+@property (nonatomic, strong, nullable) id collectingSignature;
+@property (nonatomic, strong, nullable) id collectedSignature;
+@property (nonatomic, readwrite) NSUInteger numberOfCollections;
 /// The items on in each file with items off, until the next change (the status asks several times per change).
 @property (nonatomic, strong) NSMapTable<TSTeXRootSearchFileResult *, NSNumber *> *includedCounts;
 @end
@@ -280,6 +284,18 @@ NSUInteger TSTeXRootSearchShownLines(NSString *_Nullable text)
 
 #pragma mark Computing
 
+- (nullable id)currentDocumentsSignature
+{
+    return self.environment.documentsSignature ? self.environment.documentsSignature() : nil;
+}
+
+/// The texts taken when collecting still stand: no document was opened, closed or renamed since.
+- (BOOL)collectedDocumentsStand
+{
+    id now = [self currentDocumentsSignature];
+    return now == self.collectedSignature || [now isEqual:self.collectedSignature];
+}
+
 /// The lines of each item in the list, one byte each (spec §2.9: nothing is measured on the main thread).
 static NSData *TSShownLinesOfFile(TSTeXRootSearchFileResult *file, TSTeXRootSearchMode mode)
 {
@@ -309,6 +325,11 @@ static NSData *TSShownLinesOfFile(TSTeXRootSearchFileResult *file, TSTeXRootSear
 /// is complete (spec §2.7.3).
 - (void)computeFiles:(nullable NSArray<TSTeXRootProjectFile *> *)only
 {
+    if (self.project && ![self collectedDocumentsStand]) {
+        // A document was opened or closed since the files were collected: its text taken then may be gone.
+        [self collect];
+        return;
+    }
     self.token.cancelled = YES;
     TSTeXRootSearchToken *token = [TSTeXRootSearchToken new];
     self.token = token;
@@ -420,8 +441,11 @@ static NSData *TSShownLinesOfFile(TSTeXRootSearchFileResult *file, TSTeXRootSear
     self.currentFolder = nil;
     self.collectionFailure = TSTeXRootCollectionFailureNone;
     self.activity = TSTeXRootSearchActivityCollecting;
+    // The documents as they are when their texts are taken, which collectorForRoot does.
+    self.collectingSignature = [self currentDocumentsSignature];
     TSTeXRootProjectCollector *collector = self.environment.collectorForRoot(self.rootURL);
     self.collector = collector;
+    self.numberOfCollections++;
     __weak typeof(self) weakSelf = self;
     collector.progressHandler = ^(NSUInteger folders, NSUInteger files, NSString *folder) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -449,6 +473,13 @@ static NSData *TSShownLinesOfFile(TSTeXRootSearchFileResult *file, TSTeXRootSear
 
 - (void)finishCollecting:(nullable TSTeXRootProject *)project failure:(TSTeXRootCollectionFailure)failure
 {
+    id now = [self currentDocumentsSignature];
+    if (!(now == self.collectingSignature || [now isEqual:self.collectingSignature])) {
+        // A document was opened, closed or renamed while collecting: what was taken from it no longer stands.
+        [self collect];
+        return;
+    }
+    self.collectedSignature = self.collectingSignature;
     self.collectionFailure = failure;
     if (!project) {
         self.project = nil;
@@ -547,6 +578,12 @@ static NSData *TSShownLinesOfFile(TSTeXRootSearchFileResult *file, TSTeXRootSear
     [self.pendingFileIdentifiers addObject:identifier];
     [self scheduleSearch];
     [self changed];
+}
+
+- (void)openDocumentsDidChange
+{
+    // Collecting starts again even while it runs: the texts it took may be gone.
+    [self collect];
 }
 
 - (void)documentsDidChange

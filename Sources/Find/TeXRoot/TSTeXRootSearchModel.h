@@ -40,6 +40,10 @@ NS_SWIFT_NAME(TeXRootSearchEnvironment)
 @property (nonatomic, strong, nullable) TSTeXRootSourceCodec *codec;
 /// Runs a block after a delay on the main thread; the tests run it when they choose.
 @property (nonatomic, copy) void (^performAfterDelay)(NSTimeInterval delay, dispatch_block_t block);
+/// What tells the open documents apart: which documents are open, and on which files. When it differs from what it
+/// was when the files were collected, the texts of the open documents taken then no longer stand (a document closed
+/// may have had unsaved text): the files are collected again before anything is listed (spec §2.5.1, §2.5.3).
+@property (nonatomic, copy, nullable) id<NSObject> _Nonnull (^documentsSignature)(void);
 @end
 
 NS_SWIFT_NAME(TeXRootSearchModelDelegate)
@@ -102,8 +106,12 @@ NS_SWIFT_NAME(TeXRootSearchModel)
 - (void)setFiles:(NSArray<TSTeXRootProjectFile *> *)files included:(BOOL)included;
 /// An open document's text changed: only that file is searched again.
 - (void)textDidChangeForFileWithIdentifier:(id<NSObject, NSCopying>)identifier;
-/// A document was opened, closed, renamed or became read-only: every file is searched again, from new sources.
+/// A document became read-only or editable again: every file is searched again, from new sources.
 - (void)documentsDidChange;
+/// A document was opened, closed or renamed: the files are collected again, also while they are being collected.
+- (void)openDocumentsDidChange;
+/// How many times the files were collected (for the tests).
+@property (nonatomic, readonly) NSUInteger numberOfCollections;
 
 #pragma mark Results
 @property (nonatomic, readonly) TSTeXRootSearchActivity activity;

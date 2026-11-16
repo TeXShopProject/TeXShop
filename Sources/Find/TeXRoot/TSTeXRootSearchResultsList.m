@@ -43,6 +43,7 @@ NSString *TSTeXRootSearchOnlyReasonText(TSTeXRootSearchOnlyReason reason)
 @interface TSTeXRootSearchResultsTableView : NSTableView
 @property (nonatomic, copy, nullable) void (^spaceHandler)(void);
 @property (nonatomic, copy, nullable) void (^returnHandler)(void);
+@property (nonatomic, copy, nullable) void (^wholeHandler)(void);
 @end
 
 @implementation TSTeXRootSearchResultsTableView
@@ -57,6 +58,10 @@ NSString *TSTeXRootSearchOnlyReasonText(TSTeXRootSearchOnlyReason reason)
     }
     if (modifiers == 0 && ([characters isEqualToString:@"\r"] || [characters isEqualToString:@"\x03"]) && self.returnHandler) {
         self.returnHandler();
+        return;
+    }
+    if (modifiers == NSEventModifierFlagCommand && [characters.lowercaseString isEqualToString:@"y"] && self.wholeHandler) {
+        self.wholeHandler();
         return;
     }
     [super keyDown:event];
@@ -83,6 +88,7 @@ NSString *TSTeXRootSearchOnlyReasonText(TSTeXRootSearchOnlyReason reason)
 @property (nonatomic) NSInteger rowCount;
 @property (nonatomic) TSTeXRootSearchMode shownMode;
 @property (nonatomic) BOOL fitting;
+@property (nonatomic, strong, nullable) NSPopover *wholePopover;
 @end
 
 @implementation TSTeXRootSearchResultsList
@@ -99,6 +105,12 @@ NSString *TSTeXRootSearchOnlyReasonText(TSTeXRootSearchOnlyReason reason)
     __weak typeof(self) weakSelf = self;
     table.spaceHandler = ^{ [weakSelf toggleSelectedItems]; };
     table.returnHandler = ^{ [weakSelf showClickedItem:NO selected:YES]; };
+    table.wholeHandler = ^{ [weakSelf showWholeChangeOfRow:weakSelf.tableView.selectedRow]; };
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
+    NSMenuItem *whole = [menu addItemWithTitle:TSLocalized(@"TeXRootSearch.ShowAll", @"Show All Lines") action:@selector(showWholeChange:) keyEquivalent:@"y"];
+    whole.keyEquivalentModifierMask = NSEventModifierFlagCommand;
+    whole.target = self;
+    table.menu = menu;
     for (NSString *identifier in @[@"check", @"line", @"before", @"after"]) {
         NSTableColumn *column = [[NSTableColumn alloc] initWithIdentifier:identifier];
         column.editable = NO;
@@ -297,6 +309,12 @@ NSString *TSTeXRootSearchOnlyReasonText(TSTeXRootSearchOnlyReason reason)
 /// long line cut, and at most TSShownLines lines.
 - (NSAttributedString *)displayText:(NSString *)text highlight:(NSRange)highlight color:(nullable NSColor *)color textColor:(NSColor *)textColor
 {
+    return [self displayText:text highlight:highlight color:color textColor:textColor whole:NO];
+}
+
+/// `whole`: every line, none cut (the view of the whole change).
+- (NSAttributedString *)displayText:(NSString *)text highlight:(NSRange)highlight color:(nullable NSColor *)color textColor:(NSColor *)textColor whole:(BOOL)whole
+{
     NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
     paragraph.lineBreakMode = NSLineBreakByTruncatingTail;
     NSDictionary *base = @{NSFontAttributeName: self.font, NSForegroundColorAttributeName: textColor, NSParagraphStyleAttributeName: paragraph};
@@ -318,12 +336,14 @@ NSString *TSTeXRootSearchOnlyReasonText(TSTeXRootSearchOnlyReason reason)
     NSUInteger lineEnd = 0, contentsEnd = 0;
     [text getLineStart:NULL end:&lineEnd contentsEnd:&contentsEnd forRange:NSMakeRange(highlight.location, 0)];
     NSUInteger matchEnd = MIN(NSMaxRange(highlight) + (highlight.length == 0 ? 1 : 0), contentsEnd);
-    if (matchEnd > lineStart + columns && highlight.location - lineStart > TSLeadKept + 1) {
+    if (!whole && matchEnd > lineStart + columns && highlight.location - lineStart > TSLeadKept + 1) {
         NSRange cut = NSMakeRange(lineStart, highlight.location - lineStart - TSLeadKept);
         cut = [text rangeOfComposedCharacterSequencesForRange:cut];
         cut.length = MIN(cut.length, highlight.location - lineStart);
         [shown replaceCharactersInRange:cut withAttributedString:[[NSAttributedString alloc] initWithString:@"…" attributes:base]];
     }
+    if (whole)
+        return shown;
     NSString *string = shown.string;
     NSUInteger end = 0, lines = 0;
     while (end < string.length && lines < TSShownLines) {
@@ -332,14 +352,30 @@ NSString *TSTeXRootSearchOnlyReasonText(TSTeXRootSearchOnlyReason reason)
         end = next;
         lines++;
     }
-    if (end < string.length) {
+    // The lines past the 20th are cut, and the last line says how many more there are (the whole change: ⌘Y); one
+    // line more fits where its count would go, so 21 lines are shown whole.
+    NSUInteger more = 0;
+    for (NSUInteger location = end; location < string.length; more++) {
+        NSUInteger next = 0;
+        [string getLineStart:NULL end:&next contentsEnd:NULL forRange:NSMakeRange(location, 0)];
+        location = next;
+    }
+    if (more >= 2) {
         [shown deleteCharactersInRange:NSMakeRange(end, string.length - end)];
-        [shown appendAttributedString:[[NSAttributedString alloc] initWithString:@"⋯" attributes:base]];
+        NSString *rest = [NSString stringWithFormat:TSLocalized(@"TeXRootSearch.MoreLines", @"⋯ %lu more lines"), (unsigned long)more];
+        NSMutableDictionary *restAttributes = [base mutableCopy];
+        restAttributes[NSForegroundColorAttributeName] = NSColor.secondaryLabelColor;
+        [shown appendAttributedString:[[NSAttributedString alloc] initWithString:rest attributes:restAttributes]];
     }
     return shown;
 }
 
 - (nullable NSAttributedString *)shownTextOfItem:(TSTeXRootSearchItem *)item inFile:(TSTeXRootSearchFileResult *)file after:(BOOL)after
+{
+    return [self textOfItem:item inFile:file after:after whole:NO];
+}
+
+- (nullable NSAttributedString *)textOfItem:(TSTeXRootSearchItem *)item inFile:(TSTeXRootSearchFileResult *)file after:(BOOL)after whole:(BOOL)whole
 {
     BOOL replacing = self.model.mode != TSTeXRootSearchModeFind;
     BOOL replaceable = replacing && file.searchOnlyReason == TSTeXRootSearchOnlyReasonNone;
@@ -348,19 +384,28 @@ NSString *TSTeXRootSearchOnlyReasonText(TSTeXRootSearchOnlyReason reason)
     if (!after) {
         NSColor *color = !replacing ? [NSColor.systemYellowColor colorWithAlphaComponent:0.45]
                        : on ? [NSColor.systemRedColor colorWithAlphaComponent:0.25] : nil;
-        return [self displayText:item.beforeText highlight:item.beforeHighlight color:color textColor:replaceable && !on ? muted : NSColor.labelColor];
+        return [self displayText:item.beforeText highlight:item.beforeHighlight color:color textColor:replaceable && !on ? muted : NSColor.labelColor whole:whole];
     }
     if (!replacing || !replaceable)
         return nil;
     if (!on) // what stays: the lines as they are
-        return [self displayText:item.beforeText highlight:item.beforeHighlight color:nil textColor:muted];
-    return [self displayText:item.afterText ?: @"" highlight:item.afterHighlight color:[NSColor.systemGreenColor colorWithAlphaComponent:0.3] textColor:NSColor.labelColor];
+        return [self displayText:item.beforeText highlight:item.beforeHighlight color:nil textColor:muted whole:whole];
+    return [self displayText:item.afterText ?: @"" highlight:item.afterHighlight color:[NSColor.systemGreenColor colorWithAlphaComponent:0.3]
+                   textColor:NSColor.labelColor whole:whole];
 }
 
 /// The line numbers of the lines an item shows, one under the other.
 - (NSString *)lineNumbersOfItem:(TSTeXRootSearchItem *)item
 {
-    NSUInteger lines = MIN(TSTeXRootSearchShownLines(item.beforeText), TSShownLines);
+    // As many as the lines shown: all of 21, otherwise 20 at most (the 21st line then says how many more).
+    NSUInteger lines = 0, location = 0, length = item.beforeText.length;
+    while (location < length && lines <= TSShownLines + 1) {
+        NSUInteger next = 0;
+        [item.beforeText getLineStart:NULL end:&next contentsEnd:NULL forRange:NSMakeRange(location, 0)];
+        location = next;
+        lines++;
+    }
+    lines = MAX((NSUInteger)1, lines > TSShownLines + 1 ? TSShownLines : lines);
     NSMutableArray<NSString *> *numbers = [NSMutableArray array];
     for (NSUInteger k = 0; k < lines; k++)
         [numbers addObject:[NSString stringWithFormat:@"%lu", (unsigned long)(item.lineNumber + k)]];
@@ -492,7 +537,7 @@ NSString *TSTeXRootSearchOnlyReasonText(TSTeXRootSearchOnlyReason reason)
     if (!object || !file)
         return @"";
     if (object == file) {
-        NSString *label = [NSString stringWithFormat:TSLocalized(@"TeXRootSearch.AX.File", @"%1$@, %2$lu items"), file.source.file.relativePath, (unsigned long)file.items.count];
+        NSString *label = [NSString stringWithFormat:TSLocalized(@"TeXRootSearch.AX.File", @"%1$@, items: %2$lu"), file.source.file.relativePath, (unsigned long)file.items.count];
         if (self.model.mode != TSTeXRootSearchModeFind && file.searchOnlyReason != TSTeXRootSearchOnlyReasonNone)
             label = [NSString stringWithFormat:@"%@, %@", label, TSTeXRootSearchOnlyReasonText(file.searchOnlyReason)];
         return label;
@@ -575,6 +620,86 @@ NSString *TSTeXRootSearchOnlyReasonText(TSTeXRootSearchOnlyReason reason)
     if (![object isKindOfClass:[TSTeXRootSearchItem class]] || !file || !self.showItemHandler)
         return;
     self.showItemHandler(file, object, front);
+}
+
+#pragma mark The whole change
+
+- (nullable NSViewController *)wholeChangeViewControllerForRow:(NSInteger)row
+{
+    id object = [self objectAtRow:row];
+    TSTeXRootSearchFileResult *file = [self fileOfRow:row];
+    if (![object isKindOfClass:[TSTeXRootSearchItem class]] || !file)
+        return nil;
+    TSTeXRootSearchItem *item = object;
+    NSMutableArray<NSView *> *columns = [NSMutableArray array];
+    for (NSNumber *after in @[@NO, @YES]) {
+        NSAttributedString *text = [self textOfItem:item inFile:file after:after.boolValue whole:YES];
+        if (!text)
+            continue;
+        NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, 320, 360)];
+        scroll.hasVerticalScroller = YES;
+        scroll.hasHorizontalScroller = YES;
+        scroll.borderType = NSBezelBorder;
+        NSTextView *view = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 320, 360)];
+        view.editable = NO;
+        view.selectable = YES;
+        view.horizontallyResizable = YES;
+        view.textContainer.widthTracksTextView = NO;
+        view.textContainer.containerSize = NSMakeSize(CGFLOAT_MAX, CGFLOAT_MAX);
+        view.maxSize = NSMakeSize(CGFLOAT_MAX, CGFLOAT_MAX);
+        view.autoresizingMask = NSViewWidthSizable;
+        NSMutableAttributedString *whole = [text mutableCopy];
+        NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
+        paragraph.lineBreakMode = NSLineBreakByClipping;
+        [whole addAttribute:NSParagraphStyleAttributeName value:paragraph range:NSMakeRange(0, whole.length)];
+        [view.textStorage setAttributedString:whole];
+        view.accessibilityLabel = after.boolValue ? TSLocalized(@"TeXRootSearch.After", @"After") : TSLocalized(@"TeXRootSearch.Before", @"Before");
+        scroll.documentView = view;
+        scroll.translatesAutoresizingMaskIntoConstraints = NO;
+        [scroll.widthAnchor constraintEqualToConstant:320].active = YES;
+        [scroll.heightAnchor constraintEqualToConstant:360].active = YES;
+        [columns addObject:scroll];
+    }
+    NSStackView *stack = [NSStackView stackViewWithViews:columns];
+    stack.spacing = 8;
+    stack.edgeInsets = NSEdgeInsetsMake(10, 10, 10, 10);
+    [stack layoutSubtreeIfNeeded];
+    NSViewController *controller = [NSViewController new];
+    controller.preferredContentSize = stack.fittingSize;
+    [stack setFrameSize:stack.fittingSize];
+    controller.view = stack;
+    return controller;
+}
+
+- (void)showWholeChangeOfRow:(NSInteger)row
+{
+    NSViewController *controller = [self wholeChangeViewControllerForRow:row];
+    if (!controller) {
+        NSBeep();
+        return;
+    }
+    [self.wholePopover close];
+    self.wholePopover = [NSPopover new];
+    self.wholePopover.behavior = NSPopoverBehaviorTransient;
+    self.wholePopover.contentViewController = controller;
+    self.wholePopover.contentSize = controller.preferredContentSize;
+    if (self.tableView.window)
+        [self.wholePopover showRelativeToRect:[self.tableView rectOfRow:row] ofView:self.tableView preferredEdge:NSRectEdgeMaxY];
+}
+
+- (void)showWholeChange:(id)sender
+{
+    NSInteger row = self.tableView.clickedRow >= 0 ? self.tableView.clickedRow : self.tableView.selectedRow;
+    [self showWholeChangeOfRow:row];
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem *)item
+{
+    if (item.action == @selector(showWholeChange:)) {
+        NSInteger row = self.tableView.clickedRow >= 0 ? self.tableView.clickedRow : self.tableView.selectedRow;
+        return [[self objectAtRow:row] isKindOfClass:[TSTeXRootSearchItem class]];
+    }
+    return YES;
 }
 
 - (void)rowClicked:(id)sender { [self showClickedItem:NO selected:NO]; }

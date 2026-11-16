@@ -185,6 +185,8 @@
 "TeXRootSearch.AX.Results" = "结果";
 "TeXRootSearch.AX.Searched" = "查找";
 "TeXRootSearch.AX.Set" = "批量替换集";
+"TeXRootSearch.After" = "替换后";
+"TeXRootSearch.Before" = "替换前";
 "TeXRootSearch.EditSet" = "编辑…";
 "TeXRootSearch.Explanation" = "查找%@，以及同一文件夹及其子文件夹中将其指定为TEX root的TeX源文件。";
 "TeXRootSearch.Menu.ApplySameRoot" = "应用到TEX root相同的TeX源文件…";
@@ -193,6 +195,7 @@
 "TeXRootSearch.Menu.FindThisRoot" = "在以此文件为TEX root的TeX源文件中查找…";
 "TeXRootSearch.Mode.Find" = "查找";
 "TeXRootSearch.Mode.Replace" = "替换";
+"TeXRootSearch.MoreLines" = "⋯ 另有%lu行";
 "TeXRootSearch.OpenHelp" = "打开帮助";
 "TeXRootSearch.Problem.Missing" = "找不到TEX root文件。";
 "TeXRootSearch.Problem.NotFile" = "TEX root不是文件。";
@@ -211,6 +214,7 @@
 "TeXRootSearch.RuleJoin" = "%1$@%2$@";
 "TeXRootSearch.RuleSourceDoc" = "也包括用%SourceDoc指向它的文件。";
 "TeXRootSearch.SaveBackups" = "保存备份";
+"TeXRootSearch.ShowAll" = "显示所有行";
 "TeXRootSearch.Status.Collecting" = "%1$lu个文件夹，%2$lu个文件／%3$@";
 "TeXRootSearch.Status.Found" = "%1$lu个文件中的%2$lu个，共%3$lu处";
 "TeXRootSearch.Status.Limit" = "已达到上限：未列出全部匹配。";
