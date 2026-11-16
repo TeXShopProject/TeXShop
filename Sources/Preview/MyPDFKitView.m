@@ -4708,7 +4708,9 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
                 if (!NSIsEmptyRect(textBounds))
                     textBounds = NSOffsetRect(textBounds, NSMinX(pageRects[0]), NSMinY(pageRects[0]));
             }
-            if (!TSLinkPreviewRects(previewSize, linkedPoint, textBounds, documentView.visibleRect,
+            // The popup is laid out in the part of the pages below the toolbar (#44).
+            if (!TSLinkPreviewRects(previewSize, linkedPoint, textBounds,
+                                    TSDocumentWindowRectBelowToolbar(documentView, documentView.visibleRect),
                                     mouseLocDocumentView, largerSize, pushUp, documentView.isFlipped,
                                     keepSide, &aRect, &bRect)) {
                 self.handlingLink = 0;
@@ -4856,7 +4858,8 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
     if (![self hasPinnedLinkPreview] || pinnedLinkPreview.window != self.window) return NO;
     NSView *documentView = pinnedLinkPreview.superview;
     NSPoint local = [documentView convertPoint:point fromView:nil];
-    return NSPointInRect(local, documentView.visibleRect) && NSPointInRect(local, pinnedLinkPreview.frame);
+    return NSPointInRect(local, TSDocumentWindowRectBelowToolbar(documentView, documentView.visibleRect))
+        && NSPointInRect(local, pinnedLinkPreview.frame);
 }
 
 - (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:(NSRect *)frame

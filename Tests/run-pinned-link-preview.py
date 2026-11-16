@@ -19,6 +19,7 @@ parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'oth
                                            'window-magnifier-bypass', 'window-resign-kills-pin', 'window-split-kills-pin', 'window-unsplit-drops-pin',
                                            'window-layout-not-kept', 'drag-cursor-stays', 'hidden-part-cursor', 'no-exit-tracking', 'exit-ignored',
                                            'outside-always-arrow', 'visible-beyond-bounds', 'escape-ignores-active-part',
+                                           'outside-on-toolbar-tool-cursor', 'under-toolbar-counts-as-seen',
                                            'popup-side-fitted', 'popup-side-always-kept', 'no-next-page', 'selection-first-page',
                                            'control-ignored-when-off', 'control-ignored-when-on', 'command-still-shows', 'control-popup-stays',
                                            'timer-ignores-release', 'tooltip-ignores-control', 'tooltip-back-under-popup',
@@ -70,7 +71,7 @@ view_mutations = {
                      '    [self keepingPinnedLinkPreview:^{ }];\n}\n- (BOOL)hasPinnedLinkPreview'),
     'contains-unpinned': ('    return pinnedLinkPreview.superview != nil;',
                           '    return (pinnedLinkPreview ?: linkPreview).superview != nil;'),
-    'contains-hidden-part': ('    return NSPointInRect(local, documentView.visibleRect) && NSPointInRect(local, pinnedLinkPreview.frame);',
+    'contains-hidden-part': ('    return NSPointInRect(local, TSDocumentWindowRectBelowToolbar(documentView, documentView.visibleRect))\n        && NSPointInRect(local, pinnedLinkPreview.frame);',
                              '    return NSPointInRect(local, pinnedLinkPreview.frame);'),
     'detach-keeps-state': ('    [preview removeFromSuperview];\n    pinnedLinkPreview = nil;\n    [self doKillPopup];\n    return preview;',
                            '    [preview removeFromSuperview];\n    return preview;'),
@@ -205,7 +206,12 @@ preview_mutations = {
     'resize-scales': ('                            [self availableRect], _pageSize, flipped, &frame, &source);',
                       '                            [self availableRect], _pageSize, flipped, &frame, &source);\n        source = _startSource;'),
     'drag-cursor-stays': ('    else [self showCursorOutsideWithEvent:event];\n', ''),
-    'hidden-part-cursor': (' || !NSPointInRect(point, self.superview.visibleRect)) return nil;', ') return nil;'),
+    'hidden-part-cursor': (' || !NSPointInRect(point, [self visibleRectOfPreview])) return nil;', ') return nil;'),
+    # In a window whose content runs under the toolbar (#44): the tool's cursor comes back on the toolbar,
+    # and the part of the pages under the toolbar counts as part of the preview that can be seen.
+    'outside-on-toolbar-tool-cursor': ('        && !TSDocumentWindowPointIsUnderToolbar(event.window, event.locationInWindow)\n', ''),
+    'under-toolbar-counts-as-seen': ('    return TSDocumentWindowRectBelowToolbar(self.superview, self.superview.visibleRect);',
+                                     '    return self.superview.visibleRect;'),
     'no-exit-tracking': ('        [self addTrackingArea:', '        if (NO) [self addTrackingArea:'),
     'exit-ignored': ('    [self showCursorOutsideWithEvent:event];\n}\n\n- (void)mouseDown:', '}\n\n- (void)mouseDown:'),
     'outside-always-arrow': ('    if (owner && owner.window == event.window', '    if (NO && owner && owner.window == event.window'),
@@ -363,6 +369,19 @@ DOCUMENTMETHODS
 @end
 #define TSDocument TestDocument
 // The preview window's active view, which the toolbar and Escape work with (#14).
+// An Expanded toolbar with a few items, as the document windows have.
+@interface TestToolbar : NSObject <NSToolbarDelegate>
+@end
+@implementation TestToolbar
+- (NSArray *)items { return @[@"a", @"b", @"c"]; }
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar { return self.items; }
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar { return self.items; }
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)identifier willBeInsertedIntoToolbar:(BOOL)flag {
+    NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+    item.label = identifier; item.image = [NSImage imageWithSystemSymbolName:@"doc" accessibilityDescription:nil];
+    return item;
+}
+@end
 @interface TestPreviewWindow : NSWindow
 @property PDFView *activeView;
 @end
@@ -763,12 +782,19 @@ static NSEvent *exited(NSWindow *window, NSPoint point) {
 static void testCursorOutside(MyPDFKitView *view, NSWindow *window) {
     view.document = textDocument(); [view layoutDocumentView];
     NSRect content = window.contentLayoutRect;
-    // TeXShop's toolbar lies above the content, as the title bar does in this window.
+    // TeXShop's toolbar lies above the content, as the title bar does in this window. On macOS 26
+    // and later the preview runs under the toolbar (`under`): the point is then inside the preview.
+    BOOL under = (window.styleMask & NSWindowStyleMaskFullSizeContentView) != 0;
     NSPoint toolbar = NSMakePoint(NSMidX(content), NSMaxY(content) + 5);
     NSRect visible = [view.documentView convertRect:view.documentView.visibleRect toView:nil];
     NSPoint away = NSMakePoint(NSMinX(visible) + 3, NSMinY(visible) + 3);
-    check(!NSPointInRect(toolbar, content) && toolbar.y < NSHeight(window.frame) && NSMaxY(visible) <= NSMaxY(content),
-          @"the toolbar point lies above the preview, in the window");
+    if (under)
+        check(!NSPointInRect(toolbar, content) && NSPointInRect(toolbar, visible) &&
+              NSPointInRect([view convertPoint:toolbar fromView:nil], view.bounds),
+              @"the toolbar point lies over the preview, which runs under the toolbar");
+    else
+        check(!NSPointInRect(toolbar, content) && toolbar.y < NSHeight(window.frame) && NSMaxY(visible) <= NSMaxY(content),
+              @"the toolbar point lies above the preview, in the window");
 
     [view setTestMouseMode:NEW_MOUSE_MODE_SELECT_PDF];
     show(view, NSEventModifierFlagOption); flags = 0;
@@ -788,7 +814,7 @@ static void testCursorOutside(MyPDFKitView *view, NSWindow *window) {
     check(sameCursor(NSCursor.currentCursor, resize), @"a drag keeps its cursor when the pointer leaves the popup");
     [preview mouseUp:mouse(window, NSEventTypeLeftMouseUp, toolbar)];
     NSRect resized = [preview.superview convertRect:preview.frame toView:nil];
-    check(NSMaxY(resized) > NSMaxY(onScreen) && NSMaxY(resized) < NSMaxY(visible) && approx(NSMinY(resized), NSMinY(onScreen)),
+    check(NSMaxY(resized) > NSMaxY(onScreen) && NSMaxY(resized) < MIN(NSMaxY(visible), NSMaxY(content)) && approx(NSMinY(resized), NSMinY(onScreen)),
           @"the top edge stops below the toolbar");
     check(sameCursor(NSCursor.currentCursor, NSCursor.arrowCursor), @"releasing the edge over the toolbar shows the arrow");
 
@@ -814,6 +840,19 @@ static void testCursorOutside(MyPDFKitView *view, NSWindow *window) {
     check(!sameCursor(NSCursor.currentCursor, NSCursor.arrowCursor), @"the edge shows a resize cursor before leaving");
     [preview mouseExited:exited(window, toolbar)];
     check(sameCursor(NSCursor.currentCursor, NSCursor.arrowCursor), @"leaving the popup straight onto the toolbar shows the arrow");
+    if (under) {
+        // The pointer was on the toolbar before, came down onto the popup and goes back up (#44).
+        [view mouseMoved:mouse(window, NSEventTypeMouseMoved, toolbar)];
+        [view mouseMoved:mouse(window, NSEventTypeMouseMoved, edge)];
+        check(!sameCursor(NSCursor.currentCursor, NSCursor.arrowCursor), @"back on the popup, its edge shows a resize cursor again");
+        [view mouseMoved:mouse(window, NSEventTypeMouseMoved, toolbar)];
+        check(sameCursor(NSCursor.currentCursor, NSCursor.arrowCursor), @"moving from the popup onto the toolbar shows the arrow");
+        [view mouseMoved:mouse(window, NSEventTypeMouseMoved, edge)];
+        [view mouseMoved:mouse(window, NSEventTypeMouseMoved, toolbar)];
+        [preview mouseExited:exited(window, toolbar)];
+        [view mouseMoved:mouse(window, NSEventTypeMouseMoved, toolbar)];
+        check(sameCursor(NSCursor.currentCursor, NSCursor.arrowCursor), @"an exit that arrives after the move onto the toolbar keeps the arrow");
+    }
     [view mouseMoved:mouse(window, NSEventTypeMouseMoved, edge)];
     [preview mouseExited:exited(window, away)];
     check(sameCursor(NSCursor.currentCursor, NSCursor.crosshairCursor), @"leaving the popup into the preview shows the tool's cursor");
@@ -834,6 +873,12 @@ static void testCursorOutside(MyPDFKitView *view, NSWindow *window) {
     check(sameCursor(NSCursor.currentCursor, NSCursor.arrowCursor), @"releasing a moved popup over the toolbar shows the arrow");
     check(![preview cursorAtPoint:[view.documentView convertPoint:toolbar fromView:nil]],
           @"the hidden part of the popup shows no cursor of its own");
+    if (under) {
+        [view mouseMoved:mouse(window, NSEventTypeMouseMoved, toolbar)];
+        check(sameCursor(NSCursor.currentCursor, NSCursor.arrowCursor), @"after the release, moving on the toolbar keeps the arrow");
+        NSRect moved = NSIntersectionRect([preview.superview convertRect:preview.frame toView:nil], content);
+        check(NSWidth(moved) >= 19 && NSHeight(moved) >= 19, @"a part of the moved popup stays below the toolbar, where it can be dragged back");
+    }
 
     // An ordinary popup leaves the cursor to the preview.
     [view doKillPopup];
@@ -1718,6 +1763,26 @@ int main(void) { @autoreleasepool {
     testInteraction(view, window);
     testTools(view, window, textDocument());
     testCursorOutside(view, window);
+    // The same in a window whose content runs under the title bar and the toolbar (#44).
+    if (TSDocumentWindowsUseFullSizeContent()) {
+        TestPreviewWindow *barred = [[TestPreviewWindow alloc] initWithContentRect:NSMakeRect(0,0,650,850)
+            styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskResizable backing:NSBackingStoreBuffered defer:NO];
+        barred.releasedWhenClosed = NO;
+        barred.toolbarStyle = NSWindowToolbarStyleExpanded;
+        TestToolbar *toolbarDelegate = [TestToolbar new];
+        NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"pinned-popup-test"];
+        toolbar.delegate = toolbarDelegate; barred.toolbar = toolbar;
+        MyPDFKitView *under = [[MyPDFKitView alloc] initWithFrame:barred.contentView.bounds];
+        under.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+        [barred.contentView addSubview:under];
+        TSDocumentWindowPrepare(barred);
+        under.autoScales = YES;
+        [barred layoutIfNeeded];
+        check(NSHeight(barred.contentView.frame) - NSMaxY(barred.contentLayoutRect) > 20, @"the toolbar lies over the content of the second window");
+        testCursorOutside(under, barred);
+        [under doKillPopup];
+        [under removeFromSuperview];
+    }
     testPageLabelAndToolTips(view, window, textDocument());
     testDocumentLinkPopups(view, window, doc);
     view.document = doc; [view layoutDocumentView];
@@ -1902,6 +1967,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'exit-ignored':'leaving the popup straight onto the toolbar shows the arrow',
                     'outside-always-arrow':"releasing a drag in the preview outside the popup shows the tool's cursor",
                     'visible-beyond-bounds':'releasing the edge over the toolbar shows the arrow',
+                    'outside-on-toolbar-tool-cursor':('releasing the edge over the toolbar shows the arrow', 'leaving the popup straight onto the toolbar shows the arrow'),
+                    'under-toolbar-counts-as-seen':('the top edge stops below the toolbar', 'the hidden part of the popup shows no cursor of its own'),
                     'escape-ignores-active-part':'Escape dismisses the pinned popup of the active part',
                     'escape-falls-to-other-part':'with none in the active part, Escape leaves the pinned popup of the other part',
                     'escape-closes-hover':'Escape dismisses the pinned popup and leaves the one shown by hovering',

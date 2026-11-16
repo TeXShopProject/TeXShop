@@ -31,8 +31,8 @@ BOOL TSDocumentWindowPointIsUnderToolbar(NSWindow * _Nullable window, NSPoint po
 
 // The part of a rectangle of a view, in the view's coordinates, that does not lie under
 // the title bar and the toolbar. The rectangle itself in a window whose content does
-// not run under them.
-NSRect TSDocumentWindowRectBelowToolbar(NSView *view, NSRect rect);
+// not run under them, and for a view that is in no window.
+NSRect TSDocumentWindowRectBelowToolbar(NSView * _Nullable view, NSRect rect);
 
 // Puts the divider of a split view with two parts so that the parts share the area
 // that can be seen in the ratio first : second. The band under the toolbar is not
