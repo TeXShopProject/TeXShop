@@ -65,17 +65,11 @@
 "This file was opened with IsoLatin9 encoding." = "Diese Datei wurde mit IsoLatin9-Kodierung geöffnet.";
 "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "Die Datei konnte nicht mit %@-Kodierung geöffnet werden, da diese nicht in dieser Kodierung abgespeichert wurde. Wenn Sie die Datei mit einer anderen Kodierung öffnen möchten, schließen Sie das Fenster und öffnen Sie erneut.";
 "Error" = "Fehler";
-"There was an error checking for updates." = "Bei der Suche nach Aktualisierungen ist ein Fehler aufgetreten.";
-"Your copy of TeXShop is up-to-date" = "Deine Kopie von TeXShop ist auf dem neuesten Stand";
-"You have the most recent version of TeXShop." = "Bei dir läuft die neueste Version von TeXShop.";
-"New version available" = "Eine neue Version ist verfügbar";
-"A new version of TeXShop is available (version %@). Would you like to download it now?" = "Eine neue Version von TeXShop ist verfügbar (version %@). Möchten Sie diese jetzt herunterladen?";
 "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "Diese Version von TeXShop benötigt Mac OS X 10.4 oder höher. Verwenden Sie stattdessen TeXShop 1.37.";
 "Hard Wrap" = "Harter Zeilenumbruch";
 "Newline Removal" = "Zeilenumbrüche entfernen";
 "Color Index" = "Farbindex";
 "Help" = "Hilfe";
-"TeXShop Demos" = "TeXShop Demos";
 "Sync" = "Synchronisieren";
 "ShowFullPath" = "Kompletten Pfad zeigen";
 "Close Current Environment" = "Aktuelle Umgebung schließen"; // Terada
@@ -105,7 +99,6 @@
 "No Block" = "Kein Block";
 "deprecated" = "veraltet";
 "Unknown encoding; using UTF-8." = "Unbekannte Zeichenkodierung; UTF-8 wird verwendet";
-"Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Demofilme erfordern Mac OS 10.9 (Mavericks) oder neuer.";
 "Source" = "Quelltext";
 "Type sample text here.\nUse several lines to test\ninterline spacing." = "Geben Sie den Beispieltext hier ein.\nVerwenden Sie mehrere Zeilen,\num den Zeilenabstand zu testen.";
 "<<Close All - unlocalized>>" = "Alle schließen";

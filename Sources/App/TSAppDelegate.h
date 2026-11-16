@@ -23,7 +23,6 @@
  */
 
 #import "UseMitsu.h"
-#import "TSMovie.h"
 
 #import <Cocoa/Cocoa.h>
 #import <Foundation/Foundation.h>
@@ -35,7 +34,6 @@
 }
 
 @property           BOOL      forPreview;
-@property (retain)  TSMovie   *myMovie;
 
 - (IBAction)displayMatrixPanel:(id)sender; //  MatrixPanel Addition by Jonas 1.32 Nov 28 03
 - (IBAction)openForPreview:(id)sender;
@@ -60,9 +58,6 @@
 // - (void)setForPreview: (BOOL)value;
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender;
 - (void)ogreKitWillHackFindMenu:(OgreTextFinder*)textFinder;
-- (IBAction)checkForUpdate:(id)sender; // Update checker
-- (void)configureMovieMenu;
-- (IBAction)doMovie:(id)sender;
 // - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename;
 - (void)makeDefaultEditor:(id)sender;
 - (void)updateXMLTabs;

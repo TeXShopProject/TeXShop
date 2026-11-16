@@ -66,6 +66,7 @@
 #import "TSAdvancedFindFieldStyle.h"
 #import "TSPreferenceEffects.h"
 #import "TSLibraryVersion.h"
+#import "TSBundledMacroUpdate.h"
 
 /*
 #define NSAppKitVersionNumber10_8 1187
@@ -458,6 +459,9 @@ static void TSInstallAdvancedFindFieldStyle(void)
     else if (needsUpdating) {
         [self mirrorPath:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"TeXShop/HTML/Inactive"]
                   toPath:[HTMLInactivePath stringByStandardizingPath]];
+        // Help.html is TeXShop's own page, shown by Help > HTML Commands; a new version replaces it.
+        [self mirrorPath:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"TeXShop/HTML/Help.html"]
+                  toPath:[[HTMLHelpPath stringByStandardizingPath] stringByAppendingPathComponent:@"Help.html"]];
     }
     
     if (! [fileManager fileExistsAtPath: [ExternalEditorScriptsPath stringByStandardizingPath]] ){
@@ -483,6 +487,16 @@ static void TSInstallAdvancedFindFieldStyle(void)
 		[self mirrorPath:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"TeXShop/Macros"]
 			  toPath:[MacrosPath stringByStandardizingPath]];
 		}
+	else if (needsUpdating) {
+		// Bundled macros that still open the former web site, unedited, open texshop.app.
+		NSString *resources = [[NSBundle mainBundle] resourcePath];
+		if (resources) {
+			NSString *bundledMacros = [resources stringByAppendingPathComponent:@"TeXShop/Macros"];
+			for (NSString *name in @[@"Macros_Latex.plist", @"Macros_Context.plist"])
+				TSUpdateUnchangedBundledMacros([[MacrosPath stringByStandardizingPath] stringByAppendingPathComponent:name],
+					[bundledMacros stringByAppendingPathComponent:name]);
+		}
+	}
 		
 	if (! [fileManager fileExistsAtPath: [MatrixPanelPath stringByStandardizingPath]] ) {
 		[self mirrorPath:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"TeXShop/MatrixPanel"]
@@ -517,11 +531,6 @@ static void TSInstallAdvancedFindFieldStyle(void)
 	if ((! [fileManager fileExistsAtPath: [BinaryPath stringByStandardizingPath]] ) || needsUpdating) {
 		[self mirrorPath:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"TeXShop/bin"]
 			  toPath:[BinaryPath stringByStandardizingPath]];
-		}
-		
-	if (! [fileManager fileExistsAtPath: [MoviesPath stringByStandardizingPath]] ) {
-		[self mirrorPath:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"TeXShop/Movies"]
-			  toPath:[MoviesPath stringByStandardizingPath]];
 		}
 		
 	if (([fileManager fileExistsAtPath: [NewPath stringByStandardizingPath]]) && needsUpdating)
@@ -773,7 +782,6 @@ static void TSInstallAdvancedFindFieldStyle(void)
 	[[TSMacroMenuController sharedInstance] loadMacros];
 	[self finishAutoCompletionConfigure];
 	[self configureExternalEditor];
-	[self configureMovieMenu];
     [[TSColorSupport sharedInstance] updateBundledThemeColors];
     [[TSColorSupport sharedInstance]  initializeColors];
     TSInstallAdvancedFindFieldStyle();
@@ -1131,20 +1139,6 @@ static void TSInstallAdvancedFindFieldStyle(void)
 	}
 }
 
-- (IBAction)doMovie:(id)sender
-{
-	if (atLeastMavericks)
-        {
-            NSString *title = [[sender title] stringByAppendingString:@".mp4"];
-            [self.myMovie doMovie:title];
-        }
-    else
-        {
-            NSAlert *alert = [NSAlert alertWithMessageText:@"Alert" defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:NSLocalizedString(@"Demo Movies require Mac OS 10.9, Mavericks, or higher.", @"Demo Movies require Mac OS 10.9, Mavericks, or higher.")];
-            [alert runModal];
-        }
-}
-
 // Called by AppKit just before the Tags menu in the menu bar opens.
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
@@ -1158,58 +1152,6 @@ static void TSInstallAdvancedFindFieldStyle(void)
 {
     return NO;
 }
-
-- (void)configureMovieMenu
-{
-	NSFileManager *fm;
-	NSString      *basePath, *path, *title;
-	NSArray       *fileList;
-	// NSMenu 	  *submenu;
-	BOOL	   isDirectory;
-	NSUInteger i;
-	// unsigned lv = 3;
-	
-	NSMenu *helpMenu = [[[NSApp mainMenu] itemWithTitle:
-					NSLocalizedString(@"Help", @"Help")] submenu];
-
-	
-	NSMenu *texshopDemosMenu = [[helpMenu itemWithTitle:
-					NSLocalizedString(@"TeXShop Demos", @"TeXShop Demos")] submenu];
-	
-	if (!texshopDemosMenu)
-		return;
-    
-    [texshopDemosMenu addItemWithTitle:@"Getting Started" action: @selector(doMovie:) keyEquivalent:@"" ];
-    [texshopDemosMenu addItemWithTitle:@"Initial Preferences" action: @selector(doMovie:) keyEquivalent:@"" ];
-		
-	fm       = [ NSFileManager defaultManager ];
-	basePath = [[ MoviesPath stringByAppendingString:@"/TeXShop"] stringByStandardizingPath ];
-	fileList = [ fm contentsOfDirectoryAtPath: basePath error:NULL ];
-
-	for (i = 0; i < [fileList count]; i++) {
-		title = [ fileList objectAtIndex: i ];
-		path  = [ basePath stringByAppendingPathComponent: title ];
-		if ([fm fileExistsAtPath:path isDirectory: &isDirectory]) {
-			if (isDirectory )
-				{;
-				// [popupButton addItemWithTitle: @""];
-				// newItem = [popupButton lastItem];
-				// [newItem setTitle: title];
-				// submenu = [[[NSMenu alloc] init] autorelease];
-				// [self makeMenuFromDirectory: submenu basePath: path
-				//					 action: @selector(doTemplate:) level: lv];
-				// [newItem setSubmenu: submenu];
-				} 
-			else if ([[[title pathExtension] lowercaseString] isEqualToString: @"mp4"]) {
-				title = [title stringByDeletingPathExtension];
-                if (( ! [title isEqualToString:@"Getting Started"]) && ( ! [title isEqualToString:@"Initial Preferences"]))
-                    [texshopDemosMenu addItemWithTitle:title action: @selector(doMovie:) keyEquivalent:@"" ];
-			}
-		}
-	}
-}
-
-
 
 // Source > Show Status Bar: the bars of all documents, also those opened later.
 - (IBAction)toggleStatusBar:(id)sender
@@ -1369,70 +1311,6 @@ static void TSInstallAdvancedFindFieldStyle(void)
     else
         [textFinder setShouldHackFindMenu:NO];
 }
-
-// The routine below is no longer used; it has been replaced by Sparkle. Koch, 1/11/2009.
-
-// Update Checker Nov 05 04; Martin Kerz
-// This code simply fixes a text file from a fixed URL, and parses it
-// for the version of the latest TeXShop releae. It then compares it to
-// the CFBundleVersion of the running application (the comparision is
-// pretty dumb right now, just a simple case insensitive string compare).
-// If the online TeXShop version is newer, we offer the user to
-// fetch the new version, which is done by grabbing another fixed
-// URL through the NSWorkSpaceManager.
-//
-// This approach is quite simple but also a bit limited. The version compare
-// should be improved. Also, the remote file with the version (a plist)
-// could also contain the URL of the new .dmg. That way we don't have
-// to use a fixed filename for new TeXShop releases.
-//
-// We could also add a preference to do automatic checks at regular time intervals.
-// And of course an fully automated in-place updated would be cool, too, but
-// you got to ask yourself if it's really worth the whole effort ;-)
-- (IBAction)checkForUpdate:(id)sender
-{
-	NSString *currentVersion = [[[NSBundle bundleForClass:[self class]]
-		infoDictionary] objectForKey:@"CFBundleVersion"];
-		
-	NSDictionary *texshopVersionDictionary = [NSDictionary dictionaryWithContentsOfURL:
-		[NSURL URLWithString:@"http://pages.uoregon.edu/koch/texshop/texshop-current.txt"]];
-
-	NSString *latestVersion = [texshopVersionDictionary valueForKey:@"TeXShop"];
-	
-	NSInteger button;
-	if(latestVersion == nil){
-		NSRunAlertPanel(NSLocalizedString(@"Error",
-										  @"Error"),
-						NSLocalizedString(@"There was an error checking for updates.",
-										  @"There was an error checking for updates."),
-										  @"OK", nil, nil);
-		return;
-	}
-
-	if([latestVersion caseInsensitiveCompare: currentVersion] != NSOrderedDescending)
-	{
-		NSRunAlertPanel(NSLocalizedString(@"Your copy of TeXShop is up-to-date",
-										  @"Your copy of TeXShop is up-to-date"),
-						NSLocalizedString(@"You have the most recent version of TeXShop.",
-										  @"You have the most recent version of TeXShop."),
-										  @"OK", nil, nil);
-	}
-	else
-	{
-		button = NSRunAlertPanel(NSLocalizedString(@"New version available",
-													   @"New version available"),
-									 [NSString stringWithFormat:
-										 NSLocalizedString(@"A new version of TeXShop is available (version %@). Would you like to download it now?",
-														   @"A new version of TeXShop is available (version %@). Would you like to download it now?"), latestVersion],
-									 @"OK", @"Cancel", nil);
-		if (button == NSOKButton) {
-			[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://pages.uoregon.edu/koch/texshop/texshop.zip"]];
-		}
-	}
-
-}
-
-
 
 - (void)makeDefaultEditor:(id)sender;
 {

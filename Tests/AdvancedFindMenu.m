@@ -318,7 +318,7 @@ int main(int argc, const char *argv[])
         method_setImplementation(class_getClassMethod(TSAdvancedFindController.class, @selector(sharedController)), (IMP)SharedForTests);
         NSString *mode = argc > 1 ? @(argv[1]) : @"";
         if ([mode isEqualToString:@"nib"] && argc > 4) {
-            for (NSString *name in @[@"HelpDocuments", @"TSAppDelegate", @"TSDocumentController", @"TSMacroEditor", @"TSMacroMenuController", @"TSMovie",
+            for (NSString *name in @[@"HelpDocuments", @"TSAppDelegate", @"TSDocumentController", @"TSMacroEditor", @"TSMacroMenuController",
                                      @"TSPreferences", @"TSSparkleController", @"TSStationery", @"TextFinder"]) {
                 Class c = objc_allocateClassPair(NSObject.class, name.UTF8String, 0);
                 class_addMethod(c, @selector(setValue:forUndefinedKey:), (IMP)IgnoreOutlet, "v@:@@");

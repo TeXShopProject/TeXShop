@@ -535,7 +535,6 @@ extern NSString *BringFrontOnTypesetKey;
 
 /*" Paths "*/
 extern NSString *DesktopPath;
-extern NSString *MoviesPath;
 extern NSString *DocumentsPath;
 extern NSString *TeXShopPath;
 extern NSString *TexTemplatePath;

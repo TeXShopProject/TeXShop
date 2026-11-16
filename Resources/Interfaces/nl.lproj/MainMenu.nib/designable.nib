@@ -1396,15 +1396,6 @@
                                     <action selector="displayGettingStartedTeXShop:" target="692" id="696"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop demo's" id="685">
-                                <menu key="submenu" title="TeXShop demo's" id="686">
-                                    <items>
-                                        <menuItem title="TeXShop-handleiding" id="lh9-4d-Ucv">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
                             <menuItem title="TeXShop-handleiding" id="AkR-3a-53k" identifier="TSShortcut.displayManual:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
@@ -1500,7 +1491,6 @@
         <customObject id="380" userLabel="TSPreferences" customClass="TSPreferences"/>
         <customObject id="382" userLabel="TSAppDelegate" customClass="TSAppDelegate">
             <connections>
-                <outlet property="myMovie" destination="691" id="753"/>
             </connections>
         </customObject>
         <customObject id="485" userLabel="TSMacroMenuConroller" customClass="TSMacroMenuController">
@@ -1545,7 +1535,6 @@
         </customView>
         <customObject id="619" userLabel="OgreTextFinder" customClass="OgreTextFinder"/>
         <customObject id="625" userLabel="TextFinder" customClass="TextFinder"/>
-        <customObject id="691" userLabel="TSMovie" customClass="TSMovie"/>
         <customObject id="692" userLabel="HelpDocuments" customClass="HelpDocuments">
             <connections>
                 <outlet property="openStyleFilePanel" destination="960" id="971"/>

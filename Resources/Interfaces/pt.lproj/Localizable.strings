@@ -66,17 +66,11 @@
 "This file was opened with IsoLatin9 encoding." = "Este arquivo foi aberto com a codificação IsoLatin9";
 "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "O arquivo não pode ser aberto com a codificação %@ por que este não foi salvo com esta mesma codificação. Se deseja abrí-lo em outra codificação, feche a janela e a abra novamente.";
 "Error" = "Erro";
-"There was an error checking for updates." = "Foram encontrados erros durante a verificação por novas atualizações.";
-"Your copy of TeXShop is up-to-date" = "Sua cópia do TeXShop está atualizada";
-"You have the most recent version of TeXShop." = "Você possui a versão mais recente do TeXShop.";
-"New version available" = "Nova versão está disponível";
-"A new version of TeXShop is available (version %@). Would you like to download it now?" = "Uma nova versão do TeXShop está disponível (versão %@). Você gostaria de fazer a transferência?";
 "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "A versão do TeXShop requer Mac OS X 10.4 ou superior. Tente usar a versão do TeXShop 1.37";
 "Hard Wrap" = "Quebra dura";
 "Newline Removal" = "Remoção de nova linha";
 "Color Index" = "Índice de cor";
 "Help" = "Ajuda";
-"TeXShop Demos" = "Demos do TeXShop";
 "Sync" = "Sincronizar";
 "ShowFullPath" = "ExibirCaminhoCompleto";
 "Close Current Environment" = "Fechar ambiente atual"; // Terada
@@ -105,7 +99,6 @@
 "No Block" = "Nenhum bloco";
 "deprecated" = "obsoleto";
 "Unknown encoding; using UTF-8." = "Codificação desconhecida; usando UTF-8.";
-"Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Vídeos demo requerem Mac OS 10.9, Mavericks, ou superior";
 "Source" = "Fonte";
 "Type sample text here.\nUse several lines to test\ninterline spacing." = "Digite algum texto aqui.\nEscreva diversas para testar\no espaçamento entre linhas.";
 "<<Close All - unlocalized>>" = "Fechar todas";

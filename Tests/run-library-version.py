@@ -31,6 +31,8 @@ MUTATIONS = {
     'build-number': ('infoDictionary] objectForKey:@"CFBundleShortVersionString"];', 'infoDictionary] objectForKey:@"CFBundleVersion"];'),
     # The application copies but does not remember the version.
     'app-no-record': ('		TSLibraryRecordVersion(NewPath, currentVersion);\n', ''),
+    # A new version leaves the earlier Help.html of HTML Commands in place.
+    'help-html-kept': ('stringByAppendingPathComponent:@"TeXShop/HTML/Help.html"]', 'stringByAppendingPathComponent:@"TeXShop/HTML/Help.htm"]'),
 }
 
 
@@ -44,6 +46,12 @@ def check_delegate(text):
             '				  toPath:[NewPath stringByStandardizingPath]];\n		TSLibraryRecordVersion(NewPath, currentVersion);\n	}')
     if copy not in text:
         return 'TSAppDelegate must record the version right after copying New'
+    html = text[text.index('if (! [fileManager fileExistsAtPath: [HTMLHelpPath stringByStandardizingPath]] ){'):]
+    html = html[html.index('else if (needsUpdating) {'):]
+    html = html[:html.index('\n    }\n')]
+    if ('stringByAppendingPathComponent:@"TeXShop/HTML/Help.html"]' not in html
+            or 'stringByAppendingPathComponent:@"Help.html"]' not in html):
+        return 'A new version must replace ~/Library/TeXShop/HTML/Help.html'
     return None
 
 

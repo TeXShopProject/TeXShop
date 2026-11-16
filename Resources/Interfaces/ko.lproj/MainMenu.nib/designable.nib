@@ -1397,10 +1397,6 @@
                                     <action selector="displayGettingStartedTeXShop:" target="259" id="408"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop 데모" id="227">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="TeXShop 데모" id="228"/>
-                            </menuItem>
                             <menuItem title="TeXShop 설명서 (영문)" id="tOQ-Gs-eY3" identifier="TSShortcut.displayManual:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
@@ -1497,7 +1493,6 @@
         <customObject id="245" customClass="TSPreferences"/>
         <customObject id="246" customClass="TSAppDelegate">
             <connections>
-                <outlet property="myMovie" destination="258" id="300"/>
             </connections>
         </customObject>
         <customObject id="247" customClass="TSMacroMenuController">
@@ -1541,7 +1536,6 @@
             </subviews>
         </customView>
         <customObject id="257" customClass="OgreTextFinder"/>
-        <customObject id="258" customClass="TSMovie"/>
         <customObject id="259" customClass="HelpDocuments">
             <connections>
                 <outlet property="openStyleFilePanel" destination="288" id="304"/>

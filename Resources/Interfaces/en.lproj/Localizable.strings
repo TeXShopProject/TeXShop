@@ -66,17 +66,11 @@
 "This file was opened with IsoLatin9 encoding." = "This file was opened with IsoLatin9 encoding.";
 "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again.";
 "Error" = "Error";
-"There was an error checking for updates." = "There was an error checking for updates.";
-"Your copy of TeXShop is up-to-date" = "Your copy of TeXShop is up-to-date";
-"You have the most recent version of TeXShop." = "You have the most recent version of TeXShop.";
-"New version available" = "New version available";
-"A new version of TeXShop is available (version %@). Would you like to download it now?" = "A new version of TeXShop is available (version %@). Would you like to download it now?";
 "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead.";
 "Hard Wrap" = "Hard Wrap";
 "Newline Removal" = "Newline Removal";
 "Color Index" = "Color Index";
 "Help" = "Help";
-"TeXShop Demos" = "TeXShop Demos";
 "Sync" = "Sync";
 "ShowFullPath" = "ShowFullPath";
 "Close Current Environment" = "Close Current Environment"; //Terada
@@ -106,7 +100,6 @@
 "No Block" = "No Block";
 "deprecated" = "deprecated";
 "Unknown encoding; using UTF-8." = "Unknown encoding; using UTF-8.";
-"Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Demo Movies require Mac OS 10.9, Mavericks, or higher.";
 "Source" = "Source";
 "Type sample text here.\nUse several lines to test\ninterline spacing." = "Type sample text here.\nUse several lines to test\ninterline spacing.";
 "<<Close All - unlocalized>>" = "Close All";
