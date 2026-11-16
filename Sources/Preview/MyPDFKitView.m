@@ -4645,6 +4645,13 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
         self.handlingLink = 0;
         return;
     }
+    // On macOS 26 and later the pages run under the title bar and the toolbar. A pointer that
+    // has gone on to them is no longer over the link, though it is still close to it (#44).
+    if (TSDocumentWindowPointIsUnderToolbar(self.window, [self.window convertPointFromScreen: currentPoint]))
+    {
+        self.handlingLink = 0;
+        return;
+    }
     
     mouseDownLoc = [self convertPoint: [theEvent locationInWindow] fromView: NULL]; // in PDFView
     mouseLocDocumentView = [[self documentView] convertPoint: [theEvent locationInWindow] fromView:nil]; // DocumentView
