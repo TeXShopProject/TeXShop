@@ -426,6 +426,105 @@ static NSArray<NSValue *> *_Nullable TSMatchingLines(NSArray<NSString *> *a, NSA
     return pairs;
 }
 
+/// Lines that stay the same, found without Myers's bound: each line of `a` in turn is paired with its next occurrence
+/// in `b` after the last pair. Not the fewest changes, but every pair is an unchanged line that splits hunks.
+static NSArray<NSValue *> *TSGreedyMatchingLines(NSArray<NSString *> *a, NSArray<NSString *> *b, NSUInteger offsetA, NSUInteger offsetB)
+{
+    NSMutableDictionary<NSString *, NSMutableArray<NSNumber *> *> *places = [NSMutableDictionary dictionary];
+    for (NSUInteger j = 0; j < b.count; j++) {
+        NSMutableArray<NSNumber *> *list = places[b[j]];
+        if (!list)
+            places[b[j]] = list = [NSMutableArray array];
+        [list addObject:@(j)];
+    }
+    NSMutableDictionary<NSString *, NSNumber *> *cursors = [NSMutableDictionary dictionary];
+    NSMutableArray<NSValue *> *pairs = [NSMutableArray array];
+    NSUInteger next = 0;
+    for (NSUInteger i = 0; i < a.count; i++) {
+        NSArray<NSNumber *> *list = places[a[i]];
+        if (!list)
+            continue;
+        NSUInteger cursor = cursors[a[i]].unsignedIntegerValue;
+        while (cursor < list.count && list[cursor].unsignedIntegerValue < next)
+            cursor++;
+        cursors[a[i]] = @(cursor);
+        if (cursor == list.count)
+            continue;
+        NSUInteger j = list[cursor].unsignedIntegerValue;
+        [pairs addObject:[NSValue valueWithRange:NSMakeRange(offsetA + i, offsetB + j)]];
+        next = j + 1;
+    }
+    return pairs;
+}
+
+/// The lines that stay the same, as pairs (index in `a`, index in `b`) in ascending order; nil when cancelled.
+/// Myers's algorithm gives the fewest changes when at most `maximumEdits` edits are needed. Beyond that, lines that
+/// occur once in each text are paired in their longest increasing run (as patience diff does), and the parts between
+/// them are compared again in the same way, the last resort being TSGreedyMatchingLines. So an unchanged line still
+/// splits hunks, and a part with no line in common is one hunk.
+static NSArray<NSValue *> *_Nullable TSLinePairs(NSArray<NSString *> *a, NSArray<NSString *> *b, NSUInteger maximumEdits,
+                                                 BOOL (^_Nullable cancellation)(void))
+{
+    NSArray<NSValue *> *exact = TSMatchingLines(a, b, maximumEdits, cancellation);
+    if (cancellation && cancellation())
+        return nil;
+    if (exact)
+        return exact;
+    // Lines that occur once in each text, in the order of `a`.
+    NSCountedSet<NSString *> *countsA = [[NSCountedSet alloc] initWithArray:a], *countsB = [[NSCountedSet alloc] initWithArray:b];
+    NSMutableDictionary<NSString *, NSNumber *> *placeInB = [NSMutableDictionary dictionary];
+    for (NSUInteger j = 0; j < b.count; j++)
+        if ([countsB countForObject:b[j]] == 1)
+            placeInB[b[j]] = @(j);
+    NSMutableArray<NSValue *> *unique = [NSMutableArray array];
+    for (NSUInteger i = 0; i < a.count; i++)
+        if ([countsA countForObject:a[i]] == 1 && placeInB[a[i]])
+            [unique addObject:[NSValue valueWithRange:NSMakeRange(i, placeInB[a[i]].unsignedIntegerValue)]];
+    // The longest run of them increasing in `b` (patience sorting with links back).
+    NSMutableArray<NSNumber *> *tails = [NSMutableArray array];   // index into `unique` of the smallest tail of each length
+    NSUInteger *links = malloc(sizeof(NSUInteger) * MAX(unique.count, (NSUInteger)1));
+    for (NSUInteger k = 0; k < unique.count; k++) {
+        NSUInteger j = unique[k].rangeValue.length, low = 0, high = tails.count;
+        while (low < high) {
+            NSUInteger middle = (low + high) / 2;
+            if (unique[tails[middle].unsignedIntegerValue].rangeValue.length < j)
+                low = middle + 1;
+            else
+                high = middle;
+        }
+        links[k] = low > 0 ? tails[low - 1].unsignedIntegerValue : NSNotFound;
+        if (low == tails.count)
+            [tails addObject:@(k)];
+        else
+            tails[low] = @(k);
+    }
+    NSMutableArray<NSValue *> *anchors = [NSMutableArray array];
+    for (NSUInteger k = tails.count > 0 ? tails.lastObject.unsignedIntegerValue : NSNotFound; k != NSNotFound; k = links[k])
+        [anchors insertObject:unique[k] atIndex:0];
+    free(links);
+    if (anchors.count == 0)
+        return TSGreedyMatchingLines(a, b, 0, 0);
+    NSMutableArray<NSValue *> *pairs = [NSMutableArray array];
+    NSUInteger startA = 0, startB = 0;
+    for (NSUInteger k = 0; k <= anchors.count; k++) {
+        NSUInteger endA = k < anchors.count ? anchors[k].rangeValue.location : a.count;
+        NSUInteger endB = k < anchors.count ? anchors[k].rangeValue.length : b.count;
+        if (endA > startA && endB > startB) {
+            NSArray<NSValue *> *inner = TSLinePairs([a subarrayWithRange:NSMakeRange(startA, endA - startA)],
+                                                    [b subarrayWithRange:NSMakeRange(startB, endB - startB)], maximumEdits, cancellation);
+            if (!inner)
+                return nil;
+            for (NSValue *pair in inner)
+                [pairs addObject:[NSValue valueWithRange:NSMakeRange(startA + pair.rangeValue.location, startB + pair.rangeValue.length)]];
+        }
+        if (k < anchors.count)
+            [pairs addObject:anchors[k]];
+        startA = endA + 1;
+        startB = endB + 1;
+    }
+    return pairs;
+}
+
 #pragma mark - Items
 
 /// The highlights of a hunk: what lies between the common start and the common end of the two texts, on whole
@@ -725,13 +824,13 @@ static TSTeXRootSearchItem *TSMatchItem(NSString *text, NSRange match, NSString 
         NSArray<NSString *> *middleB = [b subarrayWithRange:NSMakeRange(head, b.count - head - tail)];
         if (middleA.count == 0 && middleB.count == 0)
             continue;
-        NSArray<NSValue *> *pairs = TSMatchingLines(middleA, middleB, self.maximumLineEdits, cancellation);
+        NSArray<NSValue *> *pairs = TSLinePairs(middleA, middleB, self.maximumLineEdits, cancellation);
         if (cancellation())
             return nil;
         // Hunks are the runs between lines that stay the same.
         NSMutableArray<NSValue *> *hunks = [NSMutableArray array];   // {start in a, start in b}, {end in a, end in b}
         NSUInteger i = 0, j = 0;
-        for (NSValue *pair in pairs ?: @[]) {
+        for (NSValue *pair in pairs) {
             NSUInteger x = pair.rangeValue.location, y = pair.rangeValue.length;
             if (x > i || y > j) {
                 [hunks addObject:[NSValue valueWithRange:NSMakeRange(i, j)]];

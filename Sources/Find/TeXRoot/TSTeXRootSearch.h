@@ -124,14 +124,16 @@ NS_SWIFT_NAME(TeXRootSearchResult)
 /// Multiple replacement. The rules are applied one after another to the whole text, as in the panel. The original
 /// and the result are then compared line by line (a line keeps its line break; a last line without one is a line):
 /// the parts that the replacements touched are widened to whole lines, and each such part is compared with Myers's
-/// algorithm, so that unchanged lines inside it split it. A part needing more than `maximumLineEdits` line edits is
-/// one hunk. Hunks with no unchanged line between them are one hunk.
+/// algorithm, so that unchanged lines inside it split it. Where more than `maximumLineEdits` line edits are needed,
+/// lines that occur once in each text are paired first (as patience diff does) and the parts between them are compared
+/// again; the last resort pairs each line with its next occurrence. Unchanged lines then still split the part, though
+/// not always into the fewest changes. Hunks with no unchanged line between them are one hunk.
 NS_SWIFT_NAME(TeXRootSearch)
 @interface TSTeXRootSearch : NSObject
 /// 5,000 items per file, 500,000 in all, as CotEditor's folder search.
 @property (class, nonatomic, readonly) NSUInteger defaultMaximumItemsPerFile;
 @property (class, nonatomic, readonly) NSUInteger defaultMaximumItems;
-/// 1,024 line edits for one part of a multiple replacement (see above).
+/// 1,024 line edits: beyond it a part of a multiple replacement is compared more coarsely (see above).
 @property (class, nonatomic, readonly) NSUInteger maximumLineEdits;
 
 /// Nil once `isCancelled` has returned YES. `codec` checks that the replaced text of a file on the disk can be written

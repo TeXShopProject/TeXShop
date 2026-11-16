@@ -408,6 +408,42 @@ int main(int argc, const char **argv) { @autoreleasepool {
         TSTeXRootSearchFileResult *apart = One(Open(spaced, @"\n"), [TSTeXRootSearchQuery multipleReplaceQueryWithSet:everySet]);
         Check(apart.items.count == 3000 && apart.items[2999].lineNumber == 5999, [NSString stringWithFormat:@"3000 changed lines apart give %lu hunks", (unsigned long)apart.items.count]);
     }
+    // Past the bound of Myers's algorithm, unchanged lines still split hunks: a line once in each text (Codex 3a F1),
+    // a line twice in each, and a line once in each after a line that the greedy pairing would take too early.
+    {
+        NSString *(^lines)(NSString *, NSUInteger) = ^NSString *(NSString *line, NSUInteger count) {
+            NSMutableString *t = [NSMutableString string];
+            for (NSUInteger k = 0; k < count; k++) [t appendFormat:@"%@\n", line];
+            return t;
+        };
+        NSArray *cases = @[
+            @[[@[lines(@"a", 600), @"KEEP UNIQUE\n", lines(@"c", 600)] componentsJoinedByString:@""],
+              [@[lines(@"b", 600), @"KEEP UNIQUE\n", lines(@"d", 600)] componentsJoinedByString:@""], @2, @"KEEP UNIQUE\n"],
+            @[[@[lines(@"a", 600), @"KEEP\n", lines(@"c", 600), @"KEEP\n", lines(@"e", 600)] componentsJoinedByString:@""],
+              [@[lines(@"b", 600), @"KEEP\n", lines(@"d", 600), @"KEEP\n", lines(@"f", 600)] componentsJoinedByString:@""], @3, @"KEEP\n"],
+            @[[@[@"Z\n", lines(@"a", 600), @"U\n", lines(@"c", 600)] componentsJoinedByString:@""],
+              [@[lines(@"b", 600), @"U\n", lines(@"d", 600), @"Z\nZ\n"] componentsJoinedByString:@""], @2, @"U\n"],
+        ];
+        for (NSArray *c in cases) {
+            // One rule turns the whole original into the whole result, so that everything is one part.
+            TSRegexReplacementRule *rule = [[TSRegexReplacementRule alloc] initWithFindString:c[0] replaceString:c[1] usesRegularExpression:NO ignoresCase:NO enabled:YES note:nil];
+            TSRegexMultipleReplace *set = [[TSRegexMultipleReplace alloc] initWithRules:@[rule] textualOptions:TSRegexFindLiteral regularExpressionOptions:0 replacementSyntax:TSRegexReplacementSyntaxICU];
+            TSTeXRootSearchFileResult *file = One(Open(c[0], @"\n"), [TSTeXRootSearchQuery multipleReplaceQueryWithSet:set]);
+            CheckHunks(file, c[1], [NSString stringWithFormat:@"past the bound, kept %@", Q(c[3])], NO);
+            BOOL kept = YES;
+            for (TSTeXRootSearchItem *item in file.items)
+                if ([[NSString stringWithFormat:@"\n%@\n", [file.source.text substringWithRange:item.range]] containsString:[@"\n" stringByAppendingString:c[3]]])
+                    kept = NO;
+            Check(file.items.count == [c[2] unsignedIntegerValue] && kept, [NSString stringWithFormat:@"past the bound: %lu hunks (want %@), unchanged %@ %@",
+                                                                             (unsigned long)file.items.count, c[2], Q(c[3]), kept ? @"kept apart" : @"inside a hunk"]);
+        }
+    }
+    // Within the bound the changes are the fewest, also where the coarser pairing would not find them.
+    {
+        TSRegexReplacementRule *rule = [[TSRegexReplacementRule alloc] initWithFindString:@"p\np\nq\nq\nq\n" replaceString:@"q\nq\nq\np\np\n" usesRegularExpression:NO ignoresCase:NO enabled:YES note:nil];
+        TSRegexMultipleReplace *set = [[TSRegexMultipleReplace alloc] initWithRules:@[rule] textualOptions:TSRegexFindLiteral regularExpressionOptions:0 replacementSyntax:TSRegexReplacementSyntaxICU];
+        CheckHunks(One(Open(@"p\np\nq\nq\nq\n", @"\n"), [TSTeXRootSearchQuery multipleReplaceQueryWithSet:set]), @"q\nq\nq\np\np\n", @"fewest within the bound", YES);
+    }
     // Highlights of a hunk are on whole characters: a decomposed é changed to è.
     {
         TSRegexReplacementRule *rule = [[TSRegexReplacementRule alloc] initWithFindString:@"\u0301" replaceString:@"\u0300" usesRegularExpression:NO ignoresCase:NO enabled:YES note:nil];
@@ -502,6 +538,9 @@ MUTATIONS = {
     'matches keep their last line break': ('TSTeXRootSearch.m', 'NSUInteger textEnd = matchEnd > contentsEnd ? end : contentsEnd;', 'NSUInteger textEnd = end;'),
     'highlights split characters': ('TSTeXRootSearch.m', '        if (start == prefix)\n            break;\n        prefix = start;\n', '        break;\n'),
     'hunks touching are not joined': ('TSTeXRootSearch.m', 'if (last && last->fEnd >= window.fStart) {', 'if (last && last->fEnd > window.fStart) {'),
+    'past the bound a part is one hunk': ('TSTeXRootSearch.m', '    if (exact)\n        return exact;\n', '    if (exact)\n        return exact;\n    return @[];\n'),
+    'lines in common more than once are not paired': ('TSTeXRootSearch.m', '        return TSGreedyMatchingLines(a, b, 0, 0);', '        return @[];'),
+    'lines once in each text are not paired first': ('TSTeXRootSearch.m', '            [unique addObject:[NSValue valueWithRange:NSMakeRange(i, placeInB[a[i]].unsignedIntegerValue)]];', '            ;'),
     'a cancellation is forgotten': ('TSTeXRootSearch.m', 'return cancelled || (isCancelled && (cancelled = isCancelled()));', 'return isCancelled && isCancelled();'),
 }
 
