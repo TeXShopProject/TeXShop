@@ -2351,6 +2351,9 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	magSize = [myScale doubleValue] / 100.0;
 // changed by Terada (until this line)
 	[self setScaleFactor: magSize];
+	// A magnification chosen in the field, with the stepper, Zoom In or Zoom Out is fixed, also
+	// when it is the one Fit to Content Width had set.
+	resizeOption = NEW_PDF_FIT_TO_NONE;
 	[self keepPinnedLinkPreviewInView];
 	if (sender == myScale1) {
 		[NSApp endSheet: [self.myDocument magnificationPanel]];
@@ -8704,8 +8707,10 @@ else
         [self scaleChanged:nil];
     }
     // Fit to Content Width: a new PDF keeps the magnification until its pages are measured.
+    // A PDF whose pages are all measured already, as when the other part of a split window
+    // showed it first, is fitted now.
     if (document && resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH) {
-        if (preserveZoom)
+        if (preserveZoom && !TSContentAllMeasured(document, self.displayBox))
             [self measureContentLater];
         else
             [self fitContentWidth];

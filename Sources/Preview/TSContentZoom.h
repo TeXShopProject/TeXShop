@@ -123,8 +123,10 @@ static inline BOOL TSContentAllMeasured(PDFDocument *document, PDFDisplayBox box
 {
     NSMapTable *store = TSContentInkStore(document, box);
     if (!store) return YES;
-    for (NSUInteger i = 0; i < document.pageCount; i++)
-        if (![store objectForKey:[document pageAtIndex:i]]) return NO;
+    for (NSUInteger i = 0; i < document.pageCount; i++) {
+        PDFPage *page = [document pageAtIndex:i];
+        if (page && ![store objectForKey:page]) return NO;
+    }
     return YES;
 }
 
@@ -316,14 +318,17 @@ static inline NSArray<NSArray<PDFPage *> *> *TSContentGroups(PDFView *view)
     if (!count) return @[];
     if (TSContentContinuous(view)) {
         NSMutableArray *all = [NSMutableArray arrayWithCapacity:count];
-        for (NSUInteger i = 0; i < count; i++) [all addObject:[document pageAtIndex:i]];
+        for (NSUInteger i = 0; i < count; i++) {
+            PDFPage *page = [document pageAtIndex:i];
+            if (page) [all addObject:page];
+        }
         return @[all];
     }
     NSMutableArray *groups = [NSMutableArray array];
     NSMutableSet *seen = [NSMutableSet set];
     for (NSUInteger i = 0; i < count; i++) {
         PDFPage *page = [document pageAtIndex:i];
-        if ([seen containsObject:page]) continue;
+        if (!page || [seen containsObject:page]) continue;
         NSArray *row = TSContentRow(view, page);
         [seen addObjectsFromArray:row];
         [groups addObject:row];

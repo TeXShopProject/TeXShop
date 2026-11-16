@@ -30,6 +30,9 @@ MUTATIONS = {
                          '    TSContentTop top = {nil, NSZeroPoint};'),
     'same-scale-leaves': ('view', '        (resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH && fabs(scale - self.scaleFactor) < 1e-6);', '        NO;'),
     'page-not-centred': ('view', '            TSContentCentreRow(view);\n    });', '            ;\n    });'),
+    'measured-pdf-waits': ('view', '        if (preserveZoom && !TSContentAllMeasured(document, self.displayBox))', '        if (preserveZoom)'),
+    'new-pdf-not-measured': ('view', '        if (preserveZoom && !TSContentAllMeasured(document, self.displayBox))\n            [self measureContentLater];',
+                             '        if (preserveZoom && !TSContentAllMeasured(document, self.displayBox))\n            ;'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -41,7 +44,7 @@ zoom_text = zoom_path.read_text().replace('#pragma once\n', '', 1)
 view_methods = [method(view_source, s) for s in (
     '- (void)setScaleFactor:(CGFloat)scale', '- (void)fitContentWidth\n{', '- (void)fitContentWidthKeepingTop:(TSContentTop)top',
     '- (void)measureContentLater', '- (void)measureContentOf:(PDFDocument *)document', '- (void)centreContentRowLater',
-    '- (void)setFrameSize:(NSSize)newSize')]
+    '- (void)setFrameSize:(NSSize)newSize', '- (void)setDocument:(PDFDocument *)document')]
 fragments = [('complete method: ' + t.split('\n')[0], view_source, t) for t in view_methods]
 fragments.append(('header without #pragma once: TSContentZoom.h', zoom_path.read_text(), zoom_text))
 view_text = '\n'.join(view_methods)
@@ -73,18 +76,33 @@ static void settle(NSWindow *w) {
         [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.02]];
     }
 }
+@interface TestDocument : NSObject
+@property BOOL previewDisplaysAsBook, previewDisplaysRTL;
+- (void)updatePreviewLayoutControls;
+@end
+@implementation TestDocument
+- (void)updatePreviewLayoutControls {}
+@end
 @interface MyPDFKitView : PDFView {
-    BOOL _fittingContentWidth, _measuringContent;
+    BOOL _fittingContentWidth, _measuringContent, _pdfViewReady;
     NSInteger resizeOption;
+    NSView *pinnedLinkPreview;
 }
+@property (weak) TestDocument *myDocument;
+@property NSInteger handlingLink;
 @property NSInteger scaleUpdates;
 - (void)fitContentWidth;
 - (void)centreContentRowLater;
+- (void)becomeReady;
 @end
 @implementation MyPDFKitView
 - (NSInteger)resizeOption { return resizeOption; }
 - (void)setResizeOption:(NSInteger)option { resizeOption = option; }
 - (BOOL)measuring { return _measuringContent; }
+// As MyPDFKitView once its first PDF is shown: later PDFs keep the magnification.
+- (void)becomeReady { _pdfViewReady = YES; }
+- (void)doKillPopup {}
+- (void)updateDarkModeInversion {}
 - (void)scaleChanged:(NSNotification *)notification { self.scaleUpdates++; }
 - (void)keepPinnedLinkPreviewInView {}
 VIEWMETHODS
@@ -311,6 +329,32 @@ int main(int argc, char **argv) { @autoreleasepool {
             check(fabs(view.scaleFactor - scale) < 1e-6 && view.resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH,
                   @"turning the page keeps the magnification");
         }
+        [p.window close];
+    }
+
+    // A new PDF, as after typesetting: one whose pages are all known already, as when the other
+    // part of a split window showed it first, is fitted at once; another keeps the magnification
+    // until its pages are measured, then is fitted.
+    context = @"a new PDF";
+    {
+        PDFDocument *narrow = makeDocument(NO, NO), *wide = makeDocument(YES, NO), *again = makeDocument(NO, NO);
+        Preview p = makePreview(narrow, kPDFDisplaySinglePageContinuous);
+        MyPDFKitView *view = p.view;
+        [view becomeReady];
+        show(view, 3);
+        fit(view); measureAll(view);
+        CGFloat narrowScale = view.scaleFactor;
+        TSContentMeasurePages(wide, view.displayBox, 10);
+        view.document = wide;
+        CGFloat wideScale = view.scaleFactor;
+        check(view.resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH && wideScale < narrowScale - 0.01,
+              [NSString stringWithFormat:@"a measured PDF is fitted at once (%.3f, was %.3f)", wideScale, narrowScale]);
+        view.document = again;
+        check(fabs(view.scaleFactor - wideScale) < 1e-6 && view.resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH,
+              @"a PDF not measured yet keeps the magnification");
+        measureAll(view);
+        check(fabs(view.scaleFactor - narrowScale) < 0.005,
+              [NSString stringWithFormat:@"and is fitted once measured (%.3f, expected %.3f)", view.scaleFactor, narrowScale]);
         [p.window close];
     }
 

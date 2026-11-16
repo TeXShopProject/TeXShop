@@ -306,6 +306,8 @@ program = r'''
 #define NEW_PDF_FIT_TO_WIDTH 2
 #define NEW_PDF_FIT_TO_HEIGHT 3
 #define NEW_PDF_FIT_TO_CONTENT_WIDTH 6
+#define NEW_PDF_FIT_TO_NONE 2
+static inline BOOL TSContentAllMeasured(PDFDocument *document, PDFDisplayBox box) { return NO; }
 #define PDF_FIT_TO_WINDOW 4
 // The values of Sources/App/globals.h, which mouseMoved: also uses as numbers.
 #define NEW_MOUSE_MODE_SCROLL 1

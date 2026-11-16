@@ -32,6 +32,10 @@ MUTATIONS = {
     # MyPDFKitView.m
     'rounded-up': ('view', 'MIN((NSInteger)floor(scale * 100.0 + 1e-6), PDF_MAX_SCALE)', 'MIN((NSInteger)ceil(scale * 100.0), PDF_MAX_SCALE)'),
     'zoom-keeps-fit': ('view', '\t// A fixed magnification, as Zoom In sets, also when it did not change.\n\tresizeOption = NEW_PDF_FIT_TO_NONE;\n', ''),
+    'field-keeps-fit': ('view', '\t// A magnification chosen in the field, with the stepper, Zoom In or Zoom Out is fixed, also\n\t// when it is the one Fit to Content Width had set.\n\tresizeOption = NEW_PDF_FIT_TO_NONE;\n', ''),
+    # TSFullSplitWindow.m
+    'single-window-top-part': ('split', '    [(MyPDFKitView *)[[self myDocument] pdfKitView] changePDFViewSize:sender];', '    [[self myDocument].myPDFKitView changePDFViewSize:sender];'),
+    'single-window-zoom-top': ('split', '    [(MyPDFKitView *)[[self myDocument] pdfKitView] zoomIn:sender];', '    [[self myDocument].myPDFKitView zoomIn:sender];'),
     'menu-whole-is-width': ('view', '- (void)zoomToContent:(id)sender\n{\n\t[self zoomToContentWidthOnly:NO];', '- (void)zoomToContent:(id)sender\n{\n\t[self zoomToContentWidthOnly:YES];'),
     # TSToolbarController.m
     'wrong-part': ('toolbar', '    MyPDFKitView *view = [self pdfKitView];\n    if ((index == 0 || index == 1)',
@@ -45,6 +49,7 @@ root = Path(__file__).resolve().parents[1]
 zoom_path = root / 'Sources/Preview/TSContentZoom.h'
 view_source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
 toolbar_source = (root / 'Sources/Windows/TSToolbarController.m').read_text(encoding='latin1')
+split_source = (root / 'Sources/Windows/TSFullSplitWindow.m').read_text(encoding='latin1')
 # Included without #pragma once, which warns in a main file.
 zoom_text = zoom_path.read_text().replace('#pragma once\n', '', 1)
 
@@ -109,17 +114,21 @@ view_methods = [method(view_source, s) for s in (
     '- (void) changeScale: sender', '- (void)setScaleFactor:(CGFloat)scale')]
 toolbar_methods = [method(toolbar_source, s) for s in (
     '- (NSToolbarItem *)contentZoomToolbarItem', '- (void)zoomPreviewToContent:(id)sender')]
+split_methods = [method(split_source, s) for s in (
+    '- (void)changePDFViewSize: sender;', '- (void)zoomIn: sender;', '- (void)zoomOut: sender;',
+    '- (void)zoomToContent: (id)sender', '- (void)zoomToContentWidth: (id)sender', '- (BOOL)validateMenuItem:(NSMenuItem *)item')]
 fragments = [('complete method: ' + t.split('\n')[0], src, t)
-             for src, texts in ((view_source, view_methods), (toolbar_source, toolbar_methods)) for t in texts]
+             for src, texts in ((view_source, view_methods), (toolbar_source, toolbar_methods), (split_source, split_methods)) for t in texts]
 fragments.append(('header without #pragma once: TSContentZoom.h', zoom_path.read_text(), zoom_text))
-view_text, toolbar_text = '\n'.join(view_methods), '\n'.join(toolbar_methods)
+view_text, toolbar_text, split_text = '\n'.join(view_methods), '\n'.join(toolbar_methods), '\n'.join(split_methods)
 if args.mutation:
     which, old, new = MUTATIONS[args.mutation]
-    text = {'zoom': zoom_text, 'view': view_text, 'toolbar': toolbar_text}[which]
+    text = {'zoom': zoom_text, 'view': view_text, 'toolbar': toolbar_text, 'split': split_text}[which]
     assert text.count(old) == 1, args.mutation
     text = text.replace(old, new)
     if which == 'zoom': zoom_text = text
     elif which == 'view': view_text = text
+    elif which == 'split': split_text = text
     else: toolbar_text = text
 
 program = r'''
@@ -146,6 +155,7 @@ static void settle(NSWindow *w) {
 @interface TestDocument : NSObject <NSToolbarDelegate>
 @property id pdfKitView, myPDFKitView;
 - (NSPanel *)magnificationPanel;
+- (BOOL)validatePreviewLayoutItem:(NSMenuItem *)item;
 @end
 @interface MyPDFKitView : PDFView {
     BOOL _fittingContentWidth;
@@ -158,6 +168,10 @@ static void settle(NSWindow *w) {
 - (void)zoomToContentWidthOnly:(BOOL)widthOnly;
 - (void)zoomToContent:(id)sender;
 - (void)zoomToContentWidth:(id)sender;
+- (void)changePDFViewSize:(id)sender;
+- (void)zoomIn:(id)sender;
+- (void)zoomOut:(id)sender;
+@property NSInteger commands;
 @end
 @implementation MyPDFKitView
 - (void)useScaleField:(NSTextField *)field { myScale = field; }
@@ -167,16 +181,28 @@ static void settle(NSWindow *w) {
 // Zoom cleans up the marquee and keeps a pinned link popup, in view (#35).
 - (void)cleanupMarqueeKeepingPinnedLinkPreview { self.marqueeCleanups++; }
 - (void)keepPinnedLinkPreviewInView {}
+// The magnification commands of the menu, as they reach a part (counted).
+- (void)changePDFViewSize:(id)sender { self.commands++; resizeOption = [sender tag]; }
+- (void)zoomIn:(id)sender { self.commands++; }
+- (void)zoomOut:(id)sender { self.commands++; }
 VIEWMETHODS
 @end
 @implementation TestDocument
 - (NSPanel *)magnificationPanel { return nil; }
+- (BOOL)validatePreviewLayoutItem:(NSMenuItem *)item { return YES; }
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar { return @[kContentZoomKKTID]; }
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar { return @[kContentZoomKKTID]; }
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)identifier willBeInsertedIntoToolbar:(BOOL)inserted {
     return [identifier isEqual:kContentZoomKKTID] ? [self contentZoomToolbarItem] : nil;
 }
 TOOLBARMETHODS
+@end
+// The window with the source and the preview: its menu commands, as in TSFullSplitWindow.m.
+@interface TestSingleWindow : NSWindow
+@property (strong) TestDocument *myDocument;
+@end
+@implementation TestSingleWindow
+SPLITMETHODS
 @end
 
 // A4 pages. The body and a page number at the foot; page 2 has a narrower body on the
@@ -494,6 +520,48 @@ int main(int argc, char **argv) { @autoreleasepool {
         [p.window close];
     }
 
+    // Fit to Content Width, then the magnification typed in the field, even the same one: fixed.
+    context = @"field";
+    {
+        Preview p = makePreview(makeDocument(0, NSZeroRect), kPDFDisplaySinglePageContinuous);
+        p.lower.autoScales = NO; p.lower.scaleFactor = 1.0;
+        p.lower.resizeOption = NEW_PDF_FIT_TO_CONTENT_WIDTH;
+        p.field.integerValue = 100;
+        [p.lower changeScale:p.lower];
+        check(p.lower.resizeOption == NEW_PDF_FIT_TO_NONE && fabs(p.lower.scaleFactor - 1.0) < 1e-6, @"the same magnification typed in is fixed");
+        [p.window close];
+    }
+
+    // The window with the source and the preview: the commands of Preview > Magnification act
+    // on the active part, the one whose magnification the menu shows, as the toolbar does.
+    context = @"single window";
+    {
+        Preview p = makePreview(makeDocument(0, NSZeroRect), kPDFDisplaySinglePageContinuous);
+        show(p.lower, 2); show(p.upper, 2);
+        TestSingleWindow *window = [[TestSingleWindow alloc] initWithContentRect:NSMakeRect(0, 0, 100, 100)
+            styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
+        window.releasedWhenClosed = NO;
+        window.myDocument = p.document;
+        p.lower.resizeOption = NEW_PDF_FIT_TO_CONTENT_WIDTH; p.upper.resizeOption = NEW_PDF_FIT_TO_WINDOW;
+        NSMenuItem *fixed = [[NSMenuItem alloc] initWithTitle:@"Fixed" action:@selector(changePDFViewSize:) keyEquivalent:@""];
+        fixed.tag = NEW_PDF_FIT_TO_NONE;
+        NSMenuItem *content = [[NSMenuItem alloc] initWithTitle:@"Content" action:@selector(changePDFViewSize:) keyEquivalent:@""];
+        content.tag = NEW_PDF_FIT_TO_CONTENT_WIDTH;
+        [window validateMenuItem:fixed]; [window validateMenuItem:content];
+        check(content.state == NSControlStateValueOn && fixed.state == NSControlStateValueOff, @"the menu shows the active part");
+        [window changePDFViewSize:fixed];
+        [window zoomIn:nil]; [window zoomOut:nil];
+        check(p.lower.commands == 3 && p.upper.commands == 0 && p.lower.resizeOption == NEW_PDF_FIT_TO_NONE,
+              [NSString stringWithFormat:@"the active part gets them (%ld, other %ld)", (long)p.lower.commands, (long)p.upper.commands]);
+        CGFloat upperScale = p.upper.scaleFactor;
+        [window zoomToContentWidth:nil]; settle(p.window);
+        check(p.upper.scaleFactor == upperScale && fabs(p.lower.scaleFactor * NSWidth(ink) - NSWidth(clipOf(p.lower).frame)) < NSWidth(clipOf(p.lower).frame) * 0.02,
+              @"Zoom to Content Width of the menu acts on the active part");
+        NSMenuItem *zoom = [[NSMenuItem alloc] initWithTitle:@"Zoom" action:@selector(zoomToContent:) keyEquivalent:@""];
+        check([window validateMenuItem:zoom], @"the zooms are on with a PDF");
+        [window close]; [p.window close];
+    }
+
     // The toolbar group: two buttons that act on the active part.
     context = @"toolbar";
     {
@@ -526,7 +594,7 @@ int main(int argc, char **argv) { @autoreleasepool {
 }}
 '''
 program = (program.replace('ZOOMHEADER', zoom_text).replace('IDENTIFIER', identifier.group(1))
-           .replace('VIEWMETHODS', view_text).replace('TOOLBARMETHODS', toolbar_text))
+           .replace('VIEWMETHODS', view_text).replace('TOOLBARMETHODS', toolbar_text).replace('SPLITMETHODS', split_text))
 if not args.mutation:
     verify_embedded(program, fragments)
 with tempfile.TemporaryDirectory() as temp:

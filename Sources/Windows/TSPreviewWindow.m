@@ -757,7 +757,7 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
 
 	// The magnification of the active part.
 	if ([anItem action] == @selector(changePDFViewSize:) && [self.myDocument fromKit])
-		[anItem setState:[anItem tag] == [(MyPDFKitView *)[self.myDocument pdfKitView] resizeOption] ? NSOnState : NSOffState];
+		[anItem setState:[anItem tag] == [(MyPDFKitView *)[self.myDocument pdfKitView] resizeOption] ? NSControlStateValueOn : NSControlStateValueOff];
 	if ([anItem action] == @selector(zoomToContent:) || [anItem action] == @selector(zoomToContentWidth:))
 		return [self.myDocument fromKit] && [[[self.myDocument pdfKitView] document] pageCount] > 0;
 

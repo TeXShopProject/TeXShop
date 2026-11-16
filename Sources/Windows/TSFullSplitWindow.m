@@ -80,22 +80,23 @@
     [[self myDocument].myPDFKitView saveSelectionToFile:sender];
 }
 
+// The magnification commands act on the active part of the preview, as in the Preview window
+// and as the toolbar does; the menu shows the magnification of that part.
 - (void)changePDFViewSize: sender;
 {
-    [[self myDocument].myPDFKitView changePDFViewSize:sender];
+    [(MyPDFKitView *)[[self myDocument] pdfKitView] changePDFViewSize:sender];
 }
 
 - (void)zoomIn: sender;
 {
-    [[self myDocument].myPDFKitView zoomIn:sender];
+    [(MyPDFKitView *)[[self myDocument] pdfKitView] zoomIn:sender];
 }
 
 - (void)zoomOut: sender;
 {
-    [[self myDocument].myPDFKitView zoomOut:sender];
+    [(MyPDFKitView *)[[self myDocument] pdfKitView] zoomOut:sender];
 }
 
-// Like the toolbar buttons, for the active part of the preview.
 - (void)zoomToContent: (id)sender
 {
     [(MyPDFKitView *)[[self myDocument] pdfKitView] zoomToContent:sender];

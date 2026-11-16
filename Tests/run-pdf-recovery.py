@@ -32,6 +32,7 @@ static BOOL atLeastHighSierra=YES,atLeastMojave=YES;
 #define NEW_PDF_FIT_TO_HEIGHT 3
 #define PDF_FIT_TO_WINDOW 4
 #define NEW_PDF_FIT_TO_CONTENT_WIDTH 6
+static inline BOOL TSContentAllMeasured(PDFDocument *document, PDFDisplayBox box) { return NO; }
 static NSInteger screenUpdates=0;
 #define NSDisableScreenUpdates() (screenUpdates++)
 #define NSEnableScreenUpdates() (screenUpdates--)
