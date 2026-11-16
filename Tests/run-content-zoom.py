@@ -156,6 +156,7 @@ static void settle(NSWindow *w) {
 @property id pdfKitView, myPDFKitView;
 - (NSPanel *)magnificationPanel;
 - (BOOL)validatePreviewLayoutItem:(NSMenuItem *)item;
+- (BOOL)validateAnnotationBarItem:(NSMenuItem *)item;
 @end
 @interface MyPDFKitView : PDFView {
     BOOL _fittingContentWidth;
@@ -188,6 +189,7 @@ static void settle(NSWindow *w) {
 VIEWMETHODS
 @end
 @implementation TestDocument
+- (BOOL)validateAnnotationBarItem:(NSMenuItem *)item { return YES; }
 - (NSPanel *)magnificationPanel { return nil; }
 - (BOOL)validatePreviewLayoutItem:(NSMenuItem *)item { return YES; }
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar { return @[kContentZoomKKTID]; }

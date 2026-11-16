@@ -1098,7 +1098,7 @@
                                     <action selector="toggleLinkPopups:" target="-1" id="8Sk-L4-dnT"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="注釈パネル..." id="kRo-5t-zgJ" identifier="TSShortcut.displayChoicesPanel:.0">
+                            <menuItem title="注釈ツールバーを表示" id="kRo-5t-zgJ" identifier="TSShortcut.displayChoicesPanel:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayChoicesPanel:" target="-1" id="JRd-Z9-Tca"/>

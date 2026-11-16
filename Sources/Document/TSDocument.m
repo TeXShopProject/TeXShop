@@ -173,122 +173,9 @@ withDarkColors = NO;
     }
 }
 
-- (void)showStringWindow
-{
- //   stringWindow.floatingPanel = YES;
-    [stringWindow orderFront:self];
-}
-
-- (void)setStringWindowString: (NSString *)theString
-{
-    NSString *currentString;
-    NSRange theRange;
-    NSTextView  *theTextView;
-    
-      
-    currentString = [stringWindowTextView string];
-    theRange.location = 0;
-    theRange.length = [currentString length];
-    
-    [stringWindowTextView insertText: theString replacementRange: theRange];
-}
-
-- (void)setStringWindowAlignment: (NSInteger)value
-{
-    NSTextView* theTextView;
-    NSRange     theRange;
-    NSInteger   theLength;
-    
-    theTextView = [self getStringWindowTextView];
-    theRange.location = 0;
-    theLength = [[theTextView string] length];
-    theRange.length = theLength;
-    
-     switch(value)
-    {
-        case 0:
-            [theTextView setAlignment:NSTextAlignmentLeft range: theRange ];
-            break;
-            
-        case 1:
-            [theTextView setAlignment:NSTextAlignmentCenter range: theRange ];
-            break;
-            
-        case 2:
-            [theTextView setAlignment:NSTextAlignmentRight range: theRange ];
-            break;
-            
-        default:
-            [theTextView setAlignment:NSTextAlignmentCenter range: theRange ];
-            
-           
-           
-    }
-  
-    
-}
-
-- (void)stringLeftPushed:(id)sender
-{
-    [stringLeft setState:1];
-    [stringCenter setState:0];
-    [stringRight setState:0];
-    [self.myPDFKitView setStringAlignment:0];
-    [self setStringWindowAlignment: 0];
-}
-
-- (void)stringCenterPushed:(id)sender
-{
-    [stringLeft setState:0];
-    [stringCenter setState:1];
-    [stringRight setState:0];
-    [self.myPDFKitView setStringAlignment:1];
-    [self setStringWindowAlignment: 1];
-}
-
-- (void)stringRightPushed:(id)sender
-{
-    [stringLeft setState:0];
-    [stringCenter setState:0];
-    [stringRight setState:1];
-    [self.myPDFKitView setStringAlignment:2];
-    [self setStringWindowAlignment: 2];
-}
-
-
-
-- (NSString *)getStringWindowString
-{
-    NSTextView *theTextView;
-    NSString    *theString;
-    
-    theTextView = [self getStringWindowTextView];
-    theString = [theTextView string];
-    return theString;
-    
-    // return @"Hello, world";
-    
-    //return [stringWindowTextView string];
-}
-
-- (NSPanel *)getStringWindow
-{
-    return stringWindow;
-}
-
-- (NSTextView *)getStringWindowTextView
-{
-    return stringWindowTextView;
-}
-
 - (NSMenu *)getAnnotationMenu
 {
     return annotationMenu;
-}
-
-- (NSPanel *)getChoicesPanel
-{
-    return annotationChoices;
 }
 
 - (BOOL)experimentActive
@@ -368,7 +255,6 @@ withDarkColors = NO;
     self.markerColorSquareAttribute = 0;
     
     [self readExplColors];
-    [self setToggleEditModeCheck:0];
     WindowAfterTypeset = textWindow;
     
     
@@ -416,6 +302,7 @@ withDarkColors = NO;
     else
         self.syncWithOvals = 0;
     self.annotationsExist = NO;
+    _annotationSaveAllPages = YES;
     
  	tagLine = NO;
 	self.texRep = nil;
@@ -452,7 +339,6 @@ withDarkColors = NO;
         name:TSSpellingLanguageChangedNotification object:nil];
     fromAlternate = NO;
     self.PreviewType = 0; // use old method
-    // [stringCenter setState:1];
     self.syntaxcolorEntry = [SUD boolForKey:SyntaxColorEntryLineKey];
     self.blockCursor = [SUD boolForKey:BlockCursorKey];
     if (self.blockCursor)
@@ -3313,6 +3199,7 @@ else {
 	// [[self.pdfKitWindow toolbar] setVisible: NO];
 	[(TSToolbar *)[pdfWindow toolbar] turnVisibleOff:YES];
 	[(TSToolbar *)[self.pdfKitWindow toolbar] turnVisibleOff:YES];
+    [self annotationWindowWillClose: nil];
 	[pdfWindow close];
     [_htmlWindow close];
 	[self.pdfKitWindow close];
@@ -3320,10 +3207,8 @@ else {
     [self.logWindow close];
     [scrapPDFWindow close];
     [scrapWindow close];
-    [annotationChoices close];
-    [[self getStringWindow] close];
-    [[NSColorPanel sharedColorPanel] close];
-    [[NSFontPanel sharedFontPanel] close];
+    // The shared color and font panels close only if this document's annotation toolbar opened
+    // them and they still serve it (annotationWindowWillClose: above).
 	
 	/* The next line fixes a crash bug in Jaguar; see notifyActiveTextWindowClosed for
 	a description. */
@@ -3691,12 +3576,6 @@ static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice
     TSSplitToggleItemsFollowSplit();
 }
 
-- (void)annotationPanelWillClose:(NSNotification *)notification
-{
-        [self.myPDFKitView setRunMode:self];
-        [self.myPDFKitView closePanels];
-}
-
 - (void)registerForNotifications
 /*" This method registers all notifications that are necessary to work properly together with the other AppKit and TeXShop objects.
 "*/
@@ -3714,7 +3593,6 @@ static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice
 
 
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(annotationPanelWillClose:) name:NSWindowWillCloseNotification  object:annotationChoices];
     
     // register for notifications when the document window becomes key so we can remember which window was
     // the frontmost. This is needed for the preferences.
@@ -3734,7 +3612,6 @@ if ( ! skipTextWindow) {
 	[[NSNotificationCenter defaultCenter] addObserver:[TSLaTeXPanelController sharedInstance] selector:@selector(textWindowDidBecomeKey:) name:NSWindowDidBecomeKeyNotification object:textWindow];
 	[[NSNotificationCenter defaultCenter] addObserver:[TSMatrixPanelController sharedInstance] selector:@selector(textWindowDidBecomeKey:) name:NSWindowDidBecomeKeyNotification object:textWindow];
 	[[NSNotificationCenter defaultCenter] addObserver:[TSWindowManager sharedInstance] selector:@selector(documentWindowWillClose:) name:NSWindowWillCloseNotification object:textWindow];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(annotationPanelWillClose:) name:NSWindowWillCloseNotification  object:annotationChoices];
     
     [[NSNotificationCenter defaultCenter] addObserver:[TSWindowManager sharedInstance] selector:@selector(textSplitWindowDidBecomeKey:) name:NSWindowDidBecomeKeyNotification object:fullSplitWindow];
 	[[NSNotificationCenter defaultCenter] addObserver:[TSWindowManager sharedInstance] selector:@selector(documentSplitWindowWillClose:) name:NSWindowWillCloseNotification object:fullSplitWindow];
@@ -3749,6 +3626,9 @@ if ( ! skipTextWindow) {
 }
 // end addition
 
+
+	// A part of the Preview that gets another PDF drops the annotation text being edited for it.
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(annotationViewDocumentChanged:) name:PDFViewDocumentChangedNotification object:nil];
 
 	// register for notifications when the pdf window becomes key so we can remember which window was the frontmost.
 	[[NSNotificationCenter defaultCenter] addObserver:[TSWindowManager sharedInstance] selector:@selector(pdfWindowDidBecomeKey:) name:NSWindowDidBecomeKeyNotification object:self.pdfKitWindow];
@@ -8691,21 +8571,6 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
     [self.myPDFKitView showFontPanel:sender];
 }
 
-- (IBAction) showTextPanel: sender;
-{
-    [self.myPDFKitView showTextPanel:sender];
-}
-
-- (IBAction) acceptString: sender;
-{
-    [self.myPDFKitView acceptString:sender];
-}
-
-- (void) setToggleEditModeCheck: (NSInteger)value
-{
-    [self.EditModeCheckBox setState: value];
-}
-
 // added by John A. Nairn
 // check for linked files.
 //	If %SourceDoc, typeset from there instead
@@ -11782,6 +11647,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
             // window remains hidden. Preserve its position on the next reload.
             self.pdfKitWindow.previewClosed = NO;
             [myDrawer setParentWindow: fullSplitWindow];
+            [self annotationBarFollowWindowChange];
             // [self setWindow: fullSplitWindow];
             
             
@@ -11819,6 +11685,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
             [fullSplitWindow orderOut:self];
             [myDrawer setParentWindow: self.pdfKitWindow];
             [self removeWindowController: self.splitController];
+            [self annotationBarFollowWindowChange];
             // [self setWindow: textWindow];
         }
 }

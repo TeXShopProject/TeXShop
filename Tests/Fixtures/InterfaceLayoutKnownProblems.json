@@ -20,15 +20,6 @@
    ]
   },
   {
-   "reason": "Annotation panel (TSDocument.nib, pt): buttons beside the separator pictures. Found on 2026-11-15; not fixed yet.",
-   "problems": [
-    "TOUCH pt.lproj/TSDocument.nib/* [Painel de anotações] NSButton \"Exibir painel de fontes\" and NSImageView \"\" are 1.0 points apart (need 4)",
-    "TOUCH pt.lproj/TSDocument.nib/* [Painel de anotações] NSButton \"Mostrar painel de cores\" and NSImageView \"\" are 1.0 points apart (need 4)",
-    "TOUCH pt.lproj/TSDocument.nib/* [Painel de anotações] NSButton \"Remover fluxos\" and NSImageView \"\" are 1.0 points apart (need 4)",
-    "TOUCH pt.lproj/TSDocument.nib/* [Painel de anotações] NSImageView \"\" and NSButton \"Exibir painel de texto\" are 1.0 points apart (need 4)"
-   ]
-  },
-  {
    "reason": "Views of TSDocument.nib: the encoding pop-up close to its label (ja); the column header \"Página\" of the pages list cut off (es, it, pt-PT, ro). Found on 2026-11-15; not fixed yet.",
    "problems": [
     "HEADER es.lproj/TSDocument.nib/* [view] column header \"Página\" needs 47.1, has 40.0",

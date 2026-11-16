@@ -423,3 +423,55 @@
 "detex was not found." = "detexが見つかりません。";
 "detex failed." = "detexが失敗しました。";
 "Counted by detex without the TeX commands, with the files read by \\input and \\include." = "detexでTeXの命令を除いた数です（\\input・\\includeで読み込むファイルを含みます）。";
+
+/* Issue #49: the annotation toolbar of the Preview */
+/* Annotation tool: the name the annotation menu gives it */
+"Strikeout" = "取り消し線";
+/* Annotation tool: the name the annotation menu gives it */
+"Highlight" = "ハイライト";
+/* Annotation tool: the name the annotation menu gives it */
+"Underline" = "アンダーライン";
+/* Annotation tool: the name the annotation menu gives it */
+"Square" = "長方形";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Square" = "太枠長方形";
+/* Annotation tool: the name the annotation menu gives it */
+"Circle" = "楕円";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Circle" = "太枠楕円";
+/* Annotation tool: the name the annotation menu gives it */
+"Arrow" = "矢印";
+/* Annotation tool: the name the annotation menu gives it */
+"Text Annotation" = "テキスト";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Text" = "背景付きテキスト";
+/* Annotation tool: the name the annotation menu gives it */
+"Popup" = "ポップアップ";
+/* Annotation toolbar: switch for edit mode */
+"Edit Mode" = "編集モード";
+/* Preview menu: shows the annotation toolbar under the toolbar */
+"Show Annotation Toolbar" = "注釈ツールバーを表示";
+/* Preview menu, while the annotation toolbar is shown */
+"Hide Annotation Toolbar" = "注釈ツールバーを非表示";
+/* Annotation toolbar: its close button (tool tip and VoiceOver) */
+"Close Annotation Toolbar" = "注釈ツールバーを閉じる";
+/* Annotation toolbar: opens the color panel */
+"Show Colors" = "カラーパネルを表示";
+/* Annotation toolbar: opens the font panel */
+"Show Fonts" = "フォントパネルを表示";
+/* Annotation toolbar and annotation menu: edits the text of a text annotation */
+"Edit Text…" = "テキストを編集…";
+/* Annotation toolbar: menu of the commands that are not shown */
+"More" = "その他";
+/* Annotation toolbar: removes the image streams of the annotations */
+"Remove Image Streams" = "イメージストリームを削除";
+/* Annotation toolbar: saves the annotated PDF */
+"Save Annotations…" = "注釈を保存…";
+/* Annotation toolbar: Save Annotations saves every page */
+"All Pages" = "すべてのページ";
+/* Alignment of the text of an annotation */
+"Left" = "左揃え";
+/* Alignment of the text of an annotation */
+"Center" = "中央揃え";
+/* Alignment of the text of an annotation */
+"Right" = "右揃え";

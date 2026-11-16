@@ -47,13 +47,10 @@ static CGFloat TSHiddenTopBand(NSWindow *window)
 
 @end
 
-static void TSDrawerWillOpen(NSNotification *notification)
+// In a window whose content runs under the toolbar, a drawer at its side starts below the
+// toolbar, and below a bar under the toolbar, such as the annotation toolbar.
+static void TSPlaceDrawer(NSDrawer *drawer, NSWindow *window)
 {
-    NSDrawer *drawer = notification.object;
-    NSWindow *window = drawer.parentWindow;
-    if (![drawer isKindOfClass:NSDrawer.class] || !window || !objc_getAssociatedObject(window, TSPreparedWindowKey))
-        return;
-    // In a window whose content runs under the toolbar, a drawer at its side starts below the toolbar.
     NSNumber *base = objc_getAssociatedObject(drawer, TSDrawerBaseOffsetKey);
     if (!base) {
         base = @(drawer.leadingOffset);
@@ -61,7 +58,18 @@ static void TSDrawerWillOpen(NSNotification *notification)
     }
     NSRectEdge edge = drawer.edge == 0 ? drawer.preferredEdge : drawer.edge;
     BOOL side = edge == NSMinXEdge || edge == NSMaxXEdge;
-    drawer.leadingOffset = base.doubleValue + (side ? TSHiddenTopBand(window) : 0);
+    CGFloat offset = base.doubleValue + (side ? TSHiddenTopBand(window) : 0);
+    if (drawer.leadingOffset != offset)
+        drawer.leadingOffset = offset;
+}
+
+static void TSDrawerWillOpen(NSNotification *notification)
+{
+    NSDrawer *drawer = notification.object;
+    NSWindow *window = drawer.parentWindow;
+    if (![drawer isKindOfClass:NSDrawer.class] || !window || !objc_getAssociatedObject(window, TSPreparedWindowKey))
+        return;
+    TSPlaceDrawer(drawer, window);
     // The frame of the drawer takes the window's colors.
     NSView *frame = drawer.contentView.superview;
     if (!frame)
@@ -72,6 +80,18 @@ static void TSDrawerWillOpen(NSNotification *notification)
     TSDrawerBacking *backing = [[TSDrawerBacking alloc] initWithFrame:frame.bounds];
     backing.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     [frame addSubview:backing positioned:NSWindowBelow relativeTo:nil];
+}
+
+void TSDocumentWindowPlaceDrawers(NSWindow *window)
+{
+    if (!window || !objc_getAssociatedObject(window, TSPreparedWindowKey))
+        return;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    for (NSDrawer *drawer in window.drawers)
+        if (drawer.state == NSDrawerOpenState || drawer.state == NSDrawerOpeningState)
+            TSPlaceDrawer(drawer, window);
+#pragma clang diagnostic pop
 }
 
 BOOL TSDocumentWindowsUseFullSizeContent(void)

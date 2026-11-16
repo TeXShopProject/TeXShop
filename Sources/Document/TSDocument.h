@@ -35,6 +35,7 @@
 #import "TSWindowController.h"
 #import "CustomModalWindowController.h"
 #import "TSColorSupport.h"
+#import "TSAnnotationBar.h"
 
 @class TSFileChangeMonitor;
 @class TSExperimentConsoleController;
@@ -116,11 +117,10 @@ enum RootCommand
     IBOutlet ScrapTextView     *scrapTextView;
     IBOutlet ScrapPDFKitView    *scrapPDFKitView;
     
-    IBOutlet NSPanel            *stringWindow;
-    IBOutlet NSTextView         *stringWindowTextView;
-    IBOutlet NSButton           *stringLeft;
-    IBOutlet NSButton           *stringCenter;
-    IBOutlet NSButton           *stringRight;
+    // The annotation toolbar and the state it shows; see TSDocument-AnnotationBar.m.
+    TSAnnotationBar             *_annotationBar;
+    BOOL                        _annotationEditMode;
+    BOOL                        _annotationSaveAllPages;
     
     
     IBOutlet    NSWindow        *fullSplitWindow;
@@ -226,7 +226,6 @@ enum RootCommand
     IBOutlet    NSBox           *myURLField;
     
     IBOutlet    NSMenu          *annotationMenu;
-    IBOutlet    NSPanel         *annotationChoices;
     
     
     NSMenu				*mouseModeMenuKit; // mitsu 1.29 (O)
@@ -588,8 +587,6 @@ enum RootCommand
 @property (nonatomic, strong) IBOutlet TSHTMLWindow *htmlWindow;
 @property (nonatomic, strong) IBOutlet NSView *htmlViewContainer;
 @property (nonatomic, strong) IBOutlet WKWebView *htmlView;
-@property (nonatomic, strong) IBOutlet NSButton *EditModeCheckBox;
-@property (nonatomic, strong) IBOutlet NSButton *SaveAllCheckBox;
 
 // Values for PreviewType:  0 = use old method
 //                          1 = no Preview
@@ -652,9 +649,6 @@ enum RootCommand
 - (IBAction) removeStreams: sender;
 - (IBAction) showColorPanel: sender;
 - (IBAction) showFontPanel: sender;
-- (IBAction) showTextPanel: sender;
-- (IBAction) acceptString: sender;
-- (void) setToggleEditModeCheck: (NSInteger)value;
 
 - (IBAction) doTemplate: sender;
 - (IBAction) doPDFSearch: sender;
@@ -814,17 +808,7 @@ enum RootCommand
 - (void)switchFrontWindow;
 - (void)activateFrontWindow;
 - (void)readExplColors;
-- (void)showStringWindow;
-- (void)setStringWindowString: (NSString *)theString;
-- (void)setStringWindowAlignment: (NSInteger)value;
-- (IBAction)stringLeftPushed:(id)sender;
-- (IBAction)stringCenterPushed:(id)sender;
-- (IBAction)stringRightPushed:(id)sender;
-- (NSString *)getStringWindowString;
-- (NSWindow *)getStringWindow;
-- (NSTextView *)getStringWindowTextView;
 - (NSMenu *)getAnnotationMenu;
-- (NSPanel *)getChoicesPanel;
 - (BOOL)experimentActive;
 - (void)activateExperimentWindow;
 - (void)activateExperimentPDFWindow;
@@ -922,7 +906,6 @@ enum RootCommand
 - (NSString *)filterBackslashes:(NSString *)aString;
 - (NSStringEncoding)dataEncoding:(NSData *)theData;
 - (void)readPreviewArrangementFromData:(NSData *)data;
-- (void)annotationPanelWillClose:(NSNotification *)notification;
 
 
 // Brace matching for the document's source, or for the source of the Experiment window
@@ -933,6 +916,26 @@ enum RootCommand
 
 
 
+
+// The annotation toolbar (Issue #49); see TSDocument-AnnotationBar.m.
+@interface TSDocument (AnnotationBar) <TSAnnotationBarHost>
+@property (nonatomic, readonly) TSAnnotationBar *annotationBar;
+// Preview > Show Annotation Toolbar / Hide Annotation Toolbar.
+- (IBAction)displayChoicesPanel:(id)sender;
+- (BOOL)validateAnnotationBarItem:(NSMenuItem *)item;
+- (void)showAnnotationBar;
+// The annotation menu's Edit Text item.
+- (IBAction)editAnnotationText:(id)sender;
+// The window that shows the Preview changes (one window and separate windows).
+- (void)annotationBarFollowWindowChange;
+// The Preview window or the one window is about to close.
+- (void)annotationWindowWillClose:(NSWindow *)window;
+// The second part of the Preview stops being shown.
+- (void)annotationPartWillCollapse:(PDFView *)view;
+- (void)annotationsWillBeSaved;
+- (void)annotationWillBeRemoved:(PDFAnnotation *)annotation;
+- (void)annotationViewDocumentChanged:(NSNotification *)notification;
+@end
 
 @interface TSDocument (JobProcessing)
 

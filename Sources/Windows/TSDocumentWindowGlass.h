@@ -20,6 +20,10 @@ BOOL TSDocumentWindowsUseFullSizeContent(void);
 // below the toolbar. On every system the drawer's frame takes the window's colors.
 void TSDocumentWindowPrepare(NSWindow * _Nullable window);
 
+// Places the open drawers of a document window again after the band under its toolbar
+// changed height, as when the annotation toolbar is shown or hidden.
+void TSDocumentWindowPlaceDrawers(NSWindow * _Nullable window);
+
 // The height of the band at the top of a view that lies under the title bar and the
 // toolbar, or 0 in a window whose content does not run under them.
 CGFloat TSDocumentWindowHiddenTop(NSView *view);

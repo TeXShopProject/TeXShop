@@ -67,9 +67,11 @@ static Defaults *defaults;
 - (void)addWindowController:(id)controller;
 - (void)restoreFullSplitDivider;
 - (void)doMove:(id)sender;
+- (void)annotationBarFollowWindowChange;
 @end
 @implementation Document
 - (void)addWindowController:(id)controller {}
+- (void)annotationBarFollowWindowChange {}
 - (void)restoreFullSplitDivider { if(self.splitController.showCount==0) self.dividerRestores++; }
 METHOD
 @end

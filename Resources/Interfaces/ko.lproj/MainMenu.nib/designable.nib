@@ -1098,7 +1098,7 @@
                                     <action selector="toggleLinkPopups:" target="-1" id="TTE-uP-u3n"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="주석 패널..." keyEquivalent="v" id="raC-2c-6Yx" identifier="TSShortcut.displayChoicesPanel:.0">
+                            <menuItem title="주석 도구 막대 보기" keyEquivalent="v" id="raC-2c-6Yx" identifier="TSShortcut.displayChoicesPanel:.0">
                                 <connections>
                                     <action selector="displayChoicesPanel:" target="-1" id="0Di-6f-m36"/>
                                 </connections>

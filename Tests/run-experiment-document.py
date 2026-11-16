@@ -249,6 +249,7 @@ static BOOL auxCopied;
 - (void)cancelWatchFile;
 - (void)stopExternalPDFObservation;
 - (void)callSaveAnnotations;
+- (void)annotationWindowWillClose:(id)window;
 - (Node *)getStringWindow;
 + (void)applySpellingDefaultUnlessDocumentIsMain;
 @end
@@ -257,6 +258,7 @@ static BOOL auxCopied;
 static NSUInteger spellingDefaultsApplied;
 @implementation Document
 + (void)applySpellingDefaultUnlessDocumentIsMain { spellingDefaultsApplied++; }
+- (void)annotationWindowWillClose:(id)window {}
 - (Console *)ensureExperimentConsole {
     if (!self.experimentConsole) self.experimentConsole = [Console new];
     return self.experimentConsole;
