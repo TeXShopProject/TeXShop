@@ -755,6 +755,12 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     }
     */
 
+	// The magnification of the active part.
+	if ([anItem action] == @selector(changePDFViewSize:) && [self.myDocument fromKit])
+		[anItem setState:[anItem tag] == [(MyPDFKitView *)[self.myDocument pdfKitView] resizeOption] ? NSOnState : NSOffState];
+	if ([anItem action] == @selector(zoomToContent:) || [anItem action] == @selector(zoomToContentWidth:))
+		return [self.myDocument fromKit] && [[[self.myDocument pdfKitView] document] pageCount] > 0;
+
 	if ([anItem action] == @selector(displayLatexPanel:))
 		return NO;
 	if ([anItem action] == @selector(displayMatrixPanel:))
@@ -847,6 +853,18 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
 	
 	if ([self.myDocument fromKit])
 		[[self.myDocument pdfKitView] zoomOut: sender];
+}
+
+- (void)zoomToContent: (id)sender
+{
+	if ([self.myDocument fromKit])
+		[(MyPDFKitView *)[self.myDocument pdfKitView] zoomToContent: sender];
+}
+
+- (void)zoomToContentWidth: (id)sender
+{
+	if ([self.myDocument fromKit])
+		[(MyPDFKitView *)[self.myDocument pdfKitView] zoomToContentWidth: sender];
 }
 
 - (void)fullscreen: (id)sender
@@ -1013,6 +1031,9 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
         [view setResizeOption:resizes[i]];
         if (autoScales[i])
             [view setAutoScales:YES];
+        else if (resizes[i] == NEW_PDF_FIT_TO_CONTENT_WIDTH)
+            // Fitted to the size of the part it now has, after its place is put back below.
+            [view setAutoScales:NO];
         else {
             [view setAutoScales:NO];
             [view setMagnification:scales[i]];
@@ -1023,6 +1044,8 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
 
     TSPreviewPaneRestore(upperView, lower);
     TSPreviewPaneRestore(lowerView, upper);
+    [upperView fitContentWidth];
+    [lowerView fitContentWidth];
 
     // A pinned popup keeps its place in its part, which is now at the other side.
     NSRect newUpperFrame = [upperView convertRect:upperView.bounds toView:nil];
@@ -1575,6 +1598,9 @@ if (! self.windowIsSplit)
 		[(MyPDFKitView *)self.myPDFKitView rotateCounterclockwisePrimary];
 	[self.myPDFKitView layoutDocumentView];
 	[self.myPDFKitView2 layoutDocumentView];
+	// Turned pages have other widths.
+	[(MyPDFKitView *)self.myPDFKitView fitContentWidth];
+	[(MyPDFKitView *)self.myPDFKitView2 fitContentWidth];
 }
 
 // Among other times, this is called by TSDocument at nib initialization time

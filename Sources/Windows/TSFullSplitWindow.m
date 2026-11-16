@@ -95,10 +95,26 @@
     [[self myDocument].myPDFKitView zoomOut:sender];
 }
 
+// Like the toolbar buttons, for the active part of the preview.
+- (void)zoomToContent: (id)sender
+{
+    [(MyPDFKitView *)[[self myDocument] pdfKitView] zoomToContent:sender];
+}
+
+- (void)zoomToContentWidth: (id)sender
+{
+    [(MyPDFKitView *)[[self myDocument] pdfKitView] zoomToContentWidth:sender];
+}
+
 - (BOOL)validateMenuItem:(NSMenuItem *)item
 {
     if (item.action == @selector(changePageStyle:))
         return [self.myDocument validatePreviewLayoutItem:item];
+    // The magnification of the active part of the preview.
+    if (item.action == @selector(changePDFViewSize:))
+        item.state = item.tag == [(MyPDFKitView *)[[self myDocument] pdfKitView] resizeOption] ? NSControlStateValueOn : NSControlStateValueOff;
+    if (item.action == @selector(zoomToContent:) || item.action == @selector(zoomToContentWidth:))
+        return [[[[self myDocument] pdfKitView] document] pageCount] > 0;
     return [super validateMenuItem:item];
 }
 

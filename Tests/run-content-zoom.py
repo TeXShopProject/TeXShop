@@ -3,7 +3,10 @@
 are never shown: the Preview window's toolbar group, its zoom of the active part, and the
 shared zoom of TSContentZoom.h on real PDFKit views. The content is measured as the page is
 shown: with /Rotate and a CropBox, its visual top comes to the top of the view and its visual
-width fills the view; a page number at the foot does not shrink Zoom to Content Width."""
+width fills the view; a page number at the foot does not shrink Zoom to Content Width. With one
+page across, the next page (or the one before the last) sets the width too, so that pages printed
+on both sides, with their text further left or right on every other page, keep their line ends.
+Fit to Content Width has its own test, run-fit-content-width.py."""
 from pathlib import Path
 import argparse, re, subprocess, sys, tempfile
 from source_tree import include_args
@@ -11,10 +14,12 @@ from production_fragments import method, verify_embedded
 
 MUTATIONS = {
     # TSContentZoom.h
-    'height-limits-width': ('zoom', '        if (!widthOnly) scale = MIN(scale, visible.height / (NSHeight(content) / current));',
-                            '        scale = MIN(scale, visible.height / (NSHeight(content) / current));'),
-    'centred-not-top': ('zoom', '    if (!widthOnly)\n        target.origin.y += NSMidY(content) - NSMidY(area);',
-                        '    if (YES)\n        target.origin.y += NSMidY(content) - NSMidY(area);'),
+    'height-limits-width': ('zoom', 'widthOnly ? nil : ^CGFloat{ return NSHeight(TSContentRectInView(view, row)); }',
+                            '^CGFloat{ return NSHeight(TSContentRectInView(view, row)); }'),
+    'centred-not-top': ('zoom', '    TSContentScrollTo(view, target, widthOnly, !widthOnly);', '    TSContentScrollTo(view, target, NO, YES);'),
+    'no-next-page': ('zoom', '    return next ? [row arrayByAddingObject:next] : row;', '    return row;'),
+    'no-page-before-last': ('zoom', '    NSInteger other = index + 1 < count ? index + 1 : index - 1;', '    NSInteger other = index + 1;'),
+    'height-of-both-pages': ('zoom', 'return NSHeight(TSContentRectInView(view, row)); }', 'return NSHeight(TSContentRectInView(view, across)); }'),
     'rotation-ignored': ('zoom', '    CGAffineTransform toDrawn = [page transformForBox:box];',
                          '    CGAffineTransform toDrawn = CGAffineTransformMakeTranslation(-NSMinX(bounds), -NSMinY(bounds));'),
     'one-page-in-two-up': ('zoom', '            if (beside) [pages addObject:beside];', '            if (NO) [pages addObject:beside];'),
@@ -26,6 +31,8 @@ MUTATIONS = {
     'one-pass': ('zoom', '    for (int pass = 0; pass < 4; pass++) {', '    for (int pass = 0; pass < 1; pass++) {'),
     # MyPDFKitView.m
     'rounded-up': ('view', 'MIN((NSInteger)floor(scale * 100.0 + 1e-6), PDF_MAX_SCALE)', 'MIN((NSInteger)ceil(scale * 100.0), PDF_MAX_SCALE)'),
+    'zoom-keeps-fit': ('view', '\t// A fixed magnification, as Zoom In sets, also when it did not change.\n\tresizeOption = NEW_PDF_FIT_TO_NONE;\n', ''),
+    'menu-whole-is-width': ('view', '- (void)zoomToContent:(id)sender\n{\n\t[self zoomToContentWidthOnly:NO];', '- (void)zoomToContent:(id)sender\n{\n\t[self zoomToContentWidthOnly:YES];'),
     # TSToolbarController.m
     'wrong-part': ('toolbar', '    MyPDFKitView *view = [self pdfKitView];\n    if ((index == 0 || index == 1)',
                    '    MyPDFKitView *view = [self myPDFKitView];\n    if ((index == 0 || index == 1)'),
@@ -58,8 +65,48 @@ for strings in sorted((root / 'Resources/Interfaces').glob('*.lproj/ToolbarItems
     assert (found.group(1) == 'Zoom to Content Width') == (strings.parent.name == 'en.lproj'), 'Translated in ' + strings.parent.name
 print('PASS: toolbar lists and the names in %d languages' % len(list((root / 'Resources/Interfaces').glob('*.lproj/ToolbarItems.strings'))))
 
+# Preview > Magnification: Fit to Content Width with the other magnifications (tag 6, after
+# Fit to Window), and the two zooms after Zoom Out, named as the toolbar buttons, in every
+# language. The magnification is never named like a zoom.
+import plistlib, xml.etree.ElementTree as ET
+def strings_table(path):
+    return plistlib.loads(subprocess.run(['plutil', '-convert', 'xml1', '-o', '-', str(path)], capture_output=True, check=True).stdout)
+menus = sorted((root / 'Resources/Interfaces').glob('*.lproj/MainMenu.nib/designable.nib'))
+assert len(menus) == 12, 'twelve menus'
+for nib in menus:
+    language = nib.parent.parent.name.split('.')[0]
+    tree = ET.parse(nib)
+    magnification = next(menu for menu in tree.iter('menu')
+                         if any(i.get('identifier') == 'TSShortcut.changePDFViewSize:.3' for i in menu.findall('items/menuItem')))
+    items = [i for i in magnification.find('items') if i.tag == 'menuItem']
+    ids = [i.get('identifier') for i in items]
+    def at(name):
+        assert name in ids, name + ' in ' + language
+        return items[ids.index(name)]
+    fit = at('TSShortcut.changePDFViewSize:.6')
+    assert ids.index('TSShortcut.changePDFViewSize:.6') == ids.index('TSShortcut.changePDFViewSize:.3') + 1, 'after Fit to Window in ' + language
+    assert fit.get('tag') == '6' and fit.find('connections/action').get('selector') == 'changePDFViewSize:', language
+    out = ids.index('TSShortcut.zoomOut:.0')
+    assert ids[out + 1:out + 3] == ['TSShortcut.zoomToContent:.0', 'TSShortcut.zoomToContentWidth:.0'], 'after Zoom Out in ' + language
+    for name, selector in (('TSShortcut.zoomToContent:.0', 'zoomToContent:'), ('TSShortcut.zoomToContentWidth:.0', 'zoomToContentWidth:')):
+        item = at(name)
+        assert item.find('connections/action').get('selector') == selector and item.find('connections/action').get('target') == '-1', language
+        assert not item.get('keyEquivalent'), 'no default key in ' + language
+    toolbar = strings_table(root / 'Resources/Interfaces' / (('en' if language == 'Base' else language) + '.lproj') / 'ToolbarItems.strings')
+    whole, width = toolbar['ExperimentZoomToContent'], toolbar['ExperimentZoomToContentWidth']
+    assert at('TSShortcut.zoomToContent:.0').get('title') == whole and at('TSShortcut.zoomToContentWidth:.0').get('title') == width, 'toolbar names in ' + language
+    names = [i.get('title') for i in items if i.get('title')]
+    assert len(set(names)) == len(names), 'distinct names in ' + language
+    assert (fit.get('title') == 'Fit to Content Width') == (language == 'Base'), 'translated in ' + language
+    settings = strings_table(root / 'Resources/Interfaces' / (language + '.lproj') / 'SettingsPreview.strings')
+    assert settings['Fc6-Pp-tH1.title'] == fit.get('title'), 'Settings names it as the menu in ' + language
+xib = (root / 'Resources/Interfaces/Base.lproj/SettingsPreview.xib').read_text()
+assert '<menuItem title="Fit to Window" state="on" tag="3" id="339" />\n                      <menuItem title="Fit to Content Width" tag="6" id="Fc6-Pp-tH1" />' in xib, 'Settings > Preview offers it'
+print('PASS: Preview > Magnification and Settings in %d languages' % len(menus))
+
 view_methods = [method(view_source, s) for s in (
-    '- (void)zoomToContentWidthOnly:(BOOL)widthOnly', '- (void) changeScale: sender', '- (void)setScaleFactor:(CGFloat)scale')]
+    '- (void)zoomToContentWidthOnly:(BOOL)widthOnly', '- (void)zoomToContent:(id)sender', '- (void)zoomToContentWidth:(id)sender',
+    '- (void) changeScale: sender', '- (void)setScaleFactor:(CGFloat)scale')]
 toolbar_methods = [method(toolbar_source, s) for s in (
     '- (NSToolbarItem *)contentZoomToolbarItem', '- (void)zoomPreviewToContent:(id)sender')]
 fragments = [('complete method: ' + t.split('\n')[0], src, t)
@@ -82,7 +129,7 @@ program = r'''
 #import "TSPreviewScrollerKeeper.h"
 ZOOMHEADER
 #define PDF_MAX_SCALE 2000
-enum { NEW_PDF_ACTUAL_SIZE = 1, NEW_PDF_FIT_TO_NONE = 2, NEW_PDF_FIT_TO_WINDOW = 3 };
+enum { NEW_PDF_ACTUAL_SIZE = 1, NEW_PDF_FIT_TO_NONE = 2, NEW_PDF_FIT_TO_WINDOW = 3, NEW_PDF_FIT_TO_CONTENT_WIDTH = 6 };
 static NSString *kContentZoomKKTID = IDENTIFIER;
 static NSUInteger checks;
 static NSString *context = @"";
@@ -101,6 +148,7 @@ static void settle(NSWindow *w) {
 - (NSPanel *)magnificationPanel;
 @end
 @interface MyPDFKitView : PDFView {
+    BOOL _fittingContentWidth;
     NSInteger resizeOption, scaleMag;
     NSTextField *myScale, *smyScale, *myScale1;
     NSStepper *myStepper, *smyStepper, *myStepper1;
@@ -108,6 +156,8 @@ static void settle(NSWindow *w) {
 @property (weak) TestDocument *myDocument;
 @property NSInteger marqueeCleanups;
 - (void)zoomToContentWidthOnly:(BOOL)widthOnly;
+- (void)zoomToContent:(id)sender;
+- (void)zoomToContentWidth:(id)sender;
 @end
 @implementation MyPDFKitView
 - (void)useScaleField:(NSTextField *)field { myScale = field; }
@@ -157,6 +207,31 @@ static PDFDocument *makeDocument(NSInteger rotation, NSRect crop) {
     PDFDocument *saved = [[PDFDocument alloc] initWithData:document.dataRepresentation];
     check([saved pageAtIndex:0].rotation == rotation, @"the file keeps /Rotate");
     return saved;
+}
+
+// Pages printed on both sides: the text further right on every other page, as with the book
+// class; with wide, page 7 also has a figure wider than the text.
+static const NSRect OddBody = {{107, 150}, {343, 600}}, EvenBody = {{161, 150}, {343, 600}}, Wide = {{60, 400}, {480, 100}};
+static NSRect sideInk(NSUInteger index, BOOL wide) {
+    NSRect ink = NSUnionRect(index % 2 ? EvenBody : OddBody, Number);
+    if (wide && index == 6) ink = NSUnionRect(ink, Wide);
+    return NSInsetRect(ink, -8, -8);
+}
+static PDFDocument *makeTwoSided(BOOL wide, NSUInteger count) {
+    NSMutableData *data = [NSMutableData data];
+    CGDataConsumerRef consumer = CGDataConsumerCreateWithCFData((__bridge CFMutableDataRef)data);
+    CGRect media = CGRectMake(0, 0, 595, 842);
+    CGContextRef pdf = CGPDFContextCreate(consumer, &media, NULL);
+    for (NSUInteger i = 0; i < count; i++) {
+        CGPDFContextBeginPage(pdf, NULL);
+        CGContextSetGrayFillColor(pdf, 0, 1);
+        CGContextFillRect(pdf, NSRectToCGRect(i % 2 ? EvenBody : OddBody));
+        CGContextFillRect(pdf, NSRectToCGRect(Number));
+        if (wide && i == 6) CGContextFillRect(pdf, NSRectToCGRect(Wide));
+        CGPDFContextEndPage(pdf);
+    }
+    CGPDFContextClose(pdf); CGContextRelease(pdf); CGDataConsumerRelease(consumer);
+    return [[PDFDocument alloc] initWithData:data];
 }
 
 typedef struct { NSWindow *window; MyPDFKitView *upper, *lower; NSTextField *field; TestDocument *document; } Preview;
@@ -256,6 +331,10 @@ int main(int argc, char **argv) { @autoreleasepool {
               [NSString stringWithFormat:@"whole content centred (%@)", NSStringFromPoint(middle)]);
         if (rotation % 180 == 0)
             check(widthScale > scale * 1.3, @"the page number does not shrink Zoom to Content Width (#33)");
+        // From Fit to Content Width, a zoom that gives the same magnification still makes it fixed.
+        view.resizeOption = NEW_PDF_FIT_TO_CONTENT_WIDTH;
+        [view zoomToContentWidthOnly:NO]; settle(p.window);
+        check(fabs(view.scaleFactor - scale) < 1e-6 && view.resizeOption == NEW_PDF_FIT_TO_NONE, @"fixed after a zoom that changes nothing");
         check(p.upper.scaleFactor == upperScale, @"the other part keeps its magnification");
         [p.window close];
     }
@@ -335,6 +414,54 @@ int main(int argc, char **argv) { @autoreleasepool {
                   [NSString stringWithFormat:@"the content of the row %.1f fills the view %.1f at %.2f", NSWidth(content), width, scale]);
         [view zoomToContentWidthOnly:!whole]; settle(p.window);
         check(fabs(view.scaleFactor - scale) < 0.001, [NSString stringWithFormat:@"a second press keeps %.2f (%.2f)", scale, view.scaleFactor]);
+        [p.window close];
+    }
+
+    // Pages printed on both sides. With one page across, both zooms take the next page too, or
+    // the page before the last one, sideways: neither loses its line ends. The top, or the
+    // height, is that of the page in view.
+    for (NSNumber *mode in @[@(kPDFDisplaySinglePageContinuous), @(kPDFDisplaySinglePage)]) for (int whole = 0; whole < 2; whole++) {
+        PDFDocument *document = makeTwoSided(NO, 8);
+        Preview p = makePreview(document, (PDFDisplayMode)mode.integerValue);
+        MyPDFKitView *view = p.lower;
+        for (NSNumber *number in @[@2, @3, @7]) {
+            NSUInteger index = number.unsignedIntegerValue, other = index + 1 < 8 ? index + 1 : index - 1;
+            context = [NSString stringWithFormat:@"both sides: mode %ld, %@, page %lu", (long)mode.integerValue,
+                       whole ? @"Zoom to Content" : @"Zoom to Content Width", (unsigned long)index];
+            show(view, index);
+            if (whole) [view zoomToContent:nil]; else [view zoomToContentWidth:nil];
+            settle(p.window);
+            NSRect ink = sideInk(index, NO), beside = sideInk(other, NO);
+            CGFloat left = MIN(NSMinX(ink), NSMinX(beside)), right = MAX(NSMaxX(ink), NSMaxX(beside));
+            PDFPage *page = [document pageAtIndex:index];
+            CGFloat slack = 1.5 + 0.005 / view.scaleFactor * (right - left);
+            CGFloat seenLeft = shown(view, page, 0, .5).x, seenRight = shown(view, page, 1, .5).x;
+            check(view.resizeOption == NEW_PDF_FIT_TO_NONE, @"a fixed magnification");
+            if (whole) {
+                // Centred, unless the whole page is narrower than the view, which PDFKit then centres.
+                BOOL wholePageAcross = seenLeft < 0 && seenRight > 595;
+                check(seenLeft <= left + slack && seenRight >= right - slack &&
+                      (wholePageAcross || fabs((seenLeft + seenRight) / 2 - (left + right) / 2) < slack),
+                      [NSString stringWithFormat:@"both pages' content across, centred (%.1f to %.1f for %.1f to %.1f)", seenLeft, seenRight, left, right]);
+                CGFloat top = shown(view, page, .5, 0).y, bottom = shown(view, page, .5, 1).y;
+                check(top >= NSMaxY(ink) - slack && bottom <= NSMinY(ink) + slack,
+                      [NSString stringWithFormat:@"the page's content top to bottom (%.1f to %.1f)", top, bottom]);
+                check(fabs(seenRight - seenLeft - (right - left)) < slack || fabs(top - bottom - NSHeight(ink)) < slack + 2,
+                      @"the width or the height fills the view");
+            } else {
+                check(fabs(seenLeft - left) < slack && fabs(seenRight - right) < slack,
+                      [NSString stringWithFormat:@"both pages' content fills the width (%.1f to %.1f for %.1f to %.1f)", seenLeft, seenRight, left, right]);
+                NSClipView *clip = clipOf(view);
+                BOOL atEnd = clip.isFlipped ? NSMaxY(clip.bounds) >= NSHeight(view.documentView.frame) - 1 : NSMinY(clip.bounds) <= 1;
+                CGFloat top = shown(view, page, .5, 0).y;
+                check(fabs(top - NSMaxY(ink)) < 1.5 || (atEnd && top > NSMaxY(ink)),
+                      [NSString stringWithFormat:@"the top of the page's content at the top (%.1f)", top]);
+            }
+            // The page beside it shows all of its content's width as well.
+            PDFPage *next = [document pageAtIndex:other];
+            check(shown(view, next, 0, .5).x <= NSMinX(beside) + slack && shown(view, next, 1, .5).x >= NSMaxX(beside) - slack,
+                  @"the other page keeps its line ends");
+        }
         [p.window close];
     }
 

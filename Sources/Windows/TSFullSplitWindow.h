@@ -96,6 +96,8 @@
 - (void)changePDFViewSize: sender;
 - (void)zoomIn: sender;
 - (void)zoomOut: sender;
+- (void)zoomToContent: (id)sender;
+- (void)zoomToContentWidth: (id)sender;
 - (void)changePageStyle: sender;
 
 /* WARNING: These do not make sense in single window mode

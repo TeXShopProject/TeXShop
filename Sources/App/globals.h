@@ -208,7 +208,10 @@ typedef enum _NewPDFSizeOption
 	NEW_PDF_FIT_TO_NONE = 2, // PDF_FIT_TO_NONE = -101,
 	NEW_PDF_FIT_TO_WINDOW = 3, // PDF_FIT_TO_WINDOW = -104
 	NEW_PDF_FIT_TO_WIDTH = 4, // PDF_FIT_TO_WIDTH = -102,
-	NEW_PDF_FIT_TO_HEIGHT = 5 // PDF_FIT_TO_HEIGHT = -103,
+	NEW_PDF_FIT_TO_HEIGHT = 5, // PDF_FIT_TO_HEIGHT = -103,
+	// The content of the pages fills the width (TSContentZoom.h). Not 4: earlier versions stored 4
+	// for a fit to the page width, which is read as Fit to Window.
+	NEW_PDF_FIT_TO_CONTENT_WIDTH = 6
 
 } _NewPDFSizeOption;
 

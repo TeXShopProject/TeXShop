@@ -90,7 +90,7 @@ program = r'''
 #import "TSPreviewSplitDivider.h"
 // Values from globals.h.
 enum { PDF_SINGLE_PAGE_STYLE = 1, PDF_TWO_PAGE_STYLE = 2, PDF_MULTI_PAGE_STYLE = 3, PDF_DOUBLE_MULTI_PAGE_STYLE = 4 };
-enum { NEW_PDF_ACTUAL_SIZE = 1, NEW_PDF_FIT_TO_NONE = 2, NEW_PDF_FIT_TO_WINDOW = 3, NEW_PDF_FIT_TO_WIDTH = 4 };
+enum { NEW_PDF_ACTUAL_SIZE = 1, NEW_PDF_FIT_TO_NONE = 2, NEW_PDF_FIT_TO_WINDOW = 3, NEW_PDF_FIT_TO_WIDTH = 4, NEW_PDF_FIT_TO_CONTENT_WIDTH = 6 };
 enum { NEW_MOUSE_MODE_SCROLL = 1, NEW_MOUSE_MODE_SELECT_TEXT = 2 };
 enum { MOUSE_MODE_MAG_GLASS = 2 };
 // The settings are in memory only (TestAppKitIsolation.h).
@@ -199,6 +199,10 @@ static void TSSplitToggleItemsFollowSplit(void) {}
     [self setDisplaysPageBreaks:pageStyle != PDF_SINGLE_PAGE_STYLE];
 }
 - (void)setupMagnificationStyle { if (resizeOption == NEW_PDF_FIT_TO_NONE) [self setScaleFactor:1]; else [self setAutoScales:YES]; }
+// Fit to Content Width has its own test, run-fit-content-width.py.
+- (void)fitContentWidth {}
+- (void)measureContentLater {}
+- (void)centreContentRowLater {}
 // As a click on a link does in its own view, the part that follows the link loses its marquee.
 - (void)cleanupMarqueeKeepingPinnedLinkPreview { self.marqueeCleanups++; }
 - (void)observeLinkPreviewEvents {}

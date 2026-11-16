@@ -305,6 +305,7 @@ program = r'''
 #define PdfKitFitSizeKey @"fit"
 #define NEW_PDF_FIT_TO_WIDTH 2
 #define NEW_PDF_FIT_TO_HEIGHT 3
+#define NEW_PDF_FIT_TO_CONTENT_WIDTH 6
 #define PDF_FIT_TO_WINDOW 4
 // The values of Sources/App/globals.h, which mouseMoved: also uses as numbers.
 #define NEW_MOUSE_MODE_SCROLL 1
@@ -463,6 +464,10 @@ DOCUMENTMETHODS
 - (BOOL)globalLongTerm { return pinnedLinkPreview != nil; }
 - (void)setupPageStyle {}
 - (void)setupMagnificationStyle {}
+// Fit to Content Width has its own test, run-fit-content-width.py.
+- (void)fitContentWidth {}
+- (void)measureContentLater {}
+- (void)centreContentRowLater {}
 - (void)updateBackground:(NSRect)rect {}
 - (void)setDrawMark:(BOOL)value { drawMark=value; }
 - (void)setTestMouseMode:(NSInteger)mode { mouseMode = currentMouseMode = mode; }

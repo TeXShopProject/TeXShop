@@ -83,6 +83,8 @@
 - (void) previousPage: sender;
 - (void) nextPage: sender;
 - (void) zoomIn: sender;
+- (void) zoomToContent: (id)sender;
+- (void) zoomToContentWidth: (id)sender;
 - (void) zoomOut: sender;
 
 - (void) displayLog: sender;

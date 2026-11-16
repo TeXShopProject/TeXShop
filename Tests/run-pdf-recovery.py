@@ -31,6 +31,7 @@ static BOOL atLeastHighSierra=YES,atLeastMojave=YES;
 #define NEW_PDF_FIT_TO_WIDTH 2
 #define NEW_PDF_FIT_TO_HEIGHT 3
 #define PDF_FIT_TO_WINDOW 4
+#define NEW_PDF_FIT_TO_CONTENT_WIDTH 6
 static NSInteger screenUpdates=0;
 #define NSDisableScreenUpdates() (screenUpdates++)
 #define NSEnableScreenUpdates() (screenUpdates--)
@@ -119,6 +120,9 @@ WINDOW_METHODS
 -(void)setup{[self initializeDisplay];}
 -(void)setupPageStyle{}
 -(void)setupMagnificationStyle{}
+// Fit to Content Width has its own test, run-fit-content-width.py.
+-(void)fitContentWidth{}
+-(void)measureContentLater{}
 -(void)setupOutline{}
 
 -(void)cleanupMarquee:(BOOL)b{}

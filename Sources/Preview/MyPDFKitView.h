@@ -40,6 +40,8 @@
 // added by Terada (from this line)
     BOOL _pdfViewReady;
     BOOL _observingPreviewAppearance, _updatingPreviewAppearance;
+    // Fit to Content Width sets the magnification; pages are being measured for it.
+    BOOL _fittingContentWidth, _measuringContent;
 // added by Terada (until this line)
                     IBOutlet	NSTextField								*currentPage0;
     // "currentPage" is a very dangerous choice, because the PDFView class has a method called 'currentPage"
@@ -256,6 +258,10 @@
 - (void) zoomIn: (id)sender;
 - (void) zoomOut: (id)sender;
 - (void)zoomToContentWidthOnly:(BOOL)widthOnly;
+- (void)zoomToContent:(id)sender;
+- (void)zoomToContentWidth:(id)sender;
+// Fit to Content Width: fits the content of the pages to the width again, keeping the text at the top.
+- (void)fitContentWidth;
 - (void) fancyMouseDown: (NSEvent *)theEvent;
 - (BOOL) toolIsMagnification;
 - (BOOL) validateMenuItem:(NSMenuItem *)anItem;
