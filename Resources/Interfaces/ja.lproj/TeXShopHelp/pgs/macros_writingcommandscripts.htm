@@ -1,10 +1,10 @@
 <HTML>
 
 <HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-			<TITLE>�V�F���R�}���h�ŃX�N���v�g������</TITLE>
+			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
+			<TITLE>シェルコマンドでスクリプトを書く</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="�V�F���R�}���h���g����AppleScript�̍��ƍ�@">
+			<META NAME="description" CONTENT="シェルコマンドを使ったAppleScriptの作例と作法">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -13,16 +13,16 @@
 
 <!-- 
 <p>
-Claus Gerhardt�ɂ��AppleScript�updflatexc�v���g���āAAppleScript����UNIX�̃V�F���R�}���h���Ăяo��������Ꭶ���Ă݂܂��傤�B���̃V�F���X�N���v�g���̂͑債�Ă������낭����܂��� �GteTeX�̃o�C�i���̏ꏊ�� $PATH�ϐ��ɉ����Apdflatex���Ăяo���ă^�C�v�Z�b�g���s�Ȃ��Ă��܂��B
+Claus GerhardtによるAppleScript「pdflatexc」を使って、AppleScriptからUNIXのシェルコマンドを呼び出す原理を例示してみましょう。このシェルスクリプト自体は大しておもしろくありません ；teTeXのバイナリの場所を $PATH変数に加え、pdflatexを呼び出してタイプセットを行なっています。
 </p>
  -->
 
 <p>
 
 </p>
-Claus Gerhardt����ɂ��AppleScript�updflatexc�v���g���āAAppleScript����UNIX�̃V�F���R�}���h���Ăяo��������Ꭶ���Ă݂܂��傤�B���̃V�F���X�N���v�g���̂͑債�Ă������낭����܂��� �GteTeX�̃o�C�i���̏ꏊ�� $PATH�ϐ��ɉ����Apdflatex���Ăяo���ă^�C�v�Z�b�g���s�Ȃ��Ă��܂��B
+Claus GerhardtさんによるAppleScript「pdflatexc」を使って、AppleScriptからUNIXのシェルコマンドを呼び出す原理を例示してみましょう。このシェルスクリプト自体は大しておもしろくありません ；teTeXのバイナリの場所を $PATH変数に加え、pdflatexを呼び出してタイプセットを行なっています。
 <p>
-�V�F���X�N���v�g���̂��̂́ATeXShop�ɂ͈ˑ����Ă��܂��񂵁Apdflatexc���܂ރf�B���N�g�����o�C�i���̌����p�X�ɂ���΁updflatexc myfile.tex�v�Ƒł����ނ��Ƃ�Terminal��������s�ł��܂��B���ꂪ���̃V�F���X�N���v�g�ł��F
+シェルスクリプトそのものは、TeXShopには依存していませんし、pdflatexcを含むディレクトリがバイナリの検索パスにあれば「pdflatexc myfile.tex」と打ち込むことでTerminalからも実行できます。これがそのシェルスクリプトです：
 </p>
 
 <tt>
@@ -41,18 +41,18 @@ Claus Gerhardt����ɂ��AppleScript�updflatexc�v���g���āAAppleScript����UNIX�̃
 </tt>
 
 <p>
-�������A�������̍�Ƃ����X�Ƃ��Ȃ��Ă䂭�悤�ȁA��蕡�G�ȃX�N���v�g���������Ƃ�����ł��傤�B���������Ƃ��ɂ����A���������Z�@�����ɗ��悤�ɂȂ�܂��B
+もちろん、いくつもの作業を次々とこなしてゆくような、より複雑なスクリプトを書くこともあるでしょう。そういうときにこそ、こうした技法が役に立つようになります。
 </p>
 
 <p>
-���̃V�F���X�N���v�g���Ăяo���̂Ɏg��AppleScript�͂���������Ƃ������낢���̂ł��B�܂��͂������������F
+このシェルスクリプトを呼び出すのに使うAppleScriptはもうちょっとおもしろいものです。まずはご覧ください：
 </p>
 
 <tt>
 	<dl>
 		<dd>--Applescript
 		<dd>-- Apply only to an already saved file.
-		<dd>-- ���łɕۑ��ς݂̃t�@�C���ɂ̂ݓK�p���邱�ƁB
+		<dd>-- すでに保存済みのファイルにのみ適用すること。
 		<dd>-- Claus Gerhardt, Nov. 2003
 		<p>
 		<dd>set scriptPath to (do shell script "dirname " & "~/Library/TeXShop/Scripts/ex")
@@ -82,16 +82,16 @@ Claus Gerhardt����ɂ��AppleScript�updflatexc�v���g���āAAppleScript����UNIX�̃
 
 <!-- 
 <p>
-�O�u���̃R�����g�͂��Ă����A���̃X�N���v�g�̖`���V�s�́AClaus Gerhardt�̖��@�̃��V�s�ł������\�[�X�t�@�C����ۑ����A�������悤�Ƃ��Ă��镶���̖��O�������āufrontName�v�ɃZ�b�g���Ă��܂��B���̃��V�s�ł́A~/Library/TeXShop/Scripts�ɂ���usetpath.scpt�v�Ƃ����R���p�C���ς݂̃X�N���v�g���g���ăn�[�h�ȍ�Ƃ��ׂĂ����Ȃ��Ă��܂��B���Ӑ[���ǂ݉����Ă݂�΁A���̐��s�� ~/Library/TeXShop/Scripts/setname.scpt�Ƃ����p�X�������A�p�����[�^ #NAMEPATH# �� #TEXPATH# �ŃX�N���v�g���Ăяo���Ă��邱�Ƃ��킩��܂��B
+前置きのコメントはさておき、このスクリプトの冒頭７行は、Claus Gerhardtの魔法のレシピです──ソースファイルを保存し、処理しようとしている文書の名前を見つけて「frontName」にセットしています。このレシピでは、~/Library/TeXShop/Scriptsにある「setpath.scpt」というコンパイル済みのスクリプトを使ってハードな作業すべてをこなしています。注意深く読み解いてみれば、この数行は ~/Library/TeXShop/Scripts/setname.scptというパスを見つけ、パラメータ #NAMEPATH# と #TEXPATH# でスクリプトを呼び出していることがわかります。
 </p>
  -->
 
 <p>
-�O�u���̃R�����g�͂��Ă����A���̃X�N���v�g�̖`���V�s�́AClaus Gerhardt����̖��@�̃��V�s�ł������\�[�X�t�@�C����ۑ����A�������悤�Ƃ��Ă��镶���̖��O�������āufrontName�v�ɃZ�b�g���Ă��܂��B���̃��V�s�ł́A~/Library/TeXShop/Scripts�ɂ���usetpath.scpt�v�Ƃ����R���p�C���ς݂̃X�N���v�g���g���ăn�[�h�ȍ�Ƃ��ׂĂ����Ȃ��Ă��܂��B���Ӑ[���ǂ݉����Ă݂�΁A���̐��s�� ~/Library/TeXShop/Scripts/setname.scpt�Ƃ����p�X�������A�p�����[�^ #NAMEPATH# �� #TEXPATH# �ŃX�N���v�g���Ăяo���Ă��邱�Ƃ��킩��܂��B
+前置きのコメントはさておき、このスクリプトの冒頭７行は、Claus Gerhardtさんの魔法のレシピです──ソースファイルを保存し、処理しようとしている文書の名前を見つけて「frontName」にセットしています。このレシピでは、~/Library/TeXShop/Scriptsにある「setpath.scpt」というコンパイル済みのスクリプトを使ってハードな作業すべてをこなしています。注意深く読み解いてみれば、この数行は ~/Library/TeXShop/Scripts/setname.scptというパスを見つけ、パラメータ #NAMEPATH# と #TEXPATH# でスクリプトを呼び出していることがわかります。
 </p>
 
 <p>
-������AppleScript�ł́A����͂��ׂāA���̂悤�ȃR�}���h���g���ȒP�ȕ��@�ōς܂����܂��F
+多くのAppleScriptでは、これはすべて、次のようなコマンドを使う簡単な方法で済ませられます：
 </p>
 
 <tt>
@@ -105,24 +105,24 @@ Claus Gerhardt����ɂ��AppleScript�updflatexc�v���g���āAAppleScript����UNIX�̃
 
 <!-- 
 <p>
-�������Ȃ���Gerhardt�̃X�N���v�g�ɂ͒������Q����܂��B�ЂƂ́A�O�ʂɂ��镶�������O�t�@�C���i���Ƃ��� /Users/koch/Examples/myfile.log�̂悤�Ȃ��́j�ł����Ă�������������΁A����ȍ~�̃R�}���h���󂯓���Ȃ��悤�Ȏ�ނ̕����������Ƃ��Ă������X�N���v�g���Ăяo����A�Ƃ������Ƃł��B�����ЂƂ́A�t�@�C������x���ۑ�����Ă��Ȃ������ꍇ�AGerhardt�̃X�N���v�g�͕ۑ����s�Ȃ����Ƃ��ăG���[��Ԃ��܂��������̈���Łu�ۑ��v�R�}���h�ɂ��A�ۑ��_�C�A���O���o����TeXShop�͕ۗ���ԂɂȂ�܂��i�ڂ����̓w���v�́u<A HREF = "macros_writingcompletescripts.htm">TeXShop�̃^�C�v�Z�b�g�E�R�}���h�ŃX�N���v�g������</A>�v���Q�Ƃ��Ă��������j�B
+しかしながらGerhardtのスクリプトには長所が２つあります。ひとつは、前面にある文書がログファイル（たとえば /Users/koch/Examples/myfile.logのようなもの）であっても──換言すれば、これ以降のコマンドを受け入れないような種類の文書だったとしても──スクリプトを呼び出せる、ということです。もうひとつは、ファイルが一度も保存されていなかった場合、Gerhardtのスクリプトは保存を行なおうとしてエラーを返します──その一方で「保存」コマンドにより、保存ダイアログを出してTeXShopは保留状態になります（詳しくはヘルプの「<A HREF = "macros_writingcompletescripts.htm">TeXShopのタイプセット・コマンドでスクリプトを書く</A>」を参照してください）。
 </p>
  -->
 
 <p>
-�������Ȃ���Gerhardt����̃X�N���v�g�ɂ͒������Q����܂��B�ЂƂ́A�O�ʂɂ��镶�������O�t�@�C���i���Ƃ��� /Users/koch/Examples/myfile.log�̂悤�Ȃ��́j�ł����Ă�������������΁A����ȍ~�̃R�}���h���󂯓���Ȃ��悤�Ȏ�ނ̕����������Ƃ��Ă������X�N���v�g���Ăяo����A�Ƃ������Ƃł��B�����ЂƂ́A�t�@�C������x���ۑ�����Ă��Ȃ������ꍇ�AGerhardt�̃X�N���v�g�͕ۑ����s�Ȃ����Ƃ��ăG���[��Ԃ��܂��������̈���Łu�ۑ��v�R�}���h�ɂ��A�ۑ��_�C�A���O���o����TeXShop�͕ۗ���ԂɂȂ�܂��i�ڂ����̓w���v�́u<A HREF = "macros_writingcompletescripts.htm">TeXShop�̃^�C�v�Z�b�g�R�}���h�ŃX�N���v�g������</A>�v���Q�Ƃ��Ă��������j�B
+しかしながらGerhardtさんのスクリプトには長所が２つあります。ひとつは、前面にある文書がログファイル（たとえば /Users/koch/Examples/myfile.logのようなもの）であっても──換言すれば、これ以降のコマンドを受け入れないような種類の文書だったとしても──スクリプトを呼び出せる、ということです。もうひとつは、ファイルが一度も保存されていなかった場合、Gerhardtのスクリプトは保存を行なおうとしてエラーを返します──その一方で「保存」コマンドにより、保存ダイアログを出してTeXShopは保留状態になります（詳しくはヘルプの「<A HREF = "macros_writingcompletescripts.htm">TeXShopのタイプセットコマンドでスクリプトを書く</A>」を参照してください）。
 </p>
 
 <p>
-�Â��U�s�ł́A�ϐ�dirName��baseName���`���Ă��܂��B�\�[�X�t�@�C�����u/Users/koch/This directory/Stuff/myfile.tex�v�̏ꍇ�AdirName�́A�V���O���N�I�[�g�ƃ_�u���N�I�[�g���܂߂āu" '/Users/koch/This directory/Stuff' "�v�ƂȂ�AbaseName�́umyfile.tex�v�ƂȂ�܂��B���̍�ƕ������K�v�Ȃ̂́A�t�H���_���ɃX�y�[�X�������Ă������悤�ɂł��B�ˑR�Ƃ���TeX�́A�ŏI�I�ȃt�@�C�����ɂ���X�y�[�X��e�F���܂���B
+つづく６行では、変数dirNameとbaseNameを定義しています。ソースファイルが「/Users/koch/This directory/Stuff/myfile.tex」の場合、dirNameは、シングルクオートとダブルクオートを含めて「" '/Users/koch/This directory/Stuff' "」となり、baseNameは「myfile.tex」となります。この作業部分が必要なのは、フォルダ名にスペースがあってもいいようにです。依然としてTeXは、最終的なファイル名にあるスペースを容認しません。
 </p>
 
 <p>
-���̂܂����̂R�s���V�F���X�N���v�g���Ăяo���Ă��܂��B���ʓI�ɂ�Terminal�Łucd dirName; ~/Library/TeXShop/bin/pdflatexc baseName�v�Ƒł����ނ̂Ɠ����Ƃ͂����A�͂邩�ɐ��m�ł������Ƃ����̂��AdirName�͈��p�ł͂Ȃ��`�i�܂�A��̗�Ō����΁A�r���̃f�B���N�g���ɃX�y�[�X������̂ŃV���O���N�I�[�g���܂߂āu'/Users/koch/This directory/Stuff'�v�j�ɒu�������˂΂Ȃ�Ȃ��̂ł��B
+そのまた次の３行がシェルスクリプトを呼び出しています。結果的にはTerminalで「cd dirName; ~/Library/TeXShop/bin/pdflatexc baseName」と打ち込むのと同じとはいえ、はるかに正確です──というのも、dirNameは引用ではない形（つまり、上の例で言えば、途中のディレクトリにスペースがあるのでシングルクオートを含めて「'/Users/koch/This directory/Stuff'」）に置き換えねばならないのです。
 </p>
 
 <p>
-AppleScript�ɂ�����V�F���X�N���v�g�͎��̂悤�Ȍ`�Ŕ��߂���܂�����
+AppleScriptにおけるシェルスクリプトは次のような形で発令されます──
 </p>
 
 <tt>
@@ -132,7 +132,7 @@ AppleScript�ɂ�����V�F���X�N���v�g�͎��̂悤�Ȍ`�Ŕ��߂���܂�����
 </tt>
 
 <p>
-�����̃V�F���X�N���v�g���������������̂ł���΁A�Γ��ɂȂ��`���ŏ����̂������ł��傤����
+複数のシェルスクリプトを結合させたいのであれば、対等につなぐ形式で書くのがいいでしょう──
 </p>
 
 <tt>
@@ -142,7 +142,7 @@ AppleScript�ɂ�����V�F���X�N���v�g�͎��̂悤�Ȍ`�Ŕ��߂���܂�����
 </tt>
 
 <p>
-cmd�ƈ��p���̊Ԃ̔��p�X�y�[�X�ɒ��ӂ��Ă��������B�A���p�T���h�i���L���j�̓o�C�i���̘A�����Z�q�ł��B�܂肱���������Ƃł�����
+cmdと引用符の間の半角スペースに注意してください。アンパサンド（＆記号）はバイナリの連結演算子です。つまりこういうことです──
 </p>
 
 <tt>
@@ -152,7 +152,7 @@ cmd�ƈ��p���̊Ԃ̔��p�X�y�[�X�ɒ��ӂ��Ă��������B�A���p�T���h�i���L���j�̓o�C�i�
 </tt>
 
 <p>
-�V�F����AppleScript�ŌĂяo�����ꍇ�A�f�t�H���g�̍�ƃf�B���N�g���̓��[�g�f�B���N�g���ł��B
+シェルがAppleScriptで呼び出される場合、デフォルトの作業ディレクトリはルートディレクトリです。
 </p>
 
 <tt>
@@ -162,11 +162,11 @@ cmd�ƈ��p���̊Ԃ̔��p�X�y�[�X�ɒ��ӂ��Ă��������B�A���p�T���h�i���L���j�̓o�C�i�
 </tt>
 
 <p>
-��̃R�}���h�ł́A�f�B���N�g����dirName�Œ�߂��Ă���f�B���N�g���ɕύX���Ă��܂� �GdirName�͂��łɈ��p�ς݂Ȃ̂ň��p����������K�v�͂���܂���B
+上のコマンドでは、ディレクトリをdirNameで定められているディレクトリに変更しています ；dirNameはすでに引用済みなので引用符を加える必要はありません。
 </p>
 
 <p>
-��ƃf�B���N�g���𓮂������ɂ���ɃR�}���h����ꂽ���̂ł���΁A�udo shell script�v�̌`�ł͋L�q�ł��܂��񄟄����ꂾ�ƐV�K�V�F�����Ăяo����Ă��܂��܂��BTerminal�ł͘A������R�}���h���Z�~�R�����ŋ�؂�܂����AAppleScript�ł́u";"�v���g���܂��B�܂肱�������ӂ��Ʉ���
+作業ディレクトリを動かさずにさらにコマンドを入れたいのであれば、「do shell script」の形では記述できません──それだと新規シェルが呼び出されてしまいます。Terminalでは連続するコマンドをセミコロンで区切りますが、AppleScriptでは「";"」を使います。つまりこういうふうに──
 </p>
 
 <tt>
@@ -176,7 +176,7 @@ cmd�ƈ��p���̊Ԃ̔��p�X�y�[�X�ɒ��ӂ��Ă��������B�A���p�T���h�i���L���j�̓o�C�i�
 </tt>
 
 <p>
-��L�̗�Ō����Ȃ炱��́A�����������Ƃł��Fcmd(1) = cd�E "input(1)" = dirName�Ecmd(2) = ~/Library/TeX/bin/pdflatexc�i�V�F���X�N���v�g���Ăяo���Ă��܂��j �E "input(2)" = baseName�B
+上記の例で言うならこれは、こういうことです：cmd(1) = cd・ "input(1)" = dirName・cmd(2) = ~/Library/TeX/bin/pdflatexc（シェルスクリプトを呼び出しています） ・ "input(2)" = baseName。
 </p>
 
 <tt>
@@ -187,37 +187,37 @@ cmd�ƈ��p���̊Ԃ̔��p�X�y�[�X�ɒ��ӂ��Ă��������B�A���p�T���h�i���L���j�̓o�C�i�
 </tt>
 
 <p>
-�����Ƃ����Q�s�͒P�ɁA�ЂƂȂ���̃R�}���h��ϐ����Ƃɕ������������Ă��邾���̂��Ƃł��B
+──という２行は単に、ひとつながりのコマンドを変数ごとに分かち書きしているだけのことです。
 </p>
 
 <p>
-�Ō�̂R�s�Ńv���r���[�E�C���h�E���X�V���Ă��܂��B
+最後の３行でプレビューウインドウを更新しています。
 </p>
 
 <p>
-�������ɕ��G�ȍs������������܂����A�����������̂ł��A���̂܂܃R�s�[���ĐV�����X�N���v�g�Ɏg���܂��B
+たしかに複雑な行もいくつかありますが、そうしたものでも、そのままコピーして新しいスクリプトに使えます。
 </p>
 
 </div>		
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">�}�N���E�w���v</div>
-<div id="header_title">�V�F���R�}���h�ŃX�N���v�g������</div>
+<div id="header_chapter">マクロ・ヘルプ</div>
+<div id="header_title">シェルコマンドでスクリプトを書く</div>
 
 <div id="menu_border">
 
 	<UL>
-		<li><a href="macros_preliminaries.htm">�܂�����</a> 
-		<li><a href="macros_default.htm">�f�t�H���g�̃}�N���𗝉�����</a>
-		<li><a href="macros_rearrange.htm">�}�N���̍��ږ�����בւ���</a>
-		<li><a href="macros_define.htm">�V�����}�N�����`����</a>
-		<li><a href="macros_applescript.htm">AppleScript�}�N��</a>
+		<li><a href="macros_preliminaries.htm">まえがき</a> 
+		<li><a href="macros_default.htm">デフォルトのマクロを理解する</a>
+		<li><a href="macros_rearrange.htm">マクロの項目名を並べ替える</a>
+		<li><a href="macros_define.htm">新しいマクロを定義する</a>
+		<li><a href="macros_applescript.htm">AppleScriptマクロ</a>
 
-		<li><a href="macros_includedscripts.htm">�f�t�H���g��AppleScript�}�N��</a>
-		<li><a href="macros_defapplescript.htm">AppleScript�}�N�����`����</a>
-		<li><a href="macros_dialogs.htm">�_�C�A���O�����</a>
-		<li><a href="macros_writingcompletescripts.htm">TeXShop�̃^�C�v�Z�b�g�R�}���h�ŃX�N���v�g������</a>
-		<li><a href="macros_writingcommandscripts.htm">�V�F���R�}���h�ŃX�N���v�g������</a>
+		<li><a href="macros_includedscripts.htm">デフォルトのAppleScriptマクロ</a>
+		<li><a href="macros_defapplescript.htm">AppleScriptマクロを定義する</a>
+		<li><a href="macros_dialogs.htm">ダイアログを作る</a>
+		<li><a href="macros_writingcompletescripts.htm">TeXShopのタイプセットコマンドでスクリプトを書く</a>
+		<li><a href="macros_writingcommandscripts.htm">シェルコマンドでスクリプトを書く</a>
 	</UL>
 </div>
 </BODY>

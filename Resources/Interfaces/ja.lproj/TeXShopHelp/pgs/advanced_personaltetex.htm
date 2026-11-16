@@ -1,10 +1,10 @@
 <HTML>
 
 <HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-		<TITLE>�X�^�C���ƃ}�N����teTeX�ɒǉ�����</TITLE>
+		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
+		<TITLE>スタイルとマクロをteTeXに追加する</TITLE>
 		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="���ȍ쐬����texmf�Ɗ��ϐ��ɂ���">
+		<META NAME="description" CONTENT="自己作成したtexmfと環境変数について">
 		<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -13,33 +13,33 @@
 <div id="content_border">
 	
 <p>
-���[�U�͂������̈قȂ�v���W�F�N�g�ŋ��p���邽�߂ɒǉ���sty�Ecls�Ebib�����tex�Ȃǂ̃t�@�C�����쐬���邱�Ƃ�����܂��Btex�̃\�[�X�E�t�@�C�����^�C�v�Z�b�g����Ƃ��ɁA�����̃t�@�C��������̃t�H���_���ɂ���΁ATeX��LaTeX�ɂ͂�����Ɠǂݎ���Ă��炦�܂����A�t�@�C���̑��d�R�s�[���R���s���[�^��ɕێ����Ȃ���΂Ȃ�܂���B
+ユーザはいくつかの異なるプロジェクトで共用するために追加のsty・cls・bibおよびtexなどのファイルを作成することもあります。texのソース・ファイルをタイプセットするときに、それらのファイルが同一のフォルダ内にあれば、TeXやLaTeXにはきちんと読み取ってもらえますが、ファイルの多重コピーをコンピュータ上に保持しなければなりません。
 </p>
 
 <p>
-���ׂĂ�teTeX�v���W�F�N�g�ɑ΂��Ă����̃t�@�C����ǂݎ��\�ɂ��邱�Ƃ��ł��܂������^�C�v�Z�b�g��TeXShop����s�Ȃ��ɂ���A�^�[�~�i������s�Ȃ��ɂ���B�������邽�߂ɂ́A�z�[���E�f�B���N�g�����̃��C�u�����E�t�H���_��texmf�Ƃ������O�ŃT�u�t�H���_�����܂��B������tex��bibtex�Ƃ������O�ŃT�u�t�H���_�����܂��Btex�t�H���_���ɂ�latex�Ƃ������O�̃T�u�t�H���_�����܂��B�����̃t�H���_�Ɍl�I�ȃt�@�C�������܂��Ă����܂��B
+すべてのteTeXプロジェクトに対してこれらのファイルを読み取り可能にすることができます──タイプセットをTeXShopから行なうにしろ、ターミナルから行なうにしろ。そうするためには、ホーム・ディレクトリ内のライブラリ・フォルダにtexmfという名前でサブフォルダを作ります。そしてtexとbibtexという名前でサブフォルダを作ります。texフォルダ内にはlatexという名前のサブフォルダも作ります。これらのフォルダに個人的なファイルをしまっておきます。
 </p>
 
 <p>
-TeX�� ~/Library/texmf/tex�Ȃ����͂��̃f�B���N�g���ȉ��̃T�u�t�H���_���ɂ��邷�ׂẴt�@�C�������m���܂��BLaTeX�� ~/Library/texmf/tex/latex�Ȃ����͂��̃f�B���N�g���ȉ��̃T�u�t�H���_���ɂ��邷�ׂẴt�@�C�������m���ABibTeX��MakeIndex�͂��ꂼ�� ~/Library/texmf/bibtex���邢�� ~/Library/texmf/makeindex�ɂ��邷�ׂẴt�@�C�������m����ł��傤�B�����̃t�H���_�Ƀt�@�C����ǉ��������texhash�����s����K�v�͂���܂���B
+TeXは ~/Library/texmf/texないしはこのディレクトリ以下のサブフォルダ内にあるすべてのファイルを検知します。LaTeXは ~/Library/texmf/tex/latexないしはこのディレクトリ以下のサブフォルダ内にあるすべてのファイルを検知し、BibTeXとMakeIndexはそれぞれ ~/Library/texmf/bibtexあるいは ~/Library/texmf/makeindexにあるすべてのファイルを検知するでしょう。これらのフォルダにファイルを追加した後でtexhashを実行する必要はありません。
 </p>
 
 <p>
-����UNIX�}�V���ɂ����āATeX�͌l�I�ȓ��̓t�@�C���̏��݂����ϐ��iTEXINPUTS�EBSTINPUTS�����BIBINPUTS�j�̐ݒ�ɂ��m�炳��邱�Ƃ�����܂��B�����Gerben Wierda��teTeX�f�B�X�g���r���[�V�����ł͒ʏ�͕s�v�ł�����ǂ��A���ʂȏ󋵂ł͂������邱�Ƃ��ł��܂��BMac OS X�ł� ~/.MacOSX/environment.plist�Ƃ������O�̃t�@�C�����z�[���E�f�B���N�g���ɍ�邱�ƂŁA���ϐ��ɂ��ăv���O�����ɒm�点�邱�Ƃ����[�U�ɋ����Ă��܂��B�����̊��ϐ��͂��ׂẴ��[�U�E�V�F������т��ׂĂ�Carbon��Cocoa�v���O�����ɓǂݍ��܂�܂������ł�����A���̃t�@�C�������ɍۂ��Ă͒��ӂ𕥂��ׂ��ł��B
+他のUNIXマシンにおいて、TeXは個人的な入力ファイルの所在を環境変数（TEXINPUTS・BSTINPUTSおよびBIBINPUTS）の設定により知らされることもあります。これはGerben WierdaのteTeXディストリビューションでは通常は不要ですけれども、特別な状況ではそうすることもできます。Mac OS Xでは ~/.MacOSX/environment.plistという名前のファイルをホーム・ディレクトリに作ることで、環境変数についてプログラムに知らせることをユーザに許可しています。これらの環境変数はすべてのユーザ・シェルおよびすべてのCarbonとCocoaプログラムに読み込まれます──ですから、このファイルを作るに際しては注意を払うべきです。
 </p>
 
 <!-- 
 <p>
-���ɂ���̂�Nathan Potter�������Ă��ꂽenvironment.plist�t�@�C���̃T���v���ł� �G ���肪�Ƃ��I ����Ȃ�ڍׂɂ��ẮA
+下にあるのはNathan Potterが送ってくれたenvironment.plistファイルのサンプルです ； ありがとう！ さらなる詳細については、
 <a href="http://developer.apple.com/qa/qa2001/qa1067.html">http://developer.apple.com/qa/qa2001/qa1067.html</a>
-�ł����ׂ�������
+でお調べください
 </p>
  -->
 
 <p>
-���ɂ���̂�Nathan Potter���񂪑����Ă��ꂽenvironment.plist�t�@�C���̃T���v���ł� �G ���肪�Ƃ��I ����Ȃ�ڍׂɂ��ẮA
+下にあるのはNathan Potterさんが送ってくれたenvironment.plistファイルのサンプルです ； ありがとう！ さらなる詳細については、
 <a href="http://developer.apple.com/qa/qa2001/qa1067.html">http://developer.apple.com/qa/qa2001/qa1067.html</a>
-�ł����ׂ�������
+でお調べください
 </p>
 
 <br>
@@ -48,34 +48,34 @@ TeX�� ~/Library/texmf/tex�Ȃ����͂��̃f�B���N�g���ȉ��̃T�u�t�H���_���ɂ��邷�ׂ
 
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">�㋉�����̃w���v</div>
-<div id="header_title">�X�^�C���ƃ}�N����teTeX�ɒǉ�����</div>
+<div id="header_chapter">上級向けのヘルプ</div>
+<div id="header_title">スタイルとマクロをteTeXに追加する</div>
 
 		<div id="menu_border">
 		<ul>
-			<li><a href="advanced_personaltetex.htm">�X�^�C���ƃ}�N����teTeX�ɒǉ�����</a>
-			<li><a href="advanced_addengine.htm">�ǉ��̃^�C�v�Z�b�g�G���W��</a>
-			<li><a href="advanced_removeaux.htm">��ƃt�@�C�����폜����</a>
-			<li><a href="advanced_externaleditor.htm">�O���G�f�B�^���g�p����</a>
-			<li><a href="advanced_pdfcopypaste.htm">�v���r���[�E�C���h�E����̃R�s�[���y�[�X�g����уh���b�O���h���b�v </a>
-			<li><a href="advanced_root.htm">�v���W�F�N�g�̃��[�g�t�@�C����ݒ肷��</a>
+			<li><a href="advanced_personaltetex.htm">スタイルとマクロをteTeXに追加する</a>
+			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
+			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
+			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
+			<li><a href="advanced_pdfcopypaste.htm">プレビューウインドウからのコピー＆ペーストおよびドラッグ＆ドロップ </a>
+			<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a>
 			<li><a href="advanced_pdfsync.htm">Pdfsync</a>
-			<li><a href="advanced_unicode.htm">Unicode�i���j�R�[�h�j</a>
+			<li><a href="advanced_unicode.htm">Unicode（ユニコード）</a>
 			<li><a href="advanced_bibtex.htm">BibTeX</a>
 			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">�V�K�t�H�[�}�b�g�̍쐬�Ɨ��p</a>
-			<li><a href="advanced_otherfiles.htm">���̑��̃t�@�C����TeXShop�ŊJ��</a>
+			<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a>
+			<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a>
 			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">�e����łւ̃��[�J���C�Y</a>
-			<li><a href="advanced_syntaxcolor.htm">�\�[�X�̃J���[�\��</a>
-			<li><a href="advanced_shellescape.htm">Shell-Escape�̕ی�</a>			
-			<li><a href="advanced_coloredtext.htm">TeX�ɂ����镶���̐F�w��</a>			
-			<li><a href="advanced_moretetex.htm">teTeX�ɂ��Ă����</a>
-			<li><a href="advanced_fink.htm">Fink�Ƃ̋���</a>
-			<li><a href="advanced_otherdistributions.htm">����TeX�f�B�X�g���r���[�V�����Ƃ̋���</a>
-			<li><a href="advanced_context.htm">ConTeXt��MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist�t�@�C��</a>
-			<li><a href="advanced_menushortcuts.htm">���j���[���ڂ̃V���[�g�J�b�g�L�[���Ē�`����</a>
+			<li><a href="advanced_localization.htm">各国語版へのローカライズ</a>
+			<li><a href="advanced_syntaxcolor.htm">ソースのカラー表示</a>
+			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
+			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
+			<li><a href="advanced_moretetex.htm">teTeXについてさらに</a>
+			<li><a href="advanced_fink.htm">Finkとの共存</a>
+			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
+			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
+			<li><a href="advanced_plist.htm">Plistファイル</a>
+			<li><a href="advanced_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
 		</ul>
 	</div>
 	</body>

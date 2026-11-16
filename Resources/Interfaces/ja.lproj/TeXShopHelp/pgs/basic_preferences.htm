@@ -1,79 +1,79 @@
 <html>
 <head>
-<meta content="text/html;charset=Shift_JIS" http-equiv="content-type"/>
-<title>�ݒ�</title>
+<meta content="text/html;charset=UTF-8" http-equiv="content-type"/>
+<title>設定</title>
 <meta content="Copyright (c) 2003 Richard Koch under the GNU FDL" name="copyright"/>
-<meta content="�v���r���[�̃Y�[���{���@�E�C���h�E�ʒu�@�ݒ�v���t�@�C���i�G���R�[�f�B���O�����j�ɂ���" name="description"/>
+<meta content="プレビューのズーム倍率　ウインドウ位置　設定プロファイル（エンコーディング方式）について" name="description"/>
 <link href="../sty/screen.css" media="all" rel="stylesheet"/>
 </head>
-<!--�R�����g�A�E�g���Ă��镔���̓o�[�W����1.35�̋����ł��B-->
+<!--コメントアウトしてある部分はバージョン1.35の旧文です。-->
 <body>
 
 <div id="content_border">
-<p>�J�e�S����������Ɉ�v����ƁA���̃J�e�S���̐擪�ւ̓�����1���\������܂��B�ʂ̐ݒ�́A���̖��O�E�I�����E�����Ō�����܂��B�����s�̐F�̗���1���ɂ܂Ƃ܂�܂��B</p>
+<p>カテゴリ名や説明に一致すると、そのカテゴリの先頭への入口が1件表示されます。個別の設定は、その名前・選択肢・説明で見つかります。同じ行の色の欄は1件にまとまります。</p>
 <p>
-�������̍��ڂ́u�ݒ�c�v���j���[���g���ĕύX�ł��܂��F�\�[�X�E�C���h�E�̃f�t�H���g�E�t�H���g�A�v���r���[�E�C���h�E�̔{���A����ɂ��̂Q�̃E�C���h�E���ŏ��ɕ\�������f�t�H���g�̈ʒu�Ȃǂł��B�R���\�[�����z�u�ł��܂������^�C�v�Z�b�g���ɏ�ɕ\�����邩�A�������̓G���[���������Ƃ��ɂ����\�����邩�B
-�\�[�X�E�C���h�E�̐ݒ���ł���̂ŁA
-�ŏ��̃N���b�N�ł̓E�C���h�E���A�N�e�B�u�ɂ��邾���ɂƂǂ߂邱�Ƃ��ł���΁A
-�����N���b�N�Ńe�L�X�g�̑}���ʒu���߂Ă��܂����Ƃ��ł��܂�
-<small>�i�V�����ݒ荀�ځu�I�����ɃJ�[�\�����ړ��v�Ƀ`�F�b�N�����܂��j</small>�B
+いくつかの項目は「設定…」メニューを使って変更できます：ソースウインドウのデフォルト・フォント、プレビューウインドウの倍率、それにこの２つのウインドウが最初に表示されるデフォルトの位置などです。コンソールも配置できます──タイプセット時に常に表示するか、もしくはエラーがあったときにだけ表示するか。
+ソースウインドウの設定もできるので、
+最初のクリックではウインドウをアクティブにするだけにとどめることもできれば、
+ワンクリックでテキストの挿入位置を定めてしまうこともできます
+<small>（新しい設定項目「選択時にカーソルを移動」にチェックを入れます）</small>。
 </p>
 <p>
-�ݒ�E�C���h�E�ł́uTeX�v�ƁuLaTeX�v�{�^���������ꂽ�Ƃ��Ɏ��s����R�}���h��ύX���邱�Ƃ��ł��܂��B���ꂪ���ɗ��̂́AeTeX�ƌĂ΂��o�[�W������TeX���D�ރ��[�U�����邩��ł����AeTeX�ɂ́Apdfetex��pdfelatex�Ƃ���pdf�ł�����܂��B���̑�փR�}���h�͌����܂ł��Ȃ�pdf�o�̓t�@�C���𐶐����܂��B�V�����v���O������teTeX�o�C�i���̃f�B���N�g���ɂ���̂ł���΁A�ݒ�E�C���h�E�Ŗ��O����������ł�邾���ŏ\���ł� �G �_�C�A���O�ł͂��̑��̂Ƃ���ɂ���t�@�C���̃t���p�X���ɂ��Ή����܂��B
+設定ウインドウでは「TeX」と「LaTeX」ボタンが押されたときに実行するコマンドを変更することもできます。これが役に立つのは、eTeXと呼ばれるバージョンのTeXを好むユーザもいるからですが、eTeXには、pdfetexとpdfelatexというpdf版もあります。この代替コマンドは言うまでもなくpdf出力ファイルを生成します。新しいプログラムがteTeXバイナリのディレクトリにあるのであれば、設定ウインドウで名前を書き込んでやるだけで十分です ； ダイアログではその他のところにあるファイルのフルパス名にも対応します。
 </p>
 <p>
-TeXShop�ł̃e�L�X�g�ҏW�ɂ�Apple��Cocoa�̕ҏW�N���X���p�����Ă���A����������Unicode�ōs�Ȃ��Ă��܂��BTeXShop���ނ��f�B�X�N�ɏ������܂��Ƃ��ɂ́A�ʏ�W�r�b�g��ASCII�R�[�h�ɃG���R�[�f�B���O����܂������Ƃ����̂�TeX�̂ق��ł��������t�@�C�����󂯎�邱�Ƃ�z�肵�Ă��邩��ł��B�G���R�[�f�B���O�ɂ͕���������������܂� �GMac OS Roman�EIso Latin 1�EIso Latin 2�E ���̑��ł��B�ݒ荀�ڂŎg�p����G���R�[�f�B���O������I�����܂��B�����̃��[�U�ɂƂ��ẮA�ǂ��I�����Ă��Ⴂ�͂Ȃ��ł��傤�B�A�N�Z���g�L���̂������[���b�p�������L�[�{�[�h���炶���ɓ��͂ł���TeX�p�b�P�[�W������܂� �G ���������p�b�P�[�W�ɂ�Iso Latin�G���R�[�f�B���O���K�v�ƂȂ�܂��B���̐ݒ�̃I���W�i���R�[�h��Martin Heusse�ɒ񋟂��Ă��������܂����B�G���R�[�f�B���O�����́u�J��...�v�Ɓu�ۑ��v�̃p�l���Œ��ڑI�����邱�Ƃ��ł��܂��B
+TeXShopでのテキスト編集にはAppleのCocoaの編集クラスが用いられており、内部処理はUnicodeで行なわれています。TeXShop書類がディスクに書き込まれるときには、通常８ビットのASCIIコードにエンコーディングされます──というのもTeXのほうでそうしたファイルを受け取ることを想定しているからです。エンコーディングには方式がいくつかあります ；Mac OS Roman・Iso Latin 1・Iso Latin 2・ その他です。設定項目で使用するエンコーディング方式を選択します。多くのユーザにとっては、どれを選択しても違いはないでしょう。アクセント記号のついたヨーロッパ文字をキーボードからじかに入力できるTeXパッケージもあります ； こうしたパッケージにはIso Latinエンコーディングが必要となります。この設定のオリジナルコードはMartin Heusseに提供していただきました。エンコーディング方式は「開く...」と「保存」のパネルで直接選択することもできます。
 </p>
 <p>
-���{��؍��̃��[�U�͑��̃G���R�[�h�������g���ł��傤���A�����������Ă��܂��B
+日本や韓国のユーザは他のエンコード方式を使うでしょうが、それらも入っています。
 </p>
-<p>�\�[�X�E�v���r���[�E�R���\�[���̔w�i�F�A�����F�A�J�[�\���F�ƕs�����x�́u�e�[�}�v�Őݒ肵�܂��B�s�����x��0�`100%�̃X���C�_�[�Ɛ��l���Œ������܂��B���l���ɂ͐�������͂��AReturn���������ʂ̗��ֈڂ�Ɣ��f����܂��B���l���̉��̖��{�^���ł́A1%���������܂��B�͈͊O�̐�����0�܂���100�ɕ␳���܂��B�����Ȃǂ̖����ȓ��͂́A�m�莞�Ɍ��̒l�֖߂��܂��B�Ō��Ɠ\��t���œ����K�����g���܂��B</p>
-<p>�u��ʁv�́u�ݒ�v���t�@�C���v�ŏ����ݒ�̑g��K�p�ł��܂��B</p>
+<p>ソース・プレビュー・コンソールの背景色、文字色、カーソル色と不透明度は「テーマ」で設定します。不透明度は0～100%のスライダーと数値欄で調整します。数値欄には整数を入力し、Returnを押すか別の欄へ移ると反映されます。数値欄の横の矢印ボタンでは、1%ずつ増減します。範囲外の整数は0または100に補正します。小数などの無効な入力は、確定時に元の値へ戻します。打鍵と貼り付けで同じ規則を使います。</p>
+<p>「一般」の「設定プロファイル」で初期設定の組を適用できます。</p>
 <hr/>
 <p>
-TeXShop�o�[�W����1.35�ł́A���̂悤�Ȑݒ�v���t�@�C�������ڂ���Ă���A���{��pTeX�f�B�X�g���r���[�V�����ł��̂܂܎g�����Ƃ��ł��܂��B</p>
+TeXShopバージョン1.35では、下のような設定プロファイルが搭載されており、日本語pTeXディストリビューションでそのまま使うことができます。</p>
 <table border="">
-<tr><th><font size="1">�ݒ�ӏ�<th><font size="1">Shift JIS<th><font size="1">EUC</font></th></font></th></font></th></tr>
-<tr><td align="center"><font size="1">���� > �G���R�[�f�B���O<td align="center"><font size="1">Japanese ( Shift JIS \ )<td align="center"><font size="1">Japanese ( EUC )</font></td></font></td></font></td></tr>
-<tr><td align="center"><font size="1">�v���r���[ > ���J���y�[�W<td align="center" colspan="2"><font size="1">������X�^�[�g�i���ʁj</font></td></font></td></tr>
-<tr><td align="center"><font size="1">�^�C�v�Z�b�g > �p�X > TeX�G���W��<td align="center" colspan="2"><font size="1">/usr/local/bin</font></td></font></td></tr>
-<tr><td align="center"><font size="1">�^�C�v�Z�b�g > DVI�o�R > TeX<td align="center"><font size="1">~/Library/TeXShop/bin/ptex2pdf-sjis<td align="center"><font size="1">~/Library/TeXShop/bin/ptex2pdf-euc</font></td></font></td></font></td></tr>
-<tr><td align="center"><font size="1">�^�C�v�Z�b�g > DVI�o�R > LaTeX<td align="center"><font size="1">~/Library/TeXShop/bin/platex2pdf-sjis<td align="center"><font size="1">~/Library/TeXShop/bin/platex2pdf-euc</font></td></font></td></font></td></tr>
-<tr><td align="center"><font size="1">�^�C�v�Z�b�g > �c�[�� > BibTeX�G���W��<td align="center" colspan="2"><font size="1">jbibtex</font></td></font></td></tr>
-<tr><td align="center"><font size="1">�^�C�v�Z�b�g > ���� > �R���p�C���@<td align="center" colspan="2"><font size="1">DVI�o�R</font></td></font></td></tr>
+<tr><th><font size="1">設定箇所<th><font size="1">Shift JIS<th><font size="1">EUC</font></th></font></th></font></th></tr>
+<tr><td align="center"><font size="1">書類 > エンコーディング<td align="center"><font size="1">Japanese ( Shift JIS \ )<td align="center"><font size="1">Japanese ( EUC )</font></td></font></td></font></td></tr>
+<tr><td align="center"><font size="1">プレビュー > 見開きページ<td align="center" colspan="2"><font size="1">左からスタート（両面）</font></td></font></td></tr>
+<tr><td align="center"><font size="1">タイプセット > パス > TeXエンジン<td align="center" colspan="2"><font size="1">/usr/local/bin</font></td></font></td></tr>
+<tr><td align="center"><font size="1">タイプセット > DVI経由 > TeX<td align="center"><font size="1">~/Library/TeXShop/bin/ptex2pdf-sjis<td align="center"><font size="1">~/Library/TeXShop/bin/ptex2pdf-euc</font></td></font></td></font></td></tr>
+<tr><td align="center"><font size="1">タイプセット > DVI経由 > LaTeX<td align="center"><font size="1">~/Library/TeXShop/bin/platex2pdf-sjis<td align="center"><font size="1">~/Library/TeXShop/bin/platex2pdf-euc</font></td></font></td></font></td></tr>
+<tr><td align="center"><font size="1">タイプセット > ツール > BibTeXエンジン<td align="center" colspan="2"><font size="1">jbibtex</font></td></font></td></tr>
+<tr><td align="center"><font size="1">タイプセット > 既定 > コンパイル法<td align="center" colspan="2"><font size="1">DVI経由</font></td></font></td></tr>
 </table>
 <p>
-���F�����̐ݒ��1.34�܂ł̂��̂���ύX����Ă��܂��̂ł����ӂ��������B
+※：これらの設定は1.34までのものから変更されていますのでご注意ください。
 </p>
-<p>�ݒ�ɂ́u��ʁv�u���ނƕۑ��v�u�G�f�B�^�v�u�L�[�{�[�h�v�u�X�y���`�F�b�N�v�u�e�[�}�v�u�^�C�v�Z�b�g�v�u�R���\�[���v�u�v���r���[�v�u�A�b�v�f�[�g�v��10���ނ�����܂��B�u�X�y���`�F�b�N�v�ł́uLaTeX�̍\�����l������i�����j�v�Ɓu�]���̕����v�̂ǂ��炩��I�т܂��B�V�����̉��ɂ́uLaTeX�̏��O�K����ҏW�c�v�A�]�������̉��ɂ͎���������3���ڂ�����܂��BTab��⊮�L�[�ɂ��ăL�[������Tab�������ƁA�\��̐����ƕ⊮�L�[�̐ݒ�s��\�����܂��B�u��ʁv����R�����g�s�ƉB���ݒ�̐������J���܂��B</p><h3 id="settings-search">�ݒ������</h3><p>�T�C�h�o�[��́u�ݒ�������v�ŁA�ݒ荀�ځE�I�����E���j���[�R�}���h��T���܂��B���ʂɂ͍��ږ��ƃJ�e�S������\�����܂��B�󔒂ŋ�؂�����͓������ڂɈ�v���A�J�e�S�����Ŕ͈͂��i��܂��B�啶���Ə������A�����̃A�N�Z���g�A�S�p�Ɣ��p�A�Ђ炪�ȂƃJ�^�J�i�𓯂��悤�Ɉ����܂��B���ʂ�I�ԂƂ��̍s�܂ňړ����ċ������A�ړ������ɉ����܂��B����������ɂ���ƕ\�����̃J�e�S����ۂ��܂��B�u�߂�v�u�i�ށv�͌��������ړ������ɏ]���܂��B���j���[�R�}���h�̌��ʂ�I�ԂƁu�L�[�{�[�h�v�́u�@�\�Ō����v�Ɉ����p���܂��B�V���[�g�J�b�g�̋L�^���́A�L�[�̋L�^��D�悵�܂��B</p><p>�u�I�[�g�Z�[�u�ƃo�[�W�����v��TeXShop�̍ċN����ɗL���ɂȂ�܂��B�W���̌����p�l���ƌ����o�[�̐؂�ւ��́A�J���Ă��鏑�ނ̃\�[�X�E�R���\�[���E���O�ɂ��̏�Ŕ��f���܂��BOgreKit�ւ̐؂�ւ���OgreKit����̐؂�ւ��͍ċN����ɗL���ɂȂ�܂��B</p></div>
+<p>設定には「一般」「書類と保存」「エディタ」「キーボード」「スペルチェック」「テーマ」「タイプセット」「コンソール」「プレビュー」「アップデート」の10分類があります。「スペルチェック」では「LaTeXの構文を考慮する（推奨）」と「従来の方式」のどちらかを選びます。新方式の下には「LaTeXの除外規則を編集…」、従来方式の下には字下げした3項目があります。Tabを補完キーにしてキー検索でTabを押すと、予約の説明と補完キーの設定行を表示します。「一般」からコメント行と隠し設定の説明を開けます。</p><h3 id="settings-search">設定を検索</h3><p>サイドバー上の「設定を検索」で、設定項目・選択肢・メニューコマンドを探せます。結果には項目名とカテゴリ名を表示します。空白で区切った語は同じ項目に一致し、カテゴリ名で範囲を絞れます。大文字と小文字、欧文のアクセント、全角と半角、ひらがなとカタカナを同じように扱います。結果を選ぶとその行まで移動して強調し、移動履歴に加えます。検索欄を空にすると表示中のカテゴリを保ちます。「戻る」「進む」は検索中も移動履歴に従います。メニューコマンドの結果を選ぶと「キーボード」の「機能で検索」に引き継ぎます。ショートカットの記録中は、キーの記録を優先します。</p><p>「オートセーブとバージョン」はTeXShopの再起動後に有効になります。標準の検索パネルと検索バーの切り替えは、開いている書類のソース・コンソール・ログにその場で反映します。OgreKitへの切り替えとOgreKitからの切り替えは再起動後に有効になります。</p></div>
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/xicnsc.gif" width="40"/></a></div>
-<div id="header_chapter">��{�I�ȃw���v</div>
-<div id="header_title"> �ݒ� </div>
+<div id="header_chapter">基本的なヘルプ</div>
+<div id="header_title"> 設定 </div>
 <div id="menu_border">
 <ul>
-<li><a href="basic_preliminaries.htm">�܂�����</a>
-<li><a href="basic_j_ptex.htm">pTeX��TeXShop�œ��{������\�z����</a>
-<li><a href="basic_installtetex.htm">teTeX�̓���ƃC���X�g�[��</a>
-<li><a href="basic_installtexshop.htm">TeXShop�̓���ƃC���X�g�[��</a>
-<li><a href="basic_typesetting.htm">�h�L�������g���^�C�v�Z�b�g����</a>
-<li><a href="basic_alternatetypeset.htm">�����ЂƂ̃^�C�v�Z�b�g����</a>
-<li><a href="basic_spelling.htm">�X�y�����`�F�b�N����</a>
-<li><a href="basic_latexpanel.htm">Latex�p�l��</a>
-<li><a href="basic_matrixpanel.htm">�s��p�l��</a>
-<li><a href="basic_macros.htm">�}�N��</a>
-<li><a href="basic_toolbar.htm">�c�[���o�[��Applescript</a>
-<li><a href="basic_graphics.htm">�摜������</a>
-<li><a href="basic_printing.htm">���</a>
-<li><a href="basic_preferences.htm">�ݒ�</a>
-<li><a href="basic_j_encoding.htm">���{��G���R�[�f�B���O�� \ &#165; �����̈���</a>
-<li><a href="basic_templates.htm">�e���v���[�g���j���[��ύX����</a>
-<li><a href="basic_edittricks.htm">�ҏW��̃R�c</a>
-<li><a href="basic_autocompletion.htm">�L�[�o�C���h</a>
-<li><a href="basic_commandcompletion.htm">�R�}���h�̕⊮</a>
-<li><a href="basic_bugs.htm">�o�O���|�[�g�𑗂�</a>
-<li><a href="basic_websites.htm">���ɗ��E�F�u�T�C�g</a>
-<li><a href="basic_license.htm">�g�p����</a>
+<li><a href="basic_preliminaries.htm">まえがき</a>
+<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a>
+<li><a href="basic_installtetex.htm">teTeXの入手とインストール</a>
+<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a>
+<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a>
+<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a>
+<li><a href="basic_spelling.htm">スペルをチェックする</a>
+<li><a href="basic_latexpanel.htm">Latexパネル</a>
+<li><a href="basic_matrixpanel.htm">行列パネル</a>
+<li><a href="basic_macros.htm">マクロ</a>
+<li><a href="basic_toolbar.htm">ツールバーとApplescript</a>
+<li><a href="basic_graphics.htm">画像を入れる</a>
+<li><a href="basic_printing.htm">印刷</a>
+<li><a href="basic_preferences.htm">設定</a>
+<li><a href="basic_j_encoding.htm">日本語エンコーディングと \ &#165; 文字の扱い</a>
+<li><a href="basic_templates.htm">テンプレートメニューを変更する</a>
+<li><a href="basic_edittricks.htm">編集上のコツ</a>
+<li><a href="basic_autocompletion.htm">キーバインド</a>
+<li><a href="basic_commandcompletion.htm">コマンドの補完</a>
+<li><a href="basic_bugs.htm">バグレポートを送る</a>
+<li><a href="basic_websites.htm">役に立つウェブサイト</a>
+<li><a href="basic_license.htm">使用許諾</a>
 </li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></ul>
 </div>
 

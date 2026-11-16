@@ -1,10 +1,10 @@
 <HTML>
 
 <HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-			<TITLE>�V�K�t�H�[�}�b�g�̍쐬�Ɨ��p</TITLE>
+			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
+			<TITLE>新規フォーマットの作成と利用</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="�t�H�[�}�b�g �t�H�[�}�b�g�t�@�C��fmt">
+			<META NAME="description" CONTENT="フォーマット フォーマットファイルfmt">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -16,7 +16,7 @@
 <h4> Using formats </h4>
  -->
 
-<h4>�t�H�[�}�b�g�̗��p</h4>
+<h4>フォーマットの利用</h4>
 
 <!-- 
 		<P>When TeX typesets a document, it must process the document header, which may contain
@@ -24,7 +24,7 @@ a large number of \input, \include, and \usepackage statements. Every time the d
 this process is repeated even though large portions of the header did not change.</P>
  -->
 <p>
-TeX���^�C�v�Z�b�g���s�Ȃ��ۂɂ́A�����̃w�b�_���������Ȃ���΂Ȃ�܂��񂪁A�����ɂ� \input�� \includde���邢�� \usepackage�Ȃǂ̖��߂��������܂܂�Ă��邩������܂���B�������^�C�v�Z�b�g���邽�тɁA���̃v���Z�X�͂���Ԃ���܂������w�b�_�̑啔���ɕω����Ȃ������Ƃ��Ă��ł��B
+TeXがタイプセットを行なう際には、文書のヘッダを処理しなければなりませんが、そこには \inputや \includdeあるいは \usepackageなどの命令が数多く含まれているかもしれません。文書をタイプセットするたびに、このプロセスはくり返されます──ヘッダの大部分に変化がなかったとしてもです。
 </p>
 
 <!-- 
@@ -33,7 +33,7 @@ the format file is created when TeX is installed on your machine and the command
  -->
 
 <p>
-TeX�ɂ͂��̃v���Z�X�����������邽�߂̋@�\���g�ݍ��܂�Ă��܂��B����ɂ��A�\�[�X�������������ʂ��u�t�H�[�}�b�g�t�@�C���v�ɏo�͂���悤�w�����邱�Ƃ��ł��܂��B�������Ă����Ă���TeX�Ń^�C�v�Z�b�g�����s����ƁA�f�����t�H�[�}�b�g��ǂݍ��񂾏�ŕ������^�C�v�Z�b�g���邱�Ƃ��ł��܂��BLaTeX�͂��̕��@�ō\�z����Ă��܂�����TeX���R���s���[�^�ɃC���X�g�[������ۂɃt�H�[�}�b�g�t�@�C������������܂����A�R�}���h�ulatex file�v��TeX�ɑ΂��Ă��̃t�H�[�}�b�g��ǂݍ��ނ悤�����A���̏�Łu�t�@�C���v���^�C�v�Z�b�g����̂ł��B
+TeXにはこのプロセスを高速化するための機構が組み込まれています。それにより、ソースを処理した結果を「フォーマットファイル」に出力するよう指示することができます。そうしておいてからTeXでタイプセットを実行すると、素早くフォーマットを読み込んだ上で文書をタイプセットすることができます。LaTeXはこの方法で構築されています──TeXをコンピュータにインストールする際にフォーマットファイルが生成されますが、コマンド「latex file」がTeXに対してこのフォーマットを読み込むよう命じ、その上で「ファイル」をタイプセットするのです。
 </p>
 
 <!-- 
@@ -42,7 +42,7 @@ This is done less often today, but dealing with format files may still be useful
  -->
 
 <p>
-�}�V�����x���܂��x�����������ɂ́A���[�U�͂悭�Ǝ��̃t�H�[�}�b�g�t�@�C�����쐬���ă^�C�v�Z�b�g�̃X�s�[�h���グ�Ă��܂����B����͍����ł͂��܂�s�Ȃ��Ȃ��̂ł����A�t�H�[�}�b�g�t�@�C���̗��p�͍��ł��Ȃ��L�p�Ȃ��Ƃ�������܂���B���Ƃ��΁A����g�D�ŁA���ʂ̃v���W�F�N�g�ɎQ������e�������p�ł���悤�A�t�H�[�}�b�g���쐬���Ĕz�z����A�Ƃ����悤�ɁB���̏͂ł́A������񋟂��ꂽ�t�H�[�}�b�g�𗘗p������@�A����тǂ̂悤�ɂ��ăt�H�[�}�b�g���쐬����̂��ɂ��Đ������܂��傤�B
+マシン速度がまだ遅かった時分には、ユーザはよく独自のフォーマットファイルを作成してタイプセットのスピードを上げていました。これは今日ではあまり行なわれないのですが、フォーマットファイルの利用は今でもなお有用なことかもしれません。たとえば、ある組織で、共通のプロジェクトに参加する各員が利用できるよう、フォーマットを作成して配布する、というように。この章では、他から提供されたフォーマットを利用する方法、およびどのようにしてフォーマットを作成するのかについて説明しましょう。
 </p>
 
 <!-- 
@@ -50,7 +50,7 @@ This is done less often today, but dealing with format files may still be useful
  -->
 
 <p>
-�T�^�I�ȃt�H�[�}�b�g�t�@�C���̊g���q�́ufmt�v�ł��B���Ƃ��΃I���S����w�̊w�����t�H�[�}�b�g�uuo.fmt�v��z�z�����Ƃ��܂��傤�B���̃t�H�[�}�b�g���g�p����ɂ́A�ȉ��̂悤�Ȏ菇�𓥂݂܂�����
+典型的なフォーマットファイルの拡張子は「fmt」です。たとえばオレゴン大学の学部がフォーマット「uo.fmt」を配布したとしましょう。このフォーマットを使用するには、以下のような手順を踏みます──
 </p>
 
 <ul>
@@ -58,24 +58,24 @@ This is done less often today, but dealing with format files may still be useful
 <!-- 
 <li> Move uo.fmt to "~/Library/texmf/web2c/uo.fmt". You may need to create some of these directories.
  -->
-<li>�uuo.fmt�v�� ~/Library/texmf/web2c/uo.fmt�ւƈڂ��܂��B���̂����̂������̃f�B���N�g���͐V���ɍ쐬����K�v�����邩�����܂���B
+<li>「uo.fmt」を ~/Library/texmf/web2c/uo.fmtへと移します。このうちのいくつかのディレクトリは新たに作成する必要があるかもしません。
 
 <!-- 
 <li> Create a new "engine file" by going to ~/Library/TeXShop/Engines and duplicating the file
 XeLaTeX.engine. Engine files need to have the execute bit set, and this duplication step automatically does that.
  -->
-<li>�V�����u�G���W���t�@�C���v���쐬���܂�����~/Library/TeXShop/Engines�֍s���uXeLaTeX.engine�v�Ƃ����t�@�C���𕡐����Ă��������B�G���W���t�@�C���ɂ͎��s�r�b�g�Z�b�g���K�v�ł����A���̕����̉ߒ��Ŏ����I�ɔ����܂��B
+<li>新しい「エンジンファイル」を作成します──~/Library/TeXShop/Enginesへ行き「XeLaTeX.engine」というファイルを複製してください。エンジンファイルには実行ビットセットが必要ですが、この複製の過程で自動的に備わります。
 
 <!-- 
 <li> Rename this new file. The name need not
 match the name of the format. Since the name will appear in the TeXShop interface, it should make sense to a user. We'll choose "Oregon.engine".
  -->
-<li>���������t�@�C���̖��̂�ύX���܂��B���̖��̂��t�H�[�}�b�g���Ɠ����ɂ���K�v�͂���܂���B���̂�TeXShop�̃C���^�[�t�F�C�X�ɕ\�������̂ŁA���[�U�ɂƂ��Ă킩��₷�����̂ɂ��܂��B�����ł́uOregon.engine�v�Ƃ��܂��B
+<li>複製したファイルの名称を変更します。この名称をフォーマット名と同じにする必要はありません。名称はTeXShopのインターフェイスに表示されるので、ユーザにとってわかりやすいものにします。ここでは「Oregon.engine」とします。
 
 <!-- 
 <li> Open Oregon.engine in TeXShop and edit it to read as follows
  -->
-<li>�uOregon.engine�v��TeXShop�ŊJ���A���L�̂悤�ɕҏW���܂�����
+<li>「Oregon.engine」をTeXShopで開き、下記のように編集します──
 
 	<tt>
 		<dl>
@@ -92,18 +92,18 @@ However if your machine has an Intel processor, the word "powerpc" in the second
 be changed to "i386".
  -->
 
-�ŏ��̂Q�s�͊����̂��̂ł�����A�����������K�v�Ȃ̂͂R�s�ڂ����ł��傤�B�������A�C���e���̃v���Z�b�T�[���ڂ����}�V���ł́A�Q�s�ڂ́upowerpc�v���ui386�v�ɕς��Ă��˂΂Ȃ�܂���B
+最初の２行は既存のものですから、書き換えが必要なのは３行目だけでしょう。ただし、インテルのプロセッサーを載せたマシンでは、２行目の「powerpc」を「i386」に変えてやらねばなりません。
 
 </ul>
 
 <!-- 
 <p> This completes the installation. The next time you start TeXShop, the pulldown menu beside
 the typeset button on the Source Window Toolbar will list "Oregon" as an option. Choose this to typeset using the uo.fmt format. If you want this typesetting method to be the default, go to
-TeXShop Settings under the�u�^�C�v�Z�b�g�v�J�e�S��, and in the Default Command box select "Command Listed Below" and fill in the edit box with the word Oregon.</p>
+TeXShop Settings under the「タイプセット」カテゴリ, and in the Default Command box select "Command Listed Below" and fill in the edit box with the word Oregon.</p>
  -->
 
 <p>
-����œ�����Ƃ͍ς݂܂����B����TeXShop���N������ƁA�\�[�X�E�C���h�E�̃c�[���o�[�ɂ���^�C�v�Z�b�g�{�^���e�̃v���_�E�����j���[�ɁuOregon�v���^�C�v�Z�b�g�E�I�v�V�����Ƃ��ē����Ă��܂��B�����I�����uuo.fmt�v�t�H�[�}�b�g���g�p���ă^�C�v�Z�b�g���܂��B���������̃^�C�v�Z�b�g���@���f�t�H���g�ɂ�������΁ATeXShop�̐ݒ���J���A�u�^�C�v�Z�b�g�v�^�u�̂Ƃ���ɂ���u�f�t�H���g�̃R�}���h�v����u���̃R�}���h�𗘗p�v��I�����A�e�L�X�g�{�b�N�X�ɁgOregon�h�Ə�������Ă����܂��B
+これで導入作業は済みました。次回TeXShopを起動すると、ソースウインドウのツールバーにあるタイプセットボタン脇のプルダウンメニューに「Oregon」がタイプセット・オプションとして入っています。これを選択し「uo.fmt」フォーマットを使用してタイプセットします。もしもこのタイプセット方法をデフォルトにしたければ、TeXShopの設定を開き、「タイプセット」タブのところにある「デフォルトのコマンド」から「次のコマンドを利用」を選択し、テキストボックスに“Oregon”と書き入れておきます。
 </p>
 
 <!-- 
@@ -113,7 +113,7 @@ following line to the top of the source file:</p>
  -->
 
 <p>
-�������̕����p�ɁA�^�C�v�Z�b�g�E�I�v�V������ύX���邱�ƂȂ��uOregon�v�t�H�[�}�b�g���w�肷�邱�Ƃ��ł��܂��B���̂��߂ɂ́A�\�[�X�t�@�C���̖`���ɁA���̂悤�ȂP�s��ǉ����܂�����
+ある特定の文書用に、タイプセット・オプションを変更することなく「Oregon」フォーマットを指定することもできます。そのためには、ソースファイルの冒頭に、次のような１行を追加します──
 </p>
 
 	<tt>
@@ -127,7 +127,7 @@ following line to the top of the source file:</p>
  -->
 
 <p>
-����ŁA�^�C�v�Z�b�g�E�I�v�V�����̑I���̔@���Ɋւ�炸�A���̕����ɂ́uuo.fmt�v���p�����܂��B
+これで、タイプセット・オプションの選択の如何に関わらず、この文書には「uo.fmt」が用いられます。
 </p>
 
 <!-- 
@@ -135,7 +135,7 @@ following line to the top of the source file:</p>
  -->
 
 <p>
-�ȏ�̉���́A���[�U������pdflatex�p�̃t�H�[�}�b�g���������Ă�����̂Ƒz�肵�Ă��܂��B���[�U��plain TeX�p�̃t�H�[�}�b�g���쐬���邱�Ƃ��ł��܂��������̏ꍇ�ɂ̓G���W���t�@�C�����updflatex�v�ł͂Ȃ��updftex�v�Ƃ��Ă����܂��B
+以上の解説は、ユーザが既にpdflatex用のフォーマットを所持しているものと想定しています。ユーザがplain TeX用のフォーマットを作成することもできます──この場合にはエンジンファイルを「pdflatex」ではなく「pdftex」としておきます。
 </p>
 
 <!-- 
@@ -146,7 +146,7 @@ Here is a typical engine file for uo.fmt in that case:</p>
  -->
 
 <p>
-�uDVI�o�R�v�Ń^�C�v�Z�b�g����ꍇ�ł��A�t�H�[�}�b�g�𗘗p���邱�Ƃ͂ł��܂��BTeXShop�ł́A�G���W���t�@�C���ɂP�Ȃ����͂���ȏ�̃R�}���h���C���w�肪�܂܂�Ă���A�ŏI�I�ɂ�pdf�t�@�C���𐶐�������̂Ƒz�肵�Ă��܂��B���̂��߃G���W���t�@�C���ɂ́Advi�t�@�C����pdf�t�@�C���ɕϊ����邽�߂̃R�}���h���܂܂�Ă��Ȃ���΂Ȃ�܂���B�����������ꍇ�ɂ�����uuo.fmt�v�p�̓T�^�I�ȃG���W���t�@�C���͈ȉ��̂悤�Ȃ��̂ł�����
+「DVI経由」でタイプセットする場合でも、フォーマットを利用することはできます。TeXShopでは、エンジンファイルに１つないしはそれ以上のコマンドライン指定が含まれており、最終的にはpdfファイルを生成するものと想定しています。そのためエンジンファイルには、dviファイルをpdfファイルに変換するためのコマンドが含まれていなければなりません。こういった場合における「uo.fmt」用の典型的なエンジンファイルは以下のようなものです──
 </p>
 
 	<tt>
@@ -163,7 +163,7 @@ Here is a typical engine file for uo.fmt in that case:</p>
 <!-- 
 <h4> Making formats </h4>
  -->
-<h4>�t�H�[�}�b�g�̍쐬</h4>
+<h4>フォーマットの作成</h4>
 
 <!-- 
 <p> Format files contain the internal binary representation of typeset lines of source.
@@ -173,7 +173,7 @@ machine and TeX installation that you do.<p>
  -->
 
 <p>
-�t�H�[�}�b�g�t�@�C���ɂ́A�\�[�X�̃^�C�v�Z�b�g�ɂ��āA�����ɂ�����o�C�i���̍Č����i���v���[���e�[�V�����j���܂܂�Ă��܂��B���̍Č����̓v���Z�b�T�ƌX��TeX�̎����Ɉˑ����܂��B�ł����瑼����񋟂��ꂽ�t�H�[�}�b�g�t�@�C�������p�\�Ȃ��Ƃ͖ő��ɂ���܂��񄟄�����ł������}�V���������Ă��āA�������蓯���悤��TeX���C���X�g�[�����Ă���̂łȂ�����́B
+フォーマットファイルには、ソースのタイプセットについて、内部におけるバイナリの再現性（リプリゼンテーション）が含まれています。この再現性はプロセッサと個々のTeXの実装に依存します。ですから他から提供されたフォーマットファイルが利用可能なことは滅多にありません──先方でも同じマシンを持っていて、そっくり同じようにTeXをインストールしてあるのでない限りは。
 </p>
 
 <!-- 
@@ -185,7 +185,7 @@ format. Then type</p>
  -->
 
 <p>
-�������Ȃ���A�t�H�[�}�b�g�𐶐����邽�߂ɕK�v�ȃ\�[�X��g�D�Ŕz�z���邱�Ƃ́A�������ʂɍs�Ȃ��Ă��܂��B���������ꍇ�ɂ́uinitTeX�v���g���ăt�H�[�}�b�g���쐬����悤�ɁA�ƌ����邱�Ƃł��傤�B�����ŁA���Ƃ��΃t�H�[�}�b�g�p�̃\�[�X�e�L�X�g���uuo.tex�v�Ƃ��Ă݂܂��傤�B�t�H�[�}�b�g�����ɂ́AApple��Terminal.app���N�����A�t�H�[�}�b�g�p�̃\�[�X������f�B���N�g���ֈړ����܂��B�����Ď��̂悤�Ƀ^�C�v���܂�����
+しかしながら、フォーマットを生成するために必要なソースを組織で配布することは、ごく普通に行なわれています。こうした場合には「initTeX」を使ってフォーマットを作成するように、と言われることでしょう。そこで、たとえばフォーマット用のソーステキストを「uo.tex」としてみましょう。フォーマットを作るには、AppleのTerminal.appを起動し、フォーマット用のソースがあるディレクトリへ移動します。そして次のようにタイプします──
 </p>
 
 	<tt>
@@ -199,7 +199,7 @@ format. Then type</p>
  -->
 
 <p>
-����ƑO�� ** �̕t�����v�����v�g�ɂȂ�܂��B�v�����v�g�̂Ƃ���Ŏ��̂悤�ɑł����݂܂�����
+すると前に ** の付いたプロンプトになります。プロンプトのところで次のように打ち込みます──
 </p>
 
 	<tt>
@@ -215,7 +215,7 @@ the required "uo.fmt".</p>
  -->
 
 <p>
-�����ă��^�[���L�[�������܂��B����Ńt�H�[�}�b�g�t�@�C�����쐬����܂��B�����t�H�[�}�b�g�̃\�[�X�Ɂu\dump�v���܂܂�Ă��Ȃ������ꍇ�ɂ́A�Ō�Ɂu\dump�v�R�}���h��ł�����ł��Ȃ���΂Ȃ�Ȃ���������܂���B����ŕK�v�ȁuuo.fmt�v������܂��B
+そしてリターンキーを押します。これでフォーマットファイルが作成されます。もしフォーマットのソースに「\dump」が含まれていなかった場合には、最後に「\dump」コマンドを打ち込んでやらなければならないかもしれません。これで必要な「uo.fmt」が作られます。
 </p>
 
 <!-- 
@@ -223,7 +223,7 @@ the required "uo.fmt".</p>
  -->
 
 <p>
-�ȉ��̂悤�ȁuuo.tex�v�Ŏ����Ă݂�̂�������������܂��񄟄�
+以下のような「uo.tex」で試してみるのもいいかもしれません──
 </p>
 
 	<tt>
@@ -242,34 +242,34 @@ the required "uo.fmt".</p>
 
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">�㋉�����̃w���v</div>
-<div id="header_title">�V�K�t�H�[�}�b�g�̍쐬�Ɨ��p</div>
+<div id="header_chapter">上級向けのヘルプ</div>
+<div id="header_title">新規フォーマットの作成と利用</div>
 
 		<div id="menu_border">
 		<ul>
-			<li><a href="advanced_personaltetex.htm">�X�^�C���ƃ}�N����teTeX�ɒǉ�����</a>
-			<li><a href="advanced_addengine.htm">�ǉ��̃^�C�v�Z�b�g�G���W��</a>
-			<li><a href="advanced_removeaux.htm">��ƃt�@�C�����폜����</a>
-			<li><a href="advanced_externaleditor.htm">�O���G�f�B�^���g�p����</a>
-			<li><a href="advanced_pdfcopypaste.htm">�v���r���[�E�C���h�E����̃R�s�[���y�[�X�g����уh���b�O���h���b�v </a>
-			<li><a href="advanced_root.htm">�v���W�F�N�g�̃��[�g�t�@�C����ݒ肷��</a>
+			<li><a href="advanced_personaltetex.htm">スタイルとマクロをteTeXに追加する</a>
+			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
+			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
+			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
+			<li><a href="advanced_pdfcopypaste.htm">プレビューウインドウからのコピー＆ペーストおよびドラッグ＆ドロップ </a>
+			<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a>
 			<li><a href="advanced_pdfsync.htm">Pdfsync</a>
-			<li><a href="advanced_unicode.htm">Unicode�i���j�R�[�h�j</a>
+			<li><a href="advanced_unicode.htm">Unicode（ユニコード）</a>
 			<li><a href="advanced_bibtex.htm">BibTeX</a>
 			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">�V�K�t�H�[�}�b�g�̍쐬�Ɨ��p</a>
-			<li><a href="advanced_otherfiles.htm">���̑��̃t�@�C����TeXShop�ŊJ��</a>
+			<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a>
+			<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a>
 			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">�e����łւ̃��[�J���C�Y</a>
-			<li><a href="advanced_syntaxcolor.htm">�\�[�X�̃J���[�\��</a>
-			<li><a href="advanced_shellescape.htm">Shell-Escape�̕ی�</a>			
-			<li><a href="advanced_coloredtext.htm">TeX�ɂ����镶���̐F�w��</a>			
-			<li><a href="advanced_moretetex.htm">teTeX�ɂ��Ă����</a>
-			<li><a href="advanced_fink.htm">Fink�Ƃ̋���</a>
-			<li><a href="advanced_otherdistributions.htm">����TeX�f�B�X�g���r���[�V�����Ƃ̋���</a>
-			<li><a href="advanced_context.htm">ConTeXt��MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist�t�@�C��</a>
-			<li><a href="advanced_menushortcuts.htm">���j���[���ڂ̃V���[�g�J�b�g�L�[���Ē�`����</a>
+			<li><a href="advanced_localization.htm">各国語版へのローカライズ</a>
+			<li><a href="advanced_syntaxcolor.htm">ソースのカラー表示</a>
+			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
+			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
+			<li><a href="advanced_moretetex.htm">teTeXについてさらに</a>
+			<li><a href="advanced_fink.htm">Finkとの共存</a>
+			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
+			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
+			<li><a href="advanced_plist.htm">Plistファイル</a>
+			<li><a href="advanced_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
 		</ul>
 	</div>
 	</body>

@@ -1,10 +1,10 @@
 <HTML>
 
 <HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-			<TITLE>Fink�Ƃ̋���</TITLE>
+			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
+			<TITLE>Finkとの共存</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="Fink�𗘗p����ۂ̒��ӓ_">
+			<META NAME="description" CONTENT="Finkを利用する際の注意点">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -13,43 +13,43 @@
 <div id="content_border">
 
 <p>
-Mac OS X�ł́A�T�[�h�p�[�e�B���̃t���[�\�t�g�E�F�A���g�����ƂŁAX-window�A�v���P�[�V�����i���w�A�v���P�[�V�����j�����s�����邱�Ƃ��ł��܂�<small>�i�󒍁F���݂ł�Apple������X11������܂��j</small>�B�w�A�v���P�[�V�����͒ʏ��Mac OS X�v���O�����ƕ��s���Ď��s����܂��BFink��Mac OS X��łw�A�v���P�[�V�������_�E�����[�h���ăR���p�C�����邱�Ƃ��ł��܂��B�ڂ������Ƃɂ��Ă� <A HREF="http://fink.sourceforge.net">http://fink.sourceforge.net</A> ���Q�Ƃ��Ă��������BFink�ł͂Ƃ�킯ghostview�Exdvi�����xemacs���C���X�g�[�����邱�Ƃ��ł��܂��B
+Mac OS Xでは、サードパーティ製のフリーソフトウェアを使うことで、X-windowアプリケーション（＝Ｘアプリケーション）を実行させることもできます<small>（訳注：現在ではApple純正のX11があります）</small>。Ｘアプリケーションは通常のMac OS Xプログラムと並行して実行されます。FinkはMac OS X上でＸアプリケーションをダウンロードしてコンパイルすることができます。詳しいことについては <A HREF="http://fink.sourceforge.net">http://fink.sourceforge.net</A> を参照してください。Finkではとりわけghostview・xdviそれにxemacsをインストールすることができます。
 </p>
 
 <p>
-Fink�̓\�t�g�E�F�A�� /sw/bin�ɃC���X�g�[�����܂��BFink�ɂ���ăC���X�g�[���ł���p�b�P�[�W�̂ЂƂ�teTeX�ł��B���̂��Ƃŉߋ��ɖ�肪�N���܂����������[�U��teTeX�̏d�������R�s�[�������Ă���A�R�s�[�̂ЂƂŐݒ���s�Ȃ��A���΂炭���Ă�������̃R�s�[�ɂ͐ݒ肪���f����Ă��Ȃ����ƂɋC�t�����̂ł��BFink�̍ŐV�̃o�[�W�����ł́A�Q�߂̃R�s�[���C���X�g�[�����Ȃ��悤�ɂ��A/sw/bin���ɃV���{���b�N�E�����N���쐬���邱�Ƃ�Gerben Wierda��teTeX���g�p����I�v�V����������܂��B���̃I�v�V������I�����邱�Ƃ������߂��܂��B
+Finkはソフトウェアを /sw/binにインストールします。FinkによってインストールできるパッケージのひとつがteTeXです。このことで過去に問題が起きました──ユーザがteTeXの重複したコピーを持っており、コピーのひとつで設定を行ない、しばらくしてもう一方のコピーには設定が反映されていないことに気付いたのです。Finkの最新のバージョンでは、２つめのコピーをインストールしないようにし、/sw/bin内にシンボリック・リンクを作成することでGerben WierdaのteTeXを使用するオプションがあります。このオプションを選択することをお勧めします。
 </p>
 
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">�㋉�����̃w���v</div>
-<div id="header_title">Fink�Ƃ̋���</div>
+<div id="header_chapter">上級向けのヘルプ</div>
+<div id="header_title">Finkとの共存</div>
 
 		<div id="menu_border">
 		<ul>
-			<li><a href="advanced_personaltetex.htm">�X�^�C���ƃ}�N����teTeX�ɒǉ�����</a>
-			<li><a href="advanced_addengine.htm">�ǉ��̃^�C�v�Z�b�g�G���W��</a>
-			<li><a href="advanced_removeaux.htm">��ƃt�@�C�����폜����</a>
-			<li><a href="advanced_externaleditor.htm">�O���G�f�B�^���g�p����</a>
-			<li><a href="advanced_pdfcopypaste.htm">�v���r���[�E�C���h�E����̃R�s�[���y�[�X�g����уh���b�O���h���b�v </a>
-			<li><a href="advanced_root.htm">�v���W�F�N�g�̃��[�g�t�@�C����ݒ肷��</a>
+			<li><a href="advanced_personaltetex.htm">スタイルとマクロをteTeXに追加する</a>
+			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
+			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
+			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
+			<li><a href="advanced_pdfcopypaste.htm">プレビューウインドウからのコピー＆ペーストおよびドラッグ＆ドロップ </a>
+			<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a>
 			<li><a href="advanced_pdfsync.htm">Pdfsync</a>
-			<li><a href="advanced_unicode.htm">Unicode�i���j�R�[�h�j</a>
+			<li><a href="advanced_unicode.htm">Unicode（ユニコード）</a>
 			<li><a href="advanced_bibtex.htm">BibTeX</a>
 			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">�V�K�t�H�[�}�b�g�̍쐬�Ɨ��p</a>
-			<li><a href="advanced_otherfiles.htm">���̑��̃t�@�C����TeXShop�ŊJ��</a>
+			<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a>
+			<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a>
 			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">�e����łւ̃��[�J���C�Y</a>
-			<li><a href="advanced_syntaxcolor.htm">�\�[�X�̃J���[�\��</a>
-			<li><a href="advanced_shellescape.htm">Shell-Escape�̕ی�</a>			
-			<li><a href="advanced_coloredtext.htm">TeX�ɂ����镶���̐F�w��</a>			
-			<li><a href="advanced_moretetex.htm">teTeX�ɂ��Ă����</a>
-			<li><a href="advanced_fink.htm">Fink�Ƃ̋���</a>
-			<li><a href="advanced_otherdistributions.htm">����TeX�f�B�X�g���r���[�V�����Ƃ̋���</a>
-			<li><a href="advanced_context.htm">ConTeXt��MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist�t�@�C��</a>
-			<li><a href="advanced_menushortcuts.htm">���j���[���ڂ̃V���[�g�J�b�g�L�[���Ē�`����</a>
+			<li><a href="advanced_localization.htm">各国語版へのローカライズ</a>
+			<li><a href="advanced_syntaxcolor.htm">ソースのカラー表示</a>
+			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
+			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
+			<li><a href="advanced_moretetex.htm">teTeXについてさらに</a>
+			<li><a href="advanced_fink.htm">Finkとの共存</a>
+			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
+			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
+			<li><a href="advanced_plist.htm">Plistファイル</a>
+			<li><a href="advanced_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
 		</ul>
 	</div>
 	</body>

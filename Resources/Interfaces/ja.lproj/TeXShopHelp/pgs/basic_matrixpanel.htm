@@ -1,10 +1,10 @@
 <HTML>
 
 <HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-			<TITLE>�s��p�l��</TITLE>
+			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
+			<TITLE>行列パネル</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="�s��p�l���̎戵����">
+			<META NAME="description" CONTENT="行列パネルの取扱説明">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -14,20 +14,20 @@
 
 <!-- 
 <p>
-�u�E�B���h�E�v���j���[�Ɂu�s��p�l���v�Ƃ������ڂ�����܂��B�����I������ƁA�s����ȒP�ɍ쐬�ł���p�l�����J���܂��B�s��̊e���͕����͏����Ȃ��̂ł����A�������̂ł��ǂ����ʂ̏ꏊ�ŕҏW���Ă���y�[�X�g���邱�Ƃ��ł��܂��B���̑f���炵���p�l����Jonas Zimmermann�i <a href="mailto:zimmerleut@gmx.de">zimmerleut@gmx.de</a> �j�̋Ɛтł��B
+「ウィンドウ」メニューに「行列パネル」という項目があります。これを選択すると、行列を簡単に作成できるパネルが開きます。行列の各入力部分は小さなものですが、長いものでもどこか別の場所で編集してからペーストすることができます。この素晴らしいパネルはJonas Zimmermann（ <a href="mailto:zimmerleut@gmx.de">zimmerleut@gmx.de</a> ）の業績です。
 </p>
  -->
 
 <p>
-�u�E�C���h�E�v���j���[�Ɂu�s��p�l���v�Ƃ������ڂ�����܂��B�����I������ƁA�s����ȒP�ɍ쐬�ł���p�l�����J���܂��B�s��̊e���͕����͏����Ȃ��̂ł����A�ǂ����ʂ̏ꏊ�ŕҏW���������e�L�X�g���y�[�X�g���邱�Ƃ��ł��܂��B���̑f���炵���p�l����Jonas Zimmermann�i <a href="mailto:zimmerleut@gmx.de">zimmerleut@gmx.de</a> �j����ɂ���č���܂����B
+「ウインドウ」メニューに「行列パネル」という項目があります。これを選択すると、行列を簡単に作成できるパネルが開きます。行列の各入力部分は小さなものですが、どこか別の場所で編集した長いテキストをペーストすることができます。この素晴らしいパネルはJonas Zimmermann（ <a href="mailto:zimmerleut@gmx.de">zimmerleut@gmx.de</a> ）さんによって作られました。
 </p>
 
 <p>
-TeXShop 1.35�ł́A�s��p�l���ŕ\�i�e�[�u���j���쐬���邱�Ƃ��ł��܂��B���̃p�l���� ~/Library/TeXShop/MatrixPanel�ɂ���umatrixpanel_1.plist�v�Ƃ����t�@�C�����g���Đݒ�ł��܂��B���̃t�@�C���̍\����1.35�Ō�������܂��� �G �Â��umatrixpanel.plist�v�t�@�C����TeXShop 1.34����̂܂܎c���Ă��Ă������x������܂���B
+TeXShop 1.35では、行列パネルで表（テーブル）を作成することもできます。このパネルは ~/Library/TeXShop/MatrixPanelにある「matrixpanel_1.plist」というファイルを使って設定できます。このファイルの構成は1.35で見直されました ； 古い「matrixpanel.plist」ファイルはTeXShop 1.34からのまま残っていても差し支えありません。
 </p>
 
 <p>
-�p�l���ō쐬����f�t�H���g�̍s��̃T�C�Y��ݒ肷��B�ꂽ�ݒ肪����܂��B�f�t�H���g��ς���ɂ̈́���
+パネルで作成するデフォルトの行列のサイズを設定する隠れた設定があります。デフォルトを変えるには──
 </p>
 	<dd>
 		<dl><tt> defaults write TeXShop matrixsize 12</tt>
@@ -37,33 +37,33 @@ TeXShop 1.35�ł́A�s��p�l���ŕ\�i�e�[�u���j���쐬���邱�Ƃ��ł��܂��B���̃p�l��
 
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">��{�I�ȃw���v</div>
-<div id="header_title">�s��p�l��</div>
+<div id="header_chapter">基本的なヘルプ</div>
+<div id="header_title">行列パネル</div>
 
 		<div id="menu_border">
 		<ul>
-			<li><a href="basic_preliminaries.htm">�܂�����</a>
-			<li><a href="basic_j_ptex.htm">pTeX��TeXShop�œ��{������\�z����</a>
-			<li><a href="basic_installtetex.htm">teTeX�̓���ƃC���X�g�[��</a>
-			<li><a href="basic_installtexshop.htm">TeXShop�̓���ƃC���X�g�[��</a>
-			<li><a href="basic_typesetting.htm">�h�L�������g���^�C�v�Z�b�g����</a>
-			<li><a href="basic_alternatetypeset.htm">�����ЂƂ̃^�C�v�Z�b�g����</a>	
-			<li><a href="basic_spelling.htm">�X�y�����`�F�b�N����</a>
-			<li><a href="basic_latexpanel.htm">Latex�p�l��</a>
-			<li><a href="basic_matrixpanel.htm">�s��p�l��</a>
-			<li><a href="basic_macros.htm">�}�N��</a>
-			<li><a href="basic_toolbar.htm">�c�[���o�[��Applescript</a>
-			<li><a href="basic_graphics.htm">�摜������</a>
-			<li><a href="basic_printing.htm">���</a>
-			<li><a href="basic_preferences.htm">�ݒ�</a>
-			<li><a href="basic_j_encoding.htm">���{��G���R�[�f�B���O�� &#x005C; &#x00A5; �����̈���</a>
-			<li><a href="basic_templates.htm">�e���v���[�g���j���[��ύX����</a>
-			<li><a href="basic_edittricks.htm">�ҏW��̃R�c</a>
-			<li><a href="basic_autocompletion.htm">�L�[�o�C���h</a>
-			<li><a href="basic_commandcompletion.htm">�R�}���h�̕⊮</a>
-			<li><a href="basic_bugs.htm">�o�O���|�[�g�𑗂�</a>
-			<li><a href="basic_websites.htm">���ɗ��E�F�u�T�C�g</a>
-			<li><a href="basic_license.htm">�g�p����</a>
+			<li><a href="basic_preliminaries.htm">まえがき</a>
+			<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a>
+			<li><a href="basic_installtetex.htm">teTeXの入手とインストール</a>
+			<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a>
+			<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a>
+			<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a>	
+			<li><a href="basic_spelling.htm">スペルをチェックする</a>
+			<li><a href="basic_latexpanel.htm">Latexパネル</a>
+			<li><a href="basic_matrixpanel.htm">行列パネル</a>
+			<li><a href="basic_macros.htm">マクロ</a>
+			<li><a href="basic_toolbar.htm">ツールバーとApplescript</a>
+			<li><a href="basic_graphics.htm">画像を入れる</a>
+			<li><a href="basic_printing.htm">印刷</a>
+			<li><a href="basic_preferences.htm">設定</a>
+			<li><a href="basic_j_encoding.htm">日本語エンコーディングと &#x005C; &#x00A5; 文字の扱い</a>
+			<li><a href="basic_templates.htm">テンプレートメニューを変更する</a>
+			<li><a href="basic_edittricks.htm">編集上のコツ</a>
+			<li><a href="basic_autocompletion.htm">キーバインド</a>
+			<li><a href="basic_commandcompletion.htm">コマンドの補完</a>
+			<li><a href="basic_bugs.htm">バグレポートを送る</a>
+			<li><a href="basic_websites.htm">役に立つウェブサイト</a>
+			<li><a href="basic_license.htm">使用許諾</a>
 		</ul>
 	</div>
 </body>
