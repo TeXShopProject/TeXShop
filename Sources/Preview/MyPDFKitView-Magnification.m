@@ -9,6 +9,7 @@
 #import "MyPDFKitView.h"
 #import "Globals.h"
 #import "TSMagnifyingGlass.h"
+#import "TSDocumentWindowGlass.h"
 
 #define NSAppKitVersionNumber10_10_Max 1349
 
@@ -219,9 +220,10 @@
                 mouseLocWindow = [theEvent locationInWindow];
                 mouseLocView = [self convertPoint: mouseLocWindow fromView:nil];
             }
-            // check if the mouse is in the rect
+            // check if the mouse is in the rect; the part of the view under the title bar
+            // and the toolbar does not count, so the glass stops at the toolbar (#44)
             
-            if([self mouse:mouseLocView inRect:[self visibleRect]]) {
+            if([self mouse:mouseLocView inRect:TSDocumentWindowRectBelowToolbar(self, [self visibleRect])]) {
                 if (cursorVisible) {
                     [NSCursor hide];
                     cursorVisible = NO;

@@ -110,7 +110,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-link-clip-') as directory:
     exe = temporary / 'probe'
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit',
                     *include_args(root), '-I' + str(root / 'Tests'), str(temporary / 'probe.m'),
-                    str(temporary / 'TSLinkPreviewView.m'), '-o', str(exe)], check=True)
+                    str(temporary / 'TSLinkPreviewView.m'),
+                    str(root / 'Sources/Windows/TSDocumentWindowGlass.m'), '-o', str(exe)], check=True)
     home = temporary / 'home'
     (home / 'Library/Preferences').mkdir(parents=True)
     env = dict(os.environ, HOME=str(home), CFFIXED_USER_HOME=str(home))

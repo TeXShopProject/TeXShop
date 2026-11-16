@@ -1,5 +1,6 @@
 #import "TSLinkPreviewView.h"
 #import "TSLinkPreviewGeometry.h"
+#import "TSDocumentWindowGlass.h"
 #import <objc/runtime.h>
 
 // Sizes on screen, independent of the preview's magnification.
@@ -171,9 +172,16 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     return [self.superview convertPoint:event.locationInWindow fromView:nil];
 }
 
+// The part of the preview's pages that can be seen. On macOS 26 and later the pages run
+// under the title bar and the toolbar; what lies under them does not count (#44).
+- (NSRect)visibleRectOfPreview
+{
+    return TSDocumentWindowRectBelowToolbar(self.superview, self.superview.visibleRect);
+}
+
 - (NSRect)availableRect
 {
-    return NSInsetRect(self.superview.visibleRect, 5, 5);
+    return NSInsetRect([self visibleRectOfPreview], 5, 5);
 }
 
 // The part of a moved popup that stays in view, so that it can be dragged back.
@@ -280,7 +288,7 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     if (_drag != TSLinkPreviewDragNone) return [self cursorForEdges:_dragEdges];
     // A popup moved partly out of the preview has no cursor over its hidden part, which can
     // lie under the toolbar (#14).
-    if (!NSPointInRect(point, self.frame) || !NSPointInRect(point, self.superview.visibleRect)) return nil;
+    if (!NSPointInRect(point, self.frame) || !NSPointInRect(point, [self visibleRectOfPreview])) return nil;
     TSLinkPreviewEdge edges = [self edgesAtPoint:point];
     if (edges == TSLinkPreviewEdgeNone && [self selectsText] && [self isTextAtPoint:point])
         return NSCursor.IBeamCursor;
@@ -307,8 +315,10 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
 {
     PDFView *owner = [self ownerPDFView];
     NSPoint point = owner ? [owner convertPoint:event.locationInWindow fromView:nil] : NSZeroPoint;
-    // A view that does not clip has a visible rect beyond its bounds, up to the toolbar.
+    // A view that does not clip has a visible rect beyond its bounds, up to the toolbar, and
+    // on macOS 26 and later the preview itself runs under the toolbar (#44).
     if (owner && owner.window == event.window && NSPointInRect(point, NSIntersectionRect(owner.bounds, owner.visibleRect))
+        && !TSDocumentWindowPointIsUnderToolbar(event.window, event.locationInWindow)
         && [owner respondsToSelector:@selector(showToolCursorOutsideLinkPreviewWithEvent:)])
         [owner showToolCursorOutsideLinkPreviewWithEvent:event];
     else

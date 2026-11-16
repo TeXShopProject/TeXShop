@@ -24,6 +24,16 @@ void TSDocumentWindowPrepare(NSWindow * _Nullable window);
 // toolbar, or 0 in a window whose content does not run under them.
 CGFloat TSDocumentWindowHiddenTop(NSView *view);
 
+// YES when a point of a window, in the window's coordinates, lies in the band of its
+// content under the title bar and the toolbar. A click or a pointer there belongs to
+// them, not to the view under them. NO in a window whose content does not run under them.
+BOOL TSDocumentWindowPointIsUnderToolbar(NSWindow * _Nullable window, NSPoint point);
+
+// The part of a rectangle of a view, in the view's coordinates, that does not lie under
+// the title bar and the toolbar. The rectangle itself in a window whose content does
+// not run under them, and for a view that is in no window.
+NSRect TSDocumentWindowRectBelowToolbar(NSView * _Nullable view, NSRect rect);
+
 // Puts the divider of a split view with two parts so that the parts share the area
 // that can be seen in the ratio first : second. The band under the toolbar is not
 // counted.
