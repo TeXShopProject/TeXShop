@@ -7,6 +7,10 @@ the historical Preferences.nib are not interface text in use.
 
 Code quoted in the text keeps its spaces, so that it can be read: a backslash escape such
 as \\h or \\section in the regular expression cheat sheet may be followed by a space.
+
+macOS adds no gap before a backslash, so in Japanese a TeX command such as \\UTF right after
+kana or kanji is preceded by a thin space (U+2009, written \\U2009 in .strings), which is as
+wide as the gap macOS draws between kana and a Latin letter.
 """
 from pathlib import Path
 import re, sys
@@ -14,6 +18,9 @@ import re, sys
 root = Path(__file__).resolve().parents[1]
 CJK = '[　-〿぀-ヿ㐀-鿿！-｠]'
 spaced = re.compile(f'{CJK} [A-Za-z0-9]|[A-Za-z0-9] {CJK}')
+# Kana or kanji (not the middle dot ・, which has its own space), then a literal backslash and a
+# letter (two backslashes in .strings, one in nibs).
+tight_command = re.compile(r'[\u3040-\u30fa\u30fc-\u30ff\u3400-\u9fff](\\\\[A-Za-z]|\\[A-Za-z])')
 
 def after_escape(text, match):
     """The letters before the space end a backslash escape: \\h or \\section in the text of a
@@ -55,6 +62,14 @@ for language in ('ja', 'zh_CN'):
             text += '\n"Mutation" = "一行目\\n 二行目";'
         if mutation == 'spaced-escape' and language == 'zh_CN' and path.name == 'ToolbarItems.strings':
             text += unescape('\n"Mutation" = "TeXShop \\U6f14\\U793a";')
+        if mutation == 'tight-command' and language == 'ja' and path.name == 'SettingsMiscTwo.strings':
+            text = text.replace('\u2009\\\\UTF', '\\\\UTF')
+        if language == 'ja':
+            for match in tight_command.finditer(text):
+                if path.suffix == '.strings' and not match.group(1).startswith('\\\\'):
+                    continue  # \\n and the like are escapes of the .strings file, not a backslash in the text
+                line = text.count('\n', 0, match.start()) + 1
+                failures.append(f'{path.relative_to(root)}:{line}: no thin space before a TeX command: {text[max(0, match.start() - 12):match.end() + 12]!r}')
         for match in spaced.finditer(text):
             if path.suffix == '.strings' and after_escape(text, match):
                 continue

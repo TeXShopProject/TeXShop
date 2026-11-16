@@ -18375,7 +18375,7 @@
           "K8n-in-y4T.title": "UTF-8-MACをUTF-8に自動変換",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "毎日",
-          "ahm-aK-Qi9.title": "otfパッケージの\\UTF / \\CIDに自動変換",
+          "ahm-aK-Qi9.title": "otfパッケージの\u2009\\UTF / \\CIDに自動変換",
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "開いたルートファイルを最小化する",
           "A9l-al-gxE.title": "Radio",
@@ -19630,7 +19630,7 @@
           "view": "settings.spX-dz-ROL",
           "kind": "cell",
           "property": "title",
-          "value": "otfパッケージの\\UTF / \\CIDに自動変換"
+          "value": "otfパッケージの\u2009\\UTF / \\CIDに自動変換"
         },
         {
           "key": "WeQ-Qd-mPg.title",

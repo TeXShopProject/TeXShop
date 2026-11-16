@@ -236,7 +236,7 @@
 "catalog.preview.5.0.note" = "HTMLウインドウを表示したときに最初に開くページです。Webのアドレスか、ファイルのパスを入れます。";
 "group.typesetting.0.title" = "エンジン";
 "catalog.typesetting.0.4.title" = "エンジンのプロファイル";
-"catalog.typesetting.0.4.search" = "タイプセットとkpsewhichのコマンド、BibTeXエンジン、索引作成とMetaPostのコマンド、otfパッケージの\\UTF / \\CIDへの自動変換を設定します。日本語のプロファイルは、新しい書類のエンコーディング（UTF-8）、辞書、UTF-8-MACの変換も設定します。";
+"catalog.typesetting.0.4.search" = "タイプセットとkpsewhichのコマンド、BibTeXエンジン、索引作成とMetaPostのコマンド、otfパッケージの\U2009\\UTF / \\CIDへの自動変換を設定します。日本語のプロファイルは、新しい書類のエンコーディング（UTF-8）、辞書、UTF-8-MACの変換も設定します。";
 "catalog.typesetting.0.0.title" = "新しい書類のタイプセット";
 "catalog.typesetting.0.0.note" = "書類を開いたとき、ツールバーの「タイプセット」の横で最初に選ばれるものです。書類に % !TEX TS-programの行があれば、そちらが優先されます。";
 "catalog.typesetting.0.1.title" = "エンジンファイル";
@@ -276,7 +276,7 @@
 "catalog.typesetting.8.2.title" = "索引作成";
 "catalog.typesetting.8.3.title" = "MetaPost";
 "group.typesetting.9.title" = "日本語pLaTeX用";
-"catalog.typesetting.9.0.title" = "otfパッケージの\\UTF / \\CIDに自動変換";
+"catalog.typesetting.9.0.title" = "otfパッケージの\U2009\\UTF / \\CIDに自動変換";
 "group.console.0.title" = "フォント";
 "catalog.console.0.0.title" = "コンソールのフォント";
 "catalog.console.0.1.title" = "マクロエディタでも使用";
