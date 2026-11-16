@@ -8,7 +8,8 @@ help gives GitHub issues as the place for bug reports. Plain text in the history
 earlier versions (What's New in the help, Changes, About This Release) may still
 quote the old addresses as a record, but never as a link.
 
-The vendored filltex project keeps its upstream README and bibliography unchanged.
+The vendored filltex project keeps its upstream README and bibliography unchanged, and the
+update of unedited bundled macros names the earlier addresses to recognize them.
 """
 import argparse, re, sys
 from pathlib import Path
@@ -23,6 +24,8 @@ FORMER = re.compile(r'(pages\.uoregon\.edu/koch|uoregon\.edu/~koch|darkwing\.uor
 LINK = re.compile(r'''(href\s*=\s*["']?[^"'>\s]*|\\(?:url|href)\{[^}]*|open location "[^"]*)''' + FORMER.pattern, re.I)
 VENDORED = root/'Resources/TeXShop/Engines/Inactive/filltex/filltex-master'
 INDEXES = ('.helpindex', '.cshelpindex')
+# Names the addresses of earlier bundled macros, to replace them in unedited copies.
+RECOGNIZES = {root/'Sources/Macros/TSBundledMacroUpdate.m'}
 
 
 def history(path):
@@ -64,7 +67,7 @@ for path in files:
         if path.suffix in ('.htm', '.html') and match.group(0).startswith('\\'):
             continue  # TeX source shown as text in a help page, not a link
         problems.append('%s links to the former web site: %s' % (rel, match.group(0)[:100]))
-    if not history(path):
+    if not history(path) and path not in RECOGNIZES:
         for match in FORMER.finditer(text):
             problems.append('%s names the former web site: %s' % (rel, match.group(0)))
 

@@ -66,6 +66,7 @@
 #import "TSAdvancedFindFieldStyle.h"
 #import "TSPreferenceEffects.h"
 #import "TSLibraryVersion.h"
+#import "TSBundledMacroUpdate.h"
 
 /*
 #define NSAppKitVersionNumber10_8 1187
@@ -486,6 +487,12 @@ static void TSInstallAdvancedFindFieldStyle(void)
 		[self mirrorPath:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"TeXShop/Macros"]
 			  toPath:[MacrosPath stringByStandardizingPath]];
 		}
+	else if (needsUpdating) {
+		// Bundled macros that still open the former web site, unedited, open texshop.app.
+		for (NSString *name in @[@"Macros_Latex.plist", @"Macros_Context.plist"])
+			TSUpdateUnchangedBundledMacros([[MacrosPath stringByStandardizingPath] stringByAppendingPathComponent:name],
+				[[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"TeXShop/Macros"] stringByAppendingPathComponent:name]);
+	}
 		
 	if (! [fileManager fileExistsAtPath: [MatrixPanelPath stringByStandardizingPath]] ) {
 		[self mirrorPath:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"TeXShop/MatrixPanel"]

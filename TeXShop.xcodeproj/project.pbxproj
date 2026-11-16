@@ -195,6 +195,7 @@
 		A2C500010000000000000035 /* TSSyntaxMacroContentScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = A2C500010000000000000034 /* TSSyntaxMacroContentScanner.m */; };
 		A2C500010000000000000005 /* TSSyntaxColorScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = A2C500010000000000000004 /* TSSyntaxColorScheme.m */; };
 		A2A0000100000000000000C3 /* TSMacroContentKind.m in Sources */ = {isa = PBXBuildFile; fileRef = A2A0000100000000000000C2 /* TSMacroContentKind.m */; };
+		BCB850D73C9868F4571DAB5D /* TSBundledMacroUpdate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C21EC0AD7B4FCD6196C378F /* TSBundledMacroUpdate.m */; };
 		4078818D0519249A006979EA /* TSMacroTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4077C62B03C7FB0200000009 /* TSMacroTreeNode.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4078818E0519249A006979EA /* TSMacroOutlineController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4077C62F03C7FB1E00000009 /* TSMacroOutlineController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4078818F0519249A006979EA /* TSDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40EB71E60400BE1000000009 /* TSDocumentController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -717,6 +718,8 @@
 		A2C500010000000000000004 /* TSSyntaxColorScheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSyntaxColorScheme.m; sourceTree = "<group>"; };
 		A2A0000100000000000000C1 /* TSMacroContentKind.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMacroContentKind.h; sourceTree = "<group>"; };
 		A2A0000100000000000000C2 /* TSMacroContentKind.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMacroContentKind.m; sourceTree = "<group>"; };
+		F00748157C9E932B96032B06 /* TSBundledMacroUpdate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSBundledMacroUpdate.h; sourceTree = "<group>"; };
+		6C21EC0AD7B4FCD6196C378F /* TSBundledMacroUpdate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSBundledMacroUpdate.m; sourceTree = "<group>"; };
 		4077C62A03C7FB0200000009 /* TSMacroTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSMacroTreeNode.h; sourceTree = "<group>"; };
 		4077C62B03C7FB0200000009 /* TSMacroTreeNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSMacroTreeNode.m; sourceTree = "<group>"; };
 		4077C62E03C7FB1E00000009 /* TSMacroOutlineController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSMacroOutlineController.h; sourceTree = "<group>"; };
@@ -1331,6 +1334,8 @@
 			children = (
 				A2A0000100000000000000C1 /* TSMacroContentKind.h */,
 				A2A0000100000000000000C2 /* TSMacroContentKind.m */,
+				F00748157C9E932B96032B06 /* TSBundledMacroUpdate.h */,
+				6C21EC0AD7B4FCD6196C378F /* TSBundledMacroUpdate.m */,
 				4077C62203C7FAE800000009 /* TSMacroEditor.h */,
 				4077C62303C7FAE800000009 /* TSMacroEditor.m */,
 				5FFE9532AD27014213EA0D40 /* TSMacroContentTokens.h */,
@@ -2242,6 +2247,7 @@
 				2319C1143559AA364726B686 /* TSMacroContentTokens.m in Sources */,
 				4078818C0519249A006979EA /* TSMacroMenuController.m in Sources */,
 				A2A0000100000000000000C3 /* TSMacroContentKind.m in Sources */,
+				BCB850D73C9868F4571DAB5D /* TSBundledMacroUpdate.m in Sources */,
 				A2C500010000000000000005 /* TSSyntaxColorScheme.m in Sources */,
 				A2C500010000000000000032 /* TSSyntaxAppleScriptScanner.m in Sources */,
 				A2C500010000000000000035 /* TSSyntaxMacroContentScanner.m in Sources */,
