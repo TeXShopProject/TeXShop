@@ -105,12 +105,13 @@
 <h3>不具合の修正：タイプセットとコンソール</h3>
 <ul>
 <li><strong>重大な不具合の修正</strong>：「中止」を押してもTeXの処理が残る問題を修正しました。</li>
-<li>コンソールとタイプセットの不具合を直しました。TeXの実行中もコンソールの出力をコピーでき、文字化けした出力とログも正しく表示されます。<code>% !TEX root</code>のある書類ではCommand＋1でもとのファイルに戻れ、組版ツールを起動できないときに待ち続けることはなくなり、ルートファイルが見つからないときは知らせるようになりました。</li>
+<li>コンソールとタイプセットの不具合を直しました。TeXの実行中もコンソールの出力をコピーでき、文字化けした出力とログも正しく表示されます。<code>% !TEX root</code>のある書類ではCommand＋1でもとのファイルに戻れ、組版ツールを起動できないときに待ち続けることはなくなり、ルートファイルが見つからないときは知らせるようになりました。TeXやGhostscriptのフォルダのパスに空白があっても、epstopdf・MetaPost・texloganalyserのスクリプトが動きます。</li>
 </ul>
 <h3>不具合の修正：プレビュー</h3>
 <ul>
 <li><a href="https://github.com/svb-bit">svb-bit</a>氏、<a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏、<a href="https://github.com/ethanphil4-a11y">ethanphil4-a11y</a>氏の報告により、プレビューの位置と表示の不具合を直しました。macOS 26・27での再読み込みやページ送り、分割や境界線の操作、タイプセット中の開き直しで表示がずれることはなくなり、リンクのポップアップの周りにページの一部が見えることもなくなりました。ページには再びテーマの色が付き、ダークモードで明るい帯が出ることもありません（<a href="https://github.com/TeXShopProject/TeXShop/issues/5">#5</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/21">#21</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/23">#23</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/24">#24</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/39">#39</a>）。</li>
 <li>SyncTeXで違う場所へ移る問題、再読み込みで落ちる問題、大きなページでスペースキーのスクロールがおかしい問題を修正しました。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、macOS 26以降で、拡大鏡のツールを選んでいてもプレビューの窓のツールバーが効き、ツールバーの上にリンクのポップアップが出ないようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/44">#44</a>）。</li>
 </ul>
 <h3>不具合の修正：書類の読み書き</h3>
 <ul>
@@ -121,6 +122,7 @@
 <ul>
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告などにより、ソースの色分けと表示の不具合を直しました。コメント行での改行や閉じていない引数で色分けが崩れず、改ページ文字以降も表示され、<code>% !TEX spellcheck</code>の行がほかの書類の言語を変えることもありません。長い書類の表示と編集も速くなりました（<a href="https://github.com/TeXShopProject/TeXShop/issues/16">#16</a>）。</li>
 <li>ソースとプレビューを一つにしたウインドウでのソースの分割、HTMLウインドウの「ホーム URL」、行列パネルで落ちる問題を修正しました。</li>
+<li>macOS 26以降で、窓の幅によってツールバーの右端がちらつく問題を修正しました。</li>
 <li>いくつかの言語で、欠けたり重なったりしていた文字、働かなかったボタンやメニュー、英語のまま残っていた文字を直しました。</li>
 </ul>
 <h3>マニュアル・ヘルプ・同梱ツール</h3>
@@ -131,6 +133,7 @@
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の指摘により、マニュアルからSkypeへの言及を削除しました（<a href="https://github.com/TeXShopProject/TeXShop/issues/11">#11</a>）。</li>
 <li><a href="https://github.com/ralphrmartin">Ralph Martin</a>氏の指摘により、クレジットの連絡先を現在の保守担当者に改めました（<a href="https://github.com/TeXShopProject/TeXShop/issues/13">#13</a>）。</li>
 <li>LaTeXの構文を考慮するスペルチェックのヘルプを加えました。</li>
+<li>日本語のヘルプでTeXの命令のバックスラッシュが円記号になる問題と、英語・韓国語の一部のヘルプの文字化けを修正しました。</li>
 <li>同梱するzlibを1.4、SyncTeXパーサーを1.21に更新しました。</li>
 <li>Herbert Schulz氏の提供により、同梱するlatexmkを4.89に更新しました。</li>
 <li>展開したソースアーカイブから、TeXShopを再びビルドできるようになりました（<a href="https://github.com/TeXShopProject/TeXShop/issues/4">#4</a>）。</li>

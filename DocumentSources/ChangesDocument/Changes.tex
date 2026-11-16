@@ -115,7 +115,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 
 \begin{itemize}
 \item \textbf{Critical fix:} Stop now ends TeX; before, TeX kept running.
-\item Fix problems with the console and typesetting: console output can be copied while TeX runs, broken characters in console output and logs are shown correctly, Command-1 returns to the file typeset with \texttt{\% !TEX root}, stopping no longer hangs when a typesetting tool cannot start, and TeXShop tells you when the root file cannot be found.
+\item Fix problems with the console and typesetting: console output can be copied while TeX runs, broken characters in console output and logs are shown correctly, Command-1 returns to the file typeset with \texttt{\% !TEX root}, stopping no longer hangs when a typesetting tool cannot start, TeXShop tells you when the root file cannot be found, and the tools for pictures, MetaPost and texloganalyser work when the TeX or Ghostscript folder has a space in its path.
 \end{itemize}
 
 \subsection{Fixes: preview}
@@ -123,6 +123,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \begin{itemize}
 \item Fix the position and display of the preview: it no longer moves after reloading or turning pages on macOS 26 and 27, when it is split or its divider is dragged, or when it is reopened during typesetting; parts of the linked page no longer show around a link preview; pages take the theme’s color again; and a split Preview window no longer shows a light band in Dark Mode. Reported by \href{https://github.com/svb-bit}{svb-bit}, \href{https://github.com/Uwe-Schmock}{Uwe Schmock} and \href{https://github.com/ethanphil4-a11y}{ethanphil4-a11y} (\href{https://github.com/TeXShopProject/TeXShop/issues/5}{\#5}, \href{https://github.com/TeXShopProject/TeXShop/issues/9}{\#9}, \href{https://github.com/TeXShopProject/TeXShop/issues/21}{\#21}, \href{https://github.com/TeXShopProject/TeXShop/issues/23}{\#23}, \href{https://github.com/TeXShopProject/TeXShop/issues/24}{\#24}, \href{https://github.com/TeXShopProject/TeXShop/issues/39}{\#39}).
 \item SyncTeX goes to the place clicked, a crash while the preview reloads is fixed, and Space scrolls correctly through large pages.
+\item On macOS 26 and later, the toolbar of the Preview window works while the magnifying glass is the tool, and link popups no longer appear over the toolbar. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/44}{\#44}).
 \end{itemize}
 
 \subsection{Fixes: opening and saving documents}
@@ -137,6 +138,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \begin{itemize}
 \item Fix the coloring and display of the source: a line break in a comment and an unclosed argument no longer upset the colors, a form feed no longer hides the rest of the document, and a \texttt{\% !TEX spellcheck} line no longer changes the language of other documents. Long documents are faster to show and edit. Reported in part by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/16}{\#16}).
 \item Splitting the source in the single window divides it evenly, the Home URL of the HTML window works, and a crash in the Matrix panel is fixed.
+\item On macOS 26 and later, the end of the toolbar no longer jumps back and forth at some window width.
 \item Fix text that was cut off or drawn over other text, buttons and menus that did not work, and texts left in English, in some languages.
 \end{itemize}
 
@@ -149,6 +151,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 \item Remove Skype from the manual. Suggested by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/11}{\#11}).
 \item The contact information in the credits points to the current maintainer. Reported by \href{https://github.com/ralphrmartin}{Ralph Martin} (\href{https://github.com/TeXShopProject/TeXShop/issues/13}{\#13}).
 \item Add help for LaTeX-aware spell checking.
+\item The Japanese help shows the backslash of TeX commands correctly, and some help pages in other languages show their text correctly.
 \item Update the bundled zlib to 1.4 and the SyncTeX parser to 1.21.
 \item Update the bundled latexmk to 4.89, provided by Herbert Schulz.
 \item TeXShop can be built from an extracted source archive again (\href{https://github.com/TeXShopProject/TeXShop/issues/4}{\#4}).
