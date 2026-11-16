@@ -66,17 +66,11 @@
 "This file was opened with IsoLatin9 encoding." = "Acest fișier a fost deschis cu codificarea IsoLatin9.";
 "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "Fișierul nu a putut fi deschis cu codificarea %@ deoarece nu a fost salvat cu această codificare. Dacă doriți să-l deschideți cu altă codificare, închideți fereastra și deschideți-l din nou.";
 "Error" = "Eroare";
-"There was an error checking for updates." = "A apărut o eroare la căutarea actualizărilor.";
-"Your copy of TeXShop is up-to-date" = "Copia dvs. de TeXShop este actualizată";
-"You have the most recent version of TeXShop." = "Aveți cea mai recentă versiune de TeXShop.";
-"New version available" = "Versiune nouă disponibilă";
-"A new version of TeXShop is available (version %@). Would you like to download it now?" = "Este disponibilă o versiune nouă de TeXShop (versiunea %@). Doriți să o descărcați acum?";
 "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "Această versiune de TeXShop necesită Mac OS X 10.4 sau o versiune ulterioară. Folosiți TeXShop 1.37.";
 "Hard Wrap" = "Împărțire fixă";
 "Newline Removal" = "Eliminarea sfârșiturilor de rând";
 "Color Index" = "Index de culori";
 "Help" = "Ajutor";
-"TeXShop Demos" = "Demonstrații TeXShop";
 "Sync" = "Sincronizați";
 "ShowFullPath" = "Afișează calea completă";
 "Close Current Environment" = "Închide mediul curent"; // Terada
@@ -106,7 +100,6 @@
 "No Block" = "Niciun bloc";
 "deprecated" = "învechit";
 "Unknown encoding; using UTF-8." = "Codificare necunoscută; se folosește UTF-8.";
-"Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Filmele demonstrative necesită Mac OS 10.9 Mavericks sau o versiune ulterioară.";
 "Source" = "Sursă";
 "Type sample text here.\nUse several lines to test\ninterline spacing." = "Tastați aici un text de probă.\nFolosiți mai multe rânduri pentru a testa\nspațierea dintre rânduri.";
 "<<Close All - unlocalized>>" = "Închideți tot";

@@ -123,7 +123,6 @@
     "Editor",
     "Info: %@",
     "Labels",
-    "TeXShop Demos",
     "Text",
     "Updates",
     "Version:"
@@ -134,11 +133,7 @@
     "Test"
    ],
    "MainMenu.nib": [
-    "OK",
-    "TeXShop Demos"
-   ],
-   "Movie.nib": [
-    "Demo"
+    "OK"
    ],
    "TSDocument.nib": [
     "Labels",
@@ -164,9 +159,6 @@
    ],
    "MainMenu.nib": [
     "Macros"
-   ],
-   "Movie.nib": [
-    "Demo"
    ],
    "TSDocument.nib": [
     "Macros"
@@ -233,9 +225,6 @@
     "Font",
     "OK"
    ],
-   "Movie.nib": [
-    "Demo"
-   ],
    "TSDocument.nib": [
     "Console",
     "OK",
@@ -278,9 +267,6 @@
     "Superscript",
     "Via DVI"
    ],
-   "Movie.nib": [
-    "Demo"
-   ],
    "TSDocument.nib": [
     "Console",
     "Labels",
@@ -314,9 +300,6 @@
     "OK",
     "Via DVI"
    ],
-   "Movie.nib": [
-    "Demo"
-   ],
    "TSDocument.nib": [
     "Console",
     "Macros",
@@ -342,9 +325,6 @@
     "Macros",
     "OK",
     "Via DVI"
-   ],
-   "Movie.nib": [
-    "Demo"
    ],
    "TSDocument.nib": [
     "Macros",

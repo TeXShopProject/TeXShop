@@ -66,17 +66,11 @@
 "This file was opened with IsoLatin9 encoding." = "이 파일은 IsoLatin9 인코딩으로 열렸습니다.";
 "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "이 파일은 %@ 인코딩으로 저장되지 않았기 때문에 해당 인코딩으로 열 수 없습니다. 다른 인코딩으로 열려면 윈도우를 닫은 다음 다시 여십시오.";
 "Error" = "오류";
-"There was an error checking for updates." = "업데이트를 확인하는 중 오류가 발생했습니다.";
-"Your copy of TeXShop is up-to-date" = "사용 중인 TeXShop이 최신 버전입니다";
-"You have the most recent version of TeXShop." = "최신 버전의 TeXShop을 사용하고 있습니다.";
-"New version available" = "새로운 버전 사용 가능";
-"A new version of TeXShop is available (version %@). Would you like to download it now?" = "새로운 버전의 TeXShop을 사용할 수 있습니다(버전 %@). 지금 다운로드하시겠습니까?";
 "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "이 버전의 TeXShop을 사용하려면 Mac OS X 10.4 이상이 필요합니다. 대신 TeXShop 1.37을 사용하십시오.";
 "Hard Wrap" = "행나눔 삽입";
 "Newline Removal" = "줄바꿈 제거";
 "Color Index" = "색인 색상";
 "Help" = "도움말";
-"TeXShop Demos" = "TeXShop 데모";
 "Sync" = "동기화";
 "ShowFullPath" = "전체경로 표시";
 "Close Current Environment" = "현재 환경 닫기"; //Terada
@@ -106,7 +100,6 @@
 "No Block" = "블록 없음";
 "deprecated" = "사용 중단됨";
 "Unknown encoding; using UTF-8." = "알 수 없는 인코딩입니다. UTF-8을 사용합니다.";
-"Demo Movies require Mac OS 10.9, Mavericks, or higher." = "데모 동영상을 보려면 Mac OS 10.9 Mavericks 이상이 필요합니다.";
 "Type sample text here.\nUse several lines to test\ninterline spacing." = "여기에 샘플 텍스트를 입력하십시오.\n여러 줄을 입력하여\n줄 간격을 확인하십시오.";
 "<<Close All - unlocalized>>" = "모두 닫기";
 "Close All" = "모두 닫기";

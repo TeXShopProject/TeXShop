@@ -18,7 +18,6 @@
   "routes": {
     "Edit": [],
     "File": [],
-    "Help": [],
     "Macros": [],
     "Preview": [],
     "Source": [],
@@ -32,9 +31,6 @@
     ],
     "Magnification": [
       "Preview"
-    ],
-    "TeXShop Demos": [
-      "Help"
     ],
     "Syntax Color expl3 Code": [
       "Source"
@@ -80,10 +76,6 @@
       "value": "File",
       "parentValues": []
     },
-    "ko:Help": {
-      "value": "Help",
-      "parentValues": []
-    },
     "ko:Macros": {
       "value": "Macros",
       "parentValues": []
@@ -112,12 +104,6 @@
       "value": "Magnification",
       "parentValues": [
         "Preview"
-      ]
-    },
-    "ko:TeXShop Demos": {
-      "value": "TeXShop Demos",
-      "parentValues": [
-        "Help"
       ]
     },
     "ko:Open Macro Editor...": {
@@ -150,12 +136,6 @@
       "value": "Magnification",
       "parentValues": [
         "Preview"
-      ]
-    },
-    "nl:TeXShop Demos": {
-      "value": "TeXShop Demos",
-      "parentValues": [
-        "Help"
       ]
     },
     "nl:Open Macro Editor...": {

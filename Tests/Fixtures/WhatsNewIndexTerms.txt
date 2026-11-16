@@ -574,7 +574,6 @@ editing
 editor
 editors
 edits
-edu
 edward
 effect
 effort
@@ -754,6 +753,7 @@ get
 ghostscript
 gibbons
 gift
+github
 give
 given
 gives
@@ -827,7 +827,6 @@ hovers
 how
 however
 html
-https
 huh
 hyperfigures
 hyperref
@@ -1088,6 +1087,7 @@ math
 mathematical
 mathematics
 mathexpressioncompletion
+mathjax
 matrix
 matter
 may
@@ -1144,6 +1144,7 @@ mouth
 move
 moved
 moves
+movies
 moving
 mr
 multipage
@@ -1887,7 +1888,6 @@ unsplitting
 until
 untitled
 unusual
-uoregon
 up
 uparrow
 update

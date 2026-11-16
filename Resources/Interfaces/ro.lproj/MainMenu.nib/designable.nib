@@ -1396,9 +1396,6 @@
                                     <action selector="displayGettingStartedTeXShop:" target="690" id="694"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Demonstrații TeXShop" id="683">
-                                <menu key="submenu" title="Demonstrații TeXShop" id="684"/>
-                            </menuItem>
                             <menuItem title="Manualul TeXShop" id="IaU-hn-TM6" identifier="TSShortcut.displayManual:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
@@ -1495,7 +1492,6 @@
         <customObject id="380" userLabel="TSPreferences" customClass="TSPreferences"/>
         <customObject id="382" userLabel="TSAppDelegate" customClass="TSAppDelegate">
             <connections>
-                <outlet property="myMovie" destination="689" id="731"/>
             </connections>
         </customObject>
         <customObject id="485" userLabel="TSMacroMenuConroller" customClass="TSMacroMenuController">
@@ -1539,7 +1535,6 @@
             </subviews>
         </customView>
         <customObject id="639" userLabel="OgreTextFinder" customClass="OgreTextFinder"/>
-        <customObject id="689" userLabel="TSMovie" customClass="TSMovie"/>
         <customObject id="690" userLabel="HelpDocuments" customClass="HelpDocuments">
             <connections>
                 <outlet property="openStyleFilePanel" destination="919" id="930"/>

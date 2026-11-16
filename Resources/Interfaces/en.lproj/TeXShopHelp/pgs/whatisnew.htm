@@ -78,6 +78,7 @@
 <li><strong>Marks:</strong> the mark commands are in Edit → Marks.</li>
 <li><strong>Command completion:</strong> the Command Completion submenu of the Source menu is now one item, Add to Command Completion List.</li>
 <li><strong>Open Style File:</strong> it has moved from the Help menu to the File menu.</li>
+<li><strong>Demo movies:</strong> the two movies in the Help menu are removed. Reported by <a href="https://github.com/herbs">Herb Schulz</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/43">#43</a>).</li>
 <li><strong>Smooth text and line art:</strong> this setting is removed.</li>
 <li><strong>Save PostScript File and -dALLOWPSTRANSPARENCY:</strong> these settings are removed.</li>
 <li><strong>Obsolete settings:</strong> settings that had no effect are removed.</li>
@@ -111,6 +112,7 @@
 <ul>
 <li>Update the manual’s RaiseHook example for current hyperref, following <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>’s proposal (<a href="https://github.com/TeXShopProject/TeXShop/issues/6">#6</a>).</li>
 <li>The manual and the help point to the current TeXShop web site, <a href="https://texshop.app/">texshop.app</a>. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/15">#15</a>).</li>
+<li>The help and the other documents no longer link to the old TeXShop web site, and bug reports go to <a href="https://github.com/TeXShopProject/TeXShop/issues">GitHub issues</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/43">#43</a>).</li>
 <li>Remove Skype from the manual. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/11">#11</a>).</li>
 <li>The contact information in the credits points to the current maintainer. Reported by <a href="https://github.com/ralphrmartin">Ralph Martin</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/13">#13</a>).</li>
 <li>Add help for LaTeX-aware spell checking.</li>
@@ -346,7 +348,7 @@ definitions to be printed in green. Give it a try.
 <p><li> A ConTeXt user requested that TeXShop define the extensions lmt, mkiv, mkvi, mkxl, mklx, and tuc
 because ConTeXt can produce files with these extensions and he wanted to examine such files using Quick Look. I was reluctant to add so many new extensions to TeXShop for this very special purpose. Therefore I wrote a small program named "Helper" which defines the extensions. Installing that program causes Quick Look to display files with these extensions. Helper contains a primitive editor, so clicking a file with one of these extensions opens the file in Helper.
 
-<p> This Helper program is available on my web site, <A HREF="https://pages.uoregon.edu/koch/"> https://pages.uoregon.edu/koch/ </A>. The site also contains the complete source code for Helper, so a user with a similar problem can extend Helper to deal with additional extensions. This is not a common problem and most users will ignore Helper.
+<p> This Helper program is available on my web site. The site also contains the complete source code for Helper, so a user with a similar problem can extend Helper to deal with additional extensions. This is not a common problem and most users will ignore Helper.
 
 <p><li> Latexmk is updated to version 4.86.
 
@@ -973,7 +975,7 @@ But very shortly after the release of TeXShop 5.18, Matthias Schmidt read that c
 <a href="https://github.com/TeXShop/TeXShop">https://github.com/TeXShop/TeXShop</a> and contains
 the source code for most versions of TeXShop since the program began. While the Horn site was under construction,
 I sent him old sources obtained by turned on computers that had last run twenty years ago; they  started right up! That is how I found the original sources for the earliest TeXShop, which are linked from the the main TeXShop page, 
-<a href="https://pages.uoregon.edu/koch/texshop/texshop.html">https://pages.uoregon.edu/koch/texshop/texshop.html</a>.
+<a href="https://texshop.app/archive/">https://texshop.app/archive/</a>.
 
 <p> I am ashamed to admit that git remains a mystery to me. So Horn has access to valuable information I know nothing about. Here's an example. Horn recently reported that the 5.18 sources suddenly contained a complete copy of the final program. That was 90 megs of useless information. Sure enough, a copy had accidentally been saved in the wrong spot.
 This problem was immediately fixed on the web, but I'm gradually digesting a list from Horn of other elements in the current sources that are probably no longer relevant. 
@@ -2569,7 +2571,7 @@ But at some point in the past, this "Save Selection to File" command stopped wor
 
 <p><li>If a TeX command has the form \cite[...][...]{word}, then in addition to syntax coloring the  "\cite", TeXShop syntax colors "word".  At the suggestion of Akshay Gupte, citation syntax coloring has been extended to natbib commands. So in version 4.50 the same rule applies to any command with begins with the letters "cite" or "Cite". 
 
-<p><li> MacTeX-2020 installed Ghostscript 9.50 rather than Ghostscript 9.51 or 9.52 because these more recent versions did not correctly handle transparency. This bug is fixed in Ghostscript 9.53.3, released on October 15, 2020, and available as an install package from <a href="https://pages.uoregon.edu/koch">https://pages.uoregon.edu/koch</a>. Ghostscript 9.53.3 will be part of  MacTeX-2021.
+<p><li> MacTeX-2020 installed Ghostscript 9.50 rather than Ghostscript 9.51 or 9.52 because these more recent versions did not correctly handle transparency. This bug is fixed in Ghostscript 9.53.3, released on October 15, 2020, and available as an install package from my web site. Ghostscript 9.53.3 will be part of  MacTeX-2021.
 
 <p>If you install Ghostscript 9.53.3 and use transparency in illustrations, you should go to
 ~/Library/TeXShop/Engines/Inactive/, find the folder GhostscriptTransparencyEngines, and inside that folder find "For TeXShop/Engines". Find the file latexTR.engine in this folder and move this file or a copy to ~/Library/TeXShop/Engines, making it an active engine. Then instead of typesetting with pdflatex in DVI mode, you should use this engine. These engines and samples are due to Herbert Schulz. For an explanation, continue reading.
