@@ -680,6 +680,52 @@ static void TestPanel(NSString *_Nullable imageDirectory)
     }
 }
 
+#pragma mark The panel among the document windows
+
+/// The panel is among the document windows, as the OgreKit panel was; it floats with the setting of Settings, and
+/// while its target is in a floating panel (the Experiment source). Levels are read; nothing is shown.
+static void TestPanelLevel(void)
+{
+    NSUInteger beeps = 0;
+    TSMemoryDefaults *defaults = [TSMemoryDefaults new];
+    TSAdvancedFindController *controller = MakeController(defaults, &beeps);
+    TSAdvancedFindPanelController *panel = [[TSAdvancedFindPanelController alloc] initWithFindController:controller];
+    NSPanel *window = (NSPanel *)panel.window;
+    TestDocument *document = [[TestDocument alloc] initWithText:@"one"];
+    TSAdvancedFindController.testTargetTextView = document.upper;
+    Check(!window.isFloatingPanel && window.level == NSNormalWindowLevel, @"the panel is among the document windows, not above them");
+    Check(window.hidesOnDeactivate && (window.styleMask & NSWindowStyleMaskUtilityWindow), @"it is still a utility panel that hides with the application");
+    Check(!controller.settings.panelFloats, @"without the setting the panel does not float");
+
+    [defaults setBool:YES forKey:TSAdvancedFindPanelFloatsKey];
+    [panel updateWindowLevel];
+    Check(window.isFloatingPanel && window.level == NSFloatingWindowLevel, @"with the setting on, the panel floats above the document windows");
+    [defaults setBool:NO forKey:TSAdvancedFindPanelFloatsKey];
+    [panel updateWindowLevel];
+    Check(!window.isFloatingPanel && window.level == NSNormalWindowLevel, @"with the setting off again, it is back among them");
+
+    // The Experiment source is in a utility panel, which floats: the panel must not be left under it.
+    NSPanel *experiment = [[NSPanel alloc] initWithContentRect:NSMakeRect(0, 0, 300, 200)
+                                                     styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskUtilityWindow backing:NSBackingStoreBuffered defer:YES];
+    experiment.releasedWhenClosed = NO;
+    NSTextView *scrap = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 300, 200)];
+    experiment.contentView = scrap;
+    Check(experiment.level == NSFloatingWindowLevel, @"a utility panel floats");
+    TSAdvancedFindController.testTargetTextView = scrap;
+    [panel updateWindowLevel];
+    Check(window.isFloatingPanel && window.level == NSFloatingWindowLevel, @"while the target is in a floating panel, the panel floats too");
+    TSAdvancedFindController.testTargetTextView = document.upper;
+    [panel updateWindowLevel];
+    Check(!window.isFloatingPanel && window.level == NSNormalWindowLevel, @"with a target in a document window again, it stops floating");
+
+    // After every event, as the buttons: only a panel that is shown follows, and showing it sets the level first.
+    TSAdvancedFindController.testTargetTextView = scrap;
+    [NSNotificationCenter.defaultCenter postNotificationName:NSApplicationDidUpdateNotification object:NSApp];
+    Check(!window.isFloatingPanel, @"a panel that is not shown is left alone");
+    TSAdvancedFindController.testTargetTextView = nil;
+    Check(!window.isVisible, @"nothing is shown");
+}
+
 #pragma mark Main
 
 int main(int argc, const char *argv[])
@@ -695,6 +741,7 @@ int main(int argc, const char *argv[])
             TestController();
             TestRouting();
             TestHighlights();
+            TestPanelLevel();
         }
         if ([mode isEqualToString:@"all"] || [mode isEqualToString:@"panel"])
             TestPanel(images);

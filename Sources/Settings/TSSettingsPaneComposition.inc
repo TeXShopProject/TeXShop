@@ -252,6 +252,7 @@
         ]],
         @"settings.M4W-gm-CJz": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.581"] kind:TSSettingsRowControls indentation:0], // findMatrix
+            [TSSettingsLayoutRow controls:@[@"settings.find-panel-floats-button"] kind:TSSettingsRowControls indentation:0], // findPanelFloatsButton
         ]],
         @"settings.Ri9-vJ-bJO": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.M7m-FU-qKi"] kind:TSSettingsRowControls indentation:0], // openAsTabsMatrix

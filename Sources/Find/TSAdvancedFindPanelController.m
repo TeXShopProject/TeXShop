@@ -79,7 +79,6 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
                                                 styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable | NSWindowStyleMaskUtilityWindow
                                                   backing:NSBackingStoreBuffered defer:YES];
     panel.title = TSLocalized(@"AdvancedFind.Title", @"Find and Replace");
-    panel.floatingPanel = YES;
     panel.hidesOnDeactivate = YES;
     panel.becomesKeyOnlyIfNeeded = NO;
     panel.contentMinSize = NSMakeSize(560, 250);
@@ -88,6 +87,9 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     _findController = findController;
     _showsResults = YES;
     _resultsHeight = 260;
+    // A utility panel floats when it is made. This one stays among the document windows, as the OgreKit panel did,
+    // so a click in the source puts it behind, unless -updateWindowLevel says that it floats.
+    [self updateWindowLevel];
     [self buildContent];
     [panel center];
     self.windowFrameAutosaveName = @"AdvancedFindPanel"; // "NSWindow Frame AdvancedFindPanel", kept by the profiles
@@ -340,9 +342,20 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
 {
     [self.findController.settings reloadFindStringFromPasteboard];
     [self reloadFromSettings];
+    [self updateWindowLevel];
     [self showWindow:nil];
     [self.window makeFirstResponder:nil];
     [self.window makeFirstResponder:replacing ? self.replaceFieldView : self.findFieldView];
+}
+
+/// The panel floats above the document windows with "Keep the Advanced Find panel on top" of Settings, and while
+/// its target is in a floating panel (the Experiment source), which would cover it otherwise.
+- (void)updateWindowLevel
+{
+    NSPanel *panel = (NSPanel *)self.window;
+    BOOL floats = self.findController.settings.panelFloats || TSAdvancedFindController.targetTextView.window.level > NSNormalWindowLevel;
+    if (panel.isFloatingPanel != floats)
+        panel.floatingPanel = floats;
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification

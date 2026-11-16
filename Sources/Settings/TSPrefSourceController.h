@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nullable) IBOutlet NSTextField *documentFontTextField;
 @property (strong, nullable) IBOutlet NSButton *externalEditorButton;
 @property (strong, nullable) IBOutlet NSMatrix *findMatrix;
+@property (strong, nullable) IBOutlet NSButton *findPanelFloatsButton;
 @property (strong, nullable) IBOutlet NSMatrix *lineSizeMatrix;
 @property (strong, nullable) IBOutlet NSPopUpButton *openAsTabsMatrix;
 @property (strong, nullable) IBOutlet NSButton *openEmptyButton;

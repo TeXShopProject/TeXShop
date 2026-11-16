@@ -70,6 +70,7 @@
     _documentFontTextField = source.documentFontTextField;
     _externalEditorButton = source.externalEditorButton;
     _findMatrix = source.findMatrix;
+    _findPanelFloatsButton = source.findPanelFloatsButton;
     _lineSizeMatrix = source.lineSizeMatrix;
     _openAsTabsMatrix = source.openAsTabsMatrix;
     _openEmptyButton = source.openEmptyButton;

@@ -46,6 +46,9 @@ NS_SWIFT_NAME(AdvancedFindPanelController)
 - (NSView *)makeOptionsView;
 /// Brings the buttons up to date with the target text view now (as after each event).
 - (void)updateButtons;
+/// Among the document windows, or floating above them: with the setting of Settings > Editor, and while the target
+/// is in a floating panel.
+- (void)updateWindowLevel;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -11,6 +11,7 @@
 #import "globals.h"
 #import "TSPreferenceProfile.h"
 #import "TSPreferenceInput.h"
+#import "TSAdvancedFindSettings.h"
 #import "TSSourceFormatRanges.h"
 #import "TSColorSupport.h"
 #import "TSSettingsChangeNote.h"
@@ -222,7 +223,7 @@ int main(int argc,char **argv){@autoreleasepool{
  [TSIsolatedAppKitDefaults setObject:factory[SwitchSidesKey] ?: @NO forKey:SwitchSidesKey];
  [owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
  NSData *dependencyData=[NSData dataWithContentsOfURL:[fixture URLForResource:@"SettingsDependencies" withExtension:@"json"]];
- NSDictionary *dependencyLedger=[NSJSONSerialization JSONObjectWithData:dependencyData options:0 error:NULL];Check([dependencyLedger[@"rules"]count]==14,@"Independent dependency ledger loads");
+ NSDictionary *dependencyLedger=[NSJSONSerialization JSONObjectWithData:dependencyData options:0 error:NULL];Check([dependencyLedger[@"rules"]count]==15,@"Independent dependency ledger loads");
  for(NSDictionary *rule in dependencyLedger[@"rules"]){
   NSString *key=rule[@"key"],*category=rule[@"category"];id original=[TSIsolatedAppKitDefaults objectForKey:key];
   for(NSNumber *value in rule[@"values"]){

@@ -36,5 +36,5 @@ if args.ledger:
     projected = {json.dumps(rule,sort_keys=True) for control in ledger['controls']
                  for rule in control['dependencies'] if 'key_symbol' in rule}
     assert projected == {json.dumps(rule,sort_keys=True) for rule in rules}
-assert len(outlets) == 16
-print('PASS: 14 dependency conditions, 16 typed endpoints and reviewed projection')
+assert len(outlets) == 17
+print('PASS: 15 dependency conditions, 17 typed endpoints and reviewed projection')

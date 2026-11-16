@@ -125,6 +125,7 @@
 "catalog.editor.6.3.title" = "Lățimea la stânga sau la dreapta:";
 "group.editor.7.title" = "Căutare";
 "catalog.editor.7.0.title" = "Interfața de căutare";
+"catalog.editor.7.1.title" = "Păstrează panoul de căutare avansată deasupra";
 
 "group.editor.8.title" = "Etichete XML în lista de etichete";
 "catalog.editor.8.0.choice.0" = "chapter";

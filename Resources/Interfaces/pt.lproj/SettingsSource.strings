@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "1080.title" = "Painel de localizar OgreKit (legado)";
 "adv-Fd-Pnl.title" = "Painel de localizar avançado (recomendado)";
+"find-panel-floats-cell.title" = "Manter o painel de localizar avançado em primeiro plano";
 "14.title" = "Fonte para o documento";
 "19.title" = "Posição da janela do código fonte";
 "236.title" = "No início";

@@ -56,6 +56,19 @@ static void CheckOwnerEffects(TSPreferences *owner, NSDictionary *factory, NSDic
     Check(findChanges==1,@"Actual find action delivers one live-view notification");
     expectedFind=0;[methods selectCellWithTag:0];[owner findPanelChanged:methods];
     Check(findChanges==2,@"Bar to panel action delivers the reverse live-view notification");
+    // The switch that keeps the Advanced Find panel on top: usable only with that panel as the find interface.
+    NSButton *floats=[owner valueForKey:@"findPanelFloatsButton"];
+    Check(floats!=nil && floats.action==@selector(findPanelFloatsChanged:) && !floats.enabled,@"With another find interface the Advanced Find panel switch is disabled");
+    expectedFind=3;[methods selectCellWithTag:3];[owner findPanelChanged:methods];
+    Check(floats.enabled,@"Choosing the Advanced Find panel enables its switch at once");
+    [TSIsolatedAppKitDefaults removeObjectForKey:TSAdvancedFindPanelFloatsKey];floats.state=NSControlStateValueOff;[floats performClick:nil];
+    Check([TSIsolatedAppKitDefaults boolForKey:TSAdvancedFindPanelFloatsKey],@"The switch sets the setting the Advanced Find panel reads");
+    expectedFind=1;[methods selectCellWithTag:1];[owner findPanelChanged:methods];
+    Check(!floats.enabled && [TSIsolatedAppKitDefaults boolForKey:TSAdvancedFindPanelFloatsKey],@"Another find interface disables the switch and keeps its value");
+    [owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
+    Check(floats.state==NSControlStateValueOn,@"The switch shows the stored value");
+    expectedFind=3;[methods selectCellWithTag:3];[owner findPanelChanged:methods];[floats performClick:nil];
+    Check(![TSIsolatedAppKitDefaults boolForKey:TSAdvancedFindPanelFloatsKey],@"The switch clears the setting");
     [NSNotificationCenter.defaultCenter removeObserver:findObserver];
     TSIsolatedAppKitDefaults.values=[saved mutableCopy];[owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
     puts("PASS: profile prepares new theme and Dock before notifying exactly once");

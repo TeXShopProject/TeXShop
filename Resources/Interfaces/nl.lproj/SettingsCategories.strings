@@ -125,6 +125,7 @@
 "catalog.editor.6.3.title" = "Breedte links of rechts:";
 "group.editor.7.title" = "Zoeken";
 "catalog.editor.7.0.title" = "Zoekinterface";
+"catalog.editor.7.1.title" = "Houd het geavanceerde zoekpaneel op de voorgrond";
 
 "group.editor.8.title" = "XML-tags in de taglijst";
 "catalog.editor.8.0.choice.0" = "chapter";

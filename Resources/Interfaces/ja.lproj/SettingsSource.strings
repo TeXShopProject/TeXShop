@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "1080.title" = "OgreKit検索パネル（レガシー）";
 "adv-Fd-Pnl.title" = "詳細検索パネル（推奨）";
+"find-panel-floats-cell.title" = "詳細検索パネルを常に手前に表示";
 "14.title" = "フォント";
 "19.title" = "ソースウインドウの位置";
 "236.title" = "起動時に";

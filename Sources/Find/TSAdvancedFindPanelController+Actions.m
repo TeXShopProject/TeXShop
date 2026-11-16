@@ -11,6 +11,9 @@
 
 - (void)applicationDidUpdate:(NSNotification *)notification
 {
+    // The setting or the target may have changed.
+    if (self.window.isVisible)
+        [self updateWindowLevel];
     [self updateButtons];
 }
 

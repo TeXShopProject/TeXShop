@@ -41,6 +41,7 @@
     IBOutlet NSMatrix	*_consoleWindowPosMatrix;		/* connected to set current position button */
 	IBOutlet NSMatrix		*_commandCompletionMatrix; /* select ESCAPE or TAB */
 	IBOutlet NSMatrix       *_findMatrix;                   /* connected to Find Panel */
+	IBOutlet NSButton       *_findPanelFloatsButton;
     IBOutlet NSMatrix       *_lineSizeMatrix;               /* connected to Line Number Size */
     IBOutlet NSMatrix       *_wrapMatrix;                    /* connected to Wrap Panel */
     IBOutlet NSPanel    *stylePanel;
@@ -304,6 +305,7 @@
 - (IBAction)interlineSpacingPressed:sender;
 - (IBAction)commandCompletionChanged:sender;
 - (IBAction)findPanelChanged:sender;
+- (IBAction)findPanelFloatsChanged:(NSButton *)sender;
 - (IBAction)lineSizeChanged:sender;
 - (IBAction)wrapPanelChanged:sender;
 

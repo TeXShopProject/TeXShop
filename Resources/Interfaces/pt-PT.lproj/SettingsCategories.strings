@@ -125,6 +125,7 @@
 "catalog.editor.6.3.title" = "Largura à esquerda ou à direita:";
 "group.editor.7.title" = "Pesquisa";
 "catalog.editor.7.0.title" = "Interface de pesquisa";
+"catalog.editor.7.1.title" = "Manter o painel de pesquisa avançada em primeiro plano";
 
 "group.editor.8.title" = "Etiquetas XML na lista de etiquetas";
 "catalog.editor.8.0.choice.0" = "chapter";
