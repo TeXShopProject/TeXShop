@@ -171,6 +171,9 @@
     outputWindow.alphaValue = TSThemeWindowAlpha(colorDictionary, TSThemeConsoleAlphaKey);
     
     myColor = [[TSColorSupport sharedInstance] colorAndAlphaFromDictionary:colorDictionary andKey: @"ImageForeground"];
+    // The text of copied images is never drawn invisible, as it would be with a fully transparent color.
+    if (myColor != nil && myColor.alphaComponent == 0)
+        myColor = [myColor colorWithAlphaComponent:1];
     ImageForegroundColor = myColor;
     
     myColor = [[TSColorSupport sharedInstance] colorAndAlphaFromDictionary:colorDictionary andKey: @"ImageBackground"];
