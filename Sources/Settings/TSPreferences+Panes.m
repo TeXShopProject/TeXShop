@@ -141,7 +141,6 @@
     _afterTypesettingMatrix = typesetting.afterTypesettingMatrix;
     _defaultCommandMatrix = typesetting.defaultCommandMatrix;
     _defaultScriptMatrix = typesetting.defaultScriptMatrix;
-    _saveRelatedButton = typesetting.saveRelatedButton;
     _syncMatrix = typesetting.syncMatrix;
     _syncTabButton = typesetting.syncTabButton;
     _altPathField = engines.altPathField;

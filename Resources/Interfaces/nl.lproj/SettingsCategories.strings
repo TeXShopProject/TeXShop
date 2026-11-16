@@ -60,8 +60,6 @@
 "catalog.documents.1.0.title" = "Automatisch bewaren en versies inschakelen";
 "catalog.documents.1.0.note" = "Een macOS-functie die het bestand tijdens het bewerken automatisch overschrijft.";
 "catalog.documents.1.1.title" = "Vorig bestand bewaren als ‘naam~’";
-"catalog.documents.1.2.title" = "Sla verwante bestanden op";
-"catalog.documents.1.2.note" = "Ook geopende bestanden in hetzelfde project bewaren bij het bewaren van een document.";
 "catalog.documents.1.3.title" = "UTF-8-MAC automatisch omzetten naar UTF-8";
 "group.editor.0.title" = "Weergave";
 "catalog.editor.0.0.title" = "Documentlettertype";

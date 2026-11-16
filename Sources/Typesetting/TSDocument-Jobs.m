@@ -722,11 +722,6 @@ for(NSString *key in enu)
 		return;
 	}
 
-/* // Ulrich Bauer patch
-	if (!_externalEditor)
-		[self checkFileLinks:theSource];
-*/
-
 	// New Stuff
     
     

@@ -38,8 +38,6 @@ add(TSSettingsCategoryDocuments, @"heading.group.saving", @"SettingsCategories",
 add(TSSettingsCategoryDocuments, @"row.catalog.documents.1.0", @"SettingsCategories", @"catalog.documents.1.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryDocuments, @"row.catalog.documents.1.0", @"SettingsCategories", @"catalog.documents.1.0.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryDocuments, @"row.catalog.documents.1.1", @"SettingsCategories", @"catalog.documents.1.1.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryDocuments, @"row.catalog.documents.1.2", @"SettingsCategories", @"catalog.documents.1.2.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryDocuments, @"row.catalog.documents.1.2", @"SettingsCategories", @"catalog.documents.1.2.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryDocuments, @"row.catalog.documents.1.3", @"SettingsCategories", @"catalog.documents.1.3.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryEditor, @"heading.group.editor.0", @"SettingsCategories", @"group.editor.0.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.0.0", @"SettingsCategories", @"catalog.editor.0.0.title", TSSettingsSearchWeightLabel);

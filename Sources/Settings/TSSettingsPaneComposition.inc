@@ -321,16 +321,12 @@
         @"settings.170": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.675"] kind:TSSettingsRowSection indentation:0], // After Typesetting
             [TSSettingsLayoutRow controls:@[@"settings.183"] kind:TSSettingsRowSection indentation:0], // Default Command
-            [TSSettingsLayoutRow controls:@[@"settings.314"] kind:TSSettingsRowSection indentation:0], // During File Save
             [TSSettingsLayoutRow controls:@[@"settings.188"] kind:TSSettingsRowSection indentation:0], // Default Script
             [TSSettingsLayoutRow controls:@[@"settings.823"] kind:TSSettingsRowSection indentation:0], // Sync Method
             [TSSettingsLayoutRow controls:@[@"settings.W5U-9S-4OG"] kind:TSSettingsRowSection indentation:0], // If Sync Opens a New Window
         ]],
         @"settings.mpr-dj-yHz": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.186"] kind:TSSettingsRowControls indentation:0], // defaultScriptMatrix
-        ]],
-        @"settings.ArE-cZ-tBv": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.316"] kind:TSSettingsRowControls indentation:0], // saveRelatedButton
         ]],
         @"settings.Hkv-Rw-Dgs": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.678"] kind:TSSettingsRowControls indentation:0], // afterTypesettingMatrix

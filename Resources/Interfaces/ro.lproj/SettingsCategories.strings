@@ -60,8 +60,6 @@
 "catalog.documents.1.0.title" = "Activează salvarea automată și versiunile";
 "catalog.documents.1.0.note" = "O funcție macOS care suprascrie automat fișierul în timpul editării.";
 "catalog.documents.1.1.title" = "Păstrează fișierul anterior ca „nume~” la salvare";
-"catalog.documents.1.2.title" = "Salvează Fișierele Adiacente";
-"catalog.documents.1.2.note" = "La salvarea unui document, salvează și fișierele deschise din același proiect.";
 "catalog.documents.1.3.title" = "Convertește automat UTF-8-MAC în UTF-8";
 "group.editor.0.title" = "Afișare";
 "catalog.editor.0.0.title" = "Fontul Documentului";

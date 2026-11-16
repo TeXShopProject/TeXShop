@@ -4,7 +4,6 @@
 "188.title" = "Default Script";
 "190.title" = "Personal Script";
 "191.title" = "Direct PDF";
-"314.title" = "During File Save";
 "588.title" = "plain TeX";
 "589.title" = "LaTeX";
 "590.title" = "Engine File";
@@ -14,7 +13,6 @@
 "785.title" = "Search PDF";
 "786.title" = "SyncTeX (Recommended)";
 "823.title" = "Sync Method";
-"898.title" = "Save related files";
 "919.title" = "Radio";
 "920.title" = "Radio";
 "921.title" = "Radio";

@@ -92,7 +92,6 @@
     IBOutlet NSTextField *firstParagraphIndentField;
     IBOutlet NSTextField *remainingParagraphIndentField;
     IBOutlet NSTextField *interlineSpacingField;
-	IBOutlet NSButton	*_saveRelatedButton;		/*" connected to Save Related Files "*/
     IBOutlet NSButton   *_syncTabButton;
 	IBOutlet NSButton       *_autoPDFButton;
 	IBOutlet NSButton       *_ptexUtfOutputButton;          // zenitani 1.35 (C)
@@ -340,7 +339,6 @@
 - (IBAction)defaultEngineChosen:(NSPopUpButton *)sender;
 - (IBAction)openEnginesFolder:(id)sender;
 - (IBAction)consoleBehaviorChanged:sender;
-- (IBAction)saveRelatedButtonPressed:sender;
 - (IBAction)syncTabButtonPressed:sender;
 - (IBAction)autoPDFChanged:sender;
 - (IBAction)ptexUtfOutputPressed:sender; // zenitani 1.35 (C)

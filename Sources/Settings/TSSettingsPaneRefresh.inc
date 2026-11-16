@@ -28,7 +28,6 @@
     [_defaultEncodeMatrix removeAllItems];
     [[TSEncodingSupport sharedInstance] addEncodingsToMenu:[_defaultEncodeMatrix menu] withTarget:0 action:0];
     [_defaultEncodeMatrix selectItemWithTag:[[TSEncodingSupport sharedInstance] defaultEncoding]];
-    [_saveRelatedButton setState:[defaults boolForKey:SaveRelatedKey]];
 }
 
 - (void)refreshEditorSettingsFromDefaults:(NSUserDefaults *)defaults
