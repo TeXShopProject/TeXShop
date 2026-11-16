@@ -5,7 +5,7 @@
 # Gerben Wierda
 
 set mygspath = "$argv[2]"
-if (-x ${mygspath}/gs) then
+if (-x "${mygspath}/gs") then
 	setenv PATH "${mygspath}:${PATH}"
 	rehash
 endif

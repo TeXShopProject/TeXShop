@@ -7,7 +7,7 @@
 # then optionally the MetaPost program and its options (mpost when none is given).
 
 set mygspath = "$argv[2]"
-if (-x ${mygspath}/ps2pdf) then
+if (-x "${mygspath}/ps2pdf") then
         setenv PATH "${mygspath}:${PATH}"
         rehash
 endif

@@ -122,6 +122,39 @@ with tempfile.TemporaryDirectory(prefix='texshop-ghostscript-') as temp:
     assert code == 0 and calls.strip() == 'ps2pdf a.ps', (code, calls, 'Ghostscript before 9.51 gets no -dALLOWPSTRANSPARENCY')
     code, calls, output = run(transparency, 'Ghostscript', str(temp / 'empty'), 'a.ps', path=system)
     assert code != 0 and 'ps2pdf' in output and 'not found' in output, (code, output, 'without Ghostscript the conversion fails visibly')
+
+    # The Ghostscript and TeX folders of Settings may have a space in their path.
+    spaced = temp / 'Ghostscript folder' / 'bin'
+    standin(spaced, '9.50')
+    for program, line in (('epstopdf', 'echo "epstopdf $* gs=`command -v gs`" >> "{log}"'),
+                          ('mpost', 'echo "mpost $* ps2pdf=`command -v ps2pdf`" >> "{log}"'),
+                          ('texloganalyser', 'echo "texloganalyser $*" >> "{log}"')):
+        (spaced / program).write_text('#!/bin/sh\n' + line.format(log=log) + '\n'); (spaced / program).chmod(0o755)
+    def wrapper(name):
+        quoted = {'eps-space-unquoted': ('epstopdfwrap', '"${mygspath}/gs"'),
+                  'metapost-space-unquoted': ('metapostwrap', '"${mygspath}/ps2pdf"'),
+                  'texloganalyser-space-unquoted': ('texloganalyserwrap', '"${mytexexecpath}/texloganalyser"'),
+                  'transparency-space-unquoted': ('ps2pdftransparencywrap', '"${mygspath}/ps2pdf"')}.get(mutation)
+        if not quoted or quoted[0] != name:
+            return name
+        source = (scripts / name).read_text()
+        assert quoted[1] in source, (name, quoted[1])
+        copy = temp / ('mutated-' + name); copy.write_text(source.replace(quoted[1], quoted[1].strip('"'))); copy.chmod(0o755)
+        return copy
+    code, calls, output = run(wrapper('epstopdfwrap'), 'Ghostscript', str(spaced), str(spaced / 'epstopdf'), 'a.eps', path=system)
+    assert code == 0 and calls.strip() == f'epstopdf -o=a.pdf a.eps gs={spaced}/gs', (code, calls, output, 'epstopdfwrap uses Ghostscript in a folder with a space')
+    code, calls, output = run(wrapper('ps2pdftransparencywrap'), 'Ghostscript', str(spaced), 'a.ps', path=f'{temp / "onpath"}:{system}')
+    assert code == 0 and calls.strip() == 'ps2pdf a.ps', (code, calls, output, 'ps2pdftransparencywrap uses Ghostscript in a folder with a space before the PATH')
+    code, calls, output = run(wrapper('metapostwrap'), 'NO', str(spaced), str(spaced), 'a.tex', path=system)
+    assert code == 0 and calls.strip() == f'mpost a.mp ps2pdf={spaced}/ps2pdf', (code, calls, output, 'metapostwrap uses Ghostscript and MetaPost in folders with a space')
+    code, calls, output = run(wrapper('texloganalyserwrap'), str(spaced), 'a.log', '-w', path=system)
+    assert code == 0 and calls.strip() == 'texloganalyser -w a.log', (code, calls, output, 'texloganalyserwrap uses a TeX folder with a space')
+    # No tcsh wrapper tests a folder of Settings unquoted.
+    for script in sorted(scripts.iterdir()):
+        source = script.read_text()
+        if source.startswith('#!/bin/tcsh'):
+            assert not re.search(r'-[xefd] \$', source), (script.name, 'a file test on a folder of Settings is quoted')
+    print('PASS wrappers: Ghostscript and TeX folders with a space in their path')
     # The wrappers that only the Settings switch -dALLOWPSTRANSPARENCY used are gone.
     assert not (scripts / 'ps2pdfwrap').exists() and not (scripts / 'gstestwrap').exists(), 'ps2pdfwrap and gstestwrap are removed'
     print('PASS wrappers: Ghostscript from the setting or the PATH, version 9.51 for transparency, visible failure without it; no wrapper for the removed switch')
