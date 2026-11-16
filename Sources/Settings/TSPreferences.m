@@ -34,6 +34,7 @@
 #import "TSEnginePathDiscovery.h"
 #import "TSPreferenceProfile.h"
 #import "TSPreferenceInput.h"
+#import "TSAdvancedFindSettings.h"
 #import "TSSourceFormatRanges.h"
 #import "TSColorSupport.h"
 #import "TSInvisibleCharacters.h"
@@ -1305,6 +1306,14 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 	[SUD setInteger:(method >= 0 && method <= 3 ? method : 0) forKey:FindMethodKey];
     [self applyEffectsForPreferenceKeys:[NSSet setWithObject:FindMethodKey]];
     [self.settingsChangeNotes recordUserChangeForKey:FindMethodKey previousValue:previousNoteValue];
+    // The switch below is for the Advanced Find panel only.
+    [self updateSettingsDependenciesForCategory:TSSettingsCategoryEditor defaults:SUD];
+}
+
+// Whether the Advanced Find panel stays in front of the document windows; the panel reads it after each event.
+- (IBAction)findPanelFloatsChanged:(NSButton *)sender
+{
+    [SUD setBool:sender.state == NSControlStateValueOn forKey:TSAdvancedFindPanelFloatsKey];
 }
 
 /*" Set Line Number Size"*/

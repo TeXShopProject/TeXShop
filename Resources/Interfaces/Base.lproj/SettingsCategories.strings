@@ -125,6 +125,7 @@
 "catalog.editor.6.3.title" = "Width for Left or Right:";
 "group.editor.7.title" = "Find";
 "catalog.editor.7.0.title" = "Find interface";
+"catalog.editor.7.1.title" = "Keep the Advanced Find panel on top";
 
 "group.editor.8.title" = "XML Tags in the Tag List";
 "catalog.editor.8.0.choice.0" = "chapter";

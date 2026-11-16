@@ -1,5 +1,5 @@
 {
-  "provenance": "Approved SettingsPanelLab full-light captures, 570 points at 2x. Includes user-approved notes; Keyboard follows the 2026-11-13 key binding list decision: the list and the menu shortcuts each show at least six rows (reference image keyboard-ja-570.png in the audit notes). Typesetting follows the 2026-11-14 decision to add the index program and MetaPost rows to Related Tools: the mockup height plus the 114 points of the two rows and the longer note of Engine Profile. Typesetting also follows the 2026-11-15 decision to describe what the Sync tabs switch does: plus the 20 points of its longer note. Typesetting follows the 2026-11-15 decision to remove the note of Engine Profile: minus the 48 points of that note. Preview follows the 2026-11-16 decision to add the switch that makes the left and right arrow keys always turn pages under Display: plus the 56 points of its row.",
+  "provenance": "Approved SettingsPanelLab full-light captures, 570 points at 2x. Includes user-approved notes; Keyboard follows the 2026-11-13 key binding list decision: the list and the menu shortcuts each show at least six rows (reference image keyboard-ja-570.png in the audit notes). Typesetting follows the 2026-11-14 decision to add the index program and MetaPost rows to Related Tools: the mockup height plus the 114 points of the two rows and the longer note of Engine Profile. Typesetting also follows the 2026-11-15 decision to describe what the Sync tabs switch does: plus the 20 points of its longer note. Typesetting follows the 2026-11-15 decision to remove the note of Engine Profile: minus the 48 points of that note. Preview follows the 2026-11-16 decision to add the switch that makes the left and right arrow keys always turn pages under Display: plus the 56 points of its row. Editor follows the 2026-11-16 decision to add the switch that keeps the Advanced Find panel on top under Find: plus the 38 points of its row.",
   "width": 570,
   "maximum_ratio": 1.15,
   "categories": {
@@ -16,7 +16,7 @@
       "reference_sha256": "f4649a246b0d2012a6e1c44cc2012a3740629917c4ede3403b808592cdddfe90"
     },
     "editor": {
-      "height": 1980.0,
+      "height": 2018.0,
       "reference_sha256": "77df752d700e420572769693536139e15f42f43835cfb19b1bfa5abbec830f9f"
     },
     "general": {

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "1080.title" = "OgreKit查找面板（旧版）";
 "adv-Fd-Pnl.title" = "高级查找面板（推荐）";
+"find-panel-floats-cell.title" = "高级查找面板始终显示在最前面";
 "14.title" = "文档字体";
 "19.title" = "源代码窗口位置";
 "236.title" = "启动时";

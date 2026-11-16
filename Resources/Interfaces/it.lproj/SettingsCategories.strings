@@ -125,6 +125,7 @@
 "catalog.editor.6.3.title" = "Larghezza per sinistra o destra:";
 "group.editor.7.title" = "Trova";
 "catalog.editor.7.0.title" = "Interfaccia di ricerca";
+"catalog.editor.7.1.title" = "Mantieni il pannello di ricerca avanzata in primo piano";
 
 "group.editor.8.title" = "Tag XML nell’elenco dei tag";
 "catalog.editor.8.0.choice.0" = "chapter";

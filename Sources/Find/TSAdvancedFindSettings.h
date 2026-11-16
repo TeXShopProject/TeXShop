@@ -9,6 +9,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// The way a replacement is written (TSRegexReplacementSyntax); without it, the ICU way.
 static NSString *const TSAdvancedFindReplacementSyntaxKey = @"AdvancedFindReplacementSyntax";
+/// The Advanced Find panel stays in front of the document windows (Settings > Editor); without it, it does not.
+static NSString *const TSAdvancedFindPanelFloatsKey = @"AdvancedFindPanelFloats";
 
 /// The state of the Advanced Find panel kept between launches (the AdvancedFind… settings).
 /// The defaults are passed in, so tests can use their own.
@@ -22,6 +24,8 @@ NS_SWIFT_NAME(AdvancedFindSettings)
 /// The next search starts at the top of the text, then this turns itself off (OgreKit's "Origin: Top").
 @property (nonatomic) BOOL startsFromTop;
 @property (nonatomic) BOOL closesWhenDone;
+/// The panel stays in front of the document windows. Settings writes it; the panel only reads it.
+@property (nonatomic, readonly) BOOL panelFloats;
 /// "Live Update" of the Find All list: the list searches again shortly after each edit.
 @property (nonatomic) BOOL updatesResultsLive;
 @property (nonatomic, readonly) NSUInteger historyLimit;

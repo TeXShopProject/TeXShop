@@ -1,5 +1,5 @@
 {
-  "provenance": "Approved catalog buttonEnabledWhen / parent choices; existing tag 0 means fixed position. User decision 2026-11-09 removes per-document BlockCursor/SourceAndPreview dependencies.",
+  "provenance": "Approved catalog buttonEnabledWhen / parent choices; existing tag 0 means fixed position. User decision 2026-11-09 removes per-document BlockCursor/SourceAndPreview dependencies. User decision 2026-11-16 adds the Advanced Find panel switch, enabled only with the Advanced Find panel as the find interface.",
   "rules": [
     {
       "category": "general",
@@ -245,6 +245,26 @@
       "key_symbol": "showTabCharacterKey",
       "whole_row": false,
       "value_kind": "boolean"
+    },
+    {
+      "category": "editor",
+      "key": "FindMethod",
+      "values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "enabled_values": [
+        3
+      ],
+      "outlets": [
+        "findPanelFloatsButton"
+      ],
+      "label_row": "row.catalog.editor.7.1",
+      "key_symbol": "FindMethodKey",
+      "whole_row": true,
+      "value_kind": "integer"
     },
     {
       "category": "spelling",

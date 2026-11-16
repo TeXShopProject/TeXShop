@@ -107,6 +107,7 @@
         [_wrapMatrix selectCellWithTag:2];
     NSInteger findMethod = [defaults integerForKey:FindMethodKey];
     [_findMatrix selectCellWithTag:(findMethod >= 0 && findMethod <= 3 ? findMethod : 0)];
+    [_findPanelFloatsButton setState:[defaults boolForKey:TSAdvancedFindPanelFloatsKey] ? NSControlStateValueOn : NSControlStateValueOff];
     if ([defaults integerForKey:LineNumberSizeKey] == 0)
         [_lineSizeMatrix selectCellWithTag:0];
     else if ([defaults integerForKey:LineNumberSizeKey] == 1)

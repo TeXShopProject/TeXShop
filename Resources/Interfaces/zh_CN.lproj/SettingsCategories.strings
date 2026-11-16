@@ -125,6 +125,7 @@
 "catalog.editor.6.3.title" = "靠左或靠右时宽度:";
 "group.editor.7.title" = "查找";
 "catalog.editor.7.0.title" = "查找界面";
+"catalog.editor.7.1.title" = "高级查找面板始终显示在最前面";
 
 "group.editor.8.title" = "标签列表中的XML标签";
 "catalog.editor.8.0.choice.0" = "chapter";
