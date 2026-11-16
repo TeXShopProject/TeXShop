@@ -487,7 +487,6 @@ delay
 deleted
 demo
 demonstration
-demos
 depends
 describe
 design
@@ -721,7 +720,6 @@ forgotten
 form
 format
 formats
-former
 formula
 formulas
 forth
@@ -755,6 +753,7 @@ get
 ghostscript
 gibbons
 gift
+github
 give
 given
 gives
@@ -959,7 +958,6 @@ knowledge
 known
 koch
 koch's
-koch’s
 labeled
 language
 languages
@@ -1089,6 +1087,7 @@ math
 mathematical
 mathematics
 mathexpressioncompletion
+mathjax
 matrix
 matter
 may
@@ -1145,6 +1144,7 @@ mouth
 move
 moved
 moves
+movies
 moving
 mr
 multipage
