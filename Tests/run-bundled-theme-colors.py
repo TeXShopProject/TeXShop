@@ -17,7 +17,9 @@
 3. The table of changes is complete: update 1 holds every color of a bundled theme that differs between 5.58 and
    6.00 beta 1, from its 5.58 value to its beta 1 value, and update 2 every color that differs between beta 1 and
    now, from its beta 1 value to its current value. The update runs at launch before the themes are read.
-4. Comments can be read on the background of every bundled theme (contrast at least 3) and are told from the text
+4. Every color drawn as text (the text, syntax, expl3 and XML colors, the console and the log) can be read on its
+   background in every bundled theme (contrast at least 4.5), and the expl3 and XML colors also on the content of
+   braces, the active line and the text found by SyncTeX (at least 3); comments are told from the text
    (color difference CIE76 at least 20); the matching braces are marked in a color that shows on the background (at
    least 3); copied images keep their text when their colors are mapped (the foreground of every bundled theme is
    opaque, and TeXShop draws a fully transparent foreground of an earlier copy opaque).
@@ -135,13 +137,26 @@ def readability_problems(themes):
                 color = theme.get(key) or theme.get('SyntaxMarker')
                 if color and contrast(color, theme[painted]) < min(3, 0.5 * contrast(color, background)):
                     problems.append(f'{name}: {key} on {painted}')
+            # The expl3 and XML colors are drawn on these too (the active line, for instance).
+            for key in ['explFunction', 'explIntenseFunction', 'explIntenseVariable', 'explVariable', 'explmsg',
+                        'explmykey', 'explmykeyArgument', 'XMLComment', 'XMLParameter', 'XMLSpecial', 'XMLTag', 'XMLValue']:
+                if key in theme and contrast(theme[key], theme[painted]) < 3:
+                    problems.append(f'{name}: {key} on {painted}')
         opaque = theme.get('SourceAlpha', [0, 0, 0, 1])[3] >= 1
         for key in ['SyntaxIndex', 'XMLComment', 'XMLTag', 'XMLSpecial', 'XMLParameter', 'XMLValue'] + (['SyntaxCommand'] if opaque else []):
             if key in theme and contrast(theme[key], background) < 3:
                 problems.append(f'{name}: {key} on the background')
+        # Every color drawn as text is readable on its background (contrast at least 4.5).
+        for key in ['EditorText', 'SyntaxCommand', 'SyntaxComment', 'SyntaxIndex', 'SyntaxMarker', 'SyntaxMarkerParen',
+                    'SyntaxMarkerCurly', 'SyntaxMarkerSquare', 'FootnoteColor', 'explFunction', 'explIntenseFunction',
+                    'explIntenseVariable', 'explVariable', 'explmsg', 'explmykey', 'explmykeyArgument',
+                    'XMLComment', 'XMLParameter', 'XMLSpecial', 'XMLTag', 'XMLValue']:
+            if key in theme and contrast(theme[key], background) < 4.5:
+                problems.append(f'{name}: {key} on the background')
+        for key, under in (('ConsoleText', 'ConsoleBackground'), ('LogText', 'LogBackground')):
+            if key in theme and under in theme and contrast(theme[key], theme[under]) < 4.5:
+                problems.append(f'{name}: {key} on {under}')
         comment = theme.get('SyntaxComment')
-        if comment and contrast(comment, background) < 3:
-            problems.append(f'{name}: SyntaxComment on the background')
         if comment and difference(comment, text) < 20:
             problems.append(f'{name}: SyntaxComment too close to the text')
         if 'EditorHighlightBraces' in theme and contrast(theme['EditorHighlightBraces'], background) < 3:

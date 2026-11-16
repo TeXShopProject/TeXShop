@@ -216,9 +216,9 @@
 	<string>SolarizedDark</string>
 	<key>XMLComment</key>
 	<array>
-		<real>0.5</real>
-		<real>0.5</real>
-		<real>0.5</real>
+		<real>0.560784</real>
+		<real>0.560784</real>
+		<real>0.560784</real>
 		<real>1</real>
 	</array>
 	<key>XMLParameter</key>
@@ -237,9 +237,9 @@
 	</array>
 	<key>XMLTag</key>
 	<array>
-		<real>1</real>
-		<real>0</real>
-		<real>0.2</real>
+		<real>1.0</real>
+		<real>0.290196</real>
+		<real>0.431373</real>
 		<real>1</real>
 	</array>
 	<key>XMLValue</key>
@@ -251,16 +251,16 @@
 	</array>
 	<key>explFunction</key>
 	<array>
-		<real>0.149</real>
-		<real>0.5451</real>
-		<real>0.8235</real>
+		<real>0.2</real>
+		<real>0.584314</real>
+		<real>0.854902</real>
 		<real>1</real>
 	</array>
 	<key>explIntenseFunction</key>
 	<array>
-		<real>0.4235</real>
-		<real>0.4431</real>
-		<real>0.7686</real>
+		<real>0.521569</real>
+		<real>0.537255</real>
+		<real>0.807843</real>
 		<real>1</real>
 	</array>
 	<key>explIntenseVariable</key>
@@ -286,9 +286,9 @@
 	</array>
 	<key>explmykey</key>
 	<array>
-		<real>0.7961</real>
-		<real>0.2941</real>
-		<real>0.0863</real>
+		<real>0.913725</real>
+		<real>0.403922</real>
+		<real>0.192157</real>
 		<real>1</real>
 	</array>
 	<key>explmykeyArgument</key>

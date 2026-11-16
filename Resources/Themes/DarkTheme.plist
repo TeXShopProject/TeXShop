@@ -216,9 +216,9 @@
 	<string>LiteColors</string>
 	<key>XMLComment</key>
 	<array>
-		<real>0.5</real>
-		<real>0.5</real>
-		<real>0.5</real>
+		<real>0.615686</real>
+		<real>0.615686</real>
+		<real>0.615686</real>
 		<real>1</real>
 	</array>
 	<key>XMLParameter</key>
@@ -237,23 +237,23 @@
 	</array>
 	<key>XMLTag</key>
 	<array>
-		<real>1</real>
-		<real>0</real>
-		<real>0.2</real>
+		<real>1.0</real>
+		<real>0.423529</real>
+		<real>0.541176</real>
 		<real>1</real>
 	</array>
 	<key>XMLValue</key>
 	<array>
-		<real>0.6</real>
-		<real>0.6</real>
-		<real>0.2</real>
+		<real>0.635294</real>
+		<real>0.635294</real>
+		<real>0.211765</real>
 		<real>1</real>
 	</array>
 	<key>explFunction</key>
 	<array>
-		<real>0.5738074183</real>
-		<real>0.5655357838</real>
-		<real>0</real>
+		<real>0.647059</real>
+		<real>0.635294</real>
+		<real>0.0</real>
 		<real>1</real>
 	</array>
 	<key>explIntenseFunction</key>
@@ -272,16 +272,16 @@
 	</array>
 	<key>explVariable</key>
 	<array>
-		<real>0.3612271356295268</real>
-		<real>0.5538832545280457</real>
-		<real>0.1470971305796211</real>
+		<real>0.443137</real>
+		<real>0.682353</real>
+		<real>0.180392</real>
 		<real>1</real>
 	</array>
 	<key>explmsg</key>
 	<array>
-		<real>0.2445922347363184</real>
-		<real>0.5628632708533178</real>
-		<real>0.5655312538146973</real>
+		<real>0.294118</real>
+		<real>0.67451</real>
+		<real>0.678431</real>
 		<real>1</real>
 	</array>
 	<key>explmykey</key>
