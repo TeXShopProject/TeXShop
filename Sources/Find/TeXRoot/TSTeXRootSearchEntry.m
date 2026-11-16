@@ -117,6 +117,12 @@ static char TSOpenDocumentsSnapshotKey;
             [window selectSetNamed:name];
             [window showWindow:nil];
         };
+        controller.replaceAllHandler = ^(TSTeXRootSearchWindowController *window) { [window beginReplaceAll]; };
+        controller.textViewForFile = ^NSTextView *(TSTeXRootReplaceFile *file) { return [weakSelf textViewOfOpenFile:file]; };
+        controller.backupDataForOpenDocument = ^NSData *(TSTeXRootReplaceFile *file, BOOL *usedUTF8) {
+            return [weakSelf backupDataOfOpenFile:file usedUTF8:usedUTF8];
+        };
+        controller.openTextHandler = ^(NSString *text) { [weakSelf openUntitledDocumentWithText:text]; };
         self.madeWindowController = controller;
         [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(applicationDidUpdate:) name:NSApplicationDidUpdateNotification object:nil];
         [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(projectTextDidChange:) name:NSTextStorageDidProcessEditingNotification object:nil];
@@ -184,6 +190,9 @@ static char TSOpenDocumentsSnapshotKey;
     item.title = [TSTeXRootEntryRules titleForState:state applying:applying];
     if (state != TSTeXRootEntryStateChild && state != TSTeXRootEntryStateRoot)
         return NO;
+    // The window is not tied to another root while a Replace All runs (spec §2.5.1a).
+    if (self.madeWindowController.replacing)
+        return NO;
     if (applying)
         return TSMultipleReplaceMenu.sharedMenu.windowController.selectedSetName != nil;
     return YES;
@@ -212,7 +221,7 @@ static char TSOpenDocumentsSnapshotKey;
 {
     TSDocument *document = [self targetDocument];
     NSURL *documentURL = document.fileURL;
-    if (!document || !documentURL || ![documentURL.pathExtension isEqualToString:@"tex"]) {
+    if (!document || !documentURL || ![documentURL.pathExtension isEqualToString:@"tex"] || self.madeWindowController.replacing) {
         NSBeep();
         return;
     }
@@ -226,6 +235,10 @@ static char TSOpenDocumentsSnapshotKey;
         typeof(self) entry = weakSelf;
         if (!entry || entry.openRequest != request) // chosen again meanwhile
             return;
+        if (entry.madeWindowController.replacing) { // a Replace All began meanwhile
+            NSBeep();
+            return;
+        }
         if ((state != TSTeXRootEntryStateChild && state != TSTeXRootEntryStateRoot) || !rootURL) {
             NSBeep();
             return;
@@ -416,7 +429,8 @@ static char TSOpenDocumentsSnapshotKey;
 - (void)applicationDidUpdate:(NSNotification *)notification
 {
     TSTeXRootSearchModel *model = self.madeWindowController.model;
-    if (!model || !self.madeWindowController.window.isVisible)
+    // While a Replace All runs, its own changes are not followed: the files are collected again at its end.
+    if (!model || !self.madeWindowController.window.isVisible || TSTeXRootReplaceGuard.isRunning)
         return;
     NSArray *oldSignature = self.signature, *oldEditable = self.editableSignature;
     [self refreshOpenDocuments];
@@ -431,13 +445,58 @@ static char TSOpenDocumentsSnapshotKey;
 {
     NSTextStorage *storage = notification.object;
     TSTeXRootSearchModel *model = self.madeWindowController.model;
-    if (!model.project || !(storage.editedMask & NSTextStorageEditedCharacters))
+    if (!model.project || !(storage.editedMask & NSTextStorageEditedCharacters) || TSTeXRootReplaceGuard.isRunning)
         return;
     for (TSTeXRootOpenDocument *open in self.openDocuments)
         if (open.storage == storage && open.identifier) {
             [model textDidChangeForFileWithIdentifier:(id _Nonnull)open.identifier];
             return;
         }
+}
+
+#pragma mark Replace All
+
+/// The view of the open document of a file of the plan; nil when it was closed since, or now shows another file.
+- (nullable NSTextView *)textViewOfOpenFile:(TSTeXRootReplaceFile *)file
+{
+    for (TSTeXRootOpenDocument *open in [self openDocumentsWithIdentifier:file.file.identifier]) {
+        TSDocument *document = open.document;
+        if (document && !document.externalEditor && [document.fileURL isEqual:open.url])
+            return [document textView];
+    }
+    return nil;
+}
+
+/// The text approved, as the document would save it in its encoding; in UTF-8 when that encoding cannot hold it.
+- (nullable NSData *)backupDataOfOpenFile:(TSTeXRootReplaceFile *)file usedUTF8:(BOOL *)usedUTF8
+{
+    TSDocument *document = nil;
+    for (TSTeXRootOpenDocument *open in [self openDocumentsWithIdentifier:file.file.identifier])
+        document = document ?: open.document;
+    TSEncodingSupport *support = [TSEncodingSupport sharedInstance];
+    NSStringEncoding encoding = document ? [document encoding] : NSUTF8StringEncoding;
+    NSString *saving = [support textForSaving:file.originalText encoding:encoding];
+    NSData *data = [saving dataUsingEncoding:encoding allowLossyConversion:NO];
+    if (data)
+        return data;
+    *usedUTF8 = YES;
+    return [file.originalText dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+- (void)openUntitledDocumentWithText:(NSString *)text
+{
+    NSError *error = nil;
+    NSDocument *document = [NSDocumentController.sharedDocumentController openUntitledDocumentAndDisplay:YES error:&error];
+    if (![document isKindOfClass:[TSDocument class]]) {
+        if (error)
+            [NSApp presentError:error];
+        return;
+    }
+    NSTextView *view = [(TSDocument *)document textView];
+    if ([view shouldChangeTextInRange:NSMakeRange(0, view.string.length) replacementString:text]) {
+        [view.textStorage replaceCharactersInRange:NSMakeRange(0, view.string.length) withString:text];
+        [view didChangeText];
+    }
 }
 
 #pragma mark Showing an item

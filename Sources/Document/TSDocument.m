@@ -78,6 +78,8 @@
 #import "TSGlyphPopoverController.h"  // Terada
 #import "TSWindowController.h"
 #import "TSFileChangeMonitor.h"
+#import "TSTeXRootDocumentApplier.h"
+#import <objc/message.h>
 #import <sys/stat.h>
 #import "TSExternalPDFReload.h"
 #import "TSSourceFormatRanges.h"
@@ -621,6 +623,64 @@ withDarkColors = NO;
    self.splitController = [[TSWindowController alloc] initWithWindow: fullSplitWindow];
   //  [self addWindowController: self.splitController];
     
+}
+
+#pragma mark Replace All in the TeX sources of a root
+
+// While a Replace All of the window "Find in TeX Sources" puts its replacements in this document's text, a part at a
+// time, the text is neither saved, closed, reverted nor typeset: the request is refused at once, never held or waited
+// for on the main thread (Issue #45, spec §2.5.3a).
+- (BOOL)isBeingReplacedIn
+{
+    return [TSTeXRootReplaceGuard isApplyingToTextStorage:_textStorage];
+}
+
+- (void)saveDocumentAs:(id)sender
+{
+    if ([self isBeingReplacedIn]) {
+        NSBeep();
+        return;
+    }
+    [super saveDocumentAs:sender];
+}
+
+- (void)saveDocumentTo:(id)sender
+{
+    if ([self isBeingReplacedIn]) {
+        NSBeep();
+        return;
+    }
+    [super saveDocumentTo:sender];
+}
+
+- (void)duplicateDocument:(id)sender
+{
+    if ([self isBeingReplacedIn]) {
+        NSBeep();
+        return;
+    }
+    [super duplicateDocument:sender];
+}
+
+- (void)canCloseDocumentWithDelegate:(id)delegate shouldCloseSelector:(SEL)shouldCloseSelector contextInfo:(void *)contextInfo
+{
+    if ([self isBeingReplacedIn]) {
+        NSBeep();
+        if (delegate && shouldCloseSelector)
+            ((void (*)(id, SEL, NSDocument *, BOOL, void *))objc_msgSend)(delegate, shouldCloseSelector, self, NO, contextInfo);
+        return;
+    }
+    [super canCloseDocumentWithDelegate:delegate shouldCloseSelector:shouldCloseSelector contextInfo:contextInfo];
+}
+
+// Cancelled: AppKit tries again later.
+- (void)autosaveWithImplicitCancellability:(BOOL)autosavingIsImplicitlyCancellable completionHandler:(void (^)(NSError *errorOrNil))completionHandler
+{
+    if ([self isBeingReplacedIn]) {
+        completionHandler([NSError errorWithDomain:NSCocoaErrorDomain code:NSUserCancelledError userInfo:nil]);
+        return;
+    }
+    [super autosaveWithImplicitCancellability:autosavingIsImplicitlyCancellable completionHandler:completionHandler];
 }
 
 + (BOOL)autosavesInPlace
@@ -2608,7 +2668,7 @@ in other code when an external editor is being used. */
     sourceFileMonitor = [[TSFileChangeMonitor alloc] initWithPath:path prepare:^NSNumber *{
         TSDocument *document = weakSelf;
         if (!document || ![document.fileURL.path.stringByStandardizingPath isEqualToString:path]) return nil;
-        if (document->sourceSaving || [document isDocumentEdited] || [document hasUnautosavedChanges]) return nil;
+        if (document->sourceSaving || [document isDocumentEdited] || [document hasUnautosavedChanges] || [document isBeingReplacedIn]) return nil;
         return @(document->sourceIOGeneration);
     } accept:^BOOL(NSData *data, NSData *fingerprint, NSNumber *generation) {
         TSDocument *document = weakSelf;
@@ -2616,7 +2676,7 @@ in other code when an external editor is being used. */
         // A save/read/path change during background I/O invalidates this snapshot,
         // even when the document has become clean again by the time it arrives.
         if (generation.unsignedIntegerValue != document->sourceIOGeneration ||
-            document->sourceSaving || [document isDocumentEdited] || [document hasUnautosavedChanges]) return NO;
+            document->sourceSaving || [document isDocumentEdited] || [document hasUnautosavedChanges] || [document isBeingReplacedIn]) return NO;
         if ([fingerprint isEqual:document->sourceAcceptedFingerprint]) return YES;
         document->sourceReloadData = data;
         document->sourceReloadFingerprint = fingerprint;
@@ -3068,6 +3128,10 @@ else {
 
 //ULRICH BAUER PATCH
 - (void)revertDocumentToSaved:(id)sender {
+    if ([self isBeingReplacedIn]) {
+        NSBeep();
+        return;
+    }
     // A revert the user asks for is never one that follows another process's write.
     @synchronized (self) {
         sourceExternalWriteFinished = NO;
@@ -3284,6 +3348,11 @@ else {
 
 - (void)close
 {
+    // Closed only by the paths that ask first (canCloseDocumentWithDelegate:), or by AppleScript: not now.
+    if ([self isBeingReplacedIn]) {
+        NSBeep();
+        return;
+    }
     [self.sourceStatusBar stop];
     [self.textStatistics close];
     [self closeExperiment];
@@ -3361,6 +3430,10 @@ else {
 
 - (void)saveDocument: (id)sender
 {
+	if ([self isBeingReplacedIn]) {
+		NSBeep();
+		return;
+	}
 	[super saveDocument: sender];
   
 	// if CommandCompletion list is being saved, reload it.

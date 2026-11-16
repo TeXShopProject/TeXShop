@@ -5,6 +5,7 @@
 #import "TSTeXRootSearchModel.h"
 #import "TSTeXRootSearchFileTree.h"
 #import "TSTeXRootSearchResultsList.h"
+#import "TSTeXRootReplaceRun.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -43,8 +44,25 @@ NS_SWIFT_NAME(TeXRootSearchWindowController)
 @property (nonatomic, copy, nullable) void (^openHelpHandler)(void);
 /// "Edit…" of Multiple Replace mode: shows the set in the Multiple Replace window.
 @property (nonatomic, copy, nullable) void (^editSetHandler)(NSString *name);
-/// Replace All, when it can be pressed (stage 4 of spec §4).
+/// Replace All, when it can be pressed: TeXShop calls -beginReplaceAll.
 @property (nonatomic, copy, nullable) void (^replaceAllHandler)(TSTeXRootSearchWindowController *controller);
+
+#pragma mark Replace All (spec §2.5)
+
+/// The text view of the open document of a file of the plan, nil when it is not open any more.
+@property (nonatomic, copy, nullable) NSTextView *_Nullable (^textViewForFile)(TSTeXRootReplaceFile *file);
+/// An open document's text as approved, in its encoding, or in UTF-8 (`usedUTF8`) when that cannot hold it.
+@property (nonatomic, copy, nullable) NSData *_Nullable (^backupDataForOpenDocument)(TSTeXRootReplaceFile *file, BOOL *usedUTF8);
+/// "Open the Original Text in a New Document" of the report: an untitled document with `text`.
+@property (nonatomic, copy, nullable) void (^openTextHandler)(NSString *text);
+/// From the press of Replace All until its report: only ■ (and Escape, ⌘.) can be used, which stops it.
+@property (nonatomic, readonly, getter=isReplacing) BOOL replacing;
+/// The run after the confirmation, while it runs.
+@property (nonatomic, readonly, nullable) TSTeXRootReplaceRun *run;
+/// For the tests: the sheets go here instead of the window; `answer` gives the button pressed.
+@property (nonatomic, copy, nullable) void (^alertPresenter)(NSAlert *alert, void (^answer)(NSModalResponse response));
+/// For the tests: the run is made, before it starts.
+@property (nonatomic, copy, nullable) void (^runMade)(TSTeXRootReplaceRun *run);
 
 - (IBAction)collectAgain:(nullable id)sender;
 - (IBAction)stop:(nullable id)sender;
@@ -57,6 +75,12 @@ NS_SWIFT_NAME(TeXRootSearchWindowController)
 /// Brings every control up to date with the model now (as after each change of the model).
 - (void)updateFromModel;
 
+@end
+
+@interface TSTeXRootSearchWindowController (ReplaceAll)
+/// Check 1, the confirmation sheet, then the run and its report (spec §2.5.1, §2.5.5). Beeps when Replace All cannot
+/// be pressed.
+- (void)beginReplaceAll;
 @end
 
 /// For the tests and images; not used by the application itself.

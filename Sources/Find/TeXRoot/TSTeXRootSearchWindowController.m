@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#import "TSTeXRootSearchWindowController.h"
+#import "TSTeXRootSearchWindowController+Private.h"
 #import "TSAdvancedFindPanelController+Private.h"
 #import "TSAdvancedFindOptionsForm.h"
 #import "TSAdvancedFindFieldStyle.h"
@@ -16,54 +16,13 @@
 - (void)cancelOperation:(nullable id)sender
 {
     TSTeXRootSearchWindowController *controller = self.window.windowController;
-    if ([controller isKindOfClass:[TSTeXRootSearchWindowController class]] && controller.model.activity != TSTeXRootSearchActivityIdle)
+    if ([controller isKindOfClass:[TSTeXRootSearchWindowController class]] && (controller.model.activity != TSTeXRootSearchActivityIdle || controller.replacing))
         [controller cancelOperation:sender];
     else
         [super cancelOperation:sender];
 }
 @end
 
-@interface TSTeXRootSearchWindowController ()
-@property (nonatomic, readwrite, nullable) TSTeXRootSearchModel *model;
-@property (nonatomic, strong) NSSegmentedControl *modeControl;
-@property (nonatomic, strong) NSTextField *rootLabel;
-@property (nonatomic, strong) NSTextField *explanationLabel;
-@property (nonatomic, strong) NSButton *helpButton;
-@property (nonatomic, strong) NSButton *refreshButton;
-@property (nonatomic, strong) TSAdvancedFindFieldView *findFieldView;
-@property (nonatomic, strong) TSAdvancedFindFieldView *replaceFieldView;
-@property (nonatomic, strong) TSAdvancedFindInputBox *findBox;
-@property (nonatomic, strong) TSAdvancedFindInputBox *replaceBox;
-@property (nonatomic, strong) NSView *optionsRow;
-@property (nonatomic, strong) NSView *setRow;
-@property (nonatomic, strong) NSButton *regexBox;
-@property (nonatomic, strong) NSButton *ignoreCaseBox;
-@property (nonatomic, strong) NSButton *moreOptionsButton;
-@property (nonatomic, strong, nullable) NSPopover *popover;
-@property (nonatomic, strong, nullable) TSAdvancedFindOptionsForm *optionsForm;
-@property (nonatomic, strong) NSPopUpButton *setPopUp;
-@property (nonatomic, strong) NSTextField *ruleCountLabel;
-@property (nonatomic, strong) NSButton *editSetButton;
-@property (nonatomic, copy, nullable) NSString *setName;
-@property (nonatomic, strong) NSProgressIndicator *spinner;
-@property (nonatomic, strong) NSButton *stopButton;
-@property (nonatomic, strong) NSTextField *statusField;
-@property (nonatomic, strong) NSButton *unreadableButton;
-@property (nonatomic, strong) NSButton *backupBox;
-@property (nonatomic, strong) NSButton *replaceAllButton;
-@property (nonatomic, strong) NSStackView *topStack;
-@property (nonatomic, strong) NSStackView *bottomStack;
-@property (nonatomic, strong) NSSplitView *splitView;
-@property (nonatomic, strong, nullable) TSTeXRootSearchFileTree *fileTree;
-@property (nonatomic, strong, nullable) TSTeXRootSearchResultsList *resultsList;
-@property (nonatomic, strong) NSView *treeHolder;
-@property (nonatomic, strong) NSView *resultsHolder;
-/// What the list shows, to rebuild it only when the results or the mode changed.
-@property (nonatomic, copy, nullable) NSArray *shownResults;
-@property (nonatomic) TSTeXRootSearchMode shownMode;
-@property (nonatomic) BOOL showsAnyResults;
-@property (nonatomic) BOOL updatePending;
-@end
 
 @implementation TSTeXRootSearchWindowController
 
@@ -83,10 +42,10 @@
     [self buildContent];
     [window center];
     self.windowFrameAutosaveName = @"TeXRootSearchWindow";
+    window.delegate = self;
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(settingsDidChange:) name:TSAdvancedFindSettingsDidChangeNotification object:findController.settings];
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(libraryDidChange:) name:TSMultipleReplaceLibraryDidChangeNotification object:library];
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(fieldStyleDidChange:) name:TSAdvancedFindFieldStyleDidChangeNotification object:nil];
-    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(windowWillClose:) name:NSWindowWillCloseNotification object:window];
     return self;
 }
 
@@ -708,14 +667,29 @@
 
 - (IBAction)stop:(nullable id)sender
 {
+    if (self.replacing) {
+        [self stopReplacing];
+        return;
+    }
     [self.model stop];
 }
 
 /// Escape and ⌘. stop a long task (spec §2.9).
 - (void)cancelOperation:(nullable id)sender
 {
-    if (self.model.activity != TSTeXRootSearchActivityIdle)
+    if (self.replacing)
+        [self stopReplacing];
+    else if (self.model.activity != TSTeXRootSearchActivityIdle)
         [self.model stop];
+}
+
+/// The window stays while Replace All runs: its report comes down from it.
+- (BOOL)windowShouldClose:(NSWindow *)sender
+{
+    if (!self.replacing)
+        return YES;
+    NSBeep();
+    return NO;
 }
 
 - (IBAction)replaceAll:(nullable id)sender
@@ -735,11 +709,11 @@
 - (BOOL)validateMenuItem:(NSMenuItem *)item
 {
     if (item.action == @selector(collectAgain:))
-        return self.model != nil;
+        return self.model != nil && !self.replacing;
     if (item.action == @selector(stop:))
-        return self.model.activity != TSTeXRootSearchActivityIdle;
+        return self.model.activity != TSTeXRootSearchActivityIdle || self.replacing;
     if (item.action == @selector(replaceAll:))
-        return self.model.canReplaceAll;
+        return self.model.canReplaceAll && !self.replacing;
     return YES;
 }
 
@@ -753,7 +727,7 @@
         return;
     // Replace All follows at once: it must never be pressable for a list that is not that of the conditions; nor is a
     // whole change of the list before shown.
-    self.replaceAllButton.enabled = model.canReplaceAll && self.replaceAllHandler != nil;
+    self.replaceAllButton.enabled = model.canReplaceAll && self.replaceAllHandler != nil && !self.replacing;
     [self.resultsList modelDidChange];
     if (self.updatePending)
         return;
@@ -770,6 +744,8 @@
     *color = NSColor.secondaryLabelColor;
     if (!model)
         return @"";
+    if (self.run)
+        return TSLocalized(@"TeXRootSearch.Status.Replacing", @"Replacing…");
     if (model.activity == TSTeXRootSearchActivityCollecting)
         return [NSString stringWithFormat:TSLocalized(@"TeXRootSearch.Status.Collecting", @"%1$lu folders, %2$lu files / %3$@"),
                 (unsigned long)model.collectedFolders, (unsigned long)model.collectedFiles, model.currentFolder.lastPathComponent ?: @""];
@@ -813,12 +789,13 @@
 {
     TSTeXRootSearchModel *model = self.model;
     TSTeXRootSearchActivity activity = model.activity;
-    BOOL busy = activity == TSTeXRootSearchActivityCollecting || activity == TSTeXRootSearchActivityComputing;
-    if (activity == TSTeXRootSearchActivityComputing)
+    BOOL busy = activity == TSTeXRootSearchActivityCollecting || activity == TSTeXRootSearchActivityComputing || self.replacing;
+    BOOL spins = activity == TSTeXRootSearchActivityComputing || self.replacing;
+    if (spins)
         [self.spinner startAnimation:nil];
     else
         [self.spinner stopAnimation:nil];
-    self.spinner.hidden = activity != TSTeXRootSearchActivityComputing;
+    self.spinner.hidden = !spins;
     self.stopButton.hidden = !busy;
     if (model.mode != (TSTeXRootSearchMode)self.modeControl.selectedSegment)
         [self showMode:model.mode];
@@ -851,9 +828,8 @@
     NSUInteger unreadable = model.project.unreadableItems.count;
     self.unreadableButton.hidden = unreadable == 0;
     self.unreadableButton.title = [NSString stringWithFormat:TSLocalized(@"TeXRootSearch.UnreadableButton", @"Files not read: %lu"), (unsigned long)unreadable];
-    self.replaceAllButton.enabled = model.canReplaceAll && self.replaceAllHandler != nil;
-    self.refreshButton.enabled = model != nil;
-    self.modeControl.enabled = model != nil;
+    self.replaceAllButton.enabled = model.canReplaceAll && self.replaceAllHandler != nil && !self.replacing;
+    [self updateControlsForReplacing];
 }
 
 @end

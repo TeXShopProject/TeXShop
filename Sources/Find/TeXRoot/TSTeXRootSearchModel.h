@@ -68,6 +68,7 @@ NS_SWIFT_NAME(TeXRootSearchModel)
 + (instancetype)new NS_UNAVAILABLE;
 
 @property (nonatomic, readonly, copy) NSURL *rootURL;
+@property (nonatomic, readonly) TSTeXRootSearchEnvironment *environment;
 @property (nonatomic, weak, nullable) id<TSTeXRootSearchModelDelegate> delegate;
 /// 0.3 s (spec §2.7.3).
 @property (nonatomic) NSTimeInterval pause;
@@ -129,6 +130,8 @@ NS_SWIFT_NAME(TeXRootSearchModel)
 /// The find string or a rule cannot be used: the list is empty.
 @property (nonatomic, readonly, nullable) NSError *queryError;
 - (BOOL)isItemIncluded:(TSTeXRootSearchItem *)item inFile:(TSTeXRootSearchFileResult *)file;
+/// The checks of the items as they are now, for a background queue: what Replace All is approved with.
+- (BOOL (^)(TSTeXRootSearchItem *item, TSTeXRootSearchFileResult *file))inclusionSnapshot;
 /// The lines the item at `index` of `file` takes in the list (before or after, whichever is longer, in the mode of
 /// the search): worked out with the search, so that the list never measures the texts on the main thread.
 - (NSUInteger)shownLinesOfItemAtIndex:(NSUInteger)index inFile:(TSTeXRootSearchFileResult *)file;
@@ -158,7 +161,7 @@ NS_SWIFT_NAME(TeXRootSearchModel)
 /// replaced text) is off; items off in files not replaced in stay off as they were. The ranges of a file are kept until
 /// its items are listed again, through a stop or another collection; new conditions drop them all (every item is on),
 /// an edit of the file drops its own.
-- (void)searchAgainAfterReplacingWithRangesOff:(NSDictionary<NSString *, NSArray<NSValue *> *> *)rangesOff message:(NSString *)message;
+- (void)searchAgainAfterReplacingWithRangesOff:(NSDictionary<NSString *, NSArray<NSValue *> *> *)rangesOff message:(nullable NSString *)message;
 
 @end
 

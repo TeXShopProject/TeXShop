@@ -21,6 +21,7 @@
  * Created by dirk on Tue Jan 23 2001.
  *
  */
+#import "TSTeXRootDocumentApplier.h"
 #import "TSShortcutPaneController.h"
 #import "TSMacroEditor.h"
 #import "TSKeyboardShortcuts.h"
@@ -162,6 +163,18 @@ static void TSInstallAdvancedFindFieldStyle(void)
 }
 */
 
+
+// A Replace All of "Find in TeX Sources" that is putting its replacements in an open document finishes first, without
+// holding the main thread; the answer is given when it ends, however it ends (Issue #45, spec §2.5.3a).
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
+{
+    if (![TSTeXRootReplaceGuard isApplying])
+        return NSTerminateNow;
+    [TSTeXRootReplaceGuard performWhenNotApplying:^{
+        [NSApp replyToApplicationShouldTerminate:YES];
+    }];
+    return NSTerminateLater;
+}
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification
 {

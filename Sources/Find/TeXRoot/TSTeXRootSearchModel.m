@@ -60,7 +60,6 @@ NSUInteger TSTeXRootSearchShownLines(NSString *_Nullable text)
 @end
 
 @interface TSTeXRootSearchModel ()
-@property (nonatomic, readonly) TSTeXRootSearchEnvironment *environment;
 @property (nonatomic, readonly) dispatch_queue_t queue;
 @property (nonatomic, readwrite, nullable) TSTeXRootProject *project;
 @property (nonatomic, readwrite) TSTeXRootSearchActivity activity;
@@ -644,6 +643,19 @@ static NSString *TSItemKey(TSTeXRootSearchItem *item)
     return results;
 }
 
+- (BOOL (^)(TSTeXRootSearchItem *item, TSTeXRootSearchFileResult *file))inclusionSnapshot
+{
+    NSMutableDictionary<id, NSSet<NSString *> *> *excluded = [NSMutableDictionary dictionary];
+    [self.excludedItems enumerateKeysAndObjectsUsingBlock:^(id identifier, NSMutableSet<NSString *> *keys, BOOL *stop) {
+        if (keys.count)
+            excluded[identifier] = [keys copy];
+    }];
+    return ^BOOL(TSTeXRootSearchItem *item, TSTeXRootSearchFileResult *file) {
+        NSSet<NSString *> *keys = excluded[file.source.file.identifier];
+        return !keys || ![keys containsObject:TSItemKey(item)];
+    };
+}
+
 - (BOOL)isItemIncluded:(TSTeXRootSearchItem *)item inFile:(TSTeXRootSearchFileResult *)file
 {
     if (self.mode == TSTeXRootSearchModeFind || file.searchOnlyReason != TSTeXRootSearchOnlyReasonNone)
@@ -744,7 +756,7 @@ static NSString *TSItemKey(TSTeXRootSearchItem *item)
 
 #pragma mark After Replace All
 
-- (void)searchAgainAfterReplacingWithRangesOff:(NSDictionary<NSString *, NSArray<NSValue *> *> *)rangesOff message:(NSString *)message
+- (void)searchAgainAfterReplacingWithRangesOff:(NSDictionary<NSString *, NSArray<NSValue *> *> *)rangesOff message:(nullable NSString *)message
 {
     [self collect];
     [self.rangesOff setDictionary:rangesOff];
@@ -767,8 +779,9 @@ static NSString *TSItemKey(TSTeXRootSearchItem *item)
         NSUInteger x = a.rangeValue.location, y = b.rangeValue.location;
         return x < y ? NSOrderedAscending : x > y ? NSOrderedDescending : NSOrderedSame;
     }];
+    // The file was replaced in: what was off is said by the ranges only (the items' lines and columns moved).
     id identifier = file.source.file.identifier;
-    NSMutableSet<NSString *> *excluded = self.excludedItems[identifier] ?: [NSMutableSet set];
+    NSMutableSet<NSString *> *excluded = [NSMutableSet set];
     NSUInteger first = 0, count = ranges.count;
     for (TSTeXRootSearchItem *item in file.items) {
         NSRange range = item.range;

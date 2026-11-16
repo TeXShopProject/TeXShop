@@ -21,6 +21,7 @@
  */
 
 #import "TSTextView.h"
+#import "TSTeXRootDocumentApplier.h"
 #import "TSLaTeXPanelController.h"
 
 // added by mitsu --(A) g_texChar filtering
@@ -2951,9 +2952,30 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 }
 
 
+// Undo and Redo do not reach a text that a Replace All of "Find in TeX Sources" is replacing in (Issue #45, spec
+// §2.5.1a). NSTextView does not answer them (the window does): only then does this view, which disables them.
+- (BOOL)respondsToSelector:(SEL)selector
+{
+	if (selector == @selector(undo:) || selector == @selector(redo:))
+		return [TSTeXRootReplaceGuard locksTextStorage:self.textStorage];
+	return [super respondsToSelector:selector];
+}
+
+- (void)undo:(id)sender
+{
+	NSBeep();
+}
+
+- (void)redo:(id)sender
+{
+	NSBeep();
+}
+
 - (BOOL)validateMenuItem:(NSMenuItem *)anItem
 {
 
+	if ([anItem action] == @selector(undo:) || [anItem action] == @selector(redo:))
+		return NO;
 	if ([anItem action] == @selector(registerForCommandCompletion:))
 		return (g_canRegisterCommandCompletion && ([self selectedRange].length > 0));
 	BOOL enabled;

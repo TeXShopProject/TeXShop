@@ -682,6 +682,8 @@ enum RootCommand
 - (void) chooseTempEncoding: sender;
 - (void) activateTempEncoding;
 - (NSStringEncoding) encoding;
+/// A Replace All in the TeX sources of a root is putting its replacements in the text (Issue #45).
+- (BOOL)isBeingReplacedIn;
 - (NSStringEncoding) currentDocumentEncoding;
 - (NSStringEncoding) temporaryEncoding;
 

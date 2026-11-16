@@ -22,6 +22,7 @@
 
 /* Note: NDS stands for Neil Sims, from The University of Sheffield, who added four features for version 4.18 */
 
+#import "TSTeXRootDocumentApplier.h"
 #import "UseMitsu.h"
 
 #import <objc/runtime.h>
@@ -246,6 +247,11 @@ for(NSString *key in enu)
 
 - (void) doJobForScript:(NSInteger)type withError:(BOOL)error runContinuously:(BOOL)continuous
 {
+	// Typesetting saves the documents: not while a Replace All puts its replacements in one (Issue #45).
+	if ([TSTeXRootReplaceGuard isApplying]) {
+		NSBeep();
+		return;
+	}
     SEL saveFinished;
     
     if (! fileIsTex)
@@ -311,6 +317,11 @@ for(NSString *key in enu)
 
 - (void) doJob:(NSInteger)type withError:(BOOL)error runContinuously:(BOOL)continuous
 {
+	// Typesetting saves the documents: not while a Replace All puts its replacements in one (Issue #45).
+	if ([TSTeXRootReplaceGuard isApplying]) {
+		NSBeep();
+		return;
+	}
 	SEL		saveFinished;
 
 	useTempEngine = NO;

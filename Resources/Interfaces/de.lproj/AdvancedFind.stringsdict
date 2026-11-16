@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>TeXRootSearch.Confirm.Disk</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@f@ Dieser Vorgang kann nicht widerrufen werden.</string>
+		<key>f</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%lu nicht geöffnete Datei wird direkt auf dem Datenträger geändert.</string>
+			<key>other</key>
+			<string>%lu nicht geöffnete Dateien werden direkt auf dem Datenträger geändert.</string>
+		</dict>
+	</dict>
+	<key>TeXRootSearch.Confirm.Title</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%1$#@m@ in %2$#@f@ ersetzen?</string>
+		<key>f</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%2$lu Datei</string>
+			<key>other</key>
+			<string>%2$lu Dateien</string>
+		</dict>
+		<key>m</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%1$lu Treffer</string>
+			<key>other</key>
+			<string>%1$lu Treffer</string>
+		</dict>
+	</dict>
+	<key>TeXRootSearch.Status.Replaced</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%1$#@m@ in %2$#@f@ ersetzt</string>
+		<key>f</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%2$lu Datei</string>
+			<key>other</key>
+			<string>%2$lu Dateien</string>
+		</dict>
+		<key>m</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%1$lu Treffer</string>
+			<key>other</key>
+			<string>%1$lu Treffer</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

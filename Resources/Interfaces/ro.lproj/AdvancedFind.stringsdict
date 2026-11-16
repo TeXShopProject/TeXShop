@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>TeXRootSearch.Confirm.Disk</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@f@ Această acțiune nu poate fi anulată.</string>
+		<key>f</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>few</key>
+			<string>%lu fișiere care nu sunt deschise vor fi modificate direct pe disc.</string>
+			<key>one</key>
+			<string>%lu fișier care nu este deschis va fi modificat direct pe disc.</string>
+			<key>other</key>
+			<string>%lu de fișiere care nu sunt deschise vor fi modificate direct pe disc.</string>
+		</dict>
+	</dict>
+	<key>TeXRootSearch.Confirm.Title</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>Înlocuiți %1$#@m@ în %2$#@f@?</string>
+		<key>f</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>few</key>
+			<string>%2$lu fișiere</string>
+			<key>one</key>
+			<string>%2$lu fișier</string>
+			<key>other</key>
+			<string>%2$lu de fișiere</string>
+		</dict>
+		<key>m</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>few</key>
+			<string>%1$lu potriviri</string>
+			<key>one</key>
+			<string>%1$lu potrivire</string>
+			<key>other</key>
+			<string>%1$lu de potriviri</string>
+		</dict>
+	</dict>
+	<key>TeXRootSearch.Status.Replaced</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%1$#@m@ în %2$#@f@</string>
+		<key>f</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>few</key>
+			<string>%2$lu fișiere</string>
+			<key>one</key>
+			<string>%2$lu fișier</string>
+			<key>other</key>
+			<string>%2$lu de fișiere</string>
+		</dict>
+		<key>m</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>few</key>
+			<string>Au fost înlocuite %1$lu potriviri</string>
+			<key>one</key>
+			<string>A fost înlocuită %1$lu potrivire</string>
+			<key>other</key>
+			<string>Au fost înlocuite %1$lu de potriviri</string>
+		</dict>
+	</dict>
+</dict>
+</plist>
