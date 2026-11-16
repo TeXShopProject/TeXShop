@@ -107,6 +107,21 @@ CGFloat TSDocumentWindowHiddenTop(NSView *view)
     return MAX(0, view.safeAreaInsets.top);
 }
 
+BOOL TSDocumentWindowPointIsUnderToolbar(NSWindow *window, NSPoint point)
+{
+    if (!window || !(window.styleMask & NSWindowStyleMaskFullSizeContentView))
+        return NO;
+    return point.y >= NSMaxY(window.contentLayoutRect);
+}
+
+NSRect TSDocumentWindowRectBelowToolbar(NSView *view, NSRect rect)
+{
+    NSWindow *window = view.window;
+    if (!window || !(window.styleMask & NSWindowStyleMaskFullSizeContentView))
+        return rect;
+    return NSIntersectionRect(rect, [view convertRect:window.contentLayoutRect fromView:nil]);
+}
+
 void TSDocumentWindowSplitInShares(NSSplitView *splitView, CGFloat first, CGFloat second)
 {
     if (splitView.arrangedSubviews.count != 2 || first < 0 || second < 0 || first + second <= 0)

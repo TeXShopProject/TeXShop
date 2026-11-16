@@ -28,6 +28,7 @@
 #import "globals.h"
 #import "TSDocumentController.h"
 #import "MyPDFKitView.h"
+#import "TSDocumentWindowGlass.h"
 
 
 
@@ -654,7 +655,9 @@
             NSPoint thePoint = [theEvent locationInWindow];
             NSPoint aPoint = [[self.myDocument pdfKitView] convertPoint:thePoint fromView:nil];
             NSView *aView = [self.myDocument pdfKitView];
-            NSRect Inside = aView.bounds;
+            // The part of the Preview under the title bar and the toolbar is theirs: a click there
+            // goes to the toolbar, not to the magnifying glass (#44).
+            NSRect Inside = TSDocumentWindowRectBelowToolbar(aView, aView.bounds);
             Inside = NSInsetRect(Inside, 15, 15);
             BOOL inPDF = [aView mouse: aPoint inRect: Inside];
             // A click in a pinned link popup goes to the popup, which handles every tool (#14).

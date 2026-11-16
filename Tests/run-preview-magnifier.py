@@ -6,6 +6,9 @@ verbatim with the real OverView and PDFKit, in a window that is never shown.
 Posted mouse events drive the tracking loop; just before the glass is removed,
 what it drew is captured, so the checks look at the lens contents rather than
 at coordinates alone. Defaults stay in memory.
+
+On macOS 26 and later, where the pages run under the toolbar, a glass dragged up
+onto the toolbar stays below it.
 """
 from pathlib import Path
 import argparse, os, plistlib, subprocess, sys, tempfile
@@ -25,6 +28,9 @@ MUTATIONS = {
                          '                  NSSize z = p.rotation % 180 ? NSMakeSize(NSHeight(r), NSWidth(r)) : r.size;\n'
                          '                  [[self overView] setMagnifiedImage: [NSImage imageWithSize:z flipped:NO drawingHandler:^BOOL(NSRect d) {\n'
                          '                      [p drawWithBox:b toContext:NSGraphicsContext.currentContext.CGContext]; return YES; }]]; }\n'),
+    # The glass follows the pointer under the toolbar (#44).
+    'glass-under-toolbar': ('            if([self mouse:mouseLocView inRect:TSDocumentWindowRectBelowToolbar(self, [self visibleRect])]) {',
+                            '            if([self mouse:mouseLocView inRect:[self visibleRect]]) {'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -50,6 +56,7 @@ program = r'''
 #import "TestAppKitIsolation.h"
 #import "OverView.h"
 #import "TSMagnifyingGlass.h"
+#import "TSDocumentWindowGlass.h"
 #define NSAppKitVersionNumber10_10_Max 1349
 static TSMemoryDefaults *defaults;
 #define SUD defaults
@@ -60,6 +67,19 @@ static TSMemoryDefaults *defaults;
 @implementation MyPDFKitView
 - (void)doMagnifyingGlassMavericks:(NSEvent *)event level:(NSInteger)level {}
 METHODS
+@end
+// An Expanded toolbar with a few items, as the document windows have.
+@interface GlassTestToolbar : NSObject <NSToolbarDelegate>
+@end
+@implementation GlassTestToolbar
+- (NSArray *)items { return @[@"a", @"b", @"c"]; }
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar { return self.items; }
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar { return self.items; }
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)identifier willBeInsertedIntoToolbar:(BOOL)flag {
+    NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+    item.label = identifier; item.image = [NSImage imageWithSystemSymbolName:@"doc" accessibilityDescription:nil];
+    return item;
+}
 @end
 static NSString *context = @"";
 static NSUInteger checks;
@@ -218,6 +238,39 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check([view mouse:onMark inRect:view.visibleRect], @"Fixture: mark on page 2 visible");
     Check(Glass(view, onFirst, onMark, 0, 1, 0), @"Glass while dragging");
     Check(DarkAt(drawn, .5, .5), @"Lens shows page 2 after dragging onto it");
+
+    // On macOS 26 and later the pages run under the title bar and the toolbar. The glass
+    // stops at the toolbar: dragged up onto it, it stays where it was below (#44).
+    if (TSDocumentWindowsUseFullSizeContent()) {
+        context = @"under the toolbar";
+        NSWindow *barred = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 700, 900)
+            styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskResizable backing:NSBackingStoreBuffered defer:NO];
+        barred.releasedWhenClosed = NO;
+        barred.toolbarStyle = NSWindowToolbarStyleExpanded;
+        GlassTestToolbar *delegate = [GlassTestToolbar new];
+        NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"magnifier-test"];
+        toolbar.delegate = delegate; barred.toolbar = toolbar;
+        MyPDFKitView *under = [[MyPDFKitView alloc] initWithFrame:barred.contentView.bounds];
+        under.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+        [barred.contentView addSubview:under];
+        TSDocumentWindowPrepare(barred);
+        under.document = Document(2); under.autoScales = NO; under.scaleFactor = 1;
+        [barred layoutIfNeeded]; Pump();
+        NSRect layout = barred.contentLayoutRect;
+        CGFloat band = NSHeight(barred.contentView.frame) - NSMaxY(layout);
+        Check(band > 20 && NSMaxY([under convertRect:under.bounds toView:nil]) > NSMaxY(layout) + 20, @"Fixture: the Preview reaches under the toolbar");
+        NSPoint below = [under convertPoint:NSMakePoint(NSMidX(layout), NSMaxY(layout) - 200) fromView:nil];
+        NSPoint aside = [under convertPoint:NSMakePoint(NSMidX(layout) + 60, NSMaxY(layout) - 240) fromView:nil];
+        NSPoint on = [under convertPoint:NSMakePoint(NSMidX(layout), NSMaxY(layout) + band / 2) fromView:nil];
+        Check(Glass(under, below, aside, 0, 1, 0), @"Glass shown below the toolbar");
+        NSRect onScreen = LensOnScreen(under);
+        Check(fabs(NSMidX(onScreen) - aside.x) < 2 && fabs(NSMidY(onScreen) - aside.y) < 2,
+              [NSString stringWithFormat:@"Below the toolbar the glass follows the pointer (%@)", NSStringFromRect(onScreen)]);
+        Check(Glass(under, below, on, 0, 1, 0), @"Glass shown below the toolbar again");
+        onScreen = LensOnScreen(under);
+        Check(fabs(NSMidX(onScreen) - below.x) < 2 && fabs(NSMidY(onScreen) - below.y) < 2,
+              [NSString stringWithFormat:@"Dragged onto the toolbar, the glass stays below it (%@)", NSStringFromRect(onScreen)]);
+    }
     printf("PASS: Preview window magnifying glass position, size, magnification, keys and pages (%lu checks)\n", (unsigned long)checks);
 }}
 '''.replace('METHODS', methods)
@@ -231,7 +284,7 @@ with tempfile.TemporaryDirectory(prefix='TeXShop-preview-magnifier-') as tmp:
     (tmp/'Test.m').write_text(program)
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-fmodules', '-w', *include_args(root), '-I'+str(root/'Tests'),
                     '-framework', 'Cocoa', '-framework', 'Quartz', str(tmp/'Test.m'), str(root/'Sources/Preview/OverView.m'),
-                    '-o', str(mac/'MagnifierTest')], check=True)
+                    str(root/'Sources/Windows/TSDocumentWindowGlass.m'), '-o', str(mac/'MagnifierTest')], check=True)
     home = tmp/'Home'; (home/'Library/Preferences').mkdir(parents=True)
     try:
         result = subprocess.run([str(mac/'MagnifierTest')], env={**os.environ, 'CFFIXED_USER_HOME': str(home)},

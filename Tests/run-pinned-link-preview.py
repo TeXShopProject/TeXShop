@@ -284,6 +284,7 @@ program = r'''
 #import "TSLinkPreviewView.h"
 #import "TSScrollPageTurn.h"
 #import "TSPreviewScrollerKeeper.h"
+#import "TSDocumentWindowGlass.h"
 #define SUD NSUserDefaults.standardUserDefaults
 #define FlashFixKey @"flash"
 #define FlashDelayKey @"delay"
@@ -379,6 +380,7 @@ DOCUMENTMETHODS
     TSLinkPreviewView *linkPreview;
     TSLinkPreviewView *pinnedLinkPreview;
     BOOL showsLinkPreviewCursor;
+    BOOL pointerIsUnderToolbar;
     BOOL keepsPinnedLinkPreview;
     BOOL _skipLinks;
 }
@@ -1844,7 +1846,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
     exe = temporary / 'probe'
     subprocess.run(['xcrun','clang','-fobjc-arc','-framework','Cocoa','-framework','PDFKit',
                     *include_args(root),'-I'+str(root/'Tests'),str(native),
-                    str(root/'Sources/Preview/OverView.m'),str(preview_file),str(root/'Sources/Preview/TSPreviewScrollerKeeper.m'),'-o',str(exe)],check=True)
+                    str(root/'Sources/Preview/OverView.m'),str(preview_file),str(root/'Sources/Preview/TSPreviewScrollerKeeper.m'),
+                    str(root/'Sources/Windows/TSDocumentWindowGlass.m'),'-o',str(exe)],check=True)
     home = temporary/'home'
     (home/'Library/Preferences').mkdir(parents=True)
     # Two empty pages with a PageLabels tree: i, then 157.

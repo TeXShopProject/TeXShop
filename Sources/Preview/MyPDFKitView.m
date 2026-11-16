@@ -59,6 +59,7 @@
 #import "MyDragView.h"
 #import "TSPreviewWindow.h"
 #import "TSFullSplitWindow.h"
+#import "TSDocumentWindowGlass.h"
 #import "TSColorSupport.h"
 #import "TSPreviewAppearance.h"  // added by Terada
 
@@ -84,6 +85,7 @@
     TSLinkPreviewView *linkPreview;
     TSLinkPreviewView *pinnedLinkPreview;
     BOOL showsLinkPreviewCursor;
+    BOOL pointerIsUnderToolbar;
     BOOL keepsPinnedLinkPreview;
     BOOL _skipLinks;
 }
@@ -3444,29 +3446,33 @@ TeXShop supports search through the drawer in the Preview Window using sample co
 	if (self.selRectTimer)
 		mySelectedRect = [self convertRect: selectedRect fromView: [self documentView]];
 
+	// The tool has its cursor over the part of the Preview that can be seen, not over the
+	// title bar and the toolbar, which the pages run under on macOS 26 and later (#44).
+	NSRect toolRect = TSDocumentWindowRectBelowToolbar(self, [self visibleRect]);
+
 	switch (currentMouseMode)
 	{
 		case NEW_MOUSE_MODE_SCROLL:
 			[super resetCursorRects];
-			[self addCursorRect:[self visibleRect] cursor:[NSCursor openHandCursor]];
+			[self addCursorRect:toolRect cursor:[NSCursor openHandCursor]];
 			break;
 		case NEW_MOUSE_MODE_SELECT_TEXT:
 			[super resetCursorRects];
 			break;
 		case NEW_MOUSE_MODE_SELECT_PDF:
 			[super resetCursorRects];
-			[self addCursorRect:[self visibleRect] cursor:[NSCursor crosshairCursor]];
+			[self addCursorRect:toolRect cursor:[NSCursor crosshairCursor]];
 			if (self.selRectTimer)
 				[self addCursorRect:mySelectedRect cursor:[NSCursor arrowCursor]];
 			break;
 		case NEW_MOUSE_MODE_MAG_GLASS: // want magnifying glass cursor?
 		case NEW_MOUSE_MODE_MAG_GLASS_L:
 			[super resetCursorRects];
-			[self addCursorRect:[self visibleRect] cursor:[NSCursor arrowCursor]];
+			[self addCursorRect:toolRect cursor:[NSCursor arrowCursor]];
 			break;
 		default:
 			[super resetCursorRects];
-			[self addCursorRect:[self visibleRect] cursor:[NSCursor arrowCursor]];
+			[self addCursorRect:toolRect cursor:[NSCursor arrowCursor]];
 			break;
 	}
 }
@@ -4337,6 +4343,20 @@ The system then remembers the new number and sends is to the Timer which will di
 
 - (void) mouseMoved: (NSEvent *) theEvent
 {
+    // On macOS 26 and later the pages run under the title bar and the toolbar. A pointer
+    // there is over them, not over the page: a link under them shows no popup, and the
+    // tool does not show its cursor (#44).
+    if (TSDocumentWindowPointIsUnderToolbar(self.window, theEvent.locationInWindow)) {
+        if (self.handlingLink > 0) [self killTransientLinkPreview];
+        if (! pointerIsUnderToolbar) {
+            pointerIsUnderToolbar = YES;
+            showsLinkPreviewCursor = NO;
+            [[NSCursor arrowCursor] set];
+        }
+        return;
+    }
+    pointerIsUnderToolbar = NO;
+
     // A pinned popup shows how it can be moved or resized. The pointer has left any link
     // there, so a popup it would show goes away.
     NSCursor *previewCursor = [pinnedLinkPreview cursorAtPoint:
