@@ -188,8 +188,10 @@ static void ExtWrite(NSString *path, NSString *text, int how){
 - (void)watchFile:(NSString *)path;
 - (void)cancelWatchFile;
 - (void)readPreviewArrangementFromData:(NSData *)data;
+- (BOOL)isBeingReplacedIn;
 @end
 @implementation TSDocument
+- (BOOL)isBeingReplacedIn { return NO; }
 + (BOOL)autosavesInPlace { return YES; }
 + (BOOL)preservesVersions { return NO; }
 + (NSArray *)readableTypes { return @[@"public.plain-text"]; }

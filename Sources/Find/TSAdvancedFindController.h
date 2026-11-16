@@ -37,6 +37,15 @@ typedef NS_ENUM(NSInteger, TSAdvancedFindAction) {
 /// Carries out find and replace in a text view: selection, undo, highlights and status messages.
 /// The computation itself is done by TSRegexTextFind.
 NS_SWIFT_NAME(AdvancedFindController)
+/// The actions of the window of the TeX sources of a root. The item's title is set when it is validated.
+NS_SWIFT_NAME(TeXRootSearchActions)
+@protocol TSTeXRootSearchActions <NSObject, NSMenuItemValidation>
+/// Opens the window in Find mode for the main window's document.
+- (IBAction)showTeXRootSearch:(nullable id)sender;
+/// Opens it in Multiple Replace mode with the set shown in the Multiple Replace window.
+- (IBAction)applySetToTeXRootSources:(nullable id)sender;
+@end
+
 @interface TSAdvancedFindController : NSObject
 
 /// The controller of the application's panel: the standard defaults and the find pasteboard.
@@ -61,6 +70,11 @@ NS_SWIFT_NAME(AdvancedFindController)
 @property (nonatomic, readonly, nullable) TSAdvancedFindTask *runningTask;
 /// Seconds before a long action shows its progress sheet; 0.4 unless changed.
 @property (nonatomic) NSTimeInterval sheetDelay;
+
+/// The object that opens the window of the TeX sources of a root (TSTeXRootSearchEntry, outside these files): the
+/// target of the items in the panel's Find All menu and in the Multiple Replace window's Replace All menu. Set by the
+/// application; nil when the Find files are built alone, and the items are then gray.
+@property (class, nonatomic, weak, nullable) id<TSTeXRootSearchActions> texRootSearchTarget;
 
 - (instancetype)initWithSettings:(TSAdvancedFindSettings *)settings NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;

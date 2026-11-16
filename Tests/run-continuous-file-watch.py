@@ -43,7 +43,8 @@ static void Write(NSString *path, NSString *mode, NSString *value) {
 }
 @property NSString *observed, *injectMode;
 @property NSUInteger reads;
-@property BOOL dirty, failRead;
+@property BOOL dirty, failRead, replacing;
+- (BOOL)isBeingReplacedIn;
 - (void)watchFile:(NSString *)path;
 - (void)cancelWatchFile;
 @end
@@ -53,6 +54,7 @@ REVERT
 - (void)setupTags {}
 - (void)colorizeAll {}
 - (BOOL)hasUnautosavedChanges {return self.dirty;}
+- (BOOL)isBeingReplacedIn {return self.replacing;}
 - (BOOL)doNotReadSource {return [self.fileURL.pathExtension isEqual:@"pdf"];}
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)type error:(NSError **)error {
  [self watchFile:(self.fileURL ?: url).path];
@@ -88,6 +90,11 @@ int main(int argc,char **argv) {@autoreleasepool {
   d.dirty=YES;d.observed=@"USER EDIT";Write(path,@"atomic",@"complete");Pump(.5);
   Check([d.observed isEqual:@"USER EDIT"],@"unsaved edits preserved");
   d.dirty=NO;Pump(2.5);Check([d.observed isEqual:@"complete"],@"pending event retried without a second write");
+ } else if([mode isEqualToString:@"replacing"]) {
+  // Replace All of Find in TeX Sources is putting its replacements in the text (Issue #45): the reload waits.
+  d.replacing=YES;d.observed=@"BEING REPLACED";Write(path,@"atomic",@"complete");Pump(.5);
+  Check([d.observed isEqual:@"BEING REPLACED"],@"no reload while Replace All replaces in the text");
+  d.replacing=NO;Pump(2.5);Check([d.observed isEqual:@"complete"],@"the reload follows once it is done");
  } else if([mode isEqualToString:@"missing"]) {
   [[NSFileManager defaultManager] removeItemAtPath:path error:NULL];Pump(1.3);
   Check([d.observed isEqual:@"initial!"],@"temporary deletion retains content");
@@ -160,6 +167,6 @@ with tempfile.TemporaryDirectory(prefix='ts-continuous-watch-') as td:
     (p/'writer.py').write_text(writer)
     subprocess.run(['xcrun','clang','-fobjc-arc','-framework','Cocoa',*include_args(root), str(p/'test.m'),str(root/'Sources/Document/TSFileChangeMonitor.m'),'-o',str(p/'test')],check=True)
     import sys
-    for mode in ['initial','preserved','atomic','dirty','missing','siblings','chunks','retry','retarget','parent','preview-only','large-idle','stop','lifetime']:
+    for mode in ['initial','preserved','atomic','dirty','replacing','missing','siblings','chunks','retry','retarget','parent','preview-only','large-idle','stop','lifetime']:
         directory=p/mode;directory.mkdir()
         subprocess.run([str(p/'test'),str(directory/'source.tex'),mode,sys.executable,str(p/'writer.py')],check=True,timeout=15,env=dict(os.environ,CFFIXED_USER_HOME=str(p/'home')))

@@ -106,6 +106,9 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     findController.stringsChangedHandler = ^{ [weakSelf loadStrings]; };
     findController.findAllHandler = ^(TSAdvancedFindResults *results, NSTextView *textView) { [weakSelf showResults:results textView:textView]; };
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:NSApplicationDidBecomeActiveNotification object:nil];
+    // The window of the TeX sources of a root shares the strings and options: what is typed there shows here.
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(settingsDidChange:) name:TSAdvancedFindSettingsDidChangeNotification
+                                             object:findController.settings];
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(applicationWillTerminate:) name:NSApplicationWillTerminateNotification object:nil];
     // A long action starts or ends: every button is gray meanwhile, since every action is refused.
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(applicationDidUpdate:) name:TSAdvancedFindTaskDidChangeNotification object:findController];
@@ -204,6 +207,13 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     [allMenu addItemWithTitle:TSLocalized(@"AdvancedFind.SelectAll", @"Select All") action:@selector(advancedSelectAll:) keyEquivalent:@""].target = self;
     [allMenu addItem:NSMenuItem.separatorItem];
     [allMenu addItemWithTitle:TSLocalized(@"AdvancedFind.Unhighlight", @"Remove Highlights") action:@selector(advancedUnhighlight:) keyEquivalent:@""].target = self;
+    // The window of the TeX sources of the main window's root (spec §2.7.1); its title is set when it is validated.
+    [allMenu addItem:NSMenuItem.separatorItem];
+    NSMenuItem *texRoot = [allMenu addItemWithTitle:TSLocalized(@"TeXRootSearch.Menu.FindSameRoot", @"Find in TeX Sources with the Same TEX root…")
+                                             action:@selector(showTeXRootSearch:) keyEquivalent:@""];
+    texRoot.identifier = @"TSTeXRootSearch.panelItem";
+    texRoot.target = TSAdvancedFindController.texRootSearchTarget;
+    allMenu.delegate = self;
     NSComboButton *findAll = [NSComboButton comboButtonWithTitle:TSLocalized(@"AdvancedFind.FindAll", @"Find All") menu:allMenu
                                                           target:self action:@selector(advancedFindAll:)];
     findAll.toolTip = TSLocalized(@"AdvancedFind.FindAllTip", @"Find and list all matches.");
@@ -229,6 +239,14 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     for (NSView *view in @[replace, previousNext])
         [row addView:view inGravity:NSStackViewGravityTrailing];
     return row;
+}
+
+/// The Find All menu: the item of the TeX sources goes to the window's opener, which the application sets.
+- (void)menuNeedsUpdate:(NSMenu *)menu
+{
+    for (NSMenuItem *item in menu.itemArray)
+        if (item.action == @selector(showTeXRootSearch:))
+            item.target = TSAdvancedFindController.texRootSearchTarget;
 }
 
 - (void)buildContent
@@ -356,6 +374,15 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     BOOL floats = self.findController.settings.panelFloats || TSAdvancedFindController.targetTextView.window.level > NSNormalWindowLevel;
     if (panel.isFloatingPanel != floats)
         panel.floatingPanel = floats;
+}
+
+/// Only while the panel is shown: showing it reads the settings anyway.
+- (void)settingsDidChange:(NSNotification *)notification
+{
+    if (!self.window.isVisible)
+        return;
+    [self loadStrings];
+    [self loadOptions];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification

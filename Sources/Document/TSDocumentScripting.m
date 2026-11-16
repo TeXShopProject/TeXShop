@@ -22,6 +22,8 @@
  *
  */
 
+#import "TSTeXRootDocumentApplier.h"
+#import "TSAdvancedFindController.h"
 #import "TSDocumentScripting.h"
 #import "globals.h"
 
@@ -80,9 +82,23 @@
 //
 // -----------------------------------------------------------------------------
 
+/// AppleScript does not change a text while a Replace All of "Find in TeX Sources" replaces in it (Issue #45, spec
+/// §2.5.1a): the command fails with an error.
+- (BOOL)refusesScriptedChange
+{
+	if (![TSTeXRootReplaceGuard locksTextStorage:[self textStorage]])
+		return NO;
+	NSScriptCommand *command = [NSScriptCommand currentCommand];
+	command.scriptErrorNumber = errAEEventNotPermitted;
+	command.scriptErrorString = TSAdvancedFindLocalized(@"TeXRootSearch.ScriptRefused", @"Replace All is replacing in this text now.");
+	return YES;
+}
+
 - (void)setSelection:(id)ts
 {
 	// ts can actually be a string or an attributed string.
+	if ([self refusesScriptedChange])
+		return;
 
 	NSRange		range = [[self firstTextView] selectedRange];
 	NSString *oldString, *key= @"AppleEvent";
@@ -136,6 +152,8 @@
 
 - (void)setTextStorage:(id)ts {
 	// ts can actually be a string or an attributed string.
+	if ([self refusesScriptedChange])
+		return;
 	if ([ts isKindOfClass:[NSAttributedString class]]) {
 		[[self textStorage] replaceCharactersInRange:NSMakeRange(0, [[self textStorage] length]) withAttributedString:ts];
 	} else {

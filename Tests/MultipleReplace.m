@@ -369,15 +369,18 @@ static void TestWindow(NSURL *directory)
     TSAdvancedFindController.testTargetTextView = view;
     view.editable = NO;
     [window updateButtons];
-    NSButton *replaceButton = nil, *highlightButton = nil;
+    NSControl *replaceButton = nil, *highlightButton = nil;
     NSMutableArray<NSView *> *all = [window.window.contentView.subviews mutableCopy];
     while (all.count) {
         NSView *v = all.lastObject;
         [all removeLastObject];
-        [all addObjectsFromArray:v.subviews];
-        if ([v isKindOfClass:[NSButton class]] && ((NSButton *)v).action == @selector(replaceAll:)) replaceButton = (NSButton *)v;
+        if (![v isKindOfClass:[NSComboButton class]]) // Replace All ▾ is one control, whatever it is made of
+            [all addObjectsFromArray:v.subviews];
+        if ([v isKindOfClass:[NSControl class]] && ((NSControl *)v).action == @selector(replaceAll:)) replaceButton = (NSControl *)v;
         if ([v isKindOfClass:[NSButton class]] && ((NSButton *)v).action == @selector(highlight:)) highlightButton = (NSButton *)v;
     }
+    Check([replaceButton isKindOfClass:[NSComboButton class]] && [((NSComboButton *)replaceButton).menu.itemArray.firstObject.identifier isEqualToString:@"TSTeXRootSearch.multipleReplaceItem"],
+          @"Replace All has ▾ with the item of the TeX sources of the root");
     Check(replaceButton && !replaceButton.enabled && highlightButton.enabled, @"Replace All is gray for a read-only text view");
     view.editable = YES;
     [window updateButtons];
@@ -800,8 +803,9 @@ static void TestLayout(NSString *_Nullable imageDirectory)
     while (pendingViews.count) {
         NSView *v = pendingViews.lastObject;
         [pendingViews removeLastObject];
-        [pendingViews addObjectsFromArray:v.subviews];
-        if ([v isKindOfClass:[NSButton class]] && (((NSButton *)v).action == @selector(highlight:) || ((NSButton *)v).action == @selector(replaceAll:)))
+        if (![v isKindOfClass:[NSComboButton class]])
+            [pendingViews addObjectsFromArray:v.subviews];
+        if ([v isKindOfClass:[NSControl class]] && (((NSControl *)v).action == @selector(highlight:) || ((NSControl *)v).action == @selector(replaceAll:)))
             [bottom addObject:v];
     }
     Check(bottom.count == 2, [language stringByAppendingString:@" Highlight All and Replace All are found"]);

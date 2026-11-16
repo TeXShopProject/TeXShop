@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>TeXRootSearch.Confirm.Disk</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@f@ Questa azione non si può annullare.</string>
+		<key>f</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%lu file non aperto verrà modificato direttamente sul disco.</string>
+			<key>other</key>
+			<string>%lu file non aperti verranno modificati direttamente sul disco.</string>
+		</dict>
+	</dict>
+	<key>TeXRootSearch.Confirm.Title</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>Sostituire %1$#@m@ in %2$#@f@?</string>
+		<key>f</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%2$lu file</string>
+			<key>other</key>
+			<string>%2$lu file</string>
+		</dict>
+		<key>m</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%1$lu occorrenza</string>
+			<key>other</key>
+			<string>%1$lu occorrenze</string>
+		</dict>
+	</dict>
+	<key>TeXRootSearch.Status.Replaced</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%1$#@m@ in %2$#@f@</string>
+		<key>f</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%2$lu file</string>
+			<key>other</key>
+			<string>%2$lu file</string>
+		</dict>
+		<key>m</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>Sostituita %1$lu occorrenza</string>
+			<key>other</key>
+			<string>Sostituite %1$lu occorrenze</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

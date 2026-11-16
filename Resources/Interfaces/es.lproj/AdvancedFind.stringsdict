@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>TeXRootSearch.Confirm.Disk</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@f@ Esta acción no se puede deshacer.</string>
+		<key>f</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>Se modificará directamente en el disco %lu archivo que no está abierto.</string>
+			<key>other</key>
+			<string>Se modificarán directamente en el disco %lu archivos que no están abiertos.</string>
+		</dict>
+	</dict>
+	<key>TeXRootSearch.Confirm.Title</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>¿Reemplazar %1$#@m@ en %2$#@f@?</string>
+		<key>f</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%2$lu archivo</string>
+			<key>other</key>
+			<string>%2$lu archivos</string>
+		</dict>
+		<key>m</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%1$lu coincidencia</string>
+			<key>other</key>
+			<string>%1$lu coincidencias</string>
+		</dict>
+	</dict>
+	<key>TeXRootSearch.Status.Replaced</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%1$#@m@ en %2$#@f@</string>
+		<key>f</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%2$lu archivo</string>
+			<key>other</key>
+			<string>%2$lu archivos</string>
+		</dict>
+		<key>m</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>Se ha reemplazado %1$lu coincidencia</string>
+			<key>other</key>
+			<string>Se han reemplazado %1$lu coincidencias</string>
+		</dict>
+	</dict>
+</dict>
+</plist>
