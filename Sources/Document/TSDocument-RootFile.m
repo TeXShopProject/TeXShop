@@ -28,6 +28,7 @@
 #import "TSAppDelegate.h"
 #import "TSTextEditorWindow.h"
 #import "NSString-Extras.h"
+#import "TSRootFileResolver.h"
 
 @implementation TSDocument (RootFile)
 
@@ -255,58 +256,19 @@
 - (BOOL)checkMasterFile:(NSString *)theSource forTask:(NSInteger)task
 {
 	NSString                *home, *jobname;
-	NSRange                 aRange, bRange;
-	NSRange                 myRange, theRange, sourcedocRange, newSourceDocRange;
-	NSString                *testString, *sourcedocString;
 	NSString                *nameString;
-	NSUInteger                length;
-	BOOL                    done;
-	NSInteger                     linesTested, offset;
-	NSUInteger                start, end, irrelevant;
+	TSRootFileSpecifier     *specifier;
 
 	if (theSource == nil)
 		return NO;
-
-	jobname=[[[self fileURL] path] stringByDeletingLastPathComponent];
 
 	// load home path and jobname
 	home = [[[self fileURL] path] stringByDeletingLastPathComponent];
 	jobname = [[[[self fileURL] path] lastPathComponent] stringByDeletingPathExtension];
 
-	// see if there is a parent document
-	length = [theSource length];
-	done = NO;
-	linesTested = 0;
-	myRange.location = 0;
-	myRange.length = 1;
-	sourcedocString = 0;
-
-	while ((myRange.location < length) && (!done) && (linesTested < 20)) {
-		[theSource getLineStart: &start end: &end contentsEnd: &irrelevant forRange: myRange];
-		myRange.location = end;
-		myRange.length = 1;
-		linesTested++;
-
-		theRange.location = start; theRange.length = (end - start);
-		testString = [theSource substringWithRange: theRange];
-		sourcedocRange = [testString rangeOfString:@"%!TEX root ="];
-		offset = 12;
-		if (sourcedocRange.location == NSNotFound) {
-			sourcedocRange = [testString rangeOfString:@"% !TEX root ="];
-			offset = 13;
-			}
-		if (sourcedocRange.location != NSNotFound) {
-			newSourceDocRange.location = sourcedocRange.location + offset;
-			newSourceDocRange.length = [testString length] - newSourceDocRange.location;
-			if (newSourceDocRange.length > 0) {
-				sourcedocString = [[testString substringWithRange: newSourceDocRange]
-						stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-                if ([sourcedocString length] > 0)
-                    done = YES;
-			}
-		}
-	}
-
+	// see if there is a parent document: "% !TEX root =" in the first 20 lines, or the old "%SourceDoc "
+	specifier = [TSRootFileResolver specifierInSource:theSource
+	                                allowingSourceDoc:[SUD boolForKey:UseOldHeadingCommandsKey]];
 
 	// A typeset or Command-1 given in this window makes it the calling window
 	// again, replacing a window of another file that typeset this one as root.
@@ -314,27 +276,14 @@
 		[self setCallingWindow: textWindow];
 	self.directRootCommand = NO;
 
-	if (!done && [SUD boolForKey:UseOldHeadingCommandsKey]) {
-
-		aRange = [theSource rangeOfString:@"%SourceDoc "];
-		if (aRange.location != NSNotFound) {
-			bRange = [theSource lineRangeForRange:aRange];
-			if (bRange.length > 12 && aRange.location == bRange.location) {
-				sourcedocString = [theSource substringWithRange:NSMakeRange(bRange.location+11,bRange.length-12)];
-                if ([sourcedocString length] > 0)
-                    done = YES;
-			}
-		}
-	}
-    
     if(task == RootForOpening && ![SUD boolForKey:AutoOpenRootFileKey])
         return NO;
 
 
-	if (done) {
+	if (specifier) {
 
 		nameString = [self
-			decodeFile:sourcedocString
+			decodeFile:specifier.value
 			  homePath:home job:jobname];
 
 		return [self checkRootFile:nameString forTask:task];
@@ -532,50 +481,8 @@
 // relative is from home
 - (NSString *) decodeFile:(NSString *)relFile homePath:(NSString *)home job:(NSString *)jobname
 {
-	NSString *saveName, *searchString;
-	NSMutableString *saveTemp;
-	unichar firstChar;
-	NSRange aRange;
-
-	// trim white space first
-	relFile = [relFile stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-
-	// expand to full path
-	firstChar = [relFile characterAtIndex:0];
-	if (firstChar == '~')
-		saveName = [relFile stringByExpandingTildeInPath];
-	else if (firstChar == '/')
-		saveName = relFile;
-	else if (firstChar == '.') {
-		while ([relFile hasPrefix:@"../"]) {
-			home = [home stringByDeletingLastPathComponent];
-			relFile = [relFile substringFromIndex:3];
-		}
-		saveName = [NSString stringWithFormat:@"%@/%@",home,relFile];
-        
- 	}
-	else
-		saveName = [NSString stringWithFormat:@"%@/%@",home,relFile];
-    
-    // NSString *aName = [saveName stringByStandardizingPath];
-    NSString *aName = [saveName stringByResolvingSymlinksInPath];
-    saveName = aName;
-
-    // NSLog(@"HEREHERE");
-    // NSLog(home);
-    // NSLog(saveName);
-
-	// see if \jobname is there
-	searchString = [self filterBackslashes:@"\\jobname"];
-	aRange = [saveName rangeOfString:searchString options:NSLiteralSearch];
-	if(aRange.location == NSNotFound)
-		return saveName;
-
-	// replace \jobname(s)
-	saveTemp = [NSMutableString stringWithString:saveName];
-	[saveTemp replaceOccurrencesOfString:searchString withString:jobname options:NSLiteralSearch
-								   range:NSMakeRange(0,[saveName length])];
-	return [NSString stringWithString:saveTemp];
+	return [TSRootFileResolver pathForName:relFile homePath:home jobName:jobname
+	                          jobNameToken:[self filterBackslashes:@"\\jobname"]];
 }
 
 
