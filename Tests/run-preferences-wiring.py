@@ -79,7 +79,8 @@ for path in nibs:
     # Removed because they had no effect: scrollPressed: ("Do not scroll" with page buttons, since PDFKit),
     # distillerChanged: (Apple Distiller, whose pstopdf macOS 14 removed) and antialiasChanged: (always on).
     # NewStyleFromPrefs: made a theme from the color settings used before themes (TeXShop 4.08); removed.
-    problems += [f'{lang}: action {s} is not a TSPreferences method' for s in sorted(actions - declared - {'scrollPressed:', 'distillerChanged:', 'antialiasChanged:', 'NewStyleFromPrefs:'})]
+    # saveRelatedButtonPressed: (Save related files) set a default that nothing read; removed.
+    problems += [f'{lang}: action {s} is not a TSPreferences method' for s in sorted(actions - declared - {'scrollPressed:', 'distillerChanged:', 'antialiasChanged:', 'NewStyleFromPrefs:', 'saveRelatedButtonPressed:'})]
     for prop, want in sorted(base.items()):
         have = outlets.get(prop)
         if have is None:
@@ -113,7 +114,8 @@ for p in [x for x in (root/'Resources/Interfaces/Base.lproj').glob('Settings*.xi
 missing=set(old)-set(new)
 # _scrollButton ("Do not scroll" with page buttons), _distillerMatrix and _antialiasButton were removed.
 # _engineTextField and _alternateEngineTextField gave way to menus built in code; _savePSButton
-# (Save PostScript File) and _useTransparencyButton (-dALLOWPSTRANSPARENCY) were removed.
-assert missing <= {'_prefsWindow','_tabView','_samplePanel','_fontTextView','_scrollButton','_distillerMatrix','_antialiasButton','_engineTextField','_alternateEngineTextField','_savePSButton','_useTransparencyButton'},missing
-assert len(new)==166
-print('PASS: 170 used outlets each migrate exactly once into shared panes')
+# (Save PostScript File), _useTransparencyButton (-dALLOWPSTRANSPARENCY) and _saveRelatedButton
+# (Save related files) were removed.
+assert missing <= {'_prefsWindow','_tabView','_samplePanel','_fontTextView','_scrollButton','_distillerMatrix','_antialiasButton','_engineTextField','_alternateEngineTextField','_savePSButton','_useTransparencyButton','_saveRelatedButton'},missing
+assert len(new)==165
+print(f'PASS: {len(new)} used outlets each migrate exactly once into shared panes')
