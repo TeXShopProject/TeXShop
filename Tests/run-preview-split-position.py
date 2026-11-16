@@ -76,6 +76,7 @@ program = r'''
 DIVIDERIMPORT
 #define NEW_PDF_FIT_TO_NONE 1
 #define NEW_PDF_FIT_TO_WINDOW 4
+#define NEW_PDF_FIT_TO_CONTENT_WIDTH 6
 static NSUInteger checks;
 static void check(BOOL ok, NSString *message) {
     checks++;
@@ -112,6 +113,10 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 // pageStyle 1 is single page, 3 continuous single page (PDF_*_STYLE in globals.h).
 - (void)setupPageStyle { [self setDisplayMode:pageStyle == 1 ? kPDFDisplaySinglePage : kPDFDisplaySinglePageContinuous]; [self setDisplaysPageBreaks:pageStyle != 1]; }
 - (void)setupMagnificationStyle { if (resizeOption == NEW_PDF_FIT_TO_WINDOW) [self setAutoScales:YES]; else [self setScaleFactor:self.fixedScale]; }
+// Fit to Content Width has its own test, run-fit-content-width.py.
+- (void)fitContentWidth {}
+- (void)measureContentLater {}
+- (void)centreContentRowLater {}
 - (void)cleanupMarqueeKeepingPinnedLinkPreview {}
 // Watching the page number does not change the place shown.
 - (void)notificationSetup {}

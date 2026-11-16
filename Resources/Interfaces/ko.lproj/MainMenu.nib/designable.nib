@@ -1124,6 +1124,11 @@
                                                 <action selector="changePDFViewSize:" target="-1" id="372"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="내용 너비에 맞추기" tag="6" id="Fc6-Wd-tH1" identifier="TSShortcut.changePDFViewSize:.6">
+                                            <connections>
+                                                <action selector="changePDFViewSize:" target="-1" id="Fc6-Wd-tH2"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="177">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
@@ -1137,6 +1142,16 @@
                                             <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                             <connections>
                                                 <action selector="zoomOut:" target="-1" id="415"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="내용에 맞게 확대/축소" id="Zc1-Ct-n01" identifier="TSShortcut.zoomToContent:.0">
+                                            <connections>
+                                                <action selector="zoomToContent:" target="-1" id="Zc1-Ct-n02"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="내용 너비에 맞게 확대/축소" id="Zc1-Ct-w01" identifier="TSShortcut.zoomToContentWidth:.0">
+                                            <connections>
+                                                <action selector="zoomToContentWidth:" target="-1" id="Zc1-Ct-w02"/>
                                             </connections>
                                         </menuItem>
                                     </items>
