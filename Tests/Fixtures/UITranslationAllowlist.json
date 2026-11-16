@@ -218,7 +218,8 @@
     "Console",
     "Editor",
     "File",
-    "Info: %@"
+    "Info: %@",
+    "Popup"
    ],
    "MainMenu.nib": [
     "File",
@@ -386,7 +387,8 @@
   "fr": [
    "PDF direct",
    "Parole",
-   "Variante"
+   "Variante",
+   "Pop-up"
   ],
   "it": [
    "Formato:",
@@ -398,12 +400,14 @@
   ],
   "nl": [
    "Extensie:",
-   "Pagina %@"
+   "Pagina %@",
+   "Pop-up"
   ],
   "pt-PT": [
    "Formato:",
    "Principal:",
-   "Variante"
+   "Variante",
+   "Pop-up"
   ],
   "pt": [
    "Variante"
@@ -415,7 +419,8 @@
    "PDF direct",
    "Principal:",
    "Texte",
-   "Pagina %@"
+   "Pagina %@",
+   "Pop-up"
   ]
  },
  "pending": {}

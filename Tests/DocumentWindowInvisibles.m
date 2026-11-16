@@ -63,8 +63,14 @@ int main(int argc, char **argv) { @autoreleasepool {
     Require(@"textView is the source editor textView1", source == upper);
     Require(@"textView1 is a TSTextView", [upper isKindOfClass:TSTextView.class]);
     Require(@"textView2 is another TSTextView", [lower isKindOfClass:TSTextView.class] && lower != upper);
-    Require(@"the text annotation panel has its own text view", document->stringWindowTextView && ![document->stringWindowTextView isKindOfClass:TSTextView.class]
-            && [document->stringWindowTextView.window.identifier isEqual:@"TextPanel"]);
+    // The text of a text annotation is edited in a popover of the annotation toolbar, made in
+    // code: the nib has no Text panel and connects no other text view to the document (#42 was
+    // textView connected to the Text panel's text view).
+    BOOL textPanel = NO;
+    for (id object in objects)
+        if ([object isKindOfClass:NSWindow.class] && [((NSWindow *)object).identifier isEqual:@"TextPanel"])
+            textPanel = YES;
+    Require(@"the nib has no Text panel and no other text view for the document", !textPanel && document->stringWindowTextView == nil);
     Require(@"each source editor draws with a TSLayoutManager", [source.layoutManager isKindOfClass:TSLayoutManager.class]
             && [lower.layoutManager isKindOfClass:TSLayoutManager.class] && upper.layoutManager != lower.layoutManager);
 

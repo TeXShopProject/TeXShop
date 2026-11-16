@@ -550,10 +550,6 @@ BOOL    annotationsFound;
         [thePage  addAnnotation: theAnnotation];
 
     if ([self.myDocument useFullSplitWindow])
-        [[self.myDocument fullSplitWindow] endSheet: [self.myDocument getStringWindow]];
-    else
-        [self.myPDFWindow endSheet: [self.myDocument getStringWindow]];
-    if ([self.myDocument useFullSplitWindow])
         [ [self.myDocument fullSplitWindow] makeKeyAndOrderFront:self];
     else
         [self.myPDFWindow makeKeyAndOrderFront:self];
@@ -841,7 +837,7 @@ BOOL    annotationsFound;
     
 - (void) setEditMode: (id)sender
 {
-    [self setEditModeInternal: YES andClosePanels:YES];
+    [self.myDocument setAnnotationEditMode: YES];
 }
 
 - (void) removeStreams: (id)sender
@@ -872,23 +868,13 @@ BOOL    annotationsFound;
 
 - (void) setRunMode: (id)sender
 {
-    [self setEditModeInternal: NO andClosePanels:YES];
+    [self.myDocument setAnnotationEditMode: NO];
 }
 
-- (void)closePanels
+// Puts this part of the Preview in or out of edit mode. The document calls it for both
+// parts at once; see -[TSDocument setAnnotationEditMode:].
+- (void) applyAnnotationEditMode: (BOOL)edit
 {
-    [[NSColorPanel sharedColorPanel] close];
-    [[NSFontPanel sharedFontPanel] close];
-    [[self.myDocument getStringWindow] close];
-}
-
-- (void) setEditModeInternal: (BOOL)edit andClosePanels: (BOOL)doClose
-{
-    if (edit) {
-        self.myDocument.annotationsExist = YES;
-        //NSLog(@"got here");
-        }
-        
     PDFPage *aPage, *firstPage;
     
     firstPage = [[self document] pageAtIndex: 0];
@@ -900,26 +886,13 @@ BOOL    annotationsFound;
         [self goToPage: aPage];
     }
     
-    
-    if (edit) {
-        [self.myDocument setToggleEditModeCheck: 1];
-        //self.useAnnotationMenu = YES;
-        self.myDocument.docUseAnnotationMenu = YES;
-        }
-    else {
-        [self.myDocument setToggleEditModeCheck: 0];
-        //self.useAnnotationMenu = NO;
-        self.myDocument.docUseAnnotationMenu = NO;
-        }
-    
-    
     if (_editMode == edit)
         return;
     
     _editMode = edit;
     
-    if ((! _editMode) && (doClose))
-        [self closePanels];
+    if (! _editMode)
+        [self deSelectAll];
     
 #ifdef EDITARROWMOD
     // Walk array of annotations.
@@ -945,17 +918,19 @@ BOOL    annotationsFound;
     }
 #endif
     
-     
     [self setNeedsDisplay: YES];
-    if ([self.myDocument useFullSplitWindow])
-        [ [self.myDocument fullSplitWindow] makeKeyAndOrderFront:self];
-    else
-        [self.myPDFWindow makeKeyAndOrderFront:self];
-   
 }
 
+- (BOOL) annotationEditMode
+{
+    return _editMode;
+}
 
-
+// The annotation selected for editing in this part, or nil.
+- (PDFAnnotation *) selectedAnnotationForEditing
+{
+    return _activeAnnotation;
+}
 
 
 static NSRect RectPlusScale (NSRect aRect, float scale)
@@ -976,7 +951,8 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
 
 - (void)callSaveAnnotations
 {
-    
+    // The text being edited goes into the annotation before anything is saved.
+    [self.myDocument annotationsWillBeSaved];
     self.myDocument.annotationsExist = NO;
     fromTypesetOrQuit = YES;
     [self saveAnnotations: self];
@@ -990,13 +966,14 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
     NSString    *rawPath;
     NSString    *writePath, *writeDirectory, *writeName;
     PDFDocument *theDocument;
-    NSButton    *fullSaveButton;
-    NSInteger FullSaveInteger;
     BOOL    doFullSave;
     NSString *theExtension;
     NSURL   *myURL;
     BOOL    mustSaveAnnotations;
     BOOL    mustDoFullSave;
+    
+    // The text being edited goes into the annotation before anything is saved.
+    [self.myDocument annotationsWillBeSaved];
     
     if (fromTypesetOrQuit)
         mustDoFullSave = YES;
@@ -1017,7 +994,7 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
     
     // Retain unsaved annotations if the panel is cancelled.
     
-    [self setEditModeInternal: NO andClosePanels:NO];
+    [self.myDocument setAnnotationEditMode: NO];
     
     [self deSelectAll];
     
@@ -1029,12 +1006,7 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
     
     if (filePath)
     {
-        fullSaveButton = [self.myDocument SaveAllCheckBox];
-        FullSaveInteger = [fullSaveButton intValue];
-        if (FullSaveInteger == 0)
-            doFullSave = NO;
-        else
-            doFullSave = YES;
+        doFullSave = self.myDocument.annotationSaveAllPages;
         
         if (mustDoFullSave)
             doFullSave = YES;
@@ -1470,9 +1442,6 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
             [self specializeArrowAnnotation: _activeAnnotation];
 #endif
         
-        if ([self isFreeText: _activeAnnotation])
-           [self reflectText];
-      
         
         // Force redisplay.
         [self setNeedsDisplayInRect: RectPlusScale([self convertRect: [_activeAnnotation bounds]
@@ -2001,6 +1970,8 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
 {
     if (_activeAnnotation != NULL)
     {
+        // Text being edited for it is dropped.
+        [self.myDocument annotationWillBeRemoved: _activeAnnotation];
         // Remove annotation from page.
         [[_activeAnnotation page] removeAnnotation: _activeAnnotation];
         _activeAnnotation = NULL;
@@ -2035,97 +2006,21 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
    [self reflectFont];
 }
 
+// Preview > Show Annotation Toolbar / Hide Annotation Toolbar.
 - (void) displayChoicesPanel: (id) sender
 {
-    [[self.myDocument getChoicesPanel] makeKeyAndOrderFront: self];
-    if ([self.myDocument useFullSplitWindow])
-        [ [self.myDocument fullSplitWindow] makeKeyAndOrderFront:self];
-    else
-        [self.myPDFWindow makeKeyAndOrderFront:self];
+    [self.myDocument displayChoicesPanel: sender];
 }
 
+// The annotation menu's Edit Text item: the same as the text button of the annotation toolbar.
 - (void) showTextPanel: (id) sender
 {
-    NSTextView  *theTextView;
-    NSRange     theRange;
-    NSInteger   theLength;
-    NSInteger   value;
-    
-    [self.myDocument showStringWindow];
-    
-/*
-    value = self.stringAlignment;
-    
-    theTextView = [self.myDocument getStringWindowTextView];
-    theRange.location = 0;
-    theLength = [[theTextView string] length];
-    theRange.length = theLength;
-    
-     switch(value)
-    {
-        case 0:
-            [theTextView setAlignment:NSTextAlignmentLeft range: theRange ];
-            break;
-            
-        case 1:
-            [theTextView setAlignment:NSTextAlignmentCenter range: theRange ];
-            break;
-            
-        case 2:
-            [theTextView setAlignment:NSTextAlignmentRight range: theRange ];
-            break;
-            
-        default:
-            [theTextView setAlignment:NSTextAlignmentCenter range: theRange ];
-            
-    }
- */
-  
+    [self.myDocument editAnnotationText: sender];
 }
 
 - (void) toggleEditMode: (id) sender
 {
-    BOOL value;
-    
-    value = !_editMode;
-    
-    if (_editMode)
-        [self setEditModeInternal: NO andClosePanels:YES];
-    else
-        [self setEditModeInternal: YES andClosePanels:YES];
-    
-}
-
-- (void) acceptString: (id) sender
-{
-    NSString *currentString;
-    
-    currentString = [self.myDocument getStringWindowString];
-    // currentString = @"Hello, world";
-    if ((_activeAnnotation != NULL) && ([self isFreeText: _activeAnnotation]))
-    {
-        [_activeAnnotation setContents: currentString];
-        switch (self.stringAlignment)
-        {   case 0: [_activeAnnotation setAlignment: NSTextAlignmentLeft];
-                break;
-        
-            case 1: [_activeAnnotation setAlignment: NSTextAlignmentCenter];
-                break;
-                
-            case 2: [_activeAnnotation setAlignment: NSTextAlignmentRight];
-                break;
-                
-            default: [_activeAnnotation setAlignment: NSTextAlignmentCenter];
-        }
-     }
-    
-    // Lazy.
-    [self setNeedsDisplay: YES];
-    
-    if ([self.myDocument useFullSplitWindow])
-        [ [self.myDocument fullSplitWindow] makeKeyAndOrderFront:self];
-    else
-        [self.myPDFWindow makeKeyAndOrderFront:self];
+    [self.myDocument setAnnotationEditMode: ! self.myDocument.annotationEditMode];
 }
 
 // ---------------------------------------------------------------------------------------------------------- reflectFont
@@ -2219,25 +2114,6 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
     [self setNeedsDisplay: YES];
 }
 
-
-- (void) reflectText
-{
-    NSString*   theString;
-    
-    if (_activeAnnotation == NULL)
-        return;
-    
-    if (![self isFreeText: _activeAnnotation])
-        return;
-    
-   
-    
-    theString = _activeAnnotation.contents;
-        [self.myDocument setStringWindowString: theString];
-    
-    [self.myDocument setStringWindowAlignment: self.stringAlignment];
-      
-}
 
 // ----------------------------------------------------------------------------------------------------------- changeFont
 
@@ -2469,8 +2345,6 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
 - (void)endTheSheetWithOK:(id)sender __attribute__((ibaction)) {
 }
 
-- (void)toggleSaveAllMode:(id)sender {
-}
 
 @end
 

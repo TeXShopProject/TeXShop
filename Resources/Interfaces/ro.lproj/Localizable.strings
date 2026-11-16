@@ -415,3 +415,55 @@
 "detex was not found." = "detex nu a fost găsit.";
 "detex failed." = "detex a eșuat.";
 "Counted by detex without the TeX commands, with the files read by \\input and \\include." = "Numărat de detex fără comenzile TeX, inclusiv fișierele citite cu \\input și \\include.";
+
+/* Issue #49: the annotation toolbar of the Preview */
+/* Annotation tool: the name the annotation menu gives it */
+"Strikeout" = "Tăiat cu o linie";
+/* Annotation tool: the name the annotation menu gives it */
+"Highlight" = "Evidențiere";
+/* Annotation tool: the name the annotation menu gives it */
+"Underline" = "Subliniere";
+/* Annotation tool: the name the annotation menu gives it */
+"Square" = "Pătrat";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Square" = "Pătrat cu chenar";
+/* Annotation tool: the name the annotation menu gives it */
+"Circle" = "Cerc";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Circle" = "Cerc cu chenar";
+/* Annotation tool: the name the annotation menu gives it */
+"Arrow" = "Săgeată";
+/* Annotation tool: the name the annotation menu gives it */
+"Text Annotation" = "Text";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Text" = "Text cu chenar";
+/* Annotation tool: the name the annotation menu gives it */
+"Popup" = "Pop-up";
+/* Annotation toolbar: switch for edit mode */
+"Edit Mode" = "Editare";
+/* Preview menu: shows the annotation toolbar under the toolbar */
+"Show Annotation Toolbar" = "Afișați bara de instrumente pentru adnotări";
+/* Preview menu, while the annotation toolbar is shown */
+"Hide Annotation Toolbar" = "Ascundeți bara de instrumente pentru adnotări";
+/* Annotation toolbar: its close button (tool tip and VoiceOver) */
+"Close Annotation Toolbar" = "Închideți bara de instrumente pentru adnotări";
+/* Annotation toolbar: opens the color panel */
+"Show Colors" = "Afișați culorile";
+/* Annotation toolbar: opens the font panel */
+"Show Fonts" = "Afișați fonturile";
+/* Annotation toolbar and annotation menu: edits the text of a text annotation */
+"Edit Text…" = "Editați textul…";
+/* Annotation toolbar: menu of the commands that are not shown */
+"More" = "Mai multe";
+/* Annotation toolbar: removes the image streams of the annotations */
+"Remove Image Streams" = "Eliminați fluxurile de imagine";
+/* Annotation toolbar: saves the annotated PDF */
+"Save Annotations…" = "Salvați adnotările…";
+/* Annotation toolbar: Save Annotations saves every page */
+"All Pages" = "Toate paginile";
+/* Alignment of the text of an annotation */
+"Left" = "Stânga";
+/* Alignment of the text of an annotation */
+"Center" = "Centru";
+/* Alignment of the text of an annotation */
+"Right" = "Dreapta";

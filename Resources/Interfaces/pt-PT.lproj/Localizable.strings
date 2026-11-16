@@ -415,3 +415,55 @@
 "detex was not found." = "O detex não foi encontrado.";
 "detex failed." = "O detex falhou.";
 "Counted by detex without the TeX commands, with the files read by \\input and \\include." = "Contado pelo detex sem os comandos do TeX, incluindo os ficheiros lidos com \\input e \\include.";
+
+/* Issue #49: the annotation toolbar of the Preview */
+/* Annotation tool: the name the annotation menu gives it */
+"Strikeout" = "Rasurado";
+/* Annotation tool: the name the annotation menu gives it */
+"Highlight" = "Destaque";
+/* Annotation tool: the name the annotation menu gives it */
+"Underline" = "Sublinhado";
+/* Annotation tool: the name the annotation menu gives it */
+"Square" = "Quadrado";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Square" = "Quadrado com contorno";
+/* Annotation tool: the name the annotation menu gives it */
+"Circle" = "Círculo";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Circle" = "Círculo com contorno";
+/* Annotation tool: the name the annotation menu gives it */
+"Arrow" = "Seta";
+/* Annotation tool: the name the annotation menu gives it */
+"Text Annotation" = "Texto";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Text" = "Texto com contorno";
+/* Annotation tool: the name the annotation menu gives it */
+"Popup" = "Pop-up";
+/* Annotation toolbar: switch for edit mode */
+"Edit Mode" = "Edição";
+/* Preview menu: shows the annotation toolbar under the toolbar */
+"Show Annotation Toolbar" = "Mostrar barra de ferramentas de anotações";
+/* Preview menu, while the annotation toolbar is shown */
+"Hide Annotation Toolbar" = "Ocultar barra de ferramentas de anotações";
+/* Annotation toolbar: its close button (tool tip and VoiceOver) */
+"Close Annotation Toolbar" = "Fechar barra de ferramentas de anotações";
+/* Annotation toolbar: opens the color panel */
+"Show Colors" = "Mostrar cores";
+/* Annotation toolbar: opens the font panel */
+"Show Fonts" = "Mostrar tipos de letra";
+/* Annotation toolbar and annotation menu: edits the text of a text annotation */
+"Edit Text…" = "Editar texto…";
+/* Annotation toolbar: menu of the commands that are not shown */
+"More" = "Mais";
+/* Annotation toolbar: removes the image streams of the annotations */
+"Remove Image Streams" = "Remover fluxos de imagem";
+/* Annotation toolbar: saves the annotated PDF */
+"Save Annotations…" = "Guardar anotações…";
+/* Annotation toolbar: Save Annotations saves every page */
+"All Pages" = "Todas as páginas";
+/* Alignment of the text of an annotation */
+"Left" = "À esquerda";
+/* Alignment of the text of an annotation */
+"Center" = "Centrar";
+/* Alignment of the text of an annotation */
+"Right" = "À direita";

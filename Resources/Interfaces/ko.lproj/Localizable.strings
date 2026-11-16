@@ -415,3 +415,55 @@
 "detex was not found." = "detex를 찾을 수 없습니다.";
 "detex failed." = "detex가 실패했습니다.";
 "Counted by detex without the TeX commands, with the files read by \\input and \\include." = "detex로 TeX 명령을 제외하고 센 수입니다. \\input과 \\include로 읽는 파일도 포함합니다.";
+
+/* Issue #49: the annotation toolbar of the Preview */
+/* Annotation tool: the name the annotation menu gives it */
+"Strikeout" = "취소선";
+/* Annotation tool: the name the annotation menu gives it */
+"Highlight" = "하이라이트";
+/* Annotation tool: the name the annotation menu gives it */
+"Underline" = "밑줄";
+/* Annotation tool: the name the annotation menu gives it */
+"Square" = "사각형";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Square" = "사각형(경계선)";
+/* Annotation tool: the name the annotation menu gives it */
+"Circle" = "원";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Circle" = "원(경계선)";
+/* Annotation tool: the name the annotation menu gives it */
+"Arrow" = "화살표";
+/* Annotation tool: the name the annotation menu gives it */
+"Text Annotation" = "텍스트";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Text" = "텍스트(경계선)";
+/* Annotation tool: the name the annotation menu gives it */
+"Popup" = "팝업";
+/* Annotation toolbar: switch for edit mode */
+"Edit Mode" = "편집 모드";
+/* Preview menu: shows the annotation toolbar under the toolbar */
+"Show Annotation Toolbar" = "주석 도구 막대 보기";
+/* Preview menu, while the annotation toolbar is shown */
+"Hide Annotation Toolbar" = "주석 도구 막대 가리기";
+/* Annotation toolbar: its close button (tool tip and VoiceOver) */
+"Close Annotation Toolbar" = "주석 도구 막대 닫기";
+/* Annotation toolbar: opens the color panel */
+"Show Colors" = "색상 보기";
+/* Annotation toolbar: opens the font panel */
+"Show Fonts" = "서체 보기";
+/* Annotation toolbar and annotation menu: edits the text of a text annotation */
+"Edit Text…" = "텍스트 편집…";
+/* Annotation toolbar: menu of the commands that are not shown */
+"More" = "더 보기";
+/* Annotation toolbar: removes the image streams of the annotations */
+"Remove Image Streams" = "이미지 스트림 제거";
+/* Annotation toolbar: saves the annotated PDF */
+"Save Annotations…" = "주석 저장…";
+/* Annotation toolbar: Save Annotations saves every page */
+"All Pages" = "모든 페이지";
+/* Alignment of the text of an annotation */
+"Left" = "왼쪽";
+/* Alignment of the text of an annotation */
+"Center" = "중앙 정렬";
+/* Alignment of the text of an annotation */
+"Right" = "오른쪽";

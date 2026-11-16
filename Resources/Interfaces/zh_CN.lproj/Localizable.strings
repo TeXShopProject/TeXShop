@@ -412,3 +412,55 @@
 "detex was not found." = "找不到detex。";
 "detex failed." = "detex失败。";
 "Counted by detex without the TeX commands, with the files read by \\input and \\include." = "由detex去除TeX命令后统计，包括用\\input和\\include读取的文件。";
+
+/* Issue #49: the annotation toolbar of the Preview */
+/* Annotation tool: the name the annotation menu gives it */
+"Strikeout" = "删除线";
+/* Annotation tool: the name the annotation menu gives it */
+"Highlight" = "高亮";
+/* Annotation tool: the name the annotation menu gives it */
+"Underline" = "下划线";
+/* Annotation tool: the name the annotation menu gives it */
+"Square" = "矩形";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Square" = "加框矩形";
+/* Annotation tool: the name the annotation menu gives it */
+"Circle" = "圆形";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Circle" = "加框圆形";
+/* Annotation tool: the name the annotation menu gives it */
+"Arrow" = "箭头";
+/* Annotation tool: the name the annotation menu gives it */
+"Text Annotation" = "文本";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Text" = "文本框";
+/* Annotation tool: the name the annotation menu gives it */
+"Popup" = "弹出框";
+/* Annotation toolbar: switch for edit mode */
+"Edit Mode" = "编辑模式";
+/* Preview menu: shows the annotation toolbar under the toolbar */
+"Show Annotation Toolbar" = "显示批注工具栏";
+/* Preview menu, while the annotation toolbar is shown */
+"Hide Annotation Toolbar" = "隐藏批注工具栏";
+/* Annotation toolbar: its close button (tool tip and VoiceOver) */
+"Close Annotation Toolbar" = "关闭批注工具栏";
+/* Annotation toolbar: opens the color panel */
+"Show Colors" = "显示颜色";
+/* Annotation toolbar: opens the font panel */
+"Show Fonts" = "显示字体";
+/* Annotation toolbar and annotation menu: edits the text of a text annotation */
+"Edit Text…" = "编辑文本…";
+/* Annotation toolbar: menu of the commands that are not shown */
+"More" = "更多";
+/* Annotation toolbar: removes the image streams of the annotations */
+"Remove Image Streams" = "移除图像流";
+/* Annotation toolbar: saves the annotated PDF */
+"Save Annotations…" = "保存批注…";
+/* Annotation toolbar: Save Annotations saves every page */
+"All Pages" = "所有页面";
+/* Alignment of the text of an annotation */
+"Left" = "左对齐";
+/* Alignment of the text of an annotation */
+"Center" = "居中";
+/* Alignment of the text of an annotation */
+"Right" = "右对齐";

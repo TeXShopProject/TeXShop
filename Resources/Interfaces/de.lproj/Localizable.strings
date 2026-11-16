@@ -415,3 +415,55 @@
 "detex was not found." = "detex wurde nicht gefunden.";
 "detex failed." = "detex ist fehlgeschlagen.";
 "Counted by detex without the TeX commands, with the files read by \\input and \\include." = "Von detex ohne die TeX-Befehle gezählt, einschließlich der mit \\input und \\include gelesenen Dateien.";
+
+/* Issue #49: the annotation toolbar of the Preview */
+/* Annotation tool: the name the annotation menu gives it */
+"Strikeout" = "Durchstreichen";
+/* Annotation tool: the name the annotation menu gives it */
+"Highlight" = "Hervorheben";
+/* Annotation tool: the name the annotation menu gives it */
+"Underline" = "Unterstreichen";
+/* Annotation tool: the name the annotation menu gives it */
+"Square" = "Quadrat";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Square" = "Quadrat mit Rand";
+/* Annotation tool: the name the annotation menu gives it */
+"Circle" = "Kreis";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Circle" = "Kreis mit Rand";
+/* Annotation tool: the name the annotation menu gives it */
+"Arrow" = "Pfeil";
+/* Annotation tool: the name the annotation menu gives it */
+"Text Annotation" = "Text";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Text" = "Text mit Hintergrund";
+/* Annotation tool: the name the annotation menu gives it */
+"Popup" = "Popup für Text";
+/* Annotation toolbar: switch for edit mode */
+"Edit Mode" = "Bearbeiten";
+/* Preview menu: shows the annotation toolbar under the toolbar */
+"Show Annotation Toolbar" = "Werkzeugleiste für Anmerkungen einblenden";
+/* Preview menu, while the annotation toolbar is shown */
+"Hide Annotation Toolbar" = "Werkzeugleiste für Anmerkungen ausblenden";
+/* Annotation toolbar: its close button (tool tip and VoiceOver) */
+"Close Annotation Toolbar" = "Werkzeugleiste für Anmerkungen schließen";
+/* Annotation toolbar: opens the color panel */
+"Show Colors" = "Farben einblenden";
+/* Annotation toolbar: opens the font panel */
+"Show Fonts" = "Schriften einblenden";
+/* Annotation toolbar and annotation menu: edits the text of a text annotation */
+"Edit Text…" = "Text bearbeiten …";
+/* Annotation toolbar: menu of the commands that are not shown */
+"More" = "Mehr";
+/* Annotation toolbar: removes the image streams of the annotations */
+"Remove Image Streams" = "Bild-Streams entfernen";
+/* Annotation toolbar: saves the annotated PDF */
+"Save Annotations…" = "Anmerkungen speichern …";
+/* Annotation toolbar: Save Annotations saves every page */
+"All Pages" = "Alle Seiten";
+/* Alignment of the text of an annotation */
+"Left" = "Links";
+/* Alignment of the text of an annotation */
+"Center" = "Zentriert";
+/* Alignment of the text of an annotation */
+"Right" = "Rechts";

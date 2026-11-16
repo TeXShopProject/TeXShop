@@ -344,8 +344,6 @@
     if (!self.myDocument)
         self.skipLinks = (! [SUD boolForKey: LinkPopupsKey]);
    // self.useAnnotationMenu = NO;
-    self.stringAlignment = 1;
-    [self.myDocument setStringWindowAlignment: self.stringAlignment];
     
     
     // The initial Sierra beta had horrible scrolling, which the line below fixed
@@ -5209,6 +5207,8 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
 
 - (BOOL) validateMenuItem:(NSMenuItem *)anItem
 {
+    if (anItem.action == @selector(displayChoicesPanel:))
+        return [self.myDocument validateAnnotationBarItem: anItem];
     if (anItem.action == @selector(changePageStyle:))
         return [self.myDocument validatePreviewLayoutItem:anItem];
     if (anItem.action == @selector(changePDFViewSize:))

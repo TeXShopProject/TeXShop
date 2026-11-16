@@ -66,12 +66,14 @@ static NSInteger screenUpdates=0;
 @property TestWindow *pdfKitWindow;
 @property NSTimer *pdfRefreshTimer;
 @property PDFView *myPDFKitView2;
+- (void)annotationWindowWillClose:(id)window;
 @end
 @implementation TestDocument
 - (void)updatePreviewLayoutControls {}
 - (void)notePDFLoadedAtPath:(NSString *)path signature:(NSString *)signature changeTime:(NSString *)changeTime {}
 - (BOOL)externalPDFChecksAllowed {return self.pdfRefreshTimer != nil;}
 - (void)callSaveAnnotations {}
+- (void)annotationWindowWillClose:(id)window {}
 - (void)close {}
 @end
 @implementation TestWindow

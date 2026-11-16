@@ -107,8 +107,16 @@
     [(MyPDFKitView *)[[self myDocument] pdfKitView] zoomToContentWidth:sender];
 }
 
+// Preview > Show Annotation Toolbar / Hide Annotation Toolbar, also while the source is focused.
+- (void)displayChoicesPanel:(id)sender
+{
+    [self.myDocument displayChoicesPanel: sender];
+}
+
 - (BOOL)validateMenuItem:(NSMenuItem *)item
 {
+    if (item.action == @selector(displayChoicesPanel:))
+        return [self.myDocument validateAnnotationBarItem: item];
     if (item.action == @selector(changePageStyle:))
         return [self.myDocument validatePreviewLayoutItem:item];
     // The magnification of the active part of the preview.
@@ -397,6 +405,7 @@
 
 - (void)close
 {
+    [self.myDocument annotationWindowWillClose: self];
     self.wasClosed = YES;
     [[self.myDocument textWindow] close];
     // MAYBE NOW IRRELEVANT?

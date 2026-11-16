@@ -19,7 +19,7 @@ kinds. In every language they must keep the place they have over the picture in
 Base: the French window moved the picture 68 points to the right but not the buttons,
 so they covered the buttons on the left and missed the kinds they name.
 """
-import argparse, json, shutil, subprocess, sys, tempfile
+import plistlib, argparse, json, shutil, subprocess, sys, tempfile
 import xml.etree.ElementTree as ElementTree
 from collections import Counter
 from pathlib import Path
@@ -90,31 +90,41 @@ with tempfile.TemporaryDirectory(prefix='texshop-localized-nibs-') as tmp:
                 problems.append('listed difference no longer occurs (%s, %s): %s %s' % (e['nib'], code, e['change'], e['fact']))
     print('Compared %d compiled localized nibs with Base' % checked)
 
-    def annotation_buttons(designable):
+    # The annotation tools are in the annotation toolbar, made in code (Issue #49): no nib keeps the
+    # floating Annotation panel or Text panel, and what the nibs still name for annotations matches
+    # the toolbar's strings in every language.
+    tools = ['strikeoutAnnotation:', 'highlightAnnotation:', 'underlineAnnotation:', 'squareAnnotation:', 'bsquareAnnotation:',
+             'circleAnnotation:', 'bcircleAnnotation:', 'arrowAnnotation:', 'textAnnotation:', 'btextAnnotation:', 'popupAnnotation:']
+    def strings_of(lang):
+        path = interfaces / ('%s.lproj/Localizable.strings' % ('en' if lang == 'Base' else lang))
+        return plistlib.loads(subprocess.run(['plutil', '-convert', 'xml1', '-o', '-', str(path)], check=True, capture_output=True).stdout)
+    def menu_titles(tree):
+        found = {}
+        for item in tree.iter('menuItem'):
+            action = item.find('connections/action')
+            if action is not None:
+                found.setdefault(action.get('selector'), []).append(item.get('title'))
+        return found
+    documents = sorted(interfaces.glob('*.lproj/TSDocument.nib/designable.nib'))
+    for designable in documents:
+        lang = designable.parent.parent.name[:-len('.lproj')]
         tree = ElementTree.parse(designable).getroot()
-        ids = {e.get('id'): e for e in tree.iter() if e.get('id')}
-        window = ids[next(o for o in tree.iter('outlet') if o.get('property') == 'annotationChoices').get('destination')]
-        views = list(window.find('view/subviews'))
-        picture = [v for v in views if v.tag == 'imageView']
-        assert len(picture) == 1, designable
-        px, py = (float(picture[0].find('rect').get(k)) for k in 'xy')
-        frames = []
-        for v in views:
-            cell = v.find('buttonCell')
-            if v.tag == 'button' and cell is not None and cell.get('transparent') == 'YES':
-                r = v.find('rect'); action = v.find('connections/action')
-                frames.append((action.get('selector') if action is not None else None,
-                               float(r.get('x')) - px, float(r.get('y')) - py, float(r.get('width')), float(r.get('height'))))
-        return Counter(frames)
-
-    base_buttons = annotation_buttons(interfaces / 'Base.lproj/TSDocument.nib/designable.nib')
-    assert sum(base_buttons.values()) == 12 and any(f[0] == 'strikeoutAnnotation:' for f in base_buttons), base_buttons
-    for designable in sorted(interfaces.glob('*.lproj/TSDocument.nib/designable.nib')):
-        ours = annotation_buttons(designable)
-        for frame in sorted((base_buttons - ours) + (ours - base_buttons), key=str):
-            problems.append('TSDocument %s: the annotation button %s is not where Base puts it over the picture: %s'
-                            % (designable.parent.parent.name, frame[0], 'missing' if frame in base_buttons else frame[1:]))
-    print('Compared the annotation buttons of %d document nibs with Base' % len(list(interfaces.glob('*.lproj/TSDocument.nib/designable.nib'))))
+        outlets = {o.get('property') for o in tree.iter('outlet')}
+        for gone in ('annotationChoices', 'EditModeCheckBox', 'SaveAllCheckBox', 'stringWindow', 'stringWindowTextView', 'stringLeft', 'stringCenter', 'stringRight'):
+            if gone in outlets:
+                problems.append('TSDocument %s: outlet %s of the former annotation panels is still connected' % (lang, gone))
+        strings = strings_of(lang)
+        titles = menu_titles(tree)
+        names = ['Strikeout', 'Highlight', 'Underline', 'Square', 'Bordered Square', 'Circle', 'Bordered Circle', 'Arrow', 'Text Annotation', 'Bordered Text', 'Popup']
+        for selector, key in zip(tools, names):
+            if titles.get(selector) != [strings.get(key)]:
+                problems.append('TSDocument %s: the annotation menu names %s %r, the annotation toolbar %r' % (lang, selector, titles.get(selector), strings.get(key)))
+        if titles.get('showTextPanel:') != [strings.get('Edit Text…')]:
+            problems.append('TSDocument %s: the annotation menu item for the text is %r, not %r' % (lang, titles.get('showTextPanel:'), strings.get('Edit Text…')))
+        main = ElementTree.parse(designable.parent.parent / 'MainMenu.nib/designable.nib').getroot()
+        if menu_titles(main).get('displayChoicesPanel:') != [strings.get('Show Annotation Toolbar')]:
+            problems.append('MainMenu %s: Preview menu item %r, not %r' % (lang, menu_titles(main).get('displayChoicesPanel:'), strings.get('Show Annotation Toolbar')))
+    print('Compared the annotation names of %d document nibs with the annotation toolbar' % len(documents))
 
     if not args.skip_compile:
         compiled = 0

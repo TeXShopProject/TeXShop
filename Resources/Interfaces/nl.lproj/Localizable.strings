@@ -415,3 +415,55 @@
 "detex was not found." = "detex is niet gevonden.";
 "detex failed." = "detex is mislukt.";
 "Counted by detex without the TeX commands, with the files read by \\input and \\include." = "Geteld door detex zonder de TeX-opdrachten, inclusief de bestanden die met \\input en \\include worden gelezen.";
+
+/* Issue #49: the annotation toolbar of the Preview */
+/* Annotation tool: the name the annotation menu gives it */
+"Strikeout" = "Doorgehaald";
+/* Annotation tool: the name the annotation menu gives it */
+"Highlight" = "Tekstmarkering";
+/* Annotation tool: the name the annotation menu gives it */
+"Underline" = "Onderstreept";
+/* Annotation tool: the name the annotation menu gives it */
+"Square" = "Vierkant";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Square" = "Vierkant met rand";
+/* Annotation tool: the name the annotation menu gives it */
+"Circle" = "Cirkel";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Circle" = "Cirkel met rand";
+/* Annotation tool: the name the annotation menu gives it */
+"Arrow" = "Pijl";
+/* Annotation tool: the name the annotation menu gives it */
+"Text Annotation" = "Tekst";
+/* Annotation tool: the name the annotation menu gives it */
+"Bordered Text" = "Tekst met rand";
+/* Annotation tool: the name the annotation menu gives it */
+"Popup" = "Pop-up";
+/* Annotation toolbar: switch for edit mode */
+"Edit Mode" = "Wijzig";
+/* Preview menu: shows the annotation toolbar under the toolbar */
+"Show Annotation Toolbar" = "Toon annotatieknoppenbalk";
+/* Preview menu, while the annotation toolbar is shown */
+"Hide Annotation Toolbar" = "Verberg annotatieknoppenbalk";
+/* Annotation toolbar: its close button (tool tip and VoiceOver) */
+"Close Annotation Toolbar" = "Sluit annotatieknoppenbalk";
+/* Annotation toolbar: opens the color panel */
+"Show Colors" = "Toon kleuren";
+/* Annotation toolbar: opens the font panel */
+"Show Fonts" = "Toon lettertypen";
+/* Annotation toolbar and annotation menu: edits the text of a text annotation */
+"Edit Text…" = "Wijzig tekst…";
+/* Annotation toolbar: menu of the commands that are not shown */
+"More" = "Meer";
+/* Annotation toolbar: removes the image streams of the annotations */
+"Remove Image Streams" = "Verwijder beeldstreams";
+/* Annotation toolbar: saves the annotated PDF */
+"Save Annotations…" = "Bewaar annotaties…";
+/* Annotation toolbar: Save Annotations saves every page */
+"All Pages" = "Alle pagina's";
+/* Alignment of the text of an annotation */
+"Left" = "Links";
+/* Alignment of the text of an annotation */
+"Center" = "Centreer";
+/* Alignment of the text of an annotation */
+"Right" = "Rechts";

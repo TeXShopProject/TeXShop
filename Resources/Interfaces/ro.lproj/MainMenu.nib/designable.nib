@@ -1096,7 +1096,7 @@
                                     <action selector="toggleLinkPopups:" target="-1" id="qef-g1-xDc"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Panou de adnotări..." id="GE9-Qq-3Br" identifier="TSShortcut.displayChoicesPanel:.0">
+                            <menuItem title="Afișați bara de instrumente pentru adnotări" id="GE9-Qq-3Br" identifier="TSShortcut.displayChoicesPanel:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayChoicesPanel:" target="-1" id="Ur9-Nc-Jl6"/>

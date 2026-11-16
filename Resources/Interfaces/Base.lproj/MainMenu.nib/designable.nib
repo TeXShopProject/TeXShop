@@ -1094,7 +1094,7 @@
                                     <action selector="toggleLinkPopups:" target="-1" id="cPA-G7-FPK"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Annotation Panel..." id="KA7-YI-dPo" identifier="TSShortcut.displayChoicesPanel:.0">
+                            <menuItem title="Show Annotation Toolbar" id="KA7-YI-dPo" identifier="TSShortcut.displayChoicesPanel:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayChoicesPanel:" target="-1" id="VnD-gn-osB"/>

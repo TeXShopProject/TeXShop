@@ -143,26 +143,9 @@ int main(int argc, char **argv) { @autoreleasepool {
             groups(@"at its smallest, laid out again");
         }
 
-        // The Text panel's choices and OK, at its usual and smallest widths.
-        NSWindow *text = owner->stringWindow;
-        for (NSString *size in @[@"usual", @"smallest"]) {
-            if ([size isEqual:@"smallest"]) [text setContentSize:text.contentMinSize];
-            NSMutableArray<NSButton *> *radios = [NSMutableArray array]; NSButton *ok = nil;
-            for (NSView *v in text.contentView.subviews) if ([v isKindOfClass:NSButton.class]) {
-                if ([((NSButton *)v).keyEquivalent isEqual:@"\r"]) ok = (NSButton *)v; else [radios addObject:(NSButton *)v];
-            }
-            [radios sortUsingComparator:^NSComparisonResult(NSButton *a, NSButton *b) { return NSMinX(a.frame) < NSMinX(b.frame) ? NSOrderedAscending : NSOrderedDescending; }];
-            Check(radios.count == 3 && ok, [NSString stringWithFormat:@"%@ Text panel: three choices and OK", lang]);
-            for (NSUInteger r = 0; r < radios.count; r++) {
-                NSButton *b = radios[r];
-                CGFloat drawn = NSMinX(b.frame) + NSMaxX(Ink(b));
-                Check(NSWidth(b.frame) >= ceil(b.fittingSize.width) - 0.5, [NSString stringWithFormat:@"%@ Text panel: \"%@\" is as wide as its title", lang, b.title]);
-                NSView *next = r + 1 < radios.count ? radios[r + 1] : ok;
-                // Offscreen, a choice that is not selected draws a faint circle; its circle starts at its frame.
-                CGFloat gap = NSMinX(next.frame) + (next == ok ? NSMinX(Ink(ok)) : 0) - drawn;
-                Check(gap >= 12, [NSString stringWithFormat:@"%@ Text panel (%@): \"%@\" is %.1f points from the next control", lang, size, b.title, gap]);
-            }
-        }
+        // The text of a text annotation is edited in a popover of the annotation toolbar
+        // (run-annotation-toolbar.py checks its labels); the Text panel is gone.
+        Check(owner->stringWindow == nil, [NSString stringWithFormat:@"%@: no Text panel", lang]);
 
         // The former Statistics panel is gone; Text Statistics is a popover of the status bar.
         Check(owner->statisticsPanel == nil, [NSString stringWithFormat:@"%@: no Statistics panel", lang]);
@@ -199,5 +182,5 @@ int main(int argc, char **argv) { @autoreleasepool {
         }
     }
     if (failures) { printf("FAIL: %d of %d checks\n", failures, checks); return 1; }
-    printf("PASS: the console's push buttons, the Text panel's choices and the Magnification labels in %d languages, without the former Statistics panel (%d checks)\n", argc - 1, checks);
+    printf("PASS: the console's push buttons and the Magnification labels in %d languages, without the former Text and Statistics panels (%d checks)\n", argc - 1, checks);
 } return 0; }
