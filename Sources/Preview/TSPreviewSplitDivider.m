@@ -68,6 +68,68 @@ static BOOL TSPartCanResizeQuietly(PDFView *view)
     return view.displayMode == kPDFDisplaySinglePageContinuous || view.displayMode == kPDFDisplayTwoUpContinuous;
 }
 
+// Whether the parts fill the split view: they line up with its edges, with the dividers between them.
+static BOOL TSSplitViewPartsFill(NSSplitView *splitView, NSArray<NSView *> *parts)
+{
+    BOOL vertical = splitView.isVertical;
+    NSRect bounds = splitView.bounds;
+    CGFloat position = vertical ? NSMinX(bounds) : NSMinY(bounds);
+    for (NSView *part in parts) {
+        NSRect frame = part.frame;
+        if (vertical ? (NSMinX(frame) != position || NSMinY(frame) != NSMinY(bounds) || NSHeight(frame) != NSHeight(bounds))
+                     : (NSMinY(frame) != position || NSMinX(frame) != NSMinX(bounds) || NSWidth(frame) != NSWidth(bounds)))
+            return NO;
+        position = (vertical ? NSMaxX(frame) : NSMaxY(frame)) + splitView.dividerThickness;
+    }
+    return position - splitView.dividerThickness == (vertical ? NSMaxX(bounds) : NSMaxY(bounds));
+}
+
+// Gives the parts the new size of the split view. NSSplitView sizes them as it does without
+// a delegate. But once a view in the window uses Auto Layout, as the line along the active
+// part does, NSSplitView leaves the sizing to a delegate that implements
+// splitView:resizeSubviewsWithOldSize:, and its own sizing leaves the parts as they were
+// (#47). Then each part keeps its share of the length along the split, and takes the whole
+// size across it.
+static void TSSplitViewSizeParts(NSSplitView *splitView, NSSize oldSize)
+{
+    NSMutableArray<NSView *> *parts = [NSMutableArray array];
+    for (NSView *subview in splitView.subviews)
+        if (!subview.isHidden)
+            [parts addObject:subview];
+    if (parts.count == 0)
+        return;
+    id<NSSplitViewDelegate> delegate = splitView.delegate;
+    splitView.delegate = nil;
+    [splitView resizeSubviewsWithOldSize:oldSize];
+    splitView.delegate = delegate;
+    if (TSSplitViewPartsFill(splitView, parts))
+        return;
+    BOOL vertical = splitView.isVertical;
+    NSRect bounds = splitView.bounds;
+    CGFloat thickness = splitView.dividerThickness;
+    CGFloat oldTotal = 0;
+    for (NSView *part in parts)
+        oldTotal += vertical ? NSWidth(part.frame) : NSHeight(part.frame);
+    CGFloat newTotal = MAX(0, (vertical ? NSWidth(bounds) : NSHeight(bounds)) - thickness * (parts.count - 1));
+    CGFloat position = vertical ? NSMinX(bounds) : NSMinY(bounds);
+    CGFloat used = 0;
+    for (NSUInteger i = 0; i < parts.count; i++) {
+        NSView *part = parts[i];
+        CGFloat length;
+        if (i + 1 == parts.count)
+            length = newTotal - used;
+        else if (oldTotal > 0)
+            length = round((vertical ? NSWidth(part.frame) : NSHeight(part.frame)) * newTotal / oldTotal);
+        else
+            length = round(newTotal / parts.count);
+        length = MAX(0, MIN(length, newTotal - used));
+        part.frame = vertical ? NSMakeRect(position, NSMinY(bounds), length, NSHeight(bounds))
+                              : NSMakeRect(NSMinX(bounds), position, NSWidth(bounds), length);
+        position += length + thickness;
+        used += length;
+    }
+}
+
 @implementation TSPreviewSplitDivider
 
 - (instancetype)initWithSplitView:(NSSplitView *)splitView
@@ -260,10 +322,7 @@ static BOOL TSPartCanResizeQuietly(PDFView *view)
         [self finishQuietResize];
     if (keep)
         [self prepareParts:parts quietly:quietly];
-    // The split view sizes the parts as it does without a delegate.
-    splitView.delegate = nil;
-    [splitView resizeSubviewsWithOldSize:oldSize];
-    splitView.delegate = self;
+    TSSplitViewSizeParts(splitView, oldSize);
     if (keep)
         [self followParts:parts];
 }
