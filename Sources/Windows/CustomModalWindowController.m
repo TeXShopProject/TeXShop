@@ -69,7 +69,18 @@
     [self.theEncodings removeAllItems];
     [[TSEncodingSupport sharedInstance] addEncodingsToMenu:self.theEncodings.menu withTarget:0 action:0];
     [self.theEncodings selectItemWithTag: currentEncoding];
-    
+    [self fitWindowToContents];
+}
+
+// The sheet takes the size its contents need in the current language. The warning is two lines
+// in Korean and Chinese and four in German and Dutch, so one size in the nib is too big or too small.
+- (void)fitWindowToContents
+{
+    NSView *contents = self.window.contentView;
+    [contents layoutSubtreeIfNeeded];
+    NSSize size = contents.fittingSize;
+    self.window.contentMinSize = size;
+    [self.window setContentSize:size];
 }
 
 
