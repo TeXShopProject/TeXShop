@@ -17,7 +17,10 @@
 3. The table of changes is complete: update 1 holds every color of a bundled theme that differs between 5.58 and
    6.00 beta 1, from its 5.58 value to its beta 1 value, and update 2 every color that differs between beta 1 and
    now, from its beta 1 value to its current value. The update runs at launch before the themes are read.
-4. Comments can be read on the background of every bundled theme (contrast at least 3).
+4. Comments can be read on the background of every bundled theme (contrast at least 3) and are told from the text
+   (color difference CIE76 at least 20); the matching braces are marked in a color that shows on the background (at
+   least 3); copied images keep their text when their colors are mapped (the foreground of every bundled theme is
+   opaque, and TeXShop draws a fully transparent foreground of an earlier copy opaque).
 
 No window is opened; the harness works in a temporary folder.
 
@@ -32,6 +35,7 @@ THEMES = ROOT / 'Resources/TeXShop/Themes'
 RESERVE = ROOT / 'Resources/Themes'
 SUPPORT = 'Sources/Editor/TSColorSupport.m'
 DELEGATE = 'Sources/App/TSAppDelegate.m'
+DOCCOLOR = 'Sources/Editor/TSDocument-Color.m'
 BASE = 'db040b9b'  # the import of TeXShop 5.58
 # The bundled themes each update of the table starts from: update 1 from 5.58, update 2 from 6.00 beta 1.
 UPDATES = {1: BASE, 2: '8b9db011'}  # 8b9db011 is the tag v.6.00-beta.1
@@ -49,6 +53,7 @@ MUTATIONS = {
                                     '        NSURL *url = [store.directory URLByAppendingPathComponent:[theme stringByAppendingPathExtension:@"plist"]];'),
     'the LiteTheme content color is left out': (SUPPORT, '    {1, @"LiteTheme", @"EditorHighlightContent",', '    {0, @"LiteTheme", @"EditorHighlightContent",'),
     'the DarkTheme comment is left out of update 2': (SUPPORT, '    {2, @"DarkTheme", @"SyntaxComment",', '    {1, @"DarkTheme", @"SyntaxComment",'),
+    'a transparent image foreground stays transparent': (DOCCOLOR, '        myColor = [myColor colorWithAlphaComponent:1];', ''),
     'the update runs after the themes are read': (DELEGATE,
         '    [[TSColorSupport sharedInstance] updateBundledThemeColors];\n    [[TSColorSupport sharedInstance]  initializeColors];\n',
         '    [[TSColorSupport sharedInstance]  initializeColors];\n    [[TSColorSupport sharedInstance] updateBundledThemeColors];\n'),
@@ -97,6 +102,24 @@ def bundled():
     return {f'{folder.relative_to(ROOT / "Resources")}/{p.stem}': plistlib.loads(p.read_bytes()) for folder in (THEMES, RESERVE) for p in sorted(folder.glob('*.plist'))}
 
 
+def difference(a, b):
+    """CIE76 color difference of two sRGB colors."""
+    def lab(c):
+        f = lambda x: x / 12.92 if x <= 0.04045 else ((x + 0.055) / 1.055) ** 2.4
+        r, g, b = (f(v) for v in c[:3])
+        x, y, z = (0.4124 * r + 0.3576 * g + 0.1805 * b) / 0.95047, 0.2126 * r + 0.7152 * g + 0.0722 * b, (0.0193 * r + 0.1192 * g + 0.9505 * b) / 1.08883
+        g2 = lambda t: t ** (1 / 3) if t > 0.008856 else 7.787 * t + 16 / 116
+        return 116 * g2(y) - 16, 500 * (g2(x) - g2(y)), 200 * (g2(y) - g2(z))
+    return sum((p - q) ** 2 for p, q in zip(lab(a), lab(b))) ** 0.5
+
+
+def source_problems(text):
+    problems = []
+    if '        myColor = [myColor colorWithAlphaComponent:1];' not in text[DOCCOLOR] or 'myColor.alphaComponent == 0' not in text[DOCCOLOR]:
+        problems.append('a fully transparent image foreground is not drawn opaque')
+    return problems
+
+
 def readability_problems(themes):
     shown = ['SyntaxCommand', 'SyntaxComment', 'SyntaxMarker', 'SyntaxMarkerParen', 'SyntaxMarkerCurly', 'SyntaxMarkerSquare',
              'SyntaxIndex', 'FootnoteColor', 'EditorHighlightBraces']
@@ -119,6 +142,12 @@ def readability_problems(themes):
         comment = theme.get('SyntaxComment')
         if comment and contrast(comment, background) < 3:
             problems.append(f'{name}: SyntaxComment on the background')
+        if comment and difference(comment, text) < 20:
+            problems.append(f'{name}: SyntaxComment too close to the text')
+        if 'EditorHighlightBraces' in theme and contrast(theme['EditorHighlightBraces'], background) < 3:
+            problems.append(f'{name}: EditorHighlightBraces on the background')
+        if 'ImageForeground' in theme and theme['ImageForeground'][3] < 1:
+            problems.append(f'{name}: ImageForeground is not opaque')
     return problems
 
 
@@ -317,14 +346,14 @@ def table_problems(text):
 
 
 def check(text):
-    return readability_problems(bundled()) + table_problems(text) + update_problems(text)
+    return readability_problems(bundled()) + source_problems(text) + table_problems(text) + update_problems(text)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--mutations', action='store_true')
     args = parser.parse_args()
-    text = {path: (ROOT / path).read_text(encoding='latin1') for path in (SUPPORT, DELEGATE)}
+    text = {path: (ROOT / path).read_text(encoding='latin1') for path in (SUPPORT, DELEGATE, DOCCOLOR)}
     problems = check(text)
     if problems:
         sys.exit('FAIL: ' + '\n      '.join(problems))

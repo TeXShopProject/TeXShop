@@ -39,9 +39,9 @@
 	</array>
 	<key>EditorHighlightBraces</key>
 	<array>
-		<real>1</real>
-		<real>0</real>
-		<real>1</real>
+		<real>0.752941</real>
+		<real>0.0</real>
+		<real>0.752941</real>
 		<real>1</real>
 	</array>
 	<key>EditorHighlightContent</key>
@@ -172,9 +172,9 @@
 	</array>
 	<key>SyntaxComment</key>
 	<array>
-		<real>0.45098</real>
-		<real>0.431373</real>
-		<real>0.411765</real>
+		<real>0.243137</real>
+		<real>0.490196</real>
+		<real>0.243137</real>
 		<real>1</real>
 	</array>
 	<key>SyntaxIndex</key>

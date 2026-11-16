@@ -171,7 +171,7 @@
   specialXMLColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.3000 1.0000 1.0000
   parameterXMLColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.5412 0.0000 1.0000
   valueXMLColorAttribute NSColor kCGColorSpaceSRGB 0.4784 0.4784 0.1216 1.0000
-  highlightBraces NSColor kCGColorSpaceSRGB 1.0000 0.0000 1.0000 1.0000
+  highlightBraces NSColor kCGColorSpaceSRGB 0.7529 0.0000 0.7529 1.0000
   highlightContent NSBackgroundColor kCGColorSpaceSRGB 1.0000 1.0000 0.0000 1.0000
   editorBackground kCGColorSpaceSRGB 0.9882 0.9569 0.8667 1.0000
   editorText kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
@@ -208,7 +208,7 @@
   specialXMLColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.3000 1.0000 1.0000
   parameterXMLColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.5412 0.0000 1.0000
   valueXMLColorAttribute NSColor kCGColorSpaceSRGB 0.4784 0.4784 0.1216 1.0000
-  highlightBraces NSColor kCGColorSpaceSRGB 1.0000 0.0000 1.0000 1.0000
+  highlightBraces NSColor kCGColorSpaceSRGB 0.7529 0.0000 0.7529 1.0000
   highlightContent NSBackgroundColor kCGColorSpaceSRGB 1.0000 1.0000 0.0000 1.0000
   editorBackground kCGColorSpaceSRGB 0.9882 0.9569 0.8667 1.0000
   editorText kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
@@ -297,7 +297,7 @@
   invalid empty
 == Manteuffel light
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.0392 0.4667 0.6235 1.0000
-  commentColorAttribute NSColor kCGColorSpaceSRGB 0.4510 0.4314 0.4118 1.0000
+  commentColorAttribute NSColor kCGColorSpaceSRGB 0.2431 0.4902 0.2431 1.0000
   markerColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   markerColorParenAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   markerColorCurlyAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
@@ -319,7 +319,7 @@
   specialXMLColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.3000 1.0000 1.0000
   parameterXMLColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.5412 0.0000 1.0000
   valueXMLColorAttribute NSColor kCGColorSpaceSRGB 0.4784 0.4784 0.1216 1.0000
-  highlightBraces NSColor kCGColorSpaceSRGB 1.0000 0.0000 1.0000 1.0000
+  highlightBraces NSColor kCGColorSpaceSRGB 0.7529 0.0000 0.7529 1.0000
   highlightContent NSBackgroundColor kCGColorSpaceSRGB 1.0000 1.0000 0.0000 1.0000
   editorBackground kCGColorSpaceSRGB 0.9647 0.9647 0.9647 1.0000
   editorText kCGColorSpaceSRGB 0.2588 0.2588 0.2588 1.0000
@@ -334,7 +334,7 @@
   invalid empty
 == Manteuffel dark
   commandColorAttribute NSColor kCGColorSpaceSRGB 0.0392 0.4667 0.6235 1.0000
-  commentColorAttribute NSColor kCGColorSpaceSRGB 0.4510 0.4314 0.4118 1.0000
+  commentColorAttribute NSColor kCGColorSpaceSRGB 0.2431 0.4902 0.2431 1.0000
   markerColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   markerColorParenAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
   markerColorCurlyAttribute NSColor kCGColorSpaceSRGB 0.0000 0.0000 0.0000 1.0000
@@ -356,7 +356,7 @@
   specialXMLColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.3000 1.0000 1.0000
   parameterXMLColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.5412 0.0000 1.0000
   valueXMLColorAttribute NSColor kCGColorSpaceSRGB 0.4784 0.4784 0.1216 1.0000
-  highlightBraces NSColor kCGColorSpaceSRGB 1.0000 0.0000 1.0000 1.0000
+  highlightBraces NSColor kCGColorSpaceSRGB 0.7529 0.0000 0.7529 1.0000
   highlightContent NSBackgroundColor kCGColorSpaceSRGB 1.0000 1.0000 0.0000 1.0000
   editorBackground kCGColorSpaceSRGB 0.9647 0.9647 0.9647 1.0000
   editorText kCGColorSpaceSRGB 0.2588 0.2588 0.2588 1.0000
@@ -541,7 +541,7 @@
   specialXMLColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.3000 1.0000 1.0000
   parameterXMLColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.5412 0.0000 1.0000
   valueXMLColorAttribute NSColor kCGColorSpaceSRGB 0.4784 0.4784 0.1216 1.0000
-  highlightBraces NSColor kCGColorSpaceSRGB 1.0000 0.0000 1.0000 1.0000
+  highlightBraces NSColor kCGColorSpaceSRGB 0.7529 0.0000 0.7529 1.0000
   highlightContent NSBackgroundColor kCGColorSpaceSRGB 1.0000 1.0000 0.0000 1.0000
   editorBackground kCGColorSpaceSRGB 0.9900 0.9600 0.8900 1.0000
   editorText kCGColorSpaceSRGB 0.4000 0.4800 0.5100 1.0000
@@ -578,7 +578,7 @@
   specialXMLColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.3000 1.0000 1.0000
   parameterXMLColorAttribute NSColor kCGColorSpaceSRGB 0.0000 0.5412 0.0000 1.0000
   valueXMLColorAttribute NSColor kCGColorSpaceSRGB 0.4784 0.4784 0.1216 1.0000
-  highlightBraces NSColor kCGColorSpaceSRGB 1.0000 0.0000 1.0000 1.0000
+  highlightBraces NSColor kCGColorSpaceSRGB 0.7529 0.0000 0.7529 1.0000
   highlightContent NSBackgroundColor kCGColorSpaceSRGB 1.0000 1.0000 0.0000 1.0000
   editorBackground kCGColorSpaceSRGB 0.9900 0.9600 0.8900 1.0000
   editorText kCGColorSpaceSRGB 0.4000 0.4800 0.5100 1.0000
