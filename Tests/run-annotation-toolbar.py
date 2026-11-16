@@ -129,6 +129,12 @@ static int failures;
 static void Check(BOOL ok, NSString *name) { if (!ok) { printf("FAIL: %s\n", name.UTF8String); failures++; } }
 // The event loop back in the default mode, after what a click started.
 static void RunLoop(void) { [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]]; }
+// The same, until a condition holds or two seconds have passed (a loaded machine may be slow).
+static void RunLoopUntil(BOOL (^done)(void)) {
+    NSDate *limit = [NSDate dateWithTimeIntervalSinceNow:2];
+    while (!done() && limit.timeIntervalSinceNow > 0)
+        [NSRunLoop.currentRunLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.02]];
+}
 
 // Localizable.strings of the language under test.
 static NSDictionary *Strings;
@@ -422,7 +428,7 @@ static void TestPopover(void) {
     open(a, first); popover.textView.string = @"Clicked away";
     [popover noteOutsideClick];
     Check(popover.shown && [a.contents isEqual:@"New text"], @"a click outside does not commit at once");
-    RunLoop();
+    RunLoopUntil(^BOOL { return !popover.shown; });
     Check(!popover.shown && [a.contents isEqual:@"Clicked away"], @"a click outside commits after its actions");
 
     // A click whose action discards (the bar's close button, the end of the split): the discard wins.
