@@ -1283,6 +1283,11 @@ static NSString *TSTextForSaving(NSString *text, NSStringEncoding encoding)
 	return text;
 }
 
+- (NSString *)textForSaving:(NSString *)text encoding:(NSStringEncoding)encoding
+{
+	return TSTextForSaving(text, encoding);
+}
+
 - (NSData *)dataForText:(NSString *)text encoding:(NSStringEncoding)encoding byteOrderMark:(TSByteOrderMark)mark
 {
 	text = TSTextForSaving(text, encoding);
