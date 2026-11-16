@@ -46,6 +46,7 @@
 35
 36
 37
+38
 39
 4
 40
@@ -1087,7 +1088,6 @@ math
 mathematical
 mathematics
 mathexpressioncompletion
-mathjax
 matrix
 matter
 may
