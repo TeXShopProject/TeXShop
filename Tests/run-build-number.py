@@ -151,8 +151,12 @@ def run(mutation=None):
                 script = tmp / 'set-build-number.sh'
                 script.write_text(text.replace(old, new), encoding='utf-8')
             else:
-                assert project.count(old) == 1, 'mutation target must be unique: ' + mutation
-                project = project.replace(old, new)
+                # The project has other script phases (Update About copyright year), so the mutation applies within this phase only.
+                start = project.index('/* Set Build Number */ = {')
+                end = project.index('\n\t\t};', start)
+                phase = project[start:end]
+                assert phase.count(old) == 1, 'mutation target must be unique: ' + mutation
+                project = project[:start] + phase.replace(old, new) + project[end:]
         check_script(script, tmp)
         check_project(project)
     return failures
