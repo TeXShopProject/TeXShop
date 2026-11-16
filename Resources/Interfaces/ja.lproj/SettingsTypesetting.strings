@@ -4,7 +4,6 @@
 "188.title" = "デフォルトのスクリプト";
 "190.title" = "パーソナルスクリプト";
 "191.title" = "PDF直接生成";
-"314.title" = "ファイル保存時に";
 "588.title" = "plain TeX";
 "589.title" = "LaTeX";
 "590.title" = "エンジンファイル";
@@ -14,7 +13,6 @@
 "785.title" = "PDFを検索";
 "786.title" = "SyncTeX（推奨）";
 "823.title" = "Sync方式";
-"898.title" = "関連ファイルも保存する";
 "919.title" = "Radio";
 "920.title" = "Radio";
 "921.title" = "Radio";

@@ -6,7 +6,6 @@
 - (IBAction)afterTypesettingChanged:(id)sender { [self.preferences afterTypesettingChanged:sender]; }
 - (IBAction)defaultProgramChanged:(id)sender { [self.preferences defaultProgramChanged:sender]; }
 - (IBAction)defaultScriptChanged:(id)sender { [self.preferences defaultScriptChanged:sender]; }
-- (IBAction)saveRelatedButtonPressed:(id)sender { [self.preferences saveRelatedButtonPressed:sender]; }
 - (IBAction)syncChanged:(id)sender { [self.preferences syncChanged:sender]; }
 - (IBAction)syncTabButtonPressed:(id)sender { [self.preferences syncTabButtonPressed:sender]; }
 @end

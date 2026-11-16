@@ -830,11 +830,6 @@
         "class": "TSPrefTypesettingController"
       },
       {
-        "ivar": "_saveRelatedButton",
-        "property": "saveRelatedButton",
-        "class": "TSPrefTypesettingController"
-      },
-      {
         "ivar": "_syncMatrix",
         "property": "syncMatrix",
         "class": "TSPrefTypesettingController"
@@ -2881,13 +2876,6 @@
         "value": "defaultScriptChanged:"
       },
       {
-        "key": "316.action",
-        "view": "settings.316",
-        "kind": "view",
-        "property": "action",
-        "value": "saveRelatedButtonPressed:"
-      },
-      {
         "key": "678.action",
         "view": "settings.678",
         "kind": "view",
@@ -3357,8 +3345,6 @@
           "920.title": "Radio",
           "W5U-9S-4OG.title": "If Sync Opens a New Window",
           "YQv-fE-Uzg.title": "Open as Tab in Root Window",
-          "314.title": "During File Save",
-          "898.title": "Save related files",
           "823.title": "Sync Method",
           "190.title": "Personal Script",
           "590.title": "Engine File",
@@ -5691,20 +5677,6 @@
           "value": "Open as Tab in Root Window"
         },
         {
-          "key": "314.title",
-          "view": "settings.314",
-          "kind": "view",
-          "property": "title",
-          "value": "During File Save"
-        },
-        {
-          "key": "898.title",
-          "view": "settings.316",
-          "kind": "cell",
-          "property": "title",
-          "value": "Save related files"
-        },
-        {
           "key": "823.title",
           "view": "settings.823",
           "kind": "view",
@@ -5973,10 +5945,6 @@
         {
           "id": "heading.settings.188",
           "title": "Default Script"
-        },
-        {
-          "id": "heading.settings.314",
-          "title": "During File Save"
         },
         {
           "id": "heading.settings.675",
@@ -6406,8 +6374,6 @@
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Wenn Sync ein neues Fenster öffnet",
           "YQv-fE-Uzg.title": "Öffnen als Tab im Stammfenster",
-          "314.title": "Beim Sichern",
-          "898.title": "Verbundene Dateien sichern",
           "823.title": "Art der Synchronisierung",
           "190.title": "Persönliches Skript",
           "590.title": "Engine-Datei",
@@ -8740,20 +8706,6 @@
           "value": "Öffnen als Tab im Stammfenster"
         },
         {
-          "key": "314.title",
-          "view": "settings.314",
-          "kind": "view",
-          "property": "title",
-          "value": "Beim Sichern"
-        },
-        {
-          "key": "898.title",
-          "view": "settings.316",
-          "kind": "cell",
-          "property": "title",
-          "value": "Verbundene Dateien sichern"
-        },
-        {
           "key": "823.title",
           "view": "settings.823",
           "kind": "view",
@@ -9022,10 +8974,6 @@
         {
           "id": "heading.settings.188",
           "title": "Standardskript"
-        },
-        {
-          "id": "heading.settings.314",
-          "title": "Beim Sichern"
         },
         {
           "id": "heading.settings.675",
@@ -9455,8 +9403,6 @@
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Si Sync abre nueva ventana",
           "YQv-fE-Uzg.title": "Abrirla como pestaña",
-          "314.title": "Al guardar",
-          "898.title": "Guardar relacionados",
           "823.title": "Tipo de sincronía",
           "190.title": "Script personal",
           "590.title": "Archivo de motor",
@@ -11789,20 +11735,6 @@
           "value": "Abrirla como pestaña"
         },
         {
-          "key": "314.title",
-          "view": "settings.314",
-          "kind": "view",
-          "property": "title",
-          "value": "Al guardar"
-        },
-        {
-          "key": "898.title",
-          "view": "settings.316",
-          "kind": "cell",
-          "property": "title",
-          "value": "Guardar relacionados"
-        },
-        {
           "key": "823.title",
           "view": "settings.823",
           "kind": "view",
@@ -12071,10 +12003,6 @@
         {
           "id": "heading.settings.188",
           "title": "Script por defecto"
-        },
-        {
-          "id": "heading.settings.314",
-          "title": "Al guardar"
         },
         {
           "id": "heading.settings.675",
@@ -12504,8 +12432,6 @@
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Si la synchro ouvre une nouvelle fenêtre",
           "YQv-fE-Uzg.title": "Ouvrir un onglet dans la fenêtre initiale",
-          "314.title": "Pendant la sauvegarde des fichiers",
-          "898.title": "Fichiers apparentés sauvegardés",
           "823.title": "Méthode de synchronisation",
           "190.title": "Script personnel",
           "590.title": "Fichier de moteur",
@@ -14838,20 +14764,6 @@
           "value": "Ouvrir un onglet dans la fenêtre initiale"
         },
         {
-          "key": "314.title",
-          "view": "settings.314",
-          "kind": "view",
-          "property": "title",
-          "value": "Pendant la sauvegarde des fichiers"
-        },
-        {
-          "key": "898.title",
-          "view": "settings.316",
-          "kind": "cell",
-          "property": "title",
-          "value": "Fichiers apparentés sauvegardés"
-        },
-        {
           "key": "823.title",
           "view": "settings.823",
           "kind": "view",
@@ -15120,10 +15032,6 @@
         {
           "id": "heading.settings.188",
           "title": "Script par défaut"
-        },
-        {
-          "id": "heading.settings.314",
-          "title": "Pendant la sauvegarde des fichiers"
         },
         {
           "id": "heading.settings.675",
@@ -15553,8 +15461,6 @@
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Se la sincronizzazione apre una nuova finestra",
           "YQv-fE-Uzg.title": "Apri come scheda nella finestra principale",
-          "314.title": "Quando un file è salvato",
-          "898.title": "Salva i file correlati",
           "823.title": "Metodo di sincronizzazione",
           "190.title": "Script personale",
           "590.title": "File del motore",
@@ -17887,20 +17793,6 @@
           "value": "Apri come scheda nella finestra principale"
         },
         {
-          "key": "314.title",
-          "view": "settings.314",
-          "kind": "view",
-          "property": "title",
-          "value": "Quando un file è salvato"
-        },
-        {
-          "key": "898.title",
-          "view": "settings.316",
-          "kind": "cell",
-          "property": "title",
-          "value": "Salva i file correlati"
-        },
-        {
           "key": "823.title",
           "view": "settings.823",
           "kind": "view",
@@ -18169,10 +18061,6 @@
         {
           "id": "heading.settings.188",
           "title": "Script di Default"
-        },
-        {
-          "id": "heading.settings.314",
-          "title": "Quando un file è salvato"
         },
         {
           "id": "heading.settings.675",
@@ -18602,8 +18490,6 @@
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Syncで新ドキュメントが開くとき",
           "YQv-fE-Uzg.title": "ルートウインドウのタブで開く",
-          "314.title": "ファイル保存時に",
-          "898.title": "関連ファイルも保存する",
           "823.title": "Sync方式",
           "190.title": "パーソナルスクリプト",
           "590.title": "エンジンファイル",
@@ -20936,20 +20822,6 @@
           "value": "ルートウインドウのタブで開く"
         },
         {
-          "key": "314.title",
-          "view": "settings.314",
-          "kind": "view",
-          "property": "title",
-          "value": "ファイル保存時に"
-        },
-        {
-          "key": "898.title",
-          "view": "settings.316",
-          "kind": "cell",
-          "property": "title",
-          "value": "関連ファイルも保存する"
-        },
-        {
           "key": "823.title",
           "view": "settings.823",
           "kind": "view",
@@ -21218,10 +21090,6 @@
         {
           "id": "heading.settings.188",
           "title": "デフォルトのスクリプト"
-        },
-        {
-          "id": "heading.settings.314",
-          "title": "ファイル保存時に"
         },
         {
           "id": "heading.settings.675",
@@ -21651,8 +21519,6 @@
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Sync로 새 창을 열 때",
           "YQv-fE-Uzg.title": "새 탭으로 열기",
-          "314.title": "파일 저장시",
-          "898.title": "관련 파일 함께 저장",
           "823.title": "Sync 방식",
           "190.title": "사용자 스크립트",
           "590.title": "엔진 파일",
@@ -23985,20 +23851,6 @@
           "value": "새 탭으로 열기"
         },
         {
-          "key": "314.title",
-          "view": "settings.314",
-          "kind": "view",
-          "property": "title",
-          "value": "파일 저장시"
-        },
-        {
-          "key": "898.title",
-          "view": "settings.316",
-          "kind": "cell",
-          "property": "title",
-          "value": "관련 파일 함께 저장"
-        },
-        {
           "key": "823.title",
           "view": "settings.823",
           "kind": "view",
@@ -24267,10 +24119,6 @@
         {
           "id": "heading.settings.188",
           "title": "디폴트 스트립트"
-        },
-        {
-          "id": "heading.settings.314",
-          "title": "파일 저장시"
         },
         {
           "id": "heading.settings.675",
@@ -24700,8 +24548,6 @@
           "920.title": "Radio",
           "W5U-9S-4OG.title": "If Sync Opens a New Window",
           "YQv-fE-Uzg.title": "Als tabblad in hoofdvenster openen",
-          "314.title": "Bestanden opslaan",
-          "898.title": "Sla verwante bestanden op",
           "823.title": "Synchroniseermethode",
           "190.title": "Eigen script",
           "590.title": "Engine-bestand",
@@ -27034,20 +26880,6 @@
           "value": "Als tabblad in hoofdvenster openen"
         },
         {
-          "key": "314.title",
-          "view": "settings.314",
-          "kind": "view",
-          "property": "title",
-          "value": "Bestanden opslaan"
-        },
-        {
-          "key": "898.title",
-          "view": "settings.316",
-          "kind": "cell",
-          "property": "title",
-          "value": "Sla verwante bestanden op"
-        },
-        {
           "key": "823.title",
           "view": "settings.823",
           "kind": "view",
@@ -27316,10 +27148,6 @@
         {
           "id": "heading.settings.188",
           "title": "Standaard script"
-        },
-        {
-          "id": "heading.settings.314",
-          "title": "Bestanden opslaan"
         },
         {
           "id": "heading.settings.675",
@@ -27749,8 +27577,6 @@
           "920.title": "Radio",
           "W5U-9S-4OG.title": "If Sync Opens a New Window",
           "YQv-fE-Uzg.title": "Abrir como separador na janela principal",
-          "314.title": "During File Save",
-          "898.title": "Save related files",
           "823.title": "Método de sincronização",
           "190.title": "Script pessoal",
           "590.title": "Ficheiro de motor",
@@ -30083,20 +29909,6 @@
           "value": "Abrir como separador na janela principal"
         },
         {
-          "key": "314.title",
-          "view": "settings.314",
-          "kind": "view",
-          "property": "title",
-          "value": "During File Save"
-        },
-        {
-          "key": "898.title",
-          "view": "settings.316",
-          "kind": "cell",
-          "property": "title",
-          "value": "Save related files"
-        },
-        {
           "key": "823.title",
           "view": "settings.823",
           "kind": "view",
@@ -30365,10 +30177,6 @@
         {
           "id": "heading.settings.188",
           "title": "Script por omissão"
-        },
-        {
-          "id": "heading.settings.314",
-          "title": "During File Save"
         },
         {
           "id": "heading.settings.675",
@@ -30798,8 +30606,6 @@
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Se Sync abre uma nova janela",
           "YQv-fE-Uzg.title": "Abrir como aba na janela principal",
-          "314.title": "Durante o salvar arquivo",
-          "898.title": "Salvar arquivos relacionados",
           "823.title": "Método Sync",
           "190.title": "Script pessoal",
           "590.title": "Arquivo de motor",
@@ -33132,20 +32938,6 @@
           "value": "Abrir como aba na janela principal"
         },
         {
-          "key": "314.title",
-          "view": "settings.314",
-          "kind": "view",
-          "property": "title",
-          "value": "Durante o salvar arquivo"
-        },
-        {
-          "key": "898.title",
-          "view": "settings.316",
-          "kind": "cell",
-          "property": "title",
-          "value": "Salvar arquivos relacionados"
-        },
-        {
           "key": "823.title",
           "view": "settings.823",
           "kind": "view",
@@ -33414,10 +33206,6 @@
         {
           "id": "heading.settings.188",
           "title": "Script padrão"
-        },
-        {
-          "id": "heading.settings.314",
-          "title": "Durante o salvar arquivo"
         },
         {
           "id": "heading.settings.675",
@@ -33847,8 +33635,6 @@
           "920.title": "Radio",
           "W5U-9S-4OG.title": "If Sync Opens a New Window",
           "YQv-fE-Uzg.title": "Deschide ca filă în fereastra principală",
-          "314.title": "La Salvarea Fișierelor",
-          "898.title": "Salvează Fișierele Adiacente",
           "823.title": "Metoda de sincronizare",
           "190.title": "Script personal",
           "590.title": "Fișier de motor",
@@ -36181,20 +35967,6 @@
           "value": "Deschide ca filă în fereastra principală"
         },
         {
-          "key": "314.title",
-          "view": "settings.314",
-          "kind": "view",
-          "property": "title",
-          "value": "La Salvarea Fișierelor"
-        },
-        {
-          "key": "898.title",
-          "view": "settings.316",
-          "kind": "cell",
-          "property": "title",
-          "value": "Salvează Fișierele Adiacente"
-        },
-        {
           "key": "823.title",
           "view": "settings.823",
           "kind": "view",
@@ -36463,10 +36235,6 @@
         {
           "id": "heading.settings.188",
           "title": "Scriptul Standard"
-        },
-        {
-          "id": "heading.settings.314",
-          "title": "La Salvarea Fișierelor"
         },
         {
           "id": "heading.settings.675",
@@ -36896,8 +36664,6 @@
           "920.title": "Radio",
           "W5U-9S-4OG.title": "代码同步新建窗口时",
           "YQv-fE-Uzg.title": "在主窗口打开标签页",
-          "314.title": "保存文件时",
-          "898.title": "保存相关文件",
           "823.title": "同步方式",
           "190.title": "个性化脚本",
           "590.title": "引擎文件",
@@ -39230,20 +38996,6 @@
           "value": "在主窗口打开标签页"
         },
         {
-          "key": "314.title",
-          "view": "settings.314",
-          "kind": "view",
-          "property": "title",
-          "value": "保存文件时"
-        },
-        {
-          "key": "898.title",
-          "view": "settings.316",
-          "kind": "cell",
-          "property": "title",
-          "value": "保存相关文件"
-        },
-        {
           "key": "823.title",
           "view": "settings.823",
           "kind": "view",
@@ -39512,10 +39264,6 @@
         {
           "id": "heading.settings.188",
           "title": "默认脚本"
-        },
-        {
-          "id": "heading.settings.314",
-          "title": "保存文件时"
         },
         {
           "id": "heading.settings.675",

@@ -11,7 +11,6 @@
         <outlet property="afterTypesettingMatrix" destination="678" id="682" />
         <outlet property="defaultCommandMatrix" destination="181" id="221" />
         <outlet property="defaultScriptMatrix" destination="186" id="211" />
-        <outlet property="saveRelatedButton" destination="316" id="318" />
         <outlet property="syncMatrix" destination="782" id="820" />
         <outlet property="syncTabButton" destination="odf-Ny-S9G" id="jpP-OB-XmX" />
         <outlet property="view" destination="170" id="settings-root-view" />
@@ -60,28 +59,6 @@
                   <action selector="defaultScriptChanged:" target="-2" id="212" />
                 </connections>
               </matrix>
-            </subviews>
-          </view>
-          <font key="titleFont" metaFont="system" />
-        </box>
-        <box fixedFrame="YES" title="During File Save" translatesAutoresizingMaskIntoConstraints="NO" id="314" identifier="settings.314">
-          <rect key="frame" x="335" y="457" width="225" height="50" />
-          <autoresizingMask key="autoresizingMask" />
-          <view key="contentView" id="ArE-cZ-tBv" identifier="settings.ArE-cZ-tBv">
-            <rect key="frame" x="0.0" y="0.0" width="225" height="38" />
-            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
-            <subviews>
-              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="316" identifier="settings.316">
-                <rect key="frame" x="15" y="9" width="137" height="18" />
-                <autoresizingMask key="autoresizingMask" />
-                <buttonCell key="cell" type="check" title="Save related files" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="898">
-                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
-                  <font key="font" metaFont="system" />
-                </buttonCell>
-                <connections>
-                  <action selector="saveRelatedButtonPressed:" target="-2" id="317" />
-                </connections>
-              </button>
             </subviews>
           </view>
           <font key="titleFont" metaFont="system" />
