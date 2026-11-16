@@ -61,6 +61,7 @@
 #import "TextFinder.h"
 #import "TSPreferenceLaunch.h"
 #import "TSMultipleReplaceMenu.h"
+#import "TSTeXRootSearchEntry.h"
 #import "TSAdvancedFindMenu.h"
 #import "TSSourceStatusBar.h"
 #import "TSAdvancedFindFieldStyle.h"
@@ -229,8 +230,13 @@ static void TSInstallAdvancedFindFieldStyle(void)
     dispatch_async(dispatch_get_main_queue(), ^{
         NSString *directory = [[TeXShopPath stringByStandardizingPath] stringByAppendingPathComponent:@"MultipleReplace"];
         NSMenu *mainMenu = NSApp.mainMenu;
-        if (mainMenu)
+        if (mainMenu) {
             [TSMultipleReplaceMenu installInMainMenu:mainMenu directory:[NSURL fileURLWithPath:directory isDirectory:YES]];
+            // Find in the TeX sources of the main window's root, after the Multiple Replace items.
+            TSMultipleReplaceMenu *multipleReplace = TSMultipleReplaceMenu.sharedMenu;
+            if (multipleReplace)
+                [TSTeXRootSearchEntry installInMainMenu:mainMenu findController:multipleReplace.findController library:multipleReplace.library];
+        }
         // The commands of the Advanced Find panel join AppKit's Find submenu while it is the find method.
         [TSAdvancedFindMenu startFollowingFindMethod];
     });

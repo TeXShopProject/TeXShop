@@ -563,10 +563,11 @@ static void TestPanel(NSString *_Nullable imageDirectory)
     for (NSButton *box in panel.optionBoxes)
         Check(box.controlSize == NSControlSizeSmall, @"the options row is small, as in CotEditor");
     NSComboButton *findAll = (NSComboButton *)panel.buttons[0];
-    Check(findAll.action == @selector(advancedFindAll:) && findAll.menu.numberOfItems == 4
+    Check(findAll.action == @selector(advancedFindAll:) && findAll.menu.numberOfItems == 6
           && findAll.menu.itemArray[0].action == @selector(advancedHighlight:) && findAll.menu.itemArray[1].action == @selector(advancedSelectAll:)
-          && findAll.menu.itemArray[3].action == @selector(advancedUnhighlight:),
-          @"Highlight All, Select All and Remove Highlights under Find All");
+          && findAll.menu.itemArray[3].action == @selector(advancedUnhighlight:) && findAll.menu.itemArray[4].isSeparatorItem
+          && findAll.menu.itemArray[5].action == NSSelectorFromString(@"showTeXRootSearch:"),
+          @"Highlight All, Select All and Remove Highlights under Find All, then the TeX sources of the root");
     Check([panel.window.title isEqualToString:L(@"AdvancedFind.Title", @"Find and Replace")], @"the panel's title");
 
     // The panel acts on the target text view; read-only gray-out of the replacing buttons

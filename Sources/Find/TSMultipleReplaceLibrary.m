@@ -21,6 +21,8 @@ static NSString *const TSMultipleReplaceSamplesTable = @"MultipleReplaceSamples"
 @property (nonatomic) BOOL samplesConsidered;
 @end
 
+NSNotificationName const TSMultipleReplaceLibraryDidChangeNotification = @"TSMultipleReplaceLibraryDidChangeNotification";
+
 @implementation TSMultipleReplaceLibrary
 
 + (NSString *)fileExtension
@@ -90,6 +92,14 @@ static NSString *const TSMultipleReplaceSamplesTable = @"MultipleReplaceSamples"
                                 regularExpressionOptions:sample.regularExpressionOptions replacementSyntax:sample.replacementSyntax];
 }
 
+/// Tells the window of the TeX sources of a root that a set may have changed.
+- (BOOL)changed:(BOOL)done
+{
+    if (done)
+        [NSNotificationCenter.defaultCenter postNotificationName:TSMultipleReplaceLibraryDidChangeNotification object:self];
+    return done;
+}
+
 - (BOOL)installSamples
 {
     NSFileManager *manager = NSFileManager.defaultManager;
@@ -129,7 +139,7 @@ static NSString *const TSMultipleReplaceSamplesTable = @"MultipleReplaceSamples"
     written = written && [manager moveItemAtURL:staging toURL:self.directory error:NULL];
     if (!written)
         [manager removeItemAtURL:staging error:NULL];
-    return written;
+    return [self changed:written];
 }
 
 - (nullable TSRegexMultipleReplace *)setNamed:(NSString *)name error:(NSError **)error
@@ -145,15 +155,15 @@ static NSString *const TSMultipleReplaceSamplesTable = @"MultipleReplaceSamples"
             *error = TSLibraryError(@"MultipleReplace.BadName", @"“%@” cannot be the name of a set.", name);
         return NO;
     }
-    return [self createDirectory:error] && [set.JSONData writeToURL:[self URLForName:name] options:NSDataWritingAtomic error:error];
+    return [self changed:[self createDirectory:error] && [set.JSONData writeToURL:[self URLForName:name] options:NSDataWritingAtomic error:error]];
 }
 
 - (BOOL)removeSetNamed:(NSString *)name error:(NSError **)error
 {
     NSURL *url = [self URLForName:name];
     if (self.usesTrash)
-        return [NSFileManager.defaultManager trashItemAtURL:url resultingItemURL:NULL error:error];
-    return [NSFileManager.defaultManager removeItemAtURL:url error:error];
+        return [self changed:[NSFileManager.defaultManager trashItemAtURL:url resultingItemURL:NULL error:error]];
+    return [self changed:[NSFileManager.defaultManager removeItemAtURL:url error:error]];
 }
 
 - (BOOL)renameSetNamed:(NSString *)name to:(NSString *)newName error:(NSError **)error
@@ -172,7 +182,7 @@ static NSString *const TSMultipleReplaceSamplesTable = @"MultipleReplaceSamples"
             *error = TSLibraryError(@"MultipleReplace.NameTaken", @"A set named “%@” already exists.", newName);
         return NO;
     }
-    return [NSFileManager.defaultManager moveItemAtURL:[self URLForName:name] toURL:[self URLForName:newName] error:error];
+    return [self changed:[NSFileManager.defaultManager moveItemAtURL:[self URLForName:name] toURL:[self URLForName:newName] error:error]];
 }
 
 - (NSString *)availableNameForName:(NSString *)name
