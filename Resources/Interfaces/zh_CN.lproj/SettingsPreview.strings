@@ -45,6 +45,7 @@
 "preview-cover-note-cell.title" = "Applies on opening. Magic comments and\nPDF reading direction take precedence.";
 "preview-link-popups-cell.title" = "链接预览";
 "preview-scroll-page-turn-cell.title" = "滚动时不翻页";
+"preview-arrow-keys-page-cell.title" = "左右方向键总是翻页";
 "sa2-VV-W1K.title" = "关闭时记住上一次位置";
 "tVs-uh-QcM.title" = "所有窗口从固定位置打开";
 "vOt-2m-d2s.title" = "单一窗口";

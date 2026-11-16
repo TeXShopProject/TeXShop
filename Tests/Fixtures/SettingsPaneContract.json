@@ -1997,6 +1997,13 @@
         "value": "scrollPageTurnChanged:"
       },
       {
+        "key": "preview-arrow-keys-page-button.action",
+        "view": "settings.preview-arrow-keys-page-button",
+        "kind": "view",
+        "property": "action",
+        "value": "arrowKeysPageChanged:"
+      },
+      {
         "key": "506.action",
         "view": "settings.506",
         "kind": "view",
@@ -3222,7 +3229,8 @@
           "YrC-m9-abH.title": "HTML Window Position",
           "p2D-Mi-Gyc.title": "Home URL",
           "preview-link-popups-cell.title": "Link Popups",
-          "preview-scroll-page-turn-cell.title": "Do not turn pages by scrolling"
+          "preview-scroll-page-turn-cell.title": "Do not turn pages by scrolling",
+          "preview-arrow-keys-page-cell.title": "Always turn pages with the left and right arrow keys"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -4828,6 +4836,13 @@
           "value": "Do not turn pages by scrolling"
         },
         {
+          "key": "preview-arrow-keys-page-cell.title",
+          "view": "settings.preview-arrow-keys-page-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Always turn pages with the left and right arrow keys"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -6255,7 +6270,8 @@
           "YrC-m9-abH.title": "HTML-Fenster-Postion",
           "p2D-Mi-Gyc.title": "Standard URL-Adresse",
           "preview-link-popups-cell.title": "Link-Popups",
-          "preview-scroll-page-turn-cell.title": "Beim Scrollen nicht umblättern"
+          "preview-scroll-page-turn-cell.title": "Beim Scrollen nicht umblättern",
+          "preview-arrow-keys-page-cell.title": "Mit den Pfeiltasten links und rechts immer umblättern"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -7861,6 +7877,13 @@
           "value": "Beim Scrollen nicht umblättern"
         },
         {
+          "key": "preview-arrow-keys-page-cell.title",
+          "view": "settings.preview-arrow-keys-page-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Mit den Pfeiltasten links und rechts immer umblättern"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -9288,7 +9311,8 @@
           "YrC-m9-abH.title": "Posición de ventana HTML",
           "p2D-Mi-Gyc.title": "URL base",
           "preview-link-popups-cell.title": "Desplegar enlaces",
-          "preview-scroll-page-turn-cell.title": "No pasar de página al desplazar"
+          "preview-scroll-page-turn-cell.title": "No pasar de página al desplazar",
+          "preview-arrow-keys-page-cell.title": "Pasar siempre de página con las teclas de flecha izquierda y derecha"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -10894,6 +10918,13 @@
           "value": "No pasar de página al desplazar"
         },
         {
+          "key": "preview-arrow-keys-page-cell.title",
+          "view": "settings.preview-arrow-keys-page-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Pasar siempre de página con las teclas de flecha izquierda y derecha"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -12321,7 +12352,8 @@
           "YrC-m9-abH.title": "Position de la fenêtre HTML",
           "p2D-Mi-Gyc.title": "URL personnelle",
           "preview-link-popups-cell.title": "Pop-up pour les liens",
-          "preview-scroll-page-turn-cell.title": "Ne pas changer de page en faisant défiler"
+          "preview-scroll-page-turn-cell.title": "Ne pas changer de page en faisant défiler",
+          "preview-arrow-keys-page-cell.title": "Toujours changer de page avec les touches fléchées gauche et droite"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -13927,6 +13959,13 @@
           "value": "Ne pas changer de page en faisant défiler"
         },
         {
+          "key": "preview-arrow-keys-page-cell.title",
+          "view": "settings.preview-arrow-keys-page-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Toujours changer de page avec les touches fléchées gauche et droite"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -15354,7 +15393,8 @@
           "YrC-m9-abH.title": "Posizione finestra HTML",
           "p2D-Mi-Gyc.title": "URL personale",
           "preview-link-popups-cell.title": "Collegamento popup",
-          "preview-scroll-page-turn-cell.title": "Non cambiare pagina scorrendo"
+          "preview-scroll-page-turn-cell.title": "Non cambiare pagina scorrendo",
+          "preview-arrow-keys-page-cell.title": "Cambia sempre pagina con i tasti freccia sinistra e destra"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -16960,6 +17000,13 @@
           "value": "Non cambiare pagina scorrendo"
         },
         {
+          "key": "preview-arrow-keys-page-cell.title",
+          "view": "settings.preview-arrow-keys-page-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Cambia sempre pagina con i tasti freccia sinistra e destra"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -18328,7 +18375,7 @@
           "K8n-in-y4T.title": "UTF-8-MACをUTF-8に自動変換",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "毎日",
-          "ahm-aK-Qi9.title": "otfパッケージの\\UTF / \\CIDに自動変換",
+          "ahm-aK-Qi9.title": "otfパッケージの\u2009\\UTF / \\CIDに自動変換",
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "開いたルートファイルを最小化する",
           "A9l-al-gxE.title": "Radio",
@@ -18387,7 +18434,8 @@
           "YrC-m9-abH.title": "HTMLウインドウの位置",
           "p2D-Mi-Gyc.title": "ホームURL",
           "preview-link-popups-cell.title": "リンク先をポップアップ",
-          "preview-scroll-page-turn-cell.title": "スクロールでページを送らない"
+          "preview-scroll-page-turn-cell.title": "スクロールでページを送らない",
+          "preview-arrow-keys-page-cell.title": "左右の矢印キーでいつもページを送る"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -19582,7 +19630,7 @@
           "view": "settings.spX-dz-ROL",
           "kind": "cell",
           "property": "title",
-          "value": "otfパッケージの\\UTF / \\CIDに自動変換"
+          "value": "otfパッケージの\u2009\\UTF / \\CIDに自動変換"
         },
         {
           "key": "WeQ-Qd-mPg.title",
@@ -19991,6 +20039,13 @@
           "kind": "cell",
           "property": "title",
           "value": "スクロールでページを送らない"
+        },
+        {
+          "key": "preview-arrow-keys-page-cell.title",
+          "view": "settings.preview-arrow-keys-page-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "左右の矢印キーでいつもページを送る"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -21420,7 +21475,8 @@
           "YrC-m9-abH.title": "HTML 창 위치",
           "p2D-Mi-Gyc.title": "홈 URL",
           "preview-link-popups-cell.title": "링크 팝업",
-          "preview-scroll-page-turn-cell.title": "스크롤로 페이지를 넘기지 않음"
+          "preview-scroll-page-turn-cell.title": "스크롤로 페이지를 넘기지 않음",
+          "preview-arrow-keys-page-cell.title": "왼쪽·오른쪽 화살표 키로 항상 페이지를 넘김"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -23026,6 +23082,13 @@
           "value": "스크롤로 페이지를 넘기지 않음"
         },
         {
+          "key": "preview-arrow-keys-page-cell.title",
+          "view": "settings.preview-arrow-keys-page-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "왼쪽·오른쪽 화살표 키로 항상 페이지를 넘김"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -24453,7 +24516,8 @@
           "YrC-m9-abH.title": "HTML Window Position",
           "p2D-Mi-Gyc.title": "Start-URL",
           "preview-link-popups-cell.title": "Beweeg pop-ups",
-          "preview-scroll-page-turn-cell.title": "Niet bladeren door te scrollen"
+          "preview-scroll-page-turn-cell.title": "Niet bladeren door te scrollen",
+          "preview-arrow-keys-page-cell.title": "Altijd bladeren met de pijltoetsen links en rechts"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -26059,6 +26123,13 @@
           "value": "Niet bladeren door te scrollen"
         },
         {
+          "key": "preview-arrow-keys-page-cell.title",
+          "view": "settings.preview-arrow-keys-page-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Altijd bladeren met de pijltoetsen links en rechts"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -27486,7 +27557,8 @@
           "YrC-m9-abH.title": "HTML Window Position",
           "p2D-Mi-Gyc.title": "URL inicial",
           "preview-link-popups-cell.title": "Pop-ups de links",
-          "preview-scroll-page-turn-cell.title": "Não mudar de página ao deslocar"
+          "preview-scroll-page-turn-cell.title": "Não mudar de página ao deslocar",
+          "preview-arrow-keys-page-cell.title": "Mudar sempre de página com as teclas de seta esquerda e direita"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -29092,6 +29164,13 @@
           "value": "Não mudar de página ao deslocar"
         },
         {
+          "key": "preview-arrow-keys-page-cell.title",
+          "view": "settings.preview-arrow-keys-page-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Mudar sempre de página com as teclas de seta esquerda e direita"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -30519,7 +30598,8 @@
           "YrC-m9-abH.title": "Posição da janela HTML",
           "p2D-Mi-Gyc.title": "URL inicial",
           "preview-link-popups-cell.title": "Pop-ups de links",
-          "preview-scroll-page-turn-cell.title": "Não mudar de página ao rolar"
+          "preview-scroll-page-turn-cell.title": "Não mudar de página ao rolar",
+          "preview-arrow-keys-page-cell.title": "Sempre mudar de página com as teclas de seta esquerda e direita"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -32125,6 +32205,13 @@
           "value": "Não mudar de página ao rolar"
         },
         {
+          "key": "preview-arrow-keys-page-cell.title",
+          "view": "settings.preview-arrow-keys-page-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Sempre mudar de página com as teclas de seta esquerda e direita"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -33552,7 +33639,8 @@
           "YrC-m9-abH.title": "HTML Window Position",
           "p2D-Mi-Gyc.title": "URL inițial",
           "preview-link-popups-cell.title": "Ferestre pop-up",
-          "preview-scroll-page-turn-cell.title": "Nu schimba pagina la derulare"
+          "preview-scroll-page-turn-cell.title": "Nu schimba pagina la derulare",
+          "preview-arrow-keys-page-cell.title": "Schimbă mereu pagina cu tastele săgeată stânga și dreapta"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -35158,6 +35246,13 @@
           "value": "Nu schimba pagina la derulare"
         },
         {
+          "key": "preview-arrow-keys-page-cell.title",
+          "view": "settings.preview-arrow-keys-page-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Schimbă mereu pagina cu tastele săgeată stânga și dreapta"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -36585,7 +36680,8 @@
           "YrC-m9-abH.title": "HTML窗口位置",
           "p2D-Mi-Gyc.title": "主页URL",
           "preview-link-popups-cell.title": "链接预览",
-          "preview-scroll-page-turn-cell.title": "滚动时不翻页"
+          "preview-scroll-page-turn-cell.title": "滚动时不翻页",
+          "preview-arrow-keys-page-cell.title": "左右方向键总是翻页"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -38189,6 +38285,13 @@
           "kind": "cell",
           "property": "title",
           "value": "滚动时不翻页"
+        },
+        {
+          "key": "preview-arrow-keys-page-cell.title",
+          "view": "settings.preview-arrow-keys-page-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "左右方向键总是翻页"
         },
         {
           "key": "Sb3-3h-ll4.title",

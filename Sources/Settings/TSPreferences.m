@@ -1825,6 +1825,12 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
     [SUD setBool:sender.state == NSControlStateValueOn forKey:NoScrollPageTurnKey];
 }
 
+// Whether the left and right arrow keys turn pages also when a zoomed page can scroll sideways.
+- (IBAction)arrowKeysPageChanged:(NSButton *)sender
+{
+    [SUD setBool:sender.state == NSControlStateValueOn forKey:LeftRightArrowsAlwaysPageKey];
+}
+
 - (IBAction)sourceAndPreviewInSameWindowChanged:sender
 {
     NSInteger myTag = [sender tag];

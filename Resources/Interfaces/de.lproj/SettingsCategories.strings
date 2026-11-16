@@ -214,6 +214,8 @@
 "catalog.preview.0.3.title" = "Standard Maus-Modus";
 "catalog.preview.0.4.title" = "Beim Scrollen nicht umblättern";
 "catalog.preview.0.4.note" = "Bei „Einzelseiten“ und „Doppelseiten“ hält das Scrollen mit dem Mausrad oder dem Trackpad am oberen und unteren Rand der Seite an.";
+"catalog.preview.0.5.title" = "Mit den Pfeiltasten links und rechts immer umblättern";
+"catalog.preview.0.5.note" = "Auch wenn eine vergrößerte Seite breiter als das Fenster ist, blättern die Pfeiltasten links und rechts um, statt seitlich zu scrollen.";
 "catalog.preview.0.6.title" = "Link-Popups";
 "catalog.preview.0.6.note" = "Anfangswert für Dokumente, die Sie danach öffnen. In einem geöffneten Dokument im Menü „Vorschau“ umschalten.";
 "group.preview.1.title" = "Doppelseiten-Modus";

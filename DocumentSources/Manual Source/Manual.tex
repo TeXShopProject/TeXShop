@@ -2567,6 +2567,8 @@ The Preview window can display a pdf as one long scrollable document; this is ca
 
 In Single Page Mode and Double Page Mode, scrolling past the top or bottom of a page with the mouse wheel or the trackpad moves to the previous or next page, as in Apple's Preview. To make scrolling stop at the edge of the page instead, turn on ``Do not turn pages by scrolling'' under Display in the Preview category of TeXShop Settings. The keyboard, the Preview menu and the page buttons in the toolbar still move to other pages.
 
+The left and right arrow keys scroll sideways when a zoomed page is wider than the window, and otherwise move to the previous or next page. Starting with TeXShop 6.00, the item ``Always turn pages with the left and right arrow keys'' under Display in the Preview category of TeXShop Settings makes these keys always move to the previous or next page. Earlier versions used the hidden setting LeftRightArrowsAlwaysPage.
+
 As usual, items under the Preview category of TeXShop Settings select the behavior to use when documents first start, but the mode for a particular document can later be changed using an item in the Preview menu.
 
 The  modes showing two pages side by side are controlled by the item ``Page direction'' in the Two-Page Arrangement group of the Preview category of TeXShop Settings, which allows users to select ``Left to Right'' or
@@ -6822,7 +6824,7 @@ NSTextInputTraitTypeDefault, so the system setting decides. Any other value leav
 These settings work around bugs that were later permanently fixed, or were created for
 older versions of the program.
 
-TeXShop 6.00 no longer reads the following settings in this section, so setting them has no effect: DoNotFixTeXCrash, DisplayLogInfo, UseTerminationHandler, RepeatTypesetOnError13, SourceScrollElasticity, FixLineNumberScroll, YosemiteScrollBug, FixSplitBlankPages, ContinuousHighSierraFix, ScreenFontForLogAndConsole, SyncTeXOnly, ReleaseDocumentClasses, and FixPreviewBlur. The color settings at the end of this section no longer set colors directly, as explained there. The following settings in this section still work, but are seldom needed: FlashFix, FlashDelay, ResetSourceTextColorEachTime, InterpolationValue, IgnoreStartOnReboot, ShowSyncMarks, UseOldHeadingCommands, LeftRightArrowsAlwaysPage, RedConsoleAfterError, and brieflyFlashYellowForMatch.
+TeXShop 6.00 no longer reads the following settings in this section, so setting them has no effect: DoNotFixTeXCrash, DisplayLogInfo, UseTerminationHandler, RepeatTypesetOnError13, SourceScrollElasticity, FixLineNumberScroll, YosemiteScrollBug, FixSplitBlankPages, ContinuousHighSierraFix, ScreenFontForLogAndConsole, SyncTeXOnly, ReleaseDocumentClasses, and FixPreviewBlur. The color settings at the end of this section no longer set colors directly, as explained there. The following settings in this section still work, but are seldom needed: FlashFix, FlashDelay, ResetSourceTextColorEachTime, InterpolationValue, IgnoreStartOnReboot, ShowSyncMarks, UseOldHeadingCommands, RedConsoleAfterError, and brieflyFlashYellowForMatch. LeftRightArrowsAlwaysPage is now an item in TeXShop Settings, as explained in Display Modes.
 
 \subsubsection{<Obsolete Settings Introduced To Fix a Bug>}
 
@@ -6922,11 +6924,6 @@ TeXShop used to support a different set of source commands to determine the type
  This syntax was a poor choice on my part and has been changed. If you have a lot of old documents, you can temporarily turn this choice back on using the command below. This setting change should only be made in an emergency.
 \begin{verbatim}
    defaults write TeXShop UseOldHeadingCommands YES
-\end{verbatim}
-
-The left and right arrow keys scroll left and right if the preview page is narrower than the total page width, but otherwise they page up and down. A hidden setting changes this behavior so the left and right arrow keys always page.
-\begin{verbatim}
-   defaults write TeXShop LeftRightArrowsAlwaysPage YES
 \end{verbatim}
 
 The console text reporting typesetting behavior and errors shows black text. With a hidden setting, text typed in the console to answer a TeX error, and all later output of that run, is shown in red.

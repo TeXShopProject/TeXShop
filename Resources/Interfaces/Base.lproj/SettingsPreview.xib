@@ -16,6 +16,7 @@
         <outlet property="htmlWindowPosMatrix" destination="4qx-Bg-9Ii" id="oZo-Fd-y5r" />
         <outlet property="linkPopupsButton" destination="preview-link-popups-button" id="preview-link-popups-outlet" />
         <outlet property="scrollPageTurnButton" destination="preview-scroll-page-turn-button" id="preview-scroll-page-turn-outlet" />
+        <outlet property="arrowKeysPageButton" destination="preview-arrow-keys-page-button" id="preview-arrow-keys-page-outlet" />
         <outlet property="magTextField" destination="113" id="114" />
         <outlet property="mouseModePopup" destination="345" id="371" />
         <outlet property="pageStylePopup" destination="340" id="372" />
@@ -299,6 +300,17 @@
                 </buttonCell>
                 <connections>
                   <action selector="scrollPageTurnChanged:" target="-2" id="preview-scroll-page-turn-action" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="preview-arrow-keys-page-button" identifier="settings.preview-arrow-keys-page-button">
+                <rect key="frame" x="19" y="9" width="215" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <buttonCell key="cell" type="check" title="Always turn pages with the left and right arrow keys" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="preview-arrow-keys-page-cell">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="arrowKeysPageChanged:" target="-2" id="preview-arrow-keys-page-action" />
                 </connections>
               </button>
             </subviews>

@@ -214,6 +214,8 @@
 "catalog.preview.0.3.title" = "Réglage de la souris par défaut";
 "catalog.preview.0.4.title" = "Ne pas changer de page en faisant défiler";
 "catalog.preview.0.4.note" = "En « Page simple » et « Page double », le défilement avec la molette de la souris ou le trackpad s’arrête en haut et en bas de la page.";
+"catalog.preview.0.5.title" = "Toujours changer de page avec les touches fléchées gauche et droite";
+"catalog.preview.0.5.note" = "Même quand une page agrandie est plus large que la fenêtre, les touches fléchées gauche et droite changent de page au lieu de faire défiler horizontalement.";
 "catalog.preview.0.6.title" = "Pop-up pour les liens";
 "catalog.preview.0.6.note" = "Valeur initiale des documents ouverts désormais. Pour un document ouvert, utilisez le menu « Page ».";
 "group.preview.1.title" = "Page double (variantes)";

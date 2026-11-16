@@ -117,6 +117,7 @@
     _displayAsBookButton = preview.displayAsBookButton;
     _linkPopupsButton = preview.linkPopupsButton;
     _scrollPageTurnButton = preview.scrollPageTurnButton;
+    _arrowKeysPageButton = preview.arrowKeysPageButton;
     _firstPageMatrix = preview.firstPageMatrix;
     _htmlWindowPosButton = preview.htmlWindowPosButton;
     _htmlWindowPosMatrix = preview.htmlWindowPosMatrix;
