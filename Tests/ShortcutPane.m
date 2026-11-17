@@ -117,6 +117,9 @@ static NSInteger ClickedRow(id self,SEL cmd){return fixtureClickedRow;}
 static NSInteger ClickedColumn(id self,SEL cmd){return fixtureClickedColumn;}
 static void (^sheetReply)(NSModalResponse);
 static void CaptureSheet(id self,SEL cmd,NSWindow *parent,void (^reply)(NSModalResponse)){sheetParent=parent;sheetReply=[reply copy];}
+@interface TSShortcutPaneController (InactiveReason)
+- (NSString *)inactiveReasonForMatch:(TSShortcutMatch *)match;
+@end
 @interface ProbePane:TSShortcutPaneController
 @property NSString *lastError;
 @end
@@ -236,6 +239,10 @@ int main(int argc,char **argv){@autoreleasepool{
  for(NSString *key in @[@"q",@"w",@",",@"h",@"[",@"]"]){fixtureCharacters=key;REQUIRE([shell.window performKeyEquivalent:Event(key,C,0)] && pane.searchingByKey && [shell.history.currentIdentifier isEqual:TSSettingsCategoryKeyboard]);}
  fixtureCharacters=@"f";[shell.window keyDown:Event(@"f",C,3)];REQUIRE(pane.searchMatches.count==3 && pane.table.selectedRow==0 && [pane macroHeaderRow]==2);
  REQUIRE(pane.selectionButtons[0].enabled && !pane.macroButton.enabled);
+ // A macro file can name a key that recording refuses (Control-Escape belongs to the marks): it never runs, and the list says why.
+ { NSArray<TSShortcutMatch *> *refused=[TSShortcutSearch matchesKey:@"\x1b" modifiers:NSEventModifierFlagControl store:coordinator.store macros:@[Macro(@"Control-Escape",@"\x1b",NSEventModifierFlagControl,80)]];
+   REQUIRE(refused.count==1 && refused[0].macro!=nil && !refused[0].winner);
+   REQUIRE([[pane inactiveReasonForMatch:refused[0]] isEqual:[TSShortcutStore reasonForMacroConflict:@{@"refused":@YES}]] && [[pane inactiveReasonForMatch:refused[0]] containsString:@"cannot be used"]); }
  // Inactive matches: the path line plus the settings warning style (yellow triangle, small label-colored text) that fits its row.
  REQUIRE([pane.table.tableColumns[0].identifier isEqual:@"command"]);
  NSTextField *assigned=(NSTextField *)[pane tableView:pane.table viewForTableColumn:pane.table.tableColumns[0] row:0];

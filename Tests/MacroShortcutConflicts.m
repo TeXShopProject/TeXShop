@@ -273,6 +273,24 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE([macroMenu.itemArray[3].keyEquivalent isEqual:f5] && macroMenu.itemArray[3].keyEquivalentModifierMask==0);
     REQUIRE([macroMenu.itemArray[4].keyEquivalent isEqual:@"j"] && macroMenu.itemArray[4].keyEquivalentModifierMask==(cmd|control));
     REQUIRE([store conflictsForMacroShortcuts:@[Candidate(@"Control only",@"j",control),Candidate(@"Saved before",@"j",cmd|control)]].count==0);
+    // Command completion and the mark keys own Tab and Escape, with or without Shift, Option or Control.
+    // Recording refuses them; a macro file that names one gets no shortcut, and says why.
+    NSString *refusal=[TSShortcutStore reasonForMacroConflict:@{@"refused":@YES}];
+    REQUIRE([refusal isEqual:NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.", @"")]);
+    NSArray *reservedKeys=@[@"\t+NoCommandKey",@"\x19+ShiftKey+NoCommandKey",@"\t+ShiftKey+NoCommandKey",@"\x1b+NoCommandKey",@"\x1b+ShiftKey+NoCommandKey",
+        @"\t+ControlKey+NoCommandKey",@"\t+OptionKey+NoCommandKey",@"\x1b+ControlKey+NoCommandKey",@"\x1b+OptionKey+NoCommandKey",@"\x1b",@"\t+ControlKey"];
+    NSMutableArray *reservedMacros=[NSMutableArray array];
+    for (NSString *key in reservedKeys) [reservedMacros addObject:Macro([@"Reserved " stringByAppendingString:key],key)];
+    [reservedMacros addObject:Macro(@"After them",@"J+ControlKey+NoCommandKey")];
+    macros.macroDict=@{@"submenu":reservedMacros};
+    [coordinator refreshMenuAndMacros];
+    for (NSUInteger n=0; n<reservedKeys.count; n++)
+        REQUIRE(macroMenu.itemArray[2+n].keyEquivalent.length==0 && [macroMenu.itemArray[2+n].toolTip isEqual:refusal]);
+    REQUIRE([macroMenu.itemArray[2+reservedKeys.count].keyEquivalent isEqual:@"j"] && macroMenu.itemArray[2+reservedKeys.count].toolTip==nil);
+    NSArray *refused=[store conflictsForMacroShortcuts:@[Candidate(@"Control-Escape",@"\x1b",control),Candidate(@"Control-J",@"j",control),Candidate(@"Escape",@"\x1b",0)]];
+    REQUIRE(refused.count==2 && [refused[0][@"index"] isEqual:@0] && [refused[1][@"index"] isEqual:@2]
+            && [[TSShortcutStore reasonForMacroConflict:refused[0]] isEqual:refusal] && [[TSShortcutStore reasonForMacroConflict:refused[1]] isEqual:refusal]);
+    puts("PASS: macro files cannot give Tab or Escape, with any modifier, to a macro; the item says why");
     puts("PASS: macro keys without Command (+NoCommandKey) and function keys; keys saved before keep Command");
     puts("PASS: effective menu precedence, freed defaults, takeover confirmation/cancel, restore, engine changes and inactive tooltip");
     NSMenu *services=[NSMenu new];NSApp.servicesMenu=services;NSMenuItem *serviceParent=[[NSMenuItem alloc] initWithTitle:@"Services" action:nil keyEquivalent:@""];serviceParent.submenu=services;[menu addItem:serviceParent];

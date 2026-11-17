@@ -438,6 +438,8 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 // Why a key-search match does not run for the searched key; nil for the match that runs.
 - (NSString *)inactiveReasonForMatch:(TSShortcutMatch *)match {
     if (match == nil || match.winner) { return nil; }
+    if (match.macro && ![TSShortcutStore isAllowedKey:match.macro.key modifiers:match.macro.modifiers])
+        return [TSShortcutStore reasonForMacroConflict:@{@"refused":@YES}];
     for (TSShortcutMatch *owner in self.searchMatches) {
         if (!owner.winner) continue;
         NSString *ownerKey = owner.macro ? owner.macro.key : owner.menuItem.keyEquivalent;
