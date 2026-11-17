@@ -25,10 +25,11 @@
     </header>
     <main class="archive-content release-notes">
         <h1>変更履歴</h1>
+<nav class="release-notes-contents" aria-label="目次"><ul><li><a href="#v6.00">TeXShop 6.00</a><ul><li><a href="#v6.00-main-changes">主な変更</a></li><li><a href="#v6.00-advanced-find-panel">詳細検索パネル</a></li><li><a href="#v6.00-latex-aware-spell-checking">LaTeXの構文を考慮するスペルチェック</a></li><li><a href="#v6.00-preview">プレビュー</a></li><li><a href="#v6.00-editing">編集</a></li><li><a href="#v6.00-settings-window">設定画面</a></li><li><a href="#v6.00-app-icon-and-appearance">アプリのアイコンと見た目</a></li><li><a href="#v6.00-changes-in-behavior-from-earlier-versions">以前の版から変わった動き</a></li><li><a href="#v6.00-fixes-typesetting-and-the-console">不具合の修正：タイプセットとコンソール</a></li><li><a href="#v6.00-fixes-preview">不具合の修正：プレビュー</a></li><li><a href="#v6.00-fixes-opening-and-saving-documents">不具合の修正：書類の読み書き</a></li><li><a href="#v6.00-fixes-editing-and-other">不具合の修正：編集とその他</a></li><li><a href="#v6.00-manual-help-and-bundled-tools">マニュアル・ヘルプ・同梱ツール</a></li></ul></li><li><a href="#v5.59">TeXShop 5.59</a></li></ul></nav>
         <article id="v6.00"><h2 id="v5.60">TeXShop 6.00</h2><p class="release-date">準備中 · <a href="https://github.com/TeXShopProject/TeXShop/releases">最新のベータを試す</a></p>
 <!-- release-status: draft -->
 <p>TeXShop 6.00は、TeXShop 5.59の次の版です。新しい検索パネル、LaTeXの構文を考慮するスペルチェック、固定できるリンクのポップアップ、新しい設定画面、ステータスバーが加わり、多くの不具合を修正しました。</p>
-<h3>主な変更</h3>
+<h3 id="v6.00-main-changes">主な変更</h3>
 <ul>
 <li><strong>詳細検索パネル</strong>：正規表現を使える新しい検索パネルで、すべての一致の一覧や複数置換、同じ親ファイルを持つファイル群の一括検索・置換ができるようになりました。</li>
 <li><strong>LaTeXの構文を考慮するスペルチェック</strong>：TeXの命令や数式を飛ばして、本文だけをスペルチェックできるようになりました。</li>
@@ -36,18 +37,18 @@
 <li><strong>設定画面</strong>：サイドバーと検索欄を備えた、新しい設定画面になりました。</li>
 <li><strong>ステータスバー</strong>：ソースの下に、行数・文字数・単語数が表示されるようになりました。</li>
 </ul>
-<h3>詳細検索パネル</h3>
+<h3 id="v6.00-advanced-find-panel">詳細検索パネル</h3>
 <ul>
 <li>正規表現を使える新しい検索パネル「詳細検索パネル」が加わりました。「すべて検索」で一致を一覧にし、「すべてハイライト」で本文に示せます。<figure class="note-shot"><img class="shot-light" src="assets/whats-new/ja/advanced-find.png" width="600" height="494" alt="正規表現を入れた詳細検索パネルと、すべての一致の一覧、ソースで強調された一致" loading="lazy"><img class="shot-dark" src="assets/whats-new/ja/advanced-find-dark.png" width="600" height="494" alt="正規表現を入れた詳細検索パネルと、すべての一致の一覧、ソースで強調された一致" loading="lazy"></figure></li>
 <li>「複数置換」で、登録した検索と置換の組をまとめて適用できるようになりました。<figure class="note-shot"><img class="shot-light" src="assets/release-notes/ja/multiple-replace.png" width="600" height="269" alt="検索と置換の組を4つ並べた複数置換の窓" loading="lazy"><img class="shot-dark" src="assets/release-notes/ja/multiple-replace-dark.png" width="600" height="269" alt="検索と置換の組を4つ並べた複数置換の窓" loading="lazy"></figure></li>
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、同じ親ファイルを持つファイル群をまとめて検索・置換できるようになりました。「TeXソースの検索と置換」の窓で、ルートファイルと、それをTEX rootに指定しているTeXソースの一致を一覧にし、置換の前後を確かめてから、バックアップを保存して一度に置換できます（「編集」→「検索」→「同じTEX rootを持つTeXソースを検索…」）（<a href="https://github.com/TeXShopProject/TeXShop/issues/45">#45</a>）。<figure class="note-shot"><a class="shot-light" href="assets/release-notes/ja/texroot-entry-menu.png"><img src="assets/release-notes/ja/texroot-entry-menu.png" width="442" height="520" alt="「編集」メニューの「検索」サブメニューを開き、「同じTEX rootを持つTeXソースを検索…」を選んだところ" loading="lazy"></a><a class="shot-dark" href="assets/release-notes/ja/texroot-entry-menu-dark.png"><img src="assets/release-notes/ja/texroot-entry-menu-dark.png" width="442" height="520" alt="「編集」メニューの「検索」サブメニューを開き、「同じTEX rootを持つTeXソースを検索…」を選んだところ" loading="lazy"></a><figcaption>「編集」→「検索」→「同じTEX rootを持つTeXソースを検索…」</figcaption></figure><figure class="note-shot"><a class="shot-light" href="assets/release-notes/ja/texroot-entry-panel.png"><img src="assets/release-notes/ja/texroot-entry-panel.png" width="649" height="468" alt="詳細検索パネルの「すべて検索」のメニューを開き、「同じTEX rootを持つTeXソースを検索…」を選んだところ" loading="lazy"></a><a class="shot-dark" href="assets/release-notes/ja/texroot-entry-panel-dark.png"><img src="assets/release-notes/ja/texroot-entry-panel-dark.png" width="649" height="469" alt="詳細検索パネルの「すべて検索」のメニューを開き、「同じTEX rootを持つTeXソースを検索…」を選んだところ" loading="lazy"></a><figcaption>詳細検索パネルの「すべて検索」のメニュー</figcaption></figure><figure class="note-shot"><a class="shot-light" href="assets/release-notes/ja/texroot-entry-mr.png"><img src="assets/release-notes/ja/texroot-entry-mr.png" width="800" height="341" alt="複数置換の窓の「すべて置き換え」のメニューを開き、「同じTEX rootを持つTeXソースに適用…」を選んだところ" loading="lazy"></a><a class="shot-dark" href="assets/release-notes/ja/texroot-entry-mr-dark.png"><img src="assets/release-notes/ja/texroot-entry-mr-dark.png" width="800" height="341" alt="複数置換の窓の「すべて置き換え」のメニューを開き、「同じTEX rootを持つTeXソースに適用…」を選んだところ" loading="lazy"></a><figcaption>複数置換の窓の「すべて置き換え」のメニュー</figcaption></figure></li>
 <li>正規表現の早見表を開けるようになり、コンソール、ログ、「実験」のウインドウでも検索できるようになりました。</li>
 </ul>
-<h3>LaTeXの構文を考慮するスペルチェック</h3>
+<h3 id="v6.00-latex-aware-spell-checking">LaTeXの構文を考慮するスペルチェック</h3>
 <ul>
 <li><a href="https://github.com/ralphrmartin">Ralph Martin</a>氏と<a href="https://github.com/herbs">Herb Schulz</a>氏の提案・報告と、<a href="https://github.com/TeXShopProject/TeXShop/pull/40">PR #40</a>などでの<a href="https://github.com/ralphrmartin">Ralph Martin</a>氏の提供により、TeXの命令やコメント、数式、文章でない引数を飛ばして、本文だけをスペルチェックできるようになりました。スペルチェックパネルと辞書の選択も使いやすくなり、長い書類で見つけた誤りも表示されるようになりました（<a href="https://github.com/TeXShopProject/TeXShop/issues/32">#32</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/38">#38</a>）。<figure class="note-shot"><img class="shot-light" src="assets/whats-new/ja/spell.png" width="519" height="560" alt="LaTeXのソースの本文で印の付いた2つの綴りの誤りと、「すべて変更」の欄に候補が入ったスペルのパネル" loading="lazy"><img class="shot-dark" src="assets/whats-new/ja/spell-dark.png" width="519" height="560" alt="LaTeXのソースの本文で印の付いた2つの綴りの誤りと、「すべて変更」の欄に候補が入ったスペルのパネル" loading="lazy"></figure></li>
 </ul>
-<h3>プレビュー</h3>
+<h3 id="v6.00-preview">プレビュー</h3>
 <ul>
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案と報告により、リンク先のポップアップが読みやすくなり、Optionキーで固定したり、Controlキーで表示を切り替えたりできるようになりました（<a href="https://github.com/TeXShopProject/TeXShop/issues/7">#7</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/10">#10</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/12">#12</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/14">#14</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/17">#17</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/30">#30</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/35">#35</a>）。<figure class="note-shot"><img class="shot-light" src="assets/whats-new/ja/link-preview.png" width="386" height="560" alt="2ページの定理1を示す固定したリンクのポップアップ。右下にページのラベル" loading="lazy"><img class="shot-dark" src="assets/whats-new/ja/link-preview-dark.png" width="386" height="560" alt="2ページの定理1を示す固定したリンクのポップアップ。右下にページのラベル" loading="lazy"></figure></li>
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、分割したプレビューウインドウで、リンク先をもう一方に表示したり、二つの部分を入れ替えたりできるようになりました（<a href="https://github.com/TeXShopProject/TeXShop/issues/14">#14</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/25">#25</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/31">#31</a>）。<a href="https://github.com/felix-finster">Felix Finster</a>氏の提案により、ソースとプレビューを一つにしたウインドウは、前の境界線の位置で開きます（<a href="https://github.com/TeXShopProject/TeXShop/issues/26">#26</a>）。<figure class="note-shot"><img class="shot-light" src="assets/whats-new/ja/split-preview.png" width="386" height="560" alt="「ウインドウを分割してリンク先を表示」で分割したプレビューウインドウ。作業中の部分に線" loading="lazy"><img class="shot-dark" src="assets/whats-new/ja/split-preview-dark.png" width="386" height="560" alt="「ウインドウを分割してリンク先を表示」で分割したプレビューウインドウ。作業中の部分に線" loading="lazy"></figure></li>
@@ -55,7 +56,7 @@
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏と<a href="https://github.com/svb-bit">svb-bit</a>氏の提案と報告により、「内容の幅に合わせて拡大」と「内容の幅に合わせる」、スクロールでページを送らない設定、どの倍率でも使える拡大鏡が加わり、ドロワーのアウトラインはタイプセットし直しても保たれるようになりました（<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/19">#19</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/33">#33</a>）。latexmkなどほかのアプリがPDFを書き換えても、プレビューは同じ位置のまま更新されます。<figure class="note-shot"><img class="shot-light" src="assets/release-notes/ja/settings-preview.png" width="600" height="450" alt="「スクロールでページを送らない」「リンク先をポップアップ」「先頭ページを表紙として単独表示」のある設定の「プレビュー」" loading="lazy"><img class="shot-dark" src="assets/release-notes/ja/settings-preview-dark.png" width="600" height="450" alt="「スクロールでページを送らない」「リンク先をポップアップ」「先頭ページを表紙として単独表示」のある設定の「プレビュー」" loading="lazy"></figure></li>
 <li>Bruno Voisin氏と<a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、プレビューのツールバーがmacOSの「プレビュー」アプリと同じアイコンになり、ツールチップとページレイアウトのメニューが加わりました（<a href="https://github.com/TeXShopProject/TeXShop/issues/28">#28</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/34">#34</a>）。<figure class="note-shot"><img class="shot-light" src="assets/release-notes/ja/preview-toolbar.png" width="600" height="244" alt="「戻る／進む」の山形とページレイアウトのメニューがあるプレビューウインドウのツールバー" loading="lazy"><img class="shot-dark" src="assets/release-notes/ja/preview-toolbar-dark.png" width="600" height="244" alt="「戻る／進む」の山形とページレイアウトのメニューがあるプレビューウインドウのツールバー" loading="lazy"></figure></li>
 </ul>
-<h3>編集</h3>
+<h3 id="v6.00-editing">編集</h3>
 <ul>
 <li><a href="https://github.com/martignoni">Nicolas Martignoni</a>氏の提案により、Command＋0で書類のコンソールを表示できるようになりました（<a href="https://github.com/TeXShopProject/TeXShop/issues/2">#2</a>）。</li>
 <li>行番号をクリックまたはドラッグして、行をまとめて選択できるようになりました。<figure class="note-shot"><img class="shot-light" src="assets/whats-new/ja/line-numbers.png" width="551" height="560" alt="行番号の上をドラッグして27〜31行を選択したソースウインドウ" loading="lazy"><img class="shot-dark" src="assets/whats-new/ja/line-numbers-dark.png" width="551" height="560" alt="行番号の上をドラッグして27〜31行を選択したソースウインドウ" loading="lazy"></figure></li>
@@ -66,7 +67,7 @@
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案と報告により、「実験」で書類の画像や参照を使ってタイプセットでき、ソースも書類と同じように表示されるようになりました（<a href="https://github.com/TeXShopProject/TeXShop/issues/8">#8</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/20">#20</a>）。<figure class="note-shot"><img class="shot-light" src="assets/release-notes/ja/experiment.png" width="572" height="431" alt="定理1を参照する断片を入れた「実験」のソースのパネルと、それを組んだ「実験」のプレビュー" loading="lazy"><img class="shot-dark" src="assets/release-notes/ja/experiment-dark.png" width="572" height="431" alt="定理1を参照する断片を入れた「実験」のソースのパネルと、それを組んだ「実験」のプレビュー" loading="lazy"></figure></li>
 <li>「タグ」メニューがいつも最新の内容になり、「文字情報」で文字の詳しい情報が表示されるようになりました。</li>
 </ul>
-<h3>設定画面</h3>
+<h3 id="v6.00-settings-window">設定画面</h3>
 <ul>
 <li>設定画面を、「一般」「書類と保存」「エディタ」「キーボード」「スペルチェック」「テーマ」「タイプセット」「コンソール」「プレビュー」「アップデート」の10分類のサイドバーで構成しました。「設定を検索」で、設定の項目を探せるようになりました。<figure class="note-shot"><img class="shot-light" src="assets/whats-new/ja/settings.png" width="600" height="450" alt="分類のサイドバーと「一般」を示す設定画面" loading="lazy"><img class="shot-dark" src="assets/whats-new/ja/settings-dark.png" width="600" height="450" alt="分類のサイドバーと「一般」を示す設定画面" loading="lazy"></figure></li>
 <li>「パスの自動検出…」で、TeXとGhostscriptのインストール先を自動で設定できるようになりました。<figure class="note-shot"><img class="shot-light" src="assets/release-notes/ja/detect-paths.png" width="600" height="450" alt="見つかったTeXとGhostscriptを並べた「パスの自動検出」のシート" loading="lazy"><img class="shot-dark" src="assets/release-notes/ja/detect-paths-dark.png" width="600" height="450" alt="見つかったTeXとGhostscriptを並べた「パスの自動検出」のシート" loading="lazy"></figure></li>
@@ -76,14 +77,14 @@
 <li>オートセーブとバージョンのオフ、見開きの表紙の単独表示、@をコマンド名と見なす色分け、expl3の色分け、不可視文字の印、左右の矢印キーでいつもページを送るかどうか、詳細検索パネルを常に手前に表示するかどうかなどを設定できるようになり、ウインドウの不透明度を数値欄でも変えられるようになりました。</li>
 <li>「一般」からマジックコメントと隠し設定の説明を開けます。</li>
 </ul>
-<h3>アプリのアイコンと見た目</h3>
+<h3 id="v6.00-app-icon-and-appearance">アプリのアイコンと見た目</h3>
 <ul>
 <li><a href="https://github.com/LaTeX-fetishist">LaTeX fetishist</a>氏と<a href="https://github.com/martignoni">Nicolas Martignoni</a>氏の提案により、新しいアプリアイコンになり、起動中のDockのアイコンを歴代のデザインから選べるようになりました（<a href="https://github.com/TeXShopProject/TeXShop/issues/3">#3</a>）。<figure class="note-shot"><img class="shot-light" src="assets/whats-new/ja/dock-icons.png" width="600" height="450" alt="設定の「一般」にあるDockアイコンの選択肢" loading="lazy"><img class="shot-dark" src="assets/whats-new/ja/dock-icons-dark.png" width="600" height="450" alt="設定の「一般」にあるDockアイコンの選択肢" loading="lazy"></figure></li>
 <li>macOS 26以降では、Liquid Glassの外観で表示されるようになりました。</li>
 <li>行番号の桁がそろい、行列パネルとLaTeXパネルがダークモードでも見やすくなりました。</li>
 <li>同梱のテーマで読みにくかったコメントなどの色を、読みやすくしました。</li>
 </ul>
-<h3>以前の版から変わった動き</h3>
+<h3 id="v6.00-changes-in-behavior-from-earlier-versions">以前の版から変わった動き</h3>
 <ul>
 <li><strong>スペルチェック</strong>：LaTeXの構文を考慮するスペルチェックが初めから有効です。「設定」→「スペルチェック」で「従来の方式」に戻せます。<figure class="note-shot"><img class="shot-light" src="assets/release-notes/ja/settings-spelling.png" width="600" height="450" alt="LaTeXの構文を考慮するスペルチェックと従来の方式がある設定の「スペルチェック」" loading="lazy"><img class="shot-dark" src="assets/release-notes/ja/settings-spelling-dark.png" width="600" height="450" alt="LaTeXの構文を考慮するスペルチェックと従来の方式がある設定の「スペルチェック」" loading="lazy"></figure></li>
 <li><strong>検索</strong>：検索パネルは詳細検索パネルになります。「設定」→「エディタ」の「検索パネル」で元に戻せます。<figure class="note-shot"><img class="shot-light" src="assets/release-notes/ja/settings-find-panel.png" width="600" height="450" alt="検索パネルに詳細検索パネルを選んだ設定の「エディタ」" loading="lazy"><img class="shot-dark" src="assets/release-notes/ja/settings-find-panel-dark.png" width="600" height="450" alt="検索パネルに詳細検索パネルを選んだ設定の「エディタ」" loading="lazy"></figure></li>
@@ -104,23 +105,23 @@
 <li><strong>改行コード</strong>：Windows形式などの改行コードのファイルを開くと、LFに揃えたことが知らされるようになりました。<figure class="note-shot"><img class="shot-light" src="assets/release-notes/ja/line-endings.png" width="534" height="520" alt="書類の改行コードがWindows形式で、LFに揃えたことを知らせる画面" loading="lazy"><img class="shot-dark" src="assets/release-notes/ja/line-endings-dark.png" width="534" height="520" alt="書類の改行コードがWindows形式で、LFに揃えたことを知らせる画面" loading="lazy"></figure></li>
 <li><strong>統計情報</strong>：「編集」→「統計情報…」は、ステータスバーの「本文の統計」を開きます。</li>
 </ul>
-<h3>不具合の修正：タイプセットとコンソール</h3>
+<h3 id="v6.00-fixes-typesetting-and-the-console">不具合の修正：タイプセットとコンソール</h3>
 <ul>
 <li><strong>重大な不具合の修正</strong>：「中止」を押してもTeXの処理が残る問題を修正しました。</li>
 <li>コンソールとタイプセットの不具合を直しました。TeXの実行中もコンソールの出力をコピーでき、文字化けした出力とログも正しく表示されます。<code>% !TEX root</code>のある書類ではCommand＋1でもとのファイルに戻れ、組版ツールを起動できないときに待ち続けることはなくなり、ルートファイルが見つからないときは知らせるようになりました。TeXやGhostscriptのフォルダのパスに空白があっても、epstopdf・MetaPost・texloganalyserのスクリプトが動きます。</li>
 </ul>
-<h3>不具合の修正：プレビュー</h3>
+<h3 id="v6.00-fixes-preview">不具合の修正：プレビュー</h3>
 <ul>
 <li><a href="https://github.com/svb-bit">svb-bit</a>氏、<a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏、<a href="https://github.com/ethanphil4-a11y">ethanphil4-a11y</a>氏の報告により、プレビューの位置と表示の不具合を直しました。macOS 26・27での再読み込みやページ送り、分割や境界線の操作、タイプセット中の開き直しで表示がずれることはなくなり、リンクのポップアップの周りにページの一部が見えることもなくなりました。ページには再びテーマの色が付き、ダークモードで明るい帯が出ることもありません（<a href="https://github.com/TeXShopProject/TeXShop/issues/5">#5</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/9">#9</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/21">#21</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/23">#23</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/24">#24</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/39">#39</a>）。</li>
 <li>SyncTeXで違う場所へ移る問題、再読み込みで落ちる問題、大きなページでスペースキーのスクロールがおかしい問題を修正しました。</li>
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、macOS 26以降で、拡大鏡のツールを選んでいてもプレビューの窓のツールバーが効き、ツールバーの上にリンクのポップアップが出ないようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/44">#44</a>）。</li>
 </ul>
-<h3>不具合の修正：書類の読み書き</h3>
+<h3 id="v6.00-fixes-opening-and-saving-documents">不具合の修正：書類の読み書き</h3>
 <ul>
 <li><a href="https://github.com/Steuard">Steuard</a>氏、<a href="https://github.com/yo3iti">Tom</a>氏の報告と、<a href="https://github.com/TeXShopProject/TeXShop/pull/1">PR #1</a>の<a href="https://github.com/ddd3h">Daisuke Nishihama</a>氏の貢献により、OneDriveやGoogle Driveなどで同期しているファイルでカーソルが飛ぶ問題、ルーマニア語で書類の窓が開かない問題、ほかのエディタで保存した変更に気付かない問題を修正しました（<a href="https://github.com/TeXShopProject/TeXShop/issues/29">#29</a>、<a href="https://github.com/TeXShopProject/TeXShop/issues/42">#42</a>）。</li>
 <li>文字コードの読み書きの不具合を直しました。UTF-8のBOM、UTF-16、GB 2312、日本語の文字コードでのバックスラッシュとチルダ、保存ダイアログの文字コードのメニュー、「UTF-8-MAC を UTF-8 に自動変換」、otfパッケージの<code>\UTF</code> / <code>\CID</code>への自動変換が正しく働き、「デフォルトエディタに設定」も<code>.tex</code>ファイルに効きます。</li>
 </ul>
-<h3>不具合の修正：編集とその他</h3>
+<h3 id="v6.00-fixes-editing-and-other">不具合の修正：編集とその他</h3>
 <ul>
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告などにより、ソースの色分けと表示の不具合を直しました。コメント行での改行や閉じていない引数で色分けが崩れず、改ページ文字以降も表示され、<code>% !TEX spellcheck</code>の行がほかの書類の言語を変えることもありません。長い書類の表示と編集も速くなりました（<a href="https://github.com/TeXShopProject/TeXShop/issues/16">#16</a>）。</li>
 <li>ソースとプレビューを一つにしたウインドウでのソースの分割、HTMLウインドウの「ホーム URL」、行列パネルで落ちる問題を修正しました。</li>
@@ -128,7 +129,7 @@
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、macOS 26で、ツールバーのカスタマイズ画面の下にあるデフォルトセットをクリックすると、上に伸びて二重に見える問題を修正しました（<a href="https://github.com/TeXShopProject/TeXShop/issues/48">#48</a>）。</li>
 <li>いくつかの言語で、欠けたり重なったりしていた文字、働かなかったボタンやメニュー、英語のまま残っていた文字を直しました。</li>
 </ul>
-<h3>マニュアル・ヘルプ・同梱ツール</h3>
+<h3 id="v6.00-manual-help-and-bundled-tools">マニュアル・ヘルプ・同梱ツール</h3>
 <ul>
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、マニュアルのRaiseHookの例を新しいhyperrefに対応させました（<a href="https://github.com/TeXShopProject/TeXShop/issues/6">#6</a>）。</li>
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の指摘により、マニュアルとヘルプのリンクを現在のTeXShopのサイト（<a href="https://texshop.app/">texshop.app</a>）に改めました（<a href="https://github.com/TeXShopProject/TeXShop/issues/15">#15</a>）。</li>

@@ -19,9 +19,22 @@
       preferred = pageLanguage;
       setPreference(preferred);
     }
-    languages.querySelectorAll('a[lang]').forEach(link => {
+    const languageLinks = languages.querySelectorAll('a[lang]');
+    languageLinks.forEach(link => {
       link.addEventListener('click', () => setPreference(link.lang));
     });
+    // The pages of the two languages give their sections the same ids, so the other language
+    // opens at the section being read.
+    const carrySection = () => {
+      let id = '';
+      try { id = decodeURIComponent(location.hash.slice(1)); } catch (_) { /* Not an id of this page. */ }
+      const hash = id && document.getElementById(id) ? location.hash : '';
+      languageLinks.forEach(link => {
+        link.setAttribute('href', link.getAttribute('href').split('#')[0] + hash);
+      });
+    };
+    carrySection();
+    window.addEventListener('hashchange', carrySection);
     if (!archiveOnly) return;
     if (!preferred) {
       preferred = (navigator.languages || [navigator.language || 'en'])
