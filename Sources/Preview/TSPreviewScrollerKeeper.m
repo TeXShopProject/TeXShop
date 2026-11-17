@@ -39,8 +39,9 @@ static CGFloat TSTop(NSClipView *clip)
 // The views are left to PDFKit then, as before. The Preview views have no content insets
 // (measured on macOS 14, 15 and 26), except for a moment while the window's height changes,
 // and except for the band under the toolbar of a window whose content runs under it (macOS 26
-// and later). With that band the text does not move when a scroller comes or goes, also with
-// a document view that is not flipped (measured in the test), so it is left to PDFKit too.
+// and later). Such a view is left to PDFKit too. On macOS 26 its text does move when a
+// scroller comes or goes (#53); that happens when the view changes its size, and then
+// TSPreviewChangeSize keeps the text.
 static BOOL TSHasInsets(NSScrollView *scroll)
 {
     NSEdgeInsets insets = scroll.contentInsets;
@@ -87,7 +88,7 @@ static void TSMoveTextUp(NSScrollView *scroll, CGFloat distance)
         return;
     NSRect bounds = clip.bounds;
     bounds.origin.y += (clip.isFlipped ? distance : -distance) * TSUnit(clip);
-    NSPoint target = [clip constrainBoundsRect:bounds].origin;
+    NSPoint target = TSPreviewConstrainedOrigin(clip, bounds);
     if (!NSEqualPoints(target, clip.bounds.origin)) {
         [clip scrollToPoint:target];
         [scroll reflectScrolledClipView:clip];
@@ -193,4 +194,22 @@ void TSPreviewChangeScale(PDFView *view, void (NS_NOESCAPE ^change)(void))
         return;
     text.page = page;
     TSMoveTextUp(scroll, TSTextBelowTop(view, scroll, text) - below);
+}
+
+void TSPreviewChangeSize(PDFView *view, void (NS_NOESCAPE ^change)(void))
+{
+    TSPreviewScrollerKeeper *keeper = [TSPreviewScrollerKeeper keeperForView:view];
+    NSScrollView *scroll = TSScroll(view);
+    CGFloat scale = view.scaleFactor;
+    TSPreviewText text = scroll ? TSTextAt(view, scroll, 0) : (TSPreviewText){0};
+    PDFPage *page = text.page;
+    // A scroller that comes or goes during the change is covered here.
+    keeper.suspended++;
+    change();
+    keeper.suspended--;
+    // A new magnification, as with automatic scaling, is left to PDFKit.
+    if (!text.valid || TSScroll(view) != scroll || page.document != view.document || view.scaleFactor != scale)
+        return;
+    text.page = page;
+    TSMoveTextUp(scroll, TSTextBelowTop(view, scroll, text));
 }

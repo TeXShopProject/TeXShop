@@ -258,18 +258,21 @@
 }
 
 // The width of the view sets the magnification of Fit to Content Width. The text at the top
-// is taken before PDFKit moves to the top of the page.
+// is taken before PDFKit moves to the top of the page. Otherwise the text at the top stays
+// while the magnification does (#53).
 - (void)setFrameSize:(NSSize)newSize
 {
     BOOL refit = resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH && self.document.pageCount &&
         fabs(newSize.width - NSWidth(self.frame)) >= 0.5;
-    TSContentTop top = refit ? TSContentTopOf(self) : (TSContentTop){nil, NSZeroPoint};
+    if (!refit) {
+        TSPreviewChangeSize(self, ^{ [super setFrameSize:newSize]; });
+        return;
+    }
+    TSContentTop top = TSContentTopOf(self);
     PDFPage *topPage = top.page;
     [super setFrameSize:newSize];
-    if (refit) {
-        top.page = topPage;
-        [self fitContentWidthKeepingTop:top];
-    }
+    top.page = topPage;
+    [self fitContentWidthKeepingTop:top];
 }
 
 

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSPreviewSplitDivider.h"
+#import "TSPreviewScrollerKeeper.h"
 
 // The text at the top edge of a part, as a point on a page, and where the part was left.
 @interface TSPreviewSplitAnchor : NSObject
@@ -228,7 +229,7 @@ static void TSSplitViewSizeParts(NSSplitView *splitView, NSSize oldSize)
         NSPoint point = [clip convertPoint:[view convertPoint:anchor.point fromPage:anchor.page] fromView:view];
         NSRect bounds = clip.bounds;
         bounds.origin.y += point.y - TSPartTop(clip);
-        NSPoint target = [clip constrainBoundsRect:bounds].origin;
+        NSPoint target = TSPreviewConstrainedOrigin(clip, bounds);
         if (!NSEqualPoints(target, clip.bounds.origin)) {
             [clip scrollToPoint:target];
             [scroll reflectScrolledClipView:clip];
