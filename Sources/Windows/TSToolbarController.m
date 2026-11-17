@@ -813,6 +813,69 @@ if (@available(macOS 11.0, *))
 //
 // -----------------------------------------------------------------------------
 
+// The Scale items of the preview toolbars. Their arrows end at the edge of the item, next to
+// the label of the following item, so the item keeps the room after them that most languages
+// already had. Their label opens the Preview › Magnification menu.
+static const CGFloat TSScaleItemSpaceAfterArrows = 10.0;
+
+// The menu whose commands set the magnification of the preview (Preview › Magnification).
+static NSMenu *TSPreviewMagnificationMenu(NSMenu *menu)
+{
+    for (NSMenuItem *item in menu.itemArray)
+        if (item.action == @selector(changePDFViewSize:))
+            return menu;
+    for (NSMenuItem *item in menu.itemArray) {
+        NSMenu *found = item.hasSubmenu ? TSPreviewMagnificationMenu(item.submenu) : nil;
+        if (found)
+            return found;
+    }
+    return nil;
+}
+
+- (void)prepareScaleToolbarView:(NSView *)scaleView
+{
+    NSView *content = [scaleView isKindOfClass:[NSBox class]] ? [(NSBox *)scaleView contentView] : scaleView;
+    NSStepper *arrows = nil;
+    NSTextField *label = nil;
+    for (NSView *view in content.subviews) {
+        if ([view isKindOfClass:[NSStepper class]])
+            arrows = (NSStepper *)view;
+        else if ([view isKindOfClass:[NSTextField class]] && ![(NSTextField *)view isEditable])
+            label = (NSTextField *)view;
+    }
+    if (arrows) {
+        CGFloat width = NSMaxX([content convertRect:arrows.frame toView:scaleView]) + TSScaleItemSpaceAfterArrows;
+        if (NSWidth(scaleView.frame) < width)
+            [scaleView setFrameSize:NSMakeSize(width, NSHeight(scaleView.frame))];
+    }
+    if (label) {
+        for (NSGestureRecognizer *recognizer in label.gestureRecognizers)
+            if (recognizer.target == self && recognizer.action == @selector(showMagnificationMenuFromScaleLabel:))
+                return;
+        [label addGestureRecognizer:[[NSClickGestureRecognizer alloc] initWithTarget:self
+            action:@selector(showMagnificationMenuFromScaleLabel:)]];
+    }
+}
+
+// The commands of the copy go to the window of the label, as those of the menu bar do.
+- (NSMenu *)magnificationMenuForScaleLabel
+{
+    return [TSPreviewMagnificationMenu([NSApp mainMenu]) copy];
+}
+
+- (void)showMagnificationMenuFromScaleLabel:(NSClickGestureRecognizer *)recognizer
+{
+    NSView *label = recognizer.view;
+    NSMenu *menu = [self magnificationMenuForScaleLabel];
+    if (!menu || !label.window)
+        return;
+    // Below the whole item, as the menu of a pull-down button.
+    NSRect item = [label convertRect:label.superview.bounds fromView:label.superview];
+    [menu popUpMenuPositioningItem:nil
+                        atLocation:NSMakePoint(NSMinX(label.bounds), label.isFlipped ? NSMaxY(item) : NSMinY(item))
+                            inView:label];
+}
+
 // The arrow-only page items (PreviousPageKIT, NextPageKIT) duplicated the document
 // arrow items. Toolbars saved with them show the document arrow items instead.
 static NSString *TSPreviewPageItemKey(NSString *itemIdent)
@@ -1438,6 +1501,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 	}
     
     if ([itemIdent isEqual: skMagnificationKKTID]) {
+		[self prepareScaleToolbarView:smagnificationOutletKK];
 		toolbarItem =  [self makeToolbarItemFixedWithItemIdentifier:itemIdent key:itemIdent
 													customView:smagnificationOutletKK];
 		menuFormRep = [[NSMenuItem alloc] init];
@@ -1452,6 +1516,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 
 
 	if ([itemIdent isEqual: kMagnificationTID]) {
+		[self prepareScaleToolbarView:magnificationOutlet];
 		toolbarItem =  [self makeToolbarItemFixedWithItemIdentifier:itemIdent key:itemIdent
 													customView:magnificationOutlet];
 		menuFormRep = [[NSMenuItem alloc] init];
@@ -1464,6 +1529,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 
 
 	if ([itemIdent isEqual: kMagnificationKKTID]) {
+		[self prepareScaleToolbarView:magnificationOutletKK];
 		toolbarItem =  [self makeToolbarItemFixedWithItemIdentifier:itemIdent key:itemIdent
 													customView:magnificationOutletKK];
 		menuFormRep = [[NSMenuItem alloc] init];
