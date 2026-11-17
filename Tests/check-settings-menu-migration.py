@@ -6,6 +6,8 @@ root=Path(__file__).resolve().parents[1]
 removed={'openAutoCompletionListEditor:','openCommandCompletionList:'}
 # Commands added to the Edit menu later, and Source > Show Status Bar (6.00); they are outside the fixed contract.
 added={'convertCharacterType:','normalizeSelectedString:','exchangePaste:','toggleStatusBar:'}
+# Fit to Content Width (tag 6 of the magnifications) and the zooms to the content width joined Preview > Magnification in 6.00.
+added_items={('zoomToContentWidth:','0'),('zoomToContent:','0'),('changePDFViewSize:','6')}
 # Find and Replace… joined the Find submenu of the other languages in 6.00; the Base menu always had it.
 added_outside_base={'performTextFinderAction:'}
 # Change Encoding joined Edit > Transformations of the Base menu in 6.00; the other languages always had it.
@@ -15,7 +17,7 @@ def records(tree,language='Base'):
  skipped=added|(added_outside_base if language!='Base' else added_to_base)
  for item in tree.iter('menuItem'):
   action=item.find('connections/action')
-  if action is None or action.get('selector') in removed|skipped:continue
+  if action is None or action.get('selector') in removed|skipped or (action.get('selector'),item.get('tag','0')) in added_items:continue
   result.append({'identifier':item.get('identifier'),'selector':action.get('selector'),'tag':item.get('tag','0'),'key':item.get('keyEquivalent',''),'mask':[child.attrib for child in item if child.tag=='modifierMask']})
  return sorted(result,key=lambda entry:json.dumps(entry,sort_keys=True))
 def digest(tree,language='Base'):return hashlib.sha256(json.dumps(records(tree,language),sort_keys=True,ensure_ascii=False).encode()).hexdigest()

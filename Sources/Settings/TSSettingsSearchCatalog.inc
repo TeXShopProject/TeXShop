@@ -347,6 +347,7 @@ add(TSSettingsCategoryKeyboard, @"shortcut.key", @"Localizable", @"This key is r
 add(TSSettingsCategoryPreview, @"row.catalog.preview.0.1", @"SettingsPreview", @"339.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.0.1", @"SettingsPreview", @"344.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.0.1", @"SettingsPreview", @"637.title", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryPreview, @"row.catalog.preview.0.1", @"SettingsPreview", @"Fc6-Pp-tH1.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.0.0", @"SettingsPreview", @"333.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.0.0", @"SettingsPreview", @"343.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.0.0", @"SettingsPreview", @"346.title", TSSettingsSearchWeightChoice);
