@@ -14,8 +14,11 @@ methods = source[source.index('- (void)cancelEnginePathDiscovery'):source.index(
 entry = source[source.index('- (IBAction)showPreferences:'):]
 entry = entry[:entry.index('    if (![self prepareSettingsWindow])')]
 discovery=methods
+# Closing Settings and quitting, which end or keep the first-launch steps.
+closing = source[source.index('- (void)tearDownPreferenceEditing'):source.index('//==============================================================================\n// helpers')]
+methods += '\n' + closing
 methods += '\n' + entry + '_tetexBinPathField.stringValue = [SUD stringForKey:TetexBinPath]; _gsBinPathField.stringValue = [SUD stringForKey:GSBinPath]; [_prefsWindow makeKeyAndOrderFront:sender];\n}\n'
-verify_embedded('\n'+methods,[('engine discovery methods',source,'\n'+discovery),('preference entry guards',source,'\n'+entry)])
+verify_embedded('\n'+methods,[('engine discovery methods',source,'\n'+discovery),('closing and quitting',source,'\n'+closing),('preference entry guards',source,'\n'+entry)])
 for nib in (root / 'Resources/Interfaces').glob('*.lproj/Preferences.nib/designable.nib'):
     actions = ET.parse(nib).findall('.//button/connections/action[@selector="discoverEnginePaths:"]')
     assert len(actions) == 1 and actions[0].get('target') == '-2', nib

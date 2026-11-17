@@ -159,6 +159,15 @@ int main(int argc,char **argv){@autoreleasepool{
  NSDictionary *factory=[NSDictionary dictionaryWithContentsOfURL:[fixture URLForResource:@"FactoryDefaults" withExtension:@"plist" subdirectory:@"Defaults"]];Check(factory.count>100,@"Factory defaults fixture is complete");[TSIsolatedAppKitDefaults registerDefaults:factory];
  [TSIsolatedAppKitDefaults setObject:[NSArchiver archivedDataWithRootObject:[NSFont userFontOfSize:12]] forKey:DocumentFontKey];
  TSSettingsRememberLaunchValue(AutoSaveEnabledKey,@([TSIsolatedAppKitDefaults boolForKey:AutoSaveEnabledKey]));TSSettingsRememberLaunchValue(FindMethodKey,@([TSIsolatedAppKitDefaults integerForKey:FindMethodKey]));
+ // First launch applies the chosen engine profile before Settings has ever been opened: the window and its controls do not exist yet.
+ {
+  TSPreferences *firstLaunch=[TSPreferences new];NSDictionary *before=[TSIsolatedAppKitDefaults dictionaryRepresentation];
+  @try{[firstLaunch applyEngineProfileValues:TSEngineProfileValues(TSEngineProfilePdfLaTeX,NO)];}
+  @catch(NSException *e){Check(NO,[@"First-launch profile without the Settings window throws: " stringByAppendingString:e.reason]);}
+  NSDictionary *values=TSEngineProfileValues(TSEngineProfilePdfLaTeX,NO);
+  for(NSString *key in values){Check([[TSIsolatedAppKitDefaults objectForKey:key]isEqual:values[key]],@"The first-launch profile is written without the Settings window");
+   if(before[key])[TSIsolatedAppKitDefaults setObject:before[key] forKey:key];else[TSIsolatedAppKitDefaults removeObjectForKey:key];}
+ }
  TSPreferences *owner=[TSPreferences new];Check([owner prepareSettingsWindow],@"Production preference owner prepares its own window");[owner configurePreferenceInputs];[owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
  // Populate the production theme wells from a bundled theme; user theme files
  // and settings are neither read nor written for the comparison screenshots.

@@ -80,6 +80,7 @@ typedef NS_CLOSED_ENUM(NSUInteger, TSSettingsFontDestination) {
 @property BOOL inputErrorPresented;
 @property BOOL ownsFontPanel;
 @property BOOL endingPreferences;
+@property BOOL quittingPreferences;
 @property NSUInteger enginePathSearchGeneration;
 @property BOOL initialEnginePathSearchPending;
 @property (weak) NSButton *enginePathSearchButton;
@@ -1965,7 +1966,7 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 - (IBAction)discoverEnginePaths:(id)sender
 {
     if (![self finishPreferenceEditing:YES]) return;
-    [self searchEnginePathsForInitialSetup:NO sender:sender];
+    [self searchEnginePathsForInitialSetup:self.initialEnginePathSearchPending sender:sender];
 }
 
 - (BOOL)enginePathSnapshotMatches:(NSArray<NSString *> *)snapshot initial:(BOOL)initial
@@ -2090,13 +2091,14 @@ static NSAlert *TSEnginePathAlert(NSDictionary *found, NSMutableDictionary *matr
             sender.enabled = YES;
             // If Settings opened during the initial search, use its sheet.
             BOOL applyInitial = initial && !self->_prefsWindow.visible;
-            if ((!initial && !self->_prefsWindow.visible) || ![self enginePathSnapshotMatches:snapshot initial:applyInitial]) return;
+            BOOL settingsOpen = self->_prefsWindow.visible || self->_prefsWindow.miniaturized;
+            if ((!initial && !settingsOpen) || ![self enginePathSnapshotMatches:snapshot initial:applyInitial]) return;
             NSMutableDictionary *matrices = [NSMutableDictionary dictionary];
             NSAlert *alert = TSEnginePathAlert(found, matrices);
             BOOL hasPaths = [found[@"TeX"] count] || [found[@"Ghostscript"] count];
             void (^finish)(NSModalResponse) = ^(NSModalResponse response) {
                 if (response == NSAlertFirstButtonReturn && hasPaths && generation == self.enginePathSearchGeneration &&
-                    (applyInitial || self->_prefsWindow.visible) && [self enginePathSnapshotMatches:snapshot initial:applyInitial]) {
+                    (applyInitial || self->_prefsWindow.visible || self->_prefsWindow.miniaturized) && [self enginePathSnapshotMatches:snapshot initial:applyInitial]) {
                     NSArray *keys = @[TetexBinPath, GSBinPath];
                     NSArray *names = @[@"TeX", @"Ghostscript"];
                     NSArray *required = @[@[@"tex", @"latex", @"pdftex", @"pdflatex"], @[@"gs"]];
@@ -2106,7 +2108,7 @@ static NSAlert *TSEnginePathAlert(NSDictionary *found, NSMutableDictionary *matr
                         if (!path || ![TSEnginePathDiscovery directory:path containsPrograms:required[i]]) continue;
                         [SUD setObject:path forKey:keys[i]];
                     }
-                    if (!applyInitial) {
+                    if (self->_prefsWindow != nil) {
                         self->_tetexBinPathField.stringValue = [SUD stringForKey:TetexBinPath] ?: @"";
                         self->_gsBinPathField.stringValue = [SUD stringForKey:GSBinPath] ?: @"";
                     }
@@ -2129,6 +2131,11 @@ static NSAlert *TSEnginePathAlert(NSDictionary *found, NSMutableDictionary *matr
         if (response != NSModalResponseOK || generation != self.enginePathSearchGeneration) return;
         [self applyEngineProfileValues:sheet.valuesToApply];
     };
+    if (!modal && self.endingPreferences) {
+        // Settings is closing: ask once it has closed.
+        dispatch_async(dispatch_get_main_queue(), ^{ if (!self.quittingPreferences) [self chooseInitialEngineProfileModal:YES]; });
+        return;
+    }
     if (modal || !self->_prefsWindow.visible) finish([sheet runModal]);
     else [sheet beginSheetForWindow:self->_prefsWindow completionHandler:finish];
 }
@@ -2808,15 +2815,18 @@ A tag of 0 means "no", a tag of 1 means "yes".
     self.endingPreferences = YES;
     self.themeOperationGeneration++;
     if (_prefsWindow.attachedSheet != nil) [_prefsWindow endSheet:_prefsWindow.attachedSheet returnCode:NSModalResponseCancel];
-    [self cancelEnginePathDiscovery];
+    // The first-launch search goes on after Settings closes, and asks without it.
+    if (!self.initialEnginePathSearchPending) [self cancelEnginePathDiscovery];
     [self releasePreferencePanels];
     [self.inputEditing clear];
     [self.settingsController endSession];
 }
 - (void)finishPreferencesForTermination
 {
+    self.quittingPreferences = YES;
     self.endingPreferences = YES;
     self.themeOperationGeneration++;
+    [self cancelEnginePathDiscovery];
     if (_prefsWindow.attachedSheet != nil) [_prefsWindow endSheet:_prefsWindow.attachedSheet returnCode:NSModalResponseCancel];
     [self finishPreferenceEditing:NO];
     // Do not invoke formatter delegates or actions that could display a sheet.
