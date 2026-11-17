@@ -1406,17 +1406,19 @@ static void TSInstallAdvancedFindFieldStyle(void)
 	if (srcIsDir) {
 		// Create destination directory if missing (and abort if this fails)
 		if (!dstExists) {
+			NSError *createError = nil;
 			NS_DURING
-				// create the missing directory
-            result = [fileManager createDirectoryAtPath:dstPath withIntermediateDirectories:NO attributes:nil error: NULL];
+				// create the missing directory, and its parents (~/Library may not exist yet)
+            result = [fileManager createDirectoryAtPath:dstPath withIntermediateDirectories:YES attributes:nil error:&createError];
 			NS_HANDLER
 				result = NO;
 				reason = [localException reason];
 			NS_ENDHANDLER
 			if (!result) {
-				NSRunAlertPanel(NSLocalizedString(@"Error", @"Error"), reason,
-					[NSString stringWithFormat: NSLocalizedString(@"Couldn't create folder:\n%@", @"Message when creating a directory failed"), dstPath],
-					nil, nil);
+				NSString *message = [NSString stringWithFormat: NSLocalizedString(@"Couldn't create folder:\n%@", @"Message when creating a directory failed"), dstPath];
+				NSString *cause = reason ?: createError.localizedDescription;
+				if (cause) message = [message stringByAppendingFormat:@"\n\n%@", cause];
+				NSRunAlertPanel(NSLocalizedString(@"Error", @"Error"), @"%@", nil, nil, nil, message);
 				return;
 			}
 		}
