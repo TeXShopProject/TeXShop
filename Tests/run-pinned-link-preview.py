@@ -16,7 +16,7 @@ parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'oth
                                            'tooltip-trusts-data', 'label-from-index',
                                            'magnifier-kills-pin', 'switch-kills-pin', 'keep-marquee', 'contains-unpinned', 'contains-hidden-part',
                                            'detach-keeps-state', 'attach-keeps-old-tool', 'attach-replaces-pin', 'not-kept-in-view',
-                                           'window-magnifier-bypass', 'window-resign-kills-pin', 'window-split-kills-pin', 'window-unsplit-drops-pin',
+                                           'window-magnifier-bypass', 'window-resign-kills-pin', 'window-split-kills-pin', 'window-unsplit-moves-pin',
                                            'window-layout-not-kept', 'drag-cursor-stays', 'hidden-part-cursor', 'no-exit-tracking', 'exit-ignored',
                                            'outside-always-arrow', 'visible-beyond-bounds', 'escape-ignores-active-part',
                                            'outside-on-toolbar-tool-cursor', 'under-toolbar-counts-as-seen',
@@ -237,7 +237,8 @@ if args.mutation == 'link-popups-per-view':
 if args.mutation == 'reads-settings-again':
     methods = methods.replace('    if (!self.myDocument)\n        self.skipLinks = (! [SUD boolForKey: LinkPopupsKey]);', '    self.skipLinks = (! [SUD boolForKey: LinkPopupsKey]);')
 # The preview windows hand clicks in a pinned popup to it, keep pinned popups when another
-# window becomes main, and keep or move them when the window is split or unsplit (#14).
+# window becomes main, and keep them when the window is split (#14). Unsplitting closes the pinned
+# popup of the part that goes away (#52); run-preview-switch-views.py checks that the part in use stays.
 preview_window = (root / 'Sources/Windows/TSPreviewWindow.m').read_text(encoding='latin1')
 split_window = (root / 'Sources/Windows/TSFullSplitWindow.m').read_text(encoding='latin1')
 window_mutations = {
@@ -246,9 +247,10 @@ window_mutations = {
                                 '    [(MyPDFKitView *)self.myPDFKitView cleanupMarquee: YES];\n    [(MyPDFKitView *)self.myPDFKitView2 cleanupMarquee: YES];\n    [super resignMainWindow];'),
     'window-split-kills-pin': ('preview', '    [(MyPDFKitView *)self.myPDFKitView cleanupMarqueeKeepingPinnedLinkPreview];\n    [(MyPDFKitView *)self.myPDFKitView2 cleanupMarqueeKeepingPinnedLinkPreview];\n    \n',
                                '    [(MyPDFKitView *)self.myPDFKitView cleanupMarquee: YES];\n    [(MyPDFKitView *)self.myPDFKitView2 cleanupMarquee: YES];\n    \n'),
-    'window-unsplit-drops-pin': ('preview', '        [(MyPDFKitView *)self.myPDFKitView attachPinnedLinkPreview: movedPreview windowFrame: movedPreviewFrame];', '        ;'),
-    'window-layout-not-kept': ('preview', 'windowFrame: movedPreviewFrame];\n    [self keepPinnedLinkPreviewsInView];\n}',
-                               'windowFrame: movedPreviewFrame];\n}'),
+    'window-unsplit-moves-pin': ('preview', '        [(MyPDFKitView *)self.myPDFKitView2 detachPinnedLinkPreviewWithWindowFrame: NULL];\n',
+                                 '        [(MyPDFKitView *)self.myPDFKitView attachPinnedLinkPreview: [(MyPDFKitView *)self.myPDFKitView2 detachPinnedLinkPreviewWithWindowFrame: NULL] windowFrame: NSZeroRect];\n'),
+    'window-layout-not-kept': ('preview', '        [self.myPDFKitView2 setDocument:nil];\n    \n    [self keepPinnedLinkPreviewsInView];\n}',
+                               '        [self.myPDFKitView2 setDocument:nil];\n    \n}'),
 }
 if args.mutation in window_mutations:
     which, old, new = window_mutations[args.mutation]
@@ -270,10 +272,10 @@ first = preview_window.index('- (void) mainSplitPdfKitWindow')
 split = window_method(preview_window, '- (void) mainSplitPdfKitWindow', preview_window.index('- (void) mainSplitPdfKitWindow', first + 1))
 if 'cleanupMarquee: YES' in split or split.count('cleanupMarqueeKeepingPinnedLinkPreview') != 2:
     window_problems.append('splitting closes pinned popups')
-detach, remove, attach = (split.find(x) for x in ('detachPinnedLinkPreviewWithWindowFrame: &movedPreviewFrame',
-    '[self.myPDFKitView2 removeFromSuperview]', 'attachPinnedLinkPreview: movedPreview windowFrame: movedPreviewFrame'))
-if not (0 <= detach < remove < attach) or 'if (! [(MyPDFKitView *)self.myPDFKitView hasPinnedLinkPreview])' not in split:
-    window_problems.append('unsplitting drops the pinned popup of the pane that goes away')
+detach, remove = (split.find(x) for x in ('[(MyPDFKitView *)self.myPDFKitView2 detachPinnedLinkPreviewWithWindowFrame: NULL];',
+    '[self.myPDFKitView2 removeFromSuperview]'))
+if not (0 <= detach < remove) or 'attachPinnedLinkPreview' in split:
+    window_problems.append('unsplitting moves the pinned popup of the part that goes away to the part that stays')
 if not split.rstrip().endswith('[self keepPinnedLinkPreviewsInView];\n}'):
     window_problems.append('splitting does not bring pinned popups back into view')
 keep = window_method(preview_window, '- (void)keepPinnedLinkPreviewsInView')
@@ -1264,7 +1266,7 @@ static void testDocumentLinkPopups(MyPDFKitView *view, NSWindow *window, PDFDocu
 }
 
 // A pinned popup stays through clicks with the magnifying glass, another window becoming
-// main, and splitting the window; unsplitting moves it to the pane that stays (#14).
+// main, and splitting the window, and moves with its part when the parts change places (#14).
 static void testKeepingPinned(MyPDFKitView *view, MyPDFKitView *second, NSWindow *window) {
     show(view, NSEventModifierFlagOption);
     TSLinkPreviewView *preview = view.preview;

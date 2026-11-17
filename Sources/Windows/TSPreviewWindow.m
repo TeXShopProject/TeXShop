@@ -1369,8 +1369,6 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     double      temp1, temp2;
     BOOL        splitInMiddle;
     BOOL        topToBottom;
-    TSLinkPreviewView *movedPreview = nil;
-    NSRect      movedPreviewFrame = NSZeroRect;
     
     if (self.previewSplitDivider == nil && self.pdfKitSplitView != nil)
         self.previewSplitDivider = [[TSPreviewSplitDivider alloc] initWithSplitView:self.pdfKitSplitView];
@@ -1410,6 +1408,15 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     }
     
 // END OF ENCRYPTED PDF BUG FIX
+    
+    // Unsplitting keeps the part that was in use. When that is the second part, the parts first
+    // change places with everything they show, so the first view, which stays, shows what the
+    // second part showed, with its pinned link popup by its link (#52). The parts keep their
+    // sizes for the next split.
+    NSRect firstFrameBefore = [firstView frame], secondFrameBefore = [secondView frame];
+    BOOL keepsSecondPart = self.windowIsSplit && self.activeView == secondView;
+    if (keepsSecondPart)
+        [self switchSplitParts];
     
 // SAVE CURRENT LOCATIONS FOR LATER RESTORE
     
@@ -1508,8 +1515,8 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
         
         if (self.horizontal)
             {
-                theFrame1 = [self.myPDFKitView frame];
-                theFrame2 = [self.myPDFKitView2 frame];
+                theFrame1 = keepsSecondPart ? firstFrameBefore : [self.myPDFKitView frame];
+                theFrame2 = keepsSecondPart ? secondFrameBefore : [self.myPDFKitView2 frame];
                 // The height that can be seen: the band under the toolbar is left out.
                 temp1 = MAX(0, theFrame1.size.height - TSDocumentWindowHiddenTop(self.pdfKitSplitView));
                 temp2 = theFrame2.size.height;
@@ -1519,18 +1526,17 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
             }
         else
             {
-                theFrame1 = [self.myPDFKitView frame];
-                theFrame2 = [self.myPDFKitView2 frame];
+                theFrame1 = keepsSecondPart ? firstFrameBefore : [self.myPDFKitView frame];
+                theFrame2 = keepsSecondPart ? secondFrameBefore : [self.myPDFKitView2 frame];
                 temp1 = theFrame1.size.width;
                 temp2 = theFrame2.size.width;
                 ((MyPDFKitView *)self.myPDFKitView2).verticalSplitSaved = YES;
                 ((MyPDFKitView *)self.myPDFKitView2).verticalWidth1 = temp1;
                 ((MyPDFKitView *)self.myPDFKitView2).verticalWidth2 = temp2;
              }
-        // The pane that stays shows the pinned popup of the pane that goes away, at the same
-        // place on the screen, unless it has one of its own (#14).
-        if (! [(MyPDFKitView *)self.myPDFKitView hasPinnedLinkPreview])
-            movedPreview = [(MyPDFKitView *)self.myPDFKitView2 detachPinnedLinkPreviewWithWindowFrame: &movedPreviewFrame];
+        // The part that goes away takes its pinned link popup with it: in the part that stays
+        // it would float over pages its link is not on (#52).
+        [(MyPDFKitView *)self.myPDFKitView2 detachPinnedLinkPreviewWithWindowFrame: NULL];
         [self.myPDFKitView2 removeFromSuperview];
         theFrame = [self.myPDFKitView frame];
         theSize.width = theFrame.size.width;
@@ -1559,8 +1565,6 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     if (! self.windowIsSplit)
         [self.myPDFKitView2 setDocument:nil];
     
-    if (movedPreview)
-        [(MyPDFKitView *)self.myPDFKitView attachPinnedLinkPreview: movedPreview windowFrame: movedPreviewFrame];
     [self keepPinnedLinkPreviewsInView];
 }
 
