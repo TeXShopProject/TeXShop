@@ -7,6 +7,7 @@
 //
 
 #import "globals.h"
+#import "TSLibraryRepair.h"
 #import "TSColorSupport.h"
 #import "TSThemeFileStore.h"
 
@@ -37,16 +38,12 @@ static id sharedColorSupport = nil;
     NSString* liteColorPath = [[newColorPath stringByAppendingString:@"/"] stringByAppendingString: @"LiteTheme.plist"];
     NSString* darkColorPath = [[newColorPath stringByAppendingString:@"/"] stringByAppendingString: @"DarkTheme.plist"];
     
-    if (! [fileManager fileExistsAtPath: liteColorPath])
-    {
-        reserveLitePath = [[NSBundle mainBundle] pathForResource:@"LiteTheme" ofType:@"plist" inDirectory:@"Themes"];
-        [fileManager copyItemAtPath: reserveLitePath toPath: liteColorPath error: nil];
-    }
-    if (! [fileManager fileExistsAtPath: darkColorPath])
-    {
-        reserveDarkPath = [[NSBundle mainBundle] pathForResource:@"DarkTheme" ofType:@"plist" inDirectory:@"Themes"];
-        [fileManager copyItemAtPath: reserveDarkPath toPath: darkColorPath error: nil];
-    }
+    // Missing or damaged, each is restored from the copy inside TeXShop.
+    reserveLitePath = [[NSBundle mainBundle] pathForResource:@"LiteTheme" ofType:@"plist" inDirectory:@"Themes"];
+    reserveDarkPath = [[NSBundle mainBundle] pathForResource:@"DarkTheme" ofType:@"plist" inDirectory:@"Themes"];
+    TSLibraryRepairFile(liteColorPath, reserveLitePath, TSLibraryThemeCheck());
+    TSLibraryRepairFile(darkColorPath, reserveDarkPath, TSLibraryThemeCheck());
+    (void)fileManager;
 }
 
 // Colors of the bundled themes that a later version changed, because text could not be read in them or on them.
@@ -314,6 +311,10 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
     
     
     [self checkAndRestoreDefaults];
+    // A theme that comes with TeXShop is restored like the two above; a damaged theme of the user's own goes to the
+    // backups, and the default theme is used instead.
+    if (lite.length) TSLibraryRepairFile(liteThemePath, TSLibraryBundledPath([[@"Themes" stringByAppendingPathComponent:lite] stringByAppendingPathExtension:@"plist"]), TSLibraryThemeCheck());
+    if (dark.length) TSLibraryRepairFile(darkThemePath, TSLibraryBundledPath([[@"Themes" stringByAppendingPathComponent:dark] stringByAppendingPathExtension:@"plist"]), TSLibraryThemeCheck());
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if (! [fileManager fileExistsAtPath: liteThemePath])
     {

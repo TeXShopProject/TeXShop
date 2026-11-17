@@ -23,6 +23,7 @@
  */
 
 #import "TSMacroMenuController.h"
+#import "TSLibraryRepair.h"
 #import "TSMacroContentKind.h"
 #import "TSKeyboardShortcuts.h"
 
@@ -137,30 +138,33 @@ static id sharedMacroMenuController = nil;
 		default: pathStr = [pathStr stringByAppendingPathComponent:@"Macros_Latex"]; break;
 	}
 	pathStr = [pathStr stringByAppendingPathExtension:@"plist"];
-	
-	
+
+	// The LaTeX macros are restored from the copy inside TeXShop when missing or damaged. The macros of another
+	// engine have no such copy: when damaged they go to the backups, and the LaTeX macros are used.
+	TSLibraryRepairFile(defaultPathStr, TSLibraryBundledPath(@"Macros/Macros_Latex.plist"), TSLibraryMacrosCheck());
+	if (![pathStr isEqualToString:defaultPathStr] && [[NSFileManager defaultManager] fileExistsAtPath:pathStr])
+		TSLibraryRepairFile(pathStr, TSLibraryBundledPath([@"Macros" stringByAppendingPathComponent:pathStr.lastPathComponent]), TSLibraryMacrosCheck());
+
 	NS_DURING
 		// macroDict = [NSDictionary dictionaryWithContentsOfFile: pathStr]; // this crashes when the file is not a proper UTF8
 		if ([[NSFileManager defaultManager] fileExistsAtPath:pathStr])
 			myData = [NSData dataWithContentsOfFile:pathStr];
 		else
 			myData = [NSData dataWithContentsOfFile:defaultPathStr];
-		
+		if (!myData)
+			myData = [NSData dataWithContentsOfFile:TSLibraryBundledPath(@"Macros/Macros_Latex.plist")];
+
 		NSPropertyListFormat format;
-		self.macroDict = [NSPropertyListSerialization propertyListFromData:myData
+		self.macroDict = myData ? [NSPropertyListSerialization propertyListFromData:myData
 													 mutabilityOption:NSPropertyListImmutable
 															   format:&format
-													 errorDescription:&error];
+													 errorDescription:&error] : nil;
 	NS_HANDLER
 		self.macroDict = nil;
 	NS_ENDHANDLER
-	
+	error = nil;
+
 	if (!self.macroDict || ![self.macroDict isKindOfClass: [NSDictionary class]]) {
-		// alert: failed to parse Macros.plist
-		NSRunAlertPanel(@"Error", @"failed to parse ~/Library/TeXShop/Macros/Macros_??.plist file",
-						nil, nil, nil);
-//		if (error) [error release]; // mitsu 1.29 (U) added
-        error = nil;
 		self.macroDict = nil;
 		return;
 	}

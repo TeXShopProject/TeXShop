@@ -310,6 +310,7 @@
 		52E4BF8D08CA74C300726E11 /* TeXShop in Resources */ = {isa = PBXBuildFile; fileRef = 52E4BF4408CA74C300726E11 /* TeXShop */; };
 		EF5890000000000000000001 /* TSSparkleController.m in Sources */ = {isa = PBXBuildFile; fileRef = EF5890000000000000000002; };
 		044F5752D41407B75A0A33AA /* TSLibraryVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 201C96D30AFE8EF7EE852DB2 /* TSLibraryVersion.m */; };
+		C2528F1F6A0EBF25DFB0B1DD /* TSLibraryRepair.m in Sources */ = {isa = PBXBuildFile; fileRef = 929A3224EC4CEA8FE0903C7F /* TSLibraryRepair.m */; };
 		EF5590000000000000000001 /* TeXShop.icon in Resources */ = {isa = PBXBuildFile; fileRef = EF5590000000000000000002; };
 		E18300000000000000000000 = {isa = PBXBuildFile; fileRef = E18200000000000000000010; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		E18300000000000000000001 = {isa = PBXBuildFile; fileRef = E18200000000000000000110; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
@@ -1073,6 +1074,8 @@
 		EF5890000000000000000003 /* TSSparkleController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSparkleController.h; sourceTree = "<group>"; };
 		201C96D30AFE8EF7EE852DB2 /* TSLibraryVersion.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSLibraryVersion.m; sourceTree = "<group>"; };
 		18A717FA0C930F8D03EC3E08 /* TSLibraryVersion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSLibraryVersion.h; sourceTree = "<group>"; };
+		929A3224EC4CEA8FE0903C7F /* TSLibraryRepair.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSLibraryRepair.m; sourceTree = "<group>"; };
+		0FA9795B0D1610AC8E960FB6 /* TSLibraryRepair.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSLibraryRepair.h; sourceTree = "<group>"; };
 		EF5590000000000000000002 /* TeXShop.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.icon; path = Artwork/TeXShop.icon; sourceTree = SOURCE_ROOT; };
 		E18200000000000000000000 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingsCategory.h; sourceTree = "<group>"; };
 		E18200000000000000000010 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsCategory.m; sourceTree = "<group>"; };
@@ -1324,6 +1327,8 @@
 				40AA2B8203C79AF800000009 /* TSEncodingSupport.m */,
 				18A717FA0C930F8D03EC3E08 /* TSLibraryVersion.h */,
 				201C96D30AFE8EF7EE852DB2 /* TSLibraryVersion.m */,
+				0FA9795B0D1610AC8E960FB6 /* TSLibraryRepair.h */,
+				929A3224EC4CEA8FE0903C7F /* TSLibraryRepair.m */,
 				EF5890000000000000000003 /* TSSparkleController.h */,
 				EF5890000000000000000002 /* TSSparkleController.m */,
 				40A56E1C11E67546002BEED6 /* TSStationery.h */,
@@ -2358,6 +2363,7 @@
 				ED0C00000000000000000001,
 				EF5890000000000000000001 /* TSSparkleController.m in Sources */,
 				044F5752D41407B75A0A33AA /* TSLibraryVersion.m in Sources */,
+				C2528F1F6A0EBF25DFB0B1DD /* TSLibraryRepair.m in Sources */,
 				407881790519249A006979EA /* main.m in Sources */,
 				4078817C0519249A006979EA /* TSConsoleWindow.m in Sources */,
 				4078817D0519249A006979EA /* TSTextEditorWindow.m in Sources */,

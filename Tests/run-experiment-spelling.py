@@ -185,7 +185,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-experiment-spelling-') as td:
     (t/'probe.m').write_text(program)
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-DTSSPELL_STANDALONE_TEST', '-I', str(root/'Tests'),
                     *include_args(root), '-framework', 'Cocoa', str(t/'probe.m'),
-                    str(root/'Sources/Editor/TSSpellSupport.m'), str(root/'Sources/Editor/TSSpellExclusions.m'),
+                    str(root/'Sources/Editor/TSSpellSupport.m'), str(root/'Sources/Editor/TSSpellExclusions.m'), str(root/'Sources/App/TSLibraryRepair.m'),
                     '-o', str(t/'probe')], check=True)
     result = subprocess.run([str(t/'probe')], env=dict(os.environ, HOME=str(t), TSSPELL_RULES=str(rules)), timeout=60)
     if args.mutation:

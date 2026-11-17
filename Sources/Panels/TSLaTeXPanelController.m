@@ -23,6 +23,7 @@
  */
 
 #import "TSLaTeXPanelController.h"
+#import "TSLibraryRepair.h"
 #import "globals.h"
 #import <objc/runtime.h>
 
@@ -146,11 +147,11 @@ static id _sharedInstance = nil;
 	completionPath = [LatexPanelPath stringByStandardizingPath];
 	completionPath = [completionPath stringByAppendingPathComponent:@"completion"];
 	completionPath = [completionPath stringByAppendingPathExtension:@"plist"];
-	if ([[NSFileManager defaultManager] fileExistsAtPath: completionPath])
+	if (TSLibraryRepairFile(completionPath, TSLibraryBundledPath(@"LatexPanel/completion.plist"), TSLibraryShapeOfBundledCheck()))
 		completionDictionary=[NSDictionary dictionaryWithContentsOfFile:completionPath];
 	else
 		completionDictionary=[NSDictionary dictionaryWithContentsOfFile:
-			[myBundle pathForResource:@"completion" ofType:@"plist"]];
+			TSLibraryBundledPath(@"LatexPanel/completion.plist") ?: @""];
 
 	[super windowDidLoad];
 

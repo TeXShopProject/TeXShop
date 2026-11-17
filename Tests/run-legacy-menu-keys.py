@@ -8,6 +8,10 @@ with tempfile.TemporaryDirectory(prefix='texshop-legacy-menu-') as td:
  p=Path(td)/'probe'
  source=(r/'Sources/App/TSAppDelegate.m').read_text(encoding='latin1');start=source.index('- (void)finishMenuKeyEquivalentsConfigure\n');method=source[start:source.index('\n}',start)+2]
  method=method.replace('[NSDictionary dictionaryWithContentsOfFile:path]','FixtureEntries(path)')
+ # The repair of the file is left out: it would reach the real ~/Library/TeXShop (run-library-repair.py covers it).
+ repair='    TSLibraryRepairFile(path, TSLibraryBundledPath(@"Menus/KeyEquivalents.plist"), TSLibraryDictionaryCheck());\n'
+ assert method.count(repair)==1
+ method=method.replace(repair,'')
  assert 'dictionaryWithContentsOfFile' not in method
  program=(r/'Tests/LegacyMenuKeys.m').read_text().replace('// APPLICATION_ENTRY',method)
  test=Path(td)/'test.m';test.write_text(program)

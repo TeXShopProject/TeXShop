@@ -23,6 +23,7 @@
  */
 
 #import "TSMatrixPanelController.h"
+#import "TSLibraryRepair.h"
 #import "TSMatrixTableView.h"
 #import "TSWindowManager.h"
 
@@ -128,11 +129,11 @@ static id _sharedInstance = nil;
 	matrixPath = [MatrixPanelPath stringByStandardizingPath];
 	matrixPath = [matrixPath stringByAppendingPathComponent:@"matrixpanel_1"];
 	matrixPath = [matrixPath stringByAppendingPathExtension:@"plist"];
-	if ([[NSFileManager defaultManager] fileExistsAtPath: matrixPath])
+	if (TSLibraryRepairFile(matrixPath, TSLibraryBundledPath(@"MatrixPanel/matrixpanel_1.plist"), TSLibraryShapeOfBundledCheck()))
 		matrixDictionary = [NSDictionary dictionaryWithContentsOfFile:matrixPath];
 	else
 		matrixDictionary = [NSDictionary dictionaryWithContentsOfFile:
-			[myBundle pathForResource:@"matrixpanel_1" ofType:@"plist"]];
+			TSLibraryBundledPath(@"MatrixPanel/matrixpanel_1.plist") ?: @""];
 
 	[super windowDidLoad];
 	[self arrangeControls];

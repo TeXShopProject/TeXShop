@@ -8,7 +8,7 @@ DEFINE = '-DTS_PANEL_CONTROLLERS=1'
 
 
 def panel_controller_sources(root):
-    return [str(source_file(root, name)) for name in ('TSMatrixPanelController.m', 'TSMatrixTableView.m', 'TSLaTeXPanelController.m', 'globals.m')]
+    return [str(source_file(root, name)) for name in ('TSMatrixPanelController.m', 'TSMatrixTableView.m', 'TSLaTeXPanelController.m', 'TSLibraryRepair.m', 'globals.m')]
 
 
 def panel_environment(root, home):
