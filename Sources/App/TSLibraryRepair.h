@@ -11,25 +11,39 @@ typedef BOOL (^TSLibraryFileCheck)(NSData *data, NSData *_Nullable bundled);
 
 /// A property list whose root is a dictionary.
 FOUNDATION_EXPORT TSLibraryFileCheck TSLibraryDictionaryCheck(void);
-/// A dictionary that has every array and dictionary the copy inside TeXShop has, each array at least as long (the
-/// LaTeX and Matrix panels take their buttons from fixed positions).
-FOUNDATION_EXPORT TSLibraryFileCheck TSLibraryShapeOfBundledCheck(void);
-/// The macros: a dictionary whose `submenu`, when there, is an array.
+/// A dictionary that has every array and dictionary the copy inside TeXShop has, the arrays of strings holding strings.
+/// Each array is at least as long as TeXShop's (the LaTeX and Matrix panels take their buttons from fixed positions),
+/// except the arrays named in `anyLength`.
+FOUNDATION_EXPORT TSLibraryFileCheck TSLibraryShapeOfBundledCheck(NSSet<NSString *> *_Nullable anyLength);
+/// The arrays of the LaTeX panel that may have any length.
+FOUNDATION_EXPORT NSSet<NSString *> *TSLibraryLaTeXPanelAnyLength(void);
+/// The macros: a dictionary whose `submenu`, when there, holds items with a name, string contents and keys, and
+/// submenus of the same.
 FOUNDATION_EXPORT TSLibraryFileCheck TSLibraryMacrosCheck(void);
 /// The completions of the keyboard: a dictionary of strings.
 FOUNDATION_EXPORT TSLibraryFileCheck TSLibraryStringDictionaryCheck(void);
-/// A theme: a dictionary whose color values are arrays of at least three numbers.
+/// A theme: a dictionary whose colors are arrays of four numbers (red, green, blue, alpha); the keys that TeXShop's own
+/// theme has as something else keep that type.
 FOUNDATION_EXPORT TSLibraryFileCheck TSLibraryThemeCheck(void);
 /// Text in UTF-8.
 FOUNDATION_EXPORT TSLibraryFileCheck TSLibraryUTF8TextCheck(void);
-/// Any file that can be read.
+/// Any file that can be read, empty or not.
 FOUNDATION_EXPORT TSLibraryFileCheck TSLibraryReadableCheck(void);
+/// A file that is not empty.
+FOUNDATION_EXPORT TSLibraryFileCheck TSLibraryNonEmptyCheck(void);
 
-/// Restores `path`, a file in ~/Library/TeXShop, from `bundledPath` when it is missing or `check` refuses it, and
-/// returns `path`. A file behind a symbolic link is restored where the link points. With `bundledPath` nil a damaged
-/// file is only moved to the backups, so that the caller falls back to another file. Returns whether the file at
-/// `path` can now be used.
+/// Restores `path`, a file in ~/Library/TeXShop, from `bundledPath` when it is missing or `check` refuses it. A file
+/// behind a symbolic link is restored where the link points. With `bundledPath` nil a damaged file is only moved to
+/// the backups. A damaged file is left as it is when it changed in the last `TSLibraryQuietSeconds` (it may be being
+/// saved), when it changes while it is read, when it cannot be moved to the backups, or when its links do not end.
+/// Returns whether the file at `path` can now be used; when not, the caller reads TeXShop's copy instead.
 FOUNDATION_EXPORT BOOL TSLibraryRepairFile(NSString *path, NSString *_Nullable bundledPath, TSLibraryFileCheck check);
+
+/// Whether the file at `path` (where its links point) passes `check`, without changing anything.
+FOUNDATION_EXPORT BOOL TSLibraryFileIsUsable(NSString *path, NSString *_Nullable bundledPath, TSLibraryFileCheck check);
+
+/// How recently a damaged file may have changed and still be left alone (it may be being saved). 5 seconds.
+FOUNDATION_EXPORT NSTimeInterval TSLibraryQuietSeconds;
 
 /// The copy inside TeXShop of a file of ~/Library/TeXShop, by its path below that folder ("Macros/Macros_Latex.plist").
 FOUNDATION_EXPORT NSString *_Nullable TSLibraryBundledPath(NSString *relativePath);

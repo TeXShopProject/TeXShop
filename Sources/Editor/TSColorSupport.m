@@ -327,6 +327,12 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
         darkThemePath = defaultDarkThemePath;
     }
     
+    // A theme that could not be restored (it is being saved, or could not be kept in the backups) is not read: the
+    // theme that comes with TeXShop is used until it can be.
+    NSString *reserveLite = [[NSBundle mainBundle] pathForResource:@"LiteTheme" ofType:@"plist" inDirectory:@"Themes"];
+    NSString *reserveDark = [[NSBundle mainBundle] pathForResource:@"DarkTheme" ofType:@"plist" inDirectory:@"Themes"];
+    if (!TSLibraryFileIsUsable(liteThemePath, reserveLite, TSLibraryThemeCheck()) && reserveLite) liteThemePath = reserveLite;
+    if (!TSLibraryFileIsUsable(darkThemePath, reserveDark, TSLibraryThemeCheck()) && reserveDark) darkThemePath = reserveDark;
     liteColors = [NSDictionary dictionaryWithContentsOfFile:liteThemePath];
     darkColors = [NSDictionary dictionaryWithContentsOfFile:darkThemePath];
 }

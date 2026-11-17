@@ -197,7 +197,8 @@
     
     tempPath = @"~/Library/TeXShop/HTML/Help.html";
     fileName = [tempPath stringByExpandingTildeInPath];
-    TSLibraryRepairFile(fileName, TSLibraryBundledPath(@"HTML/Help.html"), TSLibraryReadableCheck());
+    if (!TSLibraryRepairFile(fileName, TSLibraryBundledPath(@"HTML/Help.html"), TSLibraryNonEmptyCheck()) && TSLibraryBundledPath(@"HTML/Help.html"))
+        fileName = TSLibraryBundledPath(@"HTML/Help.html");
     myURL = [NSURL fileURLWithPath: fileName];
     
     myController = [TSDocumentController sharedDocumentController];

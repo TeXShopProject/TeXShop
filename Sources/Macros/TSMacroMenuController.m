@@ -147,12 +147,15 @@ static id sharedMacroMenuController = nil;
 
 	NS_DURING
 		// macroDict = [NSDictionary dictionaryWithContentsOfFile: pathStr]; // this crashes when the file is not a proper UTF8
-		if ([[NSFileManager defaultManager] fileExistsAtPath:pathStr])
-			myData = [NSData dataWithContentsOfFile:pathStr];
-		else
-			myData = [NSData dataWithContentsOfFile:defaultPathStr];
-		if (!myData)
-			myData = [NSData dataWithContentsOfFile:TSLibraryBundledPath(@"Macros/Macros_Latex.plist")];
+		// The first that can be used: the engine's macros, the LaTeX macros, the macros inside TeXShop.
+		myData = nil;
+		NSString *bundledMacros = TSLibraryBundledPath(@"Macros/Macros_Latex.plist");
+		for (NSString *candidate in @[pathStr, defaultPathStr, bundledMacros ?: defaultPathStr]) {
+			if (TSLibraryFileIsUsable(candidate, nil, TSLibraryMacrosCheck())) {
+				myData = [NSData dataWithContentsOfFile:candidate];
+				break;
+			}
+		}
 
 		NSPropertyListFormat format;
 		self.macroDict = myData ? [NSPropertyListSerialization propertyListFromData:myData

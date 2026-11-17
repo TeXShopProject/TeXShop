@@ -142,12 +142,10 @@ static id _sharedInstance = nil;
 	NSInteger			aButtons;
 	//
 
-	NSBundle *myBundle=[NSBundle mainBundle];
-
 	completionPath = [LatexPanelPath stringByStandardizingPath];
 	completionPath = [completionPath stringByAppendingPathComponent:@"completion"];
 	completionPath = [completionPath stringByAppendingPathExtension:@"plist"];
-	if (TSLibraryRepairFile(completionPath, TSLibraryBundledPath(@"LatexPanel/completion.plist"), TSLibraryShapeOfBundledCheck()))
+	if (TSLibraryRepairFile(completionPath, TSLibraryBundledPath(@"LatexPanel/completion.plist"), TSLibraryShapeOfBundledCheck(TSLibraryLaTeXPanelAnyLength())))
 		completionDictionary=[NSDictionary dictionaryWithContentsOfFile:completionPath];
 	else
 		completionDictionary=[NSDictionary dictionaryWithContentsOfFile:
