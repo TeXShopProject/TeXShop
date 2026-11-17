@@ -46,12 +46,23 @@ static NSModalResponse SheetResponse(NSModalResponse alertResponse) { return ale
 - (NSModalResponse)testRunModal { shownSheet = self; shown = nil; modalCount++; [modals addObject:self]; return SheetResponse(modalResponse); }
 - (void)testBeginSheetForWindow:(NSWindow *)window completionHandler:(void (^)(NSModalResponse))handler { shownSheet = self; shown = nil; sheetCompletion = handler; }
 @end
+static void finish(NSModalResponse response);
+// What closing Settings ends besides the engine paths: nothing of it exists in this probe.
+@protocol ProbeSession <NSObject>
+- (void)clear;
+- (void)endSession;
+@end
 @interface TestWindow : NSWindow
-@property BOOL testVisible;
+@property BOOL testVisible, testMiniaturized;
 @property NSUInteger frontCount;
+// A sheet of the paths or the profile while one is up; ending it answers as its button would.
+@property NSWindow *testSheet;
 @end
 @implementation TestWindow
 - (BOOL)isVisible { return self.testVisible; }
+- (BOOL)isMiniaturized { return self.testMiniaturized; }
+- (NSWindow *)attachedSheet { return self.testSheet; }
+- (void)endSheet:(NSWindow *)sheet returnCode:(NSModalResponse)code { self.testSheet = nil; finish(code); }
 - (void)makeKeyAndOrderFront:(id)sender { self.frontCount++; self.testVisible = YES; }
 @end
 @interface PreferencesProbe : NSObject {
@@ -60,12 +71,16 @@ static NSModalResponse SheetResponse(NSModalResponse alertResponse) { return ale
     NSTextField *_tetexBinPathField, *_gsBinPathField;
 
 }
-@property BOOL initialEnginePathSearchPending;
+@property BOOL initialEnginePathSearchPending, endingPreferences, quittingPreferences;
+@property NSUInteger themeOperationGeneration;
+@property id<ProbeSession> inputEditing, settingsController;
+@property NSArray *inputRules;
 @property NSUInteger enginePathSearchGeneration;
 @property (weak) NSButton *enginePathSearchButton;
 @end
 @implementation PreferencesProbe
 - (BOOL)finishPreferenceEditing:(BOOL)showError { return YES; }
+- (void)releasePreferencePanels {}
 // The first-launch choice is written as one group of values.
 - (void)applyEngineProfileValues:(NSDictionary *)values { applied = values; [values enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) { [defaults setObject:value forKey:key]; }]; }
 #define NSAlert TestAlert
@@ -244,5 +259,65 @@ int main(void) { @autoreleasepool {
     [p discoverEnginePaths:button]; spin();
     check(matrices().count == 0 && shown.buttons.count == 1 && [shown.informativeText containsString:@"Install TeX Live or MacTeX"] && [shown.informativeText containsString:@"Detect Paths"], @"nothing found gives informational dialog");
     finish(NSAlertFirstButtonReturn);
-    NSLog(@"PASS: candidate selection, minimal width, local Cancel, immediate saving, stale results, two-step initial setup, removed and missing tools, TeX or Ghostscript alone");
+
+    // Settings closed, minimized, or Detect Paths pressed during the first-launch search: both steps still come.
+    results = @{@"TeX":@[candidate(@"/new/tex",@"TeX Live 2026")], @"Ghostscript":@[candidate(@"/new/gs",@"10.10.0")]};
+    void (^reset)(void) = ^{
+        [defaults setObject:@"/old/tex" forKey:TetexBinPath]; [defaults setObject:@"/old/gs" forKey:GSBinPath];
+        p->_tetexBinPathField.stringValue = @"/old/tex"; p->_gsBinPathField.stringValue = @"/old/gs";
+        ((TestWindow *)p->_prefsWindow).testVisible = NO; ((TestWindow *)p->_prefsWindow).testMiniaturized = NO;
+        p.endingPreferences = NO; p.quittingPreferences = NO; shown = nil; shownSheet = nil; sheetCompletion = nil; applied = nil; [modals removeAllObjects];
+    };
+    modalResponse = NSAlertFirstButtonReturn;
+    reset();
+    [p discoverInitialEnginePaths];
+    [p showPreferences:nil];
+    ((TestWindow *)p->_prefsWindow).testVisible = NO;
+    [p tearDownPreferenceEditing]; spin();
+    check(modals.count == 2 && [modals[1] isKindOfClass:TSEngineProfileSheet.class] && applied[@"DefaultScript"] != nil &&
+          [[defaults stringForKey:TetexBinPath] isEqual:@"/new/tex"], @"closing Settings during the first-launch search keeps both steps, asked on their own");
+    check([p->_tetexBinPathField.stringValue isEqual:@"/new/tex"], @"the fields of a closed Settings window follow the first-launch paths");
+
+    reset();
+    [p discoverInitialEnginePaths];
+    [p showPreferences:nil];
+    spin();
+    check(shown.completion != nil && modals.count == 0, @"the first-launch paths are a sheet of the open Settings window");
+    ((TestWindow *)p->_prefsWindow).testSheet = [NSWindow new];
+    [p tearDownPreferenceEditing];
+    ((TestWindow *)p->_prefsWindow).testVisible = NO;
+    check(sheetCompletion == nil && modals.count == 0, @"closing Settings does not put the profile step on the closing window");
+    spin();
+    check(modals.count == 1 && [modals[0] isKindOfClass:TSEngineProfileSheet.class] && applied[@"DefaultScript"] != nil &&
+          [[defaults stringForKey:TetexBinPath] isEqual:@"/old/tex"], @"closing Settings with the paths sheet cancels the paths and asks the profile after it has closed");
+
+    reset();
+    [p discoverInitialEnginePaths];
+    [p finishPreferencesForTermination]; spin();
+    check(modals.count == 0 && shown == nil && applied == nil, @"quitting ends the first-launch steps");
+
+    reset();
+    [p discoverInitialEnginePaths];
+    [p showPreferences:nil];
+    [p discoverEnginePaths:button]; spin();
+    check(shown.completion != nil && button.enabled, @"Detect Paths during the first-launch search shows the paths");
+    finish(NSAlertFirstButtonReturn);
+    check(sheetCompletion != nil && [shownSheet.window.title isEqual:@"Choose an Engine Profile"], @"Detect Paths during the first-launch search keeps the profile step");
+    finish(NSAlertFirstButtonReturn);
+    check(applied[@"DefaultScript"] != nil, @"the profile of that step is applied");
+
+    reset();
+    ((TestWindow *)p->_prefsWindow).testMiniaturized = YES;
+    [p discoverInitialEnginePaths]; spin();
+    check(modals.count == 2 && [p->_tetexBinPathField.stringValue isEqual:@"/new/tex"] && [p->_gsBinPathField.stringValue isEqual:@"/new/gs"],
+          @"a minimized Settings window shows the first-launch paths when it comes back");
+
+    reset();
+    ((TestWindow *)p->_prefsWindow).testVisible = YES;
+    [p discoverEnginePaths:button];
+    ((TestWindow *)p->_prefsWindow).testVisible = NO; ((TestWindow *)p->_prefsWindow).testMiniaturized = YES;
+    spin();
+    check(shown.completion != nil, @"Detect Paths keeps its result for a minimized Settings window");
+    finish(NSAlertSecondButtonReturn);
+    NSLog(@"PASS: candidate selection, minimal width, local Cancel, immediate saving, stale results, two-step initial setup, removed and missing tools, TeX or Ghostscript alone, first launch with Settings closed, minimized or detecting, quitting");
 } return 0; }
