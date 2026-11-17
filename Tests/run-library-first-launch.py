@@ -5,8 +5,10 @@ The production mirrorPath:toPath: of TSAppDelegate and HelpDocuments run verbati
 directory:
 - a home without a Library folder gets ~/Library/TeXShop with its parents;
 - a folder that cannot be created gives one alert that names it and the cause, without an exception.
-Replaced here: NSRunAlertPanel (records its arguments and formats the message as AppKit does, raising for a nil
-format as AppKit does). Removing each rule must fail."""
+Each method is copied verbatim into a small class of its own (Mirror, HelpMirror) that has nothing else of
+TSAppDelegate or HelpDocuments. Replaced here: NSRunAlertPanel (records its arguments and formats the message as
+AppKit does, raising for a nil format as AppKit does); the folders are real folders in a temporary directory.
+Removing each rule must fail."""
 from pathlib import Path
 import plistlib, subprocess, sys, tempfile
 from production_fragments import method, verify_embedded
@@ -36,7 +38,6 @@ static NSInteger RecordAlert(NSString *title, NSString *format, NSString *b1, NS
 }
 #define NSRunAlertPanel RecordAlert
 static NSString *Resources;
-static NSString *TestResourcePath(id self, SEL _cmd) { return Resources; }
 static void check(BOOL ok, NSString *what) { if (!ok) { fprintf(stderr, "FAIL: %s\n", what.UTF8String); exit(1); } }
 
 @interface Mirror : NSObject @end
@@ -55,7 +56,6 @@ int main(int argc, char **argv) { @autoreleasepool {
     alerts = [NSMutableArray array];
     NSString *base = @(argv[1]);
     NSFileManager *fm = NSFileManager.defaultManager;
-    method_setImplementation(class_getInstanceMethod(NSBundle.class, @selector(resourcePath)), (IMP)TestResourcePath);
     Resources = [base stringByAppendingPathComponent:@"Resources"];
     NSString *bundled = [Resources stringByAppendingPathComponent:@"TeXShop"];
     Write(@{@"content": @[]}, [bundled stringByAppendingPathComponent:@"Macros/Macros_Latex.plist"]);
