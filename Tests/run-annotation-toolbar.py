@@ -10,7 +10,8 @@ category (with stand-ins for TSDocument, MyPDFKitView and TSPreviewWindow) and c
 - the part the tools act on, the Preview menu item, moving between the Preview window and the
   window that shows both, closing a window;
 - the text popover: what commits and what discards (spec §3.6.3), the binding to the annotation;
-- the color and font panels: closed by the bar only while they still serve its document (§3.7).
+- the color and font panels: closed by the bar only while they still serve its document (§3.7);
+- on macOS 26.1 and later, the hard scroll edge under the bar, so pages behind it do not hide its icons.
 
 --images DIR also writes pictures of the bar (both layouts, light and dark, en and ja).
 --widths prints the width of both layouts in every language.
@@ -36,6 +37,8 @@ MUTATIONS = {
     'hide-keeps-edit-mode': ('TSDocument-AnnotationBar.m',
         '    if (window == nil)\n        return;\n    [self setAnnotationEditMode:NO];\n', '    if (window == nil)\n        return;\n'),
     'no-minimum-width': ('TSAnnotationBar.m', '    minSize.width = MAX(minSize.width, _compactWidth);\n', ''),
+    'soft-edge': ('TSAnnotationBar.m',
+        '        self.preferredScrollEdgeEffectStyle = NSScrollEdgeEffectStyle.hardStyle;\n', '        ;\n'),
     'close-discards-first': None,
 }
 
@@ -311,6 +314,9 @@ static void TestEditModeAndTargets(void) {
     Check(bar.attachedWindow == preview && [preview.titlebarAccessoryViewControllers containsObject:bar], @"edit mode shows the bar in the Preview window");
     Check(preview.minSize.width >= bar.compactWidth && preview.contentMinSize.width >= bar.compactWidth && NSWidth(preview.frame) >= bar.compactWidth,
           @"the window is at least as wide as the narrow bar");
+    if (@available(macOS 26.1, *))
+        Check(bar.preferredScrollEdgeEffectStyle == NSScrollEdgeEffectStyle.hardStyle,
+              @"the pages under the bar get the hard edge: one even background behind the toolbar and the bar");
     [document setAnnotationEditMode:YES];
     Check(first.applied == 1 && second.applied == 1, @"no change, no calls");
     Check(bar.editModeButton.state == NSControlStateValueOn, @"the switch shows edit mode");
