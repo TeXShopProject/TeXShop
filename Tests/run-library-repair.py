@@ -68,7 +68,17 @@ static NSArray<NSString *> *Files;
 // A file another application creates while TeXShop restores the same one: when TeXShop reads its own copy of `RaceBundled`,
 // `RaceTarget` is created with `RaceContents` first (the moment between finding the file missing and putting the copy).
 static NSString *RaceBundled, *RaceTarget; static NSData *RaceContents;
-static IMP OriginalDataWithContentsOfFile;
+static IMP OriginalDataWithContentsOfFile, OriginalWriteToFile;
+// Another application saves the file at once (a new file renamed over it) just when TeXShop writes the backup of what it
+// judged damaged: the moment after judging and before taking the file away.
+static NSString *SaveTarget; static NSData *SaveContents;
+static BOOL RacingWriteToFile(NSData *self, SEL _cmd, NSString *path, NSDataWritingOptions options, NSError **error) {
+    if (SaveTarget && [path hasPrefix:TSLibraryBackupFolder()]) {
+        NSString *target = SaveTarget; SaveTarget = nil;
+        ((BOOL (*)(id, SEL, NSString *, NSDataWritingOptions, NSError **))OriginalWriteToFile)(SaveContents, _cmd, target, NSDataWritingAtomic, NULL);
+    }
+    return ((BOOL (*)(id, SEL, NSString *, NSDataWritingOptions, NSError **))OriginalWriteToFile)(self, _cmd, path, options, error);
+}
 static id RacingDataWithContentsOfFile(id self, SEL _cmd, NSString *path) {
     if (RaceBundled && [path isEqual:RaceBundled]) {
         RaceBundled = nil;
@@ -245,6 +255,19 @@ int main(int argc, char **argv) { @autoreleasepool {
     RaceBundled = nil;
     method_setImplementation(class_getClassMethod(NSData.class, @selector(dataWithContentsOfFile:)), OriginalDataWithContentsOfFile);
 
+    // 14. A damaged file that another application replaces with a good one just after TeXShop judged it: the good one
+    // stays where it is, and no backup is left.
+    OriginalWriteToFile = method_setImplementation(class_getInstanceMethod(NSData.class, @selector(writeToFile:options:error:)), (IMP)RacingWriteToFile);
+    [fm removeItemAtPath:TSLibraryBackupFolder() error:NULL];
+    Put(garbage, @"Keyboard/autocompletion.plist");
+    NSData *saved = Plist(@{@"b": @"saved by another application"});
+    SaveTarget = Library(@"Keyboard/autocompletion.plist"); SaveContents = saved;
+    check(TSLibraryRepairFile(Library(@"Keyboard/autocompletion.plist"), TSLibraryBundledPath(@"Keyboard/autocompletion.plist"), TSLibraryStringDictionaryCheck()) &&
+          [[NSData dataWithContentsOfFile:Library(@"Keyboard/autocompletion.plist")] isEqual:saved] && [BackupsOf(@"autocompletion.plist") count] == 0,
+          [NSString stringWithFormat:@"a file saved at once after it was judged damaged stays, and no backup is left %@", BackupsOf(@"autocompletion.plist")]);
+    SaveTarget = nil;
+    method_setImplementation(class_getInstanceMethod(NSData.class, @selector(writeToFile:options:error:)), OriginalWriteToFile);
+
     // 13. A damaged file another process has open (it may be writing it in place) is left as it is, even at launch.
     Put(garbage, @"Menus/KeyEquivalents.plist");
     NSTask *holder = [NSTask launchedTaskWithExecutableURL:[NSURL fileURLWithPath:@"/bin/sh"]
@@ -310,19 +333,20 @@ int main(int argc, char **argv) { @autoreleasepool {
 '''
 
 MUTATIONS = {
-    'no backup': ('        if (!BackUp(file)) {', '        if (NO) {'),
-    'missing only': ('    if (data && check(data, bundled)) return YES;\n', '    if (data) return YES;\n'),
+    'no backup': ('        if (![contents writeToFile:target options:NSDataWritingWithoutOverwriting error:NULL]) return NO;\n', ''),
+    'missing only': ('    if (data && check(data, reference)) return YES;\n', '    if (data) return YES;\n'),
     'running replaces damaged': ('    if ([fm attributesOfItemAtPath:file error:NULL]) return TSLibraryFileIsUsable(path, bundledPath, check);', '    if ([fm attributesOfItemAtPath:file error:NULL]) return TSLibraryRepairFile(path, bundledPath, check);'),
     'replace when created meanwhile': ('    BOOL placed = renamex_np(temporary.fileSystemRepresentation, file.fileSystemRepresentation, RENAME_EXCL) == 0;', '    BOOL placed = rename(temporary.fileSystemRepresentation, file.fileSystemRepresentation) == 0;'),
     'open files ignored': ('        if (OpenElsewhere(file)) return NO;\n', ''),
     'own themes unchecked': ('        if (![reference isKindOfClass:NSDictionary.class]) {\n            NSString *lite', '        if (NO) {\n            NSString *lite'),
-    'link replaced': ('    NSString *file = Destination(path);\n    if (!file) return NO;\n    NSData *bundled', '    NSString *file = path;\n    NSData *bundled'),
+    'link replaced': ('    NSString *file = Destination(path);\n    if (!file) return NO;\n    NSData *reference', '    NSString *file = path;\n    NSData *reference'),
     'short panels pass': ('if (![anyLength containsObject:key] && [value count] < [expected count]) return NO;', ''),
     'every array any length': ('if (![anyLength containsObject:key] && ', 'if (NO && '),
     'three components': ('[value count] < 4', '[value count] < 3'),
     'colors not required': ('if (![value isKindOfClass:NSArray.class] || [value count] < 4 || !AllOfClass(value, NSNumber.class)) return NO;', 'if ([value isKindOfClass:NSArray.class] && ([value count] < 4 || !AllOfClass(value, NSNumber.class))) return NO;'),
     'macro items unchecked': ('        return macros[@"submenu"] == nil || MacroItems(macros[@"submenu"], 0);', '        return YES;'),
-    'delete when backup fails': ('    return [fm moveItemAtPath:path toPath:target error:NULL];', '    if (![fm moveItemAtPath:path toPath:target error:NULL]) [fm removeItemAtPath:path error:NULL];\n    return YES;'),
+    'delete when backup fails': ('        if (![contents writeToFile:target options:NSDataWritingWithoutOverwriting error:NULL]) return NO;', '        if (![contents writeToFile:target options:NSDataWritingWithoutOverwriting error:NULL]) [fm removeItemAtPath:file error:NULL];'),
+    'take away whatever is there': ('        if (![FileNumber(aside) isEqual:number]) {', '        if (NO) {'),
     'no wait while saving': ('        if (modified && fabs(modified.timeIntervalSinceNow) < TSLibraryQuietSeconds) return NO;\n', ''),
     'chains followed to a point': ('    return nil;\n}\n\n// Puts `data`', '    return current;\n}\n\n// Puts `data`'),
 }
