@@ -72,6 +72,14 @@ static IMP OriginalDataWithContentsOfFile;
 // Another application saves the file just after TeXShop judged it damaged, when TeXShop reads it again after moving it
 // aside: either in place, through a file handle it opened before (same file), or at once, as a new file at the path.
 static NSFileHandle *SaveHandle; static NSString *SaveTarget; static NSData *SaveContents;
+// The same, a little later: when TeXShop writes its own copy next to the file, after the damaged file went to the backups.
+static NSFileHandle *LateHandle; static IMP OriginalWriteToFile;
+static BOOL LateWriteToFile(NSData *self, SEL _cmd, NSString *path, NSDataWritingOptions options, NSError **error) {
+    if (LateHandle && [path containsString:@".TeXShop-"]) {
+        [LateHandle truncateFileAtOffset:0]; [LateHandle writeData:SaveContents]; [LateHandle synchronizeFile]; [LateHandle closeFile]; LateHandle = nil;
+    }
+    return ((BOOL (*)(id, SEL, NSString *, NSDataWritingOptions, NSError **))OriginalWriteToFile)(self, _cmd, path, options, error);
+}
 static id SavingDataWithContentsOfFile(id self, SEL _cmd, NSString *path) {
     if ((SaveHandle || SaveTarget) && [path containsString:@".TeXShop-"]) {
         if (SaveHandle) { [SaveHandle truncateFileAtOffset:0]; [SaveHandle writeData:SaveContents]; [SaveHandle synchronizeFile]; [SaveHandle closeFile]; SaveHandle = nil; }
@@ -273,6 +281,16 @@ int main(int argc, char **argv) { @autoreleasepool {
           [NSString stringWithFormat:@"a file saved at once after it was judged damaged stays, the damaged one is in the backups %@", BackupsOf(@"autocompletion.plist")]);
     SaveHandle = nil; SaveTarget = nil;
     method_setImplementation(class_getClassMethod(NSData.class, @selector(dataWithContentsOfFile:)), OriginalDataWithContentsOfFile);
+    // In place, after the damaged file went to the backups: it changes places with TeXShop's copy, and no backup is left.
+    OriginalWriteToFile = method_setImplementation(class_getInstanceMethod(NSData.class, @selector(writeToFile:options:error:)), (IMP)LateWriteToFile);
+    [fm removeItemAtPath:TSLibraryBackupFolder() error:NULL];
+    Put(garbage, @"Keyboard/autocompletion.plist");
+    LateHandle = [NSFileHandle fileHandleForWritingAtPath:Library(@"Keyboard/autocompletion.plist")]; SaveContents = saved;
+    check(TSLibraryRepairFile(Library(@"Keyboard/autocompletion.plist"), TSLibraryBundledPath(@"Keyboard/autocompletion.plist"), TSLibraryStringDictionaryCheck()) &&
+          [[NSData dataWithContentsOfFile:Library(@"Keyboard/autocompletion.plist")] isEqual:saved] && [BackupsOf(@"autocompletion.plist") count] == 0,
+          [NSString stringWithFormat:@"a file saved in place after it went to the backups comes back where it was %@", BackupsOf(@"autocompletion.plist")]);
+    LateHandle = nil;
+    method_setImplementation(class_getInstanceMethod(NSData.class, @selector(writeToFile:options:error:)), OriginalWriteToFile);
 
     // 13. A damaged file another process has open (it may be writing it in place) is left as it is, even at launch.
     Put(garbage, @"Menus/KeyEquivalents.plist");
@@ -352,7 +370,7 @@ MUTATIONS = {
     'colors not required': ('if (![value isKindOfClass:NSArray.class] || [value count] < 4 || !AllOfClass(value, NSNumber.class)) return NO;', 'if ([value isKindOfClass:NSArray.class] && ([value count] < 4 || !AllOfClass(value, NSNumber.class))) return NO;'),
     'macro items unchecked': ('        return macros[@"submenu"] == nil || MacroItems(macros[@"submenu"], 0);', '        return YES;'),
     'delete when backup fails': ('        if (renamex_np(aside.fileSystemRepresentation, file.fileSystemRepresentation, RENAME_EXCL) != 0)\n', '        [fm removeItemAtPath:aside error:NULL];\n        if (NO)\n'),
-    'contents not compared': ('        same = [now isEqualToData:contents] && [moved[NSFileModificationDate] isEqual:modified];', '        same = YES;'),
+    'no last look': ('    if (restored && kept && data) {', '    if (NO) {'),
     'no wait while saving': ('        if (modified && fabs(modified.timeIntervalSinceNow) < TSLibraryQuietSeconds) return NO;\n', ''),
     'chains followed to a point': ('    return nil;\n}\n\n// Puts `data`', '    return current;\n}\n\n// Puts `data`'),
 }

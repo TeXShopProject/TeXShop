@@ -210,7 +210,7 @@ static NSString *BackupTarget(NSString *path)
 // judged damaged: the same file number, and for a file the same contents and modification date as when it was judged.
 // The file itself is moved, never copied and deleted, so whatever another application writes to it at any moment stays
 // in it: back where it was if it changed, else in the backups. Returns whether `file` is now free.
-static BOOL TakeAwayIfSame(NSString *file, NSNumber *number, NSDate *modified, NSData *contents)
+static BOOL TakeAwayIfSame(NSString *file, NSNumber *number, NSDate *modified, NSData *contents, NSString **kept)
 {
     NSFileManager *fm = NSFileManager.defaultManager;
     NSString *target = BackupTarget(file);
@@ -231,6 +231,7 @@ static BOOL TakeAwayIfSame(NSString *file, NSNumber *number, NSDate *modified, N
             [fm moveItemAtPath:aside toPath:[target stringByAppendingString:@" (saved meanwhile)"] error:NULL];
         return NO;
     }
+    if (kept) *kept = target;
     return YES;
 }
 
@@ -246,6 +247,7 @@ BOOL TSLibraryRepairFile(NSString *path, NSString *bundledPath, TSLibraryFileChe
     if (data && check(data, reference)) return YES;
     NSDictionary *attributes = [fm attributesOfItemAtPath:file error:NULL];
     BOOL damaged = attributes != nil;
+    NSString *kept = nil;
     if (damaged) {
         // A file changed in the last seconds may be in the middle of being saved by another application: it is left
         // alone this time (the caller reads TeXShop's copy) and looked at again when it is next read.
@@ -258,7 +260,7 @@ BOOL TSLibraryRepairFile(NSString *path, NSString *bundledPath, TSLibraryFileChe
             ![now[NSFileSystemFileNumber] isEqual:attributes[NSFileSystemFileNumber]]) return NO;
         // Nor is a file another process has open: it may be writing it in place, however long that takes.
         if (OpenElsewhere(file)) return NO;
-        if (!TakeAwayIfSame(file, attributes[NSFileSystemFileNumber], modified, data)) {
+        if (!TakeAwayIfSame(file, attributes[NSFileSystemFileNumber], modified, data, &kept)) {
             NSLog(@"TeXShop left the damaged %@ as it is (it could not be kept in Backups, or it changed)", path.stringByAbbreviatingWithTildeInPath);
             return TSLibraryFileIsUsable(path, bundledPath, check);
         }
@@ -267,6 +269,18 @@ BOOL TSLibraryRepairFile(NSString *path, NSString *bundledPath, TSLibraryFileChe
     if (!bundled) return NO;
     // A file that appears meanwhile is kept, and used if it can be.
     BOOL restored = PlaceIfAbsent(bundled, file);
+    // Last, the damaged file in the backups is looked at once more: if another application wrote to it after all, it
+    // changes places with TeXShop's copy at once, and TeXShop's copy is removed from the backups.
+    if (restored && kept && data) {
+        NSDictionary *now = [fm attributesOfItemAtPath:kept error:NULL];
+        if (![[NSData dataWithContentsOfFile:kept] isEqualToData:data] || ![now[NSFileModificationDate] isEqual:attributes[NSFileModificationDate]]) {
+            if (renamex_np(kept.fileSystemRepresentation, file.fileSystemRepresentation, RENAME_SWAP) == 0) {
+                if ([[NSData dataWithContentsOfFile:kept] isEqualToData:bundled]) [fm removeItemAtPath:kept error:NULL];
+                NSLog(@"TeXShop left %@ as another application saved it", path.stringByAbbreviatingWithTildeInPath);
+                return TSLibraryFileIsUsable(path, bundledPath, check);
+            }
+        }
+    }
     NSLog(@"TeXShop %@ %@ from its own copy%@", restored ? @"restored" : @"did not restore", path.stringByAbbreviatingWithTildeInPath,
           damaged ? @"; the damaged file is in Backups" : @"");
     return restored || TSLibraryFileIsUsable(path, bundledPath, check);
