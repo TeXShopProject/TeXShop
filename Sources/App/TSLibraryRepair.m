@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSLibraryRepair.h"
+#import <libproc.h>
+#import <stdio.h>
 
 static NSString *const TSLibraryFolder = @"~/Library/TeXShop";
 NSTimeInterval TSLibraryQuietSeconds = 5;
@@ -154,6 +156,33 @@ static NSString *Destination(NSString *path)
     return nil;
 }
 
+// Puts `data` at `file` only if nothing is there when it lands: the copy is written next to it and renamed with
+// RENAME_EXCL, so a file that another application creates meanwhile is never replaced. Returns whether it was put.
+static BOOL PlaceIfAbsent(NSData *data, NSString *file)
+{
+    NSFileManager *fm = NSFileManager.defaultManager;
+    [fm createDirectoryAtPath:file.stringByDeletingLastPathComponent withIntermediateDirectories:YES attributes:nil error:NULL];
+    NSString *temporary = [file.stringByDeletingLastPathComponent stringByAppendingPathComponent:
+                           [NSString stringWithFormat:@".%@.TeXShop-%@", file.lastPathComponent, NSUUID.UUID.UUIDString]];
+    if (![data writeToFile:temporary options:0 error:NULL]) return NO;
+    BOOL placed = renamex_np(temporary.fileSystemRepresentation, file.fileSystemRepresentation, RENAME_EXCL) == 0;
+    if (!placed) [fm removeItemAtPath:temporary error:NULL];
+    return placed;
+}
+
+// Whether another process has the file open (an application may be writing it in place).
+static BOOL OpenElsewhere(NSString *file)
+{
+    int size = proc_listpidspath(PROC_ALL_PIDS, 0, file.fileSystemRepresentation, PROC_LISTPIDSPATH_EXCLUDE_EVTONLY, NULL, 0);
+    if (size <= 0) return NO;
+    NSMutableData *buffer = [NSMutableData dataWithLength:(NSUInteger)size + 64 * sizeof(pid_t)];
+    int bytes = proc_listpidspath(PROC_ALL_PIDS, 0, file.fileSystemRepresentation, PROC_LISTPIDSPATH_EXCLUDE_EVTONLY, buffer.mutableBytes, (int)buffer.length);
+    const pid_t *pids = buffer.bytes;
+    for (int i = 0; i < bytes / (int)sizeof(pid_t); i++)
+        if (pids[i] > 0 && pids[i] != getpid()) return YES;
+    return NO;
+}
+
 // Moves a damaged file (or a folder where a file belongs) to ~/Library/TeXShop/Backups/<date>/<name>. Returns whether
 // it is there; when it could not be moved, it stays where it was.
 static BOOL BackUp(NSString *path)
@@ -197,17 +226,19 @@ BOOL TSLibraryRepairFile(NSString *path, NSString *bundledPath, TSLibraryFileChe
         // Nor is a file that changes while it is looked at.
         NSData *again = exists && !directory ? [NSData dataWithContentsOfFile:file] : nil;
         if (!(again == data || [again isEqualToData:data]) || ![[fm attributesOfItemAtPath:file error:NULL][NSFileModificationDate] isEqual:modified]) return NO;
+        // Nor is a file another process has open: it may be writing it in place, however long that takes.
+        if (OpenElsewhere(file)) return NO;
         if (!BackUp(file)) {
             NSLog(@"TeXShop could not keep a copy of the damaged %@ in Backups; it is left as it is", path.stringByAbbreviatingWithTildeInPath);
             return NO;
         }
     }
     if (!bundled) return NO;
-    [fm createDirectoryAtPath:file.stringByDeletingLastPathComponent withIntermediateDirectories:YES attributes:nil error:NULL];
-    BOOL restored = [bundled writeToFile:file options:NSDataWritingAtomic error:NULL];
-    NSLog(@"TeXShop %@ %@ from its own copy%@", restored ? @"restored" : @"could not restore", path.stringByAbbreviatingWithTildeInPath,
+    // A file that appears meanwhile is kept, and used if it can be.
+    BOOL restored = PlaceIfAbsent(bundled, file);
+    NSLog(@"TeXShop %@ %@ from its own copy%@", restored ? @"restored" : @"did not restore", path.stringByAbbreviatingWithTildeInPath,
           damaged ? @"; the damaged file is in Backups" : @"");
-    return restored;
+    return restored || TSLibraryFileIsUsable(path, bundledPath, check);
 }
 
 BOOL TSLibraryRestoreMissingFile(NSString *path, NSString *bundledPath, TSLibraryFileCheck check)
@@ -219,10 +250,12 @@ BOOL TSLibraryRestoreMissingFile(NSString *path, NSString *bundledPath, TSLibrar
     if ([fm attributesOfItemAtPath:file error:NULL]) return TSLibraryFileIsUsable(path, bundledPath, check);
     NSData *bundled = bundledPath ? [NSData dataWithContentsOfFile:bundledPath] : nil;
     if (!bundled) return NO;
-    [fm createDirectoryAtPath:file.stringByDeletingLastPathComponent withIntermediateDirectories:YES attributes:nil error:NULL];
-    BOOL restored = [bundled writeToFile:file options:NSDataWritingAtomic error:NULL];
-    NSLog(@"TeXShop %@ the missing %@ from its own copy", restored ? @"restored" : @"could not restore", path.stringByAbbreviatingWithTildeInPath);
-    return restored;
+    // Never over a file that another application creates meanwhile: that one is kept, and used if it can be.
+    if (PlaceIfAbsent(bundled, file)) {
+        NSLog(@"TeXShop restored the missing %@ from its own copy", path.stringByAbbreviatingWithTildeInPath);
+        return YES;
+    }
+    return TSLibraryFileIsUsable(path, bundledPath, check);
 }
 
 BOOL TSLibraryFileIsUsable(NSString *path, NSString *bundledPath, TSLibraryFileCheck check)

@@ -65,6 +65,17 @@ static NSArray<NSString *> *BackupsOf(NSString *name) {
     return found;
 }
 static NSArray<NSString *> *Files;
+// A file another application creates while TeXShop restores the same one: when TeXShop reads its own copy of `RaceBundled`,
+// `RaceTarget` is created with `RaceContents` first (the moment between finding the file missing and putting the copy).
+static NSString *RaceBundled, *RaceTarget; static NSData *RaceContents;
+static IMP OriginalDataWithContentsOfFile;
+static id RacingDataWithContentsOfFile(id self, SEL _cmd, NSString *path) {
+    if (RaceBundled && [path isEqual:RaceBundled]) {
+        RaceBundled = nil;
+        [RaceContents writeToFile:RaceTarget atomically:YES];
+    }
+    return ((id (*)(id, SEL, NSString *))OriginalDataWithContentsOfFile)(self, _cmd, path);
+}
 
 int main(int argc, char **argv) { @autoreleasepool {
     alerts = [NSMutableArray array];
@@ -219,6 +230,32 @@ int main(int argc, char **argv) { @autoreleasepool {
     check(!TSLibraryRepairFile([chain stringByAppendingString:@"/loopA"], TSLibraryBundledPath(@"Menus/KeyEquivalents.plist"), TSLibraryDictionaryCheck()) &&
           [[fm attributesOfItemAtPath:[chain stringByAppendingString:@"/loopA"] error:NULL][NSFileType] isEqual:NSFileTypeSymbolicLink], @"a loop of links is left alone");
 
+    // 12. A file that appears between finding it missing and putting TeXShop's copy is kept, never replaced.
+    OriginalDataWithContentsOfFile = method_setImplementation(class_getClassMethod(NSData.class, @selector(dataWithContentsOfFile:)), (IMP)RacingDataWithContentsOfFile);
+    NSData *theirs = Plist(@{@"a": @"from another application"});
+    [fm removeItemAtPath:Library(@"Keyboard/autocompletion.plist") error:NULL];
+    RaceBundled = TSLibraryBundledPath(@"Keyboard/autocompletion.plist"); RaceTarget = Library(@"Keyboard/autocompletion.plist"); RaceContents = theirs;
+    check(TSLibraryRestoreMissingFile(Library(@"Keyboard/autocompletion.plist"), TSLibraryBundledPath(@"Keyboard/autocompletion.plist"), TSLibraryStringDictionaryCheck()) &&
+          [[NSData dataWithContentsOfFile:Library(@"Keyboard/autocompletion.plist")] isEqual:theirs], @"while running, a file created meanwhile is kept and used");
+    // The same at launch, after the damaged file has gone to the backups.
+    Put(garbage, @"Keyboard/autocompletion.plist");
+    RaceBundled = TSLibraryBundledPath(@"Keyboard/autocompletion.plist"); RaceTarget = Library(@"Keyboard/autocompletion.plist"); RaceContents = theirs;
+    check(TSLibraryRepairFile(Library(@"Keyboard/autocompletion.plist"), TSLibraryBundledPath(@"Keyboard/autocompletion.plist"), TSLibraryStringDictionaryCheck()) &&
+          [[NSData dataWithContentsOfFile:Library(@"Keyboard/autocompletion.plist")] isEqual:theirs], @"at launch, a file created after the backup is kept and used");
+    RaceBundled = nil;
+    method_setImplementation(class_getClassMethod(NSData.class, @selector(dataWithContentsOfFile:)), OriginalDataWithContentsOfFile);
+
+    // 13. A damaged file another process has open (it may be writing it in place) is left as it is, even at launch.
+    Put(garbage, @"Menus/KeyEquivalents.plist");
+    NSTask *holder = [NSTask launchedTaskWithExecutableURL:[NSURL fileURLWithPath:@"/bin/sh"]
+        arguments:@[@"-c", [NSString stringWithFormat:@"exec 3<>'%@'; sleep 30", Library(@"Menus/KeyEquivalents.plist")]] error:NULL terminationHandler:nil];
+    [NSThread sleepForTimeInterval:0.5];
+    check(!TSLibraryRepairFile(Library(@"Menus/KeyEquivalents.plist"), TSLibraryBundledPath(@"Menus/KeyEquivalents.plist"), TSLibraryDictionaryCheck()) &&
+          [[NSData dataWithContentsOfFile:Library(@"Menus/KeyEquivalents.plist")] isEqual:garbage], @"a damaged file another process has open is left alone");
+    [holder terminate]; [holder waitUntilExit];
+    check(TSLibraryRepairFile(Library(@"Menus/KeyEquivalents.plist"), TSLibraryBundledPath(@"Menus/KeyEquivalents.plist"), TSLibraryDictionaryCheck()) &&
+          [[NSData dataWithContentsOfFile:Library(@"Menus/KeyEquivalents.plist")] isEqual:Bundled(@"Menus/KeyEquivalents.plist")], @"once nobody has it open, it is repaired");
+
     // 5. The macros as TeXShop reads them while it runs: nothing is shown, the menu gets macros, and a file that is
     // there is never changed (it may be being saved); the next launch repairs it.
     NSDictionary *bundledMacros = [NSPropertyListSerialization propertyListWithData:Bundled(@"Macros/Macros_Latex.plist") options:0 format:NULL error:NULL];
@@ -276,6 +313,8 @@ MUTATIONS = {
     'no backup': ('        if (!BackUp(file)) {', '        if (NO) {'),
     'missing only': ('    if (data && check(data, bundled)) return YES;\n', '    if (data) return YES;\n'),
     'running replaces damaged': ('    if ([fm attributesOfItemAtPath:file error:NULL]) return TSLibraryFileIsUsable(path, bundledPath, check);', '    if ([fm attributesOfItemAtPath:file error:NULL]) return TSLibraryRepairFile(path, bundledPath, check);'),
+    'replace when created meanwhile': ('    BOOL placed = renamex_np(temporary.fileSystemRepresentation, file.fileSystemRepresentation, RENAME_EXCL) == 0;', '    BOOL placed = rename(temporary.fileSystemRepresentation, file.fileSystemRepresentation) == 0;'),
+    'open files ignored': ('        if (OpenElsewhere(file)) return NO;\n', ''),
     'own themes unchecked': ('        if (![reference isKindOfClass:NSDictionary.class]) {\n            NSString *lite', '        if (NO) {\n            NSString *lite'),
     'link replaced': ('    NSString *file = Destination(path);\n    if (!file) return NO;\n    NSData *bundled', '    NSString *file = path;\n    NSData *bundled'),
     'short panels pass': ('if (![anyLength containsObject:key] && [value count] < [expected count]) return NO;', ''),
@@ -285,7 +324,7 @@ MUTATIONS = {
     'macro items unchecked': ('        return macros[@"submenu"] == nil || MacroItems(macros[@"submenu"], 0);', '        return YES;'),
     'delete when backup fails': ('    return [fm moveItemAtPath:path toPath:target error:NULL];', '    if (![fm moveItemAtPath:path toPath:target error:NULL]) [fm removeItemAtPath:path error:NULL];\n    return YES;'),
     'no wait while saving': ('        if (modified && fabs(modified.timeIntervalSinceNow) < TSLibraryQuietSeconds) return NO;\n', ''),
-    'chains followed to a point': ('    return nil;\n}\n\n// Moves', '    return current;\n}\n\n// Moves'),
+    'chains followed to a point': ('    return nil;\n}\n\n// Puts `data`', '    return current;\n}\n\n// Puts `data`'),
 }
 
 
