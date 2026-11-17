@@ -35,6 +35,8 @@
 % Alternate Special Keys 
 \newcommand{\acr}[1]{\textsf{#1}}
 \usepackage[obeyspaces]{url}
+% Allow a little more space between words rather than let a line stick out into the right margin.
+\setlength{\emergencystretch}{4em}
 \newcommand{\optkey}{\texttt{Opt}}
 \newcommand{\ctlkey}{\texttt{Ctl}}
 \newcommand{\cmdkey}{\texttt{Cmd}}
@@ -1463,7 +1465,7 @@ My colleague Herbert Schulz has a large project using the amsbook document class
 \begin{verbatim}
 \let\OLDmain=\mainmatter
 \renewcommand{\mainmatter}
-    {\OLDmain\write128{Start of main material: \the\ReadonlyShipoutCounter.}}
+{\OLDmain\write128{Start of main material: \the\ReadonlyShipoutCounter.}}
 \end{verbatim} 
 The last two lines above should be combined to form one line with no spaces between the end of the second line and the start of the final line.  This has not yet been extensively tested, but it provides a very easy fix when it works.
 
@@ -1889,19 +1891,23 @@ AppleScript can create dialogs and act on user input. For example, insert the fo
   -- AppleScript
   -- Use a dialog to enter user defined information into an AppleScript.
   -- There are two feedbacks possible 'text' and "choice of buttons".
-  -- The returned information can be used to define corresponding variables.
+  -- The returned information can be used to define corresponding
+  -- variables.
   -- The number of buttons may not exceed three.
   -- In the three examples below it is shown how to use text return, 
   -- button return, and both.
 
   activate
-  display dialog "Test dialog: type something below" default answer "Hello World!" ¬
+  display dialog "Test dialog: type something below" ¬
+     default answer "Hello World!" ¬
      buttons {"A", "B", "C"} default button "B"
   set theText to (the text returned of the result)
-  display dialog "Test dialog: type something below" default answer "Hello World!" ¬
+  display dialog "Test dialog: type something below" ¬
+     default answer "Hello World!" ¬
      buttons {"A", "B", "C"} default button "B"
   set theButton to (the button returned of the result)
-  display dialog "Test dialog: type something below" default answer "Hello World!" ¬
+  display dialog "Test dialog: type something below" ¬
+     default answer "Hello World!" ¬
      buttons {"A", "B", "C"} default button "B"
   set {theText, theButton} to ¬
     {the text returned of the result, the button returned of the result}
@@ -2004,7 +2010,8 @@ The AppleScript used to call this shell script is more interesting. Here it is:
   -- Apply only to an already saved file.
   -- Claus Gerhardt, Nov. 2003
 
-  set scriptPath to (do shell script "dirname " & "~/Library/TeXShop/Scripts/ex")
+  set scriptPath to (do shell script "dirname " & ¬
+      "~/Library/TeXShop/Scripts/ex")
   set scriptPath to scriptPath & "/setname.scpt"
   set scriptName to POSIX file scriptPath as alias
   set scriptLiB to (load script scriptName)
@@ -2017,10 +2024,12 @@ The AppleScript used to call this shell script is more interesting. Here it is:
   set fileNamequoted to quoted form of fileName
   set baseName to do shell script "basename " & fileNamequoted
   set m to (number of characters of contents of baseName)
-  set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as string)
+  set dirName to quoted form of ¬
+      (characters 1 thru (n - m - 1) of fileName as string)
 
   set shellScript to "cd " & dirName & ";"
-  set shellScript to shellScript & "~/Library/TeXShop/bin/pdflatexc  " & baseName
+  set shellScript to shellScript & ¬
+      "~/Library/TeXShop/bin/pdflatexc  " & baseName
   do shell script shellScript
 
   tell document frontName of application "TeXShop"
@@ -2089,7 +2098,8 @@ This is done in the above example: cmd(1) = cd, ``input(1)'' = dirName, cmd(2) =
 The lines
 \begin{verbatim}
 set shellScript to "cd " & dirName & ";"
-set shellScript to shellScript & "~/Library/TeXShop/bin/pdflatexc  " & baseName
+set shellScript to shellScript & ¬
+    "~/Library/TeXShop/bin/pdflatexc  " & baseName
 \end{verbatim}
 are simply a convenient way to concatenate this sequence of commands and input into one variable.
 
@@ -2756,7 +2766,8 @@ Bruno Voisin called my attention to new support in LaTeX for PDF files, added as
    \usepackage{graphicx}
    \usepackage[figuresright]{rotating}
    \ExplSyntaxOn
-   \AddToHook{env/sidewaysfigure/end}{\pdfmanagement_add:nnn{ThisPage}{Rotate}{90}}
+   \AddToHook{env/sidewaysfigure/end}
+     {\pdfmanagement_add:nnn{ThisPage}{Rotate}{90}}
    \ExplSyntaxOff
    \begin{document}
    Some text.
@@ -4660,7 +4671,8 @@ This internal list, incidentally, is exactly the list marked for special handlin
 
 There is a hidden setting to extend the list of specialized TeX commands. The first command below adds one more element to the existing array of user supplied exceptions. The second command erases the array so the user can start over. Note that neither command affects TeXShop's default list of special commands. Restart TeXShop after changing this setting.
 \begin{verbatim}
-defaults write TeXShop ExtraCommandsNotToCheckParameters -array-add "\\verbatim"
+defaults write TeXShop ExtraCommandsNotToCheckParameters \
+    -array-add "\\verbatim"
 defaults write TeXShop ExtraCommandsNotToCheckParameters -array
 \end{verbatim}
 
@@ -4787,7 +4799,7 @@ Apple's Preview, Adobe Acrobat, Skim, and many others. The particular annotation
 
 \begin{figure}[htbp] %  figure placement: here, top, bottom, or page
    \centering
-   \includegraphics[width=7in]{Graphics/screen.jpg} 
+   \includegraphics[width=\textwidth]{Graphics/screen.jpg} 
    \caption{TeXShop Annotations}
    \label{fig:example}
 \end{figure}
@@ -6085,7 +6097,7 @@ To activate Writing Tools, select one or several paragraphs of the source code. 
 
 \begin{figure}[htbp] %  figure placement: here, top, bottom, or page
    \centering
-   \includegraphics[width=6.5in]{Graphics/writingtools.png} 
+   \includegraphics[width=\textwidth]{Graphics/writingtools.png} 
    \caption{Writing Tools}
    \label{fig:writingTools}
 \end{figure} 
@@ -6303,7 +6315,7 @@ to a pdf file. An advantage of this chain is that PSTricks package can be used i
 
 In recent years, the authors of Ghostscript removed several security problems, occasionally by disabling very obscure features of postscript. Unfortunately for TeX, among the obscure features were all postscript transparency operators, so any transparency in the original postscript file is ignored in the pdf version of the file.
 
-To fix this, the Ghostscript authors added a special flag, ``-dALLOWPSTRANSPARENCY''.
+To fix this, the Ghostscript authors added a special flag, \texttt{-dALLOWPSTRANSPARENCY}.
 When Ghostscript is called with this flag set, the transparency operators are recognized (while the other more serious security bugs are still quashed).
 
 When TeXShop opens a postscript file, it always sets this flag if Ghostscript is 9.51 or higher. When typesetting Via DVI, TeXShop sets no flag of its own; to set it there, add \verb|--distilleropts "-dALLOWPSTRANSPARENCY"| to the command in the {\bf Via DVI} group, as described below. Earlier versions of TeXShop could also use a distiller provided by Apple in macOS instead of Ghostscript, but macOS 14 removed that distiller, so TeXShop 6.00 always uses Ghostscript. I suspect the flag works for users who have a Ghostscript provided by MacPorts or Homebrew rather than the Ghostscript provided in MacTeX, but this has not been tested. 
@@ -6374,7 +6386,8 @@ Here is a complete list.
 {\bf \% !TEX encoding = }
 \begin{verbatim}
      Set the encoding used to open the file, overriding all other methods 
-     to determine this encoding. Irrelevant if all files use UTF-8 Unicode.
+     to determine this encoding. Irrelevant if all files use UTF-8
+     Unicode.
      Important if you deal with a mixture of encodings
 \end{verbatim}
 
@@ -6402,7 +6415,8 @@ Here is a complete list.
 
 {\bf \% !TEX numberingCorrection = 0 + current - desired }
 \begin{verbatim}
-     The number of preliminary pages before the main text numbering starts at page 1.
+     The number of preliminary pages before the main text numbering
+     starts at page 1.
 \end{verbatim}
 
 \section{Magic Lines to Control Preview in Double Page Modes}
@@ -6721,7 +6735,8 @@ The Spell Checking category of TeXShop Settings has items for spell checking. Th
 
 The list of specialized TeX commands can be extended. The first command below adds one more element to the existing array of user supplied exceptions. The second command erases the array so the user can start over. Note that neither command affects TeXShop's default list of special commands.
 \begin{verbatim}
-defaults write TeXShop ExtraCommandsNotToCheckParameters -array-add "\\verbatim"
+defaults write TeXShop ExtraCommandsNotToCheckParameters \
+    -array-add "\\verbatim"
 defaults write TeXShop ExtraCommandsNotToCheckParameters -array
 \end{verbatim}
 The second series of hidden settings is related to an earlier experiment with spelling and TeX command parameters. Originally I thought it might be better to turn off spell checking the first two parameters for all TeX commands, and then have a list of special commands whose parameters should be checked. This is the opposite of the current logic. It is possible to test this idea:
