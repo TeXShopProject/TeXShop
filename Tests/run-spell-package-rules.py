@@ -3,7 +3,7 @@
 
 Tests/SpellCheck/packages.tex uses the commands and environments of amsmath,
 mathtools, graphicx, xcolor, tikz, geometry, fancyhdr, microtype, booktabs,
-tabularx, enumitem, hyperref, cleveref, biblatex, natbib, amsthm and siunitx. Words
+tabularx, multirow, caption, enumitem, hyperref, cleveref, biblatex, natbib, amsthm and siunitx. Words
 starting with skipqzx are not prose and must be masked by the shipped
 SpellingExclusions.txt; words starting with keepqzx are prose and must stay.
 
@@ -48,7 +48,7 @@ if args.mutation in engine_mutations:
     assert engine.count(old)==1,args.mutation
     engine=engine.replace(old,new)
 if args.mutation=='package-pattern-as-skip-pattern':
-    assert rules_text.count('\npackage-pattern  ')==2
+    assert rules_text.count('\npackage-pattern  ')==3
     rules_text=rules_text.replace('\npackage-pattern  ','\nskip-pattern  ')
 # \newtheoremstyle has nine arguments, none of them prose.
 if args.mutation=='newtheoremstyle-one-arg':
@@ -110,6 +110,7 @@ conflicts=('% Commands that packages define, defined by the document itself: the
            '\\newcommand{\\rowcolor}[1]{#1}\\rowcolor{keepqzx19 row}\n'
            '\\newcommand{\\columncolor}[1]{#1}\\columncolor{keepqzx20 column}\n'
            '\\newcommand{\\fancypagestyle}[1]{#1}\\fancypagestyle{keepqzx21 style}\n'
+           '\\newcommand{\\multirow}[1]{#1}\\multirow{keepqzx22 cell}\n'
            '\\renewcommand{\\cmidrule}[1]{#1}\\cmidrule{skipqzx20}\n')
 failures=[]
 with tempfile.TemporaryDirectory() as t:

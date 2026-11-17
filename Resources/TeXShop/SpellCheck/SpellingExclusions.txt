@@ -211,6 +211,12 @@ package-args  2  DeclareMicrotypeSet DeclareMicrotypeAlias DeclareMicrotypeBabel
 # is skipped by skip-env-args above.
 package-args  2  newcolumntype
 
+# multirow: \multirow[vpos]{nrows}[bigstruts]{width}[vmove]{text}. The text is checked.
+package-pattern  []{}[]{}[]  multirow
+
+# caption: \captionof{type}[short]{text}. Both captions are checked.
+package-args  1  captionof
+
 # enumitem (the [..] of \begin{enumerate}[...] is skipped by env-options)
 package-args  1  setlist setlistdepth restartlist
 package-args  2  SetEnumitemKey SetLabelAlign
