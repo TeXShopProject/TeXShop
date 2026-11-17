@@ -27,6 +27,8 @@ MUTATIONS = {
     # Unsplitting keeps the part in use and closes the popup of the part that goes away (#52).
     'unsplit-keeps-first': ('window', '    if (keepsSecondPart)\n        [self switchSplitParts];\n', ''),
     'unsplit-keeps-gone-popup': ('window', '        [(MyPDFKitView *)self.myPDFKitView2 detachPinnedLinkPreviewWithWindowFrame: NULL];\n', ''),
+    'unsplit-keeps-hidden-part': ('window', '        keepsSecondPart = secondSeen && (self.activeView == secondView || ! firstSeen);\n', '        keepsSecondPart = self.activeView == secondView;\n'),
+    'unsplit-keeps-hidden-first': ('window', '        keepsSecondPart = secondSeen && (self.activeView == secondView || ! firstSeen);\n', '        keepsSecondPart = secondSeen && self.activeView == secondView;\n'),
     'unsplit-sizes-swapped': ('window', 'theFrame1 = keepsSecondPart ? firstFrameBefore : [self.myPDFKitView frame];\n                theFrame2 = keepsSecondPart ? secondFrameBefore : [self.myPDFKitView2 frame];\n                // The height',
                               'theFrame1 = [self.myPDFKitView frame];\n                theFrame2 = [self.myPDFKitView2 frame];\n                // The height'),
     # view code
@@ -606,6 +608,36 @@ int main(int argc, char **argv) { @autoreleasepool {
                               extentOf(inWindow(p.upper)), extentOf(inWindow(p.lower)), extentOf(used.upperFrame), extentOf(used.lowerFrame)]));
         check([doc indexForPage:p.lower.currentPage] == used.upperPlace.pageIndex,
               describe(kept, @"splitting again shows the page of the other part in the second part"));
+
+        // A part in use that cannot be seen, as when the divider has been dragged to the edge of
+        // the window, does not stay: the part that can be seen stays with its pinned popup, and
+        // the popup of the hidden part closes (#52).
+        for (int hiddenFirst = 0; hiddenFirst < 2; hiddenFirst++) {
+            NSString *hid = [name stringByAppendingString:hiddenFirst ? @", first part hidden and in use" : @", second part hidden and in use"];
+            if (!p.window.windowIsSplit) {
+                flags = sideBySide.boolValue ? NSEventModifierFlagOption : 0; [p.window splitPdfKitWindow:nil]; flags = 0; settle(p.window);
+            }
+            [sv setPosition:round(whole * 0.5) ofDividerAtIndex:0]; settle(p.window);
+            [p.upper setPageStyle:PDF_MULTI_PAGE_STYLE]; [p.upper setupPageStyle];
+            [p.lower setPageStyle:PDF_SINGLE_PAGE_STYLE]; [p.lower setupPageStyle];
+            scrollTo(p.upper, 1, 500); scrollTo(p.lower, 4, 600); settle(p.window);
+            if (!p.upper.hasPinnedLinkPreview) { NSRect r = inWindow(p.upper); [p.upper pin:NSMakeRect(NSMinX(r) + 30, NSMaxY(r) - 170, 180, 120)]; }
+            if (!p.lower.hasPinnedLinkPreview) { NSRect r = inWindow(p.lower); [p.lower pin:NSMakeRect(NSMinX(r) + 60, NSMaxY(r) - 140, 150, 100)]; }
+            MyPDFKitView *hidden = hiddenFirst ? p.upper : p.lower, *seen = hiddenFirst ? p.lower : p.upper;
+            NSInteger seenPage = pageOf(seen), seenStyle = seen.pageStyle;
+            TSLinkPreviewView *seenPopup = seen.preview, *hiddenPopup = hidden.preview;
+            [sv setPosition:(hiddenFirst ? (sideBySide.boolValue ? NSMinX(sv.bounds) : NSMinY(sv.bounds)) : (sideBySide.boolValue ? NSMaxX(sv.bounds) : NSMaxY(sv.bounds)))
+                ofDividerAtIndex:0];
+            settle(p.window);
+            [hidden becomeActiveView]; settle(p.window);
+            check(p.window.activeView == hidden && !topOf(hidden).valid && topOf(seen).valid && seenPopup && hiddenPopup,
+                  describe(hid, @"fixture: the part in use cannot be seen, the other part can, and both have a pinned popup"));
+            [p.window splitPdfKitWindow:nil]; settle(p.window);
+            check(!p.window.windowIsSplit && pageOf(p.upper) == seenPage && p.upper.pageStyle == seenStyle,
+                  describe(hid, [NSString stringWithFormat:@"unsplitting keeps the part that can be seen (page %ld for %ld)", (long)pageOf(p.upper), (long)seenPage]));
+            check(p.upper.preview == seenPopup && p.upper.hasPinnedLinkPreview && hiddenPopup.superview == nil,
+                  describe(hid, @"the popup of the part that can be seen stays and the other one closes"));
+        }
         [p.window close];
     }
     {   // A part that fits the page to the window keeps fitting at its new place.

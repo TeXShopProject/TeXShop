@@ -1409,12 +1409,17 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     
 // END OF ENCRYPTED PDF BUG FIX
     
-    // Unsplitting keeps the part that was in use. When that is the second part, the parts first
-    // change places with everything they show, so the first view, which stays, shows what the
-    // second part showed, with its pinned link popup by its link (#52). The parts keep their
-    // sizes for the next split.
+    // Unsplitting keeps the part that was in use: the active part, unless nothing of it can be
+    // seen, as when the divider has been dragged to the edge of the window; then the part that
+    // can be seen stays. When that is the second part, the parts first change places with
+    // everything they show, so the first view, which stays, shows what the second part showed,
+    // with its pinned link popup by its link (#52). The parts keep their sizes for the next split.
     NSRect firstFrameBefore = [firstView frame], secondFrameBefore = [secondView frame];
-    BOOL keepsSecondPart = self.windowIsSplit && self.activeView == secondView;
+    BOOL keepsSecondPart = NO;
+    if (self.windowIsSplit) {
+        BOOL firstSeen = TSPreviewPaneCapture(firstView).valid, secondSeen = TSPreviewPaneCapture(secondView).valid;
+        keepsSecondPart = secondSeen && (self.activeView == secondView || ! firstSeen);
+    }
     if (keepsSecondPart)
         [self switchSplitParts];
     
