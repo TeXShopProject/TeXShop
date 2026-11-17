@@ -194,7 +194,7 @@ def build(text, tmp):
     includes = [arg for arg in include_args(ROOT)]
     includes = ['-I', str((tmp / 'src' / SUPPORT).parent)] + includes
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', *includes, str(tmp / 'probe.m'),
-                    str(tmp / 'src' / SUPPORT), str(ROOT / 'Sources/Settings/TSThemeFileStore.m'), str(ROOT / 'Sources/App/globals.m'),
+                    str(tmp / 'src' / SUPPORT), str(ROOT / 'Sources/App/TSLibraryRepair.m'), str(ROOT / 'Sources/Settings/TSThemeFileStore.m'), str(ROOT / 'Sources/App/globals.m'),
                     '-o', str(tmp / 'probe')], check=True)
     return tmp / 'probe'
 

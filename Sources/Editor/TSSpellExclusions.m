@@ -13,6 +13,7 @@
  */
 
 #import "TSSpellExclusions.h"
+#import "TSLibraryRepair.h"
 
 #ifndef TSSPELL_STANDALONE_TEST
 #import "globals.h"
@@ -1566,13 +1567,9 @@ static void ScanDefinitions(TSSpellRules *rules, ScanIndex *x,
 
 + (void)installDefaultRulesIfNeeded
 {
-    NSFileManager *fm = [NSFileManager defaultManager];
-    NSString *dest = [self userRulesPath];
-    if ([fm fileExistsAtPath:dest]) return;
-    NSString *source = [self bundledRulesPath];
-    if (!source) return;
-    [fm createDirectoryAtPath:[dest stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:NULL];
-    [fm copyItemAtPath:source toPath:dest error:NULL];
+    // Missing: restored from the copy inside TeXShop. Not readable as UTF-8: repaired at the next launch
+    // (TSLibraryRepairAll), the damaged file kept in the backups.
+    TSLibraryRestoreMissingFile([self userRulesPath], [self bundledRulesPath], TSLibraryUTF8TextCheck());
 }
 
 + (TSSpellExclusions *)sharedExclusions

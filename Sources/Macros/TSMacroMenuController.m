@@ -23,6 +23,7 @@
  */
 
 #import "TSMacroMenuController.h"
+#import "TSLibraryRepair.h"
 #import "TSMacroContentKind.h"
 #import "TSKeyboardShortcuts.h"
 
@@ -137,30 +138,34 @@ static id sharedMacroMenuController = nil;
 		default: pathStr = [pathStr stringByAppendingPathComponent:@"Macros_Latex"]; break;
 	}
 	pathStr = [pathStr stringByAppendingPathExtension:@"plist"];
-	
-	
+
+	// Missing LaTeX macros are restored from the copy inside TeXShop. Damaged macros are left as they are while
+	// TeXShop runs (they may be being saved); the next launch repairs them (TSLibraryRepairAll).
+	TSLibraryRestoreMissingFile(defaultPathStr, TSLibraryBundledPath(@"Macros/Macros_Latex.plist"), TSLibraryMacrosCheck());
+
 	NS_DURING
 		// macroDict = [NSDictionary dictionaryWithContentsOfFile: pathStr]; // this crashes when the file is not a proper UTF8
-		if ([[NSFileManager defaultManager] fileExistsAtPath:pathStr])
-			myData = [NSData dataWithContentsOfFile:pathStr];
-		else
-			myData = [NSData dataWithContentsOfFile:defaultPathStr];
-		
+		// The first that can be used: the engine's macros, the LaTeX macros, the macros inside TeXShop.
+		myData = nil;
+		NSString *bundledMacros = TSLibraryBundledPath(@"Macros/Macros_Latex.plist");
+		for (NSString *candidate in @[pathStr, defaultPathStr, bundledMacros ?: defaultPathStr]) {
+			if (TSLibraryFileIsUsable(candidate, nil, TSLibraryMacrosCheck())) {
+				myData = [NSData dataWithContentsOfFile:candidate];
+				break;
+			}
+		}
+
 		NSPropertyListFormat format;
-		self.macroDict = [NSPropertyListSerialization propertyListFromData:myData
+		self.macroDict = myData ? [NSPropertyListSerialization propertyListFromData:myData
 													 mutabilityOption:NSPropertyListImmutable
 															   format:&format
-													 errorDescription:&error];
+													 errorDescription:&error] : nil;
 	NS_HANDLER
 		self.macroDict = nil;
 	NS_ENDHANDLER
-	
+	error = nil;
+
 	if (!self.macroDict || ![self.macroDict isKindOfClass: [NSDictionary class]]) {
-		// alert: failed to parse Macros.plist
-		NSRunAlertPanel(@"Error", @"failed to parse ~/Library/TeXShop/Macros/Macros_??.plist file",
-						nil, nil, nil);
-//		if (error) [error release]; // mitsu 1.29 (U) added
-        error = nil;
 		self.macroDict = nil;
 		return;
 	}

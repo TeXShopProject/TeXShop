@@ -120,7 +120,7 @@ with tempfile.TemporaryDirectory() as t:
     exe=t/'mask'
     subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-fobjc-arc','-w','-DTSSPELL_STANDALONE_TEST',
                     *include_args(root),'-framework','Foundation',str(root/'Tests/SpellCheck/mask.m'),
-                    str(t/'TSSpellExclusions.m'),'-o',str(exe)],check=True)
+                    str(t/'TSSpellExclusions.m'), str(root/'Sources/App/TSLibraryRepair.m'),'-o',str(exe)],check=True)
     for name,path in (('packages.tex',source),('conflicts',t/'conflicts.tex')):
         run=subprocess.run([str(exe),str(t/'rules.txt'),str(path)],capture_output=True,text=True,check=True)
         if run.stderr.strip():

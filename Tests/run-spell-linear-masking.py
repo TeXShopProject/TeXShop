@@ -18,7 +18,7 @@ with tempfile.TemporaryDirectory(prefix='ts-spell-linear-') as td:
     other=text.replace('comments          yes','comments          no')+'\nskip-body german\nlanguage-switch shorthandsoff\n'
     (t/'other.txt').write_text(other)
     subprocess.run(['xcrun','clang','-O2','-fobjc-arc','-w','-DTSSPELL_STANDALONE_TEST',*include_args(root),
-        '-framework','Foundation',str(root/'Tests/SpellCheck/linear.m'),str(root/'Sources/Editor/TSSpellExclusions.m'),
+        '-framework','Foundation',str(root/'Tests/SpellCheck/linear.m'),str(root/'Sources/Editor/TSSpellExclusions.m'), str(root/'Sources/App/TSLibraryRepair.m'),
         '-o',str(t/'linear')],check=True)
     command=[str(t/'linear'),str(rules),str(t/'other.txt')]+[str(f) for f in fixtures]
     if args.mutation: command.append('--reference')

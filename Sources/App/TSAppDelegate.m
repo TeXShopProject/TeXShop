@@ -68,6 +68,7 @@
 #import "TSAdvancedFindFieldStyle.h"
 #import "TSPreferenceEffects.h"
 #import "TSLibraryVersion.h"
+#import "TSLibraryRepair.h"
 #import "TSBundledMacroUpdate.h"
 
 /*
@@ -561,6 +562,9 @@ static void TSInstallAdvancedFindFieldStyle(void)
 		TSLibraryRecordVersion(NewPath, currentVersion);
 	}
 
+	// Each settings file TeXShop needs, restored from its own copy when it is missing or damaged.
+	TSLibraryRepairAll();
+
 	
 // Finish configuration of various pieces
     
@@ -937,11 +941,11 @@ static void TSInstallAdvancedFindFieldStyle(void)
 	autocompletionPath = [AutoCompletionPath stringByStandardizingPath];
 	autocompletionPath = [autocompletionPath stringByAppendingPathComponent:@"autocompletion"];
 	autocompletionPath = [autocompletionPath stringByAppendingPathExtension:@"plist"];
-	if ([[NSFileManager defaultManager] fileExistsAtPath: autocompletionPath])
+	if (TSLibraryRestoreMissingFile(autocompletionPath, TSLibraryBundledPath(@"Keyboard/autocompletion.plist"), TSLibraryStringDictionaryCheck()))
 		[GlobalData sharedGlobalData].g_autocompletionDictionary = [NSDictionary dictionaryWithContentsOfFile:autocompletionPath];
 	else
 		[GlobalData sharedGlobalData].g_autocompletionDictionary = [NSDictionary dictionaryWithContentsOfFile:
-			[[NSBundle mainBundle] pathForResource:@"autocompletion" ofType:@"plist"]];
+			TSLibraryBundledPath(@"Keyboard/autocompletion.plist") ?: @""];
 //	[g_autocompletionDictionary retain];
 	// end of code added by Greg Landweber
 	
@@ -959,6 +963,7 @@ static void TSInstallAdvancedFindFieldStyle(void)
 - (void)finishMenuKeyEquivalentsConfigure
 {
     NSString *path = [[[MenuShortcutsPath stringByStandardizingPath] stringByAppendingPathComponent:@"KeyEquivalents"] stringByAppendingPathExtension:@"plist"];
+    TSLibraryRestoreMissingFile(path, TSLibraryBundledPath(@"Menus/KeyEquivalents.plist"), TSLibraryDictionaryCheck());
     NSDictionary *shortcuts = [NSDictionary dictionaryWithContentsOfFile:path];
     TSApplyLegacyMenuKeys(NSApp.mainMenu, shortcuts);
 }
@@ -1041,11 +1046,11 @@ static void TSInstallAdvancedFindFieldStyle(void)
     g_canRegisterCommandCompletion = NO;
     completionPath = [[GlobalData sharedGlobalData].CommandCompletionPath stringByStandardizingPath];
     completionFileName = [[completionPath lastPathComponent] stringByDeletingPathExtension];
-    if ([[NSFileManager defaultManager] fileExistsAtPath: completionPath])
+    NSString *bundledCompletion = TSLibraryBundledPath([[@"CommandCompletion" stringByAppendingPathComponent:completionFileName] stringByAppendingPathExtension:@"txt"]);
+    if (TSLibraryRestoreMissingFile(completionPath, bundledCompletion, TSLibraryReadableCheck()))
         myData = [NSData dataWithContentsOfFile:completionPath];
     else
-        myData = [NSData dataWithContentsOfFile:
-                  [[NSBundle mainBundle] pathForResource:completionFileName ofType:@"txt"]];
+        myData = bundledCompletion ? [NSData dataWithContentsOfFile:bundledCompletion] : nil;
     if (!myData)
         return;
     

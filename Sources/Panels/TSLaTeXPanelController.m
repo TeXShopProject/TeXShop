@@ -23,6 +23,7 @@
  */
 
 #import "TSLaTeXPanelController.h"
+#import "TSLibraryRepair.h"
 #import "globals.h"
 #import <objc/runtime.h>
 
@@ -141,16 +142,14 @@ static id _sharedInstance = nil;
 	NSInteger			aButtons;
 	//
 
-	NSBundle *myBundle=[NSBundle mainBundle];
-
 	completionPath = [LatexPanelPath stringByStandardizingPath];
 	completionPath = [completionPath stringByAppendingPathComponent:@"completion"];
 	completionPath = [completionPath stringByAppendingPathExtension:@"plist"];
-	if ([[NSFileManager defaultManager] fileExistsAtPath: completionPath])
+	if (TSLibraryRestoreMissingFile(completionPath, TSLibraryBundledPath(@"LatexPanel/completion.plist"), TSLibraryShapeOfBundledCheck(TSLibraryLaTeXPanelAnyLength())))
 		completionDictionary=[NSDictionary dictionaryWithContentsOfFile:completionPath];
 	else
 		completionDictionary=[NSDictionary dictionaryWithContentsOfFile:
-			[myBundle pathForResource:@"completion" ofType:@"plist"]];
+			TSLibraryBundledPath(@"LatexPanel/completion.plist") ?: @""];
 
 	[super windowDidLoad];
 

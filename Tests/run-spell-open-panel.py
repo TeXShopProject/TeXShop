@@ -28,7 +28,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-spell-open-panel-') as td:
     t = Path(td); (t/'support.m').write_text(s)
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-DTSSPELL_STANDALONE_TEST', *include_args(root),
         '-I'+str(root/'Tests/SpellCheck'), '-I'+str(root/'Tests'), '-framework', 'Cocoa',
-        str(root/'Tests/SpellCheck/open-panel.m'), str(t/'support.m'), str(root/'Sources/Editor/TSSpellExclusions.m'),
+        str(root/'Tests/SpellCheck/open-panel.m'), str(t/'support.m'), str(root/'Sources/Editor/TSSpellExclusions.m'), str(root/'Sources/App/TSLibraryRepair.m'),
         '-o', str(t/'probe')], check=True)
     subprocess.run([str(t/'probe')],
         env=dict(os.environ, TSSPELL_RULES=str(root/'Resources/TeXShop/SpellCheck/SpellingExclusions.txt')),
