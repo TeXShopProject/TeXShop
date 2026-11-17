@@ -1567,8 +1567,9 @@ static void ScanDefinitions(TSSpellRules *rules, ScanIndex *x,
 
 + (void)installDefaultRulesIfNeeded
 {
-    // Missing, or not readable as UTF-8: restored from the copy inside TeXShop, the damaged file kept in the backups.
-    TSLibraryRepairFile([self userRulesPath], [self bundledRulesPath], TSLibraryUTF8TextCheck());
+    // Missing: restored from the copy inside TeXShop. Not readable as UTF-8: repaired at the next launch
+    // (TSLibraryRepairAll), the damaged file kept in the backups.
+    TSLibraryRestoreMissingFile([self userRulesPath], [self bundledRulesPath], TSLibraryUTF8TextCheck());
 }
 
 + (TSSpellExclusions *)sharedExclusions

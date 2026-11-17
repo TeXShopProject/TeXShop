@@ -82,7 +82,12 @@ TSLibraryFileCheck TSLibraryThemeCheck(void)
     return ^BOOL(NSData *data, NSData *bundled) {
         NSDictionary *theme = PropertyList(data);
         if (![theme isKindOfClass:NSDictionary.class]) return NO;
+        // A theme of the user's own is checked against TeXShop's Lite theme, wherever it is checked.
         NSDictionary *reference = PropertyList(bundled);
+        if (![reference isKindOfClass:NSDictionary.class]) {
+            NSString *lite = TSLibraryBundledPath(@"Themes/LiteTheme.plist");
+            reference = lite ? PropertyList([NSData dataWithContentsOfFile:lite]) : nil;
+        }
         if (![reference isKindOfClass:NSDictionary.class]) reference = nil;
         // A color is read as red, green, blue and alpha. A key that the copy inside TeXShop has as a color must be one;
         // any other array must be one too. Keys may be missing (TeXShop has defaults for them).
@@ -205,6 +210,21 @@ BOOL TSLibraryRepairFile(NSString *path, NSString *bundledPath, TSLibraryFileChe
     return restored;
 }
 
+BOOL TSLibraryRestoreMissingFile(NSString *path, NSString *bundledPath, TSLibraryFileCheck check)
+{
+    NSFileManager *fm = NSFileManager.defaultManager;
+    NSString *file = Destination(path);
+    if (!file) return NO;
+    // Something there, usable or not, is not touched while TeXShop runs (it may be being saved): see TSLibraryRepairAll.
+    if ([fm attributesOfItemAtPath:file error:NULL]) return TSLibraryFileIsUsable(path, bundledPath, check);
+    NSData *bundled = bundledPath ? [NSData dataWithContentsOfFile:bundledPath] : nil;
+    if (!bundled) return NO;
+    [fm createDirectoryAtPath:file.stringByDeletingLastPathComponent withIntermediateDirectories:YES attributes:nil error:NULL];
+    BOOL restored = [bundled writeToFile:file options:NSDataWritingAtomic error:NULL];
+    NSLog(@"TeXShop %@ the missing %@ from its own copy", restored ? @"restored" : @"could not restore", path.stringByAbbreviatingWithTildeInPath);
+    return restored;
+}
+
 BOOL TSLibraryFileIsUsable(NSString *path, NSString *bundledPath, TSLibraryFileCheck check)
 {
     NSString *file = Destination(path);
@@ -231,6 +251,22 @@ void TSLibraryRepairAll(void)
     Repair(@"CommandCompletion/CommandCompletionXML.txt", TSLibraryReadableCheck());
     Repair(@"Themes/LiteTheme.plist", TSLibraryThemeCheck());
     Repair(@"Themes/DarkTheme.plist", TSLibraryThemeCheck());
+    // The themes in use: one that comes with TeXShop is restored; a damaged one of the user's own goes to the backups,
+    // and TeXShop then uses its Lite or Dark theme (TSColorSupport).
+    for (NSString *key in @[@"DefaultLiteTheme", @"DefaultDarkTheme"]) {
+        NSString *name = [NSUserDefaults.standardUserDefaults stringForKey:key];
+        if (!name.length || [name containsString:@"/"] || [name isEqual:@"LiteTheme"] || [name isEqual:@"DarkTheme"]) continue;
+        NSString *relative = [[@"Themes" stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"plist"];
+        NSString *path = [[TSLibraryFolder stringByAppendingPathComponent:relative] stringByExpandingTildeInPath];
+        if ([NSFileManager.defaultManager attributesOfItemAtPath:path error:NULL] || TSLibraryBundledPath(relative))
+            TSLibraryRepairFile(path, TSLibraryBundledPath(relative), TSLibraryThemeCheck());
+    }
+    // The macros of the other engines have no copy inside TeXShop: a damaged one goes to the backups, and the LaTeX
+    // macros are used.
+    for (NSString *name in @[@"Macros_Tex", @"Macros_Bibtex", @"Macros_Index", @"Macros_Metapost"]) {
+        NSString *path = [[TSLibraryFolder stringByAppendingPathComponent:[[@"Macros" stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"plist"]] stringByExpandingTildeInPath];
+        if ([NSFileManager.defaultManager attributesOfItemAtPath:path error:NULL]) TSLibraryRepairFile(path, nil, TSLibraryMacrosCheck());
+    }
     Repair(@"SpellCheck/SpellingExclusions.txt", TSLibraryUTF8TextCheck());
     Repair(@"HTML/Help.html", TSLibraryNonEmptyCheck());
 }

@@ -219,32 +219,54 @@ int main(int argc, char **argv) { @autoreleasepool {
     check(!TSLibraryRepairFile([chain stringByAppendingString:@"/loopA"], TSLibraryBundledPath(@"Menus/KeyEquivalents.plist"), TSLibraryDictionaryCheck()) &&
           [[fm attributesOfItemAtPath:[chain stringByAppendingString:@"/loopA"] error:NULL][NSFileType] isEqual:NSFileTypeSymbolicLink], @"a loop of links is left alone");
 
-    // 5. The macros as TeXShop reads them: nothing is shown, and the menu gets macros.
+    // 5. The macros as TeXShop reads them while it runs: nothing is shown, the menu gets macros, and a file that is
+    // there is never changed (it may be being saved); the next launch repairs it.
+    NSDictionary *bundledMacros = [NSPropertyListSerialization propertyListWithData:Bundled(@"Macros/Macros_Latex.plist") options:0 format:NULL error:NULL];
     Macros *m = [Macros new];
     g_macroType = LatexEngine;
     Put(garbage, @"Macros/Macros_Latex.plist");
     [alerts removeAllObjects]; [m loadMacros];
-    check(alerts.count == 0 && [m.macroDict[@"submenu"] count] > 0 && [[NSData dataWithContentsOfFile:Library(@"Macros/Macros_Latex.plist")] isEqual:Bundled(@"Macros/Macros_Latex.plist")],
-          [NSString stringWithFormat:@"damaged LaTeX macros: restored without a message %@", alerts]);
+    check(alerts.count == 0 && [m.macroDict isEqual:bundledMacros] && [[NSData dataWithContentsOfFile:Library(@"Macros/Macros_Latex.plist")] isEqual:garbage],
+          [NSString stringWithFormat:@"damaged LaTeX macros while running: TeXShop's macros are read, the file is left, no message %@", alerts]);
+    TSLibraryRepairAll();
+    check([[NSData dataWithContentsOfFile:Library(@"Macros/Macros_Latex.plist")] isEqual:Bundled(@"Macros/Macros_Latex.plist")], @"the next launch repairs the LaTeX macros");
     [fm removeItemAtPath:Library(@"Macros") error:NULL];
     [alerts removeAllObjects]; [m loadMacros];
-    check(alerts.count == 0 && [m.macroDict[@"submenu"] count] > 0, @"no macros folder: restored without a message");
+    check(alerts.count == 0 && [m.macroDict isEqual:bundledMacros] && [[NSData dataWithContentsOfFile:Library(@"Macros/Macros_Latex.plist")] isEqual:Bundled(@"Macros/Macros_Latex.plist")],
+          @"no macros folder while running: the missing file is restored, without a message");
     g_macroType = TexEngine;
     Put(Plist(@{@"submenu": @[@{@"name": @"tex mine", @"content": @"x"}]}), @"Macros/Macros_Tex.plist");
     [alerts removeAllObjects]; [m loadMacros];
     check([[m.macroDict[@"submenu"] firstObject][@"name"] isEqual:@"tex mine"], @"the macros of the engine are read when sound");
-    // A damaged file that cannot be put aside (changed just now): the LaTeX macros are read, and nothing is shown.
-    TSLibraryQuietSeconds = 5;
-    Put(Plist(@{@"submenu": @[@{@"name": @[@"not a string"]}]}), @"Macros/Macros_Tex.plist");
+    NSData *badTex = Plist(@{@"submenu": @[@{@"name": @[@"not a string"]}]});
+    Put(badTex, @"Macros/Macros_Tex.plist");
     [alerts removeAllObjects]; [m loadMacros];
-    check(alerts.count == 0 && [m.macroDict isEqual:[NSPropertyListSerialization propertyListWithData:Bundled(@"Macros/Macros_Latex.plist") options:0 format:NULL error:NULL]],
-          @"damaged macros of an engine being saved: the LaTeX macros are read");
-    TSLibraryQuietSeconds = 0;
-    Put(garbage, @"Macros/Macros_Tex.plist");
-    [alerts removeAllObjects]; [m loadMacros];
-    check(alerts.count == 0 && ![fm fileExistsAtPath:Library(@"Macros/Macros_Tex.plist")] && [BackupsOf(@"Macros_Tex.plist") count] == 1 &&
-          [m.macroDict isEqual:[NSPropertyListSerialization propertyListWithData:Bundled(@"Macros/Macros_Latex.plist") options:0 format:NULL error:NULL]],
-          @"damaged macros of an engine go to the backups, and the LaTeX macros are used, without a message");
+    check(alerts.count == 0 && [m.macroDict isEqual:bundledMacros] && [[NSData dataWithContentsOfFile:Library(@"Macros/Macros_Tex.plist")] isEqual:badTex],
+          @"damaged macros of an engine while running: the LaTeX macros are read, the file is left");
+    TSLibraryRepairAll();
+    check(![fm fileExistsAtPath:Library(@"Macros/Macros_Tex.plist")] && [BackupsOf(@"Macros_Tex.plist") count] == 1,
+          @"the next launch puts damaged macros of an engine in the backups");
+
+    // 10. While TeXShop runs, a missing file is restored and nothing else is changed.
+    Put(garbage, @"LatexPanel/completion.plist");
+    check(!TSLibraryRestoreMissingFile(Library(@"LatexPanel/completion.plist"), TSLibraryBundledPath(@"LatexPanel/completion.plist"), TSLibraryShapeOfBundledCheck(TSLibraryLaTeXPanelAnyLength())) &&
+          [[NSData dataWithContentsOfFile:Library(@"LatexPanel/completion.plist")] isEqual:garbage], @"while running, a damaged file is left as it is");
+    [fm removeItemAtPath:Library(@"LatexPanel/completion.plist") error:NULL];
+    check(TSLibraryRestoreMissingFile(Library(@"LatexPanel/completion.plist"), TSLibraryBundledPath(@"LatexPanel/completion.plist"), TSLibraryShapeOfBundledCheck(TSLibraryLaTeXPanelAnyLength())) &&
+          [[NSData dataWithContentsOfFile:Library(@"LatexPanel/completion.plist")] isEqual:Bundled(@"LatexPanel/completion.plist")], @"while running, a missing file is restored");
+
+    // 11. A theme of the user's own is checked against TeXShop's Lite theme, with or without a reference.
+    NSMutableDictionary *mine = [theme mutableCopy];
+    for (NSString *key in mine.allKeys) if ([mine[key] isKindOfClass:NSArray.class]) { mine[key] = @42; break; }
+    check(!TSLibraryThemeCheck()(Plist(mine), nil), @"a theme of the user's own with a number for a color is damaged, as when it is read");
+    check(TSLibraryThemeCheck()(Plist(theme), nil), @"a sound theme of the user's own passes");
+    // The launch checks the theme in use; a damaged one of the user's own goes to the backups.
+    Put(Plist(mine), @"Themes/Mine.plist");
+    // In the registration domain only, which is never written to disk.
+    [NSUserDefaults.standardUserDefaults registerDefaults:@{@"DefaultLiteTheme": @"Mine"}];
+    TSLibraryRepairAll();
+    [NSUserDefaults.standardUserDefaults registerDefaults:@{@"DefaultLiteTheme": @""}];
+    check(![fm fileExistsAtPath:Library(@"Themes/Mine.plist")] && [BackupsOf(@"Mine.plist") count] == 1, @"the launch puts a damaged theme of the user's own in the backups");
     if (failures) return 1;
     puts("PASS: settings files restored when missing or damaged, damaged ones kept, links followed, macros without a message");
 } return 0; }
@@ -253,6 +275,8 @@ int main(int argc, char **argv) { @autoreleasepool {
 MUTATIONS = {
     'no backup': ('        if (!BackUp(file)) {', '        if (NO) {'),
     'missing only': ('    if (data && check(data, bundled)) return YES;\n', '    if (data) return YES;\n'),
+    'running replaces damaged': ('    if ([fm attributesOfItemAtPath:file error:NULL]) return TSLibraryFileIsUsable(path, bundledPath, check);', '    if ([fm attributesOfItemAtPath:file error:NULL]) return TSLibraryRepairFile(path, bundledPath, check);'),
+    'own themes unchecked': ('        if (![reference isKindOfClass:NSDictionary.class]) {\n            NSString *lite', '        if (NO) {\n            NSString *lite'),
     'link replaced': ('    NSString *file = Destination(path);\n    if (!file) return NO;\n    NSData *bundled', '    NSString *file = path;\n    NSData *bundled'),
     'short panels pass': ('if (![anyLength containsObject:key] && [value count] < [expected count]) return NO;', ''),
     'every array any length': ('if (![anyLength containsObject:key] && ', 'if (NO && '),

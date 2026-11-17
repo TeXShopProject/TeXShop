@@ -38,11 +38,11 @@ static id sharedColorSupport = nil;
     NSString* liteColorPath = [[newColorPath stringByAppendingString:@"/"] stringByAppendingString: @"LiteTheme.plist"];
     NSString* darkColorPath = [[newColorPath stringByAppendingString:@"/"] stringByAppendingString: @"DarkTheme.plist"];
     
-    // Missing or damaged, each is restored from the copy inside TeXShop.
+    // Missing, each is restored from the copy inside TeXShop (damaged ones are repaired at launch, TSLibraryRepairAll).
     reserveLitePath = [[NSBundle mainBundle] pathForResource:@"LiteTheme" ofType:@"plist" inDirectory:@"Themes"];
     reserveDarkPath = [[NSBundle mainBundle] pathForResource:@"DarkTheme" ofType:@"plist" inDirectory:@"Themes"];
-    TSLibraryRepairFile(liteColorPath, reserveLitePath, TSLibraryThemeCheck());
-    TSLibraryRepairFile(darkColorPath, reserveDarkPath, TSLibraryThemeCheck());
+    TSLibraryRestoreMissingFile(liteColorPath, reserveLitePath, TSLibraryThemeCheck());
+    TSLibraryRestoreMissingFile(darkColorPath, reserveDarkPath, TSLibraryThemeCheck());
     (void)fileManager;
 }
 
@@ -311,10 +311,9 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
     
     
     [self checkAndRestoreDefaults];
-    // A theme that comes with TeXShop is restored like the two above; a damaged theme of the user's own goes to the
-    // backups, and the default theme is used instead.
-    if (lite.length) TSLibraryRepairFile(liteThemePath, TSLibraryBundledPath([[@"Themes" stringByAppendingPathComponent:lite] stringByAppendingPathExtension:@"plist"]), TSLibraryThemeCheck());
-    if (dark.length) TSLibraryRepairFile(darkThemePath, TSLibraryBundledPath([[@"Themes" stringByAppendingPathComponent:dark] stringByAppendingPathExtension:@"plist"]), TSLibraryThemeCheck());
+    // A missing theme that comes with TeXShop is restored like the two above.
+    if (lite.length) TSLibraryRestoreMissingFile(liteThemePath, TSLibraryBundledPath([[@"Themes" stringByAppendingPathComponent:lite] stringByAppendingPathExtension:@"plist"]), TSLibraryThemeCheck());
+    if (dark.length) TSLibraryRestoreMissingFile(darkThemePath, TSLibraryBundledPath([[@"Themes" stringByAppendingPathComponent:dark] stringByAppendingPathExtension:@"plist"]), TSLibraryThemeCheck());
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if (! [fileManager fileExistsAtPath: liteThemePath])
     {
@@ -327,8 +326,7 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
         darkThemePath = defaultDarkThemePath;
     }
     
-    // A theme that could not be restored (it is being saved, or could not be kept in the backups) is not read: the
-    // theme that comes with TeXShop is used until it can be.
+    // A damaged theme is not read: the theme that comes with TeXShop is used until the next launch repairs it.
     NSString *reserveLite = [[NSBundle mainBundle] pathForResource:@"LiteTheme" ofType:@"plist" inDirectory:@"Themes"];
     NSString *reserveDark = [[NSBundle mainBundle] pathForResource:@"DarkTheme" ofType:@"plist" inDirectory:@"Themes"];
     if (!TSLibraryFileIsUsable(liteThemePath, reserveLite, TSLibraryThemeCheck()) && reserveLite) liteThemePath = reserveLite;

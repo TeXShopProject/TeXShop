@@ -23,7 +23,7 @@ FOUNDATION_EXPORT TSLibraryFileCheck TSLibraryMacrosCheck(void);
 /// The completions of the keyboard: a dictionary of strings.
 FOUNDATION_EXPORT TSLibraryFileCheck TSLibraryStringDictionaryCheck(void);
 /// A theme: a dictionary whose colors are arrays of four numbers (red, green, blue, alpha); the keys that TeXShop's own
-/// theme has as something else keep that type.
+/// theme (the same name, else LiteTheme) has as something else keep that type.
 FOUNDATION_EXPORT TSLibraryFileCheck TSLibraryThemeCheck(void);
 /// Text in UTF-8.
 FOUNDATION_EXPORT TSLibraryFileCheck TSLibraryUTF8TextCheck(void);
@@ -39,6 +39,11 @@ FOUNDATION_EXPORT TSLibraryFileCheck TSLibraryNonEmptyCheck(void);
 /// Returns whether the file at `path` can now be used; when not, the caller reads TeXShop's copy instead.
 FOUNDATION_EXPORT BOOL TSLibraryRepairFile(NSString *path, NSString *_Nullable bundledPath, TSLibraryFileCheck check);
 
+/// While TeXShop runs: restores `path` from `bundledPath` only when nothing is there (a missing file is not being
+/// saved by anyone). A file that is there is never changed; returns whether it passes `check`, and when not, the
+/// caller reads TeXShop's copy until the next launch repairs it (TSLibraryRepairAll).
+FOUNDATION_EXPORT BOOL TSLibraryRestoreMissingFile(NSString *path, NSString *_Nullable bundledPath, TSLibraryFileCheck check);
+
 /// Whether the file at `path` (where its links point) passes `check`, without changing anything.
 FOUNDATION_EXPORT BOOL TSLibraryFileIsUsable(NSString *path, NSString *_Nullable bundledPath, TSLibraryFileCheck check);
 
@@ -48,7 +53,8 @@ FOUNDATION_EXPORT NSTimeInterval TSLibraryQuietSeconds;
 /// The copy inside TeXShop of a file of ~/Library/TeXShop, by its path below that folder ("Macros/Macros_Latex.plist").
 FOUNDATION_EXPORT NSString *_Nullable TSLibraryBundledPath(NSString *relativePath);
 
-/// The settings files TeXShop needs, checked once at launch after ~/Library/TeXShop has been filled.
+/// The settings files TeXShop needs, checked once at launch after ~/Library/TeXShop has been filled; the only place
+/// where damaged files are replaced. Also the themes in use and the macros of the other engines.
 FOUNDATION_EXPORT void TSLibraryRepairAll(void);
 
 /// Where damaged files go (~/Library/TeXShop/Backups). For tests.

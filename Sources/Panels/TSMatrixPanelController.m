@@ -127,7 +127,7 @@ static id _sharedInstance = nil;
 	matrixPath = [MatrixPanelPath stringByStandardizingPath];
 	matrixPath = [matrixPath stringByAppendingPathComponent:@"matrixpanel_1"];
 	matrixPath = [matrixPath stringByAppendingPathExtension:@"plist"];
-	if (TSLibraryRepairFile(matrixPath, TSLibraryBundledPath(@"MatrixPanel/matrixpanel_1.plist"), TSLibraryShapeOfBundledCheck(nil)))
+	if (TSLibraryRestoreMissingFile(matrixPath, TSLibraryBundledPath(@"MatrixPanel/matrixpanel_1.plist"), TSLibraryShapeOfBundledCheck(nil)))
 		matrixDictionary = [NSDictionary dictionaryWithContentsOfFile:matrixPath];
 	else
 		matrixDictionary = [NSDictionary dictionaryWithContentsOfFile:

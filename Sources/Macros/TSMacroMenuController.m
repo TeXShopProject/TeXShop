@@ -139,11 +139,9 @@ static id sharedMacroMenuController = nil;
 	}
 	pathStr = [pathStr stringByAppendingPathExtension:@"plist"];
 
-	// The LaTeX macros are restored from the copy inside TeXShop when missing or damaged. The macros of another
-	// engine have no such copy: when damaged they go to the backups, and the LaTeX macros are used.
-	TSLibraryRepairFile(defaultPathStr, TSLibraryBundledPath(@"Macros/Macros_Latex.plist"), TSLibraryMacrosCheck());
-	if (![pathStr isEqualToString:defaultPathStr] && [[NSFileManager defaultManager] fileExistsAtPath:pathStr])
-		TSLibraryRepairFile(pathStr, TSLibraryBundledPath([@"Macros" stringByAppendingPathComponent:pathStr.lastPathComponent]), TSLibraryMacrosCheck());
+	// Missing LaTeX macros are restored from the copy inside TeXShop. Damaged macros are left as they are while
+	// TeXShop runs (they may be being saved); the next launch repairs them (TSLibraryRepairAll).
+	TSLibraryRestoreMissingFile(defaultPathStr, TSLibraryBundledPath(@"Macros/Macros_Latex.plist"), TSLibraryMacrosCheck());
 
 	NS_DURING
 		// macroDict = [NSDictionary dictionaryWithContentsOfFile: pathStr]; // this crashes when the file is not a proper UTF8

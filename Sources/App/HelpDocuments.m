@@ -197,7 +197,7 @@
     
     tempPath = @"~/Library/TeXShop/HTML/Help.html";
     fileName = [tempPath stringByExpandingTildeInPath];
-    if (!TSLibraryRepairFile(fileName, TSLibraryBundledPath(@"HTML/Help.html"), TSLibraryNonEmptyCheck()) && TSLibraryBundledPath(@"HTML/Help.html"))
+    if (!TSLibraryRestoreMissingFile(fileName, TSLibraryBundledPath(@"HTML/Help.html"), TSLibraryNonEmptyCheck()) && TSLibraryBundledPath(@"HTML/Help.html"))
         fileName = TSLibraryBundledPath(@"HTML/Help.html");
     myURL = [NSURL fileURLWithPath: fileName];
     

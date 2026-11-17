@@ -941,7 +941,7 @@ static void TSInstallAdvancedFindFieldStyle(void)
 	autocompletionPath = [AutoCompletionPath stringByStandardizingPath];
 	autocompletionPath = [autocompletionPath stringByAppendingPathComponent:@"autocompletion"];
 	autocompletionPath = [autocompletionPath stringByAppendingPathExtension:@"plist"];
-	if (TSLibraryRepairFile(autocompletionPath, TSLibraryBundledPath(@"Keyboard/autocompletion.plist"), TSLibraryStringDictionaryCheck()))
+	if (TSLibraryRestoreMissingFile(autocompletionPath, TSLibraryBundledPath(@"Keyboard/autocompletion.plist"), TSLibraryStringDictionaryCheck()))
 		[GlobalData sharedGlobalData].g_autocompletionDictionary = [NSDictionary dictionaryWithContentsOfFile:autocompletionPath];
 	else
 		[GlobalData sharedGlobalData].g_autocompletionDictionary = [NSDictionary dictionaryWithContentsOfFile:
@@ -963,7 +963,7 @@ static void TSInstallAdvancedFindFieldStyle(void)
 - (void)finishMenuKeyEquivalentsConfigure
 {
     NSString *path = [[[MenuShortcutsPath stringByStandardizingPath] stringByAppendingPathComponent:@"KeyEquivalents"] stringByAppendingPathExtension:@"plist"];
-    TSLibraryRepairFile(path, TSLibraryBundledPath(@"Menus/KeyEquivalents.plist"), TSLibraryDictionaryCheck());
+    TSLibraryRestoreMissingFile(path, TSLibraryBundledPath(@"Menus/KeyEquivalents.plist"), TSLibraryDictionaryCheck());
     NSDictionary *shortcuts = [NSDictionary dictionaryWithContentsOfFile:path];
     TSApplyLegacyMenuKeys(NSApp.mainMenu, shortcuts);
 }
@@ -1047,7 +1047,7 @@ static void TSInstallAdvancedFindFieldStyle(void)
     completionPath = [[GlobalData sharedGlobalData].CommandCompletionPath stringByStandardizingPath];
     completionFileName = [[completionPath lastPathComponent] stringByDeletingPathExtension];
     NSString *bundledCompletion = TSLibraryBundledPath([[@"CommandCompletion" stringByAppendingPathComponent:completionFileName] stringByAppendingPathExtension:@"txt"]);
-    if (TSLibraryRepairFile(completionPath, bundledCompletion, TSLibraryReadableCheck()))
+    if (TSLibraryRestoreMissingFile(completionPath, bundledCompletion, TSLibraryReadableCheck()))
         myData = [NSData dataWithContentsOfFile:completionPath];
     else
         myData = bundledCompletion ? [NSData dataWithContentsOfFile:bundledCompletion] : nil;

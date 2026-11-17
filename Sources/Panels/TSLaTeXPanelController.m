@@ -145,7 +145,7 @@ static id _sharedInstance = nil;
 	completionPath = [LatexPanelPath stringByStandardizingPath];
 	completionPath = [completionPath stringByAppendingPathComponent:@"completion"];
 	completionPath = [completionPath stringByAppendingPathExtension:@"plist"];
-	if (TSLibraryRepairFile(completionPath, TSLibraryBundledPath(@"LatexPanel/completion.plist"), TSLibraryShapeOfBundledCheck(TSLibraryLaTeXPanelAnyLength())))
+	if (TSLibraryRestoreMissingFile(completionPath, TSLibraryBundledPath(@"LatexPanel/completion.plist"), TSLibraryShapeOfBundledCheck(TSLibraryLaTeXPanelAnyLength())))
 		completionDictionary=[NSDictionary dictionaryWithContentsOfFile:completionPath];
 	else
 		completionDictionary=[NSDictionary dictionaryWithContentsOfFile:
