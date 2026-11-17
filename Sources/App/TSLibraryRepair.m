@@ -270,12 +270,14 @@ BOOL TSLibraryRepairFile(NSString *path, NSString *bundledPath, TSLibraryFileChe
     // A file that appears meanwhile is kept, and used if it can be.
     BOOL restored = PlaceIfAbsent(bundled, file);
     // Last, the damaged file in the backups is looked at once more: if another application wrote to it after all, it
-    // changes places with TeXShop's copy at once, and TeXShop's copy is removed from the backups.
+    // changes places with TeXShop's copy at once, and TeXShop's copy stays in the backups under a name of its own.
     if (restored && kept && data) {
         NSDictionary *now = [fm attributesOfItemAtPath:kept error:NULL];
         if (![[NSData dataWithContentsOfFile:kept] isEqualToData:data] || ![now[NSFileModificationDate] isEqual:attributes[NSFileModificationDate]]) {
             if (renamex_np(kept.fileSystemRepresentation, file.fileSystemRepresentation, RENAME_SWAP) == 0) {
-                if ([[NSData dataWithContentsOfFile:kept] isEqualToData:bundled]) [fm removeItemAtPath:kept error:NULL];
+                // What is in the backups now is TeXShop's copy, or whatever someone writes to it next: it is renamed, never
+                // deleted, so that nothing written to it is lost.
+                renamex_np(kept.fileSystemRepresentation, [kept stringByAppendingString:@" (TeXShop's copy)"].fileSystemRepresentation, RENAME_EXCL);
                 NSLog(@"TeXShop left %@ as another application saved it", path.stringByAbbreviatingWithTildeInPath);
                 return TSLibraryFileIsUsable(path, bundledPath, check);
             }

@@ -289,6 +289,11 @@ int main(int argc, char **argv) { @autoreleasepool {
     check(TSLibraryRepairFile(Library(@"Keyboard/autocompletion.plist"), TSLibraryBundledPath(@"Keyboard/autocompletion.plist"), TSLibraryStringDictionaryCheck()) &&
           [[NSData dataWithContentsOfFile:Library(@"Keyboard/autocompletion.plist")] isEqual:saved] && [BackupsOf(@"autocompletion.plist") count] == 0,
           [NSString stringWithFormat:@"a file saved in place after it went to the backups comes back where it was %@", BackupsOf(@"autocompletion.plist")]);
+    // TeXShop's copy that changed places with it is not deleted (someone may be writing to it): it stays in the backups.
+    NSString *copyName = @"autocompletion.plist (TeXShop's copy)";
+    __block NSString *copyPath = nil;
+    for (NSString *p in [fm enumeratorAtPath:TSLibraryBackupFolder()]) if ([p.lastPathComponent isEqual:copyName]) copyPath = [TSLibraryBackupFolder() stringByAppendingPathComponent:p];
+    check(copyPath && [[NSData dataWithContentsOfFile:copyPath] isEqual:Bundled(@"Keyboard/autocompletion.plist")], @"TeXShop's copy that changed places stays in the backups, renamed, not deleted");
     LateHandle = nil;
     method_setImplementation(class_getInstanceMethod(NSData.class, @selector(writeToFile:options:error:)), OriginalWriteToFile);
 
@@ -370,6 +375,7 @@ MUTATIONS = {
     'colors not required': ('if (![value isKindOfClass:NSArray.class] || [value count] < 4 || !AllOfClass(value, NSNumber.class)) return NO;', 'if ([value isKindOfClass:NSArray.class] && ([value count] < 4 || !AllOfClass(value, NSNumber.class))) return NO;'),
     'macro items unchecked': ('        return macros[@"submenu"] == nil || MacroItems(macros[@"submenu"], 0);', '        return YES;'),
     'delete when backup fails': ('        if (renamex_np(aside.fileSystemRepresentation, file.fileSystemRepresentation, RENAME_EXCL) != 0)\n', '        [fm removeItemAtPath:aside error:NULL];\n        if (NO)\n'),
+    'delete the copy': ('                renamex_np(kept.fileSystemRepresentation, [kept stringByAppendingString:@" (TeXShop\'s copy)"].fileSystemRepresentation, RENAME_EXCL);', '                [fm removeItemAtPath:kept error:NULL];'),
     'no last look': ('    if (restored && kept && data) {', '    if (NO) {'),
     'no wait while saving': ('        if (modified && fabs(modified.timeIntervalSinceNow) < TSLibraryQuietSeconds) return NO;\n', ''),
     'chains followed to a point': ('    return nil;\n}\n\n// Puts `data`', '    return current;\n}\n\n// Puts `data`'),
