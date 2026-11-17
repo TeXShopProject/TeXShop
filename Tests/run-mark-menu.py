@@ -18,6 +18,14 @@ launch = delegate[delegate.index('- (void)applicationDidFinishLaunching:'):]
 assert launch.index('[TSMarkMenu installInMenu:NSApp.mainMenu];') < launch.index('startAfterLaunchWithConfiguration'), 'Marks move before shortcuts read the menus'
 # The English help has the section that every language opens.
 assert 'name="marks"' in (root / 'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/basic_commandcompletion.htm').read_text(encoding='latin1')
+# The help and the manual name the menu as it is now (the history in whatisnew keeps the old names).
+former = re.compile(r'Completion/Marks|Completion\}?\s*(?:&#8250;|›|->|→|\\To)\s*(?:\\mnu\{)?Marks|in the Completion submenu|コマンド補完\s*(?:→|＞|>)\s*マーク')
+for page in [*root.glob('Resources/Interfaces/*.lproj/TeXShopHelp/pgs/*.htm'), root / 'DocumentSources/Manual Source/Manual.tex']:
+    if page.name == 'whatisnew.htm':
+        continue
+    text = page.read_bytes().decode('utf-8' if page.parent.parent.parent.name == 'ja.lproj' or page.suffix == '.tex' else 'latin1')
+    match = former.search(text)
+    assert match is None, f'{page.relative_to(root)} names the former menu: {match.group(0) if match else ""}'
 # The interface has these languages; the test checks every one but English.
 assert sorted(p.name[:-6] for p in (root / 'Resources/Interfaces').glob('*.lproj') if (p / 'MainMenu.nib').exists()) == sorted(['Base', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt', 'pt-PT', 'ro', 'zh_CN'])
 mutations = {
