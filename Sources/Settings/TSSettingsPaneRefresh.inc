@@ -319,6 +319,9 @@
 
 - (void)updateSettingsCategory:(TSSettingsCategoryID)identifier fromDefaults:(NSUserDefaults *)defaults
 {
+    // The controls exist once the Settings window is built, and opening it refreshes them all;
+    // the first-launch profile chooser applies its values before that.
+    if (_prefsWindow == nil) return;
     if ([identifier isEqual:TSSettingsCategoryGeneral])
     {
         [self refreshGeneralSettingsFromDefaults:defaults];
