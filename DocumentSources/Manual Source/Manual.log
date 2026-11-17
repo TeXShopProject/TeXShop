@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.10.17)  15 NOV 2026 17:31
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.10.17)  17 NOV 2026 23:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -296,26 +296,26 @@ File: l3backend-xetex.def 2026-09-09 L3 backend support: XeTeX
 (./Manual.aux)
 \openout1 = `Manual.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 87.
-LaTeX Font Info:    ... okay on input line 87.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 87.
-LaTeX Font Info:    ... okay on input line 87.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 87.
-LaTeX Font Info:    ... okay on input line 87.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 87.
-LaTeX Font Info:    ... okay on input line 87.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 87.
-LaTeX Font Info:    ... okay on input line 87.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 87.
-LaTeX Font Info:    ... okay on input line 87.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 87.
-LaTeX Font Info:    ... okay on input line 87.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 87.
-LaTeX Font Info:    ... okay on input line 87.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 87.
-LaTeX Font Info:    ... okay on input line 87.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 87.
-LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 89.
+LaTeX Font Info:    ... okay on input line 89.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 89.
+LaTeX Font Info:    ... okay on input line 89.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 89.
+LaTeX Font Info:    ... okay on input line 89.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 89.
+LaTeX Font Info:    ... okay on input line 89.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 89.
+LaTeX Font Info:    ... okay on input line 89.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 89.
+LaTeX Font Info:    ... okay on input line 89.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 89.
+LaTeX Font Info:    ... okay on input line 89.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 89.
+LaTeX Font Info:    ... okay on input line 89.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 89.
+LaTeX Font Info:    ... okay on input line 89.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 89.
+LaTeX Font Info:    ... okay on input line 89.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -351,7 +351,7 @@ LaTeX Font Info:    ... okay on input line 87.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring ON on input line 87.
+Package hyperref Info: Link coloring ON on input line 89.
 (./Manual.out) (./Manual.out)
 \@outlinefile=\write3
 \openout3 = `Manual.out'.
@@ -394,9 +394,9 @@ Chapter 2.
 [11
 
 ]
-Overfull \hbox (26.71686pt too wide) in paragraph at lines 300--301
-[][][][][][][] [] [][][][]$[][]\TU/lmr/m/n/10.95 . Download the program and dra
-g it to /Applications or /Applications/TeX. 
+Underfull \hbox (badness 1028) in paragraph at lines 302--303
+[][]$[][][][][] [] [] [] [][][][][][][] [] [][][][]$[][]\TU/lmr/m/n/10.95 . Dow
+nload the program and drag it to /Applications or
  []
 
 [12] [13]
@@ -420,423 +420,255 @@ Chapter 5.
 Chapter 6.
 [23
 
-] [24] [25] [26] [27]
+] [24] [25] [26] [27] [28]
 File: Graphics/SettingsEditor.png Graphic file (type bmp)
 <Graphics/SettingsEditor.png>
- [28] [29] [30] [31] [32]
+ [29] [30] [31] [32] [33]
 Chapter 7.
-[33
+[34
 
-] [34] [35] [36] [37] [38]
+] [35] [36] [37] [38] [39]
 Chapter 8.
-[39
+[40
 
-] [40] [41] [42] [43] [44] [45] [46] [47]
+] [41] [42] [43] [44] [45] [46] [47] [48]
 Chapter 9.
-[48
+[49
 
-] [49] [50] [51]
-Overfull \hbox (14.15727pt too wide) in paragraph at lines 1137--1138
+] [50] [51] [52]
+Underfull \hbox (badness 1158) in paragraph at lines 1143--1144
 []\TU/lmr/m/n/10.95 Over time the engines have been extended to use Apple’s new
- default \TU/lmr/bx/n/10.95 zsh \TU/lmr/m/n/10.95 and TeXShop’s 
+ default \TU/lmr/bx/n/10.95 zsh \TU/lmr/m/n/10.95 and
  []
 
-[52] [53] [54] [55] [56] [57] [58]
+[53] [54] [55] [56] [57] [58] [59]
 Chapter 10.
-[59
+[60
 
-] [60]
+] [61]
 Chapter 11.
-[61
+[62
 
-] [62] [63] [64]
+] [63] [64] [65]
 Chapter 12.
-[65
+[66
 
-] [66]
-Overfull \hbox (12.64902pt too wide) in paragraph at lines 1462--1462
-[]    \TU/lmtt/m/n/10.95 {\OLDmain\write128{Start of main material: \the\Readon
-lyShipoutCounter.}}[] 
- []
-
-[67] [68]
+] [67] [68] [69]
 Chapter 13.
-[69
+[70
 
-] [70] [71] [72] [73] [74] [75]
+] [71] [72] [73] [74] [75] [76]
 Chapter 14.
-[76
+[77
 
-] [77] [78] [79] [80] [81] [82]
-Overfull \hbox (1.13193pt too wide) in paragraph at lines 1831--1833
+] [78] [79] [80] [81] [82] [83]
+Underfull \hbox (badness 4403) in paragraph at lines 1837--1839
 []\TU/lmr/m/n/10.95 When TeXShop interprets an AppleScript macro, it first repl
-aces any string #FILEPATH#,
+aces any string
  []
 
-[83]
-Overfull \hbox (6.90028pt too wide) in paragraph at lines 1888--1888
-[]  \TU/lmtt/m/n/10.95 -- The returned information can be used to define corres
-ponding variables.[] 
- []
-
-
-Overfull \hbox (52.89027pt too wide) in paragraph at lines 1894--1894
-[]  \TU/lmtt/m/n/10.95 display dialog "Test dialog: type something below" defau
-lt answer "Hello World!" ¬[] 
- []
-
-[84]
-Overfull \hbox (52.89027pt too wide) in paragraph at lines 1897--1897
-[]  \TU/lmtt/m/n/10.95 display dialog "Test dialog: type something below" defau
-lt answer "Hello World!" ¬[] 
- []
-
-
-Overfull \hbox (52.89027pt too wide) in paragraph at lines 1900--1900
-[]  \TU/lmtt/m/n/10.95 display dialog "Test dialog: type something below" defau
-lt answer "Hello World!" ¬[] 
- []
-
-[85] [86]
-Overfull \hbox (35.64401pt too wide) in paragraph at lines 2003--2003
-[]  \TU/lmtt/m/n/10.95 set scriptPath to (do shell script "dirname " & "~/Libra
-ry/TeXShop/Scripts/ex")[] 
- []
-
-[87]
-Overfull \hbox (58.63902pt too wide) in paragraph at lines 2016--2016
-[]  \TU/lmtt/m/n/10.95 set dirName to quoted form of (characters 1 thru (n - m 
-- 1) of fileName as string)[] 
- []
-
-
-Overfull \hbox (35.64401pt too wide) in paragraph at lines 2019--2019
-[]  \TU/lmtt/m/n/10.95 set shellScript to shellScript & "~/Library/TeXShop/bin/
-pdflatexc  " & baseName[] 
- []
-
-[88]
-Overfull \hbox (24.14651pt too wide) in paragraph at lines 2088--2088
-[]\TU/lmtt/m/n/10.95 set shellScript to shellScript & "~/Library/TeXShop/bin/pd
-flatexc  " & baseName[] 
- []
-
-[89] [90]
+[84] [85] [86] [87] [88] [89] [90] [91]
 Chapter 15.
-[91
+[92
 
-] [92] [93] [94] [95]
-Overfull \hbox (9.75534pt too wide) in paragraph at lines 2238--2239
-\TU/lmr/m/n/10.95 tion trigger” item under the Keyboard category of TeXShop Set
-tings makes this change. 
- []
-
-[96] [97]
-Overfull \hbox (6.64195pt too wide) in paragraph at lines 2323--2324
-\TU/lmr/m/n/10.95 in turn. Additional sectioning abbreviations are [][]\TU/lmtt
-/m/n/10.95 ssec[]\TU/lmr/m/n/10.95 , [][]\TU/lmtt/m/n/10.95 sssec[]\TU/lmr/m/n/
-10.95 , [][]\TU/lmtt/m/n/10.95 par []\TU/lmr/m/n/10.95 and [][]\TU/lmtt/m/n/10.
-95 spar []\TU/lmr/m/n/10.95 for \TU/lmtt/m/n/10.95 sub-section\TU/lmr/m/n/10.95
- ,
- []
-
-[98]
+] [93] [94] [95] [96] [97] [98] [99]
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <12> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 2351.
- [99] [100] [101] [102] [103] [104] [105]
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 2365.
+ [100] [101] [102] [103] [104] [105]
+[106]
 Chapter 16.
-[106
+[107
 
-] [107]
+] [108]
 File: Graphics/RevertTo.jpg Graphic file (type bmp)
 <Graphics/RevertTo.jpg>
- [108] [109]
+ [109] [110]
 Chapter 17.
-[110
+[111
 
-] [111] [112] [113] [114] [115] [116] [117] [118] [119] [120]
+] [112] [113] [114] [115] [116] [117] [118] [119] [120] [121] [122]
 Chapter 18.
-
-Overfull \hbox (47.1415pt too wide) in paragraph at lines 2749--2749
-[]   \TU/lmtt/m/n/10.95 \AddToHook{env/sidewaysfigure/end}{\pdfmanagement_add:n
-nn{ThisPage}{Rotate}{90}}[] 
- []
-
-[121
-
-] [122]
-Chapter 19.
 [123
 
 ] [124]
-Chapter 20.
+Chapter 19.
 [125
 
-] [126] [127] [128] [129] [130] [131] [132] [133] [134] [135] [136]
+] [126]
+Chapter 20.
+[127
+
+] [128] [129] [130] [131] [132] [133] [134] [135] [136] [137] [138]
 Chapter 21.
-[137
+[139
 
 ]
-Overfull \hbox (15.14026pt too wide) in paragraph at lines 3090--3094
-[]\TU/lmr/m/n/10.95 ”$3”: the full path to the binaries in the distribution; th
-is is usually /Library/TeX/texbin
+Underfull \hbox (badness 3281) in paragraph at lines 3111--3115
+\TU/lmr/m/n/10.95 brary/TeX/texbin but points to the ConTeXt binaries if the li
+ne \TU/lmr/bx/n/10.95 !TEX
  []
 
-[138] [139]
-Overfull \hbox (2.18547pt too wide) in paragraph at lines 3169--3169
-[]\TU/lmr/bx/n/14.4 Typesetting ConTeXt in TeX Live using luametatex 
- []
-
-[140] [141] [142]
+[140] [141] [142] [143] [144]
 Chapter 22.
-[143
+[145
 
-] [144] [145]
+] [146] [147]
 Chapter 23.
-[146
+[148
 
-] [147] [148] [149] [150] [151] [152] [153] [154] [155] [156] [157]
-[158]
+] [149] [150] [151] [152] [153] [154] [155] [156] [157] [158] [159]
+[160]
 Chapter 24.
-[159
+[161
 
 ]
 File: Graphics/SettingsThemes.png Graphic file (type bmp)
 <Graphics/SettingsThemes.png>
-
-Overfull \hbox (9.77725pt too wide) in paragraph at lines 3653--3654
-\TU/lmr/m/n/10.95 nothing prevents a user from setting both Lite Mode and Dark 
-Mode to the same theme. 
- []
-
-[160] [161] [162] [163]
+ [162] [163] [164] [165]
 Chapter 25.
-[164
+[166
 
-] [165] [166]
+] [167] [168]
 Chapter 26.
-[167
+[169
 
-] [168] [169] [170] [171]
-Overfull \hbox (34.58725pt too wide) in paragraph at lines 3884--3884
-[]\TU/lmr/bx/n/14.4 Changing the Display Format While Using Switch Views 
- []
-
-[172] [173] [174]
+] [170] [171] [172] [173] [174] [175] [176]
 Chapter 27.
-[175
+[177
 
-] [176] [177]
+] [178] [179]
 Chapter 28.
-[178
+[180
 
-] [179] [180] [181] [182] [183] [184] [185]
+] [181] [182] [183] [184] [185] [186] [187]
 Chapter 29.
-[186
+[188
 
-] [187] [188]
-Overfull \hbox (5.46301pt too wide) in paragraph at lines 4303--4304
-[]\TU/lmr/m/n/10.95 The menu takes at least the following commands (and more if
- an xml file is being used): 
- []
-
-[189]
+] [189] [190] [191]
 File: Graphics/latexpanel.png Graphic file (type bmp)
 <Graphics/latexpanel.png>
- [190]
+ [192]
 File: Graphics/matrixpanel.png Graphic file (type bmp)
 <Graphics/matrixpanel.png>
 File: Graphics/arabic.png Graphic file (type bmp)
 <Graphics/arabic.png>
- [191]
+ [193]
 File: Graphics/invisible.png Graphic file (type bmp)
 <Graphics/invisible.png>
- [192] [193] [194]
+ [194] [195] [196]
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 4420.
- [195]
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 4441.
+ [197]
 Chapter 30.
-[196
+[198
 
-] [197] [198] [199] [200] [201]
+] [199] [200] [201] [202] [203]
 Chapter 31.
-[202
+[204
 
-]
-Overfull \hbox (0.39821pt too wide) in paragraph at lines 4579--4580
-\TU/lmr/m/n/10.95 skipped too. Text marked as another language with [][]\TU/lmt
-t/m/n/10.95 \foreignlanguage[]\TU/lmr/m/n/10.95 , [][]\TU/lmtt/m/n/10.95 \selec
-tlanguage[]\TU/lmr/m/n/10.95 ,
- []
-
-[203] [204] [205]
-Overfull \hbox (29.89528pt too wide) in paragraph at lines 4653--4653
-[]\TU/lmtt/m/n/10.95 defaults write TeXShop ExtraCommandsNotToCheckParameters -
-array-add "\\verbatim" 
- []
-
-[206]
+] [205] [206] [207] [208]
 File: Graphics/PrefPane.png Graphic file (type bmp)
 <Graphics/PrefPane.png>
 File: Graphics/Spelling_and_Grammar.png Graphic file (type bmp)
 <Graphics/Spelling_and_Grammar.png>
- [207] [208] [209] [210]
+ [209] [210] [211] [212]
 Chapter 32.
-
-Overfull \hbox (1.04213pt too wide) in paragraph at lines 4768--4769
-\TU/lmr/m/n/10.95 PDFKit supports annotations and TeXShop can open arbitrary pd
-f files. Recently TeXShop
- []
-
 File: Graphics/screen.jpg Graphic file (type bmp)
 <Graphics/screen.jpg>
+[213
 
-Overfull \hbox (75.88538pt too wide) in paragraph at lines 4780--4781
- [][] 
- []
-
-[211
-
-] [212]
-Overfull \hbox (2.03786pt too wide) in paragraph at lines 4809--4811
-[]\TU/lmr/m/n/10.95 For a package which mimics Adobe annotations, consider \TU/
-lmr/m/it/10.95 todonotes, pdfcomment, \TU/lmr/m/n/10.95 or \TU/lmr/m/it/10.95 m
-argin-
- []
-
-[213]
-File: Graphics/annotationPanel.png Graphic file (type bmp)
-<Graphics/annotationPanel.png>
- [214] [215] [216] [217]
+] [214] [215]
+File: Graphics/annotationToolbar.png Graphic file (type bmp)
+<Graphics/annotationToolbar.png>
+ [216] [217] [218] [219]
 Chapter 33.
 
-Overfull \hbox (8.45224pt too wide) in paragraph at lines 5341--5344
-\TU/lmr/m/n/10.95 “Fourier-Annotated1.pdf” and you can easily change that to “F
-ourier-Annotated2.pdf”. 
+Underfull \hbox (badness 2359) in paragraph at lines 5358--5361
+\TU/lmr/m/n/10.95 Annotated.pdf” as “Fourier-Annotated1.pdf”, the next time the
+ panel opens, it
  []
 
-[218
+[220
 
-] [219] [220] [221] [222] [223]
+] [221] [222] [223] [224] [225]
 Chapter 34.
-[224
+[226
 
-] [225]
+] [227]
 File: Graphics/Graphic1.png Graphic file (type bmp)
 <Graphics/Graphic1.png>
- [226] [227] [228] [229]
-Overfull \hbox (4.85268pt too wide) in paragraph at lines 5672--5674
+ [228] [229] [230] [231]
+Underfull \hbox (badness 2865) in paragraph at lines 5685--5687
 []\TU/lmr/m/n/10.95 See [][]$[][][][][] [] [] [] [][][][][][][] [] [][][][] [] 
 [][][][][] [] [][][] [] [][][][][][] [] [][][][][][][][][][][] [] [][][][][][][
-][][][] [] [][][]$[][] for a won-
+][][][] [] [][][]$[][] for a
  []
 
-[230]
+[232]
 Chapter 35.
 File: Graphics/writingtools.png Graphic file (type bmp)
 <Graphics/writingtools.png>
-
-Overfull \hbox (39.75037pt too wide) in paragraph at lines 6087--6088
- [][] 
- []
-
-[231
-
-] [232]
-Chapter 36.
 [233
 
 ] [234]
-Chapter 37.
+Chapter 36.
 [235
 
 ] [236]
-Chapter 38.
+Chapter 37.
 [237
 
 ] [238]
-Chapter 39.
+Chapter 38.
 [239
 
-]
-Overfull \hbox (9.7225pt too wide) in paragraph at lines 6252--6253
-\TU/lmr/m/n/10.95 Select the menu item “Close Current Environment” and the foll
-owing line will be added: 
- []
+] [240]
+Chapter 39.
+[241
 
-[240]
-Overfull \hbox (2.4262pt too wide) in paragraph at lines 6305--6307
-[]\TU/lmr/m/n/10.95 To fix this, the Ghostscript authors added a special flag, 
-“-dALLOWPSTRANSPARENCY”.
- []
-
-[241] [242] [243]
+] [242] [243] [244] [245]
 Chapter 40.
-
-Overfull \hbox (1.15154pt too wide) in paragraph at lines 6376--6376
-[]     \TU/lmtt/m/n/10.95 to determine this encoding. Irrelevant if all files u
-se UTF-8 Unicode.[] 
- []
-
-[244
+[246
 
 ]
-Overfull \hbox (58.63902pt too wide) in paragraph at lines 6404--6404
-[]     \TU/lmtt/m/n/10.95 The number of preliminary pages before the main text 
-numbering starts at page 1. 
+Underfull \hbox (badness 1383) in paragraph at lines 6422--6422
+[]\TU/lmr/bx/n/14.4 Magic Lines to Control Preview in Double Page
  []
 
-
-Overfull \hbox (22.28967pt too wide) in paragraph at lines 6407--6407
-[]\TU/lmr/bx/n/14.4 Magic Lines to Control Preview in Double Page Modes 
- []
-
-[245] [246] [247] [248]
+[247] [248] [249] [250]
 Chapter 41.
-[249
+[251
 
-] [250] [251] [252] [253] [254] [255]
-Overfull \hbox (29.89528pt too wide) in paragraph at lines 6723--6723
-[]\TU/lmtt/m/n/10.95 defaults write TeXShop ExtraCommandsNotToCheckParameters -
-array-add "\\verbatim" 
- []
-
-[256] [257] [258] [259] [260]
-Overfull \hbox (4.87163pt too wide) in paragraph at lines 6913--6914
+] [252] [253] [254] [255] [256] [257] [258] [259] [260] [261] [262]
+[263]
+Underfull \hbox (badness 1888) in paragraph at lines 6929--6930
 []\TU/lmr/m/n/10.95 The following setting causes synchronization spots to be sh
-own in the Preview window: 
+own in the Preview
  []
 
-[261] [262] [263] [264] [265]
+[264] [265] [266] [267]
 Chapter 42.
-[266
+[268
 
 ]
 Chapter 43.
+[269
 
-Overfull \hbox (1.26328pt too wide) in paragraph at lines 7076--7077
-\TU/lmr/m/n/10.95 former TeXShop web site, [][]$[][][][][] [] [] [] [][][][][] 
-[] [][][][][][][] [] [][][] [] [][][][] [] [][][][][][][] [] [][][][][][] [] []
-[][][]$[][]. I’d
- []
-
-[267
-
-] [268] (./Manual.aux)
+] [270] (./Manual.aux)
  ***********
 LaTeX2e <2026-06-01>
 L3 programming layer <2026-09-09>
  ***********
 Package rerunfilecheck Info: File `Manual.out' has not changed.
-(rerunfilecheck)             Checksum: 240EFCD05EAA56120B1A5C964CCB632C;48202.
+(rerunfilecheck)             Checksum: DFC212E262C9D7EB2CC987D8F232CFD1;48045.
  ) 
 Here is how much of TeX's memory you used:
  12251 strings out of 467696
- 205098 string characters out of 5418921
- 682455 words of memory out of 5000000
+ 205120 string characters out of 5418921
+ 680291 words of memory out of 5000000
  41282 multiletter control sequences out of 15000+600000
  641839 words of font info for 113 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  69i,8n,79p,1874b,525s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on Manual.pdf (278 pages).
+Output written on Manual.pdf (280 pages).
