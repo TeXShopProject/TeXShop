@@ -14,11 +14,16 @@ static const CGFloat TSLinkPreviewKeptMinimum = 20;
 // Page points around a line that still count as its text, so the cursor does not flicker
 // between lines.
 static const CGFloat TSLinkPreviewLineSlack = 2;
+// What the popup draws around its page grows and shrinks with the preview's magnification, as
+// the page in it does: these are page points, so they look the same on screen as the text in
+// the popup at any magnification, also for a popup made at another magnification (#14).
 // The page label in the lower right corner: white bold text on a gray capsule.
 static const CGFloat TSLinkPreviewLabelFontSize = 11;
 static const CGFloat TSLinkPreviewLabelMargin = 3;
-// The popup's corners, in points on screen, as the corners of current macOS popovers.
+// The popup's corners, as the corners of current macOS popovers at 100%.
 static const CGFloat TSLinkPreviewCornerRadius = 6;
+// The black edge, which stays at least one pixel wide on screen.
+static const CGFloat TSLinkPreviewEdgeWidth = 1;
 // A popup shows its linked page and, in the continuous displays, the next one (#14).
 #define TSLinkPreviewMaximumPages 2
 
@@ -44,6 +49,9 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     NSPoint _dragStart, _selectionStart;
     PDFPage *_selectionStartPage;
     NSRect _startFrame, _startSource;
+    // The preview whose magnification the popup follows.
+    __weak PDFView *_magnifiedView;
+    id _scaleObserver;
 }
 
 - (instancetype)initWithFrame:(NSRect)frame image:(NSImage *)image source:(NSRect)source
@@ -87,6 +95,32 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     return self;
 }
 
+- (void)dealloc
+{
+    if (_scaleObserver) [NSNotificationCenter.defaultCenter removeObserver:_scaleObserver];
+}
+
+// When the magnification changes, AppKit magnifies what the popup drew before and does not
+// draw it again: its page would be blurred, and its edge and page label would keep the
+// earlier magnification. So the popup draws itself again for the preview it is in (#14).
+- (void)viewDidMoveToSuperview
+{
+    [super viewDidMoveToSuperview];
+    PDFView *preview = nil;
+    for (NSView *view = self.superview; view && !preview; view = view.superview)
+        if ([view isKindOfClass:[PDFView class]]) preview = (PDFView *)view;
+    if (preview == _magnifiedView && (_scaleObserver || !preview)) return;
+    if (_scaleObserver) [NSNotificationCenter.defaultCenter removeObserver:_scaleObserver];
+    _scaleObserver = nil;
+    _magnifiedView = preview;
+    if (!preview) return;
+    __weak TSLinkPreviewView *weakSelf = self;
+    _scaleObserver = [NSNotificationCenter.defaultCenter addObserverForName:PDFViewScaleChangedNotification
+        object:preview queue:nil usingBlock:^(NSNotification *note) {
+            [weakSelf setNeedsDisplay:YES];
+        }];
+}
+
 // The rectangle in this view that shows `rect`, given in image coordinates.
 - (NSRect)viewRectForImageRect:(NSRect)rect
 {
@@ -104,7 +138,7 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     // Since macOS 14 a view may draw outside its bounds, and the image draws the whole
     // linked page: nothing outside the popup may be drawn (#21).
     NSRectClip(bounds);
-    CGFloat unit = [self unitsPerScreenPoint], radius = TSLinkPreviewCornerRadius * unit;
+    CGFloat radius = TSLinkPreviewCornerRadius;
     [[NSGraphicsContext currentContext] setShouldAntialias:YES];
     [[NSBezierPath bezierPathWithRoundedRect:bounds xRadius:radius yRadius:radius] addClip];
     [[NSGraphicsContext currentContext] setShouldAntialias:NO];
@@ -129,8 +163,10 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     [self drawPageLabelInRect:bounds];
     // A thin black edge that sets the page apart from the light page under it (#14).
     [[NSGraphicsContext currentContext] setShouldAntialias:YES];
-    NSBezierPath *edge = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(bounds, unit / 2, unit / 2) xRadius:radius - unit / 2 yRadius:radius - unit / 2];
-    edge.lineWidth = unit;
+    CGFloat width = MAX(TSLinkPreviewEdgeWidth, [self unitsPerPixel]);
+    NSBezierPath *edge = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(bounds, width / 2, width / 2)
+                                                         xRadius:MAX(radius - width / 2, 0) yRadius:MAX(radius - width / 2, 0)];
+    edge.lineWidth = width;
     [[NSColor blackColor] setStroke];
     [edge stroke];
 }
@@ -138,11 +174,10 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
 - (void)drawPageLabelInRect:(NSRect)bounds
 {
     if (!self.pageLabel.length) return;
-    CGFloat unit = [self unitsPerScreenPoint];
-    NSDictionary *attributes = @{NSFontAttributeName: [NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize * unit],
+    NSDictionary *attributes = @{NSFontAttributeName: [NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize],
                                  NSForegroundColorAttributeName: NSColor.whiteColor};
     NSSize size = [self.pageLabel sizeWithAttributes:attributes];
-    CGFloat height = ceil(size.height), radius = height / 2, margin = TSLinkPreviewLabelMargin * unit;
+    CGFloat height = ceil(size.height), radius = height / 2, margin = TSLinkPreviewLabelMargin;
     NSRect capsule = NSMakeRect(NSMaxX(bounds) - margin - ceil(size.width) - 2 * radius, NSMinY(bounds) + margin,
                                 ceil(size.width) + 2 * radius, height);
     if (NSWidth(capsule) > NSWidth(bounds) - 2 * margin || NSHeight(capsule) > NSHeight(bounds) - 2 * margin) return;
@@ -165,6 +200,13 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
 {
     NSRect unit = [self.superview convertRect:NSMakeRect(0, 0, 1, 1) fromView:nil];
     return NSWidth(unit) > 0 ? NSWidth(unit) : 1;
+}
+
+// Units of the superview in one pixel of the screen.
+- (CGFloat)unitsPerPixel
+{
+    CGFloat backing = self.window.backingScaleFactor;
+    return [self unitsPerScreenPoint] / (backing > 0 ? backing : 1);
 }
 
 - (NSPoint)locationOfEvent:(NSEvent *)event
