@@ -68,16 +68,16 @@ static NSArray<NSString *> *Files;
 // A file another application creates while TeXShop restores the same one: when TeXShop reads its own copy of `RaceBundled`,
 // `RaceTarget` is created with `RaceContents` first (the moment between finding the file missing and putting the copy).
 static NSString *RaceBundled, *RaceTarget; static NSData *RaceContents;
-static IMP OriginalDataWithContentsOfFile, OriginalWriteToFile;
-// Another application saves the file at once (a new file renamed over it) just when TeXShop writes the backup of what it
-// judged damaged: the moment after judging and before taking the file away.
-static NSString *SaveTarget; static NSData *SaveContents;
-static BOOL RacingWriteToFile(NSData *self, SEL _cmd, NSString *path, NSDataWritingOptions options, NSError **error) {
-    if (SaveTarget && [path hasPrefix:TSLibraryBackupFolder()]) {
-        NSString *target = SaveTarget; SaveTarget = nil;
-        ((BOOL (*)(id, SEL, NSString *, NSDataWritingOptions, NSError **))OriginalWriteToFile)(SaveContents, _cmd, target, NSDataWritingAtomic, NULL);
+static IMP OriginalDataWithContentsOfFile;
+// Another application saves the file just after TeXShop judged it damaged, when TeXShop reads it again after moving it
+// aside: either in place, through a file handle it opened before (same file), or at once, as a new file at the path.
+static NSFileHandle *SaveHandle; static NSString *SaveTarget; static NSData *SaveContents;
+static id SavingDataWithContentsOfFile(id self, SEL _cmd, NSString *path) {
+    if ((SaveHandle || SaveTarget) && [path containsString:@".TeXShop-"]) {
+        if (SaveHandle) { [SaveHandle truncateFileAtOffset:0]; [SaveHandle writeData:SaveContents]; [SaveHandle synchronizeFile]; [SaveHandle closeFile]; SaveHandle = nil; }
+        if (SaveTarget) { [SaveContents writeToFile:SaveTarget atomically:YES]; SaveTarget = nil; }
     }
-    return ((BOOL (*)(id, SEL, NSString *, NSDataWritingOptions, NSError **))OriginalWriteToFile)(self, _cmd, path, options, error);
+    return ((id (*)(id, SEL, NSString *))OriginalDataWithContentsOfFile)(self, _cmd, path);
 }
 static id RacingDataWithContentsOfFile(id self, SEL _cmd, NSString *path) {
     if (RaceBundled && [path isEqual:RaceBundled]) {
@@ -255,18 +255,24 @@ int main(int argc, char **argv) { @autoreleasepool {
     RaceBundled = nil;
     method_setImplementation(class_getClassMethod(NSData.class, @selector(dataWithContentsOfFile:)), OriginalDataWithContentsOfFile);
 
-    // 14. A damaged file that another application replaces with a good one just after TeXShop judged it: the good one
-    // stays where it is, and no backup is left.
-    OriginalWriteToFile = method_setImplementation(class_getInstanceMethod(NSData.class, @selector(writeToFile:options:error:)), (IMP)RacingWriteToFile);
+    // 14. A damaged file another application saves just after TeXShop judged it: its edit is never lost.
+    OriginalDataWithContentsOfFile = method_setImplementation(class_getClassMethod(NSData.class, @selector(dataWithContentsOfFile:)), (IMP)SavingDataWithContentsOfFile);
+    NSData *saved = Plist(@{@"b": @"saved by another application"});
+    // In place, into the same file: it is put back where it was, and nothing goes to the backups.
     [fm removeItemAtPath:TSLibraryBackupFolder() error:NULL];
     Put(garbage, @"Keyboard/autocompletion.plist");
-    NSData *saved = Plist(@{@"b": @"saved by another application"});
-    SaveTarget = Library(@"Keyboard/autocompletion.plist"); SaveContents = saved;
+    SaveHandle = [NSFileHandle fileHandleForWritingAtPath:Library(@"Keyboard/autocompletion.plist")]; SaveContents = saved;
     check(TSLibraryRepairFile(Library(@"Keyboard/autocompletion.plist"), TSLibraryBundledPath(@"Keyboard/autocompletion.plist"), TSLibraryStringDictionaryCheck()) &&
           [[NSData dataWithContentsOfFile:Library(@"Keyboard/autocompletion.plist")] isEqual:saved] && [BackupsOf(@"autocompletion.plist") count] == 0,
-          [NSString stringWithFormat:@"a file saved at once after it was judged damaged stays, and no backup is left %@", BackupsOf(@"autocompletion.plist")]);
-    SaveTarget = nil;
-    method_setImplementation(class_getInstanceMethod(NSData.class, @selector(writeToFile:options:error:)), OriginalWriteToFile);
+          [NSString stringWithFormat:@"a file saved in place after it was judged damaged stays where it was %@", BackupsOf(@"autocompletion.plist")]);
+    // At once, as a new file: the new file stays, and the damaged one is in the backups.
+    Put(garbage, @"Keyboard/autocompletion.plist");
+    SaveTarget = Library(@"Keyboard/autocompletion.plist"); SaveContents = saved;
+    check(TSLibraryRepairFile(Library(@"Keyboard/autocompletion.plist"), TSLibraryBundledPath(@"Keyboard/autocompletion.plist"), TSLibraryStringDictionaryCheck()) &&
+          [[NSData dataWithContentsOfFile:Library(@"Keyboard/autocompletion.plist")] isEqual:saved] && [BackupsOf(@"autocompletion.plist") count] == 1,
+          [NSString stringWithFormat:@"a file saved at once after it was judged damaged stays, the damaged one is in the backups %@", BackupsOf(@"autocompletion.plist")]);
+    SaveHandle = nil; SaveTarget = nil;
+    method_setImplementation(class_getClassMethod(NSData.class, @selector(dataWithContentsOfFile:)), OriginalDataWithContentsOfFile);
 
     // 13. A damaged file another process has open (it may be writing it in place) is left as it is, even at launch.
     Put(garbage, @"Menus/KeyEquivalents.plist");
@@ -333,7 +339,7 @@ int main(int argc, char **argv) { @autoreleasepool {
 '''
 
 MUTATIONS = {
-    'no backup': ('        if (![contents writeToFile:target options:NSDataWritingWithoutOverwriting error:NULL]) return NO;\n', ''),
+    'no backup': ('    if (!same || renamex_np(aside.fileSystemRepresentation, target.fileSystemRepresentation, RENAME_EXCL) != 0) {', '    if (!same || ![fm removeItemAtPath:aside error:NULL]) {'),
     'missing only': ('    if (data && check(data, reference)) return YES;\n', '    if (data) return YES;\n'),
     'running replaces damaged': ('    if ([fm attributesOfItemAtPath:file error:NULL]) return TSLibraryFileIsUsable(path, bundledPath, check);', '    if ([fm attributesOfItemAtPath:file error:NULL]) return TSLibraryRepairFile(path, bundledPath, check);'),
     'replace when created meanwhile': ('    BOOL placed = renamex_np(temporary.fileSystemRepresentation, file.fileSystemRepresentation, RENAME_EXCL) == 0;', '    BOOL placed = rename(temporary.fileSystemRepresentation, file.fileSystemRepresentation) == 0;'),
@@ -345,8 +351,8 @@ MUTATIONS = {
     'three components': ('[value count] < 4', '[value count] < 3'),
     'colors not required': ('if (![value isKindOfClass:NSArray.class] || [value count] < 4 || !AllOfClass(value, NSNumber.class)) return NO;', 'if ([value isKindOfClass:NSArray.class] && ([value count] < 4 || !AllOfClass(value, NSNumber.class))) return NO;'),
     'macro items unchecked': ('        return macros[@"submenu"] == nil || MacroItems(macros[@"submenu"], 0);', '        return YES;'),
-    'delete when backup fails': ('        if (![contents writeToFile:target options:NSDataWritingWithoutOverwriting error:NULL]) return NO;', '        if (![contents writeToFile:target options:NSDataWritingWithoutOverwriting error:NULL]) [fm removeItemAtPath:file error:NULL];'),
-    'take away whatever is there': ('        if (![FileNumber(aside) isEqual:number]) {', '        if (NO) {'),
+    'delete when backup fails': ('        if (renamex_np(aside.fileSystemRepresentation, file.fileSystemRepresentation, RENAME_EXCL) != 0)\n', '        [fm removeItemAtPath:aside error:NULL];\n        if (NO)\n'),
+    'contents not compared': ('        same = [now isEqualToData:contents] && [moved[NSFileModificationDate] isEqual:modified];', '        same = YES;'),
     'no wait while saving': ('        if (modified && fabs(modified.timeIntervalSinceNow) < TSLibraryQuietSeconds) return NO;\n', ''),
     'chains followed to a point': ('    return nil;\n}\n\n// Puts `data`', '    return current;\n}\n\n// Puts `data`'),
 }

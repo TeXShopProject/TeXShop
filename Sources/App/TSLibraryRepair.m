@@ -206,42 +206,29 @@ static NSString *BackupTarget(NSString *path)
     return target;
 }
 
-static NSNumber *FileNumber(NSString *path)
-{
-    return [NSFileManager.defaultManager attributesOfItemAtPath:path error:NULL][NSFileSystemFileNumber];
-}
-
-// Takes the damaged file (or folder) away from `file`, keeping it in the backups, but only if what is at `file` is
-// still the one that was judged damaged (the same file number): one that another application saved meanwhile, even by
-// replacing the file at once, is put back where it was. `contents` is what was read and judged, for a file.
-static BOOL TakeAwayIfSame(NSString *file, NSNumber *number, NSData *contents)
+// Takes the damaged file (or folder) away from `file` into the backups, but only if it is still the one that was
+// judged damaged: the same file number, and for a file the same contents and modification date as when it was judged.
+// The file itself is moved, never copied and deleted, so whatever another application writes to it at any moment stays
+// in it: back where it was if it changed, else in the backups. Returns whether `file` is now free.
+static BOOL TakeAwayIfSame(NSString *file, NSNumber *number, NSDate *modified, NSData *contents)
 {
     NSFileManager *fm = NSFileManager.defaultManager;
     NSString *target = BackupTarget(file);
     if (!target) return NO;
-    if (contents) {
-        // The backup is what was judged, written before anything is moved.
-        if (![contents writeToFile:target options:NSDataWritingWithoutOverwriting error:NULL]) return NO;
-        NSString *aside = [file.stringByDeletingLastPathComponent stringByAppendingPathComponent:
-                           [NSString stringWithFormat:@".%@.TeXShop-%@", file.lastPathComponent, NSUUID.UUID.UUIDString]];
-        if (renamex_np(file.fileSystemRepresentation, aside.fileSystemRepresentation, RENAME_EXCL) != 0) {
-            [fm removeItemAtPath:target error:NULL];
-            return NO;
-        }
-        if (![FileNumber(aside) isEqual:number]) {
-            // Not the file that was judged: it goes back (or, if yet another file is there by now, next to the backup).
-            if (renamex_np(aside.fileSystemRepresentation, file.fileSystemRepresentation, RENAME_EXCL) != 0)
-                [fm moveItemAtPath:aside toPath:[target stringByAppendingString:@" (saved meanwhile)"] error:NULL];
-            [fm removeItemAtPath:target error:NULL];
-            return NO;
-        }
-        [fm removeItemAtPath:aside error:NULL];
-        return YES;
+    NSString *aside = [file.stringByDeletingLastPathComponent stringByAppendingPathComponent:
+                       [NSString stringWithFormat:@".%@.TeXShop-%@", file.lastPathComponent, NSUUID.UUID.UUIDString]];
+    if (renamex_np(file.fileSystemRepresentation, aside.fileSystemRepresentation, RENAME_EXCL) != 0) return NO;
+    NSDictionary *moved = [fm attributesOfItemAtPath:aside error:NULL];
+    BOOL same = [moved[NSFileSystemFileNumber] isEqual:number];
+    if (same && contents) {
+        NSData *now = [NSData dataWithContentsOfFile:aside];
+        same = [now isEqualToData:contents] && [moved[NSFileModificationDate] isEqual:modified];
     }
-    // A folder where a file belongs is moved whole, and moved back if it is not the one that was judged.
-    if (renamex_np(file.fileSystemRepresentation, target.fileSystemRepresentation, RENAME_EXCL) != 0) return NO;
-    if (![FileNumber(target) isEqual:number]) {
-        renamex_np(target.fileSystemRepresentation, file.fileSystemRepresentation, RENAME_EXCL);
+    // Not the one that was judged, or changed since: it goes back where it was.
+    if (!same || renamex_np(aside.fileSystemRepresentation, target.fileSystemRepresentation, RENAME_EXCL) != 0) {
+        if (renamex_np(aside.fileSystemRepresentation, file.fileSystemRepresentation, RENAME_EXCL) != 0)
+            // Yet another file is there by now: this one is kept next to the backups.
+            [fm moveItemAtPath:aside toPath:[target stringByAppendingString:@" (saved meanwhile)"] error:NULL];
         return NO;
     }
     return YES;
@@ -271,7 +258,7 @@ BOOL TSLibraryRepairFile(NSString *path, NSString *bundledPath, TSLibraryFileChe
             ![now[NSFileSystemFileNumber] isEqual:attributes[NSFileSystemFileNumber]]) return NO;
         // Nor is a file another process has open: it may be writing it in place, however long that takes.
         if (OpenElsewhere(file)) return NO;
-        if (!TakeAwayIfSame(file, attributes[NSFileSystemFileNumber], data)) {
+        if (!TakeAwayIfSame(file, attributes[NSFileSystemFileNumber], modified, data)) {
             NSLog(@"TeXShop left the damaged %@ as it is (it could not be kept in Backups, or it changed)", path.stringByAbbreviatingWithTildeInPath);
             return TSLibraryFileIsUsable(path, bundledPath, check);
         }
