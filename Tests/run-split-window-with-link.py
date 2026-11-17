@@ -51,7 +51,9 @@ def last_method(source, signature):
     return source[start:closing_brace(source, source.index('{', start))]
 
 window_methods = [last_method(window_source, s) for s in (
-    '- (void) mainSplitPdfKitWindow', '- (void) splitPdfKitWindow:', '- (void)showLinkDestination: (PDFDestination *)destination')]
+    '- (void) mainSplitPdfKitWindow', '- (void) splitPdfKitWindow:', '- (void)showLinkDestination: (PDFDestination *)destination',
+    # Unsplitting while the second part is in use first switches the parts (#52).
+    '- (void)switchSplitParts\n')]
 view_methods = [last_method(view_source, s) for s in (
     # The contextual menu and its new item (#31).
     '- (MyPDFKitView *)previewPartForMenuEvent:', '- (NSMenu *)menuForEvent:(NSEvent *)theEvent',

@@ -24,6 +24,13 @@ MUTATIONS = {
     'popup-dropped': ('window', '    if (upperPopup)\n        [lowerView attachPinnedLinkPreview:', '    if (NO)\n        [lowerView attachPinnedLinkPreview:'),
     'focus-stays': ('window', '![window makeFirstResponder:active]', 'YES'),
     'active-view-only': ('window', '        [active becomeActiveView];\n', '        self.activeView = active;\n'),
+    # Unsplitting keeps the part in use and closes the popup of the part that goes away (#52).
+    'unsplit-keeps-first': ('window', '    if (keepsSecondPart)\n        [self switchSplitParts];\n', ''),
+    'unsplit-keeps-gone-popup': ('window', '        [(MyPDFKitView *)self.myPDFKitView2 detachPinnedLinkPreviewWithWindowFrame: NULL];\n', ''),
+    'unsplit-keeps-hidden-part': ('window', '        keepsSecondPart = secondSeen && (self.activeView == secondView || ! firstSeen);\n', '        keepsSecondPart = self.activeView == secondView;\n'),
+    'unsplit-keeps-hidden-first': ('window', '        keepsSecondPart = secondSeen && (self.activeView == secondView || ! firstSeen);\n', '        keepsSecondPart = secondSeen && self.activeView == secondView;\n'),
+    'unsplit-sizes-swapped': ('window', 'theFrame1 = keepsSecondPart ? firstFrameBefore : [self.myPDFKitView frame];\n                theFrame2 = keepsSecondPart ? secondFrameBefore : [self.myPDFKitView2 frame];\n                // The height',
+                              'theFrame1 = [self.myPDFKitView frame];\n                theFrame2 = [self.myPDFKitView2 frame];\n                // The height'),
     # view code
     'search-not-followed': ('view', '\t[self resetSearchDelegate];\n    [self.myDocument', '    [self.myDocument'),
     'places-not-swapped': ('window', '    TSPreviewPaneRestore(upperView, lower);\n    TSPreviewPaneRestore(lowerView, upper);\n', ''),
@@ -551,11 +558,86 @@ int main(int argc, char **argv) { @autoreleasepool {
         check(!p.window.windowIsSplit && p.lower.superview == nil, describe(name, @"the window is unsplit"));
         check(near(distanceFromTop(p.upper, upper)) && p.upper.pageStyle == switched.lowerStyle && near(p.upper.scaleFactor - switched.lowerScale) &&
               p.upper.preview == switched.lowerPreview, describe(name, @"unsplitting keeps the part shown at the top (or left)"));
+        // The popup of the part that goes away closes, rather than float over pages of the
+        // part that stays (#52).
+        check(switched.upperPreview.superview == nil, describe(name, @"unsplitting closes the pinned popup of the part that goes away"));
         flags = sideBySide.boolValue ? NSEventModifierFlagOption : 0; [p.window splitPdfKitWindow:nil]; flags = 0; settle(p.window);
         // The second view takes the display format of the first again, so its place is only
         // checked by page here (run-preview-split-position.py checks it exactly).
         check(near(distanceFromTop(p.upper, upper)) && [doc indexForPage:p.lower.currentPage] == lower.pageIndex,
               describe(name, @"splitting again keeps the first part and shows the page of the second part"));
+
+        // Unsplitting while the second part is in use keeps that part: the window shows its
+        // place, display format and magnification, with its pinned popup by its link, and the
+        // popup of the other part closes (#52). Splitting again gives the parts their sizes back.
+        [sv setPosition:round(whole * 0.62) ofDividerAtIndex:0]; settle(p.window);
+        [p.upper setPageStyle:PDF_MULTI_PAGE_STYLE]; [p.upper setupPageStyle];
+        [p.lower setPageStyle:PDF_SINGLE_PAGE_STYLE]; [p.lower setupPageStyle];
+        [p.lower setMagnification:1.5]; [p.upper setMagnification:0.8];
+        scrollTo(p.upper, 1, 500); scrollTo(p.lower, 4, 600); settle(p.window);
+        if (!p.upper.hasPinnedLinkPreview) { NSRect r = inWindow(p.upper); [p.upper pin:NSMakeRect(NSMinX(r) + 30, NSMaxY(r) - 170, 180, 120)]; }
+        if (!p.lower.hasPinnedLinkPreview) { NSRect r = inWindow(p.lower); [p.lower pin:NSMakeRect(NSMinX(r) + 60, NSMaxY(r) - 140, 150, 100)]; }
+        [p.window makeFirstResponder:p.lower]; settle(p.window);
+        State used = stateOf(p);
+        PDFPage *linkPage = [doc pageAtIndex:used.lowerPlace.pageIndex];
+        NSRect (^onPage)(MyPDFKitView *) = ^NSRect(MyPDFKitView *v) {
+            return [v convertRect:[v convertRect:v.preview.frame fromView:v.documentView] toPage:linkPage];
+        };
+        NSRect popupOnPage = onPage(p.lower);
+        check(p.window.activeView == p.lower, describe(name, @"fixture: the second part is in use"));
+        check(used.upperPreview && used.lowerPreview, describe(name, @"fixture: both parts have a pinned popup"));
+        check(used.upperStyle != used.lowerStyle && !near(used.upperScale - used.lowerScale), describe(name, @"fixture: the parts differ"));
+        [p.window splitPdfKitWindow:nil]; settle(p.window);
+        NSString *kept = [name stringByAppendingString:@", second part in use"];
+        check(!p.window.windowIsSplit && p.lower.superview == nil, describe(kept, @"the window is unsplit"));
+        check(near(distanceFromTop(p.upper, used.lowerPlace)) && p.upper.pageStyle == used.lowerStyle &&
+              near(p.upper.scaleFactor - used.lowerScale), describe(kept, @"unsplitting keeps the part in use"));
+        check(p.upper.preview == used.lowerPreview && used.lowerPreview.pinned && p.upper.hasPinnedLinkPreview,
+              describe(kept, @"the popup of the part in use stays pinned"));
+        NSRect q = onPage(p.upper);
+        check(near(NSMinX(q) - NSMinX(popupOnPage)) && near(NSMaxY(q) - NSMaxY(popupOnPage)) &&
+              near(NSWidth(q) - NSWidth(popupOnPage)) && near(NSHeight(q) - NSHeight(popupOnPage)),
+              describe(kept, [NSString stringWithFormat:@"the popup of the part in use stays at its place on the page (%@ for %@)",
+                              NSStringFromRect(q), NSStringFromRect(popupOnPage)]));
+        check(used.upperPreview.superview == nil, describe(kept, @"unsplitting closes the pinned popup of the part that goes away"));
+        check(p.window.activeView == p.upper, describe(kept, @"the view that stays is active"));
+        flags = sideBySide.boolValue ? NSEventModifierFlagOption : 0; [p.window splitPdfKitWindow:nil]; flags = 0; settle(p.window);
+        CGFloat (^extentOf)(NSRect) = ^CGFloat(NSRect r) { return sideBySide.boolValue ? NSWidth(r) : NSHeight(r); };
+        check(near(extentOf(inWindow(p.upper)) - extentOf(used.upperFrame)) && near(extentOf(inWindow(p.lower)) - extentOf(used.lowerFrame)),
+              describe(kept, [NSString stringWithFormat:@"splitting again gives the parts their sizes back (%.1f, %.1f for %.1f, %.1f)",
+                              extentOf(inWindow(p.upper)), extentOf(inWindow(p.lower)), extentOf(used.upperFrame), extentOf(used.lowerFrame)]));
+        check([doc indexForPage:p.lower.currentPage] == used.upperPlace.pageIndex,
+              describe(kept, @"splitting again shows the page of the other part in the second part"));
+
+        // A part in use that cannot be seen, as when the divider has been dragged to the edge of
+        // the window, does not stay: the part that can be seen stays with its pinned popup, and
+        // the popup of the hidden part closes (#52).
+        for (int hiddenFirst = 0; hiddenFirst < 2; hiddenFirst++) {
+            NSString *hid = [name stringByAppendingString:hiddenFirst ? @", first part hidden and in use" : @", second part hidden and in use"];
+            if (!p.window.windowIsSplit) {
+                flags = sideBySide.boolValue ? NSEventModifierFlagOption : 0; [p.window splitPdfKitWindow:nil]; flags = 0; settle(p.window);
+            }
+            [sv setPosition:round(whole * 0.5) ofDividerAtIndex:0]; settle(p.window);
+            [p.upper setPageStyle:PDF_MULTI_PAGE_STYLE]; [p.upper setupPageStyle];
+            [p.lower setPageStyle:PDF_SINGLE_PAGE_STYLE]; [p.lower setupPageStyle];
+            scrollTo(p.upper, 1, 500); scrollTo(p.lower, 4, 600); settle(p.window);
+            if (!p.upper.hasPinnedLinkPreview) { NSRect r = inWindow(p.upper); [p.upper pin:NSMakeRect(NSMinX(r) + 30, NSMaxY(r) - 170, 180, 120)]; }
+            if (!p.lower.hasPinnedLinkPreview) { NSRect r = inWindow(p.lower); [p.lower pin:NSMakeRect(NSMinX(r) + 60, NSMaxY(r) - 140, 150, 100)]; }
+            MyPDFKitView *hidden = hiddenFirst ? p.upper : p.lower, *seen = hiddenFirst ? p.lower : p.upper;
+            NSInteger seenPage = pageOf(seen), seenStyle = seen.pageStyle;
+            TSLinkPreviewView *seenPopup = seen.preview, *hiddenPopup = hidden.preview;
+            [sv setPosition:(hiddenFirst ? (sideBySide.boolValue ? NSMinX(sv.bounds) : NSMinY(sv.bounds)) : (sideBySide.boolValue ? NSMaxX(sv.bounds) : NSMaxY(sv.bounds)))
+                ofDividerAtIndex:0];
+            settle(p.window);
+            [hidden becomeActiveView]; settle(p.window);
+            check(p.window.activeView == hidden && !topOf(hidden).valid && topOf(seen).valid && seenPopup && hiddenPopup,
+                  describe(hid, @"fixture: the part in use cannot be seen, the other part can, and both have a pinned popup"));
+            [p.window splitPdfKitWindow:nil]; settle(p.window);
+            check(!p.window.windowIsSplit && pageOf(p.upper) == seenPage && p.upper.pageStyle == seenStyle,
+                  describe(hid, [NSString stringWithFormat:@"unsplitting keeps the part that can be seen (page %ld for %ld)", (long)pageOf(p.upper), (long)seenPage]));
+            check(p.upper.preview == seenPopup && p.upper.hasPinnedLinkPreview && hiddenPopup.superview == nil,
+                  describe(hid, @"the popup of the part that can be seen stays and the other one closes"));
+        }
         [p.window close];
     }
     {   // A part that fits the page to the window keeps fitting at its new place.
