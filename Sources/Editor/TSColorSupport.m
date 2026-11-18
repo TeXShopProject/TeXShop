@@ -594,27 +594,45 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
 // Themes store an opacity of 0 with some of these colors, for example the editor
 // background of SolarizedDark, which -colorFromDictionary:andKey: ignores.
 //
-// A color the theme does not have is the built-in one of the mode, but text and the background
-// it is drawn on are a pair: when the theme has only one of them (a theme of either kind can be
-// used in a light or a dark window, and its file may have lost a color), the missing one is
-// chosen so that the text reads on the background, contrast 4.5 or more: the built-in color of
-// the mode, else that of the other mode, else white or black. The theme file is not changed.
-// Text on: EditorText and EditorInsertionPoint on EditorBackground, ConsoleText on
-// ConsoleBackground, LogText on LogBackground; EditorText on EntryColor (the active line).
+// The color drawn for a key of a theme in a light or dark window. A color the theme has is used as
+// it is. A color it does not have is the built-in one of the mode, but text and what it is drawn on
+// go together (a theme of either kind can be used in a light or a dark window, and its file may have
+// lost colors): a missing color is chosen so that it reads, contrast 4.5 or more, with the colors it
+// goes with, in this order: the built-in color of the mode, that of the other mode, white, black;
+// the one that reads with all of them, else with the first. The colors it goes with, resolved in
+// this order, so that nothing depends on itself:
+//   1. text, with the backgrounds the theme has:
+//      EditorText: EditorBackground, EntryColor; ConsoleText: ConsoleBackground; LogText: LogBackground;
+//   2. backgrounds, with the text as it is drawn (and the theme's own cursor):
+//      EditorBackground: EditorText, EditorInsertionPoint; ConsoleBackground: ConsoleText; LogBackground: LogText;
+//   3. the cursor, with the background as it is drawn, and the active line, with the text as it is drawn:
+//      EditorInsertionPoint: EditorBackground; EntryColor: EditorText.
+// The theme file is not changed. Every view that draws these colors, and the Settings wells, ask here.
 - (NSColor *)opaqueColorForKey: (NSString *)theKey fromDictionary: (NSDictionary *)theDictionary isWindowDark: (BOOL)mode
 {
     NSColor *theColor = [self colorFromDictionary: theDictionary andKey: theKey];
     if (theColor != nil)
         return theColor;
     NSColor *builtIn = mode ? [self darkColorWithKey: theKey] : [self liteColorWithKey: theKey];
-    NSString *background = @{@"EditorText": @"EditorBackground", @"EditorInsertionPoint": @"EditorBackground",
-                              @"ConsoleText": @"ConsoleBackground", @"LogText": @"LogBackground"}[theKey];
-    NSString *text = @{@"EditorBackground": @"EditorText", @"EntryColor": @"EditorText",
-                       @"ConsoleBackground": @"ConsoleText", @"LogBackground": @"LogText"}[theKey];
-    // The other color of the pair: the background as it is drawn, or the theme's own text.
-    NSColor *other = background ? [self opaqueColorForKey: background fromDictionary: theDictionary isWindowDark: mode]
-        : text ? [self colorFromDictionary: theDictionary andKey: text] : nil;
-    if (other == nil)
+    // Each partner: its key, and whether it is taken as drawn (YES) or only as the theme has it (NO).
+    NSArray<NSArray *> *partners = @{
+        @"EditorText": @[@[@"EditorBackground", @NO], @[@"EntryColor", @NO]],
+        @"ConsoleText": @[@[@"ConsoleBackground", @NO]],
+        @"LogText": @[@[@"LogBackground", @NO]],
+        @"EditorBackground": @[@[@"EditorText", @YES], @[@"EditorInsertionPoint", @NO]],
+        @"ConsoleBackground": @[@[@"ConsoleText", @YES]],
+        @"LogBackground": @[@[@"LogText", @YES]],
+        @"EditorInsertionPoint": @[@[@"EditorBackground", @YES]],
+        @"EntryColor": @[@[@"EditorText", @YES]],
+    }[theKey];
+    NSMutableArray<NSColor *> *others = [NSMutableArray array];
+    for (NSArray *partner in partners) {
+        NSColor *other = [partner[1] boolValue] ? [self opaqueColorForKey: partner[0] fromDictionary: theDictionary isWindowDark: mode]
+            : [self colorFromDictionary: theDictionary andKey: partner[0]];
+        if (other != nil)
+            [others addObject: other];
+    }
+    if (others.count == 0)
         return builtIn;
     // WCAG contrast of two colors.
     CGFloat (^luminance)(NSColor *) = ^CGFloat(NSColor *color) {
@@ -624,20 +642,25 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
             c[i] = c[i] <= 0.03928 ? c[i] / 12.92 : pow((c[i] + 0.055) / 1.055, 2.4);
         return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
     };
-    CGFloat otherLuminance = luminance(other);
-    NSColor *best = nil;
-    CGFloat bestContrast = 0;
-    for (NSColor *candidate in @[builtIn, mode ? [self liteColorWithKey: theKey] : [self darkColorWithKey: theKey],
-                                 [NSColor colorWithRed: 1 green: 1 blue: 1 alpha: 1], [NSColor colorWithRed: 0 green: 0 blue: 0 alpha: 1]]) {
-        CGFloat l = luminance(candidate);
-        CGFloat contrast = (MAX(l, otherLuminance) + 0.05) / (MIN(l, otherLuminance) + 0.05);
-        if (contrast >= 4.5)
+    CGFloat (^contrast)(NSColor *, NSColor *) = ^CGFloat(NSColor *a, NSColor *b) {
+        CGFloat x = luminance(a), y = luminance(b);
+        return (MAX(x, y) + 0.05) / (MIN(x, y) + 0.05);
+    };
+    NSArray<NSColor *> *candidates = @[builtIn, mode ? [self liteColorWithKey: theKey] : [self darkColorWithKey: theKey],
+                                       [NSColor colorWithRed: 1 green: 1 blue: 1 alpha: 1], [NSColor colorWithRed: 0 green: 0 blue: 0 alpha: 1]];
+    for (NSColor *candidate in candidates) {
+        BOOL readsWithAll = YES;
+        for (NSColor *other in others)
+            readsWithAll = readsWithAll && contrast(candidate, other) >= 4.5;
+        if (readsWithAll)
             return candidate;
-        if (contrast > bestContrast) {
-            best = candidate;
-            bestContrast = contrast;
-        }
     }
+    NSColor *best = builtIn;
+    for (NSColor *candidate in candidates)
+        if (contrast(candidate, others[0]) >= 4.5)
+            return candidate;
+        else if (contrast(candidate, others[0]) > contrast(best, others[0]))
+            best = candidate;
     return best;
 }
 

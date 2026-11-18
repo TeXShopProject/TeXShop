@@ -166,19 +166,9 @@ NSInteger stringSort(id s1, id s2, void *context)
     [self setAllThemeEditingEnabled:(EditingColors != nil)];
     if (EditingColors == nil) return;
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
-    NSColor *flashColor, *aColor;
-    NSColor *footnoteCol, *EntryCol;
-    BOOL withDarkColors;
-    
-    
-#ifdef MOJAVEORHIGHER
-    if ((atLeastMojave) && (_prefsWindow.effectiveAppearance.name == NSAppearanceNameDarkAqua))
-        withDarkColors = YES;
-    else
-#endif
-        withDarkColors = NO;
+    NSColor *footnoteCol;
 
-    
+    // Every well shows the color drawn for its key, in the appearance of the Settings window (-editingColorForKey:).
     SourceTextColorWell.color = [self editingColorForKey: @"EditorText"];
     SourceBackgroundColorWell.color = [self editingColorForKey: @"EditorBackground"];
     SourceInsertionPointColorWell.color = [self editingColorForKey: @"EditorInsertionPoint"];
@@ -215,15 +205,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     EditorInvisibleCharColorWell.color = [self editingColorForKey: @"EditorInvisibleChar"];
     EditorHighlightZenkakuSymbolColorWell.color = [self fullwidthHighlightColorForKey: @"EditorHighlightZenkakuSymbol"];
     EditorHighlightZenkakuSymbolBackgroundColorWell.color = [self fullwidthHighlightColorForKey: @"EditorHighlightZenkakuSymbolBackground"];
-    flashColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"EditorFlash"];
-    if (flashColor != nil)
-        EditorFlashColorWell.color = flashColor;
-    else if (withDarkColors)
-        // EditorFlashColorWell.color = [NSColor colorWithRed:0.00 green:0.20 blue:0.20 alpha:1.00];
-        EditorFlashColorWell.color = [colorSupport darkColorAndAlphaWithKey: @"EditorFlash"];
-    else
-        // EditorFlashColorWell.color = [NSColor colorWithRed:1 green:0.95 blue:1 alpha:1];
-        EditorFlashColorWell.color = [colorSupport liteColorAndAlphaWithKey: @"EditorFlash"];
+    EditorFlashColorWell.color = [self editingColorForKey: @"EditorFlash"];
     
     footnoteCol = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"FootnoteColor"];
     if (footnoteCol == nil)
@@ -238,11 +220,8 @@ NSInteger stringSort(id s1, id s2, void *context)
         FootnoteColorWell.color = [colorSupport liteColorAndAlphaWithKey: @"FootnoteColor"];
  */
     
-   EntryCol = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"EntryColor"];
-    if (EntryCol != nil)
-        EntryColorWell.color = EntryCol;
-    else
-        EntryColorWell.color = [colorSupport liteColorAndAlphaWithKey: @"EntryColor"];
+    // The active line as it is drawn: without its own color, one that the text reads on (TSColorSupport).
+    EntryColorWell.color = [self editingColorForKey: @"EntryColor"];
 
         
     EditorReverseSyncColorWell.color = [self editingColorForKey: @"EditorReverseSync"];
@@ -253,45 +232,15 @@ NSInteger stringSort(id s1, id s2, void *context)
     ImageForegroundColorWell.color = [self editingColorForKey: @"ImageForeground"];
     ImageBackgroundColorWell.color = [self editingColorForKey: @"ImageBackground"];
     
-    aColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"XMLComment"];
-    if (aColor != nil)
-        XMLCommentColorWell.color = aColor;
-    else if (withDarkColors)
-        XMLCommentColorWell.color = [colorSupport darkColorAndAlphaWithKey: @"XMLComment"];
-    else
-        XMLCommentColorWell.color = [colorSupport liteColorAndAlphaWithKey: @"XMLComment"];
+    XMLCommentColorWell.color = [self editingColorForKey: @"XMLComment"];
     
-    aColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"XMLTag"];
-    if (aColor != nil)
-        XMLTagColorWell.color = aColor;
-    else if (withDarkColors)
-        XMLTagColorWell.color = [colorSupport darkColorAndAlphaWithKey: @"XMLTag"];
-    else
-        XMLTagColorWell.color = [colorSupport liteColorAndAlphaWithKey: @"XMLTag"];
+    XMLTagColorWell.color = [self editingColorForKey: @"XMLTag"];
     
-    aColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"XMLSpecial"];
-    if (aColor != nil)
-        XMLSpecialColorWell.color = aColor;
-    else if (withDarkColors)
-        XMLSpecialColorWell.color = [colorSupport darkColorAndAlphaWithKey: @"XMLSpecial"];
-    else
-        XMLSpecialColorWell.color = [colorSupport liteColorAndAlphaWithKey: @"XMLSpecial"];
+    XMLSpecialColorWell.color = [self editingColorForKey: @"XMLSpecial"];
     
-    aColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"XMLParameter"];
-    if (aColor != nil)
-        XMLParameterColorWell.color = aColor;
-    else if (withDarkColors)
-        XMLParameterColorWell.color = [colorSupport darkColorAndAlphaWithKey: @"XMLParameter"];
-    else
-        XMLParameterColorWell.color = [colorSupport liteColorAndAlphaWithKey: @"XMLParameter"];
+    XMLParameterColorWell.color = [self editingColorForKey: @"XMLParameter"];
     
-    aColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"XMLValue"];
-    if (aColor != nil)
-        XMLValueColorWell.color = aColor;
-    else if (withDarkColors)
-        XMLValueColorWell.color = [colorSupport darkColorAndAlphaWithKey: @"XMLValue"];
-    else
-        XMLValueColorWell.color = [colorSupport liteColorAndAlphaWithKey: @"XMLValue"];
+    XMLValueColorWell.color = [self editingColorForKey: @"XMLValue"];
     [self useOpaqueColorWells];
 }
 

@@ -22,7 +22,7 @@ from source_tree import include_args
 root = Path(__file__).resolve().parents[1]
 support = (root / 'Sources/Editor/TSColorSupport.m').read_text(encoding='utf-8')
 signatures = ['- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFromDictionary:', '- (NSColor *) colorAndAlphaFromDictionary:',
-              '- (NSColor *)liteColorWithKey:', '- (NSColor *)darkColorWithKey:',
+              '- (NSColor *)liteColorWithKey:', '- (NSColor *)darkColorWithKey:', '- (NSColor *)liteColorAndAlphaWithKey:', '- (NSColor *)darkColorAndAlphaWithKey:',
               '- (NSColor *)colorForKey: (NSString *)theKey fromDictionary:', '- (NSColor *)opaqueColorForKey: (NSString *)theKey fromDictionary:']
 readers = [method(support, s) for s in signatures]
 document_source = (root / 'Sources/Editor/TSDocument-Color.m').read_text(encoding='utf-8')
@@ -35,6 +35,9 @@ scrap_source = (root / 'Sources/Editor/ScrapTextView.m').read_text(encoding='utf
 scrap = method(scrap_source, '- (void)updateExperimentColors:(NSNotification *)notification')
 fragments = [('complete method:' + s, support, m) for s, m in zip(signatures, readers)]
 fragments.append(('complete method:updateExperimentColors', scrap_source, scrap))
+scheme_source = (root / 'Sources/Syntax/TSSyntaxColorScheme.m').read_text(encoding='utf-8')
+scheme = scheme_source[scheme_source.index('// Where a role finds its color'):]
+fragments.append(('color scheme', scheme_source, scheme))
 fragments += [('statement span:document views', document_source, document), ('complete method:updateConsoleColors', console_source, console)]
 
 PROGRAM = r'''
@@ -47,11 +50,18 @@ NSDictionary *liteColors, *darkColors;
 @interface TSColorSupport : NSObject
 - (NSColor *)opaqueColorForKey:(NSString *)theKey fromDictionary:(NSDictionary *)theDictionary isWindowDark:(BOOL)mode;
 - (NSColor *)colorForKey:(NSString *)theKey fromDictionary:(NSDictionary *)theDictionary isWindowDark:(BOOL)mode;
+- (NSColor *)liteColorAndAlphaWithKey:(NSString *)theKey;
+- (NSColor *)darkColorAndAlphaWithKey:(NSString *)theKey;
+- (NSColor *)colorFromDictionary:(NSDictionary *)theDictionary andKey:(NSString *)theKey;
+- (NSColor *)colorAndAlphaFromDictionary:(NSDictionary *)theDictionary andKey:(NSString *)theKey;
+- (NSArray *)colorArrayFromDictionary:(NSDictionary *)theDictionary andKey:(NSString *)theKey;
 @end
 @implementation TSColorSupport
 + (instancetype)sharedInstance { static id shared; if (!shared) shared = [self new]; return shared; }
 __READERS__
 @end
+#import "TSSyntaxColorScheme.h"
+__SCHEME__
 // The source, log and console views of a document, with the production statements that color them.
 @interface Document : NSObject {
 @public
@@ -160,70 +170,79 @@ int main(int argc, char **argv) { @autoreleasepool {
     for (NSString *key in @[@"EditorText", @"ConsoleText", @"LogText", @"EditorInsertionPoint"]) mine[key] = @[@1, @1, @1, @1];
     for (NSString *key in @[@"EditorBackground", @"ConsoleBackground", @"LogBackground", @"EntryColor"]) mine[key] = @[@0.1, @0.1, @0.1, @1];
     named[@"Mine (white text)"] = mine;
-    NSArray *pairs2 = @[@[@"EditorText", @"EditorBackground"], @[@"ConsoleText", @"ConsoleBackground"], @[@"LogText", @"LogBackground"],
-                        @[@"EditorInsertionPoint", @"EditorBackground"], @[@"EditorText", @"EntryColor"]];
-    NSUInteger checked = 0;
+    // Every color of the pairs, and every two of them, lost; in both appearances.
+    NSArray *keys = @[@"EditorText", @"EditorBackground", @"EditorInsertionPoint", @"EntryColor", @"ConsoleText", @"ConsoleBackground", @"LogText", @"LogBackground"];
+    NSArray *drawn = @[@[@"EditorText", @"EditorBackground"], @[@"EditorInsertionPoint", @"EditorBackground"], @[@"EditorText", @"EntryColor"],
+                       @[@"ConsoleText", @"ConsoleBackground"], @[@"LogText", @"LogBackground"]];
+    NSMutableArray *losses = [NSMutableArray array];
+    for (NSUInteger i = 0; i < keys.count; i++) {
+        [losses addObject:@[keys[i]]];
+        for (NSUInteger j = i + 1; j < keys.count; j++) [losses addObject:@[keys[i], keys[j]]];
+    }
+    NSUInteger checked = 0, pairsChecked = 0;
     for (NSString *name in [named.allKeys sortedArrayUsingSelector:@selector(compare:)]) {
         for (int dark = 0; dark <= 1; dark++) {
             mode = dark ? "dark" : "light";
-            for (NSArray *pair in pairs2) {
-                for (NSString *lost in pair) {
-                    NSMutableDictionary *theme = [named[name] mutableCopy];
-                    [theme removeObjectForKey:lost];
-                    NSDictionary *before = [theme copy];
-                    NSString *kept = [pair[0] isEqual:lost] ? pair[1] : pair[0];
-                    NSColor *text = [colors opaqueColorForKey:pair[0] fromDictionary:theme isWindowDark:dark];
-                    NSColor *background = [colors opaqueColorForKey:pair[1] fromDictionary:theme isWindowDark:dark];
-                    // The color the theme has is kept as it is.
-                    REQUIRE(SameRGB([colors opaqueColorForKey:kept fromDictionary:theme isWindowDark:dark], [colors opaqueColorForKey:kept fromDictionary:named[name] isWindowDark:dark]));
-                    // A pair the theme had readable stays readable (an unreadable pair of the user's own is kept).
-                    NSColor *wasText = [colors opaqueColorForKey:pair[0] fromDictionary:named[name] isWindowDark:dark];
-                    NSColor *wasBackground = [colors opaqueColorForKey:pair[1] fromDictionary:named[name] isWindowDark:dark];
-                    // The cursor and the active line are chosen for the text and background; they are checked when they are
-                    // the color that is lost.
-                    BOOL auxiliary = [pair[1] isEqual:@"EntryColor"] || [pair[0] isEqual:@"EditorInsertionPoint"];
-                    BOOL auxiliaryLost = [lost isEqual:@"EntryColor"] || [lost isEqual:@"EditorInsertionPoint"];
-                    if (auxiliary ? auxiliaryLost : Contrast(wasText, wasBackground) >= 4.5) {
-                        if (Contrast(text, background) < 4.5) fprintf(stderr, "%s without %s: %.2f\n", name.UTF8String, lost.UTF8String, Contrast(text, background));
-                        REQUIRE(Contrast(text, background) >= 4.5);
-                    }
-                    // The wells show what is drawn.
-                    REQUIRE(SameRGB([colors colorForKey:lost fromDictionary:theme isWindowDark:dark], [colors opaqueColorForKey:lost fromDictionary:theme isWindowDark:dark]));
-                    // The document's views, the Experiment console and the Experiment source draw these colors.
-                    if ([pair[1] isEqual:@"EntryColor"] || [pair[0] isEqual:@"EditorInsertionPoint"]) { checked++; continue; }
-                    Document *document = [Document new];
-                    document->textView1 = View(); document->textView2 = View(); document->outputText = View(); document.logTextView = View();
-                    [document applyDictionary:theme dark:dark];
-                    NSTextView *view = [pair[0] isEqual:@"EditorText"] ? document->textView1 : [pair[0] isEqual:@"ConsoleText"] ? document->outputText : document.logTextView;
-                    REQUIRE(SameRGB(view.textColor, text) && SameRGB(view.backgroundColor, background));
-                    NSWindow *host = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 100) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
-                    host.appearance = [NSAppearance appearanceNamed:dark ? NSAppearanceNameDarkAqua : NSAppearanceNameAqua];
-                    if ([pair[0] isEqual:@"ConsoleText"]) {
-                        TSExperimentConsoleController *console = [TSExperimentConsoleController new];
-                        console.window = host;
-                        console.outputText = View();
-                        [console updateConsoleColors:[NSNotification notificationWithName:@"colors" object:nil userInfo:theme]];
-                        REQUIRE(SameRGB(console.outputText.textColor, text) && SameRGB(console.outputText.backgroundColor, background));
-                    }
-                    if ([pair[0] isEqual:@"EditorText"]) {
-                        ScrapText *experiment = [[ScrapText alloc] initWithFrame:NSMakeRect(0, 0, 200, 100)];
-                        host.contentView = experiment;
-                        [experiment updateExperimentColors:[NSNotification notificationWithName:@"colors" object:nil userInfo:theme]];
-                        REQUIRE(SameRGB(experiment.textColor, text) && SameRGB(experiment.backgroundColor, background));
-                    }
-                    REQUIRE([theme isEqual:before]);
-                    checked++;
+            NSDictionary *whole = named[name];
+            for (NSArray *lost in losses) {
+                NSMutableDictionary *theme = [whole mutableCopy];
+                [theme removeObjectsForKeys:lost];
+                NSDictionary *before = [theme copy];
+                NSMutableDictionary *color = [NSMutableDictionary dictionary];
+                for (NSString *key in keys) color[key] = [colors opaqueColorForKey:key fromDictionary:theme isWindowDark:dark];
+                // The colors the theme still has are kept.
+                for (NSString *key in keys)
+                    if (![lost containsObject:key])
+                        REQUIRE(SameRGB(color[key], [colors colorFromDictionary:whole andKey:key]));
+                // Each drawn pair with a lost color reads, when the theme's own pair read.
+                for (NSArray *pair in drawn) {
+                    if (![lost containsObject:pair[0]] && ![lost containsObject:pair[1]]) continue;
+                    NSColor *wasText = [colors opaqueColorForKey:pair[0] fromDictionary:whole isWindowDark:dark];
+                    NSColor *wasBackground = [colors opaqueColorForKey:pair[1] fromDictionary:whole isWindowDark:dark];
+                    if (Contrast(wasText, wasBackground) < 4.5) continue;
+                    if (Contrast(color[pair[0]], color[pair[1]]) < 4.5)
+                        fprintf(stderr, "%s without %s: %s on %s %.2f\n", name.UTF8String, [lost componentsJoinedByString:@"+"].UTF8String,
+                                [pair[0] UTF8String], [pair[1] UTF8String], Contrast(color[pair[0]], color[pair[1]]));
+                    REQUIRE(Contrast(color[pair[0]], color[pair[1]]) >= 4.5);
+                    pairsChecked++;
                 }
+                // The wells' look-up gives what is drawn.
+                for (NSString *key in lost)
+                    REQUIRE(SameRGB([colors colorForKey:key fromDictionary:theme isWindowDark:dark], color[key]));
+                // What draws them: the document's views, the active line, the Experiment console and source.
+                Document *document = [Document new];
+                document->textView1 = View(); document->textView2 = View(); document->outputText = View(); document.logTextView = View();
+                [document applyDictionary:theme dark:dark];
+                REQUIRE(SameRGB(document->textView1.textColor, color[@"EditorText"]) && SameRGB(document->textView1.backgroundColor, color[@"EditorBackground"]));
+                REQUIRE(SameRGB(document->outputText.textColor, color[@"ConsoleText"]) && SameRGB(document->outputText.backgroundColor, color[@"ConsoleBackground"]));
+                REQUIRE(SameRGB(document.logTextView.textColor, color[@"LogText"]) && SameRGB(document.logTextView.backgroundColor, color[@"LogBackground"]));
+                TSSyntaxColorScheme *scheme = [[TSSyntaxColorScheme alloc] initWithTheme:theme dark:dark];
+                REQUIRE(SameRGB(scheme.activeLineAttributes[NSBackgroundColorAttributeName], color[@"EntryColor"]));
+                NSWindow *host = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 100) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
+                host.appearance = [NSAppearance appearanceNamed:dark ? NSAppearanceNameDarkAqua : NSAppearanceNameAqua];
+                TSExperimentConsoleController *console = [TSExperimentConsoleController new];
+                console.window = host;
+                console.outputText = View();
+                [console updateConsoleColors:[NSNotification notificationWithName:@"colors" object:nil userInfo:theme]];
+                REQUIRE(SameRGB(console.outputText.textColor, color[@"ConsoleText"]) && SameRGB(console.outputText.backgroundColor, color[@"ConsoleBackground"]));
+                ScrapText *experiment = [[ScrapText alloc] initWithFrame:NSMakeRect(0, 0, 200, 100)];
+                host.contentView = experiment;
+                [experiment updateExperimentColors:[NSNotification notificationWithName:@"colors" object:nil userInfo:theme]];
+                REQUIRE(SameRGB(experiment.textColor, color[@"EditorText"]) && SameRGB(experiment.backgroundColor, color[@"EditorBackground"])
+                        && SameRGB(experiment.insertionPointColor, color[@"EditorInsertionPoint"]));
+                REQUIRE([theme isEqual:before]);
+                checked++;
             }
         }
     }
-    printf("PASS: %lu cases: a theme that has lost the text or the background color of a pair stays readable, keeps the other color, and the wells show what is drawn\n", (unsigned long)checked);
+    printf("PASS: %lu cases (%lu themes x 2 appearances x %lu losses of one or two colors), %lu drawn pairs with a lost color: they read, the theme's colors are kept, and the documents, the active line, the Experiment and the wells' look-up use the same colors\n",
+           (unsigned long)checked, (unsigned long)named.count, (unsigned long)losses.count, (unsigned long)pairsChecked);
 } return 0; }
 '''
 
 
 def run(parts, label):
-    program = PROGRAM.replace('__READERS__', '\n'.join(parts['readers'])).replace('__DOCUMENT__', parts['document']).replace('__CONSOLE__', parts['console']).replace('__SCRAP__', parts['scrap'])
+    program = PROGRAM.replace('__READERS__', '\n'.join(parts['readers'])).replace('__DOCUMENT__', parts['document']).replace('__CONSOLE__', parts['console']).replace('__SCRAP__', parts['scrap']).replace('__SCHEME__', parts['scheme'])
     with tempfile.TemporaryDirectory(prefix='texshop-theme-missing-colors-') as folder:
         folder = Path(folder)
         (folder / 'test.m').write_text(program, encoding='utf-8')
@@ -231,10 +250,10 @@ def run(parts, label):
                         str(folder / 'test.m'), '-o', str(folder / 'test')], check=True)
         if label == 'production':
             verify_embedded(program, fragments)
-        return subprocess.run([str(folder / 'test'), str(root / 'Resources/TeXShop/Themes')], capture_output=True, text=True, timeout=120)
+        return subprocess.run([str(folder / 'test'), str(root / 'Resources/TeXShop/Themes')], capture_output=True, text=True, timeout=600)
 
 
-parts = {'readers': readers, 'document': document, 'console': console, 'scrap': scrap}
+parts = {'readers': readers, 'document': document, 'console': console, 'scrap': scrap, 'scheme': scheme}
 result = run(parts, 'production')
 print(result.stdout, end='')
 if result.returncode:
@@ -244,7 +263,11 @@ if '--mutations' in sys.argv:
     mutations = {
         'no built-in light colors': ('readers', '    if (builtIn != nil)\n        return', '    if (NO)\n        return', 0),
         'no built-in dark colors': ('readers', '    if (builtIn != nil)\n        return', '    if (NO)\n        return', 1),
-        'no pairs': ('readers', '    if (other == nil)\n        return builtIn;', '    return builtIn;', 0),
+        'no pairs': ('readers', '    if (others.count == 0)\n        return builtIn;', '    return builtIn;', 0),
+        'active line with the theme\'s own text': ('readers', '@"EntryColor": @[@[@"EditorText", @YES]]', '@"EntryColor": @[@[@"EditorText", @NO]]', 0),
+        'text without the active line': ('readers', '@"EditorText": @[@[@"EditorBackground", @NO], @[@"EntryColor", @NO]]', '@"EditorText": @[@[@"EditorBackground", @NO]]', 0),
+        'background with the theme\'s own text': ('readers', '@"EditorBackground": @[@[@"EditorText", @YES], @[@"EditorInsertionPoint", @NO]]', '@"EditorBackground": @[@[@"EditorText", @NO], @[@"EditorInsertionPoint", @NO]]', 0),
+        'background without the cursor': ('readers', '@"EditorBackground": @[@[@"EditorText", @YES], @[@"EditorInsertionPoint", @NO]]', '@"EditorBackground": @[@[@"EditorText", @YES]]', 0),
         'the document takes no color': ('document', '[[TSColorSupport sharedInstance] opaqueColorForKey: @"ConsoleText" fromDictionary: colorDictionary isWindowDark: withDarkColors]',
                                         '[[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"ConsoleText"]', None),
     }

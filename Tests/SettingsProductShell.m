@@ -200,6 +200,40 @@ int main(int argc,char **argv){@autoreleasepool{
   [original writeToFile:path atomically:YES];[editing selectItemWithTitle:@"LiteTheme"];
   [owner setValue:[theme mutableCopy] forKey:@"EditingColors"];[owner setValue:nil forKey:@"lastSavedEditingColors"];[owner FillInColorWells];
  }
+ // The wells show the colors drawn: every bundled theme and one of the user's own with white text, without one or two
+ // of the colors that go in pairs, in the light and the dark Settings window (once, in Japanese).
+ if(getenv("TS_TEST_BUNDLED_THEMES") && [fixture.bundlePath.lastPathComponent isEqual:@"ja.bundle"]){
+  NSString *folder=@(getenv("TS_TEST_BUNDLED_THEMES"));NSMutableDictionary *named=[NSMutableDictionary dictionary];
+  for(NSString *file in [NSFileManager.defaultManager contentsOfDirectoryAtPath:folder error:NULL])
+   if([file hasSuffix:@".plist"])named[file.stringByDeletingPathExtension]=[NSDictionary dictionaryWithContentsOfFile:[folder stringByAppendingPathComponent:file]];
+  NSMutableDictionary *mine=[named[@"LiteTheme"] mutableCopy];
+  for(NSString *key in @[@"EditorText",@"ConsoleText",@"LogText",@"EditorInsertionPoint"])mine[key]=@[@1,@1,@1,@1];
+  for(NSString *key in @[@"EditorBackground",@"ConsoleBackground",@"LogBackground",@"EntryColor"])mine[key]=@[@0.1,@0.1,@0.1,@1];
+  named[@"Mine"]=mine;Check(named.count>=10,@"The bundled themes are there");
+  NSDictionary *wellsByKey=@{@"EditorText":@"SourceTextColorWell",@"EditorBackground":@"SourceBackgroundColorWell",@"EditorInsertionPoint":@"SourceInsertionPointColorWell",
+                             @"EntryColor":@"EntryColorWell",@"ConsoleText":@"ConsoleTextColorWell",@"ConsoleBackground":@"ConsoleBackgroundColorWell",
+                             @"LogText":@"LogTextColorWell",@"LogBackground":@"LogBackgroundColorWell"};
+  NSArray *keys=@[@"EditorText",@"EditorBackground",@"EditorInsertionPoint",@"EntryColor",@"ConsoleText",@"ConsoleBackground",@"LogText",@"LogBackground"];
+  NSMutableArray *losses=[NSMutableArray array];
+  for(NSUInteger i=0;i<keys.count;i++){[losses addObject:@[keys[i]]];for(NSUInteger j=i+1;j<keys.count;j++)[losses addObject:@[keys[i],keys[j]]];}
+  NSAppearance *savedAppearance=owner.settingsController.window.appearance;BOOL savedMojave=atLeastMojave;atLeastMojave=YES;
+  TSColorSupport *colors=[TSColorSupport sharedInstance];NSUInteger compared=0;
+  for(NSString *name in named)for(NSAppearanceName appearance in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua])for(NSArray *lost in losses){
+   owner.settingsController.window.appearance=[NSAppearance appearanceNamed:appearance];BOOL dark=[appearance isEqual:NSAppearanceNameDarkAqua];
+   NSMutableDictionary *edited=[named[name] mutableCopy];[edited removeObjectsForKeys:lost];
+   [owner setValue:[edited mutableCopy] forKey:@"EditingColors"];[owner FillInColorWells];
+   for(NSString *key in keys){
+    NSColor *shown=[[[owner valueForKey:wellsByKey[key]] color] colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+    NSColor *drawn=[[colors opaqueColorForKey:key fromDictionary:edited isWindowDark:dark] colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+    Check(shown && drawn && fabs(shown.redComponent-drawn.redComponent)<1e-4 && fabs(shown.greenComponent-drawn.greenComponent)<1e-4 && fabs(shown.blueComponent-drawn.blueComponent)<1e-4,
+          [NSString stringWithFormat:@"The %@ well shows the color drawn (%@ without %@, %@)",key,name,[lost componentsJoinedByString:@"+"],appearance]);
+    compared++;
+   }
+  }
+  owner.settingsController.window.appearance=savedAppearance;atLeastMojave=savedMojave;
+  [owner setValue:[theme mutableCopy] forKey:@"EditingColors"];[owner FillInColorWells];
+  printf("PASS: %lu wells of 10 themes without one or two paired colors, in both appearances, show the colors drawn\n",(unsigned long)compared);
+ }
  Check([factory[AutoSaveEnabledKey] isEqual:@"YES"] && ![[owner valueForKey:@"keepBackupButton"]isEnabled],@"Factory string YES disables backup at first opening");
  TSSettingsWindowController *shell=owner.settingsController;Check(shell.categoryIdentifiers.count==10,@"Ten approved categories");
  // Each category refresh is independent; repeated refresh cannot persist values.
