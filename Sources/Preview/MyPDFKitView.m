@@ -1362,6 +1362,8 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
         oldDoc = self.document;
         [self setDocument:pdfDoc];
         if (oldDoc != pdfDoc) oldDoc.delegate = nil;
+        // As for any PDF shown: the part hears when the PDF is unlocked with its password (#55).
+        [[self document] setDelegate: (id<PDFDocumentDelegate>)self];
         [self shareDocumentWithSecondView];
 
         totalPages = [[self document] pageCount];
@@ -1909,6 +1911,39 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 {
 //    NSLog(@"did unlock called");
     [self setupOutline];
+}
+
+// PDFKit asks for the password of a locked PDF in its own field and unlocks the PDF there.
+// Only then can the pages be counted and the PDF's own settings be read (#55).
+- (void)documentDidUnlock:(NSNotification *)notification
+{
+    PDFDocument *document = notification.object;
+    if (document != [self document])
+        return;
+    [self adoptUnlockedDocument];
+    // A Preview split before the password was typed shows the PDF in both parts.
+    for (MyPDFKitView *part in @[self.myDocument.myPDFKitView ?: self, self.myDocument.myPDFKitView2 ?: self])
+        if (part != self && [part document] == document)
+            [part adoptUnlockedDocument];
+    [self.myDocument updatePreviewLayoutControls];
+    [totalPage setIntegerValue:totalPages];
+    [stotalPage setIntegerValue:totalPages];
+    [totalPage1 setIntegerValue:totalPages];
+    PDFView *activePart = self.myPDFWindow.activeView ?: self;
+    if ([activePart currentPage])
+        [self makePageChanges: [document indexForPage: [activePart currentPage]]];
+    [self setupOutline];
+}
+
+- (void)adoptUnlockedDocument
+{
+    totalPages = [[self document] pageCount];
+    if (self.myDocument) {
+        self.displaysAsBook = self.myDocument.previewDisplaysAsBook;
+        self.displaysRTL = self.myDocument.previewDisplaysRTL;
+    }
+    if (resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH)
+        [self fitContentWidth];
 }
 
 - (NSString *)romanStringValue: (NSInteger) n

@@ -1361,6 +1361,24 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
 
 */
 
+// When PDFKit shows the password field of a locked PDF, it places the view by constraints
+// instead of by its frame, and it leaves the view so after the PDF is unlocked. Splitting
+// then gave the first part no size, and the window stayed blank after unsplitting (#55).
+// The parts of a split are placed by their frames.
+static void TSPreviewPlacePartByFrame(NSView *part)
+{
+    if (part.translatesAutoresizingMaskIntoConstraints)
+        return;
+    // The constraints the split view placed the part with would hold it, and the window, at
+    // their size.
+    NSMutableArray<NSLayoutConstraint *> *placing = [NSMutableArray array];
+    for (NSLayoutConstraint *constraint in part.superview.constraints)
+        if (constraint.firstItem == part || constraint.secondItem == part)
+            [placing addObject: constraint];
+    [NSLayoutConstraint deactivateConstraints: placing];
+    part.translatesAutoresizingMaskIntoConstraints = YES;
+}
+
 - (void) mainSplitPdfKitWindow
 {
     NSSize        theSize, newSize1, newSize2;
@@ -1408,6 +1426,9 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     }
     
 // END OF ENCRYPTED PDF BUG FIX
+    
+    TSPreviewPlacePartByFrame(firstView);
+    TSPreviewPlacePartByFrame(secondView);
     
     // Unsplitting keeps the part that was in use: the active part, unless nothing of it can be
     // seen, as when the divider has been dragged to the edge of the window; then the part that

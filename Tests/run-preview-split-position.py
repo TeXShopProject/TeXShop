@@ -29,6 +29,8 @@ def last_method(source, signature):
     return source[start:closing_brace(source, source.index('{', start))]
 
 split = last_method(window_source, '- (void) mainSplitPdfKitWindow')
+# The split places the parts by their frames (#55).
+place = last_method(window_source, 'static void TSPreviewPlacePartByFrame(NSView *part)')
 switch = last_method(window_source, '- (void)switchViews;')
 # Switching the parts of a split window (#25).
 parts = last_method(window_source, '- (void)switchSplitParts\n')
@@ -36,7 +38,7 @@ splitter = last_method(window_source, '- (void) splitPdfKitWindow:')
 view_methods = [last_method(view_source, s) for s in (
     '- (void)saveLocation\n', '- (void)restoreLocation\n', '- (NSInteger)index\n', '- (void)moveSplitToCorrectSpot:')]
 fragments = [('complete method: ' + text.split('\n')[0], source, text)
-             for source, text in [(window_source, split), (window_source, switch), (window_source, parts), (window_source, splitter)]
+             for source, text in [(window_source, place), (window_source, split), (window_source, switch), (window_source, parts), (window_source, splitter)]
              + [(view_source, m) for m in view_methods]]
 
 for problem, old, new in (
@@ -363,7 +365,7 @@ int main(int argc, char **argv) { @autoreleasepool {
 program = (program.replace('DIVIDERIMPORT', '#import "TSPreviewSplitDivider.h"' if uses_divider else '')
            .replace('DIVIDERPROPERTY', '@property (strong) TSPreviewSplitDivider *previewSplitDivider;' if uses_divider else '')
            .replace('VIEWMETHODS', '\n'.join(view_methods))
-           .replace('SPLITTERMETHOD', splitter).replace('SPLITMETHOD', split).replace('SWITCHMETHOD', switch).replace('PARTSMETHOD', parts))
+           .replace('SPLITTERMETHOD', splitter).replace('SPLITMETHOD', place + '\n' + split).replace('SWITCHMETHOD', switch).replace('PARTSMETHOD', parts))
 if not args.mutation:
     verify_embedded(program, fragments)
 with tempfile.TemporaryDirectory() as temp:
