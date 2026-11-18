@@ -405,6 +405,31 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
 
 - (NSColor *)liteColorWithKey: (NSString *)theKey
 {
+    // A theme that has lost one of these colors (its file edited elsewhere) gets the color of the Lite
+    // theme: text stays readable on its background. The theme file is not changed.
+    NSArray *builtIn = @{
+        @"EditorText": @[@0, @0, @0, @1],
+        @"EditorBackground": @[@1, @1, @1, @1],
+        @"EditorInsertionPoint": @[@0, @0, @0, @1],
+        @"ConsoleText": @[@0, @0, @0, @1],
+        @"ConsoleBackground": @[@0.996, @0.977, @0.918, @1],
+        @"LogText": @[@0, @0, @0, @1],
+        @"LogBackground": @[@1, @1, @1, @1],
+        @"PreviewBackground": @[@1, @1, @1, @1],
+        @"SyntaxComment": @[@0.922, @0, @0, @1],
+        @"SyntaxCommand": @[@0, @0, @1, @1],
+        @"SyntaxMarker": @[@0.02, @0.51, @0.13, @1],
+        @"SyntaxIndex": @[@0.541, @0.427, @0, @1],
+        @"EditorHighlightBraces": @[@0.962, @0.223, @0.219, @1],
+        @"EditorHighlightContent": @[@1, @0.957, @0.769, @1],
+        @"EditorInvisibleChar": @[@1, @0.013, @0.011, @1],
+        @"EditorReverseSync": @[@1, @1, @0, @1],
+        @"PreviewDirectSync": @[@1, @1, @0, @0.6],
+        @"ImageForeground": @[@0, @0, @0, @1],
+        @"ImageBackground": @[@1, @1, @1, @0]
+    }[theKey];
+    if (builtIn != nil)
+        return [NSColor colorWithRed: [builtIn[0] doubleValue] green: [builtIn[1] doubleValue] blue: [builtIn[2] doubleValue] alpha: [builtIn[3] doubleValue]];
     if ([theKey isEqualToString: @"EditorFlash"])
         return [NSColor colorWithRed: 1 green: 0.95 blue: 1 alpha:1.00];
     else if ([theKey isEqualToString: @"FootnoteColor"]) //not actually used
@@ -470,6 +495,31 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
 
 - (NSColor *)darkColorWithKey: (NSString *)theKey
 {
+    // A theme that has lost one of these colors (its file edited elsewhere) gets the color of the Dark
+    // theme: text stays readable on its background. The theme file is not changed.
+    NSArray *builtIn = @{
+        @"EditorText": @[@1, @1, @1, @1],
+        @"EditorBackground": @[@0.203, @0.203, @0.203, @1],
+        @"EditorInsertionPoint": @[@0.9, @0.894, @0.787, @1],
+        @"ConsoleText": @[@0.883, @0.713, @0.491, @1],
+        @"ConsoleBackground": @[@0.114, @0.172, @0.179, @1],
+        @"LogText": @[@0, @0, @0, @1],
+        @"LogBackground": @[@0.9, @0.889, @0.872, @1],
+        @"PreviewBackground": @[@0.837, @0.837, @0.837, @1],
+        @"SyntaxComment": @[@0.596, @0.765, @0.475, @1],
+        @"SyntaxCommand": @[@0.42, @0.764, @0.83, @1],
+        @"SyntaxMarker": @[@0.968, @0.578, @0.911, @1],
+        @"SyntaxIndex": @[@1, @1, @0, @1],
+        @"EditorHighlightBraces": @[@1, @0.643, @0.011, @1],
+        @"EditorHighlightContent": @[@0.271, @0.251, @0.176, @1],
+        @"EditorInvisibleChar": @[@0.5, @0.5, @0.5, @1],
+        @"EditorReverseSync": @[@0.581, @0.067, @0, @1],
+        @"PreviewDirectSync": @[@0.882, @0.714, @0.489, @0.6],
+        @"ImageForeground": @[@0, @0, @0, @1],
+        @"ImageBackground": @[@1, @1, @1, @0]
+    }[theKey];
+    if (builtIn != nil)
+        return [NSColor colorWithRed: [builtIn[0] doubleValue] green: [builtIn[1] doubleValue] blue: [builtIn[2] doubleValue] alpha: [builtIn[3] doubleValue]];
     if ([theKey isEqualToString: @"EditorFlash"])
         return [NSColor colorWithRed: 0.00 green: 0.20  blue: 0.20 alpha:1.00];
     else if ([theKey isEqualToString: @"FootnoteColor"]) //not actually used

@@ -73,12 +73,13 @@
     
     
     // EDITOR
+    // A color the theme does not have is the built-in one of the mode (TSColorSupport), never nil.
     
     [self.myPDFKitView updatePreviewPaperColor];
     [self.myPDFKitView2 updatePreviewPaperColor];
     
-    myBackgroundColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"EditorBackground"];
-    myTextColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"EditorText"];
+    myBackgroundColor = [[TSColorSupport sharedInstance] opaqueColorForKey: @"EditorBackground" fromDictionary: colorDictionary isWindowDark: withDarkColors];
+    myTextColor = [[TSColorSupport sharedInstance] opaqueColorForKey: @"EditorText" fromDictionary: colorDictionary isWindowDark: withDarkColors];
     
     // [textView1 setTextColor: myTextColor];
     // [textView2 setTextColor: myTextColor];
@@ -110,16 +111,16 @@
     
     // LOG WINDOW
     
-    myBackgroundColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"LogBackground"];
-    myTextColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"LogText"];
+    myBackgroundColor = [[TSColorSupport sharedInstance] opaqueColorForKey: @"LogBackground" fromDictionary: colorDictionary isWindowDark: withDarkColors];
+    myTextColor = [[TSColorSupport sharedInstance] opaqueColorForKey: @"LogText" fromDictionary: colorDictionary isWindowDark: withDarkColors];
     
     [self.logTextView setTextColor: myTextColor];
     [self.logTextView setBackgroundColor: myBackgroundColor];
     
     // CONSOLE WINDOW
     
-    myBackgroundColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"ConsoleBackground"];
-    myTextColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"ConsoleText"];
+    myBackgroundColor = [[TSColorSupport sharedInstance] opaqueColorForKey: @"ConsoleBackground" fromDictionary: colorDictionary isWindowDark: withDarkColors];
+    myTextColor = [[TSColorSupport sharedInstance] opaqueColorForKey: @"ConsoleText" fromDictionary: colorDictionary isWindowDark: withDarkColors];
     
     [outputText setTextColor: myTextColor];
     [outputText setBackgroundColor: myBackgroundColor];
@@ -155,14 +156,14 @@
     highlightBracesColorDict = scheme.braceHighlightAttributes;
     highlightContentColorDict = scheme.contentHighlightAttributes;
     
-    myColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"EditorReverseSync"];
+    myColor = [[TSColorSupport sharedInstance] opaqueColorForKey: @"EditorReverseSync" fromDictionary: colorDictionary isWindowDark: withDarkColors];
     ReverseSyncColor = myColor;
     
-    myColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"EditorInsertionPoint"];
+    myColor = [[TSColorSupport sharedInstance] opaqueColorForKey: @"EditorInsertionPoint" fromDictionary: colorDictionary isWindowDark: withDarkColors];
     [textView1 setInsertionPointColor: myColor];
     [textView2 setInsertionPointColor: myColor];
     
-    myColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"EditorInvisibleChar"];
+    myColor = [[TSColorSupport sharedInstance] opaqueColorForKey: @"EditorInvisibleChar" fromDictionary: colorDictionary isWindowDark: withDarkColors];
     InvisibleColor = myColor;
     
     self.pdfKitWindow.alphaValue = TSThemeWindowAlpha(colorDictionary, TSThemePreviewAlphaKey);
