@@ -335,6 +335,8 @@
 
 /* Edit › Mark */
 "Insert Mark with Note" = "メモ付きマークを挿入";
+"Insert Mark" = "マークを挿入";
+"Delete Mark" = "マークを削除";
 "How to Use Marks…" = "マークの使い方…";
 "Inserts a mark (•) to come back to later." = "あとで戻ってくる場所に、マーク（•）を入れます。";
 "Inserts a mark with a note (•‹note›). Selected text becomes the note." = "メモ付きのマーク（•‹メモ›）を入れます。選んだ文字がメモになります。";

@@ -101,7 +101,8 @@ def color_support(tmp):
     text = source_file(root, 'TSColorSupport.m').read_text(encoding='latin1')
     methods = '\n'.join(method(text, signature) for signature in [
         '- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFromDictionary:', '- (NSColor *) colorAndAlphaFromDictionary:',
-        '- (NSColor *)liteColorWithKey:', '- (NSColor *)darkColorWithKey:', '- (NSColor *)liteColorAndAlphaWithKey:', '- (NSColor *)darkColorAndAlphaWithKey:'])
+        '- (NSColor *)liteColorWithKey:', '- (NSColor *)darkColorWithKey:', '- (NSColor *)liteColorAndAlphaWithKey:', '- (NSColor *)darkColorAndAlphaWithKey:',
+        '- (NSColor *)opaqueColorForKey: (NSString *)theKey fromDictionary:'])
     path = tmp / 'ColorSupport.m'
     path.write_text('#import "TSColorSupport.h"\n#pragma clang diagnostic ignored "-Wincomplete-implementation"\n@implementation TSColorSupport\n'
                     '+ (id)sharedInstance { static id shared; if (!shared) shared = [self new]; return shared; }\n' + methods + '\n@end\n')

@@ -35,6 +35,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
    values['group.editor.2.title']='Typing' if a.visible_text_mutation else ' Saisie '
    path.write_text('\n'.join(json.dumps(k,ensure_ascii=False)+' = '+json.dumps(v,ensure_ascii=False)+';' for k,v in values.items())+'\n')
   env=dict(os.environ)
+  env['TS_TEST_BUNDLED_THEMES']=str(r/'Resources/TeXShop/Themes')
   if a.visible_text_output:
    a.visible_text_output.mkdir(parents=True,exist_ok=True)
    env['TS_SETTINGS_VISIBLE_TEXT_PATH']=str(a.visible_text_output/(bundle.stem+'.json'))

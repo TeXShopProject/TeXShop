@@ -60,7 +60,8 @@ scheme = re.sub(r'^#import "TSColorSupport.h"$', '', text[SCHEME], flags=re.M)
 support = '\n'.join(method(text[SUPPORT], s) for s in [
     '- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFromDictionary:', '- (NSColor *) colorAndAlphaFromDictionary:',
     '- (NSColor *)liteColorWithKey:', '- (NSColor *)darkColorWithKey:',
-    '- (NSColor *)liteColorAndAlphaWithKey:', '- (NSColor *)darkColorAndAlphaWithKey:'])
+    '- (NSColor *)liteColorAndAlphaWithKey:', '- (NSColor *)darkColorAndAlphaWithKey:',
+    '- (NSColor *)opaqueColorForKey: (NSString *)theKey fromDictionary:'])
 
 PROGRAM = r'''
 #import <Cocoa/Cocoa.h>
