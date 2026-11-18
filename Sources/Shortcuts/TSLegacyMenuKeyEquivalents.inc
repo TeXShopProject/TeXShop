@@ -123,6 +123,12 @@ static void TSApplyLegacyKeyEquivalent(NSMenuItem *item, id value)
     if (item == nil || ![value isKindOfClass:NSArray.class] || [value count] < 3) return;
     id key = value[0];
     if (![key isKindOfClass:NSString.class] || ![value[1] respondsToSelector:@selector(boolValue)] || ![value[2] respondsToSelector:@selector(boolValue)]) return;
+    // As recording refuses them (TSShortcutStore isAllowedKey:), a saved key never takes Tab, Escape or
+    // another control character, which command completion and the mark keys own, or Delete.
+    if ([key length] > 0) {
+        unichar c = [key characterAtIndex:0];
+        if (c < 0x20 || c == 0x7f) return;
+    }
     NSEventModifierFlags flags = NSEventModifierFlagCommand | NSEventModifierFlagFunction;
     if ([value[1] boolValue]) flags |= NSEventModifierFlagOption;
     if ([value[2] boolValue]) flags |= NSEventModifierFlagControl;

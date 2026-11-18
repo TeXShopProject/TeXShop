@@ -273,7 +273,9 @@ static id sharedMacroMenuController = nil;
 				NSUInteger modifier = getKeyModifierMaskFromString(keyEquiv);
 				keyEquiv = getKeyEquivalentFromString(keyEquiv);
 				NSDictionary *binding = [TSShortcutStore normalizedKey:keyEquiv modifiers:modifier];
-                if (keyEquiv.length && [self isAlreadyDefined:keyEquiv modifier:modifier]) {
+                if (keyEquiv.length && ![TSShortcutStore isAllowedKey:keyEquiv modifiers:modifier]) {
+                    [newItem setToolTip:[TSShortcutStore reasonForMacroConflict:@{@"refused":@YES}]];
+                } else if (keyEquiv.length && [self isAlreadyDefined:keyEquiv modifier:modifier]) {
                     NSDictionary *owner = self.keyOwners[binding];
                     if (owner) [newItem setToolTip:[TSShortcutStore reasonForMacroConflict:@{@"other":owner}]];
                 } else if (keyEquiv.length) {

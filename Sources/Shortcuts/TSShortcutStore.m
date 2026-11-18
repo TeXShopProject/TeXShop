@@ -152,6 +152,11 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
     [candidates enumerateObjectsUsingBlock:^(NSDictionary *candidate, NSUInteger index, BOOL *stop) {
         TSShortcutBinding *binding = TSBinding(candidate[@"key"], [candidate[@"modifiers"] unsignedIntegerValue]);
         if (!binding.key.length) return;
+        // A key that recording refuses (a macro file can still name one, such as Control-Escape) never runs.
+        if (![TSShortcutStore isAllowedKey:binding.key modifiers:binding.modifiers]) {
+            [result addObject:@{@"index":@(index), @"refused":@YES}];
+            return;
+        }
         NSDictionary *other = reserved[binding];
         if (other) [result addObject:@{@"index":@(index), @"other":other}];
         else {
@@ -162,6 +167,8 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
     return result;
 }
 + (NSString *)reasonForMacroConflict:(NSDictionary *)conflict {
+    if ([conflict[@"refused"] boolValue])
+        return NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.", @"");
     NSDictionary *other = conflict[@"other"];
     NSString *key = [self displayKey:other[@"key"] ?: @"" modifiers:[other[@"modifiers"] unsignedIntegerValue]];
     NSString *format = [conflict[@"displaced"] boolValue]
