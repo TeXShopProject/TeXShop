@@ -34,4 +34,31 @@ NS_ASSUME_NONNULL_BEGIN
 // the top edge, as if the scroller were laid over the bottom of the view.
 void TSPreviewChangeScale(PDFView *view, void (NS_NOESCAPE ^change)(void));
 
+// Changes the size of a preview view. While the magnification stays, the text at the top
+// edge of the view stays there too. Up to macOS 26 the scroll view keeps the bottom of the
+// visible area instead, so the text jumped when a horizontal scroller came or went, and in
+// a view narrower than about half the width of the page it moved down by the height of the
+// scroller at every step of a resize (#53, measured in macOS 26.6.2).
+void TSPreviewChangeSize(PDFView *view, void (NS_NOESCAPE ^change)(void));
+
+// The scroll position of a clip view for the bounds, as far as the document allows; only
+// the vertical position is limited. PDFKit's clip view answers a place one scroller
+// higher in the document when AppKit lays the scrollers over the content, as it does in a
+// narrow view on macOS 26 (#53), so a place put back through it stayed where PDFKit had
+// moved it. Only its answers at the ends of the document are used.
+static inline NSPoint TSPreviewConstrainedOrigin(NSClipView *clip, NSRect bounds)
+{
+    NSRect documentRect = clip.documentRect, lower = bounds, upper = bounds;
+    NSEdgeInsets insets = clip.contentInsets;
+    CGFloat margin = NSHeight(bounds) + fabs(insets.top) + fabs(insets.bottom) + 1;
+    lower.origin.y = NSMinY(documentRect) - margin;
+    upper.origin.y = NSMaxY(documentRect) + margin;
+    CGFloat minimum = NSMinY([clip constrainBoundsRect:lower]);
+    CGFloat maximum = NSMinY([clip constrainBoundsRect:upper]);
+    NSPoint origin = bounds.origin;
+    if (isfinite(minimum) && isfinite(maximum))
+        origin.y = maximum < minimum ? minimum : fmin(fmax(origin.y, minimum), maximum);
+    return origin;
+}
+
 NS_ASSUME_NONNULL_END

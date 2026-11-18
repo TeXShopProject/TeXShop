@@ -101,6 +101,9 @@ static NSEvent *MouseEvent(NSWindow *window, NSEventType type, NSPoint point) {
                           windowNumber:window.windowNumber context:nil eventNumber:0 clickCount:1 pressure:1];
 }
 static NSScrollView *Scroll(PDFView *view) { return view.documentView.enclosingScrollView; }
+// Whether this system flips the document view of a PDFView, noted before a model changes it.
+static BOOL nativeFlipped;
+static BOOL NativeFlipped(void) { return nativeFlipped; }
 static NSClipView *Clip(PDFView *view) { return Scroll(view).contentView; }
 static BOOL HasScroller(PDFView *view) { return Scroll(view).hasHorizontalScroller && !Scroll(view).horizontalScroller.isHidden; }
 
@@ -242,6 +245,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     method_setImplementation(class_getClassMethod(NSScroller.class, @selector(preferredScrollerStyle)), overlay ? (IMP)Overlay : (IMP)Legacy);
     method_setImplementation(class_getInstanceMethod(NSWindow.class, @selector(isVisible)), (IMP)Yes);
     [NSApplication sharedApplication];
+    { PDFView *probe = [[PDFView alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)]; probe.document = MakeDocument(); nativeFlipped = probe.documentView.isFlipped; }
     if (!strcmp(model, "unflipped"))
         method_setImplementation(class_getInstanceMethod(NSClassFromString(@"PDFDocumentView"), @selector(isFlipped)), (IMP)No);
     if (!strcmp(model, "sources")) {
@@ -324,8 +328,10 @@ int main(int argc, char **argv) { @autoreleasepool {
     }
 
     // A window whose content runs under the toolbar (macOS 26 and later): the band under the
-    // toolbar is a lasting top inset. The text just below it stays when the scroller comes or
-    // goes, with or without the keeper, which leaves such a view to PDFKit.
+    // toolbar is a lasting top inset. On a system that flips the document view, the text just
+    // below it stays when the scroller comes or goes, with or without the keeper, which leaves
+    // such a view to PDFKit. On macOS 26 itself the text moves (#53): the Preview views keep it
+    // through TSPreviewChangeSize, tested in run-preview-resize-keeps-top.py.
     if (@available(macOS 26.0, *)) {
         CGFloat moved[2] = {0, 0}; BOOL toggled = NO, banded = YES;
         for (int keep = 0; keep < 2; keep++) {
@@ -345,8 +351,12 @@ int main(int argc, char **argv) { @autoreleasepool {
         }
         Check(banded, @"in a full-size window the Preview view's top inset is the band under the toolbar");
         Check(overlay || toggled, @"full-size window: the horizontal scroller comes and goes with the width");
-        Check(moved[1] <= 0.5, [NSString stringWithFormat:@"full-size window: the text below the toolbar stays when the scroller comes or goes (%.2fpt)", moved[1]]);
-        Check(moved[0] <= 0.5, [NSString stringWithFormat:@"full-size window: without the keeper the text stays too (%.2fpt)", moved[0]]);
+        if (NativeFlipped()) {
+            Check(moved[1] <= 0.5, [NSString stringWithFormat:@"full-size window: the text below the toolbar stays when the scroller comes or goes (%.2fpt)", moved[1]]);
+            Check(moved[0] <= 0.5, [NSString stringWithFormat:@"full-size window: without the keeper the text stays too (%.2fpt)", moved[0]]);
+        } else
+            Check(fabs(moved[1] - moved[0]) <= 0.5, [NSString stringWithFormat:
+                  @"full-size window: the keeper leaves the view to PDFKit (%.2f and %.2fpt)", moved[1], moved[0]]);
     }
 
     // A view with content insets is left to PDFKit: the text noted while the scroller comes or
