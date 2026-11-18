@@ -28,6 +28,9 @@ MUTATIONS = {
     'document-widest-glyph': (DOCUMENT,
         '\tcharWidth = font ? [@" " sizeWithAttributes:@{NSFontAttributeName: font}].width : 0;\n',
         '\tcharWidth = [font maximumAdvancement].width;\n'),
+    # The tabs are measured in a saved font that the source does not take.
+    'tabs-in-refused-font': (DOCUMENT,
+        '    font = [textView1 font] ?: font;\n', ''),
     # Only the hundred tab stops, nothing after them.
     'no-interval-after-stops': (DOCUMENT,
         '\tnewStyle.defaultTabInterval = [(NSTextTab *)desiredTabStops.firstObject location];\n', ''),
@@ -229,6 +232,34 @@ int main(void) { @autoreleasepool {
             }
         }
 
+    // A font saved by an older version that is no longer among the fonts of the Font panel, though it can
+    // still be read: the source keeps its font (-setFontSafely:), and the tabs follow the font it keeps.
+    NSInteger refusedFonts = 0;
+    for (NSString *name in @[@"Courier", @"Times-Roman"]) {
+        NSFont *saved = [NSFont fontWithName:name size:12];
+        if (!saved || [NSFontManager.sharedFontManager.availableFonts containsObject:name]) {
+            printf("note: %s is not a saved font that the source refuses here\n", name.UTF8String);
+            continue;
+        }
+        refusedFonts++;
+        for (NSNumber *count in @[@2, @4, @8]) {
+            NSInteger spaces = count.integerValue;
+            [SUD setInteger:spaces forKey:tabsKey];
+            [SUD setObject:[NSArchiver archivedDataWithRootObject:saved] forKey:DocumentFontKey];
+            TSDocument *opened = MakeDocument();
+            NSFont *shown = opened->textView1.font;
+            CGFloat wWidth = [@"W" sizeWithAttributes:@{NSFontAttributeName: shown}].width;
+            CGFloat spaceWidth = [@" " sizeWithAttributes:@{NSFontAttributeName: shown}].width;
+            [opened->_textStorage replaceCharactersInRange:NSMakeRange(0, 0)
+                withString:Sample(spaces, (NSInteger)ceil(100 * spaces * spaceWidth / wWidth) + 3)];
+            [opened fixUpTabs];
+            NSString *label = [NSString stringWithFormat:@"saved %@, shown %@ %.0fpt, %ld spaces", name, opened->textView1.font.fontName,
+                               opened->textView1.font.pointSize, (long)spaces];
+            Check([opened->textView1.font.fontName isEqual:shown.fontName] && opened->textView1.font.pointSize == shown.pointSize, [@"the source keeps its font: " stringByAppendingString:label]);
+            CheckLayout(opened->textView1, spaces, @"opened document with a saved font the source does not take", label);
+        }
+    }
+
     // A font that could not be read gives the tab stops and raises nothing.
     @try {
         NSArray *stops = tabStopArrayForFontAndTabWidth(nil, 4);
@@ -239,7 +270,8 @@ int main(void) { @autoreleasepool {
 
     if (failures) return 1;
     printf("PASS: a tab is as wide as the set number of spaces in %lu fonts, in an opened document and after a font change "
-           "in either half of the source, also after 101 tabs and far along a long line\n", (unsigned long)fonts.count);
+           "in either half of the source, also after 101 tabs and far along a long line, and with %ld saved fonts the source does not take\n",
+           (unsigned long)fonts.count, (long)refusedFonts);
 } return 0; }
 '''
 replacements = {

@@ -8549,6 +8549,10 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
             font = [NSFont userFontOfSize:12.0];
 	}
     
+    // The tabs are measured in the font the source shows; -setFontSafely: keeps the font it has
+    // when the saved one is not among the fonts of the Font panel.
+    [textView1 setFontSafely:font];
+    font = [textView1 font] ?: font;
 	
     CGFloat                     interlinespace      = TSStoredIntegerInRange(SUD, SourceInterlineSpaceKey, TSInterlineSpaceRange);
     CGFloat                     myFirstLineHeadIndent = TSStoredIntegerInRange(SUD, SourceFirstLineHeadIndentKey, TSParagraphIndentRange);
