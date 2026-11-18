@@ -1139,9 +1139,13 @@ static NSString *TSDisplayStringForLine(const uint8_t *bytes, NSUInteger length,
 	return result;
 }
 
-// A line of output that has not ended is kept for the next piece when the encoding is not
-// UTF-8 and the line has bytes beyond ASCII: in such an encoding a piece of a UTF-8 line can
-// read as other characters, and the whole line decides how it is read. Longer lines are not kept.
+// A line of output that has not ended is kept for the next piece when a piece of it could read
+// otherwise than the whole line: when the encoding is not UTF-8 and the line has bytes beyond
+// ASCII (in such an encoding a piece of a UTF-8 line can read as other characters, and the whole
+// line decides how it is read), when the encoding is ISO-2022-JP and the line has an escape
+// sequence (the rest of the line reads as ASCII without it), and when the output is UTF-8 and
+// the line has bytes that are not UTF-8 (the whole line decides how it is read). Longer lines
+// are not kept.
 static const NSUInteger TSLongestKeptLine = 4096;
 
 // The number of bytes at the end of data to keep for the next piece of output: the start of a
@@ -1171,10 +1175,24 @@ static NSUInteger TSLengthToKeep(NSData *data, NSStringEncoding encoding, BOOL l
 				lineStart += needed;
 		}
 	}
-	if (line && encoding != NSUTF8StringEncoding && length - lineStart <= TSLongestKeptLine)
-		for (NSUInteger i = lineStart; i < length; i++)
+	if (line && length - lineStart <= TSLongestKeptLine) {
+		BOOL beyondASCII = NO, escape = NO;
+		for (NSUInteger i = lineStart; i < length; i++) {
 			if (b[i] >= 0x80)
+				beyondASCII = YES;
+			else if (b[i] == 0x1B)
+				escape = YES;
+		}
+		if (beyondASCII && encoding != NSUTF8StringEncoding)
+			return length - lineStart;
+		if (escape && encoding == CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISO_2022_JP))
+			return length - lineStart;
+		if (beyondASCII && encoding == NSUTF8StringEncoding) {
+			NSUInteger unfinished = TSUnfinishedUTF8Character(b + lineStart, length - lineStart, NULL);
+			if (! TSBytesDecode(b + lineStart, length - lineStart - unfinished, NSUTF8StringEncoding))
 				return length - lineStart;
+		}
+	}
 	// The start of a UTF-8 character at the end of a line that is otherwise UTF-8. It is looked
 	// for before the encoding, in which these bytes may read as other characters.
 	NSUInteger unfinished = TSUnfinishedUTF8Character(b + lineStart, length - lineStart, NULL);

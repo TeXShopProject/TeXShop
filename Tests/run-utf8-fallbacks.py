@@ -69,7 +69,11 @@ int main(int argc, char **argv) { @autoreleasepool {
     check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:aiuUTF8 encoding:utf8] == 0, @"UTF-8: complete output keeps nothing");
     check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("ab\x82") encoding:sjis] == 3, @"Shift JIS: an unfinished line with bytes beyond ASCII is kept whole");
     check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("x\x82\x60\nab") encoding:sjis] == 0, @"Shift JIS: an unfinished line of ASCII is not kept");
-    check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("a\xFF\xFE b") encoding:utf8] == 0, @"broken bytes inside the output are not kept");
+    // A line with bytes that are not UTF-8 is read as a whole (as UTF-8 with U+FFFD, or as Latin 9): until it ends, it
+    // is kept for the next piece. Lines that have ended are not.
+    check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("a\xFF\xFE b") encoding:utf8] == 5, @"UTF-8: an unfinished line with broken bytes is kept whole");
+    check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("a\xFF\xFE b\nab") encoding:utf8] == 0, @"broken bytes in a line that has ended are not kept");
+    check([TSEncodingSupport lengthOfUnfinishedCharacterAtEndOfData:B("a\xFF\xFE b") encoding:utf8] == 0, @"broken bytes are shown after a pause");
     // Output split at every byte reads back whole when carried as TeXShop does.
     NSData *whole = [@"\u65e5\u672c\u8a9e: \u5b8c\u74a7\u306a\u725b\u4e3c\n" dataUsingEncoding:utf8];
     NSMutableString *joined = [NSMutableString string];

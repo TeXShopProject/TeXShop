@@ -11,8 +11,10 @@ of a character is kept across a pause longer than the console waits, until the r
 the end of the output comes, and that a backslash and a tilde typed in the console reach TeX
 as 0x5C and 0x7E in every encoding and filter mode, through the production backslash filter.
 It also checks that a source file is read whole in its own encoding for Sync. Nothing is
-shown on screen. --mutation=NAME undoes one of these (rearm, hold, flush, cr, input, order,
-pause, yen, source) and the test must then fail."""
+shown on screen. --mutation=NAME undoes one of these (rearm, hold, jis, broken, flush, cr, input,
+order, pause, yen, source) and the test must then fail. A line of ISO-2022-JP output, and a line
+of UTF-8 output with a byte that is not UTF-8, read the same at every place the pipe can divide
+them."""
 from pathlib import Path
 import subprocess, sys, tempfile
 root = Path(__file__).resolve().parents[1]
@@ -41,8 +43,11 @@ if mutation == 'rearm':
                     '        // Wait for more output even when all of this piece was kept for the next one.\n        if (! atEnd)\n',
                     '        if ([myData length])\n            [self showConsoleOutputData: myData];\n        if (! atEnd && [myData length])\n')
 elif mutation == 'hold':
-    helpers = mutate(helpers, 'if (line && encoding != NSUTF8StringEncoding && length - lineStart <= TSLongestKeptLine)',
-                     'if (NO && length - lineStart <= TSLongestKeptLine)')
+    helpers = mutate(helpers, 'if (beyondASCII && encoding != NSUTF8StringEncoding)', 'if (NO)')
+elif mutation == 'jis':
+    helpers = mutate(helpers, 'if (escape && encoding == CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISO_2022_JP))', 'if (NO)')
+elif mutation == 'broken':
+    helpers = mutate(helpers, 'if (beyondASCII && encoding == NSUTF8StringEncoding) {', 'if (NO) {')
 elif mutation == 'flush':
     output = mutate(output, '[self showConsoleOutputData: [kept subdataWithRange: NSMakeRange(0, kept.length - unfinished)]];', ';')
 elif mutation == 'pause':
@@ -252,6 +257,30 @@ int main(int argc, char **argv) { @autoreleasepool {
         BOOL same = YES;
         for (NSUInteger w = 1; w <= 7; w++) same = same && [pieces(outputs[i].doc, outputs[i].data, w) isEqualToString:once];
         check(same && [once isEqualToString:mixed], [NSString stringWithFormat:@"%s: right, and the same in pieces of 1 to 7 bytes", outputs[i].name]);
+    }
+    // Output divided in two at every byte reads as the whole: ISO-2022-JP output, whose escape
+    // sequences start the Japanese characters, and a UTF-8 line with a byte that is not UTF-8.
+    NSStringEncoding jis = CF(kCFStringEncodingISO_2022_JP);
+    NSMutableData *broken = [B("abc\xFF") mutableCopy]; [broken appendData:[@"def\u65e5\u672c\nnext\n" dataUsingEncoding:utf8]];
+    struct { NSStringEncoding doc; NSData *data; const char *name; } divided[] = {
+        {jis, [@"! \u672a\u5b9a\u7fa9\u306e\u30b3\u30de\u30f3\u30c9\nl.1 \u6f22\u5b57\n? " dataUsingEncoding:jis], "ISO-2022-JP output, ISO-2022-JP document"},
+        {utf8, broken, "UTF-8 output with a byte that is not UTF-8, UTF-8 document"},
+    };
+    for (size_t i = 0; i < sizeof(divided) / sizeof(divided[0]); i++) {
+        NSData *whole = divided[i].data;
+        NSString *once = pieces(divided[i].doc, whole, whole.length);
+        NSMutableArray *differ = [NSMutableArray array];
+        for (NSUInteger cut = 1; cut < whole.length; cut++) {
+            Probe *two = P(divided[i].doc); FakeHandle *pipe = [FakeHandle new];
+            feed(two, pipe, [whole subdataWithRange:NSMakeRange(0, cut)]);
+            feed(two, pipe, [whole subdataWithRange:NSMakeRange(cut, whole.length - cut)]);
+            feed(two, pipe, [NSData data]);
+            if (! [shown(two) isEqualToString:once]) [differ addObject:@(cut)];
+        }
+        for (NSUInteger w = 1; w <= 7; w++)
+            if (! [pieces(divided[i].doc, whole, w) isEqualToString:once]) [differ addObject:[NSString stringWithFormat:@"width %lu", (unsigned long)w]];
+        BOOL right = i == 0 ? [once isEqualToString:@"! \u672a\u5b9a\u7fa9\u306e\u30b3\u30de\u30f3\u30c9\nl.1 \u6f22\u5b57\n? "] : [once isEqualToString:@"abc\ufffddef\u65e5\u672c\nnext\n"];
+        check(right && differ.count == 0, [NSString stringWithFormat:@"%s: right, and the same divided at every byte (differs at %@)", divided[i].name, [differ componentsJoinedByString:@","]]);
     }
     // A Shift JIS line that also reads as UTF-8 keeps reading as Shift JIS in a Shift JIS document.
     NSData *both = [@"\u9b31" dataUsingEncoding:sjis];
