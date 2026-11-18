@@ -51,6 +51,8 @@ def last_method(source, signature):
     return source[start:closing_brace(source, source.index('{', start))]
 
 window_methods = [last_method(window_source, s) for s in (
+    # The split places the parts by their frames (#55).
+    'static void TSPreviewPlacePartByFrame(NSView *part)',
     '- (void) mainSplitPdfKitWindow', '- (void) splitPdfKitWindow:', '- (void)showLinkDestination: (PDFDestination *)destination',
     # Unsplitting while the second part is in use first switches the parts (#52).
     '- (void)switchSplitParts\n')]
