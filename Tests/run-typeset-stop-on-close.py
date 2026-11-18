@@ -4,7 +4,8 @@
 The production -[TSDocument close] and -[TSAppDelegate applicationWillTerminate:] are compiled verbatim with stand-ins
 for what they call: the windows, the status bar, the Experiment and the annotations are recorders, and
 killRunningTasks records that it ran. -close stops the jobs before the windows close and the document goes, and not
-when a Replace All in the document keeps it open; quitting stops the jobs of every document. The real killRunningTasks
+when a Replace All in the document keeps it open; quitting stops the jobs of every document, and a running Experiment
+job (a real TSExperimentJob running sleep, whose process must be gone). The real killRunningTasks
 and stopJobTask: (process group, TERM then KILL) are checked by run-typeset-robustness.py. The folder of dragged
 images that quitting empties is a temporary folder. Nothing is shown on screen. --mutations removes each call and the
 test must then fail."""
@@ -22,6 +23,7 @@ fragments = [('complete method:close', document, close), ('complete method:appli
 
 PROGRAM = r'''
 #import <Cocoa/Cocoa.h>
+#import "TSExperimentJob.h"
 #import "TestAppKitIsolation.h"
 #define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr, "FAIL %d: %s\n", __LINE__, #__VA_ARGS__); exit(1); } } while (0)
 static NSMutableArray<NSString *> *events;
@@ -59,6 +61,16 @@ static NSString *DraggedImagePath;
 - (void)close { Record(@"document closed"); }
 @end
 
+// The Experiment console of a document, reduced to its job: -abort: stops the job first, as the production one does
+// (TSExperimentConsoleController); run-experiment-console.py checks the rest of it.
+@interface TSExperimentConsoleController : NSObject
+@property TSExperimentJob *job;
+- (void)abort:(id)sender;
+@end
+@implementation TSExperimentConsoleController
+- (void)abort:(id)sender { Record(@"Experiment stopped"); [self.job cancel]; self.job = nil; }
+@end
+
 @interface TSDocument : Base {
 @public
     Recorder *pdfWindow, *_htmlWindow, *outputWindow, *scrapPDFWindow, *scrapWindow;
@@ -66,6 +78,7 @@ static NSString *DraggedImagePath;
 }
 @property BOOL replacing, annotationsExist;
 @property (copy) NSString *label;
+@property TSExperimentConsoleController *experimentConsole;
 @property Recorder *sourceStatusBar, *textStatistics, *pdfKitWindow, *logWindow;
 @property id myPDFKitView, myPDFKitView2, pdfActivity;
 @property NSTimer *tagTimer, *pdfRefreshTimer;
@@ -131,6 +144,22 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE([events containsObject:@"b jobs stopped"] && [events containsObject:@"c jobs stopped"] && [events containsObject:@"c annotations saved"]);
     REQUIRE(![events containsObject:@"document closed"]);
     printf("PASS: quitting stops the typesetting jobs of every document\n");
+    // Quitting while an Experiment job runs: its process is gone when quitting is done.
+    [events removeAllObjects];
+    TSDocument *e = Document(@"e");
+    e.experimentConsole = [TSExperimentConsoleController new];
+    TSExperimentJob *job = [TSExperimentJob new];
+    e.experimentConsole.job = job;
+    NSError *error = nil;
+    REQUIRE([job startExecutable:@"/bin/sleep" arguments:@[@"10"] environment:@{@"PATH": @"/bin:/usr/bin"} directory:[NSURL fileURLWithPath:folder] error:&error]);
+    NSTask *child = [job valueForKey:@"task"];
+    pid_t pid = child.processIdentifier;
+    REQUIRE(pid > 1 && kill(pid, 0) == 0);
+    [TSDocumentController sharedDocumentController].documents = @[e];
+    [[Delegate new] applicationWillTerminate:[NSNotification notificationWithName:NSApplicationWillTerminateNotification object:nil]];
+    REQUIRE([events containsObject:@"Experiment stopped"] && !job.active);
+    REQUIRE(kill(pid, 0) != 0);
+    printf("PASS: quitting stops a running Experiment job, and its process is gone\n");
 } return 0; }
 '''
 
@@ -142,7 +171,7 @@ def run(close_text, terminate_text, label):
         (folder / 'test.m').write_text(program, encoding='utf-8')
         (folder / 'DraggedImages').mkdir()
         subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-I', str(root / 'Tests'), *include_args(root),
-                        str(folder / 'test.m'), '-o', str(folder / 'test')], check=True)
+                        str(folder / 'test.m'), str(root / 'Sources/Typesetting/TSExperimentJob.m'), '-o', str(folder / 'test')], check=True)
         if label == 'production':
             verify_embedded(program, fragments)
         return subprocess.run([str(folder / 'test'), str(folder / 'DraggedImages')], capture_output=True, text=True, timeout=60)
@@ -157,6 +186,7 @@ if '--mutations' in sys.argv:
     mutations = {
         'close does not stop the jobs': ('close', '    [self killRunningTasks];\n', ''),
         'quitting does not stop the jobs': ('terminate', '            [aDocument killRunningTasks];\n', '            ;\n'),
+        'quitting does not stop the Experiment': ('terminate', '            [aDocument.experimentConsole abort:nil];\n', '            ;\n'),
     }
     for name, (where, before, after) in mutations.items():
         c, t = close, terminate

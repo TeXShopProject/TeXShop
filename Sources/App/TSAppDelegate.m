@@ -70,6 +70,7 @@
 #import "TSLibraryVersion.h"
 #import "TSLibraryRepair.h"
 #import "TSBundledMacroUpdate.h"
+#import "TSExperimentConsoleController.h"
 
 /*
 #define NSAppKitVersionNumber10_8 1187
@@ -198,9 +199,12 @@ static void TSInstallAdvancedFindFieldStyle(void)
     NSInteger i = 0;
     while (i < [myDocuments count]) {
         aDocument = [myDocuments objectAtIndex:i];
-        // Typesetting jobs do not outlive TeXShop: they are stopped as Abort stops them.
+        // Typesetting jobs do not outlive TeXShop: they are stopped as Abort stops them, those of
+        // the Experiment too (closing a document stops them in closeExperiment).
         if ([aDocument respondsToSelector:@selector(killRunningTasks)])
             [aDocument killRunningTasks];
+        if ([aDocument respondsToSelector:@selector(experimentConsole)])
+            [aDocument.experimentConsole abort:nil];
         if (aDocument.annotationsExist)
             {
             aDocument.annotationsExist = NO;
