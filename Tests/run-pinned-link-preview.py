@@ -12,7 +12,7 @@ parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'oth
                                            'unpinned-interactive', 'pinned-transparent', 'scroll-chains', 'scroll-moves-frame', 'option-not-forwarded', 'kill-leaves-view', 'cursor-overridden', 'resize-scales',
                                            'click-kills-pin', 'cleanup-in-click-kills-pin', 'cursor-not-restored', 'hand-selects', 'no-selection', 'move-confined', 'copy-ignores-popup', 'click-keeps-selection', 'toggle-keeps-popup', 'link-popups-per-view', 'reads-settings-again',
                                            'tool-change-kills-pin', 'flag-not-restored', 'click-keeps-focus',
-                                           'no-page-label', 'label-on-screen', 'tooltip-kept', 'tooltip-always-hidden',
+                                           'no-page-label', 'label-in-page-points', 'tooltip-kept', 'tooltip-always-hidden',
                                            'tooltip-trusts-data', 'label-from-index',
                                            'magnifier-kills-pin', 'switch-kills-pin', 'keep-marquee', 'contains-unpinned', 'contains-hidden-part',
                                            'detach-keeps-state', 'attach-keeps-old-tool', 'attach-replaces-pin', 'not-kept-in-view',
@@ -203,7 +203,7 @@ preview_mutations = {
     'click-keeps-selection': ('NSEqualRects(self.frame, _startFrame)) self.selection = nil;', 'NO) self.selection = nil;'),
     'click-keeps-focus': ('    if (owner && self.window.firstResponder != owner) [self.window makeFirstResponder:owner];\n', ''),
     'no-page-label': ('    if (!self.pageLabel.length) return;\n', '    return;\n'),
-    'label-on-screen': ('[NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize]', '[NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize * [self unitsPerScreenPoint]]'),
+    'label-in-page-points': ('[NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize * unit]', '[NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize]'),
     'tooltip-kept': ('if (annotation && (__bridge void *)annotation == data && [pdfView showsLinkPreviewForAnnotation:annotation])', 'if (NO)'),
     'tooltip-trusts-data': ('if (annotation && (__bridge void *)annotation == data && [pdfView showsLinkPreviewForAnnotation:annotation])',
                             'if (annotation && [pdfView showsLinkPreviewForAnnotation:annotation])'),
@@ -1036,10 +1036,10 @@ static void testPageLabelAndToolTips(MyPDFKitView *view, NSWindow *window, PDFDo
     NSRect left = NSMakeRect(NSMinX(bounds) + 4 * unit, NSMinY(bounds) + 3 * unit, 26 * unit, 10 * unit);
     check(grayShare(rep, preview, corner) > 0.3 && grayShare(rep, preview, left) < 0.01,
           @"page label is drawn in the lower right corner");
-    // The label grows with the magnification, as the page in the popup does (#14): at 200%
-    // it reaches farther to the left than a label of the same size on screen would.
+    // The label keeps the size it has on screen (#14). At 200% a label in page points would
+    // reach this far left; one that stays on screen does not.
     NSRect grown = NSMakeRect(NSMaxX(bounds) - 44, NSMinY(bounds) + 5, 6, 6);
-    check(grayShare(rep, preview, grown) > 0.3, @"page label grows with the magnification");
+    check(grayShare(rep, preview, grown) < 0.01, @"page label stays the size it has on screen");
     NSRect beyond = NSMakeRect(NSMaxX(bounds) - 90, NSMinY(bounds) + 3, 20, 10);
     check(grayShare(rep, preview, beyond) < 0.01, @"page label ends at its text");
     if (getenv("TS_LABEL_PNG")) [[rep representationUsingType:NSBitmapImageFileTypePNG properties:@{}] writeToFile:@(getenv("TS_LABEL_PNG")) atomically:YES];
@@ -2023,7 +2023,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'reads-settings-again':'the first PDF uses the value from when the document was opened',
                     'tool-change-kills-pin':'changing the tool keeps a pinned popup', 'flag-not-restored':'after a failed click',
                     'click-keeps-focus':'clicking the popup makes its preview the active view', 'click-keeps-selection':'a click away from text clears',
-                    'no-page-label':'page label is drawn in the lower right corner', 'label-on-screen':'page label grows with the magnification',
+                    'no-page-label':'page label is drawn in the lower right corner', 'label-in-page-points':'page label stays the size it has on screen',
                     'tooltip-kept':'internal link gets no PDFKit tool tip', 'tooltip-trusts-data':'user data that is not the link',
                     'label-from-index':'popup shows the label of the linked page', 'tooltip-always-hidden':'tool tip stays when link popups are off',
                     'unpinned-interactive':'hovering popup leaves the mouse', 'pinned-transparent':'pinned popup takes clicks',

@@ -14,16 +14,16 @@ static const CGFloat TSLinkPreviewKeptMinimum = 20;
 // Page points around a line that still count as its text, so the cursor does not flicker
 // between lines.
 static const CGFloat TSLinkPreviewLineSlack = 2;
-// What the popup draws around its page grows and shrinks with the preview's magnification, as
-// the page in it does: these are page points, so they look the same on screen as the text in
-// the popup at any magnification, also for a popup made at another magnification (#14).
-// The page label in the lower right corner: white bold text on a gray capsule.
+// The page label in the lower right corner: white bold text on a gray capsule, in points on
+// screen. A label in page points grew with the text and was much too large once the preview
+// was magnified; this is the size of a popup opened at the current magnification (#14).
 static const CGFloat TSLinkPreviewLabelFontSize = 11;
 static const CGFloat TSLinkPreviewLabelMargin = 3;
-// The popup's corners, as the corners of current macOS popovers at 100%.
+// The popup's corners, in page points, so they grow and shrink with the page in the popup.
 static const CGFloat TSLinkPreviewCornerRadius = 6;
-// The black edge, which stays at least one pixel wide on screen.
-static const CGFloat TSLinkPreviewEdgeWidth = 1;
+// The black edge, in page points, so it grows and shrinks with the page. One page point
+// looked heavy; this is a little thinner, and it stays at least one pixel wide on screen (#14).
+static const CGFloat TSLinkPreviewEdgeWidth = 0.75;
 // A popup shows its linked page and, in the continuous displays, the next one (#14).
 #define TSLinkPreviewMaximumPages 2
 
@@ -174,10 +174,12 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
 - (void)drawPageLabelInRect:(NSRect)bounds
 {
     if (!self.pageLabel.length) return;
-    NSDictionary *attributes = @{NSFontAttributeName: [NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize],
+    // Points on screen, so the label stays the size it has at the current magnification (#14).
+    CGFloat unit = [self unitsPerScreenPoint];
+    NSDictionary *attributes = @{NSFontAttributeName: [NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize * unit],
                                  NSForegroundColorAttributeName: NSColor.whiteColor};
     NSSize size = [self.pageLabel sizeWithAttributes:attributes];
-    CGFloat height = ceil(size.height), radius = height / 2, margin = TSLinkPreviewLabelMargin;
+    CGFloat height = ceil(size.height), radius = height / 2, margin = TSLinkPreviewLabelMargin * unit;
     NSRect capsule = NSMakeRect(NSMaxX(bounds) - margin - ceil(size.width) - 2 * radius, NSMinY(bounds) + margin,
                                 ceil(size.width) + 2 * radius, height);
     if (NSWidth(capsule) > NSWidth(bounds) - 2 * margin || NSHeight(capsule) > NSHeight(bounds) - 2 * margin) return;

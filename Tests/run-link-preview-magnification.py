@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""A link popup's edge, page label and corners follow the preview's magnification (#14).
+"""A link popup's edge and corners follow the preview's magnification (#14).
 
-The page in a link popup grows and shrinks with the preview's magnification. Its black edge,
-its page label and its rounded corners now do as well: they are sized in page points, so a
-popup made at one magnification looks the same as one made at another. The edge stays at
-least one pixel wide on screen.
+The page in a link popup grows and shrinks with the preview's magnification. Its black edge
+and its rounded corners do as well: they are sized in page points. The edge is a little
+under one page point, which looked heavy, and it stays at least one pixel wide on screen.
+The page label keeps the size it has on screen, the size of a popup opened at the current
+magnification: a label in page points grew with the text and was much too large.
 
 AppKit magnifies what a view inside the preview drew before and does not draw it again when
 the magnification changes, so a popup made at a small magnification was blurred and its edge
@@ -26,8 +27,8 @@ MUTATIONS = {
                        '    CGFloat width = [self unitsPerScreenPoint];\n'),
     'no-pixel-floor': ('    CGFloat width = MAX(TSLinkPreviewEdgeWidth, [self unitsPerPixel]);\n',
                        '    CGFloat width = TSLinkPreviewEdgeWidth;\n'),
-    'label-on-screen': ('[NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize]',
-                        '[NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize * [self unitsPerScreenPoint]]'),
+    'label-in-page-points': ('[NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize * unit]',
+                             '[NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize]'),
     'corner-on-screen': ('    CGFloat radius = TSLinkPreviewCornerRadius;\n',
                          '    CGFloat radius = TSLinkPreviewCornerRadius * [self unitsPerScreenPoint];\n'),
     'no-redraw': ('            [weakSelf setNeedsDisplay:YES];\n', ''),
@@ -37,7 +38,7 @@ MUTATIONS = {
 EXPECTED = {
     'edge-on-screen': 'the edge grows with the magnification',
     'no-pixel-floor': 'the edge stays at least one pixel wide',
-    'label-on-screen': 'the page label grows with the magnification',
+    'label-in-page-points': 'the page label keeps its size on screen',
     'corner-on-screen': 'the corners grow with the magnification',
     'no-redraw': 'the popup draws itself again when the magnification changes',
     'keeps-old-preview': 'a moved popup follows only the preview it is in',
@@ -115,15 +116,23 @@ static CGFloat edgeCoverage(NSBitmapImageRep *rep) {
     }
     return covered;
 }
-// The width of the gray page label, in pixels, along a row through its middle: from its
-// leftmost gray pixel to the right side. The page around it is white.
-static NSInteger labelWidth(NSBitmapImageRep *rep, CGFloat pixels) {
-    NSInteger y = (NSInteger)round(9 * pixels), left = -1;
-    for (NSInteger x = (NSInteger)(10 * pixels); x < rep.pixelsWide; x++) {
-        NSColor *c = pixel(rep, x, y);
-        if (c.alphaComponent > 0.5 && luma(c) > 0.45 && luma(c) < 0.8) { left = x; break; }
+// How far the gray page label extends from the right, in pixels. The page around it is
+// white. The outer pixels are the edge, whose gray antialiasing grows with the
+// magnification, so they are left out. Only the lower part is searched: a label that stays
+// a fixed size on screen sits there at every magnification.
+static NSInteger labelWidth(NSBitmapImageRep *rep) {
+    NSInteger best = 0, limit = MIN(rep.pixelsHigh - 4, 80), xEnd = rep.pixelsWide - 4;
+    for (NSInteger y = 4; y < limit; y++) {
+        NSInteger left = -1;
+        for (NSInteger x = rep.pixelsWide / 3; x < xEnd; x++) {
+            NSColor *c = pixel(rep, x, y);
+            if (c.alphaComponent > 0.5 && luma(c) > 0.45 && luma(c) < 0.8) { left = x; break; }
+        }
+        if (left < 0) continue;
+        NSInteger span = xEnd - left;
+        if (span > best && span < rep.pixelsWide / 2) best = span;
     }
-    return left < 0 ? 0 : rep.pixelsWide - left;
+    return best;
 }
 int main(void) { @autoreleasepool {
     TSInstallAppKitIsolation(); [NSApplication sharedApplication];
@@ -141,7 +150,7 @@ int main(void) { @autoreleasepool {
     popup.pageLabel = @"Page 180";
     [view.documentView addSubview:popup];
 
-    CGFloat edges[4], labels[4]; NSInteger i = 0;
+    CGFloat edges[4]; NSInteger labels[4]; NSInteger i = 0;
     for (NSNumber *magnification in @[@0.25, @1, @2, @3]) {
         view.scaleFactor = magnification.doubleValue;
         CGFloat unitsPerPoint = [popup unitsPerScreenPoint];
@@ -149,7 +158,7 @@ int main(void) { @autoreleasepool {
         CGFloat pixels = backing / unitsPerPoint;
         NSBitmapImageRep *rep = render(popup, pixels);
         edges[i] = edgeCoverage(rep) / pixels;
-        labels[i] = labelWidth(rep, pixels) / pixels;
+        labels[i] = labelWidth(rep);
         CGFloat corner = pixel(rep, (NSInteger)(1.2 * pixels), (NSInteger)(1.2 * pixels)).alphaComponent;
         if (magnification.doubleValue >= 1)
             check(corner < 0.1, "the corners grow with the magnification");
@@ -157,10 +166,12 @@ int main(void) { @autoreleasepool {
             check(edgeCoverage(rep) > 0.85, "the edge stays at least one pixel wide");
         i++;
     }
-    // In page points the edge is 1 wide at 100% and above, and the label keeps its size.
+    // In page points the edge is 0.75 wide at 100% and above, so it grows on screen.
+    // The label keeps the same size in pixels, the size it has on screen (#14).
+    check(labels[1] > 40, "the page label keeps its size on screen");
     for (NSInteger k = 1; k < 4; k++) {
-        check(fabs(edges[k] - 1) < 0.5, "the edge grows with the magnification");
-        check(fabs(labels[k] - labels[1]) < 2 && labels[1] > 30, "the page label grows with the magnification");
+        check(fabs(edges[k] - 0.75) < 0.15, "the edge grows with the magnification");
+        check(labs(labels[k] - labels[1]) * 5 <= labels[1], "the page label keeps its size on screen");
     }
 
     Method setNeedsDisplay = class_getInstanceMethod(NSView.class, @selector(setNeedsDisplay:));
@@ -183,7 +194,7 @@ int main(void) { @autoreleasepool {
     redraws = 0; other.scaleFactor = 1; view.scaleFactor = 1;
     check(redraws == 0, "a moved popup follows only the preview it is in");
     method_setImplementation(setNeedsDisplay, (IMP)originalSetNeedsDisplay);
-    printf("PASS: a link popup's edge, page label and corners follow the magnification and it draws itself again\n");
+    printf("PASS: a link popup's edge and corners follow the magnification, its page label keeps its size on screen, and it draws itself again\n");
     return 0;
 }}
 '''
