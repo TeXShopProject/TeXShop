@@ -174,6 +174,72 @@ int main(int argc,char **argv){@autoreleasepool{
  NSDictionary *theme=[NSDictionary dictionaryWithContentsOfURL:[fixture URLForResource:@"LiteTheme" withExtension:@"plist" subdirectory:@"Themes"]];Check(theme.count>10,@"Bundled theme fixture loads");[owner setValue:[theme mutableCopy] forKey:@"EditingColors"];
  for(NSString *name in @[@"LiteStyle",@"DarkStyle",@"EditingStyle"]){NSPopUpButton *menu=[owner valueForKey:name];[menu removeAllItems];[menu addItemsWithTitles:@[@"LiteTheme",@"DarkTheme"]];[menu selectItemAtIndex:[name isEqual:@"DarkStyle"]?1:0];}
  [owner FillInColorWells];
+ // A theme file changed elsewhere so that a color is missing or is not a color: saving another color of the theme
+ // completes, the well shows the built-in color, and the missing color is not written into the file.
+ {
+  NSPopUpButton *editing=[owner valueForKey:@"EditingStyle"];[editing selectItemWithTitle:@"DarkTheme"];
+  NSString *path=[ColorPath stringByAppendingPathComponent:@"DarkTheme.plist"];NSDictionary *original=[NSDictionary dictionaryWithContentsOfFile:path];
+  Check(original[@"EditorBackground"]!=nil,@"The dark theme fixture has a background color");
+  NSDictionary *broken=@{@"empty":@[],@"number":@3,@"short":@[@0.5],@"text":@[@"red",@"green",@"blue",@1]};
+  for(NSString *kind in @[@"missing",@"empty",@"number",@"short",@"text",@"nothing"]){
+   [original writeToFile:path atomically:YES];[owner EditingStyleChoice:nil];
+   NSMutableDictionary *changed=[original mutableCopy];
+   if([kind isEqual:@"missing"])[changed removeObjectForKey:@"EditorBackground"];
+   else if([kind isEqual:@"nothing"])[changed removeAllObjects];
+   else changed[@"EditorBackground"]=broken[kind];
+   [changed writeToFile:path atomically:YES];
+   NSMutableDictionary *edit=[owner valueForKey:@"EditingColors"];edit[@"EditorText"]=@[@0.5,@0.3,@0.2,@1];
+   @try{[owner SaveEditedStyle:nil];}
+   @catch(NSException *e){Check(NO,[NSString stringWithFormat:@"Saving a color of a theme whose background is %@ throws: %@",kind,e.reason]);}
+   NSDictionary *disk=[NSDictionary dictionaryWithContentsOfFile:path];
+   Check([disk[@"EditorText"] isEqual:(@[@0.5,@0.3,@0.2,@1])] && (changed[@"EditorBackground"]==nil ? disk[@"EditorBackground"]==nil : [disk[@"EditorBackground"] isEqual:changed[@"EditorBackground"]]),
+         [NSString stringWithFormat:@"A theme whose background is %@ gets the new text color and keeps its background as it is",kind]);
+   NSColorWell *background=[owner valueForKey:@"SourceBackgroundColorWell"];
+   Check(background.color!=nil && [[owner valueForKey:@"EditingColors"] isEqual:disk],[NSString stringWithFormat:@"The background well shows a color when the background is %@",kind]);
+  }
+  [original writeToFile:path atomically:YES];[editing selectItemWithTitle:@"LiteTheme"];
+  [owner setValue:[theme mutableCopy] forKey:@"EditingColors"];[owner setValue:nil forKey:@"lastSavedEditingColors"];[owner FillInColorWells];
+ }
+ // The wells show the colors drawn: every bundled theme and one of the user's own with white text, without one to three
+ // of the colors that go in pairs, in the light and the dark Settings window (once, in Japanese).
+ if(getenv("TS_TEST_BUNDLED_THEMES") && [fixture.bundlePath.lastPathComponent isEqual:@"ja.bundle"]){
+  NSString *folder=@(getenv("TS_TEST_BUNDLED_THEMES"));NSMutableDictionary *named=[NSMutableDictionary dictionary];
+  for(NSString *file in [NSFileManager.defaultManager contentsOfDirectoryAtPath:folder error:NULL])
+   if([file hasSuffix:@".plist"])named[file.stringByDeletingPathExtension]=[NSDictionary dictionaryWithContentsOfFile:[folder stringByAppendingPathComponent:file]];
+  NSMutableDictionary *mine=[named[@"LiteTheme"] mutableCopy];
+  for(NSString *key in @[@"EditorText",@"ConsoleText",@"LogText",@"EditorInsertionPoint"])mine[key]=@[@1,@1,@1,@1];
+  for(NSString *key in @[@"EditorBackground",@"ConsoleBackground",@"LogBackground",@"EntryColor"])mine[key]=@[@0.1,@0.1,@0.1,@1];
+  named[@"Mine"]=mine;Check(named.count>=10,@"The bundled themes are there");
+  NSMutableDictionary *noActiveLine=[named[@"LiteTheme"] mutableCopy];[noActiveLine removeObjectForKey:@"EntryColor"];named[@"LiteTheme without an active line"]=noActiveLine;
+  NSDictionary *wellsByKey=@{@"EditorText":@"SourceTextColorWell",@"EditorBackground":@"SourceBackgroundColorWell",@"EditorInsertionPoint":@"SourceInsertionPointColorWell",
+                             @"EntryColor":@"EntryColorWell",@"ConsoleText":@"ConsoleTextColorWell",@"ConsoleBackground":@"ConsoleBackgroundColorWell",
+                             @"LogText":@"LogTextColorWell",@"LogBackground":@"LogBackgroundColorWell"};
+  NSArray *keys=@[@"EditorText",@"EditorBackground",@"EditorInsertionPoint",@"EntryColor",@"ConsoleText",@"ConsoleBackground",@"LogText",@"LogBackground"];
+  // Every set of one to three lacking colors (a theme may never have had some, as the company theme "Old" has no
+  // active line, and may lose others).
+  NSMutableArray *losses=[NSMutableArray array];
+  for(NSUInteger bits=1;bits<(1u<<keys.count);bits++){
+   NSMutableArray *lost=[NSMutableArray array];for(NSUInteger i=0;i<keys.count;i++)if(bits&(1u<<i))[lost addObject:keys[i]];
+   if(lost.count<=3)[losses addObject:lost];
+  }
+  NSAppearance *savedAppearance=owner.settingsController.window.appearance;BOOL savedMojave=atLeastMojave;atLeastMojave=YES;
+  TSColorSupport *colors=[TSColorSupport sharedInstance];NSUInteger compared=0;
+  for(NSString *name in named)for(NSAppearanceName appearance in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua])for(NSArray *lost in losses){
+   owner.settingsController.window.appearance=[NSAppearance appearanceNamed:appearance];BOOL dark=[appearance isEqual:NSAppearanceNameDarkAqua];
+   NSMutableDictionary *edited=[named[name] mutableCopy];[edited removeObjectsForKeys:lost];
+   [owner setValue:[edited mutableCopy] forKey:@"EditingColors"];[owner FillInColorWells];
+   for(NSString *key in keys){
+    NSColor *shown=[[[owner valueForKey:wellsByKey[key]] color] colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+    NSColor *drawn=[[colors opaqueColorForKey:key fromDictionary:edited isWindowDark:dark] colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+    Check(shown && drawn && fabs(shown.redComponent-drawn.redComponent)<1e-4 && fabs(shown.greenComponent-drawn.greenComponent)<1e-4 && fabs(shown.blueComponent-drawn.blueComponent)<1e-4,
+          [NSString stringWithFormat:@"The %@ well shows the color drawn (%@ without %@, %@)",key,name,[lost componentsJoinedByString:@"+"],appearance]);
+    compared++;
+   }
+  }
+  owner.settingsController.window.appearance=savedAppearance;atLeastMojave=savedMojave;
+  [owner setValue:[theme mutableCopy] forKey:@"EditingColors"];[owner FillInColorWells];
+  printf("PASS: %lu wells of %lu themes without one to three paired colors, in both appearances, show the colors drawn\n",(unsigned long)compared,(unsigned long)named.count);
+ }
  Check([factory[AutoSaveEnabledKey] isEqual:@"YES"] && ![[owner valueForKey:@"keepBackupButton"]isEnabled],@"Factory string YES disables backup at first opening");
  TSSettingsWindowController *shell=owner.settingsController;Check(shell.categoryIdentifiers.count==10,@"Ten approved categories");
  // Each category refresh is independent; repeated refresh cannot persist values.

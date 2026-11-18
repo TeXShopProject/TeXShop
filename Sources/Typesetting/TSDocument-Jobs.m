@@ -247,6 +247,9 @@ for(NSString *key in enu)
 
 - (void) doJobForScript:(NSInteger)type withError:(BOOL)error runContinuously:(BOOL)continuous
 {
+	// Typeset › Alternate asks for this request only, also when it does not start.
+	BOOL alternate = fromAlternate;
+	fromAlternate = NO;
 	// Typesetting saves the documents: not while a Replace All puts its replacements in this one or in one of its root
 	// (Issue #45).
 	if ([self isBeingReplacedIn] || [TSTeXRootReplaceGuard isApplyingInProjectOfURL:self.fileURL]) {
@@ -264,6 +267,9 @@ for(NSString *key in enu)
 	typesetContinuously = continuous;
 	
 	[self killRunningTasks];
+	// A new request: the saves of earlier ones no longer start anything (saveFinished:).
+	void *request = (void *)(uintptr_t)(++typesetRequest);
+	typesetRequestFromAlternate = alternate;
 
 	errorNumber = 0;
 	whichError = 0;
@@ -279,9 +285,9 @@ for(NSString *key in enu)
 		[self checkFileLinksA];
 
 	if (_externalEditor || (! [self isDocumentEdited])) {
-		[self saveFinished: self didSave:YES contextInfo:nil];
+		[self saveFinished: self didSave:YES contextInfo:request];
 	} else {
-		[self saveDocumentWithDelegate: self didSaveSelector: @selector(saveFinished:didSave:contextInfo:) contextInfo: nil];
+		[self saveDocumentWithDelegate: self didSaveSelector: @selector(saveFinished:didSave:contextInfo:) contextInfo: request];
 	}
     }
     
@@ -302,13 +308,13 @@ for(NSString *key in enu)
                 
             saveFinished = @selector(saveFinished:didSave:contextInfo:);
             if ([self fileURL])
-                    [self autosaveDocumentWithDelegate: self didAutosaveSelector: saveFinished contextInfo: nil];
+                    [self autosaveDocumentWithDelegate: self didAutosaveSelector: saveFinished contextInfo: request];
             else
-                    [self saveDocumentWithDelegate: self didSaveSelector: saveFinished contextInfo: nil];
+                    [self saveDocumentWithDelegate: self didSaveSelector: saveFinished contextInfo: request];
                 
             } 
         else {
-            [self saveFinished: self didSave:YES contextInfo:nil];
+            [self saveFinished: self didSave:YES contextInfo:request];
         }
 
     }
@@ -318,6 +324,9 @@ for(NSString *key in enu)
 
 - (void) doJob:(NSInteger)type withError:(BOOL)error runContinuously:(BOOL)continuous
 {
+	// Typeset › Alternate asks for this request only, also when it does not start.
+	BOOL alternate = fromAlternate;
+	fromAlternate = NO;
 	// Typesetting saves the documents: not while a Replace All puts its replacements in this one or in one of its root
 	// (Issue #45).
 	if ([self isBeingReplacedIn] || [TSTeXRootReplaceGuard isApplyingInProjectOfURL:self.fileURL]) {
@@ -334,6 +343,9 @@ for(NSString *key in enu)
 	typesetContinuously = continuous;
 
 	[self killRunningTasks];
+	// A new request: the saves of earlier ones no longer start anything (saveFinished:).
+	void *request = (void *)(uintptr_t)(++typesetRequest);
+	typesetRequestFromAlternate = alternate;
 
 	errorNumber = 0;
 	whichError = 0;
@@ -367,10 +379,10 @@ for(NSString *key in enu)
 
 
 	if (_externalEditor || ([self fileURL] && (! [self isDocumentEdited])) ) {
-		[self saveFinished: self didSave:YES contextInfo:nil];
+		[self saveFinished: self didSave:YES contextInfo:request];
 	} else {
 		saveFinished = @selector(saveFinished:didSave:contextInfo:);
-		[self saveDocumentWithDelegate: self didSaveSelector: saveFinished contextInfo: nil];
+		[self saveDocumentWithDelegate: self didSaveSelector: saveFinished contextInfo: request];
 	}
     }
     
@@ -397,12 +409,12 @@ for(NSString *key in enu)
         
  		saveFinished = @selector(saveFinished:didSave:contextInfo:);
         if ([self fileURL])
-                [self autosaveDocumentWithDelegate: self didAutosaveSelector: saveFinished contextInfo: nil];
+                [self autosaveDocumentWithDelegate: self didAutosaveSelector: saveFinished contextInfo: request];
         else
-                [self saveDocumentWithDelegate: self didSaveSelector: saveFinished contextInfo: nil];
+                [self saveDocumentWithDelegate: self didSaveSelector: saveFinished contextInfo: request];
         
         } else {
-            [self saveFinished: self didSave:YES contextInfo:nil];
+            [self saveFinished: self didSave:YES contextInfo:request];
         }
     }
 }
@@ -701,6 +713,19 @@ for(NSString *key in enu)
     // an exception escaping from here would leave the document unable to
     // save or close.
     @try {
+    // Only the request asked for last starts, once, and not when Abort stopped it while it was being saved.
+    NSUInteger request = (NSUInteger)(uintptr_t)contextInfo;
+    if (request != typesetRequest || request == savedTypesetRequest)
+        return;
+    savedTypesetRequest = request;
+    fromAlternateTemp = typesetRequestFromAlternate;
+    typesetRequestFromAlternate = NO;
+    // Nor when the save failed or was cancelled: the file is not the text that was asked for.
+    if (request == abortedTypesetRequest || ! didSave) {
+        useTempEngine = NO;
+        fromMenu = NO;
+        return;
+    }
     [self RescanMagicComments: self];
     if (self.automaticCorrection)
         {
@@ -708,8 +733,6 @@ for(NSString *key in enu)
         }
     
 
-    fromAlternateTemp = fromAlternate;
-    fromAlternate = NO;
 
 	whichEngineLocal = (useTempEngine ? tempEngine : whichEngine);
 
@@ -1116,8 +1139,9 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 		if (aRange.location == NSNotFound)
 			warningGiven = YES;
 		else {
+			// The answer goes on with this request only (sheetDidEnd:returnCode:contextInfo:).
 			NSBeginCriticalAlertSheet (nil, nil, NSLocalizedString(@"Omit Shell Escape", @"Omit Shell Escape"), NSLocalizedString(@"Cancel", @"Cancel"),
-									  textWindow, self, @selector(sheetDidEnd:returnCode:contextInfo:), NULL, nil,
+									  textWindow, self, @selector(sheetDidEnd:returnCode:contextInfo:), NULL, (void *)(uintptr_t)request,
 									  NSLocalizedString(@"Warning: Using Shell Escape", @"Warning: Using Shell Escape"));
 			useTempEngine = NO;
 			return;
@@ -1815,6 +1839,10 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 
 -(void)sheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
+	// Only the Typeset asked for last goes on, and not one that Abort stopped while the sheet was up.
+	NSUInteger request = (NSUInteger)(uintptr_t)contextInfo;
+	if (request != typesetRequest || request == abortedTypesetRequest)
+		return;
 	switch (returnCode) {
 		case NSAlertDefaultReturn:
 			warningGiven = YES;
@@ -2146,6 +2174,8 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
         return;
     }
     doAbort = YES;
+    // A Typeset whose document is being saved does not start when the save ends (saveFinished:).
+    abortedTypesetRequest = typesetRequest;
     
 	if (! fileIsTex)
 		return;

@@ -13,7 +13,8 @@ signatures = ['- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFro
               '- (NSColor *)liteColorWithKey:', '- (NSColor *)darkColorWithKey:',
               '- (NSColor *)liteColorAndAlphaWithKey:', '- (NSColor *)darkColorAndAlphaWithKey:',
               '- (NSColor *)colorForKey: (NSString *)theKey fromDictionary:',
-              '- (NSColor *)colorForKey: (NSString *)theKey isWindowDark:']
+              '- (NSColor *)colorForKey: (NSString *)theKey isWindowDark:',
+              '- (NSColor *)opaqueColorForKey: (NSString *)theKey fromDictionary:']
 methods = [method(support, s) for s in signatures if s in support]
 document_source = (root / 'Sources/Editor/TSDocument-Color.m').read_text(encoding='latin-1')
 document=document_source

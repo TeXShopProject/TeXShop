@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Check that the ways to go to another place close the pinned link popup of the part that
 goes there, and that zoom, the magnification menu, the display format and turning one page
-keep it (#35). run-pinned-link-preview.py runs the ways that MyPDFKitView handles itself;
+keep it (#35): the magnification leaves it at its place on its page and a new display format
+puts it back there (#56). run-pinned-link-preview.py runs the ways that MyPDFKitView handles itself;
 this checks the ways that go through the document, the search and the preview window."""
 from pathlib import Path
 import argparse
@@ -20,8 +21,23 @@ MUTATIONS = {
                          '    [otherView closePinnedLinkPreview];\n', '    [linkView closePinnedLinkPreview];\n'),
     'fit-kills-pin': ('Sources/Preview/MyPDFKitView.m', '- (void)changePDFViewSizeTo:',
                       '        [self cleanupMarqueeKeepingPinnedLinkPreview];\n', '        [self cleanupMarquee: YES];\n'),
-    'format-not-kept-in-view': ('Sources/Preview/MyPDFKitView.m', '- (void)changePageStyleTo:',
-                                '    [self keepPinnedLinkPreviewInView];\n', ''),
+    # The behavior before #56: the magnification moved the popup into view, off its place.
+    'zoom-kept-in-view': ('Sources/Preview/MyPDFKitView.m', '- (void) changeScale:',
+                          '\tresizeOption = NEW_PDF_FIT_TO_NONE;\n', '\tresizeOption = NEW_PDF_FIT_TO_NONE;\n\t[self keepPinnedLinkPreviewInView];\n'),
+    'fit-kept-in-view': ('Sources/Preview/MyPDFKitView.m', '- (void)changePDFViewSizeTo:',
+                         '        [self setupMagnificationStyle];\n', '        [self setupMagnificationStyle];\n        [self keepPinnedLinkPreviewInView];\n'),
+    'format-forgets-page': ('Sources/Preview/MyPDFKitView.m', '- (BOOL)beginKeepingPinnedLinkPreviewOnPage',
+                            '    [pinnedLinkPreview rememberPlaceOnPage];\n', ''),
+    'format-not-kept-in-view': ('Sources/Preview/MyPDFKitView.m', '- (void)endKeepingPinnedLinkPreviewOnPage:',
+                                '        [pinnedLinkPreview keepInView];\n', '        ;\n'),
+    'format-ends-early': ('Sources/Preview/MyPDFKitView.m', '- (void)performPreviewLayoutChange:',
+                          '    BOOL keepsPopup = [self beginKeepingPinnedLinkPreviewOnPage];\n    change();\n',
+                          '    BOOL keepsPopup = [self beginKeepingPinnedLinkPreviewOnPage];\n    change();\n    [self endKeepingPinnedLinkPreviewOnPage: keepsPopup];\n'),
+    'contextual-format-loses-page': ('Sources/Preview/MyPDFKitView.m', '- (void)setDisplayMode:',
+                                     '    BOOL keepsPopup = [self beginKeepingPinnedLinkPreviewOnPage];\n', '    BOOL keepsPopup = NO;\n'),
+    'nested-change-returns': ('Sources/Preview/MyPDFKitView.m', '- (BOOL)beginKeepingPinnedLinkPreviewOnPage',
+                              'if (keepsPinnedLinkPreviewOnPage || ![self hasPinnedLinkPreview]) return NO;',
+                              'if (![self hasPinnedLinkPreview]) return NO;'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -96,13 +112,50 @@ expect(0 <= body.find('[otherView closePinnedLinkPreview]') < body.find('[otherV
 expect('[linkView closePinnedLinkPreview]' not in body and '[linkView cleanupMarquee' not in body,
        'Split Window with Link closes the pinned popup of the part with the link')
 
-# Zoom, the magnification menu, the display format and turning one page keep the popup, and
-# bring it back into view.
+# Zoom, the magnification menu, the display format and turning one page keep the popup.
 for signature in ('- (void) changeScale:', '- (void)setMagnification:', '- (void)changePDFViewSizeTo:',
                   '- (void)changePageStyleTo:', '- (void) previousPage:', '- (void) nextPage:'):
     body = method(kit, signature)
     expect(not re.search(r'cleanupMarquee: ?YES', body), f'{signature} closes the pinned popup')
-    expect('[self keepPinnedLinkPreviewInView]' in body, f'{signature} does not bring the pinned popup back into view')
+# Turning one page brings it back into view.
+for signature in ('- (void) previousPage:', '- (void) nextPage:'):
+    expect('[self keepPinnedLinkPreviewInView]' in method(kit, signature),
+           f'{signature} does not bring the pinned popup back into view')
+# The magnification leaves it at its place on its page, which grows and shrinks with it; PDFKit
+# keeps that place (run-pinned-popup-stays-on-page.py) (#56).
+for signature in ('- (void) changeScale:', '- (void)setMagnification:', '- (void)changePDFViewSizeTo:',
+                  '- (void)fitContentWidthKeepingTop:', '- (void)changePageStyleTo:'):
+    body = method(kit, signature)
+    expect('keepPinnedLinkPreviewInView' not in body and 'keepInView' not in body,
+           f'{signature} moves the pinned popup off its place on its page')
+# A new display format puts the pages elsewhere: the popup remembers its place on its page
+# before and goes back to it once the place shown before is back, or else into view (#56).
+expect('performPreviewLayoutChange:' in method(kit, '- (void)changePageStyleTo:'),
+       'the display format does not change through performPreviewLayoutChange')
+body = method(kit, '- (void)performPreviewLayoutChange:')
+begin = body.find('BOOL keepsPopup = [self beginKeepingPinnedLinkPreviewOnPage];')
+change = body.find('change();')
+went = max(body.find('[self goToDestination:destination]'), body.find('[self goToPage:page]'))
+end = body.find('[self endKeepingPinnedLinkPreviewOnPage: keepsPopup];')
+expect(0 <= begin < change, 'the pinned popup does not remember its place on its page before the display format changes')
+expect(change < went < end and body.count('endKeepingPinnedLinkPreviewOnPage') == 1,
+       'the pinned popup does not go back to its place on its page after the display format changes')
+begin_body = method(kit, '- (BOOL)beginKeepingPinnedLinkPreviewOnPage')
+expect('[pinnedLinkPreview rememberPlaceOnPage]' in begin_body,
+       'the pinned popup does not remember its place on its page before the display format changes')
+# A change made within another one, as setupPageStyle within performPreviewLayoutChange:, leaves
+# the popup to the outer one, which goes back only once the place shown before is back.
+expect(re.search(r'if \(keepsPinnedLinkPreviewOnPage \|\| !\[self hasPinnedLinkPreview\]\) return NO;', begin_body),
+       'a display format set within another change puts the pinned popup back before the place shown before is back')
+end_body = method(kit, '- (void)endKeepingPinnedLinkPreviewOnPage:')
+expect(re.search(r'!\[pinnedLinkPreview returnToPlaceOnPage\]\)\s*\[pinnedLinkPreview keepInView\]', end_body),
+       'a pinned popup whose page is no longer shown does not come back into view')
+# PDFKit's contextual menu sets the display format with setDisplayMode: (#56).
+body = method(kit, '- (void)setDisplayMode:')
+begin = body.find('BOOL keepsPopup = [self beginKeepingPinnedLinkPreviewOnPage];')
+display = body.find('[super setDisplayMode: mode];')
+end = body.find('[self endKeepingPinnedLinkPreviewOnPage: keepsPopup];')
+expect(0 <= begin < display < end, 'a display format from the contextual menu does not keep the pinned popup on its page')
 body = method(kit, '- (void)zoomToContentWidthOnly:')
 expect('cleanupMarqueeKeepingPinnedLinkPreview' in body and not re.search(r'cleanupMarquee: ?YES', body),
        'Zoom to Content closes the pinned popup')
@@ -115,4 +168,5 @@ if args.mutation:
     print(f'PASS: detected mutation {args.mutation}: {problems[0]}')
     raise SystemExit(0)
 assert not problems, problems
-print(f'PASS: search, {syncs} syncs and Split Window with Link close the pinned popup of the part that moves; zoom and turning pages keep it')
+print(f'PASS: search, {syncs} syncs and Split Window with Link close the pinned popup of the part that moves; zoom and turning pages keep it; '
+      'the magnification and the display format leave it on its page')

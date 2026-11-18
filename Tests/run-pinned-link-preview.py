@@ -12,7 +12,7 @@ parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'oth
                                            'unpinned-interactive', 'pinned-transparent', 'scroll-chains', 'scroll-moves-frame', 'option-not-forwarded', 'kill-leaves-view', 'cursor-overridden', 'resize-scales',
                                            'click-kills-pin', 'cleanup-in-click-kills-pin', 'cursor-not-restored', 'hand-selects', 'no-selection', 'move-confined', 'copy-ignores-popup', 'click-keeps-selection', 'toggle-keeps-popup', 'link-popups-per-view', 'reads-settings-again',
                                            'tool-change-kills-pin', 'flag-not-restored', 'click-keeps-focus',
-                                           'no-page-label', 'label-on-screen', 'tooltip-kept', 'tooltip-always-hidden',
+                                           'no-page-label', 'label-in-page-points', 'tooltip-kept', 'tooltip-always-hidden',
                                            'tooltip-trusts-data', 'label-from-index',
                                            'magnifier-kills-pin', 'switch-kills-pin', 'keep-marquee', 'contains-unpinned', 'contains-hidden-part',
                                            'detach-keeps-state', 'attach-keeps-old-tool', 'attach-replaces-pin', 'not-kept-in-view',
@@ -27,7 +27,7 @@ parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'oth
                                            'pinned-blocks-hover', 'pin-keeps-old', 'over-pin-keeps-hover', 'pin-times-out',
                                            'escape-falls-to-other-part', 'escape-closes-hover',
                                            'link-keeps-pin', 'outline-keeps-pin', 'back-keeps-pin', 'forward-keeps-pin', 'page-number-keeps-pin',
-                                           'last-page-keeps-pin', 'sync-keeps-pin', 'zoom-kills-pin', 'next-page-kills-pin',
+                                           'last-page-keeps-pin', 'sync-keeps-pin', 'zoom-kills-pin', 'zoom-moves-into-view', 'next-page-kills-pin',
                                            'empty-outline-kills-pin', 'stuck-back-kills-pin', 'stuck-single-page-kills-pin'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
@@ -109,6 +109,9 @@ view_mutations = {
     'sync-keeps-pin': ('\t[self closePinnedLinkPreview];\n\tpageIndexForMark = idx;', '\tpageIndexForMark = idx;'),
     'zoom-kills-pin': ('\t// A pinned popup stays, growing and shrinking with the page it is on (#35).\n\t[self cleanupMarqueeKeepingPinnedLinkPreview];',
                        '\t[self cleanupMarquee: YES];'),
+    # The behavior before #56: zoom moved the popup into view, off its place on its page.
+    'zoom-moves-into-view': ('\tresizeOption = NEW_PDF_FIT_TO_NONE;\n\tif (sender == myScale1) {',
+                             '\tresizeOption = NEW_PDF_FIT_TO_NONE;\n\t[self keepPinnedLinkPreviewInView];\n\tif (sender == myScale1) {'),
     'next-page-kills-pin': ('\t\t[self cleanupMarqueeKeepingPinnedLinkPreview];\n\t[self stepPageForward:YES sender:sender];', '\t\t[self cleanupMarquee: YES];\n\t[self stepPageForward:YES sender:sender];'),
     'popup-side-fitted': ('            BOOL keepSide = displayMode == kPDFDisplaySinglePageContinuous ||\n                            displayMode == kPDFDisplayTwoUpContinuous;\n',
                           '            BOOL keepSide = displayMode != displayMode;\n'),
@@ -203,7 +206,8 @@ preview_mutations = {
     'click-keeps-selection': ('NSEqualRects(self.frame, _startFrame)) self.selection = nil;', 'NO) self.selection = nil;'),
     'click-keeps-focus': ('    if (owner && self.window.firstResponder != owner) [self.window makeFirstResponder:owner];\n', ''),
     'no-page-label': ('    if (!self.pageLabel.length) return;\n', '    return;\n'),
-    'label-on-screen': ('[NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize]', '[NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize * [self unitsPerScreenPoint]]'),
+    'label-in-page-points': ('    CGFloat fontSize = TSLinkPreviewLabelFontSize * scale;\n',
+                             '    CGFloat fontSize = TSLinkPreviewLabelFontSize;\n'),
     'tooltip-kept': ('if (annotation && (__bridge void *)annotation == data && [pdfView showsLinkPreviewForAnnotation:annotation])', 'if (NO)'),
     'tooltip-trusts-data': ('if (annotation && (__bridge void *)annotation == data && [pdfView showsLinkPreviewForAnnotation:annotation])',
                             'if (annotation && [pdfView showsLinkPreviewForAnnotation:annotation])'),
@@ -1032,14 +1036,16 @@ static void testPageLabelAndToolTips(MyPDFKitView *view, NSWindow *window, PDFDo
     CGFloat unit = NSWidth([view.documentView convertRect:NSMakeRect(0,0,1,1) fromView:nil]);
     NSRect bounds = preview.bounds;
     NSBitmapImageRep *rep = render(preview);
-    NSRect corner = NSMakeRect(NSMaxX(bounds) - 30 * unit, NSMinY(bounds) + 3 * unit, 26 * unit, 10 * unit);
-    NSRect left = NSMakeRect(NSMinX(bounds) + 4 * unit, NSMinY(bounds) + 3 * unit, 26 * unit, 10 * unit);
+    // The capsule sits just inside the page-point corner, about 7 page points in, not on the
+    // old 3-point screen margin. At 200% its type is 11 points on screen.
+    NSRect corner = NSMakeRect(NSMaxX(bounds) - 24, NSMinY(bounds) + 8, 12, 4);
+    NSRect left = NSMakeRect(NSMinX(bounds) + 4 * unit, NSMinY(bounds) + 8, 26 * unit, 4);
     check(grayShare(rep, preview, corner) > 0.3 && grayShare(rep, preview, left) < 0.01,
           @"page label is drawn in the lower right corner");
-    // The label grows with the magnification, as the page in the popup does (#14): at 200%
-    // it reaches farther to the left than a label of the same size on screen would.
-    NSRect grown = NSMakeRect(NSMaxX(bounds) - 44, NSMinY(bounds) + 5, 6, 6);
-    check(grayShare(rep, preview, grown) > 0.3, @"page label grows with the magnification");
+    // The label keeps the size it has on screen (#14). At 200% a label in page points would
+    // reach this far left; one that stays on screen does not.
+    NSRect grown = NSMakeRect(NSMaxX(bounds) - 52, NSMinY(bounds) + 8, 6, 4);
+    check(grayShare(rep, preview, grown) < 0.01, @"page label stays the size it has on screen");
     NSRect beyond = NSMakeRect(NSMaxX(bounds) - 90, NSMinY(bounds) + 3, 20, 10);
     check(grayShare(rep, preview, beyond) < 0.01, @"page label ends at its text");
     if (getenv("TS_LABEL_PNG")) [[rep representationUsingType:NSBitmapImageFileTypePNG properties:@{}] writeToFile:@(getenv("TS_LABEL_PNG")) atomically:YES];
@@ -1585,23 +1591,30 @@ static void testJumps(MyPDFKitView *view, NSWindow *window) {
     view.displayMode = kPDFDisplaySinglePageContinuous;
     [view layoutDocumentView];
 
-    // Zoom keeps it, in view.
+    // Zoom keeps it at its place on its page, growing and shrinking with the page, also where
+    // that is out of view (#56).
     pin();
     preview = view.preview;
     NSTextField *scaleField = [NSTextField new];
     scaleField.integerValue = 300;
     [view setTestScaleField:scaleField];
     CGFloat widthBefore = NSWidth([view.documentView convertRect:preview.frame toView:nil]);
+    NSRect placed = preview.frame;
     [view changeScale:view];
     check(approx(view.scaleFactor, 3) && view.preview == preview && preview.superview && handlers.count == 1,
           @"zoom keeps the pinned popup");
     check(fabs(NSWidth([view.documentView convertRect:preview.frame toView:nil]) - 3 * widthBefore) < 1,
           @"the pinned popup grows with the page");
-    check(NSIntersectsRect(preview.frame, view.documentView.visibleRect), @"after zoom the pinned popup is in view");
+    check(NSEqualRects(preview.frame, placed), @"zoom leaves the pinned popup at its place on its page");
+    // A popup far out of view stays there.
+    NSRect away = NSOffsetRect(placed, 0, view.documentView.isFlipped ? 3000 : -3000);
+    preview.frame = away;
+    check(!NSIntersectsRect(away, view.documentView.visibleRect), @"fixture: the popup is out of view");
     scaleField.integerValue = 50;
     [view changeScale:view];
-    check(view.preview == preview && NSIntersectsRect(preview.frame, view.documentView.visibleRect),
-          @"zooming out keeps the pinned popup in view");
+    check(view.preview == preview && NSEqualRects(preview.frame, away),
+          @"zoom leaves a pinned popup out of view at its place on its page");
+    preview.frame = placed;
     [view setTestScaleField:nil];
     view.scaleFactor = 1;
 
@@ -2023,7 +2036,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'reads-settings-again':'the first PDF uses the value from when the document was opened',
                     'tool-change-kills-pin':'changing the tool keeps a pinned popup', 'flag-not-restored':'after a failed click',
                     'click-keeps-focus':'clicking the popup makes its preview the active view', 'click-keeps-selection':'a click away from text clears',
-                    'no-page-label':'page label is drawn in the lower right corner', 'label-on-screen':'page label grows with the magnification',
+                    'no-page-label':'page label is drawn in the lower right corner', 'label-in-page-points':'page label stays the size it has on screen',
                     'tooltip-kept':'internal link gets no PDFKit tool tip', 'tooltip-trusts-data':'user data that is not the link',
                     'label-from-index':'popup shows the label of the linked page', 'tooltip-always-hidden':'tool tip stays when link popups are off',
                     'unpinned-interactive':'hovering popup leaves the mouse', 'pinned-transparent':'pinned popup takes clicks',
@@ -2066,6 +2079,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'last-page-keeps-pin':'going to the last page closes the pinned popup',
                     'sync-keeps-pin':'a sync from the source closes the pinned popup',
                     'zoom-kills-pin':'zoom keeps the pinned popup',
+                    'zoom-moves-into-view':('zoom leaves the pinned popup at its place on its page', 'zoom leaves a pinned popup out of view at its place on its page'),
                     'next-page-kills-pin':'the next page keeps the pinned popup',
                     'popup-side-fitted':('in the continuous displays the popup stays below the link, or above it with Shift', 'Shift puts the popup above the link'),
                     'popup-side-always-kept':'in Single Page and Double Page display a popup that does not fit moves to the other side',

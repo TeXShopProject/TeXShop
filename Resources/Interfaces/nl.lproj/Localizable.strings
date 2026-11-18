@@ -328,6 +328,8 @@
 
 /* Edit › Mark */
 "Insert Mark with Note" = "Voeg markeerpunt met notitie in";
+"Insert Mark" = "Voeg markeerpunt in";
+"Delete Mark" = "Verwijder markeerpunt";
 "How to Use Marks…" = "Markeerpunten gebruiken…";
 "Inserts a mark (•) to come back to later." = "Voegt een markeerpunt (•) in om later naar terug te keren.";
 "Inserts a mark with a note (•‹note›). Selected text becomes the note." = "Voegt een markeerpunt met notitie (•‹notitie›) in. Geselecteerde tekst wordt de notitie.";

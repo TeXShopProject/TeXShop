@@ -323,6 +323,8 @@
 
 /* Edit › Mark */
 "Insert Mark with Note" = "Insert Mark with Note";
+"Insert Mark" = "Insert Mark";
+"Delete Mark" = "Delete Mark";
 "How to Use Marks…" = "How to Use Marks…";
 "Inserts a mark (•) to come back to later." = "Inserts a mark (•) to come back to later.";
 "Inserts a mark with a note (•‹note›). Selected text becomes the note." = "Inserts a mark with a note (•‹note›). Selected text becomes the note.";
