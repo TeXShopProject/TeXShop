@@ -5668,6 +5668,10 @@ if ( ! skipTextWindow) {
 // added by Terada (- (void)resetBackgroundColor:)
 - (void)resetBackgroundColor:(id)sender
 {
+	// The end, asked for by coloring (sender is the number of the highlight), of a
+	// highlight that a newer one has replaced.
+	if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != braceHighlightGeneration)
+		return;
 	contentHighlighting = NO;
 	highlightedContentRange = NSMakeRange(0, 0);
 	// This removes the backgrounds that coloring gives too (fullwidth characters, the
@@ -5725,6 +5729,7 @@ if ( ! skipTextWindow) {
 		return;
 	contentHighlighting = YES;
 	highlightedContentRange = NSRangeFromString(range);
+	highlightedTextLength = [self.textStorage length];
 	if(windowIsSplit){
 		[[textView1 layoutManager] addTemporaryAttributes:highlightContentColorDict 
 										forCharacterRange:NSRangeFromString(range)];
@@ -5748,6 +5753,8 @@ if ( ! skipTextWindow) {
 	if (![self braceHighlightFits:NSMakeRange(MIN(location1, location2), ABS(location1 - location2) + 1) inTextView:textView1])
 		return;
 	highlightedBraceLocations = locations;
+	highlightedTextLength = [self.textStorage length];
+	highlightedGeneration = ([locations count] > 2) ? [[locations objectAtIndex:2] unsignedIntegerValue] : braceHighlightGeneration;
 
 	if (windowIsSplit) {
 		[[textView1 layoutManager] addTemporaryAttributes:highlightBracesColorDict 
@@ -5862,6 +5869,11 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 	// if (![SUD boolForKey:SyntaxColoringEnabledKey]
     if ((! self.syntaxColor)
 		|| (!checkBrace && !checkBracket && !checkSquareBracket && !checkParen)) {
+		// Matching was turned off while braces were highlighted: the highlight ends.
+		if (highlightingContent)
+			[self performSelector:resetBackgroundSelector withObject:nil afterDelay:0];
+		if (highlightingBraces)
+			[self performSelector:resetHighlightSelector withObject:nil afterDelay:0];
 		return;
 	}
 	
@@ -5973,6 +5985,7 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 						   withObject:[NSArray arrayWithObjects:
 									   [NSNumber numberWithInteger:theLocation],
 									   [NSNumber numberWithInteger:originalLocation],
+									   @(generation),
 									   nil]
 						   afterDelay:0];
 				 

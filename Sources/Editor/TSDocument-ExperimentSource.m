@@ -243,6 +243,8 @@ static NSRange TSExperimentRange(NSTextView *view, NSRange range)
             [scrapTextView.layoutManager addTemporaryAttributes:highlightBracesColorDict forCharacterRange:range];
     }
     scrapHighlightedBraceLocations = locations;
+    scrapHighlightedTextLength = scrapTextView.string.length;
+    scrapHighlightedGeneration = (locations.count > 2) ? [locations[2] unsignedIntegerValue] : scrapBraceHighlightGeneration;
     scrapBraceHighlighting = YES;
 }
 
@@ -253,6 +255,7 @@ static NSRange TSExperimentRange(NSTextView *view, NSRange range)
     scrapContentHighlighting = YES;
     NSRange range = TSExperimentRange(scrapTextView, NSRangeFromString(rangeString));
     scrapHighlightedContentRange = range;
+    scrapHighlightedTextLength = scrapTextView.string.length;
     if (range.length > 0)
         [scrapTextView.layoutManager addTemporaryAttributes:highlightContentColorDict forCharacterRange:range];
 }
@@ -268,6 +271,8 @@ static NSRange TSExperimentRange(NSTextView *view, NSRange range)
 
 - (void)resetExperimentBackgroundColor:(id)sender
 {
+    if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != scrapBraceHighlightGeneration)
+        return;
     scrapContentHighlighting = NO;
     scrapHighlightedContentRange = NSMakeRange(0, 0);
     [scrapTextView.layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName

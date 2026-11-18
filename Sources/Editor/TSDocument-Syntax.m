@@ -402,21 +402,65 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
 
 // The highlight of the braces and of their contents, which coloring has just removed
 // from range or covered with the background of fullwidth characters, is given again in
-// the views that show it.
+// the views that show it. When the text has changed since, or the braces are no longer
+// matched, the highlight ends instead.
 - (void)restoreBraceHighlightsIn:(NSTextView *)aTextView range:(NSRange)range
 {
     BOOL experiment = (aTextView != nil && aTextView == scrapTextView);
     if (!experiment && !(windowIsSplit ? (aTextView == textView1 || aTextView == textView2) : aTextView == textView))
         return;
+    BOOL braces = (experiment ? scrapBraceHighlighting : braceHighlighting) &&
+        [(experiment ? scrapHighlightedBraceLocations : highlightedBraceLocations) count] >= 2;
+    BOOL highlightsContents = (experiment ? scrapContentHighlighting : contentHighlighting) &&
+        (experiment ? scrapHighlightedContentRange : highlightedContentRange).length > 0;
+    if (!braces && !highlightsContents)
+        return;
+    // Highlighting the contents was turned off meanwhile.
+    if (highlightsContents && ![SUD boolForKey:HighlightContentEnabledKey]) {
+        if (experiment)
+            scrapHighlightedContentRange = NSMakeRange(0, 0);
+        else
+            highlightedContentRange = NSMakeRange(0, 0);
+        [self performSelector:(experiment ? @selector(resetExperimentBackgroundColor:) : @selector(resetBackgroundColor:))
+                   withObject:@(experiment ? scrapHighlightedGeneration : highlightedGeneration) afterDelay:0];
+        highlightsContents = NO;
+        if (!braces)
+            return;
+    }
+    NSRange pair;
+    if (highlightsContents)
+        pair = experiment ? scrapHighlightedContentRange : highlightedContentRange;
+    else {
+        NSArray *locations = experiment ? scrapHighlightedBraceLocations : highlightedBraceLocations;
+        NSInteger location1 = [locations[0] integerValue], location2 = [locations[1] integerValue];
+        pair = NSMakeRange(MIN(location1, location2), ABS(location1 - location2) + 1);
+    }
+    if ([[aTextView string] length] != (experiment ? scrapHighlightedTextLength : highlightedTextLength) ||
+        ![self braceHighlightFits:pair inTextView:aTextView]) {
+        NSNumber *generation = @(experiment ? scrapHighlightedGeneration : highlightedGeneration);
+        if (experiment) {
+            scrapHighlightedBraceLocations = nil;
+            scrapHighlightedContentRange = NSMakeRange(0, 0);
+        } else {
+            highlightedBraceLocations = nil;
+            highlightedContentRange = NSMakeRange(0, 0);
+        }
+        // Unless a newer highlight has been asked for since, which ends this one itself.
+        if (braces)
+            [self performSelector:(experiment ? @selector(resetExperimentHighlight:) : @selector(resetHighlight:)) withObject:generation afterDelay:0];
+        if (highlightsContents)
+            [self performSelector:(experiment ? @selector(resetExperimentBackgroundColor:) : @selector(resetBackgroundColor:)) withObject:generation afterDelay:0];
+        return;
+    }
     NSLayoutManager *layoutManager = [aTextView layoutManager];
     NSRange text = NSMakeRange(0, [[aTextView string] length]);
     NSRange contents = experiment ? scrapHighlightedContentRange : highlightedContentRange;
-    if ((experiment ? scrapContentHighlighting : contentHighlighting) && highlightContentColorDict) {
+    if (highlightsContents && highlightContentColorDict) {
         contents = NSIntersectionRange(NSIntersectionRange(contents, text), range);
         if (contents.length > 0)
             [layoutManager addTemporaryAttributes:highlightContentColorDict forCharacterRange:contents];
     }
-    if ((experiment ? scrapBraceHighlighting : braceHighlighting) && highlightBracesColorDict)
+    if (braces && highlightBracesColorDict)
         for (NSNumber *location in (experiment ? scrapHighlightedBraceLocations : highlightedBraceLocations)) {
             NSUInteger brace = [location unsignedIntegerValue];
             if (NSLocationInRange(brace, range) && NSLocationInRange(brace, text))

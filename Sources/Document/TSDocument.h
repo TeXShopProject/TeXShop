@@ -332,6 +332,7 @@ enum RootCommand
 	// number of the last brace highlight and background flash, so that a reset scheduled earlier does nothing.
 	NSArray		*highlightedBraceLocations;
 	NSRange		highlightedContentRange;
+	NSUInteger	highlightedTextLength, highlightedGeneration;
 	NSUInteger	braceHighlightGeneration, braceFlashGeneration;
 	BOOL		warningGiven;
 	BOOL		omitShellEscape;
@@ -385,6 +386,7 @@ enum RootCommand
 	BOOL scrapLastInputIsDelete, scrapBraceHighlighting, scrapContentHighlighting;
 	NSArray *scrapHighlightedBraceLocations;
 	NSRange scrapHighlightedContentRange;
+	NSUInteger scrapHighlightedTextLength, scrapHighlightedGeneration;
 	NSUInteger scrapBraceHighlightGeneration, scrapBraceFlashGeneration;
 	
 	//Michael Witten: mfwitten@mit.edu
@@ -636,6 +638,8 @@ enum RootCommand
 - (void) showHideLineNumbers: sender;
 - (void) showHideInvisibleCharacters: sender;// added by Terada
 - (void) setTextView: (id)aView;
+- (void)resetHighlight:(id)sender;
+- (void)resetBackgroundColor:(id)sender;
 - (BOOL) isSplit;
 
 // endforsplit
