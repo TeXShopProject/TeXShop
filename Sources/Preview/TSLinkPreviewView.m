@@ -14,16 +14,20 @@ static const CGFloat TSLinkPreviewKeptMinimum = 20;
 // Page points around a line that still count as its text, so the cursor does not flicker
 // between lines.
 static const CGFloat TSLinkPreviewLineSlack = 2;
-// What the popup draws around its page grows and shrinks with the preview's magnification, as
-// the page in it does: these are page points, so they look the same on screen as the text in
-// the popup at any magnification, also for a popup made at another magnification (#14).
-// The page label in the lower right corner: white bold text on a gray capsule.
+// The page label in the lower right: white bold text on a gray capsule. Eleven points on
+// screen at 100% and above, the size of a popup opened at the current magnification. Below
+// 100% that size is larger, in page points, than the label drawn at 100%, and it then covers
+// the page or is dropped, so the label is never larger than it is at 100% (#14).
 static const CGFloat TSLinkPreviewLabelFontSize = 11;
+// A long label is not shrunk below this on screen. Anything smaller is a gray speck,
+// so the label is left out instead (#14).
+static const CGFloat TSLinkPreviewLabelMinimumScreenSize = 6;
 static const CGFloat TSLinkPreviewLabelMargin = 3;
-// The popup's corners, as the corners of current macOS popovers at 100%.
+// The popup's corners, in page points, so they grow and shrink with the page in the popup.
 static const CGFloat TSLinkPreviewCornerRadius = 6;
-// The black edge, which stays at least one pixel wide on screen.
-static const CGFloat TSLinkPreviewEdgeWidth = 1;
+// The black edge, in page points, so it grows and shrinks with the page. One page point
+// looked heavy; this is a little thinner, and it stays at least one pixel wide on screen (#14).
+static const CGFloat TSLinkPreviewEdgeWidth = 0.75;
 // A popup shows its linked page and, in the continuous displays, the next one (#14).
 #define TSLinkPreviewMaximumPages 2
 
@@ -174,19 +178,72 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
 - (void)drawPageLabelInRect:(NSRect)bounds
 {
     if (!self.pageLabel.length) return;
-    NSDictionary *attributes = @{NSFontAttributeName: [NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize],
-                                 NSForegroundColorAttributeName: NSColor.whiteColor};
-    NSSize size = [self.pageLabel sizeWithAttributes:attributes];
-    CGFloat height = ceil(size.height), radius = height / 2, margin = TSLinkPreviewLabelMargin;
-    NSRect capsule = NSMakeRect(NSMaxX(bounds) - margin - ceil(size.width) - 2 * radius, NSMinY(bounds) + margin,
-                                ceil(size.width) + 2 * radius, height);
-    if (NSWidth(capsule) > NSWidth(bounds) - 2 * margin || NSHeight(capsule) > NSHeight(bounds) - 2 * margin) return;
+    // `scale` is one screen point, in page points, and never more than one page point.
+    // Above 100% the label stays eleven points on screen. Below 100% it stays the size it
+    // has at 100%, which still fits a short popup near the bottom of the page (#14).
+    CGFloat unit = [self unitsPerScreenPoint];
+    CGFloat scale = MIN(unit, 1);
+    CGFloat fontSize = TSLinkPreviewLabelFontSize * scale;
+    // Six points on screen, and never above the size before shrinking. Below about 55%
+    // that size is already under six points, so the label is shown as it is or left out.
+    CGFloat fontFloor = MIN(fontSize, TSLinkPreviewLabelMinimumScreenSize * unit);
+    CGFloat margin = TSLinkPreviewLabelMargin * scale;
+    // The corners and the edge are in page points, so they grow on screen. A label on the
+    // screen-point margin sits in that curve and under the stroke. The capsule stays on the
+    // straight part of the frame (#14).
+    CGFloat edge = MAX(TSLinkPreviewEdgeWidth, [self unitsPerPixel]);
+    CGFloat inset = MAX(margin, TSLinkPreviewCornerRadius + edge);
+    CGFloat roomW = NSWidth(bounds) - 2 * inset, roomH = NSHeight(bounds) - 2 * inset;
+    // A fraction of a page point is many screen points at a high magnification. Reject
+    // only a room that is not there; the six-point floor decides whether the label fits.
+    if (!(roomW > 0) || !(roomH > 0)) return;
+    NSSize size = NSZeroSize;
+    CGFloat height = 0, radius = 0, drawn = 1;
+    NSRect capsule = NSZeroRect;
+    // One page point is many screen points at a high magnification. Round the capsule to
+    // screen pixels, or the round-up itself makes the label larger than the one at 100% (#14).
+    CGFloat px = [self unitsPerPixel];
+    if (!(px > 0)) px = 1;
+    // A short popup can still be too low for the 100% label once the corner is left clear.
+    // Shrink the type to the room instead of dropping the page information.
+    for (NSInteger attempt = 0; attempt < 12; attempt++) {
+        // The metrics of a fraction of a point do not stay in proportion, so measure the
+        // eleven-point font and scale that to the size being drawn.
+        NSSize sample = [self.pageLabel sizeWithAttributes:@{NSFontAttributeName:
+                         [NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize]}];
+        drawn = fontSize / TSLinkPreviewLabelFontSize;
+        size = NSMakeSize(sample.width * drawn, sample.height * drawn);
+        height = ceil(size.height / px) * px;
+        CGFloat textWidth = ceil(size.width / px) * px;
+        radius = height / 2;
+        capsule = NSMakeRect(NSMaxX(bounds) - inset - textWidth - height, NSMinY(bounds) + inset,
+                             textWidth + height, height);
+        if (NSWidth(capsule) <= roomW && NSHeight(capsule) <= roomH) break;
+        // A step that barely misses stalls on the rounded line height, so drop by a tenth
+        // then. Otherwise try the size that was measured to fit, and stop at the floor.
+        CGFloat fit = MIN(roomW / NSWidth(capsule), roomH / NSHeight(capsule));
+        CGFloat next = fontSize * fit;
+        if (!(next < fontSize * (CGFloat)0.99)) next = fontSize * (CGFloat)0.9;
+        if (!(next > 0) || !(next < fontSize)) return;
+        if (next < fontFloor) {
+            if (!(fontSize > fontFloor)) return;
+            next = fontFloor;
+        }
+        fontSize = next;
+    }
+    if (NSWidth(capsule) > roomW || NSHeight(capsule) > roomH) return;
     [NSGraphicsContext saveGraphicsState];
     [[NSGraphicsContext currentContext] setShouldAntialias:YES];
     [[NSColor colorWithWhite:0.55 alpha:0.8] setFill];
     [[NSBezierPath bezierPathWithRoundedRect:capsule xRadius:radius yRadius:radius] fill];
-    [self.pageLabel drawAtPoint:NSMakePoint(NSMinX(capsule) + radius, NSMinY(capsule) + (height - size.height) / 2)
-                 withAttributes:attributes];
+    // Draw the eleven-point font at `drawn`, so the glyphs match the measured capsule.
+    NSAffineTransform *glyph = [NSAffineTransform transform];
+    [glyph translateXBy:NSMinX(capsule) + radius yBy:NSMinY(capsule) + (height - size.height) / 2];
+    [glyph scaleBy:drawn];
+    [glyph concat];
+    [self.pageLabel drawAtPoint:NSZeroPoint withAttributes:@{NSFontAttributeName:
+        [NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize],
+        NSForegroundColorAttributeName: NSColor.whiteColor}];
     [NSGraphicsContext restoreGraphicsState];
 }
 
