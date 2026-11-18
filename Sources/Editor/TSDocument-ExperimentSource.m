@@ -253,9 +253,10 @@ static NSRange TSExperimentRange(NSTextView *view, NSRange range)
 
 - (void)resetExperimentBackgroundColor:(id)sender
 {
+    scrapContentHighlighting = NO;
     [scrapTextView.layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName
                                         forCharacterRange:NSMakeRange(0, scrapTextView.string.length)];
-    scrapContentHighlighting = NO;
+    [self colorizeExperimentSource];
 }
 
 // After the flash for an unmatched brace, the theme's background again.

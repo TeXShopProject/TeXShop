@@ -5664,13 +5664,18 @@ if ( ! skipTextWindow) {
 // added by Terada (- (void)resetBackgroundColor:)
 - (void)resetBackgroundColor:(id)sender
 {
+	contentHighlighting = NO;
+	// This removes the backgrounds that coloring gives too (fullwidth characters, the
+	// active line); the visible text gets them again.
 	if(windowIsSplit){
 		[[textView1 layoutManager] removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:NSMakeRange(0, [[textView1 textStorage] length])];
 		[[textView2 layoutManager] removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:NSMakeRange(0, [[textView2 textStorage] length])];
+		[self colorizeVisibleAreaInTextView:textView1];
+		[self colorizeVisibleAreaInTextView:textView2];
 	}else{
 		[[textView layoutManager] removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:NSMakeRange(0, [[textView textStorage] length])];
+		[self colorizeVisibleAreaInTextView:textView];
 	}
-	contentHighlighting = NO;
 }
 
 // added by Terada (- (void)resetBackgroundColorOfTextView:)
