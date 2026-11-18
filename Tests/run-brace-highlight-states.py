@@ -30,7 +30,9 @@
   kind of coloring again (typing, pasting, Undo, resizing, scrolling, a change of
   settings or theme, commenting out, the active line, highlighted contents, the flash),
   also when the switch changes while text is composed and on lines out of sight; on
-  again, they have the theme's colors again.
+  again, they have the theme's colors again. Syntax coloring of the document turned
+  off removes the fullwidth colors too, whichever is turned off first; turned on
+  again, the switch decides.
 
 All this in either half of a split window and in the Experiment source, with "Flash"
 and "Always" highlighting. The production categories TSDocument (SyntaxHighlighting) and
@@ -109,6 +111,8 @@ MUTATIONS = {
     'line-removal-wipes-fullwidth': (SYNTAX,
         '    TSRestoreFullwidthBackground(layoutManager, TSVisibleCharacterRange(aTextView));\n    [self restoreBraceHighlightsIn:aTextView range:TSVisibleCharacterRange(aTextView)];\n}', '}'),
     # Highlight Fullwidth Letters and Symbols.
+    'syntax-off-keeps-fullwidth': (SYNTAX, '\t\tTSRemoveFullwidthBackground([textView1 layoutManager], theRange);\n\t\tTSRemoveFullwidthBackground([textView2 layoutManager], theRange);\n\t\tTSRemoveFullwidthBackground([scrapTextView layoutManager], NSMakeRange(0, scrapTextView.string.length));\n', ''),
+    'syntax-off-loses-active-line': (SYNTAX, '\t\tif (self.syntaxcolorEntry) {\n\t\t\t[self cursorMoved:textView1];', '\t\tif (NO) {\n\t\t\t[self cursorMoved:textView1];'),
     'fullwidth-switch-ignored': (SYNTAX, '[SUD boolForKey:HighlightFullwidthSymbolsKey] &&\n        [self.syntaxColorScheme', '[self.syntaxColorScheme'),
     'fullwidth-not-posted': (EFFECTS, 'CheckParenEnabledKey, HighlightFullwidthSymbolsKey, ', 'CheckParenEnabledKey, '),
     'fullwidth-not-observed': (DOCUMENT, 'addObserver:self selector:@selector(colorizeAll)', 'addObserver:self selector:@selector(description)'),
@@ -138,7 +142,7 @@ def strip_imports(source):
 
 document = text[DOCUMENT]
 DOCUMENT_METHODS = [
-    '- (IBAction)toggleSyntaxColorEntry:sender {', '- (IBAction)toggleBlockCursor:sender {',
+    '- (IBAction)toggleSyntaxColor:sender {', '- (IBAction)toggleSyntaxColorEntry:sender {', '- (IBAction)toggleBlockCursor:sender {',
     '- (void) applyInvisibleCharactersShowing', '- (void) showHideInvisibleCharacters: sender',
     '- (void) showHideLineNumbers: sender', '- (void)setDocumentFontFromPreferences:(NSNotification *)notification',
     '- (void)fixUpTabs {', '- (void)setLineBreakMode:(id)sender', '- (void) flipIndexColor: (NSInteger)state',
@@ -365,6 +369,7 @@ extern NSColor *InvisibleColor;
 - (void)showHideLineNumbers:(id)sender;
 - (void)flipIndexColor:(NSInteger)state;
 - (void)showIndexColor:(id)sender;
+- (IBAction)toggleSyntaxColor:(id)sender;
 - (IBAction)toggleSyntaxColorEntry:(id)sender;
 - (IBAction)toggleBlockCursor:(id)sender;
 - (IBAction)toggleXML:(id)sender;
@@ -1282,6 +1287,39 @@ int main(void) { @autoreleasepool {
                 }
                 Switch(YES);
                 Check(Wide() && [Background(view, Where(@"\uff10")) isEqual:RGB(wideBack)], NAME("on again after the edits, fullwidth characters have their colors"));
+                Switch(NO);
+
+                // Syntax coloring of the document (Source menu) turned off and on, before or after the switch,
+                // with and without the active line: off, the text has no fullwidth colors nor their marks, and a
+                // fullwidth character on the active line has the line's color; on again, the switch decides.
+                for (int entry = 0; entry < 2; entry++)
+                    for (int order = 0; order < 4; order++) {
+                        void (^Syntax)(BOOL) = ^(BOOL on) { if (doc.syntaxColor != on) [doc toggleSyntaxColor:nil]; Spin(0.02); };
+                        Syntax(YES);
+                        Switch(order != 2);
+                        doc.syntaxcolorEntry = entry;
+                        Show(text);
+                        [view setSelectedRange:NSMakeRange(1, 0)]; Spin(0.02);
+                        for (NSTextView *v in views) [doc cursorMoved:v];
+                        BOOL ok = YES;
+                        if (order == 1) { Switch(NO); ok &= Plain(); }
+                        Syntax(NO);
+                        ok &= Plain() && (!entry || Background(view, Where(@"x\uff0by")) != nil);
+                        if (order == 0) { Switch(NO); ok &= Plain(); }
+                        if (order == 2) { Switch(YES); ok &= Plain(); }
+                        Syntax(YES);
+                        ok &= (order == 0 || order == 1) ? Plain() : Wide();
+                        Switch(YES);
+                        ok &= Wide();
+                        const char *names[] = {"syntax coloring off, then the switch off", "the switch off, then syntax coloring off",
+                                               "switch off, syntax coloring off, switch on", "syntax coloring off and on with the switch on"};
+                        char name[240];
+                        snprintf(name, sizeof name, "%s %s%s: no fullwidth colors while syntax coloring is off, the switch decides once it is on",
+                                 inExperiment ? "Experiment:" : "source:", names[order], entry ? ", with the active line" : "");
+                        Check(ok, name);
+                        doc.syntaxcolorEntry = NO;
+                        for (NSTextView *v in views) [doc removeCurrentLineColor:v];
+                    }
                 Switch(NO);
 
                 // The active line: a fullwidth character on it has the line's color, as its neighbors.

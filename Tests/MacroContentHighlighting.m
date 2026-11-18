@@ -237,5 +237,24 @@ int main(int argc, char **argv) { @autoreleasepool {
     [editor applyContentAppearance:nil];
     Spin();
     REQUIRE(Same(ColorAt(@"\uff12"), wide[NSForegroundColorAttributeName]) && Same(At(@"\uff11")[NSBackgroundColorAttributeName], wide[NSBackgroundColorAttributeName]));
+
+    // Syntax coloring off in Settings: no fullwidth colors, whatever the switch; on again, the switch decides.
+    for (int order = 0; order < 2; order++) {
+        [defaults setBool:YES forKey:HighlightFullwidthSymbolsKey];
+        [editor applyContentAppearance:nil]; Spin();
+        REQUIRE(At(@"\uff11")[NSBackgroundColorAttributeName] != nil);
+        if (order) { [defaults setBool:NO forKey:HighlightFullwidthSymbolsKey]; [editor applyContentAppearance:nil]; Spin(); }
+        [defaults setBool:NO forKey:SyntaxColoringEnabledKey];
+        [editor applyContentAppearance:nil]; Spin();
+        REQUIRE(Plain(@"\uff11") && At(@"\uff11")[NSBackgroundColorAttributeName] == nil);
+        if (!order) { [defaults setBool:NO forKey:HighlightFullwidthSymbolsKey]; [editor applyContentAppearance:nil]; Spin(); }
+        REQUIRE(Plain(@"\uff11") && At(@"\uff11")[NSBackgroundColorAttributeName] == nil);
+        [defaults setBool:YES forKey:SyntaxColoringEnabledKey];
+        [editor applyContentAppearance:nil]; Spin();
+        REQUIRE(Plain(@"\uff11") && At(@"\uff11")[NSBackgroundColorAttributeName] == nil && Same(ColorAt(@"\\emph"), RoleColor(dark, TSSyntaxRoleCommand)));
+        [defaults setBool:YES forKey:HighlightFullwidthSymbolsKey];
+        [editor applyContentAppearance:nil]; Spin();
+        REQUIRE(Same(ColorAt(@"\uff11"), wide[NSForegroundColorAttributeName]) && Same(At(@"\uff11")[NSBackgroundColorAttributeName], wide[NSBackgroundColorAttributeName]));
+    }
     puts("PASS: macro contents are colored as the source, follow edits, composing, appearance and Settings (fullwidth highlight too), and keep other colors");
 } return 0; }

@@ -76,7 +76,17 @@ int main(int argc, char **argv) { @autoreleasepool {
                  [[[TSColorSupport sharedInstance] colorForKey:@"EditorInsertionPoint" fromDictionary:partial isWindowDark:NO] colorWithAlphaComponent:1]));
     liteColors = saved;
 
-    // Syntax coloring off: no scheme, the theme's text and background still.
+    // Syntax coloring off: no scheme, the theme's text and background still, and no fullwidth colors whatever the
+    // switch of fullwidth letters and symbols; on again, the switch decides.
+    [defaults setBool:NO forKey:SyntaxColoringEnabledKey];
+    for (NSNumber *wide in @[@YES, @NO]) {
+        [defaults setBool:wide.boolValue forKey:HighlightFullwidthSymbolsKey];
+        REQUIRE(TSAdvancedFindFieldStyle.provider(NO).scheme == nil && !TSAdvancedFindFieldStyle.provider(NO).texOptions.marksFullwidthSymbols);
+    }
+    [defaults setBool:YES forKey:SyntaxColoringEnabledKey];
+    REQUIRE(!TSAdvancedFindFieldStyle.provider(NO).texOptions.marksFullwidthSymbols);
+    [defaults removeObjectForKey:HighlightFullwidthSymbolsKey];
+    REQUIRE(TSAdvancedFindFieldStyle.provider(NO).texOptions.marksFullwidthSymbols);
     [defaults setBool:NO forKey:SyntaxColoringEnabledKey];
     TSAdvancedFindFieldStyle *off = TSAdvancedFindFieldStyle.provider(NO);
     REQUIRE(off.scheme == nil && Same(off.textColor, Opaque(liteColors, @"EditorText")) && Same(off.backgroundColor, Opaque(liteColors, @"EditorBackground")));

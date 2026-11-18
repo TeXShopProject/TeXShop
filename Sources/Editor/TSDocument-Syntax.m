@@ -555,6 +555,17 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
 		[[textView2 layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:theRange];
 		[[scrapTextView layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName
 			forCharacterRange:NSMakeRange(0, scrapTextView.string.length)];
+		// The background that coloring gave fullwidth characters goes too; other backgrounds
+		// stay, and the active line is drawn again where a fullwidth background covered it.
+		TSRemoveFullwidthBackground([textView1 layoutManager], theRange);
+		TSRemoveFullwidthBackground([textView2 layoutManager], theRange);
+		TSRemoveFullwidthBackground([scrapTextView layoutManager], NSMakeRange(0, scrapTextView.string.length));
+		if (self.syntaxcolorEntry) {
+			[self cursorMoved:textView1];
+			if (windowIsSplit)
+				[self cursorMoved:textView2];
+			[self refreshExperimentCurrentLine];
+		}
 	}
 }
 
