@@ -10,7 +10,7 @@ import argparse, os, subprocess, tempfile
 from source_tree import include_args
 from experiment_preview_source import prelude as experiment_preview_prelude, sources as experiment_preview_sources
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['source-hook', 'pdf-hook', 'defaults-hook', 'reload-hook', 'menu-validation', 'filter-gamma', 'source-alpha', 'preview-alpha', 'paper-invert', 'paper-print', 'paper-lens'])
+parser.add_argument('--mutation', choices=['source-hook', 'pdf-hook', 'defaults-hook', 'reload-hook', 'menu-validation', 'filter-gamma', 'source-alpha', 'preview-alpha', 'paper-invert', 'paper-print', 'paper-lens', 'late-scroller'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root/'Sources/Editor/ScrapTextView.m').read_text(encoding='latin1')
@@ -44,6 +44,10 @@ if args.mutation == 'paper-print':
     pdf = pdf.replace('if (screen) TSFillPreviewPaper(', 'TSFillPreviewPaper(')
 if args.mutation == 'paper-lens':
     pdf = pdf.replace('overlay.magnifiedPaperColor = self.previewPaperColor;', '')
+if args.mutation == 'late-scroller':
+    old = '    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);\n'
+    assert pdf.count(old) == 3, 'late-scroller'
+    pdf = pdf.replace(old, '')
 pdf = pdf.replace('#import "TSPreviewAppearance.h"', appearance)
 pdf = experiment_preview_prelude(root) + pdf
 prefix = r'''
@@ -271,6 +275,51 @@ int main(void) { @autoreleasepool {
     check(!inverted(pdf) && !inverted(secondPDF), @"System choice propagates to all Experiment previews");
     NSApp.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua]; pump();
     check(inverted(pdf) && inverted(secondPDF), @"System choice follows later system change");
+    // A horizontal scroller PDFKit creates only after the appearance was chosen.
+    {
+        ScrapPDFKitView *zoom = [[ScrapPDFKitView alloc] initWithFrame:NSMakeRect(0, 0, 750, 550)];
+        NSWindow *zoomWindow = window(zoom);
+        zoom.displayMode = kPDFDisplaySinglePage;
+        zoom.autoScales = NO;
+        zoom.document = document();
+        zoom.scaleFactor = 0.5;
+        pump();
+        [testDefaults setInteger:2 forKey:TSPreviewAppearanceModeKey];
+        pump();
+        NSScrollView *scroll = zoom.documentView.enclosingScrollView;
+        check(!scroll.hasHorizontalScroller, @"Experiment starts without a horizontal scroller");
+        zoom.scaleFactor = 4;
+        pump();
+        NSScroller *bar = scroll.horizontalScroller;
+        check(scroll.hasHorizontalScroller && bar.contentFilters.count == 3
+              && bar.appearance == [NSAppearance appearanceNamed:NSAppearanceNameAqua],
+              @"a horizontal scroller that appears while the Experiment is inverted is inverted too");
+        check(scroll.verticalScroller.contentFilters.count == 3, @"the vertical scroller stays inverted");
+        check(scroll.appearance == nil && scroll.contentFilters.count == 0, @"the new scroller does not put the appearance on the scroll view");
+        for (NSView *subview in scroll.subviews)
+            if (TSPreviewSubviewIsToolbarPocket(subview))
+                check(subview.appearance == nil && subview.contentFilters.count == 0, @"the pocket stays untouched when the scroller appears");
+        [zoomWindow setContentSize:NSMakeSize(160, 480)];
+        pump();
+        check(scroll.horizontalScroller.contentFilters.count == 3, @"narrowing the inverted Experiment keeps the scroller inverted");
+        ScrapPDFKitView *plain = [[ScrapPDFKitView alloc] initWithFrame:NSMakeRect(0, 0, 750, 550)];
+        NSWindow *plainWindow = window(plain);
+        plain.displayMode = kPDFDisplaySinglePage;
+        plain.autoScales = NO;
+        plain.document = document();
+        plain.scaleFactor = 0.5;
+        pump();
+        [testDefaults setInteger:1 forKey:TSPreviewAppearanceModeKey];
+        pump();
+        plain.scaleFactor = 4;
+        pump();
+        NSScrollView *plainScroll = plain.documentView.enclosingScrollView;
+        check(plainScroll.hasHorizontalScroller && plainScroll.horizontalScroller.contentFilters.count == 0
+              && plainScroll.horizontalScroller.appearance == [NSAppearance appearanceNamed:NSAppearanceNameAqua],
+              @"a horizontal scroller that appears on a light Experiment is light and not inverted");
+        [zoomWindow close];
+        [plainWindow close];
+    }
     check(TSThemeWindowAlpha(@{}, @"SourceAlpha")==1, @"missing alpha stays opaque");
     check(TSThemeWindowAlpha(@{@"SourceAlpha":@[@0]}, @"SourceAlpha")==1, @"malformed alpha stays opaque");
     check(!sourceWindow.isVisible && !pdfWindow.isVisible && !secondWindow.isVisible, @"no windows displayed");

@@ -2,6 +2,7 @@
 #pragma once
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
+#import <objc/runtime.h>
 
 static NSString * const TSPreviewAppearanceModeKey = @"TSPreviewAppearanceMode";
 static NSString * const TSPreviewAppearanceToolbarID = @"TSPreviewAppearance";
@@ -126,6 +127,10 @@ static inline BOOL TSPreviewSubviewIsToolbarPocket(NSView *view) {
     return [NSStringFromClass(view.class) containsString:@"Pocket"];
 }
 
+// The key is private to each file that includes this header. The preview that applies
+// the appearance and the preview that meets a new scroller are the same file.
+static void *TSPreviewInversionStateKey = &TSPreviewInversionStateKey;
+
 // Share the same PDF page treatment between the document and Experiment previews.
 // The appearance chosen for the preview applies to the pages and the area around
 // them. It does not apply to the window frame, which keeps the system's appearance.
@@ -146,4 +151,14 @@ static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert
         subview.appearance = light;
         subview.contentFilters = invert ? TSPreviewInversionFilters() : @[];
     }
+    // A scroller PDFKit adds later, on a magnification or a resize, was not in this list.
+    objc_setAssociatedObject(scrollView, &TSPreviewInversionStateKey, @(invert),
+        OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+// Gives a scroller that appeared after the choice was made the same treatment.
+static inline void TSReapplyPreviewInversion(NSScrollView *scrollView) {
+    NSNumber *invert = objc_getAssociatedObject(scrollView, &TSPreviewInversionStateKey);
+    if (!invert) return;
+    TSApplyPreviewInversion(scrollView, invert.boolValue);
 }

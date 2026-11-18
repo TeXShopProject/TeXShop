@@ -11,22 +11,35 @@ The windows are never ordered on screen. Defaults stay in memory.
 """
 import argparse, os, subprocess, tempfile
 from pathlib import Path
+from production_fragments import method, verify_embedded
 from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['scroll-appearance'])
+parser.add_argument('--mutation', choices=['scroll-appearance', 'late-scroller'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 header = (root / 'Sources/Preview/TSPreviewAppearance.h').read_text()
+view_source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
+view_methods = [method(view_source, signature) for signature in (
+    '- (void)setScaleFactor:(CGFloat)scale', '- (void)setFrameSize:(NSSize)newSize')]
+view_text = '\n'.join(view_methods)
 if args.mutation == 'scroll-appearance':
     old = '    scrollView.appearance = nil;\n'
     assert header.count(old) == 1, args.mutation
     header = header.replace(old, '    scrollView.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];\n', 1)
+elif args.mutation == 'late-scroller':
+    old = '    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);\n'
+    assert view_text.count(old) == 2, args.mutation
+    view_text = view_text.replace(old, '')
 
 program = r'''
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 #import "TestAppKitIsolation.h"
+#import "TSContentZoom.h"
+#import "TSPreviewScrollerKeeper.h"
+#define NEW_PDF_FIT_TO_NONE 2
+#define NEW_PDF_FIT_TO_CONTENT_WIDTH 6
 HEADER
 static int checks;
 static void check(BOOL ok, NSString *message) {
@@ -84,6 +97,49 @@ static void CheckChrome(NSWindow *window, PDFView *pdf, NSString *systemName, BO
     }
     check(pocket && around, @"the pocket and the area around the pages are both present");
 }
+@interface ChromeDocumentPreview : PDFView {
+    BOOL _fittingContentWidth;
+    NSInteger resizeOption;
+}
+- (void)fitContentWidthKeepingTop:(TSContentTop)top;
+@end
+@implementation ChromeDocumentPreview
+- (void)fitContentWidthKeepingTop:(TSContentTop)top {}
+VIEWMETHODS
+@end
+static void CheckLateBar(PDFView *pdf, BOOL inverted, NSString *what) {
+    [pdf layoutSubtreeIfNeeded];
+    NSScrollView *scroll = pdf.documentView.enclosingScrollView;
+    NSScroller *bar = scroll.horizontalScroller;
+    check(scroll.hasHorizontalScroller && bar != nil, [what stringByAppendingString:@": the horizontal scroller is present"]);
+    check(bar.contentFilters.count == (inverted ? 3 : 0), [what stringByAppendingString:@": the new scroller has the preview's filters"]);
+    check(bar.appearance == [NSAppearance appearanceNamed:NSAppearanceNameAqua], [what stringByAppendingString:@": the new scroller is light"]);
+    check(scroll.appearance == nil && scroll.contentFilters.count == 0, [what stringByAppendingString:@": the scroll view stays with the system"]);
+    check(scroll.contentView.contentFilters.count == (inverted ? 3 : 0), [what stringByAppendingString:@": the pages keep their filters"]);
+    for (NSView *subview in scroll.subviews)
+        if (TSPreviewSubviewIsToolbarPocket(subview))
+            check(subview.appearance == nil && subview.contentFilters.count == 0, [what stringByAppendingString:@": the pocket stays untouched"]);
+    NSView *titlebar = FindClass(pdf.window.contentView.superview, @"NSTitlebarView");
+    check([Match(titlebar.effectiveAppearance) isEqual:NSAppearanceNameDarkAqua], [what stringByAppendingString:@": the title bar stays dark"]);
+}
+static ChromeDocumentPreview *LatePreview(void) {
+    NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 750, 550)
+        styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable | NSWindowStyleMaskMiniaturizable
+        backing:NSBackingStoreBuffered defer:NO];
+    window.toolbarStyle = NSWindowToolbarStyleExpanded;
+    window.toolbar = [[NSToolbar alloc] initWithIdentifier:@"TSPreviewChromeLate"];
+    window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+    ChromeDocumentPreview *pdf = [[ChromeDocumentPreview alloc] initWithFrame:window.contentView.bounds];
+    pdf.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+    pdf.autoScales = NO;
+    pdf.displayMode = kPDFDisplaySinglePage;
+    pdf.document = Document();
+    [window.contentView addSubview:pdf];
+    [window layoutIfNeeded];
+    [pdf layoutSubtreeIfNeeded];
+    pdf.scaleFactor = 0.5;
+    return pdf;
+}
 int main(void) {
     @autoreleasepool {
         TSInstallAppKitIsolation();
@@ -119,17 +175,38 @@ int main(void) {
         CheckChrome(window, pdf, NSAppearanceNameAqua, YES);
         TSApplyPreviewInversion(scroll, NO);
         CheckChrome(window, pdf, NSAppearanceNameAqua, NO);
+
+        NSApp.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
+        ChromeDocumentPreview *magnified = LatePreview();
+        TSApplyPreviewInversion(magnified.documentView.enclosingScrollView, YES);
+        check(!magnified.documentView.enclosingScrollView.hasHorizontalScroller, @"magnifying starts without a horizontal scroller");
+        magnified.scaleFactor = 4;
+        CheckLateBar(magnified, YES, @"magnifying the document preview");
+        ChromeDocumentPreview *narrowed = LatePreview();
+        narrowed.scaleFactor = 1;
+        TSApplyPreviewInversion(narrowed.documentView.enclosingScrollView, YES);
+        check(!narrowed.documentView.enclosingScrollView.hasHorizontalScroller, @"narrowing starts without a horizontal scroller");
+        [narrowed setFrameSize:NSMakeSize(120, 550)];
+        CheckLateBar(narrowed, YES, @"narrowing the document preview");
+        ChromeDocumentPreview *plain = LatePreview();
+        TSApplyPreviewInversion(plain.documentView.enclosingScrollView, NO);
+        plain.scaleFactor = 4;
+        CheckLateBar(plain, NO, @"magnifying a light document preview");
         printf("PASS: %d preview window chrome checks\n", checks);
     }
     return 0;
 }
 '''
-program = program.replace('HEADER', header)
+program = program.replace('HEADER', header).replace('VIEWMETHODS', view_text)
+fragments = [('complete method: ' + item.split('\n', 1)[0], view_source, item) for item in view_methods]
+if not args.mutation:
+    verify_embedded(program, fragments)
 with tempfile.TemporaryDirectory(prefix='texshop-preview-chrome-') as temp:
     temp = Path(temp)
     (temp / 'test.m').write_text(program, encoding='utf-8')
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-I', str(root / 'Tests'), *include_args(root),
-                    '-framework', 'Cocoa', '-framework', 'Quartz', str(temp / 'test.m'), '-o', str(temp / 'test')], check=True)
+                    '-framework', 'Cocoa', '-framework', 'Quartz', str(temp / 'test.m'),
+                    str(root / 'Sources/Preview/TSPreviewScrollerKeeper.m'), '-o', str(temp / 'test')], check=True)
     (temp / 'home/Library/Preferences').mkdir(parents=True)
     result = subprocess.run([str(temp / 'test')], capture_output=True, text=True, timeout=60,
                             env=dict(os.environ, HOME=str(temp / 'home'), CFFIXED_USER_HOME=str(temp / 'home')))

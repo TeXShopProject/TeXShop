@@ -34,6 +34,7 @@ program=r'''
 #import "MemoryDefaults.h"
 #import "TSPrefPreviewController.h"
 #import "TSPreviewScrollerKeeper.h"
+#import "TSPreviewAppearance.h"
 static NSUserDefaults *defaults;
 #define SUD defaults
 static NSStringEncoding NSISOLatin9StringEncoding = 0x8000020f;
@@ -283,7 +284,7 @@ with tempfile.TemporaryDirectory(prefix='TeXShop-layout-test-') as tmp:
  for l in ('en','ja'):
   res=app/f'Contents/Resources/{l}.lproj';res.mkdir(parents=True);shutil.copy(root/f'Resources/Interfaces/{l}.lproj/ToolbarItems.strings',res)
  source=Path(tmp)/'Test.m';source.write_text(program)
- subprocess.run(['xcrun','clang','-fobjc-arc','-fmodules',*include_args(root),'-I'+str(root/'Tests'),'-framework','Cocoa','-framework','PDFKit',str(source),*map(str,sources(root,['Preview'])),str(root/'Sources/Preview/TSPreviewScrollerKeeper.m'),'-o',str(mac/'LayoutTest')],check=True)
+ subprocess.run(['xcrun','clang','-fobjc-arc','-fmodules',*include_args(root),'-I'+str(root/'Tests'),'-framework','Cocoa','-framework','Quartz','-framework','PDFKit',str(source),*map(str,sources(root,['Preview'])),str(root/'Sources/Preview/TSPreviewScrollerKeeper.m'),'-o',str(mac/'LayoutTest')],check=True)
  fixture=Path(tmp)/'Fixtures';fixture.mkdir()
  nib=next(b for b in bundles(root,fixture,names=['Preview']) if b.stem==('Base' if lang=='en' else lang))
  snapshot=next((a.split('=',1)[1] for a in sys.argv if a.startswith('--snapshots=')),None)

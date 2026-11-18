@@ -759,10 +759,25 @@ NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CG
     [pasteboard setData:data forType:kind];
 }
 
+- (void)setScaleFactor:(CGFloat)scale
+{
+    [super setScaleFactor:scale];
+    // PDFKit may add the horizontal scroller during this change.
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
+}
+
+- (void)setFrameSize:(NSSize)newSize
+{
+    [super setFrameSize:newSize];
+    // A narrower view can bring in a horizontal scroller after the appearance was chosen.
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
+}
+
 - (void)experimentScaleChanged:(NSNotification *)notification
 {
     // The rubber band is drawn at the old scale; select again after zooming.
     [self clearExperimentSelection];
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
 @end

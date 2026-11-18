@@ -190,6 +190,8 @@
     TSPreviewChangeScale(self, ^{ [super setScaleFactor: scale]; });
     if (!keep)
         resizeOption =  NEW_PDF_FIT_TO_NONE;
+    // PDFKit may add the horizontal scroller during this change.
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
 // Fit to Content Width (TSContentZoom.h): the content of the pages fills the width of the view.
@@ -266,13 +268,15 @@
         fabs(newSize.width - NSWidth(self.frame)) >= 0.5;
     if (!refit) {
         TSPreviewChangeSize(self, ^{ [super setFrameSize:newSize]; });
-        return;
+    } else {
+        TSContentTop top = TSContentTopOf(self);
+        PDFPage *topPage = top.page;
+        [super setFrameSize:newSize];
+        top.page = topPage;
+        [self fitContentWidthKeepingTop:top];
     }
-    TSContentTop top = TSContentTopOf(self);
-    PDFPage *topPage = top.page;
-    [super setFrameSize:newSize];
-    top.page = topPage;
-    [self fitContentWidthKeepingTop:top];
+    // A narrower view can bring in a horizontal scroller after the appearance was chosen.
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
 

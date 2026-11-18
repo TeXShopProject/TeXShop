@@ -61,6 +61,7 @@ program = r'''
 #import <PDFKit/PDFKit.h>
 #import "TestAppKitIsolation.h"
 #import "TSPreviewScrollerKeeper.h"
+#import "TSPreviewAppearance.h"
 ZOOMHEADER
 #define PDF_MAX_SCALE 2000
 enum { NEW_PDF_ACTUAL_SIZE = 1, NEW_PDF_FIT_TO_NONE = 2, NEW_PDF_FIT_TO_WINDOW = 3, NEW_PDF_FIT_TO_CONTENT_WIDTH = 6 };
@@ -394,7 +395,7 @@ if not args.mutation:
 with tempfile.TemporaryDirectory() as temp:
     temp = Path(temp)
     (temp / 'test.m').write_text(program, encoding='utf-8')
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit',
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'Quartz', '-framework', 'PDFKit',
                     '-I', str(root / 'Tests'), *include_args(root), str(temp / 'test.m'),
                     str(root / 'Sources/Preview/TSPreviewScrollerKeeper.m'), '-o', str(temp / 'test')], check=True)
     result = subprocess.run([str(temp / 'test')], capture_output=True, text=True, timeout=600)
