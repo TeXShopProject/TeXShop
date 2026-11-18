@@ -41,12 +41,24 @@ static inline void TSDeliverCompletionKeyToInputMethod(NSView *view, void (NS_NO
     TSCompletionKeyComposingView = was;
 }
 
+// A key that does not start during composition is handled by the view as usual, even
+// while an outer key is still being delivered to that view's input method: its commands
+// are not dropped. The outer delivery is put back afterwards.
+static inline void TSHandleKeyOutsideComposition(NSView *view, void (NS_NOESCAPE ^handle)(void))
+{
+    NSView *was = TSCompletionKeyComposingView;
+    if (was == view) TSCompletionKeyComposingView = nil;
+    handle();
+    TSCompletionKeyComposingView = was;
+}
+
 // The key as completion compares it: Shift-Tab arrives as Backtab (U+0019), which is
 // the Tab trigger with Shift, so it goes back through the candidates as Shift-Escape does.
+// Only the physical Tab key: Control-Y also arrives as U+0019 and stays itself (yank:).
 static inline NSString *TSCompletionTypedKey(NSEvent *event)
 {
     NSString *characters = event.characters;
-    if (characters.length == 1 && [characters characterAtIndex:0] == 0x19) return @"\t";
+    if (event.keyCode == kVK_Tab && characters.length == 1 && [characters characterAtIndex:0] == 0x19) return @"\t";
     return characters;
 }
 

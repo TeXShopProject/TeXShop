@@ -176,10 +176,13 @@ NSString *g_commandCompletionChar;
 @end
 @implementation SourceTextView
 @@DOCOMMAND_SOURCE@@
-- (void)keyDown:(NSEvent *)theEvent
+@@KEYDOWN_SOURCE@@
+// Stands for the production handleKeyDown: (completion, marks, brackets): Escape and Tab
+// count as completions, "d" deletes backward through a command, other keys go to AppKit.
+- (void)handleKeyDown:(NSEvent *)theEvent
 {
-@@COMPOSITION_SOURCE@@
     if ([theEvent.charactersIgnoringModifiers isEqual:@"\033"] || [theEvent.charactersIgnoringModifiers isEqual:@"\t"]) { self.completions++; return; }
+    if ([theEvent.charactersIgnoringModifiers isEqual:@"d"]) { [self doCommandBySelector:@selector(deleteBackward:)]; return; }
     [super keyDown: theEvent];
 }
 @end
@@ -223,6 +226,13 @@ static void CheckComposition(void) {
           [TSCompletionTypedKey(Key(panel, 48, @"\t", @"\t", 0)) isEqual:@"\t"] &&
           [TSCompletionTypedKey(Key(panel, 53, @"\033", @"\033", NSEventModifierFlagShift)) isEqual:@"\033"],
           @"Shift-Tab is compared as Tab with Shift");
+    // Control-Y also arrives as U+0019: it is not Shift-Tab.
+    check([TSCompletionTypedKey(Key(panel, 16, @"\031", @"y", NSEventModifierFlagControl)) isEqual:@"\031"], @"Control-Y stays itself");
+    // A new key that does not start during composition keeps its commands, even while an outer
+    // key is still being delivered to the same view.
+    text.string = @"ab"; text.selectedRange = NSMakeRange(2, 0);
+    TSDeliverCompletionKeyToInputMethod(text, ^{ [text keyDown:Key(panel, 2, @"d", @"d", 0)]; });
+    check([text.string isEqual:@"a"], @"a nested key outside composition is handled by the same view");
     // Only the view being delivered to drops commands; another text view handles them.
     SourceTextView *second = [[SourceTextView alloc] initWithFrame:NSMakeRect(0, 0, 300, 100)];
     [content addSubview:second];

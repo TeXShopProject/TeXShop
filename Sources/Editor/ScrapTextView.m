@@ -579,7 +579,20 @@
     [super keyDown: theEvent];
 }
 
+// Escape and Tab during composition go to the input method (TSCompletionKeys.h); any
+// other key is handled by handleKeyDown:, with its commands kept even while an outer
+// key is still being delivered to this view.
 - (void)keyDown:(NSEvent *)theEvent
+{
+    // During composition, Escape and Tab with any modifier belong to the input method.
+    if ([self hasMarkedText] && TSIsCompletionFamilyKey(theEvent)) {
+        TSDeliverCompletionKeyToInputMethod(self, ^{ [super keyDown: theEvent]; });
+        return;
+    }
+    TSHandleKeyOutsideComposition(self, ^{ [self handleKeyDown: theEvent]; });
+}
+
+- (void)handleKeyDown:(NSEvent *)theEvent
 {
 	
 	// FIXME: Using static variables like this is *EVIL*
@@ -610,11 +623,6 @@
     // The panel follows the trigger key chosen in Settings, as the source window does.
     NSString *g_commandCompletionCharTab = g_commandCompletionChar;
 
-    // During composition, Escape and Tab with any modifier belong to the input method.
-    if ([self hasMarkedText] && TSIsCompletionFamilyKey(theEvent)) {
-        TSDeliverCompletionKeyToInputMethod(self, ^{ [super keyDown: theEvent]; });
-        return;
-    }
 	
 	if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionCharTab] &&
 		[SUD boolForKey: CommandCompletionAlternateMarkShortcutKey] &&

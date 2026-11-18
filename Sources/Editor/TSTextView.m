@@ -2251,7 +2251,20 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
     [super doCommandBySelector:selector];
 }
 
+// Escape and Tab during composition go to the input method (TSCompletionKeys.h); any
+// other key is handled by handleKeyDown:, with its commands kept even while an outer
+// key is still being delivered to this view.
 - (void)keyDown:(NSEvent *)theEvent
+{
+    // During composition, Escape and Tab with any modifier belong to the input method.
+    if ([self hasMarkedText] && TSIsCompletionFamilyKey(theEvent)) {
+        TSDeliverCompletionKeyToInputMethod(self, ^{ [super keyDown: theEvent]; });
+        return;
+    }
+    TSHandleKeyOutsideComposition(self, ^{ [self handleKeyDown: theEvent]; });
+}
+
+- (void)handleKeyDown:(NSEvent *)theEvent
 {
     
     // The following is from Antti Knowles, antti.knowles@unige.ch
@@ -2295,11 +2308,6 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
     BOOL boolResult;
 	unichar c;
     
-    // During composition, Escape and Tab with any modifier belong to the input method.
-    if ([self hasMarkedText] && TSIsCompletionFamilyKey(theEvent)) {
-        TSDeliverCompletionKeyToInputMethod(self, ^{ [super keyDown: theEvent]; });
-        return;
-    }
 
     // if character is $, {, (, [ and control is down and there is a selection, then enclose the selection in appropriate brackets
     // and return. Not while text is being composed: the brackets are part of the composition then.

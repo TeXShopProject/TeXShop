@@ -12,7 +12,7 @@ from shortcut_sources import production_source, companion_sources
 from source_tree import include_args, source_file
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['yield-off', 'hold-back', 'swallow-off', 'composition-off', 'escape-pass', 'menu-field-editor', 'record-macro', 'restore-conflict', 'backtab', 'shared-flag'])
+parser.add_argument('--mutation', choices=['yield-off', 'hold-back', 'swallow-off', 'composition-off', 'escape-pass', 'menu-field-editor', 'record-macro', 'restore-conflict', 'backtab', 'shared-flag', 'control-y', 'nested-drop'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 production = production_source(root)
@@ -23,17 +23,13 @@ completion_keys = source_file(root, 'TSCompletionKeys.h').read_text(encoding='ut
 completion_keys_text = completion_keys
 
 docommand = method(text_view, '- (void)doCommandBySelector:(SEL)selector')
-composition = ('    // During composition, Escape and Tab with any modifier belong to the input method.\n'
-               '    if ([self hasMarkedText] && TSIsCompletionFamilyKey(theEvent)) {\n'
-               '        TSDeliverCompletionKeyToInputMethod(self, ^{ [super keyDown: theEvent]; });\n'
-               '        return;\n'
-               '    }\n')
+composition = method(text_view, '- (void)keyDown:(NSEvent *)theEvent\n{\n    // During composition')
 pass_scrap = method(scrap_view, '- (void)passKeyDown:(NSEvent *)theEvent')
 fragments = [('TSTextView doCommandBySelector:', text_view, docommand),
              ('TSTextView composition', text_view, composition),
              ('ScrapTextView passKeyDown:', scrap_view, pass_scrap)]
 # The Experiment's keyDown has the same composition block and the same doCommandBySelector:.
-assert scrap_view.count(composition) == 1, 'ScrapTextView has the composition block'
+assert scrap_view.count(composition) == 1, 'ScrapTextView has the same keyDown:'
 assert method(scrap_view, '- (void)doCommandBySelector:(SEL)selector') == docommand, 'both views drop the same commands'
 assert '[SUD boolForKey: CommandCompletionAlternateMarkShortcutKey]' in text_view and 'stringForKey: CommandCompletionAlternateMarkShortcutKey' not in text_view
 assert '[SUD boolForKey: CommandCompletionAlternateMarkShortcutKey]' in scrap_view and 'stringForKey: CommandCompletionAlternateMarkShortcutKey' not in scrap_view
@@ -48,7 +44,7 @@ assert code_lines(scrap_view, '[TSCompletionTypedKey(theEvent) isEqualToString: 
 assert '(self.selectedRange.length > 2) && editorCanAddBrackets && ![self hasMarkedText]' in text_view, 'no enclosing during composition'
 
 harness = (root / 'Tests/CompletionMarkKeys.m').read_text(encoding='utf-8').replace('#import "TSCompletionKeys.h"', completion_keys)
-harness = harness.replace('@@DOCOMMAND_SOURCE@@', docommand).replace('@@COMPOSITION_SOURCE@@', composition).replace('@@PASS_SCRAP@@', pass_scrap)
+harness = harness.replace('@@DOCOMMAND_SOURCE@@', docommand).replace('@@KEYDOWN_SOURCE@@', composition).replace('@@PASS_SCRAP@@', pass_scrap)
 if not args.mutation:
     verify_embedded(harness, fragments)
 def mutate(text, old, new):
@@ -69,9 +65,13 @@ elif args.mutation == 'record-macro':
 elif args.mutation == 'restore-conflict':
     production = mutate(production, 'NSString *conflict = [self commandYieldsDefault:command] ? nil : [self conflictForRestoringCommand:command];', 'NSString *conflict = [self conflictForRestoringCommand:command];')
 elif args.mutation == 'backtab':
-    harness = mutate(harness, 'if (characters.length == 1 && [characters characterAtIndex:0] == 0x19) return @"\\t";', 'if (NO) return @"\\t";')
+    harness = mutate(harness, 'if (event.keyCode == kVK_Tab && characters.length == 1 && [characters characterAtIndex:0] == 0x19) return @"\\t";', 'if (NO) return @"\\t";')
 elif args.mutation == 'shared-flag':
     harness = mutate(harness, '    if (TSCompletionKeyComposingView == self) return;\n', '    if (TSCompletionKeyComposingView != nil) return;\n')
+elif args.mutation == 'control-y':
+    harness = mutate(harness, 'if (event.keyCode == kVK_Tab && characters.length == 1', 'if (characters.length == 1')
+elif args.mutation == 'nested-drop':
+    harness = mutate(harness, '    if (was == view) TSCompletionKeyComposingView = nil;\n', '')
 elif args.mutation == 'menu-field-editor':
     mark_menu = mutate(mark_menu, 'return view.isEditable && !view.isFieldEditor ? view : nil;', 'return view.isEditable ? view : nil;')
 with tempfile.TemporaryDirectory(prefix='texshop-completion-keys-') as folder:
