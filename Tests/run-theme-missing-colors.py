@@ -9,8 +9,9 @@ document's source, console and log views get these colors from the production pa
 the same colors. Nothing is written into the theme, and nothing is shown on screen. --mutations removes each part
 and the test must then fail.
 
-Also a theme that has lost one color of a pair (only the background, or only the text), for every bundled theme and one
-of the user's own with white text, in both appearances: the missing color is chosen so that the text reads (contrast
+Also a theme that lacks any set of the colors that go in pairs (one to all eight of EditorText, EditorBackground,
+EditorInsertionPoint, EntryColor, ConsoleText, ConsoleBackground, LogText, LogBackground), for every bundled theme, one
+of the user's own with white text and LiteTheme without an active line, in both appearances: the missing color is chosen so that the text reads (contrast
 4.5 or more) and the other one is kept; checked for the source, console and log of a document, the Experiment console
 (-updateConsoleColors:), the Experiment source (-[ScrapTextView updateExperimentColors:]), the cursor and the active
 line."""
@@ -170,16 +171,21 @@ int main(int argc, char **argv) { @autoreleasepool {
     for (NSString *key in @[@"EditorText", @"ConsoleText", @"LogText", @"EditorInsertionPoint"]) mine[key] = @[@1, @1, @1, @1];
     for (NSString *key in @[@"EditorBackground", @"ConsoleBackground", @"LogBackground", @"EntryColor"]) mine[key] = @[@0.1, @0.1, @0.1, @1];
     named[@"Mine (white text)"] = mine;
-    // Every color of the pairs, and every two of them, lost; in both appearances.
+    NSMutableDictionary *noActiveLine = [named[@"LiteTheme"] mutableCopy];
+    [noActiveLine removeObjectForKey:@"EntryColor"];
+    named[@"LiteTheme without an active line"] = noActiveLine;
+    // Any of the colors of the pairs lacking, one to all eight (a theme may never have had some, and may lose
+    // others); in both appearances.
     NSArray *keys = @[@"EditorText", @"EditorBackground", @"EditorInsertionPoint", @"EntryColor", @"ConsoleText", @"ConsoleBackground", @"LogText", @"LogBackground"];
     NSArray *drawn = @[@[@"EditorText", @"EditorBackground"], @[@"EditorInsertionPoint", @"EditorBackground"], @[@"EditorText", @"EntryColor"],
                        @[@"ConsoleText", @"ConsoleBackground"], @[@"LogText", @"LogBackground"]];
     NSMutableArray *losses = [NSMutableArray array];
-    for (NSUInteger i = 0; i < keys.count; i++) {
-        [losses addObject:@[keys[i]]];
-        for (NSUInteger j = i + 1; j < keys.count; j++) [losses addObject:@[keys[i], keys[j]]];
+    for (NSUInteger bits = 1; bits < (1u << keys.count); bits++) {
+        NSMutableArray *lost = [NSMutableArray array];
+        for (NSUInteger i = 0; i < keys.count; i++) if (bits & (1u << i)) [lost addObject:keys[i]];
+        [losses addObject:lost];
     }
-    NSUInteger checked = 0, pairsChecked = 0;
+    NSUInteger checked = 0, pairsChecked = 0, drawnChecked = 0;
     for (NSString *name in [named.allKeys sortedArrayUsingSelector:@selector(compare:)]) {
         for (int dark = 0; dark <= 1; dark++) {
             mode = dark ? "dark" : "light";
@@ -192,7 +198,7 @@ int main(int argc, char **argv) { @autoreleasepool {
                 for (NSString *key in keys) color[key] = [colors opaqueColorForKey:key fromDictionary:theme isWindowDark:dark];
                 // The colors the theme still has are kept.
                 for (NSString *key in keys)
-                    if (![lost containsObject:key])
+                    if (![lost containsObject:key] && [colors colorFromDictionary:whole andKey:key])
                         REQUIRE(SameRGB(color[key], [colors colorFromDictionary:whole andKey:key]));
                 // Each drawn pair with a lost color reads, when the theme's own pair read.
                 for (NSArray *pair in drawn) {
@@ -209,7 +215,11 @@ int main(int argc, char **argv) { @autoreleasepool {
                 // The wells' look-up gives what is drawn.
                 for (NSString *key in lost)
                     REQUIRE(SameRGB([colors colorForKey:key fromDictionary:theme isWindowDark:dark], color[key]));
-                // What draws them: the document's views, the active line, the Experiment console and source.
+                checked++;
+                // What draws them: the document's views, the active line, the Experiment console and source (for up to
+                // three lacking colors; they ask the same method as the checks above).
+                if (lost.count > 3) continue;
+                drawnChecked++;
                 Document *document = [Document new];
                 document->textView1 = View(); document->textView2 = View(); document->outputText = View(); document.logTextView = View();
                 [document applyDictionary:theme dark:dark];
@@ -231,12 +241,11 @@ int main(int argc, char **argv) { @autoreleasepool {
                 REQUIRE(SameRGB(experiment.textColor, color[@"EditorText"]) && SameRGB(experiment.backgroundColor, color[@"EditorBackground"])
                         && SameRGB(experiment.insertionPointColor, color[@"EditorInsertionPoint"]));
                 REQUIRE([theme isEqual:before]);
-                checked++;
             }
         }
     }
-    printf("PASS: %lu cases (%lu themes x 2 appearances x %lu losses of one or two colors), %lu drawn pairs with a lost color: they read, the theme's colors are kept, and the documents, the active line, the Experiment and the wells' look-up use the same colors\n",
-           (unsigned long)checked, (unsigned long)named.count, (unsigned long)losses.count, (unsigned long)pairsChecked);
+    printf("PASS: %lu cases (%lu themes x 2 appearances x %lu sets of lacking colors), %lu drawn pairs with a lacking color: they read, the theme's colors are kept, the wells' look-up gives the colors drawn; in %lu cases (up to three lacking) the documents, the active line and the Experiment draw them\n",
+           (unsigned long)checked, (unsigned long)named.count, (unsigned long)losses.count, (unsigned long)pairsChecked, (unsigned long)drawnChecked);
 } return 0; }
 '''
 
@@ -263,11 +272,11 @@ if '--mutations' in sys.argv:
     mutations = {
         'no built-in light colors': ('readers', '    if (builtIn != nil)\n        return', '    if (NO)\n        return', 0),
         'no built-in dark colors': ('readers', '    if (builtIn != nil)\n        return', '    if (NO)\n        return', 1),
-        'no pairs': ('readers', '    if (others.count == 0)\n        return builtIn;', '    return builtIn;', 0),
-        'active line with the theme\'s own text': ('readers', '@"EntryColor": @[@[@"EditorText", @YES]]', '@"EntryColor": @[@[@"EditorText", @NO]]', 0),
-        'text without the active line': ('readers', '@"EditorText": @[@[@"EditorBackground", @NO], @[@"EntryColor", @NO]]', '@"EditorText": @[@[@"EditorBackground", @NO]]', 0),
-        'background with the theme\'s own text': ('readers', '@"EditorBackground": @[@[@"EditorText", @YES], @[@"EditorInsertionPoint", @NO]]', '@"EditorBackground": @[@[@"EditorText", @NO], @[@"EditorInsertionPoint", @NO]]', 0),
-        'background without the cursor': ('readers', '@"EditorBackground": @[@[@"EditorText", @YES], @[@"EditorInsertionPoint", @NO]]', '@"EditorBackground": @[@[@"EditorText", @YES]]', 0),
+        'no pairs': ('readers', '    if (group == nil)\n        return builtIn;', '    return builtIn;', 0),
+        'only the text on the background': ('readers', '@[@[@0, @1], @[@2, @1], @[@0, @3]]', '@[@[@0, @1]]', 0),
+        'no cursor pair': ('readers', '@[@[@0, @1], @[@2, @1], @[@0, @3]]', '@[@[@0, @1], @[@0, @3]]', 0),
+        'no active-line pair': ('readers', '@[@[@0, @1], @[@2, @1], @[@0, @3]]', '@[@[@0, @1], @[@2, @1]]', 0),
+        'built-in colors only': ('readers', '                                  [NSColor colorWithRed: 1 green: 1 blue: 1 alpha: 1], [NSColor colorWithRed: 0 green: 0 blue: 0 alpha: 1]]];', ']];', 0),
         'the document takes no color': ('document', '[[TSColorSupport sharedInstance] opaqueColorForKey: @"ConsoleText" fromDictionary: colorDictionary isWindowDark: withDarkColors]',
                                         '[[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"ConsoleText"]', None),
     }

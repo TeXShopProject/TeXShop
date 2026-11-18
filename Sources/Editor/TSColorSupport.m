@@ -596,45 +596,34 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
 //
 // The color drawn for a key of a theme in a light or dark window. A color the theme has is used as
 // it is. A color it does not have is the built-in one of the mode, but text and what it is drawn on
-// go together (a theme of either kind can be used in a light or a dark window, and its file may have
-// lost colors): a missing color is chosen so that it reads, contrast 4.5 or more, with the colors it
-// goes with, in this order: the built-in color of the mode, that of the other mode, white, black;
-// the one that reads with all of them, else with the first. The colors it goes with, resolved in
-// this order, so that nothing depends on itself:
-//   1. text, with the backgrounds the theme has:
-//      EditorText: EditorBackground, EntryColor; ConsoleText: ConsoleBackground; LogText: LogBackground;
-//   2. backgrounds, with the text as it is drawn (and the theme's own cursor):
-//      EditorBackground: EditorText, EditorInsertionPoint; ConsoleBackground: ConsoleText; LogBackground: LogText;
-//   3. the cursor, with the background as it is drawn, and the active line, with the text as it is drawn:
-//      EditorInsertionPoint: EditorBackground; EntryColor: EditorText.
-// The theme file is not changed. Every view that draws these colors, and the Settings wells, ask here.
+// go together (a theme of either kind can be used in a light or a dark window, and its file may
+// lack colors or have lost them). The colors that go together form groups, with the pairs that must
+// read (contrast 4.5 or more):
+//   the source: EditorText on EditorBackground, EditorInsertionPoint on EditorBackground,
+//               EditorText on EntryColor (the active line);
+//   the console: ConsoleText on ConsoleBackground;   the log: LogText on LogBackground.
+// The missing colors of a group are chosen together, each from: the built-in color of the mode, that
+// of the other mode, white, black. Of all the choices, the one in which the most pairs read is taken,
+// and of those the one nearest the built-in colors of the mode (fewest steps down the list, then in
+// the order of the keys above). So whichever colors a theme lacks, the choice does not depend on an
+// order of the keys, and when the theme's own colors read with each other, all the pairs read. The
+// theme file is not changed. Every view that draws these colors, and the Settings wells, ask here.
 - (NSColor *)opaqueColorForKey: (NSString *)theKey fromDictionary: (NSDictionary *)theDictionary isWindowDark: (BOOL)mode
 {
     NSColor *theColor = [self colorFromDictionary: theDictionary andKey: theKey];
     if (theColor != nil)
         return theColor;
     NSColor *builtIn = mode ? [self darkColorWithKey: theKey] : [self liteColorWithKey: theKey];
-    // Each partner: its key, and whether it is taken as drawn (YES) or only as the theme has it (NO).
-    NSArray<NSArray *> *partners = @{
-        @"EditorText": @[@[@"EditorBackground", @NO], @[@"EntryColor", @NO]],
-        @"ConsoleText": @[@[@"ConsoleBackground", @NO]],
-        @"LogText": @[@[@"LogBackground", @NO]],
-        @"EditorBackground": @[@[@"EditorText", @YES], @[@"EditorInsertionPoint", @NO]],
-        @"ConsoleBackground": @[@[@"ConsoleText", @YES]],
-        @"LogBackground": @[@[@"LogText", @YES]],
-        @"EditorInsertionPoint": @[@[@"EditorBackground", @YES]],
-        @"EntryColor": @[@[@"EditorText", @YES]],
-    }[theKey];
-    NSMutableArray<NSColor *> *others = [NSMutableArray array];
-    for (NSArray *partner in partners) {
-        NSColor *other = [partner[1] boolValue] ? [self opaqueColorForKey: partner[0] fromDictionary: theDictionary isWindowDark: mode]
-            : [self colorFromDictionary: theDictionary andKey: partner[0]];
-        if (other != nil)
-            [others addObject: other];
-    }
-    if (others.count == 0)
+    NSArray<NSString *> *group = nil;
+    for (NSArray<NSString *> *keys in @[@[@"EditorText", @"EditorBackground", @"EditorInsertionPoint", @"EntryColor"],
+                                        @[@"ConsoleText", @"ConsoleBackground"], @[@"LogText", @"LogBackground"]])
+        if ([keys containsObject: theKey])
+            group = keys;
+    if (group == nil)
         return builtIn;
-    // WCAG contrast of two colors.
+    // The pairs that must read, as indexes into the group.
+    NSArray<NSArray<NSNumber *> *> *pairs = group.count == 4 ? @[@[@0, @1], @[@2, @1], @[@0, @3]] : @[@[@0, @1]];
+    // WCAG relative luminance.
     CGFloat (^luminance)(NSColor *) = ^CGFloat(NSColor *color) {
         NSColor *rgb = [color colorUsingColorSpace: NSColorSpace.sRGBColorSpace];
         CGFloat c[3] = {rgb.redComponent, rgb.greenComponent, rgb.blueComponent};
@@ -642,26 +631,49 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
             c[i] = c[i] <= 0.03928 ? c[i] / 12.92 : pow((c[i] + 0.055) / 1.055, 2.4);
         return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
     };
-    CGFloat (^contrast)(NSColor *, NSColor *) = ^CGFloat(NSColor *a, NSColor *b) {
-        CGFloat x = luminance(a), y = luminance(b);
-        return (MAX(x, y) + 0.05) / (MIN(x, y) + 0.05);
-    };
-    NSArray<NSColor *> *candidates = @[builtIn, mode ? [self liteColorWithKey: theKey] : [self darkColorWithKey: theKey],
-                                       [NSColor colorWithRed: 1 green: 1 blue: 1 alpha: 1], [NSColor colorWithRed: 0 green: 0 blue: 0 alpha: 1]];
-    for (NSColor *candidate in candidates) {
-        BOOL readsWithAll = YES;
-        for (NSColor *other in others)
-            readsWithAll = readsWithAll && contrast(candidate, other) >= 4.5;
-        if (readsWithAll)
-            return candidate;
+    // For each key of the group: its own color, or the candidates for it.
+    NSUInteger count = group.count;
+    NSMutableArray<NSArray<NSColor *> *> *choices = [NSMutableArray array];
+    for (NSString *key in group) {
+        NSColor *own = [self colorFromDictionary: theDictionary andKey: key];
+        if (own != nil)
+            [choices addObject: @[own]];
+        else
+            [choices addObject: @[mode ? [self darkColorWithKey: key] : [self liteColorWithKey: key],
+                                  mode ? [self liteColorWithKey: key] : [self darkColorWithKey: key],
+                                  [NSColor colorWithRed: 1 green: 1 blue: 1 alpha: 1], [NSColor colorWithRed: 0 green: 0 blue: 0 alpha: 1]]];
     }
-    NSColor *best = builtIn;
-    for (NSColor *candidate in candidates)
-        if (contrast(candidate, others[0]) >= 4.5)
-            return candidate;
-        else if (contrast(candidate, others[0]) > contrast(best, others[0]))
-            best = candidate;
-    return best;
+    CGFloat lightness[4][4];
+    for (NSUInteger k = 0; k < count; k++)
+        for (NSUInteger i = 0; i < choices[k].count; i++)
+            lightness[k][i] = luminance(choices[k][i]);
+    NSUInteger index[4] = {0, 0, 0, 0}, best[4] = {0, 0, 0, 0};
+    NSInteger bestReading = -1, bestSteps = 0;
+    while (YES) {
+        NSInteger reading = 0, steps = 0;
+        for (NSArray<NSNumber *> *pair in pairs) {
+            NSUInteger a = pair[0].unsignedIntegerValue, b = pair[1].unsignedIntegerValue;
+            CGFloat x = lightness[a][index[a]], y = lightness[b][index[b]];
+            if ((MAX(x, y) + 0.05) / (MIN(x, y) + 0.05) >= 4.5)
+                reading++;
+        }
+        for (NSUInteger k = 0; k < count; k++)
+            steps += index[k];
+        // Ties go to the first choice in this order, which is the one in the order of the keys.
+        if (reading > bestReading || (reading == bestReading && steps < bestSteps)) {
+            bestReading = reading;
+            bestSteps = steps;
+            memcpy(best, index, sizeof(index));
+        }
+        // The next choice: count up in the candidates of each key, the last key fastest.
+        NSInteger k = (NSInteger)count - 1;
+        while (k >= 0 && ++index[k] == choices[k].count)
+            index[k--] = 0;
+        if (k < 0)
+            break;
+    }
+    NSUInteger position = [group indexOfObject: theKey];
+    return choices[position][best[position]];
 }
 
 - (NSColor *)colorForKey: (NSString *)theKey isWindowDark: (BOOL)mode

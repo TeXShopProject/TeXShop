@@ -200,7 +200,7 @@ int main(int argc,char **argv){@autoreleasepool{
   [original writeToFile:path atomically:YES];[editing selectItemWithTitle:@"LiteTheme"];
   [owner setValue:[theme mutableCopy] forKey:@"EditingColors"];[owner setValue:nil forKey:@"lastSavedEditingColors"];[owner FillInColorWells];
  }
- // The wells show the colors drawn: every bundled theme and one of the user's own with white text, without one or two
+ // The wells show the colors drawn: every bundled theme and one of the user's own with white text, without one to three
  // of the colors that go in pairs, in the light and the dark Settings window (once, in Japanese).
  if(getenv("TS_TEST_BUNDLED_THEMES") && [fixture.bundlePath.lastPathComponent isEqual:@"ja.bundle"]){
   NSString *folder=@(getenv("TS_TEST_BUNDLED_THEMES"));NSMutableDictionary *named=[NSMutableDictionary dictionary];
@@ -210,12 +210,18 @@ int main(int argc,char **argv){@autoreleasepool{
   for(NSString *key in @[@"EditorText",@"ConsoleText",@"LogText",@"EditorInsertionPoint"])mine[key]=@[@1,@1,@1,@1];
   for(NSString *key in @[@"EditorBackground",@"ConsoleBackground",@"LogBackground",@"EntryColor"])mine[key]=@[@0.1,@0.1,@0.1,@1];
   named[@"Mine"]=mine;Check(named.count>=10,@"The bundled themes are there");
+  NSMutableDictionary *noActiveLine=[named[@"LiteTheme"] mutableCopy];[noActiveLine removeObjectForKey:@"EntryColor"];named[@"LiteTheme without an active line"]=noActiveLine;
   NSDictionary *wellsByKey=@{@"EditorText":@"SourceTextColorWell",@"EditorBackground":@"SourceBackgroundColorWell",@"EditorInsertionPoint":@"SourceInsertionPointColorWell",
                              @"EntryColor":@"EntryColorWell",@"ConsoleText":@"ConsoleTextColorWell",@"ConsoleBackground":@"ConsoleBackgroundColorWell",
                              @"LogText":@"LogTextColorWell",@"LogBackground":@"LogBackgroundColorWell"};
   NSArray *keys=@[@"EditorText",@"EditorBackground",@"EditorInsertionPoint",@"EntryColor",@"ConsoleText",@"ConsoleBackground",@"LogText",@"LogBackground"];
+  // Every set of one to three lacking colors (a theme may never have had some, as the company theme "Old" has no
+  // active line, and may lose others).
   NSMutableArray *losses=[NSMutableArray array];
-  for(NSUInteger i=0;i<keys.count;i++){[losses addObject:@[keys[i]]];for(NSUInteger j=i+1;j<keys.count;j++)[losses addObject:@[keys[i],keys[j]]];}
+  for(NSUInteger bits=1;bits<(1u<<keys.count);bits++){
+   NSMutableArray *lost=[NSMutableArray array];for(NSUInteger i=0;i<keys.count;i++)if(bits&(1u<<i))[lost addObject:keys[i]];
+   if(lost.count<=3)[losses addObject:lost];
+  }
   NSAppearance *savedAppearance=owner.settingsController.window.appearance;BOOL savedMojave=atLeastMojave;atLeastMojave=YES;
   TSColorSupport *colors=[TSColorSupport sharedInstance];NSUInteger compared=0;
   for(NSString *name in named)for(NSAppearanceName appearance in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua])for(NSArray *lost in losses){
@@ -232,7 +238,7 @@ int main(int argc,char **argv){@autoreleasepool{
   }
   owner.settingsController.window.appearance=savedAppearance;atLeastMojave=savedMojave;
   [owner setValue:[theme mutableCopy] forKey:@"EditingColors"];[owner FillInColorWells];
-  printf("PASS: %lu wells of 10 themes without one or two paired colors, in both appearances, show the colors drawn\n",(unsigned long)compared);
+  printf("PASS: %lu wells of %lu themes without one to three paired colors, in both appearances, show the colors drawn\n",(unsigned long)compared,(unsigned long)named.count);
  }
  Check([factory[AutoSaveEnabledKey] isEqual:@"YES"] && ![[owner valueForKey:@"keepBackupButton"]isEnabled],@"Factory string YES disables backup at first opening");
  TSSettingsWindowController *shell=owner.settingsController;Check(shell.categoryIdentifiers.count==10,@"Ten approved categories");
