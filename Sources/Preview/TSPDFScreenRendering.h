@@ -2,7 +2,16 @@
 #import <Cocoa/Cocoa.h>
 
 // Tile in device coordinates to preserve scale and rotation while bounding bitmap memory.
+// process, when given, turns each tile's image into the image that is drawn (returned
+// retained), as a dark preview inverts its pages.
+static inline void TSDrawPDFScreenTilesProcessed(CGContextRef destination, void (^draw)(CGContextRef),
+                                                 CGImageRef (^process)(CGImageRef));
 static inline void TSDrawPDFScreenTiles(CGContextRef destination, void (^draw)(CGContextRef))
+{
+    TSDrawPDFScreenTilesProcessed(destination, draw, nil);
+}
+static inline void TSDrawPDFScreenTilesProcessed(CGContextRef destination, void (^draw)(CGContextRef),
+                                                 CGImageRef (^process)(CGImageRef))
 {
     CGAffineTransform transform = CGContextGetCTM(destination);
     CGRect bounds = CGRectIntegral(CGRectApplyAffineTransform(CGContextGetClipBoundingBox(destination), transform));
@@ -21,6 +30,11 @@ static inline void TSDrawPDFScreenTiles(CGContextRef destination, void (^draw)(C
             CGContextConcatCTM(bitmap, transform);
             draw(bitmap);
             CGImageRef image = CGBitmapContextCreateImage(bitmap);
+            if (image && process) {
+                CGImageRef processed = process(image);
+                CGImageRelease(image);
+                image = processed;
+            }
             if (image) {
                 CGContextSaveGState(destination);
                 CGContextConcatCTM(destination, CGAffineTransformInvert(transform));
