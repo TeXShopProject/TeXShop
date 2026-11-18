@@ -11,13 +11,14 @@ static NSString *Translate(CFDataRef data,UInt16 code,UInt32 modifiers,UInt32 ke
  return status==noErr?[NSString stringWithCharacters:chars length:count]:@"";
 }
 // The keys a macro may take, as decided for #46, written out here rather than taken from
-// the product: F1-F20 alone or with modifiers; otherwise a printing character with
-// Command or Control. Tab, Escape, Backtab, Delete and control characters never.
+// the product: F1-F20 alone or with modifiers; any other key, function keys such as the
+// arrows included, with Command or Control. Tab, Escape, Backtab, Delete and control
+// characters never.
 static BOOL ExpectedMacroKey(NSString *key, NSEventModifierFlags flags) {
     if (key.length != 1) return NO;
     unichar c = [key characterAtIndex:0];
     if (c >= NSF1FunctionKey && c <= NSF20FunctionKey) return YES;
-    if (c < 0x20 || c == 0x7f || (c >= 0xf700 && c <= 0xf8ff)) return NO;
+    if (c < 0x20 || c == 0x7f) return NO;
     return (flags & (NSEventModifierFlagCommand | NSEventModifierFlagControl)) != 0;
 }
 static void IgnoreAssignmentOutlet(id receiver,SEL selector,id value,NSString *key) {}
@@ -91,9 +92,9 @@ int main(int argc,char **argv){@autoreleasepool{
  }
  CFRelease(sources);if(seen.count<262 || !menuChecks || menuChecks!=macroChecks)return 1;
  // Fixed cases of the #46 decisions: the macro is always listed; it wins only with a key it may take.
- {unichar f5c=NSF5FunctionKey;NSString *f5=[NSString stringWithCharacters:&f5c length:1];
+ {unichar f5c=NSF5FunctionKey,upc=NSUpArrowFunctionKey;NSString *f5=[NSString stringWithCharacters:&f5c length:1],*up=[NSString stringWithCharacters:&upc length:1];
   NSArray *fixed=@[@[@"\t",@0,@NO],@[@"\t",@(O),@NO],@[@"\033",@0,@NO],@[@"\033",@(K),@NO],@[@"c",@(O),@NO],
-                   @[@"-",@(C|K|S),@YES],@[f5,@0,@YES],@[@"m",@(C),@YES],@[@"m",@(K),@YES],@[@"m",@(S),@NO]];
+                   @[@"-",@(C|K|S),@YES],@[f5,@0,@YES],@[up,@(C),@YES],@[up,@0,@NO],@[@"m",@(C),@YES],@[@"m",@(K),@YES],@[@"m",@(S),@NO]];
   for(NSArray *one in fixed){
    NSString *key=one[0];NSUInteger f=[one[1]unsignedIntegerValue];BOOL wins=[one[2]boolValue];
    NSMenu *menu=[NSMenu new];TSShortcutStore *store=[[TSShortcutStore alloc]initWithMenu:menu defaults:TSIsolatedAppKitDefaults];
