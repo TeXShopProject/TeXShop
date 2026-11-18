@@ -407,5 +407,20 @@ int main(int argc, char **argv) { @autoreleasepool {
     second.answer=NSAlertFirstButtonReturn;[second savePressed:nil];REQUIRE(second.prompts==1 && second.testWindow.closes==0 && [second.details containsString:@"Existing later"] && [second.details containsString:@"appears later"]);
     second.answer=NSAlertThirdButtonReturn;[second savePressed:nil];REQUIRE(!first.key.length && [later.key isEqual:@"Z"] && second.testWindow.closes==1);
     puts("PASS: changing an earlier macro warns before making a later macro inactive");
+    // A key that cannot be a shortcut (here Control-Escape, from a macro file) overlaps nothing: saving does not
+    // call it a conflict, alone or next to a real one, and the key is kept as written.
+    NSString *controlEscape=@"\x1b+ControlKey+NoCommandKey";
+    TSMacroTreeNode *refusedOnly=[TSMacroTreeNode nodeWithName:@"Refused alone" content:@"KEEP" key:@""];
+    TSMacroTreeNode *thirdRoot=[TSMacroTreeNode submenuNodeWithName:@"ROOT"];[thirdRoot addChild:refusedOnly];
+    TestEditor *third=[TestEditor new];third.testOutline.rootOfTree=thirdRoot;[third rememberOriginalShortcutKeys];refusedOnly.key=controlEscape;
+    third.answer=NSAlertFirstButtonReturn;[third savePressed:nil];REQUIRE(third.prompts==0 && third.testWindow.closes==1 && [refusedOnly.key isEqual:controlEscape]);
+    TSMacroTreeNode *mixedFirst=[TSMacroTreeNode nodeWithName:@"Mixed first" content:@"KEEP" key:@"X"], *mixedLater=[TSMacroTreeNode nodeWithName:@"Mixed later" content:@"KEEP" key:@"Z"];
+    TSMacroTreeNode *mixedRefused=[TSMacroTreeNode nodeWithName:@"Refused mixed" content:@"KEEP" key:@""];
+    TSMacroTreeNode *fourthRoot=[TSMacroTreeNode submenuNodeWithName:@"ROOT"];[fourthRoot addChildren:@[mixedFirst,mixedRefused,mixedLater]];
+    TestEditor *fourth=[TestEditor new];fourth.testOutline.rootOfTree=fourthRoot;[fourth rememberOriginalShortcutKeys];mixedFirst.key=@"Z";mixedRefused.key=controlEscape;
+    fourth.answer=NSAlertThirdButtonReturn;[fourth savePressed:nil];
+    REQUIRE(fourth.prompts==1 && [fourth.details containsString:@"Mixed later"] && ![fourth.details containsString:@"Refused mixed"] && ![fourth.details containsString:@"cannot be used"]);
+    REQUIRE(!mixedFirst.key.length && [mixedLater.key isEqual:@"Z"] && [mixedRefused.key isEqual:controlEscape] && fourth.testWindow.closes==1);
+    puts("PASS: saving does not report a key that cannot be a shortcut as a conflict, alone or with a real one; the key is kept");
     puts("PASS: existing conflicts save without prompting; new/imported keys have three choices; cancellation and write errors preserve content");
 } return 0; }

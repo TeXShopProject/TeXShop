@@ -100,6 +100,7 @@ if '--mutations' in sys.argv:
         'macro files give Tab and Escape to macros': [(m, 'if (keyEquiv.length && ![TSShortcutStore isAllowedKey:keyEquiv modifiers:modifier]) {', 'if (NO) {')],
         'refused macro keys count as ordinary keys': [(k, '        if (![TSShortcutStore isAllowedKey:binding.key modifiers:binding.modifiers]) {\n            [result addObject:@{@"index":@(index), @"refused":@YES}];', '        if (NO) {\n            [result addObject:@{@"index":@(index), @"refused":@YES}];')],
         'refused keys explained as a conflict': [(k, '    if ([conflict[@"refused"] boolValue])\n        return', '    if (NO)\n        return')],
+        'saving reports refused keys as conflicts': [(e, '        if ([conflict[@"refused"] boolValue]) continue;\n', '')],
         'leave Shift for dead keys': [(k, 'key.length == 1 &&\n        ![key isEqual:unshifted]', 'key.length == 1 && unshifted.length == 1 &&\n        ![key isEqual:unshifted]')],
     }
     for name, changes in cases.items():

@@ -1265,6 +1265,8 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
         }
     }
     for (NSDictionary *conflict in conflicts) {
+        // A key that cannot be a shortcut overlaps nothing; the list already marks it and says why.
+        if ([conflict[@"refused"] boolValue]) continue;
         NSUInteger index = [conflict[@"index"] unsignedIntegerValue];
         TSMacroTreeNode *node = nodes[index];
         NSDictionary *original = [self.originalShortcutKeys objectForKey:node];
