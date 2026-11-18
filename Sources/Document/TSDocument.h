@@ -328,6 +328,12 @@ enum RootCommand
 	BOOL		autoCompleting; // added by Terada
 	BOOL	    contentHighlighting; // added by Terada
 	BOOL	    braceHighlighting; // added by Terada
+	// The braces and the contents highlighted last, given again when the text is colored again, and the
+	// number of the last brace highlight and background flash, so that a reset scheduled earlier does nothing.
+	NSArray		*highlightedBraceLocations;
+	NSRange		highlightedContentRange;
+	NSUInteger	highlightedTextLength, highlightedGeneration;
+	NSUInteger	braceHighlightGeneration, braceFlashGeneration;
 	BOOL		warningGiven;
 	BOOL		omitShellEscape;
 	BOOL		withLatex;
@@ -384,6 +390,10 @@ enum RootCommand
 	// The same state for the source of the Experiment window
 	NSInteger scrapLastCursorLocation, scrapLastStringLength;
 	BOOL scrapLastInputIsDelete, scrapBraceHighlighting, scrapContentHighlighting;
+	NSArray *scrapHighlightedBraceLocations;
+	NSRange scrapHighlightedContentRange;
+	NSUInteger scrapHighlightedTextLength, scrapHighlightedGeneration;
+	NSUInteger scrapBraceHighlightGeneration, scrapBraceFlashGeneration;
 	
 	//Michael Witten: mfwitten@mit.edu
 	NSLineBreakMode		lineBreakMode;
@@ -634,6 +644,8 @@ enum RootCommand
 - (void) showHideLineNumbers: sender;
 - (void) showHideInvisibleCharacters: sender;// added by Terada
 - (void) setTextView: (id)aView;
+- (void)resetHighlight:(id)sender;
+- (void)resetBackgroundColor:(id)sender;
 - (BOOL) isSplit;
 
 // endforsplit
@@ -1025,6 +1037,7 @@ enum RootCommand
 - (void)colorizeVisibleAreaInTextView:(NSTextView *)aTextView;
 - (BOOL)coloringWaitsForMarkedTextIn:(NSTextView *)aTextView;
 - (void)colorAfterMarkedTextEnds;
+- (BOOL)braceHighlightFits:(NSRange)range inTextView:(NSTextView *)aTextView;
 - (void)cursorMoved: (NSTextView *)aTextView;
 - (void)removeCurrentLineColor: (NSTextView *)aTextView;
 
