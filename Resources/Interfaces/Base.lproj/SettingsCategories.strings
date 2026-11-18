@@ -288,10 +288,12 @@
 "catalog.keyboard.0.1.title" = "Key Binding List";
 "group.completion.title" = "Command Completion";
 "catalog.keyboard.1.0.title" = "Completion trigger";
-"catalog.keyboard.1.0.note" = "Completes the command you are typing; press the key again for the next candidate.";
-"catalog.keyboard.1.1.title" = "BibDesk Completions";
-"catalog.keyboard.1.1.note" = "Offers citation keys from BibDesk as completions inside \\cite and similar commands.";
+"catalog.keyboard.1.0.note" = "Completes the command you are typing; press the key again for the next candidate. Hold Shift for the previous candidate.";
+"catalog.keyboard.1.3.title" = "Move to the next or previous mark with Option or Control and the trigger key";
 "catalog.keyboard.1.2.title" = "Edit Command Completion…";
+"group.labelcompletion.title" = "Label and Citation Key Completion";
+"catalog.keyboard.3.0.title" = "Also offer BibDesk citation keys";
+"catalog.keyboard.3.0.note" = "After \\ref{ and similar commands, Complete Label or Citation Key offers the labels in the file. When this is on, it also offers BibDesk citation keys after \\cite{ and similar commands.";
 "group.shortcuts.title" = "Menu Shortcuts";
 "group.updates.0.title" = "Automatic Checks";
 "catalog.updates.0.0.title" = "Automatically check for updates";

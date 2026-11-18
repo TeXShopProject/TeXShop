@@ -30,6 +30,7 @@ static inline NSString *TSShortcutDisplayKey(NSString *key, NSEventModifierFlags
 
 /// Immutable key/modifier value. NSDictionary primitives preserve the existing
 /// property-list representation at persistence and macro-editor boundaries.
+@class TSShortcutMacro;
 @interface TSShortcutBinding : NSDictionary<NSString *, id>
 @property (copy, readonly) NSString *key;
 @property (readonly) NSEventModifierFlags modifiers;
@@ -58,6 +59,9 @@ static inline NSString *TSShortcutDisplayKey(NSString *key, NSEventModifierFlags
 @property (nonatomic, readonly, copy) NSArray<TSShortcutCommand *> *commands;
 @property (nonatomic, readonly, copy) NSArray<NSString *> *unavailableCommands;
 - (void)refreshMenu;
+// The macros as their files name their keys. A command that yields its default key
+// (Edit › Complete Label or Citation Key) leaves that key to a macro that names it.
+@property (copy, nullable) NSArray<TSShortcutMacro *> * (^macroProvider)(void);
 - (NSArray<NSString *> *)settingsSearchCommandNames;
 
 - (instancetype)initWithMenu:(NSMenu *)menu defaults:(NSUserDefaults *)defaults;

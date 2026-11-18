@@ -1939,11 +1939,10 @@
       },
       {
        "kind": "switch",
-       "title": "BibDesk自動補完",
+       "title": "Option・Controlと呼び出すキーで、次・前のマークへ移動",
        "src": [
-        "621#7"
-       ],
-       "note": "\\citeなどの中で、BibDeskの文献の引用キーを補完の候補に出します。"
+        "new:completionMarkKeys"
+       ]
       },
       {
        "kind": "button",
@@ -1951,6 +1950,19 @@
        "src": [
         "menu:openCommandCompletionList"
        ]
+      }
+     ]
+    },
+    {
+     "title": "ラベルと引用キーの補完",
+     "rows": [
+      {
+       "kind": "switch",
+       "title": "BibDeskの引用キーも候補に出す",
+       "src": [
+        "621#7"
+       ],
+       "note": "\\ref{などに続けて「ラベルと引用キーを補完」を選ぶと、ファイル内のラベルを候補に出します。オンにすると、\\cite{などに続けたときにBibDeskの引用キーも出します。"
       }
      ]
     },

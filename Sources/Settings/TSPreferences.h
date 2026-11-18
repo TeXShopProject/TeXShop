@@ -241,6 +241,7 @@
 @property NSUInteger themeOperationGeneration;
 @property (strong) NSButton *legacySpellCheckButton;
 @property (strong) NSButton *sparklePrereleaseButton;
+@property (strong) NSButton *completionMarkKeysButton;
 @property (strong) NSPopUpButton *engineProfilePopup;
 @property (strong) id engineProfileWatcher;
 // The profile that the sheet asks about, shown in the menu until the sheet ends; 0 when none.
@@ -382,6 +383,7 @@
 - (IBAction)sparkleAutomaticCheck:sender;
 - (IBAction)sparkleInterval:sender;
 - (IBAction)sparklePrereleaseUpdates:(NSButton *)sender;
+- (IBAction)completionMarkKeysPressed:(NSButton *)sender;
 - (IBAction)checkForUpdatesFromSettings:(id)sender;
 - (void)sparkleStatusControlsDidLoad;
 - (void)refreshSparkleLastCheck;

@@ -60,6 +60,20 @@ static NSMenuItem *TSItemWithAction(NSMenu *menu, SEL action)
         NSString *tip = item.action ? tips[NSStringFromSelector(item.action)] : nil;
         if (tip) item.toolTip = tip;
     }
+    // Edit › Complete Label or Citation Key, just after the Mark submenu. Added before the
+    // keyboard shortcuts are collected, so F5 is its default; it gives F5 up to a menu
+    // command or a macro that has it (TSShortcutStore).
+    if (TSItemWithAction(edit, @selector(completeLabelOrCitationKey:)) == nil) {
+        unichar f5 = NSF5FunctionKey;
+        NSMenuItem *complete = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Complete Label or Citation Key", @"Edit menu")
+            action:@selector(completeLabelOrCitationKey:) keyEquivalent:[NSString stringWithCharacters:&f5 length:1]];
+        complete.keyEquivalentModifierMask = 0;
+        complete.target = [self sharedInstance];
+        complete.identifier = @"TSShortcut.completeLabelOrCitationKey:.0";
+        complete.toolTip = NSLocalizedString(@"Offers the labels of the file after \\ref{, and BibDesk citation keys after \\cite{ when Settings allows it.", @"Edit › Complete Label or Citation Key tooltip");
+        NSInteger index = [edit indexOfItem:markItem];
+        [edit insertItem:complete atIndex:index >= 0 ? index + 1 : edit.numberOfItems];
+    }
     if (TSItemWithAction(marks, @selector(showMarkHelp:)) == nil) {
         NSMenuItem *help = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"How to Use Marks…", @"Edit › Mark") action:@selector(showMarkHelp:) keyEquivalent:@""];
         help.target = [self sharedInstance];
@@ -93,6 +107,25 @@ static NSMenuItem *TSItemWithAction(NSMenu *menu, SEL action)
     NSURLComponents *components = [NSURLComponents componentsWithURL:page resolvingAgainstBaseURL:NO];
     components.fragment = @"marks";
     return components.URL;
+}
+
++ (NSTextView *)completionTarget
+{
+    id responder = NSApp.keyWindow.firstResponder;
+    if (![responder isKindOfClass:NSTextView.class]) return nil;
+    NSTextView *view = responder;
+    return view.isEditable && !view.isFieldEditor ? view : nil;
+}
+
+- (IBAction)completeLabelOrCitationKey:(id)sender
+{
+    [[TSMarkMenu completionTarget] complete:sender];
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem *)item
+{
+    if (item.action == @selector(completeLabelOrCitationKey:)) return [TSMarkMenu completionTarget] != nil;
+    return YES;
 }
 
 - (IBAction)showMarkHelp:(id)sender

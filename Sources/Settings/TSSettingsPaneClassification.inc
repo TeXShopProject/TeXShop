@@ -231,6 +231,7 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
     NSArray *newIDs=@[@"settings.edit-completion",@"settings.hidden-settings-help",@"settings.save-theme"];
     SEL actions[]={@selector(openCommandCompletionList:),@selector(displayCommentLines:),@selector(SaveEditedStyle:)};
     for(NSUInteger i=0;i<newIDs.count;i++){NSButton *b=[NSButton buttonWithTitle:@"" target:i==0?nil:preferences action:actions[i]];b.identifier=newIDs[i];views[newIDs[i]]=b;}
+    NSButton *markKeys=[NSButton checkboxWithTitle:@"" target:preferences action:@selector(completionMarkKeysPressed:)];markKeys.identifier=@"settings.completion-mark-keys";preferences.completionMarkKeysButton=markKeys;views[@"settings.completion-mark-keys"]=markKeys;
     // Choosing a profile asks at once whether to apply it.
     NSPopUpButton *engineProfile=[[NSPopUpButton alloc]initWithFrame:NSZeroRect pullsDown:NO];engineProfile.identifier=@"settings.engine-profile";engineProfile.target=preferences;engineProfile.action=@selector(applyEngineProfile:);preferences.engineProfilePopup=engineProfile;views[@"settings.engine-profile"]=engineProfile;
     NSPopUpButton *defaultEngine=[[NSPopUpButton alloc]initWithFrame:NSZeroRect pullsDown:NO];defaultEngine.identifier=@"settings.default-engine";defaultEngine.target=preferences;defaultEngine.action=@selector(defaultEngineChosen:);defaultEngine.menu.delegate=(id<NSMenuDelegate>)preferences;preferences.defaultEnginePopup=defaultEngine;views[@"settings.default-engine"]=defaultEngine;

@@ -1749,6 +1749,14 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 
 }
 
+/*" This method is connected to the switch for moving to the next or previous mark
+with Option or Control and the completion trigger key.
+"*/
+- (IBAction)completionMarkKeysPressed:(NSButton *)sender
+{
+	[SUD setBool:sender.state == NSControlStateValueOn forKey:CommandCompletionAlternateMarkShortcutKey];
+}
+
 
 
 

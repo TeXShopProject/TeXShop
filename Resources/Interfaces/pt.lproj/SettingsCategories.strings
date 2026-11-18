@@ -288,10 +288,12 @@
 "catalog.keyboard.0.1.title" = "Lista de associações de teclas";
 "group.completion.title" = "Conclusão de comandos";
 "catalog.keyboard.1.0.title" = "Tecla de ativação";
-"catalog.keyboard.1.0.note" = "Completa o comando que você está digitando; pressione a tecla de novo para a próxima sugestão.";
-"catalog.keyboard.1.1.title" = "Complemento BibDesk";
-"catalog.keyboard.1.1.note" = "Oferece chaves de citação do BibDesk como complementos dentro de \\cite e comandos semelhantes.";
+"catalog.keyboard.1.0.note" = "Completa o comando que você está digitando; pressione a tecla de novo para a próxima sugestão. Com Shift pressionado, volta à sugestão anterior.";
+"catalog.keyboard.1.3.title" = "Ir para a marca seguinte ou anterior com Option ou Controle e a tecla de ativação";
 "catalog.keyboard.1.2.title" = "Editar conclusão de comandos…";
+"group.labelcompletion.title" = "Conclusão de rótulos e chaves de citação";
+"catalog.keyboard.3.0.title" = "Oferecer também chaves de citação do BibDesk";
+"catalog.keyboard.3.0.note" = "Depois de \\ref{ e comandos semelhantes, “Completar rótulo ou chave de citação” oferece os rótulos do arquivo. Quando ativado, também oferece chaves de citação do BibDesk depois de \\cite{ e comandos semelhantes.";
 "group.shortcuts.title" = "Atalhos dos menus";
 "group.updates.0.title" = "Verificações automáticas";
 "catalog.updates.0.0.title" = "Verificar automaticamente se há atualizações";

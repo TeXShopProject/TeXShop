@@ -345,10 +345,16 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     [self updateKeyResults];
     return YES;
 }
-- (NSView *)completionRowInView:(NSView *)view {
-    if ([view.identifier isEqualToString:@"row.catalog.keyboard.1.0"]) return view;
-    for (NSView *child in view.subviews) { NSView *found = [self completionRowInView:child]; if (found != nil) return found; }
+// The rows of Settings › Keyboard › Command Completion that the trigger key shows.
+static NSString * const TSCompletionTriggerRowID = @"row.catalog.keyboard.1.0";
+static NSString * const TSCompletionMarkKeysRowID = @"row.catalog.keyboard.1.3";
+- (NSView *)rowWithIdentifier:(NSString *)identifier inView:(NSView *)view {
+    if ([view.identifier isEqualToString:identifier]) return view;
+    for (NSView *child in view.subviews) { NSView *found = [self rowWithIdentifier:identifier inView:child]; if (found != nil) return found; }
     return nil;
+}
+- (NSView *)completionRowInView:(NSView *)view {
+    return [self rowWithIdentifier:TSCompletionTriggerRowID inView:view];
 }
 - (void)clearCompletionHighlight {
     self.highlightedCompletionRow.layer.backgroundColor = nil;
@@ -360,6 +366,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 - (void)updateKeyResults {
     [self clearCompletionHighlight];
     BOOL reservedCompletion = NO;
+    NSString *completionRow = TSCompletionTriggerRowID;
     TSShortcutStore *store = self.store;
     NSEvent *event = self.searchEvent;
     self.searchMatches = @[];
@@ -371,7 +378,15 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
         self.search.stringValue = [TSShortcutStore displayKey:key modifiers:flags];
         NSArray<TSShortcutMacro *> *macros = self.shortcuts.macroProvider != nil ? self.shortcuts.macroProvider() : @[];
         self.searchMatches = [TSShortcutSearch matchesEvent:event store:store macros:macros];
-        reservedCompletion = flags == 0 && [key isEqualToString:@"\t"] && ![[store.defaults stringForKey:TSCommandCompletionCharacterKey] isEqualToString:@"ESCAPE"];
+        // The trigger key with Shift (the previous candidate), Option or Control (the next or
+        // previous mark) belongs to command completion too; plain Escape ends the search.
+        BOOL escapeTrigger = [[store.defaults stringForKey:TSCommandCompletionCharacterKey] isEqualToString:@"ESCAPE"];
+        BOOL triggerKey = escapeTrigger ? [key isEqualToString:@"\033"] : ([key isEqualToString:@"\t"] || [key isEqualToString:@"\031"]);
+        NSEventModifierFlags completionFlags = flags & (NSEventModifierFlagShift | NSEventModifierFlagOption | NSEventModifierFlagControl | NSEventModifierFlagCommand);
+        reservedCompletion = triggerKey && (completionFlags == 0 || completionFlags == NSEventModifierFlagShift ||
+                                            completionFlags == NSEventModifierFlagOption || completionFlags == NSEventModifierFlagControl);
+        completionRow = (completionFlags == NSEventModifierFlagOption || completionFlags == NSEventModifierFlagControl)
+            ? TSCompletionMarkKeysRowID : TSCompletionTriggerRowID;
         if (reservedCompletion) {
             self.searchMatches = @[];
             self.searchMessage = NSLocalizedString(@"This key is reserved for command completion.", @"");
@@ -398,7 +413,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     if (first >= 0) { [self.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)first] byExtendingSelection:NO]; [self.table scrollRowToVisible:first]; }
     [self updateSelectionButtons];
     if (reservedCompletion && self.settingsHeader != nil) {
-        NSView *row = [self completionRowInView:self.settingsHeader];
+        NSView *row = [self rowWithIdentifier:completionRow inView:self.settingsHeader];
         if (row == nil) return;
         row.wantsLayer = YES; row.layer.cornerRadius = 4;
         row.layer.backgroundColor = [NSColor.controlAccentColor colorWithAlphaComponent:0.12].CGColor;

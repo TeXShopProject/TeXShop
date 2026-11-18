@@ -271,9 +271,11 @@ add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"SettingsCategorie
 add(TSSettingsCategoryKeyboard, @"heading.group.completion", @"SettingsCategories", @"group.completion.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsCategories", @"catalog.keyboard.1.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsCategories", @"catalog.keyboard.1.0.note", TSSettingsSearchWeightDescription);
-add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.1", @"SettingsCategories", @"catalog.keyboard.1.1.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.1", @"SettingsCategories", @"catalog.keyboard.1.1.note", TSSettingsSearchWeightDescription);
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.3", @"SettingsCategories", @"catalog.keyboard.1.3.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.2", @"SettingsCategories", @"catalog.keyboard.1.2.title", TSSettingsSearchWeightLabel);
+add(TSSettingsCategoryKeyboard, @"heading.group.labelcompletion", @"SettingsCategories", @"group.labelcompletion.title", TSSettingsSearchWeightHeading);
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.3.0", @"SettingsCategories", @"catalog.keyboard.3.0.title", TSSettingsSearchWeightLabel);
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.3.0", @"SettingsCategories", @"catalog.keyboard.3.0.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryKeyboard, @"heading.group.shortcuts", @"SettingsCategories", @"group.shortcuts.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryUpdates, @"heading.group.updates.1", @"SettingsCategories", @"group.updates.1.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryUpdates, @"row.catalog.updates.1.0", @"SettingsCategories", @"catalog.updates.1.0.title", TSSettingsSearchWeightLabel);

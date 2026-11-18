@@ -288,10 +288,12 @@
 "catalog.keyboard.0.1.title" = "Liste des raccourcis de saisie";
 "group.completion.title" = "Complétion des commandes";
 "catalog.keyboard.1.0.title" = "Touche de déclenchement";
-"catalog.keyboard.1.0.note" = "Complète la commande en cours de saisie ; appuyez de nouveau sur la touche pour la proposition suivante.";
-"catalog.keyboard.1.1.title" = "Complétions de BibDesk";
-"catalog.keyboard.1.1.note" = "Propose les clés de citation de BibDesk comme complétions dans \\cite et les commandes similaires.";
+"catalog.keyboard.1.0.note" = "Complète la commande en cours de saisie ; appuyez de nouveau sur la touche pour la proposition suivante. Maintenez Maj enfoncée pour la proposition précédente.";
+"catalog.keyboard.1.3.title" = "Aller au repère suivant ou précédent avec Option ou Contrôle et la touche de déclenchement";
 "catalog.keyboard.1.2.title" = "Modifier la complétion des commandes…";
+"group.labelcompletion.title" = "Complétion des étiquettes et des clés de citation";
+"catalog.keyboard.3.0.title" = "Proposer aussi les clés de citation de BibDesk";
+"catalog.keyboard.3.0.note" = "Après \\ref{ et les commandes similaires, « Compléter l’étiquette ou la clé de citation » propose les étiquettes du fichier. Si l’option est activée, il propose aussi les clés de citation de BibDesk après \\cite{ et les commandes similaires.";
 "group.shortcuts.title" = "Raccourcis des menus";
 "group.updates.0.title" = "Vérification automatique";
 "catalog.updates.0.0.title" = "Vérification automatique des mises à jour";

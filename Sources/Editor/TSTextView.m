@@ -21,6 +21,7 @@
  */
 
 #import "TSTextView.h"
+#import "TSCompletionKeys.h"
 #import "TSTeXRootDocumentApplier.h"
 #import "TSLaTeXPanelController.h"
 
@@ -2242,6 +2243,14 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 
 /* OLD VERSION */ 
 
+// A command the input method leaves for Escape or Tab during composition is dropped
+// (TSCompletionKeys.h).
+- (void)doCommandBySelector:(SEL)selector
+{
+    if (TSCompletionKeyInComposition) return;
+    [super doCommandBySelector:selector];
+}
+
 - (void)keyDown:(NSEvent *)theEvent
 {
     
@@ -2286,10 +2295,16 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
     BOOL boolResult;
 	unichar c;
     
+    // During composition, Escape and Tab with any modifier belong to the input method.
+    if ([self hasMarkedText] && TSIsCompletionFamilyKey(theEvent)) {
+        TSDeliverCompletionKeyToInputMethod(^{ [super keyDown: theEvent]; });
+        return;
+    }
+
     // if character is $, {, (, [ and control is down and there is a selection, then enclose the selection in appropriate brackets
-    // and return
+    // and return. Not while text is being composed: the brackets are part of the composition then.
     
-    if ((self.selectedRange.length > 2) && editorCanAddBrackets)
+    if ((self.selectedRange.length > 2) && editorCanAddBrackets && ![self hasMarkedText])
     { if ([[theEvent characters] isEqualToString: @"["])
         {
             selectedString = [[self string] substringWithRange:self.selectedRange];
@@ -2341,7 +2356,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
     }
     
 	if ([[theEvent characters] isEqualToString: g_commandCompletionChar] &&
-		( ! [[SUD stringForKey: CommandCompletionAlternateMarkShortcutKey] isEqualToString:@"NO"] ) &&
+		[SUD boolForKey: CommandCompletionAlternateMarkShortcutKey] &&
 		(([theEvent modifierFlags] & NSAlternateKeyMask) != 0))
 			{
  				[self.document doNextBullet:self];
@@ -2349,7 +2364,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 			}
 		
 	else if ([[theEvent characters] isEqualToString: g_commandCompletionChar] &&
-		( ! [[SUD stringForKey: CommandCompletionAlternateMarkShortcutKey] isEqualToString:@"NO"] ) &&
+		[SUD boolForKey: CommandCompletionAlternateMarkShortcutKey] &&
 		(([theEvent modifierFlags] & NSControlKeyMask) != 0))
 			{
  				[self.document doPreviousBullet:self];

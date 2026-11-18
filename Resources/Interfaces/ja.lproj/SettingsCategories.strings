@@ -288,10 +288,12 @@
 "catalog.keyboard.0.1.title" = "キーバインドの一覧";
 "group.completion.title" = "コマンド補完";
 "catalog.keyboard.1.0.title" = "呼び出すキー";
-"catalog.keyboard.1.0.note" = "入力途中のコマンドを、呼び出すキーを押して補完します。続けて押すと次の候補になります。";
-"catalog.keyboard.1.1.title" = "BibDesk自動補完";
-"catalog.keyboard.1.1.note" = "\\citeなどの中で、BibDeskの文献の引用キーを補完の候補に出します。";
+"catalog.keyboard.1.0.note" = "入力途中のコマンドを、呼び出すキーを押して補完します。続けて押すと次の候補、Shiftを押しながらだと前の候補になります。";
+"catalog.keyboard.1.3.title" = "Option・Controlと呼び出すキーで、次・前のマークへ移動";
 "catalog.keyboard.1.2.title" = "コマンド補完ファイルを編集…";
+"group.labelcompletion.title" = "ラベルと引用キーの補完";
+"catalog.keyboard.3.0.title" = "BibDeskの引用キーも候補に出す";
+"catalog.keyboard.3.0.note" = "\\ref{などに続けて「ラベルと引用キーを補完」を選ぶと、ファイル内のラベルを候補に出します。オンにすると、\\cite{などに続けたときにBibDeskの引用キーも出します。";
 "group.shortcuts.title" = "メニューのショートカット";
 "group.updates.0.title" = "自動確認";
 "catalog.updates.0.0.title" = "アップデートを自動的に確認";

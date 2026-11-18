@@ -437,3 +437,8 @@
 "Center" = "Center";
 /* Alignment of the text of an annotation */
 "Right" = "Right";
+
+/* Edit menu */
+"Complete Label or Citation Key" = "Complete Label or Citation Key";
+/* Edit › Complete Label or Citation Key tooltip */
+"Offers the labels of the file after \\ref{, and BibDesk citation keys after \\cite{ when Settings allows it." = "Offers the labels of the file after \\ref{, and BibDesk citation keys after \\cite{ when Settings allows it.";

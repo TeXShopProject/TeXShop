@@ -288,10 +288,12 @@
 "catalog.keyboard.0.1.title" = "키 바인딩 목록";
 "group.completion.title" = "명령어 완성";
 "catalog.keyboard.1.0.title" = "호출 키";
-"catalog.keyboard.1.0.note" = "입력 중인 명령어를 호출 키로 완성합니다. 다시 누르면 다음 후보가 나옵니다.";
-"catalog.keyboard.1.1.title" = "BibDesk 자동 완성";
-"catalog.keyboard.1.1.note" = "\\cite 등의 안에서 BibDesk의 인용 키를 자동 완성 후보로 보여 줍니다.";
+"catalog.keyboard.1.0.note" = "입력 중인 명령어를 호출 키로 완성합니다. 다시 누르면 다음 후보가, Shift 키를 누른 채 누르면 이전 후보가 나옵니다.";
+"catalog.keyboard.1.3.title" = "Option 또는 Control과 호출 키로 다음·이전 마크로 이동";
 "catalog.keyboard.1.2.title" = "명령어 완성 파일 편집…";
+"group.labelcompletion.title" = "레이블과 인용 키 완성";
+"catalog.keyboard.3.0.title" = "BibDesk의 인용 키도 후보로 보여 주기";
+"catalog.keyboard.3.0.note" = "\\ref{ 등에 이어서 ‘레이블 또는 인용 키 완성’을 선택하면 파일 안의 레이블을 후보로 보여 줍니다. 켜면 \\cite{ 등에 이어서 선택할 때 BibDesk의 인용 키도 보여 줍니다.";
 "group.shortcuts.title" = "메뉴 단축키";
 "group.updates.0.title" = "자동 확인";
 "catalog.updates.0.0.title" = "업데이트를 자동으로 확인";

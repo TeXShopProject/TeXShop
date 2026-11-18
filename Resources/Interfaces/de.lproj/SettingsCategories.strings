@@ -288,10 +288,12 @@
 "catalog.keyboard.0.1.title" = "Liste der Tastenbelegungen";
 "group.completion.title" = "Befehlsvervollständigung";
 "catalog.keyboard.1.0.title" = "Auslösetaste";
-"catalog.keyboard.1.0.note" = "Vervollständigt den gerade eingegebenen Befehl; erneutes Drücken der Taste zeigt den nächsten Vorschlag.";
-"catalog.keyboard.1.1.title" = "BibDesk-Vervollständigung";
-"catalog.keyboard.1.1.note" = "Bietet in \\cite und ähnlichen Befehlen Zitierschlüssel aus BibDesk zur Vervollständigung an.";
+"catalog.keyboard.1.0.note" = "Vervollständigt den gerade eingegebenen Befehl; erneutes Drücken der Taste zeigt den nächsten Vorschlag. Mit gedrückter Umschalttaste erscheint der vorherige Vorschlag.";
+"catalog.keyboard.1.3.title" = "Mit Wahl- oder Control-Taste und der Auslösetaste zur nächsten oder vorherigen Marke springen";
 "catalog.keyboard.1.2.title" = "Befehlsvervollständigung bearbeiten…";
+"group.labelcompletion.title" = "Vervollständigung von Labels und Zitierschlüsseln";
+"catalog.keyboard.3.0.title" = "Auch Zitierschlüssel aus BibDesk anbieten";
+"catalog.keyboard.3.0.note" = "Nach \\ref{ und ähnlichen Befehlen bietet „Label oder Zitierschlüssel vervollständigen“ die Labels der Datei an. Ist die Option an, werden nach \\cite{ und ähnlichen Befehlen auch Zitierschlüssel aus BibDesk angeboten.";
 "group.shortcuts.title" = "Menükurzbefehle";
 "group.updates.0.title" = "Automatische Suche";
 "catalog.updates.0.0.title" = "Automatisch nach Aktualisierungen suchen";

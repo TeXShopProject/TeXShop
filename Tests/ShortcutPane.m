@@ -35,6 +35,7 @@ static NSView *InputHeader(void) {
    NSButton *button=[NSButton buttonWithTitle:i==0?NSLocalizedString(@"Completion trigger",@""):@"Input fixture" target:nil action:NULL];
    NSView *row=[TSPrefPaneLayout viewForRow:[[TSSettingsControlRow alloc]initWithControls:@[button] indentation:0]];
    if([key isEqual:@"completion"] && i==0)row.identifier=@"row.catalog.keyboard.1.0";
+   if([key isEqual:@"completion"] && i==1)row.identifier=@"row.catalog.keyboard.1.3"; // the Option and Control mark keys
    [rows addObject:row];
   }
   [TSPrefPaneLayout attachRows:rows toView:box.contentView];
@@ -598,8 +599,14 @@ int main(int argc,char **argv){@autoreleasepool{
   [NSNotificationCenter.defaultCenter postNotificationName:@"CommandCompletionCharNotification" object:nil];
   REQUIRE(translated.highlightedCompletionRow==nil && ![translated.searchMessage containsString:@"reserved"]);
   [TSIsolatedAppKitDefaults setObject:@"TAB" forKey:@"CommandCompletionChar"];
+  // Shift with the trigger key is the previous candidate: the trigger row is shown too.
   fixtureCharacters=@"\t";[translated handleKeySearchEvent:Event(@"\t",NSEventModifierFlagShift,48)];
-  REQUIRE(translated.highlightedCompletionRow==nil && ![translated.searchMessage isEqual:NSLocalizedString(@"This key is reserved for command completion.",@"")]);
+  REQUIRE([translated.highlightedCompletionRow.identifier isEqual:@"row.catalog.keyboard.1.0"] && [translated.searchMessage isEqual:NSLocalizedString(@"This key is reserved for command completion.",@"")]);
+  // Option or Control with the trigger key moves between marks: the switch row of those keys is shown.
+  fixtureCharacters=@"\t";[translated handleKeySearchEvent:Event(@"\t",NSEventModifierFlagOption,48)];
+  REQUIRE([translated.highlightedCompletionRow.identifier isEqual:@"row.catalog.keyboard.1.3"]);
+  fixtureCharacters=@"\t";[translated handleKeySearchEvent:Event(@"\t",NSEventModifierFlagControl,48)];
+  REQUIRE([translated.highlightedCompletionRow.identifier isEqual:@"row.catalog.keyboard.1.3"]);
   fixtureCharacters=@"\t";[translated handleKeySearchEvent:Event(@"\t",0,48)];
   NSView *highlighted=translated.highlightedCompletionRow;
   REQUIRE(highlighted!=nil && highlighted.layer.backgroundColor!=nil && highlighted.layer.borderWidth==0);

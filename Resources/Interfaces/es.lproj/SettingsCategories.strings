@@ -288,10 +288,12 @@
 "catalog.keyboard.0.1.title" = "Lista de combinaciones de teclas";
 "group.completion.title" = "Autocompletado de comandos";
 "catalog.keyboard.1.0.title" = "Tecla de activación";
-"catalog.keyboard.1.0.note" = "Completa la orden que estás escribiendo; vuelve a pulsar la tecla para ver la siguiente opción.";
-"catalog.keyboard.1.1.title" = "Compleciones BibDesk";
-"catalog.keyboard.1.1.note" = "Ofrece claves de cita de BibDesk como compleciones dentro de \\cite y órdenes similares.";
+"catalog.keyboard.1.0.note" = "Completa la orden que estás escribiendo; vuelve a pulsar la tecla para ver la siguiente opción. Con Mayúsculas pulsada, se muestra la opción anterior.";
+"catalog.keyboard.1.3.title" = "Ir a la señal siguiente o anterior con Opción o Control y la tecla de activación";
 "catalog.keyboard.1.2.title" = "Editar autocompletado de comandos…";
+"group.labelcompletion.title" = "Autocompletado de etiquetas y claves de cita";
+"catalog.keyboard.3.0.title" = "Ofrecer también claves de cita de BibDesk";
+"catalog.keyboard.3.0.note" = "Tras \\ref{ y órdenes similares, «Completar etiqueta o clave de cita» ofrece las etiquetas del archivo. Si está activado, tras \\cite{ y órdenes similares también ofrece claves de cita de BibDesk.";
 "group.shortcuts.title" = "Atajos de menú";
 "group.updates.0.title" = "Comprobación automática";
 "catalog.updates.0.0.title" = "Búsqueda automática de actualizaciones:";
