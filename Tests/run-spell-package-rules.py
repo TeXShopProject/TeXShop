@@ -2,8 +2,9 @@
 """Check the default spelling exclusions for common packages.
 
 Tests/SpellCheck/packages.tex uses the commands and environments of amsmath,
-mathtools, graphicx, xcolor, tikz, geometry, fancyhdr, microtype, booktabs,
-tabularx, multirow, caption, enumitem, hyperref, cleveref, biblatex, natbib, amsthm and siunitx. Words
+mathtools, graphicx, xcolor, tikz, pgfplots, float, wrapfig, geometry, fancyhdr,
+microtype, booktabs, tabularx, tabularray, hhline, multirow, caption, enumitem,
+hyperref, cleveref, biblatex, natbib, listings, amsthm and siunitx. Words
 starting with skipqzx are not prose and must be masked by the shipped
 SpellingExclusions.txt; words starting with keepqzx are prose and must stay.
 
