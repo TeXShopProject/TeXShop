@@ -312,18 +312,30 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
     
     [self checkAndRestoreDefaults];
     // A missing theme that comes with TeXShop is restored like the two above.
-    if (lite.length) TSLibraryRestoreMissingFile(liteThemePath, TSLibraryBundledPath([[@"Themes" stringByAppendingPathComponent:lite] stringByAppendingPathExtension:@"plist"]), TSLibraryThemeCheck());
-    if (dark.length) TSLibraryRestoreMissingFile(darkThemePath, TSLibraryBundledPath([[@"Themes" stringByAppendingPathComponent:dark] stringByAppendingPathExtension:@"plist"]), TSLibraryThemeCheck());
+    NSString *bundledLite = lite.length ? TSLibraryBundledPath([[@"Themes" stringByAppendingPathComponent:lite] stringByAppendingPathExtension:@"plist"]) : nil;
+    NSString *bundledDark = dark.length ? TSLibraryBundledPath([[@"Themes" stringByAppendingPathComponent:dark] stringByAppendingPathExtension:@"plist"]) : nil;
+    if (lite.length) TSLibraryRestoreMissingFile(liteThemePath, bundledLite, TSLibraryThemeCheck());
+    if (dark.length) TSLibraryRestoreMissingFile(darkThemePath, bundledDark, TSLibraryThemeCheck());
+    // One that cannot be restored now (the disk is full, the folder cannot be written) stays chosen: TeXShop's own
+    // copy is read, and the next launch restores the file. A missing theme of the user's own gives way to Lite or Dark.
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if (! [fileManager fileExistsAtPath: liteThemePath])
     {
-        [SUD setObject: @"LiteTheme" forKey: DefaultLiteThemeKey];
-        liteThemePath = defaultLiteThemePath;
+        if (bundledLite != nil)
+            liteThemePath = bundledLite;
+        else {
+            [SUD setObject: @"LiteTheme" forKey: DefaultLiteThemeKey];
+            liteThemePath = defaultLiteThemePath;
+        }
     }
     if (! [fileManager fileExistsAtPath: darkThemePath])
     {
-        [SUD setObject: @"DarkTheme" forKey: DefaultDarkThemeKey];
-        darkThemePath = defaultDarkThemePath;
+        if (bundledDark != nil)
+            darkThemePath = bundledDark;
+        else {
+            [SUD setObject: @"DarkTheme" forKey: DefaultDarkThemeKey];
+            darkThemePath = defaultDarkThemePath;
+        }
     }
     
     // A damaged theme is not read: the theme that comes with TeXShop is used until the next launch repairs it.
@@ -345,14 +357,24 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
 
 
 // Themes made before brackets had their own colors only define SyntaxMarker.
+// A color is an array of red, green, blue and, mostly, opacity; anything else (in a theme file
+// edited by hand or by another program) counts as a color the theme does not have.
 - (NSArray *) colorArrayFromDictionary:(NSDictionary *)theDictionary andKey: (NSString *)theKey
 {
-    NSArray *theColorArray = [theDictionary objectForKey: theKey];
+    NSArray *(^color)(id) = ^NSArray *(id value) {
+        if (![value isKindOfClass:NSArray.class] || [value count] < 3)
+            return nil;
+        for (id component in value)
+            if (![component isKindOfClass:NSNumber.class])
+                return nil;
+        return value;
+    };
+    NSArray *theColorArray = color([theDictionary objectForKey: theKey]);
     if ((theColorArray == nil) &&
         ([theKey isEqualToString: @"SyntaxMarkerParen"] ||
          [theKey isEqualToString: @"SyntaxMarkerCurly"] ||
          [theKey isEqualToString: @"SyntaxMarkerSquare"]))
-        theColorArray = [theDictionary objectForKey: @"SyntaxMarker"];
+        theColorArray = color([theDictionary objectForKey: @"SyntaxMarker"]);
     return theColorArray;
 }
 
@@ -369,10 +391,11 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
 
 - (NSColor *) colorAndAlphaFromDictionary:(NSDictionary *)theDictionary andKey: (NSString *)theKey
 {
+    // Without the bracket colors' fallback of -colorArrayFromDictionary:andKey:.
     NSArray *theColorArray = [theDictionary objectForKey: theKey];
-    if (theColorArray == nil)
+    if (theColorArray == nil || [self colorArrayFromDictionary: @{theKey: theColorArray} andKey: theKey] == nil)
         return nil;
-    NSColor *theColor = [NSColor colorWithRed: [theColorArray[0] doubleValue]  green: [theColorArray[1] doubleValue]  blue: [theColorArray[2] doubleValue]  alpha: [theColorArray[3] doubleValue]];
+    NSColor *theColor = [NSColor colorWithRed: [theColorArray[0] doubleValue]  green: [theColorArray[1] doubleValue]  blue: [theColorArray[2] doubleValue]  alpha: (theColorArray.count >= 4 ? [theColorArray[3] doubleValue] : 1.0)];
     
     return theColor;
 }
@@ -382,6 +405,31 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
 
 - (NSColor *)liteColorWithKey: (NSString *)theKey
 {
+    // A theme that has lost one of these colors (its file edited elsewhere) gets the color of the Lite
+    // theme: text stays readable on its background. The theme file is not changed.
+    NSArray *builtIn = @{
+        @"EditorText": @[@0, @0, @0, @1],
+        @"EditorBackground": @[@1, @1, @1, @1],
+        @"EditorInsertionPoint": @[@0, @0, @0, @1],
+        @"ConsoleText": @[@0, @0, @0, @1],
+        @"ConsoleBackground": @[@0.996, @0.977, @0.918, @1],
+        @"LogText": @[@0, @0, @0, @1],
+        @"LogBackground": @[@1, @1, @1, @1],
+        @"PreviewBackground": @[@1, @1, @1, @1],
+        @"SyntaxComment": @[@0.922, @0, @0, @1],
+        @"SyntaxCommand": @[@0, @0, @1, @1],
+        @"SyntaxMarker": @[@0.02, @0.51, @0.13, @1],
+        @"SyntaxIndex": @[@0.541, @0.427, @0, @1],
+        @"EditorHighlightBraces": @[@0.962, @0.223, @0.219, @1],
+        @"EditorHighlightContent": @[@1, @0.957, @0.769, @1],
+        @"EditorInvisibleChar": @[@1, @0.013, @0.011, @1],
+        @"EditorReverseSync": @[@1, @1, @0, @1],
+        @"PreviewDirectSync": @[@1, @1, @0, @0.6],
+        @"ImageForeground": @[@0, @0, @0, @1],
+        @"ImageBackground": @[@1, @1, @1, @0]
+    }[theKey];
+    if (builtIn != nil)
+        return [NSColor colorWithRed: [builtIn[0] doubleValue] green: [builtIn[1] doubleValue] blue: [builtIn[2] doubleValue] alpha: [builtIn[3] doubleValue]];
     if ([theKey isEqualToString: @"EditorFlash"])
         return [NSColor colorWithRed: 1 green: 0.95 blue: 1 alpha:1.00];
     else if ([theKey isEqualToString: @"FootnoteColor"]) //not actually used
@@ -447,6 +495,31 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
 
 - (NSColor *)darkColorWithKey: (NSString *)theKey
 {
+    // A theme that has lost one of these colors (its file edited elsewhere) gets the color of the Dark
+    // theme: text stays readable on its background. The theme file is not changed.
+    NSArray *builtIn = @{
+        @"EditorText": @[@1, @1, @1, @1],
+        @"EditorBackground": @[@0.203, @0.203, @0.203, @1],
+        @"EditorInsertionPoint": @[@0.9, @0.894, @0.787, @1],
+        @"ConsoleText": @[@0.883, @0.713, @0.491, @1],
+        @"ConsoleBackground": @[@0.114, @0.172, @0.179, @1],
+        @"LogText": @[@0, @0, @0, @1],
+        @"LogBackground": @[@0.9, @0.889, @0.872, @1],
+        @"PreviewBackground": @[@0.837, @0.837, @0.837, @1],
+        @"SyntaxComment": @[@0.596, @0.765, @0.475, @1],
+        @"SyntaxCommand": @[@0.42, @0.764, @0.83, @1],
+        @"SyntaxMarker": @[@0.968, @0.578, @0.911, @1],
+        @"SyntaxIndex": @[@1, @1, @0, @1],
+        @"EditorHighlightBraces": @[@1, @0.643, @0.011, @1],
+        @"EditorHighlightContent": @[@0.271, @0.251, @0.176, @1],
+        @"EditorInvisibleChar": @[@0.5, @0.5, @0.5, @1],
+        @"EditorReverseSync": @[@0.581, @0.067, @0, @1],
+        @"PreviewDirectSync": @[@0.882, @0.714, @0.489, @0.6],
+        @"ImageForeground": @[@0, @0, @0, @1],
+        @"ImageBackground": @[@1, @1, @1, @0]
+    }[theKey];
+    if (builtIn != nil)
+        return [NSColor colorWithRed: [builtIn[0] doubleValue] green: [builtIn[1] doubleValue] blue: [builtIn[2] doubleValue] alpha: [builtIn[3] doubleValue]];
     if ([theKey isEqualToString: @"EditorFlash"])
         return [NSColor colorWithRed: 0.00 green: 0.20  blue: 0.20 alpha:1.00];
     else if ([theKey isEqualToString: @"FootnoteColor"]) //not actually used
@@ -511,26 +584,177 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
     NSArray *theColorArray = [self colorArrayFromDictionary: theDictionary andKey: theKey];
     if (theColorArray != nil)
         {
-            theColor = [NSColor colorWithRed: [theColorArray[0] doubleValue]  green: [theColorArray[1] doubleValue]  blue: [theColorArray[2] doubleValue]  alpha: [theColorArray[3] doubleValue]];
+            theColor = [NSColor colorWithRed: [theColorArray[0] doubleValue]  green: [theColorArray[1] doubleValue]  blue: [theColorArray[2] doubleValue]  alpha: (theColorArray.count >= 4 ? [theColorArray[3] doubleValue] : 1.0)];
             return (theColor);
         }
-    if (mode)
-        return [self darkColorWithKey: theKey];
-    else
-        return [self liteColorWithKey: theKey];
+    // The color drawn for it: the built-in one, readable with the other color of its pair.
+    return [self opaqueColorForKey: theKey fromDictionary: theDictionary isWindowDark: mode];
 }
 
 // Themes store an opacity of 0 with some of these colors, for example the editor
 // background of SolarizedDark, which -colorFromDictionary:andKey: ignores.
+//
+// The color drawn for a key of a theme in a light or dark window. A color the theme has is used as
+// it is. A color it does not have is the built-in one of the mode, but text and what it is drawn on
+// go together (a theme of either kind can be used in a light or a dark window, and its file may
+// lack colors or have lost them). The colors that go together, and the pairs that must read:
+//   the source: EditorText on EditorBackground, EditorInsertionPoint on EditorBackground,
+//               EditorText on EntryColor (the active line);
+//   the console: ConsoleText on ConsoleBackground;   the log: LogText on LogBackground.
+// The missing colors of a group are chosen together. Each may be the built-in color of the mode,
+// that of the other mode, white, black, one of 64 grays, or the opposite of one of the theme's own
+// colors of the group. Of all the choices, the one is taken whose pairs with a missing color read
+// best, the weakest of them counted up to a contrast of 4.5 (WCAG): so all of them read whenever
+// any choice makes them read, and as well as they can otherwise. Of the choices that read as well,
+// the one nearest the built-in colors is taken: the built-in color of the mode first, then that of
+// the other mode, then white or black, then the nearest of the others. The theme file is not
+// changed. Every view that draws these colors, and the Settings wells, ask here.
 - (NSColor *)opaqueColorForKey: (NSString *)theKey fromDictionary: (NSDictionary *)theDictionary isWindowDark: (BOOL)mode
 {
     NSColor *theColor = [self colorFromDictionary: theDictionary andKey: theKey];
     if (theColor != nil)
         return theColor;
-    if (mode)
-        return [self darkColorWithKey: theKey];
-    else
-        return [self liteColorWithKey: theKey];
+    NSColor *builtIn = mode ? [self darkColorWithKey: theKey] : [self liteColorWithKey: theKey];
+    // The group as a chain of four: the active line, the text, the background, the cursor (EntryColor -
+    // EditorText - EditorBackground - EditorInsertionPoint); the console and the log use the middle two.
+    NSArray<NSString *> *chain = nil;
+    for (NSArray<NSString *> *keys in @[@[@"EntryColor", @"EditorText", @"EditorBackground", @"EditorInsertionPoint"],
+                                        @[@"", @"ConsoleText", @"ConsoleBackground", @""], @[@"", @"LogText", @"LogBackground", @""]])
+        if ([keys containsObject: theKey])
+            chain = keys;
+    if (chain == nil)
+        return builtIn;
+    // The choice depends only on the theme's colors of the group and the mode: it is made once for them.
+    NSMutableArray *signature = [NSMutableArray arrayWithObjects: @(mode), chain[1], nil];
+    for (NSString *key in chain)
+        [signature addObject: (key.length ? [theDictionary objectForKey: key] : nil) ?: NSNull.null];
+    static NSMutableDictionary<NSArray *, NSArray<NSColor *> *> *chosen;
+    @synchronized (TSColorSupport.class) {
+        if (chosen == nil || chosen.count > 256)
+            chosen = [NSMutableDictionary dictionary];
+        NSArray<NSColor *> *known = chosen[signature];
+        if (known != nil)
+            return known[[chain indexOfObject: theKey]];
+    }
+    CGFloat (^luminance)(NSColor *) = ^CGFloat(NSColor *color) {
+        NSColor *rgb = [color colorUsingColorSpace: NSColorSpace.sRGBColorSpace];
+        CGFloat c[3] = {rgb.redComponent, rgb.greenComponent, rgb.blueComponent};
+        for (int i = 0; i < 3; i++)
+            c[i] = c[i] <= 0.03928 ? c[i] / 12.92 : pow((c[i] + 0.055) / 1.055, 2.4);
+        return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+    };
+    // The theme's own colors of the group, and their opposites.
+    NSMutableArray<NSColor *> *opposites = [NSMutableArray array];
+    for (NSString *key in chain) {
+        NSColor *own = key.length ? [[self colorFromDictionary: theDictionary andKey: key] colorUsingColorSpace: NSColorSpace.sRGBColorSpace] : nil;
+        if (own != nil)
+            [opposites addObject: [NSColor colorWithRed: 1 - own.redComponent green: 1 - own.greenComponent blue: 1 - own.blueComponent alpha: 1]];
+    }
+    // For each place of the chain: no key (absent), the theme's own color (one choice), or the choices with their cost.
+    NSMutableArray<NSArray<NSColor *> *> *choices = [NSMutableArray array];
+    NSMutableArray<NSArray<NSNumber *> *> *costs = [NSMutableArray array];
+    BOOL missing[4] = {NO, NO, NO, NO};
+    for (NSUInteger k = 0; k < 4; k++) {
+        NSString *key = chain[k];
+        NSColor *own = key.length ? [self colorFromDictionary: theDictionary andKey: key] : nil;
+        if (key.length == 0 || own != nil) {
+            [choices addObject: own ? @[own] : @[]];
+            [costs addObject: own ? @[@0] : @[]];
+            continue;
+        }
+        missing[k] = YES;
+        NSColor *mine = mode ? [self darkColorWithKey: key] : [self liteColorWithKey: key];
+        NSMutableArray<NSColor *> *list = [NSMutableArray arrayWithObjects: mine, mode ? [self liteColorWithKey: key] : [self darkColorWithKey: key],
+                                           [NSColor colorWithRed: 1 green: 1 blue: 1 alpha: 1], [NSColor colorWithRed: 0 green: 0 blue: 0 alpha: 1], nil];
+        NSMutableArray<NSNumber *> *cost = [NSMutableArray arrayWithObjects: @0, @10, @20, @20, nil];
+        NSColor *origin = [mine colorUsingColorSpace: NSColorSpace.sRGBColorSpace];
+        NSMutableArray<NSColor *> *others = [opposites mutableCopy];
+        for (int g = 0; g < 64; g++)
+            [others addObject: [NSColor colorWithRed: g / 63.0 green: g / 63.0 blue: g / 63.0 alpha: 1]];
+        for (NSColor *other in others) {
+            NSColor *rgb = [other colorUsingColorSpace: NSColorSpace.sRGBColorSpace];
+            CGFloat dr = rgb.redComponent - origin.redComponent, dg = rgb.greenComponent - origin.greenComponent, db = rgb.blueComponent - origin.blueComponent;
+            [list addObject: other];
+            [cost addObject: @(30 + sqrt(dr * dr + dg * dg + db * db))];
+        }
+        [choices addObject: list];
+        [costs addObject: cost];
+    }
+    // Luminances.
+    NSUInteger n[4];
+    CGFloat *lum[4], *price[4];
+    for (NSUInteger k = 0; k < 4; k++) {
+        n[k] = choices[k].count;
+        lum[k] = malloc(sizeof(CGFloat) * MAX(n[k], 1));
+        price[k] = malloc(sizeof(CGFloat) * MAX(n[k], 1));
+        for (NSUInteger i = 0; i < n[k]; i++) {
+            lum[k][i] = luminance(choices[k][i]);
+            price[k][i] = costs[k][i].doubleValue;
+        }
+    }
+    // The score of a pair: its contrast up to 4.5; a pair of two of the theme's own colors does not count.
+    NSUInteger *counts = n;
+    BOOL *lacking = missing;
+    CGFloat **lightness = lum;
+    CGFloat (^score)(NSUInteger, NSUInteger, NSUInteger, NSUInteger) = ^CGFloat(NSUInteger a, NSUInteger i, NSUInteger b, NSUInteger j) {
+        if (counts[a] == 0 || counts[b] == 0 || (!lacking[a] && !lacking[b]))
+            return 4.5;
+        CGFloat x = lightness[a][i], y = lightness[b][j];
+        return MIN(4.5, (MAX(x, y) + 0.05) / (MIN(x, y) + 0.05));
+    };
+    // The chain 0-1-2-3: for a text (1) and a background (2), the best active line (0) and cursor (3) are
+    // found on their own. First the best score; then the cheapest choice that reaches it.
+    NSUInteger n0 = MAX(n[0], 1), n3 = MAX(n[3], 1);
+    CGFloat bestLine[n[1]], bestCursor[n[2]];
+    for (NSUInteger t = 0; t < n[1]; t++) {
+        bestLine[t] = 0;
+        for (NSUInteger e = 0; e < n0; e++)
+            bestLine[t] = MAX(bestLine[t], score(0, e, 1, t));
+    }
+    for (NSUInteger bg = 0; bg < n[2]; bg++) {
+        bestCursor[bg] = 0;
+        for (NSUInteger c = 0; c < n3; c++)
+            bestCursor[bg] = MAX(bestCursor[bg], score(2, bg, 3, c));
+    }
+    CGFloat best = -1;
+    for (NSUInteger t = 0; t < n[1]; t++)
+        for (NSUInteger bg = 0; bg < n[2]; bg++)
+            best = MAX(best, MIN(MIN(score(1, t, 2, bg), bestLine[t]), bestCursor[bg]));
+    CGFloat cheapest = INFINITY;
+    NSUInteger pick[4] = {0, 0, 0, 0};
+    for (NSUInteger t = 0; t < n[1]; t++)
+        for (NSUInteger bg = 0; bg < n[2]; bg++) {
+            if (MIN(MIN(score(1, t, 2, bg), bestLine[t]), bestCursor[bg]) < best - 1e-9)
+                continue;
+            CGFloat lineCost = INFINITY, cursorCost = INFINITY;
+            NSUInteger line = 0, cursor = 0;
+            for (NSUInteger e = 0; e < n0; e++)
+                if (score(0, e, 1, t) >= best - 1e-9 && (n[0] == 0 ? 0 : price[0][e]) < lineCost) {
+                    lineCost = n[0] == 0 ? 0 : price[0][e];
+                    line = e;
+                }
+            for (NSUInteger c = 0; c < n3; c++)
+                if (score(2, bg, 3, c) >= best - 1e-9 && (n[3] == 0 ? 0 : price[3][c]) < cursorCost) {
+                    cursorCost = n[3] == 0 ? 0 : price[3][c];
+                    cursor = c;
+                }
+            CGFloat total = price[1][t] + price[2][bg] + lineCost + cursorCost;
+            if (total < cheapest - 1e-9) {
+                cheapest = total;
+                pick[0] = line; pick[1] = t; pick[2] = bg; pick[3] = cursor;
+            }
+        }
+    for (NSUInteger k = 0; k < 4; k++) {
+        free(lum[k]);
+        free(price[k]);
+    }
+    NSMutableArray<NSColor *> *result = [NSMutableArray array];
+    for (NSUInteger k = 0; k < 4; k++)
+        [result addObject: n[k] ? choices[k][pick[k]] : builtIn];
+    @synchronized (TSColorSupport.class) {
+        chosen[signature] = result;
+    }
+    return result[[chain indexOfObject: theKey]];
 }
 
 - (NSColor *)colorForKey: (NSString *)theKey isWindowDark: (BOOL)mode

@@ -65,11 +65,20 @@ int main(int argc, char **argv) { @autoreleasepool {
     check([[TSEncodingSupport displayStringForData:B("caf\xE9 cr\xE8me") encoding:utf8] isEqualToString:@"caf\u00e9 cr\u00e8me"], @"Latin output that is not UTF-8 reads as Latin 9");
     check([[TSEncodingSupport displayStringForData:B("") encoding:utf8] isEqualToString:@""], @"empty output");
     // Characters split between pieces of output.
-    check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("ab\xE3\x81") encoding:utf8] == 2, @"UTF-8: two bytes of a three-byte character are kept");
-    check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:aiuUTF8 encoding:utf8] == 0, @"UTF-8: complete output keeps nothing");
+    // An unfinished line with bytes beyond ASCII is kept whole, in UTF-8 too: a byte that is not UTF-8 later in the line
+    // decides how all of it reads. After a pause only the start of a character is kept.
+    check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("ab\xE3\x81") encoding:utf8] == 4, @"UTF-8: an unfinished line with two bytes of a three-byte character is kept whole");
+    check([TSEncodingSupport lengthOfUnfinishedCharacterAtEndOfData:B("ab\xE3\x81") encoding:utf8] == 2, @"UTF-8: after a pause, two bytes of a three-byte character are kept");
+    check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:aiuUTF8 encoding:utf8] == aiuUTF8.length, @"UTF-8: an unfinished line of Japanese is kept whole");
+    check([TSEncodingSupport lengthOfUnfinishedCharacterAtEndOfData:aiuUTF8 encoding:utf8] == 0, @"UTF-8: after a pause, complete output keeps nothing");
+    check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:[[aiu stringByAppendingString:@"\nok"] dataUsingEncoding:utf8] encoding:utf8] == 0, @"UTF-8: lines that have ended and an unfinished line of ASCII keep nothing");
     check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("ab\x82") encoding:sjis] == 3, @"Shift JIS: an unfinished line with bytes beyond ASCII is kept whole");
     check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("x\x82\x60\nab") encoding:sjis] == 0, @"Shift JIS: an unfinished line of ASCII is not kept");
-    check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("a\xFF\xFE b") encoding:utf8] == 0, @"broken bytes inside the output are not kept");
+    // A line with bytes that are not UTF-8 is read as a whole (as UTF-8 with U+FFFD, or as Latin 9): until it ends, it
+    // is kept for the next piece. Lines that have ended are not.
+    check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("a\xFF\xFE b") encoding:utf8] == 5, @"UTF-8: an unfinished line with broken bytes is kept whole");
+    check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("a\xFF\xFE b\nab") encoding:utf8] == 0, @"broken bytes in a line that has ended are not kept");
+    check([TSEncodingSupport lengthOfUnfinishedCharacterAtEndOfData:B("a\xFF\xFE b") encoding:utf8] == 0, @"broken bytes are shown after a pause");
     // Output split at every byte reads back whole when carried as TeXShop does.
     NSData *whole = [@"\u65e5\u672c\u8a9e: \u5b8c\u74a7\u306a\u725b\u4e3c\n" dataUsingEncoding:utf8];
     NSMutableString *joined = [NSMutableString string];

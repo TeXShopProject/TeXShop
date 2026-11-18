@@ -337,6 +337,12 @@ enum RootCommand
     BOOL        parameterExists;
     
     BOOL        fromAlternate;
+    // Each Typeset asked for is a request; its save ends in saveFinished:, which starts only the
+    // request asked for last, once, not when Abort stopped it, and with its own Alternate.
+    NSUInteger  typesetRequest;
+    NSUInteger  savedTypesetRequest;
+    NSUInteger  abortedTypesetRequest;
+    BOOL        typesetRequestFromAlternate;
     
 //	NSDate              *_pdfLastModDate;
 //	NSTimer             *_pdfRefreshTimer;

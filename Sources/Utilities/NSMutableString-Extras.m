@@ -85,7 +85,19 @@
 {
     if ([self rangeOfString:@"#PASTE#" options:NSLiteralSearch].location == NSNotFound)
         return;
-    NSString *clipboard = [[NSPasteboard generalPasteboard] stringForType:NSPasteboardTypeString] ?: @"";
+    NSMutableString *clipboard = [([[NSPasteboard generalPasteboard] stringForType:NSPasteboardTypeString] ?: @"") mutableCopy];
+    // ConvertLFKey of globals.m (this file is built without the rest of TeXShop in the tests): as a paste, the text
+    // gets LF line endings.
+    if ([NSUserDefaults.standardUserDefaults boolForKey:@"ConvertLF"])
+        [clipboard replaceLineEndingsWithLF];
     [self replaceOccurrencesOfString:@"#PASTE#" withString:clipboard options:NSLiteralSearch range:NSMakeRange(0, self.length)];
+}
+
+// CRLF, CR, U+2028 and U+2029 become LF, as OgreKit's replaceNewlineCharactersInString: makes them when a file is
+// opened or text is typed or pasted.
+- (void)replaceLineEndingsWithLF
+{
+    for (NSString *ending in @[@"\r\n", @"\r", @"\u2028", @"\u2029"])
+        [self replaceOccurrencesOfString:ending withString:@"\n" options:NSLiteralSearch range:NSMakeRange(0, self.length)];
 }
 @end

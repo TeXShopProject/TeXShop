@@ -549,6 +549,14 @@
 	[super insertText: newString];
 }
 
+// Pasted text gets LF line endings, as in a document; the yen signs and backslashes stay as they are.
+- (BOOL)readSelectionFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type
+{
+	if ([self pasteFilteredTextFromPasteboard: pboard type: type japaneseFilter: NO])
+		return YES;
+	return [super readSelectionFromPasteboard: pboard type: type];
+}
+
 
 - (void)keyDown:(NSEvent *)theEvent
 {
@@ -966,6 +974,17 @@
     //NSLog(@"Next • hit");
 }
 
+// As -[TSDocument replaceMarkTextInRange:withString:actionName:]: the marks change the text as typing does, so that Undo puts it back.
+- (BOOL)replaceMarkTextInRange:(NSRange)range withString:(NSString *)string actionName:(NSString *)actionName
+{
+    if (![self shouldChangeTextInRange:range replacementString:string])
+        return NO;
+    [self replaceCharactersInRange:range withString:string];
+    [self didChangeText];
+    [[self undoManager] setActionName:actionName];
+    return YES;
+}
+
 - (void) doNextBulletAndDelete: (id)sender // modified by (HS)
 {
     NSRange tempRange, forwardRange, markerRange, commentRange;
@@ -996,7 +1015,8 @@
         tempRange.location = markerRange.location;
         tempRange.length = [placeholderString length];
         markerRange.length -= tempRange.length; // deleting the bullet so selection is shorter
-        [self replaceCharactersInRange:tempRange withString:@""];
+        if (![self replaceMarkTextInRange:tempRange withString:@"" actionName:NSLocalizedString(@"Delete Mark", @"Edit › Mark")])
+            return;
         // end delete bullet (marker)
         [self setSelectedRange:markerRange];
         [self scrollRangeToVisible:markerRange];
@@ -1034,7 +1054,8 @@
         tempRange.location = markerRange.location;
         tempRange.length = [placeholderString length];
         markerRange.length -= tempRange.length; // deleting the bullet so selection is shorter
-        [self replaceCharactersInRange:tempRange withString:@""];
+        if (![self replaceMarkTextInRange:tempRange withString:@"" actionName:NSLocalizedString(@"Delete Mark", @"Edit › Mark")])
+            return;
         // end delete bullet (marker)
         [self setSelectedRange:markerRange];
         [self scrollRangeToVisible:markerRange];
@@ -1049,7 +1070,8 @@
     
     //  text = [self string];
     myRange = [self selectedRange];
-    [self replaceCharactersInRange:myRange withString:placeholderString];//" •\n" puts • on previous line
+    if (![self replaceMarkTextInRange:myRange withString:placeholderString actionName:NSLocalizedString(@"Insert Mark", @"Edit › Mark")]) //" •\n" puts • on previous line
+        return;
     myRange.location += [placeholderString length];//= end+2;//start puts • on previous line
     myRange.length = 0;
     [self setSelectedRange: myRange];

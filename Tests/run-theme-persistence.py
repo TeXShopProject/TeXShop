@@ -19,7 +19,18 @@ mutations={
  'clone-early':('if (![[self themeStore] writeColors:colors title:title error:&error]) {','if (NO && ![[self themeStore] writeColors:colors title:title error:&error]) {'),
  'selection-store':('[SUD setObject:title forKey:popup == LiteStyle ? DefaultLiteThemeKey : DefaultDarkThemeKey];',';'),
 }
-if mutation:
+# Mutations of the theme file store: the whole edited dictionary written over the file, and the file read outside the
+# coordinated write.
+store=(R/'Sources/Settings/TSThemeFileStore.m').read_text()
+store_mutations={
+ 'only-changed':('NSMutableDictionary<NSString *, id> *colors = [([self readTitle:title] ?: before) mutableCopy];','NSMutableDictionary<NSString *, id> *colors = [after mutableCopy];'),
+ 'read-outside':('    __block NSDictionary<NSString *, id> *written = nil;\n','    NSDictionary *early = [self readTitle:title];\n    __block NSDictionary<NSString *, id> *written = nil;\n'),
+}
+if mutation=='read-outside':
+ store=store.replace(store_mutations[mutation][0],store_mutations[mutation][1]).replace('[([self readTitle:title] ?: before) mutableCopy]','[(early ?: before) mutableCopy]')
+elif mutation in store_mutations:
+ old,new=store_mutations[mutation];assert old in store;store=store.replace(old,new)
+elif mutation:
  old,new=mutations[mutation];assert old in methods;methods=methods.replace(old,new)
 methods=methods.replace('NSPopUpButton *popup', 'Popup *popup')
 program=r'''
@@ -50,6 +61,13 @@ static NSUInteger reloads;
 - (void)selectItemWithTitle:(NSString *)title{self.titleOfSelectedItem=title;}
 @end
 static NSString *ColorPath;
+// A theme store that runs a block once, right after it has read a theme file.
+@interface HookStore:TSThemeFileStore
+@property(copy) void (^afterRead)(void);
+@end
+@implementation HookStore
+- (NSDictionary *)readTitle:(NSString *)title {NSDictionary *colors=[super readTitle:title];void (^hook)(void)=self.afterRead;self.afterRead=nil;if(hook)hook();return colors;}
+@end
 @interface FakePanel:NSObject
 @property FakePanel *attachedSheet;
 @property FakePanel *sheetParent;
@@ -117,12 +135,47 @@ int main(int argc,char **argv){@autoreleasepool{
  [p SaveEditedStyle:nil];
  NSDictionary *saved=[p.store readTitle:@"Original"];
  check([saved isEqual:p->EditingColors] && [saved isEqual:p.lastSavedEditingColors] && notifications==1 && reloads==1,"save disk before refreshing documents");
+ // Another TeXShop (or the one-time update of the bundled colors) changes another color of the file: a change here
+ // writes only its own color, keeps the other one, and the wells show it.
+ NSMutableDictionary *elsewhere=[saved mutableCopy];elsewhere[@"EditorBackground"]=@[@0.5,@0.5,@0.5,@1];
+ check([p.store writeColors:elsewhere title:@"Original" error:NULL],"another TeXShop writes the theme");
+ NSUInteger fills=p.fills;
+ p->EditingColors[@"EditorText"]=@[@0.7,@0.6,@0.5,@1];
+ [p SaveEditedStyle:nil];
+ saved=[p.store readTitle:@"Original"];
+ check([saved[@"EditorText"] isEqual:(@[@0.7,@0.6,@0.5,@1])] && [saved[@"EditorBackground"] isEqual:elsewhere[@"EditorBackground"]],"a color change keeps a color changed elsewhere in the file");
+ check([saved isEqual:p->EditingColors] && [saved isEqual:p.lastSavedEditingColors] && p.fills==fills+1 && notifications==2 && reloads==2,"the wells show the color changed elsewhere");
+ p->EditingColors[@"EditorText"]=@[@0.8,@0.7,@0.6,@1];
+ [p SaveEditedStyle:nil];
+ saved=[p.store readTitle:@"Original"];
+ check([saved isEqual:p->EditingColors] && [saved[@"EditorText"] isEqual:(@[@0.8,@0.7,@0.6,@1])] && p.fills==fills+1 && notifications==3,"the wells are not filled again when nothing changed elsewhere");
+ // Two saves at once, of different colors of the same file: B saves its background while A has just read the file to
+ // save its text color. Both colors stay.
+ {
+  Probe *a=[Probe new],*b=[Probe new];
+  HookStore *hooked=[[HookStore alloc]initWithDirectory:root];a.store=hooked;b.store=[[TSThemeFileStore alloc]initWithDirectory:root];
+  for(Probe *x in @[a,b]){x->EditingStyle=[Popup new];x->EditingStyle.titleOfSelectedItem=@"Original";x->_prefsWindow=[FakePanel new];[x EditingStyleChoice:nil];}
+  a->EditingColors[@"EditorText"]=@[@1,@1,@1,@1];
+  b->EditingColors[@"EditorBackground"]=@[@0,@0,@0,@1];
+  dispatch_group_t group=dispatch_group_create();
+  hooked.afterRead=^{
+   dispatch_group_async(group,dispatch_get_global_queue(QOS_CLASS_USER_INITIATED,0),^{[b SaveEditedStyle:nil];});
+   [NSThread sleepForTimeInterval:0.4];
+  };
+  [a SaveEditedStyle:nil];
+  check(dispatch_group_wait(group,dispatch_time(DISPATCH_TIME_NOW,(int64_t)(10*NSEC_PER_SEC)))==0,"the other save ends");
+  NSDictionary *both=[p.store readTitle:@"Original"];
+  check([both[@"EditorText"] isEqual:(@[@1,@1,@1,@1])] && [both[@"EditorBackground"] isEqual:(@[@0,@0,@0,@1])] && a.errors==0 && b.errors==0,"two saves of different colors at once keep both");
+  check([a->EditingColors[@"EditorText"] isEqual:(@[@1,@1,@1,@1])] && [b->EditingColors isEqual:both] && [b.lastSavedEditingColors isEqual:both],"each save keeps what it wrote as its last saved colors");
+  [p.store writeColors:saved title:@"Original" error:NULL];
+ }
+ NSUInteger reloadsBeforeFailure=reloads;
  NSURL *file=[root URLByAppendingPathComponent:@"Original.plist"];
  check([NSFileManager.defaultManager removeItemAtURL:file error:NULL],"remove fixture");
  check([NSFileManager.defaultManager createDirectoryAtURL:file withIntermediateDirectories:NO attributes:nil error:NULL],"force write and reload failure");
  p->EditingColors[@"EditorText"]=@[@0.9,@0.9,@0.9,@1];
  [p SaveEditedStyle:nil];
- check(p.errors==1 && [p->EditingColors isEqual:saved] && notifications==1 && reloads==1,"failed save restores last successful dictionary without applying it");
+ check(p.errors==1 && [p->EditingColors isEqual:saved] && notifications==3 && reloads==reloadsBeforeFailure,"failed save restores last successful dictionary without applying it");
  p->EditingColors[@"EditorText"]=@[@0.4,@0.4,@0.4,@1];
  [p SaveNewStyle:nil];
  check(p->_prefsWindow.attachedSheet==p->stylePanel && [p->styleTitle.stringValue isEqual:@""],"clone uses a cleared name sheet");
@@ -186,6 +239,6 @@ int main(int argc,char **argv){@autoreleasepool{
 }return 0;}
 '''.replace('METHODS',methods)
 with tempfile.TemporaryDirectory(prefix='texshop-theme-persistence-') as td:
- t=Path(td);(t/'probe.m').write_text(program);(t/'Colors').mkdir()
- subprocess.run(['xcrun','clang','-fobjc-arc','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-Wno-deprecated-declarations',*include_args(R),'-I',str(R/'Tests'),'-framework','Cocoa',str(t/'probe.m'),str(R/'Sources/Settings/TSThemeFileStore.m'),'-o',str(t/'probe')],check=True)
+ t=Path(td);(t/'probe.m').write_text(program);(t/'TSThemeFileStore.m').write_text(store);(t/'Colors').mkdir()
+ subprocess.run(['xcrun','clang','-fobjc-arc','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-Wno-deprecated-declarations',*include_args(R),'-I',str(R/'Tests'),'-framework','Cocoa',str(t/'probe.m'),str(t/'TSThemeFileStore.m'),'-o',str(t/'probe')],check=True)
  subprocess.run([str(t/'probe'),str(t/'Colors')],check=True,timeout=60)
