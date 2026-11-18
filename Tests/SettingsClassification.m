@@ -17,6 +17,7 @@
 - (void)configurePreferenceInputs;
 - (BOOL)control:(NSControl *)control textShouldEndEditing:(NSText *)editor;
 - (void)FillInColorWells;
+- (void)refreshKeyboardSettingsFromDefaults:(NSUserDefaults *)defaults;
 @property(strong) TSSettingsWindowController *settingsController;
 - (BOOL)commitPreferenceField:(NSControl *)field showError:(BOOL)showError reflect:(BOOL)reflect;
 @end
@@ -55,6 +56,10 @@ static id MainBundle(id receiver,SEL selector) { return bundle; }
 static void Check(BOOL ok,NSString *why) { if(!ok){fprintf(stderr,"FAIL: %s\n",why.UTF8String);exit(1);} }
 static id _Nonnull Required(id _Nullable value) {if(value==nil)abort();return (id _Nonnull)value;}
 static NSString * _Nonnull Argument(const char *value) {return Required([NSString stringWithUTF8String:value]);}
+static void RowOrder(NSView *v,NSMutableArray *rows) {
+ if([v.identifier hasPrefix:@"row.catalog."]){[rows addObject:v.identifier];return;}
+ for(NSView *c in v.subviews) RowOrder(c,rows);
+}
 static void Collect(NSView *v,NSMutableDictionary *controls) {
  if([v isKindOfClass:NSControl.class] && ![v isKindOfClass:NSImageView.class] && [v.identifier hasPrefix:@"settings."]) { Check(controls[Required(v.identifier)]==nil,[NSString stringWithFormat:@"Control occurs once: %@",v.identifier]);controls[Required(v.identifier)]=v; }
  for(NSView *c in v.subviews) Collect(c,controls);
@@ -200,6 +205,34 @@ int main(int argc,char **argv){@autoreleasepool{
    Check([button sendAction:button.action to:button.target],@"Migrated action dispatches");
    Check(memory.values.count==1 && [memory.values[Required(writes[identifier])] isEqual:Required(value)],[NSString stringWithFormat:@"%@ saves only %@: %@",identifier,writes[identifier],memory.values]);
   }
+ }
+ // Keyboard: the mark switch follows the completion trigger in Command Completion; the BibDesk
+ // switch is the only row of Label and Citation Key Completion and still saves BibDeskCompletion.
+ {
+  NSView *keyboard=[panes[@"keyboard"] view],*completion=Find(keyboard,@"group.completion"),*labels=Find(keyboard,@"group.labelcompletion");
+  NSMutableArray *completionRows=[NSMutableArray array],*labelRows=[NSMutableArray array];RowOrder(Required(completion),completionRows);RowOrder(Required(labels),labelRows);
+  Check([completionRows isEqual:@[@"row.catalog.keyboard.1.0",@"row.catalog.keyboard.1.3",@"row.catalog.keyboard.1.2"]],[NSString stringWithFormat:@"Command Completion rows: %@",completionRows]);
+  Check([labelRows isEqual:@[@"row.catalog.keyboard.3.0"]],[NSString stringWithFormat:@"Label and Citation Key Completion rows: %@",labelRows]);
+  Check([Find(labels,@"settings.cell.843") isDescendantOf:Find(labels,@"row.catalog.keyboard.3.0")] && Find(completion,@"settings.cell.843")==nil,@"The BibDesk switch moved to Label and Citation Key Completion");
+  NSString *labelsTitle=[bundle localizedStringForKey:@"group.labelcompletion.title" value:nil table:@"SettingsCategories"];
+  Check([labels.accessibilityLabel isEqual:labelsTitle] && ![labelsTitle isEqual:@"group.labelcompletion.title"],@"Label and Citation Key Completion has its translated heading");
+  NSButton *marks=after[@"settings.completion-mark-keys"];NSSwitch *toggle=(NSSwitch *)Find(marks.superview,@"toggle.settings.completion-mark-keys");
+  Check([marks isDescendantOf:Find(completion,@"row.catalog.keyboard.1.3")] && [toggle isKindOfClass:NSSwitch.class],@"The mark switch is a native switch in its Command Completion row");
+  NSString *marksTitle=[bundle localizedStringForKey:@"catalog.keyboard.1.3.title" value:nil table:@"SettingsCategories"];
+  Check([marks.title isEqual:marksTitle] && ![marksTitle isEqual:@"catalog.keyboard.1.3.title"] && Find(Find(completion,@"row.catalog.keyboard.1.3"),@"note.catalog-row")==nil,@"The mark switch has its translated title and no note");
+  for(NSNumber *value in @[@NO,@YES,@NO]){
+   [memory.values removeAllObjects];toggle.state=value.boolValue;
+   Check([toggle sendAction:toggle.action to:toggle.target],@"The mark switch dispatches");
+   Check(memory.values.count==1 && [memory.values[CommandCompletionAlternateMarkShortcutKey] isEqual:value],[NSString stringWithFormat:@"The mark switch saves only CommandCompletionAlternateMarkShortcut: %@",memory.values]);
+  }
+  // Opening Settings reads the value with boolForKey: no value is on (the factory default), and the
+  // string NO and every false value are off.
+  for(NSArray *entry in @[@[@"NO",@NO],@[@"YES",@YES],@[@NO,@NO],@[@YES,@YES],@[@0,@NO],@[@1,@YES],@[@"0",@NO]]){
+   [memory.values removeAllObjects];[memory setObject:entry[0] forKey:CommandCompletionAlternateMarkShortcutKey];
+   [owner refreshKeyboardSettingsFromDefaults:(NSUserDefaults *)memory];
+   Check(marks.state==([entry[1] boolValue]?NSControlStateValueOn:NSControlStateValueOff) && toggle.state==marks.state,[NSString stringWithFormat:@"Stored %@ shows the mark switch %@",entry[0],entry[1]]);
+  }
+  [memory.values removeAllObjects];[memory setObject:@YES forKey:CommandCompletionAlternateMarkShortcutKey];
  }
  if(argc>3){
   [memory.values removeAllObjects];[memory.values addEntriesFromDictionary:@{@"TeXAwareSpellChecking":@NO,@"PdfMagnification":@1,@"Encoding":@"UTF-8",@"AutoSaveEnabled":@NO,@"FindMethod":@1}];

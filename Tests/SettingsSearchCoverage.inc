@@ -52,6 +52,15 @@ static void SearchCoverage(NSDictionary<NSString *,NSViewController *> *panes,NS
   NSString *label=[resources localizedStringForKey:contract[1] value:nil table:@"SettingsCategories"];
   BOOL found=NO;for(TSSettingsSearchEntry *entry in index.entries)if([entry.targetIdentifier isEqual:contract[0]] && [entry.text isEqual:label] && entry.weight==[contract[2]integerValue]){found=YES;}Check(found,@"Visible switch row names retain label weight");
  }
+ // The BibDesk switch moved to Label and Citation Key Completion: its words lead to its new row,
+ // and the mark switch of Command Completion is found by its name.
+ {
+  BOOL moved=NO,old=NO,marks=NO;
+  for(TSSettingsSearchResult *hit in [index resultsForQuery:@"BibDesk"]){if([hit.targetIdentifier isEqual:@"row.catalog.keyboard.3.0"])moved=YES;if([hit.targetIdentifier isEqual:@"row.catalog.keyboard.1.1"])old=YES;}
+  for(TSSettingsSearchResult *hit in [index resultsForQuery:[resources localizedStringForKey:@"catalog.keyboard.1.3.title" value:nil table:@"SettingsCategories"]])if([hit.targetIdentifier isEqual:@"row.catalog.keyboard.1.3"])marks=YES;
+  Check(moved && !old,@"BibDesk finds the switch in Label and Citation Key Completion");
+  Check(marks,@"The mark switch is found by its name");
+ }
  BOOL hasChoices=NO;for(TSSettingsSearchEntry *entry in index.entries)if([entry.targetIdentifier isEqual:@"row.catalog.editor.0.3"] && entry.weight==30)hasChoices=YES;
  Check(hasChoices,@"Radio matrix options have choice weight");
  // Every target has a fixed setting name, even when found through its help text.

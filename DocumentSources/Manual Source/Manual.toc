@@ -92,10 +92,11 @@
 \contentsline {subsection}{\numberline {15.3.6}Other Environments}{100}{subsection.15.3.6}%
 \contentsline {subsection}{\numberline {15.3.7}When Typing \texttt {\textbackslash } is Difficult}{100}{subsection.15.3.7}%
 \contentsline {subsection}{\numberline {15.3.8}Editing the Command Completion File}{100}{subsection.15.3.8}%
-\contentsline {section}{\numberline {15.4}The Advanced Find Panel}{102}{section.15.4}%
-\contentsline {subsection}{\numberline {15.4.1}Finding and Replacing}{102}{subsection.15.4.1}%
-\contentsline {subsection}{\numberline {15.4.2}Regular Expressions}{104}{subsection.15.4.2}%
-\contentsline {subsection}{\numberline {15.4.3}Multiple Replace}{105}{subsection.15.4.3}%
+\contentsline {section}{\numberline {15.4}Label and Citation Key Completion}{102}{section.15.4}%
+\contentsline {section}{\numberline {15.5}The Advanced Find Panel}{102}{section.15.5}%
+\contentsline {subsection}{\numberline {15.5.1}Finding and Replacing}{103}{subsection.15.5.1}%
+\contentsline {subsection}{\numberline {15.5.2}Regular Expressions}{104}{subsection.15.5.2}%
+\contentsline {subsection}{\numberline {15.5.3}Multiple Replace}{106}{subsection.15.5.3}%
 \contentsline {chapter}{\numberline {16}Automatic Saving; Finding Documents on Disk}{107}{chapter.16}%
 \contentsline {section}{\numberline {16.1}Automatic Saving}{107}{section.16.1}%
 \contentsline {section}{\numberline {16.2}Lock}{108}{section.16.2}%
@@ -170,7 +171,7 @@
 \contentsline {section}{\numberline {28.2}Presenting (Schmock)}{181}{section.28.2}%
 \contentsline {chapter}{\numberline {29}Additional TeXShop Features}{188}{chapter.29}%
 \contentsline {section}{\numberline {29.1}Experiments}{188}{section.29.1}%
-\contentsline {section}{\numberline {29.2}Tags Toolbar Item and Menu; Labels Item}{190}{section.29.2}%
+\contentsline {section}{\numberline {29.2}Tags Toolbar Item and Menu; Labels Item}{191}{section.29.2}%
 \contentsline {section}{\numberline {29.3}Latex Panel, Matrix Panel, Unicode Panel}{192}{section.29.3}%
 \contentsline {section}{\numberline {29.4}Show Invisible}{194}{section.29.4}%
 \contentsline {section}{\numberline {29.5}Swap with Clipboard}{194}{section.29.5}%
@@ -248,7 +249,7 @@
 \contentsline {subsubsection}{<Settings for the Preview Window Drawer>}{255}{section*.14}%
 \contentsline {subsubsection}{<Settings for Automatic Saving>}{255}{section*.15}%
 \contentsline {subsubsection}{<Settings for the Matrix Panel>}{255}{section*.16}%
-\contentsline {subsubsection}{<Settings for Server Problems>}{255}{section*.17}%
+\contentsline {subsubsection}{<Settings for Server Problems>}{256}{section*.17}%
 \contentsline {subsubsection}{<Settings for the Tags Menu>}{257}{section*.18}%
 \contentsline {section}{\numberline {41.3}Newer Hidden Settings}{257}{section.41.3}%
 \contentsline {subsubsection}{<Settings for the Source Window>}{257}{section*.19}%

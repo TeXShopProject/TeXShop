@@ -21,6 +21,7 @@
  */
 
 #import "ScrapTextView.h"
+#import "TSCompletionKeys.h"
 #import "NSMutableString-Extras.h"
 #import "globals.h"
 #import "GlobalData.h"
@@ -558,7 +559,40 @@
 }
 
 
+// A command the input method leaves for Escape or Tab during composition is dropped
+// (TSCompletionKeys.h).
+- (void)doCommandBySelector:(SEL)selector
+{
+    if (TSCompletionKeyComposingView == self) return;
+    [super doCommandBySelector:selector];
+}
+
+// When Escape triggers completion, Escape (and Shift-Escape) never reaches the panel,
+// whose Escape would close the Experiment: with no candidate it does nothing, as in the
+// source window. With Tab as the trigger, Escape closes the panel as before.
+- (void)passKeyDown:(NSEvent *)theEvent
+{
+    unichar escape = 0x1b;
+    if ([g_commandCompletionChar isEqualToString: [NSString stringWithCharacters: &escape length: 1]] &&
+        TSIsPlainOrShiftedEscape(theEvent))
+        return;
+    [super keyDown: theEvent];
+}
+
+// Escape and Tab during composition go to the input method (TSCompletionKeys.h); any
+// other key is handled by handleKeyDown:, with its commands kept even while an outer
+// key is still being delivered to this view.
 - (void)keyDown:(NSEvent *)theEvent
+{
+    // During composition, Escape and Tab with any modifier belong to the input method.
+    if ([self hasMarkedText] && TSIsCompletionFamilyKey(theEvent)) {
+        TSDeliverCompletionKeyToInputMethod(self, ^{ [super keyDown: theEvent]; });
+        return;
+    }
+    TSHandleKeyOutsideComposition(self, ^{ [self handleKeyDown: theEvent]; });
+}
+
+- (void)handleKeyDown:(NSEvent *)theEvent
 {
 	
 	// FIXME: Using static variables like this is *EVIL*
@@ -586,13 +620,12 @@
 	NSCharacterSet *charSet;
 	unichar c;
     
-    unichar tab = 0x0009; // ditto
-    NSString *g_commandCompletionCharTab;
-    
-    g_commandCompletionCharTab = [NSString stringWithCharacters: &tab length: 1];
+    // The panel follows the trigger key chosen in Settings, as the source window does.
+    NSString *g_commandCompletionCharTab = g_commandCompletionChar;
+
 	
-	if ([[theEvent characters] isEqualToString: g_commandCompletionCharTab] &&
-		( ! [[SUD stringForKey: CommandCompletionAlternateMarkShortcutKey] isEqualToString:@"NO"] ) &&
+	if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionCharTab] &&
+		[SUD boolForKey: CommandCompletionAlternateMarkShortcutKey] &&
 		(([theEvent modifierFlags] & NSAlternateKeyMask) != 0))
         
     {
@@ -600,19 +633,19 @@
         return;
     }
     
-	else if ([[theEvent characters] isEqualToString: g_commandCompletionCharTab] &&
-             ( ! [[SUD stringForKey: CommandCompletionAlternateMarkShortcutKey] isEqualToString:@"NO"] ) &&
+	else if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionCharTab] &&
+             [SUD boolForKey: CommandCompletionAlternateMarkShortcutKey] &&
              (([theEvent modifierFlags] & NSControlKeyMask) != 0))
     {
         [self doPreviousBullet:self];
         return;
     }
     
-	else if ([[theEvent characters] isEqualToString: g_commandCompletionCharTab] &&
+	else if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionCharTab] &&
              (([theEvent modifierFlags] & NSAlternateKeyMask) == 0) &&
              ![self hasMarkedText] && g_commandCompletionList)
         
-        //  if ([[theEvent characters] isEqualToString: g_commandCompletionCharTab] && (![self hasMarkedText]) && g_commandCompletionList)
+        //  if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionCharTab] && (![self hasMarkedText]) && g_commandCompletionList)
 	{
         textString = [self string]; // this will change during operations (such as undo)
 		selectedLocation = [self selectedRange].location;
@@ -681,7 +714,7 @@
 						// [self.originalString release];
 						// [self.currentString release];
 						wasCompleted = NO;
-						[super keyDown: theEvent];
+						[self passKeyDown: theEvent];
 						return; // no other completion is possible
 					}
 				} else { // this shouldn't happen
@@ -705,7 +738,7 @@
                                                      options:NSBackwardsSearch range:NSMakeRange(0,selectedLocation)];
 			if (foundRange.location != NSNotFound) {
 				if (foundRange.location + 1 == selectedLocation)
-				{ [super keyDown: theEvent];
+				{ [self passKeyDown: theEvent];
 					return;} // no string to match
 				c = [textString characterAtIndex: foundRange.location];
 				if (c == g_texChar || c == '{') // special characters
@@ -715,7 +748,7 @@
 			} else {
 				if (selectedLocation == 0)
 				{
-					[super keyDown: theEvent];
+					[self passKeyDown: theEvent];
 					return; // no string to match
 				}
 				replaceLocation = 0; // start from the beginning
@@ -892,7 +925,7 @@
 			self.originalString;
 			self.originalString = self.currentString = nil;
 			if (! wasCompleted)
-				[super keyDown: theEvent];
+				[self passKeyDown: theEvent];
 			wasCompleted = NO;
 			//NSLog(@"called super");
 		}
@@ -905,7 +938,7 @@
 		// return; //Herb Suggested Error Here		
 	}
     
-	[super keyDown: theEvent];
+	[self passKeyDown: theEvent];
 }
 
 

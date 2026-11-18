@@ -21,6 +21,7 @@
  */
 
 #import "TSTextView.h"
+#import "TSCompletionKeys.h"
 #import "TSTeXRootDocumentApplier.h"
 #import "TSLaTeXPanelController.h"
 
@@ -2242,7 +2243,28 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 
 /* OLD VERSION */ 
 
+// A command the input method leaves for Escape or Tab during composition is dropped
+// (TSCompletionKeys.h).
+- (void)doCommandBySelector:(SEL)selector
+{
+    if (TSCompletionKeyComposingView == self) return;
+    [super doCommandBySelector:selector];
+}
+
+// Escape and Tab during composition go to the input method (TSCompletionKeys.h); any
+// other key is handled by handleKeyDown:, with its commands kept even while an outer
+// key is still being delivered to this view.
 - (void)keyDown:(NSEvent *)theEvent
+{
+    // During composition, Escape and Tab with any modifier belong to the input method.
+    if ([self hasMarkedText] && TSIsCompletionFamilyKey(theEvent)) {
+        TSDeliverCompletionKeyToInputMethod(self, ^{ [super keyDown: theEvent]; });
+        return;
+    }
+    TSHandleKeyOutsideComposition(self, ^{ [self handleKeyDown: theEvent]; });
+}
+
+- (void)handleKeyDown:(NSEvent *)theEvent
 {
     
     // The following is from Antti Knowles, antti.knowles@unige.ch
@@ -2286,10 +2308,11 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
     BOOL boolResult;
 	unichar c;
     
+
     // if character is $, {, (, [ and control is down and there is a selection, then enclose the selection in appropriate brackets
-    // and return
+    // and return. Not while text is being composed: the brackets are part of the composition then.
     
-    if ((self.selectedRange.length > 2) && editorCanAddBrackets)
+    if ((self.selectedRange.length > 2) && editorCanAddBrackets && ![self hasMarkedText])
     { if ([[theEvent characters] isEqualToString: @"["])
         {
             selectedString = [[self string] substringWithRange:self.selectedRange];
@@ -2340,27 +2363,27 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
         }
     }
     
-	if ([[theEvent characters] isEqualToString: g_commandCompletionChar] &&
-		( ! [[SUD stringForKey: CommandCompletionAlternateMarkShortcutKey] isEqualToString:@"NO"] ) &&
+	if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionChar] &&
+		[SUD boolForKey: CommandCompletionAlternateMarkShortcutKey] &&
 		(([theEvent modifierFlags] & NSAlternateKeyMask) != 0))
 			{
  				[self.document doNextBullet:self];
 				return;
 			}
 		
-	else if ([[theEvent characters] isEqualToString: g_commandCompletionChar] &&
-		( ! [[SUD stringForKey: CommandCompletionAlternateMarkShortcutKey] isEqualToString:@"NO"] ) &&
+	else if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionChar] &&
+		[SUD boolForKey: CommandCompletionAlternateMarkShortcutKey] &&
 		(([theEvent modifierFlags] & NSControlKeyMask) != 0))
 			{
  				[self.document doPreviousBullet:self];
 				return;
 			}
 
-	else if ([[theEvent characters] isEqualToString: g_commandCompletionChar] &&
+	else if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionChar] &&
 		(([theEvent modifierFlags] & NSAlternateKeyMask) == 0) &&
 		![self hasMarkedText] && g_commandCompletionList)
 
-	  //  if ([[theEvent characters] isEqualToString: g_commandCompletionChar] && (![self hasMarkedText]) && g_commandCompletionList)
+	  //  if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionChar] && (![self hasMarkedText]) && g_commandCompletionList)
 	{
         textString = [self string]; // this will change during operations (such as undo)
 		selectedLocation = [self selectedRange].location;

@@ -289,10 +289,12 @@
 "catalog.keyboard.0.1.title" = "Elenco delle associazioni dei tasti";
 "group.completion.title" = "Completamento dei comandi";
 "catalog.keyboard.1.0.title" = "Tasto di attivazione";
-"catalog.keyboard.1.0.note" = "Completa il comando in corso di digitazione; premere di nuovo il tasto per la proposta successiva.";
-"catalog.keyboard.1.1.title" = "Completamento BibDesk";
-"catalog.keyboard.1.1.note" = "Propone le chiavi di citazione di BibDesk come completamenti in \\cite e comandi simili.";
+"catalog.keyboard.1.0.note" = "Completa il comando in corso di digitazione; premere di nuovo il tasto per la proposta successiva. Tenendo premuto Maiuscole si ottiene la proposta precedente.";
+"catalog.keyboard.1.3.title" = "Vai al marcatore successivo o precedente con Opzione o Controllo e il tasto di attivazione";
 "catalog.keyboard.1.2.title" = "Modifica il completamento dei comandi…";
+"group.labelcompletion.title" = "Completamento di etichette e chiavi di citazione";
+"catalog.keyboard.3.0.title" = "Proponi anche le chiavi di citazione di BibDesk";
+"catalog.keyboard.3.0.note" = "Dopo \\ref{ e comandi simili, «Completa etichetta o chiave di citazione» propone le etichette del file. Se attivato, dopo \\cite{ e comandi simili propone anche le chiavi di citazione di BibDesk.";
 "group.shortcuts.title" = "Abbreviazioni dei menu";
 "group.updates.0.title" = "Controllo automatico";
 "catalog.updates.0.0.title" = "Controlla aggiornamenti automaticamente";

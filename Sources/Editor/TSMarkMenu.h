@@ -12,6 +12,14 @@ NS_ASSUME_NONNULL_BEGIN
 // shortcuts stay with them. Calling it again changes nothing.
 + (void)installInMenu:(NSMenu *)mainMenu;
 - (IBAction)showMarkHelp:(nullable id)sender;
+// Edit › Complete Label or Citation Key: the text completion of macOS (complete:, F5)
+// in the source or Experiment text the user is typing in. After \ref{ and similar
+// commands it offers the labels of the file, after \cite{ the citation keys of BibDesk
+// when Settings › Keyboard allows it, and elsewhere the words macOS proposes.
+- (IBAction)completeLabelOrCitationKey:(nullable id)sender;
+// The editable text view, not a field editor, that is the first responder of the key
+// window; the menu item is dimmed without one.
++ (nullable NSTextView *)completionTarget;
 // Where showMarkHelp: goes in a localization: nil in English, for the help
 // book's anchor "marks"; in every other language, the English page with that
 // section, opened as a link (most languages have no help book, and those that

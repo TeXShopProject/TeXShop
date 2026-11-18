@@ -441,3 +441,8 @@
 "Center" = "Zentriert";
 /* Alignment of the text of an annotation */
 "Right" = "Rechts";
+
+/* Edit menu */
+"Complete Label or Citation Key" = "Label oder Zitierschlüssel vervollständigen";
+/* Edit › Complete Label or Citation Key tooltip */
+"Offers the labels of the file after \\ref{, and BibDesk citation keys after \\cite{ when Settings allows it." = "Bietet nach \\ref{ die Labels der Datei an und, wenn die Einstellungen es erlauben, nach \\cite{ die Zitierschlüssel von BibDesk.";

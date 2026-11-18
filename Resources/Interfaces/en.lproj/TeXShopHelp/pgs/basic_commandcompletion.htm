@@ -4,7 +4,7 @@
 <META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
 <TITLE>Command Completion</TITLE>
 <META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<META NAME="description" CONTENT="command completion; escape key">
+<META NAME="description" CONTENT="command completion; escape key; labels and citation keys">
 <link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -17,8 +17,8 @@
 		shift-escape goes through them in the opposite order.</p>
 		
 		<p>
-		The character which triggers command completion can be changed from "escape" to "tab" in TeXShop
-		Settings. </p>
+		The key which triggers command completion can be changed from "escape" to "tab" with "Completion trigger" in the
+		Keyboard category of TeXShop Settings. The source panel of Edit &#8250; Experiment&#8230; uses the same key as the source window. </p>
 
 <P>
 		TeXShop stores these completions in a Completion file, which can be edited
@@ -32,7 +32,7 @@
 		the menu. The cursor will skip to the second mark and select it. Typing immediately replaces the second mark with
 		desired text there. Continue until all four arguments of the command are filled in.</p>
 		
-<p> Since moving from mark to mark is often required, TeXShop supports additional keyboard shortcuts beyond those listed in Edit &#8250; Marks. When the escape key is used to trigger command completion, option-escape will move to the next mark and control-escape will move to the previous mark. When the tab key triggers command completion, option-tab moves to the next mark and control-tab moves to the previous mark. If you use a third party utility with other uses for these shortcuts, the TeXShop shortcuts can be turned off with a hidden setting. See the "Hidden Settings" section of TeXShop Help.</p>
+<p> Since moving from mark to mark is often required, TeXShop supports additional keyboard shortcuts beyond those listed in Edit &#8250; Marks. When the escape key is used to trigger command completion, option-escape will move to the next mark and control-escape will move to the previous mark. When the tab key triggers command completion, option-tab moves to the next mark and control-tab moves to the previous mark. If you use a third party utility with other uses for these shortcuts, turn off "Move to the next or previous mark with Option or Control and the trigger key" in the Keyboard category of TeXShop Settings.</p>
 		
 <P> 		The current extensive  Completion file  was written by Herbert Schulz, who added various "Mark" commands to TeXShop. Schulz wrote
 		an extended document describing this facility. That document is available in ~/Library/TeXShop/CommandCompletion. </p>
@@ -45,6 +45,9 @@ text in the source and thus often the intended completion.
 
 
 		
+
+<h3><a name="labels"></a>Label and Citation Key Completion</h3>
+<p>Edit &#8250; Complete Label or Citation Key (F5) completes a label or a citation key from a list. Choose it right after \ref{, \pageref{, \eqref{ or \autoref{, or after the first letters of a label typed there, and the list shows the labels defined with \label in the file. After \cite{ and similar commands, the list shows citation keys from BibDesk when "Also offer BibDesk citation keys" under Label and Citation Key Completion in the Keyboard category of TeXShop Settings is on. Elsewhere, it shows the word completions of macOS. On many keyboards, hold down the fn key (the Globe key) while pressing F5.</p>
 
 <h3><a name="marks"></a>Marks</h3>
 <p>A mark (&#8226;) is a place to come back to; a mark with a note (&#8226;&#8249;note&#8250;) also says what belongs there. Command completions, macros and key bindings can contain marks, and you can insert them yourself with Edit &#8250; Marks &#8250; Insert Mark (&#8984;8) and Insert Mark with Note (&#8963;&#8984;8). Insert Mark with Note inserts &#8226;&#8249;&#8250; with the insertion point between the brackets, or turns the selected text into the note.</p>

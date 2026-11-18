@@ -22,5 +22,9 @@ SEL TSMacroAction(void);
 - (NSArray<TSShortcutMatch *> *)menuMatchesKey:(NSString *)key modifiers:(NSEventModifierFlags)flags excluding:(nullable NSMenuItem *)excluded;
 - (nullable NSString *)conflictForKey:(NSString *)key modifiers:(NSEventModifierFlags)flags except:(nullable NSMenuItem *)excluded restoring:(nullable TSShortcutCommand *)restoring;
 - (nullable NSString *)conflictForRestoringCommand:(TSShortcutCommand *)command;
+// Edit › Complete Label or Citation Key: its default key gives way to a menu command or a macro.
+- (BOOL)commandYieldsDefault:(TSShortcutCommand *)command;
+// The macro, as its file names its key, that has the key; nil when none.
+- (nullable NSString *)macroNamingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags;
 @end
 NS_ASSUME_NONNULL_END

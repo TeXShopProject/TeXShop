@@ -441,3 +441,8 @@
 "Center" = "Centrer";
 /* Alignment of the text of an annotation */
 "Right" = "Droite";
+
+/* Edit menu */
+"Complete Label or Citation Key" = "Compléter l’étiquette ou la clé de citation";
+/* Edit › Complete Label or Citation Key tooltip */
+"Offers the labels of the file after \\ref{, and BibDesk citation keys after \\cite{ when Settings allows it." = "Propose les étiquettes du fichier après \\ref{ et, si les réglages le permettent, les clés de citation de BibDesk après \\cite{.";

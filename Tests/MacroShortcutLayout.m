@@ -551,7 +551,9 @@ static void CheckRecording(TSMacroEditor *owner) {
     Click(owner,row,@"Key",NO); SendKey(owner,window,KeyIn(window,@"\x19",48,NSEventModifierFlagShift)); REQUIRE(!owner.recordingItem && window.firstResponder!=recorder && cell.superview==nil);
     // A click elsewhere ends it, the focus where the click put it; the field leaves the row once the focus has moved.
     Click(owner,row,@"Key",NO); BOOL editable=contents.editable; contents.editable=YES;
-    REQUIRE([window makeFirstResponder:contents] && !owner.recordingItem && window.firstResponder==contents); Wait(.05);
+    REQUIRE([window makeFirstResponder:contents] && !owner.recordingItem && window.firstResponder==contents);
+    // The field leaves the row on the next turn of the main queue: wait for it, up to two seconds.
+    for (NSDate *limit=[NSDate dateWithTimeIntervalSinceNow:2]; cell.superview!=nil && limit.timeIntervalSinceNow>0;) Wait(.01);
     REQUIRE(cell.superview==nil && [Shown(rows,row) isEqual:@"⇧⌘M"] && [macro.key isEqual:@"M+ShiftKey"]);
     // Started on another item before then, the field goes there and stays.
     Click(owner,row,@"Key",NO); REQUIRE([window makeFirstResponder:contents]); Click(owner,otherRow,@"Key",YES);

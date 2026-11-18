@@ -29,6 +29,7 @@ NSNotificationName const TSMacroShortcutsChangedNotification = @"TSMacroShortcut
     NSMenu *menu = NSApp.mainMenu;
     if (menu == nil) { return; }
     self.store = [[TSShortcutStore alloc] initWithMenu:menu defaults:NSUserDefaults.standardUserDefaults];
+    self.store.macroProvider = self.macroProvider;
     [self observeMenuChanges];
     [self refreshMenuAndMacros];
 }
