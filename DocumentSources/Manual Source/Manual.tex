@@ -2406,6 +2406,14 @@ Each of the first four items has a keyboard shortcut. The Schulz document explai
 
 The creation of the existing Command Completion list was the joint work of several people. A few users have created their own versions of the file, and thus their own systematic ways to remember and name command abbreviations. Some of these are in $\sim$/Library/TeXShop/CommandCompletion.
 
+\section{Label and Citation Key Completion}
+
+The item {\bf Complete Label or Citation Key} in the Edit menu, with the keyboard shortcut F5, completes the text before the insertion point from a list. Choose it right after \texttt{\textbackslash ref\{}, \texttt{\textbackslash pageref\{}, \texttt{\textbackslash eqref\{} or \texttt{\textbackslash autoref\{}, or after the first letters of a label typed there, and a list of the labels defined with \texttt{\textbackslash label} in the file appears. Select a label with the arrow keys and press Return to enter it.
+
+After \texttt{\textbackslash cite\{} and similar commands, the list shows citation keys from BibDesk. This happens only when the item {\bf Also offer BibDesk citation keys} under Label and Citation Key Completion in the Keyboard category of TeXShop Settings is on, and BibDesk must be installed. Elsewhere, the list shows the word completions of macOS.
+
+The keyboard shortcut can be changed in the Keyboard category of TeXShop Settings, like those of other menu items. On many keyboards the top row of keys controls the brightness, the sound and other features of the Mac; then hold down the fn key (the Globe key) while pressing F5.
+
 \section{The Advanced Find Panel}\label{AdvancedFind}
 
 The Advanced Find Panel is chosen in TeXShop Settings, in the Editor category under Find Panel. Every user starts with it: at the first launch of TeXShop 6.00, users of earlier versions are switched to it once, whatever method they had, and can choose another method there again. It supports regular expressions, lists all matches, and replaces with sets of find and replace pairs.
@@ -4282,8 +4290,8 @@ Push the Typeset button at the bottom of the panel, and a second panel appears s
 
 The toolbar of the second panel has four tools, as in the Preview window: Scroll, Select Text, Magnify and Select PDF. Magnify is the magnifying glass of the Preview window: while the mouse button is held, it shows the page under the pointer at 150\% of its size on screen, or 200\%, 250\% and 300\% with Command, Option and Control; double-click for a larger lens. Select PDF draws a rectangle; Copy then copies it in the format chosen in the Copy Format submenu of the Preview menu. The panel remembers its tool separately from the Preview window. Next to the tools are Zoom Out, Zoom In, Zoom to Content, which enlarges the typeset part of the page to fill the panel, and Zoom to Content Width, which makes the typeset part as wide as the panel and shows its top at the top of the panel.
 
-Both panels have close buttons. The ESCAPE key will also close panels when they are active.
-Although the two panels do not have resize buttons, they can both be resized. TeXShop will remember the new sizes and locations and use them the next time ``Experiment...'' is selected. The source panel uses the font, tabs, line spacing and wrapping of the document's source window, and shows invisible characters, line numbers and the current line as that window does. The keyboard shortcuts ``command +'' and ``command -'' work in the source panel to enlarge the text if desired. Key bindings and command completion are available in the source panel, but with one caveat. Command completion uses the tab key in the panel even if it uses the escape key for regular source, since the escape key in a panel closes the panel.
+Both panels have close buttons, and command-W closes them. The ESCAPE key also closes the preview panel, and it closes the source panel when command completion uses the tab key.
+Although the two panels do not have resize buttons, they can both be resized. TeXShop will remember the new sizes and locations and use them the next time ``Experiment...'' is selected. The source panel uses the font, tabs, line spacing and wrapping of the document's source window, and shows invisible characters, line numbers and the current line as that window does. The keyboard shortcuts ``command +'' and ``command -'' work in the source panel to enlarge the text if desired. Key bindings, command completion, and label and citation key completion are available in the source panel. Command completion uses the same trigger key as the source window, chosen with ``Completion trigger'' in the Keyboard category of TeXShop Settings. When this key is escape, the escape key completes commands in the source panel and does not close it; close the panel with command-W or its close button.
 
 The ``Experiment...'' feature requires a latex-like engine. It will not work with ordinary plain tex. The source panel's Typeset button looks at the main source window's toolbar to determine a typesetting engine, and also uses the magic comment line mechanism if available at the top of the source window. Plain TeX, ConTeXt, and MetaPost cannot be used for an experiment. If ``BibTeX'' or ``MakeIndex'' are chosen, pdflatex is used. Obviously ``pdflatex, xelatex, and lualatex'' can be used. The panel will try to use any user-defined engine selected, but some such engines may fail if they don't expect latex-like code or don't output pdf. The fragment is typeset in a temporary folder that holds copy-on-write clones of the files and folders next to the document, so pictures and other files are found as when the document is typeset, also with paths that begin with \verb|./|, such as \verb|\graphicspath{{./figures/}}|, while whatever the typesetting writes leaves the document's folder alone. Items that cannot be cloned, for example on another disk, files whose contents are not on this Mac, such as online-only files of a cloud service, and folders with more than 5000 items are not cloned; then files are still found next to the document, but not with paths that begin with \verb|./|. A copy of the document's \verb|.aux| file from its last typesetting is read at the start of each run, so \verb|\ref|, \verb|\pageref| and \verb|\cite| show the numbers of the document.
 
@@ -6557,7 +6565,7 @@ There is a way to discover all TeXShop settings and their current values. In Ter
 
 The document ``Comment Lines and Hidden Settings'' in the TeXShop Help menu lists all hidden settings which work in the current version of TeXShop, with the command to change each one. This chapter describes many of them in more detail, together with their history.
 
-TeXShop 6.00 moved several hidden settings into TeXShop Settings: AutoSaveEnabled and KeepBackup (Automatic Saving), EncodingMenuInSaveDialog (the encoding menu in the Save dialog), MakeatletterEnabled and expl3SyntaxColoring (syntax coloring), and DisplayAsBook (showing the first page alone). The sections below say where to find them. TeXShop 6.00 also stopped reading a number of hidden settings which no longer had any effect. These are listed with the obsolete settings at the end of this chapter.
+TeXShop 6.00 moved several hidden settings into TeXShop Settings: AutoSaveEnabled and KeepBackup (Automatic Saving), EncodingMenuInSaveDialog (the encoding menu in the Save dialog), MakeatletterEnabled and expl3SyntaxColoring (syntax coloring), DisplayAsBook (showing the first page alone), and CommandCompletionAlternateMarkShortcut (moving to marks with Option or Control and the completion trigger). The sections below say where to find them. TeXShop 6.00 also stopped reading a number of hidden settings which no longer had any effect. These are listed with the obsolete settings at the end of this chapter.
 
 %The following list of hidden preferences was created by leafing through the old TeXShop Help Panel and the newer Changes document and listing preference settings. Items that can be set in the TeXShop Preferences Panel are not listed.
 
@@ -6596,14 +6604,11 @@ mechanism to find the root file. It then moves all files in the folder of this f
 
 TeXShop supports command completion. Type the first portion of a complicated TeX command and push the escape key. The rest of the command will be entered into the source. The full command can be complicated, so  TeXShop types ``marks'' within it;   menu commands jump from mark to mark. These commands have shortcuts listed in the menu.
 
-Since jumping to the next or previous mark is a common operation, TeXShop also allows users to type option-escape to get to the next mark and control-escape to get to the previous mark.
+Pushing the escape key again gives the next completion, and shift-escape goes back to the previous one. Since jumping to the next or previous mark is a common operation, TeXShop also allows users to type option-escape to get to the next mark and control-escape to get to the previous mark.
 
-The item ``Completion trigger'' in the Keyboard category of TeXShop Settings allows users to use ``tab'' instead of ``escape'' as the key which triggers command completion. In that case, the shortcuts which jump from mark to mark become option-tab and control-tab.
+The item ``Completion trigger'' in the Keyboard category of TeXShop Settings allows users to use ``tab'' instead of ``escape'' as the key which triggers command completion. In that case, the other shortcuts become shift-tab, option-tab and control-tab. The source panel of ``Experiment...'' uses the same keys as the source window.
 
-Occasionally, third party utilities make use of option-escape, control-escape, option-tab, and control-tab for other purposes. If TeXShop's use of these shortcuts interferes with these utilities, you can turn off these particular TeXShop shortcuts with a hidden setting:
-\begin{verbatim}
-   defaults write TeXShop CommandCompletionAlternateMarkShortcut NO
-\end{verbatim}
+Occasionally, third party utilities make use of option-escape, control-escape, option-tab, and control-tab for other purposes. If TeXShop's use of these shortcuts interferes with these utilities, turn off the item {\bf Move to the next or previous mark with Option or Control and the trigger key} under Command Completion in the Keyboard category of TeXShop Settings. Starting with TeXShop 6.00, this item replaces the former hidden setting CommandCompletionAlternateMarkShortcut.
 
 \subsubsection{<Settings for the Preview Window>}
 
