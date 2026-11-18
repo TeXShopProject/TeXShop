@@ -3239,6 +3239,8 @@ else {
         NSBeep();
         return;
     }
+    // A typesetting job does not outlive its document: it is stopped as Abort stops it.
+    [self killRunningTasks];
     [self.sourceStatusBar stop];
     [self.textStatistics close];
     [self closeExperiment];

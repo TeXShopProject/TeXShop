@@ -198,6 +198,9 @@ static void TSInstallAdvancedFindFieldStyle(void)
     NSInteger i = 0;
     while (i < [myDocuments count]) {
         aDocument = [myDocuments objectAtIndex:i];
+        // Typesetting jobs do not outlive TeXShop: they are stopped as Abort stops them.
+        if ([aDocument respondsToSelector:@selector(killRunningTasks)])
+            [aDocument killRunningTasks];
         if (aDocument.annotationsExist)
             {
             aDocument.annotationsExist = NO;
