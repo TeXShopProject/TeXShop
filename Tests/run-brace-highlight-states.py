@@ -13,11 +13,21 @@
   highlight of the braces and of their contents, over fullwidth characters too.
 - When the highlight of the contents ends, the fullwidth characters have their
   background again, and other text keeps its own.
+- Text composed in the same keystroke as a typed brace is not highlighted in its
+  place, and a closing brace being composed shows no indicator at its partner.
+- The highlight ends when its braces change without the insertion point moving,
+  when matching or the highlight of contents is turned off, and when typing moves
+  to the other half of a split window.
+- A change of theme or of one of its colors (each step of a dragged color well)
+  keeps the highlights, in the new colors, in light and dark windows.
+- With Highlight Current Line and the block cursor, fullwidth backgrounds and
+  highlighted contents still show, on the active line and on the others.
 
 All this in either half of a split window and in the Experiment source, with "Flash"
 and "Always" highlighting. The production categories TSDocument (SyntaxHighlighting) and
-TSDocument (ExperimentSource) are compiled unchanged onto a small TSDocument stand-in,
-with the production TSDocument methods for brace matching, the overrides of
+TSDocument (ExperimentSource), and TSDocument (Color) for changes of theme colors, are
+compiled unchanged onto a small TSDocument stand-in, with the production TSDocument
+methods for brace matching, its text view delegate method, the overrides of
 ScrapTextView and the real TSLayoutManager. Text is composed through the
 NSTextInputClient methods that input methods call. Windows are never ordered on
 screen. Preferences stay in memory."""
@@ -27,6 +37,7 @@ from source_tree import include_args, source_file
 
 SYNTAX = 'Sources/Editor/TSDocument-Syntax.m'
 EXPERIMENT = 'Sources/Editor/TSDocument-ExperimentSource.m'
+COLOR = 'Sources/Editor/TSDocument-Color.m'
 DOCUMENT = 'Sources/Document/TSDocument.m'
 SCRAP_VIEW = 'Sources/Editor/ScrapTextView.m'
 SCRAP = 'Sources/Document/TSDocument-Scrap.m'
@@ -34,12 +45,32 @@ XML = 'Sources/Document/TSDocument-XML.m'
 TEXT_VIEW = 'Sources/Editor/TSTextView.m'
 
 MUTATIONS = {
+    'highlights-moved-braces': (DOCUMENT,
+        '\tif (![self braceHighlightFits:NSMakeRange(MIN(location1, location2), ABS(location1 - location2) + 1) inTextView:textView1])\n\t\treturn;\n', ''),
+    'highlights-moved-contents': (DOCUMENT,
+        '\tif (![self braceHighlightFits:NSRangeFromString(range) inTextView:textView1])\n\t\treturn;\n', ''),
+    'experiment-highlights-moved-braces': (EXPERIMENT,
+        '    if (![self braceHighlightFits:NSMakeRange(MIN(location1, location2), ABS(location1 - location2) + 1) inTextView:scrapTextView])\n        return;\n', ''),
+    'indicator-while-composing': (DOCUMENT, '\tif ([textView1 hasMarkedText] || [textView2 hasMarkedText])\n\t\treturn;\n', ''),
+    'experiment-indicator-while-composing': (EXPERIMENT, '    if (scrapTextView.hasMarkedText)\n        return;\n', ''),
+    'restores-unmatched': (SYNTAX,
+        '    if ([[aTextView string] length] != (experiment ? scrapHighlightedTextLength : highlightedTextLength) ||\n        ![self braceHighlightFits:pair inTextView:aTextView]) {',
+        '    if (NO) {'),
+    'restores-turned-off-kinds': (SYNTAX, "(open == '{' && close == '}' && [SUD boolForKey:CheckBraceEnabledKey])", "(open == '{' && close == '}')"),
+    'no-reset-when-matching-off': (DOCUMENT,
+        '\t\tif (highlightingContent)\n\t\t\t[self performSelector:resetBackgroundSelector withObject:nil afterDelay:0];\n\t\tif (highlightingBraces)\n\t\t\t[self performSelector:resetHighlightSelector withObject:nil afterDelay:0];\n\t\treturn;',
+        '\t\treturn;'),
+    'no-resync-on-other-half': (DOCUMENT, '\tif (otherHalf) {', '\tif (NO) {'),
+    'active-line-wipes-fullwidth': (SYNTAX, '            TSRestoreFullwidthBackground(layoutManager, TSVisibleCharacterRange(aTextView));\n', ''),
+    'active-line-wipes-contents': (SYNTAX, '            [self restoreBraceHighlightsIn:aTextView range:TSVisibleCharacterRange(aTextView)];\n', ''),
+    'stale-fullwidth-marks': (SYNTAX, '      [layoutManager removeTemporaryAttribute:TSFullwidthBackgroundMark forCharacterRange:colorRange];\n', ''),
     'no-highlight-generation': (DOCUMENT,
         '    if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != braceHighlightGeneration)\n        return;\n', ''),
     'no-flash-generation': (DOCUMENT,
         '    if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != braceFlashGeneration)\n        return;\n', ''),
     'no-experiment-highlight-generation': (EXPERIMENT,
-        '    if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != scrapBraceHighlightGeneration)\n        return;\n', ''),
+        '- (void)resetExperimentHighlight:(id)sender\n{\n    if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != scrapBraceHighlightGeneration)\n        return;\n',
+        '- (void)resetExperimentHighlight:(id)sender\n{\n'),
     'no-experiment-flash-generation': (EXPERIMENT,
         '    if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != scrapBraceFlashGeneration)\n        return;\n', ''),
     'highlights-composed-brace': (DOCUMENT, '    if ([selectionView hasMarkedText]) {', '    if (NO) {'),
@@ -49,7 +80,8 @@ MUTATIONS = {
         '    if ([self coloringWaitsForMarkedTextIn:scrapTextView]) {\n        scrapHighlightedBraceLocations = nil;\n', '    if ([self coloringWaitsForMarkedTextIn:scrapTextView]) {\n'),
     'other-half-resets': (DOCUMENT,
         '\tif ([inNotification object] != nil && [inNotification object] != [self textView])\n\t\treturn;\n', ''),
-    'keeps-fullwidth-background': (SYNTAX, '   else\n      TSRemoveFullwidthBackground(layoutManager, colorRange);\n', ''),
+    'keeps-fullwidth-background': (SYNTAX, '   } else\n      TSRemoveFullwidthBackground(layoutManager, colorRange);\n', '   }\n'),
+    'keeps-contents-turned-off': (SYNTAX, '    if (highlightsContents && ![SUD boolForKey:HighlightContentEnabledKey]) {', '    if (NO) {'),
     'no-fullwidth-mark': (SYNTAX,
         '    TSMarkFullwidthBackground(layoutManager, colorRange, [self.syntaxColorScheme attributesForRole:TSSyntaxRoleFullwidthSymbol][NSBackgroundColorAttributeName]);\n', ''),
     'no-restore': (SYNTAX, '    [self restoreBraceHighlightsIn:aTextView range:colorRange];\n', ''),
@@ -63,7 +95,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
-text = {path: (root / path).read_text(encoding='latin1') for path in (SYNTAX, EXPERIMENT, DOCUMENT, SCRAP_VIEW, SCRAP, XML, TEXT_VIEW)}
+text = {path: (root / path).read_text(encoding='latin1') for path in (SYNTAX, EXPERIMENT, COLOR, DOCUMENT, SCRAP_VIEW, SCRAP, XML, TEXT_VIEW)}
 if args.mutation:
     path, old, new = MUTATIONS[args.mutation]
     assert text[path].count(old) == 1, args.mutation
@@ -94,6 +126,8 @@ DOCUMENT_METHODS = [
     '- (void)textViewDidChangeSelection:(NSNotification *)inNotification',
     '- (void)matchBracesForSelectionInTextView:(NSTextView *)aTextView',
     '- (void)flashMatchForCharacter:(NSString *)replacementString range:(NSRange)affectedCharRange inTextView:(NSTextView *)aTextView',
+    '- (BOOL)textView:(NSTextView *)aTextView shouldChangeTextInRange:(NSRange)affectedCharRange replacementString:(NSString *)replacementString',
+    '- (void) setTextView: (id)aView',
 ]
 document_methods = '\n'.join(method(document, s) for s in DOCUMENT_METHODS)
 start = document.index('static const NSInteger kTSBraceSearchLimit')
@@ -108,6 +142,9 @@ text_view_tabs = method(text[TEXT_VIEW], '- (void)fixupTabs')
 try_scrap = method(text[SCRAP], '- (void) tryScrap:(id)sender')
 
 globals_m = source_file(root, 'globals.m').read_text(encoding='latin1')
+# Settings posts this after each change of the theme or of one of its colors, as the document observes it.
+assert 'NSString *SourceColorChangedNotification = @"SourceColorChangedNotification";' in globals_m
+assert 'selector:@selector(changeColorsFromNotification:)\n          name:SourceColorChangedNotification object:nil];' in text[DOCUMENT]
 keys = dict(re.findall(r'^NSString \*(\w+Key)\s*=\s*(@"[^"]*");', globals_m, re.M))
 defines = '\n'.join(f'#define {k} {v}' for k, v in sorted(keys.items()))
 marker_keys = '\n'.join(f'NSString *{k} = {keys[k]};' for k in [
@@ -177,11 +214,19 @@ static NSColor *FlashColor, *ThemeBackground, *DarkFlashColor, *DarkBackground;
 + (instancetype)sharedInstance { return [self new]; }
 - (NSColor *)colorFromDictionary:(NSDictionary *)dictionary andKey:(NSString *)key
 {
+    NSArray *components = [dictionary[key] isKindOfClass:[NSArray class]] ? dictionary[key] : nil;
+    if (components)
+        return [NSColor colorWithSRGBRed:[components[0] doubleValue] green:[components[1] doubleValue] blue:[components[2] doubleValue]
+                                   alpha:components.count > 3 ? [components[3] doubleValue] : 1];
+    if (dictionary[@"theme"]) return nil;
     BOOL dark = dictionary == darkColors;
     if ([key isEqual:@"EditorFlash"]) return dark ? DarkFlashColor : FlashColor;
     if ([key isEqual:@"EditorBackground"]) return dark ? DarkBackground : ThemeBackground;
     return nil;
 }
+- (NSColor *)colorAndAlphaFromDictionary:(NSDictionary *)dictionary andKey:(NSString *)key { return [self colorFromDictionary:dictionary andKey:key]; }
+- (NSColor *)liteColorAndAlphaWithKey:(NSString *)key { return nil; }
+- (NSColor *)darkColorAndAlphaWithKey:(NSString *)key { return nil; }
 - (NSColor *)darkColorWithKey:(NSString *)key { return DarkFlashColor; }
 - (NSColor *)liteColorWithKey:(NSString *)key { return FlashColor; }
 @end
@@ -209,6 +254,14 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
 - (void)showFindIndicatorForRange:(NSRange)range { [indicators addObject:[@"source " stringByAppendingString:NSStringFromRange(range)]]; }
 @end
 
+@interface NSObject (TestStatusBar)
+- (void)selectionDidChange;
+- (void)updatePreviewPaperColor;
+@end
+// What -changeColorsUsingDictionary: sets besides the source.
+NSColor *ReverseSyncColor, *ImageForegroundColor, *ImageBackgroundColor, *PreviewDirectSyncColor;
+extern NSColor *InvisibleColor;
+#import "TSThemeAlpha.h"
 @interface TSDocument : NSObject {
     @public
     BOOL tagLine, fileIsTex, isLoading, firstTime, lineNumbersShowing, invisibleCharactersShowing, showIndexColor,
@@ -224,6 +277,8 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
     NSLineBreakMode lineBreakMode;
     NSTextView *textView1, *textView2, *scrapTextView, *textView;
     NSScrollView *scrollView, *scrollView2;
+    NSWindow *textWindow, *fullSplitWindow, *outputWindow;
+    NSTextView *outputText;
     NSButton *indexColorSplitBox;
 }
 @property (strong) NSDictionary *EntryColorAttribute, *commandColorAttribute, *commentColorAttribute,
@@ -232,12 +287,17 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
     *indexColorAttribute, *markerColorAttribute, *markerColorCurlyAttribute, *markerColorParenAttribute,
     *markerColorSquareAttribute, *regularColorAttribute;
 @property BOOL blockCursor, fileIsXML, syntaxColor, syntaxcolorEntry, useExplColor, coloringWaitsForMarkedText;
-@property (readonly) TSSyntaxColorScheme *syntaxColorScheme;
+@property (strong) TSSyntaxColorScheme *syntaxColorScheme;
 @property (strong) NSTextStorage *textStorage;
 @property (strong) NSTextView *textView;
 @property (strong) NSScrollView *logScrollView;
 @property (strong) NoodleLineNumberView *lineNumberView1, *lineNumberView2, *logLineNumberView;
 @property (strong) NSButton *indexColorBox;
+@property (strong) id sourceStatusBar, myPDFKitView, myPDFKitView2;
+@property (strong) NSTextView *logTextView;
+@property (strong) NSWindow *logWindow, *pdfKitWindow;
+@property (strong) NSDictionary *commentXMLColorAttribute, *tagXMLColorAttribute, *specialXMLColorAttribute, *parameterXMLColorAttribute, *valueXMLColorAttribute;
+- (void)changeColorsFromNotification:(NSNotification *)notification;
 - (BOOL)indexColorState;
 - (void)setupTagsAndLabelsAfterLoading;
 - (void)setupTags;
@@ -321,7 +381,9 @@ static TSSyntaxColorScheme *SchemeOf(TSDocument *doc)
 }
 @implementation TSDocument
 @synthesize textView = textView;
+// Made from the attributes that -changeColorsUsingDictionary: takes from the scheme it sets.
 - (TSSyntaxColorScheme *)syntaxColorScheme { return SchemeOf(self); }
+- (void)setSyntaxColorScheme:(TSSyntaxColorScheme *)scheme {}
 - (void)setupTagsAndLabelsAfterLoading {}
 - (void)setupTags {}
 @@DOCUMENT_METHODS@@
@@ -330,6 +392,7 @@ static TSSyntaxColorScheme *SchemeOf(TSDocument *doc)
 
 @@SYNTAX@@
 @@EXPERIMENT@@
+@@COLOR@@
 
 // Every change of a color in temporary attributes, and every look-up of the visible
 // text. AppKit itself keeps other temporary attributes, for text checking.
@@ -477,6 +540,7 @@ int main(void) { @autoreleasepool {
     doc->scrapTextView = scrap;
     [doc observeExperimentSource];
     source.allowsUndo = YES;
+    [NSNotificationCenter.defaultCenter addObserver:doc selector:@selector(changeColorsFromNotification:) name:@"SourceColorChangedNotification" object:nil];
 
     NSColor *contentColor = NSColor.cyanColor;
     [SUD setBool:YES forKey:CheckBraceEnabledKey];
@@ -538,6 +602,26 @@ int main(void) { @autoreleasepool {
             Spin(0.05);
             [mainWindow makeFirstResponder:source];
             doc.textView = source;
+            // Typing moves to the other half, whose insertion point is elsewhere: the highlight
+            // of the first half ends there and in the other half.
+            [SUD setBool:YES forKey:AlwaysHighlightEnabledKey]; [SUD setBool:YES forKey:HighlightContentEnabledKey];
+            Show(@"abc\nx{a\uff11b}z\nxyz plain\n");
+            [lower setSelectedRange:NSMakeRange(16, 0)];
+            Pass(5, 6); Spin(0.05);
+            Check(LIT(5) && LIT(9) && EACH([Background(v, 6) isEqual:contentColor]), "split: braces are highlighted in the upper half");
+            [lowerWindow makeFirstResponder:lower];
+            doc.textView = lower;  // as -[TSTextEditorWindow makeFirstResponder:] does
+            Spin(0.05);
+            Check(UNLIT(5) && UNLIT(9) && EACH(Background(v, 6) == nil && [Background(v, 7) isEqual:fullwidthBackground]),
+                  "split: when typing moves to the other half, the highlight of the first half ends");
+            [lower setSelectedRange:NSMakeRange(9, 0)]; Spin(0.01);
+            [lower setSelectedRange:NSMakeRange(10, 0)]; Spin(0.05);
+            Check(LIT(5) && LIT(9), "split: braces next to the insertion point of the other half are highlighted");
+            [mainWindow makeFirstResponder:source];
+            doc.textView = source;
+            Spin(0.05);
+            Check(UNLIT(5) && UNLIT(9), "split: and back in the first half, that highlight ends as well");
+            [SUD setBool:NO forKey:AlwaysHighlightEnabledKey]; [SUD setBool:NO forKey:HighlightContentEnabledKey];
             Show(@"abc\n{}{}\nxyz\n");
         }
 
@@ -638,6 +722,13 @@ int main(void) { @autoreleasepool {
             Spin(0.05);
             Check(EACH([Foreground(v, 2) isEqual:commentColor] && Background(v, 2) == nil && Background(v, 3) == nil),
                   NAME("fullwidth digits joined to a comment have no background"));
+            // Highlight Current Line turned on afterwards does not give it back.
+            doc.syntaxcolorEntry = YES;
+            for (NSTextView *v in views) [doc cursorMoved:v];
+            Check(EACH(![Background(v, 2) isEqual:fullwidthBackground] && ![Background(v, 3) isEqual:fullwidthBackground]),
+                  NAME("nor once the active line is drawn"));
+            doc.syntaxcolorEntry = NO;
+            for (NSTextView *v in views) [doc removeCurrentLineColor:v];
             [view insertText:@"\n" replacementRange:NSMakeRange(NSNotFound, 0)];
             if (inExperiment) [doc colorizeExperimentSource]; else [doc fixColor:0 :view.string.length];
             Spin(0.05);
@@ -703,6 +794,214 @@ int main(void) { @autoreleasepool {
         }
         [SUD setBool:NO forKey:HighlightContentEnabledKey];
         [SUD setBool:NO forKey:AlwaysHighlightEnabledKey];
+
+        // 6. Text composed in the same keystroke as a brace: the positions matched before
+        // are no longer those of the braces, and nothing is highlighted there.
+        for (int always = 0; always < 2; always++) {
+            [SUD setBool:always forKey:AlwaysHighlightEnabledKey];
+            [SUD setBool:YES forKey:HighlightContentEnabledKey];
+            for (int commit = 0; commit < 2; commit++) {
+                Show(@"x}}y");
+                [view setSelectedRange:NSMakeRange(1, 0)]; Spin(0.01);
+                [view insertText:@"{" replacementRange:NSMakeRange(NSNotFound, 0)];
+                Compose(view, @[@"\uff11"]); Spin(0.05);
+                Check(view.hasMarkedText && EACH(![Foreground(v, 2) isEqual:braceColor] && ![Background(v, 2) isEqual:contentColor]),
+                      NAME("text composed right after a typed brace is not highlighted"));
+                Spin(0.40);
+                Check(EACH(![Foreground(v, 2) isEqual:braceColor] && ![Background(v, 2) isEqual:contentColor]),
+                      NAME("nor after the time of the highlight"));
+                if (commit) [view insertText:@"\uff11" replacementRange:NSMakeRange(NSNotFound, 0)];
+                else { [view setMarkedText:@"" selectedRange:NSMakeRange(0, 0) replacementRange:NSMakeRange(NSNotFound, 0)]; [view unmarkText]; }
+                Spin(0.05); Recolor(); Spin(0.40);
+                BOOL none = YES;
+                for (NSUInteger i = 0; i < view.string.length; i++)
+                    if (!EACH(![Foreground(v, i) isEqual:braceColor] && ![Background(v, i) isEqual:contentColor])) none = NO;
+                Check(none, NAME("once it is committed or removed, no highlight is left anywhere"));
+                if (commit) Check(EACH([Background(v, 2) isEqual:fullwidthBackground]), NAME("the committed digit has the fullwidth background"));
+            }
+        }
+        [SUD setBool:NO forKey:HighlightContentEnabledKey];
+        [SUD setBool:NO forKey:AlwaysHighlightEnabledKey];
+
+        // 7. A closing brace being composed shows no indicator at its partner; committed, it does.
+        [SUD setBool:YES forKey:ParensMatchingEnabledKey]; [SUD setBool:YES forKey:brieflyFlashYellowForMatchKey];
+        for (int commit = 0; commit < 2; commit++) {
+            Show(@"x{y");
+            [view setSelectedRange:NSMakeRange(3, 0)]; Spin(0.40);
+            [indicators removeAllObjects];
+            Compose(view, @[@"}"]); Spin(0.06);
+            Check(indicators.count == 0, NAME("a closing brace being composed shows no indicator at its partner"));
+            if (commit) {
+                [view insertText:@"}" replacementRange:NSMakeRange(NSNotFound, 0)]; Spin(0.06);
+                Check([indicators containsObject:[NSString stringWithFormat:@"%@ {1, 1}", inExperiment ? @"experiment" : @"source"]],
+                      NAME("a committed closing brace shows the indicator at its partner"));
+            } else {
+                [view setMarkedText:@"" selectedRange:NSMakeRange(0, 0) replacementRange:NSMakeRange(NSNotFound, 0)]; [view unmarkText]; Spin(0.06);
+                Check(indicators.count == 0, NAME("nor once the composed brace is removed"));
+            }
+        }
+        [indicators removeAllObjects];
+        Show(@"x{y");
+        [view setSelectedRange:NSMakeRange(3, 0)]; Spin(0.02);
+        [view insertText:@"}" replacementRange:NSMakeRange(NSNotFound, 0)]; Spin(0.06);
+        Check(indicators.count > 0, NAME("a typed closing brace shows the indicator as before"));
+        [SUD setBool:NO forKey:ParensMatchingEnabledKey];
+
+        // 8. Matching turned off, or the text changed where braces are highlighted: the highlight ends.
+        [SUD setBool:YES forKey:AlwaysHighlightEnabledKey]; [SUD setBool:YES forKey:HighlightContentEnabledKey];
+        NSArray *kinds = @[CheckBraceEnabledKey, CheckBracketEnabledKey, CheckSquareBracketEnabledKey, CheckParenEnabledKey];
+        for (int which = 0; which < 2; which++) {
+            Show(@"abc\nx{a\uff11b}z\uff12\nxyz\n");
+            Pass(5, 6); Spin(0.05);
+            Check(LIT(5) && LIT(9) && EACH([Background(v, 6) isEqual:contentColor]), NAME("braces are highlighted"));
+            for (NSString *key in (which ? @[CheckBraceEnabledKey] : kinds)) [SUD setBool:NO forKey:key];
+            Recolor(); Spin(0.05);
+            Check(UNLIT(5) && UNLIT(9) && EACH(Background(v, 6) == nil), NAME("coloring right after matching is turned off ends the highlight"));
+            [view setSelectedRange:NSMakeRange(1, 0)]; Spin(0.05);
+            [view setSelectedRange:NSMakeRange(6, 0)]; Spin(0.50);
+            Recolor(); Spin(0.05);
+            Check(UNLIT(5) && UNLIT(9) && EACH(Background(v, 6) == nil && [Background(v, 7) isEqual:fullwidthBackground]),
+                  which ? NAME("with brace matching turned off, the highlight of braces ends and is not given again")
+                        : NAME("with all matching turned off, the highlight ends and is not given again"));
+            [SUD setBool:YES forKey:CheckBraceEnabledKey];
+            [view setSelectedRange:NSMakeRange(5, 0)]; Spin(0.01);
+            [view setSelectedRange:NSMakeRange(6, 0)]; Spin(0.05);
+            Check(LIT(5) && LIT(9) && EACH([Background(v, 7) isEqual:contentColor]), NAME("turned on again, braces are highlighted"));
+            // Turned off and the insertion point moved, with no coloring in between.
+            for (NSString *key in (which ? @[CheckBraceEnabledKey] : kinds)) [SUD setBool:NO forKey:key];
+            [view setSelectedRange:NSMakeRange(1, 0)]; Spin(0.05);
+            Check(UNLIT(5) && UNLIT(9) && EACH(Background(v, 6) == nil && [Background(v, 7) isEqual:fullwidthBackground]),
+                  NAME("moving the insertion point after matching is turned off ends the highlight"));
+            [SUD setBool:YES forKey:CheckBraceEnabledKey];
+        }
+        // Highlighting the contents turned off while they are highlighted.
+        Show(@"abc\nx{a\uff11b}z\uff12\nxyz\n");
+        Pass(5, 6); Spin(0.05);
+        [SUD setBool:NO forKey:HighlightContentEnabledKey];
+        Recolor(); Spin(0.05);
+        Check(LIT(5) && LIT(9) && EACH(Background(v, 6) == nil && [Background(v, 7) isEqual:fullwidthBackground]),
+              NAME("with Highlight Contents turned off, coloring ends the contents highlight and keeps the braces"));
+        [SUD setBool:YES forKey:HighlightContentEnabledKey];
+        for (int always = 0; always < 2; always++) {
+            [SUD setBool:always forKey:AlwaysHighlightEnabledKey];
+            Show(@"abc\nx{a\uff11b}z\uff12\nxyz\n");
+            Pass(5, 6); Spin(0.05);
+            // The closing brace replaced, the insertion point staying where it is.
+            if ([view shouldChangeTextInRange:NSMakeRange(9, 1) replacementString:@"Q"]) {
+                [view.textStorage replaceCharactersInRange:NSMakeRange(9, 1) withString:@"Q"];
+                [view didChangeText];
+            }
+            Check(NSEqualRanges(view.selectedRange, NSMakeRange(6, 0)), NAME("the insertion point stays"));
+            Spin(0.55); Recolor(); Spin(0.05);
+            Check(UNLIT(9) && UNLIT(5) && EACH(Background(v, 6) == nil && [Background(v, 7) isEqual:fullwidthBackground] && Background(v, 9) == nil),
+                  NAME("a highlighted brace replaced without moving the insertion point ends the highlight"));
+        }
+        [SUD setBool:NO forKey:HighlightContentEnabledKey];
+        [SUD setBool:NO forKey:AlwaysHighlightEnabledKey];
+
+        // 9. The active line keeps the fullwidth backgrounds and the highlighted contents on it and elsewhere.
+        for (int scheme = 0; scheme < 2; scheme++) {
+            NSDictionary *oldEntry = doc.EntryColorAttribute, *oldFullwidth = doc.fullwidthSymbolColorAttribute, *oldContent = highlightContentColorDict;
+            NSColor *line = scheme ? NSColor.darkGrayColor : entryColor, *wide = scheme ? NSColor.systemTealColor : fullwidthBackground,
+                    *contents = scheme ? NSColor.systemIndigoColor : contentColor;
+            doc.EntryColorAttribute = @{NSBackgroundColorAttributeName: line};
+            doc.fullwidthSymbolColorAttribute = @{NSForegroundColorAttributeName: fullwidthColor, NSBackgroundColorAttributeName: wide};
+            highlightContentColorDict = @{NSBackgroundColorAttributeName: contents};
+            doc.syntaxcolorEntry = YES;
+            [SUD setBool:YES forKey:AlwaysHighlightEnabledKey]; [SUD setBool:YES forKey:HighlightContentEnabledKey];
+            Show(@"\uff11a\nx{a\uff12b}z\uff13\nplain\n");
+            NSTextView *lineView = view;
+            void (^Cursor)(NSUInteger) = ^(NSUInteger at) { [lineView setSelectedRange:NSMakeRange(at, 0)]; Spin(0.02); [doc cursorMoved:lineView]; };
+            Cursor(14);
+            Check([Background(view, 0) isEqual:wide] && [Background(view, 10) isEqual:wide] && [Background(view, 13) isEqual:line] && Background(view, 1) == nil,
+                  NAME("on a plain active line, fullwidth characters on other lines keep their background"));
+            Cursor(1);
+            Check([Background(view, 0) isEqual:wide] && [Background(view, 1) isEqual:line] && [Background(view, 10) isEqual:wide],
+                  NAME("a fullwidth character on the active line keeps its background over the line's color"));
+            Cursor(4); Cursor(5);
+            Spin(0.05); [doc cursorMoved:view];
+            Check([Background(view, 3) isEqual:line] && [Background(view, 5) isEqual:contents] && [Background(view, 6) isEqual:contents]
+                  && [Background(view, 10) isEqual:wide] && [Background(view, 0) isEqual:wide] && LIT(4) && LIT(8),
+                  NAME("highlighted contents show on the active line, over a fullwidth character too"));
+            if (!inExperiment) {
+                [doc cursorMoved:lower];
+                Check([Background(lower, 6) isEqual:contents] && [Background(lower, 0) isEqual:wide], "lower half: the same with the active line drawn there");
+            }
+            [view setSelectedRange:NSMakeRange(14, 0)]; Spin(0.05); [doc cursorMoved:view];
+            Check(Background(view, 5) == nil && [Background(view, 6) isEqual:wide] && [Background(view, 13) isEqual:line],
+                  NAME("when the contents highlight ends, the active line and fullwidth backgrounds remain"));
+            // Block cursor: the cursor shows over a fullwidth character.
+            doc.blockCursor = YES;
+            [SUD setInteger:0 forKey:BlockWidthKey]; [SUD setInteger:2 forKey:BlockSideKey];
+            [SUD setFloat:1 forKey:BlockCursorRKey]; [SUD setFloat:0 forKey:BlockCursorGKey]; [SUD setFloat:0 forKey:BlockCursorBKey];
+            Cursor(0);
+            NSColor *cursor = Background(view, 0);
+            Check(cursor && ![cursor isEqual:wide] && [Background(view, 10) isEqual:wide], NAME("the block cursor shows over a fullwidth character, other ones keep their background"));
+            doc.blockCursor = NO;
+            // A theme without fullwidth colors: the active line alone.
+            doc.fullwidthSymbolColorAttribute = nil;
+            Recolor(); Cursor(14);
+            Check(Background(view, 0) == nil && Background(view, 10) == nil && [Background(view, 13) isEqual:line], NAME("without fullwidth colors, only the active line has a background"));
+            doc.syntaxcolorEntry = NO;
+            [doc removeCurrentLineColor:view]; if (!inExperiment) [doc removeCurrentLineColor:lower];
+            doc.EntryColorAttribute = oldEntry; doc.fullwidthSymbolColorAttribute = oldFullwidth; highlightContentColorDict = oldContent;
+            [SUD setBool:NO forKey:AlwaysHighlightEnabledKey]; [SUD setBool:NO forKey:HighlightContentEnabledKey];
+            Recolor(); Spin(0.40);
+        }
+
+        // 10. Changing the theme, or one of its colors in Settings (each step of a dragged color
+        // well posts a change), keeps the highlights, in the new colors, light and dark.
+        {
+            NSArray *keys = @[@"EntryColorAttribute", @"commandColorAttribute", @"commentColorAttribute", @"explColorAttribute1", @"explColorAttribute2",
+                              @"explColorAttribute3", @"explColorAttribute4", @"explColorAttribute5", @"explColorAttribute6", @"explColorAttribute7",
+                              @"footnoteColorAttribute", @"fullwidthSymbolColorAttribute", @"indexColorAttribute", @"markerColorAttribute",
+                              @"markerColorCurlyAttribute", @"markerColorParenAttribute", @"markerColorSquareAttribute", @"regularColorAttribute"];
+            NSMutableDictionary *saved = [NSMutableDictionary dictionary];
+            for (NSString *key in keys) { id value = [doc valueForKey:key]; if (value) saved[key] = value; }
+            NSDictionary *savedBraces = highlightBracesColorDict, *savedContents = highlightContentColorDict, *savedLite = liteColors, *savedDark = darkColors;
+            NSColor *(^Color)(NSArray *) = ^NSColor *(NSArray *c) {
+                return [NSColor colorWithSRGBRed:[c[0] doubleValue] green:[c[1] doubleValue] blue:[c[2] doubleValue] alpha:1];
+            };
+            for (int dark = 0; dark < 2; dark++) {
+                NSAppearance *appearance = [NSAppearance appearanceNamed:dark ? NSAppearanceNameDarkAqua : NSAppearanceNameAqua];
+                for (NSTextView *v in @[source, lower, scrap]) v.appearance = appearance;
+                for (int always = 0; always < 2; always++) {
+                    [SUD setBool:always forKey:AlwaysHighlightEnabledKey]; [SUD setBool:YES forKey:HighlightContentEnabledKey];
+                    Show(@"abc\nx{a\uff11b}z\uff12\nxyz\n");
+                    Pass(5, 6); Spin(0.05);
+                    for (int step = 0; step < 3; step++) {
+                        double s = 0.1 * step + (dark ? 0.05 : 0);
+                        NSArray *contents = @[@(0.2 + s), @0.9, @0.9], *braces = @[@0.8, @(0.1 + s), @0.6], *wide = @[@0.5, @0.5, @(0.2 + s)];
+                        NSDictionary *theme = @{@"theme": @YES, @"EditorHighlightContent": contents, @"EditorHighlightBraces": braces,
+                                                @"EditorHighlightZenkakuSymbol": @[@0.4, @0.1, @0.4], @"EditorHighlightZenkakuSymbolBackground": wide,
+                                                @"SyntaxComment": @[@0.8, @0.1, @0.1], @"EntryColor": @[@1, @1, @0.5]};
+                        if (dark) darkColors = theme; else liteColors = theme;
+                        [NSNotificationCenter.defaultCenter postNotificationName:@"SourceColorChangedNotification" object:nil];
+                        Spin(0.01);
+                        Check(EACH([Background(v, 6) isEqual:Color(contents)] && [Background(v, 7) isEqual:Color(contents)]
+                                   && [Background(v, 11) isEqual:Color(wide)]),
+                              NAME("a change of a theme color keeps the contents highlighted, in the new color"));
+                        Check(EACH([Foreground(v, 5) isEqual:Color(braces)] && [Foreground(v, 9) isEqual:Color(braces)]),
+                              NAME("and the braces too"));
+                    }
+                    if (!always) {
+                        Spin(0.40);
+                        [NSNotificationCenter.defaultCenter postNotificationName:@"SourceColorChangedNotification" object:nil];
+                        Spin(0.01);
+                        Check(EACH(![Foreground(v, 5) isEqual:[highlightBracesColorDict objectForKey:NSForegroundColorAttributeName]]
+                                   && [Background(v, 7) isEqual:[highlightContentColorDict objectForKey:NSBackgroundColorAttributeName]]),
+                              NAME("Flash: after the braces go out, a change of color keeps the contents highlighted"));
+                    }
+                    [view setSelectedRange:NSMakeRange(0, 0)]; Spin(0.40);
+                }
+            }
+            for (NSTextView *v in @[source, lower, scrap]) v.appearance = nil;
+            liteColors = savedLite; darkColors = savedDark;
+            for (NSString *key in keys) [doc setValue:saved[key] forKey:key];
+            highlightBracesColorDict = savedBraces; highlightContentColorDict = savedContents;
+            [SUD setBool:NO forKey:AlwaysHighlightEnabledKey]; [SUD setBool:NO forKey:HighlightContentEnabledKey];
+            Recolor(); Spin(0.40);
+        }
         if (!inExperiment) [mainWindow makeFirstResponder:source];
     }
 
@@ -713,7 +1012,7 @@ int main(void) { @autoreleasepool {
 '''
 replacements = {
     'DEFINES': defines, 'SCRAP_OVERRIDES': scrap_overrides, 'TAB_STOPS': tab_stops, 'BRACE_SEARCH': brace_search,
-    'DOCUMENT_METHODS': document_methods, 'TOGGLE_XML': toggle_xml, 'TEXT_VIEW_TABS': text_view_tabs, 'SYNTAX': strip_imports(text[SYNTAX]), 'EXPERIMENT': strip_imports(text[EXPERIMENT]),
+    'DOCUMENT_METHODS': document_methods, 'TOGGLE_XML': toggle_xml, 'TEXT_VIEW_TABS': text_view_tabs, 'SYNTAX': strip_imports(text[SYNTAX]), 'EXPERIMENT': strip_imports(text[EXPERIMENT]), 'COLOR': strip_imports(text[COLOR]),
     'TRY_SCRAP_SYNCS': 'YES' if '[self syncExperimentSourceDisplay];' in try_scrap else 'NO',
 }
 for name, value in replacements.items():
