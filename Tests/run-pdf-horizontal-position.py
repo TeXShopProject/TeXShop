@@ -49,6 +49,7 @@ program = r'''
 #import "TSExternalPDFReload.h"
 #import "TSPreviewHorizontalPosition.h"
 #import "TSScrollPageTurn.h"
+#import "TSPreviewAppearance.h"
 #define SUD NSUserDefaults.standardUserDefaults
 #define LeftRightArrowsAlwaysPageKey @"LeftRightArrowsAlwaysPage"
 #define NoScrollPageTurnKey @"NoScrollPageTurn"
@@ -291,7 +292,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-horizontal-') as directory:
     (temp / 'test.m').write_text(program)
     (temp / 'TSPreviewHorizontalPosition.h').write_text(header)
     subprocess.run(['xcrun', 'clang', '-I', str(temp), '-I', str(root / 'Tests'), '-mmacosx-version-min=14.6', '-w', '-fobjc-arc',
-                    '-framework', 'Cocoa', '-framework', 'PDFKit', *include_args(root), str(temp / 'test.m'),
+                    '-framework', 'Cocoa', '-framework', 'Quartz', '-framework', 'PDFKit', *include_args(root), str(temp / 'test.m'),
                     '-o', str(temp / 'test')], check=True)
     subprocess.run([str(temp / 'test')], check=True, timeout=300,
                    env=dict(os.environ, HOME=str(temp / 'home'), CFFIXED_USER_HOME=str(temp / 'home')))

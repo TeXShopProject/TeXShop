@@ -70,6 +70,7 @@ static void sameViewport(TSExternalPDFPosition expected, PDFView *view, NSString
 // moved an origin that was already inside the scrollable range by about 13.5
 // points. Reproduce that on other systems so the restoration is checked there too.
 #import <objc/runtime.h>
+#import "TSPreviewAppearance.h"
 static NSClipView *shiftingClip;
 static NSRect (*nativeConstrain)(id, SEL, NSRect);
 static NSRect shiftingConstrain(NSClipView *self, SEL _cmd, NSRect proposed) {
@@ -306,7 +307,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-viewport-') as directory:
         replacement = ('    target = [clip constrainBoundsRect:target];\n'
                        if args.mutation == 'legacy-constraints' else '')
         (temp/'TSExternalPDFReload.h').write_text(header[:start] + replacement + header[end:])
-    subprocess.run(['xcrun', 'clang', '-I', str(root/'Tests'), '-mmacosx-version-min=14.6', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit',
+    subprocess.run(['xcrun', 'clang', '-I', str(root/'Tests'), '-mmacosx-version-min=14.6', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'Quartz', '-framework', 'PDFKit',
                     *include_args(root), str(temp/'test.m'), str(root/'Sources/Preview/HideView.m'),
                     str(root/'Sources/Preview/TSExternalPDFSnapshot.m'), str(root/'Sources/Preview/TSPreviewScrollerKeeper.m'), '-o', str(temp/'test')], check=True)
     home = temp / 'home'
