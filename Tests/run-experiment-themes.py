@@ -10,7 +10,7 @@ import argparse, os, subprocess, tempfile
 from source_tree import include_args
 from experiment_preview_source import prelude as experiment_preview_prelude, sources as experiment_preview_sources
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['source-hook', 'pdf-hook', 'defaults-hook', 'reload-hook', 'menu-validation', 'filter-gamma', 'source-alpha', 'preview-alpha', 'paper-invert', 'paper-print', 'paper-lens', 'scroll-appearance', 'bar-appearance', 'bar-filters', 'late-scroller', 'display-mode', 'late-page', 'late-direction', 'late-destination'])
+parser.add_argument('--mutation', choices=['source-hook', 'pdf-hook', 'defaults-hook', 'reload-hook', 'menu-validation', 'filter-gamma', 'source-alpha', 'preview-alpha', 'paper-invert', 'paper-print', 'paper-lens', 'scroll-appearance', 'bar-appearance', 'bar-filters', 'late-scroller', 'display-mode', 'late-page', 'late-direction', 'late-destination', 'visible-pages', 'document-changed'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root/'Sources/Editor/ScrapTextView.m').read_text(encoding='latin1')
@@ -73,6 +73,12 @@ elif args.mutation == 'late-page':
     strip_after('    [super goToNextPage:sender];\n    // A wider page can replace the page views after the appearance was chosen.\n')
 elif args.mutation == 'late-destination':
     strip_after('    [super goToDestination:destination];\n    // An outline or an internal link can replace the page views after the appearance was chosen.\n')
+elif args.mutation in ('visible-pages', 'document-changed', 'reload-hook'):
+    marker = ('PDFViewVisiblePagesChangedNotification' if args.mutation == 'visible-pages'
+              else 'PDFViewDocumentChangedNotification')
+    old = '    TSFollowPreviewInversion(pdfView.documentView.enclosingScrollView); // %s\n' % marker
+    assert appearance.count(old) == 1, args.mutation
+    appearance = appearance.replace(old, '')
 pdf = pdf.replace('#import "TSPreviewAppearance.h"', appearance)
 pdf = experiment_preview_prelude(root) + pdf
 prefix = r'''
@@ -116,6 +122,52 @@ static void check(BOOL ok, NSString *message) {
 static void pump(void) {
     NSDate *end = [NSDate dateWithTimeIntervalSinceNow:.1];
     while (end.timeIntervalSinceNow > 0) [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.01]];
+}
+static void settle(void) {
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.55]];
+}
+static PDFDocument *manyPages(int count) {
+    NSMutableData *data = [NSMutableData data];
+    CGDataConsumerRef sink = CGDataConsumerCreateWithCFData((__bridge CFMutableDataRef)data);
+    CGRect box = CGRectMake(0, 0, 400, 420);
+    CGContextRef pdf = CGPDFContextCreate(sink, &box, NULL);
+    for (int i = 0; i < count; i++) {
+        CGPDFContextBeginPage(pdf, NULL);
+        CGContextSetRGBFillColor(pdf, 0, 0, 0, 1);
+        CGContextFillRect(pdf, CGRectMake(12, 14, 9, 9));
+        CGPDFContextEndPage(pdf);
+    }
+    CGPDFContextClose(pdf); CGContextRelease(pdf); CGDataConsumerRelease(sink);
+    return [[PDFDocument alloc] initWithData:data];
+}
+static NSSet *pagePointers(PDFView *view) {
+    NSMutableSet *set = [NSMutableSet set];
+    for (NSView *child in view.documentView.subviews)
+        if ([NSStringFromClass(child.class) containsString:@"Page"])
+            [set addObject:[NSValue valueWithPointer:(__bridge void *)child]];
+    return set;
+}
+static NSView *frontPage(PDFView *view) {
+    NSView *found = nil;
+    CGFloat best = 0;
+    for (NSView *child in view.documentView.subviews) {
+        if (![NSStringFromClass(child.class) containsString:@"Page"]) continue;
+        NSRect coverage = NSIntersectionRect([view convertRect:child.bounds fromView:child], view.bounds);
+        CGFloat area = coverage.size.width * coverage.size.height;
+        if (area > best) { best = area; found = child; }
+    }
+    return found;
+}
+static void turnWheel(PDFView *view) {
+    NSView *hit = frontPage(view);
+    check(hit != nil, @"the wheel hits a page in the Experiment");
+    for (int i = 0; i < 12; i++) {
+        CGEventRef event = CGEventCreateScrollWheelEvent(NULL, kCGScrollEventUnitLine, 1, -10);
+        NSEvent *wheel = [NSEvent eventWithCGEvent:event];
+        [hit scrollWheel:wheel];
+        CFRelease(event);
+        hit = frontPage(view) ?: hit;
+    }
 }
 static NSWindow *window(NSView *view) {
     NSWindow *w = [[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,600,480)
@@ -386,6 +438,7 @@ int main(void) { @autoreleasepool {
         NSScrollView *scroll = zoom.documentView.enclosingScrollView;
         check(!scroll.hasHorizontalScroller, @"Experiment starts without a horizontal scroller");
         zoom.scaleFactor = 4;
+        checkPages(scroll, 3, @"magnifying the inverted Experiment");
         pump();
         check(scroll.hasHorizontalScroller, @"a horizontal scroller appears while the Experiment is inverted");
         checkSystemScroller(scroll, @"magnifying the inverted Experiment");
@@ -408,8 +461,9 @@ int main(void) { @autoreleasepool {
         [testDefaults setInteger:1 forKey:TSPreviewAppearanceModeKey];
         pump();
         plain.scaleFactor = 4;
-        pump();
         NSScrollView *plainScroll = plain.documentView.enclosingScrollView;
+        checkPages(plainScroll, 0, @"magnifying a light Experiment");
+        pump();
         check(plainScroll.hasHorizontalScroller, @"a horizontal scroller appears on a light Experiment");
         checkSystemScroller(plainScroll, @"magnifying a light Experiment");
         checkPages(plainScroll, 0, @"magnifying a light Experiment");
@@ -447,6 +501,7 @@ int main(void) { @autoreleasepool {
             if ([item.title isEqualToString:@"Two Pages"]) twoPages = item;
         check(twoPages.action == NSSelectorFromString(@"_setDoublePage:"), @"the Experiment context menu offers Two Pages");
         [NSApp sendAction:twoPages.action to:twoPages.target ?: spread from:twoPages];
+        checkPages(spreadScroll, 3, @"Two Pages from the Experiment context menu");
         pump();
         check(spread.documentView.enclosingScrollView.contentView == spreadClip, @"Two Pages keeps the Experiment clip view");
         check(spreadScroll.hasHorizontalScroller, @"Two Pages from the Experiment context menu shows a horizontal scroller");
@@ -469,6 +524,7 @@ int main(void) { @autoreleasepool {
         pump();
         check(!wide.documentView.enclosingScrollView.hasHorizontalScroller, @"the Experiment next page starts without a horizontal scroller");
         [wide goToNextPage:nil];
+        checkPages(wide.documentView.enclosingScrollView, 3, @"turning to a wider Experiment page");
         pump();
         checkSystemScroller(wide.documentView.enclosingScrollView, @"turning to a wider Experiment page");
         checkPages(wide.documentView.enclosingScrollView, 3, @"turning to a wider Experiment page");
@@ -481,6 +537,7 @@ int main(void) { @autoreleasepool {
         pump();
         check(!row.documentView.enclosingScrollView.hasHorizontalScroller, @"a vertical Experiment row starts without a horizontal scroller");
         row.displayDirection = kPDFDisplayDirectionHorizontal;
+        checkPages(row.documentView.enclosingScrollView, 3, @"laying Experiment pages in a row");
         pump();
         checkSystemScroller(row.documentView.enclosingScrollView, @"laying Experiment pages in a row");
         checkPages(row.documentView.enclosingScrollView, 3, @"laying Experiment pages in a row");
@@ -497,6 +554,7 @@ int main(void) { @autoreleasepool {
         pump();
         check(!dest.documentView.enclosingScrollView.hasHorizontalScroller, @"the Experiment destination starts without a horizontal scroller");
         [dest goToDestination:widePoint];
+        checkPages(dest.documentView.enclosingScrollView, 3, @"an Experiment destination on a wider page");
         pump();
         checkSystemScroller(dest.documentView.enclosingScrollView, @"an Experiment destination on a wider page");
         checkPages(dest.documentView.enclosingScrollView, 3, @"an Experiment destination on a wider page");
@@ -586,6 +644,39 @@ int main(void) { @autoreleasepool {
         checkPages(linkedPlain.documentView.enclosingScrollView, 0, @"an Experiment internal link on a light preview");
         [spreadWindow close];
     }
+    [testDefaults setInteger:2 forKey:TSPreviewAppearanceModeKey];
+    pump();
+    pdf.displayMode = kPDFDisplaySinglePageContinuous;
+    pdf.document = manyPages(12);
+    pdf.scaleFactor = 1;
+    [pdf goToFirstPage:nil];
+    if (pdf.documentView.subviews.count == 0) pdf.scaleFactor = 1.1;
+    settle();
+    check(inverted(pdf), @"the Experiment's first pages are inverted");
+    NSSet *seen = pagePointers(pdf);
+    turnWheel(pdf);
+    settle();
+    BOOL created = NO;
+    for (NSView *child in pdf.documentView.subviews)
+        if ([NSStringFromClass(child.class) containsString:@"Page"] &&
+            ![seen containsObject:[NSValue valueWithPointer:(__bridge void *)child]]) created = YES;
+    check(created, @"scrolling the Experiment creates a page view");
+    settle();
+    check(inverted(pdf), @"scrolling the Experiment keeps the preview appearance");
+    checkSystemScroller(pdf.documentView.enclosingScrollView, @"scrolling the Experiment");
+    NSString *typesetPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"texshop-experiment-reload.pdf"];
+    NSData *typesetData = [manyPages(8) dataRepresentation];
+    check([typesetData writeToFile:typesetPath atomically:YES], @"the Experiment typeset PDF is written");
+    [pdf reShowWithPath:typesetPath];
+    settle();
+    check(pdf.document.pageCount == 8 && inverted(pdf), @"reloading the Experiment after typesetting keeps the preview appearance");
+    checkSystemScroller(pdf.documentView.enclosingScrollView, @"reloading the Experiment after typesetting");
+    [testDefaults setInteger:1 forKey:TSPreviewAppearanceModeKey];
+    pump();
+    pdf.document = manyPages(8);
+    settle();
+    checkPages(pdf.documentView.enclosingScrollView, 0, @"replacing the Experiment with a light PDF");
+    checkSystemScroller(pdf.documentView.enclosingScrollView, @"replacing the Experiment with a light PDF");
     check(TSThemeWindowAlpha(@{}, @"SourceAlpha")==1, @"missing alpha stays opaque");
     check(TSThemeWindowAlpha(@{@"SourceAlpha":@[@0]}, @"SourceAlpha")==1, @"malformed alpha stays opaque");
     check(!sourceWindow.isVisible && !pdfWindow.isVisible && !secondWindow.isVisible, @"no windows displayed");
@@ -599,7 +690,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-experiment-themes-') as tmp:
     subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-w','-fobjc-arc','-framework','Cocoa','-framework','Quartz',
         *include_args(root),str(src),*experiment_preview_sources(root),'-o',str(exe)], check=True)
     (Path(tmp)/'home/Library/Preferences').mkdir(parents=True)
-    result = subprocess.run([str(exe)],env=dict(os.environ,HOME=str(Path(tmp)/'home'),CFFIXED_USER_HOME=str(Path(tmp)/'home')),capture_output=True,text=True,timeout=30)
+    result = subprocess.run([str(exe)],env=dict(os.environ,HOME=str(Path(tmp)/'home'),CFFIXED_USER_HOME=str(Path(tmp)/'home')),capture_output=True,text=True,timeout=60)
     if args.mutation:
         assert result.returncode == 1 and 'FAIL:' in result.stderr, result.stdout + result.stderr
         print('PASS: detected', args.mutation)

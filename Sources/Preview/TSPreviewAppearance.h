@@ -133,6 +133,8 @@ static inline BOOL TSPreviewSubviewIsToolbarPocket(NSView *view) {
 // the appearance and the preview that meets a new page view are the same file.
 static void *TSPreviewInversionStateKey = &TSPreviewInversionStateKey;
 
+static void TSInstallPreviewPageWatch(NSScrollView *scrollView);
+
 // Share the same PDF page treatment between the document and Experiment previews.
 // Scroll bars are part of the window frame. They take no explicit appearance and no
 // filters, so they follow the system whether the preview is light or dark.
@@ -175,9 +177,11 @@ static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert
         child.appearance = light;
         child.contentFilters = filters;
     }
-    // A page view PDFKit adds later was not in this list.
+    // A page view PDFKit adds later was not in this list. Scrolling and replacing
+    // the document post the notifications below after this call has returned.
     objc_setAssociatedObject(scrollView, &TSPreviewInversionStateKey, @(invert),
         OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    TSInstallPreviewPageWatch(scrollView);
 }
 
 // Gives a page view that appeared after the choice was made the same treatment.
@@ -185,4 +189,51 @@ static inline void TSReapplyPreviewInversion(NSScrollView *scrollView) {
     NSNumber *invert = objc_getAssociatedObject(scrollView, &TSPreviewInversionStateKey);
     if (!invert) return;
     TSApplyPreviewInversion(scrollView, invert.boolValue);
+}
+
+// PDFKit posts the visible-page and document notifications before the new page
+// views exist (a replacement's pages arrive about a quarter second later). The
+// wheel's notification arrives once those pages are already on screen. Apply
+// again now, and once more after the late pages have been created.
+static BOOL TSPreviewFollowing = NO;
+static void TSFollowPreviewInversion(NSScrollView *scrollView) {
+    if (!scrollView || TSPreviewFollowing) return;
+    TSPreviewFollowing = YES;
+    TSReapplyPreviewInversion(scrollView);
+    TSPreviewFollowing = NO;
+    __weak NSScrollView *weakScroll = scrollView;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)),
+        dispatch_get_main_queue(), ^{
+            if (TSPreviewFollowing) return;
+            TSPreviewFollowing = YES;
+            TSReapplyPreviewInversion(weakScroll);
+            TSPreviewFollowing = NO;
+        });
+}
+
+static void TSPreviewVisiblePagesChanged(PDFView *pdfView) {
+    if (!pdfView) return;
+    TSFollowPreviewInversion(pdfView.documentView.enclosingScrollView); // PDFViewVisiblePagesChangedNotification
+}
+
+static void TSPreviewDocumentChanged(PDFView *pdfView) {
+    if (!pdfView) return;
+    TSFollowPreviewInversion(pdfView.documentView.enclosingScrollView); // PDFViewDocumentChangedNotification
+}
+
+// One watch per PDF view. The scroll view's superview is that PDF view.
+static void TSInstallPreviewPageWatch(NSScrollView *scrollView) {
+    PDFView *pdfView = nil;
+    for (NSView *view = scrollView; view; view = view.superview)
+        if ([view isKindOfClass:PDFView.class]) { pdfView = (PDFView *)view; break; }
+    if (!pdfView || objc_getAssociatedObject(pdfView, @selector(tsPreviewPageWatch))) return;
+    objc_setAssociatedObject(pdfView, @selector(tsPreviewPageWatch), @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    __weak PDFView *weakView = pdfView;
+    NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
+    id visiblePages = [center addObserverForName:PDFViewVisiblePagesChangedNotification object:pdfView queue:nil
+        usingBlock:^(NSNotification *note) { (void)note; TSPreviewVisiblePagesChanged(weakView); }];
+    id replacedDocument = [center addObserverForName:PDFViewDocumentChangedNotification object:pdfView queue:nil
+        usingBlock:^(NSNotification *note) { (void)note; TSPreviewDocumentChanged(weakView); }];
+    objc_setAssociatedObject(pdfView, @selector(tsPreviewVisibleWatch), visiblePages, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(pdfView, @selector(tsPreviewDocumentWatch), replacedDocument, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }

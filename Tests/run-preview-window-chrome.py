@@ -16,7 +16,7 @@ from production_fragments import method, verify_embedded
 from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['scroll-appearance', 'bar-appearance', 'bar-filters', 'late-scroller', 'display-mode', 'late-page', 'late-direction', 'late-destination', 'late-rotation'])
+parser.add_argument('--mutation', choices=['scroll-appearance', 'bar-appearance', 'bar-filters', 'late-scroller', 'display-mode', 'late-page', 'late-direction', 'late-destination', 'late-rotation', 'visible-pages', 'document-changed'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 header = (root / 'Sources/Preview/TSPreviewAppearance.h').read_text()
@@ -69,6 +69,12 @@ elif args.mutation == 'late-destination':
 elif args.mutation == 'late-rotation':
     strip_reapply(15)
     strip_reapply(16)
+elif args.mutation in ('visible-pages', 'document-changed'):
+    marker = ('PDFViewVisiblePagesChangedNotification' if args.mutation == 'visible-pages'
+              else 'PDFViewDocumentChangedNotification')
+    old = '    TSFollowPreviewInversion(pdfView.documentView.enclosingScrollView); // %s\n' % marker
+    assert header.count(old) == 1, args.mutation
+    header = header.replace(old, '')
 view_text = '\n'.join(view_methods)
 
 program = r'''
@@ -351,6 +357,68 @@ static MyPDFKitView *LatePreview(void) {
     [pdf layoutSubtreeIfNeeded];
     return pdf;
 }
+static PDFDocument *ManyPages(void) {
+    NSMutableData *data = [NSMutableData data];
+    CGDataConsumerRef sink = CGDataConsumerCreateWithCFData((__bridge CFMutableDataRef)data);
+    CGRect box = CGRectMake(0, 0, 410, 380);
+    CGContextRef pdf = CGPDFContextCreate(sink, &box, NULL);
+    for (int i = 0; i < 12; i++) {
+        CGPDFContextBeginPage(pdf, NULL);
+        CGContextSetRGBFillColor(pdf, 0, 0, 0, 1);
+        CGContextFillRect(pdf, CGRectMake(12, 14, 9, 9));
+        CGPDFContextEndPage(pdf);
+    }
+    CGPDFContextClose(pdf);
+    CGContextRelease(pdf);
+    CGDataConsumerRelease(sink);
+    return [[PDFDocument alloc] initWithData:data];
+}
+static void Settle(void) {
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.55]];
+}
+static NSSet *PagePointers(PDFView *pdf) {
+    NSMutableSet *set = [NSMutableSet set];
+    for (NSView *child in pdf.documentView.subviews)
+        if ([NSStringFromClass(child.class) containsString:@"Page"])
+            [set addObject:[NSValue valueWithPointer:(__bridge void *)child]];
+    return set;
+}
+static NSView *FrontPage(PDFView *pdf) {
+    NSView *found = nil;
+    CGFloat best = 0;
+    for (NSView *child in pdf.documentView.subviews) {
+        if (![NSStringFromClass(child.class) containsString:@"Page"]) continue;
+        NSRect coverage = NSIntersectionRect([pdf convertRect:child.bounds fromView:child], pdf.bounds);
+        CGFloat area = coverage.size.width * coverage.size.height;
+        if (area > best) { best = area; found = child; }
+    }
+    return found;
+}
+static void TurnWheel(PDFView *pdf) {
+    NSView *hit = FrontPage(pdf);
+    check(hit != nil, @"the wheel hits a page in the preview");
+    for (int i = 0; i < 12; i++) {
+        CGEventRef event = CGEventCreateScrollWheelEvent(NULL, kCGScrollEventUnitLine, 1, -10);
+        NSEvent *wheel = [NSEvent eventWithCGEvent:event];
+        [hit scrollWheel:wheel];
+        CFRelease(event);
+        hit = FrontPage(pdf) ?: hit;
+    }
+}
+static void CheckReadingPages(PDFView *pdf, BOOL inverted, NSString *what) {
+    Settle();
+    [pdf layoutSubtreeIfNeeded];
+    NSScrollView *scroll = pdf.documentView.enclosingScrollView;
+    CheckPageViews(scroll, NSAppearanceNameDarkAqua, inverted, what);
+    CheckScrollersFollowSystem(scroll, NSAppearanceNameDarkAqua, what);
+    BOOL shown = NO;
+    for (NSView *child in scroll.documentView.subviews) {
+        if (![NSStringFromClass(child.class) containsString:@"Page"]) continue;
+        NSRect coverage = NSIntersectionRect([pdf convertRect:child.bounds fromView:child], pdf.bounds);
+        if (coverage.size.width * coverage.size.height > 1000) shown = YES;
+    }
+    check(shown, [what stringByAppendingString:@": a page is on screen"]);
+}
 int main(void) {
     @autoreleasepool {
         TSInstallAppKitIsolation();
@@ -488,6 +556,41 @@ int main(void) {
         TSApplyPreviewInversion(rotatedPlain.documentView.enclosingScrollView, NO);
         [rotatedPlain rotateCounterclockwise:nil];
         CheckLateBar(rotatedPlain, NO, @"rotating a light document preview");
+
+        // Continuous reading. The wheel and a typeset reload create page views after the choice.
+        NSWindow *readingWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 700, 520)
+            styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskResizable | NSWindowStyleMaskFullSizeContentView
+            backing:NSBackingStoreBuffered defer:NO];
+        PDFView *reading = [[PDFView alloc] initWithFrame:readingWindow.contentView.bounds];
+        reading.autoScales = NO;
+        reading.displayMode = kPDFDisplaySinglePageContinuous;
+        reading.document = ManyPages();
+        [readingWindow.contentView addSubview:reading];
+        [reading layoutSubtreeIfNeeded];
+        reading.scaleFactor = 1;
+        [reading goToFirstPage:nil];
+        if (reading.documentView.subviews.count == 0) reading.scaleFactor = 1.5;
+        TSApplyPreviewInversion(reading.documentView.enclosingScrollView, YES);
+        NSSet *seen = PagePointers(reading);
+        TurnWheel(reading);
+        Settle();
+        BOOL created = NO;
+        for (NSView *child in reading.documentView.subviews)
+            if ([NSStringFromClass(child.class) containsString:@"Page"] &&
+                ![seen containsObject:[NSValue valueWithPointer:(__bridge void *)child]]) created = YES;
+        check(created, @"scrolling the document preview creates a page view");
+        CheckReadingPages(reading, YES, @"scrolling the document preview");
+        TSApplyPreviewInversion(reading.documentView.enclosingScrollView, NO);
+        reading.document = ManyPages();
+        CheckReadingPages(reading, NO, @"replacing the document preview");
+        TSApplyPreviewInversion(reading.documentView.enclosingScrollView, YES);
+        NSString *typesetPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"texshop-document-reload.pdf"];
+        NSData *typesetData = [ManyPages() dataRepresentation];
+        check([typesetData writeToFile:typesetPath atomically:YES], @"the typeset PDF is written");
+        PDFDocument *typeset = [[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:typesetPath]];
+        check(typeset.pageCount == 12, @"typesetting reload reads the new PDF");
+        reading.document = typeset;
+        CheckReadingPages(reading, YES, @"reloading the document preview after typesetting");
         printf("PASS: %d preview window chrome checks\n", checks);
     }
     return 0;
