@@ -10,13 +10,16 @@ split is placed by its frame again, so both parts fill the window and follow its
 the password field in each part while the PDF is locked.
 
 The page count in the toolbar, the outline and the PDF's own settings could only be read
-once the PDF was unlocked: they are filled in then, for each part that shows the PDF.
+once the PDF was unlocked: they are filled in then, for each part that shows the PDF. A PDF
+shown again after the Preview was closed, or when there was no PDF at first, also tells the
+part when it is unlocked.
 
 Stand-ins, and what they hide:
 - MyPDFKitView here has only the methods the split code and the unlock call; display styles,
   magnification and Fit to Content Width are plain (run-preview-split-position.py and
   run-fit-content-width.py check them). fitContentWidth counts its calls.
-- setupOutline, makePageChanges: and updatePreviewLayoutControls record that they ran;
+- setup (of a window that had no PDF), setupOutline, makePageChanges: and
+  updatePreviewLayoutControls record that they ran;
   the drawer outline, the page number box and the toolbar layout controls are not built.
 - The document (TestHost) gives the parts and fixed book and direction settings; the
   toolbar controller that reads the PDF's direction is not used.
@@ -51,6 +54,8 @@ MUTATIONS = {
     'other-part-not-adopted': ('view', '            [part adoptUnlockedDocument];\n', '            ;\n'),
     'no-outline': ('view', '    [self setupOutline];\n}', '}'),
     'no-content-width': ('view', '    if (resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH)\n        [self fitContentWidth];\n', ''),
+    # A PDF shown again after the Preview was closed does not tell the part it was unlocked.
+    'closed-no-delegate': ('early', '        [[self document] setDelegate: (id<PDFDocumentDelegate>)self];\n', ''),
     'other-document': ('view', '    if (document != [self document])\n        return;\n', ''),
 }
 parser = argparse.ArgumentParser(description=__doc__)
@@ -87,13 +92,22 @@ window_parts = [last_method(window_source, s) for s in (
 view_methods = [last_method(view_source, s) for s in (
     '- (void)documentDidUnlock:(NSNotification *)notification', '- (void)adoptUnlockedDocument',
     '- (void)saveLocation\n', '- (void)restoreLocation\n', '- (NSInteger)index\n', '- (void)moveSplitToCorrectSpot:')]
+# reShowWithDocument: shows a new PDF this way after the Preview was closed, or when there was no PDF.
+early_start = view_source.index('    if (self.myPDFWindow.noPdfFile  || self.myPDFWindow.previewClosed)\n')
+early = view_source[early_start:closing_brace(view_source, view_source.index('{', early_start))]
+fragments.append(('statements: reShowWithDocument: after the Preview was closed', view_source, early))
+view_methods.append(last_method(view_source, '- (void)shareDocumentWithSecondView'))
 fragments += [('complete method: ' + text.split('\n')[0], source, text)
              for source, text in [(window_source, m) for m in window_parts] + [(view_source, m) for m in view_methods]]
 if args.mutation:
     where, old, new = MUTATIONS[args.mutation]
-    texts = window_parts if where == 'window' else view_methods
-    assert sum(t.count(old) for t in texts) == 1, args.mutation
-    texts[:] = [t.replace(old, new) for t in texts]
+    if where == 'early':
+        assert early.count(old) == 1, args.mutation
+        early = early.replace(old, new)
+    else:
+        texts = window_parts if where == 'window' else view_methods
+        assert sum(t.count(old) for t in texts) == 1, args.mutation
+        texts[:] = [t.replace(old, new) for t in texts]
 
 program = r'''
 #import <Cocoa/Cocoa.h>
@@ -121,8 +135,12 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 @interface MyPDFKitView : PDFView <PDFDocumentDelegate> {
     TSPreviewPanePlace splitPlace;
     NSInteger pageStyle, firstPageStyle, resizeOption, totalPages;
-    NSTextField *totalPage, *stotalPage, *totalPage1;
+    NSTextField *totalPage, *stotalPage, *totalPage1, *currentPage0, *scurrentPage, *currentPage1;
+    NSMutableArray *_searchResults;
+    NSTableView *_searchTable;
 }
+@property (retain) NSMutableArray *sourceFiles;
+@property NSInteger setupRuns;
 @property BOOL locationSaved, verticalSplitSaved, horizontalSplitSaved;
 @property double horizontalHeight1, horizontalHeight2, verticalWidth1, verticalWidth2;
 @property BOOL oldUsed, doScroll; @property NSRect oldVisibleRect; @property NSInteger oldIndex;
@@ -136,7 +154,8 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 @end
 @interface TestHost : NSObject
 @property (weak) MyPDFKitView *myPDFKitView, *myPDFKitView2;
-@property NSInteger layoutControlUpdates;
+@property (weak) TSPreviewWindow *pdfKitWindow;
+@property NSInteger layoutControlUpdates, numberingCorrection;
 - (void)annotationPartWillCollapse:(id)view;
 - (BOOL)previewDisplaysAsBook;
 - (BOOL)previewDisplaysRTL;
@@ -150,7 +169,7 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 @end
 @interface TSPreviewWindow : NSWindow
 @property (strong) TestHost *myDocument;
-@property BOOL firstTime, horizontal;
+@property BOOL firstTime, horizontal, noPdfFile, previewClosed;
 @property (nonatomic) BOOL windowIsSplit;
 @property (nonatomic, retain) PDFView *activeView;
 @property PDFView *myPDFKitView, *myPDFKitView2;
@@ -183,9 +202,15 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 - (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:(NSRect *)f { return nil; }
 - (void)attachPinnedLinkPreview:(TSLinkPreviewView *)p windowFrame:(NSRect)f {}
 - (void)setupOutline { self.outlineSetups++; }
+- (void)setup { self.setupRuns++; }
+- (void)reShowEarlyWithDocument:(PDFDocument *)pdfDoc {
+    PDFDocument *oldDoc; PDFPage *aPage;
+EARLYBRANCH
+}
 - (void)makePageChanges:(NSInteger)pageNumber { self.shownPageIndex = pageNumber; }
 - (NSInteger)shownTotalPages { return totalPages; }
 - (void)connectPageCountFields { totalPage = [NSTextField new]; stotalPage = [NSTextField new]; totalPage1 = [NSTextField new];
+    currentPage0 = [NSTextField new]; scurrentPage = [NSTextField new]; currentPage1 = [NSTextField new];
     totalPage.integerValue = stotalPage.integerValue = totalPage1.integerValue = 0; }
 - (NSArray<NSTextField *> *)pageCountFields { return @[totalPage, stotalPage, totalPage1]; }
 VIEWMETHODS
@@ -254,7 +279,7 @@ static Preview makePreview(NSURL *url, BOOL underToolbar, NSInteger resizeOption
     }
     [a connectPageCountFields];
     [sv addSubview:a];
-    host.myPDFKitView = a; host.myPDFKitView2 = b;
+    host.myPDFKitView = a; host.myPDFKitView2 = b; host.pdfKitWindow = w;
     w.myDocument = host; w.pdfKitSplitView = sv; w.myPDFKitView = a; w.myPDFKitView2 = b; w.activeView = a;
     w.firstTime = YES; w.horizontal = YES;
     // As showWithPath: does: the document is shown, then the first part hears from it.
@@ -373,6 +398,25 @@ int main(int argc, char **argv) { @autoreleasepool {
             [p.window close];
         }
     }
+    for (NSString *state in @[@"closed", @"no PDF"]) {
+        // Typesetting shows the PDF again after the Preview was closed, or when there was no PDF.
+        NSString *name = [NSString stringWithFormat:@"shown again (%@)", state];
+        Preview p = makePreview(plain, NO, NEW_PDF_FIT_TO_CONTENT_WIDTH);
+        PDFDocument *first = p.first.document;
+        if ([state isEqual:@"closed"]) p.window.previewClosed = YES; else p.window.noPdfFile = YES;
+        PDFDocument *again = [[PDFDocument alloc] initWithURL:locked];
+        [p.first reShowEarlyWithDocument:again]; settle(p.window);
+        check(p.first.document == again && !p.window.previewClosed && !p.window.noPdfFile, [name stringByAppendingString:@": the new PDF is shown"]);
+        check(first.delegate == nil, [name stringByAppendingString:@": the earlier PDF no longer reports to the part"]);
+        check(p.first.setupRuns == ([state isEqual:@"no PDF"] ? 1 : 0), [name stringByAppendingString:@": a window without a PDF is set up"]);
+        // As with the reporter's PDF, the page count could not be read while the PDF was locked.
+        for (NSTextField *field in [p.first pageCountFields]) field.integerValue = 0;
+        unlockIn(p, p.first, @"secret");
+        checkUnlocked(p, name, @[p.first]);
+        split(p); checkFilled(p, [name stringByAppendingString:@", split"]);
+        split(p); checkFilled(p, [name stringByAppendingString:@", unsplit"]);
+        [p.window close];
+    }
     {   // Another PDF unlocked does not touch the part.
         Preview p = makePreview(plain, NO, NEW_PDF_FIT_TO_CONTENT_WIDTH);
         PDFDocument *other = [[PDFDocument alloc] initWithURL:locked];
@@ -386,7 +430,7 @@ int main(int argc, char **argv) { @autoreleasepool {
 }}
 '''
 program = (program.replace('VIEWMETHODS', '\n'.join(view_methods)).replace('WINDOWMETHODS', '\n'.join(window_parts))
-           .replace('LINECLASS', line_class).replace('LINEMETHODS', line_methods))
+           .replace('LINECLASS', line_class).replace('LINEMETHODS', line_methods).replace('EARLYBRANCH', early))
 if not args.mutation:
     verify_embedded(program, fragments)
 with tempfile.TemporaryDirectory() as temp:

@@ -1362,6 +1362,8 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
         oldDoc = self.document;
         [self setDocument:pdfDoc];
         if (oldDoc != pdfDoc) oldDoc.delegate = nil;
+        // As for any PDF shown: the part hears when the PDF is unlocked with its password (#55).
+        [[self document] setDelegate: (id<PDFDocumentDelegate>)self];
         [self shareDocumentWithSecondView];
 
         totalPages = [[self document] pageCount];
