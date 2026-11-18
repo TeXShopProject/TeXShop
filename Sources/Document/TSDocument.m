@@ -8507,15 +8507,11 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 	CGFloat charWidth;
 	CGFloat widthOfTab;
 	NSUInteger i;
-    NSUInteger numberGlyphs;
 
-    numberGlyphs = [font numberOfGlyphs];
-    if (' ' < numberGlyphs) { 
-// 	if ([font glyphIsEncoded:(NSGlyph)' ']) {
-		charWidth = [font advancementForGlyph:(NSGlyph)' '].width;
-	} else {
+	// The width of the space character; glyph number 32 is another glyph in most proportional fonts.
+	charWidth = font ? [@" " sizeWithAttributes:@{NSFontAttributeName: font}].width : 0;
+	if (charWidth <= 0)
 		charWidth = [font maximumAdvancement].width;
-	}
 	widthOfTab = (charWidth * tabWidth);
 
 	if (!array) {
@@ -8553,6 +8549,10 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
             font = [NSFont userFontOfSize:12.0];
 	}
     
+    // The tabs are measured in the font the source shows; -setFontSafely: keeps the font it has
+    // when the saved one is not among the fonts of the Font panel.
+    [textView1 setFontSafely:font];
+    font = [textView1 font] ?: font;
 	
     CGFloat                     interlinespace      = TSStoredIntegerInRange(SUD, SourceInterlineSpaceKey, TSInterlineSpaceRange);
     CGFloat                     myFirstLineHeadIndent = TSStoredIntegerInRange(SUD, SourceFirstLineHeadIndentKey, TSParagraphIndentRange);
@@ -8565,6 +8565,8 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
     NSMutableParagraphStyle	*	newStyle			= [paraStyle mutableCopy] ;
 	
 	[newStyle setTabStops:desiredTabStops];
+	// Tabs after the last of these stops keep the same interval.
+	newStyle.defaultTabInterval = [(NSTextTab *)desiredTabStops.firstObject location];
     [newStyle setLineSpacing: interlinespace];
     newStyle.firstLineHeadIndent = myFirstLineHeadIndent;
     newStyle.headIndent = myHeadIndent;
