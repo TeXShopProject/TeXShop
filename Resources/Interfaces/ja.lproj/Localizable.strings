@@ -449,3 +449,8 @@
 "Center" = "中央揃え";
 /* Alignment of the text of an annotation */
 "Right" = "右揃え";
+
+/* Edit menu */
+"Complete Label or Citation Key" = "ラベルと引用キーを補完";
+/* Edit › Complete Label or Citation Key tooltip */
+"Offers the labels of the file after \\ref{, and BibDesk citation keys after \\cite{ when Settings allows it." = "\\ref{などの後ではファイル内のラベルを、設定で許したときは\U2009\\cite{などの後でBibDeskの引用キーを候補に出します。";

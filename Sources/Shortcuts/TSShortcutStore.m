@@ -12,6 +12,12 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
 @property (readwrite, copy) NSArray<TSShortcutCommand *> *commands;
 @property (readwrite, copy) NSArray<NSString *> *unavailableCommands;
 @end
+// Commands whose default key is only a proposal: they take it only when no other menu
+// command (with its key as resolved) and no macro (as its file names it) has it, and
+// they never make another command's key unavailable.
+static NSSet<NSString *> *TSYieldingDefaultCommands(void) {
+    return [NSSet setWithObject:@"TSShortcut.completeLabelOrCitationKey:.0"];
+}
 @implementation TSShortcutStore
 - (NSArray<NSString *> *)settingsSearchCommandNames
 {
@@ -80,6 +86,7 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
 - (void)applySavedOverrides {
     NSMutableSet *active = [NSMutableSet set];
     NSMutableOrderedSet *unavailable = [NSMutableOrderedSet orderedSet];
+    NSSet<NSString *> *yielding = TSYieldingDefaultCommands();
     // A saved shortcut of a command macOS keeps stays saved and applies when macOS lets it.
     for (TSShortcutCommand *command in self.commands)
         if (self.overrides[command.commandID] && !command.managedBySystem) [active addObject:command.commandID];
@@ -91,7 +98,9 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
             if (!item.submenu && item.action != TSMacroAction()) [planned setObject:TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask) forKey:item];
         });
         for (TSShortcutCommand *command in self.commands) {
-            TSShortcutBinding *value = [active containsObject:command.commandID] ? self.overrides[command.commandID] : TSBinding(command.defaultKey, command.defaultModifiers);
+            // A yielding default is held back while the other commands are resolved.
+            TSShortcutBinding *value = [active containsObject:command.commandID] ? self.overrides[command.commandID]
+                : [yielding containsObject:command.commandID] ? TSBinding(@"", 0) : TSBinding(command.defaultKey, command.defaultModifiers);
             [planned setObject:value forKey:command.item];
         }
         NSMutableSet *rejected = [NSMutableSet set];
@@ -107,6 +116,22 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
         }
         if (rejected.count) { [active minusSet:rejected]; changed = YES; }
     } while (changed);
+    // With every other command resolved, a yielding default takes its key only if no menu
+    // command and no macro has it.
+    NSMutableSet *yielded = [NSMutableSet set];
+    NSArray<TSShortcutMacro *> *macros = self.macroProvider ? self.macroProvider() : @[];
+    for (TSShortcutCommand *command in self.commands) {
+        if ([active containsObject:command.commandID] || ![yielding containsObject:command.commandID]) continue;
+        TSShortcutBinding *proposal = TSBinding(command.defaultKey, command.defaultModifiers);
+        if (!proposal.key.length) continue;
+        BOOL owned = NO;
+        for (NSMenuItem *other in planned.keyEnumerator)
+            if (other != command.item && [[planned objectForKey:other] isEqual:proposal]) { owned = YES; break; }
+        for (TSShortcutMacro *macro in macros)
+            if (!owned && [TSBinding(macro.key, macro.modifiers) isEqual:proposal]) owned = YES;
+        if (owned) [yielded addObject:command.commandID];
+        else [planned setObject:proposal forKey:command.item];
+    }
     // Remove old macro keys before assigning menus; AppKit can otherwise suppress
     // a menu assignment which duplicates an installed macro. Rebuild macros next.
     TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
@@ -116,7 +141,10 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
     for (TSShortcutCommand *command in self.commands) command.item.keyEquivalent = @"";
     for (TSShortcutCommand *command in self.commands) {
         if ([active containsObject:command.commandID]) [self apply:self.overrides[command.commandID] to:command];
-        else {
+        else if ([yielded containsObject:command.commandID]) {
+            command.item.keyEquivalentModifierMask = 0;
+            command.item.keyEquivalent = @"";
+        } else {
             command.item.allowsAutomaticKeyEquivalentLocalization = command.defaultLocalization;
             command.item.keyEquivalentModifierMask = command.defaultModifiers;
             command.item.keyEquivalent = command.defaultKey;
@@ -192,8 +220,10 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
 }
 - (NSArray<NSString *> *)macrosAffectedByRestoringAll {
     NSMutableOrderedSet *result = [NSMutableOrderedSet orderedSet];
+    // A yielding default leaves its key to a macro, so restoring it disables no macro.
     for (TSShortcutCommand *command in self.commands)
-        [result addObjectsFromArray:[self macrosUsingKey:command.defaultKey modifiers:command.defaultModifiers]];
+        if (![TSYieldingDefaultCommands() containsObject:command.commandID])
+            [result addObjectsFromArray:[self macrosUsingKey:command.defaultKey modifiers:command.defaultModifiers]];
     return result.array;
 }
 + (BOOL)isAllowedKey:(NSString *)key modifiers:(NSEventModifierFlags)flags {
@@ -263,7 +293,15 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
     if (command.managedBySystem) return NSLocalizedString(@"Shortcut Unavailable", @"");
     if (![TSShortcutStore isAllowedKey:key modifiers:flags]) return NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.", @"");
     TSShortcutBinding *binding = TSBinding(key, flags);
-    if ([binding isEqual:TSBinding(command.defaultKey, command.defaultModifiers)]) return [self restoreCommand:command];
+    if ([binding isEqual:TSBinding(command.defaultKey, command.defaultModifiers)]) {
+        // Recording a yielding default that a menu command or a macro has is refused, as any
+        // key in use, and the saved key stays.
+        if ([self commandYieldsDefault:command]) {
+            NSString *owner = [self conflictForKey:key modifiers:flags except:command.item restoring:nil] ?: [self macroNamingKey:key modifiers:flags];
+            if (owner) return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), owner];
+        }
+        return [self restoreCommand:command];
+    }
     NSString *conflict = [self conflictForKey:key modifiers:flags except:command.item restoring:nil];
     if (conflict) return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), conflict];
     self.overrides[command.commandID] = binding;
@@ -271,10 +309,21 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
     [self persist];
     return [self.unavailableCommands containsObject:command.path] ? NSLocalizedString(@"Shortcut Unavailable", @"") : nil;
 }
+- (BOOL)commandYieldsDefault:(TSShortcutCommand *)command {
+    return [TSYieldingDefaultCommands() containsObject:command.commandID];
+}
+- (nullable NSString *)macroNamingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags {
+    TSShortcutBinding *wanted = TSBinding(key, flags);
+    for (TSShortcutMacro *macro in (self.macroProvider ? self.macroProvider() : @[]))
+        if ([TSBinding(macro.key, macro.modifiers) isEqual:wanted]) return macro.path;
+    return nil;
+}
 - (nullable NSString *)restoreCommand:(TSShortcutCommand *)command {
     if (![self.commands containsObject:command]) return NSLocalizedString(@"This command is no longer available.", @"");
     if (command.managedBySystem) return nil;
-    NSString *conflict = [self conflictForRestoringCommand:command];
+    // A yielding default is restored by forgetting the saved key; the default then takes
+    // F5 or leaves it to its owner, so there is nothing to refuse.
+    NSString *conflict = [self commandYieldsDefault:command] ? nil : [self conflictForRestoringCommand:command];
     if (conflict) return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), conflict];
     [self.overrides removeObjectForKey:command.commandID];
     [self applySavedOverrides]; [self persist];

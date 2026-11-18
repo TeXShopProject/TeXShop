@@ -438,3 +438,8 @@
 "Center" = "居中";
 /* Alignment of the text of an annotation */
 "Right" = "右对齐";
+
+/* Edit menu */
+"Complete Label or Citation Key" = "补全标签或引用键";
+/* Edit › Complete Label or Citation Key tooltip */
+"Offers the labels of the file after \\ref{, and BibDesk citation keys after \\cite{ when Settings allows it." = "在\\ref{之后列出文件中的标签；设置允许时，在\\cite{之后列出BibDesk的引用键。";

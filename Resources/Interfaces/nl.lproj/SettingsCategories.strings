@@ -289,10 +289,12 @@
 "catalog.keyboard.0.1.title" = "Lijst met toetsbindingen";
 "group.completion.title" = "Commandoaanvulling";
 "catalog.keyboard.1.0.title" = "Activeringstoets";
-"catalog.keyboard.1.0.note" = "Vult de opdracht aan die u typt; druk nogmaals op de toets voor de volgende suggestie.";
-"catalog.keyboard.1.1.title" = "BibDesk-aanvullen";
-"catalog.keyboard.1.1.note" = "Biedt citeersleutels uit BibDesk aan als aanvullingen binnen \\cite en vergelijkbare opdrachten.";
+"catalog.keyboard.1.0.note" = "Vult de opdracht aan die u typt; druk nogmaals op de toets voor de volgende suggestie. Houd Shift ingedrukt voor de vorige suggestie.";
+"catalog.keyboard.1.3.title" = "Naar het volgende of vorige markeerpunt met Option of Control en de activeringstoets";
 "catalog.keyboard.1.2.title" = "Commandoaanvulling bewerken…";
+"group.labelcompletion.title" = "Aanvullen van labels en citatiesleutels";
+"catalog.keyboard.3.0.title" = "Ook citatiesleutels uit BibDesk aanbieden";
+"catalog.keyboard.3.0.note" = "Na \\ref{ en vergelijkbare opdrachten biedt ‘Label of citatiesleutel aanvullen’ de labels in het bestand aan. Als dit aan staat, biedt het na \\cite{ en vergelijkbare opdrachten ook citatiesleutels uit BibDesk aan.";
 "group.shortcuts.title" = "Menutoetscombinaties";
 "group.updates.0.title" = "Automatische controles";
 "catalog.updates.0.0.title" = "Automatisch naar updates zoeken";

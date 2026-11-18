@@ -132,8 +132,9 @@ static void CheckOwnerPresentation(TSSettingsWindowController *shell) {
         CountPresentedControls(pane, actual);
     }
     // Save PostScript File, -dALLOWPSTRANSPARENCY and Save related files were removed; the arrow keys switch of
-    // Preview, and the Advanced Find panel switch and Highlight Fullwidth Letters and Symbols of Editor were added.
-    Check(expected[0] == 51 && expected[1] == 15 && expected[2] == 2, @"Reference contains fifty-one switches and two exclusive spelling choices");
+    // Preview, the Advanced Find panel switch and Highlight Fullwidth Letters and Symbols of Editor, and the
+    // mark switch of Keyboard were added.
+    Check(expected[0] == 52 && expected[1] == 15 && expected[2] == 2, @"Reference contains fifty-two switches and two exclusive spelling choices");
     {
         // Updates: Updates to Include above Automatic Checks; the last check and Check for Updates below the cards.
         NSView *updates=[shell viewForCategoryIdentifier:@"updates"];

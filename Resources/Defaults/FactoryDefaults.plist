@@ -42,6 +42,8 @@
 	<string>YES</string>
 	<key>CheckSquareBracketEnabled</key>
 	<string>YES</string>
+	<key>CommandCompletionAlternateMarkShortcut</key>
+	<true/>
 	<key>CommandCompletionChar</key>
 	<string>ESCAPE</string>
 	<key>ConsoleBehavior</key>

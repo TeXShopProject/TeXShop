@@ -26,6 +26,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
   (t/'TSSettingsSearchCatalog.inc').write_text((args.search_catalog or r/'Sources/Settings/TSSettingsSearchCatalog.inc').read_text())
   compile_command=[str(t/'TSSettingsSearch.m') if x==str(r/'Sources/Settings/TSSettingsSearch.m') else x for x in compile_command]
  subprocess.run(compile_command,check=True)
+ # The mark switch of Keyboard is on in the factory defaults (a Boolean, read with boolForKey).
+ import plistlib
+ assert plistlib.loads((r/'Resources/Defaults/FactoryDefaults.plist').read_bytes()).get('CommandCompletionAlternateMarkShortcut') is True,'Factory default of the mark switch'
  from settings_contract import expand
  expected=expand(json.loads((r/'Tests/Fixtures/SettingsClassificationStrings.json').read_text()))
  for bundle in bundles(r,t/'fixtures',product=args.app,dock=True):
@@ -37,6 +40,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
   category_file=(args.app/'Contents/Resources' if args.app else r/'Resources/Interfaces')/(lang+'.lproj')/'SettingsCategories.strings'
   categories=json.loads(subprocess.check_output(['plutil','-convert','json','-o','-',str(category_file)]))
   assert categories['preview']==expected[lang]['Preview'],(lang,'Preview category')
+  # The note of Label and Citation Key Completion names the Edit menu item as the menu shows it.
+  menu=actual.get('Complete Label or Citation Key')
+  assert menu and menu in categories['catalog.keyboard.3.0.note'],(lang,'menu name in the label completion note',menu)
   assert all(actual.get(k)==v for k,v in expected[lang].items() if k!='Preview'),lang
   # The named theme confirmation is translated in every language.
   for key,ja in [('Replace','置き換える'),('The theme “%@” already exists. Replace it?','テーマ「%@」はすでにあります。置き換えますか？')]:

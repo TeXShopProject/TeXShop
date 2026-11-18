@@ -289,10 +289,12 @@
 "catalog.keyboard.0.1.title" = "按键绑定列表";
 "group.completion.title" = "命令补全";
 "catalog.keyboard.1.0.title" = "触发按键";
-"catalog.keyboard.1.0.note" = "按触发按键补全正在输入的命令；再次按下可切换到下一个候选。";
-"catalog.keyboard.1.1.title" = "BibDesk补全";
-"catalog.keyboard.1.1.note" = "在 \\cite等命令中，将BibDesk中的引用键作为补全候选。";
+"catalog.keyboard.1.0.note" = "按触发按键补全正在输入的命令；再次按下可切换到下一个候选，按住Shift则切换到上一个候选。";
+"catalog.keyboard.1.3.title" = "用Option或Control加触发按键，移到下一个或上一个标记";
 "catalog.keyboard.1.2.title" = "编辑命令补全文件…";
+"group.labelcompletion.title" = "标签和引用键补全";
+"catalog.keyboard.3.0.title" = "同时提供BibDesk中的引用键";
+"catalog.keyboard.3.0.note" = "在 \\ref{等命令后选择“补全标签或引用键”，会将文件中的标签作为候选。打开此项后，在 \\cite{等命令后还会提供BibDesk中的引用键。";
 "group.shortcuts.title" = "菜单快捷键";
 "group.updates.0.title" = "自动检查";
 "catalog.updates.0.0.title" = "自动检查更新";

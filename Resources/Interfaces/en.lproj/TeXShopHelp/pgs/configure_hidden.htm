@@ -117,16 +117,7 @@ be made to switch to red after the first error with a hidden setting.
 <dd>
 					defaults write TeXShop PreviewDrawerOpen YES
 			</dd></dl>
-<p> TeXShop supports command completion. Type the first portion of a complicated TeX command and push the escape key. The rest of the command will be entered into the source. This command can be quite complicated, with additional parameters; in that case, TeXShop types "marks" where each parameter is be filled in. Menu commands in Edit &#8250; Marks jump from mark to mark; these commands have shortcuts listed in the menu. </p>
-<p> Since jumping to the next or previous mark is a common operation, TeXShop also allows users to type option-escape to get to the next mark and control-escape to get to the previous mark.</p>
-<p> An item in the Settings window allows users to use "tab" instead of "escape" as the key which triggers command completion. In that case, the shortcuts which jump from mark to mark become option-tab and control-tab.</p>
-<p> Occasionally, third party utilities make use of option-escape, control-escape, option-tab, and control-tab for other purposes. If TeXShop's use of these shortcuts interferes with these utilities, you can turn off these particular TeXShop shortcuts with a hidden setting:
-
-
-<dl>
-<dd>
-					defaults write TeXShop CommandCompletionAlternateMarkShortcut NO
-			</dd></dl>
+<p> Moving to the next or previous mark of Edit &#8250; Marks with Option or Control and the command completion key is now turned on and off with "Move to the next or previous mark with Option or Control and the trigger key" in the Keyboard category of the Settings window.</p>
 <p> Version 2.38 of TeXShop marks matching parentheses with a yellow badge over the parenthesis which flashes briefly and then disappears. This change to increase visibility fulfills a long time request; it requires Snow Leopard or higher. To turn the badge off:
 <dl>
 <dd> defaults write TeXShop brieflyFlashYellowForMatch NO

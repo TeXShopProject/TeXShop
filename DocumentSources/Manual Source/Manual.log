@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.10.17)  18 NOV 2026 10:47
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.10.17)  19 NOV 2026 02:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -436,7 +436,7 @@ Chapter 9.
 [49
 
 ] [50] [51] [52]
-Underfull \hbox (badness 1158) in paragraph at lines 1143--1144
+Underfull \hbox (badness 1158) in paragraph at lines 1145--1146
 []\TU/lmr/m/n/10.95 Over time the engines have been extended to use Apple’s new
  default \TU/lmr/bx/n/10.95 zsh \TU/lmr/m/n/10.95 and
  []
@@ -462,7 +462,7 @@ Chapter 14.
 [77
 
 ] [78] [79] [80] [81] [82] [83]
-Underfull \hbox (badness 4403) in paragraph at lines 1837--1839
+Underfull \hbox (badness 4403) in paragraph at lines 1839--1841
 []\TU/lmr/m/n/10.95 When TeXShop interprets an AppleScript macro, it first repl
 aces any string
  []
@@ -473,7 +473,7 @@ Chapter 15.
 
 ] [93] [94] [95] [96] [97] [98] [99]
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <12> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 2365.
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 2367.
  [100] [101] [102] [103] [104] [105]
 [106]
 Chapter 16.
@@ -503,7 +503,7 @@ Chapter 21.
 [139
 
 ]
-Underfull \hbox (badness 3281) in paragraph at lines 3111--3115
+Underfull \hbox (badness 3281) in paragraph at lines 3121--3125
 \TU/lmr/m/n/10.95 brary/TeX/texbin but points to the ConTeXt binaries if the li
 ne \TU/lmr/bx/n/10.95 !TEX
  []
@@ -557,7 +557,7 @@ File: Graphics/invisible.png Graphic file (type bmp)
 <Graphics/invisible.png>
  [194] [195] [196]
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 4441.
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 4451.
  [197]
 Chapter 30.
 [198
@@ -583,7 +583,7 @@ File: Graphics/annotationToolbar.png Graphic file (type bmp)
  [216] [217] [218] [219]
 Chapter 33.
 
-Underfull \hbox (badness 2359) in paragraph at lines 5358--5361
+Underfull \hbox (badness 2359) in paragraph at lines 5368--5371
 \TU/lmr/m/n/10.95 Annotated.pdf” as “Fourier-Annotated1.pdf”, the next time the
  panel opens, it
  []
@@ -598,7 +598,7 @@ Chapter 34.
 File: Graphics/Graphic1.png Graphic file (type bmp)
 <Graphics/Graphic1.png>
  [228] [229] [230] [231]
-Underfull \hbox (badness 2865) in paragraph at lines 5685--5687
+Underfull \hbox (badness 2865) in paragraph at lines 5695--5697
 []\TU/lmr/m/n/10.95 See [][]$[][][][][] [] [] [] [][][][][][][] [] [][][][] [] 
 [][][][][] [] [][][] [] [][][][][][] [] [][][][][][][][][][][] [] [][][][][][][
 ][][][] [] [][][]$[][] for a
@@ -631,7 +631,7 @@ Chapter 40.
 [246
 
 ]
-Underfull \hbox (badness 1383) in paragraph at lines 6422--6422
+Underfull \hbox (badness 1383) in paragraph at lines 6432--6432
 []\TU/lmr/bx/n/14.4 Magic Lines to Control Preview in Double Page
  []
 
@@ -641,7 +641,7 @@ Chapter 41.
 
 ] [252] [253] [254] [255] [256] [257] [258] [259] [260] [261] [262]
 [263]
-Underfull \hbox (badness 1888) in paragraph at lines 6929--6930
+Underfull \hbox (badness 1888) in paragraph at lines 6936--6937
 []\TU/lmr/m/n/10.95 The following setting causes synchronization spots to be sh
 own in the Preview
  []
@@ -660,12 +660,12 @@ LaTeX2e <2026-06-01>
 L3 programming layer <2026-09-09>
  ***********
 Package rerunfilecheck Info: File `Manual.out' has not changed.
-(rerunfilecheck)             Checksum: DFC212E262C9D7EB2CC987D8F232CFD1;48045.
+(rerunfilecheck)             Checksum: A030007DFADE0462CB19A3187CCA8D60;48308.
  ) 
 Here is how much of TeX's memory you used:
  12251 strings out of 467696
  205120 string characters out of 5418921
- 680291 words of memory out of 5000000
+ 682563 words of memory out of 5000000
  41282 multiletter control sequences out of 15000+600000
  641839 words of font info for 113 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
