@@ -1684,7 +1684,9 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
         paragraphStyle = [NSParagraphStyle.defaultParagraphStyle mutableCopy];
     }
     
-    CGFloat charWidth = [[self font] advancementForGlyph:(NSGlyph)' '].width;
+    // The width of the space character; glyph number 32 is another glyph in most proportional fonts.
+    NSFont *font = [self font];
+    CGFloat charWidth = font ? [@" " sizeWithAttributes:@{NSFontAttributeName: font}].width : 0;
     paragraphStyle.defaultTabInterval = charWidth * TSStoredIntegerInRange(SUD, tabsKey, TSTabWidthRange);
     paragraphStyle.tabStops = @[];
     

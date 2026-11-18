@@ -8507,15 +8507,11 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 	CGFloat charWidth;
 	CGFloat widthOfTab;
 	NSUInteger i;
-    NSUInteger numberGlyphs;
 
-    numberGlyphs = [font numberOfGlyphs];
-    if (' ' < numberGlyphs) { 
-// 	if ([font glyphIsEncoded:(NSGlyph)' ']) {
-		charWidth = [font advancementForGlyph:(NSGlyph)' '].width;
-	} else {
+	// The width of the space character; glyph number 32 is another glyph in most proportional fonts.
+	charWidth = font ? [@" " sizeWithAttributes:@{NSFontAttributeName: font}].width : 0;
+	if (charWidth <= 0)
 		charWidth = [font maximumAdvancement].width;
-	}
 	widthOfTab = (charWidth * tabWidth);
 
 	if (!array) {
