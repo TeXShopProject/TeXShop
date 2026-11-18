@@ -16,7 +16,7 @@ from production_fragments import method, verify_embedded
 from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['scroll-appearance', 'bar-appearance', 'bar-filters', 'late-scroller', 'display-mode', 'late-page', 'late-direction', 'late-destination', 'late-rotation', 'visible-pages', 'document-changed'])
+parser.add_argument('--mutation', choices=['scroll-appearance', 'bar-appearance', 'bar-filters', 'late-scroller', 'display-mode', 'late-page', 'late-direction', 'late-destination', 'late-rotation', 'visible-pages', 'document-changed', 'watch-lifetime'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 header = (root / 'Sources/Preview/TSPreviewAppearance.h').read_text()
@@ -73,6 +73,10 @@ elif args.mutation in ('visible-pages', 'document-changed'):
     marker = ('PDFViewVisiblePagesChangedNotification' if args.mutation == 'visible-pages'
               else 'PDFViewDocumentChangedNotification')
     old = '    TSFollowPreviewInversion(pdfView.documentView.enclosingScrollView); // %s\n' % marker
+    assert header.count(old) == 1, args.mutation
+    header = header.replace(old, '')
+elif args.mutation == 'watch-lifetime':
+    old = '    if (visible) [center removeObserver:visible];\n    if (replaced) [center removeObserver:replaced];\n'
     assert header.count(old) == 1, args.mutation
     header = header.replace(old, '')
 view_text = '\n'.join(view_methods)
@@ -405,6 +409,45 @@ static void TurnWheel(PDFView *pdf) {
         hit = FrontPage(pdf) ?: hit;
     }
 }
+static void CheckWatchCloses(void) {
+    @autoreleasepool {
+        PDFView *view = [[PDFView alloc] initWithFrame:NSMakeRect(0, 0, 220, 180)];
+        PDFDocument *document = [PDFDocument new];
+        [document insertPage:[[PDFPage alloc] init] atIndex:0];
+        view.document = document;
+        NSScrollView *scroll = view.documentView.enclosingScrollView;
+        check(scroll != nil, @"a preview has a scroll view to watch");
+        TSApplyPreviewInversion(scroll, NO);
+        id visible = objc_getAssociatedObject(view, @selector(tsPreviewVisibleWatch));
+        id replaced = objc_getAssociatedObject(view, @selector(tsPreviewDocumentWatch));
+        check(visible != nil && replaced != nil, @"a preview stores both notification tokens");
+        TSApplyPreviewInversion(scroll, YES);
+        check(visible == objc_getAssociatedObject(view, @selector(tsPreviewVisibleWatch)), @"a second apply keeps the visible-page watch");
+        check(replaced == objc_getAssociatedObject(view, @selector(tsPreviewDocumentWatch)), @"a second apply keeps the document watch");
+    }
+    NSHashTable *views = [NSHashTable weakObjectsHashTable];
+    NSHashTable *tokens = [NSHashTable weakObjectsHashTable];
+    for (int i = 0; i < 24; i++) {
+        @autoreleasepool {
+            PDFView *view = [[PDFView alloc] initWithFrame:NSMakeRect(0, 0, 220, 180)];
+            PDFDocument *document = [PDFDocument new];
+            [document insertPage:[[PDFPage alloc] init] atIndex:0];
+            view.document = document;
+            NSScrollView *scroll = view.documentView.enclosingScrollView;
+            if (!scroll) { check(NO, @"a closing preview has a scroll view"); return; }
+            TSApplyPreviewInversion(scroll, NO);
+            id visible = objc_getAssociatedObject(view, @selector(tsPreviewVisibleWatch));
+            id replaced = objc_getAssociatedObject(view, @selector(tsPreviewDocumentWatch));
+            if (!visible || !replaced) { check(NO, @"a closing preview stores both notification tokens"); return; }
+            [views addObject:view];
+            [tokens addObject:visible];
+            [tokens addObject:replaced];
+        }
+    }
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
+    check(views.allObjects.count == 0, @"closed previews are released");
+    check(tokens.allObjects.count == 0, @"closed previews release both notification tokens");
+}
 static void CheckReadingPages(PDFView *pdf, BOOL inverted, NSString *what, NSTimeInterval wait) {
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:wait]];
     [pdf layoutSubtreeIfNeeded];
@@ -591,6 +634,7 @@ int main(void) {
         check(typeset.pageCount == 12, @"typesetting reload reads the new PDF");
         reading.document = typeset;
         CheckReadingPages(reading, YES, @"reloading the document preview after typesetting", 0.32);
+        CheckWatchCloses();
         printf("PASS: %d preview window chrome checks\n", checks);
     }
     return 0;

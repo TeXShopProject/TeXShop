@@ -222,19 +222,58 @@ static void TSPreviewDocumentChanged(PDFView *pdfView) {
     TSFollowPreviewInversion(pdfView.documentView.enclosingScrollView); // PDFViewDocumentChangedNotification
 }
 
+// The block token stays registered after the preview is released. A companion
+// object is released with the preview and removes both registrations. Its
+// class is created once; each file that includes this header shares that class.
+static void TSPreviewWatchFree(__unsafe_unretained id self, SEL _cmd) {
+    (void)_cmd;
+    NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
+    id visible = objc_getAssociatedObject(self, @selector(tsPreviewVisibleWatch));
+    id replaced = objc_getAssociatedObject(self, @selector(tsPreviewDocumentWatch));
+    if (visible) [center removeObserver:visible];
+    if (replaced) [center removeObserver:replaced];
+    SEL end = sel_getUid("dealloc");
+    IMP root = method_getImplementation(class_getInstanceMethod(NSObject.class, end));
+    ((void (*)(__unsafe_unretained id, SEL))root)(self, end);
+}
+
+static Class TSPreviewWatchClass(void) {
+    static Class cls;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        Class allocated = objc_allocateClassPair(NSObject.class, "TSPreviewPageWatchAnchor", 0);
+        if (allocated) {
+            class_addMethod(allocated, sel_getUid("dealloc"), (IMP)TSPreviewWatchFree, "v@:");
+            objc_registerClassPair(allocated);
+            cls = allocated;
+        } else {
+            cls = objc_getClass("TSPreviewPageWatchAnchor");
+        }
+    });
+    return cls;
+}
+
+static id TSPreviewWatchAnchor(id visiblePages, id replacedDocument) {
+    id anchor = [[TSPreviewWatchClass() alloc] init];
+    objc_setAssociatedObject(anchor, @selector(tsPreviewVisibleWatch), visiblePages, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(anchor, @selector(tsPreviewDocumentWatch), replacedDocument, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    return anchor;
+}
+
 // One watch per PDF view. The scroll view's superview is that PDF view.
 static void TSInstallPreviewPageWatch(NSScrollView *scrollView) {
     PDFView *pdfView = nil;
     for (NSView *view = scrollView; view; view = view.superview)
         if ([view isKindOfClass:PDFView.class]) { pdfView = (PDFView *)view; break; }
     if (!pdfView || objc_getAssociatedObject(pdfView, @selector(tsPreviewPageWatch))) return;
-    objc_setAssociatedObject(pdfView, @selector(tsPreviewPageWatch), @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     __weak PDFView *weakView = pdfView;
     NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
     id visiblePages = [center addObserverForName:PDFViewVisiblePagesChangedNotification object:pdfView queue:nil
         usingBlock:^(NSNotification *note) { (void)note; TSPreviewVisiblePagesChanged(weakView); }];
     id replacedDocument = [center addObserverForName:PDFViewDocumentChangedNotification object:pdfView queue:nil
         usingBlock:^(NSNotification *note) { (void)note; TSPreviewDocumentChanged(weakView); }];
+    objc_setAssociatedObject(pdfView, @selector(tsPreviewPageWatch),
+        TSPreviewWatchAnchor(visiblePages, replacedDocument), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(pdfView, @selector(tsPreviewVisibleWatch), visiblePages, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     objc_setAssociatedObject(pdfView, @selector(tsPreviewDocumentWatch), replacedDocument, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
