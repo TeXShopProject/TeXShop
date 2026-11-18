@@ -195,38 +195,37 @@ static inline void TSReapplyPreviewInversion(NSScrollView *scrollView) {
 // A page view PDFKit adds while scrolling, or after a new document or display format, is
 // made light the moment PDFKit adds it to the document view: -didAddSubview: of the
 // document view's class calls the original method and then lightens the new view, when
-// the view belongs to a preview (its scroll view carries the choice). The hook is added
-// to that class once, whichever file that includes this header gets there first; the
-// original implementation is kept on the class. When the class is not PDFKit's usual one,
-// nothing changes but the hook: the filters on the document view still invert the pages.
-static void TSPreviewDidAddSubview(__unsafe_unretained NSView *self, SEL _cmd, NSView *subview) {
-    for (Class cls = object_getClass(self); cls; cls = class_getSuperclass(cls)) {
-        NSValue *original = objc_getAssociatedObject(cls, @selector(tsPreviewOriginalDidAddSubview));
-        if (!original) continue;
-        ((void (*)(__unsafe_unretained id, SEL, NSView *))original.pointerValue)(self, _cmd, subview);
-        break;
-    }
-    if (objc_getAssociatedObject(self.enclosingScrollView, TSPreviewInversionStateKey))
-        TSLightenPreviewPageView(subview);
-}
-
+// the view belongs to a preview (its scroll view carries the choice). Each class that
+// gets the hook gets its own implementation, which holds that class's original, so a
+// subclass and its superclass can both be hooked without either reaching the other's
+// hook as its original. A class that only inherits the method from a hooked ancestor is
+// left to that ancestor. When PDFKit's class is not the usual one, nothing changes but
+// the hook: the filters on the document view still invert the pages.
 static void TSInstallPreviewPageHook(NSView *documentView) {
     Class cls = [documentView class];
     if (!cls || cls == NSView.class) return;
+    SEL sel = @selector(didAddSubview:);
     @synchronized (NSView.class) {
-        if (objc_getAssociatedObject(cls, @selector(tsPreviewOriginalDidAddSubview))) return;
-        SEL sel = @selector(didAddSubview:);
+        if (objc_getAssociatedObject(cls, @selector(tsPreviewPageHook))) return;
         Method own = NULL;
         unsigned count = 0;
         Method *methods = class_copyMethodList(cls, &count);
         for (unsigned i = 0; i < count; i++) if (method_getName(methods[i]) == sel) own = methods[i];
         free(methods);
+        if (!own) {
+            for (Class up = class_getSuperclass(cls); up && up != NSView.class; up = class_getSuperclass(up))
+                if (objc_getAssociatedObject(up, @selector(tsPreviewPageHook))) return;
+        }
         IMP original = own ? method_getImplementation(own)
                            : class_getMethodImplementation(class_getSuperclass(cls), sel);
-        objc_setAssociatedObject(cls, @selector(tsPreviewOriginalDidAddSubview),
-                                 [NSValue valueWithPointer:(const void *)original], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        if (own) method_setImplementation(own, (IMP)TSPreviewDidAddSubview);
-        else class_addMethod(cls, sel, (IMP)TSPreviewDidAddSubview, "v@:@");
+        IMP hook = imp_implementationWithBlock(^(__unsafe_unretained NSView *view, NSView *subview) {
+            ((void (*)(__unsafe_unretained id, SEL, NSView *))original)(view, sel, subview);
+            if (objc_getAssociatedObject(view.enclosingScrollView, TSPreviewInversionStateKey))
+                TSLightenPreviewPageView(subview);
+        });
+        if (own) method_setImplementation(own, hook);
+        else class_addMethod(cls, sel, hook, "v@:@");
+        objc_setAssociatedObject(cls, @selector(tsPreviewPageHook), @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
 }
 

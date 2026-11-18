@@ -61,9 +61,9 @@ elif args.mutation == 'document-filters':
     assert appearance.count(old) == 1, args.mutation
     appearance = appearance.replace(old, '    documentView.contentFilters = @[];\n', 1)
 elif args.mutation == 'page-hook':
-    old = '        TSLightenPreviewPageView(subview);\n}'
+    old = '                TSLightenPreviewPageView(subview);\n        });'
     assert appearance.count(old) == 1, args.mutation
-    appearance = appearance.replace(old, '        (void)subview;\n}', 1)
+    appearance = appearance.replace(old, '                (void)subview;\n        });', 1)
 pdf = pdf.replace('#import "TSPreviewAppearance.h"', appearance)
 pdf = experiment_preview_prelude(root) + pdf
 prefix = r'''

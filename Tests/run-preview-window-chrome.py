@@ -18,7 +18,7 @@ from production_fragments import method, verify_embedded
 from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['scroll-appearance', 'bar-appearance', 'bar-filters', 'document-filters', 'page-hook', 'set-document'])
+parser.add_argument('--mutation', choices=['scroll-appearance', 'bar-appearance', 'bar-filters', 'document-filters', 'page-hook', 'hook-original', 'set-document'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 header = (root / 'Sources/Preview/TSPreviewAppearance.h').read_text()
@@ -60,9 +60,13 @@ elif args.mutation == 'document-filters':
     assert header.count(old) == 1, args.mutation
     header = header.replace(old, '    documentView.contentFilters = @[];\n', 1)
 elif args.mutation == 'page-hook':
-    old = '        TSLightenPreviewPageView(subview);\n}'
+    old = '                TSLightenPreviewPageView(subview);\n        });'
     assert header.count(old) == 1, args.mutation
-    header = header.replace(old, '        (void)subview;\n}', 1)
+    header = header.replace(old, '                (void)subview;\n        });', 1)
+elif args.mutation == 'hook-original':
+    old = '            ((void (*)(__unsafe_unretained id, SEL, NSView *))original)(view, sel, subview);\n'
+    assert header.count(old) == 1, args.mutation
+    header = header.replace(old, '            (void)original;\n')
 elif args.mutation == 'set-document':
     old = '    TSInstallPreviewPageHook(view.documentView);\n    TSReapplyPreviewInversion(view.documentView.enclosingScrollView);\n'
     assert header.count(old) == 1, args.mutation
@@ -404,6 +408,63 @@ static void TurnWheel(PDFView *pdf) {
         hit = FrontPage(pdf) ?: hit;
     }
 }
+@interface TSHookParent : NSView
+@property int calls;
+@end
+@implementation TSHookParent
+- (void)didAddSubview:(NSView *)subview { self.calls++; }
+@end
+@interface TSHookChild : TSHookParent @end
+@implementation TSHookChild @end
+@interface TSHookOwnChild : TSHookParent
+@property int ownCalls;
+@end
+@implementation TSHookOwnChild
+- (void)didAddSubview:(NSView *)subview { self.ownCalls++; [super didAddSubview:subview]; }
+@end
+@interface TSHookParentB : NSView
+@property int calls;
+@end
+@implementation TSHookParentB
+- (void)didAddSubview:(NSView *)subview { self.calls++; }
+@end
+@interface TSHookChildB : TSHookParentB @end
+@implementation TSHookChildB @end
+// A superclass and its subclasses, hooked in either order, each reach their own original
+// exactly once; only views in a preview are made light.
+static void CheckHookClasses(void) {
+    NSRect frame = NSMakeRect(0, 0, 10, 10);
+    TSHookParent *parent = [[TSHookParent alloc] initWithFrame:frame];
+    TSHookChild *child = [[TSHookChild alloc] initWithFrame:frame];
+    TSHookOwnChild *own = [[TSHookOwnChild alloc] initWithFrame:frame];
+    TSInstallPreviewPageHook(parent);
+    TSInstallPreviewPageHook(child);
+    TSInstallPreviewPageHook(own);
+    [child addSubview:[[NSView alloc] initWithFrame:frame]];
+    check(child.calls == 1, @"a subclass of a hooked class reaches the original once");
+    [own addSubview:[[NSView alloc] initWithFrame:frame]];
+    check(own.ownCalls == 1 && own.calls == 1, @"a subclass with its own method and its superclass each run once");
+    [parent addSubview:[[NSView alloc] initWithFrame:frame]];
+    check(parent.calls == 1, @"the hooked superclass reaches its original once");
+    TSHookParentB *parentB = [[TSHookParentB alloc] initWithFrame:frame];
+    TSHookChildB *childB = [[TSHookChildB alloc] initWithFrame:frame];
+    TSInstallPreviewPageHook(childB);
+    TSInstallPreviewPageHook(parentB);
+    NSView *plain = [[NSView alloc] initWithFrame:frame];
+    [childB addSubview:plain];
+    check(childB.calls == 1, @"a subclass hooked before its superclass reaches the original once");
+    [parentB addSubview:[[NSView alloc] initWithFrame:frame]];
+    check(parentB.calls == 1, @"a superclass hooked after its subclass reaches the original once");
+    check(plain.appearance == nil, @"a view outside a preview is left alone");
+    NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
+    TSHookChild *page = [[TSHookChild alloc] initWithFrame:frame];
+    scroll.documentView = page;
+    TSApplyPreviewInversion(scroll, YES);
+    NSView *added = [[NSView alloc] initWithFrame:frame];
+    [page addSubview:added];
+    check(added.appearance == [NSAppearance appearanceNamed:NSAppearanceNameAqua] && page.calls == 1,
+          @"in a preview the new view is made light after the original ran");
+}
 static void CheckWatchCloses(void) {
     @autoreleasepool {
         MyPDFKitView *view = [[MyPDFKitView alloc] initWithFrame:NSMakeRect(0, 0, 220, 180)];
@@ -414,7 +475,7 @@ static void CheckWatchCloses(void) {
         check(scroll != nil, @"a preview has a scroll view");
         TSApplyPreviewInversion(scroll, NO);
         Class documentClass = [view.documentView class];
-        check(objc_getAssociatedObject(documentClass, @selector(tsPreviewOriginalDidAddSubview)) != nil,
+        check(objc_getAssociatedObject(documentClass, @selector(tsPreviewPageHook)) != nil,
               @"the document view's class has the page hook");
         NSView *added = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 10, 10)];
         [view.documentView addSubview:added];
@@ -426,10 +487,10 @@ static void CheckWatchCloses(void) {
         [plainHost addSubview:plainChild];
         check(plainChild.appearance == nil, @"other views are left alone");
         TSApplyPreviewInversion(scroll, YES);
-        NSValue *original = objc_getAssociatedObject(documentClass, @selector(tsPreviewOriginalDidAddSubview));
+        IMP installed = class_getMethodImplementation(documentClass, @selector(didAddSubview:));
         MyPDFKitView *other = [[MyPDFKitView alloc] initWithFrame:NSMakeRect(0, 0, 220, 180)];
         other.document = document;
-        check(objc_getAssociatedObject(documentClass, @selector(tsPreviewOriginalDidAddSubview)) == original,
+        check(class_getMethodImplementation(documentClass, @selector(didAddSubview:)) == installed,
               @"the hook is added to the class once");
         NSView *first = view.documentView;
         PDFDocument *next = [PDFDocument new];
@@ -661,6 +722,7 @@ int main(void) {
         CheckPagesLightAsTheyCome(reading, YES, @"reloading the document preview after typesetting");
         CheckReadingPages(reading, YES, @"reloading the document preview after typesetting", 0);
         CheckWatchCloses();
+        CheckHookClasses();
         printf("PASS: %d preview window chrome checks\n", checks);
     }
     return 0;
