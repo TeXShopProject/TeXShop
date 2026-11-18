@@ -312,18 +312,30 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
     
     [self checkAndRestoreDefaults];
     // A missing theme that comes with TeXShop is restored like the two above.
-    if (lite.length) TSLibraryRestoreMissingFile(liteThemePath, TSLibraryBundledPath([[@"Themes" stringByAppendingPathComponent:lite] stringByAppendingPathExtension:@"plist"]), TSLibraryThemeCheck());
-    if (dark.length) TSLibraryRestoreMissingFile(darkThemePath, TSLibraryBundledPath([[@"Themes" stringByAppendingPathComponent:dark] stringByAppendingPathExtension:@"plist"]), TSLibraryThemeCheck());
+    NSString *bundledLite = lite.length ? TSLibraryBundledPath([[@"Themes" stringByAppendingPathComponent:lite] stringByAppendingPathExtension:@"plist"]) : nil;
+    NSString *bundledDark = dark.length ? TSLibraryBundledPath([[@"Themes" stringByAppendingPathComponent:dark] stringByAppendingPathExtension:@"plist"]) : nil;
+    if (lite.length) TSLibraryRestoreMissingFile(liteThemePath, bundledLite, TSLibraryThemeCheck());
+    if (dark.length) TSLibraryRestoreMissingFile(darkThemePath, bundledDark, TSLibraryThemeCheck());
+    // One that cannot be restored now (the disk is full, the folder cannot be written) stays chosen: TeXShop's own
+    // copy is read, and the next launch restores the file. A missing theme of the user's own gives way to Lite or Dark.
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if (! [fileManager fileExistsAtPath: liteThemePath])
     {
-        [SUD setObject: @"LiteTheme" forKey: DefaultLiteThemeKey];
-        liteThemePath = defaultLiteThemePath;
+        if (bundledLite != nil)
+            liteThemePath = bundledLite;
+        else {
+            [SUD setObject: @"LiteTheme" forKey: DefaultLiteThemeKey];
+            liteThemePath = defaultLiteThemePath;
+        }
     }
     if (! [fileManager fileExistsAtPath: darkThemePath])
     {
-        [SUD setObject: @"DarkTheme" forKey: DefaultDarkThemeKey];
-        darkThemePath = defaultDarkThemePath;
+        if (bundledDark != nil)
+            darkThemePath = bundledDark;
+        else {
+            [SUD setObject: @"DarkTheme" forKey: DefaultDarkThemeKey];
+            darkThemePath = defaultDarkThemePath;
+        }
     }
     
     // A damaged theme is not read: the theme that comes with TeXShop is used until the next launch repairs it.
