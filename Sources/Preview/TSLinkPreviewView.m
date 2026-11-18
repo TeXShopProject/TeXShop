@@ -194,7 +194,9 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     CGFloat edge = MAX(TSLinkPreviewEdgeWidth, [self unitsPerPixel]);
     CGFloat inset = MAX(margin, TSLinkPreviewCornerRadius + edge);
     CGFloat roomW = NSWidth(bounds) - 2 * inset, roomH = NSHeight(bounds) - 2 * inset;
-    if (roomW < 1 || roomH < 1) return;
+    // A fraction of a page point is many screen points at a high magnification. Reject
+    // only a room that is not there; the six-point floor decides whether the label fits.
+    if (!(roomW > 0) || !(roomH > 0)) return;
     NSSize size = NSZeroSize;
     CGFloat height = 0, radius = 0, drawn = 1;
     NSRect capsule = NSZeroRect;

@@ -53,6 +53,8 @@ MUTATIONS = {
                               ''),
     'label-floor-page-points': ('    CGFloat fontFloor = MIN(fontSize, TSLinkPreviewLabelMinimumScreenSize * unit);\n',
                                 '    CGFloat fontFloor = MIN(fontSize, TSLinkPreviewLabelMinimumScreenSize);\n'),
+    'label-room-page-point': ('    if (!(roomW > 0) || !(roomH > 0)) return;\n',
+                              '    if (roomW < 1 || roomH < 1) return;\n'),
     'corner-on-screen': ('    CGFloat radius = TSLinkPreviewCornerRadius;\n',
                          '    CGFloat radius = TSLinkPreviewCornerRadius * [self unitsPerScreenPoint];\n'),
     'no-redraw': ('            [weakSelf setNeedsDisplay:YES];\n', ''),
@@ -70,6 +72,7 @@ EXPECTED = {
     'label-ceil-page-points': "the page label's capsule stays one size on screen",
     'label-no-screen-floor': 'the page label keeps the six-point floor',
     'label-floor-page-points': 'the page label keeps the six-point floor',
+    'label-room-page-point': 'the page label stays visible',
     'corner-on-screen': 'the corners grow with the magnification',
     'no-redraw': 'the popup draws itself again when the magnification changes',
     'keeps-old-preview': 'a moved popup follows only the preview it is in',
@@ -382,6 +385,19 @@ int main(void) { @autoreleasepool {
         check(box.gray > 8 && box.white > 0, "the page label stays visible");
         CGFloat screen = 11 * (box.maxY - box.minY + 1) / referenceHeight;
         printf("label 1000%% length 12 is %.2f points on screen\n", screen);
+        check(screen >= 6, "the page label stays at least six points on screen");
+    }
+    // At 2000% a short linked page leaves less than one page point of room, which is
+    // still about ten points on screen. "Page 2" fits there above the six-point floor.
+    popup.pageLabel = @"Page 2";
+    popup.frame = NSMakeRect(20, 20, 35, 14);
+    view.scaleFactor = 20;
+    {
+        CGFloat pixels = backing / [popup unitsPerScreenPoint];
+        LabelBox box = measureLabel(render(popup, pixels), pixels);
+        check(box.gray > 8 && box.white > 0, "the page label stays visible");
+        CGFloat screen = 11 * (box.maxY - box.minY + 1) / referenceHeight;
+        printf("label 2000%% page 2 is %.2f points on screen\n", screen);
         check(screen >= 6, "the page label stays at least six points on screen");
     }
     popup.pageLabel = @"Page 180";
