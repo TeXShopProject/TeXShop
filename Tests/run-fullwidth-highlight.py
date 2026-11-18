@@ -17,6 +17,9 @@ support = source_file(root, 'TSColorSupport.m').read_text(encoding='latin-1')
 preferences = source_file(root, 'TSPreferences-Color.m').read_text(encoding='latin-1')
 wells = preferences[preferences.index('- (NSColor *)fullwidthHighlightColorForKey:'):]
 wells = wells[:wells.index('\n}\n') + 3]
+# A key the theme has no color for: the well shows the built-in one (-editingColorForKey:).
+editing = preferences[preferences.index('- (NSColor *)editingColorForKey: (NSString *)theKey'):]
+wells += editing[:editing.index('\n}\n') + 3]
 
 # The document takes the fullwidth colors of TSSyntaxColorScheme, and none when it has none.
 scheme_source = source_file(root, 'TSSyntaxColorScheme.m').read_text(encoding='utf-8')
@@ -35,7 +38,7 @@ membership = membership[:membership.index('\n}\n') + 3]
 readers = ''.join(support[support.index(sig):support.index('\n}\n', support.index(sig)) + 3] for sig in
                   ['- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFromDictionary:', '- (NSColor *) colorAndAlphaFromDictionary:',
                    '- (NSColor *)liteColorWithKey:', '- (NSColor *)darkColorWithKey:', '- (NSColor *)liteColorAndAlphaWithKey:',
-                   '- (NSColor *)darkColorAndAlphaWithKey:'])
+                   '- (NSColor *)darkColorAndAlphaWithKey:', '- (NSColor *)colorForKey: (NSString *)theKey fromDictionary:'])
 branch = scanner[scanner.index('else if (fullwidth && TSIsHighlightedFullwidthCharacter((unichar)c))'):]
 branch = branch[:branch.index('else if ((c == \'&\')')]
 assert 'TSToken(&scan, location, 1, TSSyntaxRoleFullwidthSymbol);' in branch
@@ -69,7 +72,7 @@ READERS
 #import "TSSyntaxColorScheme.h"
 SCHEME
 MEMBERSHIP
-@interface Wells : NSObject { @public NSMutableDictionary *EditingColors; }
+@interface Wells : NSObject { @public NSMutableDictionary *EditingColors; NSWindow *_prefsWindow; }
 @end
 @implementation Wells
 WELLS

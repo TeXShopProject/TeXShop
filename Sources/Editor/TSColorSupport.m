@@ -356,32 +356,25 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
 }
 
 
-// A color of a theme is an array of red, green, blue and, mostly, opacity. Anything else (a theme
-// file edited by hand or by another program) counts as a color the theme does not have.
-static NSArray *TSColorComponents(id value)
-{
-    if (![value isKindOfClass:NSArray.class] || [value count] < 3)
-        return nil;
-    for (id component in value)
-        if (![component isKindOfClass:NSNumber.class])
-            return nil;
-    return value;
-}
-
-static double TSColorOpacity(NSArray *components)
-{
-    return components.count >= 4 ? [components[3] doubleValue] : 1.0;
-}
-
 // Themes made before brackets had their own colors only define SyntaxMarker.
+// A color is an array of red, green, blue and, mostly, opacity; anything else (in a theme file
+// edited by hand or by another program) counts as a color the theme does not have.
 - (NSArray *) colorArrayFromDictionary:(NSDictionary *)theDictionary andKey: (NSString *)theKey
 {
-    NSArray *theColorArray = TSColorComponents([theDictionary objectForKey: theKey]);
+    NSArray *(^color)(id) = ^NSArray *(id value) {
+        if (![value isKindOfClass:NSArray.class] || [value count] < 3)
+            return nil;
+        for (id component in value)
+            if (![component isKindOfClass:NSNumber.class])
+                return nil;
+        return value;
+    };
+    NSArray *theColorArray = color([theDictionary objectForKey: theKey]);
     if ((theColorArray == nil) &&
         ([theKey isEqualToString: @"SyntaxMarkerParen"] ||
          [theKey isEqualToString: @"SyntaxMarkerCurly"] ||
          [theKey isEqualToString: @"SyntaxMarkerSquare"]))
-        theColorArray = TSColorComponents([theDictionary objectForKey: @"SyntaxMarker"]);
+        theColorArray = color([theDictionary objectForKey: @"SyntaxMarker"]);
     return theColorArray;
 }
 
@@ -398,10 +391,11 @@ static double TSColorOpacity(NSArray *components)
 
 - (NSColor *) colorAndAlphaFromDictionary:(NSDictionary *)theDictionary andKey: (NSString *)theKey
 {
-    NSArray *theColorArray = TSColorComponents([theDictionary objectForKey: theKey]);
-    if (theColorArray == nil)
+    // Without the bracket colors' fallback of -colorArrayFromDictionary:andKey:.
+    NSArray *theColorArray = [theDictionary objectForKey: theKey];
+    if (theColorArray == nil || [self colorArrayFromDictionary: @{theKey: theColorArray} andKey: theKey] == nil)
         return nil;
-    NSColor *theColor = [NSColor colorWithRed: [theColorArray[0] doubleValue]  green: [theColorArray[1] doubleValue]  blue: [theColorArray[2] doubleValue]  alpha: TSColorOpacity(theColorArray)];
+    NSColor *theColor = [NSColor colorWithRed: [theColorArray[0] doubleValue]  green: [theColorArray[1] doubleValue]  blue: [theColorArray[2] doubleValue]  alpha: (theColorArray.count >= 4 ? [theColorArray[3] doubleValue] : 1.0)];
     
     return theColor;
 }
@@ -540,7 +534,7 @@ static double TSColorOpacity(NSArray *components)
     NSArray *theColorArray = [self colorArrayFromDictionary: theDictionary andKey: theKey];
     if (theColorArray != nil)
         {
-            theColor = [NSColor colorWithRed: [theColorArray[0] doubleValue]  green: [theColorArray[1] doubleValue]  blue: [theColorArray[2] doubleValue]  alpha: TSColorOpacity(theColorArray)];
+            theColor = [NSColor colorWithRed: [theColorArray[0] doubleValue]  green: [theColorArray[1] doubleValue]  blue: [theColorArray[2] doubleValue]  alpha: (theColorArray.count >= 4 ? [theColorArray[3] doubleValue] : 1.0)];
             return (theColor);
         }
     if (mode)
