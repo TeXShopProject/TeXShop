@@ -259,6 +259,8 @@ static NSRange TSExperimentRange(NSTextView *view, NSRange range)
 
 - (void)showExperimentIndicator:(NSString *)rangeString
 {
+    if (scrapTextView.hasMarkedText)
+        return;
     NSRange range = TSExperimentRange(scrapTextView, NSRangeFromString(rangeString));
     if (range.length > 0)
         [scrapTextView showFindIndicatorForRange:range];

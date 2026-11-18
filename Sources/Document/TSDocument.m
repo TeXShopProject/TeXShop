@@ -5652,6 +5652,9 @@ if ( ! skipTextWindow) {
 // added by Terada ( - (void)showIndicator: )
 - (void)showIndicator:(NSString*)range
 {
+	// Not for a brace being composed with an input method.
+	if ([textView1 hasMarkedText] || [textView2 hasMarkedText])
+		return;
 	if (NSFoundationVersionNumber > LEOPARD) {
 		if(windowIsSplit){
 			[textView1 showFindIndicatorForRange:NSRangeFromString(range)];
@@ -6194,12 +6197,14 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 				matchRange.location = i;
 				matchRange.length = 1;
 				// modified by Terada (from this line)
+				// For a brace being composed with an input method, the indicator is not shown
+				// (see -showIndicator:) and the selection is not moved to the partner either.
 				if ((NSFoundationVersionNumber > LEOPARD) && ([SUD boolForKey: brieflyFlashYellowForMatchKey])) {
 					[self performSelector:showIndicatorSelector
 							   withObject:NSStringFromRange(matchRange)
 							   afterDelay:0.0];
 				}
-				else {
+				else if (! [aTextView hasMarkedText]) {
 					// koch: here 'affinity' and 'stillSelecting' are necessary, else the wrong range is selected.
 					[aTextView setSelectedRange: matchRange
 									  affinity: NSSelectByCharacter stillSelecting: YES];
