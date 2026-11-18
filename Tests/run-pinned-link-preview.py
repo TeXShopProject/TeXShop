@@ -27,7 +27,7 @@ parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'oth
                                            'pinned-blocks-hover', 'pin-keeps-old', 'over-pin-keeps-hover', 'pin-times-out',
                                            'escape-falls-to-other-part', 'escape-closes-hover',
                                            'link-keeps-pin', 'outline-keeps-pin', 'back-keeps-pin', 'forward-keeps-pin', 'page-number-keeps-pin',
-                                           'last-page-keeps-pin', 'sync-keeps-pin', 'zoom-kills-pin', 'next-page-kills-pin',
+                                           'last-page-keeps-pin', 'sync-keeps-pin', 'zoom-kills-pin', 'zoom-moves-into-view', 'next-page-kills-pin',
                                            'empty-outline-kills-pin', 'stuck-back-kills-pin', 'stuck-single-page-kills-pin'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
@@ -109,6 +109,9 @@ view_mutations = {
     'sync-keeps-pin': ('\t[self closePinnedLinkPreview];\n\tpageIndexForMark = idx;', '\tpageIndexForMark = idx;'),
     'zoom-kills-pin': ('\t// A pinned popup stays, growing and shrinking with the page it is on (#35).\n\t[self cleanupMarqueeKeepingPinnedLinkPreview];',
                        '\t[self cleanupMarquee: YES];'),
+    # The behavior before #56: zoom moved the popup into view, off its place on its page.
+    'zoom-moves-into-view': ('\tresizeOption = NEW_PDF_FIT_TO_NONE;\n\tif (sender == myScale1) {',
+                             '\tresizeOption = NEW_PDF_FIT_TO_NONE;\n\t[self keepPinnedLinkPreviewInView];\n\tif (sender == myScale1) {'),
     'next-page-kills-pin': ('\t\t[self cleanupMarqueeKeepingPinnedLinkPreview];\n\t[self stepPageForward:YES sender:sender];', '\t\t[self cleanupMarquee: YES];\n\t[self stepPageForward:YES sender:sender];'),
     'popup-side-fitted': ('            BOOL keepSide = displayMode == kPDFDisplaySinglePageContinuous ||\n                            displayMode == kPDFDisplayTwoUpContinuous;\n',
                           '            BOOL keepSide = displayMode != displayMode;\n'),
@@ -1588,23 +1591,30 @@ static void testJumps(MyPDFKitView *view, NSWindow *window) {
     view.displayMode = kPDFDisplaySinglePageContinuous;
     [view layoutDocumentView];
 
-    // Zoom keeps it, in view.
+    // Zoom keeps it at its place on its page, growing and shrinking with the page, also where
+    // that is out of view (#56).
     pin();
     preview = view.preview;
     NSTextField *scaleField = [NSTextField new];
     scaleField.integerValue = 300;
     [view setTestScaleField:scaleField];
     CGFloat widthBefore = NSWidth([view.documentView convertRect:preview.frame toView:nil]);
+    NSRect placed = preview.frame;
     [view changeScale:view];
     check(approx(view.scaleFactor, 3) && view.preview == preview && preview.superview && handlers.count == 1,
           @"zoom keeps the pinned popup");
     check(fabs(NSWidth([view.documentView convertRect:preview.frame toView:nil]) - 3 * widthBefore) < 1,
           @"the pinned popup grows with the page");
-    check(NSIntersectsRect(preview.frame, view.documentView.visibleRect), @"after zoom the pinned popup is in view");
+    check(NSEqualRects(preview.frame, placed), @"zoom leaves the pinned popup at its place on its page");
+    // A popup far out of view stays there.
+    NSRect away = NSOffsetRect(placed, 0, view.documentView.isFlipped ? 3000 : -3000);
+    preview.frame = away;
+    check(!NSIntersectsRect(away, view.documentView.visibleRect), @"fixture: the popup is out of view");
     scaleField.integerValue = 50;
     [view changeScale:view];
-    check(view.preview == preview && NSIntersectsRect(preview.frame, view.documentView.visibleRect),
-          @"zooming out keeps the pinned popup in view");
+    check(view.preview == preview && NSEqualRects(preview.frame, away),
+          @"zoom leaves a pinned popup out of view at its place on its page");
+    preview.frame = placed;
     [view setTestScaleField:nil];
     view.scaleFactor = 1;
 
@@ -2069,6 +2079,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'last-page-keeps-pin':'going to the last page closes the pinned popup',
                     'sync-keeps-pin':'a sync from the source closes the pinned popup',
                     'zoom-kills-pin':'zoom keeps the pinned popup',
+                    'zoom-moves-into-view':('zoom leaves the pinned popup at its place on its page', 'zoom leaves a pinned popup out of view at its place on its page'),
                     'next-page-kills-pin':'the next page keeps the pinned popup',
                     'popup-side-fitted':('in the continuous displays the popup stays below the link, or above it with Shift', 'Shift puts the popup above the link'),
                     'popup-side-always-kept':'in Single Page and Double Page display a popup that does not fit moves to the other side',

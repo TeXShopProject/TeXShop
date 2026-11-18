@@ -56,6 +56,9 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     // The preview whose magnification the popup follows.
     __weak PDFView *_magnifiedView;
     id _scaleObserver;
+    // The page the popup lies on and its frame in that page's space, while the pages move.
+    PDFPage *_placePage;
+    NSRect _placeOnPage;
 }
 
 - (instancetype)initWithFrame:(NSRect)frame image:(NSImage *)image source:(NSRect)source
@@ -299,6 +302,41 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     if (NSEqualRects(frame, self.frame)) return;
     self.frame = frame;
     [self setNeedsDisplay:YES];
+}
+
+- (void)rememberPlaceOnPage
+{
+    _placePage = nil;
+    PDFView *preview = [self ownerPDFView];
+    NSView *documentView = self.superview;
+    if (!preview || !documentView || !preview.document) return;
+    NSRect frame = [preview convertRect:self.frame fromView:documentView];
+    NSPoint corner = NSMakePoint(NSMinX(frame), preview.isFlipped ? NSMinY(frame) : NSMaxY(frame));
+    PDFPage *page = [preview pageForPoint:corner nearest:YES];
+    if (!page) return;
+    _placePage = page;
+    _placeOnPage = [preview convertRect:frame toPage:page];
+}
+
+- (BOOL)returnToPlaceOnPage
+{
+    PDFPage *page = _placePage;
+    _placePage = nil;
+    PDFView *preview = [self ownerPDFView];
+    NSView *documentView = self.superview;
+    if (!page || !preview || !documentView || page.document != preview.document) return NO;
+    // The continuous displays lay out every page; the others only the pages they show.
+    PDFDisplayMode mode = preview.displayMode;
+    if (mode != kPDFDisplaySinglePageContinuous && mode != kPDFDisplayTwoUpContinuous
+        && ![preview.visiblePages containsObject:page]) return NO;
+    NSRect frame = [documentView convertRect:[preview convertRect:_placeOnPage fromPage:page] fromView:preview];
+    if (!isfinite(NSMinX(frame)) || !isfinite(NSMinY(frame)) || !isfinite(NSWidth(frame)) || !isfinite(NSHeight(frame))
+        || NSWidth(frame) <= 0 || NSHeight(frame) <= 0) return NO;
+    if (!NSEqualRects(frame, self.frame)) {
+        self.frame = frame;
+        [self setNeedsDisplay:YES];
+    }
+    return YES;
 }
 
 - (TSLinkPreviewEdge)edgesAtPoint:(NSPoint)point

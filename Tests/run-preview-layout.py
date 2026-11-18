@@ -14,7 +14,7 @@ view=(root/'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
 doc=(root/'Sources/Document/TSDocument.m').read_text()
 prefs=(root/'Sources/Settings/TSPreferences.m').read_text()
 controller='\n'.join(method(toolbar,s) for s in ['- (BOOL)previewDisplaysAsBook','- (BOOL)previewDisplaysRTL','- (void)changePreviewLayout:', '- (void)changePreviewArrangement:', '- (BOOL)validatePreviewLayoutItem:', '- (void)updatePreviewLayoutControls'])
-viewmethods='\n'.join(method(view,s) for s in ['- (void) setupPageStyle','- (void) setupMagnificationStyle','- (void)performPreviewLayoutChange:','- (void)applyPreviewArrangement','- (void)changePageStyleTo:', '- (void)setDisplayMode:', '- (void)setScaleFactor:', '- (NSInteger)pageStyle', '- (void)setDocument:(PDFDocument *)document'])
+viewmethods='\n'.join(method(view,s) for s in ['- (void) setupPageStyle','- (void) setupMagnificationStyle','- (void)performPreviewLayoutChange:','- (void)applyPreviewArrangement','- (void)changePageStyleTo:', '- (void)setDisplayMode:', '- (void)setScaleFactor:', '- (NSInteger)pageStyle', '- (void)setDocument:(PDFDocument *)document', '- (BOOL)hasPinnedLinkPreview', '- (BOOL)beginKeepingPinnedLinkPreviewOnPage', '- (void)endKeepingPinnedLinkPreviewOnPage:'])
 parse=method(doc,'- (void)readPreviewArrangementFromData:')
 # updatePreviewLayoutControls also validates the Back/Forward item: compile its class too.
 item_start=toolbar.index('@interface TSBackForwardToolbarItem : NSToolbarItem')
@@ -34,6 +34,8 @@ program=r'''
 #import "MemoryDefaults.h"
 #import "TSPrefPreviewController.h"
 #import "TSPreviewScrollerKeeper.h"
+#import "TSLinkPreviewGeometry.h"
+#import "TSLinkPreviewView.h"
 static NSUserDefaults *defaults;
 #define SUD defaults
 static NSStringEncoding NSISOLatin9StringEncoding = 0x8000020f;
@@ -78,7 +80,8 @@ static inline BOOL TSContentAllMeasured(PDFDocument *document, PDFDisplayBox box
 BACKFORWARDITEM
 @interface MyPDFKitView : PDFView {
  @public NSInteger pageStyle,firstPageStyle,resizeOption; id myStepper,myStepper1; BOOL _pdfViewReady, _fittingContentWidth;
- NSView *pinnedLinkPreview;
+ TSLinkPreviewView *pinnedLinkPreview;
+ BOOL keepsPinnedLinkPreviewOnPage;
 }
 @property (weak) TSDocument *myDocument;
 @property BOOL doScroll;
@@ -246,6 +249,64 @@ int main(int argc,char **argv){@autoreleasepool{
  Check([d.myPDFKitView.visiblePages containsObject:page],@"Viewed page stays visible");Check(fabs(d.myPDFKitView.scaleFactor-scale)<.01,@"Manual zoom retained");
  d.myPDFKitView->resizeOption=3;[d.myPDFKitView setupMagnificationStyle];[d changePreviewLayout:Choice(@selector(changePreviewLayout:),2)];
  Check(d.myPDFKitView.autoScales && d.myPDFKitView->resizeOption==3,@"Auto fit retained");
+ // A pinned link popup stays at its place on its page when the display format or the
+ // arrangement of the pages changes, as long as its page is shown; otherwise it comes into
+ // view (#56). The popup and the layout methods are the real ones.
+ {
+  MyPDFKitView *v=d.myPDFKitView;
+  d.myPDFKitView->resizeOption=2;[d changePreviewLayout:Choice(@selector(changePreviewLayout:),3)];v.scaleFactor=.8;
+  PDFPage *popupPage=[v.document pageAtIndex:3];[v goToPage:popupPage];Pump();
+  NSSize popupSize;CGAffineTransform popupTransform;
+  Check(TSLinkPreviewPageGeometry(popupPage,&popupSize,&popupTransform),@"Popup page geometry");
+  TSLinkPreviewView *popup=[[TSLinkPreviewView alloc]initWithFrame:NSMakeRect(0,0,200,60) image:TSLinkPreviewImage(popupPage,popupSize)
+   source:NSMakeRect(0,0,300,90) pageSize:popupSize page:popupPage transform:popupTransform];
+  popup.pinned=YES;
+  NSRect onPage=NSMakeRect(60,300,200,60);
+  [v.documentView addSubview:popup];
+  popup.frame=[v.documentView convertRect:[v convertRect:onPage fromPage:popupPage] fromView:v];
+  v->pinnedLinkPreview=popup;
+  NSRect (^place)(void)=^NSRect{return [v convertRect:[v convertRect:popup.frame fromView:popup.superview] toPage:popupPage];};
+  BOOL (^atPlace)(void)=^BOOL{NSRect r=place();return popup.superview==v.documentView && fabs(NSMinX(r)-60)<.5 && fabs(NSMinY(r)-300)<.5 && fabs(NSWidth(r)-200)<.5 && fabs(NSHeight(r)-60)<.5;};
+  Check(atPlace(),@"Popup fixture on its page");
+  for(NSNumber *style in @[@4,@1,@2,@3,@2,@4,@1,@3]){
+   [d changePreviewLayout:Choice(@selector(changePreviewLayout:),style.intValue)];Pump();
+   if(!atPlace())NSLog(@"display format %@: %@",style,NSStringFromRect(place()));
+   Check(atPlace(),@"A pinned popup stays at its place on its page when the display format changes");
+  }
+  [d changePreviewLayout:Choice(@selector(changePreviewLayout:),4)];Pump();
+  for(NSNumber *choice in @[@2,@3,@1,@3]){
+   [d changePreviewArrangement:Choice(@selector(changePreviewArrangement:),choice.integerValue)];Pump();
+   if(!atPlace())NSLog(@"arrangement %@: %@",choice,NSStringFromRect(place()));
+   Check(atPlace(),@"A pinned popup stays at its place on its page when the arrangement of the pages changes");
+  }
+  [d changePreviewArrangement:Choice(@selector(changePreviewArrangement:),4)];
+  // PDFKit's contextual menu changes the display format through setDisplayMode:, not through
+  // changePageStyleTo:. Its real items are used.
+  [d changePreviewLayout:Choice(@selector(changePreviewLayout:),3)];[v goToPage:popupPage];Pump();
+  Check(atPlace(),@"Popup fixture back on its page");
+  NSEvent *right=[NSEvent mouseEventWithType:NSEventTypeRightMouseDown location:NSMakePoint(400,300) modifierFlags:0 timestamp:0
+   windowNumber:d.pdfKitWindow.windowNumber context:nil eventNumber:0 clickCount:1 pressure:1];
+  NSInteger contextualFormats=0;
+  for(NSString *name in @[@"_setDoublePageScrolling:",@"_setSinglePage:",@"_setDoublePage:",@"_setSinglePageScrolling:",@"_setDoublePageScrolling:"]){
+   NSMenu *contextual=[v menuForEvent:right];
+   NSInteger index=[contextual indexOfItemWithTarget:v andAction:NSSelectorFromString(name)];
+   if(index<0)continue;
+   contextualFormats++;
+   PDFDisplayMode before=v.displayMode;
+   [contextual performActionForItemAtIndex:index];Pump();
+   Check(v.displayMode!=before,@"The contextual menu item changes the display format");
+   if(!atPlace())NSLog(@"contextual %@: %@",name,NSStringFromRect(place()));
+   Check(atPlace(),@"A pinned popup stays at its place on its page when the display format changes from the contextual menu");
+  }
+  Check(contextualFormats==5,@"PDFKit's contextual menu offers the four display formats");
+  // Single Page display of another page: the popup's page is not shown, so it comes into view.
+  [d changePreviewLayout:Choice(@selector(changePreviewLayout:),3)];[v goToPage:[v.document pageAtIndex:0]];Pump();
+  [d changePreviewLayout:Choice(@selector(changePreviewLayout:),1)];Pump();
+  Check(![v.visiblePages containsObject:popupPage] && popup.superview==v.documentView
+        && NSIntersectsRect(popup.frame,v.documentView.visibleRect),@"A pinned popup whose page is not shown comes into view");
+  [popup removeFromSuperview];v->pinnedLinkPreview=nil;
+  [d changePreviewLayout:Choice(@selector(changePreviewLayout:),3)];
+ }
  d.pdfKitWindow.title=@"TeXShop — PDF Layout Controls";
  if(argc>2 && strcmp(argv[2],"-")!=0)Snapshot(d.pdfKitWindow.contentView.superview,[@(argv[2]) stringByAppendingPathComponent:@"pdf-layout.png"]);
  REGRESSION
@@ -270,7 +331,7 @@ int main(int argc,char **argv){@autoreleasepool{
  settings.releasedWhenClosed=NO;settings.contentView=pane.view;[pane.view layoutSubtreeIfNeeded];
  if(argc>2 && strcmp(argv[2],"-")!=0) Snapshot(pane.view,[@(argv[2]) stringByAppendingPathComponent:@"preferences.png"]);
  d.myPDFKitView.document=nil;Check(![d validatePreviewLayoutItem:Choice(@selector(changePreviewLayout:),1)],@"No PDF disables actions");
- NSLog(@"PASS: PDF catalog direction and precedence, toolbar priority, 16 layout combinations, precedence, split panes, menu synchronization, reload, position/zoom, immediate preferences");
+ NSLog(@"PASS: PDF catalog direction and precedence, toolbar priority, 16 layout combinations, precedence, split panes, menu synchronization, reload, position/zoom, pinned popup on its page, immediate preferences");
 }}
 '''
 for key,value in [('VIEWMETHODS',viewmethods),('INITIALIZE',initialize),('CONTROLLER',controller),('PARSE',parse),('BACKFORWARDITEM',backforward),('REGRESSION',(root/'Tests/PreviewLayoutRegression.inc').read_text()),('PREFMETHODS',method(prefs,'- (IBAction)displayAsBookChanged:')+'\n'+method(prefs,'- (IBAction)linkPopupsChanged:')+'\n'+method(prefs,'- (IBAction)arrowKeysPageChanged:'))]:program=program.replace(key,value)
@@ -283,7 +344,7 @@ with tempfile.TemporaryDirectory(prefix='TeXShop-layout-test-') as tmp:
  for l in ('en','ja'):
   res=app/f'Contents/Resources/{l}.lproj';res.mkdir(parents=True);shutil.copy(root/f'Resources/Interfaces/{l}.lproj/ToolbarItems.strings',res)
  source=Path(tmp)/'Test.m';source.write_text(program)
- subprocess.run(['xcrun','clang','-fobjc-arc','-fmodules',*include_args(root),'-I'+str(root/'Tests'),'-framework','Cocoa','-framework','PDFKit',str(source),*map(str,sources(root,['Preview'])),str(root/'Sources/Preview/TSPreviewScrollerKeeper.m'),'-o',str(mac/'LayoutTest')],check=True)
+ subprocess.run(['xcrun','clang','-fobjc-arc','-fmodules',*include_args(root),'-I'+str(root/'Tests'),'-framework','Cocoa','-framework','PDFKit',str(source),*map(str,sources(root,['Preview'])),str(root/'Sources/Preview/TSPreviewScrollerKeeper.m'),str(root/'Sources/Preview/TSLinkPreviewView.m'),str(root/'Sources/Windows/TSDocumentWindowGlass.m'),'-o',str(mac/'LayoutTest')],check=True)
  fixture=Path(tmp)/'Fixtures';fixture.mkdir()
  nib=next(b for b in bundles(root,fixture,names=['Preview']) if b.stem==('Base' if lang=='en' else lang))
  snapshot=next((a.split('=',1)[1] for a in sys.argv if a.startswith('--snapshots=')),None)
