@@ -251,6 +251,11 @@ static BOOL TSIsSharedPanel(NSWindow *window)
     _host = host;
     _textPopover = [[TSAnnotationTextPopover alloc] init];
     self.layoutAttribute = NSLayoutAttributeBottom;
+    // The pages scroll on under the bar. With the soft edge of the toolbar they only blur, and
+    // a heading behind the bar stays dark enough to hide its icons; the hard edge gives the
+    // toolbar and the bar one even background while the bar is shown.
+    if (@available(macOS 26.1, *))
+        self.preferredScrollEdgeEffectStyle = NSScrollEdgeEffectStyle.hardStyle;
     [self view];
     return self;
 }
