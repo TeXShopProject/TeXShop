@@ -194,7 +194,8 @@ static inline void TSReapplyPreviewInversion(NSScrollView *scrollView) {
 // PDFKit posts the visible-page and document notifications before the new page
 // views exist (a replacement's pages arrive about a quarter second later). The
 // wheel's notification arrives once those pages are already on screen. Apply
-// again now, and once more after the late pages have been created.
+// again now, and once more after those pages exist. The second pass is inside
+// the third of a second a replacement is given before it is sampled.
 static BOOL TSPreviewFollowing = NO;
 static void TSFollowPreviewInversion(NSScrollView *scrollView) {
     if (!scrollView || TSPreviewFollowing) return;
@@ -202,7 +203,7 @@ static void TSFollowPreviewInversion(NSScrollView *scrollView) {
     TSReapplyPreviewInversion(scrollView);
     TSPreviewFollowing = NO;
     __weak NSScrollView *weakScroll = scrollView;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)),
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.28 * NSEC_PER_SEC)),
         dispatch_get_main_queue(), ^{
             if (TSPreviewFollowing) return;
             TSPreviewFollowing = YES;

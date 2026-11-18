@@ -405,8 +405,8 @@ static void TurnWheel(PDFView *pdf) {
         hit = FrontPage(pdf) ?: hit;
     }
 }
-static void CheckReadingPages(PDFView *pdf, BOOL inverted, NSString *what) {
-    Settle();
+static void CheckReadingPages(PDFView *pdf, BOOL inverted, NSString *what, NSTimeInterval wait) {
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:wait]];
     [pdf layoutSubtreeIfNeeded];
     NSScrollView *scroll = pdf.documentView.enclosingScrollView;
     CheckPageViews(scroll, NSAppearanceNameDarkAqua, inverted, what);
@@ -579,10 +579,10 @@ int main(void) {
             if ([NSStringFromClass(child.class) containsString:@"Page"] &&
                 ![seen containsObject:[NSValue valueWithPointer:(__bridge void *)child]]) created = YES;
         check(created, @"scrolling the document preview creates a page view");
-        CheckReadingPages(reading, YES, @"scrolling the document preview");
+        CheckReadingPages(reading, YES, @"scrolling the document preview", 0.55);
         TSApplyPreviewInversion(reading.documentView.enclosingScrollView, NO);
         reading.document = ManyPages();
-        CheckReadingPages(reading, NO, @"replacing the document preview");
+        CheckReadingPages(reading, NO, @"replacing the document preview", 0.32);
         TSApplyPreviewInversion(reading.documentView.enclosingScrollView, YES);
         NSString *typesetPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"texshop-document-reload.pdf"];
         NSData *typesetData = [ManyPages() dataRepresentation];
@@ -590,7 +590,7 @@ int main(void) {
         PDFDocument *typeset = [[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:typesetPath]];
         check(typeset.pageCount == 12, @"typesetting reload reads the new PDF");
         reading.document = typeset;
-        CheckReadingPages(reading, YES, @"reloading the document preview after typesetting");
+        CheckReadingPages(reading, YES, @"reloading the document preview after typesetting", 0.32);
         printf("PASS: %d preview window chrome checks\n", checks);
     }
     return 0;

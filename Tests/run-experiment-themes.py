@@ -668,13 +668,13 @@ int main(void) { @autoreleasepool {
     NSData *typesetData = [manyPages(8) dataRepresentation];
     check([typesetData writeToFile:typesetPath atomically:YES], @"the Experiment typeset PDF is written");
     [pdf reShowWithPath:typesetPath];
-    settle();
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.32]];
     check(pdf.document.pageCount == 8 && inverted(pdf), @"reloading the Experiment after typesetting keeps the preview appearance");
     checkSystemScroller(pdf.documentView.enclosingScrollView, @"reloading the Experiment after typesetting");
     [testDefaults setInteger:1 forKey:TSPreviewAppearanceModeKey];
     pump();
     pdf.document = manyPages(8);
-    settle();
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.32]];
     checkPages(pdf.documentView.enclosingScrollView, 0, @"replacing the Experiment with a light PDF");
     checkSystemScroller(pdf.documentView.enclosingScrollView, @"replacing the Experiment with a light PDF");
     check(TSThemeWindowAlpha(@{}, @"SourceAlpha")==1, @"missing alpha stays opaque");
