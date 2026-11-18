@@ -563,7 +563,7 @@
 // (TSCompletionKeys.h).
 - (void)doCommandBySelector:(SEL)selector
 {
-    if (TSCompletionKeyInComposition) return;
+    if (TSCompletionKeyComposingView == self) return;
     [super doCommandBySelector:selector];
 }
 
@@ -612,11 +612,11 @@
 
     // During composition, Escape and Tab with any modifier belong to the input method.
     if ([self hasMarkedText] && TSIsCompletionFamilyKey(theEvent)) {
-        TSDeliverCompletionKeyToInputMethod(^{ [super keyDown: theEvent]; });
+        TSDeliverCompletionKeyToInputMethod(self, ^{ [super keyDown: theEvent]; });
         return;
     }
 	
-	if ([[theEvent characters] isEqualToString: g_commandCompletionCharTab] &&
+	if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionCharTab] &&
 		[SUD boolForKey: CommandCompletionAlternateMarkShortcutKey] &&
 		(([theEvent modifierFlags] & NSAlternateKeyMask) != 0))
         
@@ -625,7 +625,7 @@
         return;
     }
     
-	else if ([[theEvent characters] isEqualToString: g_commandCompletionCharTab] &&
+	else if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionCharTab] &&
              [SUD boolForKey: CommandCompletionAlternateMarkShortcutKey] &&
              (([theEvent modifierFlags] & NSControlKeyMask) != 0))
     {
@@ -633,11 +633,11 @@
         return;
     }
     
-	else if ([[theEvent characters] isEqualToString: g_commandCompletionCharTab] &&
+	else if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionCharTab] &&
              (([theEvent modifierFlags] & NSAlternateKeyMask) == 0) &&
              ![self hasMarkedText] && g_commandCompletionList)
         
-        //  if ([[theEvent characters] isEqualToString: g_commandCompletionCharTab] && (![self hasMarkedText]) && g_commandCompletionList)
+        //  if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionCharTab] && (![self hasMarkedText]) && g_commandCompletionList)
 	{
         textString = [self string]; // this will change during operations (such as undo)
 		selectedLocation = [self selectedRange].location;

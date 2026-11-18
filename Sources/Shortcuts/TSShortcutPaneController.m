@@ -569,6 +569,12 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
 - (void)restoreShortcut:(id)sender {
     [self endRecording];
     TSShortcutCommand *command = self.selectedCommand; if (!command || command.managedBySystem) return;
+    // A yielding default disables no macro and is refused by no command: it gives way.
+    if ([self.store commandYieldsDefault:command]) {
+        [self showError:[self.store restoreCommand:command]];
+        [self refreshMenuAndMacros];
+        return;
+    }
     NSString *error = [self.store conflictForRestoringCommand:command];
     if (error) { [self showError:[NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), error]]; return; }
     __weak typeof(self) weakSelf = self;
@@ -783,6 +789,14 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     NSString *conflict = [self conflictForCapturedShortcut];
     if (conflict != nil) { [self showRecordingError:conflict]; return; }
     self.recordingError = nil; [self updateRecorder]; [self updateStatus];
+    // The yielding default of Edit › Complete Label or Citation Key is refused while a macro
+    // has it, rather than taken from the macro after a confirmation.
+    if ([self.store commandYieldsDefault:command] && [key isEqualToString:command.defaultKey] && flags == command.defaultModifiers) {
+        NSString *error = [self.store setKey:key modifiers:flags forCommand:command];
+        if (error == nil) { [self endRecording]; [self refreshMenuAndMacros]; return; }
+        [self showRecordingError:error];
+        return;
+    }
     __weak typeof(self) weakSelf = self;
     self.confirmingRecording = YES;
     [self confirmMacrosUsingKey:key modifiers:flags completion:^(BOOL accepted) {

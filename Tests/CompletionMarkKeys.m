@@ -69,6 +69,30 @@ static void CheckYielding(void) {
             @"with its saved key rejected, the new item still leaves F5 to a macro");
       store.macroProvider = nil; [store refreshMenu];
       check([mine.keyEquivalent isEqual:F5()], @"once nothing else has F5, the new item takes it while its saved F6 stays rejected"); }
+    // 4c. A macro has F5 and the new item has a saved F6: recording F5 is refused and F6 stays.
+    { NSMenu *menu = [NSMenu new]; NSMenuItem *mine = Item(menu, @"Complete", @selector(completeLabelOrCitationKey:), F5(), newID);
+      TSMemoryDefaults *d = [TSMemoryDefaults new];
+      [d setObject:@{newID: @{@"key": F6(), @"modifiers": @0}} forKey:TSMenuShortcutOverridesKey];
+      TSShortcutStore *store = [[TSShortcutStore alloc] initWithMenu:menu defaults:d];
+      TSShortcutMacro *macro = [[TSShortcutMacro alloc] initWithName:@"M" path:@"Macros/M" indexPath:[NSIndexPath indexPathWithIndex:0] serializedKey:@"F5" key:F5() modifiers:0];
+      store.macroProvider = ^{ return @[macro]; }; [store refreshMenu];
+      TSShortcutCommand *command = nil; for (TSShortcutCommand *c in store.commands) if ([c.commandID isEqual:newID]) command = c;
+      NSString *message = [store setKey:F5() modifiers:0 forCommand:command];
+      check(message.length > 0 && [mine.keyEquivalent isEqual:F6()], @"recording F5 that a macro has is refused, and the saved F6 stays");
+      // Restoring the item forgets F6 and leaves F5 to the macro without an error.
+      check([store restoreCommand:command] == nil && mine.keyEquivalent.length == 0 &&
+            [store conflictsForMacroShortcuts:@[@{@"path":@"Macros/M", @"key":F5(), @"modifiers":@0}]].count == 0,
+            @"restoring the item gives F5 to the macro, which stays active"); }
+    // 4d. The new item has F6 and another item F5: restoring the item clears F6 without an error.
+    { NSMenu *menu = [NSMenu new]; NSMenuItem *other = Item(menu, @"Other", @selector(copy:), F5(), @"TSShortcut.copy:.0");
+      NSMenuItem *mine = Item(menu, @"Complete", @selector(completeLabelOrCitationKey:), F5(), newID);
+      TSMemoryDefaults *d = [TSMemoryDefaults new];
+      [d setObject:@{newID: @{@"key": F6(), @"modifiers": @0}} forKey:TSMenuShortcutOverridesKey];
+      TSShortcutStore *store = [[TSShortcutStore alloc] initWithMenu:menu defaults:d];
+      TSShortcutCommand *command = nil; for (TSShortcutCommand *c in store.commands) if ([c.commandID isEqual:newID]) command = c;
+      check([mine.keyEquivalent isEqual:F6()], @"the saved F6 applies");
+      check([store restoreCommand:command] == nil && mine.keyEquivalent.length == 0 && [other.keyEquivalent isEqual:F5()],
+            @"restoring the item forgets F6 and leaves F5 to the other item"); }
     // 5. A macro names F5.
     { NSMenu *menu = [NSMenu new]; NSMenuItem *mine = Item(menu, @"Complete", @selector(completeLabelOrCitationKey:), F5(), newID);
       TSShortcutStore *store = [[TSShortcutStore alloc] initWithMenu:menu defaults:[TSMemoryDefaults new]];
@@ -194,6 +218,23 @@ static void CheckComposition(void) {
               [name stringByAppendingString:@" during composition: the text and the composition stay"]);
         [text unmarkText];
     }
+    // Shift-Tab arrives as Backtab and is the Tab trigger with Shift.
+    check([TSCompletionTypedKey(Key(panel, 48, @"\031", @"\031", NSEventModifierFlagShift)) isEqual:@"\t"] &&
+          [TSCompletionTypedKey(Key(panel, 48, @"\t", @"\t", 0)) isEqual:@"\t"] &&
+          [TSCompletionTypedKey(Key(panel, 53, @"\033", @"\033", NSEventModifierFlagShift)) isEqual:@"\033"],
+          @"Shift-Tab is compared as Tab with Shift");
+    // Only the view being delivered to drops commands; another text view handles them.
+    SourceTextView *second = [[SourceTextView alloc] initWithFrame:NSMakeRect(0, 0, 300, 100)];
+    [content addSubview:second];
+    second.string = @"ab"; second.selectedRange = NSMakeRange(2, 0);
+    [second doCommandBySelector:@selector(deleteBackward:)];
+    check([second.string isEqual:@"a"], @"a text view handles a command on its own");
+    second.string = @"ab"; second.selectedRange = NSMakeRange(2, 0);
+    TSDeliverCompletionKeyToInputMethod(text, ^{ [second doCommandBySelector:@selector(deleteBackward:)]; });
+    check([second.string isEqual:@"a"], @"another text view handles a command while a key is delivered to the composing view");
+    text.string = @"ab"; text.selectedRange = NSMakeRange(2, 0);
+    TSDeliverCompletionKeyToInputMethod(text, ^{ [text doCommandBySelector:@selector(deleteBackward:)]; });
+    check([text.string isEqual:@"ab"], @"the composing view drops it");
     // Not composing: the source view's own handling runs.
     text.string = @"x"; text.completions = 0;
     [text keyDown:Key(panel, 53, @"\033", @"\033", 0)];

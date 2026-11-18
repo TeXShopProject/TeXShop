@@ -294,9 +294,10 @@ static NSSet<NSString *> *TSYieldingDefaultCommands(void) {
     if (![TSShortcutStore isAllowedKey:key modifiers:flags]) return NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.", @"");
     TSShortcutBinding *binding = TSBinding(key, flags);
     if ([binding isEqual:TSBinding(command.defaultKey, command.defaultModifiers)]) {
-        // Recording a yielding default that another command has is refused, as any key in use.
-        if ([TSYieldingDefaultCommands() containsObject:command.commandID]) {
-            NSString *owner = [self conflictForKey:key modifiers:flags except:command.item restoring:nil];
+        // Recording a yielding default that a menu command or a macro has is refused, as any
+        // key in use, and the saved key stays.
+        if ([self commandYieldsDefault:command]) {
+            NSString *owner = [self conflictForKey:key modifiers:flags except:command.item restoring:nil] ?: [self macroNamingKey:key modifiers:flags];
             if (owner) return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), owner];
         }
         return [self restoreCommand:command];
@@ -308,10 +309,21 @@ static NSSet<NSString *> *TSYieldingDefaultCommands(void) {
     [self persist];
     return [self.unavailableCommands containsObject:command.path] ? NSLocalizedString(@"Shortcut Unavailable", @"") : nil;
 }
+- (BOOL)commandYieldsDefault:(TSShortcutCommand *)command {
+    return [TSYieldingDefaultCommands() containsObject:command.commandID];
+}
+- (nullable NSString *)macroNamingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags {
+    TSShortcutBinding *wanted = TSBinding(key, flags);
+    for (TSShortcutMacro *macro in (self.macroProvider ? self.macroProvider() : @[]))
+        if ([TSBinding(macro.key, macro.modifiers) isEqual:wanted]) return macro.path;
+    return nil;
+}
 - (nullable NSString *)restoreCommand:(TSShortcutCommand *)command {
     if (![self.commands containsObject:command]) return NSLocalizedString(@"This command is no longer available.", @"");
     if (command.managedBySystem) return nil;
-    NSString *conflict = [self conflictForRestoringCommand:command];
+    // A yielding default is restored by forgetting the saved key; the default then takes
+    // F5 or leaves it to its owner, so there is nothing to refuse.
+    NSString *conflict = [self commandYieldsDefault:command] ? nil : [self conflictForRestoringCommand:command];
     if (conflict) return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), conflict];
     [self.overrides removeObjectForKey:command.commandID];
     [self applySavedOverrides]; [self persist];

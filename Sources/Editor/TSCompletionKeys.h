@@ -26,17 +26,28 @@ static inline BOOL TSIsCompletionFamilyKey(NSEvent *event)
     return c == 0x1b || c == 0x09 || c == 0x19;
 }
 
-// Set while such a key, pressed during composition, is delivered to the input method.
-// Each file that includes this header has its own flag; one text view class per file.
-static BOOL TSCompletionKeyInComposition = NO;
+// The text view to which such a key, pressed during composition, is being delivered.
+// Only that view drops the commands the input method leaves; another text view that
+// gets a command meanwhile handles it as usual. The previous view is put back after a
+// nested delivery.
+static __weak NSView *TSCompletionKeyComposingView = nil;
 
-// Delivers the key to the input method and drops the commands it leaves.
-static inline void TSDeliverCompletionKeyToInputMethod(void (NS_NOESCAPE ^deliver)(void))
+// Delivers the key to the input method of the view and drops the commands it leaves.
+static inline void TSDeliverCompletionKeyToInputMethod(NSView *view, void (NS_NOESCAPE ^deliver)(void))
 {
-    BOOL was = TSCompletionKeyInComposition;
-    TSCompletionKeyInComposition = YES;
+    NSView *was = TSCompletionKeyComposingView;
+    TSCompletionKeyComposingView = view;
     deliver();
-    TSCompletionKeyInComposition = was;
+    TSCompletionKeyComposingView = was;
+}
+
+// The key as completion compares it: Shift-Tab arrives as Backtab (U+0019), which is
+// the Tab trigger with Shift, so it goes back through the candidates as Shift-Escape does.
+static inline NSString *TSCompletionTypedKey(NSEvent *event)
+{
+    NSString *characters = event.characters;
+    if (characters.length == 1 && [characters characterAtIndex:0] == 0x19) return @"\t";
+    return characters;
 }
 
 // The Escape key alone or with Shift (the trigger and the reverse candidate), as

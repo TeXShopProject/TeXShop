@@ -2247,7 +2247,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 // (TSCompletionKeys.h).
 - (void)doCommandBySelector:(SEL)selector
 {
-    if (TSCompletionKeyInComposition) return;
+    if (TSCompletionKeyComposingView == self) return;
     [super doCommandBySelector:selector];
 }
 
@@ -2297,7 +2297,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
     
     // During composition, Escape and Tab with any modifier belong to the input method.
     if ([self hasMarkedText] && TSIsCompletionFamilyKey(theEvent)) {
-        TSDeliverCompletionKeyToInputMethod(^{ [super keyDown: theEvent]; });
+        TSDeliverCompletionKeyToInputMethod(self, ^{ [super keyDown: theEvent]; });
         return;
     }
 
@@ -2355,7 +2355,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
         }
     }
     
-	if ([[theEvent characters] isEqualToString: g_commandCompletionChar] &&
+	if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionChar] &&
 		[SUD boolForKey: CommandCompletionAlternateMarkShortcutKey] &&
 		(([theEvent modifierFlags] & NSAlternateKeyMask) != 0))
 			{
@@ -2363,7 +2363,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 				return;
 			}
 		
-	else if ([[theEvent characters] isEqualToString: g_commandCompletionChar] &&
+	else if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionChar] &&
 		[SUD boolForKey: CommandCompletionAlternateMarkShortcutKey] &&
 		(([theEvent modifierFlags] & NSControlKeyMask) != 0))
 			{
@@ -2371,11 +2371,11 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 				return;
 			}
 
-	else if ([[theEvent characters] isEqualToString: g_commandCompletionChar] &&
+	else if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionChar] &&
 		(([theEvent modifierFlags] & NSAlternateKeyMask) == 0) &&
 		![self hasMarkedText] && g_commandCompletionList)
 
-	  //  if ([[theEvent characters] isEqualToString: g_commandCompletionChar] && (![self hasMarkedText]) && g_commandCompletionList)
+	  //  if ([TSCompletionTypedKey(theEvent) isEqualToString: g_commandCompletionChar] && (![self hasMarkedText]) && g_commandCompletionList)
 	{
         textString = [self string]; // this will change during operations (such as undo)
 		selectedLocation = [self selectedRange].location;
