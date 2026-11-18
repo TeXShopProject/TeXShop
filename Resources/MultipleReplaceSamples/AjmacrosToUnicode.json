@@ -4277,211 +4277,211 @@
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajMasu[ \\t]*",
+      "findString" : "\\\\ajMasu(?![A-Za-z])[ \\t]*",
       "replacementString" : "〼",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajYori[ \\t]*",
+      "findString" : "\\\\ajYori(?![A-Za-z])[ \\t]*",
       "replacementString" : "ゟ",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajKoto[ \\t]*",
+      "findString" : "\\\\ajKoto(?![A-Za-z])[ \\t]*",
       "replacementString" : "ヿ",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajUta[ \\t]*",
+      "findString" : "\\\\ajUta(?![A-Za-z])[ \\t]*",
       "replacementString" : "〽",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajCommandKey[ \\t]*",
+      "findString" : "\\\\ajCommandKey(?![A-Za-z])[ \\t]*",
       "replacementString" : "⌘",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajReturnKey[ \\t]*",
+      "findString" : "\\\\ajReturnKey(?![A-Za-z])[ \\t]*",
       "replacementString" : "⏎",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajCheckmark[ \\t]*",
+      "findString" : "\\\\ajCheckmark(?![A-Za-z])[ \\t]*",
       "replacementString" : "✓",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajVisibleSpace[ \\t]*",
+      "findString" : "\\\\ajVisibleSpace(?![A-Za-z])[ \\t]*",
       "replacementString" : "␣",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajSenteMark[ \\t]*",
+      "findString" : "\\\\ajSenteMark(?![A-Za-z])[ \\t]*",
       "replacementString" : "☗",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajGoteMark[ \\t]*",
+      "findString" : "\\\\ajGoteMark(?![A-Za-z])[ \\t]*",
       "replacementString" : "☖",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajClub[ \\t]*",
+      "findString" : "\\\\ajClub(?![A-Za-z])[ \\t]*",
       "replacementString" : "♣",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajHeart[ \\t]*",
+      "findString" : "\\\\ajHeart(?![A-Za-z])[ \\t]*",
       "replacementString" : "♡",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajSpade[ \\t]*",
+      "findString" : "\\\\ajSpade(?![A-Za-z])[ \\t]*",
       "replacementString" : "♠",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajDiamond[ \\t]*",
+      "findString" : "\\\\ajDiamond(?![A-Za-z])[ \\t]*",
       "replacementString" : "♢",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajvarClub[ \\t]*",
+      "findString" : "\\\\ajvarClub(?![A-Za-z])[ \\t]*",
       "replacementString" : "♧",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajvarHeart[ \\t]*",
+      "findString" : "\\\\ajvarHeart(?![A-Za-z])[ \\t]*",
       "replacementString" : "♥",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajvarSpade[ \\t]*",
+      "findString" : "\\\\ajvarSpade(?![A-Za-z])[ \\t]*",
       "replacementString" : "♤",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajvarDiamond[ \\t]*",
+      "findString" : "\\\\ajvarDiamond(?![A-Za-z])[ \\t]*",
       "replacementString" : "♦",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajPhone[ \\t]*",
+      "findString" : "\\\\ajPhone(?![A-Za-z])[ \\t]*",
       "replacementString" : "☎",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajPostal[ \\t]*",
+      "findString" : "\\\\ajPostal(?![A-Za-z])[ \\t]*",
       "replacementString" : "〠",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajvarPostal[ \\t]*",
+      "findString" : "\\\\ajvarPostal(?![A-Za-z])[ \\t]*",
       "replacementString" : "〶",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajSun[ \\t]*",
+      "findString" : "\\\\ajSun(?![A-Za-z])[ \\t]*",
       "replacementString" : "☀",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajCloud[ \\t]*",
+      "findString" : "\\\\ajCloud(?![A-Za-z])[ \\t]*",
       "replacementString" : "☁",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajUmbrella[ \\t]*",
+      "findString" : "\\\\ajUmbrella(?![A-Za-z])[ \\t]*",
       "replacementString" : "☂",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajSnowman[ \\t]*",
+      "findString" : "\\\\ajSnowman(?![A-Za-z])[ \\t]*",
       "replacementString" : "☃",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajJIS[ \\t]*",
+      "findString" : "\\\\ajJIS(?![A-Za-z])[ \\t]*",
       "replacementString" : "〄",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajHotSpring[ \\t]*",
+      "findString" : "\\\\ajHotSpring(?![A-Za-z])[ \\t]*",
       "replacementString" : "♨",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajWhiteSesame[ \\t]*",
+      "findString" : "\\\\ajWhiteSesame(?![A-Za-z])[ \\t]*",
       "replacementString" : "﹆",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajBlackSesame[ \\t]*",
+      "findString" : "\\\\ajBlackSesame(?![A-Za-z])[ \\t]*",
       "replacementString" : "﹅",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajWhiteFlorette[ \\t]*",
+      "findString" : "\\\\ajWhiteFlorette(?![A-Za-z])[ \\t]*",
       "replacementString" : "❀",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajBlackFlorette[ \\t]*",
+      "findString" : "\\\\ajBlackFlorette(?![A-Za-z])[ \\t]*",
       "replacementString" : "✿",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajHashigoTaka[ \\t]*",
+      "findString" : "\\\\ajHashigoTaka(?![A-Za-z])[ \\t]*",
       "replacementString" : "髙",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajTsuchiYoshi[ \\t]*",
+      "findString" : "\\\\ajTsuchiYoshi(?![A-Za-z])[ \\t]*",
       "replacementString" : "𠮷",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajTatsuSaki[ \\t]*",
+      "findString" : "\\\\ajTatsuSaki(?![A-Za-z])[ \\t]*",
       "replacementString" : "﨑",
       "usesRegularExpression" : true
     },
     {
       "description" : "Ligatures, symbols and variants",
-      "findString" : "\\\\ajMayuHama[ \\t]*",
+      "findString" : "\\\\ajMayuHama(?![A-Za-z])[ \\t]*",
       "replacementString" : "濵",
       "usesRegularExpression" : true
     }

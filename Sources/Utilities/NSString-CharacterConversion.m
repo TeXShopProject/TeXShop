@@ -4351,42 +4351,43 @@ static BOOL TSStartsCommand(NSString *string, NSUInteger location)
     [str replaceAllOccurrencesOfString:@"\\ajLig{!?}" withString:@"⁉" addingPercentForEndOfLine:NO];
     
     // A command ends at the spaces and tabs after it; a line break after it stays, so that paragraphs are kept apart.
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajMasu[ \\t]*" withString:@"〼"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajYori[ \\t]*" withString:@"ゟ"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajKoto[ \\t]*" withString:@"ヿ"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajUta[ \\t]*" withString:@"〽"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajCommandKey[ \\t]*" withString:@"⌘"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajReturnKey[ \\t]*" withString:@"⏎"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajCheckmark[ \\t]*" withString:@"✓"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajVisibleSpace[ \\t]*" withString:@"␣"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajSenteMark[ \\t]*" withString:@"☗"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajGoteMark[ \\t]*" withString:@"☖"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajClub[ \\t]*" withString:@"♣"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajHeart[ \\t]*" withString:@"♡"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajSpade[ \\t]*" withString:@"♠"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajDiamond[ \\t]*" withString:@"♢"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajvarClub[ \\t]*" withString:@"♧"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajvarHeart[ \\t]*" withString:@"♥"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajvarSpade[ \\t]*" withString:@"♤"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajvarDiamond[ \\t]*" withString:@"♦"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajPhone[ \\t]*" withString:@"☎"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajPostal[ \\t]*" withString:@"〠"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajvarPostal[ \\t]*" withString:@"〶"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajSun[ \\t]*" withString:@"☀"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajCloud[ \\t]*" withString:@"☁"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajUmbrella[ \\t]*" withString:@"☂"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajSnowman[ \\t]*" withString:@"☃"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajJIS[ \\t]*" withString:@"〄"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajHotSpring[ \\t]*" withString:@"♨"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajWhiteSesame[ \\t]*" withString:@"﹆"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajBlackSesame[ \\t]*" withString:@"﹅"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajWhiteFlorette[ \\t]*" withString:@"❀"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajBlackFlorette[ \\t]*" withString:@"✿"];
+    // A longer name that begins with one of these (\ajSunday) is another command, and is left alone.
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajMasu(?![A-Za-z])[ \\t]*" withString:@"〼"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajYori(?![A-Za-z])[ \\t]*" withString:@"ゟ"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajKoto(?![A-Za-z])[ \\t]*" withString:@"ヿ"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajUta(?![A-Za-z])[ \\t]*" withString:@"〽"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajCommandKey(?![A-Za-z])[ \\t]*" withString:@"⌘"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajReturnKey(?![A-Za-z])[ \\t]*" withString:@"⏎"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajCheckmark(?![A-Za-z])[ \\t]*" withString:@"✓"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajVisibleSpace(?![A-Za-z])[ \\t]*" withString:@"␣"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajSenteMark(?![A-Za-z])[ \\t]*" withString:@"☗"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajGoteMark(?![A-Za-z])[ \\t]*" withString:@"☖"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajClub(?![A-Za-z])[ \\t]*" withString:@"♣"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajHeart(?![A-Za-z])[ \\t]*" withString:@"♡"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajSpade(?![A-Za-z])[ \\t]*" withString:@"♠"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajDiamond(?![A-Za-z])[ \\t]*" withString:@"♢"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajvarClub(?![A-Za-z])[ \\t]*" withString:@"♧"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajvarHeart(?![A-Za-z])[ \\t]*" withString:@"♥"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajvarSpade(?![A-Za-z])[ \\t]*" withString:@"♤"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajvarDiamond(?![A-Za-z])[ \\t]*" withString:@"♦"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajPhone(?![A-Za-z])[ \\t]*" withString:@"☎"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajPostal(?![A-Za-z])[ \\t]*" withString:@"〠"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajvarPostal(?![A-Za-z])[ \\t]*" withString:@"〶"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajSun(?![A-Za-z])[ \\t]*" withString:@"☀"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajCloud(?![A-Za-z])[ \\t]*" withString:@"☁"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajUmbrella(?![A-Za-z])[ \\t]*" withString:@"☂"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajSnowman(?![A-Za-z])[ \\t]*" withString:@"☃"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajJIS(?![A-Za-z])[ \\t]*" withString:@"〄"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajHotSpring(?![A-Za-z])[ \\t]*" withString:@"♨"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajWhiteSesame(?![A-Za-z])[ \\t]*" withString:@"﹆"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajBlackSesame(?![A-Za-z])[ \\t]*" withString:@"﹅"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajWhiteFlorette(?![A-Za-z])[ \\t]*" withString:@"❀"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajBlackFlorette(?![A-Za-z])[ \\t]*" withString:@"✿"];
     
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajHashigoTaka[ \\t]*" withString:@"髙"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajTsuchiYoshi[ \\t]*" withString:@"𠮷"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajTatsuSaki[ \\t]*" withString:@"﨑"];
-    [str replaceAllOccurrencesOfPattern:@"\\\\ajMayuHama[ \\t]*" withString:@"濵"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajHashigoTaka(?![A-Za-z])[ \\t]*" withString:@"髙"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajTsuchiYoshi(?![A-Za-z])[ \\t]*" withString:@"𠮷"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajTatsuSaki(?![A-Za-z])[ \\t]*" withString:@"﨑"];
+    [str replaceAllOccurrencesOfPattern:@"\\\\ajMayuHama(?![A-Za-z])[ \\t]*" withString:@"濵"];
     
     return str;
 }

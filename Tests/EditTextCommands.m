@@ -94,6 +94,9 @@ static void CheckStrings(void)
           @"\\ajMaru{1}\\ajMaru{50}\\ajKuroMaru{1}\\ajKakko{1}\\ajMaruAlph{1}\\ajMarualph{1}\\ajLig{株式会社}%\n\\ajMaru{2}%\n");
     Check(@"from ajmacros", [@"\\ajMaru{1}\\ajMaru{50}\\ajKakko{20}\\ajLig{株式会社}\\ajHotSpring \\ajTsuchiYoshi" stringByReplacingAjMacrosWithUnicodeCharacters],
           @"①㊿⒇㍿♨𠮷");
+    // A longer command name that begins with one of these names is another command.
+    Check(@"from ajmacros, longer names", [@"\\ajSunday \\ajSun x \\ajHeartsuit \\ajHeart\n\\ajMasuX \\ajMasu{}" stringByReplacingAjMacrosWithUnicodeCharacters],
+          @"\\ajSunday ☀x \\ajHeartsuit ♡\n\\ajMasuX 〼{}");
     Check(@"to UTF", [@"髙島屋―\n𠮷\nあ" stringByReplacingUnicodeCharactersWithUTF], @"\\UTF{9AD9}島屋—%\n\\CID{13706}%\nあ");
     // TeX ends lines at CR and LF only: no "%" before U+2028, U+2029 or U+0085, which would comment out the rest.
     for (NSNumber *separator in @[@0x2028, @0x2029, @0x85]) {
