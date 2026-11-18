@@ -227,7 +227,11 @@ static void CheckComposition(void) {
           [TSCompletionTypedKey(Key(panel, 53, @"\033", @"\033", NSEventModifierFlagShift)) isEqual:@"\033"],
           @"Shift-Tab is compared as Tab with Shift");
     // Control-Y also arrives as U+0019: it is not Shift-Tab.
-    check([TSCompletionTypedKey(Key(panel, 16, @"\031", @"y", NSEventModifierFlagControl)) isEqual:@"\031"], @"Control-Y stays itself");
+    check(![TSCompletionTypedKey(Key(panel, 16, @"\031", @"y", NSEventModifierFlagControl)) isEqual:@"\t"], @"Control-Y is not Shift-Tab");
+    check(![TSCompletionTypedKey(Key(panel, 33, @"\033", @"[", NSEventModifierFlagControl)) isEqual:@"\033"], @"Control-[ is not Escape");
+    check(![TSCompletionTypedKey(Key(panel, 34, @"\t", @"i", NSEventModifierFlagControl)) isEqual:@"\t"], @"Control-I is not Tab");
+    check([TSCompletionTypedKey(Key(panel, 53, @"\033", @"\033", NSEventModifierFlagControl)) isEqual:@"\033"] &&
+          [TSCompletionTypedKey(Key(panel, 48, @"\t", @"\t", NSEventModifierFlagControl)) isEqual:@"\t"], @"Control-Escape and Control-Tab stay the trigger");
     // A new key that does not start during composition keeps its commands, even while an outer
     // key is still being delivered to the same view.
     text.string = @"ab"; text.selectedRange = NSMakeRange(2, 0);

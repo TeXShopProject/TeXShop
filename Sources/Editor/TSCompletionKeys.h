@@ -52,13 +52,18 @@ static inline void TSHandleKeyOutsideComposition(NSView *view, void (NS_NOESCAPE
     TSCompletionKeyComposingView = was;
 }
 
-// The key as completion compares it: Shift-Tab arrives as Backtab (U+0019), which is
-// the Tab trigger with Shift, so it goes back through the candidates as Shift-Escape does.
-// Only the physical Tab key: Control-Y also arrives as U+0019 and stays itself (yank:).
+// The key as completion compares it. Only the physical Escape and Tab keys are the
+// trigger: Control-[ also arrives as Escape (U+001B), Control-I as Tab and Control-Y as
+// Backtab (U+0019), and those stay ordinary keys for AppKit (noop:, yank:). Shift-Tab
+// arrives as Backtab, which is the Tab trigger with Shift, so it goes back through the
+// candidates as Shift-Escape does.
 static inline NSString *TSCompletionTypedKey(NSEvent *event)
 {
     NSString *characters = event.characters;
-    if (event.keyCode == kVK_Tab && characters.length == 1 && [characters characterAtIndex:0] == 0x19) return @"\t";
+    if (characters.length != 1) return characters;
+    unichar c = [characters characterAtIndex:0];
+    if (c == 0x1b) return event.keyCode == kVK_Escape ? characters : @"";
+    if (c == 0x09 || c == 0x19) return event.keyCode == kVK_Tab ? @"\t" : @"";
     return characters;
 }
 

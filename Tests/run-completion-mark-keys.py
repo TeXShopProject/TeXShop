@@ -12,7 +12,7 @@ from shortcut_sources import production_source, companion_sources
 from source_tree import include_args, source_file
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['yield-off', 'hold-back', 'swallow-off', 'composition-off', 'escape-pass', 'menu-field-editor', 'record-macro', 'restore-conflict', 'backtab', 'shared-flag', 'control-y', 'nested-drop'])
+parser.add_argument('--mutation', choices=['yield-off', 'hold-back', 'swallow-off', 'composition-off', 'escape-pass', 'menu-field-editor', 'record-macro', 'restore-conflict', 'backtab', 'shared-flag', 'control-y', 'nested-drop', 'control-bracket'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 production = production_source(root)
@@ -65,11 +65,13 @@ elif args.mutation == 'record-macro':
 elif args.mutation == 'restore-conflict':
     production = mutate(production, 'NSString *conflict = [self commandYieldsDefault:command] ? nil : [self conflictForRestoringCommand:command];', 'NSString *conflict = [self conflictForRestoringCommand:command];')
 elif args.mutation == 'backtab':
-    harness = mutate(harness, 'if (event.keyCode == kVK_Tab && characters.length == 1 && [characters characterAtIndex:0] == 0x19) return @"\\t";', 'if (NO) return @"\\t";')
+    harness = mutate(harness, 'if (c == 0x09 || c == 0x19) return event.keyCode == kVK_Tab ? @"\\t" : @"";', 'if (c == 0x09) return characters;')
 elif args.mutation == 'shared-flag':
     harness = mutate(harness, '    if (TSCompletionKeyComposingView == self) return;\n', '    if (TSCompletionKeyComposingView != nil) return;\n')
 elif args.mutation == 'control-y':
-    harness = mutate(harness, 'if (event.keyCode == kVK_Tab && characters.length == 1', 'if (characters.length == 1')
+    harness = mutate(harness, 'if (c == 0x09 || c == 0x19) return event.keyCode == kVK_Tab ? @"\\t" : @"";', 'if (c == 0x09 || c == 0x19) return @"\\t";')
+elif args.mutation == 'control-bracket':
+    harness = mutate(harness, 'if (c == 0x1b) return event.keyCode == kVK_Escape ? characters : @"";', 'if (c == 0x1b) return characters;')
 elif args.mutation == 'nested-drop':
     harness = mutate(harness, '    if (was == view) TSCompletionKeyComposingView = nil;\n', '')
 elif args.mutation == 'menu-field-editor':
