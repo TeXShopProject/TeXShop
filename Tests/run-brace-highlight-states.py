@@ -64,6 +64,9 @@ MUTATIONS = {
     'active-line-wipes-fullwidth': (SYNTAX, '            TSRestoreFullwidthBackground(layoutManager, TSVisibleCharacterRange(aTextView));\n', ''),
     'active-line-wipes-contents': (SYNTAX, '            [self restoreBraceHighlightsIn:aTextView range:TSVisibleCharacterRange(aTextView)];\n', ''),
     'stale-fullwidth-marks': (SYNTAX, '      [layoutManager removeTemporaryAttribute:TSFullwidthBackgroundMark forCharacterRange:colorRange];\n', ''),
+    'flash-ends-with-theme-background': (DOCUMENT, '    NSColor *backgroundColor = backgroundBeforeFlash;\n',
+        '    NSColor *backgroundColor = [[TSColorSupport sharedInstance] colorFromDictionary:(textView1.effectiveAppearance.name == NSAppearanceNameDarkAqua) ? darkColors : liteColors andKey: @"EditorBackground"];\n'),
+    'flash-end-overrides-theme-change': (DOCUMENT, '    if (! flashShown)\n        return;\n', ''),
     'no-highlight-generation': (DOCUMENT,
         '    if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != braceHighlightGeneration)\n        return;\n', ''),
     'no-flash-generation': (DOCUMENT,
@@ -207,7 +210,7 @@ static NSFont *PanelConvertFont(id manager, SEL selector, NSFont *font) { return
 @end
 
 // The flash and background colors of the theme, light or dark as the window is.
-static NSColor *FlashColor, *ThemeBackground, *DarkFlashColor, *DarkBackground;
+static NSColor *FlashColor, *ThemeBackground, *DarkFlashColor, *DarkBackground, *BuiltInBackground, *BuiltInDarkBackground;
 @interface TSColorSupport : NSObject
 @end
 @implementation TSColorSupport
@@ -227,8 +230,13 @@ static NSColor *FlashColor, *ThemeBackground, *DarkFlashColor, *DarkBackground;
 - (NSColor *)colorAndAlphaFromDictionary:(NSDictionary *)dictionary andKey:(NSString *)key { return [self colorFromDictionary:dictionary andKey:key]; }
 - (NSColor *)liteColorAndAlphaWithKey:(NSString *)key { return nil; }
 - (NSColor *)darkColorAndAlphaWithKey:(NSString *)key { return nil; }
-- (NSColor *)darkColorWithKey:(NSString *)key { return DarkFlashColor; }
-- (NSColor *)liteColorWithKey:(NSString *)key { return FlashColor; }
+// The built-in colors of a mode, for a theme that lacks one.
+- (NSColor *)darkColorWithKey:(NSString *)key { return [key isEqual:@"EditorBackground"] ? BuiltInDarkBackground : DarkFlashColor; }
+- (NSColor *)liteColorWithKey:(NSString *)key { return [key isEqual:@"EditorBackground"] ? BuiltInBackground : FlashColor; }
+- (NSColor *)opaqueColorForKey:(NSString *)key fromDictionary:(NSDictionary *)dictionary isWindowDark:(BOOL)dark
+{
+    return [self colorFromDictionary:dictionary andKey:key] ?: (dark ? [self darkColorWithKey:key] : [self liteColorWithKey:key]);
+}
 @end
 
 // Reports itself visible without being ordered on screen.
@@ -272,6 +280,7 @@ extern NSColor *InvisibleColor;
     NSRange highlightedContentRange, scrapHighlightedContentRange;
     NSUInteger braceHighlightGeneration, braceFlashGeneration, scrapBraceHighlightGeneration, scrapBraceFlashGeneration;
     NSUInteger highlightedTextLength, highlightedGeneration, scrapHighlightedTextLength, scrapHighlightedGeneration;
+    NSColor *backgroundBeforeFlash, *braceFlashColor;
     NSUInteger colorStart, colorEnd;
     NSTimeInterval colorTime;
     NSLineBreakMode lineBreakMode;
@@ -481,6 +490,7 @@ int main(void) { @autoreleasepool {
     indicators = [NSMutableArray array]; flashSelections = [NSMutableArray array];
     FlashColor = NSColor.orangeColor; ThemeBackground = NSColor.whiteColor; XMLColor = NSColor.brownColor;
     DarkFlashColor = NSColor.brownColor; DarkBackground = NSColor.blackColor;
+    BuiltInBackground = NSColor.lightGrayColor; BuiltInDarkBackground = NSColor.darkGrayColor;
     liteColors = @{@"name": @"lite"}; darkColors = @{@"name": @"dark"};
     NSColor *commandColor = NSColor.blueColor, *commentColor = NSColor.redColor, *entryColor = NSColor.yellowColor;
     NSColor *braceColor = NSColor.magentaColor, *fullwidthColor = NSColor.purpleColor, *fullwidthBackground = NSColor.darkGrayColor;
@@ -543,6 +553,24 @@ int main(void) { @autoreleasepool {
     [NSNotificationCenter.defaultCenter addObserver:doc selector:@selector(changeColorsFromNotification:) name:@"SourceColorChangedNotification" object:nil];
 
     NSColor *contentColor = NSColor.cyanColor;
+    // What a change of theme replaces in the document, to be put back after a test of one.
+    NSArray *themedKeys = @[@"EntryColorAttribute", @"commandColorAttribute", @"commentColorAttribute", @"explColorAttribute1", @"explColorAttribute2",
+                            @"explColorAttribute3", @"explColorAttribute4", @"explColorAttribute5", @"explColorAttribute6", @"explColorAttribute7",
+                            @"footnoteColorAttribute", @"fullwidthSymbolColorAttribute", @"indexColorAttribute", @"markerColorAttribute",
+                            @"markerColorCurlyAttribute", @"markerColorParenAttribute", @"markerColorSquareAttribute", @"regularColorAttribute"];
+    NSDictionary *(^SaveTheme)(void) = ^NSDictionary *{
+        NSMutableDictionary *saved = [NSMutableDictionary dictionary];
+        for (NSString *key in themedKeys) { id value = [doc valueForKey:key]; if (value) saved[key] = value; }
+        if (highlightBracesColorDict) saved[@"braces"] = highlightBracesColorDict;
+        if (highlightContentColorDict) saved[@"contents"] = highlightContentColorDict;
+        saved[@"lite"] = liteColors; saved[@"dark"] = darkColors;
+        return saved;
+    };
+    void (^RestoreTheme)(NSDictionary *) = ^(NSDictionary *saved) {
+        for (NSString *key in themedKeys) [doc setValue:saved[key] forKey:key];
+        highlightBracesColorDict = saved[@"braces"]; highlightContentColorDict = saved[@"contents"];
+        liteColors = saved[@"lite"]; darkColors = saved[@"dark"];
+    };
     [SUD setBool:YES forKey:CheckBraceEnabledKey];
     NSArray<NSTextView *> *sources = @[source, lower];
 
@@ -656,6 +684,42 @@ int main(void) { @autoreleasepool {
             Check([view.backgroundColor isEqual:background], NAME("the background comes back after the newer flash"));
         }
         for (NSTextView *v in @[source, lower, scrap]) v.appearance = nil;
+        // After the flash, the source has the background that Settings gave it, also with a theme
+        // that has lost all its colors or only its background; a change of theme meanwhile stays.
+        if (!inExperiment)
+            for (int dark = 0; dark < 2; dark++)
+                for (int kind = 0; kind < 3; kind++) {
+                    NSDictionary *savedTheme = SaveTheme();
+                    NSDictionary *theme = kind == 0 ? @{@"theme": @YES}
+                        : @{@"theme": @YES, @"EditorFlash": @[@1, @0.5, @0], @"EditorText": @[@0.1, @0.1, @0.1], @"EditorHighlightContent": @[@0.2, @0.9, @0.9]};
+                    if (dark) darkColors = theme; else liteColors = theme;
+                    for (NSTextView *v in @[source, lower]) v.appearance = [NSAppearance appearanceNamed:dark ? NSAppearanceNameDarkAqua : NSAppearanceNameAqua];
+                    [NSNotificationCenter.defaultCenter postNotificationName:@"SourceColorChangedNotification" object:nil];
+                    if (kind == 2)  // as Settings gives a color the theme lacks once missing colors are resolved there
+                        for (NSTextView *v in @[source, lower]) v.backgroundColor = dark ? BuiltInDarkBackground : BuiltInBackground;
+                    NSColor *settings = source.backgroundColor;
+                    Show(@"abc\nx}}y\nxyz\n");
+                    Pass(5, 6); Spin(0.02);
+                    BOOL flashed = ![source.backgroundColor isEqual:settings];
+                    Spin(0.28);
+                    BOOL same = YES;
+                    for (NSTextView *v in @[source, lower]) if (!(v.backgroundColor == settings || [v.backgroundColor isEqual:settings])) same = NO;
+                    Check(flashed && same, kind == 0 ? (dark ? "source: dark theme without colors: after a flash, the background Settings gave" : "source: light theme without colors: after a flash, the background Settings gave")
+                                     : kind == 1 ? (dark ? "source: dark theme without a background: after a flash, the background Settings gave" : "source: light theme without a background: after a flash, the background Settings gave")
+                                     : (dark ? "source: dark, resolved background: after a flash, the background Settings gave" : "source: light, resolved background: after a flash, the background Settings gave"));
+                    // A change of theme during the flash: its background stays.
+                    Pass(6, 7); Spin(0.02);
+                    NSDictionary *other = @{@"theme": @YES, @"EditorBackground": @[@0.3, @0.6, @0.3]};
+                    if (dark) darkColors = other; else liteColors = other;
+                    [NSNotificationCenter.defaultCenter postNotificationName:@"SourceColorChangedNotification" object:nil];
+                    NSColor *changed = source.backgroundColor;
+                    Spin(0.30);
+                    Check([source.backgroundColor isEqual:changed] && [lower.backgroundColor isEqual:changed],
+                          "source: a change of theme during a flash keeps the new background");
+                    RestoreTheme(savedTheme);
+                    for (NSTextView *v in @[source, lower]) { v.appearance = nil; v.backgroundColor = ThemeBackground; }
+                    Recolor();
+                }
         [SUD setBool:NO forKey:FlashBackgroundEnabledKey];
 
         // 2. A brace being composed is not highlighted; committed, it is.

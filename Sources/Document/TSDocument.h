@@ -334,6 +334,8 @@ enum RootCommand
 	NSRange		highlightedContentRange;
 	NSUInteger	highlightedTextLength, highlightedGeneration;
 	NSUInteger	braceHighlightGeneration, braceFlashGeneration;
+	// The background of the source before a flash for an unmatched brace, and the color of the flash.
+	NSColor		*backgroundBeforeFlash, *braceFlashColor;
 	BOOL		warningGiven;
 	BOOL		omitShellEscape;
 	BOOL		withLatex;

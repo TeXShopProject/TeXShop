@@ -5697,28 +5697,18 @@ if ( ! skipTextWindow) {
 // added by Terada (- (void)resetBackgroundColorOfTextView:)
 - (void)resetBackgroundColorOfTextView:(id)sender
 {
-
-    NSDictionary *colorDictionary;
-
     // The end of a flash (sender is its number) that a newer one has replaced.
     if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != braceFlashGeneration)
         return;
-    
-#ifdef MOJAVEORHIGHER
-    if ((atLeastMojave) && (textView1.effectiveAppearance.name == NSAppearanceNameDarkAqua))
-        colorDictionary = darkColors;
-    else
-#endif
-        colorDictionary = liteColors;
 
- NSColor *backgroundColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"EditorBackground"];
-    
- /*
-    NSColor* backgroundColor = [NSColor colorWithCalibratedRed: [SUD floatForKey:background_RKey]
-														 green: [SUD floatForKey:background_GKey]
-														  blue: [SUD floatForKey:background_BKey]
-														 alpha: ([SUD floatForKey:backgroundAlphaKey] == 0 ) ? 1.0 : [SUD floatForKey:backgroundAlphaKey]]; // modified by Terada
-  */
+    // The source gets back the background it had before the flash, as the theme gave it,
+    // unless a change of theme has given it another one meanwhile.
+    NSColor *backgroundColor = backgroundBeforeFlash;
+    BOOL flashShown = (braceFlashColor != nil) && [[textView backgroundColor] isEqual: braceFlashColor];
+    backgroundBeforeFlash = nil;
+    braceFlashColor = nil;
+    if (! flashShown)
+        return;
 	if(windowIsSplit){
 		[textView1 setBackgroundColor:backgroundColor];
 		[textView2 setBackgroundColor:backgroundColor];
@@ -6042,6 +6032,10 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
     // this Color should be set in Themes, but if so, we need to face the issue of adding colors and what
     // that does to the data structure. For now we offer a very rough fix. Dick Koch
         
+        // The background the source has before the flash, for after it.
+        if (!experiment && braceFlashColor == nil)
+            backgroundBeforeFlash = [flashView backgroundColor];
+        
         if (flashColor != nil)
             
             [flashView setBackgroundColor: flashColor];
@@ -6057,6 +6051,8 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
         }
         
        
+		if (!experiment)
+			braceFlashColor = [flashView backgroundColor];
 		[self performSelector:resetFlashSelector
 				   withObject:@(++*flashGeneration) afterDelay:0.20];
 	}

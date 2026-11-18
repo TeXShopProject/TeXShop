@@ -233,6 +233,7 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
     NSRange highlightedContentRange, scrapHighlightedContentRange;
     NSUInteger braceHighlightGeneration, braceFlashGeneration, scrapBraceHighlightGeneration, scrapBraceFlashGeneration;
     NSUInteger highlightedTextLength, highlightedGeneration, scrapHighlightedTextLength, scrapHighlightedGeneration;
+    NSColor *backgroundBeforeFlash, *braceFlashColor;
     NSUInteger colorStart, colorEnd;
     NSTimeInterval colorTime;
     NSLineBreakMode lineBreakMode;
