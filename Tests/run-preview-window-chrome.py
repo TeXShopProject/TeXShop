@@ -18,7 +18,7 @@ from production_fragments import method, verify_embedded
 from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['scroll-appearance', 'bar-appearance', 'bar-filters', 'document-filters', 'page-hook', 'hook-original', 'set-document'])
+parser.add_argument('--mutation', choices=['scroll-appearance', 'bar-appearance', 'bar-filters', 'document-filters', 'page-hook', 'hook-original', 'ancestor-mark', 'set-document'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 header = (root / 'Sources/Preview/TSPreviewAppearance.h').read_text()
@@ -67,6 +67,11 @@ elif args.mutation == 'hook-original':
     old = '            ((void (*)(__unsafe_unretained id, SEL, NSView *))original)(view, sel, subview);\n'
     assert header.count(old) == 1, args.mutation
     header = header.replace(old, '            (void)original;\n')
+elif args.mutation == 'ancestor-mark':
+    # The round-9 finding: leave a class alone when any ancestor is hooked, whatever it inherits.
+    old = '        if (!own && [hooks containsObject:[NSValue valueWithPointer:(const void *)original]]) return;\n'
+    assert header.count(old) == 1, args.mutation
+    header = header.replace(old, '        if (!own) for (Class up = class_getSuperclass(cls); up && up != NSView.class; up = class_getSuperclass(up))\n            if (objc_getAssociatedObject(up, @selector(tsPreviewPageHook))) return;\n')
 elif args.mutation == 'set-document':
     old = '    TSInstallPreviewPageHook(view.documentView);\n    TSReapplyPreviewInversion(view.documentView.enclosingScrollView);\n'
     assert header.count(old) == 1, args.mutation
@@ -430,6 +435,34 @@ static void TurnWheel(PDFView *pdf) {
 @end
 @interface TSHookChildB : TSHookParentB @end
 @implementation TSHookChildB @end
+// A <- B <- C: B overrides and turns the new view dark; C only inherits B's method.
+@interface TSHookBaseC : NSView
+@property int calls;
+@end
+@implementation TSHookBaseC
+- (void)didAddSubview:(NSView *)subview { self.calls++; }
+@end
+@interface TSHookMiddleC : TSHookBaseC
+@property int middleCalls;
+@end
+@implementation TSHookMiddleC
+- (void)didAddSubview:(NSView *)subview {
+    self.middleCalls++; [super didAddSubview:subview];
+    subview.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
+}
+@end
+@interface TSHookLeafC : TSHookMiddleC @end
+@implementation TSHookLeafC @end
+@interface TSHookMiddleD : NSView
+@property int middleCalls;
+@end
+@implementation TSHookMiddleD
+- (void)didAddSubview:(NSView *)subview {
+    self.middleCalls++; subview.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
+}
+@end
+@interface TSHookLeafD : TSHookMiddleD @end
+@implementation TSHookLeafD @end
 // A superclass and its subclasses, hooked in either order, each reach their own original
 // exactly once; only views in a preview are made light.
 static void CheckHookClasses(void) {
@@ -464,6 +497,28 @@ static void CheckHookClasses(void) {
     [page addSubview:added];
     check(added.appearance == [NSAppearance appearanceNamed:NSAppearanceNameAqua] && page.calls == 1,
           @"in a preview the new view is made light after the original ran");
+    // The ancestor is hooked first; the leaf inherits an override that sets the new view dark.
+    NSAppearance *light = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    TSHookBaseC *base = [[TSHookBaseC alloc] initWithFrame:frame];
+    TSInstallPreviewPageHook(base);
+    NSScrollView *leafScroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
+    TSHookLeafC *leaf = [[TSHookLeafC alloc] initWithFrame:frame];
+    leafScroll.documentView = leaf;
+    TSApplyPreviewInversion(leafScroll, YES);
+    NSView *leafChild = [[NSView alloc] initWithFrame:frame];
+    [leaf addSubview:leafChild];
+    check(leafChild.appearance == light && leaf.middleCalls == 1 && leaf.calls == 1,
+          @"an override between a hooked ancestor and the leaf runs once, and the view is light after it");
+    NSScrollView *dScroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
+    TSHookMiddleD *middleD = [[TSHookMiddleD alloc] initWithFrame:frame];
+    TSInstallPreviewPageHook(middleD);
+    TSHookLeafD *leafD = [[TSHookLeafD alloc] initWithFrame:frame];
+    dScroll.documentView = leafD;
+    TSApplyPreviewInversion(dScroll, YES);
+    NSView *dChild = [[NSView alloc] initWithFrame:frame];
+    [leafD addSubview:dChild];
+    check(dChild.appearance == light && leafD.middleCalls == 1,
+          @"a leaf that inherits a hooked override runs it once and the view is light");
 }
 static void CheckWatchCloses(void) {
     @autoreleasepool {
