@@ -264,6 +264,8 @@ for(NSString *key in enu)
 	typesetContinuously = continuous;
 	
 	[self killRunningTasks];
+	// Abort from now on, also while the document is being saved, stops this job (saveFinished:).
+	doAbort = NO;
 
 	errorNumber = 0;
 	whichError = 0;
@@ -334,6 +336,8 @@ for(NSString *key in enu)
 	typesetContinuously = continuous;
 
 	[self killRunningTasks];
+	// Abort from now on, also while the document is being saved, stops this job (saveFinished:).
+	doAbort = NO;
 
 	errorNumber = 0;
 	whichError = 0;
@@ -701,6 +705,11 @@ for(NSString *key in enu)
     // an exception escaping from here would leave the document unable to
     // save or close.
     @try {
+    // Abort while the document was being saved: the job it was saved for does not start.
+    if (doAbort) {
+        useTempEngine = NO;
+        return;
+    }
     [self RescanMagicComments: self];
     if (self.automaticCorrection)
         {
