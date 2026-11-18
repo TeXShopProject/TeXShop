@@ -173,11 +173,11 @@ package-args  1  tag mathtoolsset usetagform refeq
 package-args  3  newtagform renewtagform
 package-args  3  DeclarePairedDelimiter
 # \DeclarePairedDelimiterX{cmd}[n]{left}{right}{body}, \DeclarePairedDelimiterXPP{cmd}[n]{pre}{left}{right}{post}{body},
-# \newgathered{name}{pre}{post}{after} and \newcases{name}{left}{right}{text}{text}{start}{end}
+# \newgathered{name}{pre}{post}{after} and \newcases{name}{sep}{preamble}{left}{right}{close}
 package-pattern  {}[]{}{}{}  DeclarePairedDelimiterX
 package-pattern  {}[]{}{}{}{}{}  DeclarePairedDelimiterXPP
 package-args  4  newgathered renewgathered
-package-args  7  newcases renewcases
+package-args  6  newcases renewcases
 
 # graphicx
 package-args  1  DeclareGraphicsExtensions
@@ -202,7 +202,7 @@ package-args  0  tikz draw fill filldraw path node clip shade shadedraw pic coor
 # remains prose. The axis environments inside
 # a tikzpicture are skipped with it.
 skip-env-args  0  axis semilogxaxis semilogyaxis loglogaxis polaraxis groupplot ternaryaxis
-package-args  0  addplot addplot3 addlegendimage
+package-args  0  addplot addlegendimage
 package-args  1  pgfplotstableread pgfplotstabletypeset
 # tikz-cd: the cells and arrow labels are mostly math.
 skip-body  tikzcd
