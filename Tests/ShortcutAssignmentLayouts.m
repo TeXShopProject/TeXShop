@@ -71,7 +71,9 @@ int main(int argc,char **argv){@autoreleasepool{
     for(TSShortcutMatch *match in matches)if(match.menuItem==item && match.winner)found=YES;
     if(!found){fprintf(stderr,"FAIL fixed menu %s key=%s flags=%lu code=%u base=%s ign=%s chars=%s\n",name.UTF8String,key.UTF8String,f,code,base.UTF8String,ign.UTF8String,chars.UTF8String);return 1;}menuChecks++;
     item.action=NSSelectorFromString(@"doMacro:");matches=[TSShortcutSearch matchesEvent:event store:store macros:@[macro]];found=NO;
-    for(TSShortcutMatch *match in matches)if(match.macro==macro && match.winner)found=YES;
+    // A macro cannot take a key without Command or Control (#46): it is listed but not the winner.
+    BOOL allowed=[TSShortcutStore isAllowedKey:key modifiers:f];
+    for(TSShortcutMatch *match in matches)if(match.macro==macro && match.winner==allowed)found=YES;
     if(!found){fprintf(stderr,"FAIL fixed macro %s key=%s flags=%lu code=%u base=%s ign=%s chars=%s\n",name.UTF8String,key.UTF8String,f,code,base.UTF8String,ign.UTF8String,chars.UTF8String);return 1;}macroChecks++;
    }
    if(!produced)unavailable++;
