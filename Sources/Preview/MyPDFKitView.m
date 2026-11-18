@@ -211,7 +211,6 @@
     });
     _fittingContentWidth = NO;
     [self scaleChanged: nil];
-    [self keepPinnedLinkPreviewInView];
     [self measureContentLater];
 }
 
@@ -2390,7 +2389,6 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	// A magnification chosen in the field, with the stepper, Zoom In or Zoom Out is fixed, also
 	// when it is the one Fit to Content Width had set.
 	resizeOption = NEW_PDF_FIT_TO_NONE;
-	[self keepPinnedLinkPreviewInView];
 	if (sender == myScale1) {
 		[NSApp endSheet: [self.myDocument magnificationPanel]];
 	}
@@ -2736,6 +2734,8 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     PDFDestination *destination = self.currentDestination;
     NSInteger savedResizeOption = resizeOption;
     CGFloat scale = self.scaleFactor;
+    // A pinned popup stays on its page, which the new layout puts elsewhere (#56).
+    if ([self hasPinnedLinkPreview]) [pinnedLinkPreview rememberPlaceOnPage];
     change();
     [self layoutDocumentView];
     if (savedResizeOption == NEW_PDF_FIT_TO_NONE) {
@@ -2753,6 +2753,8 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
         else
             [self goToPage:page];
     }
+    if ([self hasPinnedLinkPreview] && ![pinnedLinkPreview returnToPlaceOnPage])
+        [pinnedLinkPreview keepInView];
     [self.myDocument updatePreviewLayoutControls];
 }
 
@@ -2775,7 +2777,6 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
         self->pageStyle = newStyle;
         [self setupPageStyle];
     }];
-    [self keepPinnedLinkPreviewInView];
 }
 
 // action for menu items "Single Page/Two Page/Multi-Page/Double Multi-Page"
@@ -2844,7 +2845,6 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
         
         resizeOption = newResizeOption;
         [self setupMagnificationStyle];
-        [self keepPinnedLinkPreviewInView];
         
         /*
          if (resizeOption == PDF_ACTUAL_SIZE)
@@ -8235,7 +8235,6 @@ else
 	[myStepper1 setIntegerValue:scale];
 
 	[self setScaleFactor: magnification];
-	[self keepPinnedLinkPreviewInView];
 }
 
 - (void)resetMagnification
