@@ -26,6 +26,19 @@ for page in [*root.glob('Resources/Interfaces/*.lproj/TeXShopHelp/pgs/*.htm'), r
     text = page.read_bytes().decode('utf-8' if page.parent.parent.parent.name == 'ja.lproj' or page.suffix == '.tex' else 'latin1')
     match = former.search(text)
     assert match is None, f'{page.relative_to(root)} names the former menu: {match.group(0) if match else ""}'
+# Each help language names the menu as its interface shows it (Localizable.strings "Edit" and "Marks").
+import html, json
+for lang, pages in {'en': ('basic_commandcompletion', 'configure_hidden'), 'ko': ('basic_commandcompletion', 'configure_hidden'),
+                    'ja': ('basic_commandcompletion', 'configure_hidden'), 'de': ('basic_commandcompletion',), 'es': ('basic_commandcompletion',)}.items():
+    table = json.loads(subprocess.check_output(['plutil', '-convert', 'json', '-o', '-', str(root / f'Resources/Interfaces/{"Base" if lang == "en" else lang}.lproj/Localizable.strings')]) or b'{}') if lang != 'en' else {}
+    edit, marks = table.get('Edit', 'Edit'), table.get('Marks', 'Marks')
+    wanted = f'「{edit}」→「{marks}」' if lang == 'ja' else f'{edit} › {marks}'
+    for name in pages:
+        page = root / f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/{name}.htm'
+        text = html.unescape(page.read_bytes().decode('utf-8' if lang == 'ja' else 'latin1'))
+        assert wanted in text, f'{page.relative_to(root)} does not name the menu as the interface shows it: {wanted}'
+        if lang != 'en':
+            assert 'Edit › Marks' not in text, f'{page.relative_to(root)} names the English menu'
 # The interface has these languages; the test checks every one but English.
 assert sorted(p.name[:-6] for p in (root / 'Resources/Interfaces').glob('*.lproj') if (p / 'MainMenu.nib').exists()) == sorted(['Base', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt', 'pt-PT', 'ro', 'zh_CN'])
 mutations = {
