@@ -328,6 +328,8 @@
 
 /* Edit › Mark */
 "Insert Mark with Note" = "Insertar señal con nota";
+"Insert Mark" = "Insertar señal";
+"Delete Mark" = "Eliminar señal";
 "How to Use Marks…" = "Cómo usar las señales…";
 "Inserts a mark (•) to come back to later." = "Inserta una señal (•) para volver a ella más tarde.";
 "Inserts a mark with a note (•‹note›). Selected text becomes the note." = "Inserta una señal con nota (•‹nota›). El texto seleccionado se convierte en la nota.";

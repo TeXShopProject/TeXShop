@@ -328,6 +328,8 @@
 
 /* Edit › Mark */
 "Insert Mark with Note" = "Inserează marcaj cu notă";
+"Insert Mark" = "Inserează marcaj";
+"Delete Mark" = "Șterge marcajul";
 "How to Use Marks…" = "Cum se folosesc marcajele…";
 "Inserts a mark (•) to come back to later." = "Inserează un marcaj (•) la care să reveniți mai târziu.";
 "Inserts a mark with a note (•‹note›). Selected text becomes the note." = "Inserează un marcaj cu notă (•‹notă›). Textul selectat devine nota.";

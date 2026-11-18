@@ -11067,6 +11067,17 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
     //NSLog(@"Next • hit");
 }
 
+// The marks change the text as typing does: Undo puts it back, and the document counts as edited.
+- (BOOL)replaceMarkTextInRange:(NSRange)range withString:(NSString *)string actionName:(NSString *)actionName
+{
+    if (![textView shouldChangeTextInRange:range replacementString:string])
+        return NO;
+    [textView replaceCharactersInRange:range withString:string];
+    [textView didChangeText];
+    [[textView undoManager] setActionName:actionName];
+    return YES;
+}
+
 - (void) doNextBulletAndDelete: (id)sender // modified by (HS)
 {
     NSRange tempRange, forwardRange, markerRange, commentRange;
@@ -11097,7 +11108,8 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 	tempRange.location = markerRange.location;
 	tempRange.length = [placeholderString length];
 	markerRange.length -= tempRange.length; // deleting the bullet so selection is shorter
-	[textView replaceCharactersInRange:tempRange withString:@""];
+	if (![self replaceMarkTextInRange:tempRange withString:@"" actionName:NSLocalizedString(@"Delete Mark", @"Edit › Mark")])
+	    return;
 	// end delete bullet (marker)
 	[textView setSelectedRange:markerRange];
 	[textView scrollRangeToVisible:markerRange];
@@ -11135,7 +11147,8 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 	tempRange.location = markerRange.location;
 	tempRange.length = [placeholderString length];
 	markerRange.length -= tempRange.length; // deleting the bullet so selection is shorter
-	[textView replaceCharactersInRange:tempRange withString:@""];
+	if (![self replaceMarkTextInRange:tempRange withString:@"" actionName:NSLocalizedString(@"Delete Mark", @"Edit › Mark")])
+	    return;
 	// end delete bullet (marker)
 	[textView setSelectedRange:markerRange];
 	[textView scrollRangeToVisible:markerRange];
@@ -11150,7 +11163,8 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 
    //  text = [textView string];
     myRange = [textView selectedRange];
-    [textView replaceCharactersInRange:myRange withString:placeholderString];//" •\n" puts • on previous line
+    if (![self replaceMarkTextInRange:myRange withString:placeholderString actionName:NSLocalizedString(@"Insert Mark", @"Edit › Mark")]) //" •\n" puts • on previous line
+        return;
     myRange.location += [placeholderString length];//= end+2;//start puts • on previous line
     myRange.length = 0;
     [textView setSelectedRange: myRange];

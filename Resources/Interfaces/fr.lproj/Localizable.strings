@@ -328,6 +328,8 @@
 
 /* Edit › Mark */
 "Insert Mark with Note" = "Insérer un repère avec note";
+"Insert Mark" = "Insérer un repère";
+"Delete Mark" = "Supprimer le repère";
 "How to Use Marks…" = "Utiliser les repères…";
 "Inserts a mark (•) to come back to later." = "Insère un repère (•) pour y revenir plus tard.";
 "Inserts a mark with a note (•‹note›). Selected text becomes the note." = "Insère un repère avec note (•‹note›). Le texte sélectionné devient la note.";
