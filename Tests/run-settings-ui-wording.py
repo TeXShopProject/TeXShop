@@ -52,13 +52,12 @@ for lang,expected in fixture['languages'].items():
     for key,value in zip(terminology['keys'],terminology['languages']['Base' if lang=='en' else lang]):assert category_strings[key]==value,(lang,key)
     assert not set(retired)&actual.keys(),(lang,'retired UI keys')
     for key,value in zip(guidance['keys'],guidance['languages'][lang]):assert actual[key]==value,(lang,key)
-    for n in [0,1,2,5]:assert actual[keys[n]]==expected[n],(lang,keys[n])
+    for n in [0,1,2,4]:assert actual[keys[n]]==expected[n],(lang,keys[n])
     assert actual['Currently open files retain their old encoding.']==fixture['legacy_encoding_warning'][lang],(lang,'legacy encoding warning')
-    assert strings(panes/'SettingsSource.strings')['585.title']==expected[4],(lang,'Find title')
     assert strings(panes/'SettingsPreview.strings')['113.ibShadowedToolTip']==expected[3],(lang,'zoom tooltip')
     assert 'catalog.editor.7.0.note' not in strings(panes/'SettingsCategories.strings'),(lang,'constant restart note')
-    assert not {'F86-wI-vOl.label','L8F-o2-roK.label'} & strings(panes/'SettingsThemes.strings').keys(),(lang,'retired intermediate theme headings')
-    assert not any(k.startswith('LIV-TH') for k in strings(panes/'SettingsThemes.strings')),(lang,'theme explanation')
+    # Nothing of the legacy Engines and Themes panes is shown; their tables are gone.
+    assert not (panes/'SettingsEngines.strings').exists() and not (panes/'SettingsThemes.strings').exists(),(lang,'tables of panes that show nothing')
 source=(r/'Sources/Settings/TSPreferences.m').read_text();start=source.index('- (IBAction)encodingChanged:');end=source.index('\n}',start)
 assert 'NSBeginCriticalAlertSheet' not in source[start:end], 'Encoding warning must be inline'
 assert 'recordUserChangeForKey:EncodingKey' in source[start:end], 'Encoding action must reach the inline note manager'
@@ -150,3 +149,20 @@ order=[g for g in re.findall(r'@"id": @"(group\.typesetting\.\d+)"',layout)]
 # The Ghostscript group held only -dALLOWPSTRANSPARENCY; Via DVI commands take --distilleropts themselves.
 assert 'group.typesetting.7' not in order and order.index('group.typesetting.6')==order.index('group.typesetting.5')+1,'Personal Script follows the Via DVI commands'
 print("PASS: pop-up titles differ from their choices; reviewed Typesetting names match in Settings and the Typeset menu; command groups are named after the methods and Personal Script follows Via DVI")
+
+# Every text the search index reads is in every language's table: a missing key would
+# be indexed as the key itself, and a key of a removed pane row would find nothing shown.
+index_lines=[line for line in catalog.splitlines() if line.startswith('add(')]
+references=set()
+for line in index_lines:
+    match=re.match(r'add\(\w+, @"[^"]*", @"(\w+)", @"((?:[^"\\]|\\.)*)", TSSettingsSearchWeight\w+\);$',line)
+    assert match,('unreadable search index line',line)
+    if match.group(1)!='Encodings':references.add((match.group(1),json.loads('"'+match.group(2)+'"')))
+assert len(references)>400,len(references)
+for loc in sorted(interfaces.glob("*.lproj/SettingsCategories.strings")):
+    lang=loc.parent.stem;tables={}
+    for table,key in sorted(references):
+        folder=interfaces/('en.lproj' if lang=='Base' else loc.parent.name) if table=='Localizable' else loc.parent
+        if table not in tables:tables[table]=strings(folder/(table+'.strings'))
+        assert key in tables[table],(lang,table,key,'search index reads a text that is not in the table')
+print("PASS: every text the search index reads exists in all 12 languages")

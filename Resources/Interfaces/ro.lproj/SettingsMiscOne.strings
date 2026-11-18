@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "375.title" = "JPEG (calitate ridicată)";
-"377.title" = "OtherViews";
 "380.title" = "TIFF (necomprimat)";
-"386.title" = "Tipul de Copiere a Imaginii";
 "395.title" = "PNG";
 "404.title" = "TIFF (PackBits)";
 "407.title" = "JPEG (calitate redusă)";
@@ -19,24 +17,8 @@
 "438.title" = "-2";
 "440.title" = "1";
 "441.title" = "3";
-"442.title" = "OtherViews";
-"447.title" = "Culori";
-"4k3-5Y-CEt.title" = "Lățimea la stânga sau la dreapta:";
-"5ba-33-JZx.title" = "Salvarea documentelor";
-"903.title" = "Folosește Culori";
-"904.title" = "Proeminența Planului din Față";
 "CBT-8e-Ayl.title" = "Dreapta";
-"Nie-mP-dxR.title" = "Folosește un cursor bloc";
-"PVm-Il-A7W.title" = "Activează salvarea automată și versiunile";
-"XCi-5f-wnn.title" = "Culoarea cursorului:";
-"cSu-im-H1E.title" = "Cursorul de inserare";
 "g92-sP-oZU.title" = "Ambele părți";
-"hmg-EV-KUC.title" = "Păstrează fișierul anterior ca „nume~” la salvare";
 "i6L-IX-ZLk.title" = "Un caracter";
-"jjy-QZ-C0q.title" = "Afișează codificarea în dialogul de salvare";
-"kCh-5t-39X.title" = "Radio";
 "qMw-aC-Ilj.title" = "Stânga";
 "shH-XU-nyE.title" = "Două caractere";
-"sto-5E-9Q5.title" = "O funcție macOS care suprascrie automat fișierul în timpul editării.";
-"tg5-uf-NZU.title" = "Radio";
-"xvd-dM-RGh.title" = "Partea liniei de inserare:";

@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "375.title" = "JPEG (hoog)";
-"377.title" = "OtherViews";
 "380.title" = "TIFF (ongecomprimeerd)";
-"386.title" = "Kopieer selectie als";
 "395.title" = "PNG";
 "404.title" = "TIFF (PackBits)";
 "407.title" = "JPEG (laag)";
@@ -19,24 +17,8 @@
 "438.title" = "-2";
 "440.title" = "1";
 "441.title" = "3";
-"442.title" = "OtherViews";
-"447.title" = "Kleuren vervangen";
-"4k3-5Y-CEt.title" = "Breedte links of rechts:";
-"5ba-33-JZx.title" = "Documenten bewaren";
-"903.title" = "Vervang kleuren";
-"904.title" = "Nadruk op voorgrond:";
 "CBT-8e-Ayl.title" = "Rechts";
-"Nie-mP-dxR.title" = "Blokcursor gebruiken";
-"PVm-Il-A7W.title" = "Automatisch bewaren en versies inschakelen";
-"XCi-5f-wnn.title" = "Cursorkleur:";
-"cSu-im-H1E.title" = "Invoegcursor";
 "g92-sP-oZU.title" = "Beide zijden";
-"hmg-EV-KUC.title" = "Vorig bestand bewaren als ‘naam~’";
 "i6L-IX-ZLk.title" = "Eén teken";
-"jjy-QZ-C0q.title" = "Tekstencodering tonen in bewaarvenster";
-"kCh-5t-39X.title" = "Radio";
 "qMw-aC-Ilj.title" = "Links";
 "shH-XU-nyE.title" = "Twee tekens";
-"sto-5E-9Q5.title" = "Een macOS-functie die het bestand tijdens het bewerken automatisch overschrijft.";
-"tg5-uf-NZU.title" = "Radio";
-"xvd-dM-RGh.title" = "Zijde van invoeglijn:";

@@ -54,6 +54,7 @@ program = r'''
 #import "TSExternalPDFReload.h"
 #import "TSPreviewHorizontalPosition.h"
 #import "TSScrollPageTurn.h"
+#import "TSPreviewAppearance.h"
 #define SUD NSUserDefaults.standardUserDefaults
 #define NoScrollPageTurnKey @"NoScrollPageTurn"
 static NSString *context;
@@ -185,7 +186,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-scroll-page-turn-') as director
     (temp / 'test.m').write_text(program)
     (temp / 'TSScrollPageTurn.h').write_text(header)
     subprocess.run(['xcrun', 'clang', '-I', str(temp), '-I', str(root / 'Tests'), '-mmacosx-version-min=14.6', '-w', '-fobjc-arc',
-                    '-framework', 'Cocoa', '-framework', 'PDFKit', *include_args(root), str(temp / 'test.m'),
+                    '-framework', 'Cocoa', '-framework', 'Quartz', '-framework', 'PDFKit', *include_args(root), str(temp / 'test.m'),
                     '-o', str(temp / 'test')], check=True)
     if args.artifacts:
         args.artifacts.mkdir(parents=True, exist_ok=True)

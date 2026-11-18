@@ -4,6 +4,7 @@
 At run time the Base .strings table replaces the XIB titles, so a stale title in a XIB
 is never seen and no interface test notices it. It still misleads whoever opens the
 XIB in Interface Builder or translates from it, as the former pTeX and otf names did.
+The tables keep only the titles the window shows (choices and the Set ... buttons).
 """
 from pathlib import Path
 import html
@@ -15,10 +16,10 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT / 'Resources/Interfaces/Base.lproj'
 MUTATIONS = {
-    # The otf group box keeps its former name in the XIB only.
-    'stale-box': ('SettingsMiscTwo.xib', 'title="Japanese pLaTeX"', 'title="pTeX support (for Japan)"'),
-    # The otf switch keeps its former name in the XIB only.
-    'stale-switch': ('SettingsMiscTwo.xib', 'title="Convert to otf Package \\UTF / \\CID"', 'title="utf export"'),
+    # A choice of the update interval keeps a former name in the XIB only.
+    'stale-choice': ('SettingsMiscTwo.xib', 'title="Daily"', 'title="Every day"'),
+    # The console font button keeps a former name in the XIB only.
+    'stale-button': ('SettingsConsole.xib', 'title="Set ..."', 'title="Change Font"'),
 }
 mutation = sys.argv[1] if len(sys.argv) > 1 else ''
 if mutation and mutation not in MUTATIONS:

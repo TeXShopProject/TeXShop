@@ -9,12 +9,12 @@ r=Path(__file__).resolve().parents[1]
 p=argparse.ArgumentParser();p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--snapshots',type=Path);p.add_argument('--search-coverage',action='store_true');p.add_argument('--mutations',action='store_true');p.add_argument('--spelling-button-mutations',action='store_true');p.add_argument('--search-catalog',type=Path);p.add_argument('--search-source',type=Path);args=p.parse_args()
 with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
  t=Path(temp);(t/'fixtures').mkdir()
- program=(r/'Tests/SettingsClassification.m').read_text().replace('int main(int argc,char **argv)', encoding_menu_fixture(r)+'\nint main(int argc,char **argv)').replace('// SNAPSHOT_ENCODING', 'if(argc>3) { NSPopUpButton *encoding=[owner valueForKey:@"defaultEncodeMatrix"]; [[[EncodingMenuFixture alloc] init] addEncodingsToMenu:encoding.menu withTarget:nil action:NULL]; [encoding selectItemWithTag:NSUTF8StringEncoding]; }')
+ program=(r/'Tests/SettingsClassification.m').read_text().replace('int main(int argc,char **argv)', encoding_menu_fixture(r)+'\nint main(int argc,char **argv)').replace('// SNAPSHOT_ENCODING', 'if(argc>3) { NSPopUpButton *encoding=[owner valueForKey:@"defaultEncodeMatrix"]; [encoding removeAllItems]; [[[EncodingMenuFixture alloc] init] addEncodingsToMenu:encoding.menu withTarget:nil action:NULL]; [encoding selectItemWithTag:NSUTF8StringEncoding]; }')
  if args.search_coverage:
   program=program.replace('#import <Cocoa/Cocoa.h>','#import <Cocoa/Cocoa.h>\n#import "TSSettingsSearch.h"')
   program=program.replace('int main(int argc,char **argv)',(r/'Tests/SettingsSearchCoverage.inc').read_text()+'\nint main(int argc,char **argv)')
   program=program.replace(' NSMutableDictionary *after=[NSMutableDictionary dictionary];',''' for(NSString *name in @[@"documentFontTextField",@"consoleFontTextField",@"DarkStyle",@"EditingStyle",@"LiteStyle"]) { NSView *value=[owner valueForKey:name]; Check(value!=nil && [value.accessibilityIdentifier isEqual:@"settings.user-data"],@"Dynamic values identified through actual preference outlets"); }
- NSPopUpButton *enc=[owner valueForKey:@"defaultEncodeMatrix"]; [[[EncodingMenuFixture alloc] init] addEncodingsToMenu:Required(enc.menu) withTarget:nil action:NULL]; Check(enc.numberOfItems>=31,@"Actual encoding menu populated");
+ NSPopUpButton *enc=[owner valueForKey:@"defaultEncodeMatrix"]; [enc removeAllItems]; [[[EncodingMenuFixture alloc] init] addEncodingsToMenu:Required(enc.menu) withTarget:nil action:NULL]; Check(enc.numberOfItems>=31,@"Actual encoding menu populated");
  NSPopUpButton *dictionary=[owner valueForKey:@"dictionaryPopup"];[dictionary addItemWithTitle:[bundle localizedStringForKey:@"Automatic Language" value:nil table:@"Localizable"]];
  SearchCoverage(panes,bundle);return 0;
  NSMutableDictionary *after=[NSMutableDictionary dictionary];''')
