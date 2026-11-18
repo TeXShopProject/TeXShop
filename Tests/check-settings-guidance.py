@@ -110,6 +110,7 @@ def core_spotlight_text(path):
             start = item.find(b'\xff\xfe', start + 2)
     return '\n'.join(texts)
 
+RETIRED_LABELS = json.loads((ROOT / 'Tests/Fixtures/SettingsClassificationStrings.json').read_text())['retired_labels']
 page_count = 0
 for language in LANGUAGES:
     folder = ROOT / f'Resources/Interfaces/{language}.lproj'
@@ -144,7 +145,9 @@ for language in LANGUAGES:
     # The two method rows use their visible Settings names.
     for key in ('catalog.spelling.1.0.title','catalog.spelling.1.2.title'):
         assert categories[key] in overview,(language,'spelling overview',key)
-    assert labels['Use legacy spell checking'] not in overview,(language,'spelling overview uses a label the window does not show')
+    # The former name of the legacy method is in no table now; the help keeps to the name the window shows.
+    legacy = RETIRED_LABELS['Use legacy spell checking']
+    assert legacy['overrides'].get(language, legacy['default']) not in overview,(language,'spelling overview uses a label the window does not show')
     if language=='ja':
         for key in ('Search by Function','Search by Key','Remove Shortcut','Restore Default','Restore All…'):
             assert key in labels and '「'+labels[key]+'」' in pages['configure_menushortcuts'],('Japanese shortcut button missing',key)
