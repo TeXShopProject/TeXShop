@@ -22,6 +22,9 @@
   keeps the highlights, in the new colors, in light and dark windows.
 - With Highlight Current Line and the block cursor, fullwidth backgrounds and
   highlighted contents still show, on the active line and on the others.
+- Removing the color of the active line (Highlight Current Line turned off, the
+  window split, the Experiment source after composed text that coloring waited for)
+  leaves fullwidth backgrounds and highlighted contents.
 
 All this in either half of a split window and in the Experiment source, with "Flash"
 and "Always" highlighting. The production categories TSDocument (SyntaxHighlighting) and
@@ -95,6 +98,8 @@ MUTATIONS = {
     'experiment-contents-reset-without-coloring': (EXPERIMENT,
         '                                        forCharacterRange:NSMakeRange(0, scrapTextView.string.length)];\n    [self colorizeExperimentSource];\n}',
         '                                        forCharacterRange:NSMakeRange(0, scrapTextView.string.length)];\n}'),
+    'line-removal-wipes-fullwidth': (SYNTAX,
+        '    TSRestoreFullwidthBackground(layoutManager, TSVisibleCharacterRange(aTextView));\n    [self restoreBraceHighlightsIn:aTextView range:TSVisibleCharacterRange(aTextView)];\n}', '}'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -1107,6 +1112,32 @@ int main(void) { @autoreleasepool {
             highlightBracesColorDict = savedBraces; highlightContentColorDict = savedContents;
             [SUD setBool:NO forKey:AlwaysHighlightEnabledKey]; [SUD setBool:NO forKey:HighlightContentEnabledKey];
             Recolor(); Spin(0.40);
+        }
+
+        // 12. Removing the color of the active line (Highlight Current Line turned off, the window split, or the
+        // Experiment source colored when composed text that coloring waited for ends) leaves the fullwidth
+        // backgrounds and the highlighted contents.
+        [SUD setBool:YES forKey:AlwaysHighlightEnabledKey]; [SUD setBool:YES forKey:HighlightContentEnabledKey];
+        Show(@"abc\nx{a\uff11b}z\uff12\nxyz\n");
+        Pass(5, 6); Spin(0.05);
+        doc.syntaxcolorEntry = YES;
+        for (NSTextView *v in views) [doc cursorMoved:v];
+        doc.syntaxcolorEntry = NO;
+        for (NSTextView *v in views) [doc removeCurrentLineColor:v];
+        Check(EACH([Background(v, 7) isEqual:contentColor] && [Background(v, 11) isEqual:fullwidthBackground] && Background(v, 4) == nil),
+              NAME("the active line's color removed, highlighted contents and fullwidth backgrounds remain"));
+        [view setSelectedRange:NSMakeRange(0, 0)]; Spin(0.40);
+        [SUD setBool:NO forKey:AlwaysHighlightEnabledKey]; [SUD setBool:NO forKey:HighlightContentEnabledKey];
+        for (int commit = 0; commit < 2; commit++) {
+            Show(@"x\uff11y\nabc\n");
+            [view setSelectedRange:NSMakeRange(8, 0)];
+            Compose(view, @[@"\u3042"]);
+            Recolor();  // as a resize, a scroll or a change of settings does while text is composed
+            if (commit) [view insertText:@"\u4e9c" replacementRange:NSMakeRange(NSNotFound, 0)];
+            else { [view setMarkedText:@"" selectedRange:NSMakeRange(0, 0) replacementRange:NSMakeRange(NSNotFound, 0)]; [view unmarkText]; }
+            Spin(0.05);
+            Check(!view.hasMarkedText && EACH([Background(v, 1) isEqual:fullwidthBackground]),
+                  NAME("after composed text that coloring waited for, fullwidth characters keep their background"));
         }
         if (!inExperiment) [mainWindow makeFirstResponder:source];
     }

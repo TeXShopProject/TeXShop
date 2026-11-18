@@ -708,6 +708,11 @@ static NSRange TSVisibleCharacterRange(NSTextView *textView)
     fullRange.location = 0;
     fullRange.length = [textString length];
     [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:fullRange];
+    // Fullwidth characters and the highlighted contents of braces keep their background:
+    // this runs when Highlight Current Line is turned off, when the window is split, and
+    // for the Experiment source when composed text that coloring waited for ends.
+    TSRestoreFullwidthBackground(layoutManager, TSVisibleCharacterRange(aTextView));
+    [self restoreBraceHighlightsIn:aTextView range:TSVisibleCharacterRange(aTextView)];
 }
     
 
