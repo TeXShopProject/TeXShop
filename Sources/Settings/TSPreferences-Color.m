@@ -298,8 +298,29 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     NSString *title = EditingStyle.titleOfSelectedItem;
     if (title == nil || EditingColors == nil || self.lastSavedEditingColors == nil) return;
+    // Only the colors changed here replace those of the file as it is now: another TeXShop, or the one-time update of
+    // the bundled colors, may have changed other colors since the file was read.
+    NSDictionary<NSString *, id> *before = self.lastSavedEditingColors;
+    NSDictionary<NSString *, id> *file = [[self themeStore] readTitle:title] ?: before;
+    NSMutableDictionary<NSString *, id> *colors = [file mutableCopy];
+    NSMutableSet<NSString *> *keys = [NSMutableSet setWithArray:EditingColors.allKeys];
+    [keys addObjectsFromArray:before.allKeys];
+    [keys addObjectsFromArray:file.allKeys];
+    [keys removeObject:@"Title"];
+    BOOL othersChanged = NO;
+    for (NSString *key in keys) {
+        id now = EditingColors[key];
+        if (now == before[key] || [now isEqual:before[key]]) {
+            othersChanged = othersChanged || !(file[key] == before[key] || [file[key] isEqual:before[key]]);
+            continue;
+        }
+        if (now != nil)
+            colors[key] = now;
+        else
+            [colors removeObjectForKey:key];
+    }
     NSError *error = nil;
-    if (![[self themeStore] writeColors:EditingColors title:title error:&error]) {
+    if (![[self themeStore] writeColors:colors title:title error:&error]) {
         NSDictionary<NSString *, id> *saved = [[self themeStore] readTitle:title] ?: self.lastSavedEditingColors;
         EditingColors = [saved mutableCopy];
         self.lastSavedEditingColors = saved;
@@ -307,7 +328,12 @@ NSInteger stringSort(id s1, id s2, void *context)
         [self showPreferenceError:NSLocalizedString(@"The theme could not be saved. Its last saved colors have been restored.", @"")];
         return;
     }
-    self.lastSavedEditingColors = [EditingColors copy];
+    colors[@"Title"] = title;
+    EditingColors = colors;
+    self.lastSavedEditingColors = [colors copy];
+    // The wells show the colors changed elsewhere.
+    if (othersChanged)
+        [self FillInColorWells];
     [self applyEffectsForPreferenceKeys:[NSSet setWithArray:@[DefaultLiteThemeKey, DefaultDarkThemeKey]]];
 }
 

@@ -15,6 +15,7 @@ mutations={
  'sheet-cancel':('response != NSModalResponseOK ||','NO ||'),
  'failure-dictionary':('EditingColors = [saved mutableCopy];',';'),
  'failure-fallback':('[[self themeStore] readTitle:title] ?: self.lastSavedEditingColors','[[self themeStore] readTitle:title]'),
+ 'only-changed':('colors[key] = now;','colors = [EditingColors mutableCopy];'),
  'save-notify':('[self applyEffectsForPreferenceKeys:[NSSet setWithArray:@[DefaultLiteThemeKey, DefaultDarkThemeKey]]];',';'),
  'clone-early':('if (![[self themeStore] writeColors:colors title:title error:&error]) {','if (NO && ![[self themeStore] writeColors:colors title:title error:&error]) {'),
  'selection-store':('[SUD setObject:title forKey:popup == LiteStyle ? DefaultLiteThemeKey : DefaultDarkThemeKey];',';'),
@@ -117,12 +118,26 @@ int main(int argc,char **argv){@autoreleasepool{
  [p SaveEditedStyle:nil];
  NSDictionary *saved=[p.store readTitle:@"Original"];
  check([saved isEqual:p->EditingColors] && [saved isEqual:p.lastSavedEditingColors] && notifications==1 && reloads==1,"save disk before refreshing documents");
+ // Another TeXShop (or the one-time update of the bundled colors) changes another color of the file: a change here
+ // writes only its own color, keeps the other one, and the wells show it.
+ NSMutableDictionary *elsewhere=[saved mutableCopy];elsewhere[@"EditorBackground"]=@[@0.5,@0.5,@0.5,@1];
+ check([p.store writeColors:elsewhere title:@"Original" error:NULL],"another TeXShop writes the theme");
+ NSUInteger fills=p.fills;
+ p->EditingColors[@"EditorText"]=@[@0.7,@0.6,@0.5,@1];
+ [p SaveEditedStyle:nil];
+ saved=[p.store readTitle:@"Original"];
+ check([saved[@"EditorText"] isEqual:(@[@0.7,@0.6,@0.5,@1])] && [saved[@"EditorBackground"] isEqual:elsewhere[@"EditorBackground"]],"a color change keeps a color changed elsewhere in the file");
+ check([saved isEqual:p->EditingColors] && [saved isEqual:p.lastSavedEditingColors] && p.fills==fills+1 && notifications==2 && reloads==2,"the wells show the color changed elsewhere");
+ p->EditingColors[@"EditorText"]=@[@0.8,@0.7,@0.6,@1];
+ [p SaveEditedStyle:nil];
+ saved=[p.store readTitle:@"Original"];
+ check([saved isEqual:p->EditingColors] && [saved[@"EditorText"] isEqual:(@[@0.8,@0.7,@0.6,@1])] && p.fills==fills+1 && notifications==3,"the wells are not filled again when nothing changed elsewhere");
  NSURL *file=[root URLByAppendingPathComponent:@"Original.plist"];
  check([NSFileManager.defaultManager removeItemAtURL:file error:NULL],"remove fixture");
  check([NSFileManager.defaultManager createDirectoryAtURL:file withIntermediateDirectories:NO attributes:nil error:NULL],"force write and reload failure");
  p->EditingColors[@"EditorText"]=@[@0.9,@0.9,@0.9,@1];
  [p SaveEditedStyle:nil];
- check(p.errors==1 && [p->EditingColors isEqual:saved] && notifications==1 && reloads==1,"failed save restores last successful dictionary without applying it");
+ check(p.errors==1 && [p->EditingColors isEqual:saved] && notifications==3 && reloads==3,"failed save restores last successful dictionary without applying it");
  p->EditingColors[@"EditorText"]=@[@0.4,@0.4,@0.4,@1];
  [p SaveNewStyle:nil];
  check(p->_prefsWindow.attachedSheet==p->stylePanel && [p->styleTitle.stringValue isEqual:@""],"clone uses a cleared name sheet");
