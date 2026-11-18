@@ -762,7 +762,7 @@ NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CG
 - (void)setScaleFactor:(CGFloat)scale
 {
     [super setScaleFactor:scale];
-    // PDFKit may add the horizontal scroller during this change.
+    // PDFKit may replace the page views during this change.
     TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
@@ -776,7 +776,7 @@ NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CG
 - (void)setDisplayDirection:(PDFDisplayDirection)direction
 {
     [super setDisplayDirection:direction];
-    // Pages in a row can bring in the horizontal scroller after the appearance was chosen.
+    // Pages in a row can replace the page views after the appearance was chosen.
     TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
@@ -789,7 +789,7 @@ NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CG
 - (void)goToNextPage:(id)sender
 {
     [super goToNextPage:sender];
-    // A wider page can bring in the horizontal scroller after the appearance was chosen.
+    // A wider page can replace the page views after the appearance was chosen.
     TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
@@ -814,28 +814,42 @@ NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CG
 - (void)goToDestination:(PDFDestination *)destination
 {
     [super goToDestination:destination];
-    // An outline or an internal link can bring in the horizontal scroller after the appearance was chosen.
+    // An outline or an internal link can replace the page views after the appearance was chosen.
     TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
 - (void)goToRect:(PDFRect)rect onPage:(PDFPage *)page
 {
     [super goToRect:rect onPage:page];
-    // A jump to a rectangle can bring in the horizontal scroller after the appearance was chosen.
+    // A jump to a rectangle can replace the page views after the appearance was chosen.
     TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
 - (void)goToSelection:(PDFSelection *)selection
 {
     [super goToSelection:selection];
-    // A jump to a selection can bring in the horizontal scroller after the appearance was chosen.
+    // A jump to a selection can replace the page views after the appearance was chosen.
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
+}
+
+- (void)goBack:(id)sender
+{
+    [super goBack:sender];
+    // History can replace the page views after the appearance was chosen.
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
+}
+
+- (void)goForward:(id)sender
+{
+    [super goForward:sender];
+    // History can replace the page views after the appearance was chosen.
     TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
 - (void)setFrameSize:(NSSize)newSize
 {
     [super setFrameSize:newSize];
-    // A narrower view can bring in a horizontal scroller after the appearance was chosen.
+    // A resize can replace the page views after the appearance was chosen.
     TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 

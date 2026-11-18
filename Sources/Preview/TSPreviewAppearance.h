@@ -123,40 +123,64 @@ static inline NSArray *TSPreviewInversionFilters(void) {
 // On macOS 26 and later, where the preview runs under the toolbar, AppKit copies
 // the scroll view's appearance onto that title bar. The pocket has to keep the
 // window's appearance, or a light preview turns the window frame light too.
+// The class name is how the pocket is told from the gutter beside it. A pocket
+// is never given the preview's appearance.
 static inline BOOL TSPreviewSubviewIsToolbarPocket(NSView *view) {
     return [NSStringFromClass(view.class) containsString:@"Pocket"];
 }
 
 // The key is private to each file that includes this header. The preview that applies
-// the appearance and the preview that meets a new scroller are the same file.
+// the appearance and the preview that meets a new page view are the same file.
 static void *TSPreviewInversionStateKey = &TSPreviewInversionStateKey;
 
 // Share the same PDF page treatment between the document and Experiment previews.
-// The appearance chosen for the preview applies to the pages and the area around
-// them. It does not apply to the window frame, which keeps the system's appearance.
+// Scroll bars are part of the window frame. They take no explicit appearance and no
+// filters, so they follow the system whether the preview is light or dark.
+// On macOS 27 an overlay scroller's effective appearance copies the clip view and the
+// document view, not the scroller's own appearance and not PDFPageView. Those two
+// views therefore stay unset. Each PDFPageView is drawn light, and the luminosity
+// filter is applied there. The gutter around the pages is drawn light the same way.
+// The pocket stays unset so the title bar is not pulled off the system appearance.
 static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert) {
     if (!scrollView) return;
     scrollView.appearance = nil;
     // Filters on the scroll view would also invert the pocket under the toolbar.
     scrollView.contentFilters = @[];
     NSAppearance *light = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    NSArray *filters = invert ? TSPreviewInversionFilters() : @[];
     for (NSView *subview in scrollView.subviews) {
-        if (TSPreviewSubviewIsToolbarPocket(subview)) {
+        if (TSPreviewSubviewIsToolbarPocket(subview) ||
+            [subview isKindOfClass:[NSScroller class]] ||
+            subview == scrollView.contentView) {
+            // Scroll bars, the clip, and the pocket. Aqua on the clip is copied
+            // onto an overlay scroller, so the bar would leave the system appearance.
             subview.appearance = nil;
             subview.contentFilters = @[];
             continue;
         }
-        // PDFKit must draw light pages before the luminosity filter is applied.
-        // The view behind the pages is light too, so the area around them matches.
         subview.appearance = light;
-        subview.contentFilters = invert ? TSPreviewInversionFilters() : @[];
+        subview.contentFilters = filters;
     }
-    // A scroller PDFKit adds later, on a magnification or a resize, was not in this list.
+    NSView *documentView = scrollView.documentView;
+    // The document view's appearance is copied onto an overlay scroller too.
+    documentView.appearance = nil;
+    documentView.contentFilters = @[];
+    for (NSView *child in documentView.subviews) {
+        // PDFPageView draws the page. Its appearance is not copied onto the scroller.
+        if (![NSStringFromClass(child.class) containsString:@"Page"]) {
+            child.appearance = nil;
+            child.contentFilters = @[];
+            continue;
+        }
+        child.appearance = light;
+        child.contentFilters = filters;
+    }
+    // A page view PDFKit adds later was not in this list.
     objc_setAssociatedObject(scrollView, &TSPreviewInversionStateKey, @(invert),
         OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-// Gives a scroller that appeared after the choice was made the same treatment.
+// Gives a page view that appeared after the choice was made the same treatment.
 static inline void TSReapplyPreviewInversion(NSScrollView *scrollView) {
     NSNumber *invert = objc_getAssociatedObject(scrollView, &TSPreviewInversionStateKey);
     if (!invert) return;

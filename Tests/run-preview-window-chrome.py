@@ -3,9 +3,10 @@
 
 On macOS 26 and later the preview runs under the toolbar. Forcing the PDF scroll
 view to the light appearance used to make AppKit draw the title bar and the
-toolbar light as well. The pages, and the area around them, are still drawn
-light (and inverted for a dark preview). The scroll view and the pocket under
-the toolbar keep the system's appearance, so the window frame does too.
+toolbar light as well. Scroll bars are part of that frame: they keep the system's
+appearance and are not inverted. On macOS 27 an overlay scroller copies the clip
+view and the document view, so those stay unset too. Each page view, and the area
+around the pages, is still drawn light (and inverted for a dark preview).
 
 The windows are never ordered on screen. Defaults stay in memory.
 """
@@ -15,7 +16,7 @@ from production_fragments import method, verify_embedded
 from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['scroll-appearance', 'late-scroller', 'display-mode', 'late-page', 'late-direction', 'late-destination'])
+parser.add_argument('--mutation', choices=['scroll-appearance', 'bar-appearance', 'bar-filters', 'late-scroller', 'display-mode', 'late-page', 'late-direction', 'late-destination', 'late-rotation'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 header = (root / 'Sources/Preview/TSPreviewAppearance.h').read_text()
@@ -32,7 +33,11 @@ view_methods = [method(view_source, signature) for signature in (
     '- (void)goToDestination:(PDFDestination *)destination',
     '- (void)goToRect:(PDFRect)rect onPage:(PDFPage *)page',
     '- (void)goToSelection:(PDFSelection *)selection',
-    '- (IBAction) takeDestinationFromOutline: (id) sender')]
+    '- (IBAction) takeDestinationFromOutline: (id) sender',
+    '- (void) rotateClockwise:sender',
+    '- (void) rotateCounterclockwise:sender',
+    '- (void) goBack:sender',
+    '- (void) goForward: sender')]
 fragments = [('complete method: ' + item.split('\n', 1)[0], view_source, item) for item in view_methods]
 reapply = '    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);\n'
 def strip_reapply(index):
@@ -42,6 +47,14 @@ if args.mutation == 'scroll-appearance':
     old = '    scrollView.appearance = nil;\n'
     assert header.count(old) == 1, args.mutation
     header = header.replace(old, '    scrollView.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];\n', 1)
+elif args.mutation == 'bar-appearance':
+    old = '            subview.appearance = nil;\n'
+    assert header.count(old) == 1, args.mutation
+    header = header.replace(old, '            subview.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];\n', 1)
+elif args.mutation == 'bar-filters':
+    old = '            subview.contentFilters = @[];\n'
+    assert header.count(old) == 1, args.mutation
+    header = header.replace(old, '            subview.contentFilters = TSPreviewInversionFilters();\n', 1)
 elif args.mutation == 'late-scroller':
     strip_reapply(0)
     strip_reapply(1)
@@ -53,6 +66,9 @@ elif args.mutation == 'late-page':
     strip_reapply(4)
 elif args.mutation == 'late-destination':
     strip_reapply(11)
+elif args.mutation == 'late-rotation':
+    strip_reapply(15)
+    strip_reapply(16)
 view_text = '\n'.join(view_methods)
 
 program = r'''
@@ -105,6 +121,34 @@ static PDFDocument *Document(void) {
     [document insertPage:[[PDFPage alloc] initWithImage:image] atIndex:0];
     return document;
 }
+static void CheckScrollersFollowSystem(NSScrollView *scroll, NSString *systemName, NSString *what) {
+    BOOL found = NO;
+    for (NSView *subview in scroll.subviews) {
+        if (![subview isKindOfClass:NSScroller.class]) continue;
+        found = YES;
+        check(subview.appearance == nil, [what stringByAppendingString:@": the scroller has no explicit appearance"]);
+        check(subview.contentFilters.count == 0, [what stringByAppendingString:@": the scroller is not inverted"]);
+        check([Match(subview.effectiveAppearance) isEqual:systemName], [what stringByAppendingString:@": the scroller follows the system"]);
+    }
+    check(found, [what stringByAppendingString:@": a scroller is present"]);
+}
+static void CheckPageViews(NSScrollView *scroll, NSString *systemName, BOOL inverted, NSString *what) {
+    NSAppearance *light = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    check(scroll.contentView.appearance == nil && scroll.contentView.contentFilters.count == 0,
+          [what stringByAppendingString:@": the clip stays with the system"]);
+    check([Match(scroll.contentView.effectiveAppearance) isEqual:systemName],
+          [what stringByAppendingString:@": the clip follows the system"]);
+    check(scroll.documentView.appearance == nil && scroll.documentView.contentFilters.count == 0,
+          [what stringByAppendingString:@": the document view stays with the system"]);
+    BOOL page = NO;
+    for (NSView *child in scroll.documentView.subviews) {
+        if (![NSStringFromClass(child.class) containsString:@"Page"]) continue;
+        page = YES;
+        check(child.appearance == light, [what stringByAppendingString:@": the page is drawn light"]);
+        check(child.contentFilters.count == (inverted ? 3 : 0), [what stringByAppendingString:@": the page has the preview's filters"]);
+    }
+    check(page, [what stringByAppendingString:@": a page view is present"]);
+}
 static void CheckChrome(NSWindow *window, PDFView *pdf, NSString *systemName, BOOL inverted) {
     Pump();
     [window layoutIfNeeded];
@@ -115,8 +159,8 @@ static void CheckChrome(NSWindow *window, PDFView *pdf, NSString *systemName, BO
     check([Match(titlebar.effectiveAppearance) isEqual:systemName], @"the title bar follows the system, not the preview");
     NSScrollView *scroll = pdf.documentView.enclosingScrollView;
     check(scroll.appearance == nil && scroll.contentFilters.count == 0, @"the scroll view keeps the system's appearance and does not invert the pocket");
-    check([Match(scroll.contentView.effectiveAppearance) isEqual:NSAppearanceNameAqua], @"the pages are drawn light");
-    check(scroll.contentView.contentFilters.count == (inverted ? 3 : 0), @"the inversion filters apply to the pages");
+    CheckPageViews(scroll, systemName, inverted, @"the preview");
+    CheckScrollersFollowSystem(scroll, systemName, @"the preview");
     BOOL pocket = NO, around = NO;
     for (NSView *subview in scroll.subviews) {
         if (TSPreviewSubviewIsToolbarPocket(subview)) {
@@ -132,6 +176,10 @@ static void CheckChrome(NSWindow *window, PDFView *pdf, NSString *systemName, BO
     }
     check(pocket && around, @"the pocket and the area around the pages are both present");
 }
+@interface TSPreviewWindow : NSObject
+@property (nonatomic, weak) PDFView *pdf;
+- (void)fixAfterRotation:(BOOL)clockwise;
+@end
 @interface MyPDFKitView : PDFView {
     BOOL _fittingContentWidth;
     NSInteger resizeOption;
@@ -139,12 +187,29 @@ static void CheckChrome(NSWindow *window, PDFView *pdf, NSString *systemName, BO
     NSPoint menuPoint;
 }
 @property (nonatomic, strong) id myDocument;
+@property (nonatomic, strong) TSPreviewWindow *myPDFWindow;
 - (void)fitContentWidthKeepingTop:(TSContentTop)top;
+- (void)cleanupMarquee:(BOOL)terminate;
 @end
 @implementation MyPDFKitView
 - (void)fitContentWidthKeepingTop:(TSContentTop)top {}
 - (void)closePinnedLinkPreview {}
+- (void)cleanupMarquee:(BOOL)terminate {}
+- (void)cleanupMarqueeKeepingPinnedLinkPreview {}
 VIEWMETHODS
+@end
+@implementation TSPreviewWindow
+- (void)fixAfterRotation:(BOOL)clockwise {
+    PDFView *pdf = self.pdf;
+    if (!pdf.document.pageCount) return;
+    NSInteger delta = clockwise ? 90 : -90;
+    for (NSUInteger i = 0; i < pdf.document.pageCount; i++) {
+        PDFPage *page = [pdf.document pageAtIndex:i];
+        page.rotation = (page.rotation + delta + 360) % 360;
+    }
+    [pdf layoutDocumentView];
+    [pdf layoutSubtreeIfNeeded];
+}
 @end
 @interface OutlineSource : NSObject <NSOutlineViewDataSource>
 @property (nonatomic, strong) PDFOutline *item;
@@ -159,15 +224,25 @@ static void CheckLateBar(PDFView *pdf, BOOL inverted, NSString *what) {
     NSScrollView *scroll = pdf.documentView.enclosingScrollView;
     NSScroller *bar = scroll.horizontalScroller;
     check(scroll.hasHorizontalScroller && bar != nil, [what stringByAppendingString:@": the horizontal scroller is present"]);
-    check(bar.contentFilters.count == (inverted ? 3 : 0), [what stringByAppendingString:@": the new scroller has the preview's filters"]);
-    check(bar.appearance == [NSAppearance appearanceNamed:NSAppearanceNameAqua], [what stringByAppendingString:@": the new scroller is light"]);
+    check(bar.appearance == nil && bar.contentFilters.count == 0, [what stringByAppendingString:@": the new scroller is window chrome"]);
+    check([Match(bar.effectiveAppearance) isEqual:NSAppearanceNameDarkAqua], [what stringByAppendingString:@": the new scroller follows the dark system"]);
     check(scroll.appearance == nil && scroll.contentFilters.count == 0, [what stringByAppendingString:@": the scroll view stays with the system"]);
-    check(scroll.contentView.contentFilters.count == (inverted ? 3 : 0), [what stringByAppendingString:@": the pages keep their filters"]);
+    CheckPageViews(scroll, NSAppearanceNameDarkAqua, inverted, what);
     for (NSView *subview in scroll.subviews)
         if (TSPreviewSubviewIsToolbarPocket(subview))
             check(subview.appearance == nil && subview.contentFilters.count == 0, [what stringByAppendingString:@": the pocket stays untouched"]);
     NSView *titlebar = FindClass(pdf.window.contentView.superview, @"NSTitlebarView");
     check([Match(titlebar.effectiveAppearance) isEqual:NSAppearanceNameDarkAqua], [what stringByAppendingString:@": the title bar stays dark"]);
+}
+static PDFDocument *TallPage(void) {
+    PDFDocument *document = [PDFDocument new];
+    NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(410, 1100)];
+    [image lockFocus];
+    [[NSColor whiteColor] setFill];
+    NSRectFill(NSMakeRect(0, 0, 410, 1100));
+    [image unlockFocus];
+    [document insertPage:[[PDFPage alloc] initWithImage:image] atIndex:0];
+    return document;
 }
 static PDFDocument *PagesOfWidths(CGFloat first, CGFloat second) {
     PDFDocument *document = [PDFDocument new];
@@ -274,7 +349,6 @@ static MyPDFKitView *LatePreview(void) {
     [window.contentView addSubview:pdf];
     [window layoutIfNeeded];
     [pdf layoutSubtreeIfNeeded];
-    pdf.scaleFactor = 0.5;
     return pdf;
 }
 int main(void) {
@@ -294,6 +368,9 @@ int main(void) {
         pdf.document = Document();
         [window.contentView addSubview:pdf];
         [window layoutIfNeeded];
+        [pdf layoutSubtreeIfNeeded];
+        // PDFKit creates the page view when the magnification changes, not at the first layout.
+        if (pdf.documentView.subviews.count == 0) pdf.scaleFactor = 1.5;
         [pdf layoutSubtreeIfNeeded];
         NSScrollView *scroll = pdf.documentView.enclosingScrollView;
 
@@ -320,8 +397,9 @@ int main(void) {
         magnified.scaleFactor = 4;
         CheckLateBar(magnified, YES, @"magnifying the document preview");
         MyPDFKitView *narrowed = LatePreview();
-        narrowed.scaleFactor = 1;
+        narrowed.scaleFactor = 0.5;
         TSApplyPreviewInversion(narrowed.documentView.enclosingScrollView, YES);
+        narrowed.scaleFactor = 1;
         check(!narrowed.documentView.enclosingScrollView.hasHorizontalScroller, @"narrowing starts without a horizontal scroller");
         [narrowed setFrameSize:NSMakeSize(120, 550)];
         CheckLateBar(narrowed, YES, @"narrowing the document preview");
@@ -395,6 +473,21 @@ int main(void) {
         check(selection.string.length > 0, @"the wider page has text to select");
         [selected goToSelection:selection];
         CheckLateBar(selected, YES, @"jumping to a selection on a wider page");
+        MyPDFKitView *rotated = SpreadPreview(TallPage(), kPDFDisplaySinglePage);
+        TSPreviewWindow *host = [TSPreviewWindow new];
+        host.pdf = rotated;
+        rotated.myPDFWindow = host;
+        TSApplyPreviewInversion(rotated.documentView.enclosingScrollView, YES);
+        check(!rotated.documentView.enclosingScrollView.hasHorizontalScroller, @"rotation starts without a horizontal scroller");
+        [rotated rotateClockwise:nil];
+        CheckLateBar(rotated, YES, @"rotating the document preview");
+        MyPDFKitView *rotatedPlain = SpreadPreview(TallPage(), kPDFDisplaySinglePage);
+        TSPreviewWindow *plainHost = [TSPreviewWindow new];
+        plainHost.pdf = rotatedPlain;
+        rotatedPlain.myPDFWindow = plainHost;
+        TSApplyPreviewInversion(rotatedPlain.documentView.enclosingScrollView, NO);
+        [rotatedPlain rotateCounterclockwise:nil];
+        CheckLateBar(rotatedPlain, NO, @"rotating a light document preview");
         printf("PASS: %d preview window chrome checks\n", checks);
     }
     return 0;

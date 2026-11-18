@@ -10,7 +10,7 @@ import argparse, os, subprocess, tempfile
 from source_tree import include_args
 from experiment_preview_source import prelude as experiment_preview_prelude, sources as experiment_preview_sources
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['source-hook', 'pdf-hook', 'defaults-hook', 'reload-hook', 'menu-validation', 'filter-gamma', 'source-alpha', 'preview-alpha', 'paper-invert', 'paper-print', 'paper-lens', 'late-scroller', 'display-mode', 'late-page', 'late-direction', 'late-destination'])
+parser.add_argument('--mutation', choices=['source-hook', 'pdf-hook', 'defaults-hook', 'reload-hook', 'menu-validation', 'filter-gamma', 'source-alpha', 'preview-alpha', 'paper-invert', 'paper-print', 'paper-lens', 'scroll-appearance', 'bar-appearance', 'bar-filters', 'late-scroller', 'display-mode', 'late-page', 'late-direction', 'late-destination'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root/'Sources/Editor/ScrapTextView.m').read_text(encoding='latin1')
@@ -49,18 +49,30 @@ def strip_after(prefix):
     old = prefix + '    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);\n'
     assert pdf.count(old) == 1, args.mutation
     pdf = pdf.replace(old, prefix)
-if args.mutation == 'late-scroller':
-    strip_after('    // PDFKit may add the horizontal scroller during this change.\n')
-    strip_after('    // A narrower view can bring in a horizontal scroller after the appearance was chosen.\n')
+if args.mutation == 'scroll-appearance':
+    old = '    scrollView.appearance = nil;\n'
+    assert appearance.count(old) == 1, args.mutation
+    appearance = appearance.replace(old, '    scrollView.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];\n', 1)
+elif args.mutation == 'bar-appearance':
+    old = '            subview.appearance = nil;\n'
+    assert appearance.count(old) == 1, args.mutation
+    appearance = appearance.replace(old, '            subview.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];\n', 1)
+elif args.mutation == 'bar-filters':
+    old = '            subview.contentFilters = @[];\n'
+    assert appearance.count(old) == 1, args.mutation
+    appearance = appearance.replace(old, '            subview.contentFilters = TSPreviewInversionFilters();\n', 1)
+elif args.mutation == 'late-scroller':
+    strip_after('    // PDFKit may replace the page views during this change.\n')
+    strip_after('    // A resize can replace the page views after the appearance was chosen.\n')
     strip_after('    [self clearExperimentSelection];\n')
 elif args.mutation == 'display-mode':
     strip_after('    // The context menu\'s Two Pages calls this without a magnification or a resize.\n')
 elif args.mutation == 'late-direction':
-    strip_after('    [super setDisplayDirection:direction];\n    // Pages in a row can bring in the horizontal scroller after the appearance was chosen.\n')
+    strip_after('    [super setDisplayDirection:direction];\n    // Pages in a row can replace the page views after the appearance was chosen.\n')
 elif args.mutation == 'late-page':
-    strip_after('    [super goToNextPage:sender];\n    // A wider page can bring in the horizontal scroller after the appearance was chosen.\n')
+    strip_after('    [super goToNextPage:sender];\n    // A wider page can replace the page views after the appearance was chosen.\n')
 elif args.mutation == 'late-destination':
-    strip_after('    [super goToDestination:destination];\n    // An outline or an internal link can bring in the horizontal scroller after the appearance was chosen.\n')
+    strip_after('    [super goToDestination:destination];\n    // An outline or an internal link can replace the page views after the appearance was chosen.\n')
 pdf = pdf.replace('#import "TSPreviewAppearance.h"', appearance)
 pdf = experiment_preview_prelude(root) + pdf
 prefix = r'''
@@ -122,11 +134,64 @@ static PDFDocument *document(void) {
     [doc insertPage:[[PDFPage alloc] initWithImage:image] atIndex:0];
     return doc;
 }
+static NSString *Match(NSAppearance *appearance) {
+    return [appearance bestMatchFromAppearancesWithNames:@[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]];
+}
 static BOOL inverted(ScrapPDFKitView *view) {
     NSScrollView *scroll = view.documentView.enclosingScrollView;
-    return scroll.appearance == nil && scroll.contentFilters.count == 0
-        && scroll.contentView.appearance == [NSAppearance appearanceNamed:NSAppearanceNameAqua]
-        && scroll.contentView.contentFilters.count == 3;
+    if (scroll.appearance != nil || scroll.contentFilters.count != 0) return NO;
+    if (scroll.contentView.appearance != nil || scroll.contentView.contentFilters.count != 0) return NO;
+    if (scroll.documentView.appearance != nil || scroll.documentView.contentFilters.count != 0) return NO;
+    NSAppearance *light = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    NSString *system = Match(NSApp.effectiveAppearance);
+    BOOL page = NO, gutter = NO, scroller = NO;
+    for (NSView *child in scroll.documentView.subviews) {
+        if (![NSStringFromClass(child.class) containsString:@"Page"]) continue;
+        page = YES;
+        if (child.appearance != light || child.contentFilters.count != 3) return NO;
+    }
+    for (NSView *subview in scroll.subviews) {
+        if ([subview isKindOfClass:NSScroller.class]) {
+            scroller = YES;
+            if (subview.appearance != nil || subview.contentFilters.count != 0) return NO;
+            if (![Match(subview.effectiveAppearance) isEqual:system]) return NO;
+        } else if ([NSStringFromClass(subview.class) containsString:@"Background"] &&
+                   ![NSStringFromClass(subview.class) containsString:@"Pocket"]) {
+            gutter = YES;
+            if (subview.appearance != light || subview.contentFilters.count != 3) return NO;
+        }
+    }
+    return page && gutter && scroller;
+}
+static void checkPages(NSScrollView *scroll, NSUInteger filters, NSString *what) {
+    NSAppearance *light = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    BOOL page = NO;
+    for (NSView *child in scroll.documentView.subviews) {
+        if (![NSStringFromClass(child.class) containsString:@"Page"]) continue;
+        page = YES;
+        check(child.appearance == light && child.contentFilters.count == filters,
+              [what stringByAppendingString:@": the page keeps the preview appearance"]);
+    }
+    check(page, [what stringByAppendingString:@": a page view is present"]);
+}
+static void checkSystemScroller(NSScrollView *scroll, NSString *what) {
+    NSString *system = Match(NSApp.effectiveAppearance);
+    BOOL found = NO;
+    for (NSView *subview in scroll.subviews) {
+        if (![subview isKindOfClass:NSScroller.class]) continue;
+        found = YES;
+        check(subview.appearance == nil && subview.contentFilters.count == 0,
+              [what stringByAppendingString:@": the scroller is window chrome"]);
+        check([Match(subview.effectiveAppearance) isEqual:system],
+              [what stringByAppendingString:@": the scroller follows the system"]);
+    }
+    check(found, [what stringByAppendingString:@": a scroller is present"]);
+}
+static NSArray *pageInversionFilters(NSScrollView *scroll) {
+    for (NSView *child in scroll.documentView.subviews)
+        if ([NSStringFromClass(child.class) containsString:@"Page"])
+            return child.contentFilters;
+    return nil;
 }
 // A page like TeX output: transparent, with a little black mark near a corner.
 static PDFDocument *transparentDocument(void) {
@@ -213,8 +278,11 @@ int main(void) { @autoreleasepool {
     check([editor.insertionPointColor isEqual:NSColor.cyanColor], @"dark insertion color");
     check(pdf.previewPaperColor == nil, @"pages shown dark keep PDFKit's paper");
     check(fabs(sourceWindow.alphaValue-.82)<.001 && fabs(pdfWindow.alphaValue-.83)<.001, @"dark transparency");
+    // PDFKit creates the page view when the magnification changes.
+    if (pdf.documentView.subviews.count == 0) pdf.scaleFactor = MAX(pdf.scaleFactor, 1) * 1.1;
+    pump();
     check(inverted(pdf), @"system dark pages are drawn light and then inverted, without the scroll view taking that appearance");
-    NSArray *filters = pdf.documentView.enclosingScrollView.contentView.contentFilters;
+    NSArray *filters = pageInversionFilters(pdf.documentView.enclosingScrollView);
     check([[(CIFilter *)filters[0] name] isEqualToString:@"CIGammaAdjust"] &&
           [[(CIFilter *)filters[1] name] isEqualToString:@"CIColorMatrix"] &&
           [[(CIFilter *)filters[2] name] isEqualToString:@"CIGammaAdjust"], @"inversion filter order");
@@ -261,9 +329,23 @@ int main(void) { @autoreleasepool {
     [testDefaults setInteger:2 forKey:TSPreviewAppearanceModeKey]; pump();
     check(inverted(pdf), @"external dark shared setting change");
     check(screenPaper(pdf) == nil, @"pages shown dark are not filled with the theme's paper");
-    pdf.documentView.enclosingScrollView.contentView.contentFilters = @[];
+    NSScrollView *replaced = pdf.documentView.enclosingScrollView;
+    for (NSView *subview in replaced.subviews)
+        if ([NSStringFromClass(subview.class) containsString:@"Background"] &&
+            ![NSStringFromClass(subview.class) containsString:@"Pocket"])
+            subview.contentFilters = @[];
     pdf.document = document(); pump();
-    check(inverted(pdf), @"page appearance reapplied after document replacement");
+    BOOL gutterRestored = NO;
+    replaced = pdf.documentView.enclosingScrollView;
+    for (NSView *subview in replaced.subviews)
+        if ([NSStringFromClass(subview.class) containsString:@"Background"] &&
+            ![NSStringFromClass(subview.class) containsString:@"Pocket"])
+            gutterRestored = subview.contentFilters.count == 3 && subview.appearance == [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    check(gutterRestored && replaced.appearance == nil && replaced.contentView.appearance == nil,
+          @"page appearance reapplied after document replacement");
+    if (pdf.documentView.subviews.count == 0) pdf.scaleFactor = MAX(pdf.scaleFactor, 1) * 1.1;
+    pump();
+    check(inverted(pdf), @"the new document's pages take the preview appearance");
     [testDefaults setInteger:1 forKey:TSPreviewAppearanceModeKey]; pump();
     NSDictionary *custom = @{@"EditorBackground":NSColor.yellowColor, @"EditorText":NSColor.purpleColor,
         @"EditorInsertionPoint":NSColor.redColor, @"PreviewBackground":NSColor.orangeColor,
@@ -283,6 +365,8 @@ int main(void) { @autoreleasepool {
     // A later Experiment must adopt the persisted preference and theme immediately.
     ScrapPDFKitView *secondPDF = [[ScrapPDFKitView alloc] initWithFrame:NSMakeRect(0,0,600,480)];
     NSWindow *secondWindow = window(secondPDF); secondPDF.document=document(); pump();
+    if (secondPDF.documentView.subviews.count == 0) secondPDF.scaleFactor = MAX(secondPDF.scaleFactor, 1) * 1.1;
+    pump();
     check(inverted(secondPDF), @"new preview inherits shared appearance");
     [appearance.menu performActionForItemAtIndex:0]; pump();
     check(!inverted(pdf) && !inverted(secondPDF), @"System choice propagates to all Experiment previews");
@@ -303,18 +387,17 @@ int main(void) { @autoreleasepool {
         check(!scroll.hasHorizontalScroller, @"Experiment starts without a horizontal scroller");
         zoom.scaleFactor = 4;
         pump();
-        NSScroller *bar = scroll.horizontalScroller;
-        check(scroll.hasHorizontalScroller && bar.contentFilters.count == 3
-              && bar.appearance == [NSAppearance appearanceNamed:NSAppearanceNameAqua],
-              @"a horizontal scroller that appears while the Experiment is inverted is inverted too");
-        check(scroll.verticalScroller.contentFilters.count == 3, @"the vertical scroller stays inverted");
+        check(scroll.hasHorizontalScroller, @"a horizontal scroller appears while the Experiment is inverted");
+        checkSystemScroller(scroll, @"magnifying the inverted Experiment");
+        checkPages(scroll, 3, @"magnifying the inverted Experiment");
         check(scroll.appearance == nil && scroll.contentFilters.count == 0, @"the new scroller does not put the appearance on the scroll view");
         for (NSView *subview in scroll.subviews)
             if (TSPreviewSubviewIsToolbarPocket(subview))
                 check(subview.appearance == nil && subview.contentFilters.count == 0, @"the pocket stays untouched when the scroller appears");
         [zoomWindow setContentSize:NSMakeSize(160, 480)];
         pump();
-        check(scroll.horizontalScroller.contentFilters.count == 3, @"narrowing the inverted Experiment keeps the scroller inverted");
+        checkSystemScroller(scroll, @"narrowing the inverted Experiment");
+        checkPages(scroll, 3, @"narrowing the inverted Experiment");
         ScrapPDFKitView *plain = [[ScrapPDFKitView alloc] initWithFrame:NSMakeRect(0, 0, 750, 550)];
         NSWindow *plainWindow = window(plain);
         plain.displayMode = kPDFDisplaySinglePage;
@@ -327,9 +410,9 @@ int main(void) { @autoreleasepool {
         plain.scaleFactor = 4;
         pump();
         NSScrollView *plainScroll = plain.documentView.enclosingScrollView;
-        check(plainScroll.hasHorizontalScroller && plainScroll.horizontalScroller.contentFilters.count == 0
-              && plainScroll.horizontalScroller.appearance == [NSAppearance appearanceNamed:NSAppearanceNameAqua],
-              @"a horizontal scroller that appears on a light Experiment is light and not inverted");
+        check(plainScroll.hasHorizontalScroller, @"a horizontal scroller appears on a light Experiment");
+        checkSystemScroller(plainScroll, @"magnifying a light Experiment");
+        checkPages(plainScroll, 0, @"magnifying a light Experiment");
         [zoomWindow close];
         [plainWindow close];
         NSWindow *spreadWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 700, 550)
@@ -366,9 +449,9 @@ int main(void) { @autoreleasepool {
         [NSApp sendAction:twoPages.action to:twoPages.target ?: spread from:twoPages];
         pump();
         check(spread.documentView.enclosingScrollView.contentView == spreadClip, @"Two Pages keeps the Experiment clip view");
-        check(spreadScroll.hasHorizontalScroller && spreadScroll.horizontalScroller.contentFilters.count == 3
-              && spreadScroll.horizontalScroller.appearance == [NSAppearance appearanceNamed:NSAppearanceNameAqua],
-              @"Two Pages from the Experiment context menu inverts the new scroller");
+        check(spreadScroll.hasHorizontalScroller, @"Two Pages from the Experiment context menu shows a horizontal scroller");
+        checkSystemScroller(spreadScroll, @"Two Pages from the Experiment context menu");
+        checkPages(spreadScroll, 3, @"Two Pages from the Experiment context menu");
         ScrapPDFKitView *wide = [[ScrapPDFKitView alloc] initWithFrame:spreadWindow.contentView.bounds];
         wide.autoScales = NO;
         wide.displayMode = kPDFDisplaySinglePage;
@@ -387,8 +470,8 @@ int main(void) { @autoreleasepool {
         check(!wide.documentView.enclosingScrollView.hasHorizontalScroller, @"the Experiment next page starts without a horizontal scroller");
         [wide goToNextPage:nil];
         pump();
-        check(wide.documentView.enclosingScrollView.horizontalScroller.contentFilters.count == 3,
-              @"turning to a wider Experiment page inverts the new scroller");
+        checkSystemScroller(wide.documentView.enclosingScrollView, @"turning to a wider Experiment page");
+        checkPages(wide.documentView.enclosingScrollView, 3, @"turning to a wider Experiment page");
         ScrapPDFKitView *row = [[ScrapPDFKitView alloc] initWithFrame:spreadWindow.contentView.bounds];
         row.autoScales = NO;
         row.displayMode = kPDFDisplaySinglePageContinuous;
@@ -399,8 +482,8 @@ int main(void) { @autoreleasepool {
         check(!row.documentView.enclosingScrollView.hasHorizontalScroller, @"a vertical Experiment row starts without a horizontal scroller");
         row.displayDirection = kPDFDisplayDirectionHorizontal;
         pump();
-        check(row.documentView.enclosingScrollView.horizontalScroller.contentFilters.count == 3,
-              @"laying Experiment pages in a row inverts the new scroller");
+        checkSystemScroller(row.documentView.enclosingScrollView, @"laying Experiment pages in a row");
+        checkPages(row.documentView.enclosingScrollView, 3, @"laying Experiment pages in a row");
         NSData *stepData = steps.dataRepresentation;
         PDFDocument *destDoc = [[PDFDocument alloc] initWithData:stepData];
         PDFDestination *widePoint = [[PDFDestination alloc] initWithPage:[destDoc pageAtIndex:1] atPoint:NSMakePoint(30, 45)];
@@ -415,14 +498,14 @@ int main(void) { @autoreleasepool {
         check(!dest.documentView.enclosingScrollView.hasHorizontalScroller, @"the Experiment destination starts without a horizontal scroller");
         [dest goToDestination:widePoint];
         pump();
-        check(dest.documentView.enclosingScrollView.horizontalScroller.contentFilters.count == 3,
-              @"an Experiment destination on a wider page inverts the new scroller");
+        checkSystemScroller(dest.documentView.enclosingScrollView, @"an Experiment destination on a wider page");
+        checkPages(dest.documentView.enclosingScrollView, 3, @"an Experiment destination on a wider page");
         check(dest.canGoBack, @"the Experiment destination is in the back history");
         [dest goBack:nil];
         [dest goForward:nil];
         pump();
-        check(dest.documentView.enclosingScrollView.horizontalScroller.contentFilters.count == 3,
-              @"going forward in the Experiment inverts the new scroller");
+        checkSystemScroller(dest.documentView.enclosingScrollView, @"going forward in the Experiment");
+        checkPages(dest.documentView.enclosingScrollView, 3, @"going forward in the Experiment");
         PDFDocument *linkDoc = [[PDFDocument alloc] initWithData:stepData];
         PDFDestination *linkPoint = [[PDFDestination alloc] initWithPage:[linkDoc pageAtIndex:1] atPoint:NSMakePoint(30, 45)];
         ScrapPDFKitView *linked = [[ScrapPDFKitView alloc] initWithFrame:spreadWindow.contentView.bounds];
@@ -438,8 +521,8 @@ int main(void) { @autoreleasepool {
         [[linkDoc pageAtIndex:0] addAnnotation:link];
         [linked performAction:link.action];
         pump();
-        check(linked.documentView.enclosingScrollView.horizontalScroller.contentFilters.count == 3,
-              @"an Experiment internal link inverts the new scroller");
+        checkSystemScroller(linked.documentView.enclosingScrollView, @"an Experiment internal link");
+        checkPages(linked.documentView.enclosingScrollView, 3, @"an Experiment internal link");
         PDFDocument *boxDoc = [[PDFDocument alloc] initWithData:stepData];
         ScrapPDFKitView *box = [[ScrapPDFKitView alloc] initWithFrame:spreadWindow.contentView.bounds];
         box.autoScales = NO;
@@ -451,8 +534,8 @@ int main(void) { @autoreleasepool {
         pump();
         [box goToRect:NSMakeRect(40, 35, 70, 10) onPage:[boxDoc pageAtIndex:1]];
         pump();
-        check(box.documentView.enclosingScrollView.horizontalScroller.contentFilters.count == 3,
-              @"an Experiment rectangle jump inverts the new scroller");
+        checkSystemScroller(box.documentView.enclosingScrollView, @"an Experiment rectangle jump");
+        checkPages(box.documentView.enclosingScrollView, 3, @"an Experiment rectangle jump");
         NSMutableData *textPDF = [NSMutableData data];
         CGDataConsumerRef sink = CGDataConsumerCreateWithCFData((__bridge CFMutableDataRef)textPDF);
         CGRect media = CGRectMake(0, 0, 410, 380);
@@ -480,8 +563,8 @@ int main(void) { @autoreleasepool {
         check(selection.string.length > 0, @"the Experiment wider page has text to select");
         [picked goToSelection:selection];
         pump();
-        check(picked.documentView.enclosingScrollView.horizontalScroller.contentFilters.count == 3,
-              @"an Experiment selection jump inverts the new scroller");
+        checkSystemScroller(picked.documentView.enclosingScrollView, @"an Experiment selection jump");
+        checkPages(picked.documentView.enclosingScrollView, 3, @"an Experiment selection jump");
         [testDefaults setInteger:1 forKey:TSPreviewAppearanceModeKey];
         pump();
         PDFDocument *plainDoc = [[PDFDocument alloc] initWithData:stepData];
@@ -499,9 +582,8 @@ int main(void) { @autoreleasepool {
         pump();
         [linkedPlain performAction:plainLink.action];
         pump();
-        check(linkedPlain.documentView.enclosingScrollView.horizontalScroller.contentFilters.count == 0
-              && linkedPlain.documentView.enclosingScrollView.horizontalScroller.appearance == [NSAppearance appearanceNamed:NSAppearanceNameAqua],
-              @"an Experiment internal link on a light preview leaves the new scroller uninverted");
+        checkSystemScroller(linkedPlain.documentView.enclosingScrollView, @"an Experiment internal link on a light preview");
+        checkPages(linkedPlain.documentView.enclosingScrollView, 0, @"an Experiment internal link on a light preview");
         [spreadWindow close];
     }
     check(TSThemeWindowAlpha(@{}, @"SourceAlpha")==1, @"missing alpha stays opaque");

@@ -190,7 +190,7 @@
     TSPreviewChangeScale(self, ^{ [super setScaleFactor: scale]; });
     if (!keep)
         resizeOption =  NEW_PDF_FIT_TO_NONE;
-    // PDFKit may add the horizontal scroller during this change.
+    // PDFKit may replace the page views during this change.
     TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
@@ -275,7 +275,7 @@
         top.page = topPage;
         [self fitContentWidthKeepingTop:top];
     }
-    // A narrower view can bring in a horizontal scroller after the appearance was chosen.
+    // A resize can replace the page views after the appearance was chosen.
     TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
@@ -1794,6 +1794,8 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	// [self rotateClockwisePrimary];
 	[(TSPreviewWindow *)self.myPDFWindow fixAfterRotation: YES];
 	// [self layoutDocumentView];
+	// Rotation replaces the page views. Those views carry the preview appearance.
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
 - (void) rotateCounterclockwisePrimary
@@ -1824,6 +1826,8 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 
 	[(TSPreviewWindow *)self.myPDFWindow fixAfterRotation: NO];
 	// [self layoutDocumentView];
+	// Rotation replaces the page views. Those views carry the preview appearance.
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
 // Back and Forward go to another place: the pinned popup of this part closes, and it does
@@ -1835,6 +1839,8 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
 		[self cleanupMarqueeKeepingPinnedLinkPreview];
 	[super goBack:sender];
+	// History can replace the page views after the appearance was chosen.
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
 - (void) goForward: sender
@@ -1844,6 +1850,8 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
 		[self cleanupMarqueeKeepingPinnedLinkPreview];
 	[super goForward:sender];
+	// History can replace the page views after the appearance was chosen.
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
 // added by Terada (from this line)
@@ -2456,7 +2464,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     navigation();
     if (keep)
         TSPreviewScrollHorizontally(self.documentView.enclosingScrollView, x);
-    // A wider page can bring in the horizontal scroller after the appearance was chosen.
+    // A wider page can replace the page views after the appearance was chosen.
     TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
@@ -8640,34 +8648,35 @@ else
     }
     [self.myDocument updatePreviewLayoutControls];
     // The context menu's Two Pages calls this without a magnification or a resize.
+    // It can replace the page views, which carry the preview appearance.
     TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
 - (void)setDisplayDirection:(PDFDisplayDirection)direction
 {
     [super setDisplayDirection:direction];
-    // Pages in a row can bring in the horizontal scroller after the appearance was chosen.
+    // Pages in a row can replace the page views after the appearance was chosen.
     TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
 - (void)goToDestination:(PDFDestination *)destination
 {
     [super goToDestination:destination];
-    // An outline or an internal link can bring in the horizontal scroller after the appearance was chosen.
+    // An outline or an internal link can replace the page views after the appearance was chosen.
     TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
 - (void)goToRect:(PDFRect)rect onPage:(PDFPage *)page
 {
     [super goToRect:rect onPage:page];
-    // A jump to a rectangle can bring in the horizontal scroller after the appearance was chosen.
+    // A jump to a rectangle can replace the page views after the appearance was chosen.
     TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
 - (void)goToSelection:(PDFSelection *)selection
 {
     [super goToSelection:selection];
-    // A jump to a selection can bring in the horizontal scroller after the appearance was chosen.
+    // A jump to a selection can replace the page views after the appearance was chosen.
     TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
