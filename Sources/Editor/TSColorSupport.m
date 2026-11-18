@@ -836,8 +836,26 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
             return YES;
         };
         CGFloat x[4] = {0, 0, 0, 0};
-        // A little more than 4.5, so that the grays still read after they are made into colors.
-        CGFloat enough = log(4.5) + 1e-6;
+        // The gray of lightness exp(x) - 0.05 (sRGB).
+        NSColor *(^grayOf)(CGFloat) = ^NSColor *(CGFloat value) {
+            CGFloat l = MIN(1, MAX(0, exp(value) - 0.05));
+            CGFloat v = l <= 0.03928 / 12.92 ? l * 12.92 : 1.055 * pow(l, 1 / 2.4) - 0.055;
+            return [NSColor colorWithRed: v green: v blue: v alpha: 1];
+        };
+        // Whether the grays for x, made into colors, let every pair with a missing color read.
+        BOOL (^reads)(CGFloat *) = ^BOOL(CGFloat *values) {
+            CGFloat drawn[4];
+            for (NSUInteger k = 0; k < 4; k++)
+                drawn[k] = here[k] ? (lacking[k] ? luminance(grayOf(values[k])) : exp(places[k]) - 0.05) : 0;
+            for (NSUInteger k = 1; k < 4; k++)
+                if (here[k - 1] && here[k] && (lacking[k - 1] || lacking[k])
+                    && (MAX(drawn[k - 1], drawn[k]) + 0.05) / (MIN(drawn[k - 1], drawn[k]) + 0.05) < 4.5)
+                    return NO;
+            return YES;
+        };
+        // A little more than 4.5, so that the grays still read after they are made into colors: the widest
+        // margin that can be had, down to one far above the rounding of numbers.
+        CGFloat margins[4] = {1e-4, 1e-6, 1e-9, 1e-12};
         // The greatest distance for which test(distance) holds, by halving.
         CGFloat (^greatest)(BOOL (^)(CGFloat)) = ^CGFloat(BOOL (^test)(CGFloat)) {
             CGFloat reached = 0, unreached = log(21.0) + 1e-6;
@@ -850,20 +868,23 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
             }
             return reached;
         };
-        BOOL found = solve(enough, enough, x);
+        BOOL found = NO;
+        for (int m = 0; m < 4 && !found; m++)
+            found = solve(log(4.5) + margins[m], log(4.5) + margins[m], x) && reads(x);
         if (!found) {
-            CGFloat text = solve(enough, 0, NULL) ? enough : greatest(^BOOL(CGFloat d) { return solve(d, 0, NULL); });
+            CGFloat text = greatest(^BOOL(CGFloat d) { return solve(d, 0, NULL); });
+            for (int m = 0; m < 4; m++)
+                if (solve(log(4.5) + margins[m], 0, NULL)) {
+                    text = log(4.5) + margins[m];
+                    break;
+                }
             CGFloat cursor = greatest(^BOOL(CGFloat d) { return solve(text, d, NULL); });
             found = solve(text, cursor, x);
         }
         if (found)
             for (NSUInteger k = 0; k < 4; k++)
-                if (present[k] && missing[k]) {
-                    // The gray of lightness exp(x) - 0.05 (sRGB).
-                    CGFloat l = MIN(1, MAX(0, exp(x[k]) - 0.05));
-                    CGFloat v = l <= 0.03928 / 12.92 ? l * 12.92 : 1.055 * pow(l, 1 / 2.4) - 0.055;
-                    gray[k] = [NSColor colorWithRed: v green: v blue: v alpha: 1];
-                }
+                if (present[k] && missing[k])
+                    gray[k] = grayOf(x[k]);
     }
     for (NSUInteger k = 0; k < 4; k++) {
         free(lum[k]);
