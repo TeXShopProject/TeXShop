@@ -146,6 +146,11 @@ static void CheckStrings(void)
     Check(@"modified NFC composes", [@"か\u3099は\u309A\uFA19" normalizedStringWithModifiedNFC], @"がぱ\uFA19");
     Check(@"modified NFC keeps text made only of excluded characters", [@"\uFA19\uFA19" normalizedStringWithModifiedNFC], @"\uFA19\uFA19");
     Check(@"modified NFD keeps compatibility ideographs", [@"が\uFA19" normalizedStringWithModifiedNFD], @"か\u3099\uFA19");
+    // U+0000 ends the C string the decomposition is made in: the text on both sides of it is decomposed, and it stays.
+    unichar zero = 0;
+    NSString *nul = [NSString stringWithCharacters:&zero length:1];
+    Check(@"modified NFD across U+0000", [[NSString stringWithFormat:@"%@ab\u00e9%@cd\u00e9%@\uFEFFが%@", nul, nul, nul, nul] normalizedStringWithModifiedNFD],
+          [NSString stringWithFormat:@"%@abe\u0301%@cde\u0301%@\uFEFFか\u3099%@", nul, nul, nul, nul]);
     Check(@"quotes", [@"‘“a”’ “b” ‘c’" stringByReplacingFullwidthQuotesWithHalfwidthQuotes], @"`\\,``a''\\,' ``b'' `c'");
 }
 
