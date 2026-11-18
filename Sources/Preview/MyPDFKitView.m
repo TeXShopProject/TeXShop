@@ -8776,7 +8776,7 @@ else
     if (self.handlingLink || pinnedLinkPreview) [self doKillPopup];
     BOOL preserveZoom = _pdfViewReady && self.document && document && !self.autoScales;
     CGFloat previousScale = preserveZoom ? self.scaleFactor : 0;
-    [super setDocument:document];
+    TSPreviewSetDocument(self, ^{ [super setDocument:document]; });
     [TSPreviewScrollerKeeper installInView:self];
     // Apply the resolved direction after PDFKit has installed the new catalog.
     // Explicit source comments and toolbar choices take precedence over the PDF.

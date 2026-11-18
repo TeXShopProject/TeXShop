@@ -184,7 +184,7 @@ static const NSInteger TSExperimentToolCount = 4;
 {
     [self clearExperimentSelection];
     [self hideExperimentMagnifier];
-    [super setDocument:document];
+    TSPreviewSetDocument(self, ^{ [super setDocument:document]; });
     [self updateExperimentAppearance:nil];
     // PDFKit may create its document scroll view on the following run-loop turn.
     __weak ScrapPDFKitView *weakSelf = self;

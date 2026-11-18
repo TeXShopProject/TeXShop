@@ -5,8 +5,10 @@ On macOS 26 and later the preview runs under the toolbar. Forcing the PDF scroll
 view to the light appearance used to make AppKit draw the title bar and the
 toolbar light as well. Scroll bars are part of that frame: they keep the system's
 appearance and are not inverted. On macOS 27 an overlay scroller copies the clip
-view and the document view, so those stay unset too. Each page view, and the area
-around the pages, is still drawn light (and inverted for a dark preview).
+view and the document view, so those take no appearance. The pages and the area
+around them are still drawn light; for a dark preview the luminosity filter sits on
+the document view, so it reaches each page view PDFKit adds later at once, without
+waiting, and the views on the pages are made light as their layers join it.
 
 The windows are never ordered on screen. Defaults stay in memory.
 """
@@ -16,7 +18,7 @@ from production_fragments import method, verify_embedded
 from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['scroll-appearance', 'bar-appearance', 'bar-filters', 'late-scroller', 'display-mode', 'late-page', 'late-direction', 'late-destination', 'late-rotation', 'visible-pages', 'document-changed', 'watch-lifetime'])
+parser.add_argument('--mutation', choices=['scroll-appearance', 'bar-appearance', 'bar-filters', 'late-scroller', 'display-mode', 'late-page', 'late-direction', 'late-destination', 'late-rotation', 'document-filters', 'page-provider', 'set-document', 'overlay-clicks'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 header = (root / 'Sources/Preview/TSPreviewAppearance.h').read_text()
@@ -39,6 +41,11 @@ view_methods = [method(view_source, signature) for signature in (
     '- (void) goBack:sender',
     '- (void) goForward: sender')]
 fragments = [('complete method: ' + item.split('\n', 1)[0], view_source, item) for item in view_methods]
+# The document preview and the Experiment preview call the hook right after PDFKit's -setDocument:.
+set_document = method(view_source, '- (void)setDocument:(PDFDocument *)document')
+assert '    TSPreviewSetDocument(self, ^{ [super setDocument:document]; });\n' in set_document, 'MyPDFKitView -setDocument: goes through TSPreviewSetDocument'
+scrap_source = (root / 'Sources/Preview/ScrapPDFKitView.m').read_text(encoding='latin1')
+assert '    TSPreviewSetDocument(self, ^{ [super setDocument:document]; });\n' in method(scrap_source, '- (void)setDocument:(PDFDocument *)document'), 'ScrapPDFKitView -setDocument: goes through TSPreviewSetDocument'
 reapply = '    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);\n'
 def strip_reapply(index):
     assert view_methods[index].count(reapply) == 1, args.mutation
@@ -69,14 +76,20 @@ elif args.mutation == 'late-destination':
 elif args.mutation == 'late-rotation':
     strip_reapply(15)
     strip_reapply(16)
-elif args.mutation in ('visible-pages', 'document-changed'):
-    marker = ('PDFViewVisiblePagesChangedNotification' if args.mutation == 'visible-pages'
-              else 'PDFViewDocumentChangedNotification')
-    old = '    TSFollowPreviewInversion(pdfView.documentView.enclosingScrollView); // %s\n' % marker
+elif args.mutation == 'document-filters':
+    old = '    documentView.contentFilters = filters;\n'
+    assert header.count(old) == 1, args.mutation
+    header = header.replace(old, '    documentView.contentFilters = @[];\n', 1)
+elif args.mutation == 'page-provider':
+    old = '    if (view.pageOverlayViewProvider == nil) view.pageOverlayViewProvider = TSPreviewPageProvider();\n'
     assert header.count(old) == 1, args.mutation
     header = header.replace(old, '')
-elif args.mutation == 'watch-lifetime':
-    old = '    if (visible) [center removeObserver:visible];\n    if (replaced) [center removeObserver:replaced];\n'
+elif args.mutation == 'set-document':
+    old = '    set();\n    TSReapplyPreviewInversion(view.documentView.enclosingScrollView);\n'
+    assert header.count(old) == 1, args.mutation
+    header = header.replace(old, '    set();\n', 1)
+elif args.mutation == 'overlay-clicks':
+    old = '            class_addMethod(allocated, @selector(hitTest:), (IMP)TSPreviewOverlayHitTest, "@@:{CGPoint=dd}");\n'
     assert header.count(old) == 1, args.mutation
     header = header.replace(old, '')
 view_text = '\n'.join(view_methods)
@@ -148,14 +161,15 @@ static void CheckPageViews(NSScrollView *scroll, NSString *systemName, BOOL inve
           [what stringByAppendingString:@": the clip stays with the system"]);
     check([Match(scroll.contentView.effectiveAppearance) isEqual:systemName],
           [what stringByAppendingString:@": the clip follows the system"]);
-    check(scroll.documentView.appearance == nil && scroll.documentView.contentFilters.count == 0,
-          [what stringByAppendingString:@": the document view stays with the system"]);
+    check(scroll.documentView.appearance == nil,
+          [what stringByAppendingString:@": the document view takes no appearance"]);
+    check(scroll.documentView.contentFilters.count == (inverted ? 3 : 0),
+          [what stringByAppendingString:@": the document view carries the preview's filters"]);
     BOOL page = NO;
     for (NSView *child in scroll.documentView.subviews) {
-        if (![NSStringFromClass(child.class) containsString:@"Page"]) continue;
-        page = YES;
+        if ([NSStringFromClass(child.class) containsString:@"Page"]) page = YES;
         check(child.appearance == light, [what stringByAppendingString:@": the page is drawn light"]);
-        check(child.contentFilters.count == (inverted ? 3 : 0), [what stringByAppendingString:@": the page has the preview's filters"]);
+        check(child.contentFilters.count == 0, [what stringByAppendingString:@": the page is not inverted twice"]);
     }
     check(page, [what stringByAppendingString:@": a page view is present"]);
 }
@@ -206,6 +220,8 @@ static void CheckChrome(NSWindow *window, PDFView *pdf, NSString *systemName, BO
 - (void)closePinnedLinkPreview {}
 - (void)cleanupMarquee:(BOOL)terminate {}
 - (void)cleanupMarqueeKeepingPinnedLinkPreview {}
+// The production -setDocument: does more; the part this test needs is checked in its source above.
+- (void)setDocument:(PDFDocument *)document { TSPreviewSetDocument(self, ^{ [super setDocument:document]; }); }
 VIEWMETHODS
 @end
 @implementation TSPreviewWindow
@@ -411,22 +427,28 @@ static void TurnWheel(PDFView *pdf) {
 }
 static void CheckWatchCloses(void) {
     @autoreleasepool {
-        PDFView *view = [[PDFView alloc] initWithFrame:NSMakeRect(0, 0, 220, 180)];
+        MyPDFKitView *view = [[MyPDFKitView alloc] initWithFrame:NSMakeRect(0, 0, 220, 180)];
         PDFDocument *document = [PDFDocument new];
         [document insertPage:[[PDFPage alloc] init] atIndex:0];
         view.document = document;
         NSScrollView *scroll = view.documentView.enclosingScrollView;
-        check(scroll != nil, @"a preview has a scroll view to watch");
+        check(scroll != nil, @"a preview has a scroll view");
+        id provider = view.pageOverlayViewProvider;
+        check(provider != nil, @"a preview has the page provider before its document is laid out");
         TSApplyPreviewInversion(scroll, NO);
-        id visible = objc_getAssociatedObject(view, @selector(tsPreviewVisibleWatch));
-        id replaced = objc_getAssociatedObject(view, @selector(tsPreviewDocumentWatch));
-        check(visible != nil && replaced != nil, @"a preview stores both notification tokens");
         TSApplyPreviewInversion(scroll, YES);
-        check(visible == objc_getAssociatedObject(view, @selector(tsPreviewVisibleWatch)), @"a second apply keeps the visible-page watch");
-        check(replaced == objc_getAssociatedObject(view, @selector(tsPreviewDocumentWatch)), @"a second apply keeps the document watch");
+        check(view.pageOverlayViewProvider == provider, @"a second apply keeps the provider");
+        MyPDFKitView *other = [[MyPDFKitView alloc] initWithFrame:NSMakeRect(0, 0, 220, 180)];
+        other.document = document;
+        check(other.pageOverlayViewProvider == provider, @"every preview shares one provider");
+        NSView *first = view.documentView;
+        PDFDocument *next = [PDFDocument new];
+        [next insertPage:[[PDFPage alloc] init] atIndex:0];
+        view.document = next;
+        check(view.documentView != first, @"a new document comes with a new document view");
+        check(view.documentView.contentFilters.count == 3, @"the new document view carries the filters at once");
     }
     NSHashTable *views = [NSHashTable weakObjectsHashTable];
-    NSHashTable *tokens = [NSHashTable weakObjectsHashTable];
     for (int i = 0; i < 24; i++) {
         @autoreleasepool {
             PDFView *view = [[PDFView alloc] initWithFrame:NSMakeRect(0, 0, 220, 180)];
@@ -436,17 +458,29 @@ static void CheckWatchCloses(void) {
             NSScrollView *scroll = view.documentView.enclosingScrollView;
             if (!scroll) { check(NO, @"a closing preview has a scroll view"); return; }
             TSApplyPreviewInversion(scroll, NO);
-            id visible = objc_getAssociatedObject(view, @selector(tsPreviewVisibleWatch));
-            id replaced = objc_getAssociatedObject(view, @selector(tsPreviewDocumentWatch));
-            if (!visible || !replaced) { check(NO, @"a closing preview stores both notification tokens"); return; }
             [views addObject:view];
-            [tokens addObject:visible];
-            [tokens addObject:replaced];
         }
     }
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
     check(views.allObjects.count == 0, @"closed previews are released");
-    check(tokens.allObjects.count == 0, @"closed previews release both notification tokens");
+}
+// The page views PDFKit adds after a new document are light from the moment they exist,
+// however late they come: the check runs every 10 ms for a second, not once at a set time.
+static void CheckPagesLightAsTheyCome(PDFView *pdf, BOOL inverted, NSString *what) {
+    NSAppearance *light = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    BOOL sawPage = NO, allLight = YES, filtered = YES;
+    for (int i = 0; i < 100; i++) {
+        NSView *documentView = pdf.documentView;
+        if (documentView.contentFilters.count != (inverted ? 3 : 0)) filtered = NO;
+        for (NSView *child in documentView.subviews) {
+            if ([NSStringFromClass(child.class) containsString:@"Page"]) sawPage = YES;
+            if (child.appearance != light || child.contentFilters.count) allLight = NO;
+        }
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+    }
+    check(sawPage, [what stringByAppendingString:@": page views come"]);
+    check(filtered, [what stringByAppendingString:@": the document view has the filters from the start"]);
+    check(allLight, [what stringByAppendingString:@": every page view is light as soon as it exists"]);
 }
 static void CheckReadingPages(PDFView *pdf, BOOL inverted, NSString *what, NSTimeInterval wait) {
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:wait]];
@@ -461,6 +495,9 @@ static void CheckReadingPages(PDFView *pdf, BOOL inverted, NSString *what, NSTim
         if (coverage.size.width * coverage.size.height > 1000) shown = YES;
     }
     check(shown, [what stringByAppendingString:@": a page is on screen"]);
+    NSView *hit = [pdf hitTest:[pdf convertPoint:NSMakePoint(NSMidX(pdf.bounds), NSMidY(pdf.bounds)) toView:pdf.superview]];
+    check(hit != nil && ![NSStringFromClass(hit.class) isEqual:@"TSPreviewPageOverlay"],
+          [what stringByAppendingString:@": the overlay over a page takes no clicks"]);
 }
 int main(void) {
     @autoreleasepool {
@@ -604,7 +641,7 @@ int main(void) {
         NSWindow *readingWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 700, 520)
             styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskResizable | NSWindowStyleMaskFullSizeContentView
             backing:NSBackingStoreBuffered defer:NO];
-        PDFView *reading = [[PDFView alloc] initWithFrame:readingWindow.contentView.bounds];
+        MyPDFKitView *reading = [[MyPDFKitView alloc] initWithFrame:readingWindow.contentView.bounds];
         reading.autoScales = NO;
         reading.displayMode = kPDFDisplaySinglePageContinuous;
         reading.document = ManyPages();
@@ -625,7 +662,8 @@ int main(void) {
         CheckReadingPages(reading, YES, @"scrolling the document preview", 0.55);
         TSApplyPreviewInversion(reading.documentView.enclosingScrollView, NO);
         reading.document = ManyPages();
-        CheckReadingPages(reading, NO, @"replacing the document preview", 0.32);
+        CheckPagesLightAsTheyCome(reading, NO, @"replacing the document preview");
+        CheckReadingPages(reading, NO, @"replacing the document preview", 0);
         TSApplyPreviewInversion(reading.documentView.enclosingScrollView, YES);
         NSString *typesetPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"texshop-document-reload.pdf"];
         NSData *typesetData = [ManyPages() dataRepresentation];
@@ -633,7 +671,8 @@ int main(void) {
         PDFDocument *typeset = [[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:typesetPath]];
         check(typeset.pageCount == 12, @"typesetting reload reads the new PDF");
         reading.document = typeset;
-        CheckReadingPages(reading, YES, @"reloading the document preview after typesetting", 0.32);
+        CheckPagesLightAsTheyCome(reading, YES, @"reloading the document preview after typesetting");
+        CheckReadingPages(reading, YES, @"reloading the document preview after typesetting", 0);
         CheckWatchCloses();
         printf("PASS: %d preview window chrome checks\n", checks);
     }

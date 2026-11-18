@@ -10,7 +10,7 @@ import argparse, os, subprocess, tempfile
 from source_tree import include_args
 from experiment_preview_source import prelude as experiment_preview_prelude, sources as experiment_preview_sources
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['source-hook', 'pdf-hook', 'defaults-hook', 'reload-hook', 'menu-validation', 'filter-gamma', 'source-alpha', 'preview-alpha', 'paper-invert', 'paper-print', 'paper-lens', 'scroll-appearance', 'bar-appearance', 'bar-filters', 'late-scroller', 'display-mode', 'late-page', 'late-direction', 'late-destination', 'visible-pages', 'document-changed'])
+parser.add_argument('--mutation', choices=['source-hook', 'pdf-hook', 'defaults-hook', 'reload-hook', 'menu-validation', 'filter-gamma', 'source-alpha', 'preview-alpha', 'paper-invert', 'paper-print', 'paper-lens', 'scroll-appearance', 'bar-appearance', 'bar-filters', 'late-scroller', 'display-mode', 'late-page', 'late-direction', 'late-destination', 'document-filters', 'page-provider'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root/'Sources/Editor/ScrapTextView.m').read_text(encoding='latin1')
@@ -73,10 +73,12 @@ elif args.mutation == 'late-page':
     strip_after('    [super goToNextPage:sender];\n    // A wider page can replace the page views after the appearance was chosen.\n')
 elif args.mutation == 'late-destination':
     strip_after('    [super goToDestination:destination];\n    // An outline or an internal link can replace the page views after the appearance was chosen.\n')
-elif args.mutation in ('visible-pages', 'document-changed', 'reload-hook'):
-    marker = ('PDFViewVisiblePagesChangedNotification' if args.mutation == 'visible-pages'
-              else 'PDFViewDocumentChangedNotification')
-    old = '    TSFollowPreviewInversion(pdfView.documentView.enclosingScrollView); // %s\n' % marker
+elif args.mutation == 'document-filters':
+    old = '    documentView.contentFilters = filters;\n'
+    assert appearance.count(old) == 1, args.mutation
+    appearance = appearance.replace(old, '    documentView.contentFilters = @[];\n', 1)
+elif args.mutation == 'page-provider':
+    old = '    if (view.pageOverlayViewProvider == nil) view.pageOverlayViewProvider = TSPreviewPageProvider();\n'
     assert appearance.count(old) == 1, args.mutation
     appearance = appearance.replace(old, '')
 pdf = pdf.replace('#import "TSPreviewAppearance.h"', appearance)
@@ -193,14 +195,13 @@ static BOOL inverted(ScrapPDFKitView *view) {
     NSScrollView *scroll = view.documentView.enclosingScrollView;
     if (scroll.appearance != nil || scroll.contentFilters.count != 0) return NO;
     if (scroll.contentView.appearance != nil || scroll.contentView.contentFilters.count != 0) return NO;
-    if (scroll.documentView.appearance != nil || scroll.documentView.contentFilters.count != 0) return NO;
+    if (scroll.documentView.appearance != nil || scroll.documentView.contentFilters.count != 3) return NO;
     NSAppearance *light = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
     NSString *system = Match(NSApp.effectiveAppearance);
     BOOL page = NO, gutter = NO, scroller = NO;
     for (NSView *child in scroll.documentView.subviews) {
-        if (![NSStringFromClass(child.class) containsString:@"Page"]) continue;
-        page = YES;
-        if (child.appearance != light || child.contentFilters.count != 3) return NO;
+        if ([NSStringFromClass(child.class) containsString:@"Page"]) page = YES;
+        if (child.appearance != light || child.contentFilters.count != 0) return NO;
     }
     for (NSView *subview in scroll.subviews) {
         if ([subview isKindOfClass:NSScroller.class]) {
@@ -218,10 +219,11 @@ static BOOL inverted(ScrapPDFKitView *view) {
 static void checkPages(NSScrollView *scroll, NSUInteger filters, NSString *what) {
     NSAppearance *light = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
     BOOL page = NO;
+    check(scroll.documentView.appearance == nil && scroll.documentView.contentFilters.count == filters,
+          [what stringByAppendingString:@": the document view carries the preview's filters"]);
     for (NSView *child in scroll.documentView.subviews) {
-        if (![NSStringFromClass(child.class) containsString:@"Page"]) continue;
-        page = YES;
-        check(child.appearance == light && child.contentFilters.count == filters,
+        if ([NSStringFromClass(child.class) containsString:@"Page"]) page = YES;
+        check(child.appearance == light && child.contentFilters.count == 0,
               [what stringByAppendingString:@": the page keeps the preview appearance"]);
     }
     check(page, [what stringByAppendingString:@": a page view is present"]);
@@ -240,10 +242,24 @@ static void checkSystemScroller(NSScrollView *scroll, NSString *what) {
     check(found, [what stringByAppendingString:@": a scroller is present"]);
 }
 static NSArray *pageInversionFilters(NSScrollView *scroll) {
-    for (NSView *child in scroll.documentView.subviews)
-        if ([NSStringFromClass(child.class) containsString:@"Page"])
-            return child.contentFilters;
-    return nil;
+    return scroll.documentView.contentFilters;
+}
+// Page views that PDFKit adds after a new document are light from the moment they exist,
+// however late they come: checked every 10 ms for a second, not once at a set time.
+static void checkPagesAsTheyCome(PDFView *view, NSUInteger filters, NSString *what) {
+    NSAppearance *light = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    BOOL page = NO, ok = YES, filtered = YES;
+    for (int i = 0; i < 100; i++) {
+        if (view.documentView.contentFilters.count != filters) filtered = NO;
+        for (NSView *child in view.documentView.subviews) {
+            if ([NSStringFromClass(child.class) containsString:@"Page"]) page = YES;
+            if (child.appearance != light || child.contentFilters.count) ok = NO;
+        }
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+    }
+    check(page, [what stringByAppendingString:@": page views come"]);
+    check(filtered, [what stringByAppendingString:@": the document view has the filters from the start"]);
+    check(ok, [what stringByAppendingString:@": every page view is light as soon as it exists"]);
 }
 // A page like TeX output: transparent, with a little black mark near a corner.
 static PDFDocument *transparentDocument(void) {
@@ -668,13 +684,13 @@ int main(void) { @autoreleasepool {
     NSData *typesetData = [manyPages(8) dataRepresentation];
     check([typesetData writeToFile:typesetPath atomically:YES], @"the Experiment typeset PDF is written");
     [pdf reShowWithPath:typesetPath];
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.32]];
+    checkPagesAsTheyCome(pdf, 3, @"reloading the Experiment after typesetting");
     check(pdf.document.pageCount == 8 && inverted(pdf), @"reloading the Experiment after typesetting keeps the preview appearance");
     checkSystemScroller(pdf.documentView.enclosingScrollView, @"reloading the Experiment after typesetting");
     [testDefaults setInteger:1 forKey:TSPreviewAppearanceModeKey];
     pump();
     pdf.document = manyPages(8);
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.32]];
+    checkPagesAsTheyCome(pdf, 0, @"replacing the Experiment with a light PDF");
     checkPages(pdf.documentView.enclosingScrollView, 0, @"replacing the Experiment with a light PDF");
     checkSystemScroller(pdf.documentView.enclosingScrollView, @"replacing the Experiment with a light PDF");
     check(TSThemeWindowAlpha(@{}, @"SourceAlpha")==1, @"missing alpha stays opaque");

@@ -133,16 +133,27 @@ static inline BOOL TSPreviewSubviewIsToolbarPocket(NSView *view) {
 // the appearance and the preview that meets a new page view are the same file.
 static void *TSPreviewInversionStateKey = &TSPreviewInversionStateKey;
 
-static void TSInstallPreviewPageWatch(NSScrollView *scrollView);
+// The pages, and the views TeXShop places over them (link popups, the magnifying glass,
+// selections), are drawn light. Their appearance is set view by view, because Aqua on
+// the document view is copied onto an overlay scroller.
+static inline void TSLightenPreviewPageView(NSView *child) {
+    NSAppearance *light = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    if (child.appearance != light) child.appearance = light;
+    if (child.contentFilters.count) child.contentFilters = @[];
+}
+static inline void TSLightenPreviewPages(NSView *documentView) {
+    for (NSView *child in documentView.subviews) TSLightenPreviewPageView(child);
+}
 
 // Share the same PDF page treatment between the document and Experiment previews.
 // Scroll bars are part of the window frame. They take no explicit appearance and no
 // filters, so they follow the system whether the preview is light or dark.
 // On macOS 27 an overlay scroller's effective appearance copies the clip view and the
-// document view, not the scroller's own appearance and not PDFPageView. Those two
-// views therefore stay unset. Each PDFPageView is drawn light, and the luminosity
-// filter is applied there. The gutter around the pages is drawn light the same way.
-// The pocket stays unset so the title bar is not pulled off the system appearance.
+// document view, so those two take no appearance. The luminosity filter is set on the
+// document view: filters belong to its layer, so they reach every page view PDFKit adds
+// later, at once, and never the scrollers beside it. The gutter around the pages is drawn
+// light and inverted the same way. The pocket stays unset so the title bar is not pulled
+// off the system appearance.
 static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert) {
     if (!scrollView) return;
     scrollView.appearance = nil;
@@ -164,116 +175,84 @@ static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert
         subview.contentFilters = filters;
     }
     NSView *documentView = scrollView.documentView;
-    // The document view's appearance is copied onto an overlay scroller too.
     documentView.appearance = nil;
-    documentView.contentFilters = @[];
-    for (NSView *child in documentView.subviews) {
-        // PDFPageView draws the page. Its appearance is not copied onto the scroller.
-        if (![NSStringFromClass(child.class) containsString:@"Page"]) {
-            child.appearance = nil;
-            child.contentFilters = @[];
-            continue;
-        }
-        child.appearance = light;
-        child.contentFilters = filters;
-    }
-    // A page view PDFKit adds later was not in this list. Scrolling and replacing
-    // the document post the notifications below after this call has returned.
+    documentView.contentFilters = filters;
+    TSLightenPreviewPages(documentView);
     objc_setAssociatedObject(scrollView, &TSPreviewInversionStateKey, @(invert),
         OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    TSInstallPreviewPageWatch(scrollView);
 }
 
-// Gives a page view that appeared after the choice was made the same treatment.
+// Applies the choice again, as after -setDocument:, which puts a new document view in.
 static inline void TSReapplyPreviewInversion(NSScrollView *scrollView) {
     NSNumber *invert = objc_getAssociatedObject(scrollView, &TSPreviewInversionStateKey);
     if (!invert) return;
     TSApplyPreviewInversion(scrollView, invert.boolValue);
 }
 
-// PDFKit posts the visible-page and document notifications before the new page
-// views exist (a replacement's pages arrive about a quarter second later). The
-// wheel's notification arrives once those pages are already on screen. Apply
-// again now, and once more after those pages exist. The second pass is inside
-// the third of a second a replacement is given before it is sampled.
-static BOOL TSPreviewFollowing = NO;
-static void TSFollowPreviewInversion(NSScrollView *scrollView) {
-    if (!scrollView || TSPreviewFollowing) return;
-    TSPreviewFollowing = YES;
-    TSReapplyPreviewInversion(scrollView);
-    TSPreviewFollowing = NO;
-    __weak NSScrollView *weakScroll = scrollView;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.28 * NSEC_PER_SEC)),
-        dispatch_get_main_queue(), ^{
-            if (TSPreviewFollowing) return;
-            TSPreviewFollowing = YES;
-            TSReapplyPreviewInversion(weakScroll);
-            TSPreviewFollowing = NO;
-        });
+// A page view PDFKit adds while scrolling, or after a new document or display format, is
+// drawn light as PDFKit shows it: PDFKit asks the PDF view's page overlay provider for a
+// view over each page it displays, and the provider gives the page view the light
+// appearance there. The overlay itself draws nothing and takes no clicks. The provider
+// and the overlay classes are created once; each file that includes this header shares
+// them. PDFKit holds the provider weakly, so one shared provider stays alive.
+static NSView *TSPreviewOverlayHitTest(__unsafe_unretained id self, SEL _cmd, NSPoint point) {
+    (void)self; (void)_cmd; (void)point;
+    return nil;
 }
-
-static void TSPreviewVisiblePagesChanged(PDFView *pdfView) {
-    if (!pdfView) return;
-    TSFollowPreviewInversion(pdfView.documentView.enclosingScrollView); // PDFViewVisiblePagesChangedNotification
+static BOOL TSPreviewOverlayNo(__unsafe_unretained id self, SEL _cmd) {
+    (void)self; (void)_cmd;
+    return NO;
 }
-
-static void TSPreviewDocumentChanged(PDFView *pdfView) {
-    if (!pdfView) return;
-    TSFollowPreviewInversion(pdfView.documentView.enclosingScrollView); // PDFViewDocumentChangedNotification
-}
-
-// The block token stays registered after the preview is released. A companion
-// object is released with the preview and removes both registrations. Its
-// class is created once; each file that includes this header shares that class.
-static void TSPreviewWatchFree(__unsafe_unretained id self, SEL _cmd) {
-    (void)_cmd;
-    NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
-    id visible = objc_getAssociatedObject(self, @selector(tsPreviewVisibleWatch));
-    id replaced = objc_getAssociatedObject(self, @selector(tsPreviewDocumentWatch));
-    if (visible) [center removeObserver:visible];
-    if (replaced) [center removeObserver:replaced];
-    SEL end = sel_getUid("dealloc");
-    IMP root = method_getImplementation(class_getInstanceMethod(NSObject.class, end));
-    ((void (*)(__unsafe_unretained id, SEL))root)(self, end);
-}
-
-static Class TSPreviewWatchClass(void) {
+static Class TSPreviewOverlayClass(void) {
     static Class cls;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
-        Class allocated = objc_allocateClassPair(NSObject.class, "TSPreviewPageWatchAnchor", 0);
+        Class allocated = objc_allocateClassPair(NSView.class, "TSPreviewPageOverlay", 0);
         if (allocated) {
-            class_addMethod(allocated, sel_getUid("dealloc"), (IMP)TSPreviewWatchFree, "v@:");
+            class_addMethod(allocated, @selector(hitTest:), (IMP)TSPreviewOverlayHitTest, "@@:{CGPoint=dd}");
+            class_addMethod(allocated, @selector(isOpaque), (IMP)TSPreviewOverlayNo, "c@:");
+            class_addMethod(allocated, @selector(isAccessibilityElement), (IMP)TSPreviewOverlayNo, "c@:");
             objc_registerClassPair(allocated);
             cls = allocated;
         } else {
-            cls = objc_getClass("TSPreviewPageWatchAnchor");
+            cls = objc_getClass("TSPreviewPageOverlay");
         }
     });
     return cls;
 }
-
-static id TSPreviewWatchAnchor(id visiblePages, id replacedDocument) {
-    id anchor = [[TSPreviewWatchClass() alloc] init];
-    objc_setAssociatedObject(anchor, @selector(tsPreviewVisibleWatch), visiblePages, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(anchor, @selector(tsPreviewDocumentWatch), replacedDocument, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    return anchor;
+static NSView *TSPreviewProviderOverlay(__unsafe_unretained id self, SEL _cmd, PDFView *view, PDFPage *page) {
+    (void)self; (void)_cmd; (void)view; (void)page;
+    return [[TSPreviewOverlayClass() alloc] initWithFrame:NSZeroRect];
+}
+static void TSPreviewProviderWillDisplay(__unsafe_unretained id self, SEL _cmd, PDFView *view,
+                                         NSView *overlay, PDFPage *page) {
+    (void)self; (void)_cmd; (void)view; (void)page;
+    if (overlay.superview) TSLightenPreviewPageView(overlay.superview);
+}
+static id TSPreviewPageProvider(void) {
+    static id provider;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        Class cls = objc_getClass("TSPreviewPageProvider");
+        if (!cls) {
+            cls = objc_allocateClassPair(NSObject.class, "TSPreviewPageProvider", 0);
+            class_addMethod(cls, @selector(pdfView:overlayViewForPage:), (IMP)TSPreviewProviderOverlay, "@@:@@");
+            class_addMethod(cls, @selector(pdfView:willDisplayOverlayView:forPage:), (IMP)TSPreviewProviderWillDisplay, "v@:@@@");
+            class_addProtocol(cls, @protocol(PDFPageOverlayViewProvider));
+            objc_registerClassPair(cls);
+        }
+        provider = [[cls alloc] init];
+    });
+    return provider;
 }
 
-// One watch per PDF view. The scroll view's superview is that PDF view.
-static void TSInstallPreviewPageWatch(NSScrollView *scrollView) {
-    PDFView *pdfView = nil;
-    for (NSView *view = scrollView; view; view = view.superview)
-        if ([view isKindOfClass:PDFView.class]) { pdfView = (PDFView *)view; break; }
-    if (!pdfView || objc_getAssociatedObject(pdfView, @selector(tsPreviewPageWatch))) return;
-    __weak PDFView *weakView = pdfView;
-    NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
-    id visiblePages = [center addObserverForName:PDFViewVisiblePagesChangedNotification object:pdfView queue:nil
-        usingBlock:^(NSNotification *note) { (void)note; TSPreviewVisiblePagesChanged(weakView); }];
-    id replacedDocument = [center addObserverForName:PDFViewDocumentChangedNotification object:pdfView queue:nil
-        usingBlock:^(NSNotification *note) { (void)note; TSPreviewDocumentChanged(weakView); }];
-    objc_setAssociatedObject(pdfView, @selector(tsPreviewPageWatch),
-        TSPreviewWatchAnchor(visiblePages, replacedDocument), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(pdfView, @selector(tsPreviewVisibleWatch), visiblePages, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(pdfView, @selector(tsPreviewDocumentWatch), replacedDocument, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+// PDFKit asks for page overlays only when it lays out a document, so the provider is
+// installed before the document is set. A PDF view that already has another provider
+// keeps it. -setDocument: also puts a new document view in; the choice is applied to it
+// at once, while it has no page views yet, so they arrive under the preview's filters.
+// The document preview and the Experiment preview set their documents through this.
+static inline void TSPreviewSetDocument(PDFView *view, void (NS_NOESCAPE ^set)(void)) {
+    if (view.pageOverlayViewProvider == nil) view.pageOverlayViewProvider = TSPreviewPageProvider();
+    set();
+    TSReapplyPreviewInversion(view.documentView.enclosingScrollView);
 }
