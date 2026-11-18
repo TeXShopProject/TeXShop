@@ -127,6 +127,18 @@ static void TSRemoveFullwidthBackground(NSLayoutManager *layoutManager, NSRange 
     }
 }
 
+// The fullwidth background where coloring gave it, after another background replaced it.
+static void TSRestoreFullwidthBackground(NSLayoutManager *layoutManager, NSRange range)
+{
+    for (NSUInteger i = range.location; i < NSMaxRange(range); ) {
+        NSRange marked;
+        id mark = [layoutManager temporaryAttribute:TSFullwidthBackgroundMark atCharacterIndex:i longestEffectiveRange:&marked inRange:range];
+        if (mark)
+            [layoutManager addTemporaryAttribute:NSBackgroundColorAttributeName value:mark forCharacterRange:marked];
+        i = MAX(NSMaxRange(marked), i + 1);
+    }
+}
+
 static void TSMarkFullwidthBackground(NSLayoutManager *layoutManager, NSRange range, NSColor *background)
 {
     if (!background)
@@ -343,9 +355,10 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     // the following line is deactivaeed active-line-colors are used because it caused them to to be removed when scrolling on May, 2022
     
     // HERE-RED
-   if (( ! self.syntaxcolorEntry) && ( ![SUD boolForKey:AlwaysHighlightEnabledKey]))
+   if (( ! self.syntaxcolorEntry) && ( ![SUD boolForKey:AlwaysHighlightEnabledKey])) {
       [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:colorRange];
-   else
+      [layoutManager removeTemporaryAttribute:TSFullwidthBackgroundMark forCharacterRange:colorRange];
+   } else
       TSRemoveFullwidthBackground(layoutManager, colorRange);
     
     // the next line was added by Daniel Toundykov to allow changing the foreground and background source colors
@@ -723,8 +736,12 @@ static NSRange TSVisibleCharacterRange(NSTextView *textView)
             if (! self.blockCursor)
                 [layoutManager addTemporaryAttributes:self.EntryColorAttribute forCharacterRange:currentLineRange];
             
-            else
-                
+            // Fullwidth characters and the highlighted contents of braces keep their
+            // background, on the active line too.
+            TSRestoreFullwidthBackground(layoutManager, TSVisibleCharacterRange(aTextView));
+            [self restoreBraceHighlightsIn:aTextView range:TSVisibleCharacterRange(aTextView)];
+            
+            if (self.blockCursor)
             {
                 NSColor *cursorColor = [NSColor colorWithCalibratedRed: [SUD floatForKey:BlockCursorRKey]
                                                                  green: [SUD floatForKey:BlockCursorGKey] blue: [SUD floatForKey:BlockCursorBKey] alpha:1.0];
