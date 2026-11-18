@@ -216,12 +216,15 @@ static NSRange TSExperimentRange(NSTextView *view, NSRange range)
     if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != scrapBraceHighlightGeneration)
         return;
     // As -resetHighlight:, the brace highlight stays while text is composed.
-    if ([self coloringWaitsForMarkedTextIn:scrapTextView])
+    if ([self coloringWaitsForMarkedTextIn:scrapTextView]) {
+        scrapHighlightedBraceLocations = nil;
         return;
+    }
     if (scrapBraceHighlighting) {
+        scrapBraceHighlighting = NO;
+        scrapHighlightedBraceLocations = nil;
         [scrapTextView.layoutManager removeTemporaryAttribute:NSForegroundColorAttributeName
                                             forCharacterRange:NSMakeRange(0, scrapTextView.string.length)];
-        scrapBraceHighlighting = NO;
     }
     [self colorizeExperimentSource];
 }
@@ -233,6 +236,7 @@ static NSRange TSExperimentRange(NSTextView *view, NSRange range)
         if (range.length > 0)
             [scrapTextView.layoutManager addTemporaryAttributes:highlightBracesColorDict forCharacterRange:range];
     }
+    scrapHighlightedBraceLocations = locations;
     scrapBraceHighlighting = YES;
 }
 
@@ -240,6 +244,7 @@ static NSRange TSExperimentRange(NSTextView *view, NSRange range)
 {
     scrapContentHighlighting = YES;
     NSRange range = TSExperimentRange(scrapTextView, NSRangeFromString(rangeString));
+    scrapHighlightedContentRange = range;
     if (range.length > 0)
         [scrapTextView.layoutManager addTemporaryAttributes:highlightContentColorDict forCharacterRange:range];
 }
@@ -254,6 +259,7 @@ static NSRange TSExperimentRange(NSTextView *view, NSRange range)
 - (void)resetExperimentBackgroundColor:(id)sender
 {
     scrapContentHighlighting = NO;
+    scrapHighlightedContentRange = NSMakeRange(0, 0);
     [scrapTextView.layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName
                                         forCharacterRange:NSMakeRange(0, scrapTextView.string.length)];
     [self colorizeExperimentSource];

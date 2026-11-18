@@ -376,6 +376,7 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     TSSyntaxHighlighter *highlighter = [[TSSyntaxHighlighter alloc] initWithTextView:aTextView scanner:scanner scheme:self.syntaxColorScheme];
     [highlighter applyTokensInRange:colorRange];
     TSMarkFullwidthBackground(layoutManager, colorRange, [self.syntaxColorScheme attributesForRole:TSSyntaxRoleFullwidthSymbol][NSBackgroundColorAttributeName]);
+    [self restoreBraceHighlightsIn:aTextView range:colorRange];
     
     // Now we color the background of the active line
     [self doEntryLineAndCursorColoring: (NSTextView *)aTextView];
@@ -383,6 +384,30 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
 
 
 
+
+// The highlight of the braces and of their contents, which coloring has just removed
+// from range or covered with the background of fullwidth characters, is given again in
+// the views that show it.
+- (void)restoreBraceHighlightsIn:(NSTextView *)aTextView range:(NSRange)range
+{
+    BOOL experiment = (aTextView != nil && aTextView == scrapTextView);
+    if (!experiment && !(windowIsSplit ? (aTextView == textView1 || aTextView == textView2) : aTextView == textView))
+        return;
+    NSLayoutManager *layoutManager = [aTextView layoutManager];
+    NSRange text = NSMakeRange(0, [[aTextView string] length]);
+    NSRange contents = experiment ? scrapHighlightedContentRange : highlightedContentRange;
+    if ((experiment ? scrapContentHighlighting : contentHighlighting) && highlightContentColorDict) {
+        contents = NSIntersectionRange(NSIntersectionRange(contents, text), range);
+        if (contents.length > 0)
+            [layoutManager addTemporaryAttributes:highlightContentColorDict forCharacterRange:contents];
+    }
+    if ((experiment ? scrapBraceHighlighting : braceHighlighting) && highlightBracesColorDict)
+        for (NSNumber *location in (experiment ? scrapHighlightedBraceLocations : highlightedBraceLocations)) {
+            NSUInteger brace = [location unsignedIntegerValue];
+            if (NSLocationInRange(brace, range) && NSLocationInRange(brace, text))
+                [layoutManager addTemporaryAttributes:highlightBracesColorDict forCharacterRange:NSMakeRange(brace, 1)];
+        }
+}
 
 // Load the color definitions from the config system
 - (void)setupColors

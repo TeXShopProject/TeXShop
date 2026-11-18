@@ -5617,9 +5617,11 @@ if ( ! skipTextWindow) {
 
     // While text is composed, the brace highlight stays and nothing is colored. The
     // change of the selection that commits or removes the composed text schedules
-    // this method again.
-    if ([self coloringWaitsForMarkedTextIn:textView])
+    // this method again; the highlight is not given again before that.
+    if ([self coloringWaitsForMarkedTextIn:textView]) {
+        highlightedBraceLocations = nil;
         return;
+    }
     
   // item added by Koch in August, 2018
     
@@ -5628,15 +5630,14 @@ if ( ! skipTextWindow) {
         
        NSRange theRange;
         
+        braceHighlighting = NO;
+        highlightedBraceLocations = nil;
         theRange.location = 0;
         theRange.length = [self.textStorage length];
         [[textView1 layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:theRange];
         [[textView2 layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:theRange];
         [self colorizeVisibleAreaInTextView:textView1];
         [self colorizeVisibleAreaInTextView:textView2];
-        
-        
-        braceHighlighting = NO;
     }
     
 	if(windowIsSplit){
@@ -5665,6 +5666,7 @@ if ( ! skipTextWindow) {
 - (void)resetBackgroundColor:(id)sender
 {
 	contentHighlighting = NO;
+	highlightedContentRange = NSMakeRange(0, 0);
 	// This removes the backgrounds that coloring gives too (fullwidth characters, the
 	// active line); the visible text gets them again.
 	if(windowIsSplit){
@@ -5715,6 +5717,7 @@ if ( ! skipTextWindow) {
 - (void)highlightContent:(NSString*)range
 {
 	contentHighlighting = YES;
+	highlightedContentRange = NSRangeFromString(range);
 	if(windowIsSplit){
 		[[textView1 layoutManager] addTemporaryAttributes:highlightContentColorDict 
 										forCharacterRange:NSRangeFromString(range)];
@@ -5733,6 +5736,7 @@ if ( ! skipTextWindow) {
     
 	NSInteger location1 = [[locations objectAtIndex:0] integerValue];
 	NSInteger location2 = [[locations objectAtIndex:1] integerValue];
+	highlightedBraceLocations = locations;
 
 	if (windowIsSplit) {
 		[[textView1 layoutManager] addTemporaryAttributes:highlightBracesColorDict 

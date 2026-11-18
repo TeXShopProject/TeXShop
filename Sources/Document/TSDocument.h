@@ -328,8 +328,10 @@ enum RootCommand
 	BOOL		autoCompleting; // added by Terada
 	BOOL	    contentHighlighting; // added by Terada
 	BOOL	    braceHighlighting; // added by Terada
-	// The number of the last brace highlight and background flash, so that a reset
-	// scheduled earlier does nothing.
+	// The braces and the contents highlighted last, given again when the text is colored again, and the
+	// number of the last brace highlight and background flash, so that a reset scheduled earlier does nothing.
+	NSArray		*highlightedBraceLocations;
+	NSRange		highlightedContentRange;
 	NSUInteger	braceHighlightGeneration, braceFlashGeneration;
 	BOOL		warningGiven;
 	BOOL		omitShellEscape;
@@ -381,6 +383,8 @@ enum RootCommand
 	// The same state for the source of the Experiment window
 	NSInteger scrapLastCursorLocation, scrapLastStringLength;
 	BOOL scrapLastInputIsDelete, scrapBraceHighlighting, scrapContentHighlighting;
+	NSArray *scrapHighlightedBraceLocations;
+	NSRange scrapHighlightedContentRange;
 	NSUInteger scrapBraceHighlightGeneration, scrapBraceFlashGeneration;
 	
 	//Michael Witten: mfwitten@mit.edu

@@ -133,9 +133,15 @@ static void LoadSpellLists(void) {
 - (BOOL)usesTeXAwareSpellChecking { return TeXAwareSpelling; }
 @end
 
+// The brace highlights, never given here.
+NSDictionary *highlightBracesColorDict, *highlightContentColorDict;
 @interface TSDocument : NSObject {
     @public
-    BOOL tagLine, fileIsTex, isLoading, firstTime, indexColor, experimentShown;
+    BOOL tagLine, fileIsTex, isLoading, firstTime, indexColor, experimentShown, windowIsSplit,
+         braceHighlighting, contentHighlighting, scrapBraceHighlighting, scrapContentHighlighting;
+    NSArray *highlightedBraceLocations, *scrapHighlightedBraceLocations;
+    NSRange highlightedContentRange, scrapHighlightedContentRange;
+    NSUInteger braceHighlightGeneration, braceFlashGeneration, scrapBraceHighlightGeneration, scrapBraceFlashGeneration;
     NSUInteger colorStart, colorEnd;
     NSTimeInterval colorTime;
     NSTextView *textView1, *textView2, *scrapTextView, *textView;
