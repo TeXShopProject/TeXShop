@@ -174,6 +174,32 @@ int main(int argc,char **argv){@autoreleasepool{
  NSDictionary *theme=[NSDictionary dictionaryWithContentsOfURL:[fixture URLForResource:@"LiteTheme" withExtension:@"plist" subdirectory:@"Themes"]];Check(theme.count>10,@"Bundled theme fixture loads");[owner setValue:[theme mutableCopy] forKey:@"EditingColors"];
  for(NSString *name in @[@"LiteStyle",@"DarkStyle",@"EditingStyle"]){NSPopUpButton *menu=[owner valueForKey:name];[menu removeAllItems];[menu addItemsWithTitles:@[@"LiteTheme",@"DarkTheme"]];[menu selectItemAtIndex:[name isEqual:@"DarkStyle"]?1:0];}
  [owner FillInColorWells];
+ // A theme file changed elsewhere so that a color is missing or is not a color: saving another color of the theme
+ // completes, the well shows the built-in color, and the missing color is not written into the file.
+ {
+  NSPopUpButton *editing=[owner valueForKey:@"EditingStyle"];[editing selectItemWithTitle:@"DarkTheme"];
+  NSString *path=[ColorPath stringByAppendingPathComponent:@"DarkTheme.plist"];NSDictionary *original=[NSDictionary dictionaryWithContentsOfFile:path];
+  Check(original[@"EditorBackground"]!=nil,@"The dark theme fixture has a background color");
+  NSDictionary *broken=@{@"empty":@[],@"number":@3,@"short":@[@0.5],@"text":@[@"red",@"green",@"blue",@1]};
+  for(NSString *kind in @[@"missing",@"empty",@"number",@"short",@"text",@"nothing"]){
+   [original writeToFile:path atomically:YES];[owner EditingStyleChoice:nil];
+   NSMutableDictionary *changed=[original mutableCopy];
+   if([kind isEqual:@"missing"])[changed removeObjectForKey:@"EditorBackground"];
+   else if([kind isEqual:@"nothing"])[changed removeAllObjects];
+   else changed[@"EditorBackground"]=broken[kind];
+   [changed writeToFile:path atomically:YES];
+   NSMutableDictionary *edit=[owner valueForKey:@"EditingColors"];edit[@"EditorText"]=@[@0.5,@0.3,@0.2,@1];
+   @try{[owner SaveEditedStyle:nil];}
+   @catch(NSException *e){Check(NO,[NSString stringWithFormat:@"Saving a color of a theme whose background is %@ throws: %@",kind,e.reason]);}
+   NSDictionary *disk=[NSDictionary dictionaryWithContentsOfFile:path];
+   Check([disk[@"EditorText"] isEqual:(@[@0.5,@0.3,@0.2,@1])] && (changed[@"EditorBackground"]==nil ? disk[@"EditorBackground"]==nil : [disk[@"EditorBackground"] isEqual:changed[@"EditorBackground"]]),
+         [NSString stringWithFormat:@"A theme whose background is %@ gets the new text color and keeps its background as it is",kind]);
+   NSColorWell *background=[owner valueForKey:@"SourceBackgroundColorWell"];
+   Check(background.color!=nil && [[owner valueForKey:@"EditingColors"] isEqual:disk],[NSString stringWithFormat:@"The background well shows a color when the background is %@",kind]);
+  }
+  [original writeToFile:path atomically:YES];[editing selectItemWithTitle:@"LiteTheme"];
+  [owner setValue:[theme mutableCopy] forKey:@"EditingColors"];[owner setValue:nil forKey:@"lastSavedEditingColors"];[owner FillInColorWells];
+ }
  Check([factory[AutoSaveEnabledKey] isEqual:@"YES"] && ![[owner valueForKey:@"keepBackupButton"]isEnabled],@"Factory string YES disables backup at first opening");
  TSSettingsWindowController *shell=owner.settingsController;Check(shell.categoryIdentifiers.count==10,@"Ten approved categories");
  // Each category refresh is independent; repeated refresh cannot persist values.

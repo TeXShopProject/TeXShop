@@ -114,6 +114,17 @@ NSInteger stringSort(id s1, id s2, void *context)
     return [[TSColorSupport sharedInstance] colorForKey: theKey fromDictionary: EditingColors isWindowDark: withDarkColors];
 }
 
+// The color a well goes back to when it cannot be changed: as before, without its opacity, and the
+// built-in one when the theme has none for the key.
+- (NSColor *)editingOpaqueColorForKey: (NSString *)theKey
+{
+    BOOL withDarkColors = NO;
+#ifdef MOJAVEORHIGHER
+    withDarkColors = (atLeastMojave) && (_prefsWindow.effectiveAppearance.name == NSAppearanceNameDarkAqua);
+#endif
+    return [[TSColorSupport sharedInstance] opaqueColorForKey: theKey fromDictionary: EditingColors isWindowDark: withDarkColors];
+}
+
 // These colors are drawn opaque, so their wells offer no opacity. Colors whose opacity
 // is used (flash, fullwidth background, image copy, preview sync) and the window
 // opacity wells behind the sliders keep it.
@@ -168,18 +179,18 @@ NSInteger stringSort(id s1, id s2, void *context)
         withDarkColors = NO;
 
     
-    SourceTextColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"EditorText"];
-    SourceBackgroundColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"EditorBackground"];
-    SourceInsertionPointColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"EditorInsertionPoint"];
-    PreviewBackgroundColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"PreviewBackground"];
-    ConsoleTextColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"ConsoleText"];
-    ConsoleBackgroundColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"ConsoleBackground"];
-    LogTextColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"LogText"];
-    LogBackgroundColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"LogBackground"];
-    SyntaxCommentColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SyntaxComment"];
-    SyntaxCommandColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SyntaxCommand"];
-    SyntaxMarkerColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SyntaxMarker"];
-    SyntaxIndexColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SyntaxIndex"];
+    SourceTextColorWell.color = [self editingColorForKey: @"EditorText"];
+    SourceBackgroundColorWell.color = [self editingColorForKey: @"EditorBackground"];
+    SourceInsertionPointColorWell.color = [self editingColorForKey: @"EditorInsertionPoint"];
+    PreviewBackgroundColorWell.color = [self editingColorForKey: @"PreviewBackground"];
+    ConsoleTextColorWell.color = [self editingColorForKey: @"ConsoleText"];
+    ConsoleBackgroundColorWell.color = [self editingColorForKey: @"ConsoleBackground"];
+    LogTextColorWell.color = [self editingColorForKey: @"LogText"];
+    LogBackgroundColorWell.color = [self editingColorForKey: @"LogBackground"];
+    SyntaxCommentColorWell.color = [self editingColorForKey: @"SyntaxComment"];
+    SyntaxCommandColorWell.color = [self editingColorForKey: @"SyntaxCommand"];
+    SyntaxMarkerColorWell.color = [self editingColorForKey: @"SyntaxMarker"];
+    SyntaxIndexColorWell.color = [self editingColorForKey: @"SyntaxIndex"];
     
     //markerParenColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SyntaxMarkerParen"];
     //markerCurlyColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SyntaxMarkerCurly"];
@@ -199,9 +210,9 @@ NSInteger stringSort(id s1, id s2, void *context)
     explmsgColorWell.color = [self editingColorForKey: @"explmsg"];
    
     
-    EditorHighlightBracesColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"EditorHighlightBraces"];
-    EditorHighlightContentColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"EditorHighlightContent"];
-    EditorInvisibleCharColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"EditorInvisibleChar"];
+    EditorHighlightBracesColorWell.color = [self editingColorForKey: @"EditorHighlightBraces"];
+    EditorHighlightContentColorWell.color = [self editingColorForKey: @"EditorHighlightContent"];
+    EditorInvisibleCharColorWell.color = [self editingColorForKey: @"EditorInvisibleChar"];
     EditorHighlightZenkakuSymbolColorWell.color = [self fullwidthHighlightColorForKey: @"EditorHighlightZenkakuSymbol"];
     EditorHighlightZenkakuSymbolBackgroundColorWell.color = [self fullwidthHighlightColorForKey: @"EditorHighlightZenkakuSymbolBackground"];
     flashColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"EditorFlash"];
@@ -216,7 +227,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     
     footnoteCol = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"FootnoteColor"];
     if (footnoteCol == nil)
-        footnoteCol = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SyntaxCommand"];
+        footnoteCol = [self editingColorForKey: @"SyntaxCommand"];
     FootnoteColorWell.color = footnoteCol;
 /*
     else if (withDarkColors)
@@ -234,13 +245,13 @@ NSInteger stringSort(id s1, id s2, void *context)
         EntryColorWell.color = [colorSupport liteColorAndAlphaWithKey: @"EntryColor"];
 
         
-    EditorReverseSyncColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"EditorReverseSync"];
-    PreviewDirectSyncColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"PreviewDirectSync"];
+    EditorReverseSyncColorWell.color = [self editingColorForKey: @"EditorReverseSync"];
+    PreviewDirectSyncColorWell.color = [self editingColorForKey: @"PreviewDirectSync"];
     SourceAlphaColorWell.color = TSThemeWindowAlphaColor(EditingColors, TSThemeSourceAlphaKey);
     PreviewAlphaColorWell.color = TSThemeWindowAlphaColor(EditingColors, TSThemePreviewAlphaKey);
     ConsoleAlphaColorWell.color = TSThemeWindowAlphaColor(EditingColors, TSThemeConsoleAlphaKey);
-    ImageForegroundColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"ImageForeground"];
-    ImageBackgroundColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"ImageBackground"];
+    ImageForegroundColorWell.color = [self editingColorForKey: @"ImageForeground"];
+    ImageBackgroundColorWell.color = [self editingColorForKey: @"ImageBackground"];
     
     aColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"XMLComment"];
     if (aColor != nil)
@@ -298,29 +309,11 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     NSString *title = EditingStyle.titleOfSelectedItem;
     if (title == nil || EditingColors == nil || self.lastSavedEditingColors == nil) return;
-    // Only the colors changed here replace those of the file as it is now: another TeXShop, or the one-time update of
-    // the bundled colors, may have changed other colors since the file was read.
+    // Only the colors changed here replace those of the file as it is now (TSThemeFileStore).
     NSDictionary<NSString *, id> *before = self.lastSavedEditingColors;
-    NSDictionary<NSString *, id> *file = [[self themeStore] readTitle:title] ?: before;
-    NSMutableDictionary<NSString *, id> *colors = [file mutableCopy];
-    NSMutableSet<NSString *> *keys = [NSMutableSet setWithArray:EditingColors.allKeys];
-    [keys addObjectsFromArray:before.allKeys];
-    [keys addObjectsFromArray:file.allKeys];
-    [keys removeObject:@"Title"];
-    BOOL othersChanged = NO;
-    for (NSString *key in keys) {
-        id now = EditingColors[key];
-        if (now == before[key] || [now isEqual:before[key]]) {
-            othersChanged = othersChanged || !(file[key] == before[key] || [file[key] isEqual:before[key]]);
-            continue;
-        }
-        if (now != nil)
-            colors[key] = now;
-        else
-            [colors removeObjectForKey:key];
-    }
     NSError *error = nil;
-    if (![[self themeStore] writeColors:colors title:title error:&error]) {
+    NSDictionary<NSString *, id> *written = [[self themeStore] writeChangesFrom:before to:EditingColors title:title error:&error];
+    if (written == nil) {
         NSDictionary<NSString *, id> *saved = [[self themeStore] readTitle:title] ?: self.lastSavedEditingColors;
         EditingColors = [saved mutableCopy];
         self.lastSavedEditingColors = saved;
@@ -328,9 +321,18 @@ NSInteger stringSort(id s1, id s2, void *context)
         [self showPreferenceError:NSLocalizedString(@"The theme could not be saved. Its last saved colors have been restored.", @"")];
         return;
     }
-    colors[@"Title"] = title;
-    EditingColors = colors;
-    self.lastSavedEditingColors = [colors copy];
+    // Colors not changed here that the file had changed meanwhile.
+    NSMutableSet<NSString *> *keys = [NSMutableSet setWithArray:written.allKeys];
+    [keys addObjectsFromArray:before.allKeys];
+    [keys removeObject:@"Title"];
+    BOOL othersChanged = NO;
+    for (NSString *key in keys) {
+        id mine = EditingColors[key];
+        if ((mine == before[key] || [mine isEqual:before[key]]) && !(written[key] == before[key] || [written[key] isEqual:before[key]]))
+            othersChanged = YES;
+    }
+    EditingColors = [written mutableCopy];
+    self.lastSavedEditingColors = written;
     // The wells show the colors changed elsewhere.
     if (othersChanged)
         [self FillInColorWells];
@@ -400,7 +402,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"EditorText"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"EditorText"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -417,7 +419,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"EditorBackground"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"EditorBackground"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -433,7 +435,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"EditorInsertionPoint"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"EditorInsertionPoint"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -449,7 +451,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"PreviewBackground"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"PreviewBackground"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -465,7 +467,7 @@ NSInteger stringSort(id s1, id s2, void *context)
    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"ConsoleText"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"ConsoleText"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -481,7 +483,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"ConsoleBackground"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"ConsoleBackground"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -497,7 +499,7 @@ NSInteger stringSort(id s1, id s2, void *context)
    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"LogText"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"LogText"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -513,7 +515,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"LogBackground"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"LogBackground"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -530,7 +532,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"SyntaxComment"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"SyntaxComment"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -546,7 +548,7 @@ NSInteger stringSort(id s1, id s2, void *context)
    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"SyntaxCommand"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"SyntaxCommand"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -562,7 +564,7 @@ NSInteger stringSort(id s1, id s2, void *context)
    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"SyntaxMarker"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"SyntaxMarker"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -579,7 +581,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"SyntaxIndex"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"SyntaxIndex"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -595,7 +597,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"FootnoteColor"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"FootnoteColor"];
         if (oldColor != nil)
             ((NSColorWell *)sender).color = oldColor;
         return;
@@ -612,7 +614,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"EntryColor"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"EntryColor"];
         if (oldColor != nil)
             ((NSColorWell *)sender).color = oldColor;
         return;
@@ -631,7 +633,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"EditorReverseSync"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"EditorReverseSync"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -647,7 +649,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"PreviewDirectSync"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"PreviewDirectSync"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -664,7 +666,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"EditorHighlightBraces"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"EditorHighlightBraces"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -680,7 +682,7 @@ NSInteger stringSort(id s1, id s2, void *context)
    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"EditorHighlightContent"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"EditorHighlightContent"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -696,7 +698,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"EditorInvisibleChar"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"EditorInvisibleChar"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -710,13 +712,11 @@ NSInteger stringSort(id s1, id s2, void *context)
 - (NSColor *)fullwidthHighlightColorForKey:(NSString *)key
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
-    NSArray *components = EditingColors[key];
-    if (components.count >= 4)
-        return [colorSupport colorAndAlphaFromDictionary:EditingColors andKey:key];
-    if (components.count == 3)
-        return [colorSupport colorFromDictionary:EditingColors andKey:key];
+    NSColor *color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey:key];
+    if (color != nil)
+        return color;
     NSString *fallback = [key hasSuffix:@"Background"] ? @"EditorBackground" : @"EditorText";
-    return [colorSupport colorAndAlphaFromDictionary:EditingColors andKey:fallback];
+    return [self editingColorForKey:fallback];
 }
 
 - (IBAction)EditorHighlightZenkakuSymbolChanged:sender
@@ -750,7 +750,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"EditorFlash"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"EditorFlash"];
         if (oldColor != nil)
             ((NSColorWell *)sender).color = oldColor;
         return;
@@ -826,7 +826,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"ImageForeground"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"ImageForeground"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -842,7 +842,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"ImageBackground"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"ImageBackground"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -858,7 +858,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"XMLComment"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"XMLComment"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -874,7 +874,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"XMLTag"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"XMLTag"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -890,7 +890,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"XMLSpecial"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"XMLSpecial"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -906,7 +906,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"XMLParameter"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"XMLParameter"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -922,7 +922,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"XMLValue"];
+        NSColor *oldColor = [self editingOpaqueColorForKey: @"XMLValue"];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }

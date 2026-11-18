@@ -356,15 +356,32 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
 }
 
 
+// A color of a theme is an array of red, green, blue and, mostly, opacity. Anything else (a theme
+// file edited by hand or by another program) counts as a color the theme does not have.
+static NSArray *TSColorComponents(id value)
+{
+    if (![value isKindOfClass:NSArray.class] || [value count] < 3)
+        return nil;
+    for (id component in value)
+        if (![component isKindOfClass:NSNumber.class])
+            return nil;
+    return value;
+}
+
+static double TSColorOpacity(NSArray *components)
+{
+    return components.count >= 4 ? [components[3] doubleValue] : 1.0;
+}
+
 // Themes made before brackets had their own colors only define SyntaxMarker.
 - (NSArray *) colorArrayFromDictionary:(NSDictionary *)theDictionary andKey: (NSString *)theKey
 {
-    NSArray *theColorArray = [theDictionary objectForKey: theKey];
+    NSArray *theColorArray = TSColorComponents([theDictionary objectForKey: theKey]);
     if ((theColorArray == nil) &&
         ([theKey isEqualToString: @"SyntaxMarkerParen"] ||
          [theKey isEqualToString: @"SyntaxMarkerCurly"] ||
          [theKey isEqualToString: @"SyntaxMarkerSquare"]))
-        theColorArray = [theDictionary objectForKey: @"SyntaxMarker"];
+        theColorArray = TSColorComponents([theDictionary objectForKey: @"SyntaxMarker"]);
     return theColorArray;
 }
 
@@ -381,10 +398,10 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
 
 - (NSColor *) colorAndAlphaFromDictionary:(NSDictionary *)theDictionary andKey: (NSString *)theKey
 {
-    NSArray *theColorArray = [theDictionary objectForKey: theKey];
+    NSArray *theColorArray = TSColorComponents([theDictionary objectForKey: theKey]);
     if (theColorArray == nil)
         return nil;
-    NSColor *theColor = [NSColor colorWithRed: [theColorArray[0] doubleValue]  green: [theColorArray[1] doubleValue]  blue: [theColorArray[2] doubleValue]  alpha: [theColorArray[3] doubleValue]];
+    NSColor *theColor = [NSColor colorWithRed: [theColorArray[0] doubleValue]  green: [theColorArray[1] doubleValue]  blue: [theColorArray[2] doubleValue]  alpha: TSColorOpacity(theColorArray)];
     
     return theColor;
 }
@@ -523,7 +540,7 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
     NSArray *theColorArray = [self colorArrayFromDictionary: theDictionary andKey: theKey];
     if (theColorArray != nil)
         {
-            theColor = [NSColor colorWithRed: [theColorArray[0] doubleValue]  green: [theColorArray[1] doubleValue]  blue: [theColorArray[2] doubleValue]  alpha: [theColorArray[3] doubleValue]];
+            theColor = [NSColor colorWithRed: [theColorArray[0] doubleValue]  green: [theColorArray[1] doubleValue]  blue: [theColorArray[2] doubleValue]  alpha: TSColorOpacity(theColorArray)];
             return (theColor);
         }
     if (mode)
