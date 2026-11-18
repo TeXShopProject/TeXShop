@@ -203,7 +203,8 @@ preview_mutations = {
     'click-keeps-selection': ('NSEqualRects(self.frame, _startFrame)) self.selection = nil;', 'NO) self.selection = nil;'),
     'click-keeps-focus': ('    if (owner && self.window.firstResponder != owner) [self.window makeFirstResponder:owner];\n', ''),
     'no-page-label': ('    if (!self.pageLabel.length) return;\n', '    return;\n'),
-    'label-in-page-points': ('[NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize * unit]', '[NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize]'),
+    'label-in-page-points': ('    CGFloat fontSize = TSLinkPreviewLabelFontSize * scale;\n',
+                             '    CGFloat fontSize = TSLinkPreviewLabelFontSize;\n'),
     'tooltip-kept': ('if (annotation && (__bridge void *)annotation == data && [pdfView showsLinkPreviewForAnnotation:annotation])', 'if (NO)'),
     'tooltip-trusts-data': ('if (annotation && (__bridge void *)annotation == data && [pdfView showsLinkPreviewForAnnotation:annotation])',
                             'if (annotation && [pdfView showsLinkPreviewForAnnotation:annotation])'),
@@ -1032,13 +1033,15 @@ static void testPageLabelAndToolTips(MyPDFKitView *view, NSWindow *window, PDFDo
     CGFloat unit = NSWidth([view.documentView convertRect:NSMakeRect(0,0,1,1) fromView:nil]);
     NSRect bounds = preview.bounds;
     NSBitmapImageRep *rep = render(preview);
-    NSRect corner = NSMakeRect(NSMaxX(bounds) - 30 * unit, NSMinY(bounds) + 3 * unit, 26 * unit, 10 * unit);
-    NSRect left = NSMakeRect(NSMinX(bounds) + 4 * unit, NSMinY(bounds) + 3 * unit, 26 * unit, 10 * unit);
+    // The capsule sits just inside the page-point corner, about 7 page points in, not on the
+    // old 3-point screen margin. At 200% its type is 11 points on screen.
+    NSRect corner = NSMakeRect(NSMaxX(bounds) - 24, NSMinY(bounds) + 8, 12, 4);
+    NSRect left = NSMakeRect(NSMinX(bounds) + 4 * unit, NSMinY(bounds) + 8, 26 * unit, 4);
     check(grayShare(rep, preview, corner) > 0.3 && grayShare(rep, preview, left) < 0.01,
           @"page label is drawn in the lower right corner");
     // The label keeps the size it has on screen (#14). At 200% a label in page points would
     // reach this far left; one that stays on screen does not.
-    NSRect grown = NSMakeRect(NSMaxX(bounds) - 44, NSMinY(bounds) + 5, 6, 6);
+    NSRect grown = NSMakeRect(NSMaxX(bounds) - 52, NSMinY(bounds) + 8, 6, 4);
     check(grayShare(rep, preview, grown) < 0.01, @"page label stays the size it has on screen");
     NSRect beyond = NSMakeRect(NSMaxX(bounds) - 90, NSMinY(bounds) + 3, 20, 10);
     check(grayShare(rep, preview, beyond) < 0.01, @"page label ends at its text");

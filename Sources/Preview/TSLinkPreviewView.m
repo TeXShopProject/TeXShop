@@ -14,9 +14,10 @@ static const CGFloat TSLinkPreviewKeptMinimum = 20;
 // Page points around a line that still count as its text, so the cursor does not flicker
 // between lines.
 static const CGFloat TSLinkPreviewLineSlack = 2;
-// The page label in the lower right corner: white bold text on a gray capsule, in points on
-// screen. A label in page points grew with the text and was much too large once the preview
-// was magnified; this is the size of a popup opened at the current magnification (#14).
+// The page label in the lower right: white bold text on a gray capsule. Eleven points on
+// screen at 100% and above, the size of a popup opened at the current magnification. Below
+// 100% that size is larger, in page points, than the label drawn at 100%, and it then covers
+// the page or is dropped, so the label is never larger than it is at 100% (#14).
 static const CGFloat TSLinkPreviewLabelFontSize = 11;
 static const CGFloat TSLinkPreviewLabelMargin = 3;
 // The popup's corners, in page points, so they grow and shrink with the page in the popup.
@@ -174,15 +175,44 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
 - (void)drawPageLabelInRect:(NSRect)bounds
 {
     if (!self.pageLabel.length) return;
-    // Points on screen, so the label stays the size it has at the current magnification (#14).
+    // `scale` is one screen point, in page points, and never more than one page point.
+    // Above 100% the label stays eleven points on screen. Below 100% it stays the size it
+    // has at 100%, which still fits a short popup near the bottom of the page (#14).
     CGFloat unit = [self unitsPerScreenPoint];
-    NSDictionary *attributes = @{NSFontAttributeName: [NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize * unit],
-                                 NSForegroundColorAttributeName: NSColor.whiteColor};
-    NSSize size = [self.pageLabel sizeWithAttributes:attributes];
-    CGFloat height = ceil(size.height), radius = height / 2, margin = TSLinkPreviewLabelMargin * unit;
-    NSRect capsule = NSMakeRect(NSMaxX(bounds) - margin - ceil(size.width) - 2 * radius, NSMinY(bounds) + margin,
-                                ceil(size.width) + 2 * radius, height);
-    if (NSWidth(capsule) > NSWidth(bounds) - 2 * margin || NSHeight(capsule) > NSHeight(bounds) - 2 * margin) return;
+    CGFloat scale = MIN(unit, 1);
+    CGFloat fontSize = TSLinkPreviewLabelFontSize * scale;
+    CGFloat margin = TSLinkPreviewLabelMargin * scale;
+    // The corners and the edge are in page points, so they grow on screen. A label on the
+    // screen-point margin sits in that curve and under the stroke. The capsule stays on the
+    // straight part of the frame (#14).
+    CGFloat edge = MAX(TSLinkPreviewEdgeWidth, [self unitsPerPixel]);
+    CGFloat inset = MAX(margin, TSLinkPreviewCornerRadius + edge);
+    CGFloat roomW = NSWidth(bounds) - 2 * inset, roomH = NSHeight(bounds) - 2 * inset;
+    if (roomW < 1 || roomH < 1) return;
+    NSDictionary *attributes = nil;
+    NSSize size = NSZeroSize;
+    CGFloat height = 0, radius = 0;
+    NSRect capsule = NSZeroRect;
+    // A short popup can still be too low for the 100% label once the corner is left clear.
+    // Shrink the type to the room instead of dropping the page information.
+    for (NSInteger attempt = 0; attempt < 8; attempt++) {
+        attributes = @{NSFontAttributeName: [NSFont boldSystemFontOfSize:fontSize],
+                       NSForegroundColorAttributeName: NSColor.whiteColor};
+        size = [self.pageLabel sizeWithAttributes:attributes];
+        height = ceil(size.height);
+        radius = height / 2;
+        capsule = NSMakeRect(NSMaxX(bounds) - inset - ceil(size.width) - 2 * radius, NSMinY(bounds) + inset,
+                             ceil(size.width) + 2 * radius, height);
+        if (NSWidth(capsule) <= roomW && NSHeight(capsule) <= roomH) break;
+        // A factor that only just misses 1 stalls on the rounded line height, so step down
+        // by at least a tenth and keep the page information instead of dropping it.
+        CGFloat fit = MIN(roomW / NSWidth(capsule), roomH / NSHeight(capsule));
+        CGFloat next = fontSize * MIN(fit, (CGFloat)0.9);
+        if (!(next < fontSize)) next = fontSize * 0.9;
+        if (!(next > 1)) return;
+        fontSize = next;
+    }
+    if (NSWidth(capsule) > roomW || NSHeight(capsule) > roomH) return;
     [NSGraphicsContext saveGraphicsState];
     [[NSGraphicsContext currentContext] setShouldAntialias:YES];
     [[NSColor colorWithWhite:0.55 alpha:0.8] setFill];
