@@ -113,6 +113,8 @@ MUTATIONS = {
     # Highlight Fullwidth Letters and Symbols.
     'syntax-off-keeps-fullwidth': (SYNTAX, '\t\tTSRemoveFullwidthBackground([textView1 layoutManager], theRange);\n\t\tTSRemoveFullwidthBackground([textView2 layoutManager], theRange);\n\t\tTSRemoveFullwidthBackground([scrapTextView layoutManager], NSMakeRange(0, scrapTextView.string.length));\n', ''),
     'syntax-off-loses-active-line': (SYNTAX, '\t\tif (self.syntaxcolorEntry) {\n\t\t\t[self cursorMoved:textView1];', '\t\tif (NO) {\n\t\t\t[self cursorMoved:textView1];'),
+    'brace-reset-loses-active-line': (DOCUMENT, '\tif (self.syntaxcolorEntry && (!fileIsTex || !self.syntaxColor)) {', '\tif (NO) {'),
+    'experiment-brace-reset-loses-active-line': (EXPERIMENT, '    if (self.syntaxcolorEntry && (!fileIsTex || !self.syntaxColor))\n        [self refreshExperimentCurrentLine];', ''),
     'fullwidth-switch-ignored': (SYNTAX, '[SUD boolForKey:HighlightFullwidthSymbolsKey] &&\n        [self.syntaxColorScheme', '[self.syntaxColorScheme'),
     'fullwidth-not-posted': (EFFECTS, 'CheckParenEnabledKey, HighlightFullwidthSymbolsKey, ', 'CheckParenEnabledKey, '),
     'fullwidth-not-observed': (DOCUMENT, 'addObserver:self selector:@selector(colorizeAll)', 'addObserver:self selector:@selector(description)'),
@@ -1065,6 +1067,19 @@ int main(void) { @autoreleasepool {
             if (!inExperiment) {
                 [doc cursorMoved:lower];
                 Check([Background(lower, 6) isEqual:contents] && [Background(lower, 0) isEqual:wide], "lower half: the same with the active line drawn there");
+            }
+            // Syntax coloring of the document turned off while the contents are highlighted: the highlight
+            // ends, the fullwidth backgrounds go, and the active line keeps its color once all that was
+            // put off is done; on again, as before.
+            if (scheme == 0) {
+                [doc toggleSyntaxColor:nil]; Spin(0.30);
+                Check(!doc.syntaxColor && [Background(view, 3) isEqual:line] && [Background(view, 9) isEqual:line] && [Background(view, 10) isEqual:line]
+                      && Background(view, 0) == nil && Background(view, 13) == nil,
+                      NAME("syntax coloring off while contents are highlighted: the active line keeps its color, no fullwidth background"));
+                [doc toggleSyntaxColor:nil]; Spin(0.05);
+                Cursor(4); Cursor(5); Spin(0.05); [doc cursorMoved:view];
+                Check(doc.syntaxColor && [Background(view, 3) isEqual:line] && [Background(view, 6) isEqual:contents] && [Background(view, 0) isEqual:wide],
+                      NAME("syntax coloring on again: the contents, the active line and fullwidth backgrounds as before"));
             }
             [view setSelectedRange:NSMakeRange(14, 0)]; Spin(0.05); [doc cursorMoved:view];
             Check(Background(view, 5) == nil && [Background(view, 6) isEqual:wide] && [Background(view, 13) isEqual:line],
