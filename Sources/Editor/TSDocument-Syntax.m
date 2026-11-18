@@ -102,6 +102,44 @@ static BOOL TSTextStorageHasMarkedText(NSTextStorage *storage)
 
 
 
+// The background that coloring gives fullwidth characters comes with a mark of its own,
+// whose value is that background. Coloring removes it where it still has that value, so
+// that it does not stay on a character that is no longer one to highlight (in a comment,
+// say), and leaves other backgrounds, of any color, as they are.
+static NSAttributedStringKey const TSFullwidthBackgroundMark = @"TSFullwidthBackground";
+
+static void TSRemoveFullwidthBackground(NSLayoutManager *layoutManager, NSRange range)
+{
+    for (NSUInteger i = range.location; i < NSMaxRange(range); ) {
+        NSRange marked;
+        id mark = [layoutManager temporaryAttribute:TSFullwidthBackgroundMark atCharacterIndex:i longestEffectiveRange:&marked inRange:range];
+        if (mark) {
+            for (NSUInteger j = marked.location; j < NSMaxRange(marked); ) {
+                NSRange effective;
+                id background = [layoutManager temporaryAttribute:NSBackgroundColorAttributeName atCharacterIndex:j longestEffectiveRange:&effective inRange:marked];
+                if (background == mark)
+                    [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:effective];
+                j = MAX(NSMaxRange(effective), j + 1);
+            }
+            [layoutManager removeTemporaryAttribute:TSFullwidthBackgroundMark forCharacterRange:marked];
+        }
+        i = MAX(NSMaxRange(marked), i + 1);
+    }
+}
+
+static void TSMarkFullwidthBackground(NSLayoutManager *layoutManager, NSRange range, NSColor *background)
+{
+    if (!background)
+        return;
+    for (NSUInteger i = range.location; i < NSMaxRange(range); ) {
+        NSRange effective;
+        id value = [layoutManager temporaryAttribute:NSBackgroundColorAttributeName atCharacterIndex:i longestEffectiveRange:&effective inRange:range];
+        if (value == background)
+            [layoutManager addTemporaryAttribute:TSFullwidthBackgroundMark value:background forCharacterRange:effective];
+        i = MAX(NSMaxRange(effective), i + 1);
+    }
+}
+
 // Colorize ("perform syntax highlighting") all the characters in the given range.
 // Can only recolor full lines, so the given range will be extended accordingly before the
 // coloring takes place.
@@ -307,6 +345,8 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     // HERE-RED
    if (( ! self.syntaxcolorEntry) && ( ![SUD boolForKey:AlwaysHighlightEnabledKey]))
       [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:colorRange];
+   else
+      TSRemoveFullwidthBackground(layoutManager, colorRange);
     
     // the next line was added by Daniel Toundykov to allow changing the foreground and background source colors
     // [layoutManager addTemporaryAttributes:self.regularColorAttribute forCharacterRange:colorRange];
@@ -335,6 +375,7 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     TSSyntaxTeXScanner *scanner = [[TSSyntaxTeXScanner alloc] initWithOptions:options];
     TSSyntaxHighlighter *highlighter = [[TSSyntaxHighlighter alloc] initWithTextView:aTextView scanner:scanner scheme:self.syntaxColorScheme];
     [highlighter applyTokensInRange:colorRange];
+    TSMarkFullwidthBackground(layoutManager, colorRange, [self.syntaxColorScheme attributesForRole:TSSyntaxRoleFullwidthSymbol][NSBackgroundColorAttributeName]);
     
     // Now we color the background of the active line
     [self doEntryLineAndCursorColoring: (NSTextView *)aTextView];
