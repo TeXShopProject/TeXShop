@@ -787,7 +787,7 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
                 }
                 sizes[k] = 0;
                 for (NSUInteger i = 0; i < count; i++)
-                    if (pieces[i][0] <= pieces[i][1] + 1e-12) {
+                    if (pieces[i][0] <= pieces[i][1]) {
                         // Pieces in order and not overlapping.
                         if (sizes[k] > 0 && pieces[i][0] <= sets[k][sizes[k] - 1][1])
                             sets[k][sizes[k] - 1][1] = MAX(sets[k][sizes[k] - 1][1], pieces[i][1]);
@@ -819,9 +819,12 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
                         count = 2;
                     }
                     for (NSUInteger j = 0; j < count; j++) {
-                        if (ranges[j][0] > ranges[j][1] + 1e-12)
+                        if (ranges[j][0] > ranges[j][1])
                             continue;
-                        CGFloat candidate = MIN(MAX(targets[k], ranges[j][0]), ranges[j][1]);
+                        // Nearest the built-in color, but inside the range by up to 0.001, so that the pairs keep
+                        // what margin they can: a thin range gives its middle.
+                        CGFloat inside = MIN(1e-3, (ranges[j][1] - ranges[j][0]) / 2);
+                        CGFloat candidate = MIN(MAX(targets[k], ranges[j][0] + inside), ranges[j][1] - inside);
                         if (fabs(candidate - targets[k]) < distance) {
                             distance = fabs(candidate - targets[k]);
                             chosenX = candidate;
@@ -853,9 +856,8 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
                     return NO;
             return YES;
         };
-        // A little more than 4.5, so that the grays still read after they are made into colors: the widest
-        // margin that can be had, down to one far above the rounding of numbers.
-        CGFloat margins[4] = {1e-4, 1e-6, 1e-9, 1e-12};
+        // Exactly 4.5: the margin comes from choosing inside the ranges (above).
+        CGFloat enough = log(4.5);
         // The greatest distance for which test(distance) holds, by halving.
         CGFloat (^greatest)(BOOL (^)(CGFloat)) = ^CGFloat(BOOL (^test)(CGFloat)) {
             CGFloat reached = 0, unreached = log(21.0) + 1e-6;
@@ -868,16 +870,9 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
             }
             return reached;
         };
-        BOOL found = NO;
-        for (int m = 0; m < 4 && !found; m++)
-            found = solve(log(4.5) + margins[m], log(4.5) + margins[m], x) && reads(x);
+        BOOL found = solve(enough, enough, x) && reads(x);
         if (!found) {
-            CGFloat text = greatest(^BOOL(CGFloat d) { return solve(d, 0, NULL); });
-            for (int m = 0; m < 4; m++)
-                if (solve(log(4.5) + margins[m], 0, NULL)) {
-                    text = log(4.5) + margins[m];
-                    break;
-                }
+            CGFloat text = solve(enough, 0, NULL) ? enough : greatest(^BOOL(CGFloat d) { return solve(d, 0, NULL); });
             CGFloat cursor = greatest(^BOOL(CGFloat d) { return solve(text, d, NULL); });
             found = solve(text, cursor, x);
         }

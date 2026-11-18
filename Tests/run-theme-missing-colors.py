@@ -220,6 +220,13 @@ int main(int argc, char **argv) { @autoreleasepool {
     NSMutableDictionary *exactSwapped = [exact mutableCopy];
     exactSwapped[@"EditorText"] = exact[@"EditorInsertionPoint"]; exactSwapped[@"EditorInsertionPoint"] = exact[@"EditorText"];
     named[@"Mine (exact boundary, swapped)"] = exactSwapped;
+    // The 2nd audit of the gray refinement: fractional components, background and active line #767676, text and cursor
+    // grays reading exactly 4.5 on it (to 2e-13).
+    NSMutableDictionary *fraction = [named[@"LiteTheme"] mutableCopy];
+    fraction[@"EditorText"] = @[@0.9956969919249633, @0.9956969919249633, @0.9956969919249633, @1];
+    fraction[@"EditorInsertionPoint"] = @[@0.017698230157346905, @0.017698230157346905, @0.017698230157346905, @1];
+    fraction[@"EditorBackground"] = fraction[@"EntryColor"] = @[@(118 / 255.0), @(118 / 255.0), @(118 / 255.0), @1];
+    named[@"Mine (fractional boundary)"] = fraction;
     // Any of the colors of the pairs lacking, one to all eight (a theme may never have had some, and may lose
     // others); in both appearances.
     NSArray *keys = @[@"EditorText", @"EditorBackground", @"EditorInsertionPoint", @"EntryColor", @"ConsoleText", @"ConsoleBackground", @"LogText", @"LogBackground"];
@@ -334,11 +341,54 @@ int main(int argc, char **argv) { @autoreleasepool {
         }
         printf("PASS: %lu cases of 8-bit themes on the boundary (text and cursor just reaching 4.5 on the background): without the background, both read at least 4.5\n", (unsigned long)boundaryCases);
     }
+    NSColor *(^random)(void) = ^NSColor *(void) { return [NSColor colorWithRed:drand48() green:drand48() blue:drand48() alpha:1]; };
+    // Fractional themes on the boundary: a random background of the middle lightness (2000, seeded), and gray text
+    // and cursor whose contrast with it is 4.5 plus a window of 1e-12, 1e-11, 1e-9, 1e-6 or 1e-3 (text darker or lighter);
+    // the themes whose pairs read (as computed) are taken. Without the background, and without the background and the
+    // active line, in both appearances, the text and the cursor read at least 4.5.
+    {
+        srand48(2611182);
+        // The gray of lightness l (sRGB).
+        NSColor *(^grayOfLightness)(double) = ^NSColor *(double l) {
+            double v = l <= 0.03928 / 12.92 ? l * 12.92 : 1.055 * pow(l, 1 / 2.4) - 0.055;
+            return [NSColor colorWithRed:v green:v blue:v alpha:1];
+        };
+        double windows[5] = {1e-12, 1e-11, 1e-9, 1e-6, 1e-3};
+        NSUInteger fractionCases = 0, taken = 0;
+        for (int number = 0; number < 2000; number++) {
+            NSColor *background;
+            double l;
+            do { background = random(); l = Luminance(background); } while (!((l + 0.05) * 4.5 - 0.05 <= 1 && (l + 0.05) / 4.5 - 0.05 >= 0));
+            double window = windows[number % 5];
+            NSColor *darker = grayOfLightness((l + 0.05) / (4.5 + window) - 0.05), *lighter = grayOfLightness((l + 0.05) * (4.5 + window) - 0.05);
+            if (Contrast(darker, background) < 4.5 || Contrast(lighter, background) < 4.5) continue;
+            taken++;
+            for (int way = 0; way < 2; way++) {
+                NSMutableDictionary *whole = [named[@"LiteTheme"] mutableCopy];
+                whole[@"EditorText"] = components(way ? lighter : darker); whole[@"EditorInsertionPoint"] = components(way ? darker : lighter);
+                whole[@"EditorBackground"] = whole[@"EntryColor"] = components(background);
+                for (NSArray *lost in @[@[@"EditorBackground"], @[@"EditorBackground", @"EntryColor"]])
+                    for (int dark = 0; dark <= 1; dark++) {
+                        mode = dark ? "dark (fractional boundary)" : "light (fractional boundary)";
+                        NSMutableDictionary *theme = [whole mutableCopy];
+                        [theme removeObjectsForKeys:lost];
+                        NSColor *drawnBackground = [colors opaqueColorForKey:@"EditorBackground" fromDictionary:theme isWindowDark:dark];
+                        double text = Contrast([colors opaqueColorForKey:@"EditorText" fromDictionary:theme isWindowDark:dark], drawnBackground);
+                        double cursor = Contrast([colors opaqueColorForKey:@"EditorInsertionPoint" fromDictionary:theme isWindowDark:dark], drawnBackground);
+                        if (text < 4.5 || cursor < 4.5)
+                            fprintf(stderr, "fractional boundary %d (window %g) without %s: text %.17g, cursor %.17g\n", number, window, [lost componentsJoinedByString:@"+"].UTF8String, text, cursor);
+                        REQUIRE(text >= 4.5 && cursor >= 4.5);
+                        REQUIRE(SameRGB([colors colorForKey:@"EditorBackground" fromDictionary:theme isWindowDark:dark], drawnBackground));
+                        fractionCases++;
+                    }
+            }
+        }
+        printf("PASS: %lu cases of %lu fractional themes on the boundary (windows down to 1e-12): without the background, text and cursor read at least 4.5\n", (unsigned long)fractionCases, (unsigned long)taken);
+    }
     // Random themes of the user's own (seeded), all of whose pairs read, without each one of the colors that go in
     // pairs and without two random sets of them: the pairs with a lacking color read whenever colors of any lightness
     // would make them read (checked analytically), and the wells' look-up gives the colors drawn.
     srand48(20261118);
-    NSColor *(^random)(void) = ^NSColor *(void) { return [NSColor colorWithRed:drand48() green:drand48() blue:drand48() alpha:1]; };
     NSColor *(^reading)(NSColor *) = ^NSColor *(NSColor *other) { NSColor *c; do c = random(); while (Contrast(c, other) < 4.5); return c; };
     NSUInteger randomCases = 0, randomPairs = 0, noGrayReads = 0;
     for (int number = 0; number < 2000; number++) {
@@ -435,8 +485,8 @@ if '--mutations' in sys.argv:
         'no grays of any lightness': ('readers', '    if (best < 4.5 - 1e-9) {', '    if (NO) {', 0),
         'not the text first': ('readers', 'CGFloat cursor = greatest(^BOOL(CGFloat d) { return solve(text, d, NULL); });',
                                'text = greatest(^BOOL(CGFloat d) { return solve(d, d, NULL); });\n            CGFloat cursor = text;', 0),
-        'no margin above 4.5': ('readers', 'CGFloat margins[4] = {1e-4, 1e-6, 1e-9, 1e-12};', 'CGFloat margins[4] = {-1e-3, -1e-3, -1e-3, -1e-3};', 0),
-        'only a wide margin': ('readers', 'CGFloat margins[4] = {1e-4, 1e-6, 1e-9, 1e-12};', 'CGFloat margins[4] = {1e-4, 1e-4, 1e-4, 1e-4};', 0),
+        'at the edge of the range': ('readers', 'CGFloat inside = MIN(1e-3, (ranges[j][1] - ranges[j][0]) / 2);', 'CGFloat inside = 0;', 0),
+        'below 4.5': ('readers', 'CGFloat enough = log(4.5);', 'CGFloat enough = log(4.5) - 1e-3;', 0),
         'no cursor pair': ('readers', 'bestCursor[bg] = MAX(bestCursor[bg], score(2, bg, 3, c));', 'bestCursor[bg] = 4.5;', 0),
         'no active-line pair': ('readers', 'bestLine[t] = MAX(bestLine[t], score(0, e, 1, t));', 'bestLine[t] = 4.5;', 0),
         'the first pair only': ('readers', 'best = MAX(best, MIN(MIN(score(1, t, 2, bg), bestLine[t]), bestCursor[bg]));', 'best = MAX(best, score(1, t, 2, bg));', 0),
