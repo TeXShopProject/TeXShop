@@ -96,6 +96,7 @@
 "catalog.editor.3.0.title" = "@ als Teil von Befehlsnamen";
 "catalog.editor.3.1.title" = "expl3 standardmäßig färben";
 "catalog.editor.3.1.note" = "Vorgabe für neue Dokumente. Für geöffnete Dokumente das Menü „Quelltext“ verwenden.";
+"catalog.editor.3.2.title" = "Vollbreite Buchstaben und Symbole hervorheben";
 "group.editor.4.title" = "Klammerzuordnung";
 "catalog.editor.4.0.title" = "Hilfe bei Klammerung";
 "catalog.editor.4.1.title" = "Klammern";

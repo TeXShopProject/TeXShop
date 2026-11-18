@@ -30,7 +30,8 @@ rule = color[color.index('    NSDictionary *fullwidthAttributes = [scheme attrib
 rule = rule[:rule.index('self.fullwidthSymbolColorAttribute = ')]
 assert 'self.fullwidthSymbolColorAttribute = fullwidthAttributes.count ? fullwidthAttributes : nil;' in color
 block += rule + 'result = fullwidthAttributes.count ? fullwidthAttributes : nil;\n'
-# The scanner finds the characters; the document asks for them when its scheme has fullwidth colors.
+# The scanner finds the characters; the document asks for them when its scheme has fullwidth colors and
+# Highlight Fullwidth Letters and Symbols is on (run-brace-highlight-states.py turns it off and on).
 scanner_header = source_file(root, 'TSSyntaxTeXScanner.h').read_text(encoding='utf-8')
 scanner = source_file(root, 'TSSyntaxTeXScanner.m').read_text(encoding='utf-8')
 membership = scanner_header[scanner_header.index('static inline BOOL TSIsHighlightedFullwidthCharacter'):]
@@ -44,7 +45,8 @@ branch = scanner[scanner.index('else if (fullwidth && TSIsHighlightedFullwidthCh
 branch = branch[:branch.index('else if ((c == \'&\')')]
 assert 'TSToken(&scan, location, 1, TSSyntaxRoleFullwidthSymbol);' in branch
 assert 'const BOOL fullwidth = options.marksFullwidthSymbols;' in scanner
-assert 'options.marksFullwidthSymbols = [self.syntaxColorScheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;' in syntax
+assert ('options.marksFullwidthSymbols = [SUD boolForKey:HighlightFullwidthSymbolsKey] &&\n'
+        '        [self.syntaxColorScheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;') in syntax
 if mutation == 'fallback-color':
     old = 'if (color)\n        attributes[NSForegroundColorAttributeName] = color;'
     assert scheme.count(old) == 1

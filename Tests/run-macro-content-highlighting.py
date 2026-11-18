@@ -25,6 +25,7 @@ MUTATIONS = {
     'plain-layout-manager': ('editor', 'NSLayoutManager *layout = [[TSAdvancedFindLayoutManager alloc] init];',
                              'NSLayoutManager *layout = [[NSLayoutManager alloc] init];'),
     'theme-not-followed': ('editor', '        self.contentHighlighter.scheme = scheme;\n', ''),
+    'fullwidth-switch-ignored': ('editor', '[SUD boolForKey:HighlightFullwidthSymbolsKey] && ', ''),
     'colors-composed-text': ('TSSyntaxHighlighter.m', 'if (TSSyntaxStorageHasMarkedText(textView.textStorage)) {', 'if (NO) {'),
     # Ownership by color alone: unmarked text with a color of the scheme is cleared too.
     'owner-by-color': ('TSSyntaxHighlighter.m', '            if (markValue) {',

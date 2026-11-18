@@ -278,6 +278,9 @@ static NSRange TSExperimentRange(NSTextView *view, NSRange range)
     [scrapTextView.layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName
                                         forCharacterRange:NSMakeRange(0, scrapTextView.string.length)];
     [self colorizeExperimentSource];
+    // Without syntax coloring, which draws the active line, it is drawn here.
+    if (self.syntaxcolorEntry && (!fileIsTex || !self.syntaxColor))
+        [self refreshExperimentCurrentLine];
 }
 
 // After the flash for an unmatched brace, the theme's background again.

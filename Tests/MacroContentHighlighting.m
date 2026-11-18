@@ -55,6 +55,8 @@ int main(int argc, char **argv) { @autoreleasepool {
     NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
     [defaults setBool:YES forKey:SyntaxColoringEnabledKey];
     [defaults setBool:YES forKey:expl3SyntaxColoringKey];
+    // On in the factory defaults (FactoryDefaults.plist); the user has not changed it.
+    [defaults registerDefaults:@{HighlightFullwidthSymbolsKey: @YES}];
 
     TSMacroEditor *editor = [TSMacroEditor new];
     NSWindow *host = [[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,400,300) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
@@ -213,5 +215,46 @@ int main(int argc, char **argv) { @autoreleasepool {
     [editor applyContentAppearance:nil];
     Spin();
     REQUIRE(Same(ColorAt(@"\\l"), RoleColor(dark, TSSyntaxRoleCommand)) && Plain(@"_tmpa"));
-    puts("PASS: macro contents are colored as the source, follow edits, composing, appearance and Settings, and keep other colors");
+
+    // Fullwidth letters, digits and symbols in the theme's colors; with Highlight Fullwidth Letters and Symbols off
+    // in Settings, as other text; on again, in their colors.
+    NSDictionary *wide = [dark attributesForRole:TSSyntaxRoleFullwidthSymbol];
+    REQUIRE(wide[NSForegroundColorAttributeName] && wide[NSBackgroundColorAttributeName]);
+    contents.string = @"x\uff11y \\emph{\uff21} % \uff0b";
+    Spin();
+    REQUIRE(Same(ColorAt(@"\uff11"), wide[NSForegroundColorAttributeName]) && Same(At(@"\uff11")[NSBackgroundColorAttributeName], wide[NSBackgroundColorAttributeName]));
+    REQUIRE(Same(ColorAt(@"\uff21"), wide[NSForegroundColorAttributeName]));
+    [defaults setBool:NO forKey:HighlightFullwidthSymbolsKey];
+    [editor applyContentAppearance:nil];
+    Spin();
+    REQUIRE(Plain(@"\uff11") && At(@"\uff11")[NSBackgroundColorAttributeName] == nil && Plain(@"\uff21") && At(@"\uff21")[NSBackgroundColorAttributeName] == nil);
+    REQUIRE(Same(ColorAt(@"\uff0b"), RoleColor(dark, TSSyntaxRoleComment)) && Same(ColorAt(@"\\emph"), RoleColor(dark, TSSyntaxRoleCommand)));
+    [contents setSelectedRange:NSMakeRange(0, 0)];
+    [contents insertText:@"\uff12" replacementRange:NSMakeRange(NSNotFound, 0)];
+    Spin();
+    REQUIRE(Plain(@"\uff12") && At(@"\uff12")[NSBackgroundColorAttributeName] == nil);
+    [defaults setBool:YES forKey:HighlightFullwidthSymbolsKey];
+    [editor applyContentAppearance:nil];
+    Spin();
+    REQUIRE(Same(ColorAt(@"\uff12"), wide[NSForegroundColorAttributeName]) && Same(At(@"\uff11")[NSBackgroundColorAttributeName], wide[NSBackgroundColorAttributeName]));
+
+    // Syntax coloring off in Settings: no fullwidth colors, whatever the switch; on again, the switch decides.
+    for (int order = 0; order < 2; order++) {
+        [defaults setBool:YES forKey:HighlightFullwidthSymbolsKey];
+        [editor applyContentAppearance:nil]; Spin();
+        REQUIRE(At(@"\uff11")[NSBackgroundColorAttributeName] != nil);
+        if (order) { [defaults setBool:NO forKey:HighlightFullwidthSymbolsKey]; [editor applyContentAppearance:nil]; Spin(); }
+        [defaults setBool:NO forKey:SyntaxColoringEnabledKey];
+        [editor applyContentAppearance:nil]; Spin();
+        REQUIRE(Plain(@"\uff11") && At(@"\uff11")[NSBackgroundColorAttributeName] == nil);
+        if (!order) { [defaults setBool:NO forKey:HighlightFullwidthSymbolsKey]; [editor applyContentAppearance:nil]; Spin(); }
+        REQUIRE(Plain(@"\uff11") && At(@"\uff11")[NSBackgroundColorAttributeName] == nil);
+        [defaults setBool:YES forKey:SyntaxColoringEnabledKey];
+        [editor applyContentAppearance:nil]; Spin();
+        REQUIRE(Plain(@"\uff11") && At(@"\uff11")[NSBackgroundColorAttributeName] == nil && Same(ColorAt(@"\\emph"), RoleColor(dark, TSSyntaxRoleCommand)));
+        [defaults setBool:YES forKey:HighlightFullwidthSymbolsKey];
+        [editor applyContentAppearance:nil]; Spin();
+        REQUIRE(Same(ColorAt(@"\uff11"), wide[NSForegroundColorAttributeName]) && Same(At(@"\uff11")[NSBackgroundColorAttributeName], wide[NSBackgroundColorAttributeName]));
+    }
+    puts("PASS: macro contents are colored as the source, follow edits, composing, appearance and Settings (fullwidth highlight too), and keep other colors");
 } return 0; }

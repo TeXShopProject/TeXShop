@@ -40,3 +40,15 @@ def advanced_find_syntax_sources(root):
     return [root / 'Sources/Syntax' / name for name in ('TSSyntaxScanner.m', 'TSSyntaxHighlighter.m', 'TSSyntaxColorScheme.m', 'TSSyntaxTeXOptions.m',
                                                          'TSSyntaxTeXScanner.m', 'TSSyntaxXMLScanning.m')] + \
         [root / 'Tests/TSColorSupportStub.m', root / 'Sources/Windows/TSListBottomBar.m']
+
+
+def factory_default(root, key):
+    """The value of key in Resources/Defaults/FactoryDefaults.plist, which TSAppDelegate registers at launch, as the
+    Objective-C literal of the value it has there (a string such as @"YES", or a number)."""
+    import plistlib
+    value = plistlib.loads((Path(root) / 'Resources/Defaults/FactoryDefaults.plist').read_bytes())[key]
+    if isinstance(value, bool):
+        return '@YES' if value else '@NO'
+    if isinstance(value, (int, float)):
+        return '@(%r)' % value
+    return '@"%s"' % value

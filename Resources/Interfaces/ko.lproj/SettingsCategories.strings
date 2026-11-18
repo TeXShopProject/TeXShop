@@ -96,6 +96,7 @@
 "catalog.editor.3.0.title" = "@를 명령 이름의 일부로 취급";
 "catalog.editor.3.1.title" = "기본으로 expl3 구문 강조";
 "catalog.editor.3.1.note" = "새 문서의 초기값입니다. 열려 있는 문서는 소스 메뉴에서 전환합니다.";
+"catalog.editor.3.2.title" = "전각 영숫자·기호 강조";
 "group.editor.4.title" = "괄호 짝 맞추기";
 "catalog.editor.4.0.title" = "괄호 여닫기 체크";
 "catalog.editor.4.1.title" = "괄호";

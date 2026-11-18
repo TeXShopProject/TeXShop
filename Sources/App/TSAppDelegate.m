@@ -102,7 +102,7 @@ static TSAdvancedFindFieldStyle *TSAdvancedFindFieldStyleForTheme(NSDictionary *
     options.makesAtLetter = [SUD boolForKey:MakeatletterEnabledKey];
     options.colorsIndex = [SUD boolForKey:IndexColorStartKey];
     options.colorsFootnote = [SUD boolForKey:SyntaxColorFootnoteKey];
-    options.marksFullwidthSymbols = [scheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;
+    options.marksFullwidthSymbols = [SUD boolForKey:HighlightFullwidthSymbolsKey] && [scheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;
     NSFont *font = nil;
     id data = [SUD objectForKey:DocumentFontKey];
     if ([data isKindOfClass:NSData.class]) {

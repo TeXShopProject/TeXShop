@@ -67,6 +67,7 @@ NSString *CheckBracketEnabledKey = @"CheckBracketEnabled"; // added by Terada
 NSString *CheckSquareBracketEnabledKey = @"CheckSquareBracketEnabled"; // added by Terada
 NSString *CheckParenEnabledKey = @"CheckParenEnabled"; // added by Terada
 NSString *MakeatletterEnabledKey = @"MakeatletterEnabled"; // added by Terada
+NSString *HighlightFullwidthSymbolsKey = @"HighlightFullwidthSymbols";
 NSString *PdfMagnificationKey = @"PdfMagnification";
 NSString *NoScrollPageTurnKey = @"NoScrollPageTurn";
 NSString *PdfWindowFixedPosKey = @"PdfWindowFixedPosition";

@@ -2,7 +2,8 @@
 // What the application gives the Advanced Find panel's fields and the rules of Multiple Replace
 // (TSAppDelegate.m, "Advanced Find field style"): the opaque text, background and insertion point colors of the
 // light or dark theme, the source font, the TeX settings of syntax coloring, the theme's colors only with syntax
-// coloring on, and a new style whenever the themes, the syntax settings or the source font change. Built by
+// coloring on, fullwidth letters and symbols in their colors only with Highlight Fullwidth Letters and Symbols on,
+// and a new style whenever the themes, the syntax settings or the source font change. Built by
 // Tests/run-advanced-find-field-style.py; no window is shown and the defaults stay in memory.
 #import <Cocoa/Cocoa.h>
 #import "TestAppKitIsolation.h"
@@ -37,6 +38,8 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE(liteColors && darkColors);
     NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
     [defaults setBool:YES forKey:SyntaxColoringEnabledKey];
+    // On in the factory defaults (FactoryDefaults.plist); the user has not changed it.
+    [defaults registerDefaults:@{HighlightFullwidthSymbolsKey: @YES}];
     TSInstallAdvancedFindFieldStyle();
     REQUIRE(TSAdvancedFindFieldStyle.provider != nil);
 
@@ -53,6 +56,15 @@ int main(int argc, char **argv) { @autoreleasepool {
         REQUIRE(Same([style.scheme attributesForRole:TSSyntaxRoleRegexEscape][NSForegroundColorAttributeName], Opaque(theme, @"explIntenseFunction")));
         REQUIRE(Same([style.scheme attributesForRole:TSSyntaxRoleRegexSymbol][NSForegroundColorAttributeName], Opaque(theme, @"SyntaxMarkerParen")));
         REQUIRE(style.texOptions.marksFullwidthSymbols == ([style.scheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0));
+        REQUIRE(style.texOptions.marksFullwidthSymbols);
+        // Highlight Fullwidth Letters and Symbols off: the fields color these characters as other text, whatever
+        // colors the theme has for them.
+        [defaults setBool:NO forKey:HighlightFullwidthSymbolsKey];
+        TSAdvancedFindFieldStyle *plain = TSAdvancedFindFieldStyle.provider(dark.boolValue);
+        REQUIRE(!plain.texOptions.marksFullwidthSymbols && [plain.scheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0);
+        [defaults setBool:YES forKey:HighlightFullwidthSymbolsKey];
+        REQUIRE(TSAdvancedFindFieldStyle.provider(dark.boolValue).texOptions.marksFullwidthSymbols);
+        [defaults removeObjectForKey:HighlightFullwidthSymbolsKey];
     }
     REQUIRE(!Same(TSAdvancedFindFieldStyle.provider(NO).textColor, TSAdvancedFindFieldStyle.provider(YES).textColor));
     // A theme without the key: the built-in color, opaque.
@@ -64,7 +76,17 @@ int main(int argc, char **argv) { @autoreleasepool {
                  [[[TSColorSupport sharedInstance] colorForKey:@"EditorInsertionPoint" fromDictionary:partial isWindowDark:NO] colorWithAlphaComponent:1]));
     liteColors = saved;
 
-    // Syntax coloring off: no scheme, the theme's text and background still.
+    // Syntax coloring off: no scheme, the theme's text and background still, and no fullwidth colors whatever the
+    // switch of fullwidth letters and symbols; on again, the switch decides.
+    [defaults setBool:NO forKey:SyntaxColoringEnabledKey];
+    for (NSNumber *wide in @[@YES, @NO]) {
+        [defaults setBool:wide.boolValue forKey:HighlightFullwidthSymbolsKey];
+        REQUIRE(TSAdvancedFindFieldStyle.provider(NO).scheme == nil && !TSAdvancedFindFieldStyle.provider(NO).texOptions.marksFullwidthSymbols);
+    }
+    [defaults setBool:YES forKey:SyntaxColoringEnabledKey];
+    REQUIRE(!TSAdvancedFindFieldStyle.provider(NO).texOptions.marksFullwidthSymbols);
+    [defaults removeObjectForKey:HighlightFullwidthSymbolsKey];
+    REQUIRE(TSAdvancedFindFieldStyle.provider(NO).texOptions.marksFullwidthSymbols);
     [defaults setBool:NO forKey:SyntaxColoringEnabledKey];
     TSAdvancedFindFieldStyle *off = TSAdvancedFindFieldStyle.provider(NO);
     REQUIRE(off.scheme == nil && Same(off.textColor, Opaque(liteColors, @"EditorText")) && Same(off.backgroundColor, Opaque(liteColors, @"EditorBackground")));
@@ -104,6 +126,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE([TSPreferenceNotificationsForKeys([NSSet setWithObject:DocumentFontKey]) containsObject:DocumentFontChangedNotification]);
     REQUIRE([TSPreferenceNotificationsForKeys([NSSet setWithObject:SyntaxColoringEnabledKey]) containsObject:DocumentSyntaxColorNotification]);
     REQUIRE([TSPreferenceNotificationsForKeys([NSSet setWithObject:expl3SyntaxColoringKey]) containsObject:TSPreferenceNeedsRecolorNotification]);
+    REQUIRE([TSPreferenceNotificationsForKeys([NSSet setWithObject:HighlightFullwidthSymbolsKey]) containsObject:TSPreferenceNeedsRecolorNotification]);
     REQUIRE([TSPreferenceNotificationsForKeys([NSSet setWithObject:DefaultLiteThemeKey]) containsObject:SourceColorChangedNotification]);
     puts("PASS: the Advanced Find fields get the theme of the window, the source font and the TeX settings, and follow their changes");
 } return 0; }

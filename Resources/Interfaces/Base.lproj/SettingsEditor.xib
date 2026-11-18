@@ -34,6 +34,7 @@
         <outlet property="syntaxColorButton" destination="839" id="847" />
         <outlet property="makeatletterButton" destination="cgA-o7-Bdw" id="gAl-rH-u7H" />
         <outlet property="expl3SyntaxColorButton" destination="f1k-jx-ley" id="Kwn-ll-x0H" />
+        <outlet property="highlightFullwidthSymbolsButton" destination="fullwidth-highlight-button" id="fullwidth-highlight-outlet" />
         <outlet property="syntaxColorLineButton" destination="3gb-2l-vK7" id="Tew-l7-r5A" />
         <outlet property="tabIndentButton" destination="9oZ-Jg-MfD" id="07w-LG-QB8" />
         <outlet property="tagMenuButton" destination="XoX-gZ-pO3" id="g11-t0-Ho4" />
@@ -250,6 +251,17 @@
                 </buttonCell>
                 <connections>
                   <action selector="syntaxColorLinePressed:" target="-2" id="kqj-Qb-Qw6" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fullwidth-highlight-button" identifier="settings.fullwidth-highlight-button">
+                <rect key="frame" x="26" y="251" width="230" height="18" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="Highlight Fullwidth Letters and Symbols" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="fullwidth-highlight-cell">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="highlightFullwidthSymbolsChanged:" target="-2" id="fullwidth-highlight-action" />
                 </connections>
               </button>
             </subviews>
