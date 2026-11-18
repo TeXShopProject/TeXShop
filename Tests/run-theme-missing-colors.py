@@ -174,6 +174,11 @@ int main(int argc, char **argv) { @autoreleasepool {
     NSMutableDictionary *noActiveLine = [named[@"LiteTheme"] mutableCopy];
     [noActiveLine removeObjectForKey:@"EntryColor"];
     named[@"LiteTheme without an active line"] = noActiveLine;
+    // A theme of the user's own whose pairs read only on a middle gray (6th audit): black text, a white cursor.
+    NSMutableDictionary *gray = [named[@"LiteTheme"] mutableCopy];
+    gray[@"EditorText"] = @[@0, @0, @0, @1]; gray[@"EditorInsertionPoint"] = @[@1, @1, @1, @1];
+    gray[@"EditorBackground"] = gray[@"EntryColor"] = @[@0.459, @0.459, @0.459, @1];
+    named[@"Mine (middle gray)"] = gray;
     // Any of the colors of the pairs lacking, one to all eight (a theme may never have had some, and may lose
     // others); in both appearances.
     NSArray *keys = @[@"EditorText", @"EditorBackground", @"EditorInsertionPoint", @"EntryColor", @"ConsoleText", @"ConsoleBackground", @"LogText", @"LogBackground"];
@@ -244,6 +249,82 @@ int main(int argc, char **argv) { @autoreleasepool {
             }
         }
     }
+    // Random themes of the user's own (seeded), all of whose pairs read, without each one of the colors that go in
+    // pairs and without two random sets of them: the pairs with a lacking color read whenever some grays for the lacking
+    // colors would make them read (checked by trying the grays), and the wells' look-up gives the colors drawn.
+    srand48(20261118);
+    NSColor *(^random)(void) = ^NSColor *(void) { return [NSColor colorWithRed:drand48() green:drand48() blue:drand48() alpha:1]; };
+    NSColor *(^reading)(NSColor *) = ^NSColor *(NSColor *other) { NSColor *c; do c = random(); while (Contrast(c, other) < 4.5); return c; };
+    NSArray *(^components)(NSColor *) = ^NSArray *(NSColor *c) { NSColor *rgb = [c colorUsingColorSpace:NSColorSpace.sRGBColorSpace]; return @[@(rgb.redComponent), @(rgb.greenComponent), @(rgb.blueComponent), @1]; };
+    NSUInteger randomCases = 0, randomPairs = 0, noGrayReads = 0;
+    for (int number = 0; number < 2000; number++) {
+        NSColor *background = random(), *text = reading(background);
+        NSColor *cursor = reading(background), *line = reading(text);
+        NSColor *consoleBackground = random(), *consoleText = reading(consoleBackground);
+        NSColor *logBackground = random(), *logText = reading(logBackground);
+        NSDictionary *whole = @{@"EditorText": components(text), @"EditorBackground": components(background), @"EditorInsertionPoint": components(cursor),
+                                @"EntryColor": components(line), @"ConsoleText": components(consoleText), @"ConsoleBackground": components(consoleBackground),
+                                @"LogText": components(logText), @"LogBackground": components(logBackground)};
+        NSMutableArray *sets = [NSMutableArray array];
+        for (NSString *key in keys) [sets addObject:@[key]];
+        for (int r = 0; r < 2; r++) {
+            NSMutableArray *lost = [NSMutableArray array];
+            long bits = 1 + (lrand48() % 255);
+            for (NSUInteger i = 0; i < keys.count; i++) if (bits & (1L << i)) [lost addObject:keys[i]];
+            [sets addObject:lost];
+        }
+        int dark = number % 2;
+        mode = dark ? "dark (random)" : "light (random)";
+        for (NSArray *lost in sets) {
+            NSMutableDictionary *theme = [whole mutableCopy];
+            [theme removeObjectsForKeys:lost];
+            NSMutableDictionary *color = [NSMutableDictionary dictionary];
+            for (NSString *key in keys) color[key] = [colors opaqueColorForKey:key fromDictionary:theme isWindowDark:dark];
+            for (NSString *key in lost)
+                REQUIRE(SameRGB([colors colorForKey:key fromDictionary:theme isWindowDark:dark], color[key]));
+            for (NSString *key in keys)
+                if (![lost containsObject:key]) REQUIRE(SameRGB(color[key], [colors colorFromDictionary:whole andKey:key]));
+            // The pairs with a lacking color, as indexes into keys.
+            NSMutableArray *involved = [NSMutableArray array];
+            BOOL allRead = YES;
+            for (NSArray *pair in drawn) {
+                if (![lost containsObject:pair[0]] && ![lost containsObject:pair[1]]) continue;
+                [involved addObject:@[@([keys indexOfObject:pair[0]]), @([keys indexOfObject:pair[1]])]];
+                allRead = allRead && Contrast(color[pair[0]], color[pair[1]]) >= 4.5;
+                randomPairs++;
+            }
+            if (!allRead) {
+                // Could grays make them read? Try every gray of 64 for each lacking color.
+                NSUInteger count = lost.count, levels = 64;
+                NSUInteger index[8] = {0};
+                double fixed[8];
+                for (NSUInteger i = 0; i < keys.count; i++) fixed[i] = [lost containsObject:keys[i]] ? -1 : Luminance(color[keys[i]]);
+                double gray[64];
+                for (NSUInteger g = 0; g < levels; g++) gray[g] = Luminance([NSColor colorWithRed:g / 63.0 green:g / 63.0 blue:g / 63.0 alpha:1]);
+                BOOL feasible = NO;
+                while (!feasible) {
+                    double l[8];
+                    NSUInteger m = 0;
+                    for (NSUInteger i = 0; i < keys.count; i++) l[i] = fixed[i] >= 0 ? fixed[i] : gray[index[m++]];
+                    BOOL ok = YES;
+                    for (NSArray *pair in involved) {
+                        double x = l[[pair[0] unsignedIntegerValue]], y = l[[pair[1] unsignedIntegerValue]];
+                        ok = ok && (MAX(x, y) + 0.05) / (MIN(x, y) + 0.05) >= 4.5;
+                    }
+                    feasible = ok;
+                    NSInteger k = (NSInteger)count - 1;
+                    while (k >= 0 && ++index[k] == levels) index[k--] = 0;
+                    if (k < 0) break;
+                }
+                if (feasible) fprintf(stderr, "random theme %d without %s: a gray would read\n", number, [lost componentsJoinedByString:@"+"].UTF8String);
+                REQUIRE(!feasible);
+                noGrayReads++;
+            }
+            randomCases++;
+        }
+    }
+    printf("PASS: %lu cases of 2000 random themes of the user's own, %lu pairs with a lacking color: they read whenever grays could make them read (in %lu cases no grays could), and the wells' look-up gives the colors drawn\n",
+           (unsigned long)randomCases, (unsigned long)randomPairs, (unsigned long)noGrayReads);
     printf("PASS: %lu cases (%lu themes x 2 appearances x %lu sets of lacking colors), %lu drawn pairs with a lacking color: they read, the theme's colors are kept, the wells' look-up gives the colors drawn; in %lu cases (up to three lacking) the documents, the active line and the Experiment draw them\n",
            (unsigned long)checked, (unsigned long)named.count, (unsigned long)losses.count, (unsigned long)pairsChecked, (unsigned long)drawnChecked);
 } return 0; }
@@ -272,11 +353,12 @@ if '--mutations' in sys.argv:
     mutations = {
         'no built-in light colors': ('readers', '    if (builtIn != nil)\n        return', '    if (NO)\n        return', 0),
         'no built-in dark colors': ('readers', '    if (builtIn != nil)\n        return', '    if (NO)\n        return', 1),
-        'no pairs': ('readers', '    if (group == nil)\n        return builtIn;', '    return builtIn;', 0),
-        'only the text on the background': ('readers', '@[@[@0, @1], @[@2, @1], @[@0, @3]]', '@[@[@0, @1]]', 0),
-        'no cursor pair': ('readers', '@[@[@0, @1], @[@2, @1], @[@0, @3]]', '@[@[@0, @1], @[@0, @3]]', 0),
-        'no active-line pair': ('readers', '@[@[@0, @1], @[@2, @1], @[@0, @3]]', '@[@[@0, @1], @[@2, @1]]', 0),
-        'built-in colors only': ('readers', '                                  [NSColor colorWithRed: 1 green: 1 blue: 1 alpha: 1], [NSColor colorWithRed: 0 green: 0 blue: 0 alpha: 1]]];', ']];', 0),
+        'no pairs': ('readers', '    if (chain == nil)\n        return builtIn;', '    return builtIn;', 0),
+        'no grays': ('readers', '        for (int g = 0; g < 64; g++)\n', '        for (int g = 0; g < 0; g++)\n', 0),
+        'no cursor pair': ('readers', 'bestCursor[bg] = MAX(bestCursor[bg], score(2, bg, 3, c));', 'bestCursor[bg] = 4.5;', 0),
+        'no active-line pair': ('readers', 'bestLine[t] = MAX(bestLine[t], score(0, e, 1, t));', 'bestLine[t] = 4.5;', 0),
+        'the first pair only': ('readers', 'best = MAX(best, MIN(MIN(score(1, t, 2, bg), bestLine[t]), bestCursor[bg]));', 'best = MAX(best, score(1, t, 2, bg));', 0),
+        'the built-in colors not first': ('readers', '@0, @10, @20, @20, nil];', '@50, @50, @50, @50, nil];', 0),
         'the document takes no color': ('document', '[[TSColorSupport sharedInstance] opaqueColorForKey: @"ConsoleText" fromDictionary: colorDictionary isWindowDark: withDarkColors]',
                                         '[[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"ConsoleText"]', None),
     }

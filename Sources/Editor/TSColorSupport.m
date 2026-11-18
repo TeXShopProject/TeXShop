@@ -597,33 +597,45 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
 // The color drawn for a key of a theme in a light or dark window. A color the theme has is used as
 // it is. A color it does not have is the built-in one of the mode, but text and what it is drawn on
 // go together (a theme of either kind can be used in a light or a dark window, and its file may
-// lack colors or have lost them). The colors that go together form groups, with the pairs that must
-// read (contrast 4.5 or more):
+// lack colors or have lost them). The colors that go together, and the pairs that must read:
 //   the source: EditorText on EditorBackground, EditorInsertionPoint on EditorBackground,
 //               EditorText on EntryColor (the active line);
 //   the console: ConsoleText on ConsoleBackground;   the log: LogText on LogBackground.
-// The missing colors of a group are chosen together, each from: the built-in color of the mode, that
-// of the other mode, white, black. Of all the choices, the one in which the most pairs read is taken,
-// and of those the one nearest the built-in colors of the mode (fewest steps down the list, then in
-// the order of the keys above). So whichever colors a theme lacks, the choice does not depend on an
-// order of the keys, and when the theme's own colors read with each other, all the pairs read. The
-// theme file is not changed. Every view that draws these colors, and the Settings wells, ask here.
+// The missing colors of a group are chosen together. Each may be the built-in color of the mode,
+// that of the other mode, white, black, one of 64 grays, or the opposite of one of the theme's own
+// colors of the group. Of all the choices, the one is taken whose pairs with a missing color read
+// best, the weakest of them counted up to a contrast of 4.5 (WCAG): so all of them read whenever
+// any choice makes them read, and as well as they can otherwise. Of the choices that read as well,
+// the one nearest the built-in colors is taken: the built-in color of the mode first, then that of
+// the other mode, then white or black, then the nearest of the others. The theme file is not
+// changed. Every view that draws these colors, and the Settings wells, ask here.
 - (NSColor *)opaqueColorForKey: (NSString *)theKey fromDictionary: (NSDictionary *)theDictionary isWindowDark: (BOOL)mode
 {
     NSColor *theColor = [self colorFromDictionary: theDictionary andKey: theKey];
     if (theColor != nil)
         return theColor;
     NSColor *builtIn = mode ? [self darkColorWithKey: theKey] : [self liteColorWithKey: theKey];
-    NSArray<NSString *> *group = nil;
-    for (NSArray<NSString *> *keys in @[@[@"EditorText", @"EditorBackground", @"EditorInsertionPoint", @"EntryColor"],
-                                        @[@"ConsoleText", @"ConsoleBackground"], @[@"LogText", @"LogBackground"]])
+    // The group as a chain of four: the active line, the text, the background, the cursor (EntryColor -
+    // EditorText - EditorBackground - EditorInsertionPoint); the console and the log use the middle two.
+    NSArray<NSString *> *chain = nil;
+    for (NSArray<NSString *> *keys in @[@[@"EntryColor", @"EditorText", @"EditorBackground", @"EditorInsertionPoint"],
+                                        @[@"", @"ConsoleText", @"ConsoleBackground", @""], @[@"", @"LogText", @"LogBackground", @""]])
         if ([keys containsObject: theKey])
-            group = keys;
-    if (group == nil)
+            chain = keys;
+    if (chain == nil)
         return builtIn;
-    // The pairs that must read, as indexes into the group.
-    NSArray<NSArray<NSNumber *> *> *pairs = group.count == 4 ? @[@[@0, @1], @[@2, @1], @[@0, @3]] : @[@[@0, @1]];
-    // WCAG relative luminance.
+    // The choice depends only on the theme's colors of the group and the mode: it is made once for them.
+    NSMutableArray *signature = [NSMutableArray arrayWithObjects: @(mode), chain[1], nil];
+    for (NSString *key in chain)
+        [signature addObject: (key.length ? [theDictionary objectForKey: key] : nil) ?: NSNull.null];
+    static NSMutableDictionary<NSArray *, NSArray<NSColor *> *> *chosen;
+    @synchronized (TSColorSupport.class) {
+        if (chosen == nil || chosen.count > 256)
+            chosen = [NSMutableDictionary dictionary];
+        NSArray<NSColor *> *known = chosen[signature];
+        if (known != nil)
+            return known[[chain indexOfObject: theKey]];
+    }
     CGFloat (^luminance)(NSColor *) = ^CGFloat(NSColor *color) {
         NSColor *rgb = [color colorUsingColorSpace: NSColorSpace.sRGBColorSpace];
         CGFloat c[3] = {rgb.redComponent, rgb.greenComponent, rgb.blueComponent};
@@ -631,49 +643,118 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
             c[i] = c[i] <= 0.03928 ? c[i] / 12.92 : pow((c[i] + 0.055) / 1.055, 2.4);
         return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
     };
-    // For each key of the group: its own color, or the candidates for it.
-    NSUInteger count = group.count;
-    NSMutableArray<NSArray<NSColor *> *> *choices = [NSMutableArray array];
-    for (NSString *key in group) {
-        NSColor *own = [self colorFromDictionary: theDictionary andKey: key];
+    // The theme's own colors of the group, and their opposites.
+    NSMutableArray<NSColor *> *opposites = [NSMutableArray array];
+    for (NSString *key in chain) {
+        NSColor *own = key.length ? [[self colorFromDictionary: theDictionary andKey: key] colorUsingColorSpace: NSColorSpace.sRGBColorSpace] : nil;
         if (own != nil)
-            [choices addObject: @[own]];
-        else
-            [choices addObject: @[mode ? [self darkColorWithKey: key] : [self liteColorWithKey: key],
-                                  mode ? [self liteColorWithKey: key] : [self darkColorWithKey: key],
-                                  [NSColor colorWithRed: 1 green: 1 blue: 1 alpha: 1], [NSColor colorWithRed: 0 green: 0 blue: 0 alpha: 1]]];
+            [opposites addObject: [NSColor colorWithRed: 1 - own.redComponent green: 1 - own.greenComponent blue: 1 - own.blueComponent alpha: 1]];
     }
-    CGFloat lightness[4][4];
-    for (NSUInteger k = 0; k < count; k++)
-        for (NSUInteger i = 0; i < choices[k].count; i++)
-            lightness[k][i] = luminance(choices[k][i]);
-    NSUInteger index[4] = {0, 0, 0, 0}, best[4] = {0, 0, 0, 0};
-    NSInteger bestReading = -1, bestSteps = 0;
-    while (YES) {
-        NSInteger reading = 0, steps = 0;
-        for (NSArray<NSNumber *> *pair in pairs) {
-            NSUInteger a = pair[0].unsignedIntegerValue, b = pair[1].unsignedIntegerValue;
-            CGFloat x = lightness[a][index[a]], y = lightness[b][index[b]];
-            if ((MAX(x, y) + 0.05) / (MIN(x, y) + 0.05) >= 4.5)
-                reading++;
+    // For each place of the chain: no key (absent), the theme's own color (one choice), or the choices with their cost.
+    NSMutableArray<NSArray<NSColor *> *> *choices = [NSMutableArray array];
+    NSMutableArray<NSArray<NSNumber *> *> *costs = [NSMutableArray array];
+    BOOL missing[4] = {NO, NO, NO, NO};
+    for (NSUInteger k = 0; k < 4; k++) {
+        NSString *key = chain[k];
+        NSColor *own = key.length ? [self colorFromDictionary: theDictionary andKey: key] : nil;
+        if (key.length == 0 || own != nil) {
+            [choices addObject: own ? @[own] : @[]];
+            [costs addObject: own ? @[@0] : @[]];
+            continue;
         }
-        for (NSUInteger k = 0; k < count; k++)
-            steps += index[k];
-        // Ties go to the first choice in this order, which is the one in the order of the keys.
-        if (reading > bestReading || (reading == bestReading && steps < bestSteps)) {
-            bestReading = reading;
-            bestSteps = steps;
-            memcpy(best, index, sizeof(index));
+        missing[k] = YES;
+        NSColor *mine = mode ? [self darkColorWithKey: key] : [self liteColorWithKey: key];
+        NSMutableArray<NSColor *> *list = [NSMutableArray arrayWithObjects: mine, mode ? [self liteColorWithKey: key] : [self darkColorWithKey: key],
+                                           [NSColor colorWithRed: 1 green: 1 blue: 1 alpha: 1], [NSColor colorWithRed: 0 green: 0 blue: 0 alpha: 1], nil];
+        NSMutableArray<NSNumber *> *cost = [NSMutableArray arrayWithObjects: @0, @10, @20, @20, nil];
+        NSColor *origin = [mine colorUsingColorSpace: NSColorSpace.sRGBColorSpace];
+        NSMutableArray<NSColor *> *others = [opposites mutableCopy];
+        for (int g = 0; g < 64; g++)
+            [others addObject: [NSColor colorWithRed: g / 63.0 green: g / 63.0 blue: g / 63.0 alpha: 1]];
+        for (NSColor *other in others) {
+            NSColor *rgb = [other colorUsingColorSpace: NSColorSpace.sRGBColorSpace];
+            CGFloat dr = rgb.redComponent - origin.redComponent, dg = rgb.greenComponent - origin.greenComponent, db = rgb.blueComponent - origin.blueComponent;
+            [list addObject: other];
+            [cost addObject: @(30 + sqrt(dr * dr + dg * dg + db * db))];
         }
-        // The next choice: count up in the candidates of each key, the last key fastest.
-        NSInteger k = (NSInteger)count - 1;
-        while (k >= 0 && ++index[k] == choices[k].count)
-            index[k--] = 0;
-        if (k < 0)
-            break;
+        [choices addObject: list];
+        [costs addObject: cost];
     }
-    NSUInteger position = [group indexOfObject: theKey];
-    return choices[position][best[position]];
+    // Luminances.
+    NSUInteger n[4];
+    CGFloat *lum[4], *price[4];
+    for (NSUInteger k = 0; k < 4; k++) {
+        n[k] = choices[k].count;
+        lum[k] = malloc(sizeof(CGFloat) * MAX(n[k], 1));
+        price[k] = malloc(sizeof(CGFloat) * MAX(n[k], 1));
+        for (NSUInteger i = 0; i < n[k]; i++) {
+            lum[k][i] = luminance(choices[k][i]);
+            price[k][i] = costs[k][i].doubleValue;
+        }
+    }
+    // The score of a pair: its contrast up to 4.5; a pair of two of the theme's own colors does not count.
+    NSUInteger *counts = n;
+    BOOL *lacking = missing;
+    CGFloat **lightness = lum;
+    CGFloat (^score)(NSUInteger, NSUInteger, NSUInteger, NSUInteger) = ^CGFloat(NSUInteger a, NSUInteger i, NSUInteger b, NSUInteger j) {
+        if (counts[a] == 0 || counts[b] == 0 || (!lacking[a] && !lacking[b]))
+            return 4.5;
+        CGFloat x = lightness[a][i], y = lightness[b][j];
+        return MIN(4.5, (MAX(x, y) + 0.05) / (MIN(x, y) + 0.05));
+    };
+    // The chain 0-1-2-3: for a text (1) and a background (2), the best active line (0) and cursor (3) are
+    // found on their own. First the best score; then the cheapest choice that reaches it.
+    NSUInteger n0 = MAX(n[0], 1), n3 = MAX(n[3], 1);
+    CGFloat bestLine[n[1]], bestCursor[n[2]];
+    for (NSUInteger t = 0; t < n[1]; t++) {
+        bestLine[t] = 0;
+        for (NSUInteger e = 0; e < n0; e++)
+            bestLine[t] = MAX(bestLine[t], score(0, e, 1, t));
+    }
+    for (NSUInteger bg = 0; bg < n[2]; bg++) {
+        bestCursor[bg] = 0;
+        for (NSUInteger c = 0; c < n3; c++)
+            bestCursor[bg] = MAX(bestCursor[bg], score(2, bg, 3, c));
+    }
+    CGFloat best = -1;
+    for (NSUInteger t = 0; t < n[1]; t++)
+        for (NSUInteger bg = 0; bg < n[2]; bg++)
+            best = MAX(best, MIN(MIN(score(1, t, 2, bg), bestLine[t]), bestCursor[bg]));
+    CGFloat cheapest = INFINITY;
+    NSUInteger pick[4] = {0, 0, 0, 0};
+    for (NSUInteger t = 0; t < n[1]; t++)
+        for (NSUInteger bg = 0; bg < n[2]; bg++) {
+            if (MIN(MIN(score(1, t, 2, bg), bestLine[t]), bestCursor[bg]) < best - 1e-9)
+                continue;
+            CGFloat lineCost = INFINITY, cursorCost = INFINITY;
+            NSUInteger line = 0, cursor = 0;
+            for (NSUInteger e = 0; e < n0; e++)
+                if (score(0, e, 1, t) >= best - 1e-9 && (n[0] == 0 ? 0 : price[0][e]) < lineCost) {
+                    lineCost = n[0] == 0 ? 0 : price[0][e];
+                    line = e;
+                }
+            for (NSUInteger c = 0; c < n3; c++)
+                if (score(2, bg, 3, c) >= best - 1e-9 && (n[3] == 0 ? 0 : price[3][c]) < cursorCost) {
+                    cursorCost = n[3] == 0 ? 0 : price[3][c];
+                    cursor = c;
+                }
+            CGFloat total = price[1][t] + price[2][bg] + lineCost + cursorCost;
+            if (total < cheapest - 1e-9) {
+                cheapest = total;
+                pick[0] = line; pick[1] = t; pick[2] = bg; pick[3] = cursor;
+            }
+        }
+    for (NSUInteger k = 0; k < 4; k++) {
+        free(lum[k]);
+        free(price[k]);
+    }
+    NSMutableArray<NSColor *> *result = [NSMutableArray array];
+    for (NSUInteger k = 0; k < 4; k++)
+        [result addObject: n[k] ? choices[k][pick[k]] : builtIn];
+    @synchronized (TSColorSupport.class) {
+        chosen[signature] = result;
+    }
+    return result[[chain indexOfObject: theKey]];
 }
 
 - (NSColor *)colorForKey: (NSString *)theKey isWindowDark: (BOOL)mode
