@@ -271,6 +271,7 @@ boundary
 bowen
 box
 boxes
+brackets
 break
 breaking
 bring
@@ -882,6 +883,7 @@ initialized
 initializes
 initially
 initiated
+input
 insert
 inserts
 inside
@@ -1087,7 +1089,6 @@ math
 mathematical
 mathematics
 mathexpressioncompletion
-mathjax
 matrix
 matter
 may
@@ -1674,7 +1675,6 @@ started
 starting
 starts
 statement
-static
 statistics
 status
 stay
