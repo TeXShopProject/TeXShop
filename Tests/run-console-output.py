@@ -11,10 +11,11 @@ of a character is kept across a pause longer than the console waits, until the r
 the end of the output comes, and that a backslash and a tilde typed in the console reach TeX
 as 0x5C and 0x7E in every encoding and filter mode, through the production backslash filter.
 It also checks that a source file is read whole in its own encoding for Sync. Nothing is
-shown on screen. --mutation=NAME undoes one of these (rearm, hold, jis, broken, flush, cr, input,
-order, pause, yen, source) and the test must then fail. A line of ISO-2022-JP output, and a line
-of UTF-8 output with a byte that is not UTF-8, read the same at every place the pipe can divide
-them."""
+shown on screen. --mutation=NAME undoes one of these (rearm, hold, hold-all, jis, flush, cr, input,
+order, pause, yen, source) and the test must then fail (hold keeps only lines of other encodings
+than UTF-8, as before). A line of ISO-2022-JP output, and a line of UTF-8 output with a byte that
+is not UTF-8, also after valid UTF-8 characters, read the same at every place the pipe can divide
+them, at the end of the output too, and through a real pipe with short gaps."""
 from pathlib import Path
 import subprocess, sys, tempfile
 root = Path(__file__).resolve().parents[1]
@@ -43,11 +44,11 @@ if mutation == 'rearm':
                     '        // Wait for more output even when all of this piece was kept for the next one.\n        if (! atEnd)\n',
                     '        if ([myData length])\n            [self showConsoleOutputData: myData];\n        if (! atEnd && [myData length])\n')
 elif mutation == 'hold':
-    helpers = mutate(helpers, 'if (beyondASCII && encoding != NSUTF8StringEncoding)', 'if (NO)')
+    helpers = mutate(helpers, '\t\tif (beyondASCII)\n', '\t\tif (beyondASCII && encoding != NSUTF8StringEncoding)\n')
+elif mutation == 'hold-all':
+    helpers = mutate(helpers, '\t\tif (beyondASCII)\n', '\t\tif (NO)\n')
 elif mutation == 'jis':
     helpers = mutate(helpers, 'if (escape && encoding == CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISO_2022_JP))', 'if (NO)')
-elif mutation == 'broken':
-    helpers = mutate(helpers, 'if (beyondASCII && encoding == NSUTF8StringEncoding) {', 'if (NO) {')
 elif mutation == 'flush':
     output = mutate(output, '[self showConsoleOutputData: [kept subdataWithRange: NSMakeRange(0, kept.length - unfinished)]];', ';')
 elif mutation == 'pause':
@@ -265,6 +266,9 @@ int main(int argc, char **argv) { @autoreleasepool {
     struct { NSStringEncoding doc; NSData *data; const char *name; } divided[] = {
         {jis, [@"! \u672a\u5b9a\u7fa9\u306e\u30b3\u30de\u30f3\u30c9\nl.1 \u6f22\u5b57\n? " dataUsingEncoding:jis], "ISO-2022-JP output, ISO-2022-JP document"},
         {utf8, broken, "UTF-8 output with a byte that is not UTF-8, UTF-8 document"},
+        {utf8, B("\xE6\x97\xA5\xFF\nnext\n"), "UTF-8 output, a character before a byte that is not UTF-8"},
+        {utf8, B("ok\n\xE6\x97\xA5\xFF\xFE end\n\xE6\x97\xA5 \xC3\xA9\xFF"), "UTF-8 output, two bytes that are not UTF-8, and the end without a line break"},
+        {sjis, B("\x93\xfa\x96\x7b\xFF\n? "), "Shift JIS output with a byte that is not Shift JIS"},
     };
     for (size_t i = 0; i < sizeof(divided) / sizeof(divided[0]); i++) {
         NSData *whole = divided[i].data;
@@ -279,9 +283,24 @@ int main(int argc, char **argv) { @autoreleasepool {
         }
         for (NSUInteger w = 1; w <= 7; w++)
             if (! [pieces(divided[i].doc, whole, w) isEqualToString:once]) [differ addObject:[NSString stringWithFormat:@"width %lu", (unsigned long)w]];
-        BOOL right = i == 0 ? [once isEqualToString:@"! \u672a\u5b9a\u7fa9\u306e\u30b3\u30de\u30f3\u30c9\nl.1 \u6f22\u5b57\n? "] : [once isEqualToString:@"abc\ufffddef\u65e5\u672c\nnext\n"];
+        BOOL right = i == 0 ? [once isEqualToString:@"! \u672a\u5b9a\u7fa9\u306e\u30b3\u30de\u30f3\u30c9\nl.1 \u6f22\u5b57\n? "]
+            : i == 1 ? [once isEqualToString:@"abc\ufffddef\u65e5\u672c\nnext\n"]
+            : i == 2 ? [once isEqualToString:@"\u65e5\ufffd\nnext\n"]
+            : i == 3 ? [once isEqualToString:[TSEncodingSupport displayStringForData:whole encoding:utf8]] && [once hasPrefix:@"ok\n"]
+            : [once isEqualToString:[TSEncodingSupport displayStringForData:whole encoding:sjis]];
         check(right && differ.count == 0, [NSString stringWithFormat:@"%s: right, and the same divided at every byte (differs at %@)", divided[i].name, [differ componentsJoinedByString:@","]]);
     }
+    // Through a real pipe, with gaps shorter than the console waits: a valid character, then a byte that is not
+    // UTF-8, reads as when it all comes at once.
+    p = throughPipe(utf8, @[B("\xE6\x97\xA5"), B("\xFF\n")], 0.02, YES);
+    check([shown(p) isEqualToString:[TSEncodingSupport displayStringForData:B("\xE6\x97\xA5\xFF\n") encoding:utf8]] && [shown(p) isEqualToString:@"\u65e5\ufffd\n"],
+          @"real pipe: a character, 20 ms, then a byte that is not UTF-8 reads as a whole");
+    p = throughPipe(utf8, @[B("\xE6\x97\xA5"), B("\xFF\xFF\n")], 0.02, YES);
+    check([shown(p) isEqualToString:[TSEncodingSupport displayStringForData:B("\xE6\x97\xA5\xFF\xFF\n") encoding:utf8]],
+          @"real pipe: a character, 20 ms, then two bytes that are not UTF-8 read as a whole");
+    // A Japanese prompt of a UTF-8 document waiting for input is still shown.
+    p = throughPipe(utf8, @[[@"\u5165\u529b: " dataUsingEncoding:utf8]], 0.6, NO);
+    check([shown(p) isEqualToString:@"\u5165\u529b: "] && p->_consoleCarry.length == 0, @"a Japanese prompt of a UTF-8 document is shown after a pause");
     // A Shift JIS line that also reads as UTF-8 keeps reading as Shift JIS in a Shift JIS document.
     NSData *both = [@"\u9b31" dataUsingEncoding:sjis];
     check([[TSEncodingSupport displayStringForData:both encoding:sjis] isEqualToString:@"\u9b31"], @"output all in the document's encoding is shown as before");

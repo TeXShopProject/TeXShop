@@ -1140,12 +1140,11 @@ static NSString *TSDisplayStringForLine(const uint8_t *bytes, NSUInteger length,
 }
 
 // A line of output that has not ended is kept for the next piece when a piece of it could read
-// otherwise than the whole line: when the encoding is not UTF-8 and the line has bytes beyond
-// ASCII (in such an encoding a piece of a UTF-8 line can read as other characters, and the whole
-// line decides how it is read), when the encoding is ISO-2022-JP and the line has an escape
-// sequence (the rest of the line reads as ASCII without it), and when the output is UTF-8 and
-// the line has bytes that are not UTF-8 (the whole line decides how it is read). Longer lines
-// are not kept.
+// otherwise than the whole line, so that a line reads the same however the pipe divides it: when
+// it has bytes beyond ASCII (the whole line decides whether it reads as UTF-8, as UTF-8 with
+// U+FFFD for bytes that are not UTF-8, in the encoding or as Latin 9), and in ISO-2022-JP when it
+// has an escape sequence (the rest of the line reads as ASCII without it). Such a line waiting for
+// input is shown after a pause (writeTexOutput:). Longer lines are not kept.
 static const NSUInteger TSLongestKeptLine = 4096;
 
 // The number of bytes at the end of data to keep for the next piece of output: the start of a
@@ -1158,7 +1157,7 @@ static NSUInteger TSLengthToKeep(NSData *data, NSStringEncoding encoding, BOOL l
 	NSUInteger length = data.length;
 	if (length == 0)
 		return 0;
-	if (encoding == NSUTF8StringEncoding && TSBytesDecode(b, length, encoding))
+	if (! line && encoding == NSUTF8StringEncoding && TSBytesDecode(b, length, encoding))
 		return 0;
 	NSUInteger lineStart = TSLineStart(b, length);
 	if (lineStart > 0) {
@@ -1183,15 +1182,10 @@ static NSUInteger TSLengthToKeep(NSData *data, NSStringEncoding encoding, BOOL l
 			else if (b[i] == 0x1B)
 				escape = YES;
 		}
-		if (beyondASCII && encoding != NSUTF8StringEncoding)
+		if (beyondASCII)
 			return length - lineStart;
 		if (escape && encoding == CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISO_2022_JP))
 			return length - lineStart;
-		if (beyondASCII && encoding == NSUTF8StringEncoding) {
-			NSUInteger unfinished = TSUnfinishedUTF8Character(b + lineStart, length - lineStart, NULL);
-			if (! TSBytesDecode(b + lineStart, length - lineStart - unfinished, NSUTF8StringEncoding))
-				return length - lineStart;
-		}
 	}
 	// The start of a UTF-8 character at the end of a line that is otherwise UTF-8. It is looked
 	// for before the encoding, in which these bytes may read as other characters.
