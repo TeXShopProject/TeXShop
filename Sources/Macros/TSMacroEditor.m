@@ -249,7 +249,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
     options.makesAtLetter = [SUD boolForKey:MakeatletterEnabledKey];
     options.colorsIndex = [SUD boolForKey:IndexColorStartKey];
     options.colorsFootnote = [SUD boolForKey:SyntaxColorFootnoteKey];
-    options.marksFullwidthSymbols = [scheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;
+    options.marksFullwidthSymbols = [SUD boolForKey:HighlightFullwidthSymbolsKey] && [scheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;
     TSSyntaxMacroContentScanner *scanner = [[TSSyntaxMacroContentScanner alloc] initWithTeXOptions:options];
     if (self.contentHighlighter.textView != contentTextView) {
         [self.contentHighlighter invalidate];

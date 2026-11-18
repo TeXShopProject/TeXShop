@@ -74,6 +74,7 @@ add(TSSettingsCategoryEditor, @"heading.group.editor.3", @"SettingsCategories", 
 add(TSSettingsCategoryEditor, @"row.catalog.editor.3.0", @"SettingsCategories", @"catalog.editor.3.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.3.1", @"SettingsCategories", @"catalog.editor.3.1.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.3.1", @"SettingsCategories", @"catalog.editor.3.1.note", TSSettingsSearchWeightDescription);
+add(TSSettingsCategoryEditor, @"row.catalog.editor.3.2", @"SettingsCategories", @"catalog.editor.3.2.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryEditor, @"heading.group.editor.4", @"SettingsCategories", @"group.editor.4.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.4.0", @"SettingsCategories", @"catalog.editor.4.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.4.1", @"SettingsCategories", @"catalog.editor.4.1.title", TSSettingsSearchWeightLabel);

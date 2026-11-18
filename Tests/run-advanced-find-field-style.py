@@ -14,6 +14,7 @@ mutations = {
     'theme-alpha': ('return [colors colorFromDictionary:theme andKey:key] ?:', 'return [colors colorForKey:key fromDictionary:theme isWindowDark:dark] ?:'),
     'no-font-notification': ('TSPreferenceNeedsRecolorNotification,\n                                      DocumentFontChangedNotification]', 'TSPreferenceNeedsRecolorNotification]'),
     'expl3-ignored': ('options.colorsExpl3 = [SUD boolForKey:expl3SyntaxColoringKey];', 'options.colorsExpl3 = NO;'),
+    'fullwidth-switch-ignored': ('[SUD boolForKey:HighlightFullwidthSymbolsKey] && ', ''),
 }
 def run(text):
     with tempfile.TemporaryDirectory(prefix='texshop-advanced-find-field-style-') as tmp:

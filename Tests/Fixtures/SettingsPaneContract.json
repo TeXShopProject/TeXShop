@@ -1119,6 +1119,13 @@
         "value": "syntaxColorLinePressed:"
       },
       {
+        "key": "fullwidth-highlight-button.action",
+        "view": "settings.fullwidth-highlight-button",
+        "kind": "view",
+        "property": "action",
+        "value": "highlightFullwidthSymbolsChanged:"
+      },
+      {
         "key": "961.action",
         "view": "settings.961",
         "kind": "view",
@@ -3485,6 +3492,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Highlight Current Line"
+        },
+        {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Fullwidth Letters and Symbols"
         },
         {
           "key": "inv-955-item-3.title",
@@ -6299,6 +6313,13 @@
           "value": "Highlight Current Line"
         },
         {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Fullwidth Letters and Symbols"
+        },
+        {
           "key": "inv-955-item-3.title",
           "view": "settings.955",
           "kind": "menuItem",
@@ -9109,6 +9130,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Highlight Current Line"
+        },
+        {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Fullwidth Letters and Symbols"
         },
         {
           "key": "inv-955-item-3.title",
@@ -11923,6 +11951,13 @@
           "value": "Highlight Current Line"
         },
         {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Fullwidth Letters and Symbols"
+        },
+        {
           "key": "inv-955-item-3.title",
           "view": "settings.955",
           "kind": "menuItem",
@@ -14733,6 +14768,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Highlight Current Line"
+        },
+        {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Fullwidth Letters and Symbols"
         },
         {
           "key": "inv-955-item-3.title",
@@ -17547,6 +17589,13 @@
           "value": "Highlight Current Line"
         },
         {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Fullwidth Letters and Symbols"
+        },
+        {
           "key": "inv-955-item-3.title",
           "view": "settings.955",
           "kind": "menuItem",
@@ -20357,6 +20406,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Highlight Current Line"
+        },
+        {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Fullwidth Letters and Symbols"
         },
         {
           "key": "inv-955-item-3.title",
@@ -23171,6 +23227,13 @@
           "value": "Highlight Current Line"
         },
         {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Fullwidth Letters and Symbols"
+        },
+        {
           "key": "inv-955-item-3.title",
           "view": "settings.955",
           "kind": "menuItem",
@@ -25981,6 +26044,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Highlight Current Line"
+        },
+        {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Fullwidth Letters and Symbols"
         },
         {
           "key": "inv-955-item-3.title",
@@ -28795,6 +28865,13 @@
           "value": "Highlight Current Line"
         },
         {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Fullwidth Letters and Symbols"
+        },
+        {
           "key": "inv-955-item-3.title",
           "view": "settings.955",
           "kind": "menuItem",
@@ -31607,6 +31684,13 @@
           "value": "Highlight Current Line"
         },
         {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Fullwidth Letters and Symbols"
+        },
+        {
           "key": "inv-955-item-3.title",
           "view": "settings.955",
           "kind": "menuItem",
@@ -34417,6 +34501,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Highlight Current Line"
+        },
+        {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Fullwidth Letters and Symbols"
         },
         {
           "key": "inv-955-item-3.title",

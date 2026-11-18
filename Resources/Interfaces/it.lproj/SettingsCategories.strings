@@ -96,6 +96,7 @@
 "catalog.editor.3.0.title" = "@ fa parte dei nomi dei comandi";
 "catalog.editor.3.1.title" = "Colora expl3 di default";
 "catalog.editor.3.1.note" = "Valore iniziale per i nuovi documenti. Per i documenti aperti, usare il menu Sorgente.";
+"catalog.editor.3.2.title" = "Evidenzia lettere e simboli a larghezza piena";
 "group.editor.4.title" = "Corrispondenza delle parentesi";
 "catalog.editor.4.0.title" = "Controllo Parentesi";
 "catalog.editor.4.1.title" = "Parentesi";

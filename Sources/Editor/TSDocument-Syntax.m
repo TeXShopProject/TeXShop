@@ -375,7 +375,9 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     options.makesAtLetter = [SUD boolForKey:MakeatletterEnabledKey];
     options.colorsIndex = colorIndexDifferently;
     options.colorsFootnote = colorFootnoteDifferently;
-    options.marksFullwidthSymbols = [self.syntaxColorScheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;
+    // With Highlight Fullwidth Letters and Symbols off, these characters are colored as other text.
+    options.marksFullwidthSymbols = [SUD boolForKey:HighlightFullwidthSymbolsKey] &&
+        [self.syntaxColorScheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;
     options.isXML = self.fileIsXML;
     options.excludesCommandsFromSpelling = TurnOffCommandSpellChecking;
     options.excludesCommentsFromSpelling = TurnOffCommentSpellChecking;
@@ -553,6 +555,17 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
 		[[textView2 layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:theRange];
 		[[scrapTextView layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName
 			forCharacterRange:NSMakeRange(0, scrapTextView.string.length)];
+		// The background that coloring gave fullwidth characters goes too; other backgrounds
+		// stay, and the active line is drawn again where a fullwidth background covered it.
+		TSRemoveFullwidthBackground([textView1 layoutManager], theRange);
+		TSRemoveFullwidthBackground([textView2 layoutManager], theRange);
+		TSRemoveFullwidthBackground([scrapTextView layoutManager], NSMakeRange(0, scrapTextView.string.length));
+		if (self.syntaxcolorEntry) {
+			[self cursorMoved:textView1];
+			if (windowIsSplit)
+				[self cursorMoved:textView2];
+			[self refreshExperimentCurrentLine];
+		}
 	}
 }
 
@@ -708,6 +721,11 @@ static NSRange TSVisibleCharacterRange(NSTextView *textView)
     fullRange.location = 0;
     fullRange.length = [textString length];
     [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:fullRange];
+    // Fullwidth characters and the highlighted contents of braces keep their background:
+    // this runs when Highlight Current Line is turned off, when the window is split, and
+    // for the Experiment source when composed text that coloring waited for ends.
+    TSRestoreFullwidthBackground(layoutManager, TSVisibleCharacterRange(aTextView));
+    [self restoreBraceHighlightsIn:aTextView range:TSVisibleCharacterRange(aTextView)];
 }
     
 

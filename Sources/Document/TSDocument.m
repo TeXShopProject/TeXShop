@@ -5694,6 +5694,14 @@ if ( ! skipTextWindow) {
 		[[textView layoutManager] removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:NSMakeRange(0, [[textView textStorage] length])];
 		[self colorizeVisibleAreaInTextView:textView];
 	}
+	// Without syntax coloring, which draws the active line, it is drawn here.
+	if (self.syntaxcolorEntry && (!fileIsTex || !self.syntaxColor)) {
+		if (windowIsSplit) {
+			[self cursorMoved:textView1];
+			[self cursorMoved:textView2];
+		} else
+			[self cursorMoved:textView];
+	}
 }
 
 // added by Terada (- (void)resetBackgroundColorOfTextView:)

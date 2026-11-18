@@ -483,6 +483,14 @@
         "621#3"
        ],
        "note": "新しい書類の初期値です。開いている書類では、「ソース」メニューで切り替えます。"
+      },
+      {
+       "kind": "switch",
+       "title": "全角英数記号を強調",
+       "on": true,
+       "src": [
+        "fullwidth-highlight-button"
+       ]
       }
      ]
     },

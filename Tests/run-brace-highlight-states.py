@@ -22,6 +22,17 @@
   keeps the highlights, in the new colors, in light and dark windows.
 - With Highlight Current Line and the block cursor, fullwidth backgrounds and
   highlighted contents still show, on the active line and on the others.
+- Removing the color of the active line (Highlight Current Line turned off, the
+  window split, the Experiment source after composed text that coloring waited for)
+  leaves fullwidth backgrounds and highlighted contents.
+- With Highlight Fullwidth Letters and Symbols off (on in the factory defaults),
+  fullwidth letters, digits and symbols are colored exactly as other text, by every
+  kind of coloring again (typing, pasting, Undo, resizing, scrolling, a change of
+  settings or theme, commenting out, the active line, highlighted contents, the flash),
+  also when the switch changes while text is composed and on lines out of sight; on
+  again, they have the theme's colors again. Syntax coloring of the document turned
+  off removes the fullwidth colors too, whichever is turned off first; turned on
+  again, the switch decides.
 
 All this in either half of a split window and in the Experiment source, with "Flash"
 and "Always" highlighting. The production categories TSDocument (SyntaxHighlighting) and
@@ -32,7 +43,7 @@ ScrapTextView and the real TSLayoutManager. Text is composed through the
 NSTextInputClient methods that input methods call. Windows are never ordered on
 screen. Preferences stay in memory."""
 from pathlib import Path
-import argparse, re, subprocess, sys, tempfile
+import argparse, plistlib, re, subprocess, sys, tempfile
 from source_tree import include_args, source_file
 
 SYNTAX = 'Sources/Editor/TSDocument-Syntax.m'
@@ -43,6 +54,8 @@ SCRAP_VIEW = 'Sources/Editor/ScrapTextView.m'
 SCRAP = 'Sources/Document/TSDocument-Scrap.m'
 XML = 'Sources/Document/TSDocument-XML.m'
 TEXT_VIEW = 'Sources/Editor/TSTextView.m'
+EFFECTS = 'Sources/Settings/TSPreferenceEffects.h'
+FACTORY = 'Resources/Defaults/FactoryDefaults.plist'
 
 MUTATIONS = {
     'highlights-moved-braces': (DOCUMENT,
@@ -95,12 +108,23 @@ MUTATIONS = {
     'experiment-contents-reset-without-coloring': (EXPERIMENT,
         '                                        forCharacterRange:NSMakeRange(0, scrapTextView.string.length)];\n    [self colorizeExperimentSource];\n}',
         '                                        forCharacterRange:NSMakeRange(0, scrapTextView.string.length)];\n}'),
+    'line-removal-wipes-fullwidth': (SYNTAX,
+        '    TSRestoreFullwidthBackground(layoutManager, TSVisibleCharacterRange(aTextView));\n    [self restoreBraceHighlightsIn:aTextView range:TSVisibleCharacterRange(aTextView)];\n}', '}'),
+    # Highlight Fullwidth Letters and Symbols.
+    'syntax-off-keeps-fullwidth': (SYNTAX, '\t\tTSRemoveFullwidthBackground([textView1 layoutManager], theRange);\n\t\tTSRemoveFullwidthBackground([textView2 layoutManager], theRange);\n\t\tTSRemoveFullwidthBackground([scrapTextView layoutManager], NSMakeRange(0, scrapTextView.string.length));\n', ''),
+    'syntax-off-loses-active-line': (SYNTAX, '\t\tif (self.syntaxcolorEntry) {\n\t\t\t[self cursorMoved:textView1];', '\t\tif (NO) {\n\t\t\t[self cursorMoved:textView1];'),
+    'brace-reset-loses-active-line': (DOCUMENT, '\tif (self.syntaxcolorEntry && (!fileIsTex || !self.syntaxColor)) {', '\tif (NO) {'),
+    'experiment-brace-reset-loses-active-line': (EXPERIMENT, '    if (self.syntaxcolorEntry && (!fileIsTex || !self.syntaxColor))\n        [self refreshExperimentCurrentLine];', ''),
+    'fullwidth-switch-ignored': (SYNTAX, '[SUD boolForKey:HighlightFullwidthSymbolsKey] &&\n        [self.syntaxColorScheme', '[self.syntaxColorScheme'),
+    'fullwidth-not-posted': (EFFECTS, 'CheckParenEnabledKey, HighlightFullwidthSymbolsKey, ', 'CheckParenEnabledKey, '),
+    'fullwidth-not-observed': (DOCUMENT, 'addObserver:self selector:@selector(colorizeAll)', 'addObserver:self selector:@selector(description)'),
+    'fullwidth-off-by-default': (FACTORY, '<key>HighlightFullwidthSymbols</key>\n\t<string>YES</string>', '<key>HighlightFullwidthSymbols</key>\n\t<string>NO</string>'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
-text = {path: (root / path).read_text(encoding='latin1') for path in (SYNTAX, EXPERIMENT, COLOR, DOCUMENT, SCRAP_VIEW, SCRAP, XML, TEXT_VIEW)}
+text = {path: (root / path).read_text(encoding='latin1') for path in (SYNTAX, EXPERIMENT, COLOR, DOCUMENT, SCRAP_VIEW, SCRAP, XML, TEXT_VIEW, EFFECTS, FACTORY)}
 if args.mutation:
     path, old, new = MUTATIONS[args.mutation]
     assert text[path].count(old) == 1, args.mutation
@@ -120,7 +144,7 @@ def strip_imports(source):
 
 document = text[DOCUMENT]
 DOCUMENT_METHODS = [
-    '- (IBAction)toggleSyntaxColorEntry:sender {', '- (IBAction)toggleBlockCursor:sender {',
+    '- (IBAction)toggleSyntaxColor:sender {', '- (IBAction)toggleSyntaxColorEntry:sender {', '- (IBAction)toggleBlockCursor:sender {',
     '- (void) applyInvisibleCharactersShowing', '- (void) showHideInvisibleCharacters: sender',
     '- (void) showHideLineNumbers: sender', '- (void)setDocumentFontFromPreferences:(NSNotification *)notification',
     '- (void)fixUpTabs {', '- (void)setLineBreakMode:(id)sender', '- (void) flipIndexColor: (NSInteger)state',
@@ -151,6 +175,13 @@ globals_m = source_file(root, 'globals.m').read_text(encoding='latin1')
 assert 'NSString *SourceColorChangedNotification = @"SourceColorChangedNotification";' in globals_m
 assert 'selector:@selector(changeColorsFromNotification:)\n          name:SourceColorChangedNotification object:nil];' in text[DOCUMENT]
 keys = dict(re.findall(r'^NSString \*(\w+Key)\s*=\s*(@"[^"]*");', globals_m, re.M))
+# Highlight Fullwidth Letters and Symbols: its factory default, which TSAppDelegate registers; whether Settings posts
+# the notification for a recoloring when it changes; whether the document colors its views again then.
+factory_fullwidth = plistlib.loads(text[FACTORY].encode('latin1'))['HighlightFullwidthSymbols']
+assert isinstance(factory_fullwidth, str)
+recolor_keys = re.search(r'TSPreferenceNeedsRecolorNotification: @\[([^\]]*)\]', text[EFFECTS]).group(1)
+fullwidth_recolors = 'HighlightFullwidthSymbolsKey' in re.findall(r'\w+', recolor_keys)
+observes_recolor = re.search(r'addObserver:self selector:@selector\(colorizeAll\)\s*name:@"NeedsForRecolorNotification" object:nil\]', text[DOCUMENT]) is not None
 defines = '\n'.join(f'#define {k} {v}' for k, v in sorted(keys.items()))
 marker_keys = '\n'.join(f'NSString *{k} = {keys[k]};' for k in [
     'showSpaceCharacterKey', 'showFullwidthSpaceCharacterKey', 'showTabCharacterKey', 'showNewLineCharacterKey',
@@ -340,6 +371,7 @@ extern NSColor *InvisibleColor;
 - (void)showHideLineNumbers:(id)sender;
 - (void)flipIndexColor:(NSInteger)state;
 - (void)showIndexColor:(id)sender;
+- (IBAction)toggleSyntaxColor:(id)sender;
 - (IBAction)toggleSyntaxColorEntry:(id)sender;
 - (IBAction)toggleBlockCursor:(id)sender;
 - (IBAction)toggleXML:(id)sender;
@@ -487,6 +519,8 @@ static NSMutableString *Source(void) {
 
 int main(void) { @autoreleasepool {
     TSInstallAppKitIsolation();
+    // The factory default of Highlight Fullwidth Letters and Symbols, as TSAppDelegate registers it.
+    [SUD registerDefaults:@{HighlightFullwidthSymbolsKey: @"@@FULLWIDTH_FACTORY@@"}];
     [NSApplication sharedApplication];
     indicators = [NSMutableArray array]; flashSelections = [NSMutableArray array];
     FlashColor = NSColor.orangeColor; ThemeBackground = NSColor.whiteColor; XMLColor = NSColor.brownColor;
@@ -553,6 +587,9 @@ int main(void) { @autoreleasepool {
     [doc observeExperimentSource];
     source.allowsUndo = YES;
     [NSNotificationCenter.defaultCenter addObserver:doc selector:@selector(changeColorsFromNotification:) name:@"SourceColorChangedNotification" object:nil];
+    // As -[TSDocument windowControllerDidLoadNib:]: a change in Settings that needs a recoloring.
+    if (@@OBSERVES_RECOLOR@@)
+        [NSNotificationCenter.defaultCenter addObserver:doc selector:@selector(colorizeAll) name:@"NeedsForRecolorNotification" object:nil];
 
     NSColor *contentColor = NSColor.cyanColor;
     // What a change of theme replaces in the document, to be put back after a test of one.
@@ -1031,6 +1068,19 @@ int main(void) { @autoreleasepool {
                 [doc cursorMoved:lower];
                 Check([Background(lower, 6) isEqual:contents] && [Background(lower, 0) isEqual:wide], "lower half: the same with the active line drawn there");
             }
+            // Syntax coloring of the document turned off while the contents are highlighted: the highlight
+            // ends, the fullwidth backgrounds go, and the active line keeps its color once all that was
+            // put off is done; on again, as before.
+            if (scheme == 0) {
+                [doc toggleSyntaxColor:nil]; Spin(0.30);
+                Check(!doc.syntaxColor && [Background(view, 3) isEqual:line] && [Background(view, 9) isEqual:line] && [Background(view, 10) isEqual:line]
+                      && Background(view, 0) == nil && Background(view, 13) == nil,
+                      NAME("syntax coloring off while contents are highlighted: the active line keeps its color, no fullwidth background"));
+                [doc toggleSyntaxColor:nil]; Spin(0.05);
+                Cursor(4); Cursor(5); Spin(0.05); [doc cursorMoved:view];
+                Check(doc.syntaxColor && [Background(view, 3) isEqual:line] && [Background(view, 6) isEqual:contents] && [Background(view, 0) isEqual:wide],
+                      NAME("syntax coloring on again: the contents, the active line and fullwidth backgrounds as before"));
+            }
             [view setSelectedRange:NSMakeRange(14, 0)]; Spin(0.05); [doc cursorMoved:view];
             Check(Background(view, 5) == nil && [Background(view, 6) isEqual:wide] && [Background(view, 13) isEqual:line],
                   NAME("when the contents highlight ends, the active line and fullwidth backgrounds remain"));
@@ -1108,6 +1158,312 @@ int main(void) { @autoreleasepool {
             [SUD setBool:NO forKey:AlwaysHighlightEnabledKey]; [SUD setBool:NO forKey:HighlightContentEnabledKey];
             Recolor(); Spin(0.40);
         }
+
+        // 11. Highlight Fullwidth Letters and Symbols turned off (Settings, Editor, Syntax Coloring; on in the
+        // factory defaults): fullwidth letters, digits and symbols and the minus sign are colored exactly as the
+        // same text is by a theme without fullwidth colors, by every kind of coloring again, light and dark; the
+        // theme keeps its fullwidth colors for when the switch is on again. Settings posts the change
+        // (TSPreferenceEffects.h), and the document colors its views again.
+        {
+            NSDictionary *savedTheme = SaveTheme();
+            NSColor *(^RGB)(NSArray *) = ^NSColor *(NSArray *c) {
+                return [NSColor colorWithSRGBRed:[c[0] doubleValue] green:[c[1] doubleValue] blue:[c[2] doubleValue] alpha:1];
+            };
+            Check(TSIsolatedAppKitDefaults.values[HighlightFullwidthSymbolsKey] == nil && [SUD boolForKey:HighlightFullwidthSymbolsKey],
+                  NAME("Highlight Fullwidth Letters and Symbols is on without a setting of the user's"));
+            void (^Switch)(BOOL) = ^(BOOL on) {
+                [SUD setBool:on forKey:HighlightFullwidthSymbolsKey];
+                if (@@FULLWIDTH_RECOLORS@@)
+                    [NSNotificationCenter.defaultCenter postNotificationName:@"NeedsForRecolorNotification" object:nil];
+                Spin(0.02);
+            };
+            // The colors of every character, in each view of the text.
+            NSArray *(^Snapshot)(void) = ^NSArray *{
+                NSMutableArray *all = [NSMutableArray array];
+                for (NSTextView *v in views)
+                    for (NSUInteger i = 0; i < v.string.length; i++) {
+                        NSDictionary *a = [v.layoutManager temporaryAttributesAtCharacterIndex:i effectiveRange:NULL];
+                        [all addObject:@[a[NSForegroundColorAttributeName] ?: NSNull.null, a[NSBackgroundColorAttributeName] ?: NSNull.null,
+                                         a[TSFullwidthBackgroundMark] ? @YES : @NO]];
+                    }
+                return all;
+            };
+            NSUInteger (^Where)(NSString *) = ^NSUInteger(NSString *s) { return [view.string rangeOfString:s].location; };
+            // A character colored as the one at another place, in each view.
+            BOOL (^AsAt)(NSUInteger, NSUInteger) = ^BOOL(NSUInteger i, NSUInteger j) {
+                if (i == NSNotFound || j == NSNotFound) return NO;
+                return EACH((Foreground(v, i) == Foreground(v, j) || [Foreground(v, i) isEqual:Foreground(v, j)]) &&
+                            (Background(v, i) == Background(v, j) || [Background(v, i) isEqual:Background(v, j)]));
+            };
+            NSString *text = @"x\uff0by x\uff11y x\u2212y\n\\a\uff22x \\\uff21 %a\uff21\na{\uff23}b plain\n";
+            for (int dark = 0; dark < 2; dark++) {
+                NSAppearance *appearance = [NSAppearance appearanceNamed:dark ? NSAppearanceNameDarkAqua : NSAppearanceNameAqua];
+                for (NSTextView *v in @[source, lower, scrap]) v.appearance = appearance;
+                mainWindow.appearance = appearance;
+                NSArray *wideText = dark ? @[@0.3, @0.9, @1] : @[@0.7, @0.1, @0], *wideBack = dark ? @[@0.1, @0, @0] : @[@0.9, @1, @1];
+                NSDictionary *theme = @{@"theme": @YES, @"EditorHighlightZenkakuSymbol": wideText, @"EditorHighlightZenkakuSymbolBackground": wideBack,
+                                        @"SyntaxComment": @[@0.8, @0.1, @0.1], @"SyntaxCommand": @[@0.1, @0.1, @0.8],
+                                        @"EditorHighlightContent": @[@0.2, @0.9, @0.9], @"EditorHighlightBraces": @[@0.8, @0.1, @0.6], @"EntryColor": @[@1, @1, @0.5]};
+                NSMutableDictionary *noFullwidth = [theme mutableCopy];
+                [noFullwidth removeObjectsForKeys:@[@"EditorHighlightZenkakuSymbol", @"EditorHighlightZenkakuSymbolBackground"]];
+                NSMutableDictionary *otherWide = [theme mutableCopy];
+                otherWide[@"EditorHighlightZenkakuSymbol"] = @[@0.2, @0.6, @0.2]; otherWide[@"EditorHighlightZenkakuSymbolBackground"] = @[@0.6, @0.6, @0.9];
+                void (^Theme)(NSDictionary *) = ^(NSDictionary *t) {
+                    if (dark) darkColors = t; else liteColors = t;
+                    [NSNotificationCenter.defaultCenter postNotificationName:@"SourceColorChangedNotification" object:nil];
+                    Spin(0.01);
+                };
+                NSArray *wideColors = @[RGB(wideText), RGB(wideBack), RGB(otherWide[@"EditorHighlightZenkakuSymbol"]), RGB(otherWide[@"EditorHighlightZenkakuSymbolBackground"])];
+                // No character anywhere in the text has a fullwidth color or the mark of a fullwidth background.
+                BOOL (^NoneWide)(void) = ^BOOL {
+                    for (NSTextView *v in views)
+                        for (NSUInteger i = 0; i < v.string.length; i++) {
+                            NSDictionary *a = [v.layoutManager temporaryAttributesAtCharacterIndex:i effectiveRange:NULL];
+                            if (a[TSFullwidthBackgroundMark] || [wideColors containsObject:a[NSForegroundColorAttributeName] ?: NSNull.null]
+                                || [wideColors containsObject:a[NSBackgroundColorAttributeName] ?: NSNull.null])
+                                return NO;
+                        }
+                    return YES;
+                };
+                // Off: no fullwidth colors, and fullwidth characters colored as their neighbors.
+                BOOL (^Plain)(void) = ^BOOL {
+                    NSUInteger plus = Where(@"x\uff0by"), one = Where(@"x\uff11y"), minus = Where(@"x\u2212y"), b = Where(@"\uff22x"), c = Where(@"\uff23}b");
+                    return NoneWide() && AsAt(plus + 1, plus) && AsAt(one + 1, one) && AsAt(minus + 1, minus) && AsAt(b, b + 1) && AsAt(c, c + 2);
+                };
+                // On: those outside comments and commands in the theme's fullwidth colors.
+                BOOL (^Wide)(void) = ^BOOL {
+                    BOOL all = YES;
+                    for (NSString *s in @[@"\uff0b", @"\uff11", @"\u2212", @"\uff22", @"\uff23"]) {
+                        NSUInteger i = Where(s);
+                        if (!EACH([Foreground(v, i) isEqual:RGB(wideText)] && [Background(v, i) isEqual:RGB(wideBack)])) all = NO;
+                    }
+                    return all;
+                };
+
+                // Turned off and on: the colors of a theme without fullwidth colors, then the colors as before.
+                Theme(noFullwidth);
+                Show(text);
+                NSArray *plain = Snapshot();
+                Theme(theme);
+                Show(text);
+                NSArray *wide = Snapshot();
+                Check(Wide() && ![wide isEqual:plain], NAME("fullwidth characters have the theme's colors"));
+                Check(AsAt(Where(@"a\uff21\n") + 1, Where(@"a\uff21\n")), NAME("a fullwidth character in a comment has the comment's color"));
+                Switch(NO);
+                Check([Snapshot() isEqual:plain], NAME("turned off, the text has the colors of a theme without fullwidth colors"));
+                Check(Plain(), NAME("turned off, fullwidth characters are colored as their neighbors"));
+                Switch(YES);
+                Check([Snapshot() isEqual:wide], NAME("turned on again, the text has its fullwidth colors again"));
+                Switch(NO);
+
+                // Whatever colors the text again, fullwidth characters stay colored as other text.
+                NSMutableArray *paths = [@[@"type", @"type fullwidth", @"paste", @"resize", @"scroll", @"settings", @"recolor", @"theme", @"comment", @"uncomment"] mutableCopy];
+                if (!inExperiment) [paths insertObject:@"undo" atIndex:3];
+                if (!inExperiment) [paths insertObject:@"lower half resize" atIndex:5];
+                for (NSString *path in paths) {
+                    if ([path isEqual:@"type"]) {
+                        [view setSelectedRange:NSMakeRange(0, 0)];
+                        [view insertText:@"q" replacementRange:NSMakeRange(NSNotFound, 0)];
+                    } else if ([path isEqual:@"type fullwidth"]) {
+                        [view setSelectedRange:NSMakeRange(Where(@"plain"), 0)];
+                        [view insertText:@"\uff10" replacementRange:NSMakeRange(NSNotFound, 0)];
+                    } else if ([path isEqual:@"paste"]) {
+                        NSPasteboard *board = [NSPasteboard pasteboardWithUniqueName];
+                        [board clearContents];
+                        [board setString:@"x\uff15y" forType:NSPasteboardTypeString];
+                        [view setSelectedRange:NSMakeRange(Where(@"plain"), 0)];
+                        [view readSelectionFromPasteboard:board type:NSPasteboardTypeString];
+                        [board releaseGlobally];
+                    } else if ([path isEqual:@"undo"]) [view.undoManager undo];
+                    else if ([path isEqual:@"resize"]) [doc viewFrameDidChange:[NSNotification notificationWithName:NSViewFrameDidChangeNotification object:view]];
+                    else if ([path isEqual:@"lower half resize"]) [doc viewFrameDidChange:[NSNotification notificationWithName:NSViewFrameDidChangeNotification object:lower]];
+                    else if ([path isEqual:@"scroll"]) [doc viewBoundsDidChange:[NSNotification notificationWithName:NSViewBoundsDidChangeNotification object:view.enclosingScrollView.contentView]];
+                    else if ([path isEqual:@"settings"]) [doc reColor:nil];
+                    else if ([path isEqual:@"recolor"]) Recolor();
+                    else if ([path isEqual:@"theme"]) { Theme(otherWide); Check(NoneWide(), NAME("a theme with other fullwidth colors gives none")); Theme(theme); }
+                    else if ([path isEqual:@"comment"] || [path isEqual:@"uncomment"]) {
+                        // As -doCommentOrIndentForTag: does: the edit, then the lines are colored again.
+                        BOOL comment = [path isEqual:@"comment"];
+                        [view replaceCharactersInRange:NSMakeRange(0, comment ? 0 : 1) withString:comment ? @"%" : @""];
+                        if (inExperiment) [doc colorizeExperimentSource]; else [doc fixColor:0 :Where(@"\n") + 1];
+                    }
+                    Spin(0.05);
+                    if ([path isEqual:@"comment"]) {
+                        NSUInteger plus = Where(@"x\uff0by");
+                        Check(NoneWide() && AsAt(plus + 1, plus) && AsAt(plus + 1, 0), NAME("off: commented out, a fullwidth character has the comment's color"));
+                        continue;
+                    }
+                    if (!Plain()) printf("   after %s\n", path.UTF8String);
+                    Check(Plain(), NAME("off: coloring again keeps fullwidth characters colored as other text"));
+                    if ([path isEqual:@"type fullwidth"])
+                        Check(AsAt(Where(@"\uff10"), Where(@"\uff10") + 1), NAME("off: a typed fullwidth digit is colored as other text"));
+                    if ([path isEqual:@"paste"])
+                        Check(AsAt(Where(@"x\uff15y") + 1, Where(@"x\uff15y")), NAME("off: a pasted fullwidth digit is colored as other text"));
+                }
+                Switch(YES);
+                Check(Wide() && [Background(view, Where(@"\uff10")) isEqual:RGB(wideBack)], NAME("on again after the edits, fullwidth characters have their colors"));
+                Switch(NO);
+
+                // Syntax coloring of the document (Source menu) turned off and on, before or after the switch,
+                // with and without the active line: off, the text has no fullwidth colors nor their marks, and a
+                // fullwidth character on the active line has the line's color; on again, the switch decides.
+                for (int entry = 0; entry < 2; entry++)
+                    for (int order = 0; order < 4; order++) {
+                        void (^Syntax)(BOOL) = ^(BOOL on) { if (doc.syntaxColor != on) [doc toggleSyntaxColor:nil]; Spin(0.02); };
+                        Syntax(YES);
+                        Switch(order != 2);
+                        doc.syntaxcolorEntry = entry;
+                        Show(text);
+                        [view setSelectedRange:NSMakeRange(1, 0)]; Spin(0.02);
+                        for (NSTextView *v in views) [doc cursorMoved:v];
+                        BOOL ok = YES;
+                        if (order == 1) { Switch(NO); ok &= Plain(); }
+                        Syntax(NO);
+                        ok &= Plain() && (!entry || Background(view, Where(@"x\uff0by")) != nil);
+                        if (order == 0) { Switch(NO); ok &= Plain(); }
+                        if (order == 2) { Switch(YES); ok &= Plain(); }
+                        Syntax(YES);
+                        ok &= (order == 0 || order == 1) ? Plain() : Wide();
+                        Switch(YES);
+                        ok &= Wide();
+                        const char *names[] = {"syntax coloring off, then the switch off", "the switch off, then syntax coloring off",
+                                               "switch off, syntax coloring off, switch on", "syntax coloring off and on with the switch on"};
+                        char name[240];
+                        snprintf(name, sizeof name, "%s %s%s: no fullwidth colors while syntax coloring is off, the switch decides once it is on",
+                                 inExperiment ? "Experiment:" : "source:", names[order], entry ? ", with the active line" : "");
+                        Check(ok, name);
+                        doc.syntaxcolorEntry = NO;
+                        for (NSTextView *v in views) [doc removeCurrentLineColor:v];
+                    }
+                Switch(NO);
+
+                // The active line: a fullwidth character on it has the line's color, as its neighbors.
+                doc.syntaxcolorEntry = YES;
+                Show(text);
+                [view setSelectedRange:NSMakeRange(1, 0)]; Spin(0.02);
+                for (NSTextView *v in views) [doc cursorMoved:v];
+                NSUInteger plus = Where(@"x\uff0by");
+                Check(Plain() && Background(view, plus) != nil && AsAt(plus + 1, plus), NAME("off: on the active line, a fullwidth character has the line's color"));
+                Switch(YES);
+                for (NSTextView *v in views) [doc cursorMoved:v];
+                Check([Background(view, Where(@"\uff23")) isEqual:RGB(wideBack)] && [Background(view, plus + 1) isEqual:RGB(wideBack)],
+                      NAME("on: fullwidth characters keep their background on the active line and elsewhere"));
+                Switch(NO);
+                for (NSTextView *v in views) [doc cursorMoved:v];
+                Check(Plain() && Background(view, Where(@"\uff23")) == nil, NAME("off again with the active line: no fullwidth background anywhere"));
+                doc.syntaxcolorEntry = NO;
+                for (NSTextView *v in views) [doc removeCurrentLineColor:v];
+
+                // The highlight of braces and of their contents: a fullwidth digit inside has the contents' color,
+                // one outside none; when the highlight ends, neither has a background.
+                [SUD setBool:YES forKey:HighlightContentEnabledKey];
+                for (int always = 0; always < 2; always++) {
+                    [SUD setBool:always forKey:AlwaysHighlightEnabledKey];
+                    Show(@"abc\nx{a\uff11b}z\uff12\nxyz\n");
+                    Pass(5, 6); Spin(0.05);
+                    Check(CONTENTS && AsAt(7, 6) && AsAt(11, 10) && NoneWide() && EACH(Background(v, 7) != nil), NAME("off: highlighted contents color a fullwidth digit as the other contents"));
+                    Recolor(); Spin(0.02);
+                    Check(AsAt(7, 6) && AsAt(11, 10) && NoneWide(), NAME("off: and so after coloring again"));
+                    Switch(YES);
+                    Check(EACH([Background(v, 7) isEqual:Background(v, 6)]) && [Background(view, 11) isEqual:RGB(wideBack)], NAME("turned on during the highlight: the contents keep their color, the digit outside gets its own"));
+                    Switch(NO);
+                    Check(AsAt(7, 6) && AsAt(11, 10) && NoneWide(), NAME("turned off during the highlight: the contents keep their color"));
+                    [view setSelectedRange:NSMakeRange(0, 0)]; Spin(0.40);
+                    Check(!CONTENTS && EACH(Background(v, 7) == nil) && AsAt(7, 6) && NoneWide(), NAME("off: when the highlight ends, the fullwidth digit has no background"));
+                }
+                [SUD setBool:NO forKey:HighlightContentEnabledKey]; [SUD setBool:NO forKey:AlwaysHighlightEnabledKey];
+
+                // The flash for an unmatched brace.
+                [SUD setBool:YES forKey:FlashBackgroundEnabledKey];
+                Show(@"x\uff11y\nx}}y\n");
+                Pass(5, 6); Spin(0.02);
+                Spin(0.35);
+                Check(NoneWide() && AsAt(1, 0), NAME("off: after the flash for an unmatched brace, a fullwidth digit is colored as other text"));
+                [SUD setBool:NO forKey:FlashBackgroundEnabledKey];
+
+                // Turned off or on while text is composed: the text is colored once the composed text is
+                // committed or removed, in every view.
+                for (int step = 0; step < 4; step++) {
+                    BOOL commit = step % 2, turnOn = step / 2;
+                    Switch(!turnOn);
+                    Show(text);
+                    [view setSelectedRange:NSMakeRange(0, 0)];
+                    Compose(view, @[@"\u3042"]);
+                    Switch(turnOn);
+                    Check(view.hasMarkedText, NAME("text is being composed"));
+                    if (commit) [view insertText:@"\u4e9c" replacementRange:NSMakeRange(NSNotFound, 0)];
+                    else { [view setMarkedText:@"" selectedRange:NSMakeRange(0, 0) replacementRange:NSMakeRange(NSNotFound, 0)]; [view unmarkText]; }
+                    Spin(0.05);
+                    Check(!view.hasMarkedText && (turnOn ? Wide() : Plain()),
+                          turnOn ? NAME("turned on while text is composed: the fullwidth colors once it is committed or removed")
+                                 : NAME("turned off while text is composed: no fullwidth colors once it is committed or removed"));
+                }
+                Switch(NO);
+
+                // Lines out of sight: colored as they come into view, also after a change made while composing.
+                for (int composing = 0; composing < 2; composing++) {
+                    for (int on = 0; on < 2; on++) {
+                        Switch(on);
+                        NSMutableString *longText = Source();
+                        [longText appendString:@"x\uff11y\n"];
+                        Show(longText);
+                        NSUInteger end = longText.length - 3;
+                        [view scrollRangeToVisible:NSMakeRange(end, 1)]; Spin(0.05);
+                        [doc viewBoundsDidChange:[NSNotification notificationWithName:NSViewBoundsDidChangeNotification object:view.enclosingScrollView.contentView]];
+                        BOOL before = on ? [Background(view, end) isEqual:RGB(wideBack)] : Background(view, end) == nil;
+                        [view scrollRangeToVisible:NSMakeRange(0, 0)]; Spin(0.05);
+                        [doc viewBoundsDidChange:[NSNotification notificationWithName:NSViewBoundsDidChangeNotification object:view.enclosingScrollView.contentView]];
+                        if (composing) { [view setSelectedRange:NSMakeRange(0, 0)]; Compose(view, @[@"\u3042"]); }
+                        Switch(!on);
+                        if (composing) { [view insertText:@"\u4e9c" replacementRange:NSMakeRange(NSNotFound, 0)]; Spin(0.05); end++; }
+                        [view scrollRangeToVisible:NSMakeRange(end, 1)]; Spin(0.05);
+                        [doc viewBoundsDidChange:[NSNotification notificationWithName:NSViewBoundsDidChangeNotification object:view.enclosingScrollView.contentView]];
+                        // Only this view scrolls: the other half of a split window shows the beginning still.
+                        NSDictionary *a = [view.layoutManager temporaryAttributesAtCharacterIndex:end effectiveRange:NULL];
+                        NSDictionary *x = [view.layoutManager temporaryAttributesAtCharacterIndex:end - 1 effectiveRange:NULL];
+                        BOOL after = !on ? ([a[NSForegroundColorAttributeName] isEqual:RGB(wideText)] && [a[NSBackgroundColorAttributeName] isEqual:RGB(wideBack)])
+                                         : (a[TSFullwidthBackgroundMark] == nil && (a[NSForegroundColorAttributeName] == x[NSForegroundColorAttributeName] || [a[NSForegroundColorAttributeName] isEqual:x[NSForegroundColorAttributeName]])
+                                            && (a[NSBackgroundColorAttributeName] == x[NSBackgroundColorAttributeName] || [a[NSBackgroundColorAttributeName] isEqual:x[NSBackgroundColorAttributeName]]));
+                        Check(before && after, on ? NAME("turned off, a line out of sight shows no fullwidth colors when it comes into view")
+                                                  : NAME("turned on, a line out of sight shows the fullwidth colors when it comes into view"));
+                    }
+                }
+                Switch(YES);
+                RestoreTheme(savedTheme);
+                Recolor();
+            }
+            for (NSTextView *v in @[source, lower, scrap]) v.appearance = nil;
+            mainWindow.appearance = nil;
+            [SUD removeObjectForKey:HighlightFullwidthSymbolsKey];
+            RestoreTheme(savedTheme);
+            Recolor(); Spin(0.40);
+        }
+
+        // 12. Removing the color of the active line (Highlight Current Line turned off, the window split, or the
+        // Experiment source colored when composed text that coloring waited for ends) leaves the fullwidth
+        // backgrounds and the highlighted contents.
+        [SUD setBool:YES forKey:AlwaysHighlightEnabledKey]; [SUD setBool:YES forKey:HighlightContentEnabledKey];
+        Show(@"abc\nx{a\uff11b}z\uff12\nxyz\n");
+        Pass(5, 6); Spin(0.05);
+        doc.syntaxcolorEntry = YES;
+        for (NSTextView *v in views) [doc cursorMoved:v];
+        doc.syntaxcolorEntry = NO;
+        for (NSTextView *v in views) [doc removeCurrentLineColor:v];
+        Check(EACH([Background(v, 7) isEqual:contentColor] && [Background(v, 11) isEqual:fullwidthBackground] && Background(v, 4) == nil),
+              NAME("the active line's color removed, highlighted contents and fullwidth backgrounds remain"));
+        [view setSelectedRange:NSMakeRange(0, 0)]; Spin(0.40);
+        [SUD setBool:NO forKey:AlwaysHighlightEnabledKey]; [SUD setBool:NO forKey:HighlightContentEnabledKey];
+        for (int commit = 0; commit < 2; commit++) {
+            Show(@"x\uff11y\nabc\n");
+            [view setSelectedRange:NSMakeRange(8, 0)];
+            Compose(view, @[@"\u3042"]);
+            Recolor();  // as a resize, a scroll or a change of settings does while text is composed
+            if (commit) [view insertText:@"\u4e9c" replacementRange:NSMakeRange(NSNotFound, 0)];
+            else { [view setMarkedText:@"" selectedRange:NSMakeRange(0, 0) replacementRange:NSMakeRange(NSNotFound, 0)]; [view unmarkText]; }
+            Spin(0.05);
+            Check(!view.hasMarkedText && EACH([Background(v, 1) isEqual:fullwidthBackground]),
+                  NAME("after composed text that coloring waited for, fullwidth characters keep their background"));
+        }
         if (!inExperiment) [mainWindow makeFirstResponder:source];
     }
 
@@ -1120,6 +1476,8 @@ replacements = {
     'DEFINES': defines, 'SCRAP_OVERRIDES': scrap_overrides, 'TAB_STOPS': tab_stops, 'BRACE_SEARCH': brace_search,
     'DOCUMENT_METHODS': document_methods, 'TOGGLE_XML': toggle_xml, 'TEXT_VIEW_TABS': text_view_tabs, 'SYNTAX': strip_imports(text[SYNTAX]), 'EXPERIMENT': strip_imports(text[EXPERIMENT]), 'COLOR': strip_imports(text[COLOR]),
     'TRY_SCRAP_SYNCS': 'YES' if '[self syncExperimentSourceDisplay];' in try_scrap else 'NO',
+    'FULLWIDTH_FACTORY': factory_fullwidth, 'FULLWIDTH_RECOLORS': 'YES' if fullwidth_recolors else 'NO',
+    'OBSERVES_RECOLOR': 'YES' if observes_recolor else 'NO',
 }
 for name, value in replacements.items():
     program = program.replace(f'@@{name}@@', value)
