@@ -10,6 +10,16 @@ static NSString *Translate(CFDataRef data,UInt16 code,UInt32 modifiers,UInt32 ke
  OSStatus status=UCKeyTranslate((const UCKeyboardLayout *)CFDataGetBytePtr(data),code,kUCKeyActionDown,modifiers,keyboard,kUCKeyTranslateNoDeadKeysBit,&dead,8,&count,chars);
  return status==noErr?[NSString stringWithCharacters:chars length:count]:@"";
 }
+// The keys a macro may take, as decided for #46, written out here rather than taken from
+// the product: F1-F20 alone or with modifiers; otherwise a printing character with
+// Command or Control. Tab, Escape, Backtab, Delete and control characters never.
+static BOOL ExpectedMacroKey(NSString *key, NSEventModifierFlags flags) {
+    if (key.length != 1) return NO;
+    unichar c = [key characterAtIndex:0];
+    if (c >= NSF1FunctionKey && c <= NSF20FunctionKey) return YES;
+    if (c < 0x20 || c == 0x7f || (c >= 0xf700 && c <= 0xf8ff)) return NO;
+    return (flags & (NSEventModifierFlagCommand | NSEventModifierFlagControl)) != 0;
+}
 static void IgnoreAssignmentOutlet(id receiver,SEL selector,id value,NSString *key) {}
 static void CollectAssignmentMenu(NSMenu *menu,NSMutableSet *assignments){for(NSMenuItem *item in menu.itemArray){if(item.submenu)CollectAssignmentMenu(item.submenu,assignments);else if(item.keyEquivalent.length)[assignments addObject:@[item.keyEquivalent,@(item.keyEquivalentModifierMask & (NSEventModifierFlagCommand|NSEventModifierFlagShift|NSEventModifierFlagOption|NSEventModifierFlagControl))]];}}
 static void CollectAssignmentMacros(NSDictionary *node,NSMutableSet *assignments){
@@ -72,7 +82,7 @@ int main(int argc,char **argv){@autoreleasepool{
     if(!found){fprintf(stderr,"FAIL fixed menu %s key=%s flags=%lu code=%u base=%s ign=%s chars=%s\n",name.UTF8String,key.UTF8String,f,code,base.UTF8String,ign.UTF8String,chars.UTF8String);return 1;}menuChecks++;
     item.action=NSSelectorFromString(@"doMacro:");matches=[TSShortcutSearch matchesEvent:event store:store macros:@[macro]];found=NO;
     // A macro cannot take a key without Command or Control (#46): it is listed but not the winner.
-    BOOL allowed=[TSShortcutStore isAllowedKey:key modifiers:f];
+    BOOL allowed=ExpectedMacroKey(key,f);
     for(TSShortcutMatch *match in matches)if(match.macro==macro && match.winner==allowed)found=YES;
     if(!found){fprintf(stderr,"FAIL fixed macro %s key=%s flags=%lu code=%u base=%s ign=%s chars=%s\n",name.UTF8String,key.UTF8String,f,code,base.UTF8String,ign.UTF8String,chars.UTF8String);return 1;}macroChecks++;
    }
@@ -80,5 +90,17 @@ int main(int argc,char **argv){@autoreleasepool{
   }}
  }
  CFRelease(sources);if(seen.count<262 || !menuChecks || menuChecks!=macroChecks)return 1;
+ // Fixed cases of the #46 decisions: the macro is always listed; it wins only with a key it may take.
+ {unichar f5c=NSF5FunctionKey;NSString *f5=[NSString stringWithCharacters:&f5c length:1];
+  NSArray *fixed=@[@[@"\t",@0,@NO],@[@"\t",@(O),@NO],@[@"\033",@0,@NO],@[@"\033",@(K),@NO],@[@"c",@(O),@NO],
+                   @[@"-",@(C|K|S),@YES],@[f5,@0,@YES],@[@"m",@(C),@YES],@[@"m",@(K),@YES],@[@"m",@(S),@NO]];
+  for(NSArray *one in fixed){
+   NSString *key=one[0];NSUInteger f=[one[1]unsignedIntegerValue];BOOL wins=[one[2]boolValue];
+   NSMenu *menu=[NSMenu new];TSShortcutStore *store=[[TSShortcutStore alloc]initWithMenu:menu defaults:TSIsolatedAppKitDefaults];
+   TSShortcutMacro *macro=[[TSShortcutMacro alloc]initWithName:@"Fixed macro" path:@"Macros/Fixed" indexPath:[NSIndexPath indexPathWithIndex:0] serializedKey:@"fixture" key:key modifiers:f];
+   NSArray<TSShortcutMatch *> *matches=[TSShortcutSearch matchesKey:key modifiers:f store:store macros:@[macro]];
+   BOOL listed=NO,winner=NO;for(TSShortcutMatch *match in matches)if(match.macro==macro){listed=YES;winner=match.winner;}
+   if(!listed || winner!=wins || ExpectedMacroKey(key,f)!=wins){fprintf(stderr,"FAIL fixed #46 case key=%s flags=%lu listed=%d winner=%d expected=%d\n",key.UTF8String,(unsigned long)f,listed,winner,wins);return 1;}
+  }}
  printf("PASS: assignment-first search layouts=%lu menu=%lu macros=%lu unavailable-layout-assignments=%lu ambiguous-inverses=%lu; no actions dispatched\n",(unsigned long)seen.count,(unsigned long)menuChecks,(unsigned long)macroChecks,(unsigned long)unavailable,(unsigned long)ambiguous);
 }return 0;}

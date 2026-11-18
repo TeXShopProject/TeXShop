@@ -653,7 +653,10 @@ with tempfile.TemporaryDirectory(prefix='texshop-text-statistics-') as tmp:
                 'failing': str(bin_ / 'failing'), 'holding': str(bin_ / 'holding'), 'leaving': str(bin_ / 'leaving'), 'folder': str(folder), 'memory': memory, 'oracle': oracle, 'disk': disk,
                 'sentence': sentence, 'pid': str(pid), 'wcWords': wc_words, 'wcBytes': wc_bytes}
         (tmp / 'spec.json').write_text(json.dumps(spec, ensure_ascii=False))
-        result = subprocess.run([str(tmp / 'probe'), str(tmp / 'spec.json'), '-AppleLanguages', f'({folder_name})'], capture_output=True, text=True, timeout=600)
+        # NSTemporaryDirectory() follows DIRHELPER_USER_DIR_SUFFIX, not TMPDIR: give the probe a
+        # temporary folder of its own, so files of other processes are not counted.
+        probe_env = dict(os.environ, DIRHELPER_USER_DIR_SUFFIX=f'texshop-statistics-test-{os.getpid()}-{folder_name}')
+        result = subprocess.run([str(tmp / 'probe'), str(tmp / 'spec.json'), '-AppleLanguages', f'({folder_name})'], capture_output=True, text=True, timeout=600, env=probe_env)
         print(result.stdout.strip())
         if result.returncode:
             fail(f'Text Statistics ({lang})'); print(result.stderr[-2000:])
