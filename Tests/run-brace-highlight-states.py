@@ -64,9 +64,11 @@ MUTATIONS = {
     'active-line-wipes-fullwidth': (SYNTAX, '            TSRestoreFullwidthBackground(layoutManager, TSVisibleCharacterRange(aTextView));\n', ''),
     'active-line-wipes-contents': (SYNTAX, '            [self restoreBraceHighlightsIn:aTextView range:TSVisibleCharacterRange(aTextView)];\n', ''),
     'stale-fullwidth-marks': (SYNTAX, '      [layoutManager removeTemporaryAttribute:TSFullwidthBackgroundMark forCharacterRange:colorRange];\n', ''),
-    'flash-ends-with-theme-background': (DOCUMENT, '    NSColor *backgroundColor = backgroundBeforeFlash;\n',
-        '    NSColor *backgroundColor = [[TSColorSupport sharedInstance] colorFromDictionary:(textView1.effectiveAppearance.name == NSAppearanceNameDarkAqua) ? darkColors : liteColors andKey: @"EditorBackground"];\n'),
-    'flash-end-overrides-theme-change': (DOCUMENT, '    if (! flashShown)\n        return;\n', ''),
+    'flash-ends-with-theme-background': (DOCUMENT,
+        'opaqueColorForKey: @"EditorBackground" fromDictionary: colorDictionary isWindowDark: withDarkColors]',
+        'colorFromDictionary: colorDictionary andKey: @"EditorBackground"]'),
+    'flash-ends-in-light-theme': (DOCUMENT,
+        'fromDictionary: colorDictionary isWindowDark: withDarkColors]', 'fromDictionary: liteColors isWindowDark: NO]'),
     'no-highlight-generation': (DOCUMENT,
         '    if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != braceHighlightGeneration)\n        return;\n', ''),
     'no-flash-generation': (DOCUMENT,
@@ -280,7 +282,6 @@ extern NSColor *InvisibleColor;
     NSRange highlightedContentRange, scrapHighlightedContentRange;
     NSUInteger braceHighlightGeneration, braceFlashGeneration, scrapBraceHighlightGeneration, scrapBraceFlashGeneration;
     NSUInteger highlightedTextLength, highlightedGeneration, scrapHighlightedTextLength, scrapHighlightedGeneration;
-    NSColor *backgroundBeforeFlash, *braceFlashColor;
     NSUInteger colorStart, colorEnd;
     NSTimeInterval colorTime;
     NSLineBreakMode lineBreakMode;
@@ -524,6 +525,7 @@ int main(void) { @autoreleasepool {
     [doc->textView2.layoutManager replaceTextStorage:doc.textStorage];
     doc->textView1.delegate = (id)doc; doc->textView2.delegate = (id)doc;
     doc->windowIsSplit = YES;
+    doc->textWindow = mainWindow;  // its appearance chooses the dark colors, as the source's does
     [mainWindow makeFirstResponder:doc->textView1];
     NSTextView *source = doc->textView1, *lower = doc->textView2;
     // As -[TSDocument windowControllerDidLoadNib:]: scrolling and resizing recolor.
@@ -671,6 +673,7 @@ int main(void) { @autoreleasepool {
         for (int dark = 0; dark < 2; dark++) {
             NSAppearance *appearance = [NSAppearance appearanceNamed:dark ? NSAppearanceNameDarkAqua : NSAppearanceNameAqua];
             for (NSTextView *v in @[source, lower, scrap]) v.appearance = appearance;
+            mainWindow.appearance = appearance;
             NSColor *flash = dark ? DarkFlashColor : FlashColor, *background = dark ? DarkBackground : ThemeBackground;
             if (inExperiment) background = ThemeBackground;  // -[ScrapTextView updateExperimentColors:]
             Show(@"abc\nx}}y\nxyz\n");
@@ -684,6 +687,7 @@ int main(void) { @autoreleasepool {
             Check([view.backgroundColor isEqual:background], NAME("the background comes back after the newer flash"));
         }
         for (NSTextView *v in @[source, lower, scrap]) v.appearance = nil;
+        mainWindow.appearance = nil;
         // After the flash, the source has the background that Settings gave it, also with a theme
         // that has lost all its colors or only its background; a change of theme meanwhile stays.
         if (!inExperiment)
@@ -694,6 +698,7 @@ int main(void) { @autoreleasepool {
                         : @{@"theme": @YES, @"EditorFlash": @[@1, @0.5, @0], @"EditorText": @[@0.1, @0.1, @0.1], @"EditorHighlightContent": @[@0.2, @0.9, @0.9]};
                     if (dark) darkColors = theme; else liteColors = theme;
                     for (NSTextView *v in @[source, lower]) v.appearance = [NSAppearance appearanceNamed:dark ? NSAppearanceNameDarkAqua : NSAppearanceNameAqua];
+                    mainWindow.appearance = [NSAppearance appearanceNamed:dark ? NSAppearanceNameDarkAqua : NSAppearanceNameAqua];
                     [NSNotificationCenter.defaultCenter postNotificationName:@"SourceColorChangedNotification" object:nil];
                     if (kind == 2)  // as Settings gives a color the theme lacks once missing colors are resolved there
                         for (NSTextView *v in @[source, lower]) v.backgroundColor = dark ? BuiltInDarkBackground : BuiltInBackground;
@@ -707,19 +712,54 @@ int main(void) { @autoreleasepool {
                     Check(flashed && same, kind == 0 ? (dark ? "source: dark theme without colors: after a flash, the background Settings gave" : "source: light theme without colors: after a flash, the background Settings gave")
                                      : kind == 1 ? (dark ? "source: dark theme without a background: after a flash, the background Settings gave" : "source: light theme without a background: after a flash, the background Settings gave")
                                      : (dark ? "source: dark, resolved background: after a flash, the background Settings gave" : "source: light, resolved background: after a flash, the background Settings gave"));
-                    // A change of theme during the flash: its background stays.
-                    Pass(6, 7); Spin(0.02);
-                    NSDictionary *other = @{@"theme": @YES, @"EditorBackground": @[@0.3, @0.6, @0.3]};
-                    if (dark) darkColors = other; else liteColors = other;
-                    [NSNotificationCenter.defaultCenter postNotificationName:@"SourceColorChangedNotification" object:nil];
-                    NSColor *changed = source.backgroundColor;
-                    Spin(0.30);
-                    Check([source.backgroundColor isEqual:changed] && [lower.backgroundColor isEqual:changed],
-                          "source: a change of theme during a flash keeps the new background");
                     RestoreTheme(savedTheme);
                     for (NSTextView *v in @[source, lower]) { v.appearance = nil; v.backgroundColor = ThemeBackground; }
+                    mainWindow.appearance = nil;
                     Recolor();
                 }
+        // A change of theme during a flash, with or without a second flash before the first
+        // ends, and to a background of the flash's own color: the last theme's background stays.
+        for (int dark = 0; dark < 2; dark++)
+            for (int step = 0; step < 5; step++) {
+                // 0 one flash, 1 a change, 2 a change to the flash's color, 3 a change and a second flash, 4 two flashes
+                NSDictionary *savedTheme = SaveTheme();
+                NSArray *flashRGB = @[@0.93, @0.42, @0.23];
+                NSDictionary *first = @{@"theme": @YES, @"EditorFlash": flashRGB, @"EditorBackground": dark ? @[@0.1, @0.12, @0.16] : @[@0.94, @0.94, @0.92]};
+                NSDictionary *second = @{@"theme": @YES, @"EditorFlash": flashRGB, @"EditorBackground": step == 2 ? flashRGB : @[@0.22, @0.59, @0.39]};
+                NSAppearance *appearance = [NSAppearance appearanceNamed:dark ? NSAppearanceNameDarkAqua : NSAppearanceNameAqua];
+                NSArray<NSTextView *> *flashed = inExperiment ? @[scrap] : @[source, lower];
+                for (NSTextView *v in flashed) v.appearance = appearance;
+                mainWindow.appearance = appearance;
+                if (dark) darkColors = first; else liteColors = first;
+                ThemeBackground = [NSColor colorWithSRGBRed:[first[@"EditorBackground"][0] doubleValue] green:[first[@"EditorBackground"][1] doubleValue] blue:[first[@"EditorBackground"][2] doubleValue] alpha:1];
+                [NSNotificationCenter.defaultCenter postNotificationName:@"SourceColorChangedNotification" object:nil];
+                if (inExperiment) [scrap updateExperimentColors:nil];
+                Show(@"abc\nx}}y\nxyz\n");
+                Pass(5, 6); Spin(0.025);
+                BOOL started = ![view.backgroundColor isEqual:ThemeBackground];
+                NSColor *expected = ThemeBackground;
+                if (step >= 1 && step <= 3) {
+                    if (dark) darkColors = second; else liteColors = second;
+                    ThemeBackground = [NSColor colorWithSRGBRed:[second[@"EditorBackground"][0] doubleValue] green:[second[@"EditorBackground"][1] doubleValue] blue:[second[@"EditorBackground"][2] doubleValue] alpha:1];
+                    [NSNotificationCenter.defaultCenter postNotificationName:@"SourceColorChangedNotification" object:nil];
+                    if (inExperiment) [scrap updateExperimentColors:nil];  // as ScrapTextView observes the change itself
+                    expected = view.backgroundColor;
+                    Spin(0.03);
+                }
+                if (step >= 3) { [view setSelectedRange:NSMakeRange(7, 0)]; Spin(0.02); }
+                Spin(0.32);
+                BOOL same = YES;
+                for (NSTextView *v in flashed) if (!(v.backgroundColor == expected || [v.backgroundColor isEqual:expected])) same = NO;
+                const char *names[] = {"one flash", "a change of theme during it", "a change to the flash's color", "a change and a second flash", "two flashes"};
+                char name[200];
+                snprintf(name, sizeof name, "%s %s, %s: the background of the last theme after the flash", inExperiment ? "Experiment:" : "source:", dark ? "dark" : "light", names[step]);
+                Check(started && same, name);
+                RestoreTheme(savedTheme);
+                ThemeBackground = NSColor.whiteColor;
+                for (NSTextView *v in flashed) { v.appearance = nil; v.backgroundColor = ThemeBackground; }
+                mainWindow.appearance = nil;
+                Recolor(); Spin(0.30);
+            }
         [SUD setBool:NO forKey:FlashBackgroundEnabledKey];
 
         // 2. A brace being composed is not highlighted; committed, it is.
@@ -1029,6 +1069,7 @@ int main(void) { @autoreleasepool {
             for (int dark = 0; dark < 2; dark++) {
                 NSAppearance *appearance = [NSAppearance appearanceNamed:dark ? NSAppearanceNameDarkAqua : NSAppearanceNameAqua];
                 for (NSTextView *v in @[source, lower, scrap]) v.appearance = appearance;
+                mainWindow.appearance = appearance;
                 for (int always = 0; always < 2; always++) {
                     [SUD setBool:always forKey:AlwaysHighlightEnabledKey]; [SUD setBool:YES forKey:HighlightContentEnabledKey];
                     Show(@"abc\nx{a\uff11b}z\uff12\nxyz\n");
@@ -1060,6 +1101,7 @@ int main(void) { @autoreleasepool {
                 }
             }
             for (NSTextView *v in @[source, lower, scrap]) v.appearance = nil;
+            mainWindow.appearance = nil;
             liteColors = savedLite; darkColors = savedDark;
             for (NSString *key in keys) [doc setValue:saved[key] forKey:key];
             highlightBracesColorDict = savedBraces; highlightContentColorDict = savedContents;
@@ -1091,7 +1133,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-brace-highlight-states-') as tm
                *sorted((root / 'Sources/Syntax').glob('*.m')), source_file(root, 'TSMacroContentKind.m')]
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', *include_args(root),
                     '-I', str(root / 'Tests'), *map(str, sources), '-o', str(tmp / 'probe')], check=True)
-    result = subprocess.run([str(tmp / 'probe')], capture_output=True, text=True, timeout=120)
+    result = subprocess.run([str(tmp / 'probe')], capture_output=True, text=True, timeout=400)
     print(result.stdout, end='')
     if args.mutation:
         if result.returncode == 0:

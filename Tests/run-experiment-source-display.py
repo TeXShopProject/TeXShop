@@ -198,6 +198,7 @@ static NSColor *FlashColor, *ThemeBackground;
 - (NSColor *)colorFromDictionary:(NSDictionary *)dictionary andKey:(NSString *)key { return FlashColor; }
 - (NSColor *)darkColorWithKey:(NSString *)key { return FlashColor; }
 - (NSColor *)liteColorWithKey:(NSString *)key { return FlashColor; }
+- (NSColor *)opaqueColorForKey:(NSString *)key fromDictionary:(NSDictionary *)dictionary isWindowDark:(BOOL)dark { return [self colorFromDictionary:dictionary andKey:key]; }
 @end
 
 // Reports itself visible without being ordered on screen.
@@ -233,12 +234,12 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
     NSRange highlightedContentRange, scrapHighlightedContentRange;
     NSUInteger braceHighlightGeneration, braceFlashGeneration, scrapBraceHighlightGeneration, scrapBraceFlashGeneration;
     NSUInteger highlightedTextLength, highlightedGeneration, scrapHighlightedTextLength, scrapHighlightedGeneration;
-    NSColor *backgroundBeforeFlash, *braceFlashColor;
     NSUInteger colorStart, colorEnd;
     NSTimeInterval colorTime;
     NSLineBreakMode lineBreakMode;
     NSTextView *textView1, *textView2, *scrapTextView, *textView;
     NSScrollView *scrollView, *scrollView2;
+    NSWindow *textWindow;
     NSButton *indexColorSplitBox;
 }
 @property (strong) NSDictionary *EntryColorAttribute, *commandColorAttribute, *commentColorAttribute,
