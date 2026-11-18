@@ -98,8 +98,8 @@ skip-body  dcases drcases rcases multlined lgathered rgathered psmallmatrix bsma
 skip-body  Bsmallmatrix vsmallmatrix Vsmallmatrix
 
 # Environments that take a specification argument, such as column formats.
-skip-env-args  1  tabular longtable minipage multicols wrapfigure wraptable tabu
-skip-env-args  2  tabularx tabulary
+skip-env-args  1  tabular longtable minipage multicols tabu
+skip-env-args  2  tabularx tabulary wrapfigure wraptable
 
 # \verb|...|
 skip-verb  verb
@@ -172,6 +172,12 @@ check-args  emph verbatim
 package-args  1  tag mathtoolsset usetagform refeq
 package-args  3  newtagform renewtagform
 package-args  3  DeclarePairedDelimiter
+# \DeclarePairedDelimiterX{cmd}[n]{left}{right}{body}, \DeclarePairedDelimiterXPP{cmd}[n]{pre}{left}{right}{post}{body},
+# \newgathered{name}{pre}{post}{after} and \newcases{name}{left}{right}{text}{text}{start}{end}
+package-pattern  {}[]{}{}{}  DeclarePairedDelimiterX
+package-pattern  {}[]{}{}{}{}{}  DeclarePairedDelimiterXPP
+package-args  4  newgathered renewgathered
+package-args  7  newcases renewcases
 
 # graphicx
 package-args  1  DeclareGraphicsExtensions
@@ -181,13 +187,32 @@ package-args  4  DeclareGraphicsRule
 package-args  1  pagecolor cellcolor arrayrulecolor doublerulesepcolor selectcolormodel
 # \rowcolor[model]{colour}[left overhang][right overhang]
 package-pattern  []{}[][]  rowcolor columncolor
-package-args  2  fcolorbox colorlet
+package-args  2  fcolorbox colorlet xcolorlet
 package-args  3  providecolor xdefinecolor rowcolors extractcolorspecs
 package-args  4  definecolorset convertcolorspec
 
 # tikz, pgf
 package-args  1  pgfmathparse pgfplotsset tikzsetnextfilename pgfkeys
 package-args  2  pgfmathsetmacro
+# Path commands outside a tikzpicture, as in \tikz \draw[thick] ...;, and their options.
+# Only the [..] options are skipped: the text of a node is still checked.
+package-args  0  tikz draw fill filldraw path node clip shade shadedraw pic coordinate
+# pgfplots: the options of the axis environments, of \addplot and of \addlegendimage.
+# Labels given as options, such as xlabel={text}, are skipped with them; \addlegendentry{text}
+# remains prose. The axis environments inside
+# a tikzpicture are skipped with it.
+skip-env-args  0  axis semilogxaxis semilogyaxis loglogaxis polaraxis groupplot ternaryaxis
+package-args  0  addplot addplot3 addlegendimage
+package-args  1  pgfplotstableread pgfplotstabletypeset
+# tikz-cd: the cells and arrow labels are mostly math.
+skip-body  tikzcd
+
+# float: \floatstyle{style}, \restylefloat{type}, \newfloat{type}{placement}{ext}[within],
+# \floatname{type}{Name}, \floatplacement{type}{placement}. The name given to
+# \floatname and \newfloat's caption are not in these rules and stay checked.
+package-args  1  floatstyle restylefloat floatname
+package-args  2  floatplacement
+package-args  3  newfloat
 
 # geometry
 package-args  1  newgeometry savegeometry loadgeometry
@@ -210,6 +235,11 @@ package-args  2  DeclareMicrotypeSet DeclareMicrotypeAlias DeclareMicrotypeBabel
 # tabularx, array. The column specification of the tabularx environment itself
 # is skipped by skip-env-args above.
 package-args  2  newcolumntype
+# hhline: \hhline{|--|}. tabularray: \begin{tblr}{colspec={..}, rows={..}} has the specification
+# and key list in its first argument; \SetCell[r=2]{c}, \SetRow{key} and \SetColumn{key}
+# take keys. The cell text after them is checked.
+package-args  1  hhline SetCell SetRow SetColumn SetCells SetRows SetColumns
+skip-env-args  1  tblr longtblr talltblr
 
 # multirow: \multirow[vpos]{nrows}[bigstruts]{width}[vmove]{text}. The text is checked.
 package-pattern  []{}[]{}[]  multirow
@@ -218,7 +248,7 @@ package-pattern  []{}[]{}[]  multirow
 package-args  1  captionof
 
 # enumitem (the [..] of \begin{enumerate}[...] is skipped by env-options)
-package-args  1  setlist setlistdepth restartlist
+package-args  1  setlist setlistdepth restartlist setenumerate setitemize setdescription
 package-args  2  SetEnumitemKey SetLabelAlign
 package-args  3  newlist renewlist SetEnumitemValue AddEnumerateCounter
 
@@ -238,6 +268,7 @@ package-args  3  crefname Crefname
 package-args  1  crefdefaultlabelformat
 package-args  2  crefformat Crefformat crefrangeformat Crefrangeformat creflabelformat
 package-args  2  crefrangelabelformat
+package-args  5  crefmultiformat Crefmultiformat crefrangemultiformat Crefrangemultiformat
 
 # biblatex
 package-args  0  printbibliography printbibheading bibbysection bibbycategory
@@ -245,6 +276,16 @@ package-args  1  printbiblist addglobalbib addsectionbib ExecuteBibliographyOpti
 package-args  1  defbibheading
 package-args  2  defbibfilter defbibcheck defbibentryset addtocategory
 package-args  2  DeclareFieldFormat DeclareNameFormat DeclareListFormat
+package-args  2  DeclareNameAlias DeclareFieldAlias DeclareListAlias
+# \cites(pre)(post)[pre][post]{key}[pre][post]{key}...: the keys of up to four citations
+package-pattern  ()()[][]{}[][]{}[][]{}[][]{}  cites Cites parencites Parencites textcites Textcites footcites Footcites autocites Autocites smartcites Smartcites supercites
+
+# listings: \lstinline{code} and \lstinline[options]{code} skip the code. The form with a
+# delimiter, \lstinline|code|, is not understood and stays checked, as do environments
+# made with \lstnewenvironment. \lstdefinelanguage[dialect]{name}[base]{definition}.
+package-args  1  lstinline
+package-pattern  []{}[]{}  lstdefinelanguage
+package-args  2  lstdefinestyle
 
 # natbib: \citetext{...} holds ordinary text, not keys. \bibpunct has six settings.
 check-args  citetext
