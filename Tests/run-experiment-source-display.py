@@ -198,6 +198,7 @@ static NSColor *FlashColor, *ThemeBackground;
 - (NSColor *)colorFromDictionary:(NSDictionary *)dictionary andKey:(NSString *)key { return FlashColor; }
 - (NSColor *)darkColorWithKey:(NSString *)key { return FlashColor; }
 - (NSColor *)liteColorWithKey:(NSString *)key { return FlashColor; }
+- (NSColor *)opaqueColorForKey:(NSString *)key fromDictionary:(NSDictionary *)dictionary isWindowDark:(BOOL)dark { return [self colorFromDictionary:dictionary andKey:key]; }
 @end
 
 // Reports itself visible without being ordered on screen.
@@ -229,11 +230,16 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
          autoCompleting, windowIsSplit, braceHighlighting, contentHighlighting, lastInputIsDelete,
          scrapLastInputIsDelete, scrapBraceHighlighting, scrapContentHighlighting;
     NSInteger lastCursorLocation, lastStringLength, scrapLastCursorLocation, scrapLastStringLength;
+    NSArray *highlightedBraceLocations, *scrapHighlightedBraceLocations;
+    NSRange highlightedContentRange, scrapHighlightedContentRange;
+    NSUInteger braceHighlightGeneration, braceFlashGeneration, scrapBraceHighlightGeneration, scrapBraceFlashGeneration;
+    NSUInteger highlightedTextLength, highlightedGeneration, scrapHighlightedTextLength, scrapHighlightedGeneration;
     NSUInteger colorStart, colorEnd;
     NSTimeInterval colorTime;
     NSLineBreakMode lineBreakMode;
     NSTextView *textView1, *textView2, *scrapTextView, *textView;
     NSScrollView *scrollView, *scrollView2;
+    NSWindow *textWindow;
     NSButton *indexColorSplitBox;
 }
 @property (strong) NSDictionary *EntryColorAttribute, *commandColorAttribute, *commentColorAttribute,
@@ -255,6 +261,7 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
 - (void)colorizeVisibleAreaInTextView:(NSTextView *)aTextView;
 - (BOOL)coloringWaitsForMarkedTextIn:(NSTextView *)aTextView;
 - (void)colorAfterMarkedTextEnds;
+- (BOOL)braceHighlightFits:(NSRange)range inTextView:(NSTextView *)aTextView;
 - (void)reColor:(NSNotification *)notification;
 - (void)cursorMoved:(NSTextView *)aTextView;
 - (void)removeCurrentLineColor:(NSTextView *)aTextView;

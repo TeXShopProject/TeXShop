@@ -59,4 +59,41 @@
     if (!written && error != NULL) *error = writeError ?: coordinationError;
     return written;
 }
+// Another TeXShop, the one-time update of the bundled colors or another save in this TeXShop may have changed other
+// colors of the file since it was read. The file is read again, the changed colors put in it and the result written in
+// one coordinated write, so that two saves that change different colors keep both.
+- (nullable NSDictionary<NSString *, id> *)writeChangesFrom:(NSDictionary<NSString *, id> *)before to:(NSDictionary<NSString *, id> *)after title:(NSString *)title error:(NSError **)error
+{
+    NSURL *url = [self URLForTitle:title];
+    if (url == nil) {
+        if (error != NULL) *error = [NSError errorWithDomain:NSCocoaErrorDomain code:NSFileWriteInvalidFileNameError userInfo:nil];
+        return nil;
+    }
+    __block NSDictionary<NSString *, id> *written = nil;
+    __block NSError *writeError = nil;
+    NSError *coordinationError = nil;
+    NSFileCoordinator *coordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+    [coordinator coordinateWritingItemAtURL:url options:NSFileCoordinatorWritingForReplacing error:&coordinationError byAccessor:^(NSURL *fileURL) {
+        NSMutableDictionary<NSString *, id> *colors = [([self readTitle:title] ?: before) mutableCopy];
+        NSMutableSet<NSString *> *keys = [NSMutableSet setWithArray:after.allKeys];
+        [keys addObjectsFromArray:before.allKeys];
+        [keys removeObject:@"Title"];
+        for (NSString *key in keys) {
+            id now = after[key];
+            if (now == before[key] || [now isEqual:before[key]]) continue;
+            if (now != nil)
+                colors[key] = now;
+            else
+                [colors removeObjectForKey:key];
+        }
+        colors[@"Title"] = title;
+        NSError *accessError = nil;
+        NSData *data = [NSPropertyListSerialization dataWithPropertyList:colors format:NSPropertyListXMLFormat_v1_0 options:0 error:&accessError];
+        if (data != nil && [data writeToURL:fileURL options:NSDataWritingAtomic error:&accessError])
+            written = [colors copy];
+        writeError = accessError;
+    }];
+    if (written == nil && error != NULL) *error = writeError ?: coordinationError;
+    return written;
+}
 @end

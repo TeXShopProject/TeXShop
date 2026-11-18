@@ -130,8 +130,8 @@ static NSDictionary<NSAttributedStringKey, id> *TSSyntaxFullwidthAttributes(NSDi
     attributes[@(TSSyntaxRoleFullwidthSymbol)] = TSSyntaxFullwidthAttributes(theme);
 
     TSColorSupport *support = [TSColorSupport sharedInstance];
-    // The active line falls back to the built-in color of a light window, in a dark one too.
-    NSColor *activeLine = [support colorFromDictionary:theme andKey:@"EntryColor"] ?: [support liteColorAndAlphaWithKey:@"EntryColor"];
+    // Without its own color, the active line takes the built-in one that the text reads on (TSColorSupport).
+    NSColor *activeLine = [support opaqueColorForKey:@"EntryColor" fromDictionary:theme isWindowDark:dark];
     return [self initWithAttributes:attributes
                activeLineAttributes:TSSyntaxAttributes(NSBackgroundColorAttributeName, activeLine)
           braceHighlightAttributes:TSSyntaxAttributes(NSForegroundColorAttributeName, [support colorFromDictionary:theme andKey:@"EditorHighlightBraces"])

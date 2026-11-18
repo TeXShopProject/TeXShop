@@ -9,6 +9,11 @@ static IMP opacityOriginalWrite;
 static BOOL CountOpacityWrite(id store,SEL selector,NSDictionary *colors,NSString *title,NSError **error){
     opacityWrites++;return ((BOOL(*)(id,SEL,id,id,NSError **))opacityOriginalWrite)(store,selector,colors,title,error);
 }
+// A color change in Settings writes only its changes into the file (writeChangesFrom:to:title:error:).
+static IMP opacityOriginalChanges;
+static NSDictionary *CountOpacityChanges(id store,SEL selector,NSDictionary *before,NSDictionary *after,NSString *title,NSError **error){
+    opacityWrites++;return ((NSDictionary *(*)(id,SEL,id,id,id,NSError **))opacityOriginalChanges)(store,selector,before,after,title,error);
+}
 static NSUInteger opacityRejections;
 static void EnterOpacity(NSTextField *field,NSString *text,BOOL typing){
     [field selectText:nil];NSTextView *editor=(NSTextView *)field.currentEditor;
@@ -134,6 +139,8 @@ static void CheckOwnerOpacity(TSPreferences *owner,TSSettingsWindowController *s
     NSPopUpButton *choice=[owner valueForKey:@"EditingStyle"];[choice addItemWithTitle:@"OpacityFixture"];[choice selectItemWithTitle:@"OpacityFixture"];
     [owner EditingStyleChoice:nil];
     Method write=class_getInstanceMethod(TSThemeFileStore.class,@selector(writeColors:title:error:));opacityOriginalWrite=method_setImplementation(write,(IMP)CountOpacityWrite);
+    Method changes=class_getInstanceMethod(TSThemeFileStore.class,NSSelectorFromString(@"writeChangesFrom:to:title:error:"));
+    if(changes)opacityOriginalChanges=method_setImplementation(changes,(IMP)CountOpacityChanges);
     Method key=class_getInstanceMethod(NSWindow.class,@selector(isKeyWindow));IMP oldKey=method_setImplementation(key,(IMP)NavigationKey);navigationTestWindow=shell.window;navigationTestKey=YES;
     __block NSUInteger notices=0;
     id observer=[NSNotificationCenter.defaultCenter addObserverForName:SourceColorChangedNotification object:owner queue:nil usingBlock:^(NSNotification *note){
@@ -195,7 +202,7 @@ static void CheckOwnerOpacity(TSPreferences *owner,TSSettingsWindowController *s
         NSTextField *field=(NSTextField *)Find([shell viewForCategoryIdentifier:TSSettingsCategoryAppearance],[@"opacity-value." stringByAppendingString:well.identifier]);
         Check(well.color.alphaComponent==1 && slider.doubleValue==100 && field.integerValue==100 && opacityWrites==writes,@"Invalid theme opacity loads safely and consistently");
     }
-    method_setImplementation(write,opacityOriginalWrite);method_setImplementation(key,oldKey);navigationTestWindow=nil;
+    method_setImplementation(write,opacityOriginalWrite);if(changes)method_setImplementation(changes,opacityOriginalChanges);method_setImplementation(key,oldKey);navigationTestWindow=nil;
     [NSNotificationCenter.defaultCenter removeObserver:observer];
     [choice selectItemAtIndex:0];[choice removeItemWithTitle:@"OpacityFixture"];
     TSIsolatedAppKitDefaults.values=[defaults mutableCopy];liteColors=savedLite;darkColors=savedDark;

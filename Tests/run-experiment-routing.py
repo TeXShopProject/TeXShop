@@ -132,6 +132,7 @@ TOGGLE
 @public
     Window *scrapWindow, *scrapPDFWindow, *WindowAfterTypeset;
     BOOL fromMenu, doAbort, fileIsTex, taskDone;
+    NSUInteger typesetRequest, abortedTypesetRequest;
     NSInteger whichEngine;
     Output *outputText;
 }

@@ -27,4 +27,6 @@
 // Replaces the macro marker #PASTE# with the text on the clipboard, or with
 // nothing when the clipboard holds no text.
 - (void)replacePasteMarkersWithClipboardText;
+// CRLF, CR, U+2028 and U+2029 become LF.
+- (void)replaceLineEndingsWithLF;
 @end

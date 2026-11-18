@@ -55,6 +55,16 @@
 // compatibility ideographs and some other ranges stay as they are.
 - (NSString*)normalizedStringWithModifiedNFD
 {
+    // The file system representation is a C string, which ends at U+0000: the text between
+    // U+0000s is decomposed piece by piece, and the U+0000s stay.
+    unichar zero = 0;
+    NSString *nul = [NSString stringWithCharacters:&zero length:1];
+    if ([self rangeOfString:nul options:NSLiteralSearch].location != NSNotFound) {
+        NSMutableArray<NSString *> *pieces = [NSMutableArray array];
+        for (NSString *piece in [self componentsSeparatedByString:nul])
+            [pieces addObject:[piece normalizedStringWithModifiedNFD]];
+        return [pieces componentsJoinedByString:nul];
+    }
     // UTF-8 decoding would take a leading U+FEFF for a byte order mark and drop it.
     // Decompose the text after the leading U+FEFFs and put all of them back.
     NSUInteger marks = 0;

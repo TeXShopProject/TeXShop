@@ -94,7 +94,18 @@ static void CheckStrings(void)
           @"\\ajMaru{1}\\ajMaru{50}\\ajKuroMaru{1}\\ajKakko{1}\\ajMaruAlph{1}\\ajMarualph{1}\\ajLig{株式会社}%\n\\ajMaru{2}%\n");
     Check(@"from ajmacros", [@"\\ajMaru{1}\\ajMaru{50}\\ajKakko{20}\\ajLig{株式会社}\\ajHotSpring \\ajTsuchiYoshi" stringByReplacingAjMacrosWithUnicodeCharacters],
           @"①㊿⒇㍿♨𠮷");
+    // A longer command name that begins with one of these names is another command.
+    Check(@"from ajmacros, longer names", [@"\\ajSunday \\ajSun x \\ajHeartsuit \\ajHeart\n\\ajMasuX \\ajMasu{}" stringByReplacingAjMacrosWithUnicodeCharacters],
+          @"\\ajSunday ☀x \\ajHeartsuit ♡\n\\ajMasuX 〼{}");
     Check(@"to UTF", [@"髙島屋―\n𠮷\nあ" stringByReplacingUnicodeCharactersWithUTF], @"\\UTF{9AD9}島屋—%\n\\CID{13706}%\nあ");
+    // TeX ends lines at CR and LF only: no "%" before U+2028, U+2029 or U+0085, which would comment out the rest.
+    for (NSNumber *separator in @[@0x2028, @0x2029, @0x85]) {
+        NSString *after = [NSString stringWithFormat:@"%Cx", (unichar)separator.intValue];
+        Check([NSString stringWithFormat:@"to UTF, no %% before U+%04X", separator.intValue],
+              [[@"髙" stringByAppendingString:after] stringByReplacingUnicodeCharactersWithUTF],
+              [@"\\UTF{9AD9}" stringByAppendingString:[after stringByReplacingUnicodeCharactersWithUTF]]);
+    }
+    Check(@"to UTF, % before CRLF and CR", [@"髙\r\nx髙\ry" stringByReplacingUnicodeCharactersWithUTF], @"\\UTF{9AD9}%\r\nx\\UTF{9AD9}%\ry");
     Check(@"from UTF", [@"\\UTF{9AD9}\\UTF{9ad9}\\UTF{ZZZZ}" stringByReplacingUTFWithUnicodeCharacters], @"髙髙\\UTF{ZZZZ}");
     Check(@"from CID", [@"\\CID{1}|\\CID{13706}|\\CID{23057}|\\CID{99999}|\\CID{0}" stringByReplacingUTFWithUnicodeCharacters],
           @" |𠮷|\u9FA3|\\CID{99999}|\\CID{0}");
@@ -135,6 +146,11 @@ static void CheckStrings(void)
     Check(@"modified NFC composes", [@"か\u3099は\u309A\uFA19" normalizedStringWithModifiedNFC], @"がぱ\uFA19");
     Check(@"modified NFC keeps text made only of excluded characters", [@"\uFA19\uFA19" normalizedStringWithModifiedNFC], @"\uFA19\uFA19");
     Check(@"modified NFD keeps compatibility ideographs", [@"が\uFA19" normalizedStringWithModifiedNFD], @"か\u3099\uFA19");
+    // U+0000 ends the C string the decomposition is made in: the text on both sides of it is decomposed, and it stays.
+    unichar zero = 0;
+    NSString *nul = [NSString stringWithCharacters:&zero length:1];
+    Check(@"modified NFD across U+0000", [[NSString stringWithFormat:@"%@ab\u00e9%@cd\u00e9%@\uFEFFが%@", nul, nul, nul, nul] normalizedStringWithModifiedNFD],
+          [NSString stringWithFormat:@"%@abe\u0301%@cde\u0301%@\uFEFFか\u3099%@", nul, nul, nul, nul]);
     Check(@"quotes", [@"‘“a”’ “b” ‘c’" stringByReplacingFullwidthQuotesWithHalfwidthQuotes], @"`\\,``a''\\,' ``b'' `c'");
 }
 

@@ -89,6 +89,7 @@
 <ul>
 <li><strong>Critical fix:</strong> Stop now ends TeX; before, TeX kept running.</li>
 <li>Fix problems with the console and typesetting: console output can be copied while TeX runs, broken characters in console output and logs are shown correctly, Command-1 returns to the file typeset with <code>% !TEX root</code>, stopping no longer hangs when a typesetting tool cannot start, TeXShop tells you when the root file cannot be found, and the tools for pictures, MetaPost and texloganalyser work when the TeX or Ghostscript folder has a space in its path.</li>
+<li>Typesetting is stopped when its document is closed or when you quit TeXShop, and it no longer starts when the save before it fails, when you cancel that save, or when you stop it during that save.</li>
 </ul>
 <h3 id="v6.00-fixes-preview">Fixes: preview</h3>
 <ul>
@@ -109,6 +110,8 @@
 <li>On macOS 26, the default set at the bottom of the sheet that changes the toolbar no longer grows and shows twice when clicked. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/48">#48</a>).</li>
 <li>When a file of TeXShop in ~/Library/TeXShop, such as the macros, the LaTeX panel or the themes, is missing or damaged, TeXShop replaces it with its own copy without an error message; the damaged file is kept in a folder of ~/Library/TeXShop.</li>
 <li>In fonts without a fixed width, a tab in the source is no longer about twice the Tab Size set in Settings.</li>
+<li>Fix the highlight of brackets: it no longer ends too early when you type one after another, it stays when you scroll, resize the window or change themes, and brackets typed with a Japanese input method get the highlight only once confirmed.</li>
+<li>Undo now works after you insert a mark or remove one, and by default, Windows or other line endings in text you paste are changed to LF.</li>
 <li>Fix text that was cut off or drawn over other text, buttons and menus that did not work, and texts left in English, in some languages.</li>
 </ul>
 <h3 id="v6.00-manual-help-and-bundled-tools">Manual, help and bundled tools</h3>

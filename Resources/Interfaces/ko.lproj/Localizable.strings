@@ -328,6 +328,8 @@
 
 /* Edit › Mark */
 "Insert Mark with Note" = "메모 있는 마크 삽입";
+"Insert Mark" = "마크 삽입";
+"Delete Mark" = "마크 삭제";
 "How to Use Marks…" = "마크 사용법…";
 "Inserts a mark (•) to come back to later." = "나중에 돌아올 위치에 마크(•)를 삽입합니다.";
 "Inserts a mark with a note (•‹note›). Selected text becomes the note." = "메모 있는 마크(•‹메모›)를 삽입합니다. 선택한 텍스트가 메모가 됩니다.";

@@ -3239,6 +3239,8 @@ else {
         NSBeep();
         return;
     }
+    // A typesetting job does not outlive its document: it is stopped as Abort stops it.
+    [self killRunningTasks];
     [self.sourceStatusBar stop];
     [self.textStatistics close];
     [self closeExperiment];
@@ -3567,6 +3569,7 @@ static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice
 - (void) setTextView: (id)aView
 {
 	NSRange		theRange;
+	BOOL		otherHalf = (aView != textView);
  	textView = aView;
 	// The status bar follows the part being typed in.
 	[self.sourceStatusBar selectionDidChange];
@@ -3578,6 +3581,12 @@ static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice
 		theRange = [textView1 selectedRange];
 		theRange.length = 0;
 		[textView1 setSelectedRange: theRange];
+	}
+	// Typing moves to the other half of a split window: braces follow its selection
+	// from here on, and the highlight of the other half ends.
+	if (otherHalf) {
+		lastCursorLocation = [textView selectedRange].location;
+		[self matchBracesForSelectionInTextView:nil];
 	}
 }
 
@@ -5611,11 +5620,17 @@ if ( ! skipTextWindow) {
 // added by Terada (- (void)resetHighlight:)
 - (void)resetHighlight:(id)sender
 {
+    // The end of the flash of a pair (sender is its number) that a newer one has replaced.
+    if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != braceHighlightGeneration)
+        return;
+
     // While text is composed, the brace highlight stays and nothing is colored. The
     // change of the selection that commits or removes the composed text schedules
-    // this method again.
-    if ([self coloringWaitsForMarkedTextIn:textView])
+    // this method again; the highlight is not given again before that.
+    if ([self coloringWaitsForMarkedTextIn:textView]) {
+        highlightedBraceLocations = nil;
         return;
+    }
     
   // item added by Koch in August, 2018
     
@@ -5624,15 +5639,14 @@ if ( ! skipTextWindow) {
         
        NSRange theRange;
         
+        braceHighlighting = NO;
+        highlightedBraceLocations = nil;
         theRange.location = 0;
         theRange.length = [self.textStorage length];
         [[textView1 layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:theRange];
         [[textView2 layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:theRange];
         [self colorizeVisibleAreaInTextView:textView1];
         [self colorizeVisibleAreaInTextView:textView2];
-        
-        
-        braceHighlighting = NO;
     }
     
 	if(windowIsSplit){
@@ -5647,6 +5661,9 @@ if ( ! skipTextWindow) {
 // added by Terada ( - (void)showIndicator: )
 - (void)showIndicator:(NSString*)range
 {
+	// Not for a brace being composed with an input method.
+	if ([textView1 hasMarkedText] || [textView2 hasMarkedText])
+		return;
 	if (NSFoundationVersionNumber > LEOPARD) {
 		if(windowIsSplit){
 			[textView1 showFindIndicatorForRange:NSRangeFromString(range)];
@@ -5660,36 +5677,42 @@ if ( ! skipTextWindow) {
 // added by Terada (- (void)resetBackgroundColor:)
 - (void)resetBackgroundColor:(id)sender
 {
+	// The end, asked for by coloring (sender is the number of the highlight), of a
+	// highlight that a newer one has replaced.
+	if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != braceHighlightGeneration)
+		return;
+	contentHighlighting = NO;
+	highlightedContentRange = NSMakeRange(0, 0);
+	// This removes the backgrounds that coloring gives too (fullwidth characters, the
+	// active line); the visible text gets them again.
 	if(windowIsSplit){
 		[[textView1 layoutManager] removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:NSMakeRange(0, [[textView1 textStorage] length])];
 		[[textView2 layoutManager] removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:NSMakeRange(0, [[textView2 textStorage] length])];
+		[self colorizeVisibleAreaInTextView:textView1];
+		[self colorizeVisibleAreaInTextView:textView2];
 	}else{
 		[[textView layoutManager] removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:NSMakeRange(0, [[textView textStorage] length])];
+		[self colorizeVisibleAreaInTextView:textView];
 	}
-	contentHighlighting = NO;
 }
 
 // added by Terada (- (void)resetBackgroundColorOfTextView:)
 - (void)resetBackgroundColorOfTextView:(id)sender
 {
+    // The end of a flash (sender is its number) that a newer one has replaced.
+    if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != braceFlashGeneration)
+        return;
 
-    NSDictionary *colorDictionary;
-    
+    // The background of the current theme, chosen and resolved as a change of theme does
+    // (-changeColorsFromNotification:, -changeColorsUsingDictionary:), also when the theme lacks it.
+    NSDictionary *colorDictionary = liteColors;
+    BOOL withDarkColors = NO;
 #ifdef MOJAVEORHIGHER
     if ((atLeastMojave) && (textView1.effectiveAppearance.name == NSAppearanceNameDarkAqua))
         colorDictionary = darkColors;
-    else
+    withDarkColors = (atLeastMojave) && (textWindow.effectiveAppearance.name == NSAppearanceNameDarkAqua);
 #endif
-        colorDictionary = liteColors;
-
- NSColor *backgroundColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"EditorBackground"];
-    
- /*
-    NSColor* backgroundColor = [NSColor colorWithCalibratedRed: [SUD floatForKey:background_RKey]
-														 green: [SUD floatForKey:background_GKey]
-														  blue: [SUD floatForKey:background_BKey]
-														 alpha: ([SUD floatForKey:backgroundAlphaKey] == 0 ) ? 1.0 : [SUD floatForKey:backgroundAlphaKey]]; // modified by Terada
-  */
+    NSColor *backgroundColor = [[TSColorSupport sharedInstance] opaqueColorForKey: @"EditorBackground" fromDictionary: colorDictionary isWindowDark: withDarkColors];
 	if(windowIsSplit){
 		[textView1 setBackgroundColor:backgroundColor];
 		[textView2 setBackgroundColor:backgroundColor];
@@ -5701,7 +5724,13 @@ if ( ! skipTextWindow) {
 // added by Terada (- (void)highlightContent:)
 - (void)highlightContent:(NSString*)range
 {
+	// The text may have changed since the braces were matched (text composed in the
+	// same keystroke, say); then nothing is highlighted.
+	if (![self braceHighlightFits:NSRangeFromString(range) inTextView:textView1])
+		return;
 	contentHighlighting = YES;
+	highlightedContentRange = NSRangeFromString(range);
+	highlightedTextLength = [self.textStorage length];
 	if(windowIsSplit){
 		[[textView1 layoutManager] addTemporaryAttributes:highlightContentColorDict 
 										forCharacterRange:NSRangeFromString(range)];
@@ -5720,6 +5749,13 @@ if ( ! skipTextWindow) {
     
 	NSInteger location1 = [[locations objectAtIndex:0] integerValue];
 	NSInteger location2 = [[locations objectAtIndex:1] integerValue];
+	// The text may have changed since the braces were matched (text composed in the
+	// same keystroke, say); then nothing is highlighted.
+	if (![self braceHighlightFits:NSMakeRange(MIN(location1, location2), ABS(location1 - location2) + 1) inTextView:textView1])
+		return;
+	highlightedBraceLocations = locations;
+	highlightedTextLength = [self.textStorage length];
+	highlightedGeneration = ([locations count] > 2) ? [[locations objectAtIndex:2] unsignedIntegerValue] : braceHighlightGeneration;
 
 	if (windowIsSplit) {
 		[[textView1 layoutManager] addTemporaryAttributes:highlightBracesColorDict 
@@ -5792,6 +5828,10 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 - (void)textViewDidChangeSelection:(NSNotification *)inNotification
 {
 	[self colorAfterMarkedTextEnds];
+	// When the text changes, the other half of a split window reports its selection too.
+	// Braces follow the half being edited; that report would only reset their highlight.
+	if ([inNotification object] != nil && [inNotification object] != [self textView])
+		return;
 	[self matchBracesForSelectionInTextView:nil];
 }
 
@@ -5812,6 +5852,9 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 	SEL showIndicatorSelector = experiment ? @selector(showExperimentIndicator:) : @selector(showIndicator:);
 	SEL resetFlashSelector = experiment ? @selector(resetExperimentBackgroundColorOfTextView:) : @selector(resetBackgroundColorOfTextView:);
 	NSTextView *flashView = experiment ? scrapTextView : textView;
+	NSTextView *selectionView = experiment ? scrapTextView : [self textView];
+	NSUInteger *highlightGeneration = experiment ? &scrapBraceHighlightGeneration : &braceHighlightGeneration;
+	NSUInteger *flashGeneration = experiment ? &scrapBraceFlashGeneration : &braceFlashGeneration;
 
 	BOOL alwaysHighlight  = [SUD boolForKey:AlwaysHighlightEnabledKey];
 	BOOL highlightContent = [SUD boolForKey:HighlightContentEnabledKey];
@@ -5827,6 +5870,11 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 	// if (![SUD boolForKey:SyntaxColoringEnabledKey]
     if ((! self.syntaxColor)
 		|| (!checkBrace && !checkBracket && !checkSquareBracket && !checkParen)) {
+		// Matching was turned off while braces were highlighted: the highlight ends.
+		if (highlightingContent)
+			[self performSelector:resetBackgroundSelector withObject:nil afterDelay:0];
+		if (highlightingBraces)
+			[self performSelector:resetHighlightSelector withObject:nil afterDelay:0];
 		return;
 	}
 	
@@ -5851,7 +5899,19 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 	NSString *theString = experiment ? [scrapTextView string] : [_textStorage string];
     NSInteger theStringLength = [theString length];
     if (theStringLength == 0) { return; }
-    NSRange theSelectedRange = experiment ? [scrapTextView selectedRange] : [[self textView] selectedRange];
+    // A brace being composed with an input method is not highlighted. Where the composed
+    // text begins is kept as the last place, so that a brace committed there is
+    // highlighted as a typed one.
+    if ([selectionView hasMarkedText]) {
+        NSRange marked = [selectionView markedRange];
+        if (marked.location != NSNotFound) {
+            *lastLocation = marked.location;
+            *lastLength = theStringLength - marked.length;
+            *lastDelete = NO;
+        }
+        return;
+    }
+    NSRange theSelectedRange = [selectionView selectedRange];
     NSInteger theLocation = theSelectedRange.location;
     NSInteger theDifference = theLocation - *lastLocation;
     *lastLocation = theLocation;
@@ -5921,10 +5981,12 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 		return;
 	if (theMatch >= 0) {
 		theLocation = theMatch;
+		NSUInteger generation = ++*highlightGeneration;
 				[self performSelector:highlightBracesSelector
 						   withObject:[NSArray arrayWithObjects:
 									   [NSNumber numberWithInteger:theLocation],
 									   [NSNumber numberWithInteger:originalLocation],
+									   @(generation),
 									   nil]
 						   afterDelay:0];
 				 
@@ -5943,7 +6005,7 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 				
 				if(!alwaysHighlight){
 					[self performSelector:resetHighlightSelector
-							   withObject:nil afterDelay:0.30];
+							   withObject:@(generation) afterDelay:0.30];
 				}
 				
                 return;
@@ -5990,7 +6052,7 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
         
        
 		[self performSelector:resetFlashSelector
-				   withObject:nil afterDelay:0.20];
+				   withObject:@(++*flashGeneration) afterDelay:0.20];
 	}
 }
 
@@ -6149,12 +6211,14 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 				matchRange.location = i;
 				matchRange.length = 1;
 				// modified by Terada (from this line)
+				// For a brace being composed with an input method, the indicator is not shown
+				// (see -showIndicator:) and the selection is not moved to the partner either.
 				if ((NSFoundationVersionNumber > LEOPARD) && ([SUD boolForKey: brieflyFlashYellowForMatchKey])) {
 					[self performSelector:showIndicatorSelector
 							   withObject:NSStringFromRange(matchRange)
 							   afterDelay:0.0];
 				}
-				else {
+				else if (! [aTextView hasMarkedText]) {
 					// koch: here 'affinity' and 'stillSelecting' are necessary, else the wrong range is selected.
 					[aTextView setSelectedRange: matchRange
 									  affinity: NSSelectByCharacter stillSelecting: YES];
@@ -11067,6 +11131,17 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
     //NSLog(@"Next • hit");
 }
 
+// The marks change the text as typing does: Undo puts it back, and the document counts as edited.
+- (BOOL)replaceMarkTextInRange:(NSRange)range withString:(NSString *)string actionName:(NSString *)actionName
+{
+    if (![textView shouldChangeTextInRange:range replacementString:string])
+        return NO;
+    [textView replaceCharactersInRange:range withString:string];
+    [textView didChangeText];
+    [[textView undoManager] setActionName:actionName];
+    return YES;
+}
+
 - (void) doNextBulletAndDelete: (id)sender // modified by (HS)
 {
     NSRange tempRange, forwardRange, markerRange, commentRange;
@@ -11097,7 +11172,8 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 	tempRange.location = markerRange.location;
 	tempRange.length = [placeholderString length];
 	markerRange.length -= tempRange.length; // deleting the bullet so selection is shorter
-	[textView replaceCharactersInRange:tempRange withString:@""];
+	if (![self replaceMarkTextInRange:tempRange withString:@"" actionName:NSLocalizedString(@"Delete Mark", @"Edit › Mark")])
+	    return;
 	// end delete bullet (marker)
 	[textView setSelectedRange:markerRange];
 	[textView scrollRangeToVisible:markerRange];
@@ -11135,7 +11211,8 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 	tempRange.location = markerRange.location;
 	tempRange.length = [placeholderString length];
 	markerRange.length -= tempRange.length; // deleting the bullet so selection is shorter
-	[textView replaceCharactersInRange:tempRange withString:@""];
+	if (![self replaceMarkTextInRange:tempRange withString:@"" actionName:NSLocalizedString(@"Delete Mark", @"Edit › Mark")])
+	    return;
 	// end delete bullet (marker)
 	[textView setSelectedRange:markerRange];
 	[textView scrollRangeToVisible:markerRange];
@@ -11150,7 +11227,8 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 
    //  text = [textView string];
     myRange = [textView selectedRange];
-    [textView replaceCharactersInRange:myRange withString:placeholderString];//" •\n" puts • on previous line
+    if (![self replaceMarkTextInRange:myRange withString:placeholderString actionName:NSLocalizedString(@"Insert Mark", @"Edit › Mark")]) //" •\n" puts • on previous line
+        return;
     myRange.location += [placeholderString length];//= end+2;//start puts • on previous line
     myRange.length = 0;
     [textView setSelectedRange: myRange];

@@ -16,4 +16,8 @@
 {
     return nil;
 }
+- (NSColor *)opaqueColorForKey:(NSString *)theKey fromDictionary:(NSDictionary *)theDictionary isWindowDark:(BOOL)mode
+{
+    return nil;
+}
 @end

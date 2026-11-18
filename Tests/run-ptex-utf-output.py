@@ -42,6 +42,14 @@ int main(void) { @autoreleasepool {
     view.font = [NSFont fontWithName:@"Menlo" size:12];
     Check(@"character outside JIS X 0208", @"\u9DD7a", @"\\UTF{9DD7}a", view, probe);
     Check(@"line end", @"\u9DD7\nx", @"\\UTF{9DD7}%\nx", view, probe);
+    Check(@"CRLF and CR line ends", @"\u9DD7\r\nx\u9DD7\ry", @"\\UTF{9DD7}%\r\nx\\UTF{9DD7}%\ry", view, probe);
+    Check(@"end of the text", @"x\u9DD7", @"x\\UTF{9DD7}%", view, probe);
+    // TeX ends lines at CR and LF only: a "%" before U+2028, U+2029 or U+0085 would comment out the rest.
+    for (NSNumber *separator in @[@0x2028, @0x2029, @0x85]) {
+        NSString *input = [NSString stringWithFormat:@"\u9DD7%Cx", (unichar)separator.intValue];
+        Check([NSString stringWithFormat:@"no %% before U+%04X", separator.intValue], input,
+              [NSString stringWithFormat:@"\\UTF{9DD7}\\UTF{%04X}x", separator.intValue], view, probe);
+    }
     Check(@"non-BMP character", @"\U00020BB7x", @"\\CID{13706}x", view, probe);
     Check(@"registered variation sequence", @"\u8FBB\U000E0101x", @"\\CID{8267}x", view, probe);
     Check(@"registered non-default variation", @"\u845B\U000E0100x", @"\\CID{1481}x", view, probe);
