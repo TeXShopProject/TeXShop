@@ -2456,6 +2456,8 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     navigation();
     if (keep)
         TSPreviewScrollHorizontally(self.documentView.enclosingScrollView, x);
+    // A wider page can bring in the horizontal scroller after the appearance was chosen.
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
 - (void)goToPage:(PDFPage *)page
@@ -8637,6 +8639,15 @@ else
         case kPDFDisplayTwoUpContinuous: pageStyle = PDF_DOUBLE_MULTI_PAGE_STYLE; break;
     }
     [self.myDocument updatePreviewLayoutControls];
+    // The context menu's Two Pages calls this without a magnification or a resize.
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
+}
+
+- (void)setDisplayDirection:(PDFDisplayDirection)direction
+{
+    [super setDisplayDirection:direction];
+    // Pages in a row can bring in the horizontal scroller after the appearance was chosen.
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
 - (void)windowWillEnterFullScreen:(NSNotification *)notification

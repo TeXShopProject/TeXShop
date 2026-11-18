@@ -766,6 +766,51 @@ NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CG
     TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
+- (void)setDisplayMode:(PDFDisplayMode)mode
+{
+    [super setDisplayMode:mode];
+    // The context menu's Two Pages calls this without a magnification or a resize.
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
+}
+
+- (void)setDisplayDirection:(PDFDisplayDirection)direction
+{
+    [super setDisplayDirection:direction];
+    // Pages in a row can bring in the horizontal scroller after the appearance was chosen.
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
+}
+
+- (void)goToPage:(PDFPage *)page
+{
+    [super goToPage:page];
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
+}
+
+- (void)goToNextPage:(id)sender
+{
+    [super goToNextPage:sender];
+    // A wider page can bring in the horizontal scroller after the appearance was chosen.
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
+}
+
+- (void)goToPreviousPage:(id)sender
+{
+    [super goToPreviousPage:sender];
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
+}
+
+- (void)goToFirstPage:(id)sender
+{
+    [super goToFirstPage:sender];
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
+}
+
+- (void)goToLastPage:(id)sender
+{
+    [super goToLastPage:sender];
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
+}
+
 - (void)setFrameSize:(NSSize)newSize
 {
     [super setFrameSize:newSize];

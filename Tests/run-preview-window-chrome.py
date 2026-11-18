@@ -15,31 +15,60 @@ from production_fragments import method, verify_embedded
 from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['scroll-appearance', 'late-scroller'])
+parser.add_argument('--mutation', choices=['scroll-appearance', 'late-scroller', 'display-mode', 'late-page', 'late-direction'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 header = (root / 'Sources/Preview/TSPreviewAppearance.h').read_text()
 view_source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
 view_methods = [method(view_source, signature) for signature in (
-    '- (void)setScaleFactor:(CGFloat)scale', '- (void)setFrameSize:(NSSize)newSize')]
-view_text = '\n'.join(view_methods)
+    '- (void)setScaleFactor:(CGFloat)scale', '- (void)setFrameSize:(NSSize)newSize',
+    '- (void)setDisplayMode:(PDFDisplayMode)mode', '- (void)setDisplayDirection:(PDFDisplayDirection)direction',
+    '- (void)keepHorizontalPositionDuring:(void (NS_NOESCAPE ^)(void))navigation',
+    '- (BOOL)scrollingKeepsPage', '- (BOOL)isPageTurnFromScrolling:(SEL)selector',
+    '- (void)goToNextPage:(id)sender',
+    '- (NSMenu *)menuForEvent:(NSEvent *)theEvent',
+    '- (MyPDFKitView *)previewPartForMenuEvent: (NSEvent *)theEvent',
+    '- (PDFDestination *)internalLinkDestinationAtPoint: (NSPoint)viewPoint')]
+fragments = [('complete method: ' + item.split('\n', 1)[0], view_source, item) for item in view_methods]
+reapply = '    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);\n'
+def strip_reapply(index):
+    assert view_methods[index].count(reapply) == 1, args.mutation
+    view_methods[index] = view_methods[index].replace(reapply, '')
 if args.mutation == 'scroll-appearance':
     old = '    scrollView.appearance = nil;\n'
     assert header.count(old) == 1, args.mutation
     header = header.replace(old, '    scrollView.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];\n', 1)
 elif args.mutation == 'late-scroller':
-    old = '    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);\n'
-    assert view_text.count(old) == 2, args.mutation
-    view_text = view_text.replace(old, '')
+    strip_reapply(0)
+    strip_reapply(1)
+elif args.mutation == 'display-mode':
+    strip_reapply(2)
+elif args.mutation == 'late-direction':
+    strip_reapply(3)
+elif args.mutation == 'late-page':
+    strip_reapply(4)
+view_text = '\n'.join(view_methods)
 
 program = r'''
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 #import "TestAppKitIsolation.h"
 #import "TSContentZoom.h"
+#import "TSPreviewHorizontalPosition.h"
 #import "TSPreviewScrollerKeeper.h"
+#import "TSScrollPageTurn.h"
+@interface NSObject (ChromeDocumentMessages)
+- (void)updatePreviewLayoutControls;
+- (NSMenu *)getContextMenu;
+@end
+#define SUD NSUserDefaults.standardUserDefaults
+#define NoScrollPageTurnKey @"NoScrollPageTurn"
 #define NEW_PDF_FIT_TO_NONE 2
 #define NEW_PDF_FIT_TO_CONTENT_WIDTH 6
+#define PDF_SINGLE_PAGE_STYLE 1
+#define PDF_TWO_PAGE_STYLE 2
+#define PDF_MULTI_PAGE_STYLE 3
+#define PDF_DOUBLE_MULTI_PAGE_STYLE 4
 HEADER
 static int checks;
 static void check(BOOL ok, NSString *message) {
@@ -97,13 +126,16 @@ static void CheckChrome(NSWindow *window, PDFView *pdf, NSString *systemName, BO
     }
     check(pocket && around, @"the pocket and the area around the pages are both present");
 }
-@interface ChromeDocumentPreview : PDFView {
+@interface MyPDFKitView : PDFView {
     BOOL _fittingContentWidth;
     NSInteger resizeOption;
+    NSInteger pageStyle;
+    NSPoint menuPoint;
 }
+@property (nonatomic, strong) id myDocument;
 - (void)fitContentWidthKeepingTop:(TSContentTop)top;
 @end
-@implementation ChromeDocumentPreview
+@implementation MyPDFKitView
 - (void)fitContentWidthKeepingTop:(TSContentTop)top {}
 VIEWMETHODS
 @end
@@ -122,14 +154,56 @@ static void CheckLateBar(PDFView *pdf, BOOL inverted, NSString *what) {
     NSView *titlebar = FindClass(pdf.window.contentView.superview, @"NSTitlebarView");
     check([Match(titlebar.effectiveAppearance) isEqual:NSAppearanceNameDarkAqua], [what stringByAppendingString:@": the title bar stays dark"]);
 }
-static ChromeDocumentPreview *LatePreview(void) {
+static PDFDocument *PagesOfWidths(CGFloat first, CGFloat second) {
+    PDFDocument *document = [PDFDocument new];
+    CGFloat widths[2] = {first, second};
+    for (int i = 0; i < 2; i++) {
+        NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(widths[i], 380)];
+        [image lockFocus];
+        [[NSColor whiteColor] setFill];
+        NSRectFill(NSMakeRect(0, 0, widths[i], 380));
+        [image unlockFocus];
+        [document insertPage:[[PDFPage alloc] initWithImage:image] atIndex:i];
+    }
+    return document;
+}
+static MyPDFKitView *SpreadPreview(PDFDocument *document, PDFDisplayMode mode) {
+    NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 700, 550)
+        styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable | NSWindowStyleMaskMiniaturizable
+        backing:NSBackingStoreBuffered defer:NO];
+    window.toolbarStyle = NSWindowToolbarStyleExpanded;
+    window.toolbar = [[NSToolbar alloc] initWithIdentifier:@"TSPreviewChromeSpread"];
+    window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+    MyPDFKitView *pdf = [[MyPDFKitView alloc] initWithFrame:window.contentView.bounds];
+    pdf.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+    pdf.autoScales = NO;
+    pdf.displayMode = mode;
+    pdf.document = document;
+    [window.contentView addSubview:pdf];
+    [window layoutIfNeeded];
+    [pdf layoutSubtreeIfNeeded];
+    pdf.scaleFactor = 1;
+    [pdf goToFirstPage:nil];
+    return pdf;
+}
+static void ChooseTwoPages(PDFView *pdf) {
+    NSEvent *event = [NSEvent mouseEventWithType:NSEventTypeRightMouseDown location:NSMakePoint(200, 240)
+        modifierFlags:0 timestamp:0 windowNumber:pdf.window.windowNumber context:nil eventNumber:1 clickCount:1 pressure:1];
+    NSMenu *menu = [pdf menuForEvent:event];
+    NSMenuItem *item = nil;
+    for (NSMenuItem *candidate in menu.itemArray)
+        if ([candidate.title isEqualToString:@"Two Pages"]) item = candidate;
+    check(item != nil && item.action == NSSelectorFromString(@"_setDoublePage:"), @"the context menu offers Two Pages");
+    [NSApp sendAction:item.action to:item.target ?: pdf from:item];
+}
+static MyPDFKitView *LatePreview(void) {
     NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 750, 550)
         styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable | NSWindowStyleMaskMiniaturizable
         backing:NSBackingStoreBuffered defer:NO];
     window.toolbarStyle = NSWindowToolbarStyleExpanded;
     window.toolbar = [[NSToolbar alloc] initWithIdentifier:@"TSPreviewChromeLate"];
     window.styleMask |= NSWindowStyleMaskFullSizeContentView;
-    ChromeDocumentPreview *pdf = [[ChromeDocumentPreview alloc] initWithFrame:window.contentView.bounds];
+    MyPDFKitView *pdf = [[MyPDFKitView alloc] initWithFrame:window.contentView.bounds];
     pdf.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     pdf.autoScales = NO;
     pdf.displayMode = kPDFDisplaySinglePage;
@@ -177,28 +251,55 @@ int main(void) {
         CheckChrome(window, pdf, NSAppearanceNameAqua, NO);
 
         NSApp.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
-        ChromeDocumentPreview *magnified = LatePreview();
+        MyPDFKitView *magnified = LatePreview();
         TSApplyPreviewInversion(magnified.documentView.enclosingScrollView, YES);
         check(!magnified.documentView.enclosingScrollView.hasHorizontalScroller, @"magnifying starts without a horizontal scroller");
         magnified.scaleFactor = 4;
         CheckLateBar(magnified, YES, @"magnifying the document preview");
-        ChromeDocumentPreview *narrowed = LatePreview();
+        MyPDFKitView *narrowed = LatePreview();
         narrowed.scaleFactor = 1;
         TSApplyPreviewInversion(narrowed.documentView.enclosingScrollView, YES);
         check(!narrowed.documentView.enclosingScrollView.hasHorizontalScroller, @"narrowing starts without a horizontal scroller");
         [narrowed setFrameSize:NSMakeSize(120, 550)];
         CheckLateBar(narrowed, YES, @"narrowing the document preview");
-        ChromeDocumentPreview *plain = LatePreview();
+        MyPDFKitView *plain = LatePreview();
         TSApplyPreviewInversion(plain.documentView.enclosingScrollView, NO);
         plain.scaleFactor = 4;
         CheckLateBar(plain, NO, @"magnifying a light document preview");
+        MyPDFKitView *twoUp = SpreadPreview(PagesOfWidths(410, 410), kPDFDisplaySinglePage);
+        TSApplyPreviewInversion(twoUp.documentView.enclosingScrollView, YES);
+        NSScrollView *twoScroll = twoUp.documentView.enclosingScrollView;
+        NSView *twoClip = twoScroll.contentView;
+        NSView *twoGutter = nil;
+        for (NSView *subview in twoScroll.subviews)
+            if ([NSStringFromClass(subview.class) containsString:@"Background"]) twoGutter = subview;
+        check(twoClip != nil && twoGutter != nil && !twoScroll.hasHorizontalScroller, @"Two Pages starts without a horizontal scroller");
+        ChooseTwoPages(twoUp);
+        BOOL sameGutter = NO;
+        for (NSView *subview in twoUp.documentView.enclosingScrollView.subviews)
+            if (subview == twoGutter) sameGutter = YES;
+        check(twoUp.documentView.enclosingScrollView.contentView == twoClip && sameGutter, @"Two Pages keeps the clip view and the area around the pages");
+        CheckLateBar(twoUp, YES, @"choosing Two Pages from the document context menu");
+        MyPDFKitView *twoUpPlain = SpreadPreview(PagesOfWidths(410, 410), kPDFDisplaySinglePage);
+        TSApplyPreviewInversion(twoUpPlain.documentView.enclosingScrollView, NO);
+        ChooseTwoPages(twoUpPlain);
+        CheckLateBar(twoUpPlain, NO, @"choosing Two Pages on a light document preview");
+        MyPDFKitView *turned = SpreadPreview(PagesOfWidths(410, 1100), kPDFDisplaySinglePage);
+        TSApplyPreviewInversion(turned.documentView.enclosingScrollView, YES);
+        check(!turned.documentView.enclosingScrollView.hasHorizontalScroller, @"the next page starts without a horizontal scroller");
+        [turned goToNextPage:nil];
+        CheckLateBar(turned, YES, @"turning to a wider page");
+        MyPDFKitView *across = SpreadPreview(PagesOfWidths(410, 410), kPDFDisplaySinglePageContinuous);
+        TSApplyPreviewInversion(across.documentView.enclosingScrollView, YES);
+        check(!across.documentView.enclosingScrollView.hasHorizontalScroller, @"a vertical row starts without a horizontal scroller");
+        across.displayDirection = kPDFDisplayDirectionHorizontal;
+        CheckLateBar(across, YES, @"laying the pages in a row");
         printf("PASS: %d preview window chrome checks\n", checks);
     }
     return 0;
 }
 '''
 program = program.replace('HEADER', header).replace('VIEWMETHODS', view_text)
-fragments = [('complete method: ' + item.split('\n', 1)[0], view_source, item) for item in view_methods]
 if not args.mutation:
     verify_embedded(program, fragments)
 with tempfile.TemporaryDirectory(prefix='texshop-preview-chrome-') as temp:

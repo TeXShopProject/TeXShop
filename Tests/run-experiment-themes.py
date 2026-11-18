@@ -10,7 +10,7 @@ import argparse, os, subprocess, tempfile
 from source_tree import include_args
 from experiment_preview_source import prelude as experiment_preview_prelude, sources as experiment_preview_sources
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['source-hook', 'pdf-hook', 'defaults-hook', 'reload-hook', 'menu-validation', 'filter-gamma', 'source-alpha', 'preview-alpha', 'paper-invert', 'paper-print', 'paper-lens', 'late-scroller'])
+parser.add_argument('--mutation', choices=['source-hook', 'pdf-hook', 'defaults-hook', 'reload-hook', 'menu-validation', 'filter-gamma', 'source-alpha', 'preview-alpha', 'paper-invert', 'paper-print', 'paper-lens', 'late-scroller', 'display-mode', 'late-page', 'late-direction'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root/'Sources/Editor/ScrapTextView.m').read_text(encoding='latin1')
@@ -44,10 +44,21 @@ if args.mutation == 'paper-print':
     pdf = pdf.replace('if (screen) TSFillPreviewPaper(', 'TSFillPreviewPaper(')
 if args.mutation == 'paper-lens':
     pdf = pdf.replace('overlay.magnifiedPaperColor = self.previewPaperColor;', '')
+def strip_after(prefix):
+    global pdf
+    old = prefix + '    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);\n'
+    assert pdf.count(old) == 1, args.mutation
+    pdf = pdf.replace(old, prefix)
 if args.mutation == 'late-scroller':
-    old = '    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);\n'
-    assert pdf.count(old) == 3, 'late-scroller'
-    pdf = pdf.replace(old, '')
+    strip_after('    // PDFKit may add the horizontal scroller during this change.\n')
+    strip_after('    // A narrower view can bring in a horizontal scroller after the appearance was chosen.\n')
+    strip_after('    [self clearExperimentSelection];\n')
+elif args.mutation == 'display-mode':
+    strip_after('    // The context menu\'s Two Pages calls this without a magnification or a resize.\n')
+elif args.mutation == 'late-direction':
+    strip_after('    [super setDisplayDirection:direction];\n    // Pages in a row can bring in the horizontal scroller after the appearance was chosen.\n')
+elif args.mutation == 'late-page':
+    strip_after('    [super goToNextPage:sender];\n    // A wider page can bring in the horizontal scroller after the appearance was chosen.\n')
 pdf = pdf.replace('#import "TSPreviewAppearance.h"', appearance)
 pdf = experiment_preview_prelude(root) + pdf
 prefix = r'''
@@ -319,6 +330,76 @@ int main(void) { @autoreleasepool {
               @"a horizontal scroller that appears on a light Experiment is light and not inverted");
         [zoomWindow close];
         [plainWindow close];
+        NSWindow *spreadWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 700, 550)
+            styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable | NSWindowStyleMaskFullSizeContentView
+            backing:NSBackingStoreBuffered defer:NO];
+        spreadWindow.releasedWhenClosed = NO;
+        spreadWindow.toolbarStyle = NSWindowToolbarStyleExpanded;
+        spreadWindow.toolbar = [[NSToolbar alloc] initWithIdentifier:@"experiment-spread"];
+        ScrapPDFKitView *spread = [[ScrapPDFKitView alloc] initWithFrame:spreadWindow.contentView.bounds];
+        spread.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+        spread.autoScales = NO;
+        spread.displayMode = kPDFDisplaySinglePage;
+        PDFDocument *pair = [PDFDocument new];
+        for (int i = 0; i < 2; i++) {
+            NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(410, 380)];
+            [image lockFocus]; [NSColor.whiteColor setFill]; NSRectFill(NSMakeRect(0, 0, 410, 380)); [image unlockFocus];
+            [pair insertPage:[[PDFPage alloc] initWithImage:image] atIndex:i];
+        }
+        [spreadWindow.contentView addSubview:spread];
+        spread.document = pair;
+        spread.scaleFactor = 1;
+        [testDefaults setInteger:2 forKey:TSPreviewAppearanceModeKey];
+        pump();
+        NSScrollView *spreadScroll = spread.documentView.enclosingScrollView;
+        NSView *spreadClip = spreadScroll.contentView;
+        check(!spreadScroll.hasHorizontalScroller, @"Experiment Two Pages starts without a horizontal scroller");
+        NSEvent *click = [NSEvent mouseEventWithType:NSEventTypeRightMouseDown location:NSMakePoint(350, 300)
+            modifierFlags:0 timestamp:0 windowNumber:spreadWindow.windowNumber context:nil eventNumber:1 clickCount:1 pressure:1];
+        NSMenu *spreadMenu = [spread menuForEvent:click];
+        NSMenuItem *twoPages = nil;
+        for (NSMenuItem *item in spreadMenu.itemArray)
+            if ([item.title isEqualToString:@"Two Pages"]) twoPages = item;
+        check(twoPages.action == NSSelectorFromString(@"_setDoublePage:"), @"the Experiment context menu offers Two Pages");
+        [NSApp sendAction:twoPages.action to:twoPages.target ?: spread from:twoPages];
+        pump();
+        check(spread.documentView.enclosingScrollView.contentView == spreadClip, @"Two Pages keeps the Experiment clip view");
+        check(spreadScroll.hasHorizontalScroller && spreadScroll.horizontalScroller.contentFilters.count == 3
+              && spreadScroll.horizontalScroller.appearance == [NSAppearance appearanceNamed:NSAppearanceNameAqua],
+              @"Two Pages from the Experiment context menu inverts the new scroller");
+        ScrapPDFKitView *wide = [[ScrapPDFKitView alloc] initWithFrame:spreadWindow.contentView.bounds];
+        wide.autoScales = NO;
+        wide.displayMode = kPDFDisplaySinglePage;
+        PDFDocument *steps = [PDFDocument new];
+        CGFloat widths[2] = {410, 1100};
+        for (int i = 0; i < 2; i++) {
+            NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(widths[i], 380)];
+            [image lockFocus]; [NSColor.whiteColor setFill]; NSRectFill(NSMakeRect(0, 0, widths[i], 380)); [image unlockFocus];
+            [steps insertPage:[[PDFPage alloc] initWithImage:image] atIndex:i];
+        }
+        [spreadWindow.contentView addSubview:wide];
+        wide.document = steps;
+        wide.scaleFactor = 1;
+        [wide goToFirstPage:nil];
+        pump();
+        check(!wide.documentView.enclosingScrollView.hasHorizontalScroller, @"the Experiment next page starts without a horizontal scroller");
+        [wide goToNextPage:nil];
+        pump();
+        check(wide.documentView.enclosingScrollView.horizontalScroller.contentFilters.count == 3,
+              @"turning to a wider Experiment page inverts the new scroller");
+        ScrapPDFKitView *row = [[ScrapPDFKitView alloc] initWithFrame:spreadWindow.contentView.bounds];
+        row.autoScales = NO;
+        row.displayMode = kPDFDisplaySinglePageContinuous;
+        row.document = pair;
+        row.scaleFactor = 1;
+        [spreadWindow.contentView addSubview:row];
+        pump();
+        check(!row.documentView.enclosingScrollView.hasHorizontalScroller, @"a vertical Experiment row starts without a horizontal scroller");
+        row.displayDirection = kPDFDisplayDirectionHorizontal;
+        pump();
+        check(row.documentView.enclosingScrollView.horizontalScroller.contentFilters.count == 3,
+              @"laying Experiment pages in a row inverts the new scroller");
+        [spreadWindow close];
     }
     check(TSThemeWindowAlpha(@{}, @"SourceAlpha")==1, @"missing alpha stays opaque");
     check(TSThemeWindowAlpha(@{@"SourceAlpha":@[@0]}, @"SourceAlpha")==1, @"malformed alpha stays opaque");
