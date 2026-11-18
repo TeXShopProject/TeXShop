@@ -32,6 +32,7 @@ static void Require(NSString *what, BOOL ok) { if (!ok) { printf("FAIL %s\n", wh
 @public
     NSTextView *textView, *textView1, *textView2, *stringWindowTextView;
     BOOL invisibleCharactersShowing;
+    NSInteger lastCursorLocation; // setTextView: moves the brace highlight to the other half
 }
 @property NSInteger colorized;
 @property (strong) id sourceStatusBar; // the status bar under the source; nil here
@@ -40,6 +41,7 @@ static void Require(NSString *what, BOOL ok) { if (!ok) { printf("FAIL %s\n", wh
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key {}
 - (void)applyExperimentInvisibleCharacters {}
 - (void)colorizeAll { self.colorized++; }
+- (void)matchBracesForSelectionInTextView:(NSTextView *)aTextView {} // brace highlight: not this test's subject
 //@@TSDocument methods@@
 @end
 
