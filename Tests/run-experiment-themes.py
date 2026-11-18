@@ -10,7 +10,7 @@ import argparse, os, subprocess, tempfile
 from source_tree import include_args
 from experiment_preview_source import prelude as experiment_preview_prelude, sources as experiment_preview_sources
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['source-hook', 'pdf-hook', 'defaults-hook', 'reload-hook', 'menu-validation', 'filter-gamma', 'source-alpha', 'preview-alpha', 'paper-invert', 'paper-print', 'paper-lens', 'scroll-appearance', 'bar-appearance', 'bar-filters', 'late-scroller', 'display-mode', 'late-page', 'late-direction', 'late-destination', 'document-filters', 'page-provider'])
+parser.add_argument('--mutation', choices=['source-hook', 'pdf-hook', 'defaults-hook', 'reload-hook', 'menu-validation', 'filter-gamma', 'source-alpha', 'preview-alpha', 'paper-invert', 'paper-print', 'paper-lens', 'scroll-appearance', 'bar-appearance', 'bar-filters', 'document-filters', 'page-hook'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root/'Sources/Editor/ScrapTextView.m').read_text(encoding='latin1')
@@ -44,11 +44,6 @@ if args.mutation == 'paper-print':
     pdf = pdf.replace('if (screen) TSFillPreviewPaper(', 'TSFillPreviewPaper(')
 if args.mutation == 'paper-lens':
     pdf = pdf.replace('overlay.magnifiedPaperColor = self.previewPaperColor;', '')
-def strip_after(prefix):
-    global pdf
-    old = prefix + '    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);\n'
-    assert pdf.count(old) == 1, args.mutation
-    pdf = pdf.replace(old, prefix)
 if args.mutation == 'scroll-appearance':
     old = '    scrollView.appearance = nil;\n'
     assert appearance.count(old) == 1, args.mutation
@@ -61,26 +56,14 @@ elif args.mutation == 'bar-filters':
     old = '            subview.contentFilters = @[];\n'
     assert appearance.count(old) == 1, args.mutation
     appearance = appearance.replace(old, '            subview.contentFilters = TSPreviewInversionFilters();\n', 1)
-elif args.mutation == 'late-scroller':
-    strip_after('    // PDFKit may replace the page views during this change.\n')
-    strip_after('    // A resize can replace the page views after the appearance was chosen.\n')
-    strip_after('    [self clearExperimentSelection];\n')
-elif args.mutation == 'display-mode':
-    strip_after('    // The context menu\'s Two Pages calls this without a magnification or a resize.\n')
-elif args.mutation == 'late-direction':
-    strip_after('    [super setDisplayDirection:direction];\n    // Pages in a row can replace the page views after the appearance was chosen.\n')
-elif args.mutation == 'late-page':
-    strip_after('    [super goToNextPage:sender];\n    // A wider page can replace the page views after the appearance was chosen.\n')
-elif args.mutation == 'late-destination':
-    strip_after('    [super goToDestination:destination];\n    // An outline or an internal link can replace the page views after the appearance was chosen.\n')
 elif args.mutation == 'document-filters':
     old = '    documentView.contentFilters = filters;\n'
     assert appearance.count(old) == 1, args.mutation
     appearance = appearance.replace(old, '    documentView.contentFilters = @[];\n', 1)
-elif args.mutation == 'page-provider':
-    old = '    if (view.pageOverlayViewProvider == nil) view.pageOverlayViewProvider = TSPreviewPageProvider();\n'
+elif args.mutation == 'page-hook':
+    old = '        TSLightenPreviewPageView(subview);\n}'
     assert appearance.count(old) == 1, args.mutation
-    appearance = appearance.replace(old, '')
+    appearance = appearance.replace(old, '        (void)subview;\n}', 1)
 pdf = pdf.replace('#import "TSPreviewAppearance.h"', appearance)
 pdf = experiment_preview_prelude(root) + pdf
 prefix = r'''

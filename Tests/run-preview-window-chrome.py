@@ -8,7 +8,7 @@ appearance and are not inverted. On macOS 27 an overlay scroller copies the clip
 view and the document view, so those take no appearance. The pages and the area
 around them are still drawn light; for a dark preview the luminosity filter sits on
 the document view, so it reaches each page view PDFKit adds later at once, without
-waiting, and the views on the pages are made light as their layers join it.
+waiting, and each page view is made light as PDFKit adds it to the document view.
 
 The windows are never ordered on screen. Defaults stay in memory.
 """
@@ -18,23 +18,20 @@ from production_fragments import method, verify_embedded
 from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['scroll-appearance', 'bar-appearance', 'bar-filters', 'late-scroller', 'display-mode', 'late-page', 'late-direction', 'late-destination', 'late-rotation', 'document-filters', 'page-provider', 'set-document', 'overlay-clicks'])
+parser.add_argument('--mutation', choices=['scroll-appearance', 'bar-appearance', 'bar-filters', 'document-filters', 'page-hook', 'set-document'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 header = (root / 'Sources/Preview/TSPreviewAppearance.h').read_text()
 view_source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
 view_methods = [method(view_source, signature) for signature in (
     '- (void)setScaleFactor:(CGFloat)scale', '- (void)setFrameSize:(NSSize)newSize',
-    '- (void)setDisplayMode:(PDFDisplayMode)mode', '- (void)setDisplayDirection:(PDFDisplayDirection)direction',
+    '- (void)setDisplayMode:(PDFDisplayMode)mode',
     '- (void)keepHorizontalPositionDuring:(void (NS_NOESCAPE ^)(void))navigation',
     '- (BOOL)scrollingKeepsPage', '- (BOOL)isPageTurnFromScrolling:(SEL)selector',
     '- (void)goToNextPage:(id)sender',
     '- (NSMenu *)menuForEvent:(NSEvent *)theEvent',
     '- (MyPDFKitView *)previewPartForMenuEvent: (NSEvent *)theEvent',
     '- (PDFDestination *)internalLinkDestinationAtPoint: (NSPoint)viewPoint',
-    '- (void)goToDestination:(PDFDestination *)destination',
-    '- (void)goToRect:(PDFRect)rect onPage:(PDFPage *)page',
-    '- (void)goToSelection:(PDFSelection *)selection',
     '- (IBAction) takeDestinationFromOutline: (id) sender',
     '- (void) rotateClockwise:sender',
     '- (void) rotateCounterclockwise:sender',
@@ -46,10 +43,6 @@ set_document = method(view_source, '- (void)setDocument:(PDFDocument *)document'
 assert '    TSPreviewSetDocument(self, ^{ [super setDocument:document]; });\n' in set_document, 'MyPDFKitView -setDocument: goes through TSPreviewSetDocument'
 scrap_source = (root / 'Sources/Preview/ScrapPDFKitView.m').read_text(encoding='latin1')
 assert '    TSPreviewSetDocument(self, ^{ [super setDocument:document]; });\n' in method(scrap_source, '- (void)setDocument:(PDFDocument *)document'), 'ScrapPDFKitView -setDocument: goes through TSPreviewSetDocument'
-reapply = '    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);\n'
-def strip_reapply(index):
-    assert view_methods[index].count(reapply) == 1, args.mutation
-    view_methods[index] = view_methods[index].replace(reapply, '')
 if args.mutation == 'scroll-appearance':
     old = '    scrollView.appearance = nil;\n'
     assert header.count(old) == 1, args.mutation
@@ -62,36 +55,18 @@ elif args.mutation == 'bar-filters':
     old = '            subview.contentFilters = @[];\n'
     assert header.count(old) == 1, args.mutation
     header = header.replace(old, '            subview.contentFilters = TSPreviewInversionFilters();\n', 1)
-elif args.mutation == 'late-scroller':
-    strip_reapply(0)
-    strip_reapply(1)
-elif args.mutation == 'display-mode':
-    strip_reapply(2)
-elif args.mutation == 'late-direction':
-    strip_reapply(3)
-elif args.mutation == 'late-page':
-    strip_reapply(4)
-elif args.mutation == 'late-destination':
-    strip_reapply(11)
-elif args.mutation == 'late-rotation':
-    strip_reapply(15)
-    strip_reapply(16)
 elif args.mutation == 'document-filters':
     old = '    documentView.contentFilters = filters;\n'
     assert header.count(old) == 1, args.mutation
     header = header.replace(old, '    documentView.contentFilters = @[];\n', 1)
-elif args.mutation == 'page-provider':
-    old = '    if (view.pageOverlayViewProvider == nil) view.pageOverlayViewProvider = TSPreviewPageProvider();\n'
+elif args.mutation == 'page-hook':
+    old = '        TSLightenPreviewPageView(subview);\n}'
     assert header.count(old) == 1, args.mutation
-    header = header.replace(old, '')
+    header = header.replace(old, '        (void)subview;\n}', 1)
 elif args.mutation == 'set-document':
-    old = '    set();\n    TSReapplyPreviewInversion(view.documentView.enclosingScrollView);\n'
+    old = '    TSInstallPreviewPageHook(view.documentView);\n    TSReapplyPreviewInversion(view.documentView.enclosingScrollView);\n'
     assert header.count(old) == 1, args.mutation
-    header = header.replace(old, '    set();\n', 1)
-elif args.mutation == 'overlay-clicks':
-    old = '            class_addMethod(allocated, @selector(hitTest:), (IMP)TSPreviewOverlayHitTest, "@@:{CGPoint=dd}");\n'
-    assert header.count(old) == 1, args.mutation
-    header = header.replace(old, '')
+    header = header.replace(old, '', 1)
 view_text = '\n'.join(view_methods)
 
 program = r'''
@@ -214,12 +189,16 @@ static void CheckChrome(NSWindow *window, PDFView *pdf, NSString *systemName, BO
 @property (nonatomic, strong) TSPreviewWindow *myPDFWindow;
 - (void)fitContentWidthKeepingTop:(TSContentTop)top;
 - (void)cleanupMarquee:(BOOL)terminate;
+- (BOOL)beginKeepingPinnedLinkPreviewOnPage;
+- (void)endKeepingPinnedLinkPreviewOnPage:(BOOL)began;
 @end
 @implementation MyPDFKitView
 - (void)fitContentWidthKeepingTop:(TSContentTop)top {}
 - (void)closePinnedLinkPreview {}
 - (void)cleanupMarquee:(BOOL)terminate {}
 - (void)cleanupMarqueeKeepingPinnedLinkPreview {}
+- (BOOL)beginKeepingPinnedLinkPreviewOnPage { return NO; }
+- (void)endKeepingPinnedLinkPreviewOnPage:(BOOL)began {}
 // The production -setDocument: does more; the part this test needs is checked in its source above.
 - (void)setDocument:(PDFDocument *)document { TSPreviewSetDocument(self, ^{ [super setDocument:document]; }); }
 VIEWMETHODS
@@ -433,14 +412,25 @@ static void CheckWatchCloses(void) {
         view.document = document;
         NSScrollView *scroll = view.documentView.enclosingScrollView;
         check(scroll != nil, @"a preview has a scroll view");
-        id provider = view.pageOverlayViewProvider;
-        check(provider != nil, @"a preview has the page provider before its document is laid out");
         TSApplyPreviewInversion(scroll, NO);
+        Class documentClass = [view.documentView class];
+        check(objc_getAssociatedObject(documentClass, @selector(tsPreviewOriginalDidAddSubview)) != nil,
+              @"the document view's class has the page hook");
+        NSView *added = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 10, 10)];
+        [view.documentView addSubview:added];
+        check(added.superview == view.documentView && added.appearance == [NSAppearance appearanceNamed:NSAppearanceNameAqua],
+              @"a view added to a preview's document view is added and made light");
+        [added removeFromSuperview];
+        NSView *plainHost = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 10, 10)];
+        NSView *plainChild = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 5, 5)];
+        [plainHost addSubview:plainChild];
+        check(plainChild.appearance == nil, @"other views are left alone");
         TSApplyPreviewInversion(scroll, YES);
-        check(view.pageOverlayViewProvider == provider, @"a second apply keeps the provider");
+        NSValue *original = objc_getAssociatedObject(documentClass, @selector(tsPreviewOriginalDidAddSubview));
         MyPDFKitView *other = [[MyPDFKitView alloc] initWithFrame:NSMakeRect(0, 0, 220, 180)];
         other.document = document;
-        check(other.pageOverlayViewProvider == provider, @"every preview shares one provider");
+        check(objc_getAssociatedObject(documentClass, @selector(tsPreviewOriginalDidAddSubview)) == original,
+              @"the hook is added to the class once");
         NSView *first = view.documentView;
         PDFDocument *next = [PDFDocument new];
         [next insertPage:[[PDFPage alloc] init] atIndex:0];
@@ -495,9 +485,6 @@ static void CheckReadingPages(PDFView *pdf, BOOL inverted, NSString *what, NSTim
         if (coverage.size.width * coverage.size.height > 1000) shown = YES;
     }
     check(shown, [what stringByAppendingString:@": a page is on screen"]);
-    NSView *hit = [pdf hitTest:[pdf convertPoint:NSMakePoint(NSMidX(pdf.bounds), NSMidY(pdf.bounds)) toView:pdf.superview]];
-    check(hit != nil && ![NSStringFromClass(hit.class) isEqual:@"TSPreviewPageOverlay"],
-          [what stringByAppendingString:@": the overlay over a page takes no clicks"]);
 }
 int main(void) {
     @autoreleasepool {

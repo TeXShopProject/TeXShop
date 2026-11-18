@@ -129,9 +129,9 @@ static inline BOOL TSPreviewSubviewIsToolbarPocket(NSView *view) {
     return [NSStringFromClass(view.class) containsString:@"Pocket"];
 }
 
-// The key is private to each file that includes this header. The preview that applies
-// the appearance and the preview that meets a new page view are the same file.
-static void *TSPreviewInversionStateKey = &TSPreviewInversionStateKey;
+// The choice made for a scroll view. Selectors are the same in every file that includes
+// this header, so the hook below finds the state another file stored.
+#define TSPreviewInversionStateKey @selector(tsPreviewInversionState)
 
 // The pages, and the views TeXShop places over them (link popups, the magnifying glass,
 // selections), are drawn light. Their appearance is set view by view, because Aqua on
@@ -144,6 +144,8 @@ static inline void TSLightenPreviewPageView(NSView *child) {
 static inline void TSLightenPreviewPages(NSView *documentView) {
     for (NSView *child in documentView.subviews) TSLightenPreviewPageView(child);
 }
+
+static void TSInstallPreviewPageHook(NSView *documentView);
 
 // Share the same PDF page treatment between the document and Experiment previews.
 // Scroll bars are part of the window frame. They take no explicit appearance and no
@@ -177,82 +179,62 @@ static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert
     NSView *documentView = scrollView.documentView;
     documentView.appearance = nil;
     documentView.contentFilters = filters;
+    TSInstallPreviewPageHook(documentView);
     TSLightenPreviewPages(documentView);
-    objc_setAssociatedObject(scrollView, &TSPreviewInversionStateKey, @(invert),
+    objc_setAssociatedObject(scrollView, TSPreviewInversionStateKey, @(invert),
         OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 // Applies the choice again, as after -setDocument:, which puts a new document view in.
 static inline void TSReapplyPreviewInversion(NSScrollView *scrollView) {
-    NSNumber *invert = objc_getAssociatedObject(scrollView, &TSPreviewInversionStateKey);
+    NSNumber *invert = objc_getAssociatedObject(scrollView, TSPreviewInversionStateKey);
     if (!invert) return;
     TSApplyPreviewInversion(scrollView, invert.boolValue);
 }
 
 // A page view PDFKit adds while scrolling, or after a new document or display format, is
-// drawn light as PDFKit shows it: PDFKit asks the PDF view's page overlay provider for a
-// view over each page it displays, and the provider gives the page view the light
-// appearance there. The overlay itself draws nothing and takes no clicks. The provider
-// and the overlay classes are created once; each file that includes this header shares
-// them. PDFKit holds the provider weakly, so one shared provider stays alive.
-static NSView *TSPreviewOverlayHitTest(__unsafe_unretained id self, SEL _cmd, NSPoint point) {
-    (void)self; (void)_cmd; (void)point;
-    return nil;
-}
-static BOOL TSPreviewOverlayNo(__unsafe_unretained id self, SEL _cmd) {
-    (void)self; (void)_cmd;
-    return NO;
-}
-static Class TSPreviewOverlayClass(void) {
-    static Class cls;
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{
-        Class allocated = objc_allocateClassPair(NSView.class, "TSPreviewPageOverlay", 0);
-        if (allocated) {
-            class_addMethod(allocated, @selector(hitTest:), (IMP)TSPreviewOverlayHitTest, "@@:{CGPoint=dd}");
-            class_addMethod(allocated, @selector(isOpaque), (IMP)TSPreviewOverlayNo, "c@:");
-            class_addMethod(allocated, @selector(isAccessibilityElement), (IMP)TSPreviewOverlayNo, "c@:");
-            objc_registerClassPair(allocated);
-            cls = allocated;
-        } else {
-            cls = objc_getClass("TSPreviewPageOverlay");
-        }
-    });
-    return cls;
-}
-static NSView *TSPreviewProviderOverlay(__unsafe_unretained id self, SEL _cmd, PDFView *view, PDFPage *page) {
-    (void)self; (void)_cmd; (void)view; (void)page;
-    return [[TSPreviewOverlayClass() alloc] initWithFrame:NSZeroRect];
-}
-static void TSPreviewProviderWillDisplay(__unsafe_unretained id self, SEL _cmd, PDFView *view,
-                                         NSView *overlay, PDFPage *page) {
-    (void)self; (void)_cmd; (void)view; (void)page;
-    if (overlay.superview) TSLightenPreviewPageView(overlay.superview);
-}
-static id TSPreviewPageProvider(void) {
-    static id provider;
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{
-        Class cls = objc_getClass("TSPreviewPageProvider");
-        if (!cls) {
-            cls = objc_allocateClassPair(NSObject.class, "TSPreviewPageProvider", 0);
-            class_addMethod(cls, @selector(pdfView:overlayViewForPage:), (IMP)TSPreviewProviderOverlay, "@@:@@");
-            class_addMethod(cls, @selector(pdfView:willDisplayOverlayView:forPage:), (IMP)TSPreviewProviderWillDisplay, "v@:@@@");
-            class_addProtocol(cls, @protocol(PDFPageOverlayViewProvider));
-            objc_registerClassPair(cls);
-        }
-        provider = [[cls alloc] init];
-    });
-    return provider;
+// made light the moment PDFKit adds it to the document view: -didAddSubview: of the
+// document view's class calls the original method and then lightens the new view, when
+// the view belongs to a preview (its scroll view carries the choice). The hook is added
+// to that class once, whichever file that includes this header gets there first; the
+// original implementation is kept on the class. When the class is not PDFKit's usual one,
+// nothing changes but the hook: the filters on the document view still invert the pages.
+static void TSPreviewDidAddSubview(__unsafe_unretained NSView *self, SEL _cmd, NSView *subview) {
+    for (Class cls = object_getClass(self); cls; cls = class_getSuperclass(cls)) {
+        NSValue *original = objc_getAssociatedObject(cls, @selector(tsPreviewOriginalDidAddSubview));
+        if (!original) continue;
+        ((void (*)(__unsafe_unretained id, SEL, NSView *))original.pointerValue)(self, _cmd, subview);
+        break;
+    }
+    if (objc_getAssociatedObject(self.enclosingScrollView, TSPreviewInversionStateKey))
+        TSLightenPreviewPageView(subview);
 }
 
-// PDFKit asks for page overlays only when it lays out a document, so the provider is
-// installed before the document is set. A PDF view that already has another provider
-// keeps it. -setDocument: also puts a new document view in; the choice is applied to it
-// at once, while it has no page views yet, so they arrive under the preview's filters.
-// The document preview and the Experiment preview set their documents through this.
+static void TSInstallPreviewPageHook(NSView *documentView) {
+    Class cls = [documentView class];
+    if (!cls || cls == NSView.class) return;
+    @synchronized (NSView.class) {
+        if (objc_getAssociatedObject(cls, @selector(tsPreviewOriginalDidAddSubview))) return;
+        SEL sel = @selector(didAddSubview:);
+        Method own = NULL;
+        unsigned count = 0;
+        Method *methods = class_copyMethodList(cls, &count);
+        for (unsigned i = 0; i < count; i++) if (method_getName(methods[i]) == sel) own = methods[i];
+        free(methods);
+        IMP original = own ? method_getImplementation(own)
+                           : class_getMethodImplementation(class_getSuperclass(cls), sel);
+        objc_setAssociatedObject(cls, @selector(tsPreviewOriginalDidAddSubview),
+                                 [NSValue valueWithPointer:(const void *)original], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        if (own) method_setImplementation(own, (IMP)TSPreviewDidAddSubview);
+        else class_addMethod(cls, sel, (IMP)TSPreviewDidAddSubview, "v@:@");
+    }
+}
+
+// -setDocument: puts a new document view in. The choice is applied to it at once, while it
+// has no page views yet, so they arrive under the preview's filters and are made light as
+// they come. The document preview and the Experiment preview set their documents through this.
 static inline void TSPreviewSetDocument(PDFView *view, void (NS_NOESCAPE ^set)(void)) {
-    if (view.pageOverlayViewProvider == nil) view.pageOverlayViewProvider = TSPreviewPageProvider();
     set();
+    TSInstallPreviewPageHook(view.documentView);
     TSReapplyPreviewInversion(view.documentView.enclosingScrollView);
 }
