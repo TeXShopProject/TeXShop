@@ -19,6 +19,9 @@ static const CGFloat TSLinkPreviewLineSlack = 2;
 // 100% that size is larger, in page points, than the label drawn at 100%, and it then covers
 // the page or is dropped, so the label is never larger than it is at 100% (#14).
 static const CGFloat TSLinkPreviewLabelFontSize = 11;
+// A long label is not shrunk below this on screen. Anything smaller is a gray speck,
+// so the label is left out instead (#14).
+static const CGFloat TSLinkPreviewLabelMinimumScreenSize = 6;
 static const CGFloat TSLinkPreviewLabelMargin = 3;
 // The popup's corners, in page points, so they grow and shrink with the page in the popup.
 static const CGFloat TSLinkPreviewCornerRadius = 6;
@@ -181,6 +184,9 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     CGFloat unit = [self unitsPerScreenPoint];
     CGFloat scale = MIN(unit, 1);
     CGFloat fontSize = TSLinkPreviewLabelFontSize * scale;
+    // Six points on screen, and never above the size before shrinking. Below about 55%
+    // that size is already under six points, so the label is shown as it is or left out.
+    CGFloat fontFloor = MIN(fontSize, TSLinkPreviewLabelMinimumScreenSize * unit);
     CGFloat margin = TSLinkPreviewLabelMargin * scale;
     // The corners and the edge are in page points, so they grow on screen. A label on the
     // screen-point margin sits in that curve and under the stroke. The capsule stays on the
@@ -212,12 +218,15 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
                              textWidth + height, height);
         if (NSWidth(capsule) <= roomW && NSHeight(capsule) <= roomH) break;
         // A step that barely misses stalls on the rounded line height, so drop by a tenth
-        // then. Otherwise try the size that was measured to fit, even when it is near one
-        // point, and give up only when that size is not smaller.
+        // then. Otherwise try the size that was measured to fit, and stop at the floor.
         CGFloat fit = MIN(roomW / NSWidth(capsule), roomH / NSHeight(capsule));
         CGFloat next = fontSize * fit;
         if (!(next < fontSize * (CGFloat)0.99)) next = fontSize * (CGFloat)0.9;
         if (!(next > 0) || !(next < fontSize)) return;
+        if (next < fontFloor) {
+            if (!(fontSize > fontFloor)) return;
+            next = fontFloor;
+        }
         fontSize = next;
     }
     if (NSWidth(capsule) > roomW || NSHeight(capsule) > roomH) return;

@@ -46,6 +46,13 @@ MUTATIONS = {
                                '        CGFloat textWidth = ceil(size.width / px) * px;\n',
                                '        height = ceil(size.height);\n'
                                '        CGFloat textWidth = ceil(size.width);\n'),
+    'label-no-screen-floor': ('        if (next < fontFloor) {\n'
+                              '            if (!(fontSize > fontFloor)) return;\n'
+                              '            next = fontFloor;\n'
+                              '        }\n',
+                              ''),
+    'label-floor-page-points': ('    CGFloat fontFloor = MIN(fontSize, TSLinkPreviewLabelMinimumScreenSize * unit);\n',
+                                '    CGFloat fontFloor = MIN(fontSize, TSLinkPreviewLabelMinimumScreenSize);\n'),
     'corner-on-screen': ('    CGFloat radius = TSLinkPreviewCornerRadius;\n',
                          '    CGFloat radius = TSLinkPreviewCornerRadius * [self unitsPerScreenPoint];\n'),
     'no-redraw': ('            [weakSelf setNeedsDisplay:YES];\n', ''),
@@ -61,6 +68,8 @@ EXPECTED = {
     'drops-short-label': 'the page label stays visible',
     'label-estimate-floor': 'the page label stays visible',
     'label-ceil-page-points': "the page label's capsule stays one size on screen",
+    'label-no-screen-floor': 'the page label keeps the six-point floor',
+    'label-floor-page-points': 'the page label keeps the six-point floor',
     'corner-on-screen': 'the corners grow with the magnification',
     'no-redraw': 'the popup draws itself again when the magnification changes',
     'keeps-old-preview': 'a moved popup follows only the preview it is in',
@@ -271,16 +280,52 @@ int main(void) { @autoreleasepool {
         check(box.maxY >= box.minY && (box.maxY - box.minY + 1) / pixels < 20,
               "the page label does not cover the page");
     }
-    popup.frame = NSMakeRect(20, 20, productWidth, 80.0 / 3.0);
+    // At 50% the unshrunk label is already under six points on screen, so a tall popup
+    // still shows it and a short one leaves it out instead of shrinking it further.
+    popup.frame = NSMakeRect(20, 20, productWidth, 80);
     view.scaleFactor = 0.5;
     {
         CGFloat pixels = backing / [popup unitsPerScreenPoint];
-        NSBitmapImageRep *rep = render(popup, pixels);
-        LabelBox box = measureLabel(rep, pixels);
+        LabelBox box = measureLabel(render(popup, pixels), pixels);
         check(box.gray > 8 && box.white > 0, "the page label stays visible");
-        check(box.maxY >= box.minY && (box.maxY - box.minY + 1) / pixels < 20,
-              "the page label does not cover the page");
     }
+    popup.frame = NSMakeRect(20, 20, productWidth, 80.0 / 3.0);
+    {
+        CGFloat pixels = backing / [popup unitsPerScreenPoint];
+        LabelBox box = measureLabel(render(popup, pixels), pixels);
+        check(box.gray == 0, "the page label keeps the six-point floor");
+    }
+
+    // The narrowest popup is 120 points wide on screen. A label that fits at six points
+    // is drawn at least that large. One that does not fit at six points is left out.
+    popup.pageLabel = @"Page 180";
+    popup.frame = NSMakeRect(20, 20, 200, 50);
+    view.scaleFactor = 1;
+    CGFloat referenceHeight;
+    {
+        CGFloat pixels = backing / [popup unitsPerScreenPoint];
+        LabelBox box = measureLabel(render(popup, pixels), pixels);
+        referenceHeight = box.maxY - box.minY + 1;
+        check(referenceHeight > 10, "fixture: the eleven-point label has a height");
+    }
+    popup.frame = NSMakeRect(20, 20, 120, 40);
+    for (NSNumber *length in @[@24, @40, @80]) {
+        NSMutableString *longLabel = [@"Page " mutableCopy];
+        while ((NSInteger)longLabel.length < length.integerValue) [longLabel appendString:@"9"];
+        popup.pageLabel = longLabel;
+        CGFloat pixels = backing / [popup unitsPerScreenPoint];
+        LabelBox box = measureLabel(render(popup, pixels), pixels);
+        if (length.integerValue == 24) {
+            check(box.gray > 8 && box.white > 0, "the page label stays visible");
+            CGFloat screen = 11 * (box.maxY - box.minY + 1) / referenceHeight;
+            printf("label 100%% length 24 is %.2f points on screen\n", screen);
+            check(screen >= 6, "the page label stays at least six points on screen");
+        } else {
+            printf("label 100%% length %ld is %s\n", (long)length.integerValue, box.gray ? "drawn" : "left out");
+            check(box.gray == 0, "the page label keeps the six-point floor");
+        }
+    }
+    popup.pageLabel = @"Page 180";
 
     // The capsule is rounded to screen pixels, so 1000% and 2000% stay the size measured
     // at 100%. The frames are wide enough that the eleven-point label is not shrunk.
@@ -304,19 +349,40 @@ int main(void) { @autoreleasepool {
               "the page label's capsule stays one size on screen");
     }
 
-    // A long label on the short popup near the bottom of the page (46 by 20 page points
-    // at 500%). Forty characters is the reported case. Forty-eight still fits near one
-    // point, and a step of a tenth skips that size.
+    // At 500% the short popup is 46 by 20 page points. Thirty-eight characters still fit
+    // at six points on screen. Forty, forty-three and forty-eight fit only below that, so
+    // they are left out. A twelve-character label at 1000% in a 20-point-wide popup fits
+    // between six and ten points; guessing the next size must not skip it.
     popup.frame = NSMakeRect(20, 20, 46, 20);
     view.scaleFactor = 5;
-    for (NSNumber *length in @[@40, @48]) {
+    for (NSNumber *length in @[@38, @40, @43, @48]) {
         NSMutableString *longLabel = [@"Page " mutableCopy];
         while ((NSInteger)longLabel.length < length.integerValue) [longLabel appendString:@"9"];
-        check((NSInteger)longLabel.length == length.integerValue, "fixture: a long page label");
+        popup.pageLabel = longLabel;
+        CGFloat pixels = backing / [popup unitsPerScreenPoint];
+        LabelBox box = measureLabel(render(popup, pixels), pixels);
+        if (length.integerValue == 38) {
+            check(box.gray > 8 && box.white > 0, "the page label stays visible");
+            CGFloat screen = 11 * (box.maxY - box.minY + 1) / referenceHeight;
+            printf("label 500%% length 38 is %.2f points on screen\n", screen);
+            check(screen >= 6, "the page label stays at least six points on screen");
+        } else {
+            printf("label 500%% length %ld is %s\n", (long)length.integerValue, box.gray ? "drawn" : "left out");
+            check(box.gray == 0, "the page label keeps the six-point floor");
+        }
+    }
+    popup.frame = NSMakeRect(20, 20, 20, 20);
+    view.scaleFactor = 10;
+    {
+        NSMutableString *longLabel = [@"Page " mutableCopy];
+        while (longLabel.length < 12) [longLabel appendString:@"9"];
         popup.pageLabel = longLabel;
         CGFloat pixels = backing / [popup unitsPerScreenPoint];
         LabelBox box = measureLabel(render(popup, pixels), pixels);
         check(box.gray > 8 && box.white > 0, "the page label stays visible");
+        CGFloat screen = 11 * (box.maxY - box.minY + 1) / referenceHeight;
+        printf("label 1000%% length 12 is %.2f points on screen\n", screen);
+        check(screen >= 6, "the page label stays at least six points on screen");
     }
     popup.pageLabel = @"Page 180";
 
