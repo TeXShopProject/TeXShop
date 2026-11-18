@@ -607,8 +607,10 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
 // best, the weakest of them counted up to a contrast of 4.5 (WCAG): so all of them read whenever
 // any choice makes them read, and as well as they can otherwise. Of the choices that read as well,
 // the one nearest the built-in colors is taken: the built-in color of the mode first, then that of
-// the other mode, then white or black, then the nearest of the others. The theme file is not
-// changed. Every view that draws these colors, and the Settings wells, ask here.
+// the other mode, then white or black, then the nearest of the others. When none of these makes all
+// the pairs read, grays of any lightness are tried (below), so that all of them read whenever any
+// colors could make them read. The theme file is not changed. Every view that draws these colors, and
+// the Settings wells, ask here.
 - (NSColor *)opaqueColorForKey: (NSString *)theKey fromDictionary: (NSDictionary *)theDictionary isWindowDark: (BOOL)mode
 {
     NSColor *theColor = [self colorFromDictionary: theDictionary andKey: theKey];
@@ -744,13 +746,132 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
                 pick[0] = line; pick[1] = t; pick[2] = bg; pick[3] = cursor;
             }
         }
+    // When no choice above makes all the pairs read, grays of any lightness are tried. The chain is solved
+    // in the lightness x = ln(L + 0.05), where a pair reads when its two x are at least ln(4.5) apart: going
+    // along the chain, each place keeps the set of x (intervals) for which the places before it can still
+    // be chosen, then the x are picked back from the end, each nearest the built-in color. If even that
+    // cannot make all the pairs read, the text comes first: the pairs of text read if they can, else they
+    // read as well as they can, and the cursor on the background reads as well as it can besides (the
+    // greatest contrasts are found by halving).
+    NSColor *gray[4] = {nil, nil, nil, nil};
+    if (best < 4.5 - 1e-9) {
+        CGFloat low = log(0.05), high = log(1.05), point[4], target[4];
+        BOOL present[4];
+        for (NSUInteger k = 0; k < 4; k++) {
+            present[k] = n[k] > 0;
+            point[k] = present[k] ? log(lum[k][missing[k] ? 0 : pick[k]] + 0.05) : 0;
+            target[k] = point[k];
+        }
+        CGFloat *places = point, *targets = target;
+        BOOL *here = present;
+        // For the distances of the text pairs and of the cursor pair: whether grays can be found, and if so, which
+        // (x of each place).
+        BOOL (^solve)(CGFloat, CGFloat, CGFloat *) = ^BOOL(CGFloat textDistance, CGFloat cursorDistance, CGFloat *x) {
+            CGFloat sets[4][8][2];
+            NSUInteger sizes[4] = {0, 0, 0, 0};
+            NSInteger previous = -1;
+            for (NSUInteger k = 0; k < 4; k++) {
+                if (!here[k])
+                    continue;
+                // The place's own x.
+                CGFloat a = lacking[k] ? low : places[k], b = lacking[k] ? high : places[k];
+                CGFloat pieces[2][2] = {{a, b}, {a, b}};
+                NSUInteger count = 1;
+                if (previous >= 0 && (lacking[k] || lacking[previous])) {
+                    // x at least d from some x of the previous place: x <= max - d, or x >= min + d.
+                    CGFloat d = k == 3 ? cursorDistance : textDistance;
+                    CGFloat least = sets[previous][0][0], most = sets[previous][sizes[previous] - 1][1];
+                    pieces[0][0] = a; pieces[0][1] = MIN(b, most - d);
+                    pieces[1][0] = MAX(a, least + d); pieces[1][1] = b;
+                    count = 2;
+                }
+                sizes[k] = 0;
+                for (NSUInteger i = 0; i < count; i++)
+                    if (pieces[i][0] <= pieces[i][1] + 1e-12) {
+                        // Pieces in order and not overlapping.
+                        if (sizes[k] > 0 && pieces[i][0] <= sets[k][sizes[k] - 1][1])
+                            sets[k][sizes[k] - 1][1] = MAX(sets[k][sizes[k] - 1][1], pieces[i][1]);
+                        else {
+                            sets[k][sizes[k]][0] = pieces[i][0];
+                            sets[k][sizes[k]][1] = pieces[i][1];
+                            sizes[k]++;
+                        }
+                    }
+                if (sizes[k] == 0)
+                    return NO;
+                previous = k;
+            }
+            if (x == NULL)
+                return YES;
+            // Back from the end: each x nearest the place's built-in color, far enough from the next one.
+            NSInteger next = -1;
+            for (NSInteger k = 3; k >= 0; k--) {
+                if (!here[k])
+                    continue;
+                CGFloat chosenX = NAN, distance = INFINITY;
+                for (NSUInteger i = 0; i < sizes[k]; i++) {
+                    CGFloat ranges[2][2] = {{sets[k][i][0], sets[k][i][1]}, {sets[k][i][0], sets[k][i][1]}};
+                    NSUInteger count = 1;
+                    if (next >= 0 && (lacking[k] || lacking[next])) {
+                        CGFloat d = next == 3 ? cursorDistance : textDistance;
+                        ranges[0][1] = MIN(ranges[0][1], x[next] - d);
+                        ranges[1][0] = MAX(ranges[1][0], x[next] + d);
+                        count = 2;
+                    }
+                    for (NSUInteger j = 0; j < count; j++) {
+                        if (ranges[j][0] > ranges[j][1] + 1e-12)
+                            continue;
+                        CGFloat candidate = MIN(MAX(targets[k], ranges[j][0]), ranges[j][1]);
+                        if (fabs(candidate - targets[k]) < distance) {
+                            distance = fabs(candidate - targets[k]);
+                            chosenX = candidate;
+                        }
+                    }
+                }
+                if (isnan(chosenX))
+                    return NO;
+                x[k] = chosenX;
+                next = k;
+            }
+            return YES;
+        };
+        CGFloat x[4] = {0, 0, 0, 0};
+        // A little more than 4.5, so that the grays still read after they are made into colors.
+        CGFloat enough = log(4.5) + 1e-6;
+        // The greatest distance for which test(distance) holds, by halving.
+        CGFloat (^greatest)(BOOL (^)(CGFloat)) = ^CGFloat(BOOL (^test)(CGFloat)) {
+            CGFloat reached = 0, unreached = log(21.0) + 1e-6;
+            for (int step = 0; step < 50; step++) {
+                CGFloat middle = (reached + unreached) / 2;
+                if (test(middle))
+                    reached = middle;
+                else
+                    unreached = middle;
+            }
+            return reached;
+        };
+        BOOL found = solve(enough, enough, x);
+        if (!found) {
+            CGFloat text = solve(enough, 0, NULL) ? enough : greatest(^BOOL(CGFloat d) { return solve(d, 0, NULL); });
+            CGFloat cursor = greatest(^BOOL(CGFloat d) { return solve(text, d, NULL); });
+            found = solve(text, cursor, x);
+        }
+        if (found)
+            for (NSUInteger k = 0; k < 4; k++)
+                if (present[k] && missing[k]) {
+                    // The gray of lightness exp(x) - 0.05 (sRGB).
+                    CGFloat l = MIN(1, MAX(0, exp(x[k]) - 0.05));
+                    CGFloat v = l <= 0.03928 / 12.92 ? l * 12.92 : 1.055 * pow(l, 1 / 2.4) - 0.055;
+                    gray[k] = [NSColor colorWithRed: v green: v blue: v alpha: 1];
+                }
+    }
     for (NSUInteger k = 0; k < 4; k++) {
         free(lum[k]);
         free(price[k]);
     }
     NSMutableArray<NSColor *> *result = [NSMutableArray array];
     for (NSUInteger k = 0; k < 4; k++)
-        [result addObject: n[k] ? choices[k][pick[k]] : builtIn];
+        [result addObject: gray[k] ?: (n[k] ? choices[k][pick[k]] : builtIn)];
     @synchronized (TSColorSupport.class) {
         chosen[signature] = result;
     }

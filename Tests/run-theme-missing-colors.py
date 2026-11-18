@@ -100,6 +100,30 @@ static double Luminance(NSColor *color)
     NSColor *rgb = [color colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
     return 0.2126 * Channel(rgb.redComponent) + 0.7152 * Channel(rgb.greenComponent) + 0.0722 * Channel(rgb.blueComponent);
 }
+// Whether lightnesses in [0, 1] for the lacking places of a chain (places in order, each pair of neighbours a
+// pair that must read, a contrast of at least ratio) can be found: in x = ln(L + 0.05) a pair reads when its x are at
+// least ln(ratio) apart. Each place keeps the x it can take given the places before it, as a list of intervals.
+static BOOL ChainFeasible(NSUInteger count, const double *fixedLightness, const BOOL *lacking, const double *ratio)
+{
+    double sets[8][16][2]; NSUInteger sizes[8] = {0};
+    for (NSUInteger k = 0; k < count; k++) {
+        double a = lacking[k] ? log(0.05) : log(fixedLightness[k] + 0.05), b = lacking[k] ? log(1.05) : a;
+        if (k == 0 || (!lacking[k] && !lacking[k - 1]) || ratio[k - 1] <= 1) { sets[k][0][0] = a; sets[k][0][1] = b; sizes[k] = 1; }
+        else {
+            double d = log(ratio[k - 1]);
+            sizes[k] = 0;
+            // x such that some x' of the place before is at least d away.
+            for (NSUInteger i = 0; i < sizes[k - 1]; i++) {
+                double lo = sets[k - 1][i][0], hi = sets[k - 1][i][1];
+                double below[2] = {a, fmin(b, hi - d)}, above[2] = {fmax(a, lo + d), b};
+                if (below[0] <= below[1] && sizes[k] < 16) { sets[k][sizes[k]][0] = below[0]; sets[k][sizes[k]][1] = below[1]; sizes[k]++; }
+                if (above[0] <= above[1] && sizes[k] < 16) { sets[k][sizes[k]][0] = above[0]; sets[k][sizes[k]][1] = above[1]; sizes[k]++; }
+            }
+        }
+        if (sizes[k] == 0) return NO;
+    }
+    return YES;
+}
 static double Contrast(NSColor *a, NSColor *b)
 {
     if (a == nil || b == nil) return 0;
@@ -179,6 +203,14 @@ int main(int argc, char **argv) { @autoreleasepool {
     gray[@"EditorText"] = @[@0, @0, @0, @1]; gray[@"EditorInsertionPoint"] = @[@1, @1, @1, @1];
     gray[@"EditorBackground"] = gray[@"EntryColor"] = @[@0.459, @0.459, @0.459, @1];
     named[@"Mine (middle gray)"] = gray;
+    // The 7th audit: text #040404, cursor white, background and active line #767676; and with text and cursor swapped.
+    NSMutableDictionary *boundary = [named[@"LiteTheme"] mutableCopy];
+    boundary[@"EditorText"] = @[@(4 / 255.0), @(4 / 255.0), @(4 / 255.0), @1]; boundary[@"EditorInsertionPoint"] = @[@1, @1, @1, @1];
+    boundary[@"EditorBackground"] = boundary[@"EntryColor"] = @[@(118 / 255.0), @(118 / 255.0), @(118 / 255.0), @1];
+    named[@"Mine (boundary)"] = boundary;
+    NSMutableDictionary *swapped = [boundary mutableCopy];
+    swapped[@"EditorText"] = boundary[@"EditorInsertionPoint"]; swapped[@"EditorInsertionPoint"] = boundary[@"EditorText"];
+    named[@"Mine (boundary, swapped)"] = swapped;
     // Any of the colors of the pairs lacking, one to all eight (a theme may never have had some, and may lose
     // others); in both appearances.
     NSArray *keys = @[@"EditorText", @"EditorBackground", @"EditorInsertionPoint", @"EntryColor", @"ConsoleText", @"ConsoleBackground", @"LogText", @"LogBackground"];
@@ -250,8 +282,8 @@ int main(int argc, char **argv) { @autoreleasepool {
         }
     }
     // Random themes of the user's own (seeded), all of whose pairs read, without each one of the colors that go in
-    // pairs and without two random sets of them: the pairs with a lacking color read whenever some grays for the lacking
-    // colors would make them read (checked by trying the grays), and the wells' look-up gives the colors drawn.
+    // pairs and without two random sets of them: the pairs with a lacking color read whenever colors of any lightness
+    // would make them read (checked analytically), and the wells' look-up gives the colors drawn.
     srand48(20261118);
     NSColor *(^random)(void) = ^NSColor *(void) { return [NSColor colorWithRed:drand48() green:drand48() blue:drand48() alpha:1]; };
     NSColor *(^reading)(NSColor *) = ^NSColor *(NSColor *other) { NSColor *c; do c = random(); while (Contrast(c, other) < 4.5); return c; };
@@ -294,36 +326,30 @@ int main(int argc, char **argv) { @autoreleasepool {
                 randomPairs++;
             }
             if (!allRead) {
-                // Could grays make them read? Try every gray of 64 for each lacking color.
-                NSUInteger count = lost.count, levels = 64;
-                NSUInteger index[8] = {0};
-                double fixed[8];
-                for (NSUInteger i = 0; i < keys.count; i++) fixed[i] = [lost containsObject:keys[i]] ? -1 : Luminance(color[keys[i]]);
-                double gray[64];
-                for (NSUInteger g = 0; g < levels; g++) gray[g] = Luminance([NSColor colorWithRed:g / 63.0 green:g / 63.0 blue:g / 63.0 alpha:1]);
-                BOOL feasible = NO;
-                while (!feasible) {
-                    double l[8];
-                    NSUInteger m = 0;
-                    for (NSUInteger i = 0; i < keys.count; i++) l[i] = fixed[i] >= 0 ? fixed[i] : gray[index[m++]];
-                    BOOL ok = YES;
-                    for (NSArray *pair in involved) {
-                        double x = l[[pair[0] unsignedIntegerValue]], y = l[[pair[1] unsignedIntegerValue]];
-                        ok = ok && (MAX(x, y) + 0.05) / (MIN(x, y) + 0.05) >= 4.5;
-                    }
-                    feasible = ok;
-                    NSInteger k = (NSInteger)count - 1;
-                    while (k >= 0 && ++index[k] == levels) index[k--] = 0;
-                    if (k < 0) break;
+                // Could colors of any lightness make them read (the text pairs and the cursor pair), or the text pairs
+                // alone? The source is the chain active line - text - background - cursor; the console and the log.
+                double light[8]; BOOL lack[8];
+                for (NSUInteger i = 0; i < keys.count; i++) { lack[i] = [lost containsObject:keys[i]]; light[i] = lack[i] ? 0 : Luminance(color[keys[i]]); }
+                NSUInteger order[4] = {3, 0, 1, 2};
+                double sourceLight[4]; BOOL sourceLack[4];
+                for (NSUInteger i = 0; i < 4; i++) { sourceLight[i] = light[order[i]]; sourceLack[i] = lack[order[i]]; }
+                double all[3] = {4.5, 4.5, 4.5}, textOnly[3] = {4.5, 4.5, 1}, one[1] = {4.5};
+                BOOL consoleFeasible = ChainFeasible(2, light + 4, lack + 4, one), logFeasible = ChainFeasible(2, light + 6, lack + 6, one);
+                BOOL allFeasible = ChainFeasible(4, sourceLight, sourceLack, all) && consoleFeasible && logFeasible;
+                BOOL textFeasible = ChainFeasible(4, sourceLight, sourceLack, textOnly) && consoleFeasible && logFeasible;
+                if (allFeasible) fprintf(stderr, "random theme %d without %s: colors of some lightness would read\n", number, [lost componentsJoinedByString:@"+"].UTF8String);
+                REQUIRE(!allFeasible);
+                // Then the text reads, when it can.
+                for (NSArray *pair in drawn) {
+                    if ([pair[0] isEqual:@"EditorInsertionPoint"] || (![lost containsObject:pair[0]] && ![lost containsObject:pair[1]])) continue;
+                    if (textFeasible) REQUIRE(Contrast(color[pair[0]], color[pair[1]]) >= 4.5);
                 }
-                if (feasible) fprintf(stderr, "random theme %d without %s: a gray would read\n", number, [lost componentsJoinedByString:@"+"].UTF8String);
-                REQUIRE(!feasible);
                 noGrayReads++;
             }
             randomCases++;
         }
     }
-    printf("PASS: %lu cases of 2000 random themes of the user's own, %lu pairs with a lacking color: they read whenever grays could make them read (in %lu cases no grays could), and the wells' look-up gives the colors drawn\n",
+    printf("PASS: %lu cases of 2000 random themes of the user's own, %lu pairs with a lacking color: they read whenever colors of any lightness could make them read, the text first (in %lu cases nothing could make all of them read), and the wells' look-up gives the colors drawn\n",
            (unsigned long)randomCases, (unsigned long)randomPairs, (unsigned long)noGrayReads);
     printf("PASS: %lu cases (%lu themes x 2 appearances x %lu sets of lacking colors), %lu drawn pairs with a lacking color: they read, the theme's colors are kept, the wells' look-up gives the colors drawn; in %lu cases (up to three lacking) the documents, the active line and the Experiment draw them\n",
            (unsigned long)checked, (unsigned long)named.count, (unsigned long)losses.count, (unsigned long)pairsChecked, (unsigned long)drawnChecked);
@@ -354,7 +380,10 @@ if '--mutations' in sys.argv:
         'no built-in light colors': ('readers', '    if (builtIn != nil)\n        return', '    if (NO)\n        return', 0),
         'no built-in dark colors': ('readers', '    if (builtIn != nil)\n        return', '    if (NO)\n        return', 1),
         'no pairs': ('readers', '    if (chain == nil)\n        return builtIn;', '    return builtIn;', 0),
-        'no grays': ('readers', '        for (int g = 0; g < 64; g++)\n', '        for (int g = 0; g < 0; g++)\n', 0),
+        'no grays of any lightness': ('readers', '    if (best < 4.5 - 1e-9) {', '    if (NO) {', 0),
+        'not the text first': ('readers', 'CGFloat text = solve(enough, 0, NULL) ? enough : greatest(^BOOL(CGFloat d) { return solve(d, 0, NULL); });\n            CGFloat cursor = greatest(^BOOL(CGFloat d) { return solve(text, d, NULL); });',
+                               'CGFloat text = greatest(^BOOL(CGFloat d) { return solve(d, d, NULL); });\n            CGFloat cursor = text;', 0),
+        'no margin above 4.5': ('readers', 'CGFloat enough = log(4.5) + 1e-6;', 'CGFloat enough = log(4.5) - 1e-3;', 0),
         'no cursor pair': ('readers', 'bestCursor[bg] = MAX(bestCursor[bg], score(2, bg, 3, c));', 'bestCursor[bg] = 4.5;', 0),
         'no active-line pair': ('readers', 'bestLine[t] = MAX(bestLine[t], score(0, e, 1, t));', 'bestLine[t] = 4.5;', 0),
         'the first pair only': ('readers', 'best = MAX(best, MIN(MIN(score(1, t, 2, bg), bestLine[t]), bestCursor[bg]));', 'best = MAX(best, score(1, t, 2, bg));', 0),
@@ -363,6 +392,10 @@ if '--mutations' in sys.argv:
                                         '[[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"ConsoleText"]', None),
     }
     for name, (where, before, after, which) in mutations.items():
+        # --mutation=NAME runs that one only (so that the mutations can be run side by side).
+        only = next((a.split('=', 1)[1] for a in sys.argv if a.startswith('--mutation=')), None)
+        if only and name != only:
+            continue
         changed = dict(parts)
         if where == 'readers':
             readers2 = list(parts['readers'])
