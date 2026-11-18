@@ -42,6 +42,7 @@
             [TSSettingsLayoutRow controls:@[@"settings.9oZ-Jg-MfD"] kind:TSSettingsRowControls indentation:0], // tabIndentButton
             [TSSettingsLayoutRow controls:@[@"settings.3gb-2l-vK7"] kind:TSSettingsRowControls indentation:0], // syntaxColorLineButton
             [TSSettingsLayoutRow controls:@[@"settings.621"] kind:TSSettingsRowControls indentation:0], // Switch
+            [TSSettingsLayoutRow controls:@[@"settings.fullwidth-highlight-button"] kind:TSSettingsRowControls indentation:0], // highlightFullwidthSymbolsButton
         ]],
         @"settings.1BU-WH-vph": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.961", @"settings.957"] kind:TSSettingsRowControls indentation:0], // showSpaceCharacterButton

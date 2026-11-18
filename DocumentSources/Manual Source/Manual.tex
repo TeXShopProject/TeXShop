@@ -638,6 +638,8 @@ in which the hero loses a programming girlfriend because she uses spaces rather 
 
 {\bf Color expl3 Code by Default} When selected, expl3 syntax coloring is on when a document is first opened. See \cref{expl3Chapter}. Before TeXShop 6.00, this was the hidden setting expl3SyntaxColoring.
 
+{\bf Highlight Fullwidth Letters and Symbols} When selected, fullwidth letters, digits and symbols and the minus sign are shown in the Fullwidth colors of the theme, set in the Themes category. When not selected, they are colored like other text. It is on by default.
+
 Most other items in the Editor category will be explained later in the manual.
 
 {\bf Wrap Lines} \TeX\ usually ignores line feeds because it knows how to break lines. Some authors like to create a line feed near the end of each line, so their source contains a long list of relatively short lines. Other authors like to create a line feed only between paragraphs, so their lines span multiple lines of the window. In that case, TeXShop inserts a soft line break between words so the cursor jumps down to the next line when appropriate. This line break is just for the display and isn't sent on to TeX. Said another way, if you enlarge the window, the breaks will be recalculated; they aren't permanent elements of the source. Long ago, some users didn't want breaks except if they actually typed them, hence this setting. I have no idea why anyone would change the default value, which is {\bf by word}.
@@ -3718,7 +3720,7 @@ The colors ``Invisible, Enclosed, Braces'' in the Highlights group are used for 
  
  The Enclosed and Braces characters are used for the items in the Matching Brackets group of the Editor category of Settings.
 
- The Fullwidth colors are the text and background colors of fullwidth letters, digits and symbols, the characters U+FF01 to U+FF5D except the fullwidth comma and full stop, and of the minus sign U+2212. In Japanese text these characters are easily mistaken for their ASCII counterparts. The themes shipped with TeXShop define these colors. A theme without them, for instance a theme made with an earlier version of TeXShop, shows these characters like other text; the two color wells then show the text and background colors of the source window, and choosing a color adds it to the theme.
+ The Fullwidth colors are the text and background colors of fullwidth letters, digits and symbols, the characters U+FF01 to U+FF5D except the fullwidth comma and full stop, and of the minus sign U+2212. In Japanese text these characters are easily mistaken for their ASCII counterparts. The themes shipped with TeXShop define these colors. A theme without them, for instance a theme made with an earlier version of TeXShop, shows these characters like other text; the two color wells then show the text and background colors of the source window, and choosing a color adds it to the theme. The item {\bf Highlight Fullwidth Letters and Symbols} in the Syntax Coloring group of the Editor category turns these colors off; the theme keeps them.
  
  Finally the XML Syntax colors are colors used when TeXShop syntax colors html, xml, and ptx files, as described in the chapter on Html, TeX4ht, and PreTeXt.
  

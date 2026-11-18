@@ -375,7 +375,9 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     options.makesAtLetter = [SUD boolForKey:MakeatletterEnabledKey];
     options.colorsIndex = colorIndexDifferently;
     options.colorsFootnote = colorFootnoteDifferently;
-    options.marksFullwidthSymbols = [self.syntaxColorScheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;
+    // With Highlight Fullwidth Letters and Symbols off, these characters are colored as other text.
+    options.marksFullwidthSymbols = [SUD boolForKey:HighlightFullwidthSymbolsKey] &&
+        [self.syntaxColorScheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;
     options.isXML = self.fileIsXML;
     options.excludesCommandsFromSpelling = TurnOffCommandSpellChecking;
     options.excludesCommentsFromSpelling = TurnOffCommentSpellChecking;

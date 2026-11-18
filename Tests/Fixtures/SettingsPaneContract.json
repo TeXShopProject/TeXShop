@@ -1119,6 +1119,13 @@
         "value": "syntaxColorLinePressed:"
       },
       {
+        "key": "fullwidth-highlight-button.action",
+        "view": "settings.fullwidth-highlight-button",
+        "kind": "view",
+        "property": "action",
+        "value": "highlightFullwidthSymbolsChanged:"
+      },
+      {
         "key": "961.action",
         "view": "settings.961",
         "kind": "view",
@@ -3050,6 +3057,7 @@
           "963.title": "Japanese Space",
           "846.title": "Arabic, Hebrew, Persian",
           "f1k-jx-ley.title": "Color expl3 Code by Default",
+          "fullwidth-highlight-cell.title": "Highlight Fullwidth Letters and Symbols",
           "4a3-VM-Tgq.title": "Wrap Lines",
           "840.title": "Parens Matching",
           "UXo-9g-NNW.title": "by Character",
@@ -3711,6 +3719,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Highlight Current Line"
+        },
+        {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Highlight Fullwidth Letters and Symbols"
         },
         {
           "key": "inv-955-item-3.title",
@@ -6088,6 +6103,7 @@
           "963.title": "Japanisches Leerzeichen",
           "846.title": "Arabisch, Hebräisch, Persisch",
           "f1k-jx-ley.title": "expl3 standardmäßig färben",
+          "fullwidth-highlight-cell.title": "Vollbreite Buchstaben und Symbole hervorheben",
           "4a3-VM-Tgq.title": "Zeilenumbruch",
           "840.title": "Hilfe bei Klammerung",
           "UXo-9g-NNW.title": "nach Zeichen",
@@ -6749,6 +6765,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Aktuelle Zeile hervorheben"
+        },
+        {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Vollbreite Buchstaben und Symbole hervorheben"
         },
         {
           "key": "inv-955-item-3.title",
@@ -9126,6 +9149,7 @@
           "963.title": "Espacio japonés",
           "846.title": "Árabe, hebreo, persa",
           "f1k-jx-ley.title": "Colorear expl3 por omisión",
+          "fullwidth-highlight-cell.title": "Realzar letras y símbolos de ancho completo",
           "4a3-VM-Tgq.title": "Ajuste de línea dinámico",
           "840.title": "Equilibrar paréntesis",
           "UXo-9g-NNW.title": "Por caracteres",
@@ -9787,6 +9811,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Resaltar línea actual"
+        },
+        {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Realzar letras y símbolos de ancho completo"
         },
         {
           "key": "inv-955-item-3.title",
@@ -12164,6 +12195,7 @@
           "963.title": "Espace japonais",
           "846.title": "Arabe, Hébreu, Persan",
           "f1k-jx-ley.title": "Colorer expl3 par défaut",
+          "fullwidth-highlight-cell.title": "Surligner les lettres et symboles pleine chasse",
           "4a3-VM-Tgq.title": "Enroulement des lignes",
           "840.title": "Appariement des parenthèses",
           "UXo-9g-NNW.title": "par caractère",
@@ -12825,6 +12857,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Surbrillance de la ligne courante"
+        },
+        {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Surligner les lettres et symboles pleine chasse"
         },
         {
           "key": "inv-955-item-3.title",
@@ -15202,6 +15241,7 @@
           "963.title": "Spazio giapponese",
           "846.title": "Arabo, Ebraico, Persiano",
           "f1k-jx-ley.title": "Colora expl3 di default",
+          "fullwidth-highlight-cell.title": "Evidenzia lettere e simboli a larghezza piena",
           "4a3-VM-Tgq.title": "Vai a Capo",
           "840.title": "Controllo Parentesi",
           "UXo-9g-NNW.title": "A Fine Carattere",
@@ -15863,6 +15903,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Evidenzia la linea corrente"
+        },
+        {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Evidenzia lettere e simboli a larghezza piena"
         },
         {
           "key": "inv-955-item-3.title",
@@ -18240,6 +18287,7 @@
           "963.title": "全角スペース",
           "846.title": "Arabic, Hebrew, Persian",
           "f1k-jx-ley.title": "expl3を既定でハイライト",
+          "fullwidth-highlight-cell.title": "全角英数記号を強調",
           "4a3-VM-Tgq.title": "折り返し表示",
           "840.title": "括弧の対応チェック",
           "UXo-9g-NNW.title": "文字単位で",
@@ -18901,6 +18949,13 @@
           "kind": "cell",
           "property": "title",
           "value": "現在の行をハイライト"
+        },
+        {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "全角英数記号を強調"
         },
         {
           "key": "inv-955-item-3.title",
@@ -21278,6 +21333,7 @@
           "963.title": "전각 스페이스 (일본어)",
           "846.title": "아랍어, 히브리어, 페르시아어",
           "f1k-jx-ley.title": "기본으로 expl3 구문 강조",
+          "fullwidth-highlight-cell.title": "전각 영숫자·기호 강조",
           "4a3-VM-Tgq.title": "워드랩",
           "840.title": "괄호 여닫기 체크",
           "UXo-9g-NNW.title": "글자기준",
@@ -21939,6 +21995,13 @@
           "kind": "cell",
           "property": "title",
           "value": "현재 줄 강조"
+        },
+        {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "전각 영숫자·기호 강조"
         },
         {
           "key": "inv-955-item-3.title",
@@ -24316,6 +24379,7 @@
           "963.title": "Japanse spatie",
           "846.title": "Arabic, Hebrew, Persian",
           "f1k-jx-ley.title": "expl3 standaard kleuren",
+          "fullwidth-highlight-cell.title": "Letters en symbolen in volle breedte markeren",
           "4a3-VM-Tgq.title": "Regelomloop",
           "840.title": "Accentueer haakjes",
           "UXo-9g-NNW.title": "Per teken",
@@ -24977,6 +25041,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Huidige regel markeren"
+        },
+        {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Letters en symbolen in volle breedte markeren"
         },
         {
           "key": "inv-955-item-3.title",
@@ -27354,6 +27425,7 @@
           "963.title": "Espaço japonês",
           "846.title": "Arabic, Hebrew, Persian",
           "f1k-jx-ley.title": "Colorir expl3 por omissão",
+          "fullwidth-highlight-cell.title": "Realçar letras e símbolos de largura total",
           "4a3-VM-Tgq.title": "Quebrar linhas",
           "840.title": "Equilibrar parentesis",
           "UXo-9g-NNW.title": "Por caráter",
@@ -28015,6 +28087,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Realçar a linha atual"
+        },
+        {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Realçar letras e símbolos de largura total"
         },
         {
           "key": "inv-955-item-3.title",
@@ -30392,6 +30471,7 @@
           "963.title": "Espaço japonês",
           "846.title": "Arabic, Hebrew, Persian",
           "f1k-jx-ley.title": "Colorir expl3 por padrão",
+          "fullwidth-highlight-cell.title": "Destacar letras e símbolos de largura total",
           "4a3-VM-Tgq.title": "Quebra de linha",
           "840.title": "Equilibrar parênteses",
           "UXo-9g-NNW.title": "por Caracter",
@@ -31053,6 +31133,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Destacar linha atual"
+        },
+        {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Destacar letras e símbolos de largura total"
         },
         {
           "key": "inv-955-item-3.title",
@@ -33430,6 +33517,7 @@
           "963.title": "Spațiu japonez",
           "846.title": "Arabic, Hebrew, Persian",
           "f1k-jx-ley.title": "Colorează expl3 implicit",
+          "fullwidth-highlight-cell.title": "Evidențiază literele și simbolurile de lățime completă",
           "4a3-VM-Tgq.title": "Împarte rândurile",
           "840.title": "Verificarea Parantezelor",
           "UXo-9g-NNW.title": "După caracter",
@@ -34091,6 +34179,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Evidențiază rândul curent"
+        },
+        {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Evidențiază literele și simbolurile de lățime completă"
         },
         {
           "key": "inv-955-item-3.title",
@@ -36468,6 +36563,7 @@
           "963.title": "全角空格",
           "846.title": "阿拉伯语、希伯来语、波斯语",
           "f1k-jx-ley.title": "默认高亮expl3代码",
+          "fullwidth-highlight-cell.title": "高亮全角字母数字符号",
           "4a3-VM-Tgq.title": "自动换行",
           "840.title": "配对括号",
           "UXo-9g-NNW.title": "按字母",
@@ -37129,6 +37225,13 @@
           "kind": "cell",
           "property": "title",
           "value": "高亮当前行"
+        },
+        {
+          "key": "fullwidth-highlight-cell.title",
+          "view": "settings.fullwidth-highlight-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "高亮全角字母数字符号"
         },
         {
           "key": "inv-955-item-3.title",

@@ -96,6 +96,7 @@
 "catalog.editor.3.0.title" = "@ をコマンド名の一部と見なす";
 "catalog.editor.3.1.title" = "expl3を既定でハイライト";
 "catalog.editor.3.1.note" = "新しい書類の初期値です。開いている書類では、「ソース」メニューで切り替えます。";
+"catalog.editor.3.2.title" = "全角英数記号を強調";
 "group.editor.4.title" = "括弧の対応";
 "catalog.editor.4.0.title" = "括弧の対応チェック";
 "catalog.editor.4.1.title" = "対象";

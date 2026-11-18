@@ -96,6 +96,7 @@
 "catalog.editor.3.0.title" = "@ fait partie des noms de commande";
 "catalog.editor.3.1.title" = "Colorer expl3 par défaut";
 "catalog.editor.3.1.note" = "Valeur initiale des nouveaux documents. Pour les documents ouverts, utilisez le menu Source.";
+"catalog.editor.3.2.title" = "Surligner les lettres et symboles pleine chasse";
 "group.editor.4.title" = "Correspondance des parenthèses";
 "catalog.editor.4.0.title" = "Appariement des parenthèses";
 "catalog.editor.4.1.title" = "Délimiteurs";

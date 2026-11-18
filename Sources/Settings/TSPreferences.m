@@ -1240,6 +1240,14 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 	[SUD setBool:(_expl3SyntaxColorButton.state == NSControlStateValueOn) forKey:expl3SyntaxColoringKey];    TSPostPreferenceNotifications([NSSet setWithArray:@[expl3SyntaxColoringKey]], self);
 }
 
+// The theme's fullwidth colors in the sources, the macro editor and the Advanced Find fields; open windows are
+// colored again at once.
+- (IBAction)highlightFullwidthSymbolsChanged:(NSButton *)sender
+{
+    [SUD setBool:(sender.state == NSControlStateValueOn) forKey:HighlightFullwidthSymbolsKey];
+    [self applyEffectsForPreferenceKeys:[NSSet setWithObject:HighlightFullwidthSymbolsKey]];
+}
+
 // Persist immediately; NSDocument autosave and server watching change at next launch.
 - (IBAction)autoSaveEnabledPressed:sender
 {

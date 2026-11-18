@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nullable) IBOutlet NSButtonCell *syntaxColorButton;
 @property (strong, nullable) IBOutlet NSButtonCell *makeatletterButton;
 @property (strong, nullable) IBOutlet NSButtonCell *expl3SyntaxColorButton;
+@property (strong, nullable) IBOutlet NSButton *highlightFullwidthSymbolsButton;
 @property (strong, nullable) IBOutlet NSButton *syntaxColorLineButton;
 @property (strong, nullable) IBOutlet NSButton *tabIndentButton;
 @property (strong, nullable) IBOutlet NSButtonCell *tagMenuButton;

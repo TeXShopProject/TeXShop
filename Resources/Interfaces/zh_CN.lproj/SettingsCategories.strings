@@ -96,6 +96,7 @@
 "catalog.editor.3.0.title" = "将 @ 视为命令名的一部分";
 "catalog.editor.3.1.title" = "默认高亮expl3代码";
 "catalog.editor.3.1.note" = "新文档的初始值。已打开的文档可通过“源文件”菜单切换。";
+"catalog.editor.3.2.title" = "高亮全角字母数字符号";
 "group.editor.4.title" = "括号匹配";
 "catalog.editor.4.0.title" = "配对括号";
 "catalog.editor.4.1.title" = "括号";

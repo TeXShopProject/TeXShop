@@ -84,6 +84,8 @@
 	<string>/usr/local/bin</string>
 	<key>HighlightContentEnabled</key>
 	<string>NO</string>
+	<key>HighlightFullwidthSymbols</key>
+	<string>YES</string>
 	<key>KeepBackup</key>
 	<string>NO</string>
 	<key>Kpsetool</key>

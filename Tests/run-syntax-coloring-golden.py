@@ -26,7 +26,7 @@ stay in memory.
 """
 from pathlib import Path
 import argparse, hashlib, json, re, subprocess, sys, tempfile, time
-from source_tree import include_args, source_file
+from source_tree import include_args, source_file, factory_default
 
 ROOT = Path(__file__).resolve().parents[1]
 SYNTAX = 'Sources/Editor/TSDocument-Syntax.m'
@@ -506,6 +506,8 @@ static void Benchmark(NSString *string)
 
 int main(int argc, const char **argv) { @autoreleasepool {
     TSInstallAppKitIsolation();
+    // The factory default of Highlight Fullwidth Letters and Symbols (on), as TSAppDelegate registers it.
+    [SUD registerDefaults:@{HighlightFullwidthSymbolsKey: @@FULLWIDTH_FACTORY@@}];
     [NSApplication sharedApplication];
     LoadSpellLists();
     ColorNames = [NSMutableDictionary dictionary]; NamedColors = [NSMutableDictionary dictionary];
@@ -534,6 +536,7 @@ int main(int argc, const char **argv) { @autoreleasepool {
 '''
 
 program = (PROGRAM.replace('@@DEFINES@@', defines).replace('@@SPELL_LISTS@@', spell_lists)
+           .replace('@@FULLWIDTH_FACTORY@@', factory_default(ROOT, 'HighlightFullwidthSymbols'))
            .replace('@@SYNTAX@@', strip_imports(text[SYNTAX]).replace('\n\n@implementation TSDocument (SyntaxHighlighting)',
                '\n#import "TSSyntaxTeXScanner.h"\n#import "TSSyntaxHighlighter.h"\n\n@implementation TSDocument (SyntaxHighlighting)', 1)))
 

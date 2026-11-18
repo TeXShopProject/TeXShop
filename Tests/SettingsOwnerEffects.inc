@@ -69,6 +69,24 @@ static void CheckOwnerEffects(TSPreferences *owner, NSDictionary *factory, NSDic
     Check(floats.state==NSControlStateValueOn,@"The switch shows the stored value");
     expectedFind=3;[methods selectCellWithTag:3];[owner findPanelChanged:methods];[floats performClick:nil];
     Check(![TSIsolatedAppKitDefaults boolForKey:TSAdvancedFindPanelFloatsKey],@"The switch clears the setting");
+    // Highlight Fullwidth Letters and Symbols: on in the factory defaults; the switch writes the setting that syntax
+    // coloring reads and has every open window colored again, once for each change.
+    NSButton *fullwidth=[owner valueForKey:@"highlightFullwidthSymbolsButton"];
+    Check(fullwidth!=nil && fullwidth.action==@selector(highlightFullwidthSymbolsChanged:) && [fullwidth.identifier isEqual:@"settings.fullwidth-highlight-button"] && fullwidth.enabled,@"Highlight Fullwidth Letters and Symbols is a usable switch");
+    Check([factory[HighlightFullwidthSymbolsKey] boolValue],@"Highlight Fullwidth Letters and Symbols is on in the factory defaults");
+    [TSIsolatedAppKitDefaults setBool:NO forKey:HighlightFullwidthSymbolsKey];[owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
+    Check(fullwidth.state==NSControlStateValueOff,@"The fullwidth switch shows a stored off");
+    [TSIsolatedAppKitDefaults removeObjectForKey:HighlightFullwidthSymbolsKey];[owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
+    Check(fullwidth.state==NSControlStateValueOn,@"Without a setting of the user's the fullwidth switch is on");
+    __block NSUInteger recolors=0;
+    id recolorObserver=[NSNotificationCenter.defaultCenter addObserverForName:@"NeedsForRecolorNotification" object:owner queue:nil usingBlock:^(NSNotification *note){recolors++;}];
+    [fullwidth performClick:nil];
+    Check(TSIsolatedAppKitDefaults.values[HighlightFullwidthSymbolsKey]!=nil && ![TSIsolatedAppKitDefaults boolForKey:HighlightFullwidthSymbolsKey] && recolors==1,@"Turning the fullwidth switch off stores it and has open windows colored again");
+    [owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
+    Check(fullwidth.state==NSControlStateValueOff,@"The fullwidth switch shows the stored value");
+    [fullwidth performClick:nil];
+    Check([TSIsolatedAppKitDefaults boolForKey:HighlightFullwidthSymbolsKey] && recolors==2,@"Turning it on again stores it and has open windows colored again");
+    [NSNotificationCenter.defaultCenter removeObserver:recolorObserver];
     [NSNotificationCenter.defaultCenter removeObserver:findObserver];
     TSIsolatedAppKitDefaults.values=[saved mutableCopy];[owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
     puts("PASS: profile prepares new theme and Dock before notifying exactly once");

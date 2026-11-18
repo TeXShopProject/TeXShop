@@ -334,6 +334,7 @@ extern NSString *CheckBracketEnabledKey; // added by Terada
 extern NSString *CheckSquareBracketEnabledKey; // added by Terada
 extern NSString *CheckParenEnabledKey; // added by Terada
 extern NSString *MakeatletterEnabledKey; // added by Terada
+extern NSString *HighlightFullwidthSymbolsKey;
 extern NSString *PdfMagnificationKey;
 extern NSString *NoScrollPageTurnKey;
 extern NSString *PdfWindowFixedPosKey;

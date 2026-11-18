@@ -17,7 +17,7 @@ composed through the NSTextInputClient methods that input methods call. Windows 
 never ordered on screen. Preferences stay in memory."""
 from pathlib import Path
 import argparse, re, subprocess, sys, tempfile
-from source_tree import include_args, source_file
+from source_tree import include_args, source_file, factory_default
 
 SYNTAX = 'Sources/Editor/TSDocument-Syntax.m'
 EXPERIMENT = 'Sources/Editor/TSDocument-ExperimentSource.m'
@@ -402,6 +402,8 @@ static NSMutableString *Source(void) {
 
 int main(void) { @autoreleasepool {
     TSInstallAppKitIsolation();
+    // The factory default of Highlight Fullwidth Letters and Symbols (on), as TSAppDelegate registers it.
+    [SUD registerDefaults:@{HighlightFullwidthSymbolsKey: @@FULLWIDTH_FACTORY@@}];
     [NSApplication sharedApplication];
     indicators = [NSMutableArray array]; flashSelections = [NSMutableArray array];
     FlashColor = NSColor.orangeColor; ThemeBackground = NSColor.whiteColor; XMLColor = NSColor.brownColor;
@@ -654,6 +656,7 @@ replacements = {
     'DEFINES': defines, 'SCRAP_OVERRIDES': scrap_overrides, 'TAB_STOPS': tab_stops, 'BRACE_SEARCH': brace_search,
     'DOCUMENT_METHODS': document_methods, 'TOGGLE_XML': toggle_xml, 'TEXT_VIEW_TABS': text_view_tabs, 'SYNTAX': strip_imports(text[SYNTAX]), 'EXPERIMENT': strip_imports(text[EXPERIMENT]),
     'TRY_SCRAP_SYNCS': 'YES' if '[self syncExperimentSourceDisplay];' in try_scrap else 'NO',
+    'FULLWIDTH_FACTORY': factory_default(root, 'HighlightFullwidthSymbols'),
 }
 for name, value in replacements.items():
     program = program.replace(f'@@{name}@@', value)
