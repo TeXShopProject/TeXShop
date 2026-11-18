@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-"""Abort while the document is being saved for typesetting: the typesetting does not start when the save ends.
+"""Abort while the document is being saved for typesetting: the typesetting does not start when the save ends, and
+only the Typeset asked for last starts, once, with its own engine.
 
-Typesetting first saves the document, and starts the job when the save is done (saveFinished:). An Abort in between
-found no job to stop, and the job then started anyway. The production -doJob:withError:runContinuously:,
--doJobForScript:withError:runContinuously: and -abort: of TSDocument-Jobs.m are compiled verbatim, with the check at
-the start of -saveFinished:didSave:contextInfo:; the save is a stand-in that ends when the test says so, as a save
-that is not over at once (a Save panel for a new document, a save that waits for another one). Nothing is shown on
-screen. --mutations removes each part and the test must then fail."""
+Typesetting first saves the document, and starts the job when the save is done (saveFinished:). The production
+-doJob:withError:runContinuously:, -doJobForScript:withError:runContinuously:, -doAlternateTypeset: and -abort: of
+TSDocument-Jobs.m are compiled verbatim, with the start of -saveFinished:didSave:contextInfo: up to where it picks the
+engine; the saves are stand-ins that end when the test says so, in any order, as saves that are not over at once (a
+Save panel for a new document, a save that waits for another one). Checked: an Abort during the save keeps the job
+from starting; the save of an earlier Typeset, aborted or not, does not start the later one, and the later one starts
+once; the end of an earlier job (its termination handler clears doAbort) does not undo an Abort; an aborted
+Typeset › Alternate is not carried over to the next Typeset. Nothing is shown on screen. --mutations removes each
+part and the test must then fail."""
 from pathlib import Path
 import subprocess, sys, tempfile
 from production_fragments import method, verify_embedded
@@ -16,20 +20,20 @@ root = Path(__file__).resolve().parents[1]
 jobs = (root / 'Sources/Typesetting/TSDocument-Jobs.m').read_text(encoding='utf-8')
 do_job = method(jobs, '- (void) doJob:(NSInteger)type withError:(BOOL)error runContinuously:(BOOL)continuous')
 do_script = method(jobs, '- (void) doJobForScript:(NSInteger)type withError:(BOOL)error runContinuously:(BOOL)continuous')
+do_alternate = method(jobs, '- (void)doAlternateTypeset: sender')
 abort_method = method(jobs, '- (void)abort:(id)sender')
 save = jobs[jobs.index('- (void) saveFinished: (NSDocument *)doc didSave:(BOOL)didSave contextInfo:(void *)contextInfo'):]
-save = save[save.index('    @try {\n') + len('    @try {\n'):save.index('    [self RescanMagicComments: self];')]
+save = save[save.index('    @try {\n') + len('    @try {\n'):save.index('\twhichEngineLocal = (useTempEngine ? tempEngine : whichEngine);')]
 fragments = [('complete method:doJob', jobs, do_job), ('complete method:doJobForScript', jobs, do_script),
-             ('complete method:abort', jobs, abort_method)]
-if save.strip():
-    fragments.append(('statement span:saveFinished start', jobs, save))
+             ('complete method:doAlternateTypeset', jobs, do_alternate), ('complete method:abort', jobs, abort_method),
+             ('statement span:saveFinished start', jobs, save)]
 
 PROGRAM = r'''
 #import <Cocoa/Cocoa.h>
 #import <objc/message.h>
 #import "TestAppKitIsolation.h"
 #define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr, "FAIL %d: %s\n", __LINE__, #__VA_ARGS__); exit(1); } } while (0)
-enum { TexEngine = 1, LatexEngine = 2, BibtexEngine = 3, IndexEngine = 4 };
+enum { TexEngine = 1, LatexEngine = 2, BibtexEngine = 3, IndexEngine = 4, MetapostEngine = 5, UserEngine = 6 };
 static NSMutableArray<NSString *> *events;
 static void Record(NSString *event) { [events addObject:event]; }
 #define TSAppendConsoleOutput(view, text, color) Record(text)
@@ -47,13 +51,16 @@ static void Record(NSString *event) { [events addObject:event]; }
 @end
 @interface Probe : NSObject {
 @public
-    BOOL fileIsTex, useTempEngine, typesetContinuously, makeError, doAutoSave, _externalEditor, doAbort, taskDone;
-    NSInteger tempEngine, whichEngine, errorNumber, whichError;
+    BOOL fileIsTex, useTempEngine, typesetContinuously, makeError, doAutoSave, _externalEditor, doAbort, taskDone, fromAlternate, fromMenu;
+    NSInteger tempEngine, whichEngine, errorNumber, whichError, numberingCorrection;
+    NSUInteger typesetRequest, savedTypesetRequest, abortedTypesetRequest;
+    BOOL typesetRequestFromAlternate;
     id outputText;
 }
 @property id readHandle, inputPipe, experimentConsole;
-@property (copy) void (^pendingSave)(void);
-@property BOOL edited;
+@property NSMutableArray *pendingSaves;
+@property BOOL edited, automaticCorrection;
+@property NSInteger numberingCorrection;
 @end
 @implementation Probe
 - (BOOL)isBeingReplacedIn { return NO; }
@@ -63,12 +70,14 @@ static void Record(NSString *event) { [events addObject:event]; }
 - (void)killRunningTasks { Record(@"jobs stopped"); }
 - (void)fixMacroMenu {}
 - (void)checkFileLinksA {}
+- (void)RescanMagicComments:(id)sender {}
 - (NSString *)windowNibName { return @"TSDocument"; }
-// A save that is not over at once: it ends when the test runs pendingSave.
+// A save that is not over at once: it ends when the test says so.
 - (void)saveDocumentWithDelegate:(id)delegate didSaveSelector:(SEL)selector contextInfo:(void *)info
 {
+    if (!self.pendingSaves) self.pendingSaves = [NSMutableArray array];
     __weak Probe *weak = self;
-    self.pendingSave = ^{ ((void (*)(id, SEL, id, BOOL, void *))objc_msgSend)(delegate, selector, weak, YES, NULL); };
+    [self.pendingSaves addObject:^{ ((void (*)(id, SEL, id, BOOL, void *))objc_msgSend)(delegate, selector, weak, YES, info); }];
 }
 - (void)autosaveDocumentWithDelegate:(id)delegate didAutosaveSelector:(SEL)selector contextInfo:(void *)info
 {
@@ -77,20 +86,29 @@ static void Record(NSString *event) { [events addObject:event]; }
 - (void)autosaveFinished:(id)doc didSave:(BOOL)didSave contextInfo:(void *)info {}
 - (void) saveFinished: (NSDocument *)doc didSave:(BOOL)didSave contextInfo:(void *)contextInfo
 {
+    BOOL fromAlternateTemp = NO;
 SAVE
-    Record(useTempEngine ? @"started (one engine)" : @"started");
+    Record([NSString stringWithFormat:@"started %@%@", useTempEngine ? @"one engine" : @"Typeset", fromAlternateTemp ? @" (Alternate)" : @""]);
 }
 DOJOB
 DOSCRIPT
+DOALTERNATE
 ABORT
 @end
 
-static void Finish(Probe *p)
+// The save asked for index-th (0 = the first still pending) ends now.
+static void Finish(Probe *p, NSUInteger index)
 {
-    REQUIRE(p.pendingSave != nil);
-    void (^save)(void) = p.pendingSave;
-    p.pendingSave = nil;
+    REQUIRE(index < p.pendingSaves.count);
+    void (^save)(void) = p.pendingSaves[index];
+    [p.pendingSaves removeObjectAtIndex:index];
     save();
+}
+static NSUInteger Started(void)
+{
+    NSUInteger n = 0;
+    for (NSString *e in events) if ([e hasPrefix:@"started"]) n++;
+    return n;
 }
 
 int main(int argc, char **argv) { @autoreleasepool {
@@ -99,40 +117,91 @@ int main(int argc, char **argv) { @autoreleasepool {
     events = [NSMutableArray array];
     for (int autosave = 0; autosave <= 1; autosave++) {
         Probe *p = [Probe new];
-        p->fileIsTex = YES; p->doAutoSave = autosave; p.edited = YES;
+        p->fileIsTex = YES; p->doAutoSave = autosave; p.edited = YES; p->whichEngine = LatexEngine;
         // Typeset, then the save ends: the job starts.
         [events removeAllObjects];
         [p doJob:LatexEngine withError:NO runContinuously:NO];
-        Finish(p);
-        REQUIRE([events containsObject:@"started"]);
+        Finish(p, 0);
+        REQUIRE([events containsObject:@"started Typeset"] && Started() == 1);
         // Abort while the save goes on: nothing starts when it ends.
         [events removeAllObjects];
         [p doJob:LatexEngine withError:NO runContinuously:NO];
         [p abort:nil];
-        Finish(p);
-        REQUIRE([events containsObject:@"\nProcess aborted\n"] && ![events containsObject:@"started"]);
+        Finish(p, 0);
+        REQUIRE([events containsObject:@"\nProcess aborted\n"] && Started() == 0);
         // The next Typeset starts again.
         [events removeAllObjects];
         [p doJob:LatexEngine withError:NO runContinuously:NO];
-        Finish(p);
-        REQUIRE([events containsObject:@"started"]);
+        Finish(p, 0);
+        REQUIRE([events containsObject:@"started Typeset"] && Started() == 1);
         // The same for a single engine (BibTeX, MakeIndex, the Typeset menu's engines).
         [events removeAllObjects];
         [p doJobForScript:BibtexEngine withError:NO runContinuously:NO];
         [p abort:nil];
-        Finish(p);
-        REQUIRE(![events containsObject:@"started (one engine)"] && !p->useTempEngine);
+        Finish(p, 0);
+        REQUIRE(Started() == 0 && !p->useTempEngine);
         [events removeAllObjects];
         [p doJobForScript:BibtexEngine withError:NO runContinuously:NO];
-        Finish(p);
-        REQUIRE([events containsObject:@"started (one engine)"]);
+        Finish(p, 0);
+        REQUIRE([events containsObject:@"started one engine"] && Started() == 1);
         // An Abort with nothing going on does not keep the next Typeset from starting.
         [events removeAllObjects];
         [p abort:nil];
         [p doJob:LatexEngine withError:NO runContinuously:NO];
-        Finish(p);
-        REQUIRE([events containsObject:@"started"]);
-        printf("PASS: %s: Abort while saving keeps the job from starting; the next Typeset starts\n", autosave ? "autosave" : "save");
+        Finish(p, 0);
+        REQUIRE([events containsObject:@"started Typeset"] && Started() == 1);
+        // Typeset A, Abort, then B (BibTeX) while A is still being saved: whichever save ends first, only B starts,
+        // once, with its own engine.
+        for (int order = 0; order <= 1; order++) {
+            [events removeAllObjects];
+            [p doJob:LatexEngine withError:NO runContinuously:NO];
+            [p abort:nil];
+            [p doJobForScript:BibtexEngine withError:NO runContinuously:NO];
+            REQUIRE(p.pendingSaves.count == 2);
+            Finish(p, order == 0 ? 0 : 1);
+            Finish(p, 0);
+            REQUIRE(Started() == 1 && [events containsObject:@"started one engine"]);
+        }
+        // Typeset A, then B without an Abort, while A is being saved: B starts once.
+        [events removeAllObjects];
+        [p doJob:LatexEngine withError:NO runContinuously:NO];
+        [p doJob:LatexEngine withError:NO runContinuously:NO];
+        Finish(p, 0); Finish(p, 0);
+        REQUIRE(Started() == 1);
+        // A save that tells of its end twice starts the job once.
+        [events removeAllObjects];
+        [p doJob:LatexEngine withError:NO runContinuously:NO];
+        [p.pendingSaves addObject:p.pendingSaves[0]];
+        Finish(p, 0); Finish(p, 0);
+        REQUIRE(Started() == 1);
+        // The end of an earlier job clears doAbort in its termination handler (TSDocument-Jobs.m): it does not undo an
+        // Abort of the Typeset that is being saved.
+        [events removeAllObjects];
+        [p doJob:LatexEngine withError:NO runContinuously:NO];
+        [p abort:nil];
+        p->doAbort = NO;
+        Finish(p, 0);
+        REQUIRE(Started() == 0);
+        // Typeset › Alternate: it starts with the alternate engine; aborted while it is saved, the next Typeset is
+        // not an Alternate one, whether it is asked for after the save or while it goes on.
+        [events removeAllObjects];
+        [p doAlternateTypeset:nil];
+        Finish(p, 0);
+        REQUIRE([events containsObject:@"started Typeset (Alternate)"] && Started() == 1);
+        [events removeAllObjects];
+        [p doAlternateTypeset:nil];
+        [p abort:nil];
+        Finish(p, 0);
+        [p doJob:LatexEngine withError:NO runContinuously:NO];
+        Finish(p, 0);
+        REQUIRE(Started() == 1 && [events containsObject:@"started Typeset"]);
+        [events removeAllObjects];
+        [p doAlternateTypeset:nil];
+        [p abort:nil];
+        [p doJob:LatexEngine withError:NO runContinuously:NO];
+        Finish(p, 0); Finish(p, 0);
+        REQUIRE(Started() == 1 && [events containsObject:@"started Typeset"]);
+        printf("PASS: %s: Abort while saving keeps the job from starting; only the last Typeset starts, once, with its own engine\n", autosave ? "autosave" : "save");
     }
 } return 0; }
 '''
@@ -140,7 +209,7 @@ int main(int argc, char **argv) { @autoreleasepool {
 
 def run(parts, label):
     program = (PROGRAM.replace('SAVE', parts['save']).replace('DOJOB', parts['job']).replace('DOSCRIPT', parts['script'])
-               .replace('ABORT', parts['abort']))
+               .replace('DOALTERNATE', parts['alternate']).replace('ABORT', parts['abort']))
     with tempfile.TemporaryDirectory(prefix='texshop-abort-during-save-') as folder:
         folder = Path(folder)
         (folder / 'test.m').write_text(program, encoding='utf-8')
@@ -151,7 +220,7 @@ def run(parts, label):
         return subprocess.run([str(folder / 'test')], capture_output=True, text=True, timeout=60)
 
 
-parts = {'save': save, 'job': do_job, 'script': do_script, 'abort': abort_method}
+parts = {'save': save, 'job': do_job, 'script': do_script, 'alternate': do_alternate, 'abort': abort_method}
 result = run(parts, 'production')
 print(result.stdout, end='')
 if result.returncode:
@@ -159,9 +228,11 @@ if result.returncode:
     raise SystemExit('FAIL: an Abort while the document is being saved does not keep the typesetting from starting')
 if '--mutations' in sys.argv:
     mutations = {
-        'no check after the save': ('save', 'if (doAbort) {', 'if (NO) {'),
-        'Typeset keeps an earlier Abort': ('job', '\tdoAbort = NO;\n', ''),
-        'one engine keeps an earlier Abort': ('script', '\tdoAbort = NO;\n', ''),
+        'no check after the save': ('save', 'if (request == abortedTypesetRequest) {', 'if (NO) {'),
+        'earlier saves start the job': ('save', 'if (request != typesetRequest || request == savedTypesetRequest)', 'if (request == savedTypesetRequest)'),
+        'a request starts twice': ('save', 'if (request != typesetRequest || request == savedTypesetRequest)', 'if (request != typesetRequest)'),
+        'Abort not recorded': ('abort', '    abortedTypesetRequest = typesetRequest;\n', ''),
+        'Alternate carried over': ('job', '\tfromAlternate = NO;\n', ''),
     }
     for name, (where, before, after) in mutations.items():
         changed = dict(parts)
