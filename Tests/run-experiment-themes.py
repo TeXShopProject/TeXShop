@@ -10,7 +10,7 @@ import argparse, os, subprocess, tempfile
 from source_tree import include_args
 from experiment_preview_source import prelude as experiment_preview_prelude, sources as experiment_preview_sources
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['source-hook', 'pdf-hook', 'defaults-hook', 'reload-hook', 'menu-validation', 'filter-gamma', 'source-alpha', 'preview-alpha', 'paper-invert', 'paper-print', 'paper-lens', 'late-scroller', 'display-mode', 'late-page', 'late-direction'])
+parser.add_argument('--mutation', choices=['source-hook', 'pdf-hook', 'defaults-hook', 'reload-hook', 'menu-validation', 'filter-gamma', 'source-alpha', 'preview-alpha', 'paper-invert', 'paper-print', 'paper-lens', 'late-scroller', 'display-mode', 'late-page', 'late-direction', 'late-destination'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root/'Sources/Editor/ScrapTextView.m').read_text(encoding='latin1')
@@ -59,6 +59,8 @@ elif args.mutation == 'late-direction':
     strip_after('    [super setDisplayDirection:direction];\n    // Pages in a row can bring in the horizontal scroller after the appearance was chosen.\n')
 elif args.mutation == 'late-page':
     strip_after('    [super goToNextPage:sender];\n    // A wider page can bring in the horizontal scroller after the appearance was chosen.\n')
+elif args.mutation == 'late-destination':
+    strip_after('    [super goToDestination:destination];\n    // An outline or an internal link can bring in the horizontal scroller after the appearance was chosen.\n')
 pdf = pdf.replace('#import "TSPreviewAppearance.h"', appearance)
 pdf = experiment_preview_prelude(root) + pdf
 prefix = r'''
@@ -399,6 +401,107 @@ int main(void) { @autoreleasepool {
         pump();
         check(row.documentView.enclosingScrollView.horizontalScroller.contentFilters.count == 3,
               @"laying Experiment pages in a row inverts the new scroller");
+        NSData *stepData = steps.dataRepresentation;
+        PDFDocument *destDoc = [[PDFDocument alloc] initWithData:stepData];
+        PDFDestination *widePoint = [[PDFDestination alloc] initWithPage:[destDoc pageAtIndex:1] atPoint:NSMakePoint(30, 45)];
+        ScrapPDFKitView *dest = [[ScrapPDFKitView alloc] initWithFrame:spreadWindow.contentView.bounds];
+        dest.autoScales = NO;
+        dest.displayMode = kPDFDisplaySinglePage;
+        [spreadWindow.contentView addSubview:dest];
+        dest.document = destDoc;
+        dest.scaleFactor = 1;
+        [dest goToFirstPage:nil];
+        pump();
+        check(!dest.documentView.enclosingScrollView.hasHorizontalScroller, @"the Experiment destination starts without a horizontal scroller");
+        [dest goToDestination:widePoint];
+        pump();
+        check(dest.documentView.enclosingScrollView.horizontalScroller.contentFilters.count == 3,
+              @"an Experiment destination on a wider page inverts the new scroller");
+        check(dest.canGoBack, @"the Experiment destination is in the back history");
+        [dest goBack:nil];
+        [dest goForward:nil];
+        pump();
+        check(dest.documentView.enclosingScrollView.horizontalScroller.contentFilters.count == 3,
+              @"going forward in the Experiment inverts the new scroller");
+        PDFDocument *linkDoc = [[PDFDocument alloc] initWithData:stepData];
+        PDFDestination *linkPoint = [[PDFDestination alloc] initWithPage:[linkDoc pageAtIndex:1] atPoint:NSMakePoint(30, 45)];
+        ScrapPDFKitView *linked = [[ScrapPDFKitView alloc] initWithFrame:spreadWindow.contentView.bounds];
+        linked.autoScales = NO;
+        linked.displayMode = kPDFDisplaySinglePage;
+        [spreadWindow.contentView addSubview:linked];
+        linked.document = linkDoc;
+        linked.scaleFactor = 1;
+        [linked goToFirstPage:nil];
+        pump();
+        PDFAnnotation *link = [[PDFAnnotation alloc] initWithBounds:NSMakeRect(10, 10, 60, 20) forType:PDFAnnotationSubtypeLink withProperties:nil];
+        link.action = [[PDFActionGoTo alloc] initWithDestination:linkPoint];
+        [[linkDoc pageAtIndex:0] addAnnotation:link];
+        [linked performAction:link.action];
+        pump();
+        check(linked.documentView.enclosingScrollView.horizontalScroller.contentFilters.count == 3,
+              @"an Experiment internal link inverts the new scroller");
+        PDFDocument *boxDoc = [[PDFDocument alloc] initWithData:stepData];
+        ScrapPDFKitView *box = [[ScrapPDFKitView alloc] initWithFrame:spreadWindow.contentView.bounds];
+        box.autoScales = NO;
+        box.displayMode = kPDFDisplaySinglePage;
+        [spreadWindow.contentView addSubview:box];
+        box.document = boxDoc;
+        box.scaleFactor = 1;
+        [box goToFirstPage:nil];
+        pump();
+        [box goToRect:NSMakeRect(40, 35, 70, 10) onPage:[boxDoc pageAtIndex:1]];
+        pump();
+        check(box.documentView.enclosingScrollView.horizontalScroller.contentFilters.count == 3,
+              @"an Experiment rectangle jump inverts the new scroller");
+        NSMutableData *textPDF = [NSMutableData data];
+        CGDataConsumerRef sink = CGDataConsumerCreateWithCFData((__bridge CFMutableDataRef)textPDF);
+        CGRect media = CGRectMake(0, 0, 410, 380);
+        CGContextRef drawn = CGPDFContextCreate(sink, &media, NULL);
+        for (int i = 0; i < 2; i++) {
+            CGRect pageBox = CGRectMake(0, 0, i ? 1100 : 410, 380);
+            NSDictionary *info = @{(__bridge NSString *)kCGPDFContextMediaBox: [NSData dataWithBytes:&pageBox length:sizeof(pageBox)]};
+            CGPDFContextBeginPage(drawn, (__bridge CFDictionaryRef)info);
+            CGContextSelectFont(drawn, "Helvetica", 18, kCGEncodingMacRoman);
+            CGContextSetRGBFillColor(drawn, 0, 0, 0, 1);
+            CGContextShowTextAtPoint(drawn, 40, 40, "Wide page", 9);
+            CGPDFContextEndPage(drawn);
+        }
+        CGPDFContextClose(drawn); CGContextRelease(drawn); CGDataConsumerRelease(sink);
+        PDFDocument *words = [[PDFDocument alloc] initWithData:textPDF];
+        ScrapPDFKitView *picked = [[ScrapPDFKitView alloc] initWithFrame:spreadWindow.contentView.bounds];
+        picked.autoScales = NO;
+        picked.displayMode = kPDFDisplaySinglePage;
+        [spreadWindow.contentView addSubview:picked];
+        picked.document = words;
+        picked.scaleFactor = 1;
+        [picked goToFirstPage:nil];
+        pump();
+        PDFSelection *selection = [[words pageAtIndex:1] selectionForRange:NSMakeRange(0, 4)];
+        check(selection.string.length > 0, @"the Experiment wider page has text to select");
+        [picked goToSelection:selection];
+        pump();
+        check(picked.documentView.enclosingScrollView.horizontalScroller.contentFilters.count == 3,
+              @"an Experiment selection jump inverts the new scroller");
+        [testDefaults setInteger:1 forKey:TSPreviewAppearanceModeKey];
+        pump();
+        PDFDocument *plainDoc = [[PDFDocument alloc] initWithData:stepData];
+        PDFDestination *plainPoint = [[PDFDestination alloc] initWithPage:[plainDoc pageAtIndex:1] atPoint:NSMakePoint(30, 45)];
+        PDFAnnotation *plainLink = [[PDFAnnotation alloc] initWithBounds:NSMakeRect(10, 10, 60, 20) forType:PDFAnnotationSubtypeLink withProperties:nil];
+        plainLink.action = [[PDFActionGoTo alloc] initWithDestination:plainPoint];
+        [[plainDoc pageAtIndex:0] addAnnotation:plainLink];
+        ScrapPDFKitView *linkedPlain = [[ScrapPDFKitView alloc] initWithFrame:spreadWindow.contentView.bounds];
+        linkedPlain.autoScales = NO;
+        linkedPlain.displayMode = kPDFDisplaySinglePage;
+        [spreadWindow.contentView addSubview:linkedPlain];
+        linkedPlain.document = plainDoc;
+        linkedPlain.scaleFactor = 1;
+        [linkedPlain goToFirstPage:nil];
+        pump();
+        [linkedPlain performAction:plainLink.action];
+        pump();
+        check(linkedPlain.documentView.enclosingScrollView.horizontalScroller.contentFilters.count == 0
+              && linkedPlain.documentView.enclosingScrollView.horizontalScroller.appearance == [NSAppearance appearanceNamed:NSAppearanceNameAqua],
+              @"an Experiment internal link on a light preview leaves the new scroller uninverted");
         [spreadWindow close];
     }
     check(TSThemeWindowAlpha(@{}, @"SourceAlpha")==1, @"missing alpha stays opaque");

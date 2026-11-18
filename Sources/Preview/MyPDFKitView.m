@@ -8650,6 +8650,27 @@ else
     TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
 }
 
+- (void)goToDestination:(PDFDestination *)destination
+{
+    [super goToDestination:destination];
+    // An outline or an internal link can bring in the horizontal scroller after the appearance was chosen.
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
+}
+
+- (void)goToRect:(PDFRect)rect onPage:(PDFPage *)page
+{
+    [super goToRect:rect onPage:page];
+    // A jump to a rectangle can bring in the horizontal scroller after the appearance was chosen.
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
+}
+
+- (void)goToSelection:(PDFSelection *)selection
+{
+    [super goToSelection:selection];
+    // A jump to a selection can bring in the horizontal scroller after the appearance was chosen.
+    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);
+}
+
 - (void)windowWillEnterFullScreen:(NSNotification *)notification
 {
 /*

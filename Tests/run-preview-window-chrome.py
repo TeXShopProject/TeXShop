@@ -15,7 +15,7 @@ from production_fragments import method, verify_embedded
 from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['scroll-appearance', 'late-scroller', 'display-mode', 'late-page', 'late-direction'])
+parser.add_argument('--mutation', choices=['scroll-appearance', 'late-scroller', 'display-mode', 'late-page', 'late-direction', 'late-destination'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 header = (root / 'Sources/Preview/TSPreviewAppearance.h').read_text()
@@ -28,7 +28,11 @@ view_methods = [method(view_source, signature) for signature in (
     '- (void)goToNextPage:(id)sender',
     '- (NSMenu *)menuForEvent:(NSEvent *)theEvent',
     '- (MyPDFKitView *)previewPartForMenuEvent: (NSEvent *)theEvent',
-    '- (PDFDestination *)internalLinkDestinationAtPoint: (NSPoint)viewPoint')]
+    '- (PDFDestination *)internalLinkDestinationAtPoint: (NSPoint)viewPoint',
+    '- (void)goToDestination:(PDFDestination *)destination',
+    '- (void)goToRect:(PDFRect)rect onPage:(PDFPage *)page',
+    '- (void)goToSelection:(PDFSelection *)selection',
+    '- (IBAction) takeDestinationFromOutline: (id) sender')]
 fragments = [('complete method: ' + item.split('\n', 1)[0], view_source, item) for item in view_methods]
 reapply = '    TSReapplyPreviewInversion(self.documentView.enclosingScrollView);\n'
 def strip_reapply(index):
@@ -47,6 +51,8 @@ elif args.mutation == 'late-direction':
     strip_reapply(3)
 elif args.mutation == 'late-page':
     strip_reapply(4)
+elif args.mutation == 'late-destination':
+    strip_reapply(11)
 view_text = '\n'.join(view_methods)
 
 program = r'''
@@ -137,7 +143,16 @@ static void CheckChrome(NSWindow *window, PDFView *pdf, NSString *systemName, BO
 @end
 @implementation MyPDFKitView
 - (void)fitContentWidthKeepingTop:(TSContentTop)top {}
+- (void)closePinnedLinkPreview {}
 VIEWMETHODS
+@end
+@interface OutlineSource : NSObject <NSOutlineViewDataSource>
+@property (nonatomic, strong) PDFOutline *item;
+@end
+@implementation OutlineSource
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item { return item ? 0 : 1; }
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item { return self.item; }
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item { return NO; }
 @end
 static void CheckLateBar(PDFView *pdf, BOOL inverted, NSString *what) {
     [pdf layoutSubtreeIfNeeded];
@@ -185,6 +200,54 @@ static MyPDFKitView *SpreadPreview(PDFDocument *document, PDFDisplayMode mode) {
     pdf.scaleFactor = 1;
     [pdf goToFirstPage:nil];
     return pdf;
+}
+static PDFDestination *WideDestination(PDFView *pdf) {
+    return [[PDFDestination alloc] initWithPage:[pdf.document pageAtIndex:1] atPoint:NSMakePoint(30, 45)];
+}
+static void ChooseOutline(MyPDFKitView *pdf) {
+    PDFOutline *root = [PDFOutline new];
+    PDFOutline *child = [PDFOutline new];
+    child.label = @"wide";
+    child.destination = WideDestination(pdf);
+    [root insertChild:child atIndex:0];
+    pdf.document.outlineRoot = root;
+    NSOutlineView *outline = [[NSOutlineView alloc] initWithFrame:NSMakeRect(0, 0, 200, 200)];
+    NSTableColumn *column = [[NSTableColumn alloc] initWithIdentifier:@"outline"];
+    [outline addTableColumn:column];
+    outline.outlineTableColumn = column;
+    OutlineSource *source = [OutlineSource new];
+    source.item = child;
+    outline.dataSource = source;
+    [outline reloadData];
+    [outline selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+    check([outline itemAtRow:outline.selectedRow] == child, @"the outline row is the wider page");
+    [pdf takeDestinationFromOutline:outline];
+}
+static void FollowLink(PDFView *pdf) {
+    PDFAnnotation *link = [[PDFAnnotation alloc] initWithBounds:NSMakeRect(10, 10, 60, 20) forType:PDFAnnotationSubtypeLink withProperties:nil];
+    link.action = [[PDFActionGoTo alloc] initWithDestination:WideDestination(pdf)];
+    [[pdf.document pageAtIndex:0] addAnnotation:link];
+    [pdf performAction:link.action];
+}
+static PDFDocument *TextPages(void) {
+    NSMutableData *data = [NSMutableData data];
+    CGDataConsumerRef sink = CGDataConsumerCreateWithCFData((__bridge CFMutableDataRef)data);
+    CGRect media = CGRectMake(0, 0, 410, 380);
+    CGContextRef pdf = CGPDFContextCreate(sink, &media, NULL);
+    CGFloat widths[2] = {410, 1100};
+    for (int i = 0; i < 2; i++) {
+        CGRect box = CGRectMake(0, 0, widths[i], 380);
+        NSDictionary *info = @{(__bridge NSString *)kCGPDFContextMediaBox: [NSData dataWithBytes:&box length:sizeof(box)]};
+        CGPDFContextBeginPage(pdf, (__bridge CFDictionaryRef)info);
+        CGContextSelectFont(pdf, "Helvetica", 18, kCGEncodingMacRoman);
+        CGContextSetRGBFillColor(pdf, 0, 0, 0, 1);
+        CGContextShowTextAtPoint(pdf, 40, 40, "Wide page", 9);
+        CGPDFContextEndPage(pdf);
+    }
+    CGPDFContextClose(pdf);
+    CGContextRelease(pdf);
+    CGDataConsumerRelease(sink);
+    return [[PDFDocument alloc] initWithData:data];
 }
 static void ChooseTwoPages(PDFView *pdf) {
     NSEvent *event = [NSEvent mouseEventWithType:NSEventTypeRightMouseDown location:NSMakePoint(200, 240)
@@ -294,6 +357,44 @@ int main(void) {
         check(!across.documentView.enclosingScrollView.hasHorizontalScroller, @"a vertical row starts without a horizontal scroller");
         across.displayDirection = kPDFDisplayDirectionHorizontal;
         CheckLateBar(across, YES, @"laying the pages in a row");
+        MyPDFKitView *outlined = SpreadPreview(PagesOfWidths(410, 1100), kPDFDisplaySinglePage);
+        TSApplyPreviewInversion(outlined.documentView.enclosingScrollView, YES);
+        NSView *outlineClip = outlined.documentView.enclosingScrollView.contentView;
+        check(!outlined.documentView.enclosingScrollView.hasHorizontalScroller, @"the outline starts without a horizontal scroller");
+        ChooseOutline(outlined);
+        check(outlined.documentView.enclosingScrollView.contentView == outlineClip, @"the outline keeps the clip view");
+        CheckLateBar(outlined, YES, @"choosing a wider page from the outline");
+        MyPDFKitView *outlinedPlain = SpreadPreview(PagesOfWidths(410, 1100), kPDFDisplaySinglePage);
+        TSApplyPreviewInversion(outlinedPlain.documentView.enclosingScrollView, NO);
+        ChooseOutline(outlinedPlain);
+        CheckLateBar(outlinedPlain, NO, @"choosing a wider page from the outline on a light preview");
+        MyPDFKitView *linked = SpreadPreview(PagesOfWidths(410, 1100), kPDFDisplaySinglePage);
+        TSApplyPreviewInversion(linked.documentView.enclosingScrollView, YES);
+        check(!linked.documentView.enclosingScrollView.hasHorizontalScroller, @"the link starts without a horizontal scroller");
+        FollowLink(linked);
+        CheckLateBar(linked, YES, @"following an internal link to a wider page");
+        MyPDFKitView *linkedPlain = SpreadPreview(PagesOfWidths(410, 1100), kPDFDisplaySinglePage);
+        TSApplyPreviewInversion(linkedPlain.documentView.enclosingScrollView, NO);
+        FollowLink(linkedPlain);
+        CheckLateBar(linkedPlain, NO, @"following an internal link on a light preview");
+        MyPDFKitView *rectangle = SpreadPreview(PagesOfWidths(410, 1100), kPDFDisplaySinglePage);
+        TSApplyPreviewInversion(rectangle.documentView.enclosingScrollView, YES);
+        [rectangle goToRect:NSMakeRect(40, 35, 70, 10) onPage:[rectangle.document pageAtIndex:1]];
+        CheckLateBar(rectangle, YES, @"jumping to a rectangle on a wider page");
+        MyPDFKitView *direct = SpreadPreview(PagesOfWidths(410, 1100), kPDFDisplaySinglePage);
+        TSApplyPreviewInversion(direct.documentView.enclosingScrollView, YES);
+        [direct goToDestination:WideDestination(direct)];
+        CheckLateBar(direct, YES, @"going to a destination on a wider page");
+        check(direct.canGoBack, @"the destination is in the back history");
+        [direct goBack:nil];
+        [direct goForward:nil];
+        CheckLateBar(direct, YES, @"going forward to a wider page");
+        MyPDFKitView *selected = SpreadPreview(TextPages(), kPDFDisplaySinglePage);
+        TSApplyPreviewInversion(selected.documentView.enclosingScrollView, YES);
+        PDFSelection *selection = [[selected.document pageAtIndex:1] selectionForRange:NSMakeRange(0, 4)];
+        check(selection.string.length > 0, @"the wider page has text to select");
+        [selected goToSelection:selection];
+        CheckLateBar(selected, YES, @"jumping to a selection on a wider page");
         printf("PASS: %d preview window chrome checks\n", checks);
     }
     return 0;
