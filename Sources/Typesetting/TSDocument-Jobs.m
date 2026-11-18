@@ -720,8 +720,10 @@ for(NSString *key in enu)
     savedTypesetRequest = request;
     fromAlternateTemp = typesetRequestFromAlternate;
     typesetRequestFromAlternate = NO;
-    if (request == abortedTypesetRequest) {
+    // Nor when the save failed or was cancelled: the file is not the text that was asked for.
+    if (request == abortedTypesetRequest || ! didSave) {
         useTempEngine = NO;
+        fromMenu = NO;
         return;
     }
     [self RescanMagicComments: self];
@@ -1137,8 +1139,9 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 		if (aRange.location == NSNotFound)
 			warningGiven = YES;
 		else {
+			// The answer goes on with this request only (sheetDidEnd:returnCode:contextInfo:).
 			NSBeginCriticalAlertSheet (nil, nil, NSLocalizedString(@"Omit Shell Escape", @"Omit Shell Escape"), NSLocalizedString(@"Cancel", @"Cancel"),
-									  textWindow, self, @selector(sheetDidEnd:returnCode:contextInfo:), NULL, nil,
+									  textWindow, self, @selector(sheetDidEnd:returnCode:contextInfo:), NULL, (void *)(uintptr_t)request,
 									  NSLocalizedString(@"Warning: Using Shell Escape", @"Warning: Using Shell Escape"));
 			useTempEngine = NO;
 			return;
@@ -1836,6 +1839,10 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 
 -(void)sheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
+	// Only the Typeset asked for last goes on, and not one that Abort stopped while the sheet was up.
+	NSUInteger request = (NSUInteger)(uintptr_t)contextInfo;
+	if (request != typesetRequest || request == abortedTypesetRequest)
+		return;
 	switch (returnCode) {
 		case NSAlertDefaultReturn:
 			warningGiven = YES;

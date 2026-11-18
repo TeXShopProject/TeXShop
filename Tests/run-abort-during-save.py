@@ -9,7 +9,9 @@ engine; the saves are stand-ins that end when the test says so, in any order, as
 Save panel for a new document, a save that waits for another one). Checked: an Abort during the save keeps the job
 from starting; the save of an earlier Typeset, aborted or not, does not start the later one, and the later one starts
 once; the end of an earlier job (its termination handler clears doAbort) does not undo an Abort; an aborted
-Typeset › Alternate is not carried over to the next Typeset. Nothing is shown on screen. --mutations removes each
+Typeset › Alternate is not carried over to the next Typeset; a save that fails or is cancelled starts nothing and
+does not keep the next Typeset from starting; the answer to the confirmation of --shell-escape (the one wait between
+the save and the launch) goes on only with the Typeset asked for last, and not after an Abort. Nothing is shown on screen. --mutations removes each
 part and the test must then fail."""
 from pathlib import Path
 import subprocess, sys, tempfile
@@ -24,9 +26,14 @@ do_alternate = method(jobs, '- (void)doAlternateTypeset: sender')
 abort_method = method(jobs, '- (void)abort:(id)sender')
 save = jobs[jobs.index('- (void) saveFinished: (NSDocument *)doc didSave:(BOOL)didSave contextInfo:(void *)contextInfo'):]
 save = save[save.index('    @try {\n') + len('    @try {\n'):save.index('\twhichEngineLocal = (useTempEngine ? tempEngine : whichEngine);')]
+# The confirmation of --shell-escape, the one wait between the save and the launch, and its answer.
+shell = jobs[jobs.index('\tif ((! warningGiven) && ((whichEngineLocal == TexEngine) || (whichEngineLocal == LatexEngine))'):]
+shell = shell[:shell.index('\t[self completeSaveFinished];\n') + len('\t[self completeSaveFinished];\n')]
+sheet = method(jobs, '-(void)sheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo')
 fragments = [('complete method:doJob', jobs, do_job), ('complete method:doJobForScript', jobs, do_script),
              ('complete method:doAlternateTypeset', jobs, do_alternate), ('complete method:abort', jobs, abort_method),
-             ('statement span:saveFinished start', jobs, save)]
+             ('statement span:saveFinished start', jobs, save), ('statement span:shell escape confirmation', jobs, shell),
+             ('complete method:sheetDidEnd', jobs, sheet)]
 
 PROGRAM = r'''
 #import <Cocoa/Cocoa.h>
@@ -37,6 +44,16 @@ enum { TexEngine = 1, LatexEngine = 2, BibtexEngine = 3, IndexEngine = 4, Metapo
 static NSMutableArray<NSString *> *events;
 static void Record(NSString *event) { [events addObject:event]; }
 #define TSAppendConsoleOutput(view, text, color) Record(text)
+#define SUD TSIsolatedAppKitDefaults
+static NSString *WarnForShellEscapeKey = @"WarnForShellEscape", *LatexCommandKey = @"LatexCommand", *TexCommandKey = @"TexCommand";
+enum { kTypesetViaPDFTeX = 100, kTypesetViaGhostScript = 101 };
+// The confirmation sheet: its answer is given by the test, later.
+static NSMutableArray *sheets;
+static void RecordSheet(id delegate, SEL selector, void *info)
+{
+    [sheets addObject:^(NSInteger answer) { ((void (*)(id, SEL, id, NSInteger, void *))objc_msgSend)(delegate, selector, nil, answer, info); }];
+}
+#define NSBeginCriticalAlertSheet(title, defaultButton, alternateButton, otherButton, window, delegate, selector, didDismiss, info, ...) RecordSheet(delegate, selector, info)
 @interface TSTeXRootReplaceGuard : NSObject
 + (BOOL)isApplyingInProjectOfURL:(NSURL *)url;
 @end
@@ -54,8 +71,9 @@ static void Record(NSString *event) { [events addObject:event]; }
     BOOL fileIsTex, useTempEngine, typesetContinuously, makeError, doAutoSave, _externalEditor, doAbort, taskDone, fromAlternate, fromMenu;
     NSInteger tempEngine, whichEngine, errorNumber, whichError, numberingCorrection;
     NSUInteger typesetRequest, savedTypesetRequest, abortedTypesetRequest;
-    BOOL typesetRequestFromAlternate;
-    id outputText;
+    BOOL typesetRequestFromAlternate, warningGiven, omitShellEscape, withLatex, lastAlternate, lastOneEngine;
+    NSInteger theScript;
+    id outputText, textWindow;
 }
 @property id readHandle, inputPipe, experimentConsole;
 @property NSMutableArray *pendingSaves;
@@ -77,7 +95,7 @@ static void Record(NSString *event) { [events addObject:event]; }
 {
     if (!self.pendingSaves) self.pendingSaves = [NSMutableArray array];
     __weak Probe *weak = self;
-    [self.pendingSaves addObject:^{ ((void (*)(id, SEL, id, BOOL, void *))objc_msgSend)(delegate, selector, weak, YES, info); }];
+    [self.pendingSaves addObject:^(BOOL didSave) { ((void (*)(id, SEL, id, BOOL, void *))objc_msgSend)(delegate, selector, weak, didSave, info); }];
 }
 - (void)autosaveDocumentWithDelegate:(id)delegate didAutosaveSelector:(SEL)selector contextInfo:(void *)info
 {
@@ -87,9 +105,23 @@ static void Record(NSString *event) { [events addObject:event]; }
 - (void) saveFinished: (NSDocument *)doc didSave:(BOOL)didSave contextInfo:(void *)contextInfo
 {
     BOOL fromAlternateTemp = NO;
+    NSInteger whichEngineLocal;
+    NSString *myEngine;
+    NSRange aRange;
 SAVE
-    Record([NSString stringWithFormat:@"started %@%@", useTempEngine ? @"one engine" : @"Typeset", fromAlternateTemp ? @" (Alternate)" : @""]);
+    // The engine, as the rest of saveFinished: picks it for LaTeX.
+    whichEngineLocal = (useTempEngine ? tempEngine : whichEngine);
+    withLatex = (whichEngineLocal == LatexEngine);
+    theScript = kTypesetViaPDFTeX;
+    lastAlternate = fromAlternateTemp;
+    lastOneEngine = useTempEngine;
+SHELL
 }
+- (void)completeSaveFinished
+{
+    Record([NSString stringWithFormat:@"started %@%@", lastOneEngine ? @"one engine" : @"Typeset", lastAlternate ? @" (Alternate)" : @""]);
+}
+SHEET
 DOJOB
 DOSCRIPT
 DOALTERNATE
@@ -97,12 +129,21 @@ ABORT
 @end
 
 // The save asked for index-th (0 = the first still pending) ends now.
-static void Finish(Probe *p, NSUInteger index)
+static void FinishSaving(Probe *p, NSUInteger index, BOOL didSave)
 {
     REQUIRE(index < p.pendingSaves.count);
-    void (^save)(void) = p.pendingSaves[index];
+    void (^save)(BOOL) = p.pendingSaves[index];
     [p.pendingSaves removeObjectAtIndex:index];
-    save();
+    save(didSave);
+}
+static void Finish(Probe *p, NSUInteger index) { FinishSaving(p, index, YES); }
+// The answer to the confirmation sheet asked for index-th.
+static void Answer(NSUInteger index, NSInteger answer)
+{
+    REQUIRE(index < sheets.count);
+    void (^reply)(NSInteger) = sheets[index];
+    [sheets removeObjectAtIndex:index];
+    reply(answer);
 }
 static NSUInteger Started(void)
 {
@@ -201,6 +242,45 @@ int main(int argc, char **argv) { @autoreleasepool {
         [p doJob:LatexEngine withError:NO runContinuously:NO];
         Finish(p, 0); Finish(p, 0);
         REQUIRE(Started() == 1 && [events containsObject:@"started Typeset"]);
+        // A save that fails, or that is cancelled, starts nothing; the next Typeset starts, with its own engine.
+        [events removeAllObjects];
+        [p doJobForScript:BibtexEngine withError:NO runContinuously:NO];
+        FinishSaving(p, 0, NO);
+        REQUIRE(Started() == 0 && !p->useTempEngine);
+        [p doJob:LatexEngine withError:NO runContinuously:NO];
+        Finish(p, 0);
+        REQUIRE(Started() == 1 && [events containsObject:@"started Typeset"]);
+        // The confirmation of --shell-escape: the answer starts the Typeset, but not after an Abort, and not one that a
+        // later Typeset replaced.
+        sheets = [NSMutableArray array];
+        [SUD setBool:YES forKey:WarnForShellEscapeKey];
+        [SUD setObject:@"pdflatex --shell-escape --file-line-error --synctex=1" forKey:LatexCommandKey];
+        p->warningGiven = NO;
+        [events removeAllObjects];
+        [p doJob:LatexEngine withError:NO runContinuously:NO];
+        Finish(p, 0);
+        REQUIRE(Started() == 0 && sheets.count == 1);
+        Answer(0, NSAlertDefaultReturn);
+        REQUIRE(Started() == 1);
+        p->warningGiven = NO;
+        [events removeAllObjects];
+        [p doJob:LatexEngine withError:NO runContinuously:NO];
+        Finish(p, 0);
+        REQUIRE(sheets.count == 1);
+        [p abort:nil];
+        Answer(0, NSAlertDefaultReturn);
+        REQUIRE(Started() == 0);
+        [events removeAllObjects];
+        [p doJob:LatexEngine withError:NO runContinuously:NO];
+        Finish(p, 0);
+        [p doJob:LatexEngine withError:NO runContinuously:NO];
+        Finish(p, 0);
+        REQUIRE(sheets.count == 2);
+        Answer(0, NSAlertAlternateReturn);
+        REQUIRE(Started() == 0);
+        Answer(0, NSAlertDefaultReturn);
+        REQUIRE(Started() == 1);
+        [SUD setBool:NO forKey:WarnForShellEscapeKey];
         printf("PASS: %s: Abort while saving keeps the job from starting; only the last Typeset starts, once, with its own engine\n", autosave ? "autosave" : "save");
     }
 } return 0; }
@@ -208,7 +288,7 @@ int main(int argc, char **argv) { @autoreleasepool {
 
 
 def run(parts, label):
-    program = (PROGRAM.replace('SAVE', parts['save']).replace('DOJOB', parts['job']).replace('DOSCRIPT', parts['script'])
+    program = (PROGRAM.replace('SAVE', parts['save']).replace('SHELL', parts['shell']).replace('SHEET', parts['sheet']).replace('DOJOB', parts['job']).replace('DOSCRIPT', parts['script'])
                .replace('DOALTERNATE', parts['alternate']).replace('ABORT', parts['abort']))
     with tempfile.TemporaryDirectory(prefix='texshop-abort-during-save-') as folder:
         folder = Path(folder)
@@ -220,7 +300,7 @@ def run(parts, label):
         return subprocess.run([str(folder / 'test')], capture_output=True, text=True, timeout=60)
 
 
-parts = {'save': save, 'job': do_job, 'script': do_script, 'alternate': do_alternate, 'abort': abort_method}
+parts = {'save': save, 'shell': shell, 'sheet': sheet, 'job': do_job, 'script': do_script, 'alternate': do_alternate, 'abort': abort_method}
 result = run(parts, 'production')
 print(result.stdout, end='')
 if result.returncode:
@@ -228,11 +308,14 @@ if result.returncode:
     raise SystemExit('FAIL: an Abort while the document is being saved does not keep the typesetting from starting')
 if '--mutations' in sys.argv:
     mutations = {
-        'no check after the save': ('save', 'if (request == abortedTypesetRequest) {', 'if (NO) {'),
+        'no check after the save': ('save', 'if (request == abortedTypesetRequest || ! didSave) {', 'if (! didSave) {'),
         'earlier saves start the job': ('save', 'if (request != typesetRequest || request == savedTypesetRequest)', 'if (request == savedTypesetRequest)'),
         'a request starts twice': ('save', 'if (request != typesetRequest || request == savedTypesetRequest)', 'if (request != typesetRequest)'),
         'Abort not recorded': ('abort', '    abortedTypesetRequest = typesetRequest;\n', ''),
         'Alternate carried over': ('job', '\tfromAlternate = NO;\n', ''),
+        'a failed save starts the job': ('save', 'if (request == abortedTypesetRequest || ! didSave) {', 'if (request == abortedTypesetRequest) {'),
+        'the answer goes on after an Abort': ('sheet', 'if (request != typesetRequest || request == abortedTypesetRequest)', 'if (request != typesetRequest)'),
+        'the answer of a replaced Typeset goes on': ('sheet', 'if (request != typesetRequest || request == abortedTypesetRequest)', 'if (request == abortedTypesetRequest)'),
     }
     for name, (where, before, after) in mutations.items():
         changed = dict(parts)
