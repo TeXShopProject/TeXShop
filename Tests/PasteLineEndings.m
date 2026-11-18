@@ -1,7 +1,8 @@
 // Pasted text gets LF line endings when ConvertLF is on (the default), in every document, not only in the
 // Japanese modes, and in the Experiment source; so does the clipboard text that #PASTE# puts in macros and command
-// completion. The Japanese modes still turn backslashes into yen signs, or yen signs into backslashes, and Undo
-// takes a paste away. Nothing is shown on screen, and the clipboard is a private pasteboard.
+// completion. In documents the Japanese modes still turn backslashes into yen signs, or yen signs into backslashes;
+// in the Experiment source both stay as they were pasted, as before. Undo takes a paste away. Nothing is shown on
+// screen, and the clipboard is a private pasteboard.
 #import <Cocoa/Cocoa.h>
 #import <OgreKit/OgreKit.h>
 #import "TestAppKitIsolation.h"
@@ -18,7 +19,7 @@ NSMutableString *filterYenToBackslash(NSString *aString);
 FILTERS
 
 @interface NSTextView (TeXShop)
-- (BOOL)pasteFilteredTextFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type;
+- (BOOL)pasteFilteredTextFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type japaneseFilter:(BOOL)japaneseFilter;
 @end
 @implementation NSTextView (TeXShop)
 CATEGORY
@@ -90,13 +91,22 @@ int main(int argc, char **argv) { @autoreleasepool {
         // ConvertLF off: the text keeps its line endings.
         [SUD setBool:NO forKey:ConvertLFKey];
         REQUIRE([Paste(kind, endings, &undone) isEqualToString:[NSString stringWithFormat:@"x%@y", endings]] && undone);
-        // The Japanese modes, with and without ConvertLF.
-        g_shouldFilter = kMacJapaneseFilterMode;
-        REQUIRE([Paste(kind, @"\\a\r\nb", &undone) isEqualToString:@"x\u00a5a\r\nby"] && undone);
+        // The Japanese modes, with and without ConvertLF: a document turns the yen signs or the backslashes into the
+        // mode's, the Experiment source keeps both, as it did before.
+        BOOL document = kind == DocumentText.class;
+        for (int convert = 0; convert <= 1; convert++) {
+            [SUD setBool:convert forKey:ConvertLFKey];
+            NSString *lf = convert ? @"\n" : @"\r\n";
+            g_shouldFilter = kMacJapaneseFilterMode;
+            NSString *expected = [NSString stringWithFormat:@"x%@\u00a5a%@by", document ? @"\u00a5" : @"\\", lf];
+            REQUIRE([Paste(kind, @"\\\u00a5a\r\nb", &undone) isEqualToString:expected] && undone);
+            REQUIRE([Paste(kind, @"\\\u00a5", &undone) isEqualToString:document ? @"x\u00a5\u00a5y" : @"x\\\u00a5y"] && undone);
+            g_shouldFilter = kOtherJapaneseFilterMode;
+            expected = [NSString stringWithFormat:@"x\\%@a%@by", document ? @"\\" : @"\u00a5", lf];
+            REQUIRE([Paste(kind, @"\\\u00a5a\r\nb", &undone) isEqualToString:expected] && undone);
+            REQUIRE([Paste(kind, @"\\\u00a5", &undone) isEqualToString:document ? @"x\\\\y" : @"x\\\u00a5y"] && undone);
+        }
         [SUD setBool:YES forKey:ConvertLFKey];
-        REQUIRE([Paste(kind, @"\\a\r\nb", &undone) isEqualToString:@"x\u00a5a\nby"] && undone);
-        g_shouldFilter = kOtherJapaneseFilterMode;
-        REQUIRE([Paste(kind, @"\u00a5a\rb", &undone) isEqualToString:@"x\\a\nby"] && undone);
         g_shouldFilter = kNoFilterMode;
         printf("PASS: %s: a paste gets LF line endings with ConvertLF, keeps them without, and undoes\n", where);
     }

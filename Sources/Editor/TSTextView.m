@@ -1587,7 +1587,7 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 
 - (BOOL)readSelectionFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type
 {
-	if ([self pasteFilteredTextFromPasteboard: pboard type: type])
+	if ([self pasteFilteredTextFromPasteboard: pboard type: type japaneseFilter: YES])
 		return YES;
 	return [super readSelectionFromPasteboard: pboard type: type];
 }
@@ -3179,29 +3179,30 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 
 @implementation NSTextView (TeXShop)
 
-// Pasted text becomes what typing it gives: in the Japanese modes the yen sign or the backslash
-// of the mode, and with ConvertLF (the default) LF line endings, as in a file that is opened.
-// Returns NO when the text needs none of this, or there is no text: AppKit then pastes.
-- (BOOL)pasteFilteredTextFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type
+// Pasted text with ConvertLF (the default) gets LF line endings, as in a file that is opened, and
+// with japaneseFilter, in the Japanese modes, the yen sign or the backslash of the mode, as typing
+// gives. Returns NO when the text needs none of this, or there is no text: AppKit then pastes.
+- (BOOL)pasteFilteredTextFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type japaneseFilter:(BOOL)japaneseFilter
 {
 	if (! [type isEqualToString: NSStringPboardType])
 		return NO;
 	BOOL convertLF = [SUD boolForKey:ConvertLFKey];
-	if (! g_shouldFilter && ! convertLF)
+	TSFilterMode filter = japaneseFilter ? g_shouldFilter : kNoFilterMode;
+	if (! filter && ! convertLF)
 		return NO;
 	NSString *pasted = [pboard stringForType: NSStringPboardType];
 	if (! pasted)
 		return NO;
 	NSString *string = pasted;
 	// Filtering for Japanese
-	if (g_shouldFilter == kMacJapaneseFilterMode)
+	if (filter == kMacJapaneseFilterMode)
 		string = filterBackslashToYen(string);
-	else if (g_shouldFilter == kOtherJapaneseFilterMode)
+	else if (filter == kOtherJapaneseFilterMode)
 		string = filterYenToBackslash(string);
 	// zenitani 1.35 (A) -- normalizing newline character for regular expression
 	if (convertLF)
 		string = [OGRegularExpression replaceNewlineCharactersInString:string withCharacter:OgreLfNewlineCharacter];
-	if (! g_shouldFilter && [string isEqualToString: pasted])
+	if (! filter && [string isEqualToString: pasted])
 		return NO;
 	// mitsu 1.29 (T1)-- in order to enable "Undo Paste"
 	// Replace the text--imitate what happens in ordinary editing

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Pasted text gets LF line endings when ConvertLF is on (the default), in every document and in the Experiment
-source, and so does the clipboard text of #PASTE# in macros and command completion.
+source, and so does the clipboard text of #PASTE# in macros and command completion. The yen signs and backslashes
+of a paste change in the Japanese modes in documents, as before, and stay as they are in the Experiment source, as
+before.
 
 The production paste methods of TSTextView and ScrapTextView, the shared pasteFilteredTextFromPasteboard:type: of
 TSTextView.m, the Japanese filters of TSEncodingSupport.m and NSMutableString-Extras.m are compiled verbatim with
@@ -34,9 +36,11 @@ filters = encodings[encodings.index('// replace backslashes by yens'):].rstrip()
 extras = (root / 'Sources/Utilities/NSMutableString-Extras.m').read_text(encoding='utf-8')
 harness = (root / 'Tests/PasteLineEndings.m').read_text(encoding='utf-8')
 mutations = {
-    'only in the Japanese modes': ('category', 'if (! g_shouldFilter && ! convertLF)', 'if (! g_shouldFilter)'),
+    'only in the Japanese modes': ('category', 'if (! filter && ! convertLF)', 'if (! filter)'),
     'no LF line endings': ('category', 'if (convertLF)\n\t\tstring =', 'if (NO)\n\t\tstring ='),
-    'not in the Experiment': ('experiment', 'if ([self pasteFilteredTextFromPasteboard: pboard type: type])\n\t\treturn YES;\n', ''),
+    'not in the Experiment': ('experiment', 'if ([self pasteFilteredTextFromPasteboard: pboard type: type japaneseFilter: NO])\n\t\treturn YES;\n', ''),
+    'yen signs in the Experiment': ('experiment', 'japaneseFilter: NO]', 'japaneseFilter: YES]'),
+    'no yen signs in documents': ('document', 'japaneseFilter: YES]', 'japaneseFilter: NO]'),
     'not through shouldChangeTextInRange': ('category', 'if ([self shouldChangeTextInRange:selectedRange replacementString:string]) {', 'if (YES) {'),
     'not for #PASTE#': ('extras', '        [clipboard replaceLineEndingsWithLF];\n', ''),
     '#PASTE# without ConvertLF': ('extras', 'if ([NSUserDefaults.standardUserDefaults boolForKey:@"ConvertLF"])', 'if (YES)'),
