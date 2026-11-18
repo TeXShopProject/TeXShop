@@ -1,23 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-"183.title" = "Default Command";
 "187.title" = "Via DVI";
-"188.title" = "Default Script";
 "190.title" = "Personal Script";
 "191.title" = "Direct PDF";
 "588.title" = "plain TeX";
 "589.title" = "LaTeX";
 "590.title" = "Engine File";
-"675.title" = "After Typesetting";
 "679.title" = "Bring Preview Forward";
 "680.title" = "Continue Editing";
 "785.title" = "Search PDF";
 "786.title" = "SyncTeX (Recommended)";
-"823.title" = "Sync Method";
-"919.title" = "Radio";
-"920.title" = "Radio";
-"921.title" = "Radio";
-"922.title" = "Radio";
-"O6H-3y-7Ca.title" = "(Should be OFF for most users.)";
-"W5U-9S-4OG.title" = "If Sync Opens a New Window";
-"YQv-fE-Uzg.title" = "Open as Tab in Root Window";
 "bYh-V5-ri6.title" = "Show Preview and Return to Original Window";

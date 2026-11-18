@@ -35,7 +35,6 @@
 "Do you want to save macros?" = "Do you want to save macros?";
 "Save Spot" = "Save Spot";
 "Template" = "Template";
-"Typing" = "Typing";
 "AutoComplete" = "Key Bindings"; //Should be translation of "Key Bindings", even in English (role: this is menu item when toolbar is Text Only)
 "Autocompletion" = "Bound Expression"; //Should be translation of "Bound Expression", even in English (role: when type Key Bound Character, this is Undo Text)
 "Page Number" = "Page Number"; 
@@ -101,7 +100,6 @@
 "deprecated" = "deprecated";
 "Unknown encoding; using UTF-8." = "Unknown encoding; using UTF-8.";
 "Source" = "Source";
-"Type sample text here.\nUse several lines to test\ninterline spacing." = "Type sample text here.\nUse several lines to test\ninterline spacing.";
 "<<Close All - unlocalized>>" = "Close All";
 "Close All" = "Close All";
 "File Already Exists" = "File Already Exists";
@@ -188,54 +186,29 @@
 
 "Replace" = "Replace";
 
-"General" = "General";
-"Documents and Saving" = "Documents and Saving";
-"Editor" = "Editor";
-"Spell Checking" = "Spell Checking";
 "Appearance" = "Appearance";
-"Typesetting" = "Typesetting";
-"Console" = "Console";
-"Updates" = "Updates";
-"Defaults for New Documents" = "Defaults for New Documents";
-"Matching Brackets" = "Matching Brackets";
-"Spelling While Typing" = "Spelling While Typing";
 "Use LaTeX-aware spell checking (recommended)" = "Use LaTeX-aware spell checking (recommended)";
-"Use legacy spell checking" = "Use legacy spell checking";
-"LaTeX Spell Checking" = "LaTeX Spell Checking";
 "Key Bindings" = "Key Bindings";
 "Edit Command Completion…" = "Edit Command Completion…";
 "Command Completion" = "Command Completion";
-"When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut." = "When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut.";
-"Source and Preview Windows" = "Source and Preview Windows";
-"Comment Lines and Hidden Settings" = "Comment Lines and Hidden Settings";
-"Advanced" = "Advanced";
 
 "Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting.";
 "Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting.";
 
-"Completion trigger" = "Completion trigger";
 
 "This key is reserved for command completion." = "This key is reserved for command completion.";
 
 "Encoding" = "Encoding";
 
-"Saving Documents" = "Saving Documents";
 
-"Page Display" = "Page Display";
 /* Page label in the corner of a link popup; %@ is the page label given in the PDF */
 "Page %@" = "Page %@";
 
-"PDF Interaction" = "PDF Interaction";
 
-"PDF Appearance" = "PDF Appearance";
 
-"HTML Preview" = "HTML Preview";
 
-"Typesetting Defaults" = "Typesetting Defaults";
 
-"Synchronization" = "Synchronization";
 
-"Tools" = "Tools";
 
 
 
@@ -285,7 +258,6 @@
 "This shortcut is already used by “%@”." = "This shortcut is already used by “%@”.";
 "Version unavailable" = "Version unavailable";
 
-"Edits the shared file for all documents. This setting controls the default for new documents." = "Edits the shared file for all documents. This setting controls the default for new documents.";
 
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@";

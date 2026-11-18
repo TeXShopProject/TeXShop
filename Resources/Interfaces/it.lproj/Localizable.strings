@@ -35,7 +35,6 @@
 "Do you want to save macros?" = "Vuoi salvare le macro?";
 "Save Spot" = "Salva Spot";
 "Template" = "Modello";
-"Typing" = "Digitazione";
 "AutoComplete" = "Completa automaticamente";   //Should be translation of "Key Bindings", even in English
 "Page Number" = "Numero di pagina";
 "Page Number Panel" = "Pannello Numero di pagina";
@@ -101,7 +100,6 @@
 "deprecated" = "obsoleto";
 "Unknown encoding; using UTF-8." = "Encoding sconosciuto; attivato UTF-8.";
 "Source" = "Sorgente";
-"Type sample text here.\nUse several lines to test\ninterline spacing." = "Scrivi un testo d’esempio qui.\nScrivi su più linee per controllare\nla spaziatura interlinea.";
 "<<Close All - unlocalized>>" = "Chiudi tutto";
 "Close All" = "Chiudi tutto";
 "File Already Exists" = "Il file esiste già";
@@ -211,54 +209,29 @@
 
 "Replace" = "Sostituisci";
 
-"General" = "Generali";
-"Documents and Saving" = "Documenti e salvataggio";
-"Editor" = "Editor";
-"Spell Checking" = "Ortografia";
 "Appearance" = "Aspetto";
-"Typesetting" = "Composizione";
-"Console" = "Console";
-"Updates" = "Aggiornamenti";
-"Defaults for New Documents" = "Impostazioni per i nuovi documenti";
-"Matching Brackets" = "Corrispondenza delle parentesi";
-"Spelling While Typing" = "Controllo durante la digitazione";
 "Use LaTeX-aware spell checking (recommended)" = "Usa il controllo adatto a LaTeX (consigliato)";
-"Use legacy spell checking" = "Usa il controllo tradizionale";
-"LaTeX Spell Checking" = "Ortografia LaTeX";
 "Key Bindings" = "Associazioni dei tasti";
 "Edit Command Completion…" = "Modifica il completamento dei comandi…";
 "Command Completion" = "Completamento dei comandi";
-"When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut." = "Quando Tab attiva il completamento dei comandi, il tasto è riservato e non può essere assegnato a una scorciatoia di menu.";
-"Source and Preview Windows" = "Finestre di sorgente e anteprima";
-"Comment Lines and Hidden Settings" = "Righe di commento e impostazioni nascoste";
-"Advanced" = "Avanzate";
 
 "Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "Installa TeX Live o MacTeX, quindi scegli «Rileva percorsi» in Impostazioni > Composizione.";
 "Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript non è stato trovato. Installa Ghostscript, quindi scegli «Rileva percorsi» in Impostazioni > Composizione.";
 
-"Completion trigger" = "Tasto di attivazione";
 
 "This key is reserved for command completion." = "Questo tasto è riservato al completamento dei comandi.";
 
 "Encoding" = "Codifica";
 
-"Saving Documents" = "Salvataggio documenti";
 
-"Page Display" = "Visualizzazione pagine";
 /* Page label in the corner of a link popup; %@ is the page label given in the PDF */
 "Page %@" = "Pagina %@";
 
-"PDF Interaction" = "Interazione PDF";
 
-"PDF Appearance" = "Aspetto PDF";
 
-"HTML Preview" = "Anteprima HTML";
 
-"Typesetting Defaults" = "Impostazioni di composizione";
 
-"Synchronization" = "Sincronizzazione";
 
-"Tools" = "Strumenti";
 
 
 
@@ -290,7 +263,6 @@
 "This shortcut is inactive because it conflicts with “%@” (%@)." = "Questa abbreviazione è inattiva perché è in conflitto con “%@” (%@).";
 "This shortcut is inactive because macro “%@” (%@) uses it first." = "Questa abbreviazione è inattiva perché la macro “%@” (%@) la usa per prima.";
 
-"Edits the shared file for all documents. This setting controls the default for new documents." = "Modifica il file condiviso da tutti i documenti. Questa impostazione determina il valore predefinito per i nuovi documenti.";
 
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "Le seguenti macro usano questa abbreviazione. Assegnandola al comando del menu, le loro abbreviazioni saranno disattivate.\n\n%@";

@@ -66,7 +66,6 @@
     ToolbarItems = "\U5de5\U5177\U680f\U9879\U76ee";
     Typeset = "\U6392\U7248";
     "Typesetting engine cannot be found." = "\U627e\U4e0d\U5230\U6392\U7248\U5f15\U64ce\U3002";
-    Typing = "\U952e\U5165";
     Uncomment = "\U53d6\U6d88\U6ce8\U91ca";
     Unindent = "\U53d6\U6d88\U7f29\U8fdb";
     Warning = "\U8b66\U544a";
@@ -98,7 +97,6 @@
 "deprecated" = "已弃用";
 "Unknown encoding; using UTF-8." = "未知编码；使用UTF-8编码。";
 "Source" = "源代码";
-"Type sample text here.\nUse several lines to test\ninterline spacing." = "在此输入示例文本。\n输入多行\n以测试行间距。";
 "<<Close All - unlocalized>>" = "全部关闭";
 "Close All" = "全部关闭";
 "File Already Exists" = "文件已存在";
@@ -208,54 +206,29 @@
 
 "Replace" = "替换";
 
-"General" = "通用";
-"Documents and Saving" = "文稿与保存";
-"Editor" = "编辑器";
-"Spell Checking" = "拼写检查";
 "Appearance" = "外观";
-"Typesetting" = "排版";
-"Console" = "控制台";
-"Updates" = "更新";
-"Defaults for New Documents" = "新文稿的默认设置";
-"Matching Brackets" = "括号匹配";
-"Spelling While Typing" = "键入时检查拼写";
 "Use LaTeX-aware spell checking (recommended)" = "使用考虑LaTeX语法的拼写检查（推荐）";
-"Use legacy spell checking" = "使用传统拼写检查";
-"LaTeX Spell Checking" = "LaTeX拼写检查";
 "Key Bindings" = "按键绑定";
 "Edit Command Completion…" = "编辑命令补全文件…";
 "Command Completion" = "命令补全";
-"When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut." = "使用Tab触发命令补全时，Tab将保留用于补全，不能分配给菜单快捷键。";
-"Source and Preview Windows" = "源文件和预览窗口";
-"Comment Lines and Hidden Settings" = "注释行与隐藏设置";
-"Advanced" = "高级";
 
 "Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "请安装TeX Live或MacTeX，然后在设置 > 排版中选择“自动检测路径”。";
 "Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "未找到Ghostscript。请安装Ghostscript，然后在设置 > 排版中选择“自动检测路径”。";
 
-"Completion trigger" = "触发按键";
 
 "This key is reserved for command completion." = "此按键已保留用于命令补全。";
 
 "Encoding" = "字符编码";
 
-"Saving Documents" = "保存文稿";
 
-"Page Display" = "页面显示";
 /* Page label in the corner of a link popup; %@ is the page label given in the PDF */
 "Page %@" = "第 %@ 页";
 
-"PDF Interaction" = "PDF操作";
 
-"PDF Appearance" = "PDF外观";
 
-"HTML Preview" = "HTML预览";
 
-"Typesetting Defaults" = "排版默认值";
 
-"Synchronization" = "同步";
 
-"Tools" = "工具";
 
 
 
@@ -287,7 +260,6 @@
 "This shortcut is inactive because it conflicts with “%@” (%@)." = "此快捷键与“%@”（%@）冲突，因此已停用。";
 "This shortcut is inactive because macro “%@” (%@) uses it first." = "宏“%@”（%@）先使用了此快捷键，因此此快捷键已停用。";
 
-"Edits the shared file for all documents. This setting controls the default for new documents." = "编辑所有文稿共用的文件。此设置决定新文稿的默认值。";
 
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "以下宏使用此快捷键。将其分配给菜单命令后，这些宏的快捷键将停用。\n\n%@";

@@ -35,7 +35,6 @@
 "Do you want to save macros?" = "Doriți să salvați macrocomenzile?";
 "Save Spot" = "Salvează poziția";
 "Template" = "Model";
-"Typing" = "Tastare";
 "AutoComplete" = "Asocieri de taste";  //Should be translation of "Key Bindings", even in English
 "Page Number" = "Număr pagină";
 "Page Number Panel" = "Panoul de număr de pagină";
@@ -101,7 +100,6 @@
 "deprecated" = "învechit";
 "Unknown encoding; using UTF-8." = "Codificare necunoscută; se folosește UTF-8.";
 "Source" = "Sursă";
-"Type sample text here.\nUse several lines to test\ninterline spacing." = "Tastați aici un text de probă.\nFolosiți mai multe rânduri pentru a testa\nspațierea dintre rânduri.";
 "<<Close All - unlocalized>>" = "Închideți tot";
 "Close All" = "Închideți tot";
 "File Already Exists" = "Fișierul există deja";
@@ -211,54 +209,29 @@
 
 "Replace" = "Înlocuiți";
 
-"General" = "General";
-"Documents and Saving" = "Documente și salvare";
-"Editor" = "Editor";
-"Spell Checking" = "Ortografie";
 "Appearance" = "Aspect";
-"Typesetting" = "Compunere";
-"Console" = "Consolă";
-"Updates" = "Actualizări";
-"Defaults for New Documents" = "Valori pentru documente noi";
-"Matching Brackets" = "Potrivirea parantezelor";
-"Spelling While Typing" = "Verificare în timpul tastării";
 "Use LaTeX-aware spell checking (recommended)" = "Folosește verificarea adaptată la LaTeX (recomandat)";
-"Use legacy spell checking" = "Folosește verificarea tradițională";
-"LaTeX Spell Checking" = "Ortografie LaTeX";
 "Key Bindings" = "Asocieri de taste";
 "Edit Command Completion…" = "Editează completarea comenzilor…";
 "Command Completion" = "Completarea comenzilor";
-"When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut." = "Când Tab activează completarea comenzilor, tasta este rezervată acesteia și nu poate fi atribuită unei scurtături de meniu.";
-"Source and Preview Windows" = "Ferestrele sursei și previzualizării";
-"Comment Lines and Hidden Settings" = "Linii de comentarii și configurări ascunse";
-"Advanced" = "Avansat";
 
 "Install TeX Live or MacTeX, then choose Detect Paths in Settings > Typesetting." = "Instalați TeX Live sau MacTeX, apoi alegeți „Detectați căile” în Configurări > Compunere.";
 "Ghostscript was not found. Install Ghostscript, then choose Detect Paths in Settings > Typesetting." = "Ghostscript nu a fost găsit. Instalați Ghostscript, apoi alegeți „Detectați căile” în Configurări > Compunere.";
 
-"Completion trigger" = "Tastă de activare";
 
 "This key is reserved for command completion." = "Această tastă este rezervată completării comenzilor.";
 
 "Encoding" = "Codificare";
 
-"Saving Documents" = "Salvarea documentelor";
 
-"Page Display" = "Afișarea paginilor";
 /* Page label in the corner of a link popup; %@ is the page label given in the PDF */
 "Page %@" = "Pagina %@";
 
-"PDF Interaction" = "Interacțiune PDF";
 
-"PDF Appearance" = "Aspect PDF";
 
-"HTML Preview" = "Previzualizare HTML";
 
-"Typesetting Defaults" = "Valori implicite de tehnoredactare";
 
-"Synchronization" = "Sincronizare";
 
-"Tools" = "Instrumente";
 
 
 
@@ -290,7 +263,6 @@
 "This shortcut is inactive because it conflicts with “%@” (%@)." = "Această scurtătură este inactivă deoarece intră în conflict cu „%@” (%@).";
 "This shortcut is inactive because macro “%@” (%@) uses it first." = "Această scurtătură este inactivă deoarece macrocomanda „%@” (%@) o folosește prima.";
 
-"Edits the shared file for all documents. This setting controls the default for new documents." = "Editează fișierul comun tuturor documentelor. Această configurare determină valoarea implicită pentru documentele noi.";
 
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "Următoarele macrocomenzi folosesc această scurtătură. Dacă o atribuiți comenzii din meniu, scurtăturile macrocomenzilor vor fi dezactivate.\n\n%@";

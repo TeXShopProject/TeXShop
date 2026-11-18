@@ -1,23 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-"183.title" = "Standardbefehl";
 "187.title" = "Über DVI";
-"188.title" = "Standardskript";
 "190.title" = "Persönliches Skript";
 "191.title" = "PDF direkt";
 "588.title" = "plain TeX";
 "589.title" = "LaTeX";
 "590.title" = "Engine-Datei";
-"675.title" = "Nach dem Setzen";
 "679.title" = "Vorschau nach vorne bringen";
 "680.title" = "Weiter bearbeiten";
 "785.title" = "PDF durchsuchen";
 "786.title" = "SyncTeX (empfohlen)";
-"823.title" = "Art der Synchronisierung";
-"919.title" = "Radio";
-"920.title" = "Radio";
-"921.title" = "Radio";
-"922.title" = "Radio";
-"O6H-3y-7Ca.title" = "(Sollte AUS sein für die meisten Systeme)";
-"W5U-9S-4OG.title" = "Wenn Sync ein neues Fenster öffnet";
-"YQv-fE-Uzg.title" = "Öffnen als Tab im Stammfenster";
 "bYh-V5-ri6.title" = "Vorschau anzeigen und zum ursprünglichen Fenster zurückkehren";
