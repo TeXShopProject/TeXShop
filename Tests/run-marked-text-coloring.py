@@ -37,7 +37,7 @@ MUTATIONS = {
     'wait-only-in-this-view': (SYNTAX,
         '    if (!aTextView || !TSTextStorageHasMarkedText(aTextView.textStorage))', '    if (!aTextView.hasMarkedText)'),
     'no-color-after-selection': (DOCUMENT,
-        '\t[self colorAfterMarkedTextEnds];\n\t[self matchBracesForSelectionInTextView:nil];', '\t[self matchBracesForSelectionInTextView:nil];'),
+        '\t[self colorAfterMarkedTextEnds];\n\t// When the text changes', '\t// When the text changes'),
     'no-experiment-color-after-selection': (EXPERIMENT,
         '    [self colorAfterMarkedTextEnds];\n    if ([self experimentSourceShown])', '    if ([self experimentSourceShown])'),
     'color-while-source-composes': (SYNTAX,

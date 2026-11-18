@@ -5800,6 +5800,10 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 - (void)textViewDidChangeSelection:(NSNotification *)inNotification
 {
 	[self colorAfterMarkedTextEnds];
+	// When the text changes, the other half of a split window reports its selection too.
+	// Braces follow the half being edited; that report would only reset their highlight.
+	if ([inNotification object] != nil && [inNotification object] != [self textView])
+		return;
 	[self matchBracesForSelectionInTextView:nil];
 }
 
@@ -5820,6 +5824,7 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 	SEL showIndicatorSelector = experiment ? @selector(showExperimentIndicator:) : @selector(showIndicator:);
 	SEL resetFlashSelector = experiment ? @selector(resetExperimentBackgroundColorOfTextView:) : @selector(resetBackgroundColorOfTextView:);
 	NSTextView *flashView = experiment ? scrapTextView : textView;
+	NSTextView *selectionView = experiment ? scrapTextView : [self textView];
 	NSUInteger *highlightGeneration = experiment ? &scrapBraceHighlightGeneration : &braceHighlightGeneration;
 	NSUInteger *flashGeneration = experiment ? &scrapBraceFlashGeneration : &braceFlashGeneration;
 
@@ -5861,7 +5866,19 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 	NSString *theString = experiment ? [scrapTextView string] : [_textStorage string];
     NSInteger theStringLength = [theString length];
     if (theStringLength == 0) { return; }
-    NSRange theSelectedRange = experiment ? [scrapTextView selectedRange] : [[self textView] selectedRange];
+    // A brace being composed with an input method is not highlighted. Where the composed
+    // text begins is kept as the last place, so that a brace committed there is
+    // highlighted as a typed one.
+    if ([selectionView hasMarkedText]) {
+        NSRange marked = [selectionView markedRange];
+        if (marked.location != NSNotFound) {
+            *lastLocation = marked.location;
+            *lastLength = theStringLength - marked.length;
+            *lastDelete = NO;
+        }
+        return;
+    }
+    NSRange theSelectedRange = [selectionView selectedRange];
     NSInteger theLocation = theSelectedRange.location;
     NSInteger theDifference = theLocation - *lastLocation;
     *lastLocation = theLocation;
