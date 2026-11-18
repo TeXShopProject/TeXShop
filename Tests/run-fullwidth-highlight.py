@@ -38,7 +38,8 @@ membership = membership[:membership.index('\n}\n') + 3]
 readers = ''.join(support[support.index(sig):support.index('\n}\n', support.index(sig)) + 3] for sig in
                   ['- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFromDictionary:', '- (NSColor *) colorAndAlphaFromDictionary:',
                    '- (NSColor *)liteColorWithKey:', '- (NSColor *)darkColorWithKey:', '- (NSColor *)liteColorAndAlphaWithKey:',
-                   '- (NSColor *)darkColorAndAlphaWithKey:', '- (NSColor *)colorForKey: (NSString *)theKey fromDictionary:'])
+                   '- (NSColor *)darkColorAndAlphaWithKey:', '- (NSColor *)colorForKey: (NSString *)theKey fromDictionary:',
+                   '- (NSColor *)opaqueColorForKey: (NSString *)theKey fromDictionary:'])
 branch = scanner[scanner.index('else if (fullwidth && TSIsHighlightedFullwidthCharacter((unichar)c))'):]
 branch = branch[:branch.index('else if ((c == \'&\')')]
 assert 'TSToken(&scan, location, 1, TSSyntaxRoleFullwidthSymbol);' in branch
@@ -64,6 +65,7 @@ program = r'''
 #import <Cocoa/Cocoa.h>
 @interface TSColorSupport : NSObject
 + (instancetype)sharedInstance;
+- (NSColor *)opaqueColorForKey:(NSString *)theKey fromDictionary:(NSDictionary *)theDictionary isWindowDark:(BOOL)mode;
 @end
 @implementation TSColorSupport
 + (instancetype)sharedInstance { static id shared; if (!shared) shared = [self new]; return shared; }

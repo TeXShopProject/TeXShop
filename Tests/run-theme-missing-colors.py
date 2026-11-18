@@ -7,7 +7,13 @@ document's source, console and log views get these colors from the production pa
 -[TSDocument changeColorsUsingDictionary:] (real NSTextViews), the Experiment console from the production
 -[TSExperimentConsoleController updateConsoleColors:], and the Settings wells (-colorForKey:fromDictionary:) show
 the same colors. Nothing is written into the theme, and nothing is shown on screen. --mutations removes each part
-and the test must then fail."""
+and the test must then fail.
+
+Also a theme that has lost one color of a pair (only the background, or only the text), for every bundled theme and one
+of the user's own with white text, in both appearances: the missing color is chosen so that the text reads (contrast
+4.5 or more) and the other one is kept; checked for the source, console and log of a document, the Experiment console
+(-updateConsoleColors:), the Experiment source (-[ScrapTextView updateExperimentColors:]), the cursor and the active
+line."""
 from pathlib import Path
 import subprocess, sys, tempfile
 from production_fragments import method, verify_embedded
@@ -25,7 +31,10 @@ end = document_source.index('    [outputText setBackgroundColor: myBackgroundCol
 document = document_source[start:end]
 console_source = (root / 'Sources/Typesetting/TSExperimentConsoleController.m').read_text(encoding='utf-8')
 console = method(console_source, '- (void)updateConsoleColors:(NSNotification *)notification\n{')
+scrap_source = (root / 'Sources/Editor/ScrapTextView.m').read_text(encoding='utf-8')
+scrap = method(scrap_source, '- (void)updateExperimentColors:(NSNotification *)notification')
 fragments = [('complete method:' + s, support, m) for s, m in zip(signatures, readers)]
+fragments.append(('complete method:updateExperimentColors', scrap_source, scrap))
 fragments += [('statement span:document views', document_source, document), ('complete method:updateConsoleColors', console_source, console)]
 
 PROGRAM = r'''
@@ -65,6 +74,13 @@ __DOCUMENT__
 @end
 @implementation TSExperimentConsoleController
 __CONSOLE__
+@end
+
+// The Experiment source with its production -updateExperimentColors:.
+@interface ScrapText : NSTextView
+@end
+@implementation ScrapText
+__SCRAP__
 @end
 
 static double Channel(double c) { return c <= 0.03928 ? c / 12.92 : pow((c + 0.055) / 1.055, 2.4); }
@@ -108,6 +124,12 @@ int main(int argc, char **argv) { @autoreleasepool {
                 REQUIRE(SameRGB([colors colorForKey:textKey fromDictionary:theme isWindowDark:dark], text));
                 REQUIRE(SameRGB([colors colorForKey:backgroundKey fromDictionary:theme isWindowDark:dark], background));
             }
+            // An empty theme looks like the Lite or the Dark theme.
+            if (theme.count == 0) {
+                NSColor *paper = [[colors opaqueColorForKey:@"ConsoleBackground" fromDictionary:theme isWindowDark:dark] colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+                REQUIRE(dark ? fabs(paper.redComponent - 0.114) < 0.002 && fabs(paper.blueComponent - 0.179) < 0.002
+                             : fabs(paper.redComponent - 0.996) < 0.002 && fabs(paper.blueComponent - 0.918) < 0.002);
+            }
             // The document's views.
             Document *document = [Document new];
             document->textView1 = View(); document->textView2 = View(); document->outputText = View(); document.logTextView = View();
@@ -127,12 +149,81 @@ int main(int argc, char **argv) { @autoreleasepool {
         }
         printf("PASS: %s: a theme without its colors shows readable text in the source, the console, the log and the Experiment console, and the wells show the same colors\n", mode);
     }
+    // A theme that has lost one color of a pair, in a light and in a dark window (any theme can be used for either):
+    // the missing one is chosen so that the text reads, and the color the theme still has is kept.
+    NSString *folder = @(argv[1]);
+    NSMutableDictionary *named = [NSMutableDictionary dictionary];
+    for (NSString *file in [NSFileManager.defaultManager contentsOfDirectoryAtPath:folder error:NULL])
+        if ([file hasSuffix:@".plist"]) named[file.stringByDeletingPathExtension] = [NSDictionary dictionaryWithContentsOfFile:[folder stringByAppendingPathComponent:file]];
+    REQUIRE(named.count >= 9 && named[@"Dracula"] && named[@"LiteTheme"]);
+    NSMutableDictionary *mine = [named[@"LiteTheme"] mutableCopy];
+    for (NSString *key in @[@"EditorText", @"ConsoleText", @"LogText", @"EditorInsertionPoint"]) mine[key] = @[@1, @1, @1, @1];
+    for (NSString *key in @[@"EditorBackground", @"ConsoleBackground", @"LogBackground", @"EntryColor"]) mine[key] = @[@0.1, @0.1, @0.1, @1];
+    named[@"Mine (white text)"] = mine;
+    NSArray *pairs2 = @[@[@"EditorText", @"EditorBackground"], @[@"ConsoleText", @"ConsoleBackground"], @[@"LogText", @"LogBackground"],
+                        @[@"EditorInsertionPoint", @"EditorBackground"], @[@"EditorText", @"EntryColor"]];
+    NSUInteger checked = 0;
+    for (NSString *name in [named.allKeys sortedArrayUsingSelector:@selector(compare:)]) {
+        for (int dark = 0; dark <= 1; dark++) {
+            mode = dark ? "dark" : "light";
+            for (NSArray *pair in pairs2) {
+                for (NSString *lost in pair) {
+                    NSMutableDictionary *theme = [named[name] mutableCopy];
+                    [theme removeObjectForKey:lost];
+                    NSDictionary *before = [theme copy];
+                    NSString *kept = [pair[0] isEqual:lost] ? pair[1] : pair[0];
+                    NSColor *text = [colors opaqueColorForKey:pair[0] fromDictionary:theme isWindowDark:dark];
+                    NSColor *background = [colors opaqueColorForKey:pair[1] fromDictionary:theme isWindowDark:dark];
+                    // The color the theme has is kept as it is.
+                    REQUIRE(SameRGB([colors opaqueColorForKey:kept fromDictionary:theme isWindowDark:dark], [colors opaqueColorForKey:kept fromDictionary:named[name] isWindowDark:dark]));
+                    // A pair the theme had readable stays readable (an unreadable pair of the user's own is kept).
+                    NSColor *wasText = [colors opaqueColorForKey:pair[0] fromDictionary:named[name] isWindowDark:dark];
+                    NSColor *wasBackground = [colors opaqueColorForKey:pair[1] fromDictionary:named[name] isWindowDark:dark];
+                    // The cursor and the active line are chosen for the text and background; they are checked when they are
+                    // the color that is lost.
+                    BOOL auxiliary = [pair[1] isEqual:@"EntryColor"] || [pair[0] isEqual:@"EditorInsertionPoint"];
+                    BOOL auxiliaryLost = [lost isEqual:@"EntryColor"] || [lost isEqual:@"EditorInsertionPoint"];
+                    if (auxiliary ? auxiliaryLost : Contrast(wasText, wasBackground) >= 4.5) {
+                        if (Contrast(text, background) < 4.5) fprintf(stderr, "%s without %s: %.2f\n", name.UTF8String, lost.UTF8String, Contrast(text, background));
+                        REQUIRE(Contrast(text, background) >= 4.5);
+                    }
+                    // The wells show what is drawn.
+                    REQUIRE(SameRGB([colors colorForKey:lost fromDictionary:theme isWindowDark:dark], [colors opaqueColorForKey:lost fromDictionary:theme isWindowDark:dark]));
+                    // The document's views, the Experiment console and the Experiment source draw these colors.
+                    if ([pair[1] isEqual:@"EntryColor"] || [pair[0] isEqual:@"EditorInsertionPoint"]) { checked++; continue; }
+                    Document *document = [Document new];
+                    document->textView1 = View(); document->textView2 = View(); document->outputText = View(); document.logTextView = View();
+                    [document applyDictionary:theme dark:dark];
+                    NSTextView *view = [pair[0] isEqual:@"EditorText"] ? document->textView1 : [pair[0] isEqual:@"ConsoleText"] ? document->outputText : document.logTextView;
+                    REQUIRE(SameRGB(view.textColor, text) && SameRGB(view.backgroundColor, background));
+                    NSWindow *host = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 100) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
+                    host.appearance = [NSAppearance appearanceNamed:dark ? NSAppearanceNameDarkAqua : NSAppearanceNameAqua];
+                    if ([pair[0] isEqual:@"ConsoleText"]) {
+                        TSExperimentConsoleController *console = [TSExperimentConsoleController new];
+                        console.window = host;
+                        console.outputText = View();
+                        [console updateConsoleColors:[NSNotification notificationWithName:@"colors" object:nil userInfo:theme]];
+                        REQUIRE(SameRGB(console.outputText.textColor, text) && SameRGB(console.outputText.backgroundColor, background));
+                    }
+                    if ([pair[0] isEqual:@"EditorText"]) {
+                        ScrapText *experiment = [[ScrapText alloc] initWithFrame:NSMakeRect(0, 0, 200, 100)];
+                        host.contentView = experiment;
+                        [experiment updateExperimentColors:[NSNotification notificationWithName:@"colors" object:nil userInfo:theme]];
+                        REQUIRE(SameRGB(experiment.textColor, text) && SameRGB(experiment.backgroundColor, background));
+                    }
+                    REQUIRE([theme isEqual:before]);
+                    checked++;
+                }
+            }
+        }
+    }
+    printf("PASS: %lu cases: a theme that has lost the text or the background color of a pair stays readable, keeps the other color, and the wells show what is drawn\n", (unsigned long)checked);
 } return 0; }
 '''
 
 
 def run(parts, label):
-    program = PROGRAM.replace('__READERS__', '\n'.join(parts['readers'])).replace('__DOCUMENT__', parts['document']).replace('__CONSOLE__', parts['console'])
+    program = PROGRAM.replace('__READERS__', '\n'.join(parts['readers'])).replace('__DOCUMENT__', parts['document']).replace('__CONSOLE__', parts['console']).replace('__SCRAP__', parts['scrap'])
     with tempfile.TemporaryDirectory(prefix='texshop-theme-missing-colors-') as folder:
         folder = Path(folder)
         (folder / 'test.m').write_text(program, encoding='utf-8')
@@ -140,10 +231,10 @@ def run(parts, label):
                         str(folder / 'test.m'), '-o', str(folder / 'test')], check=True)
         if label == 'production':
             verify_embedded(program, fragments)
-        return subprocess.run([str(folder / 'test')], capture_output=True, text=True, timeout=60)
+        return subprocess.run([str(folder / 'test'), str(root / 'Resources/TeXShop/Themes')], capture_output=True, text=True, timeout=120)
 
 
-parts = {'readers': readers, 'document': document, 'console': console}
+parts = {'readers': readers, 'document': document, 'console': console, 'scrap': scrap}
 result = run(parts, 'production')
 print(result.stdout, end='')
 if result.returncode:
@@ -153,6 +244,7 @@ if '--mutations' in sys.argv:
     mutations = {
         'no built-in light colors': ('readers', '    if (builtIn != nil)\n        return', '    if (NO)\n        return', 0),
         'no built-in dark colors': ('readers', '    if (builtIn != nil)\n        return', '    if (NO)\n        return', 1),
+        'no pairs': ('readers', '    if (other == nil)\n        return builtIn;', '    return builtIn;', 0),
         'the document takes no color': ('document', '[[TSColorSupport sharedInstance] opaqueColorForKey: @"ConsoleText" fromDictionary: colorDictionary isWindowDark: withDarkColors]',
                                         '[[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"ConsoleText"]', None),
     }

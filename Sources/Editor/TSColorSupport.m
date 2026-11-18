@@ -587,23 +587,58 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
             theColor = [NSColor colorWithRed: [theColorArray[0] doubleValue]  green: [theColorArray[1] doubleValue]  blue: [theColorArray[2] doubleValue]  alpha: (theColorArray.count >= 4 ? [theColorArray[3] doubleValue] : 1.0)];
             return (theColor);
         }
-    if (mode)
-        return [self darkColorWithKey: theKey];
-    else
-        return [self liteColorWithKey: theKey];
+    // The color drawn for it: the built-in one, readable with the other color of its pair.
+    return [self opaqueColorForKey: theKey fromDictionary: theDictionary isWindowDark: mode];
 }
 
 // Themes store an opacity of 0 with some of these colors, for example the editor
 // background of SolarizedDark, which -colorFromDictionary:andKey: ignores.
+//
+// A color the theme does not have is the built-in one of the mode, but text and the background
+// it is drawn on are a pair: when the theme has only one of them (a theme of either kind can be
+// used in a light or a dark window, and its file may have lost a color), the missing one is
+// chosen so that the text reads on the background, contrast 4.5 or more: the built-in color of
+// the mode, else that of the other mode, else white or black. The theme file is not changed.
+// Text on: EditorText and EditorInsertionPoint on EditorBackground, ConsoleText on
+// ConsoleBackground, LogText on LogBackground; EditorText on EntryColor (the active line).
 - (NSColor *)opaqueColorForKey: (NSString *)theKey fromDictionary: (NSDictionary *)theDictionary isWindowDark: (BOOL)mode
 {
     NSColor *theColor = [self colorFromDictionary: theDictionary andKey: theKey];
     if (theColor != nil)
         return theColor;
-    if (mode)
-        return [self darkColorWithKey: theKey];
-    else
-        return [self liteColorWithKey: theKey];
+    NSColor *builtIn = mode ? [self darkColorWithKey: theKey] : [self liteColorWithKey: theKey];
+    NSString *background = @{@"EditorText": @"EditorBackground", @"EditorInsertionPoint": @"EditorBackground",
+                              @"ConsoleText": @"ConsoleBackground", @"LogText": @"LogBackground"}[theKey];
+    NSString *text = @{@"EditorBackground": @"EditorText", @"EntryColor": @"EditorText",
+                       @"ConsoleBackground": @"ConsoleText", @"LogBackground": @"LogText"}[theKey];
+    // The other color of the pair: the background as it is drawn, or the theme's own text.
+    NSColor *other = background ? [self opaqueColorForKey: background fromDictionary: theDictionary isWindowDark: mode]
+        : text ? [self colorFromDictionary: theDictionary andKey: text] : nil;
+    if (other == nil)
+        return builtIn;
+    // WCAG contrast of two colors.
+    CGFloat (^luminance)(NSColor *) = ^CGFloat(NSColor *color) {
+        NSColor *rgb = [color colorUsingColorSpace: NSColorSpace.sRGBColorSpace];
+        CGFloat c[3] = {rgb.redComponent, rgb.greenComponent, rgb.blueComponent};
+        for (int i = 0; i < 3; i++)
+            c[i] = c[i] <= 0.03928 ? c[i] / 12.92 : pow((c[i] + 0.055) / 1.055, 2.4);
+        return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+    };
+    CGFloat otherLuminance = luminance(other);
+    NSColor *best = nil;
+    CGFloat bestContrast = 0;
+    for (NSColor *candidate in @[builtIn, mode ? [self liteColorWithKey: theKey] : [self darkColorWithKey: theKey],
+                                 [NSColor colorWithRed: 1 green: 1 blue: 1 alpha: 1], [NSColor colorWithRed: 0 green: 0 blue: 0 alpha: 1]]) {
+        CGFloat l = luminance(candidate);
+        CGFloat contrast = (MAX(l, otherLuminance) + 0.05) / (MIN(l, otherLuminance) + 0.05);
+        if (contrast >= 4.5)
+            return candidate;
+        if (contrast > bestContrast) {
+            best = candidate;
+            bestContrast = contrast;
+        }
+    }
+    return best;
 }
 
 - (NSColor *)colorForKey: (NSString *)theKey isWindowDark: (BOOL)mode
