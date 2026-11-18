@@ -79,6 +79,7 @@
 
 
 @interface NSTextView (TeXShop)
+- (BOOL)pasteFilteredTextFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type;
 - (NSRange)visibleCharacterRange;
 - (CGFloat)theViewWidth;
 - (void) closeTag: (id)sender;

@@ -549,6 +549,14 @@
 	[super insertText: newString];
 }
 
+// Pasting, as in a document: the yen sign or the backslash of the Japanese modes, and LF line endings.
+- (BOOL)readSelectionFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type
+{
+	if ([self pasteFilteredTextFromPasteboard: pboard type: type])
+		return YES;
+	return [super readSelectionFromPasteboard: pboard type: type];
+}
+
 
 - (void)keyDown:(NSEvent *)theEvent
 {

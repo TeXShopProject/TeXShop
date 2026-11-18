@@ -1587,34 +1587,8 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 
 - (BOOL)readSelectionFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type
 {
-	if (g_shouldFilter && [type isEqualToString: NSStringPboardType]) {
-		NSString *string = [pboard stringForType: NSStringPboardType];
-		if (string) {
-		// mitsu 1.29 (T1)-- in order to enable "Undo Paste"
-			// Filtering for Japanese
-			if (g_shouldFilter == kMacJapaneseFilterMode)
-				string = filterBackslashToYen(string);
-			else if (g_shouldFilter == kOtherJapaneseFilterMode)
-				string = filterYenToBackslash(string);
-
-			// zenitani 1.35 (A) -- normalizing newline character for regular expression
-			if ([SUD boolForKey:ConvertLFKey]) {
-				string = [OGRegularExpression replaceNewlineCharactersInString:string
-						withCharacter:OgreLfNewlineCharacter];
-			}
-
-			// Replace the text--imitate what happens in ordinary editing
-			NSRange	selectedRange = [self selectedRange];
-			if ([self shouldChangeTextInRange:selectedRange replacementString:string]) {
-				[self replaceCharactersInRange:selectedRange withString:string];
-				[self didChangeText];
-			}
-			// by returning YES, "Undo Paste" menu item will be set up by system
-			return YES;
-		}
-		else
-			return NO;
-	}
+	if ([self pasteFilteredTextFromPasteboard: pboard type: type])
+		return YES;
 	return [super readSelectionFromPasteboard: pboard type: type];
 }
 
@@ -3204,6 +3178,41 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 @end
 
 @implementation NSTextView (TeXShop)
+
+// Pasted text becomes what typing it gives: in the Japanese modes the yen sign or the backslash
+// of the mode, and with ConvertLF (the default) LF line endings, as in a file that is opened.
+// Returns NO when the text needs none of this, or there is no text: AppKit then pastes.
+- (BOOL)pasteFilteredTextFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type
+{
+	if (! [type isEqualToString: NSStringPboardType])
+		return NO;
+	BOOL convertLF = [SUD boolForKey:ConvertLFKey];
+	if (! g_shouldFilter && ! convertLF)
+		return NO;
+	NSString *pasted = [pboard stringForType: NSStringPboardType];
+	if (! pasted)
+		return NO;
+	NSString *string = pasted;
+	// Filtering for Japanese
+	if (g_shouldFilter == kMacJapaneseFilterMode)
+		string = filterBackslashToYen(string);
+	else if (g_shouldFilter == kOtherJapaneseFilterMode)
+		string = filterYenToBackslash(string);
+	// zenitani 1.35 (A) -- normalizing newline character for regular expression
+	if (convertLF)
+		string = [OGRegularExpression replaceNewlineCharactersInString:string withCharacter:OgreLfNewlineCharacter];
+	if (! g_shouldFilter && [string isEqualToString: pasted])
+		return NO;
+	// mitsu 1.29 (T1)-- in order to enable "Undo Paste"
+	// Replace the text--imitate what happens in ordinary editing
+	NSRange	selectedRange = [self selectedRange];
+	if ([self shouldChangeTextInRange:selectedRange replacementString:string]) {
+		[self replaceCharactersInRange:selectedRange withString:string];
+		[self didChangeText];
+	}
+	// by returning YES, "Undo Paste" menu item will be set up by system
+	return YES;
+}
 
 - (CGFloat)theViewWidth
 {
