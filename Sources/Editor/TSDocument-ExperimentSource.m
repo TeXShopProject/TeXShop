@@ -213,6 +213,8 @@ static NSRange TSExperimentRange(NSTextView *view, NSRange range)
 
 - (void)resetExperimentHighlight:(id)sender
 {
+    if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != scrapBraceHighlightGeneration)
+        return;
     // As -resetHighlight:, the brace highlight stays while text is composed.
     if ([self coloringWaitsForMarkedTextIn:scrapTextView])
         return;
@@ -259,6 +261,8 @@ static NSRange TSExperimentRange(NSTextView *view, NSRange range)
 // After the flash for an unmatched brace, the theme's background again.
 - (void)resetExperimentBackgroundColorOfTextView:(id)sender
 {
+    if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != scrapBraceFlashGeneration)
+        return;
     if ([scrapTextView respondsToSelector:@selector(updateExperimentColors:)])
         [(ScrapTextView *)scrapTextView updateExperimentColors:nil];
 }

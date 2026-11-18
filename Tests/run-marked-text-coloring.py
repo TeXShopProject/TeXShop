@@ -202,6 +202,9 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
          autoCompleting, windowIsSplit, braceHighlighting, contentHighlighting, lastInputIsDelete,
          scrapLastInputIsDelete, scrapBraceHighlighting, scrapContentHighlighting;
     NSInteger lastCursorLocation, lastStringLength, scrapLastCursorLocation, scrapLastStringLength;
+    NSArray *highlightedBraceLocations, *scrapHighlightedBraceLocations;
+    NSRange highlightedContentRange, scrapHighlightedContentRange;
+    NSUInteger braceHighlightGeneration, braceFlashGeneration, scrapBraceHighlightGeneration, scrapBraceFlashGeneration;
     NSUInteger colorStart, colorEnd;
     NSTimeInterval colorTime;
     NSLineBreakMode lineBreakMode;

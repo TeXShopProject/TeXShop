@@ -5611,6 +5611,10 @@ if ( ! skipTextWindow) {
 // added by Terada (- (void)resetHighlight:)
 - (void)resetHighlight:(id)sender
 {
+    // The end of the flash of a pair (sender is its number) that a newer one has replaced.
+    if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != braceHighlightGeneration)
+        return;
+
     // While text is composed, the brace highlight stays and nothing is colored. The
     // change of the selection that commits or removes the composed text schedules
     // this method again.
@@ -5674,6 +5678,10 @@ if ( ! skipTextWindow) {
 {
 
     NSDictionary *colorDictionary;
+
+    // The end of a flash (sender is its number) that a newer one has replaced.
+    if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != braceFlashGeneration)
+        return;
     
 #ifdef MOJAVEORHIGHER
     if ((atLeastMojave) && (textView1.effectiveAppearance.name == NSAppearanceNameDarkAqua))
@@ -5812,6 +5820,8 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 	SEL showIndicatorSelector = experiment ? @selector(showExperimentIndicator:) : @selector(showIndicator:);
 	SEL resetFlashSelector = experiment ? @selector(resetExperimentBackgroundColorOfTextView:) : @selector(resetBackgroundColorOfTextView:);
 	NSTextView *flashView = experiment ? scrapTextView : textView;
+	NSUInteger *highlightGeneration = experiment ? &scrapBraceHighlightGeneration : &braceHighlightGeneration;
+	NSUInteger *flashGeneration = experiment ? &scrapBraceFlashGeneration : &braceFlashGeneration;
 
 	BOOL alwaysHighlight  = [SUD boolForKey:AlwaysHighlightEnabledKey];
 	BOOL highlightContent = [SUD boolForKey:HighlightContentEnabledKey];
@@ -5921,6 +5931,7 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 		return;
 	if (theMatch >= 0) {
 		theLocation = theMatch;
+		NSUInteger generation = ++*highlightGeneration;
 				[self performSelector:highlightBracesSelector
 						   withObject:[NSArray arrayWithObjects:
 									   [NSNumber numberWithInteger:theLocation],
@@ -5943,7 +5954,7 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 				
 				if(!alwaysHighlight){
 					[self performSelector:resetHighlightSelector
-							   withObject:nil afterDelay:0.30];
+							   withObject:@(generation) afterDelay:0.30];
 				}
 				
                 return;
@@ -5990,7 +6001,7 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
         
        
 		[self performSelector:resetFlashSelector
-				   withObject:nil afterDelay:0.20];
+				   withObject:@(++*flashGeneration) afterDelay:0.20];
 	}
 }
 
