@@ -30,16 +30,9 @@
       "group.typesetting.9.title": "Japans pLaTeX",
       "catalog.editor.1.0.title": "Tabbreedte:"
     },
-    "SettingsMiscTwo.strings": {
-      "SS5-tZ-cDa.title": "Japans pLaTeX"
-    },
     "SettingsPreview.strings": {
       "505.title": "Pagina’s lopen van links naar rechts",
       "507.title": "Pagina’s lopen van rechts naar links"
-    },
-    "SettingsEditor.strings": {
-      "ojN-Oi-8cl.title": "Tabbreedte:",
-      "pdc-GP-Cbb.title": "Tabs gebruiken voor inspringmenu"
     }
   },
   "pt-PT": {
@@ -48,16 +41,9 @@
       "catalog.editor.1.0.title": "Largura da tabulação:",
       "catalog.editor.1.1.title": "Usar tabulações no menu de indentação"
     },
-    "SettingsMiscTwo.strings": {
-      "SS5-tZ-cDa.title": "pLaTeX japonês"
-    },
     "SettingsPreview.strings": {
       "505.title": "Da esquerda para a direita",
       "507.title": "Da direita para a esquerda"
-    },
-    "SettingsEditor.strings": {
-      "ojN-Oi-8cl.title": "Largura da tabulação:",
-      "pdc-GP-Cbb.title": "Usar tabulações no menu de indentação"
     }
   },
   "ro": {
@@ -67,20 +53,9 @@
       "catalog.editor.1.1.title": "Folosește tabulatori pentru meniul de indentare",
       "group.typesetting.6.title": "Script personal"
     },
-    "SettingsMiscTwo.strings": {
-      "SS5-tZ-cDa.title": "pLaTeX japonez"
-    },
     "SettingsPreview.strings": {
       "505.title": "De la stânga la dreapta",
       "507.title": "De la dreapta la stânga"
-    },
-    "SettingsEditor.strings": {
-      "ojN-Oi-8cl.title": "Lățimea tabulatorului:",
-      "pdc-GP-Cbb.title": "Folosește tabulatori pentru meniul de indentare"
     }
-  },
-  "es": {},
-  "ko": {},
-  "pt": {},
-  "zh_CN": {}
+  }
 }

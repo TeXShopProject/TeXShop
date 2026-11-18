@@ -1,23 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-"183.title" = "Standaard TeX-opdracht";
 "187.title" = "Via DVI";
-"188.title" = "Standaard script";
 "190.title" = "Eigen script";
 "191.title" = "Direct PDF";
 "588.title" = "plain TeX";
 "589.title" = "LaTeX";
 "590.title" = "Engine-bestand";
-"675.title" = "Na zetten";
 "679.title" = "Voorvertoning op voorgrond";
 "680.title" = "Doorgaan met editor";
 "785.title" = "PDF doorzoeken";
 "786.title" = "SyncTeX (aanbevolen)";
-"823.title" = "Synchroniseermethode";
-"919.title" = "Radio";
-"920.title" = "Radio";
-"921.title" = "Radio";
-"922.title" = "Radio";
-"O6H-3y-7Ca.title" = "(Should be OFF for most users.)";
-"W5U-9S-4OG.title" = "If Sync Opens a New Window";
-"YQv-fE-Uzg.title" = "Als tabblad in hoofdvenster openen";
 "bYh-V5-ri6.title" = "Toon voorvertoning en ga terug naar vorig venster";

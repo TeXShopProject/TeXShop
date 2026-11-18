@@ -62,7 +62,7 @@ for language in ('ja', 'zh_CN'):
             text += '\n"Mutation" = "一行目\\n 二行目";'
         if mutation == 'spaced-escape' and language == 'zh_CN' and path.name == 'ToolbarItems.strings':
             text += unescape('\n"Mutation" = "TeXShop \\U6f14\\U793a";')
-        if mutation == 'tight-command' and language == 'ja' and path.name == 'SettingsMiscTwo.strings':
+        if mutation == 'tight-command' and language == 'ja' and path.name == 'SettingsCategories.strings':
             text = text.replace('\u2009\\\\UTF', '\\\\UTF')
         if language == 'ja':
             for match in tight_command.finditer(text):

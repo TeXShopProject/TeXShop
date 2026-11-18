@@ -1,23 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-"183.title" = "기본 조판 명령";
 "187.title" = "DVI 경유";
-"188.title" = "디폴트 스트립트";
 "190.title" = "사용자 스크립트";
 "191.title" = "PDF 직접 생성";
 "588.title" = "plain TeX";
 "589.title" = "LaTeX";
 "590.title" = "엔진 파일";
-"675.title" = "조판 후 동작";
 "679.title" = "보기 창을 전면으로";
 "680.title" = "편집 창에서 계속 작업";
 "785.title" = "PDF 검색";
 "786.title" = "SyncTeX(권장)";
-"823.title" = "Sync 방식";
-"919.title" = "Radio";
-"920.title" = "Radio";
-"921.title" = "Radio";
-"922.title" = "Radio";
-"O6H-3y-7Ca.title" = "(옛날 방식. 비활성화됨)";
-"W5U-9S-4OG.title" = "Sync로 새 창을 열 때";
-"YQv-fE-Uzg.title" = "새 탭으로 열기";
 "bYh-V5-ri6.title" = "보기 창을 표시한 후 원래 창으로 돌아가기";
