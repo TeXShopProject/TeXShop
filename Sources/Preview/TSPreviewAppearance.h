@@ -2,6 +2,7 @@
 #pragma once
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
+#import <objc/runtime.h>
 
 static NSString * const TSPreviewAppearanceModeKey = @"TSPreviewAppearanceMode";
 static NSString * const TSPreviewAppearanceToolbarID = @"TSPreviewAppearance";
@@ -76,15 +77,10 @@ static inline BOOL TSValidatePreviewAppearanceChoice(NSMenuItem *item, NSUserDef
 }
 // added by Terada (until this line)
 
-// Share the same PDF page treatment between the document and Experiment previews.
-static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert) {
-    if (!scrollView) return;
-    // PDFKit must draw light pages before the luminosity filter is applied.
-    scrollView.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
-    if (!invert) {
-        scrollView.contentFilters = @[];
-        return;
-    }
+// The luminosity filter turns light pages dark. PDFKit has to draw those pages
+// light first, so the same three filters are shared by the document preview and
+// the Experiment preview.
+static inline NSArray *TSPreviewInversionFilters(void) {
     NSMutableArray *filters = [NSMutableArray array];
     CIFilter *filter;
 
@@ -120,6 +116,130 @@ static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert
         keysAndValues:@"inputPower",
         [NSNumber numberWithDouble:1.6], nil];
     if (filter) [filters addObject:filter];
+    return filters;
+}
 
-    [scrollView setContentFilters:filters];
+// NSScrollPocket and the backdrop behind it fill the band under the title bar.
+// On macOS 26 and later, where the preview runs under the toolbar, AppKit copies
+// the scroll view's appearance onto that title bar. The pocket has to keep the
+// window's appearance, or a light preview turns the window frame light too.
+// The class name is how the pocket is told from the gutter beside it. A pocket
+// is never given the preview's appearance.
+static inline BOOL TSPreviewSubviewIsToolbarPocket(NSView *view) {
+    return [NSStringFromClass(view.class) containsString:@"Pocket"];
+}
+
+// The choice made for a scroll view. Selectors are the same in every file that includes
+// this header, so the hook below finds the state another file stored.
+#define TSPreviewInversionStateKey @selector(tsPreviewInversionState)
+
+// The pages, and the views TeXShop places over them (link popups, the magnifying glass,
+// selections), are drawn light. Their appearance is set view by view, because Aqua on
+// the document view is copied onto an overlay scroller.
+static inline void TSLightenPreviewPageView(NSView *child) {
+    NSAppearance *light = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    if (child.appearance != light) child.appearance = light;
+    if (child.contentFilters.count) child.contentFilters = @[];
+}
+static inline void TSLightenPreviewPages(NSView *documentView) {
+    for (NSView *child in documentView.subviews) TSLightenPreviewPageView(child);
+}
+
+static void TSInstallPreviewPageHook(NSView *documentView);
+
+// Share the same PDF page treatment between the document and Experiment previews.
+// Scroll bars are part of the window frame. They take no explicit appearance and no
+// filters, so they follow the system whether the preview is light or dark.
+// On macOS 27 an overlay scroller's effective appearance copies the clip view and the
+// document view, so those two take no appearance. The luminosity filter is set on the
+// document view: filters belong to its layer, so they reach every page view PDFKit adds
+// later, at once, and never the scrollers beside it. The gutter around the pages is drawn
+// light and inverted the same way. The pocket stays unset so the title bar is not pulled
+// off the system appearance.
+static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert) {
+    if (!scrollView) return;
+    scrollView.appearance = nil;
+    // Filters on the scroll view would also invert the pocket under the toolbar.
+    scrollView.contentFilters = @[];
+    NSAppearance *light = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    NSArray *filters = invert ? TSPreviewInversionFilters() : @[];
+    for (NSView *subview in scrollView.subviews) {
+        if (TSPreviewSubviewIsToolbarPocket(subview) ||
+            [subview isKindOfClass:[NSScroller class]] ||
+            subview == scrollView.contentView) {
+            // Scroll bars, the clip, and the pocket. Aqua on the clip is copied
+            // onto an overlay scroller, so the bar would leave the system appearance.
+            subview.appearance = nil;
+            subview.contentFilters = @[];
+            continue;
+        }
+        subview.appearance = light;
+        subview.contentFilters = filters;
+    }
+    NSView *documentView = scrollView.documentView;
+    documentView.appearance = nil;
+    documentView.contentFilters = filters;
+    TSInstallPreviewPageHook(documentView);
+    TSLightenPreviewPages(documentView);
+    objc_setAssociatedObject(scrollView, TSPreviewInversionStateKey, @(invert),
+        OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+// Applies the choice again, as after -setDocument:, which puts a new document view in.
+static inline void TSReapplyPreviewInversion(NSScrollView *scrollView) {
+    NSNumber *invert = objc_getAssociatedObject(scrollView, TSPreviewInversionStateKey);
+    if (!invert) return;
+    TSApplyPreviewInversion(scrollView, invert.boolValue);
+}
+
+// A page view PDFKit adds while scrolling, or after a new document or display format, is
+// made light the moment PDFKit adds it to the document view: -didAddSubview: of the
+// document view's class calls the original method and then lightens the new view, when
+// the view belongs to a preview (its scroll view carries the choice). Each class that
+// gets the hook gets its own implementation, which holds that class's original, so a
+// subclass and its superclass can both be hooked without either reaching the other's
+// hook as its original. A class is left alone only when the implementation it actually
+// inherits is one of these hooks; an override in between is hooked over, so the page view
+// is made light after that override has run. The hooks are listed on NSView, so every
+// file that includes this header sees the same list. When PDFKit's class is not the
+// usual one, nothing changes but the hook: the filters on the document view still
+// invert the pages.
+static void TSInstallPreviewPageHook(NSView *documentView) {
+    Class cls = [documentView class];
+    if (!cls || cls == NSView.class) return;
+    SEL sel = @selector(didAddSubview:);
+    @synchronized (NSView.class) {
+        if (objc_getAssociatedObject(cls, @selector(tsPreviewPageHook))) return;
+        Method own = NULL;
+        unsigned count = 0;
+        Method *methods = class_copyMethodList(cls, &count);
+        for (unsigned i = 0; i < count; i++) if (method_getName(methods[i]) == sel) own = methods[i];
+        free(methods);
+        NSMutableSet<NSValue *> *hooks = objc_getAssociatedObject(NSView.class, @selector(tsPreviewPageHooks));
+        if (!hooks) {
+            hooks = [NSMutableSet set];
+            objc_setAssociatedObject(NSView.class, @selector(tsPreviewPageHooks), hooks, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        }
+        IMP original = own ? method_getImplementation(own)
+                           : class_getMethodImplementation(class_getSuperclass(cls), sel);
+        if (!own && [hooks containsObject:[NSValue valueWithPointer:(const void *)original]]) return;
+        IMP hook = imp_implementationWithBlock(^(__unsafe_unretained NSView *view, NSView *subview) {
+            ((void (*)(__unsafe_unretained id, SEL, NSView *))original)(view, sel, subview);
+            if (objc_getAssociatedObject(view.enclosingScrollView, TSPreviewInversionStateKey))
+                TSLightenPreviewPageView(subview);
+        });
+        [hooks addObject:[NSValue valueWithPointer:(const void *)hook]];
+        if (own) method_setImplementation(own, hook);
+        else class_addMethod(cls, sel, hook, "v@:@");
+        objc_setAssociatedObject(cls, @selector(tsPreviewPageHook), @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+}
+
+// -setDocument: puts a new document view in. The choice is applied to it at once, while it
+// has no page views yet, so they arrive under the preview's filters and are made light as
+// they come. The document preview and the Experiment preview set their documents through this.
+static inline void TSPreviewSetDocument(PDFView *view, void (NS_NOESCAPE ^set)(void)) {
+    set();
+    TSInstallPreviewPageHook(view.documentView);
+    TSReapplyPreviewInversion(view.documentView.enclosingScrollView);
 }
