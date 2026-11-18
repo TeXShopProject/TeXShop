@@ -5716,6 +5716,10 @@ if ( ! skipTextWindow) {
 // added by Terada (- (void)highlightContent:)
 - (void)highlightContent:(NSString*)range
 {
+	// The text may have changed since the braces were matched (text composed in the
+	// same keystroke, say); then nothing is highlighted.
+	if (![self braceHighlightFits:NSRangeFromString(range) inTextView:textView1])
+		return;
 	contentHighlighting = YES;
 	highlightedContentRange = NSRangeFromString(range);
 	if(windowIsSplit){
@@ -5736,6 +5740,10 @@ if ( ! skipTextWindow) {
     
 	NSInteger location1 = [[locations objectAtIndex:0] integerValue];
 	NSInteger location2 = [[locations objectAtIndex:1] integerValue];
+	// The text may have changed since the braces were matched (text composed in the
+	// same keystroke, say); then nothing is highlighted.
+	if (![self braceHighlightFits:NSMakeRange(MIN(location1, location2), ABS(location1 - location2) + 1) inTextView:textView1])
+		return;
 	highlightedBraceLocations = locations;
 
 	if (windowIsSplit) {

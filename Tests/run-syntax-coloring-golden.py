@@ -142,6 +142,7 @@ NSDictionary *highlightBracesColorDict, *highlightContentColorDict;
     NSArray *highlightedBraceLocations, *scrapHighlightedBraceLocations;
     NSRange highlightedContentRange, scrapHighlightedContentRange;
     NSUInteger braceHighlightGeneration, braceFlashGeneration, scrapBraceHighlightGeneration, scrapBraceFlashGeneration;
+    NSUInteger highlightedTextLength, highlightedGeneration, scrapHighlightedTextLength, scrapHighlightedGeneration;
     NSUInteger colorStart, colorEnd;
     NSTimeInterval colorTime;
     NSTextView *textView1, *textView2, *scrapTextView, *textView;

@@ -231,6 +231,12 @@ static NSRange TSExperimentRange(NSTextView *view, NSRange range)
 
 - (void)highlightExperimentBracesAt:(NSArray *)locations
 {
+    // As -highlightBracesAt:, nothing when the text has changed since the braces were matched.
+    if (locations.count < 2)
+        return;
+    NSInteger location1 = [locations[0] integerValue], location2 = [locations[1] integerValue];
+    if (![self braceHighlightFits:NSMakeRange(MIN(location1, location2), ABS(location1 - location2) + 1) inTextView:scrapTextView])
+        return;
     for (NSNumber *location in [locations subarrayWithRange:NSMakeRange(0, MIN(locations.count, 2))]) {
         NSRange range = TSExperimentRange(scrapTextView, NSMakeRange(location.integerValue, 1));
         if (range.length > 0)
@@ -242,6 +248,8 @@ static NSRange TSExperimentRange(NSTextView *view, NSRange range)
 
 - (void)highlightExperimentContent:(NSString *)rangeString
 {
+    if (![self braceHighlightFits:NSRangeFromString(rangeString) inTextView:scrapTextView])
+        return;
     scrapContentHighlighting = YES;
     NSRange range = TSExperimentRange(scrapTextView, NSRangeFromString(rangeString));
     scrapHighlightedContentRange = range;

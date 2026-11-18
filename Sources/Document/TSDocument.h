@@ -1027,6 +1027,7 @@ enum RootCommand
 - (void)colorizeVisibleAreaInTextView:(NSTextView *)aTextView;
 - (BOOL)coloringWaitsForMarkedTextIn:(NSTextView *)aTextView;
 - (void)colorAfterMarkedTextEnds;
+- (BOOL)braceHighlightFits:(NSRange)range inTextView:(NSTextView *)aTextView;
 - (void)cursorMoved: (NSTextView *)aTextView;
 - (void)removeCurrentLineColor: (NSTextView *)aTextView;
 

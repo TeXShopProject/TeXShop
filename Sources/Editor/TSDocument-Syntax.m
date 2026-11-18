@@ -385,6 +385,21 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
 
 
 
+// Whether range still holds a pair of braces at its ends, of a kind that is matched,
+// in text that is not being composed with an input method.
+- (BOOL)braceHighlightFits:(NSRange)range inTextView:(NSTextView *)aTextView
+{
+    NSString *text = [aTextView string];
+    if (!aTextView || !self.syntaxColor || range.length < 2 || NSMaxRange(range) > [text length] ||
+        TSTextStorageHasMarkedText([aTextView textStorage]))
+        return NO;
+    unichar open = [text characterAtIndex:range.location], close = [text characterAtIndex:NSMaxRange(range) - 1];
+    return (open == '{' && close == '}' && [SUD boolForKey:CheckBraceEnabledKey]) ||
+           (open == '(' && close == ')' && [SUD boolForKey:CheckParenEnabledKey]) ||
+           (open == '[' && close == ']' && [SUD boolForKey:CheckSquareBracketEnabledKey]) ||
+           (open == '<' && close == '>' && [SUD boolForKey:CheckBracketEnabledKey]);
+}
+
 // The highlight of the braces and of their contents, which coloring has just removed
 // from range or covered with the background of fullwidth characters, is given again in
 // the views that show it.
