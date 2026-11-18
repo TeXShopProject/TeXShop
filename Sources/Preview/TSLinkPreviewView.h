@@ -34,6 +34,13 @@
 - (NSCursor *)cursorAtPoint:(NSPoint)point;
 // Moves the popup back into view as far as dragging it would allow, keeping its size.
 - (void)keepInView;
+// A popup lies on a page of its preview, as the text there does: it grows and shrinks with
+// the page and scrolls with it. A new display format or arrangement of the pages puts the
+// pages elsewhere; the popup remembers its place on the page under its upper left corner
+// before, and goes back to it after. It returns NO, and stays where it is, when that page is
+// no longer shown, as in Single Page display showing another page (#56).
+- (void)rememberPlaceOnPage;
+- (BOOL)returnToPlaceOnPage;
 
 @end
 
