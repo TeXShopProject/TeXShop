@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "375.title" = "JPEG (alta)";
-"377.title" = "OtherViews";
 "380.title" = "TIFF (sem compressão)";
-"386.title" = "Image Copy Type";
 "395.title" = "PNG";
 "404.title" = "TIFF (PackBits)";
 "407.title" = "JPEG (baixa)";
@@ -19,24 +17,8 @@
 "438.title" = "-2";
 "440.title" = "1";
 "441.title" = "3";
-"442.title" = "OtherViews";
-"447.title" = "Mapeamento de cores";
-"4k3-5Y-CEt.title" = "Largura à esquerda ou à direita:";
-"5ba-33-JZx.title" = "Guardar documentos";
-"903.title" = "Use Color Mapping";
-"904.title" = "Destaque do primeiro plano:";
 "CBT-8e-Ayl.title" = "Direita";
-"Nie-mP-dxR.title" = "Usar cursor de bloco";
-"PVm-Il-A7W.title" = "Ativar guardar automaticamente e versões";
-"XCi-5f-wnn.title" = "Cor do cursor:";
-"cSu-im-H1E.title" = "Cursor de inserção";
 "g92-sP-oZU.title" = "Ambos os lados";
-"hmg-EV-KUC.title" = "Manter o ficheiro anterior como “nome~”";
 "i6L-IX-ZLk.title" = "Um caráter";
-"jjy-QZ-C0q.title" = "Mostrar codificação no diálogo Guardar";
-"kCh-5t-39X.title" = "Radio";
 "qMw-aC-Ilj.title" = "Esquerda";
 "shH-XU-nyE.title" = "Dois carateres";
-"sto-5E-9Q5.title" = "Funcionalidade do macOS que substitui o ficheiro automaticamente durante a edição.";
-"tg5-uf-NZU.title" = "Radio";
-"xvd-dM-RGh.title" = "Lado da linha de inserção:";

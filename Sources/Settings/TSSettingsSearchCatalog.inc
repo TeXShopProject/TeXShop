@@ -289,7 +289,6 @@ add(TSSettingsCategoryConsole, @"row.catalog.console.1.0", @"SettingsConsole", @
 add(TSSettingsCategoryConsole, @"row.catalog.console.1.0", @"SettingsConsole", @"831.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.2.2", @"SettingsConsole", @"PqO-5d-lRv.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.2.2", @"SettingsConsole", @"ga2-ik-lSC.title", TSSettingsSearchWeightChoice);
-add(TSSettingsCategoryDocuments, @"row.catalog.documents.0.0", @"SettingsSource", @"566.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.5.4", @"SettingsEditor", @"inv-954-item-0.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.5.4", @"SettingsEditor", @"inv-954-item-1.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.5.4", @"SettingsEditor", @"inv-954-item-2.title", TSSettingsSearchWeightChoice);
