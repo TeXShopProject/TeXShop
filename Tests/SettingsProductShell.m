@@ -502,6 +502,34 @@ int main(int argc,char **argv){@autoreleasepool{
    Check(name.length && ![name containsString:@"SyncTeX"] && (i || [name isEqual:preview]),[NSString stringWithFormat:@"The SyncTeX colors are named after their windows: %@",name]);}
   [shell.window setContentSize:original];[shell.window.contentView layoutSubtreeIfNeeded];
  }
+ {
+  // The XML tags of the tag list stand in the same three even columns as the theme colors,
+  // and the last tag may use the empty columns after it.
+  [shell selectCategoryIdentifier:TSSettingsCategoryEditor];
+  NSView *editor=[shell viewForCategoryIdentifier:TSSettingsCategoryEditor];
+  NSSize original=[shell.window contentRectForFrameRect:shell.window.frame].size;
+  NSArray *tags=@[@"settings.Fww-AH-Uix",@"settings.J9Y-VM-xKk",@"settings.leH-sT-cbJ",@"settings.ct9-Gf-9nT",@"settings.ZIN-eZ-jRd",@"settings.pUb-HQ-m1i",@"settings.dNI-hB-T5a",@"settings.Ejc-g3-EPJ",@"settings.3T5-e8-Mcd",@"settings.F6b-YV-mvL",@"settings.9KW-ea-Zni"];
+  for(NSNumber *width in @[@900,@1040])for(NSString *appearance in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]){
+   [shell.window setContentSize:NSMakeSize(width.doubleValue,original.height)];shell.window.appearance=[NSAppearance appearanceNamed:appearance];
+   [shell.window.contentView layoutSubtreeIfNeeded];[editor layoutSubtreeIfNeeded];
+   NSView *row=Find(editor,@"row.catalog.editor.8.0");NSGridView *grid=nil;
+   for(NSView *child in row.subviews)if([child isKindOfClass:NSGridView.class])grid=(NSGridView *)child;
+   Check(grid!=nil && grid.numberOfColumns==3 && grid.numberOfRows==4,@"The XML tags stand in three columns");
+   CGFloat columnX[3]={-1,-1,-1};NSRect card=NSInsetRect([row convertRect:row.bounds toView:editor],12,0);
+   for(NSUInteger i=0;i<tags.count;i++){
+    NSButton *box=(NSButton *)Find(editor,tags[i]);
+    Check([box isKindOfClass:NSButton.class] && [grid cellAtColumnIndex:i%3 rowIndex:i/3].contentView==box,[NSString stringWithFormat:@"XML tag %lu fills its place from the left",(unsigned long)i]);
+    CGFloat x=NSMinX([box convertRect:box.bounds toView:editor]);
+    if(columnX[i%3]<0)columnX[i%3]=x;
+    Check(fabs(x-columnX[i%3])<0.5,[NSString stringWithFormat:@"XML tags line up in column %lu at width %@",(unsigned long)(i%3),width]);
+    Check(box.cell.cellSize.width<=NSWidth(box.frame)+1 && NSMaxX([box convertRect:box.bounds toView:editor])<=NSMaxX(card)+1,[NSString stringWithFormat:@"XML tag %@ is shown whole in its card at width %@",box.title,width]);
+   }
+   Check([grid cellAtColumnIndex:2 rowIndex:3].contentView==Find(editor,tags.lastObject),@"The last XML tag may use the empty column after it");
+   Check(columnX[1]-columnX[0]>=216 && fabs((columnX[2]-columnX[1])-(columnX[1]-columnX[0]))<0.5,[NSString stringWithFormat:@"XML tag columns are evenly spaced like the theme colors: %.1f %.1f %.1f",columnX[0],columnX[1],columnX[2]]);
+   if(argc>2)Save(editor,[@(argv[2]) stringByAppendingPathComponent:[NSString stringWithFormat:@"editor-xml-tags-%@-%@.png",width,appearance]]);
+  }
+  [shell.window setContentSize:original];[shell.window.contentView layoutSubtreeIfNeeded];
+ }
  NSMutableDictionary *current=[[TSIsolatedAppKitDefaults dictionaryRepresentation]mutableCopy];[current removeObjectForKey:TSSettingsSelectedCategoryKey];NSMutableDictionary *before=[saved mutableCopy];[before removeObjectForKey:TSSettingsSelectedCategoryKey];Check([current isEqual:before],@"Opening and navigating changes only remembered category");
  [shell selectCategoryIdentifier:TSSettingsCategoryDocuments];
  id windowManager=[NSClassFromString(@"TSWindowManager") performSelector:@selector(sharedInstance)];

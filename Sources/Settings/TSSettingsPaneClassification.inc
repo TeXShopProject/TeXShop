@@ -62,6 +62,15 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
     for(NSUInteger i=0;i<cells.count;i+=columns){NSMutableArray *row=[NSMutableArray array];for(NSUInteger j=0;j<columns;j++)[row addObject:i+j<cells.count?cells[i+j]:NSGridCell.emptyContentView];[rows addObject:row];}
     NSGridView *grid=[NSGridView gridViewWithViews:rows];grid.translatesAutoresizingMaskIntoConstraints=NO;grid.columnSpacing=spacing;grid.rowSpacing=10;grid.rowAlignment=NSGridRowAlignmentFirstBaseline;return grid;
 }
+// Three columns line up from group to group, and the last item may use the empty columns after it.
++ (NSGridView *)threeColumns:(NSArray<NSView *> *)cells
+{
+    NSGridView *grid=[self grid:cells columns:3 spacing:20];
+    for(NSInteger c=0;c<3;c++)[grid columnAtIndex:c].width=196;
+    NSInteger last=(NSInteger)cells.count-1;
+    if(last>=0 && last%3<2)[grid mergeCellsInHorizontalRange:NSMakeRange(last%3,3-last%3) verticalRange:NSMakeRange(last/3,1)];
+    return grid;
+}
 + (NSView *)buildRow:(NSDictionary *)model views:(NSMutableDictionary<NSString *,NSView *> *)views text:(NSString *(^)(NSString *))text
 {
     NSString *kind=model[@"kind"],*title=text(model[@"title"]),*note=text(model[@"note"]);
@@ -147,7 +156,7 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
     }else if([kind isEqual:@"description"]){row=[TSPrefPaneLayout catalogContent:[self label:title small:YES] trailing:NO indent:indent];
     }else if([kind isEqual:@"buttons"] || [kind isEqual:@"checks"] || [kind isEqual:@"checkgrid"]){
         for(NSUInteger i=0;i<controls.count;i++)((NSButton *)controls[i]).title=text(model[@"choices"][i]);
-        NSView *body=[kind isEqual:@"checkgrid"]?[self grid:controls columns:3 spacing:28]:[self horizontal:controls spacing:[kind isEqual:@"checks"]?14:8];
+        NSView *body=[kind isEqual:@"checkgrid"]?[self threeColumns:controls]:[self horizontal:controls spacing:[kind isEqual:@"checks"]?14:8];
         if([kind isEqual:@"checks"])accessory=body;else row=[TSPrefPaneLayout catalogContent:body trailing:[kind isEqual:@"buttons"] indent:indent];
     }else if([kind isEqual:@"color"]){accessory=controls.firstObject;
     }else if([kind isEqual:@"colors"] || [kind isEqual:@"colortable"]){
@@ -186,14 +195,8 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
             if(table){[cells addObject:label];NSUInteger i=0;for(NSNumber *occupied in item[@"occupied"])[cells addObject:occupied.boolValue?wells[i++]:NSGridCell.emptyContentView];}
             else [cells addObject:[self horizontal:@[TSCatalogRequired(wells.firstObject),label] spacing:8]];
         }
-        NSGridView *grid=[self grid:cells columns:table?4:3 spacing:table?28:20];
+        NSGridView *grid=table?[self grid:cells columns:4 spacing:28]:[self threeColumns:cells];
         if(table){grid.identifier=@"settings.color-table";grid.rowSpacing=8;grid.rowAlignment=NSGridRowAlignmentNone;[grid columnAtIndex:0].width=110;for(NSInteger c=1;c<4;c++)[grid columnAtIndex:c].xPlacement=NSGridCellPlacementCenter;for(NSInteger r=0;r<grid.numberOfRows;r++)[grid rowAtIndex:r].yPlacement=NSGridCellPlacementCenter;}
-        else {
-            // Three columns line up from group to group, and the last name may use the empty columns after it.
-            for(NSInteger c=0;c<3;c++)[grid columnAtIndex:c].width=196;
-            NSInteger last=(NSInteger)[model[@"items"] count]-1;
-            if(last>=0 && last%3<2)[grid mergeCellsInHorizontalRange:NSMakeRange(last%3,3-last%3) verticalRange:NSMakeRange(last/3,1)];
-        }
         row=[TSPrefPaneLayout catalogContent:grid trailing:NO indent:indent];
     }
     if(!row && accessory)row=[TSPrefPaneLayout catalogRowWithTitle:title note:note accessory:accessory expands:[kind isEqual:@"path"] indent:indent];
