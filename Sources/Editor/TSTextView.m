@@ -1697,6 +1697,18 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
     typingAttributes[NSFontAttributeName] = [self font];
     self.typingAttributes = typingAttributes;
     
+    // The other half of a split source shows the same text; it takes the same style for what is
+    // typed there, and the Experiment source copies the style of whichever half is in use.
+    for (NSTextView *other in @[[self.document textView1] ?: self, [self.document textView2] ?: self]) {
+        if (other == self || other.textStorage != self.textStorage)
+            continue;
+        other.defaultParagraphStyle = paragraphStyle;
+        NSMutableDictionary *otherTypingAttributes = [other.typingAttributes mutableCopy];
+        otherTypingAttributes[NSParagraphStyleAttributeName] = paragraphStyle;
+        otherTypingAttributes[NSFontAttributeName] = [self font];
+        other.typingAttributes = otherTypingAttributes;
+    }
+    
     NSRange rangeOfChange = NSMakeRange(0, [[self string] length]);
     [self shouldChangeTextInRange:rangeOfChange replacementString:nil];
     [[self textStorage] setAttributes:typingAttributes range:rangeOfChange];

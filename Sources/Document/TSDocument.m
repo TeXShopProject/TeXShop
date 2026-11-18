@@ -8561,6 +8561,8 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
     NSMutableParagraphStyle	*	newStyle			= [paraStyle mutableCopy] ;
 	
 	[newStyle setTabStops:desiredTabStops];
+	// Tabs after the last of these stops keep the same interval.
+	newStyle.defaultTabInterval = [(NSTextTab *)desiredTabStops.firstObject location];
     [newStyle setLineSpacing: interlinespace];
     newStyle.firstLineHeadIndent = myFirstLineHeadIndent;
     newStyle.headIndent = myHeadIndent;
