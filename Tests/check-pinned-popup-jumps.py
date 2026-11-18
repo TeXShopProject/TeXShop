@@ -26,10 +26,18 @@ MUTATIONS = {
                           '\tresizeOption = NEW_PDF_FIT_TO_NONE;\n', '\tresizeOption = NEW_PDF_FIT_TO_NONE;\n\t[self keepPinnedLinkPreviewInView];\n'),
     'fit-kept-in-view': ('Sources/Preview/MyPDFKitView.m', '- (void)changePDFViewSizeTo:',
                          '        [self setupMagnificationStyle];\n', '        [self setupMagnificationStyle];\n        [self keepPinnedLinkPreviewInView];\n'),
-    'format-forgets-page': ('Sources/Preview/MyPDFKitView.m', '- (void)performPreviewLayoutChange:',
-                            '    if ([self hasPinnedLinkPreview]) [pinnedLinkPreview rememberPlaceOnPage];\n', ''),
-    'format-not-kept-in-view': ('Sources/Preview/MyPDFKitView.m', '- (void)performPreviewLayoutChange:',
+    'format-forgets-page': ('Sources/Preview/MyPDFKitView.m', '- (BOOL)beginKeepingPinnedLinkPreviewOnPage',
+                            '    [pinnedLinkPreview rememberPlaceOnPage];\n', ''),
+    'format-not-kept-in-view': ('Sources/Preview/MyPDFKitView.m', '- (void)endKeepingPinnedLinkPreviewOnPage:',
                                 '        [pinnedLinkPreview keepInView];\n', '        ;\n'),
+    'format-ends-early': ('Sources/Preview/MyPDFKitView.m', '- (void)performPreviewLayoutChange:',
+                          '    BOOL keepsPopup = [self beginKeepingPinnedLinkPreviewOnPage];\n    change();\n',
+                          '    BOOL keepsPopup = [self beginKeepingPinnedLinkPreviewOnPage];\n    change();\n    [self endKeepingPinnedLinkPreviewOnPage: keepsPopup];\n'),
+    'contextual-format-loses-page': ('Sources/Preview/MyPDFKitView.m', '- (void)setDisplayMode:',
+                                     '    BOOL keepsPopup = [self beginKeepingPinnedLinkPreviewOnPage];\n', '    BOOL keepsPopup = NO;\n'),
+    'nested-change-returns': ('Sources/Preview/MyPDFKitView.m', '- (BOOL)beginKeepingPinnedLinkPreviewOnPage',
+                              'if (keepsPinnedLinkPreviewOnPage || ![self hasPinnedLinkPreview]) return NO;',
+                              'if (![self hasPinnedLinkPreview]) return NO;'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -125,14 +133,29 @@ for signature in ('- (void) changeScale:', '- (void)setMagnification:', '- (void
 expect('performPreviewLayoutChange:' in method(kit, '- (void)changePageStyleTo:'),
        'the display format does not change through performPreviewLayoutChange')
 body = method(kit, '- (void)performPreviewLayoutChange:')
-remember = body.find('[pinnedLinkPreview rememberPlaceOnPage]')
+begin = body.find('BOOL keepsPopup = [self beginKeepingPinnedLinkPreviewOnPage];')
 change = body.find('change();')
 went = max(body.find('[self goToDestination:destination]'), body.find('[self goToPage:page]'))
-back = body.find('[pinnedLinkPreview returnToPlaceOnPage]')
-expect(0 <= remember < change, 'the pinned popup does not remember its place on its page before the display format changes')
-expect(change < went < back, 'the pinned popup does not go back to its place on its page after the display format changes')
-expect(re.search(r'!\[pinnedLinkPreview returnToPlaceOnPage\]\)\s*\[pinnedLinkPreview keepInView\]', body),
+end = body.find('[self endKeepingPinnedLinkPreviewOnPage: keepsPopup];')
+expect(0 <= begin < change, 'the pinned popup does not remember its place on its page before the display format changes')
+expect(change < went < end and body.count('endKeepingPinnedLinkPreviewOnPage') == 1,
+       'the pinned popup does not go back to its place on its page after the display format changes')
+begin_body = method(kit, '- (BOOL)beginKeepingPinnedLinkPreviewOnPage')
+expect('[pinnedLinkPreview rememberPlaceOnPage]' in begin_body,
+       'the pinned popup does not remember its place on its page before the display format changes')
+# A change made within another one, as setupPageStyle within performPreviewLayoutChange:, leaves
+# the popup to the outer one, which goes back only once the place shown before is back.
+expect(re.search(r'if \(keepsPinnedLinkPreviewOnPage \|\| !\[self hasPinnedLinkPreview\]\) return NO;', begin_body),
+       'a display format set within another change puts the pinned popup back before the place shown before is back')
+end_body = method(kit, '- (void)endKeepingPinnedLinkPreviewOnPage:')
+expect(re.search(r'!\[pinnedLinkPreview returnToPlaceOnPage\]\)\s*\[pinnedLinkPreview keepInView\]', end_body),
        'a pinned popup whose page is no longer shown does not come back into view')
+# PDFKit's contextual menu sets the display format with setDisplayMode: (#56).
+body = method(kit, '- (void)setDisplayMode:')
+begin = body.find('BOOL keepsPopup = [self beginKeepingPinnedLinkPreviewOnPage];')
+display = body.find('[super setDisplayMode: mode];')
+end = body.find('[self endKeepingPinnedLinkPreviewOnPage: keepsPopup];')
+expect(0 <= begin < display < end, 'a display format from the contextual menu does not keep the pinned popup on its page')
 body = method(kit, '- (void)zoomToContentWidthOnly:')
 expect('cleanupMarqueeKeepingPinnedLinkPreview' in body and not re.search(r'cleanupMarquee: ?YES', body),
        'Zoom to Content closes the pinned popup')

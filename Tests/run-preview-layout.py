@@ -14,7 +14,7 @@ view=(root/'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
 doc=(root/'Sources/Document/TSDocument.m').read_text()
 prefs=(root/'Sources/Settings/TSPreferences.m').read_text()
 controller='\n'.join(method(toolbar,s) for s in ['- (BOOL)previewDisplaysAsBook','- (BOOL)previewDisplaysRTL','- (void)changePreviewLayout:', '- (void)changePreviewArrangement:', '- (BOOL)validatePreviewLayoutItem:', '- (void)updatePreviewLayoutControls'])
-viewmethods='\n'.join(method(view,s) for s in ['- (void) setupPageStyle','- (void) setupMagnificationStyle','- (void)performPreviewLayoutChange:','- (void)applyPreviewArrangement','- (void)changePageStyleTo:', '- (void)setDisplayMode:', '- (void)setScaleFactor:', '- (NSInteger)pageStyle', '- (void)setDocument:(PDFDocument *)document', '- (BOOL)hasPinnedLinkPreview'])
+viewmethods='\n'.join(method(view,s) for s in ['- (void) setupPageStyle','- (void) setupMagnificationStyle','- (void)performPreviewLayoutChange:','- (void)applyPreviewArrangement','- (void)changePageStyleTo:', '- (void)setDisplayMode:', '- (void)setScaleFactor:', '- (NSInteger)pageStyle', '- (void)setDocument:(PDFDocument *)document', '- (BOOL)hasPinnedLinkPreview', '- (BOOL)beginKeepingPinnedLinkPreviewOnPage', '- (void)endKeepingPinnedLinkPreviewOnPage:'])
 parse=method(doc,'- (void)readPreviewArrangementFromData:')
 # updatePreviewLayoutControls also validates the Back/Forward item: compile its class too.
 item_start=toolbar.index('@interface TSBackForwardToolbarItem : NSToolbarItem')
@@ -81,6 +81,7 @@ BACKFORWARDITEM
 @interface MyPDFKitView : PDFView {
  @public NSInteger pageStyle,firstPageStyle,resizeOption; id myStepper,myStepper1; BOOL _pdfViewReady, _fittingContentWidth;
  TSLinkPreviewView *pinnedLinkPreview;
+ BOOL keepsPinnedLinkPreviewOnPage;
 }
 @property (weak) TSDocument *myDocument;
 @property BOOL doScroll;
@@ -279,6 +280,25 @@ int main(int argc,char **argv){@autoreleasepool{
    Check(atPlace(),@"A pinned popup stays at its place on its page when the arrangement of the pages changes");
   }
   [d changePreviewArrangement:Choice(@selector(changePreviewArrangement:),4)];
+  // PDFKit's contextual menu changes the display format through setDisplayMode:, not through
+  // changePageStyleTo:. Its real items are used.
+  [d changePreviewLayout:Choice(@selector(changePreviewLayout:),3)];[v goToPage:popupPage];Pump();
+  Check(atPlace(),@"Popup fixture back on its page");
+  NSEvent *right=[NSEvent mouseEventWithType:NSEventTypeRightMouseDown location:NSMakePoint(400,300) modifierFlags:0 timestamp:0
+   windowNumber:d.pdfKitWindow.windowNumber context:nil eventNumber:0 clickCount:1 pressure:1];
+  NSInteger contextualFormats=0;
+  for(NSString *name in @[@"_setDoublePageScrolling:",@"_setSinglePage:",@"_setDoublePage:",@"_setSinglePageScrolling:",@"_setDoublePageScrolling:"]){
+   NSMenu *contextual=[v menuForEvent:right];
+   NSInteger index=[contextual indexOfItemWithTarget:v andAction:NSSelectorFromString(name)];
+   if(index<0)continue;
+   contextualFormats++;
+   PDFDisplayMode before=v.displayMode;
+   [contextual performActionForItemAtIndex:index];Pump();
+   Check(v.displayMode!=before,@"The contextual menu item changes the display format");
+   if(!atPlace())NSLog(@"contextual %@: %@",name,NSStringFromRect(place()));
+   Check(atPlace(),@"A pinned popup stays at its place on its page when the display format changes from the contextual menu");
+  }
+  Check(contextualFormats==5,@"PDFKit's contextual menu offers the four display formats");
   // Single Page display of another page: the popup's page is not shown, so it comes into view.
   [d changePreviewLayout:Choice(@selector(changePreviewLayout:),3)];[v goToPage:[v.document pageAtIndex:0]];Pump();
   [d changePreviewLayout:Choice(@selector(changePreviewLayout:),1)];Pump();

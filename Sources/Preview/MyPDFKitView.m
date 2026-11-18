@@ -87,6 +87,8 @@
     BOOL showsLinkPreviewCursor;
     BOOL pointerIsUnderToolbar;
     BOOL keepsPinnedLinkPreview;
+    // Set while a change that puts the pages elsewhere keeps the pinned popup on its page (#56).
+    BOOL keepsPinnedLinkPreviewOnPage;
     BOOL _skipLinks;
 }
 
@@ -2734,8 +2736,9 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     PDFDestination *destination = self.currentDestination;
     NSInteger savedResizeOption = resizeOption;
     CGFloat scale = self.scaleFactor;
-    // A pinned popup stays on its page, which the new layout puts elsewhere (#56).
-    if ([self hasPinnedLinkPreview]) [pinnedLinkPreview rememberPlaceOnPage];
+    // A pinned popup stays on its page, which the new layout puts elsewhere; it goes back
+    // there once the place shown before is back (#56).
+    BOOL keepsPopup = [self beginKeepingPinnedLinkPreviewOnPage];
     change();
     [self layoutDocumentView];
     if (savedResizeOption == NEW_PDF_FIT_TO_NONE) {
@@ -2753,9 +2756,27 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
         else
             [self goToPage:page];
     }
+    [self endKeepingPinnedLinkPreviewOnPage: keepsPopup];
+    [self.myDocument updatePreviewLayoutControls];
+}
+
+// A change that puts the pages elsewhere, such as another display format, keeps a pinned
+// popup at its place on its page; when its page is no longer shown, the popup comes into
+// view. A change made within another one leaves the popup to the outer one (#56).
+- (BOOL)beginKeepingPinnedLinkPreviewOnPage
+{
+    if (keepsPinnedLinkPreviewOnPage || ![self hasPinnedLinkPreview]) return NO;
+    keepsPinnedLinkPreviewOnPage = YES;
+    [pinnedLinkPreview rememberPlaceOnPage];
+    return YES;
+}
+
+- (void)endKeepingPinnedLinkPreviewOnPage:(BOOL)began
+{
+    if (!began) return;
+    keepsPinnedLinkPreviewOnPage = NO;
     if ([self hasPinnedLinkPreview] && ![pinnedLinkPreview returnToPlaceOnPage])
         [pinnedLinkPreview keepInView];
-    [self.myDocument updatePreviewLayoutControls];
 }
 
 - (void)applyPreviewArrangement
@@ -8624,7 +8645,12 @@ else
 
 - (void)setDisplayMode:(PDFDisplayMode)mode
 {
+    // PDFKit's contextual menu changes the display format here, not through
+    // changePageStyleTo:; a pinned popup stays on its page all the same (#56).
+    BOOL keepsPopup = [self beginKeepingPinnedLinkPreviewOnPage];
     [super setDisplayMode: mode];
+    if (keepsPopup) [self layoutDocumentView];
+    [self endKeepingPinnedLinkPreviewOnPage: keepsPopup];
     switch (mode) {
         case kPDFDisplaySinglePage: pageStyle = PDF_SINGLE_PAGE_STYLE; break;
         case kPDFDisplayTwoUp: pageStyle = PDF_TWO_PAGE_STYLE; break;
