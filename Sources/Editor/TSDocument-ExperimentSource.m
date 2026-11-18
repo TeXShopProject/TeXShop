@@ -213,37 +213,57 @@ static NSRange TSExperimentRange(NSTextView *view, NSRange range)
 
 - (void)resetExperimentHighlight:(id)sender
 {
-    // As -resetHighlight:, the brace highlight stays while text is composed.
-    if ([self coloringWaitsForMarkedTextIn:scrapTextView])
+    if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != scrapBraceHighlightGeneration)
         return;
+    // As -resetHighlight:, the brace highlight stays while text is composed.
+    if ([self coloringWaitsForMarkedTextIn:scrapTextView]) {
+        scrapHighlightedBraceLocations = nil;
+        return;
+    }
     if (scrapBraceHighlighting) {
+        scrapBraceHighlighting = NO;
+        scrapHighlightedBraceLocations = nil;
         [scrapTextView.layoutManager removeTemporaryAttribute:NSForegroundColorAttributeName
                                             forCharacterRange:NSMakeRange(0, scrapTextView.string.length)];
-        scrapBraceHighlighting = NO;
     }
     [self colorizeExperimentSource];
 }
 
 - (void)highlightExperimentBracesAt:(NSArray *)locations
 {
+    // As -highlightBracesAt:, nothing when the text has changed since the braces were matched.
+    if (locations.count < 2)
+        return;
+    NSInteger location1 = [locations[0] integerValue], location2 = [locations[1] integerValue];
+    if (![self braceHighlightFits:NSMakeRange(MIN(location1, location2), ABS(location1 - location2) + 1) inTextView:scrapTextView])
+        return;
     for (NSNumber *location in [locations subarrayWithRange:NSMakeRange(0, MIN(locations.count, 2))]) {
         NSRange range = TSExperimentRange(scrapTextView, NSMakeRange(location.integerValue, 1));
         if (range.length > 0)
             [scrapTextView.layoutManager addTemporaryAttributes:highlightBracesColorDict forCharacterRange:range];
     }
+    scrapHighlightedBraceLocations = locations;
+    scrapHighlightedTextLength = scrapTextView.string.length;
+    scrapHighlightedGeneration = (locations.count > 2) ? [locations[2] unsignedIntegerValue] : scrapBraceHighlightGeneration;
     scrapBraceHighlighting = YES;
 }
 
 - (void)highlightExperimentContent:(NSString *)rangeString
 {
+    if (![self braceHighlightFits:NSRangeFromString(rangeString) inTextView:scrapTextView])
+        return;
     scrapContentHighlighting = YES;
     NSRange range = TSExperimentRange(scrapTextView, NSRangeFromString(rangeString));
+    scrapHighlightedContentRange = range;
+    scrapHighlightedTextLength = scrapTextView.string.length;
     if (range.length > 0)
         [scrapTextView.layoutManager addTemporaryAttributes:highlightContentColorDict forCharacterRange:range];
 }
 
 - (void)showExperimentIndicator:(NSString *)rangeString
 {
+    if (scrapTextView.hasMarkedText)
+        return;
     NSRange range = TSExperimentRange(scrapTextView, NSRangeFromString(rangeString));
     if (range.length > 0)
         [scrapTextView showFindIndicatorForRange:range];
@@ -251,14 +271,20 @@ static NSRange TSExperimentRange(NSTextView *view, NSRange range)
 
 - (void)resetExperimentBackgroundColor:(id)sender
 {
+    if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != scrapBraceHighlightGeneration)
+        return;
+    scrapContentHighlighting = NO;
+    scrapHighlightedContentRange = NSMakeRange(0, 0);
     [scrapTextView.layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName
                                         forCharacterRange:NSMakeRange(0, scrapTextView.string.length)];
-    scrapContentHighlighting = NO;
+    [self colorizeExperimentSource];
 }
 
 // After the flash for an unmatched brace, the theme's background again.
 - (void)resetExperimentBackgroundColorOfTextView:(id)sender
 {
+    if ([sender isKindOfClass:[NSNumber class]] && [sender unsignedIntegerValue] != scrapBraceFlashGeneration)
+        return;
     if ([scrapTextView respondsToSelector:@selector(updateExperimentColors:)])
         [(ScrapTextView *)scrapTextView updateExperimentColors:nil];
 }

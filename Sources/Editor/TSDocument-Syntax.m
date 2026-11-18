@@ -102,6 +102,56 @@ static BOOL TSTextStorageHasMarkedText(NSTextStorage *storage)
 
 
 
+// The background that coloring gives fullwidth characters comes with a mark of its own,
+// whose value is that background. Coloring removes it where it still has that value, so
+// that it does not stay on a character that is no longer one to highlight (in a comment,
+// say), and leaves other backgrounds, of any color, as they are.
+static NSAttributedStringKey const TSFullwidthBackgroundMark = @"TSFullwidthBackground";
+
+static void TSRemoveFullwidthBackground(NSLayoutManager *layoutManager, NSRange range)
+{
+    for (NSUInteger i = range.location; i < NSMaxRange(range); ) {
+        NSRange marked;
+        id mark = [layoutManager temporaryAttribute:TSFullwidthBackgroundMark atCharacterIndex:i longestEffectiveRange:&marked inRange:range];
+        if (mark) {
+            for (NSUInteger j = marked.location; j < NSMaxRange(marked); ) {
+                NSRange effective;
+                id background = [layoutManager temporaryAttribute:NSBackgroundColorAttributeName atCharacterIndex:j longestEffectiveRange:&effective inRange:marked];
+                if (background == mark)
+                    [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:effective];
+                j = MAX(NSMaxRange(effective), j + 1);
+            }
+            [layoutManager removeTemporaryAttribute:TSFullwidthBackgroundMark forCharacterRange:marked];
+        }
+        i = MAX(NSMaxRange(marked), i + 1);
+    }
+}
+
+// The fullwidth background where coloring gave it, after another background replaced it.
+static void TSRestoreFullwidthBackground(NSLayoutManager *layoutManager, NSRange range)
+{
+    for (NSUInteger i = range.location; i < NSMaxRange(range); ) {
+        NSRange marked;
+        id mark = [layoutManager temporaryAttribute:TSFullwidthBackgroundMark atCharacterIndex:i longestEffectiveRange:&marked inRange:range];
+        if (mark)
+            [layoutManager addTemporaryAttribute:NSBackgroundColorAttributeName value:mark forCharacterRange:marked];
+        i = MAX(NSMaxRange(marked), i + 1);
+    }
+}
+
+static void TSMarkFullwidthBackground(NSLayoutManager *layoutManager, NSRange range, NSColor *background)
+{
+    if (!background)
+        return;
+    for (NSUInteger i = range.location; i < NSMaxRange(range); ) {
+        NSRange effective;
+        id value = [layoutManager temporaryAttribute:NSBackgroundColorAttributeName atCharacterIndex:i longestEffectiveRange:&effective inRange:range];
+        if (value == background)
+            [layoutManager addTemporaryAttribute:TSFullwidthBackgroundMark value:background forCharacterRange:effective];
+        i = MAX(NSMaxRange(effective), i + 1);
+    }
+}
+
 // Colorize ("perform syntax highlighting") all the characters in the given range.
 // Can only recolor full lines, so the given range will be extended accordingly before the
 // coloring takes place.
@@ -305,8 +355,11 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     // the following line is deactivaeed active-line-colors are used because it caused them to to be removed when scrolling on May, 2022
     
     // HERE-RED
-   if (( ! self.syntaxcolorEntry) && ( ![SUD boolForKey:AlwaysHighlightEnabledKey]))
+   if (( ! self.syntaxcolorEntry) && ( ![SUD boolForKey:AlwaysHighlightEnabledKey])) {
       [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:colorRange];
+      [layoutManager removeTemporaryAttribute:TSFullwidthBackgroundMark forCharacterRange:colorRange];
+   } else
+      TSRemoveFullwidthBackground(layoutManager, colorRange);
     
     // the next line was added by Daniel Toundykov to allow changing the foreground and background source colors
     // [layoutManager addTemporaryAttributes:self.regularColorAttribute forCharacterRange:colorRange];
@@ -335,6 +388,8 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     TSSyntaxTeXScanner *scanner = [[TSSyntaxTeXScanner alloc] initWithOptions:options];
     TSSyntaxHighlighter *highlighter = [[TSSyntaxHighlighter alloc] initWithTextView:aTextView scanner:scanner scheme:self.syntaxColorScheme];
     [highlighter applyTokensInRange:colorRange];
+    TSMarkFullwidthBackground(layoutManager, colorRange, [self.syntaxColorScheme attributesForRole:TSSyntaxRoleFullwidthSymbol][NSBackgroundColorAttributeName]);
+    [self restoreBraceHighlightsIn:aTextView range:colorRange];
     
     // Now we color the background of the active line
     [self doEntryLineAndCursorColoring: (NSTextView *)aTextView];
@@ -342,6 +397,89 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
 
 
 
+
+// Whether range still holds a pair of braces at its ends, of a kind that is matched,
+// in text that is not being composed with an input method.
+- (BOOL)braceHighlightFits:(NSRange)range inTextView:(NSTextView *)aTextView
+{
+    NSString *text = [aTextView string];
+    if (!aTextView || !self.syntaxColor || range.length < 2 || NSMaxRange(range) > [text length] ||
+        TSTextStorageHasMarkedText([aTextView textStorage]))
+        return NO;
+    unichar open = [text characterAtIndex:range.location], close = [text characterAtIndex:NSMaxRange(range) - 1];
+    return (open == '{' && close == '}' && [SUD boolForKey:CheckBraceEnabledKey]) ||
+           (open == '(' && close == ')' && [SUD boolForKey:CheckParenEnabledKey]) ||
+           (open == '[' && close == ']' && [SUD boolForKey:CheckSquareBracketEnabledKey]) ||
+           (open == '<' && close == '>' && [SUD boolForKey:CheckBracketEnabledKey]);
+}
+
+// The highlight of the braces and of their contents, which coloring has just removed
+// from range or covered with the background of fullwidth characters, is given again in
+// the views that show it. When the text has changed since, or the braces are no longer
+// matched, the highlight ends instead.
+- (void)restoreBraceHighlightsIn:(NSTextView *)aTextView range:(NSRange)range
+{
+    BOOL experiment = (aTextView != nil && aTextView == scrapTextView);
+    if (!experiment && !(windowIsSplit ? (aTextView == textView1 || aTextView == textView2) : aTextView == textView))
+        return;
+    BOOL braces = (experiment ? scrapBraceHighlighting : braceHighlighting) &&
+        [(experiment ? scrapHighlightedBraceLocations : highlightedBraceLocations) count] >= 2;
+    BOOL highlightsContents = (experiment ? scrapContentHighlighting : contentHighlighting) &&
+        (experiment ? scrapHighlightedContentRange : highlightedContentRange).length > 0;
+    if (!braces && !highlightsContents)
+        return;
+    // Highlighting the contents was turned off meanwhile.
+    if (highlightsContents && ![SUD boolForKey:HighlightContentEnabledKey]) {
+        if (experiment)
+            scrapHighlightedContentRange = NSMakeRange(0, 0);
+        else
+            highlightedContentRange = NSMakeRange(0, 0);
+        [self performSelector:(experiment ? @selector(resetExperimentBackgroundColor:) : @selector(resetBackgroundColor:))
+                   withObject:@(experiment ? scrapHighlightedGeneration : highlightedGeneration) afterDelay:0];
+        highlightsContents = NO;
+        if (!braces)
+            return;
+    }
+    NSRange pair;
+    if (highlightsContents)
+        pair = experiment ? scrapHighlightedContentRange : highlightedContentRange;
+    else {
+        NSArray *locations = experiment ? scrapHighlightedBraceLocations : highlightedBraceLocations;
+        NSInteger location1 = [locations[0] integerValue], location2 = [locations[1] integerValue];
+        pair = NSMakeRange(MIN(location1, location2), ABS(location1 - location2) + 1);
+    }
+    if ([[aTextView string] length] != (experiment ? scrapHighlightedTextLength : highlightedTextLength) ||
+        ![self braceHighlightFits:pair inTextView:aTextView]) {
+        NSNumber *generation = @(experiment ? scrapHighlightedGeneration : highlightedGeneration);
+        if (experiment) {
+            scrapHighlightedBraceLocations = nil;
+            scrapHighlightedContentRange = NSMakeRange(0, 0);
+        } else {
+            highlightedBraceLocations = nil;
+            highlightedContentRange = NSMakeRange(0, 0);
+        }
+        // Unless a newer highlight has been asked for since, which ends this one itself.
+        if (braces)
+            [self performSelector:(experiment ? @selector(resetExperimentHighlight:) : @selector(resetHighlight:)) withObject:generation afterDelay:0];
+        if (highlightsContents)
+            [self performSelector:(experiment ? @selector(resetExperimentBackgroundColor:) : @selector(resetBackgroundColor:)) withObject:generation afterDelay:0];
+        return;
+    }
+    NSLayoutManager *layoutManager = [aTextView layoutManager];
+    NSRange text = NSMakeRange(0, [[aTextView string] length]);
+    NSRange contents = experiment ? scrapHighlightedContentRange : highlightedContentRange;
+    if (highlightsContents && highlightContentColorDict) {
+        contents = NSIntersectionRange(NSIntersectionRange(contents, text), range);
+        if (contents.length > 0)
+            [layoutManager addTemporaryAttributes:highlightContentColorDict forCharacterRange:contents];
+    }
+    if (braces && highlightBracesColorDict)
+        for (NSNumber *location in (experiment ? scrapHighlightedBraceLocations : highlightedBraceLocations)) {
+            NSUInteger brace = [location unsignedIntegerValue];
+            if (NSLocationInRange(brace, range) && NSLocationInRange(brace, text))
+                [layoutManager addTemporaryAttributes:highlightBracesColorDict forCharacterRange:NSMakeRange(brace, 1)];
+        }
+}
 
 // Load the color definitions from the config system
 - (void)setupColors
@@ -598,8 +736,12 @@ static NSRange TSVisibleCharacterRange(NSTextView *textView)
             if (! self.blockCursor)
                 [layoutManager addTemporaryAttributes:self.EntryColorAttribute forCharacterRange:currentLineRange];
             
-            else
-                
+            // Fullwidth characters and the highlighted contents of braces keep their
+            // background, on the active line too.
+            TSRestoreFullwidthBackground(layoutManager, TSVisibleCharacterRange(aTextView));
+            [self restoreBraceHighlightsIn:aTextView range:TSVisibleCharacterRange(aTextView)];
+            
+            if (self.blockCursor)
             {
                 NSColor *cursorColor = [NSColor colorWithCalibratedRed: [SUD floatForKey:BlockCursorRKey]
                                                                  green: [SUD floatForKey:BlockCursorGKey] blue: [SUD floatForKey:BlockCursorBKey] alpha:1.0];

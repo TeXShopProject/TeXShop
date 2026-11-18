@@ -37,7 +37,7 @@ MUTATIONS = {
     'wait-only-in-this-view': (SYNTAX,
         '    if (!aTextView || !TSTextStorageHasMarkedText(aTextView.textStorage))', '    if (!aTextView.hasMarkedText)'),
     'no-color-after-selection': (DOCUMENT,
-        '\t[self colorAfterMarkedTextEnds];\n\t[self matchBracesForSelectionInTextView:nil];', '\t[self matchBracesForSelectionInTextView:nil];'),
+        '\t[self colorAfterMarkedTextEnds];\n\t// When the text changes', '\t// When the text changes'),
     'no-experiment-color-after-selection': (EXPERIMENT,
         '    [self colorAfterMarkedTextEnds];\n    if ([self experimentSourceShown])', '    if ([self experimentSourceShown])'),
     'color-while-source-composes': (SYNTAX,
@@ -47,8 +47,7 @@ MUTATIONS = {
     'closed-experiment-holds-source': (SYNTAX,
         '(scrapTextView.window.isVisible && TSTextStorageHasMarkedText(scrapTextView.textStorage))', '(scrapTextView && TSTextStorageHasMarkedText(scrapTextView.textStorage))'),
     'brace-reset-before-wait': (DOCUMENT,
-        '    if ([self coloringWaitsForMarkedTextIn:textView])\n        return;\n    \n  // item added by Koch in August, 2018',
-        '  // item added by Koch in August, 2018'),
+        '    if ([self coloringWaitsForMarkedTextIn:textView]) {\n        highlightedBraceLocations = nil;\n        return;\n    }\n', ''),
     'no-active-line-after-commit': (SYNTAX,
         '    [self colorizeAll];\n    [self cursorMoved:textView];\n    [self refreshExperimentCurrentLine];\n}',
         '    [self colorizeAll];\n    [self refreshExperimentCurrentLine];\n}'),
@@ -171,6 +170,7 @@ static NSColor *FlashColor, *ThemeBackground;
 - (NSColor *)colorFromDictionary:(NSDictionary *)dictionary andKey:(NSString *)key { return FlashColor; }
 - (NSColor *)darkColorWithKey:(NSString *)key { return FlashColor; }
 - (NSColor *)liteColorWithKey:(NSString *)key { return FlashColor; }
+- (NSColor *)opaqueColorForKey:(NSString *)key fromDictionary:(NSDictionary *)dictionary isWindowDark:(BOOL)dark { return [self colorFromDictionary:dictionary andKey:key]; }
 @end
 
 // Reports itself visible without being ordered on screen.
@@ -202,11 +202,16 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
          autoCompleting, windowIsSplit, braceHighlighting, contentHighlighting, lastInputIsDelete,
          scrapLastInputIsDelete, scrapBraceHighlighting, scrapContentHighlighting;
     NSInteger lastCursorLocation, lastStringLength, scrapLastCursorLocation, scrapLastStringLength;
+    NSArray *highlightedBraceLocations, *scrapHighlightedBraceLocations;
+    NSRange highlightedContentRange, scrapHighlightedContentRange;
+    NSUInteger braceHighlightGeneration, braceFlashGeneration, scrapBraceHighlightGeneration, scrapBraceFlashGeneration;
+    NSUInteger highlightedTextLength, highlightedGeneration, scrapHighlightedTextLength, scrapHighlightedGeneration;
     NSUInteger colorStart, colorEnd;
     NSTimeInterval colorTime;
     NSLineBreakMode lineBreakMode;
     NSTextView *textView1, *textView2, *scrapTextView, *textView;
     NSScrollView *scrollView, *scrollView2;
+    NSWindow *textWindow;
     NSButton *indexColorSplitBox;
 }
 @property (strong) NSDictionary *EntryColorAttribute, *commandColorAttribute, *commentColorAttribute,
@@ -229,6 +234,7 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
 - (void)fixColor:(NSUInteger)from :(NSUInteger)to;
 - (BOOL)coloringWaitsForMarkedTextIn:(NSTextView *)aTextView;
 - (void)colorAfterMarkedTextEnds;
+- (BOOL)braceHighlightFits:(NSRange)range inTextView:(NSTextView *)aTextView;
 - (void)reColor:(NSNotification *)notification;
 - (void)cursorMoved:(NSTextView *)aTextView;
 - (void)removeCurrentLineColor:(NSTextView *)aTextView;
