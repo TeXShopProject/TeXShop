@@ -189,27 +189,35 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     CGFloat inset = MAX(margin, TSLinkPreviewCornerRadius + edge);
     CGFloat roomW = NSWidth(bounds) - 2 * inset, roomH = NSHeight(bounds) - 2 * inset;
     if (roomW < 1 || roomH < 1) return;
-    NSDictionary *attributes = nil;
     NSSize size = NSZeroSize;
-    CGFloat height = 0, radius = 0;
+    CGFloat height = 0, radius = 0, drawn = 1;
     NSRect capsule = NSZeroRect;
+    // One page point is many screen points at a high magnification. Round the capsule to
+    // screen pixels, or the round-up itself makes the label larger than the one at 100% (#14).
+    CGFloat px = [self unitsPerPixel];
+    if (!(px > 0)) px = 1;
     // A short popup can still be too low for the 100% label once the corner is left clear.
     // Shrink the type to the room instead of dropping the page information.
-    for (NSInteger attempt = 0; attempt < 8; attempt++) {
-        attributes = @{NSFontAttributeName: [NSFont boldSystemFontOfSize:fontSize],
-                       NSForegroundColorAttributeName: NSColor.whiteColor};
-        size = [self.pageLabel sizeWithAttributes:attributes];
-        height = ceil(size.height);
+    for (NSInteger attempt = 0; attempt < 12; attempt++) {
+        // The metrics of a fraction of a point do not stay in proportion, so measure the
+        // eleven-point font and scale that to the size being drawn.
+        NSSize sample = [self.pageLabel sizeWithAttributes:@{NSFontAttributeName:
+                         [NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize]}];
+        drawn = fontSize / TSLinkPreviewLabelFontSize;
+        size = NSMakeSize(sample.width * drawn, sample.height * drawn);
+        height = ceil(size.height / px) * px;
+        CGFloat textWidth = ceil(size.width / px) * px;
         radius = height / 2;
-        capsule = NSMakeRect(NSMaxX(bounds) - inset - ceil(size.width) - 2 * radius, NSMinY(bounds) + inset,
-                             ceil(size.width) + 2 * radius, height);
+        capsule = NSMakeRect(NSMaxX(bounds) - inset - textWidth - height, NSMinY(bounds) + inset,
+                             textWidth + height, height);
         if (NSWidth(capsule) <= roomW && NSHeight(capsule) <= roomH) break;
-        // A factor that only just misses 1 stalls on the rounded line height, so step down
-        // by at least a tenth and keep the page information instead of dropping it.
+        // A step that barely misses stalls on the rounded line height, so drop by a tenth
+        // then. Otherwise try the size that was measured to fit, even when it is near one
+        // point, and give up only when that size is not smaller.
         CGFloat fit = MIN(roomW / NSWidth(capsule), roomH / NSHeight(capsule));
-        CGFloat next = fontSize * MIN(fit, (CGFloat)0.9);
-        if (!(next < fontSize)) next = fontSize * 0.9;
-        if (!(next > 1)) return;
+        CGFloat next = fontSize * fit;
+        if (!(next < fontSize * (CGFloat)0.99)) next = fontSize * (CGFloat)0.9;
+        if (!(next > 0) || !(next < fontSize)) return;
         fontSize = next;
     }
     if (NSWidth(capsule) > roomW || NSHeight(capsule) > roomH) return;
@@ -217,8 +225,14 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     [[NSGraphicsContext currentContext] setShouldAntialias:YES];
     [[NSColor colorWithWhite:0.55 alpha:0.8] setFill];
     [[NSBezierPath bezierPathWithRoundedRect:capsule xRadius:radius yRadius:radius] fill];
-    [self.pageLabel drawAtPoint:NSMakePoint(NSMinX(capsule) + radius, NSMinY(capsule) + (height - size.height) / 2)
-                 withAttributes:attributes];
+    // Draw the eleven-point font at `drawn`, so the glyphs match the measured capsule.
+    NSAffineTransform *glyph = [NSAffineTransform transform];
+    [glyph translateXBy:NSMinX(capsule) + radius yBy:NSMinY(capsule) + (height - size.height) / 2];
+    [glyph scaleBy:drawn];
+    [glyph concat];
+    [self.pageLabel drawAtPoint:NSZeroPoint withAttributes:@{NSFontAttributeName:
+        [NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize],
+        NSForegroundColorAttributeName: NSColor.whiteColor}];
     [NSGraphicsContext restoreGraphicsState];
 }
 
