@@ -3808,8 +3808,17 @@ TeXShop supports search through the drawer in the Preview Window using sample co
             [NSGraphicsContext restoreGraphicsState];
         }
     };
+    BOOL screen = [NSGraphicsContext graphicsContextWithCGContext:context flipped:NO].drawingToScreen;
+    // A dark preview inverts the page as it is drawn on screen, on white paper.
+    if (screen && TSPreviewPagesInverted(self)) {
+        TSDrawPDFScreenTilesProcessed(context, ^(CGContextRef target) {
+            TSFillPreviewPaper(target, page, self.displayBox, NSColor.whiteColor);
+            drawPage(target);
+        }, ^CGImageRef(CGImageRef image) { return TSPreviewCreateInvertedImage(image); });
+        return;
+    }
     if (@available(macOS 27.0, *)) {
-        if ([NSGraphicsContext graphicsContextWithCGContext:context flipped:NO].drawingToScreen) {
+        if (screen) {
             TSDrawPDFScreenTiles(context, drawPage);
             return;
         }
@@ -3846,8 +3855,8 @@ TeXShop supports search through the drawer in the Preview Window using sample co
         myBackgroundColor = [[TSColorSupport sharedInstance] colorFromDictionary:liteColors andKey: @"PreviewBackground"];
      */
     
-    // The theme's paper of pages shown light. Pages shown dark are left unfilled, as
-    // Koch chose in 5.58, so that the luminosity filter makes them deep black.
+    // The theme's paper of pages shown light. Pages shown dark are not filled with it, as
+    // Koch chose in 5.58: they are drawn on white, which the luminosity filter makes deep black.
     if ([NSGraphicsContext currentContextDrawingToScreen])
         TSFillPreviewPaper(NSGraphicsContext.currentContext.CGContext, page, self.displayBox, self.previewPaperColor);
     

@@ -121,6 +121,14 @@ static const NSInteger TSExperimentToolCount = 4;
         if (screen) TSFillPreviewPaper(target, page, self.displayBox, paper);
         [super drawPage:page toContext:target];
     };
+    // A dark preview inverts the page as it is drawn on screen, on white paper.
+    if (screen && TSPreviewPagesInverted(self)) {
+        TSDrawPDFScreenTilesProcessed(context, ^(CGContextRef target) {
+            TSFillPreviewPaper(target, page, self.displayBox, NSColor.whiteColor);
+            draw(target);
+        }, ^CGImageRef(CGImageRef image) { return TSPreviewCreateInvertedImage(image); });
+        return;
+    }
     // Drawing a page in a subclass needs the same care as the document's preview on macOS 27.
     if (@available(macOS 27.0, *)) {
         if (screen) {

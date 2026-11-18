@@ -3,8 +3,8 @@
 
 Compiles the production drawing and paper methods of MyPDFKitView into a small PDFView
 with the state they use, and the production OverView, then checks without showing a
-window: the paper of light pages on screen in Light, System and dark windows, no paper
-for pages shown dark, nothing added to printing, rotated and cropped pages, redrawing
+window: the paper of light pages on screen in Light, System and dark windows, white paper
+inverted for pages shown dark, nothing added to printing, rotated and cropped pages, redrawing
 only when the paper changes, and the magnifying glass. Defaults stay in memory.
 """
 from pathlib import Path
@@ -181,12 +181,17 @@ int main(void) { @autoreleasepool {
     check(same(at(rep, 70, 70), NSColor.blackColor), @"The page is drawn over its paper");
     check(!printedOpaque(view), @"Printing and PDF copies keep the page transparent");
 
-    // Pages shown dark keep PDFKit's paper for the luminosity filter.
+    // Pages shown dark are drawn on white, not on the theme's paper, and inverted as they are drawn.
     [SUD setInteger:TSPreviewAppearanceDark forKey:TSPreviewAppearanceModeKey];
     redraws = view.redraws; [view updateDarkModeInversion];
     check(view.previewPaperColor == nil && view.redraws > redraws, @"Dark pages have no theme paper, and are drawn again");
     rep = screen(view);
-    check(at(rep, 5, 300).alphaComponent < .01, @"Dark pages are not filled");
+    NSColor *darkPaper = [at(rep, 5, 300) colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+    check(darkPaper.alphaComponent > .99 && fabs(darkPaper.redComponent * 255 - 45) <= 2 &&
+          fabs(darkPaper.greenComponent * 255 - 45) <= 2 && fabs(darkPaper.blueComponent * 255 - 45) <= 2,
+          @"Dark pages are drawn on white paper and inverted, not on the theme's paper");
+    NSColor *darkInk = [at(rep, 70, 70) colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+    check(darkInk.redComponent > .9 && darkInk.greenComponent > .9, @"Black text of a dark page is drawn light");
 
     // System follows the system's appearance; the paper follows the window's.
     [SUD setInteger:TSPreviewAppearanceSystem forKey:TSPreviewAppearanceModeKey];
