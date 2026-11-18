@@ -183,7 +183,13 @@ static NSColor *FlashColor, *ThemeBackground;
 
 static NSMutableArray<NSString *> *indicators, *flashSelections;
 // The document's source; find indicators are recorded, not shown.
+// -[TSTextView fixupTabs] gives its style to the other half of the source of its document; here it has none.
+@interface NSObject (TestSourceDocument)
+- (NSTextView *)textView1;
+- (NSTextView *)textView2;
+@end
 @interface TestSourceView : NSTextView
+@property (weak) id document;
 @end
 @implementation TestSourceView
 @@TEXT_VIEW_TABS@@
