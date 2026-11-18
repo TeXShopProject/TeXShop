@@ -3567,6 +3567,7 @@ static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice
 - (void) setTextView: (id)aView
 {
 	NSRange		theRange;
+	BOOL		otherHalf = (aView != textView);
  	textView = aView;
 	// The status bar follows the part being typed in.
 	[self.sourceStatusBar selectionDidChange];
@@ -3578,6 +3579,12 @@ static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice
 		theRange = [textView1 selectedRange];
 		theRange.length = 0;
 		[textView1 setSelectedRange: theRange];
+	}
+	// Typing moves to the other half of a split window: braces follow its selection
+	// from here on, and the highlight of the other half ends.
+	if (otherHalf) {
+		lastCursorLocation = [textView selectedRange].location;
+		[self matchBracesForSelectionInTextView:nil];
 	}
 }
 
