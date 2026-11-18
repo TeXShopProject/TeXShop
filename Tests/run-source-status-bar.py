@@ -277,6 +277,7 @@ static void TSSplitToggleItemsFollowSplit(void) {}
     NSDrawer *myDrawer;
     BOOL windowIsSplit, useFullSplitWindow;
     NSTextStorage *_textStorage;
+    NSInteger lastCursorLocation;
 }
 @property (strong) NSWindow *pdfKitWindow;
 @property (strong) PDFView *myPDFKitView, *myPDFKitView2;
@@ -293,6 +294,7 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key {}
 - (void)removeCurrentLineColor:(id)view {}
 - (id)textView { return textView; }
+- (void)matchBracesForSelectionInTextView:(NSTextView *)aTextView {}
 - (void)installStatusBar {
 INSTALL}
 - (void)moveSourceToSides:(BOOL)interchange {
