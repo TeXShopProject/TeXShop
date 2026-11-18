@@ -2826,8 +2826,10 @@ static BOOL TSStartsCommand(NSString *string, NSUInteger location)
             } else {
                 utfString = [NSMutableString stringWithFormat:@"%CUTF{%04X}", (unichar)g_texChar, [subString characterAtIndex:0]];
             }
-            // Keep TeX from turning the line end into a space after the command.
-            if ((NSMaxRange(charRange) == end) && (NSMaxRange(charRange) < self.length)) {
+            // Keep TeX from turning the line end into a space after the command. TeX ends lines at
+            // CR and LF only: after U+2028, U+2029 or U+0085 a "%" would comment out the rest of the line.
+            if ((NSMaxRange(charRange) == end) && (NSMaxRange(charRange) < self.length)
+                && ([self characterAtIndex:end] == '\n' || [self characterAtIndex:end] == '\r')) {
                 [utfString appendString:@"%"];
             }
             [newString appendString:utfString];

@@ -1400,7 +1400,10 @@ static NSString *TSTextForSaving(NSString *text, NSStringEncoding encoding)
 				utfString = [NSMutableString stringWithFormat:@"%CUTF{%04X}",
                              (unichar)g_texChar, [subString characterAtIndex: 0]];
 			}
-			if ((charRange.location + charRange.length) == end) {
+			// TeX ends lines at CR and LF only: after U+2028, U+2029 or U+0085 a "%" would
+			// comment out the rest of the line.
+			if (((charRange.location + charRange.length) == end) && ((end == [dataString length])
+				|| [dataString characterAtIndex: end] == '\n' || [dataString characterAtIndex: end] == '\r')) {
 				[utfString appendString: @"%"];
 			}
 			[newString appendString: utfString];
