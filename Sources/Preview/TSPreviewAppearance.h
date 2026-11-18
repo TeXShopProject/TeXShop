@@ -21,8 +21,8 @@ static inline BOOL TSPreviewShouldInvert(NSInteger mode, NSAppearance *systemApp
     return [match isEqualToString:NSAppearanceNameDarkAqua];
 }
 
-// The Preview color of a theme is the paper of pages shown light. Pages shown dark
-// keep PDFKit's own paper, which the luminosity filter turns deep black.
+// The Preview color of a theme is the paper of pages shown light. Pages shown dark are
+// drawn on white paper, which the luminosity filter turns deep black.
 static inline NSColor *TSPreviewPaperColor(NSInteger mode, NSAppearance *systemAppearance, NSColor *themeColor) {
     return TSPreviewShouldInvert(mode, systemAppearance) ? nil : themeColor;
 }
@@ -133,29 +133,164 @@ static inline BOOL TSPreviewSubviewIsToolbarPocket(NSView *view) {
 // this header, so the hook below finds the state another file stored.
 #define TSPreviewInversionStateKey @selector(tsPreviewInversionState)
 
+// Whether the pages of a PDF view are drawn inverted. PDFKit draws pages on its own
+// threads, so the choice is kept on the PDF view itself, where those threads read it.
+#define TSPreviewPagesInvertedKey sel_getUid("tsPreviewPagesInverted")
+static inline BOOL TSPreviewPagesInverted(NSView *pdfView) {
+    return [objc_getAssociatedObject(pdfView, TSPreviewPagesInvertedKey) boolValue];
+}
+
+// A dark preview inverts the pages as PDFKit draws them, in the bitmaps that hold the page
+// at the resolution of the screen. A filter on a view would not do: PDFKit magnifies
+// through the clip view's own layer transform, so a filter on the clip view, the document
+// view or a page view is rendered at the page's unmagnified size, and the pages blurred
+// when zoomed in (6.00 beta 4). The same three filters run in the same color space as a
+// filter on a view, so the colors do not change. The page is drawn on white first, as on
+// PDFKit's paper. The returned image is owned by the caller; NULL if it cannot be made.
+static inline CGImageRef TSPreviewCreateInvertedImage(CGImageRef image) CF_RETURNS_RETAINED {
+    static CIContext *context;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{ context = [CIContext contextWithOptions:@{kCIContextCacheIntermediates: @NO}]; });
+    if (!image) return NULL;
+    CGColorSpaceRef sRGB = CGColorSpaceCreateWithName(kCGColorSpaceSRGB);
+    CIImage *result = [CIImage imageWithCGImage:image options:@{kCIImageColorSpace: (__bridge id)sRGB}];
+    CGRect extent = result.extent;
+    for (CIFilter *filter in TSPreviewInversionFilters()) {
+        [filter setValue:result forKey:kCIInputImageKey];
+        result = filter.outputImage;
+    }
+    CGImageRef inverted = result ? [context createCGImage:result fromRect:extent format:kCIFormatRGBA8 colorSpace:sRGB] : NULL;
+    CGColorSpaceRelease(sRGB);
+    return inverted;
+}
+
+// Inside a page view PDFKit keeps, besides the tiles of the page, layers that are not
+// drawn through -drawPage:toContext:. The white paper behind the tiles and the small
+// picture of the page shown until the tiles are drawn take the filters of a dark preview, so a page does not flash white while it is drawn
+// (they hold no fine detail, so their size does not matter). A selection is drawn by
+// layers multiplied over the page, which would darken a dark page further and leave the
+// selection hard to see; for a dark preview the layer of each selection effect (a few
+// levels down: the selection and the highlights of found text) has its colors inverted and
+// is screened over the page instead, which shows it as it was shown on a light page that was
+// then inverted. The compositing PDFKit set is kept and given back to a light preview.
+#define TSPreviewSelectionCompositingKey sel_getUid("tsPreviewSelectionCompositing")
+#define TSPreviewEffectFiltersKey sel_getUid("tsPreviewEffectFilters")
+static void TSPreparePreviewSelectionLayers(CALayer *layer, NSArray *filters, int depth) {
+    BOOL invert = filters.count > 0;
+    for (CALayer *sublayer in layer.sublayers) {
+        NSString *name = NSStringFromClass(sublayer.class);
+        if ([name containsString:@"Tile"]) continue;
+        if (![name containsString:@"SelectionEffect"]) {
+            if (depth < 4) TSPreparePreviewSelectionLayers(sublayer, filters, depth + 1);
+            continue;
+        }
+        // The effect layer with filters is drawn as a group of its own, so whatever PDFKit sets
+        // on the layers inside (it multiplies them, and sets that again when the page is zoomed)
+        // gives the selection's own colors there. Those are inverted and screened over the page.
+        id kept = objc_getAssociatedObject(sublayer, TSPreviewSelectionCompositingKey);
+        BOOL added = objc_getAssociatedObject(sublayer, TSPreviewEffectFiltersKey) != nil;
+        if (invert) {
+            if (!kept) objc_setAssociatedObject(sublayer, TSPreviewSelectionCompositingKey,
+                sublayer.compositingFilter ?: NSNull.null, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+            if (!sublayer.filters.count) {
+                sublayer.filters = filters;
+                objc_setAssociatedObject(sublayer, TSPreviewEffectFiltersKey, @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+            }
+            if (![sublayer.compositingFilter isEqual:@"screenBlendMode"]) sublayer.compositingFilter = @"screenBlendMode";
+        } else {
+            // Only the filters this function put on are taken off; a layer's own filters stay.
+            if (added) {
+                sublayer.filters = nil;
+                objc_setAssociatedObject(sublayer, TSPreviewEffectFiltersKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+            }
+            if (kept) {
+                sublayer.compositingFilter = kept == NSNull.null ? nil : kept;
+                objc_setAssociatedObject(sublayer, TSPreviewSelectionCompositingKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+            }
+        }
+    }
+}
+static inline void TSPreparePreviewPageLayers(NSView *pageView, NSArray *filters) {
+    CALayer *pageLayer = pageView.layer;
+    if (!pageLayer) return;
+    BOOL invert = filters.count > 0;
+    if (invert && !pageView.layerUsesCoreImageFilters) pageView.layerUsesCoreImageFilters = YES;
+    for (CALayer *layer in pageLayer.sublayers) {
+        // The paper and the picture have a color or contents and no sublayers. The layer
+        // that holds the tiles has neither, also while it is still empty, and never takes
+        // the filters: its tiles are inverted already.
+        BOOL tiles = NO;
+        for (CALayer *sublayer in layer.sublayers)
+            if ([NSStringFromClass(sublayer.class) containsString:@"Tile"]) tiles = YES;
+        BOOL paper = !tiles && layer.sublayers.count == 0 && (layer.backgroundColor || layer.contents);
+        // Only filters this function put on are taken off again; a layer it never touched keeps its own.
+        BOOL marked = objc_getAssociatedObject(layer, TSPreviewSelectionCompositingKey) != nil;
+        if (invert && paper && !layer.filters.count) {
+            layer.filters = filters;
+            objc_setAssociatedObject(layer, TSPreviewSelectionCompositingKey, @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        } else if (marked && !(invert && paper)) {
+            layer.filters = nil;
+            objc_setAssociatedObject(layer, TSPreviewSelectionCompositingKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        }
+    }
+    TSPreparePreviewSelectionLayers(pageLayer, filters, 0);
+}
+
 // The pages, and the views TeXShop places over them (link popups, the magnifying glass,
 // selections), are drawn light. Their appearance is set view by view, because Aqua on
-// the document view is copied onto an overlay scroller.
-static inline void TSLightenPreviewPageView(NSView *child) {
+// the document view is copied onto an overlay scroller. A page view carries no filter:
+// its page is inverted as it is drawn, and only the layers above are prepared. A view
+// over the pages carries the filters of a dark preview.
+static inline void TSLightenPreviewPageView(NSView *child, NSArray *filters) {
     NSAppearance *light = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
     if (child.appearance != light) child.appearance = light;
-    if (child.contentFilters.count) child.contentFilters = @[];
+    BOOL page = [NSStringFromClass(child.class) containsString:@"Page"];
+    NSArray *wanted = page ? @[] : filters;
+    if (child.contentFilters.count != wanted.count) child.contentFilters = wanted;
+    if (page) TSPreparePreviewPageLayers(child, filters);
 }
-static inline void TSLightenPreviewPages(NSView *documentView) {
-    for (NSView *child in documentView.subviews) TSLightenPreviewPageView(child);
+static inline void TSLightenPreviewPages(NSView *documentView, NSArray *filters) {
+    for (NSView *child in documentView.subviews) TSLightenPreviewPageView(child, filters);
 }
 
 static void TSInstallPreviewPageHook(NSView *documentView);
+
+// The selection effect layers are made with the page view and prepared when it is added.
+// As a safeguard, should PDFKit make one later, a PDF view of a preview prepares its page
+// views again when its selection changes, at once and once more after PDFKit has updated
+// its layers. The method is added to PDFView once; the
+// observer is removed when the PDF view is released.
+static void TSPreviewSelectionChanged(__unsafe_unretained PDFView *self, SEL _cmd, NSNotification *note) {
+    (void)_cmd; (void)note;
+    __weak PDFView *weakView = self;
+    void (^prepare)(void) = ^{
+        PDFView *view = weakView;
+        if (!view) return;
+        NSArray *filters = TSPreviewPagesInverted(view) ? TSPreviewInversionFilters() : @[];
+        for (NSView *child in view.documentView.subviews)
+            if ([NSStringFromClass(child.class) containsString:@"Page"]) TSPreparePreviewPageLayers(child, filters);
+    };
+    prepare();
+    dispatch_async(dispatch_get_main_queue(), prepare);
+}
+static inline void TSWatchPreviewSelection(PDFView *pdfView) {
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        class_addMethod(PDFView.class, sel_getUid("tsPreviewSelectionChanged:"), (IMP)TSPreviewSelectionChanged, "v@:@");
+    });
+    NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
+    [center removeObserver:pdfView name:PDFViewSelectionChangedNotification object:pdfView];
+    [center addObserver:pdfView selector:sel_getUid("tsPreviewSelectionChanged:") name:PDFViewSelectionChangedNotification object:pdfView];
+}
 
 // Share the same PDF page treatment between the document and Experiment previews.
 // Scroll bars are part of the window frame. They take no explicit appearance and no
 // filters, so they follow the system whether the preview is light or dark.
 // On macOS 27 an overlay scroller's effective appearance copies the clip view and the
-// document view, so those two take no appearance. The luminosity filter is set on the
-// document view: filters belong to its layer, so they reach every page view PDFKit adds
-// later, at once, and never the scrollers beside it. The gutter around the pages is drawn
-// light and inverted the same way. The pocket stays unset so the title bar is not pulled
-// off the system appearance.
+// document view, so those two take no appearance and no filters. The pages are inverted
+// as they are drawn. The gutter around the pages is drawn light and inverted by the
+// filters on its view, which PDFKit does not magnify. The pocket stays unset so the title
+// bar is not pulled off the system appearance.
 static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert) {
     if (!scrollView) return;
     scrollView.appearance = nil;
@@ -178,11 +313,21 @@ static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert
     }
     NSView *documentView = scrollView.documentView;
     documentView.appearance = nil;
-    documentView.contentFilters = filters;
+    documentView.contentFilters = @[];
     TSInstallPreviewPageHook(documentView);
-    TSLightenPreviewPages(documentView);
+    TSLightenPreviewPages(documentView, filters);
     objc_setAssociatedObject(scrollView, TSPreviewInversionStateKey, @(invert),
         OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    // The PDF view the scroll view belongs to draws its pages inverted or not; when that
+    // changes, its pages are drawn again.
+    NSView *pdfView = scrollView.superview;
+    while (pdfView && ![pdfView isKindOfClass:PDFView.class]) pdfView = pdfView.superview;
+    if (pdfView) TSWatchPreviewSelection((PDFView *)pdfView);
+    if (pdfView && TSPreviewPagesInverted(pdfView) != invert) {
+        objc_setAssociatedObject(pdfView, TSPreviewPagesInvertedKey, @(invert), OBJC_ASSOCIATION_RETAIN);
+        [pdfView setNeedsDisplay:YES];
+        for (NSView *child in documentView.subviews) [child setNeedsDisplay:YES];
+    }
 }
 
 // Applies the choice again, as after -setDocument:, which puts a new document view in.
@@ -202,8 +347,7 @@ static inline void TSReapplyPreviewInversion(NSScrollView *scrollView) {
 // inherits is one of these hooks; an override in between is hooked over, so the page view
 // is made light after that override has run. The hooks are listed on NSView, so every
 // file that includes this header sees the same list. When PDFKit's class is not the
-// usual one, nothing changes but the hook: the filters on the document view still
-// invert the pages.
+// usual one, nothing changes but the hook: the pages are still inverted as they are drawn.
 static void TSInstallPreviewPageHook(NSView *documentView) {
     Class cls = [documentView class];
     if (!cls || cls == NSView.class) return;
@@ -225,8 +369,9 @@ static void TSInstallPreviewPageHook(NSView *documentView) {
         if (!own && [hooks containsObject:[NSValue valueWithPointer:(const void *)original]]) return;
         IMP hook = imp_implementationWithBlock(^(__unsafe_unretained NSView *view, NSView *subview) {
             ((void (*)(__unsafe_unretained id, SEL, NSView *))original)(view, sel, subview);
-            if (objc_getAssociatedObject(view.enclosingScrollView, TSPreviewInversionStateKey))
-                TSLightenPreviewPageView(subview);
+            NSNumber *invert = objc_getAssociatedObject(view.enclosingScrollView, TSPreviewInversionStateKey);
+            if (invert)
+                TSLightenPreviewPageView(subview, invert.boolValue ? TSPreviewInversionFilters() : @[]);
         });
         [hooks addObject:[NSValue valueWithPointer:(const void *)hook]];
         if (own) method_setImplementation(own, hook);
@@ -236,8 +381,7 @@ static void TSInstallPreviewPageHook(NSView *documentView) {
 }
 
 // -setDocument: puts a new document view in. The choice is applied to it at once, while it
-// has no page views yet, so they arrive under the preview's filters and are made light as
-// they come. The document preview and the Experiment preview set their documents through this.
+// has no page views yet, so they are made light as they come. The document preview and the Experiment preview set their documents through this.
 static inline void TSPreviewSetDocument(PDFView *view, void (NS_NOESCAPE ^set)(void)) {
     set();
     TSInstallPreviewPageHook(view.documentView);

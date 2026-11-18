@@ -10,7 +10,7 @@ import argparse, os, subprocess, tempfile
 from source_tree import include_args
 from experiment_preview_source import prelude as experiment_preview_prelude, sources as experiment_preview_sources
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['source-hook', 'pdf-hook', 'defaults-hook', 'reload-hook', 'menu-validation', 'filter-gamma', 'source-alpha', 'preview-alpha', 'paper-invert', 'paper-print', 'paper-lens', 'scroll-appearance', 'bar-appearance', 'bar-filters', 'document-filters', 'page-hook'])
+parser.add_argument('--mutation', choices=['source-hook', 'pdf-hook', 'defaults-hook', 'reload-hook', 'menu-validation', 'filter-gamma', 'source-alpha', 'preview-alpha', 'paper-invert', 'paper-print', 'paper-lens', 'scroll-appearance', 'bar-appearance', 'bar-filters', 'document-filters', 'page-hook', 'page-state', 'draw-inversion'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root/'Sources/Editor/ScrapTextView.m').read_text(encoding='latin1')
@@ -42,6 +42,10 @@ if args.mutation == 'paper-invert':
     appearance = appearance.replace('return TSPreviewShouldInvert(mode, systemAppearance) ? nil : themeColor;', 'return themeColor;')
 if args.mutation == 'paper-print':
     pdf = pdf.replace('if (screen) TSFillPreviewPaper(', 'TSFillPreviewPaper(')
+if args.mutation == 'draw-inversion':
+    old = '    if (screen && TSPreviewPagesInverted(self)) {\n'
+    assert pdf.count(old) == 1, args.mutation
+    pdf = pdf.replace(old, '    if (0) {\n', 1)
 if args.mutation == 'paper-lens':
     pdf = pdf.replace('overlay.magnifiedPaperColor = self.previewPaperColor;', '')
 if args.mutation == 'scroll-appearance':
@@ -57,11 +61,17 @@ elif args.mutation == 'bar-filters':
     assert appearance.count(old) == 1, args.mutation
     appearance = appearance.replace(old, '            subview.contentFilters = TSPreviewInversionFilters();\n', 1)
 elif args.mutation == 'document-filters':
-    old = '    documentView.contentFilters = filters;\n'
+    # The 6.00 beta 4 filters on the document view: views there are magnified, and the pages blur.
+    old = '    documentView.contentFilters = @[];\n'
     assert appearance.count(old) == 1, args.mutation
-    appearance = appearance.replace(old, '    documentView.contentFilters = @[];\n', 1)
+    appearance = appearance.replace(old, '    documentView.contentFilters = filters;\n', 1)
+elif args.mutation == 'page-state':
+    # The Experiment preview is not told to draw its pages inverted.
+    old = '        objc_setAssociatedObject(pdfView, TSPreviewPagesInvertedKey, @(invert), OBJC_ASSOCIATION_RETAIN);\n'
+    assert appearance.count(old) == 1, args.mutation
+    appearance = appearance.replace(old, '', 1)
 elif args.mutation == 'page-hook':
-    old = '                TSLightenPreviewPageView(subview);\n        });'
+    old = '                TSLightenPreviewPageView(subview, invert.boolValue ? TSPreviewInversionFilters() : @[]);\n        });'
     assert appearance.count(old) == 1, args.mutation
     appearance = appearance.replace(old, '                (void)subview;\n        });', 1)
 pdf = pdf.replace('#import "TSPreviewAppearance.h"', appearance)
@@ -178,7 +188,8 @@ static BOOL inverted(ScrapPDFKitView *view) {
     NSScrollView *scroll = view.documentView.enclosingScrollView;
     if (scroll.appearance != nil || scroll.contentFilters.count != 0) return NO;
     if (scroll.contentView.appearance != nil || scroll.contentView.contentFilters.count != 0) return NO;
-    if (scroll.documentView.appearance != nil || scroll.documentView.contentFilters.count != 3) return NO;
+    if (scroll.documentView.appearance != nil || scroll.documentView.contentFilters.count != 0) return NO;
+    if (!TSPreviewPagesInverted(view)) return NO;
     NSAppearance *light = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
     NSString *system = Match(NSApp.effectiveAppearance);
     BOOL page = NO, gutter = NO, scroller = NO;
@@ -202,8 +213,12 @@ static BOOL inverted(ScrapPDFKitView *view) {
 static void checkPages(NSScrollView *scroll, NSUInteger filters, NSString *what) {
     NSAppearance *light = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
     BOOL page = NO;
-    check(scroll.documentView.appearance == nil && scroll.documentView.contentFilters.count == filters,
-          [what stringByAppendingString:@": the document view carries the preview's filters"]);
+    check(scroll.documentView.appearance == nil && scroll.documentView.contentFilters.count == 0,
+          [what stringByAppendingString:@": the document view, magnified by PDFKit, carries no filters"]);
+    NSView *pdfView = scroll.superview;
+    while (pdfView && ![pdfView isKindOfClass:PDFView.class]) pdfView = pdfView.superview;
+    check(pdfView && TSPreviewPagesInverted(pdfView) == (filters != 0),
+          [what stringByAppendingString:@": the Experiment preview draws its pages inverted for a dark preview only"]);
     for (NSView *child in scroll.documentView.subviews) {
         if ([NSStringFromClass(child.class) containsString:@"Page"]) page = YES;
         check(child.appearance == light && child.contentFilters.count == 0,
@@ -224,8 +239,12 @@ static void checkSystemScroller(NSScrollView *scroll, NSString *what) {
     }
     check(found, [what stringByAppendingString:@": a scroller is present"]);
 }
+// The filters of a dark preview, as the gutter carries them; the pages are inverted with the same ones.
 static NSArray *pageInversionFilters(NSScrollView *scroll) {
-    return scroll.documentView.contentFilters;
+    for (NSView *subview in scroll.subviews)
+        if ([NSStringFromClass(subview.class) containsString:@"Background"] &&
+            ![NSStringFromClass(subview.class) containsString:@"Pocket"]) return subview.contentFilters;
+    return @[];
 }
 // Page views that PDFKit adds after a new document are light from the moment they exist,
 // however late they come: checked every 10 ms for a second, not once at a set time.
@@ -233,7 +252,7 @@ static void checkPagesAsTheyCome(PDFView *view, NSUInteger filters, NSString *wh
     NSAppearance *light = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
     BOOL page = NO, ok = YES, filtered = YES;
     for (int i = 0; i < 100; i++) {
-        if (view.documentView.contentFilters.count != filters) filtered = NO;
+        if (view.documentView.contentFilters.count || TSPreviewPagesInverted(view) != (filters != 0)) filtered = NO;
         for (NSView *child in view.documentView.subviews) {
             if ([NSStringFromClass(child.class) containsString:@"Page"]) page = YES;
             if (child.appearance != light || child.contentFilters.count) ok = NO;
@@ -241,7 +260,7 @@ static void checkPagesAsTheyCome(PDFView *view, NSUInteger filters, NSString *wh
         [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
     }
     check(page, [what stringByAppendingString:@": page views come"]);
-    check(filtered, [what stringByAppendingString:@": the document view has the filters from the start"]);
+    check(filtered, [what stringByAppendingString:@": the Experiment preview draws inverted from the start, and the document view carries no filters"]);
     check(ok, [what stringByAppendingString:@": every page view is light as soon as it exists"]);
 }
 // A page like TeX output: transparent, with a little black mark near a corner.
@@ -379,7 +398,10 @@ int main(void) { @autoreleasepool {
     [pdf hideExperimentMagnifier];
     [testDefaults setInteger:2 forKey:TSPreviewAppearanceModeKey]; pump();
     check(inverted(pdf), @"external dark shared setting change");
-    check(screenPaper(pdf) == nil, @"pages shown dark are not filled with the theme's paper");
+    NSColor *darkPage = [screenPaper(pdf) colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+    check(darkPage && fabs(darkPage.redComponent * 255 - 45) <= 2 && fabs(darkPage.greenComponent * 255 - 45) <= 2 &&
+          fabs(darkPage.blueComponent * 255 - 45) <= 2,
+          @"pages shown dark are drawn on white paper and inverted as they are drawn, not filled with the theme's paper");
     NSScrollView *replaced = pdf.documentView.enclosingScrollView;
     for (NSView *subview in replaced.subviews)
         if ([NSStringFromClass(subview.class) containsString:@"Background"] &&
