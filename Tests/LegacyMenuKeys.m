@@ -198,5 +198,21 @@ int main(int argc,char **argv){@autoreleasepool{
   Apply(main,@{@"Window":@{@" 보기  전환":@[@"4",@NO,@NO]}});
   Check([korean.keyEquivalent isEqual:@"4"],@"A doubled space inside a former title compares as one");
  }
+ // Command completion and the mark keys own Tab and Escape: as in recording, a saved key never takes them,
+ // another control character or Delete. The item keeps its key; other saved keys still apply.
+ {
+  NSMenu *main=[NSMenu new];NSMenuItem *file=Item(main,@"File");file.submenu=[NSMenu new];
+  NSMenuItem *open=Item(file.submenu,@"Open…");open.keyEquivalent=@"o";
+  for(NSString *k in @[@"\t",@"\x19",@"\x1b",@"\x7f",@"\x03"])for(NSNumber *option in @[@NO,@YES])for(NSNumber *control in @[@NO,@YES]){
+   Apply(main,@{@"File":@{@"Open…":@[k,option,control]}});
+   Check([open.keyEquivalent isEqual:@"o"] && open.keyEquivalentModifierMask==NSEventModifierFlagCommand,@"a saved Tab, Escape, control character or Delete is not applied");
+  }
+  Apply(main,@{@"File":@{@"Open…":@[@"p",@NO,@YES]}});
+  Check([open.keyEquivalent isEqual:@"p"] && (open.keyEquivalentModifierMask & NSEventModifierFlagControl),@"an ordinary saved key still applies");
+  NSString *f5=[NSString stringWithFormat:@"%C",(unichar)NSF5FunctionKey];
+  Apply(main,@{@"File":@{@"Open…":@[f5,@NO,@NO]}});Check([open.keyEquivalent isEqual:f5],@"a saved function key still applies");
+  Apply(main,@{@"File":@{@"Open…":@[@"",@NO,@NO]}});Check(open.keyEquivalent.length==0,@"a saved empty key still removes the shortcut");
+  puts("PASS: saved Tab, Escape, control characters and Delete are not applied; ordinary keys, function keys and removal still are");
+ }
  puts("PASS: Show Status Bar skipped in positions; Find and Replace… skipped in positions of the menus that lacked it; 12 legacy title fixtures; CJK-Latin spacing; 18 former titles with a stray space; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File; former typesetting method titles in 12 languages; Command Completion submenu entries in 12 languages reach Add to Command Completion List");
 }return 0;}

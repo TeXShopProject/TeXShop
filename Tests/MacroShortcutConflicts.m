@@ -273,6 +273,24 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE([macroMenu.itemArray[3].keyEquivalent isEqual:f5] && macroMenu.itemArray[3].keyEquivalentModifierMask==0);
     REQUIRE([macroMenu.itemArray[4].keyEquivalent isEqual:@"j"] && macroMenu.itemArray[4].keyEquivalentModifierMask==(cmd|control));
     REQUIRE([store conflictsForMacroShortcuts:@[Candidate(@"Control only",@"j",control),Candidate(@"Saved before",@"j",cmd|control)]].count==0);
+    // Command completion and the mark keys own Tab and Escape, with or without Shift, Option or Control.
+    // Recording refuses them; a macro file that names one gets no shortcut, and says why.
+    NSString *refusal=[TSShortcutStore reasonForMacroConflict:@{@"refused":@YES}];
+    REQUIRE([refusal isEqual:NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.", @"")]);
+    NSArray *reservedKeys=@[@"\t+NoCommandKey",@"\x19+ShiftKey+NoCommandKey",@"\t+ShiftKey+NoCommandKey",@"\x1b+NoCommandKey",@"\x1b+ShiftKey+NoCommandKey",
+        @"\t+ControlKey+NoCommandKey",@"\t+OptionKey+NoCommandKey",@"\x1b+ControlKey+NoCommandKey",@"\x1b+OptionKey+NoCommandKey",@"\x1b",@"\t+ControlKey"];
+    NSMutableArray *reservedMacros=[NSMutableArray array];
+    for (NSString *key in reservedKeys) [reservedMacros addObject:Macro([@"Reserved " stringByAppendingString:key],key)];
+    [reservedMacros addObject:Macro(@"After them",@"J+ControlKey+NoCommandKey")];
+    macros.macroDict=@{@"submenu":reservedMacros};
+    [coordinator refreshMenuAndMacros];
+    for (NSUInteger n=0; n<reservedKeys.count; n++)
+        REQUIRE(macroMenu.itemArray[2+n].keyEquivalent.length==0 && [macroMenu.itemArray[2+n].toolTip isEqual:refusal]);
+    REQUIRE([macroMenu.itemArray[2+reservedKeys.count].keyEquivalent isEqual:@"j"] && macroMenu.itemArray[2+reservedKeys.count].toolTip==nil);
+    NSArray *refused=[store conflictsForMacroShortcuts:@[Candidate(@"Control-Escape",@"\x1b",control),Candidate(@"Control-J",@"j",control),Candidate(@"Escape",@"\x1b",0)]];
+    REQUIRE(refused.count==2 && [refused[0][@"index"] isEqual:@0] && [refused[1][@"index"] isEqual:@2]
+            && [[TSShortcutStore reasonForMacroConflict:refused[0]] isEqual:refusal] && [[TSShortcutStore reasonForMacroConflict:refused[1]] isEqual:refusal]);
+    puts("PASS: macro files cannot give Tab or Escape, with any modifier, to a macro; the item says why");
     puts("PASS: macro keys without Command (+NoCommandKey) and function keys; keys saved before keep Command");
     puts("PASS: effective menu precedence, freed defaults, takeover confirmation/cancel, restore, engine changes and inactive tooltip");
     NSMenu *services=[NSMenu new];NSApp.servicesMenu=services;NSMenuItem *serviceParent=[[NSMenuItem alloc] initWithTitle:@"Services" action:nil keyEquivalent:@""];serviceParent.submenu=services;[menu addItem:serviceParent];
@@ -389,5 +407,20 @@ int main(int argc, char **argv) { @autoreleasepool {
     second.answer=NSAlertFirstButtonReturn;[second savePressed:nil];REQUIRE(second.prompts==1 && second.testWindow.closes==0 && [second.details containsString:@"Existing later"] && [second.details containsString:@"appears later"]);
     second.answer=NSAlertThirdButtonReturn;[second savePressed:nil];REQUIRE(!first.key.length && [later.key isEqual:@"Z"] && second.testWindow.closes==1);
     puts("PASS: changing an earlier macro warns before making a later macro inactive");
+    // A key that cannot be a shortcut (here Control-Escape, from a macro file) overlaps nothing: saving does not
+    // call it a conflict, alone or next to a real one, and the key is kept as written.
+    NSString *controlEscape=@"\x1b+ControlKey+NoCommandKey";
+    TSMacroTreeNode *refusedOnly=[TSMacroTreeNode nodeWithName:@"Refused alone" content:@"KEEP" key:@""];
+    TSMacroTreeNode *thirdRoot=[TSMacroTreeNode submenuNodeWithName:@"ROOT"];[thirdRoot addChild:refusedOnly];
+    TestEditor *third=[TestEditor new];third.testOutline.rootOfTree=thirdRoot;[third rememberOriginalShortcutKeys];refusedOnly.key=controlEscape;
+    third.answer=NSAlertFirstButtonReturn;[third savePressed:nil];REQUIRE(third.prompts==0 && third.testWindow.closes==1 && [refusedOnly.key isEqual:controlEscape]);
+    TSMacroTreeNode *mixedFirst=[TSMacroTreeNode nodeWithName:@"Mixed first" content:@"KEEP" key:@"X"], *mixedLater=[TSMacroTreeNode nodeWithName:@"Mixed later" content:@"KEEP" key:@"Z"];
+    TSMacroTreeNode *mixedRefused=[TSMacroTreeNode nodeWithName:@"Refused mixed" content:@"KEEP" key:@""];
+    TSMacroTreeNode *fourthRoot=[TSMacroTreeNode submenuNodeWithName:@"ROOT"];[fourthRoot addChildren:@[mixedFirst,mixedRefused,mixedLater]];
+    TestEditor *fourth=[TestEditor new];fourth.testOutline.rootOfTree=fourthRoot;[fourth rememberOriginalShortcutKeys];mixedFirst.key=@"Z";mixedRefused.key=controlEscape;
+    fourth.answer=NSAlertThirdButtonReturn;[fourth savePressed:nil];
+    REQUIRE(fourth.prompts==1 && [fourth.details containsString:@"Mixed later"] && ![fourth.details containsString:@"Refused mixed"] && ![fourth.details containsString:@"cannot be used"]);
+    REQUIRE(!mixedFirst.key.length && [mixedLater.key isEqual:@"Z"] && [mixedRefused.key isEqual:controlEscape] && fourth.testWindow.closes==1);
+    puts("PASS: saving does not report a key that cannot be a shortcut as a conflict, alone or with a real one; the key is kept");
     puts("PASS: existing conflicts save without prompting; new/imported keys have three choices; cancellation and write errors preserve content");
 } return 0; }
