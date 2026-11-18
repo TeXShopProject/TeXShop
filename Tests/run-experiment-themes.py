@@ -105,7 +105,12 @@ static PDFDocument *document(void) {
     [doc insertPage:[[PDFPage alloc] initWithImage:image] atIndex:0];
     return doc;
 }
-static BOOL inverted(ScrapPDFKitView *view) { return view.documentView.enclosingScrollView.contentFilters.count == 3; }
+static BOOL inverted(ScrapPDFKitView *view) {
+    NSScrollView *scroll = view.documentView.enclosingScrollView;
+    return scroll.appearance == nil && scroll.contentFilters.count == 0
+        && scroll.contentView.appearance == [NSAppearance appearanceNamed:NSAppearanceNameAqua]
+        && scroll.contentView.contentFilters.count == 3;
+}
 // A page like TeX output: transparent, with a little black mark near a corner.
 static PDFDocument *transparentDocument(void) {
     NSMutableData *data = [NSMutableData data];
@@ -191,8 +196,8 @@ int main(void) { @autoreleasepool {
     check([editor.insertionPointColor isEqual:NSColor.cyanColor], @"dark insertion color");
     check(pdf.previewPaperColor == nil, @"pages shown dark keep PDFKit's paper");
     check(fabs(sourceWindow.alphaValue-.82)<.001 && fabs(pdfWindow.alphaValue-.83)<.001, @"dark transparency");
-    check(inverted(pdf), @"system dark pages even though PDF scroll view is forced light");
-    NSArray *filters = pdf.documentView.enclosingScrollView.contentFilters;
+    check(inverted(pdf), @"system dark pages are drawn light and then inverted, without the scroll view taking that appearance");
+    NSArray *filters = pdf.documentView.enclosingScrollView.contentView.contentFilters;
     check([[(CIFilter *)filters[0] name] isEqualToString:@"CIGammaAdjust"] &&
           [[(CIFilter *)filters[1] name] isEqualToString:@"CIColorMatrix"] &&
           [[(CIFilter *)filters[2] name] isEqualToString:@"CIGammaAdjust"], @"inversion filter order");
@@ -239,7 +244,7 @@ int main(void) { @autoreleasepool {
     [testDefaults setInteger:2 forKey:TSPreviewAppearanceModeKey]; pump();
     check(inverted(pdf), @"external dark shared setting change");
     check(screenPaper(pdf) == nil, @"pages shown dark are not filled with the theme's paper");
-    pdf.documentView.enclosingScrollView.contentFilters = @[];
+    pdf.documentView.enclosingScrollView.contentView.contentFilters = @[];
     pdf.document = document(); pump();
     check(inverted(pdf), @"page appearance reapplied after document replacement");
     [testDefaults setInteger:1 forKey:TSPreviewAppearanceModeKey]; pump();

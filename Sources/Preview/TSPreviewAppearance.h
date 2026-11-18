@@ -76,15 +76,10 @@ static inline BOOL TSValidatePreviewAppearanceChoice(NSMenuItem *item, NSUserDef
 }
 // added by Terada (until this line)
 
-// Share the same PDF page treatment between the document and Experiment previews.
-static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert) {
-    if (!scrollView) return;
-    // PDFKit must draw light pages before the luminosity filter is applied.
-    scrollView.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
-    if (!invert) {
-        scrollView.contentFilters = @[];
-        return;
-    }
+// The luminosity filter turns light pages dark. PDFKit has to draw those pages
+// light first, so the same three filters are shared by the document preview and
+// the Experiment preview.
+static inline NSArray *TSPreviewInversionFilters(void) {
     NSMutableArray *filters = [NSMutableArray array];
     CIFilter *filter;
 
@@ -120,6 +115,35 @@ static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert
         keysAndValues:@"inputPower",
         [NSNumber numberWithDouble:1.6], nil];
     if (filter) [filters addObject:filter];
+    return filters;
+}
 
-    [scrollView setContentFilters:filters];
+// NSScrollPocket and the backdrop behind it fill the band under the title bar.
+// On macOS 26 and later, where the preview runs under the toolbar, AppKit copies
+// the scroll view's appearance onto that title bar. The pocket has to keep the
+// window's appearance, or a light preview turns the window frame light too.
+static inline BOOL TSPreviewSubviewIsToolbarPocket(NSView *view) {
+    return [NSStringFromClass(view.class) containsString:@"Pocket"];
+}
+
+// Share the same PDF page treatment between the document and Experiment previews.
+// The appearance chosen for the preview applies to the pages and the area around
+// them. It does not apply to the window frame, which keeps the system's appearance.
+static inline void TSApplyPreviewInversion(NSScrollView *scrollView, BOOL invert) {
+    if (!scrollView) return;
+    scrollView.appearance = nil;
+    // Filters on the scroll view would also invert the pocket under the toolbar.
+    scrollView.contentFilters = @[];
+    NSAppearance *light = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    for (NSView *subview in scrollView.subviews) {
+        if (TSPreviewSubviewIsToolbarPocket(subview)) {
+            subview.appearance = nil;
+            subview.contentFilters = @[];
+            continue;
+        }
+        // PDFKit must draw light pages before the luminosity filter is applied.
+        // The view behind the pages is light too, so the area around them matches.
+        subview.appearance = light;
+        subview.contentFilters = invert ? TSPreviewInversionFilters() : @[];
+    }
 }
