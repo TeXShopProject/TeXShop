@@ -51,14 +51,14 @@ NSString *TSApplyKeyBindings(NSString *text, NSDictionary<NSString *, NSString *
     NSArray<NSString *> *keys = [bindings.allKeys sortedArrayUsingComparator:^NSComparisonResult(NSString *a, NSString *b) {
         return a.length > b.length ? NSOrderedAscending : (a.length < b.length ? NSOrderedDescending : [a compare:b options:NSLiteralSearch]);
     }];
-    NSMutableCharacterSet *starts = [NSMutableCharacterSet new];
-    for (NSString *key in keys) [starts addCharactersInRange:NSMakeRange([key characterAtIndex:0], 1)];
+    // The first UTF-16 unit of each input character; a character outside the
+    // Basic Multilingual Plane starts with its high surrogate.
+    NSMutableIndexSet *starts = [NSMutableIndexSet indexSet];
+    for (NSString *key in keys) [starts addIndex:[key characterAtIndex:0]];
     NSMutableString *result = nil;
     NSUInteger copied = 0, index = 0, length = text.length;
     while (index < length) {
-        NSRange found = [text rangeOfCharacterFromSet:starts options:NSLiteralSearch range:NSMakeRange(index, length - index)];
-        if (found.location == NSNotFound) break;
-        index = found.location;
+        if (![starts containsIndex:[text characterAtIndex:index]]) { index++; continue; }
         NSString *match = nil;
         if ([text rangeOfComposedCharacterSequenceAtIndex:index].location == index) {
             for (NSString *key in keys) {

@@ -3214,10 +3214,19 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 	if (! filter && [string isEqualToString: pasted])
 		return NO;
 	// mitsu 1.29 (T1)-- in order to enable "Undo Paste"
-	// Replace the text--imitate what happens in ordinary editing
-	NSRange	selectedRange = [self selectedRange];
-	if ([self shouldChangeTextInRange:selectedRange replacementString:string]) {
-		[self replaceCharactersInRange:selectedRange withString:string];
+	// Replace the text--imitate what happens in ordinary editing: as AppKit pastes, the text goes
+	// in place of the first selected range and the other ranges are deleted, in one step of Undo.
+	NSArray<NSValue *> *ranges = [self selectedRanges];
+	NSMutableArray<NSString *> *strings = [NSMutableArray arrayWithObject:string];
+	while (strings.count < ranges.count)
+		[strings addObject:@""];
+	if ([self shouldChangeTextInRanges:ranges replacementStrings:strings]) {
+		NSTextStorage *storage = [self textStorage];
+		[storage beginEditing];
+		for (NSInteger i = (NSInteger)ranges.count - 1; i >= 0; i--)
+			[storage replaceCharactersInRange:ranges[(NSUInteger)i].rangeValue withString:strings[(NSUInteger)i]];
+		[storage endEditing];
+		[self setSelectedRange:NSMakeRange(ranges.firstObject.rangeValue.location + string.length, 0)];
 		[self didChangeText];
 	}
 	// by returning YES, "Undo Paste" menu item will be set up by system

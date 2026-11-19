@@ -50,7 +50,9 @@ mutations = {
     'rows with a placeholder applied': ('globaldata', ' || TSKeyBindingOutputHasPlaceholder(output)) continue;', ') continue;'),
     'marks are not placeholders': ('globaldata', '@"#PASTE#", @"•"]', '@"#PASTE#"]'),
     'inside a character': ('globaldata', 'if (end < length && [text rangeOfComposedCharacterSequenceAtIndex:end].location != end) continue;', ''),
-    'not through shouldChangeTextInRange': ('category', 'if ([self shouldChangeTextInRange:selectedRange replacementString:string]) {', 'if (YES) {'),
+    'not through shouldChangeTextInRanges': ('category', 'if ([self shouldChangeTextInRanges:ranges replacementStrings:strings]) {', 'if (YES) {'),
+    'only the first range': ('category', 'NSArray<NSValue *> *ranges = [self selectedRanges];', 'NSArray<NSValue *> *ranges = @[[self selectedRanges].firstObject];'),
+    'high surrogates not found': ('globaldata', 'if (![starts containsIndex:[text characterAtIndex:index]]) { index++; continue; }', 'if (![starts containsIndex:[text characterAtIndex:index]] || CFStringIsSurrogateHighCharacter([text characterAtIndex:index])) { index++; continue; }'),
     'not for #PASTE#': ('extras', '        [clipboard replaceLineEndingsWithLF];\n', ''),
     '#PASTE# without ConvertLF': ('extras', 'if ([NSUserDefaults.standardUserDefaults boolForKey:@"ConvertLF"])', 'if (YES)'),
 }

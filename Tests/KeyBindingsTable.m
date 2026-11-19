@@ -296,6 +296,15 @@ int main(int argc, char **argv) { @autoreleasepool {
     BOOL dimmed = YES;
     for (NSInteger r = 2; r <= 3; r++) dimmed &= !PasteBox(table, r).enabled && PasteBox(table, r).state == NSControlStateValueOff;
     Check(dimmed, @"A row with #SEL#, #INS# or a mark has its box off and dimmed, also when the file checks it");
+    // A check the file kept for a row with a placeholder is not taken: giving
+    // the row an output without one leaves it unchecked.
+    NSUInteger hat = [bindings.keys indexOfObject:@"^"];
+    [table editColumn:1 row:(NSInteger)hat withEvent:nil select:YES];
+    editor = (NSTextView *)window.firstResponder;
+    [editor insertText:@"\\hat" replacementRange:editor.selectedRange];
+    EndEditing(window, table);
+    Check(PasteBox(table, (NSInteger)hat).enabled && PasteBox(table, (NSInteger)hat).state == NSControlStateValueOff && ![SavedPaste() containsObject:@"^"] && ![[GlobalData sharedGlobalData].pasteKeyBindings objectForKey:@"^"], @"A check left in the file for a row with a placeholder stays off when the placeholder is gone");
+    [window.undoManager undo];
     // Checking saves at once and can be undone.
     ClickBox(PasteBox(table, 4));
     Check([SavedPaste() isEqual:(@[@"¥", @"§"])] && [[GlobalData sharedGlobalData].g_autocompletionPasteKeys isEqual:(@[@"¥", @"§"])] && [bindings.pasteKeys isEqual:(@[@"¥", @"§"])], @"Checking Paste saves the row at once, and drops the rows that cannot be checked");
@@ -350,6 +359,13 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check([SavedPaste() isEqual:@[]], @"Deleting a row removes its check");
     [window.undoManager undo];
     Check([SavedPaste() isEqual:(@[@"¥"])], @"Undo brings the check back");
+    // When the checks cannot be saved, the list and pasting keep the saved ones.
+    NSString *pastePath = [folder stringByAppendingPathComponent:@"autocompletionPaste.plist"];
+    [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: @0444} ofItemAtPath:pastePath error:NULL];
+    NSUInteger equiv = [bindings.keys indexOfObject:@"≡"], beepsBefore = beeps;
+    ClickBox(PasteBox(table, (NSInteger)equiv));
+    Check(PasteBox(table, (NSInteger)equiv).state == NSControlStateValueOff && [[GlobalData sharedGlobalData].g_autocompletionPasteKeys isEqual:(@[@"¥"])] && [SavedPaste() isEqual:(@[@"¥"])] && beeps == beepsBefore + 1, @"A check that cannot be saved is not shown or used, and beeps");
+    [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: @0644} ofItemAtPath:pastePath error:NULL];
     // The note under the list.
     NSTextField *pasteNote = nil;
     pending = [NSMutableArray arrayWithObject:bindings.view];

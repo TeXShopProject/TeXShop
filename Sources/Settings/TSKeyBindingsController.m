@@ -338,6 +338,9 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
 
 #pragma mark Model
 
+// A row can be applied to pasted text unless its output has a placeholder or a mark.
+static BOOL TSKeyBindingPastable(NSString *output) { return !TSKeyBindingOutputHasPlaceholder(output); }
+
 - (void)reloadFromGlobalData
 {
     GlobalData *data = [GlobalData sharedGlobalData];
@@ -353,14 +356,15 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
         [keys addObject:key]; [values addObject:(NSString *)dictionary[key]];
     }
     NSArray *pasteKeys = [data.g_autocompletionPasteKeys isKindOfClass:NSArray.class] ? data.g_autocompletionPasteKeys : @[];
-    for (NSString *key in keys) [paste addObject:@([pasteKeys containsObject:key])];
+    // A check that a file keeps for a row with a placeholder is not taken: the
+    // row stays unchecked until it is checked again.
+    [keys enumerateObjectsUsingBlock:^(NSString *key, NSUInteger i, BOOL *stop) {
+        [paste addObject:@([pasteKeys containsObject:key] && TSKeyBindingPastable(values[i]))];
+    }];
     self.mutableKeys = keys; self.mutableValues = values; self.mutablePaste = paste;
     [self.tableView reloadData];
     [self updateControls];
 }
-
-// A row can be applied to pasted text unless its output has a placeholder or a mark.
-static BOOL TSKeyBindingPastable(NSString *output) { return !TSKeyBindingOutputHasPlaceholder(output); }
 
 - (NSArray<NSString *> *)savedPasteKeys
 {
@@ -399,7 +403,21 @@ static BOOL TSKeyBindingPastable(NSString *output) { return !TSKeyBindingOutputH
     BOOL written = [dictionary writeToFile:[folder stringByAppendingPathComponent:@"autocompletion.plist"] atomically:NO];
     written &= [keys writeToFile:[folder stringByAppendingPathComponent:@"autocompletionDisplayOrder.plist"] atomically:NO];
     // Kept apart, so that autocompletion.plist stays a dictionary of strings.
-    written &= [pasteKeys writeToFile:[folder stringByAppendingPathComponent:@"autocompletionPaste.plist"] atomically:NO];
+    NSString *pastePath = [folder stringByAppendingPathComponent:@"autocompletionPaste.plist"];
+    if (![pasteKeys writeToFile:pastePath atomically:NO]) {
+        // The checks stay as the file has them, in the list and when pasting.
+        written = NO;
+        NSArray *kept = [NSArray arrayWithContentsOfFile:pastePath];
+        if (![kept isKindOfClass:NSArray.class]) kept = @[];
+        [GlobalData sharedGlobalData].g_autocompletionPasteKeys = kept;
+        [self.mutableKeys enumerateObjectsUsingBlock:^(NSString *key, NSUInteger i, BOOL *stop) {
+            self.mutablePaste[i] = @([kept containsObject:key] && TSKeyBindingPastable(self.mutableValues[i]));
+        }];
+        NSInteger column = [self.tableView columnWithIdentifier:TSKeyBindingPasteColumn];
+        if (column >= 0 && self.tableView.numberOfRows > 0)
+            [self.tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, (NSUInteger)self.tableView.numberOfRows)] columnIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)column]];
+        NSBeep();
+    }
     if (!written) NSLog(@"TeXShop could not save the key bindings in %@", folder);
 }
 

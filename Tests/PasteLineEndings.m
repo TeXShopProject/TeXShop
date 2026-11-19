@@ -146,6 +146,39 @@ int main(int argc, char **argv) { @autoreleasepool {
         printf("PASS: %s: a paste gets the key bindings checked for pasting while key bindings are on, without placeholders and marks\n", where);
     }
     // #PASTE# keeps the clipboard text: the key bindings are not applied inside a key binding or a macro.
+    // Input characters outside the Basic Multilingual Plane are replaced whole.
+    where = "surrogates";
+    keyBindingsOn = YES;
+    [GlobalData sharedGlobalData].g_autocompletionDictionary = @{@"\U0001F408": @"CAT", @"\U00020BB7": @"K", @"a": @"A", @"@": @"ab"};
+    [GlobalData sharedGlobalData].g_autocompletionPasteKeys = @[@"\U0001F408", @"\U00020BB7", @"a", @"@"];
+    for (Class kind in @[DocumentText.class, ScrapText.class]) {
+        BOOL undone = NO;
+        REQUIRE([Paste(kind, @"\U0001F408a\U00020BB7\U0001F409", &undone) isEqualToString:@"xCATAK\U0001F409y"] && undone);
+    }
+    // Several selected ranges: the text takes the place of the first, the others are deleted, as AppKit pastes,
+    // and one Undo restores them.
+    where = "several ranges";
+    for (int bindingsOn = 0; bindingsOn <= 1; bindingsOn++) {
+        keyBindingsOn = bindingsOn;
+        Clip(bindingsOn ? @"@" : @"ab");
+        NSUndoManager *undo = [NSUndoManager new];
+        undo.groupsByEvent = NO;
+        UndoSource *source = [UndoSource new];
+        source.manager = undo;
+        NSTextView *view = [[DocumentText alloc] initWithFrame:NSMakeRect(0, 0, 300, 100)];
+        view.richText = NO; view.allowsUndo = YES; view.delegate = source;
+        view.string = @"aXbYc";
+        view.selectedRanges = @[[NSValue valueWithRange:NSMakeRange(1, 1)], [NSValue valueWithRange:NSMakeRange(3, 1)]];
+        [undo beginUndoGrouping];
+        [view paste:nil];
+        [undo endUndoGrouping];
+        REQUIRE([view.string isEqualToString:@"aabbc"]);
+        REQUIRE(NSEqualRanges(view.selectedRange, NSMakeRange(3, 0)));
+        [undo undo];
+        REQUIRE([view.string isEqualToString:@"aXbYc"]);
+    }
+    keyBindingsOn = NO;
+    printf("PASS: characters outside the BMP and several selected ranges\n");
     where = "#PASTE# key bindings";
     Clip(@"\u00a5");
     NSMutableString *kept = [@"#PASTE#" mutableCopy];
