@@ -73,6 +73,26 @@ static void Select(NSString *identifier) {
     }];
 }
 @end
+// The Settings pane, with the command, the macro confirmation and the error kept here.
+@interface DispatchPane : TSShortcutPaneController
+@property TSShortcutCommand *selection;
+@property NSString *shownError;
+@property NSUInteger confirmations;
+@property BOOL consent;
+@end
+@interface TSShortcutPaneController (DispatchActions)
+- (void)restoreShortcut:(id)sender;
+- (void)applyCapturedShortcut:(id)sender;
+- (NSArray<NSString *> *)macrosUsingBindings:(NSArray *)bindings;
+@end
+@implementation DispatchPane
+- (TSShortcutCommand *)selectedCommand { return self.selection; }
+- (void)showError:(NSString *)error { if (error) self.shownError = error; }
+- (void)confirmMacrosUsingBindings:(NSArray *)bindings completion:(void (^)(BOOL))completion {
+    if (![self macrosUsingBindings:bindings].count) { completion(YES); return; }
+    self.confirmations++; completion(self.consent);
+}
+@end
 static DispatchTarget *target;
 static NSWindow *window;
 static NSArray<NSDictionary *> *nibItems;
@@ -303,8 +323,30 @@ int main(int argc, const char *argv[]) {
             Spin(0.3);
             REQUIRE([bareDefaults.values[TSMenuShortcutOverridesKey][sourcePreview] isEqual:(@{@"key":@"k", @"modifiers":@(controlCommand)})] && early.unavailableCommands.count == 0,
                 @"a default restored before French's keys were known gives way to Console's Command-& (%@, unavailable %@)", bareDefaults.values[TSMenuShortcutOverridesKey], early.unavailableCommands);
+            // A key whose items all meet other items stays unknown, and is worked out once one is free.
+            // On French, Source ⇔ Preview shows Command-&; the other variants are taken by items with & as recorded.
+            NSMutableArray *occupants = [NSMutableArray array];
+            for (NSNumber *flags in @[@(NSEventModifierFlagCommand | NSEventModifierFlagControl | NSEventModifierFlagOption), @(controlCommand), @(NSEventModifierFlagCommand | NSEventModifierFlagOption)]) {
+                NSMenuItem *occupant = [[NSMenuItem alloc] initWithTitle:@"Occupant" action:@selector(fixtureOccupant:) keyEquivalent:@""];
+                occupant.target = target; occupant.allowsAutomaticKeyEquivalentLocalization = NO;
+                occupant.keyEquivalentModifierMask = flags.unsignedIntegerValue; occupant.keyEquivalent = @"&";
+                [bare.itemArray[1].submenu addItem:occupant]; [occupants addObject:occupant];
+            }
+            Select(French);
+            [early restoreCommand:earlyAssociated];
+            [early setValue:[NSMutableDictionary dictionary] forKey:@"layoutKeys"];
+            [early learnLayoutKeysThen:^(BOOL value) {}]; Spin(0.3);
+            NSDictionary *keys = [early valueForKey:@"layoutKeys"][French];
+            REQUIRE(!keys[TSBinding(@"1", NSEventModifierFlagCommand)] && keys.count == 83, @"Command-1 with every variant in use stays unknown (%lu keys)", (unsigned long)keys.count);
+            REQUIRE([[early bindingsForMacroKey:@"1" modifiers:controlCommand] isEqual:@[TSBinding(@"1", controlCommand)]], @"an unknown key is compared as given only");
+            [bare.itemArray[1].submenu removeItem:occupants[1]];
+            __block BOOL relearned = NO;
+            [early learnLayoutKeysThen:^(BOOL value) { relearned = value; }]; Spin(0.3);
+            keys = [early valueForKey:@"layoutKeys"][French];
+            REQUIRE(relearned && [keys[TSBinding(@"1", NSEventModifierFlagCommand)] isEqual:TSBinding(@"&", NSEventModifierFlagCommand)] && keys.count == 84, @"once an item is free, Command-1 is worked out as Command-& (%lu keys)", (unsigned long)keys.count);
+            for (NSMenuItem *occupant in occupants) if (occupant.menu) [occupant.menu removeItem:occupant];
             early = nil;
-            fprintf(stdout, "PASS: what was recorded or restored before a layout's keys were known is checked again\n");
+            fprintf(stdout, "PASS: what was recorded or restored before a layout's keys were known is checked again; keys every item of which is in use stay unknown\n");
         }
 
         // While TeXShop runs, the user switches layouts: defaults follow, as the menu's own keys do.
@@ -346,6 +388,52 @@ int main(int argc, const char *argv[]) {
         store = shortcuts.store;
         TSShortcutCommand *associated = Command(store, sourcePreview), *consoleCommand = Command(store, console);
         TSShortcutCommand *larger0 = Command(store, @"TSShortcut.modifyFont:.3");
+        // In Settings, restoring or recording in the pass in which French is chosen waits for its keys.
+        {
+            DispatchPane *pane = [[DispatchPane alloc] initWithShortcuts:shortcuts];
+            REQUIRE([store setKey:@"k" modifiers:ctrlCmd forCommand:associated] == nil && [store setKey:@"&" modifiers:cmd forCommand:consoleCommand] == nil, @"Control-Command-K and Command-& on ABC");
+            [shortcuts refreshMenuAndMacros]; Spin(0.6);
+            [store setValue:[NSMutableDictionary dictionary] forKey:@"layoutKeys"];
+            pane.selection = associated;
+            TISSelectInputSource(Source(French)); [enabledHere addObject:French];
+            [pane restoreShortcut:nil];
+            Spin(1.2);
+            NSDictionary *saved = [NSUserDefaults.standardUserDefaults objectForKey:TSMenuShortcutOverridesKey];
+            REQUIRE([pane.shownError containsString:consoleCommand.path] && [saved[sourcePreview] isEqual:(@{@"key":@"k", @"modifiers":@(ctrlCmd)})] && store.unavailableCommands.count == 0,
+                @"restoring Source ⇔ Preview in the pass French is chosen is refused for Console's Command-& (%@, %@, unavailable %@)", pane.shownError, saved, store.unavailableCommands);
+            // The Ampersand macro has Command-&: restoring asks first, and Cancel keeps both.
+            REQUIRE([store restoreCommand:consoleCommand] == nil, @"restoring Console"); [shortcuts refreshMenuAndMacros]; Spin(0.6);
+            Select(ABC); Spin(0.6);
+            [store setValue:[NSMutableDictionary dictionary] forKey:@"layoutKeys"];
+            pane.shownError = nil; pane.confirmations = 0; pane.consent = NO;
+            TISSelectInputSource(Source(French));
+            [pane restoreShortcut:nil];
+            Spin(1.2);
+            saved = [NSUserDefaults.standardUserDefaults objectForKey:TSMenuShortcutOverridesKey];
+            REQUIRE(pane.confirmations == 1 && [saved[sourcePreview] isEqual:(@{@"key":@"k", @"modifiers":@(ctrlCmd)})], @"restoring in the pass French is chosen asks about the Ampersand macro, and Cancel keeps Control-Command-K (%lu, %@)", (unsigned long)pane.confirmations, saved);
+            // Recording Command-& in that pass restores the default; switching straight back to ABC drops it.
+            Select(ABC); Spin(0.6);
+            [store setValue:[NSMutableDictionary dictionary] forKey:@"layoutKeys"];
+            [pane setValue:associated forKey:@"editingCommand"]; [pane setValue:@"&" forKey:@"capturedKey"]; [pane setValue:@(cmd) forKey:@"capturedModifiers"];
+            pane.confirmations = 0; pane.consent = YES;
+            TISSelectInputSource(Source(French));
+            [pane applyCapturedShortcut:nil];
+            TISSelectInputSource(Source(ABC));
+            Spin(1.2);
+            saved = [NSUserDefaults.standardUserDefaults objectForKey:TSMenuShortcutOverridesKey];
+            REQUIRE([saved[sourcePreview] isEqual:(@{@"key":@"k", @"modifiers":@(ctrlCmd)})], @"a recording started on French and left when ABC came back saves nothing (%@)", saved);
+            [store setValue:[NSMutableDictionary dictionary] forKey:@"layoutKeys"];
+            [pane setValue:associated forKey:@"editingCommand"]; [pane setValue:@"&" forKey:@"capturedKey"]; [pane setValue:@(cmd) forKey:@"capturedModifiers"];
+            TISSelectInputSource(Source(French));
+            [pane applyCapturedShortcut:nil];
+            Spin(1.2);
+            saved = [NSUserDefaults.standardUserDefaults objectForKey:TSMenuShortcutOverridesKey];
+            REQUIRE(saved[sourcePreview] == nil && pane.confirmations == 1, @"Command-& recorded in the pass French is chosen restores the default, after asking about the Ampersand macro (%@, %lu)", saved, (unsigned long)pane.confirmations);
+            [shortcuts refreshMenuAndMacros]; Spin(0.6);
+            Select(ABC); Spin(0.6);
+            [store restoreAll]; [shortcuts refreshMenuAndMacros]; Spin(0.6);
+            fprintf(stdout, "PASS: in Settings, restoring and recording right after a layout change wait for its keys\n");
+        }
         // Recording or restoring right after a layout change, before the store has seen the new layout.
         {
             REQUIRE([store setKey:@"k" modifiers:ctrlCmd forCommand:associated] == nil, @"assigning Control-Command-K on ABC");
@@ -407,6 +495,18 @@ int main(int argc, const char *argv[]) {
         NSArray *conflicts = [store conflictsForMacroShortcuts:@[@{@"path":ctrl1.path, @"key":ctrl1.key, @"modifiers":@(ctrl1.modifiers)}]];
         REQUIRE(conflicts.count == 1, @"the macro editor sees Console's Control-Command-& as taking the Control 1 macro's key (%@)", conflicts);
         REQUIRE(Dispatch(ctrlShown) == consoleCommand.item, @"Control-Command-& runs Console, not the macro");
+        {
+            // Command-1 and its Control-Option variant are both in use on French: another variant gives the key.
+            NSMenuItem *occupant = [[NSMenuItem alloc] initWithTitle:@"Occupant" action:@selector(fixtureOccupant:) keyEquivalent:@""];
+            occupant.target = target; occupant.allowsAutomaticKeyEquivalentLocalization = NO;
+            occupant.keyEquivalentModifierMask = ctrlCmd | NSEventModifierFlagOption; occupant.keyEquivalent = @"&";
+            [main.itemArray[1].submenu addItem:occupant]; Spin(0.6);
+            [store setValue:[NSMutableDictionary dictionary] forKey:@"layoutKeys"];
+            [store learnLayoutKeysThen:^(BOOL value) {}]; Spin(0.3);
+            NSArray *cold = [store conflictsForMacroShortcuts:@[@{@"path":@"Macros › New", @"key":@"1", @"modifiers":@(ctrlCmd)}]];
+            REQUIRE(cold.count == 1, @"with Command-& and Control-Option-Command-& in use, a new Control-Command-1 macro still meets Console's Control-Command-& (%@)", cold);
+            [occupant.menu removeItem:occupant]; Spin(0.6);
+        }
         // A macro key never seen in the menu is known as the layout shows it too.
         REQUIRE([store setKey:@"é" modifiers:ctrlCmd forCommand:larger0] == nil, @"assigning Control-Command-é to Larger");
         [shortcuts refreshMenuAndMacros]; Spin(0.6);

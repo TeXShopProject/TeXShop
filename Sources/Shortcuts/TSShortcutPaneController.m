@@ -78,6 +78,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 
 @interface TSShortcutPaneController () <NSTableViewDataSource, NSTableViewDelegate, NSSearchFieldDelegate>
 @property (strong) TSKeyboardShortcuts *shortcuts;
+@property BOOL runningAfterLayoutKeys;
 @property (readwrite) BOOL searchingByKey;
 @property (strong) NSSegmentedControl *searchMode;
 @property (strong) TSShortcutKeySearchView *keySearchView;
@@ -588,7 +589,25 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     [self showError:[self.store setKey:@"" modifiers:0 forCommand:command]];
     [self refreshMenuAndMacros];
 }
+// A key is restored or recorded with the keys the current keyboard layout shows. Right after
+// the layout changes they are worked out first, in the next pass of the run loop; when the
+// layout changes again meanwhile, the restore or recording is dropped.
+- (BOOL)deferUntilLayoutKeys:(void (^)(void))action {
+    if (self.runningAfterLayoutKeys || [self.store knowsKeysOfCurrentLayout]) return NO;
+    NSString *layout = TSKeyboardLayoutID();
+    __weak typeof(self) weakSelf = self;
+    [self.store learnLayoutKeysThen:^(BOOL learned) {
+        TSShortcutPaneController *strongSelf = weakSelf;
+        if (strongSelf == nil || ![TSKeyboardLayoutID() isEqual:layout]) return;
+        strongSelf.runningAfterLayoutKeys = YES;
+        action();
+        strongSelf.runningAfterLayoutKeys = NO;
+    }];
+    return YES;
+}
 - (void)restoreShortcut:(id)sender {
+    __weak typeof(self) deferringSelf = self;
+    if ([self deferUntilLayoutKeys:^{ [deferringSelf restoreShortcut:sender]; }]) return;
     [self endRecording];
     TSShortcutCommand *command = self.selectedCommand; if (!command || command.managedBySystem) return;
     // A yielding default disables no macro and is refused by no command: it gives way.
@@ -807,6 +826,8 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
 // A key in use by another command is refused and recording goes on; a key that
 // macros use is assigned after the confirmation.
 - (void)applyCapturedShortcut:(id)sender {
+    __weak typeof(self) deferringSelf = self;
+    if ([self deferUntilLayoutKeys:^{ [deferringSelf applyCapturedShortcut:sender]; }]) return;
     NSString *key = self.capturedKey;
     TSShortcutCommand *command = self.editingCommand;
     NSEventModifierFlags flags = self.capturedModifiers;

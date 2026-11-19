@@ -49,6 +49,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-layout-dispatch-') as directory
     models = source_file(root, 'TSShortcutModels.m')
     search = source_file(root, 'TSShortcutSearch.m')
     coordinator = source_file(root, 'TSKeyboardShortcuts.m')
+    pane = source_file(root, 'TSShortcutPaneController.m')
 
     def build(replace=None, name='probe'):
         sources = [str(source_file(root, n)) for n in NAMES]
@@ -109,15 +110,23 @@ with tempfile.TemporaryDirectory(prefix='texshop-layout-dispatch-') as directory
              '    return TSBinding(base.key, base.modifiers);',
              'the layout\'s keys give'),
             ('changes made before the layout keys are not checked again', store,
-             '            [self checkChangesMadeBeforeLayoutKeys];',
-             '            ;',
+             '        if (learned) [self checkChangesMadeBeforeLayoutKeys:layout];',
+             '        ;',
              'FAIL: '),
+            ('Settings act before the layout keys are known', pane,
+             '    if (self.runningAfterLayoutKeys || [self.store knowsKeysOfCurrentLayout]) return NO;',
+             '    if (YES) return NO;',
+             'FAIL: restoring Source ⇔ Preview in the pass French is chosen'),
+            ('one variant when a key meets another item', store,
+             '    NSArray<NSNumber *> *extras = @[@0, @(NSEventModifierFlagControl | NSEventModifierFlagOption), @(NSEventModifierFlagControl), @(NSEventModifierFlagOption)];',
+             '    NSArray<NSNumber *> *extras = @[@0, @(NSEventModifierFlagControl | NSEventModifierFlagOption)];',
+             'once an item is free'),
             ('saved keys checked against given defaults only', store,
              '    return [NSSet setWithObjects:given, [self shownDefaultForCommand:command], nil];',
              '    return [NSSet setWithObject:given];',
              'FAIL: '),
             ('shown defaults never worked out', store,
-             '    if (self.layoutKeys[layout] || !self.menu) { completion(NO); return; }',
+             '    if ((known && known.count == TSLayoutKeyCount()) || !self.menu) { completion(NO); return; }',
              '    if (YES) { completion(NO); return; }',
              'keys of com.apple.keylayout.French worked out'),
             ('macro keys compared only as their files name them', store,

@@ -19,12 +19,15 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
 // Command and Shift (-learnLayoutKeysThen:).
 @property NSMutableDictionary<NSString *, NSDictionary<TSShortcutBinding *, TSShortcutBinding *> *> *layoutKeys;
 // Saved keys of commands restored before the keys of the current layout were known.
-@property (nullable, copy) NSDictionary<NSString *, TSShortcutBinding *> *restoredBeforeLayoutKeys;
-// Commands given a key before the keys of the current layout were known.
-@property (nullable, copy) NSSet<NSString *> *recordedBeforeLayoutKeys;
+@property (nullable, copy) NSDictionary<NSString *, NSArray *> *restoredBeforeLayoutKeys;
+// Commands given a key before the keys of the current layout were known, with that layout.
+@property (nullable, copy) NSDictionary<NSString *, NSString *> *recordedBeforeLayoutKeys;
 @property (copy) NSArray *assignedShownKeys;
-// The hidden items AppKit shows defaults in, while they are in the menu.
+@property (copy) NSString *assignedLayout;
+// The hidden items AppKit shows keys in, while they are in the menu, and who waits for them.
 @property (nullable) NSMenuItem *learningHolder;
+@property (nullable, copy) NSString *learningLayout;
+@property NSMutableArray<void (^)(BOOL)> *learningCompletions;
 @end
 // Commands whose default key is only a proposal: they take it only when no other menu
 // command (with its key as resolved) and no macro (as its file names it) has it, and
@@ -108,6 +111,8 @@ static BOOL TSLayoutAdaptsKey(NSString *key) {
     unichar c = [key characterAtIndex:0];
     return !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c >= 0x7f || c < 0x21);
 }
+// The keys a layout's table has: every such key with Command, and with Command and Shift.
+static NSUInteger TSLayoutKeyCount(void) { return 2 * (0x7f - 0x21 - 52); }
 // AppKit adapts a key with any modifiers as it adapts the same key with Command, or with
 // Command and Shift when the modifiers include Shift: the shown key and Shift come from that,
 // the other modifiers stay. The keys AppKit shows with Command and with Command and Shift are
@@ -125,8 +130,11 @@ static BOOL TSLayoutAdaptsKey(NSString *key) {
 - (TSShortcutBinding *)shownBindingForGivenKey:(NSString *)key modifiers:(NSEventModifierFlags)flags {
     return [self layoutShownKey:key modifiers:flags layout:TSKeyboardLayoutID()] ?: TSBinding(key, flags);
 }
+// The keys of the current layout are known, or the layout is the one the keys were last
+// assigned on, whose defaults the items showed.
 - (BOOL)knowsKeysOfCurrentLayout {
-    return self.layoutKeys[TSKeyboardLayoutID()] != nil;
+    NSString *layout = TSKeyboardLayoutID();
+    return self.layoutKeys[layout] != nil || [layout isEqual:self.assignedLayout];
 }
 // The default of a command as AppKit shows it on the current keyboard layout.
 - (TSShortcutBinding *)shownDefaultForCommand:(TSShortcutCommand *)command {
@@ -161,12 +169,18 @@ static BOOL TSLayoutAdaptsKey(NSString *key) {
 }
 - (void)learnLayoutKeysThen:(void (^)(BOOL learned))completion {
     NSString *layout = TSKeyboardLayoutID();
-    if (self.layoutKeys[layout] || !self.menu) { completion(NO); return; }
+    NSDictionary *known = self.layoutKeys[layout];
+    if ((known && known.count == TSLayoutKeyCount()) || !self.menu) { completion(NO); return; }
+    if (!self.learningCompletions) self.learningCompletions = [NSMutableArray array];
+    [self.learningCompletions addObject:[completion copy]];
+    // One working out per layout: whoever asks while it runs waits for the same one.
+    if (self.learningHolder && [self.learningLayout isEqual:layout]) return;
     [self stopLearning];
     // Hidden items without an action, in the menu for one pass of the run loop, never run.
     // AppKit leaves a key empty when another item shows it, so each key comes again with
-    // Control and Option added, whose shown key it then gives.
-    const NSEventModifierFlags extra = NSEventModifierFlagControl | NSEventModifierFlagOption;
+    // Control, Option, or both added, whose shown key it then gives. A key that every one of
+    // them meets stays unknown, and is worked out again later.
+    NSArray<NSNumber *> *extras = @[@0, @(NSEventModifierFlagControl | NSEventModifierFlagOption), @(NSEventModifierFlagControl), @(NSEventModifierFlagOption)];
     NSMenuItem *holder = [[NSMenuItem alloc] initWithTitle:@"" action:nil keyEquivalent:@""];
     holder.identifier = TSShortcutLearningIdentifier; holder.hidden = YES;
     holder.submenu = [[NSMenu alloc] initWithTitle:@""];
@@ -177,8 +191,9 @@ static BOOL TSLayoutAdaptsKey(NSString *key) {
         if (!TSLayoutAdaptsKey(key)) continue;
         for (NSNumber *shift in @[@0, @(NSEventModifierFlagShift)]) {
             NSEventModifierFlags flags = NSEventModifierFlagCommand | shift.unsignedIntegerValue;
+            if (known[TSBinding(key, flags)]) continue;
             NSMutableArray *pair = [NSMutableArray array];
-            for (NSNumber *more in @[@0, @(extra)]) {
+            for (NSNumber *more in extras) {
                 NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:@"" action:nil keyEquivalent:@""];
                 item.hidden = YES; item.keyEquivalentModifierMask = flags | more.unsignedIntegerValue; item.keyEquivalent = key;
                 [holder.submenu addItem:item]; [pair addObject:item];
@@ -187,44 +202,70 @@ static BOOL TSLayoutAdaptsKey(NSString *key) {
         }
     }
     [self.menu addItem:holder];
-    self.learningHolder = holder;
+    self.learningHolder = holder; self.learningLayout = layout;
     dispatch_async(dispatch_get_main_queue(), ^{
-        BOOL learned = NO;
         // Assigning keys removes the items first (-applySavedOverrides): AppKit would empty a
-        // key assigned later that one of them shows.
-        if (self.learningHolder == holder && [TSKeyboardLayoutID() isEqual:layout]) {
-            NSMutableDictionary *keys = [NSMutableDictionary dictionary];
+        // key assigned later that one of them shows. That working out then starts again.
+        if (self.learningHolder != holder) return;
+        BOOL learned = NO;
+        if ([TSKeyboardLayoutID() isEqual:layout]) {
+            NSMutableDictionary *keys = [self.layoutKeys[layout] mutableCopy] ?: [NSMutableDictionary dictionary];
             [bases enumerateObjectsUsingBlock:^(TSShortcutBinding *base, NSUInteger index, BOOL *stop) {
-                TSShortcutBinding *shown = TSShownBinding(items[index][0]), *variant = TSShownBinding(items[index][1]);
-                if (!shown.key.length && variant.key.length && (variant.modifiers & extra) == extra)
-                    shown = TSBinding(variant.key, variant.modifiers & ~extra);
-                if (shown.key.length) keys[base] = shown;
+                [extras enumerateObjectsUsingBlock:^(NSNumber *more, NSUInteger variant, BOOL *found) {
+                    TSShortcutBinding *shown = TSShownBinding(items[index][variant]);
+                    NSEventModifierFlags added = more.unsignedIntegerValue;
+                    if (!shown.key.length || (shown.modifiers & added) != added) return;
+                    keys[base] = TSBinding(shown.key, shown.modifiers & ~added); *found = YES;
+                }];
             }];
             if (!self.layoutKeys) self.layoutKeys = [NSMutableDictionary dictionary];
+            learned = keys.count > [self.layoutKeys[layout] count] || !self.layoutKeys[layout];
             self.layoutKeys[layout] = keys;
-            learned = YES;
-            [self checkChangesMadeBeforeLayoutKeys];
         }
-        if (self.learningHolder == holder) [self stopLearning];
-        completion(learned);
+        [self stopLearning];
+        NSArray<void (^)(BOOL)> *waiting = [self.learningCompletions copy];
+        [self.learningCompletions removeAllObjects];
+        if (learned) [self checkChangesMadeBeforeLayoutKeys:layout];
+        for (void (^waiter)(BOOL) in waiting) waiter(learned);
     });
 }
 // Recording or restoring before the layout's keys were known went by the given default. Once
-// they are known, a recorded key that the layout shows for the default restores the command,
-// and a restored default that another command's key now meets gives way to the key it had.
-- (void)checkChangesMadeBeforeLayoutKeys {
-    NSDictionary<NSString *, TSShortcutBinding *> *restored = self.restoredBeforeLayoutKeys;
-    NSSet<NSString *> *recorded = self.recordedBeforeLayoutKeys;
-    self.restoredBeforeLayoutKeys = nil; self.recordedBeforeLayoutKeys = nil;
+// the keys of the layout it happened on are known, a recorded key that the layout shows for
+// the default restores the command, and a restored default that another command's saved key,
+// a macro or a menu item meets gives way to the key it had; neither takes a key from another.
+- (BOOL)defaultOfCommandIsTaken:(TSShortcutCommand *)command {
+    NSSet<TSShortcutBinding *> *defaults = [self defaultBindingsForCommand:command];
+    for (TSShortcutCommand *other in self.commands) {
+        TSShortcutBinding *saved = self.overrides[other.commandID];
+        if (other != command && saved && [defaults containsObject:saved]) return YES;
+    }
+    for (TSShortcutMacro *macro in (self.macroProvider ? self.macroProvider() : @[]))
+        for (TSShortcutBinding *binding in [self bindingsForMacroKey:macro.key modifiers:macro.modifiers])
+            if (binding.key.length && [defaults containsObject:binding]) return YES;
+    return [self conflictForRestoringCommand:command] != nil;
+}
+- (void)checkChangesMadeBeforeLayoutKeys:(NSString *)layout {
+    NSMutableDictionary<NSString *, NSArray *> *restored = [self.restoredBeforeLayoutKeys mutableCopy];
+    NSMutableDictionary<NSString *, NSString *> *recorded = [self.recordedBeforeLayoutKeys mutableCopy];
     BOOL changed = NO;
     for (TSShortcutCommand *command in self.commands) {
-        TSShortcutBinding *saved = self.overrides[command.commandID];
-        if (saved && [recorded containsObject:command.commandID] && [saved isEqual:[self shownDefaultForCommand:command]]) {
-            [self.overrides removeObjectForKey:command.commandID]; changed = YES;
-        } else if (!saved && restored[command.commandID] && [self conflictForRestoringCommand:command]) {
-            self.overrides[command.commandID] = restored[command.commandID]; changed = YES;
+        NSString *identifier = command.commandID;
+        TSShortcutBinding *saved = self.overrides[identifier];
+        if ([recorded[identifier] isEqual:layout]) {
+            [recorded removeObjectForKey:identifier];
+            if (saved && [saved isEqual:[self layoutShownKey:command.defaultKey modifiers:command.defaultModifiers layout:layout]]) {
+                [self.overrides removeObjectForKey:identifier];
+                if ([self defaultOfCommandIsTaken:command]) self.overrides[identifier] = saved;
+                else changed = YES;
+            }
+        }
+        if ([restored[identifier][1] isEqual:layout]) {
+            if (!saved && [self defaultOfCommandIsTaken:command]) { self.overrides[identifier] = restored[identifier][0]; changed = YES; }
+            [restored removeObjectForKey:identifier];
         }
     }
+    self.restoredBeforeLayoutKeys = restored.count ? restored : nil;
+    self.recordedBeforeLayoutKeys = recorded.count ? recorded : nil;
     if (changed) { [self applySavedOverrides]; [self persist]; }
 }
 - (NSArray<TSShortcutBinding *> *)bindingsForMacroKey:(NSString *)key modifiers:(NSEventModifierFlags)flags {
@@ -281,8 +322,19 @@ static BOOL TSLayoutAdaptsKey(NSString *key) {
 }
 - (void)stopLearning {
     NSMenuItem *holder = self.learningHolder;
-    self.learningHolder = nil;
+    self.learningHolder = nil; self.learningLayout = nil;
     if (holder.menu) [holder.menu removeItem:holder];
+}
+// Assigning keys took the hidden items away before AppKit showed their keys: whoever waits
+// for them gets a new working out.
+- (void)resumeLearning {
+    if (self.learningHolder || !self.learningCompletions.count) return;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.learningHolder || !self.learningCompletions.count) return;
+        NSArray<void (^)(BOOL)> *waiting = [self.learningCompletions copy];
+        [self.learningCompletions removeAllObjects];
+        for (void (^waiter)(BOOL) in waiting) [self learnLayoutKeysThen:waiter];
+    });
 }
 - (void)applySavedOverrides {
     [self stopLearning];
@@ -382,7 +434,9 @@ static BOOL TSLayoutAdaptsKey(NSString *key) {
     NSMutableSet *held = [active mutableCopy]; [held unionSet:yielded];
     self.heldCommandIDs = held;
     self.itemBindings = planned;
+    if (!self.assignedLayout) self.assignedLayout = TSKeyboardLayoutID();
     self.unavailableCommands = unavailable.array;
+    [self resumeLearning];
 }
 // Only the effective menu bindings reserve keys. AppKit-inserted commands
 // participate while present; only those TSFindCommandID names can be customized.
@@ -555,8 +609,11 @@ static BOOL TSLayoutAdaptsKey(NSString *key) {
     NSString *conflict = [self conflictForKey:key modifiers:flags except:command.item restoring:nil];
     if (conflict) return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), conflict];
     self.overrides[command.commandID] = binding;
-    if (![self knowsKeysOfCurrentLayout] && TSLayoutAdaptsKey(command.defaultKey))
-        self.recordedBeforeLayoutKeys = [(self.recordedBeforeLayoutKeys ?: [NSSet set]) setByAddingObject:command.commandID];
+    if (![self knowsKeysOfCurrentLayout] && TSLayoutAdaptsKey(command.defaultKey)) {
+        NSMutableDictionary *recorded = [self.recordedBeforeLayoutKeys mutableCopy] ?: [NSMutableDictionary dictionary];
+        recorded[command.commandID] = TSKeyboardLayoutID();
+        self.recordedBeforeLayoutKeys = recorded;
+    }
     [self applySavedOverrides];
     [self persist];
     return [self.unavailableCommands containsObject:command.path] ? NSLocalizedString(@"Shortcut Unavailable", @"") : nil;
@@ -580,7 +637,7 @@ static BOOL TSLayoutAdaptsKey(NSString *key) {
     TSShortcutBinding *saved = self.overrides[command.commandID];
     if (saved && ![self knowsKeysOfCurrentLayout] && TSLayoutAdaptsKey(command.defaultKey)) {
         NSMutableDictionary *restored = [self.restoredBeforeLayoutKeys mutableCopy] ?: [NSMutableDictionary dictionary];
-        restored[command.commandID] = saved;
+        restored[command.commandID] = @[saved, TSKeyboardLayoutID()];
         self.restoredBeforeLayoutKeys = restored;
     }
     [self.overrides removeObjectForKey:command.commandID];
