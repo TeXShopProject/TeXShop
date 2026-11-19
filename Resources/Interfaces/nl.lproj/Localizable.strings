@@ -444,3 +444,8 @@
 "Complete Label or Citation Key" = "Label of citatiesleutel aanvullen";
 /* Edit › Complete Label or Citation Key tooltip */
 "Offers the labels of the file after \\ref{, and BibDesk citation keys after \\cite{ when Settings allows it." = "Biedt na \\ref{ de labels van het bestand aan en, als de instellingen het toestaan, na \\cite{ de citatiesleutels van BibDesk.";
+
+/* Print panel: the section of a PDF print, as in Preview */
+"Auto Rotate" = "Roteer automatisch";
+"Scale:" = "Vergroot/verklein:";
+"Scale to Fit" = "Maak passend";

@@ -452,3 +452,8 @@
 "Complete Label or Citation Key" = "ラベルと引用キーを補完";
 /* Edit › Complete Label or Citation Key tooltip */
 "Offers the labels of the file after \\ref{, and BibDesk citation keys after \\cite{ when Settings allows it." = "\\ref{などの後ではファイル内のラベルを、設定で許したときは\U2009\\cite{などの後でBibDeskの引用キーを候補に出します。";
+
+/* Print panel: the section of a PDF print, as in Preview */
+"Auto Rotate" = "自動回転";
+"Scale:" = "サイズ調整:";
+"Scale to Fit" = "用紙サイズに合わせる";
