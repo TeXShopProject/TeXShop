@@ -164,14 +164,24 @@
             // Unidentified versions remain selectable, after every identified version.
             BOOL aKnown = [a[@"version"] length] > 0, bKnown = [b[@"version"] length] > 0;
             if (aKnown != bKnown) return aKnown ? NSOrderedAscending : NSOrderedDescending;
-            // Development builds follow every release, so that a release is selected first.
-            BOOL aDev = [a[@"dev"] boolValue], bDev = [b[@"dev"] boolValue];
-            if (aDev != bDev) return bDev ? NSOrderedAscending : NSOrderedDescending;
             NSComparisonResult year = [b[@"year"] compare:a[@"year"]];
             if (year != NSOrderedSame) return year;
+            // "YYYY/dev" is the trunk before the YYYY release, so it is older than that release.
+            BOOL aDev = [a[@"dev"] boolValue], bDev = [b[@"dev"] boolValue];
+            if (aDev != bDev) return bDev ? NSOrderedAscending : NSOrderedDescending;
             NSComparisonResult version = [b[@"number"] compare:a[@"number"] options:NSNumericSearch];
             return version != NSOrderedSame ? version : [a[@"order"] compare:b[@"order"]];
         }];
+        // Preselect the newest release that the banner names. Without one, the first entry (Ghostscript always).
+        NSUInteger preselected = [matches indexOfObjectPassingTest:^BOOL(NSDictionary *m, NSUInteger idx, BOOL *stop) {
+            return [m[@"year"] integerValue] > 0 && ![m[@"dev"] boolValue];
+        }];
+        if (preselected == NSNotFound) preselected = 0;
+        if (matches.count) {
+            NSMutableDictionary *entry = [matches[preselected] mutableCopy];
+            entry[@"default"] = @YES;
+            matches[preselected] = entry;
+        }
         result[keys[i]] = matches;
     }
     return result;

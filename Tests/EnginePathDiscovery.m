@@ -69,11 +69,26 @@ int main(void) { @autoreleasepool {
     tex(dev, @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2027/dev)");
     tex(debianDev, @"pdfTeX 3.141592653-2.6-1.40.30 (TeX Live 2026/dev/Debian)");
     tex(unknown, @"custom build without version information");
-    found = [TSEnginePathDiscovery candidatesForPaths:@[debianDev, dev, older, newer, unknown] currentTeX:dev currentGhostscript:@""];
+    NSArray *(^defaults)(NSArray *) = ^(NSArray *list) {
+        return [list filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"default == YES"]];
+    };
+    found = [TSEnginePathDiscovery candidatesForPaths:@[debianDev, dev, older, newer, unknown, gs1, gs2] currentTeX:dev currentGhostscript:@""];
     NSArray *order = [found[@"TeX"] valueForKey:@"path"];
-    check([order isEqual:@[newer, older, dev, debianDev, unknown]], @"releases first by year, then development versions by year, then unidentified");
-    check([found[@"TeX"][2][@"version"] isEqual:@"TeX Live 2027/dev (3.141592653-2.6-1.40.29)"], @"development version shown with banner wording");
-    check([found[@"TeX"][3][@"version"] isEqual:@"TeX Live 2026/dev (3.141592653-2.6-1.40.30)"], @"same-year development version shown after release despite newer pdfTeX");
+    check([order isEqual:@[dev, newer, debianDev, older, unknown]], @"newest first by year, development builds included; same-year release before its development build; unidentified last");
+    check([found[@"TeX"][0][@"version"] isEqual:@"TeX Live 2027/dev (3.141592653-2.6-1.40.29)"], @"development version shown with banner wording");
+    check([found[@"TeX"][2][@"version"] isEqual:@"TeX Live 2026/dev (3.141592653-2.6-1.40.30)"], @"same-year development version shown after release despite newer pdfTeX");
+    check([defaults(found[@"TeX"]) count] == 1 && [found[@"TeX"][1][@"default"] boolValue], @"newest release preselected, not the newer development build");
+    check([defaults(found[@"Ghostscript"]) count] == 1 && [found[@"Ghostscript"][0][@"default"] boolValue], @"newest Ghostscript preselected");
+    found = [TSEnginePathDiscovery candidatesForPaths:@[debianDev, unknown, dev] currentTeX:@"" currentGhostscript:@""];
+    check([[found[@"TeX"] valueForKey:@"path"] isEqual:@[dev, debianDev, unknown]] && [defaults(found[@"TeX"]) count] == 1 && [found[@"TeX"][0][@"default"] boolValue],
+          @"without a release, the newest development build is preselected, not an unidentified one");
+    NSString *bare = [root stringByAppendingPathComponent:@"bare"];
+    tex(bare, @"pdfTeX 3.141592653-2.6-1.40.30");
+    found = [TSEnginePathDiscovery candidatesForPaths:@[bare, dev] currentTeX:@"" currentGhostscript:@""];
+    check([[found[@"TeX"] valueForKey:@"path"] isEqual:@[dev, bare]] && [found[@"TeX"][0][@"default"] boolValue],
+          @"a banner naming no release is not taken for a release");
+    found = [TSEnginePathDiscovery candidatesForPaths:@[unknown] currentTeX:@"" currentGhostscript:@""];
+    check([defaults(found[@"TeX"]) count] == 1 && [found[@"TeX"][0][@"default"] boolValue], @"an unidentified installation alone is preselected");
     NSString *partial = [root stringByAppendingPathComponent:@"partial"];
     script(partial,@"pdflatex",@"exit 0\n");
     check(![TSEnginePathDiscovery directory:partial containsPrograms:@[@"tex",@"latex",@"pdftex",@"pdflatex"]], @"partial TeX installation rejected");
