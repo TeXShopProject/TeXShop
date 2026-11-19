@@ -206,6 +206,20 @@ int main(int argc, const char *argv[]) {
             TSShortcutStore *store = [[TSShortcutStore alloc] initWithMenu:main defaults:(NSUserDefaults *)defaults];
             Spin(0.3);
             CheckLikeReference(main, reference, @"store started", nil);
+            // The keys AppKit shows on this layout, worked out once, give every default as shown.
+            __block BOOL learned = NO;
+            [store learnLayoutKeysThen:^(BOOL value) { learned = value; }];
+            Spin(0.3);
+            REQUIRE(learned, @"keys of %@ worked out", layout);
+            for (TSShortcutCommand *command in store.commands) {
+                TSShortcutBinding *expected = reference[command.commandID];
+                if (!expected) continue;
+                REQUIRE([[store shownBindingForGivenKey:command.defaultKey modifiers:command.defaultModifiers] isEqual:expected],
+                    @"%@ on %@: the layout's keys give %@ %lx for the nib's key, AppKit shows %@ %lx", command.commandID, layout,
+                    [store shownBindingForGivenKey:command.defaultKey modifiers:command.defaultModifiers].key,
+                    (unsigned long)[store shownBindingForGivenKey:command.defaultKey modifiers:command.defaultModifiers].modifiers, expected.key, (unsigned long)expected.modifiers);
+            }
+            CheckLikeReference(main, reference, @"keys worked out", nil);
             // The key 6.00 beta 6 gave Source ⇔ Preview on French: AppKit adapted the & it read back once more.
             if ([layout isEqual:French])
                 REQUIRE(Dispatch(TSBinding(@"7", NSEventModifierFlagCommand | NSEventModifierFlagShift)) != ItemNamed(main, sourcePreview), @"Shift-Command-7 runs Source ⇔ Preview on French");
@@ -256,6 +270,43 @@ int main(int argc, const char *argv[]) {
             store = nil; saved = nil;
         }
 
+        // Without the coordinator nothing works out the keys of a new layout until asked: what was
+        // recorded or restored before is checked again once they are known.
+        {
+            Select(ABC);
+            NSMenu *bare = BuildMenu();
+            NSApp.mainMenu = bare; Spin(0.3);
+            DispatchMemoryDefaults *bareDefaults = [DispatchMemoryDefaults new];
+            TSShortcutStore *early = [[TSShortcutStore alloc] initWithMenu:bare defaults:(NSUserDefaults *)bareDefaults];
+            Spin(0.3);
+            TSShortcutCommand *earlyAssociated = Command(early, sourcePreview), *earlyConsole = Command(early, console);
+            const NSEventModifierFlags controlCommand = NSEventModifierFlagCommand | NSEventModifierFlagControl;
+            REQUIRE([early setKey:@"k" modifiers:controlCommand forCommand:earlyAssociated] == nil, @"Control-Command-K on ABC");
+            Select(French);
+            [early setKey:@"&" modifiers:NSEventModifierFlagCommand forCommand:earlyAssociated];
+            REQUIRE(bareDefaults.values[TSMenuShortcutOverridesKey][sourcePreview] != nil, @"before French's keys are known, Command-& is saved as recorded");
+            __block BOOL learned = NO;
+            [early learnLayoutKeysThen:^(BOOL value) { learned = value; }];
+            Spin(0.3);
+            REQUIRE(learned && bareDefaults.values[TSMenuShortcutOverridesKey] == nil, @"once French's keys are known, the recorded Command-& restores the default (%@)", bareDefaults.values[TSMenuShortcutOverridesKey]);
+            early = nil;
+            Select(ABC);
+            bareDefaults = [DispatchMemoryDefaults new];
+            bare = BuildMenu(); NSApp.mainMenu = bare; Spin(0.3);
+            early = [[TSShortcutStore alloc] initWithMenu:bare defaults:(NSUserDefaults *)bareDefaults];
+            Spin(0.3);
+            earlyAssociated = Command(early, sourcePreview); earlyConsole = Command(early, console);
+            REQUIRE([early setKey:@"k" modifiers:controlCommand forCommand:earlyAssociated] == nil && [early setKey:@"&" modifiers:NSEventModifierFlagCommand forCommand:earlyConsole] == nil, @"Control-Command-K and Command-& on ABC");
+            Select(French);
+            [early restoreCommand:earlyAssociated];
+            [early learnLayoutKeysThen:^(BOOL value) {}];
+            Spin(0.3);
+            REQUIRE([bareDefaults.values[TSMenuShortcutOverridesKey][sourcePreview] isEqual:(@{@"key":@"k", @"modifiers":@(controlCommand)})] && early.unavailableCommands.count == 0,
+                @"a default restored before French's keys were known gives way to Console's Command-& (%@, unavailable %@)", bareDefaults.values[TSMenuShortcutOverridesKey], early.unavailableCommands);
+            early = nil;
+            fprintf(stdout, "PASS: what was recorded or restored before a layout's keys were known is checked again\n");
+        }
+
         // While TeXShop runs, the user switches layouts: defaults follow, as the menu's own keys do.
         Select(French);
         NSMenu *main = BuildMenu();
@@ -294,6 +345,31 @@ int main(int argc, const char *argv[]) {
         Spin(1.0);
         store = shortcuts.store;
         TSShortcutCommand *associated = Command(store, sourcePreview), *consoleCommand = Command(store, console);
+        TSShortcutCommand *larger0 = Command(store, @"TSShortcut.modifyFont:.3");
+        // Recording or restoring right after a layout change, before the store has seen the new layout.
+        {
+            REQUIRE([store setKey:@"k" modifiers:ctrlCmd forCommand:associated] == nil, @"assigning Control-Command-K on ABC");
+            [shortcuts refreshMenuAndMacros]; Spin(0.6);
+            TISSelectInputSource(Source(French)); [enabledHere addObject:French];
+            Spin(0.08);
+            REQUIRE([store setKey:@"&" modifiers:cmd forCommand:associated] == nil, @"recording Command-& 80 ms after choosing French");
+            [shortcuts refreshMenuAndMacros]; Spin(1.0);
+            REQUIRE([NSUserDefaults.standardUserDefaults objectForKey:TSMenuShortcutOverridesKey] == nil, @"Command-& recorded right after choosing French restores the default (%@)", [NSUserDefaults.standardUserDefaults objectForKey:TSMenuShortcutOverridesKey]);
+            Select(ABC); Spin(0.6);
+            REQUIRE([TSShownBinding(associated.item) isEqual:references[ABC][sourcePreview]], @"Source ⇔ Preview shows its default on ABC again");
+            REQUIRE([store setKey:@"k" modifiers:ctrlCmd forCommand:associated] == nil && [store setKey:@"&" modifiers:cmd forCommand:consoleCommand] == nil, @"Control-Command-K and Command-& on ABC");
+            [shortcuts refreshMenuAndMacros]; Spin(0.6);
+            TISSelectInputSource(Source(German)); [enabledHere addObject:German]; Spin(0.6);
+            TISSelectInputSource(Source(French)); Spin(0.08);
+            [store restoreCommand:associated];
+            [shortcuts refreshMenuAndMacros]; Spin(1.2);
+            REQUIRE([[NSUserDefaults.standardUserDefaults objectForKey:TSMenuShortcutOverridesKey][sourcePreview] isEqual:(@{@"key":@"k", @"modifiers":@(ctrlCmd)})],
+                @"restoring Source ⇔ Preview right after choosing French keeps Control-Command-K while Console has Command-& (%@)", [NSUserDefaults.standardUserDefaults objectForKey:TSMenuShortcutOverridesKey]);
+            REQUIRE(store.unavailableCommands.count == 0 && Dispatch(french1) == consoleCommand.item, @"Console keeps Command-& (unavailable %@)", store.unavailableCommands);
+            REQUIRE([store restoreCommand:consoleCommand] == nil && [store restoreCommand:associated] == nil, @"restoring both");
+            [shortcuts refreshMenuAndMacros]; Spin(0.6);
+            Select(ABC); Spin(0.6);
+        }
         // 1. Source ⇔ Preview gets another key on ABC; on French its default is still known as shown.
         REQUIRE([store setKey:@"k" modifiers:ctrlCmd forCommand:associated] == nil, @"assigning Control-Command-K on ABC");
         [shortcuts refreshMenuAndMacros];
@@ -331,6 +407,14 @@ int main(int argc, const char *argv[]) {
         NSArray *conflicts = [store conflictsForMacroShortcuts:@[@{@"path":ctrl1.path, @"key":ctrl1.key, @"modifiers":@(ctrl1.modifiers)}]];
         REQUIRE(conflicts.count == 1, @"the macro editor sees Console's Control-Command-& as taking the Control 1 macro's key (%@)", conflicts);
         REQUIRE(Dispatch(ctrlShown) == consoleCommand.item, @"Control-Command-& runs Console, not the macro");
+        // A macro key never seen in the menu is known as the layout shows it too.
+        REQUIRE([store setKey:@"é" modifiers:ctrlCmd forCommand:larger0] == nil, @"assigning Control-Command-é to Larger");
+        [shortcuts refreshMenuAndMacros]; Spin(0.6);
+        conflicts = [store conflictsForMacroShortcuts:@[@{@"path":@"Macros › New", @"key":@"2", @"modifiers":@(ctrlCmd)}]];
+        REQUIRE(conflicts.count == 1, @"a new macro with Control-Command-2 meets Larger's Control-Command-é on French (%@)", conflicts);
+        REQUIRE([store restoreCommand:larger0] == nil, @"restoring Larger"); [shortcuts refreshMenuAndMacros]; Spin(0.6);
+        // The key search shows a macro's key as the menu does.
+        REQUIRE([[store shownBindingForGivenKey:@"8" modifiers:cmd] isEqual:TSBinding(@"!", cmd)], @"Command-8 of a macro file is shown as Command-! on French");
         REQUIRE([store restoreCommand:consoleCommand] == nil, @"restoring Console"); [shortcuts refreshMenuAndMacros]; Spin(0.6);
         // 2. A key saved on ABC that a layout shows for a default: after the switch it is unavailable, not doubled.
         Select(ABC); Spin(0.6);
@@ -343,6 +427,13 @@ int main(int argc, const char *argv[]) {
         REQUIRE(store.unavailableCommands.count == 0 && Dispatch(TSBinding(@"&", cmd)) == consoleCommand.item, @"back on ABC Console has Command-& again (%@)", store.unavailableCommands);
         REQUIRE([TSShownBinding(associated.item) isEqual:references[ABC][sourcePreview]], @"Source ⇔ Preview shows its ABC key");
         REQUIRE([[store shownDefaultForCommand:associated] isEqual:references[ABC][sourcePreview]], @"its default shows the ABC key, not French's");
+        REQUIRE([store restoreCommand:consoleCommand] == nil, @"restoring Console"); [shortcuts refreshMenuAndMacros]; Spin(0.6);
+        // Back on ABC right after French, the Control 1 macro is Control-Command-1 again: a command
+        // can have Control-Command-& without meeting it.
+        REQUIRE([store setKey:@"&" modifiers:ctrlCmd forCommand:consoleCommand] == nil, @"assigning Control-Command-& to Console on ABC");
+        [shortcuts refreshMenuAndMacros]; Spin(0.8);
+        conflicts = [store conflictsForMacroShortcuts:@[@{@"path":ctrl1.path, @"key":ctrl1.key, @"modifiers":@(ctrl1.modifiers)}]];
+        REQUIRE(conflicts.count == 0, @"on ABC the Control 1 macro does not meet Console's Control-Command-& (%@)", conflicts);
         REQUIRE([store restoreCommand:consoleCommand] == nil, @"restoring Console"); [shortcuts refreshMenuAndMacros]; Spin(0.6);
         // 3. A layout change while a menu change waits is still followed.
         TSShortcutCommand *larger = Command(store, @"TSShortcut.modifyFont:.3");

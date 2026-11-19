@@ -39,9 +39,11 @@ FOUNDATION_EXPORT NSString * const TSShortcutLearningIdentifier;
 - (TSShortcutBinding *)shownBindingForCommand:(TSShortcutCommand *)command;
 // The default as given and as shown on the current keyboard layout.
 - (NSSet<TSShortcutBinding *> *)defaultBindingsForCommand:(TSShortcutCommand *)command;
-// AppKit works out the shown defaults the store does not know on this layout, in the next pass
-// of the run loop; YES when it learned any.
-- (void)learnShownDefaultsThen:(void (^)(BOOL learned))completion;
+// AppKit shows, for one pass of the run loop, the keys of the current layout for every key
+// given with Command and with Command and Shift; YES when it learned them.
+- (void)learnLayoutKeysThen:(void (^)(BOOL learned))completion;
+// A key as AppKit shows it on the current layout, or the key itself while that is not known.
+- (TSShortcutBinding *)shownBindingForGivenKey:(NSString *)key modifiers:(NSEventModifierFlags)flags;
 // Called when AppKit has adapted the keys: the defaults items show are taken as shown.
 - (void)noteShownDefaultsSettled;
 // Called when AppKit has adapted the keys: whether the shown keys of defaults, other items or

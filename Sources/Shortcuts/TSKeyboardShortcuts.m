@@ -59,11 +59,17 @@ NSNotificationName const TSMacroShortcutsChangedNotification = @"TSMacroShortcut
     // AppKit shows other keys on another keyboard layout; conflicts are worked out again with them.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardLayoutChanged:)
         name:NSTextInputContextKeyboardSelectionDidChangeNotification object:nil];
+    // A layout chosen while TeXShop was in the background.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardLayoutChanged:)
+        name:NSApplicationDidBecomeActiveNotification object:nil];
 }
 - (void)keyboardLayoutChanged:(NSNotification *)notification {
-    // Switching an input method, as between Japanese and ABC, keeps the keyboard layout.
-    if ([TSKeyboardLayoutID() isEqual:self.keyboardLayout] || self.layoutRefreshPending) return;
+    // Switching an input method, as between Japanese and ABC, keeps the keyboard layout. Before
+    // the first refresh there is nothing to follow: it goes by the layout chosen then.
+    if (!self.keyboardLayout || [TSKeyboardLayoutID() isEqual:self.keyboardLayout] || self.layoutRefreshPending) return;
     self.layoutRefreshPending = YES;
+    // The keys of the new layout are worked out in the next pass, before the menus are refreshed.
+    if (!self.applyingMenus && !self.rebuildingMacros) [self.store learnLayoutKeysThen:^(BOOL learned) {}];
     [self refreshForKeyboardLayout];
 }
 - (void)refreshForKeyboardLayout {
@@ -83,10 +89,9 @@ NSNotificationName const TSMacroShortcutsChangedNotification = @"TSMacroShortcut
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         self.settleCheckPending = NO;
         if (self.applyingMenus || self.rebuildingMacros) { [self noteShownKeysAfterRefresh]; return; }
-        BOOL changedKeys = [self.store shownKeysChangedSinceAssignment];
         self.observedMenuBindings = [self menuBindingSnapshot];
-        [self.store learnShownDefaultsThen:^(BOOL learned) {
-            BOOL changed = learned || changedKeys;
+        [self.store learnLayoutKeysThen:^(BOOL learned) {
+            BOOL changed = [self.store shownKeysChangedSinceAssignment];
             if (changed && self.settleRounds < 2 && !self.applyingMenus && !self.rebuildingMacros) {
                 self.settleRounds++;
                 [self refreshMenuAndMacros];

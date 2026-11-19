@@ -457,9 +457,9 @@ static NSString * const TSCompletionMarkKeysRowID = @"row.catalog.keyboard.1.3";
         return [TSShortcutStore reasonForMacroConflict:@{@"refused":@YES}];
     for (TSShortcutMatch *owner in self.searchMatches) {
         if (!owner.winner) continue;
-        TSShortcutBinding *ownerBinding = owner.macro ? TSBinding(owner.macro.key, owner.macro.modifiers) : [self shownBindingForMatch:owner];
-        NSString *ownerKey = owner.macro ? owner.macro.key : ownerBinding.key;
-        NSEventModifierFlags ownerFlags = owner.macro ? owner.macro.modifiers : ownerBinding.modifiers;
+        TSShortcutBinding *ownerBinding = [self shownBindingForMatch:owner];
+        NSString *ownerKey = ownerBinding.key;
+        NSEventModifierFlags ownerFlags = ownerBinding.modifiers;
         return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is inactive because it conflicts with “%@” (%@).", @""),
             owner.path, [TSShortcutStore displayKey:ownerKey modifiers:ownerFlags]];
     }
@@ -495,9 +495,9 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
         if (row == [self macroHeaderRow]) { return [NSTextField labelWithString:column == nil || [column.identifier isEqualToString:@"command"] ? NSLocalizedString(@"Macros", @"") : @""]; }
         TSShortcutMatch *match = [self matchAtRow:row];
         if (match == nil) { return nil; }
-        TSShortcutBinding *shown = match.macro != nil ? nil : [self shownBindingForMatch:match];
-        NSString *key = match.macro != nil ? match.macro.key : shown.key;
-        NSEventModifierFlags flags = match.macro != nil ? match.macro.modifiers : shown.modifiers;
+        TSShortcutBinding *shown = [self shownBindingForMatch:match];
+        NSString *key = shown.key;
+        NSEventModifierFlags flags = shown.modifiers;
         NSString *reason = [self inactiveReasonForMatch:match];
         BOOL isCommand = [column.identifier isEqualToString:@"command"];
         if (!isCommand && match.command != nil && match.command == self.editingCommand) { return self.recordingCell; }
@@ -533,8 +533,11 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     label.toolTip = command.path;
     return label;
 }
-// The key a search match shows: a command's as the store knows it, another item's as AppKit shows it.
+// The key a search match shows: a command's as the store knows it, a macro's as the keyboard
+// layout shows the key its file names, another item's as AppKit shows it.
 - (TSShortcutBinding *)shownBindingForMatch:(TSShortcutMatch *)match {
+    TSShortcutMacro *macro = match.macro;
+    if (macro != nil) return [self.store shownBindingForGivenKey:macro.key modifiers:macro.modifiers];
     TSShortcutCommand *command = match.command;
     NSMenuItem *item = match.menuItem;
     if (command != nil) return [self.store shownBindingForCommand:command];
