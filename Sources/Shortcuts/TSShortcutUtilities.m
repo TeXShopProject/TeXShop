@@ -134,8 +134,10 @@ NSArray<TSShortcutBinding *> *TSRestorationBindings(NSString *key, NSEventModifi
     }
     return bindings.array;
 }
+NSString * const TSShortcutLearningIdentifier = @"TSShortcutLearning";
 void TSVisitMenu(NSMenu *menu, NSString *path, void (^visit)(NSMenuItem *, NSString *)) {
     for (NSMenuItem *item in menu.itemArray) {
+        if ([item.identifier isEqual:TSShortcutLearningIdentifier]) continue;
         NSString *title = path.length ? [path stringByAppendingFormat:@" › %@", item.title] : item.title;
         if (item.submenu == NSApp.servicesMenu && item.submenu) continue;
         visit(item, title);

@@ -47,9 +47,8 @@
     item.allowsAutomaticKeyEquivalentLocalization = NO;
     _defaultKey=[item.keyEquivalent copy];_defaultModifiers=item.keyEquivalentModifierMask;
     item.allowsAutomaticKeyEquivalentLocalization = _defaultLocalization;
-    if (_defaultLocalization && ![shown isEqual:TSBinding(_defaultKey, _defaultModifiers)]) {
-        _shownDefault = shown; _shownDefaultLayout = TSKeyboardLayoutID();
-    }
+    _shownDefaults = [NSMutableDictionary dictionary];
+    if (_defaultLocalization && shown.key.length) _shownDefaults[TSKeyboardLayoutID()] = shown;
     return self;
 }
 @end

@@ -22,10 +22,12 @@ NSString * _Nullable TSFindCommandID(NSMenuItem *item);
 void TSPrepareMenuIdentifiers(NSMenu *menu);
 SEL TSMacroAction(void);
 @interface TSShortcutCommand ()
-// The default as AppKit last showed it on a keyboard layout where it differs from the given key.
-@property (nonatomic, nullable) TSShortcutBinding *shownDefault;
-@property (nonatomic, nullable, copy) NSString *shownDefaultLayout;
+// The default as AppKit showed it on each keyboard layout, by layout identifier.
+@property (nonatomic, readonly) NSMutableDictionary<NSString *, TSShortcutBinding *> *shownDefaults;
 @end
+// Hidden items that let AppKit show a key for one pass of the run loop are kept in a hidden
+// menu with this identifier, which TSVisitMenu skips.
+FOUNDATION_EXPORT NSString * const TSShortcutLearningIdentifier;
 @interface TSShortcutStore (MenuAccess)
 @property (readonly) NSMenu *menu;
 @property (readonly) NSUserDefaults *defaults;
@@ -35,6 +37,19 @@ SEL TSMacroAction(void);
 // A command's default as AppKit shows it on the current keyboard layout, and the key it shows now.
 - (TSShortcutBinding *)shownDefaultForCommand:(TSShortcutCommand *)command;
 - (TSShortcutBinding *)shownBindingForCommand:(TSShortcutCommand *)command;
+// The default as given and as shown on the current keyboard layout.
+- (NSSet<TSShortcutBinding *> *)defaultBindingsForCommand:(TSShortcutCommand *)command;
+// AppKit works out the shown defaults the store does not know on this layout, in the next pass
+// of the run loop; YES when it learned any.
+- (void)learnShownDefaultsThen:(void (^)(BOOL learned))completion;
+// Called when AppKit has adapted the keys: the defaults items show are taken as shown.
+- (void)noteShownDefaultsSettled;
+// Called when AppKit has adapted the keys: whether the shown keys of defaults, other items or
+// macros differ from those the last assignment went by.
+- (BOOL)shownKeysChangedSinceAssignment;
+- (TSShortcutBinding *)givenBindingForMacroItem:(NSMenuItem *)item;
+// A macro's key as its file names it and as AppKit shows it on the current layout, when known.
+- (NSArray<TSShortcutBinding *> *)bindingsForMacroKey:(NSString *)key modifiers:(NSEventModifierFlags)flags;
 // Edit › Complete Label or Citation Key: its default key gives way to a menu command or a macro.
 - (BOOL)commandYieldsDefault:(TSShortcutCommand *)command;
 // The macro, as its file names its key, that has the key; nil when none.

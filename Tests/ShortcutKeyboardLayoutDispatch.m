@@ -3,6 +3,7 @@
 // TEXSHOP_ALLOW_LAYOUT_SWITCH=1; run-shortcut-keyboard-layout-dispatch.py runs it in a VM.
 // The menu holds the commands of TeXShop's MainMenu.nib with the keys the nib gives them.
 #import "TSShortcutInternal.h"
+#import "TSShortcutPaneController.h"
 #import <Carbon/Carbon.h>
 #define REQUIRE(c, ...) do { if (!(c)) { fprintf(stderr, "FAIL: %s\n", [[NSString stringWithFormat:__VA_ARGS__] UTF8String]); Restore(); exit(1); } } while (0)
 
@@ -48,6 +49,30 @@ static void Select(NSString *identifier) {
 - (BOOL)validateMenuItem:(NSMenuItem *)item { return YES; }
 @end
 
+// Macro items as the macro menu builds them: the key the file names, unless a menu item or an
+// earlier macro has it as given or as shown (TSShortcutStore +bindingsForMacroKey:).
+@interface DispatchMacros : NSObject
+@property NSMenu *menu;
+@property NSArray<TSShortcutMacro *> *macros;
+@property (weak) NSMenuItem *lastItem;
+- (void)doMacro:(id)sender;
+@end
+@implementation DispatchMacros
+- (void)doMacro:(id)sender { self.lastItem = sender; }
+- (void)rebuild:(NSNotification *)note {
+    [self.menu removeAllItems];
+    NSMutableArray *candidates = [NSMutableArray array];
+    for (TSShortcutMacro *macro in self.macros) [candidates addObject:@{@"path":macro.path, @"key":macro.key, @"modifiers":@(macro.modifiers)}];
+    NSMutableIndexSet *inactive = [NSMutableIndexSet indexSet];
+    for (NSDictionary *conflict in [TSKeyboardShortcuts.sharedController conflictsForMacroShortcuts:candidates]) [inactive addIndex:[conflict[@"index"] unsignedIntegerValue]];
+    [self.macros enumerateObjectsUsingBlock:^(TSShortcutMacro *macro, NSUInteger index, BOOL *stop) {
+        NSMenuItem *item = [self.menu addItemWithTitle:macro.name action:@selector(doMacro:) keyEquivalent:@""];
+        item.target = self;
+        if ([inactive containsIndex:index]) return;
+        item.keyEquivalentModifierMask = macro.modifiers; item.keyEquivalent = macro.key;
+    }];
+}
+@end
 static DispatchTarget *target;
 static NSWindow *window;
 static NSArray<NSDictionary *> *nibItems;
@@ -247,6 +272,106 @@ int main(int argc, const char *argv[]) {
             REQUIRE([TSShownBinding(Command(store, console).item) isEqual:TSBinding(@"é", NSEventModifierFlagCommand | NSEventModifierFlagControl)], @"a recorded key stays as recorded on %@", layout);
         }
         fprintf(stdout, "PASS: defaults follow a layout switch, recorded keys stay as recorded\n");
+
+        // The same through TeXShop's coordinator, which follows the layout notifications, with macros.
+        store = nil;
+        Select(ABC);
+        main = BuildMenu();
+        NSMenuItem *macrosTop = [main addItemWithTitle:@"Macros" action:nil keyEquivalent:@""];
+        macrosTop.submenu = [[NSMenu alloc] initWithTitle:@"Macros"];
+        DispatchMacros *macroMenu = [DispatchMacros new];
+        macroMenu.menu = macrosTop.submenu;
+        const NSEventModifierFlags cmd = NSEventModifierFlagCommand, ctrlCmd = NSEventModifierFlagCommand | NSEventModifierFlagControl;
+        TSShortcutMacro *ctrl1 = [[TSShortcutMacro alloc] initWithName:@"Control 1" path:@"Macros › Control 1" indexPath:[NSIndexPath indexPathWithIndex:0] serializedKey:@"^1" key:@"1" modifiers:ctrlCmd];
+        TSShortcutMacro *ampersand = [[TSShortcutMacro alloc] initWithName:@"Ampersand" path:@"Macros › Ampersand" indexPath:[NSIndexPath indexPathWithIndex:1] serializedKey:@"&" key:@"&" modifiers:cmd];
+        macroMenu.macros = @[ctrl1, ampersand];
+        [[NSNotificationCenter defaultCenter] addObserver:macroMenu selector:@selector(rebuild:) name:TSRebuildMacrosNotification object:nil];
+        NSApp.mainMenu = main; Spin(0.3);
+        [NSUserDefaults.standardUserDefaults removeObjectForKey:TSMenuShortcutOverridesKey];
+        TSKeyboardShortcuts *shortcuts = TSKeyboardShortcuts.sharedController;
+        shortcuts.macroProvider = ^NSArray<TSShortcutMacro *> *{ return macroMenu.macros; };
+        [shortcuts startObservingMenu];
+        Spin(1.0);
+        store = shortcuts.store;
+        TSShortcutCommand *associated = Command(store, sourcePreview), *consoleCommand = Command(store, console);
+        // 1. Source ⇔ Preview gets another key on ABC; on French its default is still known as shown.
+        REQUIRE([store setKey:@"k" modifiers:ctrlCmd forCommand:associated] == nil, @"assigning Control-Command-K on ABC");
+        [shortcuts refreshMenuAndMacros];
+        Spin(0.5);
+        Select(French); Spin(1.0);
+        REQUIRE([[store shownDefaultForCommand:associated] isEqual:french1], @"default of Source ⇔ Preview, assigned another key on ABC, shown on French as %@", [store shownDefaultForCommand:associated].key);
+        // Command-& is free while Source ⇔ Preview has another key, so Console can take it; then
+        // Source ⇔ Preview cannot come back.
+        REQUIRE([store setKey:@"&" modifiers:cmd forCommand:consoleCommand] == nil, @"assigning Command-& to Console on French");
+        [shortcuts refreshMenuAndMacros]; Spin(0.6);
+        NSString *refusal = [store restoreCommand:associated];
+        REQUIRE(refusal != nil, @"restoring Source ⇔ Preview while Console has Command-& on French is refused");
+        REQUIRE(Dispatch(french1) == consoleCommand.item && store.unavailableCommands.count == 0, @"Console keeps Command-& (runs %@, unavailable %@)", Dispatch(french1).identifier, store.unavailableCommands);
+        // 5. Restoring the default would take Command-& from the Ampersand macro: one restore warns as Restore All does.
+        REQUIRE([store restoreCommand:consoleCommand] == nil, @"restoring Console"); [shortcuts refreshMenuAndMacros]; Spin(0.6);
+        NSMutableSet *warned = [NSMutableSet set];
+        for (TSShortcutBinding *binding in [store defaultBindingsForCommand:associated]) [warned addObjectsFromArray:[store macrosUsingKey:binding.key modifiers:binding.modifiers]];
+        REQUIRE([warned containsObject:@"Macros › Ampersand (⌘&)"] || [[warned.allObjects componentsJoinedByString:@"\n"] containsString:@"Ampersand"],
+            @"restoring Source ⇔ Preview warns about the Ampersand macro (%@)", warned);
+        REQUIRE([[store macrosAffectedByRestoringAll] count] > 0, @"Restore All warns too");
+        // Recording the key French shows for the default restores it.
+        REQUIRE([store setKey:french1.key modifiers:french1.modifiers forCommand:associated] == nil, @"recording Command-& for Source ⇔ Preview on French");
+        REQUIRE([NSUserDefaults.standardUserDefaults objectForKey:TSMenuShortcutOverridesKey] == nil, @"recording the shown default saves nothing (%@)", [NSUserDefaults.standardUserDefaults objectForKey:TSMenuShortcutOverridesKey]);
+        [shortcuts refreshMenuAndMacros]; Spin(0.6);
+        REQUIRE(Dispatch(french1) == associated.item, @"Command-& runs Source ⇔ Preview again on French (runs %@)", Dispatch(french1).identifier ?: macroMenu.lastItem.title);
+        // 4. The Control 1 macro shows Control-Command-& on French: key search finds it by that key.
+        TSShortcutBinding *ctrlShown = TSBinding(french1.key, ctrlCmd);
+        NSArray<TSShortcutMatch *> *found = [TSShortcutSearch matchesKey:ctrlShown.key modifiers:ctrlShown.modifiers store:store macros:macroMenu.macros];
+        REQUIRE(found.count == 1 && found[0].macro == ctrl1 && found[0].winner, @"key search for Control-Command-& on French finds the Control 1 macro as the one that runs (%@)", found);
+        found = [TSShortcutSearch matchesEvent:KeyPress(french1.key, ctrlCmd) store:store macros:macroMenu.macros];
+        REQUIRE(found.count == 1 && found[0].macro == ctrl1 && found[0].winner, @"key search by pressing Control-Command-& on French finds the Control 1 macro as the one that runs (%@)", found);
+        // 6. A menu key equal to the key the Control 1 macro shows: the recorder and the macros agree.
+        REQUIRE([store setKey:french1.key modifiers:ctrlCmd forCommand:consoleCommand] == nil, @"assigning Control-Command-& to Console");
+        [shortcuts refreshMenuAndMacros]; Spin(0.6);
+        NSArray *conflicts = [store conflictsForMacroShortcuts:@[@{@"path":ctrl1.path, @"key":ctrl1.key, @"modifiers":@(ctrl1.modifiers)}]];
+        REQUIRE(conflicts.count == 1, @"the macro editor sees Console's Control-Command-& as taking the Control 1 macro's key (%@)", conflicts);
+        REQUIRE(Dispatch(ctrlShown) == consoleCommand.item, @"Control-Command-& runs Console, not the macro");
+        REQUIRE([store restoreCommand:consoleCommand] == nil, @"restoring Console"); [shortcuts refreshMenuAndMacros]; Spin(0.6);
+        // 2. A key saved on ABC that a layout shows for a default: after the switch it is unavailable, not doubled.
+        Select(ABC); Spin(0.6);
+        REQUIRE([store setKey:@"&" modifiers:cmd forCommand:consoleCommand] == nil, @"assigning Command-& to Console on ABC");
+        [shortcuts refreshMenuAndMacros]; Spin(0.6);
+        Select(French); Spin(1.0);
+        REQUIRE([store.unavailableCommands containsObject:consoleCommand.path], @"Console's Command-& is unavailable on French (%@)", store.unavailableCommands);
+        REQUIRE(Dispatch(french1) == associated.item, @"Command-& runs Source ⇔ Preview on French");
+        Select(ABC); Spin(1.0);
+        REQUIRE(store.unavailableCommands.count == 0 && Dispatch(TSBinding(@"&", cmd)) == consoleCommand.item, @"back on ABC Console has Command-& again (%@)", store.unavailableCommands);
+        REQUIRE([TSShownBinding(associated.item) isEqual:references[ABC][sourcePreview]], @"Source ⇔ Preview shows its ABC key");
+        REQUIRE([[store shownDefaultForCommand:associated] isEqual:references[ABC][sourcePreview]], @"its default shows the ABC key, not French's");
+        REQUIRE([store restoreCommand:consoleCommand] == nil, @"restoring Console"); [shortcuts refreshMenuAndMacros]; Spin(0.6);
+        // 3. A layout change while a menu change waits is still followed.
+        TSShortcutCommand *larger = Command(store, @"TSShortcut.modifyFont:.3");
+        REQUIRE([store setKey:@"j" modifiers:ctrlCmd forCommand:larger] == nil, @"assigning Control-Command-J to Larger"); [shortcuts refreshMenuAndMacros]; Spin(0.6);
+        NSMenuItem *passing = [[NSMenuItem alloc] initWithTitle:@"Passing" action:@selector(fixturePassing:) keyEquivalent:@"y"];
+        passing.keyEquivalentModifierMask = ctrlCmd;
+        NSMenu *commands = main.itemArray[1].submenu;
+        [commands addItem:passing];
+        Select(German);
+        [commands removeItem:passing];
+        Spin(1.2);
+        REQUIRE([[store shownDefaultForCommand:larger] isEqual:references[German][@"TSShortcut.modifyFont:.3"]], @"Larger's default shown on German after a menu change waited: %@ %lx",
+            [store shownDefaultForCommand:larger].key, (unsigned long)[store shownDefaultForCommand:larger].modifiers);
+        CheckLikeReference(main, references[German], @"coordinator on German", [NSSet setWithObject:@"TSShortcut.modifyFont:.3"]);
+        // A layout notification that arrives while a refresh for a menu change is waiting still
+        // refreshes, even when that refresh finds the menu as it was.
+        __block NSUInteger rebuilds = 0;
+        id observer = [[NSNotificationCenter defaultCenter] addObserverForName:TSRebuildMacrosNotification object:nil queue:nil usingBlock:^(NSNotification *note) { rebuilds++; }];
+        [shortcuts setValue:@YES forKey:@"menuRefreshPending"];
+        Select(ABC);
+        [shortcuts setValue:@NO forKey:@"menuRefreshPending"];
+        Spin(1.0);
+        REQUIRE(rebuilds > 0, @"a layout change while a menu change waits refreshes the menus");
+        [[NSNotificationCenter defaultCenter] removeObserver:observer];
+        Select(German); Spin(0.6);
+        [store restoreAll]; [shortcuts refreshMenuAndMacros]; Spin(0.6);
+        CheckLikeReference(main, references[German], @"coordinator, all restored", nil);
+        [NSUserDefaults.standardUserDefaults removeObjectForKey:TSMenuShortcutOverridesKey];
+        fprintf(stdout, "PASS: through the coordinator, defaults are known as shown on every layout; restore, recording, key search and macros agree\n");
         fprintf(stdout, "PASS: %lu key presses ran the expected command\n", (unsigned long)checkedKeys);
         Restore();
         Spin(0.3);

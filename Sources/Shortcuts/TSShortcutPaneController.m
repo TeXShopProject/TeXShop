@@ -553,7 +553,16 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     [alert beginSheetModalForWindow:parent completionHandler:nil];
 }
 - (void)confirmMacrosUsingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags completion:(void (^)(BOOL))completion {
-    NSArray *macros = [self.store macrosUsingKey:key modifiers:flags];
+    [self confirmMacrosUsingBindings:@[TSBinding(key, flags)] completion:completion];
+}
+- (NSArray<NSString *> *)macrosUsingBindings:(NSArray<TSShortcutBinding *> *)bindings {
+    NSMutableOrderedSet *macros = [NSMutableOrderedSet orderedSet];
+    TSShortcutStore *store = self.store;
+    for (TSShortcutBinding *binding in bindings) [macros addObjectsFromArray:[store macrosUsingKey:binding.key modifiers:binding.modifiers] ?: @[]];
+    return macros.array;
+}
+- (void)confirmMacrosUsingBindings:(NSArray<TSShortcutBinding *> *)bindings completion:(void (^)(BOOL))completion {
+    NSArray *macros = [self macrosUsingBindings:bindings];
     if (!macros.count) { completion(YES); return; }
     NSWindow *parent = self.window;
     if (parent == nil || parent.attachedSheet != nil) { completion(NO); return; }
@@ -566,7 +575,7 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     [alert beginSheetModalForWindow:parent completionHandler:^(NSModalResponse response) {
         TSShortcutPaneController *strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-        BOOL unchanged = [[strongSelf.store macrosUsingKey:key modifiers:flags] isEqualToArray:macros];
+        BOOL unchanged = [[strongSelf macrosUsingBindings:bindings] isEqualToArray:macros];
         completion(response == NSAlertSecondButtonReturn && unchanged);
     }];
 }
@@ -588,7 +597,8 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     NSString *error = [self.store conflictForRestoringCommand:command];
     if (error) { [self showError:[NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), error]]; return; }
     __weak typeof(self) weakSelf = self;
-    [self confirmMacrosUsingKey:command.defaultKey modifiers:command.defaultModifiers completion:^(BOOL accepted) {
+    // The default as given and as this keyboard layout shows it.
+    [self confirmMacrosUsingBindings:[self.store defaultBindingsForCommand:command].allObjects completion:^(BOOL accepted) {
         TSShortcutPaneController *strongSelf = weakSelf;
         if (strongSelf == nil || !accepted) { return; }
         [strongSelf showError:[strongSelf.store restoreCommand:command]];

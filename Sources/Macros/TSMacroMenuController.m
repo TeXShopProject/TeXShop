@@ -272,16 +272,19 @@ static id sharedMacroMenuController = nil;
 				NSString *keyEquiv = (NSString *)[dict objectForKey: KEYEQUIV_KEY];
 				NSUInteger modifier = getKeyModifierMaskFromString(keyEquiv);
 				keyEquiv = getKeyEquivalentFromString(keyEquiv);
-				NSDictionary *binding = [TSShortcutStore normalizedKey:keyEquiv modifiers:modifier];
+				// The key as the file names it and as the keyboard layout shows it.
+				NSArray *bindings = [TSShortcutStore bindingsForMacroKey:keyEquiv modifiers:modifier];
                 if (keyEquiv.length && ![TSShortcutStore isAllowedKey:keyEquiv modifiers:modifier]) {
                     [newItem setToolTip:[TSShortcutStore reasonForMacroConflict:@{@"refused":@YES}]];
                 } else if (keyEquiv.length && [self isAlreadyDefined:keyEquiv modifier:modifier]) {
-                    NSDictionary *owner = self.keyOwners[binding];
+                    NSDictionary *owner = nil;
+                    for (NSDictionary *binding in bindings) if (!owner) owner = self.keyOwners[binding];
                     if (owner) [newItem setToolTip:[TSShortcutStore reasonForMacroConflict:@{@"other":owner}]];
                 } else if (keyEquiv.length) {
 					[newItem setKeyEquivalentModifierMask: modifier];
 					[newItem setKeyEquivalent: keyEquiv];
-                    self.keyOwners[binding] = @{@"path":itemPath, @"key":keyEquiv, @"modifiers":@(modifier), @"macro":@YES};
+                    for (NSDictionary *binding in bindings)
+                        self.keyOwners[binding] = @{@"path":itemPath, @"key":keyEquiv, @"modifiers":@(modifier), @"macro":@YES};
 				}
 			}
 		}
@@ -549,9 +552,9 @@ static id sharedMacroMenuController = nil;
 }
 - (BOOL)isAlreadyDefined:(NSString *)keyEquiv modifier:(NSUInteger)modifier
 {
-    NSDictionary *binding = [TSShortcutStore normalizedKey:keyEquiv modifiers:modifier];
-    if ([self.keyEquivalents containsObject:binding]) return YES;
-    if ([binding[@"key"] length]) [self.keyEquivalents addObject:binding];
+    NSArray *bindings = [TSShortcutStore bindingsForMacroKey:keyEquiv modifiers:modifier];
+    for (NSDictionary *binding in bindings) if ([self.keyEquivalents containsObject:binding]) return YES;
+    for (NSDictionary *binding in bindings) if ([binding[@"key"] length]) [self.keyEquivalents addObject:binding];
     return NO;
 }
 

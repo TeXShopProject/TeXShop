@@ -47,6 +47,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-layout-dispatch-') as directory
     (d / 'menu.plist').write_bytes(plistlib.dumps(items))
     store = source_file(root, 'TSShortcutStore.m')
     models = source_file(root, 'TSShortcutModels.m')
+    search = source_file(root, 'TSShortcutSearch.m')
+    coordinator = source_file(root, 'TSKeyboardShortcuts.m')
 
     def build(replace=None, name='probe'):
         sources = [str(source_file(root, n)) for n in NAMES]
@@ -73,6 +75,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-layout-dispatch-') as directory
             check = subprocess.run(['ssh', '-o', 'BatchMode=yes', vm, 'defaults read com.apple.HIToolbox AppleSelectedInputSources'],
                                    capture_output=True, text=True)
             assert 'ABC' in check.stdout, ('ABC not selected after the probe', check.stdout)
+            check = subprocess.run(['ssh', '-o', 'BatchMode=yes', vm, 'defaults read com.apple.HIToolbox AppleEnabledInputSources'],
+                                   capture_output=True, text=True)
+            assert check.returncode == 0 and 'French' not in check.stdout and 'German' not in check.stdout, ('French or German left on', check.stdout)
 
     binary = build()
     local = subprocess.run([str(binary), str(d / 'menu.plist')], capture_output=True, text=True,
@@ -103,6 +108,26 @@ with tempfile.TemporaryDirectory(prefix='texshop-layout-dispatch-') as directory
              '    return [NSSet setWithObjects:given, [self shownDefaultForCommand:command], nil];',
              '    return [NSSet setWithObject:given];',
              'FAIL: '),
+            ('shown defaults never worked out', store,
+             '    if (!pending.count || !self.menu) { completion(NO); return; }',
+             '    if (YES) { completion(NO); return; }',
+             'shown on French as 1'),
+            ('macro keys compared only as their files name them', store,
+             '    TSShortcutBinding *known = self.macroShownKeys[TSKeyboardLayoutID()][given];\n    if (known) [result addObject:known];',
+             '    (void)given;',
+             'FAIL: key search for Control-Command-&'),
+            ('macro editor compares macros as their files name them', store,
+             '        NSArray<TSShortcutBinding *> *bindings = [self bindingsForMacroKey:binding.key modifiers:binding.modifiers];',
+             '        NSArray<TSShortcutBinding *> *bindings = @[binding];',
+             'the macro editor sees'),
+            ('key search compares macro items as shown', search,
+             '            match = activeMacros[[store givenBindingForMacroItem:item]];',
+             '            match = activeMacros[binding];',
+             'key search by pressing Control-Command-&'),
+            ('layout change waits behind a menu change', coordinator,
+             '    if ([TSKeyboardLayoutID() isEqual:self.keyboardLayout] || self.layoutRefreshPending) return;',
+             '    if ([TSKeyboardLayoutID() isEqual:self.keyboardLayout] || self.layoutRefreshPending || self.menuRefreshPending) return;',
+             'a layout change while a menu change waits'),
         ]
         every_item = ('    if (item.allowsAutomaticKeyEquivalentLocalization != localized) return NO;',
                       '    return NO;')

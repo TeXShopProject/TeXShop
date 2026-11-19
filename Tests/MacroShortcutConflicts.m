@@ -141,8 +141,10 @@ static void CaptureSheet(id self, SEL cmd, NSWindow *window, void (^handler)(NSM
 @end
 @implementation TestShortcuts
 - (TSShortcutCommand *)selectedCommand { return self.selection; }
-- (void)confirmMacrosUsingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags completion:(void (^)(BOOL))completion {
-    if (![self.store macrosUsingKey:key modifiers:flags].count) { completion(YES); return; }
+- (void)confirmMacrosUsingBindings:(NSArray *)bindings completion:(void (^)(BOOL))completion {
+    NSUInteger macros = 0;
+    for (TSShortcutBinding *binding in bindings) macros += [self.store macrosUsingKey:binding.key modifiers:binding.modifiers].count;
+    if (!macros) { completion(YES); return; }
     self.confirmations++; completion(self.consent);
 }
 - (void)showError:(NSString *)error { self.error=error; }
