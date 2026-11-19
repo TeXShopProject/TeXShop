@@ -61,7 +61,7 @@ static PrintedPage Measure(CGPDFPageRef page)
 
 // The paper of the next print is landscape A4; the print starts from this print info if set.
 static BOOL ExpectLandscape;
-static NSPrintInfo *StartInfo;
+static NSDocument *StartOwner;
 static NSPrintOperation *LastOperation;
 
 static NSPrintInfo *A4Info(NSString *output)
@@ -75,12 +75,12 @@ static NSPrintInfo *A4Info(NSString *output)
 
 static NSArray<NSValue *> *Print(NSString *input, NSString *output, void (^choose)(TSPDFPrintAccessory *), NSArray<NSString *> **arrows)
 {
-    NSPrintInfo *info = StartInfo ?: A4Info(output);
-    if (StartInfo) info.dictionary[NSPrintJobSavingURL] = [NSURL fileURLWithPath:output];
+    NSPrintInfo *info = StartOwner ? StartOwner.printInfo : A4Info(output);
+    if (StartOwner) info.dictionary[NSPrintJobSavingURL] = [NSURL fileURLWithPath:output];
     NSDictionary *before = [info.dictionary copy];
     NSPaperOrientation orientationBefore = info.orientation;
     PDFDocument *document = [[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:input]];
-    NSPrintOperation *operation = TSPDFPrintOperation(document, info);
+    NSPrintOperation *operation = TSPDFPrintOperation(document, info, StartOwner);
     LastOperation = operation;
     Check([info.dictionary isEqual:before] && info.orientation == orientationBefore, @"making the operation leaves the document's print info as it is");
     TSPDFPrintAccessory *accessory = (TSPDFPrintAccessory *)operation.printPanel.accessoryControllers.firstObject;
@@ -209,7 +209,8 @@ int main(int argc, char **argv)
         Check([TSPDFPrintLabelWithoutColon(@"\u00C9chelle\u00A0:") isEqual:@"\u00C9chelle"] && [TSPDFPrintLabelWithoutColon(@"\u7F29\u653E\uFF1A") isEqual:@"\u7F29\u653E"]
               && [TSPDFPrintLabelWithoutColon(@"Scale:") isEqual:@"Scale"], @"summary names lose the colon and the space before it");
 
-        // The choices of a print stay with its document only, and not as the source's scale.
+        // The choices of a print stay with its document only: not in its print info (shared by
+        // new documents, and used by the source's print), its edited state or its undo list.
         {
             NSDocument *first = [NSDocument new], *second = [NSDocument new];
             Check(first.printInfo == NSPrintInfo.sharedPrintInfo, @"a new document starts with the shared print info");
@@ -217,30 +218,52 @@ int main(int argc, char **argv)
             shared.paperSize = NSMakeSize(595.276, 841.89);
             shared.jobDisposition = NSPrintSaveJob;
             NSDictionary *sharedBefore = [shared.dictionary copy];
-            StartInfo = first.printInfo;
+            [first.undoManager registerUndoWithTarget:first handler:^(id target) {}];
+            [first.undoManager setActionName:@"Typing"];
+            [first.undoManager registerUndoWithTarget:first handler:^(id target) {}]; // closes the group
+            NSUInteger undoSteps = 0;
+            [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+            [first updateChangeCount:NSChangeCleared];
+            StartOwner = first;
+            NSDate *started = [NSDate date];
             Print(input, [dir stringByAppendingPathComponent:@"first.pdf"], ^(TSPDFPrintAccessory *a) {
                 a.autoRotate = NO; a.scaleToFit = NO; a.scalePercent = 43;
             }, &arrows);
+            Check(TSPDFPrintSucceeded(LastOperation, YES, started), @"a print saved to a new file succeeded");
             TSPDFPrintKeepChoices(LastOperation, first);
-            NSMutableDictionary *sharedAfter = [shared.dictionary mutableCopy];
-            [sharedAfter removeObjectForKey:NSPrintJobSavingURL];
-            NSMutableDictionary *sharedExpected = [sharedBefore mutableCopy];
-            [sharedExpected removeObjectForKey:NSPrintJobSavingURL];
+            [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
             NSMutableSet *changed = [NSMutableSet set];
-            // Saving a job records its path and format in the shared print info (AppKit): not a choice.
-            for (id key in @[TSPDFPrintAutoRotateKey, TSPDFPrintScalingModeKey, NSPrintScalingFactor, @"TSPDFPrintScale", NSPrintOrientation])
-                if (sharedAfter[key] != sharedExpected[key] && ! [sharedAfter[key] isEqual:sharedExpected[key]]) [changed addObject:key];
-            Check(changed.count == 0, [NSString stringWithFormat:@"the shared print info keeps no choice (changed: %@)", [changed.allObjects componentsJoinedByString:@", "]]);
-            Check(first.printInfo != shared && [first.printInfo.dictionary[NSPrintScalingFactor] doubleValue] == [sharedBefore[NSPrintScalingFactor] ?: @1 doubleValue],
-                  @"the document has its own print info, its scale for the source unchanged");
+            for (id key in @[TSPDFPrintAutoRotateKey, TSPDFPrintScalingModeKey, NSPrintScalingFactor, NSPrintOrientation])
+                if (shared.dictionary[key] != sharedBefore[key] && ! [shared.dictionary[key] isEqual:sharedBefore[key]]) [changed addObject:key];
+            Check(changed.count == 0 && first.printInfo == shared, [NSString stringWithFormat:@"the document's print info keeps no choice (changed: %@)", [changed.allObjects componentsJoinedByString:@", "]]);
+            Check(! first.documentEdited, @"keeping the choices does not mark the document edited");
+            Check(first.undoManager.canUndo, @"the undo list still has the typing");
+            while (first.undoManager.canUndo && ! [first.undoManager.undoActionName isEqual:@"Typing"] && undoSteps < 5) { [first.undoManager undo]; undoSteps++; }
+            Check(undoSteps == 0 && [first.undoManager.undoActionName isEqual:@"Typing"], [NSString stringWithFormat:@"the undo list is as it was (%lu steps above Typing)", (unsigned long)undoSteps]);
             __block BOOL rotate = YES, fit = YES; __block NSInteger percent = 0;
-            StartInfo = first.printInfo;
             Print(input, [dir stringByAppendingPathComponent:@"first-again.pdf"], ^(TSPDFPrintAccessory *a) { rotate = a.autoRotate; fit = a.scaleToFit; percent = a.scalePercent; }, &arrows);
             Check(! rotate && ! fit && percent == 43, @"the document's next print starts from its choices");
-            StartInfo = second.printInfo;
+            StartOwner = second;
             Print(input, [dir stringByAppendingPathComponent:@"second.pdf"], ^(TSPDFPrintAccessory *a) { rotate = a.autoRotate; fit = a.scaleToFit; percent = a.scalePercent; }, &arrows);
             Check(rotate && fit && percent == 100, @"another document starts with Auto Rotate and Scale to Fit");
-            StartInfo = nil;
+            StartOwner = nil;
+        }
+
+        // A print saved as a file succeeded only when this print wrote the file.
+        {
+            PDFDocument *document = [[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:input]];
+            NSString *old = [dir stringByAppendingPathComponent:@"old.pdf"];
+            [[NSData data] writeToFile:old atomically:YES];
+            [NSFileManager.defaultManager setAttributes:@{NSFileModificationDate: [NSDate dateWithTimeIntervalSinceNow:-3600]} ofItemAtPath:old error:NULL];
+            NSPrintOperation *missing = TSPDFPrintOperation(document, A4Info([dir stringByAppendingPathComponent:@"gone/out.pdf"]), nil);
+            NSPrintOperation *stale = TSPDFPrintOperation(document, A4Info(old), nil);
+            NSPrintInfo *spool = A4Info(old); spool.jobDisposition = NSPrintSpoolJob;
+            NSPrintOperation *printer = TSPDFPrintOperation(document, spool, nil);
+            NSDate *now = [NSDate date];
+            Check(! TSPDFPrintSucceeded(missing, YES, now), @"no file written: the print failed");
+            Check(! TSPDFPrintSucceeded(stale, YES, now), @"a file left from before: the print failed");
+            Check(! TSPDFPrintSucceeded(stale, NO, now), @"a cancelled print failed");
+            Check(TSPDFPrintSucceeded(printer, YES, now), @"a print sent to a printer that ran succeeded");
         }
 
         // A first page with /Rotate 90 is shown lying: the paper is landscape.

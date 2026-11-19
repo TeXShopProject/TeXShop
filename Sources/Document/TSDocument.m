@@ -3313,7 +3313,7 @@ else {
         // the paper and scaled to fit it, with these choices in the print panel.
         if ([aRep isKindOfClass: [NSPDFImageRep class]]) {
             printDocument = [[PDFDocument alloc] initWithURL: [NSURL fileURLWithPath: imagePath]];
-            printOperation = printDocument ? TSPDFPrintOperation(printDocument, [self printInfo]) : nil;
+            printOperation = printDocument ? TSPDFPrintOperation(printDocument, [self printInfo], self) : nil;
             if (printOperation == nil)
                 printDocument = nil;
         }
@@ -3382,7 +3382,9 @@ else {
             [printPanel setOptions:([printPanel options] | NSPrintPanelShowsOrientation | NSPrintPanelShowsScaling | NSPrintPanelShowsPaperSize)];
        //  [printPanel setOptions: (NSPrintPanelShowsPreview | NSPrintPanelShowsOrientation | NSPrintPanelShowsPageRange) ]; //( NSPrintPanelShowsPageSetupAccessory & [printPanel options])]; // NSPrintPanelShowsOrientation)];
         
-		if ([printOperation runOperation] && printDocument != nil)
+        NSDate *printStarted = [NSDate date];
+        BOOL printed = [printOperation runOperation];
+		if (printDocument != nil && TSPDFPrintSucceeded(printOperation, printed, printStarted))
             TSPDFPrintKeepChoices(printOperation, self);
 //		[printView release];
 	} else if (self.documentType == isTeX)

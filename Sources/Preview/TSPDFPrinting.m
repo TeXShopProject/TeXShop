@@ -1,5 +1,6 @@
 // Printing a PDF as Preview does; see TSPDFPrinting.h.
 #import "TSPDFPrinting.h"
+#import <objc/runtime.h>
 
 // PDFKit's print view (printOperationForPrintInfo:scalingMode:autoRotate:) keeps its two
 // choices under these keys and reads them while it prints, so the panel section can change
@@ -7,9 +8,10 @@
 // uses the choices the operation was made with.
 NSString * const TSPDFPrintAutoRotateKey = @"PDFPrintAutoRotate";
 NSString * const TSPDFPrintScalingModeKey = @"PDFPrintScalingMode";
-// The scale chosen for a PDF, kept apart from NSPrintScalingFactor of the document's print
-// info, which printing the source uses too.
-static NSString * const TSPDFPrintScaleKey = @"TSPDFPrintScale";
+// The choices of a document's last print, kept with the document itself (not in its print
+// info: setting a document's print info marks it edited and enters the undo list, and
+// printing the source uses its NSPrintScalingFactor).
+static char TSPDFPrintChoicesKey;
 
 NSString *TSPDFPrintLabelWithoutColon(NSString *label)
 {
@@ -163,19 +165,19 @@ NSString *TSPDFPrintLabelWithoutColon(NSString *label)
 
 @end
 
-NSPrintOperation *TSPDFPrintOperation(PDFDocument *document, NSPrintInfo *documentPrintInfo)
+NSPrintOperation *TSPDFPrintOperation(PDFDocument *document, NSPrintInfo *documentPrintInfo, NSDocument *owner)
 {
     if (document.pageCount == 0)
         return nil;
-    // The document's print info stays as it is until a print succeeds (TSPDFPrintKeepChoices).
+    // The document's print info stays as it is: the operation works on a copy.
     NSPrintInfo *printInfo = [documentPrintInfo copy];
     NSMutableDictionary *settings = printInfo.dictionary;
-    settings[NSPrintScalingFactor] = settings[TSPDFPrintScaleKey] ?: @1.0;
-    // The first print of a document turns pages and fits them to the paper, as Preview does.
-    if (settings[TSPDFPrintAutoRotateKey] == nil)
-        settings[TSPDFPrintAutoRotateKey] = @YES;
-    if (settings[TSPDFPrintScalingModeKey] == nil)
-        settings[TSPDFPrintScalingModeKey] = @(kPDFPrintPageScaleToFit);
+    // The choices of the document's last print; at first, as Preview: turn pages and fit them to
+    // the paper. Values in the print info itself (from elsewhere) are not taken.
+    NSDictionary *kept = owner ? objc_getAssociatedObject(owner, &TSPDFPrintChoicesKey) : nil;
+    settings[TSPDFPrintAutoRotateKey] = kept[TSPDFPrintAutoRotateKey] ?: @YES;
+    settings[TSPDFPrintScalingModeKey] = kept[TSPDFPrintScalingModeKey] ?: @(kPDFPrintPageScaleToFit);
+    settings[NSPrintScalingFactor] = kept[NSPrintScalingFactor] ?: @1.0;
 
     // The paper follows the first page as it is shown, its /Rotate applied.
     PDFPage *first = [document pageAtIndex:0];
@@ -197,17 +199,30 @@ NSPrintOperation *TSPDFPrintOperation(PDFDocument *document, NSPrintInfo *docume
     return operation;
 }
 
+BOOL TSPDFPrintSucceeded(NSPrintOperation *operation, BOOL ran, NSDate *started)
+{
+    if (! ran)
+        return NO;
+    NSPrintInfo *info = operation.printInfo;
+    if (! [info.jobDisposition isEqual:NSPrintSaveJob])
+        return YES;
+    // Saved as a file: the file is there, written by this print (not left from before).
+    NSURL *url = info.dictionary[NSPrintJobSavingURL];
+    if (! [url isKindOfClass:NSURL.class])
+        return YES;
+    NSDate *modified = nil;
+    [url removeCachedResourceValueForKey:NSURLContentModificationDateKey];
+    if (! [url getResourceValue:&modified forKey:NSURLContentModificationDateKey error:NULL] || modified == nil)
+        return NO;
+    return [modified timeIntervalSinceDate:started] > -0.01;
+}
+
 void TSPDFPrintKeepChoices(NSPrintOperation *operation, NSDocument *document)
 {
-    // A document starts with the application's shared print info: it gets its own, so that
-    // another document does not start from these choices.
-    if (document.printInfo == NSPrintInfo.sharedPrintInfo)
-        document.printInfo = [document.printInfo copy];
     NSDictionary *chosen = operation.printInfo.dictionary;
-    NSMutableDictionary *kept = document.printInfo.dictionary;
-    for (NSString *key in @[TSPDFPrintAutoRotateKey, TSPDFPrintScalingModeKey])
+    NSMutableDictionary *kept = [NSMutableDictionary dictionary];
+    for (NSString *key in @[TSPDFPrintAutoRotateKey, TSPDFPrintScalingModeKey, NSPrintScalingFactor])
         if (chosen[key] != nil)
             kept[key] = chosen[key];
-    if (chosen[NSPrintScalingFactor] != nil)
-        kept[TSPDFPrintScaleKey] = chosen[NSPrintScalingFactor];
+    objc_setAssociatedObject(document, &TSPDFPrintChoicesKey, [kept copy], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
