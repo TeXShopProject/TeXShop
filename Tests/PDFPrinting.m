@@ -15,6 +15,21 @@ static void Check(BOOL condition, NSString *message)
 
 typedef struct { NSRect frame; NSString *arrow; } PrintedPage;
 
+// Stands for Save as PDF chosen in the print panel: once printing starts, the job becomes a save
+// to this path (PDFKit's print view asks for its pages first).
+static NSString *SaveDuringRun;
+static IMP OriginalKnowsPageRange;
+static BOOL ChooseSaveThenKnowPages(id view, SEL selector, NSRangePointer range)
+{
+    if (SaveDuringRun) {
+        NSPrintInfo *info = NSPrintOperation.currentOperation.printInfo;
+        info.jobDisposition = NSPrintSaveJob;
+        info.dictionary[NSPrintJobSavingURL] = [NSURL fileURLWithPath:SaveDuringRun];
+        SaveDuringRun = nil;
+    }
+    return ((BOOL (*)(id, SEL, NSRangePointer))OriginalKnowsPageRange)(view, selector, range);
+}
+
 @interface SummaryWatcher : NSObject
 @property NSInteger count;
 @end
@@ -275,6 +290,36 @@ int main(int argc, char **argv)
             NSPrintOperation *next = TSPDFPrintOperation(document, A4Info([dir stringByAppendingPathComponent:@"next.pdf"]), owner);
             Check([next.printInfo.dictionary[TSPDFPrintAutoRotateKey] boolValue] && [next.printInfo.dictionary[TSPDFPrintScalingModeKey] integerValue] == kPDFPrintPageScaleToFit,
                   @"after the failed print, the next one starts with Auto Rotate and Scale to Fit");
+        }
+
+        // Save as PDF chosen during the run (in the panel): the job starts and ends as a spool job
+        // when the folder is gone, and the failed print's choices are not kept.
+        {
+            PDFDocument *document = [[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:input]];
+            NSDocument *owner = [NSDocument new];
+            NSPrintInfo *spool = A4Info([dir stringByAppendingPathComponent:@"unused.pdf"]);
+            spool.jobDisposition = NSPrintSpoolJob;
+            [spool.dictionary removeObjectForKey:NSPrintJobSavingURL];
+            NSPrintOperation *operation = TSPDFPrintOperation(document, spool, owner);
+            Method method = class_getInstanceMethod(operation.view.class, @selector(knowsPageRange:));
+            OriginalKnowsPageRange = method_setImplementation(method, (IMP)ChooseSaveThenKnowPages);
+            TSPDFPrintAccessory *a = (TSPDFPrintAccessory *)operation.printPanel.accessoryControllers.firstObject;
+            [a view]; a.autoRotate = NO; a.scaleToFit = NO; a.scalePercent = 43;
+            operation.showsPrintPanel = NO; operation.showsProgressPanel = NO;
+            NSString *gone = [dir stringByAppendingPathComponent:@"gone-in-panel/out.pdf"];
+            SaveDuringRun = gone;
+            BOOL printed = TSPDFPrintRun(operation);
+            Check(! printed && ! [NSFileManager.defaultManager fileExistsAtPath:gone] && [operation.printInfo.jobDisposition isEqual:NSPrintSpoolJob],
+                  @"Save as PDF chosen in the panel into a folder that is gone: the print failed");
+            if (printed) TSPDFPrintKeepChoices(operation, owner);
+            NSPrintOperation *next = TSPDFPrintOperation(document, spool, owner);
+            Check([next.printInfo.dictionary[TSPDFPrintAutoRotateKey] boolValue], @"after it, the next print starts with Auto Rotate");
+
+            NSString *saved = [dir stringByAppendingPathComponent:@"saved-in-panel.pdf"];
+            next.showsPrintPanel = NO; next.showsProgressPanel = NO;
+            SaveDuringRun = saved;
+            Check(TSPDFPrintRun(next) && [NSFileManager.defaultManager fileExistsAtPath:saved], @"Save as PDF chosen in the panel into a folder that is there: the print succeeded");
+            method_setImplementation(method, OriginalKnowsPageRange);
         }
 
         // A first page with /Rotate 90 is shown lying: the paper is landscape.

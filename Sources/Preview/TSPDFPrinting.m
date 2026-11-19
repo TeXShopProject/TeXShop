@@ -224,12 +224,33 @@ BOOL TSPDFPrintSucceeded(NSPrintOperation *operation, BOOL ran, NSDate *started,
     return [modified timeIntervalSinceDate:started] > -0.01;
 }
 
+// Notes whether the job became a save while the operation ran (Save as PDF in the panel).
+@interface TSPDFPrintJobWatcher : NSObject
+@property BOOL becameSave;
+@end
+
+@implementation TSPDFPrintJobWatcher
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([change[NSKeyValueChangeNewKey] isEqual:NSPrintSaveJob])
+        self.becameSave = YES;
+}
+@end
+
 BOOL TSPDFPrintRun(NSPrintOperation *operation)
 {
-    NSPrintJobDispositionValue disposition = [operation.printInfo.jobDisposition copy];
-    NSURL *url = operation.printInfo.dictionary[NSPrintJobSavingURL];
+    NSPrintInfo *info = operation.printInfo;
+    NSPrintJobDispositionValue disposition = [info.jobDisposition copy];
+    NSURL *url = info.dictionary[NSPrintJobSavingURL];
+    // A save chosen during the run (in the panel) that cannot write its file also comes back as a
+    // spool job without a file: the job is watched, so that it counts as a save from the start.
+    TSPDFPrintJobWatcher *watcher = [TSPDFPrintJobWatcher new];
+    [info addObserver:watcher forKeyPath:@"jobDisposition" options:NSKeyValueObservingOptionNew context:NULL];
     NSDate *started = [NSDate date];
     BOOL ran = [operation runOperation];
+    [info removeObserver:watcher forKeyPath:@"jobDisposition"];
+    if (watcher.becameSave)
+        disposition = NSPrintSaveJob;
     return TSPDFPrintSucceeded(operation, ran, started, disposition, url);
 }
 
