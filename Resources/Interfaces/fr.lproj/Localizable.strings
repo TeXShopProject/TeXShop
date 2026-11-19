@@ -26,8 +26,6 @@
 "Close Macro Editor" = "Fermer l'éditeur de macros";
 "Add macros from file..." = "Ajouter une macro à partir du fichier...";
 "Save selection to file..." = "Enregistrer la sélection dans le fichier...";
-"Convert \\yen to \\ in Pasteboard" = "Convertir \\yen en \\ dans le Presse-papiers";
-"Convert \\ to \\yen in Pasteboard" = "Convertir \\ en \\yen dans le Presse-papiers"; 
 "Edit" = "Édition";
 "Warning" = "Avertissement";
 "Don't Save" = "Ne pas enregistrer";
@@ -313,6 +311,8 @@
 /* Settings › Keyboard › Key Bindings */
 "Input Character" = "Caractère saisi";
 "Output String" = "Texte produit";
+"Paste" = "Coller";
+"Check “Paste” to also apply the replacement to pasted text." = "Si « Coller » est coché, le remplacement s’applique aussi au texte collé.";
 "Selected Text" = "Texte sélectionné";
 "Insertion Point" = "Point d’insertion";
 "Clipboard Text" = "Texte du presse-papiers";

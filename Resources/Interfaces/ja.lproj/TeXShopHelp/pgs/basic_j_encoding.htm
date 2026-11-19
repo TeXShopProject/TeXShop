@@ -36,30 +36,15 @@ TeX記号の &#x005C; を入力するとき、手元に &#x005C; キーがなけ
 </p>
 
 <p>
-また、TeXShopから他のアプリケーションにテキストをペーストする際に、&#x005C; や &#x00A5; を自動変換することもできます。「編集」メニューの一番下に次のオプション項目があって、クリップボード中の &#x005C; &#x00A5; 文字を調整することができます。お使いの環境にあわせて調整して下さい。</p>
-
-<center>
-<table border>
-<tr>
-<th><font size="1">エンコーディング</font>
-<th><font size="1">メニュー項目名</font>
-<th><font size="1">デフォルト</font>
-</tr>
-<tr>
-<th><font size="1">Japanese (<font color="orange">ShiftJIS &#x005C;</font>　<font color="vermilion">EUC</font>　<font color="blue">JIS</font>)</font>
-<td align="center"><font size="1">クリップボードで &#x005C; を &#x00A5; に変換</font>
-<td align="center"><font size="1">ON</font>
-</tr>
-<tr>
-<th><font size="1">Japanese (<font color="green">ShiftJIS &#x00A5;</font>　<font color="brown">ShiftJIS X0213</font>)</font>
-<td align="center"><font size="1">クリップボードで &#x00A5; を &#x005C; に変換</font>
-<td align="center"><font size="1">OFF</font>
-</tr>
-</table>
-</center>
+TeXShopからコピーした文字列は、&#x005C; も &#x00A5; もそのままクリップボードに入ります。
+</p>
 
 <p>
-こうした &#x005C; ⇔ &#x00A5; の自動変換機能は、宍倉光弘さんによって実装されました。なお、これらの機能はTeXShopで 日本語エンコーディング（上記５つ）を設定している場合にのみ動作します。
+「設定」→「書類と保存」の「新しい書類のエンコーディング」がUTF-8など日本語以外のときに、ペーストした文字列の &#x00A5; を &#x005C; にしたいときは、「設定」→「キーボード」のキーバインドの一覧で、入力文字 &#x00A5; の出力文字列を半角の &#x005C; 1文字にして「ペースト」にチェックを入れ、その書類でキーバインドをオンにします（「ソース」→「キーバインド」）。TeXShopを初めてインストールした場合は、&#x00A5; の行は最初からこのとおりになっているので、キーバインドをオンにするだけで使えます。
+</p>
+
+<p>
+こうした &#x005C; ⇔ &#x00A5; の入力とペーストの自動変換は、宍倉光弘さんによって実装されました。なお、この自動変換はTeXShopで日本語エンコーディング（上記５つ）を設定している場合にのみ動作します。キーバインドの「ペースト」は、エンコーディングにかかわらず使えます。
 </p>
 
 </div>

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.10.17)  19 NOV 2026 12:17
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.10.17)  20 NOV 2026 01:37
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -473,7 +473,7 @@ Chapter 15.
 
 ] [93] [94] [95] [96] [97] [98] [99]
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <12> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 2367.
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 2369.
  [100] [101] [102] [103] [104] [105]
 [106]
 Chapter 16.
@@ -503,7 +503,7 @@ Chapter 21.
 [139
 
 ]
-Underfull \hbox (badness 3281) in paragraph at lines 3121--3125
+Underfull \hbox (badness 3281) in paragraph at lines 3123--3127
 \TU/lmr/m/n/10.95 brary/TeX/texbin but points to the ConTeXt binaries if the li
 ne \TU/lmr/bx/n/10.95 !TEX
  []
@@ -557,7 +557,7 @@ File: Graphics/invisible.png Graphic file (type bmp)
 <Graphics/invisible.png>
  [194] [195] [196]
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 4451.
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 4453.
  [197]
 Chapter 30.
 [198
@@ -583,7 +583,7 @@ File: Graphics/annotationToolbar.png Graphic file (type bmp)
  [216] [217] [218] [219]
 Chapter 33.
 
-Underfull \hbox (badness 2359) in paragraph at lines 5368--5371
+Underfull \hbox (badness 2359) in paragraph at lines 5370--5373
 \TU/lmr/m/n/10.95 Annotated.pdf” as “Fourier-Annotated1.pdf”, the next time the
  panel opens, it
  []
@@ -598,7 +598,7 @@ Chapter 34.
 File: Graphics/Graphic1.png Graphic file (type bmp)
 <Graphics/Graphic1.png>
  [228] [229] [230] [231]
-Underfull \hbox (badness 2865) in paragraph at lines 5695--5697
+Underfull \hbox (badness 2865) in paragraph at lines 5697--5699
 []\TU/lmr/m/n/10.95 See [][]$[][][][][] [] [] [] [][][][][][][] [] [][][][] [] 
 [][][][][] [] [][][] [] [][][][][][] [] [][][][][][][][][][][] [] [][][][][][][
 ][][][] [] [][][]$[][] for a
@@ -631,7 +631,7 @@ Chapter 40.
 [246
 
 ]
-Underfull \hbox (badness 1383) in paragraph at lines 6432--6432
+Underfull \hbox (badness 1383) in paragraph at lines 6436--6436
 []\TU/lmr/bx/n/14.4 Magic Lines to Control Preview in Double Page
  []
 
@@ -641,7 +641,7 @@ Chapter 41.
 
 ] [252] [253] [254] [255] [256] [257] [258] [259] [260] [261] [262]
 [263]
-Underfull \hbox (badness 1888) in paragraph at lines 6936--6937
+Underfull \hbox (badness 1888) in paragraph at lines 6940--6941
 []\TU/lmr/m/n/10.95 The following setting causes synchronization spots to be sh
 own in the Preview
  []
@@ -665,10 +665,10 @@ Package rerunfilecheck Info: File `Manual.out' has not changed.
 Here is how much of TeX's memory you used:
  12251 strings out of 467696
  205120 string characters out of 5418921
- 682563 words of memory out of 5000000
+ 682562 words of memory out of 5000000
  41282 multiletter control sequences out of 15000+600000
  641839 words of font info for 113 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 69i,8n,79p,1874b,525s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 69i,8n,79p,1874b,521s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on Manual.pdf (280 pages).

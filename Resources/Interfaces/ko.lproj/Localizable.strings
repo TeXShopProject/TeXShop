@@ -26,8 +26,6 @@
 "Close Macro Editor" = "매크로 편집기 닫기";
 "Add macros from file..." = "파일에서 매크로 추가...";
 "Save selection to file..." = "선택부분을 파일로 저장...";
-"Convert \\yen to \\ in Pasteboard" = "클립보드에서 \\yen을 \\로 변환";
-"Convert \\ to \\yen in Pasteboard" = "클립보드에서 \\를 \\yen으로 변환"; 
 "Edit" = "편집";
 "Warning" = "경고";
 "Don't Save" = "저장하지 않음";
@@ -313,6 +311,8 @@
 /* Settings › Keyboard › Key Bindings */
 "Input Character" = "입력 문자";
 "Output String" = "출력 문자열";
+"Paste" = "붙여넣기";
+"Check “Paste” to also apply the replacement to pasted text." = "‘붙여넣기’를 선택하면 붙여넣은 텍스트에도 대치를 적용합니다.";
 "Selected Text" = "선택한 텍스트";
 "Insertion Point" = "출력 후 커서 위치";
 "Clipboard Text" = "클립보드 텍스트";

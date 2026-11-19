@@ -3,6 +3,8 @@
 // bindings are read from and written to a temporary folder only; copying and
 // pasting use a private pasteboard; beeps are counted, not sounded.
 #import "TestAppKitIsolation.h"
+// The Paste boxes take the right end of the rows.
+#define TS_TEST_STRIPE_END_INSET 120
 #import "StripedRows.h"
 #import "TSKeyBindingsController.h"
 #import "GlobalData.h"
@@ -43,7 +45,21 @@ static void Check(BOOL ok, NSString *what)
 static NSString *folder;
 static NSDictionary *SavedBindings(void) { return [NSDictionary dictionaryWithContentsOfFile:[folder stringByAppendingPathComponent:@"autocompletion.plist"]]; }
 static NSArray *SavedOrder(void) { return [NSArray arrayWithContentsOfFile:[folder stringByAppendingPathComponent:@"autocompletionDisplayOrder.plist"]]; }
+static NSArray *SavedPaste(void) { return [NSArray arrayWithContentsOfFile:[folder stringByAppendingPathComponent:@"autocompletionPaste.plist"]]; }
 static void Spin(void) { for (int i = 0; i < 3; i++) [NSRunLoop.currentRunLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.02]]; }
+// The Paste box of a row.
+static NSButton *PasteBox(NSTableView *table, NSInteger row)
+{
+    NSView *cell = [table viewAtColumn:[table columnWithIdentifier:@"paste"] row:row makeIfNecessary:YES];
+    for (NSView *view in cell.subviews) if ([view isKindOfClass:NSButton.class]) return (NSButton *)view;
+    return nil;
+}
+static void ClickBox(NSButton *box)
+{
+    box.state = box.state == NSControlStateValueOn ? NSControlStateValueOff : NSControlStateValueOn;
+    [NSApp sendAction:box.action to:box.target from:box];
+    Spin();
+}
 // Ends editing and finishes the event, as the application does, so each change
 // is one step of Undo.
 static void EndEditing(NSWindow *window, NSTableView *table) { [window makeFirstResponder:table]; Spin(); }
@@ -61,6 +77,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     folder = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSUUID UUID].UUIDString];
     AutoCompletionPath = folder;
     NSFont *font = [NSFont monospacedSystemFontOfSize:12 weight:NSFontWeightRegular];
+    NSMutableArray<NSView *> *pending = nil;
 
     // Every bundled output, and line breaks, tabs, marks and partial symbols,
     // survive the tokens unchanged.
@@ -253,10 +270,216 @@ int main(int argc, char **argv) { @autoreleasepool {
     Spin();
     Check([(id<NSTableViewDataSource>)bindings tableView:table acceptDrop:(id<NSDraggingInfo>)drop row:3 dropOperation:NSTableViewDropAbove] && [bindings.keys[2] isEqual:moved] && [SavedOrder()[2] isEqual:moved], @"Dragging moves a row and saves the order");
 
+    // Paste: a third column of boxes. A row is checked as saved, unless its output
+    // has a placeholder or a mark: then its box is off and dimmed.
+    [window.undoManager removeAllActions];
+    [GlobalData sharedGlobalData].g_autocompletionDictionary = @{@"¥": @"\\", @"≡": @"\\equiv", @"^": @"^{#SEL##INS#}", @"†": @"\\dag•‹n›", @"§": @"\\S"};
+    [GlobalData sharedGlobalData].g_autocompletionKeys = @[@"¥", @"≡", @"^", @"†", @"§"];
+    [GlobalData sharedGlobalData].g_autocompletionPasteKeys = @[@"¥", @"^", @"†", @"gone"];
+    [bindings reloadFromGlobalData];
+    // TS_KEY_BINDINGS_CAPTURE=<folder> saves the list, light and dark, to look at.
+    NSString *capture = NSProcessInfo.processInfo.environment[@"TS_KEY_BINDINGS_CAPTURE"];
+    for (NSAppearanceName name in capture.length ? @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua] : @[]) {
+        window.appearance = [NSAppearance appearanceNamed:name];
+        [window.contentView layoutSubtreeIfNeeded];
+        NSView *shown = window.contentView;
+        NSBitmapImageRep *rep = [shown bitmapImageRepForCachingDisplayInRect:shown.bounds];
+        [shown cacheDisplayInRect:shown.bounds toBitmapImageRep:rep];
+        [[rep representationUsingType:NSBitmapImageFileTypePNG properties:@{}] writeToFile:[capture stringByAppendingPathComponent:[NSString stringWithFormat:@"key-bindings-%@.png", name]] atomically:YES];
+    }
+    window.appearance = nil;
+    NSTableColumn *pasteColumn = table.tableColumns.lastObject;
+    Check(table.numberOfColumns == 3 && [pasteColumn.identifier isEqual:@"paste"] && pasteColumn.title.length > 0, @"The list has a Paste column");
+    printf("COLUMNS %.0f %.0f %.0f of %.0f\n", NSMinX([table rectOfColumn:2]), NSMaxX([table rectOfColumn:2]), NSWidth([table rectOfColumn:1]), NSWidth(table.bounds));
+    Check(NSMaxX([table rectOfColumn:2]) >= NSWidth(table.bounds) - 20 && NSWidth([table rectOfColumn:2]) < 100 && NSWidth([table rectOfColumn:0]) < 150, @"The Paste column keeps its width at the right end; the output column takes the rest");
+    Check(PasteBox(table, 0).enabled && PasteBox(table, 0).state == NSControlStateValueOn && PasteBox(table, 1).enabled && PasteBox(table, 1).state == NSControlStateValueOff, @"Rows are checked as saved");
+    BOOL dimmed = YES;
+    for (NSInteger r = 2; r <= 3; r++) dimmed &= !PasteBox(table, r).enabled && PasteBox(table, r).state == NSControlStateValueOff;
+    Check(dimmed, @"A row with #SEL#, #INS# or a mark has its box off and dimmed, also when the file checks it");
+    // A check the file kept for a row with a placeholder is not taken: giving
+    // the row an output without one leaves it unchecked.
+    NSUInteger hat = [bindings.keys indexOfObject:@"^"];
+    [table editColumn:1 row:(NSInteger)hat withEvent:nil select:YES];
+    editor = (NSTextView *)window.firstResponder;
+    [editor insertText:@"\\hat" replacementRange:editor.selectedRange];
+    EndEditing(window, table);
+    Check(PasteBox(table, (NSInteger)hat).enabled && PasteBox(table, (NSInteger)hat).state == NSControlStateValueOff && ![SavedPaste() containsObject:@"^"] && ![[GlobalData sharedGlobalData].pasteKeyBindings objectForKey:@"^"], @"A check left in the file for a row with a placeholder stays off when the placeholder is gone");
+    [window.undoManager undo];
+    // Checking saves at once and can be undone.
+    ClickBox(PasteBox(table, 4));
+    Check([SavedPaste() isEqual:(@[@"¥", @"§"])] && [[GlobalData sharedGlobalData].g_autocompletionPasteKeys isEqual:(@[@"¥", @"§"])] && [bindings.pasteKeys isEqual:(@[@"¥", @"§"])], @"Checking Paste saves the row at once, and drops the rows that cannot be checked");
+    Check([[[GlobalData sharedGlobalData] pasteKeyBindings] isEqual:(@{@"¥": @"\\", @"§": @"\\S"})], @"Pasting uses the checked rows");
+    Check([SavedBindings()[@"¥"] isEqual:@"\\"] && SavedBindings().count == 5, @"autocompletion.plist keeps its format");
+    [window.undoManager undo];
+    Check(PasteBox(table, 4).state == NSControlStateValueOff && ![SavedPaste() containsObject:@"§"], @"Undo takes the check away");
+    [window.undoManager redo];
+    Check([SavedPaste() containsObject:@"§"] && PasteBox(table, 4).state == NSControlStateValueOn, @"Redo checks it again");
+    ClickBox(PasteBox(table, 4));
+    Check(![SavedPaste() containsObject:@"§"], @"Unchecking saves at once");
+    // While an output is typed, its box follows it; a placeholder kept when
+    // editing ends drops the saved check, and Undo brings both back.
+    [table editColumn:1 row:0 withEvent:nil select:NO];
+    editor = (NSTextView *)window.firstResponder;
+    editor.selectedRange = NSMakeRange(editor.string.length, 0);
+    [editor insertText:@"#INS#" replacementRange:editor.selectedRange];
+    Check(!PasteBox(table, 0).enabled && PasteBox(table, 0).state == NSControlStateValueOff && [SavedPaste() containsObject:@"¥"], @"Typing #INS# turns the box off at once");
+    [editor insertText:@"" replacementRange:NSMakeRange(editor.string.length - 5, 5)];
+    Check(PasteBox(table, 0).enabled && PasteBox(table, 0).state == NSControlStateValueOn, @"Taking it out again brings the box back");
+    [table selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+    [bindings insertSymbol:bindings.insertButton.menu.itemArray.lastObject];
+    Check(!PasteBox(table, 0).enabled, @"Insert › Mark with Note turns the box off; Insert stays available");
+    EndEditing(window, table);
+    Check(![SavedPaste() containsObject:@"¥"] && [SavedBindings()[@"¥"] hasSuffix:@"•‹›"] && !PasteBox(table, 0).enabled, @"Saving an output with a mark drops its check");
+    // The check is gone, not hidden: taking the mark out again leaves the row unchecked.
+    [table editColumn:1 row:0 withEvent:nil select:YES];
+    editor = (NSTextView *)window.firstResponder;
+    [editor insertText:@"\\" replacementRange:editor.selectedRange];
+    EndEditing(window, table);
+    Check(PasteBox(table, 0).enabled && PasteBox(table, 0).state == NSControlStateValueOff && ![SavedPaste() containsObject:@"¥"], @"Taking the mark out after saving leaves the row unchecked");
+    [window.undoManager undo];
+    [window.undoManager undo];
+    Check([SavedPaste() containsObject:@"¥"] && [SavedBindings()[@"¥"] isEqual:@"\\"] && PasteBox(table, 0).enabled && PasteBox(table, 0).state == NSControlStateValueOn, @"Undo restores the output and its check");
+    // A pasted output with a placeholder counts the same.
+    [table editColumn:1 row:0 withEvent:nil select:YES];
+    editor = (NSTextView *)window.firstResponder;
+    [pasteboard clearContents];
+    [pasteboard setString:@"\\x{#PASTE#}" forType:NSPasteboardTypeString];
+    [editor readSelectionFromPasteboard:pasteboard type:NSPasteboardTypeString];
+    Check(!PasteBox(table, 0).enabled, @"A pasted #PASTE# turns the box off");
+    EndEditing(window, table);
+    Check(![SavedPaste() containsObject:@"¥"], @"and saving drops the check");
+    [window.undoManager undo];
+    // Moving keeps the check with its row; deleting removes it.
+    drop.draggingPasteboard = [NSPasteboard pasteboardWithUniqueName];
+    [drop.draggingPasteboard writeObjects:@[(NSPasteboardItem *)[(id<NSTableViewDataSource>)bindings tableView:table pasteboardWriterForRow:0]]];
+    [(id<NSTableViewDataSource>)bindings tableView:table acceptDrop:(id<NSDraggingInfo>)drop row:5 dropOperation:NSTableViewDropAbove];
+    Check([bindings.keys.lastObject isEqual:@"¥"] && PasteBox(table, 4).state == NSControlStateValueOn && [SavedPaste() isEqual:(@[@"¥"])], @"A moved row keeps its check");
+    [table selectRowIndexes:[NSIndexSet indexSetWithIndex:4] byExtendingSelection:NO];
+    [bindings delete:nil];
+    Check([SavedPaste() isEqual:@[]], @"Deleting a row removes its check");
+    [window.undoManager undo];
+    Check([SavedPaste() isEqual:(@[@"¥"])], @"Undo brings the check back");
+    // A change that cannot be saved is taken back as a whole, in the list, in
+    // open documents and in the files; TeXShop beeps and keeps no Undo for it.
+    NSString *pastePath = [folder stringByAppendingPathComponent:@"autocompletionPaste.plist"];
+    [@[@"¥", @"^"] writeToFile:pastePath atomically:NO];
+    [GlobalData sharedGlobalData].g_autocompletionPasteKeys = @[@"¥", @"^"];
+    [bindings reloadFromGlobalData];
+    [window.undoManager removeAllActions];
+    NSDictionary *savedBefore = SavedBindings();
+    NSArray *keysBefore = bindings.keys, *valuesBefore = bindings.values;
+    [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: @0444} ofItemAtPath:pastePath error:NULL];
+    NSUInteger equiv = [bindings.keys indexOfObject:@"≡"], beepsBefore = beeps;
+    ClickBox(PasteBox(table, (NSInteger)equiv));
+    Check(PasteBox(table, (NSInteger)equiv).state == NSControlStateValueOff && [[GlobalData sharedGlobalData].g_autocompletionPasteKeys isEqual:(@[@"¥"])] && [SavedPaste() isEqual:(@[@"¥", @"^"])] && beeps == beepsBefore + 1 && !window.undoManager.canUndo, @"A check that cannot be saved is not shown or used, beeps and leaves no Undo");
+    hat = [bindings.keys indexOfObject:@"^"];
+    [table editColumn:1 row:(NSInteger)hat withEvent:nil select:YES];
+    editor = (NSTextView *)window.firstResponder;
+    [editor insertText:@"\\hat" replacementRange:editor.selectedRange];
+    EndEditing(window, table);
+    Check([bindings.values isEqual:valuesBefore] && [SavedBindings() isEqual:savedBefore] && !PasteBox(table, (NSInteger)hat).enabled && PasteBox(table, (NSInteger)hat).state == NSControlStateValueOff && ![[GlobalData sharedGlobalData].pasteKeyBindings objectForKey:@"^"] && beeps == beepsBefore + 2, @"An output that cannot be saved is taken back, and a check left in the file stays off");
+    bindings.answer = YES;
+    NSInteger lastRow = (NSInteger)bindings.keys.count - 1;
+    [table editColumn:0 row:lastRow withEvent:nil select:YES];
+    editor = (NSTextView *)window.firstResponder;
+    [editor insertText:@"≡" replacementRange:editor.selectedRange];
+    EndEditing(window, table);
+    Spin();
+    Check([bindings.keys isEqual:keysBefore] && table.numberOfRows == (NSInteger)keysBefore.count && [SavedBindings() isEqual:savedBefore] && beeps == beepsBefore + 3 && table.selectedRow == lastRow, @"Replacing another row that cannot be saved keeps both rows and the selection");
+    [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: @0644} ofItemAtPath:pastePath error:NULL];
+    // An Undo or Redo that cannot be saved is kept: once the files can be
+    // written, one Undo or Redo does that one step only.
+    [window.undoManager removeAllActions];
+    NSUInteger section = [bindings.keys indexOfObject:@"§"];
+    equiv = [bindings.keys indexOfObject:@"≡"];
+    ClickBox(PasteBox(table, (NSInteger)section));
+    ClickBox(PasteBox(table, (NSInteger)equiv));
+    NSArray *bothOn = SavedPaste();
+    Check([bothOn containsObject:@"§"] && [bothOn containsObject:@"≡"], @"Two checks are saved, one after the other");
+    [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: @0444} ofItemAtPath:pastePath error:NULL];
+    [window.undoManager undo];
+    Spin();
+    Check([SavedPaste() isEqual:bothOn] && PasteBox(table, (NSInteger)equiv).state == NSControlStateValueOn && window.undoManager.canUndo, @"An Undo that cannot be saved changes nothing and can be tried again");
+    [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: @0644} ofItemAtPath:pastePath error:NULL];
+    [window.undoManager undo];
+    Spin();
+    Check([SavedPaste() containsObject:@"§"] && ![SavedPaste() containsObject:@"≡"] && PasteBox(table, (NSInteger)section).state == NSControlStateValueOn, @"Then one Undo takes back only the last check");
+    [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: @0444} ofItemAtPath:pastePath error:NULL];
+    [window.undoManager redo];
+    Spin();
+    Check(![SavedPaste() containsObject:@"≡"] && window.undoManager.canRedo, @"A Redo that cannot be saved changes nothing and can be tried again");
+    [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: @0644} ofItemAtPath:pastePath error:NULL];
+    [window.undoManager redo];
+    Spin();
+    Check([SavedPaste() isEqual:bothOn], @"Then one Redo does only that step");
+    [window.undoManager undo]; Spin();
+    [window.undoManager undo]; Spin();
+    Check(![SavedPaste() containsObject:@"§"] && ![SavedPaste() containsObject:@"≡"], @"Earlier steps are still there");
+    // Several changes in one step of Undo, next to another such step: when the
+    // step cannot be saved it is tried once, nothing else happens meanwhile or
+    // when the files can be written again, and then one Undo or Redo does one
+    // whole step.
+    [window.undoManager removeAllActions];
+    void (^setBoth)(NSControlStateValue) = ^(NSControlStateValue value) {
+        for (NSString *key in @[@"§", @"≡"]) {
+            NSButton *box = PasteBox(table, (NSInteger)[bindings.keys indexOfObject:key]);
+            box.state = value; [NSApp sendAction:box.action to:box.target from:box];
+        }
+        Spin();
+    };
+    BOOL (^bothChecked)(void) = ^BOOL { return [SavedPaste() containsObject:@"§"] && [SavedPaste() containsObject:@"≡"]; };
+    BOOL (^noneChecked)(void) = ^BOOL { return ![SavedPaste() containsObject:@"§"] && ![SavedPaste() containsObject:@"≡"]; };
+    setBoth(NSControlStateValueOn);
+    setBoth(NSControlStateValueOff);
+    [window.undoManager undo];
+    Spin();
+    Check(bothChecked(), @"Two checks in one event are one step of Undo");
+    [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: @0444} ofItemAtPath:pastePath error:NULL];
+    NSUInteger beepsAtUndo = beeps;
+    [window.undoManager undo];
+    Spin();
+    NSUInteger beepsAfterUndo = beeps;
+    for (int i = 0; i < 5; i++) Spin();
+    Check(beeps == beepsAfterUndo && beepsAfterUndo > beepsAtUndo && bothChecked() && [bindings.keys containsObject:@"≡"], @"An Undo of several changes that cannot be saved is tried once");
+    [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: @0644} ofItemAtPath:pastePath error:NULL];
+    for (int i = 0; i < 5; i++) Spin();
+    Check(bothChecked() && [bindings.keys containsObject:@"≡"], @"Nothing happens when the files can be written again");
+    [window.undoManager undo];
+    Spin();
+    Check(noneChecked() && [bindings.keys containsObject:@"≡"], @"Then one Undo takes back that whole step");
+    [window.undoManager redo];
+    Spin();
+    Check(bothChecked(), @"one Redo does it again");
+    [window.undoManager redo];
+    Spin();
+    Check(noneChecked(), @"and the next Redo does the step after it");
+    // Checking the box of a row whose output is being edited keeps both.
+    [window.undoManager removeAllActions];
+    section = [bindings.keys indexOfObject:@"§"];
+    NSButton *sectionBox = PasteBox(table, (NSInteger)section);
+    sectionBox.state = NSControlStateValueOn; [NSApp sendAction:sectionBox.action to:sectionBox.target from:sectionBox];
+    Spin();
+    sectionBox = PasteBox(table, (NSInteger)section);
+    sectionBox.state = NSControlStateValueOff; [NSApp sendAction:sectionBox.action to:sectionBox.target from:sectionBox];
+    Spin();
+    [table editColumn:1 row:(NSInteger)section withEvent:nil select:YES];
+    editor = (NSTextView *)window.firstResponder;
+    [editor insertText:@"\\S{}" replacementRange:editor.selectedRange];
+    sectionBox = PasteBox(table, (NSInteger)section);
+    sectionBox.state = NSControlStateValueOn;
+    [NSApp sendAction:sectionBox.action to:sectionBox.target from:sectionBox];
+    Spin();
+    Check([SavedBindings()[@"§"] isEqual:@"\\S{}"] && [SavedPaste() containsObject:@"§"] && PasteBox(table, (NSInteger)section).state == NSControlStateValueOn, @"Checking Paste while the output is edited keeps the output and the check");
+    // The note under the list.
+    NSTextField *pasteNote = nil;
+    pending = [NSMutableArray arrayWithObject:bindings.view];
+    while (pending.count) { NSView *v = pending.lastObject; [pending removeLastObject]; [pending addObjectsFromArray:v.subviews]; if ([v.identifier isEqual:@"keybindings.paste-note"]) pasteNote = (NSTextField *)v; }
+    Check(pasteNote && [pasteNote.stringValue containsString:pasteColumn.title] && NSMinY(pasteNote.frame) < NSMinY(bindings.insertButton.frame), @"A note under the list says what Paste does");
+
     // The symbol list names every symbol.
     NSView *list = [bindings makeSymbolListView];
     NSMutableArray *texts = [NSMutableArray array];
-    NSMutableArray<NSView *> *pending = [NSMutableArray arrayWithObject:list];
+    pending = [NSMutableArray arrayWithObject:list];
     while (pending.count) { NSView *v = pending.lastObject; [pending removeLastObject]; [pending addObjectsFromArray:v.subviews]; if ([v isKindOfClass:NSTextField.class]) [texts addObject:((NSTextField *)v).stringValue]; }
     BOOL named = YES;
     for (NSString *typed in @[@"#SEL#", @"#INS#", @"#PASTE#", @"⌥↩", @"⌥⇥", @"•"]) named &= [texts containsObject:typed];

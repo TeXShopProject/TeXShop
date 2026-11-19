@@ -2,8 +2,13 @@
 #import <Cocoa/Cocoa.h>
 NS_ASSUME_NONNULL_BEGIN
 // The key binding list in Settings › Keyboard. Each change is written to
-// autocompletion.plist and autocompletionDisplayOrder.plist at once and takes
-// effect in open documents; Edit › Undo restores the previous list.
+// autocompletion.plist, autocompletionDisplayOrder.plist and
+// autocompletionPaste.plist at once and takes effect in open documents;
+// Edit › Undo restores the previous list.
+//
+// A row checked in the Paste column is also applied to pasted text. A row whose
+// output has #SEL#, #INS#, #PASTE# or a mark cannot be checked: its box is off
+// and dimmed, and a check saved before is dropped when the output is saved.
 //
 // Output strings keep their file format. In the table, #SEL#, #INS#, #PASTE#,
 // •, line breaks and tabs are shown as tokens; Insert adds them, the help
@@ -16,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 // The output strings as written to the file, in display order.
 @property (readonly) NSArray<NSString *> *keys;
 @property (readonly) NSArray<NSString *> *values;
+// The input characters checked in the Paste column, as written to the file.
+@property (readonly) NSArray<NSString *> *pasteKeys;
 - (void)reloadFromGlobalData;
 - (IBAction)add:(nullable id)sender;
 - (IBAction)delete:(nullable id)sender;

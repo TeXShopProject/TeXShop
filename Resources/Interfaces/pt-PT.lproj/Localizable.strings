@@ -26,8 +26,6 @@
 "Close Macro Editor" = "Fechar editor de macros";
 "Add macros from file..." = "Adicionar macros de um ficheiro...";
 "Save selection to file..." = "Guardar seleção num ficheiro...";
-"Convert \\yen to \\ in Pasteboard" = "Converter \\yen em \\ na área de transferência";
-"Convert \\ to \\yen in Pasteboard" = "Converter \\ em \\yen na área de transferência"; 
 "Edit" = "Editar";
 "Warning" = "Aviso";
 "Don't Save" = "Não salvar";
@@ -313,6 +311,8 @@
 /* Settings › Keyboard › Key Bindings */
 "Input Character" = "Carácter escrito";
 "Output String" = "Texto de saída";
+"Paste" = "Colar";
+"Check “Paste” to also apply the replacement to pasted text." = "Se “Colar” estiver assinalado, a substituição também se aplica ao texto colado.";
 "Selected Text" = "Texto selecionado";
 "Insertion Point" = "Ponto de inserção";
 "Clipboard Text" = "Texto da área de transferência";

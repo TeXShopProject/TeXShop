@@ -1,12 +1,14 @@
 // Pasted text gets LF line endings when ConvertLF is on (the default), in every document, not only in the
 // Japanese modes, and in the Experiment source; so does the clipboard text that #PASTE# puts in macros and command
 // completion. In documents the Japanese modes still turn backslashes into yen signs, or yen signs into backslashes;
-// in the Experiment source both stay as they were pasted, as before. Undo takes a paste away. Nothing is shown on
-// screen, and the clipboard is a private pasteboard.
+// in the Experiment source both stay as they were pasted, as before. The key bindings checked for pasting apply in
+// both while key bindings are on, rows with a placeholder or a mark never do, and #PASTE# keeps the clipboard text.
+// Undo takes a paste away. Nothing is shown on screen, and the clipboard is a private pasteboard.
 #import <Cocoa/Cocoa.h>
 #import <OgreKit/OgreKit.h>
 #import "TestAppKitIsolation.h"
 #import "NSMutableString-Extras.h"
+#import "GlobalData.h"
 #define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr, "FAIL %s %d: %s\n", where, __LINE__, #__VA_ARGS__); exit(1); } } while (0)
 static const char *where = "";
 typedef enum { kNoFilterMode = 0, kMacJapaneseFilterMode = 1, kOtherJapaneseFilterMode = 2 } TSFilterMode;
@@ -19,7 +21,14 @@ NSMutableString *filterYenToBackslash(NSString *aString);
 FILTERS
 
 @interface NSTextView (TeXShop)
-- (BOOL)pasteFilteredTextFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type japaneseFilter:(BOOL)japaneseFilter;
+- (BOOL)pasteFilteredTextFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type japaneseFilter:(BOOL)japaneseFilter keyBindings:(BOOL)keyBindings answer:(BOOL *)answer;
+@end
+
+// The document's Key Bindings switch.
+static BOOL keyBindingsOn = NO;
+@interface StubDocument : NSObject @end
+@implementation StubDocument
+- (BOOL)isDoAutoCompleteEnabled { return keyBindingsOn; }
 @end
 @implementation NSTextView (TeXShop)
 CATEGORY
@@ -28,18 +37,22 @@ CATEGORY
 // The document source (TSTextView) and the Experiment source (ScrapTextView), with their production paste methods.
 @interface DocumentText : NSTextView @end
 @implementation DocumentText
+- (id)document { return [StubDocument new]; }
 DOCUMENT_PASTE
 @end
 @interface ScrapText : NSTextView @end
 @implementation ScrapText
+- (id)document { return [StubDocument new]; }
 SCRAP_PASTE
 @end
 
 @interface UndoSource : NSObject <NSTextViewDelegate>
 @property (strong) NSUndoManager *manager;
+@property NSUInteger changes;
 @end
 @implementation UndoSource
 - (NSUndoManager *)undoManagerForTextView:(NSTextView *)view { return self.manager; }
+- (void)textDidChange:(NSNotification *)notification { self.changes++; }
 @end
 
 static NSPasteboard *clipboard;
@@ -109,7 +122,193 @@ int main(int argc, char **argv) { @autoreleasepool {
         [SUD setBool:YES forKey:ConvertLFKey];
         g_shouldFilter = kNoFilterMode;
         printf("PASS: %s: a paste gets LF line endings with ConvertLF, keeps them without, and undoes\n", where);
+
+        // Key bindings checked for pasting: each input character becomes its output, as one paste for Undo, with
+        // and without ConvertLF; not while key bindings are off; never a row with a placeholder or a mark.
+        GlobalData *data = [GlobalData sharedGlobalData];
+        data.g_autocompletionDictionary = @{@"\u00a5": @"\\", @"\u2265": @"\\geq ", @"\u00a7": @"\\S", @"{": @"{#INS#}", @"\u2020": @"\\dag\u2022", @"^": @"^{#SEL#}", @"\"": @"#PASTE#", @"\u00e9": @"\\'e", @"ab": @"[ab]"};
+        data.g_autocompletionPasteKeys = @[@"\u00a5", @"\u2265", @"{", @"\u2020", @"^", @"\"", @"\u00e9", @"ab", @"gone"];
+        NSString *source = @"\u00a5alpha\u2265{x}\u2020^\"\u00a7 e\u0301\u00e9 ab \u00a5\u0301\r\n";
+        for (int convert = 0; convert <= 1; convert++) {
+            [SUD setBool:convert forKey:ConvertLFKey];
+            keyBindingsOn = YES;
+            NSString *expected = [NSString stringWithFormat:@"x\\alpha\\geq {x}\u2020^\"\u00a7 e\u0301\\'e [ab] \u00a5\u0301%@y", convert ? @"\n" : @"\r\n"];
+            REQUIRE([Paste(kind, source, &undone) isEqualToString:expected] && undone);
+            keyBindingsOn = NO;
+            expected = [NSString stringWithFormat:@"x%@y", convert ? [source stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"] : source];
+            REQUIRE([Paste(kind, source, &undone) isEqualToString:expected] && undone);
+        }
+        // Before the yen filter of a Japanese mode, so that the output is written as the mode writes it.
+        keyBindingsOn = YES;
+        g_shouldFilter = kMacJapaneseFilterMode;
+        REQUIRE([Paste(kind, @"\u2265", &undone) isEqualToString:document ? @"x\u00a5geq y" : @"x\\geq y"] && undone);
+        g_shouldFilter = kNoFilterMode;
+        keyBindingsOn = NO;
+        [SUD setBool:YES forKey:ConvertLFKey];
+        printf("PASS: %s: a paste gets the key bindings checked for pasting while key bindings are on, without placeholders and marks\n", where);
     }
+    // #PASTE# keeps the clipboard text: the key bindings are not applied inside a key binding or a macro.
+    // Input characters outside the Basic Multilingual Plane are replaced whole.
+    where = "surrogates";
+    keyBindingsOn = YES;
+    [GlobalData sharedGlobalData].g_autocompletionDictionary = @{@"\U0001F408": @"CAT", @"\U00020BB7": @"K", @"a": @"A", @"@": @"ab"};
+    [GlobalData sharedGlobalData].g_autocompletionPasteKeys = @[@"\U0001F408", @"\U00020BB7", @"a", @"@"];
+    for (Class kind in @[DocumentText.class, ScrapText.class]) {
+        BOOL undone = NO;
+        REQUIRE([Paste(kind, @"\U0001F408a\U00020BB7\U0001F409", &undone) isEqualToString:@"xCATAK\U0001F409y"] && undone);
+    }
+    // Several selected ranges and an empty view: the converted text is pasted as AppKit pastes text, so the result,
+    // its attributes, the selection, and the text and selection after Undo and Redo are those of an ordinary paste.
+    where = "as AppKit pastes";
+    NSDictionary *typing = @{NSFontAttributeName: [NSFont fontWithName:@"Menlo" size:19], NSForegroundColorAttributeName: NSColor.systemRedColor};
+    for (NSString *start in @[@"aXbYc", @""]) {
+        NSMutableArray *outcome = [NSMutableArray array];
+        for (int bindingsOn = 0; bindingsOn <= 1; bindingsOn++) {
+            keyBindingsOn = bindingsOn;
+            [SUD setBool:NO forKey:ConvertLFKey];
+            Clip(bindingsOn ? @"@" : @"ab");
+            NSUndoManager *undo = [NSUndoManager new];
+            undo.groupsByEvent = NO;
+            UndoSource *source = [UndoSource new];
+            source.manager = undo;
+            NSTextView *view = [[DocumentText alloc] initWithFrame:NSMakeRect(0, 0, 300, 100)];
+            view.richText = NO; view.allowsUndo = YES; view.delegate = source;
+            view.string = start;
+            view.typingAttributes = typing;
+            if (start.length)
+                view.selectedRanges = @[[NSValue valueWithRange:NSMakeRange(1, 1)], [NSValue valueWithRange:NSMakeRange(3, 1)]];
+            [undo beginUndoGrouping];
+            [view paste:nil];
+            [undo endUndoGrouping];
+            NSDictionary *attributes = view.string.length ? [view.textStorage attributesAtIndex:0 effectiveRange:NULL] : @{};
+            NSMutableArray *steps = [NSMutableArray arrayWithObjects:view.string, view.selectedRanges, attributes[NSFontAttributeName] ?: @"", attributes[NSForegroundColorAttributeName] ?: @"", nil];
+            [undo undo];
+            [steps addObjectsFromArray:@[view.string, view.selectedRanges]];
+            [undo redo];
+            [steps addObjectsFromArray:@[view.string, view.selectedRanges]];
+            [outcome addObject:steps];
+        }
+        REQUIRE([outcome[1] isEqual:outcome[0]]);
+        REQUIRE([outcome[1][0] isEqualToString:start.length ? @"aabbc" : @"ab"]);
+        if (!start.length) REQUIRE([outcome[1][2] isEqual:typing[NSFontAttributeName]]);
+    }
+    [SUD setBool:YES forKey:ConvertLFKey];
+    // A word copied with smart copy gets the spaces around it, as when AppKit pastes it.
+    where = "smart paste";
+    [GlobalData sharedGlobalData].g_autocompletionDictionary = @{@"a": @"A", @"%": @""};
+    [GlobalData sharedGlobalData].g_autocompletionPasteKeys = @[@"a", @"%"];
+    NSMutableArray *smartResults = [NSMutableArray array];
+    for (int bindingsOn = 0; bindingsOn <= 1; bindingsOn++) {
+        keyBindingsOn = bindingsOn;
+        NSTextView *from = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 300, 100)];
+        from.richText = NO; from.smartInsertDeleteEnabled = YES;
+        from.string = bindingsOn ? @"x aa y" : @"x AA y";
+        [from setSelectedRange:NSMakeRange(2, 2)];
+        from.selectionGranularity = NSSelectByWord;
+        [clipboard clearContents];
+        REQUIRE([from writeSelectionToPasteboard:clipboard types:from.writablePasteboardTypes]);
+        NSTextView *view = [[DocumentText alloc] initWithFrame:NSMakeRect(0, 0, 300, 100)];
+        view.richText = NO; view.smartInsertDeleteEnabled = YES;
+        view.string = @"red blue";
+        view.selectedRange = NSMakeRange(4, 0);
+        [view paste:nil];
+        [smartResults addObject:view.string];
+    }
+    REQUIRE([smartResults[1] isEqual:smartResults[0]] && [smartResults[0] containsString:@" AA "]);
+    // A paste whose text becomes empty deletes the selected text as AppKit deletes it: the text, the
+    // selection after Undo and the next typing are those of Edit › Delete. With nothing selected, nothing
+    // changes, and empty text on the clipboard changes nothing in any mode.
+    where = "empty";
+    keyBindingsOn = YES;
+    for (Class kind in @[DocumentText.class, ScrapText.class]) {
+        for (int caret = 0; caret <= 1; caret++) {
+            NSMutableArray *outcome = [NSMutableArray array];
+            for (int pasting = 0; pasting <= 1; pasting++) {
+                Clip(@"%");
+                NSUndoManager *undo = [NSUndoManager new];
+                undo.groupsByEvent = NO;
+                UndoSource *source = [UndoSource new];
+                source.manager = undo;
+                NSTextView *view = [[kind alloc] initWithFrame:NSMakeRect(0, 0, 300, 100)];
+                view.richText = NO; view.allowsUndo = YES; view.delegate = source;
+                view.string = @"aXbYc";
+                if (caret) view.selectedRange = NSMakeRange(2, 0);
+                else view.selectedRanges = @[[NSValue valueWithRange:NSMakeRange(1, 1)], [NSValue valueWithRange:NSMakeRange(3, 1)]];
+                [undo beginUndoGrouping];
+                if (pasting) [view paste:nil]; else [view delete:nil];
+                [undo endUndoGrouping];
+                NSMutableArray *steps = [NSMutableArray arrayWithObjects:[view.string copy], view.selectedRanges, @(source.changes), @(undo.canUndo), nil];
+                if (undo.canUndo) {
+                    [undo undo];
+                    [steps addObjectsFromArray:@[[view.string copy], view.selectedRanges]];
+                }
+                [undo beginUndoGrouping];
+                [view insertText:@"Z" replacementRange:view.selectedRange];
+                [undo endUndoGrouping];
+                [steps addObject:[view.string copy]];
+                [outcome addObject:steps];
+            }
+            REQUIRE([outcome[1] isEqual:outcome[0]]);
+            REQUIRE([outcome[1][0] isEqualToString:caret ? @"aXbYc" : @"abc"]);
+            if (caret) REQUIRE([outcome[1][2] isEqual:@0]);
+        }
+    }
+    // At the insertion point, a paste that becomes empty is the paste of empty text: the step typed before
+    // it is undone in one step, and a step that could be redone still can.
+    where = "empty at the insertion point";
+    for (Class kind in @[DocumentText.class, ScrapText.class]) {
+        NSMutableArray *outcome = [NSMutableArray array];
+        for (int converted = 0; converted <= 1; converted++) {
+            keyBindingsOn = converted;
+            NSUndoManager *undo = [NSUndoManager new];
+            UndoSource *source = [UndoSource new];
+            source.manager = undo;
+            NSTextView *view = [[kind alloc] initWithFrame:NSMakeRect(0, 0, 300, 100)];
+            view.richText = NO; view.allowsUndo = YES; view.delegate = source;
+            view.string = @"abc";
+            view.selectedRange = NSMakeRange(1, 0);
+            [view insertText:@"Z" replacementRange:view.selectedRange];
+            [view breakUndoCoalescing];
+            [NSRunLoop.currentRunLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.02]];
+            if (converted) Clip(@"%"); else { [clipboard clearContents]; [clipboard setString:@"" forType:NSPasteboardTypeString]; }
+            NSUInteger changes = source.changes;
+            [view paste:nil];
+            [NSRunLoop.currentRunLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.02]];
+            NSMutableArray *steps = [NSMutableArray arrayWithObjects:[view.string copy], @(source.changes - changes), undo.undoActionName ?: @"", nil];
+            [undo undo];
+            [steps addObject:[view.string copy]];
+            if (converted) Clip(@"%");
+            [view paste:nil];
+            [NSRunLoop.currentRunLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.02]];
+            [steps addObject:@(undo.canRedo)];
+            [outcome addObject:steps];
+        }
+        REQUIRE([outcome[1] isEqual:outcome[0]]);
+        REQUIRE([outcome[1][0] isEqualToString:@"aZbc"] && [outcome[1][1] isEqual:@0] && [outcome[1][3] isEqualToString:@"abc"] && [outcome[1][4] isEqual:@YES]);
+    }
+    keyBindingsOn = YES;
+    for (TSFilterMode mode = kNoFilterMode; mode <= kOtherJapaneseFilterMode; mode++) {
+        g_shouldFilter = mode;
+        BOOL undone = NO;
+        [clipboard clearContents];
+        [clipboard setString:@"" forType:NSPasteboardTypeString];
+        NSTextView *view = [[DocumentText alloc] initWithFrame:NSMakeRect(0, 0, 300, 100)];
+        view.richText = NO;
+        view.string = @"left/keep/right";
+        view.selectedRange = NSMakeRange(5, 4);
+        [view paste:nil];
+        REQUIRE([view.string isEqualToString:@"left/keep/right"]);
+        (void)undone;
+    }
+    g_shouldFilter = kNoFilterMode;
+    keyBindingsOn = NO;
+    printf("PASS: characters outside the BMP, and pasting as AppKit pastes into several ranges and an empty view, after smart copy, and when nothing is left\n");
+    where = "#PASTE# key bindings";
+    Clip(@"\u00a5");
+    NSMutableString *kept = [@"#PASTE#" mutableCopy];
+    [kept replacePasteMarkersWithClipboardText];
+    REQUIRE([kept isEqualToString:@"\u00a5"]);
+    [GlobalData sharedGlobalData].g_autocompletionPasteKeys = @[];
     // #PASTE# in macros and command completion.
     where = "#PASTE#";
     [SUD setBool:YES forKey:ConvertLFKey];

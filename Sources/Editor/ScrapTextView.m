@@ -550,11 +550,13 @@
 	[super insertText: newString];
 }
 
-// Pasted text gets LF line endings, as in a document; the yen signs and backslashes stay as they are.
+// Pasted text gets LF line endings and the key bindings checked for pasting, as in a document; the
+// yen signs and backslashes stay as they are.
 - (BOOL)readSelectionFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type
 {
-	if ([self pasteFilteredTextFromPasteboard: pboard type: type japaneseFilter: NO])
-		return YES;
+	BOOL answer = NO;
+	if ([self pasteFilteredTextFromPasteboard: pboard type: type japaneseFilter: NO keyBindings: [self.document isDoAutoCompleteEnabled] answer: &answer])
+		return answer;
 	return [super readSelectionFromPasteboard: pboard type: type];
 }
 

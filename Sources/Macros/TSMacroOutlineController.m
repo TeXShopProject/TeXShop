@@ -393,17 +393,9 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 	NSString *draggedString = ([self.draggedNodes count]>0)?([[self.draggedNodes objectAtIndex: 0] content]):@"";
 	if (!draggedString)
 		draggedString = @"";	// content may be nil?
-	if (g_shouldFilter == kMacJapaneseFilterMode) {
-		if ([SUD boolForKey:@"ConvertToBackslash"]) // this case isn't necessary?
-			draggedString = filterYenToBackslash(draggedString);
-		else
-			draggedString = filterBackslashToYen(draggedString);
-	} else if (g_shouldFilter == kOtherJapaneseFilterMode) {
-		if ([SUD boolForKey:@"ConvertToYen"])
-			draggedString = filterBackslashToYen(draggedString);
-		else	// this case shouldn't be necessary
-			draggedString = filterYenToBackslash(draggedString);
-	}
+	// As the macro is shown: with yen signs in the Mac Japanese mode, as stored otherwise.
+	if (g_shouldFilter == kMacJapaneseFilterMode)
+		draggedString = filterBackslashToYen(draggedString);
 	[pboard setString: draggedString forType: NSStringPboardType];
 
 	return YES;
