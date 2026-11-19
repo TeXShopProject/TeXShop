@@ -49,6 +49,7 @@
 #import "TSFindInterface.h"
 #import "TSAdvancedFindPanelController.h"
 #import "TSAdvancedFindTextView.h"
+#import <objc/runtime.h>
 
 @protocol BDSKCompletionProtocol <NSObject>
 - (NSArray *)completionsForString:(NSString *)searchString;
@@ -1569,27 +1570,11 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 	[super insertText: newString];
 }
 
-- (BOOL)writeSelectionToPasteboard:(NSPasteboard *)pboard type:(NSString *)type
-{
-	NSMutableString *newString;
-
-	BOOL returnValue = [super writeSelectionToPasteboard:pboard type:type];
-	if (returnValue && [type isEqualToString: NSStringPboardType]) {
-		if ((g_shouldFilter == kMacJapaneseFilterMode) && [SUD boolForKey:@"ConvertToBackslash"]) {
-			newString = filterYenToBackslash([pboard stringForType: NSStringPboardType]);
-			returnValue = [pboard setString: newString forType: NSStringPboardType];
-		} else if ((g_shouldFilter == kOtherJapaneseFilterMode) && [SUD boolForKey:@"ConvertToYen"]) {
-			newString = filterBackslashToYen([pboard stringForType: NSStringPboardType]);
-			returnValue = [pboard setString: newString forType: NSStringPboardType];
-		}
-	}
-	return returnValue;
-}
-
 - (BOOL)readSelectionFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type
 {
-	if ([self pasteFilteredTextFromPasteboard: pboard type: type japaneseFilter: YES])
-		return YES;
+	BOOL answer = NO;
+	if ([self pasteFilteredTextFromPasteboard: pboard type: type japaneseFilter: YES keyBindings: [self.document isDoAutoCompleteEnabled] answer: &answer])
+		return answer;
 	return [super readSelectionFromPasteboard: pboard type: type];
 }
 
@@ -3080,7 +3065,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 	NSPasteboard *general = [NSPasteboard generalPasteboard];
 	NSString *replaced = nil;
 	if ([self selectedRange].length > 0 && [general canReadObjectForClasses:@[[NSString class]] options:nil]) {
-		// Copy the selection the way Copy does, including the yen/backslash setting.
+		// Copy the selection the way Copy does.
 		NSPasteboard *selection = [NSPasteboard pasteboardWithUniqueName];
 		if ([self writeSelectionToPasteboard:selection types:[self writablePasteboardTypes]])
 			replaced = [selection stringForType:NSPasteboardTypeString];
@@ -3202,21 +3187,26 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 
 @implementation NSTextView (TeXShop)
 
-// Pasted text with ConvertLF (the default) gets LF line endings, as in a file that is opened, and
-// with japaneseFilter, in the Japanese modes, the yen sign or the backslash of the mode, as typing
-// gives. Returns NO when the text needs none of this, or there is no text: AppKit then pastes.
-- (BOOL)pasteFilteredTextFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type japaneseFilter:(BOOL)japaneseFilter
+// Pasted text with keyBindings gets the key bindings checked for pasting, with ConvertLF (the
+// default) LF line endings, as in a file that is opened, and with japaneseFilter, in the Japanese
+// modes, the yen sign or the backslash of the mode, as typing gives. All of it is one paste for
+// Undo. Returns NO when the text needs none of this, or there is no text: AppKit then pastes;
+// otherwise YES, with what readSelectionFromPasteboard:type: answers in answer.
+- (BOOL)pasteFilteredTextFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type japaneseFilter:(BOOL)japaneseFilter keyBindings:(BOOL)keyBindings answer:(BOOL *)answer
 {
 	if (! [type isEqualToString: NSStringPboardType])
 		return NO;
 	BOOL convertLF = [SUD boolForKey:ConvertLFKey];
 	TSFilterMode filter = japaneseFilter ? g_shouldFilter : kNoFilterMode;
-	if (! filter && ! convertLF)
+	NSDictionary<NSString *, NSString *> *bindings = keyBindings ? [[GlobalData sharedGlobalData] pasteKeyBindings] : nil;
+	if (! filter && ! convertLF && bindings.count == 0)
 		return NO;
 	NSString *pasted = [pboard stringForType: NSStringPboardType];
-	if (! pasted)
+	// Empty text is pasted by AppKit, which changes nothing.
+	if (pasted.length == 0)
 		return NO;
-	NSString *string = pasted;
+	// The key bindings first, as typed characters; the encoding's own filter then applies to their output.
+	NSString *string = TSApplyKeyBindings(pasted, bindings);
 	// Filtering for Japanese
 	if (filter == kMacJapaneseFilterMode)
 		string = filterBackslashToYen(string);
@@ -3228,13 +3218,32 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 	if (! filter && [string isEqualToString: pasted])
 		return NO;
 	// mitsu 1.29 (T1)-- in order to enable "Undo Paste"
-	// Replace the text--imitate what happens in ordinary editing
-	NSRange	selectedRange = [self selectedRange];
-	if ([self shouldChangeTextInRange:selectedRange replacementString:string]) {
-		[self replaceCharactersInRange:selectedRange withString:string];
-		[self didChangeText];
+	BOOL selected = NO;
+	for (NSValue *range in [self selectedRanges])
+		selected |= range.rangeValue.length > 0;
+	if (string.length == 0 && selected) {
+		// Nothing is left to paste: the selected text is deleted, as AppKit deletes it.
+		void (*deleteSelection)(id, SEL, id) = (void (*)(id, SEL, id))
+			class_getMethodImplementation([NSTextView class], @selector(delete:));
+		deleteSelection(self, @selector(delete:), nil);
+		*answer = YES;
+		return YES;
 	}
-	// by returning YES, "Undo Paste" menu item will be set up by system
+	// AppKit pastes the converted text, as it pastes any text: in place of the selected ranges, with
+	// the typing attributes and, after a word copied with smart copy, the spaces around it, in one step
+	// of Undo that restores the selection. Empty text at the insertion point changes nothing, as when
+	// the clipboard holds empty text. What AppKit answers is the answer of the paste.
+	NSString *smartType = @"NeXT smart paste pasteboard type";
+	NSData *smart = [pboard availableTypeFromArray:@[smartType]] ? [pboard dataForType:smartType] : nil;
+	NSPasteboard *converted = [NSPasteboard pasteboardWithUniqueName];
+	[converted declareTypes:smart ? @[NSPasteboardTypeString, smartType] : @[NSPasteboardTypeString] owner:nil];
+	[converted setString:string forType:NSPasteboardTypeString];
+	if (smart)
+		[converted setData:smart forType:smartType];
+	BOOL (*paste)(id, SEL, NSPasteboard *, NSString *) = (BOOL (*)(id, SEL, NSPasteboard *, NSString *))
+		class_getMethodImplementation([NSTextView class], @selector(readSelectionFromPasteboard:type:));
+	*answer = paste(self, @selector(readSelectionFromPasteboard:type:), converted, NSPasteboardTypeString);
+	[converted releaseGlobally];
 	return YES;
 }
 

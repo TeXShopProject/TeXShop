@@ -16,7 +16,6 @@
     "zh_CN"
   ],
   "routes": {
-    "Edit": [],
     "File": [],
     "Macros": [],
     "Preview": [],
@@ -67,10 +66,6 @@
       "parentValues": [
         "Anteprima"
       ]
-    },
-    "ko:Edit": {
-      "value": "Edit",
-      "parentValues": []
     },
     "ko:File": {
       "value": "File",

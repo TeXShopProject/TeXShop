@@ -155,12 +155,6 @@ static TSEncoding _availableTexworksEncodings[] = {
 		// register for encoding changed notification
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(encodingChanged:)
 				name:@"EncodingChangedNotification" object:nil];
-
-		// Here preferences are set for the state of the pasteboard conversion facility, which is only used with Japanese encoding.
-		if ([SUD objectForKey: @"ConvertToBackslash"] == nil)
-			[SUD setBool: NO forKey: @"ConvertToBackslash"];
-		if ([SUD objectForKey: @"ConvertToYen"] == nil)
-			[SUD setBool: YES forKey: @"ConvertToYen"];
 	}
 	return sharedEncodingSupport;
 }
@@ -195,7 +189,7 @@ static TSEncoding _availableTexworksEncodings[] = {
 }
 
 
-// set up g_texChar, g_taggedTeXSections and menu item for tex character conversion
+// set up g_texChar, g_taggedTeXSections and the filter mode for tex character conversion
 // FIXME: This is only called when starting up or when the encoding prefs are changed.
 // In particular, it is *not* sufficient to just save a file with a different encoding!
 // TODO: Correct this by making the encoding checks document specific. In particular,
@@ -203,22 +197,9 @@ static TSEncoding _availableTexworksEncodings[] = {
 - (void)setupForEncoding
 {
 	NSString *currentEncoding;
-	NSMenu *editMenu;
-	id item;
-	NSMutableString *menuTitle;
 	TSDocument *theDoc;
 
 	currentEncoding = [SUD stringForKey:EncodingKey];
-
-	editMenu = [[[NSApp mainMenu] itemWithTitle:NSLocalizedString(@"Edit", @"Edit")] submenu];
-	if (editMenu) {
-		NSInteger i = [editMenu indexOfItemWithTarget:self andAction:@selector(toggleTeXCharConversion:)];
-		if (i >= 0)	{ // remove menu item
-			[editMenu removeItemAtIndex: i];
-			if ([[editMenu itemAtIndex: i-1] isSeparatorItem])
-				[editMenu removeItemAtIndex: i-1];
-		}
-	}
 
 	if ([currentEncoding isEqualToString:@"MacJapanese"] ||
 			[currentEncoding isEqualToString:@"SJIS_X0213"] ) {
@@ -284,18 +265,6 @@ static TSEncoding _availableTexworksEncodings[] = {
 		}
 		// end mitsu 1.29
 		g_shouldFilter = kMacJapaneseFilterMode;
-		// set up menu item
-		if (editMenu) {
-			[editMenu addItem: [NSMenuItem separatorItem]];
-			menuTitle = [NSMutableString stringWithString:
-						NSLocalizedString(@"Convert \\yen to \\ in Pasteboard", @"Convert \\yen to \\ in Pasteboard")];
-			[menuTitle replaceOccurrencesOfString: @"\\yen" withString: yenString
-						options: 0 range: NSMakeRange(0, [menuTitle length])];
-			item = [editMenu addItemWithTitle: menuTitle
-					action:@selector(toggleTeXCharConversion:) keyEquivalent: @""];
-			[item setTarget: self];
-			[item setState: [SUD boolForKey: @"ConvertToBackslash"]?NSOnState:NSOffState];
-		}
 	} else {
 		g_texChar = BACKSLASH;
 		
@@ -321,24 +290,13 @@ static TSEncoding _availableTexworksEncodings[] = {
 		}
 		// end mitsu 1.29
 
+		// In these encodings the backslash and the yen sign share one code. UTF-8 keeps both, also
+		// with otf's \UTF and \CID output; a key binding checked for pasting can turn one into the other.
 		if ([currentEncoding isEqualToString:@"DOSJapanese"] ||
 				[currentEncoding isEqualToString:@"EUC_JP"] ||
-				[currentEncoding isEqualToString:@"JISJapanese"] ||
-				([currentEncoding isEqualToString:@"UTF-8 Unicode"] && [SUD boolForKey:ptexUtfOutputEnabledKey]) )
+				[currentEncoding isEqualToString:@"JISJapanese"])
 		{
 			g_shouldFilter = kOtherJapaneseFilterMode;
-			// set up menu item
-			if (editMenu) {
-				[editMenu addItem: [NSMenuItem separatorItem]];
-				menuTitle = [NSMutableString stringWithString:
-								NSLocalizedString(@"Convert \\ to \\yen in Pasteboard", @"Convert \\ to \\yen in Pasteboard")];
-				[menuTitle replaceOccurrencesOfString: @"\\yen" withString: yenString
-							options: 0 range: NSMakeRange(0, [menuTitle length])];
-				item = [editMenu addItemWithTitle: menuTitle
-						action:@selector(toggleTeXCharConversion:) keyEquivalent: @""];
-				[item setTarget: self];
-				[item setState: [SUD boolForKey: @"ConvertToYen"]?NSOnState:NSOffState];
-			}
 		} else {
 			g_shouldFilter = kNoFilterMode;
 		}
@@ -355,28 +313,6 @@ static TSEncoding _availableTexworksEncodings[] = {
 	//[[NSNotificationCenter defaultCenter] postNotificationName:@"ReloadMacrosNotification" object:self];
 }
 
-
-// action for "Convert * to * in Pasteboard"
-- (IBAction)toggleTeXCharConversion:(id)sender
-{
-	NSString *currentEncoding;
-	NSString *theKey;
-
-	currentEncoding = [SUD stringForKey:EncodingKey];
-	if ([currentEncoding isEqualToString:@"MacJapanese"] ||
-			[currentEncoding isEqualToString:@"SJIS_X0213"])
-		theKey = @"ConvertToBackslash";
-	else if ([currentEncoding isEqualToString:@"DOSJapanese"] ||
-		[currentEncoding isEqualToString:@"EUC_JP"] ||
-		[currentEncoding isEqualToString:@"JISJapanese"] ||
-		([currentEncoding isEqualToString:@"UTF-8 Unicode"] && [SUD boolForKey:ptexUtfOutputEnabledKey]) )
-		theKey = @"ConvertToYen";
-	else
-		return;
-	[SUD setBool: ![SUD boolForKey: theKey]  forKey: theKey];
-	[SUD synchronize];
-	[(NSMenuItem *)sender setState: [SUD boolForKey: theKey]?NSOnState:NSOffState];
-}
 
 #pragma mark New encoding API
 

@@ -26,8 +26,6 @@
 "Close Macro Editor" = "Close Macro Editor";
 "Add macros from file..." = "Add macros from file...";
 "Save selection to file..." = "Save selection to file...";
-"Convert \\yen to \\ in Pasteboard" = "Convert \\yen to \\ in Pasteboard";
-"Convert \\ to \\yen in Pasteboard" = "Convert \\ to \\yen in Pasteboard"; 
 "Edit" = "Edit";
 "Warning" = "Warning";
 "Don't Save" = "Don't Save";
@@ -309,6 +307,8 @@
 /* Settings › Keyboard › Key Bindings */
 "Input Character" = "Input Character";
 "Output String" = "Output String";
+"Paste" = "Paste";
+"Check “Paste” to also apply the replacement to pasted text." = "Check “Paste” to also apply the replacement to pasted text.";
 "Selected Text" = "Selected Text";
 "Insertion Point" = "Insertion Point";
 "Clipboard Text" = "Clipboard Text";

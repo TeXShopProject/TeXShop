@@ -39,6 +39,7 @@ MUTATIONS = {
     'engine-plain-tex-runs': ('engine', '        return nil;   // plain TeX, MetaPost, or no engine', '        return @"pdflatex";'),
     'engine-context-runs': ('engine', '    return TSExperimentRejectsEngine(engine) ? nil : engine;', '    return engine;'),
     'engine-pdftex-runs': ('engine', '@"tex", @"pdftex", ', '@"tex", '),
+    'completion-not-read-again': ('close', '\t\t[(TSAppDelegate *)[NSApp delegate] reReadCommandCompletionData];', '\t\t;'),
     'engine-name-lowercased': ('engine', '        engine = menuTitles[menuEngine - 1];', '        engine = menuTitles[menuEngine - 1].lowercaseString;'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
@@ -65,8 +66,11 @@ globals_h = source_file(args.root, 'globals.h').read_text(errors='replace')
 document_h = source_file(args.root, 'TSDocument.h').read_text(errors='replace')
 engine_start = globals_h.index('enum EngineCommand')
 mode_end = document_h.index('} DefaultTypesetMode;') + len('} DefaultTypesetMode;')
+document_m = source_file(args.root, 'TSDocument.m').read_text(errors='replace')
+own_start = document_m.index('typedef NS_ENUM(NSInteger, TSOwnTextFileKind)')
 constants = (globals_h[engine_start:globals_h.index('};', engine_start) + 2] + '\n'
-             + document_h[document_h.rindex('typedef enum', 0, mode_end):mode_end] + '\n')
+             + document_h[document_h.rindex('typedef enum', 0, mode_end):mode_end] + '\n'
+             + document_m[own_start:document_m.index('};', own_start) + 2] + '\n')
 if args.mutation:
     name, old, new = MUTATIONS[args.mutation]
     if name == 'engine':
@@ -119,12 +123,21 @@ static NSUInteger shownWindows;
 #define NSColorPanel Node
 #define NSFontPanel Node
 #define TSToolbar Node
+// The application delegate reads the command completion list again when its file is closed.
+@interface TSAppDelegate : NSObject
+@property NSUInteger completionReads;
+- (void)reReadCommandCompletionData;
+@end
+@implementation TSAppDelegate
+- (void)reReadCommandCompletionData { self.completionReads++; }
+@end
 @interface App : NSObject
 @property (strong) Node *keyWindow;
+@property (strong) TSAppDelegate *delegate;
 + (instancetype)shared;
 @end
 @implementation App
-+ (instancetype)shared { static App *a; if (!a) a = [App new]; return a; }
++ (instancetype)shared { static App *a; if (!a) { a = [App new]; a.delegate = [TSAppDelegate new]; } return a; }
 @end
 #define NSApp App.shared
 @interface Defaults : NSObject
@@ -218,6 +231,7 @@ static BOOL auxCopied;
     Node *outputWindow, *outputText, *pdfWindow, *_htmlWindow, *annotationChoices;
     BOOL fileIsTex;
     NSInteger whichScript;
+    NSInteger _ownTextFile;
 }
 @property (strong) Document *rootDocument;
 @property (strong) Console *experimentConsole;
@@ -456,6 +470,9 @@ int main(void) { @autoreleasepool {
     Check(c.invalidations == 1 && !d.experimentConsole, @"document close invalidates Experiment before teardown");
     Check(d.baseCloses == 1 && d.watchCancellations == 1 && d.pdfStops == 1, @"document close continues ordinary teardown");
     Check(spellingDefaultsApplied == 1, @"document close lets the spell checker return to the Settings choice");
+    Check(NSApp.delegate.completionReads == 0, @"closing a source does not read the command completion list again");
+    d = D(); d->_ownTextFile = TSOwnTextFileCommandCompletion; [d close];
+    Check(NSApp.delegate.completionReads == 1, @"closing the command completion file reads the list again");
     printf("%lu checks, %lu failures\n", (unsigned long)checks, (unsigned long)failures);
     return failures ? 1 : 0;
 } }

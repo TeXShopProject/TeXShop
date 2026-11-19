@@ -962,7 +962,12 @@ static void TSInstallAdvancedFindFieldStyle(void)
 		[GlobalData sharedGlobalData].g_autocompletionKeys = [NSArray arrayWithContentsOfFile:autocompletionPath];
 //		[g_autocompletionKeys retain];
 	}
-	
+	// The rows also applied to pasted text; with no file, none. autocompletion.plist
+	// keeps its format, so earlier versions read the key bindings as before.
+	autocompletionPath = [[[AutoCompletionPath stringByStandardizingPath] stringByAppendingPathComponent:@"autocompletionPaste"] stringByAppendingPathExtension:@"plist"];
+	NSArray *pasteKeys = [NSArray arrayWithContentsOfFile:autocompletionPath];
+	[GlobalData sharedGlobalData].g_autocompletionPasteKeys = [pasteKeys isKindOfClass:NSArray.class] ? pasteKeys : @[];
+
 }
 
 

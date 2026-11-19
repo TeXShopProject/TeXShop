@@ -26,8 +26,6 @@
 "Close Macro Editor" = "マクロエディタを閉じる";
 "Add macros from file..." = "ファイルからマクロを追加...";
 "Save selection to file..." = "選択したマクロをファイルに保存...";
-"Convert \\yen to \\ in Pasteboard" = "クリップボードで ¥ を \\ に変換";
-"Convert \\ to \\yen in Pasteboard" = "クリップボードで \\ を ¥ に変換"; 
 "Edit" = "編集";
 "Warning" = "警告";
 "Don't Save" = "保存しない";
@@ -321,6 +319,8 @@
 /* Settings › Keyboard › Key Bindings */
 "Input Character" = "入力文字";
 "Output String" = "出力文字列";
+"Paste" = "ペースト";
+"Check “Paste” to also apply the replacement to pasted text." = "「ペースト」にチェックを入れると、ペーストした文字列にも置換を適用します。";
 "Selected Text" = "選択中の文字列";
 "Insertion Point" = "出力後のカーソル位置";
 "Clipboard Text" = "クリップボードの文字列";

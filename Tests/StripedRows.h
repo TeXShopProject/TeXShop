@@ -3,13 +3,17 @@
 // Whether a list draws its rows striped in an appearance: the list and its
 // scroll view are drawn offscreen over the window background, and the empty
 // right ends of three neighboring rows are compared. The list should have at
-// least three rows and none of the first three selected.
+// least three rows and none of the first three selected. A list with controls
+// at the right end of its rows compares the colors further left.
+#ifndef TS_TEST_STRIPE_END_INSET
+#define TS_TEST_STRIPE_END_INSET 40
+#endif
 static NSColor *TSTestRowEndColor(NSBitmapImageRep *rep, NSView *drawn, NSTableView *table, NSInteger row)
 {
     NSRect rect = [table convertRect:[table rectOfRow:row] toView:drawn];
     CGFloat scale = rep.pixelsWide / NSWidth(drawn.bounds);
     CGFloat y = NSMidY(rect); if (!drawn.isFlipped) y = NSHeight(drawn.bounds) - y;
-    return [[rep colorAtX:(NSInteger)((NSMaxX(rect) - 40) * scale) y:(NSInteger)(y * scale)] colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+    return [[rep colorAtX:(NSInteger)((NSMaxX(rect) - TS_TEST_STRIPE_END_INSET) * scale) y:(NSInteger)(y * scale)] colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
 }
 static CGFloat TSTestColorDistance(NSColor *a, NSColor *b)
 {

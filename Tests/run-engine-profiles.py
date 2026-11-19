@@ -167,7 +167,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     // 3. Apply: only the profile's keys, one deferred notification, and the keys that changed.
     TSMemoryDefaults *d = [TSMemoryDefaults new]; [d registerDefaults:factory];
     d.values[@"FindMethod"] = @0; d.values[@"Encoding"] = @"DOSJapanese"; d.values[@"LatexCommand"] = @"mine";
-    d.values[@"ConvertToYen"] = @NO; d.values[@"SpellingLanguageDefault"] = @"en";
+    d.values[@"ConvertLF"] = @NO; d.values[@"SpellingLanguageDefault"] = @"en";
     NSDictionary *before = [d.values copy];
     __block NSUInteger notes = 0; __block BOOL deferred = NO;
     id token = [NSNotificationCenter.defaultCenter addObserverForName:NSUserDefaultsDidChangeNotification object:d queue:nil
