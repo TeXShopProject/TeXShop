@@ -47,6 +47,67 @@ int main(void) { @autoreleasepool {
     script(unknown, @"gs", @"printf '  11.0.0\\n'\n");
     found = [TSEnginePathDiscovery candidatesForPaths:@[gs2,unknown] currentTeX:@"" currentGhostscript:@""];
     check([found[@"Ghostscript"][0][@"version"] isEqual:@"11.0.0"], @"Ghostscript version parsing tolerates surrounding whitespace");
+    // Banners as printed by real builds: TeX Live releases, the trunk between releases, and distributor suffixes.
+    NSDictionary *(^banner)(NSString *) = ^(NSString *text) { return [TSEnginePathDiscovery texLiveReleaseInBanner:text]; };
+    NSDictionary *r = banner(@"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2027/dev)\nkpathsea version 6.4.2\n");
+    check([r[@"name"] isEqual:@"TeX Live 2027/dev"] && [r[@"year"] integerValue] == 2027 && [r[@"dev"] boolValue], @"trunk build recognized as development version");
+    r = banner(@"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026)\n");
+    check([r[@"name"] isEqual:@"TeX Live 2026"] && ![r[@"dev"] boolValue], @"release not taken for development version");
+    r = banner(@"pdfTeX 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian)\n");
+    check([r[@"name"] isEqual:@"TeX Live 2025/dev"] && [r[@"dev"] boolValue], @"development version keeps dev before distributor suffix, suffix not shown");
+    for (NSString *text in @[@"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/Debian)", @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/MacPorts 2026.78225_0)",
+                             @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/Homebrew)", @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux)",
+                             @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/W32TeX)", @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/devuan)",
+                             @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/dev-tools)", @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/dev.1)"]) {
+        r = banner(text);
+        check([r[@"name"] isEqual:@"TeX Live 2026"] && ![r[@"dev"] boolValue], [@"distributor suffix is not a development version: " stringByAppendingString:text]);
+    }
+    r = banner(@"pdfTeX 3.141592653-2.6-1.40.29 (Web2C 2027/dev)\n");
+    check([r[@"name"] isEqual:@"Web2C 2027/dev"] && [r[@"dev"] boolValue], @"build outside TeX Live keeps its own banner word");
+    r = banner(@"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2027/dev) \n");
+    check([r[@"dev"] boolValue], @"trailing space after the banner keeps dev");
+    // Only the pdfTeX banner line is read: not a wrapper's words before it, nor lines after it.
+    r = banner(@"Local wrapper for TeX Live 2030\npdfTeX 3.14 (TeX Live 2027/dev)\nkpathsea version 6.4\n");
+    check([r[@"name"] isEqual:@"TeX Live 2027/dev"] && [r[@"year"] integerValue] == 2027, @"a year in the words before the banner is not read");
+    check(banner(@"pdfTeX 3.14\nLocal wrapper compatible with TeX Live 2030\n") == nil, @"a year in the words after the banner is not read");
+    r = banner(@"pdfTeX wrapper: Local build for TeX Live 2099\npdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2080/dev/Debian)\n");
+    check([r[@"name"] isEqual:@"TeX Live 2080/dev"] && [r[@"dev"] boolValue], @"a wrapper line starting pdfTeX is not the banner");
+    r = banner(@"pdfTeX warning: something\npdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2076)\n");
+    check([r[@"name"] isEqual:@"TeX Live 2076"] && ![r[@"dev"] boolValue], @"a warning starting pdfTeX does not hide the banner after it");
+    check(banner(@"pdfTeX wrapper for TeX Live 2030\n") == nil, @"a pdfTeX line without a version number names no release");
+    check(banner(@"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026)\nkpathsea version 6.4.2\nCopyright 2026 Han The Thanh (pdfTeX) et al.\n") != nil, @"the usual banner with the lines after it");
+    check(banner(@"pdfTeX 3.141592653-2.6-1.40.29\n") == nil && banner(@"") == nil, @"banner without release gives no release");
+    NSString *dev = [root stringByAppendingPathComponent:@"dev"];
+    NSString *debianDev = [root stringByAppendingPathComponent:@"debian dev"];
+    tex(dev, @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2027/dev)");
+    tex(debianDev, @"pdfTeX 3.141592653-2.6-1.40.30 (TeX Live 2026/dev/Debian)");
+    tex(unknown, @"custom build without version information");
+    NSArray *(^defaults)(NSArray *) = ^(NSArray *list) {
+        return [list filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"default == YES"]];
+    };
+    found = [TSEnginePathDiscovery candidatesForPaths:@[debianDev, dev, older, newer, unknown, gs1, gs2] currentTeX:dev currentGhostscript:@""];
+    NSArray *order = [found[@"TeX"] valueForKey:@"path"];
+    check([order isEqual:@[dev, newer, debianDev, older, unknown]], @"newest first by year, development builds included; same-year release before its development build; unidentified last");
+    check([found[@"TeX"][0][@"version"] isEqual:@"TeX Live 2027/dev (3.141592653-2.6-1.40.29)"], @"development version shown with banner wording");
+    check([found[@"TeX"][2][@"version"] isEqual:@"TeX Live 2026/dev (3.141592653-2.6-1.40.30)"], @"same-year development version shown after release despite newer pdfTeX");
+    check([defaults(found[@"TeX"]) count] == 1 && [found[@"TeX"][1][@"default"] boolValue], @"newest release preselected, not the newer development build");
+    check([defaults(found[@"Ghostscript"]) count] == 1 && [found[@"Ghostscript"][0][@"default"] boolValue], @"newest Ghostscript preselected");
+    found = [TSEnginePathDiscovery candidatesForPaths:@[debianDev, unknown, dev] currentTeX:@"" currentGhostscript:@""];
+    check([[found[@"TeX"] valueForKey:@"path"] isEqual:@[dev, debianDev, unknown]] && [defaults(found[@"TeX"]) count] == 1 && [found[@"TeX"][0][@"default"] boolValue],
+          @"without a release, the newest development build is preselected, not an unidentified one");
+    NSString *wrapper = [root stringByAppendingPathComponent:@"wrapper"];
+    for (NSString *name in @[@"tex", @"latex", @"pdflatex", @"pdftex"])
+        script(wrapper, name, @"echo 'Local wrapper for TeX Live 2030 around pdfTeX 1.40.99'\necho 'pdfTeX wrapper: Local build for TeX Live 2099'\necho 'pdfTeX 3.14 (TeX Live 2027/dev)'\n");
+    found = [TSEnginePathDiscovery candidatesForPaths:@[wrapper, newer] currentTeX:@"" currentGhostscript:@""];
+    check([[found[@"TeX"] valueForKey:@"path"] isEqual:@[wrapper, newer]] && [found[@"TeX"][1][@"default"] boolValue] &&
+          [found[@"TeX"][0][@"version"] isEqual:@"TeX Live 2027/dev (3.14)"], @"a wrapper's words around the banner change neither the version nor the default");
+    NSString *bare = [root stringByAppendingPathComponent:@"bare"];
+    tex(bare, @"pdfTeX 3.141592653-2.6-1.40.30");
+    found = [TSEnginePathDiscovery candidatesForPaths:@[bare, dev] currentTeX:@"" currentGhostscript:@""];
+    check([[found[@"TeX"] valueForKey:@"path"] isEqual:@[dev, bare]] && [found[@"TeX"][0][@"default"] boolValue],
+          @"a banner naming no release is not taken for a release");
+    found = [TSEnginePathDiscovery candidatesForPaths:@[unknown] currentTeX:@"" currentGhostscript:@""];
+    check([defaults(found[@"TeX"]) count] == 1 && [found[@"TeX"][0][@"default"] boolValue], @"an unidentified installation alone is preselected");
     NSString *partial = [root stringByAppendingPathComponent:@"partial"];
     script(partial,@"pdflatex",@"exit 0\n");
     check(![TSEnginePathDiscovery directory:partial containsPrograms:@[@"tex",@"latex",@"pdftex",@"pdflatex"]], @"partial TeX installation rejected");
@@ -73,5 +134,5 @@ int main(void) { @autoreleasepool {
     check(![[paths componentsJoinedByString:@"\n"] containsString:@"/current/"], @"only year directories expanded");
     check(![[paths componentsJoinedByString:@"\n"] containsString:@"/123/"] && ![[paths componentsJoinedByString:@"\n"] containsString:@"/20260/"], @"year directories must contain exactly four digits");
     [fm removeItemAtPath:root error:NULL];
-    NSLog(@"PASS: discovery, ranking, alternatives, duplicates, validation, first launch, bounded version probes");
+    NSLog(@"PASS: discovery, ranking, development versions, alternatives, duplicates, validation, first launch, bounded version probes");
 } return 0; }

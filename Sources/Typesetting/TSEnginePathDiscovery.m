@@ -113,6 +113,33 @@
     return match ? [text substringWithRange:[match rangeAtIndex:1]] : @"";
 }
 
+// The line of --version output that is the banner: "pdfTeX" followed by its version number.
+// Other lines (a wrapper's own words, warnings, copyright) are never read for a version, even when they start "pdfTeX".
+// Only output without any "pdfTeX" line is read from its first line.
++ (NSString *)bannerLineInOutput:(NSString *)output
+{
+    NSArray<NSString *> *lines = [output componentsSeparatedByCharactersInSet:NSCharacterSet.newlineCharacterSet];
+    NSRegularExpression *banner = [NSRegularExpression regularExpressionWithPattern:@"^\\s*pdfTeX [0-9]" options:0 error:NULL];
+    BOOL mentionsPdfTeX = NO;
+    for (NSString *line in lines) {
+        if ([banner firstMatchInString:line options:0 range:NSMakeRange(0, line.length)]) return line;
+        mentionsPdfTeX = mentionsPdfTeX || [[line stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet] hasPrefix:@"pdfTeX"];
+    }
+    return mentionsPdfTeX ? @"" : lines.firstObject ?: @"";
+}
+
++ (nullable NSDictionary *)texLiveReleaseInBanner:(NSString *)banner
+{
+    // Between releases the sources say "YYYY/dev"; distributors may append "/Name". Builds outside TeX Live say "Web2C".
+    // "dev" counts only as a whole component, so that "/dev-tools" stays a distributor's name.
+    NSString *line = [self bannerLineInOutput:banner];
+    NSTextCheckingResult *match = [[NSRegularExpression regularExpressionWithPattern:@"(?:TeX Live|Web2C) ([0-9]{4})(/dev(?=[/)\\s]|$))?" options:0 error:NULL]
+                                   firstMatchInString:line options:0 range:NSMakeRange(0, line.length)];
+    if (!match) return nil;
+    BOOL dev = [match rangeAtIndex:2].location != NSNotFound;
+    return @{@"name": [line substringWithRange:match.range], @"year": @([[line substringWithRange:[match rangeAtIndex:1]] integerValue]), @"dev": @(dev)};
+}
+
 + (NSDictionary<NSString *, NSArray<NSDictionary *> *> *)candidatesForPaths:(NSArray<NSString *> *)paths currentTeX:(NSString *)texPath currentGhostscript:(NSString *)gsPath
 {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
@@ -139,15 +166,17 @@
             NSString *output = [self versionOutputForProgram:program];
             if (!output) continue;
             [seen addObject:identity];
-            NSString *version = [self capture:i == 0 ? @"pdfTeX ([0-9][0-9.\\-]+)" : @"^\\s*([0-9]+(?:\\.[0-9]+)+)" in:output];
-            NSInteger year = i == 0 ? [[self capture:@"TeX Live ([0-9]{4})" in:output] integerValue] : 0;
+            NSString *version = i == 0 ? [self capture:@"pdfTeX ([0-9][0-9.\\-]+)" in:[self bannerLineInOutput:output]]
+                                       : [self capture:@"^\\s*([0-9]+(?:\\.[0-9]+)+)" in:output];
+            NSDictionary *release = i == 0 ? [self texLiveReleaseInBanner:output] : nil;
+            NSInteger year = [release[@"year"] integerValue];
             NSString *displayVersion = version;
-            if (year > 0) {
-                displayVersion = [NSString stringWithFormat:@"TeX Live %ld", (long)year];
+            if (release) {
+                displayVersion = release[@"name"];
                 if (version.length) displayVersion = [displayVersion stringByAppendingFormat:@" (%@)", version];
             }
-            [matches addObject:@{@"path": directory, @"version": displayVersion,
-                                 @"number": version, @"year": @(year), @"order": @(matches.count)}];
+            [matches addObject:@{@"path": directory, @"version": displayVersion, @"number": version,
+                                 @"year": @(year), @"dev": release[@"dev"] ?: @NO, @"order": @(matches.count)}];
         }
         [matches sortUsingComparator:^NSComparisonResult(NSDictionary *a, NSDictionary *b) {
             // Unidentified versions remain selectable, after every identified version.
@@ -155,9 +184,22 @@
             if (aKnown != bKnown) return aKnown ? NSOrderedAscending : NSOrderedDescending;
             NSComparisonResult year = [b[@"year"] compare:a[@"year"]];
             if (year != NSOrderedSame) return year;
+            // "YYYY/dev" is the trunk before the YYYY release, so it is older than that release.
+            BOOL aDev = [a[@"dev"] boolValue], bDev = [b[@"dev"] boolValue];
+            if (aDev != bDev) return bDev ? NSOrderedAscending : NSOrderedDescending;
             NSComparisonResult version = [b[@"number"] compare:a[@"number"] options:NSNumericSearch];
             return version != NSOrderedSame ? version : [a[@"order"] compare:b[@"order"]];
         }];
+        // Preselect the newest release that the banner names. Without one, the first entry (Ghostscript always).
+        NSUInteger preselected = [matches indexOfObjectPassingTest:^BOOL(NSDictionary *m, NSUInteger idx, BOOL *stop) {
+            return [m[@"year"] integerValue] > 0 && ![m[@"dev"] boolValue];
+        }];
+        if (preselected == NSNotFound) preselected = 0;
+        if (matches.count) {
+            NSMutableDictionary *entry = [matches[preselected] mutableCopy];
+            entry[@"default"] = @YES;
+            matches[preselected] = entry;
+        }
         result[keys[i]] = matches;
     }
     return result;
