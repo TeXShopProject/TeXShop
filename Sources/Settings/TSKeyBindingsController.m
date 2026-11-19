@@ -9,6 +9,7 @@ static NSPasteboardType const TSKeyBindingRowType = @"org.texshop.key-binding-ro
 static NSString *const TSKeyBindingMark = @"•";
 static NSString *const TSKeyBindingKeyColumn = @"key";
 static NSString *const TSKeyBindingOutputColumn = @"output";
+static NSString *const TSKeyBindingPasteColumn = @"paste";
 // Rows the list shows at least; a taller window shows more.
 static const NSInteger TSKeyBindingMinimumRows = 6;
 
@@ -105,6 +106,8 @@ static NSAttributedString *TSKeyBindingTokenString(NSString *symbol, NSFont *fon
 @interface TSKeyBindingsController () <NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate, NSMenuDelegate, NSMenuItemValidation>
 @property (strong) NSMutableArray<NSString *> *mutableKeys;
 @property (strong) NSMutableArray<NSString *> *mutableValues;
+// Whether each row is also applied to pasted text, as checked.
+@property (strong) NSMutableArray<NSNumber *> *mutablePaste;
 @property (strong, readwrite) NSTableView *tableView;
 @property (strong, readwrite) NSPopUpButton *insertButton;
 @property (strong, readwrite) NSButton *symbolsButton;
@@ -193,11 +196,13 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
     if (self == nil) return nil;
     _mutableKeys = [NSMutableArray array];
     _mutableValues = [NSMutableArray array];
+    _mutablePaste = [NSMutableArray array];
     return self;
 }
 
 - (NSArray<NSString *> *)keys { return [self.mutableKeys copy]; }
 - (NSArray<NSString *> *)values { return [self.mutableValues copy]; }
+- (NSArray<NSString *> *)pasteKeys { return [self savedPasteKeys]; }
 
 - (void)loadView
 {
@@ -220,20 +225,28 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
     table.intercellSpacing = NSMakeSize(0, 0);
     table.gridStyleMask = NSTableViewGridNone;
     table.allowsMultipleSelection = YES;
-    table.columnAutoresizingStyle = NSTableViewLastColumnOnlyAutoresizingStyle;
+    // Only the output column follows the width of the list.
+    table.columnAutoresizingStyle = NSTableViewUniformColumnAutoresizingStyle;
     table.accessibilityLabel = NSLocalizedString(@"Key Bindings", @"Key binding list");
     table.identifier = @"keybindings.table";
     NSTableColumn *key = [[NSTableColumn alloc] initWithIdentifier:TSKeyBindingKeyColumn];
     key.title = NSLocalizedString(@"Input Character", @"Key binding column");
     // Wide enough for the column title in every language.
     key.width = MAX(110, ceil(key.headerCell.cellSize.width) + 16); key.minWidth = 70; key.maxWidth = 240;
+    key.resizingMask = NSTableColumnUserResizingMask;
     NSTableColumn *output = [[NSTableColumn alloc] initWithIdentifier:TSKeyBindingOutputColumn];
     output.title = NSLocalizedString(@"Output String", @"Key binding column");
+    NSTableColumn *paste = [[NSTableColumn alloc] initWithIdentifier:TSKeyBindingPasteColumn];
+    paste.title = NSLocalizedString(@"Paste", @"Key binding column: also applied to pasted text");
+    paste.headerCell.alignment = NSTextAlignmentCenter;
+    paste.width = MAX(56, ceil(paste.headerCell.cellSize.width) + 16); paste.minWidth = paste.width; paste.maxWidth = paste.width;
+    paste.resizingMask = NSTableColumnNoResizing;
     // The inset rows take 16 points on each side; the list starts narrow enough for the
-    // narrowest Settings window, and the last column grows with the list.
-    output.width = 300; output.minWidth = 120;
+    // narrowest Settings window, and this column grows with the list.
+    output.width = MAX(120, 300 - paste.width); output.minWidth = 120;
     [table addTableColumn:key];
     [table addTableColumn:output];
+    [table addTableColumn:paste];
     table.dataSource = self;
     table.delegate = self;
     [table registerForDraggedTypes:@[TSKeyBindingRowType]];
@@ -283,7 +296,15 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
     help.toolTip = help.accessibilityLabel;
     self.symbolsButton = help;
 
-    for (NSView *child in @[scroll, addRemove, insert, help]) [body addSubview:child];
+    NSTextField *pasteNote = [NSTextField wrappingLabelWithString:NSLocalizedString(@"Check “Paste” to also apply the replacement to pasted text.", @"Key binding list: what the Paste column does")];
+    pasteNote.translatesAutoresizingMaskIntoConstraints = NO;
+    pasteNote.identifier = @"keybindings.paste-note";
+    pasteNote.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
+    pasteNote.textColor = NSColor.secondaryLabelColor;
+    pasteNote.selectable = NO;
+    [pasteNote setContentCompressionResistancePriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationVertical];
+
+    for (NSView *child in @[scroll, addRemove, insert, help, pasteNote]) [body addSubview:child];
     // At least six rows; a taller window gives the list, and the menu shortcut
     // list, more (TSShortcutPaneController shares the height between them).
     CGFloat minimum = TSKeyBindingMinimumRows * table.rowHeight + 28 + 2;
@@ -302,7 +323,10 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
         height,
         [addRemove.topAnchor constraintEqualToAnchor:scroll.bottomAnchor constant:8],
         [addRemove.leadingAnchor constraintEqualToAnchor:body.leadingAnchor],
-        [addRemove.bottomAnchor constraintEqualToAnchor:body.bottomAnchor],
+        [pasteNote.topAnchor constraintEqualToAnchor:addRemove.bottomAnchor constant:8],
+        [pasteNote.leadingAnchor constraintEqualToAnchor:body.leadingAnchor],
+        [pasteNote.trailingAnchor constraintLessThanOrEqualToAnchor:body.trailingAnchor],
+        [pasteNote.bottomAnchor constraintEqualToAnchor:body.bottomAnchor],
         [insert.leadingAnchor constraintEqualToAnchor:addRemove.trailingAnchor constant:12],
         [insert.centerYAnchor constraintEqualToAnchor:addRemove.centerYAnchor],
         [help.trailingAnchor constraintEqualToAnchor:body.trailingAnchor],
@@ -318,7 +342,7 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
 {
     GlobalData *data = [GlobalData sharedGlobalData];
     NSDictionary<NSString *, NSString *> *dictionary = data.g_autocompletionDictionary ?: @{};
-    NSMutableArray *keys = [NSMutableArray array], *values = [NSMutableArray array];
+    NSMutableArray *keys = [NSMutableArray array], *values = [NSMutableArray array], *paste = [NSMutableArray array];
     // The saved order first, then keys the order file does not know.
     for (NSString *key in data.g_autocompletionKeys ?: @[]) {
         if (![key isKindOfClass:NSString.class] || dictionary[key] == nil || [keys containsObject:key]) continue;
@@ -328,9 +352,23 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
         if ([keys containsObject:key]) continue;
         [keys addObject:key]; [values addObject:(NSString *)dictionary[key]];
     }
-    self.mutableKeys = keys; self.mutableValues = values;
+    NSArray *pasteKeys = [data.g_autocompletionPasteKeys isKindOfClass:NSArray.class] ? data.g_autocompletionPasteKeys : @[];
+    for (NSString *key in keys) [paste addObject:@([pasteKeys containsObject:key])];
+    self.mutableKeys = keys; self.mutableValues = values; self.mutablePaste = paste;
     [self.tableView reloadData];
     [self updateControls];
+}
+
+// A row can be applied to pasted text unless its output has a placeholder or a mark.
+static BOOL TSKeyBindingPastable(NSString *output) { return !TSKeyBindingOutputHasPlaceholder(output); }
+
+- (NSArray<NSString *> *)savedPasteKeys
+{
+    NSMutableArray *keys = [NSMutableArray array];
+    [self.mutableKeys enumerateObjectsUsingBlock:^(NSString *key, NSUInteger i, BOOL *stop) {
+        if (key.length && self.mutablePaste[i].boolValue && TSKeyBindingPastable(self.mutableValues[i])) [keys addObject:key];
+    }];
+    return keys;
 }
 
 - (NSArray<NSString *> *)savedKeys
@@ -350,43 +388,48 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
 // The list as it is now is written at once and used by open documents.
 - (void)save
 {
-    NSArray *keys = [self savedKeys], *values = [self savedValues];
+    NSArray *keys = [self savedKeys], *values = [self savedValues], *pasteKeys = [self savedPasteKeys];
     NSDictionary *dictionary = [NSDictionary dictionaryWithObjects:values forKeys:keys];
     [GlobalData sharedGlobalData].g_autocompletionDictionary = dictionary;
     [GlobalData sharedGlobalData].g_autocompletionKeys = keys;
+    [GlobalData sharedGlobalData].g_autocompletionPasteKeys = pasteKeys;
     NSString *folder = [AutoCompletionPath stringByStandardizingPath];
     [[NSFileManager defaultManager] createDirectoryAtPath:folder withIntermediateDirectories:YES attributes:nil error:NULL];
     // Not atomic, as before: a linked file stays linked.
     BOOL written = [dictionary writeToFile:[folder stringByAppendingPathComponent:@"autocompletion.plist"] atomically:NO];
     written &= [keys writeToFile:[folder stringByAppendingPathComponent:@"autocompletionDisplayOrder.plist"] atomically:NO];
+    // Kept apart, so that autocompletion.plist stays a dictionary of strings.
+    written &= [pasteKeys writeToFile:[folder stringByAppendingPathComponent:@"autocompletionPaste.plist"] atomically:NO];
     if (!written) NSLog(@"TeXShop could not save the key bindings in %@", folder);
 }
 
-- (void)restoreKeys:(NSArray<NSString *> *)keys values:(NSArray<NSString *> *)values actionName:(NSString *)name
+- (void)restoreKeys:(NSArray<NSString *> *)keys values:(NSArray<NSString *> *)values paste:(NSArray<NSString *> *)pasteKeys actionName:(NSString *)name
 {
-    NSArray *currentKeys = [self savedKeys], *currentValues = [self savedValues];
+    NSArray *currentKeys = [self savedKeys], *currentValues = [self savedValues], *currentPaste = [self savedPasteKeys];
     self.mutableKeys = [keys mutableCopy]; self.mutableValues = [values mutableCopy];
-    [self registerUndoToKeys:currentKeys values:currentValues actionName:name];
+    self.mutablePaste = [NSMutableArray array];
+    for (NSString *key in keys) [self.mutablePaste addObject:@([pasteKeys containsObject:key])];
+    [self registerUndoToKeys:currentKeys values:currentValues paste:currentPaste actionName:name];
     [self.tableView reloadData];
     [self updateControls];
     [self save];
 }
 
-- (void)registerUndoToKeys:(NSArray<NSString *> *)keys values:(NSArray<NSString *> *)values actionName:(NSString *)name
+- (void)registerUndoToKeys:(NSArray<NSString *> *)keys values:(NSArray<NSString *> *)values paste:(NSArray<NSString *> *)pasteKeys actionName:(NSString *)name
 {
     NSUndoManager *undo = self.viewIfLoaded.window.undoManager;
     if (undo == nil) return;
     [undo registerUndoWithTarget:self handler:^(TSKeyBindingsController *target) {
-        [target restoreKeys:keys values:values actionName:name];
+        [target restoreKeys:keys values:values paste:pasteKeys actionName:name];
     }];
     [undo setActionName:name];
 }
 
 - (void)changeWithActionName:(NSString *)name change:(void (^)(void))change
 {
-    NSArray *keys = [self savedKeys], *values = [self savedValues];
+    NSArray *keys = [self savedKeys], *values = [self savedValues], *pasteKeys = [self savedPasteKeys];
     change();
-    [self registerUndoToKeys:keys values:values actionName:name];
+    [self registerUndoToKeys:keys values:values paste:pasteKeys actionName:name];
     [self updateControls];
     [self save];
 }
@@ -408,6 +451,7 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
     if (pending == NSNotFound) {
         [self.mutableKeys insertObject:@"" atIndex:row];
         [self.mutableValues insertObject:@"" atIndex:row];
+        [self.mutablePaste insertObject:@NO atIndex:row];
         [table insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:NSTableViewAnimationEffectNone];
     }
     [table selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
@@ -425,6 +469,7 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
     [self changeWithActionName:NSLocalizedString(@"Delete Key Binding", @"Undo action name") change:^{
         [self.mutableKeys removeObjectsAtIndexes:rows];
         [self.mutableValues removeObjectsAtIndexes:rows];
+        [self.mutablePaste removeObjectsAtIndexes:rows];
         [table removeRowsAtIndexes:rows withAnimation:NSTableViewAnimationEffectNone];
     }];
     if (self.mutableKeys.count) [table selectRowIndexes:[NSIndexSet indexSetWithIndex:MIN(next, self.mutableKeys.count - 1)] byExtendingSelection:NO];
@@ -558,6 +603,13 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
 - (void)controlTextDidChange:(NSNotification *)notification
 {
     NSTextField *field = notification.object;
+    if ([self.tableView columnForView:field] == [self.tableView columnWithIdentifier:TSKeyBindingOutputColumn]) {
+        // The Paste box follows the output as it is typed.
+        NSTextView *editor = notification.userInfo[@"NSFieldEditor"];
+        NSInteger row = [self.tableView rowForView:field];
+        if ([editor isKindOfClass:NSTextView.class] && row >= 0) [self updatePasteBoxInRow:row output:[TSKeyBindingsController outputForDisplayString:(NSAttributedString *)editor.textStorage]];
+        return;
+    }
     if ([self.tableView columnForView:field] != [self.tableView columnWithIdentifier:TSKeyBindingKeyColumn]) return;
     NSTextView *editor = notification.userInfo[@"NSFieldEditor"];
     if (![editor isKindOfClass:NSTextView.class] || editor.hasMarkedText) return;
@@ -598,6 +650,7 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
         if (field && [self.tableView rowForView:field] == (NSInteger)row) return;
         [self.mutableKeys removeObjectAtIndex:row];
         [self.mutableValues removeObjectAtIndex:row];
+        [self.mutablePaste removeObjectAtIndex:row];
         [self.tableView removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:NSTableViewAnimationEffectNone];
         [self updateControls];
     });
@@ -640,6 +693,7 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
                 self.mutableKeys[row] = key;
                 [self.mutableKeys removeObjectAtIndex:other];
                 [self.mutableValues removeObjectAtIndex:other];
+                [self.mutablePaste removeObjectAtIndex:other];
             }];
             [self.tableView reloadData];
             NSInteger kept = (NSInteger)other < row ? row - 1 : row;
@@ -670,12 +724,17 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
     NSString *old = self.mutableValues[row];
     if ([output isEqualToString:old] || self.mutableKeys[row].length == 0) {
         self.mutableValues[row] = output;
+        if (!TSKeyBindingPastable(output)) self.mutablePaste[row] = @NO;
         // Symbols typed as text become tokens.
         [self reloadRow:row];
         if (self.mutableKeys[row].length == 0) [self dropUnfinishedRowLater];
         return;
     }
-    [self changeWithActionName:NSLocalizedString(@"Change Key Binding", @"Undo action name") change:^{ self.mutableValues[row] = output; }];
+    [self changeWithActionName:NSLocalizedString(@"Change Key Binding", @"Undo action name") change:^{
+        self.mutableValues[row] = output;
+        // A placeholder or a mark takes the row off pasted text for good.
+        if (!TSKeyBindingPastable(output)) self.mutablePaste[row] = @NO;
+    }];
     [self reloadRow:row];
 }
 
@@ -686,6 +745,7 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)column row:(NSInteger)row
 {
     NSString *identifier = column.identifier;
+    if ([identifier isEqualToString:TSKeyBindingPasteColumn]) return [self pasteBoxForTable:tableView row:row];
     BOOL output = [identifier isEqualToString:TSKeyBindingOutputColumn];
     NSTableCellView *cell = [tableView makeViewWithIdentifier:identifier owner:self];
     if (cell == nil) {
@@ -720,6 +780,55 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification { [self updateControls]; }
 
+- (NSView *)pasteBoxForTable:(NSTableView *)tableView row:(NSInteger)row
+{
+    NSTableCellView *cell = [tableView makeViewWithIdentifier:TSKeyBindingPasteColumn owner:self];
+    NSButton *box = (NSButton *)cell.subviews.firstObject;
+    if (cell == nil) {
+        cell = [[NSTableCellView alloc] initWithFrame:NSMakeRect(0, 0, 56, tableView.rowHeight)];
+        cell.identifier = TSKeyBindingPasteColumn;
+        box = [NSButton checkboxWithTitle:@"" target:self action:@selector(togglePaste:)];
+        box.translatesAutoresizingMaskIntoConstraints = NO;
+        box.identifier = @"keybindings.paste";
+        box.accessibilityLabel = NSLocalizedString(@"Paste", @"Key binding column: also applied to pasted text");
+        [cell addSubview:box];
+        [NSLayoutConstraint activateConstraints:@[
+            [box.centerXAnchor constraintEqualToAnchor:cell.centerXAnchor],
+            [box.centerYAnchor constraintEqualToAnchor:cell.centerYAnchor]]];
+    }
+    [self setPasteBox:box output:self.mutableValues[row] checked:self.mutablePaste[row].boolValue];
+    return cell;
+}
+
+// The box is off and dimmed for an output with a placeholder or a mark.
+- (void)setPasteBox:(NSButton *)box output:(NSString *)output checked:(BOOL)checked
+{
+    BOOL pastable = TSKeyBindingPastable(output);
+    box.enabled = pastable;
+    box.state = pastable && checked ? NSControlStateValueOn : NSControlStateValueOff;
+}
+
+- (void)updatePasteBoxInRow:(NSInteger)row output:(NSString *)output
+{
+    if (row < 0 || (NSUInteger)row >= self.mutablePaste.count) return;
+    NSTableCellView *cell = [self.tableView viewAtColumn:[self.tableView columnWithIdentifier:TSKeyBindingPasteColumn] row:row makeIfNecessary:NO];
+    NSButton *box = (NSButton *)cell.subviews.firstObject;
+    if ([box isKindOfClass:NSButton.class]) [self setPasteBox:box output:output checked:self.mutablePaste[row].boolValue];
+}
+
+- (IBAction)togglePaste:(NSButton *)sender
+{
+    NSInteger row = [self.tableView rowForView:sender];
+    if (row < 0 || (NSUInteger)row >= self.mutableKeys.count) return;
+    // An output being edited is kept first, so that the box goes with it.
+    NSTextField *field = [self editedField];
+    if (field && [self.tableView rowForView:field] == row) [self.tableView.window makeFirstResponder:self.tableView];
+    if (self.mutableKeys[row].length == 0 || !TSKeyBindingPastable(self.mutableValues[row])) { [self reloadRow:row]; return; }
+    BOOL checked = sender.state == NSControlStateValueOn;
+    if (checked == self.mutablePaste[row].boolValue) return;
+    [self changeWithActionName:NSLocalizedString(@"Change Key Binding", @"Undo action name") change:^{ self.mutablePaste[row] = @(checked); }];
+}
+
 - (id<NSPasteboardWriting>)tableView:(NSTableView *)tableView pasteboardWriterForRow:(NSInteger)row
 {
     if (self.mutableKeys[row].length == 0) return nil;
@@ -746,9 +855,9 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
     NSUInteger target = (NSUInteger)MAX(row, 0) - [moved countOfIndexesInRange:NSMakeRange(0, (NSUInteger)MAX(row, 0))];
     NSIndexSet *destination = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(target, moved.count)];
     [self changeWithActionName:NSLocalizedString(@"Move Key Binding", @"Undo action name") change:^{
-        NSArray *keys = [self.mutableKeys objectsAtIndexes:moved], *values = [self.mutableValues objectsAtIndexes:moved];
-        [self.mutableKeys removeObjectsAtIndexes:moved]; [self.mutableValues removeObjectsAtIndexes:moved];
-        [self.mutableKeys insertObjects:keys atIndexes:destination]; [self.mutableValues insertObjects:values atIndexes:destination];
+        NSArray *keys = [self.mutableKeys objectsAtIndexes:moved], *values = [self.mutableValues objectsAtIndexes:moved], *paste = [self.mutablePaste objectsAtIndexes:moved];
+        [self.mutableKeys removeObjectsAtIndexes:moved]; [self.mutableValues removeObjectsAtIndexes:moved]; [self.mutablePaste removeObjectsAtIndexes:moved];
+        [self.mutableKeys insertObjects:keys atIndexes:destination]; [self.mutableValues insertObjects:values atIndexes:destination]; [self.mutablePaste insertObjects:paste atIndexes:destination];
     }];
     [tableView reloadData];
     [tableView selectRowIndexes:destination byExtendingSelection:NO];

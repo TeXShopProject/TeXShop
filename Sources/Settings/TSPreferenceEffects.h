@@ -19,7 +19,7 @@ typedef NS_OPTIONS(NSUInteger, TSPreferencePreparation) {
 // Preparation always completes before observers receive a change notification.
 static inline TSPreferencePreparation TSPreferencePreparationsForKeys(NSSet<TSPreferenceKey> *changed) {
     NSDictionary<NSNumber *, NSArray<TSPreferenceKey> *> *groups = @{
-        @(TSPreferencePrepareEncoding): @[EncodingKey, ptexUtfOutputEnabledKey],
+        @(TSPreferencePrepareEncoding): @[EncodingKey],
         @(TSPreferencePrepareSpelling): @[TSTeXAwareSpellCheckingKey, TurnOffCommandSpellCheckKey, TurnOffParameterSpellCheckKey, TurnOffCommentSpellCheckKey, ExceptionListExcludesParametersKey, ExtraCommandsNotToCheckParametersKey, ExtraCommandsToCheckParametersKey],
         @(TSPreferencePrepareTheme): @[DefaultLiteThemeKey, DefaultDarkThemeKey],
         @(TSPreferencePrepareDock): @[TSDockIconKey],
@@ -43,7 +43,7 @@ static inline NSArray<NSNotificationName> *TSPreferenceNotificationsForKeys(NSSe
         DocumentBibDeskCompleteNotification: @[BibDeskCompletionKey],
         ExternalEditorNotification: @[UseExternalEditorKey],
         SourceColorChangedNotification: @[DefaultLiteThemeKey, DefaultDarkThemeKey],
-        TSPreferenceEncodingChangedNotification: @[EncodingKey, ptexUtfOutputEnabledKey],
+        TSPreferenceEncodingChangedNotification: @[EncodingKey],
         TSCompletionChangedNotification: @[CommandCompletionCharKey],
         TSFindMethodChangedNotification: @[FindMethodKey, IncrementalSearchKey],
         TSSpellingLanguageChangedNotification: @[spellingLanguageDefaultKey, spellingAutomaticDefaultKey],

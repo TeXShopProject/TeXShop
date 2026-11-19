@@ -44,7 +44,6 @@ typedef NS_ENUM(NSInteger, TSByteOrderMark) {
 
 - (void)setupForEncoding;
 - (void)encodingChanged: (NSNotification *)note;
-- (IBAction)toggleTeXCharConversion:(id)sender;
 
 // New encoding API: Uses NSStringEncoding for the menu tags
 - (NSStringEncoding)defaultEncoding;

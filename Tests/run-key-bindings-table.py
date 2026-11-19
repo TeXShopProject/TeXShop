@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """The key binding list in Settings › Keyboard: tokens and their file text, line
 breaks and tabs, saving at once, Undo, empty rows, repeated and one-character
-input characters, copy and paste, Insert, moving rows, and striped
-rows in light and dark. No window is ordered,
+input characters, copy and paste, Insert, moving rows, striped
+rows in light and dark, and the Paste column, which cannot be checked for an
+output with a placeholder or a mark. No window is ordered,
 beeps are counted, and key bindings are written to a temporary folder only.
 
-  --mutations   also check that the test finds five deliberate faults"""
+  --mutations   also check that the test finds ten deliberate faults"""
 from pathlib import Path
 import subprocess, sys, tempfile
 from source_tree import include_args
@@ -16,6 +17,11 @@ mutations = {
     'not-used-at-once': ('    [GlobalData sharedGlobalData].g_autocompletionDictionary = dictionary;\n', '', 'save a real line break and tab, at once'),
     'replacement-character-dropped': ('        } else if (value == nil) {', '        } else if (value == nil && NO) {', 'A pasted U+FFFC without an attachment is saved'),
     'rows-not-striped': ('    table.usesAlternatingRowBackgroundColors = YES;', '    table.usesAlternatingRowBackgroundColors = NO;', 'Neighboring rows have different backgrounds'),
+    'paste-not-saved': ('    written &= [pasteKeys writeToFile:', '    if (NO) written &= [pasteKeys writeToFile:', 'Checking Paste saves the row at once'),
+    'placeholder-box-enabled': ('    box.enabled = pastable;', '    box.enabled = YES;', 'has its box off and dimmed'),
+    'check-kept-with-mark': ('        // A placeholder or a mark takes the row off pasted text for good.\n        if (!TSKeyBindingPastable(output)) self.mutablePaste[row] = @NO;\n', '', 'Taking the mark out after saving leaves the row unchecked'),
+    'box-not-live': ('[self updatePasteBoxInRow:row output:', '[self class]; if (0) [self updatePasteBoxInRow:row output:', 'Typing #INS# turns the box off at once'),
+    'input-column-stretched': ('    key.resizingMask = NSTableColumnUserResizingMask;\n', '', 'The Paste column keeps its width at the right end'),
     'input-not-limited': ('    if (text.length == 0 || [text rangeOfComposedCharacterSequenceAtIndex:0].length == text.length) return;', '    return;', 'Typing in an input character keeps only the new character'),
 }
 def run(text):

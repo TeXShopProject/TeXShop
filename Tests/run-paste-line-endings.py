@@ -2,10 +2,11 @@
 """Pasted text gets LF line endings when ConvertLF is on (the default), in every document and in the Experiment
 source, and so does the clipboard text of #PASTE# in macros and command completion. The yen signs and backslashes
 of a paste change in the Japanese modes in documents, as before, and stay as they are in the Experiment source, as
-before.
+before. The key bindings checked for pasting apply to a paste in documents and in the Experiment source while key
+bindings are on there, not to #PASTE#; rows with a placeholder or a mark never do; Undo takes the whole paste away.
 
 The production paste methods of TSTextView and ScrapTextView, the shared pasteFilteredTextFromPasteboard:type: of
-TSTextView.m, the Japanese filters of TSEncodingSupport.m and NSMutableString-Extras.m are compiled verbatim with
+TSTextView.m, the Japanese filters of TSEncodingSupport.m, GlobalData.m and NSMutableString-Extras.m are compiled verbatim with
 OgreKit (Tests/PasteLineEndings.m). Paste is the real -[NSTextView paste:], from a private pasteboard that stands
 in for the clipboard; preferences stay in memory. Nothing is shown on screen. --mutations breaks each rule and the
 test must then fail."""
@@ -34,13 +35,21 @@ document = part(text_view, '- (BOOL)readSelectionFromPasteboard:', 'TSTextView r
 experiment = part(scrap, '- (BOOL)readSelectionFromPasteboard:', 'ScrapTextView readSelectionFromPasteboard', optional=True)
 filters = encodings[encodings.index('// replace backslashes by yens'):].rstrip() + '\n'
 extras = (root / 'Sources/Utilities/NSMutableString-Extras.m').read_text(encoding='utf-8')
+global_data = (root / 'Sources/App/GlobalData.m').read_text(encoding='utf-8')
 harness = (root / 'Tests/PasteLineEndings.m').read_text(encoding='utf-8')
 mutations = {
-    'only in the Japanese modes': ('category', 'if (! filter && ! convertLF)', 'if (! filter)'),
+    'only in the Japanese modes': ('category', 'if (! filter && ! convertLF && bindings.count == 0)', 'if (! filter && bindings.count == 0)'),
     'no LF line endings': ('category', 'if (convertLF)\n\t\tstring =', 'if (NO)\n\t\tstring ='),
-    'not in the Experiment': ('experiment', 'if ([self pasteFilteredTextFromPasteboard: pboard type: type japaneseFilter: NO])\n\t\treturn YES;\n', ''),
-    'yen signs in the Experiment': ('experiment', 'japaneseFilter: NO]', 'japaneseFilter: YES]'),
-    'no yen signs in documents': ('document', 'japaneseFilter: YES]', 'japaneseFilter: NO]'),
+    'not in the Experiment': ('experiment', 'if ([self pasteFilteredTextFromPasteboard: pboard type: type japaneseFilter: NO keyBindings: [self.document isDoAutoCompleteEnabled]])\n\t\treturn YES;\n', ''),
+    'yen signs in the Experiment': ('experiment', 'japaneseFilter: NO keyBindings:', 'japaneseFilter: YES keyBindings:'),
+    'no yen signs in documents': ('document', 'japaneseFilter: YES keyBindings:', 'japaneseFilter: NO keyBindings:'),
+    'no key bindings in documents': ('document', 'keyBindings: [self.document isDoAutoCompleteEnabled]]', 'keyBindings: NO]'),
+    'key bindings while they are off': ('experiment', 'keyBindings: [self.document isDoAutoCompleteEnabled]]', 'keyBindings: YES]'),
+    'key bindings not applied': ('category', 'TSApplyKeyBindings(pasted, bindings)', 'pasted'),
+    'key bindings only with other filters': ('category', 'if (! filter && ! convertLF && bindings.count == 0)', 'if (! filter && ! convertLF)'),
+    'rows with a placeholder applied': ('globaldata', ' || TSKeyBindingOutputHasPlaceholder(output)) continue;', ') continue;'),
+    'marks are not placeholders': ('globaldata', '@"#PASTE#", @"•"]', '@"#PASTE#"]'),
+    'inside a character': ('globaldata', 'if (end < length && [text rangeOfComposedCharacterSequenceAtIndex:end].location != end) continue;', ''),
     'not through shouldChangeTextInRange': ('category', 'if ([self shouldChangeTextInRange:selectedRange replacementString:string]) {', 'if (YES) {'),
     'not for #PASTE#': ('extras', '        [clipboard replaceLineEndingsWithLF];\n', ''),
     '#PASTE# without ConvertLF': ('extras', 'if ([NSUserDefaults.standardUserDefaults boolForKey:@"ConvertLF"])', 'if (YES)'),
@@ -54,8 +63,9 @@ def run(parts, label):
         folder = Path(folder)
         (folder / 'test.m').write_text(program, encoding='utf-8')
         (folder / 'NSMutableString-Extras.m').write_text(parts['extras'], encoding='utf-8')
+        (folder / 'GlobalData.m').write_text(parts['globaldata'], encoding='utf-8')
         subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-F', str(root / 'Frameworks'), '-framework', 'OgreKit',
-                        '-I', str(root / 'Tests'), *include_args(root), str(folder / 'test.m'), str(folder / 'NSMutableString-Extras.m'),
+                        '-I', str(root / 'Tests'), *include_args(root), str(folder / 'test.m'), str(folder / 'NSMutableString-Extras.m'), str(folder / 'GlobalData.m'),
                         '-o', str(folder / 'test')], check=True)
         if label == 'production':
             verify_embedded(program, [f for f in fragments])
@@ -63,7 +73,7 @@ def run(parts, label):
                               env=dict(os.environ, DYLD_FRAMEWORK_PATH=str(root / 'Frameworks')))
 
 
-parts = {'category': category, 'document': document, 'experiment': experiment, 'extras': extras}
+parts = {'category': category, 'document': document, 'experiment': experiment, 'extras': extras, 'globaldata': global_data}
 result = run(parts, 'production')
 print(result.stdout, end='')
 if result.returncode:
@@ -77,4 +87,5 @@ if '--mutations' in sys.argv:
         r = run(changed, name)
         assert r.returncode and 'FAIL' in r.stderr, (name, r.stdout, r.stderr)
         print('DETECTED', name, r.stderr.strip().splitlines()[-1])
-print('PASS: pastes and #PASTE# get LF line endings with ConvertLF, in documents and in the Experiment source')
+print('PASS: pastes and #PASTE# get LF line endings with ConvertLF, in documents and in the Experiment source;'
+      ' pastes get the key bindings checked for pasting')

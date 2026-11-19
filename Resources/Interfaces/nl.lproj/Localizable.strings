@@ -26,8 +26,6 @@
 "Close Macro Editor" = "Sluit macro-editor";
 "Add macros from file..." = "Voeg macro’s toe uit bestand...";
 "Save selection to file..." = "Sla selectie op als bestand...";
-"Convert \\yen to \\ in Pasteboard" = "Zet \\yen om in \\ op klembord";
-"Convert \\ to \\yen in Pasteboard" = "Zet \\ om in \\yen op klembord"; 
 "Edit" = "Wijzig";
 "Warning" = "Waarschuwing";
 "Don't Save" = "Bewaar niet";
@@ -313,6 +311,8 @@
 /* Settings › Keyboard › Key Bindings */
 "Input Character" = "Invoerteken";
 "Output String" = "Uitvoertekst";
+"Paste" = "Plak";
+"Check “Paste” to also apply the replacement to pasted text." = "Als ‘Plak’ is aangevinkt, wordt de vervanging ook toegepast op geplakte tekst.";
 "Selected Text" = "Geselecteerde tekst";
 "Insertion Point" = "Invoegpositie";
 "Clipboard Text" = "Tekst op klembord";

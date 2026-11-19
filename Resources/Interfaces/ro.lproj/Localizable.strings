@@ -26,8 +26,6 @@
 "Close Macro Editor" = "Închide Editorul de Macro";
 "Add macros from file..." = "Adaugă Macro din Fișier...";
 "Save selection to file..." = "Salvează Selecția ca Fișier...";
-"Convert \\yen to \\ in Pasteboard" = "Înlocuiește \\yen cu \\ în clipboard";
-"Convert \\ to \\yen in Pasteboard" = "Înlocuiește \\ cu \\yen în clipboard"; 
 "Edit" = "Editare";
 "Warning" = "Avertisment";
 "Don't Save" = "Nu salvați";
@@ -313,6 +311,8 @@
 /* Settings › Keyboard › Key Bindings */
 "Input Character" = "Caracter tastat";
 "Output String" = "Text rezultat";
+"Paste" = "Lipiți";
+"Check “Paste” to also apply the replacement to pasted text." = "Dacă „Lipiți” este bifat, înlocuirea se aplică și textului lipit.";
 "Selected Text" = "Text selectat";
 "Insertion Point" = "Punct de inserare";
 "Clipboard Text" = "Text din clipboard";

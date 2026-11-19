@@ -26,8 +26,6 @@
 "Close Macro Editor" = "Cerrar editor de macros";		/*% Replaces previous name when editor is open; not in IB */
 "Add macros from file..." = "Añadir macros desde archivo...";  /*% Menu added by Macro Editor; not in IB */
 "Save selection to file..." = "Guardar selección en archivo...";	/*% Menu added by Macro Editor; not in IB */
-"Convert \\yen to \\ in Pasteboard" = "Convertir \\yen a \\ en Portapapeles";
-"Convert \\ to \\yen in Pasteboard" = "Convertir \\ a \\yen en Portapapeles"; 
 "Edit" = "Edición";							/*% Name of "Edit" Menu */
 "Warning" = "Advertencia";
 "Don't Save" = "No guardar";
@@ -313,6 +311,8 @@
 /* Settings › Keyboard › Key Bindings */
 "Input Character" = "Carácter escrito";
 "Output String" = "Texto de salida";
+"Paste" = "Pegar";
+"Check “Paste” to also apply the replacement to pasted text." = "Si marcas “Pegar”, la sustitución también se aplica al texto pegado.";
 "Selected Text" = "Texto seleccionado";
 "Insertion Point" = "Punto de inserción";
 "Clipboard Text" = "Texto del portapapeles";
