@@ -2067,7 +2067,11 @@ static NSAlert *TSEnginePathAlert(NSDictionary *found, NSMutableDictionary *matr
         matrix.cellSize = cellSize;
         matrix.intercellSpacing = NSMakeSize(0, spacing);
         [matrix sizeToCells];
-        [matrix selectCellAtRow:0 column:0];
+        NSUInteger preselected = [candidates indexOfObjectPassingTest:^BOOL(NSDictionary *candidate, NSUInteger idx, BOOL *stop) {
+            return [candidate[@"default"] boolValue];
+        }];
+        if (preselected == NSNotFound) preselected = 0;
+        [matrix selectCellAtRow:preselected column:0];
         // At most three installations show at once; more scroll.
         BOOL scrolls = candidates.count > 3;
         CGFloat height = scrolls ? 3 * cellSize.height + 2 * spacing : NSHeight(matrix.frame);
@@ -2077,7 +2081,7 @@ static NSAlert *TSEnginePathAlert(NSDictionary *found, NSMutableDictionary *matr
         scroll.autohidesScrollers = YES;
         scroll.drawsBackground = NO;
         scroll.documentView = matrix;
-        [matrix scrollCellToVisibleAtRow:0 column:0];
+        [matrix scrollCellToVisibleAtRow:preselected column:0];
         [views addObject:scroll]; [gaps addObject:@4];
         matrices[key] = matrix;
     }

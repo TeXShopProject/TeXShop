@@ -444,3 +444,8 @@
 "Complete Label or Citation Key" = "Completează eticheta sau cheia de citare";
 /* Edit › Complete Label or Citation Key tooltip */
 "Offers the labels of the file after \\ref{, and BibDesk citation keys after \\cite{ when Settings allows it." = "Oferă etichetele fișierului după \\ref{ și, dacă setările permit, cheile de citare BibDesk după \\cite{.";
+
+/* Print panel: the section of a PDF print, as in Preview */
+"Auto Rotate" = "Rotire automată";
+"Scale:" = "Redimensionare:";
+"Scale to Fit" = "Potrivire";

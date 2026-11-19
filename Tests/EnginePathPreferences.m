@@ -319,5 +319,26 @@ int main(void) { @autoreleasepool {
     spin();
     check(shown.completion != nil, @"Detect Paths keeps its result for a minimized Settings window");
     finish(NSAlertSecondButtonReturn);
-    NSLog(@"PASS: candidate selection, minimal width, local Cancel, immediate saving, stale results, two-step initial setup, removed and missing tools, TeX or Ghostscript alone, first launch with Settings closed, minimized or detecting, quitting");
+
+    // The row the discovery marks as default is selected first, below a newer development build, in Settings and at first launch.
+    results = @{@"TeX":@[candidate(@"/dev/tex",@"TeX Live 2027/dev"), @{@"path":@"/new/tex",@"version":@"TeX Live 2026",@"default":@YES}, candidate(@"/old/tex",@"TeX Live 2025")],
+                @"Ghostscript":@[candidate(@"/new/gs",@"10.10.0"), @{@"path":@"/old/gs",@"version":@"10.9.0",@"default":@YES}]};
+    reset();
+    ((TestWindow *)p->_prefsWindow).testVisible = YES;
+    [p discoverEnginePaths:button]; spin();
+    check(matrices().count == 2 && matrices()[0].selectedRow == 1 && matrices()[1].selectedRow == 1, @"Detect Paths selects the default rows, not the first");
+    finish(NSAlertFirstButtonReturn);
+    check([[defaults stringForKey:TetexBinPath] isEqual:@"/new/tex"] && [[defaults stringForKey:GSBinPath] isEqual:@"/old/gs"], @"OK without a change saves the default rows");
+    reset();
+    [defaults setObject:@"/elsewhere/tex" forKey:TetexBinPath];
+    [p discoverInitialEnginePaths]; spin();
+    check(modals.count == 2 && [modals[0] isKindOfClass:NSAlert.class] && [[defaults stringForKey:TetexBinPath] isEqual:@"/new/tex"],
+          @"first launch selects and saves the default row, not the development build above it");
+    reset();
+    results = @{@"TeX":@[candidate(@"/dev/tex",@"TeX Live 2027/dev"), candidate(@"/new/tex",@"TeX Live 2026")], @"Ghostscript":@[]};
+    ((TestWindow *)p->_prefsWindow).testVisible = YES;
+    [p discoverEnginePaths:button]; spin();
+    check(matrices().count == 1 && matrices()[0].selectedRow == 0, @"without a default mark the first row is selected");
+    finish(NSAlertSecondButtonReturn);
+    NSLog(@"PASS: candidate selection, default rows, minimal width, local Cancel, immediate saving, stale results, two-step initial setup, removed and missing tools, TeX or Ghostscript alone, first launch with Settings closed, minimized or detecting, quitting");
 } return 0; }

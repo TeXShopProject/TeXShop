@@ -444,3 +444,8 @@
 "Complete Label or Citation Key" = "Completa etichetta o chiave di citazione";
 /* Edit › Complete Label or Citation Key tooltip */
 "Offers the labels of the file after \\ref{, and BibDesk citation keys after \\cite{ when Settings allows it." = "Propone le etichette del file dopo \\ref{ e, se le impostazioni lo consentono, le chiavi di citazione di BibDesk dopo \\cite{.";
+
+/* Print panel: the section of a PDF print, as in Preview */
+"Auto Rotate" = "Rotazione automatica";
+"Scale:" = "Scala:";
+"Scale to Fit" = "Adatta in scala";
