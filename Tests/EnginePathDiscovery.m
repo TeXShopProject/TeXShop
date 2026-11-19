@@ -47,6 +47,33 @@ int main(void) { @autoreleasepool {
     script(unknown, @"gs", @"printf '  11.0.0\\n'\n");
     found = [TSEnginePathDiscovery candidatesForPaths:@[gs2,unknown] currentTeX:@"" currentGhostscript:@""];
     check([found[@"Ghostscript"][0][@"version"] isEqual:@"11.0.0"], @"Ghostscript version parsing tolerates surrounding whitespace");
+    // Banners as printed by real builds: TeX Live releases, the trunk between releases, and distributor suffixes.
+    NSDictionary *(^banner)(NSString *) = ^(NSString *text) { return [TSEnginePathDiscovery texLiveReleaseInBanner:text]; };
+    NSDictionary *r = banner(@"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2027/dev)\nkpathsea version 6.4.2\n");
+    check([r[@"name"] isEqual:@"TeX Live 2027/dev"] && [r[@"year"] integerValue] == 2027 && [r[@"dev"] boolValue], @"trunk build recognized as development version");
+    r = banner(@"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026)\n");
+    check([r[@"name"] isEqual:@"TeX Live 2026"] && ![r[@"dev"] boolValue], @"release not taken for development version");
+    r = banner(@"pdfTeX 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian)\n");
+    check([r[@"name"] isEqual:@"TeX Live 2025/dev"] && [r[@"dev"] boolValue], @"development version keeps dev before distributor suffix, suffix not shown");
+    for (NSString *text in @[@"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/Debian)", @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/MacPorts 2026.78225_0)",
+                             @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/Homebrew)", @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux)",
+                             @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/W32TeX)", @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/devuan)"]) {
+        r = banner(text);
+        check([r[@"name"] isEqual:@"TeX Live 2026"] && ![r[@"dev"] boolValue], [@"distributor suffix is not a development version: " stringByAppendingString:text]);
+    }
+    r = banner(@"pdfTeX 3.141592653-2.6-1.40.29 (Web2C 2027/dev)\n");
+    check([r[@"name"] isEqual:@"Web2C 2027/dev"] && [r[@"dev"] boolValue], @"build outside TeX Live keeps its own banner word");
+    check(banner(@"pdfTeX 3.141592653-2.6-1.40.29\n") == nil && banner(@"") == nil, @"banner without release gives no release");
+    NSString *dev = [root stringByAppendingPathComponent:@"dev"];
+    NSString *debianDev = [root stringByAppendingPathComponent:@"debian dev"];
+    tex(dev, @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2027/dev)");
+    tex(debianDev, @"pdfTeX 3.141592653-2.6-1.40.30 (TeX Live 2026/dev/Debian)");
+    tex(unknown, @"custom build without version information");
+    found = [TSEnginePathDiscovery candidatesForPaths:@[debianDev, dev, older, newer, unknown] currentTeX:dev currentGhostscript:@""];
+    NSArray *order = [found[@"TeX"] valueForKey:@"path"];
+    check([order isEqual:@[newer, older, dev, debianDev, unknown]], @"releases first by year, then development versions by year, then unidentified");
+    check([found[@"TeX"][2][@"version"] isEqual:@"TeX Live 2027/dev (3.141592653-2.6-1.40.29)"], @"development version shown with banner wording");
+    check([found[@"TeX"][3][@"version"] isEqual:@"TeX Live 2026/dev (3.141592653-2.6-1.40.30)"], @"same-year development version shown after release despite newer pdfTeX");
     NSString *partial = [root stringByAppendingPathComponent:@"partial"];
     script(partial,@"pdflatex",@"exit 0\n");
     check(![TSEnginePathDiscovery directory:partial containsPrograms:@[@"tex",@"latex",@"pdftex",@"pdflatex"]], @"partial TeX installation rejected");
@@ -73,5 +100,5 @@ int main(void) { @autoreleasepool {
     check(![[paths componentsJoinedByString:@"\n"] containsString:@"/current/"], @"only year directories expanded");
     check(![[paths componentsJoinedByString:@"\n"] containsString:@"/123/"] && ![[paths componentsJoinedByString:@"\n"] containsString:@"/20260/"], @"year directories must contain exactly four digits");
     [fm removeItemAtPath:root error:NULL];
-    NSLog(@"PASS: discovery, ranking, alternatives, duplicates, validation, first launch, bounded version probes");
+    NSLog(@"PASS: discovery, ranking, development versions, alternatives, duplicates, validation, first launch, bounded version probes");
 } return 0; }

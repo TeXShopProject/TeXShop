@@ -113,6 +113,16 @@
     return match ? [text substringWithRange:[match rangeAtIndex:1]] : @"";
 }
 
++ (nullable NSDictionary *)texLiveReleaseInBanner:(NSString *)banner
+{
+    // Between releases the sources say "YYYY/dev"; distributors may append "/Name". Builds outside TeX Live say "Web2C".
+    NSTextCheckingResult *match = [[NSRegularExpression regularExpressionWithPattern:@"(?:TeX Live|Web2C) ([0-9]{4})(/dev(?![A-Za-z0-9]))?" options:0 error:NULL]
+                                   firstMatchInString:banner options:0 range:NSMakeRange(0, banner.length)];
+    if (!match) return nil;
+    BOOL dev = [match rangeAtIndex:2].location != NSNotFound;
+    return @{@"name": [banner substringWithRange:match.range], @"year": @([[banner substringWithRange:[match rangeAtIndex:1]] integerValue]), @"dev": @(dev)};
+}
+
 + (NSDictionary<NSString *, NSArray<NSDictionary *> *> *)candidatesForPaths:(NSArray<NSString *> *)paths currentTeX:(NSString *)texPath currentGhostscript:(NSString *)gsPath
 {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
@@ -140,19 +150,23 @@
             if (!output) continue;
             [seen addObject:identity];
             NSString *version = [self capture:i == 0 ? @"pdfTeX ([0-9][0-9.\\-]+)" : @"^\\s*([0-9]+(?:\\.[0-9]+)+)" in:output];
-            NSInteger year = i == 0 ? [[self capture:@"TeX Live ([0-9]{4})" in:output] integerValue] : 0;
+            NSDictionary *release = i == 0 ? [self texLiveReleaseInBanner:output] : nil;
+            NSInteger year = [release[@"year"] integerValue];
             NSString *displayVersion = version;
-            if (year > 0) {
-                displayVersion = [NSString stringWithFormat:@"TeX Live %ld", (long)year];
+            if (release) {
+                displayVersion = release[@"name"];
                 if (version.length) displayVersion = [displayVersion stringByAppendingFormat:@" (%@)", version];
             }
-            [matches addObject:@{@"path": directory, @"version": displayVersion,
-                                 @"number": version, @"year": @(year), @"order": @(matches.count)}];
+            [matches addObject:@{@"path": directory, @"version": displayVersion, @"number": version,
+                                 @"year": @(year), @"dev": release[@"dev"] ?: @NO, @"order": @(matches.count)}];
         }
         [matches sortUsingComparator:^NSComparisonResult(NSDictionary *a, NSDictionary *b) {
             // Unidentified versions remain selectable, after every identified version.
             BOOL aKnown = [a[@"version"] length] > 0, bKnown = [b[@"version"] length] > 0;
             if (aKnown != bKnown) return aKnown ? NSOrderedAscending : NSOrderedDescending;
+            // Development builds follow every release, so that a release is selected first.
+            BOOL aDev = [a[@"dev"] boolValue], bDev = [b[@"dev"] boolValue];
+            if (aDev != bDev) return bDev ? NSOrderedAscending : NSOrderedDescending;
             NSComparisonResult year = [b[@"year"] compare:a[@"year"]];
             if (year != NSOrderedSame) return year;
             NSComparisonResult version = [b[@"number"] compare:a[@"number"] options:NSNumericSearch];

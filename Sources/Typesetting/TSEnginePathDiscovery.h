@@ -5,6 +5,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)shouldSearchOnFirstLaunch:(NSDictionary *)persistentSettings;
 + (NSArray<NSString *> *)systemSearchPaths;
 + (NSArray<NSString *> *)texLivePathsUnderRoots:(NSArray<NSString *> *)roots;
+// The release named in a --version banner: name ("TeX Live 2027/dev"), year and dev; nil when none.
++ (nullable NSDictionary *)texLiveReleaseInBanner:(NSString *)banner;
 + (BOOL)directory:(NSString *)directory containsPrograms:(NSArray<NSString *> *)programs;
 // Each list is newest first. Entries contain path and version; an empty list leaves the setting unchanged.
 + (NSDictionary<NSString *, NSArray<NSDictionary *> *> *)candidatesForPaths:(NSArray<NSString *> *)paths
