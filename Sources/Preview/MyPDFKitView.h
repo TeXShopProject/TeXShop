@@ -295,6 +295,7 @@
 // Closes the pinned link popup of this part, which goes to another place: following a link,
 // the outline, Back and Forward, a page number, a search result or a sync (#35).
 - (void)closePinnedLinkPreview;
+- (void)keepPinnedLinkPreviewThroughMove;
 - (void)recacheMarquee;
 - (BOOL)hasSelection;
 - (NSData *)imageDataFromSelectionType: (NSInteger)type;

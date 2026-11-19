@@ -81,7 +81,7 @@
     TSExternalPDFPosition secondViewport;
     id linkPreviewEventMonitor;
     // The popup that hovering over a link shows, and the popup pinned with Option, which
-    // stays until Escape or until this part goes elsewhere (#35).
+    // stays until Escape, also when this part goes elsewhere (#35).
     TSLinkPreviewView *linkPreview;
     TSLinkPreviewView *pinnedLinkPreview;
     BOOL showsLinkPreviewCursor;
@@ -89,6 +89,10 @@
     BOOL keepsPinnedLinkPreview;
     // Set while a change that puts the pages elsewhere keeps the pinned popup on its page (#56).
     BOOL keepsPinnedLinkPreviewOnPage;
+    // A move to another place holds the place of this pinned popup until the move is done (#35).
+    __weak TSLinkPreviewView *movingPinnedLinkPreview;
+    BOOL pinnedLinkPreviewMovePending;
+    NSUInteger pinnedLinkPreviewMoveCount;
     BOOL _skipLinks;
 }
 
@@ -1823,12 +1827,11 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	// [self layoutDocumentView];
 }
 
-// Back and Forward go to another place: the pinned popup of this part closes, and it does
-// not come back when this part returns to where it was (#35).
+// Back and Forward go to another place: the pinned popup of this part stays on its page (#35).
 - (void) goBack:sender
 {
 	if ([self canGoBack])
-		[self closePinnedLinkPreview];
+		[self keepPinnedLinkPreviewThroughMove];
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
 		[self cleanupMarqueeKeepingPinnedLinkPreview];
 	[super goBack:sender];
@@ -1837,7 +1840,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 - (void) goForward: sender
 {
 	if ([self canGoForward])
-		[self closePinnedLinkPreview];
+		[self keepPinnedLinkPreviewThroughMove];
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
 		[self cleanupMarqueeKeepingPinnedLinkPreview];
 	[super goForward:sender];
@@ -2604,38 +2607,39 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     TSExternalPDFRestore(self, viewport);
 }
 
-// Turning one page, like scrolling, keeps a pinned popup; going to the first or the last page
-// goes to another place and closes it (#35).
+// Turning one page, like scrolling, keeps a pinned popup at its place on its page; so does going
+// to the first or the last page (#35).
 - (void) previousPage: (id)sender
 {
+	// The pinned popup stays at its place on its page, as with any move (#35).
+	[self keepPinnedLinkPreviewThroughMove];
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
 		[self cleanupMarqueeKeepingPinnedLinkPreview];
 	[self stepPageForward:NO sender:self];
-	[self keepPinnedLinkPreviewInView];
 }
 
 - (void) nextPage: (id)sender
 {
-	
+	// The pinned popup stays at its place on its page, as with any move (#35).
+	[self keepPinnedLinkPreviewThroughMove];
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
 		[self cleanupMarqueeKeepingPinnedLinkPreview];
 	[self stepPageForward:YES sender:sender];
-	[self keepPinnedLinkPreviewInView];
 }
 
 - (void) firstPage: (id)sender
 {
-	[self closePinnedLinkPreview];
+	[self keepPinnedLinkPreviewThroughMove];
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
-		[self cleanupMarquee: YES];
+		[self cleanupMarqueeKeepingPinnedLinkPreview];
 	[self goToFirstPage:self];
 }
 
 - (void) lastPage: (id)sender
 {
-	[self closePinnedLinkPreview];
+	[self keepPinnedLinkPreviewThroughMove];
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
-		[self cleanupMarquee: YES];
+		[self cleanupMarqueeKeepingPinnedLinkPreview];
 	[self goToLastPage:sender];
 }
 
@@ -2647,7 +2651,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	myPage = thePage;
 	
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
-		[self cleanupMarquee: YES];
+		[self cleanupMarqueeKeepingPinnedLinkPreview];
 	
 
 
@@ -2656,8 +2660,8 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	NSInteger pageCount = (NSInteger)[[self document] pageCount];
 	if (pageCount < 1)
 		return;
-	// A page number goes to another place: the pinned popup of this part closes (#35).
-	[self closePinnedLinkPreview];
+	// A page number goes to another place: the pinned popup of this part stays on its page (#35).
+	[self keepPinnedLinkPreviewThroughMove];
 	if (myPage < 1)
 		myPage = 1;
 	if (myPage > pageCount)
@@ -2719,8 +2723,9 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 {
 	NSInteger		thePage;
 
+	// The page number box goes to another place; the pinned popup stays on its page (#35).
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
-		[self cleanupMarquee: YES];
+		[self cleanupMarqueeKeepingPinnedLinkPreview];
 	// thePage = [sender integerValue]; // only change for inputting numericCorrected page numbers
     thePage = [self getModifiedValue: sender];
 	 if (sender == currentPage1)
@@ -2996,9 +3001,9 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 {
 	// Get the destination associated with the search result list.  Tell the PDFView to go there.
 	PDFDestination *destination = [[sender itemAtRow: [sender selectedRow]] destination];
-	// The outline goes to another place: the pinned popup of this part closes (#35).
+	// The outline goes to another place: the pinned popup of this part stays on its page (#35).
 	if (destination)
-		[self closePinnedLinkPreview];
+		[self keepPinnedLinkPreviewThroughMove];
 	[self goToDestination: destination];
 }
 
@@ -3155,7 +3160,7 @@ TeXShop supports search through the drawer in the Preview Window using sample co
     {
         NSArray *thePages = [searchSelection pages];
         PDFPage *thePage =  [thePages firstObject];
-        [(MyPDFKitView *)self.myDocument.pdfKitWindow.activeView closePinnedLinkPreview];
+        [(MyPDFKitView *)self.myDocument.pdfKitWindow.activeView keepPinnedLinkPreviewThroughMove];
         [self.myDocument.pdfKitWindow.activeView goToPage: thePage];
         [self.myDocument.pdfKitWindow.activeView setCurrentSelection: searchSelection];
         [self.myDocument.pdfKitWindow.activeView scrollSelectionToVisible:self];
@@ -3207,7 +3212,7 @@ TeXShop supports search through the drawer in the Preview Window using sample co
     {
         NSArray *thePages = [searchSelection pages];
         PDFPage *thePage =  [thePages firstObject];
-        [(MyPDFKitView *)self.myDocument.pdfKitWindow.activeView closePinnedLinkPreview];
+        [(MyPDFKitView *)self.myDocument.pdfKitWindow.activeView keepPinnedLinkPreviewThroughMove];
         [self.myDocument.pdfKitWindow.activeView goToPage: thePage];
         [self setCurrentSelection: searchSelection];
         [self.myDocument.pdfKitWindow.activeView scrollSelectionToVisible:self];
@@ -3242,7 +3247,7 @@ TeXShop supports search through the drawer in the Preview Window using sample co
     {
         NSArray *thePages = [searchSelection pages];
         PDFPage *thePage =  [thePages firstObject];
-        [(MyPDFKitView *)self.myDocument.pdfKitWindow.activeView closePinnedLinkPreview];
+        [(MyPDFKitView *)self.myDocument.pdfKitWindow.activeView keepPinnedLinkPreviewThroughMove];
         [self.myDocument.pdfKitWindow.activeView goToPage: thePage];
         [self setCurrentSelection: searchSelection];
         [self.myDocument.pdfKitWindow.activeView scrollSelectionToVisible:self];
@@ -3482,8 +3487,8 @@ TeXShop supports search through the drawer in the Preview Window using sample co
 	rowIndex = [(NSTableView *)[notification object] selectedRow];
 	if (rowIndex >= 0)
 	{
-		// A search result is another place: the pinned popup of the part that goes there closes (#35).
-		[self closePinnedLinkPreview];
+		// A search result is another place: the pinned popup of the part that goes there stays on its page (#35).
+		[self keepPinnedLinkPreviewThroughMove];
 		if (self != [self.myDocument topView]) {
 			_firstSearchResults = [[self.myDocument topView] getSearchResults];
 			[self setCurrentSelection:[_firstSearchResults objectAtIndex: rowIndex]];
@@ -3646,10 +3651,10 @@ TeXShop supports search through the drawer in the Preview Window using sample co
 #pragma mark =====drawPage=====
 
 // Every sync from the source to the preview marks where it goes in the part that goes there;
-// the pinned popup of that part closes, as other ways to go to another place close it (#35).
+// the pinned popup of that part stays on its page, as with other ways to go to another place (#35).
 - (void)setIndexForMark: (NSInteger)idx
 {
-	[self closePinnedLinkPreview];
+	[self keepPinnedLinkPreviewThroughMove];
 	pageIndexForMark = idx;
 }
 
@@ -5073,9 +5078,46 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
     [self keepPinnedLinkPreviewInView];
 }
 
+// A popup away from its place goes back to it when its page is shown again, as after turning
+// a page back to it (#35); otherwise it is kept in view.
 - (void)keepPinnedLinkPreviewInView
 {
-    if ([self hasPinnedLinkPreview]) [pinnedLinkPreview keepInView];
+    if (![self hasPinnedLinkPreview]) return;
+    if (![pinnedLinkPreview returnToPlaceIfAway]) [pinnedLinkPreview keepInView];
+}
+
+// Going to another place keeps the pinned popup of the part that goes there (#35): it stays at
+// its place on its page, as when the preview is scrolled or zoomed, and is brought into view
+// only when its page is no longer shown. Escape dismisses it. The place is taken before the move;
+// every way to go to another place finishes its move while it handles the event, so the popup
+// returns to its place right after that, in the next pass of the main queue.
+- (void)keepPinnedLinkPreviewThroughMove
+{
+    // Another popup pinned while an earlier move still holds the place of the one it replaced:
+    // that move no longer belongs to the popup shown, so this move takes the new one's place.
+    if (pinnedLinkPreviewMovePending && movingPinnedLinkPreview != pinnedLinkPreview) {
+        pinnedLinkPreviewMovePending = NO;
+        keepsPinnedLinkPreviewOnPage = NO;
+    }
+    if (![self beginKeepingPinnedLinkPreviewOnPage]) return;
+    pinnedLinkPreviewMovePending = YES;
+    NSUInteger move = ++pinnedLinkPreviewMoveCount;
+    TSLinkPreviewView *kept = pinnedLinkPreview;
+    movingPinnedLinkPreview = kept;
+    __weak MyPDFKitView *weakSelf = self;
+    __weak TSLinkPreviewView *weakKept = kept;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        MyPDFKitView *view = weakSelf;
+        // A later move, or a popup pinned in the meantime, has taken over.
+        if (!view || !view->pinnedLinkPreviewMovePending || view->pinnedLinkPreviewMoveCount != move) return;
+        view->pinnedLinkPreviewMovePending = NO;
+        view->movingPinnedLinkPreview = nil;
+        TSLinkPreviewView *preview = weakKept;
+        if (preview && view->pinnedLinkPreview == preview)
+            [view endKeepingPinnedLinkPreviewOnPage: YES];
+        else
+            view->keepsPinnedLinkPreviewOnPage = NO;
+    });
 }
 
 // Pins the popup shown by hovering. It replaces a popup pinned before in this part. The
@@ -5234,9 +5276,9 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
 		downOverLink = NO;
 		if (([self areaOfInterestForMouse: theEvent] &  kPDFLinkArea) != 0) {
 			// Following an internal link goes to another place: the pinned popup of this part
-			// closes. A link to a URL or to another file leaves this part where it is (#35).
+			// stays on its page. A link to a URL or to another file leaves this part where it is (#35).
 			if ([self internalLinkDestinationAtPoint: [self convertPoint: [theEvent locationInWindow] fromView: nil]])
-				[self closePinnedLinkPreview];
+				[self keepPinnedLinkPreviewThroughMove];
 			[super mouseUp: theEvent];
 		}
 		return;

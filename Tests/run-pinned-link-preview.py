@@ -26,9 +26,9 @@ parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'oth
                                            'timer-ignores-release', 'tooltip-ignores-control', 'tooltip-back-under-popup',
                                            'pinned-blocks-hover', 'pin-keeps-old', 'over-pin-keeps-hover', 'pin-times-out',
                                            'escape-falls-to-other-part', 'escape-closes-hover',
-                                           'link-keeps-pin', 'outline-keeps-pin', 'back-keeps-pin', 'forward-keeps-pin', 'page-number-keeps-pin',
-                                           'last-page-keeps-pin', 'sync-keeps-pin', 'zoom-kills-pin', 'zoom-moves-into-view', 'next-page-kills-pin',
-                                           'empty-outline-kills-pin', 'stuck-back-kills-pin', 'stuck-single-page-kills-pin'])
+                                           'link-closes-pin', 'outline-closes-pin', 'back-closes-pin', 'forward-closes-pin', 'page-number-closes-pin',
+                                           'last-page-closes-pin', 'sync-closes-pin', 'zoom-kills-pin', 'zoom-moves-into-view', 'next-page-kills-pin',
+                                           'empty-outline-kills-pin', 'stuck-back-kills-pin', 'stuck-single-page-kills-pin', 'single-page-first-kills-pin', 'move-not-restored', 'away-forgets-place', 'replaced-pin-moved', 'repin-not-taken', 'page-turn-stays-away', 'page-turn-forgets-place'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
@@ -58,8 +58,9 @@ methods = '\n'.join(method(signature) for signature in (
     '- (BOOL)pinnedLinkPreviewContainsWindowPoint:', '- (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:',
     '- (void)attachPinnedLinkPreview:', '- (void)keepPinnedLinkPreviewInView',
     '- (BOOL)isActivePreviewPart', '- (void)pinLinkPreview', '- (void)killTransientLinkPreview',
-    '- (void)closePinnedLinkPreview',
-    # The ways to go to another place, which close the pinned popup, and the ways that keep it (#35).
+    '- (void)closePinnedLinkPreview', '- (void)keepPinnedLinkPreviewThroughMove',
+    '- (BOOL)beginKeepingPinnedLinkPreviewOnPage', '- (void)endKeepingPinnedLinkPreviewOnPage:',
+    # The ways to go to another place, which keep the pinned popup on its page, and the other ways that keep it (#35).
     '- (void) goBack:', '- (void) goForward:', '- (IBAction) takeDestinationFromOutline:', '- (void)setIndexForMark:',
     '- (void) mouseUp:', '- (PDFDestination *)internalLinkDestinationAtPoint:', '- (void) firstPage:', '- (void) lastPage:',
     '- (void) previousPage:', '- (void) nextPage:', '- (void) changeScale:', '- (void) goToKitPageNumber:'))
@@ -94,19 +95,36 @@ view_mutations = {
     'pin-keeps-old': ('    if (!linkPreview) return;\n    [pinnedLinkPreview removeFromSuperview];\n', '    if (!linkPreview) return;\n'),
     'over-pin-keeps-hover': ('        if (self.handlingLink) [self killTransientLinkPreview];\n        [previewCursor set];', '        [previewCursor set];'),
     'pin-times-out': ('    pinnedLinkPreview.pinned = YES;\n    [self increaseTimerNumber];\n', '    pinnedLinkPreview.pinned = YES;\n'),
-    'link-keeps-pin': ('\t\t\tif ([self internalLinkDestinationAtPoint: [self convertPoint: [theEvent locationInWindow] fromView: nil]])\n\t\t\t\t[self closePinnedLinkPreview];\n', ''),
-    'outline-keeps-pin': ('\tif (destination)\n\t\t[self closePinnedLinkPreview];\n', ''),
-    'empty-outline-kills-pin': ('\tif (destination)\n\t\t[self closePinnedLinkPreview];\n', '\t[self closePinnedLinkPreview];\n'),
-    'back-keeps-pin': ('\tif ([self canGoBack])\n\t\t[self closePinnedLinkPreview];\n', ''),
-    'stuck-back-kills-pin': ('\tif ([self canGoForward])\n\t\t[self closePinnedLinkPreview];\n', '\t[self closePinnedLinkPreview];\n'),
+    # The behavior up to 6.00 beta 5: going to another place closed the pinned popup.
+    'link-closes-pin': ('\t\t\tif ([self internalLinkDestinationAtPoint: [self convertPoint: [theEvent locationInWindow] fromView: nil]])\n\t\t\t\t[self keepPinnedLinkPreviewThroughMove];\n',
+                        '\t\t\tif ([self internalLinkDestinationAtPoint: [self convertPoint: [theEvent locationInWindow] fromView: nil]])\n\t\t\t\t[self closePinnedLinkPreview];\n'),
+    'outline-closes-pin': ('\tif (destination)\n\t\t[self keepPinnedLinkPreviewThroughMove];\n', '\tif (destination)\n\t\t[self closePinnedLinkPreview];\n'),
+    'empty-outline-kills-pin': ('\tif (destination)\n\t\t[self keepPinnedLinkPreviewThroughMove];\n', '\t[self closePinnedLinkPreview];\n'),
+    'back-closes-pin': ('\tif ([self canGoBack])\n\t\t[self keepPinnedLinkPreviewThroughMove];\n', '\tif ([self canGoBack])\n\t\t[self closePinnedLinkPreview];\n'),
+    'stuck-back-kills-pin': ('\tif ([self canGoForward])\n\t\t[self keepPinnedLinkPreviewThroughMove];\n', '\t[self closePinnedLinkPreview];\n'),
     # The behavior that the first audit found: in Single Page and Double Page display Back and
     # Forward cleaned up the marquee with the pinned popup, also with nowhere to go.
-    'stuck-single-page-kills-pin': ('\tif ([self canGoBack])\n\t\t[self closePinnedLinkPreview];\n\tif  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))\n\t\t[self cleanupMarqueeKeepingPinnedLinkPreview];',
-                                    '\tif ([self canGoBack])\n\t\t[self closePinnedLinkPreview];\n\tif  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))\n\t\t[self cleanupMarquee: YES];'),
-    'forward-keeps-pin': ('\tif ([self canGoForward])\n\t\t[self closePinnedLinkPreview];\n', ''),
-    'page-number-keeps-pin': ('\t// A page number goes to another place: the pinned popup of this part closes (#35).\n\t[self closePinnedLinkPreview];\n', ''),
-    'last-page-keeps-pin': ('- (void) lastPage: (id)sender\n{\n\t[self closePinnedLinkPreview];\n', '- (void) lastPage: (id)sender\n{\n'),
-    'sync-keeps-pin': ('\t[self closePinnedLinkPreview];\n\tpageIndexForMark = idx;', '\tpageIndexForMark = idx;'),
+    'stuck-single-page-kills-pin': ('\tif ([self canGoBack])\n\t\t[self keepPinnedLinkPreviewThroughMove];\n\tif  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))\n\t\t[self cleanupMarqueeKeepingPinnedLinkPreview];',
+                                    '\tif ([self canGoBack])\n\t\t[self keepPinnedLinkPreviewThroughMove];\n\tif  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))\n\t\t[self cleanupMarquee: YES];'),
+    'forward-closes-pin': ('\tif ([self canGoForward])\n\t\t[self keepPinnedLinkPreviewThroughMove];\n', '\tif ([self canGoForward])\n\t\t[self closePinnedLinkPreview];\n'),
+    'page-number-closes-pin': ('\t// A page number goes to another place: the pinned popup of this part stays on its page (#35).\n\t[self keepPinnedLinkPreviewThroughMove];\n',
+                               '\t[self closePinnedLinkPreview];\n'),
+    'last-page-closes-pin': ('- (void) lastPage: (id)sender\n{\n\t[self keepPinnedLinkPreviewThroughMove];\n', '- (void) lastPage: (id)sender\n{\n\t[self closePinnedLinkPreview];\n'),
+    'sync-closes-pin': ('\t[self keepPinnedLinkPreviewThroughMove];\n\tpageIndexForMark = idx;', '\t[self closePinnedLinkPreview];\n\tpageIndexForMark = idx;'),
+    # Up to 6.00 beta 5 Single Page display cleaned up the marquee with the pinned popup.
+    'single-page-first-kills-pin': ('- (void) firstPage: (id)sender\n{\n\t[self keepPinnedLinkPreviewThroughMove];\n\tif  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))\n\t\t[self cleanupMarqueeKeepingPinnedLinkPreview];',
+                                    '- (void) firstPage: (id)sender\n{\n\t[self keepPinnedLinkPreviewThroughMove];\n\tif  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))\n\t\t[self cleanupMarquee: YES];'),
+    # e74cc066: the move of a replaced popup put the new one into view.
+    'replaced-pin-moved': ('        if (preview && view->pinnedLinkPreview == preview)\n', '        if (YES)\n'),
+    # e7623b40: a move for a popup pinned while an earlier move held another one's place did not take its place.
+    'repin-not-taken': ('    if (pinnedLinkPreviewMovePending && movingPinnedLinkPreview != pinnedLinkPreview) {\n', '    if (NO) {\n'),
+    # d8aa5c5a: turning one page moved the popup into view without taking its place first.
+    'page-turn-forgets-place': ('\t[self keepPinnedLinkPreviewThroughMove];\n\tif  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))\n\t\t[self cleanupMarqueeKeepingPinnedLinkPreview];\n\t[self stepPageForward:YES sender:sender];\n',
+                                '\tif  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))\n\t\t[self cleanupMarqueeKeepingPinnedLinkPreview];\n\t[self stepPageForward:YES sender:sender];\n\t[self keepPinnedLinkPreviewInView];\n'),
+    # e7623b40: turning a page back to the page of a popup away from its place kept it in view instead.
+    'page-turn-stays-away': ('    if (![pinnedLinkPreview returnToPlaceIfAway]) [pinnedLinkPreview keepInView];\n', '    [pinnedLinkPreview keepInView];\n'),
+    # The place is taken before the move, but the popup never goes back to it.
+    'move-not-restored': ('            [view endKeepingPinnedLinkPreviewOnPage: YES];\n', '            ;\n'),
     'zoom-kills-pin': ('\t// A pinned popup stays, growing and shrinking with the page it is on (#35).\n\t[self cleanupMarqueeKeepingPinnedLinkPreview];',
                        '\t[self cleanupMarquee: YES];'),
     # The behavior before #56: zoom moved the popup into view, off its place on its page.
@@ -195,6 +213,8 @@ elif args.mutation == 'modified-escape':
     methods = methods.replace('&& !(event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagControl\n                                    | NSEventModifierFlagOption | NSEventModifierFlagShift))', '')
 preview_source = (root / 'Sources/Preview/TSLinkPreviewView.m').read_text()
 preview_mutations = {
+    # 5f2… e74cc066: a popup brought into view forgot the place it had on its page.
+    'away-forgets-place': ('        _placePage = page;\n        _awayFromPlace = YES;\n        return NO;\n', '        return NO;\n'),
     'unpinned-interactive': ('return self.pinned ? [super hitTest:point] : nil;', 'return [super hitTest:point];'),
     'pinned-transparent': ('return self.pinned ? [super hitTest:point] : nil;', 'return nil;'),
     'scroll-moves-frame': ('    [self setNeedsDisplay:YES];\n}\n\n@end', '    self.frame = NSOffsetRect(self.frame, 0.1, 0);\n    [self setNeedsDisplay:YES];\n}\n\n@end'),
@@ -418,6 +438,10 @@ DOCUMENTMETHODS
     BOOL showsLinkPreviewCursor;
     BOOL pointerIsUnderToolbar;
     BOOL keepsPinnedLinkPreview;
+    BOOL keepsPinnedLinkPreviewOnPage;
+    __weak TSLinkPreviewView *movingPinnedLinkPreview;
+    BOOL pinnedLinkPreviewMovePending;
+    NSUInteger pinnedLinkPreviewMoveCount;
     BOOL _skipLinks;
 }
 @property BOOL skipLinks, inLink;
@@ -445,6 +469,7 @@ DOCUMENTMETHODS
 - (TSLinkPreviewView *)preview;
 - (TSLinkPreviewView *)transientPreview;
 - (void)closePinnedLinkPreview;
+- (void)keepPinnedLinkPreviewThroughMove;
 - (void)killTransientLinkPreview;
 - (void)setTestMouseMode:(NSInteger)mode;
 - (void)setTestPageStyle:(NSInteger)style;
@@ -1489,10 +1514,20 @@ static void testHoverWhilePinned(MyPDFKitView *view, NSWindow *window) {
 - (id)itemAtRow:(NSInteger)row { return self.item; }
 @end
 
-// Going to another place closes the pinned popup of the part that goes there: following an
-// internal link, the outline, Back and Forward, a page number, the first or last page and a
-// sync. Back and Forward do not bring it back. Scrolling, zoom and turning one page keep it,
-// in view (#35).
+// Going to another place keeps the pinned popup of the part that goes there at its place on its
+// page: following an internal link, the outline, Back and Forward, a page number, the first or
+// last page and a sync. It goes back to that place once the move is done, in the next pass of
+// the main queue. Scrolling, zoom and turning one page keep it too (#35).
+static NSRect placeOnPage(MyPDFKitView *view, TSLinkPreviewView *preview, PDFPage *page) {
+    return [view convertRect:[view convertRect:preview.frame fromView:preview.superview] toPage:page];
+}
+static BOOL samePlace(NSRect a, NSRect b) {
+    return fabs(NSMinX(a) - NSMinX(b)) < 1 && fabs(NSMinY(a) - NSMinY(b)) < 1 &&
+           fabs(NSWidth(a) - NSWidth(b)) < 1 && fabs(NSHeight(a) - NSHeight(b)) < 1;
+}
+static void afterMove(void) {
+    [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+}
 static void testJumps(MyPDFKitView *view, NSWindow *window) {
     [view doKillPopup];
     NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(600,800)];
@@ -1520,36 +1555,147 @@ static void testJumps(MyPDFKitView *view, NSWindow *window) {
     [view.documentView scrollPoint:NSMakePoint(0, NSMinY(view.documentView.visibleRect) - 300)];
     check(view.preview == preview && preview.superview, @"scrolling keeps the pinned popup");
 
-    pin();
+    // Each way to go to another place: the same popup stays, at the same place on the first page.
+    BOOL (^kept)(void (^)(void)) = ^BOOL(void (^move)(void)) {
+        pin();
+        TSLinkPreviewView *before = view.preview;
+        NSRect place = placeOnPage(view, before, first);
+        move();
+        afterMove();
+        return before && view.preview == before && before.superview && before.pinned &&
+               samePlace(placeOnPage(view, before, first), place);
+    };
     NSPoint onLink = [view convertPoint:[view convertPoint:NSMakePoint(30, 730) fromPage:first] toView:nil];
-    view.inLink = YES;
-    [view setTestDownOverLink];
-    [view mouseUp:mouse(window, NSEventTypeLeftMouseUp, onLink)];
-    check(!view.preview && !handlers.count, @"following an internal link closes the pinned popup");
+    BOOL linkKept = kept(^{
+        view.inLink = YES;
+        [view setTestDownOverLink];
+        [view mouseUp:mouse(window, NSEventTypeLeftMouseUp, onLink)];
+    });
+    check(linkKept, @"following an internal link keeps the pinned popup at its place on its page");
 
-    pin();
     TestOutlineView *outline = [TestOutlineView new];
     outline.item = [TestOutlineItem new];
+    pin();
     [view takeDestinationFromOutline:outline];
     check(view.preview != nil, @"an outline item without a target keeps the pinned popup");
     outline.item.destination = [[PDFDestination alloc] initWithPage:third atPoint:NSMakePoint(0, 800)];
-    [view takeDestinationFromOutline:outline];
-    check(!view.preview && view.currentPage == third, @"the outline closes the pinned popup");
+    check(kept(^{ [view takeDestinationFromOutline:outline]; }) && view.currentPage == third,
+          @"the outline keeps the pinned popup at its place on its page");
 
+    check(kept(^{ [view goToKitPageNumber:4]; }) && view.currentPage == [doc pageAtIndex:3],
+          @"a page number keeps the pinned popup at its place on its page");
+    check(kept(^{ [view lastPage:nil]; }), @"going to the last page keeps the pinned popup at its place on its page");
+    check(kept(^{ [view goToPage:third]; [view firstPage:nil]; }), @"going to the first page keeps the pinned popup at its place on its page");
+    check(kept(^{ [view setIndexForMark:2]; [view goToPage:third]; }), @"a sync from the source keeps the pinned popup at its place on its page");
+
+    // In Single Page display the page of the popup is no longer shown after the move: the popup
+    // is brought into view instead. The last page is much smaller, so the place the popup had
+    // is outside the page shown.
+    NSImage *small = [[NSImage alloc] initWithSize:NSMakeSize(300,200)];
+    [small lockFocus]; [NSColor.whiteColor setFill]; NSRectFill(NSMakeRect(0,0,300,200)); [small unlockFocus];
+    [doc removePageAtIndex:3];
+    [doc insertPage:[[PDFPage alloc] initWithImage:small] atIndex:3];
+    [view setTestPageStyle:PDF_SINGLE_PAGE_STYLE];
+    view.displayMode = kPDFDisplaySinglePage;
+    [view layoutDocumentView];
     pin();
+    TSLinkPreviewView *single = view.preview;
+    // Low on the first page, where the small last page has nothing.
+    NSRect low = single.frame;
+    low.origin.y = NSMaxY(view.documentView.bounds) - NSHeight(low) - 40;
+    single.frame = low;
+    check(NSIntersectsRect(single.frame, view.documentView.visibleRect), @"the pinned popup is in view low on the first page");
+    NSRect lowPlace = placeOnPage(view, single, first);
     [view goToKitPageNumber:4];
-    check(!view.preview && view.currentPage == [doc pageAtIndex:3], @"a page number closes the pinned popup");
-    pin();
-    [view lastPage:nil];
-    check(!view.preview, @"going to the last page closes the pinned popup");
-    pin();
+    afterMove();
+    check(view.preview == single && single.superview && view.currentPage == [doc pageAtIndex:3] &&
+          NSContainsRect(NSInsetRect(view.documentView.visibleRect, -1, -1), NSIntersectionRect(single.frame, view.documentView.visibleRect)) &&
+          NSIntersectsRect(single.frame, view.documentView.visibleRect),
+          @"in Single Page display a page number brings the pinned popup into view on the page shown");
     [view firstPage:nil];
-    check(!view.preview, @"going to the first page closes the pinned popup");
+    afterMove();
+    check(view.preview == single && single.superview && view.currentPage == first,
+          @"in Single Page display going to the first page keeps the pinned popup");
+    check(samePlace(placeOnPage(view, single, first), lowPlace),
+          @"in Single Page display the pinned popup goes back to its place when its page is shown again");
+    [view lastPage:nil];
+    afterMove();
+    check(view.preview == single && single.superview && NSIntersectsRect(single.frame, view.documentView.visibleRect),
+          @"in Single Page display going to the last page keeps the pinned popup in view");
+    // Turning pages back to its page brings it back to its place there.
+    for (int i = 0; i < 3; i++) [view previousPage:nil];
+    afterMove();
+    check(view.currentPage == first && view.preview == single && samePlace(placeOnPage(view, single, first), lowPlace),
+          @"in Single Page display turning pages back to its page brings the pinned popup back to its place");
+    // Leaving its page by turning one page, to a smaller page, and coming back with a page
+    // number or Back: the popup goes back to its place.
+    NSImage *shortPage = [[NSImage alloc] initWithSize:NSMakeSize(300,250)];
+    [shortPage lockFocus]; [NSColor.whiteColor setFill]; NSRectFill(NSMakeRect(0,0,300,250)); [shortPage unlockFocus];
+    [doc removePageAtIndex:1];
+    [doc insertPage:[[PDFPage alloc] initWithImage:shortPage] atIndex:1];
+    [view layoutDocumentView];
+    [view nextPage:nil];
+    afterMove();
+    check(view.currentPage == [doc pageAtIndex:1] && view.preview == single && NSIntersectsRect(single.frame, view.documentView.visibleRect),
+          @"in Single Page display turning to a smaller page brings the pinned popup into view");
+    [view goToKitPageNumber:1];
+    afterMove();
+    check(view.currentPage == first && view.preview == single && samePlace(placeOnPage(view, single, first), lowPlace),
+          @"in Single Page display a page number back to its page after turning a page brings the pinned popup back to its place");
+    [view nextPage:nil];
+    afterMove();
+    [view goBack:nil];
+    afterMove();
+    check(view.currentPage == first && view.preview == single && samePlace(placeOnPage(view, single, first), lowPlace),
+          @"in Single Page display Back to its page after turning a page brings the pinned popup back to its place");
+    // Another popup pinned while the move back still holds the place of the one it replaced
+    // takes its own place with the next move, and comes back to it.
+    [view lastPage:nil];
+    afterMove();
+    [view firstPage:nil];
     pin();
-    [view setIndexForMark:2];
-    check(!view.preview, @"a sync from the source closes the pinned popup");
+    TSLinkPreviewView *repinned = view.preview;
+    NSRect repinnedLow = repinned.frame;
+    repinnedLow.origin.y = NSMaxY(view.documentView.bounds) - NSHeight(repinnedLow) - 40;
+    repinned.frame = repinnedLow;
+    NSRect repinnedPlace = placeOnPage(view, repinned, first);
+    [view goToKitPageNumber:4];
+    afterMove();
+    check(repinned != single && view.preview == repinned && NSIntersectsRect(repinned.frame, view.documentView.visibleRect),
+          @"a popup pinned while a move back is to finish is brought into view on the page shown");
+    [view firstPage:nil];
+    afterMove();
+    check(view.preview == repinned && samePlace(placeOnPage(view, repinned, first), repinnedPlace),
+          @"a popup pinned while a move back is to finish goes back to its own place");
+    [view setTestPageStyle:PDF_MULTI_PAGE_STYLE];
+    view.displayMode = kPDFDisplaySinglePageContinuous;
+    [view layoutDocumentView];
 
-    // Back and Forward close it and do not bring it back. The popup is shown from the first page
+    // Another popup pinned while a move is still to finish is left where it was pinned: the
+    // place taken before the move belongs to the popup it replaced.
+    pin();
+    TSLinkPreviewView *replaced = view.preview;
+    [view goToKitPageNumber:3];
+    pin();
+    TSLinkPreviewView *replacement = view.preview;
+    NSRect replacementPlace = placeOnPage(view, replacement, first);
+    [view goToKitPageNumber:4];
+    afterMove();
+    check(replacement != replaced && view.preview == replacement && replacement.superview &&
+          samePlace(placeOnPage(view, replacement, first), replacementPlace),
+          @"a popup pinned while a move is to finish stays at its place on its page");
+    // The move of the popup it replaced does not move it when that move is done.
+    pin();
+    [view goToKitPageNumber:3];
+    pin();
+    TSLinkPreviewView *left = view.preview;
+    NSRect leftPlace = placeOnPage(view, left, first);
+    [view.documentView scrollPoint:[view convertPoint:[view convertPoint:NSMakePoint(0, 800) fromPage:[doc pageAtIndex:2]] toView:view.documentView]];
+    afterMove();
+    check(view.preview == left && samePlace(placeOnPage(view, left, first), leftPlace),
+          @"the move of a replaced popup leaves the new one where it was pinned");
+
+    // Back and Forward keep it at its place on its page. The popup is shown from the first page
     // without going there, which would add to the history.
     void (^pinHere)(void) = ^{
         [view.documentView scrollPoint:[view convertPoint:[view convertPoint:NSMakePoint(0, 800) fromPage:first] toView:view.documentView]];
@@ -1560,16 +1706,27 @@ static void testJumps(MyPDFKitView *view, NSWindow *window) {
     [view goToPage:first];
     pinHere();
     check(view.canGoBack && !view.canGoForward, @"PDFKit keeps the history");
+    TSLinkPreviewView *historic = view.preview;
+    NSRect historicPlace = placeOnPage(view, historic, first);
     [view goBack:nil];
-    check(!view.preview && !handlers.count, @"Back closes the pinned popup");
+    afterMove();
+    check(view.preview == historic && historic.superview && samePlace(placeOnPage(view, historic, first), historicPlace),
+          @"Back keeps the pinned popup at its place on its page");
     [view goForward:nil];
-    check(view.currentPage == first && !view.preview && !handlers.count, @"Forward does not bring back the pinned popup");
+    afterMove();
+    check(view.currentPage == first && view.preview == historic && samePlace(placeOnPage(view, historic, first), historicPlace),
+          @"Forward comes back to the pinned popup at its place on its page");
     [view goToPage:third];
     [view goBack:nil];
+    afterMove();
     pinHere();
     check(view.canGoForward, @"PDFKit keeps the history forward");
+    historic = view.preview;
+    historicPlace = placeOnPage(view, historic, first);
     [view goForward:nil];
-    check(!view.preview && !handlers.count, @"Forward closes the pinned popup");
+    afterMove();
+    check(view.preview == historic && historic.superview && samePlace(placeOnPage(view, historic, first), historicPlace),
+          @"Forward keeps the pinned popup at its place on its page");
     // Back and Forward with nowhere to go keep it, in every display format.
     for (NSNumber *style in @[@(PDF_MULTI_PAGE_STYLE), @(PDF_SINGLE_PAGE_STYLE), @(PDF_TWO_PAGE_STYLE)]) {
         [view setTestPageStyle:style.integerValue];
@@ -2069,16 +2226,23 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'pin-keeps-old':'pinning another popup replaces the one pinned before',
                     'over-pin-keeps-hover':'moving onto the pinned popup dismisses the popup shown by hovering',
                     'pin-times-out':'pinning leaves the pointer over its link without another popup after the timeout',
-                    'link-keeps-pin':'following an internal link closes the pinned popup',
-                    'outline-keeps-pin':'the outline closes the pinned popup',
+                    'link-closes-pin':'following an internal link keeps the pinned popup at its place on its page',
+                    'outline-closes-pin':'the outline keeps the pinned popup at its place on its page',
                     'empty-outline-kills-pin':'an outline item without a target keeps the pinned popup',
-                    'back-keeps-pin':'Back closes the pinned popup',
-                    'forward-keeps-pin':'Forward closes the pinned popup',
-                    'stuck-back-kills-pin':'Forward with nowhere to go keeps the pinned popup',
+                    'back-closes-pin':'Back keeps the pinned popup at its place on its page',
+                    'forward-closes-pin':('Forward keeps the pinned popup at its place on its page', 'Forward comes back to the pinned popup at its place on its page'),
+                    'stuck-back-kills-pin':('Forward with nowhere to go keeps the pinned popup', 'Forward comes back to the pinned popup at its place on its page'),
                     'stuck-single-page-kills-pin':('Forward with nowhere to go keeps the pinned popup', 'Back with nowhere to go keeps the pinned popup'),
-                    'page-number-keeps-pin':'a page number closes the pinned popup',
-                    'last-page-keeps-pin':'going to the last page closes the pinned popup',
-                    'sync-keeps-pin':'a sync from the source closes the pinned popup',
+                    'page-number-closes-pin':'a page number keeps the pinned popup at its place on its page',
+                    'last-page-closes-pin':'going to the last page keeps the pinned popup at its place on its page',
+                    'sync-closes-pin':'a sync from the source keeps the pinned popup at its place on its page',
+                    'single-page-first-kills-pin':'in Single Page display going to the first page keeps the pinned popup',
+                    'away-forgets-place':'in Single Page display the pinned popup goes back to its place when its page is shown again',
+                    'replaced-pin-moved':'the move of a replaced popup leaves the new one where it was pinned',
+                    'repin-not-taken':('a popup pinned while a move back is to finish is brought into view on the page shown', 'a popup pinned while a move back is to finish goes back to its own place'),
+                    'page-turn-forgets-place':('in Single Page display a page number back to its page after turning a page brings the pinned popup back to its place', 'in Single Page display Back to its page after turning a page brings the pinned popup back to its place'),
+                    'page-turn-stays-away':'in Single Page display turning pages back to its page brings the pinned popup back to its place',
+                    'move-not-restored':('in Single Page display a page number brings the pinned popup into view on the page shown',),
                     'zoom-kills-pin':'zoom keeps the pinned popup',
                     'zoom-moves-into-view':('zoom leaves the pinned popup at its place on its page', 'zoom leaves a pinned popup out of view at its place on its page'),
                     'next-page-kills-pin':'the next page keeps the pinned popup',
