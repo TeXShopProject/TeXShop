@@ -1572,8 +1572,9 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 
 - (BOOL)readSelectionFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type
 {
-	if ([self pasteFilteredTextFromPasteboard: pboard type: type japaneseFilter: YES keyBindings: [self.document isDoAutoCompleteEnabled]])
-		return YES;
+	BOOL answer = NO;
+	if ([self pasteFilteredTextFromPasteboard: pboard type: type japaneseFilter: YES keyBindings: [self.document isDoAutoCompleteEnabled] answer: &answer])
+		return answer;
 	return [super readSelectionFromPasteboard: pboard type: type];
 }
 
@@ -3189,8 +3190,9 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 // Pasted text with keyBindings gets the key bindings checked for pasting, with ConvertLF (the
 // default) LF line endings, as in a file that is opened, and with japaneseFilter, in the Japanese
 // modes, the yen sign or the backslash of the mode, as typing gives. All of it is one paste for
-// Undo. Returns NO when the text needs none of this, or there is no text: AppKit then pastes.
-- (BOOL)pasteFilteredTextFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type japaneseFilter:(BOOL)japaneseFilter keyBindings:(BOOL)keyBindings
+// Undo. Returns NO when the text needs none of this, or there is no text: AppKit then pastes;
+// otherwise YES, with what readSelectionFromPasteboard:type: answers in answer.
+- (BOOL)pasteFilteredTextFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type japaneseFilter:(BOOL)japaneseFilter keyBindings:(BOOL)keyBindings answer:(BOOL *)answer
 {
 	if (! [type isEqualToString: NSStringPboardType])
 		return NO;
@@ -3216,22 +3218,21 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 	if (! filter && [string isEqualToString: pasted])
 		return NO;
 	// mitsu 1.29 (T1)-- in order to enable "Undo Paste"
-	if (string.length == 0) {
-		// Nothing is left to paste: the selected text is deleted, as AppKit deletes it; with nothing
-		// selected, nothing changes.
-		BOOL selected = NO;
-		for (NSValue *range in [self selectedRanges])
-			selected |= range.rangeValue.length > 0;
-		if (selected) {
-			void (*deleteSelection)(id, SEL, id) = (void (*)(id, SEL, id))
-				class_getMethodImplementation([NSTextView class], @selector(delete:));
-			deleteSelection(self, @selector(delete:), nil);
-		}
+	BOOL selected = NO;
+	for (NSValue *range in [self selectedRanges])
+		selected |= range.rangeValue.length > 0;
+	if (string.length == 0 && selected) {
+		// Nothing is left to paste: the selected text is deleted, as AppKit deletes it.
+		void (*deleteSelection)(id, SEL, id) = (void (*)(id, SEL, id))
+			class_getMethodImplementation([NSTextView class], @selector(delete:));
+		deleteSelection(self, @selector(delete:), nil);
+		*answer = YES;
 		return YES;
 	}
 	// AppKit pastes the converted text, as it pastes any text: in place of the selected ranges, with
 	// the typing attributes and, after a word copied with smart copy, the spaces around it, in one step
-	// of Undo that restores the selection.
+	// of Undo that restores the selection. Empty text at the insertion point changes nothing, as when
+	// the clipboard holds empty text. What AppKit answers is the answer of the paste.
 	NSString *smartType = @"NeXT smart paste pasteboard type";
 	NSData *smart = [pboard availableTypeFromArray:@[smartType]] ? [pboard dataForType:smartType] : nil;
 	NSPasteboard *converted = [NSPasteboard pasteboardWithUniqueName];
@@ -3241,9 +3242,8 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 		[converted setData:smart forType:smartType];
 	BOOL (*paste)(id, SEL, NSPasteboard *, NSString *) = (BOOL (*)(id, SEL, NSPasteboard *, NSString *))
 		class_getMethodImplementation([NSTextView class], @selector(readSelectionFromPasteboard:type:));
-	paste(self, @selector(readSelectionFromPasteboard:type:), converted, NSPasteboardTypeString);
+	*answer = paste(self, @selector(readSelectionFromPasteboard:type:), converted, NSPasteboardTypeString);
 	[converted releaseGlobally];
-	// by returning YES, "Undo Paste" menu item will be set up by system
 	return YES;
 }
 

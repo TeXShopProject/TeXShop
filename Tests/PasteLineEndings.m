@@ -21,7 +21,7 @@ NSMutableString *filterYenToBackslash(NSString *aString);
 FILTERS
 
 @interface NSTextView (TeXShop)
-- (BOOL)pasteFilteredTextFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type japaneseFilter:(BOOL)japaneseFilter keyBindings:(BOOL)keyBindings;
+- (BOOL)pasteFilteredTextFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type japaneseFilter:(BOOL)japaneseFilter keyBindings:(BOOL)keyBindings answer:(BOOL *)answer;
 @end
 
 // The document's Key Bindings switch.
@@ -253,6 +253,40 @@ int main(int argc, char **argv) { @autoreleasepool {
             if (caret) REQUIRE([outcome[1][2] isEqual:@0]);
         }
     }
+    // At the insertion point, a paste that becomes empty is the paste of empty text: the step typed before
+    // it is undone in one step, and a step that could be redone still can.
+    where = "empty at the insertion point";
+    for (Class kind in @[DocumentText.class, ScrapText.class]) {
+        NSMutableArray *outcome = [NSMutableArray array];
+        for (int converted = 0; converted <= 1; converted++) {
+            keyBindingsOn = converted;
+            NSUndoManager *undo = [NSUndoManager new];
+            UndoSource *source = [UndoSource new];
+            source.manager = undo;
+            NSTextView *view = [[kind alloc] initWithFrame:NSMakeRect(0, 0, 300, 100)];
+            view.richText = NO; view.allowsUndo = YES; view.delegate = source;
+            view.string = @"abc";
+            view.selectedRange = NSMakeRange(1, 0);
+            [view insertText:@"Z" replacementRange:view.selectedRange];
+            [view breakUndoCoalescing];
+            [NSRunLoop.currentRunLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.02]];
+            if (converted) Clip(@"%"); else { [clipboard clearContents]; [clipboard setString:@"" forType:NSPasteboardTypeString]; }
+            NSUInteger changes = source.changes;
+            [view paste:nil];
+            [NSRunLoop.currentRunLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.02]];
+            NSMutableArray *steps = [NSMutableArray arrayWithObjects:[view.string copy], @(source.changes - changes), undo.undoActionName ?: @"", nil];
+            [undo undo];
+            [steps addObject:[view.string copy]];
+            if (converted) Clip(@"%");
+            [view paste:nil];
+            [NSRunLoop.currentRunLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.02]];
+            [steps addObject:@(undo.canRedo)];
+            [outcome addObject:steps];
+        }
+        REQUIRE([outcome[1] isEqual:outcome[0]]);
+        REQUIRE([outcome[1][0] isEqualToString:@"aZbc"] && [outcome[1][1] isEqual:@0] && [outcome[1][3] isEqualToString:@"abc"] && [outcome[1][4] isEqual:@YES]);
+    }
+    keyBindingsOn = YES;
     for (TSFilterMode mode = kNoFilterMode; mode <= kOtherJapaneseFilterMode; mode++) {
         g_shouldFilter = mode;
         BOOL undone = NO;

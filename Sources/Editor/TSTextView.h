@@ -79,7 +79,7 @@
 
 
 @interface NSTextView (TeXShop)
-- (BOOL)pasteFilteredTextFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type japaneseFilter:(BOOL)japaneseFilter keyBindings:(BOOL)keyBindings;
+- (BOOL)pasteFilteredTextFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type japaneseFilter:(BOOL)japaneseFilter keyBindings:(BOOL)keyBindings answer:(BOOL *)answer;
 - (NSRange)visibleCharacterRange;
 - (CGFloat)theViewWidth;
 - (void) closeTag: (id)sender;

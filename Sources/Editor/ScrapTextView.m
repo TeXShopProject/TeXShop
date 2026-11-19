@@ -554,8 +554,9 @@
 // yen signs and backslashes stay as they are.
 - (BOOL)readSelectionFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type
 {
-	if ([self pasteFilteredTextFromPasteboard: pboard type: type japaneseFilter: NO keyBindings: [self.document isDoAutoCompleteEnabled]])
-		return YES;
+	BOOL answer = NO;
+	if ([self pasteFilteredTextFromPasteboard: pboard type: type japaneseFilter: NO keyBindings: [self.document isDoAutoCompleteEnabled] answer: &answer])
+		return answer;
 	return [super readSelectionFromPasteboard: pboard type: type];
 }
 
