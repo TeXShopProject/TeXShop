@@ -113,6 +113,8 @@ static NSAttributedString *TSKeyBindingTokenString(NSString *symbol, NSFont *fon
 @property (strong, readwrite) NSButton *symbolsButton;
 @property (strong) NSSegmentedControl *addRemoveControl;
 @property (strong, nullable) NSPopover *symbolsPopover;
+// A step of Undo or Redo that could not be saved is being put back.
+@property BOOL keepingFailedStep;
 @end
 
 @implementation TSKeyBindingsTableView
@@ -436,12 +438,17 @@ static BOOL TSKeyBindingPastable(NSString *output) { return !TSKeyBindingOutputH
     if (![self saveChangeOrRevertToKeys:rowKeys values:rowValues paste:rowPaste]) {
         // The step that could not be done is kept, to be tried again: the opposite step registered
         // now is done at once, and registers this step where it was.
+        // The other steps of the same group register theirs in the same opposite group, which is
+        // done once.
         if (undo == nil) return;
         [undo registerUndoWithTarget:self handler:^(TSKeyBindingsController *target) {
             [target registerUndoToKeys:keys values:values paste:pasteKeys actionName:name];
         }];
         [undo setActionName:name];
+        if (self.keepingFailedStep) return;
+        self.keepingFailedStep = YES;
         dispatch_async(dispatch_get_main_queue(), ^{
+            self.keepingFailedStep = NO;
             if (redoing) [undo undo]; else [undo redo];
         });
         return;
@@ -858,13 +865,15 @@ static BOOL TSKeyBindingPastable(NSString *output) { return !TSKeyBindingOutputH
 {
     NSInteger row = [self.tableView rowForView:sender];
     if (row < 0 || (NSUInteger)row >= self.mutableKeys.count) return;
-    // An output being edited is kept first, so that the box goes with it.
+    // The state chosen is read before an output being edited in the row is kept, which shows
+    // the row again.
+    BOOL checked = sender.state == NSControlStateValueOn;
     NSTextField *field = [self editedField];
     if (field && [self.tableView rowForView:field] == row) [self.tableView.window makeFirstResponder:self.tableView];
     if (self.mutableKeys[row].length == 0 || !TSKeyBindingPastable(self.mutableValues[row])) { [self reloadRow:row]; return; }
-    BOOL checked = sender.state == NSControlStateValueOn;
-    if (checked == self.mutablePaste[row].boolValue) return;
+    if (checked == self.mutablePaste[row].boolValue) { [self reloadRow:row]; return; }
     [self changeWithActionName:NSLocalizedString(@"Change Key Binding", @"Undo action name") change:^{ self.mutablePaste[row] = @(checked); }];
+    [self reloadRow:row];
 }
 
 - (id<NSPasteboardWriting>)tableView:(NSTableView *)tableView pasteboardWriterForRow:(NSInteger)row

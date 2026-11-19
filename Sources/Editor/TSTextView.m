@@ -3200,7 +3200,8 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 	if (! filter && ! convertLF && bindings.count == 0)
 		return NO;
 	NSString *pasted = [pboard stringForType: NSStringPboardType];
-	if (! pasted)
+	// Empty text is pasted by AppKit, which changes nothing.
+	if (pasted.length == 0)
 		return NO;
 	// The key bindings first, as typed characters; the encoding's own filter then applies to their output.
 	NSString *string = TSApplyKeyBindings(pasted, bindings);
@@ -3216,16 +3217,15 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 		return NO;
 	// mitsu 1.29 (T1)-- in order to enable "Undo Paste"
 	if (string.length == 0) {
-		// Nothing is left to paste: the selected text is deleted, as a paste of it would replace it.
-		NSArray<NSValue *> *ranges = [self selectedRanges];
-		NSMutableArray<NSString *> *empty = [NSMutableArray array];
-		while (empty.count < ranges.count)
-			[empty addObject:@""];
-		if ([self shouldChangeTextInRanges:ranges replacementStrings:empty]) {
-			for (NSInteger i = (NSInteger)ranges.count - 1; i >= 0; i--)
-				[self replaceCharactersInRange:ranges[(NSUInteger)i].rangeValue withString:@""];
-			[self setSelectedRange:NSMakeRange(ranges.firstObject.rangeValue.location, 0)];
-			[self didChangeText];
+		// Nothing is left to paste: the selected text is deleted, as AppKit deletes it; with nothing
+		// selected, nothing changes.
+		BOOL selected = NO;
+		for (NSValue *range in [self selectedRanges])
+			selected |= range.rangeValue.length > 0;
+		if (selected) {
+			void (*deleteSelection)(id, SEL, id) = (void (*)(id, SEL, id))
+				class_getMethodImplementation([NSTextView class], @selector(delete:));
+			deleteSelection(self, @selector(delete:), nil);
 		}
 		return YES;
 	}

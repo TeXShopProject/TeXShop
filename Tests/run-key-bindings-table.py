@@ -6,7 +6,7 @@ rows in light and dark, and the Paste column, which cannot be checked for an
 output with a placeholder or a mark. No window is ordered,
 beeps are counted, and key bindings are written to a temporary folder only.
 
-  --mutations   also check that the test finds fifteen deliberate faults"""
+  --mutations   also check that the test finds seventeen deliberate faults"""
 from pathlib import Path
 import subprocess, sys, tempfile
 from source_tree import include_args
@@ -27,6 +27,8 @@ mutations = {
     'failed-step-dropped': ('            if (redoing) [undo undo]; else [undo redo];\n', '', 'Then one Undo takes back only the last check'),
     'failed-redo-as-undo': ('            if (redoing) [undo undo]; else [undo redo];', '            [undo redo];', 'A Redo that cannot be saved'),
     'selection-moves-on-failure': ('            NSInteger kept = !saved || (NSInteger)other >= row ? row : row - 1;', '            NSInteger kept = (NSInteger)other < row ? row - 1 : row;', 'keeps both rows and the selection'),
+    'retried-for-each-step': ('        if (self.keepingFailedStep) return;\n', '', 'An Undo of several changes that cannot be saved is tried once'),
+    'box-read-after-editing': ('    BOOL checked = sender.state == NSControlStateValueOn;\n    NSTextField *field = [self editedField];\n    if (field && [self.tableView rowForView:field] == row) [self.tableView.window makeFirstResponder:self.tableView];\n', '    NSTextField *field = [self editedField];\n    if (field && [self.tableView rowForView:field] == row) [self.tableView.window makeFirstResponder:self.tableView];\n    BOOL checked = sender.state == NSControlStateValueOn;\n', 'Checking Paste while the output is edited'),
     'input-not-limited': ('    if (text.length == 0 || [text rangeOfComposedCharacterSequenceAtIndex:0].length == text.length) return;', '    return;', 'Typing in an input character keeps only the new character'),
 }
 def run(text):

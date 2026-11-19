@@ -48,9 +48,11 @@ SCRAP_PASTE
 
 @interface UndoSource : NSObject <NSTextViewDelegate>
 @property (strong) NSUndoManager *manager;
+@property NSUInteger changes;
 @end
 @implementation UndoSource
 - (NSUndoManager *)undoManagerForTextView:(NSTextView *)view { return self.manager; }
+- (void)textDidChange:(NSNotification *)notification { self.changes++; }
 @end
 
 static NSPasteboard *clipboard;
@@ -213,26 +215,58 @@ int main(int argc, char **argv) { @autoreleasepool {
         [smartResults addObject:view.string];
     }
     REQUIRE([smartResults[1] isEqual:smartResults[0]] && [smartResults[0] containsString:@" AA "]);
-    // A paste whose text becomes empty deletes the selected text, in one step of Undo.
+    // A paste whose text becomes empty deletes the selected text as AppKit deletes it: the text, the
+    // selection after Undo and the next typing are those of Edit › Delete. With nothing selected, nothing
+    // changes, and empty text on the clipboard changes nothing in any mode.
     where = "empty";
     keyBindingsOn = YES;
     for (Class kind in @[DocumentText.class, ScrapText.class]) {
-        Clip(@"%");
-        NSUndoManager *undo = [NSUndoManager new];
-        undo.groupsByEvent = NO;
-        UndoSource *source = [UndoSource new];
-        source.manager = undo;
-        NSTextView *view = [[kind alloc] initWithFrame:NSMakeRect(0, 0, 300, 100)];
-        view.richText = NO; view.allowsUndo = YES; view.delegate = source;
-        view.string = @"aXbYc";
-        view.selectedRanges = @[[NSValue valueWithRange:NSMakeRange(1, 1)], [NSValue valueWithRange:NSMakeRange(3, 1)]];
-        [undo beginUndoGrouping];
-        [view paste:nil];
-        [undo endUndoGrouping];
-        REQUIRE([view.string isEqualToString:@"abc"] && NSEqualRanges(view.selectedRange, NSMakeRange(1, 0)));
-        [undo undo];
-        REQUIRE([view.string isEqualToString:@"aXbYc"]);
+        for (int caret = 0; caret <= 1; caret++) {
+            NSMutableArray *outcome = [NSMutableArray array];
+            for (int pasting = 0; pasting <= 1; pasting++) {
+                Clip(@"%");
+                NSUndoManager *undo = [NSUndoManager new];
+                undo.groupsByEvent = NO;
+                UndoSource *source = [UndoSource new];
+                source.manager = undo;
+                NSTextView *view = [[kind alloc] initWithFrame:NSMakeRect(0, 0, 300, 100)];
+                view.richText = NO; view.allowsUndo = YES; view.delegate = source;
+                view.string = @"aXbYc";
+                if (caret) view.selectedRange = NSMakeRange(2, 0);
+                else view.selectedRanges = @[[NSValue valueWithRange:NSMakeRange(1, 1)], [NSValue valueWithRange:NSMakeRange(3, 1)]];
+                [undo beginUndoGrouping];
+                if (pasting) [view paste:nil]; else [view delete:nil];
+                [undo endUndoGrouping];
+                NSMutableArray *steps = [NSMutableArray arrayWithObjects:[view.string copy], view.selectedRanges, @(source.changes), @(undo.canUndo), nil];
+                if (undo.canUndo) {
+                    [undo undo];
+                    [steps addObjectsFromArray:@[[view.string copy], view.selectedRanges]];
+                }
+                [undo beginUndoGrouping];
+                [view insertText:@"Z" replacementRange:view.selectedRange];
+                [undo endUndoGrouping];
+                [steps addObject:[view.string copy]];
+                [outcome addObject:steps];
+            }
+            REQUIRE([outcome[1] isEqual:outcome[0]]);
+            REQUIRE([outcome[1][0] isEqualToString:caret ? @"aXbYc" : @"abc"]);
+            if (caret) REQUIRE([outcome[1][2] isEqual:@0]);
+        }
     }
+    for (TSFilterMode mode = kNoFilterMode; mode <= kOtherJapaneseFilterMode; mode++) {
+        g_shouldFilter = mode;
+        BOOL undone = NO;
+        [clipboard clearContents];
+        [clipboard setString:@"" forType:NSPasteboardTypeString];
+        NSTextView *view = [[DocumentText alloc] initWithFrame:NSMakeRect(0, 0, 300, 100)];
+        view.richText = NO;
+        view.string = @"left/keep/right";
+        view.selectedRange = NSMakeRange(5, 4);
+        [view paste:nil];
+        REQUIRE([view.string isEqualToString:@"left/keep/right"]);
+        (void)undone;
+    }
+    g_shouldFilter = kNoFilterMode;
     keyBindingsOn = NO;
     printf("PASS: characters outside the BMP, and pasting as AppKit pastes into several ranges and an empty view, after smart copy, and when nothing is left\n");
     where = "#PASTE# key bindings";

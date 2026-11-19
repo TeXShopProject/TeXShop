@@ -415,6 +415,61 @@ int main(int argc, char **argv) { @autoreleasepool {
     [window.undoManager undo]; Spin();
     [window.undoManager undo]; Spin();
     Check(![SavedPaste() containsObject:@"§"] && ![SavedPaste() containsObject:@"≡"], @"Earlier steps are still there");
+    // Several changes in one step of Undo, next to another such step: when the
+    // step cannot be saved it is tried once, nothing else happens meanwhile or
+    // when the files can be written again, and then one Undo or Redo does one
+    // whole step.
+    [window.undoManager removeAllActions];
+    void (^setBoth)(NSControlStateValue) = ^(NSControlStateValue value) {
+        for (NSString *key in @[@"§", @"≡"]) {
+            NSButton *box = PasteBox(table, (NSInteger)[bindings.keys indexOfObject:key]);
+            box.state = value; [NSApp sendAction:box.action to:box.target from:box];
+        }
+        Spin();
+    };
+    BOOL (^bothChecked)(void) = ^BOOL { return [SavedPaste() containsObject:@"§"] && [SavedPaste() containsObject:@"≡"]; };
+    BOOL (^noneChecked)(void) = ^BOOL { return ![SavedPaste() containsObject:@"§"] && ![SavedPaste() containsObject:@"≡"]; };
+    setBoth(NSControlStateValueOn);
+    setBoth(NSControlStateValueOff);
+    [window.undoManager undo];
+    Spin();
+    Check(bothChecked(), @"Two checks in one event are one step of Undo");
+    [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: @0444} ofItemAtPath:pastePath error:NULL];
+    NSUInteger beepsAtUndo = beeps;
+    [window.undoManager undo];
+    Spin();
+    NSUInteger beepsAfterUndo = beeps;
+    for (int i = 0; i < 5; i++) Spin();
+    Check(beeps == beepsAfterUndo && beepsAfterUndo > beepsAtUndo && bothChecked() && [bindings.keys containsObject:@"≡"], @"An Undo of several changes that cannot be saved is tried once");
+    [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: @0644} ofItemAtPath:pastePath error:NULL];
+    for (int i = 0; i < 5; i++) Spin();
+    Check(bothChecked() && [bindings.keys containsObject:@"≡"], @"Nothing happens when the files can be written again");
+    [window.undoManager undo];
+    Spin();
+    Check(noneChecked() && [bindings.keys containsObject:@"≡"], @"Then one Undo takes back that whole step");
+    [window.undoManager redo];
+    Spin();
+    Check(bothChecked(), @"one Redo does it again");
+    [window.undoManager redo];
+    Spin();
+    Check(noneChecked(), @"and the next Redo does the step after it");
+    // Checking the box of a row whose output is being edited keeps both.
+    [window.undoManager removeAllActions];
+    section = [bindings.keys indexOfObject:@"§"];
+    NSButton *sectionBox = PasteBox(table, (NSInteger)section);
+    sectionBox.state = NSControlStateValueOn; [NSApp sendAction:sectionBox.action to:sectionBox.target from:sectionBox];
+    Spin();
+    sectionBox = PasteBox(table, (NSInteger)section);
+    sectionBox.state = NSControlStateValueOff; [NSApp sendAction:sectionBox.action to:sectionBox.target from:sectionBox];
+    Spin();
+    [table editColumn:1 row:(NSInteger)section withEvent:nil select:YES];
+    editor = (NSTextView *)window.firstResponder;
+    [editor insertText:@"\\S{}" replacementRange:editor.selectedRange];
+    sectionBox = PasteBox(table, (NSInteger)section);
+    sectionBox.state = NSControlStateValueOn;
+    [NSApp sendAction:sectionBox.action to:sectionBox.target from:sectionBox];
+    Spin();
+    Check([SavedBindings()[@"§"] isEqual:@"\\S{}"] && [SavedPaste() containsObject:@"§"] && PasteBox(table, (NSInteger)section).state == NSControlStateValueOn, @"Checking Paste while the output is edited keeps the output and the check");
     // The note under the list.
     NSTextField *pasteNote = nil;
     pending = [NSMutableArray arrayWithObject:bindings.view];
