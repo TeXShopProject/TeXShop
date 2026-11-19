@@ -21,8 +21,11 @@ extern NSString * const TSPDFPrintScalingModeKey;
 // the choices of owner's last print (TSPDFPrintKeepChoices), Auto Rotate and Scale to Fit at first.
 NSPrintOperation * _Nullable TSPDFPrintOperation(PDFDocument *document, NSPrintInfo *documentPrintInfo, NSDocument * _Nullable owner);
 
-// Whether the operation printed: it ran, and a job saved as a file wrote the file after started.
-BOOL TSPDFPrintSucceeded(NSPrintOperation *operation, BOOL ran, NSDate *started);
+// Runs the operation; YES when it printed: it ran, and a job saved as a file (chosen before the
+// run or in the panel) wrote its file during the run.
+BOOL TSPDFPrintRun(NSPrintOperation *operation);
+// The test of TSPDFPrintRun, given the job before the run.
+BOOL TSPDFPrintSucceeded(NSPrintOperation *operation, BOOL ran, NSDate *started, NSPrintJobDispositionValue _Nullable dispositionBefore, NSURL * _Nullable urlBefore);
 
 // After a print that succeeded: the document's next print starts from these choices; other
 // documents do not. The document's print info, edited state and undo list stay as they are.

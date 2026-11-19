@@ -199,22 +199,38 @@ NSPrintOperation *TSPDFPrintOperation(PDFDocument *document, NSPrintInfo *docume
     return operation;
 }
 
-BOOL TSPDFPrintSucceeded(NSPrintOperation *operation, BOOL ran, NSDate *started)
+BOOL TSPDFPrintSucceeded(NSPrintOperation *operation, BOOL ran, NSDate *started, NSPrintJobDispositionValue dispositionBefore, NSURL *urlBefore)
 {
     if (! ran)
         return NO;
     NSPrintInfo *info = operation.printInfo;
-    if (! [info.jobDisposition isEqual:NSPrintSaveJob])
+    BOOL savedBefore = [dispositionBefore isEqual:NSPrintSaveJob];
+    BOOL savedAfter = [info.jobDisposition isEqual:NSPrintSaveJob];
+    // A save that could not write its file comes back as a spool job without a file (AppKit).
+    if (savedBefore && ! savedAfter)
+        return NO;
+    if (! savedAfter)
         return YES;
     // Saved as a file: the file is there, written by this print (not left from before).
     NSURL *url = info.dictionary[NSPrintJobSavingURL];
     if (! [url isKindOfClass:NSURL.class])
-        return YES;
+        url = urlBefore;
+    if (! [url isKindOfClass:NSURL.class])
+        return NO;
+    url = [NSURL fileURLWithPath:url.path];
     NSDate *modified = nil;
-    [url removeCachedResourceValueForKey:NSURLContentModificationDateKey];
     if (! [url getResourceValue:&modified forKey:NSURLContentModificationDateKey error:NULL] || modified == nil)
         return NO;
     return [modified timeIntervalSinceDate:started] > -0.01;
+}
+
+BOOL TSPDFPrintRun(NSPrintOperation *operation)
+{
+    NSPrintJobDispositionValue disposition = [operation.printInfo.jobDisposition copy];
+    NSURL *url = operation.printInfo.dictionary[NSPrintJobSavingURL];
+    NSDate *started = [NSDate date];
+    BOOL ran = [operation runOperation];
+    return TSPDFPrintSucceeded(operation, ran, started, disposition, url);
 }
 
 void TSPDFPrintKeepChoices(NSPrintOperation *operation, NSDocument *document)

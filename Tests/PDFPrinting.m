@@ -90,7 +90,7 @@ static NSArray<NSValue *> *Print(NSString *input, NSString *output, void (^choos
     if (choose) choose(accessory);
     operation.showsPrintPanel = NO;
     operation.showsProgressPanel = NO;
-    Check([operation runOperation], @"the operation prints");
+    Check(TSPDFPrintRun(operation), @"the operation prints");
     CGPDFDocumentRef printed = CGPDFDocumentCreateWithURL((__bridge CFURLRef)[NSURL fileURLWithPath:output]);
     NSMutableArray *frames = [NSMutableArray array], *directions = [NSMutableArray array];
     for (size_t i = 1; printed && i <= CGPDFDocumentGetNumberOfPages(printed); i++) {
@@ -225,11 +225,9 @@ int main(int argc, char **argv)
             [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
             [first updateChangeCount:NSChangeCleared];
             StartOwner = first;
-            NSDate *started = [NSDate date];
             Print(input, [dir stringByAppendingPathComponent:@"first.pdf"], ^(TSPDFPrintAccessory *a) {
                 a.autoRotate = NO; a.scaleToFit = NO; a.scalePercent = 43;
             }, &arrows);
-            Check(TSPDFPrintSucceeded(LastOperation, YES, started), @"a print saved to a new file succeeded");
             TSPDFPrintKeepChoices(LastOperation, first);
             [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
             NSMutableSet *changed = [NSMutableSet set];
@@ -255,15 +253,28 @@ int main(int argc, char **argv)
             NSString *old = [dir stringByAppendingPathComponent:@"old.pdf"];
             [[NSData data] writeToFile:old atomically:YES];
             [NSFileManager.defaultManager setAttributes:@{NSFileModificationDate: [NSDate dateWithTimeIntervalSinceNow:-3600]} ofItemAtPath:old error:NULL];
-            NSPrintOperation *missing = TSPDFPrintOperation(document, A4Info([dir stringByAppendingPathComponent:@"gone/out.pdf"]), nil);
+            NSURL *oldURL = [NSURL fileURLWithPath:old];
             NSPrintOperation *stale = TSPDFPrintOperation(document, A4Info(old), nil);
             NSPrintInfo *spool = A4Info(old); spool.jobDisposition = NSPrintSpoolJob;
             NSPrintOperation *printer = TSPDFPrintOperation(document, spool, nil);
             NSDate *now = [NSDate date];
-            Check(! TSPDFPrintSucceeded(missing, YES, now), @"no file written: the print failed");
-            Check(! TSPDFPrintSucceeded(stale, YES, now), @"a file left from before: the print failed");
-            Check(! TSPDFPrintSucceeded(stale, NO, now), @"a cancelled print failed");
-            Check(TSPDFPrintSucceeded(printer, YES, now), @"a print sent to a printer that ran succeeded");
+            Check(! TSPDFPrintSucceeded(stale, YES, now, NSPrintSaveJob, oldURL), @"a file left from before: the print failed");
+            Check(! TSPDFPrintSucceeded(stale, NO, now, NSPrintSaveJob, oldURL), @"a cancelled print failed");
+            Check(TSPDFPrintSucceeded(printer, YES, now, NSPrintSpoolJob, nil), @"a print sent to a printer that ran succeeded");
+
+            // The folder chosen to save into is gone when the job runs: AppKit's run returns YES and
+            // turns the job into a spool job without a file. The document keeps its earlier choices.
+            NSDocument *owner = [NSDocument new];
+            NSPrintOperation *missing = TSPDFPrintOperation(document, A4Info([dir stringByAppendingPathComponent:@"gone/out.pdf"]), owner);
+            TSPDFPrintAccessory *a = (TSPDFPrintAccessory *)missing.printPanel.accessoryControllers.firstObject;
+            [a view]; a.autoRotate = NO; a.scaleToFit = NO; a.scalePercent = 43;
+            missing.showsPrintPanel = NO; missing.showsProgressPanel = NO;
+            BOOL printed = TSPDFPrintRun(missing);
+            Check(! printed && ! [NSFileManager.defaultManager fileExistsAtPath:[dir stringByAppendingPathComponent:@"gone/out.pdf"]], @"no file written: the print failed");
+            if (printed) TSPDFPrintKeepChoices(missing, owner);
+            NSPrintOperation *next = TSPDFPrintOperation(document, A4Info([dir stringByAppendingPathComponent:@"next.pdf"]), owner);
+            Check([next.printInfo.dictionary[TSPDFPrintAutoRotateKey] boolValue] && [next.printInfo.dictionary[TSPDFPrintScalingModeKey] integerValue] == kPDFPrintPageScaleToFit,
+                  @"after the failed print, the next one starts with Auto Rotate and Scale to Fit");
         }
 
         // A first page with /Rotate 90 is shown lying: the paper is landscape.

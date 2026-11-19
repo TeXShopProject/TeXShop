@@ -3382,9 +3382,9 @@ else {
             [printPanel setOptions:([printPanel options] | NSPrintPanelShowsOrientation | NSPrintPanelShowsScaling | NSPrintPanelShowsPaperSize)];
        //  [printPanel setOptions: (NSPrintPanelShowsPreview | NSPrintPanelShowsOrientation | NSPrintPanelShowsPageRange) ]; //( NSPrintPanelShowsPageSetupAccessory & [printPanel options])]; // NSPrintPanelShowsOrientation)];
         
-        NSDate *printStarted = [NSDate date];
-        BOOL printed = [printOperation runOperation];
-		if (printDocument != nil && TSPDFPrintSucceeded(printOperation, printed, printStarted))
+		if (printDocument == nil)
+            [printOperation runOperation];
+        else if (TSPDFPrintRun(printOperation))
             TSPDFPrintKeepChoices(printOperation, self);
 //		[printView release];
 	} else if (self.documentType == isTeX)

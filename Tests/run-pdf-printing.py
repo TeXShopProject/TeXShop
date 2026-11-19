@@ -4,7 +4,7 @@ offscreen to PDF files, as a print from the Preview does, and check each printed
 turned to suit the paper and fitted to it by default, as Preview prints; each choice of the
 print panel section (Auto Rotate, Scale, Scale to Fit) changes the printed pages.
 Pass --keep=DIR to keep the printed PDFs; --mutation=NAME (no-rotate, actual-size, first-page-rotation,
-shared-info, document-print-info, failed-save, empty-field, summary-kvo) to show the checks fail without each part.
+shared-info, document-print-info, failed-save, spool-after-save, empty-field, summary-kvo) to show the checks fail without each part.
 No window, panel or printer is used: the operation saves its job to a file."""
 from pathlib import Path
 import os, subprocess, sys, tempfile
@@ -52,7 +52,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-pdf-printing-') as td:
                     'first-page-rotation': ('if ((first.rotation / 90) % 2)', 'if (0)'),
                     'shared-info': ('NSPrintInfo *printInfo = [documentPrintInfo copy];', 'NSPrintInfo *printInfo = documentPrintInfo;'),
                     'document-print-info': ('    objc_setAssociatedObject(document,', '    document.printInfo = [document.printInfo copy]; [document.printInfo.dictionary addEntriesFromDictionary:kept];\n    objc_setAssociatedObject(document,'),
-                    'failed-save': ('if (! [info.jobDisposition isEqual:NSPrintSaveJob])', 'if (1)'),
+                    'failed-save': ('    if (! savedAfter)\n        return YES;', '    return YES;'),
+                    'spool-after-save': ('    if (savedBefore && ! savedAfter)\n        return NO;', ''),
                     'empty-field': ('if (sender.objectValue == nil || sender.integerValue < 1) {', 'if (0) {'),
                     'summary-kvo': ('+ (NSSet<NSString *> *)keyPathsForValuesAffectingLocalizedSummaryItems', '+ (NSSet<NSString *> *)unusedKeyPaths')}[mutation]
         assert old in text; source = t/'TSPDFPrinting.m'; source.write_text(text.replace(old, new))
