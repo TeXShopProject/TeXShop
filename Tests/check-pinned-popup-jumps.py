@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Check that the ways to go to another place close the pinned link popup of the part that
-goes there, and that zoom, the magnification menu, the display format and turning one page
-keep it (#35): the magnification leaves it at its place on its page and a new display format
+"""Check that the ways to go to another place keep the pinned link popup of the part that
+goes there at its place on its page, bringing it into view only when its page is no longer
+shown, and that zoom, the magnification menu, the display format and turning one page keep it
+too (#35): the magnification leaves it at its place on its page and a new display format
 puts it back there (#56). run-pinned-link-preview.py runs the ways that MyPDFKitView handles itself;
 this checks the ways that go through the document, the search and the preview window."""
 from pathlib import Path
@@ -9,16 +10,35 @@ import argparse
 import re
 
 MUTATIONS = {
-    'search-keeps-pin': ('Sources/Preview/MyPDFKitView.m', '- (void) doFindAgain',
-                         '        [(MyPDFKitView *)self.myDocument.pdfKitWindow.activeView closePinnedLinkPreview];\n', ''),
-    'search-list-keeps-pin': ('Sources/Preview/MyPDFKitView.m', '- (void) tableViewSelectionDidChange:',
-                              '\t\t[self closePinnedLinkPreview];\n', ''),
-    'mark-keeps-pin': ('Sources/Preview/MyPDFKitView.m', '- (void)setIndexForMark:',
-                       '\t[self closePinnedLinkPreview];\n', ''),
+    # The behavior up to 6.00 beta 5: going to another place closed the pinned popup.
+    'search-closes-pin': ('Sources/Preview/MyPDFKitView.m', '- (void) doFindAgain',
+                          'activeView keepPinnedLinkPreviewThroughMove];', 'activeView closePinnedLinkPreview];'),
+    'search-list-closes-pin': ('Sources/Preview/MyPDFKitView.m', '- (void) tableViewSelectionDidChange:',
+                               '[self keepPinnedLinkPreviewThroughMove];', '[self closePinnedLinkPreview];'),
+    'mark-closes-pin': ('Sources/Preview/MyPDFKitView.m', '- (void)setIndexForMark:',
+                        '[self keepPinnedLinkPreviewThroughMove];', '[self closePinnedLinkPreview];'),
+    'back-closes-pin': ('Sources/Preview/MyPDFKitView.m', '- (void) goBack:',
+                        '[self keepPinnedLinkPreviewThroughMove];', '[self closePinnedLinkPreview];'),
+    'link-closes-pin': ('Sources/Preview/MyPDFKitView.m', '- (void) mouseUp:',
+                        '[self keepPinnedLinkPreviewThroughMove];', '[self closePinnedLinkPreview];'),
     'sync-marks-other-part': ('Sources/Sync/TSDocument-SyncConTeXt.m', '- (BOOL)finishForwardContextSync',
                               'self.pdfKitWindow.activeView setIndexForMark', 'self.myPDFKitView setIndexForMark'),
     'link-part-closes': ('Sources/Windows/TSPreviewWindow.m', '- (void)showLinkDestination:',
-                         '    [otherView closePinnedLinkPreview];\n', '    [linkView closePinnedLinkPreview];\n'),
+                         '    [otherView keepPinnedLinkPreviewThroughMove];\n', '    [otherView closePinnedLinkPreview];\n'),
+    'link-part-wrong': ('Sources/Windows/TSPreviewWindow.m', '- (void)showLinkDestination:',
+                        '    [otherView keepPinnedLinkPreviewThroughMove];\n', '    [linkView keepPinnedLinkPreviewThroughMove];\n'),
+    # e74cc066: the page number box cleaned up the selection with the pinned popup.
+    'page-box-kills-pin': ('Sources/Preview/MyPDFKitView.m', '- (void) goToKitPage: (id)sender',
+                           '\t\t[self cleanupMarqueeKeepingPinnedLinkPreview];\n', '\t\t[self cleanupMarquee: YES];\n'),
+    # The popup takes its place before the move but never goes back to it.
+    'move-not-restored': ('Sources/Preview/MyPDFKitView.m', '- (void)keepPinnedLinkPreviewThroughMove',
+                          '            [view endKeepingPinnedLinkPreviewOnPage: YES];\n', '            ;\n'),
+    # d8aa5c5a: turning one page moved the popup into view without taking its place first.
+    'page-turn-in-view': ('Sources/Preview/MyPDFKitView.m', '- (void) nextPage:',
+                          '\t[self keepPinnedLinkPreviewThroughMove];\n', ''),
+    # e7623b40: a drag held at an edge, which changes nothing, forgot the place the popup is away from.
+    'held-drag-forgets-place': ('Sources/Preview/TSLinkPreviewView.m', '- (void)mouseDragged:',
+                                '    if (!NSEqualRects(frame, self.frame) || !NSEqualRects(source, _source)) _awayFromPlace = NO;\n', '    _awayFromPlace = NO;\n'),
     'fit-kills-pin': ('Sources/Preview/MyPDFKitView.m', '- (void)changePDFViewSizeTo:',
                       '        [self cleanupMarqueeKeepingPinnedLinkPreview];\n', '        [self cleanupMarquee: YES];\n'),
     # The behavior before #56: the magnification moved the popup into view, off its place.
@@ -77,21 +97,47 @@ def expect(ok, message):
         problems.append(message)
 
 kit = 'Sources/Preview/MyPDFKitView.m'
-# Search results: the part that goes to the result closes its popup before it goes there.
+# Going to another place keeps the pinned popup: its place on its page is taken before the move,
+# and it goes back there once the move is done, in the next pass of the main queue, or into view
+# when its page is no longer shown.
+keep = method(kit, '- (void)keepPinnedLinkPreviewThroughMove')
+expect(re.search(r'if \(!\[self beginKeepingPinnedLinkPreviewOnPage\]\) return;', keep) and
+       re.search(r'dispatch_async\(dispatch_get_main_queue\(\), \^\{.*?\[view endKeepingPinnedLinkPreviewOnPage: YES\];', keep, re.S),
+       'going to another place does not put the pinned popup back on its page after the move')
+# A popup away from its place forgets it only when a drag really moves or resizes it.
+drag = method('Sources/Preview/TSLinkPreviewView.m', '- (void)mouseDragged:')
+expect(re.search(r'if \(!NSEqualRects\(frame, self\.frame\) \|\| !NSEqualRects\(source, _source\)\) _awayFromPlace = NO;', drag)
+       and drag.count('_awayFromPlace = NO') == 1,
+       'a drag that changes nothing forgets the place the pinned popup is away from')
+# The page number box cleans up the selection without the pinned popup before it goes there.
+body = method(kit, '- (void) goToKitPage: (id)sender')
+expect('[self cleanupMarqueeKeepingPinnedLinkPreview]' in body and not re.search(r'cleanupMarquee: ?YES', body),
+       'the page number box closes the pinned popup in Single Page and Double Page display')
+for signature in ('- (void) firstPage:', '- (void) lastPage:', '- (void) goToKitPageNumber:'):
+    expect(not re.search(r'cleanupMarquee: ?YES', method(kit, signature)),
+           f'{signature} closes the pinned popup in Single Page and Double Page display')
+for signature in ('- (void) goBack:', '- (void) goForward:', '- (void) firstPage:', '- (void) lastPage:',
+                  '- (void) goToKitPageNumber:', '- (IBAction) takeDestinationFromOutline:', '- (void) mouseUp:'):
+    body = method(kit, signature)
+    expect('[self keepPinnedLinkPreviewThroughMove]' in body and 'closePinnedLinkPreview' not in body,
+           f'{signature} does not keep the pinned popup on its page')
+# Search results: the part that goes to the result keeps its popup on its page.
 body = method(kit, '- (void) tableViewSelectionDidChange:')
-expect(0 <= body.find('[self closePinnedLinkPreview]') < body.find('[self goToPage: aPage]'),
-       'a search result in the drawer does not close the pinned popup')
+expect(0 <= body.find('[self keepPinnedLinkPreviewThroughMove]') < body.find('[self goToPage: aPage]')
+       and 'closePinnedLinkPreview' not in body, 'a search result in the drawer does not keep the pinned popup')
 for signature in ('- (void) doFindOne:', '- (void) doFindOneFullWindow:', '- (void) doFindAgain'):
     body = method(kit, signature)
-    close = body.find('[(MyPDFKitView *)self.myDocument.pdfKitWindow.activeView closePinnedLinkPreview]')
+    keep = body.find('[(MyPDFKitView *)self.myDocument.pdfKitWindow.activeView keepPinnedLinkPreviewThroughMove]')
     go = body.find('[self.myDocument.pdfKitWindow.activeView goToPage: thePage]')
     found = body.find('if (searchSelection != NULL)')
-    expect(0 <= found < close < go, f'{signature.split()[-1]} does not close the pinned popup of the part that shows the result')
+    expect(0 <= found < keep < go and 'closePinnedLinkPreview' not in body,
+           f'{signature.split()[-1]} does not keep the pinned popup of the part that shows the result')
 
 # Syncs from the source: every one marks the place it goes to in the part that goes there,
-# and marking closes the pinned popup of that part.
+# and marking keeps the pinned popup of that part on its page.
 mark = method(kit, '- (void)setIndexForMark:')
-expect('[self closePinnedLinkPreview];' in mark, 'marking the place of a sync does not close the pinned popup')
+expect('[self keepPinnedLinkPreviewThroughMove];' in mark and 'closePinnedLinkPreview' not in mark,
+       'marking the place of a sync does not keep the pinned popup')
 syncs = 0
 for name in ('Sources/Sync/TSDocument-SyncTeX.m', 'Sources/Sync/TSDocument-SyncOld.m',
              'Sources/Sync/TSDocument-SyncConTeXt.m', 'Sources/Document/TSDocument.m'):
@@ -104,23 +150,25 @@ for name in ('Sources/Sync/TSDocument-SyncTeX.m', 'Sources/Sync/TSDocument-SyncO
         expect(movers <= marked, f'{Path(name).name} {head[:70]} goes to a page of a part that it does not mark')
 expect(syncs >= 5, f'only {syncs} syncs from the source were found')
 
-# Split Window with Link: the part that goes to the target closes its popup; the part with
-# the link keeps its own (#31).
+# Split Window with Link: the part that goes to the target keeps its popup on its page; the part
+# with the link keeps its own where it is (#31).
 body = method('Sources/Windows/TSPreviewWindow.m', '- (void)showLinkDestination:')
-expect(0 <= body.find('[otherView closePinnedLinkPreview]') < body.find('[otherView goToDestination: destination]'),
-       'Split Window with Link does not close the pinned popup of the part that goes to the target')
-expect('[linkView closePinnedLinkPreview]' not in body and '[linkView cleanupMarquee' not in body,
-       'Split Window with Link closes the pinned popup of the part with the link')
+expect(0 <= body.find('[otherView keepPinnedLinkPreviewThroughMove]') < body.find('[otherView goToDestination: destination]')
+       and 'closePinnedLinkPreview' not in body,
+       'Split Window with Link does not keep the pinned popup of the part that goes to the target on its page')
+expect('[linkView keepPinnedLinkPreviewThroughMove]' not in body and '[linkView cleanupMarquee' not in body,
+       'Split Window with Link moves the pinned popup of the part with the link')
 
 # Zoom, the magnification menu, the display format and turning one page keep the popup.
 for signature in ('- (void) changeScale:', '- (void)setMagnification:', '- (void)changePDFViewSizeTo:',
                   '- (void)changePageStyleTo:', '- (void) previousPage:', '- (void) nextPage:'):
     body = method(kit, signature)
     expect(not re.search(r'cleanupMarquee: ?YES', body), f'{signature} closes the pinned popup')
-# Turning one page brings it back into view.
+# Turning one page keeps it at its place on its page too: the place is taken before the page turns.
 for signature in ('- (void) previousPage:', '- (void) nextPage:'):
-    expect('[self keepPinnedLinkPreviewInView]' in method(kit, signature),
-           f'{signature} does not bring the pinned popup back into view')
+    body = method(kit, signature)
+    expect(0 <= body.find('[self keepPinnedLinkPreviewThroughMove]') < body.find('[self stepPageForward:'),
+           f'{signature} does not keep the pinned popup at its place on its page')
 # The magnification leaves it at its place on its page, which grows and shrinks with it; PDFKit
 # keeps that place (run-pinned-popup-stays-on-page.py) (#56).
 for signature in ('- (void) changeScale:', '- (void)setMagnification:', '- (void)changePDFViewSizeTo:',
@@ -168,5 +216,5 @@ if args.mutation:
     print(f'PASS: detected mutation {args.mutation}: {problems[0]}')
     raise SystemExit(0)
 assert not problems, problems
-print(f'PASS: search, {syncs} syncs and Split Window with Link close the pinned popup of the part that moves; zoom and turning pages keep it; '
+print(f'PASS: links, the drawer, Back and Forward, page numbers, first and last page, search, {syncs} syncs and Split Window with Link keep the pinned popup of the part that moves on its page; zoom and turning pages keep it; '
       'the magnification and the display format leave it on its page')

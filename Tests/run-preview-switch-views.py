@@ -74,7 +74,7 @@ view_methods = [last_method(view_source, s) for s in (
     '- (id) outlineView: (NSOutlineView *) outlineView child:', '- (BOOL) outlineView: (NSOutlineView *) outlineView isItemExpandable:',
     '- (id) outlineView: (NSOutlineView *) outlineView objectValueForTableColumn:', '- (NSInteger)index\n', '- (void)moveSplitToCorrectSpot:',
     '- (BOOL)hasPinnedLinkPreview\n', '- (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:',
-    '- (void)attachPinnedLinkPreview:', '- (void)keepPinnedLinkPreviewInView\n', '- (void)closePinnedLinkPreview\n',
+    '- (void)attachPinnedLinkPreview:', '- (void)keepPinnedLinkPreviewInView\n', '- (void)closePinnedLinkPreview\n', '- (void)keepPinnedLinkPreviewThroughMove\n', '- (BOOL)beginKeepingPinnedLinkPreviewOnPage\n', '- (void)endKeepingPinnedLinkPreviewOnPage:',
     # What the toolbar, the menus and the search results follow (#25 audit).
     '- (void)setMagnification: (double)magnification', '- (void) scaleChanged: (NSNotification *) notification',
     '- (void)fixMagnificationControls\n', '- (void)fixStuff\n', '- (void)resetSearchDelegate\n',
@@ -132,9 +132,15 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 @property (nonatomic) BOOL pinned;
 @property (copy) BOOL (^usesHandTool)(void);
 - (void)keepInView;
+- (void)rememberPlaceOnPage;
+- (BOOL)returnToPlaceOnPage;
+- (BOOL)returnToPlaceIfAway;
 @end
 @implementation TSLinkPreviewView
 - (void)keepInView {}
+- (void)rememberPlaceOnPage {}
+- (BOOL)returnToPlaceOnPage { return YES; }
+- (BOOL)returnToPlaceIfAway { return NO; }
 @end
 @class TestDocument;
 @interface TestWindow : NSWindow
@@ -169,6 +175,10 @@ static void TSSplitToggleItemsFollowSplit(void) {}
     NSInteger pageStyle, firstPageStyle, resizeOption, mouseMode, scaleMag;
     TSLinkPreviewView *linkPreview;
     TSLinkPreviewView *pinnedLinkPreview;
+    BOOL keepsPinnedLinkPreviewOnPage;
+    __weak TSLinkPreviewView *movingPinnedLinkPreview;
+    BOOL pinnedLinkPreviewMovePending;
+    NSUInteger pinnedLinkPreviewMoveCount;
     // The toolbar's magnification field and stepper and the search results, shared by both parts.
     NSTextField *myScale, *smyScale, *myScale1;
     NSStepper *myStepper, *smyStepper, *myStepper1;

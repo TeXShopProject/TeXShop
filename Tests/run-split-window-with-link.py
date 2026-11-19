@@ -31,9 +31,9 @@ MUTATIONS = {
     'not-active': ('window', '        [otherView becomeActiveView];\n', '        ;\n'),
     'focus-stays': ('window', "! [window makeFirstResponder: otherView]", 'YES'),
     'menu-of-asked-part': ('view', '    if (part != self)\n        return [part menuForEvent: theEvent];\n', ''),
-    # The part that goes to the target closes its pinned popup, and the part with the link keeps its own (#35).
-    'moving-part-keeps-pin': ('window', '    [otherView closePinnedLinkPreview];\n', ''),
-    'link-part-closes-pin': ('window', '    [otherView closePinnedLinkPreview];\n', '    [otherView closePinnedLinkPreview];\n    [linkView closePinnedLinkPreview];\n'),
+    # Both parts keep their pinned popups: the part that goes to the target keeps its own on its page (#35).
+    'moving-part-closes-pin': ('window', '    [otherView keepPinnedLinkPreviewThroughMove];\n', '    [otherView closePinnedLinkPreview];\n'),
+    'link-part-closes-pin': ('window', '    [otherView keepPinnedLinkPreviewThroughMove];\n', '    [otherView keepPinnedLinkPreviewThroughMove];\n    [linkView closePinnedLinkPreview];\n'),
     'menu-of-first-part': ('view', '    NSView *hit = [window.contentView.superview hitTest: point];\n',
                            '    NSView *hit = self.myPDFWindow.myPDFKitView;\n'),
 }
@@ -64,7 +64,7 @@ view_methods = [last_method(view_source, s) for s in (
     # Splitting (#23) and the active view (#25, #14), as in run-preview-switch-views.py.
     '- (void)saveLocation\n', '- (void)restoreLocation\n', '- (NSInteger)index\n', '- (void)moveSplitToCorrectSpot:',
     '- (BOOL)hasPinnedLinkPreview\n', '- (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:',
-    '- (void)attachPinnedLinkPreview:', '- (void)keepPinnedLinkPreviewInView\n', '- (void)closePinnedLinkPreview\n',
+    '- (void)attachPinnedLinkPreview:', '- (void)keepPinnedLinkPreviewInView\n', '- (void)closePinnedLinkPreview\n', '- (void)keepPinnedLinkPreviewThroughMove\n', '- (BOOL)beginKeepingPinnedLinkPreviewOnPage\n', '- (void)endKeepingPinnedLinkPreviewOnPage:',
     '- (void)setMagnification: (double)magnification', '- (void) scaleChanged: (NSNotification *) notification',
     '- (void)fixMagnificationControls\n', '- (void)fixStuff\n', '- (void)resetSearchDelegate\n',
     '- (BOOL)becomeFirstResponder\n', '- (void)becomeActiveView\n',
@@ -117,9 +117,15 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 @property (nonatomic) BOOL pinned;
 @property (copy) BOOL (^usesHandTool)(void);
 - (void)keepInView;
+- (void)rememberPlaceOnPage;
+- (BOOL)returnToPlaceOnPage;
+- (BOOL)returnToPlaceIfAway;
 @end
 @implementation TSLinkPreviewView
 - (void)keepInView {}
+- (void)rememberPlaceOnPage {}
+- (BOOL)returnToPlaceOnPage { return YES; }
+- (BOOL)returnToPlaceIfAway { return NO; }
 @end
 @class TestDocument;
 @interface TestWindow : NSWindow
@@ -154,6 +160,10 @@ static void TSSplitToggleItemsFollowSplit(void) {}
     NSInteger pageStyle, firstPageStyle, resizeOption, mouseMode, scaleMag;
     TSLinkPreviewView *linkPreview;
     TSLinkPreviewView *pinnedLinkPreview;
+    BOOL keepsPinnedLinkPreviewOnPage;
+    __weak TSLinkPreviewView *movingPinnedLinkPreview;
+    BOOL pinnedLinkPreviewMovePending;
+    NSUInteger pinnedLinkPreviewMoveCount;
     NSTextField *myScale, *smyScale, *myScale1;
     NSStepper *myStepper, *smyStepper, *myStepper1;
     NSTableView *_searchTable;
@@ -452,8 +462,8 @@ int main(int argc, char **argv) { @autoreleasepool {
         [p.lower attachPinnedLinkPreview:lowerPin windowFrame:lowerPlace];
         check(p.upper.hasPinnedLinkPreview && p.lower.hasPinnedLinkPreview, describe(first, @"both parts have a pinned popup"));
         choose(p.upper, 1, forward, first);
-        check(!p.lower.hasPinnedLinkPreview && !lowerPin.superview,
-              describe(first, @"the part that goes to the target closes its pinned popup"));
+        check(p.lower.hasPinnedLinkPreview && lowerPin.superview == p.lower.documentView,
+              describe(first, @"the part that goes to the target keeps its pinned popup"));
         check(p.upper.hasPinnedLinkPreview && upperPin.superview == p.upper.documentView,
               describe(first, @"the part with the link keeps its pinned popup"));
         [p.upper doKillPopup];

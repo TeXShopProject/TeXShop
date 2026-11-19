@@ -245,6 +245,7 @@ static void CheckChrome(NSWindow *window, PDFView *pdf, NSString *systemName, BO
 @implementation MyPDFKitView
 - (void)fitContentWidthKeepingTop:(TSContentTop)top {}
 - (void)closePinnedLinkPreview {}
+- (void)keepPinnedLinkPreviewThroughMove {}
 - (void)cleanupMarquee:(BOOL)terminate {}
 - (void)cleanupMarqueeKeepingPinnedLinkPreview {}
 - (BOOL)beginKeepingPinnedLinkPreviewOnPage { return NO; }

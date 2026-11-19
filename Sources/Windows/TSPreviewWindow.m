@@ -1114,10 +1114,10 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
         TSPreviewPaneRestore(linkView, place);
     }
 
-    // The other part goes to another place: its pinned popup closes, as when a link is
-    // followed, and that of the part with the link stays (#31, #35).
+    // The other part goes to another place: its pinned popup stays on its page, as when a link
+    // is followed, and that of the part with the link stays where it is (#31, #35).
     [otherView cleanupMarqueeKeepingPinnedLinkPreview];
-    [otherView closePinnedLinkPreview];
+    [otherView keepPinnedLinkPreviewThroughMove];
     [otherView goToDestination: destination];
 
     NSResponder *responder = window.firstResponder;
