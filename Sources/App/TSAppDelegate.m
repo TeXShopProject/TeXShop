@@ -1074,8 +1074,18 @@ static void TSInstallAdvancedFindFieldStyle(void)
     [g_commandCompletionList insertString: @"\n" atIndex: 0];
     if ([g_commandCompletionList characterAtIndex: [g_commandCompletionList length]-1] != '\n')
         [g_commandCompletionList appendString: @"\n"];
-    g_canRegisterCommandCompletion = YES;
+    // While the file is open for editing, nothing else writes to it; closing it allows that again.
+    g_canRegisterCommandCompletion = ! [self commandCompletionFileIsOpen];
 
+}
+
+// Whether a command completion file is open in a document, under whatever name it was opened.
+- (BOOL)commandCompletionFileIsOpen
+{
+    for (NSDocument *document in [[NSDocumentController sharedDocumentController] documents])
+        if ([document isKindOfClass: [TSDocument class]] && [(TSDocument *)document isCommandCompletionFile])
+            return YES;
+    return NO;
 }
 
 
@@ -1275,9 +1285,9 @@ static void TSInstallAdvancedFindFieldStyle(void)
 - (void)openCommandCompletionList: (id)sender
 {
       
-	 [[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:
-       [NSURL fileURLWithPath:[[GlobalData sharedGlobalData].CommandCompletionPath stringByStandardizingPath]] display:YES
-                                                                   completionHandler: ^(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error) {
+	 [(TSDocumentController *)[NSDocumentController sharedDocumentController] openOwnTextFileAtURL:
+       [NSURL fileURLWithPath:[[GlobalData sharedGlobalData].CommandCompletionPath stringByStandardizingPath]]
+                                                                   completionHandler: ^(NSDocument *document) {
                                                                        if (document != nil) {
                                                                            g_canRegisterCommandCompletion = NO;
                                                                        }

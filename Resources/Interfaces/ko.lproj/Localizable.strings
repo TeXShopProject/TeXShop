@@ -267,8 +267,6 @@
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "다음 매크로가 이 단축키를 사용합니다. 메뉴 명령에 할당하면 해당 매크로의 단축키가 비활성화됩니다.\n\n%@";
 
-"This does not turn spell checking while typing on or off." = "이 설정은 입력 중 맞춤법 검사를 켜거나 끄지 않습니다.";
-
 "Open PDFs keep their zoom. The new value applies to PDFs opened from now on." = "열려 있는 PDF의 확대율은 유지됩니다. 새 값은 지금부터 여는 PDF에 적용됩니다.";
 
 "Takes effect after you restart TeXShop." = "TeXShop을 다시 시작하면 적용됩니다.";

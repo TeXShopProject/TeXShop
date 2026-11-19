@@ -14,7 +14,7 @@ code, pre { font-family: Menlo, monospace; font-size: 12px; }
 
 <h1>Spell Checking in TeXShop</h1>
 
-<p><b>Settings &gt; Source &gt; TeX-aware spell checking</b> selects this mode, enabled by default in TeXShop 6.00. Turn it off to use the legacy exclusion options below the checkbox. Your previous options are retained. The new rules apply to TeX source files; other file types keep their previous behavior. This setting does not turn on <b>Check Spelling While Typing</b>. Use <b>Edit TeX exclusion rules…</b> to customize what is skipped.</p>
+<p>In <b>Settings &gt; Spell Checking</b>, choose <b>Use LaTeX-aware spell checking (recommended)</b>, the default in TeXShop 6.00, or <b>Legacy method</b>, which uses the three exclusion options below it. Your previous options are retained. The new rules apply to TeX source files; other file types keep their previous behavior. Use <b>Edit LaTeX exclusion rules…</b> to customize what is skipped.</p>
 <p>The new rules apply to unsaved TeX documents and files with the extensions <code>tex, ltx, latex, dtx, ins, sty, cls, clo, bbx, cbx, lbx</code>. Mixed-source formats such as Sweave (Rnw), and other extensions including ctx, retain the legacy behavior.</p>
 
 <p>TeXShop's spell checking knows about TeX. It skips comments, maths, commands, and the
@@ -54,7 +54,7 @@ the dictionary. Only learned words that occur in the document are listed.</p>
 
 <h2>Changing what is skipped</h2>
 <p><b>Edit &gt; Spelling and Grammar &gt; Edit Spelling Exclusions&#8230;</b> opens the file
-<code>~/Library/TeXShop/SpellCheck/SpellingExclusions.txt</code> in a text editor. It lists
+<code>~/Library/TeXShop/SpellCheck/SpellingExclusions.txt</code> in TeXShop. It lists
 what is skipped, one rule per line, and explains its own format at the top. Changes take effect
 the next time you spell check; no restart is needed. For example, to skip the argument of a
 command you have defined, add a line such as</p>

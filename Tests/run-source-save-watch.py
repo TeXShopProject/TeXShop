@@ -138,11 +138,13 @@ static void ExtWrite(NSString *path, NSString *text, int how){
 + (instancetype)sharedInstance;
 + (NSInteger)byteOrderMarkOfData:(NSData *)data;
 - (NSString *)textForEditing:(NSString *)text encoding:(NSStringEncoding)encoding;
+- (NSStringEncoding)defaultEncoding;
 @end
 @implementation TSEncodingSupport
 + (instancetype)sharedInstance { static id shared; if (!shared) shared = [self new]; return shared; }
 + (NSInteger)byteOrderMarkOfData:(NSData *)data { return 0; }
 - (NSString *)textForEditing:(NSString *)text encoding:(NSStringEncoding)encoding { return text; }
+- (NSStringEncoding)defaultEncoding { return NSUTF8StringEncoding; }
 @end
 // The sources in these tests contain no \UTF commands.
 @interface NSString (TSCharacterConversion)
@@ -179,6 +181,9 @@ static void ExtWrite(NSString *path, NSString *text, int how){
  NSStringEncoding _encoding, _tempencoding, _badEncoding;
  BOOL showBadEncodingDialog, isLoading, firstTime;
  BOOL _encodingFromMagicComment, _hasReadSource;
+ NSInteger _ownTextFile, _savingOwnTextFile;
+ NSStringEncoding _ownTextEncoding, _savingOwnTextEncoding;
+ BOOL _duplicating;
  NSInteger _sourceByteOrderMark, _lineEndingNotice;
  NSStringEncoding _sourceMarkEncoding, _unreadableEncoding;
 }
@@ -190,8 +195,19 @@ static void ExtWrite(NSString *path, NSString *text, int how){
 - (void)readPreviewArrangementFromData:(NSData *)data;
 - (BOOL)isBeingReplacedIn;
 @end
+// TeXShop's own text files are not opened in these tests (run-texshop-own-files.py).
+typedef NS_ENUM(NSInteger, TSOwnTextFileKind) { TSOwnTextFileNone = 0, TSOwnTextFileSpellingRules, TSOwnTextFileCommandCompletion };
+static TSOwnTextFileKind TSOwnTextFileForURL(NSURL *url) { return TSOwnTextFileNone; }
+static TSOwnTextFileKind TSRecordedOwnTextFileKind(NSURL *url) { return TSOwnTextFileNone; }
+static void TSRecordOwnTextFileKind(NSURL *url, TSOwnTextFileKind kind) {}
+BOOL g_canRegisterCommandCompletion;
+@interface TSAppDelegate : NSObject
+- (void)reReadCommandCompletionData;
+@end
+
 @implementation TSDocument
 - (BOOL)isBeingReplacedIn { return NO; }
+- (void)takeOwnTextFileKindOfURL:(NSURL *)url {}
 + (BOOL)autosavesInPlace { return YES; }
 + (BOOL)preservesVersions { return NO; }
 + (NSArray *)readableTypes { return @[@"public.plain-text"]; }

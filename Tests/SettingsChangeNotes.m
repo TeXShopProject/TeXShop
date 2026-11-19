@@ -44,27 +44,27 @@ int main(int argc, char **argv) { @autoreleasepool {
         }
     }
     [notes attachToPanes:panes];[notes beginSession];
-    TSSettingsChangeNote *spell=Note(panes,@"spelling",@"row.catalog.spelling.1.0"), *zoom=Note(panes,@"preview",@"row.catalog.preview.0.2"), *encoding=Note(panes,@"documents",@"row.catalog.documents.0.0"),*autosave=Note(panes,@"documents",@"row.catalog.documents.1.0"),*find=Note(panes,@"editor",@"row.catalog.editor.7.0");
-    NSArray<TSSettingsChangeNote *> *all=@[spell,zoom,encoding,autosave,find];
+    TSSettingsChangeNote *zoom=Note(panes,@"preview",@"row.catalog.preview.0.2"), *encoding=Note(panes,@"documents",@"row.catalog.documents.0.0"),*autosave=Note(panes,@"documents",@"row.catalog.documents.1.0"),*find=Note(panes,@"editor",@"row.catalog.editor.7.0");
+    NSArray<TSSettingsChangeNote *> *all=@[zoom,encoding,autosave,find];
     for(TSSettingsChangeNote *note in all) Check(note.hidden,@"Opening settings creates no warning");
-    Set(notes,defaults,@"TeXAwareSpellChecking",@NO);Check(!spell.hidden,@"Spell toggle shows note");
-    Check(announcements==1 && [lastAnnouncement[NSAccessibilityAnnouncementKey] isEqual:spell.accessibilityLabel] && [lastAnnouncement[NSAccessibilityPriorityKey] integerValue]==NSAccessibilityPriorityMedium,@"Showing a note requests a medium-priority VoiceOver announcement");
-    Set(notes,defaults,@"TeXAwareSpellChecking",@YES);Check(spell.hidden,@"Returning to session value clears spell note");
+    // Switching the spell checking method takes effect at once, in open documents too: it has no note.
+    Check(Note(panes,@"spelling",@"row.catalog.spelling.1.0")==nil,@"The spell checking method has no note");
+    Set(notes,defaults,@"TeXAwareSpellChecking",@NO);Set(notes,defaults,@"TeXAwareSpellChecking",@YES);
+    Check(announcements==0,@"Switching the spell checking method announces nothing");
     Set(notes,defaults,@"PdfMagnification",@1.25);Check(zoom.hidden,@"No preview means no zoom note");
     pdf=YES;Set(notes,defaults,@"PdfMagnification",@1.25);Check(zoom.hidden,@"Committing the same zoom does not show a note");
     Set(notes,defaults,@"PdfMagnification",@1.5);Check(!zoom.hidden,@"Open preview and changed zoom show note");
+    Check(announcements==1 && [lastAnnouncement[NSAccessibilityAnnouncementKey] isEqual:zoom.accessibilityLabel] && [lastAnnouncement[NSAccessibilityPriorityKey] integerValue]==NSAccessibilityPriorityMedium,@"Showing a note requests a medium-priority VoiceOver announcement");
     Set(notes,defaults,@"PdfMagnification",@1);Check(zoom.hidden,@"Restoring zoom clears note");
     Set(notes,defaults,@"Encoding",@"ISO Latin 1");Check(encoding.hidden,@"No source window means no encoding note");
     source=YES;Set(notes,defaults,@"Encoding",@"MacOSRoman");Check(!encoding.hidden,@"Open source and changed encoding show note");
     Set(notes,defaults,@"Encoding",@"UTF-8");Check(encoding.hidden,@"Restoring encoding clears note");
-    Set(notes,defaults,@"TeXAwareSpellChecking",@NO);[notes leaveCategory];Check(spell.hidden,@"Category transition clears transient note");
-    Set(notes,defaults,@"TeXAwareSpellChecking",@YES);Set(notes,defaults,@"TeXAwareSpellChecking",@NO);[notes endSession];
+    Set(notes,defaults,@"PdfMagnification",@1.5);[notes leaveCategory];Check(zoom.hidden,@"Category transition clears transient note");
+    Set(notes,defaults,@"PdfMagnification",@1);Set(notes,defaults,@"PdfMagnification",@1.5);[notes endSession];
     for(TSSettingsChangeNote *note in all)Check(note.hidden,@"Closing hides all notes");
-    [notes beginSession];Check(spell.hidden,@"Reopening captures a new transient baseline");
-    Set(notes,defaults,@"TeXAwareSpellChecking",@YES);Check(!spell.hidden,@"New session has its own opening value");
-    [notes valuesReplaced];Check(spell.hidden,@"Profile/reset clears transient notes");
-    [defaults setDouble:2 forKey:@"PdfMagnification"];[defaults setObject:@"MacOSRoman" forKey:@"Encoding"];[notes valuesReplaced];
-    Check(zoom.hidden && encoding.hidden,@"Profile/reset does not create transient notes");
+    [notes beginSession];Check(zoom.hidden,@"Reopening captures a new transient baseline");
+    Set(notes,defaults,@"PdfMagnification",@1);Check(!zoom.hidden,@"New session has its own opening value");
+    [notes valuesReplaced];Check(zoom.hidden,@"Profile/reset clears transient notes");
     Set(notes,defaults,@"FindMethod",@0);Check(find.hidden,@"Panel and bar changes take effect without restart");
     Set(notes,defaults,@"FindMethod",@1);Check(find.hidden,@"Returning from panel to bar needs no restart");
     Set(notes,defaults,@"AutoSaveEnabled",@YES);Set(notes,defaults,@"FindMethod",@2);

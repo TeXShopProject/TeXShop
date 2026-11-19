@@ -2,6 +2,7 @@
 // Learned-word lookup and Find Next, with a stand-in spell checker that never
 // learns, ignores or forgets words.
 #import <Cocoa/Cocoa.h>
+#import <objc/runtime.h>
 #import "TSSpellSupport.h"
 #import "TSSpellExclusions.h"
 #import "SessionChecker.h"
@@ -30,6 +31,15 @@ static NSMutableArray<NSString *> *sChecked;
         [[s componentsSeparatedByCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet] componentsJoinedByString:@""]]];
     return [s rangeOfString:@"zzbad" options:0 range:NSMakeRange((NSUInteger)start, s.length - (NSUInteger)start)];
 }
+@end
+// TeXShop's document controller, as far as opening the rules file needs it: nothing is opened.
+@interface RulesOpeningController : NSDocumentController
+@property (copy) NSString *openedPath;
+@property BOOL displayed;
+@end
+@implementation RulesOpeningController
+- (void)openOwnTextFileAtURL:(NSURL *)url completionHandler:(void (^)(NSDocument *))completionHandler
+{ self.openedPath = url.path; self.displayed = YES; }
 @end
 @interface SupportTextView : NSTextView @end
 @implementation SupportTextView
@@ -111,8 +121,31 @@ int main(void)
             }
         }
 
+        // Edit Spelling Exclusions opens the rules file in TeXShop; TSDocument reads it in UTF-8 (run-texshop-own-files.py).
+        // NSWorkspace's openURL: is replaced so that nothing is opened; it records the URL.
+        __block NSURL *workspaceOpened = nil;
+        method_setImplementation(class_getInstanceMethod(NSWorkspace.class, @selector(openURL:)),
+                                 imp_implementationWithBlock(^BOOL(id workspace, NSURL *url) { workspaceOpened = url; return YES; }));
+        [[NSUserDefaults standardUserDefaults] setVolatileDomain:@{@"UseExternalEditor": @NO} forName:NSArgumentDomain];
+        RulesOpeningController *controller = [RulesOpeningController new];
+        if ([NSDocumentController sharedDocumentController] != controller) { puts("FAIL: the rules controller is the shared controller"); failures++; }
+        [TSSpellSupport editSpellingExclusions:nil];
+        if (![controller.openedPath isEqualToString:[TSSpellExclusions userRulesPath]] || !controller.displayed || workspaceOpened) {
+            printf("FAIL: Edit Spelling Exclusions opens the rules file in TeXShop (%s)\n", controller.openedPath.UTF8String);
+            failures++;
+        }
+        // With an external editor too: TSDocument edits TeXShop's own files in TeXShop (run-texshop-own-files.py).
+        controller.openedPath = nil;
+        [[NSUserDefaults standardUserDefaults] setVolatileDomain:@{@"UseExternalEditor": @YES} forName:NSArgumentDomain];
+        [TSSpellSupport editSpellingExclusions:nil];
+        if (![controller.openedPath isEqualToString:[TSSpellExclusions userRulesPath]] || workspaceOpened) {
+            puts("FAIL: with an external editor, Edit Spelling Exclusions opens the rules file in TeXShop");
+            failures++;
+        }
+        [[NSUserDefaults standardUserDefaults] setVolatileDomain:@{} forName:NSArgumentDomain];
+
         if (failures) return 1;
-        puts("PASS: learned words looked up among the checked words without blocking; Find Next checks one run per language.");
+        puts("PASS: learned words looked up among the checked words without blocking; Find Next checks one run per language; the rules file opens in TeXShop, with or without an external editor.");
     }
     return 0;
 }

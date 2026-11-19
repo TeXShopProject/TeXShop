@@ -267,8 +267,6 @@
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "De volgende macro’s gebruiken deze toetscombinatie. Als u deze aan het menucommando toewijst, worden hun toetscombinaties inactief.\n\n%@";
 
-"This does not turn spell checking while typing on or off." = "Dit schakelt de spellingcontrole tijdens het typen niet in of uit.";
-
 "Open PDFs keep their zoom. The new value applies to PDFs opened from now on." = "Geopende pdf’s behouden hun zoom. De nieuwe waarde geldt voor pdf’s die vanaf nu worden geopend.";
 
 "Takes effect after you restart TeXShop." = "Wordt van kracht nadat u TeXShop opnieuw start.";

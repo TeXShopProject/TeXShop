@@ -262,8 +262,6 @@
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@";
 
-"This does not turn spell checking while typing on or off." = "This does not turn spell checking while typing on or off.";
-
 "Open PDFs keep their zoom. The new value applies to PDFs opened from now on." = "Open PDFs keep their zoom. The new value applies to PDFs opened from now on.";
 
 "Takes effect after you restart TeXShop." = "Takes effect after you restart TeXShop.";

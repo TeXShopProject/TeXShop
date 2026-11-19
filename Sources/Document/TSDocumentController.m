@@ -212,4 +212,44 @@
 }
 */
 
+- (void)openOwnTextFileAtURL:(NSURL *)url completionHandler:(void (^)(NSDocument *document))completionHandler
+{
+	// A symbolic link is opened as the file it points to: its type is the link's own.
+	NSURL *file = url.URLByStandardizingPath.URLByResolvingSymlinksInPath;
+	// A copy of the file open for preview only (opened before it became one of TeXShop's files,
+	// or through another name) has no source. It is left as it is, with its annotations, and the
+	// file is opened for editing beside it; a copy open for editing is used.
+	BOOL previewOnly = NO;
+	for (NSDocument *document in [self documents]) {
+		if (! [document isKindOfClass: [TSDocument class]] || ! [(TSDocument *)document isSameFileAs: file])
+			continue;
+		if (! [(TSDocument *)document externalEditor]) {
+			[document showWindows];
+			if (completionHandler)
+				completionHandler(document);
+			return;
+		}
+		previewOnly = YES;
+	}
+	if (previewOnly) {
+		NSError *error = nil;
+		NSString *type = [self typeForContentsOfURL: file error: &error];
+		NSDocument *document = type ? [self makeDocumentWithContentsOfURL: file ofType: type error: &error] : nil;
+		if (document) {
+			[self addDocument: document];
+			[document makeWindowControllers];
+			[document showWindows];
+		} else if (error)
+			[self presentError: error];
+		if (completionHandler)
+			completionHandler(document);
+		return;
+	}
+	[self openDocumentWithContentsOfURL: file display: YES
+		completionHandler: ^(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error) {
+			if (completionHandler)
+				completionHandler(document);
+		}];
+}
+
 @end

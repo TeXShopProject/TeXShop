@@ -153,7 +153,16 @@ static id MainWindow(id app, SEL selector) { return mainWindowForTest; }
 }
 @end
 
-@interface ProbeDocument : ProbeBaseDocument
+// The documents here are not command completion files (run-command-completion-registration.py).
+enum { TSOwnTextFileNone = 0, TSOwnTextFileSpellingRules, TSOwnTextFileCommandCompletion };
+static BOOL g_canRegisterCommandCompletion;
+@interface TSAppDelegate : NSObject
+- (BOOL)commandCompletionFileIsOpen;
+- (void)reReadCommandCompletionData;
+@end
+@interface ProbeDocument : ProbeBaseDocument {
+    NSInteger _ownTextFile;
+}
 @property (retain) NSString *spellLanguage;
 @property BOOL automaticSpelling;
 @property BOOL spellLanguageFollowsDefault;

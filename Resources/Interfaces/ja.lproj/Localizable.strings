@@ -274,8 +274,6 @@
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "次のマクロがこのキーを使用しています。メニューのコマンドに割り当てると、マクロのキーは無効になります。\n\n%@";
 
-"This does not turn spell checking while typing on or off." = "入力中のスペルチェックの入／切は、この設定では変わりません。";
-
 "Open PDFs keep their zoom. The new value applies to PDFs opened from now on." = "開いているPDFの倍率は変わりません。新しく開くPDFから使われます。";
 
 "Takes effect after you restart TeXShop." = "TeXShopを再起動すると有効になります。";
