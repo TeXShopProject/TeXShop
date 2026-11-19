@@ -51,6 +51,8 @@ mutations = {
     'marks are not placeholders': ('globaldata', '@"#PASTE#", @"•"]', '@"#PASTE#"]'),
     'inside a character': ('globaldata', 'if (end < length && [text rangeOfComposedCharacterSequenceAtIndex:end].location != end) continue;', ''),
     'not as AppKit pastes': ('category', '\tpaste(self, @selector(readSelectionFromPasteboard:type:), converted, NSPasteboardTypeString);', '\tif ([self shouldChangeTextInRange:self.selectedRange replacementString:string]) { [self replaceCharactersInRange:self.selectedRange withString:string]; [self didChangeText]; }'),
+    'no smart paste': ('category', 'NSData *smart = [pboard availableTypeFromArray:@[smartType]] ? [pboard dataForType:smartType] : nil;', 'NSData *smart = nil;'),
+    'nothing left is not deleted': ('category', '	if (string.length == 0) {', '	if (NO) {'),
     'high surrogates not found': ('globaldata', 'if (![starts containsIndex:[text characterAtIndex:index]]) { index++; continue; }', 'if (![starts containsIndex:[text characterAtIndex:index]] || CFStringIsSurrogateHighCharacter([text characterAtIndex:index])) { index++; continue; }'),
     'not for #PASTE#': ('extras', '        [clipboard replaceLineEndingsWithLF];\n', ''),
     '#PASTE# without ConvertLF': ('extras', 'if ([NSUserDefaults.standardUserDefaults boolForKey:@"ConvertLF"])', 'if (YES)'),

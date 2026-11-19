@@ -191,8 +191,50 @@ int main(int argc, char **argv) { @autoreleasepool {
         if (!start.length) REQUIRE([outcome[1][2] isEqual:typing[NSFontAttributeName]]);
     }
     [SUD setBool:YES forKey:ConvertLFKey];
+    // A word copied with smart copy gets the spaces around it, as when AppKit pastes it.
+    where = "smart paste";
+    [GlobalData sharedGlobalData].g_autocompletionDictionary = @{@"a": @"A", @"%": @""};
+    [GlobalData sharedGlobalData].g_autocompletionPasteKeys = @[@"a", @"%"];
+    NSMutableArray *smartResults = [NSMutableArray array];
+    for (int bindingsOn = 0; bindingsOn <= 1; bindingsOn++) {
+        keyBindingsOn = bindingsOn;
+        NSTextView *from = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 300, 100)];
+        from.richText = NO; from.smartInsertDeleteEnabled = YES;
+        from.string = bindingsOn ? @"x aa y" : @"x AA y";
+        [from setSelectedRange:NSMakeRange(2, 2)];
+        from.selectionGranularity = NSSelectByWord;
+        [clipboard clearContents];
+        REQUIRE([from writeSelectionToPasteboard:clipboard types:from.writablePasteboardTypes]);
+        NSTextView *view = [[DocumentText alloc] initWithFrame:NSMakeRect(0, 0, 300, 100)];
+        view.richText = NO; view.smartInsertDeleteEnabled = YES;
+        view.string = @"red blue";
+        view.selectedRange = NSMakeRange(4, 0);
+        [view paste:nil];
+        [smartResults addObject:view.string];
+    }
+    REQUIRE([smartResults[1] isEqual:smartResults[0]] && [smartResults[0] containsString:@" AA "]);
+    // A paste whose text becomes empty deletes the selected text, in one step of Undo.
+    where = "empty";
+    keyBindingsOn = YES;
+    for (Class kind in @[DocumentText.class, ScrapText.class]) {
+        Clip(@"%");
+        NSUndoManager *undo = [NSUndoManager new];
+        undo.groupsByEvent = NO;
+        UndoSource *source = [UndoSource new];
+        source.manager = undo;
+        NSTextView *view = [[kind alloc] initWithFrame:NSMakeRect(0, 0, 300, 100)];
+        view.richText = NO; view.allowsUndo = YES; view.delegate = source;
+        view.string = @"aXbYc";
+        view.selectedRanges = @[[NSValue valueWithRange:NSMakeRange(1, 1)], [NSValue valueWithRange:NSMakeRange(3, 1)]];
+        [undo beginUndoGrouping];
+        [view paste:nil];
+        [undo endUndoGrouping];
+        REQUIRE([view.string isEqualToString:@"abc"] && NSEqualRanges(view.selectedRange, NSMakeRange(1, 0)));
+        [undo undo];
+        REQUIRE([view.string isEqualToString:@"aXbYc"]);
+    }
     keyBindingsOn = NO;
-    printf("PASS: characters outside the BMP, and pasting as AppKit pastes into several ranges and an empty view\n");
+    printf("PASS: characters outside the BMP, and pasting as AppKit pastes into several ranges and an empty view, after smart copy, and when nothing is left\n");
     where = "#PASTE# key bindings";
     Clip(@"\u00a5");
     NSMutableString *kept = [@"#PASTE#" mutableCopy];

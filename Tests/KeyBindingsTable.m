@@ -385,8 +385,36 @@ int main(int argc, char **argv) { @autoreleasepool {
     [editor insertText:@"≡" replacementRange:editor.selectedRange];
     EndEditing(window, table);
     Spin();
-    Check([bindings.keys isEqual:keysBefore] && table.numberOfRows == (NSInteger)keysBefore.count && [SavedBindings() isEqual:savedBefore] && beeps == beepsBefore + 3, @"Replacing another row that cannot be saved keeps both rows");
+    Check([bindings.keys isEqual:keysBefore] && table.numberOfRows == (NSInteger)keysBefore.count && [SavedBindings() isEqual:savedBefore] && beeps == beepsBefore + 3 && table.selectedRow == lastRow, @"Replacing another row that cannot be saved keeps both rows and the selection");
     [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: @0644} ofItemAtPath:pastePath error:NULL];
+    // An Undo or Redo that cannot be saved is kept: once the files can be
+    // written, one Undo or Redo does that one step only.
+    [window.undoManager removeAllActions];
+    NSUInteger section = [bindings.keys indexOfObject:@"§"];
+    equiv = [bindings.keys indexOfObject:@"≡"];
+    ClickBox(PasteBox(table, (NSInteger)section));
+    ClickBox(PasteBox(table, (NSInteger)equiv));
+    NSArray *bothOn = SavedPaste();
+    Check([bothOn containsObject:@"§"] && [bothOn containsObject:@"≡"], @"Two checks are saved, one after the other");
+    [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: @0444} ofItemAtPath:pastePath error:NULL];
+    [window.undoManager undo];
+    Spin();
+    Check([SavedPaste() isEqual:bothOn] && PasteBox(table, (NSInteger)equiv).state == NSControlStateValueOn && window.undoManager.canUndo, @"An Undo that cannot be saved changes nothing and can be tried again");
+    [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: @0644} ofItemAtPath:pastePath error:NULL];
+    [window.undoManager undo];
+    Spin();
+    Check([SavedPaste() containsObject:@"§"] && ![SavedPaste() containsObject:@"≡"] && PasteBox(table, (NSInteger)section).state == NSControlStateValueOn, @"Then one Undo takes back only the last check");
+    [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: @0444} ofItemAtPath:pastePath error:NULL];
+    [window.undoManager redo];
+    Spin();
+    Check(![SavedPaste() containsObject:@"≡"] && window.undoManager.canRedo, @"A Redo that cannot be saved changes nothing and can be tried again");
+    [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: @0644} ofItemAtPath:pastePath error:NULL];
+    [window.undoManager redo];
+    Spin();
+    Check([SavedPaste() isEqual:bothOn], @"Then one Redo does only that step");
+    [window.undoManager undo]; Spin();
+    [window.undoManager undo]; Spin();
+    Check(![SavedPaste() containsObject:@"§"] && ![SavedPaste() containsObject:@"≡"], @"Earlier steps are still there");
     // The note under the list.
     NSTextField *pasteNote = nil;
     pending = [NSMutableArray arrayWithObject:bindings.view];

@@ -6,7 +6,7 @@ rows in light and dark, and the Paste column, which cannot be checked for an
 output with a placeholder or a mark. No window is ordered,
 beeps are counted, and key bindings are written to a temporary folder only.
 
-  --mutations   also check that the test finds twelve deliberate faults"""
+  --mutations   also check that the test finds fifteen deliberate faults"""
 from pathlib import Path
 import subprocess, sys, tempfile
 from source_tree import include_args
@@ -24,6 +24,9 @@ mutations = {
     'input-column-stretched': ('    key.resizingMask = NSTableColumnUserResizingMask;\n', '', 'The Paste column keeps its width at the right end'),
     'stale-check-taken': ('[paste addObject:@([pasteKeys containsObject:key] && TSKeyBindingPastable(values[i]))];', '[paste addObject:@([pasteKeys containsObject:key])];', 'stays off when the placeholder is gone'),
     'unsaved-change-kept': ('    if ([self save]) return YES;', '    [self save]; return YES;', 'A check that cannot be saved is not shown'),
+    'failed-step-dropped': ('            if (redoing) [undo undo]; else [undo redo];\n', '', 'Then one Undo takes back only the last check'),
+    'failed-redo-as-undo': ('            if (redoing) [undo undo]; else [undo redo];', '            [undo redo];', 'A Redo that cannot be saved'),
+    'selection-moves-on-failure': ('            NSInteger kept = !saved || (NSInteger)other >= row ? row : row - 1;', '            NSInteger kept = (NSInteger)other < row ? row - 1 : row;', 'keeps both rows and the selection'),
     'input-not-limited': ('    if (text.length == 0 || [text rangeOfComposedCharacterSequenceAtIndex:0].length == text.length) return;', '    return;', 'Typing in an input character keeps only the new character'),
 }
 def run(text):

@@ -424,6 +424,8 @@ static BOOL TSKeyBindingPastable(NSString *output) { return !TSKeyBindingOutputH
 
 - (void)restoreKeys:(NSArray<NSString *> *)keys values:(NSArray<NSString *> *)values paste:(NSArray<NSString *> *)pasteKeys actionName:(NSString *)name
 {
+    NSUndoManager *undo = self.viewIfLoaded.window.undoManager;
+    BOOL redoing = undo.isRedoing;
     NSArray *currentKeys = [self savedKeys], *currentValues = [self savedValues], *currentPaste = [self savedPasteKeys];
     NSArray *rowKeys = [self.mutableKeys copy], *rowValues = [self.mutableValues copy], *rowPaste = [self.mutablePaste copy];
     self.mutableKeys = [keys mutableCopy]; self.mutableValues = [values mutableCopy];
@@ -431,7 +433,19 @@ static BOOL TSKeyBindingPastable(NSString *output) { return !TSKeyBindingOutputH
     for (NSString *key in keys) [self.mutablePaste addObject:@([pasteKeys containsObject:key])];
     [self.tableView reloadData];
     [self updateControls];
-    if (![self saveChangeOrRevertToKeys:rowKeys values:rowValues paste:rowPaste]) return;
+    if (![self saveChangeOrRevertToKeys:rowKeys values:rowValues paste:rowPaste]) {
+        // The step that could not be done is kept, to be tried again: the opposite step registered
+        // now is done at once, and registers this step where it was.
+        if (undo == nil) return;
+        [undo registerUndoWithTarget:self handler:^(TSKeyBindingsController *target) {
+            [target registerUndoToKeys:keys values:values paste:pasteKeys actionName:name];
+        }];
+        [undo setActionName:name];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (redoing) [undo undo]; else [undo redo];
+        });
+        return;
+    }
     [self registerUndoToKeys:currentKeys values:currentValues paste:currentPaste actionName:name];
 }
 
@@ -445,14 +459,16 @@ static BOOL TSKeyBindingPastable(NSString *output) { return !TSKeyBindingOutputH
     [undo setActionName:name];
 }
 
-- (void)changeWithActionName:(NSString *)name change:(void (^)(void))change
+// Returns NO when the change could not be saved and was taken back.
+- (BOOL)changeWithActionName:(NSString *)name change:(void (^)(void))change
 {
     NSArray *keys = [self savedKeys], *values = [self savedValues], *pasteKeys = [self savedPasteKeys];
     NSArray *rowKeys = [self.mutableKeys copy], *rowValues = [self.mutableValues copy], *rowPaste = [self.mutablePaste copy];
     change();
     [self updateControls];
-    if (![self saveChangeOrRevertToKeys:rowKeys values:rowValues paste:rowPaste]) return;
+    if (![self saveChangeOrRevertToKeys:rowKeys values:rowValues paste:rowPaste]) return NO;
     [self registerUndoToKeys:keys values:values paste:pasteKeys actionName:name];
+    return YES;
 }
 
 #pragma mark Actions
@@ -487,13 +503,14 @@ static BOOL TSKeyBindingPastable(NSString *output) { return !TSKeyBindingOutputH
     NSIndexSet *rows = table.selectedRowIndexes;
     if (rows.count == 0) { NSBeep(); return; }
     NSUInteger next = rows.firstIndex;
-    [self changeWithActionName:NSLocalizedString(@"Delete Key Binding", @"Undo action name") change:^{
+    BOOL saved = [self changeWithActionName:NSLocalizedString(@"Delete Key Binding", @"Undo action name") change:^{
         [self.mutableKeys removeObjectsAtIndexes:rows];
         [self.mutableValues removeObjectsAtIndexes:rows];
         [self.mutablePaste removeObjectsAtIndexes:rows];
         [table removeRowsAtIndexes:rows withAnimation:NSTableViewAnimationEffectNone];
     }];
-    if (self.mutableKeys.count) [table selectRowIndexes:[NSIndexSet indexSetWithIndex:MIN(next, self.mutableKeys.count - 1)] byExtendingSelection:NO];
+    if (!saved) [table selectRowIndexes:rows byExtendingSelection:NO];
+    else if (self.mutableKeys.count) [table selectRowIndexes:[NSIndexSet indexSetWithIndex:MIN(next, self.mutableKeys.count - 1)] byExtendingSelection:NO];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)item
@@ -710,14 +727,14 @@ static BOOL TSKeyBindingPastable(NSString *output) { return !TSKeyBindingOutputH
     NSString *old = self.mutableKeys[row];
     void (^finish)(BOOL) = ^(BOOL replace) {
         if (replace) {
-            [self changeWithActionName:name change:^{
+            BOOL saved = [self changeWithActionName:name change:^{
                 self.mutableKeys[row] = key;
                 [self.mutableKeys removeObjectAtIndex:other];
                 [self.mutableValues removeObjectAtIndex:other];
                 [self.mutablePaste removeObjectAtIndex:other];
             }];
             [self.tableView reloadData];
-            NSInteger kept = (NSInteger)other < row ? row - 1 : row;
+            NSInteger kept = !saved || (NSInteger)other >= row ? row : row - 1;
             [self.tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:kept] byExtendingSelection:NO];
         } else if (old.length == 0) {
             [self dropUnfinishedRowLater];
@@ -875,14 +892,14 @@ static BOOL TSKeyBindingPastable(NSString *output) { return !TSKeyBindingOutputH
     if (moved.count == 0) return NO;
     NSUInteger target = (NSUInteger)MAX(row, 0) - [moved countOfIndexesInRange:NSMakeRange(0, (NSUInteger)MAX(row, 0))];
     NSIndexSet *destination = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(target, moved.count)];
-    [self changeWithActionName:NSLocalizedString(@"Move Key Binding", @"Undo action name") change:^{
+    BOOL saved = [self changeWithActionName:NSLocalizedString(@"Move Key Binding", @"Undo action name") change:^{
         NSArray *keys = [self.mutableKeys objectsAtIndexes:moved], *values = [self.mutableValues objectsAtIndexes:moved], *paste = [self.mutablePaste objectsAtIndexes:moved];
         [self.mutableKeys removeObjectsAtIndexes:moved]; [self.mutableValues removeObjectsAtIndexes:moved]; [self.mutablePaste removeObjectsAtIndexes:moved];
         [self.mutableKeys insertObjects:keys atIndexes:destination]; [self.mutableValues insertObjects:values atIndexes:destination]; [self.mutablePaste insertObjects:paste atIndexes:destination];
     }];
     [tableView reloadData];
-    [tableView selectRowIndexes:destination byExtendingSelection:NO];
-    return YES;
+    [tableView selectRowIndexes:saved ? destination : moved byExtendingSelection:NO];
+    return saved;
 }
 
 @end

@@ -3215,11 +3215,30 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 	if (! filter && [string isEqualToString: pasted])
 		return NO;
 	// mitsu 1.29 (T1)-- in order to enable "Undo Paste"
+	if (string.length == 0) {
+		// Nothing is left to paste: the selected text is deleted, as a paste of it would replace it.
+		NSArray<NSValue *> *ranges = [self selectedRanges];
+		NSMutableArray<NSString *> *empty = [NSMutableArray array];
+		while (empty.count < ranges.count)
+			[empty addObject:@""];
+		if ([self shouldChangeTextInRanges:ranges replacementStrings:empty]) {
+			for (NSInteger i = (NSInteger)ranges.count - 1; i >= 0; i--)
+				[self replaceCharactersInRange:ranges[(NSUInteger)i].rangeValue withString:@""];
+			[self setSelectedRange:NSMakeRange(ranges.firstObject.rangeValue.location, 0)];
+			[self didChangeText];
+		}
+		return YES;
+	}
 	// AppKit pastes the converted text, as it pastes any text: in place of the selected ranges, with
-	// the typing attributes, and in one step of Undo that restores the selection.
+	// the typing attributes and, after a word copied with smart copy, the spaces around it, in one step
+	// of Undo that restores the selection.
+	NSString *smartType = @"NeXT smart paste pasteboard type";
+	NSData *smart = [pboard availableTypeFromArray:@[smartType]] ? [pboard dataForType:smartType] : nil;
 	NSPasteboard *converted = [NSPasteboard pasteboardWithUniqueName];
-	[converted clearContents];
+	[converted declareTypes:smart ? @[NSPasteboardTypeString, smartType] : @[NSPasteboardTypeString] owner:nil];
 	[converted setString:string forType:NSPasteboardTypeString];
+	if (smart)
+		[converted setData:smart forType:smartType];
 	BOOL (*paste)(id, SEL, NSPasteboard *, NSString *) = (BOOL (*)(id, SEL, NSPasteboard *, NSString *))
 		class_getMethodImplementation([NSTextView class], @selector(readSelectionFromPasteboard:type:));
 	paste(self, @selector(readSelectionFromPasteboard:type:), converted, NSPasteboardTypeString);
