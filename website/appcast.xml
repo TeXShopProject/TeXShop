@@ -3,22 +3,21 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
 --><rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
   <channel>
     <item>
-      <title>TeXShop 6.00 beta-5</title>
-      <pubDate>Thu, 19 Nov 2026 00:00:12 +0000</pubDate>
-      <sparkle:version>2003</sparkle:version>
-      <sparkle:shortVersionString>6.00 beta-5</sparkle:shortVersionString>
+      <title>TeXShop 6.00 beta-6</title>
+      <pubDate>Thu, 19 Nov 2026 01:41:05 +0000</pubDate>
+      <sparkle:version>2011</sparkle:version>
+      <sparkle:shortVersionString>6.00 beta-6</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
       <sparkle:channel>prerelease</sparkle:channel>
-      <description xml:lang="en" sparkle:format="markdown">This is the fifth **beta** of TeXShop 6.00, for testing. TeXShop 5.59 remains the current release. Please keep a copy of 5.59 if you depend on TeXShop for daily work. See [What's New in TeXShop 6](https://texshop.app/whats-new.html) for an overview.
+      <description xml:lang="en" sparkle:format="markdown">This is the sixth **beta** of TeXShop 6.00, for testing. TeXShop 5.59 remains the current release. Please keep a copy of 5.59 if you depend on TeXShop for daily work. See [What's New in TeXShop 6](https://texshop.app/whats-new.html) for an overview.
 
 ## Installation
 
-If you use 6.00 beta 1, beta 2, beta 3 or beta 4 with Settings → Updates → “Update to prereleases when available” on, TeXShop offers this beta through its automatic updates. Otherwise download `TeXShop-6.00-beta-5.zip`, extract it, and copy `TeXShop.app` to Applications (replacing 5.59 or an earlier beta), or run it from another folder. The application is signed and notarized, and runs on Apple Silicon and Intel Macs with macOS 14.6 or later. A TeX distribution such as MacTeX is required for typesetting.
+If you use 6.00 beta 1 to beta 5 with Settings → Updates → “Update to prereleases when available” on, TeXShop offers this beta through its automatic updates. Otherwise download `TeXShop-6.00-beta-6.zip`, extract it, and copy `TeXShop.app` to Applications (replacing 5.59 or an earlier beta), or run it from another folder. The application is signed and notarized, and runs on Apple Silicon and Intel Macs with macOS 14.6 or later. A TeX distribution such as MacTeX is required for typesetting.
 
-## Changes since Beta 4
+## Changes since Beta 5
 
-- Pages shown dark in the Preview window and in Experiment are sharp again when you zoom in. Since Beta 4 their text was blurred at high magnifications.
-- LaTeX-aware spell checking skips the arguments that are not prose of more commonly used packages, such as TikZ, pgfplots, float, tabularray, mathtools, enumitem, cleveref, biblatex and listings. Contributed by [Ralph Martin](https://github.com/ralphrmartin) in [PR #57](https://github.com/TeXShopProject/TeXShop/pull/57).
+- A pinned link popup now stays when the Preview window goes to another place: following a link, choosing an item in the drawer, Back and Forward, typing a page number, going to the first or last page, choosing a search result, syncing from the source, and Split Window with Link. It stays at its place on its page, so Back takes you back to it, and Escape dismisses it. Suggested by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#35](https://github.com/TeXShopProject/TeXShop/issues/35)).
 
 ## All changes in TeXShop 6.00
 
@@ -143,8 +142,8 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 - Update the bundled latexmk to 4.89, provided by Herbert Schulz.
 - TeXShop can be built from an extracted source archive again ([#4](https://github.com/TeXShopProject/TeXShop/issues/4)).
 - Remove files and code that TeXShop did not use from the application and its source.</description>
-      <sparkle:fullReleaseNotesLink>https://github.com/TeXShopProject/TeXShop/releases/tag/v.6.00-beta.5</sparkle:fullReleaseNotesLink>
-      <enclosure url="https://github.com/TeXShopProject/TeXShop/releases/download/v.6.00-beta.5/TeXShop-6.00-beta-5.zip" length="66405060" type="application/octet-stream" sparkle:edSignature="CjSF9l4RJ+xulG09+yOeHvZvKy/Am/lC3Bge2LYIdXYoG2hxCG8YWATB+9TEOK2380/irtMdzHp2S50QFFIKAA=="></enclosure>
+      <sparkle:fullReleaseNotesLink>https://github.com/TeXShopProject/TeXShop/releases/tag/v.6.00-beta.6</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/TeXShopProject/TeXShop/releases/download/v.6.00-beta.6/TeXShop-6.00-beta-6.zip" length="66408975" type="application/octet-stream" sparkle:edSignature="OzibTk9Y3THyIBQYG5GCGGOBGeFixlFE6In56q8u+9IPMSfRTnH1FFJE1J8/yhrlogoHOutsQIvFQysWKSmMBQ=="></enclosure>
     </item>
     <item>
       <title>TeXShop 5.59</title>
@@ -160,6 +159,6 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
     <language>en</language>
   </channel>
 </rss><!-- sparkle-signatures:
-edSignature: wyvZu2mCvfVqElW1cXqU5Q9qkRTK1eF8xiEMqmb0ELuPNB5oSVCyJf3Fon+yMrI7d9G5qrCRjQqdsNfz4adfAA==
-length: 20025
+edSignature: X35VRAGxn1tO3d/et/B7k7Y9ZSYLUxa+WbWPjYgN/ocAQ2Ep22MGVixMJSeHPVjNB/dNUQ7Zi9g6xCaXvGTaAg==
+length: 20024
 -->
