@@ -113,14 +113,19 @@
     return match ? [text substringWithRange:[match rangeAtIndex:1]] : @"";
 }
 
-// The line of --version output that is the banner: the one starting "pdfTeX", else the first line.
-// Lines before or after it (a wrapper's own words, copyright) are never read for a version.
+// The line of --version output that is the banner: "pdfTeX" followed by its version number.
+// Other lines (a wrapper's own words, warnings, copyright) are never read for a version, even when they start "pdfTeX".
+// Only output without any "pdfTeX" line is read from its first line.
 + (NSString *)bannerLineInOutput:(NSString *)output
 {
     NSArray<NSString *> *lines = [output componentsSeparatedByCharactersInSet:NSCharacterSet.newlineCharacterSet];
-    for (NSString *line in lines)
-        if ([[line stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet] hasPrefix:@"pdfTeX "]) return line;
-    return lines.firstObject ?: @"";
+    NSRegularExpression *banner = [NSRegularExpression regularExpressionWithPattern:@"^\\s*pdfTeX [0-9]" options:0 error:NULL];
+    BOOL mentionsPdfTeX = NO;
+    for (NSString *line in lines) {
+        if ([banner firstMatchInString:line options:0 range:NSMakeRange(0, line.length)]) return line;
+        mentionsPdfTeX = mentionsPdfTeX || [[line stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet] hasPrefix:@"pdfTeX"];
+    }
+    return mentionsPdfTeX ? @"" : lines.firstObject ?: @"";
 }
 
 + (nullable NSDictionary *)texLiveReleaseInBanner:(NSString *)banner

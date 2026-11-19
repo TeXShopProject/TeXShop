@@ -70,6 +70,11 @@ int main(void) { @autoreleasepool {
     r = banner(@"Local wrapper for TeX Live 2030\npdfTeX 3.14 (TeX Live 2027/dev)\nkpathsea version 6.4\n");
     check([r[@"name"] isEqual:@"TeX Live 2027/dev"] && [r[@"year"] integerValue] == 2027, @"a year in the words before the banner is not read");
     check(banner(@"pdfTeX 3.14\nLocal wrapper compatible with TeX Live 2030\n") == nil, @"a year in the words after the banner is not read");
+    r = banner(@"pdfTeX wrapper: Local build for TeX Live 2099\npdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2080/dev/Debian)\n");
+    check([r[@"name"] isEqual:@"TeX Live 2080/dev"] && [r[@"dev"] boolValue], @"a wrapper line starting pdfTeX is not the banner");
+    r = banner(@"pdfTeX warning: something\npdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2076)\n");
+    check([r[@"name"] isEqual:@"TeX Live 2076"] && ![r[@"dev"] boolValue], @"a warning starting pdfTeX does not hide the banner after it");
+    check(banner(@"pdfTeX wrapper for TeX Live 2030\n") == nil, @"a pdfTeX line without a version number names no release");
     check(banner(@"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026)\nkpathsea version 6.4.2\nCopyright 2026 Han The Thanh (pdfTeX) et al.\n") != nil, @"the usual banner with the lines after it");
     check(banner(@"pdfTeX 3.141592653-2.6-1.40.29\n") == nil && banner(@"") == nil, @"banner without release gives no release");
     NSString *dev = [root stringByAppendingPathComponent:@"dev"];
@@ -92,7 +97,7 @@ int main(void) { @autoreleasepool {
           @"without a release, the newest development build is preselected, not an unidentified one");
     NSString *wrapper = [root stringByAppendingPathComponent:@"wrapper"];
     for (NSString *name in @[@"tex", @"latex", @"pdflatex", @"pdftex"])
-        script(wrapper, name, @"echo 'Local wrapper for TeX Live 2030 around pdfTeX 1.40.99'\necho 'pdfTeX 3.14 (TeX Live 2027/dev)'\n");
+        script(wrapper, name, @"echo 'Local wrapper for TeX Live 2030 around pdfTeX 1.40.99'\necho 'pdfTeX wrapper: Local build for TeX Live 2099'\necho 'pdfTeX 3.14 (TeX Live 2027/dev)'\n");
     found = [TSEnginePathDiscovery candidatesForPaths:@[wrapper, newer] currentTeX:@"" currentGhostscript:@""];
     check([[found[@"TeX"] valueForKey:@"path"] isEqual:@[wrapper, newer]] && [found[@"TeX"][1][@"default"] boolValue] &&
           [found[@"TeX"][0][@"version"] isEqual:@"TeX Live 2027/dev (3.14)"], @"a wrapper's words around the banner change neither the version nor the default");
