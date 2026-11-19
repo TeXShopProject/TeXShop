@@ -117,10 +117,22 @@ with tempfile.TemporaryDirectory(prefix='texshop-layout-dispatch-') as directory
              '    if (self.runningAfterLayoutKeys || [self.store knowsKeysOfCurrentLayout]) return NO;',
              '    if (YES) return NO;',
              'FAIL: restoring Source ⇔ Preview in the pass French is chosen'),
-            ('one variant when a key meets another item', store,
-             '    NSArray<NSNumber *> *extras = @[@0, @(NSEventModifierFlagControl | NSEventModifierFlagOption), @(NSEventModifierFlagControl), @(NSEventModifierFlagOption)];',
-             '    NSArray<NSNumber *> *extras = @[@0, @(NSEventModifierFlagControl | NSEventModifierFlagOption)];',
-             'once an item is free'),
+            ('a key every variant of which is in use left unknown', store,
+             '                if (candidates.count == 1) keys[base] = candidates.anyObject;',
+             '                ;',
+             'Command-1 with every variant in use'),
+            ('Restore waits for the keys and restores what is selected then', pane,
+             'if (deferringSelf.selectedCommand == chosen) [deferringSelf restoreShortcut:sender];',
+             '[deferringSelf restoreShortcut:sender];',
+             'another selection while Restore waits'),
+            ('a layout change and back while Settings wait is not noticed', pane,
+             '        if (strongSelf.layoutChanges != changes) return;',
+             '        ;',
+             'French, ABC and French again'),
+            ('Restore All does not ask again for macros it did not name', pane,
+             '    if (![[NSSet setWithArray:[store macrosAffectedByRestoringAll] ?: @[]] isSubsetOfSet:[NSSet setWithArray:named]]) {',
+             '    if (NO) {',
+             'asks again naming'),
             ('saved keys checked against given defaults only', store,
              '    return [NSSet setWithObjects:given, [self shownDefaultForCommand:command], nil];',
              '    return [NSSet setWithObject:given];',
@@ -132,11 +144,11 @@ with tempfile.TemporaryDirectory(prefix='texshop-layout-dispatch-') as directory
             ('macro keys compared only as their files name them', store,
              '    [result addObject:[self shownBindingForGivenKey:key modifiers:flags]];\n    return result.array;\n}\n// The key a macro item',
              '    return result.array;\n}\n// The key a macro item',
-             'FAIL: key search for Control-Command-&'),
+             'FAIL: a new Control-Command-1 macro meets'),
             ('macro editor compares macros as their files name them', store,
              '        NSArray<TSShortcutBinding *> *bindings = [self bindingsForMacroKey:binding.key modifiers:binding.modifiers];',
              '        NSArray<TSShortcutBinding *> *bindings = @[binding];',
-             'the macro editor sees'),
+             'FAIL: a new Control-Command-1 macro meets'),
             ('key search compares macro items as shown', search,
              '            match = activeMacros[[store givenBindingForMacroItem:item]];',
              '            match = activeMacros[binding];',
@@ -148,7 +160,11 @@ with tempfile.TemporaryDirectory(prefix='texshop-layout-dispatch-') as directory
         ]
         every_item = ('    if (item.allowsAutomaticKeyEquivalentLocalization != localized) return NO;',
                       '    return NO;')
+        # --only NAME... runs the mutations whose names contain one of the words given after it.
+        only = sys.argv[sys.argv.index('--only') + 1:] if '--only' in sys.argv else []
         for name, path, old, new, expected in mutations:
+            if only and not any(word in name for word in only):
+                continue
             text = path.read_text()
             assert text.count(old) == 1, name
             mutated = d / path.name

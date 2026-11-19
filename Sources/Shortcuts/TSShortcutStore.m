@@ -113,6 +113,11 @@ static BOOL TSLayoutAdaptsKey(NSString *key) {
 }
 // The keys a layout's table has: every such key with Command, and with Command and Shift.
 static NSUInteger TSLayoutKeyCount(void) { return 2 * (0x7f - 0x21 - 52); }
+// The modifiers each key of a layout's table is given with, Command first.
+static NSArray<NSNumber *> *TSLayoutKeyVariants(void) {
+    const NSEventModifierFlags C = NSEventModifierFlagCommand, K = NSEventModifierFlagControl, O = NSEventModifierFlagOption;
+    return @[@(C), @(C | K | O), @(C | K), @(C | O), @(K | O), @(K), @(O)];
+}
 // AppKit adapts a key with any modifiers as it adapts the same key with Command, or with
 // Command and Shift when the modifiers include Shift: the shown key and Shift come from that,
 // the other modifiers stay. The keys AppKit shows with Command and with Command and Shift are
@@ -177,10 +182,10 @@ static NSUInteger TSLayoutKeyCount(void) { return 2 * (0x7f - 0x21 - 52); }
     if (self.learningHolder && [self.learningLayout isEqual:layout]) return;
     [self stopLearning];
     // Hidden items without an action, in the menu for one pass of the run loop, never run.
-    // AppKit leaves a key empty when another item shows it, so each key comes again with
-    // Control, Option, or both added, whose shown key it then gives. A key that every one of
-    // them meets stays unknown, and is worked out again later.
-    NSArray<NSNumber *> *extras = @[@0, @(NSEventModifierFlagControl | NSEventModifierFlagOption), @(NSEventModifierFlagControl), @(NSEventModifierFlagOption)];
+    // AppKit leaves a key empty when another item shows it, so each key comes again with other
+    // modifiers, which AppKit keeps as they are while it adapts the key in the same way.
+    const NSEventModifierFlags C = NSEventModifierFlagCommand;
+    NSArray<NSNumber *> *variants = TSLayoutKeyVariants();
     NSMenuItem *holder = [[NSMenuItem alloc] initWithTitle:@"" action:nil keyEquivalent:@""];
     holder.identifier = TSShortcutLearningIdentifier; holder.hidden = YES;
     holder.submenu = [[NSMenu alloc] initWithTitle:@""];
@@ -190,12 +195,12 @@ static NSUInteger TSLayoutKeyCount(void) { return 2 * (0x7f - 0x21 - 52); }
         NSString *key = [NSString stringWithCharacters:&c length:1];
         if (!TSLayoutAdaptsKey(key)) continue;
         for (NSNumber *shift in @[@0, @(NSEventModifierFlagShift)]) {
-            NSEventModifierFlags flags = NSEventModifierFlagCommand | shift.unsignedIntegerValue;
+            NSEventModifierFlags flags = C | shift.unsignedIntegerValue;
             if (known[TSBinding(key, flags)]) continue;
             NSMutableArray *pair = [NSMutableArray array];
-            for (NSNumber *more in extras) {
+            for (NSNumber *variant in variants) {
                 NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:@"" action:nil keyEquivalent:@""];
-                item.hidden = YES; item.keyEquivalentModifierMask = flags | more.unsignedIntegerValue; item.keyEquivalent = key;
+                item.hidden = YES; item.keyEquivalentModifierMask = variant.unsignedIntegerValue | shift.unsignedIntegerValue; item.keyEquivalent = key;
                 [holder.submenu addItem:item]; [pair addObject:item];
             }
             [bases addObject:TSBinding(key, flags)]; [items addObject:pair];
@@ -210,13 +215,32 @@ static NSUInteger TSLayoutKeyCount(void) { return 2 * (0x7f - 0x21 - 52); }
         BOOL learned = NO;
         if ([TSKeyboardLayoutID() isEqual:layout]) {
             NSMutableDictionary *keys = [self.layoutKeys[layout] mutableCopy] ?: [NSMutableDictionary dictionary];
+            // A key AppKit left empty with every variant shows as another item's key with each of
+            // them: when only one key has items with all of them, that is the key.
+            NSMutableSet<TSShortcutBinding *> *occupied = [NSMutableSet set];
+            NSMutableSet<NSString *> *characters = [NSMutableSet set];
+            TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
+                if (item.submenu || !item.keyEquivalent.length) return;
+                TSShortcutBinding *shown = TSShownBinding(item);
+                [occupied addObject:shown]; [characters addObject:shown.key];
+            });
             [bases enumerateObjectsUsingBlock:^(TSShortcutBinding *base, NSUInteger index, BOOL *stop) {
-                [extras enumerateObjectsUsingBlock:^(NSNumber *more, NSUInteger variant, BOOL *found) {
-                    TSShortcutBinding *shown = TSShownBinding(items[index][variant]);
-                    NSEventModifierFlags added = more.unsignedIntegerValue;
-                    if (!shown.key.length || (shown.modifiers & added) != added) return;
-                    keys[base] = TSBinding(shown.key, shown.modifiers & ~added); *found = YES;
+                [variants enumerateObjectsUsingBlock:^(NSNumber *variant, NSUInteger position, BOOL *found) {
+                    TSShortcutBinding *shown = TSShownBinding(items[index][position]);
+                    NSEventModifierFlags asked = variant.unsignedIntegerValue;
+                    if (!shown.key.length || (shown.modifiers & asked) != asked) return;
+                    keys[base] = TSBinding(shown.key, C | (shown.modifiers & NSEventModifierFlagShift)); *found = YES;
                 }];
+                if (keys[base]) return;
+                NSMutableSet<TSShortcutBinding *> *candidates = [NSMutableSet set];
+                for (NSString *character in characters)
+                    for (NSNumber *shift in @[@0, @(NSEventModifierFlagShift)]) {
+                        BOOL everywhere = YES;
+                        for (NSNumber *variant in variants)
+                            if (![occupied containsObject:TSBinding(character, variant.unsignedIntegerValue | shift.unsignedIntegerValue)]) { everywhere = NO; break; }
+                        if (everywhere) [candidates addObject:TSBinding(character, C | shift.unsignedIntegerValue)];
+                    }
+                if (candidates.count == 1) keys[base] = candidates.anyObject;
             }];
             if (!self.layoutKeys) self.layoutKeys = [NSMutableDictionary dictionary];
             learned = keys.count > [self.layoutKeys[layout] count] || !self.layoutKeys[layout];

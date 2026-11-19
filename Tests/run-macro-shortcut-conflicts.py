@@ -84,7 +84,7 @@ if '--mutations' in sys.argv:
         'applyCapturedShortcut ignores macro confirmation refusal': [(k, '        if (!accepted) { [strongSelf endRecording]; return; }\n        NSString *error = [strongSelf conflictForCapturedShortcut];', '        NSString *error = [strongSelf conflictForCapturedShortcut];')],
         'beginMenuRebuild does not reapply menu keys': [(k, '    self.rebuildingMacros = YES;\n    [self.store refreshMenu];', '    self.rebuildingMacros = YES;')],
         'matchesItem compares raw strings without A-Z Shift folding': [(k, 'return [TSEventBindings(event, [event charactersByApplyingModifiers:0]) containsObject:TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask)];', 'return [TSShortcutCharacterForEvent(event) isEqual:item.keyEquivalent] && (event.modifierFlags & TSShortcutModifiers) == (item.keyEquivalentModifierMask & TSShortcutModifiers);')],
-        'restoreAll does not rebuild macros': [(k, '[strongSelf.store restoreAll]; [strongSelf refreshMenuAndMacros];', '[strongSelf.store restoreAll];')],
+        'restoreAll does not rebuild macros': [(k, '    [self.store restoreAll]; [self refreshMenuAndMacros];\n}', '    [self.store restoreAll];\n}')],
         'removeShortcut does not rebuild macros': [(k, '    [self showError:[self.store setKey:@"" modifiers:0 forCommand:command]];\n    [self refreshMenuAndMacros];', '    [self showError:[self.store setKey:@"" modifiers:0 forCommand:command]];')],
         'recording leaves redundant punctuation Shift': [(k, 'flags &= ~NSEventModifierFlagShift;', 'flags |= NSEventModifierFlagShift;')],
         'engine rebuild leaves settings list stale': [(k, 'if (self.isViewLoaded) { [self reloadCommands]; }', 'if (NO) { [self reloadCommands]; }')],
