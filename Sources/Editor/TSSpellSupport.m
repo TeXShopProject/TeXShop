@@ -19,6 +19,11 @@
 - (BOOL)usesTeXAwareSpellChecking;
 @end
 
+// TeXShop's document controller (TSDocumentController), which opens TeXShop's own text files for editing.
+@protocol TSOwnTextFileOpening <NSObject>
+- (void)openOwnTextFileAtURL:(NSURL *)url completionHandler:(void (^)(NSDocument *document))completionHandler;
+@end
+
 // Data for the list of learned words in the "Forget Learned Words" sheet.
 @interface TSLearnedWordsList : NSObject <NSTableViewDataSource>
 @property (nonatomic, copy) NSArray<NSString *> *words;
@@ -814,12 +819,21 @@ static NSAlert *TSLearnedWordsAlert(NSString *language, id<NSTableViewDataSource
     return YES;
 }
 
+// The rules file is opened for editing in TeXShop, like the command completion file, also
+// when an external editor is used for sources: TSDocument reads and saves it as plain UTF-8,
+// the only encoding it is read in, however it is opened.
 + (void)editSpellingExclusions:(id)sender
 {
     [TSSpellExclusions installDefaultRulesIfNeeded];
     NSString *path = [TSSpellExclusions userRulesPath];
     if (![[NSFileManager defaultManager] fileExistsAtPath:path]) return;
-    [[NSWorkspace sharedWorkspace] openURL:[NSURL fileURLWithPath:path]];
+    NSURL *url = [NSURL fileURLWithPath:path];
+    id<TSOwnTextFileOpening> controller = (id)[NSDocumentController sharedDocumentController];
+    if ([controller respondsToSelector:@selector(openOwnTextFileAtURL:completionHandler:)])
+        [controller openOwnTextFileAtURL:url completionHandler:nil];
+    else
+        [[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES
+                                                                     completionHandler:^(NSDocument *document, BOOL wasOpen, NSError *error) {}];
 }
 
 // The help text for the first of the languages for which the directory holds a

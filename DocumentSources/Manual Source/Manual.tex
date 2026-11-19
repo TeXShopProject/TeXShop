@@ -4601,7 +4601,7 @@ The final way to spell check is to use the menu item {\em Check Spelling While T
 
 \section{LaTeX-aware Spell Checking}
 
-TeXShop 6.00 adds LaTeX-aware spell checking, based on an implementation proposed by Ralph Martin. In Settings, Spell Checking, choose {\bf Use LaTeX-aware spell checking (recommended)} or {\bf Legacy method}. The new method has an ``Edit LaTeX exclusion rules...'' button at the right end of its line; the legacy method has three indented exclusions for commands, parameters and comments. Inactive options remain visible and retain their values. This choice does not turn on {\em Check Spelling While Typing}.
+TeXShop 6.00 adds LaTeX-aware spell checking, based on an implementation proposed by Ralph Martin. In Settings, Spell Checking, choose {\bf Use LaTeX-aware spell checking (recommended)} or {\bf Legacy method}. The new method has an ``Edit LaTeX exclusion rules...'' button at the right end of its line; the legacy method has three indented exclusions for commands, parameters and comments. Inactive options remain visible and retain their values.
 
 LaTeX-aware spell checking skips comments, mathematics, TeX commands, and the arguments of commands such as \verb|\label|, \verb|\ref|, \verb|\cite|, and \verb|\usepackage|, and checks the rest of the text. The default rules also skip the arguments that are not prose, such as keys, colors and units, of the commands of common packages, among them hyperref, cleveref, xcolor, siunitx, enumitem, biblatex and natbib; a command that the document defines itself, such as a macro of your own named \verb|\unit|, follows its own definition instead. It works with the standard {\em Spelling and Grammar} panel, and with {\em Check Spelling While Typing}, which then does not underline the skipped parts of the source. The new rules apply to TeX source files and to new documents not yet saved; other kinds of files, including Sweave files, keep the older behavior described in the next sections.
 
@@ -4617,7 +4617,7 @@ What is skipped is described by rules in the file
 \begin{verbatim}
      ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt
 \end{verbatim}
-Open it with {\em Edit Spelling Exclusions...} in the Spelling and Grammar submenu, or with the button {\bf Edit LaTeX exclusion rules...} in TeXShop Settings. The file explains its format at the top, and changes take effect the next time you spell check. For example, the following lines skip the first argument of a command \verb|\mycommand| and the contents of the \verb|proof| environment:
+Open it with {\em Edit Spelling Exclusions...} in the Spelling and Grammar submenu, or with the button {\bf Edit LaTeX exclusion rules...} in TeXShop Settings; it opens in TeXShop. The file explains its format at the top, and changes take effect the next time you spell check. For example, the following lines skip the first argument of a command \verb|\mycommand| and the contents of the \verb|proof| environment:
 \begin{verbatim}
      skip-args  1  mycommand
      skip-body  proof

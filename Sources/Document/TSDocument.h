@@ -362,6 +362,10 @@ enum RootCommand
 //	NSWindow            *callingWindow;
 	NSStringEncoding	_badEncoding;
 	BOOL                _encodingFromMagicComment;
+	NSInteger           _ownTextFile;	// TeXShop's own text files (TSOwnTextFileKind): plain text, not TeX source
+	NSInteger           _savingOwnTextFile;	// while writing: 1 + the kind of file written to, else 0
+	NSStringEncoding    _savingOwnTextEncoding;	// the encoding it is being written in
+	BOOL                _duplicating;	// writing the copy for Duplicate
 	BOOL                _hasReadSource;
 	NSInteger           _sourceByteOrderMark;	// TSByteOrderMark of the file when it was read
 	NSStringEncoding    _sourceMarkEncoding;	// the encoding it was read in
@@ -748,6 +752,10 @@ enum RootCommand
 - (id) topView;
 - (void)fixUpTabs;
 - (BOOL) externalEditor;
+- (BOOL) isCommandCompletionFile;	// one of TeXShop's command completion files
+- (BOOL) isSameFileAs: (NSURL *)url;
+- (NSStringEncoding)ownTextEncodingForKind:(NSInteger)kind;
+- (void)takeOwnTextFileKindOfURL:(NSURL *)url;
 - (void) refreshPDFAndBringFront: (BOOL)front;
 - (void)notePDFLoadedAtPath:(NSString *)path signature:(NSString *)signature changeTime:(NSString *)changeTime;
 - (BOOL)externalPDFChecksAllowed;

@@ -2476,11 +2476,9 @@ person script. See also: DefaultTypesetMode.
 
 - (IBAction)texAwareSpellCheckPressed:(NSButton *)sender
 {
-    id previousNoteValue = @([SUD boolForKey:TSTeXAwareSpellCheckingKey]);
     [SUD setBool:(sender.state == NSControlStateValueOn) forKey:TSTeXAwareSpellCheckingKey];
     [self updateSpellingControlsFromDefaults:SUD];
     [self applyEffectsForPreferenceKeys:[NSSet setWithObject:TSTeXAwareSpellCheckingKey]];
-    [self.settingsChangeNotes recordUserChangeForKey:TSTeXAwareSpellCheckingKey previousValue:previousNoteValue];
 }
 
 - (IBAction)displayCommentLines:(id)sender
@@ -2491,11 +2489,9 @@ person script. See also: DefaultTypesetMode.
 
 - (IBAction)legacySpellCheckPressed:(NSButton *)sender
 {
-    id previousNoteValue = @([SUD boolForKey:TSTeXAwareSpellCheckingKey]);
     [SUD setBool:NO forKey:TSTeXAwareSpellCheckingKey];
     [self updateSpellingControlsFromDefaults:SUD];
     [self applyEffectsForPreferenceKeys:[NSSet setWithObject:TSTeXAwareSpellCheckingKey]];
-    [self.settingsChangeNotes recordUserChangeForKey:TSTeXAwareSpellCheckingKey previousValue:previousNoteValue];
 }
 
 - (IBAction)editSpellingExclusions:(id)sender

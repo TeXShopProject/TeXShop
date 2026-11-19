@@ -40,6 +40,9 @@
 - (NSStringEncoding)encoding;
 // The encoding chosen in the Open dialog for url, if one was chosen; it is used once.
 - (BOOL)takeEncoding:(NSStringEncoding *)encoding chosenForURL:(NSURL *)url;
+// Opens one of TeXShop's own text files (the command completion file, the spell checking rules)
+// for editing: the file a symbolic link points to, and not a copy open for preview only.
+- (void)openOwnTextFileAtURL:(NSURL *)url completionHandler:(void (^)(NSDocument *document))completionHandler;
 - (void)noteNewRecentDocument:(NSDocument *)aDocument;
 - (void)listDocument:(BOOL)value;
 // - (id)openDocumentWithContentsOfURL:(NSURL *)absoluteURL display:(BOOL)displayDocument error:(NSError **)outError; // Support Stationery bit?

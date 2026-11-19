@@ -267,8 +267,6 @@
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "Următoarele macrocomenzi folosesc această scurtătură. Dacă o atribuiți comenzii din meniu, scurtăturile macrocomenzilor vor fi dezactivate.\n\n%@";
 
-"This does not turn spell checking while typing on or off." = "Această setare nu activează și nu dezactivează verificarea ortografiei în timpul tastării.";
-
 "Open PDFs keep their zoom. The new value applies to PDFs opened from now on." = "PDF-urile deschise își păstrează mărirea. Noua valoare se aplică PDF-urilor deschise de acum înainte.";
 
 "Takes effect after you restart TeXShop." = "Intră în vigoare după repornirea TeXShop.";

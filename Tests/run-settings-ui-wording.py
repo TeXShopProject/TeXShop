@@ -15,7 +15,8 @@ retired=[
 'Correct this field, or restore its last saved value. Other settings are already saved.',
 'Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved.',
 'Expanded','Collapsed',
-'Use Command or Control with a key, or a function key (F1–F20).']
+'Use Command or Control with a key, or a function key (F1–F20).',
+'This does not turn spell checking while typing on or off.']
 guidance=json.loads((r/'Tests/Fixtures/SettingsShortcutGuidance.json').read_text());retired+=guidance['retired']
 reviewed=json.loads((r/'Tests/Fixtures/SettingsReviewedTooltips.json').read_text());retired.append(reviewed['retired_recording_key'])
 terminology=json.loads((r/'Tests/Fixtures/SettingsCatalogTerminology.json').read_text())
@@ -52,9 +53,9 @@ for lang,expected in fixture['languages'].items():
     for key,value in zip(terminology['keys'],terminology['languages']['Base' if lang=='en' else lang]):assert category_strings[key]==value,(lang,key)
     assert not set(retired)&actual.keys(),(lang,'retired UI keys')
     for key,value in zip(guidance['keys'],guidance['languages'][lang]):assert actual[key]==value,(lang,key)
-    for n in [0,1,2,4]:assert actual[keys[n]]==expected[n],(lang,keys[n])
+    for n in [0,1,3]:assert actual[keys[n]]==expected[n],(lang,keys[n])
     assert actual['Currently open files retain their old encoding.']==fixture['legacy_encoding_warning'][lang],(lang,'legacy encoding warning')
-    assert strings(panes/'SettingsPreview.strings')['113.ibShadowedToolTip']==expected[3],(lang,'zoom tooltip')
+    assert strings(panes/'SettingsPreview.strings')['113.ibShadowedToolTip']==expected[2],(lang,'zoom tooltip')
     assert 'catalog.editor.7.0.note' not in strings(panes/'SettingsCategories.strings'),(lang,'constant restart note')
     # Nothing of the legacy Engines and Themes panes is shown; their tables are gone.
     assert not (panes/'SettingsEngines.strings').exists() and not (panes/'SettingsThemes.strings').exists(),(lang,'tables of panes that show nothing')
@@ -64,7 +65,7 @@ assert 'recordUserChangeForKey:EncodingKey' in source[start:end], 'Encoding acti
 index=(r/'Sources/Settings/TSSettingsSearchCatalog.inc').read_text()
 assert 'catalog.editor.7.0.note' not in index and 'shortcut.hint' not in index
 for text in retired:assert text.replace('\n','\\n') not in index
-for text in keys[:3]:assert text not in index
+for text in keys[:2]:assert text not in index
 print('PASS: 12 languages, approved inline notices, original encoding translations, retired UI keys and index exclusions')
 
 row_contract=json.loads((r/'Tests/Fixtures/SettingsRowTranslations.json').read_text())

@@ -64,7 +64,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
    for old,new in dependency_rules:cases.append(('dependency-'+old.split(',')[0],'TSSettingsDependencies.inc',old,new))
    if a.additional_mutations:cases=[]
    cases.extend([
-    ('legacy-spelling-note','TSPreferences.m','[self.settingsChangeNotes recordUserChangeForKey:TSTeXAwareSpellCheckingKey previousValue:previousNoteValue];\n}\n\n- (IBAction)editSpellingExclusions:', ';\n}\n\n- (IBAction)editSpellingExclusions:'),
+    ('spelling-method-note','TSSettingsChangeNote.m','        @"preview":@[rule(','        @"spelling":@[rule(@"spelling",TSTeXAwareSpellCheckingKey,@"row.catalog.spelling.1.0",@"Note",TSSettingsNoteBoolean,NO,^BOOL{return YES;})],\n        @"preview":@[rule('),
     ('input-range','TSPreferences.m','minimum:2 maximum:50 allowsEmpty:NO','minimum:2 maximum:51 allowsEmpty:NO'),
     ('profile-validation','TSPreferences.m','    TSEngineProfile profile = self.engineProfilePopup.selectedTag;\n    if (![self finishPreferenceEditing:YES]) return;','    TSEngineProfile profile = self.engineProfilePopup.selectedTag;'),
     ('profile-separator-tags','TSPreferences.m','^(NSMenuItem *item) { item.tag = -1; [menu addItem:item]; };','^(NSMenuItem *item) { [menu addItem:item]; };'),

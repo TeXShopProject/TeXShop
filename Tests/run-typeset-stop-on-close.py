@@ -75,6 +75,7 @@ static NSString *DraggedImagePath;
 @public
     Recorder *pdfWindow, *_htmlWindow, *outputWindow, *scrapPDFWindow, *scrapWindow;
     BOOL fileIsTex;
+    NSInteger _ownTextFile;
 }
 @property BOOL replacing, annotationsExist;
 @property (copy) NSString *label;
@@ -82,6 +83,12 @@ static NSString *DraggedImagePath;
 @property Recorder *sourceStatusBar, *textStatistics, *pdfKitWindow, *logWindow;
 @property id myPDFKitView, myPDFKitView2, pdfActivity;
 @property NSTimer *tagTimer, *pdfRefreshTimer;
+@end
+// The documents here are not command completion files (run-command-completion-registration.py).
+enum { TSOwnTextFileNone = 0, TSOwnTextFileSpellingRules, TSOwnTextFileCommandCompletion };
+@interface TSAppDelegate : NSObject
+- (BOOL)commandCompletionFileIsOpen;
+- (void)reReadCommandCompletionData;
 @end
 @implementation TSDocument
 + (void)applySpellingDefaultUnlessDocumentIsMain {}

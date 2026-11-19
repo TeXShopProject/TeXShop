@@ -47,6 +47,7 @@
 // - (BOOL)forPreview;
 - (void)finishCommandCompletionConfigure; // mitsu 1.29 (P)
 - (void)reReadCommandCompletionData;
+- (BOOL)commandCompletionFileIsOpen;
 - (void)openCommandCompletionList: (id)sender; // mitsu 1.29 (P)
 #ifdef MITSU_PDF
 - (void)syncImageCopyTypeMenu;

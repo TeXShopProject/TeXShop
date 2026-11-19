@@ -32,7 +32,9 @@ program = r'''
 @implementation NSString (TSNormalization)
 - (NSString *)normalizedStringWithModifiedNFC { return self; }
 @end
-typedef NS_ENUM(NSInteger, TSByteOrderMark) { TSNoByteOrderMark = 0 };
+typedef NS_ENUM(NSInteger, TSByteOrderMark) { TSNoByteOrderMark = 0, TSUTF8ByteOrderMark = 1 };
+// The documents in these tests are TeX sources, not TeXShop's own text files (run-texshop-own-files.py).
+typedef NS_ENUM(NSInteger, TSOwnTextFileKind) { TSOwnTextFileNone = 0, TSOwnTextFileSpellingRules, TSOwnTextFileCommandCompletion };
 // In-memory stand-in for the user defaults: nothing is written to disk.
 @interface FakeDefaults : NSObject
 - (BOOL)boolForKey:(NSString *)key;
@@ -67,9 +69,12 @@ static FakeDefaults *gDefaults;
     NSTextStorage *_textStorage; NSTextView *textView;
     NSStringEncoding _encoding, _tempencoding, _sourceMarkEncoding, _unreadableEncoding;
     NSInteger _sourceByteOrderMark;
+    NSInteger _ownTextFile, _savingOwnTextFile;
+    NSStringEncoding _ownTextEncoding, _savingOwnTextEncoding;
 }
 @end
 @implementation TSDocument
+- (NSStringEncoding)ownTextEncodingForKind:(NSInteger)kind { return NSUTF8StringEncoding; }
 METHODS
 @end
 static void check(BOOL v, const char *m) { if (!v) { fprintf(stderr, "FAIL %s\n", m); exit(1); } }

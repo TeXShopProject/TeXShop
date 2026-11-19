@@ -267,8 +267,6 @@
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "Die folgenden Makros verwenden diesen Kurzbefehl. Wenn Sie ihn dem Menübefehl zuweisen, werden ihre Kurzbefehle inaktiv.\n\n%@";
 
-"This does not turn spell checking while typing on or off." = "Dies schaltet die Rechtschreibprüfung während der Eingabe weder ein noch aus.";
-
 "Open PDFs keep their zoom. The new value applies to PDFs opened from now on." = "Geöffnete PDFs behalten ihren Zoom. Der neue Wert gilt für ab jetzt geöffnete PDFs.";
 
 "Takes effect after you restart TeXShop." = "Wird nach einem Neustart von TeXShop wirksam.";

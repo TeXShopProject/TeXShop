@@ -84,10 +84,14 @@ static FakeDefaults *gDefaults;
     NSStringEncoding _encoding, _tempencoding, _unreadableEncoding;
     NSString *fileExtensions[1];
     NSTextStorage *_textStorage;
+    NSInteger _ownTextFile;
 }
 @property BOOL fileIsXML;
 @end
+// The documents here are TeX sources, not TeXShop's own text files (run-texshop-own-files.py).
+enum { TSOwnTextFileNone = 0, TSOwnTextFileSpellingRules, TSOwnTextFileCommandCompletion };
 @implementation TSDocument
+- (NSStringEncoding)ownTextEncodingForKind:(NSInteger)kind { return NSUTF8StringEncoding; }
 + (BOOL)autosavesInPlace { return YES; }
 + (NSArray *)writableTypes { return @[@"public.plain-text"]; }
 + (NSArray *)readableTypes { return @[@"public.plain-text"]; }

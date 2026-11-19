@@ -561,13 +561,21 @@ int main(int argc,char **argv){@autoreleasepool{
  [TSIsolatedAppKitDefaults setObject:@"invalid" forKey:TSDockIconKey];[dock restoreSavedIcon];Check(testDockTile.contentView==nil,@"Unknown Dock selection falls back to the standard icon");
  // The real profile application path must clear transient warnings and retain
  // restart warnings; no confirmation sheet is presented by this test.
+ // Switching the spell checking method takes effect at once, in open documents too: it shows no warning.
  [shell selectCategoryIdentifier:TSSettingsCategorySpelling];
  NSButton *spellingButton=[owner valueForKey:@"texAwareSpellCheckButton"];
  spellingButton.state=[TSIsolatedAppKitDefaults boolForKey:@"TeXAwareSpellChecking"]?NSControlStateValueOff:NSControlStateValueOn;
  [owner texAwareSpellCheckPressed:spellingButton];
- NSView *spellingNote=Find(Find([shell viewForCategoryIdentifier:TSSettingsCategorySpelling],@"row.catalog.spelling.1.0"),@"settings.change-note");
- Check(!spellingNote.hidden,@"Actual spelling action shows its warning before profile replacement");
- SaveNote(shell,spellingNote.superview.superview,argc>2?@(argv[2]):nil,@"spelling");
+ NSView *spellingRow=Find([shell viewForCategoryIdentifier:TSSettingsCategorySpelling],@"row.catalog.spelling.1.0");
+ Check(spellingRow!=nil && Find(spellingRow,@"settings.change-note")==nil,@"The actual spelling method action shows no warning");
+ [shell selectCategoryIdentifier:TSSettingsCategoryDocuments];
+ [windowManager setValue:sourceWindow forKey:@"activeTextWindow"];
+ // The earlier encoding check left Mac OS Roman; going back to the opening value and choosing it again shows the note anew.
+ [encoding selectItemWithTag:NSUTF8StringEncoding];[owner encodingChanged:encoding];
+ [encoding selectItemWithTag:NSMacOSRomanStringEncoding];[owner encodingChanged:encoding];
+ NSView *transientNote=Find(Find([shell viewForCategoryIdentifier:TSSettingsCategoryDocuments],@"row.catalog.documents.0.0"),@"settings.change-note");
+ Check(!transientNote.hidden,@"Actual encoding action shows its warning before profile replacement");
+ [windowManager setValue:nil forKey:@"activeTextWindow"];
  // The engine profile is written with the one transaction that writes several settings at once
  // (applyEngineProfileValues:); the other keys here exercise its notes and effects.
  NSMutableDictionary *replacement=[TSEngineProfileValues(TSEngineProfileUpLaTeXDvipdfmx,YES) mutableCopy];
@@ -575,7 +583,7 @@ int main(int argc,char **argv){@autoreleasepool{
  NSInteger findMethodBefore=[TSIsolatedAppKitDefaults integerForKey:FindMethodKey];
  replacement[EncodingKey]=@"MacOSRoman";replacement[PdfMagnificationKey]=@1.75;
  [owner applyEngineProfileValues:replacement];
- Check(spellingNote.hidden,@"Actual profile replacement clears a visible transient warning");
+ Check(transientNote.hidden,@"Actual profile replacement clears a visible transient warning");
  for(NSArray *entry in @[@[TSSettingsCategoryPreview,@"row.catalog.preview.0.2"],@[TSSettingsCategoryDocuments,@"row.catalog.documents.0.0"]])Check(Find(Find([shell viewForCategoryIdentifier:entry[0]],entry[1]),@"settings.change-note").hidden,@"Profile application never creates transient zoom or encoding warnings");
  Check([TSIsolatedAppKitDefaults integerForKey:FindMethodKey]==findMethodBefore,@"A profile keeps the find method");
  Check(Find(Find([shell viewForCategoryIdentifier:TSSettingsCategoryEditor],@"row.catalog.editor.7.0"),@"settings.change-note").hidden,@"A profile never shows the find method's restart warning");

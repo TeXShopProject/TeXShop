@@ -65,6 +65,7 @@
 #import "TSAppDelegate.h"
 #import "TSTextView.h"
 #import "TSSpellSupport.h"
+#import "TSSpellExclusions.h"
 #import "TSSpellingLanguage.h"
 #import "TSEncodingSupport.h"
 #import "TSMacroMenuController.h"
@@ -129,6 +130,60 @@
 - (void)setSourceBackgroundColorFromPreferences:(NSNotification *)notification;
 - (void)fixPDFPageNumberBox:(NSNotification *)notification;
 @end
+
+// TeXShop's own text files are not TeX source. However one is opened, it is a plain text file:
+// no encoding magic comment, no \UTF commands and no conversion of characters for TeX, read and
+// saved in the encoding TeXShop reads it in, and edited in TeXShop also when an external editor
+// is used for sources. The spell checking rules are read only as UTF-8; the command completion
+// file as UTF-8, or else in the encoding of new files.
+typedef NS_ENUM(NSInteger, TSOwnTextFileKind) {
+	TSOwnTextFileNone = 0,
+	TSOwnTextFileSpellingRules,
+	TSOwnTextFileCommandCompletion
+};
+
+static BOOL TSIsSameFile(NSURL *url, NSString *path)
+{
+	// New URLs, with symbolic links resolved: a URL caches its resource values, saving replaces
+	// the file, and the identifier of a link is the link's own.
+	NSURL *one = [NSURL fileURLWithPath: url.path].URLByStandardizingPath.URLByResolvingSymlinksInPath;
+	NSURL *other = [NSURL fileURLWithPath: path.stringByExpandingTildeInPath].URLByStandardizingPath.URLByResolvingSymlinksInPath;
+	id oneID = nil, otherID = nil;
+	if ([one getResourceValue: &oneID forKey: NSURLFileResourceIdentifierKey error: NULL] && oneID &&
+		[other getResourceValue: &otherID forKey: NSURLFileResourceIdentifierKey error: NULL] && otherID)
+		return [oneID isEqual: otherID];
+	return [one.path caseInsensitiveCompare: other.path] == NSOrderedSame;
+}
+
+// An untitled copy of an own text file (a duplicate, an autosave of one) records its kind on the
+// file it is written to, so that it is read again as that kind of file.
+static const char *TSOwnTextFileAttribute = "org.texshop.own-text-file";
+
+static void TSRecordOwnTextFileKind(NSURL *url, TSOwnTextFileKind kind)
+{
+	char value = (char)('0' + kind);
+	setxattr(url.fileSystemRepresentation, TSOwnTextFileAttribute, &value, 1, 0, 0);
+}
+
+static TSOwnTextFileKind TSRecordedOwnTextFileKind(NSURL *url)
+{
+	char value = 0;
+	if (! url.isFileURL || getxattr(url.fileSystemRepresentation, TSOwnTextFileAttribute, &value, 1, 0, 0) != 1)
+		return TSOwnTextFileNone;
+	return (value == '1' || value == '2') ? (TSOwnTextFileKind)(value - '0') : TSOwnTextFileNone;
+}
+
+static TSOwnTextFileKind TSOwnTextFileForURL(NSURL *url)
+{
+	if (! url.isFileURL)
+		return TSOwnTextFileNone;
+	NSString *rules = [TSSpellExclusions userRulesPath];
+	if (rules.length > 0 && TSIsSameFile(url, rules))
+		return TSOwnTextFileSpellingRules;
+	if (TSIsSameFile(url, CommandCompletionPathRegular) || TSIsSameFile(url, CommandCompletionPathXML))
+		return TSOwnTextFileCommandCompletion;
+	return TSOwnTextFileNone;
+}
 
 @implementation TSDocument
 
@@ -548,6 +603,54 @@ withDarkColors = NO;
     [super duplicateDocument:sender];
 }
 
+// A copy of one of TeXShop's own text files is written and read as that kind of file.
+- (NSDocument *)duplicateAndReturnError:(NSError **)outError
+{
+    _duplicating = YES;
+    NSDocument *copy = nil;
+    @try {
+        copy = [super duplicateAndReturnError:outError];
+    } @finally {
+        _duplicating = NO;
+    }
+    return copy;
+}
+
+// TeXShop's own text files are written in UTF-8, which TeXShop reads: the rules only as UTF-8,
+// the command completion file as UTF-8 first.
+- (NSStringEncoding)ownTextEncodingForKind:(NSInteger)kind
+{
+	return NSUTF8StringEncoding;
+}
+
+// The kind of file follows the document when it is saved elsewhere or moved. Selections are
+// not registered in a command completion file while it is open; when a document stops being
+// one, the list is read again and registering resumes if no other is open.
+- (void)takeOwnTextFileKindOfURL:(NSURL *)url
+{
+	if (url == nil)
+		return;
+	TSOwnTextFileKind kind = TSOwnTextFileForURL(url), previous = (TSOwnTextFileKind)_ownTextFile;
+	if (kind == previous)
+		return;
+	_ownTextFile = kind;
+	if (kind == TSOwnTextFileCommandCompletion)
+		g_canRegisterCommandCompletion = NO;
+	else if (previous == TSOwnTextFileCommandCompletion)
+		[(TSAppDelegate *)[NSApp delegate] reReadCommandCompletionData];
+}
+
+// A command completion file being edited: a copy open for preview only does not count.
+- (BOOL)isCommandCompletionFile
+{
+    return _ownTextFile == TSOwnTextFileCommandCompletion && ! _externalEditor;
+}
+
+- (BOOL)isSameFileAs:(NSURL *)url
+{
+    return [self fileURL].isFileURL && url.isFileURL && TSIsSameFile([self fileURL], url.path);
+}
+
 - (void)canCloseDocumentWithDelegate:(id)delegate shouldCloseSelector:(SEL)shouldCloseSelector contextInfo:(void *)contextInfo
 {
     if ([self isBeingReplacedIn]) {
@@ -910,6 +1013,14 @@ withDarkColors = NO;
 	[self colorizeAll];
 }
 
+// Opened while an external editor is used for sources, a document is for preview only;
+// TeXShop's own text files are always edited in TeXShop.
+- (BOOL)opensForPreview
+{
+	return [(TSAppDelegate *)[[NSApplication sharedApplication] delegate] forPreview] &&
+		TSOwnTextFileForURL([self fileURL]) == TSOwnTextFileNone;
+}
+
 -(BOOL)doNotReadSource;
 {
 	NSString	*theFileName;
@@ -920,12 +1031,14 @@ withDarkColors = NO;
 	theFileName = [[self fileURL] path];
 	fileExtension = [theFileName pathExtension];
 	
-	doPreview = [(TSAppDelegate *)[[NSApplication sharedApplication] delegate] forPreview];
+	doPreview = [self opensForPreview];
 
 
 	if (theFileName == nil)
 		return NO;  // this line was YES, but that broke Apple's Resume feature for Untitled Documents
-	else if ( doPreview)
+	// A document opened for editing while an external editor is used ("Open for Editing...",
+	// TeXShop's own files) has read its source, and reads it again when it changes on disk.
+	else if ( doPreview && ! _hasReadSource)
 		return YES;
 	else if 
 		(([fileExtension isEqualToString: @"pdf"]) ||
@@ -1265,7 +1378,7 @@ static void TSAddContextCopyOfSubmenu(NSMenu *contextMenu, SEL action)
         }
      }
  
-	_externalEditor = [(TSAppDelegate *)[[NSApplication sharedApplication] delegate] forPreview];
+	_externalEditor = [self opensForPreview];
 	if ((theFileName == nil) && _externalEditor)
 		_externalEditor = NO;
 		
@@ -1903,6 +2016,13 @@ if (! skipTextWindow) {
 // encoding and cannot be changed.
 - (void)setUpEncodingMenuInSavePanel: (NSPopUpButton *)menu
 {
+	// One of TeXShop's own files is written in what TeXShop reads, wherever it is saved.
+	if (_ownTextFile != TSOwnTextFileNone) {
+		_tempencoding = [self ownTextEncodingForKind: _ownTextFile];
+		[menu selectItemWithTag: _tempencoding];
+		menu.enabled = NO;
+		return;
+	}
 	NSString *name = [self encodingNameInMagicComment];
 	BOOL known = (name != nil) && [[TSEncodingSupport sharedInstance] knowsEncodingKey: name];
 	NSStringEncoding magic = known ? [[TSEncodingSupport sharedInstance] stringEncodingForKey: name] : 0;
@@ -2159,6 +2279,20 @@ in other code when an external editor is being used. */
 
 - (NSData *)serializedSourceOfType:(NSString *)typeName error:(NSError **)outError {
 	NSString            *encodingString;
+
+	// One of TeXShop's own files, or written where one is: plain text, in what TeXShop reads. The
+	// encoding chosen when saving or for the document does not apply.
+	TSOwnTextFileKind target = _savingOwnTextFile ? _savingOwnTextFile - 1 : _ownTextFile;
+	if (target != TSOwnTextFileNone) {
+		NSString *text = [_textStorage string];
+		NSStringEncoding encoding = [self ownTextEncodingForKind: target];
+		_savingOwnTextEncoding = encoding;
+		NSMutableData *data = [NSMutableData data];
+		if (encoding == NSUTF8StringEncoding && _sourceMarkEncoding == NSUTF8StringEncoding && _sourceByteOrderMark == TSUTF8ByteOrderMark)
+			[data appendBytes: "\xEF\xBB\xBF" length: 3];
+		[data appendData: [text dataUsingEncoding: encoding allowLossyConversion: YES]];
+		return data;
+	}
 
 	// FIXME: Unify this with the code in readFromFile:
 	if ((GetCurrentKeyModifiers() & optionKey) == 0) {
@@ -2593,6 +2727,8 @@ in other code when an external editor is being used. */
 - (void)setFileURL:(NSURL *)url
 {
     [super setFileURL:url];
+    if (_hasReadSource)
+        [self takeOwnTextFileKindOfURL:url];
     [self watchFile:url.isFileURL ? url.path : nil];
 }
 
@@ -2604,18 +2740,40 @@ in other code when an external editor is being used. */
     ++sourceIOGeneration;
     sourceSaving = YES;
     sourceWrittenFingerprint = nil;
-    BOOL result = NO;
+    // Whether this writes one of TeXShop's own files is decided by where it goes; an autosave
+    // elsewhere is a copy of the document's own file.
+    // Written where one of TeXShop's own files is, or from one (a copy, an autosave elsewhere, a
+    // duplicate), it is written as that kind of file. An untitled copy records its kind.
+    BOOL copy = _duplicating || operation == NSAutosaveElsewhereOperation;
+    TSOwnTextFileKind destination = copy ? (TSOwnTextFileKind)_ownTextFile : TSOwnTextFileForURL(url);
+    TSOwnTextFileKind target = (destination != TSOwnTextFileNone) ? destination : (TSOwnTextFileKind)_ownTextFile;
+    _savingOwnTextFile = target + 1;
+    _savingOwnTextEncoding = 0;
+    BOOL result = NO, becomesFile = NO;
     @try {
         result = [super writeSafelyToURL:url ofType:typeName forSaveOperation:operation error:error];
+        if (result && copy && target != TSOwnTextFileNone)
+            TSRecordOwnTextFileKind(url, target);
         // These operations make the written file the document's file. Save To
         // and Autosave Elsewhere write copies and leave the baseline unchanged.
-        if (result && (operation == NSSaveOperation || operation == NSSaveAsOperation ||
-                       operation == NSAutosaveInPlaceOperation || operation == NSAutosaveAsOperation)) {
+        becomesFile = result && ! _duplicating && (operation == NSSaveOperation || operation == NSSaveAsOperation ||
+                       operation == NSAutosaveInPlaceOperation || operation == NSAutosaveAsOperation);
+        if (becomesFile) {
             sourceAcceptedFingerprint = sourceWrittenFingerprint;
+            if (_savingOwnTextEncoding != 0)
+                _encoding = _tempencoding = _savingOwnTextEncoding;
+            [self takeOwnTextFileKindOfURL:url];
         }
+        // The command completion list follows what was just written to a command completion
+        // file, also by a document that is not one (Save To).
+        if (result && ! copy && TSOwnTextFileForURL(url) == TSOwnTextFileCommandCompletion)
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [(TSAppDelegate *)[NSApp delegate] reReadCommandCompletionData];
+            });
     } @finally {
         sourceSaving = NO;
         sourceWrittenFingerprint = nil;
+        _savingOwnTextFile = 0;
     }
     return result;
 }
@@ -2704,7 +2862,18 @@ in other code when an external editor is being used. */
 	BOOL encodingWasChosen = [[TSDocumentController sharedDocumentController] takeEncoding: &chosenEncoding chosenForURL: absoluteURL];
 	if (_hasReadSource)
 		encodingWasChosen = NO;
-	if (! _encodingFromMagicComment)
+	_ownTextFile = TSOwnTextFileForURL([self fileURL] ?: absoluteURL);
+	if (_ownTextFile == TSOwnTextFileNone && [self fileURL] == nil)
+		_ownTextFile = TSRecordedOwnTextFileKind(absoluteURL);
+	// While a command completion file is open, selections are not registered in it.
+	if (_ownTextFile == TSOwnTextFileCommandCompletion)
+		g_canRegisterCommandCompletion = NO;
+	if (_ownTextFile != TSOwnTextFileNone) {
+		_encodingFromMagicComment = NO;
+		BOOL utf8 = [[NSString alloc] initWithData: myData encoding: NSUTF8StringEncoding] != nil;
+		_encoding = _tempencoding = (utf8 || _ownTextFile == TSOwnTextFileSpellingRules) ?
+			NSUTF8StringEncoding : [[TSEncodingSupport sharedInstance] defaultEncoding];
+	} else if (! _encodingFromMagicComment)
 		_encoding = _tempencoding = encodingWasChosen ? chosenEncoding : [self encodingForUnmarkedData: myData URL: absoluteURL];
     [self readPreviewArrangementFromData:myData];
     
@@ -2790,8 +2959,10 @@ in other code when an external editor is being used. */
 		// zenitani 2.10 (A) -- decode utf.sty format
 		// Decoded whether or not utf.sty output is on, so that a file saved with
 		// \UTF commands opens as text with any setting.
-		content = [content stringByDecodingUTFCommandsForReading];
-		content = [[TSEncodingSupport sharedInstance] textForEditing: content encoding: _encoding];
+		if (_ownTextFile == TSOwnTextFileNone) {
+			content = [content stringByDecodingUTFCommandsForReading];
+			content = [[TSEncodingSupport sharedInstance] textForEditing: content encoding: _encoding];
+		}
 		
 		theLength = [content length];
 		// NSLog([NSString stringWithFormat:@"%d", theLength]);
@@ -3285,16 +3456,11 @@ else {
 	a description. */
 	[[TSWindowManager sharedInstance] notifyActiveTextWindowClosed];
 
-	// mitsu 1.29 (P)
-	if (!fileIsTex && [[[self fileURL] path] isEqualToString:
-		[[GlobalData sharedGlobalData].CommandCompletionPath stringByStandardizingPath]])
-		g_canRegisterCommandCompletion = YES;
- 	// end mitsu 1.29
-    
-
-
 	[super close];
     [TSDocument applySpellingDefaultUnlessDocumentIsMain];
+	// Selections can be registered again once no command completion file is open.
+	if (_ownTextFile == TSOwnTextFileCommandCompletion)
+		[(TSAppDelegate *)[NSApp delegate] reReadCommandCompletionData];
 }
 
 - (NSDictionary *)fileAttributesToWriteToURL:(NSURL *)absoluteURL ofType:(NSString *)typeName forSaveOperation:(NSSaveOperationType)saveOperation
@@ -3324,8 +3490,7 @@ else {
 	[super saveDocument: sender];
   
 	// if CommandCompletion list is being saved, reload it.
-	if (!fileIsTex && [[[self fileURL] path] isEqualToString:
-				[[GlobalData sharedGlobalData].CommandCompletionPath stringByStandardizingPath]])
+	if (_ownTextFile == TSOwnTextFileCommandCompletion)
         {
          //   NSLog(@"AHA, WRITING");
            // [[NSApp delegate] finishCommandCompletionConfigure];
@@ -6805,6 +6970,9 @@ if (! useFullSplitWindow) {
 
 - (BOOL)validateMenuItem:(NSMenuItem *)anItem
 {
+    // TeXShop's own text files are written in what TeXShop reads; their encoding is not chosen.
+    if (anItem.action == @selector(changeEncoding:) && _ownTextFile != TSOwnTextFileNone)
+        return NO;
     if (anItem.action == @selector(toggleLinkPopups:)) {
         anItem.state = self.linkPopups ? NSControlStateValueOn : NSControlStateValueOff;
         return YES;

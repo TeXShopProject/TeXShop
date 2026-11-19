@@ -41,7 +41,6 @@
   "theme-edited-source": "Actual edited-theme well SyntaxMarkerParen variant 0 NSAppearanceNameAqua",
   "theme-appearance-default": "Actual edited-theme well explFunction variant 1 NSAppearanceNameDarkAqua",
   "theme-marker-refresh": "Marker action refreshes only inheriting bracket wells",
-  "legacy-spelling-note": "Both spelling actions show the transient note",
   "input-range": "Independent rule contract for tabIndentField",
   "profile-validation": "Profile selection validates an edit before showing its confirmation",
   "history-bound": "History has a fifty-entry bound",
@@ -68,5 +67,6 @@
   "alternate-info-fixed-key": "A changed shortcut is told as the menu has it",
   "alternate-info-over-name": "The info button follows the name of the Alternate Engine",
   "alternate-untrimmed": "A built-in program with spaces around it is found, and the stored value stays",
-  "alternate-old-programs-not-found": "bibtex, which the typesetting understands, is shown as itself"
+  "alternate-old-programs-not-found": "bibtex, which the typesetting understands, is shown as itself",
+  "spelling-method-note": "The actual spelling method action shows no warning"
 }

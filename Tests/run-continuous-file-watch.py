@@ -37,6 +37,9 @@ static void Write(NSString *path, NSString *mode, NSString *value) {
  NSData *sourceAcceptedFingerprint, *sourceWrittenFingerprint, *sourceReloadData, *sourceReloadFingerprint;
  NSUInteger sourceIOGeneration;
  BOOL sourceSaving, sourceExternalWriteFinished;
+ NSInteger _ownTextFile, _savingOwnTextFile;
+ NSStringEncoding _encoding, _tempencoding, _unreadableEncoding, _ownTextEncoding, _savingOwnTextEncoding;
+ BOOL _duplicating, _hasReadSource;
  NSView *textView;
  NSTextView *textView1, *textView2;
  NSTextStorage *_textStorage;
@@ -48,7 +51,15 @@ static void Write(NSString *path, NSString *mode, NSString *value) {
 - (void)watchFile:(NSString *)path;
 - (void)cancelWatchFile;
 @end
+// TeXShop's own text files are not opened in these tests (run-texshop-own-files.py).
+typedef NS_ENUM(NSInteger, TSOwnTextFileKind) { TSOwnTextFileNone = 0, TSOwnTextFileSpellingRules, TSOwnTextFileCommandCompletion };
+static TSOwnTextFileKind TSOwnTextFileForURL(NSURL *url) { return TSOwnTextFileNone; }
+static void TSRecordOwnTextFileKind(NSURL *url, TSOwnTextFileKind kind) {}
+@interface TSAppDelegate : NSObject
+- (void)reReadCommandCompletionData;
+@end
 @implementation TSDocument
+- (void)takeOwnTextFileKindOfURL:(NSURL *)url {}
 WATCH
 REVERT
 - (void)setupTags {}

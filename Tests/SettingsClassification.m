@@ -237,7 +237,7 @@ int main(int argc,char **argv){@autoreleasepool{
  if(argc>3){
   [memory.values removeAllObjects];[memory.values addEntriesFromDictionary:@{@"TeXAwareSpellChecking":@NO,@"PdfMagnification":@1,@"Encoding":@"UTF-8",@"AutoSaveEnabled":@NO,@"FindMethod":@1}];
   [owner.settingsChangeNotes beginSession];owner.settingsChangeNotes.hasPDFWindow=^BOOL{return YES;};owner.settingsChangeNotes.hasSourceWindow=^BOOL{return YES;};
-  NSArray *cases=@[@[@"spelling",@"row.catalog.spelling.1.0",@"TeXAwareSpellChecking",@YES],@[@"preview",@"row.catalog.preview.0.2",@"PdfMagnification",@1.5],@[@"documents",@"row.catalog.documents.0.0",@"Encoding",@"MacOSRoman"],@[@"documents",@"row.catalog.documents.1.0",@"AutoSaveEnabled",@YES],@[@"editor",@"row.catalog.editor.7.0",@"FindMethod",@2]];
+  NSArray *cases=@[@[@"preview",@"row.catalog.preview.0.2",@"PdfMagnification",@1.5],@[@"documents",@"row.catalog.documents.0.0",@"Encoding",@"MacOSRoman"],@[@"documents",@"row.catalog.documents.1.0",@"AutoSaveEnabled",@YES],@[@"editor",@"row.catalog.editor.7.0",@"FindMethod",@2]];
   for(NSArray *entry in cases){
    NSView *pane=[panes[entry[0]] view];NSWindow *window=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,700,900) styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO];
    NSView *host=window.contentView;if(!host)abort();[host addSubview:pane];NSLayoutConstraint *width=[pane.widthAnchor constraintEqualToConstant:570];[NSLayoutConstraint activateConstraints:@[width,[pane.leadingAnchor constraintEqualToAnchor:host.leadingAnchor],[pane.topAnchor constraintEqualToAnchor:host.topAnchor]]];
@@ -257,10 +257,10 @@ int main(int argc,char **argv){@autoreleasepool{
  }
  // Action path through the real migrated spelling controls and production note manager.
  [memory setBool:NO forKey:@"TeXAwareSpellChecking"];[owner.settingsChangeNotes beginSession];
- TSSettingsChangeNote *spellNote=(id)Find(Find([panes[@"spelling"] view],@"row.catalog.spelling.1.0"),@"settings.change-note");
+ NSView *spellRow=Find([panes[@"spelling"] view],@"row.catalog.spelling.1.0");
  NSButton *aware=after[@"settings.ts-aware-spelling"],*legacy=after[@"settings.legacy-spelling"];
- aware.state=NSControlStateValueOn;[aware sendAction:aware.action to:aware.target];Check(!spellNote.hidden,@"Spelling action creates a transient note");
- legacy.state=NSControlStateValueOn;[legacy sendAction:legacy.action to:legacy.target];Check(spellNote.hidden,@"Reverse spelling action clears note");
+ aware.state=NSControlStateValueOn;[aware sendAction:aware.action to:aware.target];Check([memory boolForKey:@"TeXAwareSpellChecking"] && spellRow!=nil && Find(spellRow,@"settings.change-note")==nil,@"Spelling action shows no note");
+ legacy.state=NSControlStateValueOn;[legacy sendAction:legacy.action to:legacy.target];Check(![memory boolForKey:@"TeXAwareSpellChecking"] && Find(spellRow,@"settings.change-note")==nil,@"Reverse spelling action shows no note");
  [owner.settingsChangeNotes endSession];
  // Production encoding action and numeric edit/commit paths.
  [memory setObject:@"UTF-8 Unicode" forKey:EncodingKey];[memory setDouble:1 forKey:PdfMagnificationKey];[owner.settingsChangeNotes beginSession];

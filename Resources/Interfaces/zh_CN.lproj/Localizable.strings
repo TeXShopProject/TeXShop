@@ -264,8 +264,6 @@
 
 "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "以下宏使用此快捷键。将其分配给菜单命令后，这些宏的快捷键将停用。\n\n%@";
 
-"This does not turn spell checking while typing on or off." = "此设置不会开启或关闭键入时的拼写检查。";
-
 "Open PDFs keep their zoom. The new value applies to PDFs opened from now on." = "已打开的PDF保持当前缩放比例。新值适用于此后打开的PDF。";
 
 "Takes effect after you restart TeXShop." = "重新启动TeXShop后生效。";
