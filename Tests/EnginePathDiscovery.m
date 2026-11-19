@@ -57,12 +57,20 @@ int main(void) { @autoreleasepool {
     check([r[@"name"] isEqual:@"TeX Live 2025/dev"] && [r[@"dev"] boolValue], @"development version keeps dev before distributor suffix, suffix not shown");
     for (NSString *text in @[@"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/Debian)", @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/MacPorts 2026.78225_0)",
                              @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/Homebrew)", @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux)",
-                             @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/W32TeX)", @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/devuan)"]) {
+                             @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/W32TeX)", @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/devuan)",
+                             @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/dev-tools)", @"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026/dev.1)"]) {
         r = banner(text);
         check([r[@"name"] isEqual:@"TeX Live 2026"] && ![r[@"dev"] boolValue], [@"distributor suffix is not a development version: " stringByAppendingString:text]);
     }
     r = banner(@"pdfTeX 3.141592653-2.6-1.40.29 (Web2C 2027/dev)\n");
     check([r[@"name"] isEqual:@"Web2C 2027/dev"] && [r[@"dev"] boolValue], @"build outside TeX Live keeps its own banner word");
+    r = banner(@"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2027/dev) \n");
+    check([r[@"dev"] boolValue], @"trailing space after the banner keeps dev");
+    // Only the pdfTeX banner line is read: not a wrapper's words before it, nor lines after it.
+    r = banner(@"Local wrapper for TeX Live 2030\npdfTeX 3.14 (TeX Live 2027/dev)\nkpathsea version 6.4\n");
+    check([r[@"name"] isEqual:@"TeX Live 2027/dev"] && [r[@"year"] integerValue] == 2027, @"a year in the words before the banner is not read");
+    check(banner(@"pdfTeX 3.14\nLocal wrapper compatible with TeX Live 2030\n") == nil, @"a year in the words after the banner is not read");
+    check(banner(@"pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026)\nkpathsea version 6.4.2\nCopyright 2026 Han The Thanh (pdfTeX) et al.\n") != nil, @"the usual banner with the lines after it");
     check(banner(@"pdfTeX 3.141592653-2.6-1.40.29\n") == nil && banner(@"") == nil, @"banner without release gives no release");
     NSString *dev = [root stringByAppendingPathComponent:@"dev"];
     NSString *debianDev = [root stringByAppendingPathComponent:@"debian dev"];
@@ -82,6 +90,12 @@ int main(void) { @autoreleasepool {
     found = [TSEnginePathDiscovery candidatesForPaths:@[debianDev, unknown, dev] currentTeX:@"" currentGhostscript:@""];
     check([[found[@"TeX"] valueForKey:@"path"] isEqual:@[dev, debianDev, unknown]] && [defaults(found[@"TeX"]) count] == 1 && [found[@"TeX"][0][@"default"] boolValue],
           @"without a release, the newest development build is preselected, not an unidentified one");
+    NSString *wrapper = [root stringByAppendingPathComponent:@"wrapper"];
+    for (NSString *name in @[@"tex", @"latex", @"pdflatex", @"pdftex"])
+        script(wrapper, name, @"echo 'Local wrapper for TeX Live 2030 around pdfTeX 1.40.99'\necho 'pdfTeX 3.14 (TeX Live 2027/dev)'\n");
+    found = [TSEnginePathDiscovery candidatesForPaths:@[wrapper, newer] currentTeX:@"" currentGhostscript:@""];
+    check([[found[@"TeX"] valueForKey:@"path"] isEqual:@[wrapper, newer]] && [found[@"TeX"][1][@"default"] boolValue] &&
+          [found[@"TeX"][0][@"version"] isEqual:@"TeX Live 2027/dev (3.14)"], @"a wrapper's words around the banner change neither the version nor the default");
     NSString *bare = [root stringByAppendingPathComponent:@"bare"];
     tex(bare, @"pdfTeX 3.141592653-2.6-1.40.30");
     found = [TSEnginePathDiscovery candidatesForPaths:@[bare, dev] currentTeX:@"" currentGhostscript:@""];

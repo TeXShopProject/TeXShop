@@ -113,14 +113,26 @@
     return match ? [text substringWithRange:[match rangeAtIndex:1]] : @"";
 }
 
+// The line of --version output that is the banner: the one starting "pdfTeX", else the first line.
+// Lines before or after it (a wrapper's own words, copyright) are never read for a version.
++ (NSString *)bannerLineInOutput:(NSString *)output
+{
+    NSArray<NSString *> *lines = [output componentsSeparatedByCharactersInSet:NSCharacterSet.newlineCharacterSet];
+    for (NSString *line in lines)
+        if ([[line stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet] hasPrefix:@"pdfTeX "]) return line;
+    return lines.firstObject ?: @"";
+}
+
 + (nullable NSDictionary *)texLiveReleaseInBanner:(NSString *)banner
 {
     // Between releases the sources say "YYYY/dev"; distributors may append "/Name". Builds outside TeX Live say "Web2C".
-    NSTextCheckingResult *match = [[NSRegularExpression regularExpressionWithPattern:@"(?:TeX Live|Web2C) ([0-9]{4})(/dev(?![A-Za-z0-9]))?" options:0 error:NULL]
-                                   firstMatchInString:banner options:0 range:NSMakeRange(0, banner.length)];
+    // "dev" counts only as a whole component, so that "/dev-tools" stays a distributor's name.
+    NSString *line = [self bannerLineInOutput:banner];
+    NSTextCheckingResult *match = [[NSRegularExpression regularExpressionWithPattern:@"(?:TeX Live|Web2C) ([0-9]{4})(/dev(?=[/)\\s]|$))?" options:0 error:NULL]
+                                   firstMatchInString:line options:0 range:NSMakeRange(0, line.length)];
     if (!match) return nil;
     BOOL dev = [match rangeAtIndex:2].location != NSNotFound;
-    return @{@"name": [banner substringWithRange:match.range], @"year": @([[banner substringWithRange:[match rangeAtIndex:1]] integerValue]), @"dev": @(dev)};
+    return @{@"name": [line substringWithRange:match.range], @"year": @([[line substringWithRange:[match rangeAtIndex:1]] integerValue]), @"dev": @(dev)};
 }
 
 + (NSDictionary<NSString *, NSArray<NSDictionary *> *> *)candidatesForPaths:(NSArray<NSString *> *)paths currentTeX:(NSString *)texPath currentGhostscript:(NSString *)gsPath
@@ -149,7 +161,8 @@
             NSString *output = [self versionOutputForProgram:program];
             if (!output) continue;
             [seen addObject:identity];
-            NSString *version = [self capture:i == 0 ? @"pdfTeX ([0-9][0-9.\\-]+)" : @"^\\s*([0-9]+(?:\\.[0-9]+)+)" in:output];
+            NSString *version = i == 0 ? [self capture:@"pdfTeX ([0-9][0-9.\\-]+)" in:[self bannerLineInOutput:output]]
+                                       : [self capture:@"^\\s*([0-9]+(?:\\.[0-9]+)+)" in:output];
             NSDictionary *release = i == 0 ? [self texLiveReleaseInBanner:output] : nil;
             NSInteger year = [release[@"year"] integerValue];
             NSString *displayVersion = version;
