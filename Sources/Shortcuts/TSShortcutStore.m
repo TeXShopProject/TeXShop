@@ -18,6 +18,8 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
 // For each keyboard layout, the keys AppKit shows for keys given with Command, and with
 // Command and Shift (-learnLayoutKeysThen:).
 @property NSMutableDictionary<NSString *, NSDictionary<TSShortcutBinding *, TSShortcutBinding *> *> *layoutKeys;
+// For keys whose items all met other items and more than one key could be the one shown: those keys.
+@property NSMutableDictionary<NSString *, NSDictionary<TSShortcutBinding *, NSSet<TSShortcutBinding *> *> *> *possibleLayoutKeys;
 // Saved keys of commands restored before the keys of the current layout were known.
 @property (nullable, copy) NSDictionary<NSString *, NSArray *> *restoredBeforeLayoutKeys;
 // Commands given a key before the keys of the current layout were known, with that layout.
@@ -116,7 +118,7 @@ static NSUInteger TSLayoutKeyCount(void) { return 2 * (0x7f - 0x21 - 52); }
 // The modifiers each key of a layout's table is given with, Command first.
 static NSArray<NSNumber *> *TSLayoutKeyVariants(void) {
     const NSEventModifierFlags C = NSEventModifierFlagCommand, K = NSEventModifierFlagControl, O = NSEventModifierFlagOption;
-    return @[@(C), @(C | K | O), @(C | K), @(C | O), @(K | O), @(K), @(O)];
+    return @[@(C), @(C | K | O), @(C | K), @(C | O), @(K), @(O)];
 }
 // AppKit adapts a key with any modifiers as it adapts the same key with Command, or with
 // Command and Shift when the modifiers include Shift: the shown key and Shift come from that,
@@ -217,6 +219,7 @@ static NSArray<NSNumber *> *TSLayoutKeyVariants(void) {
             NSMutableDictionary *keys = [self.layoutKeys[layout] mutableCopy] ?: [NSMutableDictionary dictionary];
             // A key AppKit left empty with every variant shows as another item's key with each of
             // them: when only one key has items with all of them, that is the key.
+            NSMutableDictionary<TSShortcutBinding *, NSSet *> *possible = [NSMutableDictionary dictionary];
             NSMutableSet<TSShortcutBinding *> *occupied = [NSMutableSet set];
             NSMutableSet<NSString *> *characters = [NSMutableSet set];
             TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
@@ -241,10 +244,13 @@ static NSArray<NSNumber *> *TSLayoutKeyVariants(void) {
                         if (everywhere) [candidates addObject:TSBinding(character, C | shift.unsignedIntegerValue)];
                     }
                 if (candidates.count == 1) keys[base] = candidates.anyObject;
+                else if (candidates.count > 1) possible[base] = candidates;
             }];
             if (!self.layoutKeys) self.layoutKeys = [NSMutableDictionary dictionary];
             learned = keys.count > [self.layoutKeys[layout] count] || !self.layoutKeys[layout];
             self.layoutKeys[layout] = keys;
+            if (!self.possibleLayoutKeys) self.possibleLayoutKeys = [NSMutableDictionary dictionary];
+            self.possibleLayoutKeys[layout] = possible;
         }
         [self stopLearning];
         NSArray<void (^)(BOOL)> *waiting = [self.learningCompletions copy];
@@ -296,6 +302,13 @@ static NSArray<NSNumber *> *TSLayoutKeyVariants(void) {
     TSShortcutBinding *given = TSBinding(key, flags);
     NSMutableOrderedSet<TSShortcutBinding *> *result = [NSMutableOrderedSet orderedSetWithObject:given];
     [result addObject:[self shownBindingForGivenKey:key modifiers:flags]];
+    // When the layout could show the key as one of several, each of them is taken as its key,
+    // so that a key another item has is never let through unseen.
+    if (TSLayoutAdaptsKey(given.key)) {
+        TSShortcutBinding *base = TSBinding(given.key, NSEventModifierFlagCommand | (given.modifiers & NSEventModifierFlagShift));
+        for (TSShortcutBinding *possible in self.possibleLayoutKeys[TSKeyboardLayoutID()][base])
+            [result addObject:TSBinding(possible.key, (given.modifiers & ~NSEventModifierFlagShift) | (possible.modifiers & NSEventModifierFlagShift))];
+    }
     return result.array;
 }
 // The key a macro item was given: the macro whose key the layout shows as the item's.

@@ -637,9 +637,14 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     if (error) { [self showError:[NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), error]]; return; }
     __weak typeof(self) weakSelf = self;
     // The default as given and as this keyboard layout shows it.
+    [self keyboardLayoutMayHaveChanged:nil];
+    NSUInteger changes = self.layoutChanges;
     [self confirmMacrosUsingBindings:[self.store defaultBindingsForCommand:command].allObjects completion:^(BOOL accepted) {
         TSShortcutPaneController *strongSelf = weakSelf;
         if (strongSelf == nil || !accepted) { return; }
+        // The default named in the question is the one of the layout then.
+        [strongSelf keyboardLayoutMayHaveChanged:nil];
+        if (strongSelf.layoutChanges != changes) { return; }
         [strongSelf showError:[strongSelf.store restoreCommand:command]];
         [strongSelf refreshMenuAndMacros];
     }];
@@ -883,12 +888,17 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     }
     __weak typeof(self) weakSelf = self;
     self.confirmingRecording = YES;
+    // A key is recorded with the keys of the layout it was typed on: when the layout changes
+    // while the question is open, nothing is recorded.
+    [self keyboardLayoutMayHaveChanged:nil];
+    NSUInteger changes = self.layoutChanges;
     [self confirmMacrosUsingKey:key modifiers:flags completion:^(BOOL accepted) {
         TSShortcutPaneController *strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         strongSelf.confirmingRecording = NO;
         if (strongSelf.editingCommand != command || ![strongSelf.capturedKey isEqualToString:key] || strongSelf.capturedModifiers != flags) { return; }
-        if (!accepted) { [strongSelf endRecording]; return; }
+        [strongSelf keyboardLayoutMayHaveChanged:nil];
+        if (!accepted || strongSelf.layoutChanges != changes) { [strongSelf endRecording]; return; }
         NSString *error = [strongSelf conflictForCapturedShortcut];
         if (error != nil) { [strongSelf showRecordingError:error]; return; }
         error = [strongSelf.store setKey:key modifiers:flags forCommand:command];

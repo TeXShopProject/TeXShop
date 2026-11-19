@@ -79,6 +79,9 @@ static void Select(NSString *identifier) {
 @property NSString *shownError;
 @property NSUInteger confirmations;
 @property BOOL consent;
+// The answer to the macro question waits until the test gives it.
+@property BOOL holdAnswer;
+@property (copy) void (^pendingAnswer)(BOOL);
 @end
 @interface TSShortcutPaneController (DispatchActions)
 - (void)restoreShortcut:(id)sender;
@@ -90,7 +93,8 @@ static void Select(NSString *identifier) {
 - (void)showError:(NSString *)error { if (error) self.shownError = error; }
 - (void)confirmMacrosUsingBindings:(NSArray *)bindings completion:(void (^)(BOOL))completion {
     if (![self macrosUsingBindings:bindings].count) { completion(YES); return; }
-    self.confirmations++; completion(self.consent);
+    self.confirmations++;
+    if (self.holdAnswer) self.pendingAnswer = completion; else completion(self.consent);
 }
 @end
 static DispatchTarget *target;
@@ -342,6 +346,20 @@ int main(int argc, const char *argv[]) {
             REQUIRE([keys[TSBinding(@"1", C)] isEqual:TSBinding(@"&", C)] && keys.count == 84, @"Command-1 with every variant in use is known as Command-& from the items that show it (%lu keys, %@)", (unsigned long)keys.count, keys[TSBinding(@"1", C)]);
             NSArray *saved = [early conflictsForMacroShortcuts:@[@{@"path":@"Macros › New", @"key":@"1", @"modifiers":@(C | K)}]];
             REQUIRE(saved.count == 1, @"a new Control-Command-1 macro meets the Control-Command-& item (%@)", saved);
+            // New Tag shows Command-é on French; with é also taken with every other variant, the
+            // keys 1 and 2 could each be & or é: a macro meets an item with either.
+            for (NSNumber *flags in @[@(C | K | O), @(C | K), @(C | O), @(K), @(O)]) {
+                NSMenuItem *occupant = [[NSMenuItem alloc] initWithTitle:@"Occupant" action:@selector(fixtureOccupant:) keyEquivalent:@""];
+                occupant.target = target; occupant.allowsAutomaticKeyEquivalentLocalization = NO;
+                occupant.keyEquivalentModifierMask = flags.unsignedIntegerValue; occupant.keyEquivalent = @"é";
+                [bare.itemArray[1].submenu addItem:occupant]; [occupants addObject:occupant];
+            }
+            [early setValue:[NSMutableDictionary dictionary] forKey:@"layoutKeys"];
+            [early learnLayoutKeysThen:^(BOOL value) {}]; Spin(0.3);
+            keys = [early valueForKey:@"layoutKeys"][French];
+            REQUIRE(!keys[TSBinding(@"2", C)], @"Command-2 could be & or é, so it is not taken as either");
+            saved = [early conflictsForMacroShortcuts:@[@{@"path":@"Macros › New", @"key":@"2", @"modifiers":@(C | K)}]];
+            REQUIRE(saved.count == 1, @"a new Control-Command-2 macro, which could show Control-Command-é, meets the Control-Command-é item (%@)", saved);
             for (NSMenuItem *occupant in occupants) if (occupant.menu) [occupant.menu removeItem:occupant];
             early = nil;
             fprintf(stdout, "PASS: what was recorded or restored before a layout's keys were known is checked again; a key with every variant in use is known from the items that show it\n");
@@ -448,6 +466,31 @@ int main(int argc, const char *argv[]) {
             Spin(1.2);
             saved = [NSUserDefaults.standardUserDefaults objectForKey:TSMenuShortcutOverridesKey];
             REQUIRE(saved[sourcePreview] == nil && pane.confirmations == 1, @"Command-& recorded in the pass French is chosen restores the default, after asking about the Ampersand macro (%@, %lu)", saved, (unsigned long)pane.confirmations);
+            [shortcuts refreshMenuAndMacros]; Spin(0.6);
+            // Recording the key French shows for Console's default, which a macro has: a layout
+            // change while the question is open records nothing; otherwise the default comes back.
+            NSArray *macrosBefore = macroMenu.macros;
+            TSShortcutMacro *agrave = [[TSShortcutMacro alloc] initWithName:@"Agrave" path:@"Macros › Agrave" indexPath:[NSIndexPath indexPathWithIndex:2] serializedKey:@"à" key:@"à" modifiers:cmd];
+            macroMenu.macros = [macrosBefore arrayByAddingObject:agrave];
+            REQUIRE([store setKey:@"j" modifiers:ctrlCmd forCommand:consoleCommand] == nil, @"Control-Command-J for Console");
+            [shortcuts refreshMenuAndMacros]; Spin(0.6);
+            TSShortcutBinding *consoleShown = [store shownDefaultForCommand:consoleCommand];
+            REQUIRE([consoleShown isEqual:TSBinding(@"à", cmd)], @"Console's default is Command-à on French (%@)", consoleShown.key);
+            pane.holdAnswer = YES; pane.confirmations = 0;
+            [pane setValue:consoleCommand forKey:@"editingCommand"]; [pane setValue:@"à" forKey:@"capturedKey"]; [pane setValue:@(cmd) forKey:@"capturedModifiers"];
+            [pane applyCapturedShortcut:nil];
+            REQUIRE(pane.confirmations == 1 && pane.pendingAnswer, @"recording Command-à asks about the Agrave macro");
+            Select(ABC); Spin(0.6);
+            pane.pendingAnswer(YES); pane.pendingAnswer = nil; Spin(0.6);
+            saved = [NSUserDefaults.standardUserDefaults objectForKey:TSMenuShortcutOverridesKey];
+            REQUIRE([saved[console] isEqual:(@{@"key":@"j", @"modifiers":@(ctrlCmd)})], @"a layout change while the question is open records nothing (%@)", saved);
+            Select(French); Spin(0.8);
+            [pane setValue:consoleCommand forKey:@"editingCommand"]; [pane setValue:@"à" forKey:@"capturedKey"]; [pane setValue:@(cmd) forKey:@"capturedModifiers"];
+            [pane applyCapturedShortcut:nil];
+            pane.pendingAnswer(YES); pane.pendingAnswer = nil; Spin(0.6);
+            saved = [NSUserDefaults.standardUserDefaults objectForKey:TSMenuShortcutOverridesKey];
+            REQUIRE(saved[console] == nil, @"answered on the same layout, Command-à restores Console's default (%@)", saved);
+            pane.holdAnswer = NO; macroMenu.macros = macrosBefore;
             [shortcuts refreshMenuAndMacros]; Spin(0.6);
             Select(ABC); Spin(0.6);
             [store restoreAll]; [shortcuts refreshMenuAndMacros]; Spin(0.6);
