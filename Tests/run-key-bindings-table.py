@@ -40,6 +40,16 @@ def run(text):
                         str(root / 'Tests/KeyBindingsTable.m'), str(controller), str(root / 'Sources/Editor/TSPlaceholderToken.m'), str(root / 'Sources/App/GlobalData.m'), str(root / 'Sources/App/globals.m'), '-o', str(binary)], check=True)
         return subprocess.run([str(binary), str(root / 'Resources/TeXShop/Keyboard/autocompletion.plist')], capture_output=True, text=True, timeout=120)
 original = source.read_text()
+# The bundled key bindings: ¥ gives a backslash and is checked for pasting; every row checked for
+# pasting exists and can be checked (no #SEL#, #INS#, #PASTE# or mark in its output).
+import plistlib
+keyboard = root / 'Resources/TeXShop/Keyboard'
+bundled = plistlib.loads((keyboard / 'autocompletion.plist').read_bytes())
+bundled_paste = plistlib.loads((keyboard / 'autocompletionPaste.plist').read_bytes())
+assert bundled['\u00a5'] == '\\', 'the bundled \u00a5 row gives a backslash'
+assert bundled_paste == ['\u00a5'], 'only the bundled \u00a5 row is checked for pasting'
+assert all(k in bundled and not any(x in bundled[k] for x in ('#SEL#', '#INS#', '#PASTE#', '\u2022')) for k in bundled_paste), 'bundled checked rows can be checked'
+print('PASS: the bundled \u00a5 row gives a backslash and is checked for pasting')
 result = run(original); print(result.stdout, end=''); print(result.stderr, end='', file=sys.stderr)
 assert result.returncode == 0, 'key binding list test failed'
 if '--mutations' in sys.argv:
