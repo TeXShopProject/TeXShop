@@ -457,8 +457,9 @@ static NSString * const TSCompletionMarkKeysRowID = @"row.catalog.keyboard.1.3";
         return [TSShortcutStore reasonForMacroConflict:@{@"refused":@YES}];
     for (TSShortcutMatch *owner in self.searchMatches) {
         if (!owner.winner) continue;
-        NSString *ownerKey = owner.macro ? owner.macro.key : owner.menuItem.keyEquivalent;
-        NSEventModifierFlags ownerFlags = owner.macro ? owner.macro.modifiers : owner.menuItem.keyEquivalentModifierMask;
+        TSShortcutBinding *ownerBinding = owner.macro ? TSBinding(owner.macro.key, owner.macro.modifiers) : [self shownBindingForMatch:owner];
+        NSString *ownerKey = owner.macro ? owner.macro.key : ownerBinding.key;
+        NSEventModifierFlags ownerFlags = owner.macro ? owner.macro.modifiers : ownerBinding.modifiers;
         return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is inactive because it conflicts with “%@” (%@).", @""),
             owner.path, [TSShortcutStore displayKey:ownerKey modifiers:ownerFlags]];
     }
@@ -494,8 +495,9 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
         if (row == [self macroHeaderRow]) { return [NSTextField labelWithString:column == nil || [column.identifier isEqualToString:@"command"] ? NSLocalizedString(@"Macros", @"") : @""]; }
         TSShortcutMatch *match = [self matchAtRow:row];
         if (match == nil) { return nil; }
-        NSString *key = match.macro != nil ? match.macro.key : match.menuItem.keyEquivalent;
-        NSEventModifierFlags flags = match.macro != nil ? match.macro.modifiers : match.menuItem.keyEquivalentModifierMask;
+        TSShortcutBinding *shown = match.macro != nil ? nil : [self shownBindingForMatch:match];
+        NSString *key = match.macro != nil ? match.macro.key : shown.key;
+        NSEventModifierFlags flags = match.macro != nil ? match.macro.modifiers : shown.modifiers;
         NSString *reason = [self inactiveReasonForMatch:match];
         BOOL isCommand = [column.identifier isEqualToString:@"command"];
         if (!isCommand && match.command != nil && match.command == self.editingCommand) { return self.recordingCell; }
@@ -522,13 +524,21 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     TSShortcutCommand *command = self.visibleCommands[(NSUInteger)row];
     BOOL isCommand = [column.identifier isEqualToString:@"command"];
     if (!isCommand && command == self.editingCommand) { return self.recordingCell; }
-    NSString *text = isCommand ? command.path : [TSShortcutStore displayKey:command.item.keyEquivalent modifiers:command.item.keyEquivalentModifierMask];
+    TSShortcutBinding *shown = isCommand ? nil : [self.store shownBindingForCommand:command];
+    NSString *text = isCommand ? command.path : [TSShortcutStore displayKey:shown.key modifiers:shown.modifiers];
     // A command whose shortcut macOS keeps is dimmed and not recorded, as alternates are in Xcode.
     NSTextField *label = isCommand || command.managedBySystem ? [NSTextField labelWithString:text] : [self shortcutLabel:text];
     if (command.managedBySystem) label.textColor = NSColor.disabledControlTextColor;
     label.lineBreakMode = NSLineBreakByTruncatingMiddle;
     label.toolTip = command.path;
     return label;
+}
+// The key a search match shows: a command's as the store knows it, another item's as AppKit shows it.
+- (TSShortcutBinding *)shownBindingForMatch:(TSShortcutMatch *)match {
+    TSShortcutCommand *command = match.command;
+    NSMenuItem *item = match.menuItem;
+    if (command != nil) return [self.store shownBindingForCommand:command];
+    return item != nil ? TSShownBinding(item) : TSBinding(@"", 0);
 }
 - (TSShortcutCommand *)selectedCommand {
     NSInteger row = self.table.selectedRow;
@@ -715,7 +725,8 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     TSShortcutCommand *command = self.editingCommand;
     if (command == nil) { return; }
     // An empty field, as in Xcode, for a command without a shortcut (the list shows a dash).
-    NSString *current = command.item.keyEquivalent.length ? [TSShortcutStore displayKey:command.item.keyEquivalent modifiers:command.item.keyEquivalentModifierMask] : @"";
+    TSShortcutBinding *shown = [self.store shownBindingForCommand:command];
+    NSString *current = shown.key.length ? [TSShortcutStore displayKey:shown.key modifiers:shown.modifiers] : @"";
     NSString *captured = self.capturedKey;
     self.recorder.shortcut = captured != nil ? [TSShortcutStore displayKey:captured modifiers:self.capturedModifiers] : current;
     self.recorder.removeButton.hidden = command.item.keyEquivalent.length == 0;
@@ -728,8 +739,9 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     TSShortcutCommand *command = self.editingCommand ?: [self selectedCommand];
     NSString *text = error;
     if (text == nil && command != nil) {
-        text = command.defaultKey.length == 0 ? NSLocalizedString(@"Default shortcut: None", @"")
-            : [NSString stringWithFormat:NSLocalizedString(@"Default shortcut: %@", @""), [TSShortcutStore displayKey:command.defaultKey modifiers:command.defaultModifiers]];
+        TSShortcutBinding *shownDefault = [self.store shownDefaultForCommand:command];
+        text = shownDefault.key.length == 0 ? NSLocalizedString(@"Default shortcut: None", @"")
+            : [NSString stringWithFormat:NSLocalizedString(@"Default shortcut: %@", @""), [TSShortcutStore displayKey:shownDefault.key modifiers:shownDefault.modifiers]];
     }
     // A blank line keeps the list and the buttons where they are.
     self.statusText.stringValue = text.length ? text : @" ";

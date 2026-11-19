@@ -45,6 +45,8 @@ static inline NSString *TSShortcutDisplayKey(NSString *key, NSEventModifierFlags
 @property (nonatomic, readonly, strong) NSMenuItem *item;
 @property (nonatomic, readonly, copy) NSString *commandID;
 @property (nonatomic, readonly, copy) NSString *path;
+/// The default key as the menu gives it, before AppKit adapts it to the keyboard layout
+/// (1 for the & that a French layout shows); see -[TSShortcutStore shownDefaultForCommand:].
 @property (nonatomic, readonly, copy) NSString *defaultKey;
 @property (nonatomic, readonly) NSEventModifierFlags defaultModifiers;
 @property (nonatomic, readonly) BOOL defaultLocalization;

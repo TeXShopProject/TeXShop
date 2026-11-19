@@ -1,0 +1,126 @@
+#!/usr/bin/env python3
+"""Menu shortcuts on French and German keyboard layouts, matched by AppKit's own dispatch.
+
+The probe switches keyboard layouts, so it never runs on this Mac: it is built here and run
+over ssh on the Mac named by TEXSHOP_LAYOUT_VM (for example user@192.168.0.32), which must
+have this Mac's key. Without TEXSHOP_LAYOUT_VM the build and the fixture are checked and the
+run is skipped. --mutations also checks that the probe catches the double-localized keys of
+6.00 beta 6 and a conflict check that misses the keys a layout shows.
+"""
+from pathlib import Path
+import os
+import plistlib
+import subprocess
+import sys
+import tempfile
+import xml.etree.ElementTree as ET
+from shortcut_sources import NAMES, companion_sources
+from source_tree import include_args, source_file
+
+root = Path(__file__).resolve().parents[1]
+vm = os.environ.get('TEXSHOP_LAYOUT_VM', '')
+
+# The menu commands of MainMenu.nib with the keys the nib gives them.
+MASKS = {'shift': 1 << 17, 'control': 1 << 18, 'option': 1 << 19, 'command': 1 << 20}
+items, seen = [], set()
+nib = ET.parse(root / 'Resources/Interfaces/fr.lproj/MainMenu.nib/designable.nib').getroot()
+for item in nib.iter('menuItem'):
+    key, ident = item.get('keyEquivalent', ''), item.get('identifier', '')
+    if not key or not ident.startswith('TSShortcut.') or item.get('alternate') == 'YES':
+        continue
+    mask = item.find('modifierMask')
+    modifiers = MASKS['command'] if mask is None else sum(v for k, v in MASKS.items() if mask.get(k) == 'YES')
+    if (key, modifiers) in seen or ident in {i['identifier'] for i in items}:
+        continue
+    seen.add((key, modifiers))
+    items.append({'identifier': ident, 'key': key, 'modifiers': modifiers})
+fixture = {i['identifier']: i for i in items}
+assert fixture['TSShortcut.associatedWindow:.0']['key'] == '1', 'Source ⇔ Preview is Command-1 in the nib'
+assert fixture['TSShortcut.displayConsole:.0']['key'] == '0'
+# Keys the probe assigns must be free in the nib.
+for key in ('j', 'k'):
+    assert (key, MASKS['command'] | MASKS['control']) not in seen, key
+print(f'PASS: fixture has {len(items)} menu commands with their nib keys', flush=True)
+
+with tempfile.TemporaryDirectory(prefix='texshop-layout-dispatch-') as directory:
+    d = Path(directory)
+    (d / 'menu.plist').write_bytes(plistlib.dumps(items))
+    store = source_file(root, 'TSShortcutStore.m')
+    models = source_file(root, 'TSShortcutModels.m')
+
+    def build(replace=None, name='probe'):
+        sources = [str(source_file(root, n)) for n in NAMES]
+        for original, path in replace or []:
+            sources = [str(path) if s == str(original) else s for s in sources]
+        command = ['xcrun', 'clang', '-fobjc-arc', '-Wno-deprecated-declarations', '-arch', 'arm64',
+                   '-mmacosx-version-min=14.0', *include_args(root), '-I', str(root / 'Tests'),
+                   '-framework', 'Cocoa', '-framework', 'Carbon', str(root / 'Tests/ShortcutKeyboardLayoutDispatch.m'),
+                   *sources, *companion_sources(root), '-o', str(d / name)]
+        subprocess.run(command, check=True)
+        return d / name
+
+    def run(binary):
+        remote = f'texshop-layout-dispatch-{os.getpid()}'
+        subprocess.run(['ssh', '-o', 'BatchMode=yes', vm, f'mkdir -p {remote}'], check=True)
+        subprocess.run(['scp', '-q', str(binary), str(d / 'menu.plist'), f'{vm}:{remote}/'], check=True)
+        try:
+            return subprocess.run(['ssh', '-o', 'BatchMode=yes', vm,
+                                   f'TEXSHOP_ALLOW_LAYOUT_SWITCH=1 {remote}/{binary.name} {remote}/menu.plist'],
+                                  capture_output=True, text=True, timeout=600)
+        finally:
+            subprocess.run(['ssh', '-o', 'BatchMode=yes', vm, f'rm -rf {remote}'], check=False)
+            # The probe selects ABC again and turns off the layouts it turned on; check that it did.
+            check = subprocess.run(['ssh', '-o', 'BatchMode=yes', vm, 'defaults read com.apple.HIToolbox AppleSelectedInputSources'],
+                                   capture_output=True, text=True)
+            assert 'ABC' in check.stdout, ('ABC not selected after the probe', check.stdout)
+
+    binary = build()
+    local = subprocess.run([str(binary), str(d / 'menu.plist')], capture_output=True, text=True,
+                           env={k: v for k, v in os.environ.items() if k != 'TEXSHOP_ALLOW_LAYOUT_SWITCH'})
+    assert local.returncode == 2 and 'Refusing' in local.stderr, ('probe must refuse to switch layouts here', local)
+    print('PASS: the probe refuses to switch keyboard layouts outside a VM', flush=True)
+    if not vm:
+        print('SKIP: set TEXSHOP_LAYOUT_VM=user@host to run the probe in a VM', flush=True)
+        sys.exit(0)
+    result = run(binary)
+    print(result.stdout, end='', flush=True)
+    assert result.returncode == 0, result.stderr
+    if '--mutations' in sys.argv:
+        mutations = [
+            ('default read as AppKit shows it', models,
+             '    item.allowsAutomaticKeyEquivalentLocalization = NO;\n    _defaultKey=[item.keyEquivalent copy];_defaultModifiers=item.keyEquivalentModifierMask;\n    item.allowsAutomaticKeyEquivalentLocalization = _defaultLocalization;',
+             '    _defaultKey=[item.keyEquivalent copy];_defaultModifiers=item.keyEquivalentModifierMask;',
+             'FAIL: Source ⇔ Preview default on com.apple.keylayout.French is &'),
+            ('6.00 beta 6: shown default assigned again to every item', models,
+             '    item.allowsAutomaticKeyEquivalentLocalization = NO;\n    _defaultKey=[item.keyEquivalent copy];_defaultModifiers=item.keyEquivalentModifierMask;\n    item.allowsAutomaticKeyEquivalentLocalization = _defaultLocalization;',
+             '    _defaultKey=[item.keyEquivalent copy];_defaultModifiers=item.keyEquivalentModifierMask;',
+             'FAIL: store started on com.apple.keylayout.French: '),
+            ('conflicts only with given keys', store,
+             '        if (![TSShownBinding(item) isEqual:binding] && ![[self.itemBindings objectForKey:item] containsObject:binding]) { return; }',
+             '        if (![TSGivenBinding(item) isEqual:binding]) { return; }',
+             'is used by (null)'),
+            ('saved keys checked against given defaults only', store,
+             '    return [NSSet setWithObjects:given, [self shownDefaultForCommand:command], nil];',
+             '    return [NSSet setWithObject:given];',
+             'FAIL: '),
+        ]
+        every_item = ('    if (item.allowsAutomaticKeyEquivalentLocalization != localized) return NO;',
+                      '    return NO;')
+        for name, path, old, new, expected in mutations:
+            text = path.read_text()
+            assert text.count(old) == 1, name
+            mutated = d / path.name
+            mutated.write_text(text.replace(old, new))
+            replace = [(path, mutated)]
+            if name.startswith('6.00 beta 6'):
+                text = store.read_text()
+                assert text.count(every_item[0]) == 1
+                (d / 'store').mkdir(exist_ok=True)
+                (d / 'store' / store.name).write_text(text.replace(*every_item))
+                replace.append((store, d / 'store' / store.name))
+            result = run(build(replace, 'mutant'))
+            assert result.returncode != 0 and expected in result.stderr, (name, result.stdout, result.stderr)
+            print('DETECTED', name, '->', result.stderr.strip().splitlines()[-1], flush=True)
+        result = run(binary)
+        assert result.returncode == 0, result.stderr
+        print('NORMAL CONTROL passed', flush=True)

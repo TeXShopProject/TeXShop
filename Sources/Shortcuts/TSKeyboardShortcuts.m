@@ -8,6 +8,7 @@ NSNotificationName const TSMacroShortcutsChangedNotification = @"TSMacroShortcut
 @property NSArray *observedMenuBindings;
 @property BOOL rebuildingMacros;
 @property BOOL applyingMenus;
+@property (copy) NSString *keyboardLayout;
 @end
 
 @implementation TSKeyboardShortcuts
@@ -52,6 +53,29 @@ NSNotificationName const TSMacroShortcutsChangedNotification = @"TSMacroShortcut
     self.observedMenuBindings = [self menuBindingSnapshot];
     for (NSNotificationName name in @[NSMenuDidAddItemNotification, NSMenuDidRemoveItemNotification])
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(menuStructureChanged:) name:name object:nil];
+    // AppKit shows other keys on another keyboard layout; conflicts are worked out again with them.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardLayoutChanged:)
+        name:NSTextInputContextKeyboardSelectionDidChangeNotification object:nil];
+}
+- (void)keyboardLayoutChanged:(NSNotification *)notification {
+    // Switching an input method, as between Japanese and ABC, keeps the keyboard layout.
+    if ([TSKeyboardLayoutID() isEqual:self.keyboardLayout] || self.menuRefreshPending) return;
+    self.menuRefreshPending = YES;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.menuRefreshPending = NO;
+        [self refreshMenuAndMacros];
+    });
+}
+// AppKit adapts reassigned keys to the keyboard layout in the next pass of the run loop;
+// the snapshot and the views that show keys are brought up to date then.
+- (void)noteShownKeysAfterRefresh {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.applyingMenus || self.rebuildingMacros) return;
+        NSArray *snapshot = [self menuBindingSnapshot];
+        if ([snapshot isEqual:self.observedMenuBindings]) return;
+        self.observedMenuBindings = snapshot;
+        [[NSNotificationCenter defaultCenter] postNotificationName:TSMacroShortcutsChangedNotification object:self];
+    });
 }
 - (void)beginMenuRebuild {
     self.rebuildingMacros = YES;
@@ -62,10 +86,12 @@ NSNotificationName const TSMacroShortcutsChangedNotification = @"TSMacroShortcut
     self.observedMenuBindings = [self menuBindingSnapshot];
 
     [[NSNotificationCenter defaultCenter] postNotificationName:TSMacroShortcutsChangedNotification object:self];
+    [self noteShownKeysAfterRefresh];
 }
 - (void)refreshMenuAndMacros {
     if (self.applyingMenus || self.rebuildingMacros) return;
     self.applyingMenus = YES;
+    self.keyboardLayout = TSKeyboardLayoutID();
     @try {
         [self.store refreshMenu];
         [[NSNotificationCenter defaultCenter] postNotificationName:TSRebuildMacrosNotification object:self];
@@ -75,6 +101,7 @@ NSNotificationName const TSMacroShortcutsChangedNotification = @"TSMacroShortcut
         self.applyingMenus = NO;
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:TSMacroShortcutsChangedNotification object:self];
+    [self noteShownKeysAfterRefresh];
 }
 - (NSArray<NSDictionary *> *)conflictsForMacroShortcuts:(NSArray<NSDictionary *> *)candidates {
     return [self.store conflictsForMacroShortcuts:candidates] ?: @[];

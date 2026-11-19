@@ -176,9 +176,19 @@ static void CheckAssignmentOrder(void) {
         item.identifier=[@"TSShortcut." stringByAppendingString:key]; [menu addItem:item];
     }
     TSShortcutStore *store=[[TSShortcutStore alloc] initWithMenu:menu defaults:(id)[MemoryDefaults new]];
+    // Items that keep their keys are left alone: assigning a key again makes AppKit show the
+    // given key until it adapts the key to the keyboard layout once more.
     assignments=[NSMutableArray new]; [store applySavedOverrides];
-    REQUIRE(assignments.count==4 && ![assignments[0][1] length] && ![assignments[1][1] length]);
-    REQUIRE([assignments[2][1] length] && [assignments[3][1] length]); assignments=nil;
+    REQUIRE(assignments.count==0);
+    // Swapping two keys clears both before either is assigned.
+    NSMutableDictionary *overrides=[store valueForKey:@"overrides"];
+    overrides[@"TSShortcut.f"]=TSBinding(@"g",NSEventModifierFlagCommand); overrides[@"TSShortcut.g"]=TSBinding(@"f",NSEventModifierFlagCommand);
+    [store applySavedOverrides];
+    NSMutableArray *keys=[NSMutableArray new];
+    for(NSArray *assignment in assignments) if([assignment[1] length]) [keys addObject:assignment[1]];
+    REQUIRE(assignments.count>=4 && ![assignments[0][1] length] && ![assignments[1][1] length]);
+    REQUIRE([keys isEqualToArray:(@[@"g",@"f"])]); assignments=nil;
+    REQUIRE(store.unavailableCommands.count==0);
 }
 int main(int argc, char **argv) { @autoreleasepool {
     TSInstallAppKitIsolation(); [NSApplication sharedApplication]; [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];

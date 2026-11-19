@@ -26,6 +26,26 @@ TSShortcutBinding *TSBinding(NSString *key, NSEventModifierFlags flags) {
     }
     return [[TSShortcutBinding alloc] initWithKey:key modifiers:flags];
 }
+// With automatic key-equivalent localization, AppKit reports the key it shows on the current
+// keyboard layout (on a French layout, & for the 1 the item was given) and works it out again
+// whenever the item changes. The key and modifiers the item was given are read with the
+// localization turned off for a moment; AppKit localizes the item again on its own.
+TSShortcutBinding *TSGivenBinding(NSMenuItem *item) {
+    if (!item.allowsAutomaticKeyEquivalentLocalization) return TSShownBinding(item);
+    item.allowsAutomaticKeyEquivalentLocalization = NO;
+    TSShortcutBinding *given = TSShownBinding(item);
+    item.allowsAutomaticKeyEquivalentLocalization = YES;
+    return given;
+}
+TSShortcutBinding *TSShownBinding(NSMenuItem *item) {
+    return TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask);
+}
+NSString *TSKeyboardLayoutID(void) {
+    TISInputSourceRef source = TISCopyCurrentKeyboardLayoutInputSource();
+    NSString *identifier = source ? [(__bridge NSString *)TISGetInputSourceProperty(source, kTISPropertyInputSourceID) copy] : nil;
+    if (source) CFRelease(source);
+    return identifier ?: @"";
+}
 // Honor the Command layer, including Dvorak–QWERTY Command. Do not use
 // characters directly for Option/Control combinations (for example Option-G = ©).
 NSString *TSShortcutCharacterForEvent(NSEvent *event) {

@@ -53,7 +53,7 @@ def mutate(text, old, new):
 if args.mutation == 'yield-off':
     production = mutate(production, 'return [NSSet setWithObject:@"TSShortcut.completeLabelOrCitationKey:.0"];', 'return [NSSet set];')
 elif args.mutation == 'hold-back':
-    production = mutate(production, ': [yielding containsObject:command.commandID] ? TSBinding(@"", 0) : TSBinding(command.defaultKey, command.defaultModifiers);', ': TSBinding(command.defaultKey, command.defaultModifiers);')
+    production = mutate(production, ': [yielding containsObject:command.commandID] ? [NSSet set] : [defaults objectForKey:command.item];', ': [defaults objectForKey:command.item];')
 elif args.mutation == 'swallow-off':
     harness = mutate(harness, '    if (TSCompletionKeyComposingView == self) return;\n', '')
 elif args.mutation == 'composition-off':

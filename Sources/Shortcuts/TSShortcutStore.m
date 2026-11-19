@@ -11,6 +11,10 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
 @property NSMutableDictionary<NSString *, TSShortcutBinding *> *overrides;
 @property (readwrite, copy) NSArray<TSShortcutCommand *> *commands;
 @property (readwrite, copy) NSArray<NSString *> *unavailableCommands;
+// Commands whose item does not have its default key: a saved key or, for a yielding default, none.
+@property (copy) NSSet<NSString *> *heldCommandIDs;
+// The keys each menu item had at the last refresh, as given and as AppKit showed them.
+@property NSMapTable<NSMenuItem *, NSSet<TSShortcutBinding *> *> *itemBindings;
 @end
 // Commands whose default key is only a proposal: they take it only when no other menu
 // command (with its key as resolved) and no macro (as its file names it) has it, and
@@ -83,6 +87,49 @@ static NSSet<NSString *> *TSYieldingDefaultCommands(void) {
         [self.overrides removeObjectForKey:old];
     }];
 }
+// The default of a command as AppKit shows it on the current keyboard layout. AppKit works
+// the shown key out after an item changes, so the key last seen on this layout stands in
+// until then.
+- (TSShortcutBinding *)shownDefaultForCommand:(TSShortcutCommand *)command {
+    TSShortcutBinding *given = TSBinding(command.defaultKey, command.defaultModifiers);
+    if (!command.defaultLocalization || !given.key.length) return given;
+    NSString *layout = TSKeyboardLayoutID();
+    NSMenuItem *item = command.item;
+    if (![self.heldCommandIDs containsObject:command.commandID] && !command.managedBySystem && item.allowsAutomaticKeyEquivalentLocalization) {
+        TSShortcutBinding *shown = TSShownBinding(item);
+        if (shown.key.length && ![shown isEqual:given]) {
+            command.shownDefault = shown; command.shownDefaultLayout = layout;
+            return shown;
+        }
+    }
+    return [command.shownDefaultLayout isEqual:layout] && command.shownDefault ? command.shownDefault : given;
+}
+- (TSShortcutBinding *)shownBindingForCommand:(TSShortcutCommand *)command {
+    NSMenuItem *item = command.item;
+    if (command.managedBySystem || !item.allowsAutomaticKeyEquivalentLocalization || !item.keyEquivalent.length ||
+        [self.heldCommandIDs containsObject:command.commandID]) return TSShownBinding(item);
+    return [self shownDefaultForCommand:command];
+}
+// A default reserves its key as given and as shown: the given key is the one it shows
+// again on a layout like the one the menu was made for.
+- (NSSet<TSShortcutBinding *> *)defaultBindingsForCommand:(TSShortcutCommand *)command {
+    TSShortcutBinding *given = TSBinding(command.defaultKey, command.defaultModifiers);
+    if (!given.key.length) return [NSSet set];
+    return [NSSet setWithObjects:given, [self shownDefaultForCommand:command], nil];
+}
+// Whether the item has the key already. Assigning a key again makes AppKit show the given
+// key until it adapts the key once more, so unchanged items are left alone.
+- (BOOL)command:(TSShortcutCommand *)command hasKey:(TSShortcutBinding *)target localized:(BOOL)localized {
+    NSMenuItem *item = command.item;
+    TSShortcutBinding *shown = TSShownBinding(item);
+    if (!target.key.length) return !shown.key.length;
+    if (item.allowsAutomaticKeyEquivalentLocalization != localized) return NO;
+    if ([shown isEqual:target]) return YES;
+    if (!localized) return NO;
+    if ([command.shownDefaultLayout isEqual:TSKeyboardLayoutID()] && [shown isEqual:command.shownDefault] &&
+        [target isEqual:TSBinding(command.defaultKey, command.defaultModifiers)]) return YES;
+    return [TSGivenBinding(item) isEqual:target];
+}
 - (void)applySavedOverrides {
     NSMutableSet *active = [NSMutableSet set];
     NSMutableOrderedSet *unavailable = [NSMutableOrderedSet orderedSet];
@@ -90,26 +137,36 @@ static NSSet<NSString *> *TSYieldingDefaultCommands(void) {
     // A saved shortcut of a command macOS keeps stays saved and applies when macOS lets it.
     for (TSShortcutCommand *command in self.commands)
         if (self.overrides[command.commandID] && !command.managedBySystem) [active addObject:command.commandID];
-    NSMapTable<NSMenuItem *, TSShortcutBinding *> *planned = [NSMapTable strongToStrongObjectsMapTable];
+    NSMapTable<NSMenuItem *, TSShortcutCommand *> *commandItems = [NSMapTable strongToStrongObjectsMapTable];
+    NSMapTable<NSMenuItem *, NSSet<TSShortcutBinding *> *> *defaults = [NSMapTable strongToStrongObjectsMapTable];
+    for (TSShortcutCommand *command in self.commands) {
+        [commandItems setObject:command forKey:command.item];
+        [defaults setObject:[self defaultBindingsForCommand:command] forKey:command.item];
+    }
+    // Other menu items keep their keys, as given and as shown on this layout.
+    NSMapTable<NSMenuItem *, NSSet<TSShortcutBinding *> *> *planned = [NSMapTable strongToStrongObjectsMapTable];
+    TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
+        if (item.submenu || item.action == TSMacroAction() || [commandItems objectForKey:item]) return;
+        TSShortcutBinding *shown = TSShownBinding(item);
+        if (shown.key.length) [planned setObject:[NSSet setWithObjects:shown, TSGivenBinding(item), nil] forKey:item];
+    });
     BOOL changed;
     do {
         changed = NO;
-        TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
-            if (!item.submenu && item.action != TSMacroAction()) [planned setObject:TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask) forKey:item];
-        });
         for (TSShortcutCommand *command in self.commands) {
             // A yielding default is held back while the other commands are resolved.
-            TSShortcutBinding *value = [active containsObject:command.commandID] ? self.overrides[command.commandID]
-                : [yielding containsObject:command.commandID] ? TSBinding(@"", 0) : TSBinding(command.defaultKey, command.defaultModifiers);
+            TSShortcutBinding *saved = self.overrides[command.commandID];
+            NSSet *value = saved && [active containsObject:command.commandID] ? [NSSet setWithObject:saved]
+                : [yielding containsObject:command.commandID] ? [NSSet set] : [defaults objectForKey:command.item];
             [planned setObject:value forKey:command.item];
         }
         NSMutableSet *rejected = [NSMutableSet set];
         for (TSShortcutCommand *command in self.commands) {
             if (![active containsObject:command.commandID]) continue;
-            TSShortcutBinding *value = [planned objectForKey:command.item];
+            TSShortcutBinding *value = self.overrides[command.commandID];
             if (![value[@"key"] length]) continue;
             for (NSMenuItem *other in planned.keyEnumerator) {
-                if (other != command.item && [[planned objectForKey:other] isEqual:value]) {
+                if (other != command.item && [[planned objectForKey:other] containsObject:value]) {
                     [rejected addObject:command.commandID]; [unavailable addObject:command.path]; break;
                 }
             }
@@ -122,13 +179,13 @@ static NSSet<NSString *> *TSYieldingDefaultCommands(void) {
     NSArray<TSShortcutMacro *> *macros = self.macroProvider ? self.macroProvider() : @[];
     for (TSShortcutCommand *command in self.commands) {
         if ([active containsObject:command.commandID] || ![yielding containsObject:command.commandID]) continue;
-        TSShortcutBinding *proposal = TSBinding(command.defaultKey, command.defaultModifiers);
-        if (!proposal.key.length) continue;
+        NSSet<TSShortcutBinding *> *proposal = [defaults objectForKey:command.item];
+        if (!proposal.count) continue;
         BOOL owned = NO;
         for (NSMenuItem *other in planned.keyEnumerator)
-            if (other != command.item && [[planned objectForKey:other] isEqual:proposal]) { owned = YES; break; }
+            if (other != command.item && [[planned objectForKey:other] intersectsSet:proposal]) { owned = YES; break; }
         for (TSShortcutMacro *macro in macros)
-            if (!owned && [TSBinding(macro.key, macro.modifiers) isEqual:proposal]) owned = YES;
+            if (!owned && [proposal containsObject:TSBinding(macro.key, macro.modifiers)]) owned = YES;
         if (owned) [yielded addObject:command.commandID];
         else [planned setObject:proposal forKey:command.item];
     }
@@ -137,9 +194,18 @@ static NSSet<NSString *> *TSYieldingDefaultCommands(void) {
     TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
         if (item.action == TSMacroAction()) item.keyEquivalent = @"";
     });
-    // Avoid transient duplicates when restoring defaults or swapping two saved bindings.
-    for (TSShortcutCommand *command in self.commands) command.item.keyEquivalent = @"";
+    // A default is assigned as the menu gives it, so that AppKit adapts it to the keyboard
+    // layout as it does the menu's own keys; a saved key is assigned as recorded.
+    NSMutableArray<TSShortcutCommand *> *changing = [NSMutableArray array];
     for (TSShortcutCommand *command in self.commands) {
+        BOOL saved = [active containsObject:command.commandID], none = [yielded containsObject:command.commandID];
+        TSShortcutBinding *target = saved ? self.overrides[command.commandID] : none ? TSBinding(@"", 0) : TSBinding(command.defaultKey, command.defaultModifiers);
+        if (![self command:command hasKey:target localized:saved ? NO : none ? command.item.allowsAutomaticKeyEquivalentLocalization : command.defaultLocalization])
+            [changing addObject:command];
+    }
+    // Avoid transient duplicates when restoring defaults or swapping two saved bindings.
+    for (TSShortcutCommand *command in changing) command.item.keyEquivalent = @"";
+    for (TSShortcutCommand *command in changing) {
         if ([active containsObject:command.commandID]) [self apply:self.overrides[command.commandID] to:command];
         else if ([yielded containsObject:command.commandID]) {
             command.item.keyEquivalentModifierMask = 0;
@@ -152,20 +218,32 @@ static NSSet<NSString *> *TSYieldingDefaultCommands(void) {
     }
     for (TSShortcutCommand *command in self.commands) {
         if ([active containsObject:command.commandID] &&
-            ![TSBinding(command.item.keyEquivalent, command.item.keyEquivalentModifierMask) isEqual:[planned objectForKey:command.item]])
+            ![TSShownBinding(command.item) isEqual:self.overrides[command.commandID]])
             [unavailable addObject:command.path];
     }
+    NSMutableSet *held = [active mutableCopy]; [held unionSet:yielded];
+    self.heldCommandIDs = held;
+    self.itemBindings = planned;
     self.unavailableCommands = unavailable.array;
 }
 // Only the effective menu bindings reserve keys. AppKit-inserted commands
 // participate while present; only those TSFindCommandID names can be customized.
+// Each item reserves its key as shown on this keyboard layout and as given: macros are
+// given keys too, which AppKit adapts in the same way.
 + (NSArray<NSDictionary *> *)menuBindings:(NSMenu *)menu {
+    TSShortcutStore *store = TSKeyboardShortcuts.sharedController.store;
+    NSMapTable *known = store.menu == menu ? store.itemBindings : nil;
     NSMutableArray *result = [NSMutableArray array];
     TSVisitMenu(menu, @"", ^(NSMenuItem *item, NSString *path) {
         if (item.hidden && !item.allowsKeyEquivalentWhenHidden) return;
-        if (!item.submenu && item.action != TSMacroAction() && item.keyEquivalent.length)
-            [result addObject:@{@"path":path, @"key":item.keyEquivalent,
-                @"modifiers":@(item.keyEquivalentModifierMask), @"macro":@NO}];
+        if (item.submenu || item.action == TSMacroAction() || !item.keyEquivalent.length) return;
+        NSMutableOrderedSet<TSShortcutBinding *> *bindings = [NSMutableOrderedSet orderedSetWithObject:TSShownBinding(item)];
+        NSSet *previous = [known objectForKey:item];
+        if (previous) [bindings addObjectsFromArray:previous.allObjects];
+        else [bindings addObject:TSGivenBinding(item)];
+        for (TSShortcutBinding *binding in bindings)
+            if (binding.key.length)
+                [result addObject:@{@"path":path, @"key":binding.key, @"modifiers":@(binding.modifiers), @"macro":@NO}];
     });
     return result;
 }
@@ -212,7 +290,7 @@ static NSSet<NSString *> *TSYieldingDefaultCommands(void) {
     TSShortcutBinding *binding = TSBinding(key, flags);
     TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
         if (item.action == TSMacroAction() && item.keyEquivalent.length &&
-            [TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask) isEqual:binding])
+            ([TSShownBinding(item) isEqual:binding] || [TSGivenBinding(item) isEqual:binding]))
             [result addObject:[NSString stringWithFormat:@"%@ (%@)", path,
                 [TSShortcutStore displayKey:item.keyEquivalent modifiers:item.keyEquivalentModifierMask]]];
     });
@@ -223,7 +301,8 @@ static NSSet<NSString *> *TSYieldingDefaultCommands(void) {
     // A yielding default leaves its key to a macro, so restoring it disables no macro.
     for (TSShortcutCommand *command in self.commands)
         if (![TSYieldingDefaultCommands() containsObject:command.commandID])
-            [result addObjectsFromArray:[self macrosUsingKey:command.defaultKey modifiers:command.defaultModifiers]];
+            for (TSShortcutBinding *binding in [self defaultBindingsForCommand:command])
+                [result addObjectsFromArray:[self macrosUsingKey:binding.key modifiers:binding.modifiers]];
     return result.array;
 }
 + (BOOL)isAllowedKey:(NSString *)key modifiers:(NSEventModifierFlags)flags {
@@ -247,7 +326,8 @@ static NSSet<NSString *> *TSYieldingDefaultCommands(void) {
     NSMutableArray<TSShortcutMatch *> *matches = [NSMutableArray array];
     TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
         if (item == excluded || item.submenu != nil || item.action == TSMacroAction() || item.keyEquivalent.length == 0) { return; }
-        if (![TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask) isEqual:binding]) { return; }
+        // The key as AppKit shows it now, or as the item had it at the last refresh.
+        if (![TSShownBinding(item) isEqual:binding] && ![[self.itemBindings objectForKey:item] containsObject:binding]) { return; }
         TSShortcutCommand *command = nil;
         for (TSShortcutCommand *candidate in self.commands) { if (candidate.item == item) { command = candidate; break; } }
         [matches addObject:[[TSShortcutMatch alloc] initWithPath:path menuItem:item command:command macro:nil winner:matches.count == 0]];
@@ -261,26 +341,30 @@ static NSSet<NSString *> *TSYieldingDefaultCommands(void) {
 - (NSArray<TSShortcutBinding *> *)restorationBindingsForCommand:(TSShortcutCommand *)command {
     TISInputSourceRef source = TISCopyCurrentKeyboardLayoutInputSource();
     CFDataRef data = source ? TISGetInputSourceProperty(source, kTISPropertyUnicodeKeyLayoutData) : NULL;
-    NSArray *bindings = TSRestorationBindings(command.defaultKey, command.defaultModifiers, data, LMGetKbdType());
+    NSMutableOrderedSet *bindings = [NSMutableOrderedSet orderedSet];
+    for (TSShortcutBinding *binding in [self defaultBindingsForCommand:command])
+        [bindings addObjectsFromArray:TSRestorationBindings(binding.key, binding.modifiers, data, LMGetKbdType())];
     if (source) CFRelease(source);
-    return bindings;
+    return bindings.array;
 }
 - (nullable NSString *)conflictForRestoringCommand:(TSShortcutCommand *)command {
-    NSString *rawConflict = [self conflictForKey:command.defaultKey modifiers:command.defaultModifiers except:command.item restoring:command];
-    if (rawConflict) return rawConflict;
+    for (TSShortcutBinding *binding in [self defaultBindingsForCommand:command]) {
+        NSString *rawConflict = [self conflictForKey:binding.key modifiers:binding.modifiers except:command.item restoring:command];
+        if (rawConflict) return rawConflict;
+    }
     // Preserve shipped defaults even where their physical spellings overlap on a layout.
     // Only live, user-assigned menu keys participate in the additional restoration check.
     NSMutableSet *customItems = [NSMutableSet set];
     for (TSShortcutCommand *other in self.commands)
         if (other.item != command.item && self.overrides[other.commandID] && other.item.keyEquivalent.length &&
-            [TSBinding(other.item.keyEquivalent, other.item.keyEquivalentModifierMask) isEqual:self.overrides[other.commandID]])
+            [TSShownBinding(other.item) isEqual:self.overrides[other.commandID]])
             [customItems addObject:other.item];
     if (!customItems.count) return nil;
     NSArray *bindings = [self restorationBindingsForCommand:command];
     __block NSString *conflict = nil;
     TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
         if (conflict || item.submenu || item.action == TSMacroAction() || ![customItems containsObject:item]) return;
-        if ([bindings containsObject:TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask)]) conflict = path;
+        if ([bindings containsObject:TSShownBinding(item)]) conflict = path;
     });
     return conflict;
 }
@@ -293,7 +377,8 @@ static NSSet<NSString *> *TSYieldingDefaultCommands(void) {
     if (command.managedBySystem) return NSLocalizedString(@"Shortcut Unavailable", @"");
     if (![TSShortcutStore isAllowedKey:key modifiers:flags]) return NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.", @"");
     TSShortcutBinding *binding = TSBinding(key, flags);
-    if ([binding isEqual:TSBinding(command.defaultKey, command.defaultModifiers)]) {
+    // The default, as given or as this keyboard layout shows it, restores the command.
+    if ([[self defaultBindingsForCommand:command] containsObject:binding]) {
         // Recording a yielding default that a menu command or a macro has is refused, as any
         // key in use, and the saved key stays.
         if ([self commandYieldsDefault:command]) {
