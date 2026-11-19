@@ -1,7 +1,6 @@
 ''
 0
 00
-03
 1
 10
 100
@@ -209,6 +208,7 @@ attempt
 author
 authors
 authors'
+auto
 automatic
 automatically
 automatically''
@@ -273,7 +273,6 @@ box
 boxes
 brackets
 break
-breaking
 bring
 brings
 broke
@@ -1527,6 +1526,7 @@ roles
 roman
 romanian
 root
+rotate
 routine
 routines
 rules
@@ -1545,6 +1545,7 @@ saves
 saving
 saw
 say
+scale
 scheerder
 scheme
 schmock
@@ -1692,7 +1693,6 @@ strange
 strike
 strikeout
 string
-structures
 struggle
 students
 stupid
