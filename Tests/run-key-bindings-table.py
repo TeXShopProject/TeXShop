@@ -17,13 +17,13 @@ mutations = {
     'not-used-at-once': ('    [GlobalData sharedGlobalData].g_autocompletionDictionary = dictionary;\n', '', 'save a real line break and tab, at once'),
     'replacement-character-dropped': ('        } else if (value == nil) {', '        } else if (value == nil && NO) {', 'A pasted U+FFFC without an attachment is saved'),
     'rows-not-striped': ('    table.usesAlternatingRowBackgroundColors = YES;', '    table.usesAlternatingRowBackgroundColors = NO;', 'Neighboring rows have different backgrounds'),
-    'paste-not-saved': ('    if (![pasteKeys writeToFile:pastePath atomically:NO]) {', '    if (NO) {', 'Checking Paste saves the row at once'),
+    'paste-not-saved': ('    written &= [pasteKeys writeToFile:', '    if (NO) written &= [pasteKeys writeToFile:', 'Checking Paste saves the row at once'),
     'placeholder-box-enabled': ('    box.enabled = pastable;', '    box.enabled = YES;', 'has its box off and dimmed'),
     'check-kept-with-mark': ('        // A placeholder or a mark takes the row off pasted text for good.\n        if (!TSKeyBindingPastable(output)) self.mutablePaste[row] = @NO;\n', '', 'Taking the mark out after saving leaves the row unchecked'),
     'box-not-live': ('[self updatePasteBoxInRow:row output:', '[self class]; if (0) [self updatePasteBoxInRow:row output:', 'Typing #INS# turns the box off at once'),
     'input-column-stretched': ('    key.resizingMask = NSTableColumnUserResizingMask;\n', '', 'The Paste column keeps its width at the right end'),
     'stale-check-taken': ('[paste addObject:@([pasteKeys containsObject:key] && TSKeyBindingPastable(values[i]))];', '[paste addObject:@([pasteKeys containsObject:key])];', 'stays off when the placeholder is gone'),
-    'unsaved-check-shown': ('    if (![pasteKeys writeToFile:pastePath atomically:NO]) {', '    if (![pasteKeys writeToFile:pastePath atomically:NO] && NO) {', 'A check that cannot be saved is not shown'),
+    'unsaved-change-kept': ('    if ([self save]) return YES;', '    [self save]; return YES;', 'A check that cannot be saved is not shown'),
     'input-not-limited': ('    if (text.length == 0 || [text rangeOfComposedCharacterSequenceAtIndex:0].length == text.length) return;', '    return;', 'Typing in an input character keeps only the new character'),
 }
 def run(text):

@@ -359,12 +359,33 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check([SavedPaste() isEqual:@[]], @"Deleting a row removes its check");
     [window.undoManager undo];
     Check([SavedPaste() isEqual:(@[@"¥"])], @"Undo brings the check back");
-    // When the checks cannot be saved, the list and pasting keep the saved ones.
+    // A change that cannot be saved is taken back as a whole, in the list, in
+    // open documents and in the files; TeXShop beeps and keeps no Undo for it.
     NSString *pastePath = [folder stringByAppendingPathComponent:@"autocompletionPaste.plist"];
+    [@[@"¥", @"^"] writeToFile:pastePath atomically:NO];
+    [GlobalData sharedGlobalData].g_autocompletionPasteKeys = @[@"¥", @"^"];
+    [bindings reloadFromGlobalData];
+    [window.undoManager removeAllActions];
+    NSDictionary *savedBefore = SavedBindings();
+    NSArray *keysBefore = bindings.keys, *valuesBefore = bindings.values;
     [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: @0444} ofItemAtPath:pastePath error:NULL];
     NSUInteger equiv = [bindings.keys indexOfObject:@"≡"], beepsBefore = beeps;
     ClickBox(PasteBox(table, (NSInteger)equiv));
-    Check(PasteBox(table, (NSInteger)equiv).state == NSControlStateValueOff && [[GlobalData sharedGlobalData].g_autocompletionPasteKeys isEqual:(@[@"¥"])] && [SavedPaste() isEqual:(@[@"¥"])] && beeps == beepsBefore + 1, @"A check that cannot be saved is not shown or used, and beeps");
+    Check(PasteBox(table, (NSInteger)equiv).state == NSControlStateValueOff && [[GlobalData sharedGlobalData].g_autocompletionPasteKeys isEqual:(@[@"¥"])] && [SavedPaste() isEqual:(@[@"¥", @"^"])] && beeps == beepsBefore + 1 && !window.undoManager.canUndo, @"A check that cannot be saved is not shown or used, beeps and leaves no Undo");
+    hat = [bindings.keys indexOfObject:@"^"];
+    [table editColumn:1 row:(NSInteger)hat withEvent:nil select:YES];
+    editor = (NSTextView *)window.firstResponder;
+    [editor insertText:@"\\hat" replacementRange:editor.selectedRange];
+    EndEditing(window, table);
+    Check([bindings.values isEqual:valuesBefore] && [SavedBindings() isEqual:savedBefore] && !PasteBox(table, (NSInteger)hat).enabled && PasteBox(table, (NSInteger)hat).state == NSControlStateValueOff && ![[GlobalData sharedGlobalData].pasteKeyBindings objectForKey:@"^"] && beeps == beepsBefore + 2, @"An output that cannot be saved is taken back, and a check left in the file stays off");
+    bindings.answer = YES;
+    NSInteger lastRow = (NSInteger)bindings.keys.count - 1;
+    [table editColumn:0 row:lastRow withEvent:nil select:YES];
+    editor = (NSTextView *)window.firstResponder;
+    [editor insertText:@"≡" replacementRange:editor.selectedRange];
+    EndEditing(window, table);
+    Spin();
+    Check([bindings.keys isEqual:keysBefore] && table.numberOfRows == (NSInteger)keysBefore.count && [SavedBindings() isEqual:savedBefore] && beeps == beepsBefore + 3, @"Replacing another row that cannot be saved keeps both rows");
     [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions: @0644} ofItemAtPath:pastePath error:NULL];
     // The note under the list.
     NSTextField *pasteNote = nil;

@@ -155,30 +155,44 @@ int main(int argc, char **argv) { @autoreleasepool {
         BOOL undone = NO;
         REQUIRE([Paste(kind, @"\U0001F408a\U00020BB7\U0001F409", &undone) isEqualToString:@"xCATAK\U0001F409y"] && undone);
     }
-    // Several selected ranges: the text takes the place of the first, the others are deleted, as AppKit pastes,
-    // and one Undo restores them.
-    where = "several ranges";
-    for (int bindingsOn = 0; bindingsOn <= 1; bindingsOn++) {
-        keyBindingsOn = bindingsOn;
-        Clip(bindingsOn ? @"@" : @"ab");
-        NSUndoManager *undo = [NSUndoManager new];
-        undo.groupsByEvent = NO;
-        UndoSource *source = [UndoSource new];
-        source.manager = undo;
-        NSTextView *view = [[DocumentText alloc] initWithFrame:NSMakeRect(0, 0, 300, 100)];
-        view.richText = NO; view.allowsUndo = YES; view.delegate = source;
-        view.string = @"aXbYc";
-        view.selectedRanges = @[[NSValue valueWithRange:NSMakeRange(1, 1)], [NSValue valueWithRange:NSMakeRange(3, 1)]];
-        [undo beginUndoGrouping];
-        [view paste:nil];
-        [undo endUndoGrouping];
-        REQUIRE([view.string isEqualToString:@"aabbc"]);
-        REQUIRE(NSEqualRanges(view.selectedRange, NSMakeRange(3, 0)));
-        [undo undo];
-        REQUIRE([view.string isEqualToString:@"aXbYc"]);
+    // Several selected ranges and an empty view: the converted text is pasted as AppKit pastes text, so the result,
+    // its attributes, the selection, and the text and selection after Undo and Redo are those of an ordinary paste.
+    where = "as AppKit pastes";
+    NSDictionary *typing = @{NSFontAttributeName: [NSFont fontWithName:@"Menlo" size:19], NSForegroundColorAttributeName: NSColor.systemRedColor};
+    for (NSString *start in @[@"aXbYc", @""]) {
+        NSMutableArray *outcome = [NSMutableArray array];
+        for (int bindingsOn = 0; bindingsOn <= 1; bindingsOn++) {
+            keyBindingsOn = bindingsOn;
+            [SUD setBool:NO forKey:ConvertLFKey];
+            Clip(bindingsOn ? @"@" : @"ab");
+            NSUndoManager *undo = [NSUndoManager new];
+            undo.groupsByEvent = NO;
+            UndoSource *source = [UndoSource new];
+            source.manager = undo;
+            NSTextView *view = [[DocumentText alloc] initWithFrame:NSMakeRect(0, 0, 300, 100)];
+            view.richText = NO; view.allowsUndo = YES; view.delegate = source;
+            view.string = start;
+            view.typingAttributes = typing;
+            if (start.length)
+                view.selectedRanges = @[[NSValue valueWithRange:NSMakeRange(1, 1)], [NSValue valueWithRange:NSMakeRange(3, 1)]];
+            [undo beginUndoGrouping];
+            [view paste:nil];
+            [undo endUndoGrouping];
+            NSDictionary *attributes = view.string.length ? [view.textStorage attributesAtIndex:0 effectiveRange:NULL] : @{};
+            NSMutableArray *steps = [NSMutableArray arrayWithObjects:view.string, view.selectedRanges, attributes[NSFontAttributeName] ?: @"", attributes[NSForegroundColorAttributeName] ?: @"", nil];
+            [undo undo];
+            [steps addObjectsFromArray:@[view.string, view.selectedRanges]];
+            [undo redo];
+            [steps addObjectsFromArray:@[view.string, view.selectedRanges]];
+            [outcome addObject:steps];
+        }
+        REQUIRE([outcome[1] isEqual:outcome[0]]);
+        REQUIRE([outcome[1][0] isEqualToString:start.length ? @"aabbc" : @"ab"]);
+        if (!start.length) REQUIRE([outcome[1][2] isEqual:typing[NSFontAttributeName]]);
     }
+    [SUD setBool:YES forKey:ConvertLFKey];
     keyBindingsOn = NO;
-    printf("PASS: characters outside the BMP and several selected ranges\n");
+    printf("PASS: characters outside the BMP, and pasting as AppKit pastes into several ranges and an empty view\n");
     where = "#PASTE# key bindings";
     Clip(@"\u00a5");
     NSMutableString *kept = [@"#PASTE#" mutableCopy];

@@ -389,8 +389,9 @@ static BOOL TSKeyBindingPastable(NSString *output) { return !TSKeyBindingOutputH
     return values;
 }
 
-// The list as it is now is written at once and used by open documents.
-- (void)save
+// The list as it is now is written at once and used by open documents. Returns
+// NO when a file could not be written.
+- (BOOL)save
 {
     NSArray *keys = [self savedKeys], *values = [self savedValues], *pasteKeys = [self savedPasteKeys];
     NSDictionary *dictionary = [NSDictionary dictionaryWithObjects:values forKeys:keys];
@@ -403,34 +404,35 @@ static BOOL TSKeyBindingPastable(NSString *output) { return !TSKeyBindingOutputH
     BOOL written = [dictionary writeToFile:[folder stringByAppendingPathComponent:@"autocompletion.plist"] atomically:NO];
     written &= [keys writeToFile:[folder stringByAppendingPathComponent:@"autocompletionDisplayOrder.plist"] atomically:NO];
     // Kept apart, so that autocompletion.plist stays a dictionary of strings.
-    NSString *pastePath = [folder stringByAppendingPathComponent:@"autocompletionPaste.plist"];
-    if (![pasteKeys writeToFile:pastePath atomically:NO]) {
-        // The checks stay as the file has them, in the list and when pasting.
-        written = NO;
-        NSArray *kept = [NSArray arrayWithContentsOfFile:pastePath];
-        if (![kept isKindOfClass:NSArray.class]) kept = @[];
-        [GlobalData sharedGlobalData].g_autocompletionPasteKeys = kept;
-        [self.mutableKeys enumerateObjectsUsingBlock:^(NSString *key, NSUInteger i, BOOL *stop) {
-            self.mutablePaste[i] = @([kept containsObject:key] && TSKeyBindingPastable(self.mutableValues[i]));
-        }];
-        NSInteger column = [self.tableView columnWithIdentifier:TSKeyBindingPasteColumn];
-        if (column >= 0 && self.tableView.numberOfRows > 0)
-            [self.tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, (NSUInteger)self.tableView.numberOfRows)] columnIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)column]];
-        NSBeep();
-    }
+    written &= [pasteKeys writeToFile:[folder stringByAppendingPathComponent:@"autocompletionPaste.plist"] atomically:NO];
     if (!written) NSLog(@"TeXShop could not save the key bindings in %@", folder);
+    return written;
+}
+
+// Saves a change of the list. A change that cannot be saved is taken back, as
+// a whole, in the list, in open documents and in the files, and TeXShop beeps.
+- (BOOL)saveChangeOrRevertToKeys:(NSArray *)keys values:(NSArray *)values paste:(NSArray *)paste
+{
+    if ([self save]) return YES;
+    self.mutableKeys = [keys mutableCopy]; self.mutableValues = [values mutableCopy]; self.mutablePaste = [paste mutableCopy];
+    [self save];
+    [self.tableView reloadData];
+    [self updateControls];
+    NSBeep();
+    return NO;
 }
 
 - (void)restoreKeys:(NSArray<NSString *> *)keys values:(NSArray<NSString *> *)values paste:(NSArray<NSString *> *)pasteKeys actionName:(NSString *)name
 {
     NSArray *currentKeys = [self savedKeys], *currentValues = [self savedValues], *currentPaste = [self savedPasteKeys];
+    NSArray *rowKeys = [self.mutableKeys copy], *rowValues = [self.mutableValues copy], *rowPaste = [self.mutablePaste copy];
     self.mutableKeys = [keys mutableCopy]; self.mutableValues = [values mutableCopy];
     self.mutablePaste = [NSMutableArray array];
     for (NSString *key in keys) [self.mutablePaste addObject:@([pasteKeys containsObject:key])];
-    [self registerUndoToKeys:currentKeys values:currentValues paste:currentPaste actionName:name];
     [self.tableView reloadData];
     [self updateControls];
-    [self save];
+    if (![self saveChangeOrRevertToKeys:rowKeys values:rowValues paste:rowPaste]) return;
+    [self registerUndoToKeys:currentKeys values:currentValues paste:currentPaste actionName:name];
 }
 
 - (void)registerUndoToKeys:(NSArray<NSString *> *)keys values:(NSArray<NSString *> *)values paste:(NSArray<NSString *> *)pasteKeys actionName:(NSString *)name
@@ -446,10 +448,11 @@ static BOOL TSKeyBindingPastable(NSString *output) { return !TSKeyBindingOutputH
 - (void)changeWithActionName:(NSString *)name change:(void (^)(void))change
 {
     NSArray *keys = [self savedKeys], *values = [self savedValues], *pasteKeys = [self savedPasteKeys];
+    NSArray *rowKeys = [self.mutableKeys copy], *rowValues = [self.mutableValues copy], *rowPaste = [self.mutablePaste copy];
     change();
-    [self registerUndoToKeys:keys values:values paste:pasteKeys actionName:name];
     [self updateControls];
-    [self save];
+    if (![self saveChangeOrRevertToKeys:rowKeys values:rowValues paste:rowPaste]) return;
+    [self registerUndoToKeys:keys values:values paste:pasteKeys actionName:name];
 }
 
 #pragma mark Actions
