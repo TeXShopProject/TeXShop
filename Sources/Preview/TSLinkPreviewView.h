@@ -41,6 +41,7 @@
 // no longer shown, as in Single Page display showing another page (#56).
 - (void)rememberPlaceOnPage;
 - (BOOL)returnToPlaceOnPage;
+- (BOOL)returnToPlaceIfAway;
 
 @end
 

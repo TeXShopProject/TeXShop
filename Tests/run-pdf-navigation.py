@@ -49,7 +49,7 @@ static void CountedRestore(PDFView *view, TSExternalPDFPosition position) {
 @implementation NavigationView
 -(void)cleanupMarquee:(BOOL)b {}
 -(void)cleanupMarqueeKeepingPinnedLinkPreview {}
--(void)keepPinnedLinkPreviewInView {}
+-(void)keepPinnedLinkPreviewInView {} -(void)keepPinnedLinkPreviewThroughMove {}
 -(void)closePinnedLinkPreview {}
 METHODS
 @end

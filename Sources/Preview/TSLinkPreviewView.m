@@ -59,6 +59,9 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     // The page the popup lies on and its frame in that page's space, while the pages move.
     PDFPage *_placePage;
     NSRect _placeOnPage;
+    // The popup was brought into view because its page was no longer shown; _placePage and
+    // _placeOnPage still hold the place it goes back to once its page is shown again (#35).
+    BOOL _awayFromPlace;
 }
 
 - (instancetype)initWithFrame:(NSRect)frame image:(NSImage *)image source:(NSRect)source
@@ -306,8 +309,11 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
 
 - (void)rememberPlaceOnPage
 {
-    _placePage = nil;
     PDFView *preview = [self ownerPDFView];
+    // Away from its place, the popup keeps the place it had, until it goes back there.
+    if (_awayFromPlace && _placePage && _placePage.document == preview.document) return;
+    _awayFromPlace = NO;
+    _placePage = nil;
     NSView *documentView = self.superview;
     if (!preview || !documentView || !preview.document) return;
     NSRect frame = [preview convertRect:self.frame fromView:documentView];
@@ -322,13 +328,19 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
 {
     PDFPage *page = _placePage;
     _placePage = nil;
+    _awayFromPlace = NO;
     PDFView *preview = [self ownerPDFView];
     NSView *documentView = self.superview;
     if (!page || !preview || !documentView || page.document != preview.document) return NO;
-    // The continuous displays lay out every page; the others only the pages they show.
+    // The continuous displays lay out every page; the others only the pages they show. A
+    // popup whose page is not shown keeps its place for when the page is shown again.
     PDFDisplayMode mode = preview.displayMode;
     if (mode != kPDFDisplaySinglePageContinuous && mode != kPDFDisplayTwoUpContinuous
-        && ![preview.visiblePages containsObject:page]) return NO;
+        && ![preview.visiblePages containsObject:page]) {
+        _placePage = page;
+        _awayFromPlace = YES;
+        return NO;
+    }
     NSRect frame = [documentView convertRect:[preview convertRect:_placeOnPage fromPage:page] fromView:preview];
     if (!isfinite(NSMinX(frame)) || !isfinite(NSMinY(frame)) || !isfinite(NSWidth(frame)) || !isfinite(NSHeight(frame))
         || NSWidth(frame) <= 0 || NSHeight(frame) <= 0) return NO;
@@ -337,6 +349,11 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
         [self setNeedsDisplay:YES];
     }
     return YES;
+}
+
+- (BOOL)returnToPlaceIfAway
+{
+    return _awayFromPlace && [self returnToPlaceOnPage];
 }
 
 - (TSLinkPreviewEdge)edgesAtPoint:(NSPoint)point
@@ -519,6 +536,9 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
                             NSMakeSize(TSLinkPreviewMinimumWidth * unit, TSLinkPreviewMinimumHeight * unit),
                             [self availableRect], _pageSize, flipped, &frame, &source);
     }
+    // Moved or resized by hand: where it is now is its place. A drag held at an edge, which
+    // changes nothing, leaves the place it is away from.
+    if (!NSEqualRects(frame, self.frame) || !NSEqualRects(source, _source)) _awayFromPlace = NO;
     _source = source;
     self.frame = frame;
     [self setNeedsDisplay:YES];

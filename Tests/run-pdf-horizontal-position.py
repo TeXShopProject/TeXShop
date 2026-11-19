@@ -69,7 +69,7 @@ static void pump(void) { [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWi
 @implementation PreviewView
 -(void)cleanupMarquee:(BOOL)b {}
 -(void)cleanupMarqueeKeepingPinnedLinkPreview {}
--(void)keepPinnedLinkPreviewInView {}
+-(void)keepPinnedLinkPreviewInView {} -(void)keepPinnedLinkPreviewThroughMove {}
 -(void)closePinnedLinkPreview {}
 -(BOOL)annotationKeyDown:(NSEvent *)event { return NO; }
 METHODS
