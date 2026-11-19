@@ -47,6 +47,7 @@
 <li>Click or drag over the line numbers to select whole lines.</li>
 <li>The Edit menu has Character Type Conversion, Unicode Normalization, and Swap with Clipboard, which replaces the selection with the clipboard text and places the selection on the clipboard.</li>
 <li>The Macro Editor has a new design, and macros and key bindings can insert the clipboard text.</li>
+<li>Key bindings with the new Paste box checked apply to text you paste, as well as to typing.</li>
 <li>Fullwidth letters, digits and symbols can be shown in their own color; to show them like other text, turn off Highlight Fullwidth Letters and Symbols in Settings → Editor.</li>
 <li>The encoding of a source file is detected automatically.</li>
 <li>Experiment typesets with the document’s pictures and references, and its source looks like the document’s source. Suggested and reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/8">#8</a>, <a href="https://github.com/TeXShopProject/TeXShop/issues/20">#20</a>).</li>
@@ -87,6 +88,7 @@
 <li><strong>Save PostScript File and -dALLOWPSTRANSPARENCY:</strong> these settings are removed.</li>
 <li><strong>Obsolete settings:</strong> settings that had no effect are removed.</li>
 <li><strong>Themes from earlier color settings:</strong> this button in Settings → Themes and the macro Colored source are removed.</li>
+<li><strong>Clipboard conversion of ¥ and <code>\</code>:</strong> these two items of the Edit menu are removed, and text you paste in a UTF-8 document stays the same, also with otf conversion. To replace ¥ with a backslash when you paste, check Paste for ¥ in Key Bindings.</li>
 <li><strong><code>\UTF</code> commands:</strong> <code>\UTF</code> commands of the otf package are turned back into characters when a file is opened.</li>
 <li><strong>Line endings:</strong> opening a file with Windows or other line endings tells you that they were changed to LF.</li>
 <li><strong>Statistics:</strong> Edit › Statistics… opens Text Statistics in the status bar.</li>
