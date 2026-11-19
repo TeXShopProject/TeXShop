@@ -3382,13 +3382,8 @@ else {
             [printPanel setOptions:([printPanel options] | NSPrintPanelShowsOrientation | NSPrintPanelShowsScaling | NSPrintPanelShowsPaperSize)];
        //  [printPanel setOptions: (NSPrintPanelShowsPreview | NSPrintPanelShowsOrientation | NSPrintPanelShowsPageRange) ]; //( NSPrintPanelShowsPageSetupAccessory & [printPanel options])]; // NSPrintPanelShowsOrientation)];
         
-		if ([printOperation runOperation] && printDocument != nil) {
-            // The next print of this document starts from the choices made in the panel.
-            NSDictionary *chosen = [[printOperation printInfo] dictionary];
-            for (NSString *key in @[TSPDFPrintAutoRotateKey, TSPDFPrintScalingModeKey, NSPrintScalingFactor])
-                if (chosen[key] != nil)
-                    [[[self printInfo] dictionary] setObject:chosen[key] forKey:key];
-        }
+		if ([printOperation runOperation] && printDocument != nil)
+            TSPDFPrintKeepChoices(printOperation, self);
 //		[printView release];
 	} else if (self.documentType == isTeX)
 		{

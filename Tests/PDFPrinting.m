@@ -15,6 +15,13 @@ static void Check(BOOL condition, NSString *message)
 
 typedef struct { NSRect frame; NSString *arrow; } PrintedPage;
 
+@interface SummaryWatcher : NSObject
+@property NSInteger count;
+@end
+@implementation SummaryWatcher
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context { self.count++; }
+@end
+
 // Renders a printed page at one pixel per point and finds the frame and the arrow.
 static PrintedPage Measure(CGPDFPageRef page)
 {
@@ -52,14 +59,30 @@ static PrintedPage Measure(CGPDFPageRef page)
     return result;
 }
 
-static NSArray<NSValue *> *Print(NSString *input, NSString *output, void (^choose)(TSPDFPrintAccessory *), NSArray<NSString *> **arrows)
+// The paper of the next print is landscape A4; the print starts from this print info if set.
+static BOOL ExpectLandscape;
+static NSPrintInfo *StartInfo;
+static NSPrintOperation *LastOperation;
+
+static NSPrintInfo *A4Info(NSString *output)
 {
     NSPrintInfo *info = [[NSPrintInfo alloc] initWithDictionary:@{}];
     info.paperSize = NSMakeSize(595.276, 841.89); // A4
     info.jobDisposition = NSPrintSaveJob;
     info.dictionary[NSPrintJobSavingURL] = [NSURL fileURLWithPath:output];
+    return info;
+}
+
+static NSArray<NSValue *> *Print(NSString *input, NSString *output, void (^choose)(TSPDFPrintAccessory *), NSArray<NSString *> **arrows)
+{
+    NSPrintInfo *info = StartInfo ?: A4Info(output);
+    if (StartInfo) info.dictionary[NSPrintJobSavingURL] = [NSURL fileURLWithPath:output];
+    NSDictionary *before = [info.dictionary copy];
+    NSPaperOrientation orientationBefore = info.orientation;
     PDFDocument *document = [[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:input]];
     NSPrintOperation *operation = TSPDFPrintOperation(document, info);
+    LastOperation = operation;
+    Check([info.dictionary isEqual:before] && info.orientation == orientationBefore, @"making the operation leaves the document's print info as it is");
     TSPDFPrintAccessory *accessory = (TSPDFPrintAccessory *)operation.printPanel.accessoryControllers.firstObject;
     Check([accessory isKindOfClass:TSPDFPrintAccessory.class], @"the print panel has the section");
     Check(! (operation.printPanel.options & NSPrintPanelShowsScaling), @"the panel's own Scale field is left out");
@@ -73,8 +96,11 @@ static NSArray<NSValue *> *Print(NSString *input, NSString *output, void (^choos
     for (size_t i = 1; printed && i <= CGPDFDocumentGetNumberOfPages(printed); i++) {
         CGPDFPageRef page = CGPDFDocumentGetPage(printed, i);
         CGRect media = CGPDFPageGetBoxRect(page, kCGPDFMediaBox);
-        Check(fabs(media.size.width - 595.276) < 1.5 && fabs(media.size.height - 841.89) < 1.5 && CGPDFPageGetRotationAngle(page) == 0,
-              [NSString stringWithFormat:@"%@ page %zu is portrait A4", output.lastPathComponent, i]);
+        NSSize paper = media.size;
+        if ((CGPDFPageGetRotationAngle(page) / 90) % 2) paper = NSMakeSize(paper.height, paper.width);
+        NSSize a4 = ExpectLandscape ? NSMakeSize(841.89, 595.276) : NSMakeSize(595.276, 841.89);
+        Check(fabs(paper.width - a4.width) < 1.5 && fabs(paper.height - a4.height) < 1.5,
+              [NSString stringWithFormat:@"%@ page %zu is %@ A4 (%@)", output.lastPathComponent, i, ExpectLandscape ? @"landscape" : @"portrait", NSStringFromSize(paper)]);
         PrintedPage measured = Measure(page);
         [frames addObject:[NSValue valueWithRect:measured.frame]];
         [directions addObject:measured.arrow];
@@ -160,10 +186,70 @@ int main(int argc, char **argv)
             Check(field.enabled, @"the Scale field is available with Scale chosen");
             field.stringValue = @"50";
             [field sendAction:field.action to:field.target];
+            field.stringValue = @"";
+            [field sendAction:field.action to:field.target];
+            Check(a.scalePercent == 50 && field.integerValue == 50, [NSString stringWithFormat:@"an emptied Scale field goes back to 50%% (%ld)", (long)a.scalePercent]);
         }, &arrows);
         w = @"50%";
         CheckPage(frames, arrows, 1, @"right", NO, NSMakeSize(b5Lying.width / 2, b5Lying.height / 2), w);
         CheckPage(frames, arrows, 5, @"right", NO, NSMakeSize(420 * mm / 2, 297 * mm / 2), w);
+
+        // The summary the print panel watches changes with each choice.
+        {
+            NSPrintInfo *info = A4Info([dir stringByAppendingPathComponent:@"unused.pdf"]);
+            TSPDFPrintAccessory *a = [[TSPDFPrintAccessory alloc] initWithPrintInfo:info];
+            [a view];
+            SummaryWatcher *watcher = [SummaryWatcher new];
+            [a addObserver:watcher forKeyPath:@"localizedSummaryItems" options:0 context:NULL];
+            a.autoRotate = NO; Check(watcher.count == 1, @"the summary changes with Auto Rotate");
+            a.scaleToFit = NO; Check(watcher.count == 2, @"the summary changes with Scale or Scale to Fit");
+            a.scalePercent = 70; Check(watcher.count == 3, @"the summary changes with the scale");
+            [a removeObserver:watcher forKeyPath:@"localizedSummaryItems"];
+        }
+        Check([TSPDFPrintLabelWithoutColon(@"\u00C9chelle\u00A0:") isEqual:@"\u00C9chelle"] && [TSPDFPrintLabelWithoutColon(@"\u7F29\u653E\uFF1A") isEqual:@"\u7F29\u653E"]
+              && [TSPDFPrintLabelWithoutColon(@"Scale:") isEqual:@"Scale"], @"summary names lose the colon and the space before it");
+
+        // The choices of a print stay with its document only, and not as the source's scale.
+        {
+            NSDocument *first = [NSDocument new], *second = [NSDocument new];
+            Check(first.printInfo == NSPrintInfo.sharedPrintInfo, @"a new document starts with the shared print info");
+            NSPrintInfo *shared = NSPrintInfo.sharedPrintInfo;
+            shared.paperSize = NSMakeSize(595.276, 841.89);
+            shared.jobDisposition = NSPrintSaveJob;
+            NSDictionary *sharedBefore = [shared.dictionary copy];
+            StartInfo = first.printInfo;
+            Print(input, [dir stringByAppendingPathComponent:@"first.pdf"], ^(TSPDFPrintAccessory *a) {
+                a.autoRotate = NO; a.scaleToFit = NO; a.scalePercent = 43;
+            }, &arrows);
+            TSPDFPrintKeepChoices(LastOperation, first);
+            NSMutableDictionary *sharedAfter = [shared.dictionary mutableCopy];
+            [sharedAfter removeObjectForKey:NSPrintJobSavingURL];
+            NSMutableDictionary *sharedExpected = [sharedBefore mutableCopy];
+            [sharedExpected removeObjectForKey:NSPrintJobSavingURL];
+            NSMutableSet *changed = [NSMutableSet set];
+            // Saving a job records its path and format in the shared print info (AppKit): not a choice.
+            for (id key in @[TSPDFPrintAutoRotateKey, TSPDFPrintScalingModeKey, NSPrintScalingFactor, @"TSPDFPrintScale", NSPrintOrientation])
+                if (sharedAfter[key] != sharedExpected[key] && ! [sharedAfter[key] isEqual:sharedExpected[key]]) [changed addObject:key];
+            Check(changed.count == 0, [NSString stringWithFormat:@"the shared print info keeps no choice (changed: %@)", [changed.allObjects componentsJoinedByString:@", "]]);
+            Check(first.printInfo != shared && [first.printInfo.dictionary[NSPrintScalingFactor] doubleValue] == [sharedBefore[NSPrintScalingFactor] ?: @1 doubleValue],
+                  @"the document has its own print info, its scale for the source unchanged");
+            __block BOOL rotate = YES, fit = YES; __block NSInteger percent = 0;
+            StartInfo = first.printInfo;
+            Print(input, [dir stringByAppendingPathComponent:@"first-again.pdf"], ^(TSPDFPrintAccessory *a) { rotate = a.autoRotate; fit = a.scaleToFit; percent = a.scalePercent; }, &arrows);
+            Check(! rotate && ! fit && percent == 43, @"the document's next print starts from its choices");
+            StartInfo = second.printInfo;
+            Print(input, [dir stringByAppendingPathComponent:@"second.pdf"], ^(TSPDFPrintAccessory *a) { rotate = a.autoRotate; fit = a.scaleToFit; percent = a.scalePercent; }, &arrows);
+            Check(rotate && fit && percent == 100, @"another document starts with Auto Rotate and Scale to Fit");
+            StartInfo = nil;
+        }
+
+        // A first page with /Rotate 90 is shown lying: the paper is landscape.
+        if (argc > 3) {
+            ExpectLandscape = YES;
+            frames = Print(@(argv[3]), [dir stringByAppendingPathComponent:@"rotated-first.pdf"], nil, &arrows);
+            Check(frames.count == 2, @"both pages of the PDF whose first page is /Rotate 90 print");
+            ExpectLandscape = NO;
+        }
 
         printf("%s\n", failures ? "FAIL" : "PASS: PDF printing turns and scales pages as Preview does");
         return failures ? 1 : 0;

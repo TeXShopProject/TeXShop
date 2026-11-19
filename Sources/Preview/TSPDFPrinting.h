@@ -17,8 +17,15 @@ extern NSString * const TSPDFPrintScalingModeKey;
 - (instancetype)initWithPrintInfo:(NSPrintInfo *)printInfo;
 @end
 
-// Prepares printInfo (choices kept in it from an earlier print of the document; Auto Rotate
-// and Scale to Fit the first time) and returns the operation with the panel section.
-NSPrintOperation * _Nullable TSPDFPrintOperation(PDFDocument *document, NSPrintInfo *printInfo);
+// Returns the operation with the panel section, on a copy of the document's print info:
+// choices kept from an earlier print of the document, Auto Rotate and Scale to Fit the first time.
+NSPrintOperation * _Nullable TSPDFPrintOperation(PDFDocument *document, NSPrintInfo *documentPrintInfo);
+
+// After a print that succeeded: the document's next print starts from these choices; other
+// documents do not.
+void TSPDFPrintKeepChoices(NSPrintOperation *operation, NSDocument *document);
+
+// The name of a label for the panel's summary ("Scale:" gives "Scale").
+NSString *TSPDFPrintLabelWithoutColon(NSString *label);
 
 NS_ASSUME_NONNULL_END

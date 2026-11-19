@@ -7,10 +7,14 @@
 // uses the choices the operation was made with.
 NSString * const TSPDFPrintAutoRotateKey = @"PDFPrintAutoRotate";
 NSString * const TSPDFPrintScalingModeKey = @"PDFPrintScalingMode";
+// The scale chosen for a PDF, kept apart from NSPrintScalingFactor of the document's print
+// info, which printing the source uses too.
+static NSString * const TSPDFPrintScaleKey = @"TSPDFPrintScale";
 
-static NSString *TSPrintLabelWithoutColon(NSString *label)
+NSString *TSPDFPrintLabelWithoutColon(NSString *label)
 {
-    NSCharacterSet *trailing = [NSCharacterSet characterSetWithCharactersInString:@":：   "];
+    // French sets a no-break space (or a narrow one) before its colon.
+    NSCharacterSet *trailing = [NSCharacterSet characterSetWithCharactersInString:@": \uFF1A\u00A0\u202F"];
     NSString *result = label;
     while (result.length > 0 && [trailing characterIsMember:[result characterAtIndex:result.length - 1]])
         result = [result substringToIndex:result.length - 1];
@@ -127,7 +131,18 @@ static NSString *TSPrintLabelWithoutColon(NSString *label)
 
 - (void)scaleFieldChanged:(NSTextField *)sender
 {
+    // An emptied field goes back to the scale in use.
+    if (sender.objectValue == nil || sender.integerValue < 1) {
+        sender.integerValue = self.scalePercent;
+        return;
+    }
     self.scalePercent = sender.integerValue;
+}
+
+// The print panel watches the summary.
++ (NSSet<NSString *> *)keyPathsForValuesAffectingLocalizedSummaryItems
+{
+    return [NSSet setWithObjects:@"autoRotate", @"scaleToFit", @"scalePercent", nil];
 }
 
 - (NSSet<NSString *> *)keyPathsForValuesAffectingPreview
@@ -142,17 +157,20 @@ static NSString *TSPrintLabelWithoutColon(NSString *label)
         : [NSString stringWithFormat:@"%ld%%", (long)self.scalePercent];
     return @[@{NSPrintPanelAccessorySummaryItemNameKey: [bundle localizedStringForKey:@"Auto Rotate" value:nil table:nil],
                NSPrintPanelAccessorySummaryItemDescriptionKey: [bundle localizedStringForKey:(self.autoRotate ? @"On" : @"Off") value:nil table:nil]},
-             @{NSPrintPanelAccessorySummaryItemNameKey: TSPrintLabelWithoutColon([bundle localizedStringForKey:@"Scale:" value:nil table:nil]),
+             @{NSPrintPanelAccessorySummaryItemNameKey: TSPDFPrintLabelWithoutColon([bundle localizedStringForKey:@"Scale:" value:nil table:nil]),
                NSPrintPanelAccessorySummaryItemDescriptionKey: scaling}];
 }
 
 @end
 
-NSPrintOperation *TSPDFPrintOperation(PDFDocument *document, NSPrintInfo *printInfo)
+NSPrintOperation *TSPDFPrintOperation(PDFDocument *document, NSPrintInfo *documentPrintInfo)
 {
     if (document.pageCount == 0)
         return nil;
+    // The document's print info stays as it is until a print succeeds (TSPDFPrintKeepChoices).
+    NSPrintInfo *printInfo = [documentPrintInfo copy];
     NSMutableDictionary *settings = printInfo.dictionary;
+    settings[NSPrintScalingFactor] = settings[TSPDFPrintScaleKey] ?: @1.0;
     // The first print of a document turns pages and fits them to the paper, as Preview does.
     if (settings[TSPDFPrintAutoRotateKey] == nil)
         settings[TSPDFPrintAutoRotateKey] = @YES;
@@ -177,4 +195,19 @@ NSPrintOperation *TSPDFPrintOperation(PDFDocument *document, NSPrintInfo *printI
     panel.options = (panel.options | NSPrintPanelShowsOrientation | NSPrintPanelShowsPaperSize) & ~NSPrintPanelShowsScaling;
     [panel addAccessoryController:[[TSPDFPrintAccessory alloc] initWithPrintInfo:operation.printInfo]];
     return operation;
+}
+
+void TSPDFPrintKeepChoices(NSPrintOperation *operation, NSDocument *document)
+{
+    // A document starts with the application's shared print info: it gets its own, so that
+    // another document does not start from these choices.
+    if (document.printInfo == NSPrintInfo.sharedPrintInfo)
+        document.printInfo = [document.printInfo copy];
+    NSDictionary *chosen = operation.printInfo.dictionary;
+    NSMutableDictionary *kept = document.printInfo.dictionary;
+    for (NSString *key in @[TSPDFPrintAutoRotateKey, TSPDFPrintScalingModeKey])
+        if (chosen[key] != nil)
+            kept[key] = chosen[key];
+    if (chosen[NSPrintScalingFactor] != nil)
+        kept[TSPDFPrintScaleKey] = chosen[NSPrintScalingFactor];
 }
