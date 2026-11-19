@@ -444,3 +444,8 @@
 "Complete Label or Citation Key" = "레이블 또는 인용 키 완성";
 /* Edit › Complete Label or Citation Key tooltip */
 "Offers the labels of the file after \\ref{, and BibDesk citation keys after \\cite{ when Settings allows it." = "\\ref{ 뒤에서는 파일의 레이블을, 설정에서 허용하면 \\cite{ 뒤에서 BibDesk의 인용 키를 후보로 보여 줍니다.";
+
+/* Print panel: the section of a PDF print, as in Preview */
+"Auto Rotate" = "자동 회전";
+"Scale:" = "크기 조절:";
+"Scale to Fit" = "크기에 맞게 조절";

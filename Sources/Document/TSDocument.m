@@ -57,6 +57,7 @@
 #import "GlobalData.h"
 
 #import "TSPrintView.h"
+#import "TSPDFPrinting.h"
 #import "TSPreferences.h"
 #import "TSWindowManager.h"
 #import "TSLaTeXPanelController.h"
@@ -3273,6 +3274,7 @@ else {
 {
 	id				printView;
 	NSPrintOperation	*printOperation;
+	PDFDocument		*printDocument = nil;
 	NSString		*imagePath;
 	NSString		*theSource;
 	id				aRep;
@@ -3307,18 +3309,18 @@ else {
 			aRep = [NSImageRep imageRepWithContentsOfFile: imagePath];
 		if (aRep == nil)
 			return;
-		printView = [[TSPrintView alloc] initWithImageRep: aRep];
-        
-        if ([aRep isKindOfClass: [NSPDFImageRep class]])
-            {
-            NSRect bounds = [aRep bounds];
-            if ((bounds.size.width) > (bounds.size.height))
-                [[self printInfo] setOrientation: NSLandscapeOrientation];
-            else
-                [[self printInfo] setOrientation: NSPortraitOrientation];
-             }
-        
- 		printOperation = [NSPrintOperation printOperationWithView:printView printInfo: [self printInfo]];
+        // A PDF prints as Preview prints it: pages as shown (their /Rotate applied), turned to suit
+        // the paper and scaled to fit it, with these choices in the print panel.
+        if ([aRep isKindOfClass: [NSPDFImageRep class]]) {
+            printDocument = [[PDFDocument alloc] initWithURL: [NSURL fileURLWithPath: imagePath]];
+            printOperation = printDocument ? TSPDFPrintOperation(printDocument, [self printInfo], self) : nil;
+            if (printOperation == nil)
+                printDocument = nil;
+        }
+        if (printOperation == nil) {
+            printView = [[TSPrintView alloc] initWithImageRep: aRep];
+            printOperation = [NSPrintOperation printOperationWithView:printView printInfo: [self printInfo]];
+        }
         
         
   // Dirk-Willem van Gulik: code to add job title to print job
@@ -3330,7 +3332,7 @@ else {
 		if ((_documentType == isTeX) || (_documentType == isPDF)) {
             NSData * raw = [aRep PDFRepresentation];
 #if (__MAC_OS_X_VERSION_MIN_REQUIRED >= 1040)
-            PDFDocument * doc = [[PDFDocument alloc] initWithData:raw];
+            PDFDocument * doc = printDocument ?: [[PDFDocument alloc] initWithData:raw];
             for(NSString * entry in @[PDFDocumentTitleAttribute, PDFDocumentSubjectAttribute]) {
                 if ([[[doc documentAttributes] objectForKey:entry] length]) {
                     [printOperation setJobTitle:[[doc documentAttributes] objectForKey:entry]];
@@ -3376,10 +3378,14 @@ else {
         [printOperation setShowsPrintPanel:flag];
         [printOperation setShowsProgressPanel:flag];
         printPanel = [printOperation printPanel];
-        [printPanel setOptions:([printPanel options] | NSPrintPanelShowsOrientation | NSPrintPanelShowsScaling | NSPrintPanelShowsPaperSize)];
+        if (printDocument == nil)
+            [printPanel setOptions:([printPanel options] | NSPrintPanelShowsOrientation | NSPrintPanelShowsScaling | NSPrintPanelShowsPaperSize)];
        //  [printPanel setOptions: (NSPrintPanelShowsPreview | NSPrintPanelShowsOrientation | NSPrintPanelShowsPageRange) ]; //( NSPrintPanelShowsPageSetupAccessory & [printPanel options])]; // NSPrintPanelShowsOrientation)];
         
-		[printOperation runOperation];
+		if (printDocument == nil)
+            [printOperation runOperation];
+        else if (TSPDFPrintRun(printOperation))
+            TSPDFPrintKeepChoices(printOperation, self);
 //		[printView release];
 	} else if (self.documentType == isTeX)
 		{
