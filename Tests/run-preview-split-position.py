@@ -31,7 +31,7 @@ def last_method(source, signature):
 split = last_method(window_source, '- (void) mainSplitPdfKitWindow')
 # The split places the parts by their frames (#55).
 place = last_method(window_source, 'static void TSPreviewPlacePartByFrame(NSView *part)')
-switch = last_method(window_source, '- (void)switchViews;')
+switch = last_method(window_source, '- (void)switchViews\n')
 # Switching the parts of a split window (#25).
 parts = last_method(window_source, '- (void)switchSplitParts\n')
 splitter = last_method(window_source, '- (void) splitPdfKitWindow:')
@@ -124,6 +124,8 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 - (void)notificationSetup {}
 - (void)resetSearchDelegate {}
 - (void)becomeActiveView {}
+// Switch Views in a window that is not split has its own test, run-preview-switch-views.py.
+- (void)switchToOtherView {}
 - (BOOL)hasPinnedLinkPreview { return YES; }
 - (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:(NSRect *)f { return nil; }
 - (void)attachPinnedLinkPreview:(TSLinkPreviewView *)p windowFrame:(NSRect)f {}

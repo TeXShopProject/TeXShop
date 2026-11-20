@@ -94,6 +94,17 @@
     BOOL pinnedLinkPreviewMovePending;
     NSUInteger pinnedLinkPreviewMoveCount;
     BOOL _skipLinks;
+    // The other view of Switch Views in a window that is not split (#60), kept while oldUsed.
+    TSPreviewPanePlace otherViewPlace;
+    NSInteger otherViewPageStyle, otherViewFirstPageStyle, otherViewResizeOption;
+    BOOL otherViewAutoScales;
+    CGFloat otherViewScale;
+    PDFSelection *otherViewSelection;
+    TSLinkPreviewView *otherViewPinnedLinkPreview;
+    // The PDF the selection and the popup belong to.
+    __weak PDFDocument *otherViewDocument;
+    // The popup's frame in window coordinates, less the top left corner of this view.
+    NSRect otherViewPinnedLinkPreviewFrame;
 }
 
 + (void)initialize
@@ -344,7 +355,6 @@
     // changed by Terada (until this line)
     
     self.oldUsed = NO;
-    self.doScroll = YES;
     
 //    self.skipLinks = NO;
     
@@ -2796,7 +2806,6 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 - (void)changePageStyleTo:(NSInteger)newStyle
 {
     if (newStyle < PDF_SINGLE_PAGE_STYLE || newStyle > PDF_DOUBLE_MULTI_PAGE_STYLE || newStyle == pageStyle) return;
-    self.doScroll = NO;
     // A pinned popup stays; the display format does not go elsewhere (#35).
     [self cleanupMarqueeKeepingPinnedLinkPreview];
     [self performPreviewLayoutChange:^{
@@ -8712,6 +8721,74 @@ else
 	result =  [super becomeFirstResponder];
 	[self becomeActiveView];
 	return result;
+}
+
+// Switch Views in a window that is not split (#60). The view shown and the other view change
+// places, each with what it shows: the place at the top edge, the display format, the
+// magnification, the selection and a pinned link popup, which comes back at the same place in
+// the window. The first time only the place shown is kept as the other view; the view shown
+// starts from it without the pinned popup, which stays with the other view. After the PDF is
+// shown again, as after typesetting, the other view keeps its place, display format and
+// magnification, but like the view shown it no longer has its selection and pinned popup.
+- (void)switchToOtherView
+{
+    if (!self.document.pageCount) return;
+    [self cleanupMarqueeKeepingPinnedLinkPreview];
+    if (self.handlingLink) [self killTransientLinkPreview];
+
+    TSPreviewPanePlace place = TSPreviewPaneCapture(self);
+    NSInteger style = pageStyle, firstStyle = firstPageStyle, resize = resizeOption;
+    BOOL autoScales = self.autoScales;
+    CGFloat scale = self.scaleFactor;
+    PDFSelection *selection = self.currentSelection;
+    NSRect viewFrame = [self convertRect:self.bounds toView:nil];
+    NSRect popupFrame = NSZeroRect;
+    TSLinkPreviewView *popup = [self detachPinnedLinkPreviewWithWindowFrame:&popupFrame];
+    popupFrame = NSOffsetRect(popupFrame, -NSMinX(viewFrame), -NSMaxY(viewFrame));
+
+    if (self.oldUsed) {
+        if (otherViewDocument != self.document) {
+            otherViewSelection = nil;
+            otherViewPinnedLinkPreview = nil;
+        }
+        firstPageStyle = otherViewFirstPageStyle;
+        if (pageStyle != otherViewPageStyle) {
+            pageStyle = otherViewPageStyle;
+            [self setupPageStyle];
+        }
+        resizeOption = otherViewResizeOption;
+        if (otherViewAutoScales)
+            [self setAutoScales:YES];
+        else if (otherViewResizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH)
+            // Fitted to this view after its place is put back below.
+            [self setAutoScales:NO];
+        else {
+            [self setAutoScales:NO];
+            [self setMagnification:otherViewScale];
+        }
+        resizeOption = otherViewResizeOption;
+        [self setCurrentSelection:otherViewSelection];
+        TSPreviewPaneRestore(self, otherViewPlace);
+        [self fitContentWidth];
+        if (otherViewPinnedLinkPreview)
+            [self attachPinnedLinkPreview:otherViewPinnedLinkPreview windowFrame:NSOffsetRect(otherViewPinnedLinkPreviewFrame,
+                NSMinX(viewFrame), NSMaxY(viewFrame))];
+    }
+
+    self.oldUsed = YES;
+    otherViewDocument = self.document;
+    otherViewPlace = place;
+    otherViewPageStyle = style;
+    otherViewFirstPageStyle = firstStyle;
+    otherViewResizeOption = resize;
+    otherViewAutoScales = autoScales;
+    otherViewScale = scale;
+    otherViewSelection = selection;
+    otherViewPinnedLinkPreview = popup;
+    otherViewPinnedLinkPreviewFrame = popupFrame;
+
+    [self scaleChanged:nil];
+    [self.myDocument updatePreviewLayoutControls];
 }
 
 // The toolbar, the Preview menu and the search results work with this view from now on,

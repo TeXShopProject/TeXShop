@@ -187,10 +187,8 @@
 @property double                                    verticalWidth1;
 @property double                                    verticalWidth2;
 
-@property NSRect                                    oldVisibleRect;
-@property NSInteger                                 oldIndex;
+// Whether Switch Views keeps another view of a window that is not split (#60).
 @property BOOL                                      oldUsed;
-@property BOOL                                      doScroll;
 @property BOOL                                      skipLinks;
 
 @property BOOL                                      firstTime;
@@ -296,6 +294,11 @@
 // the outline, Back and Forward, a page number, a search result or a sync (#35).
 - (void)closePinnedLinkPreview;
 - (void)keepPinnedLinkPreviewThroughMove;
+// Switch Views in a window that is not split (#60): this view and the other view it keeps
+// change places, each with its own place, display format, magnification, selection and
+// pinned link popup. The first time, the place shown is kept as the other view, and the
+// pinned popup stays with it.
+- (void)switchToOtherView;
 - (void)recacheMarquee;
 - (BOOL)hasSelection;
 - (NSData *)imageDataFromSelectionType: (NSInteger)type;
