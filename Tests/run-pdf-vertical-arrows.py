@@ -16,9 +16,11 @@ def method(signature):
     start = source.rindex(signature)
     return source[start:source.index('\n}', start) + 2]
 methods = '\n'.join(method(signature) for signature in (
-    '- (BOOL)scrollVerticalArrowWithinPage:', '- (void)keyDown:'))
+    '- (BOOL)paginatedScrollMinimum:', '- (BOOL)scrollVerticalArrowWithinPage:', '- (BOOL)pageKeyInPaginatedView:', '- (void)keyDown:'))
 if args.mutation == 'delegate-at-edge':
-    methods = methods.replace('[clip scrollToPoint:origin];', 'if (origin.y == bounds.origin.y) return NO;\n    [clip scrollToPoint:origin];')
+    edge = 'origin.y = fmin(fmax(origin.y + direction * step, minimum), maximum);\n    [clip scrollToPoint:origin];'
+    assert methods.count(edge) == 1
+    methods = methods.replace(edge, edge.replace('[clip scrollToPoint:origin];', 'if (origin.y == bounds.origin.y) return NO;\n    [clip scrollToPoint:origin];'))
 elif args.mutation == 'all-modes':
     methods = methods.replace('if (self.displayMode != kPDFDisplaySinglePage && self.displayMode != kPDFDisplayTwoUp)', 'if (NO)')
 elif args.mutation == 'ignore-modifiers':
@@ -26,7 +28,9 @@ elif args.mutation == 'ignore-modifiers':
 elif args.mutation == 'ignore-annotation':
     methods = methods.replace('if ([self annotationKeyDown: theEvent])', 'if (NO)')
 elif args.mutation == 'visible-scroller':
-    methods = methods.replace('NSClipView *clip = scroll.contentView;', 'if (scroll.verticalScroller.hidden) return NO;\n    NSClipView *clip = scroll.contentView;')
+    hidden = '    NSScrollView *scroll = self.documentView.enclosingScrollView;\n    NSClipView *clip = scroll.contentView;\n    if (!self.document.pageCount'
+    assert methods.count(hidden) == 1
+    methods = methods.replace(hidden, hidden.replace('    NSClipView *clip', '    if (scroll.verticalScroller.hidden) return NO;\n    NSClipView *clip'))
 elif args.mutation == 'scaled-step':
     original = 'step /= magnification;'
     assert original in methods
@@ -56,6 +60,8 @@ static void pump(void) { [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWi
 @end
 @interface ArrowView:TrackingPDFView
 -(BOOL)scrollVerticalArrowWithinPage:(NSEvent *)event;
+-(BOOL)paginatedScrollMinimum:(CGFloat *)minimum maximum:(CGFloat *)maximum;
+-(BOOL)pageKeyInPaginatedView:(NSEvent *)event;
 @end
 @implementation ArrowView
 METHODS
