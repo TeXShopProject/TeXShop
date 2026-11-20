@@ -492,8 +492,13 @@ int main(int argc, char **argv) {
                 [args removeAllObjects];
                 engine = [p separate:@"bibtex \" x\"" into:args];
                 BOOL reopened = [engine isEqualToString:@"bibtex"] && [args isEqualToArray:@[@" x"]];
-                ok = quoted && lone && reopened;
-                detail = [NSString stringWithFormat:@"quoted=%d lone=%d reopened=%d", quoted, lone, reopened];
+                // A setting that is not text (an array, a number written by hand) gives no program, so bibtex is used.
+                [args removeAllObjects];
+                id notText = @[@"biber"];
+                BOOL other = [p separate:notText into:args] == nil && args.count == 0
+                    && [p separate:(id)@42 into:args] == nil && [p separate:nil into:args] == nil && args.count == 0;
+                ok = quoted && lone && reopened && other;
+                detail = [NSString stringWithFormat:@"quoted=%d lone=%d reopened=%d notText=%d", quoted, lone, reopened, other];
             });
 
             // First-line %& commands (A6).

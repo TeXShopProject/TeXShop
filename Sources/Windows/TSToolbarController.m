@@ -411,7 +411,7 @@ else
                 NSImage *symbolImage = [NSImage imageWithSystemSymbolName: symbolName
                                                 accessibilityDescription: accessibility];
                 return [self makeToolbarItemWithItemIdentifier:itemIdent key:itemKey
-                                                     image:symbolImage target:self action:action];
+                                                     image:symbolImage target:target action:action];
                 }
             else
              
@@ -1315,11 +1315,12 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 
 
     // The page buttons of the image window. They were made and dropped, and the nil item then lost its title in its
-    // menu form: Customize Toolbar of an image window raised. The menu form sends the actions up the responder chain.
+    // menu form: Customize Toolbar of an image window raised. They turn the pages of the image view, like the
+    // Previous Page and Next Page items.
     if ([itemIdent isEqual: kPreviousPageButtonTID])
-        return [self makeToolbarSymbolsItemWithItemIdentifier:itemIdent key:itemIdent symbolName: @"arrow.up" accessibility: @"Previous Page" imageName:@"PreviousPageAction" newImageName:@"arrow.up" target:nil action:@selector(previousPage:)];
+        return [self makeToolbarSymbolsItemWithItemIdentifier:itemIdent key:itemIdent symbolName: @"arrow.up" accessibility: @"Previous Page" imageName:@"PreviousPageAction" newImageName:@"arrow.up" target:self action:@selector(doPreviousPage:)];
     if ([itemIdent isEqual: kNextPageButtonTID])
-        return [self makeToolbarSymbolsItemWithItemIdentifier:itemIdent key:itemIdent symbolName: @"arrow.down" accessibility: @"Next Page" imageName:@"NextPageAction" newImageName:@"arrow.down" target:nil action:@selector(nextPage:)];
+        return [self makeToolbarSymbolsItemWithItemIdentifier:itemIdent key:itemIdent symbolName: @"arrow.down" accessibility: @"Next Page" imageName:@"NextPageAction" newImageName:@"arrow.down" target:self action:@selector(doNextPage:)];
 
 
 	if ([itemIdent isEqual: kPreviousPageTID])

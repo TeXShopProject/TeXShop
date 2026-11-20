@@ -30,6 +30,21 @@
 
 
 
+// The place in mtxrun's answer to a backward sync (mtx-synctex --report --console prints %q %i %i): a line that is
+// only "file", a line number above 0 and the tolerance.
+static BOOL TSContextSyncPlace(NSString *output, NSString **fileName, NSInteger *line)
+{
+    NSRegularExpression *place = [NSRegularExpression regularExpressionWithPattern:@"^\\s*\"([^\"]+)\"\\s+([1-9][0-9]{0,8})(\\s+-?[0-9]+)?\\s*$" options:0 error:NULL];
+    for (NSString *candidate in [output componentsSeparatedByCharactersInSet:NSCharacterSet.newlineCharacterSet]) {
+        NSTextCheckingResult *match = [place firstMatchInString:candidate options:0 range:NSMakeRange(0, candidate.length)];
+        if (match == nil) continue;
+        *fileName = [candidate substringWithRange:[match rangeAtIndex:1]];
+        *line = [[candidate substringWithRange:[match rangeAtIndex:2]] integerValue];
+        return YES;
+    }
+    return NO;
+}
+
 @implementation TSDocument (SyncConTeXt)
 
 
@@ -189,16 +204,10 @@
     
 //    foundFileName = @"\"this is wonderful\" 54";
     
-    if ([outputString length] < 4)
+    // Only a line "file" line tolerance with a line number above 0 is a place to go to; anything else (mtxrun
+    // missing, an error message that quotes a file, no match) gives nothing.
+    if (! TSContextSyncPlace(outputString, &foundFileName, &theLine))
         return NO;
-    NSCharacterSet *mySet = [NSCharacterSet characterSetWithCharactersInString:@"\""];
-    NSArray<NSString *> *myArray = [outputString componentsSeparatedByCharactersInSet: mySet];
-    // Output that is not "file" line (mtxrun missing, an error, no match) gives nothing to go to.
-    if (myArray.count < 3)
-        return NO;
-    
-    foundFileName = myArray[1];
-     theLine = [myArray[2] integerValue];
     
     
     
@@ -262,16 +271,10 @@
     
 //    foundFileName = @"\"this is wonderful\" 54";
     
-    if ([outputString length] < 4)
+    // Only a line "file" line tolerance with a line number above 0 is a place to go to; anything else (mtxrun
+    // missing, an error message that quotes a file, no match) gives nothing.
+    if (! TSContextSyncPlace(outputString, &foundFileName, &theLine))
         return NO;
-    NSCharacterSet *mySet = [NSCharacterSet characterSetWithCharactersInString:@"\""];
-    NSArray<NSString *> *myArray = [outputString componentsSeparatedByCharactersInSet: mySet];
-    // Output that is not "file" line (mtxrun missing, an error, no match) gives nothing to go to.
-    if (myArray.count < 3)
-        return NO;
-    
-    foundFileName = myArray[1];
-     theLine = [myArray[2] integerValue];
     
     
     

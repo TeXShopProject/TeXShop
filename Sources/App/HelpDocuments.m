@@ -270,20 +270,21 @@
  	[env setObject: path forKey: @"PATH"];
 	
 	
-	// No texdoc there (no TeX installed, or another folder set): NSTask would raise at launch.
-	if (![[NSFileManager defaultManager] isExecutableFileAtPath:enginePath]) {
-		NSBeep();
-		NSRunAlertPanel(NSLocalizedString(@"Error", @"Error"), @"%@", @"OK", nil, nil,
-			[NSString stringWithFormat:NSLocalizedString(@"%@ does not exist.", @"%@ does not exist."), enginePath]);
-		return;
-	}
 	displayPackageHelpTask = [[NSTask alloc] init];
-	[displayPackageHelpTask setLaunchPath:enginePath];
+	[displayPackageHelpTask setExecutableURL:[NSURL fileURLWithPath:enginePath]];
 	args = [NSMutableArray array];
 	[args addObject: packageString];
 	[displayPackageHelpTask setArguments:args];
 	[displayPackageHelpTask setEnvironment:env];
-	[displayPackageHelpTask launch];
+	// No texdoc there, or one that cannot be started (no TeX installed, another folder set): -launch would raise.
+	if (![displayPackageHelpTask launchAndReturnError:NULL]) {
+		displayPackageHelpTask = nil;
+		NSBeep();
+		NSAlert *alert = [[NSAlert alloc] init];
+		alert.messageText = NSLocalizedString(@"Error", @"Error");
+		alert.informativeText = [NSString stringWithFormat:NSLocalizedString(@"%@ does not exist.", @"%@ does not exist."), enginePath];
+		[alert runModal];
+	}
 }
 
 - (IBAction)displayStyleFile:sender

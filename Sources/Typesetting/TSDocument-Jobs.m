@@ -437,7 +437,7 @@ for(NSString *key in enu)
 	NSString		*theEngine = 0;
 	NSRange		aRange;
 
-	if (myEngine != nil) {
+	if ([myEngine isKindOfClass:NSString.class]) {
 		myList = [myEngine componentsSeparatedByString:@" "];
 		programFound = NO;
 		inMiddle = NO;
@@ -1721,7 +1721,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
                  
                  // modified by Terada
                  bibtexArgs = [NSMutableArray arrayWithCapacity:0];
-                 bibtexEngineString = [self separate:[SUD objectForKey:BibTeXengineKey] into:bibtexArgs];
+                 bibtexEngineString = [self separate:[SUD stringForKey:BibTeXengineKey] into:bibtexArgs]; // nil for a value that is not text
                  [bibtexArgs addObjectsFromArray:args];
                  }
                  

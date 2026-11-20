@@ -1099,7 +1099,8 @@ Clicking this button will bring up the font panel.
 		{
 
 		// A font the panel cannot convert is not saved (the Font panel raises on nil, and documents would get none).
-		NSFont *converted = [fontManager convertFont:self.documentFont ?: [NSFont userFontOfSize:12.0]];
+		NSFont *current = self.documentFont ?: [NSFont userFontOfSize:12.0] ?: [NSFont systemFontOfSize:12.0];
+		NSFont *converted = [fontManager convertFont:current];
 		if (converted == nil) return;
 		self.documentFont = converted;
 
