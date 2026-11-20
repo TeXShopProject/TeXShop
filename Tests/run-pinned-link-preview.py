@@ -492,8 +492,11 @@ DOCUMENTMETHODS
 - (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:(NSRect *)frame;
 - (void)attachPinnedLinkPreview:(TSLinkPreviewView *)preview windowFrame:(NSRect)frame;
 - (void)keepPinnedLinkPreviewInView;
+- (void)closeOtherViewPinnedLinkPreview;
 @end
 @implementation MyPDFKitView
+// The other view of Switch Views has its own test, run-preview-switch-views.py.
+- (void)closeOtherViewPinnedLinkPreview {}
 // The popup on show, the pinned one if there is one; and whether one is pinned.
 - (TSLinkPreviewView *)preview { return pinnedLinkPreview ?: linkPreview; }
 - (TSLinkPreviewView *)transientPreview { return linkPreview; }

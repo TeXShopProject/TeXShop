@@ -227,6 +227,7 @@ static void CheckChrome(NSWindow *window, PDFView *pdf, NSString *systemName, BO
 }
 @interface TSPreviewWindow : NSObject
 @property (nonatomic, weak) PDFView *pdf;
+@property (nonatomic, weak) PDFView *myPDFKitView;
 - (void)fixAfterRotation:(BOOL)clockwise;
 @end
 @interface MyPDFKitView : PDFView {
@@ -241,8 +242,11 @@ static void CheckChrome(NSWindow *window, PDFView *pdf, NSString *systemName, BO
 - (void)cleanupMarquee:(BOOL)terminate;
 - (BOOL)beginKeepingPinnedLinkPreviewOnPage;
 - (void)endKeepingPinnedLinkPreviewOnPage:(BOOL)began;
+- (void)closeOtherViewPinnedLinkPreview;
 @end
 @implementation MyPDFKitView
+// The other view of Switch Views has its own test, run-preview-switch-views.py.
+- (void)closeOtherViewPinnedLinkPreview {}
 - (void)fitContentWidthKeepingTop:(TSContentTop)top {}
 - (void)closePinnedLinkPreview {}
 - (void)keepPinnedLinkPreviewThroughMove {}

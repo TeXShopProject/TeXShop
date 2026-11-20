@@ -299,6 +299,8 @@
 // pinned link popup. The first time, the place shown is kept as the other view, and the
 // pinned popup stays with it.
 - (void)switchToOtherView;
+// Closes the pinned popup kept by the other view, as Link Popups and turning the pages do.
+- (void)closeOtherViewPinnedLinkPreview;
 - (void)recacheMarquee;
 - (BOOL)hasSelection;
 - (NSData *)imageDataFromSelectionType: (NSInteger)type;
