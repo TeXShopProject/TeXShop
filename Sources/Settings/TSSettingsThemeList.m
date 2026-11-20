@@ -283,9 +283,22 @@ static CGFloat TSThemeListInset(NSTableView *table)
         message = [NSString stringWithFormat:self.text(@"theme.list.badName"), title];
     else if ([error.domain isEqualToString:NSCocoaErrorDomain] && error.code == NSFileReadCorruptFileError)
         message = [NSString stringWithFormat:self.text(@"theme.list.notTheme"), title];
-    else if ([error.domain isEqualToString:NSCocoaErrorDomain] && (error.code == NSFileReadNoSuchFileError || error.code == NSFileNoSuchFileError))
+    else if ([error.domain isEqualToString:NSCocoaErrorDomain] && (error.code == NSFileReadNoSuchFileError || error.code == NSFileNoSuchFileError) &&
+             [self errorIsAboutTheme:error title:title])
         message = [NSString stringWithFormat:self.text(@"theme.list.missing"), title];
     [self.owner themeListShowError:message ?: error.localizedDescription ?: title];
+}
+
+// The error is about the theme's own file in the Themes folder, not a file elsewhere (where it was to be exported,
+// or a file to import): only then is the theme "no longer in the Themes folder".
+- (BOOL)errorIsAboutTheme:(NSError *)error title:(NSString *)title
+{
+    NSString *path = error.userInfo[NSFilePathErrorKey];
+    if (path == nil) path = [error.userInfo[NSURLErrorKey] path];
+    if (path == nil) return NO;
+    if ([path isEqualToString:title]) return YES; // TSThemeFileStore names the theme by its title
+    NSString *own = [self.store URLForTitle:title].path.stringByStandardizingPath;
+    return own != nil && [path.stringByStandardizingPath isEqualToString:own];
 }
 
 - (void)refreshTitle:(NSString *)title
@@ -423,7 +436,7 @@ static CGFloat TSThemeListInset(NSTableView *table)
     NSError *readError = nil;
     NSData *data = source != nil ? [NSData dataWithContentsOfURL:(NSURL *_Nonnull)source options:0 error:&readError] : nil;
     if (data == nil) {
-        [self showError:readError ?: [NSError errorWithDomain:NSCocoaErrorDomain code:NSFileReadNoSuchFileError userInfo:nil] title:title];
+        [self showError:readError ?: [NSError errorWithDomain:NSCocoaErrorDomain code:NSFileReadNoSuchFileError userInfo:@{NSFilePathErrorKey: title}] title:title];
         return;
     }
     if ([self.store readTitle:title] == nil || ![self exportable:(NSData *_Nonnull)data]) {

@@ -32,7 +32,7 @@ mutations={
 store=(R/'Sources/Settings/TSThemeFileStore.m').read_text()
 store_mutations={
  'export-unchecked':(' || (check != nil && !check(data))) {',') {'),
- 'export-any':('    if (![colors isKindOfClass:NSDictionary.class] || (accepts != nil && !accepts(colors))) {','    (void)colors;(void)accepts;if (NO) {'),
+ 'export-any':('    if (![colors isKindOfClass:NSDictionary.class] || (accepts != nil && !accepts(colors)) || (check != nil && !check(data))) {','    (void)colors;(void)accepts;(void)check;if (NO) {'),
  'overwrite-unreadable':('        if (current == nil) {\n            writeError = TSThemeStoreError(NSFileReadCorruptFileError, title);\n            return;\n        }\n        NSMutableDictionary<NSString *, id> *colors = [current mutableCopy];','        NSMutableDictionary<NSString *, id> *colors = [(current ?: before) mutableCopy];'),
  'title-case':('colors[@"Title"] = [self existingTitleForTitle:title] ?: title;','colors[@"Title"] = title;'),
  'accept-all':('    return accepts == nil || accepts(colors) ? colors : nil;','    (void)accepts;return colors;'),
@@ -42,11 +42,11 @@ store_mutations={
  'recreate-missing':('        if (!TSThemeIsRegularFile(fileURL)) {\n            writeError','        if (NO) {\n            writeError'),
  'compose-import':('lastPathComponent.precomposedStringWithCanonicalMapping ?: @""','lastPathComponent ?: @""'),
  'compose-titles':('NSString *title = name.stringByDeletingPathExtension.precomposedStringWithCanonicalMapping;','NSString *title = name.stringByDeletingPathExtension;'),
- 'only-changed':('NSMutableDictionary<NSString *, id> *colors = [([self readTitle:title] ?: before) mutableCopy];','NSMutableDictionary<NSString *, id> *colors = [after mutableCopy];'),
+ 'only-changed':('NSMutableDictionary<NSString *, id> *colors = [current mutableCopy];','NSMutableDictionary<NSString *, id> *colors = [after mutableCopy];'),
  'read-outside':('    __block NSDictionary<NSString *, id> *written = nil;\n','    NSDictionary *early = [self readTitle:title];\n    __block NSDictionary<NSString *, id> *written = nil;\n'),
 }
 if mutation=='read-outside':
- store=store.replace(store_mutations[mutation][0],store_mutations[mutation][1]).replace('[([self readTitle:title] ?: before) mutableCopy]','[(early ?: before) mutableCopy]')
+ store=store.replace(store_mutations[mutation][0],store_mutations[mutation][1]).replace('NSDictionary<NSString *, id> *current = [self readTitle:title];','NSDictionary<NSString *, id> *current = early;')
 elif mutation in store_mutations:
  old,new=store_mutations[mutation];assert old in store;store=store.replace(old,new)
 elif mutation:
@@ -307,7 +307,7 @@ int main(int argc,char **argv){@autoreleasepool{
   NSError *unreadable=nil;NSMutableDictionary *more=[broken mutableCopy];more[@"EditorText"]=@[@1,@0,@0,@1];
   check([p.store writeChangesFrom:broken to:more title:@"Broken" error:&unreadable]==nil && unreadable.code==NSFileReadCorruptFileError && [[NSData dataWithContentsOfURL:(NSURL *_Nonnull)[p.store URLForTitle:@"Broken"]] isEqual:garbage],"a file that cannot be read is kept as it is");
   NSUInteger errorsBefore=p.errors;p->EditingColors=[more mutableCopy];p.lastSavedEditingColors=broken;[p SaveEditedStyle:nil];
-  check(p.errors==errorsBefore+1 && [[NSData dataWithContentsOfURL:(NSURL *_Nonnull)[p.store URLForTitle:@"Broken"]] isEqual:garbage],"Settings says the save failed and keeps the file");
+  check(p.errors==errorsBefore+1 && [[NSData dataWithContentsOfURL:(NSURL *_Nonnull)[p.store URLForTitle:@"Broken"]] isEqual:garbage] && [p->EditingColors isEqual:broken] && [p.lastSavedEditingColors isEqual:broken],"Settings says the save failed, keeps the file and shows the last saved colors");
   [NSFileManager.defaultManager removeItemAtURL:(NSURL *_Nonnull)[p.store URLForTitle:@"Broken"] error:NULL];
   check([p.store writeColors:@{@"EditorText":@[@0,@0,@0,@1]} title:@"Night" error:NULL],"seed Night");
   [p themeListDidChooseTitle:@"Night"];NSDictionary *night=p.lastSavedEditingColors;

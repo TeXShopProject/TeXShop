@@ -254,6 +254,14 @@ static void CheckThemeActionButtons(TSPreferences *owner,TSSettingsWindowControl
                 count=notices.count;[list exportTheme:nil];said=notices.count==count+1?notices.lastObject:@"(none)";
                 Check(![said isEqual:@"(none)"] && ![said hasPrefix:[NSString stringWithFormat:tr(@"theme.list.notTheme"),@"Locked"]] && ![said hasPrefix:[NSString stringWithFormat:tr(@"theme.list.missing"),@"Locked"]],[NSString stringWithFormat:@"A theme that cannot be opened is told with the reason: %@",said]);
                 [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions:@0644} ofItemAtPath:lockedPath error:NULL];[NSFileManager.defaultManager removeItemAtPath:lockedPath error:NULL];
+                // A file elsewhere that is gone (a file to import, or where a theme was to be exported) is told with the
+                // system's reason, not as a theme gone from the Themes folder.
+                NSString *outside=[NSTemporaryDirectory() stringByAppendingPathComponent:@"NoSuchFolder/Travel.plist"];
+                count=notices.count;[list importURLs:@[[NSURL fileURLWithPath:outside]]];said=notices.count==count+1?notices.lastObject:@"(none)";
+                Check(![said isEqual:@"(none)"] && ![said hasPrefix:[NSString stringWithFormat:tr(@"theme.list.missing"),@"Travel"]] && ![said containsString:[NSString stringWithFormat:tr(@"theme.list.missing"),@"Travel.plist"]],[NSString stringWithFormat:@"A file to import that is gone is not told as a theme gone from the folder: %@",said]);
+                NSError *elsewhere=[NSError errorWithDomain:NSCocoaErrorDomain code:NSFileNoSuchFileError userInfo:@{NSFilePathErrorKey:outside}];
+                count=notices.count;((void (*)(id,SEL,NSError *,NSString *))objc_msgSend)(list,NSSelectorFromString(@"showError:title:"),elsewhere,@"LiteTheme");said=notices.count==count+1?notices.lastObject:@"(none)";
+                Check([said isEqual:[NSString stringWithFormat:@"%@|",elsewhere.localizedDescription]],[NSString stringWithFormat:@"A place to export to that is gone is told with the system's reason: %@",said]);
                 method_setImplementation(panel,realPanel);
                 Check(panels==0,@"No save panel is asked for a theme that cannot be exported");
                 [list reload];
