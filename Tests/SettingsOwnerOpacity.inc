@@ -123,6 +123,13 @@ static void CheckThemeActionButtons(TSPreferences *owner,TSSettingsWindowControl
     Check(Find(pane,@"settings.O5R-pm-csa")==nil && Find(pane,@"settings.8bu-du-vzc")==nil && Find(pane,@"settings.save-theme")==nil,@"No pop-up menu of the theme to edit, no New Theme or Save Theme button");
     Check(Find(pane,@"settings.uXA-S0-9dP")==nil && ![owner respondsToSelector:NSSelectorFromString(@"NewStyleFromPrefs:")],@"No button makes a theme from earlier color settings");
     Check(Find(row,@"settings.theme-list.add")==list.addButton && Find(row,@"settings.theme-list.remove")==list.removeButton && Find(row,@"settings.theme-list.actions")==list.actionsButton,@"＋, − and the actions menu are under the list");
+    // The independent reference catalog names the same actions as the list (Japanese, as the catalog).
+    if([fixture.bundlePath.lastPathComponent isEqual:@"ja.bundle"]){
+        NSDictionary *catalog=[NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfURL:[fixture URLForResource:@"SettingsCatalogReference" withExtension:@"json"]] options:0 error:NULL];
+        NSDictionary *edit=nil;for(NSDictionary *category in catalog[@"categories"])if([category[@"id"] isEqual:@"appearance"])for(NSDictionary *group in category[@"groups"])if([group[@"title"] isEqual:[fixture localizedStringForKey:@"group.appearance.1.title" value:nil table:@"SettingsCategories"]])edit=group;
+        NSMutableArray *names=[NSMutableArray array];for(NSString *key in @[@"add",@"duplicate",@"rename",@"restore",@"delete",@"export",@"import"])[names addObject:[fixture localizedStringForKey:[@"theme.list." stringByAppendingString:key] value:nil table:@"SettingsCategories"]];
+        Check([edit[@"rows"] count]==1 && [edit[@"rows"][0][@"kind"] isEqual:@"themelist"] && [edit[@"rows"][0][@"choices"] isEqual:names] && [edit[@"rows"][0][@"src"] isEqual:@[@"new:theme-list"]],[NSString stringWithFormat:@"The reference catalog has the list of themes with its actions: %@",edit[@"rows"]]);
+    }
     NSString *addTip=[fixture localizedStringForKey:@"theme.list.add" value:nil table:@"SettingsCategories"];
     Check([list.addButton.toolTip isEqual:addTip] && ![addTip hasPrefix:@"theme."],[NSString stringWithFormat:@"＋ is named in the language of Settings: %@",list.addButton.toolTip]);
     NSRect frame=[list.view convertRect:list.view.bounds toView:row];
