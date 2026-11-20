@@ -580,16 +580,6 @@
         "class": "TSPrefSourceController"
       },
       {
-        "ivar": "stylePanel",
-        "property": "stylePanel",
-        "class": "TSPrefThemeNameController"
-      },
-      {
-        "ivar": "styleTitle",
-        "property": "styleTitle",
-        "class": "TSPrefThemeNameController"
-      },
-      {
         "ivar": "ConsoleAlphaColorWell",
         "property": "ConsoleAlphaColorWell",
         "class": "TSPrefThemesController"
@@ -607,11 +597,6 @@
       {
         "ivar": "DarkStyle",
         "property": "DarkStyle",
-        "class": "TSPrefThemesController"
-      },
-      {
-        "ivar": "EditingStyle",
-        "property": "EditingStyle",
         "class": "TSPrefThemesController"
       },
       {
@@ -2540,23 +2525,6 @@
         "index": 2
       }
     ],
-    "ThemeNameActions": [
-      {
-        "key": "N2G-gi-llW.action",
-        "view": "settings.N2G-gi-llW",
-        "kind": "view",
-        "property": "action",
-        "value": "okForStylePanel:"
-      },
-      {
-        "key": "fck-0B-Qsq.action",
-        "view": "settings.fck-0B-Qsq",
-        "kind": "view",
-        "property": "action",
-        "value": "cancelForStylePanel:"
-      }
-    ],
-    "ThemeNameTags": [],
     "ThemesActions": [
       {
         "key": "eo2-De-DNv.action",
@@ -2566,25 +2534,11 @@
         "value": "themeSelectionChanged:"
       },
       {
-        "key": "O5R-pm-csa.action",
-        "view": "settings.O5R-pm-csa",
-        "kind": "view",
-        "property": "action",
-        "value": "EditingStyleChoice:"
-      },
-      {
         "key": "xpQ-zQ-oZe.action",
         "view": "settings.xpQ-zQ-oZe",
         "kind": "view",
         "property": "action",
         "value": "themeSelectionChanged:"
-      },
-      {
-        "key": "8bu-du-vzc.action",
-        "view": "settings.8bu-du-vzc",
-        "kind": "view",
-        "property": "action",
-        "value": "SaveNewStyle:"
       },
       {
         "key": "cnt-Xt-iQF.action",
@@ -3028,8 +2982,7 @@
         "row": 2,
         "column": 0
       }
-    ],
-    "ThemeNameHeadings": []
+    ]
   },
   "languages": {
     "Base": {
@@ -3132,12 +3085,6 @@
           "1080.title": "OgreKit Find Panel (Legacy)",
           "32.title": "Remember last position on close",
           "adv-Fd-Pnl.title": "Advanced Find Panel (recommended)"
-        },
-        "SettingsThemeName": {
-          "PHE-fW-LeB.title": "Theme Title",
-          "ZJe-8t-Rwa.title": "Title:",
-          "jJY-ql-JXD.title": "Cancel",
-          "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsTypesetting": {
           "187.title": "Via DVI",
@@ -5031,36 +4978,6 @@
           "column": 0
         }
       ],
-      "ThemeName": [
-        {
-          "key": "PHE-fW-LeB.title",
-          "view": "settings.PHE-fW-LeB",
-          "kind": "window",
-          "property": "title",
-          "value": "Theme Title"
-        },
-        {
-          "key": "ZJe-8t-Rwa.title",
-          "view": "settings.JhE-OB-yPt",
-          "kind": "cell",
-          "property": "title",
-          "value": "Title:"
-        },
-        {
-          "key": "jJY-ql-JXD.title",
-          "view": "settings.fck-0B-Qsq",
-          "kind": "cell",
-          "property": "title",
-          "value": "Cancel"
-        },
-        {
-          "key": "RC5-Ef-iJJ.title",
-          "view": "settings.N2G-gi-llW",
-          "kind": "cell",
-          "property": "title",
-          "value": "OK"
-        }
-      ],
       "Themes": [
         {
           "key": "rpP-GF-uJp.title",
@@ -5082,13 +4999,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Footnote"
-        },
-        {
-          "key": "rad-zH-Nv2.title",
-          "view": "settings.FOl-CH-y3R",
-          "kind": "cell",
-          "property": "title",
-          "value": "Theme to Edit"
         },
         {
           "key": "Sb2-DV-n4h.title",
@@ -5343,13 +5253,6 @@
           "value": "Tag"
         },
         {
-          "key": "Rzg-NG-sNa.title",
-          "view": "settings.8bu-du-vzc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Create New Theme"
-        },
-        {
           "key": "cPa-5P-FPE.title",
           "view": "settings.XCe-dk-8wN",
           "kind": "cell",
@@ -5425,13 +5328,6 @@
           "kind": "cell",
           "property": "title",
           "value": "msg"
-        },
-        {
-          "key": "ycd-ZH-bzw.title",
-          "view": "settings.ycd-ZH-bzw",
-          "kind": "view",
-          "property": "title",
-          "value": "Actions"
         }
       ],
       "Typesetting": [
@@ -5740,10 +5636,6 @@
         {
           "id": "heading.settings.7hF-dm-sw0",
           "title": "Themes"
-        },
-        {
-          "id": "heading.settings.ycd-ZH-bzw",
-          "title": "Actions"
         }
       ],
       "TypesettingHeadings": [
@@ -5951,12 +5843,6 @@
           "1080.title": "OgreKit Suchmaske (veraltet)",
           "32.title": "Merke zuletzt benutzte Position",
           "adv-Fd-Pnl.title": "Erweiterte Suchmaske (empfohlen)"
-        },
-        "SettingsThemeName": {
-          "PHE-fW-LeB.title": "Titel des Themas",
-          "ZJe-8t-Rwa.title": " Titel:",
-          "jJY-ql-JXD.title": "Abbrechen",
-          "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsTypesetting": {
           "187.title": "Über DVI",
@@ -7850,36 +7736,6 @@
           "column": 0
         }
       ],
-      "ThemeName": [
-        {
-          "key": "PHE-fW-LeB.title",
-          "view": "settings.PHE-fW-LeB",
-          "kind": "window",
-          "property": "title",
-          "value": "Titel des Themas"
-        },
-        {
-          "key": "ZJe-8t-Rwa.title",
-          "view": "settings.JhE-OB-yPt",
-          "kind": "cell",
-          "property": "title",
-          "value": " Titel:"
-        },
-        {
-          "key": "jJY-ql-JXD.title",
-          "view": "settings.fck-0B-Qsq",
-          "kind": "cell",
-          "property": "title",
-          "value": "Abbrechen"
-        },
-        {
-          "key": "RC5-Ef-iJJ.title",
-          "view": "settings.N2G-gi-llW",
-          "kind": "cell",
-          "property": "title",
-          "value": "OK"
-        }
-      ],
       "Themes": [
         {
           "key": "rpP-GF-uJp.title",
@@ -7901,13 +7757,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Footnote"
-        },
-        {
-          "key": "rad-zH-Nv2.title",
-          "view": "settings.FOl-CH-y3R",
-          "kind": "cell",
-          "property": "title",
-          "value": "Theme to Edit"
         },
         {
           "key": "Sb2-DV-n4h.title",
@@ -8162,13 +8011,6 @@
           "value": "Tag"
         },
         {
-          "key": "Rzg-NG-sNa.title",
-          "view": "settings.8bu-du-vzc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Create New Theme"
-        },
-        {
           "key": "cPa-5P-FPE.title",
           "view": "settings.XCe-dk-8wN",
           "kind": "cell",
@@ -8244,13 +8086,6 @@
           "kind": "cell",
           "property": "title",
           "value": "msg"
-        },
-        {
-          "key": "ycd-ZH-bzw.title",
-          "view": "settings.ycd-ZH-bzw",
-          "kind": "view",
-          "property": "title",
-          "value": "Actions"
         }
       ],
       "Typesetting": [
@@ -8559,10 +8394,6 @@
         {
           "id": "heading.settings.7hF-dm-sw0",
           "title": "Themes"
-        },
-        {
-          "id": "heading.settings.ycd-ZH-bzw",
-          "title": "Actions"
         }
       ],
       "TypesettingHeadings": [
@@ -8770,12 +8601,6 @@
           "1080.title": "Panel de búsquedas de OgreKit (heredado)",
           "32.title": "Conservar la última posición",
           "adv-Fd-Pnl.title": "Panel de búsqueda avanzada (recomendado)"
-        },
-        "SettingsThemeName": {
-          "PHE-fW-LeB.title": "Título del tema",
-          "ZJe-8t-Rwa.title": "Título:",
-          "jJY-ql-JXD.title": "Cancelar",
-          "RC5-Ef-iJJ.title": "Aceptar"
         },
         "SettingsTypesetting": {
           "187.title": "Vía DVI",
@@ -10669,36 +10494,6 @@
           "column": 0
         }
       ],
-      "ThemeName": [
-        {
-          "key": "PHE-fW-LeB.title",
-          "view": "settings.PHE-fW-LeB",
-          "kind": "window",
-          "property": "title",
-          "value": "Título del tema"
-        },
-        {
-          "key": "ZJe-8t-Rwa.title",
-          "view": "settings.JhE-OB-yPt",
-          "kind": "cell",
-          "property": "title",
-          "value": "Título:"
-        },
-        {
-          "key": "jJY-ql-JXD.title",
-          "view": "settings.fck-0B-Qsq",
-          "kind": "cell",
-          "property": "title",
-          "value": "Cancelar"
-        },
-        {
-          "key": "RC5-Ef-iJJ.title",
-          "view": "settings.N2G-gi-llW",
-          "kind": "cell",
-          "property": "title",
-          "value": "Aceptar"
-        }
-      ],
       "Themes": [
         {
           "key": "rpP-GF-uJp.title",
@@ -10720,13 +10515,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Footnote"
-        },
-        {
-          "key": "rad-zH-Nv2.title",
-          "view": "settings.FOl-CH-y3R",
-          "kind": "cell",
-          "property": "title",
-          "value": "Theme to Edit"
         },
         {
           "key": "Sb2-DV-n4h.title",
@@ -10981,13 +10769,6 @@
           "value": "Tag"
         },
         {
-          "key": "Rzg-NG-sNa.title",
-          "view": "settings.8bu-du-vzc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Create New Theme"
-        },
-        {
           "key": "cPa-5P-FPE.title",
           "view": "settings.XCe-dk-8wN",
           "kind": "cell",
@@ -11063,13 +10844,6 @@
           "kind": "cell",
           "property": "title",
           "value": "msg"
-        },
-        {
-          "key": "ycd-ZH-bzw.title",
-          "view": "settings.ycd-ZH-bzw",
-          "kind": "view",
-          "property": "title",
-          "value": "Actions"
         }
       ],
       "Typesetting": [
@@ -11378,10 +11152,6 @@
         {
           "id": "heading.settings.7hF-dm-sw0",
           "title": "Themes"
-        },
-        {
-          "id": "heading.settings.ycd-ZH-bzw",
-          "title": "Actions"
         }
       ],
       "TypesettingHeadings": [
@@ -11589,12 +11359,6 @@
           "1080.title": "Palette OgreKit (ancienne)",
           "32.title": "Conserver la dernière position",
           "adv-Fd-Pnl.title": "Palette de recherche avancée (recommandée)"
-        },
-        "SettingsThemeName": {
-          "PHE-fW-LeB.title": "Titre du thème",
-          "ZJe-8t-Rwa.title": "Titre:",
-          "jJY-ql-JXD.title": "Annuler",
-          "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsTypesetting": {
           "187.title": "Via DVI",
@@ -13488,36 +13252,6 @@
           "column": 0
         }
       ],
-      "ThemeName": [
-        {
-          "key": "PHE-fW-LeB.title",
-          "view": "settings.PHE-fW-LeB",
-          "kind": "window",
-          "property": "title",
-          "value": "Titre du thème"
-        },
-        {
-          "key": "ZJe-8t-Rwa.title",
-          "view": "settings.JhE-OB-yPt",
-          "kind": "cell",
-          "property": "title",
-          "value": "Titre:"
-        },
-        {
-          "key": "jJY-ql-JXD.title",
-          "view": "settings.fck-0B-Qsq",
-          "kind": "cell",
-          "property": "title",
-          "value": "Annuler"
-        },
-        {
-          "key": "RC5-Ef-iJJ.title",
-          "view": "settings.N2G-gi-llW",
-          "kind": "cell",
-          "property": "title",
-          "value": "OK"
-        }
-      ],
       "Themes": [
         {
           "key": "rpP-GF-uJp.title",
@@ -13539,13 +13273,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Footnote"
-        },
-        {
-          "key": "rad-zH-Nv2.title",
-          "view": "settings.FOl-CH-y3R",
-          "kind": "cell",
-          "property": "title",
-          "value": "Theme to Edit"
         },
         {
           "key": "Sb2-DV-n4h.title",
@@ -13800,13 +13527,6 @@
           "value": "Tag"
         },
         {
-          "key": "Rzg-NG-sNa.title",
-          "view": "settings.8bu-du-vzc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Create New Theme"
-        },
-        {
           "key": "cPa-5P-FPE.title",
           "view": "settings.XCe-dk-8wN",
           "kind": "cell",
@@ -13882,13 +13602,6 @@
           "kind": "cell",
           "property": "title",
           "value": "msg"
-        },
-        {
-          "key": "ycd-ZH-bzw.title",
-          "view": "settings.ycd-ZH-bzw",
-          "kind": "view",
-          "property": "title",
-          "value": "Actions"
         }
       ],
       "Typesetting": [
@@ -14197,10 +13910,6 @@
         {
           "id": "heading.settings.7hF-dm-sw0",
           "title": "Themes"
-        },
-        {
-          "id": "heading.settings.ycd-ZH-bzw",
-          "title": "Actions"
         }
       ],
       "TypesettingHeadings": [
@@ -14408,12 +14117,6 @@
           "1080.title": "Pannello di ricerca OgreKit (obsoleto)",
           "32.title": "Conserva l'ultima posizione",
           "adv-Fd-Pnl.title": "Pannello di ricerca avanzata (consigliato)"
-        },
-        "SettingsThemeName": {
-          "PHE-fW-LeB.title": "Titolo del tema",
-          "ZJe-8t-Rwa.title": "Titolo:",
-          "jJY-ql-JXD.title": "Annulla",
-          "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsTypesetting": {
           "187.title": "Tramite DVI",
@@ -16307,36 +16010,6 @@
           "column": 0
         }
       ],
-      "ThemeName": [
-        {
-          "key": "PHE-fW-LeB.title",
-          "view": "settings.PHE-fW-LeB",
-          "kind": "window",
-          "property": "title",
-          "value": "Titolo del tema"
-        },
-        {
-          "key": "ZJe-8t-Rwa.title",
-          "view": "settings.JhE-OB-yPt",
-          "kind": "cell",
-          "property": "title",
-          "value": "Titolo:"
-        },
-        {
-          "key": "jJY-ql-JXD.title",
-          "view": "settings.fck-0B-Qsq",
-          "kind": "cell",
-          "property": "title",
-          "value": "Annulla"
-        },
-        {
-          "key": "RC5-Ef-iJJ.title",
-          "view": "settings.N2G-gi-llW",
-          "kind": "cell",
-          "property": "title",
-          "value": "OK"
-        }
-      ],
       "Themes": [
         {
           "key": "rpP-GF-uJp.title",
@@ -16358,13 +16031,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Footnote"
-        },
-        {
-          "key": "rad-zH-Nv2.title",
-          "view": "settings.FOl-CH-y3R",
-          "kind": "cell",
-          "property": "title",
-          "value": "Theme to Edit"
         },
         {
           "key": "Sb2-DV-n4h.title",
@@ -16619,13 +16285,6 @@
           "value": "Tag"
         },
         {
-          "key": "Rzg-NG-sNa.title",
-          "view": "settings.8bu-du-vzc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Create New Theme"
-        },
-        {
           "key": "cPa-5P-FPE.title",
           "view": "settings.XCe-dk-8wN",
           "kind": "cell",
@@ -16701,13 +16360,6 @@
           "kind": "cell",
           "property": "title",
           "value": "msg"
-        },
-        {
-          "key": "ycd-ZH-bzw.title",
-          "view": "settings.ycd-ZH-bzw",
-          "kind": "view",
-          "property": "title",
-          "value": "Actions"
         }
       ],
       "Typesetting": [
@@ -17016,10 +16668,6 @@
         {
           "id": "heading.settings.7hF-dm-sw0",
           "title": "Themes"
-        },
-        {
-          "id": "heading.settings.ycd-ZH-bzw",
-          "title": "Actions"
         }
       ],
       "TypesettingHeadings": [
@@ -17227,12 +16875,6 @@
           "1080.title": "OgreKit検索パネル（レガシー）",
           "32.title": "閉じたときの位置を保存",
           "adv-Fd-Pnl.title": "詳細検索パネル（推奨）"
-        },
-        "SettingsThemeName": {
-          "PHE-fW-LeB.title": "テーマのタイトル",
-          "ZJe-8t-Rwa.title": "タイトル：",
-          "jJY-ql-JXD.title": "キャンセル",
-          "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsTypesetting": {
           "187.title": "DVI経由",
@@ -19126,36 +18768,6 @@
           "column": 0
         }
       ],
-      "ThemeName": [
-        {
-          "key": "PHE-fW-LeB.title",
-          "view": "settings.PHE-fW-LeB",
-          "kind": "window",
-          "property": "title",
-          "value": "テーマのタイトル"
-        },
-        {
-          "key": "ZJe-8t-Rwa.title",
-          "view": "settings.JhE-OB-yPt",
-          "kind": "cell",
-          "property": "title",
-          "value": "タイトル："
-        },
-        {
-          "key": "jJY-ql-JXD.title",
-          "view": "settings.fck-0B-Qsq",
-          "kind": "cell",
-          "property": "title",
-          "value": "キャンセル"
-        },
-        {
-          "key": "RC5-Ef-iJJ.title",
-          "view": "settings.N2G-gi-llW",
-          "kind": "cell",
-          "property": "title",
-          "value": "OK"
-        }
-      ],
       "Themes": [
         {
           "key": "rpP-GF-uJp.title",
@@ -19177,13 +18789,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Footnote"
-        },
-        {
-          "key": "rad-zH-Nv2.title",
-          "view": "settings.FOl-CH-y3R",
-          "kind": "cell",
-          "property": "title",
-          "value": "Theme to Edit"
         },
         {
           "key": "Sb2-DV-n4h.title",
@@ -19438,13 +19043,6 @@
           "value": "Tag"
         },
         {
-          "key": "Rzg-NG-sNa.title",
-          "view": "settings.8bu-du-vzc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Create New Theme"
-        },
-        {
           "key": "cPa-5P-FPE.title",
           "view": "settings.XCe-dk-8wN",
           "kind": "cell",
@@ -19520,13 +19118,6 @@
           "kind": "cell",
           "property": "title",
           "value": "msg"
-        },
-        {
-          "key": "ycd-ZH-bzw.title",
-          "view": "settings.ycd-ZH-bzw",
-          "kind": "view",
-          "property": "title",
-          "value": "Actions"
         }
       ],
       "Typesetting": [
@@ -19835,10 +19426,6 @@
         {
           "id": "heading.settings.7hF-dm-sw0",
           "title": "Themes"
-        },
-        {
-          "id": "heading.settings.ycd-ZH-bzw",
-          "title": "Actions"
         }
       ],
       "TypesettingHeadings": [
@@ -20046,12 +19633,6 @@
           "1080.title": "OgreKit 찾기 패널(레거시)",
           "32.title": "닫을 때 위치 저장",
           "adv-Fd-Pnl.title": "고급 찾기 패널(권장)"
-        },
-        "SettingsThemeName": {
-          "PHE-fW-LeB.title": " 테마 타이틀",
-          "ZJe-8t-Rwa.title": "제목:",
-          "jJY-ql-JXD.title": "취소",
-          "RC5-Ef-iJJ.title": "확인"
         },
         "SettingsTypesetting": {
           "187.title": "DVI 경유",
@@ -21945,36 +21526,6 @@
           "column": 0
         }
       ],
-      "ThemeName": [
-        {
-          "key": "PHE-fW-LeB.title",
-          "view": "settings.PHE-fW-LeB",
-          "kind": "window",
-          "property": "title",
-          "value": " 테마 타이틀"
-        },
-        {
-          "key": "ZJe-8t-Rwa.title",
-          "view": "settings.JhE-OB-yPt",
-          "kind": "cell",
-          "property": "title",
-          "value": "제목:"
-        },
-        {
-          "key": "jJY-ql-JXD.title",
-          "view": "settings.fck-0B-Qsq",
-          "kind": "cell",
-          "property": "title",
-          "value": "취소"
-        },
-        {
-          "key": "RC5-Ef-iJJ.title",
-          "view": "settings.N2G-gi-llW",
-          "kind": "cell",
-          "property": "title",
-          "value": "확인"
-        }
-      ],
       "Themes": [
         {
           "key": "rpP-GF-uJp.title",
@@ -21996,13 +21547,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Footnote"
-        },
-        {
-          "key": "rad-zH-Nv2.title",
-          "view": "settings.FOl-CH-y3R",
-          "kind": "cell",
-          "property": "title",
-          "value": "Theme to Edit"
         },
         {
           "key": "Sb2-DV-n4h.title",
@@ -22257,13 +21801,6 @@
           "value": "Tag"
         },
         {
-          "key": "Rzg-NG-sNa.title",
-          "view": "settings.8bu-du-vzc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Create New Theme"
-        },
-        {
           "key": "cPa-5P-FPE.title",
           "view": "settings.XCe-dk-8wN",
           "kind": "cell",
@@ -22339,13 +21876,6 @@
           "kind": "cell",
           "property": "title",
           "value": "msg"
-        },
-        {
-          "key": "ycd-ZH-bzw.title",
-          "view": "settings.ycd-ZH-bzw",
-          "kind": "view",
-          "property": "title",
-          "value": "Actions"
         }
       ],
       "Typesetting": [
@@ -22654,10 +22184,6 @@
         {
           "id": "heading.settings.7hF-dm-sw0",
           "title": "Themes"
-        },
-        {
-          "id": "heading.settings.ycd-ZH-bzw",
-          "title": "Actions"
         }
       ],
       "TypesettingHeadings": [
@@ -22865,12 +22391,6 @@
           "1080.title": "OgreKit zoekpaneel (verouderd)",
           "32.title": "Onthoud laatste positie bij sluiten",
           "adv-Fd-Pnl.title": "Geavanceerd zoekpaneel (aanbevolen)"
-        },
-        "SettingsThemeName": {
-          "PHE-fW-LeB.title": "Style Title",
-          "ZJe-8t-Rwa.title": "Naam:",
-          "jJY-ql-JXD.title": "Annuleer",
-          "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsTypesetting": {
           "187.title": "Via DVI",
@@ -24764,36 +24284,6 @@
           "column": 0
         }
       ],
-      "ThemeName": [
-        {
-          "key": "PHE-fW-LeB.title",
-          "view": "settings.PHE-fW-LeB",
-          "kind": "window",
-          "property": "title",
-          "value": "Style Title"
-        },
-        {
-          "key": "ZJe-8t-Rwa.title",
-          "view": "settings.JhE-OB-yPt",
-          "kind": "cell",
-          "property": "title",
-          "value": "Naam:"
-        },
-        {
-          "key": "jJY-ql-JXD.title",
-          "view": "settings.fck-0B-Qsq",
-          "kind": "cell",
-          "property": "title",
-          "value": "Annuleer"
-        },
-        {
-          "key": "RC5-Ef-iJJ.title",
-          "view": "settings.N2G-gi-llW",
-          "kind": "cell",
-          "property": "title",
-          "value": "OK"
-        }
-      ],
       "Themes": [
         {
           "key": "rpP-GF-uJp.title",
@@ -24815,13 +24305,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Footnote"
-        },
-        {
-          "key": "rad-zH-Nv2.title",
-          "view": "settings.FOl-CH-y3R",
-          "kind": "cell",
-          "property": "title",
-          "value": "Theme to Edit"
         },
         {
           "key": "Sb2-DV-n4h.title",
@@ -25076,13 +24559,6 @@
           "value": "Tag"
         },
         {
-          "key": "Rzg-NG-sNa.title",
-          "view": "settings.8bu-du-vzc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Create New Theme"
-        },
-        {
           "key": "cPa-5P-FPE.title",
           "view": "settings.XCe-dk-8wN",
           "kind": "cell",
@@ -25158,13 +24634,6 @@
           "kind": "cell",
           "property": "title",
           "value": "msg"
-        },
-        {
-          "key": "ycd-ZH-bzw.title",
-          "view": "settings.ycd-ZH-bzw",
-          "kind": "view",
-          "property": "title",
-          "value": "Actions"
         }
       ],
       "Typesetting": [
@@ -25473,10 +24942,6 @@
         {
           "id": "heading.settings.7hF-dm-sw0",
           "title": "Themes"
-        },
-        {
-          "id": "heading.settings.ycd-ZH-bzw",
-          "title": "Actions"
         }
       ],
       "TypesettingHeadings": [
@@ -25684,12 +25149,6 @@
           "1080.title": "Painel de pesquisa OgreKit (legado)",
           "32.title": "Lembrar-se da última posição",
           "adv-Fd-Pnl.title": "Painel de pesquisa avançada (recomendado)"
-        },
-        "SettingsThemeName": {
-          "PHE-fW-LeB.title": "Style Title",
-          "ZJe-8t-Rwa.title": "Título:",
-          "jJY-ql-JXD.title": "Cancelar",
-          "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsTypesetting": {
           "187.title": "Via DVI",
@@ -27583,36 +27042,6 @@
           "column": 0
         }
       ],
-      "ThemeName": [
-        {
-          "key": "PHE-fW-LeB.title",
-          "view": "settings.PHE-fW-LeB",
-          "kind": "window",
-          "property": "title",
-          "value": "Style Title"
-        },
-        {
-          "key": "ZJe-8t-Rwa.title",
-          "view": "settings.JhE-OB-yPt",
-          "kind": "cell",
-          "property": "title",
-          "value": "Título:"
-        },
-        {
-          "key": "jJY-ql-JXD.title",
-          "view": "settings.fck-0B-Qsq",
-          "kind": "cell",
-          "property": "title",
-          "value": "Cancelar"
-        },
-        {
-          "key": "RC5-Ef-iJJ.title",
-          "view": "settings.N2G-gi-llW",
-          "kind": "cell",
-          "property": "title",
-          "value": "OK"
-        }
-      ],
       "Themes": [
         {
           "key": "rpP-GF-uJp.title",
@@ -27634,13 +27063,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Footnote"
-        },
-        {
-          "key": "rad-zH-Nv2.title",
-          "view": "settings.FOl-CH-y3R",
-          "kind": "cell",
-          "property": "title",
-          "value": "Theme to Edit"
         },
         {
           "key": "Sb2-DV-n4h.title",
@@ -27895,13 +27317,6 @@
           "value": "Tag"
         },
         {
-          "key": "Rzg-NG-sNa.title",
-          "view": "settings.8bu-du-vzc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Create New Theme"
-        },
-        {
           "key": "cPa-5P-FPE.title",
           "view": "settings.XCe-dk-8wN",
           "kind": "cell",
@@ -27977,13 +27392,6 @@
           "kind": "cell",
           "property": "title",
           "value": "msg"
-        },
-        {
-          "key": "ycd-ZH-bzw.title",
-          "view": "settings.ycd-ZH-bzw",
-          "kind": "view",
-          "property": "title",
-          "value": "Actions"
         }
       ],
       "Typesetting": [
@@ -28292,10 +27700,6 @@
         {
           "id": "heading.settings.7hF-dm-sw0",
           "title": "Themes"
-        },
-        {
-          "id": "heading.settings.ycd-ZH-bzw",
-          "title": "Actions"
         }
       ],
       "TypesettingHeadings": [
@@ -28503,12 +27907,6 @@
           "1080.title": "Painel de localizar OgreKit (legado)",
           "32.title": "Lembrar-se da última posição",
           "adv-Fd-Pnl.title": "Painel de localizar avançado (recomendado)"
-        },
-        "SettingsThemeName": {
-          "PHE-fW-LeB.title": "Título do tema",
-          "ZJe-8t-Rwa.title": "Título:",
-          "jJY-ql-JXD.title": "Cancelar",
-          "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsTypesetting": {
           "187.title": "Via DVI",
@@ -30402,36 +29800,6 @@
           "column": 0
         }
       ],
-      "ThemeName": [
-        {
-          "key": "PHE-fW-LeB.title",
-          "view": "settings.PHE-fW-LeB",
-          "kind": "window",
-          "property": "title",
-          "value": "Título do tema"
-        },
-        {
-          "key": "ZJe-8t-Rwa.title",
-          "view": "settings.JhE-OB-yPt",
-          "kind": "cell",
-          "property": "title",
-          "value": "Título:"
-        },
-        {
-          "key": "jJY-ql-JXD.title",
-          "view": "settings.fck-0B-Qsq",
-          "kind": "cell",
-          "property": "title",
-          "value": "Cancelar"
-        },
-        {
-          "key": "RC5-Ef-iJJ.title",
-          "view": "settings.N2G-gi-llW",
-          "kind": "cell",
-          "property": "title",
-          "value": "OK"
-        }
-      ],
       "Themes": [
         {
           "key": "rpP-GF-uJp.title",
@@ -30453,13 +29821,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Footnote"
-        },
-        {
-          "key": "rad-zH-Nv2.title",
-          "view": "settings.FOl-CH-y3R",
-          "kind": "cell",
-          "property": "title",
-          "value": "Theme to Edit"
         },
         {
           "key": "Sb2-DV-n4h.title",
@@ -30714,13 +30075,6 @@
           "value": "Tag"
         },
         {
-          "key": "Rzg-NG-sNa.title",
-          "view": "settings.8bu-du-vzc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Create New Theme"
-        },
-        {
           "key": "cPa-5P-FPE.title",
           "view": "settings.XCe-dk-8wN",
           "kind": "cell",
@@ -30796,13 +30150,6 @@
           "kind": "cell",
           "property": "title",
           "value": "msg"
-        },
-        {
-          "key": "ycd-ZH-bzw.title",
-          "view": "settings.ycd-ZH-bzw",
-          "kind": "view",
-          "property": "title",
-          "value": "Actions"
         }
       ],
       "Typesetting": [
@@ -31111,10 +30458,6 @@
         {
           "id": "heading.settings.7hF-dm-sw0",
           "title": "Themes"
-        },
-        {
-          "id": "heading.settings.ycd-ZH-bzw",
-          "title": "Actions"
         }
       ],
       "TypesettingHeadings": [
@@ -31322,12 +30665,6 @@
           "1080.title": "Panoul de căutare OgreKit (vechi)",
           "32.title": "Înregistrează ultima poziție la închidere",
           "adv-Fd-Pnl.title": "Panou de căutare avansată (recomandat)"
-        },
-        "SettingsThemeName": {
-          "PHE-fW-LeB.title": "Style Title",
-          "ZJe-8t-Rwa.title": "Titlu:",
-          "jJY-ql-JXD.title": "Anulați",
-          "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsTypesetting": {
           "187.title": "Prin DVI",
@@ -33221,36 +32558,6 @@
           "column": 0
         }
       ],
-      "ThemeName": [
-        {
-          "key": "PHE-fW-LeB.title",
-          "view": "settings.PHE-fW-LeB",
-          "kind": "window",
-          "property": "title",
-          "value": "Style Title"
-        },
-        {
-          "key": "ZJe-8t-Rwa.title",
-          "view": "settings.JhE-OB-yPt",
-          "kind": "cell",
-          "property": "title",
-          "value": "Titlu:"
-        },
-        {
-          "key": "jJY-ql-JXD.title",
-          "view": "settings.fck-0B-Qsq",
-          "kind": "cell",
-          "property": "title",
-          "value": "Anulați"
-        },
-        {
-          "key": "RC5-Ef-iJJ.title",
-          "view": "settings.N2G-gi-llW",
-          "kind": "cell",
-          "property": "title",
-          "value": "OK"
-        }
-      ],
       "Themes": [
         {
           "key": "rpP-GF-uJp.title",
@@ -33272,13 +32579,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Footnote"
-        },
-        {
-          "key": "rad-zH-Nv2.title",
-          "view": "settings.FOl-CH-y3R",
-          "kind": "cell",
-          "property": "title",
-          "value": "Theme to Edit"
         },
         {
           "key": "Sb2-DV-n4h.title",
@@ -33533,13 +32833,6 @@
           "value": "Tag"
         },
         {
-          "key": "Rzg-NG-sNa.title",
-          "view": "settings.8bu-du-vzc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Create New Theme"
-        },
-        {
           "key": "cPa-5P-FPE.title",
           "view": "settings.XCe-dk-8wN",
           "kind": "cell",
@@ -33615,13 +32908,6 @@
           "kind": "cell",
           "property": "title",
           "value": "msg"
-        },
-        {
-          "key": "ycd-ZH-bzw.title",
-          "view": "settings.ycd-ZH-bzw",
-          "kind": "view",
-          "property": "title",
-          "value": "Actions"
         }
       ],
       "Typesetting": [
@@ -33930,10 +33216,6 @@
         {
           "id": "heading.settings.7hF-dm-sw0",
           "title": "Themes"
-        },
-        {
-          "id": "heading.settings.ycd-ZH-bzw",
-          "title": "Actions"
         }
       ],
       "TypesettingHeadings": [
@@ -34141,12 +33423,6 @@
           "1080.title": "OgreKit查找面板（旧版）",
           "32.title": "关闭时记住上一次位置",
           "adv-Fd-Pnl.title": "高级查找面板（推荐）"
-        },
-        "SettingsThemeName": {
-          "PHE-fW-LeB.title": "主题标题",
-          "ZJe-8t-Rwa.title": " 标题:",
-          "jJY-ql-JXD.title": "取消",
-          "RC5-Ef-iJJ.title": "好"
         },
         "SettingsTypesetting": {
           "187.title": "经由DVI",
@@ -36040,36 +35316,6 @@
           "column": 0
         }
       ],
-      "ThemeName": [
-        {
-          "key": "PHE-fW-LeB.title",
-          "view": "settings.PHE-fW-LeB",
-          "kind": "window",
-          "property": "title",
-          "value": "主题标题"
-        },
-        {
-          "key": "ZJe-8t-Rwa.title",
-          "view": "settings.JhE-OB-yPt",
-          "kind": "cell",
-          "property": "title",
-          "value": " 标题:"
-        },
-        {
-          "key": "jJY-ql-JXD.title",
-          "view": "settings.fck-0B-Qsq",
-          "kind": "cell",
-          "property": "title",
-          "value": "取消"
-        },
-        {
-          "key": "RC5-Ef-iJJ.title",
-          "view": "settings.N2G-gi-llW",
-          "kind": "cell",
-          "property": "title",
-          "value": "好"
-        }
-      ],
       "Themes": [
         {
           "key": "rpP-GF-uJp.title",
@@ -36091,13 +35337,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Footnote"
-        },
-        {
-          "key": "rad-zH-Nv2.title",
-          "view": "settings.FOl-CH-y3R",
-          "kind": "cell",
-          "property": "title",
-          "value": "Theme to Edit"
         },
         {
           "key": "Sb2-DV-n4h.title",
@@ -36352,13 +35591,6 @@
           "value": "Tag"
         },
         {
-          "key": "Rzg-NG-sNa.title",
-          "view": "settings.8bu-du-vzc",
-          "kind": "cell",
-          "property": "title",
-          "value": "Create New Theme"
-        },
-        {
           "key": "cPa-5P-FPE.title",
           "view": "settings.XCe-dk-8wN",
           "kind": "cell",
@@ -36434,13 +35666,6 @@
           "kind": "cell",
           "property": "title",
           "value": "msg"
-        },
-        {
-          "key": "ycd-ZH-bzw.title",
-          "view": "settings.ycd-ZH-bzw",
-          "kind": "view",
-          "property": "title",
-          "value": "Actions"
         }
       ],
       "Typesetting": [
@@ -36749,10 +35974,6 @@
         {
           "id": "heading.settings.7hF-dm-sw0",
           "title": "Themes"
-        },
-        {
-          "id": "heading.settings.ycd-ZH-bzw",
-          "title": "Actions"
         }
       ],
       "TypesettingHeadings": [

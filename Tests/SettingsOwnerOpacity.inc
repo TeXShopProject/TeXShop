@@ -1,7 +1,7 @@
 #import "TSThemeFileStore.h"
-@interface TSPreferences (OpacityRegression)
-- (IBAction)EditingStyleChoice:(id)sender;
-@end
+#import "TSSettingsThemeList.h"
+#import "TSLibraryRepair.h"
+#import <objc/message.h>
 static NSLocale *opacityTestLocale;
 static id OpacityLocale(id cls, SEL cmd) { return opacityTestLocale; }
 static NSUInteger opacityWrites;
@@ -100,28 +100,211 @@ static void CheckOpacityField(TSPreferences *owner,TSSettingsWindowController *s
     Check(opacityWrites==w && [field.stringValue isEqual:@"30"],@"Disabled opacity disables its numeric field");well.enabled=YES;
     formatter.rejectionHandler=^{NSBeep();};
 }
-static void CollectThemeButtons(NSView *view,NSMutableArray<NSButton *> *buttons){
-    if(view.hidden)return;
-    if([view isKindOfClass:NSButton.class]){[buttons addObject:(NSButton *)view];return;}
-    for(NSView *child in view.subviews)CollectThemeButtons(child,buttons);
+static NSTextField *ThemeRowField(TSSettingsThemeList *list,NSString *title){
+    NSUInteger row=[list.titles indexOfObject:title];
+    if(row==NSNotFound)return nil;
+    NSTableCellView *cell=[list.tableView viewAtColumn:0 row:(NSInteger)row makeIfNecessary:YES];
+    return cell.textField;
 }
-// Edit Theme keeps New Theme and Save Theme, in this order, without the button that made a theme from earlier color settings.
+static NSArray<NSString *> *ThemeRowMarks(TSSettingsThemeList *list,NSString *title){
+    NSUInteger row=[list.titles indexOfObject:title];
+    NSTableCellView *cell=row==NSNotFound?nil:[list.tableView viewAtColumn:0 row:(NSInteger)row makeIfNecessary:YES];
+    NSMutableArray *marks=[NSMutableArray array];
+    for(NSView *child in cell.subviews)if([child isKindOfClass:NSStackView.class])for(NSView *mark in ((NSStackView *)child).arrangedSubviews)[marks addObject:mark.toolTip?:@""];
+    return marks;
+}
+// Edit Theme is the list of themes with ＋, − and the actions menu under it: no pop-up menu of the theme to edit, no
+// button to save the theme (colors are saved as they change) and none that makes a theme from earlier color settings.
 static void CheckThemeActionButtons(TSPreferences *owner,TSSettingsWindowController *shell){
     [shell selectCategoryIdentifier:TSSettingsCategoryAppearance];
     NSView *pane=[shell viewForCategoryIdentifier:TSSettingsCategoryAppearance];[pane layoutSubtreeIfNeeded];
-    NSView *row=Find(pane,@"row.catalog.appearance.1.1");
-    NSMutableArray<NSButton *> *buttons=[NSMutableArray array];CollectThemeButtons(row,buttons);
-    NSArray *identifiers=[buttons valueForKey:@"identifier"];
-    Check(row!=nil && [identifiers isEqual:@[@"settings.8bu-du-vzc",@"settings.save-theme"]],[NSString stringWithFormat:@"Edit Theme has New Theme and Save Theme only: %@",identifiers]);
+    NSView *row=Find(pane,@"row.catalog.appearance.1.0");
+    TSSettingsThemeList *list=owner.themeList;
+    Check(row!=nil && list!=nil && Find(row,@"settings.theme-list")==list.view,@"Edit Theme holds the theme list");
+    Check(Find(pane,@"settings.O5R-pm-csa")==nil && Find(pane,@"settings.8bu-du-vzc")==nil && Find(pane,@"settings.save-theme")==nil,@"No pop-up menu of the theme to edit, no New Theme or Save Theme button");
     Check(Find(pane,@"settings.uXA-S0-9dP")==nil && ![owner respondsToSelector:NSSelectorFromString(@"NewStyleFromPrefs:")],@"No button makes a theme from earlier color settings");
-    if(buttons.count!=2)return;
-    NSArray *titles=@[[fixture localizedStringForKey:@"catalog.appearance.1.1.choice.0" value:nil table:@"SettingsCategories"],[fixture localizedStringForKey:@"catalog.appearance.1.1.choice.1" value:nil table:@"SettingsCategories"]];
-    Check([buttons[0].title isEqual:titles[0]] && [buttons[1].title isEqual:titles[1]] && buttons[0].action==@selector(SaveNewStyle:) && buttons[1].action==@selector(SaveEditedStyle:),[NSString stringWithFormat:@"Theme buttons keep their titles and actions: %@ / %@",buttons[0].title,buttons[1].title]);
-    NSRect first=[buttons[0] convertRect:buttons[0].bounds toView:row],second=[buttons[1] convertRect:buttons[1].bounds toView:row];
-    Check(NSWidth(first)>=buttons[0].fittingSize.width-0.5 && NSWidth(second)>=buttons[1].fittingSize.width-0.5,@"Theme button titles fit");
-    Check(fabs(NSMinX(second)-NSMaxX(first)-8)<0.5 && fabs(NSMidY(first)-NSMidY(second))<0.5,@"Theme buttons stand side by side, 8 points apart");
-    Check(fabs(NSWidth(row.bounds)-NSMaxX(second)-12)<0.5 && NSMinX(first)>=0,@"Theme buttons end 12 points from the right edge of their row");
-    puts("PASS: Edit Theme buttons");
+    Check(Find(row,@"settings.theme-list.add")==list.addButton && Find(row,@"settings.theme-list.remove")==list.removeButton && Find(row,@"settings.theme-list.actions")==list.actionsButton,@"＋, − and the actions menu are under the list");
+    // The independent reference catalog names the same actions as the list (Japanese, as the catalog).
+    if([fixture.bundlePath.lastPathComponent isEqual:@"ja.bundle"]){
+        NSDictionary *catalog=[NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfURL:[fixture URLForResource:@"SettingsCatalogReference" withExtension:@"json"]] options:0 error:NULL];
+        NSDictionary *edit=nil;for(NSDictionary *category in catalog[@"categories"])if([category[@"id"] isEqual:@"appearance"])for(NSDictionary *group in category[@"groups"])if([group[@"title"] isEqual:[fixture localizedStringForKey:@"group.appearance.1.title" value:nil table:@"SettingsCategories"]])edit=group;
+        NSMutableArray *names=[NSMutableArray array];for(NSString *key in @[@"add",@"duplicate",@"rename",@"restore",@"delete",@"export",@"import"])[names addObject:[fixture localizedStringForKey:[@"theme.list." stringByAppendingString:key] value:nil table:@"SettingsCategories"]];
+        Check([edit[@"rows"] count]==1 && [edit[@"rows"][0][@"kind"] isEqual:@"themelist"] && [edit[@"rows"][0][@"choices"] isEqual:names] && [edit[@"rows"][0][@"src"] isEqual:@[@"new:theme-list"]],[NSString stringWithFormat:@"The reference catalog has the list of themes with its actions: %@",edit[@"rows"]]);
+    }
+    NSString *addTip=[fixture localizedStringForKey:@"theme.list.add" value:nil table:@"SettingsCategories"];
+    Check([list.addButton.toolTip isEqual:addTip] && ![addTip hasPrefix:@"theme."],[NSString stringWithFormat:@"＋ is named in the language of Settings: %@",list.addButton.toolTip]);
+    NSRect frame=[list.view convertRect:list.view.bounds toView:row];
+    Check(fabs(NSWidth(row.bounds)-NSMaxX(frame)-12)<0.5 && NSMinX(frame)>=11.5 && NSHeight(frame)>=8*24,[NSString stringWithFormat:@"The list takes the width of its row, inside the card, and shows eight themes: %@ in %@ ambiguous=%d/%d",NSStringFromRect(frame),NSStringFromRect(row.bounds),list.view.hasAmbiguousLayout,row.hasAmbiguousLayout]);
+    // Themes that come with TeXShop (the bundled copies of the test) cannot be renamed or deleted.
+    if(getenv("TS_TEST_BUNDLED_THEMES"))[list setValue:[NSURL fileURLWithPath:@(getenv("TS_TEST_BUNDLED_THEMES")) isDirectory:YES] forKey:@"bundledDirectory"];
+    [TSIsolatedAppKitDefaults setObject:@"LiteTheme" forKey:DefaultLiteThemeKey];[TSIsolatedAppKitDefaults setObject:@"DarkTheme" forKey:DefaultDarkThemeKey];
+    [owner themeListDidChooseTitle:@"LiteTheme"];[list reload];
+    Check([list.titles containsObject:@"LiteTheme"] && [list.titles containsObject:@"DarkTheme"],[NSString stringWithFormat:@"The list shows the themes of the folder: %@",list.titles]);
+    if(getenv("TS_TEST_BUNDLED_THEMES")){
+        Check([list isBundledTitle:@"LiteTheme"] && !ThemeRowField(list,@"LiteTheme").editable && !list.removeButton.enabled,@"A theme that comes with TeXShop cannot be renamed or deleted");
+        NSString *light=[fixture localizedStringForKey:@"catalog.appearance.0.0.title" value:nil table:@"SettingsCategories"],*dark=[fixture localizedStringForKey:@"catalog.appearance.0.1.title" value:nil table:@"SettingsCategories"];
+        Check([ThemeRowMarks(list,@"LiteTheme") isEqual:@[light]] && [ThemeRowMarks(list,@"DarkTheme") isEqual:@[dark]],[NSString stringWithFormat:@"The themes of Light and Dark Mode are marked: %@ %@",ThemeRowMarks(list,@"LiteTheme"),ThemeRowMarks(list,@"DarkTheme")]);
+    }
+    Check(list.tableView.selectedRow==(NSInteger)[list.titles indexOfObject:@"LiteTheme"],@"The theme being edited is selected in the list");
+    if(getenv("TS_TEST_BUNDLED_THEMES")){
+        NSString *(^tr)(NSString *)=^NSString *(NSString *key){return [fixture localizedStringForKey:key value:nil table:@"SettingsCategories"];};
+        TSThemeFileStore *store=[owner themeStore];NSArray *before=[store titles];
+        // The actions menu names the selected theme; renaming and deleting a bundled theme are dimmed, as is restoring
+        // one whose colors are TeXShop's.
+        NSMenu *menu=list.actionsButton.menu;[(id<NSMenuDelegate>)list menuNeedsUpdate:menu];
+        NSMutableDictionary<NSString *,NSMenuItem *> *items=[NSMutableDictionary dictionary];for(NSMenuItem *item in menu.itemArray)if(item.action)items[NSStringFromSelector(item.action)]=item;
+        Check([items[@"duplicateTheme:"].title isEqual:[NSString stringWithFormat:tr(@"theme.list.duplicate.named"),@"LiteTheme"]] && items[@"importThemes:"]!=nil && items[@"exportTheme:"]!=nil && items[@"deleteTheme:"]==nil,@"The actions menu names the selected theme and has Import");
+        Check(![(id<NSMenuItemValidation>)list validateMenuItem:items[@"renameTheme:"]] && ![(id<NSMenuItemValidation>)list validateMenuItem:items[@"restoreTheme:"]] && [(id<NSMenuItemValidation>)list validateMenuItem:items[@"duplicateTheme:"]],@"A bundled theme with TeXShop's colors cannot be renamed or restored");
+        // ＋ makes a theme with TeXShop's colors, Duplicate a copy of the selected one.
+        [owner themeListDidChooseTitle:@"LiteTheme"];[list reload];
+        [list addTheme:nil];NSString *untitled=tr(@"theme.list.untitled");
+        Check([[store titles] containsObject:untitled] && [[store readTitle:untitled][@"EditorText"] isEqual:owner.newThemeColors[@"EditorText"]] && ![list isBundledTitle:untitled],[NSString stringWithFormat:@"＋ adds “%@” with TeXShop's colors: %@",untitled,[store titles]]);
+        Check([owner.editingThemeTitle isEqual:untitled],[NSString stringWithFormat:@"＋ edits the new theme: %@",owner.editingThemeTitle]);
+        Check(list.removeButton.enabled && ThemeRowField(list,untitled).editable,@"A theme of the user's own can be renamed and deleted");
+        [owner themeListDidChooseTitle:@"LiteTheme"];[list reload];[list duplicateTheme:nil];NSString *copy=[NSString stringWithFormat:tr(@"theme.list.copy"),@"LiteTheme"];
+        Check([[store readTitle:copy][@"EditorText"] isEqual:[store readTitle:@"LiteTheme"][@"EditorText"]] && [[store readTitle:copy][@"Title"] isEqual:copy],[NSString stringWithFormat:@"Duplicate copies the selected theme as “%@”",copy]);
+        // A bundled theme whose colors were changed is marked and can be restored.
+        NSMutableDictionary *changed=[[store readTitle:@"LiteTheme"] mutableCopy];NSArray *text=changed[@"EditorText"];changed[@"EditorText"]=@[@0.9,@0.1,@0.1,@1];[store writeColors:changed title:@"LiteTheme" error:NULL];
+        [owner themeListDidChooseTitle:@"LiteTheme"];[list reload];[(id<NSMenuDelegate>)list menuNeedsUpdate:menu];
+        NSMenuItem *restore=nil;for(NSMenuItem *item in menu.itemArray)if(item.action==@selector(restoreTheme:))restore=item;
+        Check([list isChangedTitle:@"LiteTheme"] && [(id<NSMenuItemValidation>)list validateMenuItem:restore] && [ThemeRowMarks(list,@"LiteTheme") containsObject:tr(@"theme.list.changed")],@"A changed bundled theme is marked and can be restored");
+        // Saving a changed color of a bundled theme marks its row at once, and restoring clears the mark at once.
+        [list restoreTheme:nil];
+        Check(![list isChangedTitle:@"LiteTheme"] && [[store readTitle:@"LiteTheme"][@"EditorText"] isEqual:[NSDictionary dictionaryWithContentsOfFile:[@(getenv("TS_TEST_BUNDLED_THEMES")) stringByAppendingPathComponent:@"LiteTheme.plist"]][@"EditorText"]] && [[owner valueForKey:@"EditingColors"][@"EditorText"] isEqual:[store readTitle:@"LiteTheme"][@"EditorText"]],@"Restore gives the theme TeXShop's colors and the wells show them");
+        (void)text;
+        // The row is shown before the change, so that the check sees that row, not one made for it afterwards.
+        [list.tableView scrollRowToVisible:(NSInteger)[list.titles indexOfObject:@"LiteTheme"]];[pane layoutSubtreeIfNeeded];(void)ThemeRowMarks(list,@"LiteTheme");
+        NSMutableDictionary *editing=[owner valueForKey:@"EditingColors"];editing[@"EditorText"]=@[@0.2,@0.6,@0.2,@1];[owner SaveEditedStyle:nil];
+        NSUInteger liteRow=[list.titles indexOfObject:@"LiteTheme"];NSTableCellView *shown=[list.tableView viewAtColumn:0 row:(NSInteger)liteRow makeIfNecessary:NO];
+        NSMutableArray *shownMarks=[NSMutableArray array];for(NSView *child in shown.subviews)if([child isKindOfClass:NSStackView.class])for(NSView *mark in ((NSStackView *)child).arrangedSubviews)[shownMarks addObject:mark.toolTip?:@""];
+        Check(shown!=nil && [shownMarks containsObject:tr(@"theme.list.changed")],[NSString stringWithFormat:@"The first change of a bundled theme's color marks the row shown without reading the list again: %@",shownMarks]);
+        [list restoreTheme:nil];
+        Check(![ThemeRowMarks(list,@"LiteTheme") containsObject:tr(@"theme.list.changed")],@"Restoring clears the mark at once");
+        // A property list of other settings is not imported as a theme; one with some of the colors is.
+        NSData *settingsOnly=[NSPropertyListSerialization dataWithPropertyList:@{@"WindowWidth":@800,@"ShowRuler":@YES,@"WindowFrame":@[@0,@0,@800,@600]} format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL];
+        NSData *someColors=[NSPropertyListSerialization dataWithPropertyList:@{@"EditorText":@[@0,@0,@0,@1],@"Title":@"Old"} format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL];
+        Check(![owner themeListAcceptsData:settingsOnly] && [owner themeListAcceptsData:someColors],@"Only a file with theme colors is imported");
+        // Deleting a theme in use for Dark Mode gives Dark Mode TeXShop's DarkTheme (the file is removed here, not trashed).
+        [TSIsolatedAppKitDefaults setObject:copy forKey:DefaultDarkThemeKey];[owner themeListDidChooseTitle:copy];[list reload];
+        Check([ThemeRowMarks(list,copy) containsObject:tr(@"catalog.appearance.0.1.title")],[NSString stringWithFormat:@"The copy in use for Dark Mode is marked: %@ %@ %@",ThemeRowMarks(list,copy),owner.darkThemeTitle,list.titles]);
+        Method trash=class_getInstanceMethod(TSThemeFileStore.class,@selector(trashTitle:error:));
+        IMP original=method_setImplementation(trash,imp_implementationWithBlock(^BOOL(TSThemeFileStore *s,NSString *title,NSError **error){return [NSFileManager.defaultManager removeItemAtURL:(NSURL *_Nonnull)[s URLForTitle:title] error:error];}));
+        ((void (*)(id,SEL,NSString *))objc_msgSend)(list,NSSelectorFromString(@"trashTitle:"),copy);
+        method_setImplementation(trash,original);
+        Check(![[store titles] containsObject:copy] && [[TSIsolatedAppKitDefaults objectForKey:DefaultDarkThemeKey] isEqual:@"DarkTheme"] && owner.editingThemeTitle!=nil && ![owner.editingThemeTitle isEqual:copy],@"Deleting the Dark Mode theme falls back to DarkTheme and edits the next theme");
+        [NSFileManager.defaultManager removeItemAtURL:(NSURL *_Nonnull)[store URLForTitle:untitled] error:NULL];
+        Check([[store titles] isEqual:before],@"The list's test leaves the theme folder as it was");
+        [TSIsolatedAppKitDefaults setObject:@"DarkTheme" forKey:DefaultDarkThemeKey];[owner themeListDidChooseTitle:@"LiteTheme"];[list reload];
+        // Reopened after the theme of Light Mode was deleted elsewhere: Light Mode gives way to LiteTheme, and the
+        // theme edited is one that is there, selected in the list.
+        [TSIsolatedAppKitDefaults setObject:@"Gone Elsewhere" forKey:DefaultLiteThemeKey];
+        [owner PrepareColorPane:TSIsolatedAppKitDefaults];
+        NSPopUpButton *liteMenu=[owner valueForKey:@"LiteStyle"];
+        Check([[TSIsolatedAppKitDefaults objectForKey:DefaultLiteThemeKey] isEqual:@"LiteTheme"] && [liteMenu.titleOfSelectedItem isEqual:@"LiteTheme"],@"Reopened Settings gives a deleted Light Mode theme's place to LiteTheme");
+        Check(owner.editingThemeTitle!=nil && [[store titles] containsObject:owner.editingThemeTitle] && list.tableView.selectedRow==(NSInteger)[list.titles indexOfObject:owner.editingThemeTitle] && [owner valueForKey:@"EditingColors"]!=nil,[NSString stringWithFormat:@"Reopened Settings edits a theme that is there: %@",owner.editingThemeTitle]);
+        [owner themeListDidChooseTitle:@"LiteTheme"];[list reload];
+        // A theme replaced by other settings (also with arrays that are not colors), or broken, before it is chosen is
+        // not edited: another theme is, and the list says so in an alert that is caught here before it is shown.
+        {
+            __block NSMutableArray<NSString *> *notices=[NSMutableArray array];
+            Method sheet=class_getInstanceMethod(NSAlert.class,@selector(beginSheetModalForWindow:completionHandler:));
+            IMP shown=method_setImplementation(sheet,imp_implementationWithBlock(^(NSAlert *alert,NSWindow *window,id handler){[notices addObject:[NSString stringWithFormat:@"%@|%@",alert.messageText,alert.informativeText]];}));
+            NSArray *bads=@[[NSPropertyListSerialization dataWithPropertyList:@{@"WindowFrame":@[@0,@0,@800,@600],@"ShowRuler":@YES} format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL],
+                            [NSPropertyListSerialization dataWithPropertyList:@{@"EditorText":@[@"red",@"green"],@"ShowRuler":@YES} format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL],
+                            [NSPropertyListSerialization dataWithPropertyList:@{@"EditorText":@[@0.5,@0.5]} format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL],
+                            [@"<?xml version=\"1.0\"?><plist><dict><key>EditorText" dataUsingEncoding:NSUTF8StringEncoding]];
+            NSString *expected=[NSString stringWithFormat:@"%@|",[NSString stringWithFormat:tr(@"theme.list.notTheme"),@"Replaced"]];
+            for(NSData *bad in bads){
+                NSString *badPath=[ColorPath stringByAppendingPathComponent:@"Replaced.plist"];[bad writeToFile:badPath atomically:YES];[list reload];
+                NSUInteger before=notices.count;
+                [owner themeListDidChooseTitle:@"Replaced"];
+                Check(owner.editingThemeTitle!=nil && ![owner.editingThemeTitle isEqual:@"Replaced"] && [owner valueForKey:@"EditingColors"]!=nil && [[NSData dataWithContentsOfFile:badPath] isEqual:bad],[NSString stringWithFormat:@"A theme that cannot be read as one is not edited: %@",owner.editingThemeTitle]);
+                Check(notices.count==before+1 && [notices.lastObject isEqual:expected],[NSString stringWithFormat:@"The list says the theme cannot be read, not that something could not be saved: %@",notices.lastObject]);
+                // Exported from the menu while it is not a theme: the list says so; no save panel is asked for.
+                Method panel=class_getClassMethod(NSSavePanel.class,@selector(savePanel));__block NSUInteger panels=0;
+                IMP realPanel=method_setImplementation(panel,imp_implementationWithBlock(^id(id cls){panels++;return nil;}));
+                NSUInteger row=[list.titles indexOfObject:@"Replaced"];
+                // Selected as it stays after a save failed (the list is not told, as when it is reloading).
+                if(row!=NSNotFound){[list setValue:@YES forKey:@"reloading"];[list.tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];[list setValue:@NO forKey:@"reloading"];[list exportTheme:nil];}
+                method_setImplementation(panel,realPanel);
+                Check(row!=NSNotFound && panels==0 && notices.count==before+2 && [notices.lastObject isEqual:expected],[NSString stringWithFormat:@"Export of a file that is not a theme is refused before the save panel: %lu %@",(unsigned long)panels,notices.lastObject]);
+                [NSFileManager.defaultManager removeItemAtPath:badPath error:NULL];
+            }
+            // Export says why it cannot be done: a theme without a color is not one an import would take; a file that is
+            // gone, or cannot be opened, is told as such. No save panel is asked for.
+            {
+                Method panel=class_getClassMethod(NSSavePanel.class,@selector(savePanel));__block NSUInteger panels=0;
+                IMP realPanel=method_setImplementation(panel,imp_implementationWithBlock(^id(id cls){panels++;return nil;}));
+                NSString *(^exportOf)(NSString *)=^NSString *(NSString *name){
+                    [list reload];NSUInteger row=[list.titles indexOfObject:name];if(row==NSNotFound)row=0;
+                    [list setValue:@YES forKey:@"reloading"];[list.tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];[list setValue:@NO forKey:@"reloading"];
+                    NSUInteger count=notices.count;[list exportTheme:nil];return notices.count==count+1?notices.lastObject:@"(none)";};
+                NSString *titleOnly=[ColorPath stringByAppendingPathComponent:@"TitleOnly.plist"];[@{@"Title":@"TitleOnly"} writeToFile:titleOnly atomically:YES];
+                NSString *said=exportOf(@"TitleOnly");
+                Check([said isEqual:[NSString stringWithFormat:@"%@|",[NSString stringWithFormat:tr(@"theme.list.notTheme"),@"TitleOnly"]]],[NSString stringWithFormat:@"A theme without a color is not exported: %@",said]);
+                [NSFileManager.defaultManager removeItemAtPath:titleOnly error:NULL];
+                NSString *gonePath=[ColorPath stringByAppendingPathComponent:@"Gone.plist"];[@{@"EditorText":@[@0,@0,@0,@1]} writeToFile:gonePath atomically:YES];[list reload];
+                NSUInteger goneRow=[list.titles indexOfObject:@"Gone"];[NSFileManager.defaultManager removeItemAtPath:gonePath error:NULL];
+                [list setValue:@YES forKey:@"reloading"];[list.tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:goneRow] byExtendingSelection:NO];[list setValue:@NO forKey:@"reloading"];
+                NSUInteger count=notices.count;[list exportTheme:nil];said=notices.count==count+1?notices.lastObject:@"(none)";
+                Check([said isEqual:[NSString stringWithFormat:@"%@|",[NSString stringWithFormat:tr(@"theme.list.missing"),@"Gone"]]],[NSString stringWithFormat:@"A theme that is gone is told as gone: %@",said]);
+                NSString *lockedPath=[ColorPath stringByAppendingPathComponent:@"Locked.plist"];[@{@"EditorText":@[@0,@0,@0,@1]} writeToFile:lockedPath atomically:YES];[list reload];
+                NSUInteger lockedRow=[list.titles indexOfObject:@"Locked"];[NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions:@0} ofItemAtPath:lockedPath error:NULL];
+                [list setValue:@YES forKey:@"reloading"];[list.tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:lockedRow] byExtendingSelection:NO];[list setValue:@NO forKey:@"reloading"];
+                count=notices.count;[list exportTheme:nil];said=notices.count==count+1?notices.lastObject:@"(none)";
+                Check(![said isEqual:@"(none)"] && ![said hasPrefix:[NSString stringWithFormat:tr(@"theme.list.notTheme"),@"Locked"]] && ![said hasPrefix:[NSString stringWithFormat:tr(@"theme.list.missing"),@"Locked"]],[NSString stringWithFormat:@"A theme that cannot be opened is told with the reason: %@",said]);
+                [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions:@0644} ofItemAtPath:lockedPath error:NULL];[NSFileManager.defaultManager removeItemAtPath:lockedPath error:NULL];
+                // A file elsewhere that is gone (a file to import, or where a theme was to be exported) is told with the
+                // system's reason, not as a theme gone from the Themes folder.
+                NSString *outside=[NSTemporaryDirectory() stringByAppendingPathComponent:@"NoSuchFolder/Travel.plist"];
+                count=notices.count;[list importURLs:@[[NSURL fileURLWithPath:outside]]];said=notices.count==count+1?notices.lastObject:@"(none)";
+                Check(![said isEqual:@"(none)"] && ![said hasPrefix:[NSString stringWithFormat:tr(@"theme.list.missing"),@"Travel"]] && ![said containsString:[NSString stringWithFormat:tr(@"theme.list.missing"),@"Travel.plist"]],[NSString stringWithFormat:@"A file to import that is gone is not told as a theme gone from the folder: %@",said]);
+                NSError *elsewhere=[NSError errorWithDomain:NSCocoaErrorDomain code:NSFileNoSuchFileError userInfo:@{NSFilePathErrorKey:outside}];
+                count=notices.count;((void (*)(id,SEL,NSError *,NSString *))objc_msgSend)(list,NSSelectorFromString(@"showError:title:"),elsewhere,@"LiteTheme");said=notices.count==count+1?notices.lastObject:@"(none)";
+                Check([said isEqual:[NSString stringWithFormat:@"%@|",elsewhere.localizedDescription]],[NSString stringWithFormat:@"A place to export to that is gone is told with the system's reason: %@",said]);
+                method_setImplementation(panel,realPanel);
+                Check(panels==0,@"No save panel is asked for a theme that cannot be exported");
+                [list reload];
+            }
+            method_setImplementation(sheet,shown);
+            Check(shell.window.attachedSheet==nil,@"No sheet is attached to the Settings window");
+            for(NSWindow *window in NSApp.windows)Check(!window.visible,[NSString stringWithFormat:@"No window is shown: %@",window]);
+            // A theme is what TeXShop's check at launch keeps (TSLibraryThemeCheck: every color red, green, blue and alpha
+            // numbers), with at least one color, or nothing but its title: the same for editing, saving, export and import.
+            BOOL (^accepts)(NSDictionary *)=[owner themeStore].acceptsColors;
+            NSDictionary *partial=@{@"EditorText":@[@0,@0,@0,@1]},*rgb=@{@"EditorText":@[@0,@0,@0]},*alphaText=@{@"EditorText":@[@0.1,@0.2,@0.3,@"opaque"]},*extra=@{@"EditorText":@[@0.1,@0.2,@0.3,@1,@"x"]};
+            Check(accepts(partial) && accepts(@{}) && accepts(@{@"Title":@"Old"}) && !accepts(rgb) && !accepts(alphaText) && !accepts(extra) && !accepts(@{@"EditorText":@[@0.5,@0.5]}) && !accepts(@{@"EditorText":@[@"red",@"green",@"blue"]}),@"A theme has colors TeXShop can read throughout, or nothing but its title");
+            for(NSDictionary *colors in @[partial,rgb,alphaText,extra]){
+                NSData *data=[NSPropertyListSerialization dataWithPropertyList:colors format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL];
+                Check(accepts(colors)==[owner themeListAcceptsData:data] && accepts(colors)==TSLibraryThemeCheck()(data,nil),[NSString stringWithFormat:@"Editing, import and the check at launch agree on %@",colors]);
+            }
+        }
+        [owner themeListDidChooseTitle:@"LiteTheme"];[list reload];
+        // The picture of the manual (TS_SETTINGS_MANUAL_SHOT, English): the themes that come with TeXShop, LiteTheme being
+        // edited, 710 points wide in the light appearance.
+        if(getenv("TS_SETTINGS_MANUAL_SHOT") && [fixture.bundlePath.lastPathComponent isEqual:@"Base.bundle"]){
+            NSString *folder=@(getenv("TS_TEST_BUNDLED_THEMES"));NSMutableArray *added=[NSMutableArray array];
+            for(NSString *file in [NSFileManager.defaultManager contentsOfDirectoryAtPath:folder error:NULL]){
+                NSString *target=[ColorPath stringByAppendingPathComponent:file];
+                if([file hasSuffix:@".plist"] && ![NSFileManager.defaultManager fileExistsAtPath:target] && [NSFileManager.defaultManager copyItemAtPath:[folder stringByAppendingPathComponent:file] toPath:target error:NULL])[added addObject:target];
+            }
+            NSString *fixtureTheme=[ColorPath stringByAppendingPathComponent:@"ProfileEffectFixture.plist"];NSData *hidden=[NSData dataWithContentsOfFile:fixtureTheme];
+            if(hidden)[NSFileManager.defaultManager removeItemAtPath:fixtureTheme error:NULL];
+            [owner themeListDidChooseTitle:@"LiteTheme"];[list reload];
+            NSView *parent=pane.superview;NSArray *constraints=parent.constraints;
+            [pane removeFromSuperview];NSWindow *window=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,710,900) styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO];
+            window.appearance=[NSAppearance appearanceNamed:NSAppearanceNameAqua];
+            NSView *host=window.contentView;[host addSubview:pane];pane.translatesAutoresizingMaskIntoConstraints=NO;
+            NSArray *geometry=@[[pane.widthAnchor constraintEqualToConstant:710],[pane.leadingAnchor constraintEqualToAnchor:host.leadingAnchor],[pane.topAnchor constraintEqualToAnchor:host.topAnchor]];
+            [NSLayoutConstraint activateConstraints:geometry];[host layoutSubtreeIfNeeded];[list.tableView scrollRowToVisible:0];
+            Save(pane,@(getenv("TS_SETTINGS_MANUAL_SHOT")));
+            [NSLayoutConstraint deactivateConstraints:geometry];[pane removeFromSuperview];[parent addSubview:pane];[NSLayoutConstraint activateConstraints:constraints];
+            for(NSString *path in added)[NSFileManager.defaultManager removeItemAtPath:path error:NULL];
+            if(hidden)[hidden writeToFile:fixtureTheme atomically:YES];
+            [list reload];
+        }
+    }
+    puts("PASS: Edit Theme list");
 }
 static void CheckOwnerOpacity(TSPreferences *owner,TSSettingsWindowController *shell,NSDictionary *base) {
     NSDictionary *defaults=[TSIsolatedAppKitDefaults.values copy],*editing=[owner valueForKey:@"EditingColors"],*last=[owner valueForKey:@"lastSavedEditingColors"];
@@ -136,8 +319,7 @@ static void CheckOwnerOpacity(TSPreferences *owner,TSSettingsWindowController *s
     theme[@"Title"]=@"OpacityFixture";
     NSString *path=[ColorPath stringByAppendingPathComponent:@"OpacityFixture.plist"];
     Check([theme writeToFile:path atomically:YES],@"Opacity uses a temporary theme file");
-    NSPopUpButton *choice=[owner valueForKey:@"EditingStyle"];[choice addItemWithTitle:@"OpacityFixture"];[choice selectItemWithTitle:@"OpacityFixture"];
-    [owner EditingStyleChoice:nil];
+    [owner themeListDidChooseTitle:@"OpacityFixture"];
     Method write=class_getInstanceMethod(TSThemeFileStore.class,@selector(writeColors:title:error:));opacityOriginalWrite=method_setImplementation(write,(IMP)CountOpacityWrite);
     Method changes=class_getInstanceMethod(TSThemeFileStore.class,NSSelectorFromString(@"writeChangesFrom:to:title:error:"));
     if(changes)opacityOriginalChanges=method_setImplementation(changes,(IMP)CountOpacityChanges);
@@ -157,7 +339,7 @@ static void CheckOwnerOpacity(TSPreferences *owner,TSSettingsWindowController *s
             NSArray *rgba=[owner valueForKey:@"EditingColors"][keys[i]];
             Check(fabs([rgba[0]doubleValue]-0.12)<1e-6 && fabs([rgba[1]doubleValue]-0.34)<1e-6 && fabs([rgba[2]doubleValue]-0.56)<1e-6 && fabs([rgba[3]doubleValue]-percent.doubleValue/100)<1e-6,@"Opacity action preserves RGB and changes only alpha");
             Check(opacityWrites==writes+1 && notices==notifications+1,@"One opacity action performs one theme save and one refresh");
-            [owner EditingStyleChoice:nil];Check(fabs(slider.doubleValue-percent.doubleValue)<1e-6,@"Saved opacity reloads without drift");
+            [owner themeListDidChooseTitle:owner.editingThemeTitle];Check(fabs(slider.doubleValue-percent.doubleValue)<1e-6,@"Saved opacity reloads without drift");
         }
         well.enabled=NO;slider.doubleValue=42;NSUInteger writes=opacityWrites;[slider sendAction:slider.action to:slider.target];
         Check(!slider.enabled && slider.doubleValue==100 && opacityWrites==writes,@"Disabled opacity cannot write and restores its displayed value");well.enabled=YES;
@@ -180,7 +362,7 @@ static void CheckOwnerOpacity(TSPreferences *owner,TSSettingsWindowController *s
     method_setImplementation(localeMethod,oldLocale);opacityTestLocale=nil;
     NSMutableDictionary *missing=[theme mutableCopy];for(NSString *key in keys)[missing removeObjectForKey:key];
     Check([missing writeToFile:path atomically:YES],@"Missing-alpha fixture is saved only in the temporary directory");
-    BOOL loaded=YES;@try { [owner EditingStyleChoice:nil]; } @catch(NSException *exception){loaded=NO;}
+    BOOL loaded=YES;@try { [owner themeListDidChooseTitle:owner.editingThemeTitle]; } @catch(NSException *exception){loaded=NO;}
     Check(loaded,@"Absent alpha opens without exception and displays full opacity");
     for(NSUInteger i=0;i<3;i++){
         NSColorWell *well=[owner valueForKey:outlets[i]];
@@ -189,7 +371,7 @@ static void CheckOwnerOpacity(TSPreferences *owner,TSSettingsWindowController *s
         NSUInteger writes=opacityWrites;slider.doubleValue=65;[slider sendAction:slider.action to:slider.target];
         NSArray *rgba=[NSDictionary dictionaryWithContentsOfFile:path][keys[i]];
         Check(rgba.count==4 && fabs([rgba[3]doubleValue]-0.65)<1e-9 && opacityWrites==writes+1,@"Absent alpha is created and saved once on edit");
-        [owner EditingStyleChoice:nil];Check(fabs(slider.doubleValue-65)<1e-9,@"Created alpha survives reload");
+        [owner themeListDidChooseTitle:owner.editingThemeTitle];Check(fabs(slider.doubleValue-65)<1e-9,@"Created alpha survives reload");
     }
     for(NSUInteger i=0;i<3;i++)for(id invalid in @[@"bad",@{},NSNull.null,@[@0],@[@0,@0,@0,@"0.5"],@[@0,@0,@0,NSNull.null],@[@0,@0,@0,@(-0.1)],@[@0,@0,@0,@1.1],@[@0,@0,@0,@(NAN)],@[@0,@0,@0,@(INFINITY)]]){
         NSMutableDictionary *bad=[theme mutableCopy];bad[keys[i]]=invalid;
@@ -204,7 +386,7 @@ static void CheckOwnerOpacity(TSPreferences *owner,TSSettingsWindowController *s
     }
     method_setImplementation(write,opacityOriginalWrite);if(changes)method_setImplementation(changes,opacityOriginalChanges);method_setImplementation(key,oldKey);navigationTestWindow=nil;
     [NSNotificationCenter.defaultCenter removeObserver:observer];
-    [choice selectItemAtIndex:0];[choice removeItemWithTitle:@"OpacityFixture"];
+    [NSFileManager.defaultManager removeItemAtPath:path error:NULL];[owner setValue:nil forKey:@"editingThemeTitle"];
     TSIsolatedAppKitDefaults.values=[defaults mutableCopy];liteColors=savedLite;darkColors=savedDark;
     [owner setValue:editing forKey:@"EditingColors"];[owner setValue:last forKey:@"lastSavedEditingColors"];[owner FillInColorWells];
     puts("PASS: opacity sliders and numeric fields, exact RGB/alpha, one save/refresh, reload and disabled state");

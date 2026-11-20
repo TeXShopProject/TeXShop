@@ -10,7 +10,8 @@
 #import "TSPrefMiscTwoController.h"
 #import "TSPrefThemesController.h"
 #import "TSKeyBindingsController.h"
-#import "TSPrefThemeNameController.h"
+#import "TSPreferences+LiveSettings.h"
+#import "TSSettingsThemeList.h"
 #import "TSSettingsCategory.h"
 #import "TSPrefPaneLayout.h"
 #import "TSAppDelegate.h"
@@ -54,9 +55,6 @@
     themes.preferences = self;
     (void)themes.view;
     themes.categoryIdentifier = TSSettingsCategoryThemes;
-    TSPrefThemeNameController *themeName = [TSPrefThemeNameController new];
-    themeName.preferences = self;
-    (void)themeName.view;
 
     _texAwareSpellCheckButton = source.texAwareSpellCheckButton;
     _editSpellingExclusionsButton = source.editSpellingExclusionsButton;
@@ -188,7 +186,6 @@
     ConsoleBackgroundColorWell = themes.ConsoleBackgroundColorWell;
     ConsoleTextColorWell = themes.ConsoleTextColorWell;
     DarkStyle = themes.DarkStyle;
-    EditingStyle = themes.EditingStyle;
     EditorFlashColorWell = themes.EditorFlashColorWell;
     EditorHighlightBracesColorWell = themes.EditorHighlightBracesColorWell;
     EditorHighlightContentColorWell = themes.EditorHighlightContentColorWell;
@@ -229,9 +226,7 @@
     markerCurlyColorWell = themes.markerCurlyColorWell;
     markerParenColorWell = themes.markerParenColorWell;
     markerSquareColorWell = themes.markerSquareColorWell;
-    stylePanel = themeName.stylePanel;
-    styleTitle = themeName.styleTitle;
-    return @[source, editor, preview, console, typesetting, engines, miscOne, miscTwo, themes, themeName];
+    return @[source, editor, preview, console, typesetting, engines, miscOne, miscTwo, themes];
 }
 - (NSDictionary<TSSettingsCategoryID, NSViewController *> *)classifySettingsPanes:(NSArray<TSPrefPaneController *> *)panes
 {

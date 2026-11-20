@@ -131,9 +131,16 @@ add(TSSettingsCategoryAppearance, @"heading.group.appearance.0", @"SettingsCateg
 add(TSSettingsCategoryAppearance, @"row.catalog.appearance.0.0", @"SettingsCategories", @"catalog.appearance.0.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryAppearance, @"row.catalog.appearance.0.1", @"SettingsCategories", @"catalog.appearance.0.1.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryAppearance, @"heading.group.appearance.1", @"SettingsCategories", @"group.appearance.1.title", TSSettingsSearchWeightHeading);
-add(TSSettingsCategoryAppearance, @"row.catalog.appearance.1.0", @"SettingsCategories", @"catalog.appearance.1.0.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryAppearance, @"row.catalog.appearance.1.1", @"SettingsCategories", @"catalog.appearance.1.1.choice.0", TSSettingsSearchWeightChoice);
-add(TSSettingsCategoryAppearance, @"row.catalog.appearance.1.1", @"SettingsCategories", @"catalog.appearance.1.1.choice.1", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryAppearance, @"row.catalog.appearance.1.0", @"SettingsCategories", @"theme.list.add", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryAppearance, @"row.catalog.appearance.1.0", @"SettingsCategories", @"theme.list.remove", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryAppearance, @"row.catalog.appearance.1.0", @"SettingsCategories", @"theme.list.actions", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryAppearance, @"row.catalog.appearance.1.0", @"SettingsCategories", @"theme.list.changed", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryAppearance, @"row.catalog.appearance.1.0", @"SettingsCategories", @"theme.list.duplicate", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryAppearance, @"row.catalog.appearance.1.0", @"SettingsCategories", @"theme.list.rename", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryAppearance, @"row.catalog.appearance.1.0", @"SettingsCategories", @"theme.list.restore", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryAppearance, @"row.catalog.appearance.1.0", @"SettingsCategories", @"theme.list.delete", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryAppearance, @"row.catalog.appearance.1.0", @"SettingsCategories", @"theme.list.export", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryAppearance, @"row.catalog.appearance.1.0", @"SettingsCategories", @"theme.list.import", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryAppearance, @"heading.group.appearance.2", @"SettingsCategories", @"group.appearance.2.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryAppearance, @"settings.L8Q-Ov-EVr", @"SettingsCategories", @"catalog.appearance.2.0.item.0", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryAppearance, @"settings.0fE-JX-Dl8", @"SettingsCategories", @"catalog.appearance.2.0.item.0", TSSettingsSearchWeightLabel);
@@ -460,4 +467,4 @@ add(TSSettingsCategoryEditor, @"row.catalog.editor.0.4", @"SettingsCategories", 
 add(TSSettingsCategoryEditor, @"row.catalog.editor.0.5", @"SettingsCategories", @"catalog.editor.0.1.note", TSSettingsSearchWeightDescription);
 
 add(TSSettingsCategoryEditor, @"row.catalog.editor.8.0", @"SettingsCategories", @"group.editor.8.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryAppearance, @"row.catalog.appearance.1.1", @"SettingsCategories", @"group.appearance.1.title", TSSettingsSearchWeightLabel);
+add(TSSettingsCategoryAppearance, @"row.catalog.appearance.1.0", @"SettingsCategories", @"group.appearance.1.title", TSSettingsSearchWeightLabel);

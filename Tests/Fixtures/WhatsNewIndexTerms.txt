@@ -252,7 +252,6 @@ beta
 betas
 better
 beyond
-bib
 bibdesk
 bibliography
 bibstuff
@@ -484,6 +483,7 @@ define
 defines
 definitions
 delay
+delete
 deleted
 demo
 demonstration
@@ -648,6 +648,7 @@ explain
 explaining
 explains
 explanation
+export
 expression
 expressions
 extend
@@ -849,6 +850,7 @@ image
 immediately
 implement
 implementing
+import
 important
 importer
 impossible
@@ -1236,7 +1238,6 @@ optional
 or
 order
 ordinary
-org
 original
 originally
 otf
@@ -1467,6 +1468,7 @@ remove
 removed
 removes
 removing
+rename
 renamed
 render
 rendering
@@ -1844,7 +1846,6 @@ true
 try
 ts
 tuc
-tug
 turn
 turned
 turning
@@ -1914,7 +1915,6 @@ usr
 usual
 usually
 utf
-uti
 utube
 uwe
 v

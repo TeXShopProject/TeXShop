@@ -3669,9 +3669,9 @@ which reads
 
 TeXShop uses customizable colors for syntax coloring, for various window backgrounds, and for other purposes. In the original version of TeXShop, users could modify these colors with a fairly baroque set of settings. Then in macOS Mojave, Apple introduced ``Lite Mode'' and ``Dark Mode'' and an entirely new set of colors was required. At that point the old color settings were ripped out of TeXShop and replaced by the Themes category in Settings, see \cref{fig:Theme}. While previously many colors could only be changed using  obscure hidden settings, now all color choices are available in the Themes category.
 
-\Cref{fig:Theme} shows the Themes category of TeXShop Settings. It groups theme colors by their purpose. In the Windows group, each window opacity slider runs from 0\% (transparent) to 100\% (opaque), with an editable numeric field beside it. Enter a whole percentage and press Return or leave the field to apply it, or click the arrow buttons beside the field to raise or lower it by one percent. Out-of-range integers are clamped to 0 or 100. Invalid input, including decimals, restores the previous value at the end of editing. Typed and pasted input follow the same rule. Some items have an obvious meaning and others will be explained shortly. A full set of such choices is called a ``Theme''. TeXShop allows users to create as many themes as they like. These themes are listed in three pulldown menus: Lite Mode Theme, Dark Mode Theme, Theme to Edit. The first menu sets the theme used in Lite Mode, and the second menu sets the theme used in Dark Mode. The final menu sets the theme which Settings is currently editing.
+\Cref{fig:Theme} shows the Themes category of TeXShop Settings. It groups theme colors by their purpose. In the Windows group, each window opacity slider runs from 0\% (transparent) to 100\% (opaque), with an editable numeric field beside it. Enter a whole percentage and press Return or leave the field to apply it, or click the arrow buttons beside the field to raise or lower it by one percent. Out-of-range integers are clamped to 0 or 100. Invalid input, including decimals, restores the previous value at the end of editing. Typed and pasted input follow the same rule. Some items have an obvious meaning and others will be explained shortly. A full set of such choices is called a ``Theme''. TeXShop allows users to create as many themes as they like. The pulldown menus Lite Mode Theme and Dark Mode Theme set the theme used in each mode. Under Edit Theme, all themes are listed; the colors shown below the list are those of the theme selected in it. A sun marks the theme used in Lite Mode and a moon the theme used in Dark Mode.
 
-TeXShop is shipped with several themes, including ``LiteTheme'' and ``DarkTheme''. These are the default themes for Lite Mode and Dark Mode. As explained later, there is a way for users to rename or remove Themes known to TeXShop. But TeXShop will always replace ``LiteTheme'' and ``DarkTheme''
+TeXShop is shipped with several themes, including ``LiteTheme'' and ``DarkTheme''. These are the default themes for Lite Mode and Dark Mode. The themes that come with TeXShop cannot be renamed or deleted, but TeXShop will always replace ``LiteTheme'' and ``DarkTheme''
 and use them if other required themes are missing.
 
 Gary Gray contributed GLG-Dark for Dark mode. Gray then tweaked this theme, and ended up with a dark theme that was so much better than mine  that I ended up using it as the default and renaming it DarkTheme. So Gray lost credit, but gained users. Thanks.
@@ -3689,11 +3689,18 @@ There is no distinction between themes for Lite Mode and themes for Dark Mode. T
 Theme edits are saved immediately. Documents refresh only after the theme file has been saved successfully, using their own light or dark theme selection. On failure, the editing controls and in-memory colors return to the last saved colors and an error is shown. Closing Settings does not undo saved edits.
 
 
-To keep the original theme, duplicate it with ``New Theme'' before changing its colors. The ``Theme to Edit'' menu shows the theme currently being edited. Each successful change is saved.
+The buttons and the menu under the list of themes act on themes. The plus button adds a theme with TeXShop's colors for the current appearance (those of LiteTheme in Lite Mode, of DarkTheme in Dark Mode); type its name, and begin changing its colors. The minus button moves the selected theme to the Trash. The menu at the right end, and the contextual menu of each theme, also offer:
+\begin{itemize}
+\item Duplicate: a copy of the theme, to change while keeping the original.
+\item Rename: the name is edited in the list. A theme used in Lite Mode or Dark Mode stays in use under its new name.
+\item Restore: gives a theme that comes with TeXShop its original colors again. A dot marks such a theme whose colors were changed.
+\item Delete (contextual menu): the same as the minus button. A theme used in Lite Mode or Dark Mode gives way to LiteTheme or DarkTheme.
+\item Export: saves a copy of the theme's file, for example to use it on another Mac.
+\item Import (actions menu): adds theme files saved by Export. Theme files can also be dropped on the list. An imported theme whose name is taken gets a number after its name.
+\end{itemize}
+The themes that come with TeXShop can be duplicated, restored and exported, but not renamed or deleted.
 
-To create a new theme, first change ``Theme to Edit'' to obtain reasonable starting colors for your new theme. Then push ``New Theme'' and fill in the resulting dialog with a title for this theme. Use a filename without path separators. The new theme will become the ``Theme to Edit'' and you can begin changing colors.
-
-Recall that various TeXShop items which users can customize are set in \path{~/Library/TeXShop}. This folder has various subfolders. There is a new folder in \path{~/Library/TeXShop} named ``Themes''.  This folder contains very small ``.plist'' files describing the various Themes in TeXShop. If you create a theme you like, give it to others by putting its plist file on the Internet. To install a new theme of this kind, just drop its plist form in the Themes folder.
+Recall that various TeXShop items which users can customize are set in \path{~/Library/TeXShop}. This folder has various subfolders. There is a new folder in \path{~/Library/TeXShop} named ``Themes''.  This folder contains very small ``.plist'' files describing the various Themes in TeXShop. If you create a theme you like, export it and give the file to others. To install a theme of this kind, import it, or drop its plist file on the list of themes.
 
 An actual Theme plist file can be opened in TeXShop. You'll find that it has a very simple structure.
 The file contains a list of colors. After each color, its red, green, blue, and transparency values are listed.
@@ -3702,9 +3709,7 @@ Each is a real number between zero and one.
 It is possible to directly edit this file in TeXShop, but there is a slight complication. When TeXShop
 saves the edited file, the new version does not quite meet required standards for a plist file, so TeXShop cannot read the file. I haven't traced what goes wrong because there is an easy solution. If you have downloaded Apple's free program XCode, then .plist files also open in XCode. These files can be edited in XCode, and .plist files saved by XCode have the correct structure. Moreover, if you edit a plist file in TeXShop, you can later open it and then close it in XCode, and now it will have exactly the right structure.
 
-You can  remove Themes you no longer use by removing their plist files from the Themes folder. Avoid removing themes being used for Lite Mode or Dark Mode (although TeXShop should react gracefully when it runs into this situation). As explained earlier, the themes LiteTheme and DarkTheme will be recreated if they are removed. 
-
-Selecting a theme to edit fills the color wells. Choosing Lite Mode or Dark Mode themes saves those selections and updates the corresponding documents immediately.
+Selecting a theme in the list fills the color wells. Choosing Lite Mode or Dark Mode themes saves those selections and updates the corresponding documents immediately.
 
 Finally we explain the actual color choices. At the top of the Theme Panel, the Foreground and Background colors can be set for the Source, Console, and Log Windows, and the Background color of the pages shown light can be set for the Preview Window, under the heading Light Pages. For each of these except the Log window, transparency can also be set. In color theory, alpha value sets transparency.  Window opacity is set with a slider and a numeric field from 0\% (transparent) to 100\% (opaque). The colors themselves are always opaque, so their color wells offer no opacity.
 

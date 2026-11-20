@@ -12,7 +12,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-shortcut-pane-') as td:
  translations={f.parent.name:json.loads(subprocess.check_output(['plutil','-convert','json','-o','-',str(f)])) for f in (r/'Resources/Interfaces').glob('*.lproj/Localizable.strings')}
  (p/'translations.json').write_text(json.dumps(translations))
  subprocess.run(['xcrun','ibtool','--compile',str(p/'SettingsWindow.nib'),str(r/'Resources/Interfaces/Base.lproj/SettingsWindow.xib')],check=True)
- command=['xcrun','clang','-fobjc-arc','-Wno-deprecated-declarations','-Wno-nullability-completeness','-mmacosx-version-min=14.6','-I',str(p),'-I',str(r/'Tests'),*include_args(r),'-framework','Cocoa','-framework','Carbon',str(r/'Tests/ShortcutPane.m'),*[str(f) for f in sorted((r/'Sources').rglob('TSSettings*.m'))],*companion_sources(r),str(r/'Sources/Settings/TSPreferenceProfile.m'),str(r/'Sources/App/globals.m'),str(r/'Sources/Macros/TSMacroTreeNode.m'),'-o',str(p/'test')]
+ command=['xcrun','clang','-fobjc-arc','-Wno-deprecated-declarations','-Wno-nullability-completeness','-mmacosx-version-min=14.6','-I',str(p),'-I',str(r/'Tests'),*include_args(r),'-framework','Cocoa','-framework','Carbon',str(r/'Tests/ShortcutPane.m'),*[str(f) for f in sorted((r/'Sources').rglob('TSSettings*.m'))],str(r/'Sources/Settings/TSThemeFileStore.m'),str(r/'Sources/Windows/TSListBottomBar.m'),*companion_sources(r),str(r/'Sources/Settings/TSPreferenceProfile.m'),str(r/'Sources/App/globals.m'),str(r/'Sources/Macros/TSMacroTreeNode.m'),'-o',str(p/'test')]
  def run():
   subprocess.run(command,check=True)
   return subprocess.run([str(p/'test'),str(p/'SettingsWindow.nib'),str(p/'translations.json')],capture_output=True,text=True,timeout=60)

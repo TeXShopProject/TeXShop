@@ -73,7 +73,7 @@ static void Geometry(NSView *v) {
  if(v.hasAmbiguousLayout){NSMutableArray *path=[NSMutableArray array];for(NSView *a=v;a;a=a.superview)[path addObject:[NSString stringWithFormat:@"%@:%@ %@",NSStringFromClass(a.class),a.identifier,NSStringFromRect(a.frame)]];Check(NO,[path componentsJoinedByString:@" <- "]);}
  for(NSView *c in v.subviews){
   if(c.hidden)continue;
-  Check(NSContainsRect(NSInsetRect(v.bounds,-1,-1),[c alignmentRectForFrame:c.frame]),[NSString stringWithFormat:@"%@ inside %@",c.identifier,v.identifier]);Geometry(c);
+  Check(NSContainsRect(NSInsetRect(v.bounds,-1,-1),[c alignmentRectForFrame:c.frame]),[NSString stringWithFormat:@"%@ inside %@: %@ in %@",c.identifier,v.identifier,NSStringFromRect([c alignmentRectForFrame:c.frame]),NSStringFromRect(v.bounds)]);Geometry(c);
  }
  if([v isKindOfClass:NSButton.class] && ![v isKindOfClass:NSPopUpButton.class] && !v.hidden) {
   NSButton *button=(id)v;
@@ -101,7 +101,7 @@ static void Geometry(NSView *v) {
    for(NSView *o in shown)if(o!=f){NSRect x=NSIntersectionRect(ring,[o alignmentRectForFrame:o.frame]);
     Check(NSWidth(x)<=0.5||NSHeight(x)<=0.5,[NSString stringWithFormat:@"Focus ring of %@ has room beside %@ (%@)",f.identifier,o.identifier,NSStringFromRect(x)]);}}}
  if([v.identifier hasPrefix:@"row."]) Check(NSHeight(v.frame)>=37.5,@"Minimum row height is 38");
- if([v isKindOfClass:NSStackView.class]) {NSStackView *stack=(id)v;NSView *ancestor=stack;while(ancestor && ![ancestor.identifier isEqual:@"DockIconChoices"])ancestor=ancestor.superview;Check(stack.spacing==0||stack.spacing==8||stack.spacing==18||stack.spacing==12||stack.spacing==14||stack.spacing==2||stack.spacing==6||([stack.identifier isEqual:@"settings.change-note"] && stack.spacing==4)||(ancestor && stack.spacing==4)||([NSStringFromClass(stack.class) isEqual:@"TSSettingsOpacityPresentation"] && stack.spacing==4),[NSString stringWithFormat:@"Compact row and section spacing: %@ %.1f",stack.identifier,stack.spacing]);}
+ if([v isKindOfClass:NSStackView.class]) {NSStackView *stack=(id)v;NSView *ancestor=stack;while(ancestor && ![ancestor.identifier isEqual:@"DockIconChoices"] && ![ancestor.identifier isEqual:@"settings.theme-list"])ancestor=ancestor.superview;Check(stack.spacing==0||stack.spacing==8||stack.spacing==18||stack.spacing==12||stack.spacing==14||stack.spacing==2||stack.spacing==6||([stack.identifier isEqual:@"settings.change-note"] && stack.spacing==4)||(ancestor && stack.spacing==4)||([NSStringFromClass(stack.class) isEqual:@"TSSettingsOpacityPresentation"] && stack.spacing==4),[NSString stringWithFormat:@"Compact row and section spacing: %@ %.1f",stack.identifier,stack.spacing]);}
 }
 int main(int argc,char **argv){@autoreleasepool{
  TSInstallAppKitIsolation();[NSApplication sharedApplication];memory=TSIsolatedAppKitDefaults;
