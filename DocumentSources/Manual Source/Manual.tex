@@ -3927,11 +3927,11 @@ After such a document is opened, these settings can be changed for any particula
 
 When the Preview window is not split, the menu items ``Display Format'' and ``Magnification'' affect the view shown. So if you change the magnification of the current view, and later split the window, both views will use the new magnification level. If you switch to ``Double Page'' mode in the current view and later split the window, both views will be in Double Page mode. The other view of ``Switch Views'' in a window that is not split keeps its own display format and magnification (see \cref{Switch_Views_Unsplit_Section}).
 
-When the Preview window is split so both views are shown simultaneously, ``Display Format'' and ``Magnification'' changes made to the top view affect the entire document as above. Thus if the window is later unsplit, the changes will hold in the entire document.
+When the Preview window is split so both views are shown simultaneously, ``Display Format'' and ``Magnification'' changes apply to the view in which they are made. Unsplitting keeps the view you were using (see \cref{Active_View_Split_Window}), so the changes made to that view hold in the full window, and those made to the other view are dropped. If the view you were using cannot be seen, because the divider was dragged to the edge of the window, the view that can be seen stays with its settings.
 
-However, when the Preview window is split so both views are shown simultaneously, ``Display Format'' and ``Magnification'' changes made to the bottom view will only apply to that portion of the split window, and only as long as the window remains split. This slight design inconsistency makes it possible for a user working with two sections of the document to temporarily magnify the bottom section and inspect fine details without propagating that magnification change to the rest of the interface.
+So, if you click in the top view before unsplitting, changes made to the bottom view only apply as long as the window remains split. This makes it possible for a user working with two sections of the document to temporarily magnify the bottom section and inspect fine details without propagating that magnification change to the rest of the interface. If you unsplit while using the bottom view, its display format and magnification stay in the full window.
 
-Switch Views exchanges these settings together with the two parts. After switching, the display format and magnification that were chosen for the bottom view belong to the top view, and they remain when the window is unsplit.
+Switch Views exchanges these settings together with the two parts. After switching, the display format and magnification that were chosen for the bottom view belong to the top view.
 
 \section{Avoiding Creep When Unsplitting}
 
@@ -4029,7 +4029,7 @@ Splitting and unsplitting the window leave the other view as it is: after the wi
 
 When this feature was  introduced in TeXShop 5.23, the two views for the full window were also the two views displayed by splitting the window. This is no longer the case. Instead if either of the views for the full window is split, it will become the top view of the split window. The bottom view of this window is a completely separate view, which
 can be scrolled to any position desired. Unsplitting the window keeps the view you were using as the full view (see \cref{Active_View_Split_Window}); when that is the top view, the place shown at its top stays, so unless that view was scrolled, the original full view returns. Either way the other full view stays as it was, so Option-2 still shows it.
-If we then type Option-2 to get the second full view and then split that view, the second full view will appear as the top view of the split window, and the bottom view will be the same view obtained when we first split. This means that
+If we then type Option-2 to get the second full view and then split that view, the second full view will appear as the top view of the split window. The bottom view shows the place of the part that did not stay when the window was unsplit: the former bottom view if you were using the top view, or the former top view if you were using the bottom view. This means that
 users who use the new Switch Preview Views feature can also use the older Split Window feature. Then they will deal with three independent views, the two views for the full window (which become the top view when splitting),
 and the bottom view when either view is split.
 
