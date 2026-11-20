@@ -31,6 +31,7 @@ mutations={
 # coordinated write.
 store=(R/'Sources/Settings/TSThemeFileStore.m').read_text()
 store_mutations={
+ 'export-any':('    if (![colors isKindOfClass:NSDictionary.class] || (accepts != nil && !accepts(colors))) {','    (void)colors;(void)accepts;if (NO) {'),
  'overwrite-unreadable':('        if (current == nil) {\n            writeError = TSThemeStoreError(NSFileReadCorruptFileError, title);\n            return;\n        }\n        NSMutableDictionary<NSString *, id> *colors = [current mutableCopy];','        NSMutableDictionary<NSString *, id> *colors = [(current ?: before) mutableCopy];'),
  'title-case':('colors[@"Title"] = [self existingTitleForTitle:title] ?: title;','colors[@"Title"] = title;'),
  'accept-all':('    return accepts == nil || accepts(colors) ? colors : nil;','    (void)accepts;return colors;'),
@@ -334,6 +335,8 @@ int main(int argc,char **argv){@autoreleasepool{
    NSData *settings=plist(@{@"WindowFrame":@[@0,@0,@800,@600],@"ShowRuler":@YES});[settings writeToURL:(NSURL *_Nonnull)[strict URLForTitle:@"Other"] atomically:YES];
    NSMutableDictionary *otherMore=[otherColors mutableCopy];otherMore[@"EditorText"]=@[@1,@0,@0,@1];NSError *notTheme=nil;
    check([strict readTitle:@"Other"]==nil && [strict writeChangesFrom:otherColors to:otherMore title:@"Other" error:&notTheme]==nil && notTheme.code==NSFileReadCorruptFileError && [[NSData dataWithContentsOfURL:(NSURL *_Nonnull)[strict URLForTitle:@"Other"]] isEqual:settings],"a file of other settings is not written into");
+   NSURL *exportTo=[outside URLByAppendingPathComponent:@"OtherExport.plist"];NSError *exportError=nil;
+   check(![strict exportTitle:@"Other" toURL:exportTo error:&exportError] && exportError.code==NSFileReadCorruptFileError && ![NSFileManager.defaultManager fileExistsAtPath:exportTo.path],"a file that is not a theme is not exported, and nothing is made");
    p.store=strict;
    [p themeListDidChooseTitle:@"Other"];
    check([stub.unreadable isEqual:@[@"Other"]],"a theme that cannot be read is handed to the list when it is chosen");

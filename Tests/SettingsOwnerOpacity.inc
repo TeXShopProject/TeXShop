@@ -220,6 +220,14 @@ static void CheckThemeActionButtons(TSPreferences *owner,TSSettingsWindowControl
                 [owner themeListDidChooseTitle:@"Replaced"];
                 Check(owner.editingThemeTitle!=nil && ![owner.editingThemeTitle isEqual:@"Replaced"] && [owner valueForKey:@"EditingColors"]!=nil && [[NSData dataWithContentsOfFile:badPath] isEqual:bad],[NSString stringWithFormat:@"A theme that cannot be read as one is not edited: %@",owner.editingThemeTitle]);
                 Check(notices.count==before+1 && [notices.lastObject isEqual:expected],[NSString stringWithFormat:@"The list says the theme cannot be read, not that something could not be saved: %@",notices.lastObject]);
+                // Exported from the menu while it is not a theme: the list says so; no save panel is asked for.
+                Method panel=class_getClassMethod(NSSavePanel.class,@selector(savePanel));__block NSUInteger panels=0;
+                IMP realPanel=method_setImplementation(panel,imp_implementationWithBlock(^id(id cls){panels++;return nil;}));
+                NSUInteger row=[list.titles indexOfObject:@"Replaced"];
+                // Selected as it stays after a save failed (the list is not told, as when it is reloading).
+                if(row!=NSNotFound){[list setValue:@YES forKey:@"reloading"];[list.tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];[list setValue:@NO forKey:@"reloading"];[list exportTheme:nil];}
+                method_setImplementation(panel,realPanel);
+                Check(row!=NSNotFound && panels==0 && notices.count==before+2 && [notices.lastObject isEqual:expected],[NSString stringWithFormat:@"Export of a file that is not a theme is refused before the save panel: %lu %@",(unsigned long)panels,notices.lastObject]);
                 [NSFileManager.defaultManager removeItemAtPath:badPath error:NULL];
             }
             method_setImplementation(sheet,shown);

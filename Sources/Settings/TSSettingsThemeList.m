@@ -415,6 +415,11 @@ static CGFloat TSThemeListInset(NSTableView *table)
     NSString *title = [self targetTitle];
     NSWindow *window = self.owner.themeListWindow;
     if (title == nil || window == nil) return;
+    // A theme changed elsewhere into something that is not a theme is not offered for export.
+    if ([self.store readTitle:title] == nil) {
+        [self.owner themeListShowError:[NSString stringWithFormat:self.text(@"theme.list.notTheme"), title]];
+        return;
+    }
     NSSavePanel *save = [NSSavePanel savePanel];
     save.nameFieldStringValue = [title stringByAppendingPathExtension:@"plist"] ?: title;
     [save beginSheetModalForWindow:window completionHandler:^(NSModalResponse response) {

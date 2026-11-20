@@ -34,7 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)renameTitle:(NSString *)title to:(NSString *)newTitle error:(NSError * _Nullable * _Nullable)error;
 // Moves a theme's file (never a folder) to the Trash.
 - (BOOL)trashTitle:(NSString *)title error:(NSError * _Nullable * _Nullable)error;
-// Copies the theme's file as it is to url.
+// Copies the theme's file as it is to url, when it can be read as a theme; else fails (NSFileReadCorruptFileError)
+// and makes nothing at url.
 - (BOOL)exportTitle:(NSString *)title toURL:(NSURL *)url error:(NSError * _Nullable * _Nullable)error;
 // Adds the colors of a theme file under the file's name (composed), as addColors:title:error: does. The file must be a
 // property list of colors that `check` accepts. Returns the title given, or nil.

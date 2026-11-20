@@ -268,6 +268,14 @@ static BOOL TSThemeIsRegularFile(NSURL *url)
         if (from == nil && error != NULL) *error = TSThemeStoreError(NSFileNoSuchFileError, title);
         return NO;
     }
+    // Only a file that can be read as a theme (as Settings reads it, acceptsColors) is exported: one changed elsewhere
+    // into something else would not be imported again. Nothing is made where it was to go.
+    id colors = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL];
+    BOOL (^accepts)(NSDictionary<NSString *, id> *) = self.acceptsColors;
+    if (![colors isKindOfClass:NSDictionary.class] || (accepts != nil && !accepts(colors))) {
+        if (error != NULL) *error = TSThemeStoreError(NSFileReadCorruptFileError, title);
+        return NO;
+    }
     return [data writeToURL:url options:NSDataWritingAtomic error:error];
 }
 - (nullable NSString *)importFileAtURL:(NSURL *)url check:(BOOL (^)(NSData *data))check error:(NSError **)error
