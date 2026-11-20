@@ -30,15 +30,49 @@
 
 
 
+// A file name as Lua's %q writes it, back to the name: \" \\ and \<newline> stand for the character after the
+// backslash, \r for a carriage return, and \ followed by up to three digits for that byte. Nil for anything else.
+static NSString *TSLuaUnquoted(NSString *quoted)
+{
+    NSData *bytes = [quoted dataUsingEncoding:NSUTF8StringEncoding];
+    const unsigned char *in = bytes.bytes;
+    NSUInteger length = bytes.length, i = 0;
+    NSMutableData *name = [NSMutableData dataWithCapacity:length];
+    while (i < length) {
+        unsigned char c = in[i++];
+        if (c != '\\') { [name appendBytes:&c length:1]; continue; }
+        if (i >= length) return nil;
+        c = in[i++];
+        if (c >= '0' && c <= '9') {
+            NSUInteger value = c - '0';
+            for (int digits = 1; digits < 3 && i < length && in[i] >= '0' && in[i] <= '9'; digits++)
+                value = value * 10 + (in[i++] - '0');
+            if (value > 255) return nil;
+            c = (unsigned char)value;
+        } else if (c == 'r') {
+            c = '\r';
+        } else if (c == 'n') {
+            c = '\n';
+        } else if (c != '"' && c != '\\' && c != '\n') {
+            return nil;
+        }
+        [name appendBytes:&c length:1];
+    }
+    NSString *result = [[NSString alloc] initWithData:name encoding:NSUTF8StringEncoding];
+    return result.length ? result : nil;
+}
+
 // The place in mtxrun's answer to a backward sync (mtx-synctex --report --console prints %q %i %i): a line that is
-// only "file", a line number above 0 and the tolerance.
+// only the quoted file name, a line number above 0 and the tolerance.
 static BOOL TSContextSyncPlace(NSString *output, NSString **fileName, NSInteger *line)
 {
-    NSRegularExpression *place = [NSRegularExpression regularExpressionWithPattern:@"^\\s*\"([^\"]+)\"\\s+([1-9][0-9]{0,8})(\\s+-?[0-9]+)?\\s*$" options:0 error:NULL];
+    NSRegularExpression *place = [NSRegularExpression regularExpressionWithPattern:@"^\\s*\"((?:[^\"\\\\]|\\\\.)+)\"\\s+([1-9][0-9]{0,8})(\\s+-?[0-9]+)?\\s*$" options:0 error:NULL];
     for (NSString *candidate in [output componentsSeparatedByCharactersInSet:NSCharacterSet.newlineCharacterSet]) {
         NSTextCheckingResult *match = [place firstMatchInString:candidate options:0 range:NSMakeRange(0, candidate.length)];
         if (match == nil) continue;
-        *fileName = [candidate substringWithRange:[match rangeAtIndex:1]];
+        NSString *name = TSLuaUnquoted([candidate substringWithRange:[match rangeAtIndex:1]]);
+        if (name == nil) continue;
+        *fileName = name;
         *line = [[candidate substringWithRange:[match rangeAtIndex:2]] integerValue];
         return YES;
     }

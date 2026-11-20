@@ -518,6 +518,7 @@ static id sharedMacroMenuController = nil;
 			NSString *runnerPath = [[NSBundle mainBundle] pathForResource:@"ScriptRunner" ofType:nil inDirectory:@"ScriptRunner.app/Contents/MacOS"];
 			// ScriptRunner missing from a damaged copy of TeXShop: NSTask would raise at launch.
 			if (runnerPath == nil) {
+				[[NSFileManager defaultManager] removeItemAtPath: scriptFileName error: NULL];
 				NSBeep();
 				return;
 			}

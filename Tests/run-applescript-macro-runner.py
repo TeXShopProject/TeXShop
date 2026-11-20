@@ -5,7 +5,7 @@ Production statements of -[TSMacroMenuController doMacro:] (Sources/Macros/TSMac
 of the script to the start of ScriptRunner, run with a folder of the test and a stand-in for ScriptRunner:
 - the script lands in the temporary folder (NSTemporaryDirectory() ends in "/", which -stringByStandardizingPath drops);
 - a script that cannot be written is not run;
-- a ScriptRunner that cannot be started does not raise, and its script is removed.
+- a ScriptRunner that is missing or cannot be started does not raise, and its script is removed.
 Also: the macros are checked and read from the same bytes, and texdoc is started without a call that raises.
 Nothing is shown on screen. --mutations checks that the guards are needed."""
 import os, subprocess, sys, tempfile
@@ -35,6 +35,7 @@ assert '[scriptTask launch]' not in menu, 'ScriptRunner is started without raisi
 MUTATIONS = {
     'append-string': ('[scriptFilePath stringByAppendingPathComponent: globallyUniqueString]', '[scriptFilePath stringByAppendingString: globallyUniqueString]'),
     'run-unwritten': ('\t\t\tif (! written) {\n\t\t\t\tNSBeep();\n\t\t\t\treturn;\n\t\t\t}', '\t\t\tif (NO) {\n\t\t\t}'),
+    'missing-runner-leaves-script': ('\t\t\tif (runnerPath == nil) {\n\t\t\t\t[[NSFileManager defaultManager] removeItemAtPath: scriptFileName error: NULL];', '\t\t\tif (runnerPath == nil) {\n'),
     'launch-raises': ('if (! [scriptTask launchAndReturnError: NULL]) {', '[scriptTask launch]; if (NO) {'),
 }
 
@@ -78,6 +79,13 @@ int main(int argc, char **argv) { @autoreleasepool {
     runnerLookups = 0;
     RunScript(@"-- macro");
     Check(runnerLookups == 0, @"a script that was not written is not run");
+
+    // No ScriptRunner inside TeXShop (a damaged copy): nothing is run and the script is removed.
+    [GlobalData sharedGlobalData].tempAppleScriptPath = [folder stringByAppendingString:@"/"];
+    runner = nil;
+    NSUInteger beforeMissing = Contents(folder).count;
+    RunScript(@"-- macro");
+    Check(Contents(folder).count == beforeMissing, @"the script is removed when there is no ScriptRunner");
 
     // A ScriptRunner that cannot be started.
     [GlobalData sharedGlobalData].tempAppleScriptPath = [folder stringByAppendingString:@"/"];

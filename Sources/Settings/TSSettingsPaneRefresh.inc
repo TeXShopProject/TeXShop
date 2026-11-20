@@ -231,7 +231,9 @@
     [_ptexUtfOutputButton setState:[defaults boolForKey:ptexUtfOutputEnabledKey]];
     _kpsetoolField.stringValue = TSPreferenceTextBesideDefault(defaults, KpsetoolKey);
     _kpsetoolField.placeholderString = TSPreferenceRegisteredText(defaults, KpsetoolKey);
-    NSString *bibTeXengine = [defaults stringForKey:BibTeXengineKey]; // nil for a value that is not text
+    // Only text is a command, as at typesetting: -stringForKey: would turn a number or a Boolean into "17" or "0".
+    id bibTeXSetting = [defaults objectForKey:BibTeXengineKey];
+    NSString *bibTeXengine = [bibTeXSetting isKindOfClass:NSString.class] ? bibTeXSetting : nil;
     if (!bibTeXengine || [bibTeXengine isEqualToString:@""])
     {
         bibTeXengine = @"bibtex";

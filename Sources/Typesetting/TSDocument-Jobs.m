@@ -1721,7 +1721,9 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
                  
                  // modified by Terada
                  bibtexArgs = [NSMutableArray arrayWithCapacity:0];
-                 bibtexEngineString = [self separate:[SUD stringForKey:BibTeXengineKey] into:bibtexArgs]; // nil for a value that is not text
+                 // Only text is a command: -stringForKey: would turn a number or a Boolean into "17" or "0".
+                 id bibSetting = [SUD objectForKey:BibTeXengineKey];
+                 bibtexEngineString = [self separate:([bibSetting isKindOfClass:NSString.class] ? bibSetting : nil) into:bibtexArgs];
                  [bibtexArgs addObjectsFromArray:args];
                  }
                  
