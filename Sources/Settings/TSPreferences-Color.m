@@ -1007,19 +1007,22 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
 - (TSThemeFileStore *)themeStore
 {
     TSThemeFileStore *store = [[TSThemeFileStore alloc] initWithDirectory:[NSURL fileURLWithPath:[ColorPath stringByExpandingTildeInPath] isDirectory:YES]];
-    // A file of other settings put in a theme's place is not a theme: it has entries, but none of TeXShop's colors
-    // that TeXShop can use (red, green and blue numbers, as TSColorSupport reads them). A theme with some usable
-    // colors, or only a title, is one.
+    // A theme is what TeXShop keeps as one when it checks its files at launch (TSLibraryThemeCheck: every color red,
+    // green, blue and alpha numbers), with at least one of TeXShop's colors, or nothing but a title. A file of other
+    // settings put in a theme's place, or a theme with a color TeXShop cannot read, is not edited or written into.
     NSString *lite = TSLibraryBundledPath(@"Themes/LiteTheme.plist") ?: [store.directory URLByAppendingPathComponent:@"LiteTheme.plist"].path;
-    NSDictionary *reference = lite != nil ? [NSDictionary dictionaryWithContentsOfFile:(NSString *_Nonnull)lite] : nil;
+    NSData *referenceData = lite != nil ? [NSData dataWithContentsOfFile:(NSString *_Nonnull)lite] : nil;
+    NSDictionary *reference = referenceData != nil ? [NSPropertyListSerialization propertyListWithData:(NSData *_Nonnull)referenceData options:NSPropertyListImmutable format:NULL error:NULL] : nil;
+    if (![reference isKindOfClass:NSDictionary.class]) reference = nil;
     store.acceptsColors = ^BOOL(NSDictionary<NSString *, id> *colors) {
+        NSData *data = [NSPropertyListSerialization dataWithPropertyList:colors format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL];
+        if (data == nil || !TSLibraryThemeCheck()(data, referenceData)) return NO;
         BOOL entries = NO;
         for (NSString *key in colors) {
             if ([key isEqual:@"Title"]) continue;
             entries = YES;
-            NSArray *value = [colors[key] isKindOfClass:NSArray.class] ? colors[key] : nil;
-            BOOL usable = value.count >= 3 && [value[0] isKindOfClass:NSNumber.class] && [value[1] isKindOfClass:NSNumber.class] && [value[2] isKindOfClass:NSNumber.class];
-            if (usable && (reference == nil || [reference[key] isKindOfClass:NSArray.class])) return YES;
+            // The check above has made every color red, green, blue and alpha numbers.
+            if ([colors[key] isKindOfClass:NSArray.class] && (reference == nil || [reference[key] isKindOfClass:NSArray.class])) return YES;
         }
         return !entries;
     };
@@ -1074,21 +1077,15 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
 
 - (void)themeListShowError:(NSString *)message { [self showPreferenceNotice:message]; }
 
-// A file imported as a theme has the form TeXShop repairs themes to (TSLibraryThemeCheck) and at least one of the
-// colors of TeXShop's themes: a property list of other settings is not a theme.
+// A file imported as a theme is one Settings would edit (themeStore's acceptsColors), with at least one color.
 - (BOOL)themeListAcceptsData:(NSData *)data
 {
-    if (!TSLibraryThemeCheck()(data, nil)) return NO;
     NSDictionary *theme = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL];
-    NSString *lite = TSLibraryBundledPath(@"Themes/LiteTheme.plist");
-    // TeXShop's LiteTheme names the colors; its copy in the Themes folder when TeXShop's own cannot be read.
-    NSDictionary *reference = (lite != nil ? [NSDictionary dictionaryWithContentsOfFile:(NSString *_Nonnull)lite] : nil) ?: [[self themeStore] readTitle:@"LiteTheme"];
-    for (NSString *key in theme) {
-        id value = theme[key];
-        if (![value isKindOfClass:NSArray.class]) continue;
-        if (reference == nil || [reference[key] isKindOfClass:NSArray.class]) return YES;
-    }
-    return NO;
+    if (![theme isKindOfClass:NSDictionary.class]) return NO;
+    BOOL (^accepts)(NSDictionary<NSString *, id> *) = [self themeStore].acceptsColors;
+    NSMutableDictionary *colors = [theme mutableCopy];
+    [colors removeObjectForKey:@"Title"];
+    return colors.count > 0 && (accepts == nil || accepts(theme));
 }
 
 - (IBAction)themeSelectionChanged:(id)sender

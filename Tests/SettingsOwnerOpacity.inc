@@ -1,5 +1,6 @@
 #import "TSThemeFileStore.h"
 #import "TSSettingsThemeList.h"
+#import "TSLibraryRepair.h"
 #import <objc/message.h>
 static NSLocale *opacityTestLocale;
 static id OpacityLocale(id cls, SEL cmd) { return opacityTestLocale; }
@@ -224,9 +225,15 @@ static void CheckThemeActionButtons(TSPreferences *owner,TSSettingsWindowControl
             method_setImplementation(sheet,shown);
             Check(shell.window.attachedSheet==nil,@"No sheet is attached to the Settings window");
             for(NSWindow *window in NSApp.windows)Check(!window.visible,[NSString stringWithFormat:@"No window is shown: %@",window]);
-            // Colors TeXShop can use: red, green and blue numbers, with or without alpha.
+            // A theme is what TeXShop's check at launch keeps (TSLibraryThemeCheck: every color red, green, blue and alpha
+            // numbers), with at least one color, or nothing but its title: the same for editing, saving, export and import.
             BOOL (^accepts)(NSDictionary *)=[owner themeStore].acceptsColors;
-            Check(accepts(@{@"EditorText":@[@0,@0,@0]}) && accepts(@{@"EditorText":@[@0,@0,@0,@1],@"ShowRuler":@YES}) && accepts(@{}) && accepts(@{@"Title":@"Old"}) && !accepts(@{@"EditorText":@[@0.5,@0.5]}) && !accepts(@{@"EditorText":@[@"red",@"green",@"blue"]}),@"A theme has at least one color TeXShop can use, or nothing but its title");
+            NSDictionary *partial=@{@"EditorText":@[@0,@0,@0,@1]},*rgb=@{@"EditorText":@[@0,@0,@0]},*alphaText=@{@"EditorText":@[@0.1,@0.2,@0.3,@"opaque"]},*extra=@{@"EditorText":@[@0.1,@0.2,@0.3,@1,@"x"]};
+            Check(accepts(partial) && accepts(@{}) && accepts(@{@"Title":@"Old"}) && !accepts(rgb) && !accepts(alphaText) && !accepts(extra) && !accepts(@{@"EditorText":@[@0.5,@0.5]}) && !accepts(@{@"EditorText":@[@"red",@"green",@"blue"]}),@"A theme has colors TeXShop can read throughout, or nothing but its title");
+            for(NSDictionary *colors in @[partial,rgb,alphaText,extra]){
+                NSData *data=[NSPropertyListSerialization dataWithPropertyList:colors format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL];
+                Check(accepts(colors)==[owner themeListAcceptsData:data] && accepts(colors)==TSLibraryThemeCheck()(data,nil),[NSString stringWithFormat:@"Editing, import and the check at launch agree on %@",colors]);
+            }
         }
         [owner themeListDidChooseTitle:@"LiteTheme"];[list reload];
         // The picture of the manual (TS_SETTINGS_MANUAL_SHOT, English): the themes that come with TeXShop, LiteTheme being

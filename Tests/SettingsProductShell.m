@@ -175,9 +175,14 @@ int main(int argc,char **argv){@autoreleasepool{
  NSDictionary *theme=[NSDictionary dictionaryWithContentsOfURL:[fixture URLForResource:@"LiteTheme" withExtension:@"plist" subdirectory:@"Themes"]];Check(theme.count>10,@"Bundled theme fixture loads");[owner setValue:[theme mutableCopy] forKey:@"EditingColors"];
  for(NSString *name in @[@"LiteStyle",@"DarkStyle"]){NSPopUpButton *menu=[owner valueForKey:name];[menu removeAllItems];[menu addItemsWithTitles:@[@"LiteTheme",@"DarkTheme"]];[menu selectItemAtIndex:[name isEqual:@"DarkStyle"]?1:0];}
  [owner FillInColorWells];
- // A theme file changed elsewhere so that a color is missing or is not a color: saving another color of the theme
- // completes, the well shows the built-in color, and the missing color is not written into the file.
+ // A theme file changed elsewhere so that a color is missing: saving another color of the theme completes, the well
+ // shows the built-in color, and the missing color is not written into the file. Changed so that a color is not one
+ // TeXShop can read (as its check at launch finds it): the save fails, says so in an alert caught here before it is
+ // shown, and the file stays as it is.
  {
+  __block NSMutableArray<NSString *> *saveAlerts=[NSMutableArray array];
+  Method sheet=class_getInstanceMethod(NSAlert.class,@selector(beginSheetModalForWindow:completionHandler:));
+  IMP shown=method_setImplementation(sheet,imp_implementationWithBlock(^(NSAlert *alert,NSWindow *window,id handler){[saveAlerts addObject:alert.messageText?:@""];}));
   [owner setValue:@"DarkTheme" forKey:@"editingThemeTitle"];
   NSString *path=[ColorPath stringByAppendingPathComponent:@"DarkTheme.plist"];NSDictionary *original=[NSDictionary dictionaryWithContentsOfFile:path];
   Check(original[@"EditorBackground"]!=nil,@"The dark theme fixture has a background color");
@@ -193,11 +198,17 @@ int main(int argc,char **argv){@autoreleasepool{
    @try{[owner SaveEditedStyle:nil];}
    @catch(NSException *e){Check(NO,[NSString stringWithFormat:@"Saving a color of a theme whose background is %@ throws: %@",kind,e.reason]);}
    NSDictionary *disk=[NSDictionary dictionaryWithContentsOfFile:path];
-   Check([disk[@"EditorText"] isEqual:(@[@0.5,@0.3,@0.2,@1])] && (changed[@"EditorBackground"]==nil ? disk[@"EditorBackground"]==nil : [disk[@"EditorBackground"] isEqual:changed[@"EditorBackground"]]),
-         [NSString stringWithFormat:@"A theme whose background is %@ gets the new text color and keeps its background as it is",kind]);
+   BOOL readable=[kind isEqual:@"missing"] || [kind isEqual:@"nothing"];
+   if(readable)
+    Check([disk[@"EditorText"] isEqual:(@[@0.5,@0.3,@0.2,@1])] && (changed[@"EditorBackground"]==nil ? disk[@"EditorBackground"]==nil : [disk[@"EditorBackground"] isEqual:changed[@"EditorBackground"]]),
+          [NSString stringWithFormat:@"A theme whose background is %@ gets the new text color and keeps its background as it is",kind]);
+   else
+    Check([disk isEqual:changed] && saveAlerts.count>0 && ![[owner valueForKey:@"EditingColors"][@"EditorText"] isEqual:(@[@0.5,@0.3,@0.2,@1])],
+          [NSString stringWithFormat:@"A theme whose background is %@ is not written into, and the failure is told",kind]);
    NSColorWell *background=[owner valueForKey:@"SourceBackgroundColorWell"];
-   Check(background.color!=nil && [[owner valueForKey:@"EditingColors"] isEqual:disk],[NSString stringWithFormat:@"The background well shows a color when the background is %@",kind]);
+   Check(background.color!=nil && (!readable || [[owner valueForKey:@"EditingColors"] isEqual:disk]),[NSString stringWithFormat:@"The background well shows a color when the background is %@",kind]);
   }
+  method_setImplementation(sheet,shown);
   [original writeToFile:path atomically:YES];[owner setValue:@"LiteTheme" forKey:@"editingThemeTitle"];
   [owner setValue:[theme mutableCopy] forKey:@"EditingColors"];[owner setValue:nil forKey:@"lastSavedEditingColors"];[owner FillInColorWells];
  }
