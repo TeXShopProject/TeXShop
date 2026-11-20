@@ -156,8 +156,13 @@ int main(void) { @autoreleasepool {
     spec = [TSRootFileResolver rootPathInSource:@"% !TEX root = ../link.tex\n" documentPath:[ch stringByAppendingPathComponent:@"one.tex"]
                               allowingSourceDoc:NO jobNameToken:@"\\jobname" specifier:&found];
     if (![spec isEqualToString:[proj stringByAppendingPathComponent:@"main.tex"]] || found.kind != 1) Fail([@"rootPath " stringByAppendingString:Show(spec)]);
-    @try { [TSRootFileResolver pathForName:@"  " homePath:ch jobName:@"one" jobNameToken:@"\\jobname"]; Fail(@"empty name did not raise"); }
-    @catch (NSException *e) { }
+    // A name of only spaces names no file (the old code raised); an untitled document has no job name, so
+    // \jobname stays as it is.
+    @try {
+        if (![[TSRootFileResolver pathForName:@"  " homePath:ch jobName:@"one" jobNameToken:@"\\jobname"] isEqualToString:@""]) Fail(@"empty name did not give an empty path");
+        NSString *untitled = [TSRootFileResolver pathForName:@"\\jobname-main.tex" homePath:ch jobName:nil jobNameToken:@"\\jobname"];
+        if (![untitled hasSuffix:@"\\jobname-main.tex"]) Fail([@"an untitled document's \\jobname was replaced: " stringByAppendingString:Show(untitled)]);
+    } @catch (NSException *e) { Fail([@"a name without a file or job raised: " stringByAppendingString:e.reason ?: @""]); }
     [NSFileManager.defaultManager removeItemAtPath:tmp error:nil];
     printf("compared %lu generated sources\n", (unsigned long)compared);
     return failures ? 1 : 0;

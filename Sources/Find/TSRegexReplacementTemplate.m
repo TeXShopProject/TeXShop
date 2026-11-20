@@ -338,8 +338,13 @@ static NSString *TSSubstring(NSString *string, NSRange range)
                 break;
             case TSReplacementTokenNamedGroup:
                 // rangeWithName: raises for an unknown name, so only ask for names the pattern defines.
-                if (result && [self.groupNames containsObject:token.text])
-                    [output appendString:TSSubstring(string, [result rangeWithName:token.text])];
+                // The names come from TeXShop's own reading of the pattern; one ICU does not know still raises, so it is
+                // treated as a group that matched nothing.
+                if (result && [self.groupNames containsObject:token.text]) {
+                    NSRange named = NSMakeRange(NSNotFound, 0);
+                    @try { named = [result rangeWithName:token.text]; } @catch (NSException *exception) { named = NSMakeRange(NSNotFound, 0); }
+                    [output appendString:TSSubstring(string, named)];
+                }
                 break;
             case TSReplacementTokenLastGroup:
                 if (result)

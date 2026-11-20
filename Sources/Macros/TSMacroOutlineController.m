@@ -464,6 +464,9 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 		[parentNode insertChildren: myDraggedNodes atIndex: childIndex];
 	} else if ([pboard availableTypeFromArray:[NSArray arrayWithObject: NSStringPboardType]]) {
 		NSString *string = [pboard stringForType: NSStringPboardType];
+		// The type can be there while its data cannot be read (another app's provider failed).
+		if (string == nil)
+			return;
 		NSString *tempStr = string;
 		if (g_shouldFilter == kMacJapaneseFilterMode)
 			tempStr = filterBackslashToYen(string);

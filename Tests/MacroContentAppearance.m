@@ -4,6 +4,7 @@
 // defaults stay in memory.
 #import <Cocoa/Cocoa.h>
 #import "TestAppKitIsolation.h"
+#import "TSFontSupport.h"
 #import "TSMacroEditor.h"
 #import "TSColorSupport.h"
 #import "TSSyntaxHighlighter.h"

@@ -218,7 +218,7 @@ static BOOL TSIn(const char *set, unichar c) { return c > 0 && c < 128 && strchr
             NSUInteger close = [self find:'}' from:end];
             end = close == NSNotFound ? _n : close + 1;
         } else if (d != 'N')
-            end++;
+            end = MIN(end + 1, _n); // \p at the end of the pattern
         role = d == 'N' ? TSSyntaxRoleRegexEscape : TSSyntaxRoleRegexCharacterClass;
     } else if (d == 'h' || d == 'H') {
         [self add:i end:end incompatibility:TSRegexOnigmoIncompatibilityHexDigit];

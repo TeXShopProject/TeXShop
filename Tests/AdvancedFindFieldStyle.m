@@ -7,6 +7,7 @@
 // Tests/run-advanced-find-field-style.py; no window is shown and the defaults stay in memory.
 #import <Cocoa/Cocoa.h>
 #import "TestAppKitIsolation.h"
+#import "TSFontSupport.h"
 #import "TSColorSupport.h"
 #import "TSSyntaxColorScheme.h"
 #import "TSSyntaxTeXOptions.h"

@@ -32,18 +32,9 @@
 
 - (void)refreshEditorSettingsFromDefaults:(NSUserDefaults *)defaults
 {
-    NSData *fontData, *attributesData;
-    fontData = [defaults objectForKey:DocumentFontKey];
-    if (fontData != nil)
-    {
-        self.documentFont = [NSUnarchiver unarchiveObjectWithData:fontData];
-    }
-    self.fontAttributes = nil;
-    attributesData = [defaults objectForKey:DocumentFontAttributesKey];
-    if (attributesData != nil)
-    {
-        self.fontAttributes = [NSUnarchiver unarchiveObjectWithData:attributesData];
-    }
+    // Settings data that is damaged or of another kind gives the user font, not a Settings that cannot open.
+    self.documentFont = TSArchivedFont([defaults objectForKey:DocumentFontKey]) ?: [NSFont userFontOfSize:12.0];
+    self.fontAttributes = TSUnarchivedObject([defaults objectForKey:DocumentFontAttributesKey], NSDictionary.class);
     [self updateDocumentFontTextField];
     [_tabIndentButton setState:[defaults boolForKey:TabIndentKey]];
     [_syntaxColorLineButton setState:[defaults boolForKey:SyntaxColorEntryLineKey]];
@@ -240,7 +231,7 @@
     [_ptexUtfOutputButton setState:[defaults boolForKey:ptexUtfOutputEnabledKey]];
     _kpsetoolField.stringValue = TSPreferenceTextBesideDefault(defaults, KpsetoolKey);
     _kpsetoolField.placeholderString = TSPreferenceRegisteredText(defaults, KpsetoolKey);
-    NSString *bibTeXengine = [defaults objectForKey:BibTeXengineKey];
+    NSString *bibTeXengine = [defaults stringForKey:BibTeXengineKey]; // nil for a value that is not text
     if (!bibTeXengine || [bibTeXengine isEqualToString:@""])
     {
         bibTeXengine = @"bibtex";

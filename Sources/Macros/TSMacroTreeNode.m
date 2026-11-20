@@ -455,8 +455,12 @@
 	NSArray *srcChildren;
 	NSDictionary *srcChild;
 
+	// A plist that is not a macros file (imported from anywhere) may have other kinds of values: a node needs a name
+	// that is text, and keeps only text for its content and key.
+	if (![dict isKindOfClass:[NSDictionary class]])
+		return nil;
 	aName = [dict objectForKey: NAME_KEY];
-	if (aName == nil)
+	if (![aName isKindOfClass:[NSString class]])
 		return nil;
 	node = [[TSMacroTreeNode alloc]  initWithParent: nil children: nil];
 #ifdef DEBUG_TREE
@@ -464,10 +468,10 @@
 #endif
 	[node setName: aName];
 	aContent = [dict objectForKey: CONTENT_KEY];
-	if (aContent)
+	if ([aContent isKindOfClass:[NSString class]])
 		[node setContent: aContent];
 	keyEquiv = [dict objectForKey: KEYEQUIV_KEY];
-	if (keyEquiv)
+	if ([keyEquiv isKindOfClass:[NSString class]])
 		[node setKey: keyEquiv];
 	srcChildren = [dict objectForKey: CHILDREN_KEY];
 	if ([srcChildren isKindOfClass:[NSArray class]]) {

@@ -700,12 +700,6 @@ else
 
 #endif
 
-	// HACK: The following is a trick to get the NSSegmentedControl to display correctly
-	// (i.e. the same way as in Preview.app). There seems to be a bug (or misfeature?) in
-	// this control that causes it to display differently when its label is an empty string
-	// than when its label is "not set", i.e. when we pass 0 instead of a NSString.
-	[backforthKK setLabel:0 forSegment:0];
-	[backforthKK setLabel:0 forSegment:1];
 
 
 if (@available(macOS 11.0, *))
@@ -1320,61 +1314,12 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 	}
 
 
-    if ([itemIdent isEqual: kPreviousPageButtonTID]){
-
-        if (atLeastMonterey)
-        {
-            if (@available(macOS 11.0, *)) {
-                NSString *theName = @"arrow.up";
-                NSImage *previousImage = [NSImage imageWithSystemSymbolName: theName
-                                                accessibilityDescription: @"Previous Page"];
-                [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent
-                                                    customView:previousImage];
-                }
-            else
-                 [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent
-                                             customView:previousButton];
-        }
-    else
-
-         [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent
-                                             customView:previousButton];
-
-           
-		menuFormRep = [[NSMenuItem alloc] init];
-		[menuFormRep setTitle: [toolbarItem label]];
-		[menuFormRep setAction: @selector(previousPage:)];
-		[toolbarItem setMenuFormRepresentation: menuFormRep];
-		return toolbarItem;
-	}
-
-	if ([itemIdent isEqual: kNextPageButtonTID]) {
-        
-        if (atLeastMonterey)
-        {
-            if (@available(macOS 11.0, *)) {
-                NSString *theName = @"arrow.down";
-                NSImage *previousImage = [NSImage imageWithSystemSymbolName: theName
-                                                accessibilityDescription: @"Next Page"];
-                [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent
-                                                    customView:previousImage];
-                }
-            else
-                [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent
-                                         customView:nextButton];
-        }
-    else
-
-         [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent
-                                             customView:nextButton];
-
-		menuFormRep = [[NSMenuItem alloc] init];
-		[menuFormRep setTitle: [toolbarItem label]];
-		[menuFormRep setAction: @selector(nextPage:)];
-		[toolbarItem setMenuFormRepresentation: menuFormRep];
- 
-		return toolbarItem;
-	}
+    // The page buttons of the image window. They were made and dropped, and the nil item then lost its title in its
+    // menu form: Customize Toolbar of an image window raised. The menu form sends the actions up the responder chain.
+    if ([itemIdent isEqual: kPreviousPageButtonTID])
+        return [self makeToolbarSymbolsItemWithItemIdentifier:itemIdent key:itemIdent symbolName: @"arrow.up" accessibility: @"Previous Page" imageName:@"PreviousPageAction" newImageName:@"arrow.up" target:nil action:@selector(previousPage:)];
+    if ([itemIdent isEqual: kNextPageButtonTID])
+        return [self makeToolbarSymbolsItemWithItemIdentifier:itemIdent key:itemIdent symbolName: @"arrow.down" accessibility: @"Next Page" imageName:@"NextPageAction" newImageName:@"arrow.down" target:nil action:@selector(nextPage:)];
 
 
 	if ([itemIdent isEqual: kPreviousPageTID])

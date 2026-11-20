@@ -193,6 +193,9 @@
         return NO;
     NSCharacterSet *mySet = [NSCharacterSet characterSetWithCharactersInString:@"\""];
     NSArray<NSString *> *myArray = [outputString componentsSeparatedByCharactersInSet: mySet];
+    // Output that is not "file" line (mtxrun missing, an error, no match) gives nothing to go to.
+    if (myArray.count < 3)
+        return NO;
     
     foundFileName = myArray[1];
      theLine = [myArray[2] integerValue];
@@ -263,6 +266,9 @@
         return NO;
     NSCharacterSet *mySet = [NSCharacterSet characterSetWithCharactersInString:@"\""];
     NSArray<NSString *> *myArray = [outputString componentsSeparatedByCharactersInSet: mySet];
+    // Output that is not "file" line (mtxrun missing, an error, no match) gives nothing to go to.
+    if (myArray.count < 3)
+        return NO;
     
     foundFileName = myArray[1];
      theLine = [myArray[2] integerValue];

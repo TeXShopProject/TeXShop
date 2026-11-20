@@ -205,6 +205,9 @@
          //   newDocument = self;
          */
         
+        // A page without SyncTeX records finds no source, and a recorded name that is not UTF-8 cannot be used.
+        if (! gotSomething || foundFileName == nil)
+            return NO;
         if ([foundFileName isAbsolutePath])
             newFile = [foundFileName stringByStandardizingPath];
         else
@@ -455,7 +458,12 @@
     BOOL found = NO;
     while (node != NULL) {
         name = old_synctex_scanner_get_name(scanner, old_synctex_node_tag(node));
-        theName = [NSString stringWithCString:name encoding: NSUTF8StringEncoding];
+        // An unknown tag has no name, and a name that is not UTF-8 cannot be compared.
+        theName = name != NULL ? [NSString stringWithCString:name encoding: NSUTF8StringEncoding] : nil;
+        if (theName == nil) {
+            node = old_synctex_node_sibling(node);
+            continue;
+        }
         theFullName = [theName stringByStandardizingPath];
         
         if ([theFile isEqualToString: theFullName]) {

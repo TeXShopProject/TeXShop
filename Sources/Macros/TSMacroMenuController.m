@@ -456,10 +456,11 @@ static id sharedMacroMenuController = nil;
 			if (returnValue) { // successful?
 				// show the result only if the return value is a text
 				if ([returnValue descriptorType] == kAETextSuite)	//kAETextSuite='TEXT'
-					NSRunAlertPanel(@"AppleScript Result", [returnValue stringValue], nil, nil, nil);
+					// The result is shown as text, never read as a format (LaTeX text has % in it).
+					NSRunAlertPanel(@"AppleScript Result", @"%@", nil, nil, nil, [returnValue stringValue] ?: @"");
 			} else {	// show error message
-				NSRunAlertPanel(@"AppleScript Error",
-								[errorInfo objectForKey: NSAppleScriptErrorMessage], nil, nil, nil);
+				NSRunAlertPanel(@"AppleScript Error", @"%@", nil, nil, nil,
+								[errorInfo objectForKey: NSAppleScriptErrorMessage] ?: @"");
 			}
 		//	[aScript release];
 			
@@ -506,6 +507,11 @@ static id sharedMacroMenuController = nil;
 			
 			NSTask *scriptTask =  [[NSTask alloc] init];
 			NSString *runnerPath = [[NSBundle mainBundle] pathForResource:@"ScriptRunner" ofType:nil inDirectory:@"ScriptRunner.app/Contents/MacOS"];
+			// ScriptRunner missing from a damaged copy of TeXShop: NSTask would raise at launch.
+			if (runnerPath == nil) {
+				NSBeep();
+				return;
+			}
 			//  runnerPath = [runnerPath stringByAppendingString:@"/Contents/MacOS/ScriptRunner"];
 			args = [NSMutableArray array];
 			[args addObject: scriptFileName];

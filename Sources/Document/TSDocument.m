@@ -1,4 +1,5 @@
 #import "TSDocumentWindowGlass.h"
+#import "TSFontSupport.h"
 #import "TSSourceStatusBar.h"
 #import "TSTextStatisticsPopover.h"
 #import "TSFindInterface.h"
@@ -4411,9 +4412,9 @@ if ( ! skipTextWindow) {
  
      {
         fontData = [SUD objectForKey:DocumentFontKey];
-        if (fontData != nil)
+        font = TSArchivedFont(fontData); // nil for damaged data, which leaves the font as it is
+        if (font != nil)
         {
-            font = [NSUnarchiver unarchiveObjectWithData:fontData];
             [textView1 setFontSafely:font];
             [textView2 setFontSafely:font];
         }
@@ -4429,7 +4430,7 @@ if ( ! skipTextWindow) {
 {
 	NSFont 	*theFont;
     
-    theFont = [NSFont fontWithName: [SUD stringForKey:ConsoleFontNameKey] size:[SUD floatForKey:ConsoleFontSizeKey]];
+    theFont = TSConsoleFontFromDefaults(SUD, ConsoleFontNameKey, ConsoleFontSizeKey);
      
     // change below requested by Claudio Beccari on Dec 25, 2020
     // [self.logTextView setFontSafely: [NSFont userFontOfSize:12.0]];
@@ -4441,7 +4442,7 @@ if ( ! skipTextWindow) {
 {
     NSFont		*theFont;
 
-	theFont = [NSFont fontWithName: [SUD stringForKey:ConsoleFontNameKey] size:[SUD floatForKey:ConsoleFontSizeKey]];
+	theFont = TSConsoleFontFromDefaults(SUD, ConsoleFontNameKey, ConsoleFontSizeKey);
     
     [outputText setFontSafely: theFont];
     
@@ -4858,7 +4859,8 @@ if ( ! skipTextWindow) {
 			stringByAppendingString: @".texshop"];
 		if ([[NSFileManager defaultManager] fileExistsAtPath: project]) {
 			nameString = [NSString stringWithContentsOfFile: project usedEncoding: &theEncoding error:NULL]
-				?: [NSString stringWithContentsOfFile: project encoding: NSISOLatin1StringEncoding error: NULL]; // written in Latin 1 before
+				?: [NSString stringWithContentsOfFile: project encoding: NSISOLatin1StringEncoding error: NULL] // written in Latin 1 before
+				?: [[[self fileURL] path] lastPathComponent] ?: @""; // a file that cannot be read
 			[projectName setStringValue: nameString];
 		}
 		else
@@ -6511,7 +6513,11 @@ if (! useFullSplitWindow) {
 	
     if (_externalEditor && doError)
         {
-            NSString *fullPath = [[[[self fileURL] path] stringByDeletingLastPathComponent] stringByAppendingPathComponent: [myErrorPath stringByStandardizingPath]];
+            // An error line without a file name (an engine run without -file-line-error) is in this document.
+            NSString *errorFile = myErrorPath != nil ? [myErrorPath stringByStandardizingPath] : [[[self fileURL] path] lastPathComponent];
+            if ([self fileURL] == nil || errorFile == nil)
+                return;
+            NSString *fullPath = [[[[self fileURL] path] stringByDeletingLastPathComponent] stringByAppendingPathComponent: errorFile];
             NSString *fullCorrectedPath = [fullPath stringByStandardizingPath];
             [self.myPDFKitView doErrorWithLine: myErrorLine andPath: fullCorrectedPath];
             return;
@@ -6640,7 +6646,7 @@ if (! useFullSplitWindow) {
                         // NSLog(@"found include");
                         found = YES;
                         includeRange.location = includeRange.location + 9;
-                        includeRange.length = theRange.length - 9;
+                        includeRange.length = includeString.length - 9; // the trimmed line, as the substring is taken from it
                     }
                 else if ([SUD boolForKey:tabsAlsoForInputFilesKey]) {
                     // NSLog(@"SUD found");
@@ -6650,7 +6656,7 @@ if (! useFullSplitWindow) {
                         found = YES;
                         // NSLog(@"got input");
                         includeRange.location = includeRange.location + 7;
-                        includeRange.length = theRange.length - 7;
+                        includeRange.length = includeString.length - 7;
                     }
                 }
                     if (found) {
@@ -6669,7 +6675,8 @@ if (! useFullSplitWindow) {
                                     
                                     self.numberOfTabs = self.numberOfTabs + 1;
                                     [self.includeFiles addObject: newIncludeString];
-                                    if (self.numberOfTabs > MAXNUMOFTABS)
+                                    // No more files than the short names made for them (MAXNUMOFTABS).
+                                    if (self.numberOfTabs >= MAXNUMOFTABS)
                                         done = YES;
              
                                 }
@@ -6702,7 +6709,7 @@ if (! useFullSplitWindow) {
                 {
                     
                     includeRange.location = includeRange.location + 18;
-                    includeRange.length = theRange.length - 18;
+                    includeRange.length = includeString.length - 18;
                     if (includeRange.length > 0)
                     {
                         newIncludeString = [includeString substringWithRange: includeRange];
@@ -8788,10 +8795,10 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
         font = [NSFont userFontOfSize:12.0];
 	} else {
         fontData = [SUD objectForKey:DocumentFontKey];
-        if (fontData != nil) {
-            font = [NSUnarchiver unarchiveObjectWithData:fontData];
+        font = TSArchivedFont(fontData); // nil for no data or damaged data
+        if (font != nil)
             [textView setFontSafely:font];
-		} else
+		else
             font = [NSFont userFontOfSize:12.0];
 	}
     

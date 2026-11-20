@@ -47,6 +47,11 @@
 	NSError					*outError;
 	TSDocument				*myDocument;
  	
+	// A help file missing from a damaged copy of TeXShop.
+	if (fileName == nil) {
+		NSBeep();
+		return;
+	}
 	myURL = [NSURL fileURLWithPath: fileName];
 	myController = [TSDocumentController sharedDocumentController];
 	myDocument = [myController documentForURL: myURL];
@@ -265,6 +270,13 @@
  	[env setObject: path forKey: @"PATH"];
 	
 	
+	// No texdoc there (no TeX installed, or another folder set): NSTask would raise at launch.
+	if (![[NSFileManager defaultManager] isExecutableFileAtPath:enginePath]) {
+		NSBeep();
+		NSRunAlertPanel(NSLocalizedString(@"Error", @"Error"), @"%@", @"OK", nil, nil,
+			[NSString stringWithFormat:NSLocalizedString(@"%@ does not exist.", @"%@ does not exist."), enginePath]);
+		return;
+	}
 	displayPackageHelpTask = [[NSTask alloc] init];
 	[displayPackageHelpTask setLaunchPath:enginePath];
 	args = [NSMutableArray array];
@@ -358,7 +370,7 @@
 //			NSString* cd = [[self fileName] stringByDeletingLastPathComponent];
 			cd = cd ? [NSString stringWithFormat:@"cd \"%@\";", cd] : @"";
 			
-			NSString* kpsetool = [SUD objectForKey:KpsetoolKey];
+			NSString* kpsetool = [SUD stringForKey:KpsetoolKey]; // nil for a value that is not text
 			if(!kpsetool || [kpsetool isEqualToString:@""]){
 				kpsetool = @"kpsewhich -progname=latex";
 			}
@@ -378,7 +390,8 @@
 			}
 			if(pclose(fp) != 0) {
 				NSBeep();
-				NSRunAlertPanel(NSLocalizedString(@"Error", @"Error"), [NSString stringWithFormat:NSLocalizedString(@"%@ does not exist.", @"%@ does not exist."), target], @"OK", nil, nil);
+				// The name typed is shown as text, never read as a format.
+				NSRunAlertPanel(NSLocalizedString(@"Error", @"Error"), @"%@", @"OK", nil, nil, [NSString stringWithFormat:NSLocalizedString(@"%@ does not exist.", @"%@ does not exist."), target]);
 			}
 		}
 }

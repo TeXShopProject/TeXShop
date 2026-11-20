@@ -235,6 +235,9 @@
                 return;
         }
         
+        // A page without SyncTeX records finds no source (the folder would be sent to the editor otherwise).
+        if (! gotSomething || foundFileName == nil)
+            return;
         if ([foundFileName isAbsolutePath])
             newFile = [foundFileName stringByStandardizingPath];
         else

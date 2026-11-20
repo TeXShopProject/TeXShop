@@ -2917,6 +2917,9 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 	// get the word(s) to register
 	initialWord = [[self string] substringWithRange: [self selectedRange]];
 	aWord = [initialWord stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
+	// Nothing to add (a selection of spaces only), or no list read.
+	if ([aWord length] == 0 || [g_commandCompletionList length] == 0)
+		return;
 
 	// add to the list-- it will be ideal if one can check redundancy
 	[g_commandCompletionList deleteCharactersInRange:NSMakeRange(0,1)]; // remove first LF
