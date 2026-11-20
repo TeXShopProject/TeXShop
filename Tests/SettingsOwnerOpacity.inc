@@ -194,6 +194,14 @@ static void CheckThemeActionButtons(TSPreferences *owner,TSSettingsWindowControl
         [NSFileManager.defaultManager removeItemAtURL:(NSURL *_Nonnull)[store URLForTitle:untitled] error:NULL];
         Check([[store titles] isEqual:before],@"The list's test leaves the theme folder as it was");
         [TSIsolatedAppKitDefaults setObject:@"DarkTheme" forKey:DefaultDarkThemeKey];[owner themeListDidChooseTitle:@"LiteTheme"];[list reload];
+        // Reopened after the theme of Light Mode was deleted elsewhere: Light Mode gives way to LiteTheme, and the
+        // theme edited is one that is there, selected in the list.
+        [TSIsolatedAppKitDefaults setObject:@"Gone Elsewhere" forKey:DefaultLiteThemeKey];
+        [owner PrepareColorPane:TSIsolatedAppKitDefaults];
+        NSPopUpButton *liteMenu=[owner valueForKey:@"LiteStyle"];
+        Check([[TSIsolatedAppKitDefaults objectForKey:DefaultLiteThemeKey] isEqual:@"LiteTheme"] && [liteMenu.titleOfSelectedItem isEqual:@"LiteTheme"],@"Reopened Settings gives a deleted Light Mode theme's place to LiteTheme");
+        Check(owner.editingThemeTitle!=nil && [[store titles] containsObject:owner.editingThemeTitle] && list.tableView.selectedRow==(NSInteger)[list.titles indexOfObject:owner.editingThemeTitle] && [owner valueForKey:@"EditingColors"]!=nil,[NSString stringWithFormat:@"Reopened Settings edits a theme that is there: %@",owner.editingThemeTitle]);
+        [owner themeListDidChooseTitle:@"LiteTheme"];[list reload];
         // The picture of the manual (TS_SETTINGS_MANUAL_SHOT, English): the themes that come with TeXShop, LiteTheme being
         // edited, 710 points wide in the light appearance.
         if(getenv("TS_SETTINGS_MANUAL_SHOT") && [fixture.bundlePath.lastPathComponent isEqual:@"Base.bundle"]){

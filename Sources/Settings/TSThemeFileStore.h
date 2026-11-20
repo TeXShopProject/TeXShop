@@ -11,11 +11,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)writeColors:(NSDictionary<NSString *, id> *)colors title:(NSString *)title error:(NSError * _Nullable * _Nullable)error;
 // Writes the colors that differ between before and after into the theme file as it is at that moment, and keeps its
 // other colors. Returns the colors written, or nil; nil also when the file is no longer there (renamed or deleted
-// elsewhere), which is not made again.
+// elsewhere), which is not made again, and when it cannot be read, which is kept as it is. A title inside the file
+// that differs from `title` only in case (a rename elsewhere) is kept.
 - (nullable NSDictionary<NSString *, id> *)writeChangesFrom:(NSDictionary<NSString *, id> *)before to:(NSDictionary<NSString *, id> *)after title:(NSString *)title error:(NSError * _Nullable * _Nullable)error;
 
 // The themes in the folder (files, not folders), with composed names, in the order of the Finder.
 - (NSArray<NSString *> *)titles;
+// The listed title of the theme that `title` names (the same, or differing only in case after a rename elsewhere, or
+// in its Unicode form), or nil when there is none.
+- (nullable NSString *)existingTitleForTitle:(NSString *)title;
 // The title itself when no item of the folder has it (in any case, also of the extension), else the title followed by
 // the first free number from 2.
 - (NSString *)availableTitleForTitle:(NSString *)title;

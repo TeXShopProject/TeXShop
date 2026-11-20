@@ -88,7 +88,13 @@ static BOOL TSThemeIsRegularFile(NSURL *url)
             writeError = TSThemeStoreError(NSFileNoSuchFileError, title);
             return;
         }
-        NSMutableDictionary<NSString *, id> *colors = [([self readTitle:title] ?: before) mutableCopy];
+        // A file that cannot be read (changed elsewhere into something else) is kept as it is: the save fails.
+        NSDictionary<NSString *, id> *current = [self readTitle:title];
+        if (current == nil) {
+            writeError = TSThemeStoreError(NSFileReadCorruptFileError, title);
+            return;
+        }
+        NSMutableDictionary<NSString *, id> *colors = [current mutableCopy];
         NSMutableSet<NSString *> *keys = [NSMutableSet setWithArray:after.allKeys];
         [keys addObjectsFromArray:before.allKeys];
         [keys removeObject:@"Title"];
@@ -100,7 +106,10 @@ static BOOL TSThemeIsRegularFile(NSURL *url)
             else
                 [colors removeObjectForKey:key];
         }
-        colors[@"Title"] = title;
+        // A title that differs only in case was given by a rename elsewhere (the file system finds the file either
+        // way): it stays.
+        id inside = colors[@"Title"];
+        if (![inside isKindOfClass:NSString.class] || [(NSString *)inside caseInsensitiveCompare:title] != NSOrderedSame) colors[@"Title"] = title;
         NSError *accessError = nil;
         NSData *data = [NSPropertyListSerialization dataWithPropertyList:colors format:NSPropertyListXMLFormat_v1_0 options:0 error:&accessError];
         if (data != nil && [data writeToURL:fileURL options:NSDataWritingAtomic error:&accessError])
@@ -133,6 +142,15 @@ static BOOL TSThemeIsRegularFile(NSURL *url)
     }
     [titles sortUsingSelector:@selector(localizedStandardCompare:)];
     return titles;
+}
+- (nullable NSString *)existingTitleForTitle:(NSString *)title
+{
+    NSString *composed = title.precomposedStringWithCanonicalMapping;
+    NSArray<NSString *> *titles = [self titles];
+    if ([titles containsObject:composed]) return composed;
+    for (NSString *listed in titles)
+        if ([listed caseInsensitiveCompare:composed] == NSOrderedSame) return listed;
+    return nil;
 }
 - (BOOL)hasTitle:(NSString *)title except:(nullable NSString *)except
 {

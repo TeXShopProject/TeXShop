@@ -46,10 +46,18 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
 - (void)PrepareColorPane:(NSUserDefaults *)defaults;
 {
     // The themes of Light and Dark Mode are chosen among the files in ~/Library/TeXShop/Themes.
+    // A theme of Light or Dark Mode renamed elsewhere while Settings was closed is followed when only its case
+    // changed; one deleted or renamed otherwise gives way to TeXShop's own.
+    TSThemeFileStore *store = [self themeStore];
+    for (NSString *chosen in @[self.lightThemeTitle ?: @"", self.darkThemeTitle ?: @""]) {
+        if (chosen.length == 0) continue;
+        NSString *existing = [store existingTitleForTitle:chosen];
+        if (![existing isEqualToString:chosen]) [self themeListDidChangeTitle:chosen to:existing];
+    }
     [self fillThemeMenus];
     // The theme of the window's appearance is edited first.
     NSString *editing = [self settingsWindowIsDark] ? self.darkThemeTitle : self.lightThemeTitle;
-    self.editingThemeTitle = editing != nil && [[self themeStore] URLForTitle:(NSString *_Nonnull)editing] != nil ? editing : nil;
+    self.editingThemeTitle = (editing != nil ? [store existingTitleForTitle:(NSString *_Nonnull)editing] : nil) ?: [store titles].firstObject;
     [self loadEditingTheme];
     [self.themeList reload];
 }
@@ -75,7 +83,12 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
 - (void)loadEditingTheme
 {
     NSString *title = self.editingThemeTitle;
-    NSDictionary<NSString *, id> *saved = title == nil ? nil : [[self themeStore] readTitle:title];
+    // A theme chosen in a list read before it was renamed or deleted elsewhere: the list says so and edits another.
+    if (title != nil && [[self themeStore] existingTitleForTitle:(NSString *_Nonnull)title] == nil && self.themeList != nil) {
+        [self.themeList themeWentMissing:(NSString *_Nonnull)title];
+        return;
+    }
+    NSDictionary<NSString *, id> *saved = title == nil ? nil : [[self themeStore] readTitle:(NSString *_Nonnull)title];
     EditingColors = [saved mutableCopy];
     self.lastSavedEditingColors = saved;
     [self FillInColorWells];
@@ -259,6 +272,13 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
     }
     EditingColors = [written mutableCopy];
     self.lastSavedEditingColors = written;
+    // Renamed elsewhere in case only: the theme is edited under the name it now has.
+    NSString *current = [written[@"Title"] isKindOfClass:NSString.class] ? written[@"Title"] : nil;
+    if (current != nil && ![current isEqualToString:title] && [[[self themeStore] existingTitleForTitle:title] isEqualToString:(NSString *_Nonnull)current]) {
+        [self themeListDidChangeTitle:title to:current];
+        title = (NSString *_Nonnull)current;
+        [self.themeList reload];
+    }
     // A bundled theme changed here is marked at once.
     [self.themeList refreshTitle:title];
     // The wells show the colors changed elsewhere.

@@ -19,6 +19,8 @@ mutations={
  'selection-store':('[SUD setObject:title forKey:popup == LiteStyle ? DefaultLiteThemeKey : DefaultDarkThemeKey];',';'),
  'compose-settings':('{ return title.precomposedStringWithCanonicalMapping; }','{ return title; }'),
  'missing-handoff':('        [self.themeList themeWentMissing:title];\n        return;','        ;'),
+ 'stale-choice':('        [self.themeList themeWentMissing:(NSString *_Nonnull)title];\n        return;','        ;'),
+ 'follow-case':('        [self themeListDidChangeTitle:title to:current];\n        title = (NSString *_Nonnull)current;','        ;'),
  'rename-follows':('[SUD setObject:newTitle ?: @"LiteTheme" forKey:DefaultLiteThemeKey];',';'),
  'delete-fallback':('newTitle ?: @"DarkTheme"','newTitle'),
  'rename-editing':('if ([self.editingThemeTitle isEqualToString:oldTitle] && newTitle != nil) self.editingThemeTitle = newTitle;',';'),
@@ -28,6 +30,8 @@ mutations={
 # coordinated write.
 store=(R/'Sources/Settings/TSThemeFileStore.m').read_text()
 store_mutations={
+ 'overwrite-unreadable':('        if (current == nil) {\n            writeError = TSThemeStoreError(NSFileReadCorruptFileError, title);\n            return;\n        }\n        NSMutableDictionary<NSString *, id> *colors = [current mutableCopy];','        NSMutableDictionary<NSString *, id> *colors = [(current ?: before) mutableCopy];'),
+ 'title-case':('if (![inside isKindOfClass:NSString.class] || [(NSString *)inside caseInsensitiveCompare:title] != NSOrderedSame) colors[@"Title"] = title;','(void)inside; colors[@"Title"] = title;'),
  'upper-extension':('if ([name.pathExtension compare:@"plist" options:NSCaseInsensitiveSearch] == NSOrderedSame)','if ([name.pathExtension isEqualToString:@"plist"])'),
  'overwrite-add':('options:NSDataWritingWithoutOverwriting','options:NSDataWritingAtomic'),
  'list-folders':('if (url != nil && TSThemeIsRegularFile(url) && ![titles containsObject:title])','if (url != nil && ![titles containsObject:title])'),
@@ -283,6 +287,36 @@ int main(int argc,char **argv){@autoreleasepool{
   check([importedPastel isEqual:pastel] && [[p.store titles] containsObject:pastel],"a decomposed file name is imported under the composed name");
   check([p.store renameTitle:pastel to:[@"パレット" decomposedStringWithCanonicalMapping] error:NULL] && [[p.store titles] containsObject:@"パレット"] && [[p.store readTitle:@"パレット"][@"Title"] isEqual:@"パレット"],"a decomposed new name is composed");
   [NSFileManager.defaultManager removeItemAtURL:(NSURL *_Nonnull)[p.store URLForTitle:@"パレット"] error:NULL];
+  p.themeList=nil;
+ }
+
+ // Third audit: an unreadable file is kept, a rename in case only elsewhere is followed, and a theme chosen in a list
+ // read before it went away is handed to the list.
+ {
+  ListStub *stub=[ListStub new];p.themeList=stub;
+  check([p.store writeColors:@{@"EditorText":@[@0,@0,@0,@1]} title:@"Broken" error:NULL],"seed Broken");
+  [p themeListDidChooseTitle:@"Broken"];NSDictionary *broken=p.lastSavedEditingColors;
+  NSData *garbage=[@"<?xml version=\"1.0\"?><plist><dict><key>EditorText" dataUsingEncoding:NSUTF8StringEncoding];
+  [garbage writeToURL:(NSURL *_Nonnull)[p.store URLForTitle:@"Broken"] atomically:YES];
+  NSError *unreadable=nil;NSMutableDictionary *more=[broken mutableCopy];more[@"EditorText"]=@[@1,@0,@0,@1];
+  check([p.store writeChangesFrom:broken to:more title:@"Broken" error:&unreadable]==nil && unreadable.code==NSFileReadCorruptFileError && [[NSData dataWithContentsOfURL:(NSURL *_Nonnull)[p.store URLForTitle:@"Broken"]] isEqual:garbage],"a file that cannot be read is kept as it is");
+  NSUInteger errorsBefore=p.errors;p->EditingColors=[more mutableCopy];p.lastSavedEditingColors=broken;[p SaveEditedStyle:nil];
+  check(p.errors==errorsBefore+1 && [[NSData dataWithContentsOfURL:(NSURL *_Nonnull)[p.store URLForTitle:@"Broken"]] isEqual:garbage],"Settings says the save failed and keeps the file");
+  [NSFileManager.defaultManager removeItemAtURL:(NSURL *_Nonnull)[p.store URLForTitle:@"Broken"] error:NULL];
+  check([p.store writeColors:@{@"EditorText":@[@0,@0,@0,@1]} title:@"Night" error:NULL],"seed Night");
+  [p themeListDidChooseTitle:@"Night"];NSDictionary *night=p.lastSavedEditingColors;
+  TSThemeFileStore *other=[[TSThemeFileStore alloc]initWithDirectory:root];
+  check([other renameTitle:@"Night" to:@"NIGHT" error:NULL] && [[p.store titles] containsObject:@"NIGHT"],"renamed in case only elsewhere");
+  check([[p.store existingTitleForTitle:@"Night"] isEqual:@"NIGHT"] && [p.store existingTitleForTitle:@"Day"]==nil,"the listed name of a theme named in another case");
+  NSMutableDictionary *nightMore=[night mutableCopy];nightMore[@"EditorText"]=@[@0,@0,@1,@1];
+  NSDictionary *nightWritten=[p.store writeChangesFrom:night to:nightMore title:@"Night" error:NULL];
+  check([nightWritten[@"Title"] isEqual:@"NIGHT"] && [[p.store readTitle:@"NIGHT"][@"Title"] isEqual:@"NIGHT"],"a save under the old case keeps the new name inside the file");
+  p->EditingColors=[nightWritten mutableCopy];p->EditingColors[@"EditorText"]=@[@1,@1,@0,@1];p.lastSavedEditingColors=nightWritten;
+  [p SaveEditedStyle:nil];
+  check([p.editingThemeTitle isEqual:@"NIGHT"] && [[p.store readTitle:@"NIGHT"][@"Title"] isEqual:@"NIGHT"] && [[p.store readTitle:@"NIGHT"][@"EditorText"] isEqual:(@[@1,@1,@0,@1])],"Settings edits the theme under the name it now has");
+  [NSFileManager.defaultManager removeItemAtURL:(NSURL *_Nonnull)[p.store URLForTitle:@"NIGHT"] error:NULL];
+  [p themeListDidChooseTitle:@"Vanished"];
+  check([stub.missing containsObject:@"Vanished"],"a theme chosen after it went away is handed to the list");
   p.themeList=nil;
  }
 
