@@ -67,7 +67,7 @@ static void Select(NSString *identifier) {
     for (NSDictionary *conflict in [TSKeyboardShortcuts.sharedController conflictsForMacroShortcuts:candidates]) [inactive addIndex:[conflict[@"index"] unsignedIntegerValue]];
     [self.macros enumerateObjectsUsingBlock:^(TSShortcutMacro *macro, NSUInteger index, BOOL *stop) {
         NSMenuItem *item = [self.menu addItemWithTitle:macro.name action:@selector(doMacro:) keyEquivalent:@""];
-        item.target = self;
+        item.target = self; item.identifier = TSMacroItemIdentifier(macro.indexPath);
         if ([inactive containsIndex:index]) return;
         item.keyEquivalentModifierMask = macro.modifiers; item.keyEquivalent = macro.key;
     }];
@@ -328,11 +328,11 @@ int main(int argc, const char *argv[]) {
             REQUIRE([bareDefaults.values[TSMenuShortcutOverridesKey][sourcePreview] isEqual:(@{@"key":@"k", @"modifiers":@(controlCommand)})] && early.unavailableCommands.count == 0,
                 @"a default restored before French's keys were known gives way to Console's Command-& (%@, unavailable %@)", bareDefaults.values[TSMenuShortcutOverridesKey], early.unavailableCommands);
             // A key whose items all meet other items stays unknown, and is worked out once one is free.
-            // On French, Source ⇔ Preview shows Command-&; every other variant AppKit could show the
+            // On French, Source ⇔ Preview shows Command-&; every other variant the hidden items give the
             // key with is taken by an item with & as recorded. The one key all of them show is &.
             NSMutableArray *occupants = [NSMutableArray array];
             const NSEventModifierFlags K = NSEventModifierFlagControl, O = NSEventModifierFlagOption, C = NSEventModifierFlagCommand;
-            for (NSNumber *flags in @[@(C | K | O), @(C | K), @(C | O), @(K | O), @(K), @(O)]) {
+            for (NSNumber *flags in @[@(C | K | O), @(C | K), @(C | O), @(K), @(O)]) {
                 NSMenuItem *occupant = [[NSMenuItem alloc] initWithTitle:@"Occupant" action:@selector(fixtureOccupant:) keyEquivalent:@""];
                 occupant.target = target; occupant.allowsAutomaticKeyEquivalentLocalization = NO;
                 occupant.keyEquivalentModifierMask = flags.unsignedIntegerValue; occupant.keyEquivalent = @"&";
@@ -373,19 +373,28 @@ int main(int argc, const char *argv[]) {
             [twoItem.menu removeItem:twoItem]; [occupants removeObject:twoItem]; Spin(0.3);
             // Two macros that show the same key: the item belongs to the macro at its place in the
             // Macros menu, the first one, which AppKit lets keep the key.
-            TSShortcutMacro *first = [[TSShortcutMacro alloc] initWithName:@"MacroTwo" path:@"Macros › MacroTwo" indexPath:[NSIndexPath indexPathWithIndex:0] serializedKey:@"^~2" key:@"2" modifiers:K | O];
-            TSShortcutMacro *second = [[TSShortcutMacro alloc] initWithName:@"MacroAccent" path:@"Macros › MacroAccent" indexPath:[NSIndexPath indexPathWithIndex:1] serializedKey:@"^~é" key:@"é" modifiers:K | O];
+            // Both have the same name in the same folder, so only their places in the file tell them apart.
+            TSShortcutMacro *first = [[TSShortcutMacro alloc] initWithName:@"Same" path:@"Macros › Same" indexPath:[NSIndexPath indexPathWithIndex:0] serializedKey:@"^~2" key:@"2" modifiers:K | O];
+            TSShortcutMacro *second = [[TSShortcutMacro alloc] initWithName:@"Same" path:@"Macros › Same" indexPath:[NSIndexPath indexPathWithIndex:1] serializedKey:@"^~é" key:@"é" modifiers:K | O];
+
             early.macroProvider = ^NSArray<TSShortcutMacro *> *{ return @[first, second]; };
             NSMenuItem *macrosTop = [bare addItemWithTitle:@"Makros" action:nil keyEquivalent:@""];
             macrosTop.submenu = [[NSMenu alloc] initWithTitle:@"Makros"];
             for (TSShortcutMacro *macro in @[first, second]) {
                 NSMenuItem *item = [macrosTop.submenu addItemWithTitle:macro.name action:@selector(doMacro:) keyEquivalent:@""];
                 item.target = bareMacros; item.keyEquivalentModifierMask = macro.modifiers; item.keyEquivalent = macro.key;
+                item.identifier = TSMacroItemIdentifier(macro.indexPath);
             }
             Spin(0.3);
-            REQUIRE(macrosTop.submenu.itemArray[0].keyEquivalent.length, @"MacroTwo has its key (%@ / %@)", macrosTop.submenu.itemArray[0].keyEquivalent, macrosTop.submenu.itemArray[1].keyEquivalent);
+            REQUIRE(macrosTop.submenu.itemArray[0].keyEquivalent.length, @"the first Same macro has its key (%@ / %@)", macrosTop.submenu.itemArray[0].keyEquivalent, macrosTop.submenu.itemArray[1].keyEquivalent);
             NSArray *named = [early macrosUsingKey:@"&" modifiers:K | O];
-            REQUIRE(named.count == 1 && [named[0] hasPrefix:@"Makros › MacroTwo"], @"recording Control-Option-& names MacroTwo, which could show it (%@)", named);
+            REQUIRE(named.count == 1 && [named[0] hasPrefix:@"Makros › Same ("], @"recording Control-Option-& names the first Same macro, which could show it (%@)", named);
+            // The key search marks that macro as the one that runs.
+            NSArray<TSShortcutMatch *> *runs = [TSShortcutSearch matchesEvent:KeyPress(@"é", K | O) store:early macros:@[first, second]];
+            NSUInteger winners = 0; for (TSShortcutMatch *match in runs) if (match.winner) winners++;
+            REQUIRE(winners == 1 && runs.count && ((TSShortcutMatch *)runs[0]).macro == first && ((TSShortcutMatch *)runs[0]).winner,
+                @"pressing Control-Option-é, the key search marks the first Same macro as the one that runs (%@)",
+                [[runs valueForKey:@"winner"] componentsJoinedByString:@","] ?: @"");
             [bare removeItem:macrosTop];
             early.macroProvider = nil;
             for (NSMenuItem *occupant in occupants) if (occupant.menu) [occupant.menu removeItem:occupant];

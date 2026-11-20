@@ -223,6 +223,9 @@ int main(int argc, char **argv) { @autoreleasepool {
     macros.macroDict=@{@"submenu":@[Macro(@"Freed",@"F"),Macro(@"Blocked",@"K"),Macro(@"Root",@"-+ShiftKey"),Macro(@"Duplicate",@"F")]};
     [coordinator refreshMenuAndMacros];
     REQUIRE(macroMenu.numberOfItems==6);
+    // Each macro item is named after the place of its macro in the file, as shortcutEntries counts it.
+    for (NSUInteger index=0; index<4; index++)
+        REQUIRE([macroMenu.itemArray[index+2].identifier isEqual:TSMacroItemIdentifier([NSIndexPath indexPathWithIndex:index])]);
     REQUIRE([find.keyEquivalent isEqual:@"k"] && store.unavailableCommands.count==0);
     REQUIRE([macroMenu.itemArray[2].keyEquivalent isEqual:@"f"]);
     REQUIRE(macroMenu.itemArray[3].keyEquivalent.length==0 && [macroMenu.itemArray[3].toolTip containsString:@"Find"]);

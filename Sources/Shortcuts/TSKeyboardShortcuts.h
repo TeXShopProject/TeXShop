@@ -74,6 +74,8 @@ static inline NSString *TSShortcutDisplayKey(NSString *key, NSEventModifierFlags
 - (NSArray<NSString *> *)macrosAffectedByRestoringAll;
 - (NSArray<NSDictionary<NSString *, id> *> *)conflictsForMacroShortcuts:(NSArray<NSDictionary<NSString *, id> *> *)candidates;
 + (TSShortcutBinding *)normalizedKey:(NSString *)key modifiers:(NSEventModifierFlags)flags;
+/// The identifier of the Macros menu item made for the macro at this place in the macro file.
+FOUNDATION_EXPORT NSString *TSMacroItemIdentifier(NSIndexPath *indexPath);
 /// A macro key as its file names it and, when known, as the keyboard layout shows it.
 + (NSArray<TSShortcutBinding *> *)bindingsForMacroKey:(NSString *)key modifiers:(NSEventModifierFlags)flags;
 + (NSArray<NSDictionary<NSString *, id> *> *)menuBindings:(NSMenu *)menu;

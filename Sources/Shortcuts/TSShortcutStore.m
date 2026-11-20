@@ -321,6 +321,10 @@ static NSArray<NSNumber *> *TSLayoutKeyVariants(void) {
 - (TSShortcutBinding *)givenBindingForMacroItem:(NSMenuItem *)item path:(nullable NSString *)path {
     TSShortcutBinding *shown = TSShownBinding(item);
     NSArray<TSShortcutMacro *> *macros = self.macroProvider ? self.macroProvider() : @[];
+    // The Macros menu names each item after the place of its macro in the macro file.
+    if (item.identifier.length)
+        for (TSShortcutMacro *macro in macros)
+            if (macro.key.length && [TSMacroItemIdentifier(macro.indexPath) isEqual:item.identifier]) return TSBinding(macro.key, macro.modifiers);
     NSMutableArray<TSShortcutMacro *> *placed = [NSMutableArray array];
     // The menu's own name for Macros can differ from the one macro paths start with.
     NSString *(^withinMacros)(NSString *) = ^NSString *(NSString *full) {

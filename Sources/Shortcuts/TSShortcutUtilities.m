@@ -135,6 +135,12 @@ NSArray<TSShortcutBinding *> *TSRestorationBindings(NSString *key, NSEventModifi
     return bindings.array;
 }
 NSString * const TSShortcutLearningIdentifier = @"TSShortcutLearning";
+NSString *TSMacroItemIdentifier(NSIndexPath *indexPath) {
+    NSMutableString *identifier = [NSMutableString stringWithString:@"TSMacro"];
+    for (NSUInteger position = 0; position < indexPath.length; position++)
+        [identifier appendFormat:@".%lu", (unsigned long)[indexPath indexAtPosition:position]];
+    return identifier;
+}
 void TSVisitMenu(NSMenu *menu, NSString *path, void (^visit)(NSMenuItem *, NSString *)) {
     for (NSMenuItem *item in menu.itemArray) {
         if ([item.identifier isEqual:TSShortcutLearningIdentifier]) continue;
