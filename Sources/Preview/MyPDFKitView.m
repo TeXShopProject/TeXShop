@@ -1411,6 +1411,8 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
 
         aPage = [[self document] pageAtIndex: 0];
         [self goToPage: aPage];
+        // The page may not change, so mark its entry in the new outline here.
+        [self showActivePartInOutline];
 
         return;
         
@@ -1758,6 +1760,10 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
         [[self window] enableFlushWindow];
     //[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:1]];
     [self display]; //this is needed outside disableFlushWindow when the user does not bring the window forward
+    // The outline may have been rebuilt while this part showed another page; when this part
+    // is in use, its entry is marked now that its page is back (#59).
+    if (self.myPDFWindow.activeView == self)
+        [self showActivePartInOutline];
 
 
 if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.windowIsSplit) && (self.PDFFlashFix))
@@ -1937,10 +1943,11 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     [totalPage setIntegerValue:totalPages];
     [stotalPage setIntegerValue:totalPages];
     [totalPage1 setIntegerValue:totalPages];
+    // The outline is read first, so that the entry for the page can be marked in it (#59).
+    [self setupOutline];
     PDFView *activePart = self.myPDFWindow.activeView ?: self;
     if ([activePart currentPage])
         [self makePageChanges: [document indexForPage: [activePart currentPage]]];
-    [self setupOutline];
 }
 
 - (void)adoptUnlockedDocument
@@ -2178,6 +2185,16 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
  */
     
     [self showPageInOutline: pageNumber];
+}
+
+// Marks the entry of the drawer's outline for the page of the part in use, for instance after
+// the outline was rebuilt without a change of page (#59).
+- (void)showActivePartInOutline
+{
+    PDFView *activePart = self.myPDFWindow.activeView ?: self;
+    PDFPage *page = [activePart currentPage];
+    if (page && [activePart document] == [self document])
+        [self showPageInOutline: [[self document] indexForPage: page]];
 }
 
 // Selects the entry of the drawer's outline for the page.

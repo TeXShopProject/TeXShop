@@ -52,12 +52,16 @@ MUTATIONS = {
     'placing-kept': ('window', '    [NSLayoutConstraint deactivateConstraints: placing];\n', ''),
     'no-page-count': ('view', '    [totalPage setIntegerValue:totalPages];\n', ''),
     'other-part-not-adopted': ('view', '            [part adoptUnlockedDocument];\n', '            ;\n'),
-    'no-outline': ('view', '    [self setupOutline];\n}', '}'),
+    'no-outline': ('view', '    [self setupOutline];\n    PDFView *activePart', '    PDFView *activePart'),
     'no-content-width': ('view', '    if (resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH)\n        [self fitContentWidth];\n', ''),
     # A PDF shown again after the Preview was closed does not tell the part it was unlocked.
     'closed-no-delegate': ('early', '        [[self document] setDelegate: (id<PDFDocumentDelegate>)self];\n', ''),
     # A PDF shown again after the Preview was closed keeps the drawer's outline of the old PDF (#59).
     'closed-no-outline': ('early', '        [self setupOutline];\n', ''),
+    # The page is marked before the outline of the unlocked PDF is read (#59).
+    'outline-after-page': ('view',
+                           '    [self setupOutline];\n    PDFView *activePart = self.myPDFWindow.activeView ?: self;\n    if ([activePart currentPage])\n        [self makePageChanges: [document indexForPage: [activePart currentPage]]];\n',
+                           '    PDFView *activePart = self.myPDFWindow.activeView ?: self;\n    if ([activePart currentPage])\n        [self makePageChanges: [document indexForPage: [activePart currentPage]]];\n    [self setupOutline];\n'),
     'other-document': ('view', '    if (document != [self document])\n        return;\n', ''),
 }
 parser = argparse.ArgumentParser(description=__doc__)
@@ -148,7 +152,7 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 @property BOOL oldUsed, doScroll; @property NSRect oldVisibleRect; @property NSInteger oldIndex;
 @property (weak) TestHost *myDocument;
 @property (weak) TSPreviewWindow *myPDFWindow;
-@property NSInteger contentWidthFits, outlineSetups, shownPageIndex;
+@property NSInteger contentWidthFits, outlineSetups, shownPageIndex, outlineSetupsAtPageChange;
 - (void)moveSplitToCorrectSpot:(NSInteger)index;
 - (void)saveLocation;
 - (void)restoreLocation;
@@ -204,12 +208,13 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 - (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:(NSRect *)f { return nil; }
 - (void)attachPinnedLinkPreview:(TSLinkPreviewView *)p windowFrame:(NSRect)f {}
 - (void)setupOutline { self.outlineSetups++; }
+- (void)showActivePartInOutline {}
 - (void)setup { self.setupRuns++; }
 - (void)reShowEarlyWithDocument:(PDFDocument *)pdfDoc {
     PDFDocument *oldDoc; PDFPage *aPage;
 EARLYBRANCH
 }
-- (void)makePageChanges:(NSInteger)pageNumber { self.shownPageIndex = pageNumber; }
+- (void)makePageChanges:(NSInteger)pageNumber { self.shownPageIndex = pageNumber; self.outlineSetupsAtPageChange = self.outlineSetups; }
 - (NSInteger)shownTotalPages { return totalPages; }
 - (void)connectPageCountFields { totalPage = [NSTextField new]; stotalPage = [NSTextField new]; totalPage1 = [NSTextField new];
     currentPage0 = [NSTextField new]; scurrentPage = [NSTextField new]; currentPage1 = [NSTextField new];
@@ -337,6 +342,8 @@ static void checkUnlocked(Preview p, NSString *when, NSArray<MyPDFKitView *> *pa
         check(field.integerValue == count, [NSString stringWithFormat:@"%@: the toolbar shows the page count (%ld, not %ld)", when, (long)count, (long)field.integerValue]);
     check(p.first.outlineSetups == 1, [when stringByAppendingString:@": the outline is set up once"]);
     check(p.first.shownPageIndex == 0, [when stringByAppendingString:@": the page number shows the first page"]);
+    // The page is marked in the outline read from the unlocked PDF, not in the outline before it (#59).
+    check(p.first.outlineSetupsAtPageChange == 1, [when stringByAppendingString:@": the outline is read before the page is marked in it"]);
     check(p.host.layoutControlUpdates == 1, [when stringByAppendingString:@": the layout controls follow the PDF's own settings"]);
     for (MyPDFKitView *part in parts) {
         check(part.shownTotalPages == count, [when stringByAppendingString:@": each part counts the pages"]);
