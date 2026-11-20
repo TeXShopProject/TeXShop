@@ -57,6 +57,7 @@ static NSInteger screenUpdates=0;
 @interface TestWindow:WindowOrdering
 @property (weak) id delegate;
 @property BOOL noPdfFile,previewClosed,windowIsSplit,willClose;
+@property (weak) PDFView *activeView;
 @property (weak) TestDocument *myDocument;
 @end
 @interface TestDocument:NSObject
@@ -107,6 +108,7 @@ WINDOW_METHODS
 -(void)setupPageStyle;
 -(void)setupMagnificationStyle;
 -(void)setupOutline;
+-(void)showActivePartInOutline;
 -(void)initializeDisplay;
 -(void)cleanupMarquee:(BOOL)b;
 -(NSImage*)screenCacheImageForView:(NSView*)v;
@@ -128,6 +130,8 @@ WINDOW_METHODS
 -(void)fitContentWidth{}
 -(void)measureContentLater{}
 -(void)setupOutline{}
+// The drawer has its own test, run-preview-reopen-outline.py.
+-(void)showActivePartInOutline{}
 
 -(void)cleanupMarquee:(BOOL)b{}
 -(NSImage*)screenCacheImageForView:(NSView*)v{
