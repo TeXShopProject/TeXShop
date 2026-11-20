@@ -3925,7 +3925,7 @@ TeXShop configures the way documents are displayed using two items, called ``Dis
 
 After such a document is opened, these settings can be changed for any particular Preview window using items in the Preview menu. These choices are temporary while the document is being used, but revert back to the default choices for new documents.
 
-When the Preview window is not split, the menu items ``Display Format'' and ``Magnification'' affect both views simultaneously. So if you change the magnification of the current view, and later split the window, both views will use the new magnification level. If you switch to ``Double Page'' mode in the current view and later split the window, both views will be in Double Page mode.
+When the Preview window is not split, the menu items ``Display Format'' and ``Magnification'' affect the view shown. So if you change the magnification of the current view, and later split the window, both views will use the new magnification level. If you switch to ``Double Page'' mode in the current view and later split the window, both views will be in Double Page mode. The other view of ``Switch Views'' in a window that is not split keeps its own display format and magnification (see \cref{Switch_Views_Unsplit_Section}).
 
 When the Preview window is split so both views are shown simultaneously, ``Display Format'' and ``Magnification'' changes made to the top view affect the entire document as above. Thus if the window is later unsplit, the changes will hold in the entire document.
 
@@ -4007,6 +4007,7 @@ Another tool to handle related sections is splitting the Preview window, as disc
 
 
 \section{Switch Views}
+\label{Switch_Views_Unsplit_Section}
 
 The ``Switch Views'' menu item used when Preview windows are not split provides yet another way to handle related sections of a document, although it only navigates between two views. We already discussed this menu item for split Preview windows. But the use case when windows are not split may prove to be  more  important than the original reason for introducing the command. Suppose you want to work on two related portions of a document. In TeXShop's Preview Window, do not split the view. Instead, just scroll to one of the two interesting portions of your document. Then select the menu item ``Switch Views'' or type its keyboard shortcut Option-2, and scroll to a second related section of the document. You can now switch between these two portions using ``Switch Views'' or Option-2. 
 
@@ -4017,6 +4018,10 @@ Although ``Switch Views'' does not work in the Source window, you can easily edi
 When this command was  introduced in TeXShop 5.23, it had a  ``creep problem''. The two views would creep up gradually when switched. This problem has been  fixed in TeXShop 5.25.
 
 The two views are not fixed; they can be scrolled if desired. So while one view is visible, we can scroll down to a new position. Then Option-2 will produce the second view. If we use Option-2 again, we'll go back to the newly scrolled position.
+
+Each view is independent of the other, as suggested by Uwe Schmock. Besides its place, each view keeps its own display format, magnification, selection and pinned link popup (see \cref{Modifying_Popup_Windows_Section}). So one view can show a whole page with Fit to Window while the other shows a detail at a high magnification, and a popup pinned in one view comes back at the same place in the window when you switch back to that view. When you first choose ``Switch Views'', the second view starts as a copy of the first one, except that a pinned popup stays with the first view. After typesetting, each view keeps its place, display format and magnification, but, as with the view shown, its selection and pinned popup are gone.
+
+Splitting and unsplitting the window leave the other view as it is: after the window is unsplit, Option-2 again shows the other view.
 
 \newpage
 \section{Independence from Split Window}
@@ -4140,7 +4145,7 @@ I always add at least the Table of Contents -- see this manual's drawer -- for e
 \item
 Recall from \cref{Independence_Split_Window_Section} that the Preview window has three separate views, including two full views.
 Hence you can scroll to a figure in the Preview window, select ``Switch Views'' from the Window menu, and scroll to the beginning of your presentation.
-When the time arrives to show the figure, you press the keyboard equivalent Option-2 and the figure magically appears (under the assumption that you didn't change ``Display Format'' or ``Magnification'' in between).
+When the time arrives to show the figure, you press the keyboard equivalent Option-2 and the figure magically appears, with the display format and magnification you chose for it, and with a link popup you pinned there.
 You don't have to stop sharing and start sharing again!
 \item
 By default, I use the mouse pointer for the Preview window.
