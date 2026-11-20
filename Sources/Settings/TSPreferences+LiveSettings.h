@@ -10,6 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)applyEffectsForPreferenceKeys:(NSSet<NSString *> *)changed;
 - (void)setAllThemeEditingEnabled:(BOOL)enabled;
 - (void)showPreferenceError:(NSString *)message;
+- (void)showPreferenceNotice:(NSString *)message;
 @property (copy, nullable) NSDictionary<NSString *, id> *lastSavedEditingColors;
 // The theme whose colors the wells show, chosen in the theme list.
 @property (copy, nullable) NSString *editingThemeTitle;

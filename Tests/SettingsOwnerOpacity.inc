@@ -202,12 +202,31 @@ static void CheckThemeActionButtons(TSPreferences *owner,TSSettingsWindowControl
         Check([[TSIsolatedAppKitDefaults objectForKey:DefaultLiteThemeKey] isEqual:@"LiteTheme"] && [liteMenu.titleOfSelectedItem isEqual:@"LiteTheme"],@"Reopened Settings gives a deleted Light Mode theme's place to LiteTheme");
         Check(owner.editingThemeTitle!=nil && [[store titles] containsObject:owner.editingThemeTitle] && list.tableView.selectedRow==(NSInteger)[list.titles indexOfObject:owner.editingThemeTitle] && [owner valueForKey:@"EditingColors"]!=nil,[NSString stringWithFormat:@"Reopened Settings edits a theme that is there: %@",owner.editingThemeTitle]);
         [owner themeListDidChooseTitle:@"LiteTheme"];[list reload];
-        // A theme replaced by other settings, or broken, before it is chosen is not edited: another theme is.
-        for(NSData *bad in @[[NSPropertyListSerialization dataWithPropertyList:@{@"WindowFrame":@[@0,@0,@800,@600],@"ShowRuler":@YES} format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL],[@"<?xml version=\"1.0\"?><plist><dict><key>EditorText" dataUsingEncoding:NSUTF8StringEncoding]]){
-            NSString *badPath=[ColorPath stringByAppendingPathComponent:@"Replaced.plist"];[bad writeToFile:badPath atomically:YES];[list reload];
-            [owner themeListDidChooseTitle:@"Replaced"];
-            Check(owner.editingThemeTitle!=nil && ![owner.editingThemeTitle isEqual:@"Replaced"] && [owner valueForKey:@"EditingColors"]!=nil && [[NSData dataWithContentsOfFile:badPath] isEqual:bad],[NSString stringWithFormat:@"A theme that cannot be read as one is not edited: %@",owner.editingThemeTitle]);
-            [NSFileManager.defaultManager removeItemAtPath:badPath error:NULL];
+        // A theme replaced by other settings (also with arrays that are not colors), or broken, before it is chosen is
+        // not edited: another theme is, and the list says so in an alert that is caught here before it is shown.
+        {
+            __block NSMutableArray<NSString *> *notices=[NSMutableArray array];
+            Method sheet=class_getInstanceMethod(NSAlert.class,@selector(beginSheetModalForWindow:completionHandler:));
+            IMP shown=method_setImplementation(sheet,imp_implementationWithBlock(^(NSAlert *alert,NSWindow *window,id handler){[notices addObject:[NSString stringWithFormat:@"%@|%@",alert.messageText,alert.informativeText]];}));
+            NSArray *bads=@[[NSPropertyListSerialization dataWithPropertyList:@{@"WindowFrame":@[@0,@0,@800,@600],@"ShowRuler":@YES} format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL],
+                            [NSPropertyListSerialization dataWithPropertyList:@{@"EditorText":@[@"red",@"green"],@"ShowRuler":@YES} format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL],
+                            [NSPropertyListSerialization dataWithPropertyList:@{@"EditorText":@[@0.5,@0.5]} format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL],
+                            [@"<?xml version=\"1.0\"?><plist><dict><key>EditorText" dataUsingEncoding:NSUTF8StringEncoding]];
+            NSString *expected=[NSString stringWithFormat:@"%@|",[NSString stringWithFormat:tr(@"theme.list.notTheme"),@"Replaced"]];
+            for(NSData *bad in bads){
+                NSString *badPath=[ColorPath stringByAppendingPathComponent:@"Replaced.plist"];[bad writeToFile:badPath atomically:YES];[list reload];
+                NSUInteger before=notices.count;
+                [owner themeListDidChooseTitle:@"Replaced"];
+                Check(owner.editingThemeTitle!=nil && ![owner.editingThemeTitle isEqual:@"Replaced"] && [owner valueForKey:@"EditingColors"]!=nil && [[NSData dataWithContentsOfFile:badPath] isEqual:bad],[NSString stringWithFormat:@"A theme that cannot be read as one is not edited: %@",owner.editingThemeTitle]);
+                Check(notices.count==before+1 && [notices.lastObject isEqual:expected],[NSString stringWithFormat:@"The list says the theme cannot be read, not that something could not be saved: %@",notices.lastObject]);
+                [NSFileManager.defaultManager removeItemAtPath:badPath error:NULL];
+            }
+            method_setImplementation(sheet,shown);
+            Check(shell.window.attachedSheet==nil,@"No sheet is attached to the Settings window");
+            for(NSWindow *window in NSApp.windows)Check(!window.visible,[NSString stringWithFormat:@"No window is shown: %@",window]);
+            // Colors TeXShop can use: red, green and blue numbers, with or without alpha.
+            BOOL (^accepts)(NSDictionary *)=[owner themeStore].acceptsColors;
+            Check(accepts(@{@"EditorText":@[@0,@0,@0]}) && accepts(@{@"EditorText":@[@0,@0,@0,@1],@"ShowRuler":@YES}) && accepts(@{}) && accepts(@{@"Title":@"Old"}) && !accepts(@{@"EditorText":@[@0.5,@0.5]}) && !accepts(@{@"EditorText":@[@"red",@"green",@"blue"]}),@"A theme has at least one color TeXShop can use, or nothing but its title");
         }
         [owner themeListDidChooseTitle:@"LiteTheme"];[list reload];
         // The picture of the manual (TS_SETTINGS_MANUAL_SHOT, English): the themes that come with TeXShop, LiteTheme being

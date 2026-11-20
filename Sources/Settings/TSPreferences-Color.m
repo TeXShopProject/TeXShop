@@ -1007,8 +1007,9 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
 - (TSThemeFileStore *)themeStore
 {
     TSThemeFileStore *store = [[TSThemeFileStore alloc] initWithDirectory:[NSURL fileURLWithPath:[ColorPath stringByExpandingTildeInPath] isDirectory:YES]];
-    // A file of other settings put in a theme's place is not a theme: it has entries, but none of TeXShop's colors.
-    // A theme with some of the colors, or only a title, is one.
+    // A file of other settings put in a theme's place is not a theme: it has entries, but none of TeXShop's colors
+    // that TeXShop can use (red, green and blue numbers, as TSColorSupport reads them). A theme with some usable
+    // colors, or only a title, is one.
     NSString *lite = TSLibraryBundledPath(@"Themes/LiteTheme.plist") ?: [store.directory URLByAppendingPathComponent:@"LiteTheme.plist"].path;
     NSDictionary *reference = lite != nil ? [NSDictionary dictionaryWithContentsOfFile:(NSString *_Nonnull)lite] : nil;
     store.acceptsColors = ^BOOL(NSDictionary<NSString *, id> *colors) {
@@ -1016,7 +1017,9 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
         for (NSString *key in colors) {
             if ([key isEqual:@"Title"]) continue;
             entries = YES;
-            if ([colors[key] isKindOfClass:NSArray.class] && (reference == nil || [reference[key] isKindOfClass:NSArray.class])) return YES;
+            NSArray *value = [colors[key] isKindOfClass:NSArray.class] ? colors[key] : nil;
+            BOOL usable = value.count >= 3 && [value[0] isKindOfClass:NSNumber.class] && [value[1] isKindOfClass:NSNumber.class] && [value[2] isKindOfClass:NSNumber.class];
+            if (usable && (reference == nil || [reference[key] isKindOfClass:NSArray.class])) return YES;
         }
         return !entries;
     };
@@ -1069,7 +1072,7 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
     if (inUse) [self applyEffectsForPreferenceKeys:[NSSet setWithArray:@[DefaultLiteThemeKey, DefaultDarkThemeKey]]];
 }
 
-- (void)themeListShowError:(NSString *)message { [self showPreferenceError:message]; }
+- (void)themeListShowError:(NSString *)message { [self showPreferenceNotice:message]; }
 
 // A file imported as a theme has the form TeXShop repairs themes to (TSLibraryThemeCheck) and at least one of the
 // colors of TeXShop's themes: a property list of other settings is not a theme.
