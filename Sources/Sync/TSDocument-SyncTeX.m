@@ -261,6 +261,10 @@ static const char *TSSyncTeXInputNameForSource(synctex_scanner_p scanner,
        
         
         
+        // A page without SyncTeX records (an included PDF or image, a blank page, a stale .synctex) finds no source,
+        // and a recorded name that is not UTF-8 cannot be used.
+        if (! gotSomething || foundFileName == nil)
+            return NO;
         if ([foundFileName isAbsolutePath])
 			newFile = [foundFileName stringByStandardizingPath];
 		else

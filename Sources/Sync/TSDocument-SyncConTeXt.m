@@ -30,6 +30,54 @@
 
 
 
+// A file name as Lua's %q writes it, back to the name: \" \\ and \<newline> stand for the character after the
+// backslash, \r for a carriage return, and \ followed by up to three digits for that byte. Nil for anything else.
+static NSString *TSLuaUnquoted(NSString *quoted)
+{
+    NSData *bytes = [quoted dataUsingEncoding:NSUTF8StringEncoding];
+    const unsigned char *in = bytes.bytes;
+    NSUInteger length = bytes.length, i = 0;
+    NSMutableData *name = [NSMutableData dataWithCapacity:length];
+    while (i < length) {
+        unsigned char c = in[i++];
+        if (c != '\\') { [name appendBytes:&c length:1]; continue; }
+        if (i >= length) return nil;
+        c = in[i++];
+        if (c >= '0' && c <= '9') {
+            NSUInteger value = c - '0';
+            for (int digits = 1; digits < 3 && i < length && in[i] >= '0' && in[i] <= '9'; digits++)
+                value = value * 10 + (in[i++] - '0');
+            if (value > 255) return nil;
+            c = (unsigned char)value;
+        } else if (c == 'r') {
+            c = '\r';
+        } else if (c == 'n') {
+            c = '\n';
+        } else if (c != '"' && c != '\\' && c != '\n') {
+            return nil;
+        }
+        [name appendBytes:&c length:1];
+    }
+    NSString *result = [[NSString alloc] initWithData:name encoding:NSUTF8StringEncoding];
+    return result.length ? result : nil;
+}
+
+// The place in mtxrun's answer to a backward sync (mtx-synctex --report --console prints %q %i %i): a line that is
+// only the quoted file name, a line number above 0 and the tolerance. The answer is read as a whole, not line by
+// line: a name may hold a line break (Lua writes it as \ and the break) or a line separator.
+static BOOL TSContextSyncPlace(NSString *output, NSString **fileName, NSInteger *line)
+{
+    NSRegularExpression *place = [NSRegularExpression regularExpressionWithPattern:@"(?:^|\\n)[ \\t]*\"((?:[^\"\\\\\\r\\n]|\\\\[\\s\\S])+)\"[ \\t]+([1-9][0-9]{0,8})(?:[ \\t]+-?[0-9]+)?[ \\t]*(?=\\r?\\n|$)" options:0 error:NULL];
+    for (NSTextCheckingResult *match in [place matchesInString:output options:0 range:NSMakeRange(0, output.length)]) {
+        NSString *name = TSLuaUnquoted([output substringWithRange:[match rangeAtIndex:1]]);
+        if (name == nil) continue;
+        *fileName = name;
+        *line = [[output substringWithRange:[match rangeAtIndex:2]] integerValue];
+        return YES;
+    }
+    return NO;
+}
+
 @implementation TSDocument (SyncConTeXt)
 
 
@@ -189,13 +237,10 @@
     
 //    foundFileName = @"\"this is wonderful\" 54";
     
-    if ([outputString length] < 4)
+    // Only a line "file" line tolerance with a line number above 0 is a place to go to; anything else (mtxrun
+    // missing, an error message that quotes a file, no match) gives nothing.
+    if (! TSContextSyncPlace(outputString, &foundFileName, &theLine))
         return NO;
-    NSCharacterSet *mySet = [NSCharacterSet characterSetWithCharactersInString:@"\""];
-    NSArray<NSString *> *myArray = [outputString componentsSeparatedByCharactersInSet: mySet];
-    
-    foundFileName = myArray[1];
-     theLine = [myArray[2] integerValue];
     
     
     
@@ -259,13 +304,10 @@
     
 //    foundFileName = @"\"this is wonderful\" 54";
     
-    if ([outputString length] < 4)
+    // Only a line "file" line tolerance with a line number above 0 is a place to go to; anything else (mtxrun
+    // missing, an error message that quotes a file, no match) gives nothing.
+    if (! TSContextSyncPlace(outputString, &foundFileName, &theLine))
         return NO;
-    NSCharacterSet *mySet = [NSCharacterSet characterSetWithCharactersInString:@"\""];
-    NSArray<NSString *> *myArray = [outputString componentsSeparatedByCharactersInSet: mySet];
-    
-    foundFileName = myArray[1];
-     theLine = [myArray[2] integerValue];
     
     
     

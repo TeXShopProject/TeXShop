@@ -130,6 +130,7 @@ marker_keys = '\n'.join(f'NSString *{k} = {keys[k]};' for k in [
 
 program = r'''
 #import <Cocoa/Cocoa.h>
+#import "TSFontSupport.h"
 #import "TSSyntaxTeXScanner.h"
 #import "TSSyntaxHighlighter.h"
 #import <objc/runtime.h>

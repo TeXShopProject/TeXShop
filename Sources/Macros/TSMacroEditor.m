@@ -23,6 +23,7 @@
  */
 
 #import "TSMacroSelection.h"
+#import "TSFontSupport.h"
 #import "TSMacroEditor.h"
 
 #import "TSMacroOutlineController.h"
@@ -173,13 +174,9 @@ static TSFilterMode savedFilter = kNoFilterMode;
 {
     NSFont *font = nil;
     if ([SUD boolForKey:SameFontForMacroKey])
-        font = [NSFont fontWithName:[SUD stringForKey:ConsoleFontNameKey] size:[SUD floatForKey:ConsoleFontSizeKey]];
-    else {
-        id data = [SUD objectForKey:DocumentFontKey];
-        if ([data isKindOfClass:NSData.class]) {
-            @try { font = [NSUnarchiver unarchiveObjectWithData:data]; } @catch (NSException *exception) { font = nil; }
-        }
-    }
+        font = TSConsoleFontFromDefaults(SUD, ConsoleFontNameKey, ConsoleFontSizeKey);
+    else
+        font = TSArchivedFont([SUD objectForKey:DocumentFontKey]);
     return [font isKindOfClass:NSFont.class] ? font : [NSFont userFontOfSize:12.0];
 }
 - (void)applyContentAppearance:(NSNotification *)notification
@@ -1638,8 +1635,9 @@ static NSAlert *TSShortcutConflictsAlert(NSString *details)
         [NSException raise:@"Macro write failed" format:@"%@", pathStr];
 
 	NS_HANDLER
-		NSRunAlertPanel(@"Error", [NSString stringWithFormat:
-			@"failed to save macros to %@\n%@", filePath, error], nil, nil, nil);
+		// The path is shown as text, never read as a format.
+		NSRunAlertPanel(@"Error", @"%@", nil, nil, nil, [NSString stringWithFormat:
+			@"failed to save macros to %@\n%@", filePath, error]);
     return NO;
 	NS_ENDHANDLER
     return YES;

@@ -200,6 +200,10 @@
 
 	if (!caseSensitive)
 		mask |= NSCaseInsensitiveSearch;
+	// A script may give an offset past the end, and a search needs a string.
+	if (text == nil || myText == nil)
+		return [NSNumber numberWithUnsignedInteger:0];
+	startFrom = MIN(startFrom, [myText length]);
 
 	if (directionUp) {
 		mask |= NSBackwardsSearch;

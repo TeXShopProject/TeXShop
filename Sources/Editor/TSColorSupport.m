@@ -302,6 +302,9 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
     
     NSString *lite = [SUD stringForKey: DefaultLiteThemeKey];
     NSString *dark = [SUD stringForKey: DefaultDarkThemeKey];
+    // A setting that is not text (written by hand) chooses TeXShop's own themes.
+    if (lite.length == 0) lite = @"LiteTheme";
+    if (dark.length == 0) dark = @"DarkTheme";
     
     NSString *newColorPath = [ColorPath stringByExpandingTildeInPath];
     NSString* liteThemePath = [[[newColorPath stringByAppendingString:@"/"] stringByAppendingString: lite] stringByAppendingString: @".plist"];

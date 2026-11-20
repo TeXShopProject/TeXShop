@@ -56,7 +56,8 @@
     for (NSInteger index = 0; index < 5; index++) {
         NSString *label = [self text:titles[index]];
         NSString *tip = [NSString stringWithFormat:@"%@ — %@", label, [self text:details[index]]];
-        NSImage *artwork=[TSDockIconImage(self.bundle,TSDockIconNames()[index]) copy];artwork.size=NSMakeSize(52,52);
+        // A picture that cannot be read (a damaged copy of TeXShop) leaves an empty button, not a Settings that cannot open.
+        NSImage *artwork=[TSDockIconImage(self.bundle,TSDockIconNames()[index]) copy]?:[[NSImage alloc]initWithSize:NSMakeSize(52,52)];artwork.size=NSMakeSize(52,52);
         NSButton *button=[NSButton buttonWithImage:artwork target:self action:@selector(chooseIcon:)];
         button.tag=index;button.bordered=NO;button.imageScaling=NSImageScaleNone;
         button.accessibilityLabel=label;button.accessibilityRole=NSAccessibilityRadioButtonRole;button.toolTip=tip;
