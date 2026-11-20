@@ -141,8 +141,10 @@ static void CaptureSheet(id self, SEL cmd, NSWindow *window, void (^handler)(NSM
 @end
 @implementation TestShortcuts
 - (TSShortcutCommand *)selectedCommand { return self.selection; }
-- (void)confirmMacrosUsingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags completion:(void (^)(BOOL))completion {
-    if (![self.store macrosUsingKey:key modifiers:flags].count) { completion(YES); return; }
+- (void)confirmMacrosUsingBindings:(NSArray *)bindings completion:(void (^)(BOOL))completion {
+    NSUInteger macros = 0;
+    for (TSShortcutBinding *binding in bindings) macros += [self.store macrosUsingKey:binding.key modifiers:binding.modifiers].count;
+    if (!macros) { completion(YES); return; }
     self.confirmations++; completion(self.consent);
 }
 - (void)showError:(NSString *)error { self.error=error; }
@@ -176,9 +178,19 @@ static void CheckAssignmentOrder(void) {
         item.identifier=[@"TSShortcut." stringByAppendingString:key]; [menu addItem:item];
     }
     TSShortcutStore *store=[[TSShortcutStore alloc] initWithMenu:menu defaults:(id)[MemoryDefaults new]];
+    // Items that keep their keys are left alone: assigning a key again makes AppKit show the
+    // given key until it adapts the key to the keyboard layout once more.
     assignments=[NSMutableArray new]; [store applySavedOverrides];
-    REQUIRE(assignments.count==4 && ![assignments[0][1] length] && ![assignments[1][1] length]);
-    REQUIRE([assignments[2][1] length] && [assignments[3][1] length]); assignments=nil;
+    REQUIRE(assignments.count==0);
+    // Swapping two keys clears both before either is assigned.
+    NSMutableDictionary *overrides=[store valueForKey:@"overrides"];
+    overrides[@"TSShortcut.f"]=TSBinding(@"g",NSEventModifierFlagCommand); overrides[@"TSShortcut.g"]=TSBinding(@"f",NSEventModifierFlagCommand);
+    [store applySavedOverrides];
+    NSMutableArray *keys=[NSMutableArray new];
+    for(NSArray *assignment in assignments) if([assignment[1] length]) [keys addObject:assignment[1]];
+    REQUIRE(assignments.count>=4 && ![assignments[0][1] length] && ![assignments[1][1] length]);
+    REQUIRE([keys isEqualToArray:(@[@"g",@"f"])]); assignments=nil;
+    REQUIRE(store.unavailableCommands.count==0);
 }
 int main(int argc, char **argv) { @autoreleasepool {
     TSInstallAppKitIsolation(); [NSApplication sharedApplication]; [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
@@ -211,6 +223,9 @@ int main(int argc, char **argv) { @autoreleasepool {
     macros.macroDict=@{@"submenu":@[Macro(@"Freed",@"F"),Macro(@"Blocked",@"K"),Macro(@"Root",@"-+ShiftKey"),Macro(@"Duplicate",@"F")]};
     [coordinator refreshMenuAndMacros];
     REQUIRE(macroMenu.numberOfItems==6);
+    // Each macro item is named after the place of its macro in the file, as shortcutEntries counts it.
+    for (NSUInteger index=0; index<4; index++)
+        REQUIRE([macroMenu.itemArray[index+2].identifier isEqual:TSMacroItemIdentifier([NSIndexPath indexPathWithIndex:index])]);
     REQUIRE([find.keyEquivalent isEqual:@"k"] && store.unavailableCommands.count==0);
     REQUIRE([macroMenu.itemArray[2].keyEquivalent isEqual:@"f"]);
     REQUIRE(macroMenu.itemArray[3].keyEquivalent.length==0 && [macroMenu.itemArray[3].toolTip containsString:@"Find"]);

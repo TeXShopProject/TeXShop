@@ -243,24 +243,27 @@ static id sharedMacroMenuController = nil;
 // build menu from property list
 - (void)addItemsToMenu: (NSMenu *)menu fromArray: (NSArray *)array withKey: (BOOL)flag
 {
-    [self addItemsToMenu:menu fromArray:array withKey:flag path:NSLocalizedString(@"Macros", @"")];
+    [self addItemsToMenu:menu fromArray:array withKey:flag path:NSLocalizedString(@"Macros", @"") indexPath:[NSIndexPath indexPathWithIndexes:NULL length:0]];
 }
-- (void)addItemsToMenu:(NSMenu *)menu fromArray:(NSArray *)array withKey:(BOOL)flag path:(NSString *)path
+- (void)addItemsToMenu:(NSMenu *)menu fromArray:(NSArray *)array withKey:(BOOL)flag path:(NSString *)path indexPath:(NSIndexPath *)parent
 {
 	NSDictionary *dict;
 	NSEnumerator *enumerator = [array objectEnumerator];
 	id newItem;
 	NSMenu *submenu;
 	NSString *nameStr;
+	NSUInteger index = 0;
 	
 	while ((dict = (NSDictionary *)[enumerator nextObject])) {
+		// The place of the entry in the macro file, as shortcutEntries counts it.
+		NSIndexPath *place = [parent indexPathByAddingIndex:index++];
 		nameStr = [dict objectForKey: NAME_KEY];
 		NSString *itemPath = [path stringByAppendingFormat:@" › %@", nameStr];
 		NSArray *childlenArray = [dict objectForKey: SUBMENU_KEY];
 		if (childlenArray) {	// submenu item
 			newItem = [menu addItemWithTitle: nameStr action: nil keyEquivalent: @""];
 			submenu = [[NSMenu alloc] init];
-			[self addItemsToMenu:submenu fromArray:childlenArray withKey:flag path:itemPath];
+			[self addItemsToMenu:submenu fromArray:childlenArray withKey:flag path:itemPath indexPath:place];
 			[newItem setSubmenu: submenu];
 		} else if ([nameStr isEqualToString: SEPARATOR]) {	// separator item
 			[menu addItem: [NSMenuItem separatorItem]];
@@ -268,20 +271,25 @@ static id sharedMacroMenuController = nil;
 			newItem = [menu addItemWithTitle: nameStr action: @selector(doMacro:) keyEquivalent: @""];
 			[newItem setTarget: self];
 			[newItem setRepresentedObject: [dict objectForKey: CONTENT_KEY]];
+			// Settings › Keyboard tells macros with the same name or key apart by their place.
+			[newItem setIdentifier: TSMacroItemIdentifier(place)];
 			if (flag) {
 				NSString *keyEquiv = (NSString *)[dict objectForKey: KEYEQUIV_KEY];
 				NSUInteger modifier = getKeyModifierMaskFromString(keyEquiv);
 				keyEquiv = getKeyEquivalentFromString(keyEquiv);
-				NSDictionary *binding = [TSShortcutStore normalizedKey:keyEquiv modifiers:modifier];
+				// The key as the file names it and as the keyboard layout shows it.
+				NSArray *bindings = [TSShortcutStore bindingsForMacroKey:keyEquiv modifiers:modifier];
                 if (keyEquiv.length && ![TSShortcutStore isAllowedKey:keyEquiv modifiers:modifier]) {
                     [newItem setToolTip:[TSShortcutStore reasonForMacroConflict:@{@"refused":@YES}]];
                 } else if (keyEquiv.length && [self isAlreadyDefined:keyEquiv modifier:modifier]) {
-                    NSDictionary *owner = self.keyOwners[binding];
+                    NSDictionary *owner = nil;
+                    for (NSDictionary *binding in bindings) if (!owner) owner = self.keyOwners[binding];
                     if (owner) [newItem setToolTip:[TSShortcutStore reasonForMacroConflict:@{@"other":owner}]];
                 } else if (keyEquiv.length) {
 					[newItem setKeyEquivalentModifierMask: modifier];
 					[newItem setKeyEquivalent: keyEquiv];
-                    self.keyOwners[binding] = @{@"path":itemPath, @"key":keyEquiv, @"modifiers":@(modifier), @"macro":@YES};
+                    for (NSDictionary *binding in bindings)
+                        self.keyOwners[binding] = @{@"path":itemPath, @"key":keyEquiv, @"modifiers":@(modifier), @"macro":@YES};
 				}
 			}
 		}
@@ -549,9 +557,9 @@ static id sharedMacroMenuController = nil;
 }
 - (BOOL)isAlreadyDefined:(NSString *)keyEquiv modifier:(NSUInteger)modifier
 {
-    NSDictionary *binding = [TSShortcutStore normalizedKey:keyEquiv modifiers:modifier];
-    if ([self.keyEquivalents containsObject:binding]) return YES;
-    if ([binding[@"key"] length]) [self.keyEquivalents addObject:binding];
+    NSArray *bindings = [TSShortcutStore bindingsForMacroKey:keyEquiv modifiers:modifier];
+    for (NSDictionary *binding in bindings) if ([self.keyEquivalents containsObject:binding]) return YES;
+    for (NSDictionary *binding in bindings) if ([binding[@"key"] length]) [self.keyEquivalents addObject:binding];
     return NO;
 }
 

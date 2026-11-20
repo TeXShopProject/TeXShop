@@ -21,7 +21,7 @@
 @implementation RestorationUI
 - (TSShortcutCommand *)selectedCommand { return self.selection; }
 - (void)showError:(NSString *)error { self.error=error; }
-- (void)confirmMacrosUsingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags completion:(void (^)(BOOL))completion { self.confirmations++; completion(YES); }
+- (void)confirmMacrosUsingBindings:(NSArray *)bindings completion:(void (^)(BOOL))completion { self.confirmations++; completion(YES); }
 - (void)refreshMenuAndMacros { [self.store refreshMenu]; }
 @end
 static TSShortcutCommand *Find(TSShortcutStore *store, NSString *ident) {

@@ -39,8 +39,16 @@
 - (instancetype)initWithItem:(NSMenuItem *)item identifier:(NSString *)identifier path:(NSString *)path {
     self=[super init];if(!self)return nil;
     _item=item;_commandID=[identifier copy];_path=[path copy];
-    _defaultKey=[item.keyEquivalent copy];_defaultModifiers=item.keyEquivalentModifierMask;
+    // The default is the key the item was given, which AppKit adapts to each keyboard layout.
+    // The key AppKit shows on this layout is read first: reading the given key makes AppKit
+    // work the shown key out again.
     _defaultLocalization=item.allowsAutomaticKeyEquivalentLocalization;
+    TSShortcutBinding *shown = TSShownBinding(item);
+    item.allowsAutomaticKeyEquivalentLocalization = NO;
+    _defaultKey=[item.keyEquivalent copy];_defaultModifiers=item.keyEquivalentModifierMask;
+    item.allowsAutomaticKeyEquivalentLocalization = _defaultLocalization;
+    _shownDefaults = [NSMutableDictionary dictionary];
+    if (_defaultLocalization && shown.key.length) _shownDefaults[TSKeyboardLayoutID()] = shown;
     return self;
 }
 @end
