@@ -2188,13 +2188,26 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 }
 
 // Marks the entry of the drawer's outline for the page of the part in use, for instance after
-// the outline was rebuilt without a change of page (#59).
+// the outline was rebuilt without a change of page (#59). The outline stays where it was
+// scrolled to, as it does after typesetting.
 - (void)showActivePartInOutline
 {
     PDFView *activePart = self.myPDFWindow.activeView ?: self;
     PDFPage *page = [activePart currentPage];
-    if (page && [activePart document] == [self document])
-        [self showPageInOutline: [[self document] indexForPage: page]];
+    if (!page || [activePart document] != [self document])
+        return;
+    MyPDFKitView *firstView = (MyPDFKitView *)self.myPDFWindow.myPDFKitView;
+    NSOutlineView *outlineView = _outlineView;
+    if (outlineView == nil && [firstView isKindOfClass: [MyPDFKitView class]])
+        outlineView = firstView->_outlineView;
+    NSScrollView *scrollView = [outlineView enclosingScrollView];
+    NSPoint origin = [[scrollView contentView] bounds].origin;
+    [self showPageInOutline: [[self document] indexForPage: page]];
+    if (scrollView && !NSEqualPoints([[scrollView contentView] bounds].origin, origin))
+    {
+        [[scrollView contentView] scrollToPoint: origin];
+        [scrollView reflectScrolledClipView: [scrollView contentView]];
+    }
 }
 
 // Selects the entry of the drawer's outline for the page.

@@ -10,8 +10,10 @@ unchanged in a PDFView subclass with a real NSOutlineView, without launching TeX
 read from PDF data, as after a typeset run. The entry for the page shown is marked in the new outline, also when the
 page does not change, and, in a split Preview, when the second part is in use and gets its page back afterwards;
 a cover page before the first entry gets no mark.
+The outline stays where it was scrolled to, also when the entry marked is out of sight.
 --mutation no-outline drops the new outline setup from the branch, no-mark the marking at its end, no-second-mark
-the marking after the second part got its page back. The harness must then fail.
+the marking after the second part got its page back, mark-scrolls the return to the scroll position. The harness
+must then fail.
 """
 import argparse
 import os
@@ -22,7 +24,7 @@ from production_fragments import closing_brace, method, verify_embedded
 from source_tree import include_args, source_file
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['no-outline', 'no-mark', 'no-second-mark'])
+parser.add_argument('--mutation', choices=['no-outline', 'no-mark', 'no-second-mark', 'mark-scrolls'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
@@ -35,6 +37,11 @@ signatures = ['- (void) setupOutline',
               '- (BOOL) outlineView: (NSOutlineView *) outlineView isItemExpandable:',
               '- (id) outlineView: (NSOutlineView *) outlineView objectValueForTableColumn:']
 fragments = [('complete method: ' + s, source, method(source, s)) for s in signatures]
+if args.mutation == 'mark-scrolls':
+    old = '    if (scrollView && !NSEqualPoints([[scrollView contentView] bounds].origin, origin))\n'
+    text = fragments[1][2]
+    assert text.count(old) == 1
+    fragments[1] = (fragments[1][0], source, text.replace(old, '    if (NO)\n'))
 # reShowWithDocument: shows a new PDF this way after the Preview was closed, or when there was no PDF.
 early_start = source.index('    if (self.myPDFWindow.noPdfFile  || self.myPDFWindow.previewClosed)\n')
 early = source[early_start:closing_brace(source, source.index('{', early_start))]
@@ -186,8 +193,14 @@ static void run(NSString *state, NSString *parts, BOOL cover) {
     o.outlineTableColumn = column;
     o.dataSource = v; o.target = v; o.action = @selector(takeDestinationFromOutline:);
     v->_outlineView = o;
+    // The drawer shows about two entries at a time.
+    NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, 200, 40)];
+    scroll.documentView = o;
+    NSClipView *clip = scroll.contentView;
+    NSString *expected = [parts hasSuffix:@"second in use"] ? @"Chapter 5" : (cover ? @"none" : @"Chapter 1");
 
     PDFDocument *first = [[PDFDocument alloc] initWithData:data];
+    NSPoint scrolled = NSZeroPoint;
     if ([state isEqual:@"closed"]) {
         v.document = first;
         second.document = first;
@@ -195,6 +208,12 @@ static void run(NSString *state, NSString *parts, BOOL cover) {
         click(v, @"Chapter 3");
         check(shownPage(v) == 2 + c, [name stringByAppendingString:@"before the Preview is closed, the drawer leads to page 3"]);
         check([marked(v) isEqual:@"Chapter 3"], [name stringByAppendingString:@"the entry clicked is marked"]);
+        // The outline is scrolled so that the entry to be marked is out of sight.
+        [o layoutSubtreeIfNeeded];
+        CGFloat bottom = NSHeight(o.frame) - NSHeight(clip.bounds);
+        check(bottom > 60, [name stringByAppendingString:@"the outline is taller than the drawer"]);
+        [clip scrollToPoint:NSMakePoint(0, [expected isEqual:@"Chapter 1"] ? bottom : 0)];
+        [scroll reflectScrolledClipView:clip];
         windowState.previewClosed = YES;
     } else {
         [v setupOutline];
@@ -202,6 +221,7 @@ static void run(NSString *state, NSString *parts, BOOL cover) {
         windowState.noPdfFile = YES;
     }
     first = nil;
+    scrolled = clip.bounds.origin;
     // Typesetting, or Command-1, reads the PDF again into a new document.
     @autoreleasepool { [v reShowEarlyWithDocument:[[PDFDocument alloc] initWithData:data]]; }
     check(!windowState.previewClosed && !windowState.noPdfFile, [name stringByAppendingString:@"the new PDF is shown"]);
@@ -218,9 +238,10 @@ static void run(NSString *state, NSString *parts, BOOL cover) {
         [second goToPage:[second.document pageAtIndex:4 + c]];
         [second secondPartRestored];
     }
-    NSString *expected = [parts hasSuffix:@"second in use"] ? @"Chapter 5" : (cover ? @"none" : @"Chapter 1");
     check([marked(v) isEqual:expected], [NSString stringWithFormat:@"%@the page of the part in use is marked: %@, not %@",
                                          name, expected, marked(v)]);
+    check(NSEqualPoints(clip.bounds.origin, scrolled), [NSString stringWithFormat:@"%@the outline stays where it was scrolled to (%@, not %@)",
+                                                         name, NSStringFromPoint(scrolled), NSStringFromPoint(clip.bounds.origin)]);
     click(v, @"Chapter 5");
     check(shownPage(v) == 4 + c, [name stringByAppendingString:@"a click on Chapter 5 shows page 5"]);
     [o expandItem:[o itemAtRow:rowOf(o, @"Chapter 4")]];
