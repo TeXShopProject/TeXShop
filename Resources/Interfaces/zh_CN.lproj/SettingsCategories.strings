@@ -178,6 +178,7 @@
 "theme.list.nameTaken" = "名为“%@”的主题已存在。";
 "theme.list.badName" = "“%@”不能用作主题名称。";
 "theme.list.notTheme" = "“%@”不是TeXShop主题。";
+"theme.list.missing" = "“%@”已不在主题文件夹中。";
 "group.appearance.2.title" = "窗口";
 "catalog.appearance.2.0.column.0" = "前景";
 "catalog.appearance.2.0.column.1" = "背景";

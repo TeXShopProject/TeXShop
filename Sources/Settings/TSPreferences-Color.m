@@ -48,8 +48,8 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
     // The themes of Light and Dark Mode are chosen among the files in ~/Library/TeXShop/Themes.
     [self fillThemeMenus];
     // The theme of the window's appearance is edited first.
-    self.editingThemeTitle = [self settingsWindowIsDark] ? self.darkThemeTitle : self.lightThemeTitle;
-    if (self.editingThemeTitle != nil && [[self themeStore] URLForTitle:self.editingThemeTitle] == nil) self.editingThemeTitle = nil;
+    NSString *editing = [self settingsWindowIsDark] ? self.darkThemeTitle : self.lightThemeTitle;
+    self.editingThemeTitle = editing != nil && [[self themeStore] URLForTitle:(NSString *_Nonnull)editing] != nil ? editing : nil;
     [self loadEditingTheme];
     [self.themeList reload];
 }
@@ -234,6 +234,11 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
     NSDictionary<NSString *, id> *before = self.lastSavedEditingColors;
     NSError *error = nil;
     NSDictionary<NSString *, id> *written = [[self themeStore] writeChangesFrom:before to:EditingColors title:title error:&error];
+    if (written == nil && [error.domain isEqualToString:NSCocoaErrorDomain] && error.code == NSFileNoSuchFileError) {
+        // Renamed or deleted elsewhere: it is not made again under its old name.
+        [self.themeList themeWentMissing:title];
+        return;
+    }
     if (written == nil) {
         NSDictionary<NSString *, id> *saved = [[self themeStore] readTitle:title] ?: self.lastSavedEditingColors;
         EditingColors = [saved mutableCopy];
@@ -254,6 +259,8 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
     }
     EditingColors = [written mutableCopy];
     self.lastSavedEditingColors = written;
+    // A bundled theme changed here is marked at once.
+    [self.themeList refreshTitle:title];
     // The wells show the colors changed elsewhere.
     if (othersChanged)
         [self FillInColorWells];
@@ -986,7 +993,7 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
 - (nullable NSDictionary<NSString *, id> *)newThemeColors
 {
     NSString *name = [self settingsWindowIsDark] ? @"DarkTheme" : @"LiteTheme";
-    NSString *path = TSLibraryBundledPath([@"Themes" stringByAppendingPathComponent:[name stringByAppendingPathExtension:@"plist"]]);
+    NSString *path = TSLibraryBundledPath([@"Themes" stringByAppendingPathComponent:[name stringByAppendingString:@".plist"]]);
     NSData *data = path != nil ? [NSData dataWithContentsOfFile:path] : nil;
     id colors = data != nil ? [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL] : nil;
     return [colors isKindOfClass:NSDictionary.class] ? colors : [[self themeStore] readTitle:name];
@@ -999,10 +1006,11 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
 }
 
 // A renamed theme stays chosen for Light or Dark Mode under its new name; a deleted one gives way to TeXShop's own.
-- (void)themeListDidChangeTitle:(nullable NSString *)oldTitle to:(nullable NSString *)newTitle
+- (void)themeListDidChangeTitle:(nullable NSString *)changedTitle to:(nullable NSString *)newTitle
 {
     BOOL inUse = NO;
-    if (oldTitle != nil && ![oldTitle isEqualToString:newTitle ?: @""]) {
+    NSString *oldTitle = changedTitle ?: @"";
+    if (changedTitle != nil && ![oldTitle isEqualToString:newTitle ?: @""]) {
         if ([self.lightThemeTitle isEqualToString:oldTitle]) {
             [SUD setObject:newTitle ?: @"LiteTheme" forKey:DefaultLiteThemeKey];
             inUse = YES;
@@ -1015,7 +1023,7 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
     }
     [self fillThemeMenus];
     // Restored colors.
-    if (oldTitle != nil && [oldTitle isEqualToString:newTitle ?: @""]) {
+    if (changedTitle != nil && [oldTitle isEqualToString:newTitle ?: @""]) {
         if ([self.editingThemeTitle isEqualToString:oldTitle]) [self loadEditingTheme];
         inUse = [self.lightThemeTitle isEqualToString:oldTitle] || [self.darkThemeTitle isEqualToString:oldTitle];
     }
@@ -1024,7 +1032,22 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
 
 - (void)themeListShowError:(NSString *)message { [self showPreferenceError:message]; }
 
-- (BOOL)themeListAcceptsData:(NSData *)data { return TSLibraryThemeCheck()(data, nil); }
+// A file imported as a theme has the form TeXShop repairs themes to (TSLibraryThemeCheck) and at least one of the
+// colors of TeXShop's themes: a property list of other settings is not a theme.
+- (BOOL)themeListAcceptsData:(NSData *)data
+{
+    if (!TSLibraryThemeCheck()(data, nil)) return NO;
+    NSDictionary *theme = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL];
+    NSString *lite = TSLibraryBundledPath(@"Themes/LiteTheme.plist");
+    // TeXShop's LiteTheme names the colors; its copy in the Themes folder when TeXShop's own cannot be read.
+    NSDictionary *reference = (lite != nil ? [NSDictionary dictionaryWithContentsOfFile:(NSString *_Nonnull)lite] : nil) ?: [[self themeStore] readTitle:@"LiteTheme"];
+    for (NSString *key in theme) {
+        id value = theme[key];
+        if (![value isKindOfClass:NSArray.class]) continue;
+        if (reference == nil || [reference[key] isKindOfClass:NSArray.class]) return YES;
+    }
+    return NO;
+}
 
 - (IBAction)themeSelectionChanged:(id)sender
 {

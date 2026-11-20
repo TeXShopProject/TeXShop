@@ -167,9 +167,22 @@ static void CheckThemeActionButtons(TSPreferences *owner,TSSettingsWindowControl
         [owner themeListDidChooseTitle:@"LiteTheme"];[list reload];[(id<NSMenuDelegate>)list menuNeedsUpdate:menu];
         NSMenuItem *restore=nil;for(NSMenuItem *item in menu.itemArray)if(item.action==@selector(restoreTheme:))restore=item;
         Check([list isChangedTitle:@"LiteTheme"] && [(id<NSMenuItemValidation>)list validateMenuItem:restore] && [ThemeRowMarks(list,@"LiteTheme") containsObject:tr(@"theme.list.changed")],@"A changed bundled theme is marked and can be restored");
+        // Saving a changed color of a bundled theme marks its row at once, and restoring clears the mark at once.
         [list restoreTheme:nil];
         Check(![list isChangedTitle:@"LiteTheme"] && [[store readTitle:@"LiteTheme"][@"EditorText"] isEqual:[NSDictionary dictionaryWithContentsOfFile:[@(getenv("TS_TEST_BUNDLED_THEMES")) stringByAppendingPathComponent:@"LiteTheme.plist"]][@"EditorText"]] && [[owner valueForKey:@"EditingColors"][@"EditorText"] isEqual:[store readTitle:@"LiteTheme"][@"EditorText"]],@"Restore gives the theme TeXShop's colors and the wells show them");
         (void)text;
+        // The row is shown before the change, so that the check sees that row, not one made for it afterwards.
+        [list.tableView scrollRowToVisible:(NSInteger)[list.titles indexOfObject:@"LiteTheme"]];[pane layoutSubtreeIfNeeded];(void)ThemeRowMarks(list,@"LiteTheme");
+        NSMutableDictionary *editing=[owner valueForKey:@"EditingColors"];editing[@"EditorText"]=@[@0.2,@0.6,@0.2,@1];[owner SaveEditedStyle:nil];
+        NSUInteger liteRow=[list.titles indexOfObject:@"LiteTheme"];NSTableCellView *shown=[list.tableView viewAtColumn:0 row:(NSInteger)liteRow makeIfNecessary:NO];
+        NSMutableArray *shownMarks=[NSMutableArray array];for(NSView *child in shown.subviews)if([child isKindOfClass:NSStackView.class])for(NSView *mark in ((NSStackView *)child).arrangedSubviews)[shownMarks addObject:mark.toolTip?:@""];
+        Check(shown!=nil && [shownMarks containsObject:tr(@"theme.list.changed")],[NSString stringWithFormat:@"The first change of a bundled theme's color marks the row shown without reading the list again: %@",shownMarks]);
+        [list restoreTheme:nil];
+        Check(![ThemeRowMarks(list,@"LiteTheme") containsObject:tr(@"theme.list.changed")],@"Restoring clears the mark at once");
+        // A property list of other settings is not imported as a theme; one with some of the colors is.
+        NSData *settingsOnly=[NSPropertyListSerialization dataWithPropertyList:@{@"WindowWidth":@800,@"ShowRuler":@YES,@"WindowFrame":@[@0,@0,@800,@600]} format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL];
+        NSData *someColors=[NSPropertyListSerialization dataWithPropertyList:@{@"EditorText":@[@0,@0,@0,@1],@"Title":@"Old"} format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL];
+        Check(![owner themeListAcceptsData:settingsOnly] && [owner themeListAcceptsData:someColors],@"Only a file with theme colors is imported");
         // Deleting a theme in use for Dark Mode gives Dark Mode TeXShop's DarkTheme (the file is removed here, not trashed).
         [TSIsolatedAppKitDefaults setObject:copy forKey:DefaultDarkThemeKey];[owner themeListDidChooseTitle:copy];[list reload];
         Check([ThemeRowMarks(list,copy) containsObject:tr(@"catalog.appearance.0.1.title")],[NSString stringWithFormat:@"The copy in use for Dark Mode is marked: %@ %@ %@",ThemeRowMarks(list,copy),owner.darkThemeTitle,list.titles]);

@@ -41,6 +41,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) NSPopUpButton *actionsButton;
 @property (readonly, copy) NSArray<NSString *> *titles;
 
+/// Shows the marks of a theme again, after its colors were saved.
+- (void)refreshTitle:(NSString *)title;
+/// The theme being edited is no longer in the folder (renamed or deleted elsewhere): says so, and edits another.
+- (void)themeWentMissing:(NSString *)title;
 /// Reads the folder again and selects the owner's editing theme.
 - (void)reload;
 /// The theme comes with TeXShop / has colors that differ from TeXShop's copy.

@@ -10,20 +10,26 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSDictionary<NSString *, id> *)readTitle:(NSString *)title;
 - (BOOL)writeColors:(NSDictionary<NSString *, id> *)colors title:(NSString *)title error:(NSError * _Nullable * _Nullable)error;
 // Writes the colors that differ between before and after into the theme file as it is at that moment, and keeps its
-// other colors. Returns the colors written, or nil.
+// other colors. Returns the colors written, or nil; nil also when the file is no longer there (renamed or deleted
+// elsewhere), which is not made again.
 - (nullable NSDictionary<NSString *, id> *)writeChangesFrom:(NSDictionary<NSString *, id> *)before to:(NSDictionary<NSString *, id> *)after title:(NSString *)title error:(NSError * _Nullable * _Nullable)error;
 
-// The themes in the folder, in the order of the Finder (case and numbers as people read them).
+// The themes in the folder (files, not folders), with composed names, in the order of the Finder.
 - (NSArray<NSString *> *)titles;
-// The title itself when no theme has it (in any case), else the title followed by the first free number from 2.
+// The title itself when no item of the folder has it (in any case, also of the extension), else the title followed by
+// the first free number from 2.
 - (NSString *)availableTitleForTitle:(NSString *)title;
-// Renames a theme's file. A change of case only is allowed; another theme with the new title is never replaced.
+// Adds a theme under the title or, when it is taken (also meanwhile, by another TeXShop), the next free one; never
+// replaces a file. Returns the title given, or nil.
+- (nullable NSString *)addColors:(NSDictionary<NSString *, id> *)colors title:(NSString *)title error:(NSError * _Nullable * _Nullable)error;
+// Renames a theme's file, composing the new title. A change of case only is allowed; another theme with the new title
+// is never replaced. The colors are those of the file when it is moved.
 - (BOOL)renameTitle:(NSString *)title to:(NSString *)newTitle error:(NSError * _Nullable * _Nullable)error;
-// Moves a theme's file to the Trash.
+// Moves a theme's file (never a folder) to the Trash.
 - (BOOL)trashTitle:(NSString *)title error:(NSError * _Nullable * _Nullable)error;
 // Copies the theme's file as it is to url.
 - (BOOL)exportTitle:(NSString *)title toURL:(NSURL *)url error:(NSError * _Nullable * _Nullable)error;
-// Adds the colors of a theme file under the file's name, made free with availableTitleForTitle:. The file must be a
+// Adds the colors of a theme file under the file's name (composed), as addColors:title:error: does. The file must be a
 // property list of colors that `check` accepts. Returns the title given, or nil.
 - (nullable NSString *)importFileAtURL:(NSURL *)url check:(BOOL (^)(NSData *data))check error:(NSError * _Nullable * _Nullable)error;
 @end

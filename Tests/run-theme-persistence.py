@@ -18,6 +18,7 @@ mutations={
  'save-notify':('    [self applyEffectsForPreferenceKeys:[NSSet setWithArray:@[DefaultLiteThemeKey, DefaultDarkThemeKey]]];\n}\n- (IBAction)themeSelectionChanged',';\n}\n- (IBAction)themeSelectionChanged'),
  'selection-store':('[SUD setObject:title forKey:popup == LiteStyle ? DefaultLiteThemeKey : DefaultDarkThemeKey];',';'),
  'compose-settings':('{ return title.precomposedStringWithCanonicalMapping; }','{ return title; }'),
+ 'missing-handoff':('        [self.themeList themeWentMissing:title];\n        return;','        ;'),
  'rename-follows':('[SUD setObject:newTitle ?: @"LiteTheme" forKey:DefaultLiteThemeKey];',';'),
  'delete-fallback':('newTitle ?: @"DarkTheme"','newTitle'),
  'rename-editing':('if ([self.editingThemeTitle isEqualToString:oldTitle] && newTitle != nil) self.editingThemeTitle = newTitle;',';'),
@@ -27,6 +28,11 @@ mutations={
 # coordinated write.
 store=(R/'Sources/Settings/TSThemeFileStore.m').read_text()
 store_mutations={
+ 'upper-extension':('if ([name.pathExtension compare:@"plist" options:NSCaseInsensitiveSearch] == NSOrderedSame)','if ([name.pathExtension isEqualToString:@"plist"])'),
+ 'overwrite-add':('options:NSDataWritingWithoutOverwriting','options:NSDataWritingAtomic'),
+ 'list-folders':('if (url != nil && TSThemeIsRegularFile(url) && ![titles containsObject:title])','if (url != nil && ![titles containsObject:title])'),
+ 'recreate-missing':('        if (!TSThemeIsRegularFile(fileURL)) {\n            writeError','        if (NO) {\n            writeError'),
+ 'compose-import':('lastPathComponent.precomposedStringWithCanonicalMapping ?: @""','lastPathComponent ?: @""'),
  'compose-titles':('NSString *title = name.stringByDeletingPathExtension.precomposedStringWithCanonicalMapping;','NSString *title = name.stringByDeletingPathExtension;'),
  'only-changed':('NSMutableDictionary<NSString *, id> *colors = [([self readTitle:title] ?: before) mutableCopy];','NSMutableDictionary<NSString *, id> *colors = [after mutableCopy];'),
  'read-outside':('    __block NSDictionary<NSString *, id> *written = nil;\n','    NSDictionary *early = [self readTitle:title];\n    __block NSDictionary<NSString *, id> *written = nil;\n'),
@@ -111,10 +117,23 @@ static NSMutableArray *alertButtons;
 @implementation Field @end
 @interface ListStub:NSObject
 @property NSUInteger reloads;
+@property NSMutableArray *missing,*refreshed;
 - (void)reload;
+- (void)themeWentMissing:(NSString *)title;
+- (void)refreshTitle:(NSString *)title;
 @end
 @implementation ListStub
+- (instancetype)init{if((self=[super init])){_missing=[NSMutableArray new];_refreshed=[NSMutableArray new];}return self;}
 - (void)reload{self.reloads++;}
+- (void)themeWentMissing:(NSString *)title{[self.missing addObject:title];}
+- (void)refreshTitle:(NSString *)title{[self.refreshed addObject:title];}
+@end
+// A store that, like another TeXShop, takes the free title it has just chosen.
+@interface RacingStore:TSThemeFileStore
+@property BOOL race;
+@end
+@implementation RacingStore
+- (NSString *)availableTitleForTitle:(NSString *)title{NSString *free=[super availableTitleForTitle:title];if(self.race){self.race=NO;[[[TSThemeFileStore alloc]initWithDirectory:self.directory] writeColors:@{@"EditorText":@[@0,@1,@0,@1]} title:free error:NULL];}return free;}
 @end
 @interface Probe:NSObject { @public NSMutableDictionary *EditingColors; Popup *LiteStyle,*DarkStyle; FakePanel *_prefsWindow; }
 @property(copy) NSDictionary *lastSavedEditingColors;
@@ -188,13 +207,13 @@ int main(int argc,char **argv){@autoreleasepool{
  }
  NSUInteger reloadsBeforeFailure=reloads;
  NSURL *file=[root URLByAppendingPathComponent:@"Original.plist"];
- check([NSFileManager.defaultManager removeItemAtURL:file error:NULL],"remove fixture");
- check([NSFileManager.defaultManager createDirectoryAtURL:file withIntermediateDirectories:NO attributes:nil error:NULL],"force write and reload failure");
+ // The folder cannot be written: the save fails (a missing file is another case, handed to the list below).
+ check([NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions:@0555} ofItemAtPath:root.path error:NULL],"force write failure");
  p->EditingColors[@"EditorText"]=@[@0.9,@0.9,@0.9,@1];
  [p SaveEditedStyle:nil];
  check(p.errors==1 && [p->EditingColors isEqual:saved] && notifications==3 && reloads==reloadsBeforeFailure,"failed save restores last successful dictionary without applying it");
- [NSFileManager.defaultManager removeItemAtURL:file error:NULL];
- check([p.store writeColors:saved title:@"Original" error:NULL],"restore fixture");
+ check([NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions:@0755} ofItemAtPath:root.path error:NULL],"writable again");
+ check([p.store writeColors:saved title:@"Original" error:NULL],"restore fixture");(void)file;
 
  // The theme list's file operations (TSThemeFileStore).
  for(NSString *t in @[@"Light",@"Dark",@"theme 10",@"theme 9"])check([p.store writeColors:@{@"EditorText":@[@0,@0,@0,@1]} title:t error:NULL],"seed themes");
@@ -217,6 +236,55 @@ int main(int argc,char **argv){@autoreleasepool{
  check([p.store importFileAtURL:junk check:^BOOL(NSData *d){return NO;} error:&error]==nil && error.code==NSFileReadCorruptFileError && [p.store readTitle:@"Junk"]==nil,"a file the check refuses is not imported");
  NSURL *array=[outside URLByAppendingPathComponent:@"Array.plist"];[[NSPropertyListSerialization dataWithPropertyList:@[@1] format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL] writeToURL:array atomically:YES];
  check([p.store importFileAtURL:array check:accept error:&error]==nil && [p.store readTitle:@"Array"]==nil,"a property list that is not a dictionary is not imported");
+
+ // Second audit: names in any case of the extension, names taken meanwhile, folders, themes renamed or deleted
+ // elsewhere, and decomposed names.
+ {
+  NSURL *upper=[root URLByAppendingPathComponent:@"Night.PLIST"];[plist(@{@"EditorText":@[@0,@1,@0,@1]}) writeToURL:upper atomically:YES];
+  NSURL *blue=[outside URLByAppendingPathComponent:@"Night.plist"];[plist(@{@"EditorText":@[@0,@0,@1,@1]}) writeToURL:blue atomically:YES];
+  NSString *night=[p.store importFileAtURL:blue check:accept error:NULL];
+  check([night isEqual:@"Night 2"] && [[NSDictionary dictionaryWithContentsOfURL:upper][@"EditorText"] isEqual:(@[@0,@1,@0,@1])],"an import never replaces a file whose extension differs only in case");
+  [NSFileManager.defaultManager removeItemAtURL:upper error:NULL];[NSFileManager.defaultManager removeItemAtURL:(NSURL *_Nonnull)[p.store URLForTitle:@"Night 2"] error:NULL];
+  RacingStore *racing=[[RacingStore alloc]initWithDirectory:root];racing.race=YES;
+  NSString *added=[racing addColors:@{@"EditorText":@[@1,@0,@0,@1]} title:@"Raced" error:NULL];
+  check([added isEqual:@"Raced 2"] && [[p.store readTitle:@"Raced"][@"EditorText"] isEqual:(@[@0,@1,@0,@1])] && [[p.store readTitle:@"Raced 2"][@"EditorText"] isEqual:(@[@1,@0,@0,@1])],"a title taken meanwhile is not replaced; the next one is used");
+  for(NSString *t in @[@"Raced",@"Raced 2"])[NSFileManager.defaultManager removeItemAtURL:(NSURL *_Nonnull)[p.store URLForTitle:t] error:NULL];
+  NSURL *folder=[root URLByAppendingPathComponent:@"Folder.plist" isDirectory:YES];[NSFileManager.defaultManager createDirectoryAtURL:folder withIntermediateDirectories:NO attributes:nil error:NULL];
+  [plist(@{@"EditorText":@[@0,@0,@0,@1]}) writeToURL:[folder URLByAppendingPathComponent:@"inside.plist"] atomically:YES];
+  NSError *folderError=nil;
+  check(![[p.store titles] containsObject:@"Folder"] && ![p.store trashTitle:@"Folder" error:&folderError] && folderError.code==NSFileNoSuchFileError && [NSFileManager.defaultManager fileExistsAtPath:[folder URLByAppendingPathComponent:@"inside.plist"].path],"a folder with a theme's name is neither listed nor trashed");
+  check([[p.store availableTitleForTitle:@"Folder"] isEqual:@"Folder 2"],"a new theme does not take the name of a folder");
+  [NSFileManager.defaultManager removeItemAtURL:folder error:NULL];
+  // A theme renamed elsewhere while it is edited is not made again under its old name.
+  check([p.store writeColors:@{@"EditorText":@[@0,@0,@0,@1]} title:@"Away" error:NULL],"seed Away");
+  NSDictionary *away=[p.store readTitle:@"Away"];
+  check([NSFileManager.defaultManager moveItemAtURL:(NSURL *_Nonnull)[p.store URLForTitle:@"Away"] toURL:[root URLByAppendingPathComponent:@"Moved.plist"] error:NULL],"rename elsewhere");
+  NSError *gone=nil;NSMutableDictionary *edited=[away mutableCopy];edited[@"EditorText"]=@[@1,@1,@1,@1];
+  check([p.store writeChangesFrom:away to:edited title:@"Away" error:&gone]==nil && gone.code==NSFileNoSuchFileError && [p.store readTitle:@"Away"]==nil,"a save does not make a theme renamed elsewhere again");
+  ListStub *stub=[ListStub new];p.themeList=stub;p.editingThemeTitle=@"Away";p->EditingColors=[edited mutableCopy];p.lastSavedEditingColors=away;
+  NSUInteger errorsBefore=p.errors;[p SaveEditedStyle:nil];
+  check([stub.missing isEqual:@[@"Away"]] && [p.store readTitle:@"Away"]==nil && p.errors==errorsBefore,"Settings hands a theme that went missing to the list");
+  // The rename reads the colors inside its coordinated write: a save that comes during it finds the theme gone and
+  // never makes it again; the renamed theme keeps the colors saved before it.
+  {
+   HookStore *slow=[[HookStore alloc]initWithDirectory:root];TSThemeFileStore *other=[[TSThemeFileStore alloc]initWithDirectory:root];
+   NSDictionary *moved=[p.store readTitle:@"Moved"];NSMutableDictionary *later=[moved mutableCopy];later[@"EditorText"]=@[@0.3,@0.3,@0.3,@1];
+   __block NSDictionary *result=@{};__block NSError *otherError=nil;dispatch_group_t g=dispatch_group_create();
+   slow.afterRead=^{dispatch_group_async(g,dispatch_get_global_queue(QOS_CLASS_USER_INITIATED,0),^{NSError *e=nil;result=[other writeChangesFrom:moved to:later title:@"Moved" error:&e];otherError=e;});[NSThread sleepForTimeInterval:0.4];};
+   check([slow renameTitle:@"Moved" to:@"Renamed" error:NULL],"rename while another save waits");
+   check(dispatch_group_wait(g,dispatch_time(DISPATCH_TIME_NOW,(int64_t)(10*NSEC_PER_SEC)))==0,"the other save ends");
+   check(result==nil && otherError.code==NSFileNoSuchFileError && [p.store readTitle:@"Moved"]==nil && [[p.store readTitle:@"Renamed"][@"Title"] isEqual:@"Renamed"],"a save during a rename fails and does not make the old name again");
+   [NSFileManager.defaultManager removeItemAtURL:(NSURL *_Nonnull)[p.store URLForTitle:@"Renamed"] error:NULL];
+  }
+  // Decomposed names: imported and renamed themes get composed names, as the list has them.
+  NSString *pastel=@"パステル";NSURL *decomposed=[outside URLByAppendingPathComponent:[pastel.decomposedStringWithCanonicalMapping stringByAppendingString:@".plist"]];
+  [plist(@{@"EditorText":@[@0,@0,@0,@1]}) writeToURL:decomposed atomically:YES];
+  NSString *importedPastel=[p.store importFileAtURL:decomposed check:accept error:NULL];
+  check([importedPastel isEqual:pastel] && [[p.store titles] containsObject:pastel],"a decomposed file name is imported under the composed name");
+  check([p.store renameTitle:pastel to:[@"パレット" decomposedStringWithCanonicalMapping] error:NULL] && [[p.store titles] containsObject:@"パレット"] && [[p.store readTitle:@"パレット"][@"Title"] isEqual:@"パレット"],"a decomposed new name is composed");
+  [NSFileManager.defaultManager removeItemAtURL:(NSURL *_Nonnull)[p.store URLForTitle:@"パレット"] error:NULL];
+  p.themeList=nil;
+ }
 
  // The list tells Settings of a renamed or deleted theme: Light and Dark Mode follow a rename and fall back to TeXShop's
  // own themes when theirs is deleted; restored colors are shown again.

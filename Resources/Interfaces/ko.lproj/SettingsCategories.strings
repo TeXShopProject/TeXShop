@@ -178,6 +178,7 @@
 "theme.list.nameTaken" = "이름이 ‘%@’인 테마가 이미 있습니다.";
 "theme.list.badName" = "‘%@’은(는) 테마 이름으로 사용할 수 없습니다.";
 "theme.list.notTheme" = "‘%@’은(는) TeXShop 테마가 아닙니다.";
+"theme.list.missing" = "‘%@’이(가) 더 이상 테마 폴더에 없습니다.";
 "group.appearance.2.title" = "윈도우";
 "catalog.appearance.2.0.column.0" = "전경색";
 "catalog.appearance.2.0.column.1" = "배경색";

@@ -178,6 +178,7 @@
 "theme.list.nameTaken" = "Já existe um tema denominado “%@”.";
 "theme.list.badName" = "“%@” não pode ser o nome de um tema.";
 "theme.list.notTheme" = "“%@” não é um tema do TeXShop.";
+"theme.list.missing" = "“%@” já não está na pasta de temas.";
 "group.appearance.2.title" = "Janelas";
 "catalog.appearance.2.0.column.0" = "Primeiro plano";
 "catalog.appearance.2.0.column.1" = "Fundo";

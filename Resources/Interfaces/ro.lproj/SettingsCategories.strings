@@ -178,6 +178,7 @@
 "theme.list.nameTaken" = "Există deja o temă numită „%@”.";
 "theme.list.badName" = "„%@” nu poate fi numele unei teme.";
 "theme.list.notTheme" = "„%@” nu este o temă TeXShop.";
+"theme.list.missing" = "„%@” nu mai este în dosarul temelor.";
 "group.appearance.2.title" = "Ferestre";
 "catalog.appearance.2.0.column.0" = "Prim-plan";
 "catalog.appearance.2.0.column.1" = "Fundal";

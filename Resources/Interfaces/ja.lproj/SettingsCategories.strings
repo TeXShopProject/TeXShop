@@ -178,6 +178,7 @@
 "theme.list.nameTaken" = "「%@」というテーマはすでにあります。";
 "theme.list.badName" = "「%@」はテーマの名前にできません。";
 "theme.list.notTheme" = "「%@」はTeXShopのテーマではありません。";
+"theme.list.missing" = "「%@」はテーマのフォルダにありません。";
 "group.appearance.2.title" = "ウインドウ";
 "catalog.appearance.2.0.column.0" = "文字";
 "catalog.appearance.2.0.column.1" = "背景";

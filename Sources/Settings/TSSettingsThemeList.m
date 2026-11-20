@@ -269,7 +269,7 @@ static CGFloat TSThemeListInset(NSTableView *table)
     self.titles = [self.store titles];
     [self.tableView reloadData];
     self.reloading = NO;
-    if (select != nil && [self.titles containsObject:select]) [self selectTitle:select];
+    if (select != nil && [self.titles containsObject:(NSString *_Nonnull)select]) [self selectTitle:(NSString *_Nonnull)select];
     else [self reload];
     [self updateButtons];
 }
@@ -286,16 +286,34 @@ static CGFloat TSThemeListInset(NSTableView *table)
     [self.owner themeListShowError:message ?: error.localizedDescription ?: title];
 }
 
+- (void)refreshTitle:(NSString *)title
+{
+    NSUInteger row = [self.titles indexOfObject:title];
+    if (row == NSNotFound) return;
+    [self.tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:row] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+}
+
+- (void)themeWentMissing:(NSString *)title
+{
+    [self.owner themeListShowError:[NSString stringWithFormat:self.text(@"theme.list.missing"), title]];
+    [self.owner themeListDidChangeTitle:title to:nil];
+    NSArray<NSString *> *remaining = [self.store titles];
+    NSString *next = [remaining containsObject:self.owner.lightThemeTitle ?: @""] ? self.owner.lightThemeTitle : remaining.firstObject;
+    [self.owner themeListDidChooseTitle:next];
+    [self reload];
+}
+
 #pragma mark Actions
 
 - (IBAction)addTheme:(id)sender
 {
     NSDictionary<NSString *, id> *colors = self.owner.newThemeColors;
     if (colors == nil) return;
-    NSString *title = [self.store availableTitleForTitle:self.text(@"theme.list.untitled")];
+    NSString *untitled = self.text(@"theme.list.untitled");
     NSError *error = nil;
-    if (![self.store writeColors:colors title:title error:&error]) {
-        [self showError:error title:title];
+    NSString *title = [self.store addColors:colors title:untitled error:&error];
+    if (title == nil) {
+        [self showError:error title:untitled];
         return;
     }
     [self changedTitle:nil to:title select:title];
@@ -307,10 +325,11 @@ static CGFloat TSThemeListInset(NSTableView *table)
     NSString *title = [self targetTitle];
     NSDictionary<NSString *, id> *colors = title != nil ? [self.store readTitle:title] : nil;
     if (colors == nil) return;
-    NSString *copy = [self.store availableTitleForTitle:[NSString stringWithFormat:self.text(@"theme.list.copy"), title]];
+    NSString *proposed = [NSString stringWithFormat:self.text(@"theme.list.copy"), title];
     NSError *error = nil;
-    if (![self.store writeColors:colors title:copy error:&error]) {
-        [self showError:error title:copy];
+    NSString *copy = [self.store addColors:colors title:proposed error:&error];
+    if (copy == nil) {
+        [self showError:error title:proposed];
         return;
     }
     [self changedTitle:nil to:copy select:copy];
@@ -547,7 +566,7 @@ static CGFloat TSThemeListInset(NSTableView *table)
     [self updateButtons];
     if (self.reloading) return;
     NSString *title = [self selectedTitle];
-    if (title != nil && ![title isEqualToString:self.owner.editingThemeTitle]) [self.owner themeListDidChooseTitle:title];
+    if (title != nil && ![title isEqualToString:self.owner.editingThemeTitle ?: @""]) [self.owner themeListDidChooseTitle:title];
 }
 
 /// Renaming in the list renames the theme's file.
@@ -557,7 +576,8 @@ static CGFloat TSThemeListInset(NSTableView *table)
     NSInteger row = [self.tableView rowForView:field];
     if (row < 0 || (NSUInteger)row >= self.titles.count) return;
     NSString *old = self.titles[(NSUInteger)row];
-    NSString *new = [field.stringValue stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+    // Composed, as the names of the list (TSThemeFileStore titles).
+    NSString *new = [field.stringValue stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet].precomposedStringWithCanonicalMapping;
     if (new.length == 0 || [new isEqualToString:old]) {
         field.stringValue = old;
         return;

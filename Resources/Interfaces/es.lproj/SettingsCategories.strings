@@ -178,6 +178,7 @@
 "theme.list.nameTaken" = "Ya existe un tema llamado “%@”.";
 "theme.list.badName" = "“%@” no puede ser el nombre de un tema.";
 "theme.list.notTheme" = "“%@” no es un tema de TeXShop.";
+"theme.list.missing" = "“%@” ya no está en la carpeta de temas.";
 "group.appearance.2.title" = "Ventanas";
 "catalog.appearance.2.0.column.0" = "Primer plano";
 "catalog.appearance.2.0.column.1" = "Fondo";

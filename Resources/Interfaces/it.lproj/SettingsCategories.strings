@@ -178,6 +178,7 @@
 "theme.list.nameTaken" = "Esiste già un tema denominato “%@”.";
 "theme.list.badName" = "“%@” non può essere il nome di un tema.";
 "theme.list.notTheme" = "“%@” non è un tema di TeXShop.";
+"theme.list.missing" = "“%@” non si trova più nella cartella dei temi.";
 "group.appearance.2.title" = "Finestre";
 "catalog.appearance.2.0.column.0" = "Primo piano";
 "catalog.appearance.2.0.column.1" = "Sfondo";

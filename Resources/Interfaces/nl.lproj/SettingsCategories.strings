@@ -178,6 +178,7 @@
 "theme.list.nameTaken" = "Er bestaat al een thema met de naam ‘%@’.";
 "theme.list.badName" = "‘%@’ kan niet de naam van een thema zijn.";
 "theme.list.notTheme" = "‘%@’ is geen TeXShop-thema.";
+"theme.list.missing" = "‘%@’ staat niet meer in de map met thema’s.";
 "group.appearance.2.title" = "Vensters";
 "catalog.appearance.2.0.column.0" = "Voorgrond";
 "catalog.appearance.2.0.column.1" = "Achtergrond";
