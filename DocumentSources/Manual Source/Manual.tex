@@ -3925,13 +3925,13 @@ TeXShop configures the way documents are displayed using two items, called ``Dis
 
 After such a document is opened, these settings can be changed for any particular Preview window using items in the Preview menu. These choices are temporary while the document is being used, but revert back to the default choices for new documents.
 
-When the Preview window is not split, the menu items ``Display Format'' and ``Magnification'' affect both views simultaneously. So if you change the magnification of the current view, and later split the window, both views will use the new magnification level. If you switch to ``Double Page'' mode in the current view and later split the window, both views will be in Double Page mode.
+When the Preview window is not split, the menu items ``Display Format'' and ``Magnification'' affect the view shown. So if you change the magnification of the current view, and later split the window, both views will use the new magnification level. If you switch to ``Double Page'' mode in the current view and later split the window, both views will be in Double Page mode. The other view of ``Switch Views'' in a window that is not split keeps its own display format and magnification (see \cref{Switch_Views_Unsplit_Section}).
 
-When the Preview window is split so both views are shown simultaneously, ``Display Format'' and ``Magnification'' changes made to the top view affect the entire document as above. Thus if the window is later unsplit, the changes will hold in the entire document.
+When the Preview window is split so both views are shown simultaneously, ``Display Format'' and ``Magnification'' changes apply to the view in which they are made. Unsplitting keeps the view you were using (see \cref{Active_View_Split_Window}), so the changes made to that view hold in the full window, and those made to the other view are dropped. If the view you were using cannot be seen, because the divider was dragged to the edge of the window, the view that can be seen stays with its settings.
 
-However, when the Preview window is split so both views are shown simultaneously, ``Display Format'' and ``Magnification'' changes made to the bottom view will only apply to that portion of the split window, and only as long as the window remains split. This slight design inconsistency makes it possible for a user working with two sections of the document to temporarily magnify the bottom section and inspect fine details without propagating that magnification change to the rest of the interface.
+So, if you click in the top view before unsplitting, changes made to the bottom view only apply as long as the window remains split. This makes it possible for a user working with two sections of the document to temporarily magnify the bottom section and inspect fine details without propagating that magnification change to the rest of the interface. If you unsplit while using the bottom view, its display format and magnification stay in the full window.
 
-Switch Views exchanges these settings together with the two parts. After switching, the display format and magnification that were chosen for the bottom view belong to the top view, and they remain when the window is unsplit.
+Switch Views exchanges these settings together with the two parts. After switching, the display format and magnification that were chosen for the bottom view belong to the top view.
 
 \section{Avoiding Creep When Unsplitting}
 
@@ -4007,6 +4007,7 @@ Another tool to handle related sections is splitting the Preview window, as disc
 
 
 \section{Switch Views}
+\label{Switch_Views_Unsplit_Section}
 
 The ``Switch Views'' menu item used when Preview windows are not split provides yet another way to handle related sections of a document, although it only navigates between two views. We already discussed this menu item for split Preview windows. But the use case when windows are not split may prove to be  more  important than the original reason for introducing the command. Suppose you want to work on two related portions of a document. In TeXShop's Preview Window, do not split the view. Instead, just scroll to one of the two interesting portions of your document. Then select the menu item ``Switch Views'' or type its keyboard shortcut Option-2, and scroll to a second related section of the document. You can now switch between these two portions using ``Switch Views'' or Option-2. 
 
@@ -4018,19 +4019,22 @@ When this command was  introduced in TeXShop 5.23, it had a  ``creep problem''. 
 
 The two views are not fixed; they can be scrolled if desired. So while one view is visible, we can scroll down to a new position. Then Option-2 will produce the second view. If we use Option-2 again, we'll go back to the newly scrolled position.
 
+Each view is independent of the other, as suggested by Uwe Schmock. Besides its place, each view keeps its own display format, magnification, selection and pinned link popup (see \cref{Modifying_Popup_Windows_Section}). So one view can show a whole page with Fit to Window while the other shows a detail at a high magnification, and a popup pinned in one view comes back at the same place in the window when you switch back to that view. When you first choose ``Switch Views'', the second view starts as a copy of the first one, except that a pinned popup stays with the first view. After typesetting, each view keeps its place, display format and magnification, but, as with the view shown, its selection and pinned popup are gone.
+
+Splitting and unsplitting the window leave the other view as it is: after the window is unsplit, Option-2 again shows the other view.
+
 \newpage
 \section{Independence from Split Window}
 \label{Independence_Split_Window_Section}
 
 When this feature was  introduced in TeXShop 5.23, the two views for the full window were also the two views displayed by splitting the window. This is no longer the case. Instead if either of the views for the full window is split, it will become the top view of the split window. The bottom view of this window is a completely separate view, which
-can be scrolled to any position desired. Unsplitting the window keeps the place shown at the top of the top view, so unless that view was scrolled, the original view returns.
-If we then type Option-2 to get the second full view and then split that view, the second full view will appear as the top view of the split window, and the bottom view will be the same view obtained when we first split. This means that
+can be scrolled to any position desired. Unsplitting the window keeps the view you were using as the full view (see \cref{Active_View_Split_Window}); when that is the top view, the place shown at its top stays, so unless that view was scrolled, the original full view returns. Either way the other full view stays as it was, so Option-2 still shows it.
+If we then type Option-2 to get the second full view and then split that view, the second full view will appear as the top view of the split window. The bottom view shows the place of the part that did not stay when the window was unsplit: the former bottom view if you were using the top view, or the former top view if you were using the bottom view. This means that
 users who use the new Switch Preview Views feature can also use the older Split Window feature. Then they will deal with three independent views, the two views for the full window (which become the top view when splitting),
 and the bottom view when either view is split.
 
-Any ``Display Format'' and ``Magnification'' change made to a switched Preview Window affects both views. Thus
-if the window is changed to Double MultiPage mode and later switched with Option-2, the new view will also be
-in Double MultiPage mode. Small adjustments of the alternate view may be needed after switching to it for the first time with Option-2, but changing Display Format or Magnification is rarely done in the middle of an editing session, so the adjustment should not be annoying.
+A ``Display Format'' or ``Magnification'' change made while the window is not split affects only the full view shown. Thus
+if one full view is changed to Double MultiPage mode and the window is later switched with Option-2, the other full view keeps its own display format and magnification; switching back gives Double MultiPage mode again. When you first choose ``Switch Views'', the other full view starts with the display format and magnification of the view shown. When the window is split, the top view starts with those of the full view that was shown, as described in the previous chapter.
 
 \chapter{Presenting with TeXShop (Schmock)}
 \label{PresentingWithTeXShopChapter}
@@ -4140,7 +4144,7 @@ I always add at least the Table of Contents -- see this manual's drawer -- for e
 \item
 Recall from \cref{Independence_Split_Window_Section} that the Preview window has three separate views, including two full views.
 Hence you can scroll to a figure in the Preview window, select ``Switch Views'' from the Window menu, and scroll to the beginning of your presentation.
-When the time arrives to show the figure, you press the keyboard equivalent Option-2 and the figure magically appears (under the assumption that you didn't change ``Display Format'' or ``Magnification'' in between).
+When the time arrives to show the figure, you press the keyboard equivalent Option-2 and the figure magically appears, with the display format and magnification you chose for it, and with a link popup you pinned there.
 You don't have to stop sharing and start sharing again!
 \item
 By default, I use the mouse pointer for the Preview window.
