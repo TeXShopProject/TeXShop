@@ -124,9 +124,13 @@ static NSString *const TSOutlineKeySeparator = @"\x1E";
     if (clipView != nil) {
         // The top of the outline is above 0 by the height of the column header
         // and the scroll view's insets, so let the clip view keep the position
-        // within the outline as it is now.
+        // within the outline as it is now. A position above 0 is the top: the
+        // nib leaves the clip view at the height its header had there, which is
+        // lower than the header shown now, and the drawer never moves it.
         NSRect bounds = clipView.bounds;
         bounds.origin = origin;
+        if (origin.y < 0)
+            bounds.origin.y = -1e6;
         bounds = [clipView constrainBoundsRect:bounds];
         [clipView scrollToPoint:bounds.origin];
         [outlineView.enclosingScrollView reflectScrolledClipView:clipView];
