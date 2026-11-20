@@ -78,6 +78,11 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 
 @interface TSShortcutPaneController () <NSTableViewDataSource, NSTableViewDelegate, NSSearchFieldDelegate>
 @property (strong) TSKeyboardShortcuts *shortcuts;
+@property BOOL runningAfterLayoutKeys;
+// Keyboard layout changes seen, so that a restore or recording that waited for the keys of a
+// layout is dropped when the layout changed meanwhile, even back to the same one.
+@property NSUInteger layoutChanges;
+@property (copy) NSString *lastLayout;
 @property (readwrite) BOOL searchingByKey;
 @property (strong) NSSegmentedControl *searchMode;
 @property (strong) TSShortcutKeySearchView *keySearchView;
@@ -121,6 +126,9 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     _textQuery = @""; _searchMatches = @[]; _searchMessage = @"";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(shortcutsChanged:) name:TSMacroShortcutsChangedNotification object:shortcuts];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(completionTriggerChanged:) name:TSCompletionChangedNotification object:nil];
+    _lastLayout = [TSKeyboardLayoutID() copy];
+    for (NSNotificationName name in @[NSTextInputContextKeyboardSelectionDidChangeNotification, NSApplicationDidBecomeActiveNotification])
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardLayoutMayHaveChanged:) name:name object:nil];
     return self;
 }
 - (void)dealloc { [[NSNotificationCenter defaultCenter] removeObserver:self]; }
@@ -457,8 +465,9 @@ static NSString * const TSCompletionMarkKeysRowID = @"row.catalog.keyboard.1.3";
         return [TSShortcutStore reasonForMacroConflict:@{@"refused":@YES}];
     for (TSShortcutMatch *owner in self.searchMatches) {
         if (!owner.winner) continue;
-        NSString *ownerKey = owner.macro ? owner.macro.key : owner.menuItem.keyEquivalent;
-        NSEventModifierFlags ownerFlags = owner.macro ? owner.macro.modifiers : owner.menuItem.keyEquivalentModifierMask;
+        TSShortcutBinding *ownerBinding = [self shownBindingForMatch:owner];
+        NSString *ownerKey = ownerBinding.key;
+        NSEventModifierFlags ownerFlags = ownerBinding.modifiers;
         return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is inactive because it conflicts with “%@” (%@).", @""),
             owner.path, [TSShortcutStore displayKey:ownerKey modifiers:ownerFlags]];
     }
@@ -494,8 +503,9 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
         if (row == [self macroHeaderRow]) { return [NSTextField labelWithString:column == nil || [column.identifier isEqualToString:@"command"] ? NSLocalizedString(@"Macros", @"") : @""]; }
         TSShortcutMatch *match = [self matchAtRow:row];
         if (match == nil) { return nil; }
-        NSString *key = match.macro != nil ? match.macro.key : match.menuItem.keyEquivalent;
-        NSEventModifierFlags flags = match.macro != nil ? match.macro.modifiers : match.menuItem.keyEquivalentModifierMask;
+        TSShortcutBinding *shown = [self shownBindingForMatch:match];
+        NSString *key = shown.key;
+        NSEventModifierFlags flags = shown.modifiers;
         NSString *reason = [self inactiveReasonForMatch:match];
         BOOL isCommand = [column.identifier isEqualToString:@"command"];
         if (!isCommand && match.command != nil && match.command == self.editingCommand) { return self.recordingCell; }
@@ -522,13 +532,24 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     TSShortcutCommand *command = self.visibleCommands[(NSUInteger)row];
     BOOL isCommand = [column.identifier isEqualToString:@"command"];
     if (!isCommand && command == self.editingCommand) { return self.recordingCell; }
-    NSString *text = isCommand ? command.path : [TSShortcutStore displayKey:command.item.keyEquivalent modifiers:command.item.keyEquivalentModifierMask];
+    TSShortcutBinding *shown = isCommand ? nil : [self.store shownBindingForCommand:command];
+    NSString *text = isCommand ? command.path : [TSShortcutStore displayKey:shown.key modifiers:shown.modifiers];
     // A command whose shortcut macOS keeps is dimmed and not recorded, as alternates are in Xcode.
     NSTextField *label = isCommand || command.managedBySystem ? [NSTextField labelWithString:text] : [self shortcutLabel:text];
     if (command.managedBySystem) label.textColor = NSColor.disabledControlTextColor;
     label.lineBreakMode = NSLineBreakByTruncatingMiddle;
     label.toolTip = command.path;
     return label;
+}
+// The key a search match shows: a command's as the store knows it, a macro's as the keyboard
+// layout shows the key its file names, another item's as AppKit shows it.
+- (TSShortcutBinding *)shownBindingForMatch:(TSShortcutMatch *)match {
+    TSShortcutMacro *macro = match.macro;
+    if (macro != nil) return [self.store shownBindingForGivenKey:macro.key modifiers:macro.modifiers];
+    TSShortcutCommand *command = match.command;
+    NSMenuItem *item = match.menuItem;
+    if (command != nil) return [self.store shownBindingForCommand:command];
+    return item != nil ? TSShownBinding(item) : TSBinding(@"", 0);
 }
 - (TSShortcutCommand *)selectedCommand {
     NSInteger row = self.table.selectedRow;
@@ -543,7 +564,16 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     [alert beginSheetModalForWindow:parent completionHandler:nil];
 }
 - (void)confirmMacrosUsingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags completion:(void (^)(BOOL))completion {
-    NSArray *macros = [self.store macrosUsingKey:key modifiers:flags];
+    [self confirmMacrosUsingBindings:@[TSBinding(key, flags)] completion:completion];
+}
+- (NSArray<NSString *> *)macrosUsingBindings:(NSArray<TSShortcutBinding *> *)bindings {
+    NSMutableOrderedSet *macros = [NSMutableOrderedSet orderedSet];
+    TSShortcutStore *store = self.store;
+    for (TSShortcutBinding *binding in bindings) [macros addObjectsFromArray:[store macrosUsingKey:binding.key modifiers:binding.modifiers] ?: @[]];
+    return macros.array;
+}
+- (void)confirmMacrosUsingBindings:(NSArray<TSShortcutBinding *> *)bindings completion:(void (^)(BOOL))completion {
+    NSArray *macros = [self macrosUsingBindings:bindings];
     if (!macros.count) { completion(YES); return; }
     NSWindow *parent = self.window;
     if (parent == nil || parent.attachedSheet != nil) { completion(NO); return; }
@@ -556,7 +586,7 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     [alert beginSheetModalForWindow:parent completionHandler:^(NSModalResponse response) {
         TSShortcutPaneController *strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-        BOOL unchanged = [[strongSelf.store macrosUsingKey:key modifiers:flags] isEqualToArray:macros];
+        BOOL unchanged = [[strongSelf macrosUsingBindings:bindings] isEqualToArray:macros];
         completion(response == NSAlertSecondButtonReturn && unchanged);
     }];
 }
@@ -566,7 +596,35 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     [self showError:[self.store setKey:@"" modifiers:0 forCommand:command]];
     [self refreshMenuAndMacros];
 }
+// A key is restored or recorded with the keys the current keyboard layout shows. Right after
+// the layout changes they are worked out first, in the next pass of the run loop; when the
+// layout changes again meanwhile, the restore or recording is dropped.
+- (void)keyboardLayoutMayHaveChanged:(NSNotification *)notification {
+    NSString *layout = TSKeyboardLayoutID();
+    if ([layout isEqual:self.lastLayout]) return;
+    self.lastLayout = layout; self.layoutChanges++;
+}
+- (BOOL)deferUntilLayoutKeys:(void (^)(void))action {
+    if (self.runningAfterLayoutKeys || [self.store knowsKeysOfCurrentLayout]) return NO;
+    [self keyboardLayoutMayHaveChanged:nil];
+    NSUInteger changes = self.layoutChanges;
+    __weak typeof(self) weakSelf = self;
+    [self.store learnLayoutKeysThen:^(BOOL learned) {
+        TSShortcutPaneController *strongSelf = weakSelf;
+        if (strongSelf == nil) return;
+        [strongSelf keyboardLayoutMayHaveChanged:nil];
+        if (strongSelf.layoutChanges != changes) return;
+        strongSelf.runningAfterLayoutKeys = YES;
+        action();
+        strongSelf.runningAfterLayoutKeys = NO;
+    }];
+    return YES;
+}
 - (void)restoreShortcut:(id)sender {
+    // The command selected when Restore was chosen; a different selection by then drops it.
+    TSShortcutCommand *chosen = self.selectedCommand;
+    __weak typeof(self) deferringSelf = self;
+    if ([self deferUntilLayoutKeys:^{ if (deferringSelf.selectedCommand == chosen) [deferringSelf restoreShortcut:sender]; }]) return;
     [self endRecording];
     TSShortcutCommand *command = self.selectedCommand; if (!command || command.managedBySystem) return;
     // A yielding default disables no macro and is refused by no command: it gives way.
@@ -578,14 +636,22 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     NSString *error = [self.store conflictForRestoringCommand:command];
     if (error) { [self showError:[NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), error]]; return; }
     __weak typeof(self) weakSelf = self;
-    [self confirmMacrosUsingKey:command.defaultKey modifiers:command.defaultModifiers completion:^(BOOL accepted) {
+    // The default as given and as this keyboard layout shows it.
+    [self keyboardLayoutMayHaveChanged:nil];
+    NSUInteger changes = self.layoutChanges;
+    [self confirmMacrosUsingBindings:[self.store defaultBindingsForCommand:command].allObjects completion:^(BOOL accepted) {
         TSShortcutPaneController *strongSelf = weakSelf;
         if (strongSelf == nil || !accepted) { return; }
+        // The default named in the question is the one of the layout then.
+        [strongSelf keyboardLayoutMayHaveChanged:nil];
+        if (strongSelf.layoutChanges != changes) { return; }
         [strongSelf showError:[strongSelf.store restoreCommand:command]];
         [strongSelf refreshMenuAndMacros];
     }];
 }
 - (void)restoreAll:(id)sender {
+    __weak typeof(self) deferringSelf = self;
+    if ([self deferUntilLayoutKeys:^{ [deferringSelf restoreAll:sender]; }]) return;
     [self endRecording];
     NSWindow *parent = self.window;
     if (parent == nil || parent.attachedSheet != nil) { return; }
@@ -599,8 +665,20 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     [alert beginSheetModalForWindow:parent completionHandler:^(NSModalResponse response) {
         TSShortcutPaneController *strongSelf = weakSelf;
         if (strongSelf == nil || response != NSAlertFirstButtonReturn) { return; }
-        [strongSelf.store restoreAll]; [strongSelf refreshMenuAndMacros];
+        [strongSelf finishRestoringAllNaming:macros];
     }];
+}
+// The layout may change while the question is open: when restoring now makes a macro inactive
+// that the question did not name, it is asked again.
+- (void)finishRestoringAllNaming:(NSArray<NSString *> *)named {
+    __weak typeof(self) deferringSelf = self;
+    if ([self deferUntilLayoutKeys:^{ [deferringSelf finishRestoringAllNaming:named]; }]) return;
+    TSShortcutStore *store = self.store;
+    if (![[NSSet setWithArray:[store macrosAffectedByRestoringAll] ?: @[]] isSubsetOfSet:[NSSet setWithArray:named]]) {
+        dispatch_async(dispatch_get_main_queue(), ^{ [deferringSelf restoreAll:nil]; });
+        return;
+    }
+    [self.store restoreAll]; [self refreshMenuAndMacros];
 }
 - (NSTextField *)shortcutLabel:(NSString *)text {
     TSShortcutKeyLabel *label = [TSShortcutKeyLabel labelWithString:text];
@@ -715,7 +793,8 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     TSShortcutCommand *command = self.editingCommand;
     if (command == nil) { return; }
     // An empty field, as in Xcode, for a command without a shortcut (the list shows a dash).
-    NSString *current = command.item.keyEquivalent.length ? [TSShortcutStore displayKey:command.item.keyEquivalent modifiers:command.item.keyEquivalentModifierMask] : @"";
+    TSShortcutBinding *shown = [self.store shownBindingForCommand:command];
+    NSString *current = shown.key.length ? [TSShortcutStore displayKey:shown.key modifiers:shown.modifiers] : @"";
     NSString *captured = self.capturedKey;
     self.recorder.shortcut = captured != nil ? [TSShortcutStore displayKey:captured modifiers:self.capturedModifiers] : current;
     self.recorder.removeButton.hidden = command.item.keyEquivalent.length == 0;
@@ -728,8 +807,9 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     TSShortcutCommand *command = self.editingCommand ?: [self selectedCommand];
     NSString *text = error;
     if (text == nil && command != nil) {
-        text = command.defaultKey.length == 0 ? NSLocalizedString(@"Default shortcut: None", @"")
-            : [NSString stringWithFormat:NSLocalizedString(@"Default shortcut: %@", @""), [TSShortcutStore displayKey:command.defaultKey modifiers:command.defaultModifiers]];
+        TSShortcutBinding *shownDefault = [self.store shownDefaultForCommand:command];
+        text = shownDefault.key.length == 0 ? NSLocalizedString(@"Default shortcut: None", @"")
+            : [NSString stringWithFormat:NSLocalizedString(@"Default shortcut: %@", @""), [TSShortcutStore displayKey:shownDefault.key modifiers:shownDefault.modifiers]];
     }
     // A blank line keeps the list and the buttons where they are.
     self.statusText.stringValue = text.length ? text : @" ";
@@ -782,6 +862,15 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
 // A key in use by another command is refused and recording goes on; a key that
 // macros use is assigned after the confirmation.
 - (void)applyCapturedShortcut:(id)sender {
+    // The key recorded for the command being edited; another command or key by then drops it.
+    TSShortcutCommand *recording = self.editingCommand;
+    NSString *recordedKey = self.capturedKey;
+    NSEventModifierFlags recordedFlags = self.capturedModifiers;
+    __weak typeof(self) deferringSelf = self;
+    if ([self deferUntilLayoutKeys:^{
+        TSShortcutPaneController *pane = deferringSelf;
+        if (pane.editingCommand == recording && [pane.capturedKey isEqual:recordedKey] && pane.capturedModifiers == recordedFlags) [pane applyCapturedShortcut:sender];
+    }]) return;
     NSString *key = self.capturedKey;
     TSShortcutCommand *command = self.editingCommand;
     NSEventModifierFlags flags = self.capturedModifiers;
@@ -799,12 +888,17 @@ static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSSh
     }
     __weak typeof(self) weakSelf = self;
     self.confirmingRecording = YES;
+    // A key is recorded with the keys of the layout it was typed on: when the layout changes
+    // while the question is open, nothing is recorded.
+    [self keyboardLayoutMayHaveChanged:nil];
+    NSUInteger changes = self.layoutChanges;
     [self confirmMacrosUsingKey:key modifiers:flags completion:^(BOOL accepted) {
         TSShortcutPaneController *strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         strongSelf.confirmingRecording = NO;
         if (strongSelf.editingCommand != command || ![strongSelf.capturedKey isEqualToString:key] || strongSelf.capturedModifiers != flags) { return; }
-        if (!accepted) { [strongSelf endRecording]; return; }
+        [strongSelf keyboardLayoutMayHaveChanged:nil];
+        if (!accepted || strongSelf.layoutChanges != changes) { [strongSelf endRecording]; return; }
         NSString *error = [strongSelf conflictForCapturedShortcut];
         if (error != nil) { [strongSelf showRecordingError:error]; return; }
         error = [strongSelf.store setKey:key modifiers:flags forCommand:command];

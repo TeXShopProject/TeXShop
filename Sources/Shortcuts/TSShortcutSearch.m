@@ -16,7 +16,7 @@
     for (NSDictionary *conflict in [store conflictsForMacroShortcuts:candidates]) { [inactive addIndex:[conflict[@"index"] unsignedIntegerValue]]; }
     TSShortcutBinding *binding = TSBinding(key, flags);
     [macros enumerateObjectsUsingBlock:^(TSShortcutMacro *macro, NSUInteger index, BOOL *stop) {
-        if (macro.key.length == 0 || ![TSBinding(macro.key, macro.modifiers) isEqual:binding]) { return; }
+        if (macro.key.length == 0 || ![[store bindingsForMacroKey:macro.key modifiers:macro.modifiers] containsObject:binding]) { return; }
         [matches addObject:[[TSShortcutMatch alloc] initWithPath:macro.path menuItem:nil command:nil macro:macro winner:![inactive containsIndex:index]]];
     }];
     return [matches copy];
@@ -60,9 +60,10 @@
     TSVisitMenu(store.menu, @"", ^(NSMenuItem *item, NSString *path) {
         TSShortcutMatch *match = [byItem objectForKey:item];
         if (match != nil) { [orderedMenus addObject:match]; }
-        TSShortcutBinding *binding = TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask);
+        TSShortcutBinding *binding = TSShownBinding(item);
+        // A macro item shows its key as the layout adapts it; the file names it as given.
         if (match == nil && item.action == TSMacroAction() && item.keyEquivalent.length > 0) {
-            match = activeMacros[binding];
+            match = activeMacros[[store givenBindingForMacroItem:item path:path]];
         }
         if (match == nil) { return; }
         NSUInteger tier = [primaryBindings containsObject:binding] ? 0 : 1;

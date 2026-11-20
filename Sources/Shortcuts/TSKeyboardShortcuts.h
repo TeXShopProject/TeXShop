@@ -45,6 +45,8 @@ static inline NSString *TSShortcutDisplayKey(NSString *key, NSEventModifierFlags
 @property (nonatomic, readonly, strong) NSMenuItem *item;
 @property (nonatomic, readonly, copy) NSString *commandID;
 @property (nonatomic, readonly, copy) NSString *path;
+/// The default key as the menu gives it, before AppKit adapts it to the keyboard layout
+/// (1 for the & that a French layout shows); see -[TSShortcutStore shownDefaultForCommand:].
 @property (nonatomic, readonly, copy) NSString *defaultKey;
 @property (nonatomic, readonly) NSEventModifierFlags defaultModifiers;
 @property (nonatomic, readonly) BOOL defaultLocalization;
@@ -72,6 +74,10 @@ static inline NSString *TSShortcutDisplayKey(NSString *key, NSEventModifierFlags
 - (NSArray<NSString *> *)macrosAffectedByRestoringAll;
 - (NSArray<NSDictionary<NSString *, id> *> *)conflictsForMacroShortcuts:(NSArray<NSDictionary<NSString *, id> *> *)candidates;
 + (TSShortcutBinding *)normalizedKey:(NSString *)key modifiers:(NSEventModifierFlags)flags;
+/// The identifier of the Macros menu item made for the macro at this place in the macro file.
+FOUNDATION_EXPORT NSString *TSMacroItemIdentifier(NSIndexPath *indexPath);
+/// A macro key as its file names it and, when known, as the keyboard layout shows it.
++ (NSArray<TSShortcutBinding *> *)bindingsForMacroKey:(NSString *)key modifiers:(NSEventModifierFlags)flags;
 + (NSArray<NSDictionary<NSString *, id> *> *)menuBindings:(NSMenu *)menu;
 + (NSString *)reasonForMacroConflict:(NSDictionary<NSString *, id> *)conflict;
 + (NSString *)displayKey:(NSString *)key modifiers:(NSEventModifierFlags)flags;
