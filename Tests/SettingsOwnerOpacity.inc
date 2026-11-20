@@ -105,22 +105,22 @@ static void CollectThemeButtons(NSView *view,NSMutableArray<NSButton *> *buttons
     if([view isKindOfClass:NSButton.class]){[buttons addObject:(NSButton *)view];return;}
     for(NSView *child in view.subviews)CollectThemeButtons(child,buttons);
 }
-// Edit Theme keeps New Theme and Save Theme, in this order, without the button that made a theme from earlier color settings.
+// Edit Theme has only New Theme: colors are saved as they change, so no button saves the theme, and none makes a theme from earlier color settings.
 static void CheckThemeActionButtons(TSPreferences *owner,TSSettingsWindowController *shell){
     [shell selectCategoryIdentifier:TSSettingsCategoryAppearance];
     NSView *pane=[shell viewForCategoryIdentifier:TSSettingsCategoryAppearance];[pane layoutSubtreeIfNeeded];
     NSView *row=Find(pane,@"row.catalog.appearance.1.1");
     NSMutableArray<NSButton *> *buttons=[NSMutableArray array];CollectThemeButtons(row,buttons);
     NSArray *identifiers=[buttons valueForKey:@"identifier"];
-    Check(row!=nil && [identifiers isEqual:@[@"settings.8bu-du-vzc",@"settings.save-theme"]],[NSString stringWithFormat:@"Edit Theme has New Theme and Save Theme only: %@",identifiers]);
+    Check(row!=nil && [identifiers isEqual:@[@"settings.8bu-du-vzc"]],[NSString stringWithFormat:@"Edit Theme has New Theme only: %@",identifiers]);
+    Check(Find(pane,@"settings.save-theme")==nil,@"No button saves the theme being edited");
     Check(Find(pane,@"settings.uXA-S0-9dP")==nil && ![owner respondsToSelector:NSSelectorFromString(@"NewStyleFromPrefs:")],@"No button makes a theme from earlier color settings");
-    if(buttons.count!=2)return;
-    NSArray *titles=@[[fixture localizedStringForKey:@"catalog.appearance.1.1.choice.0" value:nil table:@"SettingsCategories"],[fixture localizedStringForKey:@"catalog.appearance.1.1.choice.1" value:nil table:@"SettingsCategories"]];
-    Check([buttons[0].title isEqual:titles[0]] && [buttons[1].title isEqual:titles[1]] && buttons[0].action==@selector(SaveNewStyle:) && buttons[1].action==@selector(SaveEditedStyle:),[NSString stringWithFormat:@"Theme buttons keep their titles and actions: %@ / %@",buttons[0].title,buttons[1].title]);
-    NSRect first=[buttons[0] convertRect:buttons[0].bounds toView:row],second=[buttons[1] convertRect:buttons[1].bounds toView:row];
-    Check(NSWidth(first)>=buttons[0].fittingSize.width-0.5 && NSWidth(second)>=buttons[1].fittingSize.width-0.5,@"Theme button titles fit");
-    Check(fabs(NSMinX(second)-NSMaxX(first)-8)<0.5 && fabs(NSMidY(first)-NSMidY(second))<0.5,@"Theme buttons stand side by side, 8 points apart");
-    Check(fabs(NSWidth(row.bounds)-NSMaxX(second)-12)<0.5 && NSMinX(first)>=0,@"Theme buttons end 12 points from the right edge of their row");
+    if(buttons.count!=1)return;
+    NSString *title=[fixture localizedStringForKey:@"catalog.appearance.1.1.choice.0" value:nil table:@"SettingsCategories"];
+    Check([buttons[0].title isEqual:title] && buttons[0].action==@selector(SaveNewStyle:),[NSString stringWithFormat:@"New Theme keeps its title and action: %@",buttons[0].title]);
+    NSRect first=[buttons[0] convertRect:buttons[0].bounds toView:row];
+    Check(NSWidth(first)>=buttons[0].fittingSize.width-0.5,@"New Theme title fits");
+    Check(fabs(NSWidth(row.bounds)-NSMaxX(first)-12)<0.5 && NSMinX(first)>=0,@"New Theme ends 12 points from the right edge of its row");
     puts("PASS: Edit Theme buttons");
 }
 static void CheckOwnerOpacity(TSPreferences *owner,TSSettingsWindowController *shell,NSDictionary *base) {

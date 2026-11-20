@@ -133,7 +133,6 @@ add(TSSettingsCategoryAppearance, @"row.catalog.appearance.0.1", @"SettingsCateg
 add(TSSettingsCategoryAppearance, @"heading.group.appearance.1", @"SettingsCategories", @"group.appearance.1.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryAppearance, @"row.catalog.appearance.1.0", @"SettingsCategories", @"catalog.appearance.1.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryAppearance, @"row.catalog.appearance.1.1", @"SettingsCategories", @"catalog.appearance.1.1.choice.0", TSSettingsSearchWeightChoice);
-add(TSSettingsCategoryAppearance, @"row.catalog.appearance.1.1", @"SettingsCategories", @"catalog.appearance.1.1.choice.1", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryAppearance, @"heading.group.appearance.2", @"SettingsCategories", @"group.appearance.2.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryAppearance, @"settings.L8Q-Ov-EVr", @"SettingsCategories", @"catalog.appearance.2.0.item.0", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryAppearance, @"settings.0fE-JX-Dl8", @"SettingsCategories", @"catalog.appearance.2.0.item.0", TSSettingsSearchWeightLabel);

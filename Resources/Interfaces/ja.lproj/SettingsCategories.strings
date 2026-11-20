@@ -156,7 +156,6 @@
 "group.appearance.1.title" = "テーマの編集";
 "catalog.appearance.1.0.title" = "編集するテーマ";
 "catalog.appearance.1.1.choice.0" = "新規テーマを作成";
-"catalog.appearance.1.1.choice.1" = "編集中のテーマに上書き保存";
 "group.appearance.2.title" = "ウインドウ";
 "catalog.appearance.2.0.column.0" = "文字";
 "catalog.appearance.2.0.column.1" = "背景";

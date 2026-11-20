@@ -156,7 +156,6 @@
 "group.appearance.1.title" = "테마 편집";
 "catalog.appearance.1.0.title" = "편집할 테마";
 "catalog.appearance.1.1.choice.0" = "새 테마 만들기";
-"catalog.appearance.1.1.choice.1" = "테마 덮어쓰기";
 "group.appearance.2.title" = "윈도우";
 "catalog.appearance.2.0.column.0" = "전경색";
 "catalog.appearance.2.0.column.1" = "배경색";

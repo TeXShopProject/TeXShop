@@ -156,7 +156,6 @@
 "group.appearance.1.title" = "Editar tema";
 "catalog.appearance.1.0.title" = "Tema a editar";
 "catalog.appearance.1.1.choice.0" = "Nuevo tema";
-"catalog.appearance.1.1.choice.1" = "Sobrescribir tema";
 "group.appearance.2.title" = "Ventanas";
 "catalog.appearance.2.0.column.0" = "Primer plano";
 "catalog.appearance.2.0.column.1" = "Fondo";

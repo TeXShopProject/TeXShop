@@ -1052,7 +1052,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     for (NSView *child in view.subviews) {
         if ([child isKindOfClass:NSColorWell.class] && ((NSColorWell *)child).action != @selector(BlockCursorColorChanged:))
             [(NSColorWell *)child setEnabled:enabled];
-        if ([child isKindOfClass:NSButton.class] && (((NSButton *)child).action == @selector(SaveNewStyle:) || ((NSButton *)child).action == @selector(SaveEditedStyle:)))
+        if ([child isKindOfClass:NSButton.class] && (((NSButton *)child).action == @selector(SaveNewStyle:)))
             [(NSButton *)child setEnabled:enabled];
         [self setThemeEditingEnabled:enabled inView:child];
     }

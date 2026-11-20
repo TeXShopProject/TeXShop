@@ -231,8 +231,8 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
     [self splitMatrix:(NSMatrix *)[self take:@"settings.621" from:views] identifiers:@[@"settings.cell.839",@"settings.cell.cgA-o7-Bdw",@"settings.cell.f1k-jx-ley",@"settings.cell.840",@"settings.cell.841",@"settings.cell.842",@"settings.cell.843",@"settings.cell.844",@"settings.cell.845",@"settings.cell.846",@"settings.cell.XoX-gZ-pO3",@"settings.cell.PhR-Vr-jce",@"settings.cell.CPb-hk-Gqb"] into:views];
     [self splitMatrix:(NSMatrix *)[self take:@"settings.cp7-bc-avh" from:views] identifiers:@[@"settings.cell.teg-0p-Q8J",@"settings.cell.3eF-XA-ahc",@"settings.cell.8Wq-gx-FqO"] into:views];
     NSButton *legacy=[NSButton radioButtonWithTitle:@"" target:preferences action:@selector(legacySpellCheckPressed:)];legacy.identifier=@"settings.legacy-spelling";preferences.legacySpellCheckButton=legacy;views[@"settings.legacy-spelling"]=legacy;
-    NSArray *newIDs=@[@"settings.edit-completion",@"settings.hidden-settings-help",@"settings.save-theme"];
-    SEL actions[]={@selector(openCommandCompletionList:),@selector(displayCommentLines:),@selector(SaveEditedStyle:)};
+    NSArray *newIDs=@[@"settings.edit-completion",@"settings.hidden-settings-help"];
+    SEL actions[]={@selector(openCommandCompletionList:),@selector(displayCommentLines:)};
     for(NSUInteger i=0;i<newIDs.count;i++){NSButton *b=[NSButton buttonWithTitle:@"" target:i==0?nil:preferences action:actions[i]];b.identifier=newIDs[i];views[newIDs[i]]=b;}
     NSButton *markKeys=[NSButton checkboxWithTitle:@"" target:preferences action:@selector(completionMarkKeysPressed:)];markKeys.identifier=@"settings.completion-mark-keys";preferences.completionMarkKeysButton=markKeys;views[@"settings.completion-mark-keys"]=markKeys;
     // Choosing a profile asks at once whether to apply it.

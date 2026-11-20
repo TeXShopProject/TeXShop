@@ -156,7 +156,6 @@
 "group.appearance.1.title" = "编辑主题";
 "catalog.appearance.1.0.title" = "正在编辑的主题";
 "catalog.appearance.1.1.choice.0" = "新建主题";
-"catalog.appearance.1.1.choice.1" = "覆盖主题";
 "group.appearance.2.title" = "窗口";
 "catalog.appearance.2.0.column.0" = "前景";
 "catalog.appearance.2.0.column.1" = "背景";
