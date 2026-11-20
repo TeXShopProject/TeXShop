@@ -4028,7 +4028,7 @@ Splitting and unsplitting the window leave the other view as it is: after the wi
 \label{Independence_Split_Window_Section}
 
 When this feature was  introduced in TeXShop 5.23, the two views for the full window were also the two views displayed by splitting the window. This is no longer the case. Instead if either of the views for the full window is split, it will become the top view of the split window. The bottom view of this window is a completely separate view, which
-can be scrolled to any position desired. Unsplitting the window keeps the place shown at the top of the top view, so unless that view was scrolled, the original view returns.
+can be scrolled to any position desired. Unsplitting the window keeps the view you were using as the full view (see \cref{Active_View_Split_Window}); when that is the top view, the place shown at its top stays, so unless that view was scrolled, the original full view returns. Either way the other full view stays as it was, so Option-2 still shows it.
 If we then type Option-2 to get the second full view and then split that view, the second full view will appear as the top view of the split window, and the bottom view will be the same view obtained when we first split. This means that
 users who use the new Switch Preview Views feature can also use the older Split Window feature. Then they will deal with three independent views, the two views for the full window (which become the top view when splitting),
 and the bottom view when either view is split.

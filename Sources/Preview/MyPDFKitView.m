@@ -110,6 +110,8 @@ static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument 
     CGFloat otherViewScale;
     PDFSelection *otherViewSelection;
     TSLinkPreviewView *otherViewPinnedLinkPreview;
+    // Closing the window closes that popup, as it does those shown (#60).
+    id otherViewWindowObserver;
     // The popup's frame in window coordinates, less the top left corner of this view.
     NSRect otherViewPinnedLinkPreviewFrame;
 }
@@ -125,6 +127,7 @@ static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument 
 - (void)dealloc
 {
     if (linkPreviewEventMonitor) [NSEvent removeMonitor:linkPreviewEventMonitor];
+    if (otherViewWindowObserver) [[NSNotificationCenter defaultCenter] removeObserver:otherViewWindowObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     if (external_scanner != NULL)
         synctex_scanner_free(external_scanner);
@@ -8781,8 +8784,15 @@ else
         // The selection shown when the PDF was shown again can still be in the PDF shown before.
         [self setCurrentSelection:TSSelectionInDocument(otherViewSelection, self.document)];
         TSPreviewPaneRestore(self, otherViewPlace);
-        [self fitContentWidth];
-        if (otherViewPinnedLinkPreview && !self.skipLinks)
+        if (resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH) {
+            // Fitted to the width the view has now, as after the window was resized; the place
+            // is then put back at that magnification.
+            [self fitContentWidth];
+            TSPreviewPaneRestore(self, otherViewPlace);
+        }
+        // A popup pinned while Link Popups was off, with Control, comes back too; turning Link
+        // Popups off closed those pinned before.
+        if (otherViewPinnedLinkPreview)
             [self attachPinnedLinkPreview:otherViewPinnedLinkPreview windowFrame:NSOffsetRect(otherViewPinnedLinkPreviewFrame,
                 NSMinX(viewFrame), NSMaxY(viewFrame))];
     }
@@ -8790,6 +8800,13 @@ else
     [[NSNotificationCenter defaultCenter] removeObserver:self name:PDFViewDocumentChangedNotification object:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(otherViewDocumentChanged:)
         name:PDFViewDocumentChangedNotification object:self];
+    // A block, which the link popups' own observers of the window, removed by name, leave alone.
+    if (otherViewWindowObserver) [[NSNotificationCenter defaultCenter] removeObserver:otherViewWindowObserver];
+    __weak MyPDFKitView *weakSelf = self;
+    otherViewWindowObserver = [[NSNotificationCenter defaultCenter] addObserverForName:NSWindowWillCloseNotification
+        object:self.window queue:nil usingBlock:^(NSNotification *notification) {
+            [weakSelf closeOtherViewPinnedLinkPreview];
+        }];
     self.oldUsed = YES;
     otherViewPlace = place;
     otherViewPageStyle = style;
@@ -8995,8 +9012,12 @@ else
     if (self.handlingLink || pinnedLinkPreview) [self doKillPopup];
     BOOL preserveZoom = _pdfViewReady && self.document && document && !self.autoScales;
     CGFloat previousScale = preserveZoom ? self.scaleFactor : 0;
+    PDFDocument *previousDocument = self.document;
     TSPreviewSetDocument(self, ^{ [super setDocument:document]; });
     [TSPreviewScrollerKeeper installInView:self];
+    // A selection in the PDF shown before would still be copied, with text no longer shown (#60).
+    if (document != previousDocument && self.currentSelection)
+        [super setCurrentSelection:nil];
     // Apply the resolved direction after PDFKit has installed the new catalog.
     // Explicit source comments and toolbar choices take precedence over the PDF.
     if (document && self.myDocument) {
