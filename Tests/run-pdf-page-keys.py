@@ -22,6 +22,9 @@ MUTATIONS = {
     'keeps-position': ('    [self layoutDocumentView];\n    if ([self paginatedScrollMinimum:&minimum maximum:&maximum]) {\n        // The next page from its top', '    if (NO) {\n        // The next page from its top'),
     'continuous-too': ('    if (self.displayMode != kPDFDisplaySinglePage && self.displayMode != kPDFDisplayTwoUp)\n        return NO;\n    if (event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagOption |\n                               NSEventModifierFlagControl | NSEventModifierFlagShift))\n        return NO;\n    NSString *characters = event.charactersIgnoringModifiers;\n    if (characters.length != 1) return NO;\n    unichar key = [characters characterAtIndex:0];\n    if (key != NSPageUpFunctionKey',
                        '    if (event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagOption |\n                               NSEventModifierFlagControl | NSEventModifierFlagShift))\n        return NO;\n    NSString *characters = event.charactersIgnoringModifiers;\n    if (characters.length != 1) return NO;\n    unichar key = [characters characterAtIndex:0];\n    if (key != NSPageUpFunctionKey'),
+    'screen-and-a-half': ('CGFloat step = visible - overlap > 0 ? visible - overlap : visible;', 'CGFloat step = 1.5 * visible;'),
+    'no-overlap': ('CGFloat step = visible - overlap > 0 ? visible - overlap : visible;', 'CGFloat step = visible;'),
+    'insets-ignored': ('CGFloat visible = NSHeight(clip.bounds) - (fabs(insets.top) + fabs(insets.bottom)) / magnification;', 'CGFloat visible = NSHeight(clip.bounds);'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -49,7 +52,7 @@ program = r'''
 #define SUD NSUserDefaults.standardUserDefaults
 #define LeftRightArrowsAlwaysPageKey @"LeftRightArrowsAlwaysPage"
 static NSString *context;
-static int failures;
+static int failures; static NSUInteger measuredSteps;
 static void check(BOOL ok, NSString *message) {
  if(!ok) { fprintf(stderr,"FAIL: %s [%s]\n",message.UTF8String,context.UTF8String); failures++; }
 }
@@ -81,6 +84,21 @@ static PDFDocument *document(void) {
 }
 // The shown page and how far down it the top of the visible area is: 0 at its top, 1 at the bottom of
 // the scroll range (the page's bottom in view).
+// One press moves the page by the visible height on screen less the part that stays in view, as AppKit
+// pages a scroll view: measured in screen points, away from the ends where the move is cut short.
+static CGFloat ExpectedStep(PDFView *v) {
+ NSScrollView *scroll=v.documentView.enclosingScrollView;
+ return NSHeight(scroll.contentView.frame)-scroll.contentInsets.top-scroll.contentInsets.bottom-scroll.verticalPageScroll;
+}
+static void CheckStep(PDFView *v, CGFloat before, NSString *what) {
+ NSScrollView *scroll=v.documentView.enclosingScrollView;
+ CGFloat minimum,maximum,y=scroll.contentView.bounds.origin.y,m=scroll.magnification;
+ if(![(id)v paginatedScrollMinimum:&minimum maximum:&maximum]) return;
+ if((y-minimum)*m<0.5||(maximum-y)*m<0.5) return; // cut short at an end
+ measuredSteps++;
+ CGFloat moved=fabs(y-before)*m, expected=ExpectedStep(v);
+ check(fabs(moved-expected)<=1,[NSString stringWithFormat:@"%@ moves %.1f points on screen, the visible height less the overlap (%.1f)",what,moved,expected]);
+}
 static NSUInteger ShownPage(PDFView *v) { return [v.document indexForPage:v.currentPage]; }
 static double ShownFraction(PDFView *v) {
  CGFloat minimum, maximum;
@@ -104,6 +122,7 @@ int main(void) { @autoreleasepool {
   NSScrollView *scroll=v.documentView.enclosingScrollView;
   if(inset.doubleValue>0){scroll.automaticallyAdjustsContentInsets=NO;scroll.contentInsets=NSEdgeInsetsMake(inset.doubleValue,0,0,0);}
   [v goToPage:[doc pageAtIndex:4]];[v layoutDocumentView];pump();
+  if(zoomed) check(scroll.verticalPageScroll>0,@"the scroll view keeps part of the screen in view");
   if(!paginated) {
    check(![v pageKeyInPaginatedView:key(NSPageDownFunctionKey,0)] && ![v pageKeyInPaginatedView:key(NSPageUpFunctionKey,0)],@"continuous display is left to PDFKit");
    [v removeFromSuperview];[w close];continue;
@@ -129,7 +148,9 @@ int main(void) { @autoreleasepool {
    double last=ShownFraction(v);check(last<0.01,@"starts at the top");
    int presses=0;
    while(ShownFraction(v)>-1 && ShownFraction(v)<0.99 && ShownPage(v)==start && presses<20){
+    CGFloat before=clip.bounds.origin.y;
     [v keyDown:key(NSPageDownFunctionKey,0)];pump();presses++;
+    if(ShownPage(v)==start) CheckStep(v,before,@"Page Down");
     double f=ShownFraction(v);
     if(ShownPage(v)==start){ check(f>last+0.05,@"Page Down scrolls down the page"); last=f; }
    }
@@ -139,8 +160,11 @@ int main(void) { @autoreleasepool {
    check(ShownPage(v)==start+stride && ShownFraction(v)<0.01,@"from the bottom, Page Down shows the next page from its top");
    [v keyDown:key(NSPageUpFunctionKey,0)];pump();
    check(ShownPage(v)==start && ShownFraction(v)>0.99,@"from the top, Page Up shows the previous page from its bottom");
+   CGFloat before=clip.bounds.origin.y;
    [v keyDown:key(NSPageUpFunctionKey,0)];pump();
    check(ShownPage(v)==start && ShownFraction(v)<0.99 && ShownFraction(v)>-1,@"Page Up scrolls up the page");
+   NSUInteger measuredBefore=measuredSteps; CheckStep(v,before,@"Page Up");
+   check(measuredSteps==measuredBefore+1,@"Page Up from the bottom is measured away from the top");
   }
   // The first and last pages keep the key.
   [v goToFirstPage:nil];[v layoutDocumentView];pump();
@@ -149,6 +173,7 @@ int main(void) { @autoreleasepool {
   check([v pageKeyInPaginatedView:key(NSPageUpFunctionKey,0)] && ShownPage(v)==0 && NSEqualPoints(before,scroll.contentView.bounds.origin),@"Page Up at the top of the first page keeps the key");
   [v removeFromSuperview];[w close];
  }
+ check(measuredSteps>=8,[NSString stringWithFormat:@"moves away from the ends were measured (%lu)",(unsigned long)measuredSteps]);
  if(!failures) puts("PASS: Page Up and Page Down in four display modes, fitting and zoomed, with and without a top inset");
  return failures?1:0;
 }}
