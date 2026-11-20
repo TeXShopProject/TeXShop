@@ -76,6 +76,15 @@
 @property (atomic, strong, readwrite) NSColor *previewPaperColor;
 @end
 
+// A selection kept for another view, if all of it is in the PDF shown (#60).
+static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument *document)
+{
+    if (!selection || !document || !selection.pages.count) return nil;
+    for (PDFPage *page in selection.pages)
+        if (page.document != document) return nil;
+    return selection;
+}
+
 @implementation MyPDFKitView : PDFView
 {
     TSExternalPDFPosition secondViewport;
@@ -94,6 +103,17 @@
     BOOL pinnedLinkPreviewMovePending;
     NSUInteger pinnedLinkPreviewMoveCount;
     BOOL _skipLinks;
+    // The other view of Switch Views in a window that is not split (#60), kept while oldUsed.
+    TSPreviewPanePlace otherViewPlace;
+    NSInteger otherViewPageStyle, otherViewFirstPageStyle, otherViewResizeOption;
+    BOOL otherViewAutoScales;
+    CGFloat otherViewScale;
+    PDFSelection *otherViewSelection;
+    TSLinkPreviewView *otherViewPinnedLinkPreview;
+    // Closing the window closes that popup, as it does those shown (#60).
+    id otherViewWindowObserver;
+    // The popup's frame in window coordinates, less the top left corner of this view.
+    NSRect otherViewPinnedLinkPreviewFrame;
 }
 
 + (void)initialize
@@ -107,6 +127,7 @@
 - (void)dealloc
 {
     if (linkPreviewEventMonitor) [NSEvent removeMonitor:linkPreviewEventMonitor];
+    if (otherViewWindowObserver) [[NSNotificationCenter defaultCenter] removeObserver:otherViewWindowObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     if (external_scanner != NULL)
         synctex_scanner_free(external_scanner);
@@ -344,7 +365,6 @@
     // changed by Terada (until this line)
     
     self.oldUsed = NO;
-    self.doScroll = YES;
     
 //    self.skipLinks = NO;
     
@@ -424,6 +444,8 @@
 									[myStepper setIntegerValue:mag];
 									[myStepper1 setIntegerValue:mag];
 									[self setScaleFactor: theMagnification];
+									// Setting the magnification made it fixed; Actual Size stays chosen.
+									resizeOption = NEW_PDF_ACTUAL_SIZE;
 									break;
 
 		case NEW_PDF_FIT_TO_NONE:	theMagnification = [SUD floatForKey:PdfMagnificationKey];
@@ -1801,6 +1823,8 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	
 	
 	[self cleanupMarquee: YES];
+	// Turning the pages closes pinned popups, also that of the other view of Switch Views (#60).
+	[(MyPDFKitView *)((TSPreviewWindow *)self.myPDFWindow).myPDFKitView closeOtherViewPinnedLinkPreview];
 
 	// [self rotateClockwisePrimary];
 	[(TSPreviewWindow *)self.myPDFWindow fixAfterRotation: YES];
@@ -1830,6 +1854,8 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	
 
 	[self cleanupMarquee: YES];
+	// Turning the pages closes pinned popups, also that of the other view of Switch Views (#60).
+	[(MyPDFKitView *)((TSPreviewWindow *)self.myPDFWindow).myPDFKitView closeOtherViewPinnedLinkPreview];
 	
 	// [self rotateCounterclockwisePrimary];
 
@@ -2830,7 +2856,6 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 - (void)changePageStyleTo:(NSInteger)newStyle
 {
     if (newStyle < PDF_SINGLE_PAGE_STYLE || newStyle > PDF_DOUBLE_MULTI_PAGE_STYLE || newStyle == pageStyle) return;
-    self.doScroll = NO;
     // A pinned popup stays; the display format does not go elsewhere (#35).
     [self cleanupMarqueeKeepingPinnedLinkPreview];
     [self performPreviewLayoutChange:^{
@@ -4481,8 +4506,11 @@ The system then remembers the new number and sends is to the Timer which will di
 
 - (void) linkPopupsChanged
 {
-    if (self.skipLinks)
+    if (self.skipLinks) {
         [self doKillPopup];
+        // Also the popup pinned in the other view of Switch Views (#60).
+        [self closeOtherViewPinnedLinkPreview];
+    }
 }
 
 // Both panes of a document, whenever they first show a PDF, follow the document's Link
@@ -8748,6 +8776,99 @@ else
 	return result;
 }
 
+// Switch Views in a window that is not split (#60). The view shown and the other view change
+// places, each with what it shows: the place at the top edge, the display format, the
+// magnification, the selection and a pinned link popup, which comes back at the same place in
+// the window. The first time only the place shown is kept as the other view; the view shown
+// starts from it without the pinned popup, which stays with the other view. When the PDF is
+// shown again, as after typesetting, the other view keeps its place, display format and
+// magnification, but like the view shown it no longer has its selection and pinned popup.
+- (void)switchToOtherView
+{
+    if (!self.document.pageCount) return;
+    [self cleanupMarqueeKeepingPinnedLinkPreview];
+    if (self.handlingLink) [self killTransientLinkPreview];
+
+    TSPreviewPanePlace place = TSPreviewPaneCapture(self);
+    NSInteger style = pageStyle, firstStyle = firstPageStyle, resize = resizeOption;
+    BOOL autoScales = self.autoScales;
+    CGFloat scale = self.scaleFactor;
+    PDFSelection *selection = self.currentSelection;
+    NSRect viewFrame = [self convertRect:self.bounds toView:nil];
+    NSRect popupFrame = NSZeroRect;
+    TSLinkPreviewView *popup = [self detachPinnedLinkPreviewWithWindowFrame:&popupFrame];
+    popupFrame = NSOffsetRect(popupFrame, -NSMinX(viewFrame), -NSMaxY(viewFrame));
+
+    if (self.oldUsed) {
+        firstPageStyle = otherViewFirstPageStyle;
+        if (pageStyle != otherViewPageStyle) {
+            pageStyle = otherViewPageStyle;
+            [self setupPageStyle];
+        }
+        resizeOption = otherViewResizeOption;
+        if (otherViewAutoScales)
+            [self setAutoScales:YES];
+        else {
+            // Also Fit to Content Width: its place is put back at the magnification it had, which
+            // is fitted again below only if the width of the view has changed since.
+            [self setAutoScales:NO];
+            [self setMagnification:otherViewScale];
+        }
+        resizeOption = otherViewResizeOption;
+        // The selection shown when the PDF was shown again can still be in the PDF shown before.
+        [self setCurrentSelection:TSSelectionInDocument(otherViewSelection, self.document)];
+        TSPreviewPaneRestore(self, otherViewPlace);
+        if (resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH) {
+            // Fitted to the width the view has now, as after the window was resized; the place
+            // is then put back at that magnification.
+            [self fitContentWidth];
+            TSPreviewPaneRestore(self, otherViewPlace);
+        }
+        // A popup pinned while Link Popups was off, with Control, comes back too; turning Link
+        // Popups off closed those pinned before.
+        if (otherViewPinnedLinkPreview)
+            [self attachPinnedLinkPreview:otherViewPinnedLinkPreview windowFrame:NSOffsetRect(otherViewPinnedLinkPreviewFrame,
+                NSMinX(viewFrame), NSMaxY(viewFrame))];
+    }
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:PDFViewDocumentChangedNotification object:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(otherViewDocumentChanged:)
+        name:PDFViewDocumentChangedNotification object:self];
+    // A block, which the link popups' own observers of the window, removed by name, leave alone.
+    if (otherViewWindowObserver) [[NSNotificationCenter defaultCenter] removeObserver:otherViewWindowObserver];
+    __weak MyPDFKitView *weakSelf = self;
+    otherViewWindowObserver = [[NSNotificationCenter defaultCenter] addObserverForName:NSWindowWillCloseNotification
+        object:self.window queue:nil usingBlock:^(NSNotification *notification) {
+            [weakSelf closeOtherViewPinnedLinkPreview];
+        }];
+    self.oldUsed = YES;
+    otherViewPlace = place;
+    otherViewPageStyle = style;
+    otherViewFirstPageStyle = firstStyle;
+    otherViewResizeOption = resize;
+    otherViewAutoScales = autoScales;
+    otherViewScale = scale;
+    otherViewSelection = selection;
+    otherViewPinnedLinkPreview = popup;
+    otherViewPinnedLinkPreviewFrame = popupFrame;
+
+    [self scaleChanged:nil];
+    [self.myDocument updatePreviewLayoutControls];
+}
+
+// Another PDF, as after typesetting: the selection and the pinned popup of the other view
+// belong to the PDF shown before, and go as those of the view shown do (#60).
+- (void)otherViewDocumentChanged:(NSNotification *)notification
+{
+    otherViewSelection = nil;
+    [self closeOtherViewPinnedLinkPreview];
+}
+
+- (void)closeOtherViewPinnedLinkPreview
+{
+    otherViewPinnedLinkPreview = nil;
+}
+
 // The toolbar, the Preview menu and the search results work with this view from now on,
 // whether or not it has the keyboard focus (#25).
 - (void)becomeActiveView
@@ -8925,8 +9046,12 @@ else
     if (self.handlingLink || pinnedLinkPreview) [self doKillPopup];
     BOOL preserveZoom = _pdfViewReady && self.document && document && !self.autoScales;
     CGFloat previousScale = preserveZoom ? self.scaleFactor : 0;
+    PDFDocument *previousDocument = self.document;
     TSPreviewSetDocument(self, ^{ [super setDocument:document]; });
     [TSPreviewScrollerKeeper installInView:self];
+    // A selection in the PDF shown before would still be copied, with text no longer shown (#60).
+    if (document != previousDocument && self.currentSelection)
+        [super setCurrentSelection:nil];
     // Apply the resolved direction after PDFKit has installed the new catalog.
     // Explicit source comments and toolbar choices take precedence over the PDF.
     if (document && self.myDocument) {

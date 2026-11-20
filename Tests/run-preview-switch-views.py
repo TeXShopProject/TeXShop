@@ -3,7 +3,9 @@
 shown (#25): the parts change places with their size, place, display format, magnification,
 selection, pinned link popup and focus, and switching again gives back the first arrangement.
 The toolbar's page number field shows the page of the active part and moves it (#14), and the
-outline in the drawer shows the entry for the page of the active part, also of the second part (#25)."""
+outline in the drawer shows the entry for the page of the active part, also of the second part (#25).
+In a window that is not split, Switch Views changes between two views, each with its own place,
+display format, magnification, selection and pinned link popup (#60)."""
 from pathlib import Path
 import argparse
 import subprocess
@@ -32,7 +34,7 @@ MUTATIONS = {
     'unsplit-sizes-swapped': ('window', 'theFrame1 = keepsSecondPart ? firstFrameBefore : [self.myPDFKitView frame];\n                theFrame2 = keepsSecondPart ? secondFrameBefore : [self.myPDFKitView2 frame];\n                // The height',
                               'theFrame1 = [self.myPDFKitView frame];\n                theFrame2 = [self.myPDFKitView2 frame];\n                // The height'),
     # view code
-    'search-not-followed': ('view', '\t[self resetSearchDelegate];\n    [self.myDocument', '    [self.myDocument'),
+    'search-not-followed': ('view', '\t[self resetSearchDelegate];\n\t// The drawer', '\t// The drawer'),
     'places-not-swapped': ('window', '    TSPreviewPaneRestore(upperView, lower);\n    TSPreviewPaneRestore(lowerView, upper);\n', ''),
     # The page number field (#14).
     'page-count-cached': ('view', '\tNSInteger pageCount = (NSInteger)[[self document] pageCount];\n', '\tNSInteger pageCount = totalPages;\n'),
@@ -46,6 +48,26 @@ MUTATIONS = {
     'outline-first-of-same-page': ('view', 'itemPageIndex >= newlySelectedPageIndex)', 'itemPageIndex > newlySelectedPageIndex)'),
     'outline-kept-before-first': ('view', '\t\t[_outlineView deselectAll: nil];\n', ''),
     'outline-click-not-kept': ('view', '\t\t\tnewlySelectedRow = oldRow;\n', '\t\t\t;\n'),
+    # Switch Views in a window that is not split (#60).
+    'unsplit-format-shared': ('view', '        if (pageStyle != otherViewPageStyle) {', '        if (NO) {'),
+    'unsplit-magnification-shared': ('view', '            [self setMagnification:otherViewScale];\n', '            ;\n'),
+    'unsplit-fit-lost': ('view', '        if (otherViewAutoScales)\n', '        if (NO)\n'),
+    'unsplit-resize-lost': ('view', '        resizeOption = otherViewResizeOption;\n        // The selection shown', '        // The selection shown'),
+    'unsplit-place-lost': ('view', '        [self setCurrentSelection:TSSelectionInDocument(otherViewSelection, self.document)];\n        TSPreviewPaneRestore(self, otherViewPlace);\n', '        [self setCurrentSelection:TSSelectionInDocument(otherViewSelection, self.document)];\n'),
+    'unsplit-selection-shared': ('view', '        [self setCurrentSelection:TSSelectionInDocument(otherViewSelection, self.document)];\n', ''),
+    'unsplit-popup-shared': ('view', '    TSLinkPreviewView *popup = [self detachPinnedLinkPreviewWithWindowFrame:&popupFrame];\n', '    TSLinkPreviewView *popup = nil;\n'),
+    'unsplit-popup-moved': ('view', 'NSOffsetRect(otherViewPinnedLinkPreviewFrame,\n                NSMinX(viewFrame), NSMaxY(viewFrame))', 'otherViewPinnedLinkPreviewFrame'),
+    'unsplit-controls-stale': ('view', '    [self scaleChanged:nil];\n    [self.myDocument updatePreviewLayoutControls];\n}\n', '}\n'),
+    'unsplit-content-width-not-fitted': ('view', '            [self fitContentWidth];\n            TSPreviewPaneRestore', '            TSPreviewPaneRestore'),
+    'unsplit-stale-popup-kept': ('view', '    otherViewSelection = nil;\n    [self closeOtherViewPinnedLinkPreview];\n', '    otherViewSelection = nil;\n'),
+    'unsplit-stale-selection-kept': ('view', 'TSSelectionInDocument(otherViewSelection, self.document)', 'otherViewSelection'),
+    'unsplit-popup-after-links-off': ('view', '        [self doKillPopup];\n        // Also the popup pinned in the other view of Switch Views (#60).\n        [self closeOtherViewPinnedLinkPreview];\n', '        [self doKillPopup];\n'),
+    'unsplit-popup-after-rotation': ('view', "\t[self cleanupMarquee: YES];\n\t// Turning the pages closes pinned popups, also that of the other view of Switch Views (#60).\n\t[(MyPDFKitView *)((TSPreviewWindow *)self.myPDFWindow).myPDFKitView closeOtherViewPinnedLinkPreview];\n\n\t// [self rotateClockwisePrimary];", "\t[self cleanupMarquee: YES];\n\n\t// [self rotateClockwisePrimary];"),
+    'unsplit-content-width-at-other-scale': ('view', '        else {\n            // Also Fit to Content Width', '        else if (otherViewResizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH)\n            [self setAutoScales:NO];\n        else {\n            // Also Fit to Content Width'),
+    'unsplit-content-width-place-before-fit': ('view', '            [self fitContentWidth];\n            TSPreviewPaneRestore(self, otherViewPlace);\n', '            [self fitContentWidth];\n'),
+    'unsplit-popup-pinned-while-off-lost': ('view', '        if (otherViewPinnedLinkPreview)\n', '        if (otherViewPinnedLinkPreview && !self.skipLinks)\n'),
+    'unsplit-popup-after-close': ('view', '            [weakSelf closeOtherViewPinnedLinkPreview];\n', ''),
+    'actual-size-lost': ('view', '\t\t\t\t\t\t\t\t\t// Setting the magnification made it fixed; Actual Size stays chosen.\n\t\t\t\t\t\t\t\t\tresizeOption = NEW_PDF_ACTUAL_SIZE;\n', ''),
     'outline-kept-on-other-page': ('view', '[[self document] indexForPage: oldPage] == newlySelectedPageIndex)', '[[self document] indexForPage: oldPage] <= newPageIndex)'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
@@ -64,7 +86,7 @@ def last_method(source, signature):
 window_methods = [last_method(window_source, s) for s in (
     # The split places the parts by their frames (#55).
     'static void TSPreviewPlacePartByFrame(NSView *part)',
-    '- (void) mainSplitPdfKitWindow', '- (void)switchViews;', '- (void)switchSplitParts\n', '- (void) splitPdfKitWindow:',
+    '- (void) mainSplitPdfKitWindow', '- (void)switchViews\n', '- (void)switchSplitParts\n', '- (void) splitPdfKitWindow:',
     '- (void) goToKitPage: sender', '- (IBAction) takeDestinationFromOutline: (id) sender')]
 view_methods = [last_method(view_source, s) for s in (
     '- (void)saveLocation\n', '- (void)restoreLocation\n',
@@ -73,7 +95,13 @@ view_methods = [last_method(view_source, s) for s in (
     '- (NSInteger) outlineView: (NSOutlineView *) outlineView numberOfChildrenOfItem:',
     '- (id) outlineView: (NSOutlineView *) outlineView child:', '- (BOOL) outlineView: (NSOutlineView *) outlineView isItemExpandable:',
     '- (id) outlineView: (NSOutlineView *) outlineView objectValueForTableColumn:', '- (NSInteger)index\n', '- (void)moveSplitToCorrectSpot:',
-    '- (BOOL)hasPinnedLinkPreview\n', '- (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:',
+    '- (BOOL)hasPinnedLinkPreview\n',
+    # Switch Views in a window that is not split (#60).
+    'static PDFSelection *TSSelectionInDocument(', '- (void)switchToOtherView\n',
+    '- (void)otherViewDocumentChanged:', '- (void)closeOtherViewPinnedLinkPreview\n', '- (void) linkPopupsChanged\n',
+    '- (void) rotateClockwise:sender', '- (void) rotateCounterclockwise:sender',
+    # The magnification chosen in the Preview menu (#60 audit).
+    '- (void) setupMagnificationStyle\n', '- (void)changePDFViewSizeTo: (NSInteger)newResizeOption', '- (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:',
     '- (void)attachPinnedLinkPreview:', '- (void)keepPinnedLinkPreviewInView\n', '- (void)closePinnedLinkPreview\n', '- (void)keepPinnedLinkPreviewThroughMove\n', '- (BOOL)beginKeepingPinnedLinkPreviewOnPage\n', '- (void)endKeepingPinnedLinkPreviewOnPage:',
     # What the toolbar, the menus and the search results follow (#25 audit).
     '- (void)setMagnification: (double)magnification', '- (void) scaleChanged: (NSNotification *) notification',
@@ -107,7 +135,8 @@ program = r'''
 #import "TSPreviewSplitDivider.h"
 // Values from globals.h.
 enum { PDF_SINGLE_PAGE_STYLE = 1, PDF_TWO_PAGE_STYLE = 2, PDF_MULTI_PAGE_STYLE = 3, PDF_DOUBLE_MULTI_PAGE_STYLE = 4 };
-enum { NEW_PDF_ACTUAL_SIZE = 1, NEW_PDF_FIT_TO_NONE = 2, NEW_PDF_FIT_TO_WINDOW = 3, NEW_PDF_FIT_TO_WIDTH = 4, NEW_PDF_FIT_TO_CONTENT_WIDTH = 6 };
+enum { NEW_PDF_ACTUAL_SIZE = 1, NEW_PDF_FIT_TO_NONE = 2, NEW_PDF_FIT_TO_WINDOW = 3, NEW_PDF_FIT_TO_WIDTH = 4, NEW_PDF_FIT_TO_HEIGHT = 5, NEW_PDF_FIT_TO_CONTENT_WIDTH = 6 };
+#define PdfMagnificationKey @"PdfMagnification"
 enum { NEW_MOUSE_MODE_SCROLL = 1, NEW_MOUSE_MODE_SELECT_TEXT = 2 };
 enum { MOUSE_MODE_MAG_GLASS = 2 };
 // The settings are in memory only (TestAppKitIsolation.h).
@@ -152,6 +181,7 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 - (void)mainSplitPdfKitWindow;
 - (void)splitPdfKitWindow:(id)sender;
 - (void)switchViews;
+- (void)fixAfterRotation:(BOOL)clockwise;
 - (void)goToKitPage:(id)sender;
 - (IBAction)takeDestinationFromOutline:(id)sender;
 @end
@@ -159,6 +189,7 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 @interface TestDocument : NSObject
 @property (weak) TestWindow *window;
 @property NSInteger numberingCorrection;
+@property NSInteger layoutUpdates;
 - (id)myPDFKitView;
 - (NSWindow *)pagenumberPanel;
 - (void)annotationPartWillCollapse:(id)view;
@@ -168,7 +199,7 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 - (id)topView { return self.window.myPDFKitView; }
 - (id)myPDFKitView { return self.window.myPDFKitView; }
 - (NSWindow *)pagenumberPanel { return nil; }
-- (void)updatePreviewLayoutControls {}
+- (void)updatePreviewLayoutControls { self.layoutUpdates++; }
 @end
 @interface MyPDFKitView : PDFView {
     TSPreviewPanePlace splitPlace;
@@ -189,6 +220,14 @@ static void TSSplitToggleItemsFollowSplit(void) {}
     NSMatrix *mouseModeMatrix;
     NSMenu *mouseModeMenu;
     NSOutlineView *_outlineView;
+    TSPreviewPanePlace otherViewPlace;
+    NSInteger otherViewPageStyle, otherViewFirstPageStyle, otherViewResizeOption;
+    BOOL otherViewAutoScales;
+    CGFloat otherViewScale;
+    PDFSelection *otherViewSelection;
+    TSLinkPreviewView *otherViewPinnedLinkPreview;
+    id otherViewWindowObserver;
+    NSRect otherViewPinnedLinkPreviewFrame;
 }
 @property NSArray *sourceFiles;
 @property PDFOutline *outline;
@@ -198,10 +237,17 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 @property double horizontalHeight1, horizontalHeight2, verticalWidth1, verticalWidth2;
 @property NSInteger handlingLink;
 @property BOOL globalLongTerm;
-@property BOOL oldUsed, doScroll; @property NSRect oldVisibleRect; @property NSInteger oldIndex;
+@property BOOL oldUsed, skipLinks;
 @property (readonly) TSLinkPreviewView *preview;
 @property NSInteger contentWidthFits;
+// The magnification Fit to Content Width finds for the width the view has now, if set.
+@property CGFloat contentWidthScale;
 - (void)fitContentWidth;
+- (void)switchToOtherView;
+- (void)closeOtherViewPinnedLinkPreview;
+- (void)changePDFViewSizeTo:(NSInteger)option;
+- (void)linkPopupsChanged;
+- (void)rotateClockwise:(id)sender;
 - (void)moveSplitToCorrectSpot:(NSInteger)index;
 - (void)saveLocation;
 - (void)restoreLocation;
@@ -238,10 +284,20 @@ static void TSSplitToggleItemsFollowSplit(void) {}
     [self setDisplayMode:modes[pageStyle >= 1 && pageStyle <= 4 ? pageStyle : 0]];
     [self setDisplaysPageBreaks:pageStyle != PDF_SINGLE_PAGE_STYLE];
 }
-- (void)setupMagnificationStyle { if (resizeOption == NEW_PDF_FIT_TO_NONE) [self setScaleFactor:1]; else [self setAutoScales:YES]; }
 // Fit to Content Width (run-fit-content-width.py): counted here, as it fits the part at its new size.
-- (void)fitContentWidth { if (resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH) self.contentWidthFits++; }
+- (void)fitContentWidth {
+    if (resizeOption != NEW_PDF_FIT_TO_CONTENT_WIDTH) return;
+    self.contentWidthFits++;
+    if (self.contentWidthScale > 0) [super setScaleFactor:self.contentWidthScale];
+}
 - (void)centreContentRowLater {}
+// As in MyPDFKitView, setting a magnification makes it fixed, except while it only stays for
+// Fit to Content Width.
+- (void)setScaleFactor:(CGFloat)scale {
+    BOOL keep = resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH && fabs(scale - self.scaleFactor) < 1e-6;
+    [super setScaleFactor:scale];
+    if (!keep) resizeOption = NEW_PDF_FIT_TO_NONE;
+}
 - (void)cleanupMarqueeKeepingPinnedLinkPreview {}
 - (void)observeLinkPreviewEvents {}
 - (void)killTransientLinkPreview { [linkPreview removeFromSuperview]; linkPreview = nil; self.handlingLink = 0; }
@@ -255,6 +311,7 @@ VIEWMETHODS
 @end
 @implementation TestWindow
 - (BOOL)canBecomeKeyWindow { return YES; }
+- (void)fixAfterRotation:(BOOL)clockwise {}
 - (void)keepPinnedLinkPreviewsInView {
     [(MyPDFKitView *)self.myPDFKitView keepPinnedLinkPreviewInView];
     [(MyPDFKitView *)self.myPDFKitView2 keepPinnedLinkPreviewInView];
@@ -505,6 +562,7 @@ static void checkOutline(Preview p, NSOutlineView *ov, NSString *name, NSString 
 
 int main(int argc, char **argv) { @autoreleasepool {
     TSInstallAppKitIsolation();
+    [SUD registerDefaults:@{PdfMagnificationKey: @1.0}];
     [NSApplication sharedApplication];
     method_setImplementation(class_getClassMethod(NSEvent.class, @selector(modifierFlags)), (IMP)currentFlags);
     PDFDocument *doc = [[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:[NSString stringWithUTF8String:argv[1]]]];
@@ -793,6 +851,199 @@ int main(int argc, char **argv) { @autoreleasepool {
         marked = selectedEntry(ov);
         scrollToTop(p.upper, 5); settle(p.window);
         checkOutline(p, ov, [name stringByAppendingString:@", unsplit and scrolled"], marked);
+        [p.window close];
+    }
+    {   // Switch Views in a window that is not split changes between two views, each with its own
+        // place, display format, magnification, selection and pinned popup (#60).
+        NSString *name = @"not split";
+        Preview p = makePreview(doc, NO);
+        [p.window splitPdfKitWindow:nil]; settle(p.window);
+        MyPDFKitView *v = p.upper;
+        // The view observes its page changes once it shows the PDF, as when the document is opened.
+        [v notificationSetup];
+        check(!p.window.windowIsSplit && p.window.activeView == v, describe(name, @"the window is not split"));
+        [v setPageStyle:PDF_MULTI_PAGE_STYLE]; [v setupPageStyle];
+        [v setResizeOption:NEW_PDF_FIT_TO_NONE]; [v setAutoScales:NO]; [v setMagnification:0.8];
+        scrollTo(v, 1, 500); settle(p.window);
+        v.currentSelection = [[doc pageAtIndex:1] selectionForRange:NSMakeRange(0, 30)];
+        NSRect f = inWindow(v);
+        [v pin:NSMakeRect(NSMinX(f) + 30, NSMaxY(f) - 170, 180, 120)];
+        settle(p.window);
+        TSPreviewPanePlace placeA = topOf(v);
+        NSString *selectionA = selectionText(v);
+        TSLinkPreviewView *popupA = v.preview;
+        NSPoint offsetA = popupOffset(v);
+        NSRect popupFrameA = popupInWindow(v);
+        check(placeA.valid && selectionA.length && popupA && v.hasPinnedLinkPreview, describe(name, @"fixture: the first view"));
+
+        // The first switch keeps what is shown as the other view; the view shown starts from the
+        // same place without the pinned popup, which stays with the other view.
+        p.document.layoutUpdates = 0;
+        [p.window switchViews]; settle(p.window);
+        check(near(distanceFromTop(v, placeA)) && v.pageStyle == PDF_MULTI_PAGE_STYLE && near(v.scaleFactor - 0.8),
+              describe(name, @"the first switch stays at the place shown"));
+        check(!v.hasPinnedLinkPreview && popupA.superview == nil, describe(name, @"the first switch leaves the pinned popup with the first view"));
+        checkControls(p, [name stringByAppendingString:@", first switch"]);
+
+        // The second view gets its own display format, magnification, place, selection and popup.
+        [v setPageStyle:PDF_SINGLE_PAGE_STYLE]; [v setupPageStyle];
+        [v setMagnification:1.5];
+        scrollTo(v, 4, 600); settle(p.window);
+        v.currentSelection = [[doc pageAtIndex:4] selectionForRange:NSMakeRange(40, 25)];
+        [v pin:NSMakeRect(NSMinX(f) + 60, NSMaxY(f) - 140, 150, 100)];
+        settle(p.window);
+        TSPreviewPanePlace placeB = topOf(v);
+        NSString *selectionB = selectionText(v);
+        TSLinkPreviewView *popupB = v.preview;
+        NSPoint offsetB = popupOffset(v);
+        check(placeB.valid && placeB.pageIndex != placeA.pageIndex && popupB && popupB != popupA && ![selectionB isEqualToString:selectionA],
+              describe(name, @"fixture: the second view differs"));
+
+        for (int round = 0; round < 3; round++) {
+            NSString *a = [name stringByAppendingFormat:@", back to the first view (%d)", round + 1];
+            p.document.layoutUpdates = 0;
+            [p.window switchViews]; settle(p.window);
+            check(v.pageStyle == PDF_MULTI_PAGE_STYLE && v.resizeOption == NEW_PDF_FIT_TO_NONE && !v.autoScales && near(v.scaleFactor - 0.8),
+                  describe(a, [NSString stringWithFormat:@"the display format and magnification of the first view come back (%ld, %.3f)", (long)v.pageStyle, v.scaleFactor]));
+            check(near(distanceFromTop(v, placeA)),
+                  describe(a, [NSString stringWithFormat:@"the place of the first view comes back (%.2f)", distanceFromTop(v, placeA)]));
+            check([selectionText(v) isEqualToString:selectionA], describe(a, @"the selection of the first view comes back"));
+            check(v.preview == popupA && popupA.pinned && v.hasPinnedLinkPreview && popupB.superview == nil,
+                  describe(a, @"the pinned popup of the first view comes back and that of the second view goes"));
+            check(near(popupOffset(v).x - offsetA.x) && near(popupOffset(v).y - offsetA.y) && sameRect(popupInWindow(v), popupFrameA),
+                  describe(a, @"the popup of the first view comes back at its place"));
+            check(p.document.layoutUpdates > 0, describe(a, @"the toolbar's display format follows"));
+            checkControls(p, a);
+
+            NSString *b = [name stringByAppendingFormat:@", back to the second view (%d)", round + 1];
+            [p.window switchViews]; settle(p.window);
+            check(v.pageStyle == PDF_SINGLE_PAGE_STYLE && near(v.scaleFactor - 1.5) && !v.autoScales,
+                  describe(b, @"the display format and magnification of the second view come back"));
+            check(near(distanceFromTop(v, placeB)),
+                  describe(b, [NSString stringWithFormat:@"the place of the second view comes back (%.2f)", distanceFromTop(v, placeB)]));
+            check([selectionText(v) isEqualToString:selectionB], describe(b, @"the selection of the second view comes back"));
+            check(v.preview == popupB && v.hasPinnedLinkPreview && popupA.superview == nil,
+                  describe(b, @"the pinned popup of the second view comes back and that of the first view goes"));
+            check(near(popupOffset(v).x - offsetB.x) && near(popupOffset(v).y - offsetB.y),
+                  describe(b, @"the popup of the second view comes back at its place"));
+            checkControls(p, b);
+        }
+
+        // Actual Size stays the magnification setting of its view.
+        // Chosen in the Preview menu's Magnification, as the menu item does.
+        [v changePDFViewSizeTo:NEW_PDF_ACTUAL_SIZE]; settle(p.window);
+        check(v.resizeOption == NEW_PDF_ACTUAL_SIZE && near(v.scaleFactor - 1.0), describe(name, @"actual size: the menu choice stays checked"));
+        [p.window switchViews]; settle(p.window);
+        check(v.resizeOption == NEW_PDF_FIT_TO_NONE && near(v.scaleFactor - 0.8), describe(name, @"actual size: the first view keeps its fixed magnification"));
+        [p.window switchViews]; settle(p.window);
+        check(v.resizeOption == NEW_PDF_ACTUAL_SIZE && near(v.scaleFactor - 1.0),
+              describe(name, [NSString stringWithFormat:@"actual size: the second view is at actual size again (%ld)", (long)v.resizeOption]));
+        // A view that fits the page to the window, or the content to its width, keeps doing so.
+        [v setResizeOption:NEW_PDF_FIT_TO_WIDTH]; [v setAutoScales:YES]; settle(p.window);
+        CGFloat fitted = v.scaleFactor;
+        [p.window switchViews]; settle(p.window);
+        check(!v.autoScales && near(v.scaleFactor - 0.8), describe(name, @"fit: the first view keeps its fixed magnification"));
+        [p.window switchViews]; settle(p.window);
+        check(v.autoScales && v.resizeOption == NEW_PDF_FIT_TO_WIDTH && fabs(v.scaleFactor - fitted) < 0.005,
+              describe(name, [NSString stringWithFormat:@"fit: the second view fits the window again (%.4f for %.4f)", v.scaleFactor, fitted]));
+        // Fit to Content Width comes back at its magnification and its place, also when the
+        // other view has a much smaller one.
+        [v setAutoScales:NO]; [v setMagnification:1.7]; [v setResizeOption:NEW_PDF_FIT_TO_CONTENT_WIDTH];
+        scrollTo(v, 3, 350); settle(p.window);
+        TSPreviewPanePlace placeW = topOf(v);
+        [p.window switchViews]; settle(p.window);
+        v.contentWidthFits = 0;
+        [p.window switchViews]; settle(p.window);
+        check(v.resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH && !v.autoScales && v.contentWidthFits > 0,
+              describe(name, @"content width: the second view is fitted again"));
+        // Within a pixel: the clip view is placed on whole pixels at this magnification.
+        check(near(v.scaleFactor - 1.7) && fabs(distanceFromTop(v, placeW)) < 0.5,
+              describe(name, [NSString stringWithFormat:@"content width: the place and magnification come back (%.3f, %.2f)", v.scaleFactor, distanceFromTop(v, placeW)]));
+        // After the window was made wider, the content fits at a larger magnification; the place
+        // still comes back.
+        [p.window switchViews]; settle(p.window);
+        v.contentWidthScale = 2.2;
+        [p.window switchViews]; settle(p.window);
+        v.contentWidthScale = 0;
+        check(near(v.scaleFactor - 2.2) && fabs(distanceFromTop(v, placeW)) < 0.5,
+              describe(name, [NSString stringWithFormat:@"content width, wider window: the place comes back at the new magnification (%.3f, %.2f)", v.scaleFactor, distanceFromTop(v, placeW)]));
+        [v setMagnification:1.7]; [v setResizeOption:NEW_PDF_FIT_TO_CONTENT_WIDTH]; settle(p.window);
+
+
+        // Splitting and unsplitting leave the other view as it was.
+        TSPreviewPanePlace placeB2 = topOf(v);
+        [p.window switchViews]; settle(p.window);
+        check(v.preview == popupA && near(distanceFromTop(v, placeA)), describe(name, @"fixture: the first view is shown"));
+        [p.window splitPdfKitWindow:nil]; settle(p.window);
+        [p.window splitPdfKitWindow:nil]; settle(p.window);
+        check(!p.window.windowIsSplit && v.preview == popupA, describe(name, @"split and unsplit again"));
+        [p.window switchViews]; settle(p.window);
+        check(v.pageStyle == PDF_SINGLE_PAGE_STYLE && v.preview == popupB && near(distanceFromTop(v, placeB2)) &&
+              v.resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH,
+              describe(name, [NSString stringWithFormat:@"after splitting and unsplitting the other view comes back (style %ld, popup %d, top %.2f, resize %ld)", (long)v.pageStyle, v.preview == popupB, distanceFromTop(v, placeB2), (long)v.resizeOption]));
+
+        // Forgetting the other view, as when the preview is set up again, starts over.
+        v.oldUsed = NO;
+        TSPreviewPanePlace placeC = topOf(v);
+        [p.window switchViews]; settle(p.window);
+        check(!v.hasPinnedLinkPreview && near(distanceFromTop(v, placeC)) && v.pageStyle == PDF_SINGLE_PAGE_STYLE,
+              describe(name, @"after forgetting, the first switch stays at the place shown"));
+        [p.window switchViews]; settle(p.window);
+        check(v.preview == popupB && near(distanceFromTop(v, placeC)), describe(name, @"after forgetting, the next switch goes back"));
+
+        // After the PDF is shown again, as after typesetting, the other view keeps its place,
+        // display format and magnification; its selection and pinned popup, which belong to the
+        // PDF shown before, are gone, as those of the view shown.
+        v.currentSelection = [[doc pageAtIndex:2] selectionForRange:NSMakeRange(0, 20)];
+        [v setPageStyle:PDF_TWO_PAGE_STYLE]; [v setupPageStyle]; [v setMagnification:1.1]; settle(p.window);
+        TSPreviewPanePlace placeD = topOf(v);
+        [p.window switchViews]; settle(p.window);
+        check(v.preview == nil && !v.hasPinnedLinkPreview, describe(name, @"fixture: the view shown has no popup"));
+        v.currentSelection = [[doc pageAtIndex:5] selectionForRange:NSMakeRange(0, 19)];
+        PDFDocument *again = [[PDFDocument alloc] initWithURL:doc.documentURL];
+        [v doKillPopup];
+        v.document = again; settle(p.window);
+        // The selection shown before may stay, as it does in PDFKit, with pages of the PDF shown before.
+        v.currentSelection = [[doc pageAtIndex:5] selectionForRange:NSMakeRange(0, 19)];
+        [p.window switchViews]; settle(p.window);
+        check(v.pageStyle == PDF_TWO_PAGE_STYLE && near(v.scaleFactor - 1.1) && [v.document indexForPage:v.currentPage] == placeD.pageIndex,
+              describe(name, @"after the PDF is shown again, the other view keeps its place, display format and magnification"));
+        check(!v.hasPinnedLinkPreview && popupB.superview == nil && selectionText(v).length == 0,
+              describe(name, @"after the PDF is shown again, the other view has no popup or selection of the PDF shown before"));
+        [p.window switchViews]; settle(p.window);
+        check(selectionText(v).length == 0, describe(name, @"after the PDF is shown again, a selection of the PDF shown before does not come back"));
+
+        // Turning Link Popups off, or turning the pages, closes the pinned popup of the other
+        // view too: it does not come back, also after Link Popups is turned on again.
+        for (int how = 0; how < 2; how++) {
+            NSString *what = [name stringByAppendingString:how ? @", turning the pages" : @", Link Popups off and on"];
+            [v pin:NSMakeRect(NSMinX(f) + 40, NSMaxY(f) - 150, 150, 100)]; settle(p.window);
+            TSLinkPreviewView *kept = v.preview;
+            [p.window switchViews]; settle(p.window);
+            check(kept.superview == nil, describe(what, @"fixture: the other view keeps the popup"));
+            if (how) {
+                [v rotateClockwise:nil];
+            } else {
+                v.skipLinks = YES; [v linkPopupsChanged];
+                v.skipLinks = NO; [v linkPopupsChanged];
+            }
+            [p.window switchViews]; settle(p.window);
+            check(!v.hasPinnedLinkPreview && kept.superview == nil, describe(what, @"the popup of the other view does not come back"));
+        }
+        // A popup pinned with Control while Link Popups is off comes back with its view.
+        v.skipLinks = YES;
+        [v pin:NSMakeRect(NSMinX(f) + 40, NSMaxY(f) - 150, 150, 100)]; settle(p.window);
+        TSLinkPreviewView *whileOff = v.preview;
+        [p.window switchViews]; settle(p.window);
+        [p.window switchViews]; settle(p.window);
+        check(v.preview == whileOff && v.hasPinnedLinkPreview, describe(name, @"a popup pinned while Link Popups is off comes back"));
+        v.skipLinks = NO;
+        // Closing the Preview window closes the popup of the other view too.
+        [p.window switchViews]; settle(p.window);
+        check(whileOff.superview == nil, describe(name, @"fixture: the other view keeps the popup before closing"));
+        [p.window close];
+        [v switchToOtherView];
+        check(!v.hasPinnedLinkPreview && whileOff.superview == nil, describe(name, @"after closing the Preview window the popup of the other view does not come back"));
         [p.window close];
     }
     printf("PASS: %lu checks\n", (unsigned long)checks);

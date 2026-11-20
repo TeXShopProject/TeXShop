@@ -938,50 +938,15 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
  */
 
 
-- (void)switchViews;
-
+- (void)switchViews
 {
-    NSInteger       pageIndex1;
-    NSRect          visibleRect1;
-    MyPDFKitView    *aView;
-    
-    if (self.windowIsSplit) {
+    if (self.windowIsSplit)
         [self switchSplitParts];
-      }
-   
-    else {
-        /*
-         [self mainSplitPdfKitWindow];
-         [self switchViews];
-         [self mainSplitPdfKitWindow];
-       */
-        
-        aView = (MyPDFKitView *)self.myPDFKitView;
-        pageIndex1 = [[aView document] indexForPage:[aView currentPage]];
-        visibleRect1 = [[[aView documentView] enclosingScrollView] documentVisibleRect];
-        
-        if (aView.oldUsed)
-        {
-            [aView goToPage: [[aView document] pageAtIndex: aView.oldIndex]];
-            if (aView.doScroll)
-                [[aView documentView] scrollRectToVisible: aView.oldVisibleRect];
-            //else
-               // NSLog(@"Did Not Scroll");
-            aView.doScroll = YES;
-            aView.oldIndex = pageIndex1;
-            aView.oldVisibleRect = visibleRect1;
-        }
-        else
-        {
-            aView.oldUsed = YES;
-            aView.oldIndex = pageIndex1;
-            aView.oldVisibleRect = visibleRect1;
-        }
-        
-         
-     }
-        
- }
+    else
+        // The window that is not split shows one of two views, each with its own place,
+        // display format, magnification and pinned popup (#60).
+        [(MyPDFKitView *)self.myPDFKitView switchToOtherView];
+}
 
 // The two parts of a split window change places with everything they show (#25): the place
 // at the top edge (#23), the display format, the magnification, the selection, a pinned link
