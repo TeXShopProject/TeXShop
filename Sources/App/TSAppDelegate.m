@@ -22,6 +22,7 @@
  *
  */
 #import "TSTeXRootDocumentApplier.h"
+#import "TSFontSupport.h"
 #import "TSShortcutPaneController.h"
 #import "TSMacroEditor.h"
 #import "TSKeyboardShortcuts.h"
@@ -103,12 +104,8 @@ static TSAdvancedFindFieldStyle *TSAdvancedFindFieldStyleForTheme(NSDictionary *
     options.colorsIndex = [SUD boolForKey:IndexColorStartKey];
     options.colorsFootnote = [SUD boolForKey:SyntaxColorFootnoteKey];
     options.marksFullwidthSymbols = [SUD boolForKey:HighlightFullwidthSymbolsKey] && [scheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;
-    NSFont *font = nil;
-    id data = [SUD objectForKey:DocumentFontKey];
-    if ([data isKindOfClass:NSData.class]) {
-        @try { font = [NSUnarchiver unarchiveObjectWithData:data]; } @catch (NSException *exception) { font = nil; }
-    }
-    return [[TSAdvancedFindFieldStyle alloc] initWithScheme:scheme texOptions:options font:[font isKindOfClass:NSFont.class] ? font : [NSFont userFontOfSize:12.0]
+    NSFont *font = TSArchivedFont([SUD objectForKey:DocumentFontKey]);
+    return [[TSAdvancedFindFieldStyle alloc] initWithScheme:scheme texOptions:options font:font ?: [NSFont userFontOfSize:12.0]
                                                   textColor:opaque(@"EditorText") backgroundColor:opaque(@"EditorBackground")
                                         insertionPointColor:opaque(@"EditorInsertionPoint")];
 }

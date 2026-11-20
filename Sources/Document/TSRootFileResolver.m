@@ -74,6 +74,9 @@
 {
     NSString *relative = [name stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet];
     NSString *path;
+    // A name of only spaces names no file.
+    if (relative.length == 0)
+        return @"";
     unichar firstChar = [relative characterAtIndex:0];
     if (firstChar == '~')
         path = [relative stringByExpandingTildeInPath];
@@ -90,7 +93,8 @@
 
     path = [path stringByResolvingSymlinksInPath];
 
-    if ([path rangeOfString:jobNameToken options:NSLiteralSearch].location == NSNotFound)
+    // An untitled document has no job name: the name stays as it is (and names no file).
+    if (jobName == nil || [path rangeOfString:jobNameToken options:NSLiteralSearch].location == NSNotFound)
         return path;
     NSMutableString *replaced = [path mutableCopy];
     [replaced replaceOccurrencesOfString:jobNameToken withString:(NSString *)jobName options:NSLiteralSearch

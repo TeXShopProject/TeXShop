@@ -23,6 +23,7 @@
  *
  */
 #import "TSShortcutPaneController.h"
+#import "TSFontSupport.h"
 #import "TSPreferences+Panes.h"
 
 
@@ -1070,7 +1071,7 @@ Clicking this button will bring up the font panel.
 
 - (IBAction)changeConsoleFont:sender
 {
-	self.consoleFont = [NSFont fontWithName: [SUD stringForKey:ConsoleFontNameKey] size:[SUD floatForKey:ConsoleFontSizeKey]];
+	self.consoleFont = TSConsoleFontFromDefaults(SUD, ConsoleFontNameKey, ConsoleFontSizeKey);
 	
 	// become first responder so we will see the envents that NSFontManager sends
 	// up the responder chain
@@ -1097,7 +1098,11 @@ Clicking this button will bring up the font panel.
 	if (destination == TSSettingsFontDocument)
 		{
 
-		self.documentFont = [fontManager convertFont:self.documentFont];
+		// A font the panel cannot convert is not saved (the Font panel raises on nil, and documents would get none).
+		NSFont *current = self.documentFont ?: [NSFont userFontOfSize:12.0] ?: [NSFont systemFontOfSize:12.0];
+		NSFont *converted = [fontManager convertFont:current];
+		if (converted == nil) return;
+		self.documentFont = converted;
 
 
 		[self updateDocumentFontTextField];
@@ -1114,7 +1119,9 @@ Clicking this button will bring up the font panel.
 		
 	else if (destination == TSSettingsFontConsole)
 		{
-		self.consoleFont = [fontManager convertFont:self.consoleFont];
+		NSFont *converted = [fontManager convertFont:self.consoleFont ?: TSConsoleFontFromDefaults(SUD, ConsoleFontNameKey, ConsoleFontSizeKey)];
+		if (converted == nil) return;
+		self.consoleFont = converted;
 		[SUD setObject: [self.consoleFont fontName] forKey:ConsoleFontNameKey];
 		[SUD setFloat: [self.consoleFont pointSize] forKey: ConsoleFontSizeKey];
 		[self updateConsoleFontTextField];

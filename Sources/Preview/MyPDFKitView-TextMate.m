@@ -24,6 +24,9 @@
 
 - (void) sendLineToTextMate: (NSInteger)aLine forPath: (NSString *)aPath
 {
+    // No source file (an untitled document): there is nothing to show in the editor.
+    if ([aPath length] == 0)
+        return;
     NSTask                  *task;
     NSMutableDictionary     *environmentForTask;
     NSArray                 *args;
@@ -69,6 +72,9 @@
 
 - (void)sendLineToOtherEditor: (NSInteger)aLine forPath: (NSString *)aPath
 {
+    // No source file (an untitled document): there is nothing to show in the editor.
+    if ([aPath length] == 0)
+        return;
     NSTask                  *task;
     NSMutableDictionary     *environmentForTask;
     NSArray                 *args;

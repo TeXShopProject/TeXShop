@@ -145,12 +145,15 @@ static id sharedMacroMenuController = nil;
 
 	NS_DURING
 		// macroDict = [NSDictionary dictionaryWithContentsOfFile: pathStr]; // this crashes when the file is not a proper UTF8
-		// The first that can be used: the engine's macros, the LaTeX macros, the macros inside TeXShop.
+		// The first that can be used: the engine's macros, the LaTeX macros, the macros inside TeXShop. The bytes that
+		// are checked are the ones used: a file saved or synced meanwhile is not read a second time.
 		myData = nil;
 		NSString *bundledMacros = TSLibraryBundledPath(@"Macros/Macros_Latex.plist");
+		TSLibraryFileCheck macrosCheck = TSLibraryMacrosCheck();
 		for (NSString *candidate in @[pathStr, defaultPathStr, bundledMacros ?: defaultPathStr]) {
-			if (TSLibraryFileIsUsable(candidate, nil, TSLibraryMacrosCheck())) {
-				myData = [NSData dataWithContentsOfFile:candidate];
+			NSData *candidateData = [NSData dataWithContentsOfFile:[candidate stringByResolvingSymlinksInPath]];
+			if (candidateData && macrosCheck(candidateData, nil)) {
+				myData = candidateData;
 				break;
 			}
 		}
@@ -456,10 +459,11 @@ static id sharedMacroMenuController = nil;
 			if (returnValue) { // successful?
 				// show the result only if the return value is a text
 				if ([returnValue descriptorType] == kAETextSuite)	//kAETextSuite='TEXT'
-					NSRunAlertPanel(@"AppleScript Result", [returnValue stringValue], nil, nil, nil);
+					// The result is shown as text, never read as a format (LaTeX text has % in it).
+					NSRunAlertPanel(@"AppleScript Result", @"%@", nil, nil, nil, [returnValue stringValue] ?: @"");
 			} else {	// show error message
-				NSRunAlertPanel(@"AppleScript Error",
-								[errorInfo objectForKey: NSAppleScriptErrorMessage], nil, nil, nil);
+				NSRunAlertPanel(@"AppleScript Error", @"%@", nil, nil, nil,
+								[errorInfo objectForKey: NSAppleScriptErrorMessage] ?: @"");
 			}
 		//	[aScript release];
 			
@@ -496,16 +500,28 @@ static id sharedMacroMenuController = nil;
             
             NSString *scriptFilePath = [[GlobalData sharedGlobalData].tempAppleScriptPath stringByStandardizingPath];
             NSString *globallyUniqueString = [[NSProcessInfo processInfo] globallyUniqueString];
-			NSString *scriptFileName = [scriptFilePath stringByAppendingString: globallyUniqueString];
+			NSString *scriptFileName = [scriptFilePath stringByAppendingPathComponent: globallyUniqueString];
 			
+			// The script is run only when it was written: ScriptRunner would otherwise run nothing, or an old file.
+			BOOL written = NO;
 			NS_DURING
-                [newString writeToFile: scriptFileName atomically: NO encoding:NSUTF8StringEncoding error:NULL]; // modified by Terada
+                written = [newString writeToFile: scriptFileName atomically: NO encoding:NSUTF8StringEncoding error:NULL]; // modified by Terada
             NS_HANDLER
-				return;
+				written = NO;
 			NS_ENDHANDLER
+			if (! written) {
+				NSBeep();
+				return;
+			}
 			
 			NSTask *scriptTask =  [[NSTask alloc] init];
 			NSString *runnerPath = [[NSBundle mainBundle] pathForResource:@"ScriptRunner" ofType:nil inDirectory:@"ScriptRunner.app/Contents/MacOS"];
+			// ScriptRunner missing from a damaged copy of TeXShop: NSTask would raise at launch.
+			if (runnerPath == nil) {
+				[[NSFileManager defaultManager] removeItemAtPath: scriptFileName error: NULL];
+				NSBeep();
+				return;
+			}
 			//  runnerPath = [runnerPath stringByAppendingString:@"/Contents/MacOS/ScriptRunner"];
 			args = [NSMutableArray array];
 			[args addObject: scriptFileName];
@@ -517,7 +533,11 @@ static id sharedMacroMenuController = nil;
 			// [scriptTask setStandardOutput: nil];
 			// [scriptTask setStandardError: nil];
 			// [scriptTask setStandardInput: nil];
-			[scriptTask launch];
+			// ScriptRunner that cannot be started (not executable, gone since): -launch would raise.
+			if (! [scriptTask launchAndReturnError: NULL]) {
+				[[NSFileManager defaultManager] removeItemAtPath: scriptFileName error: NULL];
+				NSBeep();
+			}
 			
 		}
 	}

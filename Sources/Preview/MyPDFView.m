@@ -2021,10 +2021,9 @@ failed. If you change the code below, be sure to test carefully!
 					stackPointer++;
 					oneLineRange.location++;
 					oneLineRange.length--;
-					if (oneLineRange.length > 0) {
-						theFile = [syncInfo substringWithRange: oneLineRange];
-						[theStack insertObject:theFile atIndex: stackPointer];
-						}
+					// A bare "(" in a damaged .pdfsync still opens a level, with no file, so the stack stays in step.
+					theFile = oneLineRange.length > 0 ? [syncInfo substringWithRange: oneLineRange] : @"";
+					[theStack insertObject:theFile atIndex: MIN((NSUInteger)stackPointer, [theStack count])];
 					}
 				else if ([theLine characterAtIndex:0] == ')') {
 					if (stackPointer >= 0)
@@ -2036,8 +2035,10 @@ failed. If you change the code below, be sure to test carefully!
 		}
 
 	includeFileName = nil;
-	if (stackPointer >= 0)
+	if (stackPointer >= 0 && (NSUInteger)stackPointer < [theStack count])
 		includeFileName = [theStack objectAtIndex: stackPointer];
+	if ([includeFileName length] == 0)
+		includeFileName = nil;
 
 
 	if (includeFileName == nil) {

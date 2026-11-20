@@ -64,6 +64,7 @@ defines = '\n'.join(f'#define {k} {v}' for k, v in sorted(keys.items()))
 
 program = r'''
 #import <Cocoa/Cocoa.h>
+#import "TSFontSupport.h"
 #import "TestAppKitIsolation.h"
 #import "TSSourceFormatRanges.h"
 #define SUD TSIsolatedAppKitDefaults

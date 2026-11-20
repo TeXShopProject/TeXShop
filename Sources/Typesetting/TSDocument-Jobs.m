@@ -437,7 +437,7 @@ for(NSString *key in enu)
 	NSString		*theEngine = 0;
 	NSRange		aRange;
 
-	if (myEngine != nil) {
+	if ([myEngine isKindOfClass:NSString.class]) {
 		myList = [myEngine componentsSeparatedByString:@" "];
 		programFound = NO;
 		inMiddle = NO;
@@ -1580,7 +1580,8 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 						else
 							myEngine = [[SUD stringForKey:TexScriptCommandKey] stringByExpandingTildeInPath]; // 1.35 (D;
 						
-						if ([myEngine length] == 0) {
+						// The factory Personal Script is a single space: that is no script either.
+						if ([myEngine stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet].length == 0) {
 							if (withLatex)
 								myEngine = [[SUD stringForKey:LatexCommandKey] stringByExpandingTildeInPath]; // 1.35 (D)
 							else
@@ -1713,8 +1714,6 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
                      bibtexEngineString = [self separate: bibString into:bibtexArgs];
                      [bibtexArgs addObjectsFromArray:args];
                      
-                     tetexBinPath = [[[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath] stringByAppendingString:@"/"];
-                     bibProgramPath = [tetexBinPath stringByAppendingString: bibtexEngineString];
                     }
                  
                 
@@ -1722,11 +1721,16 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
                  
                  // modified by Terada
                  bibtexArgs = [NSMutableArray arrayWithCapacity:0];
-                 bibtexEngineString = [self separate:[SUD objectForKey:BibTeXengineKey] into:bibtexArgs];
+                 // Only text is a command: -stringForKey: would turn a number or a Boolean into "17" or "0".
+                 id bibSetting = [SUD objectForKey:BibTeXengineKey];
+                 bibtexEngineString = [self separate:([bibSetting isKindOfClass:NSString.class] ? bibSetting : nil) into:bibtexArgs];
                  [bibtexArgs addObjectsFromArray:args];
                  }
                  
                  
+                 // `% !BIB program =` without a program, or a cleared BibTeX setting: BibTeX itself.
+                 if (bibtexEngineString.length == 0)
+                     bibtexEngineString = @"bibtex";
                  tetexBinPath = [[[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath] stringByAppendingString:@"/"];
                  bibProgramPath = [tetexBinPath stringByAppendingString: bibtexEngineString];
                  

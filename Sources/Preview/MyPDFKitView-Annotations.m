@@ -82,7 +82,7 @@ BOOL    annotationsFound;
                      {
                          aSelection = (PDFSelection *)theSelections[i];
                          thePages = [aSelection pages];
-                         thePage = (PDFPage *)thePages[0];
+                         thePage = (PDFPage *)(thePages.firstObject ?: self.currentPage); // a selection may have no page
                          if (i == 0)
                              initialPage = thePage;
                          if (initialPage == thePage)
@@ -131,7 +131,7 @@ BOOL    annotationsFound;
                  {
                      aSelection = (PDFSelection *)theSelections[i];
                      thePages = [aSelection pages];
-                     thePage = (PDFPage *)thePages[0];
+                     thePage = (PDFPage *)(thePages.firstObject ?: self.currentPage); // a selection may have no page
                      if (i == 0)
                          initialPage = thePage;
                      if (initialPage == thePage)
@@ -174,7 +174,7 @@ BOOL    annotationsFound;
                  {
                      aSelection = (PDFSelection *)theSelections[i];
                      thePages = [aSelection pages];
-                     thePage = (PDFPage *)thePages[0];
+                     thePage = (PDFPage *)(thePages.firstObject ?: self.currentPage); // a selection may have no page
                      if (i == 0)
                          initialPage = thePage;
                      if (initialPage == thePage)
@@ -211,7 +211,7 @@ BOOL    annotationsFound;
         
         thePages = [theSelection pages];
         
-        thePage = (PDFPage *)thePages[0];
+        thePage = (PDFPage *)(thePages.firstObject ?: self.currentPage); // a selection may have no page
         
         theBounds = [theSelection boundsForPage: thePage];
         
@@ -253,7 +253,7 @@ BOOL    annotationsFound;
         
         thePages = [theSelection pages];
         
-        thePage = (PDFPage *)thePages[0];
+        thePage = (PDFPage *)(thePages.firstObject ?: self.currentPage); // a selection may have no page
         
         theBounds = [theSelection boundsForPage: thePage];
         
@@ -300,7 +300,7 @@ BOOL    annotationsFound;
         
         thePages = [theSelection pages];
         
-        thePage = (PDFPage *)thePages[0];
+        thePage = (PDFPage *)(thePages.firstObject ?: self.currentPage); // a selection may have no page
         
         theBounds = [theSelection boundsForPage: thePage];
         
@@ -343,7 +343,7 @@ BOOL    annotationsFound;
         
         thePages = [theSelection pages];
         
-        thePage = (PDFPage *)thePages[0];
+        thePage = (PDFPage *)(thePages.firstObject ?: self.currentPage); // a selection may have no page
         
         theBounds = [theSelection boundsForPage: thePage];
         
@@ -391,7 +391,7 @@ BOOL    annotationsFound;
         
         thePages = [theSelection pages];
         
-        thePage = (PDFPage *)thePages[0];
+        thePage = (PDFPage *)(thePages.firstObject ?: self.currentPage); // a selection may have no page
         
         theBounds = [theSelection boundsForPage: thePage];
         
@@ -442,7 +442,7 @@ BOOL    annotationsFound;
         
         thePages = [theSelection pages];
         
-        thePage = (PDFPage *)thePages[0];
+        thePage = (PDFPage *)(thePages.firstObject ?: self.currentPage); // a selection may have no page
         
         rotation = [thePage rotation];
         
@@ -512,7 +512,7 @@ BOOL    annotationsFound;
         
         thePages = [theSelection pages];
         
-        thePage = (PDFPage *)thePages[0];
+        thePage = (PDFPage *)(thePages.firstObject ?: self.currentPage); // a selection may have no page
         
         rotation = [thePage rotation];
         
@@ -575,7 +575,7 @@ BOOL    annotationsFound;
         
         thePages = [theSelection pages];
         
-        thePage = (PDFPage *)thePages[0];
+        thePage = (PDFPage *)(thePages.firstObject ?: self.currentPage); // a selection may have no page
         
         theBounds = [theSelection boundsForPage: thePage];
         
@@ -658,7 +658,7 @@ BOOL    annotationsFound;
         
         thePages = [theSelection pages];
         
-        thePage = (PDFPage *)thePages[0];
+        thePage = (PDFPage *)(thePages.firstObject ?: self.currentPage); // a selection may have no page
         
         theBounds = [theSelection boundsForPage: thePage];
         
@@ -695,7 +695,7 @@ BOOL    annotationsFound;
     NSString    *theType;
     
     theType = theAnnotation.type;
-    theType = [@"/" stringByAppendingString: theType];
+    theType = theType.length > 0 ? [@"/" stringByAppendingString: theType] : @""; // an annotation without a type, or none
     return [theType isEqualToString: PDFAnnotationSubtypeLine];
 }
 
@@ -704,7 +704,7 @@ BOOL    annotationsFound;
     NSString    *theType;
     
     theType = _activeAnnotation.type;
-    theType = [@"/" stringByAppendingString: theType];
+    theType = theType.length > 0 ? [@"/" stringByAppendingString: theType] : @""; // an annotation without a type, or none
     return [theType isEqualToString: PDFAnnotationSubtypeText];
 }
 
@@ -713,7 +713,7 @@ BOOL    annotationsFound;
     NSString    *theType;
     
     theType = _activeAnnotation.type;
-    theType = [@"/" stringByAppendingString: theType];
+    theType = theType.length > 0 ? [@"/" stringByAppendingString: theType] : @""; // an annotation without a type, or none
     return (([theType isEqualToString: PDFAnnotationSubtypeHighlight]) ||
             ([theType isEqualToString: PDFAnnotationSubtypeStrikeOut]) ||
             ([theType isEqualToString: PDFAnnotationSubtypeUnderline]));
@@ -724,7 +724,7 @@ BOOL    annotationsFound;
     NSString    *theType;
     
     theType = _activeAnnotation.type;
-    theType = [@"/" stringByAppendingString: theType];
+    theType = theType.length > 0 ? [@"/" stringByAppendingString: theType] : @""; // an annotation without a type, or none
     return (([theType isEqualToString: PDFAnnotationSubtypeCircle]) || ([theType isEqualToString: PDFAnnotationSubtypeSquare]));
 }
 
@@ -733,7 +733,7 @@ BOOL    annotationsFound;
     NSString    *theType;
     
     theType = _activeAnnotation.type;
-    theType = [@"/" stringByAppendingString: theType];
+    theType = theType.length > 0 ? [@"/" stringByAppendingString: theType] : @""; // an annotation without a type, or none
     return ([theType isEqualToString: PDFAnnotationSubtypeFreeText]);
 }
 
@@ -1630,6 +1630,10 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
     
     _dragging = YES;
     
+    // The annotation being dragged was deleted (Delete during the drag): nothing is left to drag.
+    if (_mouseDownInAnnotation && _activeAnnotation == nil)
+        _mouseDownInAnnotation = NO;
+    
     // Handle link-edit mode.
     if (_mouseDownInAnnotation)
     {
@@ -1886,7 +1890,9 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
     if (_editMode == NO)
         return NO;
     
-    // Get the character from the keyDown event.
+    // Get the character from the keyDown event. A dead key (^ or ´ on German and French keyboards) has none.
+    if ([[theEvent charactersIgnoringModifiers] length] == 0)
+        return NO;
     oneChar = [[theEvent charactersIgnoringModifiers] characterAtIndex: 0];
     theModifiers = [theEvent modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask;
     noModifier = ((theModifiers & (NSEventModifierFlagShift | NSEventModifierFlagControl | NSEventModifierFlagOption)) == 0);

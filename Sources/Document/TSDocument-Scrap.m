@@ -425,6 +425,9 @@ static NSString *TSExperimentEngine(NSString *program, NSInteger menuEngine, NSA
 
 - (NSString*)absoluteEnginePath:(NSString*)enginePath
 {
+    // An empty command (a setting that was cleared, or the single space of the factory Personal Script) has no engine.
+    if (enginePath.length == 0)
+        return nil;
     NSString *absolutePath = [enginePath stringByExpandingTildeInPath];
     
     if(![[NSFileManager defaultManager] fileExistsAtPath:absolutePath isDirectory:nil]){
@@ -479,6 +482,9 @@ static NSString *TSExperimentEngine(NSString *program, NSInteger menuEngine, NSA
     if ([userEngine isEqualToString:@"personallatex"]) {
       //  NSLog(@"got here");
         theProgramWithFlags = [[SUD stringForKey: LatexScriptCommandKey] stringByExpandingTildeInPath];
+        // No Personal Script set: the LaTeX command is used, as for the source window (TSDocument-Jobs).
+        if ([theProgramWithFlags stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet].length == 0)
+            theProgramWithFlags = [[SUD stringForKey: LatexCommandKey] stringByExpandingTildeInPath];
         enginePath = [self separate:theProgramWithFlags into:args];
         // [args addObject: [sourcePath lastPathComponent]];
         // tetexBinPath = [[[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath] stringByAppendingString:@"/"];
