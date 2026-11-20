@@ -230,6 +230,34 @@ static void CheckThemeActionButtons(TSPreferences *owner,TSSettingsWindowControl
                 Check(row!=NSNotFound && panels==0 && notices.count==before+2 && [notices.lastObject isEqual:expected],[NSString stringWithFormat:@"Export of a file that is not a theme is refused before the save panel: %lu %@",(unsigned long)panels,notices.lastObject]);
                 [NSFileManager.defaultManager removeItemAtPath:badPath error:NULL];
             }
+            // Export says why it cannot be done: a theme without a color is not one an import would take; a file that is
+            // gone, or cannot be opened, is told as such. No save panel is asked for.
+            {
+                Method panel=class_getClassMethod(NSSavePanel.class,@selector(savePanel));__block NSUInteger panels=0;
+                IMP realPanel=method_setImplementation(panel,imp_implementationWithBlock(^id(id cls){panels++;return nil;}));
+                NSString *(^exportOf)(NSString *)=^NSString *(NSString *name){
+                    [list reload];NSUInteger row=[list.titles indexOfObject:name];if(row==NSNotFound)row=0;
+                    [list setValue:@YES forKey:@"reloading"];[list.tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];[list setValue:@NO forKey:@"reloading"];
+                    NSUInteger count=notices.count;[list exportTheme:nil];return notices.count==count+1?notices.lastObject:@"(none)";};
+                NSString *titleOnly=[ColorPath stringByAppendingPathComponent:@"TitleOnly.plist"];[@{@"Title":@"TitleOnly"} writeToFile:titleOnly atomically:YES];
+                NSString *said=exportOf(@"TitleOnly");
+                Check([said isEqual:[NSString stringWithFormat:@"%@|",[NSString stringWithFormat:tr(@"theme.list.notTheme"),@"TitleOnly"]]],[NSString stringWithFormat:@"A theme without a color is not exported: %@",said]);
+                [NSFileManager.defaultManager removeItemAtPath:titleOnly error:NULL];
+                NSString *gonePath=[ColorPath stringByAppendingPathComponent:@"Gone.plist"];[@{@"EditorText":@[@0,@0,@0,@1]} writeToFile:gonePath atomically:YES];[list reload];
+                NSUInteger goneRow=[list.titles indexOfObject:@"Gone"];[NSFileManager.defaultManager removeItemAtPath:gonePath error:NULL];
+                [list setValue:@YES forKey:@"reloading"];[list.tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:goneRow] byExtendingSelection:NO];[list setValue:@NO forKey:@"reloading"];
+                NSUInteger count=notices.count;[list exportTheme:nil];said=notices.count==count+1?notices.lastObject:@"(none)";
+                Check([said isEqual:[NSString stringWithFormat:@"%@|",[NSString stringWithFormat:tr(@"theme.list.missing"),@"Gone"]]],[NSString stringWithFormat:@"A theme that is gone is told as gone: %@",said]);
+                NSString *lockedPath=[ColorPath stringByAppendingPathComponent:@"Locked.plist"];[@{@"EditorText":@[@0,@0,@0,@1]} writeToFile:lockedPath atomically:YES];[list reload];
+                NSUInteger lockedRow=[list.titles indexOfObject:@"Locked"];[NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions:@0} ofItemAtPath:lockedPath error:NULL];
+                [list setValue:@YES forKey:@"reloading"];[list.tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:lockedRow] byExtendingSelection:NO];[list setValue:@NO forKey:@"reloading"];
+                count=notices.count;[list exportTheme:nil];said=notices.count==count+1?notices.lastObject:@"(none)";
+                Check(![said isEqual:@"(none)"] && ![said hasPrefix:[NSString stringWithFormat:tr(@"theme.list.notTheme"),@"Locked"]] && ![said hasPrefix:[NSString stringWithFormat:tr(@"theme.list.missing"),@"Locked"]],[NSString stringWithFormat:@"A theme that cannot be opened is told with the reason: %@",said]);
+                [NSFileManager.defaultManager setAttributes:@{NSFilePosixPermissions:@0644} ofItemAtPath:lockedPath error:NULL];[NSFileManager.defaultManager removeItemAtPath:lockedPath error:NULL];
+                method_setImplementation(panel,realPanel);
+                Check(panels==0,@"No save panel is asked for a theme that cannot be exported");
+                [list reload];
+            }
             method_setImplementation(sheet,shown);
             Check(shell.window.attachedSheet==nil,@"No sheet is attached to the Settings window");
             for(NSWindow *window in NSApp.windows)Check(!window.visible,[NSString stringWithFormat:@"No window is shown: %@",window]);

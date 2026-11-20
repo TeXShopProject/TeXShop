@@ -260,7 +260,7 @@ static BOOL TSThemeIsRegularFile(NSURL *url)
     }
     return [NSFileManager.defaultManager trashItemAtURL:url resultingItemURL:NULL error:error];
 }
-- (BOOL)exportTitle:(NSString *)title toURL:(NSURL *)url error:(NSError **)error
+- (BOOL)exportTitle:(NSString *)title toURL:(NSURL *)url check:(nullable BOOL (^)(NSData *data))check error:(NSError **)error
 {
     NSURL *from = [self URLForTitle:title];
     NSData *data = from != nil ? [NSData dataWithContentsOfURL:from options:0 error:error] : nil;
@@ -272,7 +272,7 @@ static BOOL TSThemeIsRegularFile(NSURL *url)
     // into something else would not be imported again. Nothing is made where it was to go.
     id colors = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL];
     BOOL (^accepts)(NSDictionary<NSString *, id> *) = self.acceptsColors;
-    if (![colors isKindOfClass:NSDictionary.class] || (accepts != nil && !accepts(colors))) {
+    if (![colors isKindOfClass:NSDictionary.class] || (accepts != nil && !accepts(colors)) || (check != nil && !check(data))) {
         if (error != NULL) *error = TSThemeStoreError(NSFileReadCorruptFileError, title);
         return NO;
     }

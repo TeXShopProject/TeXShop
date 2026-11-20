@@ -283,6 +283,8 @@ static CGFloat TSThemeListInset(NSTableView *table)
         message = [NSString stringWithFormat:self.text(@"theme.list.badName"), title];
     else if ([error.domain isEqualToString:NSCocoaErrorDomain] && error.code == NSFileReadCorruptFileError)
         message = [NSString stringWithFormat:self.text(@"theme.list.notTheme"), title];
+    else if ([error.domain isEqualToString:NSCocoaErrorDomain] && (error.code == NSFileReadNoSuchFileError || error.code == NSFileNoSuchFileError))
+        message = [NSString stringWithFormat:self.text(@"theme.list.missing"), title];
     [self.owner themeListShowError:message ?: error.localizedDescription ?: title];
 }
 
@@ -415,8 +417,16 @@ static CGFloat TSThemeListInset(NSTableView *table)
     NSString *title = [self targetTitle];
     NSWindow *window = self.owner.themeListWindow;
     if (title == nil || window == nil) return;
-    // A theme changed elsewhere into something that is not a theme is not offered for export.
-    if ([self.store readTitle:title] == nil) {
+    // Exported is what can be imported again. A theme that is gone, cannot be opened, or is not one (changed
+    // elsewhere, or without a color) is not offered, and the reason is told.
+    NSURL *source = [self.store URLForTitle:title];
+    NSError *readError = nil;
+    NSData *data = source != nil ? [NSData dataWithContentsOfURL:(NSURL *_Nonnull)source options:0 error:&readError] : nil;
+    if (data == nil) {
+        [self showError:readError ?: [NSError errorWithDomain:NSCocoaErrorDomain code:NSFileReadNoSuchFileError userInfo:nil] title:title];
+        return;
+    }
+    if ([self.store readTitle:title] == nil || ![self exportable:(NSData *_Nonnull)data]) {
         [self.owner themeListShowError:[NSString stringWithFormat:self.text(@"theme.list.notTheme"), title]];
         return;
     }
@@ -425,9 +435,16 @@ static CGFloat TSThemeListInset(NSTableView *table)
     [save beginSheetModalForWindow:window completionHandler:^(NSModalResponse response) {
         NSError *error = nil;
         NSURL *url = save.URL;
-        if (response == NSModalResponseOK && url != nil && ![self.store exportTitle:title toURL:url error:&error])
+        if (response == NSModalResponseOK && url != nil && ![self.store exportTitle:title toURL:url check:^BOOL(NSData *exported) { return [self exportable:exported]; } error:&error])
             [self showError:error title:title];
     }];
+}
+
+// What an import of the file would require (themeListAcceptsData:).
+- (BOOL)exportable:(NSData *)data
+{
+    id<TSSettingsThemeListOwner> owner = self.owner;
+    return ![owner respondsToSelector:@selector(themeListAcceptsData:)] || [owner themeListAcceptsData:data];
 }
 
 - (IBAction)importThemes:(id)sender

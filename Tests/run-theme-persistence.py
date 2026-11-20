@@ -31,6 +31,7 @@ mutations={
 # coordinated write.
 store=(R/'Sources/Settings/TSThemeFileStore.m').read_text()
 store_mutations={
+ 'export-unchecked':(' || (check != nil && !check(data))) {',') {'),
  'export-any':('    if (![colors isKindOfClass:NSDictionary.class] || (accepts != nil && !accepts(colors))) {','    (void)colors;(void)accepts;if (NO) {'),
  'overwrite-unreadable':('        if (current == nil) {\n            writeError = TSThemeStoreError(NSFileReadCorruptFileError, title);\n            return;\n        }\n        NSMutableDictionary<NSString *, id> *colors = [current mutableCopy];','        NSMutableDictionary<NSString *, id> *colors = [(current ?: before) mutableCopy];'),
  'title-case':('colors[@"Title"] = [self existingTitleForTitle:title] ?: title;','colors[@"Title"] = title;'),
@@ -237,7 +238,7 @@ int main(int argc,char **argv){@autoreleasepool{
  NSURL *outside=[[root URLByDeletingLastPathComponent] URLByAppendingPathComponent:@"out" isDirectory:YES];
  [NSFileManager.defaultManager createDirectoryAtURL:outside withIntermediateDirectories:YES attributes:nil error:NULL];
  NSURL *exported=[outside URLByAppendingPathComponent:@"Original.plist"];
- check([p.store exportTitle:@"Original" toURL:exported error:NULL] && [[NSData dataWithContentsOfURL:exported] isEqual:[NSData dataWithContentsOfURL:[p.store URLForTitle:@"Original"]]],"export copies the file as it is");
+ check([p.store exportTitle:@"Original" toURL:exported check:nil error:NULL] && [[NSData dataWithContentsOfURL:exported] isEqual:[NSData dataWithContentsOfURL:[p.store URLForTitle:@"Original"]]],"export copies the file as it is");
  BOOL (^accept)(NSData *)=^BOOL(NSData *d){return YES;};
  NSString *imported=[p.store importFileAtURL:exported check:accept error:NULL];
  check([imported isEqual:@"Original 2"] && [[p.store readTitle:@"Original 2"][@"EditorText"] isEqual:[p.store readTitle:@"Original"][@"EditorText"]] && [[p.store readTitle:@"Original 2"][@"Title"] isEqual:@"Original 2"],"an imported theme with a taken name gets a free one");
@@ -336,7 +337,12 @@ int main(int argc,char **argv){@autoreleasepool{
    NSMutableDictionary *otherMore=[otherColors mutableCopy];otherMore[@"EditorText"]=@[@1,@0,@0,@1];NSError *notTheme=nil;
    check([strict readTitle:@"Other"]==nil && [strict writeChangesFrom:otherColors to:otherMore title:@"Other" error:&notTheme]==nil && notTheme.code==NSFileReadCorruptFileError && [[NSData dataWithContentsOfURL:(NSURL *_Nonnull)[strict URLForTitle:@"Other"]] isEqual:settings],"a file of other settings is not written into");
    NSURL *exportTo=[outside URLByAppendingPathComponent:@"OtherExport.plist"];NSError *exportError=nil;
-   check(![strict exportTitle:@"Other" toURL:exportTo error:&exportError] && exportError.code==NSFileReadCorruptFileError && ![NSFileManager.defaultManager fileExistsAtPath:exportTo.path],"a file that is not a theme is not exported, and nothing is made");
+   check(![strict exportTitle:@"Other" toURL:exportTo check:nil error:&exportError] && exportError.code==NSFileReadCorruptFileError && ![NSFileManager.defaultManager fileExistsAtPath:exportTo.path],"a file that is not a theme is not exported, and nothing is made");
+   // A theme the import would refuse (the check) is not exported, and a file already where it was to go stays.
+   check([strict writeColors:@{@"EditorText":@[@0,@0,@0,@1]} title:@"Fine" error:NULL],"seed Fine");
+   NSData *already=[@"already" dataUsingEncoding:NSUTF8StringEncoding];[already writeToURL:exportTo atomically:YES];
+   check(![strict exportTitle:@"Fine" toURL:exportTo check:^BOOL(NSData *d){return NO;} error:&exportError] && exportError.code==NSFileReadCorruptFileError && [[NSData dataWithContentsOfURL:exportTo] isEqual:already],"a theme the import would refuse is not exported over an existing file");
+   [NSFileManager.defaultManager removeItemAtURL:exportTo error:NULL];[NSFileManager.defaultManager removeItemAtURL:(NSURL *_Nonnull)[strict URLForTitle:@"Fine"] error:NULL];
    p.store=strict;
    [p themeListDidChooseTitle:@"Other"];
    check([stub.unreadable isEqual:@[@"Other"]],"a theme that cannot be read is handed to the list when it is chosen");
