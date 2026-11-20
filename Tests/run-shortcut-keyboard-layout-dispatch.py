@@ -3,7 +3,8 @@
 
 The probe switches keyboard layouts, so it never runs on this Mac: it is built here and run
 over ssh on the Mac named by TEXSHOP_LAYOUT_VM (for example user@192.168.0.32), which must
-have this Mac's key. Without TEXSHOP_LAYOUT_VM the build and the fixture are checked and the
+have this Mac's key. Several Macs separated by commas run the probe on each of them, and the
+mutants are built in parallel and shared among them. Without TEXSHOP_LAYOUT_VM the build and the fixture are checked and the
 run is skipped. --mutations also checks that the probe catches the double-localized keys of
 6.00 beta 6 and a conflict check that misses the keys a layout shows.
 """
@@ -13,12 +14,17 @@ import plistlib
 import subprocess
 import sys
 import tempfile
+import threading
+import queue
+from concurrent.futures import ThreadPoolExecutor
 import xml.etree.ElementTree as ET
 from shortcut_sources import NAMES, companion_sources
 from source_tree import include_args, source_file
 
 root = Path(__file__).resolve().parents[1]
-vm = os.environ.get('TEXSHOP_LAYOUT_VM', '')
+# One VM, or several separated by commas: the probe and the mutants are spread over them.
+vms = [v for v in os.environ.get('TEXSHOP_LAYOUT_VM', '').split(',') if v]
+vm = vms[0] if vms else ''
 
 # The menu commands of MainMenu.nib with the keys the nib gives them.
 MASKS = {'shift': 1 << 17, 'control': 1 << 18, 'option': 1 << 19, 'command': 1 << 20}
@@ -62,8 +68,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-layout-dispatch-') as directory
         subprocess.run(command, check=True)
         return d / name
 
-    def run(binary):
-        remote = f'texshop-layout-dispatch-{os.getpid()}'
+    def run(binary, vm=vm):
+        remote = f'texshop-layout-dispatch-{os.getpid()}-{binary.name}'
         subprocess.run(['ssh', '-o', 'BatchMode=yes', vm, f'mkdir -p {remote}'], check=True)
         subprocess.run(['scp', '-q', str(binary), str(d / 'menu.plist'), f'{vm}:{remote}/'], check=True)
         try:
@@ -88,9 +94,14 @@ with tempfile.TemporaryDirectory(prefix='texshop-layout-dispatch-') as directory
     if not vm:
         print('SKIP: set TEXSHOP_LAYOUT_VM=user@host to run the probe in a VM', flush=True)
         sys.exit(0)
-    result = run(binary)
-    print(result.stdout, end='', flush=True)
-    assert result.returncode == 0, result.stderr
+    # The probe on every VM at once (each VM switches only its own layouts).
+    with ThreadPoolExecutor(len(vms)) as pool:
+        results = list(pool.map(lambda host: (host, run(binary, host)), vms))
+    for host, result in results:
+        version = subprocess.run(['ssh', '-o', 'BatchMode=yes', host, 'sw_vers -productVersion'], capture_output=True, text=True).stdout.strip()
+        print(f'== {host} (macOS {version})', flush=True)
+        print(result.stdout, end='', flush=True)
+        assert result.returncode == 0, (host, result.stderr)
     if '--mutations' in sys.argv:
         mutations = [
             ('default read as AppKit shows it', models,
@@ -141,6 +152,10 @@ with tempfile.TemporaryDirectory(prefix='texshop-layout-dispatch-') as directory
              '        if (!accepted || strongSelf.layoutChanges != changes) { [strongSelf endRecording]; return; }',
              '        if (!accepted) { [strongSelf endRecording]; return; }',
              'a layout change while the question is open records nothing'),
+            ('recording names only macros showing the key or given it', store,
+             '        if ([TSShownBinding(item) isEqual:binding] || [[self bindingsForMacroKey:given.key modifiers:given.modifiers] containsObject:binding])',
+             '        if ([TSShownBinding(item) isEqual:binding] || [given isEqual:binding])',
+             'names the Control-Option-2 macro'),
             ('saved keys checked against given defaults only', store,
              '    return [NSSet setWithObjects:given, [self shownDefaultForCommand:command], nil];',
              '    return [NSSet setWithObject:given];',
@@ -170,23 +185,46 @@ with tempfile.TemporaryDirectory(prefix='texshop-layout-dispatch-') as directory
                       '    return NO;')
         # --only NAME... runs the mutations whose names contain one of the words given after it.
         only = sys.argv[sys.argv.index('--only') + 1:] if '--only' in sys.argv else []
-        for name, path, old, new, expected in mutations:
-            if only and not any(word in name for word in only):
-                continue
+        selected = [m for m in mutations if not only or any(word in m[0] for word in only)]
+        # Mutants are built in parallel here, then run one at a time on each VM, the VMs in parallel.
+        def make(numbered):
+            number, (name, path, old, new, expected) = numbered
             text = path.read_text()
             assert text.count(old) == 1, name
-            mutated = d / path.name
+            folder = d / f'source{number}'
+            folder.mkdir()
+            mutated = folder / path.name
             mutated.write_text(text.replace(old, new))
             replace = [(path, mutated)]
             if name.startswith('6.00 beta 6'):
                 text = store.read_text()
                 assert text.count(every_item[0]) == 1
-                (d / 'store').mkdir(exist_ok=True)
-                (d / 'store' / store.name).write_text(text.replace(*every_item))
-                replace.append((store, d / 'store' / store.name))
-            result = run(build(replace, 'mutant'))
-            assert result.returncode != 0 and expected in result.stderr, (name, result.stdout, result.stderr)
-            print('DETECTED', name, '->', result.stderr.strip().splitlines()[-1], flush=True)
-        result = run(binary)
-        assert result.returncode == 0, result.stderr
-        print('NORMAL CONTROL passed', flush=True)
+                (folder / 'store').mkdir()
+                (folder / 'store' / store.name).write_text(text.replace(*every_item))
+                replace.append((store, folder / 'store' / store.name))
+            return build(replace, f'mutant{number}')
+        with ThreadPoolExecutor(min(8, len(selected) or 1)) as pool:
+            binaries = list(pool.map(make, enumerate(selected)))
+        jobs = queue.Queue()
+        for job in zip(selected, binaries):
+            jobs.put(job)
+        outcomes = {}
+        def worker(host):
+            while True:
+                try:
+                    (name, path, old, new, expected), mutant = jobs.get_nowait()
+                except queue.Empty:
+                    return
+                outcomes[name] = (host, run(mutant, host), expected)
+        threads = [threading.Thread(target=worker, args=(host,)) for host in vms]
+        for thread in threads: thread.start()
+        for thread in threads: thread.join()
+        for name, *_ in selected:
+            host, result, expected = outcomes[name]
+            assert result.returncode != 0 and expected in result.stderr, (name, host, result.stdout, result.stderr)
+            print('DETECTED', name, f'({host}) ->', result.stderr.strip().splitlines()[-1], flush=True)
+        with ThreadPoolExecutor(len(vms)) as pool:
+            results = list(pool.map(lambda host: (host, run(binary, host)), vms))
+        for host, result in results:
+            assert result.returncode == 0, (host, result.stderr)
+        print('NORMAL CONTROL passed on', ', '.join(vms), flush=True)

@@ -316,6 +316,9 @@ static NSArray<NSNumber *> *TSLayoutKeyVariants(void) {
     TSShortcutBinding *shown = TSShownBinding(item);
     for (TSShortcutMacro *macro in (self.macroProvider ? self.macroProvider() : @[]))
         if (macro.key.length && [[self shownBindingForGivenKey:macro.key modifiers:macro.modifiers] isEqual:shown]) return TSBinding(macro.key, macro.modifiers);
+    // A key the layout could show as one of several: the macro one of whose keys the item shows.
+    for (TSShortcutMacro *macro in (self.macroProvider ? self.macroProvider() : @[]))
+        if (macro.key.length && [[self bindingsForMacroKey:macro.key modifiers:macro.modifiers] containsObject:shown]) return TSBinding(macro.key, macro.modifiers);
     return shown;
 }
 // The shown keys the last assignment went by: the defaults, the other items and the macros.
@@ -545,8 +548,11 @@ static NSArray<NSNumber *> *TSLayoutKeyVariants(void) {
     if (!key.length) return @[];
     TSShortcutBinding *binding = TSBinding(key, flags);
     TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
-        if (item.action == TSMacroAction() && item.keyEquivalent.length &&
-            ([TSShownBinding(item) isEqual:binding] || [[self givenBindingForMacroItem:item] isEqual:binding]))
+        if (item.action != TSMacroAction() || !item.keyEquivalent.length) return;
+        // The keys a macro has, as the macro menu compares them: as its file names the key, as
+        // the layout shows it, and each key the layout could show it as.
+        TSShortcutBinding *given = [self givenBindingForMacroItem:item];
+        if ([TSShownBinding(item) isEqual:binding] || [[self bindingsForMacroKey:given.key modifiers:given.modifiers] containsObject:binding])
             [result addObject:[NSString stringWithFormat:@"%@ (%@)", path,
                 [TSShortcutStore displayKey:item.keyEquivalent modifiers:item.keyEquivalentModifierMask]]];
     });

@@ -360,6 +360,17 @@ int main(int argc, const char *argv[]) {
             REQUIRE(!keys[TSBinding(@"2", C)], @"Command-2 could be & or é, so it is not taken as either");
             saved = [early conflictsForMacroShortcuts:@[@{@"path":@"Macros › New", @"key":@"2", @"modifiers":@(C | K)}]];
             REQUIRE(saved.count == 1, @"a new Control-Command-2 macro, which could show Control-Command-é, meets the Control-Command-é item (%@)", saved);
+            // A Control-Option-2 macro in use: recording any key it could show for a command names it first.
+            DispatchMacros *bareMacros = [DispatchMacros new];
+            TSShortcutMacro *two = [[TSShortcutMacro alloc] initWithName:@"Active two" path:@"Macros › Active two" indexPath:[NSIndexPath indexPathWithIndex:0] serializedKey:@"^~2" key:@"2" modifiers:K | O];
+            early.macroProvider = ^NSArray<TSShortcutMacro *> *{ return @[two]; };
+            NSMenuItem *twoItem = [[NSMenuItem alloc] initWithTitle:@"Active two" action:@selector(doMacro:) keyEquivalent:@""];
+            twoItem.target = bareMacros; twoItem.keyEquivalentModifierMask = K | O; twoItem.keyEquivalent = @"2";
+            [bare.itemArray[1].submenu addItem:twoItem]; [occupants addObject:twoItem]; Spin(0.3);
+            REQUIRE(twoItem.keyEquivalent.length, @"the Control-Option-2 macro has its key (%@)", twoItem.keyEquivalent);
+            for (NSString *candidate in @[@"&", @"é"])
+                REQUIRE([early macrosUsingKey:candidate modifiers:K | O].count == 1, @"recording Control-Option-%@ names the Control-Option-2 macro (%@)", candidate, [early macrosUsingKey:candidate modifiers:K | O]);
+            early.macroProvider = nil;
             for (NSMenuItem *occupant in occupants) if (occupant.menu) [occupant.menu removeItem:occupant];
             early = nil;
             fprintf(stdout, "PASS: what was recorded or restored before a layout's keys were known is checked again; a key with every variant in use is known from the items that show it\n");
