@@ -56,6 +56,8 @@ MUTATIONS = {
     'no-content-width': ('view', '    if (resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH)\n        [self fitContentWidth];\n', ''),
     # A PDF shown again after the Preview was closed does not tell the part it was unlocked.
     'closed-no-delegate': ('early', '        [[self document] setDelegate: (id<PDFDocumentDelegate>)self];\n', ''),
+    # A PDF shown again after the Preview was closed keeps the drawer's outline of the old PDF (#59).
+    'closed-no-outline': ('early', '        [self setupOutline];\n', ''),
     'other-document': ('view', '    if (document != [self document])\n        return;\n', ''),
 }
 parser = argparse.ArgumentParser(description=__doc__)
@@ -409,6 +411,9 @@ int main(int argc, char **argv) { @autoreleasepool {
         check(p.first.document == again && !p.window.previewClosed && !p.window.noPdfFile, [name stringByAppendingString:@": the new PDF is shown"]);
         check(first.delegate == nil, [name stringByAppendingString:@": the earlier PDF no longer reports to the part"]);
         check(p.first.setupRuns == ([state isEqual:@"no PDF"] ? 1 : 0), [name stringByAppendingString:@": a window without a PDF is set up"]);
+        // The drawer's outline is rebuilt from the new PDF (#59), and again when it is unlocked.
+        check(p.first.outlineSetups == 1, [name stringByAppendingString:@": the outline is set up for the new PDF"]);
+        p.first.outlineSetups = 0;
         // As with the reporter's PDF, the page count could not be read while the PDF was locked.
         for (NSTextField *field in [p.first pageCountFields]) field.integerValue = 0;
         unlockIn(p, p.first, @"secret");

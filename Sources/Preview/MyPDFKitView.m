@@ -1404,10 +1404,14 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
         
         self.myPDFWindow.noPdfFile = NO;
         self.myPDFWindow.previewClosed = NO;
-         
+
+        // The drawer's outline is rebuilt from the new PDF, as on every other load. Its
+        // entries for the old PDF lead nowhere (#59).
+        [self setupOutline];
+
         aPage = [[self document] pageAtIndex: 0];
         [self goToPage: aPage];
-        
+
         return;
         
     }
