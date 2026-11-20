@@ -63,17 +63,16 @@ static NSString *TSLuaUnquoted(NSString *quoted)
 }
 
 // The place in mtxrun's answer to a backward sync (mtx-synctex --report --console prints %q %i %i): a line that is
-// only the quoted file name, a line number above 0 and the tolerance.
+// only the quoted file name, a line number above 0 and the tolerance. The answer is read as a whole, not line by
+// line: a name may hold a line break (Lua writes it as \ and the break) or a line separator.
 static BOOL TSContextSyncPlace(NSString *output, NSString **fileName, NSInteger *line)
 {
-    NSRegularExpression *place = [NSRegularExpression regularExpressionWithPattern:@"^\\s*\"((?:[^\"\\\\]|\\\\.)+)\"\\s+([1-9][0-9]{0,8})(\\s+-?[0-9]+)?\\s*$" options:0 error:NULL];
-    for (NSString *candidate in [output componentsSeparatedByCharactersInSet:NSCharacterSet.newlineCharacterSet]) {
-        NSTextCheckingResult *match = [place firstMatchInString:candidate options:0 range:NSMakeRange(0, candidate.length)];
-        if (match == nil) continue;
-        NSString *name = TSLuaUnquoted([candidate substringWithRange:[match rangeAtIndex:1]]);
+    NSRegularExpression *place = [NSRegularExpression regularExpressionWithPattern:@"(?:^|\\n)[ \\t]*\"((?:[^\"\\\\\\r\\n]|\\\\[\\s\\S])+)\"[ \\t]+([1-9][0-9]{0,8})(?:[ \\t]+-?[0-9]+)?[ \\t]*(?=\\r?\\n|$)" options:0 error:NULL];
+    for (NSTextCheckingResult *match in [place matchesInString:output options:0 range:NSMakeRange(0, output.length)]) {
+        NSString *name = TSLuaUnquoted([output substringWithRange:[match rangeAtIndex:1]]);
         if (name == nil) continue;
         *fileName = name;
-        *line = [[candidate substringWithRange:[match rangeAtIndex:2]] integerValue];
+        *line = [[output substringWithRange:[match rangeAtIndex:2]] integerValue];
         return YES;
     }
     return NO;

@@ -21,9 +21,10 @@ assert 'componentsSeparatedByCharactersInSet: mySet' not in source, 'no other re
 
 MUTATIONS = {
     'line-zero': ('([1-9][0-9]{0,8})', '([0-9]{1,9})'),
-    'anywhere': ('@"^\\\\s*\\"', '@"\\"'),
-    'no-tolerance': ('(\\\\s+-?[0-9]+)?', ''),
+    'anywhere': ('@"(?:^|\\\\n)[ \\\\t]*\\"', '@"\\"'),
+    'no-tolerance': ('(?:[ \\\\t]+-?[0-9]+)?', ''),
     'quote-unescaped': ('if (c != \'\\\\\') { [name', 'if (YES) { [name'),
+    'escaped-break-ends-name': ('\\\\\\\\[\\\\s\\\\S]', '\\\\\\\\.'),
     'no-byte-escapes': ('if (c >= \'0\' && c <= \'9\') {', 'if (NO) {'),
 }
 
@@ -41,8 +42,8 @@ int main(int argc, char **argv) { @autoreleasepool {
     file = nil; line = 0;
     Check(TSContextSyncPlace(@"\"a.tex\" 12", &file, &line) && [file isEqual:@"a.tex"] && line == 12, @"an answer without the tolerance");
     // File names that Lua's %q escapes (here as TeX Live's texlua writes them, or as given when it is missing).
-    NSArray *names = @[@"say \"hi\".tex", @"back\\slash.tex", @"car\rriage.tex", @"日本語 名前.tex"];
-    NSArray *answers = [[NSString stringWithContentsOfFile:@(argv[1]) encoding:NSUTF8StringEncoding error:NULL] componentsSeparatedByString:@"\n"];
+    NSArray *names = @[@"say \"hi\".tex", @"back\\slash.tex", @"car\rriage.tex", @"日本語 名前.tex", @"line\nbreak.tex", @"sep\u2028arator.tex"];
+    NSArray *answers = [[NSString stringWithContentsOfFile:@(argv[1]) encoding:NSUTF8StringEncoding error:NULL] componentsSeparatedByString:@"\x1e"];
     for (NSUInteger i = 0; i < names.count; i++) {
         file = nil; line = 0;
         NSString *answer = i < answers.count ? answers[i] : @"";
@@ -60,7 +61,7 @@ int main(int argc, char **argv) { @autoreleasepool {
 } }
 '''
 
-NAMES = ['say "hi".tex', 'back\\slash.tex', 'car\rriage.tex', '日本語 名前.tex']
+NAMES = ['say "hi".tex', 'back\\slash.tex', 'car\rriage.tex', '日本語 名前.tex', 'line\nbreak.tex', 'sep\u2028arator.tex']
 def lua_quoted(name):
     """Lua 5.3's %q, for when texlua is missing."""
     out = bytearray(b'"')
@@ -73,11 +74,11 @@ def answers(t):
     texlua = shutil.which('texlua') or '/Applications/TeXLive/2026/bin/universal-darwin/texlua'
     if os.path.exists(texlua):
         script = t/'q.lua'
-        script.write_text(''.join('print(string.format("%%q %%i %%i", %s, 54, 0))\n' % lua_literal(n) for n in NAMES))
+        script.write_text(''.join('io.write(string.format("%%q %%i %%i\\n", %s, 54, 0), "\\30")\n' % lua_literal(n) for n in NAMES))
         result = subprocess.run([texlua, str(script)], capture_output=True, text=True)
         if result.returncode == 0:
             return result.stdout
-    return ''.join(lua_quoted(n) + ' 54 0\n' for n in NAMES)
+    return ''.join(lua_quoted(n) + ' 54 0\n\x1e' for n in NAMES)
 def lua_literal(name):
     return '"' + ''.join('\\%d' % b for b in name.encode('utf-8')) + '"'
 
