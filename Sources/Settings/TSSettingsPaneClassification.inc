@@ -153,6 +153,12 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
         [NSLayoutConstraint activateConstraints:@[[body.leadingAnchor constraintEqualToAnchor:list.leadingAnchor],[body.trailingAnchor constraintEqualToAnchor:list.trailingAnchor],[body.topAnchor constraintEqualToAnchor:list.topAnchor],[body.bottomAnchor constraintEqualToAnchor:list.bottomAnchor]]];
         row=[TSPrefPaneLayout catalogContent:list trailing:NO indent:indent];
         [list.trailingAnchor constraintEqualToAnchor:row.trailingAnchor constant:-12].active=YES;
+    }else if([kind isEqual:@"themelist"]){
+        // The frame of the list and its bar, fitted again to the list's outer view (take: removed its constraints).
+        NSView *list=controls.firstObject,*frame=TSCatalogRequired(list.subviews.firstObject);
+        [NSLayoutConstraint activateConstraints:@[[frame.leadingAnchor constraintEqualToAnchor:list.leadingAnchor],[frame.trailingAnchor constraintEqualToAnchor:list.trailingAnchor],[frame.topAnchor constraintEqualToAnchor:list.topAnchor],[frame.bottomAnchor constraintEqualToAnchor:list.bottomAnchor]]];
+        row=[TSPrefPaneLayout catalogContent:list trailing:NO indent:indent];
+        [list.trailingAnchor constraintEqualToAnchor:row.trailingAnchor constant:-12].active=YES;
     }else if([kind isEqual:@"description"]){row=[TSPrefPaneLayout catalogContent:[self label:title small:YES] trailing:NO indent:indent];
     }else if([kind isEqual:@"buttons"] || [kind isEqual:@"checks"] || [kind isEqual:@"checkgrid"]){
         for(NSUInteger i=0;i<controls.count;i++)((NSButton *)controls[i]).title=text(model[@"choices"][i]);
@@ -259,6 +265,10 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
     // The key binding list is edited in place in Keyboard.
     if(preferences.keyBindings==nil)preferences.keyBindings=[TSKeyBindingsController new];
     NSView *bindings=preferences.keyBindings.view;bindings.identifier=@"settings.key-bindings";views[@"settings.key-bindings"]=bindings;
+    // Edit Themes: the themes in ~/Library/TeXShop/Themes, beside those that come with TeXShop.
+    NSURL *bundledThemes=[NSBundle.mainBundle.resourceURL URLByAppendingPathComponent:@"TeXShop/Themes" isDirectory:YES];
+    preferences.themeList=[[TSSettingsThemeList alloc]initWithStore:[preferences themeStore] bundledDirectory:bundledThemes owner:preferences text:text];
+    views[@"settings.theme-list"]=preferences.themeList.view;
     NSMutableDictionary *result=[NSMutableDictionary dictionary];
     for(NSDictionary *category in TSSettingsCatalogLayout()){
         NSString *cid=category[@"id"];NSMutableArray *groups=[NSMutableArray array];

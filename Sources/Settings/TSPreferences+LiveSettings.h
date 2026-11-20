@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSPreferences.h"
+#import "TSSettingsThemeList.h"
+@class TSThemeFileStore;
 
 // Nullability applies only to the live-settings API, not the legacy nib outlets.
 NS_ASSUME_NONNULL_BEGIN
@@ -9,9 +11,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setAllThemeEditingEnabled:(BOOL)enabled;
 - (void)showPreferenceError:(NSString *)message;
 @property (copy, nullable) NSDictionary<NSString *, id> *lastSavedEditingColors;
+// The theme whose colors the wells show, chosen in the theme list.
+@property (copy, nullable) NSString *editingThemeTitle;
+@property (strong, nullable) TSSettingsThemeList *themeList;
 @end
 NS_ASSUME_NONNULL_END
 
-@interface TSPreferences (ThemeEditing)
+@interface TSPreferences (ThemeEditing) <TSSettingsThemeListOwner>
 - (void)setThemeEditingEnabled:(BOOL)enabled inView:(NSView * _Nonnull)view;
+- (TSThemeFileStore * _Nonnull)themeStore;
 @end

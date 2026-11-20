@@ -52,7 +52,7 @@ PRODUCTION = {
 DESTRUCTIVE = {
     'Sources/Editor/TSSpellSupport.m': '[alert addButtonWithTitle:NSLocalizedString(@"Forget Selected", @"")].hasDestructiveAction = YES;',
     'Sources/Shortcuts/TSShortcutPaneController.m': '[alert addButtonWithTitle:NSLocalizedString(@"Restore All", @"")].hasDestructiveAction = YES;',
-    'Sources/Settings/TSPreferences-Color.m': '[alert addButtonWithTitle:NSLocalizedString(@"Replace", @"")].hasDestructiveAction = YES;',
+    'Sources/Settings/TSSettingsThemeList.m': '[alert addButtonWithTitle:self.text(@"theme.list.moveToTrash")].hasDestructiveAction = YES;',
 }
 OLD_BEZELS = re.compile(r'NSBezelStyle(ShadowlessSquare|SmallSquare|TexturedSquare|RoundRect|TexturedRounded|ThickSquare|ThickerSquare)\b'
                         r'|NS(ShadowlessSquare|SmallSquare|TexturedSquare|RoundRect|TexturedRounded|ThickSquare|ThickerSquare)BezelStyle\b')
@@ -181,7 +181,7 @@ MUTATIONS = {
     'grid lines kept': ('Sources/Windows/TSOlderPanelLayout.m', 'table.gridStyleMask &= ~NSTableViewSolidVerticalGridLineMask;', ''),
     'bold OgreKit button': ('3rdparty/OgreKit-2.1.12-FindPanel/de.lproj/OgreAdvancedFindPanel.xib', '<font key="font" metaFont="smallSystem"/>',
                             '<font key="font" metaFont="titleBar" size="12" textStyle="headline"/>'),
-    'not destructive': ('Sources/Settings/TSPreferences-Color.m', '.hasDestructiveAction = YES;', ';'),
+    'not destructive': ('Sources/Settings/TSSettingsThemeList.m', '.hasDestructiveAction = YES;', ';'),
     'new square bezel': ('Sources/Find/TSAdvancedFindProgressSheet.m', '_cancelButton.bordered = NO;', '_cancelButton.bordered = NO; _cancelButton.bezelStyle = NSBezelStyleShadowlessSquare;'),
     'square link popup': ('Sources/Preview/TSLinkPreviewView.m', '[edge stroke];', '[edge stroke]; NSFrameRect(bounds);'),
     'gray link popup edge': ('Sources/Preview/TSLinkPreviewView.m', '[[NSColor blackColor] setStroke];', '[[NSColor colorWithWhite:0 alpha:0.35] setStroke];'),

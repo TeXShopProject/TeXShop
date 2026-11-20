@@ -129,7 +129,7 @@ int main(int argc, const char **argv) { @autoreleasepool {
         Check(found!=nil && [found.categoryIdentifier isEqual:expected[@"Categories"][name]],@"Production category ID belongs to its fixed pane class");
     }
     Check([TSSettingsGroupStyle cornerRadiusForMajorVersion:14]==10 && [TSSettingsGroupStyle cornerRadiusForMajorVersion:15]==10 && [TSSettingsGroupStyle cornerRadiusForMajorVersion:26]==12,@"Group radii match the supported OS versions");
-    Check(panes.count==10,@"Production factory eagerly owns all ten panes");
+    Check(panes.count==9,@"Production factory eagerly owns all nine panes");
     for(NSDictionary *entry in expected[@"Bridge"]) {
         TSPrefPaneController *pane=nil;
         for(TSPrefPaneController *candidate in panes)if([NSStringFromClass(candidate.class) isEqual:entry[@"class"]])pane=candidate;
@@ -138,7 +138,7 @@ int main(int argc, const char **argv) { @autoreleasepool {
         Check(object_getIvar(coordinator,ivar)==[pane valueForKey:entry[@"property"]],@"Production bridge assigns each original outlet to its matching pane control");
         Check(pane.preferences==coordinator,@"Every pane forwards to its owning coordinator");
     }
-    NSArray *names = @[@"Source",@"Editor",@"Preview",@"Console",@"Typesetting",@"Engines",@"MiscOne",@"MiscTwo",@"Themes",@"ThemeName"];
+    NSArray *names = @[@"Source",@"Editor",@"Preview",@"Console",@"Typesetting",@"Engines",@"MiscOne",@"MiscTwo",@"Themes"];
     NSUInteger outlets = 0;
     for (NSString *name in names) {
         Class cls = NSClassFromString([NSString stringWithFormat:@"TSPref%@Controller", name]);
@@ -164,10 +164,10 @@ int main(int argc, const char **argv) { @autoreleasepool {
             NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,700,700) styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO];
             NSView *parent = window.contentView;
             [parent addSubview:view];
-            NSLayoutConstraint *width=[view.widthAnchor constraintEqualToConstant:[name isEqual:@"ThemeName"] ? 420 : 620];
+            NSLayoutConstraint *width=[view.widthAnchor constraintEqualToConstant:620];
             [NSLayoutConstraint activateConstraints:@[width, [view.leadingAnchor constraintEqualToAnchor:parent.leadingAnchor], [view.topAnchor constraintEqualToAnchor:parent.topAnchor]]];
             for (NSNumber *wide in @[@NO,@YES]) {
-                width.constant=[name isEqual:@"ThemeName"] ? 420 : (wide.boolValue ? 900 : 620);
+                width.constant=(wide.boolValue ? 900 : 620);
                 for (NSAppearanceName appearance in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]) {
                     window.appearance=[NSAppearance appearanceNamed:appearance];
                     [parent layoutSubtreeIfNeeded]; CheckGeometry(view);
@@ -200,7 +200,8 @@ int main(int argc, const char **argv) { @autoreleasepool {
     // 170 migrated from the legacy Preferences window and 4 added since; the Engine File and
     // Alternate Engine text fields gave way to menus built in code; Save PostScript File and
     // -dALLOWPSTRANSPARENCY were removed; the arrow keys switch of Preview and the Advanced Find panel switch
-    // of Editor were added; Save related files was removed; Highlight Fullwidth Letters and Symbols of Editor was added.
-    Check(outlets == 172, @"Every typed outlet loads");
+    // of Editor were added; Save related files was removed; Highlight Fullwidth Letters and Symbols of Editor was added;
+    // the menu of the theme to edit and the theme name sheet (its panel and field) gave way to the theme list.
+    Check(outlets == 169, @"Every typed outlet loads");
     puts("PASS: 11 panes and 172 typed outlets");
 } return 0; }

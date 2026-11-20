@@ -6,23 +6,28 @@ from source_tree import include_args
 R=Path(__file__).resolve().parents[1];source=(R/'Sources/Settings/TSPreferences-Color.m').read_text()
 def method(sig):
  a=source.index('\n'+sig)+1;return source[a:source.index('\n}',a)+2]
-methods='\n'.join(map(method,['- (IBAction)SaveEditedStyle:', '- (void)saveNewTheme:', '- (IBAction)themeSelectionChanged:', '- (IBAction)EditingStyleChoice:', '- (IBAction)SaveNewStyle:', '- (void)requestNameForThemeColors:', '- (void)okForStylePanel:', '- (void)cancelForStylePanel:', '- (void)setThemeEditingEnabled:']))
+methods='\n'.join(map(method,['- (IBAction)SaveEditedStyle:', '- (IBAction)themeSelectionChanged:', '- (void)themeListDidChooseTitle:', '- (void)loadEditingTheme', '- (void)themeListDidChangeTitle:', '- (void)fillThemeMenus', '- (void)setThemeEditingEnabled:']))
+def line(sig):
+ a=source.index('\n'+sig)+1;return source[a:source.index('\n',a)]
+# The one-line methods and the function that composes the names stored in the settings.
+methods=line('static NSString *TSThemeTitle(')+'\n'+methods+'\n'+line('- (nullable NSString *)lightThemeTitle')+'\n'+line('- (nullable NSString *)darkThemeTitle')
 mutation=sys.argv[1] if len(sys.argv)>1 else ''
 mutations={
- 'duplicate-sheet':('_prefsWindow.attachedSheet != nil','NO'),
- 'sheet-generation':('generation != coordinator.themeOperationGeneration','NO'),
- 'overwrite-generation':('answer == NSAlertFirstButtonReturn && generation == confirmedCoordinator.themeOperationGeneration','answer == NSAlertFirstButtonReturn'),
- 'sheet-cancel':('response != NSModalResponseOK ||','NO ||'),
- 'failure-dictionary':('EditingColors = [saved mutableCopy];',';'),
+ 'failure-dictionary':('EditingColors = [saved mutableCopy];\n        self.lastSavedEditingColors = saved;\n        [self FillInColorWells];\n        [self showPreferenceError',';\n        self.lastSavedEditingColors = saved;\n        [self FillInColorWells];\n        [self showPreferenceError'),
  'failure-fallback':('[[self themeStore] readTitle:title] ?: self.lastSavedEditingColors','[[self themeStore] readTitle:title]'),
- 'save-notify':('[self applyEffectsForPreferenceKeys:[NSSet setWithArray:@[DefaultLiteThemeKey, DefaultDarkThemeKey]]];',';'),
- 'clone-early':('if (![[self themeStore] writeColors:colors title:title error:&error]) {','if (NO && ![[self themeStore] writeColors:colors title:title error:&error]) {'),
+ 'save-notify':('    [self applyEffectsForPreferenceKeys:[NSSet setWithArray:@[DefaultLiteThemeKey, DefaultDarkThemeKey]]];\n}\n- (IBAction)themeSelectionChanged',';\n}\n- (IBAction)themeSelectionChanged'),
  'selection-store':('[SUD setObject:title forKey:popup == LiteStyle ? DefaultLiteThemeKey : DefaultDarkThemeKey];',';'),
+ 'compose-settings':('{ return title.precomposedStringWithCanonicalMapping; }','{ return title; }'),
+ 'rename-follows':('[SUD setObject:newTitle ?: @"LiteTheme" forKey:DefaultLiteThemeKey];',';'),
+ 'delete-fallback':('newTitle ?: @"DarkTheme"','newTitle'),
+ 'rename-editing':('if ([self.editingThemeTitle isEqualToString:oldTitle] && newTitle != nil) self.editingThemeTitle = newTitle;',';'),
+ 'restore-reload':('if ([self.editingThemeTitle isEqualToString:oldTitle]) [self loadEditingTheme];',';'),
 }
 # Mutations of the theme file store: the whole edited dictionary written over the file, and the file read outside the
 # coordinated write.
 store=(R/'Sources/Settings/TSThemeFileStore.m').read_text()
 store_mutations={
+ 'compose-titles':('NSString *title = name.stringByDeletingPathExtension.precomposedStringWithCanonicalMapping;','NSString *title = name.stringByDeletingPathExtension;'),
  'only-changed':('NSMutableDictionary<NSString *, id> *colors = [([self readTitle:title] ?: before) mutableCopy];','NSMutableDictionary<NSString *, id> *colors = [after mutableCopy];'),
  'read-outside':('    __block NSDictionary<NSString *, id> *written = nil;\n','    NSDictionary *early = [self readTitle:title];\n    __block NSDictionary<NSString *, id> *written = nil;\n'),
 }
@@ -32,7 +37,7 @@ elif mutation in store_mutations:
  old,new=store_mutations[mutation];assert old in store;store=store.replace(old,new)
 elif mutation:
  old,new=mutations[mutation];assert old in methods;methods=methods.replace(old,new)
-methods=methods.replace('NSPopUpButton *popup', 'Popup *popup')
+methods=methods.replace('NSPopUpButton *popup', 'Popup *popup').replace('for (NSPopUpButton *popup in @[LiteStyle, DarkStyle])','for (Popup *popup in @[LiteStyle, DarkStyle])')
 program=r'''
 #import <Cocoa/Cocoa.h>
 #import "MemoryDefaults.h"
@@ -53,12 +58,16 @@ static NSUInteger reloads;
 - (id)itemWithTitle:(NSString *)title;
 - (void)addItemWithTitle:(NSString *)title;
 - (void)selectItemWithTitle:(NSString *)title;
+- (void)removeAllItems;
+- (void)addItemsWithTitles:(NSArray<NSString *> *)titles;
 @end
 @implementation Popup
 - (instancetype)init {if((self=[super init]))_items=[NSMutableArray new];return self;}
 - (id)itemWithTitle:(NSString *)title{return [self.items containsObject:title]?title:nil;}
 - (void)addItemWithTitle:(NSString *)title{[self.items addObject:title];}
-- (void)selectItemWithTitle:(NSString *)title{self.titleOfSelectedItem=title;}
+- (void)selectItemWithTitle:(NSString *)title{self.titleOfSelectedItem=[self.items containsObject:title]?title:nil;}
+- (void)removeAllItems{[self.items removeAllObjects];self.titleOfSelectedItem=nil;}
+- (void)addItemsWithTitles:(NSArray<NSString *> *)titles{for(NSString *t in titles)if(![self.items containsObject:t])[self.items addObject:t];}
 @end
 static NSString *ColorPath;
 // A theme store that runs a block once, right after it has read a theme file.
@@ -100,9 +109,17 @@ static NSMutableArray *alertButtons;
 @property(copy) NSString *stringValue;
 @end
 @implementation Field @end
-@interface Probe:NSObject { @public NSMutableDictionary *EditingColors; Popup *EditingStyle,*LiteStyle,*DarkStyle; Field *styleTitle; FakePanel *stylePanel,*_prefsWindow; }
+@interface ListStub:NSObject
+@property NSUInteger reloads;
+- (void)reload;
+@end
+@implementation ListStub
+- (void)reload{self.reloads++;}
+@end
+@interface Probe:NSObject { @public NSMutableDictionary *EditingColors; Popup *LiteStyle,*DarkStyle; FakePanel *_prefsWindow; }
 @property(copy) NSDictionary *lastSavedEditingColors;
-@property NSUInteger themeOperationGeneration;
+@property(copy) NSString *editingThemeTitle;
+@property ListStub *themeList;
 @property TSThemeFileStore *store;
 @property NSUInteger errors,fills;
 @end
@@ -110,7 +127,7 @@ static NSMutableArray *alertButtons;
 - (TSThemeFileStore *)themeStore{return self.store;}
 - (void)showPreferenceError:(NSString *)message{self.errors++;}
 - (void)FillInColorWells{self.fills++;}
-// The file/sheet test observes the coordinator boundary; SettingsOwnerEffects tests
+// The file test observes the coordinator boundary; SettingsOwnerEffects tests
 // the complete production preparation and notification dispatcher independently.
 - (void)applyEffectsForPreferenceKeys:(NSSet<NSString *> *)keys {
     if (![keys isEqualToSet:[NSSet setWithArray:@[DefaultLiteThemeKey, DefaultDarkThemeKey]]]) abort();
@@ -120,15 +137,15 @@ static NSMutableArray *alertButtons;
 METHODS
 @end
 static void check(BOOL ok,const char *why){if(!ok){fprintf(stderr,"FAIL: %s\n",why);exit(1);}}
+static NSData *plist(NSDictionary *d){return [NSPropertyListSerialization dataWithPropertyList:d format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL];}
 int main(int argc,char **argv){@autoreleasepool{
  TSInstallAppKitIsolation();memory=[TSMemoryDefaults new];Probe *p=[Probe new];
  NSURL *root=[NSURL fileURLWithPath:@(argv[1]) isDirectory:YES];
- p.store=[[TSThemeFileStore alloc]initWithDirectory:root];ColorPath=root.path;p->_prefsWindow=[FakePanel new];p->stylePanel=[FakePanel new];p->styleTitle=[Field new];
+ p.store=[[TSThemeFileStore alloc]initWithDirectory:root];ColorPath=root.path;p->_prefsWindow=[FakePanel new];
  NSDictionary *original=@{@"Title":@"Original",@"EditorText":@[@0.1,@0.2,@0.3,@1]};
  check([p.store writeColors:original title:@"Original" error:NULL],"seed file");
- p->EditingStyle=[Popup new];p->LiteStyle=[Popup new];p->DarkStyle=[Popup new];
- p->EditingStyle.titleOfSelectedItem=@"Original";p->LiteStyle.titleOfSelectedItem=@"Light";p->DarkStyle.titleOfSelectedItem=@"Dark";
- [p EditingStyleChoice:nil];check([p->EditingColors isEqual:original] && reloads==0,"selecting editing theme does not apply it to documents");
+ p->LiteStyle=[Popup new];p->DarkStyle=[Popup new];
+ [p themeListDidChooseTitle:@"Original"];check([p.editingThemeTitle isEqual:@"Original"] && [p->EditingColors isEqual:original] && reloads==0,"choosing the theme to edit does not apply it to documents");
  __block NSUInteger notifications=0;
  id token=[NSNotificationCenter.defaultCenter addObserverForName:SourceColorChangedNotification object:p queue:nil usingBlock:^(NSNotification *n){notifications++;check(n.userInfo==nil,"document notifications have no transient editing dictionary");}];
  p->EditingColors[@"EditorText"]=@[@0.8,@0.7,@0.6,@1];
@@ -154,7 +171,7 @@ int main(int argc,char **argv){@autoreleasepool{
  {
   Probe *a=[Probe new],*b=[Probe new];
   HookStore *hooked=[[HookStore alloc]initWithDirectory:root];a.store=hooked;b.store=[[TSThemeFileStore alloc]initWithDirectory:root];
-  for(Probe *x in @[a,b]){x->EditingStyle=[Popup new];x->EditingStyle.titleOfSelectedItem=@"Original";x->_prefsWindow=[FakePanel new];[x EditingStyleChoice:nil];}
+  for(Probe *x in @[a,b]){x->_prefsWindow=[FakePanel new];[x themeListDidChooseTitle:@"Original"];}
   a->EditingColors[@"EditorText"]=@[@1,@1,@1,@1];
   b->EditingColors[@"EditorBackground"]=@[@0,@0,@0,@1];
   dispatch_group_t group=dispatch_group_create();
@@ -176,66 +193,71 @@ int main(int argc,char **argv){@autoreleasepool{
  p->EditingColors[@"EditorText"]=@[@0.9,@0.9,@0.9,@1];
  [p SaveEditedStyle:nil];
  check(p.errors==1 && [p->EditingColors isEqual:saved] && notifications==3 && reloads==reloadsBeforeFailure,"failed save restores last successful dictionary without applying it");
- p->EditingColors[@"EditorText"]=@[@0.4,@0.4,@0.4,@1];
- [p SaveNewStyle:nil];
- check(p->_prefsWindow.attachedSheet==p->stylePanel && [p->styleTitle.stringValue isEqual:@""],"clone uses a cleared name sheet");
- NSUInteger activeGeneration=p.themeOperationGeneration;
- p->styleTitle.stringValue=@"Clone";
- [p requestNameForThemeColors:@{@"EditorText":@[@0,@0,@0,@1]}];
- check(p.themeOperationGeneration==activeGeneration && [p->styleTitle.stringValue isEqual:@"Clone"],"duplicate sheet request leaves name, generation and snapshot intact");
- [p okForStylePanel:nil];
- check([[[p.store readTitle:@"Clone"] objectForKey:@"EditorText"] isEqual:saved[@"EditorText"]],"clone after failed save excludes unsaved colors");
- check([p->EditingStyle.titleOfSelectedItem isEqual:@"Clone"] && [p->LiteStyle.items containsObject:@"Clone"],"successful clone updates all lists and editing selection");
- NSDictionary *before=[p->EditingColors copy];NSArray *items=[p->LiteStyle.items copy];
- [p saveNewTheme:p.lastSavedEditingColors title:@"Original"];
- check(p.errors==2 && [p->EditingColors isEqual:before] && [p->EditingStyle.titleOfSelectedItem isEqual:@"Clone"] && [items isEqual:p->LiteStyle.items],"failed clone leaves original dictionary and lists intact");
+ [NSFileManager.defaultManager removeItemAtURL:file error:NULL];
+ check([p.store writeColors:saved title:@"Original" error:NULL],"restore fixture");
 
- NSUInteger errors=p.errors; NSDictionary *clone=[p.store readTitle:@"Clone"];
- [p SaveNewStyle:nil];p->styleTitle.stringValue=@"Cancelled";[p cancelForStylePanel:nil];
- check([p.store readTitle:@"Cancelled"]==nil,"cancel creates no file");
- [p SaveNewStyle:nil];p->styleTitle.stringValue=@"../Bad";[p okForStylePanel:nil];
- check(p.errors==errors+1,"invalid title rejected before saving");
- [p SaveNewStyle:nil];p->styleTitle.stringValue=@"Clone";[p okForStylePanel:nil];
- check(alertCompletion!=nil,"collision asks on a sheet");
- check([alertMessage containsString:@"Clone"] && [alertButtons.firstObject isEqual:@"Replace"],"overwrite confirmation names the theme and the replacement action");alertCompletion(NSAlertSecondButtonReturn);alertCompletion=nil;
- check([[p.store readTitle:@"Clone"] isEqual:clone],"overwrite cancellation leaves disk intact");
- NSDictionary *replacement=@{@"Title":@"Snapshot",@"EditorText":@[@0.2,@0.5,@0.8,@1]};
- p.lastSavedEditingColors=replacement;[p SaveNewStyle:nil];p.lastSavedEditingColors=clone;
- p->styleTitle.stringValue=@"Snapshot";[p okForStylePanel:nil];
- check([[[p.store readTitle:@"Snapshot"] objectForKey:@"EditorText"] isEqual:replacement[@"EditorText"]],"in-flight clone keeps the captured saved colors");
- [p SaveNewStyle:nil];p->styleTitle.stringValue=@"Clone";[p okForStylePanel:nil];
- check(alertCompletion!=nil,"overwrite awaits confirmation");p.themeOperationGeneration++;
- alertCompletion(NSAlertFirstButtonReturn);alertCompletion=nil;
- check([[p.store readTitle:@"Clone"] isEqual:clone],"late overwrite after teardown does not save");
- [p SaveNewStyle:nil];p->styleTitle.stringValue=@"Late";p.themeOperationGeneration++;[p okForStylePanel:nil];
- check([p.store readTitle:@"Late"]==nil,"late name completion after teardown does not save");
- [p SaveNewStyle:nil];p->styleTitle.stringValue=@"Clone";[p okForStylePanel:nil];
- alertCompletion(NSAlertFirstButtonReturn);alertCompletion=nil;
- check([[[p.store readTitle:@"Clone"] objectForKey:@"EditorText"] isEqual:replacement[@"EditorText"]],"confirmed overwrite saves the snapshot");
+ // The theme list's file operations (TSThemeFileStore).
+ for(NSString *t in @[@"Light",@"Dark",@"theme 10",@"theme 9"])check([p.store writeColors:@{@"EditorText":@[@0,@0,@0,@1]} title:t error:NULL],"seed themes");
+ NSArray *titles=[p.store titles];
+ check([titles isEqual:(@[@"Dark",@"Light",@"Original",@"theme 9",@"theme 10"])],"themes are listed in Finder order");
+ check([[p.store availableTitleForTitle:@"light"] isEqual:@"light 2"] && [[p.store availableTitleForTitle:@"New"] isEqual:@"New"],"a free title ignores case and numbers from 2");
+ NSError *error=nil;
+ check(![p.store renameTitle:@"theme 9" to:@"DARK" error:&error] && error.code==NSFileWriteFileExistsError && [p.store readTitle:@"theme 9"]!=nil,"renaming never replaces another theme");
+ check(![p.store renameTitle:@"theme 9" to:@"a/b" error:&error] && error.code==NSFileWriteInvalidFileNameError,"a title with a path separator is refused");
+ check([p.store renameTitle:@"theme 9" to:@"Nine" error:NULL] && [[p.store readTitle:@"Nine"][@"Title"] isEqual:@"Nine"] && [p.store readTitle:@"theme 9"]==nil,"renaming moves the file and the title inside it");
+ check([p.store renameTitle:@"Nine" to:@"NINE" error:NULL] && [[p.store titles] containsObject:@"NINE"] && ![[p.store titles] containsObject:@"Nine"],"a change of case only renames");
+ NSURL *outside=[[root URLByDeletingLastPathComponent] URLByAppendingPathComponent:@"out" isDirectory:YES];
+ [NSFileManager.defaultManager createDirectoryAtURL:outside withIntermediateDirectories:YES attributes:nil error:NULL];
+ NSURL *exported=[outside URLByAppendingPathComponent:@"Original.plist"];
+ check([p.store exportTitle:@"Original" toURL:exported error:NULL] && [[NSData dataWithContentsOfURL:exported] isEqual:[NSData dataWithContentsOfURL:[p.store URLForTitle:@"Original"]]],"export copies the file as it is");
+ BOOL (^accept)(NSData *)=^BOOL(NSData *d){return YES;};
+ NSString *imported=[p.store importFileAtURL:exported check:accept error:NULL];
+ check([imported isEqual:@"Original 2"] && [[p.store readTitle:@"Original 2"][@"EditorText"] isEqual:[p.store readTitle:@"Original"][@"EditorText"]] && [[p.store readTitle:@"Original 2"][@"Title"] isEqual:@"Original 2"],"an imported theme with a taken name gets a free one");
+ NSURL *junk=[outside URLByAppendingPathComponent:@"Junk.plist"];[plist(@{@"EditorText":@"red"}) writeToURL:junk atomically:YES];
+ check([p.store importFileAtURL:junk check:^BOOL(NSData *d){return NO;} error:&error]==nil && error.code==NSFileReadCorruptFileError && [p.store readTitle:@"Junk"]==nil,"a file the check refuses is not imported");
+ NSURL *array=[outside URLByAppendingPathComponent:@"Array.plist"];[[NSPropertyListSerialization dataWithPropertyList:@[@1] format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL] writeToURL:array atomically:YES];
+ check([p.store importFileAtURL:array check:accept error:&error]==nil && [p.store readTitle:@"Array"]==nil,"a property list that is not a dictionary is not imported");
+
+ // The list tells Settings of a renamed or deleted theme: Light and Dark Mode follow a rename and fall back to TeXShop's
+ // own themes when theirs is deleted; restored colors are shown again.
+ [SUD setObject:@"Light" forKey:DefaultLiteThemeKey];[SUD setObject:@"Dark" forKey:DefaultDarkThemeKey];
+ [p themeListDidChooseTitle:@"Light"];
+ check([p.store renameTitle:@"Light" to:@"Bright" error:NULL],"rename the light theme");
+ NSUInteger before=reloads;
+ [p themeListDidChangeTitle:@"Light" to:@"Bright"];
+ check([[SUD stringForKey:DefaultLiteThemeKey] isEqual:@"Bright"] && [p.editingThemeTitle isEqual:@"Bright"] && [p->LiteStyle.titleOfSelectedItem isEqual:@"Bright"] && ![p->LiteStyle.items containsObject:@"Light"] && reloads==before+1,"Light Mode follows its renamed theme and documents are recolored");
+ [NSFileManager.defaultManager removeItemAtURL:[p.store URLForTitle:@"Dark"] error:NULL];
+ [p themeListDidChangeTitle:@"Dark" to:nil];
+ check([[SUD stringForKey:DefaultDarkThemeKey] isEqual:@"DarkTheme"] && [[SUD stringForKey:DefaultLiteThemeKey] isEqual:@"Bright"] && reloads==before+2,"Dark Mode gives way to DarkTheme when its theme is deleted");
+ before=reloads;[p themeListDidChangeTitle:@"NINE" to:@"Nine"];
+ check(reloads==before,"renaming a theme in use by neither mode does not recolor documents");
+ NSUInteger fillsBefore=p.fills;NSMutableDictionary *bright=[[p.store readTitle:@"Bright"] mutableCopy];bright[@"EditorText"]=@[@1,@0,@0,@1];[p.store writeColors:bright title:@"Bright" error:NULL];
+ [p themeListDidChangeTitle:@"Bright" to:@"Bright"];
+ check([p->EditingColors[@"EditorText"] isEqual:(@[@1,@0,@0,@1])] && p.fills==fillsBefore+1 && reloads==before+1,"restored colors of the theme being edited are shown and applied");
+
+ // Names come composed from the folder, and a name an earlier version stored decomposed still follows a rename.
+ NSString *nfc=@"\u30d1\u30d1",*nfd=nfc.decomposedStringWithCanonicalMapping;
+ [plist(@{@"EditorText":@[@0,@0,@0,@1]}) writeToURL:[root URLByAppendingPathComponent:[nfd stringByAppendingString:@".plist"]] atomically:YES];
+ check([[p.store titles] containsObject:nfc] && ![[p.store titles] containsObject:nfd] && [p.store readTitle:nfc]!=nil,"a decomposed file name is listed composed");
+ [SUD setObject:nfd forKey:DefaultLiteThemeKey];
+ check([p.store renameTitle:nfc to:@"Papa" error:NULL],"rename the decomposed theme");
+ [p themeListDidChangeTitle:nfc to:@"Papa"];
+ check([[SUD stringForKey:DefaultLiteThemeKey] isEqual:@"Papa"],"a decomposed stored name follows the rename");
+ [SUD setObject:@"Bright" forKey:DefaultLiteThemeKey];
  NSUInteger count=notifications,reloaded=reloads;
+ p.themeList=[ListStub new];
  p->DarkStyle.titleOfSelectedItem=nil;[SUD setObject:@"Missing" forKey:DefaultDarkThemeKey];
+ p->LiteStyle.titleOfSelectedItem=@"Original";
  [p themeSelectionChanged:p->LiteStyle];
- check([[SUD stringForKey:DefaultLiteThemeKey] isEqual:@"Light"] && [[SUD stringForKey:DefaultDarkThemeKey] isEqual:@"Missing"] && notifications==count+1 && reloads==reloaded+1,"valid popup persists and reloads despite missing other theme");
- p->DarkStyle.titleOfSelectedItem=@"Dark";[p themeSelectionChanged:p->DarkStyle];
- check([[SUD stringForKey:DefaultDarkThemeKey] isEqual:@"Dark"] && reloads==reloaded+2,"dark popup persists independently");
+ check([[SUD stringForKey:DefaultLiteThemeKey] isEqual:@"Original"] && [[SUD stringForKey:DefaultDarkThemeKey] isEqual:@"Missing"] && notifications==count+1 && reloads==reloaded+1 && p.themeList.reloads==1,"valid popup persists, reloads despite missing other theme, and the list shows it");
+ p->DarkStyle.titleOfSelectedItem=@"Bright";[p themeSelectionChanged:p->DarkStyle];
+ check([[SUD stringForKey:DefaultDarkThemeKey] isEqual:@"Bright"] && reloads==reloaded+2,"dark popup persists independently");
  NSView *view=[[NSView alloc]initWithFrame:NSZeroRect];
  NSColorWell *theme=[[NSColorWell alloc]initWithFrame:NSZeroRect],*cursor=[[NSColorWell alloc]initWithFrame:NSZeroRect];
  cursor.action=@selector(BlockCursorColorChanged:);[view addSubview:theme];[view addSubview:cursor];
  [p setThemeEditingEnabled:NO inView:view];check(!theme.enabled && cursor.enabled,"unreadable theme does not disable cursor color");
  [NSNotificationCenter.defaultCenter removeObserver:token];
- __weak Probe *released=nil;void (^pending)(NSModalResponse);
- @autoreleasepool {
-   Probe *temporary=[Probe new];temporary->_prefsWindow=[FakePanel new];temporary->stylePanel=[FakePanel new];temporary->styleTitle=[Field new];
-   [temporary requestNameForThemeColors:clone];pending=[temporary->_prefsWindow.completion copy];released=temporary;
- }
- check(released==nil,"pending name sheet does not retain the coordinator");pending(NSModalResponseOK);pending=nil;
- @autoreleasepool {
-   Probe *temporary=[Probe new];temporary.store=p.store;temporary->_prefsWindow=[FakePanel new];temporary->stylePanel=[FakePanel new];temporary->styleTitle=[Field new];
-   [temporary requestNameForThemeColors:clone];temporary->styleTitle.stringValue=@"Clone";[temporary okForStylePanel:nil];released=temporary;
- }
- check(released==nil,"pending overwrite does not retain the coordinator");alertCompletion(NSAlertFirstButtonReturn);alertCompletion=nil;
- check([[p.store readTitle:@"Clone"][@"EditorText"] isEqual:replacement[@"EditorText"]],"late overwrite after coordinator release leaves the file intact");
- puts("PASS: theme selection, save failure, last-success fallback, clone after failure and unchanged failed-clone UI");
+ puts("PASS: theme selection, save failure, last-success fallback, the theme list's file operations, and renamed or deleted themes in use");
 }return 0;}
 '''.replace('METHODS',methods)
 with tempfile.TemporaryDirectory(prefix='texshop-theme-persistence-') as td:

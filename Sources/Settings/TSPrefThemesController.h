@@ -6,7 +6,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nullable) IBOutlet NSColorWell *ConsoleBackgroundColorWell NS_SWIFT_NAME(consoleBackgroundColorWell);
 @property (strong, nullable) IBOutlet NSColorWell *ConsoleTextColorWell NS_SWIFT_NAME(consoleTextColorWell);
 @property (strong, nullable) IBOutlet NSPopUpButton *DarkStyle NS_SWIFT_NAME(darkStyle);
-@property (strong, nullable) IBOutlet NSPopUpButton *EditingStyle NS_SWIFT_NAME(editingStyle);
 @property (strong, nullable) IBOutlet NSColorWell *EditorFlashColorWell NS_SWIFT_NAME(editorFlashColorWell);
 @property (strong, nullable) IBOutlet NSColorWell *EditorHighlightBracesColorWell NS_SWIFT_NAME(editorHighlightBracesColorWell);
 @property (strong, nullable) IBOutlet NSColorWell *EditorHighlightContentColorWell NS_SWIFT_NAME(editorHighlightContentColorWell);

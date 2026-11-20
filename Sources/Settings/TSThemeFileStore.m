@@ -96,4 +96,96 @@
     if (written == nil && error != NULL) *error = writeError ?: coordinationError;
     return written;
 }
+static NSError *TSThemeStoreError(NSInteger code, NSString *title)
+{
+    return [NSError errorWithDomain:NSCocoaErrorDomain code:code userInfo:@{NSFilePathErrorKey: title}];
+}
+- (NSArray<NSString *> *)titles
+{
+    NSMutableArray<NSString *> *titles = [NSMutableArray array];
+    for (NSString *name in [NSFileManager.defaultManager contentsOfDirectoryAtPath:self.directory.path ?: @"" error:NULL]) {
+        if (![name.pathExtension isEqualToString:@"plist"] || [name hasPrefix:@"."]) continue;
+        // The file system may give a name decomposed (NFD); the names kept in the settings are composed.
+        NSString *title = name.stringByDeletingPathExtension.precomposedStringWithCanonicalMapping;
+        if ([self URLForTitle:title] != nil && ![titles containsObject:title]) [titles addObject:title];
+    }
+    [titles sortUsingSelector:@selector(localizedStandardCompare:)];
+    return titles;
+}
+- (BOOL)hasTitle:(NSString *)title except:(nullable NSString *)except
+{
+    for (NSString *existing in [self titles]) {
+        if (except != nil && [existing isEqualToString:(NSString *_Nonnull)except]) continue;
+        if ([existing compare:title options:NSCaseInsensitiveSearch] == NSOrderedSame) return YES;
+    }
+    return NO;
+}
+- (NSString *)availableTitleForTitle:(NSString *)title
+{
+    if (![self hasTitle:title except:nil]) return title;
+    for (NSUInteger number = 2; ; number++) {
+        NSString *candidate = [NSString stringWithFormat:@"%@ %lu", title, (unsigned long)number];
+        if (![self hasTitle:candidate except:nil]) return candidate;
+    }
+}
+- (BOOL)renameTitle:(NSString *)title to:(NSString *)newTitle error:(NSError **)error
+{
+    if ([title isEqualToString:newTitle]) return YES;
+    NSURL *from = [self URLForTitle:title], *to = [self URLForTitle:newTitle];
+    if (from == nil || to == nil) {
+        if (error != NULL) *error = TSThemeStoreError(NSFileWriteInvalidFileNameError, newTitle);
+        return NO;
+    }
+    if ([self hasTitle:newTitle except:title]) {
+        if (error != NULL) *error = TSThemeStoreError(NSFileWriteFileExistsError, newTitle);
+        return NO;
+    }
+    NSDictionary<NSString *, id> *colors = [self readTitle:title];
+    if (colors == nil) {
+        if (error != NULL) *error = TSThemeStoreError(NSFileReadCorruptFileError, title);
+        return NO;
+    }
+    // The file keeps its title inside it.
+    NSMutableDictionary<NSString *, id> *renamed = [colors mutableCopy];
+    renamed[@"Title"] = newTitle;
+    NSData *data = [NSPropertyListSerialization dataWithPropertyList:renamed format:NSPropertyListXMLFormat_v1_0 options:0 error:error];
+    if (data == nil || ![NSFileManager.defaultManager moveItemAtURL:from toURL:to error:error]) return NO;
+    if (![data writeToURL:to options:NSDataWritingAtomic error:error]) {
+        [NSFileManager.defaultManager moveItemAtURL:to toURL:from error:NULL];
+        return NO;
+    }
+    return YES;
+}
+- (BOOL)trashTitle:(NSString *)title error:(NSError **)error
+{
+    NSURL *url = [self URLForTitle:title];
+    if (url == nil) {
+        if (error != NULL) *error = TSThemeStoreError(NSFileNoSuchFileError, title);
+        return NO;
+    }
+    return [NSFileManager.defaultManager trashItemAtURL:url resultingItemURL:NULL error:error];
+}
+- (BOOL)exportTitle:(NSString *)title toURL:(NSURL *)url error:(NSError **)error
+{
+    NSURL *from = [self URLForTitle:title];
+    NSData *data = from != nil ? [NSData dataWithContentsOfURL:from options:0 error:error] : nil;
+    if (data == nil) {
+        if (from == nil && error != NULL) *error = TSThemeStoreError(NSFileNoSuchFileError, title);
+        return NO;
+    }
+    return [data writeToURL:url options:NSDataWritingAtomic error:error];
+}
+- (nullable NSString *)importFileAtURL:(NSURL *)url check:(BOOL (^)(NSData *data))check error:(NSError **)error
+{
+    NSData *data = [NSData dataWithContentsOfURL:url options:0 error:error];
+    if (data == nil) return nil;
+    id colors = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL];
+    if (![colors isKindOfClass:NSDictionary.class] || !check(data)) {
+        if (error != NULL) *error = TSThemeStoreError(NSFileReadCorruptFileError, url.lastPathComponent ?: @"");
+        return nil;
+    }
+    NSString *base = url.URLByDeletingPathExtension.lastPathComponent ?: @"";
+    NSString *title = [self availableTitleForTitle:base];
+    return [self writeColors:colors title:title error:error] ? title : nil;
+}
 @end

@@ -3,6 +3,7 @@
 #import "TestAppKitIsolation.h"
 #import "TSPreferences.h"
 #import "TSPreferences+Panes.h"
+#import "TSPreferences+LiveSettings.h"
 #import "TSSettingsWindowController.h"
 #import "TSShortcutPaneController.h"
 #import "TSKeyboardShortcuts.h"
@@ -172,17 +173,17 @@ int main(int argc,char **argv){@autoreleasepool{
  // Populate the production theme wells from a bundled theme; user theme files
  // and settings are neither read nor written for the comparison screenshots.
  NSDictionary *theme=[NSDictionary dictionaryWithContentsOfURL:[fixture URLForResource:@"LiteTheme" withExtension:@"plist" subdirectory:@"Themes"]];Check(theme.count>10,@"Bundled theme fixture loads");[owner setValue:[theme mutableCopy] forKey:@"EditingColors"];
- for(NSString *name in @[@"LiteStyle",@"DarkStyle",@"EditingStyle"]){NSPopUpButton *menu=[owner valueForKey:name];[menu removeAllItems];[menu addItemsWithTitles:@[@"LiteTheme",@"DarkTheme"]];[menu selectItemAtIndex:[name isEqual:@"DarkStyle"]?1:0];}
+ for(NSString *name in @[@"LiteStyle",@"DarkStyle"]){NSPopUpButton *menu=[owner valueForKey:name];[menu removeAllItems];[menu addItemsWithTitles:@[@"LiteTheme",@"DarkTheme"]];[menu selectItemAtIndex:[name isEqual:@"DarkStyle"]?1:0];}
  [owner FillInColorWells];
  // A theme file changed elsewhere so that a color is missing or is not a color: saving another color of the theme
  // completes, the well shows the built-in color, and the missing color is not written into the file.
  {
-  NSPopUpButton *editing=[owner valueForKey:@"EditingStyle"];[editing selectItemWithTitle:@"DarkTheme"];
+  [owner setValue:@"DarkTheme" forKey:@"editingThemeTitle"];
   NSString *path=[ColorPath stringByAppendingPathComponent:@"DarkTheme.plist"];NSDictionary *original=[NSDictionary dictionaryWithContentsOfFile:path];
   Check(original[@"EditorBackground"]!=nil,@"The dark theme fixture has a background color");
   NSDictionary *broken=@{@"empty":@[],@"number":@3,@"short":@[@0.5],@"text":@[@"red",@"green",@"blue",@1]};
   for(NSString *kind in @[@"missing",@"empty",@"number",@"short",@"text",@"nothing"]){
-   [original writeToFile:path atomically:YES];[owner EditingStyleChoice:nil];
+   [original writeToFile:path atomically:YES];[owner themeListDidChooseTitle:@"DarkTheme"];
    NSMutableDictionary *changed=[original mutableCopy];
    if([kind isEqual:@"missing"])[changed removeObjectForKey:@"EditorBackground"];
    else if([kind isEqual:@"nothing"])[changed removeAllObjects];
@@ -197,7 +198,7 @@ int main(int argc,char **argv){@autoreleasepool{
    NSColorWell *background=[owner valueForKey:@"SourceBackgroundColorWell"];
    Check(background.color!=nil && [[owner valueForKey:@"EditingColors"] isEqual:disk],[NSString stringWithFormat:@"The background well shows a color when the background is %@",kind]);
   }
-  [original writeToFile:path atomically:YES];[editing selectItemWithTitle:@"LiteTheme"];
+  [original writeToFile:path atomically:YES];[owner setValue:@"LiteTheme" forKey:@"editingThemeTitle"];
   [owner setValue:[theme mutableCopy] forKey:@"EditingColors"];[owner setValue:nil forKey:@"lastSavedEditingColors"];[owner FillInColorWells];
  }
  // The wells show the colors drawn: every bundled theme and one of the user's own with white text, without one to three

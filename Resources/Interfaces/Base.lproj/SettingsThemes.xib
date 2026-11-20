@@ -12,7 +12,6 @@
         <outlet property="ConsoleBackgroundColorWell" destination="ooP-O9-ggT" id="NCL-db-Wq7" />
         <outlet property="ConsoleTextColorWell" destination="Kx3-n3-dsv" id="ugA-1g-s1M" />
         <outlet property="DarkStyle" destination="eo2-De-DNv" id="jdY-LR-iY5" />
-        <outlet property="EditingStyle" destination="O5R-pm-csa" id="AIv-9y-jfD" />
         <outlet property="EditorFlashColorWell" destination="fIc-C1-M6K" id="iM7-9O-Pwb" />
         <outlet property="EditorHighlightBracesColorWell" destination="SG4-BQ-aGU" id="SWv-54-4ig" />
         <outlet property="EditorHighlightZenkakuSymbolColorWell" destination="0Uo-lK-RFI" id="lfn-I4-DBf" />
@@ -81,18 +80,6 @@
                   <action selector="themeSelectionChanged:" target="-2" id="LIV-DRK-ACT" />
                 </connections>
               </popUpButton>
-              <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="O5R-pm-csa" identifier="settings.O5R-pm-csa">
-                <rect key="frame" x="17" y="9" width="161" height="25" />
-                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
-                <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="p7a-6Z-Mbf">
-                  <behavior key="behavior" lightByBackground="YES" lightByGray="YES" />
-                  <font key="font" metaFont="menu" size="10" />
-                  <menu key="menu" id="kgS-h0-wyH" />
-                </popUpButtonCell>
-                <connections>
-                  <action selector="EditingStyleChoice:" target="-2" id="hRF-Sp-vOT" />
-                </connections>
-              </popUpButton>
               <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cy6-ep-C9P" identifier="settings.cy6-ep-C9P">
                 <rect key="frame" x="19" y="119" width="96" height="14" />
                 <autoresizingMask key="autoresizingMask" />
@@ -111,15 +98,6 @@
                   <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
                 </textFieldCell>
               </textField>
-              <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FOl-CH-y3R" identifier="settings.FOl-CH-y3R">
-                <rect key="frame" x="19" y="34" width="78" height="14" />
-                <autoresizingMask key="autoresizingMask" />
-                <textFieldCell key="cell" lineBreakMode="clipping" title="Theme to Edit" id="rad-zH-Nv2">
-                  <font key="font" metaFont="message" size="11" />
-                  <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog" />
-                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
-                </textFieldCell>
-              </textField>
               <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xpQ-zQ-oZe" identifier="settings.xpQ-zQ-oZe">
                 <rect key="frame" x="17" y="94" width="161" height="25" />
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
@@ -132,28 +110,6 @@
                   <action selector="themeSelectionChanged:" target="-2" id="LIV-LIT-ACT" />
                 </connections>
               </popUpButton>
-            </subviews>
-          </view>
-          <font key="titleFont" metaFont="system" />
-        </box>
-        <box fixedFrame="YES" title="Actions" translatesAutoresizingMaskIntoConstraints="NO" id="ycd-ZH-bzw" identifier="settings.ycd-ZH-bzw">
-          <rect key="frame" x="12" y="321" width="188" height="124" />
-          <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
-          <view key="contentView" id="RA7-3r-O6n" identifier="settings.RA7-3r-O6n">
-            <rect key="frame" x="0.0" y="0.0" width="188" height="110" />
-            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
-            <subviews>
-              <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8bu-du-vzc" identifier="settings.8bu-du-vzc">
-                <rect key="frame" x="17" y="39" width="154" height="32" />
-                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
-                <buttonCell key="cell" type="push" title="Create New Theme" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Rzg-NG-sNa">
-                  <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" />
-                  <font key="font" metaFont="message" size="11" />
-                </buttonCell>
-                <connections>
-                  <action selector="SaveNewStyle:" target="-2" id="UJQ-9Y-x7c" />
-                </connections>
-              </button>
             </subviews>
           </view>
           <font key="titleFont" metaFont="system" />

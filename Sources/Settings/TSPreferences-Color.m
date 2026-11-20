@@ -27,6 +27,7 @@
 #import "TSColorSupport.h"
 #import "TSThemeAlpha.h"
 #import "TSThemeFileStore.h"
+#import "TSLibraryRepair.h"
 
 
 @implementation TSPreferences (Color)
@@ -39,65 +40,46 @@ NSInteger stringSort(id s1, id s2, void *context)
 }
 
 
+// A theme's name as the list has it: composed, whatever form an earlier version stored it in (TSThemeFileStore titles).
+static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringWithCanonicalMapping; }
+
 - (void)PrepareColorPane:(NSUserDefaults *)defaults;
 {
-    
-    NSArray *contents, *originalContents;
-    
-  // Fill three menus with names of plist files in ~/Library/TeXShop/Colors
-    
-    [LiteStyle removeAllItems];
-    [DarkStyle removeAllItems];
-    [EditingStyle removeAllItems];
-
-    
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *filePath = [ColorPath stringByExpandingTildeInPath];
-    originalContents= [fileManager contentsOfDirectoryAtPath: filePath error: nil];
-    contents = [originalContents sortedArrayUsingFunction: stringSort context: NULL ];
-    
-    NSUInteger i;
-    NSString *theTitle;
-    for (i = 0; i < [contents count]; i++)
-    {
-        if ([[contents[i] pathExtension] isEqualToString: @"plist"])
-             {
-                 theTitle = [contents[i] stringByDeletingPathExtension];
-                 [LiteStyle addItemWithTitle: theTitle];
-                 [DarkStyle addItemWithTitle: theTitle];
-                 [EditingStyle addItemWithTitle: theTitle];
-              }
-    }
-    NSString *liteTitle = [SUD stringForKey:DefaultLiteThemeKey];
-    NSString *darkTitle = [SUD stringForKey:DefaultDarkThemeKey];
-    
-    // if this file doesn't exist, switch menu to LiteColors
-    [LiteStyle selectItemWithTitle: liteTitle];
-    [DarkStyle selectItemWithTitle: darkTitle];
-    // if this file doesn't exist, switch menu to DarkColors
-#ifdef MOJAVEORHIGHER
-    if ((atLeastMojave) && (_prefsWindow.effectiveAppearance.name == NSAppearanceNameDarkAqua))
-    {
-        [EditingStyle selectItemWithTitle:darkTitle];
-
-    }
-    else
-#endif
-    {
-        [EditingStyle selectItemWithTitle: liteTitle];
-
-    }
-    
-    NSString *selected = EditingStyle.titleOfSelectedItem;
-    EditingColors = selected == nil ? nil : [[[self themeStore] readTitle:selected] mutableCopy];
-    self.lastSavedEditingColors = [EditingColors copy];
-    // Fill in all the color wells with the colors of these items
-    
-    [self FillInColorWells];
-    
-    
+    // The themes of Light and Dark Mode are chosen among the files in ~/Library/TeXShop/Themes.
+    [self fillThemeMenus];
+    // The theme of the window's appearance is edited first.
+    self.editingThemeTitle = [self settingsWindowIsDark] ? self.darkThemeTitle : self.lightThemeTitle;
+    if (self.editingThemeTitle != nil && [[self themeStore] URLForTitle:self.editingThemeTitle] == nil) self.editingThemeTitle = nil;
+    [self loadEditingTheme];
+    [self.themeList reload];
 }
 
+- (BOOL)settingsWindowIsDark
+{
+    NSAppearance *appearance = _prefsWindow.effectiveAppearance ?: NSApp.effectiveAppearance;
+    return [[appearance bestMatchFromAppearancesWithNames:@[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] isEqualToString:NSAppearanceNameDarkAqua];
+}
+
+- (void)fillThemeMenus
+{
+    NSArray<NSString *> *titles = [[self themeStore] titles];
+    for (NSPopUpButton *popup in @[LiteStyle, DarkStyle]) {
+        [popup removeAllItems];
+        [popup addItemsWithTitles:titles];
+    }
+    [LiteStyle selectItemWithTitle:self.lightThemeTitle ?: @""];
+    [DarkStyle selectItemWithTitle:self.darkThemeTitle ?: @""];
+}
+
+// The wells show the colors of the theme chosen in the list.
+- (void)loadEditingTheme
+{
+    NSString *title = self.editingThemeTitle;
+    NSDictionary<NSString *, id> *saved = title == nil ? nil : [[self themeStore] readTitle:title];
+    EditingColors = [saved mutableCopy];
+    self.lastSavedEditingColors = saved;
+    [self FillInColorWells];
+}
 
 // Bracket and expl3 wells show the theme being edited, resolved the way documents resolve it.
 - (NSColor *)editingColorForKey: (NSString *)theKey
@@ -244,19 +226,9 @@ NSInteger stringSort(id s1, id s2, void *context)
     [self useOpaqueColorWells];
 }
 
-- (IBAction)EditingStyleChoice:(id)sender
-{
-    NSString *title = EditingStyle.titleOfSelectedItem;
-    if (title == nil) return;
-    NSDictionary<NSString *, id> *saved = [[self themeStore] readTitle:title];
-    EditingColors = [saved mutableCopy];
-    self.lastSavedEditingColors = saved;
-    [self FillInColorWells];
-}
-
 - (IBAction)SaveEditedStyle:(id)sender
 {
-    NSString *title = EditingStyle.titleOfSelectedItem;
+    NSString *title = self.editingThemeTitle;
     if (title == nil || EditingColors == nil || self.lastSavedEditingColors == nil) return;
     // Only the colors changed here replace those of the file as it is now (TSThemeFileStore).
     NSDictionary<NSString *, id> *before = self.lastSavedEditingColors;
@@ -286,61 +258,6 @@ NSInteger stringSort(id s1, id s2, void *context)
     if (othersChanged)
         [self FillInColorWells];
     [self applyEffectsForPreferenceKeys:[NSSet setWithArray:@[DefaultLiteThemeKey, DefaultDarkThemeKey]]];
-}
-
-- (IBAction)SaveNewStyle:sender
-{
-    if (self.lastSavedEditingColors == nil) {
-        [self showPreferenceError:NSLocalizedString(@"Reopen Settings or select a readable theme before editing or duplicating it.", @"")];
-        return;
-    }
-    [self requestNameForThemeColors:self.lastSavedEditingColors];
-}
-
-- (void)requestNameForThemeColors:(NSDictionary<NSString *, id> *)colors
-{
-    if (_prefsWindow == nil || stylePanel == nil || _prefsWindow.attachedSheet != nil) return;
-    NSUInteger generation = ++self.themeOperationGeneration;
-    NSDictionary<NSString *, id> *snapshot = [colors copy];
-    styleTitle.stringValue = @"";
-    [stylePanel setContentSize:NSMakeSize(420, stylePanel.contentView.fittingSize.height)];
-    __weak __typeof(self) weakSelf = self;
-    [_prefsWindow beginSheet:stylePanel completionHandler:^(NSModalResponse response) {
-        __strong __typeof(weakSelf) coordinator = weakSelf;
-        if (coordinator == nil) return;
-        if (response != NSModalResponseOK || generation != coordinator.themeOperationGeneration) return;
-        NSString *title = [coordinator->styleTitle.stringValue stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        if (title.length == 0) return;
-        NSURL *url = [[coordinator themeStore] URLForTitle:title];
-        NSString *path = url.path;
-        if (path == nil) {
-            [coordinator showPreferenceError:NSLocalizedString(@"Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed.", @"")];
-            return;
-        }
-        if (![NSFileManager.defaultManager fileExistsAtPath:path]) {
-            [coordinator saveNewTheme:snapshot title:title];
-            return;
-        }
-        NSAlert *alert = [NSAlert new];
-        alert.messageText = [NSString stringWithFormat:NSLocalizedString(@"The theme “%@” already exists. Replace it?", @""), title];
-        [alert addButtonWithTitle:NSLocalizedString(@"Replace", @"")].hasDestructiveAction = YES;
-        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
-        [alert beginSheetModalForWindow:coordinator->_prefsWindow completionHandler:^(NSModalResponse answer) {
-            __strong __typeof(weakSelf) confirmedCoordinator = weakSelf;
-            if (confirmedCoordinator == nil) return;
-            if (answer == NSAlertFirstButtonReturn && generation == confirmedCoordinator.themeOperationGeneration) [confirmedCoordinator saveNewTheme:snapshot title:title];
-        }];
-    }];
-}
-
-- (void)okForStylePanel:(id)sender
-{
-    if (stylePanel.sheetParent == _prefsWindow) [_prefsWindow endSheet:stylePanel returnCode:NSModalResponseOK];
-}
-
-- (void)cancelForStylePanel:(id)sender
-{
-    if (stylePanel.sheetParent == _prefsWindow) [_prefsWindow endSheet:stylePanel returnCode:NSModalResponseCancel];
 }
 
 // Actual Colors
@@ -1052,8 +969,6 @@ NSInteger stringSort(id s1, id s2, void *context)
     for (NSView *child in view.subviews) {
         if ([child isKindOfClass:NSColorWell.class] && ((NSColorWell *)child).action != @selector(BlockCursorColorChanged:))
             [(NSColorWell *)child setEnabled:enabled];
-        if ([child isKindOfClass:NSButton.class] && (((NSButton *)child).action == @selector(SaveNewStyle:)))
-            [(NSButton *)child setEnabled:enabled];
         [self setThemeEditingEnabled:enabled inView:child];
     }
 }
@@ -1061,24 +976,56 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     return [[TSThemeFileStore alloc] initWithDirectory:[NSURL fileURLWithPath:[ColorPath stringByExpandingTildeInPath] isDirectory:YES]];
 }
-- (void)saveNewTheme:(NSDictionary<NSString *, id> *)colors title:(NSString *)title
+#pragma mark Theme list
+
+- (nullable NSWindow *)themeListWindow { return _prefsWindow; }
+- (nullable NSString *)lightThemeTitle { return TSThemeTitle([SUD stringForKey:DefaultLiteThemeKey]); }
+- (nullable NSString *)darkThemeTitle { return TSThemeTitle([SUD stringForKey:DefaultDarkThemeKey]); }
+
+// A new theme starts with TeXShop's own colors for the appearance of the moment.
+- (nullable NSDictionary<NSString *, id> *)newThemeColors
 {
-    NSError *error = nil;
-    if (![[self themeStore] writeColors:colors title:title error:&error]) {
-        [self showPreferenceError:NSLocalizedString(@"The new theme could not be saved. The original theme is unchanged.", @"")];
-        return;
-    }
-    NSMutableDictionary<NSString *, id> *saved = [colors mutableCopy];
-    saved[@"Title"] = title;
-    EditingColors = saved;
-    self.lastSavedEditingColors = [saved copy];
-    for (NSPopUpButton *popup in @[LiteStyle, DarkStyle, EditingStyle]) {
-        if ([popup itemWithTitle:title] == nil) [popup addItemWithTitle:title];
-    }
-    [EditingStyle selectItemWithTitle:title];
-    [self FillInColorWells];
-    [self applyEffectsForPreferenceKeys:[NSSet setWithArray:@[DefaultLiteThemeKey, DefaultDarkThemeKey]]];
+    NSString *name = [self settingsWindowIsDark] ? @"DarkTheme" : @"LiteTheme";
+    NSString *path = TSLibraryBundledPath([@"Themes" stringByAppendingPathComponent:[name stringByAppendingPathExtension:@"plist"]]);
+    NSData *data = path != nil ? [NSData dataWithContentsOfFile:path] : nil;
+    id colors = data != nil ? [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL] : nil;
+    return [colors isKindOfClass:NSDictionary.class] ? colors : [[self themeStore] readTitle:name];
 }
+
+- (void)themeListDidChooseTitle:(nullable NSString *)title
+{
+    self.editingThemeTitle = title;
+    [self loadEditingTheme];
+}
+
+// A renamed theme stays chosen for Light or Dark Mode under its new name; a deleted one gives way to TeXShop's own.
+- (void)themeListDidChangeTitle:(nullable NSString *)oldTitle to:(nullable NSString *)newTitle
+{
+    BOOL inUse = NO;
+    if (oldTitle != nil && ![oldTitle isEqualToString:newTitle ?: @""]) {
+        if ([self.lightThemeTitle isEqualToString:oldTitle]) {
+            [SUD setObject:newTitle ?: @"LiteTheme" forKey:DefaultLiteThemeKey];
+            inUse = YES;
+        }
+        if ([self.darkThemeTitle isEqualToString:oldTitle]) {
+            [SUD setObject:newTitle ?: @"DarkTheme" forKey:DefaultDarkThemeKey];
+            inUse = YES;
+        }
+        if ([self.editingThemeTitle isEqualToString:oldTitle] && newTitle != nil) self.editingThemeTitle = newTitle;
+    }
+    [self fillThemeMenus];
+    // Restored colors.
+    if (oldTitle != nil && [oldTitle isEqualToString:newTitle ?: @""]) {
+        if ([self.editingThemeTitle isEqualToString:oldTitle]) [self loadEditingTheme];
+        inUse = [self.lightThemeTitle isEqualToString:oldTitle] || [self.darkThemeTitle isEqualToString:oldTitle];
+    }
+    if (inUse) [self applyEffectsForPreferenceKeys:[NSSet setWithArray:@[DefaultLiteThemeKey, DefaultDarkThemeKey]]];
+}
+
+- (void)themeListShowError:(NSString *)message { [self showPreferenceError:message]; }
+
+- (BOOL)themeListAcceptsData:(NSData *)data { return TSLibraryThemeCheck()(data, nil); }
+
 - (IBAction)themeSelectionChanged:(id)sender
 {
     if (sender != LiteStyle && sender != DarkStyle) return;
@@ -1087,6 +1034,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if (title == nil) return;
     [SUD setObject:title forKey:popup == LiteStyle ? DefaultLiteThemeKey : DefaultDarkThemeKey];
     [self applyEffectsForPreferenceKeys:[NSSet setWithArray:@[DefaultLiteThemeKey, DefaultDarkThemeKey]]];
+    [self.themeList reload];
 }
 - (BOOL)deactivateColorWellsInView:(NSView *)view
 {

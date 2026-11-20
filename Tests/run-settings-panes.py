@@ -10,7 +10,7 @@ parser=argparse.ArgumentParser();parser.add_argument("--app",type=Path);args=par
 r = Path(__file__).resolve().parents[1]
 with tempfile.TemporaryDirectory(prefix='texshop-settings-panes-') as temp:
     p = Path(temp)
-    sources = sorted((r/'Sources').rglob('TSPref*Controller.m')) + [r/'Sources/Settings/TSPrefPaneLayout.m',r/'Sources/App/TSDockIconController.m',r/'Sources/Settings/TSPreferences+Panes.m',r/'Sources/Settings/TSSettingsCategory.m',*key_binding_sources(r),r/'Sources/App/globals.m']
+    sources = sorted((r/'Sources').rglob('TSPref*Controller.m')) + [r/'Sources/Settings/TSPrefPaneLayout.m',r/'Sources/App/TSDockIconController.m',r/'Sources/Settings/TSPreferences+Panes.m',r/'Sources/Settings/TSSettingsThemeList.m',r/'Sources/Settings/TSThemeFileStore.m',r/'Sources/Windows/TSListBottomBar.m',r/'Sources/Settings/TSSettingsCategory.m',*key_binding_sources(r),r/'Sources/App/globals.m']
     subprocess.run(['xcrun','clang','-fobjc-arc','-Werror','-Wno-deprecated-declarations','-Wno-nullability-completeness','-mmacosx-version-min=14.6',*include_args(r),'-I',str(r/'Tests'),'-framework','Cocoa',str(r/'Tests/SettingsPanes.m'),*map(str,sources),'-o',str(p/'probe')],check=True)
     (p/'fixtures').mkdir()
     for bundle in bundles(r,p/'fixtures',product=args.app,dock=True):

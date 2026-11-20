@@ -13,13 +13,13 @@ with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
  if args.search_coverage:
   program=program.replace('#import <Cocoa/Cocoa.h>','#import <Cocoa/Cocoa.h>\n#import "TSSettingsSearch.h"')
   program=program.replace('int main(int argc,char **argv)',(r/'Tests/SettingsSearchCoverage.inc').read_text()+'\nint main(int argc,char **argv)')
-  program=program.replace(' NSMutableDictionary *after=[NSMutableDictionary dictionary];',''' for(NSString *name in @[@"documentFontTextField",@"consoleFontTextField",@"DarkStyle",@"EditingStyle",@"LiteStyle"]) { NSView *value=[owner valueForKey:name]; Check(value!=nil && [value.accessibilityIdentifier isEqual:@"settings.user-data"],@"Dynamic values identified through actual preference outlets"); }
+  program=program.replace(' NSMutableDictionary *after=[NSMutableDictionary dictionary];',''' for(NSString *name in @[@"documentFontTextField",@"consoleFontTextField",@"DarkStyle",@"LiteStyle"]) { NSView *value=[owner valueForKey:name]; Check(value!=nil && [value.accessibilityIdentifier isEqual:@"settings.user-data"],@"Dynamic values identified through actual preference outlets"); }
  NSPopUpButton *enc=[owner valueForKey:@"defaultEncodeMatrix"]; [enc removeAllItems]; [[[EncodingMenuFixture alloc] init] addEncodingsToMenu:Required(enc.menu) withTarget:nil action:NULL]; Check(enc.numberOfItems>=31,@"Actual encoding menu populated");
  NSPopUpButton *dictionary=[owner valueForKey:@"dictionaryPopup"];[dictionary addItemWithTitle:[bundle localizedStringForKey:@"Automatic Language" value:nil table:@"Localizable"]];
  SearchCoverage(panes,bundle);return 0;
  NSMutableDictionary *after=[NSMutableDictionary dictionary];''')
  (t/'test.m').write_text(program)
- extra=[r/'Sources/Settings/TSPreferences.m',r/'Sources/Settings/TSPreferences-Color.m',r/'Sources/Editor/TSColorSupport.m',r/'Sources/App/TSLibraryRepair.m',r/'Sources/Settings/TSThemeFileStore.m',r/'Sources/App/globals.m',r/'Sources/Settings/TSPreferenceInput.m',r/'Tests/PreferencesTestServices.m',*key_binding_sources(r),*sorted((r/'Sources').rglob('TSSettings*.m'))]
+ extra=[r/'Sources/Settings/TSPreferences.m',r/'Sources/Settings/TSPreferences-Color.m',r/'Sources/Editor/TSColorSupport.m',r/'Sources/App/TSLibraryRepair.m',r/'Sources/Settings/TSThemeFileStore.m',r/'Sources/Windows/TSListBottomBar.m',r/'Sources/App/globals.m',r/'Sources/Settings/TSPreferenceInput.m',r/'Tests/PreferencesTestServices.m',*key_binding_sources(r),*sorted((r/'Sources').rglob('TSSettings*.m'))]
  compile_command=['xcrun','clang','-fobjc-arc','-F',str(r/'Frameworks'),'-Wno-deprecated-declarations','-Wnullability-completeness','-Wnullable-to-nonnull-conversion','-Wunguarded-availability-new','-mmacosx-version-min=14.6',*include_args(r),'-I',str(r/'Tests'),'-framework','Cocoa',str(t/'test.m'),*map(str,sources(r)),str(r/'Sources/Settings/TSPreferences+Panes.m'),*map(str,extra),str(r/'Sources/App/TSDockIconController.m'),'-o',str(t/'probe')]
  if args.search_catalog or args.search_source:
   (t/'TSSettingsSearch.m').write_text((args.search_source or r/'Sources/Settings/TSSettingsSearch.m').read_text())
