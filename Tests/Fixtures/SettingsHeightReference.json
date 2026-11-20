@@ -1,10 +1,10 @@
 {
-  "provenance": "Approved SettingsPanelLab full-light captures, 570 points at 2x. Includes user-approved notes; Keyboard follows the 2026-11-13 key binding list decision: the list and the menu shortcuts each show at least six rows (reference image keyboard-ja-570.png in the audit notes). Typesetting follows the 2026-11-14 decision to add the index program and MetaPost rows to Related Tools: the mockup height plus the 114 points of the two rows and the longer note of Engine Profile. Typesetting also follows the 2026-11-15 decision to describe what the Sync tabs switch does: plus the 20 points of its longer note. Typesetting follows the 2026-11-15 decision to remove the note of Engine Profile: minus the 48 points of that note. Preview follows the 2026-11-16 decision to add the switch that makes the left and right arrow keys always turn pages under Display: plus the 56 points of its row. Editor follows the 2026-11-16 decision to add the switch that keeps the Advanced Find panel on top under Find: plus the 38 points of its row. Editor also follows the 2026-11-18 decision to add Highlight Fullwidth Letters and Symbols under Syntax Coloring: plus the 38 points of its row. Keyboard also follows the 2026-11-19 decision to add the note of the Paste column of the key binding list: plus the 22 points of its line.",
+  "provenance": "Approved SettingsPanelLab full-light captures, 570 points at 2x. Includes user-approved notes; Keyboard follows the 2026-11-13 key binding list decision: the list and the menu shortcuts each show at least six rows (reference image keyboard-ja-570.png in the audit notes). Typesetting follows the 2026-11-14 decision to add the index program and MetaPost rows to Related Tools: the mockup height plus the 114 points of the two rows and the longer note of Engine Profile. Typesetting also follows the 2026-11-15 decision to describe what the Sync tabs switch does: plus the 20 points of its longer note. Typesetting follows the 2026-11-15 decision to remove the note of Engine Profile: minus the 48 points of that note. Preview follows the 2026-11-16 decision to add the switch that makes the left and right arrow keys always turn pages under Display: plus the 56 points of its row. Editor follows the 2026-11-16 decision to add the switch that keeps the Advanced Find panel on top under Find: plus the 38 points of its row. Editor also follows the 2026-11-18 decision to add Highlight Fullwidth Letters and Symbols under Syntax Coloring: plus the 38 points of its row. Keyboard also follows the 2026-11-19 decision to add the note of the Paste column of the key binding list: plus the 22 points of its line. Themes follows the 2026-11-20 decision to replace the pop-up menu of the theme to edit and its New Theme button with the list of themes (CotEditor-like, with ＋, − and the actions menu): plus the 185 points of the list.",
   "width": 570,
   "maximum_ratio": 1.15,
   "categories": {
     "appearance": {
-      "height": 1746.0,
+      "height": 1931.0,
       "reference_sha256": "f8806b84a4675cc0d0968bcae828b22882de5517b964420568e14f3797d238bc"
     },
     "console": {
@@ -41,6 +41,8 @@
     },
     "updates": {
       "height": 360.0,
-      "reference_sha256": "af58af3412011d845d0bac857ae8fc2c9376a28f9ae04aa3a937b4bd9f661fa9", "note": "2026-11-13: the user-approved Updates to Include group (+79: heading, one 38-point row, 18-point group spacing) and the line with the last check and Check for Updates (+56: 38-point row, 18-point spacing) were added to the 225-point lab capture."}
+      "reference_sha256": "af58af3412011d845d0bac857ae8fc2c9376a28f9ae04aa3a937b4bd9f661fa9",
+      "note": "2026-11-13: the user-approved Updates to Include group (+79: heading, one 38-point row, 18-point group spacing) and the line with the last check and Check for Updates (+56: 38-point row, 18-point spacing) were added to the 225-point lab capture."
+    }
   }
 }

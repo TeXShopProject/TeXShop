@@ -6,7 +6,6 @@
 {
     [super loadView];
     self.DarkStyle.accessibilityIdentifier = @"settings.user-data";
-    self.EditingStyle.accessibilityIdentifier = @"settings.user-data";
     self.LiteStyle.accessibilityIdentifier = @"settings.user-data";
 }
 
@@ -14,7 +13,6 @@
 - (IBAction)ConsoleAlphaChanged:(id)sender { [self.preferences ConsoleAlphaChanged:sender]; }
 - (IBAction)ConsoleBackgroundColorChanged:(id)sender { [self.preferences ConsoleBackgroundColorChanged:sender]; }
 - (IBAction)ConsoleTextColorChanged:(id)sender { [self.preferences ConsoleTextColorChanged:sender]; }
-- (IBAction)EditingStyleChoice:(id)sender { [self.preferences EditingStyleChoice:sender]; }
 - (IBAction)EditorFlashChanged:(id)sender { [self.preferences EditorFlashChanged:sender]; }
 - (IBAction)EditorHighlightBracesChanged:(id)sender { [self.preferences EditorHighlightBracesChanged:sender]; }
 - (IBAction)EditorHighlightContentChanged:(id)sender { [self.preferences EditorHighlightContentChanged:sender]; }
@@ -31,7 +29,6 @@
 - (IBAction)PreviewAlphaChanged:(id)sender { [self.preferences PreviewAlphaChanged:sender]; }
 - (IBAction)PreviewBackgroundColorChanged:(id)sender { [self.preferences PreviewBackgroundColorChanged:sender]; }
 - (IBAction)PreviewDirectSyncChanged:(id)sender { [self.preferences PreviewDirectSyncChanged:sender]; }
-- (IBAction)SaveNewStyle:(id)sender { [self.preferences SaveNewStyle:sender]; }
 - (IBAction)SourceAlphaChanged:(id)sender { [self.preferences SourceAlphaChanged:sender]; }
 - (IBAction)SourceBackgroundColorChanged:(id)sender { [self.preferences SourceBackgroundColorChanged:sender]; }
 - (IBAction)SourceInsertionPointColorChanged:(id)sender { [self.preferences SourceInsertionPointColorChanged:sender]; }

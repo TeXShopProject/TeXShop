@@ -2739,6 +2739,15 @@ A tag of 0 means "no", a tag of 1 means "yes".
     alert.informativeText = message;
     [alert beginSheetModalForWindow:_prefsWindow completionHandler:nil];
 }
+// A message of the theme list (a theme that cannot be read, a name that is taken): the message is the alert's title,
+// since nothing was being saved.
+- (void)showPreferenceNotice:(NSString *)message
+{
+    if (self.endingPreferences || _prefsWindow == nil || _prefsWindow.attachedSheet != nil) return;
+    NSAlert *alert = [NSAlert new];
+    alert.messageText = message;
+    [alert beginSheetModalForWindow:_prefsWindow completionHandler:nil];
+}
 - (void)presentInputErrorForField:(NSControl *)field
 {
     if (self.inputErrorPresented || self.endingPreferences || _prefsWindow.attachedSheet != nil) return;

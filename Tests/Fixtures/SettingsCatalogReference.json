@@ -908,29 +908,19 @@
      "title": "テーマの編集",
      "rows": [
       {
-       "kind": "popup",
-       "title": "編集するテーマ",
-       "choices": [
-        "TeXShop",
-        "TeXShop Dark",
-        "Solarized Light",
-        "Solarized Dark",
-        "GitHub"
-       ],
-       "src": [
-        "f0m-Ok-bmZ"
-       ]
-      },
-      {
-       "kind": "buttons",
+       "kind": "themelist",
        "title": "",
        "choices": [
-        "新規テーマを作成",
-        "編集中のテーマに上書き保存"
+        "新規テーマ",
+        "複製",
+        "名前を変更",
+        "元に戻す",
+        "削除",
+        "書き出す…",
+        "読み込む…"
        ],
        "src": [
-        "OWo-zD-aVB",
-        "kSG-nU-o3l"
+        "new:theme-list"
        ]
       }
      ]

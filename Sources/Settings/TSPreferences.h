@@ -44,9 +44,6 @@
 	IBOutlet NSButton       *_findPanelFloatsButton;
     IBOutlet NSMatrix       *_lineSizeMatrix;               /* connected to Line Number Size */
     IBOutlet NSMatrix       *_wrapMatrix;                    /* connected to Wrap Panel */
-    IBOutlet NSPanel    *stylePanel;
-    // for Color
-    IBOutlet NSTextField *styleTitle;
 
     IBOutlet NSButton       *_tabIndentButton;		    /*" connected to "Use Tab" "*/
     IBOutlet NSButton       *_syntaxColorLineButton;    /*" connected to "Syntax Active Line Coloring" "*/
@@ -171,7 +168,6 @@
     // Color Tab
     IBOutlet NSPopUpButton  *LiteStyle;
     IBOutlet NSPopUpButton  *DarkStyle;
-    IBOutlet NSPopUpButton  *EditingStyle;
     //Actual Colors
     IBOutlet NSColorWell    *SourceTextColorWell;
     IBOutlet NSColorWell    *SourceBackgroundColorWell;
@@ -423,15 +419,12 @@
 
 @interface TSPreferences (Color)
 - (IBAction)XMLCommentChanged:(id)sender;
-- (void)requestNameForThemeColors:(NSDictionary<NSString *, id> *)colors;
 - (void)deactivatePreferenceColorWells;
 - (IBAction)themeSelectionChanged:(id)sender;
 
 - (void)PrepareColorPane:(NSUserDefaults *)defaults;
 
-- (IBAction)EditingStyleChoice:sender;
 - (IBAction)SaveEditedStyle:sender;
-- (IBAction)SaveNewStyle:sender;
 // Actual Colors
 - (IBAction)SourceTextColorChanged:sender;
 - (IBAction)SourceBackgroundColorChanged:sender;
@@ -492,8 +485,6 @@
 - (IBAction)XMLTableButtonChanged:(id)sender;
 - (IBAction)XMLMarkButtonChanged:(id)sender;
 
-- (IBAction)okForStylePanel:sender;
-- (IBAction)cancelForStylePanel:sender;
 
 
 

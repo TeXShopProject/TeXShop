@@ -163,10 +163,6 @@
       "odm-Dy-TNW.title": "Groot",
       "ypQ-Gc-HUa.title": "Altijd"
     },
-    "SettingsThemeName.strings": {
-      "ZJe-8t-Rwa.title": "Naam:",
-      "jJY-ql-JXD.title": "Annuleer"
-    },
     "SettingsTypesetting.strings": {
       "191.title": "Direct PDF",
       "bYh-V5-ri6.title": "Toon voorvertoning en ga terug naar vorig venster",
@@ -271,10 +267,6 @@
       "ypQ-Gc-HUa.title": "Sempre",
       "1080.title": "Painel de pesquisa OgreKit (legado)"
     },
-    "SettingsThemeName.strings": {
-      "ZJe-8t-Rwa.title": "Título:",
-      "jJY-ql-JXD.title": "Cancelar"
-    },
     "SettingsTypesetting.strings": {
       "191.title": "PDF direto",
       "590.title": "Ficheiro de motor",
@@ -367,7 +359,6 @@
       "catalog.general.2.2.title": "Consolă",
       "catalog.appearance.0.0.title": "Tema modului luminos",
       "group.editor.1.title": "Stilul editorului",
-      "catalog.appearance.1.0.title": "Tema de editat",
       "catalog.general.2.1.button": "Folosește poziția actuală",
       "catalog.appearance.2.0.column.0": "Prim-plan",
       "catalog.editor.4.4.title": "Arată indicatorul la deplasare",
@@ -427,10 +418,6 @@
       "odm-Dy-TNW.title": "Mare",
       "ypQ-Gc-HUa.title": "Întotdeauna",
       "1080.title": "Panoul de căutare OgreKit (vechi)"
-    },
-    "SettingsThemeName.strings": {
-      "ZJe-8t-Rwa.title": "Titlu:",
-      "jJY-ql-JXD.title": "Anulați"
     },
     "SettingsTypesetting.strings": {
       "191.title": "PDF direct",

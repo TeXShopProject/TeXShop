@@ -153,6 +153,12 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
         [NSLayoutConstraint activateConstraints:@[[body.leadingAnchor constraintEqualToAnchor:list.leadingAnchor],[body.trailingAnchor constraintEqualToAnchor:list.trailingAnchor],[body.topAnchor constraintEqualToAnchor:list.topAnchor],[body.bottomAnchor constraintEqualToAnchor:list.bottomAnchor]]];
         row=[TSPrefPaneLayout catalogContent:list trailing:NO indent:indent];
         [list.trailingAnchor constraintEqualToAnchor:row.trailingAnchor constant:-12].active=YES;
+    }else if([kind isEqual:@"themelist"]){
+        // The frame of the list and its bar, fitted again to the list's outer view (take: removed its constraints).
+        NSView *list=controls.firstObject,*frame=TSCatalogRequired(list.subviews.firstObject);
+        [NSLayoutConstraint activateConstraints:@[[frame.leadingAnchor constraintEqualToAnchor:list.leadingAnchor],[frame.trailingAnchor constraintEqualToAnchor:list.trailingAnchor],[frame.topAnchor constraintEqualToAnchor:list.topAnchor],[frame.bottomAnchor constraintEqualToAnchor:list.bottomAnchor]]];
+        row=[TSPrefPaneLayout catalogContent:list trailing:NO indent:indent];
+        [list.trailingAnchor constraintEqualToAnchor:row.trailingAnchor constant:-12].active=YES;
     }else if([kind isEqual:@"description"]){row=[TSPrefPaneLayout catalogContent:[self label:title small:YES] trailing:NO indent:indent];
     }else if([kind isEqual:@"buttons"] || [kind isEqual:@"checks"] || [kind isEqual:@"checkgrid"]){
         for(NSUInteger i=0;i<controls.count;i++)((NSButton *)controls[i]).title=text(model[@"choices"][i]);
@@ -231,8 +237,8 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
     [self splitMatrix:(NSMatrix *)[self take:@"settings.621" from:views] identifiers:@[@"settings.cell.839",@"settings.cell.cgA-o7-Bdw",@"settings.cell.f1k-jx-ley",@"settings.cell.840",@"settings.cell.841",@"settings.cell.842",@"settings.cell.843",@"settings.cell.844",@"settings.cell.845",@"settings.cell.846",@"settings.cell.XoX-gZ-pO3",@"settings.cell.PhR-Vr-jce",@"settings.cell.CPb-hk-Gqb"] into:views];
     [self splitMatrix:(NSMatrix *)[self take:@"settings.cp7-bc-avh" from:views] identifiers:@[@"settings.cell.teg-0p-Q8J",@"settings.cell.3eF-XA-ahc",@"settings.cell.8Wq-gx-FqO"] into:views];
     NSButton *legacy=[NSButton radioButtonWithTitle:@"" target:preferences action:@selector(legacySpellCheckPressed:)];legacy.identifier=@"settings.legacy-spelling";preferences.legacySpellCheckButton=legacy;views[@"settings.legacy-spelling"]=legacy;
-    NSArray *newIDs=@[@"settings.edit-completion",@"settings.hidden-settings-help",@"settings.save-theme"];
-    SEL actions[]={@selector(openCommandCompletionList:),@selector(displayCommentLines:),@selector(SaveEditedStyle:)};
+    NSArray *newIDs=@[@"settings.edit-completion",@"settings.hidden-settings-help"];
+    SEL actions[]={@selector(openCommandCompletionList:),@selector(displayCommentLines:)};
     for(NSUInteger i=0;i<newIDs.count;i++){NSButton *b=[NSButton buttonWithTitle:@"" target:i==0?nil:preferences action:actions[i]];b.identifier=newIDs[i];views[newIDs[i]]=b;}
     NSButton *markKeys=[NSButton checkboxWithTitle:@"" target:preferences action:@selector(completionMarkKeysPressed:)];markKeys.identifier=@"settings.completion-mark-keys";preferences.completionMarkKeysButton=markKeys;views[@"settings.completion-mark-keys"]=markKeys;
     // Choosing a profile asks at once whether to apply it.
@@ -259,6 +265,10 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
     // The key binding list is edited in place in Keyboard.
     if(preferences.keyBindings==nil)preferences.keyBindings=[TSKeyBindingsController new];
     NSView *bindings=preferences.keyBindings.view;bindings.identifier=@"settings.key-bindings";views[@"settings.key-bindings"]=bindings;
+    // Edit Themes: the themes in ~/Library/TeXShop/Themes, beside those that come with TeXShop.
+    NSURL *bundledThemes=[NSBundle.mainBundle.resourceURL URLByAppendingPathComponent:@"TeXShop/Themes" isDirectory:YES];
+    preferences.themeList=[[TSSettingsThemeList alloc]initWithStore:[preferences themeStore] bundledDirectory:bundledThemes owner:preferences text:text];
+    views[@"settings.theme-list"]=preferences.themeList.view;
     NSMutableDictionary *result=[NSMutableDictionary dictionary];
     for(NSDictionary *category in TSSettingsCatalogLayout()){
         NSString *cid=category[@"id"];NSMutableArray *groups=[NSMutableArray array];

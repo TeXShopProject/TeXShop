@@ -267,16 +267,11 @@
         ]],
         @"settings.ZlV-mI-DdK": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.7hF-dm-sw0"] kind:TSSettingsRowSection indentation:0], // Themes
-            [TSSettingsLayoutRow controls:@[@"settings.ycd-ZH-bzw"] kind:TSSettingsRowSection indentation:0], // Actions
             [TSSettingsLayoutRow controls:@[@"settings.qWb-pL-mS9"] kind:TSSettingsRowSection indentation:0],
         ]],
         @"settings.BGc-hx-w5D": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.cy6-ep-C9P", @"settings.xpQ-zQ-oZe"] kind:TSSettingsRowField indentation:0],
             [TSSettingsLayoutRow controls:@[@"settings.zWc-ak-WM8", @"settings.eo2-De-DNv"] kind:TSSettingsRowField indentation:0],
-            [TSSettingsLayoutRow controls:@[@"settings.FOl-CH-y3R", @"settings.O5R-pm-csa"] kind:TSSettingsRowField indentation:0],
-        ]],
-        @"settings.RA7-3r-O6n": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.8bu-du-vzc"] kind:TSSettingsRowControls indentation:0], // Create New Theme
         ]],
         @"settings.3cH-6c-fhq": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.S3x-qU-RUF"] kind:TSSettingsRowSection indentation:0],
