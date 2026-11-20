@@ -3,21 +3,28 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
 --><rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
   <channel>
     <item>
-      <title>TeXShop 6.00 beta-6</title>
-      <pubDate>Thu, 19 Nov 2026 01:41:05 +0000</pubDate>
-      <sparkle:version>2011</sparkle:version>
-      <sparkle:shortVersionString>6.00 beta-6</sparkle:shortVersionString>
+      <title>TeXShop 6.00 beta-7</title>
+      <pubDate>Fri, 20 Nov 2026 12:00:29 +0000</pubDate>
+      <sparkle:version>2093</sparkle:version>
+      <sparkle:shortVersionString>6.00 beta-7</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
       <sparkle:channel>prerelease</sparkle:channel>
-      <description xml:lang="en" sparkle:format="markdown">This is the sixth **beta** of TeXShop 6.00, for testing. TeXShop 5.59 remains the current release. Please keep a copy of 5.59 if you depend on TeXShop for daily work. See [What's New in TeXShop 6](https://texshop.app/whats-new.html) for an overview.
+      <description xml:lang="en" sparkle:format="markdown">This is the seventh **beta** of TeXShop 6.00, for testing. TeXShop 5.59 remains the current release. Please keep a copy of 5.59 if you depend on TeXShop for daily work. See [What's New in TeXShop 6](https://texshop.app/whats-new.html) for an overview.
 
 ## Installation
 
-If you use 6.00 beta 1 to beta 5 with Settings → Updates → “Update to prereleases when available” on, TeXShop offers this beta through its automatic updates. Otherwise download `TeXShop-6.00-beta-6.zip`, extract it, and copy `TeXShop.app` to Applications (replacing 5.59 or an earlier beta), or run it from another folder. The application is signed and notarized, and runs on Apple Silicon and Intel Macs with macOS 14.6 or later. A TeX distribution such as MacTeX is required for typesetting.
+If you use 6.00 beta 1 to beta 6 with Settings → Updates → “Update to prereleases when available” on, TeXShop offers this beta through its automatic updates. Otherwise download `TeXShop-6.00-beta-7.zip`, extract it, and copy `TeXShop.app` to Applications (replacing 5.59 or an earlier beta), or run it from another folder. The application is signed and notarized, and runs on Apple Silicon and Intel Macs with macOS 14.6 or later. A TeX distribution such as MacTeX is required for typesetting.
 
-## Changes since Beta 5
+## Changes since Beta 6
 
-- A pinned link popup now stays when the Preview window goes to another place: following a link, choosing an item in the drawer, Back and Forward, typing a page number, going to the first or last page, choosing a search result, syncing from the source, and Split Window with Link. It stays at its place on its page, so Back takes you back to it, and Escape dismisses it. Suggested by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#35](https://github.com/TeXShopProject/TeXShop/issues/35)).
+- Settings → Themes lists the themes: add, duplicate, rename, delete, restore, export and import them there. Colors are saved as soon as they change, and the Save Theme button is removed.
+- Key bindings with the new Paste box checked apply to text you paste or drop, as well as to typing; Search Settings finds the Paste column. The two items of the Edit menu that converted ¥ and `\` on the clipboard are removed. On a fresh installation, the ¥ key is bound to a backslash and its Paste box is checked. When Encoding for new documents is set to UTF-8, turn on Key Bindings for the document to use this binding when typing or pasting.
+- Print from the Preview as Apple’s Preview does: with Auto Rotate and Scale to Fit in the print panel, each page is turned and made to fit the paper. The choices are kept for the next print of the same document, and no longer change the printing of other documents. Suggested by Bruno Voisin.
+- Menu shortcuts on French, German and other non-US keyboard layouts are again the ones macOS shows; in the earlier betas, for example, Window › Source ⇔ Preview became Shift-Command-7 instead of Command-&amp; on a French keyboard. Shortcuts set in Settings → Keyboard also tell apart macros with the same name. Reported by Bruno Voisin.
+- The manual has the same version number as the TeXShop release it is written for. Suggested by Bruno Voisin.
+- Detect Paths labels TeX Live development builds as such and lists installations by year, newest first. It selects the newest release when there is one, otherwise the newest development build.
+- Edit Spelling Exclusions and the button that edits the LaTeX exclusion rules open the file in TeXShop, and Edit Command Completion opens its file for editing also when you use an external editor.
+- Fix a crash when a setting or file that TeXShop reads is missing or damaged, such as a font that was removed or a damaged macros file, or when you sync from a page without SyncTeX information. The Previous Page and Next Page buttons of an image window turn its pages.
 
 ## All changes in TeXShop 6.00
 
@@ -49,6 +56,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 - Annotate with an annotation toolbar under the toolbar of the Preview window (Preview › Show Annotation Toolbar). Its tools work on the document of that window, also in the window that shows the source and the Preview. Suggested by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#49](https://github.com/TeXShopProject/TeXShop/issues/49)).
 - Zoom to Content Width and Fit to Content Width, scrolling that does not turn pages and a magnifying glass at any magnification are added, and the outline in the drawer stays as it was after typesetting. Suggested and reported by [Uwe Schmock](https://github.com/Uwe-Schmock) and [svb-bit](https://github.com/svb-bit) ([#9](https://github.com/TeXShopProject/TeXShop/issues/9), [#19](https://github.com/TeXShopProject/TeXShop/issues/19), [#33](https://github.com/TeXShopProject/TeXShop/issues/33)). When another application such as latexmk rewrites the PDF, the preview is updated at the same place.
 - The preview toolbar has the icons of Apple’s Preview, tool tips and page layout menus; click the word next to its magnification field to open the Magnification menu. Suggested by Bruno Voisin and [Uwe Schmock](https://github.com/Uwe-Schmock) ([#28](https://github.com/TeXShopProject/TeXShop/issues/28), [#34](https://github.com/TeXShopProject/TeXShop/issues/34), [#54](https://github.com/TeXShopProject/TeXShop/issues/54)).
+- Print from the Preview as Apple’s Preview does: with Auto Rotate and Scale to Fit in the print panel, each page is turned and made to fit the paper. Suggested by Bruno Voisin.
 
 ## Editing
 
@@ -56,6 +64,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 - Click or drag over the line numbers to select whole lines.
 - The Edit menu has Character Type Conversion, Unicode Normalization, and Swap with Clipboard, which replaces the selection with the clipboard text and places the selection on the clipboard.
 - The Macro Editor has a new design, and macros and key bindings can insert the clipboard text.
+- Key bindings with the new Paste box checked apply to text you paste, as well as to typing.
 - Fullwidth letters, digits and symbols can be shown in their own color; to show them like other text, turn off Highlight Fullwidth Letters and Symbols in Settings → Editor.
 - The encoding of a source file is detected automatically.
 - Experiment typesets with the document’s pictures and references, and its source looks like the document’s source. Suggested and reported by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#8](https://github.com/TeXShopProject/TeXShop/issues/8), [#20](https://github.com/TeXShopProject/TeXShop/issues/20)).
@@ -78,12 +87,14 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 - On macOS 26 and later, TeXShop has the Liquid Glass appearance.
 - The digits of line numbers line up, and the Matrix and LaTeX panels are easier to read in Dark Mode.
 - Comments and other colors of the bundled themes are easier to read.
+- Settings → Themes lists the themes: add, duplicate, rename, delete, restore, export and import them there.
 
 ## Changes in behavior from earlier versions
 
 - **Spell checking:** LaTeX-aware spell checking is on by default. The legacy method is in Settings → Spell Checking.
 - **Find:** the Advanced Find panel is used by default. The earlier panel can be chosen in Settings → Editor → Find Panel.
 - **Settings profiles:** settings profiles are replaced by engine profiles in Settings → Typesetting. Choose a profile to set up typesetting for that TeX engine in one step.
+- **Themes:** colors are saved as soon as they change, and the themes to edit are chosen in their list.
 - **Typesetting settings:** Default Command is now Typeset New Documents With, and Command to use is now Engine File.
 - **Arrow keys in the preview:** in single-page and two-page layouts, the Up and Down Arrow keys scroll within the page instead of turning it. Suggested by [svb-bit](https://github.com/svb-bit) ([#9](https://github.com/TeXShopProject/TeXShop/issues/9)).
 - **Menu shortcuts set in macOS:** shortcuts for TeXShop made in macOS System Settings may need to be set again in Settings → Keyboard.
@@ -96,6 +107,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 - **Save PostScript File and -dALLOWPSTRANSPARENCY:** these settings are removed.
 - **Obsolete settings:** settings that had no effect are removed.
 - **Themes from earlier color settings:** this button in Settings → Themes and the macro Colored source are removed.
+- **Clipboard conversion of ¥ and `\`:** these two items of the Edit menu are removed. When Encoding for new documents in Settings is UTF-8, ¥ and `\` in text you paste stay the same, also with otf conversion; with a Japanese encoding, its own conversion is used as before. With UTF-8, ¥ is replaced with a backslash when you type or paste it while Key Bindings are on for the document: when you install TeXShop for the first time, Key Bindings already give a backslash for ¥ and have its Paste box checked; earlier users can set the output of ¥ to a single backslash and check its Paste box.
 - **`\UTF` commands:** `\UTF` commands of the otf package are turned back into characters when a file is opened.
 - **Line endings:** opening a file with Windows or other line endings tells you that they were changed to LF.
 - **Statistics:** Edit › Statistics… opens Text Statistics in the status bar.
@@ -127,6 +139,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 - In fonts without a fixed width, a tab in the source is no longer about twice the Tab Size set in Settings.
 - Fix the highlight of brackets: it no longer ends too early when you type one after another, it stays when you scroll, resize the window or change themes, and brackets typed with a Japanese input method get the highlight only once confirmed.
 - Undo now works after you insert a mark or remove one, and by default, Windows or other line endings in text you paste are changed to LF.
+- Fix a crash when a setting or file that TeXShop reads is missing or damaged, such as a font that was removed or a damaged macros file, or when you sync from a page without SyncTeX information. The Previous Page and Next Page buttons of an image window turn its pages.
 - Fix text that was cut off or drawn over other text, buttons and menus that did not work, and texts left in English, in some languages.
 
 ## Manual, help and bundled tools
@@ -135,6 +148,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 - The manual and the help point to the current TeXShop web site, [texshop.app](https://texshop.app/). Suggested by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#15](https://github.com/TeXShopProject/TeXShop/issues/15)).
 - The help and the other documents no longer link to the old TeXShop web site, and bug reports go to [GitHub issues](https://github.com/TeXShopProject/TeXShop/issues) ([#43](https://github.com/TeXShopProject/TeXShop/issues/43)).
 - Remove Skype from the manual. Suggested by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#11](https://github.com/TeXShopProject/TeXShop/issues/11)).
+- The manual has the same version number as the TeXShop release it is written for, starting with 6.00. Suggested by Bruno Voisin.
 - The contact information in the credits points to the current maintainer. Reported by [Ralph Martin](https://github.com/ralphrmartin) ([#13](https://github.com/TeXShopProject/TeXShop/issues/13)).
 - Add help for LaTeX-aware spell checking.
 - The Japanese help shows the backslash of TeX commands correctly, and some help pages in other languages show their text correctly.
@@ -142,8 +156,8 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 - Update the bundled latexmk to 4.89, provided by Herbert Schulz.
 - TeXShop can be built from an extracted source archive again ([#4](https://github.com/TeXShopProject/TeXShop/issues/4)).
 - Remove files and code that TeXShop did not use from the application and its source.</description>
-      <sparkle:fullReleaseNotesLink>https://github.com/TeXShopProject/TeXShop/releases/tag/v.6.00-beta.6</sparkle:fullReleaseNotesLink>
-      <enclosure url="https://github.com/TeXShopProject/TeXShop/releases/download/v.6.00-beta.6/TeXShop-6.00-beta-6.zip" length="66408975" type="application/octet-stream" sparkle:edSignature="OzibTk9Y3THyIBQYG5GCGGOBGeFixlFE6In56q8u+9IPMSfRTnH1FFJE1J8/yhrlogoHOutsQIvFQysWKSmMBQ=="></enclosure>
+      <sparkle:fullReleaseNotesLink>https://github.com/TeXShopProject/TeXShop/releases/tag/v.6.00-beta.7</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/TeXShopProject/TeXShop/releases/download/v.6.00-beta.7/TeXShop-6.00-beta-7.zip" length="66524821" type="application/octet-stream" sparkle:edSignature="rkinf+tielRoILToSMD6Hplt1PdRN50W8+QM3t88CPKikgMV+3IdMNZ3XjYKq9mJJ/GlNMN/q/R5UoD7d5ZCDw=="></enclosure>
     </item>
     <item>
       <title>TeXShop 5.59</title>
@@ -159,6 +173,6 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
     <language>en</language>
   </channel>
 </rss><!-- sparkle-signatures:
-edSignature: X35VRAGxn1tO3d/et/B7k7Y9ZSYLUxa+WbWPjYgN/ocAQ2Ep22MGVixMJSeHPVjNB/dNUQ7Zi9g6xCaXvGTaAg==
-length: 20024
+edSignature: sfL2CEsD4yIgNZ3ZH+MYAIsUyUAEbDTVO3Ou1lDZGEESd0R1wTjNTdwGHLqpYBorYi1WFd/ehJUZ7LIa6HwIDg==
+length: 23071
 -->
