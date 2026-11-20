@@ -370,6 +370,23 @@ int main(int argc, const char *argv[]) {
             REQUIRE(twoItem.keyEquivalent.length, @"the Control-Option-2 macro has its key (%@)", twoItem.keyEquivalent);
             for (NSString *candidate in @[@"&", @"é"])
                 REQUIRE([early macrosUsingKey:candidate modifiers:K | O].count == 1, @"recording Control-Option-%@ names the Control-Option-2 macro (%@)", candidate, [early macrosUsingKey:candidate modifiers:K | O]);
+            [twoItem.menu removeItem:twoItem]; [occupants removeObject:twoItem]; Spin(0.3);
+            // Two macros that show the same key: the item belongs to the macro at its place in the
+            // Macros menu, the first one, which AppKit lets keep the key.
+            TSShortcutMacro *first = [[TSShortcutMacro alloc] initWithName:@"MacroTwo" path:@"Macros › MacroTwo" indexPath:[NSIndexPath indexPathWithIndex:0] serializedKey:@"^~2" key:@"2" modifiers:K | O];
+            TSShortcutMacro *second = [[TSShortcutMacro alloc] initWithName:@"MacroAccent" path:@"Macros › MacroAccent" indexPath:[NSIndexPath indexPathWithIndex:1] serializedKey:@"^~é" key:@"é" modifiers:K | O];
+            early.macroProvider = ^NSArray<TSShortcutMacro *> *{ return @[first, second]; };
+            NSMenuItem *macrosTop = [bare addItemWithTitle:@"Makros" action:nil keyEquivalent:@""];
+            macrosTop.submenu = [[NSMenu alloc] initWithTitle:@"Makros"];
+            for (TSShortcutMacro *macro in @[first, second]) {
+                NSMenuItem *item = [macrosTop.submenu addItemWithTitle:macro.name action:@selector(doMacro:) keyEquivalent:@""];
+                item.target = bareMacros; item.keyEquivalentModifierMask = macro.modifiers; item.keyEquivalent = macro.key;
+            }
+            Spin(0.3);
+            REQUIRE(macrosTop.submenu.itemArray[0].keyEquivalent.length, @"MacroTwo has its key (%@ / %@)", macrosTop.submenu.itemArray[0].keyEquivalent, macrosTop.submenu.itemArray[1].keyEquivalent);
+            NSArray *named = [early macrosUsingKey:@"&" modifiers:K | O];
+            REQUIRE(named.count == 1 && [named[0] hasPrefix:@"Makros › MacroTwo"], @"recording Control-Option-& names MacroTwo, which could show it (%@)", named);
+            [bare removeItem:macrosTop];
             early.macroProvider = nil;
             for (NSMenuItem *occupant in occupants) if (occupant.menu) [occupant.menu removeItem:occupant];
             early = nil;

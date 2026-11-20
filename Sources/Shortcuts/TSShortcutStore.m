@@ -313,11 +313,27 @@ static NSArray<NSNumber *> *TSLayoutKeyVariants(void) {
 }
 // The key a macro item was given: the macro whose key the layout shows as the item's.
 - (TSShortcutBinding *)givenBindingForMacroItem:(NSMenuItem *)item {
+    return [self givenBindingForMacroItem:item path:nil];
+}
+// The macro an item was made for is the one at its place in the Macros menu; two macros can
+// show the same key on a layout, of which only the first has it. Without a place that tells,
+// the macro whose key the layout shows as the item's.
+- (TSShortcutBinding *)givenBindingForMacroItem:(NSMenuItem *)item path:(nullable NSString *)path {
     TSShortcutBinding *shown = TSShownBinding(item);
-    for (TSShortcutMacro *macro in (self.macroProvider ? self.macroProvider() : @[]))
+    NSArray<TSShortcutMacro *> *macros = self.macroProvider ? self.macroProvider() : @[];
+    NSMutableArray<TSShortcutMacro *> *placed = [NSMutableArray array];
+    // The menu's own name for Macros can differ from the one macro paths start with.
+    NSString *(^withinMacros)(NSString *) = ^NSString *(NSString *full) {
+        NSRange first = [full rangeOfString:@" › "];
+        return first.location == NSNotFound ? full : [full substringFromIndex:NSMaxRange(first)];
+    };
+    if (path) for (TSShortcutMacro *macro in macros) if (macro.key.length && [withinMacros(macro.path) isEqual:withinMacros(path)]) [placed addObject:macro];
+    if (placed.count == 1) return TSBinding(placed[0].key, placed[0].modifiers);
+    if (placed.count > 1) macros = placed;
+    for (TSShortcutMacro *macro in macros)
         if (macro.key.length && [[self shownBindingForGivenKey:macro.key modifiers:macro.modifiers] isEqual:shown]) return TSBinding(macro.key, macro.modifiers);
     // A key the layout could show as one of several: the macro one of whose keys the item shows.
-    for (TSShortcutMacro *macro in (self.macroProvider ? self.macroProvider() : @[]))
+    for (TSShortcutMacro *macro in macros)
         if (macro.key.length && [[self bindingsForMacroKey:macro.key modifiers:macro.modifiers] containsObject:shown]) return TSBinding(macro.key, macro.modifiers);
     return shown;
 }
@@ -551,7 +567,7 @@ static NSArray<NSNumber *> *TSLayoutKeyVariants(void) {
         if (item.action != TSMacroAction() || !item.keyEquivalent.length) return;
         // The keys a macro has, as the macro menu compares them: as its file names the key, as
         // the layout shows it, and each key the layout could show it as.
-        TSShortcutBinding *given = [self givenBindingForMacroItem:item];
+        TSShortcutBinding *given = [self givenBindingForMacroItem:item path:path];
         if ([TSShownBinding(item) isEqual:binding] || [[self bindingsForMacroKey:given.key modifiers:given.modifiers] containsObject:binding])
             [result addObject:[NSString stringWithFormat:@"%@ (%@)", path,
                 [TSShortcutStore displayKey:item.keyEquivalent modifiers:item.keyEquivalentModifierMask]]];

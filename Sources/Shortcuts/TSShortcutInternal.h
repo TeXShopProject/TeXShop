@@ -52,6 +52,8 @@ FOUNDATION_EXPORT NSString * const TSShortcutLearningIdentifier;
 // macros differ from those the last assignment went by.
 - (BOOL)shownKeysChangedSinceAssignment;
 - (TSShortcutBinding *)givenBindingForMacroItem:(NSMenuItem *)item;
+// The same, for the item at this path of the menu (the macro there).
+- (TSShortcutBinding *)givenBindingForMacroItem:(NSMenuItem *)item path:(nullable NSString *)path;
 // A macro's key as its file names it and as AppKit shows it on the current layout, when known.
 - (NSArray<TSShortcutBinding *> *)bindingsForMacroKey:(NSString *)key modifiers:(NSEventModifierFlags)flags;
 // Edit › Complete Label or Citation Key: its default key gives way to a menu command or a macro.
