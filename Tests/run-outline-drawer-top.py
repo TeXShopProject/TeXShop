@@ -8,8 +8,10 @@ never ordered on screen, at the size of an open drawer. The outline of the TeXSh
 loaded through the production methods of MyPDFKitView: when the document opens, when the
 drawer is opened (toggleDrawer: rebuilds the outline), and after typesetting, when the PDF is
 read again. The first entry must stay right below the header each time, and a position
-scrolled to inside the outline must be kept. --png DIR writes the drawer after typesetting in
-Light and Dark Mode.
+scrolled to inside the outline must be kept. The drawer's window never moves the clip view
+from where the nib leaves it, at the height the header had in the nib, which is lower than the
+header shown now; the test puts it back there after the document opens (#19).
+--png DIR writes the drawer after typesetting in Light and Dark Mode.
 """
 from pathlib import Path
 import argparse
@@ -20,12 +22,16 @@ import tempfile
 from production_fragments import method, verify_embedded
 from source_tree import include_args, source_file
 
-KEEP = '        bounds.origin = origin;\n        bounds = [clipView constrainBoundsRect:bounds];\n'
+KEEP = ('        bounds.origin = origin;\n        if (origin.y < 0)\n            bounds.origin.y = -1e6;\n'
+        '        bounds = [clipView constrainBoundsRect:bounds];\n')
 MUTATIONS = {
     # The position kept by beta-6 to beta-7: 0 is below the header.
     'clamp-at-zero': (KEEP, '        CGFloat maxY = MAX(0, NSHeight(outlineView.frame) - NSHeight(clipView.bounds));\n'
                             '        bounds.origin = NSMakePoint(0, MIN(MAX(origin.y, 0), maxY));\n'),
     'always-top': (KEEP, '        bounds.origin = NSMakePoint(origin.x, -1e6);\n        bounds = [clipView constrainBoundsRect:bounds];\n'),
+    # The position kept by 5.60 beta-8 to 6.00 beta-7: the nib's position, where the header was
+    # lower, stays.
+    'nib-position-kept': (KEEP, '        bounds.origin = origin;\n        bounds = [clipView constrainBoundsRect:bounds];\n'),
     'header-height-guessed': (KEEP, '        bounds.origin = NSMakePoint(origin.x, MAX(origin.y, -17));\n'
                                     '        bounds = [clipView constrainBoundsRect:bounds];\n'),
 }
@@ -181,20 +187,34 @@ int main(int argc, char **argv) { @autoreleasepool {
         Check(outline != nil && outline.enclosingScrollView != nil, [label stringByAppendingString:@": the drawer has the outline view"]);
         if (outline == nil) continue;
 
-        // The size of an open drawer beside a Preview window.
-        NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 784) styleMask:NSWindowStyleMaskBorderless
+        // The drawer's content size while it is closed, as the nib gives it.
+        NSSize closed = drawer.contentSize;
+        NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, closed.width, closed.height) styleMask:NSWindowStyleMaskBorderless
                                                          backing:NSBackingStoreBuffered defer:NO];
         window.releasedWhenClosed = NO;
+        NSClipView *nibClip = outline.enclosingScrollView.contentView;
+        NSPoint nibOrigin = nibClip.bounds.origin;
+        CGFloat nibHeader = -nibOrigin.y;
         drawer.contentView = [[NSView alloc] init];
         window.contentView = content;
         [window layoutIfNeeded];
+        Check(nibHeader > 0 && nibHeader < NSHeight(outline.headerView.frame),
+              [NSString stringWithFormat:@"%@: the nib leaves the clip view at the height of a lower header (%.1f, header now %.1f)",
+               label, nibHeader, NSHeight(outline.headerView.frame)]);
 
         DrawerStandIn *standIn = [DrawerStandIn new];
         PreviewHarness *h = [[PreviewHarness alloc] initWithOutlineView:outline drawer:standIn];
         NSClipView *clip = outline.enclosingScrollView.contentView;
 
-        // The document opens: showWithPath: builds the outline, then the drawer is opened.
+        // The document opens while the drawer is closed: showWithPath: builds the outline.
+        // Then the drawer is opened at the size of an open drawer beside a Preview window.
         Typeset(h, manual);
+        // In the drawer's window the clip view is still where the nib left it after this, as
+        // measured in TeXShop on macOS 15 and 26. The layout of this window has already moved
+        // it to the top, so put it back there.
+        [nibClip scrollToPoint:nibOrigin];
+        [window setContentSize:NSMakeSize(200, 784)];
+        [window layoutIfNeeded];
         [h toggleDrawer:nil];
         Check(standIn.toggles == 1, [label stringByAppendingString:@": toggleDrawer: toggles the drawer"]);
         CheckTop(label, @"when the drawer is opened for the first time", outline);
