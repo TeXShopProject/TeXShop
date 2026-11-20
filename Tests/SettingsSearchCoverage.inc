@@ -61,6 +61,19 @@ static void SearchCoverage(NSDictionary<NSString *,NSViewController *> *panes,NS
   Check(moved && !old,@"BibDesk finds the switch in Label and Citation Key Completion");
   Check(marks,@"The mark switch is found by its name");
  }
+ // The Paste column of key bindings and the note under the list lead to the key binding list
+ // itself: the column name as a choice, the note as a description.
+ {
+  NSString *column=[resources localizedStringForKey:@"Paste" value:nil table:@"Localizable"];
+  NSString *note=[resources localizedStringForKey:@"Check “Paste” to also apply the replacement to pasted text." value:nil table:@"Localizable"];
+  for(NSArray *pair in @[@[column,@(TSSettingsSearchWeightChoice)],@[note,@(TSSettingsSearchWeightDescription)]]){
+   BOOL indexed=NO,reached=NO;
+   for(TSSettingsSearchEntry *entry in index.entries)if([entry.category isEqual:@"keyboard"] && [entry.targetIdentifier isEqual:@"row.catalog.keyboard.0.1"] && [entry.text isEqual:pair[0]] && entry.weight==[pair[1] integerValue])indexed=YES;
+   for(TSSettingsSearchResult *hit in [index resultsForQuery:pair[0]])if([hit.category isEqual:@"keyboard"] && [hit.targetIdentifier isEqual:@"row.catalog.keyboard.0.1"])reached=YES;
+   Check(indexed,[NSString stringWithFormat:@"Key binding list indexes %@ with its role",pair[0]]);
+   Check(reached,[NSString stringWithFormat:@"%@ finds the key binding list",pair[0]]);
+  }
+ }
  BOOL hasChoices=NO;for(TSSettingsSearchEntry *entry in index.entries)if([entry.targetIdentifier isEqual:@"row.catalog.editor.0.3"] && entry.weight==30)hasChoices=YES;
  Check(hasChoices,@"Radio matrix options have choice weight");
  // Every target has a fixed setting name, even when found through its help text.
