@@ -42,7 +42,9 @@ static BOOL TSThemeIsRegularFile(NSURL *url)
     NSData *data = [NSData dataWithContentsOfURL:url];
     if (data == nil) return nil;
     id colors = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL];
-    return [colors isKindOfClass:NSDictionary.class] ? colors : nil;
+    if (![colors isKindOfClass:NSDictionary.class]) return nil;
+    BOOL (^accepts)(NSDictionary<NSString *, id> *) = self.acceptsColors;
+    return accepts == nil || accepts(colors) ? colors : nil;
 }
 - (BOOL)writeColors:(NSDictionary<NSString *, id> *)colors title:(NSString *)title error:(NSError **)error
 {
@@ -106,10 +108,9 @@ static BOOL TSThemeIsRegularFile(NSURL *url)
             else
                 [colors removeObjectForKey:key];
         }
-        // A title that differs only in case was given by a rename elsewhere (the file system finds the file either
-        // way): it stays.
-        id inside = colors[@"Title"];
-        if (![inside isKindOfClass:NSString.class] || [(NSString *)inside caseInsensitiveCompare:title] != NSOrderedSame) colors[@"Title"] = title;
+        // The title inside is the file's name as the folder has it: a rename elsewhere in case only (in Finder or in
+        // another TeXShop) leaves a file that `title` still finds.
+        colors[@"Title"] = [self existingTitleForTitle:title] ?: title;
         NSError *accessError = nil;
         NSData *data = [NSPropertyListSerialization dataWithPropertyList:colors format:NSPropertyListXMLFormat_v1_0 options:0 error:&accessError];
         if (data != nil && [data writeToURL:fileURL options:NSDataWritingAtomic error:&accessError])

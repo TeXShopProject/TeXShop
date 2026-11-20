@@ -202,6 +202,14 @@ static void CheckThemeActionButtons(TSPreferences *owner,TSSettingsWindowControl
         Check([[TSIsolatedAppKitDefaults objectForKey:DefaultLiteThemeKey] isEqual:@"LiteTheme"] && [liteMenu.titleOfSelectedItem isEqual:@"LiteTheme"],@"Reopened Settings gives a deleted Light Mode theme's place to LiteTheme");
         Check(owner.editingThemeTitle!=nil && [[store titles] containsObject:owner.editingThemeTitle] && list.tableView.selectedRow==(NSInteger)[list.titles indexOfObject:owner.editingThemeTitle] && [owner valueForKey:@"EditingColors"]!=nil,[NSString stringWithFormat:@"Reopened Settings edits a theme that is there: %@",owner.editingThemeTitle]);
         [owner themeListDidChooseTitle:@"LiteTheme"];[list reload];
+        // A theme replaced by other settings, or broken, before it is chosen is not edited: another theme is.
+        for(NSData *bad in @[[NSPropertyListSerialization dataWithPropertyList:@{@"WindowFrame":@[@0,@0,@800,@600],@"ShowRuler":@YES} format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL],[@"<?xml version=\"1.0\"?><plist><dict><key>EditorText" dataUsingEncoding:NSUTF8StringEncoding]]){
+            NSString *badPath=[ColorPath stringByAppendingPathComponent:@"Replaced.plist"];[bad writeToFile:badPath atomically:YES];[list reload];
+            [owner themeListDidChooseTitle:@"Replaced"];
+            Check(owner.editingThemeTitle!=nil && ![owner.editingThemeTitle isEqual:@"Replaced"] && [owner valueForKey:@"EditingColors"]!=nil && [[NSData dataWithContentsOfFile:badPath] isEqual:bad],[NSString stringWithFormat:@"A theme that cannot be read as one is not edited: %@",owner.editingThemeTitle]);
+            [NSFileManager.defaultManager removeItemAtPath:badPath error:NULL];
+        }
+        [owner themeListDidChooseTitle:@"LiteTheme"];[list reload];
         // The picture of the manual (TS_SETTINGS_MANUAL_SHOT, English): the themes that come with TeXShop, LiteTheme being
         // edited, 710 points wide in the light appearance.
         if(getenv("TS_SETTINGS_MANUAL_SHOT") && [fixture.bundlePath.lastPathComponent isEqual:@"Base.bundle"]){

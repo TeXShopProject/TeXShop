@@ -19,6 +19,7 @@ mutations={
  'selection-store':('[SUD setObject:title forKey:popup == LiteStyle ? DefaultLiteThemeKey : DefaultDarkThemeKey];',';'),
  'compose-settings':('{ return title.precomposedStringWithCanonicalMapping; }','{ return title; }'),
  'missing-handoff':('        [self.themeList themeWentMissing:title];\n        return;','        ;'),
+ 'unreadable-choice':('        [self.themeList themeCannotBeRead:(NSString *_Nonnull)title];\n        return;','        ;'),
  'stale-choice':('        [self.themeList themeWentMissing:(NSString *_Nonnull)title];\n        return;','        ;'),
  'follow-case':('        [self themeListDidChangeTitle:title to:current];\n        title = (NSString *_Nonnull)current;','        ;'),
  'rename-follows':('[SUD setObject:newTitle ?: @"LiteTheme" forKey:DefaultLiteThemeKey];',';'),
@@ -31,7 +32,8 @@ mutations={
 store=(R/'Sources/Settings/TSThemeFileStore.m').read_text()
 store_mutations={
  'overwrite-unreadable':('        if (current == nil) {\n            writeError = TSThemeStoreError(NSFileReadCorruptFileError, title);\n            return;\n        }\n        NSMutableDictionary<NSString *, id> *colors = [current mutableCopy];','        NSMutableDictionary<NSString *, id> *colors = [(current ?: before) mutableCopy];'),
- 'title-case':('if (![inside isKindOfClass:NSString.class] || [(NSString *)inside caseInsensitiveCompare:title] != NSOrderedSame) colors[@"Title"] = title;','(void)inside; colors[@"Title"] = title;'),
+ 'title-case':('colors[@"Title"] = [self existingTitleForTitle:title] ?: title;','colors[@"Title"] = title;'),
+ 'accept-all':('    return accepts == nil || accepts(colors) ? colors : nil;','    (void)accepts;return colors;'),
  'upper-extension':('if ([name.pathExtension compare:@"plist" options:NSCaseInsensitiveSearch] == NSOrderedSame)','if ([name.pathExtension isEqualToString:@"plist"])'),
  'overwrite-add':('options:NSDataWritingWithoutOverwriting','options:NSDataWritingAtomic'),
  'list-folders':('if (url != nil && TSThemeIsRegularFile(url) && ![titles containsObject:title])','if (url != nil && ![titles containsObject:title])'),
@@ -121,13 +123,15 @@ static NSMutableArray *alertButtons;
 @implementation Field @end
 @interface ListStub:NSObject
 @property NSUInteger reloads;
-@property NSMutableArray *missing,*refreshed;
+@property NSMutableArray *missing,*refreshed,*unreadable;
 - (void)reload;
 - (void)themeWentMissing:(NSString *)title;
+- (void)themeCannotBeRead:(NSString *)title;
 - (void)refreshTitle:(NSString *)title;
 @end
 @implementation ListStub
-- (instancetype)init{if((self=[super init])){_missing=[NSMutableArray new];_refreshed=[NSMutableArray new];}return self;}
+- (instancetype)init{if((self=[super init])){_missing=[NSMutableArray new];_refreshed=[NSMutableArray new];_unreadable=[NSMutableArray new];}return self;}
+- (void)themeCannotBeRead:(NSString *)title{[self.unreadable addObject:title];}
 - (void)reload{self.reloads++;}
 - (void)themeWentMissing:(NSString *)title{[self.missing addObject:title];}
 - (void)refreshTitle:(NSString *)title{[self.refreshed addObject:title];}
@@ -314,7 +318,28 @@ int main(int argc,char **argv){@autoreleasepool{
   p->EditingColors=[nightWritten mutableCopy];p->EditingColors[@"EditorText"]=@[@1,@1,@0,@1];p.lastSavedEditingColors=nightWritten;
   [p SaveEditedStyle:nil];
   check([p.editingThemeTitle isEqual:@"NIGHT"] && [[p.store readTitle:@"NIGHT"][@"Title"] isEqual:@"NIGHT"] && [[p.store readTitle:@"NIGHT"][@"EditorText"] isEqual:(@[@1,@1,@0,@1])],"Settings edits the theme under the name it now has");
-  [NSFileManager.defaultManager removeItemAtURL:(NSURL *_Nonnull)[p.store URLForTitle:@"NIGHT"] error:NULL];
+  // Renamed in case only in Finder: the name inside the file is still the old one; a save writes the file's name.
+  check([NSFileManager.defaultManager moveItemAtURL:(NSURL *_Nonnull)[p.store URLForTitle:@"NIGHT"] toURL:[root URLByAppendingPathComponent:@"Night.plist"] error:NULL],"rename in Finder");
+  NSDictionary *finder=[p.store readTitle:@"Night"];
+  check([finder[@"Title"] isEqual:@"NIGHT"],"Finder leaves the name inside");
+  NSMutableDictionary *finderMore=[finder mutableCopy];finderMore[@"EditorText"]=@[@0.5,@0.5,@0.5,@1];
+  check([[p.store writeChangesFrom:finder to:finderMore title:@"NIGHT" error:NULL][@"Title"] isEqual:@"Night"] && [[p.store readTitle:@"Night"][@"Title"] isEqual:@"Night"],"a save writes the name the folder has after a rename in Finder");
+  [NSFileManager.defaultManager removeItemAtURL:(NSURL *_Nonnull)[p.store URLForTitle:@"Night"] error:NULL];
+  // A file that is not a theme (other settings) is read as none and never written into.
+  {
+   TSThemeFileStore *strict=[[TSThemeFileStore alloc]initWithDirectory:root];
+   strict.acceptsColors=^BOOL(NSDictionary *c){return c[@"EditorText"]!=nil || c.count==0;};
+   check([strict writeColors:@{@"EditorText":@[@0,@0,@0,@1]} title:@"Other" error:NULL],"seed Other");
+   NSDictionary *otherColors=[strict readTitle:@"Other"];
+   NSData *settings=plist(@{@"WindowFrame":@[@0,@0,@800,@600],@"ShowRuler":@YES});[settings writeToURL:(NSURL *_Nonnull)[strict URLForTitle:@"Other"] atomically:YES];
+   NSMutableDictionary *otherMore=[otherColors mutableCopy];otherMore[@"EditorText"]=@[@1,@0,@0,@1];NSError *notTheme=nil;
+   check([strict readTitle:@"Other"]==nil && [strict writeChangesFrom:otherColors to:otherMore title:@"Other" error:&notTheme]==nil && notTheme.code==NSFileReadCorruptFileError && [[NSData dataWithContentsOfURL:(NSURL *_Nonnull)[strict URLForTitle:@"Other"]] isEqual:settings],"a file of other settings is not written into");
+   p.store=strict;
+   [p themeListDidChooseTitle:@"Other"];
+   check([stub.unreadable isEqual:@[@"Other"]],"a theme that cannot be read is handed to the list when it is chosen");
+   p.store=[[TSThemeFileStore alloc]initWithDirectory:root];
+   [NSFileManager.defaultManager removeItemAtURL:(NSURL *_Nonnull)[p.store URLForTitle:@"Other"] error:NULL];
+  }
   [p themeListDidChooseTitle:@"Vanished"];
   check([stub.missing containsObject:@"Vanished"],"a theme chosen after it went away is handed to the list");
   p.themeList=nil;

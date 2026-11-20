@@ -89,6 +89,11 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
         return;
     }
     NSDictionary<NSString *, id> *saved = title == nil ? nil : [[self themeStore] readTitle:(NSString *_Nonnull)title];
+    // A theme that cannot be read as one is not edited: the list says so and edits another.
+    if (title != nil && saved == nil && self.themeList != nil) {
+        [self.themeList themeCannotBeRead:(NSString *_Nonnull)title];
+        return;
+    }
     EditingColors = [saved mutableCopy];
     self.lastSavedEditingColors = saved;
     [self FillInColorWells];
@@ -1001,7 +1006,21 @@ static NSString *TSThemeTitle(NSString *title) { return title.precomposedStringW
 }
 - (TSThemeFileStore *)themeStore
 {
-    return [[TSThemeFileStore alloc] initWithDirectory:[NSURL fileURLWithPath:[ColorPath stringByExpandingTildeInPath] isDirectory:YES]];
+    TSThemeFileStore *store = [[TSThemeFileStore alloc] initWithDirectory:[NSURL fileURLWithPath:[ColorPath stringByExpandingTildeInPath] isDirectory:YES]];
+    // A file of other settings put in a theme's place is not a theme: it has entries, but none of TeXShop's colors.
+    // A theme with some of the colors, or only a title, is one.
+    NSString *lite = TSLibraryBundledPath(@"Themes/LiteTheme.plist") ?: [store.directory URLByAppendingPathComponent:@"LiteTheme.plist"].path;
+    NSDictionary *reference = lite != nil ? [NSDictionary dictionaryWithContentsOfFile:(NSString *_Nonnull)lite] : nil;
+    store.acceptsColors = ^BOOL(NSDictionary<NSString *, id> *colors) {
+        BOOL entries = NO;
+        for (NSString *key in colors) {
+            if ([key isEqual:@"Title"]) continue;
+            entries = YES;
+            if ([colors[key] isKindOfClass:NSArray.class] && (reference == nil || [reference[key] isKindOfClass:NSArray.class])) return YES;
+        }
+        return !entries;
+    };
+    return store;
 }
 #pragma mark Theme list
 

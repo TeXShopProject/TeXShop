@@ -45,6 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)refreshTitle:(NSString *)title;
 /// The theme being edited is no longer in the folder (renamed or deleted elsewhere): says so, and edits another.
 - (void)themeWentMissing:(NSString *)title;
+/// The theme chosen cannot be read as a theme: says so, and edits one that can be read.
+- (void)themeCannotBeRead:(NSString *)title;
 /// Reads the folder again and selects the owner's editing theme.
 - (void)reload;
 /// The theme comes with TeXShop / has colors that differ from TeXShop's copy.

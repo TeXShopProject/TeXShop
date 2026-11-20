@@ -303,6 +303,19 @@ static CGFloat TSThemeListInset(NSTableView *table)
     [self reload];
 }
 
+- (void)themeCannotBeRead:(NSString *)title
+{
+    [self.owner themeListShowError:[NSString stringWithFormat:self.text(@"theme.list.notTheme"), title]];
+    NSString *next = nil;
+    NSMutableArray<NSString *> *candidates = [NSMutableArray array];
+    if (self.owner.lightThemeTitle != nil) [candidates addObject:(NSString *_Nonnull)self.owner.lightThemeTitle];
+    [candidates addObjectsFromArray:[self.store titles]];
+    for (NSString *candidate in candidates)
+        if (![candidate isEqualToString:title] && [self.store readTitle:candidate] != nil) { next = candidate; break; }
+    [self.owner themeListDidChooseTitle:next];
+    [self reload];
+}
+
 #pragma mark Actions
 
 - (IBAction)addTheme:(id)sender
