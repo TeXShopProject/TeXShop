@@ -21,7 +21,7 @@ methods = '\n'.join(method(signature) for signature in (
     '- (void)goToPage:(PDFPage *)page', '- (void)goToNextPage:',
     '- (void)goToPreviousPage:', '- (void)goToFirstPage:', '- (void)goToLastPage:',
     '- (void)scrollSelectionToVisible:', '- (void)stepPageForward:', '- (void) previousPage:', '- (void) nextPage:',
-    '- (BOOL)scrollVerticalArrowWithinPage:', '- (void)keyDown:'))
+    '- (BOOL)paginatedScrollMinimum:', '- (BOOL)scrollVerticalArrowWithinPage:', '- (BOOL)pageKeyInPaginatedView:', '- (void)keyDown:'))
 def mutate(old, new):
     global methods
     assert old in methods, old
@@ -65,6 +65,8 @@ static void pump(void) { [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWi
 -(void)previousPage:(id)sender;
 -(void)nextPage:(id)sender;
 -(BOOL)scrollVerticalArrowWithinPage:(NSEvent *)event;
+-(BOOL)paginatedScrollMinimum:(CGFloat *)minimum maximum:(CGFloat *)maximum;
+-(BOOL)pageKeyInPaginatedView:(NSEvent *)event;
 @end
 @implementation PreviewView
 -(void)cleanupMarquee:(BOOL)b {}

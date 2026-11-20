@@ -8399,20 +8399,13 @@ else
 
     
 
-// In paginated views, bare vertical arrows scroll within a zoomed page.
+// In single page and two pages display, the vertical range the shown page or spread can scroll
+// through, in clip view coordinates. NO when it cannot scroll: the page fits.
 // A hidden overlay scroller still has a scrollable range.
-- (BOOL)scrollVerticalArrowWithinPage:(NSEvent *)event
+- (BOOL)paginatedScrollMinimum:(CGFloat *)minimumOut maximum:(CGFloat *)maximumOut
 {
     if (self.displayMode != kPDFDisplaySinglePage && self.displayMode != kPDFDisplayTwoUp)
         return NO;
-    if (event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagOption |
-                               NSEventModifierFlagControl | NSEventModifierFlagShift))
-        return NO;
-    NSString *characters = event.charactersIgnoringModifiers;
-    if (characters.length != 1) return NO;
-    unichar key = [characters characterAtIndex:0];
-    if (key != NSUpArrowFunctionKey && key != NSDownArrowFunctionKey) return NO;
-
     NSScrollView *scroll = self.documentView.enclosingScrollView;
     NSClipView *clip = scroll.contentView;
     if (!self.document.pageCount || !clip || NSIsEmptyRect(clip.bounds)) return NO;
@@ -8425,11 +8418,38 @@ else
     // Query only the limits: macOS 26 may shift an interior clip-view origin.
     CGFloat minimum = [clip constrainBoundsRect:lower].origin.y;
     CGFloat maximum = [clip constrainBoundsRect:upper].origin.y;
-    // Line scrolling and the scrollable test are measured on screen; the clip bounds are magnified.
+    // The scrollable test is measured on screen; the clip bounds are magnified.
     CGFloat magnification = scroll.magnification;
     if (!isfinite(magnification) || magnification <= 0) magnification = 1;
     if (!isfinite(minimum) || !isfinite(maximum) || (maximum - minimum) * magnification <= 0.5)
         return NO;
+    *minimumOut = minimum;
+    *maximumOut = maximum;
+    return YES;
+}
+
+// In paginated views, bare vertical arrows scroll within a zoomed page.
+- (BOOL)scrollVerticalArrowWithinPage:(NSEvent *)event
+{
+    if (self.displayMode != kPDFDisplaySinglePage && self.displayMode != kPDFDisplayTwoUp)
+        return NO;
+    if (event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagOption |
+                               NSEventModifierFlagControl | NSEventModifierFlagShift))
+        return NO;
+    NSString *characters = event.charactersIgnoringModifiers;
+    if (characters.length != 1) return NO;
+    unichar key = [characters characterAtIndex:0];
+    if (key != NSUpArrowFunctionKey && key != NSDownArrowFunctionKey) return NO;
+
+    CGFloat minimum, maximum;
+    if (![self paginatedScrollMinimum:&minimum maximum:&maximum])
+        return NO;
+    NSScrollView *scroll = self.documentView.enclosingScrollView;
+    NSClipView *clip = scroll.contentView;
+    NSRect bounds = clip.bounds;
+    // Line scrolling is measured on screen; the clip bounds are magnified.
+    CGFloat magnification = scroll.magnification;
+    if (!isfinite(magnification) || magnification <= 0) magnification = 1;
 
     CGFloat step = scroll.verticalLineScroll;
     if (!isfinite(step) || step <= 0) step = 10;
@@ -8444,6 +8464,67 @@ else
     return YES;
 }
 
+// Page Up and Page Down in single page and two pages display, as Preview does on macOS 15 and 26:
+// a page or spread that fits turns; a larger one scrolls by a screen, and from its end the next page
+// or spread is shown from its top, the previous one from its bottom. On macOS 27, PDFKit does
+// neither while the view has a top content inset, as under the toolbar of the Preview window.
+// Continuous display is left to PDFKit, which scrolls by a screen there.
+- (BOOL)pageKeyInPaginatedView:(NSEvent *)event
+{
+    if (self.displayMode != kPDFDisplaySinglePage && self.displayMode != kPDFDisplayTwoUp)
+        return NO;
+    if (event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagOption |
+                               NSEventModifierFlagControl | NSEventModifierFlagShift))
+        return NO;
+    NSString *characters = event.charactersIgnoringModifiers;
+    if (characters.length != 1) return NO;
+    unichar key = [characters characterAtIndex:0];
+    if (key != NSPageUpFunctionKey && key != NSPageDownFunctionKey) return NO;
+    if (!self.document.pageCount) return NO;
+    BOOL down = key == NSPageDownFunctionKey;
+
+    NSScrollView *scroll = self.documentView.enclosingScrollView;
+    NSClipView *clip = scroll.contentView;
+    CGFloat magnification = scroll.magnification;
+    if (!isfinite(magnification) || magnification <= 0) magnification = 1;
+    CGFloat minimum, maximum;
+    if ([self paginatedScrollMinimum:&minimum maximum:&maximum]) {
+        // The end of the page in the direction of the key: the bottom for Page Down.
+        BOOL towardMaximum = down == clip.isFlipped;
+        CGFloat end = towardMaximum ? maximum : minimum;
+        NSPoint origin = clip.bounds.origin;
+        if (fabs(end - origin.y) * magnification > 0.5) {
+            // A screen, less the part that stays in view, as AppKit pages a scroll view.
+            NSEdgeInsets insets = scroll.contentInsets;
+            CGFloat visible = NSHeight(clip.bounds) - (fabs(insets.top) + fabs(insets.bottom)) / magnification;
+            CGFloat overlap = scroll.verticalPageScroll / magnification;
+            CGFloat step = visible - overlap > 0 ? visible - overlap : visible;
+            origin.y = fmin(fmax(origin.y + (towardMaximum ? step : -step), minimum), maximum);
+            [clip scrollToPoint:origin];
+            [scroll reflectScrolledClipView:clip];
+            return YES;
+        }
+    }
+    // At the end of the page, or a page that fits: the next or previous page or spread. The first
+    // and last pages keep the key, as Preview does.
+    if (down ? ![self canGoToNextPage] : ![self canGoToPreviousPage])
+        return YES;
+    if (down)
+        [self goToNextPage:self];
+    else
+        [self goToPreviousPage:self];
+    [self layoutDocumentView];
+    if ([self paginatedScrollMinimum:&minimum maximum:&maximum]) {
+        // The next page from its top, the previous one from its bottom.
+        BOOL top = down;
+        NSPoint origin = clip.bounds.origin;
+        origin.y = top == clip.isFlipped ? minimum : maximum;
+        [clip scrollToPoint:origin];
+        [scroll reflectScrolledClipView:clip];
+    }
+    return YES;
+}
+
 - (void)keyDown:(NSEvent *)theEvent
 {
     NSString	*theKey;
@@ -8452,6 +8533,8 @@ else
     if ([self annotationKeyDown: theEvent])
         return;
     if ([self scrollVerticalArrowWithinPage:theEvent])
+        return;
+    if ([self pageKeyInPaginatedView:theEvent])
         return;
    
     
