@@ -6,10 +6,11 @@ and setupOutline run unchanged in an isolated harness with a real NSOutlineView,
 events are sent to the outline view: Return and Enter with an entry selected send the outline's action, from the
 outline view, with the entry chosen by the arrow keys or by typing; with no entry selected, with Command, Control or
 Option held, and for other keys the event goes on to NSOutlineView. NSOutlineView's own keyDown: is replaced by a
-recorder, so nothing beeps and no window is shown. The Base nib must still send the outline's action
-(takeDestinationFromOutline:) to the Preview window, which passes it to the part in use.
+recorder, so nothing beeps and no window is shown. In the nib of every language, the outline view itself must send
+its action (takeDestinationFromOutline:) to the Preview window, which passes it to the part in use.
 --mutation no-swap drops the class change from setupOutline, no-enter the Enter key, any-modifier the modifier
-check. The harness must then fail.
+check, nib-no-direct-action the outline's own action in the Base nib (the action of the cell inside it stays). The
+harness must then fail.
 """
 import argparse
 import os
@@ -21,7 +22,7 @@ from production_fragments import method, objc_class, verify_embedded
 from source_tree import include_args, source_file
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['no-swap', 'no-enter', 'any-modifier'])
+parser.add_argument('--mutation', choices=['no-swap', 'no-enter', 'any-modifier', 'nib-no-direct-action'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
@@ -41,18 +42,45 @@ if args.mutation == 'any-modifier':
     assert klass.count(old) == 1
     klass = klass.replace(old, 'if (')
 
-# The nib: the outline view in the drawer sends takeDestinationFromOutline: to the Preview window (TSPreviewWindow).
-nib = (root / 'Resources/Interfaces/Base.lproj/TSDocument.nib/designable.nib').read_text(encoding='utf-8')
-outline = re.search(r'<outlineView [^>]*id="763">.*?</outlineView>', nib, re.S).group(0)
-assert 'customClass' not in outline.split('>', 1)[0], 'the drawer outline has a class in the nib; check setupOutline'
-action = re.findall(r'<action selector="takeDestinationFromOutline:" target="(\d+)"', outline)
-assert action, 'the drawer outline no longer sends takeDestinationFromOutline:'
-for target in set(action):
-    assert re.search(r'<window [^>]*id="%s"[^>]*customClass="TSPreviewWindow"' % target, nib), 'action target is not the Preview window'
+# The nib: the outline view in the drawer itself (not a cell inside it) sends takeDestinationFromOutline: to the
+# Preview window (TSPreviewWindow). Return sends the outline view's own action, so its own connection is checked,
+# in the Base nib and in the nib of every language.
+import xml.etree.ElementTree as ElementTree
+def check_nibs():
+    nibs = sorted((root / 'Resources/Interfaces').glob('*.lproj/TSDocument.nib/designable.nib'))
+    assert len(nibs) >= 12, 'TSDocument nibs not found'
+    for nib in nibs:
+        tree = ElementTree.parse(nib)
+        if args.mutation == 'nib-no-direct-action' and nib.parent.parent.name == 'Base.lproj':
+            # The outline loses its own action and keeps the one of the cell inside it.
+            for outline_view in tree.iter('outlineView'):
+                for connections in outline_view.findall('connections'):
+                    for action in connections.findall('action'):
+                        connections.remove(action)
+        outline_views = [o for o in tree.iter('outlineView') if o.findall('tableColumns')]
+        assert len(outline_views) == 1, f'{nib}: the drawer outline is not the one outline view'
+        outline_view = outline_views[0]
+        assert 'customClass' not in outline_view.attrib, f'{nib}: the drawer outline has a class in the nib; check setupOutline'
+        actions = [a for c in outline_view.findall('connections') for a in c.findall('action')]
+        assert [a.get('selector') for a in actions] == ['takeDestinationFromOutline:'], \
+            f'{nib}: the drawer outline itself does not send takeDestinationFromOutline:'
+        windows = {w.get('id'): w for w in tree.iter('window')}
+        target = windows.get(actions[0].get('target'))
+        assert target is not None and target.get('customClass') == 'TSPreviewWindow', f'{nib}: action target is not the Preview window'
+    return nibs
+
+if args.mutation == 'nib-no-direct-action':
+    try:
+        check_nibs()
+    except AssertionError as error:
+        print(f'PASS: detected mutation nib-no-direct-action: {error}')
+        raise SystemExit(0)
+    raise SystemExit('mutation nib-no-direct-action was not detected')
+nibs = check_nibs()
 window = source_file(root, 'TSPreviewWindow.m').read_text(encoding='latin1')
 assert '[(MyPDFKitView *)self.activeView takeDestinationFromOutline: sender];' in method(window, '- (IBAction) takeDestinationFromOutline: (id) sender'), \
     'the Preview window does not pass the outline action to the part in use'
-print('PASS: the Base nib sends the drawer outline action to the Preview window, which passes it to the part in use')
+print(f'PASS: in all {len(nibs)} nibs the drawer outline itself sends its action to the Preview window, which passes it to the part in use')
 
 program = r'''
 #import <Cocoa/Cocoa.h>
