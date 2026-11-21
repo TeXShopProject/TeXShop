@@ -23,7 +23,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['split-ignored', 'no-hover', 'command-allowed',
                                            'menu-orientation-ignored', 'no-resign-reset', 'unturned',
                                            'split-shows-own-image', 'source-orientation-ignored', 'added-item-unturned',
-                                           'added-item-condition-negated', 'split-tool-tip-kept'])
+                                           'added-item-condition-negated', 'split-tool-tip-kept', 'added-source-unturned'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 toolbar = (root/'Sources/Windows/TSToolbarController.m').read_text()
@@ -94,6 +94,10 @@ if args.mutation == 'added-item-unturned':
     added = added.replace('dispatch_async(dispatch_get_main_queue(), ^{ TSSplitToggleItemsFollowSplit(); });', ';')
 elif args.mutation == 'added-item-condition-negated':
     added = added.replace('if ([[addedItem', 'if (!([[addedItem').replace('kSplitKKTID])\n', 'kSplitKKTID]))\n')
+elif args.mutation == 'added-source-unturned':
+    old = 'if ([[addedItem itemIdentifier] isEqual: kSplitID] || '
+    assert added.count(old) == 1
+    added = added.replace(old, 'if (')
 elif args.mutation == 'split-tool-tip-kept':
     old = '    if (windowIsSplit)\n        return preview ?'
     assert header.count(old) == 1
@@ -321,13 +325,23 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check([Pixels(again.image) isEqual:sideBySide] && [again.toolTip isEqual:TSSplitToggleToolTip(YES, YES)],
           @"A button put back into a window split side by side shows that split");
     preview = again; previewButton.target = doc;
+    // The same with the Split Source button of a source split side by side.
+    Check(doc.isSplit && doc.isSplitSideBySide, @"The source is split side by side");
+    [bar removeItemAtIndex:0]; [bar insertItemWithItemIdentifier:kSplitID atIndex:0];
+    NSToolbarItem *sourceAgain = bar.items[0];
+    Check([sourceAgain.itemIdentifier isEqual:kSplitID] && sourceAgain != source, @"The source button is put back");
+    for (int i = 0; i < 5; i++) CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.01, false);
+    Check([Pixels(sourceAgain.image) isEqual:sideBySide] && [sourceAgain.toolTip isEqual:TSSplitToggleToolTip(NO, YES)] &&
+          [sourceAgain.image.accessibilityDescription isEqual:sourceAgain.toolTip],
+          @"A Split Source button put back into a source split side by side shows that split");
+    source = sourceAgain;
     doc.isSplitSideBySide = NO; doc.pdfKitWindow.pdfKitSplitView.vertical = NO; TSSplitToggleItemsFollowSplit();
-    Check(source.image == sourceImage && [Pixels(preview.image) isEqual:Pixels(previewImage)], @"Split again top and bottom");
+    Check([Pixels(source.image) isEqual:Pixels(sourceImage)] && [Pixels(preview.image) isEqual:Pixels(previewImage)], @"Split again top and bottom");
     doc.isSplit = NO; doc.pdfKitWindow.windowIsSplit = NO; TSSplitToggleItemsFollowSplit();
-    Check(source.image == sourceImage && [Pixels(preview.image) isEqual:Pixels(previewImage)], @"Unsplit");
+    Check([Pixels(source.image) isEqual:Pixels(sourceImage)] && [Pixels(preview.image) isEqual:Pixels(previewImage)], @"Unsplit");
     Check([preview.toolTip isEqual:TSSplitToggleToolTip(YES, NO)] && [source.toolTip isEqual:TSSplitToggleToolTip(NO, NO)] &&
           [preview.image.accessibilityDescription isEqual:preview.toolTip], @"Unsplit windows tell how to split");
-    previewImage = preview.image;
+    previewImage = preview.image; sourceImage = source.image;
 
     // After a click splits the window, the button shows what the next click does.
     w.pointer = onPreview; flags = O; TSSplitToggleOptionChanged(w, flags);
