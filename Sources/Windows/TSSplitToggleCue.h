@@ -2,7 +2,8 @@
 //
 // The Split Source and Split Preview toolbar buttons show a window split top and
 // bottom. While Option is held with the pointer over the button of a window that is
-// not split, the button shows the side-by-side split that a click then makes.
+// not split, the button shows the side-by-side split that a click then makes. In a
+// split window the button shows how the window is split.
 
 #import <Cocoa/Cocoa.h>
 
@@ -14,10 +15,13 @@ static inline BOOL TSSplitToggleOptionHeld(NSEventModifierFlags flags)
            (flags & (NSEventModifierFlagCommand | NSEventModifierFlagControl)) == 0;
 }
 
-// In a split window the button unsplits, whatever the modifiers.
-static inline BOOL TSSplitToggleShowsSideBySide(NSEventModifierFlags flags, BOOL windowIsSplit, BOOL pointerOverButton)
+// In a split window the button unsplits, whatever the modifiers, and shows the split
+// that is there.
+static inline BOOL TSSplitToggleShowsSideBySide(NSEventModifierFlags flags, BOOL windowIsSplit, BOOL splitSideBySide, BOOL pointerOverButton)
 {
-    return TSSplitToggleOptionHeld(flags) && !windowIsSplit && pointerOverButton;
+    if (windowIsSplit)
+        return splitSideBySide;
+    return TSSplitToggleOptionHeld(flags) && pointerOverButton;
 }
 
 // Two parts side by side: the button's own symbol, rectangle.split.1x2, divided the

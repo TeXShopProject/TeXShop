@@ -5,8 +5,9 @@ Compiles TSSplitToggleCue.h and the production split-button code of
 TSToolbarController.m with a stand-in document and toolbar, and the Preview's
 splitPdfKitWindow: with a stand-in window. Option held over the Split Source or
 Split Preview button of a window that is not split shows the side-by-side symbol;
-anything else (no Option, Command or Control with it, the pointer elsewhere, a split
-window, a window that is not key) keeps the button's own image. The Window menu has
+anything else (no Option, Command or Control with it, the pointer elsewhere, a window
+that is not key) keeps the button's own image. A split window shows how it is split,
+whatever the modifiers and the pointer, also on a button added to the toolbar later. The Window menu has
 an Option alternate for Split Window in every language, a customized shortcut of
 either command keeps its orientation in the Preview, and the button tool tips
 mention Option-click in every language. Nothing is shown on screen and no user
@@ -19,7 +20,8 @@ from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['split-ignored', 'no-hover', 'command-allowed',
-                                           'menu-orientation-ignored', 'no-resign-reset', 'unturned'])
+                                           'menu-orientation-ignored', 'no-resign-reset', 'unturned',
+                                           'split-shows-own-image', 'source-orientation-ignored', 'added-item-unturned'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 toolbar = (root/'Sources/Windows/TSToolbarController.m').read_text()
@@ -44,6 +46,9 @@ assert setup.count('TSInstallSplitToggleOptionMonitor();') == 1, 'Every document
 assert 'addLocalMonitorForEventsMatchingMask: NSEventMaskFlagsChanged' in cue
 assert splitter.index('[self mainSplitPdfKitWindow];') < splitter.index('TSSplitToggleItemsFollowSplit();'), 'Preview buttons follow a split'
 source_split = production_method(document, '- (void) splitWindow: sender')
+side_by_side = production_method(document, '- (BOOL) isSplitSideBySide')
+assert 'return windowIsSplit && [splitView isVertical];' in side_by_side, 'The source tells a side-by-side split'
+will_add = production_method(toolbar, '- (void) toolbarWillAddItem: (NSNotification *) notif')
 assert source_split.rstrip().endswith('TSSplitToggleItemsFollowSplit();\n}'), 'Source buttons follow a split'
 for ident, action in (('kSplitID', 'splitWindow:'), ('kSplitKKTID', 'splitPreviewWindow:')):
     branch = toolbar[toolbar.index('if ([itemIdent isEqual: %s])' % ident):]
@@ -76,10 +81,29 @@ for language, word in option_words.items():
     for key in ('tiToolTipSplit', 'tiToolTipSplitKIT'):
         assert word in table[key], 'Option-click in %s %s: %s' % (language, key, table[key])
 
+added = 'dispatch_async(dispatch_get_main_queue(), ^{ TSSplitToggleItemsFollowSplit(); });'
+if args.mutation == 'added-item-unturned':
+    will_add = will_add.replace(added, ';')
+if not (will_add.count(added) == 1 and ('[[addedItem itemIdentifier] isEqual: kSplitID] || '
+                                        '[[addedItem itemIdentifier] isEqual: kSplitKKTID]') in will_add):
+    if args.mutation == 'added-item-unturned':
+        print('PASS: detected mutation added-item-unturned: a split button added to the toolbar does not follow the split')
+        sys.exit(0)
+    sys.exit('FAIL: a split button added to the toolbar follows the split')
+assert args.mutation != 'added-item-unturned', 'mutation not detected: added-item-unturned'
+
 if args.mutation == 'split-ignored':
-    old = 'return TSSplitToggleOptionHeld(flags) && !windowIsSplit && pointerOverButton;'
+    old = '    if (windowIsSplit)\n        return splitSideBySide;\n'
     assert header.count(old) == 1
-    header = header.replace(old, 'return TSSplitToggleOptionHeld(flags) && pointerOverButton;')
+    header = header.replace(old, '')
+elif args.mutation == 'split-shows-own-image':
+    old = '        return splitSideBySide;'
+    assert header.count(old) == 1
+    header = header.replace(old, '        return NO;')
+elif args.mutation == 'source-orientation-ignored':
+    old = ': document.isSplitSideBySide;'
+    assert cue.count(old) == 1
+    cue = cue.replace(old, ': NO;')
 elif args.mutation == 'command-allowed':
     old = '(flags & (NSEventModifierFlagCommand | NSEventModifierFlagControl)) == 0'
     assert header.count(old) == 1
@@ -124,7 +148,7 @@ SPLITTER
 
 @interface TSDocument : NSObject <NSToolbarDelegate>
 @property (strong) PreviewWindow *pdfKitWindow;
-@property BOOL isSplit;
+@property BOOL isSplit, isSplitSideBySide;
 @end
 @implementation TSDocument
 - (void)splitWindow:(id)sender {}
@@ -173,11 +197,13 @@ int main(int argc, char **argv) { @autoreleasepool {
         C = NSEventModifierFlagCommand, K = NSEventModifierFlagControl;
 
     // When the button shows the side-by-side split.
-    Check(TSSplitToggleShowsSideBySide(O, NO, YES) && TSSplitToggleShowsSideBySide(O | S, NO, YES), @"Option, with or without Shift");
-    Check(!TSSplitToggleShowsSideBySide(0, NO, YES) && !TSSplitToggleShowsSideBySide(S, NO, YES), @"Not without Option");
-    Check(!TSSplitToggleShowsSideBySide(O | C, NO, YES) && !TSSplitToggleShowsSideBySide(O | K, NO, YES), @"Not with Command or Control");
-    Check(!TSSplitToggleShowsSideBySide(O, YES, YES), @"Not in a split window");
-    Check(!TSSplitToggleShowsSideBySide(O, NO, NO), @"Not with the pointer elsewhere");
+    Check(TSSplitToggleShowsSideBySide(O, NO, NO, YES) && TSSplitToggleShowsSideBySide(O | S, NO, NO, YES), @"Option, with or without Shift");
+    Check(!TSSplitToggleShowsSideBySide(0, NO, NO, YES) && !TSSplitToggleShowsSideBySide(S, NO, NO, YES), @"Not without Option");
+    Check(!TSSplitToggleShowsSideBySide(O | C, NO, NO, YES) && !TSSplitToggleShowsSideBySide(O | K, NO, NO, YES), @"Not with Command or Control");
+    Check(!TSSplitToggleShowsSideBySide(O, YES, NO, YES) && !TSSplitToggleShowsSideBySide(0, YES, NO, NO), @"Not in a window split top and bottom");
+    Check(TSSplitToggleShowsSideBySide(0, YES, YES, NO) && TSSplitToggleShowsSideBySide(O, YES, YES, YES) &&
+          TSSplitToggleShowsSideBySide(O | C, YES, YES, NO), @"In a window split side by side, whatever the modifiers and the pointer");
+    Check(!TSSplitToggleShowsSideBySide(O, NO, NO, NO), @"Not with the pointer elsewhere");
 
     // A window with both split buttons. AppKit draws each toolbar item with a button
     // that carries the item's target and action; stand-in buttons take that place.
@@ -243,6 +269,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check(preview.image == previewImage && source.image == sourceImage && CueAreas(frameView) == 0, @"Option released");
 
     // In a split window the button unsplits: only the other window part's button turns.
+    doc.pdfKitWindow.pdfKitSplitView = [NSSplitView new];
     doc.pdfKitWindow.windowIsSplit = YES; flags = O; TSSplitToggleOptionChanged(w, flags);
     Check(preview.image == previewImage, @"Split preview keeps its image");
     w.pointer = onSource;
@@ -252,6 +279,26 @@ int main(int argc, char **argv) { @autoreleasepool {
     doc.isSplit = YES; [area.owner mouseMoved:moved];
     Check(source.image == sourceImage, @"Split source keeps its image");
     doc.isSplit = NO; doc.pdfKitWindow.windowIsSplit = NO; flags = 0; TSSplitToggleOptionChanged(w, flags);
+
+    // A window split side by side shows that split, with or without Option, wherever
+    // the pointer is, and after the window resigns key.
+    doc.pdfKitWindow.pdfKitSplitView.vertical = YES; doc.pdfKitWindow.windowIsSplit = YES;
+    w.pointer = elsewhere; TSSplitToggleItemsFollowSplit();
+    Check([Pixels(preview.image) isEqual:sideBySide] && source.image == sourceImage, @"Preview split side by side");
+    flags = O; TSSplitToggleOptionChanged(w, flags); w.pointer = onPreview;
+    for (NSTrackingArea *a in frameView.trackingAreas) if ([a.owner isKindOfClass:[TSSplitToggleCue class]]) area = a;
+    [area.owner mouseMoved:moved];
+    Check([Pixels(preview.image) isEqual:sideBySide], @"Option over the button of a window split side by side");
+    [area.owner mouseExited:moved]; flags = 0; TSSplitToggleOptionChanged(w, flags);
+    Check([Pixels(preview.image) isEqual:sideBySide], @"Option released over a window split side by side");
+    w.key = NO; [[NSNotificationCenter defaultCenter] postNotificationName:NSWindowDidResignKeyNotification object:w]; w.key = YES;
+    Check([Pixels(preview.image) isEqual:sideBySide], @"A window split side by side that resigns key");
+    doc.isSplit = YES; doc.isSplitSideBySide = YES; TSSplitToggleItemsFollowSplit();
+    Check([Pixels(source.image) isEqual:sideBySide], @"Source split side by side");
+    doc.isSplitSideBySide = NO; doc.pdfKitWindow.pdfKitSplitView.vertical = NO; TSSplitToggleItemsFollowSplit();
+    Check(source.image == sourceImage && preview.image == previewImage, @"Split again top and bottom");
+    doc.isSplit = NO; doc.pdfKitWindow.windowIsSplit = NO; TSSplitToggleItemsFollowSplit();
+    Check(source.image == sourceImage && preview.image == previewImage, @"Unsplit");
 
     // After a click splits the window, the button shows what the next click does.
     w.pointer = onPreview; flags = O; TSSplitToggleOptionChanged(w, flags);
