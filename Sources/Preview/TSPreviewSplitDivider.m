@@ -236,6 +236,7 @@ static void TSSplitViewSizeParts(NSSplitView *splitView, NSSize oldSize)
         }
     }
     anchor.origin = clip.bounds.origin;
+    TSPreviewPlaceSetByProgram(view);
 }
 
 // Gets each part ready to keep its top through a resize.

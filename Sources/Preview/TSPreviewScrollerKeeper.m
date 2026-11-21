@@ -95,6 +95,32 @@ static void TSMoveTextUp(NSScrollView *scroll, CGFloat distance)
     }
 }
 
+// The height of the band under the toolbar and the title bar of a window whose content runs
+// under them (macOS 26 and later). The safe area of the content view of the window keeps it
+// while the window changes its size; the top inset of the scroll view and the frames of the
+// views can be seen in a state of the resize that AppKit is about to change again (measured
+// in macOS 15.6.1 and 26.6.2).
+static CGFloat TSToolbarBand(NSView *view)
+{
+    NSWindow *window = view.window;
+    if (!window || !(window.styleMask & NSWindowStyleMaskFullSizeContentView))
+        return 0;
+    return fmax(0, window.contentView.safeAreaInsets.top);
+}
+
+// How far below the top edge of the clip view the text can be read, in points: the part of
+// the band that lies over the view. Asked when the view has its new size.
+static CGFloat TSReadableBelow(NSScrollView *scroll, CGFloat band)
+{
+    NSClipView *clip = scroll.contentView;
+    NSView *content = clip.window.contentView;
+    if (band <= 0 || !content)
+        return 0;
+    NSRect frame = [content convertRect:clip.bounds fromView:clip];
+    CGFloat distance = content.isFlipped ? NSMinY(frame) - NSMinY(content.bounds) : NSMaxY(content.bounds) - NSMaxY(frame);
+    return fmin(fmax(0, band - distance), NSHeight(clip.frame));
+}
+
 @interface TSPreviewScrollerKeeper ()
 @property (weak) PDFView *view;
 // Held so that the observation can always be removed.
@@ -109,6 +135,13 @@ static void TSMoveTextUp(NSScrollView *scroll, CGFloat distance)
 @property (strong, nullable) PDFPage *keptPage;
 @property NSPoint keptPoint;
 @property CGFloat keptBelow;
+// How much of the band lay over the view after the last change of its size, and the height of
+// the band then.
+@property BOOL hasReadableBelow;
+@property CGFloat readableBelow;
+@property CGFloat readableBand;
+// The part of the band over the view is checked again once the views are laid out.
+@property BOOL checkScheduled;
 @property NSPoint keptOrigin;
 @property CGFloat keptScale;
 @end
@@ -181,6 +214,44 @@ static void TSMoveTextUp(NSScrollView *scroll, CGFloat distance)
     TSMoveTextUp(scroll, TSTextBelowTop(view, scroll, (TSPreviewText){YES, page, self.point}));
 }
 
+
+// A split view sets the sizes and the places of its parts one after the other, and PDFKit
+// lays out its views after that, so while a part changes its size, the part of the band over
+// it may be read from a place that is about to change, and the place it was given may move
+// again. Once the views are laid out, in the same turn of the event loop, the text kept by
+// the last change is put at the top of the area where it can be read. Only a distance up to
+// the height of the band is made good: a larger move is a deliberate one of the program, as
+// to a page. The part of the band over the view is noted for the next change.
+- (void)checkReadableTopLater
+{
+    if (self.checkScheduled)
+        return;
+    self.checkScheduled = YES;
+    __weak TSPreviewScrollerKeeper *weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        TSPreviewScrollerKeeper *keeper = weakSelf;
+        keeper.checkScheduled = NO;
+        PDFView *view = keeper.view;
+        NSScrollView *scroll = view ? TSScroll(view) : nil;
+        if (scroll == nil)
+            return;
+        CGFloat band = TSToolbarBand(view);
+        CGFloat below = TSReadableBelow(scroll, band);
+        PDFPage *kept = keeper.keptPage;
+        if (band > 0 && kept.document == view.document) {
+            CGFloat distance = TSTextBelowTop(view, scroll, (TSPreviewText){YES, kept, keeper.keptPoint}) - below;
+            if (fabs(distance) >= 0.5 && fabs(distance) <= band) {
+                TSMoveTextUp(scroll, distance);
+                keeper.keptOrigin = scroll.contentView.bounds.origin;
+                keeper.keptScale = view.scaleFactor;
+            }
+            keeper.keptBelow = below;
+        }
+        keeper.hasReadableBelow = YES;
+        keeper.readableBelow = below;
+        keeper.readableBand = band;
+    });
+}
 @end
 
 void TSPreviewChangeScale(PDFView *view, void (NS_NOESCAPE ^change)(void))
@@ -203,49 +274,29 @@ void TSPreviewChangeScale(PDFView *view, void (NS_NOESCAPE ^change)(void))
     TSMoveTextUp(scroll, TSTextBelowTop(view, scroll, text) - below);
 }
 
-// The height of the band under the toolbar and the title bar of a window whose content runs
-// under them (macOS 26 and later). The safe area of the content view of the window keeps it
-// while the window changes its size; the top inset of the scroll view and the frames of the
-// views can be seen in a state of the resize that AppKit is about to change again (measured
-// in macOS 15.6.1 and 26.6.2).
-static CGFloat TSToolbarBand(NSView *view)
-{
-    NSWindow *window = view.window;
-    if (!window || !(window.styleMask & NSWindowStyleMaskFullSizeContentView))
-        return 0;
-    return fmax(0, window.contentView.safeAreaInsets.top);
-}
-
-// How far below the top edge of the clip view the text can be read, in points: the part of
-// the band that lies over the view. Asked when the view has its new size.
-static CGFloat TSReadableBelow(NSScrollView *scroll, CGFloat band)
-{
-    NSClipView *clip = scroll.contentView;
-    NSView *content = clip.window.contentView;
-    if (band <= 0 || !content)
-        return 0;
-    NSRect frame = [content convertRect:clip.bounds fromView:clip];
-    CGFloat distance = content.isFlipped ? NSMinY(frame) - NSMinY(content.bounds) : NSMaxY(content.bounds) - NSMaxY(frame);
-    return fmin(fmax(0, band - distance), NSHeight(clip.frame));
-}
-
 void TSPreviewChangeSize(PDFView *view, void (NS_NOESCAPE ^change)(void))
 {
     TSPreviewScrollerKeeper *keeper = [TSPreviewScrollerKeeper keeperForView:view];
     NSScrollView *scroll = TSScroll(view);
-    // How much of the band lies over the view is known once the view has its new size: all of
-    // it at the top of the window, none in the lower part of a split window, or a part of it
-    // when the upper part is lower than the band. The text is noted now every two points
-    // down to the bottom of the band.
+    // How much of the band lies over the view can be asked only once the view has its new
+    // size: all of it at the top of the window, none in the lower part of a split window, or a
+    // part of it when the upper part is lower than the band. While the band keeps its height,
+    // how much of it lay over the view before is what the last change of the size left; the
+    // text read there now goes to the top of the area where it can be read afterwards, also
+    // when the change moves the view under the band, as a resize at a corner of a split
+    // window does. Otherwise, the first time and after the toolbar was shown or hidden, the
+    // text at the top edge and the text just below the band are noted, and the one nearer to
+    // the top of the area where it can be read is kept. Once the views are laid out, the text
+    // kept is put at that top (checkReadableTopLater).
     CGFloat band = scroll ? TSToolbarBand(view) : 0;
-    enum { TSSampleCount = 64 };
-    CGFloat step = band > 0 ? fmax(2, band / (TSSampleCount - 1)) : 0;
-    NSInteger count = band > 0 ? MIN(TSSampleCount, (NSInteger)ceil(band / step) + 1) : 1;
-    TSPreviewText samples[TSSampleCount];
-    __strong PDFPage *samplePages[TSSampleCount];
-    CGFloat offsets[TSSampleCount];
+    BOOL knownBefore = scroll && keeper.hasReadableBelow && fabs(keeper.readableBand - band) < 0.5;
+    TSPreviewText before = knownBefore ? TSTextAt(view, scroll, keeper.readableBelow) : (TSPreviewText){0};
+    PDFPage *beforePage = before.page;
+    NSInteger count = band > 0 ? 2 : 1;
+    CGFloat offsets[2] = {0, band};
+    TSPreviewText samples[2];
+    __strong PDFPage *samplePages[2];
     for (NSInteger i = 0; i < count; i++) {
-        offsets[i] = i == count - 1 ? band : i * step;
         samples[i] = scroll ? TSTextAt(view, scroll, offsets[i]) : (TSPreviewText){0};
         samplePages[i] = samples[i].page;
     }
@@ -277,15 +328,21 @@ void TSPreviewChangeSize(PDFView *view, void (NS_NOESCAPE ^change)(void))
     CGFloat below = TSReadableBelow(scroll, band);
     TSPreviewText text = atEdge;
     text.page = edgePage;
-    // The text noted nearest to the top of the area where it can be read, kept at the same
-    // distance from the top edge: within a point of the top, the magnification does not move
-    // it further than a fraction of that.
+    // The text noted nearer to the top of the area where it can be read, kept at the same
+    // distance from the top edge.
     NSInteger nearest = 0;
     for (NSInteger i = 1; i < count; i++)
         if (fabs(offsets[i] - below) < fabs(offsets[nearest] - below))
             nearest = i;
     CGFloat target = 0;
-    if (keepAgain && fabs(offsets[nearest] - keptBelow) < 0.01) {
+    if (knownBefore && keepAgain) {
+        text = (TSPreviewText){YES, kept, keptPoint};
+        target = below;
+    } else if (knownBefore && before.valid && beforePage.document == view.document) {
+        text = before;
+        text.page = beforePage;
+        target = below;
+    } else if (keepAgain && fabs(offsets[nearest] - keptBelow) < 0.01) {
         text = (TSPreviewText){YES, kept, keptPoint};
         target = keptBelow;
     } else if (samples[nearest].valid && samplePages[nearest].document == view.document) {
@@ -297,8 +354,19 @@ void TSPreviewChangeSize(PDFView *view, void (NS_NOESCAPE ^change)(void))
     keeper.keptPage = text.page;
     keeper.keptPoint = text.point;
     keeper.keptBelow = target;
+    [keeper checkReadableTopLater];
     keeper.keptOrigin = scroll.contentView.bounds.origin;
     keeper.keptScale = view.scaleFactor;
+}
+
+void TSPreviewPlaceSetByProgram(PDFView *view)
+{
+    TSPreviewScrollerKeeper *keeper = [TSPreviewScrollerKeeper keeperForView:view];
+    NSScrollView *scroll = TSScroll(view);
+    if (scroll && keeper.keptPage != nil) {
+        keeper.keptOrigin = scroll.contentView.bounds.origin;
+        keeper.keptScale = view.scaleFactor;
+    }
 }
 
 BOOL TSPreviewSizeChangeKeptText(PDFView *view)

@@ -48,13 +48,13 @@ MUTATIONS = {
     # The text under the toolbar is kept instead of the text at the top of the readable area.
     'clip-top': ('TSPreviewScrollerKeeper.m', '    return fmax(0, window.contentView.safeAreaInsets.top);\n', '    return 0;\n'),
     # The text kept by the last change is kept again although the view was scrolled since.
-    # The text at the top edge or under the whole band is kept when a part of the band lies
-    # over the view.
-    'band-all-or-nothing': ('TSPreviewScrollerKeeper.m', '    CGFloat step = band > 0 ? fmax(2, band / (TSSampleCount - 1)) : 0;\n',
-                            '    CGFloat step = band > 0 ? band : 0;\n'),
     # The split divider puts the text at the top edge of each part back after a new magnification.
     'divider-restores-edge': ('TSPreviewSplitDivider.m', '        if (!anchor.quiet && view.scaleFactor != anchor.scale && TSPreviewSizeChangeKeptText(view)) {',
                               '        if (NO) {'),
+    # The text is chosen by the part of the band over the view after the change only.
+    'band-after-only': ('TSPreviewScrollerKeeper.m', '    BOOL knownBefore = scroll && keeper.hasReadableBelow &&', '    BOOL knownBefore = NO &&'),
+    # The text is not put at the top of the area where it can be read once the views are laid out.
+    'no-late-check': ('TSPreviewScrollerKeeper.m', '            if (fabs(distance) >= 0.5 && fabs(distance) <= band) {', '            if (NO) {'),
     'scroll-undone': ('TSPreviewScrollerKeeper.m', '\n        fabs(scroll.contentView.bounds.origin.y - keeper.keptOrigin.y) <= 0.5 * TSUnit(scroll.contentView) &&', ''),
     # The place is put back through PDFKit's constrainBoundsRect:.
     'pdfkit-constrain': ('TSPreviewScrollerKeeper.m', '    NSPoint target = TSPreviewConstrainedOrigin(clip, bounds);\n',
@@ -439,7 +439,8 @@ int main(int argc, char **argv) { @autoreleasepool {
 
         // A split into a top and a bottom part whose upper part is lower than the band under the
         // toolbar (macOS 26 and later): a part of the band lies over the lower part, and the text
-        // just below the band stays while the width changes the magnification.
+        // just below the band stays while the width changes the magnification, and while a
+        // resize at a corner changes the part of the band over it too, at once and both ways.
         if (!shifted) for (NSNumber *upper in @[@15, @40, @65]) {
             NSWindow *window = MakeWindow(900, 700);
             NSSplitView *split = [[NSSplitView alloc] initWithFrame:window.contentView.bounds];
@@ -453,12 +454,14 @@ int main(int argc, char **argv) { @autoreleasepool {
             [split setPosition:upper.doubleValue ofDividerAtIndex:0]; [window layoutIfNeeded]; RunLoop();
             ScrollIntoPage(b, 3, 200);
             Mark mb = MarkAt(b); CGFloat worst = 0; NSMutableString *steps = [NSMutableString string];
-            for (NSNumber *width in @[@800, @700, @550, @700, @900]) {
-                SetSize(window, width.doubleValue, 700);
+            for (NSArray *size in @[@[@800, @700], @[@700, @700], @[@550, @700], @[@700, @700], @[@900, @700],
+                                    @[@550, @550], @[@900, @700], @[@600, @620], @[@850, @560], @[@900, @700]]) {
+                SetSize(window, [size[0] doubleValue], [size[1] doubleValue]);
                 worst = fmax(worst, fabs(Below(b, mb)));
-                [steps appendFormat:@" %@: %.2f", width, Below(b, mb)];
+                [steps appendFormat:@" %@x%@: %.2f", size[0], size[1], Below(b, mb)];
             }
-            Check(worst <= 1.5, [NSString stringWithFormat:@"upper part %@pt: the lower part keeps the text below the band (%.2fpt;%@)",
+            // Up to a pixel of PDFKit's clip view per change, as above (1.64pt seen on macOS 26.6.2).
+            Check(worst <= 2.0, [NSString stringWithFormat:@"upper part %@pt: the lower part keeps the text below the band (%.2fpt;%@)",
                                  upper, worst, steps]);
             (void)divider;
         }

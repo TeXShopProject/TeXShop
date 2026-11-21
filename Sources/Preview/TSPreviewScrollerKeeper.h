@@ -48,6 +48,11 @@ void TSPreviewChangeSize(PDFView *view, void (NS_NOESCAPE ^change)(void));
 // area where it can be read, and the view has not been scrolled since.
 BOOL TSPreviewSizeChangeKeptText(PDFView *view);
 
+// Tells that the program, not the user, scrolled a preview view while its size changed, as the
+// split divider does to keep the top of each part: once the views are laid out, the text kept
+// by the last change of the size still goes to the top of the area where it can be read.
+void TSPreviewPlaceSetByProgram(PDFView *view);
+
 // The scroll position of a clip view for the bounds, as far as the document allows; only
 // the vertical position is limited. PDFKit's clip view answers a place one scroller
 // higher in the document when AppKit lays the scrollers over the content, as it does in a
