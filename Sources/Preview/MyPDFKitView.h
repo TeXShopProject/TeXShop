@@ -288,7 +288,6 @@
 - (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:(NSRect *)frame;
 - (BOOL)placePinnedLinkPreview:(TSLinkPreviewView *)preview windowFrame:(NSRect)frame;
 - (void)attachPinnedLinkPreview:(TSLinkPreviewView *)preview windowFrame:(NSRect)frame;
-- (BOOL)pinnedLinkPreviewIsSeen;
 // A copy of the pinned link popup of another part, at the same place on the same page in this
 // part, also when that place is out of view here (#66).
 - (void)showCopyOfPinnedLinkPreviewOfView:(MyPDFKitView *)other;

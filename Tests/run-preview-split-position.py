@@ -145,7 +145,6 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 - (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:(NSRect *)f { return nil; }
 - (void)attachPinnedLinkPreview:(TSLinkPreviewView *)p windowFrame:(NSRect)f {}
 - (BOOL)placePinnedLinkPreview:(TSLinkPreviewView *)p windowFrame:(NSRect)f { return NO; }
-- (BOOL)pinnedLinkPreviewIsSeen { return NO; }
 - (void)keepPinnedLinkPreviewInView {}
 // The copy itself is checked in run-pinned-link-preview.py.
 static NSUInteger popupCopies, popupKeeps;

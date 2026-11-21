@@ -976,9 +976,6 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     // The places are kept at the top edges below the toolbar, so the popups are moved by them too.
     NSPoint upperEdge = TSPreviewPaneWindowEdge(upperView), lowerEdge = TSPreviewPaneWindowEdge(lowerView);
     NSRect upperPopupFrame = NSZeroRect, lowerPopupFrame = NSZeroRect;
-    // A popup out of view, as the copy in the bottom part of a first split (#66), stays at its
-    // place on its page; one that can be seen is kept in view.
-    BOOL upperPopupSeen = [upperView pinnedLinkPreviewIsSeen], lowerPopupSeen = [lowerView pinnedLinkPreviewIsSeen];
     TSLinkPreviewView *upperPopup = [upperView detachPinnedLinkPreviewWithWindowFrame: &upperPopupFrame];
     TSLinkPreviewView *lowerPopup = [lowerView detachPinnedLinkPreviewWithWindowFrame: &lowerPopupFrame];
     NSResponder *responder = window.firstResponder;
@@ -1024,7 +1021,10 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     [upperView fitContentWidth];
     [lowerView fitContentWidth];
 
-    // A pinned popup keeps its place in its part, which is now at the other side.
+    // A pinned popup keeps its place in its part, which is now at the other side, measured from
+    // the top edge below the toolbar as the place is, so it stays at its place on its page. It is
+    // not brought into view, even when the part it comes to is smaller, so that switching again
+    // gives back the first arrangement (#66).
     NSPoint newUpperEdge = TSPreviewPaneWindowEdge(upperView), newLowerEdge = TSPreviewPaneWindowEdge(lowerView);
     if (lowerPopup)
         [upperView placePinnedLinkPreview:lowerPopup windowFrame:NSOffsetRect(lowerPopupFrame,
@@ -1043,10 +1043,6 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
         active = upperView;
     if (!(upperActive || lowerActive) || ![window makeFirstResponder:active])
         [active becomeActiveView];
-    if (lowerPopup && lowerPopupSeen)
-        [upperView keepPinnedLinkPreviewInView];
-    if (upperPopup && upperPopupSeen)
-        [lowerView keepPinnedLinkPreviewInView];
 }
 
 // Split Window with Link (#31). The part with the link stays where it is, and the other part
