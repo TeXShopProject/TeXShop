@@ -1049,8 +1049,8 @@ enum RootCommand
 - (BOOL)braceHighlightFits:(NSRange)range inTextView:(NSTextView *)aTextView;
 - (void)cursorMoved: (NSTextView *)aTextView;
 - (void)removeCurrentLineColor: (NSTextView *)aTextView;
-/// The options of the TeX scanner that decide the colors of the source (not those of spelling).
-- (TSMutableSyntaxTeXOptions *)syntaxColoringOptionsWithScheme:(TSSyntaxColorScheme *)scheme;
+/// The options of the TeX scanner of the source (Copy with Style scans with them too).
+- (TSMutableSyntaxTeXOptions *)sourceScannerOptionsWithScheme:(TSSyntaxColorScheme *)scheme;
 
 @end
 
@@ -1058,7 +1058,7 @@ enum RootCommand
 /// Copy with Style: the selection of a source of this document (the source, a part of a split window or the
 /// Experiment source) with the font and the colors of the theme of Light or Dark Mode, with or without its
 /// background. NO when nothing is selected.
-- (BOOL)copyStyledSelectionOfTextView:(NSTextView *)textView darkTheme:(BOOL)dark withBackground:(BOOL)withBackground;
+- (BOOL)copyStyledSelectionOfTextView:(NSTextView *)sourceView darkTheme:(BOOL)dark withBackground:(BOOL)withBackground;
 @end
 
 

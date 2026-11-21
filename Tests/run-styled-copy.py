@@ -21,10 +21,17 @@ from production_fragments import method, verify_embedded
 
 ROOT = Path(__file__).resolve().parents[1]
 STYLED = 'Sources/Editor/TSStyledCopy.m'
+HEADER = 'Sources/Editor/TSStyledCopy.h'
 SYNTAX = 'Sources/Editor/TSDocument-StyledCopy.m'
 MUTATIONS = {
-    # Only the selection is scanned: a command selected from its middle loses its color.
-    'selection-only-scanned': (STYLED, '[scanner lineAlignedRangeForEditedRange:range inString:string]', 'range'),
+    # Only the lines of the selection are scanned: the middle line of a footnote loses its color.
+    'selected-lines-scanned': (STYLED, '[scanner lineAlignedRangeForEditedRange:NSMakeRange(0, length) inString:string]',
+                               '[scanner lineAlignedRangeForEditedRange:selected.firstObject.rangeValue inString:string]'),
+    # AppKit writes the HTML: sizes in CSS pixels, other colors, a background over the paragraph.
+    'appkit-html': (STYLED, '[TSStyledCopyHTML(styled) dataUsingEncoding:NSUTF8StringEncoding]',
+                    '[styled dataFromRange:whole documentAttributes:@{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType} error:NULL]'),
+    # A source behind a find field (or in a window that is not key) is copied from.
+    'any-responder': (HEADER, '    if (!window.isKeyWindow || window.firstResponder != view)\n        return NO;\n', ''),
     # The commands of Light Mode take the theme of Dark Mode.
     'themes-swapped': (SYNTAX, '(dark ? darkColors : liteColors)', '(dark ? liteColors : darkColors)'),
     # A translucent color is written as it is.
@@ -44,13 +51,13 @@ STUB_HEADER = '''#import <AppKit/AppKit.h>
 - (NSColor *)opaqueColorForKey:(NSString *)key fromDictionary:(NSDictionary *)theme isWindowDark:(BOOL)dark;
 @end
 '''
-SIGNATURE = '- (BOOL)copyStyledSelectionOfTextView:(NSTextView *)textView darkTheme:(BOOL)dark withBackground:(BOOL)withBackground'
+SIGNATURE = '- (BOOL)copyStyledSelectionOfTextView:(NSTextView *)sourceView darkTheme:(BOOL)dark withBackground:(BOOL)withBackground'
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
 args = parser.parse_args()
 
-text = {path: (ROOT / path).read_text(encoding='utf-8') for path in (STYLED, SYNTAX)}
+text = {path: (ROOT / path).read_text(encoding='utf-8') for path in (STYLED, SYNTAX, HEADER)}
 document_method = method(text[SYNTAX], SIGNATURE)
 if args.mutation:
     path, old, new = MUTATIONS[args.mutation]
@@ -61,6 +68,14 @@ if args.mutation:
 else:
     verify_embedded(document_method, [('document method', text[SYNTAX], document_method)])
 
+# The source and Copy with Style ask the same method for the options of the scanner, spelling settings included
+# (they change how a bracket is split): colorizeText: sets none of its own.
+syntax_source = (ROOT / 'Sources/Editor/TSDocument-Syntax.m').read_text(encoding='utf-8')
+colorize = method(syntax_source, '- (void)colorizeText:(NSTextView *)aTextView range:(NSRange)range')
+assert '[self sourceScannerOptionsWithScheme:self.syntaxColorScheme]' in colorize and 'options.' not in colorize, 'colorizeText: sets scanner options of its own'
+assert 'options.excludesParametersFromSpelling' in method(syntax_source, '- (TSMutableSyntaxTeXOptions *)sourceScannerOptionsWithScheme:(TSSyntaxColorScheme *)scheme')
+assert '[self sourceScannerOptionsWithScheme:scheme]' in text[SYNTAX]
+
 menus = sorted((ROOT / 'Resources/Interfaces').glob('*.lproj/MainMenu.nib/keyedobjects*.nib'))
 if len(menus) != 36:
     raise SystemExit('Expected 36 compiled menu variants')
@@ -70,6 +85,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-styled-copy-') as tmp:
     (tmp / 'TSColorSupport.h').write_text(STUB_HEADER, encoding='utf-8')
     (tmp / 'StyledCopyDocumentMethod.inc').write_text(document_method + '\n', encoding='utf-8')
     (tmp / 'TSStyledCopy.m').write_text(text[STYLED], encoding='utf-8')
+    (tmp / 'TSStyledCopy.h').write_text(text[HEADER], encoding='utf-8')
     exe = tmp / 'styled-copy'
     subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-I', str(tmp), *include_args(ROOT),
                     str(ROOT / 'Tests/StyledCopy.m'), str(tmp / 'TSStyledCopy.m'),

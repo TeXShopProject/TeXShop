@@ -60,6 +60,13 @@ static NSPasteboard *TestPasteboard;
 
 NSDictionary *liteColors, *darkColors;
 
+@interface KeyWindow : NSWindow
+@property BOOL key;
+@end
+@implementation KeyWindow
+- (BOOL)isKeyWindow { return self.key; }
+@end
+
 // A stand-in document with what the production method uses.
 @interface TSDocument : NSObject {
 @public
@@ -67,12 +74,15 @@ NSDictionary *liteColors, *darkColors;
 }
 @property BOOL syntaxColor;
 @property BOOL marksFullwidth;
+@property BOOL xml;
 @end
 @implementation TSDocument
-- (TSMutableSyntaxTeXOptions *)syntaxColoringOptionsWithScheme:(TSSyntaxColorScheme *)scheme
+- (TSMutableSyntaxTeXOptions *)sourceScannerOptionsWithScheme:(TSSyntaxColorScheme *)scheme
 {
     TSMutableSyntaxTeXOptions *options = [TSMutableSyntaxTeXOptions new];
     options.texCharacter = '\\';
+    options.colorsFootnote = YES;
+    options.isXML = self.xml;
     options.marksFullwidthSymbols = self.marksFullwidth && [scheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;
     return options;
 }
@@ -105,7 +115,7 @@ static NSColor *ThemeColor(NSDictionary *theme, NSString *key)
     return [[TSColorSupport sharedInstance] colorFromDictionary:theme andKey:key];
 }
 
-static NSColor *ColorAt(NSAttributedString *string, NSString *substring, NSAttributedStringKey key)
+static id ColorAt(NSAttributedString *string, NSString *substring, NSAttributedStringKey key)
 {
     NSRange range = [string.string rangeOfString:substring];
     if (range.location == NSNotFound)
@@ -199,7 +209,26 @@ static void CheckDocumentCommands(NSString *themes)
     [TestPasteboard setString:@"kept" forType:NSPasteboardTypeString];
     Require(@"empty selection is refused", ![document copyStyledSelectionOfTextView:view darkTheme:NO withBackground:NO]);
     Require(@"empty selection keeps the pasteboard", [[TestPasteboard stringForType:NSPasteboardTypeString] isEqualToString:@"kept"]);
-    Require(@"no selection: disabled", !TSStyledCopyHasSelection(@[[NSValue valueWithRange:NSMakeRange(3, 0)]]));
+    // The commands copy only from where typing goes: the first responder of the key window (a window that says it
+    // is key; none is shown). A source behind a find field, or in a window that is not key, is not copied from.
+    KeyWindow *window = [[KeyWindow alloc] initWithContentRect:NSMakeRect(0, 0, 400, 100) styleMask:NSWindowStyleMaskTitled
+                                                       backing:NSBackingStoreBuffered defer:YES];
+    NSTextView *field = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 50, 400, 20)];
+    [window.contentView addSubview:view];
+    [window.contentView addSubview:field];
+    view.selectedRange = NSMakeRange(0, 5);
+    window.key = YES;
+    [window makeFirstResponder:view];
+    Require(@"key window, first responder, selection: enabled", TSStyledCopyCanCopy(view));
+    view.selectedRange = NSMakeRange(3, 0);
+    Require(@"no selection: disabled", !TSStyledCopyCanCopy(view));
+    view.selectedRange = NSMakeRange(0, 5);
+    [window makeFirstResponder:field];
+    Require(@"a find field in front: disabled", !TSStyledCopyCanCopy(view));
+    [window makeFirstResponder:view];
+    window.key = NO;
+    Require(@"not the key window: disabled", !TSStyledCopyCanCopy(view));
+    [view removeFromSuperview];
     Require(@"other commands are not Copy with Style", !TSStyledCopyAction(@selector(copy:), NULL, NULL) && !TSStyledCopyAction(NULL, NULL, NULL));
 
     // Several selected ranges are joined by line feeds, each with its own colors.
@@ -212,6 +241,49 @@ static void CheckDocumentCommands(NSString *themes)
     Require(@"joined: command color", SameColor(ColorAt(joined, @"\\section", NSForegroundColorAttributeName), ThemeColor(darkColors, @"SyntaxCommand")));
     Require(@"joined: text color", SameColor(ColorAt(joined, @"last", NSForegroundColorAttributeName), ThemeColor(darkColors, @"EditorText")));
     Require(@"joined: line feed background", SameColor([joined attribute:NSBackgroundColorAttributeName atIndex:8 effectiveRange:NULL], ThemeColor(darkColors, @"EditorBackground")));
+
+    // A construct over several lines keeps its color when only a later line of it is selected: the whole text is
+    // scanned, not the selected lines.
+    NSColor *footnote = ThemeColor(darkColors, @"FootnoteColor") ?: ThemeColor(darkColors, @"SyntaxCommand");
+    NSTextView *note = SourceView(@"text \\footnote{first line\nsecond line\nthird} after", font);
+    note.selectedRange = [note.string rangeOfString:@"second"];
+    [TestPasteboard clearContents];
+    [document copyStyledSelectionOfTextView:note darkTheme:YES withBackground:NO];
+    Require(@"middle line of a footnote", SameColor(ColorAt(ReadRTF(TestPasteboard), @"second", NSForegroundColorAttributeName), footnote));
+    Require(@"footnote differs from text", !SameColor(footnote, ThemeColor(darkColors, @"EditorText")));
+    document.xml = YES;
+    NSTextView *comment = SourceView(@"<a>\n<!-- one\ntwo\nthree -->\n<b/>", font);
+    comment.selectedRanges = @[[NSValue valueWithRange:[comment.string rangeOfString:@"two"]], [NSValue valueWithRange:[comment.string rangeOfString:@"<b/>"]]];
+    [TestPasteboard clearContents];
+    [document copyStyledSelectionOfTextView:comment darkTheme:NO withBackground:NO];
+    Require(@"middle line of an XML comment", SameColor(ColorAt(ReadRTF(TestPasteboard), @"two", NSForegroundColorAttributeName), ThemeColor(liteColors, @"XMLComment")));
+    document.xml = NO;
+
+    // The HTML has the colors in sRGB, the size in points, the tab width of the source and the background behind
+    // the characters only, as WebKit reads it back.
+    NSMutableDictionary *gray = [darkColors mutableCopy];
+    gray[@"EditorBackground"] = @[@0.2, @0.2, @0.2, @1];
+    NSDictionary *savedDark = darkColors;
+    darkColors = gray;
+    view.selectedRange = selection;
+    [view.window makeFirstResponder:view];
+    [TestPasteboard clearContents];
+    [document copyStyledSelectionOfTextView:view darkTheme:YES withBackground:YES];
+    NSString *html = [[NSString alloc] initWithData:[TestPasteboard dataForType:NSPasteboardTypeHTML] encoding:NSUTF8StringEncoding];
+    Require(@"HTML size in points", [html containsString:@"font-size:15pt"]);
+    Require(@"HTML tab width", [html containsString:@"tab-size:37pt"]);
+    Require(@"HTML background #333333", [html containsString:@"background-color:#333333"] && ![html containsString:@"background-color:#262626"]);
+    Require(@"HTML background on spans only", ![[html substringToIndex:[html rangeOfString:@"<span"].location] containsString:@"background"]);
+    NSAttributedString *read = [[NSAttributedString alloc] initWithData:[html dataUsingEncoding:NSUTF8StringEncoding]
+        options:@{NSDocumentTypeDocumentOption: NSHTMLTextDocumentType, NSCharacterEncodingDocumentOption: @(NSUTF8StringEncoding)} documentAttributes:NULL error:NULL];
+    Require(@"HTML text", [read.string containsString:@"ection{Intro}"]);
+    Require(@"HTML command color", SameColor(ColorAt(read, @"ection", NSForegroundColorAttributeName), ThemeColor(darkColors, @"SyntaxCommand")));
+    Require(@"HTML background read back", SameColor(ColorAt(read, @"plain", NSBackgroundColorAttributeName), [NSColor colorWithSRGBRed:0.2 green:0.2 blue:0.2 alpha:1]));
+    // AppKit's HTML reader counts a CSS pixel as a point, so 15pt (20 CSS pixels) comes back as 20; AppKit's own HTML
+    // said 15px, which browsers and word processors show as 11.25pt.
+    Require(@"HTML font size read back", fabs(((NSFont *)ColorAt(read, @"plain", NSFontAttributeName)).pointSize - 20) < 0.01);
+    Require(@"HTML escapes", [TSStyledCopyHTML([[NSAttributedString alloc] initWithString:@"a<b&c"]) containsString:@"a&lt;b&amp;c"]);
+    darkColors = savedDark;
 
     // Fullwidth letters keep the theme's fullwidth colors in every command; a translucent background is blended
     // onto the paper: the theme's background, or white.

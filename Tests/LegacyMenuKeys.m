@@ -214,5 +214,28 @@ int main(int argc,char **argv){@autoreleasepool{
   Apply(main,@{@"File":@{@"Open…":@[@"",@NO,@NO]}});Check(open.keyEquivalent.length==0,@"a saved empty key still removes the shortcut");
   puts("PASS: saved Tab, Escape, control characters and Delete are not applied; ordinary keys, function keys and removal still are");
  }
+ // Positions in the Edit menu were saved for the menu of 5.58: the items 6.00 added there (Copy with Style, Swap with
+ // Clipboard, Character Type Conversion, Unicode Normalization, Marks) are skipped, in every language, so that each
+ // position still reaches the command it named. argv[2] holds, per language, the compiled menu of now and the actions
+ // of the 5.58 Edit menu (the first action of a submenu), position by position.
+ if(argc>2){
+  NSDictionary *edits=[NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfFile:@(argv[2])] options:0 error:nil];
+  for(NSString *language in edits){
+   NSNib *nib=[[NSNib alloc]initWithNibData:[NSData dataWithContentsOfFile:edits[language][@"nib"]] bundle:nil];NSArray *objects=nil;
+   Check([nib instantiateWithOwner:NSApp topLevelObjects:&objects],language);
+   NSMenu *main=nil;for(id o in objects)if([o isKindOfClass:NSMenu.class]&&[o numberOfItems]>5)main=o;
+   NSMenu *edit=nil;for(NSMenuItem *top in main.itemArray)for(NSMenuItem *i in top.submenu.itemArray)if(i.action==@selector(undo:))edit=top.submenu;
+   NSArray *old=edits[language][@"actions"];
+   for(NSUInteger i=0;i<old.count;i++){
+    if([old[i] length]==0)continue;
+    NSMenuItem *item=TSLegacyMenuItem(edit,[NSString stringWithFormat:@"%lu",(unsigned long)i+1]);
+    // A submenu counts by its items, which may have gained some (Change Encoding joined Transformations).
+    NSString *action=NSStringFromSelector(item.action);
+    for(NSMenuItem *child in item.submenu.itemArray)if([NSStringFromSelector(child.action) isEqual:old[i]])action=old[i];
+    Check([action isEqual:old[i]],[NSString stringWithFormat:@"%@: Edit position %lu reaches %@, not %@",language,(unsigned long)i+1,action,old[i]]);
+   }
+  }
+  printf("PASS: Edit menu positions of 5.58 reach the same commands in %lu languages\n",(unsigned long)edits.count);
+ }
  puts("PASS: Show Status Bar skipped in positions; Find and Replace… skipped in positions of the menus that lacked it; 12 legacy title fixtures; CJK-Latin spacing; 18 former titles with a stray space; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File; former typesetting method titles in 12 languages; Command Completion submenu entries in 12 languages reach Add to Command Completion List");
 }return 0;}

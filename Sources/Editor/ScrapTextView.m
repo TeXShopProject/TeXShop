@@ -1139,7 +1139,8 @@
 - (void)copyWithStyleForAction:(SEL)action
 {
 	BOOL dark = NO, withBackground = NO;
-	if (!TSStyledCopyAction(action, &dark, &withBackground) || ![self.document copyStyledSelectionOfTextView:self darkTheme:dark withBackground:withBackground])
+	if (!TSStyledCopyAction(action, &dark, &withBackground) || !TSStyledCopyCanCopy(self) ||
+		![self.document copyStyledSelectionOfTextView:self darkTheme:dark withBackground:withBackground])
 		NSBeep();
 }
 

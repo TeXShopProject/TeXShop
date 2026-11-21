@@ -10,7 +10,7 @@
 
 @implementation TSDocument (StyledCopy)
 
-- (BOOL)copyStyledSelectionOfTextView:(NSTextView *)textView darkTheme:(BOOL)dark withBackground:(BOOL)withBackground
+- (BOOL)copyStyledSelectionOfTextView:(NSTextView *)sourceView darkTheme:(BOOL)dark withBackground:(BOOL)withBackground
 {
     NSDictionary *theme = (dark ? darkColors : liteColors) ?: @{};
     TSColorSupport *support = [TSColorSupport sharedInstance];
@@ -18,13 +18,16 @@
     NSColor *backgroundColor = withBackground ? [support opaqueColorForKey:@"EditorBackground" fromDictionary:theme isWindowDark:dark] : nil;
     // The syntax colors of the source, as it would show them in that mode: none when coloring is off.
     TSSyntaxColorScheme *scheme = nil;
-    TSSyntaxTeXScanner *scanner = nil;
+    TSSyntaxTeXScanner *texScanner = nil;
     if (fileIsTex && self.syntaxColor) {
         scheme = [[TSSyntaxColorScheme alloc] initWithTheme:theme dark:dark];
-        scanner = [[TSSyntaxTeXScanner alloc] initWithOptions:[self syntaxColoringOptionsWithScheme:scheme]];
+        texScanner = [[TSSyntaxTeXScanner alloc] initWithOptions:[self sourceScannerOptionsWithScheme:scheme]];
     }
     NSAppearance *appearance = [NSAppearance appearanceNamed:dark ? NSAppearanceNameDarkAqua : NSAppearanceNameAqua];
-    NSAttributedString *styled = TSStyledCopyString(textView.textStorage, textView.selectedRanges, scanner, scheme,
+    NSTextStorage *storage = sourceView.textStorage;
+    if (!storage)
+        return NO;
+    NSAttributedString *styled = TSStyledCopyString(storage, sourceView.selectedRanges, texScanner, scheme,
                                                     textColor, backgroundColor, appearance);
     if (!styled)
         return NO;

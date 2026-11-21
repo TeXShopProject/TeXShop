@@ -2982,7 +2982,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 	if ([self validateEditTextCommand:anItem enabled:&enabled])
 		return enabled;
 	if (TSStyledCopyAction([anItem action], NULL, NULL))
-		return self.document != nil && TSStyledCopyHasSelection([self selectedRanges]);
+		return self.document != nil && TSStyledCopyCanCopy(self);
 	TSAdvancedFindController *advancedFind = [self advancedFindController];
 	if (advancedFind && ([anItem action] == @selector(performFindPanelAction:) || [anItem action] == @selector(performTextFinderAction:)))
 		return [advancedFind validateFindMenuItem:anItem inTextView:self];
@@ -2996,7 +2996,8 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 - (void)copyWithStyleForAction:(SEL)action
 {
 	BOOL dark = NO, withBackground = NO;
-	if (!TSStyledCopyAction(action, &dark, &withBackground) || ![self.document copyStyledSelectionOfTextView:self darkTheme:dark withBackground:withBackground])
+	if (!TSStyledCopyAction(action, &dark, &withBackground) || !TSStyledCopyCanCopy(self) ||
+		![self.document copyStyledSelectionOfTextView:self darkTheme:dark withBackground:withBackground])
 		NSBeep();
 }
 

@@ -48,7 +48,7 @@ assert 'const BOOL fullwidth = options.marksFullwidthSymbols;' in scanner
 assert ('options.marksFullwidthSymbols = [SUD boolForKey:HighlightFullwidthSymbolsKey] &&\n'
         '        [scheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;') in syntax
 # The source asks with its own scheme (Copy with Style asks with the scheme of the theme it copies).
-assert '[self syntaxColoringOptionsWithScheme:self.syntaxColorScheme];' in syntax
+assert '[self sourceScannerOptionsWithScheme:self.syntaxColorScheme];' in syntax
 if mutation == 'fallback-color':
     old = 'if (color)\n        attributes[NSForegroundColorAttributeName] = color;'
     assert scheme.count(old) == 1

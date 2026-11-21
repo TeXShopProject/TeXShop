@@ -33,8 +33,9 @@ static inline BOOL TSStyledCopyAction(SEL _Nullable action, BOOL *_Nullable dark
     };
     if (!action)
         return NO;
+    SEL given = (SEL _Nonnull)action;
     for (size_t i = 0; i < sizeof(commands) / sizeof(commands[0]); i++)
-        if (sel_isEqual(action, sel_registerName(commands[i].name))) {
+        if (sel_isEqual(given, sel_registerName(commands[i].name))) {
             if (dark)
                 *dark = commands[i].dark;
             if (withBackground)
@@ -44,14 +45,22 @@ static inline BOOL TSStyledCopyAction(SEL _Nullable action, BOOL *_Nullable dark
     return NO;
 }
 
-/// Whether the commands can copy: some text is selected.
-static inline BOOL TSStyledCopyHasSelection(NSArray<NSValue *> *ranges)
+/// Whether the commands can copy from view: it is where typing goes (the first responder of the key window), and
+/// some text is selected. A source behind a find field or another panel is not copied from.
+static inline BOOL TSStyledCopyCanCopy(NSTextView *view)
 {
-    for (NSValue *range in ranges)
+    NSWindow *window = view.window;
+    if (!window.isKeyWindow || window.firstResponder != view)
+        return NO;
+    for (NSValue *range in view.selectedRanges)
         if (range.rangeValue.length > 0)
             return YES;
     return NO;
 }
+
+/// The string as an HTML document: spans with sRGB colors, the font in points and the background behind the
+/// characters only, in a <pre> with the tab width of the source.
+NSString *TSStyledCopyHTML(NSAttributedString *styled);
 
 /// Puts the string on the pasteboard as RTF, HTML and plain text. NO when it could not be written.
 BOOL TSStyledCopyWriteToPasteboard(NSAttributedString *styled, NSPasteboard *pasteboard);

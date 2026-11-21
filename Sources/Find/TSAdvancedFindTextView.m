@@ -169,9 +169,9 @@ static NSTextView *_Nullable TSFocusedTarget(NSWindow *_Nullable window)
 
 - (BOOL)validateMenuItem:(NSMenuItem *)item
 {
-    // Copy with Style, for the subclasses that have it (the Experiment source): only with text selected.
+    // Copy with Style, for the subclasses that have it (the Experiment source): only where typing goes, with text selected.
     if (TSStyledCopyAction(item.action, NULL, NULL))
-        return TSStyledCopyHasSelection(self.selectedRanges);
+        return TSStyledCopyCanCopy(self);
     TSAdvancedFindController *controller = self.findController;
     if (controller && (item.action == @selector(performFindPanelAction:) || item.action == @selector(performTextFinderAction:)))
         return [controller validateFindMenuItem:item inTextView:self];
