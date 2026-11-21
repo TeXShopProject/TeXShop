@@ -1313,7 +1313,7 @@
                                     <action selector="performZoom:" target="-1" id="143"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Pantalla completa" id="662" identifier="TSShortcut.fullscreen:.0">
+                            <menuItem title="Pantalla completa (método antiguo)" id="662" identifier="TSShortcut.fullscreen:.0">
                                 <connections>
                                     <action selector="fullscreen:" target="-1" id="663"/>
                                 </connections>

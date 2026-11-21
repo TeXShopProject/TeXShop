@@ -1311,7 +1311,7 @@
                                     <action selector="performZoom:" target="-1" id="143"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="フルスクリーン表示" id="677" identifier="TSShortcut.fullscreen:.0">
+                            <menuItem title="フルスクリーン（旧方式）" id="677" identifier="TSShortcut.fullscreen:.0">
                                 <connections>
                                     <action selector="fullscreen:" target="-1" id="678"/>
                                 </connections>
