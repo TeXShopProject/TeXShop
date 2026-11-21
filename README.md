@@ -1,6 +1,6 @@
 # TeXShop
 
-TeXShop is a free, open-source TeX and LaTeX editor and PDF previewer for macOS, created by Richard Koch and developed with contributions from many people.
+TeXShop is a free, open-source TeX and LaTeX editor and PDF previewer for macOS, created by Richard Koch and now developed by Yusuke Terada, with contributions from many people.
 
 At Richard's invitation, Yusuke Terada now develops and maintains TeXShop.
 
