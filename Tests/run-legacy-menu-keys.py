@@ -18,6 +18,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-legacy-menu-') as td:
  subprocess.run(['xcrun','clang','-fobjc-arc','-Wall','-Wextra','-Wno-unused-parameter','-Werror',*include_args(r),'-I',str(r/'Tests'),'-framework','Cocoa',str(test),'-o',str(p)],check=True)
  # The Edit menu of 5.58 (db040b9b), as the actions at its positions, beside the compiled menu of now.
  import json,xml.etree.ElementTree as ET0
+ # The title of Fullscreen (Old Method) in each language of 6.00 beta 8 (tag v.6.00-beta.8).
+ BETA8_FULLSCREEN={'Base':'Fullscreen (Old Method)','de':'Vollbild','es':'Pantalla completa','fr':'Plein écran','it':'Schermo Intero','ja':'フルスクリーン表示',
+  'ko':'전체 화면 (옛날방식)','nl':'Fullscreen','pt-PT':'Fullscreen','pt':'Tela cheia','ro':'Fullscreen','zh_CN':'全屏幕'}
  edits={}
  for nib in sorted((r/'Resources/Interfaces').glob('*.lproj/MainMenu.nib/keyedobjects.nib')):
   language=nib.parent.parent.name[:-6]
@@ -39,10 +42,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-legacy-menu-') as td:
   # The name Fullscreen (Old Method) had in this language in 5.58, which a KeyEquivalents.plist may still use.
   former=[i.get('title') for i in root.iter('menuItem') if i.find("connections/action[@selector='fullscreen:']") is not None]
   assert len(former)==1,language;edits[language]['fullscreen']=former[0]
-  # Its name in 6.00 beta 8, the last version that had it.
-  beta8=ET0.fromstring(subprocess.check_output(['git','show',f'v.6.00-beta.8:Resources/Interfaces/{language}.lproj/MainMenu.nib/designable.nib'],cwd=r))
-  named=[i.get('title') for i in beta8.iter('menuItem') if i.find("connections/action[@selector='fullscreen:']") is not None]
-  assert len(named)==1,language;edits[language]['fullscreen600b8']=named[0]
+  # Its name in 6.00 beta 8, the last version that had it (written here: TetsuTeXShop has no tags of TeXShop).
+  edits[language]['fullscreen600b8']=BETA8_FULLSCREEN[language]
  assert len(edits)==12
  (Path(td)/'edits.json').write_text(json.dumps(edits))
  subprocess.run([str(p),str(r/'Tests/Fixtures/LegacyKeyBindingTitles.json'),str(Path(td)/'edits.json')],check=True)
