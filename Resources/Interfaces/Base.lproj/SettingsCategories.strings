@@ -240,6 +240,8 @@
 "catalog.preview.0.5.note" = "Also when a zoomed page is wider than the window, the left and right arrow keys turn the page instead of scrolling sideways.";
 "catalog.preview.0.6.title" = "Link Popups";
 "catalog.preview.0.6.note" = "Default for documents opened from now on. For an open document, switch it in the Preview menu.";
+"catalog.preview.0.7.title" = "Keep magnification and display format in full screen";
+"catalog.preview.0.7.note" = "A split window also stays split. When off, full screen unsplits the window and uses the magnification and display format last used in full screen.";
 "group.preview.1.title" = "Two-Page Arrangement";
 "catalog.preview.1.0.title" = "Page direction";
 "catalog.preview.1.1.title" = "Show first page alone as cover";

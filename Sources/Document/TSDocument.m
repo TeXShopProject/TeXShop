@@ -11709,8 +11709,11 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 
 - (void)enterFullScreen: (NSNotification *)notification
 {
-    
-    
+    // With Keep magnification and display format in full screen, the window
+    // keeps its split, and each part its magnification and display format (#63).
+    fullscreenKeptDisplay = [SUD boolForKey: KeepPreviewDisplayInFullScreenKey];
+    if (fullscreenKeptDisplay)
+        return;
     oldPageStyle = [self.myPDFKitView pageStyle];
     oldResizeOption = [self.myPDFKitView resizeOption];
     fullscreenPageStyle = [SUD integerForKey: fullscreenPageStyleKey];
@@ -11733,6 +11736,10 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 {
     NSInteger fullscreenPageStyleNew, fullscreenResizeOptionNew;
     
+    if (fullscreenKeptDisplay) {
+        fullscreenKeptDisplay = NO;
+        return;
+    }
     fullscreenPageStyleNew = [self.myPDFKitView pageStyle];
     fullscreenResizeOptionNew = [self.myPDFKitView resizeOption];
     if (fullscreenPageStyleNew != fullscreenPageStyle)

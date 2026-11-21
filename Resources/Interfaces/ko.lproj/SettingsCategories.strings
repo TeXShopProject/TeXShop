@@ -240,6 +240,8 @@
 "catalog.preview.0.5.note" = "확대한 페이지가 창보다 넓을 때도 왼쪽·오른쪽 화살표 키로 가로로 스크롤하지 않고 페이지를 넘깁니다.";
 "catalog.preview.0.6.title" = "링크 팝업";
 "catalog.preview.0.6.note" = "앞으로 여는 문서의 초기값입니다. 열려 있는 문서에서는 ‘보기’ 메뉴에서 바꿉니다.";
+"catalog.preview.0.7.title" = "전체 화면에서도 배율과 보기 형식 유지";
+"catalog.preview.0.7.note" = "나눈 창도 나눈 채로 둡니다. 끄면 전체 화면에서 창 나누기를 해제하고, 지난번 전체 화면에서 쓴 배율과 보기 형식을 사용합니다.";
 "group.preview.1.title" = "두 페이지 배열";
 "catalog.preview.1.0.title" = "페이지 방향";
 "catalog.preview.1.1.title" = "첫 페이지를 표지로 따로 표시";

@@ -13,6 +13,7 @@
 - (IBAction)linkPopupsChanged:(id)sender { [self.preferences linkPopupsChanged:sender]; }
 - (IBAction)scrollPageTurnChanged:(id)sender { [self.preferences scrollPageTurnChanged:sender]; }
 - (IBAction)arrowKeysPageChanged:(id)sender { [self.preferences arrowKeysPageChanged:sender]; }
+- (IBAction)fullScreenKeepsDisplayChanged:(id)sender { [self.preferences fullScreenKeepsDisplayChanged:sender]; }
 - (IBAction)mouseModeChanged:(id)sender { [self.preferences mouseModeChanged:sender]; }
 - (IBAction)pageStyleChanged:(id)sender { [self.preferences pageStyleChanged:sender]; }
 - (IBAction)pdfWindowPosChanged:(id)sender { [self.preferences pdfWindowPosChanged:sender]; }

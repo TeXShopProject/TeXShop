@@ -240,6 +240,8 @@
 "catalog.preview.0.5.note" = "También cuando una página ampliada es más ancha que la ventana, las teclas de flecha izquierda y derecha pasan de página en lugar de desplazar en horizontal.";
 "catalog.preview.0.6.title" = "Desplegar enlaces";
 "catalog.preview.0.6.note" = "Valor inicial para los documentos que se abran a partir de ahora. En un documento abierto, se cambia en el menú «PDF».";
+"catalog.preview.0.7.title" = "Mantener el aumento y el formato de páginas en pantalla completa";
+"catalog.preview.0.7.note" = "Una ventana dividida también sigue dividida. Si está desactivado, la pantalla completa deja de dividir la ventana y usa el aumento y el formato de páginas usados la última vez en pantalla completa.";
 "group.preview.1.title" = "Con páginas dobles";
 "catalog.preview.1.0.title" = "Dirección de las páginas";
 "catalog.preview.1.1.title" = "Mostrar la primera página sola como portada";

@@ -17,6 +17,7 @@
         <outlet property="linkPopupsButton" destination="preview-link-popups-button" id="preview-link-popups-outlet" />
         <outlet property="scrollPageTurnButton" destination="preview-scroll-page-turn-button" id="preview-scroll-page-turn-outlet" />
         <outlet property="arrowKeysPageButton" destination="preview-arrow-keys-page-button" id="preview-arrow-keys-page-outlet" />
+        <outlet property="fullScreenKeepsDisplayButton" destination="preview-full-screen-keeps-display-button" id="preview-full-screen-keeps-display-outlet" />
         <outlet property="magTextField" destination="113" id="114" />
         <outlet property="mouseModePopup" destination="345" id="371" />
         <outlet property="pageStylePopup" destination="340" id="372" />
@@ -312,6 +313,17 @@
                 </buttonCell>
                 <connections>
                   <action selector="arrowKeysPageChanged:" target="-2" id="preview-arrow-keys-page-action" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="preview-full-screen-keeps-display-button" identifier="settings.preview-full-screen-keeps-display-button">
+                <rect key="frame" x="19" y="9" width="215" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <buttonCell key="cell" type="check" title="Keep magnification and display format in full screen" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="preview-full-screen-keeps-display-cell">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="fullScreenKeepsDisplayChanged:" target="-2" id="preview-full-screen-keeps-display-action" />
                 </connections>
               </button>
             </subviews>

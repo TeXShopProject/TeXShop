@@ -1435,6 +1435,14 @@
        "src": [
         "preview-link-popups-button"
        ]
+      },
+      {
+       "kind": "switch",
+       "title": "フルスクリーンでも倍率とページレイアウトを保つ",
+       "note": "分割したウインドウも分割したままにします。オフのときは、フルスクリーンで分割を解き、前回フルスクリーンで使った倍率とページレイアウトにします。",
+       "src": [
+        "preview-full-screen-keeps-display-button"
+       ]
       }
      ]
     },

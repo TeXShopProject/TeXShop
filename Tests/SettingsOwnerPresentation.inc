@@ -133,8 +133,8 @@ static void CheckOwnerPresentation(TSSettingsWindowController *shell) {
     }
     // Save PostScript File, -dALLOWPSTRANSPARENCY and Save related files were removed; the arrow keys switch of
     // Preview, the Advanced Find panel switch and Highlight Fullwidth Letters and Symbols of Editor, and the
-    // mark switch of Keyboard were added.
-    Check(expected[0] == 52 && expected[1] == 15 && expected[2] == 2, @"Reference contains fifty-two switches and two exclusive spelling choices");
+    // mark switch of Keyboard, and Keep magnification and display format in full screen of Preview were added.
+    Check(expected[0] == 53 && expected[1] == 15 && expected[2] == 2, @"Reference contains fifty-three switches and two exclusive spelling choices");
     {
         // Updates: Updates to Include above Automatic Checks; the last check and Check for Updates below the cards.
         NSView *updates=[shell viewForCategoryIdentifier:@"updates"];

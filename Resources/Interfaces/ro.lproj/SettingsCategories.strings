@@ -240,6 +240,8 @@
 "catalog.preview.0.5.note" = "Și când o pagină mărită este mai lată decât fereastra, tastele săgeată stânga și dreapta schimbă pagina în loc să deruleze pe orizontală.";
 "catalog.preview.0.6.title" = "Ferestre pop-up";
 "catalog.preview.0.6.note" = "Valoarea inițială pentru documentele deschise de acum înainte. Într-un document deschis, se schimbă din meniul „Previzualizare”.";
+"catalog.preview.0.7.title" = "Păstrează mărirea și formatul de afișare pe ecran complet";
+"catalog.preview.0.7.note" = "O fereastră împărțită rămâne și ea împărțită. Când opțiunea este dezactivată, ecranul complet anulează împărțirea și folosește mărirea și formatul de afișare folosite ultima dată pe ecran complet.";
 "group.preview.1.title" = "Aranjarea paginilor duble";
 "catalog.preview.1.0.title" = "Direcția paginilor";
 "catalog.preview.1.1.title" = "Arată prima pagină separat, ca o copertă";

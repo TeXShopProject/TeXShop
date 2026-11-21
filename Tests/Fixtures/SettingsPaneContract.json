@@ -1991,6 +1991,13 @@
         "value": "arrowKeysPageChanged:"
       },
       {
+        "key": "preview-full-screen-keeps-display-button.action",
+        "view": "settings.preview-full-screen-keeps-display-button",
+        "kind": "view",
+        "property": "action",
+        "value": "fullScreenKeepsDisplayChanged:"
+      },
+      {
         "key": "506.action",
         "view": "settings.506",
         "kind": "view",
@@ -4587,6 +4594,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Always turn pages with the left and right arrow keys"
+        },
+        {
+          "key": "preview-full-screen-keeps-display-cell.title",
+          "view": "settings.preview-full-screen-keeps-display-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Keep magnification and display format in full screen"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -7347,6 +7361,13 @@
           "value": "Always turn pages with the left and right arrow keys"
         },
         {
+          "key": "preview-full-screen-keeps-display-cell.title",
+          "view": "settings.preview-full-screen-keeps-display-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Keep magnification and display format in full screen"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -10103,6 +10124,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Always turn pages with the left and right arrow keys"
+        },
+        {
+          "key": "preview-full-screen-keeps-display-cell.title",
+          "view": "settings.preview-full-screen-keeps-display-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Keep magnification and display format in full screen"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -12863,6 +12891,13 @@
           "value": "Always turn pages with the left and right arrow keys"
         },
         {
+          "key": "preview-full-screen-keeps-display-cell.title",
+          "view": "settings.preview-full-screen-keeps-display-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Keep magnification and display format in full screen"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -15619,6 +15654,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Always turn pages with the left and right arrow keys"
+        },
+        {
+          "key": "preview-full-screen-keeps-display-cell.title",
+          "view": "settings.preview-full-screen-keeps-display-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Keep magnification and display format in full screen"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -18379,6 +18421,13 @@
           "value": "Always turn pages with the left and right arrow keys"
         },
         {
+          "key": "preview-full-screen-keeps-display-cell.title",
+          "view": "settings.preview-full-screen-keeps-display-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Keep magnification and display format in full screen"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -21135,6 +21184,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Always turn pages with the left and right arrow keys"
+        },
+        {
+          "key": "preview-full-screen-keeps-display-cell.title",
+          "view": "settings.preview-full-screen-keeps-display-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Keep magnification and display format in full screen"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -23895,6 +23951,13 @@
           "value": "Always turn pages with the left and right arrow keys"
         },
         {
+          "key": "preview-full-screen-keeps-display-cell.title",
+          "view": "settings.preview-full-screen-keeps-display-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Keep magnification and display format in full screen"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -26651,6 +26714,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Always turn pages with the left and right arrow keys"
+        },
+        {
+          "key": "preview-full-screen-keeps-display-cell.title",
+          "view": "settings.preview-full-screen-keeps-display-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Keep magnification and display format in full screen"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -29411,6 +29481,13 @@
           "value": "Always turn pages with the left and right arrow keys"
         },
         {
+          "key": "preview-full-screen-keeps-display-cell.title",
+          "view": "settings.preview-full-screen-keeps-display-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Keep magnification and display format in full screen"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -32169,6 +32246,13 @@
           "value": "Always turn pages with the left and right arrow keys"
         },
         {
+          "key": "preview-full-screen-keeps-display-cell.title",
+          "view": "settings.preview-full-screen-keeps-display-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Keep magnification and display format in full screen"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -34925,6 +35009,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Always turn pages with the left and right arrow keys"
+        },
+        {
+          "key": "preview-full-screen-keeps-display-cell.title",
+          "view": "settings.preview-full-screen-keeps-display-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Keep magnification and display format in full screen"
         },
         {
           "key": "Sb3-3h-ll4.title",
