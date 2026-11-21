@@ -60,7 +60,10 @@ static void check(BOOL ok, NSString *message) {
  if(!ok) { fprintf(stderr,"FAIL: %s [%s]\n",message.UTF8String,context.UTF8String); exit(1); }
 }
 static void pump(void) { [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.01]]; }
-@interface PreviewView:PDFView { NSInteger pageStyle; }
+// Fit to Content Width (run-fit-content-width.py) is not used here.
+#define NEW_PDF_FIT_TO_CONTENT_WIDTH 6
+@interface PreviewView:PDFView { NSInteger pageStyle, resizeOption; }
+-(void)keepContentWidthPlaceDuring:(void (NS_NOESCAPE ^)(void))navigation;
 -(void)stepPageForward:(BOOL)forward sender:(id)sender;
 -(void)previousPage:(id)sender;
 -(void)nextPage:(id)sender;
@@ -69,6 +72,7 @@ static void pump(void) { [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWi
 -(BOOL)pageKeyInPaginatedView:(NSEvent *)event;
 @end
 @implementation PreviewView
+-(void)keepContentWidthPlaceDuring:(void (NS_NOESCAPE ^)(void))navigation { navigation(); }
 -(void)cleanupMarquee:(BOOL)b {}
 -(void)cleanupMarqueeKeepingPinnedLinkPreview {}
 -(void)keepPinnedLinkPreviewInView {} -(void)keepPinnedLinkPreviewThroughMove {}
