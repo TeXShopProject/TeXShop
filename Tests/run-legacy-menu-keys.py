@@ -16,7 +16,24 @@ with tempfile.TemporaryDirectory(prefix='texshop-legacy-menu-') as td:
  program=(r/'Tests/LegacyMenuKeys.m').read_text().replace('// APPLICATION_ENTRY',method)
  test=Path(td)/'test.m';test.write_text(program)
  subprocess.run(['xcrun','clang','-fobjc-arc','-Wall','-Wextra','-Wno-unused-parameter','-Werror',*include_args(r),'-I',str(r/'Tests'),'-framework','Cocoa',str(test),'-o',str(p)],check=True)
- subprocess.run([str(p),str(r/'Tests/Fixtures/LegacyKeyBindingTitles.json')],check=True)
+ # The Edit menu of 5.58 (db040b9b), as the actions at its positions, beside the compiled menu of now.
+ import json,xml.etree.ElementTree as ET0
+ edits={}
+ for nib in sorted((r/'Resources/Interfaces').glob('*.lproj/MainMenu.nib/keyedobjects.nib')):
+  language=nib.parent.parent.name[:-6]
+  xml=subprocess.check_output(['git','show',f'db040b9b:Resources/Interfaces/{language}.lproj/MainMenu.nib/designable.nib'],cwd=r)
+  root=ET0.fromstring(xml);actions=None
+  for menu in root.iter('menu'):
+   items=menu.find('items')
+   if items is not None and any(a.get('selector')=='undo:' for a in items.iter('action')) and menu.find("items/menuItem/connections/action[@selector='undo:']") is not None:
+    actions=[]
+    for item in items:
+     sub=item.find('menu/items/menuItem/connections/action');own=item.find('connections/action')
+     actions.append(sub.get('selector') if sub is not None else own.get('selector') if own is not None else '')
+  assert actions,language;edits[language]={'nib':str(nib),'actions':actions}
+ assert len(edits)==12
+ (Path(td)/'edits.json').write_text(json.dumps(edits))
+ subprocess.run([str(p),str(r/'Tests/Fixtures/LegacyKeyBindingTitles.json'),str(Path(td)/'edits.json')],check=True)
 # The compatibility for the Open Style File move assumes, in every language, that the item
 # follows Open in the File menu and that Show Help for Package is still in the Help menu.
 import xml.etree.ElementTree as ET

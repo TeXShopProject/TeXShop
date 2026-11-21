@@ -239,6 +239,37 @@
                                     <action selector="copy:" target="-1" id="31"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Mit Stil kopieren" id="kON-74-U4Y">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Mit Stil kopieren" id="D4M-KV-hEU">
+                                    <items>
+                                        <menuItem title="Hellmodus-Thema" id="FM6-TZ-RtR" identifier="TSShortcut.copyWithLightTheme:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithLightTheme:" target="-1" id="3Vt-dP-qFe"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Hellmodus-Thema mit Hintergrund" id="8Wc-tS-IOd" identifier="TSShortcut.copyWithLightThemeAndBackground:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithLightThemeAndBackground:" target="-1" id="Smd-NH-ncc"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Dunkelmodus-Thema" id="myZ-on-kP5" identifier="TSShortcut.copyWithDarkTheme:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithDarkTheme:" target="-1" id="GYI-Rk-t5s"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Dunkelmodus-Thema mit Hintergrund" id="rlS-Hf-WGX" identifier="TSShortcut.copyWithDarkThemeAndBackground:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithDarkThemeAndBackground:" target="-1" id="0h9-JK-N7E"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Einsetzen" keyEquivalent="v" id="8" identifier="TSShortcut.paste:.0">
                                 <connections>
                                     <action selector="paste:" target="-1" id="32"/>

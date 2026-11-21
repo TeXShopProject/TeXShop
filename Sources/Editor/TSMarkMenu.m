@@ -44,7 +44,7 @@ static NSMenuItem *TSItemWithAction(NSMenu *menu, SEL action)
         [markItem.menu removeItem:markItem];
         NSInteger index = edit.numberOfItems;
         for (NSInteger i = 0; i < edit.numberOfItems; i++)
-            if ([edit itemAtIndex:i].submenu) { index = i + 1; break; }
+            if (TSItemWithAction([edit itemAtIndex:i].submenu, @selector(performFindPanelAction:))) { index = i + 1; break; }
         [edit insertItem:markItem atIndex:index];
     }
     NSMenuItem *note = TSItemWithAction(marks, @selector(placeComment:));

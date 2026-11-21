@@ -240,6 +240,37 @@
                                     <action selector="copy:" target="-1" id="7SO-HG-eA9"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Copy with Style" id="8Hl-rw-YMf">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Copy with Style" id="vea-9l-kxw">
+                                    <items>
+                                        <menuItem title="Light Mode Theme" id="kkM-xz-wwM" identifier="TSShortcut.copyWithLightTheme:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithLightTheme:" target="-1" id="5hp-A6-eEf"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Light Mode Theme with Background" id="ujf-oR-nxa" identifier="TSShortcut.copyWithLightThemeAndBackground:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithLightThemeAndBackground:" target="-1" id="6wH-W3-5PB"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Dark Mode Theme" id="bnm-3N-liq" identifier="TSShortcut.copyWithDarkTheme:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithDarkTheme:" target="-1" id="NT1-Nx-4xy"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Dark Mode Theme with Background" id="B7L-Q4-DBq" identifier="TSShortcut.copyWithDarkThemeAndBackground:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithDarkThemeAndBackground:" target="-1" id="Hbo-MS-p4D"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Paste" keyEquivalent="v" id="piZ-AQ-ZvQ" identifier="TSShortcut.paste:.0">
                                 <connections>
                                     <action selector="paste:" target="-1" id="8zn-1R-1aZ"/>

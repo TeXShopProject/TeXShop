@@ -30,13 +30,25 @@ static BOOL TSLegacySkipsFindAndReplace(void)
         TSLegacyMenuHadFindAndReplace = TSLegacyMenuPathHadFindAndReplace([NSBundle.mainBundle pathForResource:@"MainMenu" ofType:@"nib"]);
     return TSLegacyMenuHadFindAndReplace == 0;
 }
-// Source › Show Status Bar is new in 6.00; positions saved before it skip it.
+// Source › Show Status Bar is new in 6.00; positions saved before it skip it. So do the items that 6.00 added to
+// the Edit menu: Copy with Style, Swap with Clipboard, Character Type Conversion and Unicode Normalization, and Marks,
+// which moved there from Source › Command Completion.
 static NSString *const TSLegacyStatusBarItem = @"TSShortcut.toggleStatusBar:.0";
+static NSString *const TSLegacySwapItem = @"TSShortcut.exchangePaste:.0";
+static BOOL TSLegacyIsAddedSubmenu(NSMenuItem *item)
+{
+    for (NSMenuItem *child in item.submenu.itemArray)
+        if (child.action == NSSelectorFromString(@"copyWithLightTheme:") || child.action == NSSelectorFromString(@"convertCharacterType:") ||
+            child.action == NSSelectorFromString(@"normalizeSelectedString:") || child.action == NSSelectorFromString(@"doNextBullet:"))
+            return YES;
+    return NO;
+}
 static NSArray<NSMenuItem *> *TSLegacyItems(NSMenu *menu)
 {
     NSMutableArray<NSMenuItem *> *items = [menu.itemArray mutableCopy];
     [items filterUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NSMenuItem *item, NSDictionary *bindings) {
-        return ![item.identifier isEqualToString:TSLegacyStatusBarItem];
+        return ![item.identifier isEqualToString:TSLegacyStatusBarItem] && ![item.identifier isEqualToString:TSLegacySwapItem] &&
+               !TSLegacyIsAddedSubmenu(item);
     }]];
     if (TSLegacySkipsFindAndReplace()) {
         NSUInteger added = [items indexOfObjectPassingTest:^BOOL(NSMenuItem *item, NSUInteger index, BOOL *stop) {

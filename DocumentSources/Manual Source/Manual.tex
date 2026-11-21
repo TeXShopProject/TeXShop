@@ -4420,6 +4420,14 @@ Control characters other than tab, line feed and carriage return are always show
 
 The Edit menu item ``Swap with Clipboard'' replaces the selected text with the text on the clipboard, and puts the text it replaced on the clipboard. To exchange two pieces of text, copy the first piece, select the second piece and choose ``Swap with Clipboard'', then select the place where the first piece was and paste. When nothing is selected, the command is an ordinary paste.
 
+\section{Copy with Style}
+
+The Edit menu submenu ``Copy with Style'' copies the selected text in the font of the source and with the colors of a theme, to paste it into a word processor, a presentation or an email. Its four items choose the colors of the theme of Light Mode or of the theme of Dark Mode, as set in the Themes category of TeXShop Settings, and whether the background color of the source is copied too; the font is the same with every item. The choice does not depend on the mode TeXShop is in.
+
+The text keeps the colors of syntax coloring and of fullwidth letters and symbols; with syntax coloring off, it has the text color of the theme. The highlights of the current line, of braces and of found text, and the selection, are not copied. With the background, every character gets the background color of the source, except fullwidth letters and symbols while Highlight Fullwidth Letters and Symbols is on: they keep the background color of that highlight, with or without the background of the source. A translucent highlight color is blended onto the background of the source, or onto white without it. The theme of Light Mode without its background suits a white page, and the theme of Dark Mode with its background shows the source as a dark block. The text goes to the clipboard as rich text (RTF and HTML) and as plain text, so applications that only take plain text paste it without colors.
+
+The items have no keyboard shortcuts; each can be given one in the Keyboard category of TeXShop Settings.
+
 \section{Character Type Conversion and Unicode Normalization}
 
 The Edit menu has two submenus that rewrite the selected text. They are also in the contextual menu of the source window. If nothing is selected, TeXShop asks whether to apply the command to the whole document. Each command can be undone.

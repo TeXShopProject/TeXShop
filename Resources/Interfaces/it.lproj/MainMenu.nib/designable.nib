@@ -239,6 +239,37 @@
                                     <action selector="copy:" target="-1" id="31"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Copia con stile" id="nn1-sC-Iva">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Copia con stile" id="Uoj-hb-OID">
+                                    <items>
+                                        <menuItem title="Tema modalità chiara" id="YvG-mZ-4qT" identifier="TSShortcut.copyWithLightTheme:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithLightTheme:" target="-1" id="OWI-sY-y2e"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Tema modalità chiara con sfondo" id="2Cn-jT-aDj" identifier="TSShortcut.copyWithLightThemeAndBackground:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithLightThemeAndBackground:" target="-1" id="gzd-Wu-252"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Tema modalità scura" id="SYl-E4-Ivw" identifier="TSShortcut.copyWithDarkTheme:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithDarkTheme:" target="-1" id="pm1-eU-Arq"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Tema modalità scura con sfondo" id="s9p-ya-A6j" identifier="TSShortcut.copyWithDarkThemeAndBackground:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithDarkThemeAndBackground:" target="-1" id="uCA-GL-lEc"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Incolla" keyEquivalent="v" id="8" identifier="TSShortcut.paste:.0">
                                 <connections>
                                     <action selector="paste:" target="-1" id="32"/>

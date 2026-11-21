@@ -147,6 +147,8 @@
 		26F5B11D7C0A4E9D2B3A6D01 /* TSDocumentWindowGlass.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6D03 /* TSDocumentWindowGlass.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		26F5B11D7C0A4E9D2B3A6E01 /* TSSourceStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6E03 /* TSSourceStatusBar.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		26F5B11D7C0A4E9D2B3A6E04 /* TSStatusBarCounting.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6E06 /* TSStatusBarCounting.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		26F5B11D7C0A4E9D2B3A6E20 /* TSStyledCopy.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6E22 /* TSStyledCopy.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		26F5B11D7C0A4E9D2B3A6E23 /* TSDocument-StyledCopy.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6E24 /* TSDocument-StyledCopy.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		26F5B11D7C0A4E9D2B3A6E07 /* TSTextStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6E09 /* TSTextStatistics.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		26F5B11D7C0A4E9D2B3A6E10 /* TSTextStatisticsPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6E12 /* TSTextStatisticsPopover.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4061BA9E1991979600C890DB /* RecentTexFonts.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 4061BA9C1991979600C890DB /* RecentTexFonts.pdf */; };
@@ -735,6 +737,9 @@
 		26F5B11D7C0A4E9D2B3A6E03 /* TSSourceStatusBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSourceStatusBar.m; sourceTree = "<group>"; };
 		26F5B11D7C0A4E9D2B3A6E05 /* TSStatusBarCounting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSStatusBarCounting.h; sourceTree = "<group>"; };
 		26F5B11D7C0A4E9D2B3A6E06 /* TSStatusBarCounting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSStatusBarCounting.m; sourceTree = "<group>"; };
+		26F5B11D7C0A4E9D2B3A6E21 /* TSStyledCopy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSStyledCopy.h; sourceTree = "<group>"; };
+		26F5B11D7C0A4E9D2B3A6E22 /* TSStyledCopy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSStyledCopy.m; sourceTree = "<group>"; };
+		26F5B11D7C0A4E9D2B3A6E24 /* TSDocument-StyledCopy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-StyledCopy.m"; sourceTree = "<group>"; };
 		26F5B11D7C0A4E9D2B3A6E08 /* TSTextStatistics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSTextStatistics.h; sourceTree = "<group>"; };
 		26F5B11D7C0A4E9D2B3A6E09 /* TSTextStatistics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSTextStatistics.m; sourceTree = "<group>"; };
 		26F5B11D7C0A4E9D2B3A6E11 /* TSTextStatisticsPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSTextStatisticsPopover.h; sourceTree = "<group>"; };
@@ -1335,6 +1340,9 @@
 				40162B2D0F1873F200E9336E /* NoodleLineNumberView.m */,
 				26F5B11D7C0A4E9D2B3A6E05 /* TSStatusBarCounting.h */,
 				26F5B11D7C0A4E9D2B3A6E06 /* TSStatusBarCounting.m */,
+				26F5B11D7C0A4E9D2B3A6E21 /* TSStyledCopy.h */,
+				26F5B11D7C0A4E9D2B3A6E22 /* TSStyledCopy.m */,
+				26F5B11D7C0A4E9D2B3A6E24 /* TSDocument-StyledCopy.m */,
 				26F5B11D7C0A4E9D2B3A6E08 /* TSTextStatistics.h */,
 				26F5B11D7C0A4E9D2B3A6E09 /* TSTextStatistics.m */,
 				40D5BB2D19632B9C0081BC77 /* ScrapTextView.h */,
@@ -2389,6 +2397,8 @@
 				26F5B11D7C0A4E9D2B3A6D01 /* TSDocumentWindowGlass.m in Sources */,
 				26F5B11D7C0A4E9D2B3A6E01 /* TSSourceStatusBar.m in Sources */,
 				26F5B11D7C0A4E9D2B3A6E04 /* TSStatusBarCounting.m in Sources */,
+				26F5B11D7C0A4E9D2B3A6E20 /* TSStyledCopy.m in Sources */,
+				26F5B11D7C0A4E9D2B3A6E23 /* TSDocument-StyledCopy.m in Sources */,
 				26F5B11D7C0A4E9D2B3A6E07 /* TSTextStatistics.m in Sources */,
 				26F5B11D7C0A4E9D2B3A6E10 /* TSTextStatisticsPopover.m in Sources */,
 				4017CF9B266454D700981011 /* TSDocument-SyncConTeXt.m in Sources */,

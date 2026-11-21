@@ -30,6 +30,7 @@
 #import "NSMutableString-Extras.h"
 #import "globals.h"
 #import "TSDocument.h" // mitsu 1.29 (T2-4)
+#import "TSStyledCopy.h"
 #import "MyPDFKitView.h"
 #import "TSWindowManager.h" // mitsu 1.29 (T2)
 #import "TSEncodingSupport.h"
@@ -2980,12 +2981,30 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 	BOOL enabled;
 	if ([self validateEditTextCommand:anItem enabled:&enabled])
 		return enabled;
+	if (TSStyledCopyAction([anItem action], NULL, NULL))
+		return self.document != nil && TSStyledCopyCanCopy(self);
 	TSAdvancedFindController *advancedFind = [self advancedFindController];
 	if (advancedFind && ([anItem action] == @selector(performFindPanelAction:) || [anItem action] == @selector(performTextFinderAction:)))
 		return [advancedFind validateFindMenuItem:anItem inTextView:self];
     
 	return [super validateMenuItem: anItem];
 }
+
+#pragma mark ========Copy with Style==========
+
+// The four commands of Edit › Copy with Style; the document finds the colors (TSStyledCopy).
+- (void)copyWithStyleForAction:(SEL)action
+{
+	BOOL dark = NO, withBackground = NO;
+	if (!TSStyledCopyAction(action, &dark, &withBackground) || !TSStyledCopyCanCopy(self) ||
+		![self.document copyStyledSelectionOfTextView:self darkTheme:dark withBackground:withBackground])
+		NSBeep();
+}
+
+- (IBAction)copyWithLightTheme:(id)sender { [self copyWithStyleForAction:_cmd]; }
+- (IBAction)copyWithLightThemeAndBackground:(id)sender { [self copyWithStyleForAction:_cmd]; }
+- (IBAction)copyWithDarkTheme:(id)sender { [self copyWithStyleForAction:_cmd]; }
+- (IBAction)copyWithDarkThemeAndBackground:(id)sender { [self copyWithStyleForAction:_cmd]; }
 
 #pragma mark ========Advanced Find Panel==========
 
