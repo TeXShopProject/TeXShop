@@ -74,6 +74,7 @@
 60
 61
 66
+68
 7
 718
 72
@@ -1208,7 +1209,6 @@ numerals
 object
 objects
 obsolete
-obtain
 occasionally
 occur
 occurred

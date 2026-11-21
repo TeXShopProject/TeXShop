@@ -9,7 +9,7 @@ FOUNDATION_EXPORT NSString *const TSSparklePrereleaseChannel;
 // Posted on the main thread when an update check of any kind has finished.
 FOUNDATION_EXPORT NSNotificationName const TSSparkleUpdateCheckDidFinishNotification;
 
-@interface TSSparkleController : SPUStandardUpdaterController <SPUUpdaterDelegate>
+@interface TSSparkleController : SPUStandardUpdaterController <SPUUpdaterDelegate, SPUStandardUserDriverDelegate>
 + (nullable SPUUpdater *)sharedUpdater;
 + (nullable TSSparkleController *)sharedController;
 // A display version with a letter, such as 6.00 beta-1, is a prerelease.
