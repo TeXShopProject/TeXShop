@@ -34,8 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 // the top edge, as if the scroller were laid over the bottom of the view.
 void TSPreviewChangeScale(PDFView *view, void (NS_NOESCAPE ^change)(void));
 
-// Changes the size of a preview view. The text at the top edge of the view stays there,
-// also when the magnification follows the size, as with Fit to Window. Up to macOS 26 the
+// Changes the size of a preview view. The text at the top of the area where it can be read,
+// below the toolbar of a window whose content runs under it, stays there, also when the
+// magnification follows the size, as with Fit to Window. Up to macOS 26 the
 // scroll view keeps the bottom of the visible area instead, so the text jumped when a
 // horizontal scroller came or went, in a view narrower than about half the width of the
 // page it moved down by the height of the scroller at every step of a resize, and with

@@ -37,14 +37,18 @@ MUTATIONS = {
                     '        [super setFrameSize:newSize];\n'),
     # The text is not put back after the size changed.
     'no-restore': ('TSPreviewScrollerKeeper.m',
-                   '    TSMoveTextUp(scroll, TSTextBelowTop(view, scroll, text));\n    keeper.keptPage = page;', '    keeper.keptPage = page;'),
+                   '    TSMoveTextUp(scroll, TSTextBelowTop(view, scroll, text) - target);\n', ''),
     # With automatic scaling the place is left to PDFKit, as before.
     'auto-left-to-pdfkit': ('TSPreviewScrollerKeeper.m',
-                            ' || page.document != view.document)\n        return;\n    text.page = page;\n    TSMoveTextUp(scroll, TSTextBelowTop(view, scroll, text));\n    keeper',
-                            ' || page.document != view.document || view.autoScales)\n        return;\n    text.page = page;\n    TSMoveTextUp(scroll, TSTextBelowTop(view, scroll, text));\n    keeper'),
+                            ' || edgePage.document != view.document)\n        return;\n    CGFloat below',
+                            ' || edgePage.document != view.document || view.autoScales)\n        return;\n    CGFloat below'),
     # Every step of a resize keeps the text that is at the top then, and the pixels add up.
     # Only PDFKit up to macOS 26 puts its place on whole pixels: seen in the system model there.
-    'remeasured': ('TSPreviewScrollerKeeper.m', '    if (text.valid && kept.document == view.document &&', '    if (NO && kept.document == view.document &&'),
+    'remeasured': ('TSPreviewScrollerKeeper.m', '    BOOL keepAgain = atEdge.valid &&', '    BOOL keepAgain = NO &&'),
+    # The text under the toolbar is kept instead of the text at the top of the readable area.
+    'clip-top': ('TSPreviewScrollerKeeper.m', '    return fmax(0, window.contentView.safeAreaInsets.top);\n', '    return 0;\n'),
+    # The text kept by the last change is kept again although the view was scrolled since.
+    'scroll-undone': ('TSPreviewScrollerKeeper.m', '\n        fabs(scroll.contentView.bounds.origin.y - keeper.keptOrigin.y) <= 0.5 * TSUnit(scroll.contentView) &&', ''),
     # The place is put back through PDFKit's constrainBoundsRect:.
     'pdfkit-constrain': ('TSPreviewScrollerKeeper.m', '    NSPoint target = TSPreviewConstrainedOrigin(clip, bounds);\n',
                          '    NSPoint target = [clip constrainBoundsRect:bounds].origin;\n'),
@@ -116,9 +120,14 @@ static NSScrollView *Scroll(PDFView *view) { return view.documentView.enclosingS
 static NSClipView *Clip(PDFView *view) { return Scroll(view).contentView; }
 
 typedef struct { PDFPage *page; NSPoint point; } Mark;
+// The top of the area where the text can be read: in a window whose content runs under the
+// toolbar, below the toolbar and the title bar (contentLayoutRect, as TSDocumentWindowGlass).
 static CGFloat TopInWindow(PDFView *view) {
     NSClipView *clip = Clip(view); NSRect b = clip.bounds;
-    return [clip convertPoint:NSMakePoint(NSMidX(b), clip.isFlipped ? NSMinY(b) : NSMaxY(b)) toView:nil].y;
+    CGFloat top = [clip convertPoint:NSMakePoint(NSMidX(b), clip.isFlipped ? NSMinY(b) : NSMaxY(b)) toView:nil].y;
+    if (view.window.styleMask & NSWindowStyleMaskFullSizeContentView)
+        top = fmin(top, NSMaxY(view.window.contentLayoutRect));
+    return top;
 }
 static Mark MarkAt(PDFView *view) {
     NSPoint p = [view convertPoint:NSMakePoint(NSMidX(Clip(view).frame), TopInWindow(view)) fromView:nil];
@@ -271,7 +280,8 @@ int main(int argc, char **argv) { @autoreleasepool {
         // page is shown, and it stays the page shown.
         for (int single = 0; single < 2; single++) {
             CGFloat worst[2] = {0, 0}; BOOL sameScales = YES, samePage = YES; NSMutableString *steps = [NSMutableString string];
-            NSMutableArray *sizes = [@[@[@600, @700], @[@420, @700], @[@760, @700], @[@760, @520], @[@500, @820], @[@900, @700]] mutableCopy];
+            NSMutableArray *sizes = [@[@[@600, @700], @[@420, @700], @[@760, @700], @[@760, @520], @[@500, @760], @[@900, @700]] mutableCopy];
+            // The windows stay smaller than the screen, which AppKit moves and shrinks larger ones to.
             // A slow drag after them.
             for (NSNumber *width in DragWidths()) [sizes addObject:@[width, @700]];
             NSMutableArray *scales[2] = {[NSMutableArray array], [NSMutableArray array]};
@@ -314,6 +324,30 @@ int main(int argc, char **argv) { @autoreleasepool {
                 Control(worst[0] >= 10, [NSString stringWithFormat:@"%@: without the fix the text moves (%.2fpt)", mode, worst[0]]);
         }
 
+        // A small scroll between two changes of the size is kept: the text at the top after
+        // the scroll stays, at a fixed magnification and with automatic scaling.
+        // The shifted model is left out with automatic scaling, as above.
+        for (int automatic = 0; automatic < (shifted ? 1 : 2); automatic++) {
+            CGFloat worst = 0; NSMutableString *steps = [NSMutableString string];
+            for (NSNumber *amount in @[@1, @2, @6]) {
+                NSWindow *window = MakeWindow(900, 700);
+                PDFView *view = MakeView(window.contentView.bounds, document, YES, automatic);
+                if (!automatic) view.scaleFactor = 6.0;
+                [window.contentView addSubview:view]; SetSize(window, 900, 700);
+                ScrollIntoPage(view, 3, automatic ? 120 : 600);
+                SetSize(window, 800, 700);
+                NSClipView *clip = Clip(view); NSRect b = clip.bounds;
+                [clip scrollToPoint:NSMakePoint(NSMinX(b), NSMinY(b) + (clip.isFlipped ? 1 : -1) * amount.doubleValue / view.scaleFactor * NSHeight(b) / NSHeight(clip.frame) * view.scaleFactor)];
+                [Scroll(view) reflectScrolledClipView:clip]; RunLoop();
+                Mark mark = MarkAt(view);
+                SetSize(window, 700, 700);
+                worst = fmax(worst, fabs(Below(view, mark)));
+                [steps appendFormat:@" %@pt: %.2f", amount, Below(view, mark)];
+            }
+            Check(worst <= (automatic ? 1.0 : 0.5), [NSString stringWithFormat:@"%s: a small scroll before a change of the size is kept (%.2fpt;%@)",
+                                                    automatic ? "automatic scaling" : "600%", worst, steps]);
+        }
+
         // The ends of the document still limit the place: at the end, a size change that
         // would need the text below the last page leaves the last page at the bottom.
         {
@@ -326,10 +360,14 @@ int main(int argc, char **argv) { @autoreleasepool {
             [clip scrollToPoint:[clip constrainBoundsRect:clip.bounds].origin];
             [Scroll(view) reflectScrolledClipView:clip]; RunLoop();
             SetSize(window, 900, 760); SetSize(window, 450, 760);
+            // The end is where scrolling ends: with a bottom inset, as under the scroller laid over
+            // the content, that is the inset below the last page.
             NSRect visible = clip.documentVisibleRect, document = clip.documentRect;
-            BOOL atEnd = clip.isFlipped ? NSMaxY(visible) <= NSMaxY(document) + 0.5 : NSMinY(visible) >= NSMinY(document) - 0.5 - (shifted ? 8.5 : 0);
-            Check(atEnd, [NSString stringWithFormat:@"the view does not go past the end of the document (visible %@, document %@)",
-                          NSStringFromRect(visible), NSStringFromRect(document)]);
+            CGFloat inset = clip.contentInsets.bottom;
+            BOOL atEnd = clip.isFlipped ? NSMaxY(visible) <= NSMaxY(document) + inset + 0.5 :
+                NSMinY(visible) >= NSMinY(document) - inset - 0.5 - (shifted ? 8.5 : 0);
+            Check(atEnd, [NSString stringWithFormat:@"the view does not go past the end of the document (visible %@, document %@, bottom inset %.1f)",
+                          NSStringFromRect(visible), NSStringFromRect(document), inset]);
         }
 
         // On macOS 26 and later the band under the toolbar is a lasting top inset, which
