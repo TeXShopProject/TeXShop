@@ -12,6 +12,8 @@ static NSMutableArray<NSString *> *steps;
 static NSInteger terminations;
 static BOOL terminatedWhileModal;
 static BOOL alertNotKey;
+// Before each key: whether the alert had been answered, and whether the window in front was still that alert.
+static NSMutableArray<NSArray<NSNumber *> *> *beforeKeys;
 
 static void Check(BOOL ok, NSString *what)
 {
@@ -70,12 +72,15 @@ static BOOL RunAlert(id<SPUUserDriver> driver, BOOL error, NSArray *keys)
     __block BOOL acknowledged = NO;
     __block NSUInteger next = 0;
     __block BOOL timedOut = NO;
+    __block NSWindow *alertWindow = nil;
     NSDate *start = NSDate.date;
+    [beforeKeys removeAllObjects];
     NSTimer *typist = [NSTimer timerWithTimeInterval:0.3 repeats:YES block:^(NSTimer *timer) {
         if (NSApp.modalWindow == nil) return;
         // Keys are typed into the alert only while it is the key window, as on the user's screen.
         if (!NSApp.modalWindow.isKeyWindow) { if (-start.timeIntervalSinceNow > 3) { alertNotKey = YES; timedOut = YES; [NSApp abortModal]; [timer invalidate]; } return; }
-        if (next < keys.count) { NSArray *k = keys[next++]; [NSApp postEvent:Key([k[0] unsignedShortValue], k[1], [k[2] unsignedIntegerValue]) atStart:NO]; return; }
+        if (alertWindow == nil) alertWindow = NSApp.modalWindow;
+        if (next < keys.count) { [beforeKeys addObject:@[@(acknowledged), @(NSApp.modalWindow == alertWindow)]]; NSArray *k = keys[next++]; [NSApp postEvent:Key([k[0] unsignedShortValue], k[1], [k[2] unsignedIntegerValue]) atStart:NO]; return; }
         if (-start.timeIntervalSinceNow > 0.3 * keys.count + 3) { timedOut = YES; [NSApp abortModal]; [timer invalidate]; }
     }];
     [NSRunLoop.currentRunLoop addTimer:typist forMode:NSModalPanelRunLoopMode];
@@ -100,6 +105,7 @@ int main(int argc, const char *argv[])
 {
     @autoreleasepool {
         steps = [NSMutableArray array];
+        beforeKeys = [NSMutableArray array];
         [ProbeApplication sharedApplication];
         [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
         [NSApp finishLaunching];
@@ -164,8 +170,10 @@ int main(int argc, const char *argv[])
                                                       backing:NSBackingStoreBuffered defer:NO];
         __block BOOL nestedClosed = NO;
         __block NSInteger nestedAcks = 0;
+        __block NSArray *nestedBeforeReturn = nil;
         NSTimer *inner = [NSTimer timerWithTimeInterval:0.3 repeats:NO block:^(NSTimer *timer) {
             nestedClosed = RunAlert(driver, NO, @[commandQ, returnKey]);
+            nestedBeforeReturn = beforeKeys.count > 1 ? beforeKeys[1] : nil;
             nestedAcks = [steps filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF == 'acknowledged'"]].count;
             [NSApp stopModal];
         }];
@@ -173,7 +181,8 @@ int main(int argc, const char *argv[])
         [NSApp runModalForWindow:panel];
         [panel orderOut:nil];
         SpinDefaultMode(0.5);
-        Check(nestedClosed && nestedAcks == 1, @"over a modal panel the alert opens and closes once");
+        Check([nestedBeforeReturn isEqual:@[@NO, @YES]], [NSString stringWithFormat:@"over a modal panel the alert is still open and unanswered after Command-Q (answered, same alert: %@)", [nestedBeforeReturn componentsJoinedByString:@", "]]);
+        Check(nestedClosed && nestedAcks == 1, @"over a modal panel Return then closes the alert, once");
         Check(terminations == 0, [NSString stringWithFormat:@"over a modal panel Command-Q does not quit, also after the panel closes (%ld)", (long)terminations]);
         Check([controller valueForKey:@"quitKeyMonitor"] == nil, @"no key monitor is left after the alert over a modal panel");
 

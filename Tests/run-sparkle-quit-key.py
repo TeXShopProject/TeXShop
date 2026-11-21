@@ -32,6 +32,8 @@ MUTATIONS = {
     'quit-during-alert': ('    self.quitRequested = YES;\n', '    [NSApp terminate:nil];\n'),
     # Over another modal window the key closes the alert, and the quit waits for that window (first audit).
     'nested-intercepted': ('    if (NSApp.modalWindow != nil) return;\n', ''),
+    # Over another modal window the key closes the alert without quitting (second audit).
+    'nested-closes': [('    if (NSApp.modalWindow != nil) return;\n', ''), ('    if (quit)\n', '    if (quit && NSApp.modalWindow == nil)\n')],
     # The alert is not closed.
     'alert-stays': ('    [NSApp stopModalWithCode:NSAlertFirstButtonReturn];\n', ''),
     # Command-Q is hard-wired instead of the key of the Quit item.
@@ -69,11 +71,13 @@ def mutated(directory, mutation):
     source = source_file(root, 'TSSparkleController.m')
     if not mutation:
         return source
-    old, new = MUTATIONS[mutation]
+    edits = MUTATIONS[mutation]
     text = source.read_text(encoding='utf-8')
-    assert text.count(old) == 1, 'mutation target must be unique: ' + mutation
+    for old, new in (edits if isinstance(edits, list) else [edits]):
+        assert text.count(old) == 1, 'mutation target must be unique: ' + mutation
+        text = text.replace(old, new)
     path = Path(directory) / 'TSSparkleController.m'
-    path.write_text(text.replace(old, new), encoding='utf-8')
+    path.write_text(text, encoding='utf-8')
     return path
 
 
