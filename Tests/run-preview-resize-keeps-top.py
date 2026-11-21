@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""When a Preview view changes its size at a fixed magnification, the text at its top
-edge stays there (#53).
+"""When a Preview view changes its size, the text at its top edge stays there (#53): at a
+fixed magnification, and with automatic scaling (Fit to Window), where the magnification
+follows the size.
 
 Measured in a macOS 26.6.2 virtual machine with the Help manual at 200% in a window made
 narrower step by step (scroll bars always shown, TeXShop-audit Issue53 VM確認):
@@ -36,10 +37,14 @@ MUTATIONS = {
                     '        [super setFrameSize:newSize];\n'),
     # The text is not put back after the size changed.
     'no-restore': ('TSPreviewScrollerKeeper.m',
-                   '    text.page = page;\n    TSMoveTextUp(scroll, TSTextBelowTop(view, scroll, text));\n}\n', '}\n'),
-    # A change of the magnification is kept too.
-    'scale-kept': ('TSPreviewScrollerKeeper.m',
-                   ' || view.scaleFactor != scale)\n        return;\n    text.page = page;', ')\n        return;\n    text.page = page;'),
+                   '    TSMoveTextUp(scroll, TSTextBelowTop(view, scroll, text));\n    keeper.keptPage = page;', '    keeper.keptPage = page;'),
+    # With automatic scaling the place is left to PDFKit, as before.
+    'auto-left-to-pdfkit': ('TSPreviewScrollerKeeper.m',
+                            ' || page.document != view.document)\n        return;\n    text.page = page;\n    TSMoveTextUp(scroll, TSTextBelowTop(view, scroll, text));\n    keeper',
+                            ' || page.document != view.document || view.autoScales)\n        return;\n    text.page = page;\n    TSMoveTextUp(scroll, TSTextBelowTop(view, scroll, text));\n    keeper'),
+    # Every step of a resize keeps the text that is at the top then, and the pixels add up.
+    # Only PDFKit up to macOS 26 puts its place on whole pixels: seen in the system model there.
+    'remeasured': ('TSPreviewScrollerKeeper.m', '    if (text.valid && kept.document == view.document &&', '    if (NO && kept.document == view.document &&'),
     # The place is put back through PDFKit's constrainBoundsRect:.
     'pdfkit-constrain': ('TSPreviewScrollerKeeper.m', '    NSPoint target = TSPreviewConstrainedOrigin(clip, bounds);\n',
                          '    NSPoint target = [clip constrainBoundsRect:bounds].origin;\n'),
@@ -261,22 +266,52 @@ int main(int argc, char **argv) { @autoreleasepool {
             Check(worst <= 0.5, [NSString stringWithFormat:@"the text at the top stays while the height changes (%.2fpt)", worst]);
         }
 
-        // Automatic scaling: the magnification follows the width, and the place is PDFKit's.
-        {
-            CGFloat scales[2], places[2];
+        // Automatic scaling, as Fit to Window: the magnification follows the size as without
+        // the fix. In continuous mode the text at the top stays. In single page mode the whole
+        // page is shown, and it stays the page shown.
+        for (int single = 0; single < 2; single++) {
+            CGFloat worst[2] = {0, 0}; BOOL sameScales = YES, samePage = YES; NSMutableString *steps = [NSMutableString string];
+            NSMutableArray *sizes = [@[@[@600, @700], @[@420, @700], @[@760, @700], @[@760, @520], @[@500, @820], @[@900, @700]] mutableCopy];
+            // A slow drag after them.
+            for (NSNumber *width in DragWidths()) [sizes addObject:@[width, @700]];
+            NSMutableArray *scales[2] = {[NSMutableArray array], [NSMutableArray array]};
             for (int preview = 0; preview < 2; preview++) {
                 NSWindow *window = MakeWindow(900, 700);
                 PDFView *view = MakeView(window.contentView.bounds, document, preview, YES);
+                if (single) view.displayMode = kPDFDisplaySinglePage;
                 [window.contentView addSubview:view]; SetSize(window, 900, 700);
-                ScrollIntoPage(view, 3, 120);
+                if (single) { [view goToPage:[document pageAtIndex:3]]; [view.window layoutIfNeeded]; RunLoop(); }
+                else ScrollIntoPage(view, 3, 120);
                 Mark mark = MarkAt(view);
-                SetSize(window, 600, 700);
-                scales[preview] = view.scaleFactor;
-                places[preview] = Below(view, mark);
+                for (NSArray *size in sizes) {
+                    SetSize(window, [size[0] doubleValue], [size[1] doubleValue]);
+                    [scales[preview] addObject:@(view.scaleFactor)];
+                    worst[preview] = fmax(worst[preview], fabs(Below(view, mark)));
+                    if (preview) {
+                        samePage = samePage && view.currentPage == [document pageAtIndex:3];
+                        [steps appendFormat:@" %@x%@: %.2f", size[0], size[1], Below(view, mark)];
+                    }
+                }
             }
-            Check(fabs(scales[1] - scales[0]) < 1e-6, @"automatic scaling follows the width as without the fix");
-            Check(fabs(places[1] - places[0]) <= 0.5, [NSString stringWithFormat:
-                  @"with automatic scaling the place is left to PDFKit (%.2f and %.2fpt)", places[1], places[0]]);
+            for (NSUInteger i = 0; i < sizes.count; i++)
+                sameScales = sameScales && fabs([scales[1][i] doubleValue] - [scales[0][i] doubleValue]) < 1e-6;
+            NSString *mode = single ? @"single page" : @"continuous";
+            Check(sameScales, [NSString stringWithFormat:@"%@: automatic scaling follows the size as without the fix", mode]);
+            Check([scales[1][1] doubleValue] < [scales[1][0] doubleValue] - 0.01,
+                  [NSString stringWithFormat:@"%@: the magnification changes with the size", mode]);
+            if (single) {
+                Check(samePage, @"single page: with automatic scaling the page shown stays");
+                continue;
+            }
+            // The shifted model lays the scrollers over the content at every width; with automatic
+            // scaling the page fits the width and the view is never narrower than half of it.
+            // PDFKit's clip view puts its place on whole pixels up to macOS 26, and at a new
+            // magnification the text is put back up to a pixel off (measured in macOS 15 and 26).
+            if (!shifted)
+                Check(worst[1] <= 2.0, [NSString stringWithFormat:@"%@: with automatic scaling the text at the top stays (%.2fpt;%@)",
+                                        mode, worst[1], steps]);
+            if (!flipped)
+                Control(worst[0] >= 10, [NSString stringWithFormat:@"%@: without the fix the text moves (%.2fpt)", mode, worst[0]]);
         }
 
         // The ends of the document still limit the place: at the end, a size change that

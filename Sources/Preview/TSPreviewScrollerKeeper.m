@@ -104,6 +104,9 @@ static void TSMoveTextUp(NSScrollView *scroll, CGFloat distance)
 @property BOOL pending;
 // While the magnification changes, the text is put in place afterwards.
 @property NSInteger suspended;
+// The text that the last change of the size kept at the top edge.
+@property (strong, nullable) PDFPage *keptPage;
+@property NSPoint keptPoint;
 @end
 
 @implementation TSPreviewScrollerKeeper
@@ -200,16 +203,31 @@ void TSPreviewChangeSize(PDFView *view, void (NS_NOESCAPE ^change)(void))
 {
     TSPreviewScrollerKeeper *keeper = [TSPreviewScrollerKeeper keeperForView:view];
     NSScrollView *scroll = TSScroll(view);
-    CGFloat scale = view.scaleFactor;
     TSPreviewText text = scroll ? TSTextAt(view, scroll, 0) : (TSPreviewText){0};
+    // PDFKit's clip view puts its place on whole pixels up to macOS 26, so at a new
+    // magnification the text comes back up to a pixel off. The text kept by the last change
+    // is kept again while it is still at the top edge, so that the pixels do not add up over
+    // the steps of a resize (measured in macOS 26.6.2).
+    PDFPage *kept = keeper.keptPage;
+    keeper.keptPage = nil;
+    CGFloat pixel = scroll ? fmax(1, 1 / TSUnit(scroll.contentView)) : 1;
+    if (text.valid && kept.document == view.document &&
+        fabs(TSTextBelowTop(view, scroll, (TSPreviewText){YES, kept, keeper.keptPoint})) <= 1.5 * pixel) {
+        text.page = kept;
+        text.point = keeper.keptPoint;
+    }
     PDFPage *page = text.page;
     // A scroller that comes or goes during the change is covered here.
     keeper.suspended++;
     change();
     keeper.suspended--;
-    // A new magnification, as with automatic scaling, is left to PDFKit.
-    if (!text.valid || TSScroll(view) != scroll || page.document != view.document || view.scaleFactor != scale)
+    // With automatic scaling, as Fit to Window, the magnification follows the size, and the
+    // text stays at the top edge too: PDFKit kept another place, which on macOS 26 and
+    // earlier lay far from the text (#53).
+    if (!text.valid || TSScroll(view) != scroll || page.document != view.document)
         return;
     text.page = page;
     TSMoveTextUp(scroll, TSTextBelowTop(view, scroll, text));
+    keeper.keptPage = page;
+    keeper.keptPoint = text.point;
 }
