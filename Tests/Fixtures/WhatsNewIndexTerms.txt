@@ -73,6 +73,7 @@
 6
 60
 61
+66
 7
 718
 72
@@ -1833,7 +1834,6 @@ trace
 track
 trackpad
 transitioning
-transparency
 trash
 trick
 tricks

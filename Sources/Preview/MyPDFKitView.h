@@ -286,7 +286,11 @@
 // Takes a pinned link popup out of this view, giving its frame in window coordinates, so that
 // the other pane can show it when the window is unsplit; nil without one.
 - (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:(NSRect *)frame;
+- (BOOL)placePinnedLinkPreview:(TSLinkPreviewView *)preview windowFrame:(NSRect)frame;
 - (void)attachPinnedLinkPreview:(TSLinkPreviewView *)preview windowFrame:(NSRect)frame;
+// A copy of the pinned link popup of another part, at the same place on the same page in this
+// part, also when that place is out of view here (#66).
+- (void)showCopyOfPinnedLinkPreviewOfView:(MyPDFKitView *)other;
 // Brings a pinned link popup back into view, as far as dragging it would, after the view
 // changed size.
 - (void)keepPinnedLinkPreviewInView;

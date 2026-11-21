@@ -36,6 +36,29 @@ static inline TSPreviewPanePlace TSPreviewPaneCapture(PDFView *view)
     return place;
 }
 
+// The place under a point given in window coordinates, also below or above the pane, where
+// the pages go on as they are laid out.
+static inline TSPreviewPanePlace TSPreviewPaneCaptureAt(PDFView *view, NSPoint windowPoint)
+{
+    TSPreviewPanePlace place = {0};
+    if (!view.document.pageCount || !view.window) return place;
+    NSPoint point = [view convertPoint:windowPoint fromView:nil];
+    PDFPage *page = [view pageForPoint:point nearest:YES];
+    if (!page) return place;
+    place.valid = YES;
+    place.pageIndex = [view.document indexForPage:page];
+    place.pagePoint = [view convertPoint:point toPage:page];
+    return place;
+}
+
+// The left end of the top edge of a pane's visible area, in window coordinates.
+static inline NSPoint TSPreviewPaneWindowEdge(PDFView *view)
+{
+    NSScrollView *scroll = view.documentView.enclosingScrollView;
+    NSClipView *clip = scroll.contentView;
+    return clip ? [clip convertPoint:TSPreviewPaneEdge(scroll) toView:nil] : NSZeroPoint;
+}
+
 // Scrolls so that the place is at the left end of the top edge, as far as the document allows.
 static inline void TSPreviewPaneRestore(PDFView *view, TSPreviewPanePlace place)
 {
@@ -71,3 +94,26 @@ static inline void TSPreviewPaneRestore(PDFView *view, TSPreviewPanePlace place)
     // A change of the size in the same turn of the event loop does not bring its own text back.
     TSPreviewPlaceChosenByProgram(view);
 }
+// The place of a pinned popup on the page under its upper left corner, from its frame in window
+// coordinates, as the popup keeps it when the preview is zoomed (#56).
+typedef struct { __unsafe_unretained PDFPage *page; NSRect rect; } TSPopupPlace;
+static inline TSPopupPlace TSPopupPlaceOnPage(PDFView *view, NSRect windowFrame)
+{
+    TSPopupPlace place = { nil, NSZeroRect };
+    if (NSIsEmptyRect(windowFrame)) return place;
+    NSRect frame = [view convertRect:windowFrame fromView:nil];
+    NSPoint corner = NSMakePoint(NSMinX(frame), view.isFlipped ? NSMinY(frame) : NSMaxY(frame));
+    place.page = [view pageForPoint:corner nearest:YES];
+    if (place.page) place.rect = [view convertRect:frame toPage:place.page];
+    return place;
+}
+// The frame in window coordinates of that place in a view showing the page; the frame it had,
+// without a page.
+static inline NSRect TSPopupFrameInView(PDFView *view, TSPopupPlace place, NSRect windowFrame)
+{
+    if (!place.page || place.page.document != view.document) return windowFrame;
+    NSRect frame = [view convertRect:[view convertRect:place.rect fromPage:place.page] toView:nil];
+    if (!isfinite(NSMinX(frame)) || !isfinite(NSMinY(frame)) || NSWidth(frame) <= 0 || NSHeight(frame) <= 0) return windowFrame;
+    return frame;
+}
+
