@@ -13,7 +13,7 @@ parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'oth
                                            'click-kills-pin', 'cleanup-in-click-kills-pin', 'cursor-not-restored', 'hand-selects', 'no-selection', 'move-confined', 'copy-ignores-popup', 'click-keeps-selection', 'toggle-keeps-popup', 'link-popups-per-view', 'reads-settings-again',
                                            'tool-change-kills-pin', 'flag-not-restored', 'click-keeps-focus',
                                            'no-page-label', 'label-in-page-points', 'tooltip-kept', 'tooltip-always-hidden',
-                                           'tooltip-trusts-data', 'label-from-index',
+                                           'tooltip-trusts-data', 'label-from-index', 'label-ignores-setting',
                                            'magnifier-kills-pin', 'switch-kills-pin', 'keep-marquee', 'contains-unpinned', 'contains-hidden-part',
                                            'detach-keeps-state', 'attach-keeps-old-tool', 'attach-replaces-pin', 'not-kept-in-view',
                                            'window-magnifier-bypass', 'window-resign-kills-pin', 'window-split-kills-pin', 'window-unsplit-moves-pin',
@@ -206,9 +206,14 @@ elif args.mutation == 'cursor-not-restored':
     assert methods.count('    [[self cursorForToolWithEvent: theEvent] set];\n') == 1
     methods = methods.replace('    [[self cursorForToolWithEvent: theEvent] set];\n', '')
 elif args.mutation == 'label-from-index':
-    methods = methods.replace('if (linkedPage.label.length)', 'if ((linkedPage = [linkedPage.document pageAtIndex:[linkedPage.document indexForPage:linkedPage]]).label.length)').replace(
+    assert methods.count('if (linkedPage.label.length && ') == 1
+    methods = methods.replace('if (linkedPage.label.length && ', 'if ((linkedPage = [linkedPage.document pageAtIndex:[linkedPage.document indexForPage:linkedPage]]).label.length && ').replace(
         '@"Page label in the corner of a link popup; %@ is the page label given in the PDF"), linkedPage.label]',
         '@"Page label in the corner of a link popup; %@ is the page label given in the PDF"), @([linkedPage.document indexForPage:linkedPage] + 1).stringValue]')
+elif args.mutation == 'label-ignores-setting':
+    old = 'if (linkedPage.label.length && [SUD boolForKey: LinkPopupPageLabelKey])'
+    assert methods.count(old) == 1
+    methods = methods.replace(old, 'if (linkedPage.label.length)')
 elif args.mutation == 'tooltip-always-hidden':
     old = 'return showsPopups && mouseMode != NEW_MOUSE_MODE_SELECT_PDF &&'
     assert methods.count(old) == 1
@@ -332,6 +337,7 @@ program = r'''
 #define FlashFixKey @"flash"
 #define FlashDelayKey @"delay"
 #define LinkPopupsKey @"links"
+#define LinkPopupPageLabelKey @"pageLabel"
 #define ShowSyncMarksKey @"sync"
 #define PdfPageStyleKey @"pageStyle"
 #define PdfFirstPageStyleKey @"firstPage"
@@ -1094,6 +1100,15 @@ static void testPageLabelAndToolTips(MyPDFKitView *view, NSWindow *window, PDFDo
     view.document = labeled; [view layoutDocumentView]; [view goToPage:[labeled pageAtIndex:0]];
     show(view, 0);
     check([view.preview.pageLabel isEqualToString:@"Page 157"], @"popup shows the label of the linked page");
+    [view doKillPopup];
+    // Settings can leave out the page number; a popup opened then has none (#14).
+    [SUD setBool:NO forKey:LinkPopupPageLabelKey];
+    show(view, 0);
+    check(view.preview && view.preview.pageLabel == nil, @"with the page number switched off, the popup has no page label");
+    [view doKillPopup];
+    [SUD removeObjectForKey:LinkPopupPageLabelKey];
+    show(view, 0);
+    check([view.preview.pageLabel isEqualToString:@"Page 157"], @"with the page number switched on again, the popup shows it");
     [view doKillPopup];
 
     // PDFKit's "Go to page" tool tip gives way to the popup.
@@ -2044,6 +2059,8 @@ static void testSplitControlHover(MyPDFKitView *view, MyPDFKitView *second, NSWi
 }
 int main(void) { @autoreleasepool {
     TSInstallAppKitIsolation(); [NSApplication sharedApplication];
+    // FactoryDefaults.plist shows the page number in link popups.
+    [SUD registerDefaults:@{LinkPopupPageLabelKey:@YES}];
     installFakeToolTip();
     handlers = [NSMutableArray new];
     TSReplaceTestMethod(class_getClassMethod(NSEvent.class,@selector(modifierFlags)), (IMP)currentFlags);
@@ -2254,7 +2271,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'click-keeps-focus':'clicking the popup makes its preview the active view', 'click-keeps-selection':'a click away from text clears',
                     'no-page-label':'page label is drawn in the lower right corner', 'label-in-page-points':'page label stays the size it has on screen',
                     'tooltip-kept':'internal link gets no PDFKit tool tip', 'tooltip-trusts-data':'user data that is not the link',
-                    'label-from-index':'popup shows the label of the linked page', 'tooltip-always-hidden':'tool tip stays when link popups are off',
+                    'label-from-index':'popup shows the label of the linked page',
+                    'label-ignores-setting':'with the page number switched off, the popup has no page label', 'tooltip-always-hidden':'tool tip stays when link popups are off',
                     'unpinned-interactive':'hovering popup leaves the mouse', 'pinned-transparent':'pinned popup takes clicks',
                     'scroll-chains':'scrolling the popup leaves the preview', 'scroll-moves-frame':'scrolling leaves the popup in place', 'option-not-forwarded':'Option while shown makes',
                     'kill-leaves-view':'closing removes the popup view', 'cursor-overridden':'shows an open hand',

@@ -1870,6 +1870,12 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
     [SUD setBool:sender.state == NSControlStateValueOn forKey:KeepPreviewDisplayInFullScreenKey];
 }
 
+// Whether link popups opened from now on show the page number of the linked page (#14).
+- (IBAction)linkPopupPageLabelChanged:(NSButton *)sender
+{
+    [SUD setBool:sender.state == NSControlStateValueOn forKey:LinkPopupPageLabelKey];
+}
+
 - (IBAction)sourceAndPreviewInSameWindowChanged:sender
 {
     NSInteger myTag = [sender tag];

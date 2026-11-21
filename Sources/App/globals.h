@@ -407,6 +407,7 @@ extern NSString *SyncMethodKey;
 extern NSString *UseOutlineKey;
 extern NSString *LeftRightArrowsAlwaysPageKey;
 extern NSString *KeepPreviewDisplayInFullScreenKey;
+extern NSString *LinkPopupPageLabelKey;
 extern NSString *RedConsoleAfterErrorKey;
 extern NSString *PreviewDrawerOpenKey;
 extern NSString *ConTeXtTagsKey;

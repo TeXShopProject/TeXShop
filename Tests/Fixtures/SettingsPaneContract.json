@@ -1977,6 +1977,13 @@
         "value": "linkPopupsChanged:"
       },
       {
+        "key": "preview-link-popup-page-label-button.action",
+        "view": "settings.preview-link-popup-page-label-button",
+        "kind": "view",
+        "property": "action",
+        "value": "linkPopupPageLabelChanged:"
+      },
+      {
         "key": "preview-scroll-page-turn-button.action",
         "view": "settings.preview-scroll-page-turn-button",
         "kind": "view",
@@ -4580,6 +4587,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Link Popups"
+        },
+        {
+          "key": "preview-link-popup-page-label-cell.title",
+          "view": "settings.preview-link-popup-page-label-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Show page number in link popups"
         },
         {
           "key": "preview-scroll-page-turn-cell.title",
@@ -7347,6 +7361,13 @@
           "value": "Link Popups"
         },
         {
+          "key": "preview-link-popup-page-label-cell.title",
+          "view": "settings.preview-link-popup-page-label-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Show page number in link popups"
+        },
+        {
           "key": "preview-scroll-page-turn-cell.title",
           "view": "settings.preview-scroll-page-turn-button",
           "kind": "cell",
@@ -10110,6 +10131,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Link Popups"
+        },
+        {
+          "key": "preview-link-popup-page-label-cell.title",
+          "view": "settings.preview-link-popup-page-label-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Show page number in link popups"
         },
         {
           "key": "preview-scroll-page-turn-cell.title",
@@ -12877,6 +12905,13 @@
           "value": "Link Popups"
         },
         {
+          "key": "preview-link-popup-page-label-cell.title",
+          "view": "settings.preview-link-popup-page-label-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Show page number in link popups"
+        },
+        {
           "key": "preview-scroll-page-turn-cell.title",
           "view": "settings.preview-scroll-page-turn-button",
           "kind": "cell",
@@ -15640,6 +15675,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Link Popups"
+        },
+        {
+          "key": "preview-link-popup-page-label-cell.title",
+          "view": "settings.preview-link-popup-page-label-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Show page number in link popups"
         },
         {
           "key": "preview-scroll-page-turn-cell.title",
@@ -18407,6 +18449,13 @@
           "value": "Link Popups"
         },
         {
+          "key": "preview-link-popup-page-label-cell.title",
+          "view": "settings.preview-link-popup-page-label-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Show page number in link popups"
+        },
+        {
           "key": "preview-scroll-page-turn-cell.title",
           "view": "settings.preview-scroll-page-turn-button",
           "kind": "cell",
@@ -21170,6 +21219,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Link Popups"
+        },
+        {
+          "key": "preview-link-popup-page-label-cell.title",
+          "view": "settings.preview-link-popup-page-label-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Show page number in link popups"
         },
         {
           "key": "preview-scroll-page-turn-cell.title",
@@ -23937,6 +23993,13 @@
           "value": "Link Popups"
         },
         {
+          "key": "preview-link-popup-page-label-cell.title",
+          "view": "settings.preview-link-popup-page-label-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Show page number in link popups"
+        },
+        {
           "key": "preview-scroll-page-turn-cell.title",
           "view": "settings.preview-scroll-page-turn-button",
           "kind": "cell",
@@ -26700,6 +26763,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Link Popups"
+        },
+        {
+          "key": "preview-link-popup-page-label-cell.title",
+          "view": "settings.preview-link-popup-page-label-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Show page number in link popups"
         },
         {
           "key": "preview-scroll-page-turn-cell.title",
@@ -29467,6 +29537,13 @@
           "value": "Link Popups"
         },
         {
+          "key": "preview-link-popup-page-label-cell.title",
+          "view": "settings.preview-link-popup-page-label-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Show page number in link popups"
+        },
+        {
           "key": "preview-scroll-page-turn-cell.title",
           "view": "settings.preview-scroll-page-turn-button",
           "kind": "cell",
@@ -32232,6 +32309,13 @@
           "value": "Link Popups"
         },
         {
+          "key": "preview-link-popup-page-label-cell.title",
+          "view": "settings.preview-link-popup-page-label-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Show page number in link popups"
+        },
+        {
           "key": "preview-scroll-page-turn-cell.title",
           "view": "settings.preview-scroll-page-turn-button",
           "kind": "cell",
@@ -34995,6 +35079,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Link Popups"
+        },
+        {
+          "key": "preview-link-popup-page-label-cell.title",
+          "view": "settings.preview-link-popup-page-label-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Show page number in link popups"
         },
         {
           "key": "preview-scroll-page-turn-cell.title",

@@ -5037,7 +5037,8 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
             linkPreview = [[TSLinkPreviewView alloc] initWithFrame:bRect image:myImageNew source:aRect
                                                           pageSize:previewSize pages:previewPages
                                                          pageRects:pageRects];
-            if (linkedPage.label.length)
+            // Settings can leave out the page number in the corner (#14).
+            if (linkedPage.label.length && [SUD boolForKey: LinkPopupPageLabelKey])
                 linkPreview.pageLabel = [NSString stringWithFormat:NSLocalizedString(@"Page %@",
                     @"Page label in the corner of a link popup; %@ is the page label given in the PDF"), linkedPage.label];
             __weak MyPDFKitView *weakView = self;
