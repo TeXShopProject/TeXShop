@@ -22,6 +22,11 @@ MUTATIONS = {
     'book-without-lines': ('    for (NSUInteger i = 0; i < 4; i++) {\n        NSBezierPath *line', '    for (NSUInteger i = 4; i < 4; i++) {\n        NSBezierPath *line'),
     'multipage-not-scroll': ('else if (style == 3 && scroll) TSPreviewDrawSymbol(scroll, rect);', 'else if (style == 3 && scroll) TSPreviewDrawSymbol(sheet, rect);'),
     'double-multipage-without-arrow': ('            [arrow stroke];\n', ''),
+    # The arrow points up (#65 audit).
+    'arrow-up': ('@"M11,14.6V19.2M9.3,17.5L11,19.2L12.7,17.5"', '@"M11,14.6V19.2M9.3,16.3L11,14.6L12.7,16.3"'),
+    # Command letters read together: a close followed at once by a move is lost (#65 audit).
+    'commands-read-together': ('        unichar next = [data characterAtIndex:scanner.scanLocation];\n        if ([commands characterIsMember:next]) {\n            command = next;\n            scanner.scanLocation += 1;',
+        '        unichar next = [data characterAtIndex:scanner.scanLocation];\n        NSString *letters = nil;\n        if ([scanner scanCharactersFromSet:commands intoString:&letters]) {\n            command = [letters characterAtIndex:letters.length - 1];'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -48,8 +53,8 @@ static NSString *pointsOf(NSBezierPath *path) {
     for (NSInteger i = 0; i < path.elementCount; i++) {
         NSPoint p[3];
         NSBezierPathElement e = [path elementAtIndex:i associatedPoints:p];
-        NSUInteger n = e == NSBezierPathElementCurveTo ? 3 : e == NSBezierPathElementClosePath ? 0 : 1;
-        NSMutableString *s = [NSMutableString stringWithString:@[@"M", @"L", @"C", @"Z"][e == NSBezierPathElementMoveTo ? 0 : e == NSBezierPathElementLineTo ? 1 : e == NSBezierPathElementCurveTo ? 2 : 3]];
+        NSUInteger n = e == NSBezierPathElementCubicCurveTo ? 3 : e == NSBezierPathElementClosePath ? 0 : 1;
+        NSMutableString *s = [NSMutableString stringWithString:@[@"M", @"L", @"C", @"Z"][e == NSBezierPathElementMoveTo ? 0 : e == NSBezierPathElementLineTo ? 1 : e == NSBezierPathElementCubicCurveTo ? 2 : 3]];
         for (NSUInteger k = 0; k < n; k++) [s appendFormat:@"%.2f,%.2f%@", p[k].x, p[k].y, k + 1 < n ? @" " : @""];
         [parts addObject:s];
     }
@@ -101,6 +106,10 @@ int main(int argc, char **argv) { @autoreleasepool {
           [NSString stringWithFormat:@"pairs after a move are lines, also relative ones after a close (%@)", pointsOf(TSPreviewPathFromSVG(@"M1,2 3,4 5,6Z m1,1 2,0"))]);
     check([pointsOf(TSPreviewPathFromSVG(@"M1,1H4h1V3v-1")) isEqualToString:@"M1.00,1.00 L4.00,1.00 L5.00,1.00 L5.00,3.00 L5.00,2.00"],
           @"horizontal and vertical lines, absolute and relative");
+    // Without spaces between the commands, the same path (#65 audit).
+    NSString *spaced = pointsOf(TSPreviewPathFromSVG(@"M1,1L5,1L5,5Z m2,0 l1,0")), *packed = pointsOf(TSPreviewPathFromSVG(@"M1,1L5,1L5,5Zm2,0l1,0"));
+    check([spaced isEqualToString:@"M1.00,1.00 L5.00,1.00 L5.00,5.00 Z M3.00,1.00 L4.00,1.00"] && [packed isEqualToString:spaced],
+          [NSString stringWithFormat:@"a close followed at once by the next command (%@ / %@)", spaced, packed]);
 
     NSData *ink[5];
     for (NSInteger style = 1; style <= 4; style++) {
@@ -133,6 +142,13 @@ int main(int argc, char **argv) { @autoreleasepool {
     NSUInteger below = 0; const unsigned char *d4 = ink[4].bytes;
     for (NSInteger y = 60; y < 80; y++) for (NSInteger x = 36; x < 52; x++) below += d4[y * 88 + x];
     check(below > 30, [NSString stringWithFormat:@"Double MultiPage has the arrow below the book (%lu)", (unsigned long)below]);
+    // The arrow points down: all of the arrow, as in the SVG, is in the icon (#65 audit).
+    NSData *arrow = inkOf(drawn(^(NSRect r) {
+        NSBezierPath *a = TSPreviewPathFromSVG(@"M11,14.6V19.2M9.3,17.5L11,19.2L12.7,17.5");
+        a.lineWidth = 0.95; a.lineCapStyle = NSLineCapStyleRound; a.lineJoinStyle = NSLineJoinStyleRound; [a stroke]; }));
+    const unsigned char *ar = arrow.bytes; NSUInteger missing = 0;
+    for (NSUInteger i = 0; i < arrow.length; i++) if (ar[i] && !i4[i]) missing++;
+    check(count(arrow) > 30 && missing == 0, [NSString stringWithFormat:@"Double MultiPage has the arrow pointing down (%lu of %lu missing)", (unsigned long)missing, (unsigned long)count(arrow)]);
     printf("PASS: %lu checks of the display format icons\n", (unsigned long)checks);
     return 0;
 }}

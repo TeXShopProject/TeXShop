@@ -55,14 +55,23 @@ static NSString * const TSPreviewBookLines[] = {
 static inline NSBezierPath *TSPreviewPathFromSVG(NSString *data) {
     NSBezierPath *path = [NSBezierPath bezierPath];
     NSScanner *scanner = [NSScanner scannerWithString:data];
-    scanner.charactersToBeSkipped = [NSCharacterSet characterSetWithCharactersInString:@" ,\n\t"];
+    NSCharacterSet *separators = [NSCharacterSet characterSetWithCharactersInString:@" ,\n\t"];
+    scanner.charactersToBeSkipped = separators;
     NSCharacterSet *commands = [NSCharacterSet characterSetWithCharactersInString:@"MmLlHhVvCcZz"];
     unichar command = 'M';
     NSPoint current = NSZeroPoint, start = NSZeroPoint;
-    while (!scanner.isAtEnd) {
-        NSString *letter = nil;
-        if ([scanner scanCharactersFromSet:commands intoString:&letter]) command = [letter characterAtIndex:letter.length - 1];
-        if (command == 'Z' || command == 'z') { [path closePath]; current = start; continue; }
+    while (YES) {
+        // One command letter at a time: a close may be followed at once by the next command.
+        while (scanner.scanLocation < data.length && [separators characterIsMember:[data characterAtIndex:scanner.scanLocation]])
+            scanner.scanLocation += 1;
+        if (scanner.isAtEnd) break;
+        unichar next = [data characterAtIndex:scanner.scanLocation];
+        if ([commands characterIsMember:next]) {
+            command = next;
+            scanner.scanLocation += 1;
+            if (command == 'Z' || command == 'z') { [path closePath]; current = start; continue; }
+        }
+        else if (command == 'Z' || command == 'z') return path;   // numbers after a close
         BOOL relative = command >= 'a';
         NSUInteger count = (command == 'C' || command == 'c') ? 6 : (command == 'H' || command == 'h' || command == 'V' || command == 'v') ? 1 : 2;
         double v[6];
