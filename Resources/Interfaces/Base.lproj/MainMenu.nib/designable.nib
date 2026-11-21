@@ -1306,11 +1306,6 @@
                                     <action selector="performZoom:" target="-1" id="143"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Fullscreen (Old Method)" id="693" identifier="TSShortcut.fullscreen:.0">
-                                <connections>
-                                    <action selector="fullscreen:" target="-1" id="694"/>
-                                </connections>
-                            </menuItem>
                             <menuItem title="Enter Full Screen" keyEquivalent="f" id="1181" identifier="TSShortcut.toggleFullScreen:.0">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                 <connections>

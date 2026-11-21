@@ -24,7 +24,6 @@
 
 #import <AppKit/AppKit.h>
 #import <WebKit/WebKit.h>
-#import "TSFullscreenWindow.h"
 #import <Quartz/Quartz.h>
 #import "NoodleLineNumberView.h"
 #import "NoodleLineNumberMarker.h"
@@ -243,10 +242,7 @@ enum RootCommand
 	BOOL		windowIsSplit;
 	BOOL		lineNumbersShowing;
 	BOOL		invisibleCharactersShowing; // added by Terada
-	BOOL				isFullScreen;
     
-//	TSFullscreenWindow	*fullscreenWindow;
-//	PDFView				*fullscreenPDFView;
 //   TSDocument          *rootDocument;
     
 
@@ -540,8 +536,6 @@ enum RootCommand
 @property (retain) NSScrollView                 *logScrollView;
 @property (retain) NSString                     *logExtension;
 
-@property (retain) 	TSFullscreenWindow	*fullscreenWindow;
-@property (retain)  PDFView				*fullscreenPDFView;
 @property (retain)  TSDocument          *rootDocument;
 @property (retain)  IBOutlet    MyPDFKitView				*myPDFKitView;
 @property (retain)  IBOutlet    MyPDFKitView				*myPDFKitView2;
@@ -800,8 +794,6 @@ enum RootCommand
 - (void) savePreviewPosition;
 - (void) savePortableSourcePosition;
 - (void) savePortablePreviewPosition;
-- (void) fullscreen: (id)sender;
-- (void) endFullScreen;
 - (void)displayConsole: (id)sender;
 - (void)returnFromConsole;
 - (void)consoleDidResignKey;

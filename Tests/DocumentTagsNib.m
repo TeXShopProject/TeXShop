@@ -20,7 +20,7 @@ static void Register(NSString *name,Class base) {
 int main(int argc,char **argv) { @autoreleasepool {
  TSInstallAppKitIsolation(); [NSApplication sharedApplication];outlets=[NSMutableDictionary dictionary];
 
- for(NSString *name in @[@"TSConsoleWindow",@"TSFullSplitWindow",@"TSFullscreenWindow",@"TSHTMLWindow",@"TSLogWindow",@"TSPreviewWindow",@"TSTextEditorWindow"]) Register(name,NSWindow.class);
+ for(NSString *name in @[@"TSConsoleWindow",@"TSFullSplitWindow",@"TSHTMLWindow",@"TSLogWindow",@"TSPreviewWindow",@"TSTextEditorWindow"]) Register(name,NSWindow.class);
  Register(@"MyPDFView",NSView.class);
  Register(@"MyPDFKitView",PDFView.class);Register(@"ScrapPDFKitView",PDFView.class);
  Register(@"TSTextView",NSTextView.class);Register(@"ScrapTextView",NSTextView.class);

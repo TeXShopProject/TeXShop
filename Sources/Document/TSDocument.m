@@ -294,7 +294,6 @@ withDarkColors = NO;
     
     self.docUseAnnotationMenu = NO;
 	
-	isFullScreen = NO;
 
 	errorNumber = 0;
 	whichError = 0;
@@ -5119,7 +5118,7 @@ if ( ! skipTextWindow) {
         return NO;
     return ((window == textWindow) || (window == pdfWindow) || (window == self.pdfKitWindow) ||
             (window == fullSplitWindow) || (window == outputWindow) || (window == self.logWindow) ||
-            (window == self.htmlWindow) || (window == self.fullscreenWindow) ||
+            (window == self.htmlWindow) ||
             (window == scrapWindow) || (window == scrapPDFWindow) ||
             (self.experimentConsole.isWindowLoaded && (window == self.experimentConsole.window)));
 }
@@ -10870,76 +10869,6 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 */
 
 
-
-- (void) fullscreen: sender
-{
-	NSInteger				windowLevel;
-	NSRect			screenRect;
-	PDFDocument		*pdfDoc;
-	NSString		*imagePath;
-	PDFPage			*myCurrentPage, *newPage;
-	NSInteger				currentPageIndex;
-
-	if (useFullSplitWindow)
-        return;
-    
-	imagePath = [[[[self fileURL] path]stringByDeletingPathExtension] stringByAppendingPathExtension:@"pdf"];
-	if (! imagePath)
-		return;
-	if (![[NSFileManager defaultManager] fileExistsAtPath: imagePath]) 
-		return;
-		
-	if (CGDisplayCapture( kCGDirectMainDisplay ) != kCGErrorSuccess) {
-      //  NSLog( @"Couldn't capture the main display!" );
-		}
-	else {
-		isFullScreen = YES;
-		windowLevel = CGShieldingWindowLevel();
-		[self.fullscreenWindow setLevel:windowLevel];
-		screenRect = [[NSScreen mainScreen] frame];
-		[self.fullscreenWindow setFrame: screenRect display: NO];
-		[self.fullscreenWindow setBackgroundColor:[NSColor darkGrayColor]];
-	
-		[self.fullscreenPDFView setDisplayMode: kPDFDisplaySinglePage];
-		[self.fullscreenPDFView setAutoScales: YES];
-		pdfDoc = [[PDFDocument alloc] initWithURL: [NSURL fileURLWithPath: imagePath]] ;
-		[self.fullscreenPDFView setDocument: pdfDoc];
-		
-		myCurrentPage = [self.myPDFKitView currentPage];
-		currentPageIndex = [[self.myPDFKitView document] indexForPage: myCurrentPage];
-		newPage = [[self.fullscreenPDFView document] pageAtIndex: currentPageIndex];
-		[self.fullscreenPDFView goToPage: newPage];
-		
-		[self.fullscreenWindow makeKeyAndOrderFront:nil];
-		}
-
-}
-
-- (void)endFullScreen
-{
-	PDFPage	*myCurrentPage;
-	NSInteger		currentPageNumber;
-	
-	
-	if (isFullScreen) {
-		isFullScreen = NO;
-		
-		myCurrentPage = [self.fullscreenPDFView currentPage];
-		currentPageNumber = [[self.fullscreenPDFView document] indexForPage: myCurrentPage];
-		currentPageNumber++;
-		[self.myPDFKitView goToKitPageNumber: currentPageNumber];
-		
-        // Release the display(s)
-        if (CGDisplayRelease( kCGDirectMainDisplay ) != kCGErrorSuccess) {
-        	// NSLog( @"Couldn't release the display(s)!" );
-        	// Note: if you display an error dialog here, make sure you set
-        	// its window level to the same one as the shield window level,
-        	// or the user won't see anything.
-			}
-			
-		[self.fullscreenWindow orderOut:self];
-		}
-}
 
 - (void)displayConsole: (id)sender
 {

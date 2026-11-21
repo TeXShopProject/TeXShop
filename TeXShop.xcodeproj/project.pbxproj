@@ -231,8 +231,6 @@
 		4093BBEA22CECA7D00D37BD7 /* TSDocument-XML.m in Sources */ = {isa = PBXBuildFile; fileRef = 4093BBE922CECA7D00D37BD7 /* TSDocument-XML.m */; };
 		4096186405824CF2000D94FD /* TSMatrixPanelController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4096186205824CF2000D94FD /* TSMatrixPanelController.h */; };
 		4096186505824CF2000D94FD /* TSMatrixPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4096186305824CF2000D94FD /* TSMatrixPanelController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		4098635C0C66CC4D00221E87 /* TSFullscreenWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 4098635A0C66CC4D00221E87 /* TSFullscreenWindow.h */; };
-		4098635D0C66CC4D00221E87 /* TSFullscreenWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 4098635B0C66CC4D00221E87 /* TSFullscreenWindow.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		409B4CBB2892290500DCA0F5 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 409B4CBA2892290500DCA0F5 /* WebKit.framework */; };
 		409C33820E566BD200FE3BE3 /* TSDocument-SyncTeX.m in Sources */ = {isa = PBXBuildFile; fileRef = 409C33810E566BD200FE3BE3 /* TSDocument-SyncTeX.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		409F89D11960A6A200D6F7AD /* ScrapPDFKitView.h in Headers */ = {isa = PBXBuildFile; fileRef = 409F89CF1960A6A200D6F7AD /* ScrapPDFKitView.h */; };
@@ -954,8 +952,6 @@
 		4093BBE922CECA7D00D37BD7 /* TSDocument-XML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-XML.m"; sourceTree = "<group>"; };
 		4096186205824CF2000D94FD /* TSMatrixPanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSMatrixPanelController.h; sourceTree = "<group>"; };
 		4096186305824CF2000D94FD /* TSMatrixPanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSMatrixPanelController.m; sourceTree = "<group>"; };
-		4098635A0C66CC4D00221E87 /* TSFullscreenWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSFullscreenWindow.h; sourceTree = "<group>"; };
-		4098635B0C66CC4D00221E87 /* TSFullscreenWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSFullscreenWindow.m; sourceTree = "<group>"; };
 		409B4CBA2892290500DCA0F5 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = ../../../System/Library/Frameworks/WebKit.framework; sourceTree = "<group>"; };
 		409C33810E566BD200FE3BE3 /* TSDocument-SyncTeX.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-SyncTeX.m"; sourceTree = "<group>"; };
 		409C33D90E56866200FE3BE3 /* synctexwrap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.csh; path = synctexwrap; sourceTree = "<group>"; };
@@ -1635,8 +1631,6 @@
 				40E76BF0292FDD0C00CBE5F9 /* CustomModalWindowController.m */,
 				00CFF0E9000ACFC67F000001 /* TSConsoleWindow.h */,
 				00CFF0EB000ACFFC7F000001 /* TSConsoleWindow.m */,
-				4098635A0C66CC4D00221E87 /* TSFullscreenWindow.h */,
-				4098635B0C66CC4D00221E87 /* TSFullscreenWindow.m */,
 				404D78FF199FF471008B8D64 /* TSFullSplitWindow.h */,
 				404D7900199FF471008B8D64 /* TSFullSplitWindow.m */,
 				26F5B11D7C0A4E9D2B3A6C02 /* TSFullSplitDivider.h */,
@@ -2022,7 +2016,6 @@
 				F264AA2798678AB4A0B0DDB3 /* NSMutableString-Extras.h in Headers */,
 				F622D4390A4C96776A65CC4E /* NSString-CharacterConversion.h in Headers */,
 				400CD8BA0C66BD3900C450D6 /* HelpDocuments.h in Headers */,
-				4098635C0C66CC4D00221E87 /* TSFullscreenWindow.h in Headers */,
 				401EF0760D0B3F8800203D7B /* MyDragView.h in Headers */,
 				40162B2E0F1873F200E9336E /* NoodleLineNumberMarker.h in Headers */,
 				40162B300F1873F200E9336E /* NoodleLineNumberView.h in Headers */,
@@ -2424,7 +2417,6 @@
 				408F8D7618DB671100277EDB /* GlobalData.m in Sources */,
 				400CD8BB0C66BD3900C450D6 /* HelpDocuments.m in Sources */,
 				4002427928921A3800851717 /* MyHTMLView.m in Sources */,
-				4098635D0C66CC4D00221E87 /* TSFullscreenWindow.m in Sources */,
 				401EF0770D0B3F8800203D7B /* MyDragView.m in Sources */,
 				404D1B642891B23400402802 /* TSHTMLWindow.m in Sources */,
 				409C33820E566BD200FE3BE3 /* TSDocument-SyncTeX.m in Sources */,

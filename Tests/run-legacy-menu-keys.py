@@ -31,9 +31,18 @@ with tempfile.TemporaryDirectory(prefix='texshop-legacy-menu-') as td:
      sub=item.find('menu/items/menuItem/connections/action');own=item.find('connections/action')
      actions.append(sub.get('selector') if sub is not None else own.get('selector') if own is not None else '')
   assert actions,language;edits[language]={'nib':str(nib),'actions':actions}
-  # The name Fullscreen (Old Method) had in this language in 5.58, which a KeyEquivalents.plist may use.
+  # The Window menu of 5.58, whose third item was Fullscreen (Old Method), removed in 6.00.
+  window=[m for m in root.iter('menu') if m.find("items/menuItem/connections/action[@selector='toggleFullScreen:']") is not None]
+  assert len(window)==1,language
+  edits[language]['window']=[(i.find('connections/action').get('selector') if i.find('connections/action') is not None else '') for i in window[0].find('items')]
+  assert 'fullscreen:' in edits[language]['window'],language
+  # The name Fullscreen (Old Method) had in this language in 5.58, which a KeyEquivalents.plist may still use.
   former=[i.get('title') for i in root.iter('menuItem') if i.find("connections/action[@selector='fullscreen:']") is not None]
   assert len(former)==1,language;edits[language]['fullscreen']=former[0]
+  # Its name in 6.00 beta 8, the last version that had it.
+  beta8=ET0.fromstring(subprocess.check_output(['git','show',f'v.6.00-beta.8:Resources/Interfaces/{language}.lproj/MainMenu.nib/designable.nib'],cwd=r))
+  named=[i.get('title') for i in beta8.iter('menuItem') if i.find("connections/action[@selector='fullscreen:']") is not None]
+  assert len(named)==1,language;edits[language]['fullscreen600b8']=named[0]
  assert len(edits)==12
  (Path(td)/'edits.json').write_text(json.dumps(edits))
  subprocess.run([str(p),str(r/'Tests/Fixtures/LegacyKeyBindingTitles.json'),str(Path(td)/'edits.json')],check=True)

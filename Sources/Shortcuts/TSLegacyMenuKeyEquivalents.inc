@@ -43,6 +43,17 @@ static BOOL TSLegacyIsAddedSubmenu(NSMenuItem *item)
             return YES;
     return NO;
 }
+// Window › Fullscreen (Old Method) was removed in 6.00. It stood right before Enter Full Screen, so positions saved
+// before that keep a place for it: its own key goes to an item that is not in any menu, and the keys of the items after it
+// still reach the same items.
+static NSString *const TSLegacyFullScreenItem = @"TSShortcut.toggleFullScreen:.0";
+static void TSLegacyKeepRemovedFullscreen(NSMutableArray<NSMenuItem *> *items)
+{
+    NSUInteger fullScreen = [items indexOfObjectPassingTest:^BOOL(NSMenuItem *item, NSUInteger index, BOOL *stop) {
+        return [item.identifier isEqualToString:TSLegacyFullScreenItem];
+    }];
+    if (fullScreen != NSNotFound) [items insertObject:[[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""] atIndex:fullScreen];
+}
 static NSArray<NSMenuItem *> *TSLegacyItems(NSMenu *menu)
 {
     NSMutableArray<NSMenuItem *> *items = [menu.itemArray mutableCopy];
@@ -50,6 +61,7 @@ static NSArray<NSMenuItem *> *TSLegacyItems(NSMenu *menu)
         return ![item.identifier isEqualToString:TSLegacyStatusBarItem] && ![item.identifier isEqualToString:TSLegacySwapItem] &&
                !TSLegacyIsAddedSubmenu(item);
     }]];
+    TSLegacyKeepRemovedFullscreen(items);
     if (TSLegacySkipsFindAndReplace()) {
         NSUInteger added = [items indexOfObjectPassingTest:^BOOL(NSMenuItem *item, NSUInteger index, BOOL *stop) {
             return [item.identifier isEqualToString:TSLegacyFindAndReplaceItem];
@@ -99,8 +111,6 @@ static NSString *TSLegacyFormerTitleIdentifier(NSString *title)
         for (NSString *former in @[@"Pdftex", @"pdfTeX"]) map[TSLegacyComparableTitle(former)] = @"TSShortcut.doChooseMethod:.100";
         for (NSString *former in @[@"TeX and DVI", @"TeX und DVI", @"TeX y DVI", @"TeX et DVI", @"TeX e DVI", @"TeX en DVI", @"TeX + DVI", @"Tex și  DVI", @"TeX 和 DVI"]) map[TSLegacyComparableTitle(former)] = @"TSShortcut.doChooseMethod:.101";
         for (NSString *former in @[@"Command Completion", @"Vervollständigung", @"Compleción de comandos ", @"Compleción de comandos", @"Commande de complètement", @"Completamento comandi", @"コマンド補完", @"명령 완성", @"Aanvullen", @"Completion", @"Completar", @"Completare", @"命令补全"]) map[TSLegacyComparableTitle(former)] = TSLegacyCompletionItem;
-        // Fullscreen (Old Method) was named like the full screen of macOS in these languages (5.58 to 6.00 beta 8).
-        for (NSString *former in @[@"Vollbild", @"Pantalla completa", @"Plein écran", @"Schermo Intero", @"フルスクリーン表示", @"Fullscreen", @"Tela cheia", @"全屏幕"]) map[TSLegacyComparableTitle(former)] = @"TSShortcut.fullscreen:.0";
         identifiers = map;
     });
     return identifiers[TSLegacyComparableTitle(title)];
