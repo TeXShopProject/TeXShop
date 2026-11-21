@@ -194,14 +194,16 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     // that size is already under six points, so the label is shown as it is or left out.
     CGFloat fontFloor = MIN(fontSize, TSLinkPreviewLabelMinimumScreenSize * unit);
     CGFloat margin = TSLinkPreviewLabelMargin * scale;
-    // The corners and the edge are in page points, so they grow on screen. A label on the
-    // screen-point margin sits in that curve and under the stroke. The capsule stays on the
-    // straight part of the frame (#14).
+    // The corners and the edge are in page points, so they grow on screen. The capsule
+    // keeps the margin clear inside the edge, also along the rounded corner, and otherwise
+    // goes as far into the corner as that allows (#14).
     CGFloat edge = MAX(TSLinkPreviewEdgeWidth, [self unitsPerPixel]);
-    CGFloat inset = MAX(margin, TSLinkPreviewCornerRadius + edge);
+    CGFloat clear = edge + margin;
+    CGFloat inset = clear;
     CGFloat roomW = NSWidth(bounds) - 2 * inset, roomH = NSHeight(bounds) - 2 * inset;
-    // A fraction of a page point is many screen points at a high magnification. Reject
-    // only a room that is not there; the six-point floor decides whether the label fits.
+    // The capsule is never nearer the edge than `clear`. A fraction of a page point is many
+    // screen points at a high magnification. Reject only a room that is not there; the
+    // six-point floor decides whether the label fits.
     if (!(roomW > 0) || !(roomH > 0)) return;
     NSSize size = NSZeroSize;
     CGFloat height = 0, radius = 0, drawn = 1;
@@ -222,6 +224,12 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
         height = ceil(size.height / px) * px;
         CGFloat textWidth = ceil(size.width / px) * px;
         radius = height / 2;
+        // The right end of the capsule is a half circle. When its center lies inside the
+        // rounded corner, the half circle keeps the margin inside the curve of the edge: on
+        // the diagonal, its center is at most `bend` from the center of the curve (#14).
+        CGFloat bend = TSLinkPreviewCornerRadius - clear - radius;
+        inset = bend > 0 ? MAX(clear, TSLinkPreviewCornerRadius - bend / (CGFloat)M_SQRT2 - radius) : clear;
+        roomW = NSWidth(bounds) - 2 * inset; roomH = NSHeight(bounds) - 2 * inset;
         capsule = NSMakeRect(NSMaxX(bounds) - inset - textWidth - height, NSMinY(bounds) + inset,
                              textWidth + height, height);
         if (NSWidth(capsule) <= roomW && NSHeight(capsule) <= roomH) break;

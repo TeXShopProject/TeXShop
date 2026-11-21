@@ -1072,15 +1072,16 @@ static void testPageLabelAndToolTips(MyPDFKitView *view, NSWindow *window, PDFDo
     CGFloat unit = NSWidth([view.documentView convertRect:NSMakeRect(0,0,1,1) fromView:nil]);
     NSRect bounds = preview.bounds;
     NSBitmapImageRep *rep = render(preview);
-    // The capsule sits just inside the page-point corner, about 7 page points in, not on the
-    // old 3-point screen margin. At 200% its type is 11 points on screen.
-    NSRect corner = NSMakeRect(NSMaxX(bounds) - 24, NSMinY(bounds) + 8, 12, 4);
-    NSRect left = NSMakeRect(NSMinX(bounds) + 4 * unit, NSMinY(bounds) + 8, 26 * unit, 4);
+    // The capsule sits in the corner, about 2.4 page points in from the right and the bottom:
+    // three points on screen inside the edge and its page-point curve. At 200% its type is
+    // 11 points on screen, so it is about 6.5 page points high.
+    NSRect corner = NSMakeRect(NSMaxX(bounds) - 20, NSMinY(bounds) + 4, 12, 3);
+    NSRect left = NSMakeRect(NSMinX(bounds) + 4 * unit, NSMinY(bounds) + 4, 26 * unit, 3);
     check(grayShare(rep, preview, corner) > 0.3 && grayShare(rep, preview, left) < 0.01,
           @"page label is drawn in the lower right corner");
     // The label keeps the size it has on screen (#14). At 200% a label in page points would
     // reach this far left; one that stays on screen does not.
-    NSRect grown = NSMakeRect(NSMaxX(bounds) - 52, NSMinY(bounds) + 8, 6, 4);
+    NSRect grown = NSMakeRect(NSMaxX(bounds) - 52, NSMinY(bounds) + 4, 6, 3);
     check(grayShare(rep, preview, grown) < 0.01, @"page label stays the size it has on screen");
     NSRect beyond = NSMakeRect(NSMaxX(bounds) - 90, NSMinY(bounds) + 3, 20, 10);
     check(grayShare(rep, preview, beyond) < 0.01, @"page label ends at its text");
