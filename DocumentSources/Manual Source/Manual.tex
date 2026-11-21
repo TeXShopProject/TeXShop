@@ -3879,11 +3879,9 @@ There is a final item related to responders and active views. If the source wind
 then we unsplit the window, we'll see that top portion. But if the bottom portion is active and then we unsplit the
 window, we'll see that bottom portion.
 
-The Preview window does not work this way. Instead, the top view of a split window always becomes the view we see when we unsplit the window. So a slightly different philosophy guides the Preview window. The top view is the important piece, which will  appear whether or not we split the window. The bottom view is the secondary material, which we see only when the window is split.
+The Preview window works the same way: unsplitting keeps the active view, with its place, display format, magnification and pinned popup. Only when the active view has been put out of sight by dragging the divider to the edge of the window does the view that can be seen stay (see \cref{Splitting_Windows_Section}).
 
-There are rare situations when we want the bottom portion of the Preview window to become the primary view after we unsplit. And for that, there is a special command.
-
-The top view is also the one that stays in place when the divider of a Preview window split into a top and a bottom part is moved. Think of the page lying on a table, and of the bottom view as a sheet of paper laid over its lower part, showing another place in the document. Moving the divider moves this sheet up or down. The top view keeps its text where it is and only shows more or less of it below, while the text of the bottom view moves with the divider. Unsplitting the window takes the sheet away.
+The top view is the one that stays in place when the divider of a Preview window split into a top and a bottom part is moved. Think of the page lying on a table, and of the bottom view as a sheet of paper laid over its lower part, showing another place in the document. Moving the divider moves this sheet up or down. The top view keeps its text where it is and only shows more or less of it below, while the text of the bottom view moves with the divider. Unsplitting the window takes the sheet away.
 
 Changing the height of the window works the same way: both views keep the text at their top edges and show more or less below it. A view can also be put out of sight for a moment by dragging the divider all the way to the top or the bottom of the window. When the divider is dragged back, the view shows the same text at its top as before.
 
@@ -3897,11 +3895,9 @@ Changing the height of the window works the same way: both views keep the text a
 
 The Window menu contains another item named ``Switch Views''.  This item is only active when the
 Preview Window is active. It switches the top and bottom views of a split window, or the left and right views
-of a split window. This is useful because when the Preview Window is unsplit, the top view becomes the
-active view. Using ``Switch Views'' first allows either view to become the active window when the window is
-unsplit.
+of a split window.
 
-Switch Views exchanges the two parts completely. Each part keeps its size, so if the divider has been moved, it moves to the other side: a small bottom part becomes a small top part, and a narrow right part becomes a narrow left part. Each part also takes along the place it shows, its display format and magnification, its selection, and a pinned link popup, which stays at the same place within its part, and so at its place on its page, even when that is out of view. If one of the views was active, the view that now shows its material becomes active. Switching again gives back the original arrangement. Since the top (or left) view is the one that remains when the window is unsplit, after switching it is the material of the other part that remains.
+Switch Views exchanges the two parts completely. Each part keeps its size, so if the divider has been moved, it moves to the other side: a small bottom part becomes a small top part, and a narrow right part becomes a narrow left part. Each part also takes along the place it shows, its display format and magnification, its selection, and a pinned link popup, which stays at its place on its page, even when that is out of view. If one of the views was active, the view that now shows its material becomes active. Switching again gives back the original arrangement. Unsplitting keeps the material of the active view, wherever it now is.
 
 \newpage
 This feature is not available for the Source Window because it is not needed there. When the source window has been split into two views, the  view with the cursor will become the active window when the window is unsplit.
