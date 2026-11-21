@@ -1,0 +1,290 @@
+// Copy with Style: the RTF, HTML and text that the four commands put on a pasteboard, made by the production code
+// (TSStyledCopy, the TeX scanner and TSSyntaxColorScheme, and -[TSDocument copyStyledSelectionOfTextView:...] on a
+// stand-in document) with the bundled Lite and Dark themes. The general pasteboard is never written: the document's
+// method is compiled with a private pasteboard in its place. No window is shown.
+#import <AppKit/AppKit.h>
+#import "TSStyledCopy.h"
+#import "TSSyntaxTeXScanner.h"
+#import "TSColorSupport.h"
+
+static int failures;
+static void Require(NSString *label, BOOL ok)
+{
+    if (!ok) {
+        failures++;
+        fprintf(stderr, "FAIL: %s\n", label.UTF8String);
+    }
+}
+
+static NSPasteboard *TestPasteboard;
+@interface NSPasteboard (StyledCopyTest)
++ (NSPasteboard *)styledCopyTestPasteboard;
+@end
+@implementation NSPasteboard (StyledCopyTest)
++ (NSPasteboard *)styledCopyTestPasteboard { return TestPasteboard; }
+@end
+
+// The theme colors TSColorSupport gives: the color the theme has, or black text on white (white on black in Dark).
+@implementation TSColorSupport
++ (instancetype)sharedInstance
+{
+    static TSColorSupport *shared;
+    if (!shared)
+        shared = [TSColorSupport new];
+    return shared;
+}
+- (NSColor *)colorFromDictionary:(NSDictionary *)theme andKey:(NSString *)key
+{
+    NSArray *a = theme[key];
+    if (a.count < 3 && [key hasPrefix:@"SyntaxMarker"])
+        a = theme[@"SyntaxMarker"];
+    return a.count >= 3 ? [NSColor colorWithRed:[a[0] doubleValue] green:[a[1] doubleValue] blue:[a[2] doubleValue] alpha:1] : nil;
+}
+- (NSColor *)colorAndAlphaFromDictionary:(NSDictionary *)theme andKey:(NSString *)key
+{
+    NSArray *a = theme[key];
+    return a.count >= 3 ? [NSColor colorWithRed:[a[0] doubleValue] green:[a[1] doubleValue] blue:[a[2] doubleValue]
+                                           alpha:a.count >= 4 ? [a[3] doubleValue] : 1] : nil;
+}
+- (NSColor *)liteColorAndAlphaWithKey:(NSString *)key { return nil; }
+- (NSColor *)darkColorAndAlphaWithKey:(NSString *)key { return nil; }
+- (NSColor *)opaqueColorForKey:(NSString *)key fromDictionary:(NSDictionary *)theme isWindowDark:(BOOL)dark
+{
+    NSColor *color = [self colorFromDictionary:theme andKey:key];
+    if (color)
+        return color;
+    BOOL text = ![key containsString:@"Background"];
+    return (text != dark) ? NSColor.blackColor : NSColor.whiteColor;
+}
+@end
+
+NSDictionary *liteColors, *darkColors;
+
+// A stand-in document with what the production method uses.
+@interface TSDocument : NSObject {
+@public
+    BOOL fileIsTex;
+}
+@property BOOL syntaxColor;
+@property BOOL marksFullwidth;
+@end
+@implementation TSDocument
+- (TSMutableSyntaxTeXOptions *)syntaxColoringOptionsWithScheme:(TSSyntaxColorScheme *)scheme
+{
+    TSMutableSyntaxTeXOptions *options = [TSMutableSyntaxTeXOptions new];
+    options.texCharacter = '\\';
+    options.marksFullwidthSymbols = self.marksFullwidth && [scheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;
+    return options;
+}
+#define generalPasteboard styledCopyTestPasteboard
+#include "StyledCopyDocumentMethod.inc"
+#undef generalPasteboard
+@end
+
+#pragma mark Reading back
+
+static NSAttributedString *ReadRTF(NSPasteboard *pasteboard)
+{
+    NSData *rtf = [pasteboard dataForType:NSPasteboardTypeRTF];
+    return rtf ? [[NSAttributedString alloc] initWithRTF:rtf documentAttributes:NULL] : nil;
+}
+
+static NSColor *SRGB(NSColor *color) { return [color colorUsingColorSpace:NSColorSpace.sRGBColorSpace]; }
+
+static BOOL SameColor(NSColor *a, NSColor *b)
+{
+    if (!a || !b)
+        return a == b;
+    a = SRGB(a); b = SRGB(b);
+    return fabs(a.redComponent - b.redComponent) < 0.004 && fabs(a.greenComponent - b.greenComponent) < 0.004 &&
+           fabs(a.blueComponent - b.blueComponent) < 0.004 && fabs(a.alphaComponent - b.alphaComponent) < 0.004;
+}
+
+static NSColor *ThemeColor(NSDictionary *theme, NSString *key)
+{
+    return [[TSColorSupport sharedInstance] colorFromDictionary:theme andKey:key];
+}
+
+static NSColor *ColorAt(NSAttributedString *string, NSString *substring, NSAttributedStringKey key)
+{
+    NSRange range = [string.string rangeOfString:substring];
+    if (range.location == NSNotFound)
+        return nil;
+    return [string attribute:key atIndex:range.location effectiveRange:NULL];
+}
+
+static NSDictionary *Theme(NSString *path)
+{
+    NSDictionary *theme = [NSDictionary dictionaryWithContentsOfFile:path];
+    Require([@"theme " stringByAppendingString:path], theme.count > 0);
+    return theme;
+}
+
+#pragma mark Checks
+
+static NSTextView *SourceView(NSString *text, NSFont *font)
+{
+    NSTextView *view = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 400, 30)];
+    view.richText = NO;
+    view.string = text;
+    [view.textStorage addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, text.length)];
+    NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
+    style.defaultTabInterval = 37;
+    style.tabStops = @[];
+    [view.textStorage addAttribute:NSParagraphStyleAttributeName value:style range:NSMakeRange(0, text.length)];
+    return view;
+}
+
+static void CheckDocumentCommands(NSString *themes)
+{
+    liteColors = Theme([themes stringByAppendingPathComponent:@"LiteTheme.plist"]);
+    darkColors = Theme([themes stringByAppendingPathComponent:@"DarkTheme.plist"]);
+    // Every color of the check is a distinct theme color, so that a wrong theme or role is seen.
+    NSString *text = @"before \\section{Intro} % note\nplain text\nlast line";
+    NSFont *font = [NSFont fontWithName:@"Menlo-Regular" size:15] ?: [NSFont userFixedPitchFontOfSize:15];
+    NSTextView *view = SourceView(text, font);
+    // The selection starts inside \section: the command still has its color (whole lines are scanned).
+    NSRange selection = NSMakeRange([text rangeOfString:@"ection"].location, [text rangeOfString:@"plain"].location + 5 - [text rangeOfString:@"ection"].location);
+    view.selectedRange = selection;
+    TSDocument *document = [TSDocument new];
+    document->fileIsTex = YES;
+    document.syntaxColor = YES;
+
+    struct { SEL action; BOOL dark, background; } commands[] = {
+        {@selector(copyWithLightTheme:), NO, NO}, {@selector(copyWithLightThemeAndBackground:), NO, YES},
+        {@selector(copyWithDarkTheme:), YES, NO}, {@selector(copyWithDarkThemeAndBackground:), YES, YES},
+    };
+    for (int i = 0; i < 4; i++) {
+        BOOL dark = !commands[i].dark, background = !commands[i].background;
+        NSString *name = NSStringFromSelector(commands[i].action);
+        Require([name stringByAppendingString:@" is a command"], TSStyledCopyAction(commands[i].action, &dark, &background));
+        Require([name stringByAppendingString:@" theme and background"], dark == commands[i].dark && background == commands[i].background);
+        [TestPasteboard clearContents];
+        Require([name stringByAppendingString:@" copies"], [document copyStyledSelectionOfTextView:view darkTheme:dark withBackground:background]);
+        NSDictionary *theme = dark ? darkColors : liteColors;
+        NSAttributedString *rtf = ReadRTF(TestPasteboard);
+        NSString *expected = [text substringWithRange:selection];
+        Require([name stringByAppendingString:@": RTF text"], [rtf.string isEqualToString:expected]);
+        Require([name stringByAppendingString:@": plain text"], [[TestPasteboard stringForType:NSPasteboardTypeString] isEqualToString:expected]);
+        Require([name stringByAppendingString:@": HTML"], [[[NSString alloc] initWithData:[TestPasteboard dataForType:NSPasteboardTypeHTML] encoding:NSUTF8StringEncoding] containsString:@"Intro"]);
+        Require([name stringByAppendingString:@": command color"], SameColor(ColorAt(rtf, @"ection", NSForegroundColorAttributeName), ThemeColor(theme, @"SyntaxCommand")));
+        Require([name stringByAppendingString:@": comment color"], SameColor(ColorAt(rtf, @"% note", NSForegroundColorAttributeName), ThemeColor(theme, @"SyntaxComment")));
+        Require([name stringByAppendingString:@": brace color"], SameColor(ColorAt(rtf, @"{", NSForegroundColorAttributeName), ThemeColor(theme, @"SyntaxMarkerCurly")));
+        Require([name stringByAppendingString:@": text color"], SameColor(ColorAt(rtf, @"plain", NSForegroundColorAttributeName), ThemeColor(theme, @"EditorText")));
+        NSColor *paper = background ? ThemeColor(theme, @"EditorBackground") : nil;
+        Require([name stringByAppendingString:@": background of text"], SameColor(ColorAt(rtf, @"plain", NSBackgroundColorAttributeName), paper));
+        Require([name stringByAppendingString:@": background of command"], SameColor(ColorAt(rtf, @"ection", NSBackgroundColorAttributeName), paper));
+        NSFont *copied = ColorAt(rtf, @"plain", NSFontAttributeName);
+        Require([name stringByAppendingString:@": font"], [copied.fontName isEqualToString:font.fontName] && copied.pointSize == 15);
+    }
+    // The light theme differs from the dark one in these colors, or the checks above prove nothing.
+    Require(@"themes differ", !SameColor(ThemeColor(liteColors, @"EditorText"), ThemeColor(darkColors, @"EditorText")) &&
+            !SameColor(ThemeColor(liteColors, @"SyntaxComment"), ThemeColor(darkColors, @"SyntaxComment")));
+
+    // Coloring off (or not TeX): the text color only.
+    document.syntaxColor = NO;
+    [TestPasteboard clearContents];
+    [document copyStyledSelectionOfTextView:view darkTheme:NO withBackground:NO];
+    Require(@"coloring off: no command color", SameColor(ColorAt(ReadRTF(TestPasteboard), @"ection", NSForegroundColorAttributeName), ThemeColor(liteColors, @"EditorText")));
+    document.syntaxColor = YES;
+    document->fileIsTex = NO;
+    [TestPasteboard clearContents];
+    [document copyStyledSelectionOfTextView:view darkTheme:NO withBackground:NO];
+    Require(@"not TeX: no comment color", SameColor(ColorAt(ReadRTF(TestPasteboard), @"% note", NSForegroundColorAttributeName), ThemeColor(liteColors, @"EditorText")));
+    document->fileIsTex = YES;
+
+    // Nothing selected: nothing is copied, and the pasteboard keeps what it had.
+    view.selectedRange = NSMakeRange(3, 0);
+    [TestPasteboard clearContents];
+    [TestPasteboard setString:@"kept" forType:NSPasteboardTypeString];
+    Require(@"empty selection is refused", ![document copyStyledSelectionOfTextView:view darkTheme:NO withBackground:NO]);
+    Require(@"empty selection keeps the pasteboard", [[TestPasteboard stringForType:NSPasteboardTypeString] isEqualToString:@"kept"]);
+    Require(@"no selection: disabled", !TSStyledCopyHasSelection(@[[NSValue valueWithRange:NSMakeRange(3, 0)]]));
+    Require(@"other commands are not Copy with Style", !TSStyledCopyAction(@selector(copy:), NULL, NULL) && !TSStyledCopyAction(NULL, NULL, NULL));
+
+    // Several selected ranges are joined by line feeds, each with its own colors.
+    NSRange first = [text rangeOfString:@"\\section"], second = [text rangeOfString:@"last"];
+    view.selectedRanges = @[[NSValue valueWithRange:first], [NSValue valueWithRange:second]];
+    [TestPasteboard clearContents];
+    [document copyStyledSelectionOfTextView:view darkTheme:YES withBackground:YES];
+    NSAttributedString *joined = ReadRTF(TestPasteboard);
+    Require(@"ranges joined", [joined.string isEqualToString:@"\\section\nlast"]);
+    Require(@"joined: command color", SameColor(ColorAt(joined, @"\\section", NSForegroundColorAttributeName), ThemeColor(darkColors, @"SyntaxCommand")));
+    Require(@"joined: text color", SameColor(ColorAt(joined, @"last", NSForegroundColorAttributeName), ThemeColor(darkColors, @"EditorText")));
+    Require(@"joined: line feed background", SameColor([joined attribute:NSBackgroundColorAttributeName atIndex:8 effectiveRange:NULL], ThemeColor(darkColors, @"EditorBackground")));
+
+    // Fullwidth letters keep the theme's fullwidth colors in every command; a translucent background is blended
+    // onto the paper: the theme's background, or white.
+    NSMutableDictionary *translucent = [liteColors mutableCopy];
+    translucent[@"EditorHighlightZenkakuSymbol"] = @[@0.2, @0.4, @0.6, @1];
+    translucent[@"EditorHighlightZenkakuSymbolBackground"] = @[@1, @0, @0, @0.5];
+    translucent[@"EditorBackground"] = @[@0, @0, @1, @1];
+    liteColors = translucent;
+    document.marksFullwidth = YES;
+    NSTextView *fullwidth = SourceView(@"ａｂ ab", font);
+    fullwidth.selectedRange = NSMakeRange(0, 5);
+    [TestPasteboard clearContents];
+    [document copyStyledSelectionOfTextView:fullwidth darkTheme:NO withBackground:NO];
+    NSAttributedString *onWhite = ReadRTF(TestPasteboard);
+    Require(@"fullwidth color", SameColor(ColorAt(onWhite, @"ａ", NSForegroundColorAttributeName), [NSColor colorWithRed:0.2 green:0.4 blue:0.6 alpha:1]));
+    Require(@"fullwidth background on white", SameColor(ColorAt(onWhite, @"ａ", NSBackgroundColorAttributeName), [NSColor colorWithRed:1 green:0.5 blue:0.5 alpha:1]));
+    Require(@"no background beside fullwidth", ColorAt(onWhite, @"ab", NSBackgroundColorAttributeName) == nil);
+    [TestPasteboard clearContents];
+    [document copyStyledSelectionOfTextView:fullwidth darkTheme:NO withBackground:YES];
+    NSAttributedString *onTheme = ReadRTF(TestPasteboard);
+    Require(@"fullwidth background on the theme's", SameColor(ColorAt(onTheme, @"ａ", NSBackgroundColorAttributeName), [NSColor colorWithRed:0.5 green:0 blue:0.5 alpha:1]));
+    Require(@"theme background beside fullwidth", SameColor(ColorAt(onTheme, @"ab", NSBackgroundColorAttributeName), [NSColor colorWithRed:0 green:0 blue:1 alpha:1]));
+}
+
+// The four commands come right after Copy in the Edit menu of every compiled menu, without key equivalents.
+static void CheckMenu(NSString *path)
+{
+    NSNib *nib = [[NSNib alloc] initWithNibData:[NSData dataWithContentsOfFile:path] bundle:nil];
+    NSArray *objects = nil;
+    if (![nib instantiateWithOwner:NSApp topLevelObjects:&objects]) {
+        Require(path, NO);
+        return;
+    }
+    NSMenu *menu = nil;
+    for (id object in objects)
+        if ([object isKindOfClass:NSMenu.class] && [object itemArray].count > 5)
+            menu = object;
+    NSMenuItem *copy = nil;
+    for (NSMenuItem *top in menu.itemArray)
+        for (NSMenuItem *item in top.submenu.itemArray)
+            if (item.action == @selector(copy:))
+                copy = item;
+    NSMenu *edit = copy.menu;
+    NSInteger index = [edit indexOfItem:copy];
+    NSMenuItem *parent = index >= 0 && index + 1 < edit.numberOfItems ? [edit itemAtIndex:index + 1] : nil;
+    Require([path stringByAppendingString:@": Copy with Style after Copy"], parent.submenu.numberOfItems == 4 && parent.title.length > 0 && parent.keyEquivalent.length == 0);
+    Require([path stringByAppendingString:@": Paste after Copy with Style"], [edit itemAtIndex:index + 2].action == @selector(paste:));
+    SEL actions[] = {@selector(copyWithLightTheme:), @selector(copyWithLightThemeAndBackground:), @selector(copyWithDarkTheme:), @selector(copyWithDarkThemeAndBackground:)};
+    NSMutableSet *titles = [NSMutableSet set];
+    for (NSInteger i = 0; i < 4 && i < parent.submenu.numberOfItems; i++) {
+        NSMenuItem *item = [parent.submenu itemAtIndex:i];
+        NSString *label = [NSString stringWithFormat:@"%@: item %ld", path, (long)i];
+        Require([label stringByAppendingString:@" action"], item.action == actions[i] && item.target == nil);
+        Require([label stringByAppendingString:@" no key"], item.keyEquivalent.length == 0);
+        Require([label stringByAppendingString:@" identifier"], [item.identifier isEqualToString:[NSString stringWithFormat:@"TSShortcut.%@.0", NSStringFromSelector(actions[i])]]);
+        if (item.title.length)
+            [titles addObject:item.title];
+    }
+    Require([path stringByAppendingString:@": four titles"], titles.count == 4);
+}
+
+int main(int argc, const char *argv[])
+{
+    @autoreleasepool {
+        [NSApplication sharedApplication];
+        TestPasteboard = [NSPasteboard pasteboardWithUniqueName];
+        CheckDocumentCommands([NSString stringWithUTF8String:argv[1]]);
+        for (int i = 2; i < argc; i++)
+            CheckMenu([NSString stringWithUTF8String:argv[i]]);
+        [TestPasteboard releaseGlobally];
+        if (failures)
+            return 1;
+        printf("PASS: Copy with Style, Lite and Dark themes, %d compiled menus\n", argc - 2);
+    }
+    return 0;
+}

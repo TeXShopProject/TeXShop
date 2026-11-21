@@ -239,6 +239,37 @@
                                     <action selector="copy:" target="-1" id="31"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Copiați cu stil" id="tRF-Ks-2K9">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Copiați cu stil" id="ffD-VS-35P">
+                                    <items>
+                                        <menuItem title="Tema modului luminos" id="nmb-jU-PUL" identifier="TSShortcut.copyWithLightTheme:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithLightTheme:" target="-1" id="nPy-x8-ZuT"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Tema modului luminos cu fundal" id="AVE-14-vtV" identifier="TSShortcut.copyWithLightThemeAndBackground:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithLightThemeAndBackground:" target="-1" id="TAA-14-vdn"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Tema modului întunecat" id="c2l-Oc-h84" identifier="TSShortcut.copyWithDarkTheme:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithDarkTheme:" target="-1" id="6IC-4Z-ulA"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Tema modului întunecat cu fundal" id="qpN-x9-DHG" identifier="TSShortcut.copyWithDarkThemeAndBackground:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithDarkThemeAndBackground:" target="-1" id="6Hi-oL-gyH"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Lipiți" keyEquivalent="v" id="8" identifier="TSShortcut.paste:.0">
                                 <connections>
                                     <action selector="paste:" target="-1" id="32"/>

@@ -31,6 +31,7 @@
 #import "TSExperimentTheme.h"
 #import "TSTextView.h"
 #import "TSSpellSupport.h"
+#import "TSStyledCopy.h"
 
 @implementation ScrapTextView
 
@@ -1132,5 +1133,20 @@
 
 
  
+#pragma mark ========Copy with Style==========
+
+// The four commands of Edit › Copy with Style; the document finds the colors (TSStyledCopy).
+- (void)copyWithStyleForAction:(SEL)action
+{
+	BOOL dark = NO, withBackground = NO;
+	if (!TSStyledCopyAction(action, &dark, &withBackground) || ![self.document copyStyledSelectionOfTextView:self darkTheme:dark withBackground:withBackground])
+		NSBeep();
+}
+
+- (IBAction)copyWithLightTheme:(id)sender { [self copyWithStyleForAction:_cmd]; }
+- (IBAction)copyWithLightThemeAndBackground:(id)sender { [self copyWithStyleForAction:_cmd]; }
+- (IBAction)copyWithDarkTheme:(id)sender { [self copyWithStyleForAction:_cmd]; }
+- (IBAction)copyWithDarkThemeAndBackground:(id)sender { [self copyWithStyleForAction:_cmd]; }
+
 @end
 

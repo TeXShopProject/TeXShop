@@ -76,7 +76,10 @@ static NSString *FindMethodKey = @"FindMethod", *ConvertLFKey = @"ConvertLF";
 static BOOL g_canRegisterCommandCompletion = NO;
 static int failures;
 static void Check(BOOL ok, const char *what) { if (!ok) { fprintf(stderr, "FAIL: %s\n", what); failures++; } }
+// Copy with Style is validated before the find menu; its commands are checked by run-styled-copy.py.
+#import "TSStyledCopy.h"
 @interface RoutingTextView : NSTextView
+@property (weak) id document;
 - (BOOL)validateEditTextCommand:(NSMenuItem *)item enabled:(BOOL *)enabled;
 - (void)registerForCommandCompletion:(id)sender;
 @end

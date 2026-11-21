@@ -239,6 +239,37 @@
                                     <action selector="copy:" target="-1" id="31"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="带样式拷贝" id="SdP-r4-WyM">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="带样式拷贝" id="x1O-tU-z6Q">
+                                    <items>
+                                        <menuItem title="浅色主题" id="W3h-qT-Jww" identifier="TSShortcut.copyWithLightTheme:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithLightTheme:" target="-1" id="zZH-hN-8vz"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="浅色主题（带背景）" id="Lw5-n6-l7T" identifier="TSShortcut.copyWithLightThemeAndBackground:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithLightThemeAndBackground:" target="-1" id="rKL-R9-n8e"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="深色主题" id="LhM-0d-88n" identifier="TSShortcut.copyWithDarkTheme:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithDarkTheme:" target="-1" id="4W0-JZ-loS"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="深色主题（带背景）" id="iAT-DX-Rw0" identifier="TSShortcut.copyWithDarkThemeAndBackground:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithDarkThemeAndBackground:" target="-1" id="Fr8-K7-wUO"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="粘贴" keyEquivalent="v" id="8" identifier="TSShortcut.paste:.0">
                                 <connections>
                                     <action selector="paste:" target="-1" id="32"/>

@@ -239,6 +239,37 @@
                                     <action selector="copy:" target="-1" id="31"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Kopieer met stijl" id="b89-pc-86E">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Kopieer met stijl" id="7oJ-af-fq6">
+                                    <items>
+                                        <menuItem title="Thema voor lichte modus" id="DOt-oV-JeK" identifier="TSShortcut.copyWithLightTheme:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithLightTheme:" target="-1" id="0FN-jN-Ceh"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Thema voor lichte modus met achtergrond" id="kWs-FT-GF3" identifier="TSShortcut.copyWithLightThemeAndBackground:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithLightThemeAndBackground:" target="-1" id="xYQ-oO-jDr"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Thema voor donkere modus" id="8Br-rC-ZYJ" identifier="TSShortcut.copyWithDarkTheme:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithDarkTheme:" target="-1" id="RbR-1D-tfp"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Thema voor donkere modus met achtergrond" id="SWN-FS-pHM" identifier="TSShortcut.copyWithDarkThemeAndBackground:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithDarkThemeAndBackground:" target="-1" id="3FF-Hd-ntb"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Plak" keyEquivalent="v" id="8" identifier="TSShortcut.paste:.0">
                                 <connections>
                                     <action selector="paste:" target="-1" id="32"/>

@@ -187,6 +187,23 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     return current == alignment;
 }
 
+// The options of the TeX scanner that decide the colors of the source; spelling is added by the caller. The
+// fullwidth characters are marked only when the scheme has colors for them.
+- (TSMutableSyntaxTeXOptions *)syntaxColoringOptionsWithScheme:(TSSyntaxColorScheme *)scheme
+{
+    TSMutableSyntaxTeXOptions *options = [TSMutableSyntaxTeXOptions new];
+    options.texCharacter = (unichar)g_texChar;
+    options.colorsExpl3 = self.useExplColor;
+    options.makesAtLetter = [SUD boolForKey:MakeatletterEnabledKey];
+    options.colorsIndex = [self indexColorState];
+    options.colorsFootnote = [SUD boolForKey: SyntaxColorFootnoteKey];
+    // With Highlight Fullwidth Letters and Symbols off, these characters are colored as other text.
+    options.marksFullwidthSymbols = [SUD boolForKey:HighlightFullwidthSymbolsKey] &&
+        [scheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;
+    options.isXML = self.fileIsXML;
+    return options;
+}
+
 - (void)colorizeText:(NSTextView *)aTextView range:(NSRange)range
 {
     NSLayoutManager *layoutManager;
@@ -195,19 +212,15 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     NSRange            colorRange;
     NSUInteger        aLineStart;
     NSUInteger        aLineEnd;
-    BOOL            colorIndexDifferently;
-    BOOL            colorFootnoteDifferently;
     NSTimeInterval    theTime;
     BOOL            TurnOffCommandSpellChecking;
     BOOL            TurnOffCommentSpellChecking;
     BOOL            TurnOffParameterSpellChecking;
     BOOL            ListHasWordsWhoseParametersShouldBeChecked;
-    BOOL            colorExpl3;
     
     if ([self coloringWaitsForMarkedTextIn:aTextView])
         return;
 
-    colorExpl3 = self.useExplColor; // [SUD boolForKey:expl3SyntaxColoringKey];
     
     // New rules and legacy exclusions are alternative spelling modes.
     BOOL texAwareSpelling = [self.textView usesTeXAwareSpellChecking];
@@ -264,8 +277,6 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     // [self cursorMoved:[self textView]];
     
     
-    colorIndexDifferently =  [self indexColorState];
-    colorFootnoteDifferently = [SUD boolForKey: SyntaxColorFootnoteKey];
     
     
     // Fetch the underlying layout manager and string.
@@ -369,16 +380,7 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     // NSLog(@"After confusing section");
     
     // Now the tokens of the lines get their colors.
-    TSMutableSyntaxTeXOptions *options = [TSMutableSyntaxTeXOptions new];
-    options.texCharacter = (unichar)g_texChar;
-    options.colorsExpl3 = colorExpl3;
-    options.makesAtLetter = [SUD boolForKey:MakeatletterEnabledKey];
-    options.colorsIndex = colorIndexDifferently;
-    options.colorsFootnote = colorFootnoteDifferently;
-    // With Highlight Fullwidth Letters and Symbols off, these characters are colored as other text.
-    options.marksFullwidthSymbols = [SUD boolForKey:HighlightFullwidthSymbolsKey] &&
-        [self.syntaxColorScheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;
-    options.isXML = self.fileIsXML;
+    TSMutableSyntaxTeXOptions *options = [self syntaxColoringOptionsWithScheme:self.syntaxColorScheme];
     options.excludesCommandsFromSpelling = TurnOffCommandSpellChecking;
     options.excludesCommentsFromSpelling = TurnOffCommentSpellChecking;
     options.excludesParametersFromSpelling = TurnOffParameterSpellChecking;
