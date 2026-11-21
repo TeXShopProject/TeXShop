@@ -157,6 +157,26 @@ int main(int argc, const char *argv[])
         Check(closed && terminations == 0, @"Command-Q does not quit when Quit has no key");
         quitItem.keyEquivalent = @"q";
 
+        // Over another modal window, such as a panel opened before the update check finished, the
+        // key is left alone: the alert stays until Return, and nothing quits when the panel closes.
+        Reset();
+        NSPanel *panel = [[NSPanel alloc] initWithContentRect:NSMakeRect(200, 200, 320, 160) styleMask:NSWindowStyleMaskTitled
+                                                      backing:NSBackingStoreBuffered defer:NO];
+        __block BOOL nestedClosed = NO;
+        __block NSInteger nestedAcks = 0;
+        NSTimer *inner = [NSTimer timerWithTimeInterval:0.3 repeats:NO block:^(NSTimer *timer) {
+            nestedClosed = RunAlert(driver, NO, @[commandQ, returnKey]);
+            nestedAcks = [steps filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF == 'acknowledged'"]].count;
+            [NSApp stopModal];
+        }];
+        [NSRunLoop.currentRunLoop addTimer:inner forMode:NSModalPanelRunLoopMode];
+        [NSApp runModalForWindow:panel];
+        [panel orderOut:nil];
+        SpinDefaultMode(0.5);
+        Check(nestedClosed && nestedAcks == 1, @"over a modal panel the alert opens and closes once");
+        Check(terminations == 0, [NSString stringWithFormat:@"over a modal panel Command-Q does not quit, also after the panel closes (%ld)", (long)terminations]);
+        Check([controller valueForKey:@"quitKeyMonitor"] == nil, @"no key monitor is left after the alert over a modal panel");
+
         // After the alert, Command-Q is the menu's again.
         Reset();
         NSEvent *after = [NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:NSEventModifierFlagCommand timestamp:0

@@ -29,8 +29,9 @@ MUTATIONS = {
     # The monitor stays after the alert.
     'monitor-kept': ('- (void)standardUserDriverDidShowModalAlert\n{\n    [self stopQuitKeyMonitor];', '- (void)standardUserDriverDidShowModalAlert\n{\n'),
     # TeXShop is asked to quit while the alert is still running.
-    'quit-during-alert': ('[NSApp performSelector:@selector(terminate:) withObject:quit afterDelay:0 inModes:@[NSDefaultRunLoopMode]];',
-                          '[NSApp terminate:quit];'),
+    'quit-during-alert': ('    self.quitRequested = YES;\n', '    [NSApp terminate:nil];\n'),
+    # Over another modal window the key closes the alert, and the quit waits for that window (first audit).
+    'nested-intercepted': ('    if (NSApp.modalWindow != nil) return;\n', ''),
     # The alert is not closed.
     'alert-stays': ('    [NSApp stopModalWithCode:NSAlertFirstButtonReturn];\n', ''),
     # Command-Q is hard-wired instead of the key of the Quit item.

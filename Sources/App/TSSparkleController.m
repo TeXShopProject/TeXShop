@@ -10,6 +10,7 @@ static TSSparkleController *mainUpdaterController;
 
 @interface TSSparkleController ()
 @property (nonatomic, strong, nullable) id quitKeyMonitor;
+@property (nonatomic) BOOL quitRequested;
 @end
 
 // The Quit item of the main menu, wherever it is and whatever key it has.
@@ -91,10 +92,13 @@ static NSMenuItem *TSQuitMenuItem(NSMenu *menu)
 }
 // Sparkle shows some alerts, such as the one saying that TeXShop is up to date, as app-modal
 // alerts, which turn off the menu bar. While one is shown, the key of Quit closes the alert and
-// then quits TeXShop, as it does in other applications.
+// then quits TeXShop, as it does in other applications. Over another modal window, such as a
+// panel opened before the update check finished, the key is left alone as in that window.
 - (void)standardUserDriverWillShowModalAlert
 {
     [self stopQuitKeyMonitor];
+    self.quitRequested = NO;
+    if (NSApp.modalWindow != nil) return;
     __weak TSSparkleController *weakSelf = self;
     self.quitKeyMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskKeyDown handler:^NSEvent *(NSEvent *event) {
         return [weakSelf quitFromModalAlertWithEvent:event] ? nil : event;
@@ -104,6 +108,11 @@ static NSMenuItem *TSQuitMenuItem(NSMenu *menu)
 - (void)standardUserDriverDidShowModalAlert
 {
     [self stopQuitKeyMonitor];
+    BOOL quit = self.quitRequested;
+    self.quitRequested = NO;
+    // TeXShop quits once the alert is gone, so unsaved documents are asked about as usual.
+    if (quit)
+        [NSApp performSelector:@selector(terminate:) withObject:nil afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
 }
 
 - (void)stopQuitKeyMonitor
@@ -117,10 +126,9 @@ static NSMenuItem *TSQuitMenuItem(NSMenu *menu)
     NSMenuItem *quit = TSQuitMenuItem(NSApp.mainMenu);
     if (NSApp.modalWindow == nil || quit == nil || ![TSShortcutStore event:event matchesItem:quit]) return NO;
     [self stopQuitKeyMonitor];
-    // The alert closes as with its default button; TeXShop quits once the alert is gone,
-    // so unsaved documents are asked about as usual.
+    // The alert closes as with its default button.
+    self.quitRequested = YES;
     [NSApp stopModalWithCode:NSAlertFirstButtonReturn];
-    [NSApp performSelector:@selector(terminate:) withObject:quit afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
     return YES;
 }
 @end
