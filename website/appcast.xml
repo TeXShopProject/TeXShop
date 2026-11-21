@@ -3,28 +3,26 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
 --><rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
   <channel>
     <item>
-      <title>TeXShop 6.00 beta-7</title>
-      <pubDate>Fri, 20 Nov 2026 12:00:29 +0000</pubDate>
-      <sparkle:version>2093</sparkle:version>
-      <sparkle:shortVersionString>6.00 beta-7</sparkle:shortVersionString>
+      <title>TeXShop 6.00 beta-8</title>
+      <pubDate>Sat, 21 Nov 2026 02:00:56 +0000</pubDate>
+      <sparkle:version>2135</sparkle:version>
+      <sparkle:shortVersionString>6.00 beta-8</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
       <sparkle:channel>prerelease</sparkle:channel>
-      <description xml:lang="en" sparkle:format="markdown">This is the seventh **beta** of TeXShop 6.00, for testing. TeXShop 5.59 remains the current release. Please keep a copy of 5.59 if you depend on TeXShop for daily work. See [What's New in TeXShop 6](https://texshop.app/whats-new.html) for an overview.
+      <description xml:lang="en" sparkle:format="markdown">This is the eighth **beta** of TeXShop 6.00, for testing. TeXShop 5.59 remains the current release. Please keep a copy of 5.59 if you depend on TeXShop for daily work. See [What's New in TeXShop 6](https://texshop.app/whats-new.html) for an overview.
 
 ## Installation
 
-If you use 6.00 beta 1 to beta 6 with Settings → Updates → “Update to prereleases when available” on, TeXShop offers this beta through its automatic updates. Otherwise download `TeXShop-6.00-beta-7.zip`, extract it, and copy `TeXShop.app` to Applications (replacing 5.59 or an earlier beta), or run it from another folder. The application is signed and notarized, and runs on Apple Silicon and Intel Macs with macOS 14.6 or later. A TeX distribution such as MacTeX is required for typesetting.
+If you use 6.00 beta 1 to beta 7 with Settings → Updates → “Update to prereleases when available” on, TeXShop offers this beta through its automatic updates. Otherwise download `TeXShop-6.00-beta-8.zip`, extract it, and copy `TeXShop.app` to Applications (replacing 5.59 or an earlier beta), or run it from another folder. The application is signed and notarized, and runs on Apple Silicon and Intel Macs with macOS 14.6 or later. A TeX distribution such as MacTeX is required for typesetting.
 
-## Changes since Beta 6
+## Changes since Beta 7
 
-- Settings → Themes lists the themes: add, duplicate, rename, delete, restore, export and import them there. Colors are saved as soon as they change, and the Save Theme button is removed.
-- Key bindings with the new Paste box checked apply to text you paste or drop, as well as to typing; Search Settings finds the Paste column. The two items of the Edit menu that converted ¥ and `\` on the clipboard are removed. On a fresh installation, the ¥ key is bound to a backslash and its Paste box is checked. When Encoding for new documents is set to UTF-8, turn on Key Bindings for the document to use this binding when typing or pasting.
-- Print from the Preview as Apple’s Preview does: with Auto Rotate and Scale to Fit in the print panel, each page is turned and made to fit the paper. The choices are kept for the next print of the same document, and no longer change the printing of other documents. Suggested by Bruno Voisin.
-- Menu shortcuts on French, German and other non-US keyboard layouts are again the ones macOS shows; in the earlier betas, for example, Window › Source ⇔ Preview became Shift-Command-7 instead of Command-&amp; on a French keyboard. Shortcuts set in Settings → Keyboard also tell apart macros with the same name. Reported by Bruno Voisin.
-- The manual has the same version number as the TeXShop release it is written for. Suggested by Bruno Voisin.
-- Detect Paths labels TeX Live development builds as such and lists installations by year, newest first. It selects the newest release when there is one, otherwise the newest development build.
-- Edit Spelling Exclusions and the button that edits the LaTeX exclusion rules open the file in TeXShop, and Edit Command Completion opens its file for editing also when you use an external editor.
-- Fix a crash when a setting or file that TeXShop reads is missing or damaged, such as a font that was removed or a damaged macros file, or when you sync from a page without SyncTeX information. The Previous Page and Next Page buttons of an image window turn its pages.
+- Copy with Style in the Edit menu makes a copy of the source as rich text with its syntax coloring; TeXShop 4.08 to 5.00 made a copy in rich text, without the syntax colors. Copy still makes a copy in plain text.
+- In earlier 6.00 betas, some Edit menu shortcuts assigned by item number in older versions of TeXShop invoked the wrong commands. These shortcuts now invoke the intended commands.
+- In a Preview window that is not split, Switch Views changes between two views, each with its own place, magnification, display format, text selection and pinned link popup, as the two parts of a split window do. Suggested by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#60](https://github.com/TeXShopProject/TeXShop/issues/60)).
+- Clicking an entry of the outline in the drawer goes to its page again after the Preview window is closed and opened again, and after a new document is typeset for the first time. After you unlock a PDF, its outline also marks the entry for the current page, if there is one. Reported by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#59](https://github.com/TeXShopProject/TeXShop/issues/59)).
+- The column header no longer covers part of the first entry at the top of the drawer’s outline. Reported by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#19](https://github.com/TeXShopProject/TeXShop/issues/19)).
+- On macOS 27, Page Up and Page Down work again in single-page and two-page layouts. They turn the page when the whole page is shown in the window; otherwise they scroll by a screen, and at the end of the page go on to the next or previous page, as the Preview app does on macOS 15 and 26.
 
 ## All changes in TeXShop 6.00
 
@@ -52,7 +50,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 ## Preview
 
 - Link previews are easier to read; pin one with the Option key, and turn previews on or off with the Control key. Suggested and reported by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#7](https://github.com/TeXShopProject/TeXShop/issues/7), [#10](https://github.com/TeXShopProject/TeXShop/issues/10), [#12](https://github.com/TeXShopProject/TeXShop/issues/12), [#14](https://github.com/TeXShopProject/TeXShop/issues/14), [#17](https://github.com/TeXShopProject/TeXShop/issues/17), [#30](https://github.com/TeXShopProject/TeXShop/issues/30), [#35](https://github.com/TeXShopProject/TeXShop/issues/35)).
-- In a split Preview window, show a link’s target in the other part or switch the two parts; after unsplitting, the part you were using stays. Suggested by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#14](https://github.com/TeXShopProject/TeXShop/issues/14), [#25](https://github.com/TeXShopProject/TeXShop/issues/25), [#31](https://github.com/TeXShopProject/TeXShop/issues/31), [#52](https://github.com/TeXShopProject/TeXShop/issues/52)). The single window opens with the divider where it was last, suggested by [Felix Finster](https://github.com/felix-finster) ([#26](https://github.com/TeXShopProject/TeXShop/issues/26)).
+- In a split Preview window, show a link’s target in the other part or switch the two parts; after unsplitting, the part you were using stays. In a window that is not split, Switch Views changes between two views, each with its own magnification, display format and pinned link popup. Suggested by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#14](https://github.com/TeXShopProject/TeXShop/issues/14), [#25](https://github.com/TeXShopProject/TeXShop/issues/25), [#31](https://github.com/TeXShopProject/TeXShop/issues/31), [#52](https://github.com/TeXShopProject/TeXShop/issues/52), [#60](https://github.com/TeXShopProject/TeXShop/issues/60)). The single window opens with the divider where it was last, suggested by [Felix Finster](https://github.com/felix-finster) ([#26](https://github.com/TeXShopProject/TeXShop/issues/26)).
 - Annotate with an annotation toolbar under the toolbar of the Preview window (Preview › Show Annotation Toolbar). Its tools work on the document of that window, also in the window that shows the source and the Preview. Suggested by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#49](https://github.com/TeXShopProject/TeXShop/issues/49)).
 - Zoom to Content Width and Fit to Content Width, scrolling that does not turn pages and a magnifying glass at any magnification are added, and the outline in the drawer stays as it was after typesetting. Suggested and reported by [Uwe Schmock](https://github.com/Uwe-Schmock) and [svb-bit](https://github.com/svb-bit) ([#9](https://github.com/TeXShopProject/TeXShop/issues/9), [#19](https://github.com/TeXShopProject/TeXShop/issues/19), [#33](https://github.com/TeXShopProject/TeXShop/issues/33)). When another application such as latexmk rewrites the PDF, the preview is updated at the same place.
 - The preview toolbar has the icons of Apple’s Preview, tool tips and page layout menus; click the word next to its magnification field to open the Magnification menu. Suggested by Bruno Voisin and [Uwe Schmock](https://github.com/Uwe-Schmock) ([#28](https://github.com/TeXShopProject/TeXShop/issues/28), [#34](https://github.com/TeXShopProject/TeXShop/issues/34), [#54](https://github.com/TeXShopProject/TeXShop/issues/54)).
@@ -63,6 +61,7 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 - Command-0 shows the document’s console. Suggested by [Nicolas Martignoni](https://github.com/martignoni) ([#2](https://github.com/TeXShopProject/TeXShop/issues/2)).
 - Click or drag over the line numbers to select whole lines.
 - The Edit menu has Character Type Conversion, Unicode Normalization, and Swap with Clipboard, which replaces the selection with the clipboard text and places the selection on the clipboard.
+- Copy with Style in the Edit menu makes a copy of the source as rich text with its syntax coloring; TeXShop 4.08 to 5.00 made a copy in rich text, without the syntax colors. Copy still makes a copy in plain text.
 - The Macro Editor has a new design, and macros and key bindings can insert the clipboard text.
 - Key bindings with the new Paste box checked apply to text you paste, as well as to typing.
 - Fullwidth letters, digits and symbols can be shown in their own color; to show them like other text, turn off Highlight Fullwidth Letters and Symbols in Settings → Editor.
@@ -123,6 +122,8 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 - Fix the position and display of the preview: it no longer moves after reloading or turning pages on macOS 26 and 27, when it is split or its divider is dragged, when the window changes width at a fixed magnification, or when it is reopened during typesetting; parts of the linked page no longer show around a link preview; pages take the theme’s color again; a split Preview window no longer shows a light band in Dark Mode; and a PDF with a password shows its pages in both parts of a split Preview window. Reported by [svb-bit](https://github.com/svb-bit), [Uwe Schmock](https://github.com/Uwe-Schmock) and [ethanphil4-a11y](https://github.com/ethanphil4-a11y) ([#5](https://github.com/TeXShopProject/TeXShop/issues/5), [#9](https://github.com/TeXShopProject/TeXShop/issues/9), [#21](https://github.com/TeXShopProject/TeXShop/issues/21), [#23](https://github.com/TeXShopProject/TeXShop/issues/23), [#24](https://github.com/TeXShopProject/TeXShop/issues/24), [#39](https://github.com/TeXShopProject/TeXShop/issues/39), [#53](https://github.com/TeXShopProject/TeXShop/issues/53), [#55](https://github.com/TeXShopProject/TeXShop/issues/55)).
 - SyncTeX goes to the place clicked, a crash while the preview reloads is fixed, and Space scrolls correctly through large pages.
 - On macOS 26 and later, the toolbar of the Preview window works while the magnifying glass is the tool, and link popups no longer appear over the toolbar. Reported by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#44](https://github.com/TeXShopProject/TeXShop/issues/44)).
+- On macOS 27, Page Up and Page Down work again in single-page and two-page layouts. They turn the page when the whole page is shown in the window; otherwise they scroll by a screen, and at the end of the page go on to the next or previous page, as the Preview app does on macOS 15 and 26.
+- Clicking an entry of the outline in the drawer goes to its page again after the Preview window is closed and opened again, and after a new document is typeset for the first time. Reported by [Uwe Schmock](https://github.com/Uwe-Schmock) ([#59](https://github.com/TeXShopProject/TeXShop/issues/59)).
 
 ## Fixes: opening and saving documents
 
@@ -156,8 +157,8 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
 - Update the bundled latexmk to 4.89, provided by Herbert Schulz.
 - TeXShop can be built from an extracted source archive again ([#4](https://github.com/TeXShopProject/TeXShop/issues/4)).
 - Remove files and code that TeXShop did not use from the application and its source.</description>
-      <sparkle:fullReleaseNotesLink>https://github.com/TeXShopProject/TeXShop/releases/tag/v.6.00-beta.7</sparkle:fullReleaseNotesLink>
-      <enclosure url="https://github.com/TeXShopProject/TeXShop/releases/download/v.6.00-beta.7/TeXShop-6.00-beta-7.zip" length="66524821" type="application/octet-stream" sparkle:edSignature="rkinf+tielRoILToSMD6Hplt1PdRN50W8+QM3t88CPKikgMV+3IdMNZ3XjYKq9mJJ/GlNMN/q/R5UoD7d5ZCDw=="></enclosure>
+      <sparkle:fullReleaseNotesLink>https://github.com/TeXShopProject/TeXShop/releases/tag/v.6.00-beta.8</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/TeXShopProject/TeXShop/releases/download/v.6.00-beta.8/TeXShop-6.00-beta-8.zip" length="66572349" type="application/octet-stream" sparkle:edSignature="DGRsKfGetnAJozkBKABaTw6FT/0VLc6EF/BmH+WlZ10cYBKfQS4glY9I1KUUAfNvXPgaZyvrGvPM2L0v8KhxDA=="></enclosure>
     </item>
     <item>
       <title>TeXShop 5.59</title>
@@ -173,6 +174,6 @@ TeXShop 6.00 follows TeXShop 5.59. It adds a new Find panel, LaTeX-aware spell c
     <language>en</language>
   </channel>
 </rss><!-- sparkle-signatures:
-edSignature: sfL2CEsD4yIgNZ3ZH+MYAIsUyUAEbDTVO3Ou1lDZGEESd0R1wTjNTdwGHLqpYBorYi1WFd/ehJUZ7LIa6HwIDg==
-length: 23071
+edSignature: x90AixoWUwwy92zxA2C5eF3O2gUB4ZUxGHdgsl7wslgB6+chfbXeg8AIFowYHUDpR+ntAjAMUjlWgcbZMlY2Ag==
+length: 23662
 -->
