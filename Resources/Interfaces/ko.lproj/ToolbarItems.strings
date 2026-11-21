@@ -283,3 +283,5 @@ tiToolTipHtmlSearch           = "검색";
 "Continuous" = "연속 스크롤";
 "Right to left" = "오른쪽에서 왼쪽으로";
 "Show first page alone as cover" = "첫 페이지를 표지로 따로 표시";
+"tiToolTipUnsplit" = "소스 분할 끄기";
+"tiToolTipUnsplitKIT" = "미리보기 분할 끄기";

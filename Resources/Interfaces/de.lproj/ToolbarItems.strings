@@ -284,3 +284,5 @@ tiToolTipHtmlSearch           = "Suchen";
 "Show first page alone as cover" = "Erste Seite einzeln als Deckblatt anzeigen";
 
 "PreviewAppearanceSystem" = "System";
+"tiToolTipUnsplit" = "Teilung des Quelltexts aufheben";
+"tiToolTipUnsplitKIT" = "Teilung der Vorschau aufheben";

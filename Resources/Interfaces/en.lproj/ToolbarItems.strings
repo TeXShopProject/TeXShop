@@ -287,3 +287,5 @@ tiToolTipHtmlSearch           = "Search";
 "ExperimentZoomIn" = "Zoom In";
 "ExperimentZoomToContent" = "Zoom to Content";
 "ExperimentZoomToContentWidth" = "Zoom to Content Width";
+"tiToolTipUnsplit" = "Unsplit the source";
+"tiToolTipUnsplitKIT" = "Unsplit the preview";
