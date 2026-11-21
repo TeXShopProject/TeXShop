@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""When a Preview view changes its size at a fixed magnification, the text at its top
-edge stays there (#53).
+"""When a Preview view changes its size, the text at its top edge stays there (#53): at a
+fixed magnification, and with automatic scaling (Fit to Window), where the magnification
+follows the size.
 
 Measured in a macOS 26.6.2 virtual machine with the Help manual at 200% in a window made
 narrower step by step (scroll bars always shown, TeXShop-audit Issue53 VM確認):
@@ -36,10 +37,35 @@ MUTATIONS = {
                     '        [super setFrameSize:newSize];\n'),
     # The text is not put back after the size changed.
     'no-restore': ('TSPreviewScrollerKeeper.m',
-                   '    text.page = page;\n    TSMoveTextUp(scroll, TSTextBelowTop(view, scroll, text));\n}\n', '}\n'),
-    # A change of the magnification is kept too.
-    'scale-kept': ('TSPreviewScrollerKeeper.m',
-                   ' || view.scaleFactor != scale)\n        return;\n    text.page = page;', ')\n        return;\n    text.page = page;'),
+                   '    TSMoveTextUp(scroll, TSTextBelowTop(view, scroll, text) - target);\n', ''),
+    # With automatic scaling the place is left to PDFKit, as before.
+    'auto-left-to-pdfkit': ('TSPreviewScrollerKeeper.m',
+                            ' || edgePage.document != view.document)\n        return;\n    CGFloat below',
+                            ' || edgePage.document != view.document || view.autoScales)\n        return;\n    CGFloat below'),
+    # Every step of a resize keeps the text that is at the top then, and the pixels add up.
+    # Only PDFKit up to macOS 26 puts its place on whole pixels: seen in the system model there.
+    'remeasured': ('TSPreviewScrollerKeeper.m', '    BOOL keepAgain = atEdge.valid &&', '    BOOL keepAgain = NO &&'),
+    # The text under the toolbar is kept instead of the text at the top of the readable area.
+    'clip-top': ('TSPreviewScrollerKeeper.m', '    return fmax(0, window.contentView.safeAreaInsets.top);\n', '    return 0;\n'),
+    # The text kept by the last change is kept again although the view was scrolled since.
+    # The split divider puts the text at the top edge of each part back after a new magnification.
+    'divider-restores-edge': ('TSPreviewSplitDivider.m', '        if (!anchor.quiet && view.scaleFactor != anchor.scale && TSPreviewSizeChangeKeptText(view)) {',
+                              '        if (NO) {'),
+    # The text is chosen by the part of the band over the view after the change only.
+    'band-after-only': ('TSPreviewScrollerKeeper.m', '    BOOL knownBefore = scroll && keeper.hasReadableBelow &&', '    BOOL knownBefore = NO &&'),
+    # The text is not put at the top of the area where it can be read once the views are laid out.
+    'no-late-check': ('TSPreviewScrollerKeeper.m', '        if (fabs(distance) >= 0.5 && fabs(distance) <= band) {', '        if (NO) {'),
+    # A place chosen by the program, as when the parts are switched, is undone once the views are laid out.
+    'chosen-undone': ('TSPreviewScrollerKeeper.m', '    [TSPreviewScrollerKeeper keeperForView:view].keptPage = nil;\n', ''),
+    # The part of the band over the view is not noted again when the view was laid out.
+    'no-layout-check': ('TSPreviewScrollerKeeper.m', '            keeper.readableBelow = TSReadableBelow(scroll, band);\n', ''),
+    # A new top inset of the scroll view, which moves the text with it, is not followed.
+    'insets-not-followed': ('TSPreviewScrollerKeeper.m', '        if (self.checkPending)\n            [self checkReadableTop];\n        return;', '        return;'),
+    # No check after the window was laid out and drawn.
+    'no-last-check': ('TSPreviewScrollerKeeper.m', '        CFRunLoopAddObserver(CFRunLoopGetMain(), observer, kCFRunLoopCommonModes);\n', ''),
+    # The text the split divider puts back at the top edge of a part stays there.
+    'divider-edge-stays': ('TSPreviewScrollerKeeper.m', '        [keeper checkReadableTop];\n    }\n}', '    }\n}'),
+    'scroll-undone': ('TSPreviewScrollerKeeper.m', '\n        fabs(scroll.contentView.bounds.origin.y - keeper.keptOrigin.y) <= 0.5 * TSUnit(scroll.contentView) &&', ''),
     # The place is put back through PDFKit's constrainBoundsRect:.
     'pdfkit-constrain': ('TSPreviewScrollerKeeper.m', '    NSPoint target = TSPreviewConstrainedOrigin(clip, bounds);\n',
                          '    NSPoint target = [clip constrainBoundsRect:bounds].origin;\n'),
@@ -67,7 +93,8 @@ start = view.index('- (void)setFrameSize:(NSSize)newSize')
 frame_size = view[start:view.index('\n}\n', start)]
 wrapped = '#import "TSPreviewScrollerKeeper.h"' in view and \
     'TSPreviewChangeSize(self, ^{ [super setFrameSize:newSize]; });' in frame_size and \
-    frame_size.count('[super setFrameSize:newSize];') == 2
+    frame_size.count('[super setFrameSize:newSize];') == 2 and \
+    '- (void)layout\n{\n    [super layout];\n    TSPreviewViewDidLayout(self);\n}' in view
 
 program = r'''
 #import <Cocoa/Cocoa.h>
@@ -76,6 +103,7 @@ program = r'''
 #import "TestAppKitIsolation.h"
 #import "TSPreviewScrollerKeeper.h"
 #import "TSPreviewSplitDivider.h"
+#import "TSPreviewPanePlace.h"
 static int failures; static const char *model;
 static void Check(BOOL ok, NSString *name) { if (!ok) { printf("FAIL (%s): %s\n", model, name.UTF8String); failures++; } }
 static void Control(BOOL ok, NSString *name) { if (!ok) printf("NOTE (%s): not seen on this system: %s\n", model, name.UTF8String); }
@@ -95,6 +123,7 @@ static NSRect Shifted(NSClipView *self, SEL _cmd, NSRect proposed) {
 @interface PreviewLike : PDFView @end
 @implementation PreviewLike
 - (void)setFrameSize:(NSSize)newSize { TSPreviewChangeSize(self, ^{ [super setFrameSize:newSize]; }); }
+- (void)layout { [super layout]; TSPreviewViewDidLayout(self); }
 @end
 
 static PDFDocument *MakeDocument(void) {
@@ -111,9 +140,14 @@ static NSScrollView *Scroll(PDFView *view) { return view.documentView.enclosingS
 static NSClipView *Clip(PDFView *view) { return Scroll(view).contentView; }
 
 typedef struct { PDFPage *page; NSPoint point; } Mark;
+// The top of the area where the text can be read: in a window whose content runs under the
+// toolbar, below the toolbar and the title bar (contentLayoutRect, as TSDocumentWindowGlass).
 static CGFloat TopInWindow(PDFView *view) {
     NSClipView *clip = Clip(view); NSRect b = clip.bounds;
-    return [clip convertPoint:NSMakePoint(NSMidX(b), clip.isFlipped ? NSMinY(b) : NSMaxY(b)) toView:nil].y;
+    CGFloat top = [clip convertPoint:NSMakePoint(NSMidX(b), clip.isFlipped ? NSMinY(b) : NSMaxY(b)) toView:nil].y;
+    if (view.window.styleMask & NSWindowStyleMaskFullSizeContentView)
+        top = fmin(top, NSMaxY(view.window.contentLayoutRect));
+    return top;
 }
 static Mark MarkAt(PDFView *view) {
     NSPoint p = [view convertPoint:NSMakePoint(NSMidX(Clip(view).frame), TopInWindow(view)) fromView:nil];
@@ -202,7 +236,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     model = argv[1];
     const char *names[2] = {model, strdup([NSString stringWithFormat:@"%s, toolbar hidden", model].UTF8String)};
     if (!strcmp(model, "sources")) {
-        Check(WRAPPED, @"MyPDFKitView changes its size through TSPreviewChangeSize, except when Fit to Content Width refits");
+        Check(WRAPPED, @"MyPDFKitView changes its size through TSPreviewChangeSize, except when Fit to Content Width refits, and tells the keeper when it was laid out");
         return failures ? 1 : 0;
     }
     method_setImplementation(class_getClassMethod(NSScroller.class, @selector(preferredScrollerStyle)), (IMP)Legacy);
@@ -216,7 +250,8 @@ int main(int argc, char **argv) { @autoreleasepool {
         printf("shifted: not modelled on this system\n");
         return 0;
     }
-    if (shifted || !strcmp(model, "unflipped"))
+    BOOL unflippedModel = !strcmp(model, "unflipped");
+    if (shifted || unflippedModel)
         method_setImplementation(class_getInstanceMethod(NSClassFromString(@"PDFDocumentView"), @selector(isFlipped)), (IMP)No);
     if (shifted) {
         // The clip view class of a PDFView: PDFClipView up to macOS 26, NSClipView later.
@@ -261,22 +296,77 @@ int main(int argc, char **argv) { @autoreleasepool {
             Check(worst <= 0.5, [NSString stringWithFormat:@"the text at the top stays while the height changes (%.2fpt)", worst]);
         }
 
-        // Automatic scaling: the magnification follows the width, and the place is PDFKit's.
-        {
-            CGFloat scales[2], places[2];
+        // Automatic scaling, as Fit to Window: the magnification follows the size as without
+        // the fix. In continuous mode the text at the top stays. In single page mode the whole
+        // page is shown, and it stays the page shown.
+        for (int single = 0; single < 2; single++) {
+            CGFloat worst[2] = {0, 0}; BOOL sameScales = YES, samePage = YES; NSMutableString *steps = [NSMutableString string];
+            NSMutableArray *sizes = [@[@[@600, @700], @[@420, @700], @[@760, @700], @[@760, @520], @[@500, @760], @[@900, @700]] mutableCopy];
+            // The windows stay smaller than the screen, which AppKit moves and shrinks larger ones to.
+            // A slow drag after them.
+            for (NSNumber *width in DragWidths()) [sizes addObject:@[width, @700]];
+            NSMutableArray *scales[2] = {[NSMutableArray array], [NSMutableArray array]};
             for (int preview = 0; preview < 2; preview++) {
                 NSWindow *window = MakeWindow(900, 700);
                 PDFView *view = MakeView(window.contentView.bounds, document, preview, YES);
+                if (single) view.displayMode = kPDFDisplaySinglePage;
                 [window.contentView addSubview:view]; SetSize(window, 900, 700);
-                ScrollIntoPage(view, 3, 120);
+                if (single) { [view goToPage:[document pageAtIndex:3]]; [view.window layoutIfNeeded]; RunLoop(); }
+                else ScrollIntoPage(view, 3, 120);
                 Mark mark = MarkAt(view);
-                SetSize(window, 600, 700);
-                scales[preview] = view.scaleFactor;
-                places[preview] = Below(view, mark);
+                for (NSArray *size in sizes) {
+                    SetSize(window, [size[0] doubleValue], [size[1] doubleValue]);
+                    [scales[preview] addObject:@(view.scaleFactor)];
+                    worst[preview] = fmax(worst[preview], fabs(Below(view, mark)));
+                    if (preview) {
+                        samePage = samePage && view.currentPage == [document pageAtIndex:3];
+                        [steps appendFormat:@" %@x%@: %.2f", size[0], size[1], Below(view, mark)];
+                    }
+                }
             }
-            Check(fabs(scales[1] - scales[0]) < 1e-6, @"automatic scaling follows the width as without the fix");
-            Check(fabs(places[1] - places[0]) <= 0.5, [NSString stringWithFormat:
-                  @"with automatic scaling the place is left to PDFKit (%.2f and %.2fpt)", places[1], places[0]]);
+            for (NSUInteger i = 0; i < sizes.count; i++)
+                sameScales = sameScales && fabs([scales[1][i] doubleValue] - [scales[0][i] doubleValue]) < 1e-6;
+            NSString *mode = single ? @"single page" : @"continuous";
+            Check(sameScales, [NSString stringWithFormat:@"%@: automatic scaling follows the size as without the fix", mode]);
+            Check([scales[1][1] doubleValue] < [scales[1][0] doubleValue] - 0.01,
+                  [NSString stringWithFormat:@"%@: the magnification changes with the size", mode]);
+            if (single) {
+                Check(samePage, @"single page: with automatic scaling the page shown stays");
+                continue;
+            }
+            // The shifted model lays the scrollers over the content at every width; with automatic
+            // scaling the page fits the width and the view is never narrower than half of it.
+            // PDFKit's clip view puts its place on whole pixels up to macOS 26, and at a new
+            // magnification the text is put back up to a pixel off (measured in macOS 15 and 26).
+            if (!shifted)
+                Check(worst[1] <= 2.0, [NSString stringWithFormat:@"%@: with automatic scaling the text at the top stays (%.2fpt;%@)",
+                                        mode, worst[1], steps]);
+            if (!flipped)
+                Control(worst[0] >= 10, [NSString stringWithFormat:@"%@: without the fix the text moves (%.2fpt)", mode, worst[0]]);
+        }
+
+        // A small scroll between two changes of the size is kept: the text at the top after
+        // the scroll stays, at a fixed magnification and with automatic scaling.
+        // The shifted model is left out with automatic scaling, as above.
+        for (int automatic = 0; automatic < (shifted ? 1 : 2); automatic++) {
+            CGFloat worst = 0; NSMutableString *steps = [NSMutableString string];
+            for (NSNumber *amount in @[@1, @2, @6]) {
+                NSWindow *window = MakeWindow(900, 700);
+                PDFView *view = MakeView(window.contentView.bounds, document, YES, automatic);
+                if (!automatic) view.scaleFactor = 6.0;
+                [window.contentView addSubview:view]; SetSize(window, 900, 700);
+                ScrollIntoPage(view, 3, automatic ? 120 : 600);
+                SetSize(window, 800, 700);
+                NSClipView *clip = Clip(view); NSRect b = clip.bounds;
+                [clip scrollToPoint:NSMakePoint(NSMinX(b), NSMinY(b) + (clip.isFlipped ? 1 : -1) * amount.doubleValue / view.scaleFactor * NSHeight(b) / NSHeight(clip.frame) * view.scaleFactor)];
+                [Scroll(view) reflectScrolledClipView:clip]; RunLoop();
+                Mark mark = MarkAt(view);
+                SetSize(window, 700, 700);
+                worst = fmax(worst, fabs(Below(view, mark)));
+                [steps appendFormat:@" %@pt: %.2f", amount, Below(view, mark)];
+            }
+            Check(worst <= (automatic ? 1.0 : 0.5), [NSString stringWithFormat:@"%s: a small scroll before a change of the size is kept (%.2fpt;%@)",
+                                                    automatic ? "automatic scaling" : "600%", worst, steps]);
         }
 
         // The ends of the document still limit the place: at the end, a size change that
@@ -291,10 +381,14 @@ int main(int argc, char **argv) { @autoreleasepool {
             [clip scrollToPoint:[clip constrainBoundsRect:clip.bounds].origin];
             [Scroll(view) reflectScrolledClipView:clip]; RunLoop();
             SetSize(window, 900, 760); SetSize(window, 450, 760);
+            // The end is where scrolling ends: with a bottom inset, as under the scroller laid over
+            // the content, that is the inset below the last page.
             NSRect visible = clip.documentVisibleRect, document = clip.documentRect;
-            BOOL atEnd = clip.isFlipped ? NSMaxY(visible) <= NSMaxY(document) + 0.5 : NSMinY(visible) >= NSMinY(document) - 0.5 - (shifted ? 8.5 : 0);
-            Check(atEnd, [NSString stringWithFormat:@"the view does not go past the end of the document (visible %@, document %@)",
-                          NSStringFromRect(visible), NSStringFromRect(document)]);
+            CGFloat inset = clip.contentInsets.bottom;
+            BOOL atEnd = clip.isFlipped ? NSMaxY(visible) <= NSMaxY(document) + inset + 0.5 :
+                NSMinY(visible) >= NSMinY(document) - inset - 0.5 - (shifted ? 8.5 : 0);
+            Check(atEnd, [NSString stringWithFormat:@"the view does not go past the end of the document (visible %@, document %@, bottom inset %.1f)",
+                          NSStringFromRect(visible), NSStringFromRect(document), inset]);
         }
 
         // On macOS 26 and later the band under the toolbar is a lasting top inset, which
@@ -308,13 +402,20 @@ int main(int argc, char **argv) { @autoreleasepool {
 
         // A window split into a top and a bottom part, with the divider keeper: the width and
         // the height change, and both parts keep their tops.
-        for (int vertical = 0; vertical < 2; vertical++) {
+        // With automatic scaling (Fit to Window) the magnification follows the width as well;
+        // the shifted model is left out then, as above. So is the unflipped model side by side:
+        // on this system's PDFKit, which magnifies through the bounds of the clip view, a later
+        // layout moves the left part after its text was put back (seen on macOS 27.2), while
+        // macOS 15.6.1 and 26.6.2 themselves keep it (system model there).
+        for (int run = 0; run < (shifted ? 2 : 4); run++) {
+            int vertical = run % 2, automatic = run / 2;
+            if (automatic && vertical && unflippedModel) continue;
             NSWindow *window = MakeWindow(1000, 700);
             NSSplitView *split = [[NSSplitView alloc] initWithFrame:window.contentView.bounds];
             split.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable; split.vertical = vertical;
             [window.contentView addSubview:split];
-            PDFView *a = MakeView(NSMakeRect(0, 0, 500, 350), document, YES, NO);
-            PDFView *b = MakeView(NSMakeRect(0, 0, 500, 350), document, YES, NO);
+            PDFView *a = MakeView(NSMakeRect(0, 0, 500, 350), document, YES, automatic);
+            PDFView *b = MakeView(NSMakeRect(0, 0, 500, 350), document, YES, automatic);
             [split addSubview:a]; [split addSubview:b]; [split adjustSubviews];
             TSPreviewSplitDivider *divider = [[TSPreviewSplitDivider alloc] initWithSplitView:split];
             // A view held by Auto Layout in each part, as the line along the active part: with
@@ -342,8 +443,84 @@ int main(int argc, char **argv) { @autoreleasepool {
                 worst = fmax(worst, fmax(fabs(Below(a, ma)), fabs(Below(b, mb))));
                 [steps appendFormat:@" %@x%@: %.2f/%.2f", size[0], size[1], Below(a, ma), Below(b, mb)];
             }
-            Check(worst <= 0.5, [NSString stringWithFormat:@"split %s: both parts keep their tops while the window changes (%.2fpt;%@)",
-                                 vertical ? "side by side" : "top and bottom", worst, steps]);
+            // PDFKit's clip view puts its place on whole pixels up to macOS 26. A pixel at the
+            // smallest magnification of these steps (0.45) is 3.6 points at the largest (1.65).
+            Check(worst <= (automatic ? 4.0 : 0.5), [NSString stringWithFormat:@"split %s%s: both parts keep their tops while the window changes (%.2fpt;%@)",
+                                 vertical ? "side by side" : "top and bottom", automatic ? ", automatic scaling" : "", worst, steps]);
+            (void)divider;
+        }
+
+        // A split into a top and a bottom part whose upper part is lower than the band under the
+        // toolbar (macOS 26 and later): a part of the band lies over the lower part, and the text
+        // just below the band stays while the width changes the magnification, and while a
+        // resize at a corner changes the part of the band over it too, at once and both ways.
+        if (!shifted) for (int run = 0; run < 6; run++) {
+            NSNumber *upper = @[@15, @40, @65][run % 3];
+            // The second time the first change is a resize at a corner, and only the lower part
+            // has a view held by Auto Layout, as the line along the active part.
+            BOOL cornerFirst = run >= 3;
+            NSWindow *window = MakeWindow(900, 700);
+            NSSplitView *split = [[NSSplitView alloc] initWithFrame:window.contentView.bounds];
+            split.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+            [window.contentView addSubview:split];
+            PDFView *a = MakeView(NSMakeRect(0, 0, 900, 350), document, YES, YES);
+            PDFView *b = MakeView(NSMakeRect(0, 0, 900, 350), document, YES, YES);
+            [split addSubview:a]; [split addSubview:b]; [split adjustSubviews];
+            TSPreviewSplitDivider *divider = [[TSPreviewSplitDivider alloc] initWithSplitView:split];
+            SetSize(window, 900, 700);
+            if (cornerFirst) {
+                NSView *line = [[NSView alloc] initWithFrame:b.bounds];
+                line.translatesAutoresizingMaskIntoConstraints = NO;
+                [b addSubview:line];
+                [NSLayoutConstraint activateConstraints:@[
+                    [line.leadingAnchor constraintEqualToAnchor:b.leadingAnchor], [line.trailingAnchor constraintEqualToAnchor:b.trailingAnchor],
+                    [line.topAnchor constraintEqualToAnchor:b.safeAreaLayoutGuide.topAnchor], [line.heightAnchor constraintEqualToConstant:3]]];
+            }
+            [split setPosition:upper.doubleValue ofDividerAtIndex:0]; [window layoutIfNeeded]; RunLoop();
+            ScrollIntoPage(b, 3, 200);
+            Mark mb = MarkAt(b); CGFloat worst = 0; NSMutableString *steps = [NSMutableString string];
+            NSArray *sizes = cornerFirst ? @[@[@550, @550], @[@900, @700], @[@550, @550], @[@900, @700]]
+                                         : @[@[@800, @700], @[@700, @700], @[@550, @700], @[@700, @700], @[@900, @700],
+                                             @[@550, @550], @[@900, @700], @[@600, @620], @[@850, @560], @[@900, @700]];
+            for (NSArray *size in sizes) {
+                SetSize(window, [size[0] doubleValue], [size[1] doubleValue]);
+                worst = fmax(worst, fabs(Below(b, mb)));
+                [steps appendFormat:@" %@x%@: %.2f", size[0], size[1], Below(b, mb)];
+            }
+            // Up to a pixel of PDFKit's clip view per change, as above (1.64pt seen on macOS 26.6.2).
+            Check(worst <= 2.0, [NSString stringWithFormat:@"upper part %@pt%s: the lower part keeps the text below the band (%.2fpt;%@)",
+                                 upper, cornerFirst ? ", a corner first" : "", worst, steps]);
+            (void)divider;
+        }
+
+        // The parts of a split window are switched while their sizes change, as Window > Switch
+        // Views does (TSPreviewWindow switchSplitParts): each part shows the place of the
+        // other one, also after the event loop has run, when the two places are near each other.
+        if (!shifted) for (int vertical = 0; vertical < 2; vertical++) for (NSNumber *apart in @[@8, @24]) {
+            NSWindow *window = MakeWindow(900, 700);
+            NSSplitView *split = [[NSSplitView alloc] initWithFrame:window.contentView.bounds];
+            split.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable; split.vertical = vertical;
+            [window.contentView addSubview:split];
+            PDFView *a = MakeView(NSMakeRect(0, 0, 450, 350), document, YES, NO);
+            PDFView *b = MakeView(NSMakeRect(0, 0, 450, 350), document, YES, NO);
+            [split addSubview:a]; [split addSubview:b]; [split adjustSubviews];
+            TSPreviewSplitDivider *divider = [[TSPreviewSplitDivider alloc] initWithSplitView:split];
+            SetSize(window, 900, 700);
+            [split setPosition:(vertical ? 300 : 250) ofDividerAtIndex:0]; [window layoutIfNeeded]; RunLoop();
+            ScrollIntoPage(a, 2, 400); ScrollIntoPage(b, 2, 400 - apart.doubleValue);
+            TSPreviewPanePlace pa = TSPreviewPaneCapture(a), pb = TSPreviewPaneCapture(b);
+            CGFloat extent = vertical ? NSWidth(b.frame) : NSHeight(b.frame);
+            [split setPosition:(vertical ? NSMinX(split.bounds) : NSMinY(split.bounds)) + extent ofDividerAtIndex:0];
+            [split layoutSubtreeIfNeeded];
+            TSPreviewPaneRestore(a, pb);
+            TSPreviewPaneRestore(b, pa);
+            TSPreviewPanePlace na = TSPreviewPaneCapture(a), nb = TSPreviewPaneCapture(b);
+            RunLoop(); RunLoop();
+            TSPreviewPanePlace la = TSPreviewPaneCapture(a), lb = TSPreviewPaneCapture(b);
+            CGFloat moved = fmax(fabs(la.pagePoint.y - na.pagePoint.y), fabs(lb.pagePoint.y - nb.pagePoint.y));
+            Check(fabs(na.pagePoint.y - pb.pagePoint.y) < 0.6 && fabs(nb.pagePoint.y - pa.pagePoint.y) < 0.6 && moved < 0.6,
+                  [NSString stringWithFormat:@"%s, %@pt apart: switched parts keep the places they were given (%.2f/%.2f wanted %.2f/%.2f, then moved %.2f)",
+                   vertical ? "side by side" : "top and bottom", apart, na.pagePoint.y, nb.pagePoint.y, pb.pagePoint.y, pa.pagePoint.y, moved]);
             (void)divider;
         }
     }
@@ -359,6 +536,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-preview-resize-') as tmp:
     (tmp / 'probe.m').write_text(program, encoding='utf-8')
     for name in ('TSPreviewScrollerKeeper.m', 'TSPreviewScrollerKeeper.h', 'TSPreviewSplitDivider.m'):
         (tmp / name).write_text(text[name], encoding='utf-8', errors='surrogateescape')
+    # It imports the keeper's header next to it: the copy in tmp, mutated or not.
+    (tmp / 'TSPreviewPanePlace.h').write_text(source_file(root, 'TSPreviewPanePlace.h').read_text(encoding='utf-8'), encoding='utf-8')
     # The copies in tmp, mutated or not, come before the Sources tree.
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-mmacosx-version-min=14.0', '-framework', 'Cocoa', '-framework', 'Quartz', '-I', str(tmp), *include_args(root),
                     '-I', str(root / 'Tests'), str(tmp / 'probe.m'), str(tmp / 'TSPreviewScrollerKeeper.m'),

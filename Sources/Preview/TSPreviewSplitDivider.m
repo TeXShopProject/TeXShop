@@ -236,6 +236,7 @@ static void TSSplitViewSizeParts(NSSplitView *splitView, NSSize oldSize)
         }
     }
     anchor.origin = clip.bounds.origin;
+    TSPreviewPlaceSetByProgram(view);
 }
 
 // Gets each part ready to keep its top through a resize.
@@ -272,6 +273,14 @@ static void TSSplitViewSizeParts(NSSplitView *splitView, NSSize oldSize)
             quiet = YES;
         } else
             [view layoutDocumentView];
+        // A new magnification, as with Fit to Window when the width changes too: the part
+        // kept the text at the top of the area where it can be read while it changed its
+        // size, below the toolbar for the upper part. The top edge of the part is under the
+        // toolbar, and putting the text there back would move what can be read (#53).
+        if (!anchor.quiet && view.scaleFactor != anchor.scale && TSPreviewSizeChangeKeptText(view)) {
+            [self.anchors removeObjectForKey:view];
+            continue;
+        }
         [self restore:anchor inView:view];
     }
     // PDFKit catches up once the drag or the live resize is over: the event loop is

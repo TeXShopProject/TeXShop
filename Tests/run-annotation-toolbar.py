@@ -49,7 +49,8 @@ parser.add_argument('--widths', action='store_true')
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 names = ['TSAnnotationBar.h', 'TSAnnotationBar.m', 'TSAnnotationTextPopover.h', 'TSAnnotationTextPopover.m',
-         'TSDocument-AnnotationBar.m', 'TSDocumentWindowGlass.h', 'TSDocumentWindowGlass.m', 'TSPreviewPanePlace.h']
+         'TSDocument-AnnotationBar.m', 'TSDocumentWindowGlass.h', 'TSDocumentWindowGlass.m', 'TSPreviewPanePlace.h',
+         'TSPreviewScrollerKeeper.h', 'TSPreviewScrollerKeeper.m']
 text = {n: source_file(root, n).read_text(encoding='utf-8') for n in names}
 if args.mutation and MUTATIONS[args.mutation]:
     n, old, new = MUTATIONS[args.mutation]
@@ -575,7 +576,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-annotation-toolbar-') as tmp:
     (tmp / 'TSDocument.h').write_text(stub_document, encoding='utf-8')
     (tmp / 'MyPDFKitView.h').write_text(stub_view, encoding='utf-8')
     (tmp / 'probe.m').write_text(program, encoding='utf-8')
-    sources = [tmp / n for n in ('probe.m', 'TSAnnotationBar.m', 'TSAnnotationTextPopover.m', 'TSDocument-AnnotationBar.m', 'TSDocumentWindowGlass.m')]
+    sources = [tmp / n for n in ('probe.m', 'TSAnnotationBar.m', 'TSAnnotationTextPopover.m', 'TSDocument-AnnotationBar.m', 'TSDocumentWindowGlass.m',
+                                 'TSPreviewScrollerKeeper.m')]
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-mmacosx-version-min=14.0', '-framework', 'Cocoa', '-framework', 'Quartz',
                     '-I', str(tmp), '-I', str(root / 'Tests'), *map(str, sources), '-o', str(tmp / 'probe')], check=True)
     if args.images:
