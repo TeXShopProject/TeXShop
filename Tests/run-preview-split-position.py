@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Split, unsplit and switch the preview panes with the production code in a window that is
-never shown, and check that the place at the top edge of each pane does not move."""
+never shown, and check that the place at the top edge of each pane does not move. With pages
+one below the other, the first split into a top and a bottom part, and a split with Shift,
+move nothing on the screen: the bottom part shows what was below its top edge, and gets a copy
+of a pinned popup (#66)."""
 from pathlib import Path
 import argparse
 import subprocess
@@ -12,7 +15,8 @@ from production_fragments import closing_brace, verify_embedded
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['band-counted', 'heights-with-band', 'first-not-restored', 'switch-not-swapped', 'shift-not-same',
                                            'second-not-saved', 'edge-ignores-flip',
-                                           'deferred-restore', 'restore-before-layout'])
+                                           'deferred-restore', 'restore-before-layout',
+                                           'not-continued', 'continued-when-saved', 'popup-not-copied', 'popups-pulled-in'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 window_source = (root / 'Sources/Windows/TSPreviewWindow.m').read_text(encoding='latin1')
@@ -50,6 +54,11 @@ for problem, old, new in (
         ('band-counted', '            else\n                TSDocumentWindowSplitEvenly(self.pdfKitSplitView);\n', '            else\n                ;\n'),
         # The height saved for the first pane includes the band under the toolbar.
         ('heights-with-band', 'temp1 = MAX(0, theFrame1.size.height - TSDocumentWindowHiddenTop(self.pdfKitSplitView));', 'temp1 = theFrame1.size.height;'),
+        # #66: the bottom part goes where it went before, to the top of the page.
+        ('not-continued', '(topToBottom || ! secondView.locationSaved);', 'NO;'),
+        ('continued-when-saved', '(topToBottom || ! secondView.locationSaved);', 'YES;'),
+        ('popup-not-copied', '[secondView showCopyOfPinnedLinkPreviewOfView: firstView];', ''),
+        ('popups-pulled-in', '    if (! continuesBelow)\n        [self keepPinnedLinkPreviewsInView];', '    [self keepPinnedLinkPreviewsInView];'),
         ('restore-before-layout', '    [self.pdfKitSplitView adjustSubviews];\n    [self.pdfKitSplitView layoutSubtreeIfNeeded];\n    TSPreviewPaneRestore', '    TSPreviewPaneRestore')):
     if args.mutation == problem:
         assert split.count(old) + parts.count(old) >= 1, problem
@@ -129,6 +138,9 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 - (BOOL)hasPinnedLinkPreview { return YES; }
 - (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:(NSRect *)f { return nil; }
 - (void)attachPinnedLinkPreview:(TSLinkPreviewView *)p windowFrame:(NSRect)f {}
+// The copy itself is checked in run-pinned-link-preview.py.
+static NSUInteger popupCopies, popupKeeps;
+- (void)showCopyOfPinnedLinkPreviewOfView:(MyPDFKitView *)other { if (other != self) popupCopies++; }
 VIEWMETHODS
 @end
 // The document: it hears that the second part goes away (annotation text being edited for it is dropped).
@@ -149,7 +161,7 @@ DIVIDERPROPERTY
 - (void)switchViews;
 @end
 @implementation TestWindow
-- (void)keepPinnedLinkPreviewsInView {}
+- (void)keepPinnedLinkPreviewsInView { popupKeeps++; }
 SPLITMETHOD
 SWITCHMETHOD
 PARTSMETHOD
@@ -275,15 +287,52 @@ int main(int argc, char **argv) { @autoreleasepool {
               [NSString stringWithFormat:@"%@: splitting again shows the second pane's place (%.2f)", name, distanceFromTop(p.second, lower)]);
         [p.window close];
     }
-    {   // Shift-split: both panes show the place that was at the top of the window.
+    // Pages one below the other, split into a top and a bottom part for the first time, or with
+    // Shift after the bottom part was used: nothing moves on the screen (#66). The bottom part
+    // shows what was below its top edge, at the same magnification, the popups are copied and
+    // none is pulled into view. Splitting side by side, and later splits without Shift, are as before.
+    for (NSNumber *scale in @[@1, @1.5, @0.75]) for (int shift = 0; shift < 2; shift++) {
+        NSString *name = [NSString stringWithFormat:@"%@split at %@%%", shift ? @"shift-" : @"first ", @(scale.doubleValue * 100)];
+        Preview p = makePreview(doc, scale.doubleValue, 3);
+        if (shift) { split(p, 0); scrollTo(p.second, 5, 300); settle(p.window); split(p, 0); }
+        scrollTo(p.first, 2, 600); settle(p.window);
+        TSPreviewPanePlace start = topOf(p.first);
+        CGFloat top = TSPreviewPaneWindowEdge(p.first).y;
+        NSUInteger copies = popupCopies, keeps = popupKeeps;
+        split(p, shift ? NSEventModifierFlagShift : 0);
+        CGFloat below = top - TSPreviewPaneWindowEdge(p.second).y;
+        check(below > 100, [NSString stringWithFormat:@"%@: the bottom part starts below the top (%.1f)", name, below]);
+        check(near(distanceFromTop(p.first, start)), [name stringByAppendingString:@": the top part keeps its top"]);
+        check(fabs(distanceFromTop(p.second, start) + below) < 0.5,
+              [NSString stringWithFormat:@"%@: the bottom part shows what was below its top edge (%.2f, expected %.2f)", name, distanceFromTop(p.second, start), -below]);
+        check(fabs(p.second.scaleFactor - p.first.scaleFactor) < 1e-6, [name stringByAppendingString:@": the same magnification"]);
+        check(popupCopies == copies + 1 && popupKeeps == keeps, [name stringByAppendingString:@": the popup is copied, none pulled into view"]);
+        if (shift)
+            check(fabs(NSHeight(p.first.frame) - NSHeight(p.second.frame)) < 1, @"shift-split: the panes have the same size");
+        // Unsplit and split again without Shift: the bottom part shows its place again.
+        scrollTo(p.second, 4, 300); settle(p.window);
+        TSPreviewPanePlace lower = topOf(p.second);
+        split(p, 0); split(p, 0);
+        check(near(distanceFromTop(p.second, lower)), [name stringByAppendingString:@": splitting again shows the bottom part's place"]);
+        check(popupCopies == copies + 1, [name stringByAppendingString:@": no copy then"]);
+        [p.window close];
+    }
+    {   // Side by side, the first time: as before, no copy.
         Preview p = makePreview(doc, 1, 3);
+        scrollTo(p.first, 2, 600); settle(p.window);
+        NSUInteger copies = popupCopies;
+        split(p, NSEventModifierFlagOption);
+        check(popupCopies == copies, @"side by side: no copy");
+        [p.window close];
+    }
+    {   // Shift-split, one page at a time: both panes show the place that was at the top of the window.
+        Preview p = makePreview(doc, 1.5, 1);
         split(p, 0); scrollTo(p.second, 5, 300); settle(p.window); split(p, 0);
         scrollTo(p.first, 2, 600); settle(p.window);
         TSPreviewPanePlace start = topOf(p.first);
         split(p, NSEventModifierFlagShift);
-        check(near(distanceFromTop(p.first, start)), @"shift-split keeps the top of the first pane");
-        check(near(distanceFromTop(p.second, start)), [NSString stringWithFormat:@"shift-split: the second pane shows the same place (%.2f)", distanceFromTop(p.second, start)]);
-        check(fabs(NSHeight(p.first.frame) - NSHeight(p.second.frame)) < 1, @"shift-split: the panes have the same size");
+        check(near(distanceFromTop(p.first, start)), @"single page: shift-split keeps the top of the first pane");
+        check(near(distanceFromTop(p.second, start)), [NSString stringWithFormat:@"single page: shift-split: the second pane shows the same place (%.2f)", distanceFromTop(p.second, start)]);
         [p.window close];
     }
     {   // Single page display: the panes can show different pages.
@@ -349,6 +398,13 @@ int main(int argc, char **argv) { @autoreleasepool {
         CGFloat shown1 = NSHeight(p.first.frame) - band, shown2 = NSHeight(p.second.frame);
         check(fabs(shown1 - shown2) <= 1, [NSString stringWithFormat:@"full-size window: the parts share the area below the toolbar evenly (%.1f, %.1f)", shown1, shown2]);
         check(near(distanceFromTop(p.first, start)), @"full-size window: splitting keeps the top of the first pane");
+        // From the top of the first pane's clip view, where topOf takes its place, also under the toolbar.
+        NSClipView *firstClip = p.first.documentView.enclosingScrollView.contentView;
+        NSRect fb = firstClip.bounds;
+        CGFloat clipTop = [firstClip convertPoint:NSMakePoint(NSMinX(fb), firstClip.isFlipped ? NSMinY(fb) : NSMaxY(fb)) toView:nil].y;
+        CGFloat below = clipTop - TSPreviewPaneWindowEdge(p.second).y;
+        check(fabs(distanceFromTop(p.second, start) + below) < 0.5,
+              [NSString stringWithFormat:@"full-size window: the bottom part shows what was below its top edge (%.2f, expected %.2f)", distanceFromTop(p.second, start), -below]);
         NSSplitView *sv = p.window.pdfKitSplitView;
         CGFloat usable = NSHeight(sv.bounds) - band - sv.dividerThickness;
         [sv setPosition:round(band + usable / 3) ofDividerAtIndex:0]; settle(p.window);

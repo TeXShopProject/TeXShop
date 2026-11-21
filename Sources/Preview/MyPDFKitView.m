@@ -5170,10 +5170,11 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
     return preview;
 }
 
-- (void)attachPinnedLinkPreview:(TSLinkPreviewView *)preview windowFrame:(NSRect)frame
+// Puts a pinned popup in this part at a frame given in window coordinates.
+- (BOOL)placePinnedLinkPreview:(TSLinkPreviewView *)preview windowFrame:(NSRect)frame
 {
     NSView *documentView = self.documentView;
-    if (!preview || !documentView || [self hasPinnedLinkPreview]) return;
+    if (!preview || !documentView || [self hasPinnedLinkPreview]) return NO;
     if (self.handlingLink) [self killTransientLinkPreview];
     pinnedLinkPreview = preview;
     __weak MyPDFKitView *weakView = self;
@@ -5185,8 +5186,29 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
     pinnedLinkPreview.frame = [documentView convertRect:frame fromView:nil];
     pinnedLinkPreview.pinned = YES;
     [self observeLinkPreviewEvents];
-    [self keepPinnedLinkPreviewInView];
+    return YES;
 }
+
+- (void)attachPinnedLinkPreview:(TSLinkPreviewView *)preview windowFrame:(NSRect)frame
+{
+    if ([self placePinnedLinkPreview:preview windowFrame:frame])
+        [self keepPinnedLinkPreviewInView];
+}
+
+- (void)showCopyOfPinnedLinkPreviewOfView:(MyPDFKitView *)other
+{
+    TSLinkPreviewView *source = other->pinnedLinkPreview;
+    if (![other hasPinnedLinkPreview] || other.document != self.document || !self.document) return;
+    // The page under its upper left corner, as the popup keeps its place (#56).
+    NSRect frame = [other convertRect:source.frame fromView:source.superview];
+    NSPoint corner = NSMakePoint(NSMinX(frame), other.isFlipped ? NSMinY(frame) : NSMaxY(frame));
+    PDFPage *page = [other pageForPoint:corner nearest:YES];
+    if (!page) return;
+    NSRect onPage = [other convertRect:frame toPage:page];
+    NSRect here = [self convertRect:[self convertRect:onPage fromPage:page] toView:nil];
+    [self placePinnedLinkPreview:[source copyWithFrame:source.frame] windowFrame:here];
+}
+
 
 // A popup away from its place goes back to it when its page is shown again, as after turning
 // a page back to it (#35); otherwise it is kept in view.

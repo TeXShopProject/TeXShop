@@ -35,6 +35,29 @@ static inline TSPreviewPanePlace TSPreviewPaneCapture(PDFView *view)
     return place;
 }
 
+// The place under a point given in window coordinates, also below or above the pane, where
+// the pages go on as they are laid out.
+static inline TSPreviewPanePlace TSPreviewPaneCaptureAt(PDFView *view, NSPoint windowPoint)
+{
+    TSPreviewPanePlace place = {0};
+    if (!view.document.pageCount || !view.window) return place;
+    NSPoint point = [view convertPoint:windowPoint fromView:nil];
+    PDFPage *page = [view pageForPoint:point nearest:YES];
+    if (!page) return place;
+    place.valid = YES;
+    place.pageIndex = [view.document indexForPage:page];
+    place.pagePoint = [view convertPoint:point toPage:page];
+    return place;
+}
+
+// The left end of the top edge of a pane's visible area, in window coordinates.
+static inline NSPoint TSPreviewPaneWindowEdge(PDFView *view)
+{
+    NSScrollView *scroll = view.documentView.enclosingScrollView;
+    NSClipView *clip = scroll.contentView;
+    return clip ? [clip convertPoint:TSPreviewPaneEdge(scroll) toView:nil] : NSZeroPoint;
+}
+
 // Scrolls so that the place is at the left end of the top edge, as far as the document allows.
 static inline void TSPreviewPaneRestore(PDFView *view, TSPreviewPanePlace place)
 {

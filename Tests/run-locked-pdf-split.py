@@ -207,6 +207,8 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 - (BOOL)hasPinnedLinkPreview { return YES; }
 - (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:(NSRect *)f { return nil; }
 - (void)attachPinnedLinkPreview:(TSLinkPreviewView *)p windowFrame:(NSRect)f {}
+// The copy for the bottom part of a first split (#66) is checked in run-pinned-link-preview.py.
+- (void)showCopyOfPinnedLinkPreviewOfView:(id)other {}
 - (void)setupOutline { self.outlineSetups++; }
 - (void)showActivePartInOutline {}
 - (void)setup { self.setupRuns++; }

@@ -1422,6 +1422,14 @@ static void TSPreviewPlacePartByFrame(NSView *part)
         }
     
     
+    // Pages one below the other, split into a top and a bottom part for the first time, or
+    // with Shift: nothing moves on the screen. The divider comes over the pages, the bottom
+    // part shows what was below it, and a pinned popup stays where it is, now in both parts,
+    // each with its own copy at the same place on its page (#66).
+    BOOL continuesBelow = ! self.windowIsSplit && self.horizontal && firstTop.valid &&
+        (firstView.displayMode == kPDFDisplaySinglePageContinuous || firstView.displayMode == kPDFDisplayTwoUpContinuous) &&
+        (topToBottom || ! secondView.locationSaved);
+
 // REVISE self.windowIsSplit FOR SPLITING, BUT DO NOT YET SPLIT
     
     
@@ -1542,7 +1550,14 @@ static void TSPreviewPlacePartByFrame(NSView *part)
     [self.pdfKitSplitView adjustSubviews];
     [self.pdfKitSplitView layoutSubtreeIfNeeded];
     TSPreviewPaneRestore(firstView, firstTop);
-    if (self.windowIsSplit)
+    if (self.windowIsSplit && continuesBelow)
+        {
+            // The first pane shows its top where it was, at the same magnification, so the
+            // pages go on below it as they were laid out before the split.
+            TSPreviewPaneRestore(secondView, TSPreviewPaneCaptureAt(firstView, TSPreviewPaneWindowEdge(secondView)));
+            [secondView showCopyOfPinnedLinkPreviewOfView: firstView];
+        }
+    else if (self.windowIsSplit)
         {
             if (secondView.locationSaved)
                 [secondView restoreLocation];
@@ -1556,7 +1571,9 @@ static void TSPreviewPlacePartByFrame(NSView *part)
     if (! self.windowIsSplit)
         [self.myPDFKitView2 setDocument:nil];
     
-    [self keepPinnedLinkPreviewsInView];
+    // The popups stay at their places on their pages, also out of view.
+    if (! continuesBelow)
+        [self keepPinnedLinkPreviewsInView];
 }
 
 

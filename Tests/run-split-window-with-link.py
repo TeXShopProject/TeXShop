@@ -64,7 +64,7 @@ view_methods = [last_method(view_source, s) for s in (
     # Splitting (#23) and the active view (#25, #14), as in run-preview-switch-views.py.
     '- (void)saveLocation\n', '- (void)restoreLocation\n', '- (NSInteger)index\n', '- (void)moveSplitToCorrectSpot:',
     '- (BOOL)hasPinnedLinkPreview\n', '- (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:',
-    '- (void)attachPinnedLinkPreview:', '- (void)keepPinnedLinkPreviewInView\n', '- (void)closePinnedLinkPreview\n', '- (void)keepPinnedLinkPreviewThroughMove\n', '- (BOOL)beginKeepingPinnedLinkPreviewOnPage\n', '- (void)endKeepingPinnedLinkPreviewOnPage:',
+    '- (BOOL)placePinnedLinkPreview:', '- (void)attachPinnedLinkPreview:', '- (void)keepPinnedLinkPreviewInView\n', '- (void)closePinnedLinkPreview\n', '- (void)keepPinnedLinkPreviewThroughMove\n', '- (BOOL)beginKeepingPinnedLinkPreviewOnPage\n', '- (void)endKeepingPinnedLinkPreviewOnPage:',
     '- (void)setMagnification: (double)magnification', '- (void) scaleChanged: (NSNotification *) notification',
     '- (void)fixMagnificationControls\n', '- (void)fixStuff\n', '- (void)resetSearchDelegate\n',
     '- (BOOL)becomeFirstResponder\n', '- (void)becomeActiveView\n',
@@ -227,6 +227,8 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 - (void)killTransientLinkPreview { [linkPreview removeFromSuperview]; linkPreview = nil; self.handlingLink = 0; }
 - (void)doKillPopup { [pinnedLinkPreview removeFromSuperview]; pinnedLinkPreview = nil; [self killTransientLinkPreview]; }
 - (BOOL)acceptsFirstResponder { return YES; }
+// The copy for the bottom part of a first split (#66) is checked in run-pinned-link-preview.py.
+- (void)showCopyOfPinnedLinkPreviewOfView:(MyPDFKitView *)other {}
 VIEWMETHODS
 @end
 @implementation TestWindow

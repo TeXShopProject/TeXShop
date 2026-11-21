@@ -102,7 +102,7 @@ view_methods = [last_method(view_source, s) for s in (
     '- (void) rotateClockwise:sender', '- (void) rotateCounterclockwise:sender',
     # The magnification chosen in the Preview menu (#60 audit).
     '- (void) setupMagnificationStyle\n', '- (void)changePDFViewSizeTo: (NSInteger)newResizeOption', '- (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:',
-    '- (void)attachPinnedLinkPreview:', '- (void)keepPinnedLinkPreviewInView\n', '- (void)closePinnedLinkPreview\n', '- (void)keepPinnedLinkPreviewThroughMove\n', '- (BOOL)beginKeepingPinnedLinkPreviewOnPage\n', '- (void)endKeepingPinnedLinkPreviewOnPage:',
+    '- (BOOL)placePinnedLinkPreview:', '- (void)attachPinnedLinkPreview:', '- (void)keepPinnedLinkPreviewInView\n', '- (void)closePinnedLinkPreview\n', '- (void)keepPinnedLinkPreviewThroughMove\n', '- (BOOL)beginKeepingPinnedLinkPreviewOnPage\n', '- (void)endKeepingPinnedLinkPreviewOnPage:',
     # What the toolbar, the menus and the search results follow (#25 audit).
     '- (void)setMagnification: (double)magnification', '- (void) scaleChanged: (NSNotification *) notification',
     '- (void)fixMagnificationControls\n', '- (void)fixStuff\n', '- (void)resetSearchDelegate\n',
@@ -307,6 +307,8 @@ static void TSSplitToggleItemsFollowSplit(void) {}
     [self attachPinnedLinkPreview:p windowFrame:windowFrame];
 }
 - (BOOL)acceptsFirstResponder { return YES; }
+// The copy for the bottom part of a first split (#66) is checked in run-pinned-link-preview.py.
+- (void)showCopyOfPinnedLinkPreviewOfView:(MyPDFKitView *)other {}
 VIEWMETHODS
 @end
 @implementation TestWindow

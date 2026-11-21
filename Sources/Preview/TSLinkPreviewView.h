@@ -40,6 +40,9 @@
 // before, and goes back to it after. It returns NO, and stays where it is, when that page is
 // no longer shown, as in Single Page display showing another page (#56).
 - (void)rememberPlaceOnPage;
+// Another popup showing the same pages, selection and label, for another preview; the
+// caller places and pins it (#66).
+- (TSLinkPreviewView *)copyWithFrame:(NSRect)frame;
 - (BOOL)returnToPlaceOnPage;
 - (BOOL)returnToPlaceIfAway;
 
