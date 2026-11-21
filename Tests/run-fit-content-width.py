@@ -6,8 +6,10 @@ With pages one below the other, the content of all pages sets the magnification 
 sideways, which stay as the pages scroll by; pages not measured yet are measured a few at a time
 and the content is fitted again once all are known. One page or one row at a time, the widest
 content of a page or row sets the magnification and the content of each page or row comes to
-the middle when it is shown. The text at the top of the view stays; a narrower or wider view
-fits again; the same magnification set again keeps the mode, any other leaves it."""
+the middle when it is shown. Going to a place, as the drawer, links, SyncTeX and Find do, keeps
+that place sideways, so that the margins stay in view (#62). The text at the top of the view stays; a
+narrower or wider view fits again; the same magnification set again keeps the mode, any other
+leaves it."""
 from pathlib import Path
 import argparse, subprocess, sys, tempfile
 from source_tree import include_args
@@ -25,11 +27,14 @@ MUTATIONS = {
     # MyPDFKitView.m
     'not-measured': ('view', '    else if (TSContentMeasurePages(document, self.displayBox, 0.008))\n        [self fitContentWidth];',
                      '    else if (YES)\n        [self fitContentWidth];'),
-    'no-refit-on-resize': ('view', '    if (refit) {\n        top.page = topPage;', '    if (NO) {\n        top.page = topPage;'),
-    'top-after-resize': ('view', '    TSContentTop top = refit ? TSContentTopOf(self) : (TSContentTop){nil, NSZeroPoint};',
-                         '    TSContentTop top = {nil, NSZeroPoint};'),
+    'no-refit-on-resize': ('view', '    if (!refit) {', '    if (YES) {'),
+    'top-after-resize': ('view', '    top.page = topPage;\n    [self fitContentWidthKeepingTop:top];', '    [self fitContentWidth];'),
     'same-scale-leaves': ('view', '        (resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH && fabs(scale - self.scaleFactor) < 1e-6);', '        NO;'),
     'page-not-centred': ('view', '            TSContentCentreRow(view);\n    });', '            ;\n    });'),
+    'destination-moves-sideways': ('view', '    [self keepContentWidthPlaceDuring:^{ [super goToDestination:destination]; }];',
+                                   '    [super goToDestination:destination];'),
+    'result-moves-sideways': ('view', '        [self keepContentWidthPlaceDuring:^{ [super scrollSelectionToVisible:sender]; }];',
+                              '        [super scrollSelectionToVisible:sender];'),
     'measured-pdf-waits': ('view', '        if (preserveZoom && !TSContentAllMeasured(document, self.displayBox))', '        if (preserveZoom)'),
     'new-pdf-not-measured': ('view', '        if (preserveZoom && !TSContentAllMeasured(document, self.displayBox))\n            [self measureContentLater];',
                              '        if (preserveZoom && !TSContentAllMeasured(document, self.displayBox))\n            ;'),
@@ -44,7 +49,9 @@ zoom_text = zoom_path.read_text().replace('#pragma once\n', '', 1)
 view_methods = [method(view_source, s) for s in (
     '- (void)setScaleFactor:(CGFloat)scale', '- (void)fitContentWidth\n{', '- (void)fitContentWidthKeepingTop:(TSContentTop)top',
     '- (void)measureContentLater', '- (void)measureContentOf:(PDFDocument *)document', '- (void)centreContentRowLater',
-    '- (void)setFrameSize:(NSSize)newSize', '- (void)setDocument:(PDFDocument *)document')]
+    '- (void)setFrameSize:(NSSize)newSize', '- (void)setDocument:(PDFDocument *)document',
+    '- (void)keepContentWidthPlaceDuring:(void (NS_NOESCAPE ^)(void))navigation', '- (void)goToDestination:(PDFDestination *)destination',
+    '- (void)scrollSelectionToVisible:(id)sender')]
 fragments = [('complete method: ' + t.split('\n')[0], view_source, t) for t in view_methods]
 fragments.append(('header without #pragma once: TSContentZoom.h', zoom_path.read_text(), zoom_text))
 view_text = '\n'.join(view_methods)
@@ -62,6 +69,7 @@ program = r'''
 #import "TestAppKitIsolation.h"
 #import "TSPreviewScrollerKeeper.h"
 #import "TSPreviewAppearance.h"
+#import "TSPreviewHorizontalPosition.h"
 ZOOMHEADER
 #define PDF_MAX_SCALE 2000
 enum { NEW_PDF_ACTUAL_SIZE = 1, NEW_PDF_FIT_TO_NONE = 2, NEW_PDF_FIT_TO_WINDOW = 3, NEW_PDF_FIT_TO_CONTENT_WIDTH = 6 };
@@ -113,7 +121,7 @@ VIEWMETHODS
 // other page, a page number at the foot. Page 13 has a figure wider than the text; page 16 is blank.
 static const NSRect OddBody = {{107, 150}, {343, 600}}, EvenBody = {{161, 150}, {343, 600}}, Number = {{290, 40}, {15, 12}};
 static const NSRect Wide = {{60, 400}, {480, 100}};
-static const NSUInteger Count = 16, WidePage = 12, BlankPage = 15;
+static const NSUInteger Count = 16, WidePage = 12, BlankPage = 15, FindPage = 9;
 static NSRect inkOf(NSUInteger index, BOOL wide) {
     if (index == BlankPage) return NSZeroRect;
     NSRect ink = NSUnionRect(index % 2 ? EvenBody : OddBody, Number);
@@ -132,6 +140,13 @@ static PDFDocument *makeDocument(BOOL wide, BOOL blank) {
             CGContextFillRect(pdf, NSRectToCGRect(i % 2 ? EvenBody : OddBody));
             CGContextFillRect(pdf, NSRectToCGRect(Number));
             if (wide && i == WidePage) CGContextFillRect(pdf, NSRectToCGRect(Wide));
+            // A word to find, inside the body, near its left edge: the ink stays the same.
+            if (i == FindPage) {
+                [NSGraphicsContext saveGraphicsState];
+                NSGraphicsContext.currentContext = [NSGraphicsContext graphicsContextWithCGContext:pdf flipped:NO];
+                [@"Target" drawAtPoint:NSMakePoint(NSMinX(EvenBody) + 4, 500) withAttributes:@{NSFontAttributeName: [NSFont systemFontOfSize:12]}];
+                [NSGraphicsContext restoreGraphicsState];
+            }
         }
         CGPDFContextEndPage(pdf);
     }
@@ -239,6 +254,62 @@ int main(int argc, char **argv) { @autoreleasepool {
         check(fabs(view.scaleFactor - scale) < 1e-6, @"fitting again keeps the magnification");
         view.scaleFactor = view.scaleFactor;
         check(view.resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH, @"the same magnification keeps Fit to Content Width");
+        [p.window close];
+    }
+
+    // Going to a place near the left edge of the text, as the drawer, links, SyncTeX and Find
+    // do: PDFKit would scroll sideways to put it at the left edge, and the margins would leave
+    // the view. The content keeps its place sideways (#62).
+    for (NSNumber *mode in @[@(kPDFDisplaySinglePageContinuous), @(kPDFDisplayTwoUpContinuous), @(kPDFDisplaySinglePage), @(kPDFDisplayTwoUp)]) {
+        BOOL continuous = mode.integerValue == kPDFDisplaySinglePageContinuous || mode.integerValue == kPDFDisplayTwoUpContinuous;
+        BOOL twoUp = mode.integerValue == kPDFDisplayTwoUpContinuous || mode.integerValue == kPDFDisplayTwoUp;
+        PDFDocument *document = makeDocument(YES, NO);
+        Preview p = makePreview(document, (PDFDisplayMode)mode.integerValue);
+        MyPDFKitView *view = p.view;
+        show(view, 2);
+        fit(view); measureAll(view);
+        PDFPage *target = [document pageAtIndex:FindPage];
+        PDFSelection *word = [document findString:@"Target" withOptions:0].firstObject;
+        check(word != nil && [word.pages containsObject:target], @"the word to find is on its page");
+        NSArray *ways = @[@"destination", @"result", @"destination on the same page", @"result on the same page"];
+        for (NSString *way in ways) {
+            context = [NSString stringWithFormat:@"going to a place by %@, mode %ld", way, (long)mode.integerValue];
+            if (![way hasSuffix:@"same page"]) { show(view, 2); fit(view); }
+            NSClipView *clip = clipOf(view);
+            CGFloat x = NSMinX(clip.bounds);
+            NSPoint point = NSMakePoint(NSMinX(EvenBody) + 2, NSMaxY(EvenBody) - 100);
+            if ([way hasPrefix:@"destination"])
+                [view goToDestination:[[PDFDestination alloc] initWithPage:target atPoint:point]];
+            else {
+                // As SyncTeX and Find show their result. Scrolled sideways first: on macOS 27
+                // the result alone scrolls only as far as needed, which from the place itself
+                // would not move at all.
+                // To the side where there is room.
+                NSRect off = clip.bounds;
+                off.origin.x += 24;
+                if (NSMinX([clip constrainBoundsRect:off]) < x + 12) off.origin.x -= 48;
+                [clip scrollToPoint:[clip constrainBoundsRect:off].origin];
+                [clip.enclosingScrollView reflectScrolledClipView:clip];
+                settle(p.window);
+                check(fabs(NSMinX(clip.bounds) - x) > 12, @"scrolled sideways before the result is shown");
+                view.currentSelection = word;
+                [view scrollSelectionToVisible:nil];
+                view.currentSelection = nil;
+            }
+            settle(p.window);
+            check(TSContentMiddlePage(view) == target || [TSContentRow(view, TSContentMiddlePage(view)) containsObject:target] ||
+                  [view.visiblePages containsObject:target], @"the page is shown");
+            NSUInteger index = [document indexForPage:target];
+            NSRect content = [view convertRect:inkOf(index, YES) fromPage:target];
+            if (twoUp) content = NSUnionRect(content, [view convertRect:inkOf(index - 1, YES) fromPage:[document pageAtIndex:index - 1]]);
+            NSRect area = [view convertRect:TSContentVisibleArea(view) fromView:clip];
+            check(NSMinX(content) >= NSMinX(area) - 1.5 && NSMaxX(content) <= NSMaxX(area) + 1.5,
+                  [NSString stringWithFormat:@"the content with its margins in view (%.1f to %.1f, view %.1f to %.1f)",
+                   NSMinX(content), NSMaxX(content), NSMinX(area), NSMaxX(area)]);
+            if (continuous)
+                check(fabs(NSMinX(clip.bounds) - x) < 0.5, [NSString stringWithFormat:@"the same place sideways (%.1f, was %.1f)", NSMinX(clip.bounds), x]);
+            check(view.resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH, @"the mode stays");
+        }
         [p.window close];
     }
 

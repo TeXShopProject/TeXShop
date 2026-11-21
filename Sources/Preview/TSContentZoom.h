@@ -394,6 +394,25 @@ static inline void TSContentRestoreTop(PDFView *view, TSContentTop top)
     [scroll reflectScrolledClipView:clip];
 }
 
+// The place sideways of Fit to Content Width: with pages one below the other, the content of
+// the pages known (the first of the groups) in the middle; otherwise that of the page or row in
+// view.
+static inline void TSContentPlaceSidewaysIn(PDFView *view, NSArray<NSArray<PDFPage *> *> *groups)
+{
+    if (TSContentContinuous(view)) {
+        NSRect all = TSContentRectInView(view, groups.firstObject ?: @[]);
+        if (!NSIsEmptyRect(all)) TSContentScrollTo(view, all, NO, NO);
+    } else
+        TSContentCentreRow(view);
+}
+
+// The same place again, after PDFKit has gone to a place and moved sideways with it (#62).
+static inline void TSContentPlaceSideways(PDFView *view)
+{
+    if (view.document.pageCount)
+        TSContentPlaceSidewaysIn(view, TSContentKnownGroups(view));
+}
+
 // Sets the magnification and the place sideways of Fit to Content Width, keeping the text at
 // the top of the view. NO when no content is known.
 // The top is taken by the caller, before the view changes its size.
@@ -411,11 +430,7 @@ static inline BOOL TSContentFitWidthKeeping(PDFView *view, TSContentTop top, CGF
     BOOL fitted = TSContentSettleScale(view, widest, nil, setScale);
     top.page = topPage;
     TSContentRestoreTop(view, top);
-    if (TSContentContinuous(view)) {
-        NSRect all = TSContentRectInView(view, groups.firstObject ?: @[]);
-        if (!NSIsEmptyRect(all)) TSContentScrollTo(view, all, NO, NO);
-    } else
-        TSContentCentreRow(view);
+    TSContentPlaceSidewaysIn(view, groups);
     return fitted;
 }
 
