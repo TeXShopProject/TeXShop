@@ -30,6 +30,10 @@ MUTATIONS = {
     # AppKit writes the HTML: sizes in CSS pixels, other colors, a background over the paragraph.
     'appkit-html': (STYLED, '[TSStyledCopyHTML(styled) dataUsingEncoding:NSUTF8StringEncoding]',
                     '[styled dataFromRange:whole documentAttributes:@{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType} error:NULL]'),
+    # The paragraphs lose the indents and the line spacing of the source.
+    'no-paragraph-layout': (STYLED, '    if (style.headIndent != 0)\n', '    if (NO)\n'),
+    # A light face is written as regular.
+    'regular-weight': (STYLED, '    return (nearest + 1) * 100;', '    return 400;'),
     # A source behind a find field (or in a window that is not key) is copied from.
     'any-responder': (HEADER, '    if (!window.isKeyWindow || window.firstResponder != view)\n        return NO;\n', ''),
     # The commands of Light Mode take the theme of Dark Mode.

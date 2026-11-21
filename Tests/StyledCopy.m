@@ -283,6 +283,34 @@ static void CheckDocumentCommands(NSString *themes)
     // said 15px, which browsers and word processors show as 11.25pt.
     Require(@"HTML font size read back", fabs(((NSFont *)ColorAt(read, @"plain", NSFontAttributeName)).pointSize - 20) < 0.01);
     Require(@"HTML escapes", [TSStyledCopyHTML([[NSAttributedString alloc] initWithString:@"a<b&c"]) containsString:@"a&lt;b&amp;c"]);
+    // Each paragraph keeps the indents and the line spacing of the source; the default layout adds none.
+    NSMutableParagraphStyle *indented = [NSMutableParagraphStyle new];
+    indented.headIndent = 11;
+    indented.firstLineHeadIndent = 5;
+    indented.lineSpacing = 3;
+    indented.defaultTabInterval = 37;
+    NSFont *menlo = [NSFont fontWithName:@"Menlo-Regular" size:15] ?: [NSFont userFixedPitchFontOfSize:15];
+    NSAttributedString *layout = [[NSAttributedString alloc] initWithString:@"one\n\ttwo" attributes:@{NSFontAttributeName: menlo, NSParagraphStyleAttributeName: indented}];
+    NSString *indentedHTML = TSStyledCopyHTML(layout);
+    CGFloat lineHeight = [[NSLayoutManager new] defaultLineHeightForFont:menlo] + 3;
+    Require(@"HTML indent of wrapped lines", [indentedHTML containsString:@"padding-left:11pt;"]);
+    Require(@"HTML indent of the first line", [indentedHTML containsString:@"text-indent:-6pt;"]);
+    Require(@"HTML line spacing", [indentedHTML containsString:[NSString stringWithFormat:@"line-height:%gpt;", lineHeight]]);
+    Require(@"HTML one block per paragraph", [indentedHTML componentsSeparatedByString:@"<div "].count == 3);
+    NSMutableParagraphStyle *plain = [NSMutableParagraphStyle new];
+    plain.defaultTabInterval = 37;
+    NSString *plainHTML = TSStyledCopyHTML([[NSAttributedString alloc] initWithString:@"one\n\ttwo" attributes:@{NSFontAttributeName: menlo, NSParagraphStyleAttributeName: plain}]);
+    Require(@"HTML default layout", ![plainHTML isEqualToString:indentedHTML] && ![plainHTML containsString:@"padding-left"] &&
+            ![plainHTML containsString:@"text-indent"] && ![plainHTML containsString:@"line-height"]);
+    // A light face keeps its weight and its name.
+    NSFont *light = [NSFont fontWithName:@"HelveticaNeue-Light" size:15], *regular = [NSFont fontWithName:@"HelveticaNeue" size:15];
+    if (light && regular) {
+        NSString *lightHTML = TSStyledCopyHTML([[NSAttributedString alloc] initWithString:@"x" attributes:@{NSFontAttributeName: light}]);
+        NSString *regularHTML = TSStyledCopyHTML([[NSAttributedString alloc] initWithString:@"x" attributes:@{NSFontAttributeName: regular}]);
+        Require(@"HTML light face", [lightHTML containsString:@"'HelveticaNeue-Light'"] && [lightHTML containsString:@"font-weight:300;"]);
+        Require(@"HTML regular face", [regularHTML containsString:@"font-weight:400;"] && ![lightHTML isEqualToString:regularHTML]);
+    } else
+        Require(@"Helvetica Neue Light and Regular are installed", NO);
     darkColors = savedDark;
 
     // Fullwidth letters keep the theme's fullwidth colors in every command; a translucent background is blended

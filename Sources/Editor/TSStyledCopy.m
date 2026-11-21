@@ -136,14 +136,38 @@ static NSString *TSStyledCopyEscaped(NSString *string)
     return escaped;
 }
 
+// The CSS weight (100 to 900) nearest to the weight of the font, so that a light or a medium face keeps it.
+static NSInteger TSStyledCopyCSSWeight(NSFont *font)
+{
+    NSNumber *trait = [font.fontDescriptor objectForKey:NSFontTraitsAttribute][NSFontWeightTrait];
+    CGFloat weight = trait ? trait.doubleValue : ((font.fontDescriptor.symbolicTraits & NSFontDescriptorTraitBold) ? NSFontWeightBold : NSFontWeightRegular);
+    const CGFloat weights[] = {NSFontWeightUltraLight, NSFontWeightThin, NSFontWeightLight, NSFontWeightRegular, NSFontWeightMedium,
+                               NSFontWeightSemibold, NSFontWeightBold, NSFontWeightHeavy, NSFontWeightBlack};
+    NSInteger nearest = 3;
+    for (NSInteger i = 0; i < 9; i++)
+        if (fabs(weights[i] - weight) < fabs(weights[nearest] - weight))
+            nearest = i;
+    return (nearest + 1) * 100;
+}
+
+static NSString *TSStyledCopyCSSName(NSString *name)
+{
+    return [NSString stringWithFormat:@"'%@'", [[name stringByReplacingOccurrencesOfString:@"\\" withString:@"\\\\"]
+                                                stringByReplacingOccurrencesOfString:@"'" withString:@"\\'"]];
+}
+
+// The face by its PostScript name first (a light or a condensed face of the family), then by its family.
 static NSString *TSStyledCopyFontStyle(NSFont *font)
 {
     if (!font)
         return @"";
-    NSString *family = [font.familyName ?: font.fontName stringByReplacingOccurrencesOfString:@"'" withString:@"\\'"];
-    NSFontSymbolicTraits traits = font.fontDescriptor.symbolicTraits;
-    return [NSString stringWithFormat:@"font-family:'%@',monospace;font-size:%gpt;font-weight:%@;font-style:%@;", family, font.pointSize,
-            (traits & NSFontDescriptorTraitBold) ? @"bold" : @"normal", (traits & NSFontDescriptorTraitItalic) ? @"italic" : @"normal"];
+    NSMutableArray<NSString *> *names = [NSMutableArray arrayWithObject:TSStyledCopyCSSName(font.fontName)];
+    if (font.familyName && ![font.familyName isEqualToString:font.fontName])
+        [names addObject:TSStyledCopyCSSName(font.familyName)];
+    [names addObject:@"monospace"];
+    BOOL italic = (font.fontDescriptor.symbolicTraits & NSFontDescriptorTraitItalic) != 0;
+    return [NSString stringWithFormat:@"font-family:%@;font-size:%gpt;font-weight:%ld;font-style:%@;", [names componentsJoinedByString:@","],
+            font.pointSize, (long)TSStyledCopyCSSWeight(font), italic ? @"italic" : @"normal"];
 }
 
 // The tab width of the source: its tab stops are evenly spaced (or the default interval is used).
@@ -154,31 +178,55 @@ static CGFloat TSStyledCopyTabWidth(NSParagraphStyle *style)
     return style.defaultTabInterval;
 }
 
+// The layout of a paragraph as the source has it: the tab width, the indent of its first line and of the lines it
+// wraps to, and the space added between lines (on the natural line height of its font).
+static NSString *TSStyledCopyParagraphStyle(NSParagraphStyle *style, NSFont *font)
+{
+    NSMutableString *css = [NSMutableString stringWithString:@"margin:0;white-space:pre-wrap;"];
+    CGFloat tab = TSStyledCopyTabWidth(style);
+    if (tab > 0)
+        [css appendFormat:@"tab-size:%gpt;-moz-tab-size:%gpt;", tab, tab];
+    if (style.headIndent != 0)
+        [css appendFormat:@"padding-left:%gpt;", style.headIndent];
+    if (style.firstLineHeadIndent != style.headIndent)
+        [css appendFormat:@"text-indent:%gpt;", style.firstLineHeadIndent - style.headIndent];
+    if (style.lineSpacing > 0 && font)
+        [css appendFormat:@"line-height:%gpt;", [[NSLayoutManager new] defaultLineHeightForFont:font] + style.lineSpacing];
+    return css;
+}
+
 // HTML of its own rather than AppKit's: AppKit writes sizes in CSS pixels (3/4 of the size in points), colors in
-// another color space, a background that fills the paragraph and no tab width. Here every run is a span with the
-// sRGB colors, the font and its size in points, and only the characters get the background; the tab width is that of
-// the source.
+// another color space, a background that fills the paragraph, and no tab width. Here each paragraph is a block with
+// the indents, line spacing and tab width of the source, and each run in it a span with the sRGB colors and the face
+// and its size in points; only the characters get the background.
 NSString *TSStyledCopyHTML(NSAttributedString *styled)
 {
-    NSRange whole = NSMakeRange(0, styled.length);
-    NSParagraphStyle *style = whole.length ? [styled attribute:NSParagraphStyleAttributeName atIndex:0 effectiveRange:NULL] : nil;
-    CGFloat tab = TSStyledCopyTabWidth(style);
+    NSString *string = styled.string;
     NSMutableString *html = [NSMutableString stringWithString:@"<!DOCTYPE html>\n<html><head><meta charset=\"utf-8\"></head><body>"];
-    [html appendFormat:@"<pre style=\"margin:0;white-space:pre-wrap;%@\">", tab > 0 ? [NSString stringWithFormat:@"tab-size:%gpt;-moz-tab-size:%gpt;", tab, tab] : @""];
-    [styled enumerateAttributesInRange:whole options:0 usingBlock:^(NSDictionary<NSAttributedStringKey, id> *attributes, NSRange range, BOOL *stop) {
-        NSMutableString *css = [NSMutableString stringWithString:TSStyledCopyFontStyle(attributes[NSFontAttributeName])];
-        if (attributes[NSForegroundColorAttributeName])
-            [css appendFormat:@"color:%@;", TSStyledCopyHex(attributes[NSForegroundColorAttributeName])];
-        if (attributes[NSBackgroundColorAttributeName])
-            [css appendFormat:@"background-color:%@;", TSStyledCopyHex(attributes[NSBackgroundColorAttributeName])];
-        if ([attributes[NSUnderlineStyleAttributeName] integerValue] != 0) {
-            [css appendString:@"text-decoration:underline;"];
-            if (attributes[NSUnderlineColorAttributeName])
-                [css appendFormat:@"text-decoration-color:%@;", TSStyledCopyHex(attributes[NSUnderlineColorAttributeName])];
-        }
-        [html appendFormat:@"<span style=\"%@\">%@</span>", css, TSStyledCopyEscaped([styled.string substringWithRange:range])];
+    [string enumerateSubstringsInRange:NSMakeRange(0, string.length) options:NSStringEnumerationByParagraphs | NSStringEnumerationSubstringNotRequired
+                            usingBlock:^(NSString *unused, NSRange paragraph, NSRange enclosing, BOOL *stop) {
+        NSUInteger at = MIN(enclosing.location, string.length - 1);
+        NSParagraphStyle *style = [styled attribute:NSParagraphStyleAttributeName atIndex:at effectiveRange:NULL] ?: NSParagraphStyle.defaultParagraphStyle;
+        NSFont *font = [styled attribute:NSFontAttributeName atIndex:at effectiveRange:NULL];
+        [html appendFormat:@"<div style=\"%@\">", TSStyledCopyParagraphStyle(style, font)];
+        if (paragraph.length == 0)
+            [html appendString:@"<br>"];
+        [styled enumerateAttributesInRange:paragraph options:0 usingBlock:^(NSDictionary<NSAttributedStringKey, id> *attributes, NSRange range, BOOL *stop2) {
+            NSMutableString *css = [NSMutableString stringWithString:TSStyledCopyFontStyle(attributes[NSFontAttributeName])];
+            if (attributes[NSForegroundColorAttributeName])
+                [css appendFormat:@"color:%@;", TSStyledCopyHex(attributes[NSForegroundColorAttributeName])];
+            if (attributes[NSBackgroundColorAttributeName])
+                [css appendFormat:@"background-color:%@;", TSStyledCopyHex(attributes[NSBackgroundColorAttributeName])];
+            if ([attributes[NSUnderlineStyleAttributeName] integerValue] != 0) {
+                [css appendString:@"text-decoration:underline;"];
+                if (attributes[NSUnderlineColorAttributeName])
+                    [css appendFormat:@"text-decoration-color:%@;", TSStyledCopyHex(attributes[NSUnderlineColorAttributeName])];
+            }
+            [html appendFormat:@"<span style=\"%@\">%@</span>", css, TSStyledCopyEscaped([string substringWithRange:range])];
+        }];
+        [html appendString:@"</div>"];
     }];
-    [html appendString:@"</pre></body></html>\n"];
+    [html appendString:@"</body></html>\n"];
     return html;
 }
 

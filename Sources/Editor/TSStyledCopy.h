@@ -58,8 +58,9 @@ static inline BOOL TSStyledCopyCanCopy(NSTextView *view)
     return NO;
 }
 
-/// The string as an HTML document: spans with sRGB colors, the font in points and the background behind the
-/// characters only, in a <pre> with the tab width of the source.
+/// The string as an HTML document: a block for each paragraph, with the tab width, indents and line spacing of the
+/// source, and in it spans with sRGB colors, the face and its size in points, and the background behind the
+/// characters only.
 NSString *TSStyledCopyHTML(NSAttributedString *styled);
 
 /// Puts the string on the pasteboard as RTF, HTML and plain text. NO when it could not be written.
