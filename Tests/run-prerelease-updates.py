@@ -7,6 +7,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+from shortcut_sources import NAMES, companion_sources
 from source_tree import include_args, source_file
 
 root = Path(__file__).resolve().parents[1]
@@ -49,7 +50,9 @@ def run(mutation=None):
         exe = Path(tmp) / 'prerelease-updates'
         subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-F', str(frameworks), '-framework', 'Sparkle',
                         '-Wl,-rpath,' + str(frameworks), '-I', str(root / 'Tests'), *include_args(root),
-                        str(root / 'Tests/PrereleaseUpdates.m'), str(source), str(source_file(root, 'globals.m')), '-o', str(exe)],
+                        str(root / 'Tests/PrereleaseUpdates.m'), str(source), str(source_file(root, 'globals.m')),
+                        # The controller matches the key of Quit with the shortcut units (#68).
+                        '-framework', 'Carbon', *[str(source_file(root, n)) for n in NAMES], *companion_sources(root), '-o', str(exe)],
                        check=True)
         return subprocess.run([str(exe)], capture_output=True, text=True, timeout=60)
 
