@@ -27,6 +27,8 @@ MUTATIONS = {
     'clicked-part-moves': ('window', '    [otherView goToDestination: destination];\n', '    [linkView goToDestination: destination];\n'),
     'always-second-view': ('window', '    MyPDFKitView *otherView = (MyPDFKitView *)(view == self.myPDFKitView ? self.myPDFKitView2 : self.myPDFKitView);\n',
                            '    MyPDFKitView *otherView = (MyPDFKitView *)self.myPDFKitView2;\n'),
+    # The other part, widened just before, goes back to what it showed then (#53).
+    'link-place-undone': ('window', '    TSPreviewPlaceChosenByProgram(otherView);\n', ''),
     'small-part-stays': ('window', '    if (otherExtent < whole / 10) {\n', '    if (NO) {\n'),
     'not-active': ('window', '        [otherView becomeActiveView];\n', '        ;\n'),
     'focus-stays': ('window', "! [window makeFirstResponder: otherView]", 'YES'),
@@ -92,6 +94,7 @@ program = r'''
 #import "TSPreviewPanePlace.h"
 #import "TSDocumentWindowGlass.h"
 #import "TSPreviewSplitDivider.h"
+#import "TSPreviewScrollerKeeper.h"
 // Values from globals.h.
 enum { PDF_SINGLE_PAGE_STYLE = 1, PDF_TWO_PAGE_STYLE = 2, PDF_MULTI_PAGE_STYLE = 3, PDF_DOUBLE_MULTI_PAGE_STYLE = 4 };
 enum { NEW_PDF_ACTUAL_SIZE = 1, NEW_PDF_FIT_TO_NONE = 2, NEW_PDF_FIT_TO_WINDOW = 3, NEW_PDF_FIT_TO_WIDTH = 4, NEW_PDF_FIT_TO_CONTENT_WIDTH = 6 };
@@ -189,7 +192,15 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 - (void)restoreLocation;
 - (void)becomeActiveView;
 @end
+// In the windows whose content runs under the toolbar, the parts change their size through
+// TSPreviewChangeSize and tell the keeper when they were laid out, as MyPDFKitView does (#53).
+static BOOL fullSizeWindows;
 @implementation MyPDFKitView
+- (void)setFrameSize:(NSSize)size {
+    if (fullSizeWindows) TSPreviewChangeSize(self, ^{ [super setFrameSize:size]; });
+    else [super setFrameSize:size];
+}
+- (void)layout { [super layout]; if (fullSizeWindows) TSPreviewViewDidLayout(self); }
 - (NSInteger)pageStyle { return pageStyle; }
 - (NSInteger)firstPageStyle { return firstPageStyle; }
 - (NSInteger)resizeOption { return resizeOption; }
@@ -273,8 +284,13 @@ typedef struct {
 // as TSDocument does, while the views keep the Preview window as theirs.
 static Preview makePreview(PDFDocument *doc, NSWindow *singleWindow) {
     TestWindow *w = [[TestWindow alloc] initWithContentRect:NSMakeRect(0, 0, 900, 900)
-        styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskResizable backing:NSBackingStoreBuffered defer:NO];
+        styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskResizable | (fullSizeWindows ? NSWindowStyleMaskFullSizeContentView : 0)
+          backing:NSBackingStoreBuffered defer:NO];
     w.releasedWhenClosed = NO;
+    if (fullSizeWindows) {
+        w.toolbarStyle = NSWindowToolbarStyleExpanded;
+        w.toolbar = [[NSToolbar alloc] initWithIdentifier:@"preview"];
+    }
     NSWindow *host = singleWindow ?: w;
     NSSplitView *sv = [[NSSplitView alloc] initWithFrame:NSMakeRect(0, 0, 900, 900)];
     sv.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
@@ -304,6 +320,7 @@ static Preview makePreview(PDFDocument *doc, NSWindow *singleWindow) {
         [NSNotificationCenter.defaultCenter addObserver:v selector:@selector(scaleChanged:) name:PDFViewScaleChangedNotification object:v];
     }
     [a awakeFromNib]; [b awakeFromNib];
+    if (fullSizeWindows) for (MyPDFKitView *v in @[a, b]) [TSPreviewScrollerKeeper installInView:v];
     a.document = doc; [a setupPageStyle]; [a setupMagnificationStyle];
     [b showForSecond];
     settle(host);
@@ -573,6 +590,33 @@ int main(int argc, char **argv) { @autoreleasepool {
         check(near(distanceFromTop(linkView, top)), describe(name, [NSString stringWithFormat:@"the part with the link stays (%.2f)", distanceFromTop(linkView, top)]));
         checkAtTarget(other, forward.destination, name);
         [p.window close];
+    }
+    if (@available(macOS 26.0, *)) for (int sideBySide = 0; sideBySide < 2; sideBySide++) for (NSNumber *apart in @[@8, @24]) {
+        // A window whose content runs under the toolbar: the other part is too narrow, is widened
+        // to half the window and goes to a target a few points from what it showed. It keeps
+        // showing the target after the views are laid out, instead of what it showed when it
+        // was widened (#53).
+        fullSizeWindows = YES;
+        Preview p = makePreview(doc, nil);
+        split(p, sideBySide);
+        NSSplitView *sv = p.window.pdfKitSplitView;
+        CGFloat whole = sv.isVertical ? NSWidth(sv.bounds) : NSHeight(sv.bounds);
+        [sv setPosition:whole - 45 - sv.dividerThickness ofDividerAtIndex:0]; settle(p.window);
+        PDFDestination *target = forward.destination;
+        NSUInteger index = [doc indexForPage:target.page];
+        scrollTo(p.lower, index, target.point.y + apart.doubleValue); settle(p.window);
+        scrollTo(p.upper, 1, 750); settle(p.window);
+        NSString *name = [NSString stringWithFormat:@"narrow part under the toolbar, %s, %@pt apart", sideBySide ? "side by side" : "top and bottom", apart];
+        NSMenuItem *item = linkItem(menuAt(p.upper, 1, middle(forward)));
+        check(item && [NSApp sendAction:item.action to:item.target from:item], describe(name, @"the item sends its action"));
+        NSPoint point = NSMakePoint(100, target.point.y);
+        CGFloat atOnce = belowTop(p.lower, index, point);
+        settle(p.window);
+        CGFloat settled = belowTop(p.lower, index, point);
+        check(extentOf(sv, p.lower) > whole / 3 && fabs(settled - atOnce) < 0.6,
+              describe(name, [NSString stringWithFormat:@"the other part keeps showing the target (%.2f, then %.2f below its top)", atOnce, settled]));
+        [p.window close];
+        fullSizeWindows = NO;
     }
     {   // A small part that still shows something keeps its size.
         Preview p = makePreview(doc, nil);

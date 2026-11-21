@@ -277,7 +277,7 @@ static CGFloat TSReadableBelow(NSScrollView *scroll, CGFloat band)
         // move the text then, as when it gives the scroll view a new top inset. The last check
         // comes after all of that.
         CFRunLoopObserverRef observer = CFRunLoopObserverCreateWithHandler(NULL, kCFRunLoopBeforeWaiting, false, LONG_MAX,
-                                                                           ^(CFRunLoopObserverRef observer, CFRunLoopActivity activity) {
+                                                                           ^(CFRunLoopObserverRef runLoopObserver, CFRunLoopActivity activity) {
             TSPreviewScrollerKeeper *last = weakSelf;
             if (last.checkPending && !last.checkScheduled) {
                 [last checkReadableTop];

@@ -2549,6 +2549,8 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     navigation();
     if (keep)
         TSPreviewScrollHorizontally(self.documentView.enclosingScrollView, x);
+    // A change of the size in the same turn of the event loop does not bring its text back (#53).
+    TSPreviewPlaceChosenByProgram(self);
 }
 
 - (void)goToPage:(PDFPage *)page
@@ -2564,6 +2566,9 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     navigation();
     if (resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH && !_fittingContentWidth)
         TSContentPlaceSideways(self);
+    // A change of the size in the same turn of the event loop, as when Split Window with Link
+    // widens a narrow part, does not bring its text back (#53).
+    TSPreviewPlaceChosenByProgram(self);
 }
 
 - (void)goToDestination:(PDFDestination *)destination
