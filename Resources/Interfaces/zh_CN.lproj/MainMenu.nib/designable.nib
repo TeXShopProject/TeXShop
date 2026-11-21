@@ -1310,7 +1310,7 @@
                                     <action selector="performZoom:" target="-1" id="143"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="全屏幕" id="693" identifier="TSShortcut.fullscreen:.0">
+                            <menuItem title="全屏幕（旧方法）" id="693" identifier="TSShortcut.fullscreen:.0">
                                 <connections>
                                     <action selector="fullscreen:" target="-1" id="694"/>
                                 </connections>

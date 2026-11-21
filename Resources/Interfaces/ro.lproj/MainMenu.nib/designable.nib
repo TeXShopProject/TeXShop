@@ -1309,7 +1309,7 @@
                                     <action selector="performZoom:" target="-1" id="143"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Fullscreen" id="677" identifier="TSShortcut.fullscreen:.0">
+                            <menuItem title="Pe tot ecranul (metoda veche)" id="677" identifier="TSShortcut.fullscreen:.0">
                                 <connections>
                                     <action selector="fullscreen:" target="-1" id="678"/>
                                 </connections>

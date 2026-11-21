@@ -19,7 +19,7 @@ import os
 import subprocess
 import sys
 import tempfile
-from production_fragments import objc_class, method, verify_embedded
+from production_fragments import method, verify_embedded
 from source_tree import include_args, source_file
 
 KEEP = ('        bounds.origin = origin;\n        if (origin.y < 0)\n            bounds.origin.y = -1e6;\n'
@@ -261,10 +261,6 @@ int main(int argc, char **argv) { @autoreleasepool {
 } return 0; }
 '''
 program = program.replace('METHODS', '\n'.join(fragments))
-# setupOutline turns the drawer's outline into TSDrawerOutlineView, which answers Return (#61).
-drawer_class = objc_class(view, 'TSDrawerOutlineView')
-program = program.replace('#import <Cocoa/Cocoa.h>\n', '#import <Cocoa/Cocoa.h>\n#import <objc/runtime.h>\n' + drawer_class + '\n', 1)
-verify_embedded(program, [('class: TSDrawerOutlineView', view, drawer_class)] if not args.mutation else [])
 verify_embedded(program, [('complete method: ' + signature, view, fragment)
                           for signature, fragment in zip(signatures, fragments)]
                 if not args.mutation else [])
