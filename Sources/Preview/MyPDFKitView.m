@@ -2553,6 +2553,21 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     [self keepHorizontalPositionDuring:^{ [super goToPage:page]; }];
 }
 
+// Fit to Content Width: going to a place, as the drawer and links do, PDFKit also scrolls
+// sideways, to put the place at the left edge. The content goes back to its place sideways,
+// so that the margins stay in view (#62).
+- (void)keepContentWidthPlaceDuring:(void (NS_NOESCAPE ^)(void))navigation
+{
+    navigation();
+    if (resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH && !_fittingContentWidth)
+        TSContentPlaceSideways(self);
+}
+
+- (void)goToDestination:(PDFDestination *)destination
+{
+    [self keepContentWidthPlaceDuring:^{ [super goToDestination:destination]; }];
+}
+
 // "Do not turn pages by scrolling" (NoScrollPageTurnKey): in single and double page
 // display, scrolling with the mouse wheel or the trackpad stops at the edge of the page.
 // While it handles a scroll, PDFKit turns the page by asking the view to perform
@@ -2617,6 +2632,12 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 // only as far as needed to bring the result into view (TSPreviewHorizontalPosition.h).
 - (void)scrollSelectionToVisible:(id)sender
 {
+    // Fit to Content Width: the result is part of the content, which is in view sideways at
+    // its place (#62).
+    if (resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH) {
+        [self keepContentWidthPlaceDuring:^{ [super scrollSelectionToVisible:sender]; }];
+        return;
+    }
     NSScrollView *scroll = self.documentView.enclosingScrollView;
     NSClipView *clip = scroll.contentView;
     PDFSelection *selection = self.currentSelection;
