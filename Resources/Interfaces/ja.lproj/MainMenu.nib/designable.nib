@@ -241,6 +241,37 @@
                                     <action selector="copy:" target="-1" id="31"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="スタイル付きでコピー" id="THE-zE-Dh2">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="スタイル付きでコピー" id="QFL-Vx-ZXS">
+                                    <items>
+                                        <menuItem title="ライトモードのテーマ" id="ezh-Dv-t2g" identifier="TSShortcut.copyWithLightTheme:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithLightTheme:" target="-1" id="l8t-7m-qaK"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="ライトモードのテーマ（背景色付き）" id="zxE-ZU-tub" identifier="TSShortcut.copyWithLightThemeAndBackground:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithLightThemeAndBackground:" target="-1" id="E7R-5I-iAW"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="ダークモードのテーマ" id="NKT-Ji-HXR" identifier="TSShortcut.copyWithDarkTheme:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithDarkTheme:" target="-1" id="QIG-Eo-0Fg"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="ダークモードのテーマ（背景色付き）" id="0Ww-ey-tpV" identifier="TSShortcut.copyWithDarkThemeAndBackground:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithDarkThemeAndBackground:" target="-1" id="LqP-b5-cMp"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="ペースト" keyEquivalent="v" id="8" identifier="TSShortcut.paste:.0">
                                 <connections>
                                     <action selector="paste:" target="-1" id="32"/>

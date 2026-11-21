@@ -242,6 +242,37 @@
                                     <action selector="copy:" target="-1" id="312"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="스타일과 함께 복사하기" id="dO6-7M-bO6">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="스타일과 함께 복사하기" id="3ZJ-zq-k5v">
+                                    <items>
+                                        <menuItem title="밝은 테마" id="7cz-XX-Igq" identifier="TSShortcut.copyWithLightTheme:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithLightTheme:" target="-1" id="dCT-lI-Mhf"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="밝은 테마(배경 포함)" id="WvR-LD-A5T" identifier="TSShortcut.copyWithLightThemeAndBackground:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithLightThemeAndBackground:" target="-1" id="Yt9-NG-l1i"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="어두운 테마" id="aJd-ut-EnC" identifier="TSShortcut.copyWithDarkTheme:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithDarkTheme:" target="-1" id="ujA-O7-RCa"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="어두운 테마(배경 포함)" id="alc-xu-yBo" identifier="TSShortcut.copyWithDarkThemeAndBackground:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithDarkThemeAndBackground:" target="-1" id="p5a-Vk-xGz"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="붙여넣기" keyEquivalent="v" id="52" identifier="TSShortcut.paste:.0">
                                 <connections>
                                     <action selector="paste:" target="-1" id="314"/>

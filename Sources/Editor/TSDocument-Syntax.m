@@ -187,6 +187,35 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     return current == alignment;
 }
 
+// The options of the TeX scanner of the source, which Copy with Style uses too: the spelling settings are among
+// them because they change how some tokens are split. The fullwidth characters are marked only when the scheme has
+// colors for them.
+- (TSMutableSyntaxTeXOptions *)sourceScannerOptionsWithScheme:(TSSyntaxColorScheme *)scheme
+{
+    TSMutableSyntaxTeXOptions *options = [TSMutableSyntaxTeXOptions new];
+    options.texCharacter = (unichar)g_texChar;
+    options.colorsExpl3 = self.useExplColor;
+    options.makesAtLetter = [SUD boolForKey:MakeatletterEnabledKey];
+    options.colorsIndex = [self indexColorState];
+    options.colorsFootnote = [SUD boolForKey: SyntaxColorFootnoteKey];
+    // With Highlight Fullwidth Letters and Symbols off, these characters are colored as other text.
+    options.marksFullwidthSymbols = [SUD boolForKey:HighlightFullwidthSymbolsKey] &&
+        [scheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;
+    options.isXML = self.fileIsXML;
+    // New rules and legacy exclusions are alternative spelling modes.
+    BOOL texAwareSpelling = [self.textView usesTeXAwareSpellChecking];
+    BOOL turnOffParameterSpellChecking = !texAwareSpelling && [SUD boolForKey:TurnOffParameterSpellCheckKey];
+    options.excludesCommandsFromSpelling = !texAwareSpelling && [SUD boolForKey:TurnOffCommandSpellCheckKey];
+    options.excludesCommentsFromSpelling = !texAwareSpelling && [SUD boolForKey:TurnOffCommentSpellCheckKey];
+    options.excludesParametersFromSpelling = turnOffParameterSpellChecking;
+    options.excludesParametersOfUnlistedCommands = [SUD boolForKey:ExceptionListExcludesParametersKey];
+    if (turnOffParameterSpellChecking) {
+        options.commandsWithCheckedParameters = [(commandsToSpellCheck ?: @[]) arrayByAddingObjectsFromArray:userCommandsToSpellCheck ?: @[]];
+        options.commandsWithUncheckedParameters = [(commandsNotToSpellCheck ?: @[]) arrayByAddingObjectsFromArray:userCommandsNotToSpellCheck ?: @[]];
+    }
+    return options;
+}
+
 - (void)colorizeText:(NSTextView *)aTextView range:(NSRange)range
 {
     NSLayoutManager *layoutManager;
@@ -195,26 +224,12 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     NSRange            colorRange;
     NSUInteger        aLineStart;
     NSUInteger        aLineEnd;
-    BOOL            colorIndexDifferently;
-    BOOL            colorFootnoteDifferently;
     NSTimeInterval    theTime;
-    BOOL            TurnOffCommandSpellChecking;
-    BOOL            TurnOffCommentSpellChecking;
-    BOOL            TurnOffParameterSpellChecking;
-    BOOL            ListHasWordsWhoseParametersShouldBeChecked;
-    BOOL            colorExpl3;
     
     if ([self coloringWaitsForMarkedTextIn:aTextView])
         return;
 
-    colorExpl3 = self.useExplColor; // [SUD boolForKey:expl3SyntaxColoringKey];
     
-    // New rules and legacy exclusions are alternative spelling modes.
-    BOOL texAwareSpelling = [self.textView usesTeXAwareSpellChecking];
-    TurnOffCommandSpellChecking = !texAwareSpelling && [SUD boolForKey:TurnOffCommandSpellCheckKey];
-    TurnOffCommentSpellChecking = !texAwareSpelling && [SUD boolForKey:TurnOffCommentSpellCheckKey];
-    TurnOffParameterSpellChecking = !texAwareSpelling && [SUD boolForKey:TurnOffParameterSpellCheckKey];
-    ListHasWordsWhoseParametersShouldBeChecked = [SUD boolForKey:ExceptionListExcludesParametersKey];
     
     
     if (isLoading) {
@@ -264,8 +279,6 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     // [self cursorMoved:[self textView]];
     
     
-    colorIndexDifferently =  [self indexColorState];
-    colorFootnoteDifferently = [SUD boolForKey: SyntaxColorFootnoteKey];
     
     
     // Fetch the underlying layout manager and string.
@@ -369,24 +382,7 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     // NSLog(@"After confusing section");
     
     // Now the tokens of the lines get their colors.
-    TSMutableSyntaxTeXOptions *options = [TSMutableSyntaxTeXOptions new];
-    options.texCharacter = (unichar)g_texChar;
-    options.colorsExpl3 = colorExpl3;
-    options.makesAtLetter = [SUD boolForKey:MakeatletterEnabledKey];
-    options.colorsIndex = colorIndexDifferently;
-    options.colorsFootnote = colorFootnoteDifferently;
-    // With Highlight Fullwidth Letters and Symbols off, these characters are colored as other text.
-    options.marksFullwidthSymbols = [SUD boolForKey:HighlightFullwidthSymbolsKey] &&
-        [self.syntaxColorScheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;
-    options.isXML = self.fileIsXML;
-    options.excludesCommandsFromSpelling = TurnOffCommandSpellChecking;
-    options.excludesCommentsFromSpelling = TurnOffCommentSpellChecking;
-    options.excludesParametersFromSpelling = TurnOffParameterSpellChecking;
-    options.excludesParametersOfUnlistedCommands = ListHasWordsWhoseParametersShouldBeChecked;
-    if (TurnOffParameterSpellChecking) {
-        options.commandsWithCheckedParameters = [(commandsToSpellCheck ?: @[]) arrayByAddingObjectsFromArray:userCommandsToSpellCheck ?: @[]];
-        options.commandsWithUncheckedParameters = [(commandsNotToSpellCheck ?: @[]) arrayByAddingObjectsFromArray:userCommandsNotToSpellCheck ?: @[]];
-    }
+    TSMutableSyntaxTeXOptions *options = [self sourceScannerOptionsWithScheme:self.syntaxColorScheme];
     TSSyntaxTeXScanner *scanner = [[TSSyntaxTeXScanner alloc] initWithOptions:options];
     TSSyntaxHighlighter *highlighter = [[TSSyntaxHighlighter alloc] initWithTextView:aTextView scanner:scanner scheme:self.syntaxColorScheme];
     [highlighter applyTokensInRange:colorRange];

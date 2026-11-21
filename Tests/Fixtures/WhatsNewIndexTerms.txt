@@ -1,6 +1,7 @@
 ''
 0
 00
+08
 1
 10
 100
@@ -865,7 +866,6 @@ incidentally
 include
 included
 including
-incompetently
 inconsistency
 incorrect
 increasing
@@ -1519,6 +1519,7 @@ revision
 rewrite
 rewrites
 rewritten
+rich
 richard
 right
 rightarrow
@@ -1652,7 +1653,6 @@ someone
 something
 sometime
 sometimes
-sonoma
 soon
 sophisticated
 sort

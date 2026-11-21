@@ -51,7 +51,9 @@ int main(int argc, char **argv) { @autoreleasepool {
         REQUIRE(Find(edit, @selector(undo:)) != nil && edit.supermenu == main);
         REQUIRE(Find(main, @selector(changeAutoComplete:)).menu != marks.supermenu);
         NSInteger index = [edit indexOfItemWithSubmenu:marks], find = -1;
-        for (NSInteger j = 0; j < edit.numberOfItems; j++) if ([edit itemAtIndex:j].submenu) { find = j; break; }
+        for (NSInteger j = 0; j < edit.numberOfItems; j++)
+            for (NSMenuItem *item in [edit itemAtIndex:j].submenu.itemArray)
+                if (item.action == @selector(performFindPanelAction:) && find < 0) find = j;
         REQUIRE(index == find + 1);
         REQUIRE([Describe(marks) isEqual:@"placeBullet: placeComment: - doNextBullet: doNextBulletAndDelete: doPreviousBullet: doPreviousBulletAndDelete: - showMarkHelp:"]);
         for (NSString *name in before) {

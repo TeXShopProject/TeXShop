@@ -44,6 +44,7 @@
 @class TSSourceStatusBar;
 @class TSTextStatisticsPopover;
 @class TSSyntaxColorScheme;
+@class TSMutableSyntaxTeXOptions;
 
 #define NUMBEROFERRORS	20
 
@@ -1048,7 +1049,16 @@ enum RootCommand
 - (BOOL)braceHighlightFits:(NSRange)range inTextView:(NSTextView *)aTextView;
 - (void)cursorMoved: (NSTextView *)aTextView;
 - (void)removeCurrentLineColor: (NSTextView *)aTextView;
+/// The options of the TeX scanner of the source (Copy with Style scans with them too).
+- (TSMutableSyntaxTeXOptions *)sourceScannerOptionsWithScheme:(TSSyntaxColorScheme *)scheme;
 
+@end
+
+@interface TSDocument (StyledCopy)
+/// Copy with Style: the selection of a source of this document (the source, a part of a split window or the
+/// Experiment source) with the font and the colors of the theme of Light or Dark Mode, with or without its
+/// background. NO when nothing is selected.
+- (BOOL)copyStyledSelectionOfTextView:(NSTextView *)sourceView darkTheme:(BOOL)dark withBackground:(BOOL)withBackground;
 @end
 
 

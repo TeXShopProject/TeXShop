@@ -239,6 +239,37 @@
                                     <action selector="copy:" target="-1" id="31"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Copiar con estilo" id="28r-4u-nIC">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Copiar con estilo" id="Ho1-mY-Q9q">
+                                    <items>
+                                        <menuItem title="Tema del modo claro" id="B24-gP-NXo" identifier="TSShortcut.copyWithLightTheme:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithLightTheme:" target="-1" id="aK7-lZ-pZs"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Tema del modo claro con fondo" id="o8u-rn-MWy" identifier="TSShortcut.copyWithLightThemeAndBackground:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithLightThemeAndBackground:" target="-1" id="2xd-Kb-iGp"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Tema del modo oscuro" id="W5B-9G-0xQ" identifier="TSShortcut.copyWithDarkTheme:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithDarkTheme:" target="-1" id="LOr-y7-eJZ"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Tema del modo oscuro con fondo" id="Xwo-R4-Juq" identifier="TSShortcut.copyWithDarkThemeAndBackground:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="copyWithDarkThemeAndBackground:" target="-1" id="sdM-fI-4BR"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Pegar" keyEquivalent="v" id="8" identifier="TSShortcut.paste:.0">
                                 <connections>
                                     <action selector="paste:" target="-1" id="32"/>
