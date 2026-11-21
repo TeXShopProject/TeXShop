@@ -313,6 +313,13 @@ static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument 
 // The width of the view sets the magnification of Fit to Content Width. The text at the top
 // is taken before PDFKit moves to the top of the page. Otherwise the text at the top stays
 // while the magnification does (#53).
+// Auto Layout can lay out the view after a change of its size, and PDFKit then moves it.
+- (void)layout
+{
+    [super layout];
+    TSPreviewViewDidLayout(self);
+}
+
 - (void)setFrameSize:(NSSize)newSize
 {
     BOOL refit = resizeOption == NEW_PDF_FIT_TO_CONTENT_WIDTH && self.document.pageCount &&
