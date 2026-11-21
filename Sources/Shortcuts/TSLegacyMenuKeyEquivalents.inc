@@ -99,6 +99,8 @@ static NSString *TSLegacyFormerTitleIdentifier(NSString *title)
         for (NSString *former in @[@"Pdftex", @"pdfTeX"]) map[TSLegacyComparableTitle(former)] = @"TSShortcut.doChooseMethod:.100";
         for (NSString *former in @[@"TeX and DVI", @"TeX und DVI", @"TeX y DVI", @"TeX et DVI", @"TeX e DVI", @"TeX en DVI", @"TeX + DVI", @"Tex și  DVI", @"TeX 和 DVI"]) map[TSLegacyComparableTitle(former)] = @"TSShortcut.doChooseMethod:.101";
         for (NSString *former in @[@"Command Completion", @"Vervollständigung", @"Compleción de comandos ", @"Compleción de comandos", @"Commande de complètement", @"Completamento comandi", @"コマンド補完", @"명령 완성", @"Aanvullen", @"Completion", @"Completar", @"Completare", @"命令补全"]) map[TSLegacyComparableTitle(former)] = TSLegacyCompletionItem;
+        // Fullscreen (Old Method) was named like the full screen of macOS in these languages (5.58 to 6.00 beta 8).
+        for (NSString *former in @[@"Vollbild", @"Pantalla completa", @"Plein écran", @"Schermo Intero", @"フルスクリーン表示", @"Fullscreen", @"Tela cheia", @"全屏幕"]) map[TSLegacyComparableTitle(former)] = @"TSShortcut.fullscreen:.0";
         identifiers = map;
     });
     return identifiers[TSLegacyComparableTitle(title)];

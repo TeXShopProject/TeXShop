@@ -236,6 +236,25 @@ int main(int argc,char **argv){@autoreleasepool{
    }
   }
   printf("PASS: Edit menu positions of 5.58 reach the same commands in %lu languages\n",(unsigned long)edits.count);
+  // Fullscreen (Old Method), named in a KeyEquivalents.plist by its name of 5.58 or by its name now, gets the key, in the
+  // compiled menu of every language; no other item of the Window menu does.
+  for(NSString *language in edits){
+   NSNib *nib=[[NSNib alloc]initWithNibData:[NSData dataWithContentsOfFile:edits[language][@"nib"]] bundle:nil];NSArray *objects=nil;
+   Check([nib instantiateWithOwner:NSApp topLevelObjects:&objects],language);
+   NSMenu *main=nil;for(id o in objects)if([o isKindOfClass:NSMenu.class]&&[o numberOfItems]>5)main=o;
+   NSMenuItem *window=nil,*fullscreen=nil;
+   for(NSMenuItem *top in main.itemArray)for(NSMenuItem *i in top.submenu.itemArray)if([i.identifier isEqual:@"TSShortcut.fullscreen:.0"]){window=top;fullscreen=i;}
+   Check(fullscreen!=nil && fullscreen.action==@selector(fullscreen:),[language stringByAppendingString:@": Fullscreen (Old Method) is in the menu"]);
+   for(NSString *title in @[edits[language][@"fullscreen"],fullscreen.title]){
+    for(NSMenuItem *i in window.submenu.itemArray){i.keyEquivalent=@"";}
+    Apply(main,@{window.title:@{title:@[@"9",@YES,@YES]}});
+    NSEventModifierFlags want=NSEventModifierFlagCommand|NSEventModifierFlagOption|NSEventModifierFlagControl;
+    Check([fullscreen.keyEquivalent isEqual:@"9"] && (fullscreen.keyEquivalentModifierMask & want)==want,
+          [NSString stringWithFormat:@"%@: the name %@ reaches Fullscreen (Old Method)",language,title]);
+    for(NSMenuItem *i in window.submenu.itemArray)if(i!=fullscreen)Check([i.keyEquivalent isEqual:@""],[NSString stringWithFormat:@"%@: %@ reaches no other item",language,title]);
+   }
+  }
+  printf("PASS: Fullscreen (Old Method) gets a saved key by its name of 5.58 and by its name now in %lu languages\n",(unsigned long)edits.count);
  }
  puts("PASS: Show Status Bar skipped in positions; Find and Replace… skipped in positions of the menus that lacked it; 12 legacy title fixtures; CJK-Latin spacing; 18 former titles with a stray space; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File; former typesetting method titles in 12 languages; Command Completion submenu entries in 12 languages reach Add to Command Completion List");
 }return 0;}

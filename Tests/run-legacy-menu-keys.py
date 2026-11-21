@@ -31,6 +31,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-legacy-menu-') as td:
      sub=item.find('menu/items/menuItem/connections/action');own=item.find('connections/action')
      actions.append(sub.get('selector') if sub is not None else own.get('selector') if own is not None else '')
   assert actions,language;edits[language]={'nib':str(nib),'actions':actions}
+  # The name Fullscreen (Old Method) had in this language in 5.58, which a KeyEquivalents.plist may use.
+  former=[i.get('title') for i in root.iter('menuItem') if i.find("connections/action[@selector='fullscreen:']") is not None]
+  assert len(former)==1,language;edits[language]['fullscreen']=former[0]
  assert len(edits)==12
  (Path(td)/'edits.json').write_text(json.dumps(edits))
  subprocess.run([str(p),str(r/'Tests/Fixtures/LegacyKeyBindingTitles.json'),str(Path(td)/'edits.json')],check=True)
