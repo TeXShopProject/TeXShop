@@ -2686,7 +2686,7 @@ The Preview menu also has menu items to rotate individual pages clockwise or cou
 \section{The Drawer and Two Search Fields}
 \label{Drawer_Section} 
 
-The Preview Window has an associated Drawer, which can be toggled visible or invisible with an item in the window toolbar or the first item in the Preview menu. This drawer appears on the right side of the window if there is room there, and otherwise on the left side of the window. Its contents are divided into two pieces. The top piece shows an outline of the document, listing chapters, sections, and subsections if available. Clicking on an item takes you to that point in the actual  Preview Window. This top portion is blank if the pdf document does not contain an outline. Chapters and sections opened in the outline stay open when the document is typeset again, as long as their titles remain in the new outline.
+The Preview Window has an associated Drawer, which can be toggled visible or invisible with an item in the window toolbar or the first item in the Preview menu. This drawer appears on the right side of the window if there is room there, and otherwise on the left side of the window. Its contents are divided into two pieces. The top piece shows an outline of the document, listing chapters, sections, and subsections if available. Clicking on an item takes you to that point in the actual  Preview Window. You can also choose an item with the keyboard. The Up and Down Arrow keys move from item to item, and Option-Up Arrow and Option-Down Arrow select the first and the last item. If an item has a triangle in front of it, the Right Arrow key opens it and the Left Arrow key closes it again. Press Return or Enter to go to the selected item in the Preview Window. This top portion is blank if the pdf document does not contain an outline. Chapters and sections opened in the outline stay open when the document is typeset again, as long as their titles remain in the new outline.
 Outlines are automatically created by the hyperref package in LaTeX. Here is a typical command to activate
 the hyperref package:
 
@@ -2696,7 +2696,7 @@ the hyperref package:
 \end{verbatim}
 
 Adding the extra item ``bookmarksnumbered'' to this call causes hyperref to number the chapters in the outline. This is useful
-because TeXShop then activates keyboard shortcuts to select chapters in the drawer, as explained later. The revised call would be
+because a chapter can then be selected in the drawer by typing its number, and then shown by pressing Return. If its sections are shown, a section can be selected in the same way, for instance by typing 1.5 for Section 5 of Chapter 1. The revised call would be
 
 \begin{verbatim}
   \usepackage[colorlinks=true, pdfstartview=FitV, linkcolor=blue,
@@ -3867,8 +3867,7 @@ When the drawer is active and we select a chapter in the drawer, it is marked in
 
 In a split Preview window, the drawer follows the active view, whether it is the top or the bottom one. When we click on the other view, the drawer moves to the chapter or section shown in that view, and from then on it follows that view as we scroll. Scrolling the view that is not active leaves the drawer alone. The drawer marks the chapter or section that starts on the page shown, or else the last one that starts before that page; on pages before the first entry of the outline, nothing is marked. A section we click in the drawer stays marked on its page, even if its chapter starts on the same page.
 
-When the chapters in the drawer's outline view are numbered, several keyboard shortcuts are available in the
-drawer. If you type Option-1, the drawer will select the first chapter. If you type Option-2 followed by Option-0, the drawer will switch to Chapter 20. Type Option-UpArrow to select the first item and Option-DownArrow to select the last item. Type Option-1.5 to select Chapter 1, Section 5. If Chapter 3 is selected, Option-RightArrow will open sub-levels and Option-LeftArrow will close sub-levels. Although these keystrokes select drawer items, it is still necessary to click these items to make the associated view scroll to them.
+When the chapters in the drawer's outline view are numbered, chapters can be selected from the keyboard while the drawer is active. Type 2 followed by 0 to select Chapter 20. Type Option-UpArrow to select the first item and Option-DownArrow to select the last item. If Chapter 1 is selected, RightArrow opens its sections; then type 1.5 to select Chapter 1, Section 5. LeftArrow on Chapter 1 closes its sections again. Press Return or Enter to go to the selected item, as a click on it does.
 
 The toolbar of a split Preview window also works with its active view. The page number box shows the page of the active view, and typing a page number there moves the active view to that page while the other view stays where it is. Escape dismisses only the pinned link popup of the active view; a pinned popup in the other view stays (see \cref{Modifying_Popup_Windows_Section}).
 

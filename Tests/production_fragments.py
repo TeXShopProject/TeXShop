@@ -41,3 +41,11 @@ def verify_embedded(program,fragments):
         if label.startswith('complete method:'):
             start=fragment.index('{');assert closing_brace(fragment,start)==len(fragment.rstrip()),'Truncated production method: '+label
         print('PRODUCTION FRAGMENT',label,hashlib.sha256(fragment.encode()).hexdigest(),flush=True)
+
+def objc_class(source,name):
+    """A class declared and implemented in one production file: its @interface through the @end of its @implementation."""
+    start_marker='@interface '+name+' : ';impl_marker='\n@implementation '+name+'\n'
+    assert source.count(start_marker)==1 and source.count(impl_marker)==1, 'Production class marker must be unique: '+name
+    start=source.index(start_marker);impl=source.index(impl_marker,start)
+    end=source.index('\n@end\n',impl)+len('\n@end\n')
+    return source[start:end]

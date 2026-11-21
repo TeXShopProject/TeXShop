@@ -20,7 +20,7 @@ import os
 import subprocess
 import tempfile
 from pathlib import Path
-from production_fragments import closing_brace, method, verify_embedded
+from production_fragments import objc_class, closing_brace, method, verify_embedded
 from source_tree import include_args, source_file
 
 parser = argparse.ArgumentParser(description=__doc__)
@@ -265,6 +265,10 @@ int main(void) { @autoreleasepool {
 '''
 program = program.replace('METHODS', '\n'.join(f for label, _, f in fragments if label.startswith('complete method:')))
 program = program.replace('EARLYBRANCH', early).replace('SECONDPART', second)
+# setupOutline turns the drawer's outline into TSDrawerOutlineView, which answers Return (#61).
+drawer_class = objc_class(source, 'TSDrawerOutlineView')
+program = program.replace('#import <Cocoa/Cocoa.h>\n', '#import <Cocoa/Cocoa.h>\n#import <objc/runtime.h>\n' + drawer_class + '\n', 1)
+verify_embedded(program, [('class: TSDrawerOutlineView', source, drawer_class)] if not args.mutation else [])
 verify_embedded(program, fragments if not args.mutation else [])
 with tempfile.TemporaryDirectory(prefix='texshop-reopen-outline-') as directory:
     temp = Path(directory)
