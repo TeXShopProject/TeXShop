@@ -255,6 +255,7 @@ int main(int argc,char **argv){@autoreleasepool{
    }
   }
   printf("PASS: a saved key for Fullscreen (Old Method), by its name of 5.58 or of 6.00 beta 8, reaches no item in %lu languages\n",(unsigned long)edits.count);
+  NSUInteger checkedWindows=0;
   // Positions saved for the Window menu of 5.58 keep a place for Fullscreen (Old Method): its own position reaches no item
   // of the menu, and the items after it are reached at their former positions.
   for(NSString *language in edits){
@@ -263,6 +264,13 @@ int main(int argc,char **argv){@autoreleasepool{
    NSMenu *main=nil;for(id o in objects)if([o isKindOfClass:NSMenu.class]&&[o numberOfItems]>5)main=o;
    NSMenu *window=nil;for(NSMenuItem *top in main.itemArray)for(NSMenuItem *i in top.submenu.itemArray)if(i.action==@selector(toggleFullScreen:))window=top.submenu;
    NSArray *old=edits[language][@"window"];NSUInteger reached=0;
+   // A menu that dropped one of these items on purpose (TetsuTeXShop has no Minimize in English and Japanese) has its
+   // positions moved anyway; it is left out.
+   BOOL complete=YES;
+   for(NSUInteger i=0;i<MIN(old.count,(NSUInteger)5);i++)
+    if([old[i] length]>0 && ![old[i] isEqual:@"fullscreen:"] && [window indexOfItemWithTarget:nil andAction:NSSelectorFromString(old[i])]<0)complete=NO;
+   if(!complete){printf("SKIP: %s: the Window menu lacks one of its first items of 5.58\n",language.UTF8String);continue;}
+   checkedWindows++;
    // The first five items: Minimize, Zoom, Fullscreen (Old Method), Enter Full Screen and Arrange in Front (later items changed for other reasons).
    for(NSUInteger i=0;i<MIN(old.count,(NSUInteger)5);i++){
     if([old[i] length]==0)continue;
@@ -276,7 +284,8 @@ int main(int argc,char **argv){@autoreleasepool{
    }
    Check(reached>=4,[language stringByAppendingString:@": Window positions after Fullscreen (Old Method) are checked"]);
   }
-  printf("PASS: Window menu positions of 5.58 keep the place of Fullscreen (Old Method) in %lu languages\n",(unsigned long)edits.count);
+  Check(checkedWindows>=10,@"Window menu positions are checked in most languages");
+  printf("PASS: Window menu positions of 5.58 keep the place of Fullscreen (Old Method) in %lu languages\n",(unsigned long)checkedWindows);
  }
  puts("PASS: Show Status Bar skipped in positions; Find and Replace… skipped in positions of the menus that lacked it; 12 legacy title fixtures; CJK-Latin spacing; 18 former titles with a stray space; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File; former typesetting method titles in 12 languages; Command Completion submenu entries in 12 languages reach Add to Command Completion List");
 }return 0;}
