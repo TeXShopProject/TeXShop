@@ -973,11 +973,12 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     BOOL upperAutoScales = upperView.autoScales, lowerAutoScales = lowerView.autoScales;
     CGFloat upperScale = upperView.scaleFactor, lowerScale = lowerView.scaleFactor;
     PDFSelection *upperSelection = upperView.currentSelection, *lowerSelection = lowerView.currentSelection;
-    // The places are kept at the top edges below the toolbar, so the popups are moved by them too.
-    NSPoint upperEdge = TSPreviewPaneWindowEdge(upperView), lowerEdge = TSPreviewPaneWindowEdge(lowerView);
     NSRect upperPopupFrame = NSZeroRect, lowerPopupFrame = NSZeroRect;
     TSLinkPreviewView *upperPopup = [upperView detachPinnedLinkPreviewWithWindowFrame: &upperPopupFrame];
     TSLinkPreviewView *lowerPopup = [lowerView detachPinnedLinkPreviewWithWindowFrame: &lowerPopupFrame];
+    // Each popup goes to the same place on its page in the other part (#66).
+    TSPopupPlace upperPopupPlace = TSPopupPlaceOnPage(upperView, upperPopupFrame);
+    TSPopupPlace lowerPopupPlace = TSPopupPlaceOnPage(lowerView, lowerPopupFrame);
     NSResponder *responder = window.firstResponder;
     BOOL upperActive = [responder isKindOfClass:[NSView class]] && [(NSView *)responder isDescendantOf:upperView];
     BOOL lowerActive = [responder isKindOfClass:[NSView class]] && [(NSView *)responder isDescendantOf:lowerView];
@@ -1021,17 +1022,14 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     [upperView fitContentWidth];
     [lowerView fitContentWidth];
 
-    // A pinned popup keeps its place in its part, which is now at the other side, measured from
-    // the top edge below the toolbar as the place is, so it stays at its place on its page. It is
-    // not brought into view, even when the part it comes to is smaller, so that switching again
-    // gives back the first arrangement (#66).
-    NSPoint newUpperEdge = TSPreviewPaneWindowEdge(upperView), newLowerEdge = TSPreviewPaneWindowEdge(lowerView);
+    // A pinned popup stays at its place on its page, in the part that now shows its page, also
+    // at the end of the document, where the part cannot scroll as far, and at a magnification
+    // that fits the page to the part. It is not brought into view, even when the part it comes
+    // to is smaller, so that switching again gives back the first arrangement (#66).
     if (lowerPopup)
-        [upperView placePinnedLinkPreview:lowerPopup windowFrame:NSOffsetRect(lowerPopupFrame,
-            newUpperEdge.x - lowerEdge.x, newUpperEdge.y - lowerEdge.y)];
+        [upperView placePinnedLinkPreview:lowerPopup windowFrame:TSPopupFrameInView(upperView, lowerPopupPlace, lowerPopupFrame)];
     if (upperPopup)
-        [lowerView placePinnedLinkPreview:upperPopup windowFrame:NSOffsetRect(upperPopupFrame,
-            newLowerEdge.x - upperEdge.x, newLowerEdge.y - upperEdge.y)];
+        [lowerView placePinnedLinkPreview:upperPopup windowFrame:TSPopupFrameInView(lowerView, upperPopupPlace, upperPopupFrame)];
 
     // The active part stays active where it now is. Without the keyboard focus in either part,
     // as when it is in the search field, the focus stays where it is, and the toolbar, the menus

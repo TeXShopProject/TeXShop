@@ -22,10 +22,9 @@ MUTATIONS = {
     'format-stays': ('window', '        if (view.pageStyle != styles[i]) {', '        if (NO) {'),
     'fit-lost': ('window', '        if (autoScales[i])\n', '        if (NO)\n'),
     'selection-stays': ('window', '    [upperView setCurrentSelection:lowerSelection];\n    [lowerView setCurrentSelection:upperSelection];\n', ''),
-    'popup-stays-on-screen': ('window', 'newUpperEdge.x - lowerEdge.x, newUpperEdge.y - lowerEdge.y', '0, 0'),
-    # Under the toolbar the popups move with the top edges of the parts, as the places do (#66 audit).
-    'popup-moved-by-frame': ('window', 'NSPoint upperEdge = TSPreviewPaneWindowEdge(upperView), lowerEdge = TSPreviewPaneWindowEdge(lowerView);',
-        'NSPoint upperEdge = frameTop(upperView), lowerEdge = frameTop(lowerView);'),
+    'popup-stays-on-screen': ('window', 'TSPopupPlace lowerPopupPlace = TSPopupPlaceOnPage(lowerView, lowerPopupFrame);', 'TSPopupPlace lowerPopupPlace = {nil, NSZeroRect};'),
+    # The popups keep their places on their pages, also where the parts cannot scroll as far (#66 audit).
+    'popup-moved-by-window': ('window', 'TSPopupPlace upperPopupPlace = TSPopupPlaceOnPage(upperView, upperPopupFrame);', 'TSPopupPlace upperPopupPlace = {nil, NSZeroRect};'),
     'popup-dropped': ('window', '    if (upperPopup)\n        [lowerView placePinnedLinkPreview:', '    if (NO)\n        [lowerView placePinnedLinkPreview:'),
     # A popup out of view stays at its place on its page (#66 audit).
     'popups-pulled-in': ('window', '        [active becomeActiveView];\n}', '        [active becomeActiveView];\n    [self keepPinnedLinkPreviewsInView];\n}'),
@@ -440,7 +439,20 @@ static Preview makePreview(PDFDocument *doc, BOOL sideBySide) {
     return (Preview){w, a, b, document, field, table, search, pageField, singlePageField};
 }
 
+// The place of a part's pinned popup: the page under its upper left corner and the corner on it.
+typedef struct { NSInteger page; NSPoint corner; } PopupPlace;
+static PopupPlace popupOnPage(MyPDFKitView *v) {
+    if (!v.preview) return (PopupPlace){-1, NSZeroPoint};
+    NSRect f = [v convertRect:v.preview.frame fromView:v.preview.superview];
+    NSPoint c = NSMakePoint(NSMinX(f), v.isFlipped ? NSMinY(f) : NSMaxY(f));
+    PDFPage *page = [v pageForPoint:c nearest:YES];
+    return (PopupPlace){(NSInteger)[v.document indexForPage:page], [v convertPoint:c toPage:page]};
+}
+static BOOL samePlace(PopupPlace a, PopupPlace b) {
+    return a.page == b.page && fabs(a.corner.x - b.corner.x) < 0.05 && fabs(a.corner.y - b.corner.y) < 0.05;
+}
 typedef struct {
+    PopupPlace upperPopupPlace, lowerPopupPlace;
     NSRect upperFrame, lowerFrame, upperPopup, lowerPopup;
     TSPreviewPanePlace upperPlace, lowerPlace;
     NSInteger upperStyle, lowerStyle, upperResize, lowerResize;
@@ -452,7 +464,7 @@ typedef struct {
     __unsafe_unretained PDFView *active;
 } State;
 static State stateOf(Preview p) {
-    return (State){inWindow(p.upper), inWindow(p.lower), popupInWindow(p.upper), popupInWindow(p.lower),
+    return (State){popupOnPage(p.upper), popupOnPage(p.lower), inWindow(p.upper), inWindow(p.lower), popupInWindow(p.upper), popupInWindow(p.lower),
         topOf(p.upper), topOf(p.lower), p.upper.pageStyle, p.lower.pageStyle, p.upper.resizeOption, p.lower.resizeOption,
         p.upper.autoScales, p.lower.autoScales, p.upper.scaleFactor, p.lower.scaleFactor,
         selectionText(p.upper), selectionText(p.lower), p.upper.preview, p.lower.preview,
@@ -509,18 +521,19 @@ static void checkSwitched(Preview p, State s, NSString *name, BOOL fixedScales) 
     check((!s.lowerPreview || (p.upper.preview.pinned && p.upper.hasPinnedLinkPreview)) &&
           (!s.upperPreview || (p.lower.preview.pinned && p.lower.hasPinnedLinkPreview)),
           describe(name, @"the moved popups stay pinned"));
+    // Each popup stays at its place on its page (#66).
     if (s.lowerPreview) {
-        NSRect q = popupInWindow(p.upper);
-        check(near(NSMinX(q) - NSMinX(s.lowerPopup) - (NSMinX(u) - NSMinX(s.lowerFrame))) &&
-              near(NSMaxY(q) - NSMaxY(s.lowerPopup) - (NSMaxY(u) - NSMaxY(s.lowerFrame))) &&
-              near(NSWidth(q) - NSWidth(s.lowerPopup)) && near(NSHeight(q) - NSHeight(s.lowerPopup)),
-              describe(name, @"the popup of the second part keeps its place in that part"));
+        PopupPlace q = popupOnPage(p.upper);
+        check(samePlace(q, s.lowerPopupPlace) && near(NSWidth(popupInWindow(p.upper)) - NSWidth(s.lowerPopup)) &&
+              near(NSHeight(popupInWindow(p.upper)) - NSHeight(s.lowerPopup)),
+              describe(name, [NSString stringWithFormat:@"the popup of the second part keeps its place on its page (%ld: %.2f,%.2f for %ld: %.2f,%.2f)",
+                              (long)q.page, q.corner.x, q.corner.y, (long)s.lowerPopupPlace.page, s.lowerPopupPlace.corner.x, s.lowerPopupPlace.corner.y]));
     }
     if (s.upperPreview) {
-        NSRect q = popupInWindow(p.lower);
-        check(near(NSMinX(q) - NSMinX(s.upperPopup) - (NSMinX(l) - NSMinX(s.upperFrame))) &&
-              near(NSMaxY(q) - NSMaxY(s.upperPopup) - (NSMaxY(l) - NSMaxY(s.upperFrame))),
-              describe(name, @"the popup of the first part keeps its place in that part"));
+        PopupPlace q = popupOnPage(p.lower);
+        check(samePlace(q, s.upperPopupPlace),
+              describe(name, [NSString stringWithFormat:@"the popup of the first part keeps its place on its page (%ld: %.2f,%.2f for %ld: %.2f,%.2f)",
+                              (long)q.page, q.corner.x, q.corner.y, (long)s.upperPopupPlace.page, s.upperPopupPlace.corner.x, s.upperPopupPlace.corner.y]));
     }
 }
 // After switching twice everything is as before.
@@ -533,8 +546,11 @@ static void checkSame(Preview p, State s, NSString *name) {
     check(near(distanceFromTop(p.upper, s.upperPlace)) && near(distanceFromTop(p.lower, s.lowerPlace)), describe(name, @"the places are back"));
     check([t.upperSelection isEqualToString:s.upperSelection] && [t.lowerSelection isEqualToString:s.lowerSelection], describe(name, @"the selections are back"));
     check(t.upperPreview == s.upperPreview && t.lowerPreview == s.lowerPreview &&
-          (!s.upperPreview || sameRect(t.upperPopup, s.upperPopup)) && (!s.lowerPreview || sameRect(t.lowerPopup, s.lowerPopup)),
-          describe(name, @"the popups are back in their places"));
+          (!s.upperPreview || (samePlace(t.upperPopupPlace, s.upperPopupPlace) && near(NSWidth(t.upperPopup) - NSWidth(s.upperPopup)) && near(NSHeight(t.upperPopup) - NSHeight(s.upperPopup)))) &&
+          (!s.lowerPreview || (samePlace(t.lowerPopupPlace, s.lowerPopupPlace) && near(NSWidth(t.lowerPopup) - NSWidth(s.lowerPopup)) && near(NSHeight(t.lowerPopup) - NSHeight(s.lowerPopup)))),
+          describe(name, [NSString stringWithFormat:@"the popups are back at their places on their pages (%.2f,%.2f for %.2f,%.2f; %.2f,%.2f for %.2f,%.2f)",
+                          t.upperPopupPlace.corner.x, t.upperPopupPlace.corner.y, s.upperPopupPlace.corner.x, s.upperPopupPlace.corner.y,
+                          t.lowerPopupPlace.corner.x, t.lowerPopupPlace.corner.y, s.lowerPopupPlace.corner.x, s.lowerPopupPlace.corner.y]));
     check(t.responder == s.responder && t.active == s.active, describe(name, @"the focus is back"));
 }
 
@@ -1163,6 +1179,39 @@ int main(int argc, char **argv) { @autoreleasepool {
             check(with.preview == below && sameRect(b, belowPlace) && below.keeps == 0 && with.pinnedLinkPreviewIsSeen == (i == 1),
                   [NSString stringWithFormat:@"under the toolbar, switch %d: the popup hidden below stays at its place on its page, %@ (%.1f,%.1f for %.1f,%.1f)",
                    i, i == 1 ? @"seen in the larger part" : @"out of view again", NSMinX(b), NSMaxY(b), NSMinX(belowPlace), NSMaxY(belowPlace)]);
+        }
+        // At the end of the document the parts cannot scroll as far as their places: the popups
+        // still keep their places on their pages, also when a magnification that fits the page
+        // to the part changes with it.
+        for (int fit = 0; fit < 2; fit++) {
+            [p.upper doKillPopup]; [p.lower doKillPopup];
+            for (MyPDFKitView *v in @[p.upper, p.lower]) {
+                [v setResizeOption:fit ? NEW_PDF_FIT_TO_WINDOW : NEW_PDF_FIT_TO_NONE];
+                if (fit) [v setAutoScales:YES]; else { [v setAutoScales:NO]; [v setMagnification:1.0]; }
+            }
+            settle(p.window);
+            NSUInteger last = doc.pageCount - 1;
+            scrollTo(p.upper, last, 0); scrollTo(p.lower, 2, 400); settle(p.window);
+            NSRect u = inWindow(p.upper);
+            NSPoint e = TSPreviewPaneWindowEdge(p.upper);
+            [p.upper pin:NSMakeRect(e.x + 40, NSMinY(u) + 20, 150, 80)]; settle(p.window);
+            [p.lower pin:NSMakeRect(TSPreviewPaneWindowEdge(p.lower).x + 60, TSPreviewPaneWindowEdge(p.lower).y - 140, 150, 100)]; settle(p.window);
+            TSLinkPreviewView *atEnd = p.upper.preview, *other = p.lower.preview;
+            NSRect endPlace = onPage(p.upper), otherPlace = onPage(p.lower);
+            NSString *what = fit ? @"at the end, fitted to the window" : @"at the end";
+            check(atEnd && p.upper.pinnedLinkPreviewIsSeen, [NSString stringWithFormat:@"under the toolbar %@: a popup in view on the last page", what]);
+            BOOL (^close)(NSRect, NSRect) = ^BOOL(NSRect a, NSRect b) {
+                CGFloat t = fit ? 0.5 : 0.01;
+                return fabs(NSMinX(a) - NSMinX(b)) < t && fabs(NSMaxY(a) - NSMaxY(b)) < t;
+            };
+            for (int i = 1; i <= 2; i++) {
+                [p.window switchViews]; settle(p.window);
+                MyPDFKitView *withEnd = i == 1 ? p.lower : p.upper, *withOther = i == 1 ? p.upper : p.lower;
+                NSRect a = onPage(withEnd), b = onPage(withOther);
+                check(withEnd.preview == atEnd && close(a, endPlace) && withOther.preview == other && close(b, otherPlace),
+                      [NSString stringWithFormat:@"under the toolbar %@, switch %d: the popups keep their places on their pages (%.2f,%.2f for %.2f,%.2f; %.2f,%.2f for %.2f,%.2f)",
+                       what, i, NSMinX(a), NSMaxY(a), NSMinX(endPlace), NSMaxY(endPlace), NSMinX(b), NSMaxY(b), NSMinX(otherPlace), NSMaxY(otherPlace)]);
+            }
         }
         [p.upper doKillPopup]; [p.lower doKillPopup];
         [p.window close];

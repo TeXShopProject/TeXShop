@@ -91,3 +91,26 @@ static inline void TSPreviewPaneRestore(PDFView *view, TSPreviewPanePlace place)
     [clip scrollToPoint:target.origin];
     [scroll reflectScrolledClipView:clip];
 }
+// The place of a pinned popup on the page under its upper left corner, from its frame in window
+// coordinates, as the popup keeps it when the preview is zoomed (#56).
+typedef struct { __unsafe_unretained PDFPage *page; NSRect rect; } TSPopupPlace;
+static inline TSPopupPlace TSPopupPlaceOnPage(PDFView *view, NSRect windowFrame)
+{
+    TSPopupPlace place = { nil, NSZeroRect };
+    if (NSIsEmptyRect(windowFrame)) return place;
+    NSRect frame = [view convertRect:windowFrame fromView:nil];
+    NSPoint corner = NSMakePoint(NSMinX(frame), view.isFlipped ? NSMinY(frame) : NSMaxY(frame));
+    place.page = [view pageForPoint:corner nearest:YES];
+    if (place.page) place.rect = [view convertRect:frame toPage:place.page];
+    return place;
+}
+// The frame in window coordinates of that place in a view showing the page; the frame it had,
+// without a page.
+static inline NSRect TSPopupFrameInView(PDFView *view, TSPopupPlace place, NSRect windowFrame)
+{
+    if (!place.page || place.page.document != view.document) return windowFrame;
+    NSRect frame = [view convertRect:[view convertRect:place.rect fromPage:place.page] toView:nil];
+    if (!isfinite(NSMinX(frame)) || !isfinite(NSMinY(frame)) || NSWidth(frame) <= 0 || NSHeight(frame) <= 0) return windowFrame;
+    return frame;
+}
+
