@@ -24,6 +24,8 @@ MUTATIONS = {
     'double-multipage-without-arrow': ('            [arrow stroke];\n', ''),
     # The arrow points up (#65 audit).
     'arrow-up': ('@"M11,14.6V19.2M9.3,17.5L11,19.2L12.7,17.5"', '@"M11,14.6V19.2M9.3,16.3L11,14.6L12.7,16.3"'),
+    # A carriage return is not a separator (#65 audit).
+    'cr-not-separator': ('@" ,\\n\\r\\t\\f"', '@" ,\\n\\t"'),
     # Command letters read together: a close followed at once by a move is lost (#65 audit).
     'commands-read-together': ('        unichar next = [data characterAtIndex:scanner.scanLocation];\n        if ([commands characterIsMember:next]) {\n            command = next;\n            scanner.scanLocation += 1;',
         '        unichar next = [data characterAtIndex:scanner.scanLocation];\n        NSString *letters = nil;\n        if ([scanner scanCharactersFromSet:commands intoString:&letters]) {\n            command = [letters characterAtIndex:letters.length - 1];'),
@@ -110,6 +112,11 @@ int main(int argc, char **argv) { @autoreleasepool {
     NSString *spaced = pointsOf(TSPreviewPathFromSVG(@"M1,1L5,1L5,5Z m2,0 l1,0")), *packed = pointsOf(TSPreviewPathFromSVG(@"M1,1L5,1L5,5Zm2,0l1,0"));
     check([spaced isEqualToString:@"M1.00,1.00 L5.00,1.00 L5.00,5.00 Z M3.00,1.00 L4.00,1.00"] && [packed isEqualToString:spaced],
           [NSString stringWithFormat:@"a close followed at once by the next command (%@ / %@)", spaced, packed]);
+    // Line breaks of any kind separate commands as a space does (#65 audit).
+    for (NSString *br in @[@"\n", @"\r", @"\r\n", @"\t", @"\f"]) {
+        NSString *broken = pointsOf(TSPreviewPathFromSVG([NSString stringWithFormat:@"M1,1L5,1L5,5Z%@m2,0%@l1,0", br, br]));
+        check([broken isEqualToString:spaced], [NSString stringWithFormat:@"a line break between commands (%lu characters): %@", (unsigned long)br.length, broken]);
+    }
 
     NSData *ink[5];
     for (NSInteger style = 1; style <= 4; style++) {

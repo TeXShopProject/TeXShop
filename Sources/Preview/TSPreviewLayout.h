@@ -55,7 +55,7 @@ static NSString * const TSPreviewBookLines[] = {
 static inline NSBezierPath *TSPreviewPathFromSVG(NSString *data) {
     NSBezierPath *path = [NSBezierPath bezierPath];
     NSScanner *scanner = [NSScanner scannerWithString:data];
-    NSCharacterSet *separators = [NSCharacterSet characterSetWithCharactersInString:@" ,\n\t"];
+    NSCharacterSet *separators = [NSCharacterSet characterSetWithCharactersInString:@" ,\n\r\t\f"];
     scanner.charactersToBeSkipped = separators;
     NSCharacterSet *commands = [NSCharacterSet characterSetWithCharactersInString:@"MmLlHhVvCcZz"];
     unichar command = 'M';
