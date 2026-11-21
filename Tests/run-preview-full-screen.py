@@ -11,7 +11,9 @@ stand-in views, window and settings:
   format stay as they are, going in and coming out, and the remembered
   full-screen values are left alone.
 - The switch as it was on entering decides what leaving does.
-Mutations that drop either check must fail.
+The settings fall back on the shipped FactoryDefaults.plist, registered as the
+app registers it, so the default case is what a user who never touched the
+switch gets. Mutations that drop either check, or ship the switch on, must fail.
 """
 from pathlib import Path
 import subprocess, sys, tempfile
@@ -27,13 +29,16 @@ program = r'''
 static NSString *fullscreenPageStyleKey = @"fullscreenPageStyle";
 static NSString *fullscreenResizeOptionKey = @"fullscreenResizeOption";
 static NSString *KeepPreviewDisplayInFullScreenKey = @"KeepPreviewDisplayInFullScreen";
+// The user's values over the registered factory defaults, as NSUserDefaults reads them.
 @interface FakeDefaults : NSObject
 @property NSMutableDictionary *values;
+@property NSDictionary *registered;
 @end
 @implementation FakeDefaults
 - (instancetype)init { if ((self = [super init])) _values = [NSMutableDictionary dictionary]; return self; }
-- (NSInteger)integerForKey:(NSString *)key { return [self.values[key] integerValue]; }
-- (BOOL)boolForKey:(NSString *)key { return [self.values[key] boolValue]; }
+- (id)objectForKey:(NSString *)key { return self.values[key] ?: self.registered[key]; }
+- (NSInteger)integerForKey:(NSString *)key { return [[self objectForKey:key] integerValue]; }
+- (BOOL)boolForKey:(NSString *)key { return [[self objectForKey:key] boolValue]; }
 - (void)setInteger:(NSInteger)value forKey:(NSString *)key { self.values[key] = @(value); }
 - (void)setBool:(BOOL)value forKey:(NSString *)key { self.values[key] = @(value); }
 @end
@@ -73,10 +78,13 @@ static Doc *Make(BOOL split) {
     d.myPDFKitView2.pageStyle = 4; d.myPDFKitView2.resizeOption = 2; // Double Multi-Page, Fixed Magnification
     return d;
 }
-int main(void) { @autoreleasepool {
+int main(int argc, char **argv) { @autoreleasepool {
     fakeDefaults = [FakeDefaults new];
-    // Off, the default: the full-screen display of earlier versions.
-    [fakeDefaults setInteger:2 forKey:fullscreenPageStyleKey]; [fakeDefaults setInteger:3 forKey:fullscreenResizeOptionKey];
+    // As TSAppDelegate registers FactoryDefaults.plist.
+    fakeDefaults.registered = [[NSString stringWithContentsOfFile:@(argv[1]) encoding:NSUTF8StringEncoding error:NULL] propertyList];
+    Check([fakeDefaults.registered isKindOfClass:NSDictionary.class] && fakeDefaults.registered[KeepPreviewDisplayInFullScreenKey] != nil, @"FactoryDefaults.plist registers the switch");
+    // Off, as shipped: the full-screen display of earlier versions, from the
+    // shipped full-screen values (Fit to Window, Two Pages).
     Doc *d = Make(YES);
     [d enterFullScreen:nil];
     Check(!d.pdfKitWindow.split, @"Off: full screen unsplits the window");
@@ -123,11 +131,13 @@ int main(void) { @autoreleasepool {
 program = program.replace('ENTER', enter).replace('LEAVE', leave)
 verify_embedded(program, [('complete method:- (void)enterFullScreen:', doc, enter), ('complete method:- (void)exitFullScreen:', doc, leave)])
 
-def build_and_run(text, tmp, name):
+factory = root / 'Resources/Defaults/FactoryDefaults.plist'
+
+def build_and_run(text, tmp, name, defaults=factory):
     src = Path(tmp) / (name + '.m'); exe = Path(tmp) / name
     src.write_text(text)
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-Wno-objc-method-access', str(src), '-o', str(exe)], check=True)
-    return subprocess.run([str(exe)], capture_output=True, text=True)
+    return subprocess.run([str(exe), str(defaults)], capture_output=True, text=True)
 
 with tempfile.TemporaryDirectory(prefix='TeXShop-full-screen-', dir=None) as tmp:
     result = build_and_run(program, tmp, 'FullScreen')
@@ -145,4 +155,12 @@ with tempfile.TemporaryDirectory(prefix='TeXShop-full-screen-', dir=None) as tmp
         if mutated.returncode == 0:
             sys.exit('FAIL: mutation survived: ' + label)
         print('MUTATION CAUGHT:', label)
+    shipped = factory.read_text(encoding='utf-8')
+    old = '<key>KeepPreviewDisplayInFullScreen</key>\n\t<string>NO</string>'
+    assert shipped.count(old) == 1, 'Shipped default of the switch missing'
+    on = Path(tmp) / 'FactoryDefaults-on.plist'
+    on.write_text(shipped.replace(old, old.replace('NO', 'YES')), encoding='utf-8')
+    if build_and_run(program, tmp, 'ShippedOn', on).returncode == 0:
+        sys.exit('FAIL: mutation survived: the switch shipped on')
+    print('MUTATION CAUGHT: the switch shipped on')
 print('PASS: run-preview-full-screen')

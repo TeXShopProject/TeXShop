@@ -241,7 +241,7 @@
 "catalog.preview.0.6.title" = "링크 팝업";
 "catalog.preview.0.6.note" = "앞으로 여는 문서의 초기값입니다. 열려 있는 문서에서는 ‘보기’ 메뉴에서 바꿉니다.";
 "catalog.preview.0.7.title" = "전체 화면에서도 배율과 보기 형식 유지";
-"catalog.preview.0.7.note" = "나눈 창도 나눈 채로 둡니다. 끄면 전체 화면에서 창 나누기를 해제하고, 지난번 전체 화면에서 쓴 배율과 보기 형식을 사용합니다.";
+"catalog.preview.0.7.note" = "나눈 창도 나눈 채로 둡니다. 끄면 전체 화면에서 창 나누기를 해제하고, 지난번 전체 화면에서 쓴 배율 방식과 보기 형식을 사용합니다.";
 "group.preview.1.title" = "두 페이지 배열";
 "catalog.preview.1.0.title" = "페이지 방향";
 "catalog.preview.1.1.title" = "첫 페이지를 표지로 따로 표시";
