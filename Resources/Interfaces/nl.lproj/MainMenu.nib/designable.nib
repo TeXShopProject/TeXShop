@@ -1309,7 +1309,7 @@
                                     <action selector="performZoom:" target="-1" id="143"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Fullscreen" id="679" identifier="TSShortcut.fullscreen:.0">
+                            <menuItem title="Schermvullend (oude methode)" id="679" identifier="TSShortcut.fullscreen:.0">
                                 <connections>
                                     <action selector="fullscreen:" target="-1" id="680"/>
                                 </connections>
