@@ -351,6 +351,21 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     return YES;
 }
 
+- (TSLinkPreviewView *)copyWithFrame:(NSRect)frame
+{
+    TSLinkPreviewView *copy = [[TSLinkPreviewView alloc] initWithFrame:frame image:_image source:_source
+                                                               pageSize:_pageSize pages:@[] pageRects:NULL];
+    for (NSUInteger i = 0; i < _pageCount; i++) {
+        copy->_pages[i] = _pages[i];
+        copy->_pageRects[i] = _pageRects[i];
+        copy->_transforms[i] = _transforms[i];
+    }
+    copy->_pageCount = _pageCount;
+    copy->_selection = _selection;
+    copy.pageLabel = self.pageLabel;
+    return copy;
+}
+
 - (BOOL)returnToPlaceIfAway
 {
     return _awayFromPlace && [self returnToPlaceOnPage];

@@ -28,7 +28,8 @@ parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'oth
                                            'escape-falls-to-other-part', 'escape-closes-hover',
                                            'link-closes-pin', 'outline-closes-pin', 'back-closes-pin', 'forward-closes-pin', 'page-number-closes-pin',
                                            'last-page-closes-pin', 'sync-closes-pin', 'zoom-kills-pin', 'zoom-moves-into-view', 'next-page-kills-pin',
-                                           'empty-outline-kills-pin', 'stuck-back-kills-pin', 'stuck-single-page-kills-pin', 'single-page-first-kills-pin', 'move-not-restored', 'away-forgets-place', 'replaced-pin-moved', 'repin-not-taken', 'page-turn-stays-away', 'page-turn-forgets-place'])
+                                           'empty-outline-kills-pin', 'stuck-back-kills-pin', 'stuck-single-page-kills-pin', 'single-page-first-kills-pin', 'move-not-restored', 'away-forgets-place', 'replaced-pin-moved', 'repin-not-taken', 'page-turn-stays-away', 'page-turn-forgets-place',
+                                           'copy-at-window-place', 'copy-kept-in-view'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
@@ -56,7 +57,7 @@ methods = '\n'.join(method(signature) for signature in (
     '- (void) fancyMouseDown:', '- (void) fancyMouseDownKeepingPinnedLinkPreview:',
     '- (void)cleanupMarqueeKeepingPinnedLinkPreview', '- (BOOL)hasPinnedLinkPreview',
     '- (BOOL)pinnedLinkPreviewContainsWindowPoint:', '- (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:',
-    '- (void)attachPinnedLinkPreview:', '- (void)keepPinnedLinkPreviewInView',
+    '- (BOOL)placePinnedLinkPreview:', '- (void)attachPinnedLinkPreview:', '- (void)showCopyOfPinnedLinkPreviewOfView:', '- (void)keepPinnedLinkPreviewInView',
     '- (BOOL)isActivePreviewPart', '- (void)pinLinkPreview', '- (void)killTransientLinkPreview',
     '- (void)closePinnedLinkPreview', '- (void)keepPinnedLinkPreviewThroughMove',
     '- (BOOL)beginKeepingPinnedLinkPreviewOnPage', '- (void)endKeepingPinnedLinkPreviewOnPage:',
@@ -66,6 +67,11 @@ methods = '\n'.join(method(signature) for signature in (
     '- (void) previousPage:', '- (void) nextPage:', '- (void) changeScale:', '- (void) goToKitPageNumber:'))
 view_mutations = {
     # A popup that was to come appears after the pointer has gone on to the toolbar (#44).
+    # #66: the copy goes to the same place in the window instead of on its page, or is brought into view.
+    'copy-at-window-place': ('    NSRect here = [self convertRect:[self convertRect:onPage fromPage:page] toView:nil];',
+                             '    NSRect here = [source.superview convertRect:source.frame toView:nil];'),
+    'copy-kept-in-view': ('    [self placePinnedLinkPreview:[source copyWithFrame:source.frame] windowFrame:here];',
+                          '    [self attachPinnedLinkPreview:[source copyWithFrame:source.frame] windowFrame:here];'),
     'popup-under-toolbar': ('    if (TSDocumentWindowPointIsUnderToolbar(self.window, [self.window convertPointFromScreen: currentPoint]))',
                             '    if (NO)'),
     'magnifier-kills-pin': ('[self keepingPinnedLinkPreview:^{ [self fancyMouseDownKeepingPinnedLinkPreview: theEvent]; }];',
@@ -273,8 +279,8 @@ window_mutations = {
                                '    [(MyPDFKitView *)self.myPDFKitView cleanupMarquee: YES];\n    [(MyPDFKitView *)self.myPDFKitView2 cleanupMarquee: YES];\n    \n'),
     'window-unsplit-moves-pin': ('preview', '        [(MyPDFKitView *)self.myPDFKitView2 detachPinnedLinkPreviewWithWindowFrame: NULL];\n',
                                  '        [(MyPDFKitView *)self.myPDFKitView attachPinnedLinkPreview: [(MyPDFKitView *)self.myPDFKitView2 detachPinnedLinkPreviewWithWindowFrame: NULL] windowFrame: NSZeroRect];\n'),
-    'window-layout-not-kept': ('preview', '        [self.myPDFKitView2 setDocument:nil];\n    \n    [self keepPinnedLinkPreviewsInView];\n}',
-                               '        [self.myPDFKitView2 setDocument:nil];\n    \n}'),
+    'window-layout-not-kept': ('preview', '    if (! continuesBelow)\n        [self keepPinnedLinkPreviewsInView];\n}',
+                               '}'),
 }
 if args.mutation in window_mutations:
     which, old, new = window_mutations[args.mutation]
@@ -491,6 +497,7 @@ DOCUMENTMETHODS
 - (BOOL)pinnedLinkPreviewContainsWindowPoint:(NSPoint)point;
 - (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:(NSRect *)frame;
 - (void)attachPinnedLinkPreview:(TSLinkPreviewView *)preview windowFrame:(NSRect)frame;
+- (void)showCopyOfPinnedLinkPreviewOfView:(MyPDFKitView *)other;
 - (void)keepPinnedLinkPreviewInView;
 - (void)closeOtherViewPinnedLinkPreview;
 @end
@@ -1382,6 +1389,52 @@ static void testKeepingPinned(MyPDFKitView *view, MyPDFKitView *second, NSWindow
     [view cleanupMarqueeKeepingPinnedLinkPreview];
     check(!view.preview && !handlers.count, @"another window becoming main closes an ordinary popup");
 }
+// The first split of pages one below the other (#66): the bottom part gets its own copy of the
+// pinned popup, at the same place on the same page, also when that place is out of view there;
+// it is not brought into view. The top part keeps its popup.
+static void testSplitCopy(NSWindow *window) {
+    NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(600,800)];
+    [image lockFocus]; [NSColor.whiteColor setFill]; NSRectFill(NSMakeRect(0,0,600,800)); [image unlockFocus];
+    PDFDocument *doc = [PDFDocument new];
+    for (NSUInteger i = 0; i < 4; i++) [doc insertPage:[[PDFPage alloc] initWithImage:image] atIndex:i];
+    PDFPage *first = [doc pageAtIndex:0];
+    PDFAnnotation *link = [[PDFAnnotation alloc] initWithBounds:NSMakeRect(20,720,100,25) forType:PDFAnnotationSubtypeLink withProperties:nil];
+    link.destination = [[PDFDestination alloc] initWithPage:[doc pageAtIndex:2] atPoint:NSMakePoint(20,600)]; [first addAnnotation:link];
+    NSRect bounds = window.contentView.bounds;
+    MyPDFKitView *top = [[MyPDFKitView alloc] initWithFrame:NSMakeRect(0, NSHeight(bounds) / 2, NSWidth(bounds), NSHeight(bounds) / 2)];
+    MyPDFKitView *bottom = [[MyPDFKitView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(bounds), NSHeight(bounds) / 2)];
+    for (MyPDFKitView *v in @[top, bottom]) {
+        [window.contentView addSubview:v];
+        v.document = doc; v.displayMode = kPDFDisplaySinglePageContinuous; v.autoScales = NO; v.scaleFactor = 1;
+        [v layoutDocumentView];
+        [v goToPage:first];
+    }
+    linkPoint = NSMakePoint(30,730);
+    show(top, NSEventModifierFlagOption);
+    TSLinkPreviewView *pinned = top.preview;
+    // The bottom part shows pages further down, where the popup's place is out of view.
+    [bottom goToPage:[doc pageAtIndex:2]]; [bottom layoutDocumentView];
+    NSRect topFrame = [pinned.superview convertRect:pinned.frame toView:nil];
+    NSPoint corner = NSMakePoint(NSMinX(topFrame), NSMaxY(topFrame));
+    NSPoint onTop = [top convertPoint:[top convertPoint:corner fromView:nil] toPage:first];
+    [bottom showCopyOfPinnedLinkPreviewOfView:top];
+    TSLinkPreviewView *copy = bottom.preview;
+    check(copy && copy != pinned && copy.superview == bottom.documentView && copy.pinned && bottom.globalLongTerm,
+          @"split copy: the bottom part shows its own pinned copy");
+    check(top.preview == pinned && pinned.superview == top.documentView, @"split copy: the top part keeps its popup");
+    NSRect copyFrame = [copy.superview convertRect:copy.frame toView:nil];
+    NSPoint onBottom = [bottom convertPoint:[bottom convertPoint:NSMakePoint(NSMinX(copyFrame), NSMaxY(copyFrame)) fromView:nil] toPage:first];
+    check(approx(onTop.x, onBottom.x) && approx(onTop.y, onBottom.y) && approx(NSWidth(copyFrame), NSWidth(topFrame)) &&
+          approx(NSHeight(copyFrame), NSHeight(topFrame)),
+          [NSString stringWithFormat:@"split copy: the same place on the same page (%.1f,%.1f / %.1f,%.1f)", onTop.x, onTop.y, onBottom.x, onBottom.y]);
+    check(!NSIntersectsRect(copy.frame, bottom.documentView.visibleRect), @"split copy: out of view, not brought into view");
+    check(NSEqualRects(copy.source, pinned.source) && (copy.pageLabel == pinned.pageLabel || [copy.pageLabel isEqual:pinned.pageLabel]),
+          @"split copy: the same part of the same page and its label");
+    [bottom showCopyOfPinnedLinkPreviewOfView:top];
+    check(bottom.preview == copy, @"split copy: a part with a pinned popup keeps it");
+    [top doKillPopup]; [bottom doKillPopup];
+    [top removeFromSuperview]; [bottom removeFromSuperview];
+}
 // AppKit calls each local monitor with what the one before returned and stops at nil;
 // try both orders, since both parts watch Escape while they show a pinned popup.
 static NSEvent *dispatchEvent(NSEvent *e, BOOL lastFirst) {
@@ -2053,6 +2106,7 @@ int main(void) { @autoreleasepool {
         testSplitEscape(view, second, window);
         testSplitControlHover(view, second, window);
         [second removeFromSuperview];
+        testSplitCopy(window);
         view.frame = bounds; [view layoutDocumentView];
     }
     testPopupSide(view, window);
@@ -2259,7 +2313,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'control-popup-stays':'leaving the link dismisses a popup shown with Control',
                     'timer-ignores-release':('with link popups on, pressing Control before the popup appears keeps it away', 'releasing Control before the popup appears shows none'),
                     'tooltip-ignores-control':'with link popups off, Control leaves out the tool tip',
-                    'tooltip-back-under-popup':'a popup shown with Control keeps the tool tip away'}[args.mutation]
+                    'tooltip-back-under-popup':'a popup shown with Control keeps the tool tip away',
+                    'copy-at-window-place':'split copy: the same place on the same page',
+                    'copy-kept-in-view':'split copy: the same place on the same page'}[args.mutation]
         if isinstance(expected, str): expected = (expected,)
         assert result.returncode == 1 and any(message in result.stderr for message in expected), result.stderr
         print('PASS: detected mutation ' + args.mutation)

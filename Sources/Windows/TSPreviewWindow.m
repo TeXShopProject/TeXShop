@@ -973,11 +973,12 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     BOOL upperAutoScales = upperView.autoScales, lowerAutoScales = lowerView.autoScales;
     CGFloat upperScale = upperView.scaleFactor, lowerScale = lowerView.scaleFactor;
     PDFSelection *upperSelection = upperView.currentSelection, *lowerSelection = lowerView.currentSelection;
-    NSRect upperFrame = [upperView convertRect:upperView.bounds toView:nil];
-    NSRect lowerFrame = [lowerView convertRect:lowerView.bounds toView:nil];
     NSRect upperPopupFrame = NSZeroRect, lowerPopupFrame = NSZeroRect;
     TSLinkPreviewView *upperPopup = [upperView detachPinnedLinkPreviewWithWindowFrame: &upperPopupFrame];
     TSLinkPreviewView *lowerPopup = [lowerView detachPinnedLinkPreviewWithWindowFrame: &lowerPopupFrame];
+    // Each popup goes to the same place on its page in the other part (#66).
+    TSPopupPlace upperPopupPlace = TSPopupPlaceOnPage(upperView, upperPopupFrame);
+    TSPopupPlace lowerPopupPlace = TSPopupPlaceOnPage(lowerView, lowerPopupFrame);
     NSResponder *responder = window.firstResponder;
     BOOL upperActive = [responder isKindOfClass:[NSView class]] && [(NSView *)responder isDescendantOf:upperView];
     BOOL lowerActive = [responder isKindOfClass:[NSView class]] && [(NSView *)responder isDescendantOf:lowerView];
@@ -1021,15 +1022,14 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     [upperView fitContentWidth];
     [lowerView fitContentWidth];
 
-    // A pinned popup keeps its place in its part, which is now at the other side.
-    NSRect newUpperFrame = [upperView convertRect:upperView.bounds toView:nil];
-    NSRect newLowerFrame = [lowerView convertRect:lowerView.bounds toView:nil];
+    // A pinned popup stays at its place on its page, in the part that now shows its page, also
+    // at the end of the document, where the part cannot scroll as far, and at a magnification
+    // that fits the page to the part. It is not brought into view, even when the part it comes
+    // to is smaller, so that switching again gives back the first arrangement (#66).
     if (lowerPopup)
-        [upperView attachPinnedLinkPreview:lowerPopup windowFrame:NSOffsetRect(lowerPopupFrame,
-            NSMinX(newUpperFrame) - NSMinX(lowerFrame), NSMaxY(newUpperFrame) - NSMaxY(lowerFrame))];
+        [upperView placePinnedLinkPreview:lowerPopup windowFrame:TSPopupFrameInView(upperView, lowerPopupPlace, lowerPopupFrame)];
     if (upperPopup)
-        [lowerView attachPinnedLinkPreview:upperPopup windowFrame:NSOffsetRect(upperPopupFrame,
-            NSMinX(newLowerFrame) - NSMinX(upperFrame), NSMaxY(newLowerFrame) - NSMaxY(upperFrame))];
+        [lowerView placePinnedLinkPreview:upperPopup windowFrame:TSPopupFrameInView(lowerView, upperPopupPlace, upperPopupFrame)];
 
     // The active part stays active where it now is. Without the keyboard focus in either part,
     // as when it is in the search field, the focus stays where it is, and the toolbar, the menus
@@ -1041,7 +1041,6 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
         active = upperView;
     if (!(upperActive || lowerActive) || ![window makeFirstResponder:active])
         [active becomeActiveView];
-    [self keepPinnedLinkPreviewsInView];
 }
 
 // Split Window with Link (#31). The part with the link stays where it is, and the other part
@@ -1425,6 +1424,14 @@ static void TSPreviewPlacePartByFrame(NSView *part)
         }
     
     
+    // Pages one below the other, split into a top and a bottom part for the first time, or
+    // with Shift: nothing moves on the screen. The divider comes over the pages, the bottom
+    // part shows what was below it, and a pinned popup stays where it is, now in both parts,
+    // each with its own copy at the same place on its page (#66).
+    BOOL continuesBelow = ! self.windowIsSplit && self.horizontal && firstTop.valid &&
+        (firstView.displayMode == kPDFDisplaySinglePageContinuous || firstView.displayMode == kPDFDisplayTwoUpContinuous) &&
+        (topToBottom || ! secondView.locationSaved);
+
 // REVISE self.windowIsSplit FOR SPLITING, BUT DO NOT YET SPLIT
     
     
@@ -1493,13 +1500,14 @@ static void TSPreviewPlacePartByFrame(NSView *part)
         
         [(MyPDFKitView *)self.myPDFKitView2 setPageStyle:[(MyPDFKitView *)self.myPDFKitView pageStyle]];
         [(MyPDFKitView *)self.myPDFKitView2 setFirstPageStyle:[(MyPDFKitView *)self.myPDFKitView firstPageStyle]];
+        // The display format comes first: Fit to Content Width fits the pages as they are laid out.
+        [(MyPDFKitView *)self.myPDFKitView2 setupPageStyle];
         if ( [(MyPDFKitView *)self.myPDFKitView resizeOption] == NEW_PDF_FIT_TO_NONE)
           [(MyPDFKitView *)self.myPDFKitView2 setMagnification: [(MyPDFKitView *)self.myPDFKitView magnification]];
         else {
             [(MyPDFKitView *)self.myPDFKitView2 setResizeOption:[(MyPDFKitView *)self.myPDFKitView resizeOption]];
             [(MyPDFKitView *)self.myPDFKitView2 setupMagnificationStyle];
             }
-        [(MyPDFKitView *)self.myPDFKitView2 setupPageStyle];
 
         [(MyPDFKitView *)self.myPDFKitView2 moveSplitToCorrectSpot:[(MyPDFKitView *)self.myPDFKitView index]];
     }
@@ -1545,7 +1553,14 @@ static void TSPreviewPlacePartByFrame(NSView *part)
     [self.pdfKitSplitView adjustSubviews];
     [self.pdfKitSplitView layoutSubtreeIfNeeded];
     TSPreviewPaneRestore(firstView, firstTop);
-    if (self.windowIsSplit)
+    if (self.windowIsSplit && continuesBelow)
+        {
+            // The first pane shows its top where it was, at the same magnification, so the
+            // pages go on below it as they were laid out before the split.
+            TSPreviewPaneRestore(secondView, TSPreviewPaneCaptureAt(firstView, TSPreviewPaneWindowEdge(secondView)));
+            [secondView showCopyOfPinnedLinkPreviewOfView: firstView];
+        }
+    else if (self.windowIsSplit)
         {
             if (secondView.locationSaved)
                 [secondView restoreLocation];
@@ -1559,7 +1574,9 @@ static void TSPreviewPlacePartByFrame(NSView *part)
     if (! self.windowIsSplit)
         [self.myPDFKitView2 setDocument:nil];
     
-    [self keepPinnedLinkPreviewsInView];
+    // The popups stay at their places on their pages, also out of view.
+    if (! continuesBelow)
+        [self keepPinnedLinkPreviewsInView];
 }
 
 
