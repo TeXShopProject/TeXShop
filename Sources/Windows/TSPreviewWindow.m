@@ -973,8 +973,8 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     BOOL upperAutoScales = upperView.autoScales, lowerAutoScales = lowerView.autoScales;
     CGFloat upperScale = upperView.scaleFactor, lowerScale = lowerView.scaleFactor;
     PDFSelection *upperSelection = upperView.currentSelection, *lowerSelection = lowerView.currentSelection;
-    NSRect upperFrame = [upperView convertRect:upperView.bounds toView:nil];
-    NSRect lowerFrame = [lowerView convertRect:lowerView.bounds toView:nil];
+    // The places are kept at the top edges below the toolbar, so the popups are moved by them too.
+    NSPoint upperEdge = TSPreviewPaneWindowEdge(upperView), lowerEdge = TSPreviewPaneWindowEdge(lowerView);
     NSRect upperPopupFrame = NSZeroRect, lowerPopupFrame = NSZeroRect;
     // A popup out of view, as the copy in the bottom part of a first split (#66), stays at its
     // place on its page; one that can be seen is kept in view.
@@ -1025,14 +1025,13 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     [lowerView fitContentWidth];
 
     // A pinned popup keeps its place in its part, which is now at the other side.
-    NSRect newUpperFrame = [upperView convertRect:upperView.bounds toView:nil];
-    NSRect newLowerFrame = [lowerView convertRect:lowerView.bounds toView:nil];
+    NSPoint newUpperEdge = TSPreviewPaneWindowEdge(upperView), newLowerEdge = TSPreviewPaneWindowEdge(lowerView);
     if (lowerPopup)
         [upperView placePinnedLinkPreview:lowerPopup windowFrame:NSOffsetRect(lowerPopupFrame,
-            NSMinX(newUpperFrame) - NSMinX(lowerFrame), NSMaxY(newUpperFrame) - NSMaxY(lowerFrame))];
+            newUpperEdge.x - lowerEdge.x, newUpperEdge.y - lowerEdge.y)];
     if (upperPopup)
         [lowerView placePinnedLinkPreview:upperPopup windowFrame:NSOffsetRect(upperPopupFrame,
-            NSMinX(newLowerFrame) - NSMinX(upperFrame), NSMaxY(newLowerFrame) - NSMaxY(upperFrame))];
+            newLowerEdge.x - upperEdge.x, newLowerEdge.y - upperEdge.y)];
 
     // The active part stays active where it now is. Without the keyboard focus in either part,
     // as when it is in the search field, the focus stays where it is, and the toolbar, the menus

@@ -22,7 +22,12 @@ MUTATIONS = {
     'format-stays': ('window', '        if (view.pageStyle != styles[i]) {', '        if (NO) {'),
     'fit-lost': ('window', '        if (autoScales[i])\n', '        if (NO)\n'),
     'selection-stays': ('window', '    [upperView setCurrentSelection:lowerSelection];\n    [lowerView setCurrentSelection:upperSelection];\n', ''),
-    'popup-stays-on-screen': ('window', 'NSMinX(newUpperFrame) - NSMinX(lowerFrame), NSMaxY(newUpperFrame) - NSMaxY(lowerFrame)', '0, 0'),
+    'popup-stays-on-screen': ('window', 'newUpperEdge.x - lowerEdge.x, newUpperEdge.y - lowerEdge.y', '0, 0'),
+    # Under the toolbar the popups move with the top edges of the parts, as the places do (#66 audit).
+    'popup-moved-by-frame': ('window', 'NSPoint upperEdge = TSPreviewPaneWindowEdge(upperView), lowerEdge = TSPreviewPaneWindowEdge(lowerView);',
+        'NSPoint upperEdge = frameTop(upperView), lowerEdge = frameTop(lowerView);'),
+    'seen-counts-band': ('view', 'NSIntersectsRect(pinnedLinkPreview.frame, TSDocumentWindowRectBelowToolbar(documentView, documentView.visibleRect))',
+        'NSIntersectsRect(pinnedLinkPreview.frame, documentView.visibleRect)'),
     'popup-dropped': ('window', '    if (upperPopup)\n        [lowerView placePinnedLinkPreview:', '    if (NO)\n        [lowerView placePinnedLinkPreview:'),
     # A popup out of view stays at its place on its page (#66 audit).
     'unseen-popup-pulled-in': ('window', '    if (lowerPopup && lowerPopupSeen)\n', '    if (lowerPopup)\n'),
@@ -158,6 +163,7 @@ static void check(BOOL ok, NSString *message) {
     if (!ok) { fprintf(stderr, "FAIL: %s\n", message.UTF8String); exit(1); }
 }
 static NSEventModifierFlags flags;
+static NSPoint frameTop(NSView *v);
 static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
 // The split toolbar buttons are checked in run-split-toggle-option.py.
 static void TSSplitToggleItemsFollowSplit(void) {}
@@ -326,6 +332,29 @@ VIEWMETHODS
 WINDOWMETHODS
 @end
 
+// The top left corner of a part, which is not the top edge of its place under the toolbar.
+static NSPoint frameTop(NSView *v) { NSRect r = [v convertRect:v.bounds toView:nil]; return NSMakePoint(NSMinX(r), NSMaxY(r)); }
+// The window's content runs under its toolbar, as the Preview window's on macOS 26 and later.
+@interface GlassToolbar : NSObject <NSToolbarDelegate> @end
+@implementation GlassToolbar
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar { return @[@"item"]; }
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar { return @[@"item"]; }
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)identifier willBeInsertedIntoToolbar:(BOOL)flag {
+    NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+    item.label = @"Item"; item.image = [NSImage imageWithSystemSymbolName:@"doc" accessibilityDescription:nil];
+    return item;
+}
+@end
+static GlassToolbar *glassToolbar;
+static BOOL underToolbar;
+static void runUnderToolbar(NSWindow *window) {
+    if (!glassToolbar) glassToolbar = [GlassToolbar new];
+    window.toolbarStyle = NSWindowToolbarStyleExpanded;
+    NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"glass"];
+    toolbar.delegate = glassToolbar; window.toolbar = toolbar;
+    window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+    [window layoutIfNeeded];
+}
 static void settle(NSWindow *w) {
     for (int i = 0; i < 4; i++) {
         [w layoutIfNeeded];
@@ -368,6 +397,7 @@ static Preview makePreview(PDFDocument *doc, BOOL sideBySide) {
     TestWindow *w = [[TestWindow alloc] initWithContentRect:NSMakeRect(0, 0, 900, 900)
         styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskResizable backing:NSBackingStoreBuffered defer:NO];
     w.releasedWhenClosed = NO;
+    if (underToolbar) runUnderToolbar(w);
     NSSplitView *sv = [[NSSplitView alloc] initWithFrame:w.contentView.bounds];
     sv.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     [w.contentView addSubview:sv];
@@ -1076,6 +1106,45 @@ int main(int argc, char **argv) { @autoreleasepool {
         [v switchToOtherView];
         check(!v.hasPinnedLinkPreview && whileOff.superview == nil, describe(name, @"after closing the Preview window the popup of the other view does not come back"));
         [p.window close];
+    }
+    // Under the toolbar, a popup hidden under it in the top part stays at its place on its page:
+    // switching twice gives it back there, still hidden, and it is never brought into view.
+    // A popup in view moves with the place at the top edge of its part (#66 audit).
+    {
+        underToolbar = YES;
+        Preview p = makePreview(doc, NO);
+        CGFloat band = TSDocumentWindowHiddenTop(p.window.pdfKitSplitView);
+        check(band > 20, [NSString stringWithFormat:@"under the toolbar: a band of %.1f points", band]);
+        scrollTo(p.upper, 1, 500); scrollTo(p.lower, 4, 600); settle(p.window);
+        NSPoint edge = TSPreviewPaneWindowEdge(p.upper);
+        check(near(frameTop(p.upper).y - edge.y - band), @"under the toolbar: the top part's place is below the band");
+        [p.upper pin:NSMakeRect(edge.x + 40, edge.y + 10, 150, 60)]; settle(p.window);
+        NSPoint le = TSPreviewPaneWindowEdge(p.lower);
+        [p.lower pin:NSMakeRect(le.x + 60, le.y - 140, 150, 100)]; settle(p.window);
+        TSLinkPreviewView *hidden = p.upper.preview, *seen = p.lower.preview;
+        check(hidden && seen && !p.upper.pinnedLinkPreviewIsSeen && p.lower.pinnedLinkPreviewIsSeen,
+              @"under the toolbar: one popup hidden under the band, one in view");
+        NSRect (^onPage)(MyPDFKitView *) = ^NSRect(MyPDFKitView *v) {
+            NSRect f = [v convertRect:v.preview.frame fromView:v.preview.superview];
+            PDFPage *page = [v pageForPoint:NSMakePoint(NSMinX(f), NSMaxY(f)) nearest:YES];
+            return [v convertRect:f toPage:page];
+        };
+        NSRect hiddenPlace = onPage(p.upper), seenPlace = onPage(p.lower);
+        hidden.keeps = 0; seen.keeps = 0;
+        for (int i = 1; i <= 2; i++) {
+            [p.window switchViews]; settle(p.window);
+            MyPDFKitView *withHidden = i == 1 ? p.lower : p.upper, *withSeen = i == 1 ? p.upper : p.lower;
+            NSRect h = onPage(withHidden), v = onPage(withSeen);
+            check(withHidden.preview == hidden && sameRect(h, hiddenPlace) && hidden.keeps == 0 && !withHidden.pinnedLinkPreviewIsSeen,
+                  [NSString stringWithFormat:@"under the toolbar, switch %d: the hidden popup stays at its place on its page, out of view (%.1f,%.1f for %.1f,%.1f)",
+                   i, NSMinX(h), NSMaxY(h), NSMinX(hiddenPlace), NSMaxY(hiddenPlace)]);
+            check(withSeen.preview == seen && sameRect(v, seenPlace) && withSeen.pinnedLinkPreviewIsSeen,
+                  [NSString stringWithFormat:@"under the toolbar, switch %d: the popup in view stays at its place on its page (%.1f,%.1f for %.1f,%.1f)",
+                   i, NSMinX(v), NSMaxY(v), NSMinX(seenPlace), NSMaxY(seenPlace)]);
+        }
+        [p.upper doKillPopup]; [p.lower doKillPopup];
+        [p.window close];
+        underToolbar = NO;
     }
     printf("PASS: %lu checks\n", (unsigned long)checks);
     return 0;
