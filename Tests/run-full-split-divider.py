@@ -159,7 +159,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     [NSApplication sharedApplication];
     Check(RESTORED_ON_MOVE, @"opening the combined window puts the divider in place after the frame and before showing it");
     Check(RESTORED_WITH_STATE, @"a combined window restored at launch puts the divider in place after its frame");
-    for (NSString *name in @[@"TSConsoleWindow", @"TSFullSplitWindow", @"TSFullscreenWindow", @"TSHTMLWindow", @"TSLogWindow",
+    for (NSString *name in @[@"TSConsoleWindow", @"TSFullSplitWindow", @"TSHTMLWindow", @"TSLogWindow",
                              @"TSPreviewWindow", @"TSTextEditorWindow"]) Register(name, NSWindow.class);
     Register(@"MyPDFView", NSView.class);
     Register(@"MyPDFKitView", PDFView.class); Register(@"ScrapPDFKitView", PDFView.class);

@@ -1311,11 +1311,6 @@
                                     <action selector="performZoom:" target="-1" id="143"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Plein écran (ancienne méthode)" id="659" identifier="TSShortcut.fullscreen:.0">
-                                <connections>
-                                    <action selector="fullscreen:" target="-1" id="660"/>
-                                </connections>
-                            </menuItem>
                             <menuItem title="Activer le mode plein écran" keyEquivalent="f" id="1024" identifier="TSShortcut.toggleFullScreen:.0">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                 <connections>

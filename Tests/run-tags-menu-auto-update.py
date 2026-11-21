@@ -190,7 +190,7 @@ static void RegisterNibClass(NSString *name, Class base)
     NSWindow *textWindow, *pdfWindow, *fullSplitWindow, *outputWindow;
     NSPanel *scrapWindow, *scrapPDFWindow;
 }
-@property NSWindow *pdfKitWindow, *logWindow, *htmlWindow, *fullscreenWindow;
+@property NSWindow *pdfKitWindow, *logWindow, *htmlWindow;
 @property NSWindowController *experimentConsole;
 @property NSString *name;
 @property NSInteger tagsFilled, labelsFilled, tags2Filled;
@@ -292,7 +292,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     method_setImplementation(class_getInstanceMethod([NSApplication class], @selector(keyWindow)), (IMP)HarnessKeyWindow);
     method_setImplementation(class_getInstanceMethod([NSApplication class], @selector(mainWindow)), (IMP)HarnessMainWindow);
     shownWindows = [NSHashTable weakObjectsHashTable];
-    for (NSString *name in @[@"TSConsoleWindow", @"TSFullSplitWindow", @"TSFullscreenWindow", @"TSHTMLWindow", @"TSPreviewWindow", @"TSTextEditorWindow"]) RegisterNibClass(name, NSWindow.class);
+    for (NSString *name in @[@"TSConsoleWindow", @"TSFullSplitWindow", @"TSHTMLWindow", @"TSPreviewWindow", @"TSTextEditorWindow"]) RegisterNibClass(name, NSWindow.class);
     RegisterNibClass(@"MyPDFView", NSView.class); RegisterNibClass(@"MyPDFKitView", PDFView.class); RegisterNibClass(@"ScrapPDFKitView", PDFView.class);
     RegisterNibClass(@"TSTextView", NSTextView.class); RegisterNibClass(@"ScrapTextView", NSTextView.class);
     method_setImplementation(class_getInstanceMethod([NSWindow class], @selector(isVisible)), (IMP)HarnessIsVisible);
@@ -438,8 +438,7 @@ int main(int argc, char **argv) { @autoreleasepool {
         [[NSDocumentController sharedDocumentController] addDocument:n];
         NSDictionary *windows = @{@"textWindow": n->textWindow ?: none, @"pdfWindow": n->pdfWindow ?: none, @"fullSplitWindow": n->fullSplitWindow ?: none,
                                   @"outputWindow": n->outputWindow ?: none, @"scrapWindow": n->scrapWindow ?: none, @"scrapPDFWindow": n->scrapPDFWindow ?: none,
-                                  @"pdfKitWindow": n.pdfKitWindow ?: none, @"logWindow": n.logWindow ?: none, @"htmlWindow": n.htmlWindow ?: none,
-                                  @"fullscreenWindow": n.fullscreenWindow ?: none};
+                                  @"pdfKitWindow": n.pdfKitWindow ?: none, @"logWindow": n.logWindow ?: none, @"htmlWindow": n.htmlWindow ?: none};
         for (NSString *key in windows) {
             id w = windows[key];
             Check(w != none && [TSDocument documentOwningWindow:w] == n, [NSString stringWithFormat:@"%s: the %@ belongs to its document", argv[i], key]);

@@ -739,6 +739,7 @@ friend
 from
 front
 full
+fullscreen
 fullwidth
 fully
 fun
@@ -1670,7 +1671,6 @@ splits
 splitting
 spot
 spotlight
-spots
 stable
 stackoverflow
 standard

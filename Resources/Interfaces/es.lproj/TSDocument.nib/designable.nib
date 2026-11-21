@@ -21,8 +21,6 @@
                 <outlet property="extensionResult" destination="2434" id="2437"/>
                 <outlet property="fLog" destination="8tb-Sl-il3" id="u6k-Gy-hIs"/>
                 <outlet property="fullSplitWindow" destination="j2r-q1-1qa" id="b8b-p1-2GX"/>
-                <outlet property="fullscreenPDFView" destination="1023" id="1217"/>
-                <outlet property="fullscreenWindow" destination="1021" id="1216"/>
                 <outlet property="gotopageOutlet" destination="374" id="390"/>
                 <outlet property="gotopageOutletKK" destination="681" id="723"/>
                 <outlet property="hLog" destination="4jg-jV-40f" id="Kkj-0m-UmQ"/>
@@ -2088,26 +2086,6 @@ DQ
             </items>
             <point key="canvasLocation" x="1071" y="643"/>
         </menu>
-        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="1021" userLabel="Fullscreen Window" customClass="TSFullscreenWindow">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="362" y="197" width="755" height="731"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1055"/>
-            <value key="minSize" type="size" width="213" height="107"/>
-            <view key="contentView" id="1022">
-                <rect key="frame" x="0.0" y="0.0" width="755" height="731"/>
-                <autoresizingMask key="autoresizingMask"/>
-                <subviews>
-                    <pdfView autoresizesSubviews="NO" wantsLayer="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1023">
-                        <rect key="frame" x="0.0" y="0.0" width="755" height="731"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                    </pdfView>
-                </subviews>
-            </view>
-            <connections>
-                <outlet property="myDocument" destination="-2" id="1313"/>
-            </connections>
-        </window>
         <window title="Archivo log" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="Log" animationBehavior="default" id="1605" userLabel="Log Window" customClass="TSLogWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>

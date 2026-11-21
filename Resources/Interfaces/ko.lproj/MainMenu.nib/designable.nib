@@ -1310,11 +1310,6 @@
                                     <action selector="performZoom:" target="-1" id="333"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="전체 화면 (옛날방식)" id="205" identifier="TSShortcut.fullscreen:.0">
-                                <connections>
-                                    <action selector="fullscreen:" target="-1" id="407"/>
-                                </connections>
-                            </menuItem>
                             <menuItem title="전체 화면 시작" keyEquivalent="f" id="206" identifier="TSShortcut.toggleFullScreen:.0">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                 <connections>

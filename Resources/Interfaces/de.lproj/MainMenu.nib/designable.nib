@@ -1309,11 +1309,6 @@
                                     <action selector="performZoom:" target="-1" id="143"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Vollbild (alte Methode)" id="660" identifier="TSShortcut.fullscreen:.0">
-                                <connections>
-                                    <action selector="fullscreen:" target="-1" id="661"/>
-                                </connections>
-                            </menuItem>
                             <menuItem title="Vollbildmodus" keyEquivalent="f" id="1005" identifier="TSShortcut.toggleFullScreen:.0">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                 <connections>
