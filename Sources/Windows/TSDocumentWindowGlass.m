@@ -47,8 +47,19 @@ static CGFloat TSHiddenTopBand(NSWindow *window)
 
 @end
 
-// In a window whose content runs under the toolbar, a drawer at its side starts below the
-// toolbar, and below a bar under the toolbar, such as the annotation toolbar.
+// The height of the title bar of a window, without the toolbar and the bars under it.
+static CGFloat TSTitleBarHeight(NSWindow *window)
+{
+    NSRect content = NSMakeRect(0, 0, 100, 100);
+    NSWindowStyleMask style = window.styleMask & ~NSWindowStyleMaskFullSizeContentView;
+    return MAX(0, NSHeight([NSWindow frameRectForContentRect:content styleMask:style]) - NSHeight(content));
+}
+
+// A drawer at the side of a window starts right below the title bar, beside the toolbar and a
+// bar under it, such as the annotation toolbar, so that a long outline has room (#67). AppKit
+// puts it there in a window whose content stays below the toolbar (measured on macOS 15 and
+// 26), and at the top of the window, beside the title bar, in a window whose content runs
+// under the toolbar. It does not go higher than the area below the toolbar, as in full screen.
 static void TSPlaceDrawer(NSDrawer *drawer, NSWindow *window)
 {
     NSNumber *base = objc_getAssociatedObject(drawer, TSDrawerBaseOffsetKey);
@@ -58,7 +69,7 @@ static void TSPlaceDrawer(NSDrawer *drawer, NSWindow *window)
     }
     NSRectEdge edge = drawer.edge == 0 ? drawer.preferredEdge : drawer.edge;
     BOOL side = edge == NSMinXEdge || edge == NSMaxXEdge;
-    CGFloat offset = base.doubleValue + (side ? TSHiddenTopBand(window) : 0);
+    CGFloat offset = base.doubleValue + (side ? MIN(TSTitleBarHeight(window), TSHiddenTopBand(window)) : 0);
     if (drawer.leadingOffset != offset)
         drawer.leadingOffset = offset;
 }

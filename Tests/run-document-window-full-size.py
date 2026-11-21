@@ -33,8 +33,11 @@ MUTATIONS = {
     # The band under the toolbar counts as part of the top part.
     'band-counted': ('TSDocumentWindowGlass.m', '    CGFloat hidden = TSDocumentWindowHiddenTop(splitView);\n', '    CGFloat hidden = 0;\n'),
     # The drawer starts at the top of the window, beside the title bar.
-    'drawer-at-top': ('TSDocumentWindowGlass.m', '    drawer.leadingOffset = base.doubleValue + (side ? TSHiddenTopBand(window) : 0);\n',
-        '    drawer.leadingOffset = base.doubleValue;\n'),
+    'drawer-at-top': ('TSDocumentWindowGlass.m', '    CGFloat offset = base.doubleValue + (side ? MIN(TSTitleBarHeight(window), TSHiddenTopBand(window)) : 0);\n',
+        '    CGFloat offset = base.doubleValue;\n'),
+    # The drawer starts below the toolbar and the bars under it, as before #67.
+    'drawer-below-toolbar': ('TSDocumentWindowGlass.m', '    CGFloat offset = base.doubleValue + (side ? MIN(TSTitleBarHeight(window), TSHiddenTopBand(window)) : 0);\n',
+        '    CGFloat offset = base.doubleValue + (side ? TSHiddenTopBand(window) : 0);\n'),
     # The drawer's frame keeps AppKit's light gray bezel.
     'drawer-frame-light': ('TSDocumentWindowGlass.m', '    [frame addSubview:backing positioned:NSWindowBelow relativeTo:nil];\n', ''),
 }
@@ -118,6 +121,11 @@ static void Settle(NSWindow *window) {
     }
 }
 static CGFloat Band(NSWindow *window) { return NSHeight(window.contentView.frame) - NSMaxY(window.contentLayoutRect); }
+// The height of the title bar alone, without the toolbar.
+static CGFloat TitleBar(NSWindow *window) {
+    NSRect content = NSMakeRect(0, 0, 100, 100);
+    return NSHeight([NSWindow frameRectForContentRect:content styleMask:window.styleMask & ~NSWindowStyleMaskFullSizeContentView]) - 100;
+}
 static NSString *SampleText(void) {
     NSMutableString *s = [NSMutableString stringWithString:@"\\documentclass{article}\n\\begin{document}\n"];
     for (int i = 1; i <= 120; i++) [s appendFormat:@"Line %d of the sample: the text runs under the toolbar when it is scrolled.\n", i];
@@ -282,11 +290,14 @@ int main(int argc, char **argv) { @autoreleasepool {
         [doc splitWindow:nil]; Settle(doc->textWindow);
         Check(doc->scrollView2.superview == nil, [@"the source window is unsplit again" stringByAppendingString:nibName]);
 
-        // The drawer of the Preview window starts below the toolbar, with a frame in the window's colors.
+        // The drawer of the Preview window starts right below the title bar, beside the toolbar,
+        // as in a window whose content stays below the toolbar (#67), with a frame in the window's colors.
         CGFloat base = doc->myDrawer.leadingOffset;
         NSDrawer *drawer = OpenDrawer(doc);
-        Check(fabs(drawer.leadingOffset - (base + Band(pw))) < 0.5,
-              [NSString stringWithFormat:@"the drawer starts below the toolbar (%.1f, band %.1f)%@", drawer.leadingOffset, Band(pw), nibName]);
+        Check(TitleBar(pw) > 20 && TitleBar(pw) < Band(pw) - 20 &&
+              fabs(drawer.leadingOffset - (base + TitleBar(pw))) < 0.5,
+              [NSString stringWithFormat:@"the drawer starts right below the title bar (%.1f, title bar %.1f, band %.1f)%@",
+               drawer.leadingOffset, TitleBar(pw), Band(pw), nibName]);
         NSColor *edge = DrawerEdge(drawer);
         Check(edge.brightnessComponent < 0.4, [NSString stringWithFormat:@"in Dark Mode the drawer's frame is dark (%.2f)%@", edge.brightnessComponent, nibName]);
         OpenDrawer(doc);
