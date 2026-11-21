@@ -876,12 +876,6 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
 		[(MyPDFKitView *)[self.myDocument pdfKitView] zoomToContentWidth: sender];
 }
 
-- (void)fullscreen: (id)sender
-{
-	if ([self.myDocument fromKit])
-		[self.myDocument fullscreen: sender];
-}
-
 - (void) savePreviewPosition: sender
 {
 	[self.myDocument savePreviewPosition];

@@ -239,7 +239,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     TSInstallAppKitIsolation();
     [NSApplication sharedApplication];
     toolbarDelegate = [GlassToolbar new];
-    for (NSString *name in @[@"TSConsoleWindow", @"TSFullSplitWindow", @"TSFullscreenWindow", @"TSHTMLWindow", @"TSLogWindow",
+    for (NSString *name in @[@"TSConsoleWindow", @"TSFullSplitWindow", @"TSHTMLWindow", @"TSLogWindow",
                              @"TSPreviewWindow", @"TSTextEditorWindow"]) Register(name, NSWindow.class);
     Register(@"MyPDFView", NSView.class);
     Register(@"MyPDFKitView", PDFView.class); Register(@"ScrapPDFKitView", PDFView.class);

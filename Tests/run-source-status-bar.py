@@ -465,7 +465,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     TSInstallAppKitIsolation();
     [NSApplication sharedApplication];
     toolbarDelegate = [GlassToolbar new];
-    for (NSString *name in @[@"TSConsoleWindow", @"TSFullscreenWindow", @"TSHTMLWindow", @"TSLogWindow", @"TSPreviewWindow"]) Register(name, NSWindow.class);
+    for (NSString *name in @[@"TSConsoleWindow", @"TSHTMLWindow", @"TSLogWindow", @"TSPreviewWindow"]) Register(name, NSWindow.class);
     Register(@"MyPDFView", NSView.class); Register(@"MyPDFKitView", PDFView.class); Register(@"ScrapPDFKitView", PDFView.class);
     Register(@"TSTextView", NSTextView.class); Register(@"ScrapTextView", NSTextView.class); Register(@"TSAdvancedFindTextView", NSTextView.class);
     nibData = [NSData dataWithContentsOfFile:@(argv[1])];

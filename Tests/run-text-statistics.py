@@ -353,7 +353,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     TSInstallAppKitIsolation();
     [NSApplication sharedApplication];
     originalShow = method_setImplementation(class_getInstanceMethod(NSPopover.class, @selector(showRelativeToRect:ofView:preferredEdge:)), (IMP)RecordShow);
-    for (NSString *name in @[@"TSConsoleWindow", @"TSFullSplitWindow", @"TSFullscreenWindow", @"TSHTMLWindow", @"TSLogWindow", @"TSPreviewWindow", @"TSTextEditorWindow"]) Register(name, NSWindow.class);
+    for (NSString *name in @[@"TSConsoleWindow", @"TSFullSplitWindow", @"TSHTMLWindow", @"TSLogWindow", @"TSPreviewWindow", @"TSTextEditorWindow"]) Register(name, NSWindow.class);
     theScreen = NSScreen.mainScreen ?: NSScreen.screens.firstObject;
     method_setImplementation(class_getInstanceMethod(NSScreen.class, @selector(frame)), (IMP)ScreenFrame);
     method_setImplementation(class_getInstanceMethod(NSScreen.class, @selector(visibleFrame)), (IMP)ScreenFrame);

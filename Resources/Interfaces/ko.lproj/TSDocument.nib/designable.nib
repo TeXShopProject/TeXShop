@@ -21,8 +21,6 @@
                 <outlet property="extensionResult" destination="381" id="410"/>
                 <outlet property="fLog" destination="365" id="411"/>
                 <outlet property="fullSplitWindow" destination="399" id="412"/>
-                <outlet property="fullscreenPDFView" destination="343" id="413"/>
-                <outlet property="fullscreenWindow" destination="341" id="414"/>
                 <outlet property="gotopageOutlet" destination="157" id="415"/>
                 <outlet property="gotopageOutletKK" destination="104" id="416"/>
                 <outlet property="hLog" destination="361" id="417"/>
@@ -2093,26 +2091,6 @@ DQ
             </items>
             <point key="canvasLocation" x="1071" y="643"/>
         </menu>
-        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="341" customClass="TSFullscreenWindow">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="362" y="197" width="755" height="731"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1055"/>
-            <value key="minSize" type="size" width="213" height="107"/>
-            <view key="contentView" id="342">
-                <rect key="frame" x="0.0" y="0.0" width="755" height="731"/>
-                <autoresizingMask key="autoresizingMask"/>
-                <subviews>
-                    <pdfView autoresizesSubviews="NO" wantsLayer="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="343">
-                        <rect key="frame" x="0.0" y="0.0" width="755" height="731"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                    </pdfView>
-                </subviews>
-            </view>
-            <connections>
-                <outlet property="myDocument" destination="-2" id="544"/>
-            </connections>
-        </window>
         <window title="로그 파일" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="Log" animationBehavior="default" id="344" customClass="TSLogWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
