@@ -35,7 +35,7 @@ MUTATIONS = {
     # The line break that ends the selection is left out of the HTML.
     'final-break-dropped': (STYLED, '        if (NSMaxRange(enclosing) == string.length && enclosing.length > paragraph.length)\n', '        if (NO)\n'),
     # A CRLF is written as two line feeds.
-    'crlf-two-breaks': (STYLED, '[text stringByReplacingOccurrencesOfString:@"\\r\\n" withString:@"\\n"]', 'text'),
+    'crlf-two-breaks': (STYLED, '    NSAttributedString *styled = TSStyledCopyWithLineFeeds(original);', '    NSAttributedString *styled = original;'),
     # A light face is written as regular.
     'regular-weight': (STYLED, '    return (nearest + 1) * 100;', '    return 400;'),
     # A source behind a find field (or in a window that is not key) is copied from.

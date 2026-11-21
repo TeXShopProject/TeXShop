@@ -289,8 +289,7 @@ static void CheckDocumentCommands(NSString *themes)
     NSDictionary *plainText = @{NSFontAttributeName: font};
     // Read as a browser shows it: the text of the page in a WKWebView that is never put in a window. (AppKit's own
     // HTML reader adds a line break at the end of everything.)
-    NSString *(^Read)(NSString *) = ^NSString *(NSString *text) {
-        NSString *written = TSStyledCopyHTML([[NSAttributedString alloc] initWithString:text attributes:plainText]);
+    NSString *(^ReadHTML)(NSString *) = ^NSString *(NSString *written) {
         WKWebView *web = [[WKWebView alloc] initWithFrame:NSMakeRect(0, 0, 400, 300)];
         __block NSString *shown = nil;
         [web loadHTMLString:written baseURL:nil];
@@ -301,6 +300,9 @@ static void CheckDocumentCommands(NSString *themes)
         while (!shown && limit.timeIntervalSinceNow > 0)
             [NSRunLoop.currentRunLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
         return shown ?: @"(timeout)";
+    };
+    NSString *(^Read)(NSString *) = ^NSString *(NSString *text) {
+        return ReadHTML(TSStyledCopyHTML([[NSAttributedString alloc] initWithString:text attributes:plainText]));
     };
     Require(@"HTML final line break kept", ![TSStyledCopyHTML([[NSAttributedString alloc] initWithString:@"abc" attributes:plainText])
                                                isEqualToString:TSStyledCopyHTML([[NSAttributedString alloc] initWithString:@"abc\n" attributes:plainText])]);
@@ -314,6 +316,18 @@ static void CheckDocumentCommands(NSString *themes)
     Require(@"HTML CRLF lines and an empty line", [Read(@"a\r\n\r\nb\r\n") isEqualToString:@"a\n\nb\n"]);
     Require(@"HTML CRLF alone", [Read(@"\r\n") isEqualToString:@"\n"]);
     Require(@"HTML paragraph separator", [Read(@"a\u2029b\u2029") isEqualToString:@"a\nb\n"]);
+    // A CRLF whose CR and LF have different colors, as a lone backslash at the end of a line gives them, through the
+    // document's command: one line break, also before an empty line.
+    for (NSString *text in @[@"abc\\\r\n", @"abc\\\r\n\r\nnext\r\n"]) {
+        NSTextView *crlf = SourceView(text, font);
+        crlf.selectedRange = NSMakeRange(0, text.length);
+        [TestPasteboard clearContents];
+        [document copyStyledSelectionOfTextView:crlf darkTheme:NO withBackground:YES];
+        NSString *html = [[NSString alloc] initWithData:[TestPasteboard dataForType:NSPasteboardTypeHTML] encoding:NSUTF8StringEncoding];
+        NSString *expected = [[text stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"] copy];
+        Require([@"HTML CRLF after a backslash: " stringByAppendingString:[expected stringByReplacingOccurrencesOfString:@"\n" withString:@"/"]],
+                [ReadHTML(html) isEqualToString:expected]);
+    }
 
     // Each paragraph keeps the indents and the line spacing of the source; the default layout adds none.
     NSMutableParagraphStyle *indented = [NSMutableParagraphStyle new];

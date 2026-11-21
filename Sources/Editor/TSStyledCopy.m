@@ -121,13 +121,27 @@ static NSString *TSStyledCopyHex(NSColor *color)
             (int)lround(MIN(MAX(srgb.greenComponent, 0), 1) * 255), (int)lround(MIN(MAX(srgb.blueComponent, 0), 1) * 255)];
 }
 
-static NSString *TSStyledCopyEscaped(NSString *text)
+// Every line ending is one line feed, before the text is split into runs: a CRLF whose CR and LF have different
+// colors (after a lone backslash, say) is otherwise written twice. CR and the Unicode separators become LF too.
+static NSAttributedString *TSStyledCopyWithLineFeeds(NSAttributedString *styled)
 {
-    // Every line ending is one line feed: CRLF (which enumerates as two characters), CR and the Unicode separators.
-    NSString *string = [[[[text stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"]
-                          stringByReplacingOccurrencesOfString:@"\r" withString:@"\n"]
-                         stringByReplacingOccurrencesOfString:@"\u2028" withString:@"\n"]
-                        stringByReplacingOccurrencesOfString:@"\u2029" withString:@"\n"];
+    NSMutableAttributedString *text = [styled mutableCopy];
+    NSString *string = text.string;
+    for (NSUInteger i = string.length; i > 0; i--) {
+        unichar c = [string characterAtIndex:i - 1];
+        if (c == '\n' && i >= 2 && [string characterAtIndex:i - 2] == '\r') {
+            [text deleteCharactersInRange:NSMakeRange(i - 1, 1)];
+            [text replaceCharactersInRange:NSMakeRange(i - 2, 1) withString:@"\n"];
+            string = text.string;
+            i--;
+        } else if (c == '\r' || c == 0x2028 || c == 0x2029)
+            [text replaceCharactersInRange:NSMakeRange(i - 1, 1) withString:@"\n"];
+    }
+    return text;
+}
+
+static NSString *TSStyledCopyEscaped(NSString *string)
+{
     NSMutableString *escaped = [NSMutableString stringWithCapacity:string.length];
     [string enumerateSubstringsInRange:NSMakeRange(0, string.length) options:NSStringEnumerationByComposedCharacterSequences
                             usingBlock:^(NSString *character, NSRange range, NSRange enclosing, BOOL *stop) {
@@ -203,8 +217,9 @@ static NSString *TSStyledCopyParagraphStyle(NSParagraphStyle *style, NSFont *fon
 // another color space, a background that fills the paragraph, and no tab width. Here each paragraph is a block with
 // the indents, line spacing and tab width of the source, and each run in it a span with the sRGB colors and the face
 // and its size in points; only the characters get the background.
-NSString *TSStyledCopyHTML(NSAttributedString *styled)
+NSString *TSStyledCopyHTML(NSAttributedString *original)
 {
+    NSAttributedString *styled = TSStyledCopyWithLineFeeds(original);
     NSString *string = styled.string;
     NSMutableString *html = [NSMutableString stringWithString:@"<!DOCTYPE html>\n<html><head><meta charset=\"utf-8\"></head><body>"];
     [string enumerateSubstringsInRange:NSMakeRange(0, string.length) options:NSStringEnumerationByParagraphs | NSStringEnumerationSubstringNotRequired
