@@ -281,7 +281,17 @@ int main(int argc, char **argv) { @autoreleasepool {
             if ([way hasPrefix:@"destination"])
                 [view goToDestination:[[PDFDestination alloc] initWithPage:target atPoint:point]];
             else {
-                // As SyncTeX and Find show their result.
+                // As SyncTeX and Find show their result. Scrolled sideways first: on macOS 27
+                // the result alone scrolls only as far as needed, which from the place itself
+                // would not move at all.
+                // To the side where there is room.
+                NSRect off = clip.bounds;
+                off.origin.x += 24;
+                if (NSMinX([clip constrainBoundsRect:off]) < x + 12) off.origin.x -= 48;
+                [clip scrollToPoint:[clip constrainBoundsRect:off].origin];
+                [clip.enclosingScrollView reflectScrolledClipView:clip];
+                settle(p.window);
+                check(fabs(NSMinX(clip.bounds) - x) > 12, @"scrolled sideways before the result is shown");
                 view.currentSelection = word;
                 [view scrollSelectionToVisible:nil];
                 view.currentSelection = nil;
