@@ -5189,6 +5189,15 @@ if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent m
     return YES;
 }
 
+// Whether some of the pinned popup can be seen in this part.
+- (BOOL)pinnedLinkPreviewIsSeen
+{
+    if (![self hasPinnedLinkPreview]) return NO;
+    NSView *documentView = pinnedLinkPreview.superview;
+    return documentView == self.documentView &&
+        NSIntersectsRect(pinnedLinkPreview.frame, TSDocumentWindowRectBelowToolbar(documentView, documentView.visibleRect));
+}
+
 - (void)attachPinnedLinkPreview:(TSLinkPreviewView *)preview windowFrame:(NSRect)frame
 {
     if ([self placePinnedLinkPreview:preview windowFrame:frame])

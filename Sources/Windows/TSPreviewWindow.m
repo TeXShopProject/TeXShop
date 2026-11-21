@@ -976,6 +976,9 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     NSRect upperFrame = [upperView convertRect:upperView.bounds toView:nil];
     NSRect lowerFrame = [lowerView convertRect:lowerView.bounds toView:nil];
     NSRect upperPopupFrame = NSZeroRect, lowerPopupFrame = NSZeroRect;
+    // A popup out of view, as the copy in the bottom part of a first split (#66), stays at its
+    // place on its page; one that can be seen is kept in view.
+    BOOL upperPopupSeen = [upperView pinnedLinkPreviewIsSeen], lowerPopupSeen = [lowerView pinnedLinkPreviewIsSeen];
     TSLinkPreviewView *upperPopup = [upperView detachPinnedLinkPreviewWithWindowFrame: &upperPopupFrame];
     TSLinkPreviewView *lowerPopup = [lowerView detachPinnedLinkPreviewWithWindowFrame: &lowerPopupFrame];
     NSResponder *responder = window.firstResponder;
@@ -1025,10 +1028,10 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     NSRect newUpperFrame = [upperView convertRect:upperView.bounds toView:nil];
     NSRect newLowerFrame = [lowerView convertRect:lowerView.bounds toView:nil];
     if (lowerPopup)
-        [upperView attachPinnedLinkPreview:lowerPopup windowFrame:NSOffsetRect(lowerPopupFrame,
+        [upperView placePinnedLinkPreview:lowerPopup windowFrame:NSOffsetRect(lowerPopupFrame,
             NSMinX(newUpperFrame) - NSMinX(lowerFrame), NSMaxY(newUpperFrame) - NSMaxY(lowerFrame))];
     if (upperPopup)
-        [lowerView attachPinnedLinkPreview:upperPopup windowFrame:NSOffsetRect(upperPopupFrame,
+        [lowerView placePinnedLinkPreview:upperPopup windowFrame:NSOffsetRect(upperPopupFrame,
             NSMinX(newLowerFrame) - NSMinX(upperFrame), NSMaxY(newLowerFrame) - NSMaxY(upperFrame))];
 
     // The active part stays active where it now is. Without the keyboard focus in either part,
@@ -1041,7 +1044,10 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
         active = upperView;
     if (!(upperActive || lowerActive) || ![window makeFirstResponder:active])
         [active becomeActiveView];
-    [self keepPinnedLinkPreviewsInView];
+    if (lowerPopup && lowerPopupSeen)
+        [upperView keepPinnedLinkPreviewInView];
+    if (upperPopup && upperPopupSeen)
+        [lowerView keepPinnedLinkPreviewInView];
 }
 
 // Split Window with Link (#31). The part with the link stays where it is, and the other part
@@ -1498,13 +1504,14 @@ static void TSPreviewPlacePartByFrame(NSView *part)
         
         [(MyPDFKitView *)self.myPDFKitView2 setPageStyle:[(MyPDFKitView *)self.myPDFKitView pageStyle]];
         [(MyPDFKitView *)self.myPDFKitView2 setFirstPageStyle:[(MyPDFKitView *)self.myPDFKitView firstPageStyle]];
+        // The display format comes first: Fit to Content Width fits the pages as they are laid out.
+        [(MyPDFKitView *)self.myPDFKitView2 setupPageStyle];
         if ( [(MyPDFKitView *)self.myPDFKitView resizeOption] == NEW_PDF_FIT_TO_NONE)
           [(MyPDFKitView *)self.myPDFKitView2 setMagnification: [(MyPDFKitView *)self.myPDFKitView magnification]];
         else {
             [(MyPDFKitView *)self.myPDFKitView2 setResizeOption:[(MyPDFKitView *)self.myPDFKitView resizeOption]];
             [(MyPDFKitView *)self.myPDFKitView2 setupMagnificationStyle];
             }
-        [(MyPDFKitView *)self.myPDFKitView2 setupPageStyle];
 
         [(MyPDFKitView *)self.myPDFKitView2 moveSplitToCorrectSpot:[(MyPDFKitView *)self.myPDFKitView index]];
     }

@@ -16,7 +16,8 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['band-counted', 'heights-with-band', 'first-not-restored', 'switch-not-swapped', 'shift-not-same',
                                            'second-not-saved', 'edge-ignores-flip',
                                            'deferred-restore', 'restore-before-layout',
-                                           'not-continued', 'continued-when-saved', 'popup-not-copied', 'popups-pulled-in'])
+                                           'not-continued', 'continued-when-saved', 'popup-not-copied', 'popups-pulled-in',
+                                           'format-after-magnification'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 window_source = (root / 'Sources/Windows/TSPreviewWindow.m').read_text(encoding='latin1')
@@ -58,6 +59,9 @@ for problem, old, new in (
         ('not-continued', '(topToBottom || ! secondView.locationSaved);', 'NO;'),
         ('continued-when-saved', '(topToBottom || ! secondView.locationSaved);', 'YES;'),
         ('popup-not-copied', '[secondView showCopyOfPinnedLinkPreviewOfView: firstView];', ''),
+        # #66 audit: the bottom part is fitted before it has the display format of the top part.
+        ('format-after-magnification', '        [(MyPDFKitView *)self.myPDFKitView2 setupPageStyle];\n        if ( [(MyPDFKitView *)self.myPDFKitView resizeOption]',
+         '        if ( [(MyPDFKitView *)self.myPDFKitView resizeOption]'),
         ('popups-pulled-in', '    if (! continuesBelow)\n        [self keepPinnedLinkPreviewsInView];', '    [self keepPinnedLinkPreviewsInView];'),
         ('restore-before-layout', '    [self.pdfKitSplitView adjustSubviews];\n    [self.pdfKitSplitView layoutSubtreeIfNeeded];\n    TSPreviewPaneRestore', '    TSPreviewPaneRestore')):
     if args.mutation == problem:
@@ -107,6 +111,8 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 @property double horizontalHeight1, horizontalHeight2, verticalWidth1, verticalWidth2, fixedScale;
 @property BOOL oldUsed, doScroll; @property NSRect oldVisibleRect; @property NSInteger oldIndex;
 @property BOOL singlePage;
+// The display mode when the magnification was last set.
+@property NSInteger modeAtScale;
 - (void)moveSplitToCorrectSpot:(NSInteger)index;
 - (void)notificationSetup;
 - (void)saveLocation;
@@ -120,10 +126,10 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 - (void)setFirstPageStyle:(NSInteger)s { firstPageStyle = s; }
 - (void)setResizeOption:(NSInteger)s { resizeOption = s; }
 - (double)magnification { return self.scaleFactor; }
-- (void)setMagnification:(double)m { [self setScaleFactor:m]; }
+- (void)setMagnification:(double)m { self.modeAtScale = self.displayMode; [self setScaleFactor:m]; }
 // pageStyle 1 is single page, 3 continuous single page (PDF_*_STYLE in globals.h).
 - (void)setupPageStyle { [self setDisplayMode:pageStyle == 1 ? kPDFDisplaySinglePage : kPDFDisplaySinglePageContinuous]; [self setDisplaysPageBreaks:pageStyle != 1]; }
-- (void)setupMagnificationStyle { if (resizeOption == NEW_PDF_FIT_TO_WINDOW) [self setAutoScales:YES]; else [self setScaleFactor:self.fixedScale]; }
+- (void)setupMagnificationStyle { self.modeAtScale = self.displayMode; if (resizeOption == NEW_PDF_FIT_TO_WINDOW) [self setAutoScales:YES]; else [self setScaleFactor:self.fixedScale]; }
 // Fit to Content Width has its own test, run-fit-content-width.py.
 - (void)fitContentWidth {}
 - (void)measureContentLater {}
@@ -138,6 +144,9 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 - (BOOL)hasPinnedLinkPreview { return YES; }
 - (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:(NSRect *)f { return nil; }
 - (void)attachPinnedLinkPreview:(TSLinkPreviewView *)p windowFrame:(NSRect)f {}
+- (BOOL)placePinnedLinkPreview:(TSLinkPreviewView *)p windowFrame:(NSRect)f { return NO; }
+- (BOOL)pinnedLinkPreviewIsSeen { return NO; }
+- (void)keepPinnedLinkPreviewInView {}
 // The copy itself is checked in run-pinned-link-preview.py.
 static NSUInteger popupCopies, popupKeeps;
 - (void)showCopyOfPinnedLinkPreviewOfView:(MyPDFKitView *)other { if (other != self) popupCopies++; }
@@ -291,6 +300,17 @@ int main(int argc, char **argv) { @autoreleasepool {
     // Shift after the bottom part was used: nothing moves on the screen (#66). The bottom part
     // shows what was below its top edge, at the same magnification, the popups are copied and
     // none is pulled into view. Splitting side by side, and later splits without Shift, are as before.
+    // The bottom part takes the display format of the top part before its magnification, so that
+    // Fit to Content Width fits the pages as they are laid out there (#66 audit).
+    for (NSNumber *scale in @[@1, @0]) {
+        Preview p = makePreview(doc, scale.doubleValue, 3);
+        [p.second setPageStyle:1]; [p.second setupPageStyle]; p.second.modeAtScale = -1;
+        split(p, 0);
+        check(p.second.modeAtScale == kPDFDisplaySinglePageContinuous && p.second.displayMode == kPDFDisplaySinglePageContinuous,
+              [NSString stringWithFormat:@"first split at %@: the bottom part has the display format before its magnification (%ld)",
+               scale.doubleValue ? @"100%" : @"fit", (long)p.second.modeAtScale]);
+        [p.window close];
+    }
     for (NSNumber *scale in @[@1, @1.5, @0.75]) for (int shift = 0; shift < 2; shift++) {
         NSString *name = [NSString stringWithFormat:@"%@split at %@%%", shift ? @"shift-" : @"first ", @(scale.doubleValue * 100)];
         Preview p = makePreview(doc, scale.doubleValue, 3);

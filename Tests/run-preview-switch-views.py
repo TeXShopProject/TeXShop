@@ -23,7 +23,10 @@ MUTATIONS = {
     'fit-lost': ('window', '        if (autoScales[i])\n', '        if (NO)\n'),
     'selection-stays': ('window', '    [upperView setCurrentSelection:lowerSelection];\n    [lowerView setCurrentSelection:upperSelection];\n', ''),
     'popup-stays-on-screen': ('window', 'NSMinX(newUpperFrame) - NSMinX(lowerFrame), NSMaxY(newUpperFrame) - NSMaxY(lowerFrame)', '0, 0'),
-    'popup-dropped': ('window', '    if (upperPopup)\n        [lowerView attachPinnedLinkPreview:', '    if (NO)\n        [lowerView attachPinnedLinkPreview:'),
+    'popup-dropped': ('window', '    if (upperPopup)\n        [lowerView placePinnedLinkPreview:', '    if (NO)\n        [lowerView placePinnedLinkPreview:'),
+    # A popup out of view stays at its place on its page (#66 audit).
+    'unseen-popup-pulled-in': ('window', '    if (lowerPopup && lowerPopupSeen)\n', '    if (lowerPopup)\n'),
+    'seen-popup-not-kept': ('window', '    if (upperPopup && upperPopupSeen)\n', '    if (NO)\n'),
     'focus-stays': ('window', '![window makeFirstResponder:active]', 'YES'),
     'active-view-only': ('window', '        [active becomeActiveView];\n', '        self.activeView = active;\n'),
     # Unsplitting keeps the part in use and closes the popup of the part that goes away (#52).
@@ -103,6 +106,7 @@ view_methods = [last_method(view_source, s) for s in (
     # The magnification chosen in the Preview menu (#60 audit).
     '- (void) setupMagnificationStyle\n', '- (void)changePDFViewSizeTo: (NSInteger)newResizeOption', '- (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:',
     '- (BOOL)placePinnedLinkPreview:', '- (void)attachPinnedLinkPreview:', '- (void)keepPinnedLinkPreviewInView\n', '- (void)closePinnedLinkPreview\n', '- (void)keepPinnedLinkPreviewThroughMove\n', '- (BOOL)beginKeepingPinnedLinkPreviewOnPage\n', '- (void)endKeepingPinnedLinkPreviewOnPage:',
+    '- (BOOL)pinnedLinkPreviewIsSeen\n',
     # What the toolbar, the menus and the search results follow (#25 audit).
     '- (void)setMagnification: (double)magnification', '- (void) scaleChanged: (NSNotification *) notification',
     '- (void)fixMagnificationControls\n', '- (void)fixStuff\n', '- (void)resetSearchDelegate\n',
@@ -160,13 +164,14 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 @interface TSLinkPreviewView : NSView
 @property (nonatomic) BOOL pinned;
 @property (copy) BOOL (^usesHandTool)(void);
+@property NSUInteger keeps;
 - (void)keepInView;
 - (void)rememberPlaceOnPage;
 - (BOOL)returnToPlaceOnPage;
 - (BOOL)returnToPlaceIfAway;
 @end
 @implementation TSLinkPreviewView
-- (void)keepInView {}
+- (void)keepInView { self.keeps++; }
 - (void)rememberPlaceOnPage {}
 - (BOOL)returnToPlaceOnPage { return YES; }
 - (BOOL)returnToPlaceIfAway { return NO; }
@@ -602,6 +607,30 @@ int main(int argc, char **argv) { @autoreleasepool {
         checkControls(p, [name stringByAppendingString:@", second switch"]);
         for (int i = 0; i < 4; i++) { [p.window switchViews]; settle(p.window); }
         checkSame(p, before, [name stringByAppendingString:@", six switches"]);
+
+        // A popup out of view, as the copy in the bottom part of a first split (#66), stays at
+        // its place on its page; switching twice gives it back. One that can be seen is kept in view.
+        {
+            TSLinkPreviewView *seen = p.upper.preview;
+            [p.lower doKillPopup];
+            NSRect r = inWindow(p.lower);
+            [p.lower pin:NSMakeRect(NSMinX(r) + 60, NSMaxY(r) + 300, 150, 100)]; settle(p.window);
+            TSLinkPreviewView *away = p.lower.preview;
+            check(away && !p.lower.pinnedLinkPreviewIsSeen && p.upper.pinnedLinkPreviewIsSeen, describe(name, @"one popup out of view, one in view"));
+            State awayBefore = stateOf(p);
+            away.keeps = 0; seen.keeps = 0;
+            [p.window switchViews]; settle(p.window);
+            checkSwitched(p, awayBefore, [name stringByAppendingString:@", popup out of view"], YES);
+            check(away.keeps == 0 && !p.upper.pinnedLinkPreviewIsSeen, describe(name, @"a popup out of view is not brought into view"));
+            check(seen.keeps > 0, describe(name, @"a popup in view is kept in view"));
+            [p.window switchViews]; settle(p.window);
+            checkSame(p, awayBefore, [name stringByAppendingString:@", popup out of view, second switch"]);
+            check(away.keeps == 0, describe(name, @"a popup out of view is not brought into view when switching back"));
+            [p.lower doKillPopup];
+            r = inWindow(p.lower);
+            [p.lower pin:NSMakeRect(NSMinX(r) + 60, NSMaxY(r) - 140, 150, 100)]; settle(p.window);
+            before = stateOf(p);
+        }
 
         // With the focus in the search field, the focus stays there, and the active view, the
         // magnification field and the search results follow the part, whichever part is active.
