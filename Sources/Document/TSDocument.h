@@ -304,6 +304,9 @@ enum RootCommand
     NSInteger           oldResizeOption;
     NSInteger           fullscreenPageStyle;
     NSInteger           fullscreenResizeOption;
+    // The Preview window went full screen as it was, so leaving full screen
+    // changes nothing either (#63).
+    BOOL                fullscreenKeptDisplay;
 
 
 //	NSTimer		*tagTimer;		/*" Timer that repeatedly handles tag updates "*/

@@ -118,6 +118,7 @@
     _linkPopupsButton = preview.linkPopupsButton;
     _scrollPageTurnButton = preview.scrollPageTurnButton;
     _arrowKeysPageButton = preview.arrowKeysPageButton;
+    _fullScreenKeepsDisplayButton = preview.fullScreenKeepsDisplayButton;
     _firstPageMatrix = preview.firstPageMatrix;
     _htmlWindowPosButton = preview.htmlWindowPosButton;
     _htmlWindowPosMatrix = preview.htmlWindowPosMatrix;

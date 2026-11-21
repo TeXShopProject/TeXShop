@@ -201,7 +201,8 @@ int main(int argc, const char **argv) { @autoreleasepool {
     // Alternate Engine text fields gave way to menus built in code; Save PostScript File and
     // -dALLOWPSTRANSPARENCY were removed; the arrow keys switch of Preview and the Advanced Find panel switch
     // of Editor were added; Save related files was removed; Highlight Fullwidth Letters and Symbols of Editor was added;
-    // the menu of the theme to edit and the theme name sheet (its panel and field) gave way to the theme list.
-    Check(outlets == 169, @"Every typed outlet loads");
-    puts("PASS: 11 panes and 172 typed outlets");
+    // the menu of the theme to edit and the theme name sheet (its panel and field) gave way to the theme list;
+    // Keep magnification and display format in full screen of Preview was added.
+    Check(outlets == 170, @"Every typed outlet loads");
+    puts("PASS: 11 panes and 170 typed outlets");
 } return 0; }
