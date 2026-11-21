@@ -48,6 +48,13 @@ MUTATIONS = {
     # The text under the toolbar is kept instead of the text at the top of the readable area.
     'clip-top': ('TSPreviewScrollerKeeper.m', '    return fmax(0, window.contentView.safeAreaInsets.top);\n', '    return 0;\n'),
     # The text kept by the last change is kept again although the view was scrolled since.
+    # The text at the top edge or under the whole band is kept when a part of the band lies
+    # over the view.
+    'band-all-or-nothing': ('TSPreviewScrollerKeeper.m', '    CGFloat step = band > 0 ? fmax(2, band / (TSSampleCount - 1)) : 0;\n',
+                            '    CGFloat step = band > 0 ? band : 0;\n'),
+    # The split divider puts the text at the top edge of each part back after a new magnification.
+    'divider-restores-edge': ('TSPreviewSplitDivider.m', '        if (!anchor.quiet && view.scaleFactor != anchor.scale && TSPreviewSizeChangeKeptText(view)) {',
+                              '        if (NO) {'),
     'scroll-undone': ('TSPreviewScrollerKeeper.m', '\n        fabs(scroll.contentView.bounds.origin.y - keeper.keptOrigin.y) <= 0.5 * TSUnit(scroll.contentView) &&', ''),
     # The place is put back through PDFKit's constrainBoundsRect:.
     'pdfkit-constrain': ('TSPreviewScrollerKeeper.m', '    NSPoint target = TSPreviewConstrainedOrigin(clip, bounds);\n',
@@ -230,7 +237,8 @@ int main(int argc, char **argv) { @autoreleasepool {
         printf("shifted: not modelled on this system\n");
         return 0;
     }
-    if (shifted || !strcmp(model, "unflipped"))
+    BOOL unflippedModel = !strcmp(model, "unflipped");
+    if (shifted || unflippedModel)
         method_setImplementation(class_getInstanceMethod(NSClassFromString(@"PDFDocumentView"), @selector(isFlipped)), (IMP)No);
     if (shifted) {
         // The clip view class of a PDFView: PDFClipView up to macOS 26, NSClipView later.
@@ -381,13 +389,20 @@ int main(int argc, char **argv) { @autoreleasepool {
 
         // A window split into a top and a bottom part, with the divider keeper: the width and
         // the height change, and both parts keep their tops.
-        for (int vertical = 0; vertical < 2; vertical++) {
+        // With automatic scaling (Fit to Window) the magnification follows the width as well;
+        // the shifted model is left out then, as above. So is the unflipped model side by side:
+        // on this system's PDFKit, which magnifies through the bounds of the clip view, a later
+        // layout moves the left part after its text was put back (seen on macOS 27.2), while
+        // macOS 15.6.1 and 26.6.2 themselves keep it (system model there).
+        for (int run = 0; run < (shifted ? 2 : 4); run++) {
+            int vertical = run % 2, automatic = run / 2;
+            if (automatic && vertical && unflippedModel) continue;
             NSWindow *window = MakeWindow(1000, 700);
             NSSplitView *split = [[NSSplitView alloc] initWithFrame:window.contentView.bounds];
             split.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable; split.vertical = vertical;
             [window.contentView addSubview:split];
-            PDFView *a = MakeView(NSMakeRect(0, 0, 500, 350), document, YES, NO);
-            PDFView *b = MakeView(NSMakeRect(0, 0, 500, 350), document, YES, NO);
+            PDFView *a = MakeView(NSMakeRect(0, 0, 500, 350), document, YES, automatic);
+            PDFView *b = MakeView(NSMakeRect(0, 0, 500, 350), document, YES, automatic);
             [split addSubview:a]; [split addSubview:b]; [split adjustSubviews];
             TSPreviewSplitDivider *divider = [[TSPreviewSplitDivider alloc] initWithSplitView:split];
             // A view held by Auto Layout in each part, as the line along the active part: with
@@ -415,8 +430,36 @@ int main(int argc, char **argv) { @autoreleasepool {
                 worst = fmax(worst, fmax(fabs(Below(a, ma)), fabs(Below(b, mb))));
                 [steps appendFormat:@" %@x%@: %.2f/%.2f", size[0], size[1], Below(a, ma), Below(b, mb)];
             }
-            Check(worst <= 0.5, [NSString stringWithFormat:@"split %s: both parts keep their tops while the window changes (%.2fpt;%@)",
-                                 vertical ? "side by side" : "top and bottom", worst, steps]);
+            // PDFKit's clip view puts its place on whole pixels up to macOS 26. A pixel at the
+            // smallest magnification of these steps (0.45) is 3.6 points at the largest (1.65).
+            Check(worst <= (automatic ? 4.0 : 0.5), [NSString stringWithFormat:@"split %s%s: both parts keep their tops while the window changes (%.2fpt;%@)",
+                                 vertical ? "side by side" : "top and bottom", automatic ? ", automatic scaling" : "", worst, steps]);
+            (void)divider;
+        }
+
+        // A split into a top and a bottom part whose upper part is lower than the band under the
+        // toolbar (macOS 26 and later): a part of the band lies over the lower part, and the text
+        // just below the band stays while the width changes the magnification.
+        if (!shifted) for (NSNumber *upper in @[@15, @40, @65]) {
+            NSWindow *window = MakeWindow(900, 700);
+            NSSplitView *split = [[NSSplitView alloc] initWithFrame:window.contentView.bounds];
+            split.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+            [window.contentView addSubview:split];
+            PDFView *a = MakeView(NSMakeRect(0, 0, 900, 350), document, YES, YES);
+            PDFView *b = MakeView(NSMakeRect(0, 0, 900, 350), document, YES, YES);
+            [split addSubview:a]; [split addSubview:b]; [split adjustSubviews];
+            TSPreviewSplitDivider *divider = [[TSPreviewSplitDivider alloc] initWithSplitView:split];
+            SetSize(window, 900, 700);
+            [split setPosition:upper.doubleValue ofDividerAtIndex:0]; [window layoutIfNeeded]; RunLoop();
+            ScrollIntoPage(b, 3, 200);
+            Mark mb = MarkAt(b); CGFloat worst = 0; NSMutableString *steps = [NSMutableString string];
+            for (NSNumber *width in @[@800, @700, @550, @700, @900]) {
+                SetSize(window, width.doubleValue, 700);
+                worst = fmax(worst, fabs(Below(b, mb)));
+                [steps appendFormat:@" %@: %.2f", width, Below(b, mb)];
+            }
+            Check(worst <= 1.5, [NSString stringWithFormat:@"upper part %@pt: the lower part keeps the text below the band (%.2fpt;%@)",
+                                 upper, worst, steps]);
             (void)divider;
         }
     }

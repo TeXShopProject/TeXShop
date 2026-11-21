@@ -233,12 +233,23 @@ void TSPreviewChangeSize(PDFView *view, void (NS_NOESCAPE ^change)(void))
 {
     TSPreviewScrollerKeeper *keeper = [TSPreviewScrollerKeeper keeperForView:view];
     NSScrollView *scroll = TSScroll(view);
-    // The view is either at the top of the window, with the band over its top, or below it
-    // (the lower part of a split window); which one is known once it has its new size. The
-    // text at both places is noted now.
+    // How much of the band lies over the view is known once the view has its new size: all of
+    // it at the top of the window, none in the lower part of a split window, or a part of it
+    // when the upper part is lower than the band. The text is noted now every two points
+    // down to the bottom of the band.
     CGFloat band = scroll ? TSToolbarBand(view) : 0;
-    TSPreviewText atEdge = scroll ? TSTextAt(view, scroll, 0) : (TSPreviewText){0};
-    TSPreviewText underBand = band > 0 ? TSTextAt(view, scroll, band) : atEdge;
+    enum { TSSampleCount = 64 };
+    CGFloat step = band > 0 ? fmax(2, band / (TSSampleCount - 1)) : 0;
+    NSInteger count = band > 0 ? MIN(TSSampleCount, (NSInteger)ceil(band / step) + 1) : 1;
+    TSPreviewText samples[TSSampleCount];
+    __strong PDFPage *samplePages[TSSampleCount];
+    CGFloat offsets[TSSampleCount];
+    for (NSInteger i = 0; i < count; i++) {
+        offsets[i] = i == count - 1 ? band : i * step;
+        samples[i] = scroll ? TSTextAt(view, scroll, offsets[i]) : (TSPreviewText){0};
+        samplePages[i] = samples[i].page;
+    }
+    TSPreviewText atEdge = samples[0];
     // PDFKit's clip view puts its place on whole pixels up to macOS 26, so at a new
     // magnification the text comes back up to a pixel off, and it rounds the place again
     // later. While the view has not moved since the last change by more than that rounding and
@@ -253,7 +264,7 @@ void TSPreviewChangeSize(PDFView *view, void (NS_NOESCAPE ^change)(void))
         fabs(TSTextBelowTop(view, scroll, (TSPreviewText){YES, kept, keeper.keptPoint}) - keeper.keptBelow) <= 1.5 * pixel;
     CGFloat keptBelow = keeper.keptBelow;
     NSPoint keptPoint = keeper.keptPoint;
-    PDFPage *edgePage = atEdge.page, *bandPage = underBand.page;
+    PDFPage *edgePage = samplePages[0];
     // A scroller that comes or goes during the change is covered here.
     keeper.suspended++;
     change();
@@ -266,14 +277,21 @@ void TSPreviewChangeSize(PDFView *view, void (NS_NOESCAPE ^change)(void))
     CGFloat below = TSReadableBelow(scroll, band);
     TSPreviewText text = atEdge;
     text.page = edgePage;
+    // The text noted nearest to the top of the area where it can be read, kept at the same
+    // distance from the top edge: within a point of the top, the magnification does not move
+    // it further than a fraction of that.
+    NSInteger nearest = 0;
+    for (NSInteger i = 1; i < count; i++)
+        if (fabs(offsets[i] - below) < fabs(offsets[nearest] - below))
+            nearest = i;
     CGFloat target = 0;
-    if (keepAgain && fabs(below - keptBelow) < 0.5) {
+    if (keepAgain && fabs(offsets[nearest] - keptBelow) < 0.01) {
         text = (TSPreviewText){YES, kept, keptPoint};
         target = keptBelow;
-    } else if (band > 0 && underBand.valid && fabs(below - band) < 0.5 && bandPage.document == view.document) {
-        text = underBand;
-        text.page = bandPage;
-        target = band;
+    } else if (samples[nearest].valid && samplePages[nearest].document == view.document) {
+        text = samples[nearest];
+        text.page = samplePages[nearest];
+        target = offsets[nearest];
     }
     TSMoveTextUp(scroll, TSTextBelowTop(view, scroll, text) - target);
     keeper.keptPage = text.page;
@@ -281,4 +299,13 @@ void TSPreviewChangeSize(PDFView *view, void (NS_NOESCAPE ^change)(void))
     keeper.keptBelow = target;
     keeper.keptOrigin = scroll.contentView.bounds.origin;
     keeper.keptScale = view.scaleFactor;
+}
+
+BOOL TSPreviewSizeChangeKeptText(PDFView *view)
+{
+    TSPreviewScrollerKeeper *keeper = [TSPreviewScrollerKeeper keeperForView:view];
+    NSScrollView *scroll = TSScroll(view);
+    PDFPage *kept = keeper.keptPage;
+    return scroll && kept.document == view.document && view.scaleFactor == keeper.keptScale &&
+        fabs(scroll.contentView.bounds.origin.y - keeper.keptOrigin.y) <= 0.5 * TSUnit(scroll.contentView);
 }

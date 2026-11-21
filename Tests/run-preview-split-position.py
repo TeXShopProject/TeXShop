@@ -384,7 +384,7 @@ with tempfile.TemporaryDirectory() as temp:
     (temp / 'test.m').write_text(program, encoding='latin1')
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit',
                     '-I', str(temp), '-I', str(root / 'Tests'), *include_args(root),
-                    str(temp / 'test.m'), *([str(divider)] if uses_divider else []), str(root / 'Sources/Windows/TSDocumentWindowGlass.m'), '-o', str(temp / 'test')], check=True)
+                    str(temp / 'test.m'), *([str(divider), str(root / 'Sources/Preview/TSPreviewScrollerKeeper.m')] if uses_divider else []), str(root / 'Sources/Windows/TSDocumentWindowGlass.m'), '-o', str(temp / 'test')], check=True)
     result = subprocess.run([str(temp / 'test'), str(temp / 'doc.pdf')], capture_output=True, text=True)
     output = result.stdout + result.stderr
     if args.mutation:
