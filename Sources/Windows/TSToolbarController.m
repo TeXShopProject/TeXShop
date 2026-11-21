@@ -207,8 +207,14 @@ static void TSSplitToggleItemsFollow(NSWindow *window, NSEventModifierFlags flag
         BOOL splitSideBySide = preview ? document.pdfKitWindow.pdfKitSplitView.isVertical : document.isSplitSideBySide;
         BOOL sideBySide = TSSplitToggleShowsSideBySide(flags, split, splitSideBySide,
                                                        option && TSSplitTogglePointOnItem(window, item, point));
-        if (sideBySide == [objc_getAssociatedObject(item, &TSSplitToggleSideBySideKey) boolValue])
+        // In a split window a click unsplits, so the tool tip and the spoken name say so.
+        NSString *tip = TSSplitToggleToolTip(preview, split);
+        if (![item.toolTip isEqualToString: tip])
+            item.toolTip = tip;
+        if (sideBySide == [objc_getAssociatedObject(item, &TSSplitToggleSideBySideKey) boolValue]) {
+            item.image.accessibilityDescription = tip;
             continue;
+        }
         if (sideBySide) {
             NSImage *image = item.image ? TSSplitToggleSideBySideImage(item.image) : nil;
             if (!image)
@@ -219,6 +225,7 @@ static void TSSplitToggleItemsFollow(NSWindow *window, NSEventModifierFlags flag
             item.image = objc_getAssociatedObject(item, &TSSplitToggleImageKey) ?: item.image;
             objc_setAssociatedObject(item, &TSSplitToggleImageKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         }
+        item.image.accessibilityDescription = tip;
         objc_setAssociatedObject(item, &TSSplitToggleSideBySideKey, @(sideBySide), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
 }

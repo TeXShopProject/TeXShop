@@ -7,7 +7,8 @@ splitPdfKitWindow: with a stand-in window. Option held over the Split Source or
 Split Preview button of a window that is not split shows the side-by-side symbol;
 anything else (no Option, Command or Control with it, the pointer elsewhere, a window
 that is not key) keeps the button's own image. A split window shows how it is split,
-whatever the modifiers and the pointer, also on a button added to the toolbar later. The Window menu has
+whatever the modifiers and the pointer, also on a button added to the toolbar later,
+and its tool tip and spoken name tell that a click unsplits. The Window menu has
 an Option alternate for Split Window in every language, a customized shortcut of
 either command keeps its orientation in the Preview, and the button tool tips
 mention Option-click in every language. Nothing is shown on screen and no user
@@ -21,7 +22,8 @@ from source_tree import include_args
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['split-ignored', 'no-hover', 'command-allowed',
                                            'menu-orientation-ignored', 'no-resign-reset', 'unturned',
-                                           'split-shows-own-image', 'source-orientation-ignored', 'added-item-unturned'])
+                                           'split-shows-own-image', 'source-orientation-ignored', 'added-item-unturned',
+                                           'added-item-condition-negated', 'split-tool-tip-kept'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 toolbar = (root/'Sources/Windows/TSToolbarController.m').read_text()
@@ -80,17 +82,22 @@ for language, word in option_words.items():
     table = json.loads(strings)
     for key in ('tiToolTipSplit', 'tiToolTipSplitKIT'):
         assert word in table[key], 'Option-click in %s %s: %s' % (language, key, table[key])
+    for key in ('tiToolTipUnsplit', 'tiToolTipUnsplitKIT'):
+        assert table.get(key) and word not in table[key] and table[key] != table[key.replace('Unsplit', 'Split')], \
+            'Unsplit tool tip in %s %s' % (language, key)
 
-added = 'dispatch_async(dispatch_get_main_queue(), ^{ TSSplitToggleItemsFollowSplit(); });'
+added_first = '    // A split button added to a split window'
+added_last = 'TSSplitToggleItemsFollowSplit(); });\n'
+added = span(toolbar, added_first, added_last)
+assert added in will_add, 'The split branch is in toolbarWillAddItem:'
 if args.mutation == 'added-item-unturned':
-    will_add = will_add.replace(added, ';')
-if not (will_add.count(added) == 1 and ('[[addedItem itemIdentifier] isEqual: kSplitID] || '
-                                        '[[addedItem itemIdentifier] isEqual: kSplitKKTID]') in will_add):
-    if args.mutation == 'added-item-unturned':
-        print('PASS: detected mutation added-item-unturned: a split button added to the toolbar does not follow the split')
-        sys.exit(0)
-    sys.exit('FAIL: a split button added to the toolbar follows the split')
-assert args.mutation != 'added-item-unturned', 'mutation not detected: added-item-unturned'
+    added = added.replace('dispatch_async(dispatch_get_main_queue(), ^{ TSSplitToggleItemsFollowSplit(); });', ';')
+elif args.mutation == 'added-item-condition-negated':
+    added = added.replace('if ([[addedItem', 'if (!([[addedItem').replace('kSplitKKTID])\n', 'kSplitKKTID]))\n')
+elif args.mutation == 'split-tool-tip-kept':
+    old = '    if (windowIsSplit)\n        return preview ?'
+    assert header.count(old) == 1
+    header = header.replace(old, '    if (0)\n        return preview ?')
 
 if args.mutation == 'split-ignored':
     old = '    if (windowIsSplit)\n        return splitSideBySide;\n'
@@ -155,6 +162,10 @@ SPLITTER
 - (void)splitPreviewWindow:(id)sender {}
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)t { return @[kSplitID, kSplitKKTID]; }
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)t { return @[kSplitID, kSplitKKTID]; }
+- (void)toolbarWillAddItem:(NSNotification *)notif
+{
+    NSToolbarItem *addedItem = [[notif userInfo] objectForKey: @"item"];
+ADDED}
 - (NSToolbarItem *)toolbar:(NSToolbar *)t itemForItemIdentifier:(NSString *)ident willBeInsertedIntoToolbar:(BOOL)inserted
 {
     NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:ident];
@@ -295,10 +306,28 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check([Pixels(preview.image) isEqual:sideBySide], @"A window split side by side that resigns key");
     doc.isSplit = YES; doc.isSplitSideBySide = YES; TSSplitToggleItemsFollowSplit();
     Check([Pixels(source.image) isEqual:sideBySide], @"Source split side by side");
+    // Tool tips and spoken names: a click on the button of a split window unsplits.
+    Check([preview.toolTip isEqual:TSSplitToggleToolTip(YES, YES)] && [source.toolTip isEqual:TSSplitToggleToolTip(NO, YES)] &&
+          [preview.image.accessibilityDescription isEqual:preview.toolTip] && [source.image.accessibilityDescription isEqual:source.toolTip],
+          @"Split windows tell that a click unsplits");
+    Check(![TSSplitToggleToolTip(YES, YES) isEqual:TSSplitToggleToolTip(YES, NO)] && ![TSSplitToggleToolTip(NO, YES) isEqual:TSSplitToggleToolTip(NO, NO)],
+          @"The unsplit tool tips differ from the split ones");
+    // The Split Preview button is taken out of the toolbar and put back while the
+    // window is split side by side: once in the toolbar it shows that split.
+    [bar removeItemAtIndex:1]; [bar insertItemWithItemIdentifier:kSplitKKTID atIndex:1];
+    NSToolbarItem *again = bar.items[1];
+    Check([again.itemIdentifier isEqual:kSplitKKTID] && again != preview, @"The button is put back");
+    for (int i = 0; i < 5; i++) CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.01, false);
+    Check([Pixels(again.image) isEqual:sideBySide] && [again.toolTip isEqual:TSSplitToggleToolTip(YES, YES)],
+          @"A button put back into a window split side by side shows that split");
+    preview = again; previewButton.target = doc;
     doc.isSplitSideBySide = NO; doc.pdfKitWindow.pdfKitSplitView.vertical = NO; TSSplitToggleItemsFollowSplit();
-    Check(source.image == sourceImage && preview.image == previewImage, @"Split again top and bottom");
+    Check(source.image == sourceImage && [Pixels(preview.image) isEqual:Pixels(previewImage)], @"Split again top and bottom");
     doc.isSplit = NO; doc.pdfKitWindow.windowIsSplit = NO; TSSplitToggleItemsFollowSplit();
-    Check(source.image == sourceImage && preview.image == previewImage, @"Unsplit");
+    Check(source.image == sourceImage && [Pixels(preview.image) isEqual:Pixels(previewImage)], @"Unsplit");
+    Check([preview.toolTip isEqual:TSSplitToggleToolTip(YES, NO)] && [source.toolTip isEqual:TSSplitToggleToolTip(NO, NO)] &&
+          [preview.image.accessibilityDescription isEqual:preview.toolTip], @"Unsplit windows tell how to split");
+    previewImage = preview.image;
 
     // After a click splits the window, the button shows what the next click does.
     w.pointer = onPreview; flags = O; TSSplitToggleOptionChanged(w, flags);
@@ -339,7 +368,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     return 0;
 }}
 '''
-program = program.replace('SPLITTER', splitter).replace('CUE', cue)
+program = program.replace('SPLITTER', splitter).replace('CUE', cue).replace('ADDED', added)
 if not args.mutation:
     verify_embedded(program, fragments)
 with tempfile.TemporaryDirectory() as temp:

@@ -24,6 +24,16 @@ static inline BOOL TSSplitToggleShowsSideBySide(NSEventModifierFlags flags, BOOL
     return TSSplitToggleOptionHeld(flags) && pointerOverButton;
 }
 
+// The tool tip of a split button: what a click does.
+static inline NSString *TSSplitToggleToolTip(BOOL preview, BOOL windowIsSplit)
+{
+    if (windowIsSplit)
+        return preview ? NSLocalizedStringFromTable(@"tiToolTipUnsplitKIT", @"ToolbarItems", @"Unsplit the preview")
+                       : NSLocalizedStringFromTable(@"tiToolTipUnsplit", @"ToolbarItems", @"Unsplit the source");
+    return preview ? NSLocalizedStringFromTable(@"tiToolTipSplitKIT", @"ToolbarItems", @"Toggle preview split; Option-click to split vertically")
+                   : NSLocalizedStringFromTable(@"tiToolTipSplit", @"ToolbarItems", @"Toggle source split; Option-click to split vertically");
+}
+
 // Two parts side by side: the button's own symbol, rectangle.split.1x2, divided the
 // other way. Both are SF symbols of the same size, so the toolbar draws them alike on
 // every system and neither the button nor the toolbar changes its size.
