@@ -3,6 +3,7 @@
 // whatever PDFKit does to the scroll position while the panes change size.
 #import <Cocoa/Cocoa.h>
 #import <PDFKit/PDFKit.h>
+#import "TSPreviewScrollerKeeper.h"
 
 typedef struct {
     BOOL valid;
@@ -67,4 +68,6 @@ static inline void TSPreviewPaneRestore(PDFView *view, TSPreviewPanePlace place)
     target.origin.y = fmin(fmax(target.origin.y, lower.origin.y), upper.origin.y);
     [clip scrollToPoint:target.origin];
     [scroll reflectScrolledClipView:clip];
+    // A change of the size in the same turn of the event loop does not bring its own text back.
+    TSPreviewPlaceChosenByProgram(view);
 }

@@ -16,6 +16,12 @@ from source_tree import include_args
 from production_fragments import method, verify_embedded
 
 MUTATIONS = {
+    # #53: going to a page or a place right after a change of the size, in the same turn of the
+    # event loop, does not tell the keeper, which brings back the text from the change.
+    'page-not-told': ('view', '        TSPreviewScrollHorizontally(self.documentView.enclosingScrollView, x);\n    // A change of the size in the same turn of the event loop does not bring its text back (#53).\n    TSPreviewPlaceChosenByProgram(self);\n',
+                      '        TSPreviewScrollHorizontally(self.documentView.enclosingScrollView, x);\n'),
+    'destination-not-told': ('view', '        TSContentPlaceSideways(self);\n    // A change of the size in the same turn of the event loop, as when Split Window with Link\n    // widens a narrow part, does not bring its text back (#53).\n    TSPreviewPlaceChosenByProgram(self);\n',
+                             '        TSContentPlaceSideways(self);\n'),
     # TSContentZoom.h
     'in-view-pages-only': ('zoom', '            if ([store objectForKey:page] || [current containsObject:page]) [pages addObject:page];',
                            '            if ([current containsObject:page]) [pages addObject:page];'),
@@ -51,6 +57,7 @@ view_methods = [method(view_source, s) for s in (
     '- (void)measureContentLater', '- (void)measureContentOf:(PDFDocument *)document', '- (void)centreContentRowLater',
     '- (void)setFrameSize:(NSSize)newSize', '- (void)setDocument:(PDFDocument *)document',
     '- (void)keepContentWidthPlaceDuring:(void (NS_NOESCAPE ^)(void))navigation', '- (void)goToDestination:(PDFDestination *)destination',
+    '- (void)keepHorizontalPositionDuring:(void (NS_NOESCAPE ^)(void))navigation', '- (void)goToPage:(PDFPage *)page', '- (void)layout\n{',
     '- (void)scrollSelectionToVisible:(id)sender')]
 fragments = [('complete method: ' + t.split('\n')[0], view_source, t) for t in view_methods]
 fragments.append(('header without #pragma once: TSContentZoom.h', zoom_path.read_text(), zoom_text))
@@ -176,6 +183,34 @@ static Preview makePreview(PDFDocument *document, PDFDisplayMode mode) {
     return p;
 }
 static NSClipView *clipOf(PDFView *view) { return view.documentView.enclosingScrollView.contentView; }
+// A window whose content runs under the toolbar, as the Preview window on macOS 26 and later.
+static Preview makeFullSizePreview(PDFDocument *document) {
+    Preview p;
+    p.window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 600, 700)
+        styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskResizable | NSWindowStyleMaskFullSizeContentView
+          backing:NSBackingStoreBuffered defer:NO];
+    p.window.releasedWhenClosed = NO;
+    p.window.toolbarStyle = NSWindowToolbarStyleExpanded;
+    p.window.toolbar = [[NSToolbar alloc] initWithIdentifier:@"preview"];
+    p.view = [[MyPDFKitView alloc] initWithFrame:NSMakeRect(0, 0, 600, 700)];
+    [p.window.contentView addSubview:p.view];
+    p.view.displayBox = kPDFDisplayBoxCropBox;
+    p.view.displayMode = kPDFDisplaySinglePageContinuous;
+    p.view.displaysPageBreaks = YES;
+    p.view.document = document;
+    [TSPreviewScrollerKeeper installInView:p.view];
+    p.view.resizeOption = NEW_PDF_FIT_TO_WINDOW;
+    p.view.autoScales = YES;
+    settle(p.window);
+    return p;
+}
+// How far below the top edge of the clip view a point of a page is shown, in points.
+static CGFloat belowEdge(PDFView *view, PDFPage *page, NSPoint pagePoint) {
+    NSClipView *clip = clipOf(view);
+    NSPoint point = [clip convertPoint:[view convertPoint:pagePoint fromPage:page] fromView:view];
+    NSRect b = clip.bounds;
+    return (clip.isFlipped ? point.y - NSMinY(b) : NSMaxY(b) - point.y) * NSHeight(clip.frame) / NSHeight(b);
+}
 // A point of the clip view (left/right 0..1, top 0..1 from the top) on a page, in page coordinates.
 static NSPoint shown(PDFView *view, PDFPage *page, CGFloat across, CGFloat down) {
     NSClipView *clip = clipOf(view);
@@ -456,6 +491,27 @@ int main(int argc, char **argv) { @autoreleasepool {
         check(fabs(p.view.scaleFactor - 0.7) < 1e-6, @"no change");
         [p.window close];
     }
+    // #53: in a window whose content runs under the toolbar, going to a page or to a place a few
+    // points from what is shown, right after a change of the size in the same turn of the event
+    // loop, stays there once the views are laid out (goToPage:, goToDestination:).
+    if (@available(macOS 26.0, *)) for (int toPage = 0; toPage < 2; toPage++) for (NSNumber *apart in @[@8, @24]) {
+        context = [NSString stringWithFormat:@"#53 %s, %@pt apart", toPage ? "goToPage:" : "goToDestination:", apart];
+        Preview p = makeFullSizePreview(makeDocument(NO, NO));
+        PDFPage *page = [p.view.document pageAtIndex:4];
+        CGFloat top = NSMaxY([page boundsForBox:p.view.displayBox]);
+        CGFloat targetY = toPage ? top : top - 200;
+        [p.view goToDestination:[[PDFDestination alloc] initWithPage:page atPoint:NSMakePoint(100, targetY - apart.doubleValue)]];
+        settle(p.window);
+        [p.view setFrameSize:NSMakeSize(450, 700)];
+        if (toPage) [p.view goToPage:page];
+        else [p.view goToDestination:[[PDFDestination alloc] initWithPage:page atPoint:NSMakePoint(100, targetY)]];
+        CGFloat atOnce = belowEdge(p.view, page, NSMakePoint(100, targetY));
+        settle(p.window);
+        CGFloat settled = belowEdge(p.view, page, NSMakePoint(100, targetY));
+        check(fabs(settled - atOnce) < 0.6, [NSString stringWithFormat:@"the place gone to stays (%.2f, then %.2f below the top edge)", atOnce, settled]);
+        [p.window close];
+    }
+    context = @"";
     printf("PASS: %lu checks\n", (unsigned long)checks);
     return 0;
 }}

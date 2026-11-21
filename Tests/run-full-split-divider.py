@@ -266,7 +266,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-full-split-') as tmp:
         (tmp / name).write_text(text[name], encoding='latin1')
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-framework', 'Quartz', *include_args(root),
                     '-I', str(root / 'Tests'), str(tmp / 'probe.m'), str(tmp / 'TSFullSplitDivider.m'),
-                    str(tmp / 'TSPreviewSplitDivider.m'), str(source_file(root, 'globals.m')), '-o', str(tmp / 'probe')], check=True)
+                    str(tmp / 'TSPreviewSplitDivider.m'), str(root / 'Sources/Preview/TSPreviewScrollerKeeper.m'), str(source_file(root, 'globals.m')), '-o', str(tmp / 'probe')], check=True)
     result = subprocess.run([str(tmp / 'probe'), *nibs], capture_output=True, text=True, timeout=300)
     print(result.stdout, end='')
     if args.mutation:

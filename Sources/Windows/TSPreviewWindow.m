@@ -1084,6 +1084,9 @@ static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, 
     [otherView cleanupMarqueeKeepingPinnedLinkPreview];
     [otherView keepPinnedLinkPreviewThroughMove];
     [otherView goToDestination: destination];
+    // The divider may have widened the other part just before: its text from then is not
+    // brought back once the views are laid out (#53).
+    TSPreviewPlaceChosenByProgram(otherView);
 
     NSResponder *responder = window.firstResponder;
     BOOL focusInParts = [responder isKindOfClass: [NSView class]] &&

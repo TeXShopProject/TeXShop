@@ -571,7 +571,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-preview-split-') as tmp:
     (tmp / 'probe.m').write_text(program, encoding='latin1')
     (tmp / 'TSPreviewSplitDivider.m').write_text(text['TSPreviewSplitDivider.m'], encoding='latin1')
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-mmacosx-version-min=14.0', '-framework', 'Cocoa', '-framework', 'Quartz', *include_args(root),
-                    '-I', str(root / 'Tests'), str(tmp / 'probe.m'), str(tmp / 'TSPreviewSplitDivider.m'),
+                    '-I', str(root / 'Tests'), str(tmp / 'probe.m'), str(tmp / 'TSPreviewSplitDivider.m'), str(root / 'Sources/Preview/TSPreviewScrollerKeeper.m'),
                     '-o', str(tmp / 'probe')], check=True)
     if args.binary:
         import shutil
