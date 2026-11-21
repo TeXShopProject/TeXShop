@@ -209,9 +209,14 @@ NSString *TSStyledCopyHTML(NSAttributedString *styled)
         NSParagraphStyle *style = [styled attribute:NSParagraphStyleAttributeName atIndex:at effectiveRange:NULL] ?: NSParagraphStyle.defaultParagraphStyle;
         NSFont *font = [styled attribute:NSFontAttributeName atIndex:at effectiveRange:NULL];
         [html appendFormat:@"<div style=\"%@\">", TSStyledCopyParagraphStyle(style, font)];
-        if (paragraph.length == 0)
+        // The blocks stand for the line breaks between paragraphs; the break that ends the selection stays in the
+        // last block, so that a selection with its line break is pasted with it.
+        NSRange content = paragraph;
+        if (NSMaxRange(enclosing) == string.length && enclosing.length > paragraph.length)
+            content = NSMakeRange(paragraph.location, NSMaxRange(enclosing) - paragraph.location);
+        if (content.length == 0)
             [html appendString:@"<br>"];
-        [styled enumerateAttributesInRange:paragraph options:0 usingBlock:^(NSDictionary<NSAttributedStringKey, id> *attributes, NSRange range, BOOL *stop2) {
+        [styled enumerateAttributesInRange:content options:0 usingBlock:^(NSDictionary<NSAttributedStringKey, id> *attributes, NSRange range, BOOL *stop2) {
             NSMutableString *css = [NSMutableString stringWithString:TSStyledCopyFontStyle(attributes[NSFontAttributeName])];
             if (attributes[NSForegroundColorAttributeName])
                 [css appendFormat:@"color:%@;", TSStyledCopyHex(attributes[NSForegroundColorAttributeName])];

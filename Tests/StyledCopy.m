@@ -3,6 +3,7 @@
 // stand-in document) with the bundled Lite and Dark themes. The general pasteboard is never written: the document's
 // method is compiled with a private pasteboard in its place. No window is shown.
 #import <AppKit/AppKit.h>
+#import <WebKit/WebKit.h>
 #import "TSStyledCopy.h"
 #import "TSSyntaxTeXScanner.h"
 #import "TSColorSupport.h"
@@ -283,6 +284,31 @@ static void CheckDocumentCommands(NSString *themes)
     // said 15px, which browsers and word processors show as 11.25pt.
     Require(@"HTML font size read back", fabs(((NSFont *)ColorAt(read, @"plain", NSFontAttributeName)).pointSize - 20) < 0.01);
     Require(@"HTML escapes", [TSStyledCopyHTML([[NSAttributedString alloc] initWithString:@"a<b&c"]) containsString:@"a&lt;b&amp;c"]);
+    // A selection that ends with its line break keeps it in the HTML; a break inside, an empty line and a selection
+    // of the break alone are kept too.
+    NSDictionary *plainText = @{NSFontAttributeName: font};
+    // Read as a browser shows it: the text of the page in a WKWebView that is never put in a window. (AppKit's own
+    // HTML reader adds a line break at the end of everything.)
+    NSString *(^Read)(NSString *) = ^NSString *(NSString *text) {
+        NSString *written = TSStyledCopyHTML([[NSAttributedString alloc] initWithString:text attributes:plainText]);
+        WKWebView *web = [[WKWebView alloc] initWithFrame:NSMakeRect(0, 0, 400, 300)];
+        __block NSString *shown = nil;
+        [web loadHTMLString:written baseURL:nil];
+        NSDate *limit = [NSDate dateWithTimeIntervalSinceNow:10];
+        while (web.isLoading && limit.timeIntervalSinceNow > 0)
+            [NSRunLoop.currentRunLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+        [web evaluateJavaScript:@"document.body.innerText" completionHandler:^(id value, NSError *error) { shown = value ?: @"(error)"; }];
+        while (!shown && limit.timeIntervalSinceNow > 0)
+            [NSRunLoop.currentRunLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+        return shown ?: @"(timeout)";
+    };
+    Require(@"HTML final line break kept", ![TSStyledCopyHTML([[NSAttributedString alloc] initWithString:@"abc" attributes:plainText])
+                                               isEqualToString:TSStyledCopyHTML([[NSAttributedString alloc] initWithString:@"abc\n" attributes:plainText])]);
+    Require(@"HTML without a final line break", [Read(@"abc") isEqualToString:@"abc"]);
+    Require(@"HTML final line break read back", [Read(@"abc\n") isEqualToString:@"abc\n"]);
+    Require(@"HTML line breaks inside", [Read(@"a\n\nb") isEqualToString:@"a\n\nb"]);
+    Require(@"HTML a line break alone", [Read(@"\n") isEqualToString:@"\n"]);
+
     // Each paragraph keeps the indents and the line spacing of the source; the default layout adds none.
     NSMutableParagraphStyle *indented = [NSMutableParagraphStyle new];
     indented.headIndent = 11;

@@ -32,6 +32,8 @@ MUTATIONS = {
                     '[styled dataFromRange:whole documentAttributes:@{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType} error:NULL]'),
     # The paragraphs lose the indents and the line spacing of the source.
     'no-paragraph-layout': (STYLED, '    if (style.headIndent != 0)\n', '    if (NO)\n'),
+    # The line break that ends the selection is left out of the HTML.
+    'final-break-dropped': (STYLED, '        if (NSMaxRange(enclosing) == string.length && enclosing.length > paragraph.length)\n', '        if (NO)\n'),
     # A light face is written as regular.
     'regular-weight': (STYLED, '    return (nearest + 1) * 100;', '    return 400;'),
     # A source behind a find field (or in a window that is not key) is copied from.
@@ -91,7 +93,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-styled-copy-') as tmp:
     (tmp / 'TSStyledCopy.m').write_text(text[STYLED], encoding='utf-8')
     (tmp / 'TSStyledCopy.h').write_text(text[HEADER], encoding='utf-8')
     exe = tmp / 'styled-copy'
-    subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-I', str(tmp), *include_args(ROOT),
+    subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'WebKit', '-I', str(tmp), *include_args(ROOT),
                     str(ROOT / 'Tests/StyledCopy.m'), str(tmp / 'TSStyledCopy.m'),
                     *(str(syntax / name) for name in ['TSSyntaxScanner.m', 'TSSyntaxTeXOptions.m', 'TSSyntaxTeXScanner.m',
                                                       'TSSyntaxXMLScanning.m', 'TSSyntaxColorScheme.m']),
