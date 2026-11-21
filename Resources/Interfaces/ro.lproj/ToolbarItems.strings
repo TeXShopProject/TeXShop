@@ -284,3 +284,5 @@ tiToolTipHtmlSearch           = "Căutare";
 "Continuous" = "Pagină Multiplă";
 "Right to left" = "De la dreapta la stânga";
 "Show first page alone as cover" = "Afișați prima pagină separat, ca o copertă";
+"tiToolTipUnsplit" = "Anulează scindarea ferestrei";
+"tiToolTipUnsplitKIT" = "Anulează scindarea ferestrei";

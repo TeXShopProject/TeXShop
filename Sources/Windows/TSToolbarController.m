@@ -192,7 +192,8 @@ static NSString*    kHtmlSearchTID              = @"HtmlSearch";
 static char TSSplitToggleCueKey, TSSplitToggleSideBySideKey, TSSplitToggleImageKey;
 
 // The split buttons of a window show the side-by-side split while Option is held
-// over them in a window that is not split (TSSplitToggleCue.h).
+// over them in a window that is not split, and in a window split side by side
+// (TSSplitToggleCue.h).
 static void TSSplitToggleItemsFollow(NSWindow *window, NSEventModifierFlags flags)
 {
     BOOL option = window.isKeyWindow && TSSplitToggleOptionHeld(flags);
@@ -203,9 +204,17 @@ static void TSSplitToggleItemsFollow(NSWindow *window, NSEventModifierFlags flag
             continue;
         TSDocument *document = item.target;
         BOOL split = preview ? document.pdfKitWindow.windowIsSplit : document.isSplit;
-        BOOL sideBySide = TSSplitToggleShowsSideBySide(flags, split, option && TSSplitTogglePointOnItem(window, item, point));
-        if (sideBySide == [objc_getAssociatedObject(item, &TSSplitToggleSideBySideKey) boolValue])
+        BOOL splitSideBySide = preview ? document.pdfKitWindow.pdfKitSplitView.isVertical : document.isSplitSideBySide;
+        BOOL sideBySide = TSSplitToggleShowsSideBySide(flags, split, splitSideBySide,
+                                                       option && TSSplitTogglePointOnItem(window, item, point));
+        // In a split window a click unsplits, so the tool tip and the spoken name say so.
+        NSString *tip = TSSplitToggleToolTip(preview, split);
+        if (![item.toolTip isEqualToString: tip])
+            item.toolTip = tip;
+        if (sideBySide == [objc_getAssociatedObject(item, &TSSplitToggleSideBySideKey) boolValue]) {
+            item.image.accessibilityDescription = tip;
             continue;
+        }
         if (sideBySide) {
             NSImage *image = item.image ? TSSplitToggleSideBySideImage(item.image) : nil;
             if (!image)
@@ -216,6 +225,7 @@ static void TSSplitToggleItemsFollow(NSWindow *window, NSEventModifierFlags flag
             item.image = objc_getAssociatedObject(item, &TSSplitToggleImageKey) ?: item.image;
             objc_setAssociatedObject(item, &TSSplitToggleImageKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         }
+        item.image.accessibilityDescription = tip;
         objc_setAssociatedObject(item, &TSSplitToggleSideBySideKey, @(sideBySide), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
 }
@@ -2274,6 +2284,10 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 	// to do it    The notification object is the toolbar to which the item is being added   The item being
 	// added is found by referencing the @"item" key in the userInfo
 	NSToolbarItem *addedItem = [[notif userInfo] objectForKey: @"item"];
+
+    // A split button added to a split window shows how the window is split once it is in the toolbar.
+    if ([[addedItem itemIdentifier] isEqual: kSplitID] || [[addedItem itemIdentifier] isEqual: kSplitKKTID])
+        dispatch_async(dispatch_get_main_queue(), ^{ TSSplitToggleItemsFollowSplit(); });
 
     if ([[addedItem itemIdentifier] isEqual: NSToolbarPrintItemIdentifier]) {
 

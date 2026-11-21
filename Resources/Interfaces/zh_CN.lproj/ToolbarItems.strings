@@ -234,3 +234,5 @@
 
 "tiLabelColorIndexSplit" = "索引着色";
 "tiPaletteLabelColorIndexSplit" = "索引着色";
+"tiToolTipUnsplit" = "取消窗口分割";
+"tiToolTipUnsplitKIT" = "取消窗口分割";

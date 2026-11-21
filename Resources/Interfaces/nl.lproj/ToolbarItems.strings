@@ -284,3 +284,5 @@ tiToolTipHtmlSearch           = "Zoek";
 "Continuous" = "Doorlopend";
 "Right to left" = "Van rechts naar links";
 "Show first page alone as cover" = "Eerste pagina apart als omslag tonen";
+"tiToolTipUnsplit" = "Splitsing van het venster opheffen";
+"tiToolTipUnsplitKIT" = "Splitsing van het venster opheffen";

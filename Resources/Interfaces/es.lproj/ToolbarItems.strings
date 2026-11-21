@@ -284,3 +284,5 @@ tiToolTipHtmlSearch           = "Buscar";
 "Continuous" = "Multipágina";
 "Right to left" = "De derecha a izquierda";
 "Show first page alone as cover" = "Mostrar la primera página sola como portada";
+"tiToolTipUnsplit" = "Quitar la división de la ventana";
+"tiToolTipUnsplitKIT" = "Quitar la división de la ventana";

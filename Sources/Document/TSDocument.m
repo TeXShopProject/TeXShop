@@ -3775,6 +3775,12 @@ static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice
     return windowIsSplit;
 }
 
+// The two parts of the split source are side by side.
+- (BOOL) isSplitSideBySide
+{
+    return windowIsSplit && [splitView isVertical];
+}
+
 - (void) splitWindow: sender
 {
 	NSSize		newSize;

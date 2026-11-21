@@ -652,6 +652,7 @@ enum RootCommand
 - (void)resetHighlight:(id)sender;
 - (void)resetBackgroundColor:(id)sender;
 - (BOOL) isSplit;
+- (BOOL) isSplitSideBySide;
 
 // endforsplit
 - (id) magnificationPanel;

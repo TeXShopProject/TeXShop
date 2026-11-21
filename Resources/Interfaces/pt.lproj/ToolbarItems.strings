@@ -283,3 +283,5 @@ tiToolTipHtmlSearch           = "Buscar";
 "Continuous" = "Várias páginas";
 "Right to left" = "Da direita para a esquerda";
 "Show first page alone as cover" = "Mostrar a primeira página sozinha como capa";
+"tiToolTipUnsplit" = "Remover a divisão da janela";
+"tiToolTipUnsplitKIT" = "Remover a divisão da janela";
