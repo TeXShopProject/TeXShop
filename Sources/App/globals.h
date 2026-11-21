@@ -406,6 +406,7 @@ extern NSString *UseOldHeadingCommandsKey;
 extern NSString *SyncMethodKey;
 extern NSString *UseOutlineKey;
 extern NSString *LeftRightArrowsAlwaysPageKey;
+extern NSString *KeepPreviewDisplayInFullScreenKey;
 extern NSString *RedConsoleAfterErrorKey;
 extern NSString *PreviewDrawerOpenKey;
 extern NSString *ConTeXtTagsKey;

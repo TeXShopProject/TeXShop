@@ -1864,6 +1864,12 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
     [SUD setBool:sender.state == NSControlStateValueOn forKey:LeftRightArrowsAlwaysPageKey];
 }
 
+// Whether a Preview window keeps its split, magnification and display format in full screen.
+- (IBAction)fullScreenKeepsDisplayChanged:(NSButton *)sender
+{
+    [SUD setBool:sender.state == NSControlStateValueOn forKey:KeepPreviewDisplayInFullScreenKey];
+}
+
 - (IBAction)sourceAndPreviewInSameWindowChanged:sender
 {
     NSInteger myTag = [sender tag];

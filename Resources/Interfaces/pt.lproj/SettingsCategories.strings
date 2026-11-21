@@ -240,6 +240,8 @@
 "catalog.preview.0.5.note" = "Também quando uma página ampliada é mais larga que a janela, as teclas de seta esquerda e direita mudam de página em vez de rolar na horizontal.";
 "catalog.preview.0.6.title" = "Pop-ups de links";
 "catalog.preview.0.6.note" = "Valor inicial para os documentos abertos a partir de agora. Em um documento aberto, altere no menu “Página”.";
+"catalog.preview.0.7.title" = "Manter a ampliação e o formato de visualização em tela cheia";
+"catalog.preview.0.7.note" = "Uma janela dividida também continua dividida. Se estiver desativado, a tela cheia desfaz a divisão e usa o tipo de ampliação e o formato de visualização usados da última vez em tela cheia.";
 "group.preview.1.title" = "Modo de página dupla";
 "catalog.preview.1.0.title" = "Direção das páginas";
 "catalog.preview.1.1.title" = "Mostrar a primeira página sozinha como capa";

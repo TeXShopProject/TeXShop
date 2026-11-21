@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nullable) IBOutlet NSButton *linkPopupsButton;
 @property (strong, nullable) IBOutlet NSButton *scrollPageTurnButton;
 @property (strong, nullable) IBOutlet NSButton *arrowKeysPageButton;
+@property (strong, nullable) IBOutlet NSButton *fullScreenKeepsDisplayButton;
 @property (strong, nullable) IBOutlet NSTextField *magTextField;
 @property (strong, nullable) IBOutlet NSPopUpButton *mouseModePopup;
 @property (strong, nullable) IBOutlet NSPopUpButton *pageStylePopup;

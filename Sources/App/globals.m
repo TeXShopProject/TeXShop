@@ -138,6 +138,7 @@ NSString *UseOldHeadingCommandsKey = @"UseOldHeadingCommands";
 NSString *SyncMethodKey = @"SyncMethod";
 NSString *UseOutlineKey = @"UseOutline";
 NSString *LeftRightArrowsAlwaysPageKey = @"LeftRightArrowsAlwaysPage";
+NSString *KeepPreviewDisplayInFullScreenKey = @"KeepPreviewDisplayInFullScreen";
 NSString *RedConsoleAfterErrorKey = @"RedConsoleAfterError"; // NO or YES
 NSString *PreviewDrawerOpenKey = @"PreviewDrawerOpen"; // NO or YES
 NSString *ConTeXtTagsKey = @"ConTeXtTags"; // NO or YES
