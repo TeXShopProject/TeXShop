@@ -43,7 +43,6 @@
 // // QUESTIONABLE_BUG_FIX  (Search for this)
 
 
-#import <objc/runtime.h>
 #import "MyPDFKitView.h"
 #import "TSContentZoom.h"
 #import "TSExternalPDFReload.h"
@@ -86,8 +85,9 @@ static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument 
     return selection;
 }
 
-// The outline in the drawer. Return or Enter goes to the selected entry, as a click does,
-// so an entry chosen with the arrow keys or by typing its number can be shown (#61).
+// The outline in the drawer (its class in the TSDocument nib of every language). Return or Enter
+// goes to the selected entry, as a click does, so an entry chosen with the arrow keys or by
+// typing its number can be shown (#61).
 @interface TSDrawerOutlineView : NSOutlineView
 @end
 
@@ -502,10 +502,6 @@ static PDFSelection *TSSelectionInDocument(PDFSelection *selection, PDFDocument 
 {
     // NSLog(@"setup outline");
     
-	// The nib makes a plain NSOutlineView; this one also answers Return (#61).
-	if (_outlineView != nil && [_outlineView class] == [NSOutlineView class])
-		object_setClass(_outlineView, [TSDrawerOutlineView class]);
-
 	if (![SUD boolForKey: UseOutlineKey])
 		return;
     

@@ -1653,7 +1653,7 @@ DQ
                                                 <rect key="frame" x="1" y="1" width="279" height="283"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
-                                                    <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" multipleSelection="NO" autosaveColumns="NO" headerView="3918" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="764" id="763">
+                                                    <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" multipleSelection="NO" autosaveColumns="NO" headerView="3918" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="764" customClass="TSDrawerOutlineView" id="763">
                                                         <rect key="frame" x="0.0" y="0.0" width="279" height="266"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
