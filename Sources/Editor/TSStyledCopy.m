@@ -121,8 +121,13 @@ static NSString *TSStyledCopyHex(NSColor *color)
             (int)lround(MIN(MAX(srgb.greenComponent, 0), 1) * 255), (int)lround(MIN(MAX(srgb.blueComponent, 0), 1) * 255)];
 }
 
-static NSString *TSStyledCopyEscaped(NSString *string)
+static NSString *TSStyledCopyEscaped(NSString *text)
 {
+    // Every line ending is one line feed: CRLF (which enumerates as two characters), CR and the Unicode separators.
+    NSString *string = [[[[text stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"]
+                          stringByReplacingOccurrencesOfString:@"\r" withString:@"\n"]
+                         stringByReplacingOccurrencesOfString:@"\u2028" withString:@"\n"]
+                        stringByReplacingOccurrencesOfString:@"\u2029" withString:@"\n"];
     NSMutableString *escaped = [NSMutableString stringWithCapacity:string.length];
     [string enumerateSubstringsInRange:NSMakeRange(0, string.length) options:NSStringEnumerationByComposedCharacterSequences
                             usingBlock:^(NSString *character, NSRange range, NSRange enclosing, BOOL *stop) {
@@ -130,7 +135,6 @@ static NSString *TSStyledCopyEscaped(NSString *string)
         else if ([character isEqualToString:@"<"]) [escaped appendString:@"&lt;"];
         else if ([character isEqualToString:@">"]) [escaped appendString:@"&gt;"];
         else if ([character isEqualToString:@"\""]) [escaped appendString:@"&quot;"];
-        else if ([character isEqualToString:@"\r"] || [character isEqualToString:@"\r\n"]) [escaped appendString:@"\n"];
         else [escaped appendString:character];
     }];
     return escaped;

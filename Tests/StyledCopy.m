@@ -308,6 +308,12 @@ static void CheckDocumentCommands(NSString *themes)
     Require(@"HTML final line break read back", [Read(@"abc\n") isEqualToString:@"abc\n"]);
     Require(@"HTML line breaks inside", [Read(@"a\n\nb") isEqualToString:@"a\n\nb"]);
     Require(@"HTML a line break alone", [Read(@"\n") isEqualToString:@"\n"]);
+    // Line endings kept as they were in the file (Convert to LF off) are one line break each.
+    Require(@"HTML final CRLF", [Read(@"abc\r\n") isEqualToString:@"abc\n"]);
+    Require(@"HTML final CR", [Read(@"abc\r") isEqualToString:@"abc\n"]);
+    Require(@"HTML CRLF lines and an empty line", [Read(@"a\r\n\r\nb\r\n") isEqualToString:@"a\n\nb\n"]);
+    Require(@"HTML CRLF alone", [Read(@"\r\n") isEqualToString:@"\n"]);
+    Require(@"HTML paragraph separator", [Read(@"a\u2029b\u2029") isEqualToString:@"a\nb\n"]);
 
     // Each paragraph keeps the indents and the line spacing of the source; the default layout adds none.
     NSMutableParagraphStyle *indented = [NSMutableParagraphStyle new];
