@@ -43,6 +43,17 @@ static BOOL TSLegacyIsAddedSubmenu(NSMenuItem *item)
             return YES;
     return NO;
 }
+// Window › Fullscreen (Old Method) was removed in 6.00. It stood right before Enter Full Screen, so positions saved
+// before that keep a place for it: its own key goes to an item that is not in any menu, and the keys of the items after it
+// still reach the same items.
+static NSString *const TSLegacyFullScreenItem = @"TSShortcut.toggleFullScreen:.0";
+static void TSLegacyKeepRemovedFullscreen(NSMutableArray<NSMenuItem *> *items)
+{
+    NSUInteger fullScreen = [items indexOfObjectPassingTest:^BOOL(NSMenuItem *item, NSUInteger index, BOOL *stop) {
+        return [item.identifier isEqualToString:TSLegacyFullScreenItem];
+    }];
+    if (fullScreen != NSNotFound) [items insertObject:[[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""] atIndex:fullScreen];
+}
 static NSArray<NSMenuItem *> *TSLegacyItems(NSMenu *menu)
 {
     NSMutableArray<NSMenuItem *> *items = [menu.itemArray mutableCopy];
@@ -50,6 +61,7 @@ static NSArray<NSMenuItem *> *TSLegacyItems(NSMenu *menu)
         return ![item.identifier isEqualToString:TSLegacyStatusBarItem] && ![item.identifier isEqualToString:TSLegacySwapItem] &&
                !TSLegacyIsAddedSubmenu(item);
     }]];
+    TSLegacyKeepRemovedFullscreen(items);
     if (TSLegacySkipsFindAndReplace()) {
         NSUInteger added = [items indexOfObjectPassingTest:^BOOL(NSMenuItem *item, NSUInteger index, BOOL *stop) {
             return [item.identifier isEqualToString:TSLegacyFindAndReplaceItem];

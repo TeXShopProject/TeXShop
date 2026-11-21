@@ -255,6 +255,28 @@ int main(int argc,char **argv){@autoreleasepool{
    }
   }
   printf("PASS: a saved key for Fullscreen (Old Method), by its name of 5.58 or of 6.00 beta 8, reaches no item in %lu languages\n",(unsigned long)edits.count);
+  // Positions saved for the Window menu of 5.58 keep a place for Fullscreen (Old Method): its own position reaches no item
+  // of the menu, and the items after it are reached at their former positions.
+  for(NSString *language in edits){
+   NSNib *nib=[[NSNib alloc]initWithNibData:[NSData dataWithContentsOfFile:edits[language][@"nib"]] bundle:nil];NSArray *objects=nil;
+   Check([nib instantiateWithOwner:NSApp topLevelObjects:&objects],language);
+   NSMenu *main=nil;for(id o in objects)if([o isKindOfClass:NSMenu.class]&&[o numberOfItems]>5)main=o;
+   NSMenu *window=nil;for(NSMenuItem *top in main.itemArray)for(NSMenuItem *i in top.submenu.itemArray)if(i.action==@selector(toggleFullScreen:))window=top.submenu;
+   NSArray *old=edits[language][@"window"];NSUInteger reached=0;
+   // The first five items: Minimize, Zoom, Fullscreen (Old Method), Enter Full Screen and Arrange in Front (later items changed for other reasons).
+   for(NSUInteger i=0;i<MIN(old.count,(NSUInteger)5);i++){
+    if([old[i] length]==0)continue;
+    NSMenuItem *item=TSLegacyMenuItem(window,[NSString stringWithFormat:@"%lu",(unsigned long)i+1]);
+    if([old[i] isEqual:@"fullscreen:"]){
+     Check(item==nil || [window indexOfItem:item]<0,[NSString stringWithFormat:@"%@: Window position %lu (Fullscreen (Old Method)) reaches no item, not %@",language,(unsigned long)i+1,item.title]);
+     continue;
+    }
+    Check([NSStringFromSelector(item.action) isEqual:old[i]],[NSString stringWithFormat:@"%@: Window position %lu reaches %@, not %@",language,(unsigned long)i+1,NSStringFromSelector(item.action),old[i]]);
+    reached++;
+   }
+   Check(reached>=4,[language stringByAppendingString:@": Window positions after Fullscreen (Old Method) are checked"]);
+  }
+  printf("PASS: Window menu positions of 5.58 keep the place of Fullscreen (Old Method) in %lu languages\n",(unsigned long)edits.count);
  }
  puts("PASS: Show Status Bar skipped in positions; Find and Replace… skipped in positions of the menus that lacked it; 12 legacy title fixtures; CJK-Latin spacing; 18 former titles with a stray space; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File; former typesetting method titles in 12 languages; Command Completion submenu entries in 12 languages reach Add to Command Completion List");
 }return 0;}
