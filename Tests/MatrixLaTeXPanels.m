@@ -410,6 +410,41 @@ static void CheckMatrixSpreadsheet(NSString *language, NSString *path, Listener 
     Expect([at(1, 0) isEqual:@""], name(@"Redo empties them again"));
     Expect(w.undoManager == [panel windowWillReturnUndoManager:w], name(@"the panel has its own undo"));
 
+    // Emptying empty cells, or pasting the same values, adds nothing to Undo; only the cells that change are undone.
+    CloseUndoGroups(w.undoManager);
+    [panel setValues:@[@[@"", @"0"]] atRow:14 shownColumn:0];
+    CloseUndoGroups(w.undoManager);
+    [table selectRow:14 column:1 extending:NO];
+    Key(w, @"V", 9); Key(w, @"\r", 36);
+    CloseUndoGroups(w.undoManager);
+    [table selectRows:NSMakeRange(14, 1) columns:NSMakeRange(0, 1)];
+    Key(w, @"\x7f", 51);
+    CloseUndoGroups(w.undoManager);
+    [w.undoManager undo];
+    Expect([at(14, 1) isEqual:@"0"], name([@"Delete in an empty cell adds nothing to Undo: one Undo takes V back: " stringByAppendingString:at(14, 1)]));
+    CloseUndoGroups(w.undoManager);
+    [w.undoManager redo];
+    CloseUndoGroups(w.undoManager);
+    [table.pasteboard clearContents];
+    [table.pasteboard setString:@"\tV" forType:NSPasteboardTypeString];
+    [table selectRow:14 column:0 extending:NO];
+    [table paste:nil];
+    CloseUndoGroups(w.undoManager);
+    [w.undoManager undo];
+    Expect([at(14, 1) isEqual:@"0"], name(@"pasting the same values adds nothing to Undo"));
+    CloseUndoGroups(w.undoManager);
+    [w.undoManager redo];
+    [panel setValues:@[@[@"p", @"q"]] atRow:15 shownColumn:0];
+    CloseUndoGroups(w.undoManager);
+    [table selectRows:NSMakeRange(14, 2) columns:NSMakeRange(0, 2)];
+    Key(w, @"\x7f", 51);
+    CloseUndoGroups(w.undoManager);
+    [w.undoManager undo];
+    Expect([at(14, 0) isEqual:@""] && [at(14, 1) isEqual:@"V"] && [at(15, 0) isEqual:@"p"] && [at(15, 1) isEqual:@"q"], name(@"a range partly empty is put back by one Undo"));
+    CloseUndoGroups(w.undoManager);
+    [w.undoManager redo];
+    Expect([at(15, 0) isEqual:@""] && [at(14, 1) isEqual:@""], name(@"and emptied again by Redo"));
+
     // Copy and paste tab separated text, as spreadsheets do.
     CloseUndoGroups(w.undoManager);
     [panel setValues:@[@[@"1", @"2"], @[@"3", @"a\tb"]] atRow:0 shownColumn:0];

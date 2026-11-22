@@ -280,8 +280,9 @@ static id _sharedInstance = nil;
 	[self setCells:cells];
 }
 
-// Sets cells given as row, stored column and value, as one change that can be undone: only these cells are
-// kept for Undo, so that a change in a large table costs little.
+// Sets cells given as row, stored column and value, as one change that can be undone: only the cells that
+// change are kept for Undo, so that a change in a large table costs little, and nothing changed adds nothing
+// to Undo.
 - (void)setCells:(NSArray<NSArray *> *)cells
 {
 	[self setCells:cells reloading:YES];
@@ -295,7 +296,11 @@ static id _sharedInstance = nil;
 		NSInteger row = [cell[0] integerValue], column = [cell[1] integerValue];
 		if (row < 0 || row >= [self gridRows] || column < 0 || column >= [self gridColumns])
 			continue;
-		[previous addObject:@[cell[0], cell[1], [self.myMatrix objectInRow:row inCol:column]]];
+		NSString *before = [self.myMatrix objectInRow:row inCol:column];
+		// Only the cells whose values change are changed and kept for Undo.
+		if ([before isEqual:cell[2]])
+			continue;
+		[previous addObject:@[cell[0], cell[1], before]];
 		[self.myMatrix replaceObjectInRow:row inCol:column withObject:cell[2]];
 	}
 	if ([previous count] > 0)
