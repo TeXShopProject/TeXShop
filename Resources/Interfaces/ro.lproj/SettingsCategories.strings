@@ -18,7 +18,7 @@
 /* Category overview */
 "general.summary" = "Pornire, pozițiile ferestrelor și pictograma din Dock.";
 "documents.summary" = "Codificarea textului și salvarea documentelor.";
-"editor.summary" = "Editare, culori de sintaxă, indentare și paranteze.";
+"editor.summary" = "Editare, evidențierea sintaxei, indentare și paranteze.";
 "spelling.summary" = "Verificarea ortografiei la tastare și în LaTeX.";
 "appearance.summary" = "Alegeți și editați temele de culori.";
 "preview.summary" = "Afișarea și comenzile previzualizării PDF.";
@@ -86,10 +86,10 @@
 "catalog.editor.2.0.note" = "Când faceți clic pe o fereastră sursă care nu este în față, același clic mută și cursorul.";
 "catalog.editor.2.1.title" = "Încadrează textul selectat la tastarea unei paranteze";
 "catalog.editor.2.2.title" = "Limbi de la dreapta la stânga (arabă, ebraică, persană)";
-"catalog.editor.2.2.note" = "Aliniază la dreapta rândurile care încep cu scriere ebraică sau arabă. Funcționează când Colorarea Sintaxei este activată.";
-"group.editor.3.title" = "Colorarea sintaxei";
+"catalog.editor.2.2.note" = "Aliniază la dreapta rândurile care încep cu scriere ebraică sau arabă. Funcționează când evidențierea sintaxei este activată.";
+"group.editor.3.title" = "Evidențierea sintaxei";
 "catalog.editor.3.0.title" = "@ face parte din comenzi";
-"catalog.editor.3.1.title" = "Colorează expl3 implicit";
+"catalog.editor.3.1.title" = "Evidențiază codul expl3 implicit";
 "catalog.editor.3.2.title" = "Evidențiază literele și simbolurile de lățime completă";
 "group.editor.4.title" = "Potrivirea parantezelor";
 "catalog.editor.4.0.title" = "Verificarea Parantezelor";
@@ -185,7 +185,7 @@
 "catalog.appearance.3.0.item.0" = "Punct de inserare";
 "catalog.appearance.3.0.item.1" = "Clipire";
 "catalog.appearance.3.0.item.2" = "Rândul curent";
-"group.appearance.4.title" = "Sintaxă";
+"group.appearance.4.title" = "Evidențierea sintaxei";
 "catalog.appearance.4.0.item.0" = "Comentariu";
 "catalog.appearance.4.0.item.1" = "Comandă";
 "catalog.appearance.4.0.item.2" = "Notă de subsol";

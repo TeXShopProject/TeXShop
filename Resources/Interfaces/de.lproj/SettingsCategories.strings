@@ -18,7 +18,7 @@
 /* Category overview */
 "general.summary" = "Startverhalten, Fensterpositionen und das Dock-Symbol.";
 "documents.summary" = "Textkodierung und Speichern von Dokumenten.";
-"editor.summary" = "Bearbeitung, Syntaxfarben, Einzüge und Klammerpaare.";
+"editor.summary" = "Bearbeitung, Syntaxhervorhebung, Einzüge und Klammerpaare.";
 "spelling.summary" = "Rechtschreibung beim Schreiben und in LaTeX.";
 "appearance.summary" = "Farbschemata auswählen und bearbeiten.";
 "preview.summary" = "Anzeige und Bedienung der PDF-Vorschau.";
@@ -86,10 +86,10 @@
 "catalog.editor.2.0.note" = "Wenn Sie in ein Quelltextfenster klicken, das nicht vorne liegt, setzt derselbe Klick auch den Cursor.";
 "catalog.editor.2.1.title" = "Ausgewählten Text beim Eingeben einer Klammer einschließen";
 "catalog.editor.2.2.title" = "Rechts-nach-links-Sprachen (Arabisch, Hebräisch, Persisch)";
-"catalog.editor.2.2.note" = "Zeilen, die mit hebräischer oder arabischer Schrift beginnen, rechtsbündig anzeigen. Wirkt nur, wenn „Syntax farblich hervorheben“ eingeschaltet ist.";
-"group.editor.3.title" = "Syntaxfarben";
+"catalog.editor.2.2.note" = "Zeilen, die mit hebräischer oder arabischer Schrift beginnen, rechtsbündig anzeigen. Wirkt nur, wenn die Syntaxhervorhebung eingeschaltet ist.";
+"group.editor.3.title" = "Syntaxhervorhebung";
 "catalog.editor.3.0.title" = "@ als Teil von Befehlsnamen";
-"catalog.editor.3.1.title" = "expl3 standardmäßig färben";
+"catalog.editor.3.1.title" = "expl3-Code standardmäßig hervorheben";
 "catalog.editor.3.2.title" = "Vollbreite Buchstaben und Symbole hervorheben";
 "group.editor.4.title" = "Klammerzuordnung";
 "catalog.editor.4.0.title" = "Hilfe bei Klammerung";

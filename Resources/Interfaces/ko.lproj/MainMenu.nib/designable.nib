@@ -786,13 +786,13 @@
                                     <action selector="toggleStatusBar:" target="-1" id="Stb-Ac-7Kd"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="구문색상 끄기/켜기" tag="14" id="4rD-fK-Ewp" identifier="TSShortcut.toggleSyntaxColor:.14">
+                            <menuItem title="구문 하이라이트" tag="14" id="4rD-fK-Ewp" identifier="TSShortcut.toggleSyntaxColor:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleSyntaxColor:" target="-1" id="1j1-3N-gQJ"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="expl3 구문 강조" id="KMf-Jg-gns" identifier="TSShortcut.toggleExplColor:.0">
+                            <menuItem title="expl3 코드 하이라이트" id="KMf-Jg-gns" identifier="TSShortcut.toggleExplColor:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleExplColor:" target="-1" id="tje-mx-2JP"/>

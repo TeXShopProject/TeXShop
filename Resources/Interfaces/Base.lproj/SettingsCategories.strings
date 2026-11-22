@@ -18,7 +18,7 @@
 /* Category overview */
 "general.summary" = "Startup, window positions, and the Dock icon.";
 "documents.summary" = "Text encoding and document saving.";
-"editor.summary" = "Editing, syntax coloring, indentation, and matching brackets.";
+"editor.summary" = "Editing, syntax highlighting, indentation, and matching brackets.";
 "spelling.summary" = "Spelling while typing and LaTeX spell checking.";
 "appearance.summary" = "Choose and edit color themes.";
 "preview.summary" = "PDF preview display and controls.";
@@ -86,10 +86,10 @@
 "catalog.editor.2.0.note" = "When you click a source window that is not in front, the same click also moves the cursor.";
 "catalog.editor.2.1.title" = "Enclose selected text when typing a bracket";
 "catalog.editor.2.2.title" = "Right-to-left languages (Arabic, Hebrew, Persian)";
-"catalog.editor.2.2.note" = "Right-aligns lines that begin with Hebrew or Arabic script. Works when Syntax Coloring is on.";
-"group.editor.3.title" = "Syntax Coloring";
+"catalog.editor.2.2.note" = "Right-aligns lines that begin with Hebrew or Arabic script. Works when Syntax Highlighting is on.";
+"group.editor.3.title" = "Syntax Highlighting";
 "catalog.editor.3.0.title" = "@ as Part of Command Names";
-"catalog.editor.3.1.title" = "Color expl3 Code by Default";
+"catalog.editor.3.1.title" = "Highlight expl3 Code by Default";
 "catalog.editor.3.2.title" = "Highlight Fullwidth Letters and Symbols";
 "group.editor.4.title" = "Matching Brackets";
 "catalog.editor.4.0.title" = "Parens Matching";

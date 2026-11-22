@@ -107,7 +107,7 @@
 "New Document" = "Document nou";
 "Link Popups" = "Ferestre pop-up";
 "Split Window with Link" = "Scindează Fereastra cu Legătura";
-"Syntax Color expl3 Code" = "Sintaxă Cod expl culoare";
+"Highlight expl3 Code" = "Evidențiază codul expl3";
 "PDF File Has No Annotations" = "Fișierul PDF nu are adnotări";
 
 /* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */

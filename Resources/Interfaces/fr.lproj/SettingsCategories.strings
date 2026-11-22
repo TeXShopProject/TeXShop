@@ -18,7 +18,7 @@
 /* Category overview */
 "general.summary" = "Démarrage, position des fenêtres et icône du Dock.";
 "documents.summary" = "Encodage du texte et enregistrement des documents.";
-"editor.summary" = "Édition, couleurs syntaxiques, retraits et parenthèses.";
+"editor.summary" = "Édition, surlignage syntaxique, retraits et parenthèses.";
 "spelling.summary" = "Vérification orthographique pendant la saisie et dans LaTeX.";
 "appearance.summary" = "Choisir et modifier les thèmes de couleurs.";
 "preview.summary" = "Affichage et commandes de l’aperçu PDF.";
@@ -86,10 +86,10 @@
 "catalog.editor.2.0.note" = "Quand vous cliquez dans une fenêtre source qui n’est pas au premier plan, ce même clic déplace aussi le curseur.";
 "catalog.editor.2.1.title" = "Entourer le texte sélectionné lors de la saisie d’une parenthèse";
 "catalog.editor.2.2.title" = "Langues de droite à gauche (arabe, hébreu, persan)";
-"catalog.editor.2.2.note" = "Aligne à droite les lignes qui commencent par de l’écriture hébraïque ou arabe. Fonctionne lorsque « Distinctions syntaxiques en couleurs » est activé.";
-"group.editor.3.title" = "Coloration syntaxique";
+"catalog.editor.2.2.note" = "Aligne à droite les lignes qui commencent par de l’écriture hébraïque ou arabe. Fonctionne lorsque le surlignage syntaxique est activé.";
+"group.editor.3.title" = "Surlignage syntaxique";
 "catalog.editor.3.0.title" = "@ fait partie des noms de commande";
-"catalog.editor.3.1.title" = "Colorer expl3 par défaut";
+"catalog.editor.3.1.title" = "Surligner le code expl3 par défaut";
 "catalog.editor.3.2.title" = "Surligner les lettres et symboles pleine chasse";
 "group.editor.4.title" = "Correspondance des parenthèses";
 "catalog.editor.4.0.title" = "Appariement des parenthèses";
@@ -185,7 +185,7 @@
 "catalog.appearance.3.0.item.0" = "Insertion";
 "catalog.appearance.3.0.item.1" = "Flash";
 "catalog.appearance.3.0.item.2" = "Ligne courante";
-"group.appearance.4.title" = "Coloration syntaxique";
+"group.appearance.4.title" = "Surlignage syntaxique";
 "catalog.appearance.4.0.item.0" = "Commentaire";
 "catalog.appearance.4.0.item.1" = "Commande";
 "catalog.appearance.4.0.item.2" = "Note en bas de page";

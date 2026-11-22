@@ -783,13 +783,13 @@
                                     <action selector="toggleStatusBar:" target="-1" id="Stb-Ac-7Kd"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Toggle Syntax Color" tag="14" id="wmS-Ah-NZj" identifier="TSShortcut.toggleSyntaxColor:.14">
+                            <menuItem title="Syntaxmarkering" tag="14" id="wmS-Ah-NZj" identifier="TSShortcut.toggleSyntaxColor:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleSyntaxColor:" target="-1" id="tWy-tm-BxB"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Syntaxis Kleur expl3-code" id="YhA-vX-egR" identifier="TSShortcut.toggleExplColor:.0">
+                            <menuItem title="expl3-code markeren" id="YhA-vX-egR" identifier="TSShortcut.toggleExplColor:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleExplColor:" target="-1" id="wFr-Uc-ifc"/>

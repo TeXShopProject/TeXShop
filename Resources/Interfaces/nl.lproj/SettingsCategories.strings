@@ -18,7 +18,7 @@
 /* Category overview */
 "general.summary" = "Opstarten, vensterposities en het Dock-symbool.";
 "documents.summary" = "Tekstcodering en documenten bewaren.";
-"editor.summary" = "Bewerken, syntaxkleuren, inspringen en haakjes.";
+"editor.summary" = "Bewerken, syntaxmarkering, inspringen en haakjes.";
 "spelling.summary" = "Spellingcontrole tijdens het typen en in LaTeX.";
 "appearance.summary" = "Kleurthema’s kiezen en bewerken.";
 "preview.summary" = "Weergave en bediening van het pdf-voorbeeld.";
@@ -86,10 +86,10 @@
 "catalog.editor.2.0.note" = "Als u klikt in een bronvenster dat niet vooraan staat, verplaatst dezelfde klik ook de cursor.";
 "catalog.editor.2.1.title" = "Geselecteerde tekst omsluiten bij het typen van een haakje";
 "catalog.editor.2.2.title" = "Talen van rechts naar links (Arabisch, Hebreeuws, Perzisch)";
-"catalog.editor.2.2.note" = "Regels die beginnen met Hebreeuws of Arabisch schrift rechts uitlijnen. Werkt als Kleur taalelementen aan staat.";
-"group.editor.3.title" = "Syntaxiskleuren";
+"catalog.editor.2.2.note" = "Regels die beginnen met Hebreeuws of Arabisch schrift rechts uitlijnen. Werkt als syntaxmarkering aan staat.";
+"group.editor.3.title" = "Syntaxmarkering";
 "catalog.editor.3.0.title" = "@ in opdrachtnamen";
-"catalog.editor.3.1.title" = "expl3 standaard kleuren";
+"catalog.editor.3.1.title" = "expl3-code standaard markeren";
 "catalog.editor.3.2.title" = "Letters en symbolen in volle breedte markeren";
 "group.editor.4.title" = "Overeenkomende haakjes";
 "catalog.editor.4.0.title" = "Accentueer haakjes";
@@ -185,7 +185,7 @@
 "catalog.appearance.3.0.item.0" = "Invoegpunt";
 "catalog.appearance.3.0.item.1" = "Flits";
 "catalog.appearance.3.0.item.2" = "Huidige regel";
-"group.appearance.4.title" = "Syntaxis";
+"group.appearance.4.title" = "Syntaxmarkering";
 "catalog.appearance.4.0.item.0" = "Commentaar";
 "catalog.appearance.4.0.item.1" = "Commando";
 "catalog.appearance.4.0.item.2" = "Voetnoot";

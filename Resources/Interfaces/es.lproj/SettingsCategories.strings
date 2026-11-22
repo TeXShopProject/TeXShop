@@ -18,7 +18,7 @@
 /* Category overview */
 "general.summary" = "Inicio, posiciones de ventanas e icono del Dock.";
 "documents.summary" = "Codificación del texto y guardado de documentos.";
-"editor.summary" = "Edición, colores de sintaxis, sangría y paréntesis.";
+"editor.summary" = "Edición, resaltado de sintaxis, sangría y paréntesis.";
 "spelling.summary" = "Ortografía al escribir y revisión ortográfica de LaTeX.";
 "appearance.summary" = "Elegir y editar temas de color.";
 "preview.summary" = "Visualización y controles de la vista previa de PDF.";
@@ -86,10 +86,10 @@
 "catalog.editor.2.0.note" = "Al hacer clic en una ventana de código que no está delante, el mismo clic también mueve el cursor.";
 "catalog.editor.2.1.title" = "Rodear el texto seleccionado al escribir un delimitador";
 "catalog.editor.2.2.title" = "Idiomas de derecha a izquierda (árabe, hebreo, persa)";
-"catalog.editor.2.2.note" = "Alinea a la derecha las líneas que empiezan con escritura hebrea o árabe. Funciona cuando «Colores para sintaxis» está activado.";
-"group.editor.3.title" = "Coloreado de sintaxis";
+"catalog.editor.2.2.note" = "Alinea a la derecha las líneas que empiezan con escritura hebrea o árabe. Funciona cuando el resaltado de sintaxis está activado.";
+"group.editor.3.title" = "Resaltado de sintaxis";
 "catalog.editor.3.0.title" = "@ en nombres de comando";
-"catalog.editor.3.1.title" = "Colorear expl3 por omisión";
+"catalog.editor.3.1.title" = "Resaltar el código expl3 por omisión";
 "catalog.editor.3.2.title" = "Realzar letras y símbolos de ancho completo";
 "group.editor.4.title" = "Correspondencia de paréntesis";
 "catalog.editor.4.0.title" = "Equilibrar paréntesis";

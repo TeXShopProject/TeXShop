@@ -18,7 +18,7 @@
 /* Category overview */
 "general.summary" = "设置启动行为、窗口位置和Dock图标。";
 "documents.summary" = "设置文本编码和文稿保存方式。";
-"editor.summary" = "设置编辑、语法着色、缩进和括号匹配。";
+"editor.summary" = "设置编辑、语法高亮、缩进和括号匹配。";
 "spelling.summary" = "设置输入时的拼写检查和LaTeX拼写检查方式。";
 "appearance.summary" = "选择和编辑配色主题。";
 "preview.summary" = "设置PDF预览的显示和操作。";
@@ -87,7 +87,7 @@
 "catalog.editor.2.1.title" = "输入括号时将选中文本括起来";
 "catalog.editor.2.2.title" = "从右向左的语言（阿拉伯语、希伯来语、波斯语）";
 "catalog.editor.2.2.note" = "将以希伯来文或阿拉伯文开头的行右对齐。仅在“语法高亮”打开时起作用。";
-"group.editor.3.title" = "语法颜色";
+"group.editor.3.title" = "语法高亮";
 "catalog.editor.3.0.title" = "将 @ 视为命令名的一部分";
 "catalog.editor.3.1.title" = "默认高亮expl3代码";
 "catalog.editor.3.2.title" = "高亮全角字母数字符号";

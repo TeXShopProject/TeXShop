@@ -783,13 +783,13 @@
                                     <action selector="toggleStatusBar:" target="-1" id="Stb-Ac-7Kd"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Exibir destaque de sintaxe" tag="14" id="sTX-uf-FJw" identifier="TSShortcut.toggleSyntaxColor:.14">
+                            <menuItem title="Destaque de sintaxe" tag="14" id="sTX-uf-FJw" identifier="TSShortcut.toggleSyntaxColor:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleSyntaxColor:" target="-1" id="J20-jE-MJ8"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Código exp da cor da sintaxe" id="7zl-lU-gjq" identifier="TSShortcut.toggleExplColor:.0">
+                            <menuItem title="Destacar o código expl3" id="7zl-lU-gjq" identifier="TSShortcut.toggleExplColor:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleExplColor:" target="-1" id="fSF-be-sjJ"/>

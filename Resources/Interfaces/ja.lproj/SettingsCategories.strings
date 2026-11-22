@@ -86,10 +86,10 @@
 "catalog.editor.2.0.note" = "前面にないソースのウインドウをクリックしたとき、そのクリックでカーソルも移動します。";
 "catalog.editor.2.1.title" = "選択中に括弧類を入力したら、選択範囲を囲む";
 "catalog.editor.2.2.title" = "右から左に書く言語（Arabic、Hebrew、Persian）";
-"catalog.editor.2.2.note" = "ヘブライ文字やアラビア文字で始まる行を右寄せで表示します。「ソースのカラー表示」がオンのときに働きます。";
-"group.editor.3.title" = "構文の色分け";
+"catalog.editor.2.2.note" = "ヘブライ文字やアラビア文字で始まる行を右寄せで表示します。シンタックスハイライトがオンのときに働きます。";
+"group.editor.3.title" = "シンタックスハイライト";
 "catalog.editor.3.0.title" = "@ をコマンド名の一部と見なす";
-"catalog.editor.3.1.title" = "expl3を既定でハイライト";
+"catalog.editor.3.1.title" = "expl3コードを既定でハイライト";
 "catalog.editor.3.2.title" = "全角英数記号を強調";
 "group.editor.4.title" = "括弧の対応";
 "catalog.editor.4.0.title" = "括弧の対応チェック";

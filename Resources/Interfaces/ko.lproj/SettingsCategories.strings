@@ -18,7 +18,7 @@
 /* Category overview */
 "general.summary" = "시작 동작, 윈도우 위치 및 Dock 아이콘을 설정합니다.";
 "documents.summary" = "텍스트 인코딩과 문서 저장 방식을 설정합니다.";
-"editor.summary" = "편집, 구문 색상, 들여쓰기 및 괄호 짝 표시를 설정합니다.";
+"editor.summary" = "편집, 구문 하이라이트, 들여쓰기 및 괄호 짝 표시를 설정합니다.";
 "spelling.summary" = "입력 중 맞춤법 검사와 LaTeX 맞춤법 검사 방식을 설정합니다.";
 "appearance.summary" = "색상 테마를 선택하고 편집합니다.";
 "preview.summary" = "PDF 미리보기의 표시와 조작을 설정합니다.";
@@ -86,10 +86,10 @@
 "catalog.editor.2.0.note" = "앞에 있지 않은 소스 창을 클릭하면 그 클릭으로 커서도 이동합니다.";
 "catalog.editor.2.1.title" = "괄호 입력 시 선택한 텍스트를 감싸기";
 "catalog.editor.2.2.title" = "오른쪽에서 왼쪽으로 쓰는 언어(아랍어, 히브리어, 페르시아어)";
-"catalog.editor.2.2.note" = "히브리 문자나 아랍 문자로 시작하는 줄을 오른쪽 정렬합니다. 구문 색상 표시가 켜져 있을 때 작동합니다.";
-"group.editor.3.title" = "구문 색상";
+"catalog.editor.2.2.note" = "히브리 문자나 아랍 문자로 시작하는 줄을 오른쪽 정렬합니다. 구문 하이라이트가 켜져 있을 때 작동합니다.";
+"group.editor.3.title" = "구문 하이라이트";
 "catalog.editor.3.0.title" = "@를 명령 이름의 일부로 취급";
-"catalog.editor.3.1.title" = "기본으로 expl3 구문 강조";
+"catalog.editor.3.1.title" = "기본으로 expl3 코드 하이라이트";
 "catalog.editor.3.2.title" = "전각 영숫자·기호 강조";
 "group.editor.4.title" = "괄호 짝 맞추기";
 "catalog.editor.4.0.title" = "괄호 여닫기 체크";
@@ -185,7 +185,7 @@
 "catalog.appearance.3.0.item.0" = "삽입";
 "catalog.appearance.3.0.item.1" = "플래시";
 "catalog.appearance.3.0.item.2" = "현재 줄";
-"group.appearance.4.title" = "구문 강조";
+"group.appearance.4.title" = "구문 하이라이트";
 "catalog.appearance.4.0.item.0" = "주석문";
 "catalog.appearance.4.0.item.1" = "명령어";
 "catalog.appearance.4.0.item.2" = "각주";

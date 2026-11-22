@@ -783,13 +783,13 @@
                                     <action selector="toggleStatusBar:" target="-1" id="Stb-Ac-7Kd"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Syntaxhervorhebung anzeigen" tag="14" id="cS1-GN-QFp" identifier="TSShortcut.toggleSyntaxColor:.14">
+                            <menuItem title="Syntaxhervorhebung" tag="14" id="cS1-GN-QFp" identifier="TSShortcut.toggleSyntaxColor:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleSyntaxColor:" target="-1" id="KIz-dA-OLB"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="expl3-Syntax farblich hervorheben" id="AT3-Ty-RLd" identifier="TSShortcut.toggleExplColor:.0">
+                            <menuItem title="expl3-Code hervorheben" id="AT3-Ty-RLd" identifier="TSShortcut.toggleExplColor:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleExplColor:" target="-1" id="LSD-lU-lXP"/>

@@ -18,7 +18,7 @@
 /* Category overview */
 "general.summary" = "Avvio, posizione delle finestre e icona del Dock.";
 "documents.summary" = "Codifica del testo e salvataggio dei documenti.";
-"editor.summary" = "Modifica, colori della sintassi, rientri e parentesi.";
+"editor.summary" = "Modifica, evidenziazione della sintassi, rientri e parentesi.";
 "spelling.summary" = "Controllo ortografico durante la digitazione e in LaTeX.";
 "appearance.summary" = "Scegli e modifica i temi dei colori.";
 "preview.summary" = "Visualizzazione e controlli dell’anteprima PDF.";
@@ -86,10 +86,10 @@
 "catalog.editor.2.0.note" = "Quando fai clic su una finestra sorgente che non è in primo piano, lo stesso clic sposta anche il cursore.";
 "catalog.editor.2.1.title" = "Racchiudere il testo selezionato quando si digita una parentesi";
 "catalog.editor.2.2.title" = "Lingue da destra a sinistra (arabo, ebraico, persiano)";
-"catalog.editor.2.2.note" = "Allinea a destra le righe che iniziano con caratteri ebraici o arabi. Funziona quando Sintassi Colorata è attiva.";
-"group.editor.3.title" = "Colorazione della sintassi";
+"catalog.editor.2.2.note" = "Allinea a destra le righe che iniziano con caratteri ebraici o arabi. Funziona quando l’evidenziazione della sintassi è attiva.";
+"group.editor.3.title" = "Evidenziazione della sintassi";
 "catalog.editor.3.0.title" = "@ fa parte dei nomi dei comandi";
-"catalog.editor.3.1.title" = "Colora expl3 di default";
+"catalog.editor.3.1.title" = "Evidenzia il codice expl3 di default";
 "catalog.editor.3.2.title" = "Evidenzia lettere e simboli a larghezza piena";
 "group.editor.4.title" = "Corrispondenza delle parentesi";
 "catalog.editor.4.0.title" = "Controllo Parentesi";
