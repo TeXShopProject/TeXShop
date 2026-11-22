@@ -24,7 +24,7 @@ import subprocess
 import tempfile
 from source_tree import include_args
 
-INSET = '                insetX = MIN(tried, middleX);\n                inset = MIN(tried, middleY);\n'
+INSET = '            insetX = MIN(found, middleX);\n            inset = MIN(found, middleY);\n'
 MUTATIONS = {
     'edge-on-screen': ('    CGFloat width = MAX(TSLinkPreviewEdgeWidth, [self unitsPerPixel]);\n',
                        '    CGFloat width = [self unitsPerScreenPoint];\n'),
@@ -34,11 +34,13 @@ MUTATIONS = {
                              '    CGFloat fontSize = TSLinkPreviewLabelFontSize;\n'),
     'label-uncapped': ('    CGFloat scale = MIN(unit, 1);\n',
                        '    CGFloat scale = unit;\n'),
-    'label-in-corner': (INSET, '                insetX = inset = margin;\n'),
+    'label-in-corner': (INSET, '            insetX = inset = margin;\n'),
     'label-ignores-curve': ('    if (!(rx > 0) || !(ry > 0)) return least;\n', '    return least;\n'),
     'label-circle-corners': ('    CGFloat rx = MIN(line, (w - edge) / 2), ry = MIN(line, (h - edge) / 2);\n',
                              '    CGFloat rx = line, ry = line;\n'),
-    'label-old-inset': (INSET, '                insetX = inset = MAX(margin, TSLinkPreviewCornerRadius + edge);\n'),
+    'label-skips-endpoint': ('        NSInteger steps = (NSInteger)ceil((farthest - clear) / step);\n',
+                             '        NSInteger steps = (NSInteger)floor((farthest - clear) / step + 0.5);\n'),
+    'label-old-inset': (INSET, '            insetX = inset = MAX(margin, TSLinkPreviewCornerRadius + edge);\n'),
     'drops-short-label': ('        fontSize = next;\n',
                           '        return;\n'),
     'label-estimate-floor': ('        CGFloat next = fontSize * fit;\n'
@@ -72,6 +74,7 @@ EXPECTED = {
     'label-in-corner': 'the page label stays clear of the frame',
     'label-ignores-curve': 'the page label stays clear of the frame',
     'label-old-inset': 'the page label sits in the corner',
+    'label-skips-endpoint': 'the page label stays visible',
     'label-circle-corners': ('the page label stays visible', 'the page label keeps its size on screen', 'the page label sits in the corner'),
     'drops-short-label': 'the page label stays visible',
     'label-estimate-floor': 'the page label stays visible',
@@ -481,6 +484,29 @@ int main(void) { @autoreleasepool {
                 if (kind == 0) check(screen > 10, "the page label keeps its size on screen");
                 else check(screen >= 6 && screen < 10, "the page label stays at least six points on screen");
             }
+        }
+    }
+    // Resizing a pinned popup point by point at 2000%, 45 points high, and one at 1900%,
+    // 132 by 43: the place found is at the end of the search, where the room is largest.
+    // However little is left for the last step, it is tried (#14).
+    for (NSNumber *density in @[@1, @2]) {
+        backingOverride = density.doubleValue;
+        NSArray *sizes = @[@[@20, @128, @45, @"Page 127"], @[@20, @129, @45, @"Page 127"], @[@20, @130, @45, @"Page 127"],
+                           @[@20, @131, @45, @"Page 127"], @[@20, @132, @45, @"Page 127"], @[@19, @132, @43, @"Page 2"]];
+        for (NSArray *size in sizes) {
+            CGFloat mag = [size[0] doubleValue];
+            view.scaleFactor = mag;
+            popup.pageLabel = size[3];
+            popup.frame = NSMakeRect(20, 20, [size[1] doubleValue] / mag, [size[2] doubleValue] / mag);
+            CGFloat unit = [popup unitsPerScreenPoint];
+            CGFloat pixels = backingOverride / unit;
+            LabelBox box = measureLabel(render(popup, pixels), pixels);
+            printf("label %.0f%% at %.0fx in %.0f by %.0f points: %s, %.2f inside the black edge\n", mag * 100,
+                   backingOverride, [size[1] doubleValue], [size[2] doubleValue], box.gray ? "drawn" : "left out",
+                   box.gray ? box.clearance / unit : 0.0);
+            check(box.gray > 8 && box.white > 0, "the page label stays visible");
+            check(box.dark == 0 && box.clearance >= 3 * unit - 1 / pixels, "the page label stays clear of the frame");
+            check(box.clearance <= 3 * unit + 1 / pixels, "the page label sits in the corner");
         }
     }
     backingOverride = 0;

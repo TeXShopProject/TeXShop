@@ -269,27 +269,46 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
         NSSize capsuleSize = NSMakeSize(textWidth + height, height);
         CGFloat middleX = MAX((NSWidth(bounds) - capsuleSize.width) / 2, clear);
         CGFloat middleY = MAX((NSHeight(bounds) - capsuleSize.height) / 2, clear);
-        CGFloat step = MAX(px, TSLinkPreviewCornerRadius / 256), last = clear;
+        CGFloat step = MAX(px, TSLinkPreviewCornerRadius / 256);
         CGFloat farthest = MIN(clear + TSLinkPreviewCornerRadius, MAX(middleX, middleY));
-        placed = NO;
-        for (CGFloat d = clear; d <= farthest + step / 2; d += step) {
-            CGFloat tried = MIN(d, farthest);
-            if (TSLinkPreviewLabelClearance(bounds.size, edge, capsuleSize,
-                                            NSMakePoint(MIN(tried, middleX), MIN(tried, middleY))) >= margin) {
-                CGFloat near = MIN(last, tried);
-                for (NSInteger halve = 0; tried - near > px / 100 && halve < 20; halve++) {
-                    CGFloat middle = (near + tried) / 2;
-                    if (TSLinkPreviewLabelClearance(bounds.size, edge, capsuleSize,
-                                                    NSMakePoint(MIN(middle, middleX), MIN(middle, middleY))) >= margin)
-                        tried = middle;
-                    else near = middle;
-                }
-                insetX = MIN(tried, middleX);
-                inset = MIN(tried, middleY);
-                placed = YES;
-                break;
+        CGFloat (^room)(CGFloat) = ^CGFloat(CGFloat along) {
+            return TSLinkPreviewLabelClearance(bounds.size, edge, capsuleSize,
+                                               NSMakePoint(MIN(along, middleX), MIN(along, middleY)));
+        };
+        // The last step ends at `farthest` itself, however little is left for it (#14).
+        NSInteger steps = (NSInteger)ceil((farthest - clear) / step);
+        CGFloat last = clear, best = -CGFLOAT_MAX, bestAlong = clear, found = -1, before = clear;
+        for (NSInteger i = 0; i <= steps; i++) {
+            CGFloat along = MIN(clear + i * step, farthest);
+            CGFloat here = room(along);
+            if (here >= margin) { found = along; before = MIN(last, along); break; }
+            if (here > best) { best = here; bestAlong = along; }
+            last = along;
+        }
+        // The room grows and then shrinks along the way, so it can be enough only between two
+        // steps. Look for its top between the neighbors of the best step tried (#14).
+        if (found < 0) {
+            CGFloat low = MAX(clear, bestAlong - step), high = MIN(last, bestAlong + step);
+            for (NSInteger third = 0; third < 40 && high - low > px / 100; third++) {
+                CGFloat a = low + (high - low) / 3, b = high - (high - low) / 3;
+                if (room(a) < room(b)) low = a; else high = b;
             }
-            last = tried;
+            CGFloat top = (low + high) / 2;
+            if (room(top) >= margin) {
+                found = top;
+                before = MAX(clear, bestAlong - step);
+            }
+        }
+        placed = found >= 0;
+        if (placed) {
+            // Back toward the corner, to the first place with room.
+            for (NSInteger halve = 0; found - before > px / 100 && halve < 20; halve++) {
+                CGFloat middle = (before + found) / 2;
+                if (room(middle) >= margin) found = middle;
+                else before = middle;
+            }
+            insetX = MIN(found, middleX);
+            inset = MIN(found, middleY);
         }
         capsule = NSMakeRect(NSMaxX(bounds) - insetX - capsuleSize.width, NSMinY(bounds) + inset,
                              capsuleSize.width, capsuleSize.height);
