@@ -1,9 +1,9 @@
 // TSSplitToggleCue.h
 //
 // The Split Source and Split Preview toolbar buttons show a window split top and
-// bottom. While Option is held with the pointer over the button of a window that is
-// not split, the button shows the side-by-side split that a click then makes. In a
-// split window the button shows how the window is split.
+// bottom. While Option is held in a window that is not split, wherever the pointer
+// is, the buttons show the side-by-side split that a click then makes. In a split
+// window the button shows how the window is split.
 
 #import <Cocoa/Cocoa.h>
 
@@ -17,11 +17,11 @@ static inline BOOL TSSplitToggleOptionHeld(NSEventModifierFlags flags)
 
 // In a split window the button unsplits, whatever the modifiers, and shows the split
 // that is there.
-static inline BOOL TSSplitToggleShowsSideBySide(NSEventModifierFlags flags, BOOL windowIsSplit, BOOL splitSideBySide, BOOL pointerOverButton)
+static inline BOOL TSSplitToggleShowsSideBySide(NSEventModifierFlags flags, BOOL windowIsSplit, BOOL splitSideBySide)
 {
     if (windowIsSplit)
         return splitSideBySide;
-    return TSSplitToggleOptionHeld(flags) && pointerOverButton;
+    return TSSplitToggleOptionHeld(flags);
 }
 
 // The tool tip of a split button: what a click does.
@@ -43,35 +43,4 @@ static inline NSImage *TSSplitToggleSideBySideImage(NSImage *image)
 {
     return [NSImage imageWithSystemSymbolName:TSSplitToggleSideBySideSymbolName
                      accessibilityDescription:image.accessibilityDescription];
-}
-
-// AppKit draws an image toolbar item with a button that carries the item's target
-// and action.
-static NSButton *TSSplitToggleButtonInView(NSView *view, NSToolbarItem *item)
-{
-    if ([view isKindOfClass:[NSButton class]] && ((NSButton *)view).action == item.action &&
-        ((NSButton *)view).target == item.target)
-        return (NSButton *)view;
-    for (NSView *subview in view.subviews) {
-        NSButton *button = TSSplitToggleButtonInView(subview, item);
-        if (button)
-            return button;
-    }
-    return nil;
-}
-
-// YES when the point, in the window's coordinates, is on the item's button and
-// nothing covers the button there.
-static inline BOOL TSSplitTogglePointOnItem(NSWindow *window, NSToolbarItem *item, NSPoint point)
-{
-    NSView *frameView = window.contentView.superview;
-    if (!frameView || !item.action)
-        return NO;
-    NSView *hit = [frameView hitTest: frameView.superview ? [frameView.superview convertPoint:point fromView:nil] : point];
-    NSButton *button = TSSplitToggleButtonInView(frameView, item);
-    if (!hit || !button || button.hiddenOrHasHiddenAncestor)
-        return NO;
-    if (!([button isDescendantOf:hit] || [hit isDescendantOf:button]))
-        return NO;
-    return NSPointInRect([button convertPoint:point fromView:nil], button.bounds);
 }
