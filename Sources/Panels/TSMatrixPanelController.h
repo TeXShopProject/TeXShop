@@ -42,8 +42,6 @@
 	IBOutlet id mtscrv;
 	IBOutlet id vstep;
 	IBOutlet id vtf;
-	
-	NSInteger			MatrixSize;
 
 	BOOL shown; //YES if user has chosen to display panel
 
@@ -75,7 +73,23 @@
 - (IBAction)resizeMatrix:(id)sender;
 // - (NSArray*)draggedRows;
 
+// The cells of the table, by row and by column in the order shown (without the row numbers). The table
+// grows as far as TSMatrixLargestSize rows and columns, and never shrinks: the cells beyond the rows and
+// columns inserted keep their values.
+- (NSInteger)gridRows;
+- (NSInteger)gridColumns;
+- (void)growGridToRows:(NSInteger)rows columns:(NSInteger)columns;
+- (NSString *)valueAtRow:(NSInteger)row shownColumn:(NSInteger)column;
+// Puts the values in place from the given cell on, as one change that can be undone; the rows and
+// columns beyond the largest size are left out.
+- (void)setValues:(NSArray<NSArray<NSString *> *> *)values atRow:(NSInteger)row shownColumn:(NSInteger)column;
+// Empties the cells, as one change that can be undone.
+- (void)clearRows:(NSRange)rows shownColumns:(NSRange)columns;
+
 @end
+
+// The largest number of rows and of columns of the table.
+extern const NSInteger TSMatrixLargestSize;
 
 
 @interface MatrixData : NSObject {
@@ -91,6 +105,7 @@
 - (id)objectInRow:(NSUInteger)row inCol:(NSUInteger)col;
 - (id)myRowAtIndex:(NSUInteger)row;
 - (void)replaceObjectInRow:(NSUInteger)row inCol:(NSUInteger)col withObject:(id) anObj;
+- (void)growToRows:(NSInteger)rows columns:(NSInteger)columns;
 - (void)addRow;
 - (void)insertRow:(NSMutableArray*)row atIndex:(NSInteger)ind;
 - (void)removeRowAtIndex:(NSUInteger)ind;

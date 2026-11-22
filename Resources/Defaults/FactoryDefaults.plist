@@ -122,8 +122,6 @@
 	<string>makeindex</string>
 	<key>MetaPostEngine</key>
 	<string>mpost</string>
-	<key>matrixsize</key>
-	<integer>12</integer>
 	<key>NewLineCharacterKind</key>
 	<string>0</string>
 	<key>NoScrollPageTurn</key>

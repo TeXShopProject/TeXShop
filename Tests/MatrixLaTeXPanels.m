@@ -23,8 +23,16 @@
 - (BOOL)tableView:(NSTableView *)tableView shouldReorderColumn:(NSInteger)columnIndex toColumn:(NSInteger)newColumnIndex;
 - (void)tableView:(NSTableView *)tv setObjectValue:(id)objectValue forTableColumn:(NSTableColumn *)tc row:(NSInteger)row;
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
-- (BOOL)tableView:(NSTableView *)tv writeRows:(NSArray *)rows toPasteboard:(NSPasteboard *)pboard;
+- (BOOL)tableView:(NSTableView *)tv writeRowsWithIndexes:(NSIndexSet *)rows toPasteboard:(NSPasteboard *)pboard;
 - (BOOL)tableView:(NSTableView *)tv acceptDrop:(id)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)op;
+@end
+@interface TSMatrixPanelController (Undo)
+- (NSUndoManager *)windowWillReturnUndoManager:(NSWindow *)window;
+@end
+@interface TSMatrixTableView (Edit)
+- (void)copy:(id)sender;
+- (void)cut:(id)sender;
+- (void)paste:(id)sender;
 @end
 
 static int failures;
@@ -157,7 +165,7 @@ static void CheckMatrixPanel(NSString *language, NSString *path, Listener *liste
     RowDrag *drag = [RowDrag new];
     drag.draggingPasteboard = [NSPasteboard pasteboardWithUniqueName];
     drag.draggingSource = table;
-    [panel tableView:table writeRows:@[@0] toPasteboard:drag.draggingPasteboard];
+    [panel tableView:table writeRowsWithIndexes:[NSIndexSet indexSetWithIndex:0] toPasteboard:drag.draggingPasteboard];
     [panel tableView:table acceptDrop:drag row:2 dropOperation:NSTableViewDropAbove];
     [panel insertMatrix:insert];
     Expect([listener.posted.lastObject isEqual:@"\\left(\\begin{array}{ccc}0 & 0 & 0 \\\\x & 0 & 0 \\\\0 & 0 & 0\\end{array}\\right)"], name([@"a dragged row moves its values: " stringByAppendingString:listener.posted.lastObject ?: @"nothing"]));
@@ -217,6 +225,226 @@ static void CheckMatrixPanel(NSString *language, NSString *path, Listener *liste
         Expect(dark ? white < 0.3 : white > 0.8, name([NSString stringWithFormat:@"the table is %@ in %@ appearance (gray %.2f)", dark ? @"dark" : @"light", dark ? @"dark" : @"light", white]));
     }
     w.appearance = nil;
+}
+
+// A key with modifiers, as the window gets it.
+static void KeyWith(NSWindow *w, NSString *chars, unsigned short code, NSEventModifierFlags flags) {
+    [w sendEvent:[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:flags timestamp:0 windowNumber:w.windowNumber
+                                    context:nil characters:chars charactersIgnoringModifiers:chars isARepeat:NO keyCode:code]];
+}
+static NSString *Arrow(unichar key) { return [NSString stringWithCharacters:&key length:1]; }
+// A click in a cell of the table: the button comes up at once.
+static void Click(NSTableView *table, NSInteger tableColumn, NSInteger row, NSInteger count, NSEventModifierFlags flags) {
+    NSRect cell = [table frameOfCellAtColumn:tableColumn row:row];
+    NSPoint p = [table convertPoint:NSMakePoint(NSMidX(cell), NSMidY(cell)) toView:nil];
+    NSWindow *w = table.window;
+    NSEvent *(^mouse)(NSEventType) = ^(NSEventType type) {
+        return [NSEvent mouseEventWithType:type location:p modifierFlags:flags timestamp:NSProcessInfo.processInfo.systemUptime windowNumber:w.windowNumber context:nil eventNumber:0 clickCount:count pressure:1];
+    };
+    [NSApp postEvent:mouse(NSEventTypeLeftMouseUp) atStart:NO];
+    [table mouseDown:mouse(NSEventTypeLeftMouseDown)];
+}
+
+// Each event is one change to undo: the run loop closes the group, as after an event in the application.
+static void CloseUndoGroups(NSUndoManager *undo) {
+    for (int i = 0; i < 20 && undo.groupingLevel > 0; i++) [NSRunLoop.currentRunLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+    Expect(undo.groupingLevel == 0, @"the run loop closes the group of changes to undo");
+}
+
+// The table of the Matrix panel used like a spreadsheet, the size of the panel and of the matrix, and the
+// fields for other delimiters.
+static void CheckMatrixSpreadsheet(NSString *language, NSString *path, Listener *listener) {
+    NSWindow *w = nil;
+    TSMatrixPanelController *panel = Load(TSMatrixPanelController.class, path, &w);
+    if (!panel) { Expect(NO, [NSString stringWithFormat:@"%@ matrix panel loads", language]); return; }
+    NSString *(^name)(NSString *) = ^(NSString *what) { return [NSString stringWithFormat:@"%@ matrix table: %@", language, what]; };
+    TSMatrixTableView *table = [panel valueForKey:@"matrixtable"];
+    table.pasteboard = [NSPasteboard pasteboardWithUniqueName];
+    NSButton *insert = nil;
+    for (NSView *v in w.contentView.subviews) if ([v isKindOfClass:NSButton.class] && ((NSButton *)v).action == @selector(insertMatrix:)) insert = (NSButton *)v;
+    NSString *(^at)(NSInteger, NSInteger) = ^(NSInteger r, NSInteger c) { return [panel valueAtRow:r shownColumn:c]; };
+    NSInteger (^tc)(NSInteger) = ^NSInteger(NSInteger c) { return (NSInteger)[table.tableColumns indexOfObject:table.matrixColumns[c]]; };
+
+    // The panel has no largest size.
+    Expect(w.contentMaxSize.width > 10000 && w.contentMaxSize.height > 10000, name([NSString stringWithFormat:@"the panel can be made as large as wanted (%@)", NSStringFromSize(w.contentMaxSize)]));
+    Expect(table.columnAutoresizingStyle == NSTableViewNoColumnAutoresizing && table.enclosingScrollView.hasHorizontalScroller, name(@"the columns keep their widths and the table scrolls sideways"));
+    // A larger panel shows more rows and columns.
+    NSInteger rowsBefore = panel.gridRows, columnsBefore = panel.gridColumns;
+    [w setContentSize:NSMakeSize(1400, 1100)]; [w.contentView layoutSubtreeIfNeeded];
+    [NSNotificationCenter.defaultCenter postNotificationName:NSViewFrameDidChangeNotification object:table.enclosingScrollView.contentView];
+    Expect(panel.gridRows > rowsBefore && panel.gridColumns > columnsBefore && panel.gridColumns == (NSInteger)table.matrixColumns.count,
+           name([NSString stringWithFormat:@"a larger panel fills with rows and columns (%ld x %ld -> %ld x %ld)", (long)rowsBefore, (long)columnsBefore, (long)panel.gridRows, (long)panel.gridColumns]));
+
+    // The rows and columns go up to 999, and the cells left out keep their values.
+    NSTextField *rowsField = [panel valueForKey:@"vtf"], *columnsField = [panel valueForKey:@"htf"];
+    NSStepper *rowsStepper = [panel valueForKey:@"vstep"], *columnsStepper = [panel valueForKey:@"hstep"];
+    Expect(rowsStepper.maxValue == TSMatrixLargestSize && columnsStepper.maxValue == TSMatrixLargestSize && TSMatrixLargestSize == 999, name(@"the steppers go up to 999"));
+    columnsField.integerValue = 40; [panel resizeMatrix:columnsField];
+    Expect(panel.theMatrix.actCols == 40 && panel.gridColumns >= 40 && columnsStepper.integerValue == 40, name(@"40 columns"));
+    rowsField.integerValue = 2; [panel resizeMatrix:rowsField];
+    [panel insertMatrix:insert];
+    NSString *forty = [@"" stringByPaddingToLength:40 withString:@"c" startingAtIndex:0];
+    Expect([listener.posted.lastObject hasPrefix:[NSString stringWithFormat:@"\\left(\\begin{array}{%@}", forty]], name(@"40 columns are inserted"));
+    NSDate *start = NSDate.date;
+    columnsField.integerValue = 5000; [panel resizeMatrix:columnsField];
+    rowsField.integerValue = 5000; [panel resizeMatrix:rowsField];
+    Expect(panel.theMatrix.actCols == 999 && panel.theMatrix.actRows == 999 && panel.gridColumns == 999 && panel.gridRows == 999 && columnsField.integerValue == 999,
+           name(@"5000 rows and columns become 999"));
+    Expect(-start.timeIntervalSinceNow < 20, name([NSString stringWithFormat:@"999 by 999 takes %.1f s", -start.timeIntervalSinceNow]));
+    [panel setValues:@[@[@"kept"]] atRow:998 shownColumn:998];
+    columnsField.integerValue = 3; [panel resizeMatrix:columnsField];
+    rowsField.integerValue = 3; [panel resizeMatrix:rowsField];
+    Expect(panel.gridColumns == 999 && [at(998, 998) isEqual:@"kept"], name(@"fewer rows and columns keep the table and its values"));
+    [panel insertMatrix:insert];
+    Expect([listener.posted.lastObject isEqual:@"\\left(\\begin{array}{ccc}0 & 0 & 0 \\\\0 & 0 & 0 \\\\0 & 0 & 0\\end{array}\\right)"], name([@"3 by 3 again: " stringByAppendingString:listener.posted.lastObject ?: @"nothing"]));
+    [table scrollRowToVisible:0]; [table scrollColumnToVisible:0];
+
+    // Typing in a cell, Return and Tab as in a spreadsheet.
+    [w makeFirstResponder:table];
+    [table selectRow:0 column:0 extending:NO];
+    [listener.posted removeAllObjects];
+    Key(w, @"5", 23);
+    Expect(table.currentEditor != nil, name(@"typing starts editing the cell"));
+    Key(w, @"\r", 36);
+    Expect([at(0, 0) isEqual:@"5"] && table.activeRow == 1 && table.activeColumn == 0 && table.currentEditor == nil && w.firstResponder == table,
+           name([NSString stringWithFormat:@"Return keeps 5 and goes down (%@ at %ld,%ld)", at(0, 0), (long)table.activeRow, (long)table.activeColumn]));
+    Key(w, @"a", 0); Key(w, @"\t", 48); Key(w, @"b", 11); Key(w, @"\t", 48); Key(w, @"c", 8); Key(w, @"\r", 36);
+    Expect([at(1, 0) isEqual:@"a"] && [at(1, 1) isEqual:@"b"] && [at(1, 2) isEqual:@"c"] && table.activeRow == 2 && table.activeColumn == 0,
+           name([NSString stringWithFormat:@"Tab goes right and Return comes back to the first column (%ld,%ld)", (long)table.activeRow, (long)table.activeColumn]));
+    Expect(listener.posted.count == 0, name(@"Return in the table does not insert"));
+    // Return and Tab without editing move too.
+    Key(w, @"\r", 36);
+    Expect(table.activeRow == 3 && listener.posted.count == 0, name(@"Return without editing goes down and does not insert"));
+    KeyWith(w, @"\r", 36, NSEventModifierFlagShift);
+    Expect(table.activeRow == 2, name(@"Shift-Return goes up"));
+    KeyWith(w, @"\r", 36, NSEventModifierFlagCommand);
+    Expect(listener.posted.count == 1, name(@"Command-Return inserts from the table"));
+    // Typing replaces; an arrow key keeps it and moves; Escape puts the value back.
+    [table selectRow:1 column:1 extending:NO];
+    Key(w, @"x", 7); Key(w, Arrow(NSRightArrowFunctionKey), 124);
+    Expect([at(1, 1) isEqual:@"x"] && table.activeColumn == 2 && table.currentEditor == nil, name(@"typing replaces the value and an arrow key moves on"));
+    Key(w, @"9", 25); Key(w, @"\x1b", 53);
+    Expect([at(1, 2) isEqual:@"c"] && table.currentEditor == nil && w.firstResponder == table, name([@"Escape puts the value back: " stringByAppendingString:at(1, 2)]));
+    // F2 and a double click edit the value: the arrow keys move in the text.
+    Key(w, Arrow(NSF2FunctionKey), 120);
+    Expect([table.currentEditor.string isEqual:@"c"] && table.currentEditor.selectedRange.location == 1 && table.currentEditor.selectedRange.length == 0, name(@"F2 edits the value, the caret at its end"));
+    Key(w, Arrow(NSLeftArrowFunctionKey), 123); Key(w, @"d", 2); Key(w, @"\r", 36);
+    Expect([at(1, 2) isEqual:@"dc"] && table.activeRow == 2, name([@"the arrow keys move in a cell being edited: " stringByAppendingString:at(1, 2)]));
+    [table selectRow:1 column:2 extending:NO];
+    KeyWith(w, @"u", 32, NSEventModifierFlagControl);
+    Expect([table.currentEditor.string isEqual:@"dc"], name(@"Control-U edits the value"));
+    Key(w, @"\x1b", 53);
+
+    // Arrow keys, Shift, Command; going past the last column adds one.
+    [table selectRow:0 column:0 extending:NO];
+    KeyWith(w, Arrow(NSRightArrowFunctionKey), 124, NSEventModifierFlagShift); KeyWith(w, Arrow(NSDownArrowFunctionKey), 125, NSEventModifierFlagShift);
+    Expect(NSEqualRanges(table.selectedRows, NSMakeRange(0, 2)) && NSEqualRanges(table.selectedColumns, NSMakeRange(0, 2)) && table.activeRow == 0 && table.activeColumn == 0, name(@"Shift and the arrow keys choose a range"));
+    KeyWith(w, Arrow(NSRightArrowFunctionKey), 124, NSEventModifierFlagCommand);
+    Expect(table.activeColumn == 2 && table.selectedColumns.length == 1, name(@"Command-Right goes to the last column inserted"));
+    [table selectRow:0 column:panel.gridColumns - 1 extending:NO];
+    NSInteger columns = panel.gridColumns;
+    Key(w, Arrow(NSRightArrowFunctionKey), 124);
+    Expect(columns == 999 ? panel.gridColumns == 999 : panel.gridColumns == columns + 1, name(@"going past the last column adds one, up to 999"));
+
+    // What was typed in a cell is undone as a change of the table.
+    CloseUndoGroups(w.undoManager);
+    [table selectRow:2 column:2 extending:NO];
+    Key(w, @"q", 12); Key(w, @"\r", 36);
+    Expect([at(2, 2) isEqual:@"q"], name(@"q typed"));
+    CloseUndoGroups(w.undoManager);
+    [w.undoManager undo];
+    Expect([at(2, 2) isEqual:@"0"] && w.firstResponder == table, name([@"Undo takes back what was typed in a cell: " stringByAppendingString:at(2, 2)]));
+    CloseUndoGroups(w.undoManager);
+    [w.undoManager redo];
+    Expect([at(2, 2) isEqual:@"q"], name(@"Redo types it again"));
+    // Delete empties the cells chosen; Undo and Redo.
+    [table selectRows:NSMakeRange(1, 1) columns:NSMakeRange(0, 2)];
+    CloseUndoGroups(w.undoManager);
+    Key(w, @"\x7f", 51);
+    Expect([at(1, 0) isEqual:@""] && [at(1, 1) isEqual:@""] && [at(1, 2) isEqual:@"dc"], name(@"Delete empties the cells chosen"));
+    CloseUndoGroups(w.undoManager);
+    [w.undoManager undo];
+    Expect([at(1, 0) isEqual:@"a"] && [at(1, 1) isEqual:@"x"], name(@"Undo puts them back"));
+    CloseUndoGroups(w.undoManager);
+    [w.undoManager redo];
+    Expect([at(1, 0) isEqual:@""], name(@"Redo empties them again"));
+    Expect(w.undoManager == [panel windowWillReturnUndoManager:w], name(@"the panel has its own undo"));
+
+    // Copy and paste tab separated text, as spreadsheets do.
+    CloseUndoGroups(w.undoManager);
+    [panel setValues:@[@[@"1", @"2"], @[@"3", @"a\tb"]] atRow:0 shownColumn:0];
+    [table selectRows:NSMakeRange(0, 2) columns:NSMakeRange(0, 2)];
+    [table copy:nil];
+    Expect([[table.pasteboard stringForType:NSPasteboardTypeString] isEqual:@"1\t2\n3\t\"a\tb\""], name([@"Copy gives tab separated text: " stringByAppendingString:[table.pasteboard stringForType:NSPasteboardTypeString] ?: @"nothing"]));
+    [table selectRow:4 column:1 extending:NO];
+    CloseUndoGroups(w.undoManager);
+    [table paste:nil];
+    Expect([at(4, 1) isEqual:@"1"] && [at(4, 2) isEqual:@"2"] && [at(5, 1) isEqual:@"3"] && [at(5, 2) isEqual:@"a\tb"] && NSEqualRanges(table.selectedRows, NSMakeRange(4, 2)) && NSEqualRanges(table.selectedColumns, NSMakeRange(1, 2)),
+           name(@"Paste puts the cells in place and chooses them"));
+    [table.pasteboard clearContents];
+    [table.pasteboard setString:@"p\t\"q\"\"r\"\r\ns\r\n" forType:NSPasteboardTypeString];
+    [table selectRow:6 column:0 extending:NO];
+    CloseUndoGroups(w.undoManager);
+    [table paste:nil];
+    Expect([at(6, 0) isEqual:@"p"] && [at(6, 1) isEqual:@"q\"r"] && [at(7, 0) isEqual:@"s"], name(@"Paste reads quotes and Windows line ends"));
+    [table.pasteboard clearContents];
+    [table.pasteboard setString:@"7" forType:NSPasteboardTypeString];
+    [table selectRows:NSMakeRange(8, 2) columns:NSMakeRange(0, 2)];
+    CloseUndoGroups(w.undoManager);
+    [table paste:nil];
+    Expect([at(8, 0) isEqual:@"7"] && [at(9, 1) isEqual:@"7"], name(@"one value fills the range chosen"));
+    CloseUndoGroups(w.undoManager);
+    [w.undoManager undo];
+    Expect([at(8, 0) isEqual:@"0"] && [at(9, 1) isEqual:@"0"], name(@"Undo takes a paste back"));
+    [table selectRows:NSMakeRange(4, 1) columns:NSMakeRange(1, 1)];
+    CloseUndoGroups(w.undoManager);
+    [table cut:nil];
+    Expect([at(4, 1) isEqual:@""] && [[table.pasteboard stringForType:NSPasteboardTypeString] isEqual:@"1"], name(@"Cut copies and empties"));
+    // Clear, Identity and Zero can be undone.
+    NSMatrix *modify = [panel valueForKey:@"matmod"];
+    CloseUndoGroups(w.undoManager);
+    [modify selectCellWithTag:2]; [panel resetMatrix:modify];
+    Expect([at(0, 0) isEqual:@"0"], name(@"Zero"));
+    CloseUndoGroups(w.undoManager);
+    [w.undoManager undo];
+    Expect([at(0, 0) isEqual:@"1"], name(@"Undo takes Zero back"));
+
+    // Clicks: a cell, Shift, a double click; the header of a column; only the row numbers drag rows.
+    [w makeFirstResponder:table];
+    Click(table, tc(1), 2, 1, 0);
+    Expect(table.activeRow == 2 && table.activeColumn == 1 && table.currentEditor == nil, name(@"a click chooses a cell"));
+    Click(table, tc(2), 3, 1, NSEventModifierFlagShift);
+    Expect(table.activeRow == 2 && table.activeColumn == 1 && NSEqualRanges(table.selectedRows, NSMakeRange(2, 2)) && NSEqualRanges(table.selectedColumns, NSMakeRange(1, 2)), name(@"Shift-click chooses a range"));
+    Click(table, tc(0), 1, 2, 0);
+    Expect(table.currentEditor != nil && table.activeRow == 1 && table.activeColumn == 0, name(@"a double click edits the cell"));
+    Click(table, tc(1), 1, 1, 0);
+    Expect(table.currentEditor == nil && table.activeColumn == 1, name(@"a click elsewhere ends editing"));
+    [table.delegate tableView:table didClickTableColumn:table.matrixColumns[2]];
+    Expect(NSEqualRanges(table.selectedColumns, NSMakeRange(2, 1)) && table.selectedRows.length == (NSUInteger)panel.gridRows, name(@"a click on a column header chooses the column"));
+    [table.delegate tableView:table didClickTableColumn:table.tableColumns[0]];
+    Expect(table.selectedColumns.length == (NSUInteger)panel.gridColumns && table.selectedRows.length == (NSUInteger)panel.gridRows, name(@"a click above the row numbers chooses every cell"));
+    NSRect numberCell = [table frameOfCellAtColumn:0 row:2], valueCell = [table frameOfCellAtColumn:tc(0) row:2];
+    NSIndexSet *two = [NSIndexSet indexSetWithIndex:2];
+    Expect([table canDragRowsWithIndexes:two atPoint:NSMakePoint(NSMidX(numberCell), NSMidY(numberCell))] && ![table canDragRowsWithIndexes:two atPoint:NSMakePoint(NSMidX(valueCell), NSMidY(valueCell))],
+           name(@"rows are dragged by their numbers only"));
+    Expect(table.verticalMotionCanBeginDrag, name(@"a row number can be dragged up or down"));
+
+    // The fields for other delimiters keep what was typed when they are turned off.
+    NSMatrix *open = [panel valueForKey:@"brselop"], *environment = [panel valueForKey:@"envsel"];
+    NSTextField *other = [panel valueForKey:@"brtfop"];
+    [open selectCellWithTag:5]; [panel brselChange:open];
+    Expect(other.isEnabled, name(@"the field for another delimiter is on with its choice"));
+    [w makeFirstResponder:other]; Key(w, @"z", 6);
+    [open selectCellWithTag:0]; [panel brselChange:open];
+    Expect(!other.isEnabled && [other.stringValue isEqual:@"z"], name([@"another choice turns the field off and keeps what was typed: " stringByAppendingString:other.stringValue]));
+    [environment selectCellWithTag:1]; [panel envselChange:environment];
+    [environment selectCellWithTag:0]; [panel envselChange:environment];
+    Expect(!other.isEnabled && [other.stringValue isEqual:@"z"], name(@"going to tabular and back leaves the field off while its choice is not chosen"));
+    [open selectCellWithTag:5]; [panel brselChange:open];
+    Expect(other.isEnabled && [other.stringValue isEqual:@"z"], name(@"choosing it again turns the field on with what was typed"));
+    [w makeFirstResponder:other]; Key(w, @"y", 16);
+    [environment selectCellWithTag:1]; [panel envselChange:environment];
+    Expect(!other.isEnabled && [other.stringValue hasSuffix:@"y"], name([@"tabular keeps what is being typed: " stringByAppendingString:other.stringValue]));
 }
 
 static void CheckLaTeXPanel(NSString *language, NSString *path, Listener *listener, BOOL outlinesOnHover) {
@@ -324,8 +552,9 @@ int main(int argc, char **argv) { @autoreleasepool {
     for (int i = 1; i < argc; i++) {
         NSArray<NSString *> *parts = [@(argv[i]) componentsSeparatedByString:@"|"];
         CheckMatrixPanel(parts[0], parts[1], listener);
+        if ([parts[0] isEqual:@"Base"]) CheckMatrixSpreadsheet(parts[0], parts[1], listener);
         for (NSNumber *hover in @[@YES, @NO]) CheckLaTeXPanel(parts[0], parts[2], listener, hover.boolValue);
     }
     if (failures) { printf("FAIL: %d problems\n", failures); return 1; }
-    printf("PASS: in %d languages the Matrix panel inserts what it did, numbers its rows without a ruler, starts its rows below the header and makes Insert the default button, and the LaTeX panel shows its groups with segmented controls, posts what it did, names its custom buttons and draws its symbols in the color of text\n", argc - 1);
+    printf("PASS: in %d languages the Matrix panel inserts what it did, numbers its rows without a ruler, starts its rows below the header, makes Insert the default button and its table works like a spreadsheet, and the LaTeX panel shows its groups with segmented controls, posts what it did, names its custom buttons and draws its symbols in the color of text\n", argc - 1);
 } return 0; }
