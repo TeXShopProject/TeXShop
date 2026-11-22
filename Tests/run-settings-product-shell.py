@@ -91,6 +91,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
     ('history-inactive-key','TSSettingsWindowController.m','if (controller != nil && self.isKeyWindow && self.attachedSheet == nil)', 'if (controller != nil && self.attachedSheet == nil)'),
     ('sidebar-wrap','TSSettingsSidebarRow.m','label.maximumNumberOfLines = 2;','label.maximumNumberOfLines = 1;'),
     ('wrap-note','TSSettingsCatalogLayout.inc','@"id": @"catalog.editor.0.5", @"kind": @"popup", @"title": @"catalog.editor.0.5.title", @"note": @""','@"id": @"catalog.editor.0.5", @"kind": @"popup", @"title": @"catalog.editor.0.5.title", @"note": @"catalog.editor.0.4.title"'),
+    ('even-columns-unpinned','TSPrefPaneLayout.m','|| [content.layoutGuides indexOfObjectPassingTest:','&& [content.layoutGuides indexOfObjectPassingTest:'),
     ('opening-group-missing','TSSettingsCatalogLayout.inc','@{@"id": @"group.preview.6", @"title": @"group.preview.6.title"','@{@"id": @"group.preview.7", @"title": @"group.preview.6.title"'),
    ])
    for name in ['Chapter','Section','Subsection','Subsubsection','Introduction','Conclusion','Exercises','Project','Figure','Table','Mark']:

@@ -506,7 +506,11 @@ int main(int argc,char **argv){@autoreleasepool{
      if(i+1<items.count && column<2 && columnX[column+1]>=0)Check(NSMaxX(name)<=columnEnd,[NSString stringWithFormat:@"Theme color name ends before the next column at width %@: %@",width,label.stringValue]);
     }
    }
-   Check(columnsUsed==3 && columnX[1]-columnX[0]>=196 && fabs((columnX[2]-columnX[1])-(columnX[1]-columnX[0]))<0.5,@"Theme color columns are evenly spaced");
+   // Thirds of the width fall between pixels: the two spaces may differ by the half point of rounding.
+   Check(columnsUsed==3 && columnX[1]-columnX[0]>=196 && fabs((columnX[2]-columnX[1])-(columnX[1]-columnX[0]))<=0.5+0.01,[NSString stringWithFormat:@"Theme color columns are evenly spaced at width %@: %.2f %.2f %.2f",width,columnX[0],columnX[1],columnX[2]]);
+   NSView *firstRow=Find(themes,@"row.catalog.appearance.3.0");NSGridView *firstGrid=nil;for(NSView *child in firstRow.subviews)if([child isKindOfClass:NSGridView.class])firstGrid=(NSGridView *)child;
+   NSRect firstCard=NSInsetRect([firstRow convertRect:firstRow.bounds toView:themes],12,0),firstFrame=[firstGrid convertRect:firstGrid.bounds toView:themes];
+   Check(fabs(NSMaxX(firstFrame)-NSMaxX(firstCard))<1,[NSString stringWithFormat:@"Theme color columns share the width of the card at width %@",width]);
    if(argc>2)Save(themes,[@(argv[2]) stringByAppendingPathComponent:[NSString stringWithFormat:@"themes-colors-%@-%@.png",width,appearance]]);
   }
   NSString *preview=[fixture localizedStringForKey:@"preview" value:nil table:@"SettingsCategories"];
@@ -516,7 +520,9 @@ int main(int argc,char **argv){@autoreleasepool{
  }
  {
   // The XML tags of the tag list stand in the same three even columns as the theme colors,
-  // and the last tag may use the empty columns after it.
+  // and the last tag may use the empty columns after it. The columns share the width of the
+  // card, so a wider window spreads them.
+  CGFloat xmlSpacing=0;
   [shell selectCategoryIdentifier:TSSettingsCategoryEditor];
   NSView *editor=[shell viewForCategoryIdentifier:TSSettingsCategoryEditor];
   NSSize original=[shell.window contentRectForFrameRect:shell.window.frame].size;
@@ -537,7 +543,11 @@ int main(int argc,char **argv){@autoreleasepool{
     Check(box.cell.cellSize.width<=NSWidth(box.frame)+1 && NSMaxX([box convertRect:box.bounds toView:editor])<=NSMaxX(card)+1,[NSString stringWithFormat:@"XML tag %@ is shown whole in its card at width %@",box.title,width]);
    }
    Check([grid cellAtColumnIndex:2 rowIndex:3].contentView==Find(editor,tags.lastObject),@"The last XML tag may use the empty column after it");
-   Check(columnX[1]-columnX[0]>=216 && fabs((columnX[2]-columnX[1])-(columnX[1]-columnX[0]))<0.5,[NSString stringWithFormat:@"XML tag columns are evenly spaced like the theme colors: %.1f %.1f %.1f",columnX[0],columnX[1],columnX[2]]);
+   Check(columnX[1]-columnX[0]>=216 && fabs((columnX[2]-columnX[1])-(columnX[1]-columnX[0]))<=0.5+0.01,[NSString stringWithFormat:@"XML tag columns are evenly spaced like the theme colors: %.1f %.1f %.1f",columnX[0],columnX[1],columnX[2]]);
+   NSRect gridFrame=[grid convertRect:grid.bounds toView:editor];
+   Check(fabs(NSMaxX(gridFrame)-NSMaxX(card))<1 && fabs((columnX[1]-columnX[0])-(NSWidth(gridFrame)+grid.columnSpacing)/3)<1,[NSString stringWithFormat:@"XML tag columns share the width of the card at width %@: grid %.1f–%.1f, card ends %.1f, columns %.1f %.1f",width,NSMinX(gridFrame),NSMaxX(gridFrame),NSMaxX(card),columnX[0],columnX[1]]);
+   if(width.doubleValue>900)Check(columnX[1]-columnX[0]>xmlSpacing+10,[NSString stringWithFormat:@"XML tag columns spread in a wider window: %.1f after %.1f",columnX[1]-columnX[0],xmlSpacing]);
+   else xmlSpacing=columnX[1]-columnX[0];
    if(argc>2)Save(editor,[@(argv[2]) stringByAppendingPathComponent:[NSString stringWithFormat:@"editor-xml-tags-%@-%@.png",width,appearance]]);
   }
   [shell.window setContentSize:original];[shell.window.contentView layoutSubtreeIfNeeded];

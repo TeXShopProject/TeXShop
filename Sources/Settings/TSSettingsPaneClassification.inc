@@ -62,13 +62,27 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
     for(NSUInteger i=0;i<cells.count;i+=columns){NSMutableArray *row=[NSMutableArray array];for(NSUInteger j=0;j<columns;j++)[row addObject:i+j<cells.count?cells[i+j]:NSGridCell.emptyContentView];[rows addObject:row];}
     NSGridView *grid=[NSGridView gridViewWithViews:rows];grid.translatesAutoresizingMaskIntoConstraints=NO;grid.columnSpacing=spacing;grid.rowSpacing=10;grid.rowAlignment=NSGridRowAlignmentFirstBaseline;return grid;
 }
-// Three columns line up from group to group, and the last item may use the empty columns after it.
+// Three columns share the width of the group equally, so they line up from group to group at any width of the window,
+// and the last item may use the empty columns after it. A column starts at a third or two thirds of the width; a
+// wider item may push it.
 + (NSGridView *)threeColumns:(NSArray<NSView *> *)cells
 {
     NSGridView *grid=[self grid:cells columns:3 spacing:20];
-    for(NSInteger c=0;c<3;c++)[grid columnAtIndex:c].width=196;
     NSInteger last=(NSInteger)cells.count-1;
     if(last>=0 && last%3<2)[grid mergeCellsInHorizontalRange:NSMakeRange(last%3,3-last%3) verticalRange:NSMakeRange(last/3,1)];
+    [grid.widthAnchor constraintGreaterThanOrEqualToConstant:3*196+2*grid.columnSpacing].active=YES;
+    for(NSInteger c=1;c<3;c++){
+        NSView *first=nil;
+        for(NSInteger r=0;r<grid.numberOfRows && first==nil;r++){
+            NSGridCell *cell=[grid cellAtColumnIndex:c rowIndex:r];
+            if(cell.contentView.superview && [grid cellAtColumnIndex:c-1 rowIndex:r]!=cell)first=cell.contentView;
+        }
+        if(first==nil)continue;
+        NSLayoutGuide *start=[NSLayoutGuide new];start.identifier=TSEvenColumnsGuide;[grid addLayoutGuide:start];
+        NSLayoutConstraint *place=[first.leadingAnchor constraintEqualToAnchor:start.trailingAnchor];place.priority=NSLayoutPriorityDefaultHigh+1;
+        [NSLayoutConstraint activateConstraints:@[[start.leadingAnchor constraintEqualToAnchor:grid.leadingAnchor],
+            [start.widthAnchor constraintEqualToAnchor:grid.widthAnchor multiplier:c/3.0 constant:grid.columnSpacing*c/3.0],place]];
+    }
     return grid;
 }
 + (NSView *)buildRow:(NSDictionary *)model views:(NSMutableDictionary<NSString *,NSView *> *)views text:(NSString *(^)(NSString *))text

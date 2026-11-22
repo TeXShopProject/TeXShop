@@ -688,7 +688,7 @@ static NSColor *TSSettingsCardColor(void)
     NSView *view = [NSView new]; view.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:content]; content.translatesAutoresizingMaskIntoConstraints = NO;
     CGFloat pad = trailing ? 7 : 10;
-    BOOL fills = [content.identifier isEqual:@"label.catalog-stack"];
+    BOOL fills = [content.identifier isEqual:@"label.catalog-stack"] || [content.layoutGuides indexOfObjectPassingTest:^BOOL(NSLayoutGuide *guide, NSUInteger i, BOOL *stop) { return [guide.identifier isEqual:TSEvenColumnsGuide]; }] != NSNotFound;
     [NSLayoutConstraint activateConstraints:@[
         trailing ? [content.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-12] : [content.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:12+24*indent],
         fills ? [content.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-12] : (trailing ? [content.leadingAnchor constraintGreaterThanOrEqualToAnchor:view.leadingAnchor constant:12] : [content.trailingAnchor constraintLessThanOrEqualToAnchor:view.trailingAnchor constant:-12]),
