@@ -4376,7 +4376,9 @@ The LaTeX Panel, see \cref{fig:latexpanel}, floats above regular source windows 
 
 \newpage
 
-The Matrix Panel, see \cref{fig:matrixpanel}, is similar, but more complicated. It creates matrices and tables. The number of rows and columns can be set. Experiment with other entries to see how they work.
+The Matrix Panel, see \cref{fig:matrixpanel}, is similar, but more complicated. It creates matrices and tables. The number of rows and columns can be set, up to 999. Experiment with other entries to see how they work.
+
+The table of the Matrix Panel works like a spreadsheet. Click a cell to choose it, drag or Shift-click to choose several, and type to replace the value; double-click, press F2 or press Control-U to edit it. Return moves down, Tab moves right and the arrow keys move in any direction; Delete empties the cells chosen. Copy and Paste exchange cells with spreadsheet applications. Drag the number of a row to move the row, and press Command-Return to insert the matrix. The cells outside the matrix keep their values, shown in gray.
 
 \begin{figure}[htbp] %  figure placement: here, top, bottom, or page
    \centering
@@ -6668,12 +6670,6 @@ By default, automatic saving is on. I strongly recommend leaving it on, but it c
 
 Before the days of Automatic Saving, TeXShop could be configured to save a backup file whenever it saves or typesets a source file. Starting with TeXShop 6.00, this is the item {\bf Keep the previous file as ``name\textasciitilde'' when saving} under the Documents and Saving category, which replaces the former hidden setting KeepBackup.
 
-
-\subsubsection{<Settings for the Matrix Panel>}
-There is a hidden setting to set the largest number of rows and columns in the Matrix Panel, from 2 to 100; the default is 12:
-\begin{verbatim}
-   defaults write TeXShop matrixsize 12
-\end{verbatim}
 
 \subsubsection{<Settings for Server Problems>}
 
