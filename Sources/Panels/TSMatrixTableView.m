@@ -117,7 +117,7 @@ static NSString *TSMatrixTabularString(NSArray<NSArray<NSString *> *> *rows)
 {
 	NSInteger _tabStartColumn;	// the column where a row of Tabs started, where Return comes back to
 	BOOL _replacing;			// editing started by typing: the arrow keys end it and move on, as in a spreadsheet
-	BOOL _endingEditing;
+	id _editingObserver;		// watches the end of the editing of a cell; apart from the table, which the editor's delegate is
 }
 
 /*
@@ -463,6 +463,8 @@ static NSString *TSMatrixTabularString(NSArray<NSArray<NSString *> *> *rows)
 	_replacing = replace;
 	[self editColumn:index row:_activeRow withEvent:event select:replace];
 	NSText *editor = [self currentEditor];
+	if (editor != nil)
+		[self watchEndOfEditingIn:editor];
 	if (!replace && event == nil)
 		[editor setSelectedRange:NSMakeRange([[editor string] length], 0)];
 	[self setNeedsDisplay:YES];
@@ -473,10 +475,7 @@ static NSString *TSMatrixTabularString(NSArray<NSArray<NSString *> *> *rows)
 {
 	if ([self currentEditor] == nil)
 		return YES;
-	_endingEditing = YES;
-	BOOL ended = [[self window] makeFirstResponder:self];
-	_endingEditing = NO;
-	return ended;
+	return [[self window] makeFirstResponder:self];
 }
 
 // What was typed in a cell is undone as a change of the matrix, not as typing in an editor that is gone.
@@ -490,25 +489,26 @@ static NSString *TSMatrixTabularString(NSArray<NSArray<NSString *> *> *rows)
 		[undo removeAllActionsWithTarget:[(NSTextView *)editor textStorage]];
 }
 
-- (void)textDidEndEditing:(NSNotification *)note
+// However the editing of a cell ends, what was typed in its editor is no longer undone as typing.
+- (void)watchEndOfEditingIn:(NSText *)editor
 {
-	NSInteger movement = [[note userInfo][NSTextMovementUserInfoKey] integerValue];
-	NSMutableDictionary *info = [[note userInfo] mutableCopy] ?: [NSMutableDictionary dictionary];
-	// The table keeps the value; where the cell chosen goes next is decided here.
-	info[NSTextMovementUserInfoKey] = @(NSTextMovementOther);
-	[super textDidEndEditing:[NSNotification notificationWithName:[note name] object:[note object] userInfo:info]];
-	[self forgetTypingIn:[note object]];
-	_replacing = NO;
-	if (!_endingEditing)
-		[[self window] makeFirstResponder:self];
-	BOOL shift = ([[NSApp currentEvent] modifierFlags] & NSEventModifierFlagShift) != 0;
-	if (movement == NSTextMovementReturn)
-		[self moveForReturnUp:shift];
-	else if (movement == NSTextMovementTab)
-		[self moveForTabBack:NO];
-	else if (movement == NSTextMovementBacktab)
-		[self moveForTabBack:YES];
-	[self setNeedsDisplay:YES];
+	[self stopWatchingEndOfEditing];
+	__weak TSMatrixTableView *table = self;
+	_editingObserver = [[NSNotificationCenter defaultCenter] addObserverForName:NSTextDidEndEditingNotification object:editor queue:nil usingBlock:^(NSNotification *note) {
+		TSMatrixTableView *strong = table;
+		[strong stopWatchingEndOfEditing];
+		[strong forgetTypingIn:[note object]];
+		if (strong != nil)
+			strong->_replacing = NO;
+		[strong setNeedsDisplay:YES];
+	}];
+}
+
+- (void)stopWatchingEndOfEditing
+{
+	if (_editingObserver != nil)
+		[[NSNotificationCenter defaultCenter] removeObserver:_editingObserver];
+	_editingObserver = nil;
 }
 
 - (BOOL)textView:(NSTextView *)textView doCommandBySelector:(SEL)selector
@@ -517,6 +517,7 @@ static NSString *TSMatrixTabularString(NSArray<NSArray<NSString *> *> *rows)
 	if (selector == @selector(cancelOperation:)) {
 		// Escape puts back the value the cell had.
 		NSText *editor = [self currentEditor];
+		[self stopWatchingEndOfEditing];
 		[self abortEditing];
 		[self forgetTypingIn:editor];
 		_replacing = NO;
@@ -524,10 +525,20 @@ static NSString *TSMatrixTabularString(NSArray<NSArray<NSString *> *> *rows)
 		[self setNeedsDisplay:YES];
 		return YES;
 	}
-	if ((selector == @selector(insertNewline:) || selector == @selector(noop:)) && [event type] == NSEventTypeKeyDown
-		&& ([event modifierFlags] & NSEventModifierFlagCommand) && [[event charactersIgnoringModifiers] isEqualToString:@"\r"]) {
-		[self endCellEditing];
+	BOOL returnKey = [event type] == NSEventTypeKeyDown && ([[event charactersIgnoringModifiers] isEqualToString:@"\r"] || [[event charactersIgnoringModifiers] isEqualToString:@"\x03"]);
+	if ((selector == @selector(insertNewline:) || selector == NSSelectorFromString(@"noop:")) && returnKey && ([event modifierFlags] & NSEventModifierFlagCommand)) {
 		[[self controller] insertMatrix:self];
+		return YES;
+	}
+	// Return, Tab and Shift-Tab keep the value and move on, as in a spreadsheet.
+	if (selector == @selector(insertNewline:)) {
+		[self endCellEditing];
+		[self moveForReturnUp:([event modifierFlags] & NSEventModifierFlagShift) != 0];
+		return YES;
+	}
+	if (selector == @selector(insertTab:) || selector == @selector(insertBacktab:)) {
+		[self endCellEditing];
+		[self moveForTabBack:selector == @selector(insertBacktab:)];
 		return YES;
 	}
 	if (_replacing) {
@@ -667,26 +678,38 @@ static BOOL TSMatrixTypesText(NSEvent *event)
 	return self.pasteboard ?: [NSPasteboard generalPasteboard];
 }
 
-- (NSArray<NSArray<NSString *> *> *)selectedValues
-{
-	NSRange rows = [self selectedRows], columns = [self selectedColumns];
-	NSMutableArray<NSArray<NSString *> *> *values = [NSMutableArray array];
-	for (NSUInteger r = rows.location; r < NSMaxRange(rows) && (NSInteger)r < [[self controller] gridRows]; r++) {
-		NSMutableArray<NSString *> *row = [NSMutableArray array];
-		for (NSUInteger c = columns.location; c < NSMaxRange(columns) && (NSInteger)c < [[self controller] gridColumns]; c++)
-			[row addObject:[[self controller] valueAtRow:r shownColumn:c] ?: @""];
-		[values addObject:row];
-	}
-	return values;
-}
+// The cells exactly as copied, empty ones included, for pasting them back into a Matrix panel; other
+// applications get tab separated text.
+static NSPasteboardType const TSMatrixCellsPboardType = @"org.texshop.matrix-cells";
 
 - (void)copy:(id)sender
 {
-	NSString *text = TSMatrixTabularString([self selectedValues]);
+	NSArray<NSArray<NSString *> *> *values = [[self controller] valuesInRows:[self selectedRows] shownColumns:[self selectedColumns]];
+	NSString *text = TSMatrixTabularString(values);
 	NSPasteboard *pasteboard = [self usedPasteboard];
 	[pasteboard clearContents];
+	[pasteboard setPropertyList:values forType:TSMatrixCellsPboardType];
 	[pasteboard setString:text forType:NSPasteboardTypeString];
 	[pasteboard setString:text forType:NSPasteboardTypeTabularText];
+}
+
+// The cells on the pasteboard: as copied from a Matrix panel, or read from tab separated text.
+- (NSArray<NSArray<NSString *> *> *)pastedValues
+{
+	NSPasteboard *pasteboard = [self usedPasteboard];
+	id cells = [pasteboard propertyListForType:TSMatrixCellsPboardType];
+	if ([cells isKindOfClass:[NSArray class]] && [cells count] > 0) {
+		BOOL valid = YES;
+		for (id row in cells) {
+			if (![row isKindOfClass:[NSArray class]]) { valid = NO; break; }
+			for (id value in row)
+				if (![value isKindOfClass:[NSString class]]) { valid = NO; break; }
+		}
+		if (valid)
+			return cells;
+	}
+	NSString *text = [pasteboard stringForType:NSPasteboardTypeTabularText] ?: [pasteboard stringForType:NSPasteboardTypeString];
+	return TSMatrixParseTabular(text ?: @"");
 }
 
 - (void)cut:(id)sender
@@ -703,9 +726,7 @@ static BOOL TSMatrixTypesText(NSEvent *event)
 
 - (void)paste:(id)sender
 {
-	NSPasteboard *pasteboard = [self usedPasteboard];
-	NSString *text = [pasteboard stringForType:NSPasteboardTypeTabularText] ?: [pasteboard stringForType:NSPasteboardTypeString];
-	NSArray<NSArray<NSString *> *> *values = TSMatrixParseTabular(text ?: @"");
+	NSArray<NSArray<NSString *> *> *values = [self pastedValues];
 	if ([values count] == 0)
 		return;
 	[self endCellEditing];
@@ -736,7 +757,7 @@ static BOOL TSMatrixTypesText(NSEvent *event)
 	if (action == @selector(copy:) || action == @selector(cut:) || action == @selector(delete:) || action == @selector(selectAll:))
 		return [[self controller] gridRows] > 0;
 	if (action == @selector(paste:))
-		return [[self usedPasteboard] canReadObjectForClasses:@[[NSString class]] options:nil];
+		return [[self usedPasteboard] availableTypeFromArray:@[TSMatrixCellsPboardType, NSPasteboardTypeString, NSPasteboardTypeTabularText]] != nil;
 	return [super validateUserInterfaceItem:item];
 }
 

@@ -80,6 +80,7 @@
 - (NSInteger)gridColumns;
 - (void)growGridToRows:(NSInteger)rows columns:(NSInteger)columns;
 - (NSString *)valueAtRow:(NSInteger)row shownColumn:(NSInteger)column;
+- (NSArray<NSArray<NSString *> *> *)valuesInRows:(NSRange)rows shownColumns:(NSRange)columns;
 // Puts the values in place from the given cell on, as one change that can be undone; the rows and
 // columns beyond the largest size are left out.
 - (void)setValues:(NSArray<NSArray<NSString *> *> *)values atRow:(NSInteger)row shownColumn:(NSInteger)column;

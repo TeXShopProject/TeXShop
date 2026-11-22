@@ -34,9 +34,14 @@
 const NSInteger TSMatrixLargestSize = 999;
 // The table opens with this many rows and columns, more when the panel is larger, and grows as it is used.
 static const NSInteger TSMatrixFirstGridSize = 12;
+// The order and widths of the columns, as [identifier, width] in the order shown. AppKit's own autosave of the
+// columns cannot restore columns that are added later, so the panel keeps them itself.
+static NSString *const TSMatrixColumnsKey = @"MatrixPanelColumns";
 
 @interface TSMatrixPanelController () <NSWindowDelegate>
 @property (strong) NSUndoManager *matrixUndoManager;
+// The columns are saved only after the saved ones are put back: making the first columns resizes them.
+@property BOOL columnsRestored;
 @end
 
 @implementation TSMatrixPanelController
@@ -99,7 +104,9 @@ static id _sharedInstance = nil;
 	// The numbers of the rows, at the left of the table, look like the numbers of the columns in its header.
 	[self addRowNumberColumn];
 
-	[matrixtable setAutosaveTableColumns:TRUE];
+	[matrixtable setAutosaveTableColumns:NO];
+	[matrixtable setAutosaveName:nil];
+	[self restoreColumns];
 	[self keepRowNumberColumnFirst];
 	// Rows are moved by dragging their numbers, up or down.
 	[matrixtable setVerticalMotionCanBeginDrag:YES];
@@ -107,6 +114,54 @@ static id _sharedInstance = nil;
 	
 	[matrixtable reloadData];
 	[(TSMatrixTableView *)matrixtable selectRow:0 column:0 extending:NO];
+}
+
+#pragma mark The columns
+
+- (void)restoreColumns
+{
+	NSArray *saved = [[NSUserDefaults standardUserDefaults] arrayForKey:TSMatrixColumnsKey];
+	NSMutableArray<NSArray *> *columns = [NSMutableArray array];
+	NSInteger count = 0;
+	for (id entry in saved) {
+		if (![entry isKindOfClass:[NSArray class]] || [entry count] != 2 || ![entry[0] isKindOfClass:[NSString class]] || ![entry[1] isKindOfClass:[NSNumber class]])
+			continue;
+		NSInteger identifier = [entry[0] integerValue];
+		if (identifier < 0 || identifier >= TSMatrixLargestSize || ![[@(identifier) stringValue] isEqualToString:entry[0]])
+			continue;
+		[columns addObject:entry];
+		count = MAX(count, identifier + 1);
+	}
+	// The columns saved are made first, then put in their order with their widths.
+	[self growGridToRows:0 columns:count];
+	NSInteger place = 0;
+	for (NSArray *entry in columns) {
+		NSInteger index = [matrixtable columnWithIdentifier:entry[0]];
+		if (index < 0)
+			continue;
+		NSTableColumn *column = [matrixtable tableColumns][index];
+		[column setWidth:MAX([column minWidth], [entry[1] doubleValue])];
+		NSInteger target = [[matrixtable tableColumns] indexOfObject:[[(TSMatrixTableView *)matrixtable matrixColumns] objectAtIndex:place]];
+		if (index != target)
+			[matrixtable moveColumn:index toColumn:target];
+		place++;
+	}
+	self.columnsRestored = YES;
+}
+
+- (void)saveColumns
+{
+	if (!self.columnsRestored)
+		return;
+	NSMutableArray<NSArray *> *columns = [NSMutableArray array];
+	for (NSTableColumn *column in [(TSMatrixTableView *)matrixtable matrixColumns])
+		[columns addObject:@[[column identifier], @([column width])]];
+	[[NSUserDefaults standardUserDefaults] setObject:columns forKey:TSMatrixColumnsKey];
+}
+
+- (void)tableViewColumnDidResize:(NSNotification *)aNotification
+{
+	[self saveColumns];
 }
 
 #pragma mark The cells
@@ -160,12 +215,35 @@ static id _sharedInstance = nil;
 	[self growGridToRows:rows columns:columns];
 }
 
+// Where each column shown keeps its values; made once for each change, which may touch many cells.
+- (NSArray<NSNumber *> *)storedColumns
+{
+	NSMutableArray<NSNumber *> *stored = [NSMutableArray array];
+	for (NSTableColumn *column in [(TSMatrixTableView *)matrixtable matrixColumns])
+		[stored addObject:@([[column identifier] integerValue])];
+	return stored;
+}
+
 - (NSInteger)storedColumnOfShownColumn:(NSInteger)column
 {
-	NSArray<NSTableColumn *> *columns = [(TSMatrixTableView *)matrixtable matrixColumns];
-	if (column < 0 || column >= (NSInteger)[columns count])
+	NSArray<NSNumber *> *stored = [self storedColumns];
+	if (column < 0 || column >= (NSInteger)[stored count])
 		return -1;
-	return [[columns[column] identifier] integerValue];
+	return [stored[column] integerValue];
+}
+
+- (NSArray<NSArray<NSString *> *> *)valuesInRows:(NSRange)rows shownColumns:(NSRange)columns
+{
+	NSArray<NSNumber *> *stored = [self storedColumns];
+	NSMutableArray<NSArray<NSString *> *> *values = [NSMutableArray array];
+	for (NSUInteger r = rows.location; r < NSMaxRange(rows) && (NSInteger)r < [self gridRows]; r++) {
+		NSArray<NSString *> *line = [self.myMatrix myRowAtIndex:r];
+		NSMutableArray<NSString *> *row = [NSMutableArray array];
+		for (NSUInteger c = columns.location; c < NSMaxRange(columns) && c < [stored count]; c++)
+			[row addObject:line[[stored[c] integerValue]]];
+		[values addObject:row];
+	}
+	return values;
 }
 
 - (NSString *)valueAtRow:(NSInteger)row shownColumn:(NSInteger)column
@@ -184,19 +262,21 @@ static id _sharedInstance = nil;
 	if ([values count] == 0 || width == 0 || row < 0 || column < 0)
 		return;
 	[self growGridToRows:row + [values count] columns:column + width];
+	NSArray<NSNumber *> *stored = [self storedColumns];
 	NSMutableArray<NSArray *> *cells = [NSMutableArray array];
 	for (NSUInteger r = 0; r < [values count] && row + (NSInteger)r < [self gridRows]; r++)
-		for (NSUInteger c = 0; c < [values[r] count] && column + (NSInteger)c < [self gridColumns]; c++)
-			[cells addObject:@[@(row + r), @([self storedColumnOfShownColumn:column + c]), [values[r][c] copy]]];
+		for (NSUInteger c = 0; c < [values[r] count] && column + c < [stored count]; c++)
+			[cells addObject:@[@(row + r), stored[column + c], [values[r][c] copy]]];
 	[self setCells:cells];
 }
 
 - (void)clearRows:(NSRange)rows shownColumns:(NSRange)columns
 {
+	NSArray<NSNumber *> *stored = [self storedColumns];
 	NSMutableArray<NSArray *> *cells = [NSMutableArray array];
 	for (NSUInteger r = rows.location; r < NSMaxRange(rows) && (NSInteger)r < [self gridRows]; r++)
-		for (NSUInteger c = columns.location; c < NSMaxRange(columns) && (NSInteger)c < [self gridColumns]; c++)
-			[cells addObject:@[@(r), @([self storedColumnOfShownColumn:c]), @""]];
+		for (NSUInteger c = columns.location; c < NSMaxRange(columns) && c < [stored count]; c++)
+			[cells addObject:@[@(r), stored[c], @""]];
 	[self setCells:cells];
 }
 
@@ -336,6 +416,7 @@ static id _sharedInstance = nil;
 }
 - (void)tableViewColumnDidMove:(NSNotification *)aNotification
 {
+	[self saveColumns];
 	[matrixtable reloadData];
 	[matrixtable setNeedsDisplay];
 }
@@ -464,6 +545,8 @@ static id _sharedInstance = nil;
 
 - (IBAction)insertMatrix:(id)sender
 {
+	// What is being typed in a cell goes in too, whether Insert is clicked or chosen from the keyboard.
+	[(TSMatrixTableView *)matrixtable endCellEditing];
 	NSMutableString *insertion = [NSMutableString stringWithCapacity:200];
 	NSInteger i, j;
 	NSInteger brstyleop = [[brselop selectedCell] tag];

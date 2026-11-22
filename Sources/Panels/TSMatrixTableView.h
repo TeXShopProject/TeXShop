@@ -48,6 +48,8 @@ extern NSString *const TSMatrixRowNumberColumn;
 - (void)selectWholeColumn:(NSInteger)column extending:(BOOL)extend;
 // Starts editing the cell chosen: emptied for the characters typed when replace is YES, with its value otherwise.
 - (void)editActiveCellReplacing:(BOOL)replace;
+// Ends the editing of a cell, keeping what was typed.
+- (BOOL)endCellEditing;
 @property BOOL rowDragStarted;
 // The pasteboard of Copy, Cut and Paste: the general one unless another is given.
 @property (strong) NSPasteboard *pasteboard;
