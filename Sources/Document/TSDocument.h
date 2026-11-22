@@ -196,7 +196,6 @@ enum RootCommand
 	IBOutlet NSButton			*autoCompleteButton;
 	IBOutlet NSButton           *showFullPathButton; // added by Terada
     IBOutlet NSButton			*autoCompleteSplitButton;
-    IBOutlet NSButton           *indexColorSplitBox;
     
 
     
@@ -315,7 +314,6 @@ enum RootCommand
 	BOOL                taskDone;
 	NSInteger                 pdfSyncLine;
 //	id                  syncBox;
-//	id					indexColorBox;
 	BOOL                aggressiveTrash;
 	BOOL				willClose;
     BOOL                doAbort;
@@ -379,7 +377,7 @@ enum RootCommand
 	BOOL				PDFfromKit;
 	NSUInteger		pdfCharacterIndex;
 	BOOL				textSelectionYellow;
-	BOOL				showIndexColor; // this is related to a bug where the source draws after the toolbar is disposed
+	BOOL				showIndexColor; // Source > Highlight Index Entries for this document
 	BOOL				showSync; // this fixes a bug in which the pdfkit draws a final time and accesses a toolbar button after it is disposed
 	BOOL				isLoading;
 	BOOL				firstTime;
@@ -520,7 +518,6 @@ enum RootCommand
 @property (retain) NSTimer              *tagTimer;		/*" Timer that repeatedly handles tag updates "*/
 
 @property (retain)	id                  syncBox;
-@property (retain)  id					indexColorBox;
 
 @property TSDocumentType			documentType;
 
@@ -680,6 +677,7 @@ enum RootCommand
 - (IBAction)toggleSyntaxColor:sender;
 - (IBAction)toggleSyntaxColorEntry:sender;
 - (IBAction)toggleExplColor: sender;
+- (IBAction)toggleIndexColor:sender;
 - (IBAction)toggleBlockCursor:sender;
 - (IBAction)RescanMagicComments:sender;
 - (IBAction)endTheSheetWithOK:(id)sender;
@@ -771,9 +769,7 @@ enum RootCommand
 - (void)setPdfSyncLine:(NSInteger)line;
 - (void)showSyncMarks:sender;
 - (void) flipShowSync: sender;
-- (void)showIndexColor:sender;
 - (BOOL)indexColorState;
-- (void) flipIndexColorState: sender;
 - (void)doPreviewSyncWithFilename:(NSString *)fileName andLine:(NSInteger)line andCharacterIndex:(NSUInteger)idx andTextView:(id)aTextView;
 - (BOOL)doNewPreviewSyncWithFilename:(NSString *)fileName andLine:(NSInteger)line andCharacterIndex:(NSUInteger)idx andTextView:(id)aTextView;
 - (void)trashAUXFiles: sender;

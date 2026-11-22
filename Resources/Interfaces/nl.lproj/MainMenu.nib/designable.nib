@@ -795,6 +795,12 @@
                                     <action selector="toggleExplColor:" target="-1" id="wFr-Uc-ifc"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Indexitems markeren" id="irA-gs-XOh" identifier="TSShortcut.toggleIndexColor:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="toggleIndexColor:" target="-1" id="yl9-F6-sn2"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Markeer huidige regel" tag="14" id="YNs-V7-0pm" identifier="TSShortcut.toggleSyntaxColorEntry:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

@@ -118,10 +118,6 @@ tiLabelSyncMarks			= "Marcas sinc.";
 tiPaletteLabelSyncMarks			= "Marcas de sincronismo";
 tiToolTipSyncMarks			= "Exibir marcas de sincronismo";
 
-tiLabelColorIndex				= "Índice de cores";
-tiPaletteLabelColorIndex		= "Índice de cores";
-tiToolTipColorIndex				= "Comandos do índice de cores";
-
 tiLabelTypesetKIT				= "Compor";
 tiPaletteLabelTypesetKIT		= "Compor";
 tiToolTipTypesetKIT				= "Executar programa de composição";
@@ -207,10 +203,6 @@ tiToolTipGotoPageSplit          = "Saltar para a página...";
 tiLabelMagnificationSplit		= "Ampliação";
 tiPaletteLabelMagnificationSplit   = "Ampliação";
 tiToolTipMagnificationSplit     = "Escolher ampliação da página";
-
-tiLabelColorIndexSplit			= "Índice de cores";
-tiPaletteLabelColorIndexSplit     = "Índice de cores";
-tiToolTipColorIndexSplit          = "Comandos do índice de cores";
 
 tiLabelAutoCompleteSplit		= "Auto Completar";
 tiPaletteLabelAutoCompleteSplit   = "Auto Completar";

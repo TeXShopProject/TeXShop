@@ -90,6 +90,8 @@
 "group.editor.3.title" = "Surlignage syntaxique";
 "catalog.editor.3.0.title" = "@ fait partie des noms de commande";
 "catalog.editor.3.1.title" = "Surligner le code expl3 par défaut";
+"catalog.editor.3.3.title" = "Surligner les entrées d'index par défaut";
+"catalog.editor.3.3.former" = "Index des couleurs";
 "catalog.editor.3.2.title" = "Surligner les lettres et symboles pleine chasse";
 "group.editor.4.title" = "Correspondance des parenthèses";
 "catalog.editor.4.0.title" = "Appariement des parenthèses";

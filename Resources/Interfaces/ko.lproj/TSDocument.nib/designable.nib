@@ -27,8 +27,6 @@
                 <outlet property="htmlViewContainer" destination="Za4-kS-jBE" id="sEZ-XY-Iq5"/>
                 <outlet property="htmlWindow" destination="BPj-82-7qf" id="zk0-U8-DeP"/>
                 <outlet property="iLog" destination="373" id="418"/>
-                <outlet property="indexColorBox" destination="84" id="419"/>
-                <outlet property="indexColorSplitBox" destination="213" id="420"/>
                 <outlet property="labels" destination="m1l-di-FbE" id="ubG-zi-95K"/>
                 <outlet property="leftView" destination="402" id="421"/>
                 <outlet property="lineBox" destination="62" id="422"/>
@@ -584,17 +582,6 @@ DQ
                         <action selector="chooseProgram:" target="-2" id="580"/>
                     </connections>
                 </popUpButton>
-                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="84">
-                    <rect key="frame" x="488" y="55" width="92" height="18"/>
-                    <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="색인 색상" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="85">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="showIndexColor:" target="-2" id="614"/>
-                    </connections>
-                </button>
                 <imageView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="86">
                     <rect key="frame" x="773" y="49" width="39" height="32"/>
                     <autoresizingMask key="autoresizingMask"/>
@@ -1181,17 +1168,6 @@ DQ
                     </view>
                     <font key="titleFont" metaFont="system"/>
                 </box>
-                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="213">
-                    <rect key="frame" x="12" y="12" width="92" height="18"/>
-                    <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="색인 색상" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="214">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="showIndexColor:" target="-2" id="622"/>
-                    </connections>
-                </button>
                 <searchField wantsLayer="YES" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d0k-uu-k0R">
                     <rect key="frame" x="224" y="10" width="96" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>

@@ -70,6 +70,9 @@ add(TSSettingsCategoryEditor, @"row.catalog.editor.2.2", @"SettingsCategories", 
 add(TSSettingsCategoryEditor, @"heading.group.editor.3", @"SettingsCategories", @"group.editor.3.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.3.0", @"SettingsCategories", @"catalog.editor.3.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.3.1", @"SettingsCategories", @"catalog.editor.3.1.title", TSSettingsSearchWeightLabel);
+add(TSSettingsCategoryEditor, @"row.catalog.editor.3.3", @"SettingsCategories", @"catalog.editor.3.3.title", TSSettingsSearchWeightLabel);
+// The former Color Index tool of the source toolbar still finds the setting.
+add(TSSettingsCategoryEditor, @"row.catalog.editor.3.3", @"SettingsCategories", @"catalog.editor.3.3.former", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.3.2", @"SettingsCategories", @"catalog.editor.3.2.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryEditor, @"heading.group.editor.4", @"SettingsCategories", @"group.editor.4.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.4.0", @"SettingsCategories", @"catalog.editor.4.0.title", TSSettingsSearchWeightLabel);

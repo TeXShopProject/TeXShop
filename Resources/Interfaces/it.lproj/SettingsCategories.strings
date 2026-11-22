@@ -90,6 +90,8 @@
 "group.editor.3.title" = "Evidenziazione della sintassi";
 "catalog.editor.3.0.title" = "@ fa parte dei nomi dei comandi";
 "catalog.editor.3.1.title" = "Evidenzia il codice expl3 di default";
+"catalog.editor.3.3.title" = "Evidenzia le voci dell'indice di default";
+"catalog.editor.3.3.former" = "Colora indice";
 "catalog.editor.3.2.title" = "Evidenzia lettere e simboli a larghezza piena";
 "group.editor.4.title" = "Corrispondenza delle parentesi";
 "catalog.editor.4.0.title" = "Controllo Parentesi";

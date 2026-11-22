@@ -84,7 +84,6 @@ static NSString*    kLabelsTID           = @"Labels";        //NDS added dropdow
 static NSString*	kTemplatesID 		= @"Templates";
 static NSString*	kAutoCompleteID		= @"AutoComplete";  //warning: used in TSDocument's fixAutoMenu
 static NSString*	kShowFullPathID		= @"ShowFullPath";  // added by Terada
-static NSString* kColorIndexTID		= @"ColorIndex";
 static NSString* kSharingTID          = @"Sharing";
 // forsplit
 static NSString*	kSplitID			= @"Split";
@@ -143,7 +142,6 @@ static NSString*    skLabelsTID           = @"LabelsSplit";        //NDS added d
 static NSString*	skGotoPageKKTID 	= @"GotoPageSplit";
 static NSString*    skMagnificationKKTID = @"MagnificationSplit";
 static NSString*	skAutoCompleteID	 = @"AutoCompleteSplit";
-static NSString*    skColorIndexTID		= @"ColorIndexSplit";
 static NSString *   skSharingTID       = @"SharingSplit";
 static NSString*    skSearchTID          = @"SearchKITSplit";
 static NSString*    skMouseModeTID         = @"MouseModeKITSplit";
@@ -1551,33 +1549,6 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 		return toolbarItem;
 	}
 	
-	if ([itemIdent isEqual: kColorIndexTID]) {
-		toolbarItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent
-												   customView:self.indexColorBox];
-		menuFormRep = [[NSMenuItem alloc] init];
-		submenu = [[NSMenu alloc] init];
-		submenuItem = [[NSMenuItem alloc] initWithTitle: NSLocalizedString(@"Color Index", @"Color Index")
-												  action: @selector(flipIndexColorState:) keyEquivalent:@""];
-		[submenu addItem: submenuItem];
-		[menuFormRep setSubmenu: submenu];
-		[menuFormRep setTitle: [toolbarItem label]];
-		[toolbarItem setMenuFormRepresentation: menuFormRep];
-		return toolbarItem;
-	}
-    
-    if ([itemIdent isEqual: skColorIndexTID]) {
-		toolbarItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent
-												   customView:indexColorSplitBox];
-		menuFormRep = [[NSMenuItem alloc] init];
-		submenu = [[NSMenu alloc] init];
-		submenuItem = [[NSMenuItem alloc] initWithTitle: NSLocalizedString(@"Color Index", @"Color Index")
-                                                 action: @selector(flipIndexColorState:) keyEquivalent:@""];
-		[submenu addItem: submenuItem];
-		[menuFormRep setSubmenu: submenu];
-		[menuFormRep setTitle: [toolbarItem label]];
-		[toolbarItem setMenuFormRepresentation: menuFormRep];
-		return toolbarItem;
-	}
     
     
     
@@ -1996,7 +1967,6 @@ if ([itemIdent isEqual: kSplitKKTID]) {
                      kSharingTID,
 					kSplitID,
 					kMacrosTID,
-					kColorIndexTID,
 					NSToolbarPrintItemIdentifier,
 					NSToolbarCustomizeToolbarItemIdentifier,
 					NSToolbarFlexibleSpaceItemIdentifier,
@@ -2023,7 +1993,6 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 					kShowFullPathID, // added by Terada
 					kSplitID,
 					kMacrosTID,
-					kColorIndexTID,
 					NSToolbarPrintItemIdentifier,
 					NSToolbarCustomizeToolbarItemIdentifier,
 					NSToolbarFlexibleSpaceItemIdentifier,
@@ -2173,7 +2142,6 @@ if ([itemIdent isEqual: kSplitKKTID]) {
                     TSPreviewArrangementToolbarID,
                     skSearchTID,
 					kSplitKKTID,
-                    skColorIndexTID,
                     skAutoCompleteID,
 					NSToolbarPrintItemIdentifier,
 					NSToolbarCustomizeToolbarItemIdentifier,
@@ -2208,7 +2176,6 @@ if ([itemIdent isEqual: kSplitKKTID]) {
                     TSPreviewArrangementToolbarID,
                     skSearchTID,
 					kSplitKKTID,
-                    skColorIndexTID,
  					skAutoCompleteID,
 					NSToolbarPrintItemIdentifier,
 					NSToolbarCustomizeToolbarItemIdentifier,

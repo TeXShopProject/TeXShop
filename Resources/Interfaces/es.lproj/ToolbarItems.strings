@@ -122,10 +122,6 @@ tiLabelSearchKIT				= "Buscar";
 tiPaletteLabelSearchKIT         = "Buscar";
 tiToolTipSearchKIT				= "Buscar";
 
-tiLabelColorIndex				= "Colorear índice";
-tiPaletteLabelColorIndex		= "Colorear índice";
-tiToolTipColorIndex				= "Colorear comandos del índice";
-
 tiLabelTypesetKIT				= "Componer";
 tiPaletteLabelTypesetKIT		= "Componer";
 tiToolTipTypesetKIT				= "Ejecutar el programa que compone";
@@ -208,10 +204,6 @@ tiToolTipGotoPageSplit			= "Ir a la página";
 tiLabelMagnificationSplit		= "Escala";
 tiPaletteLabelMagnificationSplit	= "Escala";
 tiToolTipMagnificationSplit		= "Establecer escala de página";
-
-tiLabelColorIndexSplit			= "Colorear índice";
-tiPaletteLabelColorIndexSplit	= "Colorear índice";
-tiToolTipColorIndexSplit		= "Colorear comandos del índice";
 
 tiLabelAutoCompleteSplit		= "Autocompleción";
 tiPaletteLabelAutoCompleteSplit	= "Autocompleción";

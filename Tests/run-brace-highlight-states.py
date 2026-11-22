@@ -147,8 +147,8 @@ DOCUMENT_METHODS = [
     '- (IBAction)toggleSyntaxColor:sender {', '- (IBAction)toggleSyntaxColorEntry:sender {', '- (IBAction)toggleBlockCursor:sender {',
     '- (void) applyInvisibleCharactersShowing', '- (void) showHideInvisibleCharacters: sender',
     '- (void) showHideLineNumbers: sender', '- (void)setDocumentFontFromPreferences:(NSNotification *)notification',
-    '- (void)fixUpTabs {', '- (void)setLineBreakMode:(id)sender', '- (void) flipIndexColor: (NSInteger)state',
-    '- (void) showIndexColor: sender', '- (BOOL)indexColorState',
+    '- (void)fixUpTabs {', '- (void)setLineBreakMode:(id)sender', '- (IBAction)toggleIndexColor:sender {',
+    '- (BOOL)indexColorState',
     '- (void)resetHighlight:(id)sender', '- (void)showIndicator:(NSString*)range', '- (void)resetBackgroundColor:(id)sender',
     '- (void)resetBackgroundColorOfTextView:(id)sender', '- (void)highlightContent:(NSString*)range',
     '- (void)highlightBracesAt:(NSArray*)locations',
@@ -321,7 +321,6 @@ extern NSColor *InvisibleColor;
     NSScrollView *scrollView, *scrollView2;
     NSWindow *textWindow, *fullSplitWindow, *outputWindow;
     NSTextView *outputText;
-    NSButton *indexColorSplitBox;
 }
 @property (strong) NSDictionary *EntryColorAttribute, *commandColorAttribute, *commentColorAttribute,
     *explColorAttribute1, *explColorAttribute2, *explColorAttribute3, *explColorAttribute4, *explColorAttribute5,
@@ -334,7 +333,6 @@ extern NSColor *InvisibleColor;
 @property (strong) NSTextView *textView;
 @property (strong) NSScrollView *logScrollView;
 @property (strong) NoodleLineNumberView *lineNumberView1, *lineNumberView2, *logLineNumberView;
-@property (strong) NSButton *indexColorBox;
 @property (strong) id sourceStatusBar, myPDFKitView, myPDFKitView2;
 @property (strong) NSTextView *logTextView;
 @property (strong) NSWindow *logWindow, *pdfKitWindow;
@@ -370,8 +368,7 @@ extern NSColor *InvisibleColor;
 - (void)applyInvisibleCharactersShowing;
 - (void)showHideInvisibleCharacters:(id)sender;
 - (void)showHideLineNumbers:(id)sender;
-- (void)flipIndexColor:(NSInteger)state;
-- (void)showIndexColor:(id)sender;
+- (IBAction)toggleIndexColor:(id)sender;
 - (IBAction)toggleSyntaxColor:(id)sender;
 - (IBAction)toggleSyntaxColorEntry:(id)sender;
 - (IBAction)toggleBlockCursor:(id)sender;
