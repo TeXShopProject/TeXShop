@@ -3509,7 +3509,6 @@ else {
             
          //  [(TSAppDelegate *)[NSApp delegate] performSelector:@selector(finishCommandCompletionConfigure) withObject: nil afterDelay:2.0]; //0.2
         }
-     if(showFullPath) [textWindow performSelector:@selector(refreshTitle) withObject:nil afterDelay:0.2]; // added by Terada
 }
 
 
@@ -8381,12 +8380,18 @@ if (! useFullSplitWindow) {
     showFullPath = ! showFullPath;
 	[self fixShowFullPathButton];
 	[SUD setBool:showFullPath forKey:ShowFullPathEnabledKey];
+	[self.standardController synchronizeWindowTitleWithDocumentName];
 	[self.pdfKitWindow becomeMainWindow];
 	[self.pdfKitWindow makeKeyWindow];
 	[textWindow becomeMainWindow];
 	[textWindow makeKeyWindow];
 }
 
+
+- (BOOL) showsFullPath
+{
+	return showFullPath;
+}
 
 // added by Terada (- (NSString*) fileTitleName)
 - (NSString*) fileTitleName

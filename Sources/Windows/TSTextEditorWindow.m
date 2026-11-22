@@ -55,7 +55,8 @@
 
 - (void)refreshTitle // added by Terada
 {
-	if([self.myDocument fileURL] != nil) [self setTitle:[self.myDocument fileTitleName]];
+	// The window controller names the window, as AppKit does after every save (Show Full Path).
+	[[self windowController] synchronizeWindowTitleWithDocumentName];
 }
 
 // In the pair of commands below, becomeMainWindow and resignMainWindow should do nothing
