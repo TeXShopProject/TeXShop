@@ -11,10 +11,12 @@ TSDocumentWindowPrepare, as setupToolbar does. The test checks:
   middle of the area that can be seen, in the source window and in the combined
   window, with and without a full-size content view (the combined window used to
   leave the lower part far smaller);
-- a drawer at the side of the Preview window starts right below the title bar, beside
-  the toolbar (#67), and not higher than the area below the toolbar where that area
-  starts higher, as in full screen; its frame takes the window's colors in Dark Mode,
-  on every system.
+- a drawer at the side of the Preview window starts where the rounding of the window's
+  top corner ends, beside the title bar and the toolbar (#67), and not higher than the
+  area below the toolbar where that area starts higher, as in full screen, also when it
+  is left open into and out of full screen; on macOS 27
+  and later the window's corner radius that AppKit reports still gives that place; the
+  drawer's frame takes the window's colors in Dark Mode, on every system.
 
 --images DIR draws the windows of the Base and Japanese nibs offscreen, before
 and after TSDocumentWindowPrepare, in Light and Dark Mode. Offscreen drawing has
@@ -34,15 +36,24 @@ MUTATIONS = {
     'source-split-not-even': ('TSDocument.m', '\t\tTSDocumentWindowSplitEvenly(splitView);\n', ''),
     # The band under the toolbar counts as part of the top part.
     'band-counted': ('TSDocumentWindowGlass.m', '    CGFloat hidden = TSDocumentWindowHiddenTop(splitView);\n', '    CGFloat hidden = 0;\n'),
-    # The drawer starts at the top of the window, beside the title bar.
-    'drawer-at-top': ('TSDocumentWindowGlass.m', '    CGFloat offset = base.doubleValue + (side ? MIN(TSTitleBarHeight(window), TSHiddenTopBand(window)) : 0);\n',
+    # The drawer starts at the top of the window, beside the rounded corner.
+    'drawer-at-top': ('TSDocumentWindowGlass.m', '    CGFloat offset = base.doubleValue + (side ? MIN(TSWindowCornerHeight, TSHiddenTopBand(window)) : 0);\n',
         '    CGFloat offset = base.doubleValue;\n'),
-    # The drawer starts below the toolbar and the bars under it, as before #67.
-    'drawer-below-toolbar': ('TSDocumentWindowGlass.m', '    CGFloat offset = base.doubleValue + (side ? MIN(TSTitleBarHeight(window), TSHiddenTopBand(window)) : 0);\n',
+    # The drawer starts right below the title bar, as in 6.00 beta 8.
+    'drawer-below-title': ('TSDocumentWindowGlass.m', '    CGFloat offset = base.doubleValue + (side ? MIN(TSWindowCornerHeight, TSHiddenTopBand(window)) : 0);\n',
+        '    CGFloat offset = base.doubleValue + (side ? MIN(NSHeight([NSWindow frameRectForContentRect:NSMakeRect(0, 0, 100, 100) styleMask:window.styleMask & ~NSWindowStyleMaskFullSizeContentView]) - 100, TSHiddenTopBand(window)) : 0);\n'),
+    # The drawer starts below the toolbar and the bars under it, as in 6.00 beta 1 to 7.
+    'drawer-below-toolbar': ('TSDocumentWindowGlass.m', '    CGFloat offset = base.doubleValue + (side ? MIN(TSWindowCornerHeight, TSHiddenTopBand(window)) : 0);\n',
         '    CGFloat offset = base.doubleValue + (side ? TSHiddenTopBand(window) : 0);\n'),
-    # The drawer starts right below the title bar also where the band is shorter, as in full screen.
-    'drawer-title-always': ('TSDocumentWindowGlass.m', '    CGFloat offset = base.doubleValue + (side ? MIN(TSTitleBarHeight(window), TSHiddenTopBand(window)) : 0);\n',
-        '    CGFloat offset = base.doubleValue + (side ? TSTitleBarHeight(window) : 0);\n'),
+    # The drawer keeps clear of the rounded corner also where the band is shorter, as in full screen.
+    'drawer-corner-always': ('TSDocumentWindowGlass.m', '    CGFloat offset = base.doubleValue + (side ? MIN(TSWindowCornerHeight, TSHiddenTopBand(window)) : 0);\n',
+        '    CGFloat offset = base.doubleValue + (side ? TSWindowCornerHeight : 0);\n'),
+    # The rounding is taken to end at the radius, not at 1.5 times the radius.
+    'drawer-at-radius': ('TSDocumentWindowGlass.m', 'static const CGFloat TSWindowCornerHeight = 24;\n',
+        'static const CGFloat TSWindowCornerHeight = 16;\n'),
+    # A drawer left open out of full screen stays at the top, beside the rounded corner.
+    'drawer-not-placed-after-full-screen': ('TSDocumentWindowGlass.m', '        for (NSNotificationName name in @[NSWindowDidEnterFullScreenNotification, NSWindowDidExitFullScreenNotification])\n',
+        '        for (NSNotificationName name in @[])\n'),
     # The drawer's frame keeps AppKit's light gray bezel.
     'drawer-frame-light': ('TSDocumentWindowGlass.m', '    [frame addSubview:backing positioned:NSWindowBelow relativeTo:nil];\n', ''),
 }
@@ -125,8 +136,21 @@ static void Settle(NSWindow *window) {
         [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.02]];
     }
 }
+// A view at the top left corner of a window that asks for corners concentric with the window's:
+// macOS 27 and later tell the radius they get.
+@interface CornerProbe : NSView @end
+@implementation CornerProbe
+- (NSViewCornerConfiguration *)cornerConfiguration API_AVAILABLE(macos(27.0)) {
+    return [NSViewCornerConfiguration configurationWithRadius:NSViewCornerRadius.containerConcentricRadius];
+}
+@end
+// A drawer opens only beside a window on the screen; this one tells that it is open.
+static NSDrawer *drawerLooksOpen; static IMP originalDrawerState;
+static NSDrawerState DrawerState(NSDrawer *self, SEL _cmd) {
+    return self == drawerLooksOpen ? NSDrawerOpenState : ((NSDrawerState (*)(id, SEL))originalDrawerState)(self, _cmd);
+}
 static CGFloat Band(NSWindow *window) { return NSHeight(window.contentView.frame) - NSMaxY(window.contentLayoutRect); }
-// A window whose band under the toolbar is shorter than the title bar, as in full screen.
+// A window whose band under the toolbar is shorter than the rounding of its corners, as in full screen.
 static NSWindow *shortBandWindow; static CGFloat shortBand; static IMP originalLayoutRect;
 static NSRect ShortLayoutRect(NSWindow *self, SEL _cmd) {
     NSRect rect = ((NSRect (*)(id, SEL))originalLayoutRect)(self, _cmd);
@@ -303,27 +327,52 @@ int main(int argc, char **argv) { @autoreleasepool {
         [doc splitWindow:nil]; Settle(doc->textWindow);
         Check(doc->scrollView2.superview == nil, [@"the source window is unsplit again" stringByAppendingString:nibName]);
 
-        // The drawer of the Preview window starts right below the title bar, beside the toolbar,
-        // as in a window whose content stays below the toolbar (#67), with a frame in the window's colors.
+        // The drawer of the Preview window starts where the rounding of the window's top corner
+        // ends (24 points below the top), beside the title bar and the toolbar (#67), with a frame
+        // in the window's colors.
         CGFloat base = doc->myDrawer.leadingOffset;
         NSDrawer *drawer = OpenDrawer(doc);
-        Check(TitleBar(pw) > 20 && TitleBar(pw) < Band(pw) - 20 &&
-              fabs(drawer.leadingOffset - (base + TitleBar(pw))) < 0.5,
-              [NSString stringWithFormat:@"the drawer starts right below the title bar (%.1f, title bar %.1f, band %.1f)%@",
+        Check(TitleBar(pw) > 24 && TitleBar(pw) < Band(pw) - 20 &&
+              fabs(drawer.leadingOffset - (base + 24)) < 0.5,
+              [NSString stringWithFormat:@"the drawer starts where the rounding of the corner ends (%.1f, title bar %.1f, band %.1f)%@",
                drawer.leadingOffset, TitleBar(pw), Band(pw), nibName]);
-        // A band shorter than the title bar: the drawer does not go higher than it.
+        // macOS 27 and later tell the corner radius: the rounding (a continuous curve) ends at
+        // 1.5 times it, where the drawer starts.
+        if (@available(macOS 27.0, *)) {
+            CornerProbe *probe = [[CornerProbe alloc] initWithFrame:NSMakeRect(0, NSHeight(pw.contentView.bounds) - 80, 80, 80)];
+            [pw.contentView addSubview:probe];
+            [probe invalidateCornerConfiguration];
+            CGFloat radius = probe.effectiveCornerRadii.topLeft;
+            [probe removeFromSuperview];
+            Check(radius > 0 && fabs(1.5 * radius - (drawer.leadingOffset - base)) < 0.5,
+                  [NSString stringWithFormat:@"the window's corner radius %.1f ends its rounding where the drawer starts (%.1f)%@",
+                   radius, drawer.leadingOffset - base, nibName]);
+        }
+        // A band shorter than the rounding, as in full screen: the drawer does not go higher than it.
         if (!originalLayoutRect) {
             Method m = class_getInstanceMethod(NSWindow.class, @selector(contentLayoutRect));
             originalLayoutRect = method_setImplementation(m, (IMP)ShortLayoutRect);
+            originalDrawerState = method_setImplementation(class_getInstanceMethod(NSDrawer.class, @selector(state)), (IMP)DrawerState);
         }
         for (NSNumber *band in @[@9, @21]) {
             shortBandWindow = pw; shortBand = band.doubleValue;
             OpenDrawer(doc);
             Check(fabs(Band(pw) - shortBand) < 0.5 && fabs(drawer.leadingOffset - (base + shortBand)) < 0.5,
-                  [NSString stringWithFormat:@"with a band of %.0f under a title bar of %.1f the drawer starts below the band (%.1f)%@",
-                   shortBand, TitleBar(pw), drawer.leadingOffset, nibName]);
+                  [NSString stringWithFormat:@"with a band of %.0f the drawer starts below the band (%.1f)%@",
+                   shortBand, drawer.leadingOffset, nibName]);
         }
+        // A drawer left open into and out of full screen (where the band is 0) is placed again
+        // when the window has gone in or out, without being opened again.
+        drawerLooksOpen = drawer;
+        shortBandWindow = pw; shortBand = 0;
+        [NSNotificationCenter.defaultCenter postNotificationName:NSWindowDidEnterFullScreenNotification object:pw];
+        Check(fabs(drawer.leadingOffset - base) < 0.5,
+              [NSString stringWithFormat:@"an open drawer goes to the top in full screen (%.1f)%@", drawer.leadingOffset, nibName]);
         shortBandWindow = nil;
+        [NSNotificationCenter.defaultCenter postNotificationName:NSWindowDidExitFullScreenNotification object:pw];
+        Check(fabs(drawer.leadingOffset - (base + 24)) < 0.5,
+              [NSString stringWithFormat:@"out of full screen an open drawer goes back below the rounded corner (%.1f)%@", drawer.leadingOffset, nibName]);
+        drawerLooksOpen = nil;
         OpenDrawer(doc);
         NSColor *edge = DrawerEdge(drawer);
         Check(edge.brightnessComponent < 0.4, [NSString stringWithFormat:@"in Dark Mode the drawer's frame is dark (%.2f)%@", edge.brightnessComponent, nibName]);
