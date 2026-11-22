@@ -280,7 +280,7 @@
 "catalog.typesetting.4.0.title" = "plain TeX";
 "catalog.typesetting.4.1.title" = "LaTeX";
 "catalog.typesetting.4.2.title" = "Chiedi conferma per shell-escape";
-"catalog.typesetting.4.2.note" = "Chiede conferma prima della composizione se il comando plain TeX o LaTeX qui sopra contiene --shell-escape.";
+"catalog.typesetting.4.2.note" = "Chiede conferma prima della composizione se il comando plain TeX o LaTeX qui sopra contiene -shell-escape.";
 "group.typesetting.5.title" = "Tramite DVI";
 "catalog.typesetting.5.0.title" = "plain TeX";
 "catalog.typesetting.5.1.title" = "LaTeX";

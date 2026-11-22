@@ -616,6 +616,7 @@ environment
 equations
 erases
 error
+escape
 etc
 ethanphil4
 european
@@ -937,7 +938,6 @@ itself
 iv
 japanese
 jeff
-jeroen
 job
 john
 jpeg
