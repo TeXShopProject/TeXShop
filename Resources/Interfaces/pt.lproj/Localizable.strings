@@ -472,3 +472,12 @@
 
 /* Help > Show Help for Package: the path of texdoc and its exit status */
 "%@ ended with status %d." = "%@ terminou com o estado %d.";
+
+/* Help > Show Help for Package: kpsewhich did not tell where texdoc looked; %@ is the path of texdoc */
+"The folders that %@ searched could not be determined." = "Não foi possível determinar as pastas em que %@ procurou.";
+
+/* Help > Show Help for Package: texdoc is there but not executable */
+"texdoc cannot be run." = "O texdoc não pode ser executado.";
+
+/* Help > Show Help for Package: the path of texdoc and the path of the setting */
+"%@ is not executable. The folder is set in %@." = "%@ não é executável. A pasta é definida em %@.";

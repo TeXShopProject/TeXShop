@@ -472,3 +472,12 @@
 
 /* Help > Show Help for Package: the path of texdoc and its exit status */
 "%@ ended with status %d." = "%@ s-a încheiat cu starea %d.";
+
+/* Help > Show Help for Package: kpsewhich did not tell where texdoc looked; %@ is the path of texdoc */
+"The folders that %@ searched could not be determined." = "Nu s-au putut determina dosarele în care a căutat %@.";
+
+/* Help > Show Help for Package: texdoc is there but not executable */
+"texdoc cannot be run." = "texdoc nu poate fi rulat.";
+
+/* Help > Show Help for Package: the path of texdoc and the path of the setting */
+"%@ is not executable. The folder is set in %@." = "%@ nu este executabil. Dosarul se alege în %@.";

@@ -19,8 +19,11 @@
 @interface HelpDocuments (Private)
 
 - (void)mirrorPath:(NSString *)srcPath toPath:(NSString *)dstPath;
-- (void)showTexdocAlert:(NSArray<NSString *> *)texts;
 
+@end
+
+@interface HelpDocuments ()
+- (void)showTexdocAlert:(NSArray<NSString *> *)texts;
 @end
 
 @implementation HelpDocuments
@@ -265,7 +268,7 @@
 	enginePath = [binPath stringByAppendingPathComponent:@"texdoc"];
 	// No folder set, or no texdoc that can run in it (no TeX installed, another folder set).
 	if (binPath.length == 0 || ![[NSFileManager defaultManager] isExecutableFileAtPath:enginePath]) {
-		[self showTexdocAlert:TSTexdocMissingTexts(binPath)];
+		[self showTexdocAlert:TSTexdocMissingTexts(binPath, binPath.length && [[NSFileManager defaultManager] fileExistsAtPath:enginePath])];
 		return;
 	}
 
@@ -279,8 +282,11 @@
 
 	displayPackageHelpTask = [[NSTask alloc] init];
 	[displayPackageHelpTask setExecutableURL:[NSURL fileURLWithPath:enginePath]];
-	args = [NSMutableArray array];
+	// -I: no interactive menus or questions, which would read the (absent) terminal and end with status 1;
+	// it shows the best match, and ends with status 3 when there is none.
+	args = [NSMutableArray arrayWithObject:@"-I"];
 	[args addObject: packageString];
+	[displayPackageHelpTask setStandardInput:[NSFileHandle fileHandleWithNullDevice]];
 	[displayPackageHelpTask setArguments:args];
 	[displayPackageHelpTask setEnvironment:env];
 	// texdoc ends with status 3 when it finds no documentation (a misspelt name, a TeX installed without its

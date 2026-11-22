@@ -469,3 +469,12 @@
 
 /* Help > Show Help for Package: the path of texdoc and its exit status */
 "%@ ended with status %d." = "“%@”以状态%d结束。";
+
+/* Help > Show Help for Package: kpsewhich did not tell where texdoc looked; %@ is the path of texdoc */
+"The folders that %@ searched could not be determined." = "无法确定“%@”查找过的文件夹。";
+
+/* Help > Show Help for Package: texdoc is there but not executable */
+"texdoc cannot be run." = "无法运行texdoc。";
+
+/* Help > Show Help for Package: the path of texdoc and the path of the setting */
+"%@ is not executable. The folder is set in %@." = "“%1$@”不是可执行文件。文件夹在“%2$@”中设置。";
