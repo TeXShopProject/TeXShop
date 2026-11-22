@@ -241,7 +241,6 @@
 "catalog.preview.0.6.title" = "Beweeg pop-ups";
 "catalog.preview.0.6.note" = "Beginwaarde voor documenten die u hierna opent. In een geopend document wijzigt u dit in het menu ‘Pagina’.";
 "catalog.preview.0.8.title" = "Paginanummer in pop-ups van links tonen";
-"catalog.preview.0.8.note" = "Het nummer dat de PDF aan de gekoppelde pagina geeft, in de rechterbenedenhoek.";
 "catalog.preview.0.7.title" = "Vergroting en weergavetype behouden in volledig scherm";
 "catalog.preview.0.7.note" = "Een gesplitst venster blijft ook gesplitst. Als dit uit staat, heft volledig scherm de splitsing op en gebruikt het de soort vergroting en het weergavetype van de vorige keer in volledig scherm.";
 "group.preview.1.title" = "Indeling van dubbele pagina’s";
