@@ -1627,7 +1627,6 @@
        "kind": "path",
        "title": "代替エンジン",
        "value": "pdflatexmk",
-       "note": "「代替エンジンでタイプセット」で使うエンジンです。デフォルト: pdflatexmk",
        "src": [
         "5ec-XS-ht9"
        ]
