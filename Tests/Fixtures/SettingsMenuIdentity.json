@@ -1,17 +1,17 @@
 {
-  "source": "Fixed command identity of commit 127ecbab90b1ad199c9d7e6adfa86258e3f36c6c, excluding the two intentionally removed editor actions. The Italian File Encoding and TeXShop item calls displayFileEncoding: since 6.00; it called displayGettingStartedConTeXt: before. Update only after reviewing a deliberate command migration.",
+  "source": "Fixed command identity of commit 127ecbab90b1ad199c9d7e6adfa86258e3f36c6c, excluding the two intentionally removed editor actions and Window > Fullscreen (Old Method), removed in 6.00. The Italian File Encoding and TeXShop item calls displayFileEncoding: since 6.00; it called displayGettingStartedConTeXt: before. Update only after reviewing a deliberate command migration.",
   "languages": {
-    "Base": "2c742097c6a0cac931899e43dae006c7e892eb2413d2465b5973880f7f26ce3f",
-    "de": "3615367150ca5a9daa58a0dab99f35d9ef4e3f9b3b89d8671739065da9300d38",
-    "es": "d01319ab29b3d62df3562ed93c2831ded2f3960d92c3b04d0c867e936882bf6a",
-    "fr": "986ae35aab6192edf825fc243c20303327f8cec5bdf4481815377c3daa2033a0",
-    "it": "986ae35aab6192edf825fc243c20303327f8cec5bdf4481815377c3daa2033a0",
-    "ja": "c78b494ac19505f8e106eae3699b521fb88b32fff952da3a09e82e1624d89744",
-    "ko": "ae769ef41e9385ef0435f1ad410ec3e7f587bb0eb042deca305033118a049759",
-    "nl": "986ae35aab6192edf825fc243c20303327f8cec5bdf4481815377c3daa2033a0",
-    "pt-PT": "986ae35aab6192edf825fc243c20303327f8cec5bdf4481815377c3daa2033a0",
-    "pt": "2c14bbc2cfe73445a09af6d3b3adf404f7ddf5efdd9536bb693a19e34990e3c6",
-    "ro": "986ae35aab6192edf825fc243c20303327f8cec5bdf4481815377c3daa2033a0",
-    "zh_CN": "986ae35aab6192edf825fc243c20303327f8cec5bdf4481815377c3daa2033a0"
+    "Base": "cc4a606e66ff3d944ab5c6d4a7f318aff822523cfef6f83267b03ba83c772c9b",
+    "de": "5cd24aade31f20ac1dcddd10c52fdd79e9b9c2bd2628de44ffbf6dbba55c5a62",
+    "es": "0eb90952223f589c4571a6260b11fe7207ee0ac9615f6c46586ec983254c9b6e",
+    "fr": "bdef900e308465b96888e374a5c8ac22b9cf11fec2ec8c14948e7615992868d0",
+    "it": "bdef900e308465b96888e374a5c8ac22b9cf11fec2ec8c14948e7615992868d0",
+    "ja": "5d1295892627ef65b1bc2b66e0295d911d01c49a15c365a7f03b46bf5cb9999b",
+    "ko": "09a48091e6a38b406a408b76a00b25e942bce6699f163f0ec8f3803ffd0a0bfb",
+    "nl": "bdef900e308465b96888e374a5c8ac22b9cf11fec2ec8c14948e7615992868d0",
+    "pt-PT": "bdef900e308465b96888e374a5c8ac22b9cf11fec2ec8c14948e7615992868d0",
+    "pt": "f18e19be08a974590d97d31cfe71134c54f1df296878a2905c18aa7c9c396409",
+    "ro": "bdef900e308465b96888e374a5c8ac22b9cf11fec2ec8c14948e7615992868d0",
+    "zh_CN": "bdef900e308465b96888e374a5c8ac22b9cf11fec2ec8c14948e7615992868d0"
   }
 }
