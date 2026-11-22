@@ -1,15 +1,32 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Defining AppleScript Macros</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="applescript">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Macros Help</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Preliminaries</a></li>
+<li><a href="macros_default.htm">Understanding Default Macros</a></li>
+<li><a href="macros_rearrange.htm">Rearranging the Macro Menu</a></li>
+<li><a href="macros_define.htm">Defining New Macros</a></li>
+<li><a href="macros_applescript.htm">AppleScript Macros</a></li>
+<li><a href="macros_includedscripts.htm">Default AppleScript Macros</a></li>
+<li><a href="macros_defapplescript.htm" class="current">Defining AppleScript Macros</a></li>
+<li><a href="macros_dialogs.htm">Creating Dialogs</a></li>
+<li><a href="macros_writingcompletescripts.htm">Writing Scripts with TeXShop Typesetting Commands</a></li>
+<li><a href="macros_writingcommandscripts.htm">Writing Scripts with Shell Commands</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Defining AppleScript Macros</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Defining AppleScript Macros</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="applescript">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-
-<BODY>
-		<div id="content_border">
 		<P>AppleScript syntax is a subject all its own. To learn more about it, read one of several books on the subject. If you installed the developer tools which come with Mac OS X, there is an online book about AppleScript in the Developer folder.</P>
 
  <P>When TeXShop interpretes an applescript macro, it first replaces any string #FILEPATH#, #PDFPATH#, #DVIPATH#, #PSPATH#, #LOGPATH#, #AUXPATH# with the complete path name of the source tex file, pdf file, dvi file, ps file, log file, or aux file respectively. Similarly, the strings #INDPATH#, #BBLPATH#, and #HTMLPATH# are replaced with the complete path name of the ind file, bbl file, or html file. </P>
@@ -64,25 +81,12 @@ tell document #DOCUMENTNAME# of application "TeXShop"
 </div
  </P>
 </div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Macros Help</div>
-<div id="header_title">Defining AppleScript Macros</div>
 
-	<div id="menu_border">
-		<UL>
-			<LI><a href="macros_preliminaries.htm">Preliminaries</a></li>
-			<LI><a href="macros_default.htm">Understanding Default Macros</a></li>
-			<LI><a href="macros_rearrange.htm">Rearranging the Macro Menu</a></li>
-			<LI><a href="macros_define.htm">Defining New Macros</a></li>
-			<li><a href="macros_applescript.htm">AppleScript Macros</a></li>
-			<LI><a href="macros_includedscripts.htm">Default AppleScript Macros</a></li>
-			<li><a href="macros_defapplescript.htm">Defining AppleScript Macros</a></li>
-			<li><a href="macros_dialogs.htm">Creating Dialogs</a></li>
-			<li><a href="macros_writingcompletescripts.htm">Writing Scripts with TeXShop Typesetting Commands</a></li>
-			<li><a href="macros_writingcommandscripts.htm">Writing Scripts with Shell Commands</a></li>
-		</UL>
-	</div>
+
+
+
+
+	
 
 
 
@@ -91,3 +95,6 @@ tell document #DOCUMENTNAME# of application "TeXShop"
 	</BODY>
 
 </HTML>
+</main>
+</body>
+</html>

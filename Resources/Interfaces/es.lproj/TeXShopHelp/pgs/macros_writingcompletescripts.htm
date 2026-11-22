@@ -1,15 +1,32 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scripts con comandos de composici&oacute;n de TeXShop</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
+<meta name="description" content="applescript; bibliograf&iacute;a">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda para macros</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Preliminares</a></li>
+<li><a href="macros_default.htm">Comprensi&oacute;n de las macros predefinidas</a></li>
+<li><a href="macros_rearrange.htm">Reajuste del men&uacute; Macros</a></li>
+<li><a href="macros_define.htm">Definici&oacute;n de nuevas macros</a></li>
+<li><a href="macros_applescript.htm">Macros AppleScript</a></li>
+<li><a href="macros_includedscripts.htm">Macros AppleScript predefinidas</a></li>
+<li><a href="macros_defapplescript.htm">Definici&oacute;n de macros AppleScript</a></li>
+<li><a href="macros_dialogs.htm">Creaci&oacute;n de di&aacute;logos</a></li>
+<li><a href="macros_writingcompletescripts.htm" class="current">Scripts con comandos de composici&oacute;n de TeXShop</a></li>
+<li><a href="macros_writingcommandscripts.htm">Scripts con comandos del Shell</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Scripts con comandos de composici&oacute;n de TeXShop</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Scripts con comandos de composici&oacute;n de TeXShop</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-		<META NAME="description" CONTENT="applescript; bibliograf&iacute;a">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-
-<BODY>
-	<div id="content_border">
 	<P>Si un proyecto LaTeX contiene una bibliograf&iacute;a, se requieren varios pasos para actualizar la bibliograf&iacute;a. Primero hay que usar LaTeX para crear un archivo .aux. Entonces se ejecuta BibTeX, que usa este archivo crear los archivos .bbl y .blg. Luego, de nuevo LaTeX para a&ntilde;adir la bibliograf&iacute;a al documento.
 </P>
 
@@ -91,24 +108,6 @@ end tell
 
 <P>Los siguientes comandos ejecutan latex, bibtex, latex, y latex. Recuerda que el control vuelve a applescript inmediamente tras cada llamada a un comando de composici&oacute;n, sin esperar a que la composici&oacute;n de p&aacute;ginas termine. El bucle que se repite le dice al script que compruebe si cada proceso de composici&oacute;n ha concluido ya, antes de empezar la siguiente tarea. La l&iacute;nea &laquo;delay 2&raquo; hace que applescript haga una pausa en lugar de estar preguntando continuamente si la tarea ha acabado, lo que ralentizar&iacute;a todo el ordenador.
 </P>
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Ayuda para macros</div><div id="header_title">Scripts con comandos de composici&oacute;n de TeXShop</div>
-		<div id="menu_border">
-		<UL>
-			<LI><a href="macros_preliminaries.htm">Preliminares</a>
-			<LI><a href="macros_default.htm">Comprensi&oacute;n de las macros predefinidas</a>
-			<LI><a href="macros_rearrange.htm">Reajuste del men&uacute; Macros</a>
-			<LI><a href="macros_define.htm">Definici&oacute;n de nuevas macros</a>
-			<li><a href="macros_applescript.htm">Macros AppleScript</a>
-			<li><a href="macros_includedscripts.htm">Macros AppleScript predefinidas</a>
-			<li><a href="macros_defapplescript.htm">Definici&oacute;n de macros AppleScript</a>
-			<li><a href="macros_dialogs.htm">Creaci&oacute;n de di&aacute;logos</a>
-			<li><a href="macros_writingcompletescripts.htm">Scripts con comandos de composici&oacute;n de TeXShop</a>
-			<li><a href="macros_writingcommandscripts.htm">Scripts con comandos del Shell</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+</main>
+</body>
+</html>

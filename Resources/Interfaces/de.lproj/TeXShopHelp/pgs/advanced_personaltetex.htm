@@ -1,14 +1,40 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pers&ouml;nliche Dateien zu TeX Live hinzuf&uuml;gen</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="Der lokale texmf-Ordner f&uuml;r pers&ouml;nliche Dateien und Umgebungsvariablen">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Erweitert</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm" class="current">Pers&ouml;nliche Dateien zu TeX Live hinzuf&uuml;gen</a></li>
+<li><a href="advanced_moretetex.htm">Mehr &uuml;ber TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Zusammenarbeit mit anderen TeX Distributionen</a></li>
+<li><a href="advanced_addengine.htm">Zus&auml;tzliche Schriftsatz-Programme</a></li>
+<li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
+<li><a href="advanced_root.htm">Die Hauptdatei des Projekts festlegen</a></li>
+<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
+<li><a href="advanced_removeaux.htm">AUX-Dateien entfernen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape Schutz</a></li>
+<li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopieren-Einf&uuml;gen und Drag-Drop aus dem Vorschau-Fenster</a></li>
+<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop &ouml;ffnen</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung</a></li>
+<li><a href="advanced_coloredtext.htm">Farbiger Text in TeX</a></li>
+<li><a href="advanced_plist.htm">Plist Datein</a></li>
+<li><a href="advanced_localization.htm">Lokalisierungen</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Pers&ouml;nliche Dateien zu TeX Live hinzuf&uuml;gen</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Pers&ouml;nliche Dateien zu TeX Live hinzuf&uuml;gen</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="Der lokale texmf-Ordner f&uuml;r pers&ouml;nliche Dateien und Umgebungsvariablen">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-<BODY>
-	<div id="content_border">
 		<p>Jede TeX-Distribution erwartet pers&ouml;nliche Erg&auml;nzungen (etwa eigene Style-Dateien oder Pakete, die nicht zur eigentlichen Distribution geh&ouml;ren) in einem lokalen Ordner bzw. Verzeichnis. Dieser Ordner hei&szlig;t &bdquo;texmf&ldquo; und hat eine bestimmte Struktur von Unterordnern, damit die TeX-Programme die Dateien richtig finden.</p>
 		<p>Auf dem Mac liegt der lokale texmf-Ordner im Ordner &bdquo;Library&ldquo; Ihres Benutzerordners. Man schreibt daf&uuml;r meist &bdquo;~/Library/texmf&ldquo;, wobei &bdquo;~&ldquo; f&uuml;r &bdquo;Ihren Benutzerordner&ldquo; steht (also den Ordner, den Sie sehen, wenn Sie in einem Finder-Fenster auf das Symbol Ihres Benutzerordners klicken).</p>
 <h2>Wann geh&ouml;rt etwas in den lokalen texmf-Ordner?</h2>
@@ -41,39 +67,6 @@
 		<p>Hier ist eine Beispieldatei environment.plist von Nathan Potter. Danke! F&uuml;r weitere Details besuchen Sie <a href="http://developer.apple.com/qa/qa2001/qa1067.html">http://developer.apple.com/qa/qa2001/qa1067.html</a>.</p>
 <br>
 <center><img align=center src="environment.tiff" border=3></center>
-</div>
-
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Erweitert</div>
-<div id="header_title">Pers&ouml;nliche Sty- und Makrodateien zu TeX Live hinzuf&uuml;gen</div>
-
-
-	<div id="menu_border">
-		<UL>
-			<li><a href="advanced_personaltetex.htm">Pers&ouml;nliche sty- und Makrodateien zu TeX Live hinzuf&uuml;gen</a></li>
-			<LI><a href="advanced_addengine.htm">Zusätzliche Schriftsatz-Programme</a>
-			<LI><a href="advanced_removeaux.htm">AUX-Dateien entfernen</a>
-			<li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
-			<li><a href="advanced_pdfcopypaste.htm">Kopieren-Einf&uuml;gen und Drag-Drop aus dem Vorschau-Fenster</a></li>
-			<li><a href="advanced_root.htm">Die Hauptdatei des Projekts festlegen</a></li>
-			<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
-			<li><a href="advanced_unicode.htm">Unicode</a></li>
-			<li><a href="advanced_bibtex.htm">BibTeX</a></li>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-			<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop &ouml;ffnen</a></li>
-			<li><a href="advanced_mathematica.htm">Mathematica</a></li>
-			<li><a href="advanced_localization.htm">Lokalisierungen</a></li>
-			<li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung </a></li>
-			<li><a href="advanced_shellescape.htm">Shell Escape Schutz</a></li>
-			<li><a href="advanced_coloredtext.htm">Farbiger Text in TeX</a></li>
-			<li><a href="advanced_moretetex.htm">Mehr &uuml;ber TeX Live</a></li>
-			<li><a href="advanced_otherdistributions.htm">Zusammenarbeit mit anderen TeX Distributionen</a></li>
-			<li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
-			<li><a href="advanced_plist.htm">Plist Dateien</a></li>
-			<li><a href="advanced_menushortcuts.htm">Tastaturk&uuml;rzel neubelegen</a></li>
-		</UL>
-	</div>
-	
-	</BODY>
-</HTML>
+</main>
+</body>
+</html>

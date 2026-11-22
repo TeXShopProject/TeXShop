@@ -98,15 +98,15 @@ for language in ('ja', 'zh_CN'):
 assert compiled > 32, compiled
 
 # The Japanese help lost the same spaces where it quotes the interface (checked by
-# check-settings-guidance.py). Font names in its attributes are names, not text:
-# they must still name a font.
+# check-settings-guidance.py). The help uses the system font of its stylesheet; a font
+# name a page still gives is a name, not text, and must name a font.
 import json, subprocess
 help_pages, font_names = 0, set()
 for path in sorted((root / 'Resources/Interfaces/ja.lproj/TeXShopHelp').rglob('*.htm*')):
     raw = path.read_bytes()
     page = raw.decode('utf-8')
     if mutation == 'help-font' and path.name == 'basic_j_ptex.htm':
-        page = page.replace('ヒラギノ角ゴ Pro W3', 'ヒラギノ角ゴPro W3')
+        page = page.replace('</h1>', '</h1><p style="font-family: ヒラギノ角ゴPro W3">x</p>', 1)
     help_pages += 1
     for value in re.findall(r'face="([^"]*)"|font-family:\s*([^;"}]*)', page, re.I):
         font_names.update(name.strip(" '") for name in ''.join(value).split(','))
@@ -114,7 +114,6 @@ for path in sorted((root / 'Resources/Interfaces/ja.lproj/TeXShopHelp').rglob('*
         font_names.update(name.strip(" '") for name in value.split(','))
 assert help_pages > 60, help_pages
 japanese_fonts = sorted(name for name in font_names if not name.isascii())
-assert japanese_fonts, 'the help names a Japanese font'
 probe = 'ObjC.import("AppKit");JSON.stringify(%s.filter(n => $.NSFont.fontWithNameSize(n, 12).isNil()))' % json.dumps(japanese_fonts, ensure_ascii=False)
 missing = json.loads(subprocess.run(['osascript', '-l', 'JavaScript', '-e', probe], capture_output=True, text=True, check=True).stdout)
 failures += [f'help font name that names no font: {name!r}' for name in missing]

@@ -1,15 +1,43 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>In TeX-Quellen suchen</title>
+<meta name="copyright" content="Copyright (c) 2026 unter der GNU FDL">
+<meta name="description" content="Suchen und Ersetzen in allen Dateien eines geteilten Dokuments; TEX root; In TeX-Quellen suchen; Alles ersetzen; Sicherungskopien">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Grundlagen</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Einf&uuml;hrung</a></li>
+<li><a href="basic_installtetex.htm">TeX Live beschaffen und installieren</a></li>
+<li><a href="basic_installtexshop.htm">TeXShop beschaffen und installieren</a></li>
+<li><a href="basic_typesetting.htm">Dokumente setzen</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternativer Schriftsatzmodus</a></li>
+<li><a href="basic_edittricks.htm">Bearbeitungstipps</a></li>
+<li><a href="basic_texrootsearch.htm" class="current">In TeX-Quellen suchen</a></li>
+<li><a href="basic_spelling.htm">Rechtschreibprüfung</a></li>
+<li><a href="basic_autocompletion.htm">Autovervollst&auml;ndigen</a></li>
+<li><a href="basic_commandcompletion.htm">Vervollst&auml;ndigung von Befehlen</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Palette</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix Palette</a></li>
+<li><a href="basic_macros.htm">Makros</a></li>
+<li><a href="basic_toolbar.htm">Werkzeugleiste und AppleScript</a></li>
+<li><a href="basic_graphics.htm">Grafik einf&uuml;gen</a></li>
+<li><a href="basic_printing.htm">Drucken</a></li>
+<li><a href="basic_preferences.htm">Einstellungen ändern</a></li>
+<li><a href="basic_templates.htm">&Auml;ndern des Vorlagenmen&uuml;s</a></li>
+<li><a href="basic_bugs.htm">Fehlerberichte &uuml;bermitteln</a></li>
+<li><a href="basic_websites.htm">N&uuml;tzliche Webseiten</a></li>
+<li><a href="basic_license.htm">Lizenz</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>In TeX-Quellen suchen</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>In TeX-Quellen suchen</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2026 unter der GNU FDL">
-		<META NAME="description" CONTENT="Suchen und Ersetzen in allen Dateien eines geteilten Dokuments; TEX root; In TeX-Quellen suchen; Alles ersetzen; Sicherungskopien">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-
-<BODY>
-		<div id="content_border">
 
 <p><a name="texroot_search"></a>Ein Dokument, das in Kapiteldateien geteilt ist, kann in allen seinen Dateien auf einmal durchsucht werden, und in allen kann ersetzt werden. Ist eine seiner Dateien vorne, w&#228;hlen Sie im Untermen&#252; &bdquo;Suchen&ldquo; des Men&#252;s &bdquo;Bearbeiten&ldquo; &bdquo;In TeX-Quellen mit derselben TEX root suchen &hellip;&ldquo;; ist die vordere Datei die Root-Datei selbst, hei&#223;t der Befehl &bdquo;In TeX-Quellen mit dieser Datei als TEX root suchen &hellip;&ldquo;. Derselbe Befehl steht im Men&#252; von &bdquo;Alle suchen&ldquo; in der erweiterten Suchmaske, und &bdquo;Auf TeX-Quellen mit derselben TEX root anwenden &hellip;&ldquo; im Men&#252; von &bdquo;Alles ersetzen&ldquo; im Fenster &bdquo;Mehrfach ersetzen&ldquo; &#246;ffnet das Fenster mit dem dort gew&#228;hlten Regelsatz. F&#252;r ein Dokument ohne Namen und f&#252;r eine Datei, deren Name nicht auf .tex endet, sind die Befehle abgeblendet.</p>
 <p>Das Fenster &bdquo;In TeX-Quellen suchen&ldquo; durchsucht die Root-Datei und die .tex-Dateien in ihrem Ordner und den Ordnern darunter, die sie in ihren ersten 20 Zeilen mit % !TEX root (oder %!TEX root) angeben; mit der versteckten Einstellung UseOldHeadingCommands auch die, die sie mit %SourceDoc angeben. Die Zeile unter den Modi nennt die durchsuchte Root, und die Taste ? am Ende dieser Zeile zeigt diese Regel. Mit \input oder \include eingebundenen Dateien wird nicht gefolgt, und die Root-Datei eines .texshop-Projekts wird nicht verwendet. Symbolische Links auf Dateien werden &#252;bersprungen, Ordner hinter symbolischen Links oder Aliassen werden nicht betreten, und der Ordner TeXShop Backups wird ausgelassen. Die Baumansicht links zeigt die Dateien; eine dort ausgeschaltete Datei oder ein ausgeschalteter Ordner wird nicht durchsucht. Die Taste &bdquo;Nicht gelesene Dateien&ldquo; unten zeigt die Dateien und Ordner, die nicht gelesen werden konnten, mit dem Grund.</p>
@@ -18,6 +46,7 @@
 <p>&bdquo;Alles ersetzen&ldquo; fragt vor dem Ersetzen. Vor und nach dieser Frage werden die Dateien neu gesammelt und mit der Liste verglichen: Hat sich eine Datei ge&#228;ndert oder ist eine Datei hinzugekommen, wird nichts ersetzt und die Liste neu erstellt. Ist &bdquo;Sicherungskopien sichern&ldquo; eingeschaltet, wird zuerst jede Datei, in der ersetzt wird, so, wie sie bei der Antwort auf die Frage war, nach TeXShop Backups/&lt;Datum und Uhrzeit&gt; im Ordner der Root-Datei kopiert, unter ihrem Pfad; ein ge&#246;ffnetes Dokument mit seinem Text auf dem Bildschirm. Dann werden die nicht ge&#246;ffneten Dateien direkt geschrieben, in ihrer Codierung, mit ihren Zeilenenden, ihrer Byte-Reihenfolge-Markierung, ihren Zugriffsrechten und anderen Attributen; das kann nicht widerrufen werden. Die ge&#246;ffneten Dokumente werden auf dem Bildschirm ersetzt und nicht gesichert: Ein einziges &bdquo;Widerrufen&ldquo; nimmt die Ersetzungen eines Dokuments zur&#252;ck. W&#228;hrenddessen k&#246;nnen die Dokumente weder bearbeitet, gesichert, geschlossen noch gesetzt werden, und die Stopptaste, Escape oder Befehl-Punkt beenden &bdquo;Alles ersetzen&ldquo;: Bereits geschriebene Dateien und schon fertig ersetzte Dokumente bleiben ersetzt, was schon in das gerade bearbeitete Dokument eingesetzt wurde, wird zur&#252;ckgenommen, und der Rest wird nicht ersetzt. Danach werden die Dateien erneut durchsucht, ausgeschaltete Treffer bleiben ausgeschaltet, und die Zeile unten nennt die Zahl der Ersetzungen. Wurden einige Dateien nicht ersetzt, nennt ein Hinweis sie mit dem Grund, und &bdquo;Im Finder zeigen&ldquo; &#246;ffnet den Ordner der Sicherungskopie.</p>
 <p>Unmittelbar bevor eine Datei ersetzt wird, wird ihr Inhalt mit der Fassung in der Liste verglichen, und die Datei wird sofort ersetzt. Ein Programm, das die Datei genau in diesem kurzen Moment schreibt, ohne sich mit anderen Programmen abzustimmen (&#252;ber NSFileCoordinator), kann das Geschriebene trotzdem verlieren; die Sicherungskopie enth&#228;lt die verglichene Fassung. Verwenden Sie &bdquo;Alles ersetzen&ldquo; nicht, w&#228;hrend ein anderes Programm die Dateien laufend schreibt.</p>
 
-		</div>
-	</BODY>
-</HTML>
+		
+</main>
+</body>
+</html>

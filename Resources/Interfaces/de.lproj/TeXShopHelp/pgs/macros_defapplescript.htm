@@ -1,16 +1,32 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AppleScript Makros erstellen</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
+<meta name="description" content="Beachten Sie einige Besonderheiten, wenn Sie AppleScript-Makros erstellen wollen.">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Hilfe zu Makros</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Einleitung</a></li>
+<li><a href="macros_default.htm">Die Standardmakros verstehen</a></li>
+<li><a href="macros_rearrange.htm">Das Makromen&uuml; neu anordnen</a></li>
+<li><a href="macros_define.htm">Neue Makros erstellen</a></li>
+<li><a href="macros_applescript.htm">AppleScript Makros</a></li>
+<li><a href="macros_includedscripts.htm">Standard AppleScript Makros</a></li>
+<li><a href="macros_defapplescript.htm" class="current">AppleScript Makros erstellen</a></li>
+<li><a href="macros_dialogs.htm">Dialoge erstellen</a></li>
+<li><a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzkommandos erstellen</a></li>
+<li><a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen erstellen</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>AppleScript Makros erstellen</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>AppleScript Makros erstellen</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-		<META NAME="description" CONTENT="Beachten Sie einige Besonderheiten, wenn Sie AppleScript-Makros erstellen wollen.">
-	<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-
-<BODY>
-
-<div id="content_border">
 		<P>Die AppleScript Syntax ist ein komplexes Thema. Wenn Sie mehr hier&uuml;ber erfahren m&ouml;chten, so lesen Sie eines der zahlreichen B&uuml;cher hierzu. If you installed the developer tools which come with Mac OS X, there is an online book about AppleScript in the Developer folder.</P>
 		<p>Wenn TeXShop ein AppleScript Makro interpretiert, so ersetzt es erst die Strings #FILEPATH#, #PDFPATH#, #LOGPATH#, #AUXPATH#, #DVIPATH# und #PSPATH# durch die kompletten Pfade der tex-Datei, der pdf-Datei, der dvi-Datei oder der ps-Datei. Ebenso werden die Strings #INDPATH#, #BBLPATH# und #HTMLPATH# mit dem kompletten Pfad jeweils der ind-Datei, bbl-Datei oder html-Datei ersetzt. </p>
 		<p>Dar&uuml;ber hinaus wird jeder String #NAMEPATH# durch den Pfad der TeX-Quelldatei ersetzt. Dabei wird das Dateisuffix abgeschintten. #DOCUMENTNAME# wird durch den Namen des aktuellen Dokuments ersetzt. Diese letzte Ersetzung ist subtil. Normalerweise wird der Dateiname eingesetzt, der in der Titelzeile des Dokuments angezeigt wird. Wurde das Dokument mit der Option &bdquo;Suffix ausblenden&ldquo; gesichert, so wird nur der Dokumentname eingesetzt. Wurd diese Option jedoch nicht gew&auml;hlt, so wird der Dokumentname mit dem entsprechenden Suffix eingesetzt. Diese Information kann auf folgende Weise ausgenutzt werden um das Dokument zu indentifizieren, dass den AppleScript-Code aufgerufen hat:</p>
@@ -47,28 +63,6 @@
 			<dd><tt>goto line 37</tt>
 			<dd><tt>end tell</tt>
 		</dl>
-</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Hilfe zu Makros</div>
-<div id="header_title">AppleScript Makros erstellen</div>
-
-
-	<div id="menu_border">
-		<UL>
-			<LI><a href="macros_preliminaries.htm">Einleitung</a></li>
-			
-			<LI><a href="macros_default.htm">Die Standardmakros verstehen</a></li>
-			<LI><a href="macros_rearrange.htm">Das Makromen&uuml; neu anordnen</a></li>
-			<LI><a href="macros_define.htm">Neue Makros erstellen</a></li>
-			<li><a href="macros_applescript.htm">AppleScript Makros</a></li>
-			<li><a href="macros_includedscripts.htm">Standard AppleScript Makros</a></li>
-			<li><a href="macros_defapplescript.htm">AppleScript Makros erstellen</a></li>
-			<li><a href="macros_dialogs.htm">Dialoge erstellen</a></li>
-			<li><a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzkommandos erstellen</a></li>
-			<li><a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen erstellen</a></li>
-		</UL>
-	</div>
-	
-	</BODY>
-</HTML>
+</main>
+</body>
+</html>

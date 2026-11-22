@@ -76,7 +76,7 @@ issues = 'https://github.com/TeXShopProject/TeXShop/issues'
 bug_pages = sorted((root/'Resources/Interfaces').glob('*.lproj/TeXShopHelp/pgs/basic_bugs.htm'))
 assert len(bug_pages) == 5, bug_pages
 for page in bug_pages:
-    text = page.read_bytes().decode('latin-1')
+    text = page.read_bytes().decode('utf-8')
     if args.mutation == 'bug-contact' and page.parent.parent.parent.name == 'de.lproj':
         text = text.replace(issues, 'https://example.org/')
     if ('href="%s"' % issues) not in text:

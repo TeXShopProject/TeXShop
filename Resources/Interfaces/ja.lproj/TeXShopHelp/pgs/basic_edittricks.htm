@@ -1,16 +1,45 @@
-<HTML>
-
-<HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-			<TITLE>編集上のコツ</TITLE>
-			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="ソース編集時に役立つ事柄について">
-			<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
-
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>編集上のコツ</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="ソース編集時に役立つ事柄について">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
 <body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">基本的なヘルプ</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">まえがき</a></li>
+<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a></li>
+<li><a href="basic_installtetex.htm">TeX Liveの入手とインストール</a></li>
+<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a></li>
+<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a></li>
+<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a></li>
+<li><a href="basic_edittricks.htm" class="current">編集上のコツ</a></li>
+<li><a href="basic_texrootsearch.htm">TeXソースの検索と置換</a></li>
+<li><a href="basic_spelling.htm">スペルをチェックする</a></li>
+<li><a href="basic_autocompletion.htm">キーバインド</a></li>
+<li><a href="basic_commandcompletion.htm">コマンドの補完</a></li>
+<li><a href="basic_latexpanel.htm">LaTeXパネル</a></li>
+<li><a href="basic_matrixpanel.htm">行列パネル</a></li>
+<li><a href="basic_macros.htm">マクロ</a></li>
+<li><a href="basic_toolbar.htm">ツールバーとAppleScript</a></li>
+<li><a href="basic_graphics.htm">画像を入れる</a></li>
+<li><a href="basic_printing.htm">印刷</a></li>
+<li><a href="basic_preferences.htm">設定</a></li>
+<li><a href="basic_j_encoding.htm">日本語エンコーディングと &#x005C; &#x00A5; 文字の扱い</a></li>
+<li><a href="basic_templates.htm">テンプレートメニューを変更する</a></li>
+<li><a href="basic_bugs.htm">バグレポートを送る</a></li>
+<li><a href="basic_websites.htm">役に立つウェブ・サイト</a></li>
+<li><a href="basic_license.htm">使用許諾</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>編集上のコツ</h1>
 
-<div id="content_border">
 
 <p>
 (, {, [, ], }, ) といった括弧類をダブルクリックすると、対応する括弧とその間の全てのテキストが選択されます。optionキーを押しながら括弧をダブルクリックすると、その括弧だけを選択することができます。
@@ -126,40 +155,6 @@ clsファイルをドロップすると \documentclassが記述されてファ�
 <p>
 「編集」メニューの「文字種一括変換」と「Unicode正規化」は、選択範囲の文字列を書き換えます。どちらもソースウインドウのコンテキストメニューにもあります。何も選択していない場合は、書類全体を書き換えるかどうかを確認します。「文字種一括変換」では、ひらがなとカタカナ、全角と半角の数字・英字、丸数字などの文字とajmacrosパッケージのコマンド、JIS X 0208にない文字とotfパッケージの &#92;UTF・&#92;CIDコマンドのあいだで変換し、全角引用符をTeXの引用符に変換します。「Unicode正規化」では、NFC・NFD・NFKC・NFKDのほか、CJK互換漢字を変えないModified NFCとModified NFDに変換します。どちらも取り消せます。
 </p>
-
-</div>
-
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">基本的なヘルプ</div>
-<div id="header_title">編集上のコツ</div>
-
-		<div id="menu_border">
-		<ul>
-			<li><a href="basic_preliminaries.htm">まえがき</a>
-			<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a>
-			<li><a href="basic_installtetex.htm">TeX Liveの入手とインストール</a>
-			<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a>
-			<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a>
-			<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a>	
-			<li><a href="basic_spelling.htm">スペルをチェックする</a>
-			<li><a href="basic_latexpanel.htm">Latexパネル</a>
-			<li><a href="basic_matrixpanel.htm">行列パネル</a>
-			<li><a href="basic_macros.htm">マクロ</a>
-			<li><a href="basic_toolbar.htm">ツールバーとApplescript</a>
-			<li><a href="basic_graphics.htm">画像を入れる</a>
-			<li><a href="basic_printing.htm">印刷</a>
-			<li><a href="basic_preferences.htm">設定</a>
-			<li><a href="basic_j_encoding.htm">日本語エンコーディングと &#x005C; &#x00A5; 文字の扱い</a>
-			<li><a href="basic_templates.htm">テンプレートメニューを変更する</a>
-			<li><a href="basic_edittricks.htm">編集上のコツ</a>
-			<li><a href="basic_autocompletion.htm">キーバインド</a>
-			<li><a href="basic_commandcompletion.htm">コマンドの補完</a>
-			<li><a href="basic_bugs.htm">バグレポートを送る</a>
-			<li><a href="basic_websites.htm">役に立つウェブサイト</a>
-			<li><a href="basic_license.htm">使用許諾</a>
-		</ul>
-	</div>
+</main>
 </body>
-
-</HTML>
+</html>

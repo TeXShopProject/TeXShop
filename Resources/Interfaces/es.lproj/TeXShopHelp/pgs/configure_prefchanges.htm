@@ -1,54 +1,46 @@
-<html>
+<!DOCTYPE html>
+<html lang="es">
 <head>
-<meta content="text/html;charset=iso-8859-1" http-equiv="content-type"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Recomendaciones de cambios en los ajustes</title>
-<meta content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU" name="copyright"/>
-<meta content="cambios en ajustes; colocar ventana de código y del PDF previsto; aumento; magnification; seguridad; aviso shell-escape" name="description"/>
-<link href="../sty/screen.css" media="all" rel="stylesheet"/>
+<link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-
-<div id="content_border"><p>En Composición, elige un perfil del motor para ajustar de una vez los comandos de composición. La lista muestra los valores que se ajustarán y marca los que cambian; desmarca los que quieras conservar y haz clic en Aceptar; Escape cancela. Para conservar un tema original, duplícalo antes de editarlo. Al crear un tema se pide un nombre; reemplazar un tema existente requiere confirmación. Los colores se actualizan en los documentos abiertos cuando se guardan correctamente. Si falla el guardado, se restauran los últimos colores guardados.</p><p>El guardado automático y las versiones se activan al reiniciar TeXShop. El cambio entre el panel de búsqueda estándar y la barra de búsqueda se aplica inmediatamente al código, la consola y el registro de los documentos abiertos. Los cambios hacia o desde OgreKit se activan al reiniciar TeXShop.</p>
-
-
-
-<p>
-Los usuarios pueden querer cambiar algunos de los ajustes previamente establecidos por TeXShop. Algunos de estos cambios dependerán de determinadas características individuales, y no se pueden establecer hasta no haber usado el programa.
-</p>
-<p>
-Por defecto, TeXShop abre la ventana de código y la del pdf previsto en la posición en que las mostró por última vez. Esto sólo tiene sentido cuando estamos manejando un solo documento cada vez. Usualmente, es mejor abrir ambas ventanas en un lugrar óptimo predeterminado. Para ver qué es lo que ocurre, compila un documento. Entonces, pon el tamaño y posición de la ventana donde quieras. Si la pantalla es grande, lo mejor es ponerlas una junto a otra. En la categoría «General», selecciona «Comenzar con posición fija» y haz click en «Establecer con posición actual». Haz el mismo cambio en la categoría «Vista previa».
-</p>
-<p>
-</p>
-<p>
-Finalmente, puedes querer enfrentarte con un posible problema de seguridad. Por defecto, TeXShop está configurado para permitir que pdftex y pdflatex llamen a otros programas cuando están componiendo. Cuando pdftex encuentra una ilustración en un formato que no entiende, automáticamente llama a un programa de conversiones gráficas, para que convierta el gráfico en un formato útil. Por ejemplo, los archivos eps se convierten en pdf, y los archivos tif en png.
-</p>
-<p>
-Sin embargo, la configuración permite a pdftex llamar a CUALQUIER programa. Es concebible que otro usuario te envíe un archivo tex que, al compilarlo, le haga a tu sistema cosas no muy agradables. Si estás precupado por que te pueda ocurrir esto, vete a la categoría «Composición» de los Ajustes y selecciona la opción «Avisos shell-escape». Cuando este botón está marcado, la primera vez que TeXShop compila una archivo tex en una sesión, aparece un diálogo que te permite desactivar la comunicación entre pdftex y otros programas durante toda la compilación del archivo. Así, puedes continuar consiguiendo la conversión automática en tus propios archivos, pero actuar de manera segura cuando los hayas recibido de otros.
-</p>
-
-<p><a href="basic_preferences.htm#settings-search">Uso y búsqueda de ajustes</a></p></div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/texshop-icon-small.png" width="40"/></a></div>
-<div id="header_chapter">¿Cómo configuro TeXShop?</div><div id="header_title">Recomendaciones de cambios en los ajustes</div>
-<div id="menu_border">
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">&iquest;C&oacute;mo configuro TeXShop?</span></header>
+<nav id="menu">
 <ul>
-<li><a href="configure_preliminaries.htm">Preliminares</a>
-<li><a href="configure_correctinstall.htm">Obtener elementos nuevos de ~/Library/TeXShop</a>
-<li><a href="configure_prefchanges.htm">Recomendaciones de cambios en los ajustes</a>
-<li><a href="configure_convertgraphics.htm">Conversión automática de formatos gráficos</a>
-<li><a href="configure_defaults.htm">Ajustes predeterminados</a>
-<li><a href="configure_latextemplate.htm">Plantilla LaTeX predeterminada</a>
-<li><a href="configure_hidden.htm">Ajustes ocultos</a>
-<li><a href="configure_plist.htm">Archivos .plist</a>
-<li><a href="configure_panel.htm">Modificación del panel LaTeX</a>
-<li><a href="configure_autocompletion.htm">Modificación de la autocompleción</a>
-<li><a href="configure_menushortcuts.htm">Redefinición de atajos de teclado de menús</a>
-<li><a href="configure_macros.htm">Modificación del menú Macros</a>
-</li></li></li></li></li></li></li></li></li></li></li></li></ul>
-</div>
+<li><a href="configure_preliminaries.htm">Preliminares</a></li>
+<li><a href="configure_prefchanges.htm" class="current">Recomendaciones de cambios en los ajustes</a></li>
+<li><a href="configure_correctinstall.htm">Obtener elementos nuevos de ~/Library/TeXShop</a></li>
+<li><a href="configure_hidden.htm">Ajustes ocultos</a></li>
+<li><a href="configure_panel.htm">Modificaci&oacute;n del panel LaTeX</a></li>
+<li><a href="configure_autocompletion.htm">Modificaci&oacute;n de la autocompleci&oacute;n</a></li>
+<li><a href="configure_menushortcuts.htm">RedefiniciÃ³n de atajos de teclado de menÃºs</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Recomendaciones de cambios en los ajustes</h1>
+<p>En ComposiciÃ³n, elige un perfil del motor para ajustar de una vez los comandos de composiciÃ³n. La lista muestra los valores que se ajustarÃ¡n y marca los que cambian; desmarca los que quieras conservar y haz clic en Aceptar; Escape cancela. Para conservar un tema original, duplÃ­calo antes de editarlo. Al crear un tema se pide un nombre; reemplazar un tema existente requiere confirmaciÃ³n. Los colores se actualizan en los documentos abiertos cuando se guardan correctamente. Si falla el guardado, se restauran los Ãºltimos colores guardados.</p><p>El guardado automÃ¡tico y las versiones se activan al reiniciar TeXShop. El cambio entre el panel de bÃºsqueda estÃ¡ndar y la barra de bÃºsqueda se aplica inmediatamente al cÃ³digo, la consola y el registro de los documentos abiertos. Los cambios hacia o desde OgreKit se activan al reiniciar TeXShop.</p>
 
 
 
+<p>
+Los usuarios pueden querer cambiar algunos de los ajustes previamente establecidos por TeXShop. Algunos de estos cambios dependerÃ¡n de determinadas caracterÃ­sticas individuales, y no se pueden establecer hasta no haber usado el programa.
+</p>
+<p>
+Por defecto, TeXShop abre la ventana de cÃ³digo y la del pdf previsto en la posiciÃ³n en que las mostrÃ³ por Ãºltima vez. Esto sÃ³lo tiene sentido cuando estamos manejando un solo documento cada vez. Usualmente, es mejor abrir ambas ventanas en un lugrar Ã³ptimo predeterminado. Para ver quÃ© es lo que ocurre, compila un documento. Entonces, pon el tamaÃ±o y posiciÃ³n de la ventana donde quieras. Si la pantalla es grande, lo mejor es ponerlas una junto a otra. En la categorÃ­a Â«GeneralÂ», selecciona Â«Comenzar con posiciÃ³n fijaÂ» y haz click en Â«Establecer con posiciÃ³n actualÂ». Haz el mismo cambio en la categorÃ­a Â«Vista previaÂ».
+</p>
+<p>
+</p>
+<p>
+Finalmente, puedes querer enfrentarte con un posible problema de seguridad. Por defecto, TeXShop estÃ¡ configurado para permitir que pdftex y pdflatex llamen a otros programas cuando estÃ¡n componiendo. Cuando pdftex encuentra una ilustraciÃ³n en un formato que no entiende, automÃ¡ticamente llama a un programa de conversiones grÃ¡ficas, para que convierta el grÃ¡fico en un formato Ãºtil. Por ejemplo, los archivos eps se convierten en pdf, y los archivos tif en png.
+</p>
+<p>
+Sin embargo, la configuraciÃ³n permite a pdftex llamar a CUALQUIER programa. Es concebible que otro usuario te envÃ­e un archivo tex que, al compilarlo, le haga a tu sistema cosas no muy agradables. Si estÃ¡s precupado por que te pueda ocurrir esto, vete a la categorÃ­a Â«ComposiciÃ³nÂ» de los Ajustes y selecciona la opciÃ³n Â«Avisos shell-escapeÂ». Cuando este botÃ³n estÃ¡ marcado, la primera vez que TeXShop compila una archivo tex en una sesiÃ³n, aparece un diÃ¡logo que te permite desactivar la comunicaciÃ³n entre pdftex y otros programas durante toda la compilaciÃ³n del archivo. AsÃ­, puedes continuar consiguiendo la conversiÃ³n automÃ¡tica en tus propios archivos, pero actuar de manera segura cuando los hayas recibido de otros.
+</p>
+
+<p><a href="basic_preferences.htm#settings-search">Uso y bÃºsqueda de ajustes</a></p>
+</main>
 </body>
 </html>

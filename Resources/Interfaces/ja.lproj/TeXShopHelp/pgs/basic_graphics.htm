@@ -1,16 +1,45 @@
-<HTML>
-
-<HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-			<TITLE>画像を入れる</TITLE>
-			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="TeX文書に画像を含めるための方法">
-			<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
-
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>画像を入れる</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="TeX文書に画像を含めるための方法">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
 <body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">基本的なヘルプ</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">まえがき</a></li>
+<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a></li>
+<li><a href="basic_installtetex.htm">TeX Liveの入手とインストール</a></li>
+<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a></li>
+<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a></li>
+<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a></li>
+<li><a href="basic_edittricks.htm">編集上のコツ</a></li>
+<li><a href="basic_texrootsearch.htm">TeXソースの検索と置換</a></li>
+<li><a href="basic_spelling.htm">スペルをチェックする</a></li>
+<li><a href="basic_autocompletion.htm">キーバインド</a></li>
+<li><a href="basic_commandcompletion.htm">コマンドの補完</a></li>
+<li><a href="basic_latexpanel.htm">LaTeXパネル</a></li>
+<li><a href="basic_matrixpanel.htm">行列パネル</a></li>
+<li><a href="basic_macros.htm">マクロ</a></li>
+<li><a href="basic_toolbar.htm">ツールバーとAppleScript</a></li>
+<li><a href="basic_graphics.htm" class="current">画像を入れる</a></li>
+<li><a href="basic_printing.htm">印刷</a></li>
+<li><a href="basic_preferences.htm">設定</a></li>
+<li><a href="basic_j_encoding.htm">日本語エンコーディングと &#x005C; &#x00A5; 文字の扱い</a></li>
+<li><a href="basic_templates.htm">テンプレートメニューを変更する</a></li>
+<li><a href="basic_bugs.htm">バグレポートを送る</a></li>
+<li><a href="basic_websites.htm">役に立つウェブ・サイト</a></li>
+<li><a href="basic_license.htm">使用許諾</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>画像を入れる</h1>
 
-<div id="content_border">
 
 <p>
 「DVI経由」モードでjpg・pngおよびpdf形式の画像を挿入するには、dvipdfmxを使用します。プリアンブルに次の１行を追加しておいてください。
@@ -126,40 +155,6 @@ tifやtiffのイラストも使えます。この場合のために、TeXShopに
 <p>
 epsのイラストを使った古いファイルが少しある場合や、TeXでPostScriptのパッケージpstricksを使う場合は、pdflatexの代わりに「DVI経由」でタイプセットできます。詳しくはTeXShopヘルプの「<a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a>」を参照してください。このモードでは、epsファイルをpdf形式に変換する必要はありません。けれども、epsファイルをたくさん使う新しいプロジェクトにこのモードを使うのはよい考えではありません。タイプセットのたびにepsのイラストが暗黙のうちにpdf形式に変換されねばならず、epsのイラストが複雑な場合はタイプセットがひどく遅くなるからです。というのも「DVI経由」モードでは、PostScriptからpdfへの変換は、イラストが最終的な文書全体に埋め込まれた後、タイプセットのいちばん最後に行なわれるからです。
 </p>
-
-</div>
-
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">基本的なヘルプ</div>
-<div id="header_title">画像を入れる</div>
-
-		<div id="menu_border">
-		<ul>
-			<li><a href="basic_preliminaries.htm">まえがき</a>
-			<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a>
-			<li><a href="basic_installtetex.htm">TeX Liveの入手とインストール</a>
-			<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a>
-			<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a>
-			<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a>	
-			<li><a href="basic_spelling.htm">スペルをチェックする</a>
-			<li><a href="basic_latexpanel.htm">Latexパネル</a>
-			<li><a href="basic_matrixpanel.htm">行列パネル</a>
-			<li><a href="basic_macros.htm">マクロ</a>
-			<li><a href="basic_toolbar.htm">ツールバーとApplescript</a>
-			<li><a href="basic_graphics.htm">画像を入れる</a>
-			<li><a href="basic_printing.htm">印刷</a>
-			<li><a href="basic_preferences.htm">設定</a>
-			<li><a href="basic_j_encoding.htm">日本語エンコーディングと &#x005C; &#x00A5; 文字の扱い</a>
-			<li><a href="basic_templates.htm">テンプレートメニューを変更する</a>
-			<li><a href="basic_edittricks.htm">編集上のコツ</a>
-			<li><a href="basic_autocompletion.htm">キーバインド</a>
-			<li><a href="basic_commandcompletion.htm">コマンドの補完</a>
-			<li><a href="basic_bugs.htm">バグレポートを送る</a>
-			<li><a href="basic_websites.htm">役に立つウェブサイト</a>
-			<li><a href="basic_license.htm">使用許諾</a>
-		</ul>
-	</div>
+</main>
 </body>
-
-</HTML>
+</html>

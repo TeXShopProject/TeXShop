@@ -47,7 +47,7 @@ def strings(language, table):
 
 def raw_page(language, name):
     raw = (INTERFACES / f'{language}.lproj/TeXShopHelp/pgs/{name}').read_bytes()
-    match = re.search(br'charset=([^"\s>]+)', raw, re.I)
+    match = re.search(br'charset=["\x27]?([^"\x27\s>]+)', raw, re.I)
     encoding = match[1].decode().lower() if match else 'latin-1'
     encoding = {'shift_jis': 'cp932', 'x-sjis': 'cp932', 'iso-8859-1': 'latin-1'}.get(encoding, encoding)
     text = raw.decode(encoding)

@@ -1,16 +1,32 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TeXShopのタイプセットコマンドでスクリプトを書く</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="AppleScriptによるタイプセットの自動化について">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">マクロ・ヘルプ</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">まえがき</a></li>
+<li><a href="macros_default.htm">デフォルトのマクロを理解する</a></li>
+<li><a href="macros_rearrange.htm">マクロの項目名を並べ替える</a></li>
+<li><a href="macros_define.htm">新しいマクロを定義する</a></li>
+<li><a href="macros_applescript.htm">AppleScriptマクロ</a></li>
+<li><a href="macros_includedscripts.htm">デフォルトのAppleScriptマクロ</a></li>
+<li><a href="macros_defapplescript.htm">AppleScriptマクロを定義する</a></li>
+<li><a href="macros_dialogs.htm">ダイアログを作る</a></li>
+<li><a href="macros_writingcompletescripts.htm" class="current">TeXShopのタイプセットコマンドでスクリプトを書く</a></li>
+<li><a href="macros_writingcommandscripts.htm">シェルコマンドでスクリプトを書く</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>TeXShopのタイプセットコマンドでスクリプトを書く</h1>
 
-<HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-			<TITLE>TeXShopのタイプセットコマンドでスクリプトを書く</TITLE>
-			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="AppleScriptによるタイプセットの自動化について">
-			<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
-
-
-<BODY>
-<div id="content_border">
 
 <p>
 TeXプロジェクトが参考文献目録を含んでいる場合には、一連のタイプセットコマンドを実行して目録をアップデートしなければなりません。まずLaTeXを実行して .auxファイルを作成する。BibTeXを実行して .auxファイルから .bblおよび .blgファイルを作成する。再度LaTeXを実行して参考文献目録を文書に付け加える。LaTeXを最終的に実行して目録に対する文書内の参照をアップデートする。
@@ -97,29 +113,6 @@ TeXプロジェクトが参考文献目録を含んでいる場合には、一�
 <p>
 残りのコマンドでlatexinteractive・bibtex・latexそれにlatexを実行しています。タイプセットコマンドを呼び出した後、タイプセット作業が完了する前に、コントロールはすぐにAppleScriptに戻ることを思い出してください。repeatのループ部分では、次のタイプセット処理が実行される前に、先立つ作業が完了したかどうかをチェックするようスクリプトに命じています。「delay 2」という行は、作業が完了したかどうかを絶えず問い合わせつづけることでコンピュータ全体の速度を低下させないようAppleScriptに間合いを取らせています。
 </p>
-
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">マクロ・ヘルプ</div>
-<div id="header_title">TeXShopのタイプセットコマンドでスクリプトを書く</div>
-
-<div id="menu_border">
-
-	<UL>
-		<li><a href="macros_preliminaries.htm">まえがき</a> 
-		<li><a href="macros_default.htm">デフォルトのマクロを理解する</a>
-		<li><a href="macros_rearrange.htm">マクロの項目名を並べ替える</a>
-		<li><a href="macros_define.htm">新しいマクロを定義する</a>
-		<li><a href="macros_applescript.htm">AppleScriptマクロ</a>
-
-		<li><a href="macros_includedscripts.htm">デフォルトのAppleScriptマクロ</a>
-		<li><a href="macros_defapplescript.htm">AppleScriptマクロを定義する</a>
-		<li><a href="macros_dialogs.htm">ダイアログを作る</a>
-		<li><a href="macros_writingcompletescripts.htm">TeXShopのタイプセットコマンドでスクリプトを書く</a>
-		<li><a href="macros_writingcommandscripts.htm">シェルコマンドでスクリプトを書く</a>
-	</UL>
-</div>
-</BODY>
-
-</HTML>
+</main>
+</body>
+</html>

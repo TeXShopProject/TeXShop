@@ -1,15 +1,32 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Creating Dialogs</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="applescript; dialogs">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Macros Help</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Preliminaries</a></li>
+<li><a href="macros_default.htm">Understanding Default Macros</a></li>
+<li><a href="macros_rearrange.htm">Rearranging the Macro Menu</a></li>
+<li><a href="macros_define.htm">Defining New Macros</a></li>
+<li><a href="macros_applescript.htm">AppleScript Macros</a></li>
+<li><a href="macros_includedscripts.htm">Default AppleScript Macros</a></li>
+<li><a href="macros_defapplescript.htm">Defining AppleScript Macros</a></li>
+<li><a href="macros_dialogs.htm" class="current">Creating Dialogs</a></li>
+<li><a href="macros_writingcompletescripts.htm">Writing Scripts with TeXShop Typesetting Commands</a></li>
+<li><a href="macros_writingcommandscripts.htm">Writing Scripts with Shell Commands</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Creating Dialogs</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Creating Dialogs</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="applescript; dialogs">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-
-<BODY>
-		<div id="content_border">
 		<P>AppleScript can create dialogs and act on user input. For example, insert the following script and test its behavior.</p>
 <div id="source">
 <p>
@@ -33,27 +50,6 @@ set {theText, theButton} to {the text returned of the result, the button returne
 </div>
 <p>
 One command in this example, "activate",  requires comment. When TeXShop is asked to run an AppleScript, it calls a separate program to run the script. That program, Scriptrunner, is in the TeXShop bundle. Any dialogs created by the script will be displayed by Scriptrunner rather than by TeXShop. The "activate" command brings Scriptrunner to the front so dialogs will appear on top of other windows.</p>
-</div>
-
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Macros Help</div>
-<div id="header_title">Creating Dialogs</div>
-
-	<div id="menu_border">
-		<UL>
-			<LI><a href="macros_preliminaries.htm">Preliminaries</a></li>
-			<LI><a href="macros_default.htm">Understanding Default Macros</a></li>
-			<LI><a href="macros_rearrange.htm">Rearranging the Macro Menu</a></li>
-			<LI><a href="macros_define.htm">Defining New Macros</a></li>
-			<li><a href="macros_applescript.htm">AppleScript Macros</a></li>
-			<LI><a href="macros_includedscripts.htm">Default AppleScript Macros</a></li>
-			<li><a href="macros_defapplescript.htm">Defining AppleScript Macros</a></li>
-			<li><a href="macros_dialogs.htm">Creating Dialogs</a></li>
-			<li><a href="macros_writingcompletescripts.htm">Writing Scripts with TeXShop Typesetting Commands</a></li>
-			<li><a href="macros_writingcommandscripts.htm">Writing Scripts with Shell Commands</a></li>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+</main>
+</body>
+</html>

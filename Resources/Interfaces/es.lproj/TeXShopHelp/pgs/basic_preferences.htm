@@ -1,52 +1,51 @@
-<html>
+<!DOCTYPE html>
+<html lang="es">
 <head>
-<meta content="text/html;charset=iso-8859-1" http-equiv="content-type"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Establecer ajustes</title>
-<meta content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU" name="copyright"/>
-<meta content="ajustes; aumento; posición de ventana; código de caracteres; encoding" name="description"/>
-<link href="../sty/screen.css" media="all" rel="stylesheet"/>
+<link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-
-<div id="content_border">
-<p>Una coincidencia con el nombre o la descripción de una categoría ofrece una entrada al principio de esa categoría. Los ajustes individuales se encuentran por sus nombres, opciones o descripciones. Los campos de color de una misma fila forman un único resultado.</p>
-<p>Hay varias cosas que pueden cambiarse en la ventana de Ajustes: la tipografía por defecto en la ventana de código, la escala por defecto de la ventana de salida (pdf previsto), y la posición de estas ventanas cuando aparecen por primera vez. Se puede configurar la consola para que aparezca siempre que componemos un documento, o sólo aparezca cuando hay algún error.
-Puedes configurar la ventana con código para que, al hacer un click sobre ella, sólo se active, o para que, además, este click se use para colocar el punto de inserción de texto.</p>
-<p>La ventana de Ajustes se puede usar también para cambiar los comandos que se ejecutan al pulsar los botones «TeX» y «LaTeX». Esto es útil pues algunos usuarios prefieren usar una versión de TeX llamada etex, y existen versiones pdf de etex llamadas pdfetex y pdfelatex. Obviamente, los comandos sustitutivos deben producir como salida un archivo pdf. Si los nuevos programas están en el directorio de los programas de TeX, basta con poner su nombre en la correspondiente casilla de la ventana de Ajustes; la ventana también aceptará el nombre completo de la ruta (&#8216;path&#8217;) si el programa se encuentra en otra parte.</p>
-<p>TeXShop edita archivos utilizando las clases Cocoa de Apple, que usan Unicode para su funcionamiento interno. Pero cuando TeXShop guarda archivos en disco, generalmente los convierte a código ASCII de 8 bits, porque esto es lo que espera encontrar TeX en un archivo. Hay varias maneras de efectuar esta conversión: Mac OS Roman, Iso Latin 1, Iso Latin 2, y otras. Por medio de los ajustes podemos elegir la que deseemos. Para muchos usuarios, la elección no representará ninguna diferencia. Algunos paquetes de TeX permiten al usuario introducir caracteres acentuados europeos directamente del teclado; estos paquetes requieren la conversión Iso Latin. Gracias a Martin Heusse por proporcionar el código que implementa esta elección. El método de conversión se puede seleccionar también directametne en los paneles de Abrir y Guardar.</p>
-<p>Los usuarios de Japón y Corea pueden preferir otros tipos de conversión, también disponibles.</p>
-<p>En Temas puede ajustar los colores de fondo, texto y cursor y la opacidad de las ventanas de código, vista previa y consola, y el color de la selección en el código. Con «Usar el color del sistema», bajo los colores del cursor y de la selección, se usan en su lugar el color de contraste y el color del resaltado elegidos en Ajustes del Sistema &#8250; Aspecto; al desmarcarlo, vuelve el color del tema. La opacidad se ajusta con un regulador y un campo numérico del 0 % al 100 %. Introduzca un porcentaje entero y pulse Retorno o salga del campo para aplicarlo. Los botones de flecha junto al campo lo suben o bajan en un uno por ciento. Los enteros fuera del intervalo se ajustan a 0 o 100. Al terminar la edición, las entradas no válidas, incluidos los decimales, restablecen el valor anterior. El texto escrito y el pegado siguen la misma regla.</p>
-<p>Seleccione el perfil de ajustes en General para aplicar un conjunto de valores predeterminados.</p>
-<p>Los ajustes tienen diez categorías: General, Documentos y guardado, Editor, Teclado, Ortografía, Temas, Composición, Consola, Vista previa, Actualizaciones. En Ortografía, elija «Usar corrección adaptada a LaTeX (recomendado)», con «Editar exclusiones de LaTeX&#8230;», o «Método anterior», con tres opciones subordinadas. Si Tab completa comandos, buscar Tab muestra el aviso de reserva y la opción correspondiente. General enlaza con las líneas de comentario y los ajustes ocultos.</p><h3 id="settings-search">Buscar ajustes</h3><p>El campo sobre la barra lateral busca ajustes, opciones y comandos de menú. Cada resultado muestra el nombre del elemento y su categoría. Las palabras separadas por espacios se refieren al mismo elemento; el nombre de la categoría acota la búsqueda. Se normalizan mayúsculas, acentos latinos, caracteres de ancho completo, hiragana y katakana. Selecciona un resultado para ir a su fila resaltada y añadir la visita al historial. Al borrar la consulta se conserva la categoría mostrada. Atrás y Adelante siguen el historial durante la búsqueda. Un comando de menú abre Teclado y filtra la búsqueda por función. Durante la grabación de un atajo, la captura de teclas tiene prioridad.</p><p>El guardado automático y las versiones se activan al reiniciar TeXShop. El cambio entre el panel de búsqueda estándar y la barra de búsqueda se aplica inmediatamente al código, la consola y el registro de los documentos abiertos. Los cambios hacia o desde OgreKit se activan al reiniciar TeXShop.</p></div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/texshop-icon-small.png" width="40"/></a></div>
-<div id="header_chapter">Ayuda básica</div><div id="header_title">Establecer ajustes</div>
-<div id="menu_border">
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda b&aacute;sica</span></header>
+<nav id="menu">
 <ul>
-<li><a href="basic_preliminaries.htm">Preliminares</a>
-<li><a href="basic_installtetex.htm">C&oacute;mo obtener e instalar TeX Live</a>
-<li><a href="basic_installtexshop.htm">Cómo obtener e instalar TeXShop</a>
-<li><a href="basic_typesetting.htm">Componer (&#8216;typeset&#8217;) documentos</a>
-<li><a href="basic_alternatetypeset.htm">Métodos alternativos de composición</a>
-<li><a href="basic_spelling.htm">Corrección ortográfica</a>
-<li><a href="basic_latexpanel.htm">Panel LaTeX</a>
-<li><a href="basic_matrixpanel.htm">Panel matrices</a>
-<li><a href="basic_macros.htm">Macros</a>
-<li><a href="basic_toolbar.htm">Barra de herramientas y AppleScript</a>
-<li><a href="basic_graphics.htm">Inclusión de gráficos</a>
-<li><a href="basic_printing.htm">Imprimir</a>
-<li><a href="basic_preferences.htm">Establecer ajustes</a>
-<li><a href="basic_templates.htm">Personalización del menú Plantillas</a>
-<li><a href="basic_edittricks.htm">Trucos de edición</a>
-<li><a href="basic_autocompletion.htm">Autocompleción</a>
-<li><a href="basic_commandcompletion.htm">Compleción de comandos</a>
-<li><a href="basic_bugs.htm">Notificación de errores (&#8216;bugs&#8217;)</a>
-<li><a href="basic_websites.htm">Sitios web útiles</a>
-<li><a href="basic_license.htm">Licencia</a>
-<li><a href="basic_thistranslation.htm">Sobre la traducción a español</a>
-</li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></ul>
-</div>
+<li><a href="basic_preliminaries.htm">Preliminares</a></li>
+<li><a href="basic_installtetex.htm">C&oacute;mo obtener e instalar TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">C&oacute;mo obtener e instalar TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Componer (&lsquo;typeset&rsquo;) documentos</a></li>
+<li><a href="basic_alternatetypeset.htm">M&eacute;todos alternativos de composici&oacute;n</a></li>
+<li><a href="basic_edittricks.htm">Trucos de edici&oacute;n</a></li>
+<li><a href="basic_texrootsearch.htm">Buscar en fuentes TeX</a></li>
+<li><a href="basic_spelling.htm">CorrecciÃ³n ortogrÃ¡fica</a></li>
+<li><a href="basic_autocompletion.htm">Autocompleci&oacute;n</a></li>
+<li><a href="basic_commandcompletion.htm">Compleci&oacute;n de comandos</a></li>
+<li><a href="basic_latexpanel.htm">Panel LaTeX</a></li>
+<li><a href="basic_matrixpanel.htm">Panel matrices</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Barra de herramientas y AppleScript</a></li>
+<li><a href="basic_graphics.htm">Inclusi&oacute;n de gr&aacute;ficos</a></li>
+<li><a href="basic_printing.htm">Imprimir</a></li>
+<li><a href="basic_preferences.htm" class="current">Establecer ajustes</a></li>
+<li><a href="basic_templates.htm">Personalizaci&oacute;n del men&uacute; Plantillas</a></li>
+<li><a href="basic_bugs.htm">Notificaci&oacute;n de errores (&lsquo;bugs&rsquo;)</a></li>
+<li><a href="basic_websites.htm">Sitios web &uacute;tiles</a></li>
+<li><a href="basic_license.htm">Licencia</a></li>
+<li><a href="basic_thistranslation.htm">Sobre la traducci&oacute;n a espa&ntilde;ol</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Establecer ajustes</h1>
 
-
+<p>Una coincidencia con el nombre o la descripciÃ³n de una categorÃ­a ofrece una entrada al principio de esa categorÃ­a. Los ajustes individuales se encuentran por sus nombres, opciones o descripciones. Los campos de color de una misma fila forman un Ãºnico resultado.</p>
+<p>Hay varias cosas que pueden cambiarse en la ventana de Ajustes: la tipografÃ­a por defecto en la ventana de cÃ³digo, la escala por defecto de la ventana de salida (pdf previsto), y la posiciÃ³n de estas ventanas cuando aparecen por primera vez. Se puede configurar la consola para que aparezca siempre que componemos un documento, o sÃ³lo aparezca cuando hay algÃºn error.
+Puedes configurar la ventana con cÃ³digo para que, al hacer un click sobre ella, sÃ³lo se active, o para que, ademÃ¡s, este click se use para colocar el punto de inserciÃ³n de texto.</p>
+<p>La ventana de Ajustes se puede usar tambiÃ©n para cambiar los comandos que se ejecutan al pulsar los botones Â«TeXÂ» y Â«LaTeXÂ». Esto es Ãºtil pues algunos usuarios prefieren usar una versiÃ³n de TeX llamada etex, y existen versiones pdf de etex llamadas pdfetex y pdfelatex. Obviamente, los comandos sustitutivos deben producir como salida un archivo pdf. Si los nuevos programas estÃ¡n en el directorio de los programas de TeX, basta con poner su nombre en la correspondiente casilla de la ventana de Ajustes; la ventana tambiÃ©n aceptarÃ¡ el nombre completo de la ruta (&#8216;path&#8217;) si el programa se encuentra en otra parte.</p>
+<p>TeXShop edita archivos utilizando las clases Cocoa de Apple, que usan Unicode para su funcionamiento interno. Pero cuando TeXShop guarda archivos en disco, generalmente los convierte a cÃ³digo ASCII de 8 bits, porque esto es lo que espera encontrar TeX en un archivo. Hay varias maneras de efectuar esta conversiÃ³n: Mac OS Roman, Iso Latin 1, Iso Latin 2, y otras. Por medio de los ajustes podemos elegir la que deseemos. Para muchos usuarios, la elecciÃ³n no representarÃ¡ ninguna diferencia. Algunos paquetes de TeX permiten al usuario introducir caracteres acentuados europeos directamente del teclado; estos paquetes requieren la conversiÃ³n Iso Latin. Gracias a Martin Heusse por proporcionar el cÃ³digo que implementa esta elecciÃ³n. El mÃ©todo de conversiÃ³n se puede seleccionar tambiÃ©n directametne en los paneles de Abrir y Guardar.</p>
+<p>Los usuarios de JapÃ³n y Corea pueden preferir otros tipos de conversiÃ³n, tambiÃ©n disponibles.</p>
+<p>En Temas puede ajustar los colores de fondo, texto y cursor y la opacidad de las ventanas de cÃ³digo, vista previa y consola, y el color de la selecciÃ³n en el cÃ³digo. Con Â«Usar el color del sistemaÂ», bajo los colores del cursor y de la selecciÃ³n, se usan en su lugar el color de contraste y el color del resaltado elegidos en Ajustes del Sistema &#8250; Aspecto; al desmarcarlo, vuelve el color del tema. La opacidad se ajusta con un regulador y un campo numÃ©rico del 0 % al 100 %. Introduzca un porcentaje entero y pulse Retorno o salga del campo para aplicarlo. Los botones de flecha junto al campo lo suben o bajan en un uno por ciento. Los enteros fuera del intervalo se ajustan a 0 o 100. Al terminar la ediciÃ³n, las entradas no vÃ¡lidas, incluidos los decimales, restablecen el valor anterior. El texto escrito y el pegado siguen la misma regla.</p>
+<p>Seleccione el perfil de ajustes en General para aplicar un conjunto de valores predeterminados.</p>
+<p>Los ajustes tienen diez categorÃ­as: General, Documentos y guardado, Editor, Teclado, OrtografÃ­a, Temas, ComposiciÃ³n, Consola, Vista previa, Actualizaciones. En OrtografÃ­a, elija Â«Usar correcciÃ³n adaptada a LaTeX (recomendado)Â», con Â«Editar exclusiones de LaTeX&#8230;Â», o Â«MÃ©todo anteriorÂ», con tres opciones subordinadas. Si Tab completa comandos, buscar Tab muestra el aviso de reserva y la opciÃ³n correspondiente. General enlaza con las lÃ­neas de comentario y los ajustes ocultos.</p><h3 id="settings-search">Buscar ajustes</h3><p>El campo sobre la barra lateral busca ajustes, opciones y comandos de menÃº. Cada resultado muestra el nombre del elemento y su categorÃ­a. Las palabras separadas por espacios se refieren al mismo elemento; el nombre de la categorÃ­a acota la bÃºsqueda. Se normalizan mayÃºsculas, acentos latinos, caracteres de ancho completo, hiragana y katakana. Selecciona un resultado para ir a su fila resaltada y aÃ±adir la visita al historial. Al borrar la consulta se conserva la categorÃ­a mostrada. AtrÃ¡s y Adelante siguen el historial durante la bÃºsqueda. Un comando de menÃº abre Teclado y filtra la bÃºsqueda por funciÃ³n. Durante la grabaciÃ³n de un atajo, la captura de teclas tiene prioridad.</p><p>El guardado automÃ¡tico y las versiones se activan al reiniciar TeXShop. El cambio entre el panel de bÃºsqueda estÃ¡ndar y la barra de bÃºsqueda se aplica inmediatamente al cÃ³digo, la consola y el registro de los documentos abiertos. Los cambios hacia o desde OgreKit se activan al reiniciar TeXShop.</p>
+</main>
 </body>
 </html>

@@ -1,16 +1,32 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skripte mit TeXShop-Satzkommandos erstellen</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
+<meta name="description" content="applescript">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Hilfe zu Makros</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Einleitung</a></li>
+<li><a href="macros_default.htm">Die Standardmakros verstehen</a></li>
+<li><a href="macros_rearrange.htm">Das Makromen&uuml; neu anordnen</a></li>
+<li><a href="macros_define.htm">Neue Makros erstellen</a></li>
+<li><a href="macros_applescript.htm">AppleScript Makros</a></li>
+<li><a href="macros_includedscripts.htm">Standard AppleScript Makros</a></li>
+<li><a href="macros_defapplescript.htm">AppleScript Makros erstellen</a></li>
+<li><a href="macros_dialogs.htm">Dialoge erstellen</a></li>
+<li><a href="macros_writingcompletescripts.htm" class="current">Skripte mit TeXShop-Satzkommandos erstellen</a></li>
+<li><a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen erstellen</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Skripte mit TeXShop-Satzkommandos erstellen</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Skripte mit TeXShop-Satzkommandos erstellen</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-		<META NAME="description" CONTENT="applescript">
-	<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-
-<BODY>
-
-<div id="content_border">
 	<P>Enth&auml;lt ein TeX Projekt eine Bibliographie muss eine Reihe von Befehlen ausgef&uuml;hrt werden um die Literaturliste zu aktualisieren. Zuerst wird LaTeX ausgef&uuml;hrt, damit eine .aux-Datei erstellt wird. Danach wird BiBTeX ausgef&uuml;hrt um aus dieser Datei .bbl- und .blg-Dateien zu erstellen. Schlie&szlig;lich muss wieder LaTeX ausgef&uuml;hrt werden, um die Bibliographie in das Dokument zu &uuml;bernehmen.</P>
 
 <P>&Auml;hnliche Befehlsfolgen k&ouml;nnen auch an anderen Stellen auftauchen. Sie k&ouml;nnen diese Befehlsfolgen mit Hilfe von AppleScript automatisieren.</P>
@@ -107,29 +123,6 @@ end tell
 		<P>In der n&auml;chsten Zeile wird TeXShop aufgefordert das Dokument zu sichern. Auf den Dokumentennamen kann mit der Variable #DOCUMENTNAME# zur&uuml;ck gegriffen werden. </P>
 
 <P>Die letzten Kommandos f&uuml;hren latexinteractive, bibtex, latex und latex aus. Merken Sie sich, dass sie mit der &bdquo;ctrl&ldquo; Taste sofort zum Quelltext zur&uuml;ckkehren k&ouml;nnen, auch wenn der Satzvorgang noch nicht abgeschlossen ist. Die Schleife &bdquo;repeat&ldquo; erlaubt es zu &uuml;berpr&uuml;fen, ob der Satzvorgang schon abgeschlossen ist, bevor der n&auml;chste gestartet wird. Die Zeile &bdquo;delay 2&ldquo; zwingt das AppleScript dazu eine Pause einzulegen anstatt st&auml;ndig das Ende des Satzvorganges abzufragen. Das st&auml;ndige Abfragen kann den Computer n&auml;mlich verlangsamen. </P>
-
-</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Hilfe zu Makros</div>
-<div id="header_title">Skripte mit TeXShop-Satzkommandos erstellen</div>
-
-
-	<div id="menu_border">
-		<UL>
-			<LI><a href="macros_preliminaries.htm">Einleitung</a></li>
-			
-			<LI><a href="macros_default.htm">Die Standardmakros verstehen</a></li>
-			<LI><a href="macros_rearrange.htm">Das Makromen&uuml; neu anordnen</a></li>
-			<LI><a href="macros_define.htm">Neue Makros erstellen</a></li>
-			<li><a href="macros_applescript.htm">AppleScript Makros</a></li>
-			<li><a href="macros_includedscripts.htm">Standard AppleScript Makros</a></li>
-			<li><a href="macros_defapplescript.htm">AppleScript Makros erstellen</a></li>
-			<li><a href="macros_dialogs.htm">Dialoge erstellen</a></li>
-			<li><a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzkommandos erstellen</a></li>
-			<li><a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen erstellen</a></li>
-		</UL>
-	</div>
-	
-	</BODY>
-</HTML>
+</main>
+</body>
+</html>

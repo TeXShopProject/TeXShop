@@ -1,16 +1,32 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skripte mit Shell-Befehlen erstellen</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="applescript">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Hilfe zu Makros</span></header>
+<nav id="menu">
+<ul>
+<li><a href="macros_preliminaries.htm">Einleitung</a></li>
+<li><a href="macros_default.htm">Die Standardmakros verstehen</a></li>
+<li><a href="macros_rearrange.htm">Das Makromen&uuml; neu anordnen</a></li>
+<li><a href="macros_define.htm">Neue Makros erstellen</a></li>
+<li><a href="macros_applescript.htm">AppleScript Makros</a></li>
+<li><a href="macros_includedscripts.htm">Standard AppleScript Makros</a></li>
+<li><a href="macros_defapplescript.htm">AppleScript Makros erstellen</a></li>
+<li><a href="macros_dialogs.htm">Dialoge erstellen</a></li>
+<li><a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzkommandos erstellen</a></li>
+<li><a href="macros_writingcommandscripts.htm" class="current">Skripte mit Shell-Befehlen erstellen</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Skripte mit Shell-Befehlen erstellen</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Skripte mit Shell-Befehlen erstellen</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="applescript">
-	<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-
-<BODY>
-
-<div id="content_border">
 		<P>Um zu demonstrieren wie man ein Unix Shell-Skript aus einem AppleScript aufruft werden wir das AppleScript &bdquo;pdflatexc&ldquo; von Claus Gerhardt analysieren. Dieses Skript erf&uuml;llt lediglich die Aufgabe den Ort der TeX-Programme an die $PATH-Variable zu &uuml;bergeben und dann pdflatex zum Setzen aufzurufen.</P>
 
 	<P>Das Shell-Skript selbst ist von TeXShop unabh&auml;ngig und kann im Terminal mit dem Befehl &bdquo;pdflatexc myfile.tex&ldquo; aufgerufen werden, wenn sich pdflatexc sich in einem Ordner befindet, der sich im Durchsuchungspfad f&uuml;r auf&uuml;hrbare Dateien befindet. 
@@ -112,28 +128,6 @@
 		sind einfach ein Weg Befehlsketten in einer Variable zusammenzuf&uuml;gen.
 		<P>Die letzten drei Zeilen aktualisieren das Vorschau-Fenster.</P>
 		<P>Sicherlich sind einige Zeilen schwer verst&auml;ndlich. Sie k&ouml;nnen sie aber ohne Probleme in eiigene Skripte kopieren.</P>
-</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Hilfe zu Makros</div>
-<div id="header_title">Skripte mit Shell-Befehlen erstellen</div>
-
-
-	<div id="menu_border">
-		<UL>
-			<LI><a href="macros_preliminaries.htm">Einleitung</a></li>
-			
-			<LI><a href="macros_default.htm">Die Standardmakros verstehen</a></li>
-			<LI><a href="macros_rearrange.htm">Das Makromen&uuml; neu anordnen</a></li>
-			<LI><a href="macros_define.htm">Neue Makros erstellen</a></li>
-			<li><a href="macros_applescript.htm">AppleScript Makros</a></li>
-			<li><a href="macros_includedscripts.htm">Standard AppleScript Makros</a></li>
-			<li><a href="macros_defapplescript.htm">AppleScript Makros erstellen</a></li>
-			<li><a href="macros_dialogs.htm">Dialoge erstellen</a></li>
-			<li><a href="macros_writingcompletescripts.htm">Skripte mit TeXShop-Satzkommandos erstellen</a></li>
-			<li><a href="macros_writingcommandscripts.htm">Skripte mit Shell-Befehlen erstellen</a></li>
-		</UL>
-	</div>
-	
-	</BODY>
-</HTML>
+</main>
+</body>
+</html>

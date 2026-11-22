@@ -1,15 +1,45 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TeXソースの検索と置換</title>
+<meta name="copyright" content="Copyright (c) 2026 under the GNU FDL">
+<meta name="description" content="同じ親ファイルを持つファイル群の一括検索・置換、分割したファイルの一括検索・置換、TEX root、TeXソースの検索と置換、すべて置き換え、バックアップ">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">基本的なヘルプ</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">まえがき</a></li>
+<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a></li>
+<li><a href="basic_installtetex.htm">TeX Liveの入手とインストール</a></li>
+<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a></li>
+<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a></li>
+<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a></li>
+<li><a href="basic_edittricks.htm">編集上のコツ</a></li>
+<li><a href="basic_texrootsearch.htm" class="current">TeXソースの検索と置換</a></li>
+<li><a href="basic_spelling.htm">スペルをチェックする</a></li>
+<li><a href="basic_autocompletion.htm">キーバインド</a></li>
+<li><a href="basic_commandcompletion.htm">コマンドの補完</a></li>
+<li><a href="basic_latexpanel.htm">LaTeXパネル</a></li>
+<li><a href="basic_matrixpanel.htm">行列パネル</a></li>
+<li><a href="basic_macros.htm">マクロ</a></li>
+<li><a href="basic_toolbar.htm">ツールバーとAppleScript</a></li>
+<li><a href="basic_graphics.htm">画像を入れる</a></li>
+<li><a href="basic_printing.htm">印刷</a></li>
+<li><a href="basic_preferences.htm">設定</a></li>
+<li><a href="basic_j_encoding.htm">日本語エンコーディングと &#x005C; &#x00A5; 文字の扱い</a></li>
+<li><a href="basic_templates.htm">テンプレートメニューを変更する</a></li>
+<li><a href="basic_bugs.htm">バグレポートを送る</a></li>
+<li><a href="basic_websites.htm">役に立つウェブ・サイト</a></li>
+<li><a href="basic_license.htm">使用許諾</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>TeXソースの検索と置換</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-		<TITLE>TeXソースの検索と置換</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2026 under the GNU FDL">
-		<META NAME="description" CONTENT="同じ親ファイルを持つファイル群の一括検索・置換、分割したファイルの一括検索・置換、TEX root、TeXソースの検索と置換、すべて置き換え、バックアップ">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-
-<BODY>
-		<div id="content_border">
 
 <p><a name="texroot_search"></a>章ごとにファイルを分けた文書は、すべてのファイルをまとめて検索し、置換できます。そのファイルの一つを前面にして、「編集」メニューの「検索」サブメニューから「同じTEX rootを持つTeXソースを検索…」を選びます。前面のファイルがルートファイル自身のときは、項目は「これをTEX rootとするTeXソースを検索…」になります。同じ項目は詳細検索パネルの「すべて検索」のメニューにもあります。複数置換の窓の「すべて置き換え」のメニューにある「同じTEX rootを持つTeXソースに適用…」は、そこで選んだ組で窓を開きます。名称未設定の書類や、名前が.texで終わらないファイルでは、これらの項目は灰色になります。</p>
 <p>「TeXソースの検索と置換」の窓は、ルートファイルと、同じフォルダとその下のフォルダにある.texファイルのうち、先頭20行の% !TEX root（%!TEX rootも可）でそのルートを指しているものを検索します。隠し設定UseOldHeadingCommandsがオンのときは、%SourceDocで指しているものも含みます。モードの下の行に、どのルートを検索するかが出ます。その行の末尾の?ボタンで、この規則を表示します。\inputや\includeで読み込むファイルはたどりません。.texshopのプロジェクトのルートファイルも使いません。ファイルへのシンボリックリンクは飛ばし、シンボリックリンクやエイリアスの先のフォルダには入りません。TeXShop Backupsのフォルダも除きます。左のツリーにファイルが並びます。そこでオフにしたファイルやフォルダは検索しません。下の「読めなかったファイル」のボタンで、読めなかったファイルとフォルダを理由とともに表示します。</p>
@@ -18,6 +48,7 @@
 <p>「すべて置き換え」は、置換の前に確認します。その確認の前と後に、ファイルを集め直して一覧と照らし合わせます。変わったファイルや、新しいファイルがあれば、何も置換せず、一覧を作り直します。「バックアップを保存」がオンなら、まず、置換するすべてのファイルを、確認に答えたときの内容で、ルートファイルのフォルダのTeXShop Backups/&lt;日付 時刻&gt;に、同じ相対パスで保存します。開いている書類は、画面上の本文を保存します。次に、開いていないファイルを直接書き換えます。文字コード、改行コード、BOM、権限などの属性はそのままです。これは取り消せません。開いている書類は画面上で置換し、保存はしません。1回の「取り消す」で、その書類の置換を元に戻せます。その間、書類は編集・保存・クローズ・タイプセットできません。停止ボタン、Escape、command-ピリオドで止めると、書き換え済みのファイルと置換し終えた書類はそのままで、置換中の書類に入れた分は元に戻し、残りは置換しません。終わると、ファイルを検索し直します。外していた一致はオフのままで、下の行に置換した数が出ます。置換できなかったファイルがあると、シートで理由とともに示します。「Finderで表示」でバックアップのフォルダを開きます。</p>
 <p>ファイルを置換する直前に、その内容を一覧の版と照らし合わせ、すぐに置換します。そのごく短い間に、ほかのアプリケーションと協調しないで（NSFileCoordinatorを使わずに）ファイルを書くアプリケーションがあると、その書き込みは失われることがあります。バックアップには、照らし合わせた版が残ります。ほかのプログラムがファイルを書き続けている間は、「すべて置き換え」を使わないでください。</p>
 
-		</div>
-	</BODY>
-</HTML>
+		
+</main>
+</body>
+</html>

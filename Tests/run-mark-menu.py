@@ -17,13 +17,13 @@ delegate = (root / 'Sources/App/TSAppDelegate.m').read_text(encoding='utf-8', er
 launch = delegate[delegate.index('- (void)applicationDidFinishLaunching:'):]
 assert launch.index('[TSMarkMenu installInMenu:NSApp.mainMenu];') < launch.index('startAfterLaunchWithConfiguration'), 'Marks move before shortcuts read the menus'
 # The English help has the section that every language opens.
-assert 'name="marks"' in (root / 'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/basic_commandcompletion.htm').read_text(encoding='latin1')
+assert 'name="marks"' in (root / 'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/basic_commandcompletion.htm').read_text(encoding='utf-8')
 # The help and the manual name the menu as it is now (the history in whatisnew keeps the old names).
 former = re.compile(r'Completion/Marks|Completion\}?\s*(?:&#8250;|›|->|→|\\To)\s*(?:\\mnu\{)?Marks|in the Completion submenu|コマンド補完\s*(?:→|＞|>)\s*マーク')
 for page in [*root.glob('Resources/Interfaces/*.lproj/TeXShopHelp/pgs/*.htm'), root / 'DocumentSources/Manual Source/Manual.tex']:
     if page.name == 'whatisnew.htm':
         continue
-    text = page.read_bytes().decode('utf-8' if page.parent.parent.parent.name == 'ja.lproj' or page.suffix == '.tex' else 'latin1')
+    text = page.read_bytes().decode('utf-8' if 'TeXShopHelp' in page.parts or page.suffix == '.tex' else 'latin1')
     match = former.search(text)
     assert match is None, f'{page.relative_to(root)} names the former menu: {match.group(0) if match else ""}'
 # Each help language names the menu as its interface shows it (Localizable.strings "Edit" and "Marks").
@@ -35,7 +35,7 @@ for lang, pages in {'en': ('basic_commandcompletion', 'configure_hidden'), 'ko':
     wanted = f'「{edit}」→「{marks}」' if lang == 'ja' else f'{edit} › {marks}'
     for name in pages:
         page = root / f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/{name}.htm'
-        text = html.unescape(page.read_bytes().decode('utf-8' if lang == 'ja' else 'latin1'))
+        text = html.unescape(page.read_bytes().decode('utf-8'))
         assert wanted in text, f'{page.relative_to(root)} does not name the menu as the interface shows it: {wanted}'
         if lang != 'en':
             assert 'Edit › Marks' not in text, f'{page.relative_to(root)} names the English menu'

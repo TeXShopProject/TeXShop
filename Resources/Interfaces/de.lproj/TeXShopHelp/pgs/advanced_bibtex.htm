@@ -1,14 +1,40 @@
-<HTML>
-
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>BibTeX</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-		<META NAME="description" CONTENT="Verwalten Sie Ihr Literaturverzeichnis komfortabel mit BiBTeX.">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-<BODY>
-	<div id="content_border">	
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BibTeX</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
+<meta name="description" content="Verwalten Sie Ihr Literaturverzeichnis komfortabel mit BiBTeX.">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Erweitert</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Pers&ouml;nliche Dateien zu TeX Live hinzuf&uuml;gen</a></li>
+<li><a href="advanced_moretetex.htm">Mehr &uuml;ber TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Zusammenarbeit mit anderen TeX Distributionen</a></li>
+<li><a href="advanced_addengine.htm">Zus&auml;tzliche Schriftsatz-Programme</a></li>
+<li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
+<li><a href="advanced_root.htm">Die Hauptdatei des Projekts festlegen</a></li>
+<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
+<li><a href="advanced_removeaux.htm">AUX-Dateien entfernen</a></li>
+<li><a href="advanced_bibtex.htm" class="current">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape Schutz</a></li>
+<li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopieren-Einf&uuml;gen und Drag-Drop aus dem Vorschau-Fenster</a></li>
+<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop &ouml;ffnen</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung</a></li>
+<li><a href="advanced_coloredtext.htm">Farbiger Text in TeX</a></li>
+<li><a href="advanced_plist.htm">Plist Datein</a></li>
+<li><a href="advanced_localization.htm">Lokalisierungen</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>BibTeX</h1>
+	
 		<P>BibTeX ist ein Hilfsprogramm um Bibliographien in Latex-Dokumenten zu erstellen. Es wird davon ausgegangen, dass gro&szlig;e Datenbanken mit Quellenangaben vorhaben sind, die h&auml;ufig zitiert werden. Einfache Befehle erlauben es bestimmte dieser Quellen im Latex-Sourcecode zu zitieren. BibTeX erstellt dann automatisch eine Bibliographie in Ihrem Dokument, die ausschlie&szlig;lich die von Ihnen zitierten Werke enth&auml;lt.</P>
 		<p>Hier ein kleines Beispiel aus The Latex Companion von Goossens, Mittelbach und Samarin. Konsultieren Sie dieses Buch f&uuml;r weitere Details. Nehmen wir an, die Datenbank hei&szlig;t &bdquo;meinebibliographie.bib&ldquo; und enth&auml;lt den untenstehenden Text. In diesem Text sind &bdquo;Felici:1991, Knuth:WEB&ldquo; und &bdquo;Liang:1983&ldquo; Schl&uuml;sselbegriffe um die Werke im Text zu zitieren.</p>
 		<dl>
@@ -55,37 +81,7 @@
 		<p>Um BibTeX mit TeXShop zu benutzen, m&uuml;ssen Sie wie folgt vorgehen: Erstellen und setzen Sie die Datei &bdquo;meinedatei.tex&ldquo;. Die Zitate werden in der Ausgabe als &bdquo;[&ldquo;]&ldquo; dargestellt. W&auml;hlen Sie danach &bdquo;Bibtex&ldquo; aus dem Auswahlmen&uuml; im oberen Teil des Eingabefensters und f&uuml;hren Sie BibTeX aus. W&auml;hlen Sie jetzt wieder LaTeX und setzen Sie das Dokument ein zweites Mal. Wieder werden die Zitate als &bdquo;[&ldquo;]&ldquo; erscheinen, jedoch ist die Bibliographie schon eingef&uuml;gt. Erst wenn Sie das Dokument ein drittes Mal setzen, werden auch die Zitate korrekt erscheinen.</p>
 		<p>Die Datei &bdquo;meinebibliographie.bib&ldquo; kann mit TeXShop ge&ouml;ffnet und bearbeitet werden. &Ouml;ffnet TeXShop eine Datei, die nicht die Endung &bdquo;.tex&ldquo; oder &bdquo;.TEX&ldquo; tr&auml;gt, wird der Knopf zum Starten des Satzvorgangs deaktiviert. Wird die Datei sp&auml;ter mit &bdquo;Speichern&ldquo; oder &bdquo;Speichern als...&ldquo; abgespeichert wird die Endung &bdquo;.tex&ldquo; nicht angeh&auml;ngt. Auf diese Weise k&ouml;nnen Sie neue Eintr&auml;ge in die Bibliographie eintragen w&auml;hrend Sie gleichzeitig ein neues Dokument erstellen.</p>
 		<p>(Wenn Sie jedoch die Datei &bdquo;meinebibliographie.bib&ldquo; unter TeXShop direkt erstellen, wird der Datei die Endung &bdquo;.tex&ldquo; angeh&auml;ngt. Diesen Fehler hoffen wir bald zu beheben. Entfernen Sie die Endung einfach im Finder und laden Sie die Datei erneut in TeXShop.)</p>
-	</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Erweitert</div>
-<div id="header_title">BibTeX</div>
-
-
-	<div id="menu_border">
-		<UL>
-			<li><a href="advanced_personaltetex.htm">Pers&ouml;nliche sty- und Makrodateien zu TeX Live hinzuf&uuml;gen</a></li>
-			<LI><a href="advanced_addengine.htm">Zusätzliche Schriftsatz-Programme</a>
-			<LI><a href="advanced_removeaux.htm">AUX-Dateien entfernen</a>
-			<li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
-			<li><a href="advanced_pdfcopypaste.htm">Kopieren-Einf&uuml;gen und Drag-Drop aus dem Vorschau-Fenster</a></li>
-			<li><a href="advanced_root.htm">Die Hauptdatei des Projekts festlegen</a></li>
-			<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
-			<li><a href="advanced_unicode.htm">Unicode</a></li>
-			<li><a href="advanced_bibtex.htm">BibTeX</a></li>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-			<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop &ouml;ffnen</a></li>
-			<li><a href="advanced_mathematica.htm">Mathematica</a></li>
-			<li><a href="advanced_localization.htm">Lokalisierungen</a></li>
-			<li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung </a></li>
-			<li><a href="advanced_shellescape.htm">Shell Escape Schutz</a></li>
-			<li><a href="advanced_coloredtext.htm">Farbiger Text in TeX</a></li>
-			<li><a href="advanced_moretetex.htm">Mehr &uuml;ber TeX Live</a></li>
-			<li><a href="advanced_otherdistributions.htm">Zusammenarbeit mit anderen TeX Distributionen</a></li>
-			<li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
-			<li><a href="advanced_plist.htm">Plist Dateien</a></li>
-			<li><a href="advanced_menushortcuts.htm">Tastaturk&uuml;rzel neubelegen</a></li>
-		</UL>
-	</div>
-	</BODY>
-</HTML>
+	
+</main>
+</body>
+</html>

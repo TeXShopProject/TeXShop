@@ -1,13 +1,42 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta content="text/html;charset=iso-8859-1" http-equiv="content-type"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Changing Settings</title>
-<meta content="Copyright (c) 2003 Richard Koch under the GNU FDL" name="copyright"/>
-<meta content="settings; magnify; window position; encoding" name="description"/>
-<link href="../sty/screen.css" media="all" rel="stylesheet"/>
+<link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-<div id="content_border">
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Basic Help</span></header>
+<nav id="menu">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminaries</a></li>
+<li><a href="basic_installtetex.htm">Installing TeX Live</a></li>
+<li><a href="basic_installtexshop.htm">Installing TeXShop</a></li>
+<li><a href="basic_typesetting.htm">Typesetting Documents</a></li>
+<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a></li>
+<li><a href="basic_preview.htm">The Preview Window</a></li>
+<li><a href="basic_edittricks.htm">Editing Tricks</a></li>
+<li><a href="basic_find.htm">Find and Replace</a></li>
+<li><a href="basic_texrootsearch.htm">Find in TeX Sources</a></li>
+<li><a href="basic_spelling.htm">Checking Spelling</a></li>
+<li><a href="basic_autocompletion.htm">Key Bindings</a></li>
+<li><a href="basic_commandcompletion.htm">Command Completion</a></li>
+<li><a href="basic_latexpanel.htm">Latex Panel</a></li>
+<li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
+<li><a href="basic_macros.htm">Macros</a></li>
+<li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
+<li><a href="basic_graphics.htm">Including Graphics</a></li>
+<li><a href="basic_printing.htm">Printing</a></li>
+<li><a href="basic_preferences.htm" class="current">Changing Settings</a></li>
+<li><a href="basic_templates.htm">Modifying the Templates Menu</a></li>
+<li><a href="basic_miscellaneous.htm">Miscellaneous</a></li>
+<li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
+<li><a href="basic_websites.htm">Useful Web Sites</a></li>
+<li><a href="basic_license.htm">License</a></li>
+</ul>
+</nav>
+<main id="content">
 <p>A match on a category name or description provides one entry to the top of that category. Individual settings match their own labels, options or descriptions. Color fields on the same row share one result.</p>
 <h1> Changing settings in the Settings window</h1>
 <p>Settings has ten categories: General, Documents and Saving, Editor, Keyboard, Spell Checking, Themes, Typesetting, Console, Preview, Updates. In Spell Checking, choose &#8220;Use LaTeX-aware spell checking (recommended)&#8221; with &#8220;Edit LaTeX exclusion rules&#8230;&#8221;, or &#8220;Legacy method&#8221; with three indented options. General links to Comment Lines and Hidden Settings.</p>
@@ -54,36 +83,7 @@ for details.
 <dd>defaults write TeXShop OtherTeXExtensions -array-add "lbx"
 		</dd></dl>
 <p>tells TeXShop to syntax color biblatex 'lbx' files.<p>
-</p></p><h3 id="settings-search">Search Settings</h3><p>Search Settings above the sidebar finds settings, options, and menu commands. Each result shows the item name and category. Space-separated words match the same item; a category name narrows the query. Search normalizes case, Latin accents, full-width characters, hiragana, and katakana. Select a result to scroll to and highlight its row and add the visit to navigation history. Clearing the query keeps the displayed category. Back and Forward follow navigation history during a search. A menu command result opens Keyboard and filters Search by Function. While recording a shortcut, key recording has priority.</p><p>Auto Save and Versions takes effect after restarting TeXShop. Switching between the standard Find Panel and Find Bar updates the source, console and log views of open documents immediately. Switching to or from OgreKit takes effect after restarting TeXShop.</p></div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/texshop-icon-small.png" width="40"/></a></div>
-<div id="header_chapter">Basic Help</div><div id="header_title">Changing Settings</div>
-<div id="menu_border">
-<ul>
-<li><a href="basic_preliminaries.htm">Preliminaries</a>
-<li><a href="basic_installtetex.htm">Installing TeX Live</a>
-<li><a href="basic_installtexshop.htm">Installing TeXShop</a>
-<li><a href="basic_typesetting.htm">Typesetting Documents</a>
-<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>
-<li><a href="basic_spelling.htm">Checking Spelling</a>
-<li><a href="basic_latexpanel.htm">Latex Panel</a>
-<li><a href="basic_matrixpanel.htm">Matrix Panel</a>
-<li><a href="basic_macros.htm">Macros</a>
-<li><a href="basic_toolbar.htm">Toolbar and Applescript</a>
-<li><a href="basic_graphics.htm">Including Graphics</a>
-<li><a href="basic_printing.htm">Printing</a>
-<li><a href="basic_preferences.htm">Changing Settings</a>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a>
-<li><a href="basic_edittricks.htm">Editing Tricks</a>
-<li><a href="basic_autocompletion.htm">Key Bindings</a>
-<li><a href="basic_commandcompletion.htm">Command Completion </a>
-<li><a href="basic_miscellaneous.htm">Miscellaneous </a>
-<li><a href="basic_bugs.htm">Sending Bug Reports</a>
-<li><a href="basic_websites.htm">Useful Web Sites</a>
-<li><a href="basic_license.htm">License</a>
-</li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></ul>
-</div>
-
-
+</p></p><h3 id="settings-search">Search Settings</h3><p>Search Settings above the sidebar finds settings, options, and menu commands. Each result shows the item name and category. Space-separated words match the same item; a category name narrows the query. Search normalizes case, Latin accents, full-width characters, hiragana, and katakana. Select a result to scroll to and highlight its row and add the visit to navigation history. Clearing the query keeps the displayed category. Back and Forward follow navigation history during a search. A menu command result opens Keyboard and filters Search by Function. While recording a shortcut, key recording has priority.</p><p>Auto Save and Versions takes effect after restarting TeXShop. Switching between the standard Find Panel and Find Bar updates the source, console and log views of open documents immediately. Switching to or from OgreKit takes effect after restarting TeXShop.</p>
+</main>
 </body>
 </html>

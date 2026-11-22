@@ -1,16 +1,43 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shell-Escapeの保護</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
+<meta name="description" content="TeX文書タイプセット時のセキュリティについて">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">上級向けのヘルプ</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">スタイルとマクロをTeX Liveに追加する</a></li>
+<li><a href="advanced_moretetex.htm">TeX Liveについてさらに</a></li>
+<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a></li>
+<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a></li>
+<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a></li>
+<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a></li>
+<li><a href="advanced_context.htm">ConTeXtとMetaPost</a></li>
+<li><a href="advanced_encoding.htm">Encodings</a></li>
+<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a></li>
+<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
+<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm" class="current">Shell-Escapeの保護</a></li>
+<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a></li>
+<li><a href="advanced_pdfcopypaste.htm">コピー＆ペーストおよびドラッグ＆ドロップ</a></li>
+<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a></li>
+<li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a></li>
+<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a></li>
+<li><a href="advanced_plist.htm">Plistファイル</a></li>
+<li><a href="advanced_localization.htm">各国語版へのローカライズ</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Shell-Escapeの保護</h1>
 
-<HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-			<TITLE>Shell-Escapeの保護</TITLE>
-			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="TeX文書タイプセット時のセキュリティについて">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
-
-<body>	
-
-<div id="content_border">
 
 <p>
 2011年以降のTeX Liveでは、pdftex、pdflatexなどのTeXプログラムは、タイプセット中に信頼できる少数のプログラムを呼び出すことができます。たとえば、Ghostscriptを呼び出してepsファイルをpdfファイルに変換することが許可されています。
@@ -23,39 +50,6 @@ pdftex、pdflatexなどのプログラムを、タイプセット中に任意の
 <p>
 このフラグを設定することはお勧めしませんが、一部の特殊なパッケージではこれが必要になることがあります。TeXShopはこのような場合のための保護機能を備えています。設定ウインドウの「タイプセット」カテゴリの「PDF直接生成」グループにある「shell-escapeのとき確認」がそれです。この項目は当初はオフになっています。確認の対象は、同じグループの「plain TeX」「LaTeX」のコマンドだけです。これらのコマンドは、TeXまたはLaTeXで「PDF直接生成」の方法によりタイプセットするときに使われます。エンジンスクリプト（.engineファイル）は、「-shell-escape」を含んでいても確認の対象になりません。この項目をオンにし、使われるコマンドに「-shell-escape」が含まれていると、TeXShopの起動中にあるファイルを初めてタイプセットするときに警告ダイアログが現われ、そのファイルに対してshell-escapeをオフにすることができます。このダイアログは、TeXShopの起動中には、同じファイルに対してくりかえし表示されることはありません。なので、自分のファイルはshell-escapeを使ってタイプセットし、メールで受け取ったファイルはshell-escapeを使わずにタイプセットできます。
 </p>
-</div>
-
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">上級向けのヘルプ</div>
-<div id="header_title">Shell-Escapeの保護</div>
-
-		<div id="menu_border">
-		<ul>
-			<li><a href="advanced_personaltetex.htm">スタイルとマクロをTeX Liveに追加する</a>
-			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
-			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
-			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
-			<li><a href="advanced_pdfcopypaste.htm">プレビューウインドウからのコピー＆ペーストおよびドラッグ＆ドロップ </a>
-			<li><a href="advanced_root.htm">プロジェクトのルートファイルを設定する</a>
-			<li><a href="advanced_pdfsync.htm">Pdfsync</a>
-			<li><a href="advanced_unicode.htm">Unicode（ユニコード）</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a>
-			<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">各国語版へのローカライズ</a>
-			<li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a>
-			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
-			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
-			<li><a href="advanced_moretetex.htm">TeX Liveについてさらに</a>
-			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
-			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
-			<li><a href="advanced_plist.htm">Plistファイル</a>
-			<li><a href="advanced_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
-		</ul>
-	</div>
-	</body>
-
-</HTML>
+</main>
+</body>
+</html>

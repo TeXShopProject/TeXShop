@@ -1,45 +1,36 @@
-<html>
+<!DOCTYPE html>
+<html lang="de">
 <head>
-<meta content="text/html;charset=iso-8859-1" http-equiv="content-type"/>
-<title>Empfohlene Änderung von Einstellungen</title>
-<meta content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL" name="copyright"/>
-<meta content="Einige Änderungen der Standardeinstellungen, die Sie wahrscheinlich vornehmen wollen." name="description"/>
-<link href="../sty/screen.css" media="all" rel="stylesheet"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Empfohlene Ã„nderung von Einstellungen</title>
+<link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
-
-<div id="content_border"><p>&#8222;Engine-Profil&#8220; unter &#8222;Satz&#8220; legt die Satzbefehle für eine Art von TeX-Engine, den kpsewhich-Befehl, das BibTeX-Programm, das Indexprogramm, MetaPost und die Umwandlung in \UTF / \CID des otf-Pakets fest; die japanischen Profile legen auch UTF-8 als Kodierung für neue Dokumente, das Wörterbuch und die Umwandlung von UTF-8-MAC fest. Andere Einstellungen bleiben unverändert. Beim Wählen eines Profils werden die Werte aufgelistet, die es setzt, und die geänderten markiert; schalten Sie ab, was Sie behalten möchten, und klicken Sie auf OK. &#8222;Mit latexmk&#8220; führt BibTeX, den Index und weitere Durchläufe nach Bedarf aus. Escape bricht ab. &#8222;Pfade erkennen&#8220; in derselben Kategorie legt die Pfade zu TeX und Ghostscript fest. Duplizieren Sie ein Thema vor der Bearbeitung, wenn Sie das Original behalten möchten. Ein neues Thema erhält einen Namen; das Ersetzen eines vorhandenen Themas muss bestätigt werden. Nach erfolgreichem Speichern werden die Farben in offenen Dokumenten aktualisiert. Schlägt das Speichern fehl, werden die zuletzt gespeicherten Farben wiederhergestellt.</p><p>&#8222;Automatisches Sichern und Versionen&#8220; wird nach dem Neustart von TeXShop wirksam. Der Wechsel zwischen dem Standard-Suchfenster und der Suchleiste aktualisiert Quelltext-, Konsolen- und Protokollansichten offener Dokumente sofort. Ein Wechsel zu oder von OgreKit wird nach einem Neustart wirksam.</p>
-
-
-
-<p>Benutzer sollten einige Änderungen der Standard-Einstellungen von TeXShop in Betracht ziehen. Die meisten dieser Änderungen basieren auf Besonderheiten einiger Bildschirme und können daher erst später festgelegt werden. </p>
-<p>Normalerweise öffnet TeXShop das Vorschau-Fenster an der Stelle, an der es zuletzt geöffnet war. Das macht dann Sinn, wenn Sie meist mit höchstens einem Dokument arbeiten. Es kann besser sein das Quelltext- und Vorschau-Fenster in einer optimalen Position zu öffnen. Um diese Einstellung zu treffen, setzen Sie ein beliebiges Dokument. Platzieren Sie nun die Fenster an die gewünschte Position auf dem Bildschirm. Wenn Sie genügend Platz auf dem Bildschirm haben, wird es das Beste sein, beide Fenster neben einander anzuordnen. Öffnen Sie nun den Kategorie &#8222;Allgemein&#8220; in den Einstellungen. Markieren Sie &#8222;Fenster immer an fester Position&#8220; und klicken Sie dann auf &#8222;Aktuelle Position merken&#8220;. Treffen Sie die selben Einstellungen unter dem Kategorie &#8222;Vorschau&#8220;.</p>
-<p>Schließlich können Sie sich über Sicherheitsfragen Gedanken machen. Normalerweise ist TeXShop so eingestellt, dass es pdftex und pdflatex erlaubt andere Programme während des Setzens aufzurufen. Wenn pdftex zum Beispiel eine Grafik in einem Format findet, das es nicht erkennt, ruft es ein Konvertierungsprogramm auf, das diese Grafik in ein für pdftex erkennbares Format umwandelt. So werden eps-Dateien in pdf und gif-Dateien in das png-Format konvertiert.</p>
-<p>Diese Einstellung macht es jedoch möglich jedes beliebige Programm aufzurufen. Dies kann dazu führen, dass eine bösartige TeX-Quelldatei, die Sie per E-Mail erhalten, ihr System beschädigen könnte. Daher könne Sie unter dem Kategorie &#8222;Schriftsatz&#8220; die Einstellung &#8222;Shell Escape Warnung&#8220; ein- oder ausschalten. Hierdurch werden Sie, wenn Sie eine Datei zu ersten Mal setzen, gefragt, ob pdftex ein anderes Programm aufrufen darf. Hierdurch können sie die automatische Konvertierung für ihre eigenen Programme benutzen, für fremde Programme jedoch jeweils die sichere Lösung wählen und einen Aufruf anderer Programme unterbinden.</p>
-
-<p><a href="basic_preferences.htm#settings-search">Einstellungen verwenden und durchsuchen</a></p></div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/texshop-icon-small.png" width="40"/></a></div>
-<div id="header_chapter">Wie konfiguriere ich TeXShop?</div>
-<div id="header_title">Empfohlene Änderung von Einstellungen</div>
-<div id="menu_border">
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Wie konfiguriere ich TeXShop?</span></header>
+<nav id="menu">
 <ul>
-<li><a href="configure_preliminaries.htm">Einleitung</a>
-<li><a href="configure_correctinstall.htm">Neue Objekte in ~/Library/TeXShop erhalten</a>
-<li><a href="configure_prefchanges.htm">Empfohlene Änderung von Einstellungen</a>
-<li><a href="configure_convertgraphics.htm">Grafikformate automatisch konvertieren</a>
-<li><a href="configure_defaults.htm">Standardeinstellungen</a>
-<li><a href="configure_latextemplate.htm">Die Standard-LaTeX-Vorlage</a>
-<li><a href="configure_hidden.htm">Versteckte Einstellungen</a>
-<li><a href="configure_plist.htm">.plist-Dateien</a>
-<li><a href="configure_panel.htm">Die LaTeX Palette anpassen</a>
-<li><a href="configure_autocompletion.htm">Die automatische Vervollständigung anpassen</a>
-<li><a href="configure_menushortcuts.htm">Tastaturkürzel neu festlegen</a>
-<li><a href="configure_macros.htm">Das Makro-Menü verändern</a>
-</li></li></li></li></li></li></li></li></li></li></li></li></ul>
-</div>
+<li><a href="configure_preliminaries.htm">Einleitung</a></li>
+<li><a href="configure_prefchanges.htm" class="current">Empfohlene Ã„nderung von Einstellungen</a></li>
+<li><a href="configure_correctinstall.htm">Neue Objekte in ~/Library/TeXShop erhalten</a></li>
+<li><a href="configure_hidden.htm">Versteckte Einstellungen</a></li>
+<li><a href="configure_panel.htm">Die LaTeX Palette anpassen</a></li>
+<li><a href="configure_autocompletion.htm">Die automatische Vervollst&auml;ndigung anpassen</a></li>
+<li><a href="configure_menushortcuts.htm">TastaturkÃ¼rzel neu festlegen</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Empfohlene Ã„nderung von Einstellungen</h1>
+<p>&#8222;Engine-Profil&#8220; unter &#8222;Satz&#8220; legt die Satzbefehle fÃ¼r eine Art von TeX-Engine, den kpsewhich-Befehl, das BibTeX-Programm, das Indexprogramm, MetaPost und die Umwandlung in \UTF / \CID des otf-Pakets fest; die japanischen Profile legen auch UTF-8 als Kodierung fÃ¼r neue Dokumente, das WÃ¶rterbuch und die Umwandlung von UTF-8-MAC fest. Andere Einstellungen bleiben unverÃ¤ndert. Beim WÃ¤hlen eines Profils werden die Werte aufgelistet, die es setzt, und die geÃ¤nderten markiert; schalten Sie ab, was Sie behalten mÃ¶chten, und klicken Sie auf OK. &#8222;Mit latexmk&#8220; fÃ¼hrt BibTeX, den Index und weitere DurchlÃ¤ufe nach Bedarf aus. Escape bricht ab. &#8222;Pfade erkennen&#8220; in derselben Kategorie legt die Pfade zu TeX und Ghostscript fest. Duplizieren Sie ein Thema vor der Bearbeitung, wenn Sie das Original behalten mÃ¶chten. Ein neues Thema erhÃ¤lt einen Namen; das Ersetzen eines vorhandenen Themas muss bestÃ¤tigt werden. Nach erfolgreichem Speichern werden die Farben in offenen Dokumenten aktualisiert. SchlÃ¤gt das Speichern fehl, werden die zuletzt gespeicherten Farben wiederhergestellt.</p><p>&#8222;Automatisches Sichern und Versionen&#8220; wird nach dem Neustart von TeXShop wirksam. Der Wechsel zwischen dem Standard-Suchfenster und der Suchleiste aktualisiert Quelltext-, Konsolen- und Protokollansichten offener Dokumente sofort. Ein Wechsel zu oder von OgreKit wird nach einem Neustart wirksam.</p>
 
 
 
+<p>Benutzer sollten einige Ã„nderungen der Standard-Einstellungen von TeXShop in Betracht ziehen. Die meisten dieser Ã„nderungen basieren auf Besonderheiten einiger Bildschirme und kÃ¶nnen daher erst spÃ¤ter festgelegt werden. </p>
+<p>Normalerweise Ã¶ffnet TeXShop das Vorschau-Fenster an der Stelle, an der es zuletzt geÃ¶ffnet war. Das macht dann Sinn, wenn Sie meist mit hÃ¶chstens einem Dokument arbeiten. Es kann besser sein das Quelltext- und Vorschau-Fenster in einer optimalen Position zu Ã¶ffnen. Um diese Einstellung zu treffen, setzen Sie ein beliebiges Dokument. Platzieren Sie nun die Fenster an die gewÃ¼nschte Position auf dem Bildschirm. Wenn Sie genÃ¼gend Platz auf dem Bildschirm haben, wird es das Beste sein, beide Fenster neben einander anzuordnen. Ã–ffnen Sie nun den Kategorie &#8222;Allgemein&#8220; in den Einstellungen. Markieren Sie &#8222;Fenster immer an fester Position&#8220; und klicken Sie dann auf &#8222;Aktuelle Position merken&#8220;. Treffen Sie die selben Einstellungen unter dem Kategorie &#8222;Vorschau&#8220;.</p>
+<p>SchlieÃŸlich kÃ¶nnen Sie sich Ã¼ber Sicherheitsfragen Gedanken machen. Normalerweise ist TeXShop so eingestellt, dass es pdftex und pdflatex erlaubt andere Programme wÃ¤hrend des Setzens aufzurufen. Wenn pdftex zum Beispiel eine Grafik in einem Format findet, das es nicht erkennt, ruft es ein Konvertierungsprogramm auf, das diese Grafik in ein fÃ¼r pdftex erkennbares Format umwandelt. So werden eps-Dateien in pdf und gif-Dateien in das png-Format konvertiert.</p>
+<p>Diese Einstellung macht es jedoch mÃ¶glich jedes beliebige Programm aufzurufen. Dies kann dazu fÃ¼hren, dass eine bÃ¶sartige TeX-Quelldatei, die Sie per E-Mail erhalten, ihr System beschÃ¤digen kÃ¶nnte. Daher kÃ¶nne Sie unter dem Kategorie &#8222;Schriftsatz&#8220; die Einstellung &#8222;Shell Escape Warnung&#8220; ein- oder ausschalten. Hierdurch werden Sie, wenn Sie eine Datei zu ersten Mal setzen, gefragt, ob pdftex ein anderes Programm aufrufen darf. Hierdurch kÃ¶nnen sie die automatische Konvertierung fÃ¼r ihre eigenen Programme benutzen, fÃ¼r fremde Programme jedoch jeweils die sichere LÃ¶sung wÃ¤hlen und einen Aufruf anderer Programme unterbinden.</p>
+
+<p><a href="basic_preferences.htm#settings-search">Einstellungen verwenden und durchsuchen</a></p>
+</main>
 </body>
 </html>

@@ -1,15 +1,41 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protecci&oacute;n ante shell-escape</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
+<meta name="description" content="shell-escape; convertir gr&aacute;ficos; seguridad">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda avanzada</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">A&ntilde;adir archivos personales a TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">M&aacute;s sobre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistencia con otras distribuciones de TeX</a></li>
+<li><a href="advanced_addengine.htm">Motores de composici&oacute;n adicionales</a></li>
+<li><a href="advanced_formats.htm">Creaci&oacute;n y uso de formatos de TeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt y MetaPost</a></li>
+<li><a href="advanced_root.htm">Establecer un documento ra&iacute;z</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizaci&oacute;n c&oacute;digo-pdf</a></li>
+<li><a href="advanced_removeaux.htm">Borrado de archivos AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm" class="current">Protecci&oacute;n ante shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Uso de un editor externo</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar-pegar y arrastrar-soltar</a></li>
+<li><a href="advanced_otherfiles.htm">Abrir otros archivos con TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Resaltado de sintaxis</a></li>
+<li><a href="advanced_coloredtext.htm">Texto coloreado en TeX</a></li>
+<li><a href="advanced_plist.htm">Archivos .plist</a></li>
+<li><a href="advanced_localization.htm">Localizaciones</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Protecci&oacute;n ante shell-escape</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Protecci&oacute;n ante shell-escape</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-		<META NAME="description" CONTENT="shell-escape; convertir gr&aacute;ficos; seguridad">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-
-<BODY>
-	<div id="content_border">
 <P>
 En TeX Live, desde 2011, pdftex, pdflatex y otros programas de TeX pueden llamar durante la composici&oacute;n a una breve lista de programas de confianza. Por ejemplo, pueden llamar a Ghostscript para convertir archivos eps en archivos pdf.
 </P>
@@ -21,36 +47,6 @@ Es posible configurar pdftex, pdflatex y otros programas para que llamen a cualq
 <P>
 Aunque recomendamos no activar la opci&oacute;n, puede que algunos paquetes poco habituales la necesiten. Para este caso, TeXShop ofrece un mecanismo de protecci&oacute;n: en el grupo &laquo;PDF directo&raquo; de la categor&iacute;a &laquo;Composici&oacute;n&raquo; de los Ajustes hay un ajuste llamado &laquo;Confirmar shell-escape&raquo;, que viene desactivado. Solo comprueba las &oacute;rdenes plain TeX y LaTeX de ese grupo, que se usan cuando un archivo se compone con TeX o LaTeX mediante &laquo;PDF directo&raquo;. Los scripts de motor (archivos .engine) no se comprueban, aunque contengan &laquo;-shell-escape&raquo;. Si el ajuste est&aacute; activado y la orden usada contiene &laquo;-shell-escape&raquo;, la primera vez que se compone un archivo en una sesi&oacute;n de TeXShop aparece un di&aacute;logo de aviso que permite desactivar shell-escape para ese archivo. El di&aacute;logo no vuelve a aparecer para ese archivo durante la sesi&oacute;n. As&iacute;, puedes componer tus propios archivos con shell-escape y los que recibas por correo electr&oacute;nico sin &eacute;l.
 </P>
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Ayuda avanzada</div><div id="header_title">Protecci&oacute;n ante shell-escape</div>
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adici&oacute;n de archivos de estilo y de macros personales a TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Motores de composici&oacute;n adicionales</a>
-			<LI><a href="advanced_removeaux.htm">Borrado de archivos AUX</a>
-			<li><a href="advanced_externaleditor.htm">Uso de un editor externo</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copiar-pegar y arrastrar-soltar desde la ventana del PDF</a>
-			<li><a href="advanced_root.htm">Establecer un documento ra&iacute;z</a>
-			<li><a href="advanced_pdfsync.htm">Sincronizaci&oacute;n c&oacute;digo-pdf</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Creaci&oacute;n y uso de formatos de TeX</a>
-			<li><a href="advanced_otherfiles.htm">Abrir otros archivos con TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizaciones</a>
-			<li><a href="advanced_syntaxcolor.htm">Resaltado de sintaxis</a>
-			<li><a href="advanced_shellescape.htm">Protecci&oacute;n ante shell-escape</a>
-			<li><a href="advanced_coloredtext.htm">Texto coloreado en TeX</a>
-			<li><a href="advanced_moretetex.htm">M&aacute;s sobre TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexistencia con otras distribuciones de TeX</a>
-			<li><a href="advanced_context.htm">ConTeXt y MetaPost</a>
-			<li><a href="advanced_plist.htm">Archivos .plist</a>
-			<li><a href="advanced_menushortcuts.htm">Redefinici&oacute;n de atajos de teclado de men&uacute;s</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+</main>
+</body>
+</html>

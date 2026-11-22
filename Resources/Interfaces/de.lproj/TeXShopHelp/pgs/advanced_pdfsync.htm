@@ -1,14 +1,40 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pdfsync</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch und Maritn Kerz unter der GNU FDL">
+<meta name="description" content="pdfsync, synchronisieren, Synchronisierung">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Erweitert</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">Pers&ouml;nliche Dateien zu TeX Live hinzuf&uuml;gen</a></li>
+<li><a href="advanced_moretetex.htm">Mehr &uuml;ber TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Zusammenarbeit mit anderen TeX Distributionen</a></li>
+<li><a href="advanced_addengine.htm">Zus&auml;tzliche Schriftsatz-Programme</a></li>
+<li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
+<li><a href="advanced_root.htm">Die Hauptdatei des Projekts festlegen</a></li>
+<li><a href="advanced_pdfsync.htm" class="current">Pdfsync</a></li>
+<li><a href="advanced_removeaux.htm">AUX-Dateien entfernen</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Shell Escape Schutz</a></li>
+<li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Kopieren-Einf&uuml;gen und Drag-Drop aus dem Vorschau-Fenster</a></li>
+<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop &ouml;ffnen</a></li>
+<li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung</a></li>
+<li><a href="advanced_coloredtext.htm">Farbiger Text in TeX</a></li>
+<li><a href="advanced_plist.htm">Plist Datein</a></li>
+<li><a href="advanced_localization.htm">Lokalisierungen</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Pdfsync</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Pdfsync</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch und Maritn Kerz unter der GNU FDL">
-		<META NAME="description" CONTENT="pdfsync, synchronisieren, Synchronisierung">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-<BODY>
-	<div id="content_border">
 			<P>Synchronisierung ist eine wichtige Funktion von Textures. Textures ist eine kommerzielle TeX-Implemetierung f&uuml;r den Mac von Blue Sky TeX Systems. Hierbe ist es m&ouml;glich, dass ein Autor in das Vorschau-Fenster klickt und automatisch zur korrespondierenden Stelle im Quelltext gelangt. Textures ist jedoch noch nicht in einer nativen Mac OS X-Version erh&auml;tlich. Diese Implementierung der Synchronisierung von Textures wird &uuml;berall f&uuml;r seine Pr&auml;zision im Auffinden des korrespondierenden Quelltextes gelobt. </P>
 			<P>TeX-Systeme anderer Plattformen haben versucht diese Funktion zu immitieren, indem sie eine zus&auml;tzliche Style-Datei benutzt haben, durch die TeX veranlasst wurde die n&ouml;tigen Informationen in die dvi-Datei zu schreiben. Im Sommer 2003 schrieb Piero D'Ancona ein &auml;hnliches Hilfmittel f&uuml;r pdflatex. Dieses Paket, &bdquo;pdfsync.sty&rdquo;, bringt pdftex dazu eine zus&auml;tzliche Datei mit Informationen zu Synchronisieren von Eingabe- und Ausgabefenster zu erzeugen. D'Anconas Arbeit basiert auf pdftex-internen Befehlen, die x- und y-Koordinaten von verschiedenen Satzoperationen ausgeben. </P>
 <P> Mit TeXShop k&ouml;nnen sie auf zweierlei Art und Weise synchronisieren. Die Standardmethode nutzt herf&uuml;r die neue Funktion in Mac OS X 10.4, die es erlaubt nach Text in PDF-Dateien zu suchen. Hirf&uuml;r werden keine speziellen style-Dateien ben&ouml;tigt. Klicken Sie einfach auf ein Wort oder einen Satz im Quelltext-Fenster und halten Sie dabei die Befehls-(Apfel-)Taste gedr&uuml;ckt; im Vorschaufenster wird nun automatisch die entsprechende Stelle angezeigt und rot eingekreist. Ebenso wird, wenn Sie auf ein Wort oder einen Satz im Vorschau-Fenster klicken und dabei die Befehls-Taste gedr&uuml;ckt halten, die entsprechende Quelldatei (wenn n&ouml;tig) ge&ouml;ffnet und der passende Text gelb markiert.</P>
@@ -48,38 +74,7 @@
 			<dl>
 				<dd>defaults write TeXShop ShowSyncMarks YES
 			</dl>
-		</div>		
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Erweitert</div>
-<div id="header_title">Pdfsync</div>
-
-
-	<div id="menu_border">
-		<UL>
-			<li><a href="advanced_personaltetex.htm">Pers&ouml;nliche sty- und Makrodateien zu TeX Live hinzuf&uuml;gen</a></li>
-			<LI><a href="advanced_addengine.htm">Zusätzliche Schriftsatz-Programme</a>
-			<LI><a href="advanced_removeaux.htm">AUX-Dateien entfernen</a>
-			<li><a href="advanced_externaleditor.htm">Einen externen Editor verwenden</a></li>
-			<li><a href="advanced_pdfcopypaste.htm">Kopieren-Einf&uuml;gen und Drag-Drop aus dem Vorschau-Fenster</a></li>
-			<li><a href="advanced_root.htm">Die Hauptdatei des Projekts festlegen</a></li>
-			<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
-			<li><a href="advanced_unicode.htm">Unicode</a></li>
-			<li><a href="advanced_bibtex.htm">BibTeX</a></li>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
-			<li><a href="advanced_otherfiles.htm">Andere Dateien mit TeXShop &ouml;ffnen</a></li>
-			<li><a href="advanced_mathematica.htm">Mathematica</a></li>
-			<li><a href="advanced_localization.htm">Lokalisierungen</a></li>
-			<li><a href="advanced_syntaxcolor.htm">Syntaxhervorhebung </a></li>
-			<li><a href="advanced_shellescape.htm">Shell Escape Schutz</a></li>
-			<li><a href="advanced_coloredtext.htm">Farbiger Text in TeX</a></li>
-			<li><a href="advanced_moretetex.htm">Mehr &uuml;ber TeX Live</a></li>
-			<li><a href="advanced_otherdistributions.htm">Zusammenarbeit mit anderen TeX Distributionen</a></li>
-			<li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
-			<li><a href="advanced_plist.htm">Plist Dateien</a></li>
-			<li><a href="advanced_menushortcuts.htm">Tastaturk&uuml;rzel neubelegen</a></li>
-		</UL>
-	</div>
-	
-	</BODY>
-</HTML>
+		
+</main>
+</body>
+</html>

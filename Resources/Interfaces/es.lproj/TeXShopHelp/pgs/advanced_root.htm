@@ -1,15 +1,41 @@
-<HTML>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Establecer un documento ra&iacute;z</title>
+<meta name="copyright" content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
+<meta name="description" content="documento ra&iacute;z; archivo ra&iacute;z; root file; varios archivos peque&ntilde;os; proyecto">
+<link href="../sty/screen.css" rel="stylesheet">
+</head>
+<body>
+<header id="header"><a href="../TeXShop%20Help.html"><img src="../gfx/texshop-icon-small.png" width="32" height="32" alt="TeXShop Help"></a><span class="chapter">Ayuda avanzada</span></header>
+<nav id="menu">
+<ul>
+<li><a href="advanced_personaltetex.htm">A&ntilde;adir archivos personales a TeX Live</a></li>
+<li><a href="advanced_moretetex.htm">M&aacute;s sobre TeX Live</a></li>
+<li><a href="advanced_otherdistributions.htm">Coexistencia con otras distribuciones de TeX</a></li>
+<li><a href="advanced_addengine.htm">Motores de composici&oacute;n adicionales</a></li>
+<li><a href="advanced_formats.htm">Creaci&oacute;n y uso de formatos de TeX</a></li>
+<li><a href="advanced_context.htm">ConTeXt y MetaPost</a></li>
+<li><a href="advanced_root.htm" class="current">Establecer un documento ra&iacute;z</a></li>
+<li><a href="advanced_pdfsync.htm">Sincronizaci&oacute;n c&oacute;digo-pdf</a></li>
+<li><a href="advanced_removeaux.htm">Borrado de archivos AUX</a></li>
+<li><a href="advanced_bibtex.htm">BibTeX</a></li>
+<li><a href="advanced_makeindex.htm">MakeIndex</a></li>
+<li><a href="advanced_shellescape.htm">Protecci&oacute;n ante shell-escape</a></li>
+<li><a href="advanced_externaleditor.htm">Uso de un editor externo</a></li>
+<li><a href="advanced_pdfcopypaste.htm">Copiar-pegar y arrastrar-soltar</a></li>
+<li><a href="advanced_otherfiles.htm">Abrir otros archivos con TeXShop</a></li>
+<li><a href="advanced_syntaxcolor.htm">Resaltado de sintaxis</a></li>
+<li><a href="advanced_coloredtext.htm">Texto coloreado en TeX</a></li>
+<li><a href="advanced_plist.htm">Archivos .plist</a></li>
+<li><a href="advanced_localization.htm">Localizaciones</a></li>
+</ul>
+</nav>
+<main id="content">
+<h1>Establecer un documento ra&iacute;z</h1>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Establecer un documento ra&iacute;z</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-		<META NAME="description" CONTENT="documento ra&iacute;z; archivo ra&iacute;z; root file; varios archivos peque&ntilde;os; proyecto">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-
-<BODY>
-	<div id="content_border">
 		<P>En lugar de tener un archivo TeX muy grande, es usual descomponerlo en varios archivos m&aacute;s peque&ntilde;os controlados por un documento ra&iacute;z (&lsquo;root&rsquo;). Por ejemplo, el archivo ra&iacute;z de un proyecto de un libro puede tener la forma
 </P>
 		<dl>
@@ -35,36 +61,6 @@ La segunda es usar el men&uacute; &laquo;Documento ra&iacute;z...&raquo;; as&iac
 		<p>Si todo el c&oacute;digo TeX est&aacute; en un solo archivo, no es necesario establecer el documento ra&iacute;z.</p>
 		<p>Si usamos el men&uacute; &laquo;Documento ra&iacute;z...&raquo;, TeXShop recuerda el nombre del documento ra&iacute;z escribiendo esta informaci&oacute;n en un archivo con el mismo nombre que el archivo que estamos editando y la extensi&oacute;n &laquo;.texshop&raquo;. Por ejemplo, si el archivo para el cap&iacute;tulo dos es two.tex, TeXShop guarda el nombre del archivo ra&iacute;z en two.texshop, en el mismo directorio que two.tex. Si borramos two.texshop, a partir de entonces TeXShop compondr&aacute; two.tex en lugar de Main.tex.</p>
 		<p>En general, comando-1 sirve para alternar entre la ventana de c&oacute;digo y la ventana con el pdf previsto. Si hay alg&uacute;n documento ra&iacute;z activo, y tenemos al frente cualquiera de los ficheros con c&oacute;digo, al pulsar comando-1 vamos a la ventana con el pdf. Ahora, al pulsar comando-1 de nuevo, volvemos a la misma ventana de c&oacute;digo de la que hab&iacute;amos partido. Pero, si estamos en la ventana del pdf y no hemos usado comando-1 antes, vamos a la ventana con el c&oacute;digo ra&iacute;z.</p>
-</div>
-<div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/texshop-icon-small.png"></a></div>
-<div id="header_chapter">Ayuda avanzada</div><div id="header_title">Establecer un documento ra&iacute;z</div>
-	<div id="menu_border">
-		<ul>
-			<LI><a href="advanced_personaltetex.htm">Adici&oacute;n de archivos de estilo y de macros personales a TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Motores de composici&oacute;n adicionales</a>
-			<LI><a href="advanced_removeaux.htm">Borrado de archivos AUX</a>
-			<li><a href="advanced_externaleditor.htm">Uso de un editor externo</a>
-			<li><a href="advanced_pdfcopypaste.htm">Copiar-pegar y arrastrar-soltar desde la ventana del PDF</a>
-			<li><a href="advanced_root.htm">Establecer un documento ra&iacute;z</a>
-			<li><a href="advanced_pdfsync.htm">Sincronizaci&oacute;n c&oacute;digo-pdf</a>
-			<li><a href="advanced_unicode.htm">Unicode</a>
-			<li><a href="advanced_bibtex.htm">BibTeX</a>
-			<li><a href="advanced_makeindex.htm">MakeIndex</a>
-			<li><a href="advanced_formats.htm">Creaci&oacute;n y uso de formatos de TeX</a>
-			<li><a href="advanced_otherfiles.htm">Abrir otros archivos con TeXShop</a>
-			<li><a href="advanced_mathematica.htm">Mathematica</a>
-			<li><a href="advanced_localization.htm">Localizaciones</a>
-			<li><a href="advanced_syntaxcolor.htm">Resaltado de sintaxis</a>
-			<li><a href="advanced_shellescape.htm">Protecci&oacute;n ante shell-escape</a>
-			<li><a href="advanced_coloredtext.htm">Texto coloreado en TeX</a>
-			<li><a href="advanced_moretetex.htm">M&aacute;s sobre TeX Live</a>
-			<li><a href="advanced_otherdistributions.htm">Coexistencia con otras distribuciones de TeX</a>
-			<li><a href="advanced_context.htm">ConTeXt y MetaPost</a>
-			<li><a href="advanced_plist.htm">Archivos .plist</a>
-			<li><a href="advanced_menushortcuts.htm">Redefinici&oacute;n de atajos de teclado de men&uacute;s</a>
-		</UL>
-	</div>
-	</BODY>
-
-</HTML>
+</main>
+</body>
+</html>
