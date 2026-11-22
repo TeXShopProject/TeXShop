@@ -780,13 +780,13 @@
                                     <action selector="toggleStatusBar:" target="-1" id="Stb-Ac-7Kd"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Show Syntax Color" tag="14" id="0hO-j5-0tM" identifier="TSShortcut.toggleSyntaxColor:.14">
+                            <menuItem title="Syntax Highlighting" tag="14" id="0hO-j5-0tM" identifier="TSShortcut.toggleSyntaxColor:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleSyntaxColor:" target="-1" id="Hyx-hD-B3e"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Syntax Color expl3 Code" id="kdq-IP-9RR" identifier="TSShortcut.toggleExplColor:.0">
+                            <menuItem title="Highlight expl3 Code" id="kdq-IP-9RR" identifier="TSShortcut.toggleExplColor:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleExplColor:" target="-1" id="1cU-Vb-wfE"/>

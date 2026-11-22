@@ -103,17 +103,23 @@ static void CheckOwnerAlternateEngine(TSPreferences *owner, TSSettingsWindowCont
     NSMenuItem *trash=[typeset addItemWithTitle:@"Trash Aux & Typeset" action:@selector(doTypeset:) keyEquivalent:@"t"];trash.keyEquivalentModifierMask=NSEventModifierFlagCommand|NSEventModifierFlagOption;trash.alternate=YES;
     NSMenuItem *item=[typeset addItemWithTitle:@"Typeset with Alternate Engine" action:@selector(doAlternateTypeset:) keyEquivalent:@"t"];item.keyEquivalentModifierMask=NSEventModifierFlagCommand|NSEventModifierFlagOption|NSEventModifierFlagControl;item.alternate=YES;
     NSArray *lines=TSAlternateEngineInfoLines(main);
+    // Sentences of one paragraph: a space between them, none after a full-width full stop.
+    NSString *(^join)(NSString *,NSString *)=^NSString *(NSString *a,NSString *b){return [a hasSuffix:@"。"]?[a stringByAppendingString:b]:[NSString stringWithFormat:@"%@ %@",a,b];};
+    NSString *purpose=join([[NSBundle mainBundle] localizedStringForKey:@"catalog.typesetting.0.3.note" value:nil table:@"SettingsCategories"],NSLocalizedString(@"Typesets once with this engine instead of the one chosen in the toolbar.",nil));
     NSString *where=[NSString stringWithFormat:NSLocalizedString(@"In the %1$@ menu, this item appears in place of %2$@ while you hold %3$@.",nil),@"Typeset",@"Typeset",@"⌃⌥"];
     NSString *key=[NSString stringWithFormat:NSLocalizedString(@"Key: %@",nil),@"⌃⌥⌘T"];
-    Check(lines.count==5 && [lines[0] isEqual:@"Typeset with Alternate Engine"] && [lines[1] isEqual:where] && [lines[2] isEqual:key] && [lines[4] containsString:@"% !TEX TS-program"] && ![[lines componentsJoinedByString:@" "] containsString:@"pdflatexmk"],@"The info tells where the item is, its key and what it does");
+    Check(lines.count==4 && [lines[0] isEqual:@"Typeset with Alternate Engine"] && [lines[1] isEqual:purpose] && [lines[2] isEqual:join(where,key)] && [lines[3] containsString:@"% !TEX TS-program"] && ![[lines componentsJoinedByString:@" "] containsString:@"pdflatexmk"],@"The info tells what the engine is for and what the command does, then where the item is and its key in one paragraph, then what takes precedence");
     item.alternate=NO;item.keyEquivalent=@"y";item.keyEquivalentModifierMask=NSEventModifierFlagCommand|NSEventModifierFlagShift;
     lines=TSAlternateEngineInfoLines(main);
-    Check([lines[1] isEqual:[NSString stringWithFormat:NSLocalizedString(@"This item is in the %@ menu.",nil),@"Typeset"]] && [lines[2] isEqual:[NSString stringWithFormat:NSLocalizedString(@"Key: %@",nil),@"⇧⌘Y"]],@"A changed shortcut is told as the menu has it");
+    Check([lines[2] isEqual:join([NSString stringWithFormat:NSLocalizedString(@"This item is in the %@ menu.",nil),@"Typeset"],[NSString stringWithFormat:NSLocalizedString(@"Key: %@",nil),@"⇧⌘Y"])],@"A changed shortcut is told as the menu has it");
     item.keyEquivalent=@"";lines=TSAlternateEngineInfoLines(main);
-    Check([lines[2] isEqual:NSLocalizedString(@"No key is assigned.",nil)],@"An item without a key says so");
+    Check([lines[2] hasSuffix:NSLocalizedString(@"No key is assigned.",nil)],@"An item without a key says so");
     Check(TSAlternateEngineInfoLines(nil).count==3,@"Without the menu item the info still says what the engine does");
-    NSStackView *content=(NSStackView *)[owner alternateEngineInfoController].view;
+    NSViewController *infoController=[owner alternateEngineInfoController];
+    NSStackView *content=(NSStackView *)infoController.view;
     Check([content isKindOfClass:NSStackView.class] && content.arrangedSubviews.count==TSAlternateEngineInfoLines(NSApp.mainMenu).count,@"The popover shows each line of the info");
+    // The popover takes the size of the text with its margins, which the popover would otherwise leave out.
+    Check(infoController.preferredContentSize.width>=300+content.edgeInsets.left+content.edgeInsets.right && content.edgeInsets.left>=16 && content.edgeInsets.right>=16 && infoController.preferredContentSize.height>=content.fittingSize.height,[NSString stringWithFormat:@"The popover keeps its margins: %@",NSStringFromSize(infoController.preferredContentSize)]);
     [TSIsolatedAppKitDefaults removeObjectForKey:AlternateEngineKey];[owner refreshAlternateEngineFromDefaults:TSIsolatedAppKitDefaults];
     [files removeItemAtPath:engines error:NULL];
     EnginePath=savedEnginePath;

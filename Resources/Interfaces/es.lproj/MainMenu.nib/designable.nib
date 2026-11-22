@@ -783,13 +783,13 @@
                                     <action selector="toggleStatusBar:" target="-1" id="Stb-Ac-7Kd"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Mostrar resaltado de sintaxis" tag="14" id="54c-9v-HRi" identifier="TSShortcut.toggleSyntaxColor:.14">
+                            <menuItem title="Resaltado de sintaxis" tag="14" id="54c-9v-HRi" identifier="TSShortcut.toggleSyntaxColor:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleSyntaxColor:" target="-1" id="pVT-PD-FoL"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Sintaxis de código expl3" id="QUc-7d-hET" identifier="TSShortcut.toggleExplColor:.0">
+                            <menuItem title="Resaltar el código expl3" id="QUc-7d-hET" identifier="TSShortcut.toggleExplColor:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleExplColor:" target="-1" id="Okq-HD-lHp"/>

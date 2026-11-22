@@ -3,7 +3,7 @@
 <meta content="text/html;charset=UTF-8" http-equiv="content-type"/>
 <title>隠れた設定項目</title>
 <meta content="Copyright (c) 2003 Richard Koch under the GNU FDL" name="copyright"/>
-<meta content="タグの追加　ソースのカラー表示　ウインドウの背景色　プレビューの自動更新" name="description"/>
+<meta content="タグの追加　シンタックスハイライト　ウインドウの背景色　プレビューの自動更新" name="description"/>
 <link href="../sty/screen.css" media="all" rel="stylesheet"/>
 </head>
 <body>
@@ -29,8 +29,17 @@ ConTeXtユーザーは、もっと多くの語句がタグメニューに追加�
 </tt>
 <hr/>
 <p>
-ソース・プレビュー・コンソールの各ウインドウの色（ソースのカラー表示の色、背景色や文字色、挿入ポイントの色、対応括弧の強調色や不可視文字の色、プレビューウインドウの背景色など）と、これらのウインドウの透明度は、現在は「設定」の「テーマ」カテゴリで設定します。
+ソース・プレビュー・コンソールの各ウインドウの色（シンタックスハイライトの色、背景色や文字色、挿入ポイントの色、対応括弧の強調色や不可視文字の色、プレビューウインドウの背景色など）と、これらのウインドウの透明度は、現在は「設定」の「テーマ」カテゴリで設定します。
 </p>
+<hr/>
+<p>
+書類は、シンタックスハイライトがオンの状態で開きます。オフの状態で開くには、次のコマンドを実行します。そのうえで書類ごとにオンにするには、「ソース」メニューの「シンタックスハイライト」を選びます。この設定では、詳細検索パネルの入力欄とマクロエディタの内容にも色が付きません。
+</p>
+<tt>
+<dl>
+<dd>defaults write TeXShop SyntaxColoringEnabled NO
+		</dd></dl>
+</tt>
 <hr/>
 <p>
 タイプセットの際に時たま、TeXによって自動的に生成される .auxファイルや .logファイル、その他のファイルがおかしくなったりして、取り除かねばならないことがあります。TeXShopには「作業ファイルを削除」というメニュー項目があり、さらにコンソールウインドウにもこれと連動しているボタンがあります。このいずれかを選択するとTeXShopは、ソースファイルを含むフォルダ内にあって、ソースと同じ名前で、拡張子がaux・bcf・blg・brf・css・ent・fdb_latexmk・fff・fls・gaux・glo・glog・gtex・idv・idx・ilg・ind・lg・loa・lof・log・lot・mlf・mtc・out・pdfsync・run.xml・synctex・synctex.gz・synctex(busy) ・toc・ttt・wrm・xref・4ct・4tcとなっているファイルをすべてゴミ箱へと移動します。このリストには、その他の拡張子を、ひとつずつ追加することができます。例として、.dviファイルを加えるには：

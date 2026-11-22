@@ -5,7 +5,7 @@
 			Hidden Settings
 		</title>
 <meta content="Copyright (c) 2003 Richard Koch under the GNU FDL" name="copyright"/>
-<meta content="hidden setting; syntax coloring; background color" name="description"/>
+<meta content="hidden setting; syntax highlighting; background color" name="description"/>
 <link href="../sty/screen.css" media="all" rel="stylesheet"/>
 </head>
 <body>
@@ -33,8 +33,15 @@ following settings add the words \subsubsubsection, \subsubsubsubsection, \part,
 					defaults write TeXShop ConTeXtTags YES
 			</dd></dl>
 <p>
-				The colors of the source, preview and console windows, such as the syntax coloring colors, the background and text colors, the insertion point color, the colors used for parenthesis matching and invisible characters, and the preview background color, as well as the transparency of these windows, are now set in the Themes category of the Settings window.
+				The colors of the source, preview and console windows, such as the syntax highlighting colors, the background and text colors, the insertion point color, the colors used for parenthesis matching and invisible characters, and the preview background color, as well as the transparency of these windows, are now set in the Themes category of the Settings window.
 			</p>
+<p>
+				Documents open with syntax highlighting on. To open them without it, type the following command. The "Syntax Highlighting" item in the Source menu then turns it on for a document. With this setting, the fields of the Advanced Find panel and the contents of the Macro Editor are not colored either.
+			</p>
+<dl>
+<dd>
+					defaults write TeXShop SyntaxColoringEnabled NO
+			</dd></dl>
 <p>
 				Occasionally during typesetting, the .aux files, .log files, and other files created automatically by TeX become corrupted and must be removed. TeXShop has a "Trash AUX Files" menu item and associated button in the console window. When either item is selected, TeXShop moves to the trash all files in the folder containing the source file with the same name as the source name, and extensions .aux, .bcf, .blg, .brf, .css, .ent, .fdb_latexmk, .fff, .fls, .gaux, .glo, .glog, .gtex, .idv, .idx, .ilg, .ind, .lg, .loa, .lof, .log, .lot, .mlf, .mtc, .out, .pdfsync, .run.xml, .synctex, .synctex.gz, .synctex(busy), .toc, .ttt, .wrm, .xref, .4ct, and .4tc. Other extensions can be added to this list, one by one. For instance, to add .dvi files to this list:
 			</p>

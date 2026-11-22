@@ -51,11 +51,15 @@ int main(int argc,char **argv){@autoreleasepool{
   NSMenu *main=[NSMenu new];NSMenuItem *source=Item(main,@"Source");source.submenu=[NSMenu new];
   NSMenuItem *numbers=Item(source.submenu,@"Show Line Numbers");numbers.identifier=@"TSShortcut.showHideLineNumbers:.0";
   NSMenuItem *bar=Item(source.submenu,@"Show Status Bar");bar.identifier=@"TSShortcut.toggleStatusBar:.0";
-  NSMenuItem *syntax=Item(source.submenu,@"Show Syntax Color");
+  NSMenuItem *syntax=Item(source.submenu,@"Syntax Highlighting");syntax.identifier=@"TSShortcut.toggleSyntaxColor:.14";
   Apply(main,@{@"1":@{@"1":@[@"1",@NO,@YES],@"2":@[@"2",@NO,@YES]}});
   Check([numbers.keyEquivalent isEqual:@"1"] && [syntax.keyEquivalent isEqual:@"2"] && [bar.keyEquivalent isEqual:@""],@"positions skip Show Status Bar, added in 6.00");
   Apply(main,@{@"Source":@{@"Show Status Bar":@[@"b",@NO,@YES]}});
   Check([bar.keyEquivalent isEqual:@"b"],@"the title reaches Show Status Bar");
+  // Saved under the titles before 6.00: Show Syntax Color, and Syntax Color expl3 Code in German.
+  NSMenuItem *expl=Item(source.submenu,@"Highlight expl3 Code");expl.identifier=@"TSShortcut.toggleExplColor:.0";
+  Apply(main,@{@"Source":@{@"Show Syntax Color":@[@"y",@NO,@YES],@"expl3-Syntax farblich hervorheben":@[@"x",@NO,@YES]}});
+  Check([syntax.keyEquivalent isEqual:@"y"] && [expl.keyEquivalent isEqual:@"x"],@"the former titles reach Syntax Highlighting and Highlight expl3 Code");
  }
  // Edit › Find: only the English menu had Find and Replace… before 6.00. Positions saved for another language's menu
  // skip it, which that menu now has after Find…; the English positions count it, as before. Titles reach it in both.

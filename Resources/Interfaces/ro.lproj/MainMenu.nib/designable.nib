@@ -783,13 +783,13 @@
                                     <action selector="toggleStatusBar:" target="-1" id="Stb-Ac-7Kd"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Toggle Syntax Color" tag="14" id="0R0-xZ-eff" identifier="TSShortcut.toggleSyntaxColor:.14">
+                            <menuItem title="Evidențierea sintaxei" tag="14" id="0R0-xZ-eff" identifier="TSShortcut.toggleSyntaxColor:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleSyntaxColor:" target="-1" id="Ptj-wN-Pxc"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Sintaxă Cod expl culoare" id="oqt-PG-iGY" identifier="TSShortcut.toggleExplColor:.0">
+                            <menuItem title="Evidențiază codul expl3" id="oqt-PG-iGY" identifier="TSShortcut.toggleExplColor:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleExplColor:" target="-1" id="uwS-Ev-kp7"/>

@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import <Cocoa/Cocoa.h>
 NS_ASSUME_NONNULL_BEGIN
+
+/// The layout guides that place the columns of a group of three equal columns; a row with such a grid fills its width.
+static NSString *const TSEvenColumnsGuide = @"settings.even-columns";
 // Whole-percentage opacity input (0–100). Refused input calls rejectionHandler,
 // which beeps by default.
 @interface TSOpacityFormatter : NSFormatter

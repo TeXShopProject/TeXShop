@@ -13,7 +13,11 @@
 <dl>
 <dd>defaults write TeXShop TagSections NO
 		</dd></dl>
-<p>Die Farben des Quelltext-, Vorschau- und Konsolenfensters (etwa die Farben der Syntaxfärbung, die Hintergrund- und Textfarbe, die Farbe des Einfügepunktes und der Hintergrund des Vorschau-Fensters) sowie die Transparenz dieser Fenster werden jetzt in der Kategorie &#8222;Themen&#8220; der Einstellungen festgelegt.</p>
+<p>Die Farben des Quelltext-, Vorschau- und Konsolenfensters (etwa die Farben der Syntaxhervorhebung, die Hintergrund- und Textfarbe, die Farbe des Einfügepunktes und der Hintergrund des Vorschau-Fensters) sowie die Transparenz dieser Fenster werden jetzt in der Kategorie &#8222;Themen&#8220; der Einstellungen festgelegt.</p>
+<p>Dokumente werden mit Syntaxhervorhebung geöffnet. Um sie ohne Syntaxhervorhebung zu öffnen, geben Sie den folgenden Befehl ein. Der Menüpunkt &#8222;Syntaxhervorhebung&#8220; im Menü &#8222;Quelltext&#8220; schaltet sie dann für ein Dokument ein. Mit dieser Einstellung werden auch die Felder der erweiterten Suchmaske und der Inhalt des Makro-Editors nicht eingefärbt.</p>
+<dl>
+<dd>defaults write TeXShop SyntaxColoringEnabled NO
+		</dd></dl>
 <p>Es kann vorkommen, dass während des Setzens &#8222;.aux&#8220;, &#8222;.log&#8220; und andere Dateien die automaitsch von TeX erstellt werden, beschädigt werden und entfernt werden müssen.  TeXShop bietet diese Möglichkeit mit dem Menüpukt &#8222;AUX-Dateien löschen&#8220; und dem Knopf im Konsolenfenster. Wählt man diese Funktion aus, werden alle Dateien, die in ihrem Namen den selben Namen wie die Quelldatei und eine der folgenden Dateiendungen haben, in den Papierkorb verschoben: .aux, .bcf, .blg, .brf, .css, .ent, .fdb_latexmk, .fff, .fls, .gaux, .glo, .glog, .gtex, .idv, .idx, .ilg, .ind, .lg, .loa, .lof, .log, .lot, .mlf, .mtc, .out, .pdfsync, .run.xml, .synctex, .synctex.gz, .synctex(busy), .toc, .ttt, .wrm, .xref, .4ct und .4tc. Andere Dateiendungen können zusätzlich gelöscht werden. Um z.B. &#8222;.dvi&#8220;-Dateien mit aufzunehmen müssen Sie folgendes Kommando ausführen:</p>
 <dl>
 <dd>defaults write TeXShop OtherTrashExtensions -array-add "dvi"

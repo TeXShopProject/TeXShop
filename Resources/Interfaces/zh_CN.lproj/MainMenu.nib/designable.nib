@@ -783,7 +783,7 @@
                                     <action selector="toggleStatusBar:" target="-1" id="Stb-Ac-7Kd"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="显示语法高亮" tag="14" id="Dg1-i4-sxi" identifier="TSShortcut.toggleSyntaxColor:.14">
+                            <menuItem title="语法高亮" tag="14" id="Dg1-i4-sxi" identifier="TSShortcut.toggleSyntaxColor:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleSyntaxColor:" target="-1" id="hm1-xg-ZiD"/>

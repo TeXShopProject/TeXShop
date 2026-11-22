@@ -31,7 +31,6 @@
         <outlet property="showSpaceCharacterButton" destination="961" id="1002" />
         <outlet property="showTabCharacterButton" destination="958" id="1005" />
         <outlet property="spellCheckButton" destination="841" id="851" />
-        <outlet property="syntaxColorButton" destination="839" id="847" />
         <outlet property="makeatletterButton" destination="cgA-o7-Bdw" id="gAl-rH-u7H" />
         <outlet property="expl3SyntaxColorButton" destination="f1k-jx-ley" id="Kwn-ll-x0H" />
         <outlet property="highlightFullwidthSymbolsButton" destination="fullwidth-highlight-button" id="fullwidth-highlight-outlet" />
@@ -137,13 +136,6 @@
                 </buttonCell>
                 <cells>
                   <column>
-                    <buttonCell type="check" title="Syntax Coloring" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="839">
-                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
-                      <font key="font" metaFont="system" />
-                      <connections>
-                        <action selector="syntaxColorPressed:" target="-2" id="848" />
-                      </connections>
-                    </buttonCell>
                     <buttonCell type="check" title="@ as Part of Command Names" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="-1" inset="2" id="cgA-o7-Bdw">
                       <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                       <font key="font" metaFont="system" />

@@ -47,7 +47,6 @@
 
     IBOutlet NSButton       *_tabIndentButton;		    /*" connected to "Use Tab" "*/
     IBOutlet NSButton       *_syntaxColorLineButton;    /*" connected to "Syntax Active Line Coloring" "*/
-	IBOutlet NSButtonCell	*_syntaxColorButton;		/*" connected to "Syntax Coloring" "*/
     IBOutlet NSButton       *_blockCursorButton;        /*" connected to "Block Cursor" "*/
     IBOutlet NSButton       *_macroButton;              /*" connected to "Font for Log and Macro" "*/
 	IBOutlet NSButtonCell   *_selectActivateButton;     /*" connected to "Select on Activate" "*/
@@ -277,7 +276,6 @@
 - (IBAction)changeConsoleFont:sender;
 - (IBAction)sourceWindowPosChanged:sender;
 - (IBAction)currentDocumentWindowPosDefault:sender;
-- (IBAction)syntaxColorPressed:sender;
 - (IBAction)syntaxColorLinePressed:sender;
 - (IBAction)blockCursorPressed:sender;
 - (IBAction)MacroPressed:sender;
