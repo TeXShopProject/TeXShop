@@ -4,7 +4,8 @@
 AppKit names a document window again after saves, autosaves and renames. The window controller
 gives the full path at that time, so the title does not fall back to the file name. The test builds
 the real TSWindowController with a small TSDocument stand-in, keeps its window off screen, and
-saves, autosaves and renames the document in a private folder."""
+saves, autosaves and renames the document in a private folder. The single window of source and
+preview, which has a controller of the same class, keeps AppKit's name."""
 from pathlib import Path
 import argparse
 import os
@@ -19,8 +20,9 @@ DOCUMENT = 'Sources/Document/TSDocument.m'
 
 MUTATIONS = {
     # The controller gives AppKit's name: saves bring the file name back.
-    'controller-gives-file-name': (CONTROLLER, 'if ([document isKindOfClass:[TSDocument class]] && [(TSDocument *)document showsFullPath] && document.fileURL != nil)',
-                                   'if (NO)'),
+    'controller-gives-file-name': (CONTROLLER, 'if ([document isKindOfClass:[TSDocument class]]', 'if (NO && [document isKindOfClass:[TSDocument class]]'),
+    # The single window of source and preview also shows the full path (first audit).
+    'single-window-full-path': (CONTROLLER, '((TSDocument *)document).standardController == self\n        && ', ''),
     # The switch is turned without naming the window again.
     'switch-without-renaming': (DOCUMENT, '\t[self.standardController synchronizeWindowTitleWithDocumentName];\n', ''),
     # The window sets its own title again, which the next save overwrites.
@@ -99,7 +101,12 @@ int main(int argc, char **argv) {
         // Never ordered front: the window stays off screen.
         NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 100) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
         TSWindowController *controller = [[TSWindowController alloc] initWithWindow:window];
+        document.standardController = controller;
         [document addWindowController:controller];
+        // The single window of source and preview: a second controller of the same class (doMove:).
+        NSWindow *single = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 100) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
+        TSWindowController *singleController = [[TSWindowController alloc] initWithWindow:single];
+        [document addWindowController:singleController];
 
         document.showsFullPath = NO;
         [controller synchronizeWindowTitleWithDocumentName];
@@ -108,6 +115,8 @@ int main(int argc, char **argv) {
         document.showsFullPath = YES;
         [controller synchronizeWindowTitleWithDocumentName];
         check([window.title isEqualToString:first.path], @"switch on: the full path");
+        [singleController synchronizeWindowTitleWithDocumentName];
+        check([single.title isEqualToString:document.displayName], @"switch on: the single window keeps AppKit's name");
 
         [document updateChangeCount:NSChangeDone];
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.3]];
@@ -129,11 +138,13 @@ int main(int argc, char **argv) {
         }];
         waitFor(&done);
         check([window.title isEqualToString:first.path], @"after a save: still the full path");
+        check([single.title isEqualToString:document.displayName], @"the single window keeps AppKit's name");
 
         // A rename (Move To, Rename in the title bar) gives the new full path without any call of ours.
         document.fileURL = second;
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.3]];
         check([window.title isEqualToString:second.path], @"after a rename: the new full path");
+        check([single.title isEqualToString:document.displayName], @"after a rename: the single window keeps AppKit's name");
 
         document.showsFullPath = NO;
         [controller synchronizeWindowTitleWithDocumentName];
@@ -151,8 +162,10 @@ int main(int argc, char **argv) {
 
 STUB_DOCUMENT = r'''
 #import <Cocoa/Cocoa.h>
+@class TSWindowController;
 @interface TSDocument : NSDocument
 @property BOOL showsFullPath;
+@property (retain) TSWindowController *standardController;
 @end
 '''
 
