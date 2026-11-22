@@ -33,7 +33,7 @@
 "Do you want to save macros?" = "Voulez-vous enregistrer les macros ?";
 "Save Spot" = "Enregistrer le spot";
 "Template" = "Modèle";
-"AutoComplete" = "Raccourcis clavier"; //Should be translation of "Key Bindings", even in English
+"AutoComplete" = "Raccourcis de saisie"; //Should be translation of "Key Bindings", even in English
 "Page Number" = "Numéro de page";
 "Page Number Panel" = "Panneau Numéro de page";
 "Magnification Panel" = "Panneau de magnification";

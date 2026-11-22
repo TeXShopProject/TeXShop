@@ -776,9 +776,9 @@ DQ
                     </connections>
                 </matrix>
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="440">
-                    <rect key="frame" x="254" y="188" width="136" height="18"/>
+                    <rect key="frame" x="254" y="188" width="176" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="Autocompleción" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3858">
+                    <buttonCell key="cell" type="check" title="Combinaciones de teclas" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3858">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -985,9 +985,9 @@ DQ
                     </connections>
                 </popUpButton>
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3921">
-                    <rect key="frame" x="397" y="188" width="157" height="18"/>
+                    <rect key="frame" x="440" y="188" width="157" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Mostar ruta completa" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="3922">
+                    <buttonCell key="cell" type="check" title="Mostrar ruta completa" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="3922">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -1136,9 +1136,9 @@ DQ
                     <font key="titleFont" metaFont="system"/>
                 </box>
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UWt-Yd-gHK">
-                    <rect key="frame" x="122" y="16" width="124" height="18"/>
+                    <rect key="frame" x="122" y="16" width="176" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="Autocompleción" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="nrg-Re-kxa">
+                    <buttonCell key="cell" type="check" title="Combinaciones de teclas" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="nrg-Re-kxa">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -1147,7 +1147,7 @@ DQ
                     </connections>
                 </button>
                 <searchField wantsLayer="YES" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ikf-ja-eQQ">
-                    <rect key="frame" x="241" y="14" width="96" height="22"/>
+                    <rect key="frame" x="306" y="14" width="96" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" sendsWholeSearchString="YES" id="ud0-15-TBe">
                         <font key="font" metaFont="system"/>

@@ -21,6 +21,8 @@ add(TSSettingsCategoryGeneral, @"row.catalog.general.2.3", @"SettingsCategories"
 add(TSSettingsCategoryGeneral, @"heading.group.general.3", @"SettingsCategories", @"group.general.3.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.3.0", @"SettingsCategories", @"catalog.general.3.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.3.1", @"SettingsCategories", @"catalog.general.3.1.title", TSSettingsSearchWeightLabel);
+// A former name of the row still finds it (an empty former name is skipped).
+add(TSSettingsCategoryGeneral, @"row.catalog.general.3.1", @"SettingsCategories", @"catalog.general.3.1.former", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryGeneral, @"heading.group.general.6", @"SettingsCategories", @"group.general.6.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryGeneral, @"DockIconChoices", @"SettingsCategories", @"group.general.6.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryGeneral, @"DockIconChoices", @"SettingsDock", @"Classic Circle", TSSettingsSearchWeightChoice);
@@ -125,6 +127,8 @@ add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.4", @"SettingsCategorie
 add(TSSettingsCategorySpelling, @"row.catalog.spelling.1.5", @"SettingsCategories", @"catalog.spelling.1.5.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryAppearance, @"heading.group.appearance.0", @"SettingsCategories", @"group.appearance.0.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryAppearance, @"row.catalog.appearance.0.0", @"SettingsCategories", @"catalog.appearance.0.0.title", TSSettingsSearchWeightLabel);
+// A former name of the row still finds it (an empty former name is skipped).
+add(TSSettingsCategoryAppearance, @"row.catalog.appearance.0.0", @"SettingsCategories", @"catalog.appearance.0.0.former", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryAppearance, @"row.catalog.appearance.0.1", @"SettingsCategories", @"catalog.appearance.0.1.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryAppearance, @"heading.group.appearance.1", @"SettingsCategories", @"group.appearance.1.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryAppearance, @"row.catalog.appearance.1.0", @"SettingsCategories", @"theme.list.add", TSSettingsSearchWeightChoice);
@@ -218,6 +222,8 @@ add(TSSettingsCategoryPreview, @"row.catalog.preview.4.1", @"SettingsCategories"
 add(TSSettingsCategoryPreview, @"row.catalog.preview.4.1", @"SettingsCategories", @"catalog.preview.4.1.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.4.2", @"SettingsCategories", @"catalog.preview.4.2.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.4.2", @"SettingsCategories", @"catalog.preview.4.2.note", TSSettingsSearchWeightDescription);
+// A former name of the row still finds it (an empty former name is skipped).
+add(TSSettingsCategoryPreview, @"row.catalog.preview.4.2", @"SettingsCategories", @"catalog.preview.4.2.former", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryPreview, @"heading.group.preview.5", @"SettingsCategories", @"group.preview.5.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.5.0", @"SettingsCategories", @"catalog.preview.5.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.5.0", @"SettingsCategories", @"catalog.preview.5.0.note", TSSettingsSearchWeightDescription);
@@ -276,6 +282,9 @@ add(TSSettingsCategoryConsole, @"row.catalog.console.1.1", @"SettingsCategories"
 add(TSSettingsCategoryKeyboard, @"heading.group.bindings", @"SettingsCategories", @"group.bindings.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.0", @"SettingsCategories", @"catalog.keyboard.0.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.0", @"SettingsCategories", @"catalog.keyboard.0.0.note", TSSettingsSearchWeightDescription);
+// A former name of the group, or of the row, still finds the row (an empty former name is skipped).
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.0", @"SettingsCategories", @"group.bindings.former", TSSettingsSearchWeightDescription);
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.0", @"SettingsCategories", @"catalog.keyboard.0.0.former", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"SettingsCategories", @"catalog.keyboard.0.1.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"heading.group.completion", @"SettingsCategories", @"group.completion.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsCategories", @"catalog.keyboard.1.0.title", TSSettingsSearchWeightLabel);

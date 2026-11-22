@@ -49,6 +49,7 @@
 "group.general.3.title" = "Ficheiro principal do projeto";
 "catalog.general.3.0.title" = "Abrir o ficheiro principal ao abrir um documento";
 "catalog.general.3.1.title" = "Minimizar a janela do documento principal aberto";
+"catalog.general.3.1.former" = "";
 "group.general.5.title" = "Avançadas";
 "group.general.6.title" = "Ícone da Dock durante a execução";
 "catalog.general.5.0.title" = "As definições que não aparecem aqui são descritas na ajuda «Linhas de comentário e definições ocultas».";
@@ -147,6 +148,7 @@
 "catalog.spelling.1.5.title" = "Ignorar comentários";
 "group.appearance.0.title" = "Temas";
 "catalog.appearance.0.0.title" = "Tema do modo claro";
+"catalog.appearance.0.0.former" = "";
 "catalog.appearance.0.1.title" = "Tema do modo escuro";
 "group.appearance.1.title" = "Editar tema";
 "theme.list.add" = "Novo tema";
@@ -251,6 +253,7 @@
 "catalog.preview.4.1.note" = "Ao copiar, arrastar ou guardar como imagem uma seleção da pré-visualização, o preto é substituído pela cor do texto e o branco pela cor de fundo. As duas cores definem-se em “Mapeamento de cores das imagens copiadas” no tema atual. As cópias em PDF e EPS não são alteradas.";
 "catalog.preview.4.2.title" = "Destaque do primeiro plano:";
 "catalog.preview.4.2.note" = "Valores mais elevados realçam o texto ao copiar imagens rasterizadas.";
+"catalog.preview.4.2.former" = "";
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "URL inicial";
 "catalog.preview.5.0.note" = "A página que a janela HTML abre primeiro. Introduza um endereço web ou o caminho de um ficheiro.";
@@ -303,9 +306,11 @@
 "group.console.1.title" = "Ações";
 "catalog.console.1.0.title" = "Mostrar consola";
 "catalog.console.1.1.title" = "Redimensionar a consola";
-"group.bindings.title" = "Preenchimento automático";
+"group.bindings.title" = "Associações de teclas";
+"group.bindings.former" = "Preenchimento automático";
 "catalog.keyboard.0.0.title" = "Usar associações de teclas (predefinição para novos documentos)";
 "catalog.keyboard.0.0.note" = "Substitui um carácter escrito por um texto definido, como { por {}.";
+"catalog.keyboard.0.0.former" = "";
 "catalog.keyboard.0.1.title" = "Lista de associações de teclas";
 "group.completion.title" = "Conclusão de comandos";
 "catalog.keyboard.1.0.title" = "Tecla de ativação";

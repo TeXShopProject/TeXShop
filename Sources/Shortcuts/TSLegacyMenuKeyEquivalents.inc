@@ -164,7 +164,7 @@ static NSString *const TSLegacyCompletionItem = @"TSShortcut.registerForCommandC
 // typesetting methods before 5.60 named them by what they do (Direct PDF,
 // Via DVI), the former Command Completion submenu, and the two syntax
 // highlighting items of the Source menu before 6.00, in every language, and
-// the Japanese TeX Live Documentation item before 6.00.
+// the Japanese TeX Live Documentation item before 6.00, and titles corrected in 6.00.
 static NSString *TSLegacyFormerTitleIdentifier(NSString *title)
 {
     static NSDictionary<NSString *, NSString *> *identifiers;
@@ -205,6 +205,16 @@ static NSString *TSLegacyFormerTitleIdentifier(NSString *title)
                                    @"TeXShop 功能答疑", @"TeXShop功能答疑", @"Raccourcis clavier et autres", @"Chiarimenti sulle funzioni di TeXShop",
                                    @"Verwarrende TeXShop-functies", @"Confusões entre funcionalidades do TeXShop", @"Confuzii privind funcțiile TeXShop"])
             map[TSLegacyComparableTitle(former)] = @"TSShortcut.displayTeXShopConfusion:.0";
+        // Source › Key Bindings, named Auto Completion or the like in several languages before 6.00 (in 5.58 a submenu
+        // whose first item was Toggle On/Off, handled where the entries are applied).
+        for (NSString *former in @[@"Autovervollständigung", @"Autocompleción", @"Raccourcis clavier", @"Autocompletamento",
+                                   @"Auto Completion", @"Auto Completar", @"Completare automată", @"自动更正"])
+            map[TSLegacyComparableTitle(former)] = @"TSShortcut.changeAutoComplete:.0";
+        // Other titles corrected in 6.00: a misspelling, an untranslated name, a missing word, and capitals and spacing.
+        map[TSLegacyComparableTitle(@"TIFF (unkmprimiert)")] = @"TSShortcut.changeImageCopyType:.1";
+        map[TSLegacyComparableTitle(@"Setzen mit Alternate Engine")] = @"TSShortcut.doAlternateTypeset:.-2";
+        map[TSLegacyComparableTitle(@"Panel matrices...")] = @"TSShortcut.displayMatrixPanel:.0";
+        map[TSLegacyComparableTitle(@"~/라이브러리/TeXshop 폴더열기")] = @"TSShortcut.GotoLibraryTeXShop:.0";
         // TeX Live Documentation in Japanese before 6.00, written without the space.
         map[TSLegacyComparableTitle(@"TeXLiveドキュメント（英語）")] = @"TSShortcut.displayTeXLiveDocumentation:.0";
         identifiers = map;

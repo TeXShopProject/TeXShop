@@ -89,9 +89,9 @@ tiLabelProgramEE			= "Programma";
 tiPaletteLabelProgramEE			= "Programma";
 tiToolTipProgramEE			= "Scegli il programma di compilazione";
 
-tiLabelAutoComplete			= "Autocompletamento";
-tiPaletteLabelAutoComplete		= "Autocompletamento";
-tiToolTipAutoComplete			= "(Dis)attiva autocompletamento";
+tiLabelAutoComplete			= "Associazioni dei tasti";
+tiPaletteLabelAutoComplete		= "Associazioni dei tasti";
+tiToolTipAutoComplete			= "(Dis)attiva le associazioni dei tasti";
 
 tiLabelSplit				= "Dividi finestra";
 tiPaletteLabelSplit			= "Dividi finestra";
@@ -205,9 +205,9 @@ tiLabelMagnificationSplit		= "Ingrandimento";
 tiPaletteLabelMagnificationSplit   = "Ingrandimento";
 tiToolTipMagnificationSplit     = "Imposta ingrandimento della pagina";
 
-tiLabelAutoCompleteSplit		= "Autocompletamento";
-tiPaletteLabelAutoCompleteSplit   = "Autocompletamento";
-tiToolTipAutoCompleteSplit     = "(Dis)attiva autocompletamento";
+tiLabelAutoCompleteSplit		= "Associazioni dei tasti";
+tiPaletteLabelAutoCompleteSplit   = "Associazioni dei tasti";
+tiToolTipAutoCompleteSplit     = "(Dis)attiva le associazioni dei tasti";
 
 tiLabelTemplatesSplit            = "Modelli";
 tiPaletteLabelTemplatesSplit            = "Modelli";

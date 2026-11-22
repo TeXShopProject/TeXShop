@@ -784,7 +784,7 @@ DQ
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sN7-vf-b8c">
                     <rect key="frame" x="131" y="10" width="162" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="Autovervollständigung" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3zL-Uj-qe0">
+                    <buttonCell key="cell" type="check" title="Tastenbelegungen" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3zL-Uj-qe0">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -1151,7 +1151,7 @@ DQ
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="440">
                     <rect key="frame" x="173" y="178" width="162" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="Autovervollständigung" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3858">
+                    <buttonCell key="cell" type="check" title="Tastenbelegungen" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3858">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>

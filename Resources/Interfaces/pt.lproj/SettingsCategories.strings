@@ -49,6 +49,7 @@
 "group.general.3.title" = "Arquivo principal do projeto";
 "catalog.general.3.0.title" = "Abrir o arquivo principal ao abrir um documento";
 "catalog.general.3.1.title" = "Minimizar a janela do arquivo raiz";
+"catalog.general.3.1.former" = "";
 "group.general.5.title" = "Avançado";
 "group.general.6.title" = "Ícone do Dock durante a execução";
 "catalog.general.5.0.title" = "As configurações que não aparecem aqui são descritas na ajuda “Linhas Especiais e Ajustes Ocultos”.";
@@ -147,6 +148,7 @@
 "catalog.spelling.1.5.title" = "Não verificar comentários";
 "group.appearance.0.title" = "Temas";
 "catalog.appearance.0.0.title" = "Tema modo claro";
+"catalog.appearance.0.0.former" = "";
 "catalog.appearance.0.1.title" = "Tema modo escuro";
 "group.appearance.1.title" = "Editar tema";
 "theme.list.add" = "Novo Tema";
@@ -251,6 +253,7 @@
 "catalog.preview.4.1.note" = "Ao copiar, arrastar ou salvar como imagem uma seleção da pré-visualização, o preto é substituído pela cor do texto e o branco pela cor de fundo. As duas cores são definidas em “Mapeamento de cores das imagens copiadas” no tema atual. Cópias em PDF e EPS não são alteradas.";
 "catalog.preview.4.2.title" = "Proeminência do texto";
 "catalog.preview.4.2.note" = "Valores maiores realçam o texto ao copiar imagens rasterizadas.";
+"catalog.preview.4.2.former" = "";
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "URL inicial";
 "catalog.preview.5.0.note" = "A página que a janela HTML abre primeiro. Digite um endereço da web ou o caminho de um arquivo.";
@@ -303,9 +306,11 @@
 "group.console.1.title" = "Ações";
 "catalog.console.1.0.title" = "Mostrar console";
 "catalog.console.1.1.title" = "Redimensionar console";
-"group.bindings.title" = "Auto Completar";
+"group.bindings.title" = "Associações de teclas";
+"group.bindings.former" = "Auto Completar";
 "catalog.keyboard.0.0.title" = "Usar associações de teclas (padrão para novos documentos)";
 "catalog.keyboard.0.0.note" = "Substitui um caractere digitado por um texto definido, como { por {}.";
+"catalog.keyboard.0.0.former" = "";
 "catalog.keyboard.0.1.title" = "Lista de associações de teclas";
 "group.completion.title" = "Conclusão de comandos";
 "catalog.keyboard.1.0.title" = "Tecla de ativação";

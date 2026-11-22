@@ -695,7 +695,7 @@ The group \mnu{Check Spelling} turns on \mnu{Check spelling while typing}, choos
 
 \section{Themes}\label{sec:SettingsThemes}
 
-A theme is a set of colors for the source, Preview, console and log windows, syntax highlighting, brackets, invisible characters and other highlights. \mnu{Lite Mode Theme} and \mnu{Dark Mode Theme} choose the theme used in each appearance of macOS. Under \mnu{Edit Theme}, the list of themes adds, duplicates, renames, deletes, restores, exports and imports themes; the colors below the list are those of the theme selected in it, and a change is saved at once. See \cref{ThemesChapter}.
+A theme is a set of colors for the source, Preview, console and log windows, syntax highlighting, brackets, invisible characters and other highlights. \mnu{Light Mode Theme} and \mnu{Dark Mode Theme} choose the theme used in each appearance of macOS. Under \mnu{Edit Theme}, the list of themes adds, duplicates, renames, deletes, restores, exports and imports themes; the colors below the list are those of the theme selected in it, and a change is saved at once. See \cref{ThemesChapter}.
 
 \section{Typesetting}\label{sec:SettingsTypesetting}
 
@@ -1726,7 +1726,7 @@ Only existing characters can be colored: at the start or the end of a line only 
 
 \subsection{Copy with Style}\label{CopyWithStyleSection}
 
-The submenu \mnu{Edit}\To\mnu{Copy with Style} copies the selected text in the font of the source and with the colors of a theme, to paste it into a word processor, a presentation or an email. Its four items, \mnu{Light Mode Theme}, \mnu{Light Mode Theme with Background}, \mnu{Dark Mode Theme} and \mnu{Dark Mode Theme with Background}, choose the theme set for Lite Mode or for Dark Mode in the \mnu{Themes} category of TeXShop Settings, and whether the background color of the source is copied too. The choice does not depend on the appearance TeXShop is shown in.
+The submenu \mnu{Edit}\To\mnu{Copy with Style} copies the selected text in the font of the source and with the colors of a theme, to paste it into a word processor, a presentation or an email. Its four items, \mnu{Light Mode Theme}, \mnu{Light Mode Theme with Background}, \mnu{Dark Mode Theme} and \mnu{Dark Mode Theme with Background}, choose the theme set for Light Mode or for Dark Mode in the \mnu{Themes} category of TeXShop Settings, and whether the background color of the source is copied too. The choice does not depend on the appearance TeXShop is shown in.
 
 The text keeps the colors of syntax highlighting and of fullwidth letters and symbols; with syntax highlighting off, it has the text color of the theme. The highlights of the current line, of braces and of found text, and the selection, are not copied. The Light Mode theme without background suits a white page; the Dark Mode theme with background shows the source as a dark block. The text goes to the clipboard as rich text and as plain text, so applications that take only plain text paste it without colors. The items have no keyboard shortcuts; each can be given one in the \mnu{Keyboard} category of TeXShop Settings.
 
@@ -2437,7 +2437,7 @@ The colors of TeXShop's windows, of syntax highlighting, of matching brackets, o
    \label{fig:Theme}
 \end{figure}
 
-The pop-up menus \mnu{Lite Mode Theme} and \mnu{Dark Mode Theme} choose the theme used while macOS is in Light Mode and in Dark Mode; any theme can be used in either mode, and both can be set to the same theme. TeXShop comes with several themes: LiteTheme and DarkTheme, the default themes of the two modes, and others such as SolarizedLite, SolarizedDark, Dracula and TransparentTheme. \Cref{fig:DarkThemeLightPages} shows a source window in DarkTheme next to a preview with light pages.
+The pop-up menus \mnu{Light Mode Theme} and \mnu{Dark Mode Theme} choose the theme used while macOS is in Light Mode and in Dark Mode; any theme can be used in either mode, and both can be set to the same theme. TeXShop comes with several themes: LiteTheme and DarkTheme, the default themes of the two modes, and others such as SolarizedLite, SolarizedDark, Dracula and TransparentTheme. \Cref{fig:DarkThemeLightPages} shows a source window in DarkTheme next to a preview with light pages.
 
 \begin{figure}[htbp]
    \centering
@@ -2448,12 +2448,12 @@ The pop-up menus \mnu{Lite Mode Theme} and \mnu{Dark Mode Theme} choose the them
 
 \subsection{Managing Themes}
 
-Under \mnu{Edit Theme}, all themes are listed; the colors shown below the list are those of the theme selected in it. A sun marks the theme used in Lite Mode and a moon the theme used in Dark Mode. The buttons and the menu under the list act on themes:
+Under \mnu{Edit Theme}, all themes are listed; the colors shown below the list are those of the theme selected in it. A sun marks the theme used in Light Mode and a moon the theme used in Dark Mode. The buttons and the menu under the list act on themes:
 \begin{itemize}
 \item The plus button adds a theme with TeXShop's colors for the current appearance (those of LiteTheme in Light Mode, of DarkTheme in Dark Mode); type its name, and begin changing its colors.
-\item The minus button, or \mnu{Delete} in the contextual menu of a theme, moves the selected theme to the Trash. A theme used in Lite Mode or Dark Mode gives way to LiteTheme or DarkTheme.
+\item The minus button, or \mnu{Delete} in the contextual menu of a theme, moves the selected theme to the Trash. A theme used in Light Mode or Dark Mode gives way to LiteTheme or DarkTheme.
 \item \mnu{Duplicate} makes a copy of the theme, to change while keeping the original.
-\item \mnu{Rename} edits the name in the list. A theme used in Lite Mode or Dark Mode stays in use under its new name.
+\item \mnu{Rename} edits the name in the list. A theme used in Light Mode or Dark Mode stays in use under its new name.
 \item \mnu{Restore} gives a theme that comes with TeXShop its original colors again. A dot marks such a theme whose colors were changed.
 \item \mnu{Export\ldots} saves a copy of the theme's file, for example to use it on another Mac or to give it to others, and \mnu{Show in Finder} shows the file.
 \item \mnu{Import\ldots}, in the menu at the right end, adds theme files saved by \mnu{Export\ldots}. Theme files can also be dropped on the list. An imported theme whose name is taken gets a number after its name.

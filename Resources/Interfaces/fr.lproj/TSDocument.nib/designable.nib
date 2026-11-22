@@ -784,7 +784,7 @@ DQ
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="440">
                     <rect key="frame" x="254" y="194" width="150" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="Raccourcis clavier" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3858">
+                    <buttonCell key="cell" type="check" title="Raccourcis de saisie" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3858">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -795,7 +795,7 @@ DQ
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PO4-zm-aTY">
                     <rect key="frame" x="129" y="17" width="150" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="Raccourcis clavier" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="NSk-0F-Hmq">
+                    <buttonCell key="cell" type="check" title="Raccourcis de saisie" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="NSk-0F-Hmq">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
