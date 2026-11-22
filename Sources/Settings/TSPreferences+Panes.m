@@ -208,6 +208,9 @@
     SourceAlphaColorWell = themes.SourceAlphaColorWell;
     SourceBackgroundColorWell = themes.SourceBackgroundColorWell;
     SourceInsertionPointColorWell = themes.SourceInsertionPointColorWell;
+    SourceInsertionPointSystemColorButton = themes.SourceInsertionPointSystemColorButton;
+    SourceSelectionColorWell = themes.SourceSelectionColorWell;
+    SourceSelectionSystemColorButton = themes.SourceSelectionSystemColorButton;
     SourceTextColorWell = themes.SourceTextColorWell;
     SyntaxCommandColorWell = themes.SyntaxCommandColorWell;
     SyntaxCommentColorWell = themes.SyntaxCommentColorWell;

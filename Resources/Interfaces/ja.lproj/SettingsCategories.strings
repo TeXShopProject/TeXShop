@@ -187,6 +187,8 @@
 "catalog.appearance.3.0.item.0" = "カーソル";
 "catalog.appearance.3.0.item.1" = "背景の点滅";
 "catalog.appearance.3.0.item.2" = "現在の行";
+"catalog.appearance.3.0.item.3" = "選択範囲";
+"catalog.appearance.3.0.switch" = "システムカラーを使う";
 "group.appearance.4.title" = "シンタックスハイライト";
 "catalog.appearance.4.0.item.0" = "コメント";
 "catalog.appearance.4.0.item.1" = "コマンド";

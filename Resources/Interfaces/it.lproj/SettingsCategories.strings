@@ -187,6 +187,8 @@
 "catalog.appearance.3.0.item.0" = "Inserimento";
 "catalog.appearance.3.0.item.1" = "Lampeggio";
 "catalog.appearance.3.0.item.2" = "Linea corrente";
+"catalog.appearance.3.0.item.3" = "Selezione";
+"catalog.appearance.3.0.switch" = "Usa colore di sistema";
 "group.appearance.4.title" = "Evidenziazione della sintassi";
 "catalog.appearance.4.0.item.0" = "Commento";
 "catalog.appearance.4.0.item.1" = "Comando";

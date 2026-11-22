@@ -61,11 +61,13 @@ support = '\n'.join(method(text[SUPPORT], s) for s in [
     '- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFromDictionary:', '- (NSColor *) colorAndAlphaFromDictionary:',
     '- (NSColor *)liteColorWithKey:', '- (NSColor *)darkColorWithKey:',
     '- (NSColor *)liteColorAndAlphaWithKey:', '- (NSColor *)darkColorAndAlphaWithKey:',
-    '- (NSColor *)opaqueColorForKey: (NSString *)theKey fromDictionary:'])
+    '- (NSColor *)opaqueColorForKey: (NSString *)theKey fromDictionary:',
+    '- (NSColor *)insertionPointColorFromDictionary:', '- (NSColor *)selectionColorFromDictionary:'])
 
 PROGRAM = r'''
 #import <Cocoa/Cocoa.h>
 #import "TSThemeAlpha.h"
+#import "TSThemeSystemColor.h"
 #define MOJAVEORHIGHER
 BOOL atLeastMojave = YES;
 NSDictionary *liteColors, *darkColors, *highlightBracesColorDict, *highlightContentColorDict;
@@ -117,9 +119,14 @@ NSColor *PreviewBackgroundColor, *ReverseSyncColor, *InvisibleColor, *ImageForeg
 @property (strong) NSTextView *logTextView;
 @property (strong) FakeWindow *logWindow, *pdfKitWindow;
 @property (strong) FakePDFView *myPDFKitView, *myPDFKitView2;
+// The selection of the source and the view marked by a reverse sync (TSDocument).
+@property (strong) NSColor *sourceSelectionColor;
+@property (weak) NSTextView *reverseSyncTextView;
+@property (getter=textSelectionYellow) BOOL textSelectionYellow;
 @end
 @implementation TSDocument
 - (void)colorizeVisibleAreaInTextView:(NSTextView *)view {}
+- (void)applySourceSelectionColorToTextView:(NSTextView *)view { TSThemeSetSelectionColor(view, self.sourceSelectionColor); }
 - (void)colorizeExperimentSource {}
 @@CHANGE_COLORS@@
 @end

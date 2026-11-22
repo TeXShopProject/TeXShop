@@ -37,6 +37,8 @@ if mutations:
  engine=(r/'Sources/Settings/TSSettingsSearch.m').read_text()
  cases=[('category-cascade','if (score && ownMatch)', 'if (score)', 'Category-only matches produce one named category doorway'),('category-doorway','if (categoryScore) [results addObject:', 'if (NO && categoryScore) [results addObject:', 'Category-only matches produce one named category doorway'),('theme-row-duplicates','(visualRows[entry.targetIdentifier] ?: entry.targetIdentifier)','entry.targetIdentifier','A visual theme row has one result retaining all color targets')]
  cases.append(('dock-year', 'text:TSDockIconYears()[i] weight:TSSettingsSearchWeightChoice', 'text:@"" weight:TSSettingsSearchWeightChoice', 'Every visible Dock year finds its choice row'))
+ # The title of the system color switches alone also names their results: both are then named alike.
+ cases.append(('switch-title-alone', 'weight:TSSettingsSearchWeightLabel command:NO]];\n    };', 'weight:TSSettingsSearchWeightLabel command:NO]];\n        add(category, target, table, switchKey, TSSettingsSearchWeightLabel);\n    };', 'The system color switches are told apart'))
  with tempfile.TemporaryDirectory(prefix='texshop-search-categories-') as td:
   for name,old,new,diagnostic in cases:
    assert engine.count(old)==1

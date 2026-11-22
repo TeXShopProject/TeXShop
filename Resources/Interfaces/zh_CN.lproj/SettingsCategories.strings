@@ -187,6 +187,8 @@
 "catalog.appearance.3.0.item.0" = "插入点";
 "catalog.appearance.3.0.item.1" = "闪烁";
 "catalog.appearance.3.0.item.2" = "当前行";
+"catalog.appearance.3.0.item.3" = "所选内容";
+"catalog.appearance.3.0.switch" = "使用系统颜色";
 "group.appearance.4.title" = "语法高亮";
 "catalog.appearance.4.0.item.0" = "注释";
 "catalog.appearance.4.0.item.1" = "命令";

@@ -107,7 +107,8 @@ static TSAdvancedFindFieldStyle *TSAdvancedFindFieldStyleForTheme(NSDictionary *
     NSFont *font = TSArchivedFont([SUD objectForKey:DocumentFontKey]);
     return [[TSAdvancedFindFieldStyle alloc] initWithScheme:scheme texOptions:options font:font ?: [NSFont userFontOfSize:12.0]
                                                   textColor:opaque(@"EditorText") backgroundColor:opaque(@"EditorBackground")
-                                        insertionPointColor:opaque(@"EditorInsertionPoint")];
+                                        insertionPointColor:[colors insertionPointColorFromDictionary:theme isWindowDark:dark]
+                                             selectionColor:[colors selectionColorFromDictionary:theme isWindowDark:dark]];
 }
 
 static void TSInstallAdvancedFindFieldStyle(void)

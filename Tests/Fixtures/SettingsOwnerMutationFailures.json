@@ -1,6 +1,6 @@
 {
   "dependency-PdfWindowPosModeKey": "Ledger dependency PdfWindowPositionMode=0 -> pdfWindowPosButton",
-  "switch-to-checkbox": "Displayed controls: switches=0 checks=64 radios=2 matrices=0",
+  "switch-to-checkbox": "Displayed controls: switches=0 checks=66 radios=2 matrices=0",
   "close-validation": "Close clamps 99 to 50",
   "profile-theme-order": "Theme notification recipients already see the new colors",
   "dependency-SparkleAutomaticUpdateKey": "Ledger dependency SparkleAutomaticUpdate=0 -> sparkleIntervalMatrix",
@@ -16,7 +16,7 @@
   "detached-radio-state": "Both detached window-style radio cells refresh",
   "dictionary-localization": "Dictionary automatic choice uses the current language",
   "focus-treated-as-edit": "Untouched GS focus permits navigation",
-  "spelling-checkbox": "Displayed controls: switches=53 checks=16 radios=1 matrices=0",
+  "spelling-checkbox": "Displayed controls: switches=53 checks=18 radios=1 matrices=0",
   "profile-dock": "Dock selection is prepared before change notifications",
   "shared-restore-value": "Restore uses this field's empty value, never the prior tab width",
   "wrap-note": "row.catalog.editor.0.5 is in the group of what a document starts with, without a note",

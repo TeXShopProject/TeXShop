@@ -532,8 +532,6 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 {
   //  [[NSColorPanel sharedColorPanel] close];
     
-	NSMutableDictionary	*mySelectedTextAttributes;
-
 	if ([theEvent modifierFlags] & NSAlternateKeyMask)
 		_alternateDown = YES;
 	else
@@ -549,12 +547,8 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 	}
 
 	// Reset the special 'yellow' selection (which is used by PDF sync).
-	if ([self.document textSelectionYellow]) {
-		[self.document setTextSelectionYellow: NO];
-		mySelectedTextAttributes = [NSMutableDictionary dictionaryWithDictionary: [[self.document textView] selectedTextAttributes]];
-		[mySelectedTextAttributes setObject:[NSColor colorWithCatalogName: @"System" colorName: @"selectedTextBackgroundColor"]  forKey:@"NSBackgroundColor"];
-		[[self.document textView] setSelectedTextAttributes: mySelectedTextAttributes];
-	}
+	if ([self.document textSelectionYellow])
+		[self.document endReverseSyncSelection];
 	[super mouseDown:theEvent];
 }
 
@@ -2257,12 +2251,8 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
     // If the user uses synctex from pdf to text, the selection is yellow. If additional selectios are made from the keyboard,
     // they are also in yellow until the cursor converts them back to selection color. This code fixes the problem
     
-    if ([_document textSelectionYellow]) {
-        [_document setTextSelectionYellow: NO];
-        NSMutableDictionary* mySelectedTextAttributes = [NSMutableDictionary dictionaryWithDictionary: [[_document textView] selectedTextAttributes]];
-        [mySelectedTextAttributes setObject: [NSColor colorWithCatalogName: @"System" colorName: @"selectedTextBackgroundColor"] forKey: @"NSBackgroundColor" ];
-         [[_document textView] setSelectedTextAttributes: mySelectedTextAttributes];
-    }
+    if ([_document textSelectionYellow])
+        [_document endReverseSyncSelection];
     
    
 	

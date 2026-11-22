@@ -51,7 +51,8 @@ def method(source, signature):
 support = '\n'.join(method(text[SUPPORT], s) for s in [
     '- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFromDictionary:', '- (NSColor *) colorAndAlphaFromDictionary:',
     '- (NSColor *)liteColorWithKey:', '- (NSColor *)darkColorWithKey:',
-    '- (NSColor *)colorForKey: (NSString *)theKey fromDictionary:', '- (NSColor *)opaqueColorForKey:'])
+    '- (NSColor *)colorForKey: (NSString *)theKey fromDictionary:', '- (NSColor *)opaqueColorForKey:',
+    '- (NSColor *)insertionPointColorFromDictionary:', '- (NSColor *)selectionColorFromDictionary:'])
 source = method(text[SOURCE], '- (void)updateExperimentColors:')
 console = method(text[CONSOLE], '- (void)updateConsoleColors:')
 preview = method(text[PREVIEW], '- (void)updateExperimentColors:')

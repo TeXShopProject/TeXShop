@@ -3,6 +3,7 @@
 #import "TSAdvancedFindPanelController+Private.h"
 #import "TSAdvancedFindOptionsForm.h"
 #import "TSAdvancedFindFieldStyle.h"
+#import "TSThemeSystemColor.h"
 #import "TSRegexMultipleReplace.h"
 #import "TSRegexFindPattern.h"
 
@@ -300,6 +301,7 @@
         field.font = style.fieldFont;
         field.textColor = style.textColor ?: NSColor.textColor;
         field.insertionPointColor = style.insertionPointColor ?: NSColor.textInsertionPointColor;
+        TSThemeSetSelectionColor(field, style.selectionColor);
         field.backgroundColor = style.backgroundColor ?: NSColor.textBackgroundColor;
     }
     self.findBox.fillColor = self.replaceBox.fillColor = style.backgroundColor;

@@ -187,6 +187,8 @@
 "catalog.appearance.3.0.item.0" = "Punct de inserare";
 "catalog.appearance.3.0.item.1" = "Clipire";
 "catalog.appearance.3.0.item.2" = "Rândul curent";
+"catalog.appearance.3.0.item.3" = "Selecție";
+"catalog.appearance.3.0.switch" = "Folosește culoarea sistemului";
 "group.appearance.4.title" = "Evidențierea sintaxei";
 "catalog.appearance.4.0.item.0" = "Comentariu";
 "catalog.appearance.4.0.item.1" = "Comandă";

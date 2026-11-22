@@ -101,7 +101,7 @@ static void Geometry(NSView *v) {
    for(NSView *o in shown)if(o!=f){NSRect x=NSIntersectionRect(ring,[o alignmentRectForFrame:o.frame]);
     Check(NSWidth(x)<=0.5||NSHeight(x)<=0.5,[NSString stringWithFormat:@"Focus ring of %@ has room beside %@ (%@)",f.identifier,o.identifier,NSStringFromRect(x)]);}}}
  if([v.identifier hasPrefix:@"row."]) Check(NSHeight(v.frame)>=37.5,@"Minimum row height is 38");
- if([v isKindOfClass:NSStackView.class]) {NSStackView *stack=(id)v;NSView *ancestor=stack;while(ancestor && ![ancestor.identifier isEqual:@"DockIconChoices"] && ![ancestor.identifier isEqual:@"settings.theme-list"])ancestor=ancestor.superview;Check(stack.spacing==0||stack.spacing==8||stack.spacing==18||stack.spacing==12||stack.spacing==14||stack.spacing==2||stack.spacing==6||([stack.identifier isEqual:@"settings.change-note"] && stack.spacing==4)||(ancestor && stack.spacing==4)||([NSStringFromClass(stack.class) isEqual:@"TSSettingsOpacityPresentation"] && stack.spacing==4),[NSString stringWithFormat:@"Compact row and section spacing: %@ %.1f",stack.identifier,stack.spacing]);}
+ if([v isKindOfClass:NSStackView.class]) {NSStackView *stack=(id)v;NSView *ancestor=stack;while(ancestor && ![ancestor.identifier isEqual:@"DockIconChoices"] && ![ancestor.identifier isEqual:@"settings.theme-list"])ancestor=ancestor.superview;Check(stack.spacing==0||stack.spacing==8||stack.spacing==18||stack.spacing==12||stack.spacing==14||stack.spacing==2||stack.spacing==6||([stack.identifier isEqual:@"settings.change-note"] && stack.spacing==4)||([stack.identifier hasPrefix:@"cell.settings."] && stack.spacing==4)||(ancestor && stack.spacing==4)||([NSStringFromClass(stack.class) isEqual:@"TSSettingsOpacityPresentation"] && stack.spacing==4),[NSString stringWithFormat:@"Compact row and section spacing: %@ %.1f",stack.identifier,stack.spacing]);}
 }
 int main(int argc,char **argv){@autoreleasepool{
  TSInstallAppKitIsolation();[NSApplication sharedApplication];memory=TSIsolatedAppKitDefaults;
@@ -305,7 +305,10 @@ int main(int argc,char **argv){@autoreleasepool{
  [owner setValue:nil forKey:@"EditingColors"];[owner FillInColorWells];
  NSUInteger disabledWells=0;for(NSControl *control in after.allValues)if([control isKindOfClass:NSColorWell.class] && control.action!=@selector(BlockCursorColorChanged:)){Check(!control.enabled,@"Unreadable theme disables offscreen color wells");disabledWells++;}
  Check(disabledWells>=30 && cursor.enabled,@"Theme disabling covers all theme wells and preserves independent cursor color");
- [owner setAllThemeEditingEnabled:YES];for(NSControl *control in after.allValues)if([control isKindOfClass:NSColorWell.class])Check(control.enabled,@"Theme wells can be enabled again");owner.settingsController=nil;
+ [owner setAllThemeEditingEnabled:YES];for(NSControl *control in after.allValues)if([control isKindOfClass:NSColorWell.class]){
+  // The selection well stays off while its system color switch is on (the default of a theme without the switch).
+  if(control.action==@selector(SourceSelectionColorChanged:))Check(!control.enabled,@"The selection well stays off while the system color is used");
+  else Check(control.enabled,@"Theme wells can be enabled again");}owner.settingsController=nil;
  // Saving a PDF frame must update its own selection and preserve the source selection/value.
  NSWindow *pdf=[[NSWindow alloc]initWithContentRect:NSMakeRect(25,30,400,350) styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO];
  [[TSWindowManager sharedInstance] setValue:pdf forKey:@"activePDFWindow"];

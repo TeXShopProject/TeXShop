@@ -10,6 +10,7 @@
 #import "TSLibraryRepair.h"
 #import "TSColorSupport.h"
 #import "TSThemeFileStore.h"
+#import "TSThemeSystemColor.h"
 
 @implementation TSColorSupport
 
@@ -427,6 +428,7 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
         @"EditorHighlightContent": @[@1, @0.957, @0.769, @1],
         @"EditorInvisibleChar": @[@1, @0.013, @0.011, @1],
         @"EditorReverseSync": @[@1, @1, @0, @1],
+        @"EditorSelection": @[@0.702, @0.843, @1, @1],
         @"PreviewDirectSync": @[@1, @1, @0, @0.6],
         @"ImageForeground": @[@0, @0, @0, @1],
         @"ImageBackground": @[@1, @1, @1, @0]
@@ -517,6 +519,7 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
         @"EditorHighlightContent": @[@0.271, @0.251, @0.176, @1],
         @"EditorInvisibleChar": @[@0.5, @0.5, @0.5, @1],
         @"EditorReverseSync": @[@0.581, @0.067, @0, @1],
+        @"EditorSelection": @[@0.247, @0.388, @0.545, @1],
         @"PreviewDirectSync": @[@0.882, @0.714, @0.489, @0.6],
         @"ImageForeground": @[@0, @0, @0, @1],
         @"ImageBackground": @[@1, @1, @1, @0]
@@ -895,6 +898,21 @@ static BOOL TSUpdateBundledThemeFile(NSURL *url, NSString *theme, NSInteger upda
         chosen[signature] = result;
     }
     return result[[chain indexOfObject: theKey]];
+}
+
+- (NSColor *)insertionPointColorFromDictionary: (NSDictionary *)theDictionary isWindowDark: (BOOL)mode
+{
+    if (TSThemeUsesSystemColor(theDictionary, TSThemeInsertionPointUsesSystemColorKey))
+        return NSColor.textInsertionPointColor;
+    return [self opaqueColorForKey: @"EditorInsertionPoint" fromDictionary: theDictionary isWindowDark: mode];
+}
+
+// The system's is the color NSTextView selects with when it is given none (#B3D7FF or #3F638B with the blue accent).
+- (NSColor *)selectionColorFromDictionary: (NSDictionary *)theDictionary isWindowDark: (BOOL)mode
+{
+    if (TSThemeUsesSystemColor(theDictionary, TSThemeSelectionUsesSystemColorKey))
+        return NSColor.selectedTextBackgroundColor;
+    return [self opaqueColorForKey: TSThemeSelectionKey fromDictionary: theDictionary isWindowDark: mode];
 }
 
 - (NSColor *)colorForKey: (NSString *)theKey isWindowDark: (BOOL)mode

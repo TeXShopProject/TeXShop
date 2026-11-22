@@ -187,6 +187,8 @@
 "catalog.appearance.3.0.item.0" = "Invoegpunt";
 "catalog.appearance.3.0.item.1" = "Flits";
 "catalog.appearance.3.0.item.2" = "Huidige regel";
+"catalog.appearance.3.0.item.3" = "Selectie";
+"catalog.appearance.3.0.switch" = "Gebruik systeemkleur";
 "group.appearance.4.title" = "Syntaxmarkering";
 "catalog.appearance.4.0.item.0" = "Commentaar";
 "catalog.appearance.4.0.item.1" = "Commando";

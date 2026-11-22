@@ -213,6 +213,20 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
                 if(action==@selector(SourceAlphaChanged:) || action==@selector(ConsoleAlphaChanged:) || action==@selector(PreviewAlphaChanged:))well=[TSPrefPaneLayout opacityForColorWell:(NSColorWell *)well];
                 [wells addObject:well];}
             if(table){[cells addObject:label];NSUInteger i=0;for(NSNumber *occupied in item[@"occupied"])[cells addObject:occupied.boolValue?wells[i++]:NSGridCell.emptyContentView];}
+            else if(item[@"switch"]){
+                // A color that may give way to the system's: its switch under the well, at the left edge of the column.
+                // The cell is a group named after the color, so that the switches, which have the same title, are told apart.
+                NSButton *box=(NSButton *)[self take:TSCatalogRequired(item[@"switch"]) from:views];[self prepare:box];
+                box.controlSize=NSControlSizeSmall;box.font=[NSFont systemFontOfSize:NSFont.smallSystemFontSize];
+                box.title=text(item[@"switchTitle"]);
+                NSStackView *cell=[TSPrefPaneLayout stackWithViews:@[[self horizontal:@[TSCatalogRequired(wells.firstObject),label] spacing:8],box] orientation:NSUserInterfaceLayoutOrientationVertical];
+                cell.alignment=NSLayoutAttributeLeading;cell.spacing=4;
+                // The name and the switch keep their whole width: the narrower of the two must not set the cell's.
+                for(NSView *part in @[label,box])[part setContentCompressionResistancePriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
+                cell.identifier=[@"cell." stringByAppendingString:TSCatalogRequired(item[@"switch"])];
+                cell.accessibilityElement=YES;cell.accessibilityRole=NSAccessibilityGroupRole;cell.accessibilityLabel=label.stringValue;
+                [cells addObject:cell];
+            }
             else [cells addObject:[self horizontal:@[TSCatalogRequired(wells.firstObject),label] spacing:8]];
         }
         NSGridView *grid=table?[self grid:cells columns:4 spacing:28]:[self threeColumns:cells];

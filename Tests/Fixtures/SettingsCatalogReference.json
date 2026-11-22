@@ -1003,6 +1003,26 @@
          ],
          "src": [
           "uIl-Dg-5JB"
+         ],
+         "switch": "システムカラーを使う"
+        },
+        {
+         "title": "選択範囲",
+         "cells": [
+          "#B3D7FF"
+         ],
+         "src": [
+          "new:selection"
+         ],
+         "switch": "システムカラーを使う"
+        },
+        {
+         "title": "現在の行",
+         "cells": [
+          "#EEF4FF"
+         ],
+         "src": [
+          "dl3-aa-Pcl"
          ]
         },
         {
@@ -1012,15 +1032,6 @@
          ],
          "src": [
           "YAY-lx-vy6"
-         ]
-        },
-        {
-         "title": "現在の行",
-         "cells": [
-          "#EEF4FF"
-         ],
-         "src": [
-          "dl3-aa-Pcl"
          ]
         }
        ]
@@ -1837,7 +1848,7 @@
      "rows": [
       {
        "kind": "switch",
-       "title": "otfパッケージの\u2009\\UTF / \\CIDに自動変換",
+       "title": "otfパッケージの \\UTF / \\CIDに自動変換",
        "src": [
         "573"
        ]
@@ -1997,7 +2008,18 @@
    "section": 3,
    "summary": "TeXShopのアップデートを確認する方法を設定します。",
    "groups": [
-    {"title": "アップデートの対象", "rows": [{"kind": "switch", "title": "プレリリース版を対象に含める", "on": false, "src": [], "id": "prereleaseUpdates"}]},
+    {
+     "title": "アップデートの対象",
+     "rows": [
+      {
+       "kind": "switch",
+       "title": "プレリリース版を対象に含める",
+       "on": false,
+       "src": [],
+       "id": "prereleaseUpdates"
+      }
+     ]
+    },
     {
      "title": "自動確認",
      "rows": [

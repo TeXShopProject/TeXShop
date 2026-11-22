@@ -28,6 +28,7 @@
 #import <OgreKit/OgreKit.h>
 #import "TSEncodingSupport.h"
 #import "TSColorSupport.h"
+#import "TSThemeSystemColor.h"
 #import "TSExperimentTheme.h"
 #import "TSTextView.h"
 #import "TSSpellSupport.h"
@@ -44,7 +45,8 @@
     TSColorSupport *colors = [TSColorSupport sharedInstance];
     self.backgroundColor = [colors opaqueColorForKey:@"EditorBackground" fromDictionary:theme isWindowDark:dark];
     self.textColor = [colors opaqueColorForKey:@"EditorText" fromDictionary:theme isWindowDark:dark];
-    self.insertionPointColor = [colors opaqueColorForKey:@"EditorInsertionPoint" fromDictionary:theme isWindowDark:dark];
+    self.insertionPointColor = [colors insertionPointColorFromDictionary:theme isWindowDark:dark];
+    TSThemeSetSelectionColor(self, [colors selectionColorFromDictionary:theme isWindowDark:dark]);
     self.window.alphaValue = TSThemeWindowAlpha(theme, TSThemeSourceAlphaKey);
 }
 

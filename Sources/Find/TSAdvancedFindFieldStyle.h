@@ -19,9 +19,13 @@ NS_SWIFT_NAME(AdvancedFindFieldStyle)
 
 /// `scheme`: the theme's colors of the syntax roles, nil when syntax coloring is off. A nil font or color leaves the
 /// panel's own.
+/// `selectionColor`: the theme's selection color, or the system's (TSColorSupport); nil also gives the system's.
 - (instancetype)initWithScheme:(nullable TSSyntaxColorScheme *)scheme texOptions:(TSSyntaxTeXOptions *)texOptions font:(nullable NSFont *)font
                      textColor:(nullable NSColor *)textColor backgroundColor:(nullable NSColor *)backgroundColor
-           insertionPointColor:(nullable NSColor *)insertionPointColor NS_DESIGNATED_INITIALIZER;
+           insertionPointColor:(nullable NSColor *)insertionPointColor selectionColor:(nullable NSColor *)selectionColor NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithScheme:(nullable TSSyntaxColorScheme *)scheme texOptions:(TSSyntaxTeXOptions *)texOptions font:(nullable NSFont *)font
+                     textColor:(nullable NSColor *)textColor backgroundColor:(nullable NSColor *)backgroundColor
+           insertionPointColor:(nullable NSColor *)insertionPointColor;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
@@ -32,6 +36,7 @@ NS_SWIFT_NAME(AdvancedFindFieldStyle)
 @property (nonatomic, readonly, nullable) NSColor *textColor;
 @property (nonatomic, readonly, nullable) NSColor *backgroundColor;
 @property (nonatomic, readonly, nullable) NSColor *insertionPointColor;
+@property (nonatomic, readonly, nullable) NSColor *selectionColor;
 
 /// The colors of the fields: those of `scheme` (none without it), and the marks of errors (red, underlined) and of
 /// what OgreKit reads otherwise (orange, a dotted line), which are not theme colors.
