@@ -140,6 +140,8 @@ static inline NSString *TSTeXCommandProgram(NSString *command)
                 NSString *string = [word hasPrefix:@"--split-string="] ? [word substringFromIndex:15] : (words.count ? words.firstObject : @"");
                 if (![word hasPrefix:@"--split-string="] && words.count) [words removeObjectAtIndex:0];
                 NSMutableArray<NSString *> *inner = [NSMutableArray array];
+                // env -S of macOS also takes \\_ for a blank between words.
+                string = [string stringByReplacingOccurrencesOfString:@"\\_" withString:@" "];
                 for (NSDictionary *w in TSTeXShellWords(string, NSMakeRange(0, string.length)))
                     [inner addObject:w[TSTeXArgumentValue]];
                 [words replaceObjectsInRange:NSMakeRange(0, 0) withObjectsFromArray:inner];
@@ -153,10 +155,11 @@ static inline NSString *TSTeXCommandProgram(NSString *command)
     return @"";
 }
 
-// Whether the command runs LuaTeX (luatex, lualatex, luahbtex, …), whose usage writes two hyphens.
+// Whether the command runs LuaTeX (luatex, lualatex, luahbtex, dviluatex, dvilualatex, …), whose usage writes two hyphens.
 static inline BOOL TSTeXCommandRunsLuaTeX(NSString *command)
 {
-    return [TSTeXCommandProgram(command).lowercaseString hasPrefix:@"lua"];
+    NSString *program = TSTeXCommandProgram(command).lowercaseString;
+    return [program hasPrefix:@"lua"] || [program hasPrefix:@"dvilua"];
 }
 
 // The hyphens of a TeX option for the engine of the command: "--" for LuaTeX, "-" otherwise.

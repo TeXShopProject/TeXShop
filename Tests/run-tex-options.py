@@ -47,6 +47,10 @@ MUTATIONS = {
     # env -S is split at blanks with its quotes kept.
     'env-split-raw': (HEADER, '                for (NSDictionary *w in TSTeXShellWords(string, NSMakeRange(0, string.length)))\n                    [inner addObject:w[TSTeXArgumentValue]];',
                       '                [inner addObjectsFromArray:[string componentsSeparatedByString:@" "]];'),
+    # DVI LuaTeX is not seen as LuaTeX.
+    'dvilua-ignored': (HEADER, ' || [program hasPrefix:@"dvilua"]', ''),
+    # The \\_ of macOS env -S is not a blank.
+    'env-blank-escape': (HEADER, '                string = [string stringByReplacingOccurrencesOfString:@"\\\\_" withString:@" "];\n', ''),
     # Every engine gets two hyphens.
     'two-for-all': (HEADER, '    return TSTeXCommandRunsLuaTeX(command) ? @"--" : @"-";', '    return @"--";'),
     # The confirmation looks for --shell-escape only.
@@ -161,8 +165,8 @@ int main(void) {
                isEqualToString:@"latexmk -e \"$pdflatex=q/pdflatex -output-directory='a --file-line-error b' -file-line-error/\""], @"a quoted directory inside latexmk's command is kept");
         check(!TSTeXCommandHasShellEscape(@"latexmk -e \"$pdflatex=q/pdflatex -jobname='x -shell-escape'/\""), @"no shell escape inside a quoted value of latexmk's command");
         check([TSTeXCommandWithoutShellEscape(@"latexmk -e \"$pdflatex=q/pdflatex -shell-''escape x/\"") isEqualToString:@"latexmk -e \"$pdflatex=q/pdflatex  x/\""], @"a shell word with quotes inside is the option");
-        for (NSString *c in @[@"env -S 'lualatex' x", @"env -S 'lualatex -x' y"])
-            check([TSTeXOptionDashes(c) isEqualToString:@"--"], [NSString stringWithFormat:@"env -S reads its string as a shell does: %@", c]);
+        for (NSString *c in @[@"env -S 'lualatex' x", @"env -S 'lualatex -x' y", @"env -S TEXINPUTS=.\\_lualatex x", @"dviluatex x", @"dvilualatex x", @"dvilualatex-dev x"])
+            check([TSTeXOptionDashes(c) isEqualToString:@"--"], [NSString stringWithFormat:@"two hyphens (env -S read as a shell does, DVI LuaTeX): %@", c]);
     }
     return failures ? 1 : 0;
 }
