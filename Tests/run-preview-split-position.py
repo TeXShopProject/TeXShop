@@ -3,7 +3,8 @@
 never shown, and check that the place at the top edge of each pane does not move. With pages
 one below the other, the first split into a top and a bottom part, and a split with Shift,
 move nothing on the screen: the bottom part shows what was below its top edge, and gets a copy
-of a pinned popup (#66)."""
+of a pinned popup. Unsplitting while the bottom part is in use moves nothing on the screen
+either: the window shows above its pages what comes before them (#66)."""
 from pathlib import Path
 import argparse
 import subprocess
@@ -17,7 +18,8 @@ parser.add_argument('--mutation', choices=['band-counted', 'heights-with-band', 
                                            'second-not-saved', 'edge-ignores-flip',
                                            'deferred-restore', 'restore-before-layout',
                                            'not-continued', 'continued-when-saved', 'popup-not-copied', 'popups-pulled-in',
-                                           'format-after-magnification'])
+                                           'format-after-magnification',
+                                           'bottom-to-top', 'bottom-place-after-switch', 'bottom-stays-when-fitted', 'bottom-stays-single-page'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 window_source = (root / 'Sources/Windows/TSPreviewWindow.m').read_text(encoding='latin1')
@@ -62,6 +64,13 @@ for problem, old, new in (
         # #66 audit: the bottom part is fitted before it has the display format of the top part.
         ('format-after-magnification', '        [(MyPDFKitView *)self.myPDFKitView2 setupPageStyle];\n        if ( [(MyPDFKitView *)self.myPDFKitView resizeOption]',
          '        if ( [(MyPDFKitView *)self.myPDFKitView resizeOption]'),
+        # Unsplitting while the bottom part is in use: its pages go to the top of the window.
+        ('bottom-to-top', 'TSPreviewPaneRestoreAt(firstView, secondTop, secondEdge);', 'TSPreviewPaneRestore(firstView, firstTop);'),
+        # #66 audit: the place is taken after the switch, where Fit to Content Width has fitted the part again.
+        ('bottom-place-after-switch', 'TSPreviewPaneRestoreAt(firstView, secondTop, secondEdge);', 'TSPreviewPaneRestoreAt(firstView, firstTop, secondEdge);'),
+        ('bottom-stays-when-fitted', 'if (staysBelow && fabs(firstView.scaleFactor - secondScale) < 1e-6)', 'if (staysBelow)'),
+        ('bottom-stays-single-page', '    BOOL staysBelow = keepsSecondPart && self.horizontal &&\n        (secondView.displayMode == kPDFDisplaySinglePageContinuous || secondView.displayMode == kPDFDisplayTwoUpContinuous);',
+         '    BOOL staysBelow = keepsSecondPart && self.horizontal;'),
         ('popups-pulled-in', '    if (! continuesBelow)\n        [self keepPinnedLinkPreviewsInView];', '    [self keepPinnedLinkPreviewsInView];'),
         ('restore-before-layout', '    [self.pdfKitSplitView adjustSubviews];\n    [self.pdfKitSplitView layoutSubtreeIfNeeded];\n    TSPreviewPaneRestore', '    TSPreviewPaneRestore')):
     if args.mutation == problem:
@@ -88,6 +97,7 @@ program = r'''
 #import "TestAppKitIsolation.h"
 #import "TSPreviewPanePlace.h"
 #import "TSDocumentWindowGlass.h"
+#import "TSContentZoom.h"
 DIVIDERIMPORT
 #define NEW_PDF_FIT_TO_NONE 1
 #define NEW_PDF_FIT_TO_WINDOW 4
@@ -111,6 +121,8 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 @property double horizontalHeight1, horizontalHeight2, verticalWidth1, verticalWidth2, fixedScale;
 @property BOOL oldUsed, doScroll; @property NSRect oldVisibleRect; @property NSInteger oldIndex;
 @property BOOL singlePage;
+// A magnification that fits the page to the height of the view.
+@property BOOL fitsHeight;
 // The display mode when the magnification was last set.
 @property NSInteger modeAtScale;
 - (void)moveSplitToCorrectSpot:(NSInteger)index;
@@ -119,6 +131,7 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 - (void)restoreLocation;
 @end
 @implementation MyPDFKitView
+- (void)setFrameSize:(NSSize)size { [super setFrameSize:size]; if (self.fitsHeight && size.height > 0) [self setScaleFactor:size.height / 700]; }
 - (NSInteger)pageStyle { return pageStyle; }
 - (NSInteger)firstPageStyle { return firstPageStyle; }
 - (NSInteger)resizeOption { return resizeOption; }
@@ -127,11 +140,18 @@ static void TSSplitToggleItemsFollowSplit(void) {}
 - (void)setResizeOption:(NSInteger)s { resizeOption = s; }
 - (double)magnification { return self.scaleFactor; }
 - (void)setMagnification:(double)m { self.modeAtScale = self.displayMode; [self setScaleFactor:m]; }
-// pageStyle 1 is single page, 3 continuous single page (PDF_*_STYLE in globals.h).
-- (void)setupPageStyle { [self setDisplayMode:pageStyle == 1 ? kPDFDisplaySinglePage : kPDFDisplaySinglePageContinuous]; [self setDisplaysPageBreaks:pageStyle != 1]; }
+// pageStyle 1 is single page, 3 continuous single page, 4 continuous two pages (PDF_*_STYLE in globals.h).
+- (void)setupPageStyle { [self setDisplayMode:pageStyle == 1 ? kPDFDisplaySinglePage : pageStyle == 4 ? kPDFDisplayTwoUpContinuous : kPDFDisplaySinglePageContinuous]; [self setDisplaysPageBreaks:pageStyle != 1]; }
 - (void)setupMagnificationStyle { self.modeAtScale = self.displayMode; if (resizeOption == NEW_PDF_FIT_TO_WINDOW) [self setAutoScales:YES]; else [self setScaleFactor:self.fixedScale]; }
-// Fit to Content Width has its own test, run-fit-content-width.py.
-- (void)fitContentWidth {}
+// Fit to Content Width as in MyPDFKitView.m; run-fit-content-width.py checks it in full.
+- (void)fitContentWidth {
+    if (resizeOption != NEW_PDF_FIT_TO_CONTENT_WIDTH || !self.document.pageCount) return;
+    if (self.autoScales) self.autoScales = NO;
+    TSContentFitWidthKeeping(self, TSContentTopOf(self), ^CGFloat(CGFloat scale) {
+        [self setScaleFactor:MAX(0.2, MIN(scale, 16))];
+        return self.scaleFactor;
+    });
+}
 - (void)measureContentLater {}
 - (void)centreContentRowLater {}
 - (void)cleanupMarqueeKeepingPinnedLinkPreview {}
@@ -336,6 +356,94 @@ int main(int argc, char **argv) { @autoreleasepool {
         check(popupCopies == copies + 1, [name stringByAppendingString:@": no copy then"]);
         [p.window close];
     }
+    // Unsplitting while the bottom part of pages one below the other is in use: its pages stay
+    // where they are on the screen, and the window shows above them what comes before them, as
+    // unsplitting while the top part is in use shows below it what comes after it (#66). At a
+    // magnification that changes with the height of the window, in single page display and side
+    // by side, the place at the top edge of the bottom part comes to the top of the window, as before.
+    // PDFKit fits pages one below the other to the width of the view, which does not change; the
+    // magnification that fits the height is made up here (-1).
+    for (NSNumber *scale in @[@1, @1.5, @0.75, @0, @-1]) for (NSNumber *style in @[@3, @1]) for (NSNumber *sideBySide in @[@NO, @YES]) {
+        BOOL stays = scale.doubleValue >= 0 && style.integerValue == 3 && !sideBySide.boolValue;
+        NSString *name = [NSString stringWithFormat:@"unsplit with the %@ part in use at %@, %@", sideBySide.boolValue ? @"right" : @"bottom",
+                          scale.doubleValue > 0 ? [NSString stringWithFormat:@"%@%%", @(scale.doubleValue * 100)] : scale.doubleValue ? @"fit to height" : @"fit",
+                          style.integerValue == 3 ? @"MultiPage" : @"single page"];
+        Preview p = makePreview(doc, fmax(scale.doubleValue, 0), style.integerValue);
+        if (scale.doubleValue < 0) { p.first.fitsHeight = p.second.fitsHeight = YES; [p.first setFrameSize:p.first.frame.size]; settle(p.window); }
+        scrollTo(p.first, 1, 500); settle(p.window);
+        split(p, sideBySide.boolValue ? NSEventModifierFlagOption : 0);
+        scrollTo(p.second, 4, 400); settle(p.window);
+        p.window.activeView = p.second;
+        TSPreviewPanePlace lower = TSPreviewPaneCapture(p.second);
+        NSPoint edge = TSPreviewPaneWindowEdge(p.second);
+        CGFloat usedScale = p.second.scaleFactor;
+        NSUInteger keeps = popupKeeps;
+        split(p, 0);
+        check(!p.window.windowIsSplit && !p.second.superview, [name stringByAppendingString:@": the window is unsplit"]);
+        PDFPage *page = [doc pageAtIndex:lower.pageIndex];
+        NSPoint at = [p.first convertPoint:[p.first convertPoint:lower.pagePoint fromPage:page] toView:nil];
+        if (stays) {
+            check(fabs(at.y - edge.y) < 0.5 && fabs(at.x - edge.x) < 0.5,
+                  [NSString stringWithFormat:@"%@: the pages stay where they are on the screen (%.2f, %.2f off)", name, at.x - edge.x, at.y - edge.y]);
+            TSPreviewPanePlace top = TSPreviewPaneCapture(p.first);
+            check(top.pageIndex < lower.pageIndex || (top.pageIndex == lower.pageIndex && top.pagePoint.y > lower.pagePoint.y),
+                  [NSString stringWithFormat:@"%@: above them the window shows what comes before them (page %lu)", name, (unsigned long)top.pageIndex]);
+        } else {
+            // As far as the document allows: one page at a time, the place cannot come above
+            // the bottom of its page, and a page shorter than the window cannot scroll.
+            CGFloat distance = distanceFromTop(p.first, lower);
+            NSRect shown = p.first.documentView.enclosingScrollView.contentView.bounds;
+            TSPreviewPaneRestore(p.first, lower);
+            NSRect again = p.first.documentView.enclosingScrollView.contentView.bounds;
+            check(near(distance) || ((style.integerValue == 1 || scale.doubleValue < 0) && fabs(NSMinY(shown) - NSMinY(again)) < 0.01),
+                  [NSString stringWithFormat:@"%@: the place comes to the top of the window (%.2f)", name, distance]);
+        }
+        check(fabs(p.first.scaleFactor - usedScale) < 1e-6 || !(scale.doubleValue > 0 || stays),
+              [NSString stringWithFormat:@"%@: the magnification of the part in use (%.4f for %.4f)", name, p.first.scaleFactor, usedScale]);
+        check(popupKeeps == keeps + 1, [name stringByAppendingString:@": the popups are kept in view"]);
+        [p.window close];
+    }
+    // Fit to Content Width in the bottom part: switching the parts before unsplitting fits it
+    // again, and shows it a little elsewhere; the pages still stay where they were (#66 audit).
+    for (NSNumber *style in @[@3, @4]) for (NSNumber *share in @[@0.2, @0.5, @0.8]) for (NSNumber *target in @[@3, @-1]) {
+        NSString *name = [NSString stringWithFormat:@"unsplit with the bottom part in use, Fit to Content Width, %@, top part %@%%, %@",
+                          style.integerValue == 3 ? @"MultiPage" : @"Double MultiPage", @(share.doubleValue * 100),
+                          target.integerValue < 0 ? @"last page" : @"middle"];
+        Preview p = makePreview(doc, 1, style.integerValue);
+        scrollTo(p.first, 1, 500); settle(p.window);
+        split(p, 0);
+        NSSplitView *sv = p.window.pdfKitSplitView;
+        [sv setPosition:round(NSHeight(sv.bounds) * share.doubleValue) ofDividerAtIndex:0]; settle(p.window);
+        [p.second setResizeOption:NEW_PDF_FIT_TO_CONTENT_WIDTH]; [p.second fitContentWidth]; settle(p.window);
+        NSUInteger page = target.integerValue < 0 ? doc.pageCount - 1 : (NSUInteger)target.integerValue;
+        scrollTo(p.second, page, target.integerValue < 0 ? 200 : 400); settle(p.window);
+        p.window.activeView = p.second;
+        TSPreviewPanePlace lower = TSPreviewPaneCapture(p.second);
+        NSPoint edge = TSPreviewPaneWindowEdge(p.second);
+        CGFloat usedScale = p.second.scaleFactor;
+        split(p, 0);
+        NSPoint at = [p.first convertPoint:[p.first convertPoint:lower.pagePoint fromPage:[doc pageAtIndex:lower.pageIndex]] toView:nil];
+        check(!p.window.windowIsSplit && fabs(p.first.scaleFactor - usedScale) < 1e-6,
+              [NSString stringWithFormat:@"%@: the magnification of the part in use (%.4f for %.4f)", name, p.first.scaleFactor, usedScale]);
+        check(fabs(at.y - edge.y) < 0.5 && fabs(at.x - edge.x) < 0.5,
+              [NSString stringWithFormat:@"%@: the pages stay where they are on the screen (%.2f, %.2f off)", name, at.x - edge.x, at.y - edge.y]);
+        [p.window close];
+    }
+    {   // Near the beginning of the document the pages can only move up, as far as the document allows.
+        Preview p = makePreview(doc, 1, 3);
+        scrollTo(p.first, 0, 700); settle(p.window);
+        split(p, 0);
+        scrollTo(p.second, 0, 600); settle(p.window);
+        p.window.activeView = p.second;
+        TSPreviewPanePlace lower = TSPreviewPaneCapture(p.second);
+        split(p, 0);
+        NSClipView *clip = p.first.documentView.enclosingScrollView.contentView;
+        NSRect b = clip.bounds, d = clip.documentRect;
+        CGFloat gap = clip.isFlipped ? NSMinY(b) - NSMinY(d) : NSMaxY(d) - NSMaxY(b);
+        check(fabs(gap) < 1, [NSString stringWithFormat:@"unsplit with the bottom part in use at the beginning: the window shows the beginning (%.2f)", gap]);
+        check(distanceFromTop(p.first, lower) > 0, @"unsplit with the bottom part in use at the beginning: its pages are below the top of the window");
+        [p.window close];
+    }
     {   // Side by side, the first time: as before, no copy.
         Preview p = makePreview(doc, 1, 3);
         scrollTo(p.first, 2, 600); settle(p.window);
@@ -433,6 +541,15 @@ int main(int argc, char **argv) { @autoreleasepool {
         split(p, 0);
         CGFloat again = (NSHeight(p.first.frame) - band) / (NSHeight(p.first.frame) - band + NSHeight(p.second.frame));
         check(fabs(again - share) < 0.01, [NSString stringWithFormat:@"full-size window: the parts come back with the shares the user left (%.3f, %.3f)", share, again]);
+        // Unsplitting with the bottom part in use keeps its pages where they are, also below the toolbar (#66).
+        scrollTo(p.second, 4, 400); settle(p.window);
+        p.window.activeView = p.second;
+        TSPreviewPanePlace lower = TSPreviewPaneCapture(p.second);
+        NSPoint edge = TSPreviewPaneWindowEdge(p.second);
+        split(p, 0);
+        NSPoint at = [p.first convertPoint:[p.first convertPoint:lower.pagePoint fromPage:[doc pageAtIndex:lower.pageIndex]] toView:nil];
+        check(!p.window.windowIsSplit && fabs(at.y - edge.y) < 0.5,
+              [NSString stringWithFormat:@"full-size window: unsplitting with the bottom part in use keeps its pages where they are (%.2f off)", at.y - edge.y]);
         [p.window close];
     }
     printf("PASS: %lu checks\n", (unsigned long)checks);
