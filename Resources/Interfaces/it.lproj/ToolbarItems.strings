@@ -100,6 +100,7 @@ tiToolTipSplit				= "(Dis)attiva divisione finestra; fai clic tenendo premuto il
 tiLabelSplitKIT				= "Dividi finestra";
 tiPaletteLabelSplitKIT		= "Dividi finestra";
 tiToolTipSplitKIT			= "(Dis)attiva divisione finestra; fai clic tenendo premuto il tasto Opzione per dividere verticalmente";
+"tiToolTipSplitKITContinuous" = "(Dis)attiva divisione finestra; fai clic tenendo premuto il tasto Opzione per dividere verticalmente, o il tasto Maiuscole per continuare le pagine sotto";
 
 tiLabelMacros				= "Macro";
 tiPaletteLabelMacros			= "Macro";

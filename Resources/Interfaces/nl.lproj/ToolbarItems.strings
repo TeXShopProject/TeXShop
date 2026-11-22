@@ -100,6 +100,7 @@ tiToolTipSplit				= "Splits venster (of juist niet). Option + klik om verticaal 
 tiLabelSplitKIT				= "Splits venster";
 tiPaletteLabelSplitKIT		= "Splits venster";
 tiToolTipSplitKIT			= "Splits venster (of juist niet). Option + klik om verticaal te splitsen.";
+"tiToolTipSplitKITContinuous" = "Splits venster (of juist niet). Option + klik om verticaal te splitsen, Shift + klik om de pagina's onderaan te laten doorlopen.";
 
 tiLabelMacros				= "Macro's";
 tiPaletteLabelMacros			= "Macro's";

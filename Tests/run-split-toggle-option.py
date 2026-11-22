@@ -12,7 +12,9 @@ whatever the modifiers, also on a button added to the toolbar later,
 and its tool tip and spoken name tell that a click unsplits. The Window menu has
 an Option alternate for Split Window in every language, a customized shortcut of
 either command keeps its orientation in the Preview, and the button tool tips
-mention Option-click in every language. Nothing is shown on screen and no user
+mention Option-click in every language. With pages one below the other, the
+Split Preview button's tool tip also mentions Shift-click (#66), and follows a change of
+the display format; in the other display formats it does not. Nothing is shown on screen and no user
 settings are read.
 """
 import argparse, json, re, subprocess, sys, tempfile
@@ -24,7 +26,8 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['split-ignored', 'no-become-key', 'command-allowed', 'key-ignored', 'no-flags-monitor', 'no-catch-up', 'catch-up-default-mode-only', 'monitor-not-recorded',
                                            'menu-orientation-ignored', 'no-resign-reset', 'unturned',
                                            'split-shows-own-image', 'source-orientation-ignored', 'added-item-unturned',
-                                           'added-item-condition-negated', 'split-tool-tip-kept', 'added-source-unturned'])
+                                           'added-item-condition-negated', 'split-tool-tip-kept', 'added-source-unturned',
+                                           'shift-tip-everywhere', 'shift-tip-never', 'shift-tip-on-source'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 toolbar = (root/'Sources/Windows/TSToolbarController.m').read_text()
@@ -52,6 +55,8 @@ source_split = production_method(document, '- (void) splitWindow: sender')
 side_by_side = production_method(document, '- (BOOL) isSplitSideBySide')
 assert 'return windowIsSplit && [splitView isVertical];' in side_by_side, 'The source tells a side-by-side split'
 will_add = production_method(toolbar, '- (void) toolbarWillAddItem: (NSNotification *) notif')
+layout_controls = production_method(toolbar, '- (void)updatePreviewLayoutControls')
+assert layout_controls.rstrip().endswith('TSSplitToggleItemsFollowSplit();\n}'), 'The Split Preview tool tip follows a change of the display format'
 assert source_split.rstrip().endswith('TSSplitToggleItemsFollowSplit();\n}'), 'Source buttons follow a split'
 for ident, action in (('kSplitID', 'splitWindow:'), ('kSplitKKTID', 'splitPreviewWindow:')):
     branch = toolbar[toolbar.index('if ([itemIdent isEqual: %s])' % ident):]
@@ -76,13 +81,21 @@ for nib in nibs:
 option_words = {'en': 'Option-click', 'de': 'Option-Taste-Klicken', 'es': 'tecla Opción', 'fr': 'touche Option',
                 'it': 'tasto Opzione', 'ja': 'Option+クリック', 'ko': 'Option-클릭', 'nl': 'Option + klik',
                 'pt': 'tecla Option', 'pt-PT': 'tecla Opção', 'ro': 'Opțiune-clic', 'zh_CN': '按住Option键点按'}
+shift_words = {'en': 'Shift-click', 'de': 'Umschalttaste', 'es': 'Mayúsculas', 'fr': 'touche Maj',
+               'it': 'tasto Maiuscole', 'ja': 'Shift+クリック', 'ko': 'Shift-클릭', 'nl': 'Shift + klik',
+               'pt': 'tecla Shift', 'pt-PT': 'tecla Shift', 'ro': 'Shift-clic', 'zh_CN': '按住Shift键点按'}
 for language, word in option_words.items():
     strings = subprocess.run(['plutil', '-convert', 'json', '-o', '-',
                               str(root/'Resources/Interfaces'/(language+'.lproj')/'ToolbarItems.strings')],
                              check=True, capture_output=True, text=True).stdout
     table = json.loads(strings)
-    for key in ('tiToolTipSplit', 'tiToolTipSplitKIT'):
+    for key in ('tiToolTipSplit', 'tiToolTipSplitKIT', 'tiToolTipSplitKITContinuous'):
         assert word in table[key], 'Option-click in %s %s: %s' % (language, key, table[key])
+    # Shift-click only with pages one below the other (#66).
+    shift = shift_words[language]
+    assert shift in table['tiToolTipSplitKITContinuous'], 'Shift-click in %s: %s' % (language, table['tiToolTipSplitKITContinuous'])
+    for key in ('tiToolTipSplit', 'tiToolTipSplitKIT'):
+        assert shift not in table[key], 'No Shift-click in %s %s: %s' % (language, key, table[key])
     for key in ('tiToolTipUnsplit', 'tiToolTipUnsplitKIT'):
         assert table.get(key) and word not in table[key] and table[key] != table[key.replace('Unsplit', 'Split')], \
             'Unsplit tool tip in %s %s' % (language, key)
@@ -103,6 +116,19 @@ elif args.mutation == 'split-tool-tip-kept':
     old = '    if (windowIsSplit)\n        return preview ?'
     assert header.count(old) == 1
     header = header.replace(old, '    if (0)\n        return preview ?')
+
+if args.mutation == 'shift-tip-everywhere':
+    old = '    if (preview && continuousPages)\n'
+    assert header.count(old) == 1
+    header = header.replace(old, '    if (preview)\n')
+elif args.mutation == 'shift-tip-never':
+    old = '    if (preview && continuousPages)\n'
+    assert header.count(old) == 1
+    header = header.replace(old, '    if (0)\n')
+elif args.mutation == 'shift-tip-on-source':
+    old = '    if (preview && continuousPages)\n'
+    assert header.count(old) == 1
+    header = header.replace(old, '    if (continuousPages || (preview && continuousPages))\n')
 
 if args.mutation == 'split-ignored':
     old = '    if (windowIsSplit)\n        return splitSideBySide;\n'
@@ -159,6 +185,7 @@ elif args.mutation == 'menu-orientation-ignored':
 
 program = r'''
 #import <Cocoa/Cocoa.h>
+#import <PDFKit/PDFKit.h>
 #import <objc/runtime.h>
 #import "TestAppKitIsolation.h"
 #import "TSSplitToggleCue.h"
@@ -173,6 +200,7 @@ void TSSplitToggleItemsFollowSplit(void);
 @interface PreviewWindow : NSObject
 @property BOOL windowIsSplit, horizontal;
 @property (strong) NSSplitView *pdfKitSplitView;
+@property (strong) PDFView *myPDFKitView;
 @property NSInteger splits;
 @end
 @implementation PreviewWindow
@@ -250,6 +278,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     // A window with both split buttons. AppKit draws each toolbar item with a button
     // that carries the item's target and action; stand-in buttons take that place.
     TSDocument *doc = [TSDocument new]; doc.pdfKitWindow = [PreviewWindow new];
+    doc.pdfKitWindow.myPDFKitView = [PDFView new]; doc.pdfKitWindow.myPDFKitView.displayMode = kPDFDisplaySinglePage;
     KeyWindow *w = [[KeyWindow alloc] initWithContentRect:NSMakeRect(0, 0, 600, 300) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
     w.releasedWhenClosed = NO;
     NSToolbar *bar = [[NSToolbar alloc] initWithIdentifier:@"SplitToggleTest"]; bar.autosavesConfiguration = NO; bar.delegate = doc;
@@ -336,10 +365,10 @@ int main(int argc, char **argv) { @autoreleasepool {
     doc.isSplit = YES; doc.isSplitSideBySide = YES; TSSplitToggleItemsFollowSplit();
     Check([Pixels(source.image) isEqual:sideBySide], @"Source split side by side");
     // Tool tips and spoken names: a click on the button of a split window unsplits.
-    Check([preview.toolTip isEqual:TSSplitToggleToolTip(YES, YES)] && [source.toolTip isEqual:TSSplitToggleToolTip(NO, YES)] &&
+    Check([preview.toolTip isEqual:TSSplitToggleToolTip(YES, YES, NO)] && [source.toolTip isEqual:TSSplitToggleToolTip(NO, YES, NO)] &&
           [preview.image.accessibilityDescription isEqual:preview.toolTip] && [source.image.accessibilityDescription isEqual:source.toolTip],
           @"Split windows tell that a click unsplits");
-    Check(![TSSplitToggleToolTip(YES, YES) isEqual:TSSplitToggleToolTip(YES, NO)] && ![TSSplitToggleToolTip(NO, YES) isEqual:TSSplitToggleToolTip(NO, NO)],
+    Check(![TSSplitToggleToolTip(YES, YES, NO) isEqual:TSSplitToggleToolTip(YES, NO, NO)] && ![TSSplitToggleToolTip(NO, YES, NO) isEqual:TSSplitToggleToolTip(NO, NO, NO)],
           @"The unsplit tool tips differ from the split ones");
     // The Split Preview button is taken out of the toolbar and put back while the
     // window is split side by side: once in the toolbar it shows that split.
@@ -347,7 +376,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     NSToolbarItem *again = bar.items[1];
     Check([again.itemIdentifier isEqual:kSplitKKTID] && again != preview, @"The button is put back");
     for (int i = 0; i < 5; i++) CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.01, false);
-    Check([Pixels(again.image) isEqual:sideBySide] && [again.toolTip isEqual:TSSplitToggleToolTip(YES, YES)],
+    Check([Pixels(again.image) isEqual:sideBySide] && [again.toolTip isEqual:TSSplitToggleToolTip(YES, YES, NO)],
           @"A button put back into a window split side by side shows that split");
     preview = again;
     // The same with the Split Source button of a source split side by side.
@@ -356,7 +385,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     NSToolbarItem *sourceAgain = bar.items[0];
     Check([sourceAgain.itemIdentifier isEqual:kSplitID] && sourceAgain != source, @"The source button is put back");
     for (int i = 0; i < 5; i++) CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.01, false);
-    Check([Pixels(sourceAgain.image) isEqual:sideBySide] && [sourceAgain.toolTip isEqual:TSSplitToggleToolTip(NO, YES)] &&
+    Check([Pixels(sourceAgain.image) isEqual:sideBySide] && [sourceAgain.toolTip isEqual:TSSplitToggleToolTip(NO, YES, NO)] &&
           [sourceAgain.image.accessibilityDescription isEqual:sourceAgain.toolTip],
           @"A Split Source button put back into a source split side by side shows that split");
     source = sourceAgain;
@@ -364,9 +393,28 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check([Pixels(source.image) isEqual:Pixels(sourceImage)] && [Pixels(preview.image) isEqual:Pixels(previewImage)], @"Split again top and bottom");
     doc.isSplit = NO; doc.pdfKitWindow.windowIsSplit = NO; TSSplitToggleItemsFollowSplit();
     Check([Pixels(source.image) isEqual:Pixels(sourceImage)] && [Pixels(preview.image) isEqual:Pixels(previewImage)], @"Unsplit");
-    Check([preview.toolTip isEqual:TSSplitToggleToolTip(YES, NO)] && [source.toolTip isEqual:TSSplitToggleToolTip(NO, NO)] &&
+    Check([preview.toolTip isEqual:TSSplitToggleToolTip(YES, NO, NO)] && [source.toolTip isEqual:TSSplitToggleToolTip(NO, NO, NO)] &&
           [preview.image.accessibilityDescription isEqual:preview.toolTip], @"Unsplit windows tell how to split");
     previewImage = preview.image; sourceImage = source.image;
+
+    // Shift-click with pages one below the other (#66): only on the Split Preview button
+    // of a window that is not split, and following the display format.
+    PDFDisplayMode modes[] = {kPDFDisplaySinglePageContinuous, kPDFDisplayTwoUpContinuous, kPDFDisplaySinglePage, kPDFDisplayTwoUp};
+    for (unsigned i = 0; i < 4; i++) {
+        BOOL continuous = i < 2;
+        doc.pdfKitWindow.myPDFKitView.displayMode = modes[i]; TSSplitToggleItemsFollowSplit();
+        Check([preview.toolTip isEqual:TSSplitToggleToolTip(YES, NO, continuous)] && [preview.image.accessibilityDescription isEqual:preview.toolTip] &&
+              [source.toolTip isEqual:TSSplitToggleToolTip(NO, NO, NO)],
+              [NSString stringWithFormat:@"The Split Preview tool tip follows display format %u", i]);
+        doc.pdfKitWindow.windowIsSplit = YES; TSSplitToggleItemsFollowSplit();
+        Check([preview.toolTip isEqual:TSSplitToggleToolTip(YES, YES, NO)], [NSString stringWithFormat:@"A split window unsplits in display format %u", i]);
+        doc.pdfKitWindow.windowIsSplit = NO; TSSplitToggleItemsFollowSplit();
+    }
+    Check(![TSSplitToggleToolTip(YES, NO, YES) isEqual:TSSplitToggleToolTip(YES, NO, NO)] &&
+          [TSSplitToggleToolTip(NO, NO, YES) isEqual:TSSplitToggleToolTip(NO, NO, NO)] &&
+          [TSSplitToggleToolTip(YES, YES, YES) isEqual:TSSplitToggleToolTip(YES, YES, NO)],
+          @"Shift-click only on the Split Preview button of a window that is not split");
+    doc.pdfKitWindow.myPDFKitView.displayMode = kPDFDisplaySinglePage; TSSplitToggleItemsFollowSplit();
 
     // After a click splits the window, the button shows what the next click does.
     Press(w, O);
@@ -414,7 +462,7 @@ with tempfile.TemporaryDirectory() as temp:
     temp = Path(temp)
     (temp/'TSSplitToggleCue.h').write_text(header)
     (temp/'test.m').write_text(program)
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-I', str(temp), '-I', str(root/'Tests'),
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit', '-I', str(temp), '-I', str(root/'Tests'),
                     *include_args(root), str(temp/'test.m'), '-o', str(temp/'test')], check=True)
     result = subprocess.run([str(temp/'test')], capture_output=True, text=True)
     output = (result.stdout + result.stderr).strip()

@@ -104,6 +104,7 @@ tiToolTipSplit				= "Toggle source split; Option-click to split vertically";
 tiLabelSplitKIT				= "Split Preview";
 tiPaletteLabelSplitKIT		= "Split Preview";
 tiToolTipSplitKIT			= "Toggle preview split; Option-click to split vertically";
+"tiToolTipSplitKITContinuous" = "Toggle preview split; Option-click to split vertically, Shift-click to continue the pages below";
 
 tiLabelMacros				= "Macros";
 tiPaletteLabelMacros		= "Macros";

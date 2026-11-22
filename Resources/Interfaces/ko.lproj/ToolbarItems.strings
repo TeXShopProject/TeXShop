@@ -100,6 +100,7 @@ tiToolTipSplit				= "소스 분할 켜기/끄기(Option-클릭은 세로로 나�
 tiLabelSplitKIT				= "미리보기 분할";
 tiPaletteLabelSplitKIT		= "미리보기 분할";
 tiToolTipSplitKIT			= "미리보기 분할 켜기/끄기(Option-클릭은 세로로 나누기)";
+"tiToolTipSplitKITContinuous" = "미리보기 분할 켜기/끄기(Option-클릭은 세로로 나누기, Shift-클릭은 아래에 페이지 이어서 보기)";
 
 tiLabelMacros				= "매크로";
 tiPaletteLabelMacros		= "매크로";

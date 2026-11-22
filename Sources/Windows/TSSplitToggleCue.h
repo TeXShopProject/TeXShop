@@ -24,12 +24,16 @@ static inline BOOL TSSplitToggleShowsSideBySide(NSEventModifierFlags flags, BOOL
     return TSSplitToggleOptionHeld(flags);
 }
 
-// The tool tip of a split button: what a click does.
-static inline NSString *TSSplitToggleToolTip(BOOL preview, BOOL windowIsSplit)
+// The tool tip of a split button: what a click does. With pages one below the other,
+// the Preview's tool tip also tells that a Shift-click continues the pages in the bottom
+// part (#66); in the other display formats a Shift-click is not offered.
+static inline NSString *TSSplitToggleToolTip(BOOL preview, BOOL windowIsSplit, BOOL continuousPages)
 {
     if (windowIsSplit)
         return preview ? NSLocalizedStringFromTable(@"tiToolTipUnsplitKIT", @"ToolbarItems", @"Unsplit the preview")
                        : NSLocalizedStringFromTable(@"tiToolTipUnsplit", @"ToolbarItems", @"Unsplit the source");
+    if (preview && continuousPages)
+        return NSLocalizedStringFromTable(@"tiToolTipSplitKITContinuous", @"ToolbarItems", @"Toggle preview split; Option-click to split vertically, Shift-click to continue the pages below");
     return preview ? NSLocalizedStringFromTable(@"tiToolTipSplitKIT", @"ToolbarItems", @"Toggle preview split; Option-click to split vertically")
                    : NSLocalizedStringFromTable(@"tiToolTipSplit", @"ToolbarItems", @"Toggle source split; Option-click to split vertically");
 }

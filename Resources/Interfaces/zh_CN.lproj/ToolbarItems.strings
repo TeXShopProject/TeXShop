@@ -122,6 +122,7 @@
     tiToolTipShowFullPath = "\U5728\U7a97\U53e3\U6807\U9898\U4e2d\U663e\U793a\U5b8c\U6574\U8def\U5f84";
     tiToolTipSplit = "切换窗口分割；按住Option键点按以垂直分割";
     tiToolTipSplitKIT = "切换窗口分割；按住Option键点按以垂直分割";
+    "tiToolTipSplitKITContinuous" = "切换窗口分割；按住Option键点按以垂直分割，按住Shift键点按以在下方接续显示页面";
     tiToolTipSyncMarks = "\U663e\U793a\U540c\U6b65\U6807\U8bb0";
     tiToolTipSyncMarksKIT = "\U663e\U793a\U540c\U6b65\U6807\U8bb0";
     tiToolTipTags = "\U6eda\U52a8\U5230\U9009\U62e9\U7684\U6807\U7b7e";

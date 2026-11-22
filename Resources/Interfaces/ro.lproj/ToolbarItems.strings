@@ -100,6 +100,7 @@ tiToolTipSplit				= "Comută scindarea ferestrei; faceți Opțiune-clic pentru a
 tiLabelSplitKIT				= "Scindează Fereastra";
 tiPaletteLabelSplitKIT		= "Scindează Fereastra";
 tiToolTipSplitKIT			= "Comută scindarea ferestrei; faceți Opțiune-clic pentru a scinda vertical";
+"tiToolTipSplitKITContinuous" = "Comută scindarea ferestrei; faceți Opțiune-clic pentru a scinda vertical, Shift-clic pentru a continua paginile dedesubt";
 
 tiLabelMacros				= "Macro";
 tiPaletteLabelMacros			= "Macro";
