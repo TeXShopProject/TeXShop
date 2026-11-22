@@ -37,6 +37,9 @@ program=r'''
 #import "TSPreviewAppearance.h"
 #import "TSLinkPreviewGeometry.h"
 #import "TSLinkPreviewView.h"
+// The split buttons follow the display format (TSToolbarController.m); run-split-toggle-option.py checks them.
+static NSInteger splitButtonUpdates;
+static void TSSplitToggleItemsFollowSplit(void) { splitButtonUpdates++; }
 static NSUserDefaults *defaults;
 #define SUD defaults
 static NSStringEncoding NSISOLatin9StringEncoding = 0x8000020f;

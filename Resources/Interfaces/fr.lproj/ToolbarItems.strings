@@ -104,6 +104,7 @@ tiToolTipSplit				= "Diviser la fenêtre ou annuler la division ; cliquez en mai
 tiLabelSplitKIT				= "Fenêtre divisée";
 tiPaletteLabelSplitKIT		= "Fenêtre divisée";
 tiToolTipSplitKIT			= "Diviser la fenêtre ou annuler la division ; cliquez en maintenant la touche Option enfoncée pour diviser verticalement";
+"tiToolTipSplitKITContinuous" = "Diviser la fenêtre ou annuler la division ; cliquez en maintenant la touche Option enfoncée pour diviser verticalement, ou la touche Maj pour continuer les pages en dessous";
 
 tiLabelMacros				= "Macros";
 tiPaletteLabelMacros		= "Macros";

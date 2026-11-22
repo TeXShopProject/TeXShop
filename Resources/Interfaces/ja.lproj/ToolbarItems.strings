@@ -104,6 +104,7 @@ tiToolTipSplit				= "ウインドウを分割表示します。縦に分割す�
 tiLabelSplitKIT				= "ウインドウ分割";
 tiPaletteLabelSplitKIT		= "ウインドウ分割";
 tiToolTipSplitKIT			= "ウインドウを分割表示します。縦に分割するにはOption+クリックします";
+"tiToolTipSplitKITContinuous" = "ウインドウを分割表示します。縦に分割するにはOption+クリック、上の続きを下に表示するにはShift+クリックします";
 
 tiLabelMacros				= "マクロ";
 tiPaletteLabelMacros			= "マクロ";
