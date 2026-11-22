@@ -98,16 +98,18 @@ int main(int argc,char **argv){@autoreleasepool{
   add(older,@"Curso corto de George Grätzer (en inglés)",@"displayShortCourse");add(older,@"Tablas de símbolos del curso (en inglés)",@"displayTables");
   NSMenuItem *style=Item(main,@"Open Style File...");style.identifier=@"TSShortcut.displayStyleFile:.0";
   void (^reset)(void)=^{for(NSMenuItem *item in by.allValues)item.keyEquivalent=@"";spell.keyEquivalent=@"";style.keyEquivalent=@"";};
-  // Former positions: 6 was Open Style File, 8 First Steps, 9 the Manual, 14 Tips and Tricks, 16 Comment Lines, 24 the removed Supplements, 25 Symbol Tables.
-  NSDictionary *positions=@{@"8":@"displayGettingStartedTeXShop",@"9":@"displayManual",@"14":@"displayTipsandTricks",@"16":@"displayCommentLines",
-                            @"18":@"displayNotesonApplescript",@"20":@"displayGettingStartedXeTeX",@"22":@"displayGettingStartedLatex",@"25":@"displayTables"};
+  // Former positions, as in the Help menu of 5.59 and before (KeyEquivalents.plist gave way to Settings › Keyboard in 5.60): 6 was
+  // Open Style File, 8 First Steps, 9 a separator, 10 the Manual, 15 Tips and Tricks, 17 Comment Lines, 24 the Short Course, 25 the
+  // removed Supplements, 26 Symbol Tables.
+  NSDictionary *positions=@{@"8":@"displayGettingStartedTeXShop",@"10":@"displayManual",@"15":@"displayTipsandTricks",@"17":@"displayCommentLines",
+                            @"19":@"displayNotesonApplescript",@"21":@"displayGettingStartedXeTeX",@"23":@"displayGettingStartedLatex",@"24":@"displayShortCourse",@"26":@"displayTables"};
   for(NSString *helpKey in @[@"1",@"Help"]){
    for(NSString *position in positions){
     reset();Apply(main,@{helpKey:@{position:@[@"j",@NO,@YES]}});
     Check([by[positions[position]].keyEquivalent isEqual:@"j"] && [spell.keyEquivalent isEqual:@""],
           [NSString stringWithFormat:@"former Help position %@ reaches %@, not Spell Checking Help",position,positions[position]]);
    }
-   reset();Apply(main,@{helpKey:@{@"6":@[@"s",@NO,@YES],@"24":@[@"x",@NO,@YES]}});
+   reset();Apply(main,@{helpKey:@{@"6":@[@"s",@NO,@YES],@"25":@[@"x",@NO,@YES]}});
    BOOL quiet=[style.keyEquivalent isEqual:@"s"];
    for(NSMenuItem *item in by.allValues)if(item.keyEquivalent.length)quiet=NO;
    Check(quiet,@"former position 6 reaches Open Style File; the place of the removed Supplements reaches no item");
@@ -348,6 +350,50 @@ int main(int argc,char **argv){@autoreleasepool{
   }
   Check(checkedWindows>=10,@"Window menu positions are checked in most languages");
   printf("PASS: Window menu positions of 5.58 keep the place of Fullscreen (Old Method) in %lu languages\n",(unsigned long)checkedWindows);
+ // George Grätzer's Short Course and its symbol tables moved into a submenu named like the course (6.00), and TeXShop
+ // Feature Confusion back to the Help menu. A key saved for them by their names of 5.58 or of 6.00 beta 9, or by their
+ // positions of 5.58, reaches the item that opens the same document, never the submenu, and no other item; the items of
+ // the submenu can be named through it too.
+ {
+  NSUInteger names=0,positions=0;
+  for(NSString *language in edits){
+   NSNib *nib=[[NSNib alloc]initWithNibData:[NSData dataWithContentsOfFile:edits[language][@"nib"]] bundle:nil];NSArray *objects=nil;
+   Check([nib instantiateWithOwner:NSApp topLevelObjects:&objects],language);
+   NSMenu *main=nil;for(id o in objects)if([o isKindOfClass:NSMenu.class]&&[o numberOfItems]>5)main=o;
+   // Items are known by their identifiers (TSShortcut.<action>.0): in some languages the actions go to an object the test does not have.
+   NSMenuItem *help=nil;for(NSMenuItem *top in main.itemArray)for(NSMenuItem *i in top.submenu.itemArray)if([i.identifier isEqual:@"TSShortcut.displayManual:.0"])help=top;
+   Check(help!=nil,[language stringByAppendingString:@": the Help menu is found"]);
+   NSMutableArray<NSMenuItem *> *all=[NSMutableArray array];
+   void (^__block collect)(NSMenu *)=nil;
+   void (^walk)(NSMenu *)=^(NSMenu *m){for(NSMenuItem *i in m.itemArray){[all addObject:i];if(i.hasSubmenu)collect(i.submenu);}};
+   collect=walk;walk(help.submenu);collect=nil;
+   NSMenuItem *(^withAction)(NSString *)=^NSMenuItem *(NSString *s){for(NSMenuItem *i in all)if(!i.hasSubmenu&&[i.identifier isEqual:[NSString stringWithFormat:@"TSShortcut.%@.0",s]])return i;return nil;};
+   NSDictionary *former=edits[language][@"helpformer"];
+   for(NSString *selector in former)for(NSString *title in former[selector]){
+    for(NSMenuItem *i in all)i.keyEquivalent=@"";
+    Apply(main,@{help.title:@{title:@[@"9",@YES,@YES]}});
+    NSMenuItem *target=withAction(selector);
+    Check([target.keyEquivalent isEqual:@"9"],[NSString stringWithFormat:@"%@: the name %@ reaches %@",language,title,selector]);
+    for(NSMenuItem *i in all)if(i!=target)Check([i.keyEquivalent isEqual:@""],[NSString stringWithFormat:@"%@: the name %@ reaches only %@, not %@",language,title,selector,i.title]);
+    names++;
+   }
+   // Through the submenu by today's names.
+   NSMenuItem *course=withAction(@"displayShortCourse:");
+   for(NSMenuItem *i in all)i.keyEquivalent=@"";
+   Apply(main,@{help.title:@{course.parentItem.title:@{course.title:@[@"7",@YES,@YES]}}});
+   Check([course.keyEquivalent isEqual:@"7"]&&course.parentItem.keyEquivalent.length==0,[language stringByAppendingString:@": the course is named through its submenu"]);
+   // Positions of 5.58.
+   NSArray *old=edits[language][@"helpactions"];
+   for(NSUInteger i=0;i<old.count;i++){
+    if([old[i] length]==0||withAction(old[i])==nil)continue;
+    NSMenuItem *item=TSLegacyMenuItem(help.submenu,[NSString stringWithFormat:@"%lu",(unsigned long)i+1]);
+    Check(item==withAction(old[i]),[NSString stringWithFormat:@"%@: Help position %lu reaches %@, not %@",language,(unsigned long)i+1,item.identifier,old[i]]);
+    positions++;
+   }
+  }
+  Check(names>=36,@"names of the course, the tables and Feature Confusion are checked in every language");
+  printf("PASS: %lu former names and %lu positions of 5.58 in the Help menus reach the item that opens the same document\n",(unsigned long)names,(unsigned long)positions);
+ }
  }
  puts("PASS: Show Status Bar and Highlight Index Entries skipped in positions; Find and Replace… skipped in positions of the menus that lacked it; 12 legacy title fixtures; CJK-Latin spacing; 18 former titles with a stray space; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File; former typesetting method titles in 12 languages; Command Completion submenu entries in 12 languages reach Add to Command Completion List");
 }return 0;}

@@ -44,6 +44,23 @@ with tempfile.TemporaryDirectory(prefix='texshop-legacy-menu-') as td:
   assert len(former)==1,language;edits[language]['fullscreen']=former[0]
   # Its name in 6.00 beta 8, the last version that had it (written here: TetsuTeXShop has no tags of TeXShop).
   edits[language]['fullscreen600b8']=BETA8_FULLSCREEN[language]
+ # The Help menu of 5.58 and of 6.00 beta 9 (6b0e2342): the names of George Grätzer's Short Course, its symbol tables and
+ # TeXShop Feature Confusion, which a KeyEquivalents.plist may use, and the actions at the positions of 5.58.
+ for language in edits:
+  former={}
+  for commit in ('db040b9b','6b0e2342'):
+   root=ET0.fromstring(subprocess.check_output(['git','show',f'{commit}:Resources/Interfaces/{language}.lproj/MainMenu.nib/designable.nib'],cwd=r))
+   for item in root.iter('menuItem'):
+    own=item.find('connections/action')
+    if own is not None and own.get('selector') in ('displayShortCourse:','displayTables:','displayTeXShopConfusion:'):
+     former.setdefault(own.get('selector'),[])
+     if item.get('title') not in former[own.get('selector')]:former[own.get('selector')].append(item.get('title'))
+   if commit=='db040b9b':
+    help=[m for m in root.iter('menu') if m.find("items/menuItem/connections/action[@selector='displayManual:']") is not None]
+    assert len(help)==1,language
+    edits[language]['helpactions']=[(i.find('connections/action').get('selector') if i.find('connections/action') is not None else '') for i in help[0].find('items')]
+  assert all(len(former.get(s,[]))>=1 for s in ('displayShortCourse:','displayTables:','displayTeXShopConfusion:')),(language,former)
+  edits[language]['helpformer']=former
  assert len(edits)==12
  (Path(td)/'edits.json').write_text(json.dumps(edits))
  subprocess.run([str(p),str(r/'Tests/Fixtures/LegacyKeyBindingTitles.json'),str(Path(td)/'edits.json')],check=True)

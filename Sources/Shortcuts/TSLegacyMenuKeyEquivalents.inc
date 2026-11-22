@@ -58,13 +58,14 @@ static void TSLegacyKeepRemovedFullscreen(NSMutableArray<NSMenuItem *> *items)
 }
 // 6.00 moved the older documents of the Help menu into its Older Documents submenu and George Grätzer's Short
 // Course with the symbol tables into a submenu of their own, and removed Short Course Supplements --> Desktop;
-// Spell Checking Help is added at launch. Positions saved before count the Help menu as it was,
+// Spell Checking Help is added at launch, and the separator between Getting Started with TeXShop and the
+// manual is gone. Positions saved before count the Help menu as it was (5.58),
 // with the moved items in their former places, a place for the removed one, and without Spell Checking Help.
 static NSString *const TSLegacyHelpMenuMarker = @"TSShortcut.displayThisRelease:.0";
 static NSArray<NSString *> *TSLegacyFormerHelpMenu(void)
 {
     return @[@"TSShortcut.displayThisRelease:.0", @"TSShortcut.displayChanges:.0", @"", @"TSShortcut.displayTeXLiveDocumentation:.0",
-             @"TSShortcut.displayHelpForPackage:.0", @"", @"TSShortcut.displayGettingStartedTeXShop:.0", @"TSShortcut.displayManual:.0", @"",
+             @"TSShortcut.displayHelpForPackage:.0", @"", @"TSShortcut.displayGettingStartedTeXShop:.0", @"", @"TSShortcut.displayManual:.0", @"",
              @"TSShortcut.displayHTMLHelp:.0", @"TSShortcut.showHelp:.0", @"TSShortcut.displayFileEncoding:.0",
              @"TSShortcut.displayTipsandTricks:.0", @"TSShortcut.displayTeXShopConfusion:.0", @"TSShortcut.displayCommentLines:.0",
              @"TSShortcut.displayRecentTeXFonts:.0", @"TSShortcut.displayNotesonApplescript:.0", @"",
@@ -163,6 +164,24 @@ static NSString *TSLegacyFormerTitleIdentifier(NSString *title)
         map[TSLegacyComparableTitle(@"Introductie symbooltabellen")] = @"TSShortcut.displayTables:.0";
         for (NSString *former in @[@"TeXShop Hilfspalette", @"TeXShopヘルプパネル", @"TeXShop 도움말 패널"])
             map[TSLegacyComparableTitle(former)] = @"TSShortcut.showHelp:.0";
+        // George Grätzer's Short Course, the symbol tables and TeXShop Feature Confusion, in every language, as 5.58 and
+        // 6.00 beta 9 named them; the course and the tables are now in a submenu named like the course was.
+        for (NSString *former in @[@"George Grätzer's Short Course", @"Curso corto de George Grätzer", @"Cours allégé de George Grätzer",
+                                   @"George Grätzer によるショートコース", @"George Grätzer 짧은 입문서", @"George Grätzers korte handleiding",
+                                   @"Curso rápido do George Grätzer", @"George Grätzer 的快速教程", @"George Grätzers Kurzkurs",
+                                   @"Corso breve di George Grätzer", @"George Grätzerによるショートコース", @"Curso breve de George Grätzer",
+                                   @"Cursul scurt al lui George Grätzer", @"George Grätzer的快速教程"])
+            map[TSLegacyComparableTitle(former)] = @"TSShortcut.displayShortCourse:.0";
+        for (NSString *former in @[@"Short Course Symbol Tables", @"Tablas de símbolos del curso", @"Tables des symboles de LaTeX", @"記号一覧",
+                                   @"기호 일람", @"快速教程符号表", @"Kurzkurs-Symboltabellen", @"Tabelle dei simboli del corso breve",
+                                   @"Symbooltabellen van de korte handleiding", @"Tabelas de símbolos do curso breve", @"Tabelas de símbolos do curso rápido",
+                                   @"Tabele de simboluri pentru cursul scurt"])
+            map[TSLegacyComparableTitle(former)] = @"TSShortcut.displayTables:.0";
+        for (NSString *former in @[@"TeXShop Feature Confusion", @"TeXShop Funktionsbeschreibung", @"Confusiones entre utilidades de TeXShop",
+                                   @"TeXShop の様々な補完機能の解説", @"TeXShopの様々な補完機能の解説", @"단축키, 매크로, 자동완성에 대하여", @"Características do TeXShop",
+                                   @"TeXShop 功能答疑", @"TeXShop功能答疑", @"Raccourcis clavier et autres", @"Chiarimenti sulle funzioni di TeXShop",
+                                   @"Verwarrende TeXShop-functies", @"Confusões entre funcionalidades do TeXShop", @"Confuzii privind funcțiile TeXShop"])
+            map[TSLegacyComparableTitle(former)] = @"TSShortcut.displayTeXShopConfusion:.0";
         // TeX Live Documentation in Japanese before 6.00, written without the space.
         map[TSLegacyComparableTitle(@"TeXLiveドキュメント（英語）")] = @"TSShortcut.displayTeXLiveDocumentation:.0";
         identifiers = map;
@@ -234,7 +253,15 @@ static void TSApplyLegacyMenuKeys(NSMenu *mainMenu, NSDictionary *shortcuts)
                     if (TSLegacyIsFormerCompletionChild(item, childKey)) child = item;
                     TSApplyLegacyKeyEquivalent(child, value[childKey]);
                 }
-            } else TSApplyLegacyKeyEquivalent(item, value);
+            } else {
+                // A key saved for an item that is a submenu now was for the document it opened then (George
+                // Grätzer's Short Course): it goes to that document, in the submenu. A submenu takes no key itself.
+                if (item.hasSubmenu) {
+                    NSString *identifier = TSLegacyFormerTitleIdentifier(itemKey);
+                    item = identifier != nil ? TSLegacyItemWithIdentifier(menu, identifier) : nil;
+                }
+                TSApplyLegacyKeyEquivalent(item, value);
+            }
         }
     }
 }
