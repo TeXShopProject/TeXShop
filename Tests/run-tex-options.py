@@ -6,8 +6,11 @@ The usage of pdfTeX, XeTeX and the other web2c engines writes -file-line-error, 
 commands and the profiles follow the usage; settings written with the other number of hyphens still
 match a profile. Confirm Shell Escape notices -shell-escape and --shell-escape (not -no-shell-escape),
 and Omit Shell Escape removes either; a run from a script adds -interaction=nonstopmode with the
-hyphens of its engine. A probe compiled against Sources/Typesetting/TSTeXOptions.h checks the
-helpers; static checks cover TSDocument-Jobs.m and the factory defaults. With --mutation NAME the
+hyphens of its engine. Commands are read as TeXShop runs them: a second program compares
+TSTeXCommandArguments with -[TSDocument separate:into:] taken from TSDocument-Jobs.m. A probe
+compiled against Sources/Typesetting/TSTeXOptions.h checks the helpers; static checks cover
+TSDocument-Jobs.m and the factory defaults; both copies of Manual.pdf are read with pypdf, which is
+required (--without-pypdf shows that the harness then fails). With --mutation NAME the
 harness runs mutated sources and must fail; --mutations runs them all."""
 from pathlib import Path
 import plistlib
@@ -20,13 +23,23 @@ HEADER = 'Sources/Typesetting/TSTeXOptions.h'
 JOBS = 'Sources/Typesetting/TSDocument-Jobs.m'
 MUTATIONS = {
     # Only --shell-escape is noticed again.
-    'two-hyphens-only': (HEADER, ')([\\"\']?)--?shell-escape\\\\1(?=', ')([\\"\']?)--shell-escape\\\\1(?='),
-    # A path or a longer name that contains the option counts as the option.
-    'loose-boundaries': (HEADER, '@"(?:(?<=^)|(?<=\\\\s)|(?<=q/))([\\"\']?)--?shell-escape', '@"([\\"\']?)--?shell-escape'),
+    'two-hyphens-only': (HEADER, '[value isEqualToString:@"-shell-escape"] || ', ''),
+    # A path, a quoted file name or a longer name that contains the option counts as the option.
+    'loose-boundaries': (HEADER, '        if (TSTeXArgumentIsShellEscape(argument))\n            return YES;',
+                         '        if ([argument[TSTeXArgumentValue] containsString:@"-shell-escape"])\n            return YES;'),
     # A command started through env is not seen as LuaTeX.
     'env-ignored': (HEADER, '        if (!afterEnv && [name isEqualToString:@"env"]) { afterEnv = YES; continue; }\n', ''),
+    # env -u NAME: NAME is taken for the program.
+    'env-values': (HEADER, '            if ([withValue containsObject:word]) { if (words.count) [words removeObjectAtIndex:0]; continue; }\n', ''),
     # Options inside paths and longer names are written with one hyphen for the comparison too.
-    'normalize-anywhere': (HEADER, '(?=[\\\\s\\"\']|$|/(?:[\\\\s\\"\']|$))"\n            options:0', '"\n            options:0'),
+    'normalize-anywhere': (HEADER, '@"^--(?:(?:no-)?(?:file-line-error|shell-escape)|synctex=-?\\\\d+|interaction=[a-z]+)$"',
+                           '@"--(?:(?:no-)?(?:file-line-error|shell-escape)|synctex=-?\\\\d+|interaction=[a-z]+)"'),
+    # The commands inside any -e option are read, not only those given to latexmk.
+    'latexmk-any-program': (HEADER, '    if (![TSTeXCommandProgram(command).lowercaseString hasPrefix:@"latexmk"])\n        return arguments;\n', ''),
+    # The space that joins the words inside quotes is not given a place in the command.
+    'joined-offsets': (HEADER, '                [middleOffsets addObject:@(location - 1)];\n', ''),
+    # Words are split at every space, quotes or not.
+    'quotes-ignored': (HEADER, "            } else if ([word characterAtIndex:0] == '\"') {", "            } else if (NO) {"),
     # Every engine gets two hyphens.
     'two-for-all': (HEADER, '    return TSTeXCommandRunsLuaTeX(command) ? @"--" : @"-";', '    return @"--";'),
     # The confirmation looks for --shell-escape only.
@@ -38,6 +51,41 @@ MUTATIONS = {
     'interaction-two': (JOBS, '[myEngine stringByAppendingFormat:@" %@interaction=nonstopmode ", TSTeXOptionDashes(myEngine)]',
                         '[myEngine stringByAppendingString:@" --interaction=nonstopmode "]'),
 }
+
+SPLIT = r'''
+#import <Foundation/Foundation.h>
+#import "TSTeXOptions.h"
+@interface Splitter : NSObject @end
+@implementation Splitter
+SEPARATE
+@end
+int main(void) {
+    int failures = 0;
+    @autoreleasepool {
+        Splitter *s = [Splitter new];
+        for (NSString *c in @[@"pdflatex -file-line-error -synctex=1", @"  pdflatex  a   b ", @"prog \"a b\" c \"d\"", @"bibtex \"", @"bibtex \" x\"",
+                              @"pdflatex -output-directory=\"Sample --file-line-error records\"", @"pdflatex \"-output-directory=Sample  --x  records\" y",
+                              @"latexmk -e \"$pdflatex=q/pdflatex  -shell-escape/\"", @"a \"b \"c d\" e", @"a \"\" b", @"a \"open never closed", @"\"quoted program\" x", @""]) {
+            NSMutableArray *args = [NSMutableArray array];
+            NSString *program = [s separate:c into:args];
+            NSArray *mine = TSTeXCommandArguments(c);
+            NSMutableArray *values = [NSMutableArray array];
+            for (NSDictionary *a in mine) [values addObject:a[TSTeXArgumentValue]];
+            NSMutableArray *theirs = [NSMutableArray array];
+            if (program) { [theirs addObject:program]; [theirs addObjectsFromArray:args]; }
+            if (![values isEqualToArray:theirs]) { printf("FAIL: %s: separate:into: gives %s, TSTeXCommandArguments %s\n", c.UTF8String, theirs.description.UTF8String, values.description.UTF8String); failures++; }
+            for (NSDictionary *a in mine) {
+                NSArray *offsets = a[TSTeXArgumentOffsets]; NSString *v = a[TSTeXArgumentValue];
+                for (NSUInteger i = 0; i < v.length; i++) {
+                    unichar at = [c characterAtIndex:[offsets[i] unsignedIntegerValue]];
+                    if (at != [v characterAtIndex:i]) { printf("FAIL: %s: character %lu of %s is not where it is said to be\n", c.UTF8String, (unsigned long)i, v.UTF8String); failures++; break; }
+                }
+            }
+        }
+    }
+    return failures ? 1 : 0;
+}
+'''
 
 PROBE = r'''
 #import <Foundation/Foundation.h>
@@ -69,12 +117,29 @@ int main(void) {
         check([TSTeXCommandWithOneHyphenOptions(@"pdflatex --file-line-error --synctex=1") isEqualToString:@"pdflatex -file-line-error -synctex=1"], @"former profile command compared with one hyphen");
         check([TSTeXCommandWithOneHyphenOptions(@"latexmk -e \"$lualatex=q/lualatex --synctex=1 --file-line-error/\"") isEqualToString:@"latexmk -e \"$lualatex=q/lualatex -synctex=1 -file-line-error/\""], @"inside latexmk too");
         check([TSTeXCommandWithOneHyphenOptions(@"simpdftex latex --maxpfb --extratexopts \"-file-line-error\"") isEqualToString:@"simpdftex latex --maxpfb --extratexopts \"-file-line-error\""], @"options of simpdftex kept");
+        // Commands are read as TeXShop runs them (separate:into:): a word that starts with a quote runs to one that ends with it.
+        for (NSString *c in @[@"pdflatex \"my -shell-escape file.tex\"", @"pdflatex \"my --shell-escape\"", @"pdflatex -e \"$pdflatex=q/pdflatex -shell-escape/\"",
+                              @"pdflatex -pdflatex=\"pdflatex -shell-escape\""])
+            check(!TSTeXCommandHasShellEscape(c), [NSString stringWithFormat:@"no shell escape inside a quoted argument: %@", c]);
+        check([TSTeXCommandWithoutShellEscape(@"pdflatex \"my -shell-escape file\" -shell-escape x") isEqualToString:@"pdflatex \"my -shell-escape file\"  x"], @"a quoted file name is kept");
+        check([TSTeXCommandWithOneHyphenOptions(@"pdflatex \"-output-directory=Sample --file-line-error records\" --file-line-error") isEqualToString:@"pdflatex \"-output-directory=Sample --file-line-error records\" -file-line-error"], @"a quoted directory name is kept");
+        // A quote inside a word does not open an argument for TeXShop: here --file-line-error reaches TeX as an argument of its own.
+        check([TSTeXCommandWithOneHyphenOptions(@"pdflatex -output-directory=\"Sample --file-line-error records\"") isEqualToString:@"pdflatex -output-directory=\"Sample -file-line-error records\""], @"an argument TeXShop passes on its own is compared as one");
+        for (NSString *c in @[@"latexmk -pdf -pdflatex=\"pdflatex -shell-escape %O %S\"", @"latexmk -e \"$pdflatex=q/pdflatex  -shell-escape/\"", @"latexmk -e \"$lualatex=q/lualatex '--shell-escape'/\""])
+            check(TSTeXCommandHasShellEscape(c), [NSString stringWithFormat:@"shell escape noticed in a command latexmk runs: %@", c]);
+        check([TSTeXCommandWithoutShellEscape(@"latexmk -e \"$pdflatex=q/pdflatex  -shell-escape  -synctex=1/\"") isEqualToString:@"latexmk -e \"$pdflatex=q/pdflatex    -synctex=1/\""], @"removed where the quoted words were joined");
+        check([TSTeXCommandWithoutShellEscape(@"latexmk -pdflatex=\"pdflatex -shell-escape %O %S\"") isEqualToString:@"latexmk -pdflatex=\"pdflatex  %O %S\""], @"removed from -pdflatex=");
+        check([TSTeXCommandWithOneHyphenOptions(@"latexmk -e \"$lualatex=q/lualatex  --synctex=1/\"") isEqualToString:@"latexmk -e \"$lualatex=q/lualatex  -synctex=1/\""], @"compared where the quoted words were joined");
+        for (NSString *c in @[@"/usr/bin/env -u TEXINPUTS lualatex x", @"env -P /usr/bin lualatex", @"env -S lualatex x", @"env -i -u A -u B LUA=1 lualatex"])
+            check([TSTeXOptionDashes(c) isEqualToString:@"--"], [NSString stringWithFormat:@"two hyphens past the options of env: %@", c]);
+        check([TSTeXCommandProgram(@"/usr/bin/env -u TEXINPUTS pdflatex") isEqualToString:@"pdflatex"], @"env -u takes a name");
     }
     return failures ? 1 : 0;
 }
 '''
 
 failures = []
+WITHOUT_PYPDF = False
 
 
 def check(ok, message):
@@ -96,10 +161,12 @@ def run(texts):
         check(line and '-shell-escape' in line[0] and '--shell-escape' not in line[0], f'{note.parent.name}: the note writes -shell-escape: {line}')
     # The manual writes LuaTeX's form with two ASCII hyphens (TeX would join -- into a dash), in both copies.
     try:
+        if WITHOUT_PYPDF:
+            raise ImportError('pypdf hidden by --without-pypdf')
         import pypdf
     except ImportError:
         pypdf = None
-        print('note: pypdf not found; the manual is not checked')
+        failures.append('pypdf is needed to read Manual.pdf; run with a Python that has it (python3 -m pip install pypdf)')
     if pypdf is not None:
         for copy in ('DocumentSources/Manual Source/Manual.pdf', 'Resources/Interfaces/Base.lproj/Manual.pdf'):
             text = ''.join(page.extract_text() or '' for page in pypdf.PdfReader(str(root / copy)).pages if 'LuaTeX writes them' in (page.extract_text() or ''))
@@ -113,6 +180,17 @@ def run(texts):
         if built.returncode:
             failures.append('probe did not compile: ' + built.stderr[-1500:])
             return
+        # TSTeXCommandArguments reads a command as -[TSDocument separate:into:] does.
+        start = texts[JOBS].index('- (NSString *) separate: (NSString *)myEngine into:(NSMutableArray *)args')
+        (tmp / 'split.m').write_text(SPLIT.replace('SEPARATE', texts[JOBS][start:texts[JOBS].index('\n}\n', start) + 3]))
+        built = subprocess.run(['clang', '-fobjc-arc', '-framework', 'Foundation', '-I', str(tmp / 'h'), str(tmp / 'split.m'), '-o', str(tmp / 'split')], capture_output=True, text=True)
+        if built.returncode:
+            failures.append('the comparison with separate:into: did not compile: ' + built.stderr[-1500:])
+        else:
+            split = subprocess.run([str(tmp / 'split')], capture_output=True, text=True, timeout=60)
+            failures.extend(line[6:] if line.startswith('FAIL: ') else line for line in split.stdout.splitlines())
+            if split.returncode and not split.stdout.strip():
+                failures.append(f'the comparison with separate:into: ended with status {split.returncode}')
         out = subprocess.run([str(tmp / 'probe')], capture_output=True, text=True, timeout=60)
         for line in out.stdout.splitlines():
             failures.append(line[6:] if line.startswith('FAIL: ') else line)
@@ -132,7 +210,15 @@ def main():
             print(('PASS: detected' if r.returncode else 'FAIL: missed') + f' mutation {name}: ' + (r.stdout.strip().splitlines() or [''])[0])
             if not r.returncode:
                 bad.append(name)
+        # Without pypdf the manual cannot be read, and the harness fails rather than skip it.
+        r = subprocess.run([sys.executable, __file__, '--without-pypdf'], capture_output=True, text=True)
+        print(('PASS: fails' if r.returncode else 'FAIL: passes') + ' without pypdf: ' + (r.stdout.strip().splitlines() or [''])[0])
+        if not r.returncode:
+            bad.append('without-pypdf')
         sys.exit(1 if bad else 0)
+    global WITHOUT_PYPDF
+    if args == ['--without-pypdf']:
+        WITHOUT_PYPDF, args = True, []
     texts = {p: (root / p).read_text(encoding='utf-8') for p in (HEADER, JOBS)}
     texts['PROBE'] = PROBE
     if args[:1] == ['--mutation']:
