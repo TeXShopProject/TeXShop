@@ -138,7 +138,6 @@
 		403E76BE218E7008006975A8 /* TeXShop.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 403E76BD218E7008006975A8 /* TeXShop.scriptSuite */; };
 		403F25EA0F20770F001031A0 /* TSDocument-Console.m in Sources */ = {isa = PBXBuildFile; fileRef = 403F25E90F20770F001031A0 /* TSDocument-Console.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		40415E3D131CAB3700226AF4 /* TeXShop Tips & Tricks.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 40415E3B131CAB3700226AF4 /* TeXShop Tips & Tricks.pdf */; };
-		40473FAE0C68273C009311CF /* Course Supplements in Resources */ = {isa = PBXBuildFile; fileRef = 40473FA90C68273C009311CF /* Course Supplements */; };
 		404D1B632891B23400402802 /* TSHTMLWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 404D1B612891B23400402802 /* TSHTMLWindow.h */; };
 		404D1B642891B23400402802 /* TSHTMLWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 404D1B622891B23400402802 /* TSHTMLWindow.m */; };
 		404D7901199FF471008B8D64 /* TSFullSplitWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 404D78FF199FF471008B8D64 /* TSFullSplitWindow.h */; };
@@ -706,7 +705,6 @@
 		256546D6030BAEB5035BE49B /* TSPreviewScrollerKeeper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSPreviewScrollerKeeper.m; sourceTree = "<group>"; };
 		403E76BD218E7008006975A8 /* TeXShop.scriptSuite */ = {isa = PBXFileReference; lastKnownFileType = text.plist.scriptSuite; path = TeXShop.scriptSuite; sourceTree = "<group>"; };
 		403F25E90F20770F001031A0 /* TSDocument-Console.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-Console.m"; sourceTree = "<group>"; };
-		40473FA90C68273C009311CF /* Course Supplements */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Course Supplements"; sourceTree = "<group>"; };
 		40496C1F26067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/First Steps with TeXShop.pdf"; sourceTree = "<group>"; };
 		40496C2026067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/First Steps with General Typesetting.pdf"; sourceTree = "<group>"; };
 		40496C2126067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = Base.lproj/RecentTexFonts.pdf; sourceTree = "<group>"; };
@@ -1787,7 +1785,6 @@
 				027B3F65000AD8447F000001 /* Interfaces */,
 				403E76BD218E7008006975A8 /* TeXShop.scriptSuite */,
 				4015F924218F458C00F6F883 /* ScriptRunner.app */,
-				40473FA90C68273C009311CF /* Course Supplements */,
 				0273C927FF23CC9B80DF2474 /* DocumentIcons */,
 				528029DB089D3DD900696FB9 /* Shellscripts */,
 				52E4BF4408CA74C300726E11 /* TeXShop */,
@@ -2171,7 +2168,6 @@
 				52E4BF8D08CA74C300726E11 /* TeXShop in Resources */,
 				4062E2921D7BC08300DC1518 /* GPLv2 License.pdf in Resources */,
 				EF5590000000000000000001 /* TeXShop.icon in Resources */,
-				40473FAE0C68273C009311CF /* Course Supplements in Resources */,
 				4009C6D70D0BAA9C00B23013 /* hiero.icns in Resources */,
 				40A03E800F3A47580014104E /* First Steps with General Typesetting.pdf in Resources */,
 				40A03E870F3A47760014104E /* First Steps with Mathematical Typesetting.pdf in Resources */,

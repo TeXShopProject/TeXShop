@@ -1409,15 +1409,15 @@
                     </menu>
                 </menuItem>
                 <menuItem title="帮助" id="136">
-                    <menu key="submenu" title="帮助" id="137">
+                    <menu key="submenu" title="帮助" systemMenu="help" id="137">
                         <items>
-                            <menuItem title="关于本发行版" id="893" identifier="TSShortcut.displayThisRelease:.0">
+                            <menuItem title="关于本发行版（英文）" id="893" identifier="TSShortcut.displayThisRelease:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayThisRelease:" target="705" id="894"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="更新内容" id="mQ1-k5-Jfa" identifier="TSShortcut.displayChanges:.0">
+                            <menuItem title="更新内容（英文）" id="mQ1-k5-Jfa" identifier="TSShortcut.displayChanges:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayChanges:" target="705" id="KEQ-da-AT3"/>
@@ -1426,7 +1426,7 @@
                             <menuItem isSeparatorItem="YES" id="tDL-cD-YX6">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="TeX Live文档" id="RcD-aZ-WS0" identifier="TSShortcut.displayTeXLiveDocumentation:.0">
+                            <menuItem title="TeX Live文档（英文）" id="RcD-aZ-WS0" identifier="TSShortcut.displayTeXLiveDocumentation:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayTeXLiveDocumentation:" target="705" id="dde-FX-Nix"/>
@@ -1441,19 +1441,19 @@
                             <menuItem isSeparatorItem="YES" id="892">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="TeXShop入门" id="698" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
+                            <menuItem title="TeXShop入门（英文）" id="698" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
                                 <connections>
                                     <action selector="displayGettingStartedTeXShop:" target="705" id="710"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop手册" id="wEg-wt-tOY" identifier="TSShortcut.displayManual:.0">
+                            <menuItem title="TeXShop手册（英文）" id="wEg-wt-tOY" identifier="TSShortcut.displayManual:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayManual:" target="705" id="TRv-FF-0V8"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="KBF-MQ-E1k"/>
-                            <menuItem title="HTML指令" id="7LB-Zs-kjL" identifier="TSShortcut.displayHTMLHelp:.0">
+                            <menuItem title="HTML指令（英文）" id="7LB-Zs-kjL" identifier="TSShortcut.displayHTMLHelp:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayHTMLHelp:" target="705" id="BN4-vm-BYY"/>
@@ -1464,72 +1464,75 @@
                                     <action selector="showHelp:" target="-1" id="144"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="文件编码指南" id="Uzw-yD-xiM" identifier="TSShortcut.displayFileEncoding:.0">
+                            <menuItem title="文件编码指南（英文）" id="Uzw-yD-xiM" identifier="TSShortcut.displayFileEncoding:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayFileEncoding:" target="705" id="wuT-Cx-dPF"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop提示与技巧" id="1059" identifier="TSShortcut.displayTipsandTricks:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayTipsandTricks:" target="705" id="1060"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="TeXShop功能答疑" id="2RH-ib-DJ5" identifier="TSShortcut.displayTeXShopConfusion:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayTeXShopConfusion:" target="705" id="fnI-bz-Egx"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="魔术行; 隐藏设置" id="572-je-Eqd" identifier="TSShortcut.displayCommentLines:.0">
+                            <menuItem title="魔术行和隐藏设置（英文）" id="572-je-Eqd" identifier="TSShortcut.displayCommentLines:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayCommentLines:" target="705" id="H62-yO-JaR"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="最近使用的TeX字体" id="MOP-CJ-Rvn" identifier="TSShortcut.displayRecentTeXFonts:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayRecentTeXFonts:" target="705" id="E5X-f6-7LR"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="在TeXShop中使用AppleScript" id="dxu-Z4-tmW" identifier="TSShortcut.displayNotesonApplescript:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayNotesonApplescript:" target="705" id="htU-ot-VUB"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="714">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="一般排版入门" id="715" identifier="TSShortcut.displayGettingStartedXeTeX:.0">
-                                <connections>
-                                    <action selector="displayGettingStartedXeTeX:" target="705" id="750"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="716">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
-                            <menuItem title="数学排版入门" id="717" identifier="TSShortcut.displayGettingStartedLatex:.0">
-                                <connections>
-                                    <action selector="displayGettingStartedLatex:" target="705" id="749"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="George Grätzer的快速教程" id="718" identifier="TSShortcut.displayShortCourse:.0">
-                                <connections>
-                                    <action selector="displayShortCourse:" target="705" id="777"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="拷贝快速教程附加文件到桌面" id="719" identifier="TSShortcut.supplementsToDesktop:.0">
-                                <connections>
-                                    <action selector="supplementsToDesktop:" target="705" id="778"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="快速教程符号表" id="831" identifier="TSShortcut.displayTables:.0">
-                                <connections>
-                                    <action selector="displayTables:" target="705" id="832"/>
-                                </connections>
+                            <menuItem title="早期文档" id="HlO-Dc-Mnu">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="早期文档" id="HlO-Dc-Sub">
+                                    <items>
+                                        <menuItem title="TeXShop提示与技巧（英文）" id="1059" identifier="TSShortcut.displayTipsandTricks:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayTipsandTricks:" target="705" id="1060"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="TeXShop功能答疑（英文）" id="2RH-ib-DJ5" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayTeXShopConfusion:" target="705" id="fnI-bz-Egx"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="近年的TeX字体（英文）" id="MOP-CJ-Rvn" identifier="TSShortcut.displayRecentTeXFonts:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayRecentTeXFonts:" target="705" id="E5X-f6-7LR"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="在TeXShop中使用AppleScript（英文）" id="dxu-Z4-tmW" identifier="TSShortcut.displayNotesonApplescript:.0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="displayNotesonApplescript:" target="705" id="htU-ot-VUB"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="716">
+                                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                                        </menuItem>
+                                        <menuItem title="一般排版入门（英文）" id="715" identifier="TSShortcut.displayGettingStartedXeTeX:.0">
+                                            <connections>
+                                                <action selector="displayGettingStartedXeTeX:" target="705" id="750"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="数学排版入门（英文）" id="717" identifier="TSShortcut.displayGettingStartedLatex:.0">
+                                            <connections>
+                                                <action selector="displayGettingStartedLatex:" target="705" id="749"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="HlO-Dc-Sp2"/>
+                                        <menuItem title="George Grätzer的快速教程（英文）" id="718" identifier="TSShortcut.displayShortCourse:.0">
+                                            <connections>
+                                                <action selector="displayShortCourse:" target="705" id="777"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="快速教程符号表（英文）" id="831" identifier="TSShortcut.displayTables:.0">
+                                            <connections>
+                                                <action selector="displayTables:" target="705" id="832"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
                             </menuItem>
                         </items>
                     </menu>

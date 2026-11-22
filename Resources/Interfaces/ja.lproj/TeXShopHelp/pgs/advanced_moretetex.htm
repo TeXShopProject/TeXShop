@@ -2,73 +2,60 @@
 
 <HEAD>
 			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
-			<TITLE>teTeXについてさらに</TITLE>
+			<TITLE>TeX Liveについてさらに</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="追加のドキュメント類の在り処やteTeXのディレクトリ構造について">
+			<META NAME="description" CONTENT="TeX Liveのディレクトリ構造と追加のファイルの置き場所について">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
 <body>	
 
 <div id="content_border">
-
 <p>
-teTeXは /usr/local/teTeXというディレクトリにインストールされますが、ファインダからは見ることができません。けれどもインストーラは、このディレクトリのシンボリック・リンクを /Library/teTeXに作ります。なのでteTeXの ファイルを調べるには /Library/teTeXに行きます。
+TUGのTeX Liveは /usr/local/texlive というディレクトリにインストールされますが、ファインダからは見ることができません。けれどもインストーラによって、アクティブなTeXディストリビューションのディレクトリへのシンボリック・リンクが /Library/TeX/Root に作成されます。ですから、ディストリビューション内のファイルを調べるには /Library/TeX/Root へ行ってください。
 </p>
 
 <p>
-teTeXについてのドキュメント類は /Library/teTeX/share/texmf/doc/tetexにあります。特に、次のファイルを調べてみてください──
-</p>
-
-		<dl>
-			<dd>TETEXDOC.pdf
-			<dd>teTeX-FAQ
-		</dl>
-
-<!-- 
-<p>
-Gerben WierdaによるMac OS Xへの移植についての追加のドキュメント類は次の場所にあります──
-</p>
- -->
-
-<p>
-Gerben WierdaさんによるMac OS Xへの移植についての追加のドキュメント類は次の場所にあります──
-</p>
-
-		<dl>
-			<dd>/Library/teTeX/README.macosx
-		</dl>
-
-<p>
-追加のクラスファイルやフォントなどをteTeXそのものに格納しておくことができます。けれどもteTeXは所有者がルート・ユーザになっており、/usr/local/teTeXにあるのでファインダからは見ることができません。さらに言えば、このディレクトリはいじらずにおくほうがいいでしょう──後に新しいバージョンがリリースされたときにアップグレードが簡単にできますから。teTeXのディレクトリ構造とまったく同じ物をユーザのライブラリ・フォルダに作り、そこに個人的なファイルを入れておくのがよいでしょう。
+アクティブなディストリビューションのドキュメント類は /Library/TeX/Documentation にあります（これは実際には、ディストリビューション内のいろいろなドキュメント・フォルダへのリンクです）。
 </p>
 
 <p>
-ファイルは適切なディレクトリに置いてやらねばなりません。teTeXはTeXワーキンググループの考案したディレクトリ構造を用いています。new.styという名前の特別なスタイルファイルを、LaTeXで使えるように追加したいとします。teTeXの中を見ると、このファイルを収める自然な場所は以下のようだとわかることでしょう──
+追加のスタイルファイルやフォントなどをTeX Liveそのものに格納しておくこともできます。けれどもTeX Liveは所有者がルートで、ユーザが書き込めないフォルダに置かれています。そのうえ、後のバージョンがリリースされたときに簡単にアップグレードできるよう、このディレクトリは手を加えないままにしておくのがよいでしょう。ライブラリ・フォルダ内にTeX Liveのディレクトリ構造をそっくり写した構造を作り、そこに個人的なファイルを格納するほうがよいのです。
 </p>
-		<dl>
-			<dd>/usr/local/teTeX/share/texmf/tex/latex/misc/
-		</dl>
 
 <p>
-ということで、ホーム・ディレクトリのライブラリ・フォルダ内に、次のような一連のサブディレクトリを作成してください：
+ファイルは適切なディレクトリに置いてやらねばなりません。TeX LiveはTeXワーキンググループの考案したディレクトリ構造を用いています。LaTeXが使うスタイルファイルに、new.styという名前のスタイルファイルを追加したいとしましょう。TeX Liveでは、LaTeXが使うスタイルファイルはtexmf-dist/tex/latexのサブフォルダに置かれています。
 </p>
+
+<p>
+ということで、ホーム・ディレクトリのライブラリ・フォルダ内に、次のような一連のサブディレクトリを作成してください。
+</p>
+
 		<dl>
 			<dd>Library  --&gt;  texmf  --&gt;  tex  --&gt;  latex  --&gt;  misc
 		</dl>
 
 <p>
-そのうえで「new.sty」をこのmiscディレクトリに格納します。
+そして「new.sty」をこのmiscディレクトリの中に格納します。
 </p>
+
+<p>
+TeX Liveは、BibTeXのbibファイルを ~/Library/texmf/bibtex/bib から、BibTeXのbstファイルを ~/Library/texmf/bibtex/bst から探します。
+</p>
+
+<p>
+MacTeXは、/Applications/TeXにTeX Live Utilityもインストールします。複数のTeXディストリビューションがインストールされている場合は、TeX Live Utilityの「Configure」メニューから「Reconfigure Distributions」を選ぶと、使うディストリビューションを切り替えられます。切り替えたディストリビューションは、コマンドラインから呼び出すTeX、ターミナルでのMANページ、それに/Library/TeX/texbinを通してTeXを見つけるすべてのGUIアプリケーションで使われます。MacTeXを使わずにインストールしたTeX LiveがTeX Live Utilityに表示されない場合は、代わりに設定の「タイプセット &gt; パス &gt; TeXエンジン」に、そのTeX Liveのバイナリのフォルダ（たとえば/usr/local/texlive/2026/bin/universal-darwin）を指定してください。
+</p>
+</div>
 
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
 <div id="header_chapter">上級向けのヘルプ</div>
-<div id="header_title">teTeXについてさらに</div>
+<div id="header_title">TeX Liveについてさらに</div>
 
 		<div id="menu_border">
 		<ul>
-			<li><a href="advanced_personaltetex.htm">スタイルとマクロをteTeXに追加する</a>
+			<li><a href="advanced_personaltetex.htm">スタイルとマクロをTeX Liveに追加する</a>
 			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
 			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
 			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
@@ -85,8 +72,7 @@ Gerben WierdaさんによるMac OS Xへの移植についての追加のドキ�
 			<li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a>
 			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
 			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
-			<li><a href="advanced_moretetex.htm">teTeXについてさらに</a>
-			<li><a href="advanced_fink.htm">Finkとの共存</a>
+			<li><a href="advanced_moretetex.htm">TeX Liveについてさらに</a>
 			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
 			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
 			<li><a href="advanced_plist.htm">Plistファイル</a>

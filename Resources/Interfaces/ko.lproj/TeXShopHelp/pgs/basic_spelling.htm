@@ -3,36 +3,37 @@
 <meta content="text/html;charset=iso-8859-1" http-equiv="content-type"/>
 <title>Checking Spelling</title>
 <meta content="Copyright (c) 2003 Richard Koch under the GNU FDL" name="copyright"/>
-<meta content="spelling; aspell; continuous spell checking; excalibur; zaccone" name="description"/>
+<meta content="spelling; continuous spell checking; latex-aware spell checking; dictionary" name="description"/>
 <link href="../sty/screen.css" media="all" rel="stylesheet"/>
 </head>
 <body>
 
 <div id="content_border">
 <p>Cocoa programs automatically inherit spell checking technology by Apple. TeXShop supports continuous spell checking, which can be toggled on or off with a menu command. A setting selects the initial position of this toggle.</p>
-<p> The Apple spell checker does not understand LaTeX commands and marks many such commands as misspelled. However, Apple's technology allows third parties to add extra spell servers to the operating system, which then become available as transparent extensions of Apple's system. One of these third party servers, cocoAspell, supports LaTeX and is often installed by TeX users. This speller was written by Anton Leuski, using Kevin Adkinson's ispell for Unix machines as a foundation. To obtain it, go to</p>
-<p>
-<dl>
-<dd><a href="http://cocoaspell.leuski.net/">http://cocoaspell.leuski.net/</a>
-</dd></dl>
-	and download the free installer which makes installing a breeze. The installer  provides an English dictionary, but Leuski's site contains a link to a site with free dictionaries for over 90 extra languages. 
-	<p> After installing cocoAspell, it is important to configure it for TeX. That is done with the  Spelling Preference Pane which the cocoAspell installer adds to Apple's System Preferences panel. Use this pane to select active cocoAspell dictionaries. For each selected dictionary, click the TeX/LaTeX filter switch
-	in the Spelling Pane panel to turn on LaTeX filtering.
+<p> The Apple spell checker does not understand LaTeX commands by itself and marks many such commands as misspelled. In the &#47582;&#52644;&#48277; &#44160;&#49324; category of TeXShop Settings, choose &#8220;LaTeX &#44396;&#47928;&#51012; &#44256;&#47140;&#54620; &#47582;&#52644;&#48277; &#44160;&#49324; &#49324;&#50857;(&#44428;&#51109;)&#8221;: TeXShop then checks the text and skips commands, mathematics, comments, and the arguments of references.</p>
 
-	<p> Once cocoAspell is installed, open Apple's Language &amp; Text Preference Pane, select the Text tab, and choose the appropriate spelling dictionary in the pulldown "Spelling" menu. Notice that dictionaries from the cocoAspell system are indicated by an extra (Aspell) after their names in this list.
-		<p>An alternate LaTeX spell checker named Excalibur is sometimes used. This spell checker was written by Rick Zaccone; it can open TeXShop files. To obtain it, go to</p>
-<dl>
-<dd><a href="http://www.eg.bucknell.edu/%7eexcalibr/excalibur.html">http://www.eg.bucknell.edu/~excalibr/excalibur.html</a>
-</dd></dl>
-Zaccone's program is not a spell service; instead source files are spell checked by opening them in this program as a separate step in the authoring process.
+	<p> Use the Dictionary section of TeXShop Settings to select a default dictionary. If you usually write in English, select an English dictionary; if you usually write in French, select a French dictionary. Or select "&#50616;&#50612; &#51088;&#46041; &#44048;&#51648;" and an appropriate dictionary will automatically be selected depending on the text.
 
-<p> If you use more than one language in TeXShop, you can  select the active dictionary for a document on one of the first twenty lines of
-the source code by writing a line like
-<dl>
-<dd> % !TEX spellcheck = de-DE
-</dd></dl>
-In that case, documents without this line will use the system default spelling dictionary, but documents with this line will use the indicated dictionary. The line is
+	<p> The dictionary section of TeXShop Settings selects the default dictionary used when new files are opened in TeXShop, but does not change the dictionary used by files that are already open.
+
+	<p> The &#49324;&#51204; menu shows each language under its own name (for example, Deutsch or Fran&ccedil;ais), so choose the dictionary by the name of the language. The code the spell checker uses for that language, such as de or fr_CA, appears as the tool tip of the menu item.
+
+	<p> Once TeXShop dictionary settings are set up, users can open several source files in TeXShop.
+	Each will be assigned the Default Dictionary. But these dictionaries can be changed using the
+	"&#47582;&#52644;&#48277; &#48143; &#47928;&#48277;" menu item in the TeXShop &#54200;&#51665; menu. If desired, each file can use a separate dictionary. For instance, a user might be writing customer letters in English, French, German, and Japanese and could assign such dictionaries to the four source files. In that case, click randomly among the source files and notice that the "Spelling and Grammar" panel switches to the appropriate dictionary each time the corresponding source file becomes active.
+
+	<p> When files are closed, this association is lost, so users who write in multiple languages will need to reselect the appropriate dictionary when each file is opened. 
+
+	<p> However, it is possible to fix the dictionary used when a file is first opened with the magic comment
+	<dd>
+<dl> % !TEX spellcheck = de-DE
+	</dl></dd>
+<p> In this example, the magic states that a German dictionary should be used whenever this file is opened. The dictionary, however, can still be changed after the file opens by using "Spelling &amp; Grammar."
+	The next time the file is closed and opened again, it will use the German dictionary.	
+
+	<p> The line is
 recognized when the document is opened, so the first time it is added to a source file, the file must be saved and reopened before the line is recognized. In a project with a root document, each included source file must contain the line.
+
 
 <p> When using this command, Apple dictionaries are specified using either the ISO 639-1 or ISO 639-2 standards for determining language designations, and the ISO 3166-1 standard for regional designations. The regional designation is used to distinguish between a language as used in one part of the world and that same language in another part of the world. For instance, French is "fr" in ISO 639-1 and "fre" in ISO 639-2; French (France) has regional designation "FR" and
 French (Canadian) has regional designation "CA". So to select a French dictionary in Canada, "spellcheck = fr" will work, and "spellcheck = fr-CA" would be even better.
@@ -42,31 +43,17 @@ Since these are ISO standards, similar commands will work on other platforms, al
 </dd></dl>
 and the regional standards are at
 <dl>
-<dd><a href="http:www.iso.ch">http:www.iso.ch</a>
+<dd><a href="https://www.iso.org/iso-3166-country-codes.html">https://www.iso.org/iso-3166-country-codes.html</a>
 </dd></dl>
-although this second site is difficult to use.
 
-<p> Specifying a cocoAspell dictionary is slightly tricky. The Spelling Preference Pane installed by cocoAspell lists all cocoAspell dictionaries, including active dictionaries. Names in this list are the names to be used following "spellcheck". When these dictionaries appear in Apple's list in the Language &amp; Text panel, they often have different names. Those names don't work.
+<p> Originally, TeXShop did nothing special for dictionaries and users just used "Spelling &amp; Grammar."
+Later a partial implementation of the above design was introduced. Finally, the full implementation was introduced in TeXShop 3.81. A very small number of users prefer the original design in which TeXShop just accepted the default behavior of "Spelling &amp; Grammar." If you are one of these users, you can switch back to the original behavior using the hidden default
 
-<p> For example, there  is a ocoAspell dictionary named German. If the German dictionary is selected in the Spelling Preference Panel, then the resulting dictionary will be listed in Apple's panel as Deutch (Aspell). In this case 
-<dl>
-<dd>% !TEX spellcheck = de
-		</dd></dl>
-will select Apple's German dictionary and 
-<dl>
-<dd>% !TEX spellcheck = German
-		</dd></dl>
-will select the cocoAspell German dictionary, while
-<dl>
-<dd>% !TEX spellcheck = Deutsch (Aspell)
-		</dd></dl>
-will select nothing. 
+	<dl>
+<dd> defaults write TeXShop OriginalSpelling YES
+	</dd></dl>
 
-<p> Similarly there is a cocoAspell dictionary named German (Germany) in the Spelling Preference Pane. To select it, the appropriate command is
-<dl>
-<dd>% !TEX spellcheck = German (Germany)
-		</dd></dl>
-</p></p></p></p></p></p></p></p><p><a href="basic_preferences.htm#settings-search">&#49444;&#51221; &#49324;&#50857; &#48143; &#44160;&#49353;</a></p></div>
+	</p></p></p></p></p></p></p></p></p></p></p></p></p></p></p></p><p><a href="basic_preferences.htm#settings-search">&#49444;&#51221; &#49324;&#50857; &#48143; &#44160;&#49353;</a></p></div>
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/xicnsc.gif" width="40"/></a></div>
 <div id="header_chapter">Basic Help</div><div id="header_title">Checking Spelling</div>

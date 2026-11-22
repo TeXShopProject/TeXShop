@@ -11,7 +11,7 @@
 <BODY>
 	<div id="content_border">
 		<P>Usaremos el applescript &laquo;pdflatexc&raquo;, realizado por Claus Gerhardt, para ilustar el proceso involucrado al llamar a un script del Shell de Unix desde un applescript.
-El script de shell particular que explicamos no es muy interesante; lo &uacute;nico que hace es a&ntilde;adir la localizaci&oacute;n de los archivos binarios teTeX a la variable $PATH, y llama a pdflatex para componer.</P>
+El script de shell particular que explicamos no es muy interesante; lo &uacute;nico que hace es a&ntilde;adir la localizaci&oacute;n de los archivos binarios de TeX a la variable $PATH, y llama a pdflatex para componer.</P>
 
 	<P>El script de shell en s&iacute; mismo es independiente de TeXShop, y se puede ejecutar en el Terminar tecleando &laquo;pdflatexc miarchivo.tex&raquo;, supuesto que el directorio en el que est&eacute; pdflatexc se encuentre en la ruta de b&uacute;squeda de archivos ejecutables. &Eacute;ste es el script del shell:
 
@@ -23,7 +23,7 @@ El script de shell particular que explicamos no es muy interesante; lo &uacute;n
 <dd># Usage
 <dd># pdflatexc filename.tex
 <p>
-<dd>set path= ($path /usr/local/teTeX/bin/powerpc-apple-darwin-current /usr/local/bin)
+<dd>set path= ($path /Library/TeX/texbin /usr/local/bin)
 <p>
 <dd>pdflatex --shell-escape "$1"
 </dl>

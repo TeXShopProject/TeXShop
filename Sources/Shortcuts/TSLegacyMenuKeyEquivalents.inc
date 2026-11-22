@@ -56,9 +56,39 @@ static void TSLegacyKeepRemovedFullscreen(NSMutableArray<NSMenuItem *> *items)
     }];
     if (fullScreen != NSNotFound) [items insertObject:[[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""] atIndex:fullScreen];
 }
+// 6.00 moved the older documents of the Help menu into its Older Documents submenu and removed Short Course
+// Supplements --> Desktop; Spell Checking Help is added at launch. Positions saved before count the Help menu as it was,
+// with the moved items in their former places, a place for the removed one, and without Spell Checking Help.
+static NSString *const TSLegacyOlderDocumentsMarker = @"TSShortcut.displayTipsandTricks:.0";
+static NSArray<NSString *> *TSLegacyFormerHelpMenu(void)
+{
+    return @[@"TSShortcut.displayThisRelease:.0", @"TSShortcut.displayChanges:.0", @"", @"TSShortcut.displayTeXLiveDocumentation:.0",
+             @"TSShortcut.displayHelpForPackage:.0", @"", @"TSShortcut.displayGettingStartedTeXShop:.0", @"TSShortcut.displayManual:.0", @"",
+             @"TSShortcut.displayHTMLHelp:.0", @"TSShortcut.showHelp:.0", @"TSShortcut.displayFileEncoding:.0",
+             @"TSShortcut.displayTipsandTricks:.0", @"TSShortcut.displayTeXShopConfusion:.0", @"TSShortcut.displayCommentLines:.0",
+             @"TSShortcut.displayRecentTeXFonts:.0", @"TSShortcut.displayNotesonApplescript:.0", @"",
+             @"TSShortcut.displayGettingStartedXeTeX:.0", @"", @"TSShortcut.displayGettingStartedLatex:.0",
+             @"TSShortcut.displayShortCourse:.0", @"", @"TSShortcut.displayTables:.0"];
+}
+static NSMutableArray<NSMenuItem *> *TSLegacyFormerHelpItems(NSMenu *menu)
+{
+    BOOL hasOlderDocuments = NO;
+    for (NSMenuItem *item in menu.itemArray)
+        // Only the Help menu itself has the submenu among its items; the menus above it do not count.
+        for (NSMenuItem *child in item.submenu.itemArray)
+            if ([child.identifier isEqualToString:TSLegacyOlderDocumentsMarker]) hasOlderDocuments = YES;
+    if (!hasOlderDocuments) return nil;
+    NSMutableArray<NSMenuItem *> *items = [NSMutableArray array];
+    for (NSString *identifier in TSLegacyFormerHelpMenu()) {
+        NSMenuItem *item = identifier.length ? TSLegacyItemWithIdentifier(menu, identifier) : nil;
+        // Separators and the removed item keep their places with an item that is not in any menu.
+        [items addObject:item ?: [[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""]];
+    }
+    return items;
+}
 static NSArray<NSMenuItem *> *TSLegacyItems(NSMenu *menu)
 {
-    NSMutableArray<NSMenuItem *> *items = [menu.itemArray mutableCopy];
+    NSMutableArray<NSMenuItem *> *items = TSLegacyFormerHelpItems(menu) ?: [menu.itemArray mutableCopy];
     [items filterUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NSMenuItem *item, NSDictionary *bindings) {
         return ![item.identifier isEqualToString:TSLegacyStatusBarItem] && ![item.identifier isEqualToString:TSLegacyIndexColorItem] &&
                ![item.identifier isEqualToString:TSLegacySwapItem] &&
@@ -95,7 +125,11 @@ static NSString *TSLegacyComparableTitle(NSString *title)
         space = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:NULL];
         doubled = [NSRegularExpression regularExpressionWithPattern:@" {2,}" options:0 error:NULL];
     });
-    NSString *trimmed = [title stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
+    // 6.00 marks the documents that are in English only, in every language; titles saved without the mark name the same items.
+    for (NSString *mark in @[@" (Englisch)", @"（英語）", @" (영문)", @" (en inglés)", @" (en anglais)", @" (in inglese)", @" (Engels)",
+                             @" (em inglês)", @" (în engleză)", @"（英文）"])
+        if ([title hasSuffix:mark]) { title = [title substringToIndex:title.length - mark.length]; break; }
+    NSString *trimmed = [title stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" \n"]];
     trimmed = [doubled stringByReplacingMatchesInString:trimmed options:0 range:NSMakeRange(0, trimmed.length) withTemplate:@" "];
     return [space stringByReplacingMatchesInString:trimmed options:0 range:NSMakeRange(0, trimmed.length) withTemplate:@""];
 }
@@ -119,6 +153,16 @@ static NSString *TSLegacyFormerTitleIdentifier(NSString *title)
         // Show Syntax Color and Syntax Color expl3 Code before 6.00, in every language.
         for (NSString *former in @[@"Afficher la coloration syntaxique", @"Colorazione sintassi", @"Exibir destaque de sintaxe", @"Mostrar resaltado de sintaxis", @"Show Syntax Color", @"Syntaxhervorhebung anzeigen", @"Toggle Syntax Color", @"显示语法高亮", @"구문색상 끄기/켜기"]) map[TSLegacyComparableTitle(former)] = @"TSShortcut.toggleSyntaxColor:.14";
         for (NSString *former in @[@"Coloration syntaxique du code expl3", @"Colorazione sintassi codice expl3", @"Coloração de sintaxe do código expl3", @"Código exp da cor da sintaxe", @"Sintaxis de código expl3", @"Sintaxă Cod expl culoare", @"Syntax Color expl3 Code", @"Syntaxis Kleur expl3-code", @"expl3 구문 강조", @"expl3-Syntax farblich hervorheben"]) map[TSLegacyComparableTitle(former)] = @"TSShortcut.toggleExplColor:.0";
+        // Help menu titles corrected in 6.00.
+        map[TSLegacyComparableTitle(@"最近使用的TeX字体")] = @"TSShortcut.displayRecentTeXFonts:.0";
+        map[TSLegacyComparableTitle(@"魔术行; 隐藏设置")] = @"TSShortcut.displayCommentLines:.0";
+        map[TSLegacyComparableTitle(@"Primeiros passos com o TexShop")] = @"TSShortcut.displayGettingStartedTeXShop:.0";
+        map[TSLegacyComparableTitle(@"Curso rápido de símbolos de tabelas")] = @"TSShortcut.displayTables:.0";
+        map[TSLegacyComparableTitle(@"Exibir ajuda para o pacote")] = @"TSShortcut.displayHelpForPackage:.0";
+        map[TSLegacyComparableTitle(@"Raccourcis clavier et autres par Herbert Schulz.")] = @"TSShortcut.displayTeXShopConfusion:.0";
+        map[TSLegacyComparableTitle(@"Introductie symbooltabellen")] = @"TSShortcut.displayTables:.0";
+        for (NSString *former in @[@"TeXShop Hilfspalette", @"TeXShopヘルプパネル", @"TeXShop 도움말 패널"])
+            map[TSLegacyComparableTitle(former)] = @"TSShortcut.showHelp:.0";
         // TeX Live Documentation in Japanese before 6.00, written without the space.
         map[TSLegacyComparableTitle(@"TeXLiveドキュメント（英語）")] = @"TSShortcut.displayTeXLiveDocumentation:.0";
         identifiers = map;

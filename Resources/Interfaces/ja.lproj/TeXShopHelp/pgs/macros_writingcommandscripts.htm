@@ -11,16 +11,10 @@
 <BODY>
 <div id="content_border">
 
-<!-- 
-<p>
-Claus GerhardtによるAppleScript「pdflatexc」を使って、AppleScriptからUNIXのシェルコマンドを呼び出す原理を例示してみましょう。このシェルスクリプト自体は大しておもしろくありません ；teTeXのバイナリの場所を $PATH変数に加え、pdflatexを呼び出してタイプセットを行なっています。
-</p>
- -->
-
 <p>
 
 </p>
-Claus GerhardtさんによるAppleScript「pdflatexc」を使って、AppleScriptからUNIXのシェルコマンドを呼び出す原理を例示してみましょう。このシェルスクリプト自体は大しておもしろくありません ；teTeXのバイナリの場所を $PATH変数に加え、pdflatexを呼び出してタイプセットを行なっています。
+Claus GerhardtさんによるAppleScript「pdflatexc」を使って、AppleScriptからUNIXのシェルコマンドを呼び出す原理を例示してみましょう。このシェルスクリプト自体は大しておもしろくありません ；TeXのバイナリの場所を $PATH変数に加え、pdflatexを呼び出してタイプセットを行なっています。
 <p>
 シェルスクリプトそのものは、TeXShopには依存していませんし、pdflatexcを含むディレクトリがバイナリの検索パスにあれば「pdflatexc myfile.tex」と打ち込むことでTerminalからも実行できます。これがそのシェルスクリプトです：
 </p>
@@ -34,7 +28,7 @@ Claus GerhardtさんによるAppleScript「pdflatexc」を使って、AppleScrip
 		<dd># Usage
 		<dd># pdflatexc filename.tex
 		<p>
-		<dd>set path= ($path /usr/local/teTeX/bin/powerpc-apple-darwin-current /usr/local/bin)
+		<dd>set path= ($path /Library/TeX/texbin /usr/local/bin)
 		<p>
 		<dd>pdflatex --shell-escape "$1"
 	</dl>

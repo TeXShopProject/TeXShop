@@ -10,37 +10,23 @@
 
 <BODY>
 <div id="content_border">
-
 <p>
-pdftexとpdflatexの最新バージョンではtiffファイルのサポートがなくなりました。しかしながらTeXShopでは設定可能なので、tiff形式の画像はタイプセット時に自動的にpng形式に変換されます。加えてeps形式のグラフィックもタイプセット時にはpdf形式に変換されます。どちらの場合にも、もともとの画像ファイルはそのままで、新しいファイルがそれぞれのフォーマットで作成されます。tiffファイルはいまだに拡張子が「.tiff」ではなく「.tif」でなければなりませんが。
+tiffファイルのサポートは、しばらく前にpdftexとpdflatexから削除されました。しかしTeXShopには「TIFFファイルを変換」というメニューコマンドがあり、tiffファイルを、pdftexとpdflatexが扱えるpng形式に変換できます。
 </p>
 
-<!-- 
 <p>
-新規にインストールしたTeXShopでは、あらかじめ適切な設定になっています。アップグレードするユーザは、次の２つのセクションで挙げている変更を行なってください。またGerben Wierdaのi-Installerを使って、以下のパッケージをインストールしておきます──まだ入れていなければですが：
+pdftexとpdflatexはpdf・jpg・png形式の画像ファイルを扱えますが、eps形式は扱えません。古いTeXのプロジェクトの多くでは、dvipsが扱えたことから、eps形式のイラストが使われていました。2011年以降のTeX Liveでは、ソース文書でgraphicxパッケージを読み込んでいれば、タイプセットの際にepsファイルが自動的にpdf形式に変換されます。この変換には、セキュリティ上の問題がある「--shell-escape」フラグは必要ありません。
 </p>
- -->
+</div>
 
-<p>
-新規にインストールしたTeXShopでは、あらかじめ適切な設定になっています。アップグレードするユーザは、次の２つのセクションで挙げている変更を行なってください。またGerben Wierdaさんのi-Installerを使って、以下のパッケージをインストールしておきます──まだ入れていなければですが：
-</p>
-
-		<dl>
-			<dd>Ghostscript 8</font>
-			<dd>Freetype 2</font>
-			<dd>wmf and iconv conversion support</font>
-			<dd>ImageMagick</font>
-		</dl>
-
-</div>		
-		<div id="header_background"></div>
+<div id="header_background"></div>
 		<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
 		<div id="header_chapter">TeXShopの設定はどうすればよいか？</div>
 		<div id="header_title">画像形式を自動的に変換する</div>
 		<div id="menu_border">
 			<UL>
 				<li><a href="configure_preliminaries.htm">まえがき</a>
-				<li><a href="configure_correctinstall.htm">きちんとインストールしましたか？</a>
+				<li><a href="configure_correctinstall.htm">~/Library/TeXShopの新しい項目を入手する</a>
 				<li><a href="configure_prefchanges.htm">おすすめの設定変更</a>
 				<li><a href="configure_convertgraphics.htm">画像形式を自動的に変換する</a>
 				<li><a href="configure_defaults.htm">初期設定について</a>

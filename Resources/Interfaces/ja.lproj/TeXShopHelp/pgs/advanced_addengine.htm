@@ -4,129 +4,51 @@
 			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=UTF-8">
 			<TITLE>追加のタイプセットエンジン</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="XeTeXとXeLaTeXについて">
+			<META NAME="description" CONTENT="タイプセットエンジン; engine; TS-program; Engines">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
-<!--コメントアウトしてある部分はバージョン1.35の旧文です。-->
 
 <body>	
 
 <div id="content_border">
 
-<!-- 
-<p>
-最近になり、Jonathan KewがXeTeXとXeLaTeXを発表しました。これらのプログラムは、TeX文書内でMacintoshのフォントをじかに利用することができます。XeTeXとXeLaTeXはunicodeによるソースが必要になりますが、それゆえすべてのunicode文字を取り扱うことができます ； たとえば、アラビア語やヘブライ語をソースコードに打ち込んで、アラビア語やヘブライ語の出力として見ることができます。TeXShopのエディタではこうした文字を右から左へきちんと入力できます。XeTeXはGerben Wierdaの配布する標準的なTeXには含まれていませんが、Wierdaのi-Installerを使うことで、オプション・インストールとしてJonathan Kewのところから入手することができます。さらに詳しいことについては、以下でお調べください──
-</p>
- -->
+<p>TeXShopには文書をタイプセットする方式がいくつか組み込まれていますが、タイプセットの方式を追加することもできます。追加した方式を「エンジン」と呼びます。</p>
 
-<p>
-最近、Jonathan KewさんがXeTeXとXeLaTeXを発表しました。これらのプログラムは、TeX文書内でMacintoshのフォントをじかに利用することができます。XeTeXとXeLaTeXはunicodeによるソースが必要になりますが、それゆえすべてのunicode文字を取り扱うことができます ； たとえば、アラビア語やヘブライ語をソースコードに打ち込んで、アラビア語やヘブライ語の出力として見ることができます。TeXShopのエディタではこうした文字を右から左へきちんと入力できます。XeTeXはGerben Wierdaさんの配布する標準的なTeXには含まれていませんが、Wierdaさんのi-Installerを使うことで、オプション・インストールとしてJonathan Kewさんのところから入手することができます。さらに詳しいことについては、以下でお調べください──
-</p>
+<p>エンジンは、TeXのソースファイルから始まってPDFファイルで終わる一連の処理の中で、どのようなプログラムでも呼び出せます。厳密には最後のPDFファイルさえ必須ではありません。TeXShopに付属するエンジンの1つは、TeX Liveのプログラムtex4htを使ってLaTeXのソースをHTMLファイルに変換し、TeXShopはそのHTMLファイルを自分のHTMLウインドウに、PDFと並べて表示します。エンジンが呼び出すプログラムの手順はシェルスクリプトに書きます。</p>
 
-	<dl>
-		<dd><a href="http://scripts.sil.org/xetex">http://scripts.sil.org/xetex</a>
-	</dl>
+<p>~/Library/TeXShopにはEnginesというフォルダがあり、その中のファイルはタイプセットプログラムを呼び出すシェルスクリプトです。TeXShopは起動時にこのフォルダを調べ、中にあるスクリプトの名前をタイプセット方式のポップアップメニューに加えます。その項目を選んで「タイプセット」ボタンを押すと、スクリプトが呼び出されます。自分で書いたスクリプトをEnginesフォルダに加えることもできます。スクリプトの名前には空白を含めず、拡張子を「.engine」にし、実行権限を付けておく必要があります。</p>
 
-<p>
-これがどのように動作するのかを理解できるような、簡単なXeLaTeXのソース文書と出力結果があります。アラビア語とヘブライ語の文字は「システム環境設定」の「言語環境」で「入力メニュー」タブを選び、ArabicとHebrewにチェックを入れます ； 小さな国旗がメニューバーに表示されるので、それを選択することでキーボード入力を切り替えられます。
-</p>
+<p>~/Library/TeXShop/Enginesにある項目は、TeXShopの設定でデフォルトのタイプセット方式として選ぶこともできます。設定に表示される方式の名前には拡張子が付きません。</p>
 
-<IMG HEIGHT="356" WIDTH="328" border="1" SRC="../gfx/source.jpg" align="top">＿入力例
-<p>
-<IMG HEIGHT="155" WIDTH="349" border="1" SRC="../gfx/output.jpg" align="top">＿出力例
+<p>ソースの最初の20行のどこかに次のような行を書くと、その文書で使うプログラムを指定できます。</p>
+<dl>
+<dd> % !TEX TS-program = xelatex
+</dl>
 
+<p>等号の前後には空白を1つずつ入れます。TeXShopに付属するマクロを使うと、この行を簡単に追加できます。このマクロは有効なエンジンをすべて一覧にするので、ダイアログのリストから目的のエンジンを選べます。</p>
 
-<p>
-TeXShopでは現在すでにXeTeXとXeLaTeXをサポートしています：
-</p>
+<p>この書式はのちにTeXworksなどのフロントエンドでも採用されました。共同作業をしやすくするため、TeXShopはTeXworks形式の次の行も受け付けます。</p>
+<dl>
+<dd> % !TEX program = xelatex
+</dl>
 
-<ul>
-	<li>XeTeXとXeLaTeXは、ソースウインドウにあるプルダウンメニュー「タイプセット」から利用可能です
-	<li>設定でXeTeXまたはXeLaTeXをデフォルトのタイプセットコマンドにできます
-	
-<!--	<li>もしソースの冒頭10行以内に次の書式があれば──-->
-	<li>もしソースの冒頭20行以内に次の書式があれば──
-		<dl>
-<!--			<dd><tt>%&encoding=UTF-8 Unicode</tt>-->
-			<dd><tt>%!TEX encoding = UTF-8 Unicode</tt>
-		</dl>
-		そのソースは、設定でのデフォルトのエンコーディング方式に関わらずUTF-8 Unicode形式で読み込まれ保存されます
-<!--	<li>もしソースの第１行目に次のいずれかの書式があれば──-->
-	<li>もしソースの冒頭20行以内に次のいずれかの書式があれば──
-		<dl>
-<!--			<dd><tt>%&program=xetex</tt>-->
-			<dd><tt>%!TEX TS-program = xetex</tt>
-			<p>
-<!--			<dd><tt>%&program=xelatex</tt>-->
-			<dd><tt>%!TEX TS-program = xelatex</tt>
-		</dl>
-		メニューで選択したタイプセット・オプションに関わらず、特定のプログラムが用いられます
-</ul>
+<p>「% !TEX TS-program = ...」の行は、ツールバーで選んだタイプセット方式より優先されます。たとえば上のようにxelatexを指定する行がソースにあれば、ツールバーのポップアップメニューでpdflatexを選んでいても、「タイプセット」ボタンを押したとき、「タイプセット」メニューの「タイプセット」を選んだとき、そのキーボードショートカットを使ったときのいずれもxelatexでタイプセットされます。ルートファイルと複数の章ファイルからなるプロジェクトでは、ルートファイルにだけ「% !TEX TS-program」の行を書けば十分です。</p>
 
-<p>
-こうしたXeTeXの特徴は、TeXShopにタイプセットエンジンを追加する新しい一般的な方法の特例となっています。~/Library/TeXShop内に「Engines」という名前のフォルダがあります ； このフォルダに入っているファイルは、タイプセット・プログラムを呼び出せるシェル・スクリプトです。TeXShopを最初に起動すると、このフォルダを調べ、ファイルのスクリプト名を加え、プルダウンメニュー「タイプセット」に含めます。この中から１つを選んでタイプセット・ボタンを押せば、スクリプトが呼び出されます。ユーザは自分で独自のスクリプトを書き、それを「Engines」フォルダに追加することができます。各スクリプトは、スペースを含まない名前で、拡張子が「.engine」となっており、実行可能なビット・セットがなければなりません。
-</p>
+<p>新しいエンジンファイルを書くときは、~/Library/TeXShop/Enginesにある既存のエンジンを複製して始めると便利です。複製したファイルには実行権限が自動的に付いています。そのファイルをTeXShopで編集して新しいエンジンを作ります。</p>
 
-<p>
-~/Library/TeXShop/Engines内にある項目は、デフォルトのタイプセット方式として、TeXShopの設定で選択できます。設定に表示される際には、拡張子なしの名称となることに注意します。
-</p>
+<p>~/Library/TeXShop/EnginesフォルダにはInactiveというサブフォルダがあり、追加のエンジンスクリプトが多数入っています。これらを見ると、エンジンファイルの書き方が実例でわかります。エンジンが呼び出されると、変数「$1」には、そのとき作業中だったソースファイルの名前（フォルダを含まないファイル名）が入り、エンジンはそのファイルがあるフォルダを作業ディレクトリとして起動します。たとえば/Users/me/paper/main.texなら、「$1」はmain.texで、エンジンは/Users/me/paperで実行されます。そのため、スクリプトで別のフォルダに移動する場合は、先に「$PWD/$1」などとしてフルパスを控えておく必要があります。このファイルの拡張子は「.tex」とは限りません。エンジンスクリプトでは、いくつもの中間段階を経て各種の補助ファイルを作り、それを別のコマンドラインプログラムで処理してもかまいません。TeXShopは、最終的にソースファイルと同じ名前で拡張子が「.pdf」のPDFファイルができることを想定しています。その場合、TeXShopはエンジンの実行が終わると自動的にPDFファイルを開き、タイプセット前のPDFと同じ位置までスクロールします。PDFファイルができなかった場合、TeXShopはこの手順を省きます。そのときは、必要に応じて結果を適切なプログラムで開く処理をエンジンスクリプトに書いてください。</p>
 
-<p>
-<!--ソースコードの第１行目に次のように書くことでデフォルトのプログラムを設定できます──-->
-ソースコードの冒頭20行以内の１行に次のように書くことでデフォルトのプログラムを設定できます──
-</p>
-	<dl>
-<!--		<dd><tt>%&program=xelatex</tt>-->
-		<dd><tt>%!TEX TS-program = xelatex</tt>
-	</dl>
+<p>エンジンスクリプトはどのような言語で書いてもかまいません。ほとんどのエンジンはtcshかzshを使っていますが、perlなどの言語で書いたスクリプトも動作します。</p>
 
-<p>
-任意のファイルを開いたり保存したりするのに用いるエンコーディング方式は、
-<!--以下のような書式をソース文書の冒頭10行以内に書き込むことで設定できます。-->
-以下のような書式をソース文書の冒頭20行以内に書き込むことで設定できます。
-サポートされているエンコーディング方式のいずれでも可能です。この動作を回避するには、オプションキーを押しながらファイルを開きます。
-</p>
-	<dl>
-<!--		<dd><tt>%&encoding=UTF-8 Unicode</tt>-->
-		<dd><tt>%!TEX encoding = UTF-8 Unicode</tt>
-	</dl>
+<p>エンジンでは次のような方法がよく使われます。入力ファイルをタイプセットして、同じ名前で拡張子の違う補助ファイルを作り、その補助ファイルを別のプログラムで処理するという方法です。Inactiveフォルダにあるsageエンジンがその例で、補助ファイルの拡張子は「.sage」で、数式処理システムSageで処理する必要があります。このような場合には、sageエンジンにある次のコードが役立ちます。</p>
+<dl>
+<dd> sagename=${filename/%tex/sagetex.sage}
+</dl>
 
-<p>
-<!--等号記号の前後にスペースを入れることはできません ； -->
-<tt>%!TEX</tt> の後に１つ、等号記号の前に１つ、半角スペースを入れなければなりません ； 
-エンコーディング名に含まれるスペースは、下記のリストにあるスペースと一致させてください。エンコーディング方式の名称はMac OS Xの内部で用いられているものです。以下が利用可能な名称のリストです：
-</p>
+<p>ここで${filename/%tex/sagetex.sage}は、ファイル名の末尾の「tex」を、sagetexが書き出すファイルの名前の「sagetex.sage」に置き換えます。</p>
 
-	<ul>
-		<li> MacOSRoman
-		<li> IsoLatin
-		<li> IsoLatin2
-		<li> IsoLatin5
-		<li> MacJapanese
-		<li> DOSJapanese
-		<li> SJIS_X0213
-		<li> EUC_JP
-		<li> JISJapanese
-		<li> MacKorean
-		<li> UTF-8 Unicode
-		<li> Standard Unicode
-		<li> Mac Cyrillic
-		<li> DOS Cyrillic
-		<li> DOS Russian
-		<li> Windows Cyrillic
-		<li> KOI8_R
-		<li> Mac Chinese Traditional
-		<li> Mac Chinese Simplified
-		<li> DOS Chinese Traditional
-		<li> DOS Chinese Simplified
-		<li> GBK
-		<li> GB 2312
-		<li> GB 18030
-	</ul>
-
-
-
+</div>
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
 <div id="header_chapter">上級向けのヘルプ</div>
@@ -134,7 +56,7 @@ TeXShopでは現在すでにXeTeXとXeLaTeXをサポートしています：
 
 		<div id="menu_border">
 		<ul>
-			<li><a href="advanced_personaltetex.htm">スタイルとマクロをteTeXに追加する</a>
+			<li><a href="advanced_personaltetex.htm">スタイルとマクロをTeX Liveに追加する</a>
 			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
 			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
 			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
@@ -151,8 +73,7 @@ TeXShopでは現在すでにXeTeXとXeLaTeXをサポートしています：
 			<li><a href="advanced_syntaxcolor.htm">シンタックスハイライト</a>
 			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
 			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
-			<li><a href="advanced_moretetex.htm">teTeXについてさらに</a>
-			<li><a href="advanced_fink.htm">Finkとの共存</a>
+			<li><a href="advanced_moretetex.htm">TeX Liveについてさらに</a>
 			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
 			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
 			<li><a href="advanced_plist.htm">Plistファイル</a>
