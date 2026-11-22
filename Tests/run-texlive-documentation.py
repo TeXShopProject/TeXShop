@@ -138,6 +138,31 @@ def spelling(overrides):
                 check(False, f'{name}: "TeX Live" without the space, or teTeX: {line.strip()[:120]}')
 
 
+def links():
+    """The documents link to the documents online, not to the files of a MacTeX installation
+    (file:///Library/TeX/Root/...), which another TeX Live installation does not have. Checks the
+    sources and, with qpdf, the links in the bundled PDFs."""
+    folder = root / 'DocumentSources/TeXLiveDocumentation'
+    sources = [folder / 'TeXLiveDocumentation.tex', folder / 'TeXLiveDoc-Spain/TeXLiveDocumentation-spanish.tex',
+               folder / 'TeXLiveDoc-France/TeXLiveDocumentation.tex', folder / 'TexLiveDoc-Brazil/TeXLiveDocumentation-pt_BR.tex']
+    for source in sources:
+        text = source.read_text(encoding='utf-8', errors='replace')
+        check('file://' not in text, f'{source.relative_to(root)}: links to installed files')
+        check('https://texdoc.org' in text, f'{source.relative_to(root)}: points to texdoc.org')
+    qpdf = shutil.which('qpdf') or ('/usr/local/tetex/bin/qpdf' if Path('/usr/local/tetex/bin/qpdf').exists() else None)
+    if qpdf is None:
+        print('note: qpdf not found; the links in the PDFs are not checked')
+        return
+    for pdf in sorted(INTERFACES.glob('*.lproj/TeXLiveDocumentation.pdf')):
+        out = subprocess.run([qpdf, '--qdf', '--object-streams=disable', str(pdf), '-'], capture_output=True)
+        data = out.stdout
+        uris = re.findall(rb'/URI \(([^)]*)\)', data)
+        name = pdf.relative_to(root)
+        check(len(uris) >= 10, f'{name}: {len(uris)} links')
+        check(not any(u.startswith(b'file:') for u in uris), f'{name}: links to installed files')
+        check(b'https://texdoc.org' in uris, f'{name}: links to texdoc.org')
+
+
 def main():
     args = sys.argv[1:]
     if args == ['--mutations']:
@@ -162,6 +187,7 @@ def main():
         else:
             overrides[path] = original.replace(old, new, 1)
     spelling(overrides)
+    links()
     with tempfile.TemporaryDirectory(prefix='texlive-doc-') as tmp:
         work = Path(tmp)
         (work / 'home').mkdir()
