@@ -724,6 +724,7 @@ enum RootCommand
 - (void) fixExplMenu;
 - (void) fixShowFullPathButton; // added by Terada
 - (NSString*) fileTitleName; // added by Terada
+- (BOOL) showsFullPath;
 // - (void) openStyleFile: (id)sender; // added by Terada
 - (void) setAutoCompleting:(BOOL)flag; // added by Terada
 - (IBAction) showCharacterInfo:(id)sender; // added by Terada

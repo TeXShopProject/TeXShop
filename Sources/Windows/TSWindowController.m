@@ -43,6 +43,16 @@
     [super windowWillLoad];
 }
 
+// AppKit names the window again whenever the document changes (saves, autosaves, Edited); with Show Full Path
+// the name it gives is the full path, so the window never falls back to the file name.
+- (NSString *)windowTitleForDocumentDisplayName:(NSString *)displayName
+{
+    NSDocument *document = self.document;
+    if ([document isKindOfClass:[TSDocument class]] && [(TSDocument *)document showsFullPath] && document.fileURL != nil)
+        return document.fileURL.path;
+    return [super windowTitleForDocumentDisplayName:displayName];
+}
+
 
 
 @end
