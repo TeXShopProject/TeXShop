@@ -104,7 +104,7 @@
 
 \begin{document}
 \maketitle
-\noindent\textit{Ce document a été écrit en 2015. Les noms des menus et des réglages de TeXShop ont changé depuis ; consultez le manuel de TeXShop pour les noms actuels.}
+\noindent\textit{Révisé en 2026 pour TeXShop 6.00 (noms des menus et des réglages).}
 
 
 %\section{Introduction}
@@ -126,7 +126,7 @@ Trois fonctionnalités de \TS\ sont souvent confondues : les \cmd{Raccourcis cla
 
 Les \textbf{\cmd{Raccourcis clavier}} attribuent à l'entrée d'un seul caractère un ensemble de frappes ; par exemple, taper \verb+_+ produit \verb+_{...|}+ (où « \verb+...|+ » est n'importe quel texte sélectionné, suivi du curseur~--- le lieu où le texte est inséré) ou taper \(\leq\) (\cmd{Opt-,} sur un clavier anglais) produit \verb+\leq+\footnote{Il faut entrer \optkey< sur un clavier français.}.
 
-Les \textbf{\cmd{Macros}} peuvent également insérer simplement du texte et se voir octroyer un raccourci clavier (qui utilise toujours la touche \cmdkey\ avec d'autres touches) mais sont plus utiles lorsqu'elles sont associées aux programmes Applescript afin qu'elles puissent traiter d'une façon particulière le texte du source, etc.
+Les \textbf{\cmd{Macros}} peuvent également insérer simplement du texte et se voir octroyer un raccourci clavier (qui utilise la touche \cmdkey\ ou ctrl avec d'autres touches, ou une touche de fonction) mais sont plus utiles lorsqu'elles sont associées aux programmes Applescript afin qu'elles puissent traiter d'une façon particulière le texte du source, etc.
 
 La \textbf{\cmd{Commande de complètement}} (à ne pas confondre avec l'\cmd{autocomplétion}\setcounter{footnote}{0}\footnotemark) vous permet, en n'entrant qu'une partie de commande ou une courte abréviation, d'obtenir une commande entière ou même tout un environnement, lorsqu'une touche de déclenchement est pressée (la touche \esckey\ par défaut, mais elle peut être remplacée par la touche de tabulation « \tabkey »).
 
@@ -140,9 +140,9 @@ Voir les détails ci-dessous.
 %
 %You can see the list of \cmd{Key Bindings}, edit and add/delete them by starting up the \cmd{Key Bindings Editor} using the \mnu{Source}\To\mnu{Key Bindings}\To\mnu{Edit Key Bindings File…} menu item.
 
-Pour les activer allez dans \mnu{TeXShop}\To\mnu{Préférences…}\To\mnu{Document}\To\mnu{Éditeur}\To \mnu{Raccourcis clavier} et cochez la case correspondante. Bien sûr, ils peuvent être désactivés en décochant cette case. Ils peuvent être activés ou désactivés au cours d'une session d'édition en utilisant l'option du menu \mnu{Source}\To\mnu{Raccourcis clavier}\To\mnu{Activer/Désactiver} (une coche « \checkmark » confirme l'activation).
+Pour les activer dans les nouveaux documents, allez dans la catégorie \mnu{Clavier} de \mnu{TeXShop}\To\mnu{Réglages…} et cochez \mnu{Utiliser les raccourcis de saisie (valeur initiale des nouveaux documents)}. Bien sûr, ils peuvent être désactivés en décochant cette case. Ils peuvent être activés ou désactivés au cours d'une session d'édition en utilisant l'option du menu \mnu{Source}\To\mnu{Raccourcis clavier} (une coche « \checkmark » confirme l'activation).
 
-Vous pouvez consulter la liste des \cmd{Raccourcis clavier}, les modifier, en ajouter ou en supprimer. Pour cela, affichez l'\cmd{Éditeur de raccourcis clavier} en allant dans le menu \mnu{Source}\To\mnu{Raccourcis clavier}\To\mnu{Éditer le fichier des raccourcis…}
+Vous pouvez consulter la liste des \cmd{Raccourcis clavier}, les modifier, en ajouter ou en supprimer. Pour cela, utilisez la \mnu{Liste des raccourcis de saisie} de la même catégorie \mnu{Clavier} de \mnu{TeXShop}\To\mnu{Réglages…}
 
 
 %\subsection{Special Notes}
@@ -161,7 +161,7 @@ Les \cmd{Raccourcis clavier} ne peuvent pas être créés pour des caractères p
 
 %The \mnu{Macros} Menu contains a fairly large number of pre-defined macros. It is possible to create more macros by enabling the Macro Editor with \mnu{Macros}\To\mnu{Open Macro Editor…}. Macros can be added either by copying text into a newly created macro or by adding a macro file (which has the extension \cmd{plist}) using \mnu{Macros}\To\mnu{Add macros from file…} (only visible and available when the Macro Editor is active). The order of appearance of the macros in the \cmd{Macros} Menu can also be changed by simply moving them around on the left panel of the \cmd{Macro Editor}.
 
-Le menu \mnu{Macros} contient un assez grand nombre de macros prédéfinies. Il est possible de créer d'autres macros en ouvrant le \cmd{Macro Editor}. Pour cela, aller dans le menu \mnu{Macros}\To\mnu{Ouvrir l'éditeur des macros…} Les macros peuvent être ajoutées en copiant le texte dans une macro nouvellement créée ou en ajoutant un fichier macro (de suffixe \cmd{.plist}) à l'aide du menu \mnu{Macros}\To\mnu{Ajouter une macro à partir du fichier…} (visible et disponible seulement si le \cmd{Macro Editor} est ouvert). L'ordre d'apparition des macros dans le menu \mnu{Macros} peut également être modifié simplement en les déplaçant dans le panneau gauche du \cmd{Macro Editor}.
+Le menu \mnu{Macros} contient un assez grand nombre de macros prédéfinies. Il est possible de créer d'autres macros en ouvrant le \cmd{Macro Editor}. Pour cela, aller dans le menu \mnu{Macros}\To\mnu{Ouvrir l'éditeur de macros…} Les macros peuvent être ajoutées en copiant le texte dans une macro nouvellement créée ou en ajoutant un fichier macro (de suffixe \cmd{.plist}) à l'aide du menu \mnu{Macros}\To\mnu{Ajouter une macro à partir du fichier…} (visible et disponible seulement si le \cmd{Macro Editor} est ouvert). L'ordre d'apparition des macros dans le menu \mnu{Macros} peut également être modifié simplement en les déplaçant dans le panneau gauche du \cmd{Macro Editor}.
 
 %\subsection{Special Notes}
 \subsection{Remarque particulière}
@@ -175,7 +175,7 @@ Si vous voulez appliquer à un texte un raccourci clavier au moyen de la touche 
 
 %For \cmd{Command Completion} you enter a partial command name or a short abbreviation, press a trigger key (\esckey\ or, as mentioned above, \tabkey\ if set in \mnu{TeXShop}\To\mnu{Preferences}\To\mnu{Source}\To\mnu{Command Completion Triggered By:}) and it gets expanded. E.g., enter
 
-Avec la \cmd{Commande de complètement} vous entrez une partie du nom de la commande ou une courte abréviation, appuyez sur la touche de déclenchement (\esckey\ ou \tabkey\, selon l'indication portée dans \mnu{TeXShop}\To\mnu{Préférences…}\To\mnu{Document}\To\mnu{Commande de complétion déclenchée par}, comme mentionné plus haut) et votre entrée sera complétée. Par exemple, entrez
+Avec la \cmd{Commande de complètement} vous entrez une partie du nom de la commande ou une courte abréviation, appuyez sur la touche de déclenchement (\esckey\ ou \tabkey\, selon l'indication portée dans \mnu{TeXShop}\To\mnu{Réglages…}\To\mnu{Clavier}\To\mnu{Touche de déclenchement}, comme mentionné plus haut) et votre entrée sera complétée. Par exemple, entrez
 \begin{verbatim}
 \sec
 \end{verbatim}
@@ -185,7 +185,7 @@ sur une nouvelle ligne, pressez la touche de déclenchement (\esckey\ ou…) et 
 \section{|selmark}
 \end{verbatim}
 %(where \selmark\ is a selected bullet [called a \cmd{Mark} in \cmd{Command Completion} parlance] so simply typing will replace that \cmd{Mark} with your text. There can be more than one match for a given input; if you press the trigger again (without entering text) you get
-où \selmark\ est un gros point rond sélectionné [appelé \cmd{Repère} dans le menu \cmd{Commande de complètement}] si bien qu'il pourra être  remplacé par votre texte. Une entrée peut donner plusieurs correspondances : si vous pressez à nouveau la touche de déclenchement (sans entrer de texte), vous obtenez
+où \selmark\ est un gros point rond sélectionné [appelé \cmd{Repère} dans le menu \mnu{Édition}\To\mnu{Repères}] si bien qu'il pourra être  remplacé par votre texte. Une entrée peut donner plusieurs correspondances : si vous pressez à nouveau la touche de déclenchement (sans entrer de texte), vous obtenez
 \begin{verbatim}
 \section*{|selmark}
 \end{verbatim}
@@ -195,7 +195,7 @@ et une autre sollicitation de la touche de déclenchement donne
 \section[|selmark]{•}
 \end{verbatim}
 %for separate section titles in the \cmd{toc} and the document. In the last case there is a second \cmd{Mark}~(•) for the second argument. After entering the \cmd{toc} section title you jump to and select the next \cmd{Mark} by using \mnu{Source}\To\mnu{Command Completion}\To\mnu{Marks}\To\mnu{Next Mark} (\cmd{Ctl-Cmd-F}) so you can immediately start typing the section title for that document.
-pour obtenir dans la table des matières (\cmd{toc}) un titre de section différent de celui du document. À cet effet, il y a un second \cmd{Repère}~(•) pour le second argument. Après avoir entré le titre de section pour la table des matières (\cmd{toc}), vous sauterez au second \cmd{Repère} et le sélectionnerez en utilisant le menu \mnu{Source}\To\mnu{Command de complètement}\To\mnu{Repères}\To\mnu{Repère suivant} (\cmd{ctrl-cmd-F}) et vous pourrez alors entrer le titre de section pour le document.\medskip
+pour obtenir dans la table des matières (\cmd{toc}) un titre de section différent de celui du document. À cet effet, il y a un second \cmd{Repère}~(•) pour le second argument. Après avoir entré le titre de section pour la table des matières (\cmd{toc}), vous sauterez au second \cmd{Repère} et le sélectionnerez en utilisant le menu \mnu{Édition}\To\mnu{Repères}\To\mnu{Repère suivant} (\cmd{ctrl-cmd-F}) et vous pourrez alors entrer le titre de section pour le document.\medskip
 
 %Better yet are abbreviations. E.g., type
 Les abréviations sont encore mieux. Par exemple, tapez
