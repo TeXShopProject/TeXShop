@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "TSThemeSystemColor.h"
 
 @interface TSColorSupport : NSObject {
     

@@ -221,6 +221,8 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
                 box.title=text(item[@"switchTitle"]);
                 NSStackView *cell=[TSPrefPaneLayout stackWithViews:@[[self horizontal:@[TSCatalogRequired(wells.firstObject),label] spacing:8],box] orientation:NSUserInterfaceLayoutOrientationVertical];
                 cell.alignment=NSLayoutAttributeLeading;cell.spacing=4;
+                // The name and the switch keep their whole width: the narrower of the two must not set the cell's.
+                for(NSView *part in @[label,box])[part setContentCompressionResistancePriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
                 cell.identifier=[@"cell." stringByAppendingString:TSCatalogRequired(item[@"switch"])];
                 cell.accessibilityElement=YES;cell.accessibilityRole=NSAccessibilityGroupRole;cell.accessibilityLabel=label.stringValue;
                 [cells addObject:cell];

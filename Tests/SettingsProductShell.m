@@ -491,10 +491,24 @@ int main(int argc,char **argv){@autoreleasepool{
     NSRect card=NSInsetRect([row convertRect:row.bounds toView:themes],12,0);
     for(NSUInteger i=0;i<items.count;i++){
      Check(places[i].unsignedIntegerValue==i,[NSString stringWithFormat:@"Group %@ fills its rows from the left without gaps",group]);
-     NSColorWell *well=nil;NSTextField *label=nil;
-     for(NSView *part in items[i].subviews){if([part isKindOfClass:NSColorWell.class])well=(NSColorWell *)part;else if([part isKindOfClass:NSTextField.class])label=(NSTextField *)part;}
+     // A color with a system color switch has its well and name in a row above the switch.
+     NSColorWell *well=nil;NSTextField *label=nil;NSButton *box=nil;
+     for(NSView *part in items[i].subviews){if([part isKindOfClass:NSColorWell.class])well=(NSColorWell *)part;else if([part isKindOfClass:NSTextField.class])label=(NSTextField *)part;else if([part isKindOfClass:NSButton.class])box=(NSButton *)part;
+      else for(NSView *inner in part.subviews){if([inner isKindOfClass:NSColorWell.class])well=(NSColorWell *)inner;else if([inner isKindOfClass:NSTextField.class])label=(NSTextField *)inner;}}
      Check(well!=nil && label!=nil,@"Each theme color has its well and its name");
-     NSString *expected=[fixture localizedStringForKey:[NSString stringWithFormat:@"catalog.appearance.%@.0.item.%lu",group,(unsigned long)i] value:nil table:@"SettingsCategories"];
+     // The Source group shows the cursor, the selection, the current line and the flash (the selection was added later).
+     NSUInteger key=[group isEqual:@"3"]?((NSUInteger[]){0,3,2,1})[i]:i;
+     NSString *expected=[fixture localizedStringForKey:[NSString stringWithFormat:@"catalog.appearance.%@.0.item.%lu",group,(unsigned long)key] value:nil table:@"SettingsCategories"];
+     BOOL switched=[group isEqual:@"3"] && i<2;
+     Check(switched==(box!=nil),[NSString stringWithFormat:@"The cursor and the selection, and only they, have a system color switch: %@",expected]);
+     if(box!=nil){
+      NSString *title=[fixture localizedStringForKey:@"catalog.appearance.3.0.switch" value:nil table:@"SettingsCategories"];
+      NSRect boxFrame=[box convertRect:box.bounds toView:themes],wellFrame=[well convertRect:well.bounds toView:themes];
+      Check([box.title isEqual:title] && box.controlSize==NSControlSizeSmall && box.font.pointSize==NSFont.smallSystemFontSize,[NSString stringWithFormat:@"The switch of %@ is a small check box %@",expected,box.title]);
+      Check(fabs(NSMinX(boxFrame)-NSMinX(wellFrame))<0.5 && (themes.isFlipped?NSMinY(boxFrame)>=NSMaxY(wellFrame):NSMaxY(boxFrame)<=NSMinY(wellFrame)),[NSString stringWithFormat:@"The switch of %@ stands under its well, at its left edge",expected]);
+      Check(box.cell.cellSize.width<=NSWidth(box.frame)+1 && NSMaxX(boxFrame)<=NSMinX(wellFrame)+196+0.5,[NSString stringWithFormat:@"The switch of %@ fits its column at width %@: %.1f",expected,width,box.cell.cellSize.width]);
+      Check(items[i].isAccessibilityElement && [items[i].accessibilityRole isEqual:NSAccessibilityGroupRole] && [items[i].accessibilityLabel isEqual:expected],[NSString stringWithFormat:@"The switch of %@ is in a group named after its color",expected]);
+     }
      Check([label.stringValue isEqual:expected],[NSString stringWithFormat:@"Theme color %@ is named %@",label.stringValue,expected]);
      NSUInteger column=i%3;CGFloat x=NSMinX([well convertRect:well.bounds toView:themes]);
      if(columnX[column]<0){columnX[column]=x;columnsUsed=MAX(columnsUsed,column+1);}

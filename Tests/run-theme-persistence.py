@@ -57,6 +57,7 @@ program=r'''
 #import "MemoryDefaults.h"
 #import "TestAppKitIsolation.h"
 #import "TSThemeFileStore.h"
+#import "TSThemeSystemColor.h"
 static TSMemoryDefaults *memory;
 #define SUD memory
 static NSString *DefaultLiteThemeKey=@"DefaultLiteTheme",*DefaultDarkThemeKey=@"DefaultDarkTheme",*SourceColorChangedNotification=@"ColorsChanged";
@@ -145,7 +146,8 @@ static NSMutableArray *alertButtons;
 @implementation RacingStore
 - (NSString *)availableTitleForTitle:(NSString *)title{NSString *free=[super availableTitleForTitle:title];if(self.race){self.race=NO;[[[TSThemeFileStore alloc]initWithDirectory:self.directory] writeColors:@{@"EditorText":@[@0,@1,@0,@1]} title:free error:NULL];}return free;}
 @end
-@interface Probe:NSObject { @public NSMutableDictionary *EditingColors; Popup *LiteStyle,*DarkStyle; FakePanel *_prefsWindow; }
+@interface Probe:NSObject { @public NSMutableDictionary *EditingColors; Popup *LiteStyle,*DarkStyle; FakePanel *_prefsWindow;
+ NSColorWell *SourceInsertionPointColorWell,*SourceSelectionColorWell; NSButton *SourceInsertionPointSystemColorButton,*SourceSelectionSystemColorButton; }
 @property(copy) NSDictionary *lastSavedEditingColors;
 @property(copy) NSString *editingThemeTitle;
 @property ListStub *themeList;
