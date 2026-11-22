@@ -363,7 +363,6 @@ extern NSString *GSBinPath;
 extern NSString *TexCommandKey;
 extern NSString *TexGSCommandKey;
 extern NSString *TexScriptCommandKey;
-extern NSString *MatrixSizeKey; // Jonas' Matrix addition
 extern NSString *TSHasBeenUsedKey;
 extern NSString *UserInfoPath;
 
