@@ -20,8 +20,8 @@
 En la categor&iacute;a &laquo;Composición&raquo; de los ajustes, pon que el m&eacute;todo de sincronizaci&oacute;n sea SyncTeX.
 Y, en la categor&iacute;a &laquo;Composición&raquo;, cambia los dos &iacute;tems del grupo &laquo;PDF directo&raquo; por</p>
 <dl>
-	<dd> pdftex --shell-escape --synctex=1
-	<dd> pdflatex --shell-escape --synctex=1
+	<dd> pdftex -synctex=1
+	<dd> pdflatex -synctex=1
 </dl>
 
 
@@ -40,16 +40,16 @@ Esta complejidad se debe a razones hist&oacute;ricas. Pdfsync era una antigua te
 
 <p>Para usar SyncTeX, necesitamos llamar al motor de composici&oacute;n con un &lsquo;flag&rsquo; especial que le indique que debe generar el archivo &laquo;.synctex&raquo;. Esto se logra a&ntilde;adiendo la siguiente opci&oacute;n cuando se llama al motor:</p>
 <dl>
-	<dd> --synctex=1
+	<dd> -synctex=1
 </dl>
 
 <p>Por ejemplo, para usar SyncTeX con pdftex y pdflatex, la categor&iacute;a &laquo;Composición&raquo; de la ventana de Ajustes debe establecer las llamadas a TeX y LaTeX mediante</p>
 <dl>
-	<dd> pdftex --shell-escape --synctex=1
-	<dd> pdflatex --shell-escape --synctex=1
+	<dd> pdftex -synctex=1
+	<dd> pdflatex -synctex=1
 </dl>
 
-<p>Conviene aqu&iacute; destacar que, si la parte &laquo;--synctex=1&raquo; est&aacute; presente pero TeXShop usa un antiguo motor que no soporta ese flag, la composici&oacute;n de p&aacute;ginas se lleva a cabo sin problemas, aunque el motor informar&aacute; en la consola de que que ha reconocido el flag &laquo;synctex&raquo;.</p>
+<p>Conviene aqu&iacute; destacar que, si la parte &laquo;-synctex=1&raquo; est&aacute; presente pero TeXShop usa un antiguo motor que no soporta ese flag, la composici&oacute;n de p&aacute;ginas se lleva a cabo sin problemas, aunque el motor informar&aacute; en la consola de que que ha reconocido el flag &laquo;synctex&raquo;.</p>
 
 
 <p>Hay que hacer cambios similares en las llamadas a simpdftex, y a cualquier otro motor que hayas creado. Todo eso tendr&aacute;s que hacerlo por ti mismo si quieres emplear SyncTeX con esos motores. En distribuciones de TeX modernas, lo m&aacute;s com&uacute;n es componer p&aacute;ginas con pdftex o con xetex, y ambos soportan el flag &laquo;synctex&raquo;. No lo hace, sin embargo, el programa TeX original de Donald Knuth.</p>

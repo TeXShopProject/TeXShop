@@ -1037,14 +1037,14 @@ The {\bf Second TeX Engines} setting will be explained later and is not used by 
 
 Below these items, the command line calls are listed for each of the four typesetting methods discussed so far that call pdftex. These items are irrelevant if you switched to Xe\TeX\ or Lua\TeX. Suppose you have a \LaTeX\ source file named Galois.tex and you have opened Apple's Terminal program and changed to the directory containing this source. You could typeset the source file with pdflatex by typing the following line in Terminal:
 \begin{verbatim}
-     pdflatex --file-line-error --synctex=1 Galois.tex
+     pdflatex -file-line-error -synctex=1 Galois.tex
 \end{verbatim}
 TeXShop calls the typesetting engine in exactly the same way. These four settings list the appropriate four calls. 
 
-The pdftex defaults use two flags. The first, --file-line-error, tells pdftex how to display errors in the console; TeXShop uses this to take you directly to the source lines with the reported error, as explained later. The second flag, --synctex=1, activates code by Jerome Laurens which tells pdftex to generate sync data during typesetting. TeXShop later uses this data to sync between spots in the source file and corresponding spots in the preview output, as explained later.
+The pdftex defaults use two flags, written with one hyphen as in the usage of pdftex; LuaTeX writes them with two (--file-line-error), and every engine accepts either form. The first, -file-line-error, tells pdftex how to display errors in the console; TeXShop uses this to take you directly to the source lines with the reported error, as explained later. The second flag, -synctex=1, activates code by Jerome Laurens which tells pdftex to generate sync data during typesetting. TeXShop later uses this data to sync between spots in the source file and corresponding spots in the preview output, as explained later.
 
-There is one other flag you might want to add, --shell-escape. This flag gives pdftex permission to call other programs during typesetting. If you typeset source files which other people send you, this could be  dangerous because pdftex will call any program requested, even a program which erases your entire home directory. So we recommend avoiding the flag. But if you use it, you might want to turn on the item {\bf Confirm Shell Escape}
-underneath, in the same {\bf Direct PDF} group. After that, when you typeset a file for the first time, a warning dialog will appear reminding you of ``shell-escape'' and asking if you still want to proceed.
+There is one other flag you might want to add, -shell-escape. This flag gives pdftex permission to call other programs during typesetting. If you typeset source files which other people send you, this could be  dangerous because pdftex will call any program requested, even a program which erases your entire home directory. So we recommend avoiding the flag. But if you use it, you might want to turn on the item {\bf Confirm Shell Escape}
+underneath, in the same {\bf Direct PDF} group. After that, when you typeset a file for the first time, a warning dialog will appear reminding you of ``shell-escape'' and asking if you still want to proceed. TeXShop recognizes the flag written with one or two hyphens.
 
 Typesetting ``Via DVI'' calls a script named ``simpdftex'' which is part of TeX Live. If you want to know how the script works, open it in TeX Live and read it. To keep the intermediate PostScript file, add \verb|--keep-psfile| to the plain \TeX\ or \LaTeX\ command in the {\bf Via DVI} group; simpdftex understands this option.
 
@@ -1203,7 +1203,7 @@ The rest of the line after the equal sign, with leading and trailing spaces remo
 If a project has a root file and several include files, the magic comment must be near the top of the root file.
 
 The magic line might be used to pass one or more flags to engines.
-For instance, Herbert Schulz used this line to add a --shell-escape flag when pdflatex needs to call an external program during typesetting. 
+For instance, Herbert Schulz used this line to add a -shell-escape flag when pdflatex needs to call an external program during typesetting. 
 
 Finally, \verb|"|\$3\verb|"| contains a path to the \TeX\  binaries. Therefore \verb|"|\$3\verb|"| will usually contain \verb|"|/Library/TeX/texbin\verb|"|. However users who install TeX using MacPorts or MiKTeX or something else will have set a different location for binaries in the {\bf TeX Engines} field of the {\bf Paths} group in the Typesetting category of TeXShop Settings, and then \verb|"|\$3\verb|"| will contain that location. For the cases of TeX Live, MacPorts, and MiKTeX, this parameter is not needed because the Cocoa call to a binary contains its location. So  \verb|"|\$3\verb|"|  is usually not mentioned in an engine.
 
@@ -1337,7 +1337,7 @@ If the project has a root file and various chapter files,  Goto Error will open 
 
 The Goto Error command parses the console output to find error messages, and requires that TeX reports these errors in suitable format. So calls to LaTeX, pdfTeX, XeTeX, and other engines should contain the flag
 \begin{verbatim}
-    --file-line-error 
+    -file-line-error 
 \end{verbatim}
 to activate this formatting.
 
@@ -1392,7 +1392,7 @@ which front ends could use to sync between source and preview windows. Unfortuna
 Later TeXShop provided a method directly in the program, bypassing Laurens's package; this didn't work very well and the less said about it, the better.
 
 \newpage
-Eventually Laurens provided a version of SyncTeX which outputs sync information during typesetting directly from the typesetting engines. This no longer modifies typesetting output. His code is built into most of the typesetting engines supplied by TeX Live. When a source file, say Galois.tex, is typeset by one of these engines, and the engine  is called with the flag ``--synctex=1'', it outputs a file named Galois.synctex.gz containing the required sync information. Laurens  provides a library written in C to interpret this information; TeXShop contains that library and uses it to provide syncing.
+Eventually Laurens provided a version of SyncTeX which outputs sync information during typesetting directly from the typesetting engines. This no longer modifies typesetting output. His code is built into most of the typesetting engines supplied by TeX Live. When a source file, say Galois.tex, is typeset by one of these engines, and the engine  is called with the flag ``-synctex=1'', it outputs a file named Galois.synctex.gz containing the required sync information. Laurens  provides a library written in C to interpret this information; TeXShop contains that library and uses it to provide syncing.
 
 SyncTeX is turned on in TeXShop Settings by an item under the Typesetting category. Be sure to select the last item in the {\bf Sync Method} pop-up menu, called ``SyncTeX (Recommended)''. The other item is for a previous sync method now obsolete.
 
@@ -2008,7 +2008,7 @@ TeXShop and can be run from the Terminal by typing ``pdflatexc myfile.tex'' prov
      # pdflatexc filename.tex
 
      set path= ($path /Library/TeX/texbin /usr/local/bin)
-     pdflatex --shell-escape "$1"
+     pdflatex -shell-escape "$1"
 \end{verbatim}
 Of course you are likely to write a more complicated script which performs several operations
 in sequence. That is when these techniques become useful.

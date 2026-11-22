@@ -9,11 +9,11 @@
 	</HEAD>
 <BODY>
 	<div id="content_border">	
-<P>Die Standardbefehle f&uuml;r pdftex und pdflatex sind nun &bdquo;pdftex --shell-escape&ldquo; und &bdquo;pdflatex --shell-escape.&ldquo; Durch die Erweiterung &bdquo;shell-escape&ldquo; wird es m&ouml;glich, dass w&auml;hrend des Setzens andere Programme aufgerufen werden. Dies ist n&uuml;tzlich, wenn zum Beispiel automatisch Grafiken in ein anderes Format konvertiert werden sollen. So konvertiert die LaTeX-Vorlage eps-Dateien automatisch in das pdf-Format.</P>
+<P>Die Standardbefehle f&uuml;r pdftex und pdflatex sind nun &bdquo;pdftex -shell-escape&ldquo; und &bdquo;pdflatex -shell-escape.&ldquo; Durch die Erweiterung &bdquo;shell-escape&ldquo; wird es m&ouml;glich, dass w&auml;hrend des Setzens andere Programme aufgerufen werden. Dies ist n&uuml;tzlich, wenn zum Beispiel automatisch Grafiken in ein anderes Format konvertiert werden sollen. So konvertiert die LaTeX-Vorlage eps-Dateien automatisch in das pdf-Format.</P>
 
 <P>Hierdurch kann jedoch eine Sicherheitsl&uuml;cke entstehen. Die &bdquo;shell-escape&ldquo; Funktion erlaubt es jedes beliebige Programm auszuf&uuml;hren. Daher k&ouml;nnte ihr System durch eine b&ouml;sartige E-Mail besch&auml;digt werden.</P>
 
-<P>Die darauf resultierende Gefahr sollte jedoch gering sein. Nichts desto trotz gibt es zwei M&ouml;glichkeiten, wie Sie sich sch&uuml;tzen k&ouml;nnen. Die erste und einfachste M&ouml;glichkeit ist, die Buchstaben &bdquo;--shell-escape&ldquo; an den zwei Stellen in den Einstellungen von Hand zu l&ouml;schen. Hiernach m&uuml;ssen Sie jedoch alle Grafikdateien von Hand konvertieren.</P>
+<P>Die darauf resultierende Gefahr sollte jedoch gering sein. Nichts desto trotz gibt es zwei M&ouml;glichkeiten, wie Sie sich sch&uuml;tzen k&ouml;nnen. Die erste und einfachste M&ouml;glichkeit ist, die Buchstaben &bdquo;-shell-escape&ldquo; an den zwei Stellen in den Einstellungen von Hand zu l&ouml;schen. Hiernach m&uuml;ssen Sie jedoch alle Grafikdateien von Hand konvertieren.</P>
 
 <P>TeXShop gibt Ihnen eine zweite Schutzm&ouml;glichkeit. Eine Einstellug unter dem Titel &bdquo;Programme&ldquo; tr&auml;gt die Bezeichnung &bdquo;Shell Escape Warnung&ldquo;. Diese ist normalerweise nicht eingeschaltet. Ist diese Option zusammen mit der &bdquo;shell-escape&ldquo; Funktion aktiviert, so erscheint beim ersten Setzen einer TeX-Datei ein Dialog, in dem Sie die &bdquo;shell-escape&ldquo;-Funktion f&uuml;r diese einzelne Datei ausschalten k&ouml;nnen. Nach dem ersten Setzen wird der Dialog nicht mehr angezeigt und Ihre Auswahl respektiert. Jetzt k&ouml;nnen Sie Ihre eigenen Dateien mit, fremde Dateien jedoch ohne &bdquo;shell-escape&ldquo; Funktion setzen.</P>
 </div>		
