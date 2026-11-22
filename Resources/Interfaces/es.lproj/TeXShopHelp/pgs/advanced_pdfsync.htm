@@ -28,7 +28,7 @@ Y, en la categor&iacute;a &laquo;Composición&raquo;, cambia los dos &iacute;tems
 <p>SyncTeX fue introducido por J&eacute;r&ocirc;me Laurens en 2008. Hace que TeX cree un archivo adicional con extensi&oacute;n &laquo;.synctex&raquo;, y que contiene la informaci&oacute;n que se necesita para sincronizar la salida en pdf con el c&oacute;digo tex. Es el propio motor de TeX el que se encarga de generar este archivo. La composicion de p&aacute;gina no se ve afectada en absoluto cuando se usa SyncTeX; en particular, no cambian los cores de l&iacute;nea y de p&aacute;gina, como ocurr&iacute;a con la antigua tecnolog&iacute;a basada en pdfsync. SyncTeX proporcionar&aacute; una sincronizaci&oacute;n a&uacute;n m&aacute;s precisas cuando los desarrolladores dominen todas sus posibilidades.</p>
 
 
-<p>SyncTeX requiere las versiones de pdftex, pdfetex y xetex introducidas en TeX Live 2008 y disponibles en MacTeX-2008. Para que lo puedan emplear los usuarios de distribuciones de TeX antiguas, TeXShop incorpora un segundo m&eacute;todo de sincronizaci&oacute;n basado en b&uacute;squedas. Funciona con todos los motores de composici&oacute;n, y el c&oacute;digo tex no necesita ning&uacute;n cambio para poder usarlo. El m&eacute;todo basado en b&uacute;squedas utiliza una habilidad introducida en Mac OS X 10.4, y que permite a los desarrolladores programar f&aacute;cilmente la b&uacute;squeda de cadenas de texto en archivos pdf. As&iacute;, el m&eacute;todo de b&uacute;squeda lo que hace es encontrar cadenas de texto iguales en el c&oacute;digo tex y el archivo pdf. Este m&eacute;todo no requiere ning&uacute;n archivo de estilo, as&iacute; que te&oacute;ricamente funciona cualquiera que sea el modo de composici&oacute;n de p&aacute;ginas que se use. Pero falla cuando la cadenas de texto en el pdf es distinta de la del c&oacute;digo tex; en particular, no funciona en expresiones matem&aacute;ticas.</p>
+<p>TeXShop incorpora tambi&eacute;n un segundo m&eacute;todo de sincronizaci&oacute;n basado en b&uacute;squedas. Funciona con todos los motores de composici&oacute;n, y el c&oacute;digo tex no necesita ning&uacute;n cambio para poder usarlo. El m&eacute;todo basado en b&uacute;squedas utiliza una habilidad introducida en Mac OS X 10.4, y que permite a los desarrolladores programar f&aacute;cilmente la b&uacute;squeda de cadenas de texto en archivos pdf. As&iacute;, el m&eacute;todo de b&uacute;squeda lo que hace es encontrar cadenas de texto iguales en el c&oacute;digo tex y el archivo pdf. Este m&eacute;todo no requiere ning&uacute;n archivo de estilo, as&iacute; que te&oacute;ricamente funciona cualquiera que sea el modo de composici&oacute;n de p&aacute;ginas que se use. Pero falla cuando la cadenas de texto en el pdf es distinta de la del c&oacute;digo tex; en particular, no funciona en expresiones matem&aacute;ticas.</p>
 
 <p>Por defecto, TeXShop primero intenta SyncTeX. Pero si SyncTeX falla o el archivo &laquo;.synctex&raquo; no existe, TeXShop utiliza el m&eacute;todo de sincronizaci&oacute;n basado en b&uacute;squedas.</p>
 
@@ -82,7 +82,7 @@ He aqu&iacute; unos ejemplos:
 	<div id="menu_border">
 		<ul>
 			<LI><a href="advanced_personaltetex.htm">Adici&oacute;n de archivos de estilo y de macros personales a TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Motores de composici&oacute;n adicionales y codificaci&oacute;n de caracteres</a>
+			<LI><a href="advanced_addengine.htm">Motores de composici&oacute;n adicionales</a>
 			<LI><a href="advanced_removeaux.htm">Borrado de archivos AUX</a>
 			<li><a href="advanced_externaleditor.htm">Uso de un editor externo</a>
 			<li><a href="advanced_pdfcopypaste.htm">Copiar-pegar y arrastrar-soltar desde la ventana del PDF</a>
@@ -99,7 +99,6 @@ He aqu&iacute; unos ejemplos:
 			<li><a href="advanced_shellescape.htm">Protecci&oacute;n ante shell-escape</a>
 			<li><a href="advanced_coloredtext.htm">Texto coloreado en TeX</a>
 			<li><a href="advanced_moretetex.htm">M&aacute;s sobre TeX Live</a>
-			<li><a href="advanced_fink.htm">Coexistencia con Fink</a>
 			<li><a href="advanced_otherdistributions.htm">Coexistencia con otras distribuciones de TeX</a>
 			<li><a href="advanced_context.htm">ConTeXt y MetaPost</a>
 			<li><a href="advanced_plist.htm">Archivos .plist</a>

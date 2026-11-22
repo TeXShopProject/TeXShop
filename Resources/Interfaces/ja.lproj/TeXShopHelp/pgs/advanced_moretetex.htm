@@ -24,12 +24,8 @@ TUGのTeX Liveは /usr/local/texlive というディレクトリにインスト�
 </p>
 
 <p>
-ファイルは適切なディレクトリに置いてやらねばなりません。TeX LiveはTeXワーキンググループの考案したディレクトリ構造を用いています。LaTeXが使うスタイルファイルに、new.styという名前のスタイルファイルを追加したいとしましょう。TeX Liveの中を見てみると、このファイルを置くのにふさわしい場所は次のところだとわかります。
+ファイルは適切なディレクトリに置いてやらねばなりません。TeX LiveはTeXワーキンググループの考案したディレクトリ構造を用いています。LaTeXが使うスタイルファイルに、new.styという名前のスタイルファイルを追加したいとしましょう。TeX Liveでは、LaTeXが使うスタイルファイルはtexmf-dist/tex/latexのサブフォルダに置かれています。
 </p>
-
-		<dl>
-			<dd>/usr/local/texlive/2008/texmf/tex/latex/misc/
-		</dl>
 
 <p>
 ということで、ホーム・ディレクトリのライブラリ・フォルダ内に、次のような一連のサブディレクトリを作成してください。
@@ -77,7 +73,6 @@ MacTeXは、/Applications/TeXにTeX Live Utilityもインストールします�
 			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
 			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
 			<li><a href="advanced_moretetex.htm">TeX Liveについてさらに</a>
-			<li><a href="advanced_fink.htm">Finkとの共存</a>
 			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
 			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
 			<li><a href="advanced_plist.htm">Plistファイル</a>

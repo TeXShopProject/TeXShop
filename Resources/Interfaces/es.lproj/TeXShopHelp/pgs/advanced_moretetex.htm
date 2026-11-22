@@ -13,10 +13,7 @@
 		<p>TeX Live, del TUG, se instala en el directorio /usr/local/texlive, que no es visible desde el Finder. Pero el instalador crea en /Library/TeX/Root un enlace simb&oacute;lico al directorio de la distribuci&oacute;n de TeX activa. Por tanto, ve a /Library/TeX/Root para examinar los archivos de tu distribuci&oacute;n.</p>
 		<p>La documentaci&oacute;n de la distribuci&oacute;n activa est&aacute; en /Library/TeX/Documentation (que en realidad es un enlace a varias carpetas de documentaci&oacute;n de la distribuci&oacute;n).</p>
 		<p>Es posible almacenar archivos de estilo adicionales, tipos (&lsquo;fonts&rsquo;), etc. en el mismo TeX Live. Pero el &laquo;propietario&raquo; de TeX Live es &laquo;root&raquo;, y TeX Live est&aacute; en una carpeta en la que los usuarios no pueden escribir. Adem&aacute;s, es buena idea mantener este directorio intacto, para poder actualizarlo f&aacute;cilmente cuando salgan versiones posteriores. Es mejor construir una r&eacute;plica de la estructura de directorios de TeX Live dentro de tu carpeta Library y guardar all&iacute; tus archivos personales.</p>
-		<p>Los archivos deben estar en sus directorios apropiados. TeX Live usa la estructura de directorios ideada por el grupo de trabajo de TeX. Sup&oacute;n que quieres a&ntilde;adir un archivo de estilo llamado new.sty a los que usa LaTeX. Si miras dentro de TeX Live, ver&aacute;s que el lugar natural para este archivo ser&iacute;a</p>
-		<dl>
-			<dd>/usr/local/texlive/2008/texmf/tex/latex/misc/
-		</dl>
+		<p>Los archivos deben estar en sus directorios apropiados. TeX Live usa la estructura de directorios ideada por el grupo de trabajo de TeX. Sup&oacute;n que quieres a&ntilde;adir un archivo de estilo llamado new.sty a los que usa LaTeX. TeX Live guarda los archivos de estilo de LaTeX en subcarpetas de texmf-dist/tex/latex.</p>
 		<p>Por tanto, dentro de la carpeta Library de tu directorio personal, crea una serie de subdirectorios como sigue:</p>
 		<dl>
 			<dd>Library  --&gt;  texmf  --&gt;  tex  --&gt;  latex  --&gt;  misc
@@ -32,7 +29,7 @@
 	<div id="menu_border">
 		<ul>
 			<LI><a href="advanced_personaltetex.htm">Adici&oacute;n de archivos de estilo y de macros personales a TeX Live</a>
-			<LI><a href="advanced_addengine.htm">Motores de composici&oacute;n adicionales y codificaci&oacute;n de caracteres</a>
+			<LI><a href="advanced_addengine.htm">Motores de composici&oacute;n adicionales</a>
 			<LI><a href="advanced_removeaux.htm">Borrado de archivos AUX</a>
 			<li><a href="advanced_externaleditor.htm">Uso de un editor externo</a>
 			<li><a href="advanced_pdfcopypaste.htm">Copiar-pegar y arrastrar-soltar desde la ventana del PDF</a>
@@ -49,7 +46,6 @@
 			<li><a href="advanced_shellescape.htm">Protecci&oacute;n ante shell-escape</a>
 			<li><a href="advanced_coloredtext.htm">Texto coloreado en TeX</a>
 			<li><a href="advanced_moretetex.htm">M&aacute;s sobre TeX Live</a>
-			<li><a href="advanced_fink.htm">Coexistencia con Fink</a>
 			<li><a href="advanced_otherdistributions.htm">Coexistencia con otras distribuciones de TeX</a>
 			<li><a href="advanced_context.htm">ConTeXt y MetaPost</a>
 			<li><a href="advanced_plist.htm">Archivos .plist</a>

@@ -2,29 +2,39 @@
 
 <HEAD>
 		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Alles richtig installiert?</TITLE>
+		<TITLE>Neue Objekte in ~/Library/TeXShop erhalten</TITLE>
 		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-		<META NAME="description" CONTENT="richtig Installiert; TeX ordner; makro">
+		<META NAME="description" CONTENT="~/Library/TeXShop; New; Templates; Aktualisierung">
 				<link href="../sty/screen.css" rel="stylesheet" media="all">
 	</HEAD>
 
 <BODY>
 
 <div id="content_border">
-		<P>Seit Verion 1.34 beinhaltet TeXShop eine Funktion mit Namen pdfsync. Hiermit k&ouml;nnen Sie durch Klicken in das Vorschau-Fenster zum entsprechenden Punkt im Quelltext gelangen. Um diese Funktion zu benutzen, ben&ouml;tigen Sie die folgenden Dateien: &quot;pdfsync.sty&quot;, &quot;pdfsync.tex&quot; und &quot;pdfsync4context.tex&quot;. Diese m&uuml;ssen jeweils im Ordner &bdquo;~/Library/texmf/tex/latex&ldquo;, &bdquo;~/Library/texmf/tex/plain&ldquo; und &bdquo;~/Library/texmf/tex/context&ldquo; installiert sein. L&ouml;schen Sie eventuelle &auml;ltere Versionen von &quot;pdfsync.sty&quot; aus &bdquo;~/Library/texmf/tex/latex&ldquo; falls vorhanden. Kopieren Sie dann die oben genannten Dateien aus der TeXShop Distribution, die Sie aus dem Internet geladen haben und kopieren Sie diese in die entsprechenden Ordner, wobei &bdquo;~/Library&ldquo; der Library-Ordner Ihres Privat-Verzeichnisses ist. Sollten einige der oben genannten Ordner nicht existieren, m&uuml;ssen Sie diese erstellen.</P>
-		<p>Seit Version 1.35 werden mit TeXShop AppleScripts von Claus Gerhardt und Will Robertson mitgeliefert. Wenn Sie von einer &auml;lteren Verion aktualisieren erscheinen diese Skripte nicht automatisch im Men&uuml; &bdquo;Makros&ldquo;.</p>
-		<p>Wenn Sie die Standardmakros ver&auml;ndert haben, k&ouml;nnen Sie die Skripte erhalten, indem Sie den Ordner &bdquo;Macros&ldquo; aus dem Ordner &bdquo;~/Library/TeXShop&ldquo; an einen anderen Ort verschieben. Beim n&auml;chsten Start wird TeXShop den Ordner mit den neuen Skripten neu anlegen. Nachdem TeXShop den neuen Ordner angelegt hat, k&ouml;nnen Sie Ihre angepassten Makros mit Hilfe des Makro-Editors wieder einf&uuml;gen.</p>
-		<p>Wenn Sie die Standardmakros ge&auml;ndert haben, solten Sie den oben genannten Ordner &bdquo;Macros&ldquo; nur an einen anderen Ort verschieben. Nachdem TeXShop den neuen Ordner angelegt hat, k&ouml;nnen Sie Ihre angepassten Makros mit Hilfe des Makro-Editors wieder einf&uuml;gen.</p>
-			<p>TeXShop 1.35 wird mit neuen Vorlagen von Will Robertson ausgeliefert. Diese Vorlagen werden nicht automatisch installiert. Sie k&ouml;nnen Sie jedoch erhalten, indem Sie den vorhandenen Ordner &bdquo;Templates&ldquo; im Ordner &bdquo;~/Library/TeXShop&ldquo; auf den Schreibtisch verschieben. Beim n&auml;chsten Start wird der Vorlagenordner mit den neuen Vorlagen erstellt. Sie k&ouml;nnen jetzt ihre angepassten Vorlagen vom Schreibtisch wieder in den Ordner &bdquo;~/Library/TeXShop/Templates&ldquo; zur&uuml;ck kopieren.</p>
-		</div>		
+
+<p>Das Standardverhalten von TeXShop l&auml;sst sich auf zwei Arten &auml;ndern: &uuml;ber die Einstellungen und durch Bearbeiten von Dateien in ~/Library/TeXShop. Dabei ist ~/Library der Ordner &bdquo;Library&ldquo; in Ihrem Benutzerordner.</p>
+
+<p>Neue Versionen von TeXShop &auml;ndern diese Anpassungen in der Regel nicht, denn niemand mag &Auml;nderungen hinter seinem R&uuml;cken. Manchmal erfordern neue Funktionen aber einige Anpassungen. Sie werden im Dokument &bdquo;&Uuml;ber diese Version (Englisch)&ldquo; im Men&uuml; &bdquo;Hilfe&ldquo; beschrieben, das f&uuml;r jede Version von TeXShop neu geschrieben wird. TeXShop funktioniert auch dann, wenn die dort beschriebenen Anpassungen nicht vorgenommen werden; einige neue Funktionen arbeiten dann aber m&ouml;glicherweise nicht wie beschrieben.</p>
+
+<p>TeXShop aktualisiert die Objekte in ~/Library/TeXShop normalerweise nicht, mit drei Ausnahmen: Die Ordner bin, Engines/Inactive und Scripts werden mit jeder neuen Version aktualisiert. Dateien, die Sie diesen Ordnern hinzugef&uuml;gt haben, bleiben unver&auml;ndert; die Standarddateien von TeXShop werden aber durch neue Versionen ersetzt, und neue Standarddateien kommen hinzu. Aktive Engine-Dateien werden nicht ge&auml;ndert, da sie im Ordner Engines liegen und nicht im Unterordner Inactive.</p>
+
+<p>Der Vorteil dieses Aufbaus: Manche Engines legen Hilfsdateien in den Ordnern bin und Scripts ab. Bei einer Aktualisierung von TeXShop werden diese Hilfsdateien automatisch erneuert, ohne dass Sie etwas tun m&uuml;ssen. Ebenso kommen gelegentlich neue Engines in den Ordner Engines/Inactive, die Sie automatisch erhalten.</p>
+
+<p>Jede neue Version von TeXShop schreibt den Ordner ~/Library/TeXShop/New neu. Er enth&auml;lt neue Objekte, die Sie vielleicht in Ihre anderen Konfigurationsordner &uuml;bernehmen m&ouml;chten. Neue Vorlagen erscheinen zum Beispiel in ~/Library/TeXShop/New. Wenn Sie diese Vorlagen verwenden m&ouml;chten, verschieben Sie sie nach ~/Library/TeXShop/Templates und passen Sie sie nach Bedarf an. Der Inhalt von ~/Library/TeXShop/New wird immer in &bdquo;&Uuml;ber diese Version (Englisch)&ldquo; beschrieben; Sie m&uuml;ssen den Ordner also nur ansehen, wenn Sie dort dazu aufgefordert werden.</p>
+
+<p>Ein technisches Detail ist n&uuml;tzlich zu wissen: Eine unsichtbare Datei in ~/Library/TeXShop/New enth&auml;lt die Versionsnummer der TeXShop-Version, die den Ordner geschrieben hat. ~/Library/TeXShop wird nur aktualisiert, wenn die Versionsnummer von TeXShop h&ouml;her ist als die in dieser Datei. Deshalb wird ~/Library/TeXShop nicht bei jedem Start von TeXShop aktualisiert, und &auml;ltere Versionen von TeXShop k&ouml;nnen gefahrlos gestartet werden, ohne ~/Library/TeXShop zu ver&auml;ndern.</p>
+
+<p>In seltenen F&auml;llen m&ouml;chten Sie vielleicht die neuesten Standarddateien eines Ordners in ~/Library/TeXShop erhalten. Verschieben Sie diesen Ordner auf den Schreibtisch; beim n&auml;chsten Start legt TeXShop ihn neu an. Danach k&ouml;nnen Sie Ihre eigenen &Auml;nderungen aus der Kopie auf dem Schreibtisch &uuml;bernehmen. Verschieben Sie zum Beispiel den Ordner Templates aus ~/Library/TeXShop auf den Schreibtisch, so erzeugt der n&auml;chste Start von TeXShop den neuesten Standardordner Templates. Dieser drastische Schritt ist zum Gl&uuml;ck nur selten n&ouml;tig.</p>
+
+</div>
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">Wie konfiguriere ich TeXShop?</div><div id="header_title">Alles richtig installiert?</div>
+<div id="header_chapter">Wie konfiguriere ich TeXShop?</div><div id="header_title">Neue Objekte in ~/Library/TeXShop erhalten</div>
 
 <div id="menu_border">
 		<ul>
 			<LI><a href="configure_preliminaries.htm">Einleitung</a>
-			<li><a href="configure_correctinstall.htm">Alles richtig installiert?</a>
+			<li><a href="configure_correctinstall.htm">Neue Objekte in ~/Library/TeXShop erhalten</a>
 			<li><a href="configure_prefchanges.htm">Empfohlene &Auml;nderung von Einstellungen</a>
 			<LI><a href="configure_convertgraphics.htm">Grafikformate automatisch konvertieren</a>
 			<LI><a href="configure_defaults.htm">Standardeinstellungen</a>

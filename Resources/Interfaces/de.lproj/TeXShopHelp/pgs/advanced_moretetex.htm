@@ -12,10 +12,7 @@
 		<p>TeX Live von der TUG wird im Verzeichnis /usr/local/texlive installiert, das im Finder nicht sichtbar ist. Der Installer erstellt jedoch in /Library/TeX/Root einen symbolischen Link auf das Verzeichnis der aktiven TeX-Distribution. Um die Dateien Ihrer Distribution anzusehen, gehen Sie deshalb nach /Library/TeX/Root.</p>
 		<p>Die Dokumentation der aktiven Distribution befindet sich in /Library/TeX/Documentation (eigentlich ein Link auf verschiedene Dokumentationsordner in der Distribution).</p>
 		<p>Es ist m&ouml;glich, zus&auml;tzliche Style-Dateien, Schriften und so weiter in TeX Live selbst abzulegen. TeX Live geh&ouml;rt jedoch dem Benutzer &bdquo;root&ldquo; und liegt in einem Ordner, in den Benutzer nicht schreiben d&uuml;rfen. Au&szlig;erdem ist es sinnvoll, dieses Verzeichnis unver&auml;ndert zu lassen, damit es sich leicht aktualisieren l&auml;sst, wenn neuere Versionen erscheinen. Besser ist es, in Ihrem Library-Ordner ein Abbild der Verzeichnisstruktur von TeX Live anzulegen und Ihre pers&ouml;nlichen Dateien dort zu speichern.</p>
-		<p>Die Dateien m&uuml;ssen in den richtigen Verzeichnissen liegen. TeX Live benutzt eine Verzeichnisstruktur, die von der TeX-Arbeitsgruppe entwickelt wurde. Angenommen, Sie m&ouml;chten den Style-Dateien von LaTeX eine weitere Datei namens new.sty hinzuf&uuml;gen. Ein Blick in TeX Live zeigt, dass der nat&uuml;rliche Platz f&uuml;r diese Datei folgender w&auml;re:</p>
-		<dl>
-			<dd>/usr/local/texlive/2008/texmf/tex/latex/misc/
-		</dl>
+		<p>Die Dateien m&uuml;ssen in den richtigen Verzeichnissen liegen. TeX Live benutzt eine Verzeichnisstruktur, die von der TeX-Arbeitsgruppe entwickelt wurde. Angenommen, Sie m&ouml;chten den Style-Dateien von LaTeX eine weitere Datei namens new.sty hinzuf&uuml;gen. TeX Live legt die Style-Dateien von LaTeX in Unterordnern von texmf-dist/tex/latex ab.</p>
 		<p>Legen Sie deshalb im Library-Ordner Ihres Benutzerordners die folgenden Unterordner an:</p>
 		<dl>
 			<dd>Library  --&gt;  texmf  --&gt;  tex  --&gt;  latex  --&gt;  misc
@@ -50,7 +47,6 @@
 			<li><a href="advanced_shellescape.htm">Shell Escape Schutz</a></li>
 			<li><a href="advanced_coloredtext.htm">Farbiger Text in TeX</a></li>
 			<li><a href="advanced_moretetex.htm">Mehr &uuml;ber TeX Live</a></li>
-			<li><a href="advanced_fink.htm">Zusammenarbeit mit Fink</a></li>
 			<li><a href="advanced_otherdistributions.htm">Zusammenarbeit mit anderen TeX Distributionen</a></li>
 			<li><a href="advanced_context.htm">ConTeXt und MetaPost</a></li>
 			<li><a href="advanced_plist.htm">Plist Dateien</a></li>

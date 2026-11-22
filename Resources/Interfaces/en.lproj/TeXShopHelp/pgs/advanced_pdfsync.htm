@@ -25,7 +25,7 @@ the Macintosh by Blue Sky TeX Systems. Using this feature,  an author can click 
 
 <p>SyncTeX was introduced by Jérôme Laurens in 2008. It causes TeX to output an additional file with extension ".synctex" containing information needed to correlate the output pdf and input source files. The additional file is written directly by the TeX engine. Typesetting is not modified in any way by SyncTeX; in particular, line and page breaks are not changed, as happened with the older pdfsync technology. SyncTeX should allow very accurate synchronization as developers master its features.</p>
 
-<p>SyncTeX requires the versions of pdftex, pdfetex, and xetex introduced in TeX Live 2008 and made available in MacTeX-2008. For users with older TeX distributions, a second synchronization method named Search is also provided in TeXShop. This method works with all TeX engines; no special changes to the source file are needed to use it.  The Search method uses features of OS X introduced by Apple in System 10.4. These features allow developers toeasily search pdf files for text strings;  the search method finds strings in the source file and corresponding strings in the output pdf file. This method does not require an additional style file, so theoretically it works for all typesetting methods. But it fails when the pdf strings is different than the input strings and thus fails for mathematical expressions.</p>
+<p>A second synchronization method named Search is also provided in TeXShop. This method works with all TeX engines; no special changes to the source file are needed to use it.  The Search method uses features of OS X introduced by Apple in System 10.4. These features allow developers toeasily search pdf files for text strings;  the search method finds strings in the source file and corresponding strings in the output pdf file. This method does not require an additional style file, so theoretically it works for all typesetting methods. But it fails when the pdf strings is different than the input strings and thus fails for mathematical expressions.</p>
 
 <p>By default, TeXShop first tries SyncTeX. But if SyncTeX fails or the ".synctex" file does not exist, TeXShop falls back on the Search synchronization method.</p>  
 
@@ -108,7 +108,6 @@ Here are examples:
 			<li><a href="advanced_shellescape.htm">Shell Escape Protection </a>			
 			<li><a href="advanced_coloredtext.htm">Colored Text in TeX </a>			
 			<li><a href="advanced_moretetex.htm">More About TeX Live</a>
-			<li><a href="advanced_fink.htm">Coexisting with Fink</a>
 			<li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a>
 			<li><a href="advanced_context.htm">ConTeXt and MetaPost</a>
 			<li><a href="advanced_plist.htm">Plist Files</a>

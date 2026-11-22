@@ -3,22 +3,50 @@
 <meta content="text/html;charset=iso-8859-1" http-equiv="content-type"/>
 <title>Corrección ortográfica</title>
 <meta content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU" name="copyright"/>
-<meta content="corrección ortográfica; spelling; aspell; verificación ortográfica mientras se escribe; excalibur; zaccone" name="description"/>
+<meta content="correcci&oacute;n ortogr&aacute;fica; diccionario; correcci&oacute;n adaptada a LaTeX; spellcheck" name="description"/>
 <link href="../sty/screen.css" media="all" rel="stylesheet"/>
 </head>
 <body>
 
 <div id="content_border">
-<p>Los programas desarrollados con Cocoa heredan automáticamente la tecnología de corrección ortográfica de Apple. El verificador ortográfico incorporado en Mac OS X 10.4 y superior se comporta mejor que los de las versiones anteriores cuando se enfrenta a archivos en LaTeX. Pero no entiende los comandos de LaTeX, y marca muchos de ellos como palabras mal escritas. Afortunadamente, se pueden añadir otros servicios a la tecnología de verificación ortográfica original de Apple; y estarán disponibles para todos los programas Cocoa.</p>
-<p>TeXShop soporta verificación ortográfica mientras se escribe, que se activa o desactiva con un comando del menú. En la ventana de Ajustes hay un ítem destinado a establecer cuál tiene que ser su estado cada vez que se arranca TeXShop.</p>
-<p>Aspell es «a more intelligent Ispell» (&#8216;un Ispell más inteligente&#8217;) para máquinas Unix escrito por Kevin Adkinson. Este programa ha sido adaptado a Mac OS X y convertido en un servicio de verificación ortográfica por Anton Leuski. Además, soporta LaTeX. Para obtenerlo, ir a</p>
+
+<p>Los programas desarrollados con Cocoa heredan autom&aacute;ticamente la tecnolog&iacute;a de correcci&oacute;n ortogr&aacute;fica de Apple. TeXShop permite comprobar la ortograf&iacute;a mientras se escribe, algo que se activa o desactiva con un comando de men&uacute;. Un ajuste establece el estado inicial.</p>
+
+<p>El corrector ortogr&aacute;fico de Apple no entiende por s&iacute; solo los comandos de LaTeX y marca muchos de ellos como errores. En la categor&iacute;a Ortograf&iacute;a de los ajustes de TeXShop, elige &laquo;Usar correcci&oacute;n adaptada a LaTeX (recomendado)&raquo;: TeXShop revisar&aacute; entonces el texto principal, excluyendo comandos, f&oacute;rmulas, comentarios y argumentos de referencias.</p>
+
+<p>El diccionario predeterminado se elige en el men&uacute; &laquo;Diccionario&raquo; de la categor&iacute;a Ortograf&iacute;a de los ajustes. Si sueles escribir en ingl&eacute;s, elige un diccionario ingl&eacute;s; si sueles escribir en franc&eacute;s, uno franc&eacute;s. Con &laquo;Detecci&oacute;n autom&aacute;tica del idioma&raquo; se elige autom&aacute;ticamente un diccionario adecuado seg&uacute;n el texto.</p>
+
+<p>El diccionario de los ajustes es el que se usa al abrir archivos nuevos en TeXShop; no cambia el diccionario de los archivos que ya est&aacute;n abiertos.</p>
+
+<p>En los ajustes, los diccionarios aparecen con los c&oacute;digos de las normas ISO 639-1 e ISO 639-2, no con los nombres localizados del panel &laquo;Ortograf&iacute;a y gram&aacute;tica&raquo; de Apple.</p>
+
+<p>Una vez configurado el diccionario, si abres varios archivos fuente en TeXShop, a cada uno se le asigna el diccionario predeterminado. Pero se puede cambiar con &laquo;Ortograf&iacute;a y gram&aacute;tica&raquo; del men&uacute; Edici&oacute;n, de modo que, si quieres, cada archivo puede usar un diccionario distinto. Por ejemplo, si escribes cartas a clientes en ingl&eacute;s, franc&eacute;s, alem&aacute;n y japon&eacute;s, puedes asignar esos diccionarios a los cuatro archivos fuente. Al pasar de un archivo a otro, el panel &laquo;Ortograf&iacute;a y gram&aacute;tica&raquo; cambia cada vez al diccionario correspondiente.</p>
+
+<p>Al cerrar los archivos se pierde esta asociaci&oacute;n, as&iacute; que quien escribe en varios idiomas tiene que volver a elegir el diccionario adecuado cada vez que abre un archivo.</p>
+
+<p>Sin embargo, el diccionario que se usa al abrir un archivo se puede fijar con este comentario m&aacute;gico:</p>
 <dl>
-<dd><a href="http://cocoaspell.leuski.net/">http://cocoaspell.leuski.net/</a>
+<dd>% !TEX spellcheck = de-DE
 </dd></dl>
-<p>Otro corrector ortográfico para LaTeX es Excalibur. Este programa, escrito por Rick Zaccone, puede abrir archivos de TeXShop. Para obtenerlo, ir a</p>
+<p>En este ejemplo, al abrir el archivo se usar&aacute; siempre un diccionario alem&aacute;n. Despu&eacute;s de abrirlo se puede cambiar el diccionario con &laquo;Ortograf&iacute;a y gram&aacute;tica&raquo;, pero la pr&oacute;xima vez que se cierre y se vuelva a abrir se usar&aacute; de nuevo el diccionario alem&aacute;n.</p>
+
+<p>La l&iacute;nea se lee al abrir el documento, as&iacute; que la primera vez que la a&ntilde;adas a un archivo fuente tendr&aacute;s que guardarlo y volver a abrirlo para que surta efecto. En un proyecto con archivo ra&iacute;z, cada archivo fuente incluido debe contener la l&iacute;nea.</p>
+
+<p>En esta l&iacute;nea, los diccionarios de Apple se indican con las normas ISO 639-1 o ISO 639-2 para el idioma y con la norma ISO 3166-1 para la regi&oacute;n. La regi&oacute;n distingue un idioma tal como se usa en una parte del mundo del mismo idioma en otra parte. Por ejemplo, el franc&eacute;s es &laquo;fr&raquo; en ISO 639-1 y &laquo;fre&raquo; en ISO 639-2; el franc&eacute;s de Francia tiene la regi&oacute;n &laquo;FR&raquo; y el franc&eacute;s de Canad&aacute; la regi&oacute;n &laquo;CA&raquo;. As&iacute;, para elegir un diccionario franc&eacute;s en Canad&aacute; sirve &laquo;spellcheck = fr&raquo;, y &laquo;spellcheck = fr-CA&raquo; es a&uacute;n mejor. Como son normas ISO, comandos similares funcionan en otras plataformas, aunque TeXShop solo funciona en el Mac. Las normas de idiomas se describen en</p>
 <dl>
-<dd><a href="http://www.eg.bucknell.edu/%7eexcalibr/excalibur.html">http://www.eg.bucknell.edu/~excalibr/excalibur.html</a>
-</dd></dl><p><a href="basic_preferences.htm#settings-search">Uso y búsqueda de ajustes</a></p></div>
+<dd><a href="https://www.loc.gov/standards/iso639-2/php/English_list.php">https://www.loc.gov/standards/iso639-2/php/English_list.php</a>
+</dd></dl>
+<p>y las de regiones en</p>
+<dl>
+<dd><a href="https://www.iso.org/iso-3166-country-codes.html">https://www.iso.org/iso-3166-country-codes.html</a>
+</dd></dl>
+
+<p>Al principio, TeXShop no hac&iacute;a nada especial con los diccionarios y se usaba simplemente &laquo;Ortograf&iacute;a y gram&aacute;tica&raquo;. M&aacute;s tarde se introdujo parte del dise&ntilde;o descrito arriba, y en TeXShop 3.81 se complet&oacute;. Si prefieres el dise&ntilde;o original, en el que TeXShop aceptaba sin m&aacute;s el comportamiento predeterminado de &laquo;Ortograf&iacute;a y gram&aacute;tica&raquo;, puedes volver a &eacute;l con este ajuste oculto:</p>
+<dl>
+<dd>defaults write TeXShop OriginalSpelling YES
+</dd></dl>
+
+<p><a href="basic_preferences.htm#settings-search">Uso y búsqueda de ajustes</a></p></div>
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/xicnsc.gif" width="40"/></a></div>
 <div id="header_chapter">Ayuda básica</div><div id="header_title">Corrección ortográfica</div>
