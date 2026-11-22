@@ -355,7 +355,7 @@ int main(int argc,char **argv){@autoreleasepool{
  // positions of 5.58, reaches the item that opens the same document, never the submenu, and no other item; the items of
  // the submenu can be named through it too.
  {
-  NSUInteger names=0,positions=0;
+  NSUInteger names=0,positions=0,olderChecks=0;
   for(NSString *language in edits){
    NSNib *nib=[[NSNib alloc]initWithNibData:[NSData dataWithContentsOfFile:edits[language][@"nib"]] bundle:nil];NSArray *objects=nil;
    Check([nib instantiateWithOwner:NSApp topLevelObjects:&objects],language);
@@ -382,6 +382,15 @@ int main(int argc,char **argv){@autoreleasepool{
    for(NSMenuItem *i in all)i.keyEquivalent=@"";
    Apply(main,@{help.title:@{course.parentItem.title:@{course.title:@[@"7",@YES,@YES]}}});
    Check([course.keyEquivalent isEqual:@"7"]&&course.parentItem.keyEquivalent.length==0,[language stringByAppendingString:@": the course is named through its submenu"]);
+   // Older Documents of TetsuTeXShop 6.00b9.1: each document by its name and its position there.
+   NSDictionary *older=edits[language][@"older"];
+   for(NSArray *entry in older[@"items"])for(id key in @[[entry[0] stringValue],entry[1]]){
+    for(NSMenuItem *i in all)i.keyEquivalent=@"";
+    Apply(main,@{help.title:@{older[@"title"]:@{key:@[@"9",@YES,@YES]}}});
+    NSMenuItem *target=withAction(entry[2]);
+    for(NSMenuItem *i in all)Check([i.keyEquivalent isEqual:i==target?@"9":@""],[NSString stringWithFormat:@"%@: Older Documents › %@ reaches %@ only (%@ has %@)",language,key,entry[2],i.title,i.keyEquivalent]);
+    olderChecks++;
+   }
    // Positions of 5.58.
    NSArray *old=edits[language][@"helpactions"];
    for(NSUInteger i=0;i<old.count;i++){
@@ -392,7 +401,8 @@ int main(int argc,char **argv){@autoreleasepool{
    }
   }
   Check(names>=36,@"names of the course, the tables and Feature Confusion are checked in every language");
-  printf("PASS: %lu former names and %lu positions of 5.58 in the Help menus reach the item that opens the same document\n",(unsigned long)names,(unsigned long)positions);
+  Check(olderChecks==192,@"8 documents of Older Documents by name and position in 12 languages");
+  printf("PASS: %lu former names and %lu positions of 5.58 in the Help menus, and %lu names and positions in Older Documents of 6.00b9.1, reach the item that opens the same document\n",(unsigned long)names,(unsigned long)positions,(unsigned long)olderChecks);
  }
  }
  puts("PASS: Show Status Bar and Highlight Index Entries skipped in positions; Find and Replace… skipped in positions of the menus that lacked it; 12 legacy title fixtures; CJK-Latin spacing; 18 former titles with a stray space; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File; former typesetting method titles in 12 languages; Command Completion submenu entries in 12 languages reach Add to Command Completion List");

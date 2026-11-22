@@ -61,6 +61,14 @@ with tempfile.TemporaryDirectory(prefix='texshop-legacy-menu-') as td:
     edits[language]['helpactions']=[(i.find('connections/action').get('selector') if i.find('connections/action') is not None else '') for i in help[0].find('items')]
   assert all(len(former.get(s,[]))>=1 for s in ('displayShortCourse:','displayTables:','displayTeXShopConfusion:')),(language,former)
   edits[language]['helpformer']=former
+ # Older Documents of TetsuTeXShop 6.00b9.1 (6b0e2342 in TeXShop): its name, and each document's name and position in it.
+ for language in edits:
+  root=ET0.fromstring(subprocess.check_output(['git','show',f'6b0e2342:Resources/Interfaces/{language}.lproj/MainMenu.nib/designable.nib'],cwd=r))
+  older=[m for m in root.iter('menuItem') if m.find("menu/items/menuItem/connections/action[@selector='displayTipsandTricks:']") is not None]
+  assert len(older)==1,language
+  edits[language]['older']={'title':older[0].get('title'),'items':[[k+1,i.get('title'),i.find('connections/action').get('selector')]
+                            for k,i in enumerate(older[0].find('menu/items')) if i.find('connections/action') is not None]}
+  assert len(edits[language]['older']['items'])==8,language
  assert len(edits)==12
  (Path(td)/'edits.json').write_text(json.dumps(edits))
  subprocess.run([str(p),str(r/'Tests/Fixtures/LegacyKeyBindingTitles.json'),str(Path(td)/'edits.json')],check=True)

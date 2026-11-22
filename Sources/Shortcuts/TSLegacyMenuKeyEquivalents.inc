@@ -87,9 +87,32 @@ static NSMutableArray<NSMenuItem *> *TSLegacyFormerHelpItems(NSMenu *menu)
     }
     return items;
 }
+// TetsuTeXShop 6.00b9.1 (build 1145) had an Older Documents submenu with TeXShop Feature Confusion and George Grätzer's
+// Short Course with the symbol tables in it. Keys saved for it by position or name reach the same documents where they are now.
+static NSArray<NSString *> *TSLegacyFormerOlderMenu(void)
+{
+    return @[@"TSShortcut.displayTipsandTricks:.0", @"TSShortcut.displayTeXShopConfusion:.0", @"TSShortcut.displayRecentTeXFonts:.0",
+             @"TSShortcut.displayNotesonApplescript:.0", @"", @"TSShortcut.displayGettingStartedXeTeX:.0", @"TSShortcut.displayGettingStartedLatex:.0",
+             @"", @"TSShortcut.displayShortCourse:.0", @"TSShortcut.displayTables:.0"];
+}
+static NSMutableArray<NSMenuItem *> *TSLegacyFormerOlderItems(NSMenu *menu)
+{
+    NSMenu *help = menu.supermenu;
+    if (help == nil || TSLegacyItemWithIdentifier(help, TSLegacyHelpMenuMarker) == nil) return nil;
+    BOOL older = NO;
+    for (NSMenuItem *item in menu.itemArray)
+        if ([item.identifier isEqualToString:@"TSShortcut.displayTipsandTricks:.0"]) older = YES;
+    if (!older) return nil;
+    NSMutableArray<NSMenuItem *> *items = [NSMutableArray array];
+    for (NSString *identifier in TSLegacyFormerOlderMenu()) {
+        NSMenuItem *item = identifier.length ? TSLegacyItemWithIdentifier(help, identifier) : nil;
+        [items addObject:item ?: [[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""]];
+    }
+    return items;
+}
 static NSArray<NSMenuItem *> *TSLegacyItems(NSMenu *menu)
 {
-    NSMutableArray<NSMenuItem *> *items = TSLegacyFormerHelpItems(menu) ?: [menu.itemArray mutableCopy];
+    NSMutableArray<NSMenuItem *> *items = TSLegacyFormerHelpItems(menu) ?: TSLegacyFormerOlderItems(menu) ?: [menu.itemArray mutableCopy];
     [items filterUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NSMenuItem *item, NSDictionary *bindings) {
         return ![item.identifier isEqualToString:TSLegacyStatusBarItem] && ![item.identifier isEqualToString:TSLegacyIndexColorItem] &&
                ![item.identifier isEqualToString:TSLegacySwapItem] &&
