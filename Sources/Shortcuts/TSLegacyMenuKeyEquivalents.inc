@@ -56,14 +56,16 @@ static void TSLegacyKeepRemovedFullscreen(NSMutableArray<NSMenuItem *> *items)
     }];
     if (fullScreen != NSNotFound) [items insertObject:[[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""] atIndex:fullScreen];
 }
-// 6.00 moved the older documents of the Help menu into its Older Documents submenu and removed Short Course
-// Supplements --> Desktop; Spell Checking Help is added at launch. Positions saved before count the Help menu as it was,
+// 6.00 moved the older documents of the Help menu into its Older Documents submenu and George Grätzer's Short
+// Course with the symbol tables into a submenu of their own, and removed Short Course Supplements --> Desktop;
+// Spell Checking Help is added at launch, and the separator between Getting Started with TeXShop and the
+// manual is gone. Positions saved before count the Help menu as it was (5.58),
 // with the moved items in their former places, a place for the removed one, and without Spell Checking Help.
-static NSString *const TSLegacyOlderDocumentsMarker = @"TSShortcut.displayTipsandTricks:.0";
+static NSString *const TSLegacyHelpMenuMarker = @"TSShortcut.displayThisRelease:.0";
 static NSArray<NSString *> *TSLegacyFormerHelpMenu(void)
 {
     return @[@"TSShortcut.displayThisRelease:.0", @"TSShortcut.displayChanges:.0", @"", @"TSShortcut.displayTeXLiveDocumentation:.0",
-             @"TSShortcut.displayHelpForPackage:.0", @"", @"TSShortcut.displayGettingStartedTeXShop:.0", @"TSShortcut.displayManual:.0", @"",
+             @"TSShortcut.displayHelpForPackage:.0", @"", @"TSShortcut.displayGettingStartedTeXShop:.0", @"", @"TSShortcut.displayManual:.0", @"",
              @"TSShortcut.displayHTMLHelp:.0", @"TSShortcut.showHelp:.0", @"TSShortcut.displayFileEncoding:.0",
              @"TSShortcut.displayTipsandTricks:.0", @"TSShortcut.displayTeXShopConfusion:.0", @"TSShortcut.displayCommentLines:.0",
              @"TSShortcut.displayRecentTeXFonts:.0", @"TSShortcut.displayNotesonApplescript:.0", @"",
@@ -72,12 +74,11 @@ static NSArray<NSString *> *TSLegacyFormerHelpMenu(void)
 }
 static NSMutableArray<NSMenuItem *> *TSLegacyFormerHelpItems(NSMenu *menu)
 {
-    BOOL hasOlderDocuments = NO;
+    // The Help menu itself has About This Release among its own items; the menus above it do not.
+    BOOL helpMenu = NO;
     for (NSMenuItem *item in menu.itemArray)
-        // Only the Help menu itself has the submenu among its items; the menus above it do not count.
-        for (NSMenuItem *child in item.submenu.itemArray)
-            if ([child.identifier isEqualToString:TSLegacyOlderDocumentsMarker]) hasOlderDocuments = YES;
-    if (!hasOlderDocuments) return nil;
+        if ([item.identifier isEqualToString:TSLegacyHelpMenuMarker]) helpMenu = YES;
+    if (!helpMenu) return nil;
     NSMutableArray<NSMenuItem *> *items = [NSMutableArray array];
     for (NSString *identifier in TSLegacyFormerHelpMenu()) {
         NSMenuItem *item = identifier.length ? TSLegacyItemWithIdentifier(menu, identifier) : nil;
@@ -86,9 +87,32 @@ static NSMutableArray<NSMenuItem *> *TSLegacyFormerHelpItems(NSMenu *menu)
     }
     return items;
 }
+// TetsuTeXShop 6.00b9.1 (build 1145) had an Older Documents submenu with TeXShop Feature Confusion and George Grätzer's
+// Short Course with the symbol tables in it. Keys saved for it by position or name reach the same documents where they are now.
+static NSArray<NSString *> *TSLegacyFormerOlderMenu(void)
+{
+    return @[@"TSShortcut.displayTipsandTricks:.0", @"TSShortcut.displayTeXShopConfusion:.0", @"TSShortcut.displayRecentTeXFonts:.0",
+             @"TSShortcut.displayNotesonApplescript:.0", @"", @"TSShortcut.displayGettingStartedXeTeX:.0", @"TSShortcut.displayGettingStartedLatex:.0",
+             @"", @"TSShortcut.displayShortCourse:.0", @"TSShortcut.displayTables:.0"];
+}
+static NSMutableArray<NSMenuItem *> *TSLegacyFormerOlderItems(NSMenu *menu)
+{
+    NSMenu *help = menu.supermenu;
+    if (help == nil || TSLegacyItemWithIdentifier(help, TSLegacyHelpMenuMarker) == nil) return nil;
+    BOOL older = NO;
+    for (NSMenuItem *item in menu.itemArray)
+        if ([item.identifier isEqualToString:@"TSShortcut.displayTipsandTricks:.0"]) older = YES;
+    if (!older) return nil;
+    NSMutableArray<NSMenuItem *> *items = [NSMutableArray array];
+    for (NSString *identifier in TSLegacyFormerOlderMenu()) {
+        NSMenuItem *item = identifier.length ? TSLegacyItemWithIdentifier(help, identifier) : nil;
+        [items addObject:item ?: [[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""]];
+    }
+    return items;
+}
 static NSArray<NSMenuItem *> *TSLegacyItems(NSMenu *menu)
 {
-    NSMutableArray<NSMenuItem *> *items = TSLegacyFormerHelpItems(menu) ?: [menu.itemArray mutableCopy];
+    NSMutableArray<NSMenuItem *> *items = TSLegacyFormerHelpItems(menu) ?: TSLegacyFormerOlderItems(menu) ?: [menu.itemArray mutableCopy];
     [items filterUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NSMenuItem *item, NSDictionary *bindings) {
         return ![item.identifier isEqualToString:TSLegacyStatusBarItem] && ![item.identifier isEqualToString:TSLegacyIndexColorItem] &&
                ![item.identifier isEqualToString:TSLegacySwapItem] &&
@@ -163,6 +187,24 @@ static NSString *TSLegacyFormerTitleIdentifier(NSString *title)
         map[TSLegacyComparableTitle(@"Introductie symbooltabellen")] = @"TSShortcut.displayTables:.0";
         for (NSString *former in @[@"TeXShop Hilfspalette", @"TeXShopヘルプパネル", @"TeXShop 도움말 패널"])
             map[TSLegacyComparableTitle(former)] = @"TSShortcut.showHelp:.0";
+        // George Grätzer's Short Course, the symbol tables and TeXShop Feature Confusion, in every language, as 5.58 and
+        // 6.00 beta 9 named them; the course and the tables are now in a submenu named like the course was.
+        for (NSString *former in @[@"George Grätzer's Short Course", @"Curso corto de George Grätzer", @"Cours allégé de George Grätzer",
+                                   @"George Grätzer によるショートコース", @"George Grätzer 짧은 입문서", @"George Grätzers korte handleiding",
+                                   @"Curso rápido do George Grätzer", @"George Grätzer 的快速教程", @"George Grätzers Kurzkurs",
+                                   @"Corso breve di George Grätzer", @"George Grätzerによるショートコース", @"Curso breve de George Grätzer",
+                                   @"Cursul scurt al lui George Grätzer", @"George Grätzer的快速教程"])
+            map[TSLegacyComparableTitle(former)] = @"TSShortcut.displayShortCourse:.0";
+        for (NSString *former in @[@"Short Course Symbol Tables", @"Tablas de símbolos del curso", @"Tables des symboles de LaTeX", @"記号一覧",
+                                   @"기호 일람", @"快速教程符号表", @"Kurzkurs-Symboltabellen", @"Tabelle dei simboli del corso breve",
+                                   @"Symbooltabellen van de korte handleiding", @"Tabelas de símbolos do curso breve", @"Tabelas de símbolos do curso rápido",
+                                   @"Tabele de simboluri pentru cursul scurt"])
+            map[TSLegacyComparableTitle(former)] = @"TSShortcut.displayTables:.0";
+        for (NSString *former in @[@"TeXShop Feature Confusion", @"TeXShop Funktionsbeschreibung", @"Confusiones entre utilidades de TeXShop",
+                                   @"TeXShop の様々な補完機能の解説", @"TeXShopの様々な補完機能の解説", @"단축키, 매크로, 자동완성에 대하여", @"Características do TeXShop",
+                                   @"TeXShop 功能答疑", @"TeXShop功能答疑", @"Raccourcis clavier et autres", @"Chiarimenti sulle funzioni di TeXShop",
+                                   @"Verwarrende TeXShop-functies", @"Confusões entre funcionalidades do TeXShop", @"Confuzii privind funcțiile TeXShop"])
+            map[TSLegacyComparableTitle(former)] = @"TSShortcut.displayTeXShopConfusion:.0";
         // TeX Live Documentation in Japanese before 6.00, written without the space.
         map[TSLegacyComparableTitle(@"TeXLiveドキュメント（英語）")] = @"TSShortcut.displayTeXLiveDocumentation:.0";
         identifiers = map;
@@ -234,7 +276,15 @@ static void TSApplyLegacyMenuKeys(NSMenu *mainMenu, NSDictionary *shortcuts)
                     if (TSLegacyIsFormerCompletionChild(item, childKey)) child = item;
                     TSApplyLegacyKeyEquivalent(child, value[childKey]);
                 }
-            } else TSApplyLegacyKeyEquivalent(item, value);
+            } else {
+                // A key saved for an item that is a submenu now was for the document it opened then (George
+                // Grätzer's Short Course): it goes to that document, in the submenu. A submenu takes no key itself.
+                if (item.hasSubmenu) {
+                    NSString *identifier = TSLegacyFormerTitleIdentifier(itemKey);
+                    item = identifier != nil ? TSLegacyItemWithIdentifier(menu, identifier) : nil;
+                }
+                TSApplyLegacyKeyEquivalent(item, value);
+            }
         }
     }
 }
