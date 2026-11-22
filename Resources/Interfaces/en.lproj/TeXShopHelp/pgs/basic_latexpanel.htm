@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Latex Panel</title>
+<title>LaTeX Panel</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="latex panel; amssymb; completion.plist; custom">
+<meta name="description" content="LaTeX Panel; symbols; Greek letters; environments; typeface; amssymb; completion.plist; Custom buttons">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -24,36 +24,39 @@
 <li><a href="basic_spelling.htm">Checking Spelling</a></li>
 <li><a href="basic_autocompletion.htm">Key Bindings</a></li>
 <li><a href="basic_commandcompletion.htm">Command Completion</a></li>
-<li><a href="basic_latexpanel.htm" class="current">Latex Panel</a></li>
+<li><a href="basic_latexpanel.htm" class="current">LaTeX Panel</a></li>
 <li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
 <li><a href="basic_macros.htm">Macros</a></li>
 <li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
 <li><a href="basic_graphics.htm">Including Graphics</a></li>
 <li><a href="basic_printing.htm">Printing</a></li>
 <li><a href="basic_preferences.htm">Changing Settings</a></li>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a></li>
-<li><a href="basic_miscellaneous.htm">Miscellaneous</a></li>
+<li><a href="basic_templates.htm">Templates and Stationery</a></li>
+<li><a href="basic_miscellaneous.htm">Windows and Tabs</a></li>
 <li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
 <li><a href="basic_websites.htm">Useful Web Sites</a></li>
 <li><a href="basic_license.htm">License</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Latex Panel</h1>
+<h1>LaTeX Panel</h1>
+<p>Window › LaTeX Panel… opens a panel of LaTeX code: mathematical symbols, Greek letters, functions, accented and international characters, environments and typeface commands. Click in the source where the code should go, then click a button in the panel. Its code is inserted at the insertion point. The panel stays in front of the source windows while you work.</p>
+<p>The buttons are arranged on pages. Choose a page with the buttons at the top of each part of the panel: Math, Greek, Symbols, Functions and International, and Environments, Typeface and Custom.</p>
+<p>If text is selected when you click a typeface or environment button, the selected text goes inside the inserted code, as in <code>\textbf{selected text}</code>.</p>
+<p>Some symbols need the amssymb package. Add this line to the preamble of a document that uses them:</p>
+<pre>\usepackage{amssymb}</pre>
 
-		<P>Under the Windows menu, there is an item named &quot;Latex Panel...&quot; Choosing this item will open a panel containing a large number of mathematical symbols, Greek letters, international characters, and typesetting environments. Clicking on a symbol will insert the corresponding text into your LaTeX source file. This wonderful panel is the work of Geoffroy Lenglin, who can be reached at <a href="mailto:geoffroy.lenglin@m4x.org">geoffroy.lenglin@m4x.org</a>.</P>
-		<p>Some symbols in the panel require the line</p>
-		<dl>
-			<dd><tt>\usepackage{amssymb}</tt>
-		</dl>
-		<p>at the top of the source file. </p>
-		<p>It is possible to customize the behavior of the panel. When TeXShop first runs, it creates a file ~/Library/TeXShop/LatexPanel/completion.plist inside your personal Library folder. This file is an ordinary text file which can be opened and edited by TeXShop. The file contains all strings inserted into the source code when a Palette item is chosen. If such a string contains #SEL#, then the current selection will replace this expression in the inserted string. If a string contains #INS#, then the cursor will be set to this position when the string is inserted. To customize panel behavior, edit completion.plist.</p>
-		<p>Editing plist files is slightly tricky; see the item about them at the end of this help file. Be sure to edit and save in UTF-8 format if you use Unicode characters.</p>
-		<p>Users can add up to sixteen additional items to the Latex Panel by editing completion.plist. These are displayed on the &quot;Custom&quot; subpanel of the Latex Panel. See comments in completion.plist for details about adding such items.</p>
-		<ul>
-			
-		</ul>
-	
+<h2>Customizing the panel</h2>
+<p>The code each button inserts is kept in <code>~/Library/TeXShop/LatexPanel/completion.plist</code>. Open this file in TeXShop to change it; the comments at its start explain how it is organized. The names of the standard buttons cannot be changed, but the code they insert can. In this code:</p>
+<ul>
+<li><code>#SEL#</code> stands for the selected text;</li>
+<li><code>#INS#</code> marks where the insertion point goes after the code is inserted;</li>
+<li><code>#PASTE#</code> stands for the text on the clipboard.</li>
+</ul>
+<p>The Custom page has room for up to sixteen buttons of your own. Each is defined in the <code>Customized</code> list of the file by two strings, the name of the button and the code it inserts:</p>
+<pre>&lt;string&gt;Section&lt;/string&gt;
+&lt;string&gt;\section{#SEL##INS#}&lt;/string&gt;</pre>
+<p>Save the file in UTF-8, then quit and restart TeXShop to see the changes in the panel. If the file is missing or damaged, TeXShop replaces it with its own copy. See <a href="configure_panel.htm">Modifying the Latex Panel</a> and <a href="advanced_plist.htm">Plist Files</a>.</p>
 </main>
 </body>
 </html>

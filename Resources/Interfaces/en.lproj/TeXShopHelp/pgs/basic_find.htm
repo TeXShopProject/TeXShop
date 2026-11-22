@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Find and Replace</title>
+<meta name="description" content="find and replace; Advanced Find Panel; Find interface; regular expressions; Find All; Highlight All; Replace All; Multiple Replace; Apple Find Bar; OgreKit Find Panel">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -22,15 +23,15 @@
 <li><a href="basic_spelling.htm">Checking Spelling</a></li>
 <li><a href="basic_autocompletion.htm">Key Bindings</a></li>
 <li><a href="basic_commandcompletion.htm">Command Completion</a></li>
-<li><a href="basic_latexpanel.htm">Latex Panel</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Panel</a></li>
 <li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
 <li><a href="basic_macros.htm">Macros</a></li>
 <li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
 <li><a href="basic_graphics.htm">Including Graphics</a></li>
 <li><a href="basic_printing.htm">Printing</a></li>
 <li><a href="basic_preferences.htm">Changing Settings</a></li>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a></li>
-<li><a href="basic_miscellaneous.htm">Miscellaneous</a></li>
+<li><a href="basic_templates.htm">Templates and Stationery</a></li>
+<li><a href="basic_miscellaneous.htm">Windows and Tabs</a></li>
 <li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
 <li><a href="basic_websites.htm">Useful Web Sites</a></li>
 <li><a href="basic_license.htm">License</a></li>
@@ -38,6 +39,69 @@
 </nav>
 <main id="content">
 <h1>Find and Replace</h1>
+
+<p>The commands for finding are in the Find submenu of the Edit menu: Find… (<kbd>⌘F</kbd>), Find and Replace… (<kbd>⌥⌘F</kbd>), Find Next (<kbd>⌘G</kbd>), Find Previous (<kbd>⇧⌘G</kbd>), Use Selection for Find (<kbd>⌘E</kbd>) and Jump to Selection (<kbd>⌘J</kbd>). To find text in the typeset document, see <a href="basic_preview.htm#search">The Preview Window</a>.</p>
+
+<h2>Choosing the find interface</h2>
+
+<p>Settings › Editor › Find interface chooses what Find opens:</p>
+<dl>
+<dt>Advanced Find Panel (recommended)</dt>
+<dd>A panel with regular expressions, a list of all matches and Multiple Replace, described on this page. It is the one every user starts with.</dd>
+<dt>Apple Find Bar</dt>
+<dd>The find bar of macOS, at the top of the source, as in Safari and Xcode.</dd>
+<dt>Apple Find Panel</dt>
+<dd>The basic find panel of macOS.</dd>
+<dt>OgreKit Find Panel (Legacy)</dt>
+<dd>The find panel of OgreKit by Isao Sonobe, with regular expressions of its own. Switching to or from it takes effect when TeXShop is restarted.</dd>
+</dl>
+
+<h2>The Advanced Find Panel</h2>
+
+<p>Find opens the panel with the find field selected, and Find and Replace with the replacement field selected. In a field, Return finds the next match and Tab moves to the other field; Option-Return and Option-Tab insert a line break and a tab. The icon at the left of a field lists its recent strings, and the right end of the find field shows the position of the current match, such as “3 of 12”.</p>
+
+<p>Below the fields are Regular expression, Ignore case and In selection. The button with three dots shows more options: wrapping around, whole words only, ignoring diacritical marks or the difference between fullwidth and halfwidth characters, options for regular expressions, the syntax of the replacement, and “Treat ¥ as \”. The options are kept from one session to the next.</p>
+
+<p>The buttons at the bottom are Find All, Replace All, Multiple Replace…, Replace &amp; Find, and the arrows for the previous and next match.</p>
+<ul>
+<li>Find All lists every match with its line number. Click a row to select the match in the source; double-click it to bring the source window to the front as well. With Live Update on, the list follows your edits. The menu of Find All also has Highlight All, which marks every match in the text, Select All, which selects them all, and Remove Highlights.</li>
+<li>Replace All replaces every match, or every match in the selection when In selection is on. A single Undo takes back the whole replacement.</li>
+<li>Replace &amp; Find replaces the selected match and finds the next one; its menu also has Replace alone.</li>
+</ul>
+
+<p>With the Advanced Find Panel, the Find submenu also has the commands of the panel, which work while the panel is closed: Find All (<kbd>⇧⌘F</kbd>), Select All Matches, Use Selection for Replace (<kbd>⇧⌘E</kbd>), Replace, Replace and Find (<kbd>⌥⌘G</kbd>), Replace All, Highlight All (<kbd>⇧⌘H</kbd>) and Remove Highlights (<kbd>⌃⇧⌘H</kbd>). Their shortcuts can be changed in Settings › Keyboard.</p>
+
+<p>Replace All, Find All and Multiple Replace work in the background, and the document cannot be edited until they end. When one takes long, a sheet on the document window shows its progress; Cancel in the sheet, or the Escape key, stops it and leaves the text as it was.</p>
+
+<p>The panel also finds text in the console, the log and the Experiment windows. Replacing is not possible in the console, the log and the Experiment console, which show the output of TeX.</p>
+
+<p>The panel is one of the document windows, so a click in the source puts it behind that window, and Find brings it back. To keep it in front of the document windows, turn on “Keep the Advanced Find panel on top” in Settings › Editor › Find.</p>
+
+<h2>Regular expressions</h2>
+
+<p>With Regular expression on, the find string is a pattern in the syntax of ICU, the regular expressions of macOS. Most patterns are written as in other applications. A brace that does not belong to a repetition must be written <code>\{</code> or <code>\}</code>, so search for <code>\\section\{</code> rather than <code>\\section{</code>.</p>
+
+<p>In the replacement, <code>$0</code> is the whole match, <code>$1</code>, <code>$2</code>, … are the groups, and <code>\$</code> is a dollar sign, so a formula <code>$x$</code> is written <code>\$x\$</code>. A backslash is written twice: <code>\\section</code> gives <code>\section</code>. The OgreKit syntax, with <code>\1</code>, <code>\2</code>, … for the groups and <code>$</code> as an ordinary character, can be chosen among the options; users who came from the OgreKit Find Panel start with it.</p>
+
+<p>The small ? button next to Regular expression opens a reference of the syntax of patterns and replacements, and of where it differs from OgreKit. The fields show the parts of a pattern in the colors of the theme, a mistake in red and what OgreKit would read differently in orange; the line below the options explains them.</p>
+
+<p>Some examples:</p>
+<ul>
+<li>To change <code>\section{Intro}</code> into <code>\section*{Intro}</code>, search for <code>\\section\{([^}]*)\}</code> and replace with <code>\\section*{$1}</code>.</li>
+<li>To find every character that is not ASCII, search for <code>[^[:ascii:]]</code>, then click Find All or choose Highlight All.</li>
+</ul>
+
+<h2><a name="multiplereplace"></a>Multiple Replace</h2>
+
+<p>Edit Multiple Replace… in the Find submenu, or the Multiple Replace… button of the panel, opens the Multiple Replace window. It keeps sets of find and replace pairs, called rules, and applies the rules of a set in order from the top. The sets are listed on the left and the rules of the selected set on the right. Each rule has its own find and replacement strings, its own choice of regular expression (RE) and of ignoring case (IC), and a description; the check box at its left turns it off. The + and − buttons add and remove rules, and rules are reordered by dragging. The button with three dots below the rules holds the options of the whole set. A rule that cannot be used, for example with an invalid pattern, shows a warning sign and is skipped.</p>
+
+<p>Replace All in the window applies the rules to the whole text, or to the selection when In selection is on; a single Undo takes it back. Highlight All marks what the rules find. Every change in the window is saved at once. The Multiple Replace submenu of the Find submenu lists the sets and applies the one you choose to the whole text of the source in front.</p>
+
+<p>Each set is a file in ~/Library/TeXShop/MultipleReplace, in the JSON format of the replacement definitions of CotEditor. The + and − buttons below the list of sets make a new set and move the selected set to the Trash; the menu with three dots next to them duplicates, imports and exports sets. Import also reads replacement definitions of CotEditor and tab-separated text with one rule per line. Two sample sets convert between Unicode characters and the commands of the ajmacros package, as Character Type Conversion does; they are written only when the folder MultipleReplace does not exist yet.</p>
+
+<h2>Finding in all files of a project</h2>
+
+<p>To find and replace in the root file and all the chapter files of a document at once, see <a href="basic_texrootsearch.htm">Find in TeX Sources</a>.</p>
 </main>
 </body>
 </html>

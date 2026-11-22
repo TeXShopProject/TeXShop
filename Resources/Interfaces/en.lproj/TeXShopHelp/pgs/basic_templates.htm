@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Modifying the Templates Menu</title>
+<title>Templates and Stationery</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="modifying templates; template files; hierarchical menu; subfolder">
+<meta name="description" content="templates; Templates menu; ~/Library/TeXShop/Templates; More; New from Stationery; stationery; Stationery folder">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -24,39 +24,37 @@
 <li><a href="basic_spelling.htm">Checking Spelling</a></li>
 <li><a href="basic_autocompletion.htm">Key Bindings</a></li>
 <li><a href="basic_commandcompletion.htm">Command Completion</a></li>
-<li><a href="basic_latexpanel.htm">Latex Panel</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Panel</a></li>
 <li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
 <li><a href="basic_macros.htm">Macros</a></li>
 <li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
 <li><a href="basic_graphics.htm">Including Graphics</a></li>
 <li><a href="basic_printing.htm">Printing</a></li>
 <li><a href="basic_preferences.htm">Changing Settings</a></li>
-<li><a href="basic_templates.htm" class="current">Modifying the Templates Menu</a></li>
-<li><a href="basic_miscellaneous.htm">Miscellaneous</a></li>
+<li><a href="basic_templates.htm" class="current">Templates and Stationery</a></li>
+<li><a href="basic_miscellaneous.htm">Windows and Tabs</a></li>
 <li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
 <li><a href="basic_websites.htm">Useful Web Sites</a></li>
 <li><a href="basic_license.htm">License</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>Modifying the Templates Menu</h1>
+<h1>Templates and Stationery</h1>
+<h2>Templates</h2>
+<p>The Templates menu in the toolbar of the source window inserts a template at the insertion point, indented like the current line. TeXShop comes with these templates:</p>
+<ul>
+<li>LatexTemplate, XeLaTeX Template, LatexSpanishTemplate and BeamerTemplate: the start of a LaTeX article, a XeLaTeX document, a LaTeX article in Spanish and a Beamer presentation;</li>
+<li>TexTemplate: the <code>\end</code> that closes a plain TeX document;</li>
+<li>GraphicsTemplate: the code to include a graphic;</li>
+<li>TeX4ht-Header and TeX4ht-Interactive: code for documents converted to HTML with TeX4ht;</li>
+<li>More: a submenu with preambles, document classes such as article, letter and memoir, floating figures and tables, and mathematical layouts such as <code>align</code> and matrices.</li>
+</ul>
+<p>The templates are ordinary files in <code>~/Library/TeXShop/Templates</code>; choose TeXShop › Open ~/Library/TeXShop to get there. To make your own template, for example the preamble you use for every article, save a file with the extension <code>.tex</code> in this folder, or duplicate a template and change it. Subfolders become submenus. Templates you add, rename or remove show in the menu of windows opened afterward.</p>
+<p>Updates of TeXShop do not change this folder, so your templates are kept. To get the original templates back, move the Templates folder out of <code>~/Library/TeXShop</code>, for example to the Desktop, and restart TeXShop: it creates the folder again with its own templates.</p>
 
-		<P>When TeXShop runs for the first time, it creates a folder</P>
-		<dl>
-			<dd>~/Library/TeXShop/Templates
-		</dl>
-		<p>and places the files Graphics.tex  and LatexTemplate.tex (and a folder named "More" of additional files) in this folder. The names of these files are shown under the Templates pull down menu at the top of the input window. Choosing one of these items inserts the contents of the template file at the current cursor position in the source. The Graphics and LaTeX templates were recently revised by Will Robertson to follow modern
-TeX practices; Robertson provided the templates in the More subdirectory.</p>
-		<p>Template files are standard TeX files which can be opened and edited by TeXShop. Additional TeX files can be inserted into the Templates folder; they will also appear under the Templates pull down menu provided their names end with the extension &quot;.tex&quot;.  The original template files can be removed if desired.</p>
-<p>To create a hierarchical structure in the Templates menu, place some of the template files in subfolders of ~/Library/TeXShop/Templates.</p>
-		<p>To restore the original template files, delete the Templates folder and run TeXShop again. It will recreate the folder and restore its original contents. </p>
-		<p>When users upgrade TeXShop, the templates folder is not updated because the user may have
-modified it. If an upgrade changes default templates, the new templates will appear in ~/Library/TeXShop/New. Drag those you want into the Templates folder. Changes will be reported in "About This Release" under the Help menu.</p>
-<p> The commands \usepackage{amssymb} and \usepackage{graphicx} mentioned earlier are included in recent copies of the LatexTemplate, but not in copies from very old versions of TeXShop.</p>
-		<ul>
-			
-		</ul>
-	
+<h2>Stationery</h2>
+<p>File › New from Stationery… starts a new document from a complete sample: choose one in the list, which shows a description of each, and click OK. The new document is untitled; save it where you like. TeXShop comes with stationery for an AMS article, a Beamer presentation, a letter, a PreTeXt document, a project with a root file and a chapter, and a XeLaTeX document.</p>
+<p>The stationery is kept in <code>~/Library/TeXShop/Stationery</code>. To add your own, put the file there, for example <code>Report.tex</code>, together with a file <code>Report.comment</code> holding one sentence that describes it.</p>
 </main>
 </body>
 </html>

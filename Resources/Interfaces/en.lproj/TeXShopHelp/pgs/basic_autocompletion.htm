@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Key Bindings</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="key binding">
+<meta name="description" content="key bindings; Key Binding List; Input Character; Output String; Paste; yen sign; backslash; autocompletion.plist">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -24,15 +24,15 @@
 <li><a href="basic_spelling.htm">Checking Spelling</a></li>
 <li><a href="basic_autocompletion.htm" class="current">Key Bindings</a></li>
 <li><a href="basic_commandcompletion.htm">Command Completion</a></li>
-<li><a href="basic_latexpanel.htm">Latex Panel</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Panel</a></li>
 <li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
 <li><a href="basic_macros.htm">Macros</a></li>
 <li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
 <li><a href="basic_graphics.htm">Including Graphics</a></li>
 <li><a href="basic_printing.htm">Printing</a></li>
 <li><a href="basic_preferences.htm">Changing Settings</a></li>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a></li>
-<li><a href="basic_miscellaneous.htm">Miscellaneous</a></li>
+<li><a href="basic_templates.htm">Templates and Stationery</a></li>
+<li><a href="basic_miscellaneous.htm">Windows and Tabs</a></li>
 <li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
 <li><a href="basic_websites.htm">Useful Web Sites</a></li>
 <li><a href="basic_license.htm">License</a></li>
@@ -41,15 +41,23 @@
 <main id="content">
 <h1>Key Bindings</h1>
 
-		<P>Greg Landweber has added key bindings to the TeXShop editor. Typing a double quote will produce a pair of double quotes with the cursor positioned between them. Typing the ^ symbol will produce ^{  }  with the cursor positioned between the brackets. Etc. Thirty-nine such bindings are currently available.</P>
-		<p>Key Bindings can be turned off or on with an item in the Settings window. The default is off.  </p>
-		<p> Key Bindings can also be turned on or off on a file by file basis by the Key Bindings item in the Source menu. This facility is
-		provided because Key Bindings reconfigures keys on the keyboard; turn if off if you need keys to input their standard characters.
-		</p>
-		<p>Key Bindings are user configurable. Open Settings and select Keyboard. The Key Bindings section lists each input character with its output string, under "Input Character" and "Output String". Double-click a cell to edit it in place; press + below the list to add a key binding and &#8722; to delete the selected ones, and drag rows to change their order. An input character is a single character. Changes are saved at once and take effect immediately; Edit &#8250; Undo reverts them.</p>
-		<p>In an output string, #SEL# (the selected text), #INS# (where the insertion point goes), #PASTE# (the text on the clipboard), &#8226; (a mark), line breaks and tabs are shown as small labels. Add them with "Insert" below the list, or type them: Option-Return enters a line break and Option-Tab a tab. The ? button lists them all. The list is stored in ~/Library/TeXShop/Keyboard/autocompletion.plist, in the same form as before.</p>
-		
-		
+<p>Key bindings make a typed character insert other text. With the list that comes with TeXShop, typing <code>^</code> gives <code>^{}</code> with the insertion point between the braces, typing <code>"</code> gives the TeX quotes <code>``''</code> around the insertion point, and typing <code>ä</code> gives <code>\"a</code>. A key binding can also put the selected text inside: select a word and type <code>^</code> to get <code>^{word}</code>. The list has 45 key bindings.</p>
+
+<p>Key bindings are off at first. Turn on “Use key bindings (default for new documents)” in Settings › Keyboard to have them on in every document you open. Source › Key Bindings turns them on or off for the document in front, for example to type a character that has a key binding as itself. The KeyBindings item, which can be added to the toolbar, does the same.</p>
+
+<h2>The Key Binding List</h2>
+
+<p>The Key Bindings group of Settings › Keyboard lists the key bindings, with each Input Character and its Output String. Double-click a cell to edit it; click + below the list to add a key binding and − to delete the selected ones, and drag rows to change their order. An input character is a single character. Changes are saved at once and act in open documents too; Edit › Undo takes them back.</p>
+
+<p>In an output string, special items are shown as small labels: the selected text, the place of the insertion point, the text on the clipboard, a mark (•) for Edit › Marks, a line break and a tab. Add them with Insert below the list, or type them: <code>#SEL#</code>, <code>#INS#</code>, <code>#PASTE#</code> and <code>•</code>, Option-Return for a line break and Option-Tab for a tab. The ? button lists them all.</p>
+
+<p>A check in the Paste column applies the key binding also to text you paste into the source or drop on it: each occurrence of the input character is replaced by the output string. As with typing, this happens only while key bindings are on for the document. A key binding whose output string contains the selection, the insertion point, the clipboard or a mark cannot be checked.</p>
+
+<h2>The yen sign</h2>
+
+<p>On a Japanese keyboard, the key for the backslash may type a yen sign (¥). In the list that comes with TeXShop, ¥ gives a single backslash and its Paste box is checked. So when the encoding for new documents is UTF-8, turning on key bindings is enough to have ¥ typed or pasted into the source become \. If your list comes from an earlier version of TeXShop, set the output string of ¥ to a single backslash and check its Paste box yourself.</p>
+
+<p>The list is stored in ~/Library/TeXShop/Keyboard/autocompletion.plist; see <a href="configure_autocompletion.htm">Modifying Key Bindings</a>.</p>
 </main>
 </body>
 </html>

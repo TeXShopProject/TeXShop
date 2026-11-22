@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Defining AppleScript Macros</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="applescript">
+<meta name="description" content="AppleScript; #FILEPATH#; #PDFPATH#; #TEXPATH#; #FOLDERPATH#; #NAMEPATH#; #DOCUMENTNAME#; typeset; latexinteractive; taskdone; refreshpdf; goto line">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -26,75 +26,46 @@
 </nav>
 <main id="content">
 <h1>Defining AppleScript Macros</h1>
+<p>AppleScript is a language of its own. Apple's <cite>AppleScript Language Guide</cite>, on Apple's developer website, describes it in full.</p>
 
-		<P>AppleScript syntax is a subject all its own. To learn more about it, read one of several books on the subject. If you installed the developer tools which come with Mac OS X, there is an online book about AppleScript in the Developer folder.</P>
+<h2 id="paths">Paths and the document name</h2>
+<p>Before running an AppleScript macro, TeXShop replaces the following strings with the path of a file of the active document, in double quotes:</p>
+<dl>
+<dt>#FILEPATH#</dt><dd>the source file</dd>
+<dt>#TEXPATH#</dt><dd>the .tex file</dd>
+<dt>#NAMEPATH#</dt><dd>the source file without its extension</dd>
+<dt>#FOLDERPATH#</dt><dd>the folder that contains the source, ending with a slash</dd>
+<dt>#PDFPATH#, #DVIPATH#, #PSPATH#, #LOGPATH#, #AUXPATH#</dt><dd>the .pdf, .dvi, .ps, .log and .aux files</dd>
+<dt>#INDPATH#, #BBLPATH#, #HTMLPATH#</dt><dd>the .ind, .bbl and .html files</dd>
+</dl>
+<p>For example, if #FILEPATH# gives /Users/name/Projects/Fourier/Fourier.tex, #FOLDERPATH# gives /Users/name/Projects/Fourier/. If the document has never been saved, #FILEPATH# is an empty string.</p>
+<p>#DOCUMENTNAME# is replaced with the name of the document as the title of the source window shows it: with its extension, or without it if the extension is hidden. A script uses it to address the document that called it:</p>
+<pre>tell document #DOCUMENTNAME# of application "TeXShop"
+  latex
+end tell</pre>
 
- <P>When TeXShop interpretes an applescript macro, it first replaces any string #FILEPATH#, #PDFPATH#, #DVIPATH#, #PSPATH#, #LOGPATH#, #AUXPATH# with the complete path name of the source tex file, pdf file, dvi file, ps file, log file, or aux file respectively. Similarly, the strings #INDPATH#, #BBLPATH#, and #HTMLPATH# are replaced with the complete path name of the ind file, bbl file, or html file. </P>
-
-<P>In addition, any string #NAMEPATH# 
-is replaced with the complete path name of the source tex file minus its extension,
-and any string #DOCUMENTNAME# is replaced with  the display name of the current document.
-This last replacement is somewhat subtle; it gives the title of the document as shown at the top of the source window.  If a document was saved with the "hide extension" box checked, #DOCUMENTNAME# will contain only the document name. But if the document was saved without checking "hide extension", #DOCUMENTNAME# will contain the document name and extension. This information can be used to locate the calling document for Applescript code as follows:
-
-<div id="source">
-tell document #DOCUMENTNAME# of application "TeXShop"<br>
-latex<br>
-end tell<br>
-</div>
-</P>
-
-		<P>There are at least two ways to write Applescript commands. Applescript can run shell commands, so after preliminary processing with an applescript, a shell command can be called to do the actual work. TeXShop comes with several examples of this technique; some of these examples will be explained in a later help section. Applescript commands can also call built-in TeXShop commands and thus work directly. A later section will give examples of
-this technique.</P>
-
-<P>
-TeXShop understands the following commands:</p>
-
-<p><div id="source">
- typeset<br>
- latex<br>
- tex<br>
- context<br>
- bibtex<br>
- makeindex<br>
- metapost<br>
- typesetinteractive<br>
- latexinteractive<br>
- texinteractive<br>
- contextinteractive<br>
- bibtexinteractive<br>
- makeindexinteractive<br>
- metapostinteractive<br>
- taskdone<br>
- refreshpdf<br>
- refreshtext<br>
- goto line<br>
-</div></p>
-<p>
-The first seven commands call TeXShop typesetting routines. These commands typeset continuously without
-stopping at errors. The next seven commands also call TeXShop typesetting commands, but this time if there is an error, the user is allowed to interact with the console. When a typesetting command is called, control returns to the applescript immediately without waiting until the operation is complete. The "taskdone" call returns NO if typesetting is still running, and YES when it is done. The calls "refreshpdf" and "refreshtext" cause pdf and text documents to display the latest version of their files on the screen. The "goto line" command tells the editor
-to select a given line; for example:
-</p>
-<p><div id="source">
-tell document #DOCUMENTNAME# of application "TeXShop"
- goto line 37
- end tell
-</div
- </P>
-</div>
-
-
-
-
-
-	
-
-
-
-
-
-	</BODY>
-
-</HTML>
+<h2 id="commands">TeXShop commands</h2>
+<p>An AppleScript can do its work in two ways: it can run shell commands, as described in <a href="macros_writingcommandscripts.htm">Writing Scripts with Shell Commands</a>, or it can call TeXShop's own commands, as described in <a href="macros_writingcompletescripts.htm">Writing Scripts with TeXShop Typesetting Commands</a>. TeXShop understands these commands:</p>
+<pre>typeset
+latex
+tex
+bibtex
+makeindex
+metapost
+typesetinteractive
+latexinteractive
+texinteractive
+bibtexinteractive
+makeindexinteractive
+metapostinteractive
+taskdone
+refreshpdf
+refreshtext
+goto line</pre>
+<p>The first six commands typeset continuously, without stopping at errors. The next six typeset too, but stop at an error so that you can answer in the console. A typesetting command returns at once, before typesetting is finished. <code>taskdone</code> returns NO while typesetting is still running and YES when it is done. <code>refreshpdf</code> and <code>refreshtext</code> make PDF and text windows show the latest version of their files. <code>goto line</code> selects a line in the source:</p>
+<pre>tell document #DOCUMENTNAME# of application "TeXShop"
+  goto line 37
+end tell</pre>
 </main>
 </body>
 </html>

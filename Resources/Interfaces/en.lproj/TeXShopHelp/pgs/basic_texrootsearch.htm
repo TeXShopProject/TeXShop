@@ -24,15 +24,15 @@
 <li><a href="basic_spelling.htm">Checking Spelling</a></li>
 <li><a href="basic_autocompletion.htm">Key Bindings</a></li>
 <li><a href="basic_commandcompletion.htm">Command Completion</a></li>
-<li><a href="basic_latexpanel.htm">Latex Panel</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Panel</a></li>
 <li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
 <li><a href="basic_macros.htm">Macros</a></li>
 <li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
 <li><a href="basic_graphics.htm">Including Graphics</a></li>
 <li><a href="basic_printing.htm">Printing</a></li>
 <li><a href="basic_preferences.htm">Changing Settings</a></li>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a></li>
-<li><a href="basic_miscellaneous.htm">Miscellaneous</a></li>
+<li><a href="basic_templates.htm">Templates and Stationery</a></li>
+<li><a href="basic_miscellaneous.htm">Windows and Tabs</a></li>
 <li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
 <li><a href="basic_websites.htm">Useful Web Sites</a></li>
 <li><a href="basic_license.htm">License</a></li>
@@ -41,15 +41,34 @@
 <main id="content">
 <h1>Find in TeX Sources</h1>
 
+<p><a name="texroot_search"></a>A document split into a root file and chapter files can be searched, and replaced in, in all its files at once. With one of its files in front, choose Edit › Find › Find in TeX Sources with the Same TEX root…; when the root file itself is in front, the item is Find in TeX Sources with This File as TEX root…. The same item is in the menu of Find All in the Advanced Find Panel, and Apply to TeX Sources with the Same TEX root… in the menu of Replace All in the Multiple Replace window opens the window with the set chosen there. The items are dimmed for an untitled document and for a file whose name does not end in .tex.</p>
 
-<p><a name="texroot_search"></a>A document split into chapter files can be searched, and replaced in, in all its files at once. With one of its files in front, choose Find in TeX Sources with the Same TEX root&hellip; in the Find submenu of the Edit menu; when the file in front is the root file itself, the item is Find in TeX Sources with This File as TEX root&hellip;. The same item is in the menu of Find All in the Advanced Find Panel, and Apply to TeX Sources with the Same TEX root&hellip; in the menu of Replace All in the Multiple Replace window opens the window with the set chosen there. The items are dimmed for an untitled document and for a file whose name does not end in .tex.</p>
-<p>The window Find in TeX Sources searches the root file and the .tex files in its folder and in the folders below it that name it with % !TEX root (or %!TEX root) in their first 20 lines; with the hidden setting UseOldHeadingCommands, also those that name it with %SourceDoc. The line under the modes says which root is searched, and the ? button at its end shows this rule. Files named in \input or \include are not followed, and the root file of a .texshop project is not used. Symbolic links to files are skipped, folders reached through symbolic links or aliases are not entered, and the folder TeXShop Backups is left out. The tree on the left lists the files; a file or a folder turned off there is not searched. The button Files not read at the bottom lists the files and folders that could not be read, with the reason.</p>
-<p>Find lists every match with its line number. Replace shows each line before and after the replacement, and every match has a check box: a match turned off is not replaced. Multiple Replace applies a set of the Multiple Replace window, and lists the groups of changed lines, which are turned on and off as a whole; Edit&hellip; opens the set in that window. The find and replace fields and the options are those of the Advanced Find Panel. The list follows every change shortly after it, and the &#8635; button (command-R) collects the files again. Clicking a row shows the match in its document; double-clicking brings that window to the front. The stop button, the Escape key or command-period stop a long search.</p>
-<p>An open document is searched in the text on screen, with its unsaved changes. A file that is not open is read in the encoding TeXShop would open it with. A file that would not be written back exactly in that encoding, a file that has another name (a hard link), a file that cannot be written, and an open document that cannot be edited are only searched: they are marked &#8856;, and the mark gives the reason.</p>
-<p>Replace All asks before it replaces. The files are collected again and compared with the list before and after that question: if a file has changed or another file has appeared, nothing is replaced and the list is made again. With Save backups on, every file that is to be replaced in is first copied, as it was when the question was answered, into TeXShop Backups/&lt;date and time&gt; in the folder of the root file, under its path; an open document is copied in its text on screen. Then the files that are not open are written directly, in their own encoding, keeping their line endings, byte order mark, permissions and other attributes; this cannot be undone. The open documents are replaced on screen and are not saved: one Undo takes back the replacements of a document. Meanwhile the documents cannot be edited, saved, closed or typeset, and the stop button, Escape or command-period stop Replace All: the files already written and the open documents already done stay replaced, what was already put in the open document being replaced is taken back, and the rest is not replaced. Afterwards the files are searched again, the matches that were turned off stay off, and the line at the bottom says how many were replaced. When some files were not replaced, a sheet lists them with the reason, and Show in Finder opens the folder of the backup.</p>
-<p>Right before a file is replaced, its content is compared with the version in the list, and the file is replaced at once. An application that writes the file in that brief moment without coordinating with other applications (through NSFileCoordinator) can still lose what it wrote; the backup keeps the version that was compared. Do not run Replace All while another program keeps writing the files.</p>
+<h2>Which files are searched</h2>
 
-		
+<p>The window searches the root file and the .tex files in its folder and the folders below it that name it in a <code>% !TEX root</code> line among their first 20 lines; see <a href="advanced_root.htm">Setting a Project Root File</a>. The line under the modes says which root file is searched, and its ? button repeats this rule. Files named in <code>\input</code> or <code>\include</code> are not followed, and a root file named in a .texshop file is not used. Symbolic links to files, folders reached through symbolic links or aliases, and the folder TeXShop Backups are left out.</p>
+
+<p>The list on the left shows the files; turn off a file or a folder there to leave it out. If some files or folders could not be read, the button Files not read at the bottom lists them with the reason.</p>
+
+<h2>Finding and replacing</h2>
+
+<p>The find and replace fields and the options are those of the <a href="basic_find.htm">Advanced Find Panel</a>. Choose a mode:</p>
+<ul>
+<li>Find lists every match with its line number.</li>
+<li>Replace shows each line before and after the replacement. Every match has a check box; a match turned off is not replaced.</li>
+<li>Multiple Replace applies a set of the Multiple Replace window and lists the groups of changed lines, each with one check box. Edit… opens the set in that window.</li>
+</ul>
+
+<p>Click a row to show the match in its document; double-click it to bring that window to the front. The list follows your changes, and the ↻ button (<kbd>⌘R</kbd>) collects the files again. The stop button, the Escape key or <kbd>⌘.</kbd> stops a long search.</p>
+
+<p>A document that is open is searched as it is on the screen, with its unsaved changes; a file that is not open is read in the encoding TeXShop would open it in. Some files can only be searched, not replaced in, for example a file that cannot be written or that its encoding cannot save back unchanged. They are marked ⊘, and the mark gives the reason.</p>
+
+<h2>Replace All</h2>
+
+<p>Replace All asks before it replaces. If a file has changed in the meantime, nothing is replaced and the list is made again. With Save backups on, each file to be changed is first copied into the folder TeXShop Backups, in a folder named after the date and time, next to the root file.</p>
+
+<p>Files that are not open are then written directly, in their own encoding and with their line endings and permissions; this cannot be undone. Open documents are changed on the screen and are not saved, and one Undo in a document takes back its replacements. Stopping Replace All leaves the files already done replaced and the others unchanged. Afterwards the files are searched again, and the line at the bottom says how many matches were replaced. If some files could not be changed, a sheet lists them with the reason, and Show in Finder opens the folder of the backup.</p>
+
+<p>Do not run Replace All while another application keeps writing these files.</p>
 </main>
 </body>
 </html>

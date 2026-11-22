@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Colored Text</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="colored text; pdf background color">
+<meta name="description" content="colored text; xcolor; color; textcolor; definecolor; dvipsnames; preview page color; Light Pages">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -15,14 +15,14 @@
 <li><a href="advanced_personaltetex.htm">Adding Personal Files to TeX Live</a></li>
 <li><a href="advanced_moretetex.htm">More About TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a></li>
-<li><a href="advanced_addengine.htm">Adding Additional Typesetting Engines</a></li>
+<li><a href="advanced_addengine.htm">Adding Typesetting Engines</a></li>
 <li><a href="advanced_formats.htm">Making and Using TeX Formats</a></li>
-<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX and LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt and MetaPost</a></li>
 <li><a href="advanced_encoding.htm">Encodings</a></li>
-<li><a href="advanced_Japan.htm">Japan</a></li>
+<li><a href="advanced_Japan.htm">Typesetting in Japanese</a></li>
 <li><a href="advanced_root.htm">Setting a Project Root File</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
+<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a></li>
 <li><a href="advanced_removeaux.htm">Removing AUX Files</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
@@ -33,58 +33,23 @@
 <li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a></li>
 <li><a href="advanced_syntaxcolor.htm">Syntax Highlighting</a></li>
 <li><a href="advanced_coloredtext.htm" class="current">Colored Text</a></li>
-<li><a href="advanced_plist.htm">Plist Files</a></li>
+<li><a href="advanced_plist.htm">Files in ~/Library/TeXShop</a></li>
 <li><a href="advanced_localization.htm">Localizations</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>Colored Text</h1>
+<p>The xcolor package colors text in the typeset document. Load it in the preamble:</p>
+<pre>\usepackage{xcolor}</pre>
+<p>Then <code>\color{blue}</code> switches to blue until the end of the current group or environment, and <code>\textcolor{red}{This is very important!}</code> colors just its argument. To define colors of your own, use for instance</p>
+<pre>\definecolor{mycolor}{rgb}{0.2, 0.7, 0.8}</pre>
+<p>The option <code>dvipsnames</code> adds a list of named colors, such as BrickRed and ForestGreen:</p>
+<pre>\usepackage[dvipsnames]{xcolor}</pre>
+<p>The documentation of xcolor, opened with Help › Show Help for Package…, lists all colors and options.</p>
 
-		<P>
-	It has always been possible to color TeX output. To do so, add the line
-</P>
-	<dl>
-	<dd><tt>\usepackage{color}</tt>   
-	</dl>
-<P>
-	to the preamble, and insert a line like
-</P>
-	<dl>
-	<dd><tt>\color{blue}</tt>   
-	</dl>
-<P>
-	before typesetting begins. To color a limited section of text, use a command like
-</P>
-	<dl>
-	<dd><tt>{\color{red} This is very important!}</tt>   
-	</dl>
-<P>
-	To define custom colors, use a command like
-</P>
-<dl>
-	<dd><tt>\definecolor{mycolor}{rgb}{0.2, 0.7, 0.8}</tt>   
-	</dl>
-
-<P>
-	Users may be familiar with a list of defined colors with names like "BrickRed"; these
-named colors were defined automatically for the dvips driver. To use them generally, use the syntax
-</P>
-<dl>
-	<dd><tt>\usepackage[dvipsnames,usenames]{color}</tt>   
-	</dl>
-
-
-<P>
-	When output is colored, the output may be difficult to read on the preview screen.
-		The pages in the preview can be given another color in the Themes category of the Settings window:
-		the color under “Light Pages” in the Preview row fills the pages while they are shown light.
-		Each theme has its own color, so the Lite Mode Theme and the Dark Mode Theme can use different colors.
-		The color is not printed, and it does not appear when part of a page is copied.
-		Pages shown dark with the Appearance item in the toolbar of the Preview window are not filled with this color.
-</P>
-<P>
-	Earlier versions of TeXShop set this color with the hidden settings Pdfbackground_R, Pdfbackground_G and Pdfbackground_B.
-</P>
+<h2>The color of the pages in the Preview window</h2>
+<p>Colored text can be hard to read on a white page. The pages in the Preview window can be given another color in Settings › Themes: in the Windows group, the color under “Light Pages” in the Preview row fills the pages while they are shown light. Each theme has its own color, so the Lite Mode Theme and the Dark Mode Theme can use different colors.</p>
+<p>The color is only for viewing: it is not printed, and it does not appear when part of a page is copied. Pages shown dark with the Appearance item in the toolbar of the Preview window are not filled with this color. The color of the text itself is set by the document, with xcolor as above.</p>
 </main>
 </body>
 </html>

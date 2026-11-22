@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Writing Scripts with TeXShop Typesetting Commands</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="applescript">
+<meta name="description" content="AppleScript; Bibliography macro; latexinteractive; bibtex; taskdone; sequence of typesetting commands">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -26,88 +26,61 @@
 </nav>
 <main id="content">
 <h1>Writing Scripts with TeXShop Typesetting Commands</h1>
-	
-	<P> If a TeX project contains a bibliography,
-a sequence of typesetting commands must be run to update the bibliography. Latex is run first to create
-an .aux file. Bibtex is run to create .bbl and .blg  files from this .aux file. 
-Latex is run again to add the bibliography to the document. Latex is run a final time to update the references to the bibliography in the document.
-</P>
+<p>A document with a bibliography needs a sequence of typesetting runs: LaTeX writes the .aux file, BibTeX uses it to write the .bbl and .blg files, LaTeX runs again to add the bibliography to the document, and once more to update the references to it. Your projects may need similar sequences, and an AppleScript macro can run them for you.</p>
+<p>The macro Macros › Applescript › Bibliography, which comes with TeXShop, shows how. Here are its contents:</p>
+<pre>--Applescript
 
-<P> Your projects may contain similar sequences of typesetting commands. It is possible to use applescript to automate these sequences. 
-</P>
+set fileName to #FILEPATH#
+if fileName is equal to  ""
+activate
+display dialog "Please save the file first"  buttons {"OK"} default button "OK"
+return
+end if
 
-<P> To see how to do that we'll examine the
-OtherScripts->Bibliography command which comes with TeXShop. Here is the body of that command</p>
-<div id="source">
-<dd>--Applescript
-<p>
-<dd>set fileName to #FILEPATH#
-<dd>if fileName is equal to  ""
-<dd>activate
-<dd>display dialog "Please save the file first"  buttons {"OK"} default button "OK"
-<dd>return
-<dd>end if
-<p>
-<dd>set frontName to #DOCUMENTNAME#
-<dd>tell application "TeXShop"
-<dd>save document frontName
-<dd>end tell
+set frontName to #DOCUMENTNAME#
 
-<p>
-<dd>tell document frontName of application "TeXShop" 
-<p>
-<dl>
-<dd>	latexinteractive
-<p>
-<dd>	repeat
-<dl>
-<dd>		delay 2
-<dd>		if taskdone
-<dd>			exit repeat
-<dd>		end if
-</dl>
-<dd>	end repeat
-<p>
-<dd>
-<dd>	bibtex
-<p>
-<dd>	repeat
-<dl>
-<dd>		delay 2
-<dd>		if taskdone
-<dd>			exit repeat
-<dd>		end if
-</dl>
-<dd>	end repeat
-<p>
-<dd>	latex
-<p>
-<dd>	repeat
-<dl>
-<dd>		delay 2
-<dd>		if taskdone
-<dd>			exit repeat
-<dd>		end if
-</dl>
-<dd>	end repeat
-<p>
-<dd> latex
-<p>
-</dl>
-end tell
-</P>
-</div>
+tell document frontName of application "TeXShop"
 
+    latexinteractive
 
-		<P>The first line of this command indicates that this is an AppleScript macro. The next lines check #FILEPATH#, a parameter which gives the full path to the tex source. This parameter is an empty string when a new document has been created and not yet saved. In that case the user is asked to save the document and the script ends.
-</P>
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
 
- <P>The next line tells TeXShop to save the document. Notice that we use #DOCUMENTNAME# to refer to the document in question. </P>
+    bibtex
 
-<P>The remaining commands run latexinteractive, bibtex, latex, and
-latex. Recall that control returns to applescript immediately after calling a typesetting command
-before the typesetting job is over. The repeat loop tells the script to check whether the job is complete before running another typesetting task. The line "delay 2" causes applescript to pause rather than continually asking if the task is done and thereby slowing the entire computer down.
-</P>
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    latex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+    latex
+
+    repeat
+        delay 2
+        if taskdone
+            exit repeat
+        end if
+    end repeat
+
+end tell</pre>
+<p>The first line makes this an AppleScript macro run by ScriptRunner, so it can ask TeXShop to typeset (see <a href="macros_applescript.htm">AppleScript Macros</a>). The next lines check #FILEPATH#, the full path of the source file. It is an empty string when the document has not been saved yet; in that case the script asks you to save it and stops.</p>
+<p>The script then refers to the document by #DOCUMENTNAME#. TeXShop saves the document itself when a typesetting command starts, so the script does not need to save it.</p>
+<p>The remaining commands run latexinteractive, bibtex, latex and latex. A typesetting command returns to the script at once, before typesetting is finished, so after each command a <code>repeat</code> loop waits until <code>taskdone</code> reports that the job is complete. The line <code>delay 2</code> makes the script pause between the checks rather than asking continually and slowing down the computer. The commands are listed in <a href="macros_defapplescript.htm">Defining AppleScript Macros</a>.</p>
 </main>
 </body>
 </html>

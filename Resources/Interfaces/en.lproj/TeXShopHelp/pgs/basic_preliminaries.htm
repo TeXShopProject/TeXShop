@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Preliminaries</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="about texshop; han the thanh">
+<meta name="description" content="what TeXShop is; TeX Live; MacTeX; pdfLaTeX; PDF; macOS 14.6; overview of the help">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -24,15 +24,15 @@
 <li><a href="basic_spelling.htm">Checking Spelling</a></li>
 <li><a href="basic_autocompletion.htm">Key Bindings</a></li>
 <li><a href="basic_commandcompletion.htm">Command Completion</a></li>
-<li><a href="basic_latexpanel.htm">Latex Panel</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Panel</a></li>
 <li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
 <li><a href="basic_macros.htm">Macros</a></li>
 <li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
 <li><a href="basic_graphics.htm">Including Graphics</a></li>
 <li><a href="basic_printing.htm">Printing</a></li>
 <li><a href="basic_preferences.htm">Changing Settings</a></li>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a></li>
-<li><a href="basic_miscellaneous.htm">Miscellaneous</a></li>
+<li><a href="basic_templates.htm">Templates and Stationery</a></li>
+<li><a href="basic_miscellaneous.htm">Windows and Tabs</a></li>
 <li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
 <li><a href="basic_websites.htm">Useful Web Sites</a></li>
 <li><a href="basic_license.htm">License</a></li>
@@ -41,12 +41,27 @@
 <main id="content">
 <h1>Preliminaries</h1>
 
-		<p>TeXShop is a Mac OS X program which can typeset TeX and LaTeX files and preview the output on the screen. The program usually typesets using pdftex or pdflatex instead of tex or latex. These programs output pdf files rather than dvi files. Since pdf is the native graphics format of Mac OS X, it is easy to display the output on the screen. Pdftex and pdflatex were written by  Han The Thanh, Petr Sojka, and Jiri Zlatuska.<br>
-			<br>
-			The pdf files created by TeXShop are standard pdf files which can be given to other people and displayed on a variety of computer systems. For example, they can be displayed by Adobe Acrobat. <br>
-			<br>
-			TeXShop does not include TeX. Instead it can be used with any standard TeX distribution. See the next section for download sites for the standard TeX distributions on Mac OS X.</p>
-	
+<p>TeXShop is a macOS application for writing documents in TeX and LaTeX. You write the source in an editor window, typeset it with a click or <kbd>⌘T</kbd>, and read the result in a Preview window beside it. A Command-click in either window shows the matching place in the other.</p>
+
+<p>TeXShop does not contain TeX. It runs the programs of a TeX distribution, normally TeX Live, which the MacTeX installer puts on the Mac; see <a href="basic_installtetex.htm">Installing TeX Live</a>. TeXShop requires macOS 14.6 or later.</p>
+
+<p>As installed, TeXShop typesets LaTeX documents with pdfLaTeX, which writes a PDF file directly, and the Preview window shows that file. It is an ordinary PDF file that can be sent to others and read on any computer. To typeset with another engine, such as LuaLaTeX, choose an engine profile in Settings or name the engine at the top of the document; see <a href="basic_typesetting.htm#engine">Typesetting Documents</a>.</p>
+
+<h2>What this help contains</h2>
+<dl>
+<dt><a href="basic.htm">Basic Help</a></dt>
+<dd>Installing TeX Live and TeXShop, typesetting, the Preview window, editing, finding and replacing, spell checking, key bindings and command completion, the panels, macros, printing and Settings.</dd>
+<dt><a href="advanced.htm">Advanced Help</a></dt>
+<dd>Typesetting engines, projects with a root file, BibTeX and MakeIndex, encodings, external editors, syntax highlighting and other topics.</dd>
+<dt><a href="macros.htm">Macros Help</a></dt>
+<dd>The Macros menu, the Macro Editor, and macros written in AppleScript.</dd>
+<dt><a href="configure.htm">How do I configure TeXShop?</a></dt>
+<dd>Recommended settings, new items for ~/Library/TeXShop, hidden settings, key bindings and keyboard shortcuts.</dd>
+</dl>
+
+<p>The Help menu opens further documents. The TeXShop Manual describes every feature in detail. First Steps with TeXShop is a short introduction for new users. About This Release tells what to do after an update, if anything, and Changes lists what each version changed. Comment Lines and Hidden Settings lists the magic comment lines, such as <code>% !TEX program =</code>, and the settings that the Settings window does not show.</p>
+
+<p>The TeXShop web site is <a href="https://texshop.app/">texshop.app</a>.</p>
 </main>
 </body>
 </html>

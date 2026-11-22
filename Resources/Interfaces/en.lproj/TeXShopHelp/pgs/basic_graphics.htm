@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Including Graphics</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="including graphics; epstopdf; eps; pdf; jpg; tif; tiff; automatic conversion">
+<meta name="description" content="including graphics; graphicx; includegraphics; pdf; png; jpg; eps; epstopdf; tiff; Convert TIFF">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -24,15 +24,15 @@
 <li><a href="basic_spelling.htm">Checking Spelling</a></li>
 <li><a href="basic_autocompletion.htm">Key Bindings</a></li>
 <li><a href="basic_commandcompletion.htm">Command Completion</a></li>
-<li><a href="basic_latexpanel.htm">Latex Panel</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Panel</a></li>
 <li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
 <li><a href="basic_macros.htm">Macros</a></li>
 <li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
 <li><a href="basic_graphics.htm" class="current">Including Graphics</a></li>
 <li><a href="basic_printing.htm">Printing</a></li>
 <li><a href="basic_preferences.htm">Changing Settings</a></li>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a></li>
-<li><a href="basic_miscellaneous.htm">Miscellaneous</a></li>
+<li><a href="basic_templates.htm">Templates and Stationery</a></li>
+<li><a href="basic_miscellaneous.htm">Windows and Tabs</a></li>
 <li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
 <li><a href="basic_websites.htm">Useful Web Sites</a></li>
 <li><a href="basic_license.htm">License</a></li>
@@ -40,42 +40,22 @@
 </nav>
 <main id="content">
 <h1>Including Graphics</h1>
+<p>Typesetting directly to PDF, LaTeX includes graphics in PDF, PNG and JPEG format. PDF keeps line art and text sharp at every size, so use it for diagrams and plots; PNG and JPEG suit screenshots and photographs.</p>
+<p>Load the graphicx package in the preamble:</p>
+<pre>\usepackage{graphicx}</pre>
+<p>and include a graphic where it should appear:</p>
+<pre>\includegraphics[width=0.8\textwidth]{diagram}</pre>
+<p>The extension can be left out; LaTeX then looks for <code>diagram.pdf</code>, <code>diagram.png</code>, <code>diagram.jpg</code> and the other formats it knows. Change the width to change the size of the graphic. Put graphic files in the folder of the document, or give a path relative to it, such as <code>figures/diagram</code>.</p>
 
-		<P>The programs pdftex and pdflatex can use graphic files produced in pdf, jpg, png, or mps format. 
-		The native graphics format of Mac OS X is pdf (portable document format) and such files print well at any size. It is likely that most future Mac graphics programs will output pdf.</P>
-		
-		<p>To use graphics, include the line below in the preamble section of your source file:</p>
-		<dl>
-			<dd><tt>\usepackage{graphicx}</tt>
-		</dl>
-		<p>When you wish to insert a graphic file, say &quot;f1.pdf &quot;, use the command</p>
-		<dl>
-			<dd><tt>\includegraphics[width=2in]{f1}</tt>
-		</dl>
-		<p>By changing the indicated width in this command, the graphic can be resized during typesetting. Experiment to find the desired size.</p>
-		
-		<p>If you used TeX in the past, your illustrations may be in eps format. These files must be converted to pdf format before being typeset with pdftex and pdflatex. In TeX Live starting with 2011, this is done automatically, provided the source file includes the graphicx package.
-		
-		<p> It is possible to convert isolated eps files to pdf format by opening the file in TeXShop. This step automatically converts the eps
-		to pdf, writing the pdf file to disk and leaving the eps file in place. Then it opens the pdf file.
-		
-		
-				<p>The authors of pdflatex and the authors of the graphics package graphicx have made it easy to include graphic files in a LaTeX document typeset with pdflatex, even if the document will later be typeset by standard latex and converted to a dvi file for distribution to other people. This might happen if you share source files with a colleague who uses ordinary LaTeX and requires eps illustrations rather than pdf illustrations. When you want to include an illustration, say &quot;f1.pdf &quot;, use the command below, omitting the ".pdf" or ".eps" extension:</p>
-		<dl>
-			<dd><tt>\includegraphics[width=2in]{f1}</tt>
-		</dl>
-		<p>This command will cause tex to input the graphic file &quot;f1.pdf&quot; when the text is typeset with pdflatex, but input the file &quot;f1.eps&quot; when the text is typeset with latex. </p>
-		
-		
-		<p>You can also use tif and tiff illustrations. For these cases, TeXShop has a menu command "Convert tiff" which converts the files to png files which pdftex and pdflatex understand. The menu command will be active when the source window is active. When the menu is selected, an open dialog will appear listing all files
-		in the folder containing the source. Only tif and tiff files will be active; all others will be grayed out. Select one file or multiple files and push "Convert." All
-		selected files will be converted to png files, leaving the tiff files undisturbed. 
-		
+<h2>EPS files</h2>
+<p>TeX Live converts EPS graphics to PDF automatically while it typesets, using epstopdf, as long as the document loads graphicx. The converted file, <code>diagram-eps-converted-to.pdf</code>, is written next to the EPS file and used from then on.</p>
+<p>An EPS file opened in TeXShop is also converted: TeXShop writes a PDF file of the same name next to it and shows it.</p>
 
-<p> If you have a few old files with eps illustrations, or if you use the pstricks postscript package in TeX, you can typeset with "Via DVI" instead of pdflatex. See the TeXShop Help section "Alternate Typesetting Mode" for details. In this mode, conversion of eps files to pdf format is not necessary. However, it is not a good idea to use this mode for new projects involving a large number of eps files, because the eps illustrations must be implicitly converted to pdf form every time the file is typeset, slowing typesetting down enormously when the eps illustrations are complicated. That is because convertion from postscript to pdf takes place at the very end of typesetting in "Via DVI" mode, after the illustrations have been embedded in the complete final document.</p>	
-	
+<h2>TIFF files</h2>
+<p>LaTeX cannot include TIFF files. Choose File › Convert TIFF while a source window is active: a dialog shows the folder of the document, where only TIFF files can be chosen. Select one or several and click Convert. Each one is converted to a PNG file of the same name in the same folder; the TIFF files are kept.</p>
 
-		
+<h2>Typesetting via DVI</h2>
+<p>Documents that use PostScript code, for example with the pstricks package, are typeset with the Via DVI method, which runs dvips by default. Graphics are then included in EPS format; PDF, PNG and JPEG files cannot be used. See <a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>.</p>
 </main>
 </body>
 </html>

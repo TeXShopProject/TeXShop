@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Preliminaries</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="preliminary; install first time; hidden setting; localize">
+<meta name="description" content="configure TeXShop; Settings window; Search Settings; ~/Library/TeXShop; damaged files; Backups; hidden settings; magic comments">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -16,20 +16,27 @@
 <li><a href="configure_prefchanges.htm">Recommended Changes to Settings</a></li>
 <li><a href="configure_correctinstall.htm">Obtaining New Library Items</a></li>
 <li><a href="configure_hidden.htm">Hidden Settings</a></li>
-<li><a href="configure_panel.htm">Modifying the Latex Panel</a></li>
+<li><a href="configure_panel.htm">Modifying the LaTeX Panel</a></li>
 <li><a href="configure_autocompletion.htm">Modifying Key Bindings</a></li>
 <li><a href="configure_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>Preliminaries</h1>
+<p>This chapter explains how to adapt TeXShop to the way you work: the settings worth checking first, how TeXShop keeps the files in ~/Library/TeXShop up to date, the hidden settings, and how to change the LaTeX Panel, the key bindings and the menu shortcuts.</p>
 
-		<P>Please read only the first two sections listed on the left if you are a new user installing TeXShop for the first time. If you are an older user,
-		read the third section. You may want to dip into the remaining sections for more information.</P>
-		<p> When TeXShop first runs, it writes default settings which can later be changed in the Settings window. There are two settings which TeXShop cannot set correctly because it does not know your working habits. Read the second section to make these changes.
-		<p>TeXShop places default macros, templates, and typesetting engines in the user's library folder in a subfolder of ~/Library/TeXShop. The user may later edit items in these folders. If TeXShop is later updated, these items are not modified because users don't like the program to make changes behind their backs. The third section on the left explains how a user upgrading TeXShop can obtain these new default items.
-			<p>TeXShop has a few hidden settings for power users. Such users can also modify program behavior by installing various plist files. Details are provided below.</p>
-		<p>New versions of TeXShop sometimes require additional menu items and other interface components. These new items appear in English even when the rest of the interface has been localized for another language. Translations of these items are welcome as issues on <a href="https://github.com/TeXShopProject/TeXShop/issues">GitHub</a>.</p>
+<h2 id="settings">The Settings window</h2>
+<p>Choose TeXShop › Settings… to open the Settings window. Its sidebar has ten categories: General, Documents and Saving, Editor, Keyboard, Spell Checking, Themes, Typesetting, Console, Preview and Updates. To find a setting without knowing its category, type a word in the Search Settings field above the sidebar and choose a result: Settings shows the setting and highlights it. See <a href="basic_preferences.htm#settings-search">Using Settings and Search Settings</a>.</p>
+<p>Many settings have a matching menu command, such as Source › Show Line Numbers and the “Line Numbers” setting in Editor. The menu command changes only the active document while it is open; the setting decides how documents look and behave when they are opened.</p>
+<p>Most things that used to require editing a file are now done in TeXShop itself. Settings › Keyboard holds the key bindings, the command completion list (“Edit Command Completion…”) and the menu shortcuts; macros are edited in the Macro Editor (Macros › Open Macro Editor…), and color themes in Settings › Themes.</p>
+
+<h2 id="library">The folder ~/Library/TeXShop</h2>
+<p>Templates, macros, engines, the LaTeX Panel file, key bindings, the command completion list, themes and other files you can change are kept in ~/Library/TeXShop, the TeXShop folder of the Library folder in your home folder. TeXShop › Open ~/Library/TeXShop opens it in the Finder. A new version of TeXShop keeps your changes there; <a href="configure_correctinstall.htm">Obtaining New Library Items</a> explains which files it updates.</p>
+<p>When a file that TeXShop needs, such as the macros, the LaTeX Panel file, the key bindings or a theme, is missing or damaged, TeXShop replaces it with its own copy when it starts, without a message. The damaged file is kept in ~/Library/TeXShop/Backups, so you can recover your changes from it.</p>
+<p>To go back to the default contents of a folder, quit TeXShop, move the folder (Templates, for example) out of ~/Library/TeXShop, for instance to the desktop, and start TeXShop again. TeXShop creates the folder again with its default contents; copy back from the moved folder whatever you want to keep.</p>
+
+<h2 id="more">Hidden settings and magic comments</h2>
+<p>A few settings are not in the Settings window; they are changed with a command in Terminal. See <a href="configure_hidden.htm">Hidden Settings</a>. Magic comments such as <code>% !TEX program = lualatex</code> at the top of a source file set the engine, the encoding, the root file and more for that file only. Help › Comment Lines and Hidden Settings lists all magic comments and hidden settings.</p>
 </main>
 </body>
 </html>

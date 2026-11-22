@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Modifying Key Bindings</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="key bindings; create and modify key bindings">
+<meta name="description" content="key bindings; Key Binding List; edit key bindings; Input Character; Output String; Paste; Keyboard folder; autocompletion.plist">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -16,17 +16,32 @@
 <li><a href="configure_prefchanges.htm">Recommended Changes to Settings</a></li>
 <li><a href="configure_correctinstall.htm">Obtaining New Library Items</a></li>
 <li><a href="configure_hidden.htm">Hidden Settings</a></li>
-<li><a href="configure_panel.htm">Modifying the Latex Panel</a></li>
+<li><a href="configure_panel.htm">Modifying the LaTeX Panel</a></li>
 <li><a href="configure_autocompletion.htm" class="current">Modifying Key Bindings</a></li>
 <li><a href="configure_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>Modifying Key Bindings</h1>
+<p>Key bindings replace a typed character with a text, for example ^ with ^{} and the insertion point between the braces; <a href="basic_autocompletion.htm">Key Bindings</a> explains how to use them. This page explains how to change the list.</p>
 
-		<P>The Settings window contains a checkbox to turn key bindings on or off. By default it is off. When the item is on, typing certain characters inserts an entire string in the source file. For instance, typing ^ inserts ^{  }, with the cursor positioned inside the brackets.</P>
-		<p>Key binding elements can be modified and created using the Key Bindings Editor built into TeXShop. </p>
-		<p>While key bindings are on, a key binding checked in the Paste column also applies to pasted text: each of its input characters in the pasted text becomes its output string. Key bindings whose output string contains #SEL#, #INS#, #PASTE# or a mark (&bull;) cannot be checked. For instance, when the encoding for new documents in Settings is not a Japanese one, giving &yen; the output string \ (a single backslash) and checking Paste turns the yen signs of pasted text into backslashes. When TeXShop is installed for the first time, the key binding of &yen; is already set this way.</p>
+<h2 id="on-off">Turning key bindings on</h2>
+<p>“Use key bindings (default for new documents)” in Settings › Keyboard decides whether key bindings are on when a document opens; it is off at first. Source › Key Bindings turns them on or off for the active document only, and the optional KeyBindings toolbar item does the same.</p>
+
+<h2 id="edit">Editing the list</h2>
+<p>The Key Binding List in Settings › Keyboard shows each input character with its output string. Double-click a cell to edit it in place. Click + below the list to add a key binding and − to delete the selected ones; drag rows to change their order. An input character is a single character. Changes are saved at once and apply immediately, also in documents that are already open; Edit › Undo reverts them.</p>
+<p>An output string can contain these symbols, which the list shows as small labels:</p>
+<dl>
+<dt>#SEL#</dt><dd>the text that was selected when the key was typed</dd>
+<dt>#INS#</dt><dd>where the insertion point goes</dd>
+<dt>#PASTE#</dt><dd>the text on the clipboard</dd>
+<dt>•</dt><dd>a mark, which Edit › Marks can move to</dd>
+</dl>
+<p>Add them with the Insert menu below the list, or type them as written above; Option-Return types a line break and Option-Tab a tab. The ? button beside the list shows all of them. Copying an output string copies the symbols as written above.</p>
+<p>A check in the Paste column applies a key binding to pasted text as well: while key bindings are on for the document, each occurrence of its input character in text pasted or dropped into the source is replaced by its output string. Key bindings whose output string contains #SEL#, #INS#, #PASTE# or a mark cannot be checked.</p>
+
+<h2 id="reset">Returning to the default list</h2>
+<p>The list is kept in the folder ~/Library/TeXShop/Keyboard. To return to the list that comes with TeXShop, quit TeXShop, move the Keyboard folder to the desktop and start TeXShop again; it creates the folder with its default contents.</p>
 </main>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Localizations</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="localization; french; german; dutch; italian; japanese; spanish; portuguese">
+<meta name="description" content="localization; language; translation; French; German; Italian; Spanish; Portuguese; Dutch; Romanian; Chinese; Japanese; Korean">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -15,14 +15,14 @@
 <li><a href="advanced_personaltetex.htm">Adding Personal Files to TeX Live</a></li>
 <li><a href="advanced_moretetex.htm">More About TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a></li>
-<li><a href="advanced_addengine.htm">Adding Additional Typesetting Engines</a></li>
+<li><a href="advanced_addengine.htm">Adding Typesetting Engines</a></li>
 <li><a href="advanced_formats.htm">Making and Using TeX Formats</a></li>
-<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX and LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt and MetaPost</a></li>
 <li><a href="advanced_encoding.htm">Encodings</a></li>
-<li><a href="advanced_Japan.htm">Japan</a></li>
+<li><a href="advanced_Japan.htm">Typesetting in Japanese</a></li>
 <li><a href="advanced_root.htm">Setting a Project Root File</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
+<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a></li>
 <li><a href="advanced_removeaux.htm">Removing AUX Files</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
@@ -33,21 +33,47 @@
 <li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a></li>
 <li><a href="advanced_syntaxcolor.htm">Syntax Highlighting</a></li>
 <li><a href="advanced_coloredtext.htm">Colored Text</a></li>
-<li><a href="advanced_plist.htm">Plist Files</a></li>
+<li><a href="advanced_plist.htm">Files in ~/Library/TeXShop</a></li>
 <li><a href="advanced_localization.htm" class="current">Localizations</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>Localizations</h1>
+<p>TeXShop is shown in the language chosen for it in macOS: the first language of the list in System Settings › General › Language &amp; Region that TeXShop has, or the language set for TeXShop alone under Applications in the same pane.</p>
 
-		<P>TeXShop contains a Dutch localization Maarten Sneep, a  French localization by Jérôme Laurens, Hendrik Chaltin, and Jean-Claude De Soza, a German localization by Keith J. Schultz, Sascha Beverungen, Martin Kerz,  Max Horn, and Lukas Christensen, an Italian localization by Giuseppe Carlino and Nicola Vitacolonna, a Japanese localization by Seiji Zenitani, Yoshihisa Okazaki, and Yusuke Terada, a Chinese Localization by Linus Yang, a Spanish localization by Juan Luis Varona, a Romanian localization by Roxana Tenea Teleman and Andrei Teleman,  a Portuguese localization by Paulo T. Abreu, a Portuguese Brazilian localization by Emerson Mello,
-		and a Korean localization by Karnes Kim. Thanks!</P>
-		<p>In Japan, modified versions of TeX and LaTeX called ptex and platex are sometimes used. TeXShop has been modified by Makoto Inoue, Seiji Zenitani, and Mitsuhiro Shishikura to deal with these versions. Ptex and platex are available at <a href="http://www.ascii.co.jp/pb/ptex/">http://www.ascii.co.jp/pb/ptex/</a>. Dvipdfmx is available at <a href="http://project.ktug.or.kr/dvipdfmx/">http://project.ktug.or.kr/dvipdfmx/</a>. A dvi previewer for Japanese is available at <a href="http://macptex.appi.keio.ac.jp/%7euchiyama/macptex.html">http://macptex.appi.keio.ac.jp/~uchiyama/macptex.html</a>.</p>
-<p> For more details on these modifications for Japan, see the following section.</p>
-		<ul>
-			
-		</ul>
-	
+<h2>Languages</h2>
+<table>
+<tr><th>Language</th><th>Interface</th><th>Help</th></tr>
+<tr><td>English</td><td>original</td><td>English</td></tr>
+<tr><td>French</td><td>translated</td><td>English</td></tr>
+<tr><td>German</td><td>translated</td><td>German</td></tr>
+<tr><td>Italian</td><td>translated</td><td>English</td></tr>
+<tr><td>Spanish</td><td>translated</td><td>Spanish</td></tr>
+<tr><td>Portuguese (Brazil)</td><td>translated</td><td>English</td></tr>
+<tr><td>Chinese (Simplified)</td><td>translated</td><td>English</td></tr>
+<tr><td>Japanese</td><td>translated</td><td>Japanese</td></tr>
+<tr><td>Korean</td><td>translated</td><td>Korean</td></tr>
+<tr><td>Dutch</td><td>partly translated</td><td>English</td></tr>
+<tr><td>Portuguese (Portugal)</td><td>partly translated</td><td>English</td></tr>
+<tr><td>Romanian</td><td>partly translated</td><td>English</td></tr>
+</table>
+<p>In the partly translated languages, many commands appear in English. In a language without its own help, Help › TeXShop Help Panel… shows the English help.</p>
+
+<h2>Translators</h2>
+<ul>
+<li>Dutch: Maarten Sneep</li>
+<li>French: Jérôme Laurens, Hendrik Chaltin, Jean-Claude De Soza</li>
+<li>German: Keith J. Schultz, Sascha Beverungen, Martin Kerz, Max Horn, Steffen Wolfrum, Lukas Christensen, Matthias Schmidt</li>
+<li>Italian: Giuseppe Carlino, Nicola Vitacolonna</li>
+<li>Japanese: Seiji Zenitani, Yoshihisa Okazaki, Tomoaki Okayama, Yusuke Terada</li>
+<li>Chinese: Linus Yang</li>
+<li>Spanish: Juan Luis Varona Malumbres</li>
+<li>Portuguese (Portugal): Paulo Abreu</li>
+<li>Portuguese (Brazil): Emerson Ribeiro de Mello</li>
+<li>Romanian: Roxana Tenea Teleman, Andrei Teleman</li>
+<li>Korean: Karnes Kim</li>
+</ul>
+<p>Corrections to a translation are welcome; see <a href="basic_bugs.htm">Sending Bug Reports</a>.</p>
 </main>
 </body>
 </html>

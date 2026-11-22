@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Making and Using TeX Formats</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="index; makeindex; makeidx">
+<meta name="description" content="format; fmt file; initex; -ini; -fmt; dump; engine file; preamble">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -15,14 +15,14 @@
 <li><a href="advanced_personaltetex.htm">Adding Personal Files to TeX Live</a></li>
 <li><a href="advanced_moretetex.htm">More About TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a></li>
-<li><a href="advanced_addengine.htm">Adding Additional Typesetting Engines</a></li>
+<li><a href="advanced_addengine.htm">Adding Typesetting Engines</a></li>
 <li><a href="advanced_formats.htm" class="current">Making and Using TeX Formats</a></li>
-<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX and LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt and MetaPost</a></li>
 <li><a href="advanced_encoding.htm">Encodings</a></li>
-<li><a href="advanced_Japan.htm">Japan</a></li>
+<li><a href="advanced_Japan.htm">Typesetting in Japanese</a></li>
 <li><a href="advanced_root.htm">Setting a Project Root File</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
+<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a></li>
 <li><a href="advanced_removeaux.htm">Removing AUX Files</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
@@ -33,106 +33,40 @@
 <li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a></li>
 <li><a href="advanced_syntaxcolor.htm">Syntax Highlighting</a></li>
 <li><a href="advanced_coloredtext.htm">Colored Text</a></li>
-<li><a href="advanced_plist.htm">Plist Files</a></li>
+<li><a href="advanced_plist.htm">Files in ~/Library/TeXShop</a></li>
 <li><a href="advanced_localization.htm">Localizations</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>Making and Using TeX Formats</h1>
+<p>A format file (extension <code>.fmt</code>) is a snapshot of TeX after it has read a set of macros. LaTeX itself is a format: TeX loads it in a moment instead of reading the LaTeX sources every time. You can make a format of your own from a long preamble, so that typesetting starts faster, or use a format that a project or an organization provides.</p>
+<p>A format works only with the engine and the TeX Live version that made it. A format made with pdfLaTeX of TeX Live 2026 cannot be used by XeLaTeX or by another year of TeX Live; make it again after installing a new TeX Live.</p>
 
-<h4> Using formats </h4>
-		<P>When TeX typesets a document, it must process the document header, which may contain
-a large number of \input, \include, and \usepackage statements. Every time the document is typeset,
-this process is repeated even though large portions of the header did not change.</P>
+<h2>Making a format</h2>
+<p>Put the lines that the format should contain in a file, ending with <code>\dump</code>. For example, <code>uo.tex</code>:</p>
+<pre>\documentclass[11pt]{article}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\dump</pre>
+<p>In Terminal, change to the folder of this file and type</p>
+<pre>pdflatex -ini -jobname=uo "&amp;pdflatex" uo.tex</pre>
+<p>This loads the LaTeX format, reads <code>uo.tex</code> and writes <code>uo.fmt</code>. A document typeset with this format leaves out the lines that are in the format and starts with <code>\begin{document}</code>.</p>
 
-<p> TeX has a built-in mechanism to speed up this process. It can be instructed to process lines of source and output the result to a "format file." When TeX typesets after that, it can rapidly read the format and then typeset the document. LaTeX is constructed in this manner;
-the format file is created when TeX is installed on your machine and the command "latex file" tells TeX to read this format and then typeset "file". </p>
+<h2>Using a format in TeXShop</h2>
+<ol>
+<li>Move <code>uo.fmt</code> to the folder <code>~/Library/texmf/web2c</code>, creating the folders if necessary, so that TeX finds it from any folder.</li>
+<li>In the Finder, open <code>~/Library/TeXShop/Engines</code> (TeXShop › Open ~/Library/TeXShop), duplicate an engine such as <code>XeLaTeX.engine</code>, and rename the copy, for instance <code>Oregon.engine</code>. The name appears in TeXShop and need not match the format.</li>
+<li>Open the copy in TeXShop and change its last line so that the engine reads:
+<pre>#!/bin/tcsh
 
-<p> When machines were slower, users often created their own format files to speed up typesetting.
-This is done less often today, but dealing with format files may still be useful. For instance, some organizations create and distribute a format to be used by everyone working on a common project. In this section we'll explain how to use a format file provided by someone else, and how to create a format.</p>
-
-<p> A typical format file has extension "fmt". Suppose a department of the University of Oregon has provided a format "uo.fmt". To use this format, follow the steps below:</p>
-<ul>
-<li> Move uo.fmt to "~/Library/texmf/web2c/uo.fmt". You may need to create some of these directories.
-<li> Create a new "engine file" by going to ~/Library/TeXShop/Engines and duplicating the file
-XeLaTeX.engine. Engine files need to have the execute bit set, and this duplication step automatically does that.
-<li> Rename this new file. The name need not
-match the name of the format. Since the name will appear in the TeXShop interface, it should make sense to a user. We'll choose "Oregon.engine".
-<li> Open Oregon.engine in TeXShop and edit it to read as follows
-<dl>
-<dd>#!/bin/tcsh
-<dd>
-<dd>set path= ($path /Library/TeX/texbin /usr/local/bin)
-<dd>pdflatex -fmt uo  "$1" 
-</dl>
-	The first two lines will already be present, so it may only be necessary to change the third line.
-</ul>
-<p> This completes the installation. The next time you start TeXShop, the pulldown menu beside
-the typeset button on the Source Window Toolbar will list "Oregon" as an option. Choose this to typeset using the uo.fmt format. If you want this typesetting method to be the default, go to
-TeXShop Settings under the Typesetting category, choose "Engine File" in the "Typeset New Documents With" menu, and choose Oregon in the "Engine File" menu.</p>
-<p> It is also possible to select the Oregon format for a particular document 
-without changing the typesetting option. To do that, add the
-following line to the top of the source file:</p>
-<dl>
-<dd> %!TEX TS-program = Oregon
-</dl>
-<p> Then uo.fmt will be used for that document regardless of the typesetting option chosen.</p>
-<p> The above instructions assume you have a format for pdflatex. You can also make formats for plain tex; in that case change "pdflatex" to "pdftex" in the engine file.</p>
-<p> It is also possible to use formats when you are typesetting with tex + ghostscript. TeXShop assumes that an
-engine file contains one or more command line instructions and ultimately produces a pdf file.
-So the engine file must contain the commands which convert the dvi file to a pdf file.
-Here is a typical engine file for uo.fmt in that case:</p>
-<dl>
-<dd>#!/bin/tcsh
-<dd>set path= ($path /Library/TeX/texbin /usr/local/bin /opt/homebrew/bin)
-<dd>latex -fmt uolatex  "$1"
-<dd>set filename = "$1"
-<dd>dvips "${filename:r}.dvi"
-<dd>ps2pdf "${filename:r}.ps" 
-</dl>  
-<h4> Making formats </h4>
-<p> Format files contain the internal binary representation of typeset lines of source.
-This representation depends on the processor and particular TeX implementation. Thus it is
-rarely possible to use a format file from someone else unless that person has the same
-machine and TeX installation that you do.<p>
-
-<p> However, it is common for organizations to distribute the source lines needed to construct
-a format. In that case you'll be told to make the format using "initTeX". For example,
-suppose this source text is "uo.tex". To make the format,
-open Apple's Terminal program and change to the directory containing the source for the
-format. Then type</p>
-<dl>
-<dd>pdflatex -ini
-</dl>
-<p>You will get a ** prompt. Type the following line at the prompt</p>
-<dl>
-<dd>&pdflatex uo
-</dl>
-<p>and press return. The format file will be created. At the end you may have to
-issue a "\dump" command if the format source doesn't contain it. This will produce
-the required "uo.fmt".</p>
-<p> You might like to try this with the follow "uo.tex" file:</p>
-<dl>
-<dd>\documentclass[11pt]{article}
-<dd>\usepackage{geometry}   
-<dd>\geometry{letterpaper}                 
-<dd>\usepackage[parfill]{parskip} 
-<dd>\usepackage{graphicx}
-<dd>\usepackage{amssymb}
-<dd>\usepackage{epstopdf}
-<dd>\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
-
-<dd>\dump
-</dl>
-
-
-
-
-
-
-
-
-	
+set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+pdflatex -fmt=uo -file-line-error -synctex=1 "$1"</pre></li>
+</ol>
+<p>Documents opened afterwards list Oregon in the pop-up menu beside the Typeset button. To use the format for one document whatever is chosen there, add this line at the top of the source:</p>
+<pre>% !TEX program = Oregon</pre>
+<p>To make it the default, choose “Engine File” in Settings › Typesetting › Engine › Typeset New Documents With, and Oregon in the Engine File menu. See <a href="advanced_addengine.htm">Adding Typesetting Engines</a>.</p>
+<p>For a plain TeX format, use <code>pdftex</code> instead of <code>pdflatex</code> in the engine. For a format to be used Via DVI, the engine must also convert the DVI file to PDF, for instance with <code>dvipdfmx "${1:r}.dvi"</code> in a zsh script, because TeXShop shows the PDF file with the name of the source.</p>
 </main>
 </body>
 </html>

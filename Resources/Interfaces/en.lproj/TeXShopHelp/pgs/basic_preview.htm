@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Preview Window</title>
+<meta name="description" content="Preview window; display format; page layout; two-page arrangement; magnification; Fit to Window; magnifying glass; Select PDF; copy images; search PDF; drawer; link popups; pinned popup; split window; Switch Views; full screen; annotation toolbar">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -22,15 +23,15 @@
 <li><a href="basic_spelling.htm">Checking Spelling</a></li>
 <li><a href="basic_autocompletion.htm">Key Bindings</a></li>
 <li><a href="basic_commandcompletion.htm">Command Completion</a></li>
-<li><a href="basic_latexpanel.htm">Latex Panel</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Panel</a></li>
 <li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
 <li><a href="basic_macros.htm">Macros</a></li>
 <li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
 <li><a href="basic_graphics.htm">Including Graphics</a></li>
 <li><a href="basic_printing.htm">Printing</a></li>
 <li><a href="basic_preferences.htm">Changing Settings</a></li>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a></li>
-<li><a href="basic_miscellaneous.htm">Miscellaneous</a></li>
+<li><a href="basic_templates.htm">Templates and Stationery</a></li>
+<li><a href="basic_miscellaneous.htm">Windows and Tabs</a></li>
 <li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
 <li><a href="basic_websites.htm">Useful Web Sites</a></li>
 <li><a href="basic_license.htm">License</a></li>
@@ -38,6 +39,84 @@
 </nav>
 <main id="content">
 <h1>The Preview Window</h1>
+
+<p>The Preview window shows the typeset PDF file. It is updated after every typesetting and stays at the page you were reading. Its settings are in Settings › Preview: those under When a Document Opens apply when a document is opened, and the Preview menu changes them for the window in front.</p>
+
+<h2>Moving through the document</h2>
+
+<p>Preview › Display Format chooses how the pages are laid out: Single Page and Double Page show one page or one pair of pages, and MultiPage and Double MultiPage show all pages in one long column. “Default Page Style” under When a Document Opens sets the format a window starts with. Previous Page and Next Page in the Preview menu and in the toolbar turn the pages, the Go to page field in the toolbar goes to a page by its number, and the two chevrons of Back/Forward in the toolbar return to the places you came from, as in a web browser.</p>
+
+<p>In Single Page and Double Page, scrolling past the top or bottom of a page turns the page; turn on “Do not turn pages by scrolling” in Settings › Preview › Display and Navigation to stop at the edge of the page instead. The Up and Down Arrow keys scroll within the page. The Left and Right Arrow keys scroll sideways when a magnified page is wider than the window, and otherwise turn the page; “Always turn pages with the left and right arrow keys” makes them always turn the page.</p>
+
+<p>Two menus can be added to the toolbar with Window › Customize Toolbar.... Page Layout chooses the display format. Two-Page Arrangement chooses, for this document only, whether a pair of pages reads from left to right or from right to left, and whether the first page is shown alone as a cover; its item Restore Document Settings returns to the settings. The settings are “Page direction” and “Show first page alone as cover” under When a Document Opens, and the magic lines <code>% !TEX PageDirectionL2R</code>, <code>% !TEX PageDirectionR2L</code>, <code>% !TEX bookDisplay</code> and <code>% !TEX standardDisplay</code> set them for one document.</p>
+
+<h2>Magnification</h2>
+
+<p>Preview › Magnification offers these choices:</p>
+<dl>
+<dt>Fit to Window</dt>
+<dd>The page fills the width of the window, and resizing the window changes the magnification.</dd>
+<dt>Fit to Content Width</dt>
+<dd>Like Fit to Window, but without the white margins: the typeset part of the pages fills the width of the window.</dd>
+<dt>Fixed Magnification</dt>
+<dd>The magnification stays as set in the Magnification field of the toolbar, or with Zoom In (<kbd>⇧⌘=</kbd>) and Zoom Out (<kbd>⇧⌘-</kbd>).</dd>
+<dt>Actual Size</dt>
+<dd>The pages at the size of the paper.</dd>
+</dl>
+
+<p>Zoom to Content and Zoom to Content Width, at the end of the same submenu, set the magnification once, so that the typeset part of the page fits the window or fills its width. Changing the magnification with the toolbar, with these commands or with a pinch on the trackpad switches the window to Fixed Magnification; choose Fit to Window again to go back. Clicking the word next to the Magnification field opens the Magnification menu. “After resizing the window” and “Magnification” under When a Document Opens set the magnification a window starts with.</p>
+
+<h2>The mouse tools</h2>
+
+<p>The Mouse Mode item of the toolbar chooses what the pointer does on the page. Scroll moves the page. Select Text selects text to copy. Magnify and Magnify (Large) show a magnifying glass while the mouse button is held down: double-click and hold for a larger glass, triple-click and hold to magnify the whole window, and press Command, Option or Control to magnify more, with Shift less. Select PDF selects an area of the page to copy as a picture. “Default Mouse Mode” under When a Document Opens chooses the tool a window starts with.</p>
+
+<p>With Select PDF, drag over an area of the page, then copy it with <kbd>⌘C</kbd> or drag it into another application or onto the desktop; Preview › Save Selection to File... saves it in a file. Preview › Copy Format chooses whether the copy is PDF or a picture such as PNG, TIFF or JPEG; “Image Copy Type” in Settings › Preview › Copy Images sets the default. See <a href="advanced_pdfcopypaste.htm">Copy-Paste and Drag-Drop</a>.</p>
+
+<h2 id="search">Searching and the drawer</h2>
+
+<p>Type a word in the Search PDF field of the toolbar and press Return to select its first occurrence; <kbd>⌘G</kbd> and <kbd>⇧⌘G</kbd> go to the next and the previous one. While the Preview window is in front, <kbd>⌘F</kbd> goes to this field.</p>
+
+<p>Preview › Drawer, or the Drawer item of the toolbar, shows the drawer. Its upper part is the outline of the document, which the hyperref package makes from the chapters and sections; click an entry to go there, or choose one with the arrow keys and press Return. Its lower part is a second search field, which lists every occurrence with its page; click one to go there.</p>
+
+<h2>Links and link popups</h2>
+
+<p>Links made by the hyperref package work in the Preview: click a reference to go to the theorem or the bibliography entry, and the left chevron of Back/Forward returns. A web address opens in your web browser.</p>
+
+<p>Hold the pointer over a link to see the linked place in a popup, with the page number in its lower right corner. The popup goes away after a few seconds. Keys held down when the popup appears change it:</p>
+<dl>
+<dt>Shift</dt>
+<dd>shows the popup above the link instead of below it.</dd>
+<dt>Command</dt>
+<dd>shows a larger popup.</dd>
+<dt>Option</dt>
+<dd>pins the popup, so that it stays. Pressing Option while a popup is shown pins it too.</dd>
+<dt>Control</dt>
+<dd>reverses Link Popups for this link: while Link Popups is on, no popup appears, so none is in the way of a Control-click; while it is off, the popup appears all the same.</dd>
+</dl>
+
+<p>A pinned popup can be moved, resized and scrolled, and its text can be selected and copied. It stays at its place on its page while you click, scroll, zoom, follow links or work in other windows, until you press Escape in the Preview window. While a popup is pinned, other popups still appear, and Option pins one of them instead.</p>
+
+<p>Preview › Link Popups turns the popups on or off for the window, and “Link Popups” under When a Document Opens sets whether they are on when a document opens. “Show page number in link popups” in Settings › Preview › Display and Navigation leaves out the page number. No popups appear while the Select PDF tool is chosen.</p>
+
+<h2>Splitting the window</h2>
+
+<p>Window › Split Window (<kbd>⌃2</kbd>), or the Split Preview item of the toolbar, divides the Preview window into two parts that can show different places in the document; choose it again to unsplit. Hold down Option to split the window side by side (Window › Split Window Vertically, <kbd>⌃⌥2</kbd>). Each part has its own display format and magnification. The part you clicked last is the active part, marked with a thin line in the accent color: the toolbar, the drawer, SyncTeX and the Preview menu act on it, and unsplitting keeps it.</p>
+
+<p>Control-click an internal link, or click it with the right mouse button, and choose Split Window with Link to show the linked place in the other part while the link stays in view; the window is split first if needed.</p>
+
+<p>Window › Switch Views (<kbd>⌥2</kbd>) exchanges the two parts of a split window. In a window that is not split, it switches between two views of the document, each with its own place, display format and magnification, so that you can go back and forth between two places.</p>
+
+<h2>Full screen</h2>
+
+<p>Window › Enter Full Screen (<kbd>⌃⌘F</kbd>) shows the Preview on the whole screen. The window is then unsplit and uses the magnification and display format last used in full screen, and leaving full screen brings back the earlier ones. To keep the split, the magnification and the display format, turn on “Keep magnification, display format and split when entering full screen” in Settings › Preview › Display and Navigation. In full screen, the first Escape dismisses a pinned popup and the second leaves full screen.</p>
+
+<h2>Annotations</h2>
+
+<p>Preview › Show Annotation Toolbar shows the annotation tools under the toolbar of the window. Click Edit Mode at the left end of the annotation toolbar, then use its buttons to strike out, highlight or underline selected text, or to add shapes, arrows, text and notes. Annotations are not part of the source, and the next typesetting replaces the PDF file, so save them with Save Annotations… in the annotation toolbar; it saves a copy of the PDF file, named for example Fourier-Annotated.pdf for Fourier.tex. After you have worked in Edit Mode, TeXShop offers to save the annotations before it typesets again or closes the window. The TeXShop Manual describes annotations in detail.</p>
+
+<h2>More</h2>
+
+<p>Command-click in the Preview to go to the matching place in the source; see <a href="basic_typesetting.htm">Typesetting Documents</a>. Rotate Clockwise and Rotate Counterclockwise in the Preview menu rotate the pages. When another application, such as latexmk, rewrites the PDF file, the Preview reloads it at the same place; turn on “Always Watch for PDF Changes by Other Apps” in Settings › Preview › Refresh to have it reloaded also while TeXShop is in the background. Preview › Save Preview Position makes new Preview windows open at the place and size of the window in front.</p>
 </main>
 </body>
 </html>

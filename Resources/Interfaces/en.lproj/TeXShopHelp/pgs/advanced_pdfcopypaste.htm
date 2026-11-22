@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Copy-Paste and Drag-Drop</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="copy and paste; drag and drop; configure">
+<meta name="description" content="copy and paste; drag and drop; Select PDF; Image Copy Type; Copy Format; Use Color Mapping; Foreground Prominence; Save Selection to File; Keynote">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -15,14 +15,14 @@
 <li><a href="advanced_personaltetex.htm">Adding Personal Files to TeX Live</a></li>
 <li><a href="advanced_moretetex.htm">More About TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a></li>
-<li><a href="advanced_addengine.htm">Adding Additional Typesetting Engines</a></li>
+<li><a href="advanced_addengine.htm">Adding Typesetting Engines</a></li>
 <li><a href="advanced_formats.htm">Making and Using TeX Formats</a></li>
-<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX and LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt and MetaPost</a></li>
 <li><a href="advanced_encoding.htm">Encodings</a></li>
-<li><a href="advanced_Japan.htm">Japan</a></li>
+<li><a href="advanced_Japan.htm">Typesetting in Japanese</a></li>
 <li><a href="advanced_root.htm">Setting a Project Root File</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
+<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a></li>
 <li><a href="advanced_removeaux.htm">Removing AUX Files</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
@@ -33,36 +33,31 @@
 <li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a></li>
 <li><a href="advanced_syntaxcolor.htm">Syntax Highlighting</a></li>
 <li><a href="advanced_coloredtext.htm">Colored Text</a></li>
-<li><a href="advanced_plist.htm">Plist Files</a></li>
+<li><a href="advanced_plist.htm">Files in ~/Library/TeXShop</a></li>
 <li><a href="advanced_localization.htm">Localizations</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>Copy-Paste and Drag-Drop</h1>
+<p>A part of a page in the Preview window can be copied as a picture into another program, such as Keynote, Pages or Preview.</p>
 
-<P>
-It is possible to select a portion of the pdf preview display and copy and paste the
-		resulting graphic into another program. Drag and drop of the selection is also supported.
-		Settings allow users to select the file type of the copy (pdf, png, jpg, tiff, etc.)
-		and the foreground and background colors and transparency.
-</P>
+<h2>Selecting and copying</h2>
+<ol>
+<li>Choose the Select PDF tool in the toolbar of the Preview window.</li>
+<li>Drag a rectangle over the part you want. It can contain text, formulas and pictures.</li>
+<li>Choose Edit › Copy (<kbd>⌘C</kbd>) and paste into the other program, or drag the selection into a document of that program. Dragging it to the desktop or a Finder window makes a file.</li>
+</ol>
+<p>Preview › Save Selection to File… saves the selection under a name and in a folder you choose. With the Select PDF tool, Edit › Select All (<kbd>⌘A</kbd>) selects everything shown: the page in the Single Page and Double Page display formats, the whole document in MultiPage and Double MultiPage. In the latter two it works only for documents of at most 20 pages, so that the copy does not become enormous.</p>
+<p>To copy text rather than a picture, use the Select Text tool.</p>
 
-<P>
-Preview selection combined with drag and drop can be used with Keynote. 
-		Using the default copy settings, a text selection can be dropped on a Keynote slide; 
-		the background of the text will be transparent, so the slide background will show between the
-		letters. This text can be resized since the default copy format is pdf.
-</P>
-
-<P>
-The Edit menu's "Select All" command can be used to select the entire pdf page for copying. However,
-in Multi-Page and Double-Multi-Page modes Select All  only works if the document has 20 or fewer pages, since otherwise the selected pdf could be enormous and copying could bring the machine to a crawl.
-</P>
-
-		<ul>
-			
-		</ul>
-	
+<h2>The format of the copy</h2>
+<p>Settings › Preview › Copy Images › Image Copy Type sets the kind of picture: PDF, TIFF, JPEG or PNG, some in several qualities. PDF, the default, keeps text and lines sharp at any size, so a selection pasted into a Keynote slide can be enlarged freely. The submenu Preview › Copy Format shows and changes the same setting.</p>
+<p>For TIFF, JPEG and PNG copies, two more items of the Copy Images group apply:</p>
+<ul>
+<li>“Use Color Mapping” turns black into a text color and white into a background color, so that a copy matches the colors of a slide. Both colors are set in Settings › Themes › Color Mapping for Copied Images, under Text and Background, separately for each theme. PDF copies keep the colors of the page.</li>
+<li>“Foreground Prominence” sets how strongly the text is emphasized in the copy.</li>
+</ul>
+<p>The color that the theme gives to light pages in the Preview window is not part of the copy.</p>
 </main>
 </body>
 </html>

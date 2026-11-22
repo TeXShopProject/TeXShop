@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Adding Personal Files to TeX Live</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="about TeXLive; add sty file">
+<meta name="description" content="personal texmf tree; ~/Library/texmf; TEXMFHOME; add sty file; add class; bib file; bst file; kpsewhich">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -15,14 +15,14 @@
 <li><a href="advanced_personaltetex.htm" class="current">Adding Personal Files to TeX Live</a></li>
 <li><a href="advanced_moretetex.htm">More About TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a></li>
-<li><a href="advanced_addengine.htm">Adding Additional Typesetting Engines</a></li>
+<li><a href="advanced_addengine.htm">Adding Typesetting Engines</a></li>
 <li><a href="advanced_formats.htm">Making and Using TeX Formats</a></li>
-<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX and LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt and MetaPost</a></li>
 <li><a href="advanced_encoding.htm">Encodings</a></li>
-<li><a href="advanced_Japan.htm">Japan</a></li>
+<li><a href="advanced_Japan.htm">Typesetting in Japanese</a></li>
 <li><a href="advanced_root.htm">Setting a Project Root File</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
+<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a></li>
 <li><a href="advanced_removeaux.htm">Removing AUX Files</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
@@ -33,68 +33,39 @@
 <li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a></li>
 <li><a href="advanced_syntaxcolor.htm">Syntax Highlighting</a></li>
 <li><a href="advanced_coloredtext.htm">Colored Text</a></li>
-<li><a href="advanced_plist.htm">Plist Files</a></li>
+<li><a href="advanced_plist.htm">Files in ~/Library/TeXShop</a></li>
 <li><a href="advanced_localization.htm">Localizations</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>Adding Personal Files to TeX Live</h1>
+<p>Style files, classes, bibliography databases and other files that are not part of TeX Live go in your personal TeX tree, the folder <code>texmf</code> in the Library folder of your home folder: <code>~/Library/texmf</code>. Every program of TeX Live finds the files there, and they take precedence over files of the same name in TeX Live itself. Nothing needs to be registered after a file is added; the next typesetting finds it.</p>
+<p>The Library folder is hidden in the Finder. To open it, choose Go › Go to Folder… in the Finder and type <code>~/Library</code>. Create the folder <code>texmf</code> there if it does not exist yet.</p>
 
-		<P>
-Every TeX distribution expects to find personal additions (such as private style files or packages not part of the main distribution) in a local folder or directory.  The name of this folder is 'texmf' and it has a specific structure of sub-folders so that the TeX programs can find files correctly.</p>
+<h2>Before adding a package</h2>
+<p>Most packages on CTAN are already part of TeX Live, and MacTeX installs all of them. To see whether TeX already has a file, choose File › Open Style File… in TeXShop and type its name, such as <code>hyperref.sty</code>; TeXShop opens the file that TeX would use. Add a package to your personal tree only when TeX Live does not have it, or when you need a version of your own. Because your copy takes precedence, remove it when TeX Live has caught up, or you keep using the old version.</p>
 
-<p>On a Mac, the local texmf folder  is located in the Library folder  of your Home directory.  This is usually notated as "~/Library/texmf", where the "~" means "your home directory" (i.e. what you get when you click on the Home icon in a finder window.).</p>
-
-<h2>When should I put things in the local texmf ?</h2>
-
-Before putting anything into the local texmf folder, you should check that the relevant package isn't already part of TeXLive, and therefore included in the MacTeX distribution.  The easiest way to do this is to use the TeXLive utility.  This is especially true of packages on CTAN, most of which are included in TeXLive, and should already be available to you.
-
-If you know that a package is not available as part of TeXLive, then you should put it into your local texmf folder.
-
-<h2>What goes where?</h2>
-<p>
-The texmf folder contains a number of folders, and these folders themselves contain other folders.  For most users, the three top-level folders that are most important are the following:</p>
+<h2>Where files go</h2>
+<p>The folders inside <code>texmf</code> follow the same structure as TeX Live. Create the folders you need:</p>
 <table>
-<tr><th>Folder</th><th>What goes in it</th></tr> <tr><th>bibtex </th><td>This is where bib files and bst files go. It should contain at least the following folders: </td></tr>
-<tr><td>&nbsp;</td></tr>
-<tr><td>bst </td><td>Put bst files here.</td></tr> <tr><td>bib </td><td>Put bib files here.</td></tr> <tr><td>&nbsp;</td>
-</tr> <tr><th>tex </th><td>This is where new packages go. It should contain the following folders:</td></tr>
-<tr><td>&nbsp;</td></tr>
-<tr><td>latex </td><td>Put latex packages here.</td></tr> 
-<tr><td>plain </td><td>Put plain tex files here.</td></tr> 
-<tr><td>xelatex </td><td>Put xelatex specific packages here.</td></tr>
-<tr><td>xetex</td><td>Put plain xetex files here.</td></tr>
-<tr><td>context </td><td>Put context files here.</td></tr>
-<tr><td>generic </td><td>Put files that are usable with any TeX flavor here.</td></tr> 
-<tr><td>&nbsp;</td></tr> 
-<tr><th>doc </th><td>Put documentation files from packages installed in the tex folder  here.  Putting the documentation files here allows them to be found by the texdoc system (or the "Show Help for Package" function in the Help menu of TeXShop).</td></tr>
+<tr><th>Folder</th><th>Contents</th></tr>
+<tr><td><code>tex/latex/</code></td><td>LaTeX packages and classes (.sty, .cls), each package in a folder of its own</td></tr>
+<tr><td><code>tex/plain/</code></td><td>files for plain TeX</td></tr>
+<tr><td><code>tex/generic/</code></td><td>files that work with any format</td></tr>
+<tr><td><code>bibtex/bib/</code></td><td>bibliography databases (.bib)</td></tr>
+<tr><td><code>bibtex/bst/</code></td><td>bibliography styles (.bst)</td></tr>
+<tr><td><code>doc/</code></td><td>documentation of the packages you added; Help › Show Help for Package… finds it there</td></tr>
 </table>
-<p>Other top-level folders in include fonts, scripts, and source.  
-<P>
-<h2>Environment Variables</h2>
-On other Unix machines, tex is sometimes notified of the location
-of personal input files by setting the environment variables
-TEXINPUTS, BSTINPUTS, and BIBINPUTS. This is almost never necessary with TeX Live; instead put personal input files in appropriate subdirectories of ~/Library/texmf.</p>
+<p>For example, a package of your own macros and your bibliography database would be stored as</p>
+<pre>~/Library/texmf/tex/latex/mymacros/mymacros.sty
+~/Library/texmf/bibtex/bib/mybibliography.bib</pre>
+<p>Then <code>\usepackage{mymacros}</code> and <code>\bibliography{mybibliography}</code> work in every document, wherever it is saved.</p>
 
-Under very special circumstances, these environment variables can be set. 
-Mac OS X allows users to notify programs about  environment variables by creating a file in their home directory named ~/.MacOSX/environment.plist.
-These environment variables get picked up by all user shells and all Carbon and Cocoa programs, so caution should be used when creating the file. 
- </P>
-
-<P>
-Below is a sample environment.plist file sent me by Nathan Potter; thanks! 
-For further details, consult</p>
-<p> <a href="http://developer.apple.com/qa/qa2001/qa1067.html">http://developer.apple.com/qa/qa2001/qa1067.html</a>.
-
- </P>
-<br>
-
-
-<center><img align=center src="environment.tiff" border=3></center>
-
-
-
-	
+<h2>Checking the folder</h2>
+<p>To see which folder your TeX uses as the personal tree, type in Terminal</p>
+<pre>kpsewhich -var-value TEXMFHOME</pre>
+<p>On a Mac it is <code>~/Library/texmf</code> unless the installation was set up otherwise. To see which copy of a file TeX will read, type for instance <code>kpsewhich mymacros.sty</code>.</p>
+<p>Do not add files to the folders of TeX Live itself; see <a href="advanced_moretetex.htm">More About TeX Live</a>.</p>
 </main>
 </body>
 </html>

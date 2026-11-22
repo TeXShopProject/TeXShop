@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Checking Spelling</title>
+<meta name="description" content="spell checking; LaTeX-aware spell checking; spelling exclusion rules; legacy method; dictionary; Show Spelling and Grammar; % !TEX spellcheck">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -22,15 +23,15 @@
 <li><a href="basic_spelling.htm" class="current">Checking Spelling</a></li>
 <li><a href="basic_autocompletion.htm">Key Bindings</a></li>
 <li><a href="basic_commandcompletion.htm">Command Completion</a></li>
-<li><a href="basic_latexpanel.htm">Latex Panel</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Panel</a></li>
 <li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
 <li><a href="basic_macros.htm">Macros</a></li>
 <li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
 <li><a href="basic_graphics.htm">Including Graphics</a></li>
 <li><a href="basic_printing.htm">Printing</a></li>
 <li><a href="basic_preferences.htm">Changing Settings</a></li>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a></li>
-<li><a href="basic_miscellaneous.htm">Miscellaneous</a></li>
+<li><a href="basic_templates.htm">Templates and Stationery</a></li>
+<li><a href="basic_miscellaneous.htm">Windows and Tabs</a></li>
 <li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
 <li><a href="basic_websites.htm">Useful Web Sites</a></li>
 <li><a href="basic_license.htm">License</a></li>
@@ -39,51 +40,43 @@
 <main id="content">
 <h1>Checking Spelling</h1>
 
-<p>Cocoa programs automatically inherit spell checking technology by Apple. TeXShop supports continuous spell checking, which can be toggled on or off with a menu command. A setting selects the initial position of this toggle.</p>
-<p> The Apple spell checker does not understand LaTeX commands by itself and marks many such commands as misspelled. In the Spell Checking category of TeXShop Settings, choose &#8220;Use LaTeX-aware spell checking (recommended)&#8221;: TeXShop then checks the text and skips commands, mathematics, comments, and the arguments of references.</p>
+<p>TeXShop checks spelling with the spell checker and the dictionaries of macOS. LaTeX-aware spell checking is on from the start: it checks the text and skips TeX commands, mathematics, comments, and the arguments of commands such as <code>\label</code>, <code>\ref</code>, <code>\cite</code> and <code>\usepackage</code>, as well as arguments that are not prose, such as keys, colors and units, of common packages. Commands that the document defines with <code>\newcommand</code>, <code>\def</code> and the like are read, so an argument that a definition passes to <code>\ref</code> or into mathematics is skipped too. Text marked as another language, for example with <code>\foreignlanguage</code>, is checked in that language, but is not underlined while you type.</p>
 
-	<p> Use the Dictionary section of TeXShop Settings to select a default dictionary. If you usually write in English, select an English dictionary; if you usually write in French, select a French dictionary. Or select "Automatic Language" and an appropriate dictionary will automatically be selected depending on the text.
+<h2>Checking a document</h2>
 
-	<p> The dictionary section of TeXShop Settings selects the default dictionary used when new files are opened in TeXShop, but does not change the dictionary used by files that are already open.
+<p>Misspelled words are underlined as you type while Edit › Spelling and Grammar › Check Spelling While Typing is on. To go through the document word by word, choose Edit › Spelling and Grammar › Show Spelling and Grammar (<kbd>⌘:</kbd>): the panel shows the first misspelled word after the insertion point. Click Find Next in the panel, or choose Check Document Now (<kbd>⌘;</kbd>), to go to the next one. Hold down Option while doing so to use the search of macOS, which skips no markup.</p>
 
-	<p> The Dictionary menu shows each language under its own name (for example, Deutsch or Fran&ccedil;ais), so choose the dictionary by the name of the language. The code the spell checker uses for that language, such as de or fr_CA, appears as the tool tip of the menu item.
+<p>To replace a word everywhere, type the replacement in the field Replacement for Change All of the panel, or select a suggestion, and click Change All; one Undo takes back the change. Forget Learned Words… in the Spelling and Grammar submenu lists the words of the document that were learned for the current language, and removes the ones you select from the dictionary. Correct Spelling Automatically in the same submenu changes words as you type; it is off at first, which suits TeX, where it would also change commands.</p>
 
-	<p> Once TeXShop dictionary settings are set up, users can open several source files in TeXShop.
-	Each will be assigned the Default Dictionary. But these dictionaries can be changed using the
-	"Spelling &amp; Grammar" menu item in the TeXShop Edit menu. If desired, each file can use a separate dictionary. For instance, a user might be writing customer letters in English, French, German, and Japanese and could assign such dictionaries to the four source files. In that case, click randomly among the source files and notice that the "Spelling and Grammar" panel switches to the appropriate dictionary each time the corresponding source file becomes active.
+<h2>Settings › Spell Checking</h2>
 
-	<p> When files are closed, this association is lost, so users who write in multiple languages will need to reselect the appropriate dictionary when each file is opened. 
-
-	<p> However, it is possible to fix the dictionary used when a file is first opened with the magic comment
-	<dd>
-<dl> % !TEX spellcheck = de-DE
-	</dl></dd>
-<p> In this example, the magic states that a German dictionary should be used whenever this file is opened. The dictionary, however, can still be changed after the file opens by using "Spelling &amp; Grammar."
-	The next time the file is closed and opened again, it will use the German dictionary.	
-
-	<p> The line is
-recognized when the document is opened, so the first time it is added to a source file, the file must be saved and reopened before the line is recognized. In a project with a root document, each included source file must contain the line.
-
-
-<p> When using this command, Apple dictionaries are specified using either the ISO 639-1 or ISO 639-2 standards for determining language designations, and the ISO 3166-1 standard for regional designations. The regional designation is used to distinguish between a language as used in one part of the world and that same language in another part of the world. For instance, French is "fr" in ISO 639-1 and "fre" in ISO 639-2; French (France) has regional designation "FR" and
-French (Canadian) has regional designation "CA". So to select a French dictionary in Canada, "spellcheck = fr" will work, and "spellcheck = fr-CA" would be even better.
-Since these are ISO standards, similar commands will work on other platforms, although TeXShop only runs on the Mac. The language standards are described in 
+<p>In the Check Spelling group, “Check spelling while typing” sets whether misspelled words are underlined in a document when it opens, and “Dictionary” is described below. The Method group chooses how TeX source is checked:</p>
 <dl>
-<dd><a href="http://www.loc.gov/standards/iso639-2/php/English_list.php">http://www.loc.gov/standards/iso639-2/php/English_list.php</a>
-</dd></dl>
-and the regional standards are at
-<dl>
-<dd><a href="https://www.iso.org/iso-3166-country-codes.html">https://www.iso.org/iso-3166-country-codes.html</a>
-</dd></dl>
+<dt>“Use LaTeX-aware spell checking (recommended)”</dt>
+<dd>The method described above. “Edit LaTeX exclusion rules…” at the end of its line opens the rules that say what is skipped.</dd>
+<dt>“Legacy method”</dt>
+<dd>macOS checks everything, except what the three options below it leave out: “Do not check LaTeX commands”, “Do not check selected parameters”, which skips the parameters of some commands with special words, such as <code>\usepackage</code>, and “Do not check comments”. These options work only while syntax highlighting is on, and Check Document Now does not follow them.</dd>
+</dl>
+<p>Files that are not TeX source, such as Sweave files, are always checked with the legacy method.</p>
 
-<p> Originally, TeXShop did nothing special for dictionaries and users just used "Spelling &amp; Grammar."
-Later a partial implementation of the above design was introduced. Finally, the full implementation was introduced in TeXShop 3.81. A very small number of users prefer the original design in which TeXShop just accepted the default behavior of "Spelling &amp; Grammar." If you are one of these users, you can switch back to the original behavior using the hidden default
+<h2>Exclusion rules</h2>
 
-	<dl>
-<dd> defaults write TeXShop OriginalSpelling YES
-	</dd></dl>
+<p>The rules of LaTeX-aware spell checking are in the file ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt. Open it with “Edit LaTeX exclusion rules…” in Settings or with Edit › Spelling and Grammar › Edit Spelling Exclusions…; it opens in TeXShop, and its top explains the format. For example, these lines skip the first argument of a command <code>\mycommand</code> and the contents of the environment <code>proof</code>:</p>
+<pre>skip-args  1  mycommand
+skip-body  proof</pre>
+<p>Changes take effect the next time spelling is checked. If the file is deleted, TeXShop makes a new copy of the default file the next time it starts. Help › Spell Checking Help describes spell checking in more detail.</p>
 
-	</p></p></p></p></p></p></p></p></p></p></p></p></p></p></p></p><p><a href="basic_preferences.htm#settings-search">Using Settings and Search Settings</a></p>
+<h2>Dictionaries</h2>
+
+<p>“Dictionary” in Settings › Spell Checking chooses the dictionary of documents that are opened from then on; documents already open keep theirs. The menu shows each language under its own name, such as Deutsch or Français, with its code, such as de or fr_CA, as the tool tip. Automatic Language lets macOS choose the language from the text.</p>
+
+<p>To use another dictionary for one document, choose it in the pop-up menu at the bottom of the Spelling and Grammar panel while that document is in front. Each open document keeps its own dictionary, and the panel switches when you switch documents. The choice is not kept when the document is closed.</p>
+
+<p>To give a document its dictionary every time it opens, put a line like this among its first 20 lines:</p>
+<pre>% !TEX spellcheck = de-DE</pre>
+<p>The value is a language code, as in the tool tips of the Dictionary menu: <code>fr</code> for French, or <code>fr-CA</code> for the French of Canada. The line is read when the document is opened, so save, close and open the document again after adding it. In a document with chapter files, put the line in each file.</p>
+
+<p>See <a href="basic_preferences.htm#settings-search">Using Settings and Search Settings</a> for finding settings in the Settings window.</p>
 </main>
 </body>
 </html>

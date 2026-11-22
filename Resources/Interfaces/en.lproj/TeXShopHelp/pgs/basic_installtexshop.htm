@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Installing TeXShop</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="install texshop; web site; texshop.app">
+<meta name="description" content="install TeXShop; texshop.app; first launch; Check for Updates; Settings Updates; prereleases; ~/Library/TeXShop; About This Release">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -24,15 +24,15 @@
 <li><a href="basic_spelling.htm">Checking Spelling</a></li>
 <li><a href="basic_autocompletion.htm">Key Bindings</a></li>
 <li><a href="basic_commandcompletion.htm">Command Completion</a></li>
-<li><a href="basic_latexpanel.htm">Latex Panel</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Panel</a></li>
 <li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
 <li><a href="basic_macros.htm">Macros</a></li>
 <li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
 <li><a href="basic_graphics.htm">Including Graphics</a></li>
 <li><a href="basic_printing.htm">Printing</a></li>
 <li><a href="basic_preferences.htm">Changing Settings</a></li>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a></li>
-<li><a href="basic_miscellaneous.htm">Miscellaneous</a></li>
+<li><a href="basic_templates.htm">Templates and Stationery</a></li>
+<li><a href="basic_miscellaneous.htm">Windows and Tabs</a></li>
 <li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
 <li><a href="basic_websites.htm">Useful Web Sites</a></li>
 <li><a href="basic_license.htm">License</a></li>
@@ -41,15 +41,27 @@
 <main id="content">
 <h1>Installing TeXShop</h1>
 
-<p> TeXShop is automatically installed by the MacTeX packages described in the previous section. It is also possible to obtain it from the TeXShop web site:</p>
-			<p><a href="https://texshop.app/">https://texshop.app/</a></p>
+<p>TeXShop requires macOS 14.6 or later. MacTeX installs it in /Applications/TeX. It can also be downloaded from the TeXShop web site:</p>
 
-<p> New versions of TeXShop sometimes have revised Macros, Engines, and Templates. These new versions do not automatically appear when updating from an older version of TeXShop. To get them, read "About This Release" under the Help menu. 
+<p><a href="https://texshop.app/">https://texshop.app/</a></p>
 
-<p> A brute force way to get new defaults is to go to ~/Library/TeXShop; here ~/Library is the Library folder in your home directory. Move the entire Macros (or Engines or Templates) folder to the desktop. The next time TeXShop runs, it will recreate the missing folder. Then merge in any personal changes you may have made from the old folder on the desktop.</p>
+<p>Move the downloaded TeXShop to /Applications or /Applications/TeX. After installing MacTeX, choose TeXShop › Check for Updates... once, since MacTeX may contain an earlier version.</p>
 
-<p>Much easier ways to update are described in Help's "How do I configure TeXShop?" section.
-		
+<h2>The first launch</h2>
+
+<p>When TeXShop starts for the first time, it looks for TeX and Ghostscript and lists the installations it finds, newest first; choose one and click OK. It then asks for an engine profile, which sets up typesetting for the engine you use. Both can be changed later in Settings › Typesetting; see <a href="basic_typesetting.htm#engine">Choosing the engine</a>.</p>
+
+<h2>Updates</h2>
+
+<p>TeXShop › Check for Updates... looks for a new version. When there is one, TeXShop shows what changed and offers to install it, then restarts where you left off. In Settings › Updates, “Automatically check for updates” and “Check interval” set whether and how often TeXShop looks by itself. Turn on “Update to prereleases when available” to be offered beta versions as well; a beta version of TeXShop turns it on when it first runs.</p>
+
+<p>After an update, glance at Help › About This Release. It tells you when there is something to do by hand, usually nothing.</p>
+
+<h2>The folder ~/Library/TeXShop</h2>
+
+<p>TeXShop keeps the files you can change, such as the templates, macros, engines, key bindings, the command completion list and the themes, in the folder TeXShop in the Library folder of your home folder. TeXShop › Open ~/Library/TeXShop shows it in the Finder. TeXShop creates the folder when it first runs. If one of its files is missing or damaged, TeXShop puts its own copy in place without an error message and keeps the damaged file in a folder of ~/Library/TeXShop.</p>
+
+<p>An update does not change the files you may have edited, such as the macros and the active engines; it renews only a few folders of optional items. When a version brings new macros, engines or other items, About This Release says so, and <a href="configure_correctinstall.htm">Obtaining New Library Items</a> explains how to add them.</p>
 </main>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Matrix Panel</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="matrix panel">
+<meta name="description" content="Matrix Panel; matrix; array; tabular; table; delimiters; identity matrix; spreadsheet; matrixpanel_1.plist">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -24,15 +24,15 @@
 <li><a href="basic_spelling.htm">Checking Spelling</a></li>
 <li><a href="basic_autocompletion.htm">Key Bindings</a></li>
 <li><a href="basic_commandcompletion.htm">Command Completion</a></li>
-<li><a href="basic_latexpanel.htm">Latex Panel</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Panel</a></li>
 <li><a href="basic_matrixpanel.htm" class="current">Matrix Panel</a></li>
 <li><a href="basic_macros.htm">Macros</a></li>
 <li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
 <li><a href="basic_graphics.htm">Including Graphics</a></li>
 <li><a href="basic_printing.htm">Printing</a></li>
 <li><a href="basic_preferences.htm">Changing Settings</a></li>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a></li>
-<li><a href="basic_miscellaneous.htm">Miscellaneous</a></li>
+<li><a href="basic_templates.htm">Templates and Stationery</a></li>
+<li><a href="basic_miscellaneous.htm">Windows and Tabs</a></li>
 <li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
 <li><a href="basic_websites.htm">Useful Web Sites</a></li>
 <li><a href="basic_license.htm">License</a></li>
@@ -40,16 +40,24 @@
 </nav>
 <main id="content">
 <h1>Matrix Panel</h1>
+<p>Window › Matrix Panel… opens a panel that writes matrices and tables for you. Fill in the entries in its table, choose how the result should look, and insert it into the source at the insertion point.</p>
 
-		<P>The Windows menu contains an item &quot;Matrix Panel...&quot. Choosing this item will open a panel allowing easy creation of matrices. Only a small space is provided for each matrix entry, but larger items can be edited elsewhere and pasted into the matrix. This wonderful panel is the work of Jonas Zimmermann, who can be reached at <a href="mailto:zimmerleut@gmx.de">zimmerleut@gmx.de</a>.</P>
-<p> In TeXShop 1.35, the Matrix Panel can also create tables. This panel can be configured using the
-file "matrixpanel_1.plist" in ~/Library/TeXShop/MatrixPanel. The structure of this file was revised
-in 1.35; an old "matrixpanel.plist" file may remain from TeXShop 1.34.</p>
-<p>The table works like a spreadsheet. Click a cell to choose it, drag or Shift-click to choose several, and type to replace the value; double-click, press F2 or press Control-U to edit it. Return moves down, Tab moves right and the arrow keys move in any direction; Delete empties the cells chosen. Copy and Paste exchange cells with spreadsheet applications. Drag the number of a row to move the row, and press Command-Return to insert the matrix. A matrix can have up to 999 rows and columns; the cells outside the matrix keep their values, shown in gray.</p> 
-		<ul>
-			
-		</ul>
-	
+<h2>Making a matrix or table</h2>
+<ol>
+<li>Enter the size in Rows and Columns, up to 999 each.</li>
+<li>Under Environment, choose matrix for a matrix in a formula (an <code>array</code> environment) or tabular for a table of text. With tabular, “Embed in table environment” puts the table into a <code>table</code> float with a caption and a label.</li>
+<li>For a matrix, choose the left and right delimiters. The period leaves that side without a delimiter, and the last button uses the delimiter typed in the field beside it.</li>
+<li>The two buttons with pictures of a matrix add a border around the entries and lines between them.</li>
+<li>Fill in the entries. Clear empties them all; Identity Matrix and Zero Matrix fill them with an identity matrix or with zeros.</li>
+<li>Click Insert or press <kbd>⌘Return</kbd>.</li>
+</ol>
+
+<h2>Working in the table</h2>
+<p>The table works like a spreadsheet. Click a cell to choose it, drag or Shift-click to choose several, and type to replace the value; double-click, press F2 or press Control-U to edit it. Return moves down, Tab moves right and the arrow keys move in any direction; Delete empties the cells chosen. Copy and Paste exchange cells with spreadsheet applications. Drag the number of a row to move the row. Undo and Redo work on the table while the panel is active.</p>
+<p>When the matrix is made smaller, the cells outside it keep their values, shown in gray, and come back when it is made larger again. Make the panel larger to see more of the table.</p>
+
+<h2>Customizing the inserted code</h2>
+<p>The code the panel writes around the entries is kept in <code>~/Library/TeXShop/MatrixPanel/matrixpanel_1.plist</code>: the beginning and end of the environments, the delimiters, the separators between entries and between rows, the lines of a border or grid, and the letter <code>c</code> that sets the alignment of each column. For example, change <code>c</code> to <code>r</code> to align the columns to the right. Keep the number and the order of the strings in the file, and restart TeXShop after changing it. See <a href="advanced_plist.htm">Plist Files</a>.</p>
 </main>
 </body>
 </html>

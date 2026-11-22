@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Setting a Project Root File</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="root file; several smaller files; project">
+<meta name="description" content="root file; % !TEX root; project; chapter files; include; input; Source ⇔ Preview; Project Root File">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -15,14 +15,14 @@
 <li><a href="advanced_personaltetex.htm">Adding Personal Files to TeX Live</a></li>
 <li><a href="advanced_moretetex.htm">More About TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a></li>
-<li><a href="advanced_addengine.htm">Adding Additional Typesetting Engines</a></li>
+<li><a href="advanced_addengine.htm">Adding Typesetting Engines</a></li>
 <li><a href="advanced_formats.htm">Making and Using TeX Formats</a></li>
-<li><a href="advanced_xetex.htm">XeTeX and XeLaTeX</a></li>
+<li><a href="advanced_xetex.htm">XeLaTeX and LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt and MetaPost</a></li>
 <li><a href="advanced_encoding.htm">Encodings</a></li>
-<li><a href="advanced_Japan.htm">Japan</a></li>
+<li><a href="advanced_Japan.htm">Typesetting in Japanese</a></li>
 <li><a href="advanced_root.htm" class="current">Setting a Project Root File</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
+<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a></li>
 <li><a href="advanced_removeaux.htm">Removing AUX Files</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
@@ -33,48 +33,47 @@
 <li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a></li>
 <li><a href="advanced_syntaxcolor.htm">Syntax Highlighting</a></li>
 <li><a href="advanced_coloredtext.htm">Colored Text</a></li>
-<li><a href="advanced_plist.htm">Plist Files</a></li>
+<li><a href="advanced_plist.htm">Files in ~/Library/TeXShop</a></li>
 <li><a href="advanced_localization.htm">Localizations</a></li>
 </ul>
 </nav>
 <main id="content">
 <h1>Setting a Project Root File</h1>
+<p>Large documents are often split into several files: a root file with the preamble that includes a file for each chapter. For example, a root file <code>Main.tex</code> could read</p>
+<pre>\documentclass[11pt]{book}
+\includeonly{Chapter2/two}
+\begin{document}
+\include{Chapter1/one}
+\include{Chapter2/two}
+\include{Chapter3/three}
+\end{document}</pre>
+<p>When you edit <code>two.tex</code>, TeXShop should typeset <code>Main.tex</code>, not the chapter, which has no preamble. To tell it so, put this line in one of the first twenty lines of each chapter file:</p>
+<pre>% !TEX root = ../Main.tex</pre>
+<p>The root file itself needs no such line. The name of the root file can be given</p>
+<ul>
+<li>by its name alone, <code>Main.tex</code>, when it is in the same folder as the chapter file;</li>
+<li>relative to the folder of the chapter file, <code>../Main.tex</code> or <code>../../Main.tex</code>;</li>
+<li>by its full path, <code>/Users/me/Book/Main.tex</code>, which must be changed when the project moves.</li>
+</ul>
+<p>The Root macro in the Macros menu inserts the line: it asks for the root file and offers a relative or an absolute line, replacing an earlier root line.</p>
 
-		<P>It is common to split large input files into several smaller files controlled by a root file. For instance, the root file of a book project might have the form</P>
-		<dl>
-			<dd><tt>\documentclass[11pt]{book}</tt>
-			<dd><tt>\includeonly{Chapter2/two}</tt>
-			<dd><tt>\textwidth = 6.5 in</tt>
-			<dd><tt>\textheight = 9 in</tt>
-			<dd><tt>\begin{document}</tt>
-			<dd><tt>\include{Chapter1/one}</tt>
-			<dd><tt>\include{Chapter2/two}</tt>
-			<dd><tt>\include{Chapter3/three}</tt>
-			<dd><tt>\end{document}</tt>
-		</dl>
-		<p>This root file contains formatting commands for the entire project, but the subject matter is contained in files one.tex, two.tex, and three.tex. The second line above tells TeX to typeset chapter two only, speeding up typesetting while chapter two is being written. When the book is complete, this line can be commented out and the entire book can be typeset a final time.</p>
-		<p>While chapter two is being written, it would be natural to open the file two.tex in TeXShop. But after changes are made to this input file, TeXShop should not typeset two.tex; instead it should typeset the root file. TeXShop can be told to do so as follows.  Indicate the root file in one of the first twenty lines of each chapter file by writing
-	<dl>
-	<dd> % !TEX root = ../Main.tex
-	</dl>
-	</p>
-	<p> Note that only the included chapter files need this command; the Root file itself requires no modification.</p>
-		<p>If the root file is in the same folder as the input file, it is enough to give its name, including the &quot;.tex&quot; extension. For instance, if the root file is named Main, you can enter Main.tex in the first source line or the dialog window.</p>
-		<p>If the root file is in a different directory, its name can be given relative to the location of the input file. In the above example, the various chapters are contained in subfolders within the folder containing the root file. In that case, you could enter ../Main.tex in the first source line or dialog window, showing the location of the root file relative to the chapter input file.</p>
-		<p>Finally, the name of the root can be given with an absolute name, as in /Users/me/Main.tex.</p>
-		<p>If the entire TeX source is contained in a single file, it is not necessary to set the root project name.</p>
-		<p> TeXShop has a Macro in the Macros menu which makes setting this "root line" almost automatic.</p>
-		
-		<p> Setting a project root is also important for synchronization. If input lines have a "% !TEX root = ..." line, then synchronizing from the Preview window to the Source window will open the appropriate source chapter file and bring make that source window active. </p>		
-		<p> If a root file is active, typing command-1 when a given source window is at the front will activate the corresponding preview window. Typing command-1 again will activate the source window. Since a preview window may correspond to several source windows, command-1 will activate the source window which previously activated the preview window, or the root source if no previous command-1 was entered.  
-		</p>
-		<ul>
-			
-		</ul>
-		
-<p> TeXShop had an alternate method of setting the root file, activated by the menu command "Set Project Root..." This method will continue to be supported in the future, but should not be used because the "% !TEX root = ..." method is more robust. Consequently, the "Set Project Root..." command has been removed from TeXShop menus. When the "Set Project Root.." command was used to indicate a root file, TeXShop remembered the name of the root file by writing the information to a file with the same name as the input file and the extension &quot;.texshop&quot;. For instance, if the input for chapter two was in two.tex, TeXShop wrote the name of the root in two.texshop in the same directory as two.tex.  If the file two.texshop was later thrown away, TeXShop would revert to typesetting two.tex rather than Main.tex. </p>
+<h2>What the root line does</h2>
+<ul>
+<li>Typeset in a chapter file typesets the root file, and the Preview window of the root file shows the whole document. A <code>% !TEX program</code> line or other magic lines for typesetting belong in the root file.</li>
+<li>Goto Error opens the file that contains an error, if it is not open, and goes to the line.</li>
+<li>Synchronization from the Preview window opens the chapter file that contains the clicked spot; see <a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a>.</li>
+<li>Trash Aux Files removes the auxiliary files of the root file; see <a href="advanced_removeaux.htm">Removing AUX Files</a>.</li>
+<li>Window › Source ⇔ Preview (<kbd>⌘1</kbd>) in a chapter file brings the Preview window of the root file to the front. Pressing it again in the Preview window returns to the source window from which you came, or to the root file if you did not come from a source window.</li>
+</ul>
 
-	
+<h2>Opening a chapter file</h2>
+<p>When a chapter file with a root line is opened, TeXShop also opens the root file and its Preview window. Two items in Settings › General › Project Root File control this: “Open the root file when opening a document” turns it on or off, and “Miniaturize the opened root window” sends the source window of the root file to the Dock, since it is rarely edited while you work on a chapter.</p>
+
+<h2>Finding and replacing in the whole project</h2>
+<p>To search all files of a project at once, choose Edit › Find › Find in TeX Sources with the Same TEX root… in one of its files. It searches the root file and the files that name it in a root line. See <a href="basic_texrootsearch.htm">Find in TeX Sources</a> and <a href="basic_find.htm">Find and Replace</a>.</p>
+
+<h2>Root files named in .texshop files</h2>
+<p>A file with the extension <code>.texshop</code> next to a chapter file, such as <code>two.texshop</code> for <code>two.tex</code>, can also name the root file, and TeXShop still reads it. No menu command creates such files; use a <code>% !TEX root</code> line, which travels with the source.</p>
 </main>
 </body>
 </html>

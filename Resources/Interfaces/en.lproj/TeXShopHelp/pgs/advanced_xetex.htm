@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>XeTeX and XeLaTeX</title>
+<title>XeLaTeX and LuaLaTeX</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="bibtex; bibliography; citation">
+<meta name="description" content="XeLaTeX; LuaLaTeX; XeTeX; LuaTeX; fontspec; system fonts; OpenType; Unicode; engine profile">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -15,14 +15,14 @@
 <li><a href="advanced_personaltetex.htm">Adding Personal Files to TeX Live</a></li>
 <li><a href="advanced_moretetex.htm">More About TeX Live</a></li>
 <li><a href="advanced_otherdistributions.htm">Coexisting with Other TeX Distributions</a></li>
-<li><a href="advanced_addengine.htm">Adding Additional Typesetting Engines</a></li>
+<li><a href="advanced_addengine.htm">Adding Typesetting Engines</a></li>
 <li><a href="advanced_formats.htm">Making and Using TeX Formats</a></li>
-<li><a href="advanced_xetex.htm" class="current">XeTeX and XeLaTeX</a></li>
+<li><a href="advanced_xetex.htm" class="current">XeLaTeX and LuaLaTeX</a></li>
 <li><a href="advanced_context.htm">ConTeXt and MetaPost</a></li>
 <li><a href="advanced_encoding.htm">Encodings</a></li>
-<li><a href="advanced_Japan.htm">Japan</a></li>
+<li><a href="advanced_Japan.htm">Typesetting in Japanese</a></li>
 <li><a href="advanced_root.htm">Setting a Project Root File</a></li>
-<li><a href="advanced_pdfsync.htm">Pdfsync</a></li>
+<li><a href="advanced_pdfsync.htm">Synchronizing Source and Preview</a></li>
 <li><a href="advanced_removeaux.htm">Removing AUX Files</a></li>
 <li><a href="advanced_bibtex.htm">BibTeX</a></li>
 <li><a href="advanced_makeindex.htm">MakeIndex</a></li>
@@ -33,48 +33,38 @@
 <li><a href="advanced_otherfiles.htm">Opening Other Files with TeXShop</a></li>
 <li><a href="advanced_syntaxcolor.htm">Syntax Highlighting</a></li>
 <li><a href="advanced_coloredtext.htm">Colored Text</a></li>
-<li><a href="advanced_plist.htm">Plist Files</a></li>
+<li><a href="advanced_plist.htm">Files in ~/Library/TeXShop</a></li>
 <li><a href="advanced_localization.htm">Localizations</a></li>
 </ul>
 </nav>
 <main id="content">
-<h1>XeTeX and XeLaTeX</h1>
+<h1>XeLaTeX and LuaLaTeX</h1>
+<p>XeLaTeX and LuaLaTeX are versions of LaTeX that read UTF-8 source directly and use the OpenType and TrueType fonts installed on the Mac as well as the fonts of TeX Live. Any script that Unicode encodes can be typed into the source and typeset, provided a font has its characters. Both are part of TeX Live, and both typeset ordinary LaTeX documents without changes.</p>
 
-<p> Recently, Jonathan Kew introduced XeTeX and XeLaTeX. These programs can use
-Macintosh fonts directly within a TeX document. XeTeX and XeLaTeX require unicode source and
-thus can deal with any unicode character; for example, with them you can type Arabic or Hebrew in the source document
-and later see
-Arabic or Hebrew in the output. TeXShop's editor will correctly input these characters from
-right to left. XeTeX is part of TeX Live, so it is installed by MacTeX. For additional details, consult </p>
-<dl>
-			<dd><a href="http://scripts.sil.org/xetex">http://scripts.sil.org/xetex</a>
-		</dl>
+<h2>Typesetting with XeLaTeX or LuaLaTeX</h2>
+<p>There are three ways, from the most general to the most specific:</p>
+<ul>
+<li><strong>Engine profile.</strong> In Settings › Typesetting › Engine Profile, choose XeLaTeX or LuaLaTeX. The profile sets the LaTeX and plain TeX commands of Direct PDF to xelatex and xetex, or lualatex and luatex, so that the LaTeX choice in the toolbar and Typeset › LaTeX use that engine. A sheet lists the values the profile sets before you confirm.</li>
+<li><strong>Engine file.</strong> The engines LuaLaTeX and XeLaTeX are in the pop-up menu beside the Typeset button. To typeset new documents with one of them, choose “Engine File” in Settings › Typesetting › Engine › Typeset New Documents With, and the engine in the Engine File menu; LuaLaTeX is chosen there at first.</li>
+<li><strong>Magic comment.</strong> A line at the top of the source chooses the engine for that document whatever else is set:
+<pre>% !TEX program = LuaLaTeX</pre></li>
+</ul>
+<p>For the Japanese version of LuaLaTeX, see <a href="advanced_Japan.htm">Typesetting in Japanese</a>.</p>
 
-<p> To understand how this works, here is a brief XeLaTeX source document, and the resulting
-output. The Arabic and Hebrew
-characters were obtained by accessing the International Panel in System Preferences, selecting the
-Input Menu tab, and checking Arabic and Hebrew; a small flag appeared on the menu bar and a user could
-switch keyboards by selecting an appropriate flag.</p>
-<IMG HEIGHT="356" WIDTH="328" border="0" SRC="../gfx/source.jpg">
+<h2>Using the fonts of the Mac</h2>
+<p>The fontspec package selects fonts by the names they have in the Font Book application. For example:</p>
+<pre>% !TEX program = XeLaTeX
+\documentclass{article}
+\usepackage{fontspec}
+\setmainfont{Palatino}
+\setsansfont{Helvetica Neue}
+\begin{document}
+Text in Palatino, \textsf{and in Helvetica Neue}.
+\end{document}</pre>
+<p>Without fontspec, or without a font command, both engines use Latin Modern, the standard font of LaTeX. Packages such as polyglossia or babel set up hyphenation and conventions for other languages; their documentation is available with Help › Show Help for Package….</p>
 
-<IMG HEIGHT="155" WIDTH="349" border="0" SRC="../gfx/output.jpg">
-
-<p> TeXShop now supports XeTeX and XeLaTeX:</p>
-<dl>
-<li> XeTeX and XeLaTeX are available in the pull-down typesetting menu on the source window
-<li> A user can make XeTeX or XeLaTeX the default typesetting option in Settings
-<li> If one of the first twenty lines of the source has the form
-<dl>
-<dd> % !TEX encoding = UTF-8 Unicode
-</dl>
-then that source will be loaded and saved with UTF-8 Unicode encoding regardless of the default encoding
-setting in Settings
-<li> If one of the first twenty lines of the source has the form
-<dl>
-<dd> % !TEX TS-program = xetex or % !TEX TS-program = xelatex
-</dl>
-then the appropriate program will be used regardless of the typesetting option chosen in the menu
-</dl>
+<h2>Typing other scripts</h2>
+<p>To type Greek, Cyrillic, Arabic, Hebrew or other scripts, add their input sources in System Settings › Keyboard and switch between them with the input menu in the menu bar. TeXShop can show lines in Arabic, Hebrew and Persian aligned to the right; see <a href="advanced_encoding.htm">Encodings</a>. Save such documents in UTF-8, the default encoding for new documents.</p>
 </main>
 </body>
 </html>

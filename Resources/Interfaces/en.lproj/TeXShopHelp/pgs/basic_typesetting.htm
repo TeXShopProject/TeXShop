@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Typesetting Documents</title>
 <meta name="copyright" content="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<meta name="description" content="typesetting; tag; open; multiple files; modify behavior">
+<meta name="description" content="typesetting; first document; Typeset; console; errors; Goto Error; Abort; Trash Aux Files; engine profile; % !TEX program; root file; SyncTeX; Use One Window">
 <link href="../sty/screen.css" rel="stylesheet">
 </head>
 <body>
@@ -24,15 +24,15 @@
 <li><a href="basic_spelling.htm">Checking Spelling</a></li>
 <li><a href="basic_autocompletion.htm">Key Bindings</a></li>
 <li><a href="basic_commandcompletion.htm">Command Completion</a></li>
-<li><a href="basic_latexpanel.htm">Latex Panel</a></li>
+<li><a href="basic_latexpanel.htm">LaTeX Panel</a></li>
 <li><a href="basic_matrixpanel.htm">Matrix Panel</a></li>
 <li><a href="basic_macros.htm">Macros</a></li>
 <li><a href="basic_toolbar.htm">Toolbar and AppleScript</a></li>
 <li><a href="basic_graphics.htm">Including Graphics</a></li>
 <li><a href="basic_printing.htm">Printing</a></li>
 <li><a href="basic_preferences.htm">Changing Settings</a></li>
-<li><a href="basic_templates.htm">Modifying the Templates Menu</a></li>
-<li><a href="basic_miscellaneous.htm">Miscellaneous</a></li>
+<li><a href="basic_templates.htm">Templates and Stationery</a></li>
+<li><a href="basic_miscellaneous.htm">Windows and Tabs</a></li>
 <li><a href="basic_bugs.htm">Sending Bug Reports</a></li>
 <li><a href="basic_websites.htm">Useful Web Sites</a></li>
 <li><a href="basic_license.htm">License</a></li>
@@ -41,64 +41,55 @@
 <main id="content">
 <h1>Typesetting Documents</h1>
 
-		<P>To use TeXShop, type your LaTeX input in the editing window it provides. Then push the &quot;Typeset&quot; button at the top of the window. The input will be saved and pdflatex will run. A second window will open displaying messages from tex. If there are errors, pdflatex will halt; push &quot;return&quot; to skip the errors one by one, or type one of the standard TeX inputs to quit, run continuously, etc. After the document has been typeset, a new window will appear showing the resulting pdf file. You can switch between the two windows by typing command-1.</P>
-		
-<p> A standard editing session consists of repeating this operation over and over. New additions
-are made to the source, when enough additions are made the document is typeset again, and the preview window is consulted to see if the additions typeset correctly. Some users like to enter substantial amounts of information before typesetting, while others tend to typeset after every new line. LaTeX can typeset 400 page books in just a few seconds, so it is not "expensive" to typeset often.
-</p>
-<p> Because typesetting is so common, there is a keyboard shortcut to do it: push command-T,
-the command key and the "T" key simultaneously, to typeset. Later on it will turn out
-that there are many typesetting engines: TeX, LaTeX, XeTeX, LuaTeX, and on an on. TeXShop has been designed so the choice of typesetting engine can be made once, and from then on the menu command command-T typesets with the correct engine. So this shortcut always works.
-</p>
-<p> When LaTeX typesets, it goes through the source just once. But a few operations require multiple passes. For instance, if a document has a table of contents, LaTeX has to read through the entire document to determine chapter titles, and their starting pages. LaTeX records this information in a file with extension ".aux". When the document is typeset again, this file is read and the additional information needed is filled in. 
-</p>
-<p>
-While the document is being written, this structure can be ignored, and a single typeset suffices. Occasionally references to future material will be off a few pages. When the document is ready to final checking, it will be run through LaTeX two or three times to update all necessary information.
-</p>
-<p> It is common to find typesetting errors which must be fixed before proceeding. Even the
-best TeX users run into them often. On very rare occasions, these errors can corrupt the .aux
-file, so that even after the error is fixed, the document will not typeset. In these situations,
-it is necessary to throw away the .aux file before proceeding. TeXShop has several commands to
-do this, but the easiest is to use the keyboard shortcut option-command-T to typeset; this
-command throws away the .aux file and then typesets. Notice that option-command-T should only
-be used if you suspect a corrupt aux file, since the aux file is required to for typesetting
-operations which require multiple passes.
-</p>
+<h2>A first document</h2>
 
+<p>Choose File › New. In the toolbar of the new window, choose LatexTemplate in the Templates menu; the window fills with the lines every LaTeX document needs. Write your text between <code>\begin{document}</code> and <code>\end{document}</code>. A blank line starts a new paragraph.</p>
 
-		<p>After typesetting, press the mouse on a section of the pdf output display to magnify the region near the cursor. Double click to magnify a larger region; triple click to magnify a still larger region. Notice that the default region size can be selected using
-an element of the toolbar at the top of the page. </p>
-		<p>To typeset a TeX document, push the button labeled LaTeX and select TeX instead of LaTeX. If you usually use TeX, choose it as your default program in the Settings window.</p>
-		<p>If you notice an error, you can immediately fix it in the editing window and push the &quot;Typeset&quot; button again without halting the first invocation of pdflatex. The program will kill that invocation and run another. </p>
-		<p>TeXShop remembers the source lines of the first twenty errors. To cycle through these lines in the source file, choose &quot;Go To Error&quot; in the Edit menu or type the keyboard shortcut for this menu item.</p>
-		<p>When you fix errors and typeset again, the viewer will remember the page you were previously viewing.</p>
-		<p>If a line in the source begins with the characters &quot;%:&quot;, TeXShop interprets the remaining word or words on the line as a &quot;tag&quot; and adds these words to the Tag pulldown menu. Choosing a tag entry in this menu will scroll to the appropriate line in the source file. Lines which begin with the words \section, \subsection, \subsubsection, or \chapter are automatically added to the Tag menu. However, this behavior can be changed by typing the following command in Apple's Terminal program:</p>
-		<dl>
-			<dd><tt>defaults write TeXShop TagSections NO</tt>
-		</dl>
-		<p>TeXShop can show multiple documents. If you choose &quot;New&quot; or &quot;Open,&quot;  your original document will remain and additional windows for the new document will open. If you open a TeX file in a folder which contains a pdf file with the same name, this pdf will also appear.</p>
-		<p>Some users like to divide their source into multiple files controlled by a master file using an \input command. TeXShop always saves the source file before typesetting.</p>
-		<p>You can start TeXShop by double clicking on a document with extension &quot;.tex&quot;. The program will open that input document and (if it exists) the associated pdf document.</p>
-		<p>You can close the pdf window at any time. It will reappear when the document is typeset again. If you close the input window then both the input and output windows will close (windows from other TeX documents will remain open). Therefore, if an input source window is cluttering the screen, hide it instead of closing it.</p>
-		<p>pdftex and pdflatex are unix programs derived from Knuth's TeX program. The syntax of TeX does not allow spaces in filenames, so source files created with TeXShop should be given names without spaces. TeXShop itself has no problem with spaces in filenames.</p>
-	<p>
-	The preview window's behavior can be changed using the "Magnification" and "Display Format" items in the Preview menu. For example, you can configure the scroller to scroll through all of the document pages; the preview window can show two pages at a time; resizing the window can be made to change the preview magnification. Experiment until you find the mode you prefer, and then select this mode in Settings to make it permanent.
-</p>
-	<p>
-	Use the magnification tools in the Preview window's toolbar to magnify portions of text. By double or triple clicking before holding down the mouse, a larger portion of the text will be magnified. The
-magnified region can be changed during magnification by pushing the apple, option, control, and shift keys.
-</p>
-	<p>
-	Use the pdf selection tool to select a portion of the preview window and drag it to the desktop or another program's window. The selection can also be copied and then pasted into another document. By default, this selected region contains only foreground text in pdf format. This is useful, for example, when dragging text to Keynote; the slide's background will show behind the text and the text can be
-resized without losing clarity. 
-</p>
-	<p>
-	Use the text selection tool to select text in the preview window. This text can be copied and then pasted to a word processor. If the preview contains links, these links can be activated by clicking with the text selection tool. Use the Back/Forward commands to return to the original page. Use the Find command in the window's drawer to search for text in the pdf document. 
-</p>
+<p>Click Typeset in the toolbar, or press <kbd>⌘T</kbd> (Typeset › Typeset). The first time, TeXShop asks where to save the document. TeX writes several files next to the source, so give each document a folder of its own. TeXShop then runs TeX and opens a Preview window with the typeset document.</p>
 
-<p> You can jump between the source and preview windows by holding down the Apple command key while clicking on a word or phrase. If the phrase is in the source window, the preview window will scroll to the appropriate spot and the typeset phrase will be circled in red. If the phrase is in the preview window, the source window will open (if necessary) and scroll to the appropriate spot, and the source phrase will
-be highlighted in yellow.</p>  
-	
+<p>From then on, write, typeset, and look at the result. TeXShop saves the source before every typesetting, and the Preview stays at the page you were reading. <kbd>⌘T</kbd> works in the source, the Preview and the console, and <kbd>⌘1</kbd> (Window › Source ⇔ Preview) switches between the source and its Preview. Settings › Typesetting › After Typesetting chooses which window comes forward when TeX ends.</p>
+
+<p>Opening a .tex file also opens the PDF file of the same name, if there is one. Closing the Preview window leaves the source open, and the Preview returns at the next typesetting; closing the source window closes the document.</p>
+
+<h2>The console</h2>
+
+<p>While TeX runs, its messages appear in the console. Settings › Console › Show console chooses whether the console comes forward at every typesetting (always) or only when TeX reports an error (when error occurs). File › Show Console (<kbd>⌘0</kbd>) brings forward the console of the active document, and <kbd>⌘0</kbd> in the console goes back to the window you came from. Console text can be selected and copied at any time.</p>
+
+<p>When TeX finds an error, it prints a message at the end of the console and waits for an answer. Type it in the field at the bottom of the console and press Return; Return alone goes on to the next error, and the field lists the other answers TeX accepts. To stop TeX, click Abort in the console or choose File › Abort Typesetting (<kbd>⌃⌥⌘A</kbd>).</p>
+
+<h2>Finding errors</h2>
+
+<p>Goto Error in the console, or Edit › Goto Error (<kbd>⌃⌘E</kbd>), scrolls the source to the line of the first error and highlights it; choose it again for the next error. If the error is in another file of the project, that file is opened. Fixing a few errors and typesetting again is often quickest, since one error can cause several others. Goto Error relies on the file names and line numbers that TeX writes with <code>-file-line-error</code>, which the commands and engine files of TeXShop use.</p>
+
+<p>LaTeX writes information for its next run, such as the table of contents and the cross-references, in an .aux file and other auxiliary files, so a document may need two or three runs until every reference is right. An error can leave these files damaged, and the document may then fail to typeset even after the error is fixed. Choose Typeset › Trash Aux &amp; Typeset (<kbd>⌥⌘T</kbd>) to move the auxiliary files to the Trash and typeset again, or File › Trash Aux Files (<kbd>⌃⌘A</kbd>), which is also a button in the console. See <a href="advanced_removeaux.htm">Removing AUX Files</a>.</p>
+
+<h2 id="engine">Choosing the engine</h2>
+
+<p>Settings › Typesetting › Engine Profile sets up typesetting for an engine in one step. Choose the profile of the engine you use; a sheet lists the values it sets, and OK sets them. In the sheet, “Run LaTeX” can be set to With latexmk, so that latexmk runs BibTeX, the index and further passes as needed. Once one of these values is changed, the menu shows Custom. The TeXShop Manual lists what the profiles set.</p>
+
+<p>For a single document, choose the engine in the Program pop-up menu next to Typeset in the toolbar. It lists LaTeX, plain TeX and the engine files in ~/Library/TeXShop/Engines, such as LuaLaTeX and XeLaTeX, and the choice holds for that window. To make it part of the document, put a line like this among the first 20 lines of the source:</p>
+
+<pre>% !TEX program = LuaLaTeX</pre>
+
+<p><kbd>⌘T</kbd> then always typesets the file with that engine. The name is that of an engine file, or one of <code>pdflatex</code>, <code>latex</code>, <code>pdftex</code> and <code>tex</code> for the built-in LaTeX and plain TeX (see <a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>). Macros › Program inserts the line, with the engine chosen from a list. Settings › Typesetting › Typeset New Documents With sets the engine of documents without such a line. See <a href="advanced_addengine.htm">Adding Additional Typesetting Engines</a> for engine files.</p>
+
+<p>The Typeset menu also runs BibTeX, MakeIndex and MetaPost on the document; see <a href="advanced_bibtex.htm">BibTeX</a> and <a href="advanced_makeindex.htm">MakeIndex</a>.</p>
+
+<h2>Documents in several files</h2>
+
+<p>A book is often split into a root file, which has the preamble, and chapter files that it reads with <code>\include</code> or <code>\input</code>. Put a line such as <code>% !TEX root = ../Book.tex</code> at the top of each chapter file, naming the root file by its path from the chapter file. <kbd>⌘T</kbd> in a chapter file then typesets the root file, and Goto Error and SyncTeX find the right chapter file. See <a href="advanced_root.htm">Setting a Project Root File</a>.</p>
+
+<h2>Going between the source and the Preview</h2>
+
+<p>Command-click a word in the source, and the Preview scrolls to the typeset text and marks it. Command-click in the Preview, and the source comes forward with the matching text marked; in a document with chapter files, the chapter file opens if needed. The match is not always exact, so look around the marked place. The colors of the marks are set in Settings › Themes › SyncTeX.</p>
+
+<p>This uses SyncTeX, which the engines support when run with <code>-synctex=1</code>, as the commands and engine files of TeXShop are; Settings › Typesetting › Sync Method should be SyncTeX (Recommended). The SyncTeX file of a document records where its files are, so after a project folder has been moved, typeset once more before syncing.</p>
+
+<h2>Arranging the windows</h2>
+
+<p>Window › Use One Window puts the source and its Preview side by side in a single window, and Window › Use Separate Windows separates them again. To open every document this way, set Settings › General › Windows › Source and Preview to Use One Window; “Source position in the combined window” puts the source on the left or the right. Drag the divider to give the source more or less room; TeXShop opens every combined window with the same share. Documents with chapter files do not work in a single window, so keep separate windows for them. File › New opens only a source window: typeset the new document first, then choose Use One Window.</p>
+
+<p>With separate windows, place and size the source and Preview windows as you like, then choose Source › Save Source Position and Preview › Save Preview Position; new windows open there.</p>
 </main>
 </body>
 </html>
