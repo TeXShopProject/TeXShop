@@ -241,7 +241,6 @@
 "catalog.preview.0.6.title" = "Ferestre pop-up";
 "catalog.preview.0.6.note" = "Valoarea inițială pentru documentele deschise de acum înainte. Într-un document deschis, se schimbă din meniul „Previzualizare”.";
 "catalog.preview.0.8.title" = "Arată numărul paginii în ferestrele pop-up ale linkurilor";
-"catalog.preview.0.8.note" = "Numărul pe care PDF-ul îl dă paginii legate, în colțul din dreapta jos.";
 "catalog.preview.0.7.title" = "Păstrează mărirea și formatul de afișare pe ecran complet";
 "catalog.preview.0.7.note" = "O fereastră împărțită rămâne și ea împărțită. Când opțiunea este dezactivată, ecranul complet anulează împărțirea și folosește tipul de mărire și formatul de afișare folosite ultima dată pe ecran complet.";
 "group.preview.1.title" = "Aranjarea paginilor duble";

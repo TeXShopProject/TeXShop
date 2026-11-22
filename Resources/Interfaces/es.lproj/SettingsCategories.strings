@@ -241,7 +241,6 @@
 "catalog.preview.0.6.title" = "Desplegar enlaces";
 "catalog.preview.0.6.note" = "Valor inicial para los documentos que se abran a partir de ahora. En un documento abierto, se cambia en el menú «PDF».";
 "catalog.preview.0.8.title" = "Mostrar el número de página al desplegar enlaces";
-"catalog.preview.0.8.note" = "El número que el PDF da a la página enlazada, en la esquina inferior derecha.";
 "catalog.preview.0.7.title" = "Mantener el aumento y el formato de páginas en pantalla completa";
 "catalog.preview.0.7.note" = "Una ventana dividida también sigue dividida. Si está desactivado, la pantalla completa deja de dividir la ventana y usa el tipo de aumento y el formato de páginas usados la última vez en pantalla completa.";
 "group.preview.1.title" = "Con páginas dobles";
