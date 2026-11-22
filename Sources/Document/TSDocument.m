@@ -37,6 +37,7 @@
 #import <Foundation/Foundation.h>
 
 #import "TSDocument.h"
+#import "TSThemeSystemColor.h"
 #import "TSSourceMagicComments.h"
 #import "TSDialogButtonLayout.h"
 #import "TSOlderPanelLayout.h"
@@ -10010,6 +10011,11 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 
 - (void) setTextSelectionYellow:(BOOL)value
 {
+	// A part of a split marked before and not cleared yet (the split was closed and opened again since) gets the
+	// theme's selection back when another part is marked.
+	NSTextView *marked = _reverseSyncTextView;
+	if (value && marked != nil && marked != textView)
+		TSThemeSetSelectionColor(marked, self.sourceSelectionColor);
 	textSelectionYellow = value;
 	_reverseSyncTextView = value ? textView : nil;
 }

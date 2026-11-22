@@ -14,7 +14,7 @@ TSThemeFileStore.m, and -themeStore and -themeListAcceptsData: of the Settings w
 - the bundled themes (and the copies kept inside TeXShop) have the switches and the selection colors chosen for them,
   and their text reads on the selection.
 - in a split, the part a reverse sync marked keeps its mark through a change of theme and gets the theme's selection
-  back, also when the other part is in use by then.
+  back, also when the other part is in use by then, and an earlier mark is cleared when another part is marked.
 Nothing is shown on screen. --mutations changes key parts of the production code and the test must then fail."""
 from pathlib import Path
 import plistlib, re, shutil, subprocess, sys, tempfile
@@ -245,6 +245,25 @@ int main(int argc, char **argv) { @autoreleasepool {
         [doc applyColors:redTheme dark:NO];
         [doc endReverseSyncSelection];
         REQUIRE(SameRGB(one.selectedTextAttributes[NSBackgroundColorAttributeName], NSColor.redColor));
+        // Two reverse syncs in a row, into one part and then the other, with no click or key between (the split was
+        // closed and opened again): the first part gets the theme's selection back, the second keeps the mark until it
+        // is cleared.
+        doc->textView = two;
+        [doc setTextSelectionYellow:YES];
+        TSThemeSetSelectionColor(two, NSColor.yellowColor);
+        doc->textView = one;
+        [doc setTextSelectionYellow:YES];
+        TSThemeSetSelectionColor(one, NSColor.yellowColor);
+        REQUIRE(SameRGB(two.selectedTextAttributes[NSBackgroundColorAttributeName], NSColor.redColor));
+        REQUIRE(doc.reverseSyncTextView == one);
+        [doc endReverseSyncSelection];
+        REQUIRE(SameRGB(one.selectedTextAttributes[NSBackgroundColorAttributeName], NSColor.redColor) && SameRGB(two.selectedTextAttributes[NSBackgroundColorAttributeName], NSColor.redColor));
+        // A second sync into the same part keeps its mark.
+        [doc setTextSelectionYellow:YES];
+        TSThemeSetSelectionColor(one, NSColor.yellowColor);
+        [doc setTextSelectionYellow:YES];
+        REQUIRE([one.selectedTextAttributes[NSBackgroundColorAttributeName] isEqual:NSColor.yellowColor]);
+        [doc endReverseSyncSelection];
     }
     puts("PASS: switches read, colors, selection attributes, launch check, Settings editing and exchange, the reverse sync in a split");
 } return 0; }
@@ -327,6 +346,7 @@ if '--mutations' in sys.argv:
         'the part in use given back its color': ('end', 'self.reverseSyncTextView ?: [self textView]', '[self textView]'),
         'the marked part recolored by a theme': ('loop', ' && !([self textSelectionYellow] && view == self.reverseSyncTextView)', ''),
         'the marked part not kept': ('yellow', '_reverseSyncTextView = value ? textView : nil;', '(void)value;'),
+        'an earlier mark left': ('yellow', '\t\tTSThemeSetSelectionColor(marked, self.sourceSelectionColor);\n', '\t\t;\n'),
     }
     for name, (where, before, after) in mutations.items():
         changed = dict(parts)
