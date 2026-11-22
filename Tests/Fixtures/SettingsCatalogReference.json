@@ -492,6 +492,13 @@
       },
       {
        "kind": "switch",
+       "title": "索引を既定でハイライト",
+       "src": [
+        "index-highlight-button"
+       ]
+      },
+      {
+       "kind": "switch",
        "title": "全角英数記号を強調",
        "on": true,
        "src": [

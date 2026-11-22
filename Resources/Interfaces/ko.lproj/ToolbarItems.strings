@@ -118,10 +118,6 @@ tiLabelSyncMarks			= "동기화 마크";
 tiPaletteLabelSyncMarks		= "동기화 마크";
 tiToolTipSyncMarks			= "동기화 마크 보기";
 
-tiLabelColorIndex				= "색인 색상";
-tiPaletteLabelColorIndex		= "색인 색상";
-tiToolTipColorIndex				= "색인 명령 색상 표시";
-
 tiLabelTypesetKIT				= "조판";
 tiPaletteLabelTypesetKIT		= "조판";
 tiToolTipTypesetKIT				= "조판 프로그램 실행";
@@ -207,10 +203,6 @@ tiToolTipGotoPageSplit          = "페이지로 이동";
 tiLabelMagnificationSplit		= "배율";
 tiPaletteLabelMagnificationSplit   = "배율";
 tiToolTipMagnificationSplit     = "페이지 배율 설정";
-
-tiLabelColorIndexSplit			= "색인 색상";
-tiPaletteLabelColorIndexSplit     = "색인 색상";
-tiToolTipColorIndexSplit          = "색인 명령 색상 표시";
 
 tiLabelAutoCompleteSplit		= "키 바인딩";
 tiPaletteLabelAutoCompleteSplit   = "키 바인딩";

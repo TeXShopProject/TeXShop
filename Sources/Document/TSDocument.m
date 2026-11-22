@@ -1334,6 +1334,7 @@ static void TSAddContextCopyOfSubmenu(NSMenu *contextMenu, SEL action)
       
     self.syntaxColor = [SUD boolForKey: SyntaxColoringEnabledKey];
     self.useExplColor = [SUD boolForKey: expl3SyntaxColoringKey];
+    showIndexColor = [SUD boolForKey: IndexColorStartKey];
     [self applyInvisibleCharactersShowing]; // added by Terada
     self.pdfKitWindow.previewClosed = NO;
     
@@ -1405,10 +1406,6 @@ static void TSAddContextCopyOfSubmenu(NSMenu *contextMenu, SEL action)
 		}
 	else
 		skipTextWindow = NO;
-    
-    
-    
-    [self flipIndexColor:  ![SUD boolForKey:IndexColorStartKey]];
 
 
 // WARNING: May be dangerous!!
@@ -7025,6 +7022,9 @@ if (! useFullSplitWindow) {
         else
             [anItem setState:NSOffState];
     }
+
+    if ([anItem action] == @selector(toggleIndexColor:))
+        [anItem setState: showIndexColor ? NSControlStateValueOn : NSControlStateValueOff];
     
     if ([anItem action] == @selector(toggleBlockCursor:))
     {
@@ -8545,28 +8545,6 @@ if (! useFullSplitWindow) {
 	[self.myPDFKitView2 display];
 }
 
-- (void) flipIndexColorState: sender
-{
-    NSInteger   theState;
-    
-    if (useFullSplitWindow)
-        theState = [(NSCell *)indexColorSplitBox state];
-    else
-        theState = [(NSCell *)self.indexColorBox state];
-    [self flipIndexColor: theState];
-    /*
-	NSInteger newState = 1 - theState;
-	[self.indexColorBox setState: newState];
-    [indexColorSplitBox setState: newState];
-	if (newState == 1)
-		showIndexColor = YES;
-	else
-		showIndexColor = NO;
-	[self colorizeVisibleAreaInTextView:textView1];
-	[self colorizeVisibleAreaInTextView:textView2];
-    */
-}
-
 - (IBAction)toggleSyntaxColor:sender {
     
      self.syntaxColor = ! self.syntaxColor;
@@ -8584,6 +8562,14 @@ if (! useFullSplitWindow) {
   if (self.syntaxColor)
       [self reColor:nil];
     
+}
+
+// Source > Highlight Index Entries: the arguments of \index and \esindex, for this document only.
+- (IBAction)toggleIndexColor:sender {
+    showIndexColor = ! showIndexColor;
+    [sender setState: showIndexColor];
+    if (self.syntaxColor)
+        [self reColor:nil];
 }
 
 - (IBAction)toggleSyntaxColorEntry:sender {
@@ -8612,22 +8598,6 @@ if (! useFullSplitWindow) {
     [self cursorMoved: textView];
     [self refreshExperimentCurrentLine];
  }
-
-- (void) flipIndexColor: (NSInteger)state
-{
-     NSInteger newState = 1 - state;
-    [self.indexColorBox setState: newState];
-    [indexColorSplitBox setState: newState];
-    if (newState == 1)
-        showIndexColor = YES;
-    else {
-        showIndexColor = NO;
-    //    [self reColor: nil];
-    }
-    [self colorizeVisibleAreaInTextView:textView1];
-    [self colorizeVisibleAreaInTextView:textView2];
-    [self colorizeExperimentSource];
-}
 
 
 
@@ -9984,30 +9954,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 	[self.myPDFKitView2 display];
 }
 
-- (void) showIndexColor: sender
-{
-    NSInteger myState;
-    NSRange     theRange;
-    
-    myState = [(NSButton *)sender state];
-    if (myState == 1)
-        showIndexColor = YES;
-    else
-    {
-         showIndexColor = NO;
-        theRange.location = 0;
-        theRange.length = [self.textStorage length];
-        [[textView1 layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:theRange];
-        [[textView2 layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:theRange];
-        [[scrapTextView layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName
-            forCharacterRange:NSMakeRange(0, scrapTextView.string.length)];
-    }
-	[self colorizeVisibleAreaInTextView:textView1];
-	[self colorizeVisibleAreaInTextView:textView2];
-	[self colorizeExperimentSource];
-}
-
-- (BOOL)indexColorState // warning: can be called after indexColorBox is disposed
+- (BOOL)indexColorState // can be called after close, when the windows are gone
 {
 	return showIndexColor;
 }

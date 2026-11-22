@@ -100,8 +100,8 @@ DOCUMENT_METHODS = [
     '- (IBAction)toggleSyntaxColorEntry:sender {', '- (IBAction)toggleBlockCursor:sender {',
     '- (void) applyInvisibleCharactersShowing', '- (void) showHideInvisibleCharacters: sender',
     '- (void) showHideLineNumbers: sender', '- (void)setDocumentFontFromPreferences:(NSNotification *)notification',
-    '- (void)fixUpTabs {', '- (void)setLineBreakMode:(id)sender', '- (void) flipIndexColor: (NSInteger)state',
-    '- (void) showIndexColor: sender', '- (BOOL)indexColorState',
+    '- (void)fixUpTabs {', '- (void)setLineBreakMode:(id)sender', '- (IBAction)toggleIndexColor:sender {',
+    '- (BOOL)indexColorState',
     '- (void)resetHighlight:(id)sender', '- (void)showIndicator:(NSString*)range', '- (void)resetBackgroundColor:(id)sender',
     '- (void)resetBackgroundColorOfTextView:(id)sender', '- (void)highlightContent:(NSString*)range',
     '- (void)highlightBracesAt:(NSArray*)locations',
@@ -241,7 +241,6 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
     NSTextView *textView1, *textView2, *scrapTextView, *textView;
     NSScrollView *scrollView, *scrollView2;
     NSWindow *textWindow;
-    NSButton *indexColorSplitBox;
 }
 @property (strong) NSDictionary *EntryColorAttribute, *commandColorAttribute, *commentColorAttribute,
     *explColorAttribute1, *explColorAttribute2, *explColorAttribute3, *explColorAttribute4, *explColorAttribute5,
@@ -254,7 +253,6 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
 @property (strong) NSTextView *textView;
 @property (strong) NSScrollView *logScrollView;
 @property (strong) NoodleLineNumberView *lineNumberView1, *lineNumberView2, *logLineNumberView;
-@property (strong) NSButton *indexColorBox;
 - (BOOL)indexColorState;
 - (void)setupTagsAndLabelsAfterLoading;
 - (void)setupTags;
@@ -284,8 +282,7 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
 - (void)applyInvisibleCharactersShowing;
 - (void)showHideInvisibleCharacters:(id)sender;
 - (void)showHideLineNumbers:(id)sender;
-- (void)flipIndexColor:(NSInteger)state;
-- (void)showIndexColor:(id)sender;
+- (IBAction)toggleIndexColor:(id)sender;
 - (IBAction)toggleSyntaxColorEntry:(id)sender;
 - (IBAction)toggleBlockCursor:(id)sender;
 - (IBAction)toggleXML:(id)sender;
@@ -539,13 +536,12 @@ int main(void) { @autoreleasepool {
     [doc colorizeAll];
     Check([Foreground(doc->textView1, 0) isEqual:commandColor], "the document source is colored as before");
 
-    // Index color, from the toolbar.
+    // Index highlighting, from Source > Highlight Index Entries.
     [scrap insertText:@"\\index{key} " replacementRange:NSMakeRange(0, 0)];
-    [doc flipIndexColor:0];
-    Check([Foreground(scrap, Find(scrap, @"key")) isEqual:indexColor], "the index color appears in the Experiment source at once");
-    NSButton *box = [[NSButton alloc] initWithFrame:NSZeroRect]; box.state = NSControlStateValueOff;
-    [doc showIndexColor:box];
-    Check(![Foreground(scrap, Find(scrap, @"key")) isEqual:indexColor], "turning the index color off removes it from the Experiment source");
+    [doc toggleIndexColor:Item(0)];
+    Check(doc->showIndexColor && [Foreground(scrap, Find(scrap, @"key")) isEqual:indexColor], "the index color appears in the Experiment source at once");
+    [doc toggleIndexColor:Item(0)];
+    Check(!doc->showIndexColor && ![Foreground(scrap, Find(scrap, @"key")) isEqual:indexColor], "turning the index color off removes it from the Experiment source");
 
     // Font, tabs and line spacing, from Settings.
     [SUD setBool:YES forKey:SaveDocumentFontKey];

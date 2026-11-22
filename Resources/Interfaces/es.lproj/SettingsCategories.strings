@@ -90,6 +90,8 @@
 "group.editor.3.title" = "Resaltado de sintaxis";
 "catalog.editor.3.0.title" = "@ en nombres de comando";
 "catalog.editor.3.1.title" = "Resaltar el código expl3 por omisión";
+"catalog.editor.3.3.title" = "Resaltar las entradas del índice por omisión";
+"catalog.editor.3.3.former" = "Colorear índice";
 "catalog.editor.3.2.title" = "Realzar letras y símbolos de ancho completo";
 "group.editor.4.title" = "Correspondencia de paréntesis";
 "catalog.editor.4.0.title" = "Equilibrar paréntesis";

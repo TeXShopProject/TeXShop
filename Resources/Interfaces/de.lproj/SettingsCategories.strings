@@ -90,6 +90,8 @@
 "group.editor.3.title" = "Syntaxhervorhebung";
 "catalog.editor.3.0.title" = "@ als Teil von Befehlsnamen";
 "catalog.editor.3.1.title" = "expl3-Code standardmäßig hervorheben";
+"catalog.editor.3.3.title" = "Indexeinträge standardmäßig hervorheben";
+"catalog.editor.3.3.former" = "Farbindex";
 "catalog.editor.3.2.title" = "Vollbreite Buchstaben und Symbole hervorheben";
 "group.editor.4.title" = "Klammerzuordnung";
 "catalog.editor.4.0.title" = "Hilfe bei Klammerung";

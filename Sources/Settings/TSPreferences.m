@@ -1271,6 +1271,14 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
     [self applyEffectsForPreferenceKeys:[NSSet setWithObject:HighlightFullwidthSymbolsKey]];
 }
 
+// Each document reads this when it opens; the Source menu turns index highlighting on and off for one document.
+// The macro editor and the Advanced Find fields follow this setting, so open windows are colored again at once.
+- (IBAction)indexColorStartChanged:(NSButton *)sender
+{
+    [SUD setBool:(sender.state == NSControlStateValueOn) forKey:IndexColorStartKey];
+    [self applyEffectsForPreferenceKeys:[NSSet setWithObject:IndexColorStartKey]];
+}
+
 // Persist immediately; NSDocument autosave and server watching change at next launch.
 - (IBAction)autoSaveEnabledPressed:sender
 {

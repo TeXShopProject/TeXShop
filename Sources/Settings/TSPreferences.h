@@ -127,6 +127,7 @@
 	IBOutlet NSButtonCell *_makeatletterButton; // added by Terada
 	IBOutlet NSButtonCell *_expl3SyntaxColorButton;
 	IBOutlet NSButton *_highlightFullwidthSymbolsButton;
+	IBOutlet NSButton *_indexColorStartButton;
 	IBOutlet NSButton *_autoSaveEnabledButton;
 	IBOutlet NSButton *_keepBackupButton;
 	IBOutlet NSButton *_saveEncodingMenuButton;
@@ -374,6 +375,7 @@
 - (IBAction)makeatletterChanged:sender; // added by Terada
 - (IBAction)expl3SyntaxColorPressed:sender;
 - (IBAction)highlightFullwidthSymbolsChanged:(NSButton *)sender;
+- (IBAction)indexColorStartChanged:(NSButton *)sender;
 - (IBAction)autoSaveEnabledPressed:sender;
 - (IBAction)keepBackupPressed:sender;
 - (IBAction)saveEncodingMenuPressed:sender;

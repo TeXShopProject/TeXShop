@@ -27,8 +27,6 @@
                 <outlet property="htmlViewContainer" destination="XQ9-vp-pE0" id="ohs-tu-Hd4"/>
                 <outlet property="htmlWindow" destination="Maa-fJ-K9a" id="mVs-wY-nv0"/>
                 <outlet property="iLog" destination="kDb-1x-TJ4" id="8ps-rf-XMC"/>
-                <outlet property="indexColorBox" destination="923" id="924"/>
-                <outlet property="indexColorSplitBox" destination="i5N-fW-gO8" id="PCh-R4-zch"/>
                 <outlet property="labels" destination="n3r-OG-kGX" id="Nob-WL-MTU"/>
                 <outlet property="leftView" destination="JeP-h5-zmi" id="WXH-SF-IYU"/>
                 <outlet property="lineBox" destination="217" id="221"/>
@@ -588,17 +586,6 @@ DQ
                         <action selector="chooseProgram:" target="-2" id="917"/>
                     </connections>
                 </popUpButton>
-                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="923">
-                    <rect key="frame" x="488" y="56" width="95" height="18"/>
-                    <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="索引の色づけ" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3871">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="showIndexColor:" target="-2" id="925"/>
-                    </connections>
-                </button>
                 <imageView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="782">
                     <rect key="frame" x="773" y="49" width="39" height="32"/>
                     <autoresizingMask key="autoresizingMask"/>
@@ -1185,17 +1172,6 @@ DQ
                     </view>
                     <font key="titleFont" metaFont="system"/>
                 </box>
-                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i5N-fW-gO8">
-                    <rect key="frame" x="12" y="12" width="95" height="18"/>
-                    <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="索引の色づけ" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="9xY-Oc-TRB">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="showIndexColor:" target="-2" id="UYd-Dm-BWF"/>
-                    </connections>
-                </button>
                 <searchField wantsLayer="YES" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rrv-In-ns7">
                     <rect key="frame" x="257" y="11" width="96" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
